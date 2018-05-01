@@ -565,7 +565,11 @@ var Systems = new Class({
         this.settings.active = true;
         this.settings.visible = true;
 
+        //  For plugins to listen out for
         this.events.emit('start', this);
+
+        //  For user-land code to listen out for
+        this.events.emit('ready', this);
     },
 
     /**

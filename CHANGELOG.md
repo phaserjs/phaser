@@ -42,6 +42,7 @@ The Loader has been given a slight overhaul to improve its performance and exten
 * WebGLRenderer will now remove a GL texture from its local `nativeTextures` array when you call the `deleteTexture` method.
 * The BaseCache has a new method `exists` that will return a boolean if an entry for the given key exists in the cache or not.
 * ScenePlugin.getIndex will return the index of the given Scene in the Scene List.
+* The Scene Systems will emit a `ready` event when it has fully finished starting up and all plugins are available. Re: #3636 (thanks @Yazir)
 
 ### Bug Fixes
 
@@ -57,6 +58,7 @@ The Loader has been given a slight overhaul to improve its performance and exten
 * The Animation Component `setProgress` method was setting the frame on the wrong object. Fix #3633 (thanks @benhhopkins)
 * SceneManager.moveAbove wouldn't move the Scene if it was already above the target Scene. Now it moves to be directly above the target Scene no matter where in the Scene List it is.
 * SceneManager.moveBelow wouldn't move the Scene if it was already below the target Scene. Now it moves to be directly below the target Scene no matter where in the Scene List it is.
+* Emitter.setEmitZone was rejecting custom objects passed as the source argument because it was checking for the wrong methods (thanks @samme)
 
 ### Examples, Documentation and TypeScript
 
