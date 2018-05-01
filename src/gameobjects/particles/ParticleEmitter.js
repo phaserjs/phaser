@@ -66,7 +66,7 @@ var Wrap = require('../../math/Wrap');
 /**
  * @typedef {object} ParticleEmitterEdgeZoneConfig
  *
- * @property {EdgeZoneSource|RandomZoneSource} source - A shape representing the zone. See {@link Phaser.GameObjects.Particles.Zones.EdgeZone#source}.
+ * @property {EdgeZoneSource} source - A shape representing the zone. See {@link Phaser.GameObjects.Particles.Zones.EdgeZone#source}.
  * @property {string} type - 'edge'.
  * @property {integer} quantity - The number of particles to place on the source edge. Set to 0 to use `stepRate` instead.
  * @property {float} [stepRate] - The distance between each particle. When set, `quantity` is implied and should be set to 0.
@@ -77,7 +77,7 @@ var Wrap = require('../../math/Wrap');
 /**
  * @typedef {object} ParticleEmitterRandomZoneConfig
  *
- * @property {EdgeZoneSource|RandomZoneSource} source - A shape representing the zone. See {@link Phaser.GameObjects.Particles.Zones.RandomZone#source}.
+ * @property {RandomZoneSource} source - A shape representing the zone. See {@link Phaser.GameObjects.Particles.Zones.RandomZone#source}.
  * @property {string} [type] - 'random'.
  */
 
@@ -1571,32 +1571,24 @@ var ParticleEmitter = new Class({
             var type = GetFastValue(zoneConfig, 'type', 'random');
             var source = GetFastValue(zoneConfig, 'source', null);
 
-            // TODO:
-            // For an EdgeZone, only source.getPoints(quantity, stepRate) is required.
-            // For a RandomZone, only source.getRandomPoint(point) is required.
-            // Any object implementing getPoint(position) could also be assigned here (instead of new EdgeZone, new RandomZone).
-
-            if (source && typeof source.getPoint === 'function')
+            switch (type)
             {
-                switch (type)
-                {
-                    case 'random':
+                case 'random':
 
-                        this.emitZone = new RandomZone(source);
+                    this.emitZone = new RandomZone(source);
 
-                        break;
+                    break;
 
-                    case 'edge':
+                case 'edge':
 
-                        var quantity = GetFastValue(zoneConfig, 'quantity', 1);
-                        var stepRate = GetFastValue(zoneConfig, 'stepRate', 0);
-                        var yoyo = GetFastValue(zoneConfig, 'yoyo', false);
-                        var seamless = GetFastValue(zoneConfig, 'seamless', true);
+                    var quantity = GetFastValue(zoneConfig, 'quantity', 1);
+                    var stepRate = GetFastValue(zoneConfig, 'stepRate', 0);
+                    var yoyo = GetFastValue(zoneConfig, 'yoyo', false);
+                    var seamless = GetFastValue(zoneConfig, 'seamless', true);
 
-                        this.emitZone = new EdgeZone(source, quantity, stepRate, yoyo, seamless);
+                    this.emitZone = new EdgeZone(source, quantity, stepRate, yoyo, seamless);
 
-                        break;
-                }
+                    break;
             }
         }
 
