@@ -18,19 +18,18 @@ var PathFollower = require('./PathFollower');
  * @param {Phaser.Curves.Path} path - The Path this PathFollower is connected to.
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
- * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
- * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
+ * @param {Phaser.GameObjects.GameObject[]} [children] - An optional array of Game Objects to add to this Container.
  *
  * @return {Phaser.GameObjects.PathFollower} The Game Object that was created.
  */
 GameObjectFactory.register('follower', function (path, x, y, key, frame)
 {
-    var sprite = new PathFollower(this.scene, path, x, y, key, frame);
+    var container = new PathFollower(this.scene, path, x, y, key, frame);
 
-    this.displayList.add(sprite);
-    this.updateList.add(sprite);
+    this.displayList.add(container);
+    this.updateList.add(container);
 
-    return sprite;
+    return container;
 });
 
 //  When registering a factory function 'this' refers to the GameObjectFactory context.
