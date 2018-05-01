@@ -626,13 +626,21 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#setActive
      * @since 3.0.0
      *
-     * @param {boolean} value - The Scene to set the active state for.
+     * @param {boolean} value - The active value.
+     * @param {string} [key] - The Scene to set the active state for.
      *
      * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
      */
-    setActive: function (value)
+    setActive: function (value, key)
     {
-        this.settings.active = value;
+        if (key === undefined) { key = this.key; }
+
+        var scene = this.manager.getScene(key);
+
+        if (scene)
+        {
+            scene.sys.setActive(value);
+        }
 
         return this;
     },
@@ -643,13 +651,21 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#setVisible
      * @since 3.0.0
      *
-     * @param {boolean} value - The Scene to set the visible state for.
+     * @param {boolean} value - The visible value.
+     * @param {string} [key] - The Scene to set the visible state for.
      *
      * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
      */
-    setVisible: function (value)
+    setVisible: function (value, key)
     {
-        this.settings.visible = value;
+        if (key === undefined) { key = this.key; }
+
+        var scene = this.manager.getScene(key);
+
+        if (scene)
+        {
+            scene.sys.setVisible(value);
+        }
 
         return this;
     },

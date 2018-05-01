@@ -59,6 +59,8 @@ The Loader has been given a slight overhaul to improve its performance and exten
 * SceneManager.moveAbove wouldn't move the Scene if it was already above the target Scene. Now it moves to be directly above the target Scene no matter where in the Scene List it is.
 * SceneManager.moveBelow wouldn't move the Scene if it was already below the target Scene. Now it moves to be directly below the target Scene no matter where in the Scene List it is.
 * Emitter.setEmitZone was rejecting custom objects passed as the source argument because it was checking for the wrong methods (thanks @samme)
+* ScenePlugin.setActive would only toggle the current Scene, not any given Scene.
+* ScenePlugin.setVisible would only toggle the current Scene, not any given Scene.
 
 ### Examples, Documentation and TypeScript
 
