@@ -1323,7 +1323,7 @@ var SceneManager = new Class({
             var indexA = this.getIndex(keyA);
             var indexB = this.getIndex(keyB);
 
-            if (indexA > indexB && indexA !== -1 && indexB !== -1)
+            if (indexA !== -1 && indexB !== -1)
             {
                 var tempScene = this.getAt(indexB);
 
@@ -1331,7 +1331,7 @@ var SceneManager = new Class({
                 this.scenes.splice(indexB, 1);
 
                 //  Add in new location
-                this.scenes.splice(indexA, 0, tempScene);
+                this.scenes.splice(indexA + 1, 0, tempScene);
             }
         }
 
@@ -1367,15 +1367,22 @@ var SceneManager = new Class({
             var indexA = this.getIndex(keyA);
             var indexB = this.getIndex(keyB);
 
-            if (indexA < indexB && indexA !== -1 && indexB !== -1)
+            if (indexA !== -1 && indexB !== -1)
             {
                 var tempScene = this.getAt(indexB);
 
                 //  Remove
                 this.scenes.splice(indexB, 1);
 
-                //  Add in new location
-                this.scenes.splice(indexA, 0, tempScene);
+                if (indexA === 0)
+                {
+                    this.scenes.unshift(tempScene);
+                }
+                else
+                {
+                    //  Add in new location
+                    this.scenes.splice(indexA, 0, tempScene);
+                }
             }
         }
 
