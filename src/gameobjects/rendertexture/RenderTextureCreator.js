@@ -26,17 +26,24 @@ var RenderTexture = require('./RenderTexture');
  * @method Phaser.GameObjects.GameObjectCreator#renderTexture
  * @since 3.2.0
  *
- * @param {RenderTextureConfig} config - [description]
+ * @param {RenderTextureConfig} config - The configuration object this Game Object will use to create itself.
+ * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.RenderTexture} The Game Object that was created.
  */
-GameObjectCreator.register('renderTexture', function (config)
+GameObjectCreator.register('renderTexture', function (config, addToScene)
 {
     var x = GetAdvancedValue(config, 'x', 0);
     var y = GetAdvancedValue(config, 'y', 0);
     var width = GetAdvancedValue(config, 'width', 32);
     var height = GetAdvancedValue(config, 'height', 32);
+
     var renderTexture = new RenderTexture(this.scene, x, y, width, height);
+
+    if (addToScene !== undefined)
+    {
+        config.add = addToScene;
+    }
 
     BuildGameObject(this.scene, renderTexture, config);
 

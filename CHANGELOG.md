@@ -43,6 +43,7 @@ The Loader has been given a slight overhaul to improve its performance and exten
 * The BaseCache has a new method `exists` that will return a boolean if an entry for the given key exists in the cache or not.
 * ScenePlugin.getIndex will return the index of the given Scene in the Scene List.
 * The Scene Systems will emit a `ready` event when it has fully finished starting up and all plugins are available. Re: #3636 (thanks @Yazir)
+* All Game Object Creators now have an extra boolean argument `addToScene`. If you set this to `true` it will add the Game Object being created to the Scene automatically, while `false` will do the opposite, i.e.: `this.make.image(config, false)`. You can still specify the `add` property in the Config object too, but if the argument is provided it will override the property.
 
 ### Bug Fixes
 
@@ -61,6 +62,7 @@ The Loader has been given a slight overhaul to improve its performance and exten
 * Emitter.setEmitZone was rejecting custom objects passed as the source argument because it was checking for the wrong methods (thanks @samme)
 * ScenePlugin.setActive would only toggle the current Scene, not any given Scene.
 * ScenePlugin.setVisible would only toggle the current Scene, not any given Scene.
+* The Graphics Creator would automatically add the Graphics to the display list by mistake. The default should be to remain hidden. Fix #3637 (thanks @mikuso)
 
 ### Examples, Documentation and TypeScript
 

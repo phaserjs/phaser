@@ -27,11 +27,12 @@ var GetAdvancedValue = require('../../../utils/object/GetAdvancedValue');
  * @method Phaser.GameObjects.GameObjectCreator#dynamicBitmapText
  * @since 3.0.0
  *²
- * @param {BitmapTextConfig} config - [description]
+ * @param {BitmapTextConfig} config - The configuration object this Game Object will use to create itself.
+ * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.DynamicBitmapText} The Game Object that was created.
  */
-GameObjectCreator.register('dynamicBitmapText', function (config)
+GameObjectCreator.register('dynamicBitmapText', function (config, addToScene)
 {
     var font = GetAdvancedValue(config, 'font', '');
     var text = GetAdvancedValue(config, 'text', '');
@@ -39,6 +40,11 @@ GameObjectCreator.register('dynamicBitmapText', function (config)
     var align = GetAdvancedValue(config, 'align', 'left');
 
     var bitmapText = new BitmapText(this.scene, 0, 0, font, text, size, align);
+
+    if (addToScene !== undefined)
+    {
+        config.add = addToScene;
+    }
 
     BuildGameObject(this.scene, bitmapText, config);
 

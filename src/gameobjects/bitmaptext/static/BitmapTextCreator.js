@@ -18,11 +18,12 @@ var GetValue = require('../../../utils/object/GetValue');
  * @method Phaser.GameObjects.GameObjectCreator#bitmapText
  * @since 3.0.0
  *
- * @param {BitmapTextConfig} config - [description]
- *
+ * @param {BitmapTextConfig} config - The configuration object this Game Object will use to create itself.
+ * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
+ * 
  * @return {Phaser.GameObjects.BitmapText} The Game Object that was created.
  */
-GameObjectCreator.register('bitmapText', function (config)
+GameObjectCreator.register('bitmapText', function (config, addToScene)
 {
     var font = GetValue(config, 'font', '');
     var text = GetAdvancedValue(config, 'text', '');
@@ -31,6 +32,11 @@ GameObjectCreator.register('bitmapText', function (config)
     // var align = GetValue(config, 'align', 'left');
 
     var bitmapText = new BitmapText(this.scene, 0, 0, font, text, size);
+
+    if (addToScene !== undefined)
+    {
+        config.add = addToScene;
+    }
 
     BuildGameObject(this.scene, bitmapText, config);
 

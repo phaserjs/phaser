@@ -29,11 +29,12 @@ var TileSprite = require('./TileSprite');
  * @method Phaser.GameObjects.GameObjectCreator#tileSprite
  * @since 3.0.0
  *
- * @param {TileSprite} config - [description]
+ * @param {TileSprite} config - The configuration object this Game Object will use to create itself.
+ * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.TileSprite} The Game Object that was created.
  */
-GameObjectCreator.register('tileSprite', function (config)
+GameObjectCreator.register('tileSprite', function (config, addToScene)
 {
     var x = GetAdvancedValue(config, 'x', 0);
     var y = GetAdvancedValue(config, 'y', 0);
@@ -43,6 +44,11 @@ GameObjectCreator.register('tileSprite', function (config)
     var frame = GetAdvancedValue(config, 'frame', '');
 
     var tile = new TileSprite(this.scene, x, y, width, height, key, frame);
+
+    if (addToScene !== undefined)
+    {
+        config.add = addToScene;
+    }
 
     BuildGameObject(this.scene, tile, config);
 

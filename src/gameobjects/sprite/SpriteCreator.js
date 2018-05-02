@@ -18,16 +18,22 @@ var Sprite = require('./Sprite');
  * @method Phaser.GameObjects.GameObjectCreator#sprite
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {object} config - The configuration object this Game Object will use to create itself.
+ * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.Sprite} The Game Object that was created.
  */
-GameObjectCreator.register('sprite', function (config)
+GameObjectCreator.register('sprite', function (config, addToScene)
 {
     var key = GetAdvancedValue(config, 'key', null);
     var frame = GetAdvancedValue(config, 'frame', null);
 
     var sprite = new Sprite(this.scene, 0, 0, key, frame);
+
+    if (addToScene !== undefined)
+    {
+        config.add = addToScene;
+    }
 
     BuildGameObject(this.scene, sprite, config);
 
@@ -35,9 +41,5 @@ GameObjectCreator.register('sprite', function (config)
 
     BuildGameObjectAnimation(sprite, config);
 
-    //  Physics, Input, etc to follow ...
-
     return sprite;
 });
-
-//  When registering a factory function 'this' refers to the GameObjectCreator context.
