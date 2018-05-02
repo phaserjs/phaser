@@ -98,6 +98,11 @@ var LinkFile = new Class({
         }
     },
 
+    isReadyToProcess: function ()
+    {
+        return (this.pending === 0 && this.failed === 0);
+    },
+
     /**
      * Called by each File when it finishes loading.
      *
