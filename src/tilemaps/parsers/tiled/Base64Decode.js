@@ -18,7 +18,7 @@ var Base64Decode = function (data)
 {
     var binaryString = window.atob(data);
     var len = binaryString.length;
-    var bytes = new Array(len);
+    var bytes = new Array(len / 4);
 
     // Interpret binaryString as an array of bytes representing little-endian encoded uint32 values.
     for (var i = 0; i < len; i += 4)
