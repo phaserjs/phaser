@@ -57,28 +57,21 @@ var BitmapFontFile = new Class({
 
     addToCache: function ()
     {
-        if (this.failed === 0 && !this.complete)
+        if (this.isReadyToProcess())
         {
             var fileA = this.files[0];
             var fileB = this.files[1];
 
+            fileA.addToCache();
+            fileB.addToCache();
+
             if (fileA.type === 'image')
             {
                 this.loader.cacheManager.bitmapFont.add(fileB.key, { data: ParseXMLBitmapFont(fileB.data), texture: fileA.key, frame: null });
-
-                this.loader.textureManager.addImage(fileA.key, fileA.data);
-
-                //  Add the XML into the XML cache
-                fileB.addToCache();
             }
             else
             {
                 this.loader.cacheManager.bitmapFont.add(fileA.key, { data: ParseXMLBitmapFont(fileA.data), texture: fileB.key, frame: null });
-
-                this.loader.textureManager.addImage(fileB.key, fileB.data);
-
-                //  Add the XML into the XML cache
-                fileA.addToCache();
             }
 
             this.complete = true;

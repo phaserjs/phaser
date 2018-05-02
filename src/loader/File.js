@@ -83,7 +83,14 @@ var File = new Class({
          * @type {string}
          * @since 3.0.0
          */
-        this.key = loader.prefix + GetFastValue(fileConfig, 'key', false);
+        this.key = GetFastValue(fileConfig, 'key', false);
+
+        var loadKey = this.key;
+
+        if (loader.prefix && loader.prefix !== '')
+        {
+            this.key = loader.prefix + loadKey;
+        }
 
         if (!this.type || !this.key)
         {
@@ -101,7 +108,7 @@ var File = new Class({
 
         if (this.url === undefined)
         {
-            this.url = loader.path + this.key + '.' + GetFastValue(fileConfig, 'extension', '');
+            this.url = loader.path + loadKey + '.' + GetFastValue(fileConfig, 'extension', '');
         }
         else if (typeof(this.url) !== 'function')
         {
@@ -248,9 +255,8 @@ var File = new Class({
     {
         if (this.state === CONST.FILE_POPULATED)
         {
-            this.onComplete();
-
-            this.loader.nextFile(this);
+            //  Can happen for example in a JSONFile if they've provided a JSON object instead of a URL
+            this.loader.nextFile(this, true);
         }
         else
         {
@@ -412,12 +418,33 @@ var File = new Class({
             this.cache.add(this.key, this.data);
         }
 
-        this.loader.emit('filecomplete', this.key, this);
+        this.pendingDestroy();
+    },
+
+    /**
+     * Adds this file to its target cache upon successful loading and processing.
+     * It will emit a `filecomplete` event from the LoaderPlugin.
+     * This method is often overridden by specific file types.
+     *
+     * @method Phaser.Loader.File#pendingDestroy
+     * @since 3.7.0
+     */
+    pendingDestroy: function (data)
+    {
+        if (data === undefined) { data = this.data; }
+
+        var key = this.key;
+        var type = this.type;
+
+        this.loader.emit('filecomplete', key, type, data);
+
+        this.loader.emit(type + 'complete', key, data);
+
+        this.loader.flagForRemoval(this);
     },
 
     /**
      * Destroy this File and any references it holds.
-     * Called automatically by the Loader.
      *
      * @method Phaser.Loader.File#destroy
      * @since 3.7.0

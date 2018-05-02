@@ -33,8 +33,9 @@ var JSONFile = new Class({
     initialize:
 
     //  url can either be a string, in which case it is treated like a proper url, or an object, in which case it is treated as a ready-made JS Object
+    //  dataKey allows you to pluck a specific object out of the JSON and put just that into the cache, rather than the whole thing
 
-    function JSONFile (loader, key, url, xhrSettings)
+    function JSONFile (loader, key, url, xhrSettings, dataKey)
     {
         var extension = 'json';
 
@@ -46,6 +47,7 @@ var JSONFile = new Class({
             url = GetFastValue(config, 'url');
             xhrSettings = GetFastValue(config, 'xhrSettings');
             extension = GetFastValue(config, 'extension', extension);
+            dataKey = GetFastValue(config, 'dataKey', dataKey);
         }
 
         var fileConfig = {
@@ -55,7 +57,8 @@ var JSONFile = new Class({
             responseType: 'text',
             key: key,
             url: url,
-            xhrSettings: xhrSettings
+            xhrSettings: xhrSettings,
+            config: dataKey
         };
 
         File.call(this, loader, fileConfig);
@@ -63,7 +66,8 @@ var JSONFile = new Class({
         if (IsPlainObject(url))
         {
             //  Object provided instead of a URL, so no need to actually load it (populate data with value)
-            this.data = url;
+
+            this.data = (dataKey && dataKey !== '' && url.hasOwnProperty(dataKey)) ? url[dataKey] : url;
 
             this.state = CONST.FILE_POPULATED;
         }
@@ -71,9 +75,15 @@ var JSONFile = new Class({
 
     onProcess: function ()
     {
-        this.state = CONST.FILE_PROCESSING;
+        if (this.state !== CONST.FILE_POPULATED)
+        {
+            this.state = CONST.FILE_PROCESSING;
 
-        this.data = JSON.parse(this.xhrLoader.responseText);
+            var json = JSON.parse(this.xhrLoader.responseText);
+            var key = this.config;
+
+            this.data = (key && key !== '' && json.hasOwnProperty(key)) ? json[key] : json;
+        }
 
         this.onProcessComplete();
     }
@@ -93,11 +103,12 @@ var JSONFile = new Class({
  *
  * @param {string} key - [description]
  * @param {string} url - [description]
+ * @param {string} [dataKey] - [description]
  * @param {XHRSettingsObject} [xhrSettings] - [description]
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */
-FileTypesManager.register('json', function (key, url, xhrSettings)
+FileTypesManager.register('json', function (key, url, dataKey, xhrSettings)
 {
     if (Array.isArray(key))
     {
@@ -109,7 +120,7 @@ FileTypesManager.register('json', function (key, url, xhrSettings)
     }
     else
     {
-        this.addFile(new JSONFile(this, key, url, xhrSettings));
+        this.addFile(new JSONFile(this, key, url, xhrSettings, dataKey));
     }
 
     return this;

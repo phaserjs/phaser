@@ -115,9 +115,9 @@ var SVGFile = new Class({
 
     addToCache: function ()
     {
-        this.cache.addImage(this.key, this.data);
+        var texture = this.cache.addImage(this.key, this.data);
 
-        this.loader.emit('filecomplete', this.key, this);
+        this.pendingDestroy(texture);
     }
 
 });

@@ -56,7 +56,7 @@ var AtlasJSONFile = new Class({
 
     addToCache: function ()
     {
-        if (this.failed === 0 && !this.complete)
+        if (this.isReadyToProcess())
         {
             var fileA = this.files[0];
             var fileB = this.files[1];

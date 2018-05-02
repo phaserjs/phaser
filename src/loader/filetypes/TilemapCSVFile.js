@@ -74,9 +74,11 @@ var TilemapCSVFile = new Class({
 
     addToCache: function ()
     {
-        this.cache.add(this.key, { format: this.tilemapFormat, data: this.data });
+        var tiledata = { format: this.tilemapFormat, data: this.data };
 
-        this.loader.emit('filecomplete', this.key, this);
+        this.cache.add(this.key, tiledata);
+
+        this.pendingDestroy(tiledata);
     }
 
 });

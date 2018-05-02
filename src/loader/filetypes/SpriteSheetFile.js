@@ -40,9 +40,9 @@ var SpriteSheetFile = new Class({
 
     addToCache: function ()
     {
-        this.cache.addSpriteSheet(this.key, this.data, this.config);
+        var texture = this.cache.addSpriteSheet(this.key, this.data, this.config);
 
-        this.loader.emit('filecomplete', this.key, this);
+        this.pendingDestroy(texture);
     }
 
 });

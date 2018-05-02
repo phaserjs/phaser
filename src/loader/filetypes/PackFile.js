@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
+var CONST = require('../const');
 var FileTypesManager = require('../FileTypesManager');
 var JSONFile = require('./JSONFile.js');
 
@@ -12,18 +13,17 @@ var JSONFile = require('./JSONFile.js');
  * @classdesc
  * [description]
  *
- * @class AnimationJSONFile
+ * @class PackFile
  * @extends Phaser.Loader.File
  * @memberOf Phaser.Loader.FileTypes
  * @constructor
- * @since 3.0.0
+ * @since 3.7.0
  *
  * @param {string} key - [description]
  * @param {string} url - [description]
- * @param {string} path - [description]
  * @param {XHRSettingsObject} [xhrSettings] - [description]
  */
-var AnimationJSONFile = new Class({
+var PackFile = new Class({
 
     Extends: JSONFile,
 
@@ -31,29 +31,26 @@ var AnimationJSONFile = new Class({
 
     //  url can either be a string, in which case it is treated like a proper url, or an object, in which case it is treated as a ready-made JS Object
 
-    function AnimationJSONFile (loader, key, url, xhrSettings)
+    function PackFile (loader, key, url, xhrSettings, packKey)
     {
-        JSONFile.call(this, loader, key, url, xhrSettings);
+        JSONFile.call(this, loader, key, url, xhrSettings, packKey);
 
-        this.type = 'animationJSON';
+        this.type = 'packfile';
     },
 
     onProcess: function ()
     {
-        //  We need to hook into this event:
-        this.loader.once('loadcomplete', this.onLoadComplete, this);
+        if (this.state !== CONST.FILE_POPULATED)
+        {
+            this.state = CONST.FILE_PROCESSING;
 
-        //  But the rest is the same as a normal JSON file
-        JSONFile.prototype.onProcess.call(this);
-    },
+            this.data = JSON.parse(this.xhrLoader.responseText);
+        }
 
-    onLoadComplete: function ()
-    {
-        console.log('AnimationJSONFile.onLoadComplete');
+        //  Let's pass the pack file data over to the Loader ...
+        this.loader.addPack(this.data, this.config);
 
-        this.loader.scene.sys.anims.fromJSON(this.data);
-
-        this.pendingDestroy();
+        this.onProcessComplete();
     }
 
 });
@@ -66,17 +63,18 @@ var AnimationJSONFile = new Class({
  * The file is **not** loaded immediately after calling this method.
  * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
  *
- * @method Phaser.Loader.LoaderPlugin#animation
- * @since 3.0.0
+ * @method Phaser.Loader.LoaderPlugin#pack
+ * @since 3.7.0
  *
  * @param {(string|array|object)} key - A unique string to be used as the key to reference this file from the Cache. Must be unique within this file type.
  * @param {string} [url] - URL of the file. If `undefined` or `null` the url will be set to `<key>.json`,
  * i.e. if `key` was "alien" then the URL will be "alien.json".
+ * @param {string} [packKey] - If you just want to process part of a pack, provide the key here. Leave empty to process the whole pack.
  * @param {XHRSettingsObject} [xhrSettings] - File specific XHR settings to be used during the load. These settings are merged with the global Loader XHR settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */
-FileTypesManager.register('animation', function (key, url, xhrSettings)
+FileTypesManager.register('pack', function (key, url, packKey, xhrSettings)
 {
     //  Supports an Object file definition in the key argument
     //  Or an array of objects in the key argument
@@ -86,15 +84,15 @@ FileTypesManager.register('animation', function (key, url, xhrSettings)
     {
         for (var i = 0; i < key.length; i++)
         {
-            this.addFile(new AnimationJSONFile(this, key[i]));
+            this.addFile(new PackFile(this, key[i]));
         }
     }
     else
     {
-        this.addFile(new AnimationJSONFile(this, key, url, xhrSettings));
+        this.addFile(new PackFile(this, key, url, xhrSettings, packKey));
     }
 
     return this;
 });
 
-module.exports = AnimationJSONFile;
+module.exports = PackFile;
