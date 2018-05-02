@@ -262,6 +262,13 @@ var File = new Class({
             }
             else
             {
+                //  The creation of this XHRLoader starts the load process going.
+                //  It will automatically call the following, based on the load outcome:
+                //  
+                // xhr.onload = file.onLoad.bind(file);
+                // xhr.onerror = file.onError.bind(file);
+                // xhr.onprogress = file.onProgress.bind(file);
+
                 this.xhrLoader = XHRLoader(this, this.loader.xhr);
             }
         }
@@ -279,14 +286,9 @@ var File = new Class({
     {
         this.resetXHR();
 
-        if (event.target && event.target.status !== 200)
-        {
-            this.loader.nextFile(this, false);
-        }
-        else
-        {
-            this.loader.nextFile(this, true);
-        }
+        var success = !(event.target && event.target.status !== 200);
+
+        this.loader.nextFile(this, success);
     },
 
     /**
@@ -321,44 +323,63 @@ var File = new Class({
 
             this.percentComplete = Math.min((this.bytesLoaded / this.bytesTotal), 1);
 
-            // console.log(this.percentComplete + '% (' + this.bytesLoaded + ' bytes)');
             this.loader.emit('fileprogress', this, this.percentComplete);
         }
     },
 
     /**
      * Usually overridden by the FileTypes and is called by Loader.finishedLoading.
-     * The callback is Loader.processUpdate
      *
      * @method Phaser.Loader.File#onProcess
      * @since 3.0.0
-     *
-     * @param {FileProcessCallback} callback - The callback to invoke to process this File.
      */
-    onProcess: function (callback)
+    onProcess: function ()
     {
         this.state = CONST.FILE_PROCESSING;
 
         this.onComplete();
-
-        callback(this);
     },
 
     /**
      * Called when the File has completed loading.
      * Checks on the state of its linkfile, if set.
      *
-     * @method Phaser.Loader.File#onComplete
-     * @since 3.0.0
+     * @method Phaser.Loader.File#onProcessComplete
+     * @since 3.7.0
      */
-    onComplete: function ()
+    onProcessComplete: function ()
     {
+        console.log('onProcessComplete', this.key);
+
         this.state = CONST.FILE_COMPLETE;
 
         if (this.linkFile)
         {
             this.linkFile.onFileComplete(this);
         }
+
+        this.loader.fileProcessComplete(this);
+    },
+
+    /**
+     * Called when the File has completed loading.
+     * Checks on the state of its linkfile, if set.
+     *
+     * @method Phaser.Loader.File#onProcessError
+     * @since 3.7.0
+     */
+    onProcessError: function ()
+    {
+        console.log('onProcessError', this.key);
+
+        this.state = CONST.FILE_ERRORED;
+
+        if (this.linkFile)
+        {
+            this.linkFile.onFileFailed(this);
+        }
+
+        this.loader.fileProcessComplete(this);
     },
 
     /**
