@@ -9,8 +9,7 @@ module.exports = {
     context: `${__dirname}/src/`,
 
     entry: {
-        phaser: './phaser.js',
-        'phaser-core': './phaser-core.js'
+        phaser: './phaser.js'
     },
 
     output: {
@@ -40,7 +39,7 @@ module.exports = {
             "typeof WEBGL_RENDERER": JSON.stringify(true)
         }),
 
-        new WebpackShellPlugin({onBuildExit: 'node copy-to-examples.js'})
+        new WebpackShellPlugin({onBuildExit: 'node scripts/copy-to-examples.js'})
     ],
 
     devtool: 'source-map'

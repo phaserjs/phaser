@@ -20,7 +20,8 @@
     "dist": "webpack --config webpack.dist.config.js",
     "lint": "eslint --config .eslintrc.json \"src/**/*.js\"",
     "lintfix": "eslint --config .eslintrc.json \"src/**/*.js\" --fix",
-    "sloc": "node-sloc \"./src\" --include-extensions \"js\""
+    "sloc": "node-sloc \"./src\" --include-extensions \"js\"",
+    "postinstall": "node scripts/support.js"
   },
   "keywords": [
     "2d",
@@ -36,16 +37,16 @@
   ],
   "devDependencies": {
     "clean-webpack-plugin": "^0.1.19",
-    "eslint": "^4.19.0",
-    "fs-extra": "^5.0.0",
+    "eslint": "^4.19.1",
+    "fs-extra": "^6.0.0",
     "node-sloc": "^0.1.10",
     "raw-loader": "^0.5.1",
-    "uglifyjs-webpack-plugin": "^1.2.4",
-    "webpack": "^4.1.1",
-    "webpack-cli": "^2.0.12",
+    "uglifyjs-webpack-plugin": "^1.2.5",
+    "webpack": "^4.6.0",
+    "webpack-cli": "^2.1.2",
     "webpack-shell-plugin": "^0.5.0"
   },
   "dependencies": {
-    "eventemitter3": "^3.0.1"
+    "eventemitter3": "^3.1.0"
   }
 }
