@@ -38,12 +38,13 @@ var AnimationJSONFile = new Class({
         this.type = 'animationJSON';
     },
 
-    onProcess: function (callback)
+    onProcess: function ()
     {
-        JSONFile.prototype.onProcess.call(this, callback);
-
-        //  We also need to hook into this event:
+        //  We need to hook into this event:
         this.loader.once('processcomplete', this.onProcessComplete, this);
+
+        //  But the rest is the same as a normal JSON file
+        JSONFile.prototype.onProcess.call(this);
     },
 
     onProcessComplete: function ()

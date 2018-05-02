@@ -59,15 +59,13 @@ var TextFile = new Class({
         File.call(this, loader, fileConfig);
     },
 
-    onProcess: function (callback)
+    onProcess: function ()
     {
         this.state = CONST.FILE_PROCESSING;
 
         this.data = this.xhrLoader.responseText;
 
-        this.onComplete();
-
-        callback(this);
+        this.onProcessComplete();
     }
 
 });

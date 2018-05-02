@@ -70,7 +70,7 @@ var HTMLFile = new Class({
         File.call(this, loader, fileConfig);
     },
 
-    onProcess: function (callback)
+    onProcess: function ()
     {
         this.state = CONST.FILE_PROCESSING;
 
@@ -98,7 +98,7 @@ var HTMLFile = new Class({
         {
             _this.state = CONST.FILE_ERRORED;
 
-            callback(_this);
+            _this.onProcessComplete();
 
             return;
         }
@@ -111,18 +111,14 @@ var HTMLFile = new Class({
         {
             File.revokeObjectURL(_this.data);
 
-            _this.onComplete();
-
-            callback(_this);
+            _this.onProcessComplete();
         };
 
         this.data.onerror = function ()
         {
             File.revokeObjectURL(_this.data);
 
-            _this.state = CONST.FILE_ERRORED;
-
-            callback(_this);
+            _this.onProcessError();
         };
 
         File.createObjectURL(this.data, blob, 'image/svg+xml');

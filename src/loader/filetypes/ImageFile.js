@@ -62,8 +62,10 @@ var ImageFile = new Class({
         File.call(this, loader, fileConfig);
     },
 
-    onProcess: function (callback)
+    onProcess: function ()
     {
+        console.log('onProcess', this.key);
+
         this.state = CONST.FILE_PROCESSING;
 
         this.data = new Image();
@@ -76,18 +78,14 @@ var ImageFile = new Class({
         {
             File.revokeObjectURL(_this.data);
 
-            _this.onComplete();
-
-            callback(_this);
+            _this.onProcessComplete();
         };
 
         this.data.onerror = function ()
         {
             File.revokeObjectURL(_this.data);
 
-            _this.state = CONST.FILE_ERRORED;
-
-            callback(_this);
+            _this.onProcessError();
         };
 
         File.createObjectURL(this.data, this.xhrLoader.response, 'image/png');

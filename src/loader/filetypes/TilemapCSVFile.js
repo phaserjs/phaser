@@ -63,15 +63,13 @@ var TilemapCSVFile = new Class({
         this.tilemapFormat = TILEMAP_FORMATS.CSV;
     },
 
-    onProcess: function (callback)
+    onProcess: function ()
     {
         this.state = CONST.FILE_PROCESSING;
 
         this.data = this.xhrLoader.responseText;
 
-        this.onComplete();
-
-        callback(this);
+        this.onProcessComplete();
     },
 
     addToCache: function ()

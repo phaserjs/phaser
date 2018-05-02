@@ -59,7 +59,7 @@ var ScriptFile = new Class({
         File.call(this, fileConfig);
     },
 
-    onProcess: function (callback)
+    onProcess: function ()
     {
         this.state = CONST.FILE_PROCESSING;
 
@@ -71,9 +71,7 @@ var ScriptFile = new Class({
 
         document.head.appendChild(this.data);
 
-        this.onComplete();
-
-        callback(this);
+        this.onProcessComplete();
     }
 
 });
