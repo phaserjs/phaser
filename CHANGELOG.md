@@ -9,9 +9,13 @@
 * CanvasTexture is a new extension of the Texture object specifically created for when you've got a Canvas element as the backing source of the texture that you wish to draw to programmatically using the Canvas API. This was possible in previous versions, as a Texture object supported having a Canvas as its source, but we've streamlined the process and made it a lot easier for you to refresh the resulting WebGLTexture on the GPU. To create a CanvasTexture just call the `TextureManager.createCanvas` method as before, only this time you'll get a CanvasTexture back which has helper properties and methods. See the complete JSDocs for more details.
 * RandomDataGenerator has a new method: `shuffle` which allows you to shuffle an array using the current RNG seed (thanks @wtravO)
 
-### Loader Updates
+### Loader New Features
 
-The Loader has been given a slight overhaul to improve its performance and extensibility.
+The Loader has been given an overhaul to improve its performance and extensibility and gains the following new features:
+
+* TODO
+
+### Loader Updates
 
 * LinkFile is a new type of file used by the Loader that handles multiple files that need to be paired together. For example, loading a JSON and an Image for a Texture Atlas. This is now handled by a LinkFile.
 * File has a new argument in its constructor which is an instance of the LoaderPlugin. It stores this in the `loader` property. It also has a new property `cache` which is a reference to the cache that the file type will be stored in.
@@ -23,6 +27,8 @@ The Loader has been given a slight overhaul to improve its performance and exten
 * The Loader now passes off processing of the final file data to the file itself, which will now self-add itself to its target cache.
 * The Loader will now call 'destroy' on all Files when it finishes processing them. They now tidy-up references and extra data, freeing it for gc.
 * The File Types are now responsible for adding themselves to their respective caches and any extra processing that needs to happen. This has removed all of the code from the Loader that was doing this, meaning the file types are now properly abstracted away and the Loader is no longer bound to them. This will allow us to exclude file types in a future version if you don't need them, creating smaller bundles as a result.
+* The XMLFile type will no longer throw an error if it can't parse the XML, instead it'll log a console warning and not add the XML to the cache.
+* Loading a BitmapFont will add the image used as the font texture into the Texture Manager and the XML into the XML cache, using the key you specified for the font.
 
 ### Updates
 
