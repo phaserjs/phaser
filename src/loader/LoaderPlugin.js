@@ -190,7 +190,7 @@ var LoaderPlugin = new Class({
          * [description]
          *
          * @name Phaser.Loader.LoaderPlugin#totalToLoad
-         * @type {number}
+         * @type {integer}
          * @default 0
          * @since 3.0.0
          */
@@ -200,14 +200,19 @@ var LoaderPlugin = new Class({
          * [description]
          *
          * @name Phaser.Loader.LoaderPlugin#progress
-         * @type {number}
+         * @type {float}
          * @default 0
          * @since 3.0.0
          */
         this.progress = 0;
 
         /**
-         * [description]
+         * Files are placed in this Set when they're added to the Loader via `addFile`.
+         * 
+         * They are moved to the `inflight` Set when they start loading, and assuming a successful
+         * load, to the `queue` Set for further processing.
+         *
+         * By the end of the load process this Set will be empty.
          *
          * @name Phaser.Loader.LoaderPlugin#list
          * @type {Phaser.Structs.Set.<Phaser.Loader.File>}
@@ -216,7 +221,11 @@ var LoaderPlugin = new Class({
         this.list = new CustomSet();
 
         /**
-         * [description]
+         * Files are stored in this Set while they're in the process of being loaded.
+         * 
+         * Upon a successful load they are moved to the `queue` Set.
+         * 
+         * By the end of the load process this Set will be empty.
          *
          * @name Phaser.Loader.LoaderPlugin#inflight
          * @type {Phaser.Structs.Set.<Phaser.Loader.File>}
@@ -225,16 +234,12 @@ var LoaderPlugin = new Class({
         this.inflight = new CustomSet();
 
         /**
-         * [description]
-         *
-         * @name Phaser.Loader.LoaderPlugin#failed
-         * @type {Phaser.Structs.Set.<Phaser.Loader.File>}
-         * @since 3.0.0
-         */
-        this.failed = new CustomSet();
-
-        /**
-         * [description]
+         * Files are stored in this Set while they're being processed.
+         * 
+         * If the process is successful they are moved to their final destination, which could be
+         * a Cache or the Texture Manager.
+         * 
+         * At the end of the load process this Set will be empty.
          *
          * @name Phaser.Loader.LoaderPlugin#queue
          * @type {Phaser.Structs.Set.<Phaser.Loader.File>}
@@ -245,11 +250,22 @@ var LoaderPlugin = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Loader.LoaderPlugin#storage
-         * @type {Phaser.Structs.Set.<(Phaser.Loader.File|LinkFileObject)>}
-         * @since 3.0.0
+         * @name Phaser.Loader.LoaderPlugin#totalFailed
+         * @type {integer}
+         * @default 0
+         * @since 3.7.0
          */
-        this.storage = new CustomSet();
+        this.totalFailed = 0;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Loader.LoaderPlugin#totalComplete
+         * @type {integer}
+         * @default 0
+         * @since 3.7.0
+         */
+        this.totalComplete = 0;
 
         /**
          * [description]
@@ -378,37 +394,91 @@ var LoaderPlugin = new Class({
      * @method Phaser.Loader.LoaderPlugin#addFile
      * @since 3.0.0
      *
-     * @param {Phaser.Loader.File} file - [description]
+     * @param {(Phaser.Loader.File|Phaser.Loader.File[])} file - The file, or array of files, to be added to the load queue.
      */
     addFile: function (file)
     {
-        if (!this.isReady())
+        if (!Array.isArray(file))
         {
-            return;
+            file = [ file ];
         }
 
-        if (Array.isArray(file))
+        for (var i = 0; i < file.length; i++)
         {
-            for (var i = 0; i < file.length; i++)
+            var item = file[i];
+
+            //  Does the file already exist in the cache or texture manager?
+            //  Or will it conflict with a file already in the queue or inflight?
+            if (!this.keyExists(item))
             {
-                var item = file[i];
+                this.list.set(item);
 
-                //  Does the file already exist in the cache or texture manager?
-                if (!item.hasCacheConflict())
+                console.log('addFile', item.key);
+
+                if (this.isLoading())
                 {
-                    item.path = this.path;
-
-                    this.list.set(item);
+                    this.totalToLoad++;
+                    this.updateProgress();
                 }
             }
         }
-        else if (!file.hasCacheConflict())
-        {
-            //  Does the file already exist in the cache or texture manager?
-            file.path = this.path;
+    },
 
-            this.list.set(file);
+    /**
+     * Checks the key and type of the given file to see if it will conflict with anything already
+     * in a Cache, the Texture Manager, or the list or inflight queues.
+     *
+     * @method Phaser.Loader.LoaderPlugin#keyExists
+     * @since 3.7.0
+     *
+     * @param {Phaser.Loader.File} file - The file to check the key of.
+     *
+     * @return {boolean} `true` if adding this file will cause a cache or queue conflict, otherwise `false`.
+     */
+    keyExists: function (file)
+    {
+        var keyConflict = file.hasCacheConflict();
+
+        if (!keyConflict)
+        {
+            this.list.iterate(function (item)
+            {
+                if (item.type === file.type && item.key === file.key)
+                {
+                    keyConflict = true;
+
+                    return false;
+                }
+
+            });
         }
+
+        if (!keyConflict && this.isLoading())
+        {
+            this.inflight.iterate(function (item)
+            {
+                if (item.type === file.type && item.key === file.key)
+                {
+                    keyConflict = true;
+
+                    return false;
+                }
+
+            });
+
+            this.queue.iterate(function (item)
+            {
+                if (item.type === file.type && item.key === file.key)
+                {
+                    keyConflict = true;
+
+                    return false;
+                }
+
+            });
+        }
+
+        return keyConflict;
     },
 
     /**
@@ -451,23 +521,25 @@ var LoaderPlugin = new Class({
         }
 
         this.progress = 0;
+
+        this.totalFailed = 0;
+        this.totalComplete = 0;
         this.totalToLoad = this.list.size;
+
+        console.log('start', this.totalToLoad);
 
         this.emit('start', this);
 
         if (this.list.size === 0)
         {
-            this.finishedLoading();
+            this.loadComplete();
         }
         else
         {
             this.state = CONST.LOADER_LOADING;
 
-            this.failed.clear();
             this.inflight.clear();
             this.queue.clear();
-
-            this.queue.debug = true;
 
             this.updateProgress();
 
@@ -504,7 +576,15 @@ var LoaderPlugin = new Class({
 
                 this.list.delete(file);
 
-                this.loadFile(file);
+                //  If the file doesn't have its own crossOrigin set,
+                //  we'll use the Loaders (which is undefined by default)
+                if (!file.crossOrigin)
+                {
+                    file.crossOrigin = this.crossOrigin;
+                }
+
+                console.log('processLoadQueue', file.key);
+                file.load();
             }
 
             if (this.inflight.size === this.maxParallelDownloads)
@@ -517,230 +597,131 @@ var LoaderPlugin = new Class({
     },
 
     /**
-     * [description]
-     *
-     * @method Phaser.Loader.LoaderPlugin#loadFile
-     * @since 3.0.0
-     *
-     * @param {Phaser.Loader.File} file - [description]
-     */
-    loadFile: function (file)
-    {
-        //  If the file doesn't have its own crossOrigin set,
-        //  we'll use the Loaders (which is undefined by default)
-        if (!file.crossOrigin)
-        {
-            file.crossOrigin = this.crossOrigin;
-        }
-
-        file.load(this);
-    },
-
-    /**
-     * [description]
+     * Called automatically by the Files XHRLoader function.
      *
      * @method Phaser.Loader.LoaderPlugin#nextFile
      * @since 3.0.0
      *
-     * @param {Phaser.Loader.File} previousFile - [description]
-     * @param {boolean} success - [description]
+     * @param {Phaser.Loader.File} file - The File that just finished loading, or errored during load.
+     * @param {boolean} success - `true` if the file loaded successfully, otherwise `false`.
      */
-    nextFile: function (previousFile, success)
+    nextFile: function (file, success)
     {
-        //  Move the file that just loaded from the inflight list to the queue or failed Set
+        console.log('nextFile', file.key, success);
 
-        if (success)
-        {
-            this.emit('load', previousFile);
-            this.queue.set(previousFile);
-        }
-        else
-        {
-            this.emit('loaderror', previousFile);
-            this.failed.set(previousFile);
-        }
-
-        this.inflight.delete(previousFile);
+        this.inflight.delete(file);
 
         this.updateProgress();
 
-        if (this.list.size > 0)
+        if (success)
         {
-            this.processLoadQueue();
-        }
-        else if (this.inflight.size === 0)
-        {
-            this.finishedLoading();
-        }
-    },
+            this.totalComplete++;
 
-    /**
-     * [description]
-     *
-     * @method Phaser.Loader.LoaderPlugin#finishedLoading
-     * @since 3.0.0
-     */
-    finishedLoading: function ()
-    {
-        if (this.state === CONST.LOADER_PROCESSING)
-        {
-            return;
-        }
+            this.queue.set(file);
 
-        this.progress = 1;
+            this.emit('load', file);
 
-        this.state = CONST.LOADER_PROCESSING;
+            console.log('nextFile 1');
 
-        this.storage.clear();
-
-        if (this.queue.size === 0)
-        {
-            //  Everything failed, so nothing to process
-            this.processComplete();
+            file.onProcess();
         }
         else
         {
-            this.queue.each(function (file)
-            {
-                file.onProcess(this.processUpdate.bind(this));
-            }, this);
+            this.totalFailed++;
+
+            this.emit('loaderror', file);
+
+            console.log('nextFile 2');
+        }
+
+        if (this.list.size > 0)
+        {
+            console.log('nextFile processLoadQueue');
+            this.processLoadQueue();
         }
     },
 
     /**
      * Called automatically by the File when it has finished processing.
      *
-     * @method Phaser.Loader.LoaderPlugin#processUpdate
-     * @since 3.0.0
+     * @method Phaser.Loader.LoaderPlugin#fileProcessComplete
+     * @since 3.7.0
      *
      * @param {Phaser.Loader.File} file - [description]
      */
-    processUpdate: function (file)
+    fileProcessComplete: function (file)
     {
-        //  This file has failed to load, so move it to the failed Set
+        //  This file has failed, so move it to the failed Set
         if (file.state === CONST.FILE_ERRORED)
         {
-            this.failed.set(file);
-
             if (file.linkFile)
             {
                 file.linkFile.onFileFailed(file);
             }
-
-            return this.removeFromQueue(file);
+        }
+        else if (file.state === CONST.FILE_COMPLETE)
+        {
+            if (file.linkFile)
+            {
+                //  If we got here, then the file processed, so let it add itself to its cache
+                file.linkFile.addToCache();
+            }
+            else
+            {
+                file.addToCache();
+            }
         }
 
-        //  If we got here, then the file loaded
-
-        this.storage.set(file);
-
-        this.removeFromQueue(file);
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Loader.LoaderPlugin#removeFromQueue
-     * @since 3.0.0
-     *
-     * @param {Phaser.Loader.File} file - [description]
-     */
-    removeFromQueue: function (file)
-    {
+        //  Remove it from the queue as it's now in the cache, or failed
         this.queue.delete(file);
 
-        if (this.queue.size === 0 && this.state === CONST.LOADER_PROCESSING)
+        file.destroy();
+
+        //  Nothing left to do?
+        if (this.list.size === 0 && this.inflight.size === 0 && this.queue.size === 0)
         {
-            //  We've processed all the files we loaded
-            this.processComplete();
+            this.loadComplete();
+        }
+        else
+        {
+            //  In case we've added to the list by processing this file
+            this.processLoadQueue();
         }
     },
 
     /**
      * [description]
      *
-     * @method Phaser.Loader.LoaderPlugin#processComplete
-     * @since 3.0.0
+     * @method Phaser.Loader.LoaderPlugin#loadComplete
+     * @since 3.7.0
      */
-    processComplete: function ()
+    loadComplete: function ()
     {
         this.list.clear();
         this.inflight.clear();
         this.queue.clear();
 
-        this.processCallback();
+        this.progress = 1;
 
         this.state = CONST.LOADER_COMPLETE;
 
-        this.emit('complete', this, this.storage.size, this.failed.size);
+        this.emit('complete', this, this.totalComplete, this.totalFailed);
     },
 
     /**
-     * The Loader has finished.
+     * !!! TO BE DELETED !!!
+     * !!! TO BE DELETED !!!
+     * !!! TO BE DELETED !!!
      *
      * @method Phaser.Loader.LoaderPlugin#processCallback
      * @since 3.0.0
      */
-    processCallback: function ()
+    ___processCallback: function ()
     {
         if (this.storage.size === 0)
         {
             return;
         }
-
-        /*
-        //  The global Texture Manager
-        var cache = this.scene.sys.cache;
-        var textures = this.scene.sys.textures;
-
-        //  Process multiatlas groups first
-
-        var file;
-        var fileA;
-        var fileB;
-
-        for (var key in this._multilist)
-        {
-            var data = [];
-            var images = [];
-            var keys = this._multilist[key];
-
-            for (var i = 0; i < keys.length; i++)
-            {
-                file = this.storage.get('key', keys[i]);
-
-                if (file)
-                {
-                    if (file.type === 'image')
-                    {
-                        images.push(file.data);
-                    }
-                    else if (file.type === 'json')
-                    {
-                        data.push(file.data);
-                    }
-
-                    this.storage.delete(file);
-                }
-            }
-
-            //  Do we have everything needed?
-            if (images.length + data.length === keys.length)
-            {
-                //  Yup, add them to the Texture Manager
-
-                //  Is the data JSON Hash or JSON Array?
-                if (Array.isArray(data[0].textures) || Array.isArray(data[0].frames))
-                {
-                    textures.addAtlasJSONArray(key, images, data);
-                }
-                else
-                {
-                    textures.addAtlasJSONHash(key, images, data);
-                }
-            }
-        }
-        */
 
         //  Process all of the files
 
@@ -790,7 +771,7 @@ var LoaderPlugin = new Class({
 
         this.emit('processcomplete', this);
 
-        //  Called 'destroy' on each file in storage
+        //  Call 'destroy' on each file in storage
         this.storage.iterateLocal('destroy');
 
         this.storage.clear();
@@ -853,20 +834,23 @@ var LoaderPlugin = new Class({
     {
         this.list.clear();
         this.inflight.clear();
-        this.failed.clear();
         this.queue.clear();
-        this.storage.clear();
 
         var gameConfig = this.systems.game.config;
         var sceneConfig = this.systems.settings.loader;
 
         this.setBaseURL(GetFastValue(sceneConfig, 'baseURL', gameConfig.loaderBaseURL));
         this.setPath(GetFastValue(sceneConfig, 'path', gameConfig.loaderPath));
+        this.setPrefix(GetFastValue(sceneConfig, 'prefix', gameConfig.loaderPrefix));
 
         this.state = CONST.LOADER_IDLE;
     },
 
     /**
+     * !!! TO BE REPLACED BY THE PACK LOADER METHOD !!!
+     * !!! TO BE REPLACED BY THE PACK LOADER METHOD !!!
+     * !!! TO BE REPLACED BY THE PACK LOADER METHOD !!!
+     * 
      * Called by the Scene Manager if you specify a files payload for a pre-Scene Boot.
      * Takes an array of file objects.
      *
@@ -928,9 +912,7 @@ var LoaderPlugin = new Class({
 
         this.list = null;
         this.inflight = null;
-        this.failed = null;
         this.queue = null;
-        this.storage = null;
 
         this.scene = null;
         this.systems = null;
