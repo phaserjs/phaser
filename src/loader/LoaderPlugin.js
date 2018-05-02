@@ -65,6 +65,9 @@ var LoaderPlugin = new Class({
     {
         EventEmitter.call(this);
 
+        var gameConfig = scene.sys.game.config;
+        var sceneConfig = scene.sys.settings.loader;
+
         /**
          * [description]
          *
@@ -101,22 +104,19 @@ var LoaderPlugin = new Class({
          */
         this.textureManager = scene.sys.textures;
 
-        /**
-         * [description]
-         *
-         * @name Phaser.Loader.LoaderPlugin#_multilist
-         * @type {object}
-         * @private
-         * @default {}
-         * @since 3.0.0
-         */
-        // this._multilist = {};
-
         //  Inject the available filetypes into the Loader
         FileTypesManager.install(this);
 
-        var gameConfig = this.systems.game.config;
-        var sceneConfig = this.systems.settings.loader;
+        /**
+         * An optional prefix that is automatically prepended to the start of every file key.
+         * If prefix was `MENU` and you load an image with the key 'Background' the resulting key would be `MENUBackground`.
+         *
+         * @name Phaser.Loader.LoaderPlugin#prefix
+         * @type {string}
+         * @default ''
+         * @since 3.7.0
+         */
+        this.prefix = '';
 
         /**
          * [description]
@@ -141,6 +141,8 @@ var LoaderPlugin = new Class({
         this.setBaseURL(GetFastValue(sceneConfig, 'baseURL', gameConfig.loaderBaseURL));
 
         this.setPath(GetFastValue(sceneConfig, 'path', gameConfig.loaderPath));
+
+        this.setPrefix(GetFastValue(sceneConfig, 'prefix', gameConfig.loaderPrefix));
 
         /**
          * [description]
@@ -329,6 +331,26 @@ var LoaderPlugin = new Class({
         }
 
         this.path = path;
+
+        return this;
+    },
+
+    /**
+     * An optional prefix that is automatically prepended to the start of every file key.
+     * If prefix was `MENU` and you load an image with the key 'Background' the resulting key would be `MENUBackground`.
+     *
+     * @method Phaser.Loader.LoaderPlugin#setPrefix
+     * @since 3.7.0
+     *
+     * @param {string} prefix - The prefix to use. Leave empty to reset.
+     *
+     * @return {Phaser.Loader.LoaderPlugin} This Loader object.
+     */
+    setPrefix: function (prefix)
+    {
+        if (prefix === undefined) { prefix = ''; }
+
+        this.prefix = prefix;
 
         return this;
     },

@@ -51,7 +51,6 @@ var AudioFile = new Class({
             responseType: 'arraybuffer',
             key: key,
             url: GetFastValue(url, 'uri', url),
-            path: loader.path,
             xhrSettings: xhrSettings
         };
 

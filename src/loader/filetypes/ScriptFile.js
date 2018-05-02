@@ -53,7 +53,6 @@ var ScriptFile = new Class({
             responseType: 'text',
             key: key,
             url: url,
-            path: loader.path,
             xhrSettings: xhrSettings
         };
 

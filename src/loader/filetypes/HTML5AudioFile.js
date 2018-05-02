@@ -42,7 +42,6 @@ var HTML5AudioFile = new Class({
             extension: GetFastValue(url, 'type', ''),
             key: key,
             url: GetFastValue(url, 'uri', url),
-            path: loader.path,
             config: config
         };
 

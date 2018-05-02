@@ -55,7 +55,6 @@ var ImageFile = new Class({
             responseType: 'blob',
             key: key,
             url: url,
-            path: loader.path,
             xhrSettings: xhrSettings,
             config: frameConfig
         };

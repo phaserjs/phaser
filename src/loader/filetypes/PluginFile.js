@@ -61,7 +61,6 @@ var PluginFile = new Class({
             responseType: 'text',
             key: key,
             url: url,
-            path: loader.path,
             xhrSettings: xhrSettings
         };
 

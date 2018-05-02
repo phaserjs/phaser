@@ -53,7 +53,6 @@ var BinaryFile = new Class({
             responseType: 'arraybuffer',
             key: key,
             url: url,
-            path: loader.path,
             xhrSettings: xhrSettings
         };
 

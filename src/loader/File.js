@@ -83,7 +83,7 @@ var File = new Class({
          * @type {string}
          * @since 3.0.0
          */
-        this.key = GetFastValue(fileConfig, 'key', false);
+        this.key = loader.prefix + GetFastValue(fileConfig, 'key', false);
 
         if (!this.type || !this.key)
         {
@@ -101,11 +101,11 @@ var File = new Class({
 
         if (this.url === undefined)
         {
-            this.url = GetFastValue(fileConfig, 'path', '') + this.key + '.' + GetFastValue(fileConfig, 'extension', '');
+            this.url = loader.path + this.key + '.' + GetFastValue(fileConfig, 'extension', '');
         }
         else if (typeof(this.url) !== 'function')
         {
-            this.url = GetFastValue(fileConfig, 'path', '').concat(this.url);
+            this.url = loader.path + this.url;
         }
 
         /**

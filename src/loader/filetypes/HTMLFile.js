@@ -60,7 +60,6 @@ var HTMLFile = new Class({
             responseType: 'text',
             key: key,
             url: url,
-            path: loader.path,
             xhrSettings: xhrSettings,
             config: {
                 width: width,
