@@ -30,8 +30,7 @@ var Vector2 = require('../../math/Vector2');
  *
  * A PathFollower is a Container Game Object with some extra helpers to allow it to follow a Path automatically.
  *
- * Anything you can do with a standard Container can be done with this PathFollower, such as animate it, tint it,
- * scale it and so on.
+ * Anything you can do with a standard Container can be done with this PathFollower, tint it, scale it and so on.
  *
  * PathFollowers are bound to a single Path at any one time and can traverse the length of the Path, from start
  * to finish, forwards or backwards, or from any given point on the Path to its end. They can optionally rotate
@@ -43,7 +42,9 @@ var Vector2 = require('../../math/Vector2');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - [description]
+ * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
+ * @param {number} x - The horizontal position of this Game Object in the world.
+ * @param {number} y - The vertical position of this Game Object in the world.
  * @param {Phaser.Curves.Path} path - The Path this PathFollower is following. It can only follow one Path at a time.
  * @param {Phaser.GameObjects.GameObject[]} [children] - An optional array of Game Objects to add to this Container.
  */
