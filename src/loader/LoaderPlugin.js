@@ -248,6 +248,17 @@ var LoaderPlugin = new Class({
         this.queue = new CustomSet();
 
         /**
+         * A temporary Set in which files are stored after processing,
+         * awaiting destruction at the end of the load process.
+         *
+         * @name Phaser.Loader.LoaderPlugin#_deleteQueue
+         * @type {Phaser.Structs.Set.<Phaser.Loader.File>}
+         * @private
+         * @since 3.7.0
+         */
+        this._deleteQueue = new CustomSet();
+
+        /**
          * [description]
          *
          * @name Phaser.Loader.LoaderPlugin#totalFailed
@@ -313,12 +324,14 @@ var LoaderPlugin = new Class({
      * @method Phaser.Loader.LoaderPlugin#setBaseURL
      * @since 3.0.0
      *
-     * @param {string} url - [description]
+     * @param {string} url - The URL to use. Leave empty to reset.
      *
      * @return {Phaser.Loader.LoaderPlugin} This Loader object.
      */
     setBaseURL: function (url)
     {
+        if (url === undefined) { url = ''; }
+
         if (url !== '' && url.substr(-1) !== '/')
         {
             url = url.concat('/');
@@ -335,12 +348,14 @@ var LoaderPlugin = new Class({
      * @method Phaser.Loader.LoaderPlugin#setPath
      * @since 3.0.0
      *
-     * @param {string} path - [description]
+     * @param {string} path - The path to use. Leave empty to reset.
      *
      * @return {Phaser.Loader.LoaderPlugin} This Loader object.
      */
     setPath: function (path)
     {
+        if (path === undefined) { path = ''; }
+
         if (path !== '' && path.substr(-1) !== '/')
         {
             path = path.concat('/');
@@ -479,6 +494,69 @@ var LoaderPlugin = new Class({
         }
 
         return keyConflict;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.LoaderPlugin#addPack
+     * @since 3.7.0
+     *
+     * @param {any} data - The Pack File data, or an array of Pack File data, to be added to the load queue.
+     */
+    addPack: function (pack, packKey)
+    {
+        //  if no packKey provided we'll add everything to the queue
+        if (packKey && pack.hasOwnProperty(packKey))
+        {
+            pack = { packKey: pack[packKey] };
+        }
+
+        console.log('---------> addPack', packKey);
+        console.log(pack);
+
+        //  Store the loader settings in case this pack replaces them
+        var currentBaseURL = this.baseURL;
+        var currentPath = this.path;
+        var currentPrefix = this.prefix;
+
+        //  Here we go ...
+        for (var key in pack)
+        {
+            var config = pack[key];
+
+            //  Any meta data to process?
+            var baseURL = GetFastValue(config, 'baseURL', currentBaseURL);
+            var path = GetFastValue(config, 'path', currentPath);
+            var prefix = GetFastValue(config, 'prefix', currentPrefix);
+            var files = GetFastValue(config, 'files', null);
+            var defaultType = GetFastValue(config, 'defaultType', 'void');
+
+            if (Array.isArray(files))
+            {
+                this.setBaseURL(baseURL);
+                this.setPath(path);
+                this.setPrefix(prefix);
+
+                for (var i = 0; i < files.length; i++)
+                {
+                    var file = files[i];
+                    var type = (file.hasOwnProperty('type')) ? file.type : defaultType;
+
+                    if (this[type])
+                    {
+                        this[type](file);
+                    }
+                }
+            }
+        }
+
+        //  Reset the loader settings
+        this.setBaseURL(currentBaseURL);
+        this.setPath(currentPath);
+        this.setPrefix(currentPrefix);
+
+        return this;
     },
 
     /**
@@ -629,6 +707,8 @@ var LoaderPlugin = new Class({
         {
             this.totalFailed++;
 
+            this._deleteQueue.set(file);
+
             this.emit('loaderror', file);
 
             console.log('nextFile 2');
@@ -661,21 +741,20 @@ var LoaderPlugin = new Class({
         }
         else if (file.state === CONST.FILE_COMPLETE)
         {
-            if (file.linkFile)
+            if (file.linkFile && file.linkFile.isReadyToProcess())
             {
-                //  If we got here, then the file processed, so let it add itself to its cache
+                //  If we got here then all files the link file needs are ready to add to the cache
                 file.linkFile.addToCache();
             }
             else
             {
+                //  If we got here, then the file processed, so let it add itself to its cache
                 file.addToCache();
             }
         }
 
-        //  Remove it from the queue as it's now in the cache, or failed
+        //  Remove it from the queue
         this.queue.delete(file);
-
-        file.destroy();
 
         //  Nothing left to do?
         if (this.list.size === 0 && this.inflight.size === 0 && this.queue.size === 0)
@@ -697,6 +776,10 @@ var LoaderPlugin = new Class({
      */
     loadComplete: function ()
     {
+        console.log('>>> loadComplete');
+
+        this.emit('loadcomplete', this);
+
         this.list.clear();
         this.inflight.clear();
         this.queue.clear();
@@ -705,7 +788,25 @@ var LoaderPlugin = new Class({
 
         this.state = CONST.LOADER_COMPLETE;
 
+        //  Call 'destroy' on each file ready for deletion
+        this._deleteQueue.iterateLocal('destroy');
+
+        this._deleteQueue.clear();
+
         this.emit('complete', this, this.totalComplete, this.totalFailed);
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Loader.LoaderPlugin#flagForRemoval
+     * @since 3.7.0
+     * 
+     * @param {Phaser.Loader.File} file - [description]
+     */
+    flagForRemoval: function (file)
+    {
+        this._deleteQueue.set(file);
     },
 
     /**
