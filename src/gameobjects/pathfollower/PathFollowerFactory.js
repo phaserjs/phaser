@@ -15,16 +15,16 @@ var PathFollower = require('./PathFollower');
  * @method Phaser.GameObjects.GameObjectFactory#follower
  * @since 3.0.0
  *
- * @param {Phaser.Curves.Path} path - The Path this PathFollower is connected to.
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
+ * @param {Phaser.Curves.Path} path - The Path this PathFollower is connected to.
  * @param {Phaser.GameObjects.GameObject[]} [children] - An optional array of Game Objects to add to this Container.
  *
  * @return {Phaser.GameObjects.PathFollower} The Game Object that was created.
  */
-GameObjectFactory.register('follower', function (path, x, y, key, frame)
+GameObjectFactory.register('follower', function (x, y, path, children)
 {
-    var container = new PathFollower(this.scene, path, x, y, key, frame);
+    var container = new PathFollower(this.scene, x, y, path, children);
 
     this.displayList.add(container);
     this.updateList.add(container);
