@@ -4,7 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var GameObjectCreator = require('../GameObjectCreator');
 var Graphics = require('./Graphics');
 
