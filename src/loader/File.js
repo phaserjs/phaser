@@ -343,7 +343,7 @@ var File = new Class({
     {
         this.state = CONST.FILE_PROCESSING;
 
-        this.onComplete();
+        this.onProcessComplete();
     },
 
     /**
