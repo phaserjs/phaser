@@ -8,6 +8,7 @@ var Class = require('../../utils/Class');
 var File = require('../File');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetURL = require('../GetURL');
+var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
  * @classdesc
@@ -30,27 +31,37 @@ var HTML5AudioFile = new Class({
 
     initialize:
 
-    function HTML5AudioFile (loader, key, url, config)
+    function HTML5AudioFile (loader, key, urlConfig, audioConfig)
     {
-        this.locked = 'ontouchstart' in window;
+        if (IsPlainObject(key))
+        {
+            var config = key;
 
-        this.loaded = false;
+            key = GetFastValue(config, 'key');
+            audioConfig = GetFastValue(config, 'config', audioConfig);
+        }
 
         var fileConfig = {
             type: 'audio',
             cache: loader.cacheManager.audio,
-            extension: GetFastValue(url, 'type', ''),
+            extension: urlConfig.type,
             key: key,
-            url: GetFastValue(url, 'uri', url),
-            config: config
+            url: urlConfig.url,
+            config: audioConfig
         };
 
         File.call(this, loader, fileConfig);
+
+        //  New properties specific to this class
+        this.locked = 'ontouchstart' in window;
+        this.loaded = false;
+        this.filesLoaded = 0;
+        this.filesTotal = 0;
     },
 
     onLoad: function ()
     {
-        if(this.loaded)
+        if (this.loaded)
         {
             return;
         }
@@ -65,6 +76,7 @@ var HTML5AudioFile = new Class({
         for (var i = 0; i < this.data.length; i++)
         {
             var audio = this.data[i];
+
             audio.oncanplaythrough = null;
             audio.onerror = null;
         }
@@ -75,6 +87,7 @@ var HTML5AudioFile = new Class({
     onProgress: function (event)
     {
         var audio = event.target;
+
         audio.oncanplaythrough = null;
         audio.onerror = null;
 
@@ -84,17 +97,15 @@ var HTML5AudioFile = new Class({
 
         this.loader.emit('fileprogress', this, this.percentComplete);
 
-        if(this.filesLoaded === this.filesTotal)
+        if (this.filesLoaded === this.filesTotal)
         {
             this.onLoad();
         }
     },
 
     //  Called by the Loader, starts the actual file downloading
-    load: function (loader)
+    load: function ()
     {
-        this.loader = loader;
-
         this.data = [];
 
         var instances = (this.config && this.config.instances) || 1;
@@ -103,10 +114,11 @@ var HTML5AudioFile = new Class({
         this.filesLoaded = 0;
         this.percentComplete = 0;
 
-        for(var i = 0; i < instances; i++)
+        for (var i = 0; i < instances; i++)
         {
             var audio = new Audio();
-            audio.dataset.name = this.key + ('0' + i).slice(-2); // Useful for debugging
+
+            audio.dataset.name = this.key + ('0' + i).slice(-2);
             audio.dataset.used = 'false';
 
             if (this.locked)
@@ -128,7 +140,7 @@ var HTML5AudioFile = new Class({
         for (i = 0; i < this.data.length; i++)
         {
             audio = this.data[i];
-            audio.src = GetURL(this, loader.baseURL);
+            audio.src = GetURL(this, this.loader.baseURL);
 
             if (!this.locked)
             {
@@ -138,6 +150,8 @@ var HTML5AudioFile = new Class({
 
         if (this.locked)
         {
+            //  This is super-dangerous but works. Race condition potential high.
+            //  Is there another way?
             setTimeout(this.onLoad.bind(this));
         }
     }
