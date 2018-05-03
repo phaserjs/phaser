@@ -91,6 +91,8 @@ var LinkFile = new Class({
          */
         this.failed = 0;
 
+        this.config = {};
+
         //  Link the files
         for (var i = 0; i < files.length; i++)
         {
@@ -101,6 +103,21 @@ var LinkFile = new Class({
     isReadyToProcess: function ()
     {
         return (this.pending === 0 && this.failed === 0);
+    },
+
+    addToLinkFile: function (file)
+    {
+        console.log('LinkFile - new file added: ', file.key);
+
+        this.files.push(file);
+
+        file.linkFile = this;
+
+        this.pending++;
+
+        this.complete = false;
+
+        return this;
     },
 
     /**

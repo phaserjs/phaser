@@ -64,8 +64,6 @@ var ImageFile = new Class({
 
     onProcess: function ()
     {
-        console.log('onProcess', this.key);
-
         this.state = CONST.FILE_PROCESSING;
 
         this.data = new Image();

@@ -44,6 +44,7 @@ module.exports = {
     HTMLFile: require('./HTMLFile'),
     ImageFile: require('./ImageFile'),
     JSONFile: require('./JSONFile'),
+    MultiAtlasFile: require('./MultiAtlasFile'),
     PackFile: require('./PackFile'),
     PluginFile: require('./PluginFile'),
     ScriptFile: require('./ScriptFile'),

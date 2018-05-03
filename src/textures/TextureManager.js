@@ -410,8 +410,8 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {HTMLImageElement} source - The source Image element.
-     * @param {object} data - The Texture Atlas data.
+     * @param {(HTMLImageElement|HTMLImageElement[])} source - The source Image element/s.
+     * @param {(object|object[])} data - The Texture Atlas data/s.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
@@ -427,6 +427,7 @@ var TextureManager = new Class({
             {
                 var singleAtlasFile = (data.length === 1); // multi-pack with one atlas file for all images
 
+                //  !! Assumes the textures are in the same order in the source array as in the json data !!
                 for (var i = 0; i < texture.source.length; i++)
                 {
                     var atlasData = singleAtlasFile ? data[0] : data[i];
