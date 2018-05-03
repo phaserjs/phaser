@@ -69,6 +69,7 @@ The Loader has been given an overhaul to improve its performance and extensibili
 * ScenePlugin.setActive would only toggle the current Scene, not any given Scene.
 * ScenePlugin.setVisible would only toggle the current Scene, not any given Scene.
 * The Graphics Creator would automatically add the Graphics to the display list by mistake. The default should be to remain hidden. Fix #3637 (thanks @mikuso)
+* BitmapText, both static and dynamic, can now take any data-type, including numbers, for the `text` argument in the constructor. Before they only worked via `setText` (thanks @Jelaw21)
 
 ### Examples, Documentation and TypeScript
 

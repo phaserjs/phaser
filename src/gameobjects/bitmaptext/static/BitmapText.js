@@ -121,7 +121,7 @@ var BitmapText = new Class({
          * @type {string}
          * @since 3.0.0
          */
-        this.text = (Array.isArray(text)) ? text.join('\n') : text;
+        this.text = '';
 
         /**
          * [description]
@@ -141,6 +141,8 @@ var BitmapText = new Class({
          * @since 3.4.0
          */
         this.letterSpacing = 0;
+
+        this.setText(text);
 
         this.setTexture(entry.texture, entry.frame);
         this.setPosition(x, y);
