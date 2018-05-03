@@ -10,6 +10,7 @@ var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var HTML5AudioFile = require('./HTML5AudioFile');
+var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
  * @classdesc
@@ -33,25 +34,27 @@ var AudioFile = new Class({
 
     initialize:
 
-    function AudioFile (loader, key, url, xhrSettings, audioContext)
+    //  URL is an object created by AudioFile.findAudioURL
+    function AudioFile (loader, key, urlConfig, xhrSettings, audioContext)
     {
-        /**
-         * [description]
-         *
-         * @name Phaser.Loader.FileTypes.AudioFile#context
-         * @type {AudioContext}
-         * @since 3.0.0
-         */
-        this.context = audioContext;
+        if (IsPlainObject(key))
+        {
+            var config = key;
+
+            key = GetFastValue(config, 'key');
+            xhrSettings = GetFastValue(config, 'xhrSettings');
+            audioContext = GetFastValue(config, 'context', audioContext);
+        }
 
         var fileConfig = {
             type: 'audio',
             cache: loader.cacheManager.audio,
-            extension: GetFastValue(url, 'type', ''),
+            extension: urlConfig.type,
             responseType: 'arraybuffer',
             key: key,
-            url: GetFastValue(url, 'uri', url),
-            xhrSettings: xhrSettings
+            url: urlConfig.url,
+            xhrSettings: xhrSettings,
+            config: { context: audioContext }
         };
 
         File.call(this, loader, fileConfig);
@@ -62,70 +65,99 @@ var AudioFile = new Class({
      *
      * @method Phaser.Loader.FileTypes.AudioFile#onProcess
      * @since 3.0.0
-     *
-     * @param {FileProcessCallback} callback - [description]
      */
-    onProcess: function (callback)
+    onProcess: function ()
     {
         this.state = CONST.FILE_PROCESSING;
 
         var _this = this;
 
         // interesting read https://github.com/WebAudio/web-audio-api/issues/1305
-        this.context.decodeAudioData(this.xhrLoader.response,
+        this.config.context.decodeAudioData(this.xhrLoader.response,
             function (audioBuffer)
             {
                 _this.data = audioBuffer;
 
-                _this.onComplete();
-
-                callback(_this);
+                _this.onProcessComplete();
             },
             function (e)
             {
                 // eslint-disable-next-line no-console
-                console.error('Error with decoding audio data for \'' + this.key + '\':', e.message);
+                console.error('Error decoding audio: ' + this.key + ' - ', e.message);
 
-                _this.state = CONST.FILE_ERRORED;
-
-                callback(_this);
+                _this.onProcessError();
             }
         );
 
-        this.context = null;
+        this.config.context = null;
     }
 
 });
 
-AudioFile.create = function (loader, key, urls, config, xhrSettings)
+function createAudio (loader, key, urls, config, xhrSettings)
 {
     var game = loader.systems.game;
     var audioConfig = game.config.audio;
     var deviceAudio = game.device.audio;
 
-    if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
+    //  url may be inside key, which may be an object
+    if (IsPlainObject(key))
     {
-        // console.info('Skipping loading audio \'' + key + '\' since sounds are disabled.');
+        urls = GetFastValue(key, 'url', []);
+        config = GetFastValue(key, 'config', {});
+    }
+
+    var urlConfig = findAudioURL(game, urls);
+
+    if (!urlConfig)
+    {
         return null;
     }
 
-    var url = AudioFile.findAudioURL(game, urls);
-
-    if (!url)
-    {
-        // console.warn('No supported url provided for audio \'' + key + '\'!');
-        return null;
-    }
+    // https://developers.google.com/web/updates/2012/02/HTML5-audio-and-the-Web-Audio-API-are-BFFs
+    var stream = GetFastValue(config, 'stream', false);
 
     if (deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
     {
-        return new AudioFile(loader, key, url, xhrSettings, game.sound.context);
+        return new AudioFile(loader, key, urlConfig, xhrSettings, game.sound.context);
     }
     else
     {
-        return new HTML5AudioFile(loader, key, url, config);
+        return new HTML5AudioFile(loader, key, urlConfig, config);
     }
-};
+}
+
+function findAudioURL (game, urls)
+{
+    if (!Array.isArray(urls))
+    {
+        urls = [ urls ];
+    }
+
+    for (var i = 0; i < urls.length; i++)
+    {
+        var url = GetFastValue(urls[i], 'url', urls[i]);
+
+        if (url.indexOf('blob:') === 0 || url.indexOf('data:') === 0)
+        {
+            return url;
+        }
+
+        var audioType = url.match(/\.([a-zA-Z0-9]+)($|\?)/);
+
+        audioType = GetFastValue(urls[i], 'type', (audioType) ? audioType[1] : '').toLowerCase();
+
+        if (game.device.audio[audioType])
+        {
+            return {
+                url: url,
+                type: audioType
+            };
+        }
+    }
+
+    return null;
+}
 
 /**
  * Adds an Audio file to the current load queue.
@@ -147,90 +179,40 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
  */
 FileTypesManager.register('audio', function (key, urls, config, xhrSettings)
 {
-    var audioFile = AudioFile.create(this, key, urls, config, xhrSettings);
+    var game = this.systems.game;
+    var audioConfig = game.config.audio;
+    var deviceAudio = game.device.audio;
 
-    if (audioFile)
+    if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
     {
-        this.addFile(audioFile);
+        //  Sounds are disabled, so skip loading audio
+        return this;
+    }
+
+    if (Array.isArray(key))
+    {
+        for (var i = 0; i < key.length; i++)
+        {
+            //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
+            var audioFile = createAudio(this, key[i]);
+
+            if (audioFile)
+            {
+                this.addFile(audioFile);
+            }
+        }
+    }
+    else
+    {
+        var audioFile = createAudio(this, key, urls, config, xhrSettings);
+
+        if (audioFile)
+        {
+            this.addFile(audioFile);
+        }
     }
 
     return this;
 });
-
-// this.load.audio('sound', 'assets/audio/booom.ogg', config, xhrSettings);
-//
-// this.load.audio('sound',
-//     [
-//         'assets/audio/booom.ogg',
-//         'assets/audio/booom.m4a',
-//         'assets/audio/booom.mp3'
-//     ],
-//     config, xhrSettings);
-//
-// this.load.audio('sound',
-//     {
-//         uri: 'assets/audio/boooooom',
-//         type: 'ogg'
-//     },
-//     config, xhrSettings);
-//
-// this.load.audio('sound',
-//     [
-//         {
-//             uri: 'assets/audio/booooooo',
-//             type: 'ogg'
-//         },
-//         {
-//             uri: 'assets/audio/boooooom',
-//             type: 'mp3'
-//         }
-//     ],
-//     config, xhrSettings);
-//
-// this.load.audio('sound',
-//     [
-//         {
-//             uri: 'assets/audio/booooooo',
-//             type: 'ogg'
-//         },
-//         'assets/audio/booom.m4a',
-//         {
-//             uri: 'assets/audio/boooooom',
-//             type: 'mp3'
-//         }
-//     ],
-//     config, xhrSettings);
-
-AudioFile.findAudioURL = function (game, urls)
-{
-    if (urls.constructor !== Array)
-    {
-        urls = [ urls ];
-    }
-
-    for (var i = 0; i < urls.length; i++)
-    {
-        var url = GetFastValue(urls[i], 'uri', urls[i]);
-
-        if (url.indexOf('blob:') === 0 || url.indexOf('data:') === 0)
-        {
-            return url;
-        }
-
-        var audioType = url.match(/\.([a-zA-Z0-9]+)($|\?)/);
-
-        audioType = GetFastValue(urls[i], 'type', (audioType) ? audioType[1] : '').toLowerCase();
-
-        if (game.device.audio[audioType])
-        {
-            return {
-                uri: url,
-                type: audioType
-            };
-        }
-    }
-
-    return null;
-};
 
 module.exports = AudioFile;
