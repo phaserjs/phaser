@@ -10,14 +10,14 @@ var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
 var JSONFile = require('./JSONFile.js');
-var LinkFile = require('../LinkFile.js');
+var MultiFile = require('../MultiFile.js');
 
 /**
  * @classdesc
  * An Audio Sprite JSON File.
  *
  * @class AudioSpriteFile
- * @extends Phaser.Loader.LinkFile
+ * @extends Phaser.Loader.MultiFile
  * @memberOf Phaser.Loader.FileTypes
  * @constructor
  * @since 3.7.0
@@ -31,7 +31,7 @@ var LinkFile = require('../LinkFile.js');
  */
 var AudioSpriteFile = new Class({
 
-    Extends: LinkFile,
+    Extends: MultiFile,
 
     initialize:
 
@@ -56,8 +56,9 @@ var AudioSpriteFile = new Class({
         {
             data = new JSONFile(loader, key, json, jsonXhrSettings);
             
-            LinkFile.call(this, loader, 'audiosprite', key, [ data ]);
+            MultiFile.call(this, loader, 'audiosprite', key, [ data ]);
 
+            this.config.resourceLoad = true;
             this.config.audioConfig = audioConfig;
             this.config.audioXhrSettings = audioXhrSettings;
         }
@@ -69,7 +70,9 @@ var AudioSpriteFile = new Class({
             {
                 data = new JSONFile(loader, key, json, jsonXhrSettings);
 
-                LinkFile.call(this, loader, 'audiosprite', key, [ audio, data ]);
+                MultiFile.call(this, loader, 'audiosprite', key, [ audio, data ]);
+
+                this.config.resourceLoad = false;
             }
         }
     },
@@ -77,7 +80,7 @@ var AudioSpriteFile = new Class({
     /**
      * Called by each File when it finishes loading.
      *
-     * @method Phaser.Loader.LinkFile#onFileComplete
+     * @method Phaser.Loader.MultiFile#onFileComplete
      * @since 3.7.0
      *
      * @param {Phaser.Loader.File} file - The File that has completed processing.
@@ -90,7 +93,7 @@ var AudioSpriteFile = new Class({
         {
             this.pending--;
 
-            if (file.type === 'json' && file.data.hasOwnProperty('resources'))
+            if (this.config.resourceLoad && file.type === 'json' && file.data.hasOwnProperty('resources'))
             {
                 //  Inspect the data for the files to now load
                 var urls = file.data.resources;
@@ -102,7 +105,7 @@ var AudioSpriteFile = new Class({
 
                 if (audio)
                 {
-                    this.addToLinkFile(audio);
+                    this.addToMultiFile(audio);
 
                     this.loader.addFile(audio);
                 }
@@ -158,7 +161,7 @@ FileTypesManager.register('audioSprite', function (key, json, urls, config, audi
         return this;
     }
 
-    var linkfile;
+    var multifile;
 
     //  Supports an Object file definition in the key argument
     //  Or an array of objects in the key argument
@@ -168,21 +171,21 @@ FileTypesManager.register('audioSprite', function (key, json, urls, config, audi
     {
         for (var i = 0; i < key.length; i++)
         {
-            linkfile = new AudioSpriteFile(this, key[i]);
+            multifile = new AudioSpriteFile(this, key[i]);
 
-            if (linkfile.files)
+            if (multifile.files)
             {
-                this.addFile(linkfile.files);
+                this.addFile(multifile.files);
             }
         }
     }
     else
     {
-        linkfile = new AudioSpriteFile(this, key, urls, json, config, audioXhrSettings, jsonXhrSettings);
+        multifile = new AudioSpriteFile(this, key, urls, json, config, audioXhrSettings, jsonXhrSettings);
 
-        if (linkfile.files)
+        if (multifile.files)
         {
-            this.addFile(linkfile.files);
+            this.addFile(multifile.files);
         }
     }
 
