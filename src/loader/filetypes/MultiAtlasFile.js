@@ -107,6 +107,20 @@ var MultiAtlasFile = new Class({
                     this.addToMultiFile(image);
 
                     loader.addFile(image);
+
+                    //  "normalMap": "texture-packer-multi-atlas-0_n.png",
+                    if (textures[i].normalMap)
+                    {
+                        var normalMap = new ImageFile(loader, key, textures[i].normalMap, textureXhrSettings);
+
+                        normalMap.type = 'normalMap';
+
+                        image.setLink(normalMap);
+
+                        this.addToMultiFile(normalMap);
+
+                        loader.addFile(normalMap);
+                    }
                 }
 
                 //  Reset the loader settings
@@ -127,11 +141,19 @@ var MultiAtlasFile = new Class({
 
             var data = [];
             var images = [];
+            var normalMaps = [];
 
             for (var i = 1; i < this.files.length; i++)
             {
-                var key = this.files[i].key.substr(4);
-                var image = this.files[i].data;
+                var file = this.files[i];
+
+                if (file.type === 'normalMap')
+                {
+                    continue;
+                }
+
+                var key = file.key.substr(4);
+                var image = file.data;
 
                 //  Now we need to find out which json entry this mapped to
                 for (var t = 0; t < fileJSON.data.textures.length; t++)
@@ -141,13 +163,25 @@ var MultiAtlasFile = new Class({
                     if (item.image === key)
                     {
                         images.push(image);
+                        
                         data.push(item);
+
+                        if (file.linkFile)
+                        {
+                            normalMaps.push(file.linkFile.data);
+                        }
+
                         break;
                     }
                 }
             }
 
-            this.loader.textureManager.addAtlasJSONArray(this.key, images, data);
+            if (normalMaps.length === 0)
+            {
+                normalMaps = undefined;
+            }
+
+            this.loader.textureManager.addAtlasJSONArray(this.key, images, data, normalMaps);
 
             this.complete = true;
 
