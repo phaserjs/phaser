@@ -94,7 +94,7 @@ var AudioFile = new Class({
 
 });
 
-function createAudio (loader, key, urls, config, xhrSettings)
+AudioFile.create = function (loader, key, urls, config, xhrSettings)
 {
     var game = loader.systems.game;
     var audioConfig = game.config.audio;
@@ -107,7 +107,7 @@ function createAudio (loader, key, urls, config, xhrSettings)
         config = GetFastValue(key, 'config', {});
     }
 
-    var urlConfig = findAudioURL(game, urls);
+    var urlConfig = AudioFile.getAudioURL(game, urls);
 
     if (!urlConfig)
     {
@@ -127,7 +127,7 @@ function createAudio (loader, key, urls, config, xhrSettings)
     }
 }
 
-function findAudioURL (game, urls)
+AudioFile.getAudioURL = function (game, urls)
 {
     if (!Array.isArray(urls))
     {
@@ -194,7 +194,7 @@ FileTypesManager.register('audio', function (key, urls, config, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            var audioFile = createAudio(this, key[i]);
+            var audioFile = AudioFile.create(this, key[i]);
 
             if (audioFile)
             {
@@ -204,7 +204,7 @@ FileTypesManager.register('audio', function (key, urls, config, xhrSettings)
     }
     else
     {
-        var audioFile = createAudio(this, key, urls, config, xhrSettings);
+        var audioFile = AudioFile.create(this, key, urls, config, xhrSettings);
 
         if (audioFile)
         {
