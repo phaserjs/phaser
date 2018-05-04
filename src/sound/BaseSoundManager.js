@@ -6,6 +6,7 @@
  */
 
 var Class = require('../utils/Class');
+var Clone = require('../utils/object/Clone');
 var EventEmitter = require('eventemitter3');
 var NOOP = require('../utils/NOOP');
 
@@ -62,6 +63,16 @@ var BaseSoundManager = new Class({
          * @since 3.0.0
          */
         this.game = game;
+
+        /**
+         * Local reference to the JSON Cache, as used by Audio Sprites.
+         *
+         * @name Phaser.Sound.BaseSoundManager#jsonCache
+         * @type {Phaser.Cache.BaseCache}
+         * @readOnly
+         * @since 3.7.0
+         */
+        this.jsonCache = game.cache.json;
 
         /**
          * An array containing all added sounds.
@@ -186,6 +197,8 @@ var BaseSoundManager = new Class({
 
     /**
      * Adds a new audio sprite sound into the sound manager.
+     * Audio Sprites are a combination of audio files and a JSON configuration.
+     * The JSON follows the format of that created by https://github.com/tonistiigi/audiosprite
      *
      * @method Phaser.Sound.BaseSoundManager#addAudioSprite
      * @since 3.0.0
@@ -197,9 +210,11 @@ var BaseSoundManager = new Class({
      */
     addAudioSprite: function (key, config)
     {
+        if (config === undefined) { config = {}; }
+
         var sound = this.add(key, config);
 
-        sound.spritemap = this.game.cache.json.get(key).spritemap;
+        sound.spritemap = this.jsonCache.get(key).spritemap;
 
         for (var markerName in sound.spritemap)
         {
@@ -208,13 +223,17 @@ var BaseSoundManager = new Class({
                 continue;
             }
 
+            var markerConfig = Clone(config);
+
             var marker = sound.spritemap[markerName];
+
+            markerConfig.loop = (marker.hasOwnProperty('loop')) ? marker.loop : false;
 
             sound.addMarker({
                 name: markerName,
                 start: marker.start,
                 duration: marker.end - marker.start,
-                config: config
+                config: markerConfig
             });
         }
 
