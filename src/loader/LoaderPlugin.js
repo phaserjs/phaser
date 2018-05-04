@@ -501,6 +501,8 @@ var LoaderPlugin = new Class({
      * @since 3.7.0
      *
      * @param {any} data - The Pack File data, or an array of Pack File data, to be added to the load queue.
+     *
+     * @return {boolean} `true` if any files were added to the queue, otherwise `false`.
      */
     addPack: function (pack, packKey)
     {
@@ -509,6 +511,8 @@ var LoaderPlugin = new Class({
         {
             pack = { packKey: pack[packKey] };
         }
+
+        var total = 0;
 
         //  Store the loader settings in case this pack replaces them
         var currentBaseURL = this.baseURL;
@@ -541,6 +545,7 @@ var LoaderPlugin = new Class({
                     if (this[type])
                     {
                         this[type](file);
+                        total++;
                     }
                 }
             }
@@ -551,7 +556,7 @@ var LoaderPlugin = new Class({
         this.setPath(currentPath);
         this.setPrefix(currentPrefix);
 
-        return this;
+        return (total > 0);
     },
 
     /**
@@ -862,37 +867,6 @@ var LoaderPlugin = new Class({
         this.setPrefix(GetFastValue(sceneConfig, 'prefix', gameConfig.loaderPrefix));
 
         this.state = CONST.LOADER_IDLE;
-    },
-
-    /**
-     * !!! TO BE REPLACED BY THE PACK LOADER METHOD !!!
-     * !!! TO BE REPLACED BY THE PACK LOADER METHOD !!!
-     * !!! TO BE REPLACED BY THE PACK LOADER METHOD !!!
-     * 
-     * Called by the Scene Manager if you specify a files payload for a pre-Scene Boot.
-     * Takes an array of file objects.
-     *
-     * @method Phaser.Loader.LoaderPlugin#loadArray
-     * @since 3.0.0
-     *
-     * @param {LoaderFileObject[]} files - An array of files to load.
-     *
-     * @return {boolean} `true` if any files were successfully added to the list, otherwise `false`.
-     */
-    loadArray: function (files)
-    {
-        if (Array.isArray(files))
-        {
-            for (var i = 0; i < files.length; i++)
-            {
-                var file = files[i];
-
-                //  Calls file-type methods like `atlas` or `image`
-                this[file.type](file);
-            }
-        }
-
-        return (this.list.size > 0);
     },
 
     /**
