@@ -45,7 +45,29 @@ var XHRSettings = require('./XHRSettings');
 
 /**
  * @classdesc
- * [description]
+ * The Loader handles loading all external content such as Images, Sounds, Texture Atlases and data files.
+ * You typically interact with it via `this.load` in your Scene. Scenes can have a `preload` method, which is always
+ * called before the Scenes `create` method, allowing you to preload assets that the Scene may need.
+ *
+ * If you call any `this.load` methods from outside of `Scene.preload` then you need to start the Loader going
+ * yourself by calling `Loader.start()`. It's only automatically started during the Scene preload.
+ *
+ * The Loader uses a combination of tag loading (eg. Audio elements) and XHR and provides progress and completion events.
+ * Files are loaded in parallel by default. The amount of concurrent connections can be controlled in your Game Configuration.
+ *
+ * Once the Loader has started loading you are still able to add files to it. These can be injected as a result of a loader
+ * event, the type of file being loaded (such as a pack file) or other external events. As long as the Loader hasn't finished
+ * simply adding a new file to it, while running, will ensure it's added into the current queue.
+ *
+ * Every Scene has its own instance of the Loader and they are bound to the Scene in which they are created. However,
+ * assets loaded by the Loader are placed into global game-level caches. For example, loading an XML file will place that
+ * file inside `Game.cache.xml`, which is accessible from every Scene in your game, no matter who was responsible
+ * for loading it. The same is true of Textures. A texture loaded in one Scene is instantly available to all other Scenes
+ * in your game.
+ *
+ * The Loader works by using custom File Types. These are stored in the FileTypesManager, which injects them into the Loader
+ * when it's instantiated. You can create your own custom file types by extending either the File or MultiFile classes.
+ * See those files for more details.
  *
  * @class LoaderPlugin
  * @extends Phaser.Events.EventEmitter
@@ -53,7 +75,7 @@ var XHRSettings = require('./XHRSettings');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - [description]
+ * @param {Phaser.Scene} scene - The Scene which owns this Loader instance.
  */
 var LoaderPlugin = new Class({
 
@@ -69,19 +91,21 @@ var LoaderPlugin = new Class({
         var sceneConfig = scene.sys.settings.loader;
 
         /**
-         * [description]
+         * The Scene which owns this Loader instance.
          *
          * @name Phaser.Loader.LoaderPlugin#scene
          * @type {Phaser.Scene}
+         * @protected
          * @since 3.0.0
          */
         this.scene = scene;
 
         /**
-         * [description]
+         * A reference to the Scene Systems.
          *
          * @name Phaser.Loader.LoaderPlugin#systems
          * @type {Phaser.Scenes.Systems}
+         * @protected
          * @since 3.0.0
          */
         this.systems = scene.sys;
@@ -91,6 +115,7 @@ var LoaderPlugin = new Class({
          *
          * @name Phaser.Loader.LoaderPlugin#cacheManager
          * @type {Phaser.Cache.CacheManager}
+         * @protected
          * @since 3.7.0
          */
         this.cacheManager = scene.sys.cache;
@@ -100,6 +125,7 @@ var LoaderPlugin = new Class({
          *
          * @name Phaser.Loader.LoaderPlugin#textureManager
          * @type {Phaser.Textures.TextureManager}
+         * @protected
          * @since 3.7.0
          */
         this.textureManager = scene.sys.textures;
@@ -109,7 +135,9 @@ var LoaderPlugin = new Class({
 
         /**
          * An optional prefix that is automatically prepended to the start of every file key.
-         * If prefix was `MENU` and you load an image with the key 'Background' the resulting key would be `MENUBackground`.
+         * If prefix was `MENU.` and you load an image with the key 'Background' the resulting key would be `MENU.Background`.
+         * You can set this directly, or call `Loader.setPrefix()`. It will then affect every file added to the Loader
+         * from that point on. It does _not_ change any file already in the load queue.
          *
          * @name Phaser.Loader.LoaderPlugin#prefix
          * @type {string}
@@ -119,7 +147,22 @@ var LoaderPlugin = new Class({
         this.prefix = '';
 
         /**
-         * [description]
+         * The value of `path`, if set, is placed before any _relative_ file path given. For example:
+         *
+         * ```javascript
+         * this.load.path = "images/sprites/";
+         * this.load.image("ball", "ball.png");
+         * this.load.image("tree", "level1/oaktree.png");
+         * this.load.image("boom", "http://server.com/explode.png");
+         * ```
+         *
+         * Would load the `ball` file from `images/sprites/ball.png` and the tree from
+         * `images/sprites/level1/oaktree.png` but the file `boom` would load from the URL
+         * given as it's an absolute URL.
+         *
+         * Please note that the path is added before the filename but *after* the baseURL (if set.)
+         *
+         * If you set this property directly then it _must_ end with a "/". Alternatively, call `setPath()` and it'll do it for you.
          *
          * @name Phaser.Loader.LoaderPlugin#path
          * @type {string}
@@ -129,7 +172,11 @@ var LoaderPlugin = new Class({
         this.path = '';
 
         /**
-         * [description]
+         * If you want to append a URL before the path of any asset you can set this here.
+         * 
+         * Useful if allowing the asset base url to be configured outside of the game code.
+         * 
+         * If you set this property directly then it _must_ end with a "/". Alternatively, call `setBaseURL()` and it'll do it for you.
          *
          * @name Phaser.Loader.LoaderPlugin#baseURL
          * @type {string}
@@ -143,15 +190,6 @@ var LoaderPlugin = new Class({
         this.setPath(GetFastValue(sceneConfig, 'path', gameConfig.loaderPath));
 
         this.setPrefix(GetFastValue(sceneConfig, 'prefix', gameConfig.loaderPrefix));
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Loader.LoaderPlugin#enableParallel
-         * @type {boolean}
-         * @since 3.0.0
-         */
-        this.enableParallel = GetFastValue(sceneConfig, 'enableParallel', gameConfig.loaderEnableParallel);
 
         /**
          * [description]
@@ -368,12 +406,14 @@ var LoaderPlugin = new Class({
 
     /**
      * An optional prefix that is automatically prepended to the start of every file key.
-     * If prefix was `MENU` and you load an image with the key 'Background' the resulting key would be `MENUBackground`.
+     * If prefix was `MENU.` and you load an image with the key 'Background' the resulting key would be `MENU.Background`.
+     * Once a prefix is set it will then affect every file added to the Loader from that point on.
+     * It does _not_ change any file _already_ in the load queue.
      *
      * @method Phaser.Loader.LoaderPlugin#setPrefix
      * @since 3.7.0
      *
-     * @param {string} prefix - The prefix to use. Leave empty to reset.
+     * @param {string} [prefix] - The prefix to use. Leave empty to reset.
      *
      * @return {Phaser.Loader.LoaderPlugin} This Loader object.
      */
