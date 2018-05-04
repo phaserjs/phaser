@@ -102,13 +102,11 @@ var LinkFile = new Class({
 
     isReadyToProcess: function ()
     {
-        return (this.pending === 0 && this.failed === 0);
+        return (this.pending === 0 && this.failed === 0 && !this.complete);
     },
 
     addToLinkFile: function (file)
     {
-        console.log('LinkFile - new file added: ', file.key);
-
         this.files.push(file);
 
         file.linkFile = this;
