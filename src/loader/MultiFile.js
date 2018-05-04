@@ -10,7 +10,7 @@ var Class = require('../utils/Class');
  * @classdesc
  * [description]
  *
- * @class LinkFile
+ * @class MultiFile
  * @memberOf Phaser.Loader
  * @constructor
  * @since 3.7.0
@@ -18,18 +18,18 @@ var Class = require('../utils/Class');
  * @param {Phaser.Loader.LoaderPlugin} loader - The Loader that is going to load this File.
  * @param {string} type - The file type string for sorting within the Loader.
  * @param {string} key - The key of the file within the loader.
- * @param {Phaser.Loader.File[]} files - An array of Files that make-up this LinkFile.
+ * @param {Phaser.Loader.File[]} files - An array of Files that make-up this MultiFile.
  */
-var LinkFile = new Class({
+var MultiFile = new Class({
 
     initialize:
 
-    function LinkFile (loader, type, key, files)
+    function MultiFile (loader, type, key, files)
     {
         /**
          * A reference to the Loader that is going to load this file.
          *
-         * @name Phaser.Loader.LinkFile#loader
+         * @name Phaser.Loader.MultiFile#loader
          * @type {Phaser.Loader.LoaderPlugin}
          * @since 3.7.0
          */
@@ -38,7 +38,7 @@ var LinkFile = new Class({
         /**
          * The file type string for sorting within the Loader.
          *
-         * @name Phaser.Loader.LinkFile#type
+         * @name Phaser.Loader.MultiFile#type
          * @type {string}
          * @since 3.7.0
          */
@@ -47,25 +47,25 @@ var LinkFile = new Class({
         /**
          * Unique cache key (unique within its file type)
          *
-         * @name Phaser.Loader.LinkFile#key
+         * @name Phaser.Loader.MultiFile#key
          * @type {string}
          * @since 3.7.0
          */
         this.key = key;
 
         /**
-         * Array of files that make up this LinkFile.
+         * Array of files that make up this MultiFile.
          *
-         * @name Phaser.Loader.LinkFile#files
+         * @name Phaser.Loader.MultiFile#files
          * @type {Phaser.Loader.File[]}
          * @since 3.7.0
          */
         this.files = files;
 
         /**
-         * The completion status of this LinkFile.
+         * The completion status of this MultiFile.
          *
-         * @name Phaser.Loader.LinkFile#complete
+         * @name Phaser.Loader.MultiFile#complete
          * @type {boolean}
          * @since 3.7.0
          */
@@ -74,7 +74,7 @@ var LinkFile = new Class({
         /**
          * The number of files to load.
          *
-         * @name Phaser.Loader.LinkFile#pending
+         * @name Phaser.Loader.MultiFile#pending
          * @type {integer}
          * @since 3.7.0
          */
@@ -84,7 +84,7 @@ var LinkFile = new Class({
         /**
          * The number of files that failed to load.
          *
-         * @name Phaser.Loader.LinkFile#failed
+         * @name Phaser.Loader.MultiFile#failed
          * @type {integer}
          * @default 0
          * @since 3.7.0
@@ -96,7 +96,7 @@ var LinkFile = new Class({
         //  Link the files
         for (var i = 0; i < files.length; i++)
         {
-            files[i].linkFile = this;
+            files[i].multiFile = this;
         }
     },
 
@@ -105,11 +105,11 @@ var LinkFile = new Class({
         return (this.pending === 0 && this.failed === 0 && !this.complete);
     },
 
-    addToLinkFile: function (file)
+    addToMultiFile: function (file)
     {
         this.files.push(file);
 
-        file.linkFile = this;
+        file.multiFile = this;
 
         this.pending++;
 
@@ -121,7 +121,7 @@ var LinkFile = new Class({
     /**
      * Called by each File when it finishes loading.
      *
-     * @method Phaser.Loader.LinkFile#onFileComplete
+     * @method Phaser.Loader.MultiFile#onFileComplete
      * @since 3.7.0
      *
      * @param {Phaser.Loader.File} file - The File that has completed processing.
@@ -139,7 +139,7 @@ var LinkFile = new Class({
     /**
      * Called by each File that fails to load.
      *
-     * @method Phaser.Loader.LinkFile#onFileFailed
+     * @method Phaser.Loader.MultiFile#onFileFailed
      * @since 3.7.0
      *
      * @param {Phaser.Loader.File} file - The File that has failed to load.
@@ -156,4 +156,4 @@ var LinkFile = new Class({
 
 });
 
-module.exports = LinkFile;
+module.exports = MultiFile;

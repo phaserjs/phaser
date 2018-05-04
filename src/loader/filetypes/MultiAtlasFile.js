@@ -10,14 +10,14 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var ImageFile = require('./ImageFile.js');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
 var JSONFile = require('./JSONFile.js');
-var LinkFile = require('../LinkFile.js');
+var MultiFile = require('../MultiFile.js');
 
 /**
  * @classdesc
  * A Multi Atlas File.
  *
  * @class MultiAtlasFile
- * @extends Phaser.Loader.LinkFile
+ * @extends Phaser.Loader.MultiFile
  * @memberOf Phaser.Loader.FileTypes
  * @constructor
  * @since 3.7.0
@@ -31,7 +31,7 @@ var LinkFile = require('../LinkFile.js');
  */
 var MultiAtlasFile = new Class({
 
-    Extends: LinkFile,
+    Extends: MultiFile,
 
     initialize:
 
@@ -51,7 +51,7 @@ var MultiAtlasFile = new Class({
 
         var data = new JSONFile(loader, key, atlasURL, atlasXhrSettings);
 
-        LinkFile.call(this, loader, 'multiatlas', key, [ data ]);
+        MultiFile.call(this, loader, 'multiatlas', key, [ data ]);
 
         this.config.path = path;
         this.config.baseURL = baseURL;
@@ -61,7 +61,7 @@ var MultiAtlasFile = new Class({
     /**
      * Called by each File when it finishes loading.
      *
-     * @method Phaser.Loader.LinkFile#onFileComplete
+     * @method Phaser.Loader.MultiFile#onFileComplete
      * @since 3.7.0
      *
      * @param {Phaser.Loader.File} file - The File that has completed processing.
@@ -104,7 +104,7 @@ var MultiAtlasFile = new Class({
 
                     var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
 
-                    this.addToLinkFile(image);
+                    this.addToMultiFile(image);
 
                     loader.addFile(image);
                 }
@@ -179,7 +179,7 @@ var MultiAtlasFile = new Class({
  */
 FileTypesManager.register('multiatlas', function (key, atlasURL, path, baseURL, atlasXhrSettings)
 {
-    var linkfile;
+    var multifile;
 
     //  Supports an Object file definition in the key argument
     //  Or an array of objects in the key argument
@@ -189,16 +189,16 @@ FileTypesManager.register('multiatlas', function (key, atlasURL, path, baseURL, 
     {
         for (var i = 0; i < key.length; i++)
         {
-            linkfile = new MultiAtlasFile(this, key[i]);
+            multifile = new MultiAtlasFile(this, key[i]);
 
-            this.addFile(linkfile.files);
+            this.addFile(multifile.files);
         }
     }
     else
     {
-        linkfile = new MultiAtlasFile(this, key, atlasURL, path, baseURL, atlasXhrSettings);
+        multifile = new MultiAtlasFile(this, key, atlasURL, path, baseURL, atlasXhrSettings);
 
-        this.addFile(linkfile.files);
+        this.addFile(multifile.files);
     }
 
     return this;

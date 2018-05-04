@@ -36,6 +36,7 @@ var ImageFile = new Class({
     function ImageFile (loader, key, url, xhrSettings, frameConfig)
     {
         var extension = 'png';
+        var normalMap;
 
         if (IsPlainObject(key))
         {
@@ -43,9 +44,16 @@ var ImageFile = new Class({
 
             key = GetFastValue(config, 'key');
             url = GetFastValue(config, 'url');
+            normalMap = GetFastValue(config, 'normalMap');
             xhrSettings = GetFastValue(config, 'xhrSettings');
             extension = GetFastValue(config, 'extension', extension);
             frameConfig = GetFastValue(config, 'frameConfig');
+        }
+
+        if (Array.isArray(url))
+        {
+            normalMap = url[1];
+            url = url[0];
         }
 
         var fileConfig = {
@@ -60,6 +68,12 @@ var ImageFile = new Class({
         };
 
         File.call(this, loader, fileConfig);
+
+        //  Do we have a normal map to load as well?
+        if (normalMap)
+        {
+            // var 
+        }
     },
 
     onProcess: function ()

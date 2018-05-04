@@ -221,11 +221,11 @@ var File = new Class({
          * If this is a multipart file, i.e. an atlas and its json together, then this is a reference
          * to the linked file. Set and used internally by the Loader.
          *
-         * @name Phaser.Loader.File#linkFile
-         * @type {?Phaser.Loader.LinkFile}
+         * @name Phaser.Loader.File#multiFile
+         * @type {?Phaser.Loader.MultiFile}
          * @since 3.0.0
          */
-        this.linkFile;
+        this.multiFile;
     },
 
     /**
@@ -348,7 +348,7 @@ var File = new Class({
 
     /**
      * Called when the File has completed loading.
-     * Checks on the state of its linkfile, if set.
+     * Checks on the state of its multifile, if set.
      *
      * @method Phaser.Loader.File#onProcessComplete
      * @since 3.7.0
@@ -357,9 +357,9 @@ var File = new Class({
     {
         this.state = CONST.FILE_COMPLETE;
 
-        if (this.linkFile)
+        if (this.multiFile)
         {
-            this.linkFile.onFileComplete(this);
+            this.multiFile.onFileComplete(this);
         }
 
         this.loader.fileProcessComplete(this);
@@ -367,7 +367,7 @@ var File = new Class({
 
     /**
      * Called when the File has completed loading.
-     * Checks on the state of its linkfile, if set.
+     * Checks on the state of its multifile, if set.
      *
      * @method Phaser.Loader.File#onProcessError
      * @since 3.7.0
@@ -376,9 +376,9 @@ var File = new Class({
     {
         this.state = CONST.FILE_ERRORED;
 
-        if (this.linkFile)
+        if (this.multiFile)
         {
-            this.linkFile.onFileFailed(this);
+            this.multiFile.onFileFailed(this);
         }
 
         this.loader.fileProcessComplete(this);
@@ -450,7 +450,7 @@ var File = new Class({
         this.loader = null;
         this.cache = null;
         this.xhrSettings = null;
-        this.linkFile = null;
+        this.multiFile = null;
         this.data = null;
     }
 

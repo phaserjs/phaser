@@ -20,6 +20,7 @@ var Loader = {
     GetURL: require('./GetURL'),
     LoaderPlugin: require('./LoaderPlugin'),
     MergeXHRSettings: require('./MergeXHRSettings'),
+    MultiFile: require('./MultiFile'),
     XHRLoader: require('./XHRLoader'),
     XHRSettings: require('./XHRSettings')
 

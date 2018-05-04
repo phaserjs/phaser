@@ -14,7 +14,7 @@ var PluginManager = require('../boot/PluginManager');
 var XHRSettings = require('./XHRSettings');
 
 /**
- * @typedef {object} LinkFileObject
+ * @typedef {object} MultiFileObject
  *
  * @property {string} type - [description]
  * @property {Phaser.Loader.File} fileA - [description]
@@ -719,19 +719,19 @@ var LoaderPlugin = new Class({
         //  This file has failed, so move it to the failed Set
         if (file.state === CONST.FILE_ERRORED)
         {
-            if (file.linkFile)
+            if (file.multiFile)
             {
-                file.linkFile.onFileFailed(file);
+                file.multiFile.onFileFailed(file);
             }
         }
         else if (file.state === CONST.FILE_COMPLETE)
         {
-            if (file.linkFile)
+            if (file.multiFile)
             {
-                if (file.linkFile.isReadyToProcess())
+                if (file.multiFile.isReadyToProcess())
                 {
                     //  If we got here then all files the link file needs are ready to add to the cache
-                    file.linkFile.addToCache();
+                    file.multiFile.addToCache();
                 }
             }
             else

@@ -9,7 +9,7 @@ var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var ImageFile = require('./ImageFile.js');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
-var LinkFile = require('../LinkFile.js');
+var MultiFile = require('../MultiFile.js');
 var ParseXMLBitmapFont = require('../../gameobjects/bitmaptext/ParseXMLBitmapFont.js');
 var XMLFile = require('./XMLFile.js');
 
@@ -18,7 +18,7 @@ var XMLFile = require('./XMLFile.js');
  * An Bitmap Font File.
  *
  * @class BitmapFontFile
- * @extends Phaser.Loader.LinkFile
+ * @extends Phaser.Loader.MultiFile
  * @memberOf Phaser.Loader.FileTypes
  * @constructor
  * @since 3.0.0
@@ -32,7 +32,7 @@ var XMLFile = require('./XMLFile.js');
  */
 var BitmapFontFile = new Class({
 
-    Extends: LinkFile,
+    Extends: MultiFile,
 
     initialize:
 
@@ -52,7 +52,7 @@ var BitmapFontFile = new Class({
         var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
         var data = new XMLFile(loader, key, xmlURL, xmlXhrSettings);
 
-        LinkFile.call(this, loader, 'bitmapfont', key, [ image, data ]);
+        MultiFile.call(this, loader, 'bitmapfont', key, [ image, data ]);
     },
 
     addToCache: function ()
@@ -101,7 +101,7 @@ var BitmapFontFile = new Class({
  */
 FileTypesManager.register('bitmapFont', function (key, textureURL, xmlURL, textureXhrSettings, xmlXhrSettings)
 {
-    var linkfile;
+    var multifile;
 
     //  Supports an Object file definition in the key argument
     //  Or an array of objects in the key argument
@@ -111,16 +111,16 @@ FileTypesManager.register('bitmapFont', function (key, textureURL, xmlURL, textu
     {
         for (var i = 0; i < key.length; i++)
         {
-            linkfile = new BitmapFontFile(this, key[i]);
+            multifile = new BitmapFontFile(this, key[i]);
 
-            this.addFile(linkfile.files);
+            this.addFile(multifile.files);
         }
     }
     else
     {
-        linkfile = new BitmapFontFile(this, key, textureURL, xmlURL, textureXhrSettings, xmlXhrSettings);
+        multifile = new BitmapFontFile(this, key, textureURL, xmlURL, textureXhrSettings, xmlXhrSettings);
 
-        this.addFile(linkfile.files);
+        this.addFile(multifile.files);
     }
 
     return this;

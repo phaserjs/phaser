@@ -10,14 +10,14 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var ImageFile = require('./ImageFile.js');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
 var JSONFile = require('./JSONFile.js');
-var LinkFile = require('../LinkFile.js');
+var MultiFile = require('../MultiFile.js');
 
 /**
  * @classdesc
  * An Atlas JSON File.
  *
  * @class AtlasJSONFile
- * @extends Phaser.Loader.LinkFile
+ * @extends Phaser.Loader.MultiFile
  * @memberOf Phaser.Loader.FileTypes
  * @constructor
  * @since 3.0.0
@@ -31,7 +31,7 @@ var LinkFile = require('../LinkFile.js');
  */
 var AtlasJSONFile = new Class({
 
-    Extends: LinkFile,
+    Extends: MultiFile,
 
     initialize:
 
@@ -51,7 +51,7 @@ var AtlasJSONFile = new Class({
         var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
         var data = new JSONFile(loader, key, atlasURL, atlasXhrSettings);
 
-        LinkFile.call(this, loader, 'atlasjson', key, [ image, data ]);
+        MultiFile.call(this, loader, 'atlasjson', key, [ image, data ]);
     },
 
     addToCache: function ()
@@ -99,7 +99,7 @@ var AtlasJSONFile = new Class({
  */
 FileTypesManager.register('atlas', function (key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
 {
-    var linkfile;
+    var multifile;
 
     //  Supports an Object file definition in the key argument
     //  Or an array of objects in the key argument
@@ -109,16 +109,16 @@ FileTypesManager.register('atlas', function (key, textureURL, atlasURL, textureX
     {
         for (var i = 0; i < key.length; i++)
         {
-            linkfile = new AtlasJSONFile(this, key[i]);
+            multifile = new AtlasJSONFile(this, key[i]);
 
-            this.addFile(linkfile.files);
+            this.addFile(multifile.files);
         }
     }
     else
     {
-        linkfile = new AtlasJSONFile(this, key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings);
+        multifile = new AtlasJSONFile(this, key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings);
 
-        this.addFile(linkfile.files);
+        this.addFile(multifile.files);
     }
 
     return this;

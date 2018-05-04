@@ -9,7 +9,7 @@ var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var ImageFile = require('./ImageFile.js');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
-var LinkFile = require('../LinkFile.js');
+var MultiFile = require('../MultiFile.js');
 var XMLFile = require('./XMLFile.js');
 
 /**
@@ -17,7 +17,7 @@ var XMLFile = require('./XMLFile.js');
  * An XML based Atlas File, such as those created with Shoebox, Starling or Flash.
  *
  * @class AtlasXMLFile
- * @extends Phaser.Loader.LinkFile
+ * @extends Phaser.Loader.MultiFile
  * @memberOf Phaser.Loader.FileTypes
  * @constructor
  *
@@ -29,7 +29,7 @@ var XMLFile = require('./XMLFile.js');
  */
 var AtlasXMLFile = new Class({
 
-    Extends: LinkFile,
+    Extends: MultiFile,
 
     initialize:
 
@@ -49,12 +49,12 @@ var AtlasXMLFile = new Class({
         var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
         var data = new XMLFile(loader, key, atlasURL, atlasXhrSettings);
 
-        LinkFile.call(this, loader, 'atlasxml', key, [ image, data ]);
+        MultiFile.call(this, loader, 'atlasxml', key, [ image, data ]);
     },
 
     addToCache: function ()
     {
-        if (this.failed === 0 && !this.complete)
+        if (this.isReadyToProcess())
         {
             var fileA = this.files[0];
             var fileB = this.files[1];
@@ -97,7 +97,7 @@ var AtlasXMLFile = new Class({
  */
 FileTypesManager.register('atlasXML', function (key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
 {
-    var linkfile;
+    var multifile;
 
     //  Supports an Object file definition in the key argument
     //  Or an array of objects in the key argument
@@ -107,16 +107,16 @@ FileTypesManager.register('atlasXML', function (key, textureURL, atlasURL, textu
     {
         for (var i = 0; i < key.length; i++)
         {
-            linkfile = new AtlasXMLFile(this, key[i]);
+            multifile = new AtlasXMLFile(this, key[i]);
 
-            this.addFile(linkfile.files);
+            this.addFile(multifile.files);
         }
     }
     else
     {
-        linkfile = new AtlasXMLFile(this, key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings);
+        multifile = new AtlasXMLFile(this, key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings);
 
-        this.addFile(linkfile.files);
+        this.addFile(multifile.files);
     }
 
     return this;
