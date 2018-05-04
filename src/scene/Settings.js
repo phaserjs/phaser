@@ -92,7 +92,7 @@ var Settings = {
 
             data: {},
 
-            files: GetValue(config, 'files', false),
+            pack: GetValue(config, 'pack', false),
 
             //  Cameras
 

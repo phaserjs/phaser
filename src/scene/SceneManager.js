@@ -1049,11 +1049,11 @@ var SceneManager = new Class({
             }
 
             //  Files payload?
-            if (loader && Array.isArray(scene.sys.settings.files))
+            if (loader && scene.sys.settings.hasOwnProperty('pack'))
             {
                 loader.reset();
 
-                if (loader.loadArray(scene.sys.settings.files))
+                if (loader.addPack({ 'payload': scene.sys.settings.pack }))
                 {
                     scene.sys.settings.status = CONST.LOADING;
 
