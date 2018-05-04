@@ -13,22 +13,30 @@
 
 The Loader has been given an overhaul to improve its performance and extensibility and gains the following new features:
 
-* TODO
+* A popular feature from Phaser 2 is back: Loader Packs. These are JSON files that contain a bunch of files to load. You can now load a pack into the Loader, and it will parse it and then add the contents into the current load queue automatically. Those contents can be anything the Loader can handle, including other packs! Please see the documentation and examples for more details.
+* The Loader is no longer locked during load. New files can be added into the load queue, even while a load is in process. Indeed, this is how the new Pack files feature works. A side effect is that if you do it a lot, your progress bar may jump around, as it's based on the number of files in the loader at that point in time. So if you add a bunch more it may look like it has reduced. It's up to you to handle this in your code, or create a type of loader graphic that doesn't highlight this (such as a spinning circle instead of a progress bar).
+* The Loader now handles the flow slightly differently. Before, it would load every file, and once they were all complete it would then process them in turn. Which would add them into the various caches, create textures, and so on. This now happens as soon as the file has loaded because the browser is likely mostly idle during this time anyway, so it allows us to distribute the file processing throughout the load time, rather than in one lump at the end.
+* Loading an Audio Sprite has changed. You now specify the JSON file first, and if you wish you can leave out the audio file URLs and let the Loader figure it out from the JSON meta data.
+* The Loader has a new file type: `atlasXML` which will load a Shoebox / Starling / Flash CC format XML Texture Atlas.
+* The Loader `multiatlas` file type has changed. You no longer have to specify the URLs to the images, instead it reads them from the JSON data and adds them into the loader automatically.
+* Every file type the Loader supports can now be loaded either via the method arguments, or a configuration object, or an array of configuration objects. Before only some of them could, but they all use the same code now. See the new examples demonstrating this.
 
 ### Loader Updates
 
-* LinkFile is a new type of file used by the Loader that handles multiple files that need to be paired together. For example, loading a JSON and an Image for a Texture Atlas. This is now handled by a LinkFile.
+* The Loader and all associated file types are now covered 100% by JSDocs.
+* LinkFile is a new type of file used by the Loader that handles multiple files that need to be joined together. For example, loading a JSON and an Image for a Texture Atlas. This is now handled by a LinkFile.
 * File has a new argument in its constructor which is an instance of the LoaderPlugin. It stores this in the `loader` property. It also has a new property `cache` which is a reference to the cache that the file type will be stored in.
 * File has a new method `hasCacheConflict` which checks if a key matching the one used by this file exists in the target Cache or not.
 * File has a new method `addToCache` which will add the file to its target cache and then emit a `filecomplete` event, passing its key and a reference to itself to the listener (thanks to @kalebwalton for a related PR)
 * The Loader has a new property `cacheManager` which is a reference to the global game cache and is used by the File Types.
 * The Loader has a new property `textureManager` which is a reference to the global Texture Manager and is used by the File Types.
 * The Loader will now check to see if loading a file would cache a cache conflict or not, and prevent it if it will.
-* The Loader now passes off processing of the final file data to the file itself, which will now self-add itself to its target cache.
-* The Loader will now call 'destroy' on all Files when it finishes processing them. They now tidy-up references and extra data, freeing it for gc.
-* The File Types are now responsible for adding themselves to their respective caches and any extra processing that needs to happen. This has removed all of the code from the Loader that was doing this, meaning the file types are now properly abstracted away and the Loader is no longer bound to them. This will allow us to exclude file types in a future version if you don't need them, creating smaller bundles as a result.
+* The Loader now hands off processing of the file data to the file itself, which will now self-add itself to its target cache.
+* The Loader will now call 'destroy' on all Files when it finishes processing them. They now tidy-up references and extra data, freeing them for gc.
+* The File Types are now responsible for adding themselves to their respective caches and any extra processing that needs to happen. This has removed all of the code from the Loader that was doing this, meaning the file types are now properly abstracted away and the Loader is no longer bound to them. This allows you to exclude file types if you don't need them, creating smaller bundles as a result. It also means we can drop in new file types easily without touching the Loader itself and Plugins can register new file types.
 * The XMLFile type will no longer throw an error if it can't parse the XML, instead it'll log a console warning and not add the XML to the cache.
-* Loading a BitmapFont will add the image used as the font texture into the Texture Manager and the XML into the XML cache, using the key you specified for the font.
+* Loading a BitmapFont will add the image used as the font texture into the Texture Manager and the XML into the XML cache, using the key you specified for the font, so you can extract it more easily if needed.
+* The default number of max parallel file loads has increased from 4 to 32. You can still change it in the game config.
 
 ### Updates
 
@@ -50,6 +58,8 @@ The Loader has been given an overhaul to improve its performance and extensibili
 * ScenePlugin.getIndex will return the index of the given Scene in the Scene List.
 * The Scene Systems will emit a `ready` event when it has fully finished starting up and all plugins are available. Re: #3636 (thanks @Yazir)
 * All Game Object Creators now have an extra boolean argument `addToScene`. If you set this to `true` it will add the Game Object being created to the Scene automatically, while `false` will do the opposite, i.e.: `this.make.image(config, false)`. You can still specify the `add` property in the Config object too, but if the argument is provided it will override the property.
+* We have removed the TextureManager.addAtlasPyxel method and related parser. It didn't work anyway and no-one seems to use Pyxel any more. If we get enough demand we can consider adding it back.
+* When adding an Audio Sprite to the Sound Manager it will now respect the `loop` property, if set in the source JSON.
 
 ### Bug Fixes
 
