@@ -335,6 +335,43 @@ var Texture = new Class({
     },
 
     /**
+     * Given a Frame name, return the data source image it uses to render with.
+     * You can use this to get the normal map for an image for example.
+     *
+     * This will return the actual DOM Image.
+     *
+     * @method Phaser.Textures.Texture#getDataSourceImage
+     * @since 3.7.0
+     *
+     * @param {(string|integer)} [name] - The string-based name, or integer based index, of the Frame to get from this Texture.
+     *
+     * @return {(HTMLImageElement|HTMLCanvasElement)} The DOM Image or Canvas Element.
+     */
+    getDataSourceImage: function (name)
+    {
+        if (name === undefined || name === null || this.frameTotal === 1)
+        {
+            name = '__BASE';
+        }
+
+        var frame = this.frames[name];
+        var idx;
+
+        if (!frame)
+        {
+            console.warn('No Texture.frame found with name ' + name);
+
+            idx = this.frames['__BASE'].sourceIndex;
+        }
+        else
+        {
+            idx = frame.sourceIndex;
+        }
+
+        return this.dataSource[idx].image;
+    },
+
+    /**
      * Adds a data source image to this Texture.
      *
      * An example of a data source image would be a normal map, where all of the Frames for this Texture

@@ -65,6 +65,7 @@ The Loader has been given an overhaul to improve its performance and extensibili
 * All Game Object Creators now have an extra boolean argument `addToScene`. If you set this to `true` it will add the Game Object being created to the Scene automatically, while `false` will do the opposite, i.e.: `this.make.image(config, false)`. You can still specify the `add` property in the Config object too, but if the argument is provided it will override the property.
 * We have removed the TextureManager.addAtlasPyxel method and related parser. It didn't work anyway and no-one seems to use Pyxel any more. If we get enough demand we can consider adding it back.
 * When adding an Audio Sprite to the Sound Manager it will now respect the `loop` property, if set in the source JSON.
+* The Texture class has a new method `getDataSourceImage` which will return the raw image data of the data source.
 
 ### Bug Fixes
 
