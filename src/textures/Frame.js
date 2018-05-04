@@ -304,7 +304,7 @@ var Frame = new Class({
      * and should rarely be changed on-the-fly.
      *
      * @method Phaser.Textures.Frame#setSize
-     * @since 3.6.1
+     * @since 3.7.0
      *
      * @param {integer} width - The width of the frame before being trimmed.
      * @param {integer} height - The height of the frame before being trimmed.

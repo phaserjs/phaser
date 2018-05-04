@@ -39,7 +39,7 @@ var TextureSource = new Class({
          *
          * @name Phaser.Textures.TextureSource#renderer
          * @type {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)}
-         * @since 3.6.1
+         * @since 3.7.0
          */
         this.renderer = game.renderer;
 
@@ -195,7 +195,7 @@ var TextureSource = new Class({
      * it updates the WebGLTexture using the canvas data.
      *
      * @method Phaser.Textures.TextureSource#update
-     * @since 3.6.1
+     * @since 3.7.0
      */
     update: function ()
     {

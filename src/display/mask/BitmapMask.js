@@ -200,7 +200,7 @@ var BitmapMask = new Class({
      * so be sure to call `clearMask` on any Game Object using it, before destroying it.
      *
      * @method Phaser.Display.Masks.BitmapMask#destroy
-     * @since 3.6.1
+     * @since 3.7.0
      */
     destroy: function ()
     {

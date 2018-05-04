@@ -153,7 +153,7 @@ var TextureManager = new Class({
      * Checks the given texture key and throws a console.warn if the key is already in use, then returns false.
      *
      * @method Phaser.Textures.TextureManager#checkKey
-     * @since 3.6.1
+     * @since 3.7.0
      *
      * @param {string} key - The texture key to check.
      *
@@ -182,7 +182,7 @@ var TextureManager = new Class({
      * step when clearing down to avoid this.
      *
      * @method Phaser.Textures.TextureManager#remove
-     * @since 3.6.1
+     * @since 3.7.0
      *
      * @param {(string|Phaser.Textures.Texture)} key - The key of the Texture to remove, or a reference to it.
      *
