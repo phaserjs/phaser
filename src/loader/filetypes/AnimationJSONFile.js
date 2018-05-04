@@ -49,8 +49,6 @@ var AnimationJSONFile = new Class({
 
     onLoadComplete: function ()
     {
-        console.log('AnimationJSONFile.onLoadComplete');
-
         this.loader.scene.sys.anims.fromJSON(this.data);
 
         this.pendingDestroy();

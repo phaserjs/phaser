@@ -115,7 +115,7 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
     }
 
     // https://developers.google.com/web/updates/2012/02/HTML5-audio-and-the-Web-Audio-API-are-BFFs
-    var stream = GetFastValue(config, 'stream', false);
+    // var stream = GetFastValue(config, 'stream', false);
 
     if (deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
     {
@@ -125,7 +125,7 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
     {
         return new HTML5AudioFile(loader, key, urlConfig, config);
     }
-}
+};
 
 AudioFile.getAudioURL = function (game, urls)
 {
@@ -157,7 +157,7 @@ AudioFile.getAudioURL = function (game, urls)
     }
 
     return null;
-}
+};
 
 /**
  * Adds an Audio file to the current load queue.
@@ -189,12 +189,14 @@ FileTypesManager.register('audio', function (key, urls, config, xhrSettings)
         return this;
     }
 
+    var audioFile;
+
     if (Array.isArray(key))
     {
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            var audioFile = AudioFile.create(this, key[i]);
+            audioFile = AudioFile.create(this, key[i]);
 
             if (audioFile)
             {
@@ -204,7 +206,7 @@ FileTypesManager.register('audio', function (key, urls, config, xhrSettings)
     }
     else
     {
-        var audioFile = AudioFile.create(this, key, urls, config, xhrSettings);
+        audioFile = AudioFile.create(this, key, urls, config, xhrSettings);
 
         if (audioFile)
         {

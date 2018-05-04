@@ -42,14 +42,14 @@ var MultiAtlasFile = new Class({
             var config = key;
 
             key = GetFastValue(config, 'key');
-            url = GetFastValue(config, 'url');
-            xhrSettings = GetFastValue(config, 'xhrSettings');
+            atlasURL = GetFastValue(config, 'url');
+            atlasXhrSettings = GetFastValue(config, 'xhrSettings');
             path = GetFastValue(config, 'path');
             baseURL = GetFastValue(config, 'baseURL');
             textureXhrSettings = GetFastValue(config, 'textureXhrSettings');
         }
 
-        var data = new JSONFile(loader, key, url, xhrSettings);
+        var data = new JSONFile(loader, key, atlasURL, atlasXhrSettings);
 
         LinkFile.call(this, loader, 'multiatlas', key, [ data ]);
 
@@ -124,8 +124,6 @@ var MultiAtlasFile = new Class({
             var fileJSON = this.files[0];
 
             fileJSON.addToCache();
-
-            console.log(fileJSON.data);
 
             var data = [];
             var images = [];

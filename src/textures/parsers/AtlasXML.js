@@ -53,10 +53,10 @@ var AtlasXML = function (texture, sourceIndex, xml)
         //  These are the original (non-trimmed) sprite values
         if (frame.frameX)
         {
-            frameX = Math.abs(parseInt(frame.frameX.value, 10));
-            frameY = Math.abs(parseInt(frame.frameY.value, 10));
-            frameWidth = parseInt(frame.frameWidth.value, 10);
-            frameHeight = parseInt(frame.frameHeight.value, 10);
+            var frameX = Math.abs(parseInt(frame.frameX.value, 10));
+            var frameY = Math.abs(parseInt(frame.frameY.value, 10));
+            var frameWidth = parseInt(frame.frameWidth.value, 10);
+            var frameHeight = parseInt(frame.frameHeight.value, 10);
 
             newFrame.setTrim(
                 width,
