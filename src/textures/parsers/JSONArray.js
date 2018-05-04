@@ -26,7 +26,7 @@ var JSONArray = function (texture, sourceIndex, json)
     //  Malformed?
     if (!json['frames'] && !json['textures'])
     {
-        console.warn('Invalid Texture Atlas JSON Array given, missing \'frames\' and \'textures\' array');
+        console.warn('Invalid Texture Atlas JSON Array');
         return;
     }
 
