@@ -192,7 +192,11 @@ var LoaderPlugin = new Class({
         this.setPrefix(GetFastValue(sceneConfig, 'prefix', gameConfig.loaderPrefix));
 
         /**
-         * [description]
+         * The number of concurrent / parallel resources to try and fetch at once.
+         *
+         * Old browsers limit 6 requests per domain; modern ones, especially those with HTTP/2 don't limit it at all.
+         *
+         * The default is 32 but you can change this in your Game Config, or by changing this property before the Loader starts.
          *
          * @name Phaser.Loader.LoaderPlugin#maxParallelDownloads
          * @type {integer}
@@ -216,7 +220,7 @@ var LoaderPlugin = new Class({
         );
 
         /**
-         * [description]
+         * The crossOrigin value applied to loaded images. Very often this needs to be set to 'anonymous'.
          *
          * @name Phaser.Loader.LoaderPlugin#crossOrigin
          * @type {string}
@@ -225,7 +229,8 @@ var LoaderPlugin = new Class({
         this.crossOrigin = GetFastValue(sceneConfig, 'crossOrigin', gameConfig.loaderCrossOrigin);
 
         /**
-         * [description]
+         * The total number of files to load. It may not always be accurate because you may add to the Loader during the process
+         * of loading, especially if you load a Pack File. Therefore this value can change, but in most cases remains static.
          *
          * @name Phaser.Loader.LoaderPlugin#totalToLoad
          * @type {integer}
@@ -235,7 +240,9 @@ var LoaderPlugin = new Class({
         this.totalToLoad = 0;
 
         /**
-         * [description]
+         * The progress of the current load queue, as a float value between 0 and 1.
+         * This is updated automatically as files complete loading.
+         * Note that it is possible for this value to go down again if you add content to the current load queue during a load.
          *
          * @name Phaser.Loader.LoaderPlugin#progress
          * @type {float}
@@ -297,7 +304,8 @@ var LoaderPlugin = new Class({
         this._deleteQueue = new CustomSet();
 
         /**
-         * [description]
+         * The total number of files that failed to load during the most recent load.
+         * This value is reset when you call `Loader.start`.
          *
          * @name Phaser.Loader.LoaderPlugin#totalFailed
          * @type {integer}
@@ -307,7 +315,8 @@ var LoaderPlugin = new Class({
         this.totalFailed = 0;
 
         /**
-         * [description]
+         * The total number of files that successfully loaded during the most recent load.
+         * This value is reset when you call `Loader.start`.
          *
          * @name Phaser.Loader.LoaderPlugin#totalComplete
          * @type {integer}
@@ -317,10 +326,11 @@ var LoaderPlugin = new Class({
         this.totalComplete = 0;
 
         /**
-         * [description]
+         * The current state of the Loader.
          *
          * @name Phaser.Loader.LoaderPlugin#state
          * @type {integer}
+         * @readOnly
          * @since 3.0.0
          */
         this.state = CONST.LOADER_IDLE;
@@ -357,12 +367,17 @@ var LoaderPlugin = new Class({
     },
 
     /**
-     * [description]
+     * If you want to append a URL before the path of any asset you can set this here.
+     * 
+     * Useful if allowing the asset base url to be configured outside of the game code.
+     * 
+     * Once a base URL is set it will affect every file loaded by the Loader from that point on. It does _not_ change any
+     * file _already_ being loaded. To reset it, call this method with no arguments.
      *
      * @method Phaser.Loader.LoaderPlugin#setBaseURL
      * @since 3.0.0
      *
-     * @param {string} url - The URL to use. Leave empty to reset.
+     * @param {string} [url] - The URL to use. Leave empty to reset.
      *
      * @return {Phaser.Loader.LoaderPlugin} This Loader object.
      */
@@ -381,12 +396,28 @@ var LoaderPlugin = new Class({
     },
 
     /**
-     * [description]
+     * The value of `path`, if set, is placed before any _relative_ file path given. For example:
+     *
+     * ```javascript
+     * this.load.setPath("images/sprites/");
+     * this.load.image("ball", "ball.png");
+     * this.load.image("tree", "level1/oaktree.png");
+     * this.load.image("boom", "http://server.com/explode.png");
+     * ```
+     *
+     * Would load the `ball` file from `images/sprites/ball.png` and the tree from
+     * `images/sprites/level1/oaktree.png` but the file `boom` would load from the URL
+     * given as it's an absolute URL.
+     *
+     * Please note that the path is added before the filename but *after* the baseURL (if set.)
+     * 
+     * Once a path is set it will then affect every file added to the Loader from that point on. It does _not_ change any
+     * file _already_ in the load queue. To reset it, call this method with no arguments.
      *
      * @method Phaser.Loader.LoaderPlugin#setPath
      * @since 3.0.0
      *
-     * @param {string} path - The path to use. Leave empty to reset.
+     * @param {string} [path] - The path to use. Leave empty to reset.
      *
      * @return {Phaser.Loader.LoaderPlugin} This Loader object.
      */
@@ -406,9 +437,11 @@ var LoaderPlugin = new Class({
 
     /**
      * An optional prefix that is automatically prepended to the start of every file key.
+     * 
      * If prefix was `MENU.` and you load an image with the key 'Background' the resulting key would be `MENU.Background`.
-     * Once a prefix is set it will then affect every file added to the Loader from that point on.
-     * It does _not_ change any file _already_ in the load queue.
+     * 
+     * Once a prefix is set it will then affect every file added to the Loader from that point on. It does _not_ change any
+     * file _already_ in the load queue. To reset it, call this method with no arguments.
      *
      * @method Phaser.Loader.LoaderPlugin#setPrefix
      * @since 3.7.0
@@ -427,12 +460,19 @@ var LoaderPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Sets the Cross Origin Resource Sharing value used when loading files.
+     * 
+     * Files can override this value on a per-file basis by specifying an alternative `crossOrigin` value in their file config.
+     * 
+     * Once CORs is set it will then affect every file loaded by the Loader from that point on, as long as they don't have
+     * their own CORs setting. To reset it, call this method with no arguments.
+     *
+     * For more details about CORs see https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
      *
      * @method Phaser.Loader.LoaderPlugin#setCORS
      * @since 3.0.0
      *
-     * @param {string} crossOrigin - [description]
+     * @param {string} [crossOrigin] - The value to use for the `crossOrigin` property in the load request.
      *
      * @return {Phaser.Loader.LoaderPlugin} This Loader object.
      */
@@ -444,7 +484,15 @@ var LoaderPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Adds a file, or array of files, into the load queue.
+     *
+     * The file must be an instance of `Phaser.Loader.File`, or a class that extends it. The Loader will check that the key
+     * used by the file won't conflict with any other key either in the loader, the inflight queue or the target cache.
+     * If allowed it will then add the file into the pending list, read for the load to start. Or, if the load has already
+     * started, ready for the next batch of files to be pulled from the list to the inflight queue.
+     *
+     * You should not normally call this method directly, but rather use one of the Loader methods like `image` or `atlas`,
+     * however you can call this as long as the file given to it is well formed.
      *
      * @method Phaser.Loader.LoaderPlugin#addFile
      * @since 3.0.0
@@ -535,12 +583,19 @@ var LoaderPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Takes a well formed, fully parsed pack file object and adds its entries into the load queue. Usually you do not call
+     * this method directly, but instead use `Loader.pack` and supply a path to a JSON file that holds the
+     * pack data. However, if you've got the data prepared you can pass it to this method.
+     *
+     * You can also provide an optional key. If you do then it will only add the entries from that part of the pack into
+     * to the load queue. If not specified it will add all entries it finds. For more details about the pack file format
+     * see the `LoaderPlugin.pack` method.
      *
      * @method Phaser.Loader.LoaderPlugin#addPack
      * @since 3.7.0
      *
-     * @param {any} data - The Pack File data, or an array of Pack File data, to be added to the load queue.
+     * @param {any} data - The Pack File data to be parsed and each entry of it to added to the load queue.
+     * @param {string} [packKey] - An optional key to use from the pack file data.
      *
      * @return {boolean} `true` if any files were added to the queue, otherwise `false`.
      */
@@ -600,12 +655,12 @@ var LoaderPlugin = new Class({
     },
 
     /**
-     * Is the Loader actively loading (or processing loaded files)
+     * Is the Loader actively loading, or processing loaded files?
      *
      * @method Phaser.Loader.LoaderPlugin#isLoading
      * @since 3.0.0
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if the Loader is busy loading or processing, otherwise `false`.
      */
     isLoading: function ()
     {
@@ -618,7 +673,7 @@ var LoaderPlugin = new Class({
      * @method Phaser.Loader.LoaderPlugin#isReady
      * @since 3.0.0
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if the Loader is ready to start a new load, otherwise `false`.
      */
     isReady: function ()
     {
@@ -626,9 +681,25 @@ var LoaderPlugin = new Class({
     },
 
     /**
-     * [description]
+     * This event is fired when a Loader successfully begins to load its queue.
+     * 
+     * @event Phaser.Loader.LoaderPlugin#startEvent
+     * @param {Phaser.Loader.LoaderPlugin} loader - The Loader instance that started.
+     */
+
+    /**
+     * Starts the Loader running. This will reset the progress and totals and then emit a `start` event.
+     * If there is nothing in the queue the Loader will immediately complete, otherwise it will start
+     * loading the first batch of files.
+     *
+     * The Loader is started automatically if the queue is populated within your Scenes `preload` method.
+     *
+     * However, outside of this, you need to call this method to start it.
+     *
+     * If the Loader is already running this method will simply return.
      *
      * @method Phaser.Loader.LoaderPlugin#start
+     * @fires Phaser.Loader.LoaderPlugin#startEvent
      * @since 3.0.0
      */
     start: function ()
@@ -659,14 +730,25 @@ var LoaderPlugin = new Class({
 
             this.updateProgress();
 
-            this.processLoadQueue();
+            this.checkLoadQueue();
         }
     },
 
     /**
-     * [description]
+     * This event is fired when the Loader updates its progress, typically as a result of
+     * a file having completed loading.
+     * 
+     * @event Phaser.Loader.LoaderPlugin#progressEvent
+     * @param {float} progress - The current progress of the load. A value between 0 and 1.
+     */
+
+    /**
+     * Called automatically during the load process.
+     * It updates the `progress` value and then emits a progress event, which you can use to
+     * display a loading bar in your game.
      *
      * @method Phaser.Loader.LoaderPlugin#updateProgress
+     * @fires Phaser.Loader.LoaderPlugin#progressEvent
      * @since 3.0.0
      */
     updateProgress: function ()
@@ -677,12 +759,18 @@ var LoaderPlugin = new Class({
     },
 
     /**
-     * [description]
+     * An internal method called by the Loader.
+     * 
+     * It will check to see if there are any more files in the pending list that need loading, and if so it will move
+     * them from the list Set into the inflight Set, set their CORs flag and start them loading.
+     * 
+     * It will carrying on doing this for each file in the pending list until it runs out, or hits the max allowed parallel downloads.
      *
-     * @method Phaser.Loader.LoaderPlugin#processLoadQueue
-     * @since 3.0.0
+     * @method Phaser.Loader.LoaderPlugin#checkLoadQueue
+     * @private
+     * @since 3.7.0
      */
-    processLoadQueue: function ()
+    checkLoadQueue: function ()
     {
         this.list.each(function (file)
         {
@@ -712,9 +800,28 @@ var LoaderPlugin = new Class({
     },
 
     /**
-     * Called automatically by the Files XHRLoader function.
+     * This event is fired when the a file successfully completes loading, _before_ it is processed.
+     * 
+     * @event Phaser.Loader.LoaderPlugin#loadEvent
+     * @param {Phaser.Loader.File} file - The file that has completed loading.
+     */
+
+    /**
+     * This event is fired when the a file errors during load.
+     * 
+     * @event Phaser.Loader.LoaderPlugin#loadErrorEvent
+     * @param {Phaser.Loader.File} file - The file that has failed to load.
+     */
+
+    /**
+     * An internal method called automatically by the XHRLoader belong to a File.
+     * 
+     * This method will remove the given file from the inflight Set and update the load progress.
+     * If the file was successful its `onProcess` method is called, otherwise it is added to the delete queue.
      *
      * @method Phaser.Loader.LoaderPlugin#nextFile
+     * @fires Phaser.Loader.LoaderPlugin#loadEvent
+     * @fires Phaser.Loader.LoaderPlugin#loadErrorEvent
      * @since 3.0.0
      *
      * @param {Phaser.Loader.File} file - The File that just finished loading, or errored during load.
@@ -747,17 +854,21 @@ var LoaderPlugin = new Class({
 
         if (this.list.size > 0)
         {
-            this.processLoadQueue();
+            this.checkLoadQueue();
         }
     },
 
     /**
-     * Called automatically by the File when it has finished processing.
+     * An internal method that is called automatically by the File when it has finished processing.
+     *
+     * If the process was successful, and the File isn't part of a MultiFile, its `addToCache` method is called.
+     *
+     * It this then removed from the queue. If there are more files to load, `checkLoadQueue` is called, otherwise `loadComplete` is.
      *
      * @method Phaser.Loader.LoaderPlugin#fileProcessComplete
      * @since 3.7.0
      *
-     * @param {Phaser.Loader.File} file - [description]
+     * @param {Phaser.Loader.File} file - The file that has finished processing.
      */
     fileProcessComplete: function (file)
     {
@@ -797,14 +908,26 @@ var LoaderPlugin = new Class({
         else
         {
             //  In case we've added to the list by processing this file
-            this.processLoadQueue();
+            this.checkLoadQueue();
         }
     },
 
     /**
-     * [description]
+     * This event is fired when the Loader has finished loading everything and the queue is empty.
+     * By this point every loaded file will now be in its associated cache and ready for use.
+     * 
+     * @event Phaser.Loader.LoaderPlugin#completeEvent
+     * @param {Phaser.Loader.File} file - The file that has failed to load.
+     */
+
+    /**
+     * Called at the end when the load queue is exhausted and all files have either loaded or errored.
+     * By this point every loaded file will now be in its associated cache and ready for use.
+     *
+     * Also clears down the Sets, puts progress to 1 and clears the deletion queue.
      *
      * @method Phaser.Loader.LoaderPlugin#loadComplete
+     * @fires Phaser.Loader.LoaderPlugin#completeEvent
      * @since 3.7.0
      */
     loadComplete: function ()
@@ -828,12 +951,12 @@ var LoaderPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Adds a File into the pending-deletion queue.
      *
      * @method Phaser.Loader.LoaderPlugin#flagForRemoval
      * @since 3.7.0
      * 
-     * @param {Phaser.Loader.File} file - [description]
+     * @param {Phaser.Loader.File} file - The File to be queued for deletion when the Loader completes.
      */
     flagForRemoval: function (file)
     {
@@ -841,13 +964,15 @@ var LoaderPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Converts the given JSON data into a file that the browser then prompts you to download so you can save it locally.
+     *
+     * The data must be well formed JSON and ready-parsed, not a JavaScript object.
      *
      * @method Phaser.Loader.LoaderPlugin#saveJSON
      * @since 3.0.0
      *
-     * @param {*} data - [description]
-     * @param {string} [filename=file.json] - [description]
+     * @param {*} data - The JSON data, ready parsed.
+     * @param {string} [filename=file.json] - The name to save the JSON file as.
      *
      * @return {Phaser.Loader.LoaderPlugin} This Loader plugin.
      */
@@ -857,14 +982,17 @@ var LoaderPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Causes the browser to save the given data as a file to its default Downloads folder.
+     * 
+     * Creates a DOM level anchor link, assigns it as being a `download` anchor, sets the href
+     * to be an ObjectURL based on the given data, and then invokes a click event.
      *
      * @method Phaser.Loader.LoaderPlugin#save
      * @since 3.0.0
      *
-     * @param {*} data - [description]
-     * @param {string} [filename=file.json] - [description]
-     * @param {string} [filetype=application/json] - [description]
+     * @param {*} data - The data to be saved. Will be passed through URL.createObjectURL.
+     * @param {string} [filename=file.json] - The filename to save the file as.
+     * @param {string} [filetype=application/json] - The file type to use when saving the file. Defaults to JSON.
      *
      * @return {Phaser.Loader.LoaderPlugin} This Loader plugin.
      */
@@ -888,7 +1016,11 @@ var LoaderPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Resets the Loader.
+     *
+     * This will clear all lists and reset the base URL, path and prefix.
+     *
+     * Warning: If the Loader is currently downloading files, or has files in its queue, they will be aborted.
      *
      * @method Phaser.Loader.LoaderPlugin#reset
      * @since 3.0.0

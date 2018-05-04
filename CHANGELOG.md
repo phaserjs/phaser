@@ -1,6 +1,6 @@
 # Change Log
 
-## Version 3.6.1 - Asuna - in development
+## Version 3.7.0 - Asuna - in development
 
 ### New Features
 
