@@ -59,20 +59,15 @@ var BitmapFontFile = new Class({
     {
         if (this.isReadyToProcess())
         {
-            var fileA = this.files[0];
-            var fileB = this.files[1];
+            var image = this.files[0];
+            var xml = this.files[1];
 
-            fileA.addToCache();
-            fileB.addToCache();
+            image.addToCache();
+            xml.addToCache();
 
-            if (fileA.type === 'image')
-            {
-                this.loader.cacheManager.bitmapFont.add(fileB.key, { data: ParseXMLBitmapFont(fileB.data), texture: fileA.key, frame: null });
-            }
-            else
-            {
-                this.loader.cacheManager.bitmapFont.add(fileA.key, { data: ParseXMLBitmapFont(fileA.data), texture: fileB.key, frame: null });
-            }
+            this.loader.cacheManager.bitmapFont.add(image.key, {
+                data: ParseXMLBitmapFont(xml.data), texture: image.key, frame: null
+            });
 
             this.complete = true;
         }
