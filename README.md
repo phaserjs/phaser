@@ -260,6 +260,10 @@ You can then run `webpack` to create a development build in the `build` folder w
 ![Change Log](https://phaser.io/images/github/div-change-log.png "Change Log")
 <a name="changelog"></a>
 
+## Version 3.7.0 - Sinon - 4th May 2018
+
+This version will be out shortly and is available from npm under the `beta` tag. See the Change Log for what's new!
+
 ## Version 3.6.0 - Asuna - 19th April 2018
 
 ### New Features
