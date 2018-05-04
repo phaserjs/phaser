@@ -49,26 +49,28 @@ var AtlasXMLFile = new Class({
         var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
         var data = new XMLFile(loader, key, atlasURL, atlasXhrSettings);
 
-        MultiFile.call(this, loader, 'atlasxml', key, [ image, data ]);
+        if (image.linkFile)
+        {
+            //  Image has a normal map
+            MultiFile.call(this, loader, 'atlasxml', key, [ image, data, image.linkFile ]);
+        }
+        else
+        {
+            MultiFile.call(this, loader, 'atlasxml', key, [ image, data ]);
+        }
     },
 
     addToCache: function ()
     {
         if (this.isReadyToProcess())
         {
-            var fileA = this.files[0];
-            var fileB = this.files[1];
+            var image = this.files[0];
+            var xml = this.files[1];
+            var normalMap = (this.files[2]) ? this.files[2].data : null;
 
-            if (fileA.type === 'image')
-            {
-                this.loader.textureManager.addAtlasXML(fileA.key, fileA.data, fileB.data);
-                fileB.addToCache();
-            }
-            else
-            {
-                this.loader.textureManager.addAtlasXML(fileB.key, fileB.data, fileA.data);
-                fileA.addToCache();
-            }
+            this.loader.textureManager.addAtlasXML(image.key, image.data, xml.data, normalMap);
+
+            xml.addToCache();
 
             this.complete = true;
         }

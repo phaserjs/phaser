@@ -36,7 +36,7 @@ var ImageFile = new Class({
     function ImageFile (loader, key, url, xhrSettings, frameConfig)
     {
         var extension = 'png';
-        var normalMap;
+        var normalMapURL;
 
         if (IsPlainObject(key))
         {
@@ -44,7 +44,7 @@ var ImageFile = new Class({
 
             key = GetFastValue(config, 'key');
             url = GetFastValue(config, 'url');
-            normalMap = GetFastValue(config, 'normalMap');
+            normalMapURL = GetFastValue(config, 'normalMap');
             xhrSettings = GetFastValue(config, 'xhrSettings');
             extension = GetFastValue(config, 'extension', extension);
             frameConfig = GetFastValue(config, 'frameConfig');
@@ -52,7 +52,7 @@ var ImageFile = new Class({
 
         if (Array.isArray(url))
         {
-            normalMap = url[1];
+            normalMapURL = url[1];
             url = url[0];
         }
 
@@ -70,9 +70,15 @@ var ImageFile = new Class({
         File.call(this, loader, fileConfig);
 
         //  Do we have a normal map to load as well?
-        if (normalMap)
+        if (normalMapURL)
         {
-            // var 
+            var normalMap = new ImageFile(loader, key, normalMapURL, xhrSettings, frameConfig);
+
+            normalMap.type = 'normalMap';
+
+            this.setLink(normalMap);
+
+            loader.addFile(normalMap);
         }
     },
 
@@ -105,9 +111,36 @@ var ImageFile = new Class({
 
     addToCache: function ()
     {
-        var texture = this.cache.addImage(this.key, this.data);
+        console.log('addToCache', this.key, this.type);
 
-        this.pendingDestroy(texture);
+        var texture;
+
+        if (this.linkFile && this.linkFile.state === CONST.FILE_COMPLETE)
+        {
+            console.log('linkFile ready');
+
+            //  Both files are ready
+            var fileA = this;
+            var fileB = this.linkFile;
+
+            if (fileA.type === 'image')
+            {
+                texture = this.cache.addImage(fileA.key, fileA.data, fileB.data);
+            }
+            else
+            {
+                texture = this.cache.addImage(fileB.key, fileB.data, fileA.data);
+            }
+
+            fileA.pendingDestroy(texture);
+            fileB.pendingDestroy(texture);
+        }
+        else if (!this.linkFile)
+        {
+            texture = this.cache.addImage(this.key, this.data);
+
+            this.pendingDestroy(texture);
+        }
     }
 
 });

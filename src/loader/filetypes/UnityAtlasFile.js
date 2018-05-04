@@ -49,26 +49,28 @@ var UnityAtlasFile = new Class({
         var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
         var data = new TextFile(loader, key, atlasURL, atlasXhrSettings);
 
-        MultiFile.call(this, loader, 'unityatlas', key, [ image, data ]);
+        if (image.linkFile)
+        {
+            //  Image has a normal map
+            MultiFile.call(this, loader, 'unityatlas', key, [ image, data, image.linkFile ]);
+        }
+        else
+        {
+            MultiFile.call(this, loader, 'unityatlas', key, [ image, data ]);
+        }
     },
 
     addToCache: function ()
     {
         if (this.failed === 0 && !this.complete)
         {
-            var fileA = this.files[0];
-            var fileB = this.files[1];
+            var image = this.files[0];
+            var text = this.files[1];
+            var normalMap = (this.files[2]) ? this.files[2].data : null;
 
-            if (fileA.type === 'image')
-            {
-                this.loader.textureManager.addUnityAtlas(fileA.key, fileA.data, fileB.data);
-                fileB.addToCache();
-            }
-            else
-            {
-                this.loader.textureManager.addUnityAtlas(fileB.key, fileB.data, fileA.data);
-                fileA.addToCache();
-            }
+            this.loader.textureManager.addUnityAtlas(image.key, image.data, text.data, normalMap);
+
+            text.addToCache();
 
             this.complete = true;
         }

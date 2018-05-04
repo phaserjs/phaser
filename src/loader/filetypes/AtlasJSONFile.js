@@ -15,6 +15,7 @@ var MultiFile = require('../MultiFile.js');
 /**
  * @classdesc
  * An Atlas JSON File.
+ * https://www.codeandweb.com/texturepacker/tutorials/how-to-create-sprite-sheets-for-phaser3?source=photonstorm
  *
  * @class AtlasJSONFile
  * @extends Phaser.Loader.MultiFile
@@ -51,26 +52,28 @@ var AtlasJSONFile = new Class({
         var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
         var data = new JSONFile(loader, key, atlasURL, atlasXhrSettings);
 
-        MultiFile.call(this, loader, 'atlasjson', key, [ image, data ]);
+        if (image.linkFile)
+        {
+            //  Image has a normal map
+            MultiFile.call(this, loader, 'atlasjson', key, [ image, data, image.linkFile ]);
+        }
+        else
+        {
+            MultiFile.call(this, loader, 'atlasjson', key, [ image, data ]);
+        }
     },
 
     addToCache: function ()
     {
         if (this.isReadyToProcess())
         {
-            var fileA = this.files[0];
-            var fileB = this.files[1];
+            var image = this.files[0];
+            var json = this.files[1];
+            var normalMap = (this.files[2]) ? this.files[2].data : null;
 
-            if (fileA.type === 'image')
-            {
-                this.loader.textureManager.addAtlas(fileA.key, fileA.data, fileB.data);
-                fileB.addToCache();
-            }
-            else
-            {
-                this.loader.textureManager.addAtlas(fileB.key, fileB.data, fileA.data);
-                fileA.addToCache();
-            }
+            this.loader.textureManager.addAtlas(image.key, image.data, json.data, normalMap);
+
+            json.addToCache();
 
             this.complete = true;
         }

@@ -385,19 +385,20 @@ var TextureManager = new Class({
      * @param {string} key - The unique string-based key of the Texture.
      * @param {HTMLImageElement} source - The source Image element.
      * @param {object} data - The Texture Atlas data.
+     * @param {HTMLImageElement} [dataSource] - An optional data Image element.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
-    addAtlas: function (key, source, data)
+    addAtlas: function (key, source, data, dataSource)
     {
         //  New Texture Packer format?
         if (Array.isArray(data.textures) || Array.isArray(data.frames))
         {
-            return this.addAtlasJSONArray(key, source, data);
+            return this.addAtlasJSONArray(key, source, data, dataSource);
         }
         else
         {
-            return this.addAtlasJSONHash(key, source, data);
+            return this.addAtlasJSONHash(key, source, data, dataSource);
         }
     },
 
@@ -412,10 +413,11 @@ var TextureManager = new Class({
      * @param {string} key - The unique string-based key of the Texture.
      * @param {(HTMLImageElement|HTMLImageElement[])} source - The source Image element/s.
      * @param {(object|object[])} data - The Texture Atlas data/s.
+     * @param {HTMLImageElement} [dataSource] - An optional data Image element.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
-    addAtlasJSONArray: function (key, source, data)
+    addAtlasJSONArray: function (key, source, data, dataSource)
     {
         var texture = null;
 
@@ -423,6 +425,7 @@ var TextureManager = new Class({
         {
             texture = this.create(key, source);
 
+            //  Multi-Atlas?
             if (Array.isArray(data))
             {
                 var singleAtlasFile = (data.length === 1); // multi-pack with one atlas file for all images
@@ -438,6 +441,11 @@ var TextureManager = new Class({
             else
             {
                 Parser.JSONArray(texture, 0, data);
+            }
+
+            if (dataSource)
+            {
+                texture.setDataSource(dataSource);
             }
 
             this.emit('addtexture', key, texture);
@@ -457,10 +465,11 @@ var TextureManager = new Class({
      * @param {string} key - The unique string-based key of the Texture.
      * @param {HTMLImageElement} source - The source Image element.
      * @param {object} data - The Texture Atlas data.
+     * @param {HTMLImageElement} [dataSource] - An optional data Image element.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
-    addAtlasJSONHash: function (key, source, data)
+    addAtlasJSONHash: function (key, source, data, dataSource)
     {
         var texture = null;
 
@@ -480,6 +489,46 @@ var TextureManager = new Class({
                 Parser.JSONHash(texture, 0, data);
             }
 
+            if (dataSource)
+            {
+                texture.setDataSource(dataSource);
+            }
+
+            this.emit('addtexture', key, texture);
+        }
+
+        return texture;
+    },
+
+    /**
+     * Adds a Texture Atlas to this Texture Manager, where the atlas data is given
+     * in the XML format.
+     *
+     * @method Phaser.Textures.TextureManager#addAtlasXML
+     * @since 3.7.0
+     *
+     * @param {string} key - The unique string-based key of the Texture.
+     * @param {HTMLImageElement} source - The source Image element.
+     * @param {object} data - The Texture Atlas XML data.
+     * @param {HTMLImageElement} [dataSource] - An optional data Image element.
+     *
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
+     */
+    addAtlasXML: function (key, source, data, dataSource)
+    {
+        var texture = null;
+
+        if (this.checkKey(key))
+        {
+            texture = this.create(key, source);
+            
+            Parser.AtlasXML(texture, 0, data);
+
+            if (dataSource)
+            {
+                texture.setDataSource(dataSource);
+            }
+
             this.emit('addtexture', key, texture);
         }
 
@@ -496,10 +545,11 @@ var TextureManager = new Class({
      * @param {string} key - The unique string-based key of the Texture.
      * @param {HTMLImageElement} source - The source Image element.
      * @param {object} data - The Texture Atlas data.
+     * @param {HTMLImageElement} [dataSource] - An optional data Image element.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
-    addUnityAtlas: function (key, source, data)
+    addUnityAtlas: function (key, source, data, dataSource)
     {
         var texture = null;
 
@@ -508,6 +558,11 @@ var TextureManager = new Class({
             texture = this.create(key, source);
 
             Parser.UnityYAML(texture, 0, data);
+
+            if (dataSource)
+            {
+                texture.setDataSource(dataSource);
+            }
 
             this.emit('addtexture', key, texture);
         }
@@ -623,35 +678,6 @@ var TextureManager = new Class({
 
             return texture;
         }
-    },
-
-    /**
-     * Adds a Texture Atlas to this Texture Manager, where the atlas data is given
-     * in the XML format.
-     *
-     * @method Phaser.Textures.TextureManager#addAtlasXML
-     * @since 3.7.0
-     *
-     * @param {string} key - The unique string-based key of the Texture.
-     * @param {HTMLImageElement} source - The source Image element.
-     * @param {object} data - The Texture Atlas XML data.
-     *
-     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
-     */
-    addAtlasXML: function (key, source, data)
-    {
-        var texture = null;
-
-        if (this.checkKey(key))
-        {
-            texture = this.create(key, source);
-            
-            Parser.AtlasXML(texture, 0, data);
-
-            this.emit('addtexture', key, texture);
-        }
-
-        return texture;
     },
 
     /**
