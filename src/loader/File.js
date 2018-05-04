@@ -223,9 +223,27 @@ var File = new Class({
          *
          * @name Phaser.Loader.File#multiFile
          * @type {?Phaser.Loader.MultiFile}
-         * @since 3.0.0
+         * @since 3.7.0
          */
         this.multiFile;
+
+        /**
+         * Does this file have an associated linked file? Such as an image and a normal map.
+         * Atlases and Bitmap Fonts use the multiFile, because those files need loading together but aren't
+         * actually bound by data, where-as a linkFile is.
+         *
+         * @name Phaser.Loader.File#linkFile
+         * @type {?Phaser.Loader.File}
+         * @since 3.7.0
+         */
+        this.linkFile;
+    },
+
+    setLink: function (fileB)
+    {
+        this.linkFile = fileB;
+
+        fileB.linkFile = this;
     },
 
     /**
@@ -451,6 +469,7 @@ var File = new Class({
         this.cache = null;
         this.xhrSettings = null;
         this.multiFile = null;
+        this.linkFile = null;
         this.data = null;
     }
 
