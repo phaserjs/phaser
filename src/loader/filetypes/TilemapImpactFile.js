@@ -74,12 +74,12 @@ FileTypesManager.register('tilemapWeltmeister', function (key, url, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(TilemapImpactFile(this, key[i]));
+            this.addFile(new TilemapImpactFile(this, key[i]));
         }
     }
     else
     {
-        this.addFile(TilemapImpactFile(this, key, url, xhrSettings));
+        this.addFile(new TilemapImpactFile(this, key, url, xhrSettings));
     }
 
     return this;
