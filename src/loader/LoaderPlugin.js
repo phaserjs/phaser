@@ -428,8 +428,6 @@ var LoaderPlugin = new Class({
             {
                 this.list.set(item);
 
-                console.log('addFile', item.key);
-
                 if (this.isLoading())
                 {
                     this.totalToLoad++;
@@ -511,9 +509,6 @@ var LoaderPlugin = new Class({
         {
             pack = { packKey: pack[packKey] };
         }
-
-        console.log('---------> addPack', packKey);
-        console.log(pack);
 
         //  Store the loader settings in case this pack replaces them
         var currentBaseURL = this.baseURL;
@@ -604,8 +599,6 @@ var LoaderPlugin = new Class({
         this.totalComplete = 0;
         this.totalToLoad = this.list.size;
 
-        console.log('start', this.totalToLoad);
-
         this.emit('start', this);
 
         if (this.list.size === 0)
@@ -661,7 +654,6 @@ var LoaderPlugin = new Class({
                     file.crossOrigin = this.crossOrigin;
                 }
 
-                console.log('processLoadQueue', file.key);
                 file.load();
             }
 
@@ -685,8 +677,6 @@ var LoaderPlugin = new Class({
      */
     nextFile: function (file, success)
     {
-        console.log('nextFile', file.key, success);
-
         this.inflight.delete(file);
 
         this.updateProgress();
@@ -699,8 +689,6 @@ var LoaderPlugin = new Class({
 
             this.emit('load', file);
 
-            console.log('nextFile 1');
-
             file.onProcess();
         }
         else
@@ -710,13 +698,10 @@ var LoaderPlugin = new Class({
             this._deleteQueue.set(file);
 
             this.emit('loaderror', file);
-
-            console.log('nextFile 2');
         }
 
         if (this.list.size > 0)
         {
-            console.log('nextFile processLoadQueue');
             this.processLoadQueue();
         }
     },
@@ -741,10 +726,13 @@ var LoaderPlugin = new Class({
         }
         else if (file.state === CONST.FILE_COMPLETE)
         {
-            if (file.linkFile && file.linkFile.isReadyToProcess())
+            if (file.linkFile)
             {
-                //  If we got here then all files the link file needs are ready to add to the cache
-                file.linkFile.addToCache();
+                if (file.linkFile.isReadyToProcess())
+                {
+                    //  If we got here then all files the link file needs are ready to add to the cache
+                    file.linkFile.addToCache();
+                }
             }
             else
             {
@@ -776,8 +764,6 @@ var LoaderPlugin = new Class({
      */
     loadComplete: function ()
     {
-        console.log('>>> loadComplete');
-
         this.emit('loadcomplete', this);
 
         this.list.clear();
@@ -807,75 +793,6 @@ var LoaderPlugin = new Class({
     flagForRemoval: function (file)
     {
         this._deleteQueue.set(file);
-    },
-
-    /**
-     * !!! TO BE DELETED !!!
-     * !!! TO BE DELETED !!!
-     * !!! TO BE DELETED !!!
-     *
-     * @method Phaser.Loader.LoaderPlugin#processCallback
-     * @since 3.0.0
-     */
-    ___processCallback: function ()
-    {
-        if (this.storage.size === 0)
-        {
-            return;
-        }
-
-        //  Process all of the files
-
-        this.storage.each(function (file)
-        {
-            if (file.linkFile)
-            {
-                file.linkFile.addToCache();
-            }
-            else
-            {
-                file.addToCache();
-            }
-
-            /*
-            switch (file.type)
-            {
-                case 'dataimage':
-
-                    fileA = file.fileA;
-                    fileB = file.fileB;
-
-                    if (fileA.linkParent)
-                    {
-                        textures.addImage(fileA.key, fileA.data, fileB.data);
-                    }
-                    else
-                    {
-                        textures.addImage(fileB.key, fileB.data, fileA.data);
-                    }
-                    break;
-
-                case 'audioSprite':
-
-                    var files = [ file.fileA, file.fileB ];
-
-                    files.forEach(function (file)
-                    {
-                        cache[file.type].add(file.key, file.data);
-                    });
-
-                    break;
-            }
-            */
-
-        });
-
-        this.emit('processcomplete', this);
-
-        //  Call 'destroy' on each file in storage
-        this.storage.iterateLocal('destroy');
-
-        this.storage.clear();
     },
 
     /**
