@@ -200,7 +200,7 @@ var BaseSound = new Class({
         if (this.markers[marker.name])
         {
             // eslint-disable-next-line no-console
-            console.error('addMarker - Marker with name \'' + marker.name + '\' already exists for sound \'' + this.key + '\'!');
+            console.error('addMarker ' + marker.name + ' already exists in Sound');
 
             return false;
         }
