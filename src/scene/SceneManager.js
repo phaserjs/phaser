@@ -1053,7 +1053,7 @@ var SceneManager = new Class({
             {
                 loader.reset();
 
-                if (loader.addPack({ 'payload': scene.sys.settings.pack }))
+                if (loader.addPack({ payload: scene.sys.settings.pack }))
                 {
                     scene.sys.settings.status = CONST.LOADING;
 

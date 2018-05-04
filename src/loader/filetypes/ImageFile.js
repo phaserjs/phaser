@@ -112,26 +112,25 @@ var ImageFile = new Class({
     addToCache: function ()
     {
         var texture;
+        var linkFile = this.linkFile;
 
-        if (this.linkFile && this.linkFile.state === CONST.FILE_COMPLETE)
+        if (linkFile && linkFile.state === CONST.FILE_COMPLETE)
         {
-            //  Both files are ready
-            var fileA = this;
-            var fileB = this.linkFile;
 
-            if (fileA.type === 'image')
+            if (this.type === 'image')
             {
-                texture = this.cache.addImage(fileA.key, fileA.data, fileB.data);
+                texture = this.cache.addImage(this.key, this.data, linkFile.data);
             }
             else
             {
-                texture = this.cache.addImage(fileB.key, fileB.data, fileA.data);
+                texture = this.cache.addImage(linkFile.key, linkFile.data, this.data);
             }
 
-            fileA.pendingDestroy(texture);
-            fileB.pendingDestroy(texture);
+            this.pendingDestroy(texture);
+
+            linkFile.pendingDestroy(texture);
         }
-        else if (!this.linkFile)
+        else if (!linkFile)
         {
             texture = this.cache.addImage(this.key, this.data);
 
