@@ -13,12 +13,6 @@ var XHRLoader = require('./XHRLoader');
 var XHRSettings = require('./XHRSettings');
 
 /**
- * @callback FileProcessCallback
- *
- * @param {Phaser.Loader.File} file - [description]
- */
-
-/**
  * @typedef {object} FileConfig
  *
  * @property {(string|false)} [type=false] - The file type string (image, json, etc) for sorting within the Loader.
@@ -33,7 +27,8 @@ var XHRSettings = require('./XHRSettings');
 
 /**
  * @classdesc
- * [description]
+ * The base File class used by all File Types that the Loader can support.
+ * You shouldn't create an instance of a File directly, but should extend it with your own class, setting a custom type and processing methods.
  *
  * @class File
  * @memberOf Phaser.Loader
@@ -41,7 +36,7 @@ var XHRSettings = require('./XHRSettings');
  * @since 3.0.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - The Loader that is going to load this File.
- * @param {FileConfig} fileConfig - [description]
+ * @param {FileConfig} fileConfig - The file configuration object, as created by the file type.
  */
 var File = new Class({
 
@@ -99,6 +94,7 @@ var File = new Class({
 
         /**
          * The URL of the file, not including baseURL.
+         * Automatically has Loader.path prepended to it.
          *
          * @name Phaser.Loader.File#url
          * @type {string}
@@ -116,7 +112,8 @@ var File = new Class({
         }
 
         /**
-         * Set when the Loader calls 'load' on this file.
+         * The final URL this file will load from, including baseURL and path.
+         * Set automatically when the Loader calls 'load' on this file.
          *
          * @name Phaser.Loader.File#src
          * @type {string}
@@ -200,7 +197,7 @@ var File = new Class({
         this.crossOrigin = undefined;
 
         /**
-         * The processed file data, stored in here after the file has loaded.
+         * The processed file data, stored here after the file has loaded.
          *
          * @name Phaser.Loader.File#data
          * @type {*}
@@ -212,14 +209,14 @@ var File = new Class({
          * A config object that can be used by file types to store transitional data.
          *
          * @name Phaser.Loader.File#config
-         * @type {object}
+         * @type {*}
          * @since 3.0.0
          */
         this.config = GetFastValue(fileConfig, 'config', {});
 
         /**
          * If this is a multipart file, i.e. an atlas and its json together, then this is a reference
-         * to the linked file. Set and used internally by the Loader.
+         * to the parent MultiFile. Set and used internally by the Loader or specific file types.
          *
          * @name Phaser.Loader.File#multiFile
          * @type {?Phaser.Loader.MultiFile}
@@ -239,6 +236,14 @@ var File = new Class({
         this.linkFile;
     },
 
+    /**
+     * Links this File with another, so they depend upon each other for loading and processing.
+     *
+     * @method Phaser.Loader.File#setLink
+     * @since 3.7.0
+     *
+     * @param {Phaser.Loader.File} fileB - The file to link to this one.
+     */
     setLink: function (fileB)
     {
         this.linkFile = fileB;
@@ -247,7 +252,7 @@ var File = new Class({
     },
 
     /**
-     * Resets the XHRLoader instance.
+     * Resets the XHRLoader instance this file is using.
      *
      * @method Phaser.Loader.File#resetXHR
      * @since 3.0.0
@@ -264,7 +269,8 @@ var File = new Class({
 
     /**
      * Called by the Loader, starts the actual file downloading.
-     * During the load the methods onLoad, onProgress, etc are called based on the XHR events.
+     * During the load the methods onLoad, onError and onProgress are called, based on the XHR events.
+     * You shouldn't normally call this method directly, it's meant to be invoked by the Loader.
      *
      * @method Phaser.Loader.File#load
      * @since 3.0.0
@@ -289,9 +295,9 @@ var File = new Class({
                 //  The creation of this XHRLoader starts the load process going.
                 //  It will automatically call the following, based on the load outcome:
                 //  
-                // xhr.onload = file.onLoad.bind(file);
-                // xhr.onerror = file.onError.bind(file);
-                // xhr.onprogress = file.onProgress.bind(file);
+                // xhr.onload = this.onLoad
+                // xhr.onerror = this.onError
+                // xhr.onprogress = this.onProgress
 
                 this.xhrLoader = XHRLoader(this, this.loader.xhr);
             }
@@ -352,7 +358,8 @@ var File = new Class({
     },
 
     /**
-     * Usually overridden by the FileTypes and is called by Loader.finishedLoading.
+     * Usually overridden by the FileTypes and is called by Loader.nextFile.
+     * This method controls what extra work this File does with its loaded data, for example a JSON file will parse itself during this stage.
      *
      * @method Phaser.Loader.File#onProcess
      * @since 3.0.0
@@ -365,7 +372,7 @@ var File = new Class({
     },
 
     /**
-     * Called when the File has completed loading.
+     * Called when the File has completed processing.
      * Checks on the state of its multifile, if set.
      *
      * @method Phaser.Loader.File#onProcessComplete
@@ -384,7 +391,7 @@ var File = new Class({
     },
 
     /**
-     * Called when the File has completed loading.
+     * Called when the File has completed processing but it generated an error.
      * Checks on the state of its multifile, if set.
      *
      * @method Phaser.Loader.File#onProcessError
@@ -419,7 +426,6 @@ var File = new Class({
 
     /**
      * Adds this file to its target cache upon successful loading and processing.
-     * It will emit a `filecomplete` event from the LoaderPlugin.
      * This method is often overridden by specific file types.
      *
      * @method Phaser.Loader.File#addToCache
@@ -436,11 +442,19 @@ var File = new Class({
     },
 
     /**
+     * @event Phaser.Loader.File#fileCompleteEvent
+     * @param {string} key - The key of the file that just loaded and finished processing.
+     * @param {string} type - The type of the file that just loaded and finished processing.
+     * @param {any} data - The data of the file.
+     */
+
+    /**
      * Adds this file to its target cache upon successful loading and processing.
      * It will emit a `filecomplete` event from the LoaderPlugin.
      * This method is often overridden by specific file types.
      *
      * @method Phaser.Loader.File#pendingDestroy
+     * @fires Phaser.Loader.File#fileCompleteEvent
      * @since 3.7.0
      */
     pendingDestroy: function (data)
