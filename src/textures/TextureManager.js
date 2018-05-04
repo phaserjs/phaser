@@ -627,49 +627,10 @@ var TextureManager = new Class({
 
     /**
      * Adds a Texture Atlas to this Texture Manager, where the atlas data is given
-     * in the Starling XML format.
+     * in the XML format.
      *
-     * @method Phaser.Textures.TextureManager#addAtlasStarlingXML
-     * @since 3.0.0
-     *
-     * @param {string} key - The unique string-based key of the Texture.
-     * @param {HTMLImageElement} source - The source Image element.
-     * @param {object} data - The Texture Atlas XML data.
-     *
-     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
-     */
-    addAtlasStarlingXML: function (key, source, data)
-    {
-        var texture = null;
-
-        if (this.checkKey(key))
-        {
-            texture = this.create(key, source);
-
-            if (Array.isArray(data))
-            {
-                for (var i = 0; i < data.length; i++)
-                {
-                    Parser.StarlingXML(texture, i, data[i]);
-                }
-            }
-            else
-            {
-                Parser.StarlingXML(texture, 0, data);
-            }
-
-            this.emit('addtexture', key, texture);
-        }
-
-        return texture;
-    },
-
-    /**
-     * Adds a Texture Atlas to this Texture Manager, where the atlas data is given
-     * in the Pyxel JSON format.
-     *
-     * @method Phaser.Textures.TextureManager#addAtlasPyxel
-     * @since 3.0.0
+     * @method Phaser.Textures.TextureManager#addAtlasXML
+     * @since 3.7.0
      *
      * @param {string} key - The unique string-based key of the Texture.
      * @param {HTMLImageElement} source - The source Image element.
@@ -677,25 +638,15 @@ var TextureManager = new Class({
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
-    addAtlasPyxel: function (key, source, data)
+    addAtlasXML: function (key, source, data)
     {
         var texture = null;
 
         if (this.checkKey(key))
         {
             texture = this.create(key, source);
-
-            if (Array.isArray(data))
-            {
-                for (var i = 0; i < data.length; i++)
-                {
-                    Parser.Pyxel(texture, i, data[i]);
-                }
-            }
-            else
-            {
-                Parser.Pyxel(texture, 0, data);
-            }
+            
+            Parser.AtlasXML(texture, 0, data);
 
             this.emit('addtexture', key, texture);
         }
