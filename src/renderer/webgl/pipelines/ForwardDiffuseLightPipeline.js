@@ -135,7 +135,7 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     drawStaticTilemapLayer: function (tilemap, camera, parentTransformMatrix)
     {
-        var normalTexture = tilemap.texture.dataSource[0];
+        var normalTexture = tilemap.tileset.image.dataSource[0];
 
         if (normalTexture)
         {
@@ -163,7 +163,7 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     drawEmitterManager: function (emitterManager, camera, parentTransformMatrix)
     {
-        var normalTexture = emitterManager.texture.dataSource[0];
+        var normalTexture = emitterManager.texture.dataSource[emitterManager.frame.sourceIndex];
 
         if (normalTexture)
         {
@@ -191,7 +191,7 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     drawBlitter: function (blitter, camera, parentTransformMatrix)
     {
-        var normalTexture = blitter.texture.dataSource[0];
+        var normalTexture = blitter.texture.dataSource[blitter.frame.sourceIndex];
 
         if (normalTexture)
         {
@@ -219,7 +219,7 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     batchSprite: function (sprite, camera, parentTransformMatrix)
     {
-        var normalTexture = sprite.texture.dataSource[0];
+        var normalTexture = sprite.texture.dataSource[sprite.frame.sourceIndex];
 
         if (normalTexture)
         {
@@ -247,7 +247,7 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     batchMesh: function (mesh, camera, parentTransformMatrix)
     {
-        var normalTexture = mesh.texture.dataSource[0];
+        var normalTexture = mesh.texture.dataSource[mesh.frame.sourceIndex];
 
         if (normalTexture)
         {
@@ -276,7 +276,7 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     batchBitmapText: function (bitmapText, camera, parentTransformMatrix)
     {
-        var normalTexture = bitmapText.texture.dataSource[0];
+        var normalTexture = bitmapText.texture.dataSource[bitmapText.frame.sourceIndex];
 
         if (normalTexture)
         {
@@ -304,7 +304,7 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     batchDynamicBitmapText: function (bitmapText, camera, parentTransformMatrix)
     {
-        var normalTexture = bitmapText.texture.dataSource[0];
+        var normalTexture = bitmapText.texture.dataSource[bitmapText.frame.sourceIndex];
 
         if (normalTexture)
         {
@@ -332,7 +332,7 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     batchText: function (text, camera, parentTransformMatrix)
     {
-        var normalTexture = text.texture.dataSource[0];
+        var normalTexture = text.texture.dataSource[text.frame.sourceIndex];
 
         if (normalTexture)
         {
@@ -360,7 +360,7 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     batchDynamicTilemapLayer: function (tilemapLayer, camera, parentTransformMatrix)
     {
-        var normalTexture = tilemapLayer.texture.dataSource[0];
+        var normalTexture = tilemapLayer.tileset.image.dataSource[0];
 
         if (normalTexture)
         {
@@ -388,7 +388,7 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     batchTileSprite: function (tileSprite, camera, parentTransformMatrix)
     {
-        var normalTexture = tileSprite.texture.dataSource[0];
+        var normalTexture = tileSprite.texture.dataSource[tileSprite.frame.sourceIndex];
 
         if (normalTexture)
         {
