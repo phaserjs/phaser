@@ -355,8 +355,6 @@ var File = new Class({
      */
     onProcessComplete: function ()
     {
-        console.log('onProcessComplete', this.key);
-
         this.state = CONST.FILE_COMPLETE;
 
         if (this.linkFile)
@@ -376,8 +374,6 @@ var File = new Class({
      */
     onProcessError: function ()
     {
-        console.log('onProcessError', this.key);
-
         this.state = CONST.FILE_ERRORED;
 
         if (this.linkFile)
