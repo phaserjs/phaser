@@ -14,6 +14,7 @@
  * @property {number} timeout - [description]
  * @property {?string} header - [description]
  * @property {?string} headerValue - [description]
+ * @property {?string} requestedWith - [description]
  * @property {(string|undefined)} overrideMimeType - [description]
  */
 
@@ -60,6 +61,7 @@ var XHRSettings = function (responseType, async, user, password, timeout)
         //  setRequestHeader
         header: undefined,
         headerValue: undefined,
+        requestedWith: false,
 
         //  overrideMimeType
         overrideMimeType: undefined

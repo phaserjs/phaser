@@ -310,13 +310,20 @@ var File = new Class({
      * @method Phaser.Loader.File#onLoad
      * @since 3.0.0
      *
+     * @param {XMLHttpRequest} xhr - The XMLHttpRequest that caused this onload event.
      * @param {ProgressEvent} event - The DOM ProgressEvent that resulted from this load.
      */
-    onLoad: function (event)
+    onLoad: function (xhr, event)
     {
-        this.resetXHR();
-
         var success = !(event.target && event.target.status !== 200);
+
+        //  Handle HTTP status codes of 4xx and 5xx as errors, even if xhr.onerror was not called.
+        if (xhr.readyState === 4 && xhr.status >= 400 && xhr.status <= 599)
+        {
+            success = false;
+        }
+
+        this.resetXHR();
 
         this.loader.nextFile(this, success);
     },

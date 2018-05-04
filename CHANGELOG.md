@@ -43,6 +43,8 @@ The Loader has been given an overhaul to improve its performance and extensibili
 * The default number of max parallel file loads has increased from 4 to 32. You can still change it in the game config.
 * Normal Maps can now be loaded using a config object: `load.image({ key: 'shinyRobot', url: 'rob.png', normalMap: 'rob_n.png' });` - you can still use the previous array method too.
 * Loader.enableParallel has been removed. If you don't want parallel file loads then set the maximum parallel limit to 1. Related to this, the Game Config `loaderEnableParallel` property has been removed.
+* You can now set the `X-Requested-With` header in the XHR requests by specifying it in your XHRSettings config, either in the game, scene or file configs.
+* Files will consider themselves as errored if the xhr status is >= 400 and <= 599, even if they didn't throw an onerror event.
 
 ### Updates
 
