@@ -35,24 +35,79 @@ var AudioSpriteFile = new Class({
 
     initialize:
 
-    function AudioSpriteFile (loader, key, urls, json, config, audioXhrSettings, jsonXhrSettings)
+    function AudioSpriteFile (loader, key, url, json, audioConfig, audioXhrSettings, jsonXhrSettings)
     {
         if (IsPlainObject(key))
         {
             var config = key;
 
-            // key = GetFastValue(config, 'key');
-            // URLs = GetFastValue(config, 'urls');
-            // json = GetFastValue(config, 'json');
-            // atlasURL = GetFastValue(config, 'atlasURL');
-            // textureXhrSettings = GetFastValue(config, 'textureXhrSettings');
-            // atlasXhrSettings = GetFastValue(config, 'atlasXhrSettings');
+            key = GetFastValue(config, 'key');
+            url = GetFastValue(config, 'url');
+            json = GetFastValue(config, 'json');
+            audioConfig = GetFastValue(config, 'config');
+            audioXhrSettings = GetFastValue(config, 'audioXhrSettings');
+            jsonXhrSettings = GetFastValue(config, 'jsonXhrSettings');
         }
 
-        var audio = AudioFile.create(loader, key, urls, config, audioXhrSettings)
-        var data = new JSONFile(loader, key, json, jsonXhrSettings);
+        var data;
 
-        LinkFile.call(this, loader, 'audiosprite', key, [ audio, data ]);
+        //  No url? then we're going to do a json load and parse it from that
+        if (!Array.isArray(url))
+        {
+            data = new JSONFile(loader, key, json, jsonXhrSettings);
+            
+            LinkFile.call(this, loader, 'audiosprite', key, [ data ]);
+
+            this.config.audioConfig = audioConfig;
+            this.config.audioXhrSettings = audioXhrSettings;
+        }
+        else
+        {
+            var audio = AudioFile.create(loader, key, url, audioConfig, audioXhrSettings);
+
+            if (audio)
+            {
+                data = new JSONFile(loader, key, json, jsonXhrSettings);
+
+                LinkFile.call(this, loader, 'audiosprite', key, [ audio, data ]);
+            }
+        }
+    },
+
+    /**
+     * Called by each File when it finishes loading.
+     *
+     * @method Phaser.Loader.LinkFile#onFileComplete
+     * @since 3.7.0
+     *
+     * @param {Phaser.Loader.File} file - The File that has completed processing.
+     */
+    onFileComplete: function (file)
+    {
+        var index = this.files.indexOf(file);
+
+        if (index !== -1)
+        {
+            this.pending--;
+
+            if (file.type === 'json' && file.data.hasOwnProperty('resources'))
+            {
+                //  Inspect the data for the files to now load
+                var urls = file.data.resources;
+
+                var audioConfig = GetFastValue(this.config, 'audioConfig');
+                var audioXhrSettings = GetFastValue(this.config, 'audioXhrSettings');
+
+                var audio = AudioFile.create(this.loader, file.key, urls, audioConfig, audioXhrSettings);
+
+                if (audio)
+                {
+                    this.addToLinkFile(audio);
+
+                    this.loader.addFile(audio);
+                }
+            }
+        }
     },
 
     addToCache: function ()
@@ -62,18 +117,8 @@ var AudioSpriteFile = new Class({
             var fileA = this.files[0];
             var fileB = this.files[1];
 
-            /*
-            if (fileA.type === 'image')
-            {
-                this.loader.textureManager.addAtlas(fileA.key, fileA.data, fileB.data);
-                fileB.addToCache();
-            }
-            else
-            {
-                this.loader.textureManager.addAtlas(fileB.key, fileB.data, fileA.data);
-                fileA.addToCache();
-            }
-            */
+            fileA.addToCache();
+            fileB.addToCache();
 
             this.complete = true;
         }
@@ -93,16 +138,26 @@ var AudioSpriteFile = new Class({
  * @since 3.0.0
  *
  * @param {string} key - [description]
- * @param {(string|string[])} urls - [description]
  * @param {object} json - [description]
+ * @param {(string|string[])} urls - [description]
  * @param {object} config - [description]
  * @param {XHRSettingsObject} [audioXhrSettings] - Optional file specific XHR settings.
  * @param {XHRSettingsObject} [jsonXhrSettings] - Optional file specific XHR settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */
-FileTypesManager.register('audioSprite', function (key, urls, json, config, audioXhrSettings, jsonXhrSettings)
+FileTypesManager.register('audioSprite', function (key, json, urls, config, audioXhrSettings, jsonXhrSettings)
 {
+    var game = this.systems.game;
+    var audioConfig = game.config.audio;
+    var deviceAudio = game.device.audio;
+
+    if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
+    {
+        //  Sounds are disabled, so skip loading audio
+        return this;
+    }
+
     var linkfile;
 
     //  Supports an Object file definition in the key argument
@@ -115,52 +170,21 @@ FileTypesManager.register('audioSprite', function (key, urls, json, config, audi
         {
             linkfile = new AudioSpriteFile(this, key[i]);
 
-            this.addFile(linkfile.files);
+            if (linkfile.files)
+            {
+                this.addFile(linkfile.files);
+            }
         }
     }
     else
     {
         linkfile = new AudioSpriteFile(this, key, urls, json, config, audioXhrSettings, jsonXhrSettings);
 
-        this.addFile(linkfile.files);
+        if (linkfile.files)
+        {
+            this.addFile(linkfile.files);
+        }
     }
 
     return this;
-
-    /*
-    var audioFile = AudioFile.create(this, key, urls, config, audioXhrSettings);
-
-    if (audioFile)
-    {
-        var jsonFile;
-
-        if (typeof json === 'string')
-        {
-            jsonFile = new JSONFile(this, key, json, jsonXhrSettings);
-
-            this.addFile(jsonFile);
-        }
-        else
-        {
-            jsonFile = {
-                type: 'json',
-                key: key,
-                data: json,
-                state: CONST.FILE_WAITING_LINKFILE
-            };
-        }
-
-        //  Link them together
-        audioFile.linkFile = jsonFile;
-        jsonFile.linkFile = audioFile;
-
-        //  Set the type
-        audioFile.linkType = 'audioSprite';
-        jsonFile.linkType = 'audioSprite';
-
-        this.addFile(audioFile);
-    }
-
-    return this;
-    */
 });
