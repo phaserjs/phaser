@@ -111,14 +111,10 @@ var ImageFile = new Class({
 
     addToCache: function ()
     {
-        console.log('addToCache', this.key, this.type);
-
         var texture;
 
         if (this.linkFile && this.linkFile.state === CONST.FILE_COMPLETE)
         {
-            console.log('linkFile ready');
-
             //  Both files are ready
             var fileA = this;
             var fileB = this.linkFile;
