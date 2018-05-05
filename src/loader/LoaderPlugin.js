@@ -14,36 +14,6 @@ var PluginManager = require('../boot/PluginManager');
 var XHRSettings = require('./XHRSettings');
 
 /**
- * @typedef {object} MultiFileObject
- *
- * @property {string} type - [description]
- * @property {Phaser.Loader.File} fileA - [description]
- * @property {Phaser.Loader.File} fileB - [description]
- */
-
-/**
- * @typedef {object} LoaderFileObject
- *
- * @property {string} key - [description]
- * @property {string} type - [description]
- * @property {string} [url] - [description]
- * @property {string[]} [urls] - [description]
- * @property {string} [textureURL] - [description]
- * @property {string} [atlasURL] - [description]
- * @property {string} [xmlURL] - [description]
- * @property {string[]} [textureURLs] - [description]
- * @property {string[]} [atlasURLs] - [description]
- * @property {object} [config] - [description]
- * @property {object} [json] - [description]
- * @property {XHRSettingsObject} [xhrSettings] - [description]
- * @property {XHRSettingsObject} [textureXhrSettings] - [description]
- * @property {XHRSettingsObject} [atlasXhrSettings] - [description]
- * @property {XHRSettingsObject} [xmlXhrSettings] - [description]
- * @property {XHRSettingsObject} [audioXhrSettings] - [description]
- * @property {XHRSettingsObject} [jsonXhrSettings] - [description]
- */
-
-/**
  * @classdesc
  * The Loader handles loading all external content such as Images, Sounds, Texture Atlases and data files.
  * You typically interact with it via `this.load` in your Scene. Scenes can have a `preload` method, which is always
@@ -484,6 +454,16 @@ var LoaderPlugin = new Class({
     },
 
     /**
+     * This event is fired when a Loader successfully begins to load its queue.
+     * 
+     * @event Phaser.Loader.LoaderPlugin#addFileEvent
+     * @param {string} key - The key of the file that was added.
+     * @param {string} type - The type of the file that was added.
+     * @param {Phaser.Loader.LoaderPlugin} loader - The Loader that had the file added to it.
+     * @param {Phaser.Loader.File} loader - The File object that was added to the Loader.
+     */
+
+    /**
      * Adds a file, or array of files, into the load queue.
      *
      * The file must be an instance of `Phaser.Loader.File`, or a class that extends it. The Loader will check that the key
@@ -495,6 +475,7 @@ var LoaderPlugin = new Class({
      * however you can call this as long as the file given to it is well formed.
      *
      * @method Phaser.Loader.LoaderPlugin#addFile
+     * @fires Phaser.Loader.LoaderPlugin#addFileEvent
      * @since 3.0.0
      *
      * @param {(Phaser.Loader.File|Phaser.Loader.File[])} file - The file, or array of files, to be added to the load queue.
@@ -515,6 +496,8 @@ var LoaderPlugin = new Class({
             if (!this.keyExists(item))
             {
                 this.list.set(item);
+
+                this.emit('addfile', item.key, item.type, this, item);
 
                 if (this.isLoading())
                 {
