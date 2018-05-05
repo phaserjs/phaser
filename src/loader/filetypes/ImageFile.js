@@ -184,7 +184,7 @@ var ImageFile = new Class({
  *
  * The file is **not** loaded immediately, it is added to a queue ready to be loaded either when the loader starts,
  * or if it's already running, when the next free load slot becomes available. This means you cannot use the file
- * immediately after calling this method, but instead my wait for the file to complete.
+ * immediately after calling this method, but instead must wait for the file to complete.
  * 
  * Phaser can load all common image types: png, jpg, gif and any other format the browser can natively handle.
  * If you try to load an animated gif only the first frame will be rendered. Browsers do not natively support playback
