@@ -224,7 +224,7 @@ var ImageFile = new Class({
  * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension, although
  * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
  *
- * Note: Th ability to load this type of file will only be available if the Image File type has been built into Phaser.
+ * Note: The ability to load this type of file will only be available if the Image File type has been built into Phaser.
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#image

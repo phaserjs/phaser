@@ -36,7 +36,7 @@ var ParseXML = require('../../dom/ParseXML');
  * @since 3.0.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {(string|Phaser.Loader.FileTypes.TextFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {(string|Phaser.Loader.FileTypes.XMLFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.xml`, i.e. if `key` was "alien" then the URL will be "alien.xml".
  * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
@@ -141,7 +141,7 @@ var XMLFile = new Class({
  * and no URL is given then the Loader will set the URL to be "data.xml". It will always add `.xml` as the extension, although
  * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
  *
- * Note: Th ability to load this type of file will only be available if the XML File type has been built into Phaser.
+ * Note: The ability to load this type of file will only be available if the XML File type has been built into Phaser.
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#xml
