@@ -112,7 +112,7 @@ var JSONFile = new Class({
 
             var key = this.config;
 
-            if (typeof key === 'String')
+            if (typeof key === 'string')
             {
                 this.data = GetValue(json, key, json);
             }
