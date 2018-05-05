@@ -82,8 +82,14 @@ var JSONFile = new Class({
         if (IsPlainObject(url))
         {
             //  Object provided instead of a URL, so no need to actually load it (populate data with value)
-
-            this.data = GetValue(url, dataKey, url);
+            if (dataKey)
+            {
+                this.data = GetValue(url, dataKey);
+            }
+            else
+            {
+                this.data = url;
+            }
 
             this.state = CONST.FILE_POPULATED;
         }
@@ -106,7 +112,7 @@ var JSONFile = new Class({
 
             var key = this.config;
 
-            if (key && key !== '')
+            if (typeof key === 'String')
             {
                 this.data = GetValue(json, key, json);
             }

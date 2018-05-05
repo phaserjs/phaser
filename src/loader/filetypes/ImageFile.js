@@ -49,7 +49,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
  * @param {(string|Phaser.Loader.FileTypes.ImageFileConfig)} key - The key to use for this file, or a file configuration object.
- * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+ * @param {string|string[]} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
  * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  * @param {Phaser.Loader.FileTypes.ImageFrameConfig} [frameConfig] - The frame configuration object. Only provided for, and used by, Sprite Sheets.
  */
@@ -98,7 +98,7 @@ var ImageFile = new Class({
         //  Do we have a normal map to load as well?
         if (normalMapURL)
         {
-            var normalMap = new ImageFile(loader, key, normalMapURL, xhrSettings, frameConfig);
+            var normalMap = new ImageFile(loader, this.key, normalMapURL, xhrSettings, frameConfig);
 
             normalMap.type = 'normalMap';
 
@@ -224,6 +224,26 @@ var ImageFile = new Class({
  * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension, although
  * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
  *
+ * Phaser also supports the automatic loading of associated normal maps. If you have a normal map to go with this image,
+ * then you can specify it by providing an array as the `url` where the second element is the normal map:
+ * 
+ * ```javascript
+ * this.load.image('logo', [ 'images/AtariLogo.png', 'images/AtariLogo-n.png' ]);
+ * ```
+ *
+ * Or, if you are using a config object use the `normalMap` property:
+ * 
+ * ```javascript
+ * this.load.image({
+ *     key: 'logo',
+ *     url: 'images/AtariLogo.png',
+ *     normalMap: 'images/AtariLogo-n.png'
+ * });
+ * ```
+ *
+ * The normal map file is subject to the same conditions as the image file with regard to the path, baseURL, CORs and XHR Settings.
+ * Normal maps are a WebGL only feature.
+ *
  * Note: The ability to load this type of file will only be available if the Image File type has been built into Phaser.
  * It is available in the default build but can be excluded from custom builds.
  *
@@ -232,7 +252,7 @@ var ImageFile = new Class({
  * @since 3.0.0
  *
  * @param {(string|Phaser.Loader.FileTypes.ImageFileConfig|Phaser.Loader.FileTypes.ImageFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
- * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+ * @param {string|string[]} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
  * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.

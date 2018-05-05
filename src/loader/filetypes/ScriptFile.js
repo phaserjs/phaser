@@ -12,8 +12,21 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
+ * @typedef {object} Phaser.Loader.FileTypes.ScriptFileConfig
+ *
+ * @property {string} key - The key of the file. Must be unique within the Loader.
+ * @property {string} [url] - The absolute or relative URL to load the file from.
+ * @property {string} [extension='js'] - The default file extension to use if no url is provided.
+ * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ */
+
+/**
  * @classdesc
- * [description]
+ * A single Script File suitable for loading by the Loader.
+ *
+ * These are created when you use the Phaser.Loader.LoaderPlugin#script method and are not typically created directly.
+ * 
+ * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#script.
  *
  * @class ScriptFile
  * @extends Phaser.Loader.File
@@ -21,10 +34,10 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @constructor
  * @since 3.0.0
  *
- * @param {string} key - [description]
- * @param {string} url - [description]
- * @param {string} path - [description]
- * @param {XHRSettingsObject} [xhrSettings] - [description]
+ * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
+ * @param {(string|Phaser.Loader.FileTypes.ScriptFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
+ * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var ScriptFile = new Class({
 
@@ -59,6 +72,13 @@ var ScriptFile = new Class({
         File.call(this, fileConfig);
     },
 
+    /**
+     * Called automatically by Loader.nextFile.
+     * This method controls what extra work this File does with its loaded data.
+     *
+     * @method Phaser.Loader.FileTypes.ScriptFile#onProcess
+     * @since 3.7.0
+     */
     onProcess: function ()
     {
         this.state = CONST.FILE_PROCESSING;
@@ -77,21 +97,48 @@ var ScriptFile = new Class({
 });
 
 /**
- * Adds a JavaScript file to the current load queue.
+ * Adds an Script file, or array of Script files, to the current load queue.
  *
- * Note: This method will only be available if the Script File type has been built into Phaser.
+ * The file is **not** loaded immediately, it is added to a queue ready to be loaded either when the loader starts,
+ * or if it's already running, when the next free load slot becomes available. This means you cannot use the file
+ * immediately after calling this method, but instead must wait for the file to complete.
+ * 
+ * The key must be a unique String and not already in-use by another file in the Loader.
  *
- * The file is **not** loaded immediately after calling this method.
- * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
+ * Instead of passing arguments you can pass a configuration object, such as:
+ * 
+ * ```javascript
+ * this.load.script({
+ *     key: 'aliens',
+ *     url: 'lib/aliens.js'
+ * });
+ * ```
+ *
+ * See the documentation for `Phaser.Loader.FileTypes.ScriptFileConfig` for more details.
+ *
+ * Once the file has finished loading it will automatically be converted into a script element
+ * via `document.createElement('script')`. It will have its language set to JavaScript, `defer` set to
+ * false and then the resulting element will be appended to `document.head`. Any code then in the
+ * script will be executed.
+ *
+ * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+ *
+ * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+ * and no URL is given then the Loader will set the URL to be "alien.js". It will always add `.js` as the extension, although
+ * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+ *
+ * Note: The ability to load this type of file will only be available if the Script File type has been built into Phaser.
+ * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#script
+ * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.0.0
  *
- * @param {string} key - [description]
- * @param {string} url - [description]
- * @param {XHRSettingsObject} [xhrSettings] - [description]
+ * @param {(string|Phaser.Loader.FileTypes.ScriptFileConfig|Phaser.Loader.FileTypes.ScriptFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
+ * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
- * @return {Phaser.Loader.LoaderPlugin} The Loader.
+ * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */
 FileTypesManager.register('script', function (key, url, xhrSettings)
 {
