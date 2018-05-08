@@ -254,10 +254,10 @@ var AudioSpriteFile = new Class({
 FileTypesManager.register('audioSprite', function (key, jsonURL, audioURL, audioConfig, audioXhrSettings, jsonXhrSettings)
 {
     var game = this.systems.game;
-    var audioConfig = game.config.audio;
+    var gameAudioConfig = game.config.audio;
     var deviceAudio = game.device.audio;
 
-    if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
+    if ((gameAudioConfig && gameAudioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
     {
         //  Sounds are disabled, so skip loading audio
         return this;
