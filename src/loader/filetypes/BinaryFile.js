@@ -70,9 +70,7 @@ var BinaryFile = new Class({
             key: key,
             url: url,
             xhrSettings: xhrSettings,
-            config: {
-                dataType: dataType
-            }
+            config: {dataType: dataType}
         };
 
         File.call(this, loader, fileConfig);
