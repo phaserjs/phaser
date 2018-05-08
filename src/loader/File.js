@@ -449,6 +449,15 @@ var File = new Class({
     },
 
     /**
+     * You can listen for this event from the LoaderPlugin. It is dispatched _every time_
+     * a file loads and is sent 3 arguments, which allow you to identify the file:
+     *
+     * ```javascript
+     * this.load.on('filecomplete', function (key, type, data) {
+     *     // Your handler code
+     * });
+     * ```
+     * 
      * @event Phaser.Loader.File#fileCompleteEvent
      * @param {string} key - The key of the file that just loaded and finished processing.
      * @param {string} type - The type of the file that just loaded and finished processing.
@@ -456,12 +465,48 @@ var File = new Class({
      */
 
     /**
-     * Adds this file to its target cache upon successful loading and processing.
+     * You can listen for this event from the LoaderPlugin. It is dispatched only once per
+     * file and you have to use a special listener handle to pick it up.
+     * 
+     * The string of the event is based on the file type and the key you gave it, split up
+     * using hyphens.
+     * 
+     * For example, if you have loaded an image with a key of `monster`, you can listen for it
+     * using the following:
+     *
+     * ```javascript
+     * this.load.on('filecomplete-image-monster', function (key, type, data) {
+     *     // Your handler code
+     * });
+     * ```
+     *
+     * Or, if you have loaded a texture atlas with a key of `Level1`:
+     * 
+     * ```javascript
+     * this.load.on('filecomplete-atlas-Level1', function (key, type, data) {
+     *     // Your handler code
+     * });
+     * ```
+     * 
+     * Or, if you have loaded a sprite sheet with a key of `Explosion` and a prefix of `GAMEOVER`:
+     * 
+     * ```javascript
+     * this.load.on('filecomplete-spritesheet-GAMEOVERExplosion', function (key, type, data) {
+     *     // Your handler code
+     * });
+     * ```
+     * 
+     * @event Phaser.Loader.File#singleFileCompleteEvent
+     * @param {any} data - The data of the file.
+     */
+
+    /**
+     * Called once the file has been added to its cache and is now ready for deletion from the Loader.
      * It will emit a `filecomplete` event from the LoaderPlugin.
-     * This method is often overridden by specific file types.
      *
      * @method Phaser.Loader.File#pendingDestroy
      * @fires Phaser.Loader.File#fileCompleteEvent
+     * @fires Phaser.Loader.File#singleFileCompleteEvent
      * @since 3.7.0
      */
     pendingDestroy: function (data)
@@ -472,8 +517,7 @@ var File = new Class({
         var type = this.type;
 
         this.loader.emit('filecomplete', key, type, data);
-
-        this.loader.emit(type + 'complete', key, data);
+        this.loader.emit('filecomplete_' + type + '_' + key, key, type, data);
 
         this.loader.flagForRemoval(this);
     },
