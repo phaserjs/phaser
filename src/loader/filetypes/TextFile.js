@@ -91,7 +91,7 @@ var TextFile = new Class({
 });
 
 /**
- * Adds an Text file, or array of Text files, to the current load queue.
+ * Adds a Text file, or array of Text files, to the current load queue.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
  * 
