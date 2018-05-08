@@ -76,7 +76,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1009);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1014);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -319,6 +319,49 @@ module.exports = Class;
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Finds the key within the top level of the {@link source} object, or returns {@link defaultValue}
+ *
+ * @function Phaser.Utils.Object.GetFastValue
+ * @since 3.0.0
+ *
+ * @param {object} source - The object to search
+ * @param {string} key - The key for the property on source. Must exist at the top level of the source object (no periods)
+ * @param {*} [defaultValue] - The default value to use if the key does not exist.
+ *
+ * @return {*} The value if found; otherwise, defaultValue (null if none provided)
+ */
+var GetFastValue = function (source, key, defaultValue)
+{
+    var t = typeof(source);
+
+    if (!source || t === 'number' || t === 'string')
+    {
+        return defaultValue;
+    }
+    else if (source.hasOwnProperty(key) && source[key] !== undefined)
+    {
+        return source[key];
+    }
+    else
+    {
+        return defaultValue;
+    }
+};
+
+module.exports = GetFastValue;
+
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -328,9 +371,9 @@ module.exports = Class;
  */
 
 var Class = __webpack_require__(0);
-var Components = __webpack_require__(14);
-var DataManager = __webpack_require__(76);
-var EventEmitter = __webpack_require__(9);
+var Components = __webpack_require__(15);
+var DataManager = __webpack_require__(78);
+var EventEmitter = __webpack_require__(8);
 
 /**
  * @classdesc
@@ -602,7 +645,7 @@ var GameObject = new Class({
      * @since 3.0.0
      *
      * @param {*} [shape] - A geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
-     * @param {HitAreaCallback} [callback] - A callback to be invoked when the Game Object is interacted with.
+     * @param {HitAreaCallback} [callback] - A callback to be invoked when the Game Object is interacted with. If you provide a shape you must also provide a callback.
      * @param {boolean} [dropZone=false] - Should this Game Object be treated as a drop zone target?
      *
      * @return {Phaser.GameObjects.GameObject} This GameObject.
@@ -610,6 +653,57 @@ var GameObject = new Class({
     setInteractive: function (shape, callback, dropZone)
     {
         this.scene.sys.input.enable(this, shape, callback, dropZone);
+
+        return this;
+    },
+
+    /**
+     * If this Game Object has previously been enabled for input, this will disable it.
+     * 
+     * An object that is disabled for input stops processing or being considered for
+     * input events, but can be turned back on again at any time by simply calling
+     * `setInteractive()` with no arguments provided.
+     * 
+     * If want to completely remove interaction from this Game Object then use `removeInteractive` instead.
+     *
+     * @method Phaser.GameObjects.GameObject#disableInteractive
+     * @since 3.7.0
+     *
+     * @return {Phaser.GameObjects.GameObject} This GameObject.
+     */
+    disableInteractive: function ()
+    {
+        if (this.input)
+        {
+            this.input.enabled = (this.input.enabled) ? false : true;
+        }
+
+        return this;
+    },
+
+    /**
+     * If this Game Object has previously been enabled for input, this will remove it.
+     *
+     * The Interactive Object that was assigned to this Game Object will be destroyed,
+     * removed from the Input Manager and cleared from this Game Object.
+     *
+     * If you wish to re-enable this Game Object at a later date you will need to
+     * re-create its InteractiveOobject by calling `setInteractive` again.
+     *
+     * If you wish to only temporarily stop an object from receiving input then use
+     * `disableInteractive` instead, as that toggles the interactive state, where-as
+     * this erases it completely.
+     *
+     * @method Phaser.GameObjects.GameObject#removeInteractive
+     * @since 3.7.0
+     *
+     * @return {Phaser.GameObjects.GameObject} This GameObject.
+     */
+    removeInteractive: function ()
+    {
+        this.scene.sys.input.clear(this);
+
+        this.input = undefined;
 
         return this;
     },
@@ -774,49 +868,6 @@ var GameObject = new Class({
 GameObject.RENDER_MASK = 15;
 
 module.exports = GameObject;
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Finds the key within the top level of the {@link source} object, or returns {@link defaultValue}
- *
- * @function Phaser.Utils.Object.GetFastValue
- * @since 3.0.0
- *
- * @param {object} source - The object to search
- * @param {string} key - The key for the property on source. Must exist at the top level of the source object (no periods)
- * @param {*} [defaultValue] - The default value to use if the key does not exist.
- *
- * @return {*} The value if found; otherwise, defaultValue (null if none provided)
- */
-var GetFastValue = function (source, key, defaultValue)
-{
-    var t = typeof(source);
-
-    if (!source || t === 'number' || t === 'string')
-    {
-        return defaultValue;
-    }
-    else if (source.hasOwnProperty(key) && source[key] !== undefined)
-    {
-        return source[key];
-    }
-    else
-    {
-        return defaultValue;
-    }
-};
-
-module.exports = GetFastValue;
 
 
 /***/ }),
@@ -1022,15 +1073,15 @@ var Class = __webpack_require__(0);
 
 /**
  * @classdesc
- * [description]
+ * A representation of a vector in 2D space.
  *
  * @class Vector2
  * @memberOf Phaser.Math
  * @constructor
  * @since 3.0.0
  *
- * @param {number} [x] - [description]
- * @param {number} [y] - [description]
+ * @param {number} [x] - The x component of this Vector.
+ * @param {number} [y] - The y component of this Vector.
  */
 var Vector2 = new Class({
 
@@ -1073,7 +1124,7 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Make a clone of this Vector2.
      *
      * @method Phaser.Math.Vector2#clone
      * @since 3.0.0
@@ -1086,12 +1137,12 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Copy the components of a given vector, into this Vector.
      *
      * @method Phaser.Math.Vector2#copy
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - [description]
+     * @param {Phaser.Math.Vector2} src - The Vector to copy the components from.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -1104,12 +1155,12 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Set the component values of this Vector from a given Vector2Like object.
      *
      * @method Phaser.Math.Vector2#setFromObject
      * @since 3.0.0
      *
-     * @param {Vector2Like} obj - [description]
+     * @param {Vector2Like} obj - The object containing the component values to set for this Vector.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -1122,13 +1173,13 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Set the x and y components of the this Vector to the given x and y values.
      *
      * @method Phaser.Math.Vector2#set
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} [y=x] - [description]
+     * @param {number} x - The x value to set for this Vector.
+     * @param {number} [y=x] - The y value to set for this Vector.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -1148,8 +1199,8 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#setTo
      * @since 3.4.0
      *
-     * @param {number} x - [description]
-     * @param {number} [y=x] - [description]
+     * @param {number} x - The x value to set for this Vector.
+     * @param {number} [y=x] - The y value to set for this Vector.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -1180,14 +1231,14 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Check if this Vector is equal to a given Vector.
      *
      * @method Phaser.Math.Vector2#equals
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} v - [description]
+     * @param {Phaser.Math.Vector2} v - The vector to compare with this Vector.
      *
-     * @return {boolean} [description]
+     * @return {boolean} Whether the given Vector is equal to this Vector.
      */
     equals: function (v)
     {
@@ -1195,12 +1246,12 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Calculate the angle between this Vector and the positive x-axis, in radians.
      *
      * @method Phaser.Math.Vector2#angle
      * @since 3.0.0
      *
-     * @return {number} [description]
+     * @return {number} The angle between this Vector, and the positive x-axis, given in radians.
      */
     angle: function ()
     {
@@ -1217,12 +1268,12 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Add a given Vector to this Vector. Addition is element-wise.
      *
      * @method Phaser.Math.Vector2#add
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - [description]
+     * @param {Phaser.Math.Vector2} src - The Vector to add to this Vector.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -1235,12 +1286,12 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Subtract the given Vector from this Vector. Subtraction is element-wise.
      *
      * @method Phaser.Math.Vector2#subtract
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - [description]
+     * @param {Phaser.Math.Vector2} src - The Vector to subtract from this Vector.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -1253,12 +1304,12 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Perform an element-wise multiplication between this Vector and the given Vector.
      *
      * @method Phaser.Math.Vector2#multiply
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - [description]
+     * @param {Phaser.Math.Vector2} src - The Vector to multiply this Vector by.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -1271,12 +1322,12 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Scale this Vector by the given value.
      *
      * @method Phaser.Math.Vector2#scale
      * @since 3.0.0
      *
-     * @param {number} value - [description]
+     * @param {number} value - The value to scale this Vector by.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -1297,12 +1348,12 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Perform an element-wise division between this Vector and the given Vector. This Vector is divided by the given Vector.
      *
      * @method Phaser.Math.Vector2#divide
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - [description]
+     * @param {Phaser.Math.Vector2} src - The Vector to divide this Vector by.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -1315,7 +1366,7 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Negate the x and y components of this Vector.
      *
      * @method Phaser.Math.Vector2#negate
      * @since 3.0.0
@@ -1331,14 +1382,14 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Calculate the distance between this Vector, and the given Vector.
      *
      * @method Phaser.Math.Vector2#distance
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - [description]
+     * @param {Phaser.Math.Vector2} src - The Vector to calculate the distance to.
      *
-     * @return {number} [description]
+     * @return {number} The distance to the given Vector from this Vector.
      */
     distance: function (src)
     {
@@ -1349,14 +1400,14 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * The distance between this Vector, and the given Vector, squared.
      *
      * @method Phaser.Math.Vector2#distanceSq
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - [description]
+     * @param {Phaser.Math.Vector2} src - The Vector to calculate the distance to.
      *
-     * @return {number} [description]
+     * @return {number} The distance to this Vector and the given Vector, squared.
      */
     distanceSq: function (src)
     {
@@ -1367,12 +1418,12 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * The length (or magnitude) of this Vector.
      *
      * @method Phaser.Math.Vector2#length
      * @since 3.0.0
      *
-     * @return {number} [description]
+     * @return {number} The length of this Vector.
      */
     length: function ()
     {
@@ -1383,12 +1434,12 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Calculate the length of this Vector squared.
      *
      * @method Phaser.Math.Vector2#lengthSq
      * @since 3.0.0
      *
-     * @return {number} [description]
+     * @return {number} The length of this Vector, squared.
      */
     lengthSq: function ()
     {
@@ -1399,7 +1450,7 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Normalise this Vector, that is, make it a unit length vector (magnitude of 1) in the same direction.
      *
      * @method Phaser.Math.Vector2#normalize
      * @since 3.0.0
@@ -1444,14 +1495,14 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Perform a dot product between this Vector and the given Vector
      *
      * @method Phaser.Math.Vector2#dot
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - [description]
+     * @param {Phaser.Math.Vector2} src - The Vector2 to dot product with this Vector2.
      *
-     * @return {number} [description]
+     * @return {number} The result of the dot product
      */
     dot: function (src)
     {
@@ -1542,7 +1593,7 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Make this Vector the zero vector (0, 0).
      *
      * @method Phaser.Math.Vector2#reset
      * @since 3.0.0
@@ -1584,6 +1635,17 @@ var types = {};
 
 var FileTypesManager = {
 
+    /**
+     * Static method called when a LoaderPlugin is created.
+     * 
+     * Loops through the local types object and injects all of them as
+     * properties into the LoaderPlugin instance.
+     *
+     * @method Phaser.Loader.FileTypesManager.register
+     * @since 3.0.0
+     * 
+     * @param {Phaser.Loader.LoaderPlugin} loader - The LoaderPlugin to install the types into.
+     */
     install: function (loader)
     {
         for (var key in types)
@@ -1592,13 +1654,28 @@ var FileTypesManager = {
         }
     },
 
+    /**
+     * Static method called directly by the File Types.
+     * 
+     * The key is a reference to the function used to load the files via the Loader, i.e. `image`.
+     *
+     * @method Phaser.Loader.FileTypesManager.register
+     * @since 3.0.0
+     * 
+     * @param {string} key - The key that will be used as the method name in the LoaderPlugin.
+     * @param {function} factoryFunction - The function that will be called when LoaderPlugin.key is invoked.
+     */
     register: function (key, factoryFunction)
     {
         types[key] = factoryFunction;
-
-        // console.log('FileTypesManager.register', key);
     },
 
+    /**
+     * Removed all associated file types.
+     *
+     * @method Phaser.Loader.FileTypesManager.destroy
+     * @since 3.0.0
+     */
     destroy: function ()
     {
         types = {};
@@ -1611,92 +1688,6 @@ module.exports = FileTypesManager;
 
 /***/ }),
 /* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var MATH = __webpack_require__(15);
-var GetValue = __webpack_require__(4);
-
-//  Allowed types:
-
-//  Implicit
-//  {
-//      x: 4
-//  }
-//
-//  From function
-//  {
-//      x: function ()
-//  }
-//
-//  Randomly pick one element from the array
-//  {
-//      x: [a, b, c, d, e, f]
-//  }
-//
-//  Random integer between min and max:
-//  {
-//      x: { randInt: [min, max] }
-//  }
-//
-//  Random float between min and max:
-//  {
-//      x: { randFloat: [min, max] }
-//  }
-
-/**
- * [description]
- *
- * @function Phaser.Utils.Object.GetAdvancedValue
- * @since 3.0.0
- *
- * @param {object} source - [description]
- * @param {string} key - [description]
- * @param {*} defaultValue - [description]
- *
- * @return {*} [description]
- */
-var GetAdvancedValue = function (source, key, defaultValue)
-{
-    var value = GetValue(source, key, null);
-
-    if (value === null)
-    {
-        return defaultValue;
-    }
-    else if (Array.isArray(value))
-    {
-        return MATH.RND.pick(value);
-    }
-    else if (typeof value === 'object')
-    {
-        if (value.hasOwnProperty('randInt'))
-        {
-            return MATH.RND.integerInRange(value.randInt[0], value.randInt[1]);
-        }
-        else if (value.hasOwnProperty('randFloat'))
-        {
-            return MATH.RND.realInRange(value.randFloat[0], value.randFloat[1]);
-        }
-    }
-    else if (typeof value === 'function')
-    {
-        return value(key);
-    }
-
-    return value;
-};
-
-module.exports = GetAdvancedValue;
-
-
-/***/ }),
-/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2039,7 +2030,149 @@ if (true) {
 
 
 /***/ }),
+/* 9 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * This is a slightly modified version of jQuery.isPlainObject.
+ * A plain object is an object whose internal class property is [object Object].
+ *
+ * @function Phaser.Utils.Object.IsPlainObject
+ * @since 3.0.0
+ *
+ * @param {object} obj - The object to inspect.
+ *
+ * @return {boolean} `true` if the object is plain, otherwise `false`.
+ */
+var IsPlainObject = function (obj)
+{
+    // Not plain objects:
+    // - Any object or value whose internal [[Class]] property is not "[object Object]"
+    // - DOM nodes
+    // - window
+    if (typeof(obj) !== 'object' || obj.nodeType || obj === obj.window)
+    {
+        return false;
+    }
+
+    // Support: Firefox <20
+    // The try/catch suppresses exceptions thrown when attempting to access
+    // the "constructor" property of certain host objects, ie. |window.location|
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=814622
+    try
+    {
+        if (obj.constructor && !({}).hasOwnProperty.call(obj.constructor.prototype, 'isPrototypeOf'))
+        {
+            return false;
+        }
+    }
+    catch (e)
+    {
+        return false;
+    }
+
+    // If the function hasn't returned already, we're confident that
+    // |obj| is a plain object, created by {} or constructed with new Object
+    return true;
+};
+
+module.exports = IsPlainObject;
+
+
+/***/ }),
 /* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var MATH = __webpack_require__(16);
+var GetValue = __webpack_require__(4);
+
+//  Allowed types:
+
+//  Implicit
+//  {
+//      x: 4
+//  }
+//
+//  From function
+//  {
+//      x: function ()
+//  }
+//
+//  Randomly pick one element from the array
+//  {
+//      x: [a, b, c, d, e, f]
+//  }
+//
+//  Random integer between min and max:
+//  {
+//      x: { randInt: [min, max] }
+//  }
+//
+//  Random float between min and max:
+//  {
+//      x: { randFloat: [min, max] }
+//  }
+
+/**
+ * [description]
+ *
+ * @function Phaser.Utils.Object.GetAdvancedValue
+ * @since 3.0.0
+ *
+ * @param {object} source - [description]
+ * @param {string} key - [description]
+ * @param {*} defaultValue - [description]
+ *
+ * @return {*} [description]
+ */
+var GetAdvancedValue = function (source, key, defaultValue)
+{
+    var value = GetValue(source, key, null);
+
+    if (value === null)
+    {
+        return defaultValue;
+    }
+    else if (Array.isArray(value))
+    {
+        return MATH.RND.pick(value);
+    }
+    else if (typeof value === 'object')
+    {
+        if (value.hasOwnProperty('randInt'))
+        {
+            return MATH.RND.integerInRange(value.randInt[0], value.randInt[1]);
+        }
+        else if (value.hasOwnProperty('randFloat'))
+        {
+            return MATH.RND.realInRange(value.randFloat[0], value.randFloat[1]);
+        }
+    }
+    else if (typeof value === 'function')
+    {
+        return value(key);
+    }
+
+    return value;
+};
+
+module.exports = GetAdvancedValue;
+
+
+/***/ }),
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -2221,7 +2354,7 @@ module.exports = PluginManager;
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -2231,7 +2364,7 @@ module.exports = PluginManager;
  */
 
 var Class = __webpack_require__(0);
-var PluginManager = __webpack_require__(10);
+var PluginManager = __webpack_require__(11);
 
 /**
  * @classdesc
@@ -2408,7 +2541,7 @@ module.exports = GameObjectFactory;
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -2418,11 +2551,11 @@ module.exports = GameObjectFactory;
  */
 
 var Class = __webpack_require__(0);
-var Contains = __webpack_require__(28);
-var GetPoint = __webpack_require__(127);
-var GetPoints = __webpack_require__(286);
-var Line = __webpack_require__(92);
-var Random = __webpack_require__(146);
+var Contains = __webpack_require__(31);
+var GetPoint = __webpack_require__(130);
+var GetPoints = __webpack_require__(289);
+var Line = __webpack_require__(95);
+var Random = __webpack_require__(150);
 
 /**
  * @classdesc
@@ -2899,7 +3032,7 @@ module.exports = Rectangle;
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -2909,7 +3042,7 @@ module.exports = Rectangle;
  */
 
 var Class = __webpack_require__(0);
-var PluginManager = __webpack_require__(10);
+var PluginManager = __webpack_require__(11);
 
 /**
  * @classdesc
@@ -3058,7 +3191,7 @@ module.exports = GameObjectCreator;
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -3073,31 +3206,32 @@ module.exports = GameObjectCreator;
 
 module.exports = {
 
-    Alpha: __webpack_require__(574),
-    Animation: __webpack_require__(295),
-    BlendMode: __webpack_require__(573),
-    ComputedSize: __webpack_require__(572),
-    Depth: __webpack_require__(571),
-    Flip: __webpack_require__(570),
-    GetBounds: __webpack_require__(569),
-    MatrixStack: __webpack_require__(568),
-    Origin: __webpack_require__(567),
-    Pipeline: __webpack_require__(283),
-    ScaleMode: __webpack_require__(566),
-    ScrollFactor: __webpack_require__(565),
-    Size: __webpack_require__(564),
-    Texture: __webpack_require__(563),
-    Tint: __webpack_require__(562),
-    ToJSON: __webpack_require__(561),
-    Transform: __webpack_require__(560),
-    TransformMatrix: __webpack_require__(60),
-    Visible: __webpack_require__(559)
+    Alpha: __webpack_require__(576),
+    Animation: __webpack_require__(297),
+    BlendMode: __webpack_require__(575),
+    ComputedSize: __webpack_require__(574),
+    Depth: __webpack_require__(573),
+    Flip: __webpack_require__(572),
+    GetBounds: __webpack_require__(571),
+    Mask: __webpack_require__(570),
+    MatrixStack: __webpack_require__(569),
+    Origin: __webpack_require__(568),
+    Pipeline: __webpack_require__(286),
+    ScaleMode: __webpack_require__(567),
+    ScrollFactor: __webpack_require__(566),
+    Size: __webpack_require__(565),
+    Texture: __webpack_require__(564),
+    Tint: __webpack_require__(563),
+    ToJSON: __webpack_require__(562),
+    Transform: __webpack_require__(561),
+    TransformMatrix: __webpack_require__(63),
+    Visible: __webpack_require__(560)
 
 };
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -3106,7 +3240,7 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var RND = __webpack_require__(289);
+var RND = __webpack_require__(292);
 
 var MATH_CONST = {
 
@@ -3170,7 +3304,7 @@ module.exports = MATH_CONST;
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -3179,7 +3313,7 @@ module.exports = MATH_CONST;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var IsPlainObject = __webpack_require__(292);
+var IsPlainObject = __webpack_require__(9);
 
 // @param {boolean} deep - Perform a deep copy?
 // @param {object} target - The target object to copy to.
@@ -3269,7 +3403,7 @@ module.exports = Extend;
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports) {
 
 /**
@@ -3380,15 +3514,6 @@ var FILE_CONST = {
     FILE_PROCESSING: 14,
 
     /**
-     * File is waiting for its linkfile to load.
-     * 
-     * @name Phaser.Loader.FILE_WAITING_LINKFILE
-     * @type {integer}
-     * @since 3.0.0
-     */
-    FILE_WAITING_LINKFILE: 15,
-
-    /**
      * The File has errored somehow during processing.
      * 
      * @name Phaser.Loader.FILE_ERRORED
@@ -3422,25 +3547,7 @@ var FILE_CONST = {
      * @type {integer}
      * @since 3.0.0
      */
-    FILE_POPULATED: 19,
-
-    /**
-     * A special Texture Atlas const.
-     * 
-     * @name Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY
-     * @type {integer}
-     * @since 3.0.0
-     */
-    TEXTURE_ATLAS_JSON_ARRAY: 20,
-
-    /**
-     * A special Texture Atlas const.
-     * 
-     * @name Phaser.Loader.TEXTURE_ATLAS_JSON_HASH
-     * @type {integer}
-     * @since 3.0.0
-     */
-    TEXTURE_ATLAS_JSON_HASH: 21
+    FILE_POPULATED: 19
 
 };
 
@@ -3448,7 +3555,7 @@ module.exports = FILE_CONST;
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -3458,49 +3565,63 @@ module.exports = FILE_CONST;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(17);
-var GetFastValue = __webpack_require__(2);
-var GetURL = __webpack_require__(117);
-var MergeXHRSettings = __webpack_require__(116);
-var XHRLoader = __webpack_require__(216);
-var XHRSettings = __webpack_require__(88);
-
-/**
- * @callback FileProcessCallback
- *
- * @param {Phaser.Loader.File} file - [description]
- */
+var CONST = __webpack_require__(18);
+var GetFastValue = __webpack_require__(1);
+var GetURL = __webpack_require__(121);
+var MergeXHRSettings = __webpack_require__(120);
+var XHRLoader = __webpack_require__(219);
+var XHRSettings = __webpack_require__(91);
 
 /**
  * @typedef {object} FileConfig
  *
- * @property {(string|false)} [type=false] - The file type string (image, json, etc) for sorting within the Loader.
- * @property {(string|false)} [key=false] - Unique cache key (unique within its file type)
+ * @property {string} type - The file type string (image, json, etc) for sorting within the Loader.
+ * @property {string} key - Unique cache key (unique within its file type)
  * @property {string} [url] - The URL of the file, not including baseURL.
- * @property {string} [path=''] - [description]
- * @property {string} [extension=''] - [description]
- * @property {XMLHttpRequestResponseType} [responseType] - [description]
- * @property {(XHRSettingsObject|false)} [xhrSettings=false] - [description]
- * @property {object} [config] - A config object that can be used by file types to store transitional data.
+ * @property {string} [path] - The path of the file, not including the baseURL.
+ * @property {string} [extension] - The default extension this file uses.
+ * @property {XMLHttpRequestResponseType} [responseType] - The responseType to be used by the XHR request.
+ * @property {(XHRSettingsObject|false)} [xhrSettings=false] - Custom XHR Settings specific to this file and merged with the Loader defaults.
+ * @property {any} [config] - A config object that can be used by file types to store transitional data.
  */
 
 /**
  * @classdesc
- * [description]
+ * The base File class used by all File Types that the Loader can support.
+ * You shouldn't create an instance of a File directly, but should extend it with your own class, setting a custom type and processing methods.
  *
  * @class File
  * @memberOf Phaser.Loader
  * @constructor
  * @since 3.0.0
  *
- * @param {FileConfig} fileConfig - [description]
+ * @param {Phaser.Loader.LoaderPlugin} loader - The Loader that is going to load this File.
+ * @param {FileConfig} fileConfig - The file configuration object, as created by the file type.
  */
 var File = new Class({
 
     initialize:
 
-    function File (fileConfig)
+    function File (loader, fileConfig)
     {
+        /**
+         * A reference to the Loader that is going to load this file.
+         *
+         * @name Phaser.Loader.File#loader
+         * @type {Phaser.Loader.LoaderPlugin}
+         * @since 3.0.0
+         */
+        this.loader = loader;
+
+        /**
+         * A reference to the Cache, or Texture Manager, that is going to store this file if it loads.
+         *
+         * @name Phaser.Loader.File#cache
+         * @type {(Phaser.Cache.BaseCache|Phaser.Textures.TextureManager)}
+         * @since 3.7.0
+         */
+        this.cache = GetFastValue(fileConfig, 'cache', false);
+
         /**
          * The file type string (image, json, etc) for sorting within the Loader.
          *
@@ -3519,6 +3640,13 @@ var File = new Class({
          */
         this.key = GetFastValue(fileConfig, 'key', false);
 
+        var loadKey = this.key;
+
+        if (loader.prefix && loader.prefix !== '')
+        {
+            this.key = loader.prefix + loadKey;
+        }
+
         if (!this.type || !this.key)
         {
             throw new Error('Error calling \'Loader.' + this.type + '\' invalid key provided.');
@@ -3526,6 +3654,7 @@ var File = new Class({
 
         /**
          * The URL of the file, not including baseURL.
+         * Automatically has Loader.path prepended to it.
          *
          * @name Phaser.Loader.File#url
          * @type {string}
@@ -3535,15 +3664,16 @@ var File = new Class({
 
         if (this.url === undefined)
         {
-            this.url = GetFastValue(fileConfig, 'path', '') + this.key + '.' + GetFastValue(fileConfig, 'extension', '');
+            this.url = loader.path + loadKey + '.' + GetFastValue(fileConfig, 'extension', '');
         }
         else if (typeof(this.url) !== 'function')
         {
-            this.url = GetFastValue(fileConfig, 'path', '').concat(this.url);
+            this.url = loader.path + this.url;
         }
 
         /**
-         * Set when the Loader calls 'load' on this file.
+         * The final URL this file will load from, including baseURL and path.
+         * Set automatically when the Loader calls 'load' on this file.
          *
          * @name Phaser.Loader.File#src
          * @type {string}
@@ -3564,15 +3694,6 @@ var File = new Class({
         {
             this.xhrSettings = MergeXHRSettings(this.xhrSettings, GetFastValue(fileConfig, 'xhrSettings', {}));
         }
-
-        /**
-         * The LoaderPlugin instance that is loading this file.
-         *
-         * @name Phaser.Loader.File#loader
-         * @type {?Phaser.Loader.LoaderPlugin}
-         * @since 3.0.0
-         */
-        this.loader = null;
 
         /**
          * The XMLHttpRequest instance (as created by XHR Loader) that is loading this File.
@@ -3636,7 +3757,7 @@ var File = new Class({
         this.crossOrigin = undefined;
 
         /**
-         * The processed file data, stored in here after the file has loaded.
+         * The processed file data, stored here after the file has loaded.
          *
          * @name Phaser.Loader.File#data
          * @type {*}
@@ -3648,66 +3769,50 @@ var File = new Class({
          * A config object that can be used by file types to store transitional data.
          *
          * @name Phaser.Loader.File#config
-         * @type {object}
+         * @type {*}
          * @since 3.0.0
          */
         this.config = GetFastValue(fileConfig, 'config', {});
 
         /**
          * If this is a multipart file, i.e. an atlas and its json together, then this is a reference
-         * to the linked file. Set and used internally by the Loader.
+         * to the parent MultiFile. Set and used internally by the Loader or specific file types.
+         *
+         * @name Phaser.Loader.File#multiFile
+         * @type {?Phaser.Loader.MultiFile}
+         * @since 3.7.0
+         */
+        this.multiFile;
+
+        /**
+         * Does this file have an associated linked file? Such as an image and a normal map.
+         * Atlases and Bitmap Fonts use the multiFile, because those files need loading together but aren't
+         * actually bound by data, where-as a linkFile is.
          *
          * @name Phaser.Loader.File#linkFile
          * @type {?Phaser.Loader.File}
-         * @since 3.0.0
+         * @since 3.7.0
          */
-        this.linkFile = undefined;
-
-        /**
-         * If this is a multipart file, i.e. an atlas and its json together, then this is a reference
-         * to the type of linked association. Set and used internally by the Loader.
-         *
-         * @name Phaser.Loader.File#linkType
-         * @type {string}
-         * @default ''
-         * @since 3.0.0
-         */
-        this.linkType = '';
-
-        /**
-         * If this is a link file, is this the parent or the sibbling?
-         *
-         * @name Phaser.Loader.File#linkParent
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.linkParent = false;
+        this.linkFile;
     },
 
     /**
-     * If this is a multipart file, i.e. an atlas and its json together, then this is a reference
-     * to the linked file. Set and used internally by the Loader.
+     * Links this File with another, so they depend upon each other for loading and processing.
      *
-     * @method Phaser.Loader.File#setLinkFile
-     * @since 3.0.0
+     * @method Phaser.Loader.File#setLink
+     * @since 3.7.0
      *
-     * @param {Phaser.Loader.File} fileB - The linked file.
-     * @param {string} linkType - The type of association.
+     * @param {Phaser.Loader.File} fileB - The file to link to this one.
      */
-    setLinkFile: function (fileB, linkType)
+    setLink: function (fileB)
     {
         this.linkFile = fileB;
+
         fileB.linkFile = this;
-
-        this.linkType = linkType;
-        fileB.linkType = linkType;
-
-        this.linkParent = true;
     },
 
     /**
-     * Resets the XHRLoader instance.
+     * Resets the XHRLoader instance this file is using.
      *
      * @method Phaser.Loader.File#resetXHR
      * @since 3.0.0
@@ -3724,26 +3829,22 @@ var File = new Class({
 
     /**
      * Called by the Loader, starts the actual file downloading.
-     * During the load the methods onLoad, onProgress, etc are called based on the XHR events.
+     * During the load the methods onLoad, onError and onProgress are called, based on the XHR events.
+     * You shouldn't normally call this method directly, it's meant to be invoked by the Loader.
      *
      * @method Phaser.Loader.File#load
      * @since 3.0.0
-     *
-     * @param {Phaser.Loader.LoaderPlugin} loader - The Loader that will load this File.
      */
-    load: function (loader)
+    load: function ()
     {
-        this.loader = loader;
-
         if (this.state === CONST.FILE_POPULATED)
         {
-            this.onComplete();
-
-            loader.nextFile(this);
+            //  Can happen for example in a JSONFile if they've provided a JSON object instead of a URL
+            this.loader.nextFile(this, true);
         }
         else
         {
-            this.src = GetURL(this, loader.baseURL);
+            this.src = GetURL(this, this.loader.baseURL);
 
             if (this.src.indexOf('data:') === 0)
             {
@@ -3751,7 +3852,14 @@ var File = new Class({
             }
             else
             {
-                this.xhrLoader = XHRLoader(this, loader.xhr);
+                //  The creation of this XHRLoader starts the load process going.
+                //  It will automatically call the following, based on the load outcome:
+                //  
+                // xhr.onload = this.onLoad
+                // xhr.onerror = this.onError
+                // xhr.onprogress = this.onProgress
+
+                this.xhrLoader = XHRLoader(this, this.loader.xhr);
             }
         }
     },
@@ -3762,20 +3870,22 @@ var File = new Class({
      * @method Phaser.Loader.File#onLoad
      * @since 3.0.0
      *
+     * @param {XMLHttpRequest} xhr - The XMLHttpRequest that caused this onload event.
      * @param {ProgressEvent} event - The DOM ProgressEvent that resulted from this load.
      */
-    onLoad: function (event)
+    onLoad: function (xhr, event)
     {
+        var success = !(event.target && event.target.status !== 200);
+
+        //  Handle HTTP status codes of 4xx and 5xx as errors, even if xhr.onerror was not called.
+        if (xhr.readyState === 4 && xhr.status >= 400 && xhr.status <= 599)
+        {
+            success = false;
+        }
+
         this.resetXHR();
 
-        if (event.target && event.target.status !== 200)
-        {
-            this.loader.nextFile(this, false);
-        }
-        else
-        {
-            this.loader.nextFile(this, true);
-        }
+        this.loader.nextFile(this, success);
     },
 
     /**
@@ -3810,56 +3920,182 @@ var File = new Class({
 
             this.percentComplete = Math.min((this.bytesLoaded / this.bytesTotal), 1);
 
-            // console.log(this.percentComplete + '% (' + this.bytesLoaded + ' bytes)');
             this.loader.emit('fileprogress', this, this.percentComplete);
         }
     },
 
     /**
-     * Usually overridden by the FileTypes and is called by Loader.finishedLoading.
-     * The callback is Loader.processUpdate
+     * Usually overridden by the FileTypes and is called by Loader.nextFile.
+     * This method controls what extra work this File does with its loaded data, for example a JSON file will parse itself during this stage.
      *
      * @method Phaser.Loader.File#onProcess
      * @since 3.0.0
-     *
-     * @param {FileProcessCallback} callback - The callback to invoke to process this File.
      */
-    onProcess: function (callback)
+    onProcess: function ()
     {
         this.state = CONST.FILE_PROCESSING;
 
-        this.onComplete();
-
-        callback(this);
+        this.onProcessComplete();
     },
 
     /**
-     * Called with the File has completed loading.
-     * Checks on the state of its linkfile, if set.
+     * Called when the File has completed processing.
+     * Checks on the state of its multifile, if set.
      *
-     * @method Phaser.Loader.File#onComplete
-     * @since 3.0.0
+     * @method Phaser.Loader.File#onProcessComplete
+     * @since 3.7.0
      */
-    onComplete: function ()
+    onProcessComplete: function ()
     {
-        if (this.linkFile)
+        this.state = CONST.FILE_COMPLETE;
+
+        if (this.multiFile)
         {
-            if (this.linkFile.state === CONST.FILE_WAITING_LINKFILE)
-            {
-                //  The linkfile has finished processing, and is waiting for this file, so let's do them both
-                this.state = CONST.FILE_COMPLETE;
-                this.linkFile.state = CONST.FILE_COMPLETE;
-            }
-            else
-            {
-                //  The linkfile still hasn't finished loading and/or processing yet
-                this.state = CONST.FILE_WAITING_LINKFILE;
-            }
+            this.multiFile.onFileComplete(this);
         }
-        else
+
+        this.loader.fileProcessComplete(this);
+    },
+
+    /**
+     * Called when the File has completed processing but it generated an error.
+     * Checks on the state of its multifile, if set.
+     *
+     * @method Phaser.Loader.File#onProcessError
+     * @since 3.7.0
+     */
+    onProcessError: function ()
+    {
+        this.state = CONST.FILE_ERRORED;
+
+        if (this.multiFile)
         {
-            this.state = CONST.FILE_COMPLETE;
+            this.multiFile.onFileFailed(this);
         }
+
+        this.loader.fileProcessComplete(this);
+    },
+
+    /**
+     * Checks if a key matching the one used by this file exists in the target Cache or not.
+     * This is called automatically by the LoaderPlugin to decide if the file can be safely
+     * loaded or will conflict.
+     *
+     * @method Phaser.Loader.File#hasCacheConflict
+     * @since 3.7.0
+     *
+     * @return {boolean} `true` if adding this file will cause a conflict, otherwise `false`.
+     */
+    hasCacheConflict: function ()
+    {
+        return (this.cache && this.cache.exists(this.key));
+    },
+
+    /**
+     * Adds this file to its target cache upon successful loading and processing.
+     * This method is often overridden by specific file types.
+     *
+     * @method Phaser.Loader.File#addToCache
+     * @since 3.7.0
+     */
+    addToCache: function ()
+    {
+        if (this.cache)
+        {
+            this.cache.add(this.key, this.data);
+        }
+
+        this.pendingDestroy();
+    },
+
+    /**
+     * You can listen for this event from the LoaderPlugin. It is dispatched _every time_
+     * a file loads and is sent 3 arguments, which allow you to identify the file:
+     *
+     * ```javascript
+     * this.load.on('filecomplete', function (key, type, data) {
+     *     // Your handler code
+     * });
+     * ```
+     * 
+     * @event Phaser.Loader.File#fileCompleteEvent
+     * @param {string} key - The key of the file that just loaded and finished processing.
+     * @param {string} type - The type of the file that just loaded and finished processing.
+     * @param {any} data - The data of the file.
+     */
+
+    /**
+     * You can listen for this event from the LoaderPlugin. It is dispatched only once per
+     * file and you have to use a special listener handle to pick it up.
+     * 
+     * The string of the event is based on the file type and the key you gave it, split up
+     * using hyphens.
+     * 
+     * For example, if you have loaded an image with a key of `monster`, you can listen for it
+     * using the following:
+     *
+     * ```javascript
+     * this.load.on('filecomplete-image-monster', function (key, type, data) {
+     *     // Your handler code
+     * });
+     * ```
+     *
+     * Or, if you have loaded a texture atlas with a key of `Level1`:
+     * 
+     * ```javascript
+     * this.load.on('filecomplete-atlas-Level1', function (key, type, data) {
+     *     // Your handler code
+     * });
+     * ```
+     * 
+     * Or, if you have loaded a sprite sheet with a key of `Explosion` and a prefix of `GAMEOVER`:
+     * 
+     * ```javascript
+     * this.load.on('filecomplete-spritesheet-GAMEOVERExplosion', function (key, type, data) {
+     *     // Your handler code
+     * });
+     * ```
+     * 
+     * @event Phaser.Loader.File#singleFileCompleteEvent
+     * @param {any} data - The data of the file.
+     */
+
+    /**
+     * Called once the file has been added to its cache and is now ready for deletion from the Loader.
+     * It will emit a `filecomplete` event from the LoaderPlugin.
+     *
+     * @method Phaser.Loader.File#pendingDestroy
+     * @fires Phaser.Loader.File#fileCompleteEvent
+     * @fires Phaser.Loader.File#singleFileCompleteEvent
+     * @since 3.7.0
+     */
+    pendingDestroy: function (data)
+    {
+        if (data === undefined) { data = this.data; }
+
+        var key = this.key;
+        var type = this.type;
+
+        this.loader.emit('filecomplete', key, type, data);
+        this.loader.emit('filecomplete_' + type + '_' + key, key, type, data);
+
+        this.loader.flagForRemoval(this);
+    },
+
+    /**
+     * Destroy this File and any references it holds.
+     *
+     * @method Phaser.Loader.File#destroy
+     * @since 3.7.0
+     */
+    destroy: function ()
+    {
+        this.loader = null;
+        this.cache = null;
+        this.xhrSettings = null;
+        this.multiFile = null;
+        this.linkFile = null;
+        this.data = null;
     }
 
 });
@@ -3916,7 +4152,7 @@ module.exports = File;
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -3941,11 +4177,11 @@ var CONST = {
      * @type {string}
      * @since 3.0.0
      */
-    VERSION: '3.6.0',
+    VERSION: '3.7.0',
 
-    BlendModes: __webpack_require__(48),
+    BlendModes: __webpack_require__(50),
 
-    ScaleModes: __webpack_require__(55),
+    ScaleModes: __webpack_require__(58),
 
     /**
      * AUTO Detect Renderer.
@@ -4054,160 +4290,7 @@ module.exports = CONST;
 
 
 /***/ }),
-/* 20 */,
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var BlendModes = __webpack_require__(48);
-var GetAdvancedValue = __webpack_require__(8);
-var ScaleModes = __webpack_require__(55);
-
-/**
- * @typedef {object} GameObjectConfig
- *
- * @property {number} [x=0] - [description]
- * @property {number} [y=0] - [description]
- * @property {number} [depth=0] - [description]
- * @property {boolean} [flipX=false] - [description]
- * @property {boolean} [flipY=false] - [description]
- * @property {?(number|object)} [scale=null] - [description]
- * @property {?(number|object)} [scrollFactor=null] - [description]
- * @property {number} [rotation=0] - [description]
- * @property {?number} [angle=null] - [description]
- * @property {number} [alpha=1] - [description]
- * @property {?(number|object)} [origin=null] - [description]
- * @property {number} [scaleMode=ScaleModes.DEFAULT] - [description]
- * @property {number} [blendMode=BlendModes.DEFAULT] - [description]
- * @property {boolean} [visible=true] - [description]
- * @property {boolean} [add=true] - [description]
- */
-
-/**
- * Builds a Game Object using the provided configuration object.
- *
- * @function Phaser.GameObjects.BuildGameObject
- * @since 3.0.0
- *
- * @param {Phaser.Scene} scene - [description]
- * @param {Phaser.GameObjects.GameObject} gameObject - [description]
- * @param {GameObjectConfig} config - [description]
- *
- * @return {Phaser.GameObjects.GameObject} The built Game Object.
- */
-var BuildGameObject = function (scene, gameObject, config)
-{
-    //  Position
-
-    gameObject.x = GetAdvancedValue(config, 'x', 0);
-    gameObject.y = GetAdvancedValue(config, 'y', 0);
-    gameObject.depth = GetAdvancedValue(config, 'depth', 0);
-
-    //  Flip
-
-    gameObject.flipX = GetAdvancedValue(config, 'flipX', false);
-    gameObject.flipY = GetAdvancedValue(config, 'flipY', false);
-
-    //  Scale
-    //  Either: { scale: 2 } or { scale: { x: 2, y: 2 }}
-
-    var scale = GetAdvancedValue(config, 'scale', null);
-
-    if (typeof scale === 'number')
-    {
-        gameObject.setScale(scale);
-    }
-    else if (scale !== null)
-    {
-        gameObject.scaleX = GetAdvancedValue(scale, 'x', 1);
-        gameObject.scaleY = GetAdvancedValue(scale, 'y', 1);
-    }
-
-    //  ScrollFactor
-    //  Either: { scrollFactor: 2 } or { scrollFactor: { x: 2, y: 2 }}
-
-    var scrollFactor = GetAdvancedValue(config, 'scrollFactor', null);
-
-    if (typeof scrollFactor === 'number')
-    {
-        gameObject.setScrollFactor(scrollFactor);
-    }
-    else if (scrollFactor !== null)
-    {
-        gameObject.scrollFactorX = GetAdvancedValue(scrollFactor, 'x', 1);
-        gameObject.scrollFactorY = GetAdvancedValue(scrollFactor, 'y', 1);
-    }
-
-    //  Rotation
-
-    gameObject.rotation = GetAdvancedValue(config, 'rotation', 0);
-
-    var angle = GetAdvancedValue(config, 'angle', null);
-
-    if (angle !== null)
-    {
-        gameObject.angle = angle;
-    }
-
-    //  Alpha
-
-    gameObject.alpha = GetAdvancedValue(config, 'alpha', 1);
-
-    //  Origin
-    //  Either: { origin: 0.5 } or { origin: { x: 0.5, y: 0.5 }}
-
-    var origin = GetAdvancedValue(config, 'origin', null);
-
-    if (typeof origin === 'number')
-    {
-        gameObject.setOrigin(origin);
-    }
-    else if (origin !== null)
-    {
-        var ox = GetAdvancedValue(origin, 'x', 0.5);
-        var oy = GetAdvancedValue(origin, 'y', 0.5);
-
-        gameObject.setOrigin(ox, oy);
-    }
-
-    //  ScaleMode
-
-    gameObject.scaleMode = GetAdvancedValue(config, 'scaleMode', ScaleModes.DEFAULT);
-
-    //  BlendMode
-
-    gameObject.blendMode = GetAdvancedValue(config, 'blendMode', BlendModes.NORMAL);
-
-    //  Visible
-
-    gameObject.visible = GetAdvancedValue(config, 'visible', true);
-
-    //  Add to Scene
-
-    var add = GetAdvancedValue(config, 'add', true);
-
-    if (add)
-    {
-        scene.sys.displayList.add(gameObject);
-    }
-
-    if (gameObject.preUpdate)
-    {
-        scene.sys.updateList.add(gameObject);
-    }
-
-    return gameObject;
-};
-
-module.exports = BuildGameObject;
-
-
-/***/ }),
+/* 21 */,
 /* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4217,8 +4300,8 @@ module.exports = BuildGameObject;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CONST = __webpack_require__(19);
-var Smoothing = __webpack_require__(123);
+var CONST = __webpack_require__(20);
+var Smoothing = __webpack_require__(126);
 
 // The pool into which the canvas elements are placed.
 var pool = [];
@@ -4249,14 +4332,16 @@ var CanvasPool = function ()
      * @param {integer} [width=1] - The width of the Canvas.
      * @param {integer} [height=1] - The height of the Canvas.
      * @param {integer} [canvasType=Phaser.CANVAS] - The type of the Canvas. Either `Phaser.CANVAS` or `Phaser.WEBGL`.
+     * @param {boolean} [selfParent=false] - Use the generated Canvas element as the parent?
      *
      * @return {HTMLCanvasElement} [description]
      */
-    var create = function (parent, width, height, canvasType)
+    var create = function (parent, width, height, canvasType, selfParent)
     {
         if (width === undefined) { width = 1; }
         if (height === undefined) { height = 1; }
         if (canvasType === undefined) { canvasType = CONST.CANVAS; }
+        if (selfParent === undefined) { selfParent = false; }
 
         var canvas;
         var container = first(canvasType);
@@ -4281,6 +4366,11 @@ var CanvasPool = function ()
             container.parent = parent;
 
             canvas = container.canvas;
+        }
+
+        if (selfParent)
+        {
+            container.parent = canvas;
         }
 
         canvas.width = width;
@@ -4463,6 +4553,159 @@ module.exports = CanvasPool();
 
 /***/ }),
 /* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var BlendModes = __webpack_require__(50);
+var GetAdvancedValue = __webpack_require__(10);
+var ScaleModes = __webpack_require__(58);
+
+/**
+ * @typedef {object} GameObjectConfig
+ *
+ * @property {number} [x=0] - [description]
+ * @property {number} [y=0] - [description]
+ * @property {number} [depth=0] - [description]
+ * @property {boolean} [flipX=false] - [description]
+ * @property {boolean} [flipY=false] - [description]
+ * @property {?(number|object)} [scale=null] - [description]
+ * @property {?(number|object)} [scrollFactor=null] - [description]
+ * @property {number} [rotation=0] - [description]
+ * @property {?number} [angle=null] - [description]
+ * @property {number} [alpha=1] - [description]
+ * @property {?(number|object)} [origin=null] - [description]
+ * @property {number} [scaleMode=ScaleModes.DEFAULT] - [description]
+ * @property {number} [blendMode=BlendModes.DEFAULT] - [description]
+ * @property {boolean} [visible=true] - [description]
+ * @property {boolean} [add=true] - [description]
+ */
+
+/**
+ * Builds a Game Object using the provided configuration object.
+ *
+ * @function Phaser.GameObjects.BuildGameObject
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - [description]
+ * @param {Phaser.GameObjects.GameObject} gameObject - [description]
+ * @param {GameObjectConfig} config - [description]
+ *
+ * @return {Phaser.GameObjects.GameObject} The built Game Object.
+ */
+var BuildGameObject = function (scene, gameObject, config)
+{
+    //  Position
+
+    gameObject.x = GetAdvancedValue(config, 'x', 0);
+    gameObject.y = GetAdvancedValue(config, 'y', 0);
+    gameObject.depth = GetAdvancedValue(config, 'depth', 0);
+
+    //  Flip
+
+    gameObject.flipX = GetAdvancedValue(config, 'flipX', false);
+    gameObject.flipY = GetAdvancedValue(config, 'flipY', false);
+
+    //  Scale
+    //  Either: { scale: 2 } or { scale: { x: 2, y: 2 }}
+
+    var scale = GetAdvancedValue(config, 'scale', null);
+
+    if (typeof scale === 'number')
+    {
+        gameObject.setScale(scale);
+    }
+    else if (scale !== null)
+    {
+        gameObject.scaleX = GetAdvancedValue(scale, 'x', 1);
+        gameObject.scaleY = GetAdvancedValue(scale, 'y', 1);
+    }
+
+    //  ScrollFactor
+    //  Either: { scrollFactor: 2 } or { scrollFactor: { x: 2, y: 2 }}
+
+    var scrollFactor = GetAdvancedValue(config, 'scrollFactor', null);
+
+    if (typeof scrollFactor === 'number')
+    {
+        gameObject.setScrollFactor(scrollFactor);
+    }
+    else if (scrollFactor !== null)
+    {
+        gameObject.scrollFactorX = GetAdvancedValue(scrollFactor, 'x', 1);
+        gameObject.scrollFactorY = GetAdvancedValue(scrollFactor, 'y', 1);
+    }
+
+    //  Rotation
+
+    gameObject.rotation = GetAdvancedValue(config, 'rotation', 0);
+
+    var angle = GetAdvancedValue(config, 'angle', null);
+
+    if (angle !== null)
+    {
+        gameObject.angle = angle;
+    }
+
+    //  Alpha
+
+    gameObject.alpha = GetAdvancedValue(config, 'alpha', 1);
+
+    //  Origin
+    //  Either: { origin: 0.5 } or { origin: { x: 0.5, y: 0.5 }}
+
+    var origin = GetAdvancedValue(config, 'origin', null);
+
+    if (typeof origin === 'number')
+    {
+        gameObject.setOrigin(origin);
+    }
+    else if (origin !== null)
+    {
+        var ox = GetAdvancedValue(origin, 'x', 0.5);
+        var oy = GetAdvancedValue(origin, 'y', 0.5);
+
+        gameObject.setOrigin(ox, oy);
+    }
+
+    //  ScaleMode
+
+    gameObject.scaleMode = GetAdvancedValue(config, 'scaleMode', ScaleModes.DEFAULT);
+
+    //  BlendMode
+
+    gameObject.blendMode = GetAdvancedValue(config, 'blendMode', BlendModes.NORMAL);
+
+    //  Visible
+
+    gameObject.visible = GetAdvancedValue(config, 'visible', true);
+
+    //  Add to Scene
+
+    var add = GetAdvancedValue(config, 'add', true);
+
+    if (add)
+    {
+        scene.sys.displayList.add(gameObject);
+    }
+
+    if (gameObject.preUpdate)
+    {
+        scene.sys.updateList.add(gameObject);
+    }
+
+    return gameObject;
+};
+
+module.exports = BuildGameObject;
+
+
+/***/ }),
+/* 24 */
 /***/ (function(module, exports) {
 
 /**
@@ -4492,8 +4735,9 @@ module.exports = Clamp;
 
 
 /***/ }),
-/* 24 */,
-/* 25 */
+/* 25 */,
+/* 26 */,
+/* 27 */
 /***/ (function(module, exports) {
 
 /**
@@ -4510,15 +4754,15 @@ module.exports = Clamp;
 module.exports = {
 
     /**
-     * [description]
+     * Packs four floats on a range from 0.0 to 1.0 into a single Uint32
      *
      * @function Phaser.Renderer.WebGL.Utils.getTintFromFloats
      * @since 3.0.0
      * 
-     * @param {number} r - [description]
+     * @param {number} r - Red component in a range from 0.0 to 1.0 
      * @param {number} g - [description]
      * @param {number} b - [description]
-     * @param {number} a - [description]
+     * @param {number} a - Alpha component in a range from 0.0 to 1.0
      * 
      * @return {number} [description]
      */
@@ -4533,15 +4777,16 @@ module.exports = {
     },
 
     /**
-     * [description]
+     * Packs a Uint24, representing RGB components, with a Float32, representing
+     * the alpha component, with a range between 0.0 and 1.0 and return a Uint32
      *
      * @function Phaser.Renderer.WebGL.Utils.getTintAppendFloatAlpha
      * @since 3.0.0
      * 
-     * @param {number} rgb - [description]
-     * @param {number} a - [description]
+     * @param {number} rgb - Uint24 representing RGB components
+     * @param {number} a - Float32 representing Alpha component
      * 
-     * @return {number} [description]
+     * @return {number} Packed RGBA as Uint32
      */
     getTintAppendFloatAlpha: function (rgb, a)
     {
@@ -4550,15 +4795,17 @@ module.exports = {
     },
 
     /**
-     * [description]
+     * Packs a Uint24, representing RGB components, with a Float32, representing
+     * the alpha component, with a range between 0.0 and 1.0 and return a 
+     * swizzled Uint32
      *
      * @function Phaser.Renderer.WebGL.Utils.getTintAppendFloatAlphaAndSwap
      * @since 3.0.0
      * 
-     * @param {number} rgb - [description]
-     * @param {number} a - [description]
+     * @param {number} rgb - Uint24 representing RGB components
+     * @param {number} a - Float32 representing Alpha component
      * 
-     * @return {number} [description]
+     * @return {number} Packed RGBA as Uint32
      */
     getTintAppendFloatAlphaAndSwap: function (rgb, a)
     {
@@ -4571,14 +4818,14 @@ module.exports = {
     },
 
     /**
-     * [description]
+     * Unpacks a Uint24 RGB into an array of floats of ranges of 0.0 and 1.0
      *
      * @function Phaser.Renderer.WebGL.Utils.getFloatsFromUintRGB
      * @since 3.0.0
      * 
-     * @param {number} rgb - [description]
+     * @param {number} rgb - RGB packed as a Uint24
      * 
-     * @return {number} [description]
+     * @return {array} Array of floats representing each component as a float 
      */
     getFloatsFromUintRGB: function (rgb)
     {
@@ -4590,15 +4837,15 @@ module.exports = {
     },
 
     /**
-     * [description]
+     * Counts how many attributes of 32 bits a vertex has
      *
      * @function Phaser.Renderer.WebGL.Utils.getComponentCount
      * @since 3.0.0
      * 
-     * @param {number} attributes - [description]
-     * @param {WebGLRenderingContext} glContext - [description]
+     * @param {array} attributes - Array of attributes 
+     * @param {WebGLRenderingContext} glContext - WebGLContext used for check types
      * 
-     * @return {number} [description]
+     * @return {number} Count of 32 bit attributes in vertex
      */
     getComponentCount: function (attributes, glContext)
     {
@@ -4625,7 +4872,247 @@ module.exports = {
 
 
 /***/ }),
-/* 26 */
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+var CONST = __webpack_require__(18);
+var File = __webpack_require__(19);
+var FileTypesManager = __webpack_require__(7);
+var GetFastValue = __webpack_require__(1);
+var GetValue = __webpack_require__(4);
+var IsPlainObject = __webpack_require__(9);
+
+/**
+ * @typedef {object} Phaser.Loader.FileTypes.JSONFileConfig
+ *
+ * @property {string} key - The key of the file. Must be unique within both the Loader and the JSON Cache.
+ * @property {string|any} [url] - The absolute or relative URL to load the file from. Or can be a ready formed JSON object, in which case it will be directly added to the Cache.
+ * @property {string} [extension='json'] - The default file extension to use if no url is provided.
+ * @property {string} [dataKey] - If specified instead of the whole JSON file being parsed and added to the Cache, only the section corresponding to this property key will be added. If the property you want to extract is nested, use periods to divide it.
+ * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ */
+
+/**
+ * @classdesc
+ * A single JSON File suitable for loading by the Loader.
+ *
+ * These are created when you use the Phaser.Loader.LoaderPlugin#json method and are not typically created directly.
+ * 
+ * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#json.
+ *
+ * @class JSONFile
+ * @extends Phaser.Loader.File
+ * @memberOf Phaser.Loader.FileTypes
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
+ * @param {(string|Phaser.Loader.FileTypes.JSONFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+ * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {string} [dataKey] - When the JSON file loads only this property will be stored in the Cache.
+ */
+var JSONFile = new Class({
+
+    Extends: File,
+
+    initialize:
+
+    //  url can either be a string, in which case it is treated like a proper url, or an object, in which case it is treated as a ready-made JS Object
+    //  dataKey allows you to pluck a specific object out of the JSON and put just that into the cache, rather than the whole thing
+
+    function JSONFile (loader, key, url, xhrSettings, dataKey)
+    {
+        var extension = 'json';
+
+        if (IsPlainObject(key))
+        {
+            var config = key;
+
+            key = GetFastValue(config, 'key');
+            url = GetFastValue(config, 'url');
+            xhrSettings = GetFastValue(config, 'xhrSettings');
+            extension = GetFastValue(config, 'extension', extension);
+            dataKey = GetFastValue(config, 'dataKey', dataKey);
+        }
+
+        var fileConfig = {
+            type: 'json',
+            cache: loader.cacheManager.json,
+            extension: extension,
+            responseType: 'text',
+            key: key,
+            url: url,
+            xhrSettings: xhrSettings,
+            config: dataKey
+        };
+
+        File.call(this, loader, fileConfig);
+
+        if (IsPlainObject(url))
+        {
+            //  Object provided instead of a URL, so no need to actually load it (populate data with value)
+            if (dataKey)
+            {
+                this.data = GetValue(url, dataKey);
+            }
+            else
+            {
+                this.data = url;
+            }
+
+            this.state = CONST.FILE_POPULATED;
+        }
+    },
+
+    /**
+     * Called automatically by Loader.nextFile.
+     * This method controls what extra work this File does with its loaded data.
+     *
+     * @method Phaser.Loader.FileTypes.JSONFile#onProcess
+     * @since 3.7.0
+     */
+    onProcess: function ()
+    {
+        if (this.state !== CONST.FILE_POPULATED)
+        {
+            this.state = CONST.FILE_PROCESSING;
+
+            var json = JSON.parse(this.xhrLoader.responseText);
+
+            var key = this.config;
+
+            if (typeof key === 'string')
+            {
+                this.data = GetValue(json, key, json);
+            }
+            else
+            {
+                this.data = json;
+            }
+        }
+
+        this.onProcessComplete();
+    }
+
+});
+
+/**
+ * Adds a JSON file, or array of JSON files, to the current load queue.
+ *
+ * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
+ * 
+ * ```javascript
+ * function preload ()
+ * {
+ *     this.load.json('wavedata', 'files/AlienWaveData.json');
+ * }
+ * ```
+ *
+ * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+ * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+ * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+ * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+ * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+ * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+ * loaded.
+ * 
+ * The key must be a unique String. It is used to add the file to the global JSON Cache upon a successful load.
+ * The key should be unique both in terms of files being loaded and files already present in the JSON Cache.
+ * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+ * then remove it from the JSON Cache first, before loading a new one.
+ *
+ * Instead of passing arguments you can pass a configuration object, such as:
+ * 
+ * ```javascript
+ * this.load.json({
+ *     key: 'wavedata',
+ *     url: 'files/AlienWaveData.json'
+ * });
+ * ```
+ *
+ * See the documentation for `Phaser.Loader.FileTypes.JSONFileConfig` for more details.
+ *
+ * Once the file has finished loading you can access it from its Cache using its key:
+ * 
+ * ```javascript
+ * this.load.json('wavedata', 'files/AlienWaveData.json');
+ * // and later in your game ...
+ * var data = this.cache.json.get('wavedata');
+ * ```
+ *
+ * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+ * key. For example, if the prefix was `LEVEL1.` and the key was `Waves` the final key will be `LEVEL1.Waves` and
+ * this is what you would use to retrieve the text from the JSON Cache.
+ *
+ * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+ *
+ * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "data"
+ * and no URL is given then the Loader will set the URL to be "data.json". It will always add `.json` as the extension, although
+ * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+ *
+ * You can also optionally provide a `dataKey` to use. This allows you to extract only a part of the JSON and store it in the Cache,
+ * rather than the whole file. For example, if your JSON data had a structure like this:
+ * 
+ * ```json
+ * {
+ *     "level1": {
+ *         "baddies": {
+ *             "aliens": {},
+ *             "boss": {}
+ *         }
+ *     },
+ *     "level2": {},
+ *     "level3": {}
+ * }
+ * ```
+ *
+ * And you only wanted to store the `boss` data in the Cache, then you could pass `level1.baddies.boss`as the `dataKey`.
+ *
+ * Note: The ability to load this type of file will only be available if the JSON File type has been built into Phaser.
+ * It is available in the default build but can be excluded from custom builds.
+ *
+ * @method Phaser.Loader.LoaderPlugin#json
+ * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+ * @since 3.0.0
+ *
+ * @param {(string|Phaser.Loader.FileTypes.JSONFileConfig|Phaser.Loader.FileTypes.JSONFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+ * @param {string} [dataKey] - When the JSON file loads only this property will be stored in the Cache.
+ * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
+ *
+ * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
+ */
+FileTypesManager.register('json', function (key, url, dataKey, xhrSettings)
+{
+    if (Array.isArray(key))
+    {
+        for (var i = 0; i < key.length; i++)
+        {
+            //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
+            this.addFile(new JSONFile(this, key[i]));
+        }
+    }
+    else
+    {
+        this.addFile(new JSONFile(this, key, url, xhrSettings, dataKey));
+    }
+
+    return this;
+});
+
+module.exports = JSONFile;
+
+
+/***/ }),
+/* 29 */
 /***/ (function(module, exports) {
 
 /**
@@ -4674,7 +5161,7 @@ module.exports = SafeRange;
 
 
 /***/ }),
-/* 27 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -4684,8 +5171,8 @@ module.exports = SafeRange;
  */
 
 var Class = __webpack_require__(0);
-var GetColor = __webpack_require__(144);
-var GetColor32 = __webpack_require__(278);
+var GetColor = __webpack_require__(148);
+var GetColor32 = __webpack_require__(281);
 
 /**
  * @classdesc
@@ -5188,7 +5675,7 @@ module.exports = Color;
 
 
 /***/ }),
-/* 28 */
+/* 31 */
 /***/ (function(module, exports) {
 
 /**
@@ -5223,8 +5710,7 @@ module.exports = Contains;
 
 
 /***/ }),
-/* 29 */,
-/* 30 */
+/* 32 */
 /***/ (function(module, exports) {
 
 /**
@@ -5265,7 +5751,49 @@ module.exports = Contains;
 
 
 /***/ }),
-/* 31 */
+/* 33 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Shallow Object Clone. Will not clone nested objects.
+ *
+ * @function Phaser.Utils.Object.Clone
+ * @since 3.0.0
+ *
+ * @param {object} obj - the object from which to clone
+ *
+ * @return {object} a new object with the same properties as the input obj
+ */
+var Clone = function (obj)
+{
+    var clone = {};
+
+    for (var key in obj)
+    {
+        if (Array.isArray(obj[key]))
+        {
+            clone[key] = obj[key].slice(0);
+        }
+        else
+        {
+            clone[key] = obj[key];
+        }
+    }
+
+    return clone;
+};
+
+module.exports = Clone;
+
+
+/***/ }),
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -5275,9 +5803,9 @@ module.exports = Contains;
  */
 
 var Class = __webpack_require__(0);
-var Components = __webpack_require__(14);
-var GameObject = __webpack_require__(1);
-var SpriteRender = __webpack_require__(540);
+var Components = __webpack_require__(15);
+var GameObject = __webpack_require__(2);
+var SpriteRender = __webpack_require__(541);
 
 /**
  * @classdesc
@@ -5302,6 +5830,7 @@ var SpriteRender = __webpack_require__(540);
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.GetBounds
+ * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.ScaleMode
@@ -5328,6 +5857,7 @@ var Sprite = new Class({
         Components.Depth,
         Components.Flip,
         Components.GetBounds,
+        Components.Mask,
         Components.Origin,
         Components.Pipeline,
         Components.ScaleMode,
@@ -5419,8 +5949,8 @@ module.exports = Sprite;
 
 
 /***/ }),
-/* 32 */,
-/* 33 */
+/* 35 */,
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -5429,17 +5959,314 @@ module.exports = Sprite;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CONST = __webpack_require__(15);
+var Class = __webpack_require__(0);
+var CONST = __webpack_require__(18);
+var File = __webpack_require__(19);
+var FileTypesManager = __webpack_require__(7);
+var GetFastValue = __webpack_require__(1);
+var IsPlainObject = __webpack_require__(9);
 
 /**
- * [description]
+ * @typedef {object} Phaser.Loader.FileTypes.ImageFrameConfig
+ *
+ * @property {integer} frameWidth - The width of the frame in pixels.
+ * @property {integer} [frameHeight] - The height of the frame in pixels. Uses the `frameWidth` value if not provided.
+ * @property {integer} [startFrame=0] - The first frame to start parsing from.
+ * @property {integer} [endFrame] - The frame to stop parsing at. If not provided it will calculate the value based on the image and frame dimensions.
+ * @property {integer} [margin=0] - The margin in the image. This is the space around the edge of the frames.
+ * @property {integer} [spacing=0] - The spacing between each frame in the image.
+ */
+
+/**
+ * @typedef {object} Phaser.Loader.FileTypes.ImageFileConfig
+ *
+ * @property {string} key - The key of the file. Must be unique within both the Loader and the Texture Manager.
+ * @property {string} [url] - The absolute or relative URL to load the file from.
+ * @property {string} [extension='png'] - The default file extension to use if no url is provided.
+ * @property {string} [normalMap] - The filename of an associated normal map. It uses the same path and url to load as the image.
+ * @property {Phaser.Loader.FileTypes.ImageFrameConfig} [frameConfig] - The frame configuration object. Only provided for, and used by, Sprite Sheets.
+ * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ */
+
+/**
+ * @classdesc
+ * A single Image File suitable for loading by the Loader.
+ *
+ * These are created when you use the Phaser.Loader.LoaderPlugin#image method and are not typically created directly.
+ * 
+ * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#image.
+ *
+ * @class ImageFile
+ * @extends Phaser.Loader.File
+ * @memberOf Phaser.Loader.FileTypes
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
+ * @param {(string|Phaser.Loader.FileTypes.ImageFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {string|string[]} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+ * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {Phaser.Loader.FileTypes.ImageFrameConfig} [frameConfig] - The frame configuration object. Only provided for, and used by, Sprite Sheets.
+ */
+var ImageFile = new Class({
+
+    Extends: File,
+
+    initialize:
+
+    function ImageFile (loader, key, url, xhrSettings, frameConfig)
+    {
+        var extension = 'png';
+        var normalMapURL;
+
+        if (IsPlainObject(key))
+        {
+            var config = key;
+
+            key = GetFastValue(config, 'key');
+            url = GetFastValue(config, 'url');
+            normalMapURL = GetFastValue(config, 'normalMap');
+            xhrSettings = GetFastValue(config, 'xhrSettings');
+            extension = GetFastValue(config, 'extension', extension);
+            frameConfig = GetFastValue(config, 'frameConfig');
+        }
+
+        if (Array.isArray(url))
+        {
+            normalMapURL = url[1];
+            url = url[0];
+        }
+
+        var fileConfig = {
+            type: 'image',
+            cache: loader.textureManager,
+            extension: extension,
+            responseType: 'blob',
+            key: key,
+            url: url,
+            xhrSettings: xhrSettings,
+            config: frameConfig
+        };
+
+        File.call(this, loader, fileConfig);
+
+        //  Do we have a normal map to load as well?
+        if (normalMapURL)
+        {
+            var normalMap = new ImageFile(loader, this.key, normalMapURL, xhrSettings, frameConfig);
+
+            normalMap.type = 'normalMap';
+
+            this.setLink(normalMap);
+
+            loader.addFile(normalMap);
+        }
+    },
+
+    /**
+     * Called automatically by Loader.nextFile.
+     * This method controls what extra work this File does with its loaded data.
+     *
+     * @method Phaser.Loader.FileTypes.ImageFile#onProcess
+     * @since 3.7.0
+     */
+    onProcess: function ()
+    {
+        this.state = CONST.FILE_PROCESSING;
+
+        this.data = new Image();
+
+        this.data.crossOrigin = this.crossOrigin;
+
+        var _this = this;
+
+        this.data.onload = function ()
+        {
+            File.revokeObjectURL(_this.data);
+
+            _this.onProcessComplete();
+        };
+
+        this.data.onerror = function ()
+        {
+            File.revokeObjectURL(_this.data);
+
+            _this.onProcessError();
+        };
+
+        File.createObjectURL(this.data, this.xhrLoader.response, 'image/png');
+    },
+
+    /**
+     * Adds this file to its target cache upon successful loading and processing.
+     *
+     * @method Phaser.Loader.FileTypes.ImageFile#addToCache
+     * @since 3.7.0
+     */
+    addToCache: function ()
+    {
+        var texture;
+        var linkFile = this.linkFile;
+
+        if (linkFile && linkFile.state === CONST.FILE_COMPLETE)
+        {
+
+            if (this.type === 'image')
+            {
+                texture = this.cache.addImage(this.key, this.data, linkFile.data);
+            }
+            else
+            {
+                texture = this.cache.addImage(linkFile.key, linkFile.data, this.data);
+            }
+
+            this.pendingDestroy(texture);
+
+            linkFile.pendingDestroy(texture);
+        }
+        else if (!linkFile)
+        {
+            texture = this.cache.addImage(this.key, this.data);
+
+            this.pendingDestroy(texture);
+        }
+    }
+
+});
+
+/**
+ * Adds an Image, or array of Images, to the current load queue.
+ *
+ * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
+ * 
+ * ```javascript
+ * function preload ()
+ * {
+ *     this.load.image('logo', 'images/phaserLogo.png');
+ * }
+ * ```
+ *
+ * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+ * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+ * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+ * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+ * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+ * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+ * loaded.
+ * 
+ * Phaser can load all common image types: png, jpg, gif and any other format the browser can natively handle.
+ * If you try to load an animated gif only the first frame will be rendered. Browsers do not natively support playback
+ * of animated gifs to Canvas elements.
+ *
+ * The key must be a unique String. It is used to add the file to the global Texture Manager upon a successful load.
+ * The key should be unique both in terms of files being loaded and files already present in the Texture Manager.
+ * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+ * then remove it from the Texture Manager first, before loading a new one.
+ *
+ * Instead of passing arguments you can pass a configuration object, such as:
+ * 
+ * ```javascript
+ * this.load.image({
+ *     key: 'logo',
+ *     url: 'images/AtariLogo.png'
+ * });
+ * ```
+ *
+ * See the documentation for `Phaser.Loader.FileTypes.ImageFileConfig` for more details.
+ *
+ * Once the file has finished loading you can use it as a texture for a Game Object by referencing its key:
+ * 
+ * ```javascript
+ * this.load.image('logo', 'images/AtariLogo.png');
+ * // and later in your game ...
+ * this.add.image(x, y, 'logo');
+ * ```
+ *
+ * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+ * key. For example, if the prefix was `MENU.` and the key was `Background` the final key will be `MENU.Background` and
+ * this is what you would use to retrieve the image from the Texture Manager.
+ *
+ * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+ *
+ * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+ * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension, although
+ * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+ *
+ * Phaser also supports the automatic loading of associated normal maps. If you have a normal map to go with this image,
+ * then you can specify it by providing an array as the `url` where the second element is the normal map:
+ * 
+ * ```javascript
+ * this.load.image('logo', [ 'images/AtariLogo.png', 'images/AtariLogo-n.png' ]);
+ * ```
+ *
+ * Or, if you are using a config object use the `normalMap` property:
+ * 
+ * ```javascript
+ * this.load.image({
+ *     key: 'logo',
+ *     url: 'images/AtariLogo.png',
+ *     normalMap: 'images/AtariLogo-n.png'
+ * });
+ * ```
+ *
+ * The normal map file is subject to the same conditions as the image file with regard to the path, baseURL, CORs and XHR Settings.
+ * Normal maps are a WebGL only feature.
+ *
+ * Note: The ability to load this type of file will only be available if the Image File type has been built into Phaser.
+ * It is available in the default build but can be excluded from custom builds.
+ *
+ * @method Phaser.Loader.LoaderPlugin#image
+ * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+ * @since 3.0.0
+ *
+ * @param {(string|Phaser.Loader.FileTypes.ImageFileConfig|Phaser.Loader.FileTypes.ImageFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {string|string[]} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+ * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
+ *
+ * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
+ */
+FileTypesManager.register('image', function (key, url, xhrSettings)
+{
+    if (Array.isArray(key))
+    {
+        for (var i = 0; i < key.length; i++)
+        {
+            //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
+            this.addFile(new ImageFile(this, key[i]));
+        }
+    }
+    else
+    {
+        this.addFile(new ImageFile(this, key, url, xhrSettings));
+    }
+
+    return this;
+});
+
+module.exports = ImageFile;
+
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var CONST = __webpack_require__(16);
+
+/**
+ * Convert the given angle from degrees, to the equivalent angle in radians.
  *
  * @function Phaser.Math.DegToRad
  * @since 3.0.0
  *
- * @param {integer} degrees - [description]
+ * @param {integer} degrees - The angle (in degrees) to convert to radians.
  *
- * @return {float} [description]
+ * @return {float} The given angle converted to radians.
  */
 var DegToRad = function (degrees)
 {
@@ -5450,7 +6277,7 @@ module.exports = DegToRad;
 
 
 /***/ }),
-/* 34 */
+/* 38 */
 /***/ (function(module, exports) {
 
 /**
@@ -5482,8 +6309,8 @@ module.exports = Wrap;
 
 
 /***/ }),
-/* 35 */,
-/* 36 */
+/* 39 */,
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -5493,336 +6320,200 @@ module.exports = Wrap;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(17);
-var File = __webpack_require__(18);
-var FileTypesManager = __webpack_require__(7);
-var GetFastValue = __webpack_require__(2);
 
 /**
  * @classdesc
- * [description]
+ * A MultiFile is a special kind of parent that contains two, or more, Files as children and looks after
+ * the loading and processing of them all. It is commonly extended and used as a base class for file types such as AtlasJSON or BitmapFont.
+ * 
+ * You shouldn't create an instance of a MultiFile directly, but should extend it with your own class, setting a custom type and processing methods.
  *
- * @class JSONFile
- * @extends Phaser.Loader.File
- * @memberOf Phaser.Loader.FileTypes
+ * @class MultiFile
+ * @memberOf Phaser.Loader
  * @constructor
- * @since 3.0.0
+ * @since 3.7.0
  *
- * @param {string} key - [description]
- * @param {string} url - [description]
- * @param {string} path - [description]
- * @param {XHRSettingsObject} [xhrSettings] - [description]
+ * @param {Phaser.Loader.LoaderPlugin} loader - The Loader that is going to load this File.
+ * @param {string} type - The file type string for sorting within the Loader.
+ * @param {string} key - The key of the file within the loader.
+ * @param {Phaser.Loader.File[]} files - An array of Files that make-up this MultiFile.
  */
-var JSONFile = new Class({
-
-    Extends: File,
+var MultiFile = new Class({
 
     initialize:
 
-    //  url can either be a string, in which case it is treated like a proper url, or an object, in which case it is treated as a ready-made JS Object
-
-    function JSONFile (key, url, path, xhrSettings)
+    function MultiFile (loader, type, key, files)
     {
-        var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
+        /**
+         * A reference to the Loader that is going to load this file.
+         *
+         * @name Phaser.Loader.MultiFile#loader
+         * @type {Phaser.Loader.LoaderPlugin}
+         * @since 3.7.0
+         */
+        this.loader = loader;
 
-        var fileConfig = {
-            type: 'json',
-            extension: GetFastValue(key, 'extension', 'json'),
-            responseType: 'text',
-            key: fileKey,
-            url: GetFastValue(key, 'file', url),
-            path: path,
-            xhrSettings: GetFastValue(key, 'xhr', xhrSettings)
-        };
+        /**
+         * The file type string for sorting within the Loader.
+         *
+         * @name Phaser.Loader.MultiFile#type
+         * @type {string}
+         * @since 3.7.0
+         */
+        this.type = type;
 
-        File.call(this, fileConfig);
+        /**
+         * Unique cache key (unique within its file type)
+         *
+         * @name Phaser.Loader.MultiFile#key
+         * @type {string}
+         * @since 3.7.0
+         */
+        this.key = key;
 
-        if (typeof fileConfig.url === 'object')
+        /**
+         * Array of files that make up this MultiFile.
+         *
+         * @name Phaser.Loader.MultiFile#files
+         * @type {Phaser.Loader.File[]}
+         * @since 3.7.0
+         */
+        this.files = files;
+
+        /**
+         * The completion status of this MultiFile.
+         *
+         * @name Phaser.Loader.MultiFile#complete
+         * @type {boolean}
+         * @default false
+         * @since 3.7.0
+         */
+        this.complete = false;
+
+        /**
+         * The number of files to load.
+         *
+         * @name Phaser.Loader.MultiFile#pending
+         * @type {integer}
+         * @since 3.7.0
+         */
+
+        this.pending = files.length;
+
+        /**
+         * The number of files that failed to load.
+         *
+         * @name Phaser.Loader.MultiFile#failed
+         * @type {integer}
+         * @default 0
+         * @since 3.7.0
+         */
+        this.failed = 0;
+
+        /**
+         * A storage container for transient data that the loading files need.
+         *
+         * @name Phaser.Loader.MultiFile#config
+         * @type {any}
+         * @since 3.7.0
+         */
+        this.config = {};
+
+        //  Link the files
+        for (var i = 0; i < files.length; i++)
         {
-            //  Object provided instead of a URL, so no need to actually load it (populate data with value)
-            this.data = fileConfig.url;
-
-            this.state = CONST.FILE_POPULATED;
+            files[i].multiFile = this;
         }
     },
 
-    onProcess: function (callback)
+    /**
+     * Checks if this MultiFile is ready to process its children or not.
+     *
+     * @method Phaser.Loader.MultiFile#isReadyToProcess
+     * @since 3.7.0
+     *
+     * @return {boolean} `true` if all children of this MultiFile have loaded, otherwise `false`.
+     */
+    isReadyToProcess: function ()
     {
-        this.state = CONST.FILE_PROCESSING;
+        return (this.pending === 0 && this.failed === 0 && !this.complete);
+    },
 
-        this.data = JSON.parse(this.xhrLoader.responseText);
-
-        this.onComplete();
-
-        callback(this);
-    }
-
-});
-
-/**
- * Adds a JSON file to the current load queue.
- *
- * Note: This method will only be available if the JSON File type has been built into Phaser.
- *
- * The file is **not** loaded immediately after calling this method.
- * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
- *
- * @method Phaser.Loader.LoaderPlugin#json
- * @since 3.0.0
- *
- * @param {string} key - [description]
- * @param {string} url - [description]
- * @param {XHRSettingsObject} [xhrSettings] - [description]
- *
- * @return {Phaser.Loader.LoaderPlugin} The Loader.
- */
-FileTypesManager.register('json', function (key, url, xhrSettings)
-{
-    if (Array.isArray(key))
+    /**
+     * Adds another child to this MultiFile, increases the pending count and resets the completion status.
+     *
+     * @method Phaser.Loader.MultiFile#addToMultiFile
+     * @since 3.7.0
+     *
+     * @param {Phaser.Loader.File} files - The File to add to this MultiFile.
+     *
+     * @return {Phaser.Loader.MultiFile} This MultiFile instance.
+     */
+    addToMultiFile: function (file)
     {
-        for (var i = 0; i < key.length; i++)
+        this.files.push(file);
+
+        file.multiFile = this;
+
+        this.pending++;
+
+        this.complete = false;
+
+        return this;
+    },
+
+    /**
+     * Called by each File when it finishes loading.
+     *
+     * @method Phaser.Loader.MultiFile#onFileComplete
+     * @since 3.7.0
+     *
+     * @param {Phaser.Loader.File} file - The File that has completed processing.
+     */
+    onFileComplete: function (file)
+    {
+        var index = this.files.indexOf(file);
+
+        if (index !== -1)
         {
-            //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new JSONFile(key[i], url, this.path, xhrSettings));
+            this.pending--;
+        }
+    },
+
+    /**
+     * Called by each File that fails to load.
+     *
+     * @method Phaser.Loader.MultiFile#onFileFailed
+     * @since 3.7.0
+     *
+     * @param {Phaser.Loader.File} file - The File that has failed to load.
+     */
+    onFileFailed: function (file)
+    {
+        var index = this.files.indexOf(file);
+
+        if (index !== -1)
+        {
+            this.failed++;
         }
     }
-    else
-    {
-        this.addFile(new JSONFile(key, url, this.path, xhrSettings));
-    }
 
-    //  For method chaining
-    return this;
 });
 
-module.exports = JSONFile;
+module.exports = MultiFile;
 
 
 /***/ }),
-/* 37 */,
-/* 38 */,
-/* 39 */,
-/* 40 */,
 /* 41 */,
 /* 42 */,
 /* 43 */,
 /* 44 */,
 /* 45 */,
-/* 46 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var Class = __webpack_require__(0);
-var CONST = __webpack_require__(17);
-var File = __webpack_require__(18);
-var FileTypesManager = __webpack_require__(7);
-var GetFastValue = __webpack_require__(2);
-
-/**
- * @classdesc
- * [description]
- *
- * @class ImageFile
- * @extends Phaser.Loader.File
- * @memberOf Phaser.Loader.FileTypes
- * @constructor
- * @since 3.0.0
- *
- * @param {string} key - [description]
- * @param {string} url - [description]
- * @param {string} path - [description]
- * @param {XHRSettingsObject} [xhrSettings] - [description]
- * @param {object} [config] - [description]
- */
-var ImageFile = new Class({
-
-    Extends: File,
-
-    initialize:
-
-    // this.load.image('pic', 'assets/pics/taikodrummaster.jpg');
-    // this.load.image({ key: 'pic', file: 'assets/pics/taikodrummaster.jpg' });
-    // this.load.image({
-    //     key: 'bunny',
-    //     file: 'assets/sprites/bunny.png',
-    //     xhr: {
-    //         user: 'root',
-    //         password: 'th3G1bs0n',
-    //         timeout: 30,
-    //         header: 'Content-Type',
-    //         headerValue: 'text/xml'
-    //     }
-    // });
-    // this.load.image({ key: 'bunny' });
-    // this.load.image({ key: 'bunny', extension: 'jpg' });
-
-    function ImageFile (key, url, path, xhrSettings, config)
-    {
-        var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
-
-        var fileConfig = {
-            type: 'image',
-            extension: GetFastValue(key, 'extension', 'png'),
-            responseType: 'blob',
-            key: fileKey,
-            url: GetFastValue(key, 'file', url),
-            path: path,
-            xhrSettings: GetFastValue(key, 'xhr', xhrSettings),
-            config: GetFastValue(key, 'config', config)
-        };
-
-        File.call(this, fileConfig);
-    },
-
-    onProcess: function (callback)
-    {
-        this.state = CONST.FILE_PROCESSING;
-
-        this.data = new Image();
-
-        this.data.crossOrigin = this.crossOrigin;
-
-        var _this = this;
-
-        this.data.onload = function ()
-        {
-            File.revokeObjectURL(_this.data);
-
-            _this.onComplete();
-
-            callback(_this);
-        };
-
-        this.data.onerror = function ()
-        {
-            File.revokeObjectURL(_this.data);
-
-            _this.state = CONST.FILE_ERRORED;
-
-            callback(_this);
-        };
-
-        File.createObjectURL(this.data, this.xhrLoader.response, 'image/png');
-    }
-
-});
-
-/**
- * Adds an Image file to the current load queue.
- *
- * Note: This method will only be available if the Image File type has been built into Phaser.
- *
- * The file is **not** loaded immediately after calling this method.
- * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
- *
- * @method Phaser.Loader.LoaderPlugin#image
- * @since 3.0.0
- *
- * @param {string} key - [description]
- * @param {string} url - [description]
- * @param {XHRSettingsObject} [xhrSettings] - [description]
- *
- * @return {Phaser.Loader.LoaderPlugin} The Loader.
- */
-FileTypesManager.register('image', function (key, url, xhrSettings)
-{
-    var urls;
-    var fileA;
-    var fileB;
-
-    if (Array.isArray(key))
-    {
-        for (var i = 0; i < key.length; i++)
-        {
-            //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            urls = GetFastValue(key[i], 'file', url);
-
-            if (Array.isArray(urls) && urls.length === 2)
-            {
-                fileA = this.addFile(new ImageFile(key[i], urls[0], this.path, xhrSettings));
-                fileB = this.addFile(new ImageFile(key[i], urls[1], this.path, xhrSettings));
-
-                fileA.setLinkFile(fileB, 'dataimage');
-            }
-            else
-            {
-                this.addFile(new ImageFile(key[i], url, this.path, xhrSettings));
-            }
-        }
-    }
-    else
-    {
-        urls = GetFastValue(key, 'file', url);
-
-        if (Array.isArray(urls) && urls.length === 2)
-        {
-            fileA = this.addFile(new ImageFile(key, urls[0], this.path, xhrSettings));
-            fileB = this.addFile(new ImageFile(key, urls[1], this.path, xhrSettings));
-
-            fileA.setLinkFile(fileB, 'dataimage');
-        }
-        else
-        {
-            this.addFile(new ImageFile(key, url, this.path, xhrSettings));
-        }
-    }
-
-    //  For method chaining
-    return this;
-});
-
-module.exports = ImageFile;
-
-
-/***/ }),
-/* 47 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Shallow Object Clone. Will not clone nested objects.
- *
- * @function Phaser.Utils.Object.Clone
- * @since 3.0.0
- *
- * @param {object} obj - the object from which to clone
- *
- * @return {object} a new object with the same properties as the input obj
- */
-var Clone = function (obj)
-{
-    var clone = {};
-
-    for (var key in obj)
-    {
-        if (Array.isArray(obj[key]))
-        {
-            clone[key] = obj[key].slice(0);
-        }
-        else
-        {
-            clone[key] = obj[key];
-        }
-    }
-
-    return clone;
-};
-
-module.exports = Clone;
-
-
-/***/ }),
-/* 48 */
+/* 46 */,
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */
 /***/ (function(module, exports) {
 
 /**
@@ -5973,9 +6664,9 @@ module.exports = {
 
 
 /***/ }),
-/* 49 */,
-/* 50 */,
-/* 51 */
+/* 51 */,
+/* 52 */,
+/* 53 */
 /***/ (function(module, exports) {
 
 /**
@@ -6017,7 +6708,7 @@ module.exports = Contains;
 
 
 /***/ }),
-/* 52 */
+/* 54 */
 /***/ (function(module, exports) {
 
 /**
@@ -6140,7 +6831,53 @@ module.exports = CONST;
 
 
 /***/ }),
-/* 53 */
+/* 55 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Removes a single item from an array and returns it without creating gc, like the native splice does.
+ * Based on code by Mike Reinstein.
+ *
+ * @function Phaser.Utils.Array.SpliceOne
+ * @since 3.0.0
+ *
+ * @param {array} array - [description]
+ * @param {integer} index - [description]
+ *
+ * @return {*} [description]
+ */
+var SpliceOne = function (array, index)
+{
+    if (index >= array.length)
+    {
+        return;
+    }
+
+    var len = array.length - 1;
+
+    var item = array[index];
+
+    for (var i = index; i < len; i++)
+    {
+        array[i] = array[i + 1];
+    }
+
+    array.length = len;
+
+    return item;
+};
+
+module.exports = SpliceOne;
+
+
+/***/ }),
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process) {/**
@@ -6325,10 +7062,10 @@ function init ()
 
 module.exports = init();
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(519)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(522)))
 
 /***/ }),
-/* 54 */
+/* 57 */
 /***/ (function(module, exports) {
 
 /**
@@ -6362,7 +7099,7 @@ module.exports = DistanceBetween;
 
 
 /***/ }),
-/* 55 */
+/* 58 */
 /***/ (function(module, exports) {
 
 /**
@@ -6408,7 +7145,7 @@ module.exports = {
 
 
 /***/ }),
-/* 56 */
+/* 59 */
 /***/ (function(module, exports) {
 
 /**
@@ -6461,7 +7198,7 @@ module.exports = Contains;
 
 
 /***/ }),
-/* 57 */
+/* 60 */
 /***/ (function(module, exports) {
 
 /**
@@ -6633,7 +7370,7 @@ module.exports = TWEEN_CONST;
 
 
 /***/ }),
-/* 58 */
+/* 61 */
 /***/ (function(module, exports) {
 
 /**
@@ -6674,7 +7411,7 @@ module.exports = GetBoolean;
 
 
 /***/ }),
-/* 59 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -6683,7 +7420,7 @@ module.exports = GetBoolean;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var EaseMap = __webpack_require__(430);
+var EaseMap = __webpack_require__(432);
 
 /**
  * [description]
@@ -6736,7 +7473,7 @@ module.exports = GetEaseFunction;
 
 
 /***/ }),
-/* 60 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -7333,7 +8070,7 @@ module.exports = TransformMatrix;
 
 
 /***/ }),
-/* 61 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -7342,7 +8079,7 @@ module.exports = TransformMatrix;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Clamp = __webpack_require__(23);
+var Clamp = __webpack_require__(24);
 
 /**
  * Return a value based on the range between `min` and `max` and the percentage given.
@@ -7367,10 +8104,10 @@ module.exports = FromPercent;
 
 
 /***/ }),
-/* 62 */,
-/* 63 */,
-/* 64 */,
-/* 65 */
+/* 65 */,
+/* 66 */,
+/* 67 */,
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -7380,11 +8117,11 @@ module.exports = FromPercent;
  */
 
 var Class = __webpack_require__(0);
-var Contains = __webpack_require__(56);
-var GetPoint = __webpack_require__(219);
-var GetPoints = __webpack_require__(218);
-var Line = __webpack_require__(92);
-var Random = __webpack_require__(145);
+var Contains = __webpack_require__(59);
+var GetPoint = __webpack_require__(222);
+var GetPoints = __webpack_require__(221);
+var Line = __webpack_require__(95);
+var Random = __webpack_require__(149);
 
 /**
  * @classdesc
@@ -7805,7 +8542,7 @@ module.exports = Triangle;
 
 
 /***/ }),
-/* 66 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -7815,9 +8552,9 @@ module.exports = Triangle;
  */
 
 var Class = __webpack_require__(0);
-var Components = __webpack_require__(14);
-var GameObject = __webpack_require__(1);
-var ImageRender = __webpack_require__(438);
+var Components = __webpack_require__(15);
+var GameObject = __webpack_require__(2);
+var ImageRender = __webpack_require__(440);
 
 /**
  * @classdesc
@@ -7839,6 +8576,7 @@ var ImageRender = __webpack_require__(438);
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.GetBounds
+ * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.ScaleMode
@@ -7865,6 +8603,7 @@ var Image = new Class({
         Components.Depth,
         Components.Flip,
         Components.GetBounds,
+        Components.Mask,
         Components.Origin,
         Components.Pipeline,
         Components.ScaleMode,
@@ -7896,7 +8635,7 @@ module.exports = Image;
 
 
 /***/ }),
-/* 67 */
+/* 70 */
 /***/ (function(module, exports) {
 
 /**
@@ -7924,7 +8663,7 @@ module.exports = Length;
 
 
 /***/ }),
-/* 68 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -7933,17 +8672,17 @@ module.exports = Length;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Defaults = __webpack_require__(96);
-var GetAdvancedValue = __webpack_require__(8);
-var GetBoolean = __webpack_require__(58);
-var GetEaseFunction = __webpack_require__(59);
-var GetNewValue = __webpack_require__(69);
-var GetProps = __webpack_require__(155);
-var GetTargets = __webpack_require__(98);
+var Defaults = __webpack_require__(99);
+var GetAdvancedValue = __webpack_require__(10);
+var GetBoolean = __webpack_require__(61);
+var GetEaseFunction = __webpack_require__(62);
+var GetNewValue = __webpack_require__(72);
+var GetProps = __webpack_require__(159);
+var GetTargets = __webpack_require__(101);
 var GetValue = __webpack_require__(4);
-var GetValueOp = __webpack_require__(97);
-var Tween = __webpack_require__(95);
-var TweenData = __webpack_require__(94);
+var GetValueOp = __webpack_require__(100);
+var Tween = __webpack_require__(98);
+var TweenData = __webpack_require__(97);
 
 /**
  * [description]
@@ -8055,7 +8794,7 @@ module.exports = TweenBuilder;
 
 
 /***/ }),
-/* 69 */
+/* 72 */
 /***/ (function(module, exports) {
 
 /**
@@ -8118,53 +8857,7 @@ module.exports = GetNewValue;
 
 
 /***/ }),
-/* 70 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Removes a single item from an array and returns it without creating gc, like the native splice does.
- * Based on code by Mike Reinstein.
- *
- * @function Phaser.Utils.Array.SpliceOne
- * @since 3.0.0
- *
- * @param {array} array - [description]
- * @param {integer} index - [description]
- *
- * @return {*} [description]
- */
-var SpliceOne = function (array, index)
-{
-    if (index >= array.length)
-    {
-        return;
-    }
-
-    var len = array.length - 1;
-
-    var item = array[index];
-
-    for (var i = index; i < len; i++)
-    {
-        array[i] = array[i + 1];
-    }
-
-    array.length = len;
-
-    return item;
-};
-
-module.exports = SpliceOne;
-
-
-/***/ }),
-/* 71 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -8175,8 +8868,8 @@ module.exports = SpliceOne;
 
 // Based on the routine from {@link http://jsfiddle.net/MrPolywhirl/NH42z/}.
 
-var CheckMatrix = __webpack_require__(108);
-var TransposeMatrix = __webpack_require__(166);
+var CheckMatrix = __webpack_require__(111);
+var TransposeMatrix = __webpack_require__(169);
 
 /**
  * [description]
@@ -8230,7 +8923,7 @@ module.exports = RotateMatrix;
 
 
 /***/ }),
-/* 72 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -8241,8 +8934,8 @@ module.exports = RotateMatrix;
  */
 
 var Class = __webpack_require__(0);
-var EventEmitter = __webpack_require__(9);
-var Extend = __webpack_require__(16);
+var EventEmitter = __webpack_require__(8);
+var Extend = __webpack_require__(17);
 var NOOP = __webpack_require__(3);
 
 /**
@@ -8435,7 +9128,7 @@ var BaseSound = new Class({
         if (this.markers[marker.name])
         {
             // eslint-disable-next-line no-console
-            console.error('addMarker - Marker with name \'' + marker.name + '\' already exists for sound \'' + this.key + '\'!');
+            console.error('addMarker ' + marker.name + ' already exists in Sound');
 
             return false;
         }
@@ -8728,7 +9421,7 @@ module.exports = BaseSound;
 
 
 /***/ }),
-/* 73 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -8739,7 +9432,8 @@ module.exports = BaseSound;
  */
 
 var Class = __webpack_require__(0);
-var EventEmitter = __webpack_require__(9);
+var Clone = __webpack_require__(33);
+var EventEmitter = __webpack_require__(8);
 var NOOP = __webpack_require__(3);
 
 /**
@@ -8795,6 +9489,16 @@ var BaseSoundManager = new Class({
          * @since 3.0.0
          */
         this.game = game;
+
+        /**
+         * Local reference to the JSON Cache, as used by Audio Sprites.
+         *
+         * @name Phaser.Sound.BaseSoundManager#jsonCache
+         * @type {Phaser.Cache.BaseCache}
+         * @readOnly
+         * @since 3.7.0
+         */
+        this.jsonCache = game.cache.json;
 
         /**
          * An array containing all added sounds.
@@ -8919,6 +9623,8 @@ var BaseSoundManager = new Class({
 
     /**
      * Adds a new audio sprite sound into the sound manager.
+     * Audio Sprites are a combination of audio files and a JSON configuration.
+     * The JSON follows the format of that created by https://github.com/tonistiigi/audiosprite
      *
      * @method Phaser.Sound.BaseSoundManager#addAudioSprite
      * @since 3.0.0
@@ -8930,9 +9636,11 @@ var BaseSoundManager = new Class({
      */
     addAudioSprite: function (key, config)
     {
+        if (config === undefined) { config = {}; }
+
         var sound = this.add(key, config);
 
-        sound.spritemap = this.game.cache.json.get(key).spritemap;
+        sound.spritemap = this.jsonCache.get(key).spritemap;
 
         for (var markerName in sound.spritemap)
         {
@@ -8941,13 +9649,17 @@ var BaseSoundManager = new Class({
                 continue;
             }
 
+            var markerConfig = Clone(config);
+
             var marker = sound.spritemap[markerName];
+
+            markerConfig.loop = (marker.hasOwnProperty('loop')) ? marker.loop : false;
 
             sound.addMarker({
                 name: markerName,
                 start: marker.start,
                 duration: marker.end - marker.start,
-                config: config
+                config: markerConfig
             });
         }
 
@@ -9375,7 +10087,7 @@ module.exports = BaseSoundManager;
 
 
 /***/ }),
-/* 74 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -9384,7 +10096,7 @@ module.exports = BaseSoundManager;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var OS = __webpack_require__(53);
+var OS = __webpack_require__(56);
 
 /**
  * Determines the browser type and version running this Phaser Game instance.
@@ -9485,7 +10197,7 @@ module.exports = init();
 
 
 /***/ }),
-/* 75 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -9923,7 +10635,7 @@ module.exports = Set;
 
 
 /***/ }),
-/* 76 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -10020,7 +10732,7 @@ var DataManager = new Class({
          */
         this._frozen = false;
 
-        if (this.events)
+        if (!parent.hasOwnProperty('sys') && this.events)
         {
             this.events.once('destroy', this.destroy, this);
         }
@@ -10370,9 +11082,9 @@ module.exports = DataManager;
 
 
 /***/ }),
-/* 77 */,
-/* 78 */,
-/* 79 */
+/* 79 */,
+/* 80 */,
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -10492,7 +11204,7 @@ else {}
 })();
 
 /***/ }),
-/* 80 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -10503,11 +11215,39 @@ else {}
  */
 
 var Class = __webpack_require__(0);
-var Utils = __webpack_require__(25);
+var Utils = __webpack_require__(27);
 
 /**
  * @classdesc
- * [description]
+ * WebGLPipeline is a class that describes the way elements will be rendererd 
+ * in WebGL, specially focused on batching vertices (batching is not provided). 
+ * Pipelines are mostly used for describing 2D rendering passes but it's 
+ * flexible enough to be used for any type of rendering including 3D. 
+ * Internally WebGLPipeline will handle things like compiling shaders,
+ * creating vertex buffers, assigning primitive topology and binding 
+ * vertex attributes.
+ *
+ * The config properties are:
+ * - game: Current game instance.
+ * - renderer: Current WebGL renderer.
+ * - gl: Current WebGL context.
+ * - topology: This indicates how the primitives are rendered. The default value is GL_TRIANGLES.
+ *              Here is the full list of rendering primitives (https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Constants).
+ * - vertShader: Source for vertex shader as a string.
+ * - fragShader: Source for fragment shader as a string.
+ * - vertexCapacity: The amount of vertices that shall be allocated
+ * - vertexSize: The size of a single vertex in bytes.
+ * - vertices: An optional buffer of vertices
+ * - attributes: An array describing the vertex attributes
+ *  
+ * The vertex attributes properties are:
+ * - name : String - Name of the attribute in the vertex shader
+ * - size : integer - How many components describe the attribute. For ex: vec3 = size of 3, float = size of 1
+ * - type : GLenum - WebGL type (gl.BYTE, gl.SHORT, gl.UNSIGNED_BYTE, gl.UNSIGNED_SHORT, gl.FLOAT)
+ * - normalized : boolean - Is the attribute normalized
+ * - offset : integer - The offset in bytes to the current attribute in the vertex. Equivalent to offsetof(vertex, attrib) in C
+ * Here you can find more information of how to describe an attribute:
+ * - https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer
  *
  * @class WebGLPipeline
  * @memberOf Phaser.Renderer.WebGL
@@ -10523,7 +11263,7 @@ var WebGLPipeline = new Class({
     function WebGLPipeline (config)
     {
         /**
-         * [description]
+         * Name of the Pipeline. Used for identifying
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#name
          * @type {string}
@@ -10550,7 +11290,7 @@ var WebGLPipeline = new Class({
         this.view = config.game.canvas;
 
         /**
-         * [description]
+         * Used to store the current game resolution
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#resolution
          * @type {number}
@@ -10559,7 +11299,7 @@ var WebGLPipeline = new Class({
         this.resolution = config.game.config.resolution;
 
         /**
-         * [description]
+         * Width of the current viewport
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#width
          * @type {number}
@@ -10568,7 +11308,7 @@ var WebGLPipeline = new Class({
         this.width = config.game.config.width * this.resolution;
 
         /**
-         * [description]
+         * Height of the current viewport
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#height
          * @type {number}
@@ -10586,7 +11326,7 @@ var WebGLPipeline = new Class({
         this.gl = config.gl;
 
         /**
-         * [description]
+         * How many vertices have been fed to the current pipeline.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexCount
          * @type {number}
@@ -10596,7 +11336,7 @@ var WebGLPipeline = new Class({
         this.vertexCount = 0;
 
         /**
-         * [description]
+         * The limit of vertices that the pipeline can hold
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexCapacity
          * @type {integer}
@@ -10614,7 +11354,7 @@ var WebGLPipeline = new Class({
         this.renderer = config.renderer;
 
         /**
-         * [description]
+         * Raw byte buffer of vertices.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexData
          * @type {ArrayBuffer}
@@ -10623,7 +11363,7 @@ var WebGLPipeline = new Class({
         this.vertexData = (config.vertices ? config.vertices : new ArrayBuffer(config.vertexCapacity * config.vertexSize));
 
         /**
-         * [description]
+         * The handle to a WebGL vertex buffer object.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexBuffer
          * @type {WebGLBuffer}
@@ -10632,7 +11372,7 @@ var WebGLPipeline = new Class({
         this.vertexBuffer = this.renderer.createVertexBuffer((config.vertices ? config.vertices : this.vertexData.byteLength), this.gl.STREAM_DRAW);
 
         /**
-         * [description]
+         * The handle to a WebGL program
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#program
          * @type {WebGLProgram}
@@ -10641,7 +11381,7 @@ var WebGLPipeline = new Class({
         this.program = this.renderer.createProgram(config.vertShader, config.fragShader);
 
         /**
-         * [description]
+         * Array of objects that describe the vertex attributes
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#attributes
          * @type {object}
@@ -10650,7 +11390,7 @@ var WebGLPipeline = new Class({
         this.attributes = config.attributes;
 
         /**
-         * [description]
+         * The size in bytes of the vertex
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexSize
          * @type {integer}
@@ -10659,7 +11399,7 @@ var WebGLPipeline = new Class({
         this.vertexSize = config.vertexSize;
 
         /**
-         * [description]
+         * The primitive topology which the pipeline will use to submit draw calls
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#topology
          * @type {integer}
@@ -10668,7 +11408,8 @@ var WebGLPipeline = new Class({
         this.topology = config.topology;
 
         /**
-         * [description]
+         * Uint8 view to the vertex raw buffer. Used for uploading vertex buffer resources
+         * to the GPU.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#bytes
          * @type {Uint8Array}
@@ -10697,16 +11438,16 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Adds a description of vertex attribute to the pipeline
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#addAttribute
      * @since 3.2.0
      *
-     * @param {string} name - [description]
-     * @param {integer} size - [description]
-     * @param {integer} type - [description]
-     * @param {boolean} normalized - [description]
-     * @param {integer} offset - [description]
+     * @param {string} name - Name of the vertex attribute
+     * @param {integer} size - Vertex component size
+     * @param {integer} type - Type of the attribute
+     * @param {boolean} normalized - Is the value normalized to a range
+     * @param {integer} offset - Byte offset to the beginning of the first element in the vertex
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
@@ -10724,7 +11465,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Check if the current batch of vertices is full.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#shouldFlush
      * @since 3.0.0
@@ -10737,7 +11478,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Resizes the properties used to describe the viewport
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#resize
      * @since 3.0.0
@@ -10756,7 +11497,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Binds the pipeline resources, including programs, vertex buffers and binds attributes
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#bind
      * @since 3.0.0
@@ -10854,7 +11595,8 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Uploads the vertex data and emits a draw call
+     * for the current batch of vertices.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#flush
      * @since 3.0.0
@@ -10910,7 +11652,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Set a uniform value of the current pipeline program.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat1
      * @since 3.2.0
@@ -10927,7 +11669,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Set a uniform value of the current pipeline program.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat2
      * @since 3.2.0
@@ -10946,7 +11688,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Set a uniform value of the current pipeline program.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat3
      * @since 3.2.0
@@ -10966,16 +11708,16 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Set a uniform value of the current pipeline program.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat4
      * @since 3.2.0
      *
-     * @param {string} name - [description]
-     * @param {float} x - [description]
-     * @param {float} y - [description]
-     * @param {float} z - [description]
-     * @param {float} w - [description]
+     * @param {string} name - Name of the uniform
+     * @param {float} x - X component of the uniform
+     * @param {float} y - Y component of the uniform
+     * @param {float} z - Z component of the uniform
+     * @param {float} w - W component of the uniform
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
@@ -10987,7 +11729,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Set a uniform value of the current pipeline program.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setInt1
      * @since 3.2.0
@@ -11004,7 +11746,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Set a uniform value of the current pipeline program.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setInt2
      * @since 3.2.0
@@ -11022,7 +11764,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Set a uniform value of the current pipeline program.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setInt3
      * @since 3.2.0
@@ -11041,16 +11783,16 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Set a uniform value of the current pipeline program.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setInt4
      * @since 3.2.0
      *
-     * @param {string} name - [description]
-     * @param {integer} x - [description]
-     * @param {integer} y - [description]
-     * @param {integer} z - [description]
-     * @param {integer} w - [description]
+     * @param {string} name - Name of the uniform
+     * @param {integer} x - X component of the uniform
+     * @param {integer} y - Y component of the uniform
+     * @param {integer} z - Z component of the uniform
+     * @param {integer} w - W component of the uniform
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
@@ -11061,6 +11803,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
+     * Set a uniform value of the current pipeline program.
      * [description]
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setMatrix2
@@ -11079,6 +11822,8 @@ var WebGLPipeline = new Class({
     },
 
     /**
+     * Set a uniform value of the current pipeline program.
+     * [description]
      * [description]
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setMatrix3
@@ -11097,14 +11842,14 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Set a uniform value of the current pipeline program.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#setMatrix4
      * @since 3.2.0
      *
-     * @param {string} name - [description]
-     * @param {boolean} transpose - [description]
-     * @param {Float32Array} matrix - [description]
+     * @param {string} name - Name of the uniform
+     * @param {boolean} transpose - Should the matrix be transpose
+     * @param {Float32Array} matrix - Matrix data
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
@@ -11120,9 +11865,39 @@ module.exports = WebGLPipeline;
 
 
 /***/ }),
-/* 81 */,
-/* 82 */,
 /* 83 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Checks if the given `width` and `height` are a power of two.
+ * Useful for checking texture dimensions.
+ *
+ * @function Phaser.Math.Pow2.IsSizePowerOfTwo
+ * @since 3.0.0
+ *
+ * @param {number} width - The width.
+ * @param {number} height - The height.
+ *
+ * @return {boolean} `true` if `width` and `height` are a power of two, otherwise `false`.
+ */
+var IsSizePowerOfTwo = function (width, height)
+{
+    return (width > 0 && (width & (width - 1)) === 0 && height > 0 && (height & (height - 1)) === 0);
+};
+
+module.exports = IsSizePowerOfTwo;
+
+
+/***/ }),
+/* 84 */,
+/* 85 */,
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -11132,10 +11907,10 @@ module.exports = WebGLPipeline;
  */
 
 var Class = __webpack_require__(0);
-var Contains = __webpack_require__(30);
-var GetPoint = __webpack_require__(290);
-var GetPoints = __webpack_require__(288);
-var Random = __webpack_require__(149);
+var Contains = __webpack_require__(32);
+var GetPoint = __webpack_require__(293);
+var GetPoints = __webpack_require__(291);
+var Random = __webpack_require__(153);
 
 /**
  * @classdesc
@@ -11485,11 +12260,11 @@ module.exports = Circle;
 
 
 /***/ }),
-/* 84 */,
-/* 85 */,
-/* 86 */,
 /* 87 */,
-/* 88 */
+/* 88 */,
+/* 89 */,
+/* 90 */,
+/* 91 */
 /***/ (function(module, exports) {
 
 /**
@@ -11501,14 +12276,15 @@ module.exports = Circle;
 /**
  * @typedef {object} XHRSettingsObject
  *
- * @property {XMLHttpRequestResponseType} responseType - [description]
- * @property {boolean} async - [description]
- * @property {string} user - [description]
- * @property {string} password - [description]
- * @property {number} timeout - [description]
- * @property {?string} header - [description]
- * @property {?string} headerValue - [description]
- * @property {(string|undefined)} overrideMimeType - [description]
+ * @property {XMLHttpRequestResponseType} responseType - The response type of the XHR request, i.e. `blob`, `text`, etc.
+ * @property {boolean} [async=true] - Should the XHR request use async or not?
+ * @property {string} [user=''] - Optional username for the XHR request.
+ * @property {string} [password=''] - Optional password for the XHR request.
+ * @property {integer} [timeout=0] - Optional XHR timeout value.
+ * @property {(string|undefined)} [header] - This value is used to populate the XHR `setRequestHeader` and is undefined by default.
+ * @property {(string|undefined)} [headerValue] - This value is used to populate the XHR `setRequestHeader` and is undefined by default.
+ * @property {(string|undefined)} [requestedWith] - This value is used to populate the XHR `setRequestHeader` and is undefined by default.
+ * @property {(string|undefined)} [overrideMimeType] - Provide a custom mime-type to use instead of the default.
  */
 
 /**
@@ -11554,6 +12330,7 @@ var XHRSettings = function (responseType, async, user, password, timeout)
         //  setRequestHeader
         header: undefined,
         headerValue: undefined,
+        requestedWith: false,
 
         //  overrideMimeType
         overrideMimeType: undefined
@@ -11565,7 +12342,7 @@ module.exports = XHRSettings;
 
 
 /***/ }),
-/* 89 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -11574,10 +12351,10 @@ module.exports = XHRSettings;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var ArrayUtils = __webpack_require__(140);
+var ArrayUtils = __webpack_require__(144);
 var Class = __webpack_require__(0);
 var NOOP = __webpack_require__(3);
-var StableSort = __webpack_require__(79);
+var StableSort = __webpack_require__(81);
 
 /**
  * @callback EachListCallback
@@ -12384,7 +13161,7 @@ module.exports = List;
 
 
 /***/ }),
-/* 90 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -12393,7 +13170,7 @@ module.exports = List;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Clone = __webpack_require__(47);
+var Clone = __webpack_require__(33);
 
 /**
  * Creates a new Object using all values from obj1 and obj2.
@@ -12426,7 +13203,7 @@ module.exports = Merge;
 
 
 /***/ }),
-/* 91 */
+/* 94 */
 /***/ (function(module, exports) {
 
 /**
@@ -12464,7 +13241,7 @@ module.exports = Shuffle;
 
 
 /***/ }),
-/* 92 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -12474,9 +13251,9 @@ module.exports = Shuffle;
  */
 
 var Class = __webpack_require__(0);
-var GetPoint = __webpack_require__(285);
-var GetPoints = __webpack_require__(148);
-var Random = __webpack_require__(147);
+var GetPoint = __webpack_require__(288);
+var GetPoints = __webpack_require__(152);
+var Random = __webpack_require__(151);
 var Vector2 = __webpack_require__(6);
 
 /**
@@ -12784,7 +13561,7 @@ module.exports = Line;
 
 
 /***/ }),
-/* 93 */
+/* 96 */
 /***/ (function(module, exports) {
 
 /**
@@ -12812,7 +13589,7 @@ module.exports = Perimeter;
 
 
 /***/ }),
-/* 94 */
+/* 97 */
 /***/ (function(module, exports) {
 
 /**
@@ -12965,7 +13742,7 @@ module.exports = TweenData;
 
 
 /***/ }),
-/* 95 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -12975,9 +13752,9 @@ module.exports = TweenData;
  */
 
 var Class = __webpack_require__(0);
-var GameObjectCreator = __webpack_require__(13);
-var GameObjectFactory = __webpack_require__(11);
-var TWEEN_CONST = __webpack_require__(57);
+var GameObjectCreator = __webpack_require__(14);
+var GameObjectFactory = __webpack_require__(12);
+var TWEEN_CONST = __webpack_require__(60);
 
 /**
  * @classdesc
@@ -14358,7 +15135,7 @@ module.exports = Tween;
 
 
 /***/ }),
-/* 96 */
+/* 99 */
 /***/ (function(module, exports) {
 
 /**
@@ -14401,7 +15178,7 @@ module.exports = TWEEN_DEFAULTS;
 
 
 /***/ }),
-/* 97 */
+/* 100 */
 /***/ (function(module, exports) {
 
 /**
@@ -14574,7 +15351,7 @@ module.exports = GetValueOp;
 
 
 /***/ }),
-/* 98 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -14621,10 +15398,10 @@ module.exports = GetTargets;
 
 
 /***/ }),
-/* 99 */,
-/* 100 */,
-/* 101 */,
-/* 102 */
+/* 102 */,
+/* 103 */,
+/* 104 */,
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -14633,17 +15410,17 @@ module.exports = GetTargets;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var AddToDOM = __webpack_require__(122);
+var AddToDOM = __webpack_require__(125);
 var CanvasPool = __webpack_require__(22);
 var Class = __webpack_require__(0);
-var Components = __webpack_require__(14);
-var CONST = __webpack_require__(19);
-var GameObject = __webpack_require__(1);
-var GetTextSize = __webpack_require__(394);
+var Components = __webpack_require__(15);
+var CONST = __webpack_require__(20);
+var GameObject = __webpack_require__(2);
+var GetTextSize = __webpack_require__(396);
 var GetValue = __webpack_require__(4);
-var RemoveFromDOM = __webpack_require__(261);
-var TextRender = __webpack_require__(393);
-var TextStyle = __webpack_require__(390);
+var RemoveFromDOM = __webpack_require__(264);
+var TextRender = __webpack_require__(395);
+var TextStyle = __webpack_require__(392);
 
 /**
  * @classdesc
@@ -14661,6 +15438,7 @@ var TextStyle = __webpack_require__(390);
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.GetBounds
+ * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.ScaleMode
@@ -14686,6 +15464,7 @@ var Text = new Class({
         Components.Depth,
         Components.Flip,
         Components.GetBounds,
+        Components.Mask,
         Components.Origin,
         Components.Pipeline,
         Components.ScaleMode,
@@ -15083,13 +15862,19 @@ var Text = new Class({
                     {
                         result += '\n';
                     }
+
                     result += words[j] + ' ';
                     spaceLeft = wordWrapWidth - wordWidth;
                 }
                 else
                 {
                     spaceLeft -= wordWidthWithSpace;
-                    result += words[j] + ' ';
+                    result += words[j];
+
+                    if (j < (words.length - 1))
+                    {
+                        result += ' ';
+                    }
                 }
             }
 
@@ -15737,9 +16522,9 @@ module.exports = Text;
 
 
 /***/ }),
-/* 103 */,
-/* 104 */,
-/* 105 */
+/* 106 */,
+/* 107 */,
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -15781,7 +16566,7 @@ module.exports = CircumferencePoint;
 
 
 /***/ }),
-/* 106 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -15791,10 +16576,10 @@ module.exports = CircumferencePoint;
  */
 
 var Class = __webpack_require__(0);
-var Contains = __webpack_require__(51);
-var GetPoint = __webpack_require__(163);
-var GetPoints = __webpack_require__(162);
-var Random = __webpack_require__(126);
+var Contains = __webpack_require__(53);
+var GetPoint = __webpack_require__(167);
+var GetPoints = __webpack_require__(166);
+var Random = __webpack_require__(129);
 
 /**
  * @classdesc
@@ -16149,7 +16934,7 @@ module.exports = Ellipse;
 
 
 /***/ }),
-/* 107 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -16158,15 +16943,15 @@ module.exports = Ellipse;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Camera = __webpack_require__(113);
+var Camera = __webpack_require__(117);
 var Class = __webpack_require__(0);
-var Commands = __webpack_require__(111);
-var Components = __webpack_require__(14);
-var Ellipse = __webpack_require__(241);
-var GameObject = __webpack_require__(1);
+var Commands = __webpack_require__(115);
+var Components = __webpack_require__(15);
+var Ellipse = __webpack_require__(244);
+var GameObject = __webpack_require__(2);
 var GetValue = __webpack_require__(4);
-var MATH_CONST = __webpack_require__(15);
-var Render = __webpack_require__(440);
+var MATH_CONST = __webpack_require__(16);
+var Render = __webpack_require__(442);
 
 /**
  * @classdesc
@@ -16181,6 +16966,7 @@ var Render = __webpack_require__(440);
  * @extends Phaser.GameObjects.Components.Alpha
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
@@ -16197,6 +16983,7 @@ var Graphics = new Class({
         Components.Alpha,
         Components.BlendMode,
         Components.Depth,
+        Components.Mask,
         Components.Pipeline,
         Components.Transform,
         Components.Visible,
@@ -17291,7 +18078,7 @@ var Graphics = new Class({
 
             if (sys.game.renderer.gl && texture)
             {
-                texture.source[0].glTexture = sys.game.renderer.canvasToTexture(ctx.canvas, texture.source[0].glTexture, true, 0);
+                texture.source[0].glTexture = sys.game.renderer.canvasToTexture(ctx.canvas, texture.source[0].glTexture);
             }
         }
 
@@ -17313,7 +18100,7 @@ module.exports = Graphics;
 
 
 /***/ }),
-/* 108 */
+/* 111 */
 /***/ (function(module, exports) {
 
 /**
@@ -17371,7 +18158,7 @@ module.exports = CheckMatrix;
 
 
 /***/ }),
-/* 109 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -17381,11 +18168,481 @@ module.exports = CheckMatrix;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(52);
-var GetPhysicsPlugins = __webpack_require__(495);
-var GetScenePlugins = __webpack_require__(494);
-var Plugins = __webpack_require__(194);
-var Settings = __webpack_require__(178);
+var Frame = __webpack_require__(123);
+var TextureSource = __webpack_require__(171);
+
+/**
+ * @classdesc
+ * A Texture consists of a source, usually an Image from the Cache, and a collection of Frames.
+ * The Frames represent the different areas of the Texture. For example a texture atlas
+ * may have many Frames, one for each element within the atlas. Where-as a single image would have
+ * just one frame, that encompasses the whole image.
+ *
+ * Textures are managed by the global TextureManager. This is a singleton class that is
+ * responsible for creating and delivering Textures and their corresponding Frames to Game Objects.
+ *
+ * Sprites and other Game Objects get the texture data they need from the TextureManager.
+ *
+ * @class Texture
+ * @memberOf Phaser.Textures
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Textures.TextureManager} manager - A reference to the Texture Manager this Texture belongs to.
+ * @param {string} key - The unique string-based key of this Texture.
+ * @param {(HTMLImageElement[]|HTMLCanvasElement[])} source - An array of sources that are used to create the texture. Usually Images, but can also be a Canvas.
+ * @param {number} [width] - The width of the Texture. This is optional and automatically derived from the source images.
+ * @param {number} [height] - The height of the Texture. This is optional and automatically derived from the source images.
+ */
+var Texture = new Class({
+
+    initialize:
+
+    function Texture (manager, key, source, width, height)
+    {
+        if (!Array.isArray(source))
+        {
+            source = [ source ];
+        }
+
+        /**
+         * A reference to the Texture Manager this Texture belongs to.
+         *
+         * @name Phaser.Textures.Texture#manager
+         * @type {Phaser.Textures.TextureManager}
+         * @since 3.0.0
+         */
+        this.manager = manager;
+
+        /**
+         * The unique string-based key of this Texture.
+         *
+         * @name Phaser.Textures.Texture#key
+         * @type {string}
+         * @since 3.0.0
+         */
+        this.key = key;
+
+        /**
+         * An array of TextureSource instances.
+         * These are unique to this Texture and contain the actual Image (or Canvas) data.
+         *
+         * @name Phaser.Textures.Texture#source
+         * @type {Phaser.Textures.TextureSource[]}
+         * @since 3.0.0
+         */
+        this.source = [];
+
+        /**
+         * An array of TextureSource data instances.
+         * Used to store additional data images, such as normal maps or specular maps.
+         *
+         * @name Phaser.Textures.Texture#dataSource
+         * @type {array}
+         * @since 3.0.0
+         */
+        this.dataSource = [];
+
+        /**
+         * A key-value object pair associating the unique Frame keys with the Frames objects.
+         *
+         * @name Phaser.Textures.Texture#frames
+         * @type {object}
+         * @since 3.0.0
+         */
+        this.frames = {};
+
+        /**
+         * Any additional data that was set in the source JSON (if any),
+         * or any extra data you'd like to store relating to this texture
+         *
+         * @name Phaser.Textures.Texture#customData
+         * @type {object}
+         * @since 3.0.0
+         */
+        this.customData = {};
+
+        /**
+         * The name of the first frame of the Texture.
+         *
+         * @name Phaser.Textures.Texture#firstFrame
+         * @type {string}
+         * @since 3.0.0
+         */
+        this.firstFrame = '__BASE';
+
+        /**
+         * The total number of Frames in this Texture.
+         *
+         * @name Phaser.Textures.Texture#frameTotal
+         * @type {integer}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.frameTotal = 0;
+
+        //  Load the Sources
+        for (var i = 0; i < source.length; i++)
+        {
+            this.source.push(new TextureSource(this, source[i], width, height));
+        }
+    },
+
+    /**
+     * Adds a new Frame to this Texture.
+     *
+     * A Frame is a rectangular region of a TextureSource with a unique index or string-based key.
+     *
+     * @method Phaser.Textures.Texture#add
+     * @since 3.0.0
+     *
+     * @param {(integer|string)} name - The name of this Frame. The name is unique within the Texture.
+     * @param {integer} sourceIndex - The index of the TextureSource that this Frame is a part of.
+     * @param {number} x - The x coordinate of the top-left of this Frame.
+     * @param {number} y - The y coordinate of the top-left of this Frame.
+     * @param {number} width - The width of this Frame.
+     * @param {number} height - The height of this Frame.
+     *
+     * @return {Phaser.Textures.Frame} The Frame that was added to this Texture.
+     */
+    add: function (name, sourceIndex, x, y, width, height)
+    {
+        var frame = new Frame(this, name, sourceIndex, x, y, width, height);
+
+        this.frames[name] = frame;
+
+        //  Set the first frame of the Texture (other than __BASE)
+        //  This is used to ensure we don't spam the display with entire
+        //  atlases of sprite sheets, but instead just the first frame of them
+        //  should the dev incorrectly specify the frame index
+        if (this.frameTotal === 1)
+        {
+            this.firstFrame = name;
+        }
+
+        this.frameTotal++;
+
+        return frame;
+    },
+
+    /**
+     * Checks to see if a Frame matching the given key exists within this Texture.
+     *
+     * @method Phaser.Textures.Texture#has
+     * @since 3.0.0
+     *
+     * @param {string} name - The key of the Frame to check for.
+     *
+     * @return {boolean} True if a Frame with the matching key exists in this Texture.
+     */
+    has: function (name)
+    {
+        return (this.frames[name]);
+    },
+
+    /**
+     * Gets a Frame from this Texture based on either the key or the index of the Frame.
+     *
+     * In a Texture Atlas Frames are typically referenced by a key.
+     * In a Sprite Sheet Frames are referenced by an index.
+     * Passing no value for the name returns the base texture.
+     *
+     * @method Phaser.Textures.Texture#get
+     * @since 3.0.0
+     *
+     * @param {(string|integer)} [name] - The string-based name, or integer based index, of the Frame to get from this Texture.
+     *
+     * @return {Phaser.Textures.Frame} The Texture Frame.
+     */
+    get: function (name)
+    {
+        //  null, undefined, empty string, zero
+        if (!name)
+        {
+            name = this.firstFrame;
+        }
+
+        var frame = this.frames[name];
+
+        if (!frame)
+        {
+            console.warn('No Texture.frame found with name ' + name);
+
+            frame = this.frames[this.firstFrame];
+        }
+
+        return frame;
+    },
+
+    /**
+     * Takes the given TextureSource and returns the index of it within this Texture.
+     * If it's not in this Texture, it returns -1.
+     * Unless this Texture has multiple TextureSources, such as with a multi-atlas, this
+     * method will always return zero or -1.
+     *
+     * @method Phaser.Textures.Texture#getTextureSourceIndex
+     * @since 3.0.0
+     *
+     * @param {Phaser.Textures.TextureSource} source - The TextureSource to check.
+     *
+     * @return {integer} The index of the TextureSource within this Texture, or -1 if not in this Texture.
+     */
+    getTextureSourceIndex: function (source)
+    {
+        for (var i = 0; i < this.source.length; i++)
+        {
+            if (this.source[i] === source)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    },
+
+    /**
+     * Returns an array of all the Frames in the given TextureSource.
+     *
+     * @method Phaser.Textures.Texture#getFramesFromTextureSource
+     * @since 3.0.0
+     *
+     * @param {integer} sourceIndex - The index of the TextureSource to get the Frames from.
+     *
+     * @return {Phaser.Textures.Frame[]} An array of Texture Frames.
+     */
+    getFramesFromTextureSource: function (sourceIndex)
+    {
+        var out = [];
+
+        for (var frameName in this.frames)
+        {
+            if (frameName === '__BASE')
+            {
+                continue;
+            }
+
+            var frame = this.frames[frameName];
+
+            if (frame.sourceIndex === sourceIndex)
+            {
+                out.push(frame.name);
+            }
+        }
+
+        return out;
+    },
+
+    /**
+     * Returns an array with all of the names of the Frames in this Texture.
+     *
+     * Useful if you want to randomly assign a Frame to a Game Object, as you can
+     * pick a random element from the returned array.
+     *
+     * @method Phaser.Textures.Texture#getFrameNames
+     * @since 3.0.0
+     *
+     * @param {boolean} [includeBase=false] - Include the `__BASE` Frame in the output array?
+     *
+     * @return {string[]} An array of all Frame names in this Texture.
+     */
+    getFrameNames: function (includeBase)
+    {
+        if (includeBase === undefined) { includeBase = false; }
+
+        var out = Object.keys(this.frames);
+
+        if (!includeBase)
+        {
+            var idx = out.indexOf('__BASE');
+
+            if (idx !== -1)
+            {
+                out.splice(idx, 1);
+            }
+        }
+
+        return out;
+    },
+
+    /**
+     * Given a Frame name, return the source image it uses to render with.
+     *
+     * This will return the actual DOM Image or Canvas element.
+     *
+     * @method Phaser.Textures.Texture#getSourceImage
+     * @since 3.0.0
+     *
+     * @param {(string|integer)} [name] - The string-based name, or integer based index, of the Frame to get from this Texture.
+     *
+     * @return {(HTMLImageElement|HTMLCanvasElement)} The DOM Image or Canvas Element.
+     */
+    getSourceImage: function (name)
+    {
+        if (name === undefined || name === null || this.frameTotal === 1)
+        {
+            name = '__BASE';
+        }
+
+        var frame = this.frames[name];
+
+        if (!frame)
+        {
+            console.warn('No Texture.frame found with name ' + name);
+
+            return this.frames['__BASE'].source.image;
+        }
+        else
+        {
+            return frame.source.image;
+        }
+    },
+
+    /**
+     * Given a Frame name, return the data source image it uses to render with.
+     * You can use this to get the normal map for an image for example.
+     *
+     * This will return the actual DOM Image.
+     *
+     * @method Phaser.Textures.Texture#getDataSourceImage
+     * @since 3.7.0
+     *
+     * @param {(string|integer)} [name] - The string-based name, or integer based index, of the Frame to get from this Texture.
+     *
+     * @return {(HTMLImageElement|HTMLCanvasElement)} The DOM Image or Canvas Element.
+     */
+    getDataSourceImage: function (name)
+    {
+        if (name === undefined || name === null || this.frameTotal === 1)
+        {
+            name = '__BASE';
+        }
+
+        var frame = this.frames[name];
+        var idx;
+
+        if (!frame)
+        {
+            console.warn('No Texture.frame found with name ' + name);
+
+            idx = this.frames['__BASE'].sourceIndex;
+        }
+        else
+        {
+            idx = frame.sourceIndex;
+        }
+
+        return this.dataSource[idx].image;
+    },
+
+    /**
+     * Adds a data source image to this Texture.
+     *
+     * An example of a data source image would be a normal map, where all of the Frames for this Texture
+     * equally apply to the normal map.
+     *
+     * @method Phaser.Textures.Texture#setDataSource
+     * @since 3.0.0
+     *
+     * @param {(HTMLImageElement|HTMLCanvasElement)} data - The source image.
+     */
+    setDataSource: function (data)
+    {
+        if (!Array.isArray(data))
+        {
+            data = [ data ];
+        }
+
+        for (var i = 0; i < data.length; i++)
+        {
+            var source = this.source[i];
+
+            this.dataSource.push(new TextureSource(this, data[i], source.width, source.height));
+        }
+    },
+
+    /**
+     * Sets the Filter Mode for this Texture.
+     *
+     * The mode can be either Linear, the default, or Nearest.
+     *
+     * For pixel-art you should use Nearest.
+     *
+     * The mode applies to the entire Texture, not just a specific Frame of it.
+     *
+     * @method Phaser.Textures.Texture#setFilter
+     * @since 3.0.0
+     *
+     * @param {Phaser.Textures.FilterMode} filterMode - The Filter Mode.
+     */
+    setFilter: function (filterMode)
+    {
+        var i;
+
+        for (i = 0; i < this.source.length; i++)
+        {
+            this.source[i].setFilter(filterMode);
+        }
+
+        for (i = 0; i < this.dataSource.length; i++)
+        {
+            this.dataSource[i].setFilter(filterMode);
+        }
+    },
+
+    /**
+     * Destroys this Texture and releases references to its sources and frames.
+     *
+     * @method Phaser.Textures.Texture#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        var i;
+
+        for (i = 0; i < this.source.length; i++)
+        {
+            this.source[i].destroy();
+        }
+
+        for (i = 0; i < this.dataSource.length; i++)
+        {
+            this.dataSource[i].destroy();
+        }
+
+        for (var frameName in this.frames)
+        {
+            var frame = this.frames[frameName];
+
+            frame.destroy();
+        }
+
+        this.source = [];
+        this.dataSource = [];
+        this.frames = {};
+        this.manager = null;
+    }
+
+});
+
+module.exports = Texture;
+
+
+/***/ }),
+/* 113 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+var CONST = __webpack_require__(54);
+var GetPhysicsPlugins = __webpack_require__(498);
+var GetScenePlugins = __webpack_require__(497);
+var Plugins = __webpack_require__(196);
+var Settings = __webpack_require__(180);
 
 /**
  * @classdesc
@@ -17941,7 +19198,11 @@ var Systems = new Class({
         this.settings.active = true;
         this.settings.visible = true;
 
+        //  For plugins to listen out for
         this.events.emit('start', this);
+
+        //  For user-land code to listen out for
+        this.events.emit('ready', this);
     },
 
     /**
@@ -18018,7 +19279,7 @@ module.exports = Systems;
 
 
 /***/ }),
-/* 110 */
+/* 114 */
 /***/ (function(module, exports) {
 
 /**
@@ -18445,7 +19706,7 @@ module.exports = KeyCodes;
 
 
 /***/ }),
-/* 111 */
+/* 115 */
 /***/ (function(module, exports) {
 
 /**
@@ -18484,7 +19745,7 @@ module.exports = {
 
 
 /***/ }),
-/* 112 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -18493,8 +19754,8 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var OS = __webpack_require__(53);
-var Browser = __webpack_require__(74);
+var OS = __webpack_require__(56);
+var Browser = __webpack_require__(76);
 var CanvasPool = __webpack_require__(22);
 
 /**
@@ -18681,7 +19942,7 @@ module.exports = init();
 
 
 /***/ }),
-/* 113 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -18691,13 +19952,21 @@ module.exports = init();
  */
 
 var Class = __webpack_require__(0);
-var DegToRad = __webpack_require__(33);
-var EventEmitter = __webpack_require__(9);
-var Effects = __webpack_require__(195);
-var Rectangle = __webpack_require__(12);
-var TransformMatrix = __webpack_require__(60);
-var ValueToColor = __webpack_require__(124);
+var DegToRad = __webpack_require__(37);
+var EventEmitter = __webpack_require__(8);
+var Effects = __webpack_require__(197);
+var Rectangle = __webpack_require__(13);
+var TransformMatrix = __webpack_require__(63);
+var ValueToColor = __webpack_require__(127);
 var Vector2 = __webpack_require__(6);
+
+/**
+ * @typedef {object} JSONCameraBounds
+ * @property {number} x - The horizontal position of camera
+ * @property {number} y - The vertical position of camera
+ * @property {number} width - The width size of camera
+ * @property {number} height - The height size of camera
+ */
 
 /**
  * @typedef {object} JSONCamera
@@ -18713,11 +19982,7 @@ var Vector2 = __webpack_require__(6);
  * @property {number} scrollX - The horizontal scroll of camera
  * @property {number} scrollY - The vertical scroll of camera
  * @property {string} backgroundColor - The background color of camera
- * @property {object} [bounds] - The bounds of camera
- * @property {number} [bounds.x] - The horizontal position of bounds of camera
- * @property {number} [bounds.y] - The vertical position of bounds of camera
- * @property {number} [bounds.width] - The width of the bounds of camera
- * @property {number} [bounds.height] - The height of the bounds of camera
+ * @property {(JSONCameraBounds|undefined)} [bounds] - The bounds of camera
  */
 
 /**
@@ -19865,7 +21130,7 @@ module.exports = Camera;
 
 
 /***/ }),
-/* 114 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -20235,8 +21500,8 @@ module.exports = Map;
 
 
 /***/ }),
-/* 115 */,
-/* 116 */
+/* 119 */,
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -20245,8 +21510,8 @@ module.exports = Map;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Extend = __webpack_require__(16);
-var XHRSettings = __webpack_require__(88);
+var Extend = __webpack_require__(17);
+var XHRSettings = __webpack_require__(91);
 
 /**
  * Takes two XHRSettings Objects and creates a new XHRSettings object from them.
@@ -20284,7 +21549,7 @@ module.exports = MergeXHRSettings;
 
 
 /***/ }),
-/* 117 */
+/* 121 */
 /***/ (function(module, exports) {
 
 /**
@@ -20325,7 +21590,7 @@ module.exports = GetURL;
 
 
 /***/ }),
-/* 118 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -20334,7 +21599,7 @@ module.exports = GetURL;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GetAdvancedValue = __webpack_require__(8);
+var GetAdvancedValue = __webpack_require__(10);
 
 /**
  * Adds an Animation component to a Sprite and populates it based on the given config.
@@ -20414,7 +21679,7 @@ module.exports = BuildGameObjectAnimation;
 
 
 /***/ }),
-/* 119 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -20424,7 +21689,7 @@ module.exports = BuildGameObjectAnimation;
  */
 
 var Class = __webpack_require__(0);
-var Extend = __webpack_require__(16);
+var Extend = __webpack_require__(17);
 
 /**
  * @classdesc
@@ -20493,7 +21758,7 @@ var Frame = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.cutX = x;
+        this.cutX;
 
         /**
          * Y position within the source image to cut from.
@@ -20502,7 +21767,7 @@ var Frame = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.cutY = y;
+        this.cutY;
 
         /**
          * The width of the area in the source image to cut.
@@ -20511,7 +21776,7 @@ var Frame = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.cutWidth = width;
+        this.cutWidth;
 
         /**
          * The height of the area in the source image to cut.
@@ -20520,7 +21785,7 @@ var Frame = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.cutHeight = height;
+        this.cutHeight;
 
         /**
          * The X rendering offset of this Frame, taking trim into account.
@@ -20549,7 +21814,7 @@ var Frame = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.width = width;
+        this.width;
 
         /**
          * The rendering height of this Frame, taking trim into account.
@@ -20558,7 +21823,7 @@ var Frame = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.height = height;
+        this.height;
 
         /**
          * Half the width, floored.
@@ -20568,7 +21833,7 @@ var Frame = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.halfWidth = Math.floor(width * 0.5);
+        this.halfWidth;
 
         /**
          * Half the height, floored.
@@ -20578,7 +21843,7 @@ var Frame = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.halfHeight = Math.floor(height * 0.5);
+        this.halfHeight;
 
         /**
          * The x center of this frame, floored.
@@ -20587,7 +21852,7 @@ var Frame = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.centerX = Math.floor(width / 2);
+        this.centerX;
 
         /**
          * The y center of this frame, floored.
@@ -20596,7 +21861,7 @@ var Frame = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.centerY = Math.floor(height / 2);
+        this.centerY;
 
         /**
          * The horizontal pivot point of this Frame.
@@ -20674,23 +21939,23 @@ var Frame = new Class({
          */
         this.data = {
             cut: {
-                x: x,
-                y: y,
-                w: width,
-                h: height,
-                r: x + width,
-                b: y + height
+                x: 0,
+                y: 0,
+                w: 0,
+                h: 0,
+                r: 0,
+                b: 0
             },
             trim: false,
             sourceSize: {
-                w: width,
-                h: height
+                w: 0,
+                h: 0
             },
             spriteSourceSize: {
                 x: 0,
                 y: 0,
-                w: width,
-                h: height
+                w: 0,
+                h: 0
             },
             uvs: {
                 x0: 0,
@@ -20702,18 +21967,83 @@ var Frame = new Class({
                 x3: 0,
                 y3: 0
             },
-            radius: 0.5 * Math.sqrt(width * width + height * height),
+            radius: 0,
             drawImage: {
-                sx: x,
-                sy: y,
-                sWidth: width,
-                sHeight: height,
-                dWidth: width,
-                dHeight: height
+                sx: 0,
+                sy: 0,
+                sWidth: 0,
+                sHeight: 0,
+                dWidth: 0,
+                dHeight: 0
             }
         };
 
-        this.updateUVs();
+        this.setSize(width, height, x, y);
+    },
+
+    /**
+     * Sets the width, height, x and y of this Frame.
+     * 
+     * This is called automatically by the constructor
+     * and should rarely be changed on-the-fly.
+     *
+     * @method Phaser.Textures.Frame#setSize
+     * @since 3.7.0
+     *
+     * @param {integer} width - The width of the frame before being trimmed.
+     * @param {integer} height - The height of the frame before being trimmed.
+     * @param {integer} [x=0] - The x coordinate of the top-left of this Frame.
+     * @param {integer} [y=0] - The y coordinate of the top-left of this Frame.
+     *
+     * @return {Phaser.Textures.Frame} This Frame object.
+     */
+    setSize: function (width, height, x, y)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+
+        this.cutX = x;
+        this.cutY = y;
+        this.cutWidth = width;
+        this.cutHeight = height;
+
+        this.width = width;
+        this.height = height;
+
+        this.halfWidth = Math.floor(width * 0.5);
+        this.halfHeight = Math.floor(height * 0.5);
+
+        this.centerX = Math.floor(width / 2);
+        this.centerY = Math.floor(height / 2);
+
+        var data = this.data;
+        var cut = data.cut;
+
+        cut.x = x;
+        cut.y = y;
+        cut.w = width;
+        cut.h = height;
+        cut.r = x + width;
+        cut.b = y + height;
+
+        data.sourceSize.w = width;
+        data.sourceSize.h = height;
+
+        data.spriteSourceSize.w = width;
+        data.spriteSourceSize.h = height;
+
+        data.radius = 0.5 * Math.sqrt(width * width + height * height);
+
+        var drawImage = data.drawImage;
+
+        drawImage.sx = x;
+        drawImage.sy = y;
+        drawImage.sWidth = width;
+        drawImage.sHeight = height;
+        drawImage.dWidth = width;
+        drawImage.dHeight = height;
+
+        return this.updateUVs();
     },
 
     /**
@@ -20999,7 +22329,7 @@ module.exports = Frame;
 
 
 /***/ }),
-/* 120 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -21010,15 +22340,25 @@ module.exports = Frame;
  */
 
 var Class = __webpack_require__(0);
-var ModelViewProjection = __webpack_require__(192);
-var ShaderSourceFS = __webpack_require__(509);
-var ShaderSourceVS = __webpack_require__(508);
-var Utils = __webpack_require__(25);
-var WebGLPipeline = __webpack_require__(80);
+var ModelViewProjection = __webpack_require__(194);
+var ShaderSourceFS = __webpack_require__(512);
+var ShaderSourceVS = __webpack_require__(511);
+var Utils = __webpack_require__(27);
+var WebGLPipeline = __webpack_require__(82);
 
 /**
  * @classdesc
- * [description]
+ * TextureTintPipeline implements the rendering infrastructure
+ * for displaying textured objects
+ * The config properties are:
+ * - game: Current game instance.
+ * - renderer: Current WebGL renderer.
+ * - topology: This indicates how the primitives are rendered. The default value is GL_TRIANGLES.
+ *              Here is the full list of rendering primitives (https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Constants).
+ * - vertShader: Source for vertex shader as a string.
+ * - fragShader: Source for fragment shader as a string.
+ * - vertexCapacity: The amount of vertices that shall be allocated
+ * - vertexSize: The size of a single vertex in bytes.
  *
  * @class TextureTintPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
@@ -21080,7 +22420,7 @@ var TextureTintPipeline = new Class({
         });
 
         /**
-         * [description]
+         * Float32 view of the array buffer containing the pipeline's vertices.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#vertexViewF32
          * @type {Float32Array}
@@ -21089,7 +22429,7 @@ var TextureTintPipeline = new Class({
         this.vertexViewF32 = new Float32Array(this.vertexData);
 
         /**
-         * [description]
+         * Uint32 view of the array buffer containing the pipeline's vertices.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#vertexViewU32
          * @type {Uint32Array}
@@ -21098,7 +22438,7 @@ var TextureTintPipeline = new Class({
         this.vertexViewU32 = new Uint32Array(this.vertexData);
 
         /**
-         * [description]
+         * Size of the batch.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#maxQuads
          * @type {integer}
@@ -21108,7 +22448,7 @@ var TextureTintPipeline = new Class({
         this.maxQuads = 2000;
 
         /**
-         * [description]
+         * Collection of batch information
          *
          * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batches
          * @type {array}
@@ -21120,13 +22460,14 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Assigns a texture to the current batch. If a texture is already set it creates
+     * a new batch object.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#setTexture2D
      * @since 3.1.0
      *
-     * @param {WebGLTexture} texture - [description]
-     * @param {integer} textureUnit - [description]
+     * @param {WebGLTexture} texture - WebGLTexture that will be assigned to the current batch.
+     * @param {integer} textureUnit - Texture unit to which the texture needs to be bound.
      *
      * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} [description]
      */
@@ -21171,7 +22512,10 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Creates a new batch object and pushes it to a batch array.
+     * The batch object contains information relevant to the current 
+     * vertex batch like the offset in the vertex buffer, vertex count and 
+     * the textures used by that batch.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#pushBatch
      * @since 3.1.0
@@ -21188,7 +22532,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Binds, uploads resources and processes all batches generating draw calls.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#flush
      * @since 3.1.0
@@ -21288,7 +22632,8 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Called every time the pipeline needs to be used.
+     * It binds all necessary resources.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#onBind
      * @since 3.0.0
@@ -21329,7 +22674,8 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Renders immediately a static tilemap. This function won't use
+     * the batching functionality of the pipieline.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#drawStaticTilemapLayer
      * @since 3.0.0
@@ -21365,7 +22711,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Renders contents of a ParticleEmitterManager. It'll batch all particles if possible.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#drawEmitterManager
      * @since 3.0.0
@@ -21581,7 +22927,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Batches blitter game object
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#drawBlitter
      * @since 3.0.0
@@ -21741,7 +23087,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Batches Sprite game object
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchSprite
      * @since 3.0.0
@@ -21914,7 +23260,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Batches Mesh game object
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchMesh
      * @since 3.0.0
@@ -22045,7 +23391,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Batches BitmapText game object
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchBitmapText
      * @since 3.0.0
@@ -22322,7 +23668,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Batches DynamicBitmapText game object
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchDynamicBitmapText
      * @since 3.0.0
@@ -22672,7 +24018,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Batches Text game object
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchText
      * @since 3.0.0
@@ -22708,7 +24054,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Batches DynamicTilemapLayer game object
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchDynamicTilemapLayer
      * @since 3.0.0
@@ -22766,7 +24112,7 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Batches TileSprite game object
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTileSprite
      * @since 3.0.0
@@ -22803,40 +24149,40 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Generic function for batching a textured quad
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTexture
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} gameObject - [description]
-     * @param {WebGLTexture} texture - [description]
-     * @param {integer} textureWidth - [description]
-     * @param {integer} textureHeight - [description]
-     * @param {float} srcX - [description]
-     * @param {float} srcY - [description]
-     * @param {float} srcWidth - [description]
-     * @param {float} srcHeight - [description]
-     * @param {float} scaleX - [description]
-     * @param {float} scaleY - [description]
-     * @param {float} rotation - [description]
-     * @param {boolean} flipX - [description]
-     * @param {boolean} flipY - [description]
-     * @param {float} scrollFactorX - [description]
-     * @param {float} scrollFactorY - [description]
-     * @param {float} displayOriginX - [description]
-     * @param {float} displayOriginY - [description]
-     * @param {float} frameX - [description]
-     * @param {float} frameY - [description]
-     * @param {float} frameWidth - [description]
-     * @param {float} frameHeight - [description]
-     * @param {integer} tintTL - [description]
-     * @param {integer} tintTR - [description]
-     * @param {integer} tintBL - [description]
-     * @param {integer} tintBR - [description]
-     * @param {float} uOffset - [description]
-     * @param {float} vOffset - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
+     * @param {Phaser.GameObjects.GameObject} gameObject - Source GameObject
+     * @param {WebGLTexture} texture - Raw WebGLTexture associated with the quad
+     * @param {integer} textureWidth - Real texture width
+     * @param {integer} textureHeight - Real texture height
+     * @param {float} srcX - X coordinate of the quad
+     * @param {float} srcY - Y coordinate of the quad
+     * @param {float} srcWidth - Width of the quad
+     * @param {float} srcHeight - Height of the quad
+     * @param {float} scaleX - X component of scale
+     * @param {float} scaleY - Y component of scale
+     * @param {float} rotation - Rotation of the quad
+     * @param {boolean} flipX - Indicates if the quad is horizontally flipped
+     * @param {boolean} flipY - Indicates if the quad is vertically flipped
+     * @param {float} scrollFactorX - By which factor is the quad affected by the camera horizontal scroll
+     * @param {float} scrollFactorY - By which factor is the quad effected by the camera vertical scroll
+     * @param {float} displayOriginX - Horizontal origin in pixels
+     * @param {float} displayOriginY - Vertical origin in pixels
+     * @param {float} frameX - X coordinate of the texture frame
+     * @param {float} frameY - Y coordinate of the texture frame
+     * @param {float} frameWidth - Width of the texture frame
+     * @param {float} frameHeight - Height of the texture frame
+     * @param {integer} tintTL - Tint for top left
+     * @param {integer} tintTR - Tint for top right
+     * @param {integer} tintBL - Tint for bottom left
+     * @param {integer} tintBR - Tint for bottom right
+     * @param {float} uOffset - Horizontal offset on texture coordinate
+     * @param {float} vOffset - Vertical offset on texture coordinate
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - Current used camera
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - Parent container
      */
     batchTexture: function (
         gameObject,
@@ -23173,37 +24519,7 @@ module.exports = TextureTintPipeline;
 
 
 /***/ }),
-/* 121 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Checks if the given `width` and `height` are a power of two.
- * Useful for checking texture dimensions.
- *
- * @function Phaser.Math.Pow2.IsSizePowerOfTwo
- * @since 3.0.0
- *
- * @param {number} width - The width.
- * @param {number} height - The height.
- *
- * @return {boolean} `true` if `width` and `height` are a power of two, otherwise `false`.
- */
-var IsSizePowerOfTwo = function (width, height)
-{
-    return (width > 0 && (width & (width - 1)) === 0 && height > 0 && (height & (height - 1)) === 0);
-};
-
-module.exports = IsSizePowerOfTwo;
-
-
-/***/ }),
-/* 122 */
+/* 125 */
 /***/ (function(module, exports) {
 
 /**
@@ -23265,7 +24581,7 @@ module.exports = AddToDOM;
 
 
 /***/ }),
-/* 123 */
+/* 126 */
 /***/ (function(module, exports) {
 
 /**
@@ -23397,7 +24713,7 @@ module.exports = Smoothing();
 
 
 /***/ }),
-/* 124 */
+/* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -23406,10 +24722,10 @@ module.exports = Smoothing();
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var HexStringToColor = __webpack_require__(279);
-var IntegerToColor = __webpack_require__(277);
-var ObjectToColor = __webpack_require__(275);
-var RGBStringToColor = __webpack_require__(274);
+var HexStringToColor = __webpack_require__(282);
+var IntegerToColor = __webpack_require__(280);
+var ObjectToColor = __webpack_require__(278);
+var RGBStringToColor = __webpack_require__(277);
 
 /**
  * Converts the given source color value into an instance of a Color class.
@@ -23453,7 +24769,7 @@ module.exports = ValueToColor;
 
 
 /***/ }),
-/* 125 */
+/* 128 */
 /***/ (function(module, exports) {
 
 /**
@@ -23529,7 +24845,7 @@ module.exports = Pad;
 
 
 /***/ }),
-/* 126 */
+/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -23570,7 +24886,7 @@ module.exports = Random;
 
 
 /***/ }),
-/* 127 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -23579,7 +24895,7 @@ module.exports = Random;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Perimeter = __webpack_require__(93);
+var Perimeter = __webpack_require__(96);
 var Point = __webpack_require__(5);
 
 /**
@@ -23647,7 +24963,7 @@ module.exports = GetPoint;
 
 
 /***/ }),
-/* 128 */
+/* 131 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -23686,9 +25002,6 @@ module.exports = CircumferencePoint;
 
 
 /***/ }),
-/* 129 */,
-/* 130 */,
-/* 131 */,
 /* 132 */,
 /* 133 */,
 /* 134 */,
@@ -23696,7 +25009,204 @@ module.exports = CircumferencePoint;
 /* 136 */,
 /* 137 */,
 /* 138 */,
-/* 139 */
+/* 139 */,
+/* 140 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+var CONST = __webpack_require__(18);
+var File = __webpack_require__(19);
+var FileTypesManager = __webpack_require__(7);
+var GetFastValue = __webpack_require__(1);
+var IsPlainObject = __webpack_require__(9);
+var ParseXML = __webpack_require__(265);
+
+/**
+ * @typedef {object} Phaser.Loader.FileTypes.XMLFileConfig
+ *
+ * @property {string} key - The key of the file. Must be unique within both the Loader and the Text Cache.
+ * @property {string} [url] - The absolute or relative URL to load the file from.
+ * @property {string} [extension='xml'] - The default file extension to use if no url is provided.
+ * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ */
+
+/**
+ * @classdesc
+ * A single XML File suitable for loading by the Loader.
+ *
+ * These are created when you use the Phaser.Loader.LoaderPlugin#xml method and are not typically created directly.
+ * 
+ * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#xml.
+ *
+ * @class XMLFile
+ * @extends Phaser.Loader.File
+ * @memberOf Phaser.Loader.FileTypes
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
+ * @param {(string|Phaser.Loader.FileTypes.XMLFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.xml`, i.e. if `key` was "alien" then the URL will be "alien.xml".
+ * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ */
+var XMLFile = new Class({
+
+    Extends: File,
+
+    initialize:
+
+    function XMLFile (loader, key, url, xhrSettings)
+    {
+        var extension = 'xml';
+
+        if (IsPlainObject(key))
+        {
+            var config = key;
+
+            key = GetFastValue(config, 'key');
+            url = GetFastValue(config, 'url');
+            xhrSettings = GetFastValue(config, 'xhrSettings');
+            extension = GetFastValue(config, 'extension', extension);
+        }
+
+        var fileConfig = {
+            type: 'xml',
+            cache: loader.cacheManager.xml,
+            extension: extension,
+            responseType: 'text',
+            key: key,
+            url: url,
+            xhrSettings: xhrSettings
+        };
+
+        File.call(this, loader, fileConfig);
+    },
+
+    /**
+     * Called automatically by Loader.nextFile.
+     * This method controls what extra work this File does with its loaded data.
+     *
+     * @method Phaser.Loader.FileTypes.XMLFile#onProcess
+     * @since 3.7.0
+     */
+    onProcess: function ()
+    {
+        this.state = CONST.FILE_PROCESSING;
+
+        this.data = ParseXML(this.xhrLoader.responseText);
+
+        if (this.data)
+        {
+            this.onProcessComplete();
+        }
+        else
+        {
+            console.warn('Invalid XMLFile: ' + this.key);
+            
+            this.onProcessError();
+        }
+    }
+
+});
+
+/**
+ * Adds an XML file, or array of XML files, to the current load queue.
+ *
+ * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
+ * 
+ * ```javascript
+ * function preload ()
+ * {
+ *     this.load.xml('wavedata', 'files/AlienWaveData.xml');
+ * }
+ * ```
+ *
+ * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+ * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+ * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+ * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+ * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+ * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+ * loaded.
+ * 
+ * The key must be a unique String. It is used to add the file to the global XML Cache upon a successful load.
+ * The key should be unique both in terms of files being loaded and files already present in the XML Cache.
+ * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+ * then remove it from the XML Cache first, before loading a new one.
+ *
+ * Instead of passing arguments you can pass a configuration object, such as:
+ * 
+ * ```javascript
+ * this.load.xml({
+ *     key: 'wavedata',
+ *     url: 'files/AlienWaveData.xml'
+ * });
+ * ```
+ *
+ * See the documentation for `Phaser.Loader.FileTypes.XMLFileConfig` for more details.
+ *
+ * Once the file has finished loading you can access it from its Cache using its key:
+ * 
+ * ```javascript
+ * this.load.xml('wavedata', 'files/AlienWaveData.xml');
+ * // and later in your game ...
+ * var data = this.cache.xml.get('wavedata');
+ * ```
+ *
+ * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+ * key. For example, if the prefix was `LEVEL1.` and the key was `Waves` the final key will be `LEVEL1.Waves` and
+ * this is what you would use to retrieve the text from the XML Cache.
+ *
+ * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+ *
+ * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "data"
+ * and no URL is given then the Loader will set the URL to be "data.xml". It will always add `.xml` as the extension, although
+ * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+ *
+ * Note: The ability to load this type of file will only be available if the XML File type has been built into Phaser.
+ * It is available in the default build but can be excluded from custom builds.
+ *
+ * @method Phaser.Loader.LoaderPlugin#xml
+ * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+ * @since 3.0.0
+ *
+ * @param {(string|Phaser.Loader.FileTypes.XMLFileConfig|Phaser.Loader.FileTypes.XMLFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.xml`, i.e. if `key` was "alien" then the URL will be "alien.xml".
+ * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
+ *
+ * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
+ */
+FileTypesManager.register('xml', function (key, url, xhrSettings)
+{
+    if (Array.isArray(key))
+    {
+        for (var i = 0; i < key.length; i++)
+        {
+            //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
+            this.addFile(new XMLFile(this, key[i]));
+        }
+    }
+    else
+    {
+        this.addFile(new XMLFile(this, key, url, xhrSettings));
+    }
+
+    return this;
+});
+
+module.exports = XMLFile;
+
+
+/***/ }),
+/* 141 */,
+/* 142 */,
+/* 143 */
 /***/ (function(module, exports) {
 
 /**
@@ -23731,7 +25241,7 @@ module.exports = GetRandom;
 
 
 /***/ }),
-/* 140 */
+/* 144 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -23746,45 +25256,45 @@ module.exports = GetRandom;
 
 module.exports = {
 
-    Matrix: __webpack_require__(480),
+    Matrix: __webpack_require__(483),
 
-    Add: __webpack_require__(473),
-    AddAt: __webpack_require__(472),
-    BringToTop: __webpack_require__(471),
-    CountAllMatching: __webpack_require__(470),
-    Each: __webpack_require__(469),
-    EachInRange: __webpack_require__(468),
-    FindClosestInSorted: __webpack_require__(200),
-    GetAll: __webpack_require__(467),
-    GetFirst: __webpack_require__(466),
-    GetRandom: __webpack_require__(139),
-    MoveDown: __webpack_require__(465),
-    MoveTo: __webpack_require__(464),
-    MoveUp: __webpack_require__(463),
-    NumberArray: __webpack_require__(165),
-    NumberArrayStep: __webpack_require__(462),
-    QuickSelect: __webpack_require__(164),
-    Range: __webpack_require__(246),
-    Remove: __webpack_require__(461),
-    RemoveAt: __webpack_require__(460),
-    RemoveBetween: __webpack_require__(459),
-    RemoveRandomElement: __webpack_require__(458),
-    Replace: __webpack_require__(457),
-    RotateLeft: __webpack_require__(282),
-    RotateRight: __webpack_require__(281),
-    SafeRange: __webpack_require__(26),
-    SendToBack: __webpack_require__(456),
-    SetAll: __webpack_require__(455),
-    Shuffle: __webpack_require__(91),
-    SpliceOne: __webpack_require__(70),
-    StableSort: __webpack_require__(79),
-    Swap: __webpack_require__(454)
+    Add: __webpack_require__(476),
+    AddAt: __webpack_require__(475),
+    BringToTop: __webpack_require__(474),
+    CountAllMatching: __webpack_require__(473),
+    Each: __webpack_require__(472),
+    EachInRange: __webpack_require__(471),
+    FindClosestInSorted: __webpack_require__(202),
+    GetAll: __webpack_require__(470),
+    GetFirst: __webpack_require__(469),
+    GetRandom: __webpack_require__(143),
+    MoveDown: __webpack_require__(468),
+    MoveTo: __webpack_require__(467),
+    MoveUp: __webpack_require__(466),
+    NumberArray: __webpack_require__(465),
+    NumberArrayStep: __webpack_require__(464),
+    QuickSelect: __webpack_require__(168),
+    Range: __webpack_require__(249),
+    Remove: __webpack_require__(463),
+    RemoveAt: __webpack_require__(462),
+    RemoveBetween: __webpack_require__(461),
+    RemoveRandomElement: __webpack_require__(460),
+    Replace: __webpack_require__(459),
+    RotateLeft: __webpack_require__(285),
+    RotateRight: __webpack_require__(284),
+    SafeRange: __webpack_require__(29),
+    SendToBack: __webpack_require__(458),
+    SetAll: __webpack_require__(457),
+    Shuffle: __webpack_require__(94),
+    SpliceOne: __webpack_require__(55),
+    StableSort: __webpack_require__(81),
+    Swap: __webpack_require__(456)
 
 };
 
 
 /***/ }),
-/* 141 */
+/* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -23795,14 +25305,16 @@ module.exports = {
  */
 
 var Class = __webpack_require__(0);
-var ShaderSourceFS = __webpack_require__(510);
-var TextureTintPipeline = __webpack_require__(120);
+var ShaderSourceFS = __webpack_require__(513);
+var TextureTintPipeline = __webpack_require__(124);
 
 var LIGHT_COUNT = 10;
 
 /**
  * @classdesc
- * [description]
+ * ForwardDiffuseLightPipeline implements a forward rendering approach for 2D lights.
+ * This pipeline extends TextureTintPipeline so it implements all it's rendering functions
+ * and batching system.
  *
  * @class ForwardDiffuseLightPipeline
  * @extends Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline
@@ -23826,7 +25338,7 @@ var ForwardDiffuseLightPipeline = new Class({
     },
 
     /**
-     * [description]
+     * This function binds it's base class resources and this lights 2D resources.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#onBind
      * @override
@@ -23850,7 +25362,7 @@ var ForwardDiffuseLightPipeline = new Class({
     },
 
     /**
-     * [description]
+     * This function sets all the needed resources for each camera pass.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#onRender
      * @since 3.0.0
@@ -23922,7 +25434,7 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     drawStaticTilemapLayer: function (tilemap, camera, parentTransformMatrix)
     {
-        var normalTexture = tilemap.texture.dataSource[0];
+        var normalTexture = tilemap.tileset.image.dataSource[0];
 
         if (normalTexture)
         {
@@ -23950,7 +25462,7 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     drawEmitterManager: function (emitterManager, camera, parentTransformMatrix)
     {
-        var normalTexture = emitterManager.texture.dataSource[0];
+        var normalTexture = emitterManager.texture.dataSource[emitterManager.frame.sourceIndex];
 
         if (normalTexture)
         {
@@ -23978,7 +25490,7 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     drawBlitter: function (blitter, camera, parentTransformMatrix)
     {
-        var normalTexture = blitter.texture.dataSource[0];
+        var normalTexture = blitter.texture.dataSource[blitter.frame.sourceIndex];
 
         if (normalTexture)
         {
@@ -24006,7 +25518,7 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     batchSprite: function (sprite, camera, parentTransformMatrix)
     {
-        var normalTexture = sprite.texture.dataSource[0];
+        var normalTexture = sprite.texture.dataSource[sprite.frame.sourceIndex];
 
         if (normalTexture)
         {
@@ -24034,7 +25546,7 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     batchMesh: function (mesh, camera, parentTransformMatrix)
     {
-        var normalTexture = mesh.texture.dataSource[0];
+        var normalTexture = mesh.texture.dataSource[mesh.frame.sourceIndex];
 
         if (normalTexture)
         {
@@ -24063,7 +25575,7 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     batchBitmapText: function (bitmapText, camera, parentTransformMatrix)
     {
-        var normalTexture = bitmapText.texture.dataSource[0];
+        var normalTexture = bitmapText.texture.dataSource[bitmapText.frame.sourceIndex];
 
         if (normalTexture)
         {
@@ -24091,7 +25603,7 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     batchDynamicBitmapText: function (bitmapText, camera, parentTransformMatrix)
     {
-        var normalTexture = bitmapText.texture.dataSource[0];
+        var normalTexture = bitmapText.texture.dataSource[bitmapText.frame.sourceIndex];
 
         if (normalTexture)
         {
@@ -24119,7 +25631,7 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     batchText: function (text, camera, parentTransformMatrix)
     {
-        var normalTexture = text.texture.dataSource[0];
+        var normalTexture = text.texture.dataSource[text.frame.sourceIndex];
 
         if (normalTexture)
         {
@@ -24147,7 +25659,7 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     batchDynamicTilemapLayer: function (tilemapLayer, camera, parentTransformMatrix)
     {
-        var normalTexture = tilemapLayer.texture.dataSource[0];
+        var normalTexture = tilemapLayer.tileset.image.dataSource[0];
 
         if (normalTexture)
         {
@@ -24175,7 +25687,7 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     batchTileSprite: function (tileSprite, camera, parentTransformMatrix)
     {
-        var normalTexture = tileSprite.texture.dataSource[0];
+        var normalTexture = tileSprite.texture.dataSource[tileSprite.frame.sourceIndex];
 
         if (normalTexture)
         {
@@ -24198,7 +25710,7 @@ module.exports = ForwardDiffuseLightPipeline;
 
 
 /***/ }),
-/* 142 */
+/* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -24207,17 +25719,17 @@ module.exports = ForwardDiffuseLightPipeline;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CONST = __webpack_require__(15);
+var CONST = __webpack_require__(16);
 
 /**
- * [description]
+ * Convert the given angle in radians, to the equivalent angle in degrees.
  *
  * @function Phaser.Math.RadToDeg
  * @since 3.0.0
  *
- * @param {float} radians - [description]
+ * @param {float} radians - The angle in radians to convert ot degrees.
  *
- * @return {integer} [description]
+ * @return {integer} The given angle converted to degrees.
  */
 var RadToDeg = function (radians)
 {
@@ -24228,8 +25740,8 @@ module.exports = RadToDeg;
 
 
 /***/ }),
-/* 143 */,
-/* 144 */
+/* 147 */,
+/* 148 */
 /***/ (function(module, exports) {
 
 /**
@@ -24259,7 +25771,7 @@ module.exports = GetColor;
 
 
 /***/ }),
-/* 145 */
+/* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -24315,7 +25827,7 @@ module.exports = Random;
 
 
 /***/ }),
-/* 146 */
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -24353,7 +25865,7 @@ module.exports = Random;
 
 
 /***/ }),
-/* 147 */
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -24393,7 +25905,7 @@ module.exports = Random;
 
 
 /***/ }),
-/* 148 */
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -24402,7 +25914,7 @@ module.exports = Random;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Length = __webpack_require__(67);
+var Length = __webpack_require__(70);
 var Point = __webpack_require__(5);
 
 /**
@@ -24453,7 +25965,7 @@ module.exports = GetPoints;
 
 
 /***/ }),
-/* 149 */
+/* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -24497,8 +26009,8 @@ module.exports = Random;
 
 
 /***/ }),
-/* 150 */,
-/* 151 */
+/* 154 */,
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -24508,9 +26020,9 @@ module.exports = Random;
  */
 
 var Class = __webpack_require__(0);
-var EventEmitter = __webpack_require__(9);
-var TweenBuilder = __webpack_require__(68);
-var TWEEN_CONST = __webpack_require__(57);
+var EventEmitter = __webpack_require__(8);
+var TweenBuilder = __webpack_require__(71);
+var TWEEN_CONST = __webpack_require__(60);
 
 /**
  * @classdesc
@@ -25367,7 +26879,7 @@ module.exports = Timeline;
 
 
 /***/ }),
-/* 152 */
+/* 156 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -25376,17 +26888,17 @@ module.exports = Timeline;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Clone = __webpack_require__(47);
-var Defaults = __webpack_require__(96);
-var GetAdvancedValue = __webpack_require__(8);
-var GetBoolean = __webpack_require__(58);
-var GetEaseFunction = __webpack_require__(59);
-var GetNewValue = __webpack_require__(69);
-var GetTargets = __webpack_require__(98);
-var GetTweens = __webpack_require__(154);
+var Clone = __webpack_require__(33);
+var Defaults = __webpack_require__(99);
+var GetAdvancedValue = __webpack_require__(10);
+var GetBoolean = __webpack_require__(61);
+var GetEaseFunction = __webpack_require__(62);
+var GetNewValue = __webpack_require__(72);
+var GetTargets = __webpack_require__(101);
+var GetTweens = __webpack_require__(158);
 var GetValue = __webpack_require__(4);
-var Timeline = __webpack_require__(151);
-var TweenBuilder = __webpack_require__(68);
+var Timeline = __webpack_require__(155);
+var TweenBuilder = __webpack_require__(71);
 
 /**
  * [description]
@@ -25519,7 +27031,7 @@ module.exports = TimelineBuilder;
 
 
 /***/ }),
-/* 153 */
+/* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -25528,15 +27040,15 @@ module.exports = TimelineBuilder;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Defaults = __webpack_require__(96);
-var GetAdvancedValue = __webpack_require__(8);
-var GetBoolean = __webpack_require__(58);
-var GetEaseFunction = __webpack_require__(59);
-var GetNewValue = __webpack_require__(69);
+var Defaults = __webpack_require__(99);
+var GetAdvancedValue = __webpack_require__(10);
+var GetBoolean = __webpack_require__(61);
+var GetEaseFunction = __webpack_require__(62);
+var GetNewValue = __webpack_require__(72);
 var GetValue = __webpack_require__(4);
-var GetValueOp = __webpack_require__(97);
-var Tween = __webpack_require__(95);
-var TweenData = __webpack_require__(94);
+var GetValueOp = __webpack_require__(100);
+var Tween = __webpack_require__(98);
+var TweenData = __webpack_require__(97);
 
 /**
  * [description]
@@ -25647,7 +27159,7 @@ module.exports = NumberTweenBuilder;
 
 
 /***/ }),
-/* 154 */
+/* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -25693,7 +27205,7 @@ module.exports = GetTweens;
 
 
 /***/ }),
-/* 155 */
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -25702,7 +27214,7 @@ module.exports = GetTweens;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var RESERVED = __webpack_require__(297);
+var RESERVED = __webpack_require__(299);
 
 /**
  * [description]
@@ -25751,7 +27263,7 @@ module.exports = GetProps;
 
 
 /***/ }),
-/* 156 */
+/* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -25761,7 +27273,7 @@ module.exports = GetProps;
  */
 
 var Class = __webpack_require__(0);
-var GetFastValue = __webpack_require__(2);
+var GetFastValue = __webpack_require__(1);
 
 /**
  * @typedef {object} TimerEventConfig
@@ -26068,7 +27580,7 @@ module.exports = TimerEvent;
 
 
 /***/ }),
-/* 157 */
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -26078,13 +27590,18 @@ module.exports = TimerEvent;
  */
 
 var Class = __webpack_require__(0);
-var File = __webpack_require__(18);
-var GetFastValue = __webpack_require__(2);
-var GetURL = __webpack_require__(117);
+var File = __webpack_require__(19);
+var GetFastValue = __webpack_require__(1);
+var GetURL = __webpack_require__(121);
+var IsPlainObject = __webpack_require__(9);
 
 /**
  * @classdesc
- * [description]
+ * A single Audio File suitable for loading by the Loader.
+ *
+ * These are created when you use the Phaser.Loader.LoaderPlugin#audio method and are not typically created directly.
+ * 
+ * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#audio.
  *
  * @class HTML5AudioFile
  * @extends Phaser.Loader.File
@@ -26092,10 +27609,10 @@ var GetURL = __webpack_require__(117);
  * @constructor
  * @since 3.0.0
  *
- * @param {string} key - [description]
- * @param {string} url - [description]
- * @param {string} path - [description]
- * @param {XHRSettingsObject} [config] - [description]
+ * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
+ * @param {(string|Phaser.Loader.FileTypes.AudioFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {string} [urlConfig] - The absolute or relative URL to load this file from.
+ * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var HTML5AudioFile = new Class({
 
@@ -26103,27 +27620,43 @@ var HTML5AudioFile = new Class({
 
     initialize:
 
-        function HTML5AudioFile (key, url, path, config)
+    function HTML5AudioFile (loader, key, urlConfig, audioConfig)
+    {
+        if (IsPlainObject(key))
         {
-            this.locked = 'ontouchstart' in window;
+            var config = key;
 
-            this.loaded = false;
+            key = GetFastValue(config, 'key');
+            audioConfig = GetFastValue(config, 'config', audioConfig);
+        }
 
-            var fileConfig = {
-                type: 'audio',
-                extension: GetFastValue(url, 'type', ''),
-                key: key,
-                url: GetFastValue(url, 'uri', url),
-                path: path,
-                config: config
-            };
+        var fileConfig = {
+            type: 'audio',
+            cache: loader.cacheManager.audio,
+            extension: urlConfig.type,
+            key: key,
+            url: urlConfig.url,
+            config: audioConfig
+        };
 
-            File.call(this, fileConfig);
-        },
+        File.call(this, loader, fileConfig);
 
+        //  New properties specific to this class
+        this.locked = 'ontouchstart' in window;
+        this.loaded = false;
+        this.filesLoaded = 0;
+        this.filesTotal = 0;
+    },
+
+    /**
+     * Called when the file finishes loading.
+     *
+     * @method Phaser.Loader.FileTypes.HTML5AudioFile#onLoad
+     * @since 3.0.0
+     */
     onLoad: function ()
     {
-        if(this.loaded)
+        if (this.loaded)
         {
             return;
         }
@@ -26133,11 +27666,18 @@ var HTML5AudioFile = new Class({
         this.loader.nextFile(this, true);
     },
 
+    /**
+     * Called if the file errors while loading.
+     *
+     * @method Phaser.Loader.FileTypes.HTML5AudioFile#onError
+     * @since 3.0.0
+     */
     onError: function ()
     {
         for (var i = 0; i < this.data.length; i++)
         {
             var audio = this.data[i];
+
             audio.oncanplaythrough = null;
             audio.onerror = null;
         }
@@ -26145,9 +27685,16 @@ var HTML5AudioFile = new Class({
         this.loader.nextFile(this, false);
     },
 
+    /**
+     * Called during the file load progress. Is sent a DOM ProgressEvent.
+     *
+     * @method Phaser.Loader.FileTypes.HTML5AudioFile#onProgress
+     * @since 3.0.0
+     */
     onProgress: function (event)
     {
         var audio = event.target;
+
         audio.oncanplaythrough = null;
         audio.onerror = null;
 
@@ -26157,17 +27704,22 @@ var HTML5AudioFile = new Class({
 
         this.loader.emit('fileprogress', this, this.percentComplete);
 
-        if(this.filesLoaded === this.filesTotal)
+        if (this.filesLoaded === this.filesTotal)
         {
             this.onLoad();
         }
     },
 
-    //  Called by the Loader, starts the actual file downloading
-    load: function (loader)
+    /**
+     * Called by the Loader, starts the actual file downloading.
+     * During the load the methods onLoad, onError and onProgress are called, based on the XHR events.
+     * You shouldn't normally call this method directly, it's meant to be invoked by the Loader.
+     *
+     * @method Phaser.Loader.FileTypes.HTML5AudioFile#load
+     * @since 3.0.0
+     */
+    load: function ()
     {
-        this.loader = loader;
-
         this.data = [];
 
         var instances = (this.config && this.config.instances) || 1;
@@ -26176,10 +27728,11 @@ var HTML5AudioFile = new Class({
         this.filesLoaded = 0;
         this.percentComplete = 0;
 
-        for(var i = 0; i < instances; i++)
+        for (var i = 0; i < instances; i++)
         {
             var audio = new Audio();
-            audio.dataset.name = this.key + ('0' + i).slice(-2); // Useful for debugging
+
+            audio.dataset.name = this.key + ('0' + i).slice(-2);
             audio.dataset.used = 'false';
 
             if (this.locked)
@@ -26201,7 +27754,7 @@ var HTML5AudioFile = new Class({
         for (i = 0; i < this.data.length; i++)
         {
             audio = this.data[i];
-            audio.src = GetURL(this, loader.baseURL);
+            audio.src = GetURL(this, this.loader.baseURL);
 
             if (!this.locked)
             {
@@ -26211,6 +27764,8 @@ var HTML5AudioFile = new Class({
 
         if (this.locked)
         {
+            //  This is super-dangerous but works. Race condition potential high.
+            //  Is there another way?
             setTimeout(this.onLoad.bind(this));
         }
     }
@@ -26221,7 +27776,7 @@ module.exports = HTML5AudioFile;
 
 
 /***/ }),
-/* 158 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -26231,15 +27786,29 @@ module.exports = HTML5AudioFile;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(19);
-var File = __webpack_require__(18);
+var CONST = __webpack_require__(20);
+var File = __webpack_require__(19);
 var FileTypesManager = __webpack_require__(7);
-var GetFastValue = __webpack_require__(2);
-var HTML5AudioFile = __webpack_require__(157);
+var GetFastValue = __webpack_require__(1);
+var HTML5AudioFile = __webpack_require__(161);
+var IsPlainObject = __webpack_require__(9);
+
+/**
+ * @typedef {object} Phaser.Loader.FileTypes.AudioFileConfig
+ *
+ * @property {string} key - The key of the file. Must be unique within the Loader and Audio Cache.
+ * @property {string} [urlConfig] - The absolute or relative URL to load the file from.
+ * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @property {AudioContext} [audioContext] - The AudioContext this file will use to process itself.
+ */
 
 /**
  * @classdesc
- * [description]
+ * A single Audio File suitable for loading by the Loader.
+ *
+ * These are created when you use the Phaser.Loader.LoaderPlugin#audio method and are not typically created directly.
+ * 
+ * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#audio.
  *
  * @class AudioFile
  * @extends Phaser.Loader.File
@@ -26247,11 +27816,11 @@ var HTML5AudioFile = __webpack_require__(157);
  * @constructor
  * @since 3.0.0
  *
- * @param {string} key - [description]
- * @param {string} url - [description]
- * @param {string} path - [description]
- * @param {XHRSettingsObject} [xhrSettings] - [description]
- * @param {AudioContext} [audioContext] - [description]
+ * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
+ * @param {(string|Phaser.Loader.FileTypes.AudioFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {any} [urlConfig] - The absolute or relative URL to load this file from in a config object.
+ * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {AudioContext} [audioContext] - The AudioContext this file will use to process itself.
  */
 var AudioFile = new Class({
 
@@ -26259,66 +27828,63 @@ var AudioFile = new Class({
 
     initialize:
 
-    function AudioFile (key, url, path, xhrSettings, audioContext)
+    //  URL is an object created by AudioFile.findAudioURL
+    function AudioFile (loader, key, urlConfig, xhrSettings, audioContext)
     {
-        /**
-         * [description]
-         *
-         * @name Phaser.Loader.FileTypes.AudioFile#context
-         * @type {AudioContext}
-         * @since 3.0.0
-         */
-        this.context = audioContext;
+        if (IsPlainObject(key))
+        {
+            var config = key;
+
+            key = GetFastValue(config, 'key');
+            xhrSettings = GetFastValue(config, 'xhrSettings');
+            audioContext = GetFastValue(config, 'context', audioContext);
+        }
 
         var fileConfig = {
             type: 'audio',
-            extension: GetFastValue(url, 'type', ''),
+            cache: loader.cacheManager.audio,
+            extension: urlConfig.type,
             responseType: 'arraybuffer',
             key: key,
-            url: GetFastValue(url, 'uri', url),
-            path: path,
-            xhrSettings: xhrSettings
+            url: urlConfig.url,
+            xhrSettings: xhrSettings,
+            config: { context: audioContext }
         };
 
-        File.call(this, fileConfig);
+        File.call(this, loader, fileConfig);
     },
 
     /**
-     * [description]
+     * Called automatically by Loader.nextFile.
+     * This method controls what extra work this File does with its loaded data.
      *
      * @method Phaser.Loader.FileTypes.AudioFile#onProcess
      * @since 3.0.0
-     *
-     * @param {FileProcessCallback} callback - [description]
      */
-    onProcess: function (callback)
+    onProcess: function ()
     {
         this.state = CONST.FILE_PROCESSING;
 
         var _this = this;
 
         // interesting read https://github.com/WebAudio/web-audio-api/issues/1305
-        this.context.decodeAudioData(this.xhrLoader.response,
+        this.config.context.decodeAudioData(this.xhrLoader.response,
             function (audioBuffer)
             {
                 _this.data = audioBuffer;
 
-                _this.onComplete();
-
-                callback(_this);
+                _this.onProcessComplete();
             },
             function (e)
             {
                 // eslint-disable-next-line no-console
-                console.error('Error with decoding audio data for \'' + this.key + '\':', e.message);
+                console.error('Error decoding audio: ' + this.key + ' - ', e.message);
 
-                _this.state = CONST.FILE_ERRORED;
-
-                callback(_this);
+                _this.onProcessError();
             }
         );
 
-        this.context = null;
+        this.config.context = null;
     }
 
 });
@@ -26329,114 +27895,43 @@ AudioFile.create = function (loader, key, urls, config, xhrSettings)
     var audioConfig = game.config.audio;
     var deviceAudio = game.device.audio;
 
-    if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
+    //  url may be inside key, which may be an object
+    if (IsPlainObject(key))
     {
-        // console.info('Skipping loading audio \'' + key + '\' since sounds are disabled.');
+        urls = GetFastValue(key, 'url', []);
+        config = GetFastValue(key, 'config', {});
+    }
+
+    var urlConfig = AudioFile.getAudioURL(game, urls);
+
+    if (!urlConfig)
+    {
         return null;
     }
 
-    var url = AudioFile.findAudioURL(game, urls);
-
-    if (!url)
-    {
-        // console.warn('No supported url provided for audio \'' + key + '\'!');
-        return null;
-    }
+    // https://developers.google.com/web/updates/2012/02/HTML5-audio-and-the-Web-Audio-API-are-BFFs
+    // var stream = GetFastValue(config, 'stream', false);
 
     if (deviceAudio.webAudio && !(audioConfig && audioConfig.disableWebAudio))
     {
-        return new AudioFile(key, url, loader.path, xhrSettings, game.sound.context);
+        return new AudioFile(loader, key, urlConfig, xhrSettings, game.sound.context);
     }
     else
     {
-        return new HTML5AudioFile(key, url, loader.path, config);
+        return new HTML5AudioFile(loader, key, urlConfig, config);
     }
 };
 
-/**
- * Adds an Audio file to the current load queue.
- *
- * Note: This method will only be available if the Audio File type has been built into Phaser.
- *
- * The file is **not** loaded immediately after calling this method.
- * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
- *
- * @method Phaser.Loader.LoaderPlugin#audio
- * @since 3.0.0
- *
- * @param {string} key - [description]
- * @param {(string|string[])} urls - [description]
- * @param {object} config - [description]
- * @param {object} [xhrSettings] - [description]
- *
- * @return {Phaser.Loader.LoaderPlugin} The Loader.
- */
-FileTypesManager.register('audio', function (key, urls, config, xhrSettings)
+AudioFile.getAudioURL = function (game, urls)
 {
-    var audioFile = AudioFile.create(this, key, urls, config, xhrSettings);
-
-    if (audioFile)
-    {
-        this.addFile(audioFile);
-    }
-
-    return this;
-});
-
-// this.load.audio('sound', 'assets/audio/booom.ogg', config, xhrSettings);
-//
-// this.load.audio('sound',
-//     [
-//         'assets/audio/booom.ogg',
-//         'assets/audio/booom.m4a',
-//         'assets/audio/booom.mp3'
-//     ],
-//     config, xhrSettings);
-//
-// this.load.audio('sound',
-//     {
-//         uri: 'assets/audio/boooooom',
-//         type: 'ogg'
-//     },
-//     config, xhrSettings);
-//
-// this.load.audio('sound',
-//     [
-//         {
-//             uri: 'assets/audio/booooooo',
-//             type: 'ogg'
-//         },
-//         {
-//             uri: 'assets/audio/boooooom',
-//             type: 'mp3'
-//         }
-//     ],
-//     config, xhrSettings);
-//
-// this.load.audio('sound',
-//     [
-//         {
-//             uri: 'assets/audio/booooooo',
-//             type: 'ogg'
-//         },
-//         'assets/audio/booom.m4a',
-//         {
-//             uri: 'assets/audio/boooooom',
-//             type: 'mp3'
-//         }
-//     ],
-//     config, xhrSettings);
-
-AudioFile.findAudioURL = function (game, urls)
-{
-    if (urls.constructor !== Array)
+    if (!Array.isArray(urls))
     {
         urls = [ urls ];
     }
 
     for (var i = 0; i < urls.length; i++)
     {
-        var url = GetFastValue(urls[i], 'uri', urls[i]);
+        var url = GetFastValue(urls[i], 'url', urls[i]);
 
         if (url.indexOf('blob:') === 0 || url.indexOf('data:') === 0)
         {
@@ -26450,7 +27945,7 @@ AudioFile.findAudioURL = function (game, urls)
         if (game.device.audio[audioType])
         {
             return {
-                uri: url,
+                url: url,
                 type: audioType
             };
         }
@@ -26459,11 +27954,109 @@ AudioFile.findAudioURL = function (game, urls)
     return null;
 };
 
+/**
+ * Adds an Audio or HTML5Audio file, or array of audio files, to the current load queue.
+ *
+ * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
+ * 
+ * ```javascript
+ * function preload ()
+ * {
+ *     this.load.audio('title', [ 'music/Title.ogg', 'music/Title.mp3', 'music/Title.m4a' ]);
+ * }
+ * ```
+ *
+ * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+ * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+ * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+ * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+ * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+ * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+ * loaded.
+ * 
+ * The key must be a unique String. It is used to add the file to the global Audio Cache upon a successful load.
+ * The key should be unique both in terms of files being loaded and files already present in the Audio Cache.
+ * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+ * then remove it from the Audio Cache first, before loading a new one.
+ *
+ * Instead of passing arguments you can pass a configuration object, such as:
+ * 
+ * ```javascript
+ * this.load.audio({
+ *     key: 'title',
+ *     url: [ 'music/Title.ogg', 'music/Title.mp3', 'music/Title.m4a' ]
+ * });
+ * ```
+ *
+ * See the documentation for `Phaser.Loader.FileTypes.AudioFileConfig` for more details.
+ *
+ * The URLs can be relative or absolute. If the URLs are relative the `Loader.baseURL` and `Loader.path` values will be prepended to them.
+ *
+ * Due to different browsers supporting different audio file types you should usually provide your audio files in a variety of formats.
+ * ogg, mp3 and m4a are the most common. If you provide an array of URLs then the Loader will determine which _one_ file to load based on
+ * browser support.
+ *
+ * If audio has been disabled in your game, either via the game config, or lack of support from the device, then no audio will be loaded.
+ *
+ * Note: The ability to load this type of file will only be available if the Audio File type has been built into Phaser.
+ * It is available in the default build but can be excluded from custom builds.
+ *
+ * @method Phaser.Loader.LoaderPlugin#audio
+ * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+ * @since 3.0.0
+ *
+ * @param {(string|Phaser.Loader.FileTypes.AudioFileConfig|Phaser.Loader.FileTypes.AudioFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {(string|string[])} [urls] - The absolute or relative URL to load the audio files from.
+ * @param {any} [config] - An object containing an `instances` property for HTML5Audio. Defaults to 1.
+ * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
+ *
+ * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
+ */
+FileTypesManager.register('audio', function (key, urls, config, xhrSettings)
+{
+    var game = this.systems.game;
+    var audioConfig = game.config.audio;
+    var deviceAudio = game.device.audio;
+
+    if ((audioConfig && audioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
+    {
+        //  Sounds are disabled, so skip loading audio
+        return this;
+    }
+
+    var audioFile;
+
+    if (Array.isArray(key))
+    {
+        for (var i = 0; i < key.length; i++)
+        {
+            //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
+            audioFile = AudioFile.create(this, key[i]);
+
+            if (audioFile)
+            {
+                this.addFile(audioFile);
+            }
+        }
+    }
+    else
+    {
+        audioFile = AudioFile.create(this, key, urls, config, xhrSettings);
+
+        if (audioFile)
+        {
+            this.addFile(audioFile);
+        }
+    }
+
+    return this;
+});
+
 module.exports = AudioFile;
 
 
 /***/ }),
-/* 159 */
+/* 163 */
 /***/ (function(module, exports) {
 
 /**
@@ -26553,7 +28146,7 @@ module.exports = CreateInteractiveObject;
 
 
 /***/ }),
-/* 160 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -26562,8 +28155,8 @@ module.exports = CreateInteractiveObject;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Commands = __webpack_require__(111);
-var GameObject = __webpack_require__(1);
+var Commands = __webpack_require__(115);
+var GameObject = __webpack_require__(2);
 
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
@@ -26825,7 +28418,7 @@ module.exports = GraphicsCanvasRenderer;
 
 
 /***/ }),
-/* 161 */
+/* 165 */
 /***/ (function(module, exports) {
 
 /**
@@ -26857,7 +28450,7 @@ module.exports = Circumference;
 
 
 /***/ }),
-/* 162 */
+/* 166 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -26866,10 +28459,10 @@ module.exports = Circumference;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Circumference = __webpack_require__(161);
-var CircumferencePoint = __webpack_require__(105);
-var FromPercent = __webpack_require__(61);
-var MATH_CONST = __webpack_require__(15);
+var Circumference = __webpack_require__(165);
+var CircumferencePoint = __webpack_require__(108);
+var FromPercent = __webpack_require__(64);
+var MATH_CONST = __webpack_require__(16);
 
 /**
  * Returns an array of Point objects containing the coordinates of the points around the circumference of the Ellipse,
@@ -26911,7 +28504,7 @@ module.exports = GetPoints;
 
 
 /***/ }),
-/* 163 */
+/* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -26920,9 +28513,9 @@ module.exports = GetPoints;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CircumferencePoint = __webpack_require__(105);
-var FromPercent = __webpack_require__(61);
-var MATH_CONST = __webpack_require__(15);
+var CircumferencePoint = __webpack_require__(108);
+var FromPercent = __webpack_require__(64);
+var MATH_CONST = __webpack_require__(16);
 var Point = __webpack_require__(5);
 
 /**
@@ -26954,7 +28547,7 @@ module.exports = GetPoint;
 
 
 /***/ }),
-/* 164 */
+/* 168 */
 /***/ (function(module, exports) {
 
 /**
@@ -27072,71 +28665,7 @@ module.exports = QuickSelect;
 
 
 /***/ }),
-/* 165 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Create an array representing the range of numbers (usually integers), between, and inclusive of,
- * the given `start` and `end` arguments. For example:
- *
- * `var array = numberArray(2, 4); // array = [2, 3, 4]`
- * `var array = numberArray(0, 9); // array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]`
- *
- * This is equivalent to `numberArrayStep(start, end, 1)`.
- *
- * You can optionally provide a prefix and / or suffix string. If given the array will contain
- * strings, not integers. For example:
- *
- * `var array = numberArray(1, 4, 'Level '); // array = ["Level 1", "Level 2", "Level 3", "Level 4"]`
- * `var array = numberArray(5, 7, 'HD-', '.png'); // array = ["HD-5.png", "HD-6.png", "HD-7.png"]`
- *
- * @function Phaser.Utils.Array.NumberArray
- * @since 3.0.0
- *
- * @param {number} start - The minimum value the array starts with.
- * @param {number} end - The maximum value the array contains.
- * @param {string} [prefix] - Optional prefix to place before the number. If provided the array will contain strings, not integers.
- * @param {string} [suffix] - Optional suffix to place after the number. If provided the array will contain strings, not integers.
- *
- * @return {(number[]|string[])} The array of number values, or strings if a prefix or suffix was provided.
- */
-var NumberArray = function (start, end, prefix, suffix)
-{
-    var result = [];
-
-    for (var i = start; i <= end; i++)
-    {
-        if (prefix || suffix)
-        {
-            var key = (prefix) ? prefix + i.toString() : i.toString();
-
-            if (suffix)
-            {
-                key = key.concat(suffix);
-            }
-
-            result.push(key);
-        }
-        else
-        {
-            result.push(i);
-        }
-    }
-
-    return result;
-};
-
-module.exports = NumberArray;
-
-
-/***/ }),
-/* 166 */
+/* 169 */
 /***/ (function(module, exports) {
 
 /**
@@ -27182,7 +28711,7 @@ module.exports = TransposeMatrix;
 
 
 /***/ }),
-/* 167 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -27191,10 +28720,38 @@ module.exports = TransposeMatrix;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+/**
+ * @namespace Phaser.Textures.Parsers
+ */
+
+module.exports = {
+
+    AtlasXML: __webpack_require__(494),
+    Canvas: __webpack_require__(493),
+    Image: __webpack_require__(492),
+    JSONArray: __webpack_require__(491),
+    JSONHash: __webpack_require__(490),
+    SpriteSheet: __webpack_require__(489),
+    SpriteSheetFromAtlas: __webpack_require__(488),
+    UnityYAML: __webpack_require__(487)
+
+};
+
+
+/***/ }),
+/* 171 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var CanvasPool = __webpack_require__(22);
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(19);
-var IsSizePowerOfTwo = __webpack_require__(121);
-var ScaleModes = __webpack_require__(55);
+var IsSizePowerOfTwo = __webpack_require__(83);
+var ScaleModes = __webpack_require__(58);
 
 /**
  * @classdesc
@@ -27220,6 +28777,15 @@ var TextureSource = new Class({
     function TextureSource (texture, source, width, height)
     {
         var game = texture.manager.game;
+
+        /**
+         * The Texture this TextureSource belongs to.
+         *
+         * @name Phaser.Textures.TextureSource#renderer
+         * @type {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)}
+         * @since 3.7.0
+         */
+        this.renderer = game.renderer;
 
         /**
          * The Texture this TextureSource belongs to.
@@ -27330,9 +28896,16 @@ var TextureSource = new Class({
      */
     init: function (game)
     {
-        if (game.config.renderType === CONST.WEBGL)
+        if (this.renderer.gl)
         {
-            this.glTexture = game.renderer.createTextureFromSource(this.image, this.width, this.height, this.scaleMode);
+            if (this.isCanvas)
+            {
+                this.glTexture = this.renderer.canvasToTexture(this.image);
+            }
+            else
+            {
+                this.glTexture = this.renderer.createTextureFromSource(this.image, this.width, this.height, this.scaleMode);
+            }
         }
 
         if (game.config.pixelArt)
@@ -27355,24 +28928,47 @@ var TextureSource = new Class({
      */
     setFilter: function (filterMode)
     {
-        var game = this.texture.manager.game;
-
-        if (game.config.renderType === CONST.WEBGL)
+        if (this.renderer.gl)
         {
-            game.renderer.setTextureFilter(this.glTexture, filterMode);
+            this.renderer.setTextureFilter(this.glTexture, filterMode);
         }
     },
 
     /**
-     * Destroys this Texture Source and nulls the source image reference.
+     * If this TextureSource is backed by a Canvas and is running under WebGL,
+     * it updates the WebGLTexture using the canvas data.
+     *
+     * @method Phaser.Textures.TextureSource#update
+     * @since 3.7.0
+     */
+    update: function ()
+    {
+        if (this.renderer.gl && this.isCanvas)
+        {
+            this.renderer.canvasToTexture(this.image, this.glTexture);
+        }
+    },
+
+    /**
+     * Destroys this Texture Source and nulls the references.
      *
      * @method Phaser.Textures.TextureSource#destroy
      * @since 3.0.0
      */
     destroy: function ()
     {
-        this.texture = null;
+        if (this.glTexture)
+        {
+            this.renderer.deleteTexture(this.glTexture);
+        }
 
+        if (this.isCanvas)
+        {
+            CanvasPool.remove(this.image);
+        }
+
+        this.renderer = null;
+        this.texture = null;
         this.image = null;
     }
 
@@ -27382,468 +28978,7 @@ module.exports = TextureSource;
 
 
 /***/ }),
-/* 168 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var Class = __webpack_require__(0);
-var Frame = __webpack_require__(119);
-var TextureSource = __webpack_require__(167);
-
-/**
- * @classdesc
- * A Texture consists of a source, usually an Image from the Cache, or a Canvas, and a collection
- * of Frames. The Frames represent the different areas of the Texture. For example a texture atlas
- * may have many Frames, one for each element within the atlas. Where-as a single image would have
- * just one frame, that encompasses the whole image.
- *
- * Textures are managed by the global TextureManager. This is a singleton class that is
- * responsible for creating and delivering Textures and their corresponding Frames to Game Objects.
- *
- * Sprites and other Game Objects get the texture data they need from the TextureManager.
- *
- * @class Texture
- * @memberOf Phaser.Textures
- * @constructor
- * @since 3.0.0
- *
- * @param {Phaser.Textures.TextureManager} manager - A reference to the Texture Manager this Texture belongs to.
- * @param {string} key - The unique string-based key of this Texture.
- * @param {(HTMLImageElement|HTMLCanvasElement)} source - The source that is used to create the texture. Usually an Image, but can also be a Canvas.
- * @param {number} [width] - The width of the Texture. This is optional and automatically derived from the source images.
- * @param {number} [height] - The height of the Texture. This is optional and automatically derived from the source images.
- */
-var Texture = new Class({
-
-    initialize:
-
-    function Texture (manager, key, source, width, height)
-    {
-        if (!Array.isArray(source))
-        {
-            source = [ source ];
-        }
-
-        /**
-         * A reference to the Texture Manager this Texture belongs to.
-         *
-         * @name Phaser.Textures.Texture#manager
-         * @type {Phaser.Textures.TextureManager}
-         * @since 3.0.0
-         */
-        this.manager = manager;
-
-        /**
-         * The unique string-based key of this Texture.
-         *
-         * @name Phaser.Textures.Texture#key
-         * @type {string}
-         * @since 3.0.0
-         */
-        this.key = key;
-
-        /**
-         * An array of TextureSource instances.
-         * These are unique to this Texture and contain the actual Image (or Canvas) data.
-         *
-         * @name Phaser.Textures.Texture#source
-         * @type {Phaser.Textures.TextureSource[]}
-         * @since 3.0.0
-         */
-        this.source = [];
-
-        /**
-         * An array of TextureSource data instances.
-         * Used to store additional data images, such as normal maps or specular maps.
-         *
-         * @name Phaser.Textures.Texture#dataSource
-         * @type {array}
-         * @since 3.0.0
-         */
-        this.dataSource = [];
-
-        /**
-         * A key-value object pair associating the unique Frame keys with the Frames objects.
-         *
-         * @name Phaser.Textures.Texture#frames
-         * @type {object}
-         * @since 3.0.0
-         */
-        this.frames = {};
-
-        /**
-         * Any additional data that was set in the source JSON (if any),
-         * or any extra data you'd like to store relating to this texture
-         *
-         * @name Phaser.Textures.Texture#customData
-         * @type {object}
-         * @since 3.0.0
-         */
-        this.customData = {};
-
-        /**
-         * The name of the first frame of the Texture.
-         *
-         * @name Phaser.Textures.Texture#firstFrame
-         * @type {string}
-         * @since 3.0.0
-         */
-        this.firstFrame = '__BASE';
-
-        /**
-         * The total number of Frames in this Texture.
-         *
-         * @name Phaser.Textures.Texture#frameTotal
-         * @type {integer}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.frameTotal = 0;
-
-        //  Load the Sources
-        for (var i = 0; i < source.length; i++)
-        {
-            this.source.push(new TextureSource(this, source[i], width, height));
-        }
-    },
-
-    /**
-     * Adds a new Frame to this Texture.
-     *
-     * A Frame is a rectangular region of a TextureSource with a unique index or string-based key.
-     *
-     * @method Phaser.Textures.Texture#add
-     * @since 3.0.0
-     *
-     * @param {(integer|string)} name - The name of this Frame. The name is unique within the Texture.
-     * @param {integer} sourceIndex - The index of the TextureSource that this Frame is a part of.
-     * @param {number} x - The x coordinate of the top-left of this Frame.
-     * @param {number} y - The y coordinate of the top-left of this Frame.
-     * @param {number} width - The width of this Frame.
-     * @param {number} height - The height of this Frame.
-     *
-     * @return {Phaser.Textures.Frame} The Frame that was added to this Texture.
-     */
-    add: function (name, sourceIndex, x, y, width, height)
-    {
-        var frame = new Frame(this, name, sourceIndex, x, y, width, height);
-
-        this.frames[name] = frame;
-
-        //  Set the first frame of the Texture (other than __BASE)
-        //  This is used to ensure we don't spam the display with entire
-        //  atlases of sprite sheets, but instead just the first frame of them
-        //  should the dev incorrectly specify the frame index
-        if (this.frameTotal === 1)
-        {
-            this.firstFrame = name;
-        }
-
-        this.frameTotal++;
-
-        return frame;
-    },
-
-    /**
-     * Checks to see if a Frame matching the given key exists within this Texture.
-     *
-     * @method Phaser.Textures.Texture#has
-     * @since 3.0.0
-     *
-     * @param {string} name - The key of the Frame to check for.
-     *
-     * @return {boolean} True if a Frame with the matching key exists in this Texture.
-     */
-    has: function (name)
-    {
-        return (this.frames[name]);
-    },
-
-    /**
-     * Gets a Frame from this Texture based on either the key or the index of the Frame.
-     *
-     * In a Texture Atlas Frames are typically referenced by a key.
-     * In a Sprite Sheet Frames are referenced by an index.
-     * Passing no value for the name returns the base texture.
-     *
-     * @method Phaser.Textures.Texture#get
-     * @since 3.0.0
-     *
-     * @param {(string|integer)} [name] - The string-based name, or integer based index, of the Frame to get from this Texture.
-     *
-     * @return {Phaser.Textures.Frame} The Texture Frame.
-     */
-    get: function (name)
-    {
-        //  null, undefined, empty string, zero
-        if (!name)
-        {
-            name = this.firstFrame;
-        }
-
-        var frame = this.frames[name];
-
-        if (!frame)
-        {
-            console.warn('No Texture.frame found with name ' + name);
-
-            frame = this.frames[this.firstFrame];
-        }
-
-        return frame;
-    },
-
-    /**
-     * Takes the given TextureSource and returns the index of it within this Texture.
-     * If it's not in this Texture, it returns -1.
-     * Unless this Texture has multiple TextureSources, such as with a multi-atlas, this
-     * method will always return zero or -1.
-     *
-     * @method Phaser.Textures.Texture#getTextureSourceIndex
-     * @since 3.0.0
-     *
-     * @param {Phaser.Textures.TextureSource} source - The TextureSource to check.
-     *
-     * @return {integer} The index of the TextureSource within this Texture, or -1 if not in this Texture.
-     */
-    getTextureSourceIndex: function (source)
-    {
-        for (var i = 0; i < this.source.length; i++)
-        {
-            if (this.source[i] === source)
-            {
-                return i;
-            }
-        }
-
-        return -1;
-    },
-
-    /**
-     * Returns an array of all the Frames in the given TextureSource.
-     *
-     * @method Phaser.Textures.Texture#getFramesFromTextureSource
-     * @since 3.0.0
-     *
-     * @param {integer} sourceIndex - The index of the TextureSource to get the Frames from.
-     *
-     * @return {Phaser.Textures.Frame[]} An array of Texture Frames.
-     */
-    getFramesFromTextureSource: function (sourceIndex)
-    {
-        var out = [];
-
-        for (var frameName in this.frames)
-        {
-            if (frameName === '__BASE')
-            {
-                continue;
-            }
-
-            var frame = this.frames[frameName];
-
-            if (frame.sourceIndex === sourceIndex)
-            {
-                out.push(frame.name);
-            }
-        }
-
-        return out;
-    },
-
-    /**
-     * Returns an array with all of the names of the Frames in this Texture.
-     *
-     * Useful if you want to randomly assign a Frame to a Game Object, as you can
-     * pick a random element from the returned array.
-     *
-     * @method Phaser.Textures.Texture#getFrameNames
-     * @since 3.0.0
-     *
-     * @param {boolean} [includeBase=false] - Include the `__BASE` Frame in the output array?
-     *
-     * @return {string[]} An array of all Frame names in this Texture.
-     */
-    getFrameNames: function (includeBase)
-    {
-        if (includeBase === undefined) { includeBase = false; }
-
-        var out = Object.keys(this.frames);
-
-        if (!includeBase)
-        {
-            var idx = out.indexOf('__BASE');
-
-            if (idx !== -1)
-            {
-                out.splice(idx, 1);
-            }
-        }
-
-        return out;
-    },
-
-    /**
-     * Given a Frame name, return the source image it uses to render with.
-     *
-     * This will return the actual DOM Image or Canvas element.
-     *
-     * @method Phaser.Textures.Texture#getSourceImage
-     * @since 3.0.0
-     *
-     * @param {(string|integer)} [name] - The string-based name, or integer based index, of the Frame to get from this Texture.
-     *
-     * @return {(HTMLImageElement|HTMLCanvasElement)} The DOM Image or Canvas Element.
-     */
-    getSourceImage: function (name)
-    {
-        if (name === undefined || name === null || this.frameTotal === 1)
-        {
-            name = '__BASE';
-        }
-
-        var frame = this.frames[name];
-
-        if (!frame)
-        {
-            console.warn('No Texture.frame found with name ' + name);
-
-            return this.frames['__BASE'].source.image;
-        }
-        else
-        {
-            return frame.source.image;
-        }
-    },
-
-    /**
-     * Adds a data source image to this Texture.
-     *
-     * An example of a data source image would be a normal map, where all of the Frames for this Texture
-     * equally apply to the normal map.
-     *
-     * @method Phaser.Textures.Texture#setDataSource
-     * @since 3.0.0
-     *
-     * @param {(HTMLImageElement|HTMLCanvasElement)} data - The source image.
-     */
-    setDataSource: function (data)
-    {
-        if (!Array.isArray(data))
-        {
-            data = [ data ];
-        }
-
-        for (var i = 0; i < data.length; i++)
-        {
-            var source = this.source[i];
-
-            this.dataSource.push(new TextureSource(this, data[i], source.width, source.height));
-        }
-    },
-
-    /**
-     * Sets the Filter Mode for this Texture.
-     *
-     * The mode can be either Linear, the default, or Nearest.
-     *
-     * For pixel-art you should use Nearest.
-     *
-     * The mode applies to the entire Texture, not just a specific Frame of it.
-     *
-     * @method Phaser.Textures.Texture#setFilter
-     * @since 3.0.0
-     *
-     * @param {Phaser.Textures.FilterMode} filterMode - The Filter Mode.
-     */
-    setFilter: function (filterMode)
-    {
-        var i;
-
-        for (i = 0; i < this.source.length; i++)
-        {
-            this.source[i].setFilter(filterMode);
-        }
-
-        for (i = 0; i < this.dataSource.length; i++)
-        {
-            this.dataSource[i].setFilter(filterMode);
-        }
-    },
-
-    /**
-     * Destroys this Texture and releases references to its sources and frames.
-     *
-     * @method Phaser.Textures.Texture#destroy
-     * @since 3.0.0
-     */
-    destroy: function ()
-    {
-        var i;
-
-        for (i = 0; i < this.source.length; i++)
-        {
-            this.source[i].destroy();
-        }
-
-        for (i = 0; i < this.dataSource.length; i++)
-        {
-            this.dataSource[i].destroy();
-        }
-
-        for (var frameName in this.frames)
-        {
-            var frame = this.frames[frameName];
-
-            frame.destroy();
-        }
-
-        this.source = [];
-        this.dataSource = [];
-        this.frames = {};
-    }
-
-});
-
-module.exports = Texture;
-
-
-/***/ }),
-/* 169 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * @namespace Phaser.Textures.Parsers
- */
-
-module.exports = {
-
-    Canvas: __webpack_require__(492),
-    Image: __webpack_require__(491),
-    JSONArray: __webpack_require__(490),
-    JSONHash: __webpack_require__(489),
-    Pyxel: __webpack_require__(488),
-    SpriteSheet: __webpack_require__(487),
-    SpriteSheetFromAtlas: __webpack_require__(486),
-    StarlingXML: __webpack_require__(485),
-    UnityYAML: __webpack_require__(484)
-
-};
-
-
-/***/ }),
-/* 170 */
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -27853,13 +28988,15 @@ module.exports = {
  */
 
 var CanvasPool = __webpack_require__(22);
+var CanvasTexture = __webpack_require__(495);
 var Class = __webpack_require__(0);
-var Color = __webpack_require__(27);
-var EventEmitter = __webpack_require__(9);
-var GenerateTexture = __webpack_require__(270);
+var Color = __webpack_require__(30);
+var CONST = __webpack_require__(20);
+var EventEmitter = __webpack_require__(8);
+var GenerateTexture = __webpack_require__(273);
 var GetValue = __webpack_require__(4);
-var Parser = __webpack_require__(169);
-var Texture = __webpack_require__(168);
+var Parser = __webpack_require__(170);
+var Texture = __webpack_require__(112);
 
 /**
  * @callback EachTextureCallback
@@ -27996,6 +29133,73 @@ var TextureManager = new Class({
     },
 
     /**
+     * Checks the given texture key and throws a console.warn if the key is already in use, then returns false.
+     *
+     * @method Phaser.Textures.TextureManager#checkKey
+     * @since 3.7.0
+     *
+     * @param {string} key - The texture key to check.
+     *
+     * @return {boolean} `true` if it's safe to use the texture key, otherwise `false`.
+     */
+    checkKey: function (key)
+    {
+        if (this.exists(key))
+        {
+            // eslint-disable-next-line no-console
+            console.error('Texture key already in use: ' + key);
+
+            return false;
+        }
+
+        return true;
+    },
+
+    /**
+     * Removes a Texture from the Texture Manager and destroys it. This will immediately
+     * clear all references to it from the Texture Manager, and if it has one, destroy its
+     * WebGLTexture. This will emit a `removetexture` event.
+     *
+     * Note: If you have any Game Objects still using this texture they will start throwing
+     * errors the next time they try to render. Make sure that removing the texture is the final
+     * step when clearing down to avoid this.
+     *
+     * @method Phaser.Textures.TextureManager#remove
+     * @since 3.7.0
+     *
+     * @param {(string|Phaser.Textures.Texture)} key - The key of the Texture to remove, or a reference to it.
+     *
+     * @return {Phaser.Textures.TextureManager} The Texture Manager.
+     */
+    remove: function (key)
+    {
+        if (typeof key === 'string')
+        {
+            if (this.exists(key))
+            {
+                key = this.get(key);
+            }
+            else
+            {
+                console.warn('No texture found matching key: ' + key);
+                return this;
+            }
+        }
+
+        //  By this point key should be a Texture, if not, the following fails anyway
+        if (this.list.hasOwnProperty(key.key))
+        {
+            delete this.list[key.key];
+
+            key.destroy();
+
+            this.emit('removetexture', key.key);
+        }
+
+        return this;
+    },
+
+    /**
      * Adds a new Texture to the Texture Manager created from the given Base64 encoded data.
      *
      * @method Phaser.Textures.TextureManager#addBase64
@@ -28006,25 +29210,30 @@ var TextureManager = new Class({
      */
     addBase64: function (key, data)
     {
-        var _this = this;
-
-        var image = new Image();
-
-        image.onerror = function ()
+        if (this.checkKey(key))
         {
-            _this.emit('onerror', key);
-        };
+            var _this = this;
 
-        image.onload = function ()
-        {
-            var texture = _this.create(key, image);
+            var image = new Image();
 
-            Parser.Image(texture, 0);
+            image.onerror = function ()
+            {
+                _this.emit('onerror', key);
+            };
 
-            _this.emit('onload', key, texture);
-        };
+            image.onload = function ()
+            {
+                var texture = _this.create(key, image);
 
-        image.src = data;
+                Parser.Image(texture, 0);
+
+                _this.emit('addtexture', key, texture);
+
+                _this.emit('onload', key, texture);
+            };
+
+            image.src = data;
+        }
     },
 
     /**
@@ -28037,19 +29246,26 @@ var TextureManager = new Class({
      * @param {HTMLImageElement} source - The source Image element.
      * @param {HTMLImageElement} [dataSource] - An optional data Image element.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
     addImage: function (key, source, dataSource)
     {
-        var texture = this.create(key, source);
+        var texture = null;
 
-        Parser.Image(texture, 0);
-
-        if (dataSource)
+        if (this.checkKey(key))
         {
-            texture.setDataSource(dataSource);
-        }
+            texture = this.create(key, source);
 
+            Parser.Image(texture, 0);
+
+            if (dataSource)
+            {
+                texture.setDataSource(dataSource);
+            }
+
+            this.emit('addtexture', key, texture);
+        }
+        
         return texture;
     },
 
@@ -28064,17 +29280,24 @@ var TextureManager = new Class({
      * @param {string} key - The unique string-based key of the Texture.
      * @param {object} config - [description]
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
     generate: function (key, config)
     {
-        var canvas = CanvasPool.create(this, 1, 1);
+        if (this.checkKey(key))
+        {
+            var canvas = CanvasPool.create(this, 1, 1);
 
-        config.canvas = canvas;
+            config.canvas = canvas;
 
-        GenerateTexture(config);
+            GenerateTexture(config);
 
-        return this.addCanvas(key, canvas);
+            return this.addCanvas(key, canvas);
+        }
+        else
+        {
+            return null;
+        }
     },
 
     /**
@@ -28087,23 +29310,28 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {integer} width - The width of the Canvas element.
-     * @param {integer} height - The height of the Canvas element.
+     * @param {integer} [width=256]- The width of the Canvas element.
+     * @param {integer} [height=256] - The height of the Canvas element.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.CanvasTexture} The Canvas Texture that was created, or `null` if the key is already in use.
      */
     createCanvas: function (key, width, height)
     {
         if (width === undefined) { width = 256; }
         if (height === undefined) { height = 256; }
 
-        var canvas = CanvasPool.create(this, width, height);
+        if (this.checkKey(key))
+        {
+            var canvas = CanvasPool.create(this, width, height, CONST.CANVAS, true);
 
-        return this.addCanvas(key, canvas);
+            return this.addCanvas(key, canvas);
+        }
+
+        return null;
     },
 
     /**
-     * Creates a new Texture object from an existing Canvas element and adds
+     * Creates a new Canvas Texture object from an existing Canvas element and adds
      * it to this Texture Manager.
      *
      * @method Phaser.Textures.TextureManager#addCanvas
@@ -28112,13 +29340,20 @@ var TextureManager = new Class({
      * @param {string} key - The unique string-based key of the Texture.
      * @param {HTMLCanvasElement} source - The Canvas element to form the base of the new Texture.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.CanvasTexture} The Canvas Texture that was created, or `null` if the key is already in use.
      */
     addCanvas: function (key, source)
     {
-        var texture = this.create(key, source);
+        var texture = null;
 
-        Parser.Canvas(texture, 0);
+        if (this.checkKey(key))
+        {
+            texture = new CanvasTexture(this, key, source, source.width, source.height);
+
+            this.list[key] = texture;
+
+            this.emit('addtexture', key, texture);
+        }
 
         return texture;
     },
@@ -28133,19 +29368,20 @@ var TextureManager = new Class({
      * @param {string} key - The unique string-based key of the Texture.
      * @param {HTMLImageElement} source - The source Image element.
      * @param {object} data - The Texture Atlas data.
+     * @param {HTMLImageElement} [dataSource] - An optional data Image element.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
-    addAtlas: function (key, source, data)
+    addAtlas: function (key, source, data, dataSource)
     {
         //  New Texture Packer format?
         if (Array.isArray(data.textures) || Array.isArray(data.frames))
         {
-            return this.addAtlasJSONArray(key, source, data);
+            return this.addAtlasJSONArray(key, source, data, dataSource);
         }
         else
         {
-            return this.addAtlasJSONHash(key, source, data);
+            return this.addAtlasJSONHash(key, source, data, dataSource);
         }
     },
 
@@ -28158,27 +29394,44 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {HTMLImageElement} source - The source Image element.
-     * @param {object} data - The Texture Atlas data.
+     * @param {(HTMLImageElement|HTMLImageElement[])} source - The source Image element/s.
+     * @param {(object|object[])} data - The Texture Atlas data/s.
+     * @param {HTMLImageElement} [dataSource] - An optional data Image element.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
-    addAtlasJSONArray: function (key, source, data)
+    addAtlasJSONArray: function (key, source, data, dataSource)
     {
-        var texture = this.create(key, source);
+        var texture = null;
 
-        if (Array.isArray(data))
+        if (this.checkKey(key))
         {
-            var singleAtlasFile = (data.length === 1); // multi-pack with one atlas file for all images
-            for (var i = 0; i < texture.source.length; i++)
+            texture = this.create(key, source);
+
+            //  Multi-Atlas?
+            if (Array.isArray(data))
             {
-                var atlasData = singleAtlasFile ? data[0] : data[i];
-                Parser.JSONArray(texture, i, atlasData);
+                var singleAtlasFile = (data.length === 1); // multi-pack with one atlas file for all images
+
+                //  !! Assumes the textures are in the same order in the source array as in the json data !!
+                for (var i = 0; i < texture.source.length; i++)
+                {
+                    var atlasData = singleAtlasFile ? data[0] : data[i];
+
+                    Parser.JSONArray(texture, i, atlasData);
+                }
             }
-        }
-        else
-        {
-            Parser.JSONArray(texture, 0, data);
+            else
+            {
+                Parser.JSONArray(texture, 0, data);
+            }
+
+            if (dataSource)
+            {
+                texture.setDataSource(dataSource);
+            }
+
+            this.emit('addtexture', key, texture);
         }
 
         return texture;
@@ -28195,23 +29448,71 @@ var TextureManager = new Class({
      * @param {string} key - The unique string-based key of the Texture.
      * @param {HTMLImageElement} source - The source Image element.
      * @param {object} data - The Texture Atlas data.
+     * @param {HTMLImageElement} [dataSource] - An optional data Image element.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
-    addAtlasJSONHash: function (key, source, data)
+    addAtlasJSONHash: function (key, source, data, dataSource)
     {
-        var texture = this.create(key, source);
+        var texture = null;
 
-        if (Array.isArray(data))
+        if (this.checkKey(key))
         {
-            for (var i = 0; i < data.length; i++)
+            texture = this.create(key, source);
+
+            if (Array.isArray(data))
             {
-                Parser.JSONHash(texture, i, data[i]);
+                for (var i = 0; i < data.length; i++)
+                {
+                    Parser.JSONHash(texture, i, data[i]);
+                }
             }
+            else
+            {
+                Parser.JSONHash(texture, 0, data);
+            }
+
+            if (dataSource)
+            {
+                texture.setDataSource(dataSource);
+            }
+
+            this.emit('addtexture', key, texture);
         }
-        else
+
+        return texture;
+    },
+
+    /**
+     * Adds a Texture Atlas to this Texture Manager, where the atlas data is given
+     * in the XML format.
+     *
+     * @method Phaser.Textures.TextureManager#addAtlasXML
+     * @since 3.7.0
+     *
+     * @param {string} key - The unique string-based key of the Texture.
+     * @param {HTMLImageElement} source - The source Image element.
+     * @param {object} data - The Texture Atlas XML data.
+     * @param {HTMLImageElement} [dataSource] - An optional data Image element.
+     *
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
+     */
+    addAtlasXML: function (key, source, data, dataSource)
+    {
+        var texture = null;
+
+        if (this.checkKey(key))
         {
-            Parser.JSONHash(texture, 0, data);
+            texture = this.create(key, source);
+            
+            Parser.AtlasXML(texture, 0, data);
+
+            if (dataSource)
+            {
+                texture.setDataSource(dataSource);
+            }
+
+            this.emit('addtexture', key, texture);
         }
 
         return texture;
@@ -28227,14 +29528,27 @@ var TextureManager = new Class({
      * @param {string} key - The unique string-based key of the Texture.
      * @param {HTMLImageElement} source - The source Image element.
      * @param {object} data - The Texture Atlas data.
+     * @param {HTMLImageElement} [dataSource] - An optional data Image element.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
-    addUnityAtlas: function (key, source, data)
+    addUnityAtlas: function (key, source, data, dataSource)
     {
-        var texture = this.create(key, source);
+        var texture = null;
 
-        Parser.UnityYAML(texture, 0, data);
+        if (this.checkKey(key))
+        {
+            texture = this.create(key, source);
+
+            Parser.UnityYAML(texture, 0, data);
+
+            if (dataSource)
+            {
+                texture.setDataSource(dataSource);
+            }
+
+            this.emit('addtexture', key, texture);
+        }
 
         return texture;
     },
@@ -28263,16 +29577,23 @@ var TextureManager = new Class({
      * @param {HTMLImageElement} source - The source Image element.
      * @param {SpriteSheetConfig} config - The configuration object for this Sprite Sheet.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
     addSpriteSheet: function (key, source, config)
     {
-        var texture = this.create(key, source);
+        var texture = null;
 
-        var width = texture.source[0].width;
-        var height = texture.source[0].height;
+        if (this.checkKey(key))
+        {
+            texture = this.create(key, source);
 
-        Parser.SpriteSheet(texture, 0, 0, 0, width, height, config);
+            var width = texture.source[0].width;
+            var height = texture.source[0].height;
+
+            Parser.SpriteSheet(texture, 0, 0, 0, width, height, config);
+
+            this.emit('addtexture', key, texture);
+        }
 
         return texture;
     },
@@ -28302,10 +29623,15 @@ var TextureManager = new Class({
      * @param {string} key - The unique string-based key of the Texture.
      * @param {SpriteSheetFromAtlasConfig} config - The configuration object for this Sprite Sheet.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
     addSpriteSheetFromAtlas: function (key, config)
     {
+        if (!this.checkKey(key))
+        {
+            return null;
+        }
+
         var atlasKey = GetValue(config, 'atlas', null);
         var atlasFrame = GetValue(config, 'frame', null);
 
@@ -28331,72 +29657,10 @@ var TextureManager = new Class({
                 Parser.SpriteSheet(texture, 0, sheet.cutX, sheet.cutY, sheet.cutWidth, sheet.cutHeight, config);
             }
 
+            this.emit('addtexture', key, texture);
+
             return texture;
         }
-    },
-
-    /**
-     * Adds a Texture Atlas to this Texture Manager, where the atlas data is given
-     * in the Starling XML format.
-     *
-     * @method Phaser.Textures.TextureManager#addAtlasStarlingXML
-     * @since 3.0.0
-     *
-     * @param {string} key - The unique string-based key of the Texture.
-     * @param {HTMLImageElement} source - The source Image element.
-     * @param {object} data - The Texture Atlas XML data.
-     *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
-     */
-    addAtlasStarlingXML: function (key, source, data)
-    {
-        var texture = this.create(key, source);
-
-        if (Array.isArray(data))
-        {
-            for (var i = 0; i < data.length; i++)
-            {
-                Parser.StarlingXML(texture, i, data[i]);
-            }
-        }
-        else
-        {
-            Parser.StarlingXML(texture, 0, data);
-        }
-
-        return texture;
-    },
-
-    /**
-     * Adds a Texture Atlas to this Texture Manager, where the atlas data is given
-     * in the Pyxel JSON format.
-     *
-     * @method Phaser.Textures.TextureManager#addAtlasPyxel
-     * @since 3.0.0
-     *
-     * @param {string} key - The unique string-based key of the Texture.
-     * @param {HTMLImageElement} source - The source Image element.
-     * @param {object} data - The Texture Atlas XML data.
-     *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
-     */
-    addAtlasPyxel: function (key, source, data)
-    {
-        var texture = this.create(key, source);
-
-        if (Array.isArray(data))
-        {
-            for (var i = 0; i < data.length; i++)
-            {
-                Parser.Pyxel(texture, i, data[i]);
-            }
-        }
-        else
-        {
-            Parser.Pyxel(texture, 0, data);
-        }
-
-        return texture;
     },
 
     /**
@@ -28410,13 +29674,18 @@ var TextureManager = new Class({
      * @param {integer} width - The width of the Texture.
      * @param {integer} height - The height of the Texture.
      *
-     * @return {Phaser.Textures.Texture} The Texture that was created.
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
     create: function (key, source, width, height)
     {
-        var texture = new Texture(this, key, source, width, height);
+        var texture = null;
 
-        this.list[key] = texture;
+        if (this.checkKey(key))
+        {
+            texture = new Texture(this, key, source, width, height);
+
+            this.list[key] = texture;
+        }
 
         return texture;
     },
@@ -28640,6 +29909,8 @@ var TextureManager = new Class({
         this.list = {};
 
         this.game = null;
+
+        CanvasPool.remove(this._tempCanvas);
     }
 
 });
@@ -28648,7 +29919,7 @@ module.exports = TextureManager;
 
 
 /***/ }),
-/* 171 */
+/* 173 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -28658,7 +29929,7 @@ module.exports = TextureManager;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseSound = __webpack_require__(72);
+var BaseSound = __webpack_require__(74);
 var Class = __webpack_require__(0);
 
 /**
@@ -29615,7 +30886,7 @@ module.exports = WebAudioSound;
 
 
 /***/ }),
-/* 172 */
+/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29625,9 +30896,9 @@ module.exports = WebAudioSound;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseSoundManager = __webpack_require__(73);
+var BaseSoundManager = __webpack_require__(75);
 var Class = __webpack_require__(0);
-var WebAudioSound = __webpack_require__(171);
+var WebAudioSound = __webpack_require__(173);
 
 /**
  * @classdesc
@@ -29693,7 +30964,7 @@ var WebAudioSoundManager = new Class({
          */
         this.destination = this.masterMuteNode;
 
-        this.locked = this.context.state === 'suspended' && 'ontouchstart' in window;
+        this.locked = this.context.state === 'suspended' && ('ontouchstart' in window || 'onclick' in window);
 
         BaseSoundManager.call(this, game);
 
@@ -29705,7 +30976,7 @@ var WebAudioSoundManager = new Class({
 
     /**
      * Method responsible for instantiating and returning AudioContext instance.
-     * If an instance of an AudioContext class was provided trough the game config,
+     * If an instance of an AudioContext class was provided through the game config,
      * that instance will be returned instead. This can come in handy if you are reloading
      * a Phaser game on a page that never properly refreshes (such as in an SPA project)
      * and you want to reuse already instantiated AudioContext.
@@ -29753,7 +31024,7 @@ var WebAudioSoundManager = new Class({
     },
 
     /**
-     * Unlocks Web Audio API on iOS devices on the initial touch event.
+     * Unlocks Web Audio API on the initial input event.
      *
      * Read more about how this issue is handled here in [this article](https://medium.com/@pgoloskokovic/unlocking-web-audio-the-smarter-way-8858218c0e09).
      *
@@ -29770,6 +31041,7 @@ var WebAudioSoundManager = new Class({
             {
                 document.body.removeEventListener('touchstart', unlock);
                 document.body.removeEventListener('touchend', unlock);
+                document.body.removeEventListener('click', unlock);
 
                 _this.unlocked = true;
             });
@@ -29777,6 +31049,7 @@ var WebAudioSoundManager = new Class({
 
         document.body.addEventListener('touchstart', unlock, false);
         document.body.addEventListener('touchend', unlock, false);
+        document.body.addEventListener('click', unlock, false);
     },
 
     /**
@@ -29826,10 +31099,15 @@ var WebAudioSoundManager = new Class({
         }
         else
         {
-            this.context.close();
-        }
+            var _this = this;
 
-        this.context = null;
+            this.context.close().then(function ()
+            {
+
+                _this.context = null;
+
+            });
+        }
 
         BaseSoundManager.prototype.destroy.call(this);
     },
@@ -29932,7 +31210,7 @@ module.exports = WebAudioSoundManager;
 
 
 /***/ }),
-/* 173 */
+/* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29942,10 +31220,10 @@ module.exports = WebAudioSoundManager;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseSound = __webpack_require__(72);
+var BaseSound = __webpack_require__(74);
 var Class = __webpack_require__(0);
-var EventEmitter = __webpack_require__(9);
-var Extend = __webpack_require__(16);
+var EventEmitter = __webpack_require__(8);
+var Extend = __webpack_require__(17);
 
 /**
  * @classdesc
@@ -30059,7 +31337,7 @@ module.exports = NoAudioSound;
 
 
 /***/ }),
-/* 174 */
+/* 176 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -30069,10 +31347,10 @@ module.exports = NoAudioSound;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseSoundManager = __webpack_require__(73);
+var BaseSoundManager = __webpack_require__(75);
 var Class = __webpack_require__(0);
-var EventEmitter = __webpack_require__(9);
-var NoAudioSound = __webpack_require__(173);
+var EventEmitter = __webpack_require__(8);
+var NoAudioSound = __webpack_require__(175);
 var NOOP = __webpack_require__(3);
 
 /**
@@ -30177,7 +31455,7 @@ module.exports = NoAudioSoundManager;
 
 
 /***/ }),
-/* 175 */
+/* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -30187,7 +31465,7 @@ module.exports = NoAudioSoundManager;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseSound = __webpack_require__(72);
+var BaseSound = __webpack_require__(74);
 var Class = __webpack_require__(0);
 
 /**
@@ -31159,27 +32437,27 @@ module.exports = HTML5AudioSound;
 
 
 /***/ }),
-/* 176 */
+/* 178 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  * @copyright    2018 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseSoundManager = __webpack_require__(73);
+var BaseSoundManager = __webpack_require__(75);
 var Class = __webpack_require__(0);
-var HTML5AudioSound = __webpack_require__(175);
+var HTML5AudioSound = __webpack_require__(177);
 
 /**
- * HTML5 Audio implementation of the sound manager.
+ * HTML5 Audio implementation of the Sound Manager.
  *
  * @class HTML5AudioSoundManager
  * @extends Phaser.Sound.BaseSoundManager
  * @memberOf Phaser.Sound
  * @constructor
- * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  * @since 3.0.0
  *
  * @param {Phaser.Game} game - Reference to the current game instance.
@@ -31260,7 +32538,7 @@ var HTML5AudioSoundManager = new Class({
          * @private
          * @since 3.0.0
          */
-        this.lockedActionsQueue = null;
+        this.lockedActionsQueue = this.locked ? [] : null;
 
         /**
          * Property that actually holds the value of global mute
@@ -31318,18 +32596,29 @@ var HTML5AudioSoundManager = new Class({
      */
     unlock: function ()
     {
-        this.locked = 'ontouchstart' in window;
+        this.locked = false;
 
-        if(this.locked)
+        var _this = this;
+
+        this.game.cache.audio.entries.each(function (key, tags)
         {
-            this.lockedActionsQueue = [];
-        }
-        else
+            for (var i = 0; i < tags.length; i++)
+            {
+                if (tags[i].dataset.locked === 'true')
+                {
+                    _this.locked = true;
+
+                    return false;
+                }
+            }
+
+            return true;
+        });
+
+        if (!this.locked)
         {
             return;
         }
-
-        var _this = this;
 
         var moved = false;
 
@@ -31395,7 +32684,7 @@ var HTML5AudioSoundManager = new Class({
         {
             this.forEachActiveSound(function (sound)
             {
-                if(sound.currentMarker === null && sound.duration === 0)
+                if (sound.currentMarker === null && sound.duration === 0)
                 {
                     sound.duration = sound.tags[0].duration;
                 }
@@ -31403,8 +32692,10 @@ var HTML5AudioSoundManager = new Class({
                 sound.totalDuration = sound.tags[0].duration;
             });
 
-            this.lockedActionsQueue.forEach(function (lockedAction)
+            while (this.lockedActionsQueue.length)
             {
+                var lockedAction = this.lockedActionsQueue.shift();
+
                 if (lockedAction.sound[lockedAction.prop].apply)
                 {
                     lockedAction.sound[lockedAction.prop].apply(lockedAction.sound, lockedAction.value || []);
@@ -31413,10 +32704,7 @@ var HTML5AudioSoundManager = new Class({
                 {
                     lockedAction.sound[lockedAction.prop] = lockedAction.value;
                 }
-            });
-
-            this.lockedActionsQueue.length = 0;
-            this.lockedActionsQueue = null;
+            }
 
         }, this);
 
@@ -31616,7 +32904,7 @@ module.exports = HTML5AudioSoundManager;
 
 
 /***/ }),
-/* 177 */
+/* 179 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -31626,12 +32914,14 @@ module.exports = HTML5AudioSoundManager;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var HTML5AudioSoundManager = __webpack_require__(176);
-var NoAudioSoundManager = __webpack_require__(174);
-var WebAudioSoundManager = __webpack_require__(172);
+var HTML5AudioSoundManager = __webpack_require__(178);
+var NoAudioSoundManager = __webpack_require__(176);
+var WebAudioSoundManager = __webpack_require__(174);
 
 /**
  * Creates a Web Audio, HTML5 Audio or No Audio Sound Manager based on config and device settings.
+ *
+ * Be aware of https://developers.google.com/web/updates/2017/09/autoplay-policy-changes
  *
  * @function Phaser.Sound.SoundManagerCreator
  * @since 3.0.0
@@ -31664,7 +32954,7 @@ module.exports = SoundManagerCreator;
 
 
 /***/ }),
-/* 178 */
+/* 180 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -31673,10 +32963,10 @@ module.exports = SoundManagerCreator;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CONST = __webpack_require__(52);
+var CONST = __webpack_require__(54);
 var GetValue = __webpack_require__(4);
-var Merge = __webpack_require__(90);
-var InjectionMap = __webpack_require__(493);
+var Merge = __webpack_require__(93);
+var InjectionMap = __webpack_require__(496);
 
 /**
  * @namespace Phaser.Scenes.Settings
@@ -31761,7 +33051,7 @@ var Settings = {
 
             data: {},
 
-            files: GetValue(config, 'files', false),
+            pack: GetValue(config, 'pack', false),
 
             //  Cameras
 
@@ -31792,7 +33082,7 @@ module.exports = Settings;
 
 
 /***/ }),
-/* 179 */
+/* 181 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -31802,7 +33092,7 @@ module.exports = Settings;
  */
 
 var Class = __webpack_require__(0);
-var Systems = __webpack_require__(109);
+var Systems = __webpack_require__(113);
 
 /**
  * @classdesc
@@ -32071,7 +33361,7 @@ module.exports = Scene;
 
 
 /***/ }),
-/* 180 */
+/* 182 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -32081,11 +33371,11 @@ module.exports = Scene;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(52);
+var CONST = __webpack_require__(54);
 var GetValue = __webpack_require__(4);
 var NOOP = __webpack_require__(3);
-var Scene = __webpack_require__(179);
-var Systems = __webpack_require__(109);
+var Scene = __webpack_require__(181);
+var Systems = __webpack_require__(113);
 
 /**
  * @classdesc
@@ -32394,6 +33684,11 @@ var SceneManager = new Class({
                 autoStart: autoStart,
                 data: data
             });
+
+            if (!this.isBooted)
+            {
+                this._data[key] = { data: data };
+            }
 
             return null;
         }
@@ -33120,11 +34415,11 @@ var SceneManager = new Class({
             }
 
             //  Files payload?
-            if (loader && Array.isArray(scene.sys.settings.files))
+            if (loader && scene.sys.settings.hasOwnProperty('pack'))
             {
                 loader.reset();
 
-                if (loader.loadArray(scene.sys.settings.files))
+                if (loader.addPack({ payload: scene.sys.settings.pack }))
                 {
                     scene.sys.settings.status = CONST.LOADING;
 
@@ -33394,7 +34689,7 @@ var SceneManager = new Class({
             var indexA = this.getIndex(keyA);
             var indexB = this.getIndex(keyB);
 
-            if (indexA > indexB && indexA !== -1 && indexB !== -1)
+            if (indexA !== -1 && indexB !== -1)
             {
                 var tempScene = this.getAt(indexB);
 
@@ -33402,7 +34697,7 @@ var SceneManager = new Class({
                 this.scenes.splice(indexB, 1);
 
                 //  Add in new location
-                this.scenes.splice(indexA, 0, tempScene);
+                this.scenes.splice(indexA + 1, 0, tempScene);
             }
         }
 
@@ -33438,15 +34733,22 @@ var SceneManager = new Class({
             var indexA = this.getIndex(keyA);
             var indexB = this.getIndex(keyB);
 
-            if (indexA < indexB && indexA !== -1 && indexB !== -1)
+            if (indexA !== -1 && indexB !== -1)
             {
                 var tempScene = this.getAt(indexB);
 
                 //  Remove
                 this.scenes.splice(indexB, 1);
 
-                //  Add in new location
-                this.scenes.splice(indexA, 0, tempScene);
+                if (indexA === 0)
+                {
+                    this.scenes.unshift(tempScene);
+                }
+                else
+                {
+                    //  Add in new location
+                    this.scenes.splice(indexA, 0, tempScene);
+                }
             }
         }
 
@@ -33568,7 +34870,7 @@ module.exports = SceneManager;
 
 
 /***/ }),
-/* 181 */
+/* 183 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -33771,7 +35073,7 @@ module.exports = TouchManager;
 
 
 /***/ }),
-/* 182 */
+/* 184 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -34410,7 +35712,7 @@ module.exports = Pointer;
 
 
 /***/ }),
-/* 183 */
+/* 185 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -34420,7 +35722,7 @@ module.exports = Pointer;
  */
 
 var Class = __webpack_require__(0);
-var Features = __webpack_require__(112);
+var Features = __webpack_require__(116);
 
 //  https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent
 //  https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
@@ -34722,7 +36024,7 @@ module.exports = MouseManager;
 
 
 /***/ }),
-/* 184 */
+/* 186 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -34732,9 +36034,9 @@ module.exports = MouseManager;
  */
 
 var Class = __webpack_require__(0);
-var GetFastValue = __webpack_require__(2);
-var ProcessKeyCombo = __webpack_require__(501);
-var ResetKeyCombo = __webpack_require__(499);
+var GetFastValue = __webpack_require__(1);
+var ProcessKeyCombo = __webpack_require__(504);
+var ResetKeyCombo = __webpack_require__(502);
 
 /**
  * @callback KeyboardKeydownCallback
@@ -35007,7 +36309,7 @@ module.exports = KeyCombo;
 
 
 /***/ }),
-/* 185 */
+/* 187 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -35232,7 +36534,7 @@ module.exports = Key;
 
 
 /***/ }),
-/* 186 */
+/* 188 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -35242,13 +36544,13 @@ module.exports = Key;
  */
 
 var Class = __webpack_require__(0);
-var EventEmitter = __webpack_require__(9);
-var Key = __webpack_require__(185);
-var KeyCodes = __webpack_require__(110);
-var KeyCombo = __webpack_require__(184);
-var KeyMap = __webpack_require__(498);
-var ProcessKeyDown = __webpack_require__(497);
-var ProcessKeyUp = __webpack_require__(496);
+var EventEmitter = __webpack_require__(8);
+var Key = __webpack_require__(187);
+var KeyCodes = __webpack_require__(114);
+var KeyCombo = __webpack_require__(186);
+var KeyMap = __webpack_require__(501);
+var ProcessKeyDown = __webpack_require__(500);
+var ProcessKeyUp = __webpack_require__(499);
 
 /**
  * @callback KeyboardHandler
@@ -35680,7 +36982,7 @@ module.exports = KeyboardManager;
 
 
 /***/ }),
-/* 187 */
+/* 189 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -35800,7 +37102,7 @@ module.exports = Button;
 
 
 /***/ }),
-/* 188 */
+/* 190 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -35910,7 +37212,7 @@ module.exports = Axis;
 
 
 /***/ }),
-/* 189 */
+/* 191 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -35919,8 +37221,8 @@ module.exports = Axis;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Axis = __webpack_require__(188);
-var Button = __webpack_require__(187);
+var Axis = __webpack_require__(190);
+var Button = __webpack_require__(189);
 var Class = __webpack_require__(0);
 
 /**
@@ -36062,7 +37364,7 @@ module.exports = Gamepad;
 
 
 /***/ }),
-/* 190 */
+/* 192 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -36072,8 +37374,8 @@ module.exports = Gamepad;
  */
 
 var Class = __webpack_require__(0);
-var EventEmitter = __webpack_require__(9);
-var Gamepad = __webpack_require__(189);
+var EventEmitter = __webpack_require__(8);
+var Gamepad = __webpack_require__(191);
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API
 // https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API
@@ -36461,7 +37763,7 @@ module.exports = GamepadManager;
 
 
 /***/ }),
-/* 191 */
+/* 193 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -36471,15 +37773,15 @@ module.exports = GamepadManager;
  */
 
 var Class = __webpack_require__(0);
-var EventEmitter = __webpack_require__(9);
-var Gamepad = __webpack_require__(190);
-var Keyboard = __webpack_require__(186);
-var Mouse = __webpack_require__(183);
-var Pointer = __webpack_require__(182);
-var Rectangle = __webpack_require__(12);
-var Touch = __webpack_require__(181);
-var TransformMatrix = __webpack_require__(60);
-var TransformXY = __webpack_require__(249);
+var EventEmitter = __webpack_require__(8);
+var Gamepad = __webpack_require__(192);
+var Keyboard = __webpack_require__(188);
+var Mouse = __webpack_require__(185);
+var Pointer = __webpack_require__(184);
+var Rectangle = __webpack_require__(13);
+var Touch = __webpack_require__(183);
+var TransformMatrix = __webpack_require__(63);
+var TransformXY = __webpack_require__(252);
 
 /**
  * @classdesc
@@ -37108,7 +38410,7 @@ module.exports = InputManager;
 
 
 /***/ }),
-/* 192 */
+/* 194 */
 /***/ (function(module, exports) {
 
 /**
@@ -37117,15 +38419,47 @@ module.exports = InputManager;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+
+/**
+ * Implements a model view projection matrices.
+ * Pipelines can implement this for doing 2D and 3D rendering.
+ */
+
 var ModelViewProjection = {
 
+    /**
+     * Dirty flag for checking if model matrix needs to be updated on GPU.
+     */
     modelMatrixDirty: false,
+
+    /**
+     * Dirty flag for checking if view matrix needs to be updated on GPU.
+     */
     viewMatrixDirty: false,
+
+    /**
+     * Dirty flag for checking if projection matrix needs to be updated on GPU.
+     */
     projectionMatrixDirty: false,
+
+    /**
+     * Model matrix
+     */
     modelMatrix: null,
+
+    /**
+     * View matrix
+     */
     viewMatrix: null,
+
+    /**
+     * Projection matrix
+     */
     projectionMatrix: null,
 
+    /**
+     * Initializes MVP matrices with an identity matrix
+     */
     mvpInit: function ()
     {
         this.modelMatrixDirty = true;
@@ -37156,6 +38490,9 @@ var ModelViewProjection = {
         return this;
     },
 
+    /**
+     * If dirty flags are set then the matrices are uploaded to the GPU.
+     */
     mvpUpdate: function ()
     {
         var program = this.program;
@@ -37181,6 +38518,9 @@ var ModelViewProjection = {
         return this;
     },
 
+    /**
+     * Loads an identity matrix to the model matrix
+     */
     modelIdentity: function ()
     {
         var modelMatrix = this.modelMatrix;
@@ -37207,6 +38547,9 @@ var ModelViewProjection = {
         return this;
     },
 
+    /**
+     * Scale model matrix
+     */
     modelScale: function (x, y, z)
     {
         var modelMatrix = this.modelMatrix;
@@ -37229,6 +38572,9 @@ var ModelViewProjection = {
         return this;
     },
 
+    /**
+     * Translate model matrix
+     */
     modelTranslate: function (x, y, z)
     {
         var modelMatrix = this.modelMatrix;
@@ -37243,6 +38589,10 @@ var ModelViewProjection = {
         return this;
     },
 
+
+    /**
+     * Rotates the model matrix in the X axis.
+     */
     modelRotateX: function (radians)
     {
         var modelMatrix = this.modelMatrix;
@@ -37271,6 +38621,9 @@ var ModelViewProjection = {
         return this;
     },
 
+    /**
+     * Rotates the model matrix in the Y axis.
+     */
     modelRotateY: function (radians)
     {
         var modelMatrix = this.modelMatrix;
@@ -37298,7 +38651,10 @@ var ModelViewProjection = {
         
         return this;
     },
-
+    
+    /**
+     * Rotates the model matrix in the Z axis.
+     */
     modelRotateZ: function (radians)
     {
         var modelMatrix = this.modelMatrix;
@@ -37327,6 +38683,9 @@ var ModelViewProjection = {
         return this;
     },
 
+    /**
+     * Loads identity matrix into the view matrix
+     */
     viewIdentity: function ()
     {
         var viewMatrix = this.viewMatrix;
@@ -37352,7 +38711,10 @@ var ModelViewProjection = {
         
         return this;
     },
-
+    
+    /**
+     * Scales view matrix
+     */
     viewScale: function (x, y, z)
     {
         var viewMatrix = this.viewMatrix;
@@ -37375,6 +38737,9 @@ var ModelViewProjection = {
         return this;
     },
 
+    /**
+     * Translates view matrix
+     */
     viewTranslate: function (x, y, z)
     {
         var viewMatrix = this.viewMatrix;
@@ -37388,7 +38753,10 @@ var ModelViewProjection = {
 
         return this;
     },
-
+    
+    /**
+     * Rotates view matrix in the X axis.
+     */
     viewRotateX: function (radians)
     {
         var viewMatrix = this.viewMatrix;
@@ -37416,7 +38784,10 @@ var ModelViewProjection = {
 
         return this;
     },
-
+    
+    /**
+     * Rotates view matrix in the Y axis.
+     */
     viewRotateY: function (radians)
     {
         var viewMatrix = this.viewMatrix;
@@ -37444,7 +38815,10 @@ var ModelViewProjection = {
         
         return this;
     },
-
+    
+    /**
+     * Rotates view matrix in the Z axis.
+     */
     viewRotateZ: function (radians)
     {
         var viewMatrix = this.viewMatrix;
@@ -37473,6 +38847,9 @@ var ModelViewProjection = {
         return this;
     },
 
+    /**
+     * Loads a 2D view matrix (3x2 matrix) into a 4x4 view matrix 
+     */
     viewLoad2D: function (matrix2D)
     {
         var vm = this.viewMatrix;
@@ -37499,6 +38876,10 @@ var ModelViewProjection = {
         return this;
     },
 
+
+    /**
+     * Copies a 4x4 matrix into the view matrix
+     */
     viewLoad: function (matrix)
     {
         var vm = this.viewMatrix;
@@ -37524,7 +38905,10 @@ var ModelViewProjection = {
 
         return this;
     },
-
+    
+    /**
+     * Loads identity matrix into the projection matrix.
+     */
     projIdentity: function ()
     {
         var projectionMatrix = this.projectionMatrix;
@@ -37551,6 +38935,9 @@ var ModelViewProjection = {
         return this;
     },
 
+    /**
+     * Sets up an orthographics projection matrix
+     */
     projOrtho: function (left, right, bottom, top, near, far)
     {
         var projectionMatrix = this.projectionMatrix;
@@ -37578,7 +38965,10 @@ var ModelViewProjection = {
         this.projectionMatrixDirty = true;
         return this;
     },
-
+    
+    /**
+     * Sets up a perspective projection matrix
+     */
     projPersp: function (fovy, aspectRatio, near, far)
     {
         var projectionMatrix = this.projectionMatrix;
@@ -37611,7 +39001,7 @@ module.exports = ModelViewProjection;
 
 
 /***/ }),
-/* 193 */
+/* 195 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -37725,7 +39115,7 @@ module.exports = init();
 
 
 /***/ }),
-/* 194 */
+/* 196 */
 /***/ (function(module, exports) {
 
 /**
@@ -37819,7 +39209,7 @@ module.exports = Plugins;
 
 
 /***/ }),
-/* 195 */
+/* 197 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -37834,15 +39224,15 @@ module.exports = Plugins;
 
 module.exports = {
 
-    Fade: __webpack_require__(549),
-    Flash: __webpack_require__(548),
-    Shake: __webpack_require__(547)
+    Fade: __webpack_require__(550),
+    Flash: __webpack_require__(549),
+    Shake: __webpack_require__(548)
 
 };
 
 
 /***/ }),
-/* 196 */
+/* 198 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -37851,7 +39241,7 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseCache = __webpack_require__(197);
+var BaseCache = __webpack_require__(199);
 var Class = __webpack_require__(0);
 
 /**
@@ -38055,7 +39445,7 @@ module.exports = CacheManager;
 
 
 /***/ }),
-/* 197 */
+/* 199 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -38065,8 +39455,8 @@ module.exports = CacheManager;
  */
 
 var Class = __webpack_require__(0);
-var CustomMap = __webpack_require__(114);
-var EventEmitter = __webpack_require__(9);
+var CustomMap = __webpack_require__(118);
+var EventEmitter = __webpack_require__(8);
 
 /**
  * @classdesc
@@ -38143,6 +39533,7 @@ var BaseCache = new Class({
 
     /**
      * Checks if this cache contains an item matching the given key.
+     * This performs the same action as `BaseCache.exists`.
      *
      * @method Phaser.Cache.BaseCache#has
      * @since 3.0.0
@@ -38152,6 +39543,22 @@ var BaseCache = new Class({
      * @return {boolean} Returns `true` if the cache contains an item matching the given key, otherwise `false`.
      */
     has: function (key)
+    {
+        return this.entries.has(key);
+    },
+
+    /**
+     * Checks if this cache contains an item matching the given key.
+     * This performs the same action as `BaseCache.has` and is called directly by the Loader.
+     *
+     * @method Phaser.Cache.BaseCache#exists
+     * @since 3.7.0
+     *
+     * @param {string} key - The unique key of the item to be checked in this cache.
+     *
+     * @return {boolean} Returns `true` if the cache contains an item matching the given key, otherwise `false`.
+     */
+    exists: function (key)
     {
         return this.entries.has(key);
     },
@@ -38232,7 +39639,7 @@ module.exports = BaseCache;
 
 
 /***/ }),
-/* 198 */
+/* 200 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -38241,12 +39648,12 @@ module.exports = BaseCache;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Animation = __webpack_require__(201);
+var Animation = __webpack_require__(203);
 var Class = __webpack_require__(0);
-var CustomMap = __webpack_require__(114);
-var EventEmitter = __webpack_require__(9);
+var CustomMap = __webpack_require__(118);
+var EventEmitter = __webpack_require__(8);
 var GetValue = __webpack_require__(4);
-var Pad = __webpack_require__(125);
+var Pad = __webpack_require__(128);
 
 /**
  * @typedef {object} JSONAnimationManager
@@ -38850,7 +40257,7 @@ module.exports = AnimationManager;
 
 
 /***/ }),
-/* 199 */
+/* 201 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -39033,7 +40440,7 @@ module.exports = AnimationFrame;
 
 
 /***/ }),
-/* 200 */
+/* 202 */
 /***/ (function(module, exports) {
 
 /**
@@ -39114,7 +40521,7 @@ module.exports = FindClosestInSorted;
 
 
 /***/ }),
-/* 201 */
+/* 203 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -39123,16 +40530,16 @@ module.exports = FindClosestInSorted;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Clamp = __webpack_require__(23);
+var Clamp = __webpack_require__(24);
 var Class = __webpack_require__(0);
-var FindClosestInSorted = __webpack_require__(200);
-var Frame = __webpack_require__(199);
+var FindClosestInSorted = __webpack_require__(202);
+var Frame = __webpack_require__(201);
 var GetValue = __webpack_require__(4);
 
 /**
  * @typedef {object} JSONAnimation
  *
- * @property {string} key - [description]
+ * @property {string} key - The key that the animation will be associated with. i.e. sprite.animations.play(key)
  * @property {string} type - A frame based animation (as opposed to a bone based animation)
  * @property {JSONAnimationFrame[]} frames - [description]
  * @property {integer} frameRate - The frame rate of playback in frames per second (default 24 if duration is null)
@@ -39149,7 +40556,7 @@ var GetValue = __webpack_require__(4);
 /**
  * @typedef {object} AnimationFrameConfig
  *
- * @property {string} key - [description]
+ * @property {string} key - The key that the animation will be associated with. i.e. sprite.animations.play(key)
  * @property {(string|number)} frame - [description]
  * @property {float} [duration=0] - [description]
  * @property {boolean} [visible] - [description]
@@ -39158,8 +40565,9 @@ var GetValue = __webpack_require__(4);
 /**
  * @typedef {object} AnimationConfig
  *
- * @property {AnimationFrameConfig[]} [frames] - [description]
- * @property {string} [defaultTextureKey=null] - [description]
+ * @property {string} [key] - The key that the animation will be associated with. i.e. sprite.animations.play(key)
+ * @property {AnimationFrameConfig[]} [frames] - An object containing data used to generate the frames for the animation
+ * @property {string} [defaultTextureKey=null] - The key of the texture all frames of the animation will use. Can be overridden on a per frame basis.
  * @property {integer} [frameRate] - The frame rate of playback in frames per second (default 24 if duration is null)
  * @property {integer} [duration] - How long the animation should play for in milliseconds. If not given its derived from frameRate.
  * @property {boolean} [skipMissedFrames=true] - Skip frames if the time lags, or always advanced anyway?
@@ -39197,7 +40605,7 @@ var Animation = new Class({
     function Animation (manager, key, config)
     {
         /**
-         * [description]
+         * A reference to the global Animation Manager
          *
          * @name Phaser.Animations.Animation#manager
          * @type {Phaser.Animations.AnimationManager}
@@ -39206,7 +40614,7 @@ var Animation = new Class({
         this.manager = manager;
 
         /**
-         * [description]
+         * The unique identifying string for this animation
          *
          * @name Phaser.Animations.Animation#key
          * @type {string}
@@ -39485,15 +40893,15 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Returns the AnimationFrame at the provided index
      *
      * @method Phaser.Animations.Animation#getFrameAt
      * @protected
      * @since 3.0.0
      *
-     * @param {integer} index - [description]
+     * @param {integer} index - The index in the AnimationFrame array
      *
-     * @return {Phaser.Animations.AnimationFrame} [description]
+     * @return {Phaser.Animations.AnimationFrame} The frame at the index provided from the animation sequence
      */
     getFrameAt: function (index)
     {
@@ -39779,12 +41187,13 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Removes a frame from the AnimationFrame array at the provided index
+     * and updates the animation accordingly.
      *
      * @method Phaser.Animations.Animation#removeFrameAt
      * @since 3.0.0
      *
-     * @param {integer} index - [description]
+     * @param {integer} index - The index in the AnimationFrame array
      *
      * @return {Phaser.Animations.Animation} This Animation object.
      */
@@ -39995,7 +41404,7 @@ module.exports = Animation;
 
 
 /***/ }),
-/* 202 */
+/* 204 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40004,7 +41413,7 @@ module.exports = Animation;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Wrap = __webpack_require__(34);
+var Wrap = __webpack_require__(38);
 
 /**
  * [description]
@@ -40025,7 +41434,7 @@ module.exports = WrapDegrees;
 
 
 /***/ }),
-/* 203 */
+/* 205 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40034,7 +41443,7 @@ module.exports = WrapDegrees;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var MathWrap = __webpack_require__(34);
+var MathWrap = __webpack_require__(38);
 
 /**
  * [description]
@@ -40055,7 +41464,387 @@ module.exports = Wrap;
 
 
 /***/ }),
-/* 204 */
+/* 206 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class GeometryMask
+ * @memberOf Phaser.Display.Masks
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - [description]
+ * @param {Phaser.GameObjects.Graphics} graphicsGeometry - [description]
+ */
+var GeometryMask = new Class({
+
+    initialize:
+
+    function GeometryMask (scene, graphicsGeometry)
+    {
+        /**
+         * [description]
+         *
+         * @name Phaser.Display.Masks.GeometryMask#geometryMask
+         * @type {Phaser.GameObjects.Graphics}
+         * @since 3.0.0
+         */
+        this.geometryMask = graphicsGeometry;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Display.Masks.GeometryMask#setShape
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Graphics} graphicsGeometry - [description]
+     */
+    setShape: function (graphicsGeometry)
+    {
+        this.geometryMask = graphicsGeometry;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Display.Masks.GeometryMask#preRenderWebGL
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - [description]
+     * @param {Phaser.GameObjects.GameObject} mask - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
+    preRenderWebGL: function (renderer, mask, camera)
+    {
+        var gl = renderer.gl;
+        var geometryMask = this.geometryMask;
+
+        // Force flushing before drawing to stencil buffer
+        renderer.flush();
+
+        // Enable and setup GL state to write to stencil buffer
+        gl.enable(gl.STENCIL_TEST);
+        gl.clear(gl.STENCIL_BUFFER_BIT);
+        gl.colorMask(false, false, false, false);
+        gl.stencilFunc(gl.NOTEQUAL, 1, 1);
+        gl.stencilOp(gl.REPLACE, gl.REPLACE, gl.REPLACE);
+
+        // Write stencil buffer
+        geometryMask.renderWebGL(renderer, geometryMask, 0.0, camera);
+        renderer.flush();
+
+        // Use stencil buffer to affect next rendering object
+        gl.colorMask(true, true, true, true);
+        gl.stencilFunc(gl.EQUAL, 1, 1);
+        gl.stencilOp(gl.INVERT, gl.INVERT, gl.INVERT);
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Display.Masks.GeometryMask#postRenderWebGL
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - [description]
+     */
+    postRenderWebGL: function (renderer)
+    {
+        var gl = renderer.gl;
+
+        // Force flush before disabling stencil test
+        renderer.flush();
+        gl.disable(gl.STENCIL_TEST);
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Display.Masks.GeometryMask#preRenderCanvas
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - [description]
+     * @param {Phaser.GameObjects.GameObject} mask - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     */
+    preRenderCanvas: function (renderer, mask, camera)
+    {
+        var geometryMask = this.geometryMask;
+
+        renderer.currentContext.save();
+
+        geometryMask.renderCanvas(renderer, geometryMask, 0.0, camera, undefined, null, true);
+
+        renderer.currentContext.clip();
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Display.Masks.GeometryMask#postRenderCanvas
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - [description]
+     */
+    postRenderCanvas: function (renderer)
+    {
+        renderer.currentContext.restore();
+    },
+
+    /**
+     * Destroys this GeometryMask and nulls any references it holds.
+     * 
+     * Note that if a Game Object is currently using this mask it will _not_ automatically detect you have destroyed it,
+     * so be sure to call `clearMask` on any Game Object using it, before destroying it.
+     *
+     * @method Phaser.Display.Masks.GeometryMask#destroy
+     * @since 3.7.0
+     */
+    destroy: function ()
+    {
+        this.geometryMask = null;
+    }
+
+});
+
+module.exports = GeometryMask;
+
+
+/***/ }),
+/* 207 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+
+/**
+ * @classdesc
+ * [description]
+ *
+ * @class BitmapMask
+ * @memberOf Phaser.Display.Masks
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Scene} scene - [description]
+ * @param {Phaser.GameObjects.GameObject} renderable - A renderable Game Object that uses a texture, such as a Sprite.
+ */
+var BitmapMask = new Class({
+
+    initialize:
+
+    function BitmapMask (scene, renderable)
+    {
+        var renderer = scene.sys.game.renderer;
+
+        /**
+         * A renderable Game Object that uses a texture, such as a Sprite.
+         *
+         * @name Phaser.Display.Masks.BitmapMask#bitmapMask
+         * @type {Phaser.GameObjects.GameObject}
+         * @since 3.0.0
+         */
+        this.bitmapMask = renderable;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Display.Masks.BitmapMask#maskTexture
+         * @type {WebGLTexture}
+         * @default null
+         * @since 3.0.0
+         */
+        this.maskTexture = null;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Display.Masks.BitmapMask#mainTexture
+         * @type {WebGLTexture}
+         * @default null
+         * @since 3.0.0
+         */
+        this.mainTexture = null;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Display.Masks.BitmapMask#dirty
+         * @type {boolean}
+         * @default true
+         * @since 3.0.0
+         */
+        this.dirty = true;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Display.Masks.BitmapMask#mainFramebuffer
+         * @type {WebGLFramebuffer}
+         * @since 3.0.0
+         */
+        this.mainFramebuffer = null;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Display.Masks.BitmapMask#maskFramebuffer
+         * @type {WebGLFramebuffer}
+         * @since 3.0.0
+         */
+        this.maskFramebuffer = null;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Display.Masks.BitmapMask#invertAlpha
+         * @type {boolean}
+         * @since 3.1.2
+         */
+        this.invertAlpha = false;
+
+        if (renderer && renderer.gl)
+        {
+            var width = renderer.width;
+            var height = renderer.height;
+            var pot = ((width & (width - 1)) === 0 && (height & (height - 1)) === 0);
+            var gl = renderer.gl;
+            var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
+            var filter = gl.LINEAR;
+
+            this.mainTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+            this.maskTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+            this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, false);
+            this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, false);
+
+            renderer.onContextRestored(function (renderer)
+            {
+                var width = renderer.width;
+                var height = renderer.height;
+                var pot = ((width & (width - 1)) === 0 && (height & (height - 1)) === 0);
+                var gl = renderer.gl;
+                var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
+                var filter = gl.LINEAR;
+
+                this.mainTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+                this.maskTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
+                this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, false);
+                this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, false);
+
+            }, this);
+        }
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Display.Masks.BitmapMask#setBitmap
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.GameObject} renderable - A renderable Game Object that uses a texture, such as a Sprite.
+     */
+    setBitmap: function (renderable)
+    {
+        this.bitmapMask = renderable;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Display.Masks.BitmapMask#preRenderWebGL
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - [description]
+     * @param {Phaser.GameObjects.GameObject} maskedObject - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to render to.
+     */
+    preRenderWebGL: function (renderer, maskedObject, camera)
+    {
+        renderer.pipelines.BitmapMaskPipeline.beginMask(this, maskedObject, camera);
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Display.Masks.BitmapMask#postRenderWebGL
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - [description]
+     */
+    postRenderWebGL: function (renderer)
+    {
+        renderer.pipelines.BitmapMaskPipeline.endMask(this);
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Display.Masks.BitmapMask#preRenderCanvas
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - [description]
+     * @param {Phaser.GameObjects.GameObject} mask - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to render to.
+     */
+    preRenderCanvas: function ()
+    {
+        // NOOP
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Display.Masks.BitmapMask#postRenderCanvas
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - [description]
+     */
+    postRenderCanvas: function ()
+    {
+        // NOOP
+    },
+
+    /**
+     * Destroys this BitmapMask and nulls any references it holds.
+     * 
+     * Note that if a Game Object is currently using this mask it will _not_ automatically detect you have destroyed it,
+     * so be sure to call `clearMask` on any Game Object using it, before destroying it.
+     *
+     * @method Phaser.Display.Masks.BitmapMask#destroy
+     * @since 3.7.0
+     */
+    destroy: function ()
+    {
+        this.bitmapMask = null;
+        this.mainTexture = null;
+        this.maskTexture = null;
+        this.mainFramebuffer = null;
+        this.maskFramebuffer = null;
+    }
+
+});
+
+module.exports = BitmapMask;
+
+
+/***/ }),
+/* 208 */
 /***/ (function(module, exports) {
 
 var g;
@@ -40081,14 +41870,14 @@ module.exports = g;
 
 
 /***/ }),
-/* 205 */,
-/* 206 */,
-/* 207 */,
-/* 208 */,
 /* 209 */,
 /* 210 */,
 /* 211 */,
-/* 212 */
+/* 212 */,
+/* 213 */,
+/* 214 */,
+/* 215 */,
+/* 216 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40097,7 +41886,7 @@ module.exports = g;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var quickselect = __webpack_require__(164);
+var quickselect = __webpack_require__(168);
 
 /**
  * @classdesc
@@ -40696,7 +42485,7 @@ function multiSelect (arr, left, right, n, compare)
 module.exports = rbush;
 
 /***/ }),
-/* 213 */
+/* 217 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40912,7 +42701,7 @@ module.exports = ProcessQueue;
 
 
 /***/ }),
-/* 214 */
+/* 218 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40922,13 +42711,28 @@ module.exports = ProcessQueue;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(17);
-var File = __webpack_require__(18);
+var CONST = __webpack_require__(18);
+var File = __webpack_require__(19);
 var FileTypesManager = __webpack_require__(7);
+var GetFastValue = __webpack_require__(1);
+var IsPlainObject = __webpack_require__(9);
+
+/**
+ * @typedef {object} Phaser.Loader.FileTypes.TextFileConfig
+ *
+ * @property {string} key - The key of the file. Must be unique within both the Loader and the Text Cache.
+ * @property {string} [url] - The absolute or relative URL to load the file from.
+ * @property {string} [extension='txt'] - The default file extension to use if no url is provided.
+ * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ */
 
 /**
  * @classdesc
- * [description]
+ * A single Text File suitable for loading by the Loader.
+ *
+ * These are created when you use the Phaser.Loader.LoaderPlugin#text method and are not typically created directly.
+ * 
+ * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#text.
  *
  * @class TextFile
  * @extends Phaser.Loader.File
@@ -40936,10 +42740,10 @@ var FileTypesManager = __webpack_require__(7);
  * @constructor
  * @since 3.0.0
  *
- * @param {string} key - [description]
- * @param {string} url - [description]
- * @param {string} path - [description]
- * @param {XHRSettingsObject} [xhrSettings] - [description]
+ * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
+ * @param {(string|Phaser.Loader.FileTypes.TextFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.txt".
+ * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var TextFile = new Class({
 
@@ -40947,50 +42751,117 @@ var TextFile = new Class({
 
     initialize:
 
-    function TextFile (key, url, path, xhrSettings)
+    function TextFile (loader, key, url, xhrSettings)
     {
+        var extension = 'txt';
+
+        if (IsPlainObject(key))
+        {
+            var config = key;
+
+            key = GetFastValue(config, 'key');
+            url = GetFastValue(config, 'url');
+            xhrSettings = GetFastValue(config, 'xhrSettings');
+            extension = GetFastValue(config, 'extension', extension);
+        }
+
         var fileConfig = {
             type: 'text',
-            extension: 'txt',
+            cache: loader.cacheManager.text,
+            extension: extension,
             responseType: 'text',
             key: key,
             url: url,
-            path: path,
             xhrSettings: xhrSettings
         };
 
-        File.call(this, fileConfig);
+        File.call(this, loader, fileConfig);
     },
 
-    onProcess: function (callback)
+    /**
+     * Called automatically by Loader.nextFile.
+     * This method controls what extra work this File does with its loaded data.
+     *
+     * @method Phaser.Loader.FileTypes.TextFile#onProcess
+     * @since 3.7.0
+     */
+    onProcess: function ()
     {
         this.state = CONST.FILE_PROCESSING;
 
         this.data = this.xhrLoader.responseText;
 
-        this.onComplete();
-
-        callback(this);
+        this.onProcessComplete();
     }
 
 });
 
 /**
- * Adds a Text file to the current load queue.
+ * Adds a Text file, or array of Text files, to the current load queue.
  *
- * Note: This method will only be available if the Text File type has been built into Phaser.
+ * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
+ * 
+ * ```javascript
+ * function preload ()
+ * {
+ *     this.load.text('story', files/IntroStory.txt');
+ * }
+ * ```
  *
- * The file is **not** loaded immediately after calling this method.
- * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
+ * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+ * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+ * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+ * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+ * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+ * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+ * loaded.
+ * 
+ * The key must be a unique String. It is used to add the file to the global Text Cache upon a successful load.
+ * The key should be unique both in terms of files being loaded and files already present in the Text Cache.
+ * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+ * then remove it from the Text Cache first, before loading a new one.
+ *
+ * Instead of passing arguments you can pass a configuration object, such as:
+ * 
+ * ```javascript
+ * this.load.text({
+ *     key: 'story',
+ *     url: 'files/IntroStory.txt'
+ * });
+ * ```
+ *
+ * See the documentation for `Phaser.Loader.FileTypes.TextFileConfig` for more details.
+ *
+ * Once the file has finished loading you can access it from its Cache using its key:
+ * 
+ * ```javascript
+ * this.load.image('story', 'files/IntroStory.txt');
+ * // and later in your game ...
+ * var data = this.cache.text.get('story');
+ * ```
+ *
+ * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+ * key. For example, if the prefix was `LEVEL1.` and the key was `Story` the final key will be `LEVEL1.Story` and
+ * this is what you would use to retrieve the text from the Text Cache.
+ *
+ * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+ *
+ * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "story"
+ * and no URL is given then the Loader will set the URL to be "story.txt". It will always add `.txt` as the extension, although
+ * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+ *
+ * Note: The ability to load this type of file will only be available if the Text File type has been built into Phaser.
+ * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#text
+ * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.0.0
  *
- * @param {string} key - [description]
- * @param {string} url - [description]
- * @param {XHRSettingsObject} [xhrSettings] - [description]
+ * @param {(string|Phaser.Loader.FileTypes.TextFileConfig|Phaser.Loader.FileTypes.TextFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.txt".
+ * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
- * @return {Phaser.Loader.LoaderPlugin} The Loader.
+ * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */
 FileTypesManager.register('text', function (key, url, xhrSettings)
 {
@@ -40999,15 +42870,14 @@ FileTypesManager.register('text', function (key, url, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new TextFile(key[i], url, this.path, xhrSettings));
+            this.addFile(new TextFile(this, key[i]));
         }
     }
     else
     {
-        this.addFile(new TextFile(key, url, this.path, xhrSettings));
+        this.addFile(new TextFile(this, key, url, xhrSettings));
     }
 
-    //  For method chaining
     return this;
 });
 
@@ -41015,7 +42885,7 @@ module.exports = TextFile;
 
 
 /***/ }),
-/* 215 */
+/* 219 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -41024,119 +42894,7 @@ module.exports = TextFile;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Class = __webpack_require__(0);
-var CONST = __webpack_require__(17);
-var File = __webpack_require__(18);
-var FileTypesManager = __webpack_require__(7);
-var GetFastValue = __webpack_require__(2);
-var ParseXML = __webpack_require__(262);
-
-/**
- * @classdesc
- * [description]
- *
- * @class XMLFile
- * @extends Phaser.Loader.File
- * @memberOf Phaser.Loader.FileTypes
- * @constructor
- * @since 3.0.0
- *
- * @param {string} key - [description]
- * @param {string} url - [description]
- * @param {string} path - [description]
- * @param {XHRSettingsObject} [xhrSettings] - [description]
- */
-var XMLFile = new Class({
-
-    Extends: File,
-
-    initialize:
-
-    function XMLFile (key, url, path, xhrSettings)
-    {
-        var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
-
-        var fileConfig = {
-            type: 'xml',
-            extension: GetFastValue(key, 'extension', 'xml'),
-            responseType: 'text',
-            key: fileKey,
-            url: GetFastValue(key, 'file', url),
-            path: path,
-            xhrSettings: GetFastValue(key, 'xhr', xhrSettings)
-        };
-
-        File.call(this, fileConfig);
-    },
-
-    onProcess: function (callback)
-    {
-        this.state = CONST.FILE_PROCESSING;
-
-        this.data = ParseXML(this.xhrLoader.responseText);
-
-        if (this.data === null)
-        {
-            throw new Error('XMLFile: Invalid XML');
-        }
-
-        this.onComplete();
-
-        callback(this);
-    }
-
-});
-
-/**
- * Adds an XML file to the current load queue.
- *
- * Note: This method will only be available if the XML File type has been built into Phaser.
- *
- * The file is **not** loaded immediately after calling this method.
- * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
- *
- * @method Phaser.Loader.LoaderPlugin#xml
- * @since 3.0.0
- *
- * @param {string} key - [description]
- * @param {string} url - [description]
- * @param {XHRSettingsObject} [xhrSettings] - [description]
- *
- * @return {Phaser.Loader.LoaderPlugin} The Loader.
- */
-FileTypesManager.register('xml', function (key, url, xhrSettings)
-{
-    if (Array.isArray(key))
-    {
-        for (var i = 0; i < key.length; i++)
-        {
-            //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new XMLFile(key[i], url, this.path, xhrSettings));
-        }
-    }
-    else
-    {
-        this.addFile(new XMLFile(key, url, this.path, xhrSettings));
-    }
-
-    //  For method chaining
-    return this;
-});
-
-module.exports = XMLFile;
-
-
-/***/ }),
-/* 216 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var MergeXHRSettings = __webpack_require__(116);
+var MergeXHRSettings = __webpack_require__(120);
 
 /**
  * Creates a new XMLHttpRequest (xhr) object based on the given File and XHRSettings
@@ -41167,6 +42925,11 @@ var XHRLoader = function (file, globalXHRSettings)
         xhr.setRequestHeader(config.header, config.headerValue);
     }
 
+    if (config.requestedWith)
+    {
+        xhr.setRequestHeader('X-Requested-With', config.requestedWith);
+    }
+
     if (config.overrideMimeType)
     {
         xhr.overrideMimeType(config.overrideMimeType);
@@ -41174,7 +42937,7 @@ var XHRLoader = function (file, globalXHRSettings)
 
     // After a successful request, the xhr.response property will contain the requested data as a DOMString, ArrayBuffer, Blob, or Document (depending on what was set for responseType.)
 
-    xhr.onload = file.onLoad.bind(file);
+    xhr.onload = file.onLoad.bind(file, xhr);
     xhr.onerror = file.onError.bind(file);
     xhr.onprogress = file.onProgress.bind(file);
 
@@ -41190,8 +42953,8 @@ module.exports = XHRLoader;
 
 
 /***/ }),
-/* 217 */,
-/* 218 */
+/* 220 */,
+/* 221 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -41200,7 +42963,7 @@ module.exports = XHRLoader;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Length = __webpack_require__(67);
+var Length = __webpack_require__(70);
 var Point = __webpack_require__(5);
 
 /**
@@ -41284,7 +43047,7 @@ module.exports = GetPoints;
 
 
 /***/ }),
-/* 219 */
+/* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -41294,7 +43057,7 @@ module.exports = GetPoints;
  */
 
 var Point = __webpack_require__(5);
-var Length = __webpack_require__(67);
+var Length = __webpack_require__(70);
 
 //  Position is a value between 0 and 1
 /**
@@ -41372,15 +43135,15 @@ module.exports = GetPoint;
 
 
 /***/ }),
-/* 220 */,
-/* 221 */,
-/* 222 */,
 /* 223 */,
 /* 224 */,
 /* 225 */,
 /* 226 */,
 /* 227 */,
-/* 228 */
+/* 228 */,
+/* 229 */,
+/* 230 */,
+/* 231 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -41393,11 +43156,11 @@ module.exports = GetPoint;
  * @namespace Phaser.Math.Easing.Stepped
  */
 
-module.exports = __webpack_require__(398);
+module.exports = __webpack_require__(400);
 
 
 /***/ }),
-/* 229 */
+/* 232 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -41412,78 +43175,9 @@ module.exports = __webpack_require__(398);
 
 module.exports = {
 
-    In: __webpack_require__(401),
-    Out: __webpack_require__(400),
-    InOut: __webpack_require__(399)
-
-};
-
-
-/***/ }),
-/* 230 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * @namespace Phaser.Math.Easing.Quintic
- */
-
-module.exports = {
-
-    In: __webpack_require__(404),
-    Out: __webpack_require__(403),
-    InOut: __webpack_require__(402)
-
-};
-
-
-/***/ }),
-/* 231 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * @namespace Phaser.Math.Easing.Quartic
- */
-
-module.exports = {
-
-    In: __webpack_require__(407),
-    Out: __webpack_require__(406),
-    InOut: __webpack_require__(405)
-
-};
-
-
-/***/ }),
-/* 232 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * @namespace Phaser.Math.Easing.Quadratic
- */
-
-module.exports = {
-
-    In: __webpack_require__(410),
-    Out: __webpack_require__(409),
-    InOut: __webpack_require__(408)
+    In: __webpack_require__(403),
+    Out: __webpack_require__(402),
+    InOut: __webpack_require__(401)
 
 };
 
@@ -41499,10 +43193,16 @@ module.exports = {
  */
 
 /**
- * @namespace Phaser.Math.Easing.Linear
+ * @namespace Phaser.Math.Easing.Quintic
  */
 
-module.exports = __webpack_require__(411);
+module.exports = {
+
+    In: __webpack_require__(406),
+    Out: __webpack_require__(405),
+    InOut: __webpack_require__(404)
+
+};
 
 
 /***/ }),
@@ -41516,14 +43216,14 @@ module.exports = __webpack_require__(411);
  */
 
 /**
- * @namespace Phaser.Math.Easing.Expo
+ * @namespace Phaser.Math.Easing.Quartic
  */
 
 module.exports = {
 
-    In: __webpack_require__(414),
-    Out: __webpack_require__(413),
-    InOut: __webpack_require__(412)
+    In: __webpack_require__(409),
+    Out: __webpack_require__(408),
+    InOut: __webpack_require__(407)
 
 };
 
@@ -41539,14 +43239,14 @@ module.exports = {
  */
 
 /**
- * @namespace Phaser.Math.Easing.Elastic
+ * @namespace Phaser.Math.Easing.Quadratic
  */
 
 module.exports = {
 
-    In: __webpack_require__(417),
-    Out: __webpack_require__(416),
-    InOut: __webpack_require__(415)
+    In: __webpack_require__(412),
+    Out: __webpack_require__(411),
+    InOut: __webpack_require__(410)
 
 };
 
@@ -41562,16 +43262,10 @@ module.exports = {
  */
 
 /**
- * @namespace Phaser.Math.Easing.Cubic
+ * @namespace Phaser.Math.Easing.Linear
  */
 
-module.exports = {
-
-    In: __webpack_require__(420),
-    Out: __webpack_require__(419),
-    InOut: __webpack_require__(418)
-
-};
+module.exports = __webpack_require__(413);
 
 
 /***/ }),
@@ -41585,14 +43279,14 @@ module.exports = {
  */
 
 /**
- * @namespace Phaser.Math.Easing.Circular
+ * @namespace Phaser.Math.Easing.Expo
  */
 
 module.exports = {
 
-    In: __webpack_require__(423),
-    Out: __webpack_require__(422),
-    InOut: __webpack_require__(421)
+    In: __webpack_require__(416),
+    Out: __webpack_require__(415),
+    InOut: __webpack_require__(414)
 
 };
 
@@ -41608,14 +43302,14 @@ module.exports = {
  */
 
 /**
- * @namespace Phaser.Math.Easing.Bounce
+ * @namespace Phaser.Math.Easing.Elastic
  */
 
 module.exports = {
 
-    In: __webpack_require__(426),
-    Out: __webpack_require__(425),
-    InOut: __webpack_require__(424)
+    In: __webpack_require__(419),
+    Out: __webpack_require__(418),
+    InOut: __webpack_require__(417)
 
 };
 
@@ -41631,21 +43325,21 @@ module.exports = {
  */
 
 /**
- * @namespace Phaser.Math.Easing.Back
+ * @namespace Phaser.Math.Easing.Cubic
  */
 
 module.exports = {
 
-    In: __webpack_require__(429),
-    Out: __webpack_require__(428),
-    InOut: __webpack_require__(427)
+    In: __webpack_require__(422),
+    Out: __webpack_require__(421),
+    InOut: __webpack_require__(420)
 
 };
 
 
 /***/ }),
 /* 240 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
@@ -41654,22 +43348,16 @@ module.exports = {
  */
 
 /**
- * [description]
- *
- * @function Phaser.Math.FloatBetween
- * @since 3.0.0
- *
- * @param {float} min - [description]
- * @param {float} max - [description]
- *
- * @return {float} [description]
+ * @namespace Phaser.Math.Easing.Circular
  */
-var FloatBetween = function (min, max)
-{
-    return Math.random() * (max - min) + min;
-};
 
-module.exports = FloatBetween;
+module.exports = {
+
+    In: __webpack_require__(425),
+    Out: __webpack_require__(424),
+    InOut: __webpack_require__(423)
+
+};
 
 
 /***/ }),
@@ -41682,33 +43370,108 @@ module.exports = FloatBetween;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Ellipse = __webpack_require__(106);
+/**
+ * @namespace Phaser.Math.Easing.Bounce
+ */
 
-Ellipse.Area = __webpack_require__(449);
-Ellipse.Circumference = __webpack_require__(161);
-Ellipse.CircumferencePoint = __webpack_require__(105);
-Ellipse.Clone = __webpack_require__(448);
-Ellipse.Contains = __webpack_require__(51);
-Ellipse.ContainsPoint = __webpack_require__(447);
-Ellipse.ContainsRect = __webpack_require__(446);
-Ellipse.CopyFrom = __webpack_require__(445);
-Ellipse.Equals = __webpack_require__(444);
-Ellipse.GetBounds = __webpack_require__(443);
-Ellipse.GetPoint = __webpack_require__(163);
-Ellipse.GetPoints = __webpack_require__(162);
-Ellipse.Offset = __webpack_require__(442);
-Ellipse.OffsetPoint = __webpack_require__(441);
-Ellipse.Random = __webpack_require__(126);
+module.exports = {
+
+    In: __webpack_require__(428),
+    Out: __webpack_require__(427),
+    InOut: __webpack_require__(426)
+
+};
+
+
+/***/ }),
+/* 242 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Easing.Back
+ */
+
+module.exports = {
+
+    In: __webpack_require__(431),
+    Out: __webpack_require__(430),
+    InOut: __webpack_require__(429)
+
+};
+
+
+/***/ }),
+/* 243 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Generate a random floating point number between the two given bounds, minimum inclusive, maximum exclusive.
+ *
+ * @function Phaser.Math.FloatBetween
+ * @since 3.0.0
+ *
+ * @param {float} min - The lower bound for the float, inclusive.
+ * @param {float} max - The upper bound for the float exclusive.
+ *
+ * @return {float} A random float within the given range.
+ */
+var FloatBetween = function (min, max)
+{
+    return Math.random() * (max - min) + min;
+};
+
+module.exports = FloatBetween;
+
+
+/***/ }),
+/* 244 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Ellipse = __webpack_require__(109);
+
+Ellipse.Area = __webpack_require__(451);
+Ellipse.Circumference = __webpack_require__(165);
+Ellipse.CircumferencePoint = __webpack_require__(108);
+Ellipse.Clone = __webpack_require__(450);
+Ellipse.Contains = __webpack_require__(53);
+Ellipse.ContainsPoint = __webpack_require__(449);
+Ellipse.ContainsRect = __webpack_require__(448);
+Ellipse.CopyFrom = __webpack_require__(447);
+Ellipse.Equals = __webpack_require__(446);
+Ellipse.GetBounds = __webpack_require__(445);
+Ellipse.GetPoint = __webpack_require__(167);
+Ellipse.GetPoints = __webpack_require__(166);
+Ellipse.Offset = __webpack_require__(444);
+Ellipse.OffsetPoint = __webpack_require__(443);
+Ellipse.Random = __webpack_require__(129);
 
 module.exports = Ellipse;
 
 
 /***/ }),
-/* 242 */,
-/* 243 */,
-/* 244 */,
 /* 245 */,
-/* 246 */
+/* 246 */,
+/* 247 */,
+/* 248 */,
+/* 249 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -41718,7 +43481,7 @@ module.exports = Ellipse;
  */
 
 var GetValue = __webpack_require__(4);
-var Shuffle = __webpack_require__(91);
+var Shuffle = __webpack_require__(94);
 
 var BuildChunk = function (a, b, qty)
 {
@@ -41848,7 +43611,7 @@ module.exports = Range;
 
 
 /***/ }),
-/* 247 */
+/* 250 */
 /***/ (function(module, exports) {
 
 /**
@@ -41858,14 +43621,14 @@ module.exports = Range;
  */
 
 /**
- * [description]
+ * Round a given number so it is further away from zero. That is, positive numbers are rounded up, and negative numbers are rounded down.
  *
  * @function Phaser.Math.RoundAwayFromZero
  * @since 3.0.0
  *
- * @param {number} value - [description]
+ * @param {number} value - The number to round.
  *
- * @return {number} [description]
+ * @return {number} The rounded number, rounded away from zero.
  */
 var RoundAwayFromZero = function (value)
 {
@@ -41877,7 +43640,7 @@ module.exports = RoundAwayFromZero;
 
 
 /***/ }),
-/* 248 */
+/* 251 */
 /***/ (function(module, exports) {
 
 /**
@@ -41914,7 +43677,7 @@ module.exports = UppercaseFirst;
 
 
 /***/ }),
-/* 249 */
+/* 252 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -41980,7 +43743,7 @@ module.exports = TransformXY;
 
 
 /***/ }),
-/* 250 */
+/* 253 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42655,7 +44418,7 @@ earcut.flatten = function (data) {
 };
 
 /***/ }),
-/* 251 */
+/* 254 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -42666,13 +44429,13 @@ earcut.flatten = function (data) {
  */
 
 var Class = __webpack_require__(0);
-var Commands = __webpack_require__(111);
-var Earcut = __webpack_require__(250);
-var ModelViewProjection = __webpack_require__(192);
-var ShaderSourceFS = __webpack_require__(512);
-var ShaderSourceVS = __webpack_require__(511);
-var Utils = __webpack_require__(25);
-var WebGLPipeline = __webpack_require__(80);
+var Commands = __webpack_require__(115);
+var Earcut = __webpack_require__(253);
+var ModelViewProjection = __webpack_require__(194);
+var ShaderSourceFS = __webpack_require__(515);
+var ShaderSourceVS = __webpack_require__(514);
+var Utils = __webpack_require__(27);
+var WebGLPipeline = __webpack_require__(82);
 
 var Point = function (x, y, width, rgb, alpha)
 {
@@ -42697,7 +44460,17 @@ var pathArray = [];
 
 /**
  * @classdesc
- * [description]
+ * The FlatTintPipeline is used for rendering flat colored shapes. 
+ * Mostly used by the Graphics game object.
+ * The config properties are:
+ * - game: Current game instance.
+ * - renderer: Current WebGL renderer.
+ * - topology: This indicates how the primitives are rendered. The default value is GL_TRIANGLES.
+ *              Here is the full list of rendering primitives (https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Constants).
+ * - vertShader: Source for vertex shader as a string.
+ * - fragShader: Source for fragment shader as a string.
+ * - vertexCapacity: The amount of vertices that shall be allocated
+ * - vertexSize: The size of a single vertex in bytes.
  *
  * @class FlatTintPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
@@ -42705,7 +44478,7 @@ var pathArray = [];
  * @constructor
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {object} config - Used for overriding shader an pipeline properties if extending this pipeline.
  */
 var FlatTintPipeline = new Class({
 
@@ -42751,7 +44524,7 @@ var FlatTintPipeline = new Class({
         });
 
         /**
-         * [description]
+         * Float32 view of the array buffer containing the pipeline's vertices.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#vertexViewF32
          * @type {Float32Array}
@@ -42760,7 +44533,7 @@ var FlatTintPipeline = new Class({
         this.vertexViewF32 = new Float32Array(this.vertexData);
 
         /**
-         * [description]
+         * Uint32 view of the array buffer containing the pipeline's vertices.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#vertexViewU32
          * @type {Uint32Array}
@@ -42769,7 +44542,7 @@ var FlatTintPipeline = new Class({
         this.vertexViewU32 = new Uint32Array(this.vertexData);
 
         /**
-         * [description]
+         * Used internally to draw triangles
          *
          * @name Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#tempTriangle
          * @type {array}
@@ -42783,7 +44556,7 @@ var FlatTintPipeline = new Class({
         ];
 
         /**
-         * [description]
+         * Used internally by for triangulating a polyong
          *
          * @name Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#polygonCache
          * @type {array}
@@ -42832,29 +44605,29 @@ var FlatTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Pushes a rectangle into the vertex batch
      *
      * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchFillRect
      * @since 3.0.0
      *
-     * @param {float} srcX - [description]
-     * @param {float} srcY - [description]
-     * @param {float} srcScaleX - [description]
-     * @param {float} srcScaleY - [description]
-     * @param {float} srcRotation - [description]
-     * @param {float} x - [description]
-     * @param {float} y - [description]
-     * @param {float} width - [description]
-     * @param {float} height - [description]
-     * @param {integer} fillColor - [description]
-     * @param {float} fillAlpha - [description]
-     * @param {float} a1 - [description]
-     * @param {float} b1 - [description]
-     * @param {float} c1 - [description]
-     * @param {float} d1 - [description]
-     * @param {float} e1 - [description]
-     * @param {float} f1 - [description]
-     * @param {Float32Array} currentMatrix - [description]
+     * @param {float} srcX - Graphics horizontal component for translation
+     * @param {float} srcY - Graphics vertical component for translation
+     * @param {float} srcScaleX - Graphics horizontal component for scale
+     * @param {float} srcScaleY - Graphics vertical component for scale
+     * @param {float} srcRotation - Graphics rotation
+     * @param {float} x - Horiztonal top left coordinate of the rectangle
+     * @param {float} y - Vertical top left coordinate of the rectangle
+     * @param {float} width - Width of the rectangle
+     * @param {float} height - Height of the rectangle
+     * @param {integer} fillColor - RGB color packed as a uint
+     * @param {float} fillAlpha - Alpha represented as float
+     * @param {float} a1 - Matrix stack top a component
+     * @param {float} b1 - Matrix stack top b component
+     * @param {float} c1 - Matrix stack top c component
+     * @param {float} d1 - Matrix stack top d component
+     * @param {float} e1 - Matrix stack top e component
+     * @param {float} f1 - Matrix stack top f component
+     * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
     batchFillRect: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, x, y, width, height, fillColor, fillAlpha, a1, b1, c1, d1, e1, f1, currentMatrix)
     {
@@ -42920,26 +44693,26 @@ var FlatTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchFillTriangle
      * @since 3.0.0
      *
-     * @param {float} srcX - [description]
-     * @param {float} srcY - [description]
-     * @param {float} srcScaleX - [description]
-     * @param {float} srcScaleY - [description]
-     * @param {float} srcRotation - [description]
-     * @param {float} x0 - [description]
-     * @param {float} y0 - [description]
-     * @param {float} x1 - [description]
-     * @param {float} y1 - [description]
-     * @param {float} x2 - [description]
-     * @param {float} y2 - [description]
-     * @param {integer} fillColor - [description]
-     * @param {float} fillAlpha - [description]
-     * @param {float} a1 - [description]
-     * @param {float} b1 - [description]
-     * @param {float} c1 - [description]
-     * @param {float} d1 - [description]
-     * @param {float} e1 - [description]
-     * @param {float} f1 - [description]
-     * @param {Float32Array} currentMatrix - [description]
+     * @param {float} srcX - Graphics horizontal component for translation
+     * @param {float} srcY - Graphics vertical component for translation
+     * @param {float} srcScaleX - Graphics horizontal component for scale
+     * @param {float} srcScaleY - Graphics vertical component for scale
+     * @param {float} srcRotation - Graphics rotation
+     * @param {float} x0 - Point 0 x coordinate
+     * @param {float} y0 - Point 0 y coordinate
+     * @param {float} x1 - Point 1 x coordinate
+     * @param {float} y1 - Point 1 y coordinate
+     * @param {float} x2 - Point 2 x coordinate
+     * @param {float} y2 - Point 2 y coordinate
+     * @param {integer} fillColor - RGB color packed as a uint
+     * @param {float} fillAlpha - Alpha represented as float
+     * @param {float} a1 - Matrix stack top a component
+     * @param {float} b1 - Matrix stack top b component
+     * @param {float} c1 - Matrix stack top c component
+     * @param {float} d1 - Matrix stack top d component
+     * @param {float} e1 - Matrix stack top e component
+     * @param {float} f1 - Matrix stack top f component
+     * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
     batchFillTriangle: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, x0, y0, x1, y1, x2, y2, fillColor, fillAlpha, a1, b1, c1, d1, e1, f1, currentMatrix)
     {
@@ -42992,27 +44765,27 @@ var FlatTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchStrokeTriangle
      * @since 3.0.0
      *
-     * @param {float} srcX - [description]
-     * @param {float} srcY - [description]
-     * @param {float} srcScaleX - [description]
-     * @param {float} srcScaleY - [description]
-     * @param {float} srcRotation - [description]
+     * @param {float} srcX - Graphics horizontal component for translation
+     * @param {float} srcY - Graphics vertical component for translation
+     * @param {float} srcScaleX - Graphics horizontal component for scale
+     * @param {float} srcScaleY - Graphics vertical component for scale
+     * @param {float} srcRotation - Graphics rotation
      * @param {float} x0 - [description]
      * @param {float} y0 - [description]
      * @param {float} x1 - [description]
      * @param {float} y1 - [description]
      * @param {float} x2 - [description]
      * @param {float} y2 - [description]
-     * @param {float} lineWidth - [description]
-     * @param {integer} lineColor - [description]
-     * @param {float} lineAlpha - [description]
-     * @param {float} a - [description]
-     * @param {float} b - [description]
-     * @param {float} c - [description]
-     * @param {float} d - [description]
-     * @param {float} e - [description]
-     * @param {float} f - [description]
-     * @param {Float32Array} currentMatrix - [description]
+     * @param {float} lineWidth - Size of the line as a float value
+     * @param {integer} lineColor - RGB color packed as a uint
+     * @param {float} lineAlpha - Alpha represented as float
+     * @param {float} a - Matrix stack top a component
+     * @param {float} b - Matrix stack top b component
+     * @param {float} c - Matrix stack top c component
+     * @param {float} d - Matrix stack top d component
+     * @param {float} e - Matrix stack top e component
+     * @param {float} f - Matrix stack top f component
+     * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
     batchStrokeTriangle: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, x0, y0, x1, y1, x2, y2, lineWidth, lineColor, lineAlpha, a, b, c, d, e, f, currentMatrix)
     {
@@ -43054,21 +44827,21 @@ var FlatTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchFillPath
      * @since 3.0.0
      *
-     * @param {float} srcX - [description]
-     * @param {float} srcY - [description]
-     * @param {float} srcScaleX - [description]
-     * @param {float} srcScaleY - [description]
-     * @param {float} srcRotation - [description]
-     * @param {float} path - [description]
-     * @param {integer} fillColor - [description]
-     * @param {float} fillAlpha - [description]
-     * @param {float} a1 - [description]
-     * @param {float} b1 - [description]
-     * @param {float} c1 - [description]
-     * @param {float} d1 - [description]
-     * @param {float} e1 - [description]
-     * @param {float} f1 - [description]
-     * @param {Float32Array} currentMatrix - [description]
+     * @param {float} srcX - Graphics horizontal component for translation
+     * @param {float} srcY - Graphics vertical component for translation
+     * @param {float} srcScaleX - Graphics horizontal component for scale
+     * @param {float} srcScaleY - Graphics vertical component for scale
+     * @param {float} srcRotation - Graphics rotation
+     * @param {float} path - Collection of points that represent the path
+     * @param {integer} fillColor - RGB color packed as a uint
+     * @param {float} fillAlpha - Alpha represented as float
+     * @param {float} a1 - Matrix stack top a component
+     * @param {float} b1 - Matrix stack top b component
+     * @param {float} c1 - Matrix stack top c component
+     * @param {float} d1 - Matrix stack top d component
+     * @param {float} e1 - Matrix stack top e component
+     * @param {float} f1 - Matrix stack top f component
+     * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
     batchFillPath: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, path, fillColor, fillAlpha, a1, b1, c1, d1, e1, f1, currentMatrix)
     {
@@ -43156,23 +44929,23 @@ var FlatTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchStrokePath
      * @since 3.0.0
      *
-     * @param {float} srcX - [description]
-     * @param {float} srcY - [description]
-     * @param {float} srcScaleX - [description]
-     * @param {float} srcScaleY - [description]
-     * @param {float} srcRotation - [description]
+     * @param {float} srcX - Graphics horizontal component for translation
+     * @param {float} srcY - Graphics vertical component for translation
+     * @param {float} srcScaleX - Graphics horizontal component for scale
+     * @param {float} srcScaleY - Graphics vertical component for scale
+     * @param {float} srcRotation - Graphics rotation
      * @param {array} path - [description]
      * @param {float} lineWidth - [description]
-     * @param {integer} lineColor - [description]
-     * @param {float} lineAlpha - [description]
-     * @param {float} a - [description]
-     * @param {float} b - [description]
-     * @param {float} c - [description]
-     * @param {float} d - [description]
-     * @param {float} e - [description]
-     * @param {float} f - [description]
-     * @param {boolean} isLastPath - [description]
-     * @param {Float32Array} currentMatrix - [description]
+     * @param {integer} lineColor - RGB color packed as a uint
+     * @param {float} lineAlpha - Alpha represented as float
+     * @param {float} a - Matrix stack top a component
+     * @param {float} b - Matrix stack top b component
+     * @param {float} c - Matrix stack top c component
+     * @param {float} d - Matrix stack top d component
+     * @param {float} e - Matrix stack top e component
+     * @param {float} f - Matrix stack top f component
+     * @param {boolean} isLastPath - Indicates if the path should be closed
+     * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
     batchStrokePath: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, path, lineWidth, lineColor, lineAlpha, a, b, c, d, e, f, isLastPath, currentMatrix)
     {
@@ -43249,27 +45022,27 @@ var FlatTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchLine
      * @since 3.0.0
      *
-     * @param {float} srcX - [description]
-     * @param {float} srcY - [description]
-     * @param {float} srcScaleX - [description]
-     * @param {float} srcScaleY - [description]
-     * @param {float} srcRotation - [description]
-     * @param {float} ax - [description]
-     * @param {float} ay - [description]
-     * @param {float} bx - [description]
-     * @param {float} by - [description]
-     * @param {float} aLineWidth - [description]
-     * @param {float} bLineWidth - [description]
-     * @param {integer} aLineColor - [description]
-     * @param {integer} bLineColor - [description]
-     * @param {float} lineAlpha - [description]
-     * @param {float} a1 - [description]
-     * @param {float} b1 - [description]
-     * @param {float} c1 - [description]
-     * @param {float} d1 - [description]
-     * @param {float} e1 - [description]
-     * @param {float} f1 - [description]
-     * @param {Float32Array} currentMatrix - [description]
+     * @param {float} srcX - Graphics horizontal component for translation
+     * @param {float} srcY - Graphics vertical component for translation
+     * @param {float} srcScaleX - Graphics horizontal component for scale
+     * @param {float} srcScaleY - Graphics vertical component for scale
+     * @param {float} srcRotation - Graphics rotation
+     * @param {float} ax - X coordinate to the start of the line
+     * @param {float} ay - Y coordinate to the start of the line
+     * @param {float} bx - X coordinate to the end of the line
+     * @param {float} by - Y coordinate to the end of the line
+     * @param {float} aLineWidth - Width of the start of the line
+     * @param {float} bLineWidth - Width of the end of the line
+     * @param {integer} aLineColor - RGB color packed as a uint
+     * @param {integer} bLineColor - RGB color packed as a uint
+     * @param {float} lineAlpha - Alpha represented as float
+     * @param {float} a1 - Matrix stack top a component
+     * @param {float} b1 - Matrix stack top b component
+     * @param {float} c1 - Matrix stack top c component
+     * @param {float} d1 - Matrix stack top d component
+     * @param {float} e1 - Matrix stack top e component
+     * @param {float} f1 - Matrix stack top f component
+     * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
     batchLine: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, ax, ay, bx, by, aLineWidth, bLineWidth, aLineColor, bLineColor, lineAlpha, a1, b1, c1, d1, e1, f1, currentMatrix)
     {
@@ -43927,7 +45700,7 @@ module.exports = FlatTintPipeline;
 
 
 /***/ }),
-/* 252 */
+/* 255 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -43938,13 +45711,23 @@ module.exports = FlatTintPipeline;
  */
 
 var Class = __webpack_require__(0);
-var ShaderSourceFS = __webpack_require__(514);
-var ShaderSourceVS = __webpack_require__(513);
-var WebGLPipeline = __webpack_require__(80);
+var ShaderSourceFS = __webpack_require__(517);
+var ShaderSourceVS = __webpack_require__(516);
+var WebGLPipeline = __webpack_require__(82);
 
 /**
  * @classdesc
- * [description]
+ * BitmapMaskPipeline handles all bitmap masking rendering in WebGL. It works by using 
+ * sampling two texture on the fragment shader and using the fragment's alpha to clip the region.
+ * The config properties are:
+ * - game: Current game instance.
+ * - renderer: Current WebGL renderer.
+ * - topology: This indicates how the primitives are rendered. The default value is GL_TRIANGLES.
+ *              Here is the full list of rendering primitives (https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Constants).
+ * - vertShader: Source for vertex shader as a string.
+ * - fragShader: Source for fragment shader as a string.
+ * - vertexCapacity: The amount of vertices that shall be allocated
+ * - vertexSize: The size of a single vertex in bytes.
  *
  * @class BitmapMaskPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
@@ -43952,7 +45735,7 @@ var WebGLPipeline = __webpack_require__(80);
  * @constructor
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {object} config - Used for overriding shader an pipeline properties if extending this pipeline.
  */
 var BitmapMaskPipeline = new Class({
 
@@ -43990,7 +45773,7 @@ var BitmapMaskPipeline = new Class({
         });
 
         /**
-         * [description]
+         * Float32 view of the array buffer containing the pipeline's vertices.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#vertexViewF32
          * @type {Float32Array}
@@ -43999,7 +45782,7 @@ var BitmapMaskPipeline = new Class({
         this.vertexViewF32 = new Float32Array(this.vertexData);
 
         /**
-         * [description]
+         * Size of the batch.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#maxQuads
          * @type {number}
@@ -44009,7 +45792,8 @@ var BitmapMaskPipeline = new Class({
         this.maxQuads = 1;
 
         /**
-         * [description]
+         * Dirty flag to check if resolution properties need to be updated on the 
+         * masking shader.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#resolutionDirty
          * @type {boolean}
@@ -44020,7 +45804,8 @@ var BitmapMaskPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Called every time the pipeline needs to be used.
+     * It binds all necessary resources.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#onBind
      * @since 3.0.0
@@ -44065,13 +45850,14 @@ var BitmapMaskPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Binds necessary resources and renders the mask to a separated framebuffer.
+     * The framebuffer for the masked object is also bound for further use.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#beginMask
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} mask - [description]
-     * @param {Phaser.GameObjects.GameObject} maskedObject - [description]
+     * @param {Phaser.GameObjects.GameObject} mask - GameObject used as mask.
+     * @param {Phaser.GameObjects.GameObject} maskedObject - GameObject masked by the mask GameObject.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      */
     beginMask: function (mask, maskedObject, camera)
@@ -44102,12 +45888,15 @@ var BitmapMaskPipeline = new Class({
     },
 
     /**
-     * [description]
+     * The masked game object's framebuffer is unbound and it's texture 
+     * is bound together with the mask texture and the mask shader and 
+     * a draw call with a single quad is processed. Here is where the
+     * masking effect is applied.  
      *
      * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#endMask
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} mask - [description]
+     * @param {Phaser.GameObjects.GameObject} mask - GameObject used as a mask.
      */
     endMask: function (mask)
     {
@@ -44138,7 +45927,7 @@ module.exports = BitmapMaskPipeline;
 
 
 /***/ }),
-/* 253 */
+/* 256 */
 /***/ (function(module, exports) {
 
 /**
@@ -44207,7 +45996,7 @@ module.exports = WebGLSnapshot;
 
 
 /***/ }),
-/* 254 */
+/* 257 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44218,16 +46007,17 @@ module.exports = WebGLSnapshot;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(19);
-var IsSizePowerOfTwo = __webpack_require__(121);
-var Utils = __webpack_require__(25);
-var WebGLSnapshot = __webpack_require__(253);
+var CONST = __webpack_require__(20);
+var IsSizePowerOfTwo = __webpack_require__(83);
+var SpliceOne = __webpack_require__(55);
+var Utils = __webpack_require__(27);
+var WebGLSnapshot = __webpack_require__(256);
 
 // Default Pipelines
-var BitmapMaskPipeline = __webpack_require__(252);
-var FlatTintPipeline = __webpack_require__(251);
-var ForwardDiffuseLightPipeline = __webpack_require__(141);
-var TextureTintPipeline = __webpack_require__(120);
+var BitmapMaskPipeline = __webpack_require__(255);
+var FlatTintPipeline = __webpack_require__(254);
+var ForwardDiffuseLightPipeline = __webpack_require__(145);
+var TextureTintPipeline = __webpack_require__(124);
 
 /**
  * @callback WebGLContextCallback
@@ -44245,7 +46035,13 @@ var TextureTintPipeline = __webpack_require__(120);
 
 /**
  * @classdesc
- * [description]
+ * WebGLRenderer is a class that contains the needed functionality to keep the
+ * WebGLRenderingContext state clean. The main idea of the WebGLRenderer is to keep track of
+ * any context change that happens for WebGL rendering inside of Phaser. This means
+ * if raw webgl functions are called outside the WebGLRenderer of the Phaser WebGL
+ * rendering ecosystem they might pollute the current WebGLRenderingContext state producing
+ * unexpected behaviour. It's recommended that WebGL interaction is done through 
+ * WebGLRenderer and/or WebGLPipeline.
  *
  * @class WebGLRenderer
  * @memberOf Phaser.Renderer.WebGL
@@ -44367,7 +46163,7 @@ var WebGLRenderer = new Class({
         this.blendModes = [];
 
         /**
-         * [description]
+         * Keeps track of any WebGLTexture created with the current WebGLRenderingContext
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#nativeTextures
          * @type {array}
@@ -44387,7 +46183,7 @@ var WebGLRenderer = new Class({
         this.contextLost = false;
 
         /**
-         * [description]
+         * This object will store all pipelines created through addPipeline
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#pipelines
          * @type {object}
@@ -44412,7 +46208,7 @@ var WebGLRenderer = new Class({
         // Internal Renderer State (Textures, Framebuffers, Pipelines, Buffers, etc)
 
         /**
-         * [description]
+         * Cached value for the last texture unit that was used
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentActiveTextureUnit
          * @type {integer}
@@ -44421,7 +46217,7 @@ var WebGLRenderer = new Class({
         this.currentActiveTextureUnit = 0;
 
         /**
-         * [description]
+         * An array of the last texture handles that were bound to the WebGLRenderingContext
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentTextures
          * @type {array}
@@ -44430,7 +46226,7 @@ var WebGLRenderer = new Class({
         this.currentTextures = new Array(16);
 
         /**
-         * [description]
+         * Current framebuffer in use
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentFramebuffer
          * @type {WebGLFramebuffer}
@@ -44440,7 +46236,7 @@ var WebGLRenderer = new Class({
         this.currentFramebuffer = null;
 
         /**
-         * [description]
+         * Current WebGLPipeline in use
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentPipeline
          * @type {Phaser.Renderer.WebGL.WebGLPipeline}
@@ -44450,7 +46246,7 @@ var WebGLRenderer = new Class({
         this.currentPipeline = null;
 
         /**
-         * [description]
+         * Current WebGLProgram in use
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentProgram
          * @type {WebGLProgram}
@@ -44460,7 +46256,7 @@ var WebGLRenderer = new Class({
         this.currentProgram = null;
 
         /**
-         * [description]
+         * Current WebGLBuffer (Vertex buffer) in use
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentVertexBuffer
          * @type {WebGLBuffer}
@@ -44470,7 +46266,7 @@ var WebGLRenderer = new Class({
         this.currentVertexBuffer = null;
 
         /**
-         * [description]
+         * Current WebGLBuffer (Index buffer) in use
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentIndexBuffer
          * @type {WebGLBuffer}
@@ -44480,7 +46276,7 @@ var WebGLRenderer = new Class({
         this.currentIndexBuffer = null;
 
         /**
-         * [description]
+         * Current blend mode in use
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentBlendMode
          * @type {integer}
@@ -44489,7 +46285,7 @@ var WebGLRenderer = new Class({
         this.currentBlendMode = Infinity;
 
         /**
-         * [description]
+         * Indicates if the the scissor state is enabled in WebGLRenderingContext
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentScissorEnabled
          * @type {boolean}
@@ -44499,7 +46295,7 @@ var WebGLRenderer = new Class({
         this.currentScissorEnabled = false;
 
         /**
-         * [description]
+         * Stores the current scissor data
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentScissor
          * @type {Uint32Array}
@@ -44508,7 +46304,7 @@ var WebGLRenderer = new Class({
         this.currentScissor = new Uint32Array([ 0, 0, this.width, this.height ]);
 
         /**
-         * [description]
+         * Index to the scissor stack top
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentScissorIdx
          * @type {number}
@@ -44518,7 +46314,7 @@ var WebGLRenderer = new Class({
         this.currentScissorIdx = 0;
 
         /**
-         * [description]
+         * Stack of scissor data
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#scissorStack
          * @type {Uint32Array}
@@ -44551,7 +46347,7 @@ var WebGLRenderer = new Class({
             }
         }, false);
 
-        // This are initialized post context creation
+        // These are initialized post context creation
 
         /**
          * [description]
@@ -44564,7 +46360,7 @@ var WebGLRenderer = new Class({
         this.gl = null;
 
         /**
-         * [description]
+         * Array of strings that indicate which WebGL extensions are supported by the browser
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#supportedExtensions
          * @type {object}
@@ -44574,7 +46370,7 @@ var WebGLRenderer = new Class({
         this.supportedExtensions = null;
 
         /**
-         * [description]
+         * Extensions loaded into the current context
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#extensions
          * @type {object}
@@ -44584,7 +46380,7 @@ var WebGLRenderer = new Class({
         this.extensions = {};
 
         /**
-         * [description]
+         * Stores the current WebGL component formats for further use
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#glFormats
          * @type {array}
@@ -44597,7 +46393,8 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Creates a new WebGLRenderingContext and initializes all internal
+     * state.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#init
      * @since 3.0.0
@@ -44744,12 +46541,12 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Checks if a WebGL extension is supported
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#hasExtension
      * @since 3.0.0
      *
-     * @param {string} extensionName - [description]
+     * @param {string} extensionName - Name of the WebGL extension
      *
      * @return {boolean} [description]
      */
@@ -44759,14 +46556,14 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Loads a WebGL extension
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#getExtension
      * @since 3.0.0
      *
      * @param {string} extensionName - [description]
      *
-     * @return {object} [description]
+     * @return {object} WebGL extension if the extension is supported
      */
     getExtension: function (extensionName)
     {
@@ -44781,7 +46578,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Flushes the current pipeline if the pipeline is bound
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#flush
      * @since 3.0.0
@@ -44797,12 +46594,12 @@ var WebGLRenderer = new Class({
     /* Renderer State Manipulation Functions */
 
     /**
-     * [description]
+     * Checks if a pipeline is present in the current WebGLRenderer
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#hasPipeline
      * @since 3.0.0
      *
-     * @param {string} pipelineName - [description]
+     * @param {string} pipelineName - Name of the pipeline
      *
      * @return {boolean} [description]
      */
@@ -44812,7 +46609,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Returns the pipeline by name if the pipeline exists
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#getPipeline
      * @since 3.0.0
@@ -44827,7 +46624,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Removes a pipeline by name
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#removePipeline
      * @since 3.0.0
@@ -44844,15 +46641,15 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Adds a pipeline instance into the collection of pipelines
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#addPipeline
      * @since 3.0.0
      *
      * @param {string} pipelineName - [description]
-     * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipelineInstance - [description]
+     * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipelineInstance - Pipeline instance must extend WebGLPipeline
      *
-     * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} The instance that was passed.
      */
     addPipeline: function (pipelineName, pipelineInstance)
     {
@@ -44873,7 +46670,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Sets the current scissor state
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setScissor
      * @since 3.0.0
@@ -44920,7 +46717,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Pushes a new scissor state. This is used to set nested scissor states.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#pushScissor
      * @since 3.0.0
@@ -44950,7 +46747,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Pops the last scissor state and sets it.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#popScissor
      * @since 3.0.0
@@ -44974,7 +46771,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Binds a WebGLPipeline and sets it as the current pipeline to be used.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setPipeline
      * @since 3.0.0
@@ -45103,13 +46900,14 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Binds a texture at a texture unit. If a texture is already 
+     * bound to that unit it will force a flush on the current pipeline.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setTexture2D
      * @since 3.0.0
      *
-     * @param {WebGLTexture} texture - [description]
-     * @param {integer} textureUnit - [description]
+     * @param {WebGLTexture} texture - The WebGL texture that needs to be bound
+     * @param {integer} textureUnit - The texture unit to which the texture will be bound
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} This WebGL Renderer.
      */
@@ -45137,12 +46935,13 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Binds a framebuffer. If there was another framebuffer already bound
+     * it will force a pipeline flush.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setFramebuffer
      * @since 3.0.0
      *
-     * @param {WebGLFramebuffer} framebuffer - [description]
+     * @param {WebGLFramebuffer} framebuffer - The framebuffer that needs to be bound
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} This WebGL Renderer.
      */
@@ -45163,12 +46962,13 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Binds a program. If there was another program already bound
+     * it will force a pipeline flush
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setProgram
      * @since 3.0.0
      *
-     * @param {WebGLProgram} program - [description]
+     * @param {WebGLProgram} program - The program that needs to be bound
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} This WebGL Renderer.
      */
@@ -45189,12 +46989,13 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Bounds a vertex buffer. If there is a vertex buffer already bound
+     * it'll force a pipeline flush.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setVertexBuffer
      * @since 3.0.0
      *
-     * @param {WebGLBuffer} vertexBuffer - [description]
+     * @param {WebGLBuffer} vertexBuffer - The buffer that needs to be bound
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} This WebGL Renderer.
      */
@@ -45215,12 +47016,13 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Bounds a index buffer. If there is a index buffer already bound
+     * it'll force a pipeline flush.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setIndexBuffer
      * @since 3.0.0
      *
-     * @param {WebGLBuffer} indexBuffer - [description]
+     * @param {WebGLBuffer} indexBuffer - The buffer the needs to be bound
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} This WebGL Renderer.
      */
@@ -45243,7 +47045,8 @@ var WebGLRenderer = new Class({
     /* Renderer Resource Creation Functions */
 
     /**
-     * [description]
+     * Creates a texture from an image source. If the source is not valid
+     * it creates an empty texture
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createTextureFromSource
      * @since 3.0.0
@@ -45292,23 +47095,24 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * A wrapper for creating a WebGLTexture. If not pixel data is passed
+     * it will create an empty texture.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createTexture2D
      * @since 3.0.0
      *
-     * @param {integer} mipLevel - [description]
-     * @param {integer} minFilter - [description]
-     * @param {integer} magFilter - [description]
-     * @param {integer} wrapT - [description]
-     * @param {integer} wrapS - [description]
-     * @param {integer} format - [description]
-     * @param {object} pixels - [description]
-     * @param {integer} width - [description]
-     * @param {integer} height - [description]
-     * @param {boolean} pma - [description]
+     * @param {integer} mipLevel - Mip level of the texture
+     * @param {integer} minFilter - Filtering of the texture
+     * @param {integer} magFilter - Filtering of the texture
+     * @param {integer} wrapT - Wrapping mode of the texture
+     * @param {integer} wrapS - Wrapping mode of the texture
+     * @param {integer} format - Which format does the texture use
+     * @param {object} pixels - pixel data
+     * @param {integer} width - Width of the texture in pixels
+     * @param {integer} height - Height of the texture in pixels
+     * @param {boolean} pma - Does the texture hace premultiplied alpha.
      *
-     * @return {WebGLTexture} [description]
+     * @return {WebGLTexture} Raw WebGLTexture
      */
     createTexture2D: function (mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma)
     {
@@ -45349,17 +47153,17 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Wrapper for creating WebGLFramebuffer.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createFramebuffer
      * @since 3.0.0
      *
-     * @param {integer} width - [description]
-     * @param {integer} height - [description]
-     * @param {WebGLFramebuffer} renderTexture - [description]
-     * @param {boolean} addDepthStencilBuffer - [description]
+     * @param {integer} width - Width in pixels of the framebuffer
+     * @param {integer} height - Height in pixels of the framebuffer
+     * @param {WebGLTexture} renderTexture - The color texture to where the color pixels are written 
+     * @param {boolean} addDepthStencilBuffer - Indicates if the current framebuffer support depth and stencil buffers
      *
-     * @return {WebGLFramebuffer} [description]
+     * @return {WebGLFramebuffer} Raw WebGLFramebuffer
      */
     createFramebuffer: function (width, height, renderTexture, addDepthStencilBuffer)
     {
@@ -45404,15 +47208,15 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Wrapper for creating a WebGLProgram
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createProgram
      * @since 3.0.0
      *
-     * @param {string} vertexShader - [description]
-     * @param {string} fragmentShader - [description]
+     * @param {string} vertexShader - Source to the vertex shader
+     * @param {string} fragmentShader - Source to the fragment shader
      *
-     * @return {WebGLProgram} [description]
+     * @return {WebGLProgram} Raw WebGLProgram
      */
     createProgram: function (vertexShader, fragmentShader)
     {
@@ -45448,15 +47252,15 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Wrapper for creating a vertex buffer.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createVertexBuffer
      * @since 3.0.0
      *
-     * @param {ArrayBuffer} initialDataOrSize - [description]
-     * @param {integer} bufferUsage - [description]
+     * @param {ArrayBuffer} initialDataOrSize - It's either ArrayBuffer or an integer indicating the size of the vbo
+     * @param {integer} bufferUsage - How the buffer is used. gl.DYNAMIC_DRAW, gl.STATIC_DRAW or gl.STREAM_DRAW
      *
-     * @return {WebGLBuffer} [description]
+     * @return {WebGLBuffer} Raw vertex buffer
      */
     createVertexBuffer: function (initialDataOrSize, bufferUsage)
     {
@@ -45473,15 +47277,15 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Wrapper for creating a vertex buffer.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#createIndexBuffer
      * @since 3.0.0
      *
-     * @param {ArrayBuffer} initialDataOrSize - [description]
-     * @param {integer} bufferUsage - [description]
+     * @param {ArrayBuffer} initialDataOrSize - It's either ArrayBuffer or an integer indicating the size of the vbo
+     * @param {integer} bufferUsage - How the buffer is used. gl.DYNAMIC_DRAW, gl.STATIC_DRAW or gl.STREAM_DRAW
      *
-     * @return {WebGLBuffer} [description]
+     * @return {WebGLBuffer} Raw index buffer
      */
     createIndexBuffer: function (initialDataOrSize, bufferUsage)
     {
@@ -45509,13 +47313,20 @@ var WebGLRenderer = new Class({
      */
     deleteTexture: function (texture)
     {
+        var index = this.nativeTextures.indexOf(texture);
+
+        if (index !== -1)
+        {
+            SpliceOne(this.nativeTextures, index);
+        }
+
         this.gl.deleteTexture(texture);
 
         return this;
     },
 
     /**
-     * [description]
+     * Wrapper for deleting a raw WebGLFramebuffer
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#deleteFramebuffer
      * @since 3.0.0
@@ -45549,7 +47360,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Wrapper for deleting a vertex or index buffer
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#deleteBuffer
      * @since 3.0.0
@@ -45568,7 +47379,8 @@ var WebGLRenderer = new Class({
     /* Rendering Functions */
 
     /**
-     * [description]
+     * Handles any clipping needed by the camera and renders the background
+     * color if a color is visible.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#preRenderCamera
      * @since 3.0.0
@@ -45605,7 +47417,8 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Renders the foreground camera effects like flash and fading.
+     * It resets the current scissor state.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#postRenderCamera
      * @since 3.0.0
@@ -45628,7 +47441,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Clears the current vertex buffer and updates pipelines.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#preRender
      * @since 3.0.0
@@ -45767,9 +47580,7 @@ var WebGLRenderer = new Class({
      * @since 3.0.0
      *
      * @param {HTMLCanvasElement} srcCanvas - [description]
-     * @param {WebGLTexture} dstTexture - [description]
-     * @param {boolean} shouldReallocate - [description]
-     * @param {integer} scaleMode - [description]
+     * @param {WebGLTexture} [dstTexture] - [description]
      *
      * @return {WebGLTexture} [description]
      */
@@ -45792,16 +47603,10 @@ var WebGLRenderer = new Class({
         {
             this.setTexture2D(dstTexture, 0);
 
-            // if (!shouldReallocate && dstTexture.width >= srcCanvas.width || dstTexture.height >= srcCanvas.height)
-            // {
-            //    gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, srcCanvas.width, srcCanvas.height, gl.RGBA, gl.UNSIGNED_BYTE, srcCanvas);
-            // }
-            // else
-            {
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, srcCanvas);
-                dstTexture.width = srcCanvas.width;
-                dstTexture.height = srcCanvas.height;
-            }
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, srcCanvas);
+
+            dstTexture.width = srcCanvas.width;
+            dstTexture.height = srcCanvas.height;
 
             this.setTexture2D(null, 0);
         }
@@ -45902,17 +47707,17 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Sets uniform of a WebGLProgram
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat4
      * @since 3.0.0
      *
-     * @param {WebGLProgram} program - [description]
-     * @param {string} name - [description]
-     * @param {float} x - [description]
-     * @param {float} y - [description]
-     * @param {float} z - [description]
-     * @param {float} w - [description]
+     * @param {WebGLProgram} program - Target program
+     * @param {string} name - Name of the uniform
+     * @param {float} x - X component
+     * @param {float} y - Y component
+     * @param {float} z - Z component
+     * @param {float} w - W component
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
@@ -45992,17 +47797,17 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Sets uniform of a WebGLProgram
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setInt4
      * @since 3.0.0
      *
-     * @param {WebGLProgram} program - [description]
-     * @param {string} name - [description]
-     * @param {integer} x - [description]
-     * @param {integer} y - [description]
-     * @param {integer} z - [description]
-     * @param {integer} w - [description]
+     * @param {WebGLProgram} program - Target Program
+     * @param {string} name - Name of the uniform
+     * @param {integer} x - X component
+     * @param {integer} y - Y component
+     * @param {integer} z - Z component
+     * @param {integer} w - W component
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
@@ -46060,15 +47865,15 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Sets uniform of a WebGLProgram
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setMatrix4
      * @since 3.0.0
      *
-     * @param {WebGLProgram} program - [description]
-     * @param {string} name - [description]
-     * @param {boolean} transpose - [description]
-     * @param {Float32Array} matrix - [description]
+     * @param {WebGLProgram} program - Target program
+     * @param {string} name - Name of the uniform
+     * @param {boolean} transpose - Is the matrix transposed
+     * @param {Float32Array} matrix - Matrix data
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
@@ -46093,12 +47898,14 @@ var WebGLRenderer = new Class({
         for (var key in this.pipelines)
         {
             this.pipelines[key].destroy();
+
             delete this.pipelines[key];
         }
 
         for (var index = 0; index < this.nativeTextures.length; ++index)
         {
             this.deleteTexture(this.nativeTextures[index]);
+
             delete this.nativeTextures[index];
         }
 
@@ -46116,7 +47923,7 @@ module.exports = WebGLRenderer;
 
 
 /***/ }),
-/* 255 */
+/* 258 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -46125,8 +47932,8 @@ module.exports = WebGLRenderer;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var modes = __webpack_require__(48);
-var CanvasFeatures = __webpack_require__(193);
+var modes = __webpack_require__(50);
+var CanvasFeatures = __webpack_require__(195);
 
 /**
  * [description]
@@ -46166,7 +47973,7 @@ module.exports = GetBlendModes;
 
 
 /***/ }),
-/* 256 */
+/* 259 */
 /***/ (function(module, exports) {
 
 /**
@@ -46289,7 +48096,7 @@ module.exports = function (configRoundPixels)
 
 
 /***/ }),
-/* 257 */
+/* 260 */
 /***/ (function(module, exports) {
 
 /**
@@ -46328,7 +48135,7 @@ module.exports = CanvasSnapshot;
 
 
 /***/ }),
-/* 258 */
+/* 261 */
 /***/ (function(module, exports) {
 
 /**
@@ -46384,7 +48191,7 @@ module.exports = function (configRoundPixels)
 
 
 /***/ }),
-/* 259 */
+/* 262 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -46394,14 +48201,14 @@ module.exports = function (configRoundPixels)
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BlitImage = __webpack_require__(258);
-var CanvasSnapshot = __webpack_require__(257);
+var BlitImage = __webpack_require__(261);
+var CanvasSnapshot = __webpack_require__(260);
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(19);
-var DrawImage = __webpack_require__(256);
-var GetBlendModes = __webpack_require__(255);
-var ScaleModes = __webpack_require__(55);
-var Smoothing = __webpack_require__(123);
+var CONST = __webpack_require__(20);
+var DrawImage = __webpack_require__(259);
+var GetBlendModes = __webpack_require__(258);
+var ScaleModes = __webpack_require__(58);
+var Smoothing = __webpack_require__(126);
 
 /**
  * @classdesc
@@ -46902,7 +48709,7 @@ module.exports = CanvasRenderer;
 
 
 /***/ }),
-/* 260 */
+/* 263 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -47099,7 +48906,7 @@ module.exports = RequestAnimationFrame;
 
 
 /***/ }),
-/* 261 */
+/* 264 */
 /***/ (function(module, exports) {
 
 /**
@@ -47128,7 +48935,7 @@ module.exports = RemoveFromDOM;
 
 
 /***/ }),
-/* 262 */
+/* 265 */
 /***/ (function(module, exports) {
 
 /**
@@ -47185,7 +48992,7 @@ module.exports = ParseXML;
 
 
 /***/ }),
-/* 263 */
+/* 266 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -47194,7 +49001,7 @@ module.exports = ParseXML;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var OS = __webpack_require__(53);
+var OS = __webpack_require__(56);
 
 /**
  * @callback ContentLoadedCallback
@@ -47248,7 +49055,7 @@ module.exports = DOMContentLoaded;
 
 
 /***/ }),
-/* 264 */
+/* 267 */
 /***/ (function(module, exports) {
 
 /**
@@ -47277,8 +49084,8 @@ module.exports = Between;
 
 
 /***/ }),
-/* 265 */,
-/* 266 */
+/* 268 */,
+/* 269 */
 /***/ (function(module, exports) {
 
 /**
@@ -47341,9 +49148,9 @@ module.exports = CanvasInterpolation;
 
 
 /***/ }),
-/* 267 */,
-/* 268 */,
-/* 269 */
+/* 270 */,
+/* 271 */,
+/* 272 */
 /***/ (function(module, exports) {
 
 /**
@@ -47381,7 +49188,7 @@ module.exports = {
 
 
 /***/ }),
-/* 270 */
+/* 273 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -47390,7 +49197,7 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Arne16 = __webpack_require__(269);
+var Arne16 = __webpack_require__(272);
 var CanvasPool = __webpack_require__(22);
 var GetValue = __webpack_require__(4);
 
@@ -47496,10 +49303,10 @@ module.exports = GenerateTexture;
 
 
 /***/ }),
-/* 271 */,
-/* 272 */,
-/* 273 */,
-/* 274 */
+/* 274 */,
+/* 275 */,
+/* 276 */,
+/* 277 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -47508,7 +49315,7 @@ module.exports = GenerateTexture;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Color = __webpack_require__(27);
+var Color = __webpack_require__(30);
 
 /**
  * Converts a CSS 'web' string into a Phaser Color object.
@@ -47545,7 +49352,7 @@ module.exports = RGBStringToColor;
 
 
 /***/ }),
-/* 275 */
+/* 278 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -47554,7 +49361,7 @@ module.exports = RGBStringToColor;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Color = __webpack_require__(27);
+var Color = __webpack_require__(30);
 
 /**
  * Converts an object containing `r`, `g`, `b` and `a` properties into a Color class instance.
@@ -47575,7 +49382,7 @@ module.exports = ObjectToColor;
 
 
 /***/ }),
-/* 276 */
+/* 279 */
 /***/ (function(module, exports) {
 
 /**
@@ -47623,7 +49430,7 @@ module.exports = IntegerToRGB;
 
 
 /***/ }),
-/* 277 */
+/* 280 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -47632,8 +49439,8 @@ module.exports = IntegerToRGB;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Color = __webpack_require__(27);
-var IntegerToRGB = __webpack_require__(276);
+var Color = __webpack_require__(30);
+var IntegerToRGB = __webpack_require__(279);
 
 /**
  * Converts the given color value into an instance of a Color object.
@@ -47656,7 +49463,7 @@ module.exports = IntegerToColor;
 
 
 /***/ }),
-/* 278 */
+/* 281 */
 /***/ (function(module, exports) {
 
 /**
@@ -47687,7 +49494,7 @@ module.exports = GetColor32;
 
 
 /***/ }),
-/* 279 */
+/* 282 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -47696,7 +49503,7 @@ module.exports = GetColor32;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Color = __webpack_require__(27);
+var Color = __webpack_require__(30);
 
 /**
  * Converts a hex string into a Phaser Color object.
@@ -47740,8 +49547,8 @@ module.exports = HexStringToColor;
 
 
 /***/ }),
-/* 280 */,
-/* 281 */
+/* 283 */,
+/* 284 */
 /***/ (function(module, exports) {
 
 /**
@@ -47781,7 +49588,7 @@ module.exports = RotateRight;
 
 
 /***/ }),
-/* 282 */
+/* 285 */
 /***/ (function(module, exports) {
 
 /**
@@ -47821,7 +49628,7 @@ module.exports = RotateLeft;
 
 
 /***/ }),
-/* 283 */
+/* 286 */
 /***/ (function(module, exports) {
 
 /**
@@ -47950,7 +49757,7 @@ module.exports = Pipeline;
 
 
 /***/ }),
-/* 284 */
+/* 287 */
 /***/ (function(module, exports) {
 
 /**
@@ -47990,7 +49797,7 @@ module.exports = RotateAround;
 
 
 /***/ }),
-/* 285 */
+/* 288 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -48032,7 +49839,7 @@ module.exports = GetPoint;
 
 
 /***/ }),
-/* 286 */
+/* 289 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -48041,8 +49848,8 @@ module.exports = GetPoint;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GetPoint = __webpack_require__(127);
-var Perimeter = __webpack_require__(93);
+var GetPoint = __webpack_require__(130);
+var Perimeter = __webpack_require__(96);
 
 //  Return an array of points from the perimeter of the rectangle
 //  each spaced out based on the quantity or step required
@@ -48086,7 +49893,7 @@ module.exports = GetPoints;
 
 
 /***/ }),
-/* 287 */
+/* 290 */
 /***/ (function(module, exports) {
 
 /**
@@ -48114,7 +49921,7 @@ module.exports = Circumference;
 
 
 /***/ }),
-/* 288 */
+/* 291 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -48123,10 +49930,10 @@ module.exports = Circumference;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Circumference = __webpack_require__(287);
-var CircumferencePoint = __webpack_require__(128);
-var FromPercent = __webpack_require__(61);
-var MATH_CONST = __webpack_require__(15);
+var Circumference = __webpack_require__(290);
+var CircumferencePoint = __webpack_require__(131);
+var FromPercent = __webpack_require__(64);
+var MATH_CONST = __webpack_require__(16);
 
 /**
  * Returns an array of Point objects containing the coordinates of the points around the circumference of the Circle,
@@ -48166,7 +49973,7 @@ module.exports = GetPoints;
 
 
 /***/ }),
-/* 289 */
+/* 292 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -48620,6 +50427,32 @@ var RandomDataGenerator = new Class({
         }
 
         return [ '!rnd', this.c, this.s0, this.s1, this.s2 ].join(',');
+    },
+
+    /**
+     * Shuffles the given array, using the current seed.
+     *
+     * @method Phaser.Math.RandomDataGenerator#shuffle
+     * @since 3.7.0
+     * 
+     * @param {array[]} [array] - The array to be shuffled.
+     *
+     * @return {array} The shuffled array.
+     */
+    shuffle: function (array)
+    {
+        var len = array.length - 1;
+
+        for (var i = len; i > 0; i--)
+        {
+            var randomIndex = Math.floor(this.frac() * (len + 1));
+            var itemAtIndex = array[randomIndex];
+
+            array[randomIndex] = array[i];
+            array[i] = itemAtIndex;
+        }
+
+        return array;
     }
 
 });
@@ -48628,7 +50461,7 @@ module.exports = RandomDataGenerator;
 
 
 /***/ }),
-/* 290 */
+/* 293 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -48637,9 +50470,9 @@ module.exports = RandomDataGenerator;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CircumferencePoint = __webpack_require__(128);
-var FromPercent = __webpack_require__(61);
-var MATH_CONST = __webpack_require__(15);
+var CircumferencePoint = __webpack_require__(131);
+var FromPercent = __webpack_require__(64);
+var MATH_CONST = __webpack_require__(16);
 var Point = __webpack_require__(5);
 
 /**
@@ -48671,66 +50504,10 @@ module.exports = GetPoint;
 
 
 /***/ }),
-/* 291 */,
-/* 292 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * This is a slightly modified version of jQuery.isPlainObject.
- * A plain object is an object whose internal class property is [object Object].
- *
- * @function Phaser.Utils.Object.IsPlainObject
- * @since 3.0.0
- *
- * @param {object} obj - The object to inspect.
- *
- * @return {boolean} `true` if the object is plain, otherwise `false`.
- */
-var IsPlainObject = function (obj)
-{
-    // Not plain objects:
-    // - Any object or value whose internal [[Class]] property is not "[object Object]"
-    // - DOM nodes
-    // - window
-    if (typeof(obj) !== 'object' || obj.nodeType || obj === obj.window)
-    {
-        return false;
-    }
-
-    // Support: Firefox <20
-    // The try/catch suppresses exceptions thrown when attempting to access
-    // the "constructor" property of certain host objects, ie. |window.location|
-    // https://bugzilla.mozilla.org/show_bug.cgi?id=814622
-    try
-    {
-        if (obj.constructor && !({}).hasOwnProperty.call(obj.constructor.prototype, 'isPrototypeOf'))
-        {
-            return false;
-        }
-    }
-    catch (e)
-    {
-        return false;
-    }
-
-    // If the function hasn't returned already, we're confident that
-    // |obj| is a plain object, created by {} or constructed with new Object
-    return true;
-};
-
-module.exports = IsPlainObject;
-
-
-/***/ }),
-/* 293 */,
 /* 294 */,
-/* 295 */
+/* 295 */,
+/* 296 */,
+/* 297 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -49295,7 +51072,7 @@ var Animation = new Class({
             value = 1 - value;
         }
 
-        this.setCurrentFrame(this.animationManager.getFrameByProgress(value));
+        this.setCurrentFrame(this.currentAnim.getFrameByProgress(value));
 
         return this.parent;
     },
@@ -49698,7 +51475,7 @@ module.exports = Animation;
 
 
 /***/ }),
-/* 296 */
+/* 298 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -49708,11 +51485,11 @@ module.exports = Animation;
  */
 
 var Class = __webpack_require__(0);
-var NumberTweenBuilder = __webpack_require__(153);
-var PluginManager = __webpack_require__(10);
-var TimelineBuilder = __webpack_require__(152);
-var TWEEN_CONST = __webpack_require__(57);
-var TweenBuilder = __webpack_require__(68);
+var NumberTweenBuilder = __webpack_require__(157);
+var PluginManager = __webpack_require__(11);
+var TimelineBuilder = __webpack_require__(156);
+var TWEEN_CONST = __webpack_require__(60);
+var TweenBuilder = __webpack_require__(71);
 
 /**
  * @classdesc
@@ -50379,7 +52156,7 @@ module.exports = TweenManager;
 
 
 /***/ }),
-/* 297 */
+/* 299 */
 /***/ (function(module, exports) {
 
 /**
@@ -50451,7 +52228,7 @@ module.exports = [
 
 
 /***/ }),
-/* 298 */
+/* 300 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -50466,22 +52243,22 @@ module.exports = [
 
 module.exports = {
 
-    GetBoolean: __webpack_require__(58),
-    GetEaseFunction: __webpack_require__(59),
-    GetNewValue: __webpack_require__(69),
-    GetProps: __webpack_require__(155),
-    GetTargets: __webpack_require__(98),
-    GetTweens: __webpack_require__(154),
-    GetValueOp: __webpack_require__(97),
-    NumberTweenBuilder: __webpack_require__(153),
-    TimelineBuilder: __webpack_require__(152),
-    TweenBuilder: __webpack_require__(68)
+    GetBoolean: __webpack_require__(61),
+    GetEaseFunction: __webpack_require__(62),
+    GetNewValue: __webpack_require__(72),
+    GetProps: __webpack_require__(159),
+    GetTargets: __webpack_require__(101),
+    GetTweens: __webpack_require__(158),
+    GetValueOp: __webpack_require__(100),
+    NumberTweenBuilder: __webpack_require__(157),
+    TimelineBuilder: __webpack_require__(156),
+    TweenBuilder: __webpack_require__(71)
 
 };
 
 
 /***/ }),
-/* 299 */
+/* 301 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -50490,8 +52267,8 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CONST = __webpack_require__(57);
-var Extend = __webpack_require__(16);
+var CONST = __webpack_require__(60);
+var Extend = __webpack_require__(17);
 
 /**
  * @namespace Phaser.Tweens
@@ -50499,12 +52276,12 @@ var Extend = __webpack_require__(16);
 
 var Tweens = {
 
-    Builders: __webpack_require__(298),
+    Builders: __webpack_require__(300),
 
-    TweenManager: __webpack_require__(296),
-    Tween: __webpack_require__(95),
-    TweenData: __webpack_require__(94),
-    Timeline: __webpack_require__(151)
+    TweenManager: __webpack_require__(298),
+    Tween: __webpack_require__(98),
+    TweenData: __webpack_require__(97),
+    Timeline: __webpack_require__(155)
 
 };
 
@@ -50515,7 +52292,7 @@ module.exports = Tweens;
 
 
 /***/ }),
-/* 300 */
+/* 302 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -50525,8 +52302,8 @@ module.exports = Tweens;
  */
 
 var Class = __webpack_require__(0);
-var PluginManager = __webpack_require__(10);
-var TimerEvent = __webpack_require__(156);
+var PluginManager = __webpack_require__(11);
+var TimerEvent = __webpack_require__(160);
 
 /**
  * @classdesc
@@ -50909,7 +52686,7 @@ module.exports = Clock;
 
 
 /***/ }),
-/* 301 */
+/* 303 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -50924,15 +52701,13 @@ module.exports = Clock;
 
 module.exports = {
 
-    Clock: __webpack_require__(300),
-    TimerEvent: __webpack_require__(156)
+    Clock: __webpack_require__(302),
+    TimerEvent: __webpack_require__(160)
 
 };
 
 
 /***/ }),
-/* 302 */,
-/* 303 */,
 /* 304 */,
 /* 305 */,
 /* 306 */,
@@ -50945,7 +52720,9 @@ module.exports = {
 /* 313 */,
 /* 314 */,
 /* 315 */,
-/* 316 */
+/* 316 */,
+/* 317 */,
+/* 318 */
 /***/ (function(module, exports) {
 
 /**
@@ -50985,7 +52762,7 @@ module.exports = CONST;
 
 
 /***/ }),
-/* 317 */
+/* 319 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -50994,8 +52771,8 @@ module.exports = CONST;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Extend = __webpack_require__(16);
-var FilterMode = __webpack_require__(316);
+var Extend = __webpack_require__(17);
+var FilterMode = __webpack_require__(318);
 
 /**
  * @namespace Phaser.Textures
@@ -51018,11 +52795,11 @@ var FilterMode = __webpack_require__(316);
 var Textures = {
 
     FilterMode: FilterMode,
-    Frame: __webpack_require__(119),
-    Parsers: __webpack_require__(169),
-    Texture: __webpack_require__(168),
-    TextureManager: __webpack_require__(170),
-    TextureSource: __webpack_require__(167)
+    Frame: __webpack_require__(123),
+    Parsers: __webpack_require__(170),
+    Texture: __webpack_require__(112),
+    TextureManager: __webpack_require__(172),
+    TextureSource: __webpack_require__(171)
 
 };
 
@@ -51032,7 +52809,7 @@ module.exports = Textures;
 
 
 /***/ }),
-/* 318 */
+/* 320 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -51047,17 +52824,17 @@ module.exports = Textures;
 
 module.exports = {
 
-    List: __webpack_require__(89),
-    Map: __webpack_require__(114),
-    ProcessQueue: __webpack_require__(213),
-    RTree: __webpack_require__(212),
-    Set: __webpack_require__(75)
+    List: __webpack_require__(92),
+    Map: __webpack_require__(118),
+    ProcessQueue: __webpack_require__(217),
+    RTree: __webpack_require__(216),
+    Set: __webpack_require__(77)
 
 };
 
 
 /***/ }),
-/* 319 */
+/* 321 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -51098,25 +52875,25 @@ module.exports = {
 
 module.exports = {
 
-    SoundManagerCreator: __webpack_require__(177),
+    SoundManagerCreator: __webpack_require__(179),
 
-    BaseSound: __webpack_require__(72),
-    BaseSoundManager: __webpack_require__(73),
+    BaseSound: __webpack_require__(74),
+    BaseSoundManager: __webpack_require__(75),
 
-    WebAudioSound: __webpack_require__(171),
-    WebAudioSoundManager: __webpack_require__(172),
+    WebAudioSound: __webpack_require__(173),
+    WebAudioSoundManager: __webpack_require__(174),
 
-    HTML5AudioSound: __webpack_require__(175),
-    HTML5AudioSoundManager: __webpack_require__(176),
+    HTML5AudioSound: __webpack_require__(177),
+    HTML5AudioSoundManager: __webpack_require__(178),
 
-    NoAudioSound: __webpack_require__(173),
-    NoAudioSoundManager: __webpack_require__(174)
+    NoAudioSound: __webpack_require__(175),
+    NoAudioSoundManager: __webpack_require__(176)
 
 };
 
 
 /***/ }),
-/* 320 */
+/* 322 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -51125,11 +52902,11 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Clamp = __webpack_require__(23);
+var Clamp = __webpack_require__(24);
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(52);
-var GetFastValue = __webpack_require__(2);
-var PluginManager = __webpack_require__(10);
+var CONST = __webpack_require__(54);
+var GetFastValue = __webpack_require__(1);
+var PluginManager = __webpack_require__(11);
 
 /**
  * @classdesc
@@ -51747,13 +53524,21 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#setActive
      * @since 3.0.0
      *
-     * @param {boolean} value - The Scene to set the active state for.
+     * @param {boolean} value - The active value.
+     * @param {string} [key] - The Scene to set the active state for.
      *
      * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
      */
-    setActive: function (value)
+    setActive: function (value, key)
     {
-        this.settings.active = value;
+        if (key === undefined) { key = this.key; }
+
+        var scene = this.manager.getScene(key);
+
+        if (scene)
+        {
+            scene.sys.setActive(value);
+        }
 
         return this;
     },
@@ -51764,13 +53549,21 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#setVisible
      * @since 3.0.0
      *
-     * @param {boolean} value - The Scene to set the visible state for.
+     * @param {boolean} value - The visible value.
+     * @param {string} [key] - The Scene to set the visible state for.
      *
      * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
      */
-    setVisible: function (value)
+    setVisible: function (value, key)
     {
-        this.settings.visible = value;
+        if (key === undefined) { key = this.key; }
+
+        var scene = this.manager.getScene(key);
+
+        if (scene)
+        {
+            scene.sys.setVisible(value);
+        }
 
         return this;
     },
@@ -52022,6 +53815,23 @@ var ScenePlugin = new Class({
     },
 
     /**
+     * Retrieves the numeric index of a Scene in the Scenes list.
+     *
+     * @method Phaser.Scenes.ScenePlugin#getIndex
+     * @since 3.7.0
+     *
+     * @param {(string|Phaser.Scene)} [key] - The Scene to get the index of.
+     *
+     * @return {integer} The index of the Scene.
+     */
+    getIndex: function (key)
+    {
+        if (key === undefined) { key = this.key; }
+
+        return this.manager.getIndex(key);
+    },
+
+    /**
      * The Scene that owns this plugin is shutting down.
      * We need to kill and reset all internal properties as well as stop listening to Scene events.
      *
@@ -52066,7 +53876,7 @@ module.exports = ScenePlugin;
 
 
 /***/ }),
-/* 321 */
+/* 323 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52075,8 +53885,8 @@ module.exports = ScenePlugin;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CONST = __webpack_require__(52);
-var Extend = __webpack_require__(16);
+var CONST = __webpack_require__(54);
+var Extend = __webpack_require__(17);
 
 /**
  * @namespace Phaser.Scenes
@@ -52084,10 +53894,10 @@ var Extend = __webpack_require__(16);
 
 var Scene = {
 
-    SceneManager: __webpack_require__(180),
-    ScenePlugin: __webpack_require__(320),
-    Settings: __webpack_require__(178),
-    Systems: __webpack_require__(109)
+    SceneManager: __webpack_require__(182),
+    ScenePlugin: __webpack_require__(322),
+    Settings: __webpack_require__(180),
+    Systems: __webpack_require__(113)
 
 };
 
@@ -52098,8 +53908,6 @@ module.exports = Scene;
 
 
 /***/ }),
-/* 322 */,
-/* 323 */,
 /* 324 */,
 /* 325 */,
 /* 326 */,
@@ -52117,84 +53925,9 @@ module.exports = Scene;
 /* 338 */,
 /* 339 */,
 /* 340 */,
-/* 341 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var FileTypesManager = __webpack_require__(7);
-var ImageFile = __webpack_require__(46);
-
-/**
- * A Sprite Sheet File.
- *
- * @function Phaser.Loader.FileTypes.SpriteSheetFile
- * @since 3.0.0
- *
- * @param {string} key - The key of the file within the loader.
- * @param {string} url - The url to load the texture file from.
- * @param {object} config - Optional texture file specific XHR settings.
- * @param {string} path - Optional texture file specific XHR settings.
- * @param {XHRSettingsObject} [xhrSettings] - Optional atlas file specific XHR settings.
- *
- * @return {object} An object containing two File objects to be added to the loader.
- */
-var SpriteSheetFile = function (key, url, config, path, xhrSettings)
-{
-    var image = new ImageFile(key, url, path, xhrSettings, config);
-
-    //  Override the File type
-    image.type = 'spritesheet';
-
-    return image;
-};
-
-/**
- * Adds a Sprite Sheet file to the current load queue.
- *
- * Note: This method will only be available if the Sprite Sheet File type has been built into Phaser.
- *
- * The file is **not** loaded immediately after calling this method.
- * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
- *
- * @method Phaser.Loader.LoaderPlugin#spritesheet
- * @since 3.0.0
- *
- * @param {string} key - [description]
- * @param {string} url - [description]
- * @param {object} config - config can include: frameWidth, frameHeight, startFrame, endFrame, margin, spacing.
- * @param {XHRSettingsObject} [xhrSettings] - [description]
- *
- * @return {Phaser.Loader.LoaderPlugin} The Loader.
- */
-FileTypesManager.register('spritesheet', function (key, url, config, xhrSettings)
-{
-    if (Array.isArray(key))
-    {
-        for (var i = 0; i < key.length; i++)
-        {
-            //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new SpriteSheetFile(key[i], url, null, this.path, xhrSettings));
-        }
-    }
-    else
-    {
-        this.addFile(new SpriteSheetFile(key, url, config, this.path, xhrSettings));
-    }
-
-    //  For method chaining
-    return this;
-});
-
-module.exports = SpriteSheetFile;
-
-
-/***/ }),
-/* 342 */
+/* 341 */,
+/* 342 */,
+/* 343 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52204,14 +53937,230 @@ module.exports = SpriteSheetFile;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(17);
-var File = __webpack_require__(18);
 var FileTypesManager = __webpack_require__(7);
-var GetFastValue = __webpack_require__(2);
+var ImageFile = __webpack_require__(36);
+
+/**
+ * @typedef {object} Phaser.Loader.FileTypes.SpriteSheetFileConfig
+ *
+ * @property {string} key - The key of the file. Must be unique within both the Loader and the Texture Manager.
+ * @property {string} [url] - The absolute or relative URL to load the file from.
+ * @property {string} [extension='png'] - The default file extension to use if no url is provided.
+ * @property {string} [normalMap] - The filename of an associated normal map. It uses the same path and url to load as the image.
+ * @property {Phaser.Loader.FileTypes.ImageFrameConfig} [frameConfig] - The frame configuration object.
+ * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ */
 
 /**
  * @classdesc
- * [description]
+ * A single Sprite Sheet Image File suitable for loading by the Loader.
+ *
+ * These are created when you use the Phaser.Loader.LoaderPlugin#spritesheet method and are not typically created directly.
+ * 
+ * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#spritesheet.
+ *
+ * @class SpriteSheetFile
+ * @extends Phaser.Loader.File
+ * @memberOf Phaser.Loader.FileTypes
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
+ * @param {(string|Phaser.Loader.FileTypes.SpriteSheetFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {string|string[]} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+ * @param {Phaser.Loader.FileTypes.ImageFrameConfig} [frameConfig] - The frame configuration object.
+ * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ */
+var SpriteSheetFile = new Class({
+
+    Extends: ImageFile,
+
+    initialize:
+
+    function SpriteSheetFile (loader, key, url, frameConfig, xhrSettings)
+    {
+        ImageFile.call(this, loader, key, url, xhrSettings, frameConfig);
+
+        this.type = 'spritesheet';
+    },
+
+    /**
+     * Adds this file to its target cache upon successful loading and processing.
+     *
+     * @method Phaser.Loader.FileTypes.SpriteSheetFile#addToCache
+     * @since 3.7.0
+     */
+    addToCache: function ()
+    {
+        var texture = this.cache.addSpriteSheet(this.key, this.data, this.config);
+
+        this.pendingDestroy(texture);
+    }
+
+});
+
+/**
+ * Adds a Sprite Sheet Image, or array of Sprite Sheet Images, to the current load queue.
+ *
+ * The term 'Sprite Sheet' in Phaser means a fixed-size sheet. Where every frame in the sheet is the exact same size,
+ * and you reference those frames using numbers, not frame names. This is not the same thing as a Texture Atlas, where
+ * the frames are packed in a way where they take up the least amount of space, and are referenced by their names,
+ * not numbers. Some articles and software use the term 'Sprite Sheet' to mean Texture Atlas, so please be aware of
+ * what sort of file you're actually trying to load.
+ *
+ * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
+ * 
+ * ```javascript
+ * function preload ()
+ * {
+ *     this.load.spritesheet('bot', 'images/robot.png', { frameWidth: 32, frameHeight: 38 });
+ * }
+ * ```
+ *
+ * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+ * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+ * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+ * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+ * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+ * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+ * loaded.
+ * 
+ * Phaser can load all common image types: png, jpg, gif and any other format the browser can natively handle.
+ * If you try to load an animated gif only the first frame will be rendered. Browsers do not natively support playback
+ * of animated gifs to Canvas elements.
+ *
+ * The key must be a unique String. It is used to add the file to the global Texture Manager upon a successful load.
+ * The key should be unique both in terms of files being loaded and files already present in the Texture Manager.
+ * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+ * then remove it from the Texture Manager first, before loading a new one.
+ *
+ * Instead of passing arguments you can pass a configuration object, such as:
+ * 
+ * ```javascript
+ * this.load.spritesheet({
+ *     key: 'bot',
+ *     url: 'images/robot.png',
+ *     frameConfig: {
+ *         frameWidth: 32,
+ *         frameHeight: 38,
+ *         startFrame: 0,
+ *         endFrame: 8
+ *     }
+ * });
+ * ```
+ *
+ * See the documentation for `Phaser.Loader.FileTypes.SpriteSheetFileConfig` for more details.
+ *
+ * Once the file has finished loading you can use it as a texture for a Game Object by referencing its key:
+ * 
+ * ```javascript
+ * this.load.spritesheet('bot', 'images/robot.png', { frameWidth: 32, frameHeight: 38 });
+ * // and later in your game ...
+ * this.add.image(x, y, 'bot', 0);
+ * ```
+ *
+ * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+ * key. For example, if the prefix was `PLAYER.` and the key was `Running` the final key will be `PLAYER.Running` and
+ * this is what you would use to retrieve the image from the Texture Manager.
+ *
+ * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+ *
+ * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+ * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension, although
+ * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+ *
+ * Phaser also supports the automatic loading of associated normal maps. If you have a normal map to go with this image,
+ * then you can specify it by providing an array as the `url` where the second element is the normal map:
+ * 
+ * ```javascript
+ * this.load.spritesheet('logo', [ 'images/AtariLogo.png', 'images/AtariLogo-n.png' ], { frameWidth: 256, frameHeight: 80 });
+ * ```
+ *
+ * Or, if you are using a config object use the `normalMap` property:
+ * 
+ * ```javascript
+ * this.load.spritesheet({
+ *     key: 'logo',
+ *     url: 'images/AtariLogo.png',
+ *     normalMap: 'images/AtariLogo-n.png',
+ *     frameConfig: {
+ *         frameWidth: 256,
+ *         frameHeight: 80
+ *     }
+ * });
+ * ```
+ *
+ * The normal map file is subject to the same conditions as the image file with regard to the path, baseURL, CORs and XHR Settings.
+ * Normal maps are a WebGL only feature.
+ * 
+ * Note: The ability to load this type of file will only be available if the Sprite Sheet File type has been built into Phaser.
+ * It is available in the default build but can be excluded from custom builds.
+ *
+ * @method Phaser.Loader.LoaderPlugin#spritesheet
+ * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+ * @since 3.0.0
+ *
+ * @param {(string|Phaser.Loader.FileTypes.SpriteSheetFileConfig|Phaser.Loader.FileTypes.SpriteSheetFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+ * @param {Phaser.Loader.FileTypes.ImageFrameConfig} [frameConfig] - The frame configuration object. At a minimum it should have a `frameWidth` property.
+ * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
+ *
+ * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
+ */
+FileTypesManager.register('spritesheet', function (key, url, frameConfig, xhrSettings)
+{
+    if (Array.isArray(key))
+    {
+        for (var i = 0; i < key.length; i++)
+        {
+            //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
+            this.addFile(new SpriteSheetFile(this, key[i]));
+        }
+    }
+    else
+    {
+        this.addFile(new SpriteSheetFile(this, key, url, frameConfig, xhrSettings));
+    }
+
+    return this;
+});
+
+module.exports = SpriteSheetFile;
+
+
+/***/ }),
+/* 344 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+var CONST = __webpack_require__(18);
+var File = __webpack_require__(19);
+var FileTypesManager = __webpack_require__(7);
+var GetFastValue = __webpack_require__(1);
+var IsPlainObject = __webpack_require__(9);
+
+/**
+ * @typedef {object} Phaser.Loader.FileTypes.ScriptFileConfig
+ *
+ * @property {string} key - The key of the file. Must be unique within the Loader.
+ * @property {string} [url] - The absolute or relative URL to load the file from.
+ * @property {string} [extension='js'] - The default file extension to use if no url is provided.
+ * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ */
+
+/**
+ * @classdesc
+ * A single Script File suitable for loading by the Loader.
+ *
+ * These are created when you use the Phaser.Loader.LoaderPlugin#script method and are not typically created directly.
+ * 
+ * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#script.
  *
  * @class ScriptFile
  * @extends Phaser.Loader.File
@@ -52219,10 +54168,10 @@ var GetFastValue = __webpack_require__(2);
  * @constructor
  * @since 3.0.0
  *
- * @param {string} key - [description]
- * @param {string} url - [description]
- * @param {string} path - [description]
- * @param {XHRSettingsObject} [xhrSettings] - [description]
+ * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
+ * @param {(string|Phaser.Loader.FileTypes.ScriptFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
+ * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var ScriptFile = new Class({
 
@@ -52230,24 +54179,41 @@ var ScriptFile = new Class({
 
     initialize:
 
-    function ScriptFile (key, url, path, xhrSettings)
+    function ScriptFile (loader, key, url, xhrSettings)
     {
-        var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
+        var extension = 'js';
+
+        if (IsPlainObject(key))
+        {
+            var config = key;
+
+            key = GetFastValue(config, 'key');
+            url = GetFastValue(config, 'url');
+            xhrSettings = GetFastValue(config, 'xhrSettings');
+            extension = GetFastValue(config, 'extension', extension);
+        }
 
         var fileConfig = {
             type: 'script',
-            extension: GetFastValue(key, 'extension', 'js'),
+            cache: false,
+            extension: extension,
             responseType: 'text',
-            key: fileKey,
-            url: GetFastValue(key, 'file', url),
-            path: path,
-            xhrSettings: GetFastValue(key, 'xhr', xhrSettings)
+            key: key,
+            url: url,
+            xhrSettings: xhrSettings
         };
 
         File.call(this, fileConfig);
     },
 
-    onProcess: function (callback)
+    /**
+     * Called automatically by Loader.nextFile.
+     * This method controls what extra work this File does with its loaded data.
+     *
+     * @method Phaser.Loader.FileTypes.ScriptFile#onProcess
+     * @since 3.7.0
+     */
+    onProcess: function ()
     {
         this.state = CONST.FILE_PROCESSING;
 
@@ -52259,29 +54225,67 @@ var ScriptFile = new Class({
 
         document.head.appendChild(this.data);
 
-        this.onComplete();
-
-        callback(this);
+        this.onProcessComplete();
     }
 
 });
 
 /**
- * Adds a JavaScript file to the current load queue.
+ * Adds a Script file, or array of Script files, to the current load queue.
  *
- * Note: This method will only be available if the Script File type has been built into Phaser.
+ * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
+ * 
+ * ```javascript
+ * function preload ()
+ * {
+ *     this.load.script('aliens', 'lib/aliens.js');
+ * }
+ * ```
  *
- * The file is **not** loaded immediately after calling this method.
- * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
+ * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+ * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+ * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+ * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+ * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+ * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+ * loaded.
+ * 
+ * The key must be a unique String and not already in-use by another file in the Loader.
+ *
+ * Instead of passing arguments you can pass a configuration object, such as:
+ * 
+ * ```javascript
+ * this.load.script({
+ *     key: 'aliens',
+ *     url: 'lib/aliens.js'
+ * });
+ * ```
+ *
+ * See the documentation for `Phaser.Loader.FileTypes.ScriptFileConfig` for more details.
+ *
+ * Once the file has finished loading it will automatically be converted into a script element
+ * via `document.createElement('script')`. It will have its language set to JavaScript, `defer` set to
+ * false and then the resulting element will be appended to `document.head`. Any code then in the
+ * script will be executed.
+ *
+ * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+ *
+ * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+ * and no URL is given then the Loader will set the URL to be "alien.js". It will always add `.js` as the extension, although
+ * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+ *
+ * Note: The ability to load this type of file will only be available if the Script File type has been built into Phaser.
+ * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#script
+ * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.0.0
  *
- * @param {string} key - [description]
- * @param {string} url - [description]
- * @param {XHRSettingsObject} [xhrSettings] - [description]
+ * @param {(string|Phaser.Loader.FileTypes.ScriptFileConfig|Phaser.Loader.FileTypes.ScriptFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
+ * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
- * @return {Phaser.Loader.LoaderPlugin} The Loader.
+ * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */
 FileTypesManager.register('script', function (key, url, xhrSettings)
 {
@@ -52290,15 +54294,14 @@ FileTypesManager.register('script', function (key, url, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new ScriptFile(key[i], url, this.path, xhrSettings));
+            this.addFile(new ScriptFile(this, key[i]));
         }
     }
     else
     {
-        this.addFile(new ScriptFile(key, url, this.path, xhrSettings));
+        this.addFile(new ScriptFile(this, key, url, xhrSettings));
     }
 
-    //  For method chaining
     return this;
 });
 
@@ -52306,7 +54309,7 @@ module.exports = ScriptFile;
 
 
 /***/ }),
-/* 343 */
+/* 345 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52316,15 +54319,29 @@ module.exports = ScriptFile;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(17);
-var File = __webpack_require__(18);
+var CONST = __webpack_require__(18);
+var File = __webpack_require__(19);
 var FileTypesManager = __webpack_require__(7);
-var GetFastValue = __webpack_require__(2);
-var PluginManager = __webpack_require__(10);
+var GetFastValue = __webpack_require__(1);
+var IsPlainObject = __webpack_require__(9);
+var PluginManager = __webpack_require__(11);
+
+/**
+ * @typedef {object} Phaser.Loader.FileTypes.PluginFileConfig
+ *
+ * @property {string} key - The key of the file. Must be unique within the Loader.
+ * @property {string} [url] - The absolute or relative URL to load the file from.
+ * @property {string} [extension='js'] - The default file extension to use if no url is provided.
+ * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ */
 
 /**
  * @classdesc
- * [description]
+ * A single Plugin Script File suitable for loading by the Loader.
+ *
+ * These are created when you use the Phaser.Loader.LoaderPlugin#plugin method and are not typically created directly.
+ * 
+ * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#plugin.
  *
  * @class PluginFile
  * @extends Phaser.Loader.File
@@ -52332,10 +54349,10 @@ var PluginManager = __webpack_require__(10);
  * @constructor
  * @since 3.0.0
  *
- * @param {string} key - [description]
- * @param {string} url - [description]
- * @param {string} path - [description]
- * @param {XHRSettingsObject} [xhrSettings] - [description]
+ * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
+ * @param {(string|Phaser.Loader.FileTypes.PluginFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
+ * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var PluginFile = new Class({
 
@@ -52343,32 +54360,48 @@ var PluginFile = new Class({
 
     initialize:
 
-    function PluginFile (key, url, path, xhrSettings)
+    function PluginFile (loader, key, url, xhrSettings)
     {
+        var extension = 'js';
+
+        if (IsPlainObject(key))
+        {
+            var config = key;
+
+            key = GetFastValue(config, 'key');
+            url = GetFastValue(config, 'url');
+            xhrSettings = GetFastValue(config, 'xhrSettings');
+            extension = GetFastValue(config, 'extension', extension);
+        }
+
         // If the url variable refers to a class, add the plugin directly
         if (typeof url === 'function')
         {
-            this.key = key;
             window[key] = url;
             window[key].register(PluginManager);
         }
 
-        var fileKey = (typeof key === 'string') ? key : GetFastValue(key, 'key', '');
-
         var fileConfig = {
             type: 'script',
-            extension: GetFastValue(key, 'extension', 'js'),
+            cache: false,
+            extension: extension,
             responseType: 'text',
-            key: fileKey,
-            url: GetFastValue(key, 'file', url),
-            path: path,
-            xhrSettings: GetFastValue(key, 'xhr', xhrSettings)
+            key: key,
+            url: url,
+            xhrSettings: xhrSettings
         };
 
         File.call(this, fileConfig);
     },
 
-    onProcess: function (callback)
+    /**
+     * Called automatically by Loader.nextFile.
+     * This method controls what extra work this File does with its loaded data.
+     *
+     * @method Phaser.Loader.FileTypes.PluginFile#onProcess
+     * @since 3.7.0
+     */
+    onProcess: function ()
     {
         this.state = CONST.FILE_PROCESSING;
 
@@ -52383,29 +54416,67 @@ var PluginFile = new Class({
         //  Need to wait for onload?
         window[this.key].register(PluginManager);
 
-        this.onComplete();
-
-        callback(this);
+        this.onProcessComplete();
     }
 
 });
 
 /**
- * Adds a Plugin file to the current load queue.
+ * Adds a Plugin Script file, or array of plugin files, to the current load queue.
  *
- * Note: This method will only be available if the Plugin File type has been built into Phaser.
+ * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
+ * 
+ * ```javascript
+ * function preload ()
+ * {
+ *     this.load.plugin('modplayer', 'plugins/ModPlayer.js');
+ * }
+ * ```
  *
- * The file is **not** loaded immediately after calling this method.
- * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
+ * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+ * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+ * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+ * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+ * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+ * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+ * loaded.
+ * 
+ * The key must be a unique String and not already in-use by another file in the Loader.
+ *
+ * Instead of passing arguments you can pass a configuration object, such as:
+ * 
+ * ```javascript
+ * this.load.plugin({
+ *     key: 'modplayer',
+ *     url: 'plugins/ModPlayer.js'
+ * });
+ * ```
+ *
+ * See the documentation for `Phaser.Loader.FileTypes.PluginFileConfig` for more details.
+ *
+ * Once the file has finished loading it will automatically be converted into a script element
+ * via `document.createElement('script')`. It will have its language set to JavaScript, `defer` set to
+ * false and then the resulting element will be appended to `document.head`. Any code then in the
+ * script will be executed. It will then be passed to the Phaser PluginManager.register method.
+ *
+ * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+ *
+ * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+ * and no URL is given then the Loader will set the URL to be "alien.js". It will always add `.js` as the extension, although
+ * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+ *
+ * Note: The ability to load this type of file will only be available if the Script File type has been built into Phaser.
+ * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#plugin
+ * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.0.0
  *
- * @param {string} key - [description]
- * @param {string} url - [description]
- * @param {XHRSettingsObject} [xhrSettings] - [description]
+ * @param {(string|Phaser.Loader.FileTypes.PluginFileConfig|Phaser.Loader.FileTypes.PluginFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
+ * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
- * @return {Phaser.Loader.LoaderPlugin} The Loader.
+ * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */
 FileTypesManager.register('plugin', function (key, url, xhrSettings)
 {
@@ -52414,182 +54485,18 @@ FileTypesManager.register('plugin', function (key, url, xhrSettings)
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new PluginFile(key[i], url, this.path, xhrSettings));
+            this.addFile(new PluginFile(this, key[i]));
         }
     }
     else
     {
-        this.addFile(new PluginFile(key, url, this.path, xhrSettings));
+        this.addFile(new PluginFile(this, key, url, xhrSettings));
     }
 
-    //  For method chaining
     return this;
 });
 
 module.exports = PluginFile;
-
-
-/***/ }),
-/* 344 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var FileTypesManager = __webpack_require__(7);
-var ImageFile = __webpack_require__(46);
-var JSONFile = __webpack_require__(36);
-var NumberArray = __webpack_require__(165);
-
-/**
- * Adds a Multi File Texture Atlas to the current load queue.
- *
- * Note: This method will only be available if the Multi Atlas File type has been built into Phaser.
- *
- * The file is **not** loaded immediately after calling this method.
- * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
- *
- * @method Phaser.Loader.LoaderPlugin#multiatlas
- * @since 3.0.0
- *
- * @param {string} key - [description]
- * @param {string[]} textureURLs - [description]
- * @param {string[]} atlasURLs - [description]
- * @param {XHRSettingsObject} [textureXhrSettings] - [description]
- * @param {XHRSettingsObject} [atlasXhrSettings] - [description]
- *
- * @return {Phaser.Loader.LoaderPlugin} The Loader.
- */
-FileTypesManager.register('multiatlas', function (key, textureURLs, atlasURLs, textureXhrSettings, atlasXhrSettings)
-{
-    if (typeof textureURLs === 'number')
-    {
-        var total = textureURLs;
-        var suffix = (atlasURLs === undefined) ? '' : atlasURLs;
-
-        textureURLs = NumberArray(0, total, key + suffix, '.png');
-        atlasURLs = NumberArray(0, total, key + suffix, '.json');
-    }
-    else
-    {
-        if (!Array.isArray(textureURLs))
-        {
-            textureURLs = [ textureURLs ];
-        }
-
-        if (!Array.isArray(atlasURLs))
-        {
-            atlasURLs = [ atlasURLs ];
-        }
-    }
-
-    var file;
-    var i = 0;
-    var multiKey;
-
-    this._multilist[key] = [];
-
-    for (i = 0; i < textureURLs.length; i++)
-    {
-        multiKey = '_MA_IMG_' + key + '_' + i.toString();
-
-        file = new ImageFile(multiKey, textureURLs[i], this.path, textureXhrSettings);
-
-        this.addFile(file);
-
-        this._multilist[key].push(multiKey);
-    }
-
-    for (i = 0; i < atlasURLs.length; i++)
-    {
-        multiKey = '_MA_JSON_' + key + '_' + i.toString();
-
-        file = new JSONFile(multiKey, atlasURLs[i], this.path, atlasXhrSettings);
-
-        this.addFile(file);
-
-        this._multilist[key].push(multiKey);
-    }
-
-    return this;
-});
-
-
-/***/ }),
-/* 345 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var AudioFile = __webpack_require__(158);
-var CONST = __webpack_require__(17);
-var FileTypesManager = __webpack_require__(7);
-var JSONFile = __webpack_require__(36);
-
-/**
- * Adds an Audio Sprite file to the current load queue.
- *
- * Note: This method will only be available if the Audio Sprite File type has been built into Phaser.
- *
- * The file is **not** loaded immediately after calling this method.
- * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
- *
- * @method Phaser.Loader.LoaderPlugin#audioSprite
- * @since 3.0.0
- *
- * @param {string} key - [description]
- * @param {(string|string[])} urls - [description]
- * @param {object} json - [description]
- * @param {object} config - [description]
- * @param {XHRSettingsObject} [audioXhrSettings] - Optional file specific XHR settings.
- * @param {XHRSettingsObject} [jsonXhrSettings] - Optional file specific XHR settings.
- *
- * @return {Phaser.Loader.LoaderPlugin} The Loader.
- */
-FileTypesManager.register('audioSprite', function (key, urls, json, config, audioXhrSettings, jsonXhrSettings)
-{
-    var audioFile = AudioFile.create(this, key, urls, config, audioXhrSettings);
-
-    if (audioFile)
-    {
-        var jsonFile;
-
-        if (typeof json === 'string')
-        {
-            jsonFile = new JSONFile(key, json, this.path, jsonXhrSettings);
-
-            this.addFile(jsonFile);
-        }
-        else
-        {
-            jsonFile = {
-                type: 'json',
-                key: key,
-                data: json,
-                state: CONST.FILE_WAITING_LINKFILE
-            };
-        }
-
-        //  Link them together
-        audioFile.linkFile = jsonFile;
-        jsonFile.linkFile = audioFile;
-
-        //  Set the type
-        audioFile.linkType = 'audioSprite';
-        jsonFile.linkType = 'audioSprite';
-
-        this.addFile(audioFile);
-    }
-
-    return this;
-});
 
 
 /***/ }),
@@ -52602,85 +54509,330 @@ FileTypesManager.register('audioSprite', function (key, urls, json, config, audi
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var Class = __webpack_require__(0);
 var FileTypesManager = __webpack_require__(7);
-var ImageFile = __webpack_require__(46);
-var JSONFile = __webpack_require__(36);
+var GetFastValue = __webpack_require__(1);
+var ImageFile = __webpack_require__(36);
+var IsPlainObject = __webpack_require__(9);
+var JSONFile = __webpack_require__(28);
+var MultiFile = __webpack_require__(40);
 
 /**
- * An Atlas JSON File.
+ * @typedef {object} Phaser.Loader.FileTypes.MultiAtlasFileConfig
  *
- * @function Phaser.Loader.FileTypes.AtlasJSONFile
- * @since 3.0.0
- *
- * @param {string} key - The key of the file within the loader.
- * @param {string} textureURL - The url to load the texture file from.
- * @param {string} atlasURL - The url to load the atlas file from.
- * @param {string} path - The path of the file.
- * @param {XHRSettingsObject} [textureXhrSettings] - Optional texture file specific XHR settings.
- * @param {XHRSettingsObject} [atlasXhrSettings] - Optional atlas file specific XHR settings.
- *
- * @return {object} An object containing two File objects to be added to the loader.
+ * @property {string} key - The key of the file. Must be unique within both the Loader and the Texture Manager.
+ * @property {string} [atlasURL] - The absolute or relative URL to load the multi atlas json file from. Or, a well formed JSON object.
+ * @property {string} [atlasExtension='json'] - The default file extension to use for the atlas json if no url is provided.
+ * @property {XHRSettingsObject} [atlasXhrSettings] - Extra XHR Settings specifically for the atlas json file.
+ * @property {string} [path] - Optional path to use when loading the textures defined in the atlas data.
+ * @property {string} [baseURL] - Optional Base URL to use when loading the textures defined in the atlas data.
+ * @property {XHRSettingsObject} [textureXhrSettings] - Extra XHR Settings specifically for the texture files.
  */
-var AtlasJSONFile = function (key, textureURL, atlasURL, path, textureXhrSettings, atlasXhrSettings)
-{
-    var image = new ImageFile(key, textureURL, path, textureXhrSettings);
-    var data = new JSONFile(key, atlasURL, path, atlasXhrSettings);
-
-    //  Link them together
-    image.linkFile = data;
-    data.linkFile = image;
-
-    //  Set the type
-    image.linkType = 'atlasjson';
-    data.linkType = 'atlasjson';
-
-    return { texture: image, data: data };
-};
 
 /**
- * Adds a Texture Atlas file to the current load queue.
+ * @classdesc
+ * A single Multi Texture Atlas File suitable for loading by the Loader.
  *
- * Note: This method will only be available if the Atlas JSON File type has been built into Phaser.
+ * These are created when you use the Phaser.Loader.LoaderPlugin#multiatlas method and are not typically created directly.
+ * 
+ * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#multiatlas.
  *
- * The file is **not** loaded immediately after calling this method.
- * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
+ * @class MultiAtlasFile
+ * @extends Phaser.Loader.MultiFile
+ * @memberOf Phaser.Loader.FileTypes
+ * @constructor
+ * @since 3.7.0
  *
- * @method Phaser.Loader.LoaderPlugin#atlas
- * @since 3.0.0
- *
- * @param {string} key - The key of the file within the loader.
- * @param {string} textureURL - The url to load the texture file from.
- * @param {string} atlasURL - The url to load the atlas file from.
- * @param {XHRSettingsObject} [textureXhrSettings] - Optional texture file specific XHR settings.
- * @param {XHRSettingsObject} [atlasXhrSettings] - Optional atlas file specific XHR settings.
- *
- * @return {Phaser.Loader.LoaderPlugin} The Loader.
+ * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
+ * @param {string} key - The key of the file. Must be unique within both the Loader and the Texture Manager.
+ * @param {string} [atlasURL] - The absolute or relative URL to load the multi atlas json file from.
+ * @param {string} [path] - Optional path to use when loading the textures defined in the atlas data.
+ * @param {string} [baseURL] - Optional Base URL to use when loading the textures defined in the atlas data.
+ * @param {XHRSettingsObject} [atlasXhrSettings] - Extra XHR Settings specifically for the atlas json file.
+ * @param {XHRSettingsObject} [textureXhrSettings] - Extra XHR Settings specifically for the texture files.
  */
-FileTypesManager.register('atlas', function (key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
-{
+var MultiAtlasFile = new Class({
 
-    var files;
+    Extends: MultiFile,
 
-    // If param key is an object, use object based loading method
-    if ((typeof key === 'object') && (key !== null))
+    initialize:
+
+    function MultiAtlasFile (loader, key, atlasURL, path, baseURL, atlasXhrSettings, textureXhrSettings)
     {
-        files = new AtlasJSONFile(key.key, key.texture, key.data, this.path, textureXhrSettings, atlasXhrSettings);
+        if (IsPlainObject(key))
+        {
+            var config = key;
+
+            key = GetFastValue(config, 'key');
+            atlasURL = GetFastValue(config, 'url');
+            atlasXhrSettings = GetFastValue(config, 'xhrSettings');
+            path = GetFastValue(config, 'path');
+            baseURL = GetFastValue(config, 'baseURL');
+            textureXhrSettings = GetFastValue(config, 'textureXhrSettings');
+        }
+
+        var data = new JSONFile(loader, key, atlasURL, atlasXhrSettings);
+
+        MultiFile.call(this, loader, 'multiatlas', key, [ data ]);
+
+        this.config.path = path;
+        this.config.baseURL = baseURL;
+        this.config.textureXhrSettings = textureXhrSettings;
+    },
+
+    /**
+     * Called by each File when it finishes loading.
+     *
+     * @method Phaser.Loader.MultiFile#onFileComplete
+     * @since 3.7.0
+     *
+     * @param {Phaser.Loader.File} file - The File that has completed processing.
+     */
+    onFileComplete: function (file)
+    {
+        var index = this.files.indexOf(file);
+
+        if (index !== -1)
+        {
+            this.pending--;
+
+            if (file.type === 'json' && file.data.hasOwnProperty('textures'))
+            {
+                //  Inspect the data for the files to now load
+                var textures = file.data.textures;
+
+                var config = this.config;
+                var loader = this.loader;
+
+                var currentBaseURL = loader.baseURL;
+                var currentPath = loader.path;
+                var currentPrefix = loader.prefix;
+
+                var baseURL = GetFastValue(config, 'baseURL', currentBaseURL);
+                var path = GetFastValue(config, 'path', currentPath);
+                var prefix = GetFastValue(config, 'prefix', currentPrefix);
+                var textureXhrSettings = GetFastValue(config, 'textureXhrSettings');
+
+                loader.setBaseURL(baseURL);
+                loader.setPath(path);
+                loader.setPrefix(prefix);
+
+                for (var i = 0; i < textures.length; i++)
+                {
+                    //  "image": "texture-packer-multi-atlas-0.png",
+                    var textureURL = textures[i].image;
+
+                    var key = '_MA_' + textureURL;
+
+                    var image = new ImageFile(loader, key, textureURL, textureXhrSettings);
+
+                    this.addToMultiFile(image);
+
+                    loader.addFile(image);
+
+                    //  "normalMap": "texture-packer-multi-atlas-0_n.png",
+                    if (textures[i].normalMap)
+                    {
+                        var normalMap = new ImageFile(loader, key, textures[i].normalMap, textureXhrSettings);
+
+                        normalMap.type = 'normalMap';
+
+                        image.setLink(normalMap);
+
+                        this.addToMultiFile(normalMap);
+
+                        loader.addFile(normalMap);
+                    }
+                }
+
+                //  Reset the loader settings
+                loader.setBaseURL(currentBaseURL);
+                loader.setPath(currentPath);
+                loader.setPrefix(currentPrefix);
+            }
+        }
+    },
+
+    /**
+     * Adds this file to its target cache upon successful loading and processing.
+     *
+     * @method Phaser.Loader.MultiFile#addToCache
+     * @since 3.7.0
+     */
+    addToCache: function ()
+    {
+        if (this.isReadyToProcess())
+        {
+            var fileJSON = this.files[0];
+
+            fileJSON.addToCache();
+
+            var data = [];
+            var images = [];
+            var normalMaps = [];
+
+            for (var i = 1; i < this.files.length; i++)
+            {
+                var file = this.files[i];
+
+                if (file.type === 'normalMap')
+                {
+                    continue;
+                }
+
+                var key = file.key.substr(4);
+                var image = file.data;
+
+                //  Now we need to find out which json entry this mapped to
+                for (var t = 0; t < fileJSON.data.textures.length; t++)
+                {
+                    var item = fileJSON.data.textures[t];
+
+                    if (item.image === key)
+                    {
+                        images.push(image);
+                        
+                        data.push(item);
+
+                        if (file.linkFile)
+                        {
+                            normalMaps.push(file.linkFile.data);
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            if (normalMaps.length === 0)
+            {
+                normalMaps = undefined;
+            }
+
+            this.loader.textureManager.addAtlasJSONArray(this.key, images, data, normalMaps);
+
+            this.complete = true;
+
+            for (i = 0; i < this.files.length; i++)
+            {
+                this.files[i].pendingDestroy();
+            }
+        }
     }
 
-    // Else just use the parameters like normal
+});
+
+/**
+ * Adds a Multi Texture Atlas, or array of multi atlases, to the current load queue.
+ *
+ * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
+ * 
+ * ```javascript
+ * function preload ()
+ * {
+ *     this.load.multiatlas('level1', 'images/Level1.json');
+ * }
+ * ```
+ *
+ * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+ * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+ * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+ * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+ * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+ * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+ * loaded.
+ * 
+ * If you call this from outside of `preload` then you are responsible for starting the Loader afterwards and monitoring
+ * its events to know when it's safe to use the asset. Please see the Phaser.Loader.LoaderPlugin class for more details.
+ *
+ * Phaser expects the atlas data to be provided in a JSON file as exported from the application Texture Packer,
+ * version 4.6.3 or above, where you have made sure to use the Phaser 3 Export option.
+ *
+ * The way it works internally is that you provide a URL to the JSON file. Phaser then loads this JSON, parses it and
+ * extracts which texture files it also needs to load to complete the process. If the JSON also defines normal maps,
+ * Phaser will load those as well.
+ * 
+ * The key must be a unique String. It is used to add the file to the global Texture Manager upon a successful load.
+ * The key should be unique both in terms of files being loaded and files already present in the Texture Manager.
+ * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+ * then remove it from the Texture Manager first, before loading a new one.
+ *
+ * Instead of passing arguments you can pass a configuration object, such as:
+ * 
+ * ```javascript
+ * this.load.multiatlas({
+ *     key: 'level1',
+ *     atlasURL: 'images/Level1.json'
+ * });
+ * ```
+ *
+ * See the documentation for `Phaser.Loader.FileTypes.MultiAtlasFileConfig` for more details.
+ *
+ * Instead of passing a URL for the atlas JSON data you can also pass in a well formed JSON object instead.
+ *
+ * Once the atlas has finished loading you can use frames from it as textures for a Game Object by referencing its key:
+ * 
+ * ```javascript
+ * this.load.multiatlas('level1', 'images/Level1.json');
+ * // and later in your game ...
+ * this.add.image(x, y, 'level1', 'background');
+ * ```
+ *
+ * To get a list of all available frames within an atlas please consult your Texture Atlas software.
+ *
+ * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+ * key. For example, if the prefix was `MENU.` and the key was `Background` the final key will be `MENU.Background` and
+ * this is what you would use to retrieve the image from the Texture Manager.
+ *
+ * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+ *
+ * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+ * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension, although
+ * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+ *
+ * Note: The ability to load this type of file will only be available if the Multi Atlas File type has been built into Phaser.
+ * It is available in the default build but can be excluded from custom builds.
+ *
+ * @method Phaser.Loader.LoaderPlugin#multiatlas
+ * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+ * @since 3.7.0
+ *
+ * @param {(string|Phaser.Loader.FileTypes.MultiAtlasFileConfig|Phaser.Loader.FileTypes.MultiAtlasFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {string} [atlasURL] - The absolute or relative URL to load the texture atlas json data file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+ * @param {string} [path] - Optional path to use when loading the textures defined in the atlas data.
+ * @param {string} [baseURL] - Optional Base URL to use when loading the textures defined in the atlas data.
+ * @param {XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the atlas json file. Used in replacement of the Loaders default XHR Settings.
+ *
+ * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
+ */
+FileTypesManager.register('multiatlas', function (key, atlasURL, path, baseURL, atlasXhrSettings)
+{
+    var multifile;
+
+    //  Supports an Object file definition in the key argument
+    //  Or an array of objects in the key argument
+    //  Or a single entry where all arguments have been defined
+
+    if (Array.isArray(key))
+    {
+        for (var i = 0; i < key.length; i++)
+        {
+            multifile = new MultiAtlasFile(this, key[i]);
+
+            this.addFile(multifile.files);
+        }
+    }
     else
     {
-        //  Returns an object with two properties: 'texture' and 'data'
-        files = new AtlasJSONFile(key, textureURL, atlasURL, this.path, textureXhrSettings, atlasXhrSettings);
-    }
+        multifile = new MultiAtlasFile(this, key, atlasURL, path, baseURL, atlasXhrSettings);
 
-    this.addFile(files.texture);
-    this.addFile(files.data);
+        this.addFile(multifile.files);
+    }
 
     return this;
 });
 
-module.exports = AtlasJSONFile;
+module.exports = MultiAtlasFile;
 
 
 /***/ }),
@@ -52693,80 +54845,763 @@ module.exports = AtlasJSONFile;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var AudioFile = __webpack_require__(162);
+var Class = __webpack_require__(0);
 var FileTypesManager = __webpack_require__(7);
-var JSONFile = __webpack_require__(36);
+var GetFastValue = __webpack_require__(1);
+var IsPlainObject = __webpack_require__(9);
+var JSONFile = __webpack_require__(28);
+var MultiFile = __webpack_require__(40);
 
 /**
- * An Animation JSON File.
+ * @typedef {object} Phaser.Loader.FileTypes.AudioSpriteFileFileConfig
  *
- * @function Phaser.Loader.FileTypes.AnimationJSONFile
- * @since 3.0.0
- *
- * @param {string} key - The key of the file within the loader.
- * @param {string} url - The url to load the file from.
- * @param {string} path - The path of the file.
- * @param {XHRSettingsObject} [xhrSettings] - Optional file specific XHR settings.
- *
- * @return {Phaser.Loader.FileTypes.JSONFile} A File instance to be added to the Loader.
+ * @property {string} key - The key of the file. Must be unique within both the Loader and the Audio Cache.
+ * @property {string} jsonURL - The absolute or relative URL to load the json file from. Or a well formed JSON object to use instead.
+ * @property {XHRSettingsObject} [jsonXhrSettings] - Extra XHR Settings specifically for the json file.
+ * @property {string} [audioURL] - The absolute or relative URL to load the audio file from.
+ * @property {any} [audioConfig] - The audio configuration options.
+ * @property {XHRSettingsObject} [audioXhrSettings] - Extra XHR Settings specifically for the audio file.
  */
-var AnimationJSONFile = function (key, url, path, xhrSettings)
-{
-    var json = new JSONFile(key, url, path, xhrSettings);
-
-    //  Override the File type
-    json.type = 'animationJSON';
-
-    return json;
-};
 
 /**
- * Adds an Animation JSON file to the current load queue.
+ * @classdesc
+ * An Audio Sprite File suitable for loading by the Loader.
  *
- * Note: This method will only be available if the Animation JSON File type has been built into Phaser.
+ * These are created when you use the Phaser.Loader.LoaderPlugin#audioSprite method and are not typically created directly.
+ * 
+ * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#audioSprite.
  *
- * The file is **not** loaded immediately after calling this method.
- * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
+ * @class AudioSpriteFile
+ * @extends Phaser.Loader.MultiFile
+ * @memberOf Phaser.Loader.FileTypes
+ * @constructor
+ * @since 3.7.0
  *
- * @method Phaser.Loader.LoaderPlugin#animation
+ * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
+ * @param {(string|Phaser.Loader.FileTypes.AudioSpriteFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {string} jsonURL - The absolute or relative URL to load the json file from. Or a well formed JSON object to use instead.
+ * @param {string} [audioURL] - The absolute or relative URL to load the audio file from. If empty it will be obtained by parsing the JSON file.
+ * @param {any} [audioConfig] - The audio configuration options.
+ * @param {XHRSettingsObject} [audioXhrSettings] - An XHR Settings configuration object for the audio file. Used in replacement of the Loaders default XHR Settings.
+ * @param {XHRSettingsObject} [jsonXhrSettings] - An XHR Settings configuration object for the json file. Used in replacement of the Loaders default XHR Settings.
+ */
+var AudioSpriteFile = new Class({
+
+    Extends: MultiFile,
+
+    initialize:
+
+    function AudioSpriteFile (loader, key, jsonURL, audioURL, audioConfig, audioXhrSettings, jsonXhrSettings)
+    {
+        if (IsPlainObject(key))
+        {
+            var config = key;
+
+            key = GetFastValue(config, 'key');
+            jsonURL = GetFastValue(config, 'jsonURL');
+            audioURL = GetFastValue(config, 'audioURL');
+            audioConfig = GetFastValue(config, 'audioConfig');
+            audioXhrSettings = GetFastValue(config, 'audioXhrSettings');
+            jsonXhrSettings = GetFastValue(config, 'jsonXhrSettings');
+        }
+
+        var data;
+
+        //  No url? then we're going to do a json load and parse it from that
+        if (!audioURL)
+        {
+            data = new JSONFile(loader, key, jsonURL, jsonXhrSettings);
+            
+            MultiFile.call(this, loader, 'audiosprite', key, [ data ]);
+
+            this.config.resourceLoad = true;
+            this.config.audioConfig = audioConfig;
+            this.config.audioXhrSettings = audioXhrSettings;
+        }
+        else
+        {
+            var audio = AudioFile.create(loader, key, audioURL, audioConfig, audioXhrSettings);
+
+            if (audio)
+            {
+                data = new JSONFile(loader, key, jsonURL, jsonXhrSettings);
+
+                MultiFile.call(this, loader, 'audiosprite', key, [ audio, data ]);
+
+                this.config.resourceLoad = false;
+            }
+        }
+    },
+
+    /**
+     * Called by each File when it finishes loading.
+     *
+     * @method Phaser.Loader.AudioSpriteFile#onFileComplete
+     * @since 3.7.0
+     *
+     * @param {Phaser.Loader.File} file - The File that has completed processing.
+     */
+    onFileComplete: function (file)
+    {
+        var index = this.files.indexOf(file);
+
+        if (index !== -1)
+        {
+            this.pending--;
+
+            if (this.config.resourceLoad && file.type === 'json' && file.data.hasOwnProperty('resources'))
+            {
+                //  Inspect the data for the files to now load
+                var urls = file.data.resources;
+
+                var audioConfig = GetFastValue(this.config, 'audioConfig');
+                var audioXhrSettings = GetFastValue(this.config, 'audioXhrSettings');
+
+                var audio = AudioFile.create(this.loader, file.key, urls, audioConfig, audioXhrSettings);
+
+                if (audio)
+                {
+                    this.addToMultiFile(audio);
+
+                    this.loader.addFile(audio);
+                }
+            }
+        }
+    },
+
+    /**
+     * Adds this file to its target cache upon successful loading and processing.
+     *
+     * @method Phaser.Loader.AudioSpriteFile#addToCache
+     * @since 3.7.0
+     */
+    addToCache: function ()
+    {
+        if (this.isReadyToProcess())
+        {
+            var fileA = this.files[0];
+            var fileB = this.files[1];
+
+            fileA.addToCache();
+            fileB.addToCache();
+
+            this.complete = true;
+        }
+    }
+
+});
+
+/**
+ * Adds a JSON based Audio Sprite, or array of audio sprites, to the current load queue.
+ *
+ * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
+ * 
+ * ```javascript
+ * function preload ()
+ * {
+ *     this.load.audioSprite('kyobi', 'kyobi.json', [
+ *         'kyobi.ogg',
+ *         'kyobi.mp3',
+ *         'kyobi.m4a'
+ *     ]);
+ * }
+ * ```
+ * 
+ * Audio Sprites are a combination of audio files and a JSON configuration.
+ * The JSON follows the format of that created by https://github.com/tonistiigi/audiosprite
+ *
+ * If the JSON file includes a 'resource' object then you can let Phaser parse it and load the audio
+ * files automatically based on its content. To do this exclude the audio URLs from the load:
+ * 
+ * ```javascript
+ * function preload ()
+ * {
+ *     this.load.audioSprite('kyobi', 'kyobi.json');
+ * }
+ * ```
+ *
+ * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+ * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+ * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+ * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+ * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+ * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+ * loaded.
+ * 
+ * If you call this from outside of `preload` then you are responsible for starting the Loader afterwards and monitoring
+ * its events to know when it's safe to use the asset. Please see the Phaser.Loader.LoaderPlugin class for more details.
+ *
+ * The key must be a unique String. It is used to add the file to the global Audio Cache upon a successful load.
+ * The key should be unique both in terms of files being loaded and files already present in the Audio Cache.
+ * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+ * then remove it from the Audio Cache first, before loading a new one.
+ *
+ * Instead of passing arguments you can pass a configuration object, such as:
+ * 
+ * ```javascript
+ * this.load.audioSprite({
+ *     key: 'kyobi',
+ *     jsonURL: 'audio/Kyobi.json',
+ *     audioURL: [
+ *         'audio/Kyobi.ogg',
+ *         'audio/Kyobi.mp3',
+ *         'audio/Kyobi.m4a'
+ *     ]
+ * });
+ * ```
+ *
+ * See the documentation for `Phaser.Loader.FileTypes.AudioSpriteFileConfig` for more details.
+ *
+ * Instead of passing a URL for the audio JSON data you can also pass in a well formed JSON object instead.
+ *
+ * Once the audio has finished loading you can use it create an Audio Sprite by referencing its key:
+ * 
+ * ```javascript
+ * this.load.audioSprite('kyobi', 'kyobi.json');
+ * // and later in your game ...
+ * var music = this.sound.addAudioSprite('kyobi');
+ * music.play('title');
+ * ```
+ *
+ * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+ * key. For example, if the prefix was `MENU.` and the key was `Background` the final key will be `MENU.Background` and
+ * this is what you would use to retrieve the image from the Texture Manager.
+ *
+ * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+ *
+ * Due to different browsers supporting different audio file types you should usually provide your audio files in a variety of formats.
+ * ogg, mp3 and m4a are the most common. If you provide an array of URLs then the Loader will determine which _one_ file to load based on
+ * browser support.
+ *
+ * If audio has been disabled in your game, either via the game config, or lack of support from the device, then no audio will be loaded.
+ * 
+ * Note: The ability to load this type of file will only be available if the Audio Sprite File type has been built into Phaser.
+ * It is available in the default build but can be excluded from custom builds.
+ *
+ * @method Phaser.Loader.LoaderPlugin#audioSprite
+ * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.0.0
  *
- * @param {(string|array|object)} key - A unique string to be used as the key to reference this file from the Cache. Must be unique within this file type.
- * @param {string} [url] - URL of the file. If `undefined` or `null` the url will be set to `<key>.json`,
- * i.e. if `key` was "alien" then the URL will be "alien.json".
- * @param {XHRSettingsObject} [xhrSettings] - File specific XHR settings to be used during the load. These settings are merged with the global Loader XHR settings.
+ * @param {(string|Phaser.Loader.FileTypes.AudioSpriteFileConfig|Phaser.Loader.FileTypes.AudioSpriteFileConfig[])} key - The key to use for this file, or a file configuration object, or an array of objects.
+ * @param {string} jsonURL - The absolute or relative URL to load the json file from. Or a well formed JSON object to use instead.
+ * @param {string} [audioURL] - The absolute or relative URL to load the audio file from. If empty it will be obtained by parsing the JSON file.
+ * @param {any} [audioConfig] - The audio configuration options.
+ * @param {XHRSettingsObject} [audioXhrSettings] - An XHR Settings configuration object for the audio file. Used in replacement of the Loaders default XHR Settings.
+ * @param {XHRSettingsObject} [jsonXhrSettings] - An XHR Settings configuration object for the json file. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */
-FileTypesManager.register('animation', function (key, url, xhrSettings)
+FileTypesManager.register('audioSprite', function (key, jsonURL, audioURL, audioConfig, audioXhrSettings, jsonXhrSettings)
 {
+    var game = this.systems.game;
+    var gameAudioConfig = game.config.audio;
+    var deviceAudio = game.device.audio;
+
+    if ((gameAudioConfig && gameAudioConfig.noAudio) || (!deviceAudio.webAudio && !deviceAudio.audioData))
+    {
+        //  Sounds are disabled, so skip loading audio
+        return this;
+    }
+
+    var multifile;
+
+    //  Supports an Object file definition in the key argument
+    //  Or an array of objects in the key argument
+    //  Or a single entry where all arguments have been defined
+
     if (Array.isArray(key))
     {
         for (var i = 0; i < key.length; i++)
         {
-            //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new AnimationJSONFile(key[i], url, this.path, xhrSettings));
+            multifile = new AudioSpriteFile(this, key[i]);
+
+            if (multifile.files)
+            {
+                this.addFile(multifile.files);
+            }
         }
     }
     else
     {
-        this.addFile(new AnimationJSONFile(key, url, this.path, xhrSettings));
+        multifile = new AudioSpriteFile(this, key, jsonURL, audioURL, audioConfig, audioXhrSettings, jsonXhrSettings);
+
+        if (multifile.files)
+        {
+            this.addFile(multifile.files);
+        }
     }
 
-    //  For method chaining
     return this;
 });
 
-//  When registering a factory function 'this' refers to the Loader context.
-//
-//  There are several properties available to use:
-//
-//  this.scene - a reference to the Scene that owns the GameObjectFactory
+
+/***/ }),
+/* 348 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+var FileTypesManager = __webpack_require__(7);
+var GetFastValue = __webpack_require__(1);
+var ImageFile = __webpack_require__(36);
+var IsPlainObject = __webpack_require__(9);
+var JSONFile = __webpack_require__(28);
+var MultiFile = __webpack_require__(40);
+
+/**
+ * @typedef {object} Phaser.Loader.FileTypes.AtlasJSONFileConfig
+ *
+ * @property {string} key - The key of the file. Must be unique within both the Loader and the Texture Manager.
+ * @property {string} [textureURL] - The absolute or relative URL to load the texture image file from.
+ * @property {string} [textureExtension='png'] - The default file extension to use for the image texture if no url is provided.
+ * @property {XHRSettingsObject} [textureXhrSettings] - Extra XHR Settings specifically for the texture image file.
+ * @property {string} [normalMap] - The filename of an associated normal map. It uses the same path and url to load as the texture image.
+ * @property {string} [atlasURL] - The absolute or relative URL to load the atlas json file from. Or a well formed JSON object to use instead.
+ * @property {string} [atlasExtension='json'] - The default file extension to use for the atlas json if no url is provided.
+ * @property {XHRSettingsObject} [atlasXhrSettings] - Extra XHR Settings specifically for the atlas json file.
+ */
+
+/**
+ * @classdesc
+ * A single JSON based Texture Atlas File suitable for loading by the Loader.
+ *
+ * These are created when you use the Phaser.Loader.LoaderPlugin#atlas method and are not typically created directly.
+ * 
+ * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#atlas.
+ * 
+ * https://www.codeandweb.com/texturepacker/tutorials/how-to-create-sprite-sheets-for-phaser3?source=photonstorm
+ *
+ * @class AtlasJSONFile
+ * @extends Phaser.Loader.MultiFile
+ * @memberOf Phaser.Loader.FileTypes
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
+ * @param {(string|Phaser.Loader.FileTypes.AtlasJSONFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {string|string[]} [textureURL] - The absolute or relative URL to load the texture image file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+ * @param {string} [atlasURL] - The absolute or relative URL to load the texture atlas json data file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+ * @param {XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.
+ * @param {XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the atlas json file. Used in replacement of the Loaders default XHR Settings.
+ */
+var AtlasJSONFile = new Class({
+
+    Extends: MultiFile,
+
+    initialize:
+
+    function AtlasJSONFile (loader, key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
+    {
+        var image;
+        var data;
+
+        if (IsPlainObject(key))
+        {
+            var config = key;
+
+            key = GetFastValue(config, 'key');
+
+            image = new ImageFile(loader, {
+                key: key,
+                url: GetFastValue(config, 'textureURL'),
+                extension: GetFastValue(config, 'textureExtension', 'png'),
+                normalMap: GetFastValue(config, 'normalMap'),
+                xhrSettings: GetFastValue(config, 'textureXhrSettings')
+            });
+
+            data = new JSONFile(loader, {
+                key: key,
+                url: GetFastValue(config, 'atlasURL'),
+                extension: GetFastValue(config, 'atlasExtension', 'json'),
+                xhrSettings: GetFastValue(config, 'atlasXhrSettings')
+            });
+        }
+        else
+        {
+            image = new ImageFile(loader, key, textureURL, textureXhrSettings);
+            data = new JSONFile(loader, key, atlasURL, atlasXhrSettings);
+        }
+
+        if (image.linkFile)
+        {
+            //  Image has a normal map
+            MultiFile.call(this, loader, 'atlasjson', key, [ image, data, image.linkFile ]);
+        }
+        else
+        {
+            MultiFile.call(this, loader, 'atlasjson', key, [ image, data ]);
+        }
+    },
+
+    /**
+     * Adds this file to its target cache upon successful loading and processing.
+     *
+     * @method Phaser.Loader.FileTypes.AtlasJSONFile#addToCache
+     * @since 3.7.0
+     */
+    addToCache: function ()
+    {
+        if (this.isReadyToProcess())
+        {
+            var image = this.files[0];
+            var json = this.files[1];
+            var normalMap = (this.files[2]) ? this.files[2].data : null;
+
+            this.loader.textureManager.addAtlas(image.key, image.data, json.data, normalMap);
+
+            json.addToCache();
+
+            this.complete = true;
+        }
+    }
+
+});
+
+/**
+ * Adds a JSON based Texture Atlas, or array of atlases, to the current load queue.
+ *
+ * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
+ * 
+ * ```javascript
+ * function preload ()
+ * {
+ *     this.load.atlas('mainmenu', 'images/MainMenu.png', 'images/MainMenu.json');
+ * }
+ * ```
+ *
+ * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+ * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+ * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+ * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+ * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+ * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+ * loaded.
+ * 
+ * If you call this from outside of `preload` then you are responsible for starting the Loader afterwards and monitoring
+ * its events to know when it's safe to use the asset. Please see the Phaser.Loader.LoaderPlugin class for more details.
+ *
+ * Phaser expects the atlas data to be provided in a JSON file, using either the JSON Hash or JSON Array format.
+ * These files are created by software such as Texture Packer, Shoebox and Adobe Flash / Animate.
+ * If you are using Texture Packer and have enabled multi-atlas support, then please use the Phaser Multi Atlas loader
+ * instead of this one.
+ * 
+ * Phaser can load all common image types: png, jpg, gif and any other format the browser can natively handle.
+ *
+ * The key must be a unique String. It is used to add the file to the global Texture Manager upon a successful load.
+ * The key should be unique both in terms of files being loaded and files already present in the Texture Manager.
+ * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+ * then remove it from the Texture Manager first, before loading a new one.
+ *
+ * Instead of passing arguments you can pass a configuration object, such as:
+ * 
+ * ```javascript
+ * this.load.atlas({
+ *     key: 'mainmenu',
+ *     textureURL: 'images/MainMenu.png',
+ *     atlasURL: 'images/MainMenu.json'
+ * });
+ * ```
+ *
+ * See the documentation for `Phaser.Loader.FileTypes.AtlasJSONFileConfig` for more details.
+ *
+ * Instead of passing a URL for the atlas JSON data you can also pass in a well formed JSON object instead.
+ *
+ * Once the atlas has finished loading you can use frames from it as textures for a Game Object by referencing its key:
+ * 
+ * ```javascript
+ * this.load.atlas('mainmenu', 'images/MainMenu.png', 'images/MainMenu.json');
+ * // and later in your game ...
+ * this.add.image(x, y, 'mainmenu', 'background');
+ * ```
+ *
+ * To get a list of all available frames within an atlas please consult your Texture Atlas software.
+ *
+ * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+ * key. For example, if the prefix was `MENU.` and the key was `Background` the final key will be `MENU.Background` and
+ * this is what you would use to retrieve the image from the Texture Manager.
+ *
+ * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+ *
+ * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+ * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension, although
+ * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+ *
+ * Phaser also supports the automatic loading of associated normal maps. If you have a normal map to go with this image,
+ * then you can specify it by providing an array as the `url` where the second element is the normal map:
+ * 
+ * ```javascript
+ * this.load.atlas('mainmenu', [ 'images/MainMenu.png', 'images/MainMenu-n.png' ], 'images/MainMenu.json');
+ * ```
+ *
+ * Or, if you are using a config object use the `normalMap` property:
+ * 
+ * ```javascript
+ * this.load.atlas({
+ *     key: 'mainmenu',
+ *     textureURL: 'images/MainMenu.png',
+ *     normalMap: 'images/MainMenu-n.png',
+ *     atlasURL: 'images/MainMenu.json'
+ * });
+ * ```
+ *
+ * The normal map file is subject to the same conditions as the image file with regard to the path, baseURL, CORs and XHR Settings.
+ * Normal maps are a WebGL only feature.
+ *
+ * Note: The ability to load this type of file will only be available if the Atlas JSON File type has been built into Phaser.
+ * It is available in the default build but can be excluded from custom builds.
+ *
+ * @method Phaser.Loader.LoaderPlugin#atlas
+ * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+ * @since 3.0.0
+ *
+ * @param {(string|Phaser.Loader.FileTypes.AtlasJSONFileConfig|Phaser.Loader.FileTypes.AtlasJSONFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {string|string[]} [textureURL] - The absolute or relative URL to load the texture image file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+ * @param {string} [atlasURL] - The absolute or relative URL to load the texture atlas json data file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+ * @param {XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.
+ * @param {XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the atlas json file. Used in replacement of the Loaders default XHR Settings.
+ *
+ * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
+ */
+FileTypesManager.register('atlas', function (key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings)
+{
+    var multifile;
+
+    //  Supports an Object file definition in the key argument
+    //  Or an array of objects in the key argument
+    //  Or a single entry where all arguments have been defined
+
+    if (Array.isArray(key))
+    {
+        for (var i = 0; i < key.length; i++)
+        {
+            multifile = new AtlasJSONFile(this, key[i]);
+
+            this.addFile(multifile.files);
+        }
+    }
+    else
+    {
+        multifile = new AtlasJSONFile(this, key, textureURL, atlasURL, textureXhrSettings, atlasXhrSettings);
+
+        this.addFile(multifile.files);
+    }
+
+    return this;
+});
+
+module.exports = AtlasJSONFile;
+
+
+/***/ }),
+/* 349 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+var FileTypesManager = __webpack_require__(7);
+var JSONFile = __webpack_require__(28);
+
+/**
+ * @classdesc
+ * A single Animation JSON File suitable for loading by the Loader.
+ *
+ * These are created when you use the Phaser.Loader.LoaderPlugin#animation method and are not typically created directly.
+ * 
+ * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#animation.
+ *
+ * @class AnimationJSONFile
+ * @extends Phaser.Loader.File
+ * @memberOf Phaser.Loader.FileTypes
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
+ * @param {(string|Phaser.Loader.FileTypes.JSONFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+ * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {string} [dataKey] - When the JSON file loads only this property will be stored in the Cache.
+ */
+var AnimationJSONFile = new Class({
+
+    Extends: JSONFile,
+
+    initialize:
+
+    //  url can either be a string, in which case it is treated like a proper url, or an object, in which case it is treated as a ready-made JS Object
+    //  dataKey allows you to pluck a specific object out of the JSON and put just that into the cache, rather than the whole thing
+
+    function AnimationJSONFile (loader, key, url, xhrSettings, dataKey)
+    {
+        JSONFile.call(this, loader, key, url, xhrSettings, dataKey);
+
+        this.type = 'animationJSON';
+    },
+
+    /**
+     * Called automatically by Loader.nextFile.
+     * This method controls what extra work this File does with its loaded data.
+     *
+     * @method Phaser.Loader.FileTypes.AnimationJSONFile#onProcess
+     * @since 3.7.0
+     */
+    onProcess: function ()
+    {
+        //  We need to hook into this event:
+        this.loader.once('loadcomplete', this.onLoadComplete, this);
+
+        //  But the rest is the same as a normal JSON file
+        JSONFile.prototype.onProcess.call(this);
+    },
+
+    /**
+     * Called at the end of the load process, after the Loader has finished all files in its queue.
+     *
+     * @method Phaser.Loader.FileTypes.AnimationJSONFile#onLoadComplete
+     * @since 3.7.0
+     */
+    onLoadComplete: function ()
+    {
+        this.loader.systems.anims.fromJSON(this.data);
+
+        this.pendingDestroy();
+    }
+
+});
+
+/**
+ * Adds an Animation JSON Data file, or array of Animation JSON files, to the current load queue.
+ *
+ * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
+ * 
+ * ```javascript
+ * function preload ()
+ * {
+ *     this.load.animation('baddieAnims', 'files/BaddieAnims.json');
+ * }
+ * ```
+ *
+ * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+ * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+ * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+ * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+ * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+ * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+ * loaded.
+ * 
+ * If you call this from outside of `preload` then you are responsible for starting the Loader afterwards and monitoring
+ * its events to know when it's safe to use the asset. Please see the Phaser.Loader.LoaderPlugin class for more details.
+ * 
+ * The key must be a unique String. It is used to add the file to the global JSON Cache upon a successful load.
+ * The key should be unique both in terms of files being loaded and files already present in the JSON Cache.
+ * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+ * then remove it from the JSON Cache first, before loading a new one.
+ *
+ * Instead of passing arguments you can pass a configuration object, such as:
+ * 
+ * ```javascript
+ * this.load.animation({
+ *     key: 'baddieAnims',
+ *     url: 'files/BaddieAnims.json'
+ * });
+ * ```
+ *
+ * See the documentation for `Phaser.Loader.FileTypes.JSONFileConfig` for more details.
+ *
+ * Once the file has finished loading it will automatically be passed to the global Animation Managers `fromJSON` method.
+ * This will parse all of the JSON data and create animation data from it. This process happens at the very end
+ * of the Loader, once every other file in the load queue has finished. The reason for this is to allow you to load
+ * both animation data and the images it relies upon in the same load call.
+ *
+ * Once the animation data has been parsed you will be able to play animations using that data.
+ * Please see the Animation Manager `fromJSON` method for more details about the format and playback.
+ * 
+ * You can also access the raw animation data from its Cache using its key:
+ * 
+ * ```javascript
+ * this.load.animation('baddieAnims', 'files/BaddieAnims.json');
+ * // and later in your game ...
+ * var data = this.cache.json.get('baddieAnims');
+ * ```
+ *
+ * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+ * key. For example, if the prefix was `LEVEL1.` and the key was `Waves` the final key will be `LEVEL1.Waves` and
+ * this is what you would use to retrieve the text from the JSON Cache.
+ *
+ * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+ *
+ * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "data"
+ * and no URL is given then the Loader will set the URL to be "data.json". It will always add `.json` as the extension, although
+ * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+ *
+ * You can also optionally provide a `dataKey` to use. This allows you to extract only a part of the JSON and store it in the Cache,
+ * rather than the whole file. For example, if your JSON data had a structure like this:
+ * 
+ * ```json
+ * {
+ *     "level1": {
+ *         "baddies": {
+ *             "aliens": {},
+ *             "boss": {}
+ *         }
+ *     },
+ *     "level2": {},
+ *     "level3": {}
+ * }
+ * ```
+ *
+ * And if you only wanted to create animations from the `boss` data, then you could pass `level1.baddies.boss`as the `dataKey`.
+ *
+ * Note: The ability to load this type of file will only be available if the JSON File type has been built into Phaser.
+ * It is available in the default build but can be excluded from custom builds.
+ *
+ * @method Phaser.Loader.LoaderPlugin#animation
+ * @fires Phaser.Loader.LoaderPlugin#addFileEvent
+ * @since 3.0.0
+ *
+ * @param {(string|Phaser.Loader.FileTypes.JSONFileConfig|Phaser.Loader.FileTypes.JSONFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+ * @param {string} [dataKey] - When the Animation JSON file loads only this property will be stored in the Cache and used to create animation data.
+ * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
+ *
+ * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
+ */
+FileTypesManager.register('animation', function (key, url, dataKey, xhrSettings)
+{
+    //  Supports an Object file definition in the key argument
+    //  Or an array of objects in the key argument
+    //  Or a single entry where all arguments have been defined
+
+    if (Array.isArray(key))
+    {
+        for (var i = 0; i < key.length; i++)
+        {
+            this.addFile(new AnimationJSONFile(this, key[i]));
+        }
+    }
+    else
+    {
+        this.addFile(new AnimationJSONFile(this, key, url, xhrSettings, dataKey));
+    }
+
+    return this;
+});
 
 module.exports = AnimationJSONFile;
 
 
 /***/ }),
-/* 348 */
+/* 350 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52782,14 +55617,14 @@ module.exports = AnimationJSONFile;
 /* eslint-disable */
 module.exports = {
 
-    TouchManager: __webpack_require__(181)
+    TouchManager: __webpack_require__(183)
        
 };
 /* eslint-enable */
 
 
 /***/ }),
-/* 349 */
+/* 351 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52805,14 +55640,14 @@ module.exports = {
 /* eslint-disable */
 module.exports = {
 
-    MouseManager: __webpack_require__(183)
+    MouseManager: __webpack_require__(185)
        
 };
 /* eslint-enable */
 
 
 /***/ }),
-/* 350 */
+/* 352 */
 /***/ (function(module, exports) {
 
 /**
@@ -52844,7 +55679,7 @@ module.exports = UpDuration;
 
 
 /***/ }),
-/* 351 */
+/* 353 */
 /***/ (function(module, exports) {
 
 /**
@@ -52876,7 +55711,7 @@ module.exports = DownDuration;
 
 
 /***/ }),
-/* 352 */
+/* 354 */
 /***/ (function(module, exports) {
 
 /**
@@ -52916,7 +55751,7 @@ module.exports = JustUp;
 
 
 /***/ }),
-/* 353 */
+/* 355 */
 /***/ (function(module, exports) {
 
 /**
@@ -52956,7 +55791,7 @@ module.exports = JustDown;
 
 
 /***/ }),
-/* 354 */
+/* 356 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52971,23 +55806,23 @@ module.exports = JustDown;
 
 module.exports = {
 
-    KeyboardManager: __webpack_require__(186),
+    KeyboardManager: __webpack_require__(188),
 
-    Key: __webpack_require__(185),
-    KeyCodes: __webpack_require__(110),
+    Key: __webpack_require__(187),
+    KeyCodes: __webpack_require__(114),
 
-    KeyCombo: __webpack_require__(184),
+    KeyCombo: __webpack_require__(186),
 
-    JustDown: __webpack_require__(353),
-    JustUp: __webpack_require__(352),
-    DownDuration: __webpack_require__(351),
-    UpDuration: __webpack_require__(350)
+    JustDown: __webpack_require__(355),
+    JustUp: __webpack_require__(354),
+    DownDuration: __webpack_require__(353),
+    UpDuration: __webpack_require__(352)
     
 };
 
 
 /***/ }),
-/* 355 */
+/* 357 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52996,19 +55831,19 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Circle = __webpack_require__(83);
-var CircleContains = __webpack_require__(30);
+var Circle = __webpack_require__(86);
+var CircleContains = __webpack_require__(32);
 var Class = __webpack_require__(0);
-var DistanceBetween = __webpack_require__(54);
-var Ellipse = __webpack_require__(106);
-var EllipseContains = __webpack_require__(51);
-var EventEmitter = __webpack_require__(9);
-var CreateInteractiveObject = __webpack_require__(159);
-var PluginManager = __webpack_require__(10);
-var Rectangle = __webpack_require__(12);
-var RectangleContains = __webpack_require__(28);
-var Triangle = __webpack_require__(65);
-var TriangleContains = __webpack_require__(56);
+var DistanceBetween = __webpack_require__(57);
+var Ellipse = __webpack_require__(109);
+var EllipseContains = __webpack_require__(53);
+var EventEmitter = __webpack_require__(8);
+var CreateInteractiveObject = __webpack_require__(163);
+var PluginManager = __webpack_require__(11);
+var Rectangle = __webpack_require__(13);
+var RectangleContains = __webpack_require__(31);
+var Triangle = __webpack_require__(68);
+var TriangleContains = __webpack_require__(59);
 
 /**
  * @classdesc
@@ -54702,7 +57537,7 @@ module.exports = InputPlugin;
 
 
 /***/ }),
-/* 356 */
+/* 358 */
 /***/ (function(module, exports) {
 
 /**
@@ -54753,7 +57588,7 @@ module.exports = {
 
 
 /***/ }),
-/* 357 */
+/* 359 */
 /***/ (function(module, exports) {
 
 /**
@@ -54792,7 +57627,7 @@ module.exports = {
 
 
 /***/ }),
-/* 358 */
+/* 360 */
 /***/ (function(module, exports) {
 
 /**
@@ -54842,7 +57677,7 @@ module.exports = {
 
 
 /***/ }),
-/* 359 */
+/* 361 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -54857,15 +57692,15 @@ module.exports = {
 
 module.exports = {
 
-    DUALSHOCK_4: __webpack_require__(358),
-    SNES_USB: __webpack_require__(357),
-    XBOX_360: __webpack_require__(356)
+    DUALSHOCK_4: __webpack_require__(360),
+    SNES_USB: __webpack_require__(359),
+    XBOX_360: __webpack_require__(358)
 
 };
 
 
 /***/ }),
-/* 360 */
+/* 362 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -54880,17 +57715,17 @@ module.exports = {
 
 module.exports = {
 
-    Axis: __webpack_require__(188),
-    Button: __webpack_require__(187),
-    Gamepad: __webpack_require__(189),
-    GamepadManager: __webpack_require__(190),
+    Axis: __webpack_require__(190),
+    Button: __webpack_require__(189),
+    Gamepad: __webpack_require__(191),
+    GamepadManager: __webpack_require__(192),
     
-    Configs: __webpack_require__(359)
+    Configs: __webpack_require__(361)
 };
 
 
 /***/ }),
-/* 361 */
+/* 363 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -54905,21 +57740,19 @@ module.exports = {
 
 module.exports = {
 
-    CreateInteractiveObject: __webpack_require__(159),
-    Gamepad: __webpack_require__(360),
-    InputManager: __webpack_require__(191),
-    InputPlugin: __webpack_require__(355),
-    Keyboard: __webpack_require__(354),
-    Mouse: __webpack_require__(349),
-    Pointer: __webpack_require__(182),
-    Touch: __webpack_require__(348)
+    CreateInteractiveObject: __webpack_require__(163),
+    Gamepad: __webpack_require__(362),
+    InputManager: __webpack_require__(193),
+    InputPlugin: __webpack_require__(357),
+    Keyboard: __webpack_require__(356),
+    Mouse: __webpack_require__(351),
+    Pointer: __webpack_require__(184),
+    Touch: __webpack_require__(350)
 
 };
 
 
 /***/ }),
-/* 362 */,
-/* 363 */,
 /* 364 */,
 /* 365 */,
 /* 366 */,
@@ -54936,7 +57769,9 @@ module.exports = {
 /* 377 */,
 /* 378 */,
 /* 379 */,
-/* 380 */
+/* 380 */,
+/* 381 */,
+/* 382 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -54945,10 +57780,10 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BuildGameObject = __webpack_require__(21);
-var GameObjectCreator = __webpack_require__(13);
-var GetAdvancedValue = __webpack_require__(8);
-var Text = __webpack_require__(102);
+var BuildGameObject = __webpack_require__(23);
+var GameObjectCreator = __webpack_require__(14);
+var GetAdvancedValue = __webpack_require__(10);
+var Text = __webpack_require__(105);
 
 /**
  * Creates a new Text Game Object and returns it.
@@ -54958,11 +57793,12 @@ var Text = __webpack_require__(102);
  * @method Phaser.GameObjects.GameObjectCreator#text
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {object} config - The configuration object this Game Object will use to create itself.
+ * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.Text} The Game Object that was created.
  */
-GameObjectCreator.register('text', function (config)
+GameObjectCreator.register('text', function (config, addToScene)
 {
     // style Object = {
     //     font: [ 'font', '16px Courier' ],
@@ -55001,6 +57837,11 @@ GameObjectCreator.register('text', function (config)
 
     var text = new Text(this.scene, 0, 0, content, style);
 
+    if (addToScene !== undefined)
+    {
+        config.add = addToScene;
+    }
+
     BuildGameObject(this.scene, text, config);
 
     //  Text specific config options:
@@ -55009,97 +57850,6 @@ GameObjectCreator.register('text', function (config)
     text.resolution = GetAdvancedValue(config, 'resolution', 1);
 
     return text;
-});
-
-//  When registering a factory function 'this' refers to the GameObjectCreator context.
-
-
-/***/ }),
-/* 381 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var BuildGameObject = __webpack_require__(21);
-var BuildGameObjectAnimation = __webpack_require__(118);
-var GameObjectCreator = __webpack_require__(13);
-var GetAdvancedValue = __webpack_require__(8);
-var Sprite = __webpack_require__(31);
-
-/**
- * Creates a new Sprite Game Object and returns it.
- *
- * Note: This method will only be available if the Sprite Game Object has been built into Phaser.
- *
- * @method Phaser.GameObjects.GameObjectCreator#sprite
- * @since 3.0.0
- *
- * @param {object} config - [description]
- *
- * @return {Phaser.GameObjects.Sprite} The Game Object that was created.
- */
-GameObjectCreator.register('sprite', function (config)
-{
-    var key = GetAdvancedValue(config, 'key', null);
-    var frame = GetAdvancedValue(config, 'frame', null);
-
-    var sprite = new Sprite(this.scene, 0, 0, key, frame);
-
-    BuildGameObject(this.scene, sprite, config);
-
-    //  Sprite specific config options:
-
-    BuildGameObjectAnimation(sprite, config);
-
-    //  Physics, Input, etc to follow ...
-
-    return sprite;
-});
-
-//  When registering a factory function 'this' refers to the GameObjectCreator context.
-
-
-/***/ }),
-/* 382 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var BuildGameObject = __webpack_require__(21);
-var GameObjectCreator = __webpack_require__(13);
-var GetAdvancedValue = __webpack_require__(8);
-var Image = __webpack_require__(66);
-
-/**
- * Creates a new Image Game Object and returns it.
- *
- * Note: This method will only be available if the Image Game Object has been built into Phaser.
- *
- * @method Phaser.GameObjects.GameObjectCreator#image
- * @since 3.0.0
- *
- * @param {object} config - [description]
- *
- * @return {Phaser.GameObjects.Image} The Game Object that was created.
- */
-GameObjectCreator.register('image', function (config)
-{
-    var key = GetAdvancedValue(config, 'key', null);
-    var frame = GetAdvancedValue(config, 'frame', null);
-
-    var image = new Image(this.scene, 0, 0, key, frame);
-
-    BuildGameObject(this.scene, image, config);
-
-    return image;
 });
 
 //  When registering a factory function 'this' refers to the GameObjectCreator context.
@@ -55115,36 +57865,45 @@ GameObjectCreator.register('image', function (config)
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GetAdvancedValue = __webpack_require__(8);
-var GameObjectCreator = __webpack_require__(13);
-var Graphics = __webpack_require__(107);
+var BuildGameObject = __webpack_require__(23);
+var BuildGameObjectAnimation = __webpack_require__(122);
+var GameObjectCreator = __webpack_require__(14);
+var GetAdvancedValue = __webpack_require__(10);
+var Sprite = __webpack_require__(34);
 
 /**
- * Creates a new Graphics Game Object and returns it.
+ * Creates a new Sprite Game Object and returns it.
  *
- * Note: This method will only be available if the Graphics Game Object has been built into Phaser.
+ * Note: This method will only be available if the Sprite Game Object has been built into Phaser.
  *
- * @method Phaser.GameObjects.GameObjectCreator#graphics
+ * @method Phaser.GameObjects.GameObjectCreator#sprite
  * @since 3.0.0
  *
- * @param {object} [config] - [description]
+ * @param {object} config - The configuration object this Game Object will use to create itself.
+ * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
- * @return {Phaser.GameObjects.Graphics} The Game Object that was created.
+ * @return {Phaser.GameObjects.Sprite} The Game Object that was created.
  */
-GameObjectCreator.register('graphics', function (config)
+GameObjectCreator.register('sprite', function (config, addToScene)
 {
-    var add = GetAdvancedValue(config, 'add', true);
-    var graphics = new Graphics(this.scene, config);
+    var key = GetAdvancedValue(config, 'key', null);
+    var frame = GetAdvancedValue(config, 'frame', null);
 
-    if (add)
+    var sprite = new Sprite(this.scene, 0, 0, key, frame);
+
+    if (addToScene !== undefined)
     {
-        this.scene.sys.displayList.add(graphics);
+        config.add = addToScene;
     }
-    
-    return graphics;
-});
 
-//  When registering a factory function 'this' refers to the GameObjectCreator context.
+    BuildGameObject(this.scene, sprite, config);
+
+    //  Sprite specific config options:
+
+    BuildGameObjectAnimation(sprite, config);
+
+    return sprite;
+});
 
 
 /***/ }),
@@ -55157,8 +57916,102 @@ GameObjectCreator.register('graphics', function (config)
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Text = __webpack_require__(102);
-var GameObjectFactory = __webpack_require__(11);
+var BuildGameObject = __webpack_require__(23);
+var GameObjectCreator = __webpack_require__(14);
+var GetAdvancedValue = __webpack_require__(10);
+var Image = __webpack_require__(69);
+
+/**
+ * Creates a new Image Game Object and returns it.
+ *
+ * Note: This method will only be available if the Image Game Object has been built into Phaser.
+ *
+ * @method Phaser.GameObjects.GameObjectCreator#image
+ * @since 3.0.0
+ *
+ * @param {object} config - The configuration object this Game Object will use to create itself.
+ * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
+ *
+ * @return {Phaser.GameObjects.Image} The Game Object that was created.
+ */
+GameObjectCreator.register('image', function (config, addToScene)
+{
+    var key = GetAdvancedValue(config, 'key', null);
+    var frame = GetAdvancedValue(config, 'frame', null);
+
+    var image = new Image(this.scene, 0, 0, key, frame);
+
+    if (addToScene !== undefined)
+    {
+        config.add = addToScene;
+    }
+
+    BuildGameObject(this.scene, image, config);
+
+    return image;
+});
+
+//  When registering a factory function 'this' refers to the GameObjectCreator context.
+
+
+/***/ }),
+/* 385 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var GameObjectCreator = __webpack_require__(14);
+var Graphics = __webpack_require__(110);
+
+/**
+ * Creates a new Graphics Game Object and returns it.
+ *
+ * Note: This method will only be available if the Graphics Game Object has been built into Phaser.
+ *
+ * @method Phaser.GameObjects.GameObjectCreator#graphics
+ * @since 3.0.0
+ *
+ * @param {object} config - The configuration object this Game Object will use to create itself.
+ * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
+ *
+ * @return {Phaser.GameObjects.Graphics} The Game Object that was created.
+ */
+GameObjectCreator.register('graphics', function (config, addToScene)
+{
+    if (addToScene !== undefined)
+    {
+        config.add = addToScene;
+    }
+
+    var graphics = new Graphics(this.scene, config);
+
+    if (config.add)
+    {
+        this.scene.sys.displayList.add(graphics);
+    }
+    
+    return graphics;
+});
+
+//  When registering a factory function 'this' refers to the GameObjectCreator context.
+
+
+/***/ }),
+/* 386 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Text = __webpack_require__(105);
+var GameObjectFactory = __webpack_require__(12);
 
 /**
  * Creates a new Text Game Object and adds it to the Scene.
@@ -55190,7 +58043,7 @@ GameObjectFactory.register('text', function (x, y, text, style)
 
 
 /***/ }),
-/* 385 */
+/* 387 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -55199,8 +58052,8 @@ GameObjectFactory.register('text', function (x, y, text, style)
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObjectFactory = __webpack_require__(11);
-var Sprite = __webpack_require__(31);
+var GameObjectFactory = __webpack_require__(12);
+var Sprite = __webpack_require__(34);
 
 /**
  * Creates a new Sprite Game Object and adds it to the Scene.
@@ -55237,7 +58090,7 @@ GameObjectFactory.register('sprite', function (x, y, key, frame)
 
 
 /***/ }),
-/* 386 */
+/* 388 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -55246,8 +58099,8 @@ GameObjectFactory.register('sprite', function (x, y, key, frame)
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Image = __webpack_require__(66);
-var GameObjectFactory = __webpack_require__(11);
+var Image = __webpack_require__(69);
+var GameObjectFactory = __webpack_require__(12);
 
 /**
  * Creates a new Image Game Object and adds it to the Scene.
@@ -55279,7 +58132,7 @@ GameObjectFactory.register('image', function (x, y, key, frame)
 
 
 /***/ }),
-/* 387 */
+/* 389 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -55288,8 +58141,8 @@ GameObjectFactory.register('image', function (x, y, key, frame)
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Graphics = __webpack_require__(107);
-var GameObjectFactory = __webpack_require__(11);
+var Graphics = __webpack_require__(110);
+var GameObjectFactory = __webpack_require__(12);
 
 /**
  * Creates a new Graphics Game Object and adds it to the Scene.
@@ -55318,8 +58171,8 @@ GameObjectFactory.register('graphics', function (config)
 
 
 /***/ }),
-/* 388 */,
-/* 389 */
+/* 390 */,
+/* 391 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -55454,7 +58307,7 @@ module.exports = MeasureText;
 
 
 /***/ }),
-/* 390 */
+/* 392 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -55464,9 +58317,9 @@ module.exports = MeasureText;
  */
 
 var Class = __webpack_require__(0);
-var GetAdvancedValue = __webpack_require__(8);
+var GetAdvancedValue = __webpack_require__(10);
 var GetValue = __webpack_require__(4);
-var MeasureText = __webpack_require__(389);
+var MeasureText = __webpack_require__(391);
 
 //  Key: [ Object Key, Default Value ]
 
@@ -56404,7 +59257,7 @@ module.exports = TextStyle;
 
 
 /***/ }),
-/* 391 */
+/* 393 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -56413,7 +59266,7 @@ module.exports = TextStyle;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = __webpack_require__(1);
+var GameObject = __webpack_require__(2);
 
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
@@ -56499,7 +59352,7 @@ module.exports = TextCanvasRenderer;
 
 
 /***/ }),
-/* 392 */
+/* 394 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -56508,7 +59361,7 @@ module.exports = TextCanvasRenderer;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = __webpack_require__(1);
+var GameObject = __webpack_require__(2);
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -56534,7 +59387,7 @@ var TextWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     
     if (src.dirty)
     {
-        src.canvasTexture = renderer.canvasToTexture(src.canvas, src.canvasTexture, true, src.scaleMode);
+        src.canvasTexture = renderer.canvasToTexture(src.canvas, src.canvasTexture);
         src.dirty = false;
     }
 
@@ -56545,7 +59398,7 @@ module.exports = TextWebGLRenderer;
 
 
 /***/ }),
-/* 393 */
+/* 395 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -56559,12 +59412,12 @@ var renderCanvas = __webpack_require__(3);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(392);
+    renderWebGL = __webpack_require__(394);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(391);
+    renderCanvas = __webpack_require__(393);
 }
 
 module.exports = {
@@ -56576,7 +59429,7 @@ module.exports = {
 
 
 /***/ }),
-/* 394 */
+/* 396 */
 /***/ (function(module, exports) {
 
 /**
@@ -56663,10 +59516,10 @@ module.exports = GetTextSize;
 
 
 /***/ }),
-/* 395 */,
-/* 396 */,
 /* 397 */,
-/* 398 */
+/* 398 */,
+/* 399 */,
+/* 400 */
 /***/ (function(module, exports) {
 
 /**
@@ -56708,7 +59561,7 @@ module.exports = Stepped;
 
 
 /***/ }),
-/* 399 */
+/* 401 */
 /***/ (function(module, exports) {
 
 /**
@@ -56747,7 +59600,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 400 */
+/* 402 */
 /***/ (function(module, exports) {
 
 /**
@@ -56786,7 +59639,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 401 */
+/* 403 */
 /***/ (function(module, exports) {
 
 /**
@@ -56825,7 +59678,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 402 */
+/* 404 */
 /***/ (function(module, exports) {
 
 /**
@@ -56860,7 +59713,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 403 */
+/* 405 */
 /***/ (function(module, exports) {
 
 /**
@@ -56888,7 +59741,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 404 */
+/* 406 */
 /***/ (function(module, exports) {
 
 /**
@@ -56916,7 +59769,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 405 */
+/* 407 */
 /***/ (function(module, exports) {
 
 /**
@@ -56951,7 +59804,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 406 */
+/* 408 */
 /***/ (function(module, exports) {
 
 /**
@@ -56979,7 +59832,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 407 */
+/* 409 */
 /***/ (function(module, exports) {
 
 /**
@@ -57007,7 +59860,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 408 */
+/* 410 */
 /***/ (function(module, exports) {
 
 /**
@@ -57042,7 +59895,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 409 */
+/* 411 */
 /***/ (function(module, exports) {
 
 /**
@@ -57070,7 +59923,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 410 */
+/* 412 */
 /***/ (function(module, exports) {
 
 /**
@@ -57098,7 +59951,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 411 */
+/* 413 */
 /***/ (function(module, exports) {
 
 /**
@@ -57126,7 +59979,7 @@ module.exports = Linear;
 
 
 /***/ }),
-/* 412 */
+/* 414 */
 /***/ (function(module, exports) {
 
 /**
@@ -57161,7 +60014,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 413 */
+/* 415 */
 /***/ (function(module, exports) {
 
 /**
@@ -57189,7 +60042,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 414 */
+/* 416 */
 /***/ (function(module, exports) {
 
 /**
@@ -57217,7 +60070,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 415 */
+/* 417 */
 /***/ (function(module, exports) {
 
 /**
@@ -57279,7 +60132,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 416 */
+/* 418 */
 /***/ (function(module, exports) {
 
 /**
@@ -57334,7 +60187,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 417 */
+/* 419 */
 /***/ (function(module, exports) {
 
 /**
@@ -57389,7 +60242,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 418 */
+/* 420 */
 /***/ (function(module, exports) {
 
 /**
@@ -57424,7 +60277,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 419 */
+/* 421 */
 /***/ (function(module, exports) {
 
 /**
@@ -57452,7 +60305,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 420 */
+/* 422 */
 /***/ (function(module, exports) {
 
 /**
@@ -57480,7 +60333,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 421 */
+/* 423 */
 /***/ (function(module, exports) {
 
 /**
@@ -57515,7 +60368,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 422 */
+/* 424 */
 /***/ (function(module, exports) {
 
 /**
@@ -57543,7 +60396,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 423 */
+/* 425 */
 /***/ (function(module, exports) {
 
 /**
@@ -57571,7 +60424,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 424 */
+/* 426 */
 /***/ (function(module, exports) {
 
 /**
@@ -57635,7 +60488,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 425 */
+/* 427 */
 /***/ (function(module, exports) {
 
 /**
@@ -57678,7 +60531,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 426 */
+/* 428 */
 /***/ (function(module, exports) {
 
 /**
@@ -57723,7 +60576,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 427 */
+/* 429 */
 /***/ (function(module, exports) {
 
 /**
@@ -57763,7 +60616,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 428 */
+/* 430 */
 /***/ (function(module, exports) {
 
 /**
@@ -57794,7 +60647,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 429 */
+/* 431 */
 /***/ (function(module, exports) {
 
 /**
@@ -57825,7 +60678,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 430 */
+/* 432 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -57834,18 +60687,18 @@ module.exports = In;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Back = __webpack_require__(239);
-var Bounce = __webpack_require__(238);
-var Circular = __webpack_require__(237);
-var Cubic = __webpack_require__(236);
-var Elastic = __webpack_require__(235);
-var Expo = __webpack_require__(234);
-var Linear = __webpack_require__(233);
-var Quadratic = __webpack_require__(232);
-var Quartic = __webpack_require__(231);
-var Quintic = __webpack_require__(230);
-var Sine = __webpack_require__(229);
-var Stepped = __webpack_require__(228);
+var Back = __webpack_require__(242);
+var Bounce = __webpack_require__(241);
+var Circular = __webpack_require__(240);
+var Cubic = __webpack_require__(239);
+var Elastic = __webpack_require__(238);
+var Expo = __webpack_require__(237);
+var Linear = __webpack_require__(236);
+var Quadratic = __webpack_require__(235);
+var Quartic = __webpack_require__(234);
+var Quintic = __webpack_require__(233);
+var Sine = __webpack_require__(232);
+var Stepped = __webpack_require__(231);
 
 //  EaseMap
 module.exports = {
@@ -57906,12 +60759,12 @@ module.exports = {
 
 
 /***/ }),
-/* 431 */,
-/* 432 */,
 /* 433 */,
 /* 434 */,
 /* 435 */,
-/* 436 */
+/* 436 */,
+/* 437 */,
+/* 438 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -57920,7 +60773,7 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = __webpack_require__(1);
+var GameObject = __webpack_require__(2);
 
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
@@ -57951,7 +60804,7 @@ module.exports = ImageCanvasRenderer;
 
 
 /***/ }),
-/* 437 */
+/* 439 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -57960,7 +60813,7 @@ module.exports = ImageCanvasRenderer;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = __webpack_require__(1);
+var GameObject = __webpack_require__(2);
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -57991,7 +60844,7 @@ module.exports = ImageWebGLRenderer;
 
 
 /***/ }),
-/* 438 */
+/* 440 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58005,12 +60858,12 @@ var renderCanvas = __webpack_require__(3);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(437);
+    renderWebGL = __webpack_require__(439);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(436);
+    renderCanvas = __webpack_require__(438);
 }
 
 module.exports = {
@@ -58022,7 +60875,7 @@ module.exports = {
 
 
 /***/ }),
-/* 439 */
+/* 441 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58031,7 +60884,7 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = __webpack_require__(1);
+var GameObject = __webpack_require__(2);
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -58062,7 +60915,7 @@ module.exports = GraphicsWebGLRenderer;
 
 
 /***/ }),
-/* 440 */
+/* 442 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58076,15 +60929,15 @@ var renderCanvas = __webpack_require__(3);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(439);
+    renderWebGL = __webpack_require__(441);
 
     //  Needed for Graphics.generateTexture
-    renderCanvas = __webpack_require__(160);
+    renderCanvas = __webpack_require__(164);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(160);
+    renderCanvas = __webpack_require__(164);
 }
 
 module.exports = {
@@ -58096,7 +60949,7 @@ module.exports = {
 
 
 /***/ }),
-/* 441 */
+/* 443 */
 /***/ (function(module, exports) {
 
 /**
@@ -58130,7 +60983,7 @@ module.exports = OffsetPoint;
 
 
 /***/ }),
-/* 442 */
+/* 444 */
 /***/ (function(module, exports) {
 
 /**
@@ -58165,7 +61018,7 @@ module.exports = Offset;
 
 
 /***/ }),
-/* 443 */
+/* 445 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58174,7 +61027,7 @@ module.exports = Offset;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Rectangle = __webpack_require__(12);
+var Rectangle = __webpack_require__(13);
 
 /**
  * Returns the bounds of the Ellipse object.
@@ -58205,7 +61058,7 @@ module.exports = GetBounds;
 
 
 /***/ }),
-/* 444 */
+/* 446 */
 /***/ (function(module, exports) {
 
 /**
@@ -58240,7 +61093,7 @@ module.exports = Equals;
 
 
 /***/ }),
-/* 445 */
+/* 447 */
 /***/ (function(module, exports) {
 
 /**
@@ -58272,7 +61125,7 @@ module.exports = CopyFrom;
 
 
 /***/ }),
-/* 446 */
+/* 448 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58281,7 +61134,7 @@ module.exports = CopyFrom;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Contains = __webpack_require__(51);
+var Contains = __webpack_require__(53);
 
 /**
  * Check to see if the Ellipse contains all four points of the given Rectangle object.
@@ -58308,7 +61161,7 @@ module.exports = ContainsRect;
 
 
 /***/ }),
-/* 447 */
+/* 449 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58317,7 +61170,7 @@ module.exports = ContainsRect;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Contains = __webpack_require__(51);
+var Contains = __webpack_require__(53);
 
 /**
  * Check to see if the Ellipse contains the given Point object.
@@ -58339,7 +61192,7 @@ module.exports = ContainsPoint;
 
 
 /***/ }),
-/* 448 */
+/* 450 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58348,7 +61201,7 @@ module.exports = ContainsPoint;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Ellipse = __webpack_require__(106);
+var Ellipse = __webpack_require__(109);
 
 /**
  * Creates a new Ellipse instance based on the values contained in the given source.
@@ -58369,7 +61222,7 @@ module.exports = Clone;
 
 
 /***/ }),
-/* 449 */
+/* 451 */
 /***/ (function(module, exports) {
 
 /**
@@ -58403,10 +61256,10 @@ module.exports = Area;
 
 
 /***/ }),
-/* 450 */,
-/* 451 */,
 /* 452 */,
-/* 453 */
+/* 453 */,
+/* 454 */,
+/* 455 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58416,7 +61269,7 @@ module.exports = Area;
  */
 
 var Class = __webpack_require__(0);
-var PluginManager = __webpack_require__(10);
+var PluginManager = __webpack_require__(11);
 
 /**
  * @classdesc
@@ -58698,7 +61551,7 @@ module.exports = UpdateList;
 
 
 /***/ }),
-/* 454 */
+/* 456 */
 /***/ (function(module, exports) {
 
 /**
@@ -58746,7 +61599,7 @@ module.exports = Swap;
 
 
 /***/ }),
-/* 455 */
+/* 457 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58755,7 +61608,7 @@ module.exports = Swap;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var SafeRange = __webpack_require__(26);
+var SafeRange = __webpack_require__(29);
 
 /**
  * Scans the array for elements with the given property. If found, the property is set to the `value`.
@@ -58801,7 +61654,7 @@ module.exports = SetAll;
 
 
 /***/ }),
-/* 456 */
+/* 458 */
 /***/ (function(module, exports) {
 
 /**
@@ -58839,7 +61692,7 @@ module.exports = SendToBack;
 
 
 /***/ }),
-/* 457 */
+/* 459 */
 /***/ (function(module, exports) {
 
 /**
@@ -58882,7 +61735,7 @@ module.exports = Replace;
 
 
 /***/ }),
-/* 458 */
+/* 460 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58891,7 +61744,7 @@ module.exports = Replace;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var SpliceOne = __webpack_require__(70);
+var SpliceOne = __webpack_require__(55);
 
 /**
  * Removes a random object from the given array and returns it.
@@ -58920,7 +61773,7 @@ module.exports = RemoveRandomElement;
 
 
 /***/ }),
-/* 459 */
+/* 461 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58929,7 +61782,7 @@ module.exports = RemoveRandomElement;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var SafeRange = __webpack_require__(26);
+var SafeRange = __webpack_require__(29);
 
 /**
  * Removes the item within the given range in the array.
@@ -58983,7 +61836,7 @@ module.exports = RemoveBetween;
 
 
 /***/ }),
-/* 460 */
+/* 462 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58992,7 +61845,7 @@ module.exports = RemoveBetween;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var SpliceOne = __webpack_require__(70);
+var SpliceOne = __webpack_require__(55);
 
 /**
  * Removes the item from the given position in the array.
@@ -59034,7 +61887,7 @@ module.exports = RemoveAt;
 
 
 /***/ }),
-/* 461 */
+/* 463 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -59043,7 +61896,7 @@ module.exports = RemoveAt;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var SpliceOne = __webpack_require__(70);
+var SpliceOne = __webpack_require__(55);
 
 /**
  * Removes the given item, or array of items, from the array.
@@ -59125,7 +61978,7 @@ module.exports = Remove;
 
 
 /***/ }),
-/* 462 */
+/* 464 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -59134,7 +61987,7 @@ module.exports = Remove;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var RoundAwayFromZero = __webpack_require__(247);
+var RoundAwayFromZero = __webpack_require__(250);
 
 /**
  * Create an array of numbers (positive and/or negative) progressing from `start`
@@ -59202,7 +62055,71 @@ module.exports = NumberArrayStep;
 
 
 /***/ }),
-/* 463 */
+/* 465 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Create an array representing the range of numbers (usually integers), between, and inclusive of,
+ * the given `start` and `end` arguments. For example:
+ *
+ * `var array = numberArray(2, 4); // array = [2, 3, 4]`
+ * `var array = numberArray(0, 9); // array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]`
+ *
+ * This is equivalent to `numberArrayStep(start, end, 1)`.
+ *
+ * You can optionally provide a prefix and / or suffix string. If given the array will contain
+ * strings, not integers. For example:
+ *
+ * `var array = numberArray(1, 4, 'Level '); // array = ["Level 1", "Level 2", "Level 3", "Level 4"]`
+ * `var array = numberArray(5, 7, 'HD-', '.png'); // array = ["HD-5.png", "HD-6.png", "HD-7.png"]`
+ *
+ * @function Phaser.Utils.Array.NumberArray
+ * @since 3.0.0
+ *
+ * @param {number} start - The minimum value the array starts with.
+ * @param {number} end - The maximum value the array contains.
+ * @param {string} [prefix] - Optional prefix to place before the number. If provided the array will contain strings, not integers.
+ * @param {string} [suffix] - Optional suffix to place after the number. If provided the array will contain strings, not integers.
+ *
+ * @return {(number[]|string[])} The array of number values, or strings if a prefix or suffix was provided.
+ */
+var NumberArray = function (start, end, prefix, suffix)
+{
+    var result = [];
+
+    for (var i = start; i <= end; i++)
+    {
+        if (prefix || suffix)
+        {
+            var key = (prefix) ? prefix + i.toString() : i.toString();
+
+            if (suffix)
+            {
+                key = key.concat(suffix);
+            }
+
+            result.push(key);
+        }
+        else
+        {
+            result.push(i);
+        }
+    }
+
+    return result;
+};
+
+module.exports = NumberArray;
+
+
+/***/ }),
+/* 466 */
 /***/ (function(module, exports) {
 
 /**
@@ -59244,7 +62161,7 @@ module.exports = MoveUp;
 
 
 /***/ }),
-/* 464 */
+/* 467 */
 /***/ (function(module, exports) {
 
 /**
@@ -59291,7 +62208,7 @@ module.exports = MoveTo;
 
 
 /***/ }),
-/* 465 */
+/* 468 */
 /***/ (function(module, exports) {
 
 /**
@@ -59333,7 +62250,7 @@ module.exports = MoveDown;
 
 
 /***/ }),
-/* 466 */
+/* 469 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -59342,7 +62259,7 @@ module.exports = MoveDown;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var SafeRange = __webpack_require__(26);
+var SafeRange = __webpack_require__(29);
 
 /**
  * Returns the first element in the array.
@@ -59392,7 +62309,7 @@ module.exports = GetFirst;
 
 
 /***/ }),
-/* 467 */
+/* 470 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -59401,7 +62318,7 @@ module.exports = GetFirst;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var SafeRange = __webpack_require__(26);
+var SafeRange = __webpack_require__(29);
 
 /**
  * Returns all elements in the array.
@@ -59454,7 +62371,7 @@ module.exports = GetAll;
 
 
 /***/ }),
-/* 468 */
+/* 471 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -59463,7 +62380,7 @@ module.exports = GetAll;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var SafeRange = __webpack_require__(26);
+var SafeRange = __webpack_require__(29);
 
 /**
  * Passes each element in the array, between the start and end indexes, to the given callback.
@@ -59510,7 +62427,7 @@ module.exports = EachInRange;
 
 
 /***/ }),
-/* 469 */
+/* 472 */
 /***/ (function(module, exports) {
 
 /**
@@ -59556,7 +62473,7 @@ module.exports = Each;
 
 
 /***/ }),
-/* 470 */
+/* 473 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -59565,7 +62482,7 @@ module.exports = Each;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var SafeRange = __webpack_require__(26);
+var SafeRange = __webpack_require__(29);
 
 /**
  * Returns the total number of elements in the array which have a property matching the given value.
@@ -59608,7 +62525,7 @@ module.exports = CountAllMatching;
 
 
 /***/ }),
-/* 471 */
+/* 474 */
 /***/ (function(module, exports) {
 
 /**
@@ -59646,7 +62563,7 @@ module.exports = BringToTop;
 
 
 /***/ }),
-/* 472 */
+/* 475 */
 /***/ (function(module, exports) {
 
 /**
@@ -59706,7 +62623,7 @@ var AddAt = function (array, item, index, limit, callback, context)
 
             if (callback)
             {
-                callback.call(context, entry);
+                callback.call(context, item);
             }
 
             return item;
@@ -59768,7 +62685,7 @@ module.exports = AddAt;
 
 
 /***/ }),
-/* 473 */
+/* 476 */
 /***/ (function(module, exports) {
 
 /**
@@ -59885,7 +62802,7 @@ module.exports = Add;
 
 
 /***/ }),
-/* 474 */
+/* 477 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -59894,7 +62811,7 @@ module.exports = Add;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var RotateMatrix = __webpack_require__(71);
+var RotateMatrix = __webpack_require__(73);
 
 /**
  * [description]
@@ -59915,7 +62832,7 @@ module.exports = RotateRight;
 
 
 /***/ }),
-/* 475 */
+/* 478 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -59924,7 +62841,7 @@ module.exports = RotateRight;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var RotateMatrix = __webpack_require__(71);
+var RotateMatrix = __webpack_require__(73);
 
 /**
  * [description]
@@ -59945,7 +62862,7 @@ module.exports = RotateLeft;
 
 
 /***/ }),
-/* 476 */
+/* 479 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -59954,7 +62871,7 @@ module.exports = RotateLeft;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var RotateMatrix = __webpack_require__(71);
+var RotateMatrix = __webpack_require__(73);
 
 /**
  * [description]
@@ -59975,7 +62892,7 @@ module.exports = Rotate180;
 
 
 /***/ }),
-/* 477 */
+/* 480 */
 /***/ (function(module, exports) {
 
 /**
@@ -60003,7 +62920,7 @@ module.exports = ReverseRows;
 
 
 /***/ }),
-/* 478 */
+/* 481 */
 /***/ (function(module, exports) {
 
 /**
@@ -60036,7 +62953,7 @@ module.exports = ReverseColumns;
 
 
 /***/ }),
-/* 479 */
+/* 482 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60045,8 +62962,8 @@ module.exports = ReverseColumns;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Pad = __webpack_require__(125);
-var CheckMatrix = __webpack_require__(108);
+var Pad = __webpack_require__(128);
+var CheckMatrix = __webpack_require__(111);
 
 //  Generates a string (which you can pass to console.log) from the given
 //  Array Matrix.
@@ -60117,7 +63034,7 @@ module.exports = MatrixToString;
 
 
 /***/ }),
-/* 480 */
+/* 483 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60132,21 +63049,21 @@ module.exports = MatrixToString;
 
 module.exports = {
 
-    CheckMatrix: __webpack_require__(108),
-    MatrixToString: __webpack_require__(479),
-    ReverseColumns: __webpack_require__(478),
-    ReverseRows: __webpack_require__(477),
-    Rotate180: __webpack_require__(476),
-    RotateLeft: __webpack_require__(475),
-    RotateMatrix: __webpack_require__(71),
-    RotateRight: __webpack_require__(474),
-    TransposeMatrix: __webpack_require__(166)
+    CheckMatrix: __webpack_require__(111),
+    MatrixToString: __webpack_require__(482),
+    ReverseColumns: __webpack_require__(481),
+    ReverseRows: __webpack_require__(480),
+    Rotate180: __webpack_require__(479),
+    RotateLeft: __webpack_require__(478),
+    RotateMatrix: __webpack_require__(73),
+    RotateRight: __webpack_require__(477),
+    TransposeMatrix: __webpack_require__(169)
 
 };
 
 
 /***/ }),
-/* 481 */
+/* 484 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60156,9 +63073,9 @@ module.exports = {
  */
 
 var Class = __webpack_require__(0);
-var List = __webpack_require__(89);
-var PluginManager = __webpack_require__(10);
-var StableSort = __webpack_require__(79);
+var List = __webpack_require__(92);
+var PluginManager = __webpack_require__(11);
+var StableSort = __webpack_require__(81);
 
 /**
  * @classdesc
@@ -60362,7 +63279,7 @@ module.exports = DisplayList;
 
 
 /***/ }),
-/* 482 */
+/* 485 */
 /***/ (function(module, exports) {
 
 /**
@@ -60476,7 +63393,7 @@ module.exports = VisibilityHandler;
 
 
 /***/ }),
-/* 483 */
+/* 486 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60488,7 +63405,7 @@ module.exports = VisibilityHandler;
 var Class = __webpack_require__(0);
 var GetValue = __webpack_require__(4);
 var NOOP = __webpack_require__(3);
-var RequestAnimationFrame = __webpack_require__(260);
+var RequestAnimationFrame = __webpack_require__(263);
 
 //  Frame Rate config
 //      fps: {
@@ -61132,7 +64049,7 @@ module.exports = TimeStep;
 
 
 /***/ }),
-/* 484 */
+/* 487 */
 /***/ (function(module, exports) {
 
 /**
@@ -61302,92 +64219,7 @@ TextureImporter:
 
 
 /***/ }),
-/* 485 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Parses a Starling XML object and adds all the Frames into a Texture.
- *
- * @function Phaser.Textures.Parsers.StarlingXML
- * @memberOf Phaser.Textures.Parsers
- * @private
- * @since 3.0.0
- *
- * @param {Phaser.Textures.Texture} texture - The Texture to add the Frames to.
- * @param {*} xml - The XML data.
- *
- * @return {Phaser.Textures.Texture} The Texture modified by this parser.
- */
-var StarlingXML = function (texture, xml)
-{
-    //  Malformed?
-    if (!xml.getElementsByTagName('TextureAtlas'))
-    {
-        // console.warn("Phaser.AnimationParser.XMLData: Invalid Texture Atlas XML given, missing <TextureAtlas> tag");
-        return;
-    }
-
-    //  Let's create some frames then
-    var data = new Phaser.FrameData();
-    var frames = xml.getElementsByTagName('SubTexture');
-    var newFrame;
-
-    var name;
-    var frame;
-    var x;
-    var y;
-    var width;
-    var height;
-    var frameX;
-    var frameY;
-    var frameWidth;
-    var frameHeight;
-
-    for (var i = 0; i < frames.length; i++)
-    {
-        frame = frames[i].attributes;
-
-        name = frame.name.value;
-        x = parseInt(frame.x.value, 10);
-        y = parseInt(frame.y.value, 10);
-        width = parseInt(frame.width.value, 10);
-        height = parseInt(frame.height.value, 10);
-
-        frameX = null;
-        frameY = null;
-
-        if (frame.frameX)
-        {
-            frameX = Math.abs(parseInt(frame.frameX.value, 10));
-            frameY = Math.abs(parseInt(frame.frameY.value, 10));
-            frameWidth = parseInt(frame.frameWidth.value, 10);
-            frameHeight = parseInt(frame.frameHeight.value, 10);
-        }
-
-        newFrame = data.addFrame(new Phaser.Frame(i, x, y, width, height, name));
-
-        //  Trimmed?
-        if (frameX !== null || frameY !== null)
-        {
-            newFrame.setTrim(true, width, height, frameX, frameY, frameWidth, frameHeight);
-        }
-    }
-
-    return data;
-
-};
-
-module.exports = StarlingXML;
-
-
-/***/ }),
-/* 486 */
+/* 488 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -61396,7 +64228,7 @@ module.exports = StarlingXML;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GetFastValue = __webpack_require__(2);
+var GetFastValue = __webpack_require__(1);
 
 /**
  * Parses a Sprite Sheet and adds the Frames to the Texture, where the Sprite Sheet is stored as a frame within an Atlas.
@@ -61578,7 +64410,7 @@ module.exports = SpriteSheetFromAtlas;
 
 
 /***/ }),
-/* 487 */
+/* 489 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -61587,7 +64419,7 @@ module.exports = SpriteSheetFromAtlas;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GetFastValue = __webpack_require__(2);
+var GetFastValue = __webpack_require__(1);
 
 /**
  * Parses a Sprite Sheet and adds the Frames to the Texture.
@@ -61698,82 +64530,7 @@ module.exports = SpriteSheet;
 
 
 /***/ }),
-/* 488 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Parses a Pyxel JSON object and adds the Frames to a Texture.
- *
- * @function Phaser.Textures.Parsers.Pyxel
- * @memberOf Phaser.Textures.Parsers
- * @private
- * @since 3.0.0
- *
- * @param {Phaser.Textures.Texture} texture - The Texture to add the Frames to.
- * @param {object} json - The JSON data.
- *
- * @return {Phaser.Textures.Texture} The Texture modified by this parser.
- */
-var Pyxel = function (texture, json)
-{
-    //  Malformed? There are a few keys to check here.
-    var signature = [ 'layers', 'tilewidth', 'tileheight', 'tileswide', 'tileshigh' ];
-
-    signature.forEach(function (key)
-    {
-        if (!json[key])
-        {
-            // console.warn('Phaser.AnimationParser.JSONDataPyxel: Invalid Pyxel Tilemap JSON given, missing "' + key + '" key.');
-            // console.log(json);
-            return;
-        }
-    });
-
-    // For this purpose, I only care about parsing tilemaps with a single layer.
-    if (json['layers'].length !== 1)
-    {
-        // console.warn('Phaser.AnimationParser.JSONDataPyxel: Too many layers, this parser only supports flat Tilemaps.');
-        // console.log(json);
-        return;
-    }
-
-    var data = new Phaser.FrameData();
-
-    var tileheight = json['tileheight'];
-    var tilewidth = json['tilewidth'];
-
-    var frames = json['layers'][0]['tiles'];
-    var newFrame;
-
-    for (var i = 0; i < frames.length; i++)
-    {
-        newFrame = data.addFrame(new Phaser.Frame(
-            i,
-            frames[i].x,
-            frames[i].y,
-            tilewidth,
-            tileheight,
-            'frame_' + i // No names are included in pyxel tilemap data.
-        ));
-
-        // No trim data is included.
-        newFrame.setTrim(false);
-    }
-
-    return data;
-};
-
-module.exports = Pyxel;
-
-
-/***/ }),
-/* 489 */
+/* 490 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -61782,7 +64539,7 @@ module.exports = Pyxel;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Clone = __webpack_require__(47);
+var Clone = __webpack_require__(33);
 
 /**
  * Parses a Texture Atlas JSON Hash and adds the Frames to the Texture.
@@ -61872,7 +64629,7 @@ module.exports = JSONHash;
 
 
 /***/ }),
-/* 490 */
+/* 491 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -61881,7 +64638,7 @@ module.exports = JSONHash;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Clone = __webpack_require__(47);
+var Clone = __webpack_require__(33);
 
 /**
  * Parses a Texture Atlas JSON Array and adds the Frames to the Texture.
@@ -61903,7 +64660,7 @@ var JSONArray = function (texture, sourceIndex, json)
     //  Malformed?
     if (!json['frames'] && !json['textures'])
     {
-        console.warn('Invalid Texture Atlas JSON Array given, missing \'frames\' and \'textures\' array');
+        console.warn('Invalid Texture Atlas JSON Array');
         return;
     }
 
@@ -61979,7 +64736,7 @@ module.exports = JSONArray;
 
 
 /***/ }),
-/* 491 */
+/* 492 */
 /***/ (function(module, exports) {
 
 /**
@@ -62014,7 +64771,7 @@ module.exports = Image;
 
 
 /***/ }),
-/* 492 */
+/* 493 */
 /***/ (function(module, exports) {
 
 /**
@@ -62049,7 +64806,297 @@ module.exports = Canvas;
 
 
 /***/ }),
-/* 493 */
+/* 494 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Parses an XML Texture Atlas object and adds all the Frames into a Texture.
+ *
+ * @function Phaser.Textures.Parsers.AtlasXML
+ * @memberOf Phaser.Textures.Parsers
+ * @private
+ * @since 3.7.0
+ *
+ * @param {Phaser.Textures.Texture} texture - The Texture to add the Frames to.
+ * @param {integer} sourceIndex - The index of the TextureSource.
+ * @param {*} xml - The XML data.
+ *
+ * @return {Phaser.Textures.Texture} The Texture modified by this parser.
+ */
+var AtlasXML = function (texture, sourceIndex, xml)
+{
+    //  Malformed?
+    if (!xml.getElementsByTagName('TextureAtlas'))
+    {
+        console.warn('Invalid Texture Atlas XML given');
+        return;
+    }
+
+    //  Add in a __BASE entry (for the entire atlas)
+    var source = texture.source[sourceIndex];
+
+    texture.add('__BASE', sourceIndex, 0, 0, source.width, source.height);
+
+    //  By this stage frames is a fully parsed array
+    var frames = xml.getElementsByTagName('SubTexture');
+
+    var newFrame;
+
+    for (var i = 0; i < frames.length; i++)
+    {
+        var frame = frames[i].attributes;
+
+        var name = frame.name.value;
+        var x = parseInt(frame.x.value, 10);
+        var y = parseInt(frame.y.value, 10);
+        var width = parseInt(frame.width.value, 10);
+        var height = parseInt(frame.height.value, 10);
+
+        //  The frame values are the exact coordinates to cut the frame out of the atlas from
+        newFrame = texture.add(name, sourceIndex, x, y, width, height);
+
+        //  These are the original (non-trimmed) sprite values
+        if (frame.frameX)
+        {
+            var frameX = Math.abs(parseInt(frame.frameX.value, 10));
+            var frameY = Math.abs(parseInt(frame.frameY.value, 10));
+            var frameWidth = parseInt(frame.frameWidth.value, 10);
+            var frameHeight = parseInt(frame.frameHeight.value, 10);
+
+            newFrame.setTrim(
+                width,
+                height,
+                frameX,
+                frameY,
+                frameWidth,
+                frameHeight
+            );
+        }
+    }
+
+    return texture;
+};
+
+module.exports = AtlasXML;
+
+
+/***/ }),
+/* 495 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+var IsSizePowerOfTwo = __webpack_require__(83);
+var Texture = __webpack_require__(112);
+
+/**
+ * @classdesc
+ * A Canvas Texture is a special kind of Texture that is backed by an HTML Canvas Element as its source.
+ *
+ * You can use the properties of this texture to draw to the canvas element directly, using all of the standard
+ * canvas operations available in the browser. Any Game Object can be given this texture and will render with it.
+ *
+ * Note: When running under WebGL the Canvas Texture needs to re-generate its base WebGLTexture and reupload it to
+ * the GPU every time you modify it, otherwise the changes you make to this texture will not be visible. To do this
+ * you should call `CanvasTexture.refresh()` once you are finished with your changes to the canvas. Try and keep
+ * this to a minimum, especially on large canvas sizes, or you may inadvertently thrash the GPU by constantly uploading
+ * texture data to it. This restriction does not apply if using the Canvas Renderer.
+ * 
+ * It starts with only one frame that covers the whole of the canvas. You can add further frames, that specify
+ * sections of the canvas using the `add` method.
+ * 
+ * Should you need to resize the canvas use the `setSize` method so that it accurately updates all of the underlying
+ * texture data as well. Forgetting to do this (i.e. by changing the canvas size directly from your code) could cause
+ * graphical errors.
+ *
+ * @class CanvasTexture
+ * @extends Phaser.Textures.Texture
+ * @memberOf Phaser.Textures
+ * @constructor
+ * @since 3.7.0
+ *
+ * @param {Phaser.Textures.TextureManager} manager - A reference to the Texture Manager this Texture belongs to.
+ * @param {string} key - The unique string-based key of this Texture.
+ * @param {HTMLCanvasElement} source - The canvas element that is used as the base of this texture.
+ * @param {integer} width - The width of the canvas.
+ * @param {integer} height - The height of the canvas.
+ */
+var CanvasTexture = new Class({
+
+    Extends: Texture,
+
+    initialize:
+
+    function CanvasTexture (manager, key, source, width, height)
+    {
+        Texture.call(this, manager, key, source, width, height);
+
+        this.add('__BASE', 0, 0, 0, width, height);
+
+        /**
+         * A reference to the Texture Source of this Canvas.
+         *
+         * @name Phaser.Textures.TextureManager#_source
+         * @type {Phaser.Textures.TextureSource}
+         * @private
+         * @since 3.7.0
+         */
+        this._source = this.frames['__BASE'].source;
+
+        /**
+         * The source Canvas Element.
+         *
+         * @name Phaser.Textures.TextureManager#canvas
+         * @readOnly
+         * @type {HTMLCanvasElement}
+         * @since 3.7.0
+         */
+        this.canvas = this._source.image;
+
+        /**
+         * The 2D Canvas Rendering Context.
+         *
+         * @name Phaser.Textures.TextureManager#canvas
+         * @readOnly
+         * @type {CanvasRenderingContext2D}
+         * @since 3.7.0
+         */
+        this.context = this.canvas.getContext('2d');
+
+        /**
+         * The width of the Canvas.
+         * This property is read-only, if you wish to change use `setSize`.
+         *
+         * @name Phaser.Textures.TextureManager#width
+         * @readOnly
+         * @type {integer}
+         * @since 3.7.0
+         */
+        this.width = width;
+
+        /**
+         * The height of the Canvas.
+         * This property is read-only, if you wish to change use `setSize`.
+         *
+         * @name Phaser.Textures.TextureManager#height
+         * @readOnly
+         * @type {integer}
+         * @since 3.7.0
+         */
+        this.height = height;
+    },
+
+    /**
+     * This should be called manually if you are running under WebGL.
+     * It will refresh the WebGLTexture from the Canvas source. Only call this if you know that the
+     * canvas has changed, as there is a significant GPU texture allocation cost involved in doing so.
+     *
+     * @method Phaser.Textures.CanvasTexture#refresh
+     * @since 3.7.0
+     *
+     * @return {Phaser.Textures.CanvasTexture} This CanvasTexture.
+     */
+    refresh: function ()
+    {
+        this._source.update();
+
+        return this;
+    },
+
+    /**
+     * Gets the Canvas Element.
+     *
+     * @method Phaser.Textures.CanvasTexture#getCanvas
+     * @since 3.7.0
+     *
+     * @return {HTMLCanvasElement} The Canvas DOM element this texture is using.
+     */
+    getCanvas: function ()
+    {
+        return this.canvas;
+    },
+
+    /**
+     * Gets the 2D Canvas Rendering Context.
+     *
+     * @method Phaser.Textures.CanvasTexture#getContext
+     * @since 3.7.0
+     *
+     * @return {CanvasRenderingContext2D} The Canvas Rendering Context this texture is using.
+     */
+    getContext: function ()
+    {
+        return this.context;
+    },
+
+    /**
+     * Clears this Canvas Texture, resetting it back to transparent.
+     *
+     * @method Phaser.Textures.CanvasTexture#clear
+     * @since 3.7.0
+     *
+     * @return {Phaser.Textures.CanvasTexture} The Canvas Texture.
+     */
+    clear: function ()
+    {
+        this.context.clearRect(0, 0, this.width, this.height);
+
+        return this;
+    },
+
+    /**
+     * Changes the size of this Canvas Texture.
+     *
+     * @method Phaser.Textures.CanvasTexture#setSize
+     * @since 3.7.0
+     *
+     * @param {integer} width - The new width of the Canvas.
+     * @param {integer} [height] - The new height of the Canvas. If not given it will use the width as the height.
+     *
+     * @return {Phaser.Textures.CanvasTexture} The Canvas Texture.
+     */
+    setSize: function (width, height)
+    {
+        if (height === undefined) { height = width; }
+
+        if (width !== this.width || height !== this.height)
+        {
+            //  Update the Canvas
+            this.canvas.width = width;
+            this.canvas.height = height;
+
+            //  Update the Texture Source
+            this._source.width = width;
+            this._source.height = height;
+            this._source.isPowerOf2 = IsSizePowerOfTwo(width, height);
+
+            //  Update the Frame
+            this.frames['__BASE'].setSize(width, height, 0, 0);
+
+            this.refresh();
+        }
+
+        return this;
+    }
+
+});
+
+module.exports = CanvasTexture;
+
+
+/***/ }),
+/* 496 */
 /***/ (function(module, exports) {
 
 /**
@@ -62103,7 +65150,7 @@ module.exports = InjectionMap;
 
 
 /***/ }),
-/* 494 */
+/* 497 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -62112,7 +65159,7 @@ module.exports = InjectionMap;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GetFastValue = __webpack_require__(2);
+var GetFastValue = __webpack_require__(1);
 
 /**
  * Builds an array of which plugins (not including physics plugins) should be activated for the given Scene.
@@ -62149,7 +65196,7 @@ module.exports = GetScenePlugins;
 
 
 /***/ }),
-/* 495 */
+/* 498 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -62158,8 +65205,8 @@ module.exports = GetScenePlugins;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GetFastValue = __webpack_require__(2);
-var UppercaseFirst = __webpack_require__(248);
+var GetFastValue = __webpack_require__(1);
+var UppercaseFirst = __webpack_require__(251);
 
 /**
  * Builds an array of which physics plugins should be activated for the given Scene.
@@ -62167,9 +65214,9 @@ var UppercaseFirst = __webpack_require__(248);
  * @function Phaser.Scenes.GetPhysicsPlugins
  * @since 3.0.0
  *
- * @param {Phaser.Scenes.Systems} sys - [description]
+ * @param {Phaser.Scenes.Systems} sys - The scene system to get the physics systems of.
  *
- * @return {array} [description]
+ * @return {array} An array of Physics systems to start for this Scene.
  */
 var GetPhysicsPlugins = function (sys)
 {
@@ -62211,7 +65258,7 @@ module.exports = GetPhysicsPlugins;
 
 
 /***/ }),
-/* 496 */
+/* 499 */
 /***/ (function(module, exports) {
 
 /**
@@ -62261,7 +65308,7 @@ module.exports = ProcessKeyUp;
 
 
 /***/ }),
-/* 497 */
+/* 500 */
 /***/ (function(module, exports) {
 
 /**
@@ -62319,7 +65366,7 @@ module.exports = ProcessKeyDown;
 
 
 /***/ }),
-/* 498 */
+/* 501 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -62328,7 +65375,7 @@ module.exports = ProcessKeyDown;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var KeyCodes = __webpack_require__(110);
+var KeyCodes = __webpack_require__(114);
 
 var KeyMap = {};
 
@@ -62341,7 +65388,7 @@ module.exports = KeyMap;
 
 
 /***/ }),
-/* 499 */
+/* 502 */
 /***/ (function(module, exports) {
 
 /**
@@ -62375,7 +65422,7 @@ module.exports = ResetKeyCombo;
 
 
 /***/ }),
-/* 500 */
+/* 503 */
 /***/ (function(module, exports) {
 
 /**
@@ -62416,7 +65463,7 @@ module.exports = AdvanceKeyCombo;
 
 
 /***/ }),
-/* 501 */
+/* 504 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -62425,7 +65472,7 @@ module.exports = AdvanceKeyCombo;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var AdvanceKeyCombo = __webpack_require__(500);
+var AdvanceKeyCombo = __webpack_require__(503);
 
 /**
  * Used internally by the KeyCombo class.
@@ -62496,7 +65543,7 @@ module.exports = ProcessKeyCombo;
 
 
 /***/ }),
-/* 502 */
+/* 505 */
 /***/ (function(module, exports) {
 
 /**
@@ -62594,7 +65641,7 @@ module.exports = init();
 
 
 /***/ }),
-/* 503 */
+/* 506 */
 /***/ (function(module, exports) {
 
 /**
@@ -62679,7 +65726,7 @@ module.exports = init();
 
 
 /***/ }),
-/* 504 */
+/* 507 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -62688,7 +65735,7 @@ module.exports = init();
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Browser = __webpack_require__(74);
+var Browser = __webpack_require__(76);
 
 /**
  * Determines the audio playback capabilities of the device running this Phaser Game instance.
@@ -62804,7 +65851,7 @@ module.exports = init();
 
 
 /***/ }),
-/* 505 */
+/* 508 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -62813,8 +65860,8 @@ module.exports = init();
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var OS = __webpack_require__(53);
-var Browser = __webpack_require__(74);
+var OS = __webpack_require__(56);
+var Browser = __webpack_require__(76);
 
 /**
  * Determines the input support of the browser running this Phaser Game instance.
@@ -62883,7 +65930,7 @@ module.exports = init();
 
 
 /***/ }),
-/* 506 */
+/* 509 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -62917,20 +65964,20 @@ module.exports = init();
 
 module.exports = {
 
-    os: __webpack_require__(53),
-    browser: __webpack_require__(74),
-    features: __webpack_require__(112),
-    input: __webpack_require__(505),
-    audio: __webpack_require__(504),
-    video: __webpack_require__(503),
-    fullscreen: __webpack_require__(502),
-    canvasFeatures: __webpack_require__(193)
+    os: __webpack_require__(56),
+    browser: __webpack_require__(76),
+    features: __webpack_require__(116),
+    input: __webpack_require__(508),
+    audio: __webpack_require__(507),
+    video: __webpack_require__(506),
+    fullscreen: __webpack_require__(505),
+    canvasFeatures: __webpack_require__(195)
 
 };
 
 
 /***/ }),
-/* 507 */
+/* 510 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -62939,7 +65986,7 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CONST = __webpack_require__(19);
+var CONST = __webpack_require__(20);
 
 /**
  * Called automatically by Phaser.Game and responsible for creating the console.log debug header.
@@ -63058,49 +66105,219 @@ module.exports = DebugHeader;
 
 
 /***/ }),
-/* 508 */
-/***/ (function(module, exports) {
-
-module.exports = "#define SHADER_NAME PHASER_TEXTURE_TINT_VS\r\n\r\nprecision mediump float;\r\n\r\nuniform mat4 uProjectionMatrix;\r\nuniform mat4 uViewMatrix;\r\nuniform mat4 uModelMatrix;\r\n\r\nattribute vec2 inPosition;\r\nattribute vec2 inTexCoord;\r\nattribute vec4 inTint;\r\n\r\nvarying vec2 outTexCoord;\r\nvarying vec4 outTint;\r\n\r\nvoid main () \r\n{\r\n    gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(inPosition, 1.0, 1.0);\r\n    outTexCoord = inTexCoord;\r\n    outTint = inTint;\r\n}\r\n\r\n"
-
-/***/ }),
-/* 509 */
-/***/ (function(module, exports) {
-
-module.exports = "#define SHADER_NAME PHASER_TEXTURE_TINT_FS\r\n\r\nprecision mediump float;\r\n\r\nuniform sampler2D uMainSampler;\r\n\r\nvarying vec2 outTexCoord;\r\nvarying vec4 outTint;\r\n\r\nvoid main() \r\n{\r\n    vec4 texel = texture2D(uMainSampler, outTexCoord);\r\n    texel *= vec4(outTint.rgb * outTint.a, outTint.a);\r\n    gl_FragColor = texel;\r\n}\r\n"
-
-/***/ }),
-/* 510 */
-/***/ (function(module, exports) {
-
-module.exports = "#define SHADER_NAME PHASER_FORWARD_DIFFUSE_FS\r\n\r\nprecision mediump float;\r\n\r\nstruct Light\r\n{\r\n    vec2 position;\r\n    vec3 color;\r\n    float intensity;\r\n    float radius;\r\n};\r\n\r\nconst int kMaxLights = %LIGHT_COUNT%;\r\n\r\nuniform vec4 uCamera; /* x, y, rotation, zoom */\r\nuniform vec2 uResolution;\r\nuniform sampler2D uMainSampler;\r\nuniform sampler2D uNormSampler;\r\nuniform vec3 uAmbientLightColor;\r\nuniform Light uLights[kMaxLights];\r\n\r\nvarying vec2 outTexCoord;\r\nvarying vec4 outTint;\r\n\r\nvoid main()\r\n{\r\n    vec3 finalColor = vec3(0.0, 0.0, 0.0);\r\n    vec4 color = texture2D(uMainSampler, outTexCoord) * vec4(outTint.rgb * outTint.a, outTint.a);\r\n    vec3 normalMap = texture2D(uNormSampler, outTexCoord).rgb;\r\n    vec3 normal = normalize(vec3(normalMap * 2.0 - 1.0));\r\n    vec2 res = vec2(min(uResolution.x, uResolution.y)) * uCamera.w;\r\n\r\n    for (int index = 0; index < kMaxLights; ++index)\r\n    {\r\n        Light light = uLights[index];\r\n        vec3 lightDir = vec3((light.position.xy / res) - (gl_FragCoord.xy / res), 0.1);\r\n        vec3 lightNormal = normalize(lightDir);\r\n        float distToSurf = length(lightDir) * uCamera.w;\r\n        float diffuseFactor = max(dot(normal, lightNormal), 0.0);\r\n        float radius = (light.radius / res.x * uCamera.w) * uCamera.w;\r\n        float attenuation = clamp(1.0 - distToSurf * distToSurf / (radius * radius), 0.0, 1.0);\r\n        vec3 diffuse = light.color * diffuseFactor;\r\n        finalColor += (attenuation * diffuse) * light.intensity;\r\n    }\r\n\r\n    vec4 colorOutput = vec4(uAmbientLightColor + finalColor, 1.0);\r\n    gl_FragColor = color * vec4(colorOutput.rgb * colorOutput.a, colorOutput.a);\r\n\r\n}\r\n"
-
-/***/ }),
 /* 511 */
 /***/ (function(module, exports) {
 
-module.exports = "#define SHADER_NAME PHASER_FLAT_TINT_VS\r\n\r\nprecision mediump float;\r\n\r\nuniform mat4 uProjectionMatrix;\r\nuniform mat4 uViewMatrix;\r\nuniform mat4 uModelMatrix;\r\n\r\nattribute vec2 inPosition;\r\nattribute vec4 inTint;\r\n\r\nvarying vec4 outTint;\r\n\r\nvoid main () {\r\n    gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(inPosition, 1.0, 1.0);\r\n    outTint = inTint;\r\n}\r\n"
+module.exports = [
+    '#define SHADER_NAME PHASER_TEXTURE_TINT_VS',
+    '',
+    'precision mediump float;',
+    '',
+    'uniform mat4 uProjectionMatrix;',
+    'uniform mat4 uViewMatrix;',
+    'uniform mat4 uModelMatrix;',
+    '',
+    'attribute vec2 inPosition;',
+    'attribute vec2 inTexCoord;',
+    'attribute vec4 inTint;',
+    '',
+    'varying vec2 outTexCoord;',
+    'varying vec4 outTint;',
+    '',
+    'void main ()',
+    '{',
+    '    gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(inPosition, 1.0, 1.0);',
+    '    outTexCoord = inTexCoord;',
+    '    outTint = inTint;',
+    '}',
+    '',
+    ''
+].join('\n');
+
 
 /***/ }),
 /* 512 */
 /***/ (function(module, exports) {
 
-module.exports = "#define SHADER_NAME PHASER_FLAT_TINT_FS\r\n\r\nprecision mediump float;\r\n\r\nvarying vec4 outTint;\r\n\r\nvoid main() {\r\n    gl_FragColor = vec4(outTint.rgb * outTint.a, outTint.a);\r\n}\r\n"
+module.exports = [
+    '#define SHADER_NAME PHASER_TEXTURE_TINT_FS',
+    '',
+    'precision mediump float;',
+    '',
+    'uniform sampler2D uMainSampler;',
+    '',
+    'varying vec2 outTexCoord;',
+    'varying vec4 outTint;',
+    '',
+    'void main()',
+    '{',
+    '    vec4 texel = texture2D(uMainSampler, outTexCoord);',
+    '    texel *= vec4(outTint.rgb * outTint.a, outTint.a);',
+    '    gl_FragColor = texel;',
+    '}',
+    ''
+].join('\n');
+
 
 /***/ }),
 /* 513 */
 /***/ (function(module, exports) {
 
-module.exports = "#define SHADER_NAME PHASER_BITMAP_MASK_VS\r\n\r\nprecision mediump float;\r\n\r\nattribute vec2 inPosition;\r\n\r\nvoid main()\r\n{\r\n    gl_Position = vec4(inPosition, 0.0, 1.0);\r\n}\r\n"
+module.exports = [
+    '#define SHADER_NAME PHASER_FORWARD_DIFFUSE_FS',
+    '',
+    'precision mediump float;',
+    '',
+    'struct Light',
+    '{',
+    '    vec2 position;',
+    '    vec3 color;',
+    '    float intensity;',
+    '    float radius;',
+    '};',
+    '',
+    'const int kMaxLights = %LIGHT_COUNT%;',
+    '',
+    'uniform vec4 uCamera; /* x, y, rotation, zoom */',
+    'uniform vec2 uResolution;',
+    'uniform sampler2D uMainSampler;',
+    'uniform sampler2D uNormSampler;',
+    'uniform vec3 uAmbientLightColor;',
+    'uniform Light uLights[kMaxLights];',
+    '',
+    'varying vec2 outTexCoord;',
+    'varying vec4 outTint;',
+    '',
+    'void main()',
+    '{',
+    '    vec3 finalColor = vec3(0.0, 0.0, 0.0);',
+    '    vec4 color = texture2D(uMainSampler, outTexCoord) * vec4(outTint.rgb * outTint.a, outTint.a);',
+    '    vec3 normalMap = texture2D(uNormSampler, outTexCoord).rgb;',
+    '    vec3 normal = normalize(vec3(normalMap * 2.0 - 1.0));',
+    '    vec2 res = vec2(min(uResolution.x, uResolution.y)) * uCamera.w;',
+    '',
+    '    for (int index = 0; index < kMaxLights; ++index)',
+    '    {',
+    '        Light light = uLights[index];',
+    '        vec3 lightDir = vec3((light.position.xy / res) - (gl_FragCoord.xy / res), 0.1);',
+    '        vec3 lightNormal = normalize(lightDir);',
+    '        float distToSurf = length(lightDir) * uCamera.w;',
+    '        float diffuseFactor = max(dot(normal, lightNormal), 0.0);',
+    '        float radius = (light.radius / res.x * uCamera.w) * uCamera.w;',
+    '        float attenuation = clamp(1.0 - distToSurf * distToSurf / (radius * radius), 0.0, 1.0);',
+    '        vec3 diffuse = light.color * diffuseFactor;',
+    '        finalColor += (attenuation * diffuse) * light.intensity;',
+    '    }',
+    '',
+    '    vec4 colorOutput = vec4(uAmbientLightColor + finalColor, 1.0);',
+    '    gl_FragColor = color * vec4(colorOutput.rgb * colorOutput.a, colorOutput.a);',
+    '',
+    '}',
+    ''
+].join('\n');
+
 
 /***/ }),
 /* 514 */
 /***/ (function(module, exports) {
 
-module.exports = "#define SHADER_NAME PHASER_BITMAP_MASK_FS\r\n\r\nprecision mediump float;\r\n\r\nuniform vec2 uResolution;\r\nuniform sampler2D uMainSampler;\r\nuniform sampler2D uMaskSampler;\r\nuniform bool uInvertMaskAlpha;\r\n\r\nvoid main()\r\n{\r\n    vec2 uv = gl_FragCoord.xy / uResolution;\r\n    vec4 mainColor = texture2D(uMainSampler, uv);\r\n    vec4 maskColor = texture2D(uMaskSampler, uv);\r\n    float alpha = mainColor.a;\r\n\r\n    if (!uInvertMaskAlpha)\r\n    {\r\n        alpha *= (maskColor.a);\r\n    }\r\n    else\r\n    {\r\n        alpha *= (1.0 - maskColor.a);\r\n    }\r\n    \r\n    gl_FragColor = vec4(mainColor.rgb * alpha, alpha);\r\n}\r\n"
+module.exports = [
+    '#define SHADER_NAME PHASER_FLAT_TINT_VS',
+    '',
+    'precision mediump float;',
+    '',
+    'uniform mat4 uProjectionMatrix;',
+    'uniform mat4 uViewMatrix;',
+    'uniform mat4 uModelMatrix;',
+    '',
+    'attribute vec2 inPosition;',
+    'attribute vec4 inTint;',
+    '',
+    'varying vec4 outTint;',
+    '',
+    'void main () {',
+    '    gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(inPosition, 1.0, 1.0);',
+    '    outTint = inTint;',
+    '}',
+    ''
+].join('\n');
+
 
 /***/ }),
 /* 515 */
+/***/ (function(module, exports) {
+
+module.exports = [
+    '#define SHADER_NAME PHASER_FLAT_TINT_FS',
+    '',
+    'precision mediump float;',
+    '',
+    'varying vec4 outTint;',
+    '',
+    'void main() {',
+    '    gl_FragColor = vec4(outTint.rgb * outTint.a, outTint.a);',
+    '}',
+    ''
+].join('\n');
+
+
+/***/ }),
+/* 516 */
+/***/ (function(module, exports) {
+
+module.exports = [
+    '#define SHADER_NAME PHASER_BITMAP_MASK_VS',
+    '',
+    'precision mediump float;',
+    '',
+    'attribute vec2 inPosition;',
+    '',
+    'void main()',
+    '{',
+    '    gl_Position = vec4(inPosition, 0.0, 1.0);',
+    '}',
+    ''
+].join('\n');
+
+
+/***/ }),
+/* 517 */
+/***/ (function(module, exports) {
+
+module.exports = [
+    '#define SHADER_NAME PHASER_BITMAP_MASK_FS',
+    '',
+    'precision mediump float;',
+    '',
+    'uniform vec2 uResolution;',
+    'uniform sampler2D uMainSampler;',
+    'uniform sampler2D uMaskSampler;',
+    'uniform bool uInvertMaskAlpha;',
+    '',
+    'void main()',
+    '{',
+    '    vec2 uv = gl_FragCoord.xy / uResolution;',
+    '    vec4 mainColor = texture2D(uMainSampler, uv);',
+    '    vec4 maskColor = texture2D(uMaskSampler, uv);',
+    '    float alpha = mainColor.a;',
+    '',
+    '    if (!uInvertMaskAlpha)',
+    '    {',
+    '        alpha *= (maskColor.a);',
+    '    }',
+    '    else',
+    '    {',
+    '        alpha *= (1.0 - maskColor.a);',
+    '    }',
+    '',
+    '    gl_FragColor = vec4(mainColor.rgb * alpha, alpha);',
+    '}',
+    ''
+].join('\n');
+
+
+/***/ }),
+/* 518 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63109,10 +66326,10 @@ module.exports = "#define SHADER_NAME PHASER_BITMAP_MASK_FS\r\n\r\nprecision med
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CanvasInterpolation = __webpack_require__(266);
+var CanvasInterpolation = __webpack_require__(269);
 var CanvasPool = __webpack_require__(22);
-var CONST = __webpack_require__(19);
-var Features = __webpack_require__(112);
+var CONST = __webpack_require__(20);
+var Features = __webpack_require__(116);
 
 /**
  * Called automatically by Phaser.Game and responsible for creating the renderer it will use.
@@ -63198,8 +66415,8 @@ var CreateRenderer = function (game)
 
     if (true)
     {
-        CanvasRenderer = __webpack_require__(259);
-        WebGLRenderer = __webpack_require__(254);
+        CanvasRenderer = __webpack_require__(262);
+        WebGLRenderer = __webpack_require__(257);
 
         //  Let the config pick the renderer type, both are included
         if (config.renderType === CONST.WEBGL)
@@ -63225,7 +66442,7 @@ module.exports = CreateRenderer;
 
 
 /***/ }),
-/* 516 */
+/* 519 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63235,12 +66452,12 @@ module.exports = CreateRenderer;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(19);
+var CONST = __webpack_require__(20);
 var GetValue = __webpack_require__(4);
-var MATH = __webpack_require__(15);
+var MATH = __webpack_require__(16);
 var NOOP = __webpack_require__(3);
-var Plugins = __webpack_require__(194);
-var ValueToColor = __webpack_require__(124);
+var Plugins = __webpack_require__(196);
+var ValueToColor = __webpack_require__(127);
 
 /**
  * This callback type is completely empty, a no-operation.
@@ -63269,8 +66486,7 @@ var ValueToColor = __webpack_require__(124);
  *
  * @property {string} [baseURL] - [description]
  * @property {string} [path] - [description]
- * @property {boolean} [enableParallel=true] - [description]
- * @property {integer} [maxParallelDownloads=4] - [description]
+ * @property {integer} [maxParallelDownloads=32] - [description]
  * @property {(string|undefined)} [crossOrigin=undefined] - [description]
  * @property {string} [responseType] - [description]
  * @property {boolean} [async=true] - [description]
@@ -63310,16 +66526,16 @@ var ValueToColor = __webpack_require__(124);
  * @property {string} [banner.text='#ffffff'] - [description]
  * @property {string[]} [banner.background] - [description]
  * @property {FPSConfig} [fps] - [description]
- * @property {boolean} [antialias=true] - [description]
- * @property {boolean} [pixelArt=false] - [description]
- * @property {boolean} [autoResize=false] - [description]
- * @property {boolean} [roundPixels=false] - [description]
- * @property {boolean} [transparent=false] - [description]
- * @property {boolean} [clearBeforeRender=true] - [description]
- * @property {boolean} [premultipliedAlpha=true] - [description]
- * @property {boolean} [preserveDrawingBuffer=false] - [description]
- * @property {boolean} [failIfMajorPerformanceCaveat=false] - [description]
- * @property {boolean} [powerPreference='default'] - "high-performance", "low-power" or "default"
+ * @property {boolean} [render.antialias=true] - [description]
+ * @property {boolean} [render.pixelArt=false] - [description]
+ * @property {boolean} [render.autoResize=false] - [description]
+ * @property {boolean} [render.roundPixels=false] - [description]
+ * @property {boolean} [render.transparent=false] - [description]
+ * @property {boolean} [render.clearBeforeRender=true] - [description]
+ * @property {boolean} [render.premultipliedAlpha=true] - [description]
+ * @property {boolean} [render.preserveDrawingBuffer=false] - [description]
+ * @property {boolean} [render.failIfMajorPerformanceCaveat=false] - [description]
+ * @property {string} [render.powerPreference='default'] - "high-performance", "low-power" or "default"
  * @property {(string|number)} [backgroundColor=0x000000] - [description]
  * @property {object} [callbacks] - [description]
  * @property {BootCallback} [callbacks.preBoot=NOOP] - [description]
@@ -63361,51 +66577,162 @@ var Config = new Class({
 
         var defaultBannerTextColor = '#ffffff';
 
+        /**
+         * @const {(integer|string)} Phaser.Boot.Config#width - [description]
+         */
         this.width = GetValue(config, 'width', 1024);
+
+        /**
+         * @const {(integer|string)} Phaser.Boot.Config#height - [description]
+         */
         this.height = GetValue(config, 'height', 768);
+
+        /**
+         * @const {number} Phaser.Boot.Config#zoom - [description]
+         */
         this.zoom = GetValue(config, 'zoom', 1);
 
+
+        /**
+         * @const {number} Phaser.Boot.Config#resolution - [description]
+         */
         this.resolution = GetValue(config, 'resolution', 1);
 
+
+        /**
+         * @const {number} Phaser.Boot.Config#renderType - [description]
+         */
         this.renderType = GetValue(config, 'type', CONST.AUTO);
 
+
+        /**
+         * @const {?*} Phaser.Boot.Config#parent - [description]
+         */
         this.parent = GetValue(config, 'parent', null);
+
+        /**
+         * @const {?HTMLCanvasElement} Phaser.Boot.Config#canvas - [description]
+         */
         this.canvas = GetValue(config, 'canvas', null);
+
+        /**
+         * @const {?string} Phaser.Boot.Config#canvasStyle - [description]
+         */
         this.canvasStyle = GetValue(config, 'canvasStyle', null);
 
+
+        /**
+         * @const {?object} Phaser.Boot.Config#sceneConfig - [description]
+         */
         this.sceneConfig = GetValue(config, 'scene', null);
 
+
+        /**
+         * @const {string[]} Phaser.Boot.Config#seed - [description]
+         */
         this.seed = GetValue(config, 'seed', [ (Date.now() * Math.random()).toString() ]);
 
         MATH.RND.init(this.seed);
 
+
+        /**
+         * @const {string} Phaser.Boot.Config#gameTitle - [description]
+         */
         this.gameTitle = GetValue(config, 'title', '');
+
+        /**
+         * @const {string} Phaser.Boot.Config#gameURL - [description]
+         */
         this.gameURL = GetValue(config, 'url', 'https://phaser.io');
+
+        /**
+         * @const {string} Phaser.Boot.Config#gameVersion - [description]
+         */
         this.gameVersion = GetValue(config, 'version', '');
 
+
         //  Input
+        /**
+         * @const {boolean} Phaser.Boot.Config#inputKeyboard - [description]
+         */
         this.inputKeyboard = GetValue(config, 'input.keyboard', true);
+
+        /**
+         * @const {*} Phaser.Boot.Config#inputKeyboardEventTarget - [description]
+         */
         this.inputKeyboardEventTarget = GetValue(config, 'input.keyboard.target', window);
 
+
+        /**
+         * @const {(boolean|object)} Phaser.Boot.Config#inputMouse - [description]
+         */
         this.inputMouse = GetValue(config, 'input.mouse', true);
+
+        /**
+         * @const {?*} Phaser.Boot.Config#inputMouseEventTarget - [description]
+         */
         this.inputMouseEventTarget = GetValue(config, 'input.mouse.target', null);
+
+        /**
+         * @const {boolean} Phaser.Boot.Config#inputMouseCapture - [description]
+         */
         this.inputMouseCapture = GetValue(config, 'input.mouse.capture', true);
 
+
+        /**
+         * @const {boolean} Phaser.Boot.Config#inputTouch - [description]
+         */
         this.inputTouch = GetValue(config, 'input.touch', true);
+
+        /**
+         * @const {?*} Phaser.Boot.Config#inputTouchEventTarget - [description]
+         */
         this.inputTouchEventTarget = GetValue(config, 'input.touch.target', null);
+
+        /**
+         * @const {boolean} Phaser.Boot.Config#inputTouchCapture - [description]
+         */
         this.inputTouchCapture = GetValue(config, 'input.touch.capture', true);
 
+
+        /**
+         * @const {boolean} Phaser.Boot.Config#inputGamepad - [description]
+         */
         this.inputGamepad = GetValue(config, 'input.gamepad', false);
 
+
+        /**
+         * @const {boolean} Phaser.Boot.Config#disableContextMenu - [description]
+         */
         this.disableContextMenu = GetValue(config, 'disableContextMenu', false);
 
+
+        /**
+         * @const {any} Phaser.Boot.Config#audio - [description]
+         */
         this.audio = GetValue(config, 'audio');
 
+
         //  If you do: { banner: false } it won't display any banner at all
+        /**
+         * @const {boolean} Phaser.Boot.Config#hideBanner - [description]
+         */
         this.hideBanner = (GetValue(config, 'banner', null) === false);
 
+
+        /**
+         * @const {boolean} Phaser.Boot.Config#hidePhaser - [description]
+         */
         this.hidePhaser = GetValue(config, 'banner.hidePhaser', false);
+
+        /**
+         * @const {string} Phaser.Boot.Config#bannerTextColor - [description]
+         */
         this.bannerTextColor = GetValue(config, 'banner.text', defaultBannerTextColor);
+
+        /**
+         * @const {string[]} Phaser.Boot.Config#bannerBackgroundColor - [description]
+         */
         this.bannerBackgroundColor = GetValue(config, 'banner.background', defaultBannerColor);
 
         if (this.gameTitle === '' && this.hidePhaser)
@@ -63421,6 +66748,9 @@ var Config = new Class({
         //          deltaHistory: 10
         //     }
 
+        /**
+         * @const {?FPSConfig} Phaser.Boot.Config#fps - [description]
+         */
         this.fps = GetValue(config, 'fps', null);
 
         //  Renderer Settings
@@ -63428,19 +66758,62 @@ var Config = new Class({
 
         var renderConfig = GetValue(config, 'render', config);
 
+        /**
+         * @const {boolean} Phaser.Boot.Config#antialias - [description]
+         */
         this.antialias = GetValue(renderConfig, 'antialias', true);
+
+        /**
+         * @const {boolean} Phaser.Boot.Config#pixelArt - [description]
+         */
         this.pixelArt = GetValue(renderConfig, 'pixelArt', false);
+
+        /**
+         * @const {boolean} Phaser.Boot.Config#autoResize - [description]
+         */
         this.autoResize = GetValue(renderConfig, 'autoResize', false);
+
+        /**
+         * @const {boolean} Phaser.Boot.Config#roundPixels - [description]
+         */
         this.roundPixels = GetValue(renderConfig, 'roundPixels', false);
+
+        /**
+         * @const {boolean} Phaser.Boot.Config#transparent - [description]
+         */
         this.transparent = GetValue(renderConfig, 'transparent', false);
+
+        /**
+         * @const {boolean} Phaser.Boot.Config#zoclearBeforeRenderom - [description]
+         */
         this.clearBeforeRender = GetValue(renderConfig, 'clearBeforeRender', true);
+
+        /**
+         * @const {boolean} Phaser.Boot.Config#premultipliedAlpha - [description]
+         */
         this.premultipliedAlpha = GetValue(renderConfig, 'premultipliedAlpha', true);
+
+        /**
+         * @const {boolean} Phaser.Boot.Config#preserveDrawingBuffer - [description]
+         */
         this.preserveDrawingBuffer = GetValue(renderConfig, 'preserveDrawingBuffer', false);
+
+        /**
+         * @const {boolean} Phaser.Boot.Config#failIfMajorPerformanceCaveat - [description]
+         */
         this.failIfMajorPerformanceCaveat = GetValue(renderConfig, 'failIfMajorPerformanceCaveat', false);
+
+        /**
+         * @const {string} Phaser.Boot.Config#powerPreference - [description]
+         */
         this.powerPreference = GetValue(renderConfig, 'powerPreference', 'default');
+
 
         var bgc = GetValue(config, 'backgroundColor', 0);
 
+        /**
+         * @const {Phaser.Display.Color} Phaser.Boot.Config#backgroundColor - [description]
+         */
         this.backgroundColor = ValueToColor(bgc);
 
         if (bgc === 0 && this.transparent)
@@ -63448,9 +66821,18 @@ var Config = new Class({
             this.backgroundColor.alpha = 0;
         }
 
+
         //  Callbacks
+        /**
+         * @const {BootCallback} Phaser.Boot.Config#preBoot - [description]
+         */
         this.preBoot = GetValue(config, 'callbacks.preBoot', NOOP);
+
+        /**
+         * @const {BootCallback} Phaser.Boot.Config#postBoot - [description]
+         */
         this.postBoot = GetValue(config, 'callbacks.postBoot', NOOP);
+
 
         //  Physics
         //  physics: {
@@ -63460,28 +66842,82 @@ var Config = new Class({
         //      cellSize: 64
         //  }
 
+        /**
+         * @const {object} Phaser.Boot.Config#physics - [description]
+         */
         this.physics = GetValue(config, 'physics', {});
+
+        /**
+         * @const {boolean} Phaser.Boot.Config#defaultPhysicsSystem - [description]
+         */
         this.defaultPhysicsSystem = GetValue(this.physics, 'default', false);
 
+
         //  Loader Defaults
+        /**
+         * @const {string} Phaser.Boot.Config#loaderBaseURL - [description]
+         */
         this.loaderBaseURL = GetValue(config, 'loader.baseURL', '');
+
+        /**
+         * @const {string} Phaser.Boot.Config#loaderPath - [description]
+         */
         this.loaderPath = GetValue(config, 'loader.path', '');
-        this.loaderEnableParallel = GetValue(config, 'loader.enableParallel', true);
-        this.loaderMaxParallelDownloads = GetValue(config, 'loader.maxParallelDownloads', 4);
+
+        /**
+         * @const {integer} Phaser.Boot.Config#loaderMaxParallelDownloads - [description]
+         */
+        this.loaderMaxParallelDownloads = GetValue(config, 'loader.maxParallelDownloads', 32);
+
+        /**
+         * @const {(string|undefined)} Phaser.Boot.Config#loaderCrossOrigin - [description]
+         */
         this.loaderCrossOrigin = GetValue(config, 'loader.crossOrigin', undefined);
+
+        /**
+         * @const {string} Phaser.Boot.Config#loaderResponseType - [description]
+         */
         this.loaderResponseType = GetValue(config, 'loader.responseType', '');
+
+        /**
+         * @const {boolean} Phaser.Boot.Config#loaderAsync - [description]
+         */
         this.loaderAsync = GetValue(config, 'loader.async', true);
+
+        /**
+         * @const {string} Phaser.Boot.Config#loaderUser - [description]
+         */
         this.loaderUser = GetValue(config, 'loader.user', '');
+
+        /**
+         * @const {string} Phaser.Boot.Config#loaderPassword - [description]
+         */
         this.loaderPassword = GetValue(config, 'loader.password', '');
+
+        /**
+         * @const {integer} Phaser.Boot.Config#loaderTimeout - [description]
+         */
         this.loaderTimeout = GetValue(config, 'loader.timeout', 0);
 
+
         //  Scene Plugins
+        /**
+         * @const {any} Phaser.Boot.Config#defaultPlugins - [description]
+         */
         this.defaultPlugins = GetValue(config, 'plugins', Plugins.DefaultScene);
+
 
         //  Default / Missing Images
         var pngPrefix = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAg';
 
+        /**
+         * @const {string} Phaser.Boot.Config#defaultImage - [description]
+         */
         this.defaultImage = GetValue(config, 'images.default', pngPrefix + 'AQMAAABJtOi3AAAAA1BMVEX///+nxBvIAAAAAXRSTlMAQObYZgAAABVJREFUeF7NwIEAAAAAgKD9qdeocAMAoAABm3DkcAAAAABJRU5ErkJggg==');
+        
+        /**
+         * @const {string} Phaser.Boot.Config#missingImage - [description]
+         */
         this.missingImage = GetValue(config, 'images.missing', pngPrefix + 'CAIAAAD8GO2jAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJ9JREFUeNq01ssOwyAMRFG46v//Mt1ESmgh+DFmE2GPOBARKb2NVjo+17PXLD8a1+pl5+A+wSgFygymWYHBb0FtsKhJDdZlncG2IzJ4ayoMDv20wTmSMzClEgbWYNTAkQ0Z+OJ+A/eWnAaR9+oxCF4Os0H8htsMUp+pwcgBBiMNnAwF8GqIgL2hAzaGFFgZauDPKABmowZ4GL369/0rwACp2yA/ttmvsQAAAABJRU5ErkJggg==');
     }
 
@@ -63491,7 +66927,7 @@ module.exports = Config;
 
 
 /***/ }),
-/* 517 */
+/* 520 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63500,26 +66936,26 @@ module.exports = Config;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var AddToDOM = __webpack_require__(122);
-var AnimationManager = __webpack_require__(198);
-var CacheManager = __webpack_require__(196);
+var AddToDOM = __webpack_require__(125);
+var AnimationManager = __webpack_require__(200);
+var CacheManager = __webpack_require__(198);
 var CanvasPool = __webpack_require__(22);
 var Class = __webpack_require__(0);
-var Config = __webpack_require__(516);
-var CreateRenderer = __webpack_require__(515);
-var DataManager = __webpack_require__(76);
-var DebugHeader = __webpack_require__(507);
-var Device = __webpack_require__(506);
-var DOMContentLoaded = __webpack_require__(263);
-var EventEmitter = __webpack_require__(9);
-var InputManager = __webpack_require__(191);
+var Config = __webpack_require__(519);
+var CreateRenderer = __webpack_require__(518);
+var DataManager = __webpack_require__(78);
+var DebugHeader = __webpack_require__(510);
+var Device = __webpack_require__(509);
+var DOMContentLoaded = __webpack_require__(266);
+var EventEmitter = __webpack_require__(8);
+var InputManager = __webpack_require__(193);
 var NOOP = __webpack_require__(3);
-var PluginManager = __webpack_require__(10);
-var SceneManager = __webpack_require__(180);
-var SoundManagerCreator = __webpack_require__(177);
-var TextureManager = __webpack_require__(170);
-var TimeStep = __webpack_require__(483);
-var VisibilityHandler = __webpack_require__(482);
+var PluginManager = __webpack_require__(11);
+var SceneManager = __webpack_require__(182);
+var SoundManagerCreator = __webpack_require__(179);
+var TextureManager = __webpack_require__(172);
+var TimeStep = __webpack_require__(486);
+var VisibilityHandler = __webpack_require__(485);
 
 /**
  * @callback GameStepCallback
@@ -64106,7 +67542,7 @@ module.exports = Game;
 
 
 /***/ }),
-/* 518 */
+/* 521 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64116,8 +67552,8 @@ module.exports = Game;
  */
 
 var Class = __webpack_require__(0);
-var EE = __webpack_require__(9);
-var PluginManager = __webpack_require__(10);
+var EE = __webpack_require__(8);
+var PluginManager = __webpack_require__(11);
 
 /**
  * @namespace Phaser.Events
@@ -64294,7 +67730,7 @@ module.exports = EventEmitter;
 
 
 /***/ }),
-/* 519 */
+/* 522 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -64484,355 +67920,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 520 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var Class = __webpack_require__(0);
-
-/**
- * @classdesc
- * [description]
- *
- * @class GeometryMask
- * @memberOf Phaser.Display.Masks
- * @constructor
- * @since 3.0.0
- *
- * @param {Phaser.Scene} scene - [description]
- * @param {Phaser.GameObjects.Graphics} graphicsGeometry - [description]
- */
-var GeometryMask = new Class({
-
-    initialize:
-
-    function GeometryMask (scene, graphicsGeometry)
-    {
-        /**
-         * [description]
-         *
-         * @name Phaser.Display.Masks.GeometryMask#geometryMask
-         * @type {Phaser.GameObjects.Graphics}
-         * @since 3.0.0
-         */
-        this.geometryMask = graphicsGeometry;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Display.Masks.GeometryMask#setShape
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Graphics} graphicsGeometry - [description]
-     */
-    setShape: function (graphicsGeometry)
-    {
-        this.geometryMask = graphicsGeometry;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Display.Masks.GeometryMask#preRenderWebGL
-     * @since 3.0.0
-     *
-     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - [description]
-     * @param {Phaser.GameObjects.GameObject} mask - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     */
-    preRenderWebGL: function (renderer, mask, camera)
-    {
-        var gl = renderer.gl;
-        var geometryMask = this.geometryMask;
-
-        // Force flushing before drawing to stencil buffer
-        renderer.flush();
-
-        // Enable and setup GL state to write to stencil buffer
-        gl.enable(gl.STENCIL_TEST);
-        gl.clear(gl.STENCIL_BUFFER_BIT);
-        gl.colorMask(false, false, false, false);
-        gl.stencilFunc(gl.NOTEQUAL, 1, 1);
-        gl.stencilOp(gl.REPLACE, gl.REPLACE, gl.REPLACE);
-
-        // Write stencil buffer
-        geometryMask.renderWebGL(renderer, geometryMask, 0.0, camera);
-        renderer.flush();
-
-        // Use stencil buffer to affect next rendering object
-        gl.colorMask(true, true, true, true);
-        gl.stencilFunc(gl.EQUAL, 1, 1);
-        gl.stencilOp(gl.INVERT, gl.INVERT, gl.INVERT);
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Display.Masks.GeometryMask#postRenderWebGL
-     * @since 3.0.0
-     *
-     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - [description]
-     */
-    postRenderWebGL: function (renderer)
-    {
-        var gl = renderer.gl;
-
-        // Force flush before disabling stencil test
-        renderer.flush();
-        gl.disable(gl.STENCIL_TEST);
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Display.Masks.GeometryMask#preRenderCanvas
-     * @since 3.0.0
-     *
-     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - [description]
-     * @param {Phaser.GameObjects.GameObject} mask - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     */
-    preRenderCanvas: function (renderer, mask, camera)
-    {
-        var geometryMask = this.geometryMask;
-
-        renderer.currentContext.save();
-
-        geometryMask.renderCanvas(renderer, geometryMask, 0.0, camera, undefined, null, true);
-
-        renderer.currentContext.clip();
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Display.Masks.GeometryMask#postRenderCanvas
-     * @since 3.0.0
-     *
-     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - [description]
-     */
-    postRenderCanvas: function (renderer)
-    {
-        renderer.currentContext.restore();
-    }
-
-});
-
-module.exports = GeometryMask;
-
-
-/***/ }),
-/* 521 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var Class = __webpack_require__(0);
-
-/**
- * @classdesc
- * [description]
- *
- * @class BitmapMask
- * @memberOf Phaser.Display.Masks
- * @constructor
- * @since 3.0.0
- *
- * @param {Phaser.Scene} scene - [description]
- * @param {Phaser.GameObjects.GameObject} renderable - A renderable Game Object that uses a texture, such as a Sprite.
- */
-var BitmapMask = new Class({
-
-    initialize:
-
-    function BitmapMask (scene, renderable)
-    {
-        var renderer = scene.sys.game.renderer;
-
-        /**
-         * A renderable Game Object that uses a texture, such as a Sprite.
-         *
-         * @name Phaser.Display.Masks.BitmapMask#bitmapMask
-         * @type {Phaser.GameObjects.GameObject}
-         * @since 3.0.0
-         */
-        this.bitmapMask = renderable;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Display.Masks.BitmapMask#maskTexture
-         * @type {WebGLTexture}
-         * @default null
-         * @since 3.0.0
-         */
-        this.maskTexture = null;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Display.Masks.BitmapMask#mainTexture
-         * @type {WebGLTexture}
-         * @default null
-         * @since 3.0.0
-         */
-        this.mainTexture = null;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Display.Masks.BitmapMask#dirty
-         * @type {boolean}
-         * @default true
-         * @since 3.0.0
-         */
-        this.dirty = true;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Display.Masks.BitmapMask#mainFramebuffer
-         * @type {WebGLFramebuffer}
-         * @since 3.0.0
-         */
-        this.mainFramebuffer = null;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Display.Masks.BitmapMask#maskFramebuffer
-         * @type {WebGLFramebuffer}
-         * @since 3.0.0
-         */
-        this.maskFramebuffer = null;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Display.Masks.BitmapMask#invertAlpha
-         * @type {boolean}
-         * @since 3.1.2
-         */
-        this.invertAlpha = false;
-
-        if (renderer && renderer.gl)
-        {
-            var width = renderer.width;
-            var height = renderer.height;
-            var pot = ((width & (width - 1)) === 0 && (height & (height - 1)) === 0);
-            var gl = renderer.gl;
-            var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
-            var filter = gl.LINEAR;
-
-            this.mainTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
-            this.maskTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
-            this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, false);
-            this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, false);
-
-            renderer.onContextRestored(function (renderer)
-            {
-                var width = renderer.width;
-                var height = renderer.height;
-                var pot = ((width & (width - 1)) === 0 && (height & (height - 1)) === 0);
-                var gl = renderer.gl;
-                var wrap = pot ? gl.REPEAT : gl.CLAMP_TO_EDGE;
-                var filter = gl.LINEAR;
-
-                this.mainTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
-                this.maskTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
-                this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, false);
-                this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, false);
-
-            }, this);
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Display.Masks.BitmapMask#setBitmap
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.GameObject} renderable - A renderable Game Object that uses a texture, such as a Sprite.
-     */
-    setBitmap: function (renderable)
-    {
-        this.bitmapMask = renderable;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Display.Masks.BitmapMask#preRenderWebGL
-     * @since 3.0.0
-     *
-     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - [description]
-     * @param {Phaser.GameObjects.GameObject} maskedObject - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to render to.
-     */
-    preRenderWebGL: function (renderer, maskedObject, camera)
-    {
-        renderer.pipelines.BitmapMaskPipeline.beginMask(this, maskedObject, camera);
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Display.Masks.BitmapMask#postRenderWebGL
-     * @since 3.0.0
-     *
-     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - [description]
-     */
-    postRenderWebGL: function (renderer)
-    {
-        renderer.pipelines.BitmapMaskPipeline.endMask(this);
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Display.Masks.BitmapMask#preRenderCanvas
-     * @since 3.0.0
-     *
-     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - [description]
-     * @param {Phaser.GameObjects.GameObject} mask - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to render to.
-     */
-    preRenderCanvas: function ()
-    {
-        // NOOP
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Display.Masks.BitmapMask#postRenderCanvas
-     * @since 3.0.0
-     *
-     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - [description]
-     */
-    postRenderCanvas: function ()
-    {
-        // NOOP
-    }
-
-});
-
-module.exports = BitmapMask;
-
-
-/***/ }),
-/* 522 */
+/* 523 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64847,18 +67935,18 @@ module.exports = BitmapMask;
 
 module.exports = {
 
-    BitmapMask: __webpack_require__(521),
-    GeometryMask: __webpack_require__(520)
+    BitmapMask: __webpack_require__(207),
+    GeometryMask: __webpack_require__(206)
 
 };
 
 
 /***/ }),
-/* 523 */,
 /* 524 */,
 /* 525 */,
 /* 526 */,
-/* 527 */
+/* 527 */,
+/* 528 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64868,8 +67956,8 @@ module.exports = {
  */
 
 var Class = __webpack_require__(0);
-var DataManager = __webpack_require__(76);
-var PluginManager = __webpack_require__(10);
+var DataManager = __webpack_require__(78);
+var PluginManager = __webpack_require__(11);
 
 /**
  * @classdesc
@@ -64943,13 +68031,6 @@ var DataManagerPlugin = new Class({
      */
     start: function ()
     {
-        if (this.events)
-        {
-            this.events.off('destroy', this.destroy, this);
-        }
-
-        this.events = this.systems.events;
-
         this.events.once('shutdown', this.shutdown, this);
     },
 
@@ -64977,7 +68058,7 @@ var DataManagerPlugin = new Class({
     {
         DataManager.prototype.destroy.call(this);
 
-        this.systems.events.off('start', this.start, this);
+        this.events.off('start', this.start, this);
 
         this.scene = null;
         this.systems = null;
@@ -64991,7 +68072,7 @@ module.exports = DataManagerPlugin;
 
 
 /***/ }),
-/* 528 */
+/* 529 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -65006,14 +68087,13 @@ module.exports = DataManagerPlugin;
 
 module.exports = {
 
-    DataManager: __webpack_require__(76),
-    DataManagerPlugin: __webpack_require__(527)
+    DataManager: __webpack_require__(78),
+    DataManagerPlugin: __webpack_require__(528)
 
 };
 
 
 /***/ }),
-/* 529 */,
 /* 530 */,
 /* 531 */,
 /* 532 */,
@@ -65022,7 +68102,8 @@ module.exports = {
 /* 535 */,
 /* 536 */,
 /* 537 */,
-/* 538 */
+/* 538 */,
+/* 539 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -65031,7 +68112,7 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = __webpack_require__(1);
+var GameObject = __webpack_require__(2);
 
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
@@ -65062,7 +68143,7 @@ module.exports = SpriteCanvasRenderer;
 
 
 /***/ }),
-/* 539 */
+/* 540 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -65071,7 +68152,7 @@ module.exports = SpriteCanvasRenderer;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = __webpack_require__(1);
+var GameObject = __webpack_require__(2);
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -65102,7 +68183,7 @@ module.exports = SpriteWebGLRenderer;
 
 
 /***/ }),
-/* 540 */
+/* 541 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -65116,12 +68197,12 @@ var renderCanvas = __webpack_require__(3);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(539);
+    renderWebGL = __webpack_require__(540);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(538);
+    renderCanvas = __webpack_require__(539);
 }
 
 module.exports = {
@@ -65133,12 +68214,12 @@ module.exports = {
 
 
 /***/ }),
-/* 541 */,
 /* 542 */,
 /* 543 */,
 /* 544 */,
 /* 545 */,
-/* 546 */
+/* 546 */,
+/* 547 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -65147,11 +68228,11 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Camera = __webpack_require__(113);
+var Camera = __webpack_require__(117);
 var Class = __webpack_require__(0);
-var GetFastValue = __webpack_require__(2);
-var PluginManager = __webpack_require__(10);
-var RectangleContains = __webpack_require__(28);
+var GetFastValue = __webpack_require__(1);
+var PluginManager = __webpack_require__(11);
+var RectangleContains = __webpack_require__(31);
 
 /**
  * @typedef {object} InputJSONCameraObject
@@ -65664,7 +68745,7 @@ module.exports = CameraManager;
 
 
 /***/ }),
-/* 547 */
+/* 548 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -65673,7 +68754,7 @@ module.exports = CameraManager;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Clamp = __webpack_require__(23);
+var Clamp = __webpack_require__(24);
 var Class = __webpack_require__(0);
 var Vector2 = __webpack_require__(6);
 
@@ -66006,7 +69087,7 @@ module.exports = Shake;
 
 
 /***/ }),
-/* 548 */
+/* 549 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -66015,7 +69096,7 @@ module.exports = Shake;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Clamp = __webpack_require__(23);
+var Clamp = __webpack_require__(24);
 var Class = __webpack_require__(0);
 
 /**
@@ -66385,7 +69466,7 @@ module.exports = Flash;
 
 
 /***/ }),
-/* 549 */
+/* 550 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -66394,7 +69475,7 @@ module.exports = Flash;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Clamp = __webpack_require__(23);
+var Clamp = __webpack_require__(24);
 var Class = __webpack_require__(0);
 
 /**
@@ -66821,7 +69902,7 @@ module.exports = Fade;
 
 
 /***/ }),
-/* 550 */
+/* 551 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -66836,17 +69917,17 @@ module.exports = Fade;
 
 module.exports = {
 
-    Camera: __webpack_require__(113),
-    CameraManager: __webpack_require__(546),
-    Effects: __webpack_require__(195)
+    Camera: __webpack_require__(117),
+    CameraManager: __webpack_require__(547),
+    Effects: __webpack_require__(197)
 
 };
 
 
 /***/ }),
-/* 551 */,
 /* 552 */,
-/* 553 */
+/* 553 */,
+/* 554 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -66861,14 +69942,14 @@ module.exports = {
 
 module.exports = {
 
-    BaseCache: __webpack_require__(197),
-    CacheManager: __webpack_require__(196)
+    BaseCache: __webpack_require__(199),
+    CacheManager: __webpack_require__(198)
 
 };
 
 
 /***/ }),
-/* 554 */
+/* 555 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -66883,19 +69964,19 @@ module.exports = {
 
 module.exports = {
 
-    Animation: __webpack_require__(201),
-    AnimationFrame: __webpack_require__(199),
-    AnimationManager: __webpack_require__(198)
+    Animation: __webpack_require__(203),
+    AnimationFrame: __webpack_require__(201),
+    AnimationManager: __webpack_require__(200)
 
 };
 
 
 /***/ }),
-/* 555 */,
 /* 556 */,
 /* 557 */,
 /* 558 */,
-/* 559 */
+/* 559 */,
+/* 560 */
 /***/ (function(module, exports) {
 
 /**
@@ -66984,7 +70065,7 @@ module.exports = Visible;
 
 
 /***/ }),
-/* 560 */
+/* 561 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -66993,10 +70074,10 @@ module.exports = Visible;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var MATH_CONST = __webpack_require__(15);
-var TransformMatrix = __webpack_require__(60);
-var WrapAngle = __webpack_require__(203);
-var WrapAngleDegrees = __webpack_require__(202);
+var MATH_CONST = __webpack_require__(16);
+var TransformMatrix = __webpack_require__(63);
+var WrapAngle = __webpack_require__(205);
+var WrapAngleDegrees = __webpack_require__(204);
 
 //  global bitmask flag for GameObject.renderMask (used by Scale)
 var _FLAG = 4; // 0100
@@ -67432,7 +70513,7 @@ module.exports = Transform;
 
 
 /***/ }),
-/* 561 */
+/* 562 */
 /***/ (function(module, exports) {
 
 /**
@@ -67520,7 +70601,7 @@ module.exports = ToJSON;
 
 
 /***/ }),
-/* 562 */
+/* 563 */
 /***/ (function(module, exports) {
 
 /**
@@ -67758,7 +70839,7 @@ module.exports = Tint;
 
 
 /***/ }),
-/* 563 */
+/* 564 */
 /***/ (function(module, exports) {
 
 /**
@@ -67783,7 +70864,7 @@ var Texture = {
      * The Texture this Game Object is using to render with.
      *
      * @name Phaser.GameObjects.Components.Texture#texture
-     * @type {Phaser.Textures.Texture}
+     * @type {Phaser.Textures.Texture|Phaser.Textures.CanvasTexture}
      * @since 3.0.0
      */
     texture: null,
@@ -67878,7 +70959,7 @@ module.exports = Texture;
 
 
 /***/ }),
-/* 564 */
+/* 565 */
 /***/ (function(module, exports) {
 
 /**
@@ -68034,7 +71115,7 @@ module.exports = Size;
 
 
 /***/ }),
-/* 565 */
+/* 566 */
 /***/ (function(module, exports) {
 
 /**
@@ -68126,7 +71207,7 @@ module.exports = ScrollFactor;
 
 
 /***/ }),
-/* 566 */
+/* 567 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -68135,7 +71216,7 @@ module.exports = ScrollFactor;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var ScaleModes = __webpack_require__(55);
+var ScaleModes = __webpack_require__(58);
 
 /**
  * Provides methods used for getting and setting the scale of a Game Object.
@@ -68197,7 +71278,7 @@ module.exports = ScaleMode;
 
 
 /***/ }),
-/* 567 */
+/* 568 */
 /***/ (function(module, exports) {
 
 /**
@@ -68400,7 +71481,7 @@ module.exports = Origin;
 
 
 /***/ }),
-/* 568 */
+/* 569 */
 /***/ (function(module, exports) {
 
 /**
@@ -68688,7 +71769,7 @@ module.exports = MatrixStack;
 
 
 /***/ }),
-/* 569 */
+/* 570 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -68697,8 +71778,151 @@ module.exports = MatrixStack;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Rectangle = __webpack_require__(12);
-var RotateAround = __webpack_require__(284);
+var BitmapMask = __webpack_require__(207);
+var GeometryMask = __webpack_require__(206);
+
+/**
+ * Provides methods used for getting and setting the mask of a Game Object.
+ *
+ * @name Phaser.GameObjects.Components.Mask
+ * @since 3.0.0
+ */
+
+var Mask = {
+
+    /**
+     * The Mask this Game Object is using during render.
+     *
+     * @name Phaser.GameObjects.Components.Mask#mask
+     * @type {Phaser.Display.Masks.BitmapMask|Phaser.Display.Masks.GeometryMask}
+     * @since 3.0.0
+     */
+    mask: null,
+
+    /**
+     * Sets the mask that this Game Object will use to render with.
+     *
+     * The mask must have been previously created and can be either a
+     * GeometryMask or a BitmapMask.
+     *
+     * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+     *
+     * If a mask is already set on this Game Object it will be immediately replaced.
+     *
+     * @method Phaser.GameObjects.Components.Mask#setMask
+     * @since 3.6.2
+     *
+     * @param {Phaser.Display.Masks.BitmapMask|Phaser.Display.Masks.GeometryMask} mask - The mask this Game Object will use when rendering.
+     *
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
+    setMask: function (mask)
+    {
+        this.mask = mask;
+
+        return this;
+    },
+
+    /**
+     * Clears the mask that this Game Object was using.
+     *
+     * @method Phaser.GameObjects.Components.Mask#clearMask
+     * @since 3.6.2
+     *
+     * @param {boolean} [destroyMask=false] - Destroy the mask before clearing it?
+     *
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
+    clearMask: function (destroyMask)
+    {
+        if (destroyMask === undefined) { destroyMask = false; }
+
+        if (destroyMask)
+        {
+            this.mask.destroy();
+        }
+
+        this.mask = null;
+
+        return this;
+    },
+
+    /**
+     * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+     * including this one.
+     *
+     * To create the mask you need to pass in a reference to a renderable Game Object.
+     * A renderable Game Object is one that uses a texture to render with, such as an
+     * Image, Sprite, Render Texture or BitmapText.
+     *
+     * If you do not provide a renderable object, and this Game Object has a texture,
+     * it will use itself as the object. This means you can call this method to create
+     * a Bitmap Mask from any renderable Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Mask#createBitmapMask
+     * @since 3.6.2
+     * 
+     * @param {Phaser.GameObjects.GameObject} [renderable] - A renderable Game Object that uses a texture, such as a Sprite.
+     *
+     * @return {Phaser.Display.Masks.BitmapMask} This Bitmap Mask that was created.
+     */
+    createBitmapMask: function (renderable)
+    {
+        if (renderable === undefined && this.texture)
+        {
+            // eslint-disable-next-line consistent-this
+            renderable = this;
+        }
+
+        return new BitmapMask(this.scene, renderable);
+    },
+
+    /**
+     * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+     * including this one.
+     *
+     * To create the mask you need to pass in a reference to a Graphics Game Object.
+     *
+     * If you do not provide a graphics object, and this Game Object is an instance
+     * of a Graphics object, then it will use itself to create the mask.
+     * 
+     * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Mask#createGeometryMask
+     * @since 3.6.2
+     * 
+     * @param {Phaser.GameObjects.Graphics} [graphics] - A Graphics Game Object. The geometry within it will be used as the mask.
+     *
+     * @return {Phaser.Display.Masks.GeometryMask} This Geometry Mask that was created.
+     */
+    createGeometryMask: function (graphics)
+    {
+        if (graphics === undefined && this.type === 'Graphics')
+        {
+            // eslint-disable-next-line consistent-this
+            graphics = this;
+        }
+
+        return new GeometryMask(this.scene, graphics);
+    }
+
+};
+
+module.exports = Mask;
+
+
+/***/ }),
+/* 571 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Rectangle = __webpack_require__(13);
+var RotateAround = __webpack_require__(287);
 var Vector2 = __webpack_require__(6);
 
 /**
@@ -68889,7 +72113,7 @@ var GetBounds = {
      * @method Phaser.GameObjects.Components.GetBounds#getBounds
      * @since 3.0.0
      *
-     * @generic {Phaser.Math.Vector2} O - [output,$return]
+     * @generic {Phaser.Geom.Rectangle} O - [output,$return]
      *
      * @param {(Phaser.Geom.Rectangle|object)} [output] - An object to store the values in. If not provided a new Rectangle will be created.
      *
@@ -68970,7 +72194,7 @@ module.exports = GetBounds;
 
 
 /***/ }),
-/* 570 */
+/* 572 */
 /***/ (function(module, exports) {
 
 /**
@@ -69118,7 +72342,7 @@ module.exports = Flip;
 
 
 /***/ }),
-/* 571 */
+/* 573 */
 /***/ (function(module, exports) {
 
 /**
@@ -69211,7 +72435,7 @@ module.exports = Depth;
 
 
 /***/ }),
-/* 572 */
+/* 574 */
 /***/ (function(module, exports) {
 
 /**
@@ -69337,7 +72561,7 @@ module.exports = ComputedSize;
 
 
 /***/ }),
-/* 573 */
+/* 575 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -69346,7 +72570,7 @@ module.exports = ComputedSize;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BlendModes = __webpack_require__(48);
+var BlendModes = __webpack_require__(50);
 
 /**
  * Provides methods used for setting the blend mode of a Game Object.
@@ -69457,7 +72681,7 @@ module.exports = BlendMode;
 
 
 /***/ }),
-/* 574 */
+/* 576 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -69466,7 +72690,7 @@ module.exports = BlendMode;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Clamp = __webpack_require__(23);
+var Clamp = __webpack_require__(24);
 
 //  bitmask flag for GameObject.renderMask
 var _FLAG = 2; // 0010
@@ -69751,8 +72975,6 @@ module.exports = Alpha;
 
 
 /***/ }),
-/* 575 */,
-/* 576 */,
 /* 577 */,
 /* 578 */,
 /* 579 */,
@@ -69763,7 +72985,9 @@ module.exports = Alpha;
 /* 584 */,
 /* 585 */,
 /* 586 */,
-/* 587 */
+/* 587 */,
+/* 588 */,
+/* 589 */
 /***/ (function(module, exports) {
 
 /**
@@ -69816,7 +73040,7 @@ if (typeof window.Uint32Array !== 'function' && typeof window.Uint32Array !== 'o
 
 
 /***/ }),
-/* 588 */
+/* 590 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {// References:
@@ -69886,10 +73110,10 @@ if (!global.cancelAnimationFrame) {
     };
 }
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(204)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(208)))
 
 /***/ }),
-/* 589 */
+/* 591 */
 /***/ (function(module, exports) {
 
 /**
@@ -69926,7 +73150,7 @@ if (!global.cancelAnimationFrame) {
 
 
 /***/ }),
-/* 590 */
+/* 592 */
 /***/ (function(module, exports) {
 
 // ES6 Math.trunc - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/trunc
@@ -69938,7 +73162,7 @@ if (!Math.trunc) {
 
 
 /***/ }),
-/* 591 */
+/* 593 */
 /***/ (function(module, exports) {
 
 /**
@@ -69986,7 +73210,7 @@ if (!Function.prototype.bind) {
 
 
 /***/ }),
-/* 592 */
+/* 594 */
 /***/ (function(module, exports) {
 
 /**
@@ -70001,7 +73225,7 @@ if (!window.console)
 
 
 /***/ }),
-/* 593 */
+/* 595 */
 /***/ (function(module, exports) {
 
 /* Copyright 2013 Chris Wilson
@@ -70189,7 +73413,7 @@ BiquadFilterNode.type and OscillatorNode.type.
 
 
 /***/ }),
-/* 594 */
+/* 596 */
 /***/ (function(module, exports) {
 
 /**
@@ -70205,7 +73429,7 @@ if (!Array.isArray)
 
 
 /***/ }),
-/* 595 */
+/* 597 */
 /***/ (function(module, exports) {
 
 /**
@@ -70245,9 +73469,11 @@ if (!Array.prototype.forEach)
 
 
 /***/ }),
-/* 596 */
+/* 598 */
 /***/ (function(module, exports, __webpack_require__) {
 
+__webpack_require__(597);
+__webpack_require__(596);
 __webpack_require__(595);
 __webpack_require__(594);
 __webpack_require__(593);
@@ -70255,13 +73481,9 @@ __webpack_require__(592);
 __webpack_require__(591);
 __webpack_require__(590);
 __webpack_require__(589);
-__webpack_require__(588);
-__webpack_require__(587);
 
 
 /***/ }),
-/* 597 */,
-/* 598 */,
 /* 599 */,
 /* 600 */,
 /* 601 */,
@@ -70319,7 +73541,9 @@ __webpack_require__(587);
 /* 653 */,
 /* 654 */,
 /* 655 */,
-/* 656 */
+/* 656 */,
+/* 657 */,
+/* 658 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -70334,16 +73558,16 @@ __webpack_require__(587);
 
 module.exports = {
 
-    BitmapMaskPipeline: __webpack_require__(252),
-    FlatTintPipeline: __webpack_require__(251),
-    ForwardDiffuseLightPipeline: __webpack_require__(141),
-    TextureTintPipeline: __webpack_require__(120)
+    BitmapMaskPipeline: __webpack_require__(255),
+    FlatTintPipeline: __webpack_require__(254),
+    ForwardDiffuseLightPipeline: __webpack_require__(145),
+    TextureTintPipeline: __webpack_require__(124)
 
 };
 
 
 /***/ }),
-/* 657 */
+/* 659 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -70358,10 +73582,10 @@ module.exports = {
 
 module.exports = {
 
-    Utils: __webpack_require__(25),
-    WebGLPipeline: __webpack_require__(80),
-    WebGLRenderer: __webpack_require__(254),
-    Pipelines: __webpack_require__(656),
+    Utils: __webpack_require__(27),
+    WebGLPipeline: __webpack_require__(82),
+    WebGLRenderer: __webpack_require__(257),
+    Pipelines: __webpack_require__(658),
 
     // Constants
     BYTE: 0,
@@ -70374,7 +73598,7 @@ module.exports = {
 
 
 /***/ }),
-/* 658 */
+/* 660 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -70395,14 +73619,14 @@ module.exports = {
 
 module.exports = {
 
-    Canvas: __webpack_require__(257),
-    WebGL: __webpack_require__(253)
+    Canvas: __webpack_require__(260),
+    WebGL: __webpack_require__(256)
 
 };
 
 
 /***/ }),
-/* 659 */
+/* 661 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -70417,16 +73641,16 @@ module.exports = {
 
 module.exports = {
 
-    BlitImage: __webpack_require__(258),
-    CanvasRenderer: __webpack_require__(259),
-    DrawImage: __webpack_require__(256),
-    GetBlendModes: __webpack_require__(255)
+    BlitImage: __webpack_require__(261),
+    CanvasRenderer: __webpack_require__(262),
+    DrawImage: __webpack_require__(259),
+    GetBlendModes: __webpack_require__(258)
 
 };
 
 
 /***/ }),
-/* 660 */
+/* 662 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -70452,16 +73676,14 @@ module.exports = {
 
 module.exports = {
 
-    Canvas: __webpack_require__(659),
-    Snapshot: __webpack_require__(658),
-    WebGL: __webpack_require__(657)
+    Canvas: __webpack_require__(661),
+    Snapshot: __webpack_require__(660),
+    WebGL: __webpack_require__(659)
 
 };
 
 
 /***/ }),
-/* 661 */,
-/* 662 */,
 /* 663 */,
 /* 664 */,
 /* 665 */,
@@ -70808,7 +74030,12 @@ module.exports = {
 /* 1006 */,
 /* 1007 */,
 /* 1008 */,
-/* 1009 */
+/* 1009 */,
+/* 1010 */,
+/* 1011 */,
+/* 1012 */,
+/* 1013 */,
+/* 1014 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/**
@@ -70817,10 +74044,10 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-__webpack_require__(596);
+__webpack_require__(598);
 
-var CONST = __webpack_require__(19);
-var Extend = __webpack_require__(16);
+var CONST = __webpack_require__(20);
+var Extend = __webpack_require__(17);
 
 /**
  * @namespace Phaser
@@ -70828,73 +74055,73 @@ var Extend = __webpack_require__(16);
 
 var Phaser = {
 
-    Animation: __webpack_require__(554),
-    Cache: __webpack_require__(553),
-    Cameras: { Scene2D: __webpack_require__(550) },
+    Animation: __webpack_require__(555),
+    Cache: __webpack_require__(554),
+    Cameras: { Scene2D: __webpack_require__(551) },
     Class: __webpack_require__(0),
-    Data: __webpack_require__(528),
-    Display: { Masks: __webpack_require__(522) },
-    EventEmitter: __webpack_require__(518),
-    Game: __webpack_require__(517),
+    Data: __webpack_require__(529),
+    Display: { Masks: __webpack_require__(523) },
+    EventEmitter: __webpack_require__(521),
+    Game: __webpack_require__(520),
     GameObjects: {
-        DisplayList: __webpack_require__(481),
-        GameObjectCreator: __webpack_require__(13),
-        GameObjectFactory: __webpack_require__(11),
-        UpdateList: __webpack_require__(453),
-        Components: __webpack_require__(14),
-        BuildGameObject: __webpack_require__(21),
-        BuildGameObjectAnimation: __webpack_require__(118),
-        GameObject: __webpack_require__(1),
-        Graphics: __webpack_require__(107),
-        Image: __webpack_require__(66),
-        Sprite: __webpack_require__(31),
-        Text: __webpack_require__(102),
+        DisplayList: __webpack_require__(484),
+        GameObjectCreator: __webpack_require__(14),
+        GameObjectFactory: __webpack_require__(12),
+        UpdateList: __webpack_require__(455),
+        Components: __webpack_require__(15),
+        BuildGameObject: __webpack_require__(23),
+        BuildGameObjectAnimation: __webpack_require__(122),
+        GameObject: __webpack_require__(2),
+        Graphics: __webpack_require__(110),
+        Image: __webpack_require__(69),
+        Sprite: __webpack_require__(34),
+        Text: __webpack_require__(105),
         Factories: {
-            Graphics: __webpack_require__(387),
-            Image: __webpack_require__(386),
-            Sprite: __webpack_require__(385),
-            Text: __webpack_require__(384)
+            Graphics: __webpack_require__(389),
+            Image: __webpack_require__(388),
+            Sprite: __webpack_require__(387),
+            Text: __webpack_require__(386)
         },
         Creators: {
-            Graphics: __webpack_require__(383),
-            Image: __webpack_require__(382),
-            Sprite: __webpack_require__(381),
-            Text: __webpack_require__(380)
+            Graphics: __webpack_require__(385),
+            Image: __webpack_require__(384),
+            Sprite: __webpack_require__(383),
+            Text: __webpack_require__(382)
         }
     },
-    Input: __webpack_require__(361),
+    Input: __webpack_require__(363),
     Loader: {
         FileTypes: {
-            AnimationJSONFile: __webpack_require__(347),
-            AtlasJSONFile: __webpack_require__(346),
-            AudioFile: __webpack_require__(158),
-            AudioSprite: __webpack_require__(345),
-            HTML5AudioFile: __webpack_require__(157),
-            ImageFile: __webpack_require__(46),
-            JSONFile: __webpack_require__(36),
-            MultiAtlas: __webpack_require__(344),
-            PluginFile: __webpack_require__(343),
-            ScriptFile: __webpack_require__(342),
-            SpriteSheetFile: __webpack_require__(341),
-            TextFile: __webpack_require__(214),
-            XMLFile: __webpack_require__(215)
+            AnimationJSONFile: __webpack_require__(349),
+            AtlasJSONFile: __webpack_require__(348),
+            AudioFile: __webpack_require__(162),
+            AudioSpriteFile: __webpack_require__(347),
+            HTML5AudioFile: __webpack_require__(161),
+            ImageFile: __webpack_require__(36),
+            JSONFile: __webpack_require__(28),
+            MultiAtlasFile: __webpack_require__(346),
+            PluginFile: __webpack_require__(345),
+            ScriptFile: __webpack_require__(344),
+            SpriteSheetFile: __webpack_require__(343),
+            TextFile: __webpack_require__(218),
+            XMLFile: __webpack_require__(140)
         }
     },
     Math: {
-        Between: __webpack_require__(264),
-        DegToRad: __webpack_require__(33),
-        FloatBetween: __webpack_require__(240),
-        RadToDeg: __webpack_require__(142),
+        Between: __webpack_require__(267),
+        DegToRad: __webpack_require__(37),
+        FloatBetween: __webpack_require__(243),
+        RadToDeg: __webpack_require__(146),
         Vector2: __webpack_require__(6)
     },
-    Renderer: __webpack_require__(660),
-    Scene: __webpack_require__(179),
-    Scenes: __webpack_require__(321),
-    Sound: __webpack_require__(319),
-    Structs: __webpack_require__(318),
-    Textures: __webpack_require__(317),
-    Time: __webpack_require__(301),
-    Tweens: __webpack_require__(299)
+    Renderer: __webpack_require__(662),
+    Scene: __webpack_require__(181),
+    Scenes: __webpack_require__(323),
+    Sound: __webpack_require__(321),
+    Structs: __webpack_require__(320),
+    Textures: __webpack_require__(319),
+    Time: __webpack_require__(303),
+    Tweens: __webpack_require__(301)
 };
 
 //   Merge in the consts
@@ -70913,7 +74140,7 @@ global.Phaser = Phaser;
  *  -- Dick Brandon
  */
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(204)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(208)))
 
 /***/ })
 /******/ ]);

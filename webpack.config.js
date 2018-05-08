@@ -23,6 +23,8 @@ module.exports = {
         umdNamedDefine: true
     },
 
+    performance: { hints: false },
+
     plugins: [
         new webpack.DefinePlugin({
             "typeof CANVAS_RENDERER": JSON.stringify(true),

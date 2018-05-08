@@ -26,6 +26,8 @@ module.exports = {
         umdNamedDefine: true
     },
 
+    performance: { hints: false },
+
     optimization: {
         minimizer: [
             new UglifyJSPlugin({
