@@ -25,6 +25,7 @@ The Loader has been given an overhaul to improve its performance and extensibili
 * The Loader now supports Texture Atlases with normal maps. Before it would only support single images loaded with normal maps, but now you can provide them for all the atlas formats (json, xml and Unity)
 * The Loader `multiatlas` feature will now automatically load texture normal maps, if specified in the json.
 * Binary Files have a new optional `dataType` argument and property which will cast the binary data to that format after load, before inserting it into the cache, i.e.: `load.binary('mod', 'music.mod', Uint8Array)`
+* The method `LoaderPlugin.tilemapWeltmeister` has been renamed to the far more friendly `LoaderPlugin.tilemapImpact`. Everything else about it remains the same, but please update to use the new method name.
 
 ### Loader Updates
 
