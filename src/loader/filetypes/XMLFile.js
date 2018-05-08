@@ -103,9 +103,22 @@ var XMLFile = new Class({
 /**
  * Adds an XML file, or array of XML files, to the current load queue.
  *
- * The file is **not** loaded immediately, it is added to a queue ready to be loaded either when the loader starts,
- * or if it's already running, when the next free load slot becomes available. This means you cannot use the file
- * immediately after calling this method, but instead must wait for the file to complete.
+ * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
+ * 
+ * ```javascript
+ * function preload ()
+ * {
+ *     this.load.xml('wavedata', 'files/AlienWaveData.xml');
+ * }
+ * ```
+ *
+ * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+ * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+ * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+ * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+ * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+ * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+ * loaded.
  * 
  * The key must be a unique String. It is used to add the file to the global XML Cache upon a successful load.
  * The key should be unique both in terms of files being loaded and files already present in the XML Cache.

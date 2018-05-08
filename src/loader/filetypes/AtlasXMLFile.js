@@ -122,7 +122,7 @@ var AtlasXMLFile = new Class({
  * Adds an XML based Texture Atlas, or array of atlases, to the current load queue.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
-
+ * 
  * ```javascript
  * function preload ()
  * {
