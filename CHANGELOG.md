@@ -73,6 +73,7 @@ The Loader has been given an overhaul to improve its performance and extensibili
 * We have removed the TextureManager.addAtlasPyxel method and related parser. It didn't work anyway and no-one seems to use Pyxel any more. If we get enough demand we can consider adding it back.
 * When adding an Audio Sprite to the Sound Manager it will now respect the `loop` property, if set in the source JSON.
 * The Texture class has a new method `getDataSourceImage` which will return the raw image data of the data source.
+* The WebAudioSoundManager will now listen for 'click' events on the document body, as well as touch events, before resuming the AudioContext, in order to deal with the changes made in Chrome v66 not playing audio until a user gesture is received, even on desktop.
 
 ### Bug Fixes
 
