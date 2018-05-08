@@ -1,6 +1,6 @@
 # Change Log
 
-## Version 3.7.0 - Sinon - 8th May 2018
+## Version 3.7.1 - Sinon - 8th May 2018
 
 ### New Features
 
@@ -102,6 +102,10 @@ The Loader has been given an overhaul to improve its performance and extensibili
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
 @wtravO @Fabadiculous @zilbuz @samme @iamchristopher @erd0s @PaNaVTEC @ksmai @snowbillr 
+
+## Version 3.7.0 - Sinon - 4th May 2018
+
+A beta release of the 3.7.0 version. See 3.7.1 for details.
 
 ## Version 3.6.0 - Asuna - 19th April 2018
 

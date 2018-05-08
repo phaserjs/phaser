@@ -26,7 +26,7 @@ Grab the source and join the fun!
 
 > 8th May 2018
 
-I'm pleased to announce the immediate availability of Phaser 3.7.0. This release continues our mission of enhancing Phaser 3 as best and as quickly as we can. We've made significant improvements to the Loader Plugin, allowing for far more flexible file loading, new loader packs, new file formats, normal map support and more. We've also improved our build process, making Phaser 3 much easier to package outside of Webpack. You'll also find hundreds and hundreds of  items now have full documentation too. As always, please check out the [Change Log](#changelog) for comprehensive details about what recent versions contain.
+I'm pleased to announce the immediate availability of Phaser 3.7.1. This release continues our mission of enhancing Phaser 3 as best and as quickly as we can. We've made significant improvements to the Loader Plugin, allowing for far more flexible file loading, new loader packs, new file formats, normal map support and more. We've also improved our build process, making Phaser 3 much easier to package outside of Webpack. You'll also find hundreds and hundreds of  items now have full documentation too. As always, please check out the [Change Log](#changelog) for comprehensive details about what recent versions contain.
 
 **About Phaser 3**
 
@@ -98,13 +98,13 @@ npm install phaser
 [Phaser is on jsDelivr](https://www.jsdelivr.com/projects/phaser) which is a "super-fast CDN for developers". Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.7.0/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.7.1/dist/phaser.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.7.0/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.7.1/dist/phaser.min.js"></script>
 ```
 
 ### API Documentation
@@ -264,7 +264,7 @@ You can then run `webpack` to create a development build in the `build` folder w
 ![Change Log](https://phaser.io/images/github/div-change-log.png "Change Log")
 <a name="changelog"></a>
 
-## Version 3.7.0 - Sinon - 8th May 2018
+## Version 3.7.1 - Sinon - 8th May 2018
 
 ### New Features
 
@@ -398,8 +398,8 @@ All rights reserved.
 
 "Above all, video games are meant to be just one thing: fun. Fun for everyone." - Satoru Iwata
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.7.0/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.7.0/phaser.min.js
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.7.1/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.7.1/phaser.min.js
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-ghwin]: github-windows://openRepo/https://github.com/photonstorm/phaser
