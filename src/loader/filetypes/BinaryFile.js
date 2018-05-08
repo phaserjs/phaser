@@ -18,6 +18,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @property {string} [url] - The absolute or relative URL to load the file from.
  * @property {string} [extension='bin'] - The default file extension to use if no url is provided.
  * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @property {any} [dataType] - Optional type to cast the binary file to once loaded. For example, `Uint8Array`.
  */
 
 /**
@@ -38,6 +39,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {(string|Phaser.Loader.FileTypes.BinaryFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.bin`, i.e. if `key` was "alien" then the URL will be "alien.bin".
  * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {any} [dataType] - Optional type to cast the binary file to once loaded. For example, `Uint8Array`.
  */
 var BinaryFile = new Class({
 
@@ -45,7 +47,7 @@ var BinaryFile = new Class({
 
     initialize:
 
-    function BinaryFile (loader, key, url, xhrSettings)
+    function BinaryFile (loader, key, url, xhrSettings, dataType)
     {
         var extension = 'bin';
 
@@ -57,6 +59,7 @@ var BinaryFile = new Class({
             url = GetFastValue(config, 'url');
             xhrSettings = GetFastValue(config, 'xhrSettings');
             extension = GetFastValue(config, 'extension', extension);
+            dataType = GetFastValue(config, 'dataType', dataType);
         }
 
         var fileConfig = {
@@ -66,7 +69,10 @@ var BinaryFile = new Class({
             responseType: 'arraybuffer',
             key: key,
             url: url,
-            xhrSettings: xhrSettings
+            xhrSettings: xhrSettings,
+            config: {
+                dataType: dataType
+            }
         };
 
         File.call(this, loader, fileConfig);
@@ -83,7 +89,9 @@ var BinaryFile = new Class({
     {
         this.state = CONST.FILE_PROCESSING;
 
-        this.data = this.xhrLoader.response;
+        var ctor = this.config.dataType;
+
+        this.data = (ctor) ? new ctor(this.xhrLoader.response) : this.xhrLoader.response;
 
         this.onProcessComplete();
     }
@@ -140,11 +148,12 @@ var BinaryFile = new Class({
  *
  * @param {(string|Phaser.Loader.FileTypes.BinaryFileConfig|Phaser.Loader.FileTypes.BinaryFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.bin`, i.e. if `key` was "alien" then the URL will be "alien.bin".
+ * @param {any} [dataType] - Optional type to cast the binary file to once loaded. For example, `Uint8Array`.
  * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */
-FileTypesManager.register('binary', function (key, url, xhrSettings)
+FileTypesManager.register('binary', function (key, url, dataType, xhrSettings)
 {
     if (Array.isArray(key))
     {
@@ -156,7 +165,7 @@ FileTypesManager.register('binary', function (key, url, xhrSettings)
     }
     else
     {
-        this.addFile(new BinaryFile(this, key, url, xhrSettings));
+        this.addFile(new BinaryFile(this, key, url, xhrSettings, dataType));
     }
 
     return this;
