@@ -6,7 +6,7 @@
  */
 
 var Class = require('../../../utils/Class');
-var ShaderSourceFS = require('../shaders/ForwardDiffuse.frag');
+var ShaderSourceFS = require('../shaders/ForwardDiffuse-frag.js');
 var TextureTintPipeline = require('./TextureTintPipeline');
 
 var LIGHT_COUNT = 10;

@@ -52,9 +52,9 @@ The Loader has been given an overhaul to improve its performance and extensibili
 
 ### Updates
 
-* If you're using Webpack with Phaser you'll need to update your config to match our new one.
-* We've swapped use of the Webpack DefinePlugin so instead of setting a global flag for the compilation of the Canvas and WebGL renderers, we now use a typeof check instead. This means you should now be able to ingest the Phaser source more easily outside of Webpack without having to define any global vars first (thanks @tgrajewski)
-* Under Webpack we still use the raw-loader to import our shader source, but outside of Webpack we now use `require.extensions` to load the shader source via fs. This should allow you to bundle Phaser with packages other than Webpack more easily (thanks @tgrajewski)
+* If you're using Webpack with Phaser you'll need to update your config to match our new one. The two changes are: We've removed the need for `raw-loader` and we've changed the syntax of the DefinePlugin calls:
+* We've swapped use of the Webpack DefinePlugin so instead of setting a global flag for the compilation of the Canvas and WebGL renderers, we use a typeof check instead. This means you should now be able to ingest the Phaser source more easily outside of Webpack without having to define any global vars (thanks @tgrajewski)
+* Under Webpack we still no longer use `raw-loader` to import our shader source. Instead it's compiled to plain JS files during our in-house workflow. This should allow you to bundle Phaser with packages other than Webpack more easily.
 * The Texture Manager will now emit an `addtexture` event whenever you add a new texture to it, which includes when you load image files from the Loader (as it automatically populates the Texture Manager). Once you receive an `addtexture` event you know the image is loaded and the texture is safe to be applied to a Game Object.
 * BitmapMask and GeometryMask both have new `destroy` methods which clear their references, freeing them for gc.
 * CanvasPool has a new argument `selfParent` which allows the canvas itself to be the parent key, used for later removal.

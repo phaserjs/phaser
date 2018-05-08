@@ -6,8 +6,8 @@
  */
 
 var Class = require('../../../utils/Class');
-var ShaderSourceFS = require('../shaders/BitmapMask.frag');
-var ShaderSourceVS = require('../shaders/BitmapMask.vert');
+var ShaderSourceFS = require('../shaders/BitmapMask-frag.js');
+var ShaderSourceVS = require('../shaders/BitmapMask-vert.js');
 var WebGLPipeline = require('../WebGLPipeline');
 
 /**

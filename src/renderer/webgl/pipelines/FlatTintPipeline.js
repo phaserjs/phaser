@@ -9,8 +9,8 @@ var Class = require('../../../utils/Class');
 var Commands = require('../../../gameobjects/graphics/Commands');
 var Earcut = require('../../../geom/polygon/Earcut');
 var ModelViewProjection = require('./components/ModelViewProjection');
-var ShaderSourceFS = require('../shaders/FlatTint.frag');
-var ShaderSourceVS = require('../shaders/FlatTint.vert');
+var ShaderSourceFS = require('../shaders/FlatTint-frag.js');
+var ShaderSourceVS = require('../shaders/FlatTint-vert.js');
 var Utils = require('../Utils');
 var WebGLPipeline = require('../WebGLPipeline');
 

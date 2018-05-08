@@ -7,8 +7,8 @@
 
 var Class = require('../../../utils/Class');
 var ModelViewProjection = require('./components/ModelViewProjection');
-var ShaderSourceFS = require('../shaders/TextureTint.frag');
-var ShaderSourceVS = require('../shaders/TextureTint.vert');
+var ShaderSourceFS = require('../shaders/TextureTint-frag.js');
+var ShaderSourceVS = require('../shaders/TextureTint-vert.js');
 var Utils = require('../Utils');
 var WebGLPipeline = require('../WebGLPipeline');
 
