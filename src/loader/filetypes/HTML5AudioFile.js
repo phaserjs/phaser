@@ -12,7 +12,11 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
  * @classdesc
- * [description]
+ * A single Audio File suitable for loading by the Loader.
+ *
+ * These are created when you use the Phaser.Loader.LoaderPlugin#audio method and are not typically created directly.
+ * 
+ * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#audio.
  *
  * @class HTML5AudioFile
  * @extends Phaser.Loader.File
@@ -20,10 +24,10 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @constructor
  * @since 3.0.0
  *
- * @param {string} key - [description]
- * @param {string} url - [description]
- * @param {string} path - [description]
- * @param {XHRSettingsObject} [config] - [description]
+ * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
+ * @param {(string|Phaser.Loader.FileTypes.AudioFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {string} [urlConfig] - The absolute or relative URL to load this file from.
+ * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var HTML5AudioFile = new Class({
 
@@ -59,6 +63,12 @@ var HTML5AudioFile = new Class({
         this.filesTotal = 0;
     },
 
+    /**
+     * Called when the file finishes loading.
+     *
+     * @method Phaser.Loader.FileTypes.HTML5AudioFile#onLoad
+     * @since 3.0.0
+     */
     onLoad: function ()
     {
         if (this.loaded)
@@ -71,6 +81,12 @@ var HTML5AudioFile = new Class({
         this.loader.nextFile(this, true);
     },
 
+    /**
+     * Called if the file errors while loading.
+     *
+     * @method Phaser.Loader.FileTypes.HTML5AudioFile#onError
+     * @since 3.0.0
+     */
     onError: function ()
     {
         for (var i = 0; i < this.data.length; i++)
@@ -84,6 +100,12 @@ var HTML5AudioFile = new Class({
         this.loader.nextFile(this, false);
     },
 
+    /**
+     * Called during the file load progress. Is sent a DOM ProgressEvent.
+     *
+     * @method Phaser.Loader.FileTypes.HTML5AudioFile#onProgress
+     * @since 3.0.0
+     */
     onProgress: function (event)
     {
         var audio = event.target;
@@ -103,7 +125,14 @@ var HTML5AudioFile = new Class({
         }
     },
 
-    //  Called by the Loader, starts the actual file downloading
+    /**
+     * Called by the Loader, starts the actual file downloading.
+     * During the load the methods onLoad, onError and onProgress are called, based on the XHR events.
+     * You shouldn't normally call this method directly, it's meant to be invoked by the Loader.
+     *
+     * @method Phaser.Loader.FileTypes.HTML5AudioFile#load
+     * @since 3.0.0
+     */
     load: function ()
     {
         this.data = [];

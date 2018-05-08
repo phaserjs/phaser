@@ -97,11 +97,24 @@ var ScriptFile = new Class({
 });
 
 /**
- * Adds an Script file, or array of Script files, to the current load queue.
+ * Adds a Script file, or array of Script files, to the current load queue.
  *
- * The file is **not** loaded immediately, it is added to a queue ready to be loaded either when the loader starts,
- * or if it's already running, when the next free load slot becomes available. This means you cannot use the file
- * immediately after calling this method, but instead must wait for the file to complete.
+ * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
+ * 
+ * ```javascript
+ * function preload ()
+ * {
+ *     this.load.script('aliens', 'lib/aliens.js');
+ * }
+ * ```
+ *
+ * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+ * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+ * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+ * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+ * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+ * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+ * loaded.
  * 
  * The key must be a unique String and not already in-use by another file in the Loader.
  *
