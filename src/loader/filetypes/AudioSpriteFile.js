@@ -13,7 +13,7 @@ var JSONFile = require('./JSONFile.js');
 var MultiFile = require('../MultiFile.js');
 
 /**
- * @typedef {object} Phaser.Loader.FileTypes.AudioSpriteFileFileConfig
+ * @typedef {object} Phaser.Loader.FileTypes.AudioSpriteFileConfig
  *
  * @property {string} key - The key of the file. Must be unique within both the Loader and the Audio Cache.
  * @property {string} jsonURL - The absolute or relative URL to load the json file from. Or a well formed JSON object to use instead.
