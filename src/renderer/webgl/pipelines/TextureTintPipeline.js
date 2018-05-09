@@ -341,7 +341,7 @@ var TextureTintPipeline = new Class({
 
     /**
      * Renders immediately a static tilemap. This function won't use
-     * the batching functionality of the pipieline.
+     * the batching functionality of the pipeline.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#drawStaticTilemapLayer
      * @since 3.0.0
