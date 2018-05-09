@@ -156,9 +156,12 @@ var WebAudioSoundManager = new Class({
             });
         };
 
-        document.body.addEventListener('touchstart', unlock, false);
-        document.body.addEventListener('touchend', unlock, false);
-        document.body.addEventListener('click', unlock, false);
+        if (document.body)
+        {
+            document.body.addEventListener('touchstart', unlock, false);
+            document.body.addEventListener('touchend', unlock, false);
+            document.body.addEventListener('click', unlock, false);
+        }
     },
 
     /**
