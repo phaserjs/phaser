@@ -60,13 +60,6 @@ var PluginFile = new Class({
             extension = GetFastValue(config, 'extension', extension);
         }
 
-        // If the url variable refers to a class, add the plugin directly
-        if (typeof url === 'function')
-        {
-            window[key] = url;
-            window[key].register(PluginManager);
-        }
-
         var fileConfig = {
             type: 'script',
             cache: false,
@@ -78,6 +71,14 @@ var PluginFile = new Class({
         };
 
         File.call(this, loader, fileConfig);
+
+        // If the url variable refers to a class, add the plugin directly
+        if (typeof url === 'function')
+        {
+            this.data = url;
+
+            this.state = CONST.FILE_POPULATED;
+        }
     },
 
     /**
@@ -89,18 +90,27 @@ var PluginFile = new Class({
      */
     onProcess: function ()
     {
-        this.state = CONST.FILE_PROCESSING;
+        if (this.state === CONST.FILE_POPULATED)
+        {
+            //  Plugin added via a reference
+            window[this.key] = this.data;
+            window[this.key].register(PluginManager);
+        }
+        else
+        {
+            //  Plugin added via a js file
+            this.state = CONST.FILE_PROCESSING;
 
-        this.data = document.createElement('script');
-        this.data.language = 'javascript';
-        this.data.type = 'text/javascript';
-        this.data.defer = false;
-        this.data.text = this.xhrLoader.responseText;
+            this.data = document.createElement('script');
+            this.data.language = 'javascript';
+            this.data.type = 'text/javascript';
+            this.data.defer = false;
+            this.data.text = this.xhrLoader.responseText;
 
-        document.head.appendChild(this.data);
+            document.head.appendChild(this.data);
 
-        //  Need to wait for onload?
-        window[this.key].register(PluginManager);
+            window[this.key].register(PluginManager);
+        }
 
         this.onProcessComplete();
     }
