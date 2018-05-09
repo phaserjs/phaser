@@ -1,6 +1,6 @@
 # Change Log
 
-## Version 3.8.0 - Klein - in development
+## Version 3.next - in development
 
 ### New Features
 
@@ -10,6 +10,9 @@
 * WebGLRenderer.config has a new property `maxTextureSize` which is derived from `gl.MAX_TEXTURE_SIZE`, you can get it via the new method `getMaxTextureSize()`
 
 ### Bug Fixes
+
+* The Script File type in the Loader didn't create itself correctly as it was missing an argument (thanks @TadejZupancic)
+* The Plugin File type in the Loader didn't create itself correctly as it was missing an argument.
 
 ### Examples, Documentation and TypeScript
 
