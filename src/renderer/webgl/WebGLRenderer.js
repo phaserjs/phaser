@@ -449,8 +449,6 @@ var WebGLRenderer = new Class({
         // Load supported extensions
         var exts = gl.getSupportedExtensions();
 
-        var config = this.config;
-
         if (!config.maxTextures)
         {
             config.maxTextures = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
@@ -461,7 +459,7 @@ var WebGLRenderer = new Class({
             config.maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
         }
 
-        var extString = 'WEBGL_compressed_texture_'
+        var extString = 'WEBGL_compressed_texture_';
         var wkExtString = 'WEBKIT_' + extString;
 
         this.compression.ETC1 = gl.getExtension(extString + 'etc1') || gl.getExtension(wkExtString + 'etc1');
