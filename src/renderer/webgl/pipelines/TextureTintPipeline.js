@@ -664,6 +664,8 @@ var TextureTintPipeline = new Class({
         var blitterX = blitter.x - cameraScrollX;
         var blitterY = blitter.y - cameraScrollY;
 
+        var prevTextureSourceIndex;
+
         for (var batchIndex = 0; batchIndex < batchCount; ++batchIndex)
         {
             var batchSize = Math.min(length, this.maxQuads);
@@ -673,6 +675,13 @@ var TextureTintPipeline = new Class({
                 var bob = list[batchOffset + index];
                 var frame = bob.frame;
                 var alpha = bob.alpha;
+
+                if (alpha === 0)
+                {
+                    //  Nothing to see here, moving on ...
+                    continue;
+                }
+
                 var tint = getTint(0xffffff, alpha);
                 var uvs = frame.uvs;
                 var flipX = bob.flipX;
@@ -688,10 +697,13 @@ var TextureTintPipeline = new Class({
                 var tx1 = xw * a + yh * c + e;
                 var ty1 = xw * b + yh * d + f;
             
-                // Bind Texture if texture wasn't bound.
-                // This needs to be here because of multiple
-                // texture atlas.
-                this.setTexture2D(frame.texture.source[frame.sourceIndex].glTexture, 0);
+                //  Bind texture only if the Texture Source is different from before
+                if (frame.sourceIndex !== prevTextureSourceIndex)
+                {
+                    this.setTexture2D(frame.texture.source[frame.sourceIndex].glTexture, 0);
+
+                    prevTextureSourceIndex = frame.sourceIndex;
+                }
 
                 var vertexOffset = this.vertexCount * this.vertexComponentCount;
 
@@ -739,6 +751,8 @@ var TextureTintPipeline = new Class({
                 if (this.vertexCount >= this.vertexCapacity)
                 {
                     this.flush();
+
+                    prevTextureSourceIndex = -1;
                 }
             }
 
