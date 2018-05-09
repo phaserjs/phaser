@@ -77,7 +77,7 @@ var PluginFile = new Class({
             xhrSettings: xhrSettings
         };
 
-        File.call(this, fileConfig);
+        File.call(this, loader, fileConfig);
     },
 
     /**
