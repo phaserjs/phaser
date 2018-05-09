@@ -8,11 +8,13 @@
 
 * WebGLRenderer.config has a new property `maxTextures` which is derived from `gl.MAX_TEXTURE_IMAGE_UNITS`, you can get it via the new method `getMaxTextures()`.
 * WebGLRenderer.config has a new property `maxTextureSize` which is derived from `gl.MAX_TEXTURE_SIZE`, you can get it via the new method `getMaxTextureSize()`
+* WebGLRenderer has a new property `compression` which holds the browser / devices compressed texture support gl extensions, which is populated during `init`.
 
 ### Bug Fixes
 
 * The Script File type in the Loader didn't create itself correctly as it was missing an argument (thanks @TadejZupancic)
 * The Plugin File type in the Loader didn't create itself correctly as it was missing an argument.
+* WebAudioSoundManager.unlock will now check if `document.body` is available before setting the listeners on it. Fixes old versions of Firefox, apparently. #3649 (thanks @squilibob)
 
 ### Examples, Documentation and TypeScript
 

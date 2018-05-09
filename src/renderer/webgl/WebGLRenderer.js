@@ -390,6 +390,19 @@ var WebGLRenderer = new Class({
          */
         this.glFormats = [];
 
+        /**
+         * Stores the supported WebGL texture compression formats.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#compression
+         * @type {array}
+         * @since 3.8.0
+         */
+        this.compression = {
+            ETC1: false,
+            PVRTC: false,
+            S3TC: false
+        };
+
         this.init(this.config);
     },
 
@@ -434,7 +447,7 @@ var WebGLRenderer = new Class({
         this.glFormats[4] = gl.FLOAT;
 
         // Load supported extensions
-        this.supportedExtensions = gl.getSupportedExtensions();
+        var exts = gl.getSupportedExtensions();
 
         var config = this.config;
 
@@ -447,6 +460,15 @@ var WebGLRenderer = new Class({
         {
             config.maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
         }
+
+        var extString = 'WEBGL_compressed_texture_'
+        var wkExtString = 'WEBKIT_' + extString;
+
+        this.compression.ETC1 = gl.getExtension(extString + 'etc1') || gl.getExtension(wkExtString + 'etc1');
+        this.compression.PVRTC = gl.getExtension(extString + 'pvrtc') || gl.getExtension(wkExtString + 'pvrtc');
+        this.compression.S3TC = gl.getExtension(extString + 's3tc') || gl.getExtension(wkExtString + 's3tc');
+        
+        this.supportedExtensions = exts;
 
         // Setup initial WebGL state
         gl.disable(gl.DEPTH_TEST);
