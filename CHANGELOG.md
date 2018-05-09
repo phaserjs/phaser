@@ -6,6 +6,9 @@
 
 ### Updates
 
+* WebGLRenderer.config has a new property `maxTextures` which is derived from `gl.MAX_TEXTURE_IMAGE_UNITS`, you can get it via the new method `getMaxTextures()`.
+* WebGLRenderer.config has a new property `maxTextureSize` which is derived from `gl.MAX_TEXTURE_SIZE`, you can get it via the new method `getMaxTextureSize()`
+
 ### Bug Fixes
 
 ### Examples, Documentation and TypeScript

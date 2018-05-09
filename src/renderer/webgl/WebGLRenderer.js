@@ -85,7 +85,9 @@ var WebGLRenderer = new Class({
             contextCreation: contextCreationConfig,
             resolution: gameConfig.resolution,
             autoResize: gameConfig.autoResize,
-            roundPixels: gameConfig.roundPixels
+            roundPixels: gameConfig.roundPixels,
+            maxTextures: gameConfig.maxTextures,
+            maxTextureSize: gameConfig.maxTextureSize
         };
 
         /**
@@ -433,6 +435,18 @@ var WebGLRenderer = new Class({
 
         // Load supported extensions
         this.supportedExtensions = gl.getSupportedExtensions();
+
+        var config = this.config;
+
+        if (!config.maxTextures)
+        {
+            config.maxTextures = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
+        }
+
+        if (!config.maxTextureSize)
+        {
+            config.maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+        }
 
         // Setup initial WebGL state
         gl.disable(gl.DEPTH_TEST);
@@ -1883,6 +1897,34 @@ var WebGLRenderer = new Class({
         this.gl.uniformMatrix4fv(this.gl.getUniformLocation(program, name), transpose, matrix);
 
         return this;
+    },
+
+    /**
+     * Returns the maximum number of texture units that can be used in a fragment shader.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#getMaxTextures
+     * @since 3.8.0
+     *
+     * @return {integer} The maximum number of textures WebGL supports.
+     */
+    getMaxTextures: function ()
+    {
+        return this.config.maxTextures;
+    },
+
+    /**
+     * Returns the largest texture size (either width or height) that can be created.
+     * Note that VRAM may not allow a texture of any given size, it just expresses
+     * hardware / driver support for a given size.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#getMaxTextureSize
+     * @since 3.8.0
+     *
+     * @return {integer} ...
+     */
+    getMaxTextureSize: function ()
+    {
+        return this.config.maxTextureSize;
     },
 
     /**
