@@ -6,7 +6,9 @@
 
 var Class = require('../utils/Class');
 var CONST = require('../const');
+var GetFastValue = require('../utils/object/GetFastValue');
 var GetValue = require('../utils/object/GetValue');
+var IsPlainObject = require('../utils/object/IsPlainObject');
 var MATH = require('../math/const');
 var NOOP = require('../utils/NOOP');
 var Plugins = require('../plugins');
@@ -443,12 +445,62 @@ var Config = new Class({
          */
         this.loaderTimeout = GetValue(config, 'loader.timeout', 0);
 
-        //  Scene Plugins
+        //  Plugins
 
         /**
-         * @const {any} Phaser.Boot.Config#defaultPlugins - [description]
+         * @const {any} Phaser.Boot.Config#defaultPlugins - The plugins installed into every Scene (in addition to CoreScene and Global).
          */
-        this.defaultPlugins = GetValue(config, 'plugins', Plugins.DefaultScene);
+        this.defaultPlugins = Plugins.DefaultScene;
+
+        /**
+         * @const {any} Phaser.Boot.Config#installPlugins - [description]
+         */
+        this.installPlugins = { global: [], scene: [], files: [] };
+
+        var plugins = GetValue(config, 'plugins', null);
+
+        /*
+         * Allows `plugins` property to either be an array, in which case it just replaces
+         * the default plugins like previously.
+         *
+         * plugins: {
+         *    install: [
+         *        ModPlayerPlugin,
+         *        WireFramePlugin
+         *    ],
+         *    filetypes: [
+         *        MODFile
+         *        OBJFile,
+         *    ],
+         *    default: [], OR
+         *    defaultMerge: {
+         *        'ModPlayer': 'mod'
+         *    }
+         * }
+         *
+         * If an object, it checks for an 'install' property, 
+         */
+        if (plugins)
+        {
+            //  Old 3.7 array format?
+            if (Array.isArray(plugins))
+            {
+                this.defaultPlugins = plugins;
+            }
+            else if (IsPlainObject(plugins))
+            {
+                this.installPlugins.global = GetFastValue(plugins, 'install', []);
+
+                if (Array.isArray(plugins.default))
+                {
+                    this.defaultPlugins = plugins.default;
+                }
+                else if (Array.isArray(plugins.defaultMerge))
+                {
+                    this.defaultPlugins = this.defaultPlugins.concat(plugins.defaultMerge);
+                }
+            }
+        }
 
         //  Default / Missing Images
         var pngPrefix = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAg';
