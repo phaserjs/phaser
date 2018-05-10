@@ -21,6 +21,7 @@ var Plugins = {
 
         'anims',
         'cache',
+        'plugins',
         'registry',
         'sound',
         'textures'
