@@ -33,6 +33,8 @@ var Phaser = {
     Loader: require('./loader'),
     Math: require('./math'),
     Physics: require('./physics'),
+    Plugin: require('./plugins/Plugin'),
+    Plugins: require('./plugins'),
     Renderer: require('./renderer'),
     Scene: require('./scene/Scene'),
     Scenes: require('./scene'),
