@@ -419,17 +419,31 @@ var WebGLRenderer = new Class({
      */
     init: function (config)
     {
+        var gl;
         var canvas = this.canvas;
         var clearColor = config.backgroundColor;
-        var gl = canvas.getContext('webgl', config.contextCreation) || canvas.getContext('experimental-webgl', config.contextCreation);
+
+        //  Did they provide their own context?
+        if (this.game.config.context)
+        {
+            gl = this.game.config.context;
+        }
+        else
+        {
+            gl = canvas.getContext('webgl', config.contextCreation) || canvas.getContext('experimental-webgl', config.contextCreation);
+        }
 
         if (!gl || gl.isContextLost())
         {
             this.contextLost = true;
+
             throw new Error('This browser does not support WebGL. Try using the Canvas pipeline.');
         }
 
         this.gl = gl;
+
+        //  Set it back into the Game, so devs can access it from there too
+        this.game.context = gl;
 
         for (var i = 0; i <= 16; i++)
         {

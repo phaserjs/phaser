@@ -74,7 +74,9 @@ var Game = new Class({
         this.renderer = null;
 
         /**
-         * A reference to the HTML Canvas Element on which the renderer is drawing.
+         * A reference to the HTML Canvas Element that Phaser uses to render the game.
+         * This is created automatically by Phaser unless you provide a `canvas` property
+         * in your Game Config.
          *
          * @name Phaser.Game#canvas
          * @type {HTMLCanvasElement}
@@ -83,10 +85,14 @@ var Game = new Class({
         this.canvas = null;
 
         /**
-         * A reference to the Canvas Rendering Context belonging to the Canvas Element this game is rendering to.
+         * A reference to the Rendering Context belonging to the Canvas Element this game is rendering to.
+         * If the game is running under Canvas it will be a 2d Canvas Rendering Context.
+         * If the game is running under WebGL it will be a WebGL Rendering Context.
+         * This context is created automatically by Phaser unless you provide a `context` property
+         * in your Game Config.
          *
          * @name Phaser.Game#context
-         * @type {CanvasRenderingContext2D}
+         * @type {(CanvasRenderingContext2D|WebGLRenderingContext)}
          * @since 3.0.0
          */
         this.context = null;

@@ -96,10 +96,12 @@ var CreateRenderer = function (game)
         CanvasRenderer = require('../renderer/canvas/CanvasRenderer');
         WebGLRenderer = require('../renderer/webgl/WebGLRenderer');
 
-        //  Let the config pick the renderer type, both are included
+        //  Let the config pick the renderer type, as both are included
         if (config.renderType === CONST.WEBGL)
         {
             game.renderer = new WebGLRenderer(game);
+
+            //  The WebGL Renderer sets this value during its init, not on construction
             game.context = null;
         }
         else
@@ -115,7 +117,10 @@ var CreateRenderer = function (game)
 
         //  Force the type to WebGL, regardless what was requested
         config.renderType = CONST.WEBGL;
+
         game.renderer = new WebGLRenderer(game);
+
+        //  The WebGL Renderer sets this value during its init, not on construction
         game.context = null;
     }
 
@@ -125,7 +130,9 @@ var CreateRenderer = function (game)
 
         //  Force the type to Canvas, regardless what was requested
         config.renderType = CONST.CANVAS;
+
         game.renderer = new CanvasRenderer(game);
+
         game.context = game.renderer.gameContext;
     }
 };
