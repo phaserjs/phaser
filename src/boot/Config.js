@@ -169,7 +169,7 @@ var Config = new Class({
         /**
          * @const {?(CanvasRenderingContext2D|WebGLRenderingContext)} Phaser.Boot.Config#context - Force Phaser to use your own Canvas context instead of creating one.
          */
-        this.context = GetValue(renderConfig, 'context', null);
+        this.context = GetValue(config, 'context', null);
 
         /**
          * @const {?string} Phaser.Boot.Config#canvasStyle - [description]
