@@ -15,8 +15,8 @@ var GameObjectFactory = require('../GameObjectFactory');
  * @method Phaser.GameObjects.GameObjectFactory#group
  * @since 3.0.0
  *
- * @param {?(Phaser.GameObjects.GameObject[]|GroupConfig)} children - [description]
- * @param {GroupConfig} [config] - [description]
+ * @param {(Phaser.GameObjects.GameObject[]|GroupConfig)} [children] - Game Objects to add to this Group; or the `config` argument.
+ * @param {GroupConfig} [config] - A Group Configuration object.
  *
  * @return {Phaser.GameObjects.Group} The Game Object that was created.
  */
@@ -30,11 +30,3 @@ GameObjectFactory.register('group', function (children, config)
 
     return this.updateList.add(new Group(this.scene, children, config));
 });
-
-//  When registering a factory function 'this' refers to the GameObjectFactory context.
-//
-//  There are several properties available to use:
-//
-//  this.scene - a reference to the Scene that owns the GameObjectFactory
-//  this.displayList - a reference to the Display List the Scene owns
-//  this.updateList - a reference to the Update List the Scene owns

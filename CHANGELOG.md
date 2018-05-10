@@ -24,7 +24,7 @@
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@samme @mzguimaraes @NaNdreas @Matthew-Herman @melissaelopez
+@samme @mzguimaraes @NaNdreas @Matthew-Herman @melissaelopez @TheColorRed 
 
 
 ## Version 3.7.1 - Sinon - 8th May 2018
