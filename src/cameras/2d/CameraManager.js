@@ -7,7 +7,7 @@
 var Camera = require('./Camera');
 var Class = require('../../utils/Class');
 var GetFastValue = require('../../utils/object/GetFastValue');
-var PluginManager = require('../../boot/PluginManager');
+var PluginManager = require('../../plugins/PluginManager');
 var RectangleContains = require('../../geom/rectangle/Contains');
 
 /**

@@ -6,7 +6,7 @@
 
 var Class = require('../../utils/Class');
 var LightsManager = require('./LightsManager');
-var PluginManager = require('../../boot/PluginManager');
+var PluginManager = require('../../plugins/PluginManager');
 
 /**
  * @classdesc

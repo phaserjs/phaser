@@ -10,7 +10,7 @@ var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
-var PluginManager = require('../../boot/PluginManager');
+var PluginManager = require('../../plugins/PluginManager');
 
 /**
  * @typedef {object} Phaser.Loader.FileTypes.PluginFileConfig

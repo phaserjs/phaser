@@ -10,7 +10,7 @@ var CustomSet = require('../structs/Set');
 var EventEmitter = require('eventemitter3');
 var FileTypesManager = require('./FileTypesManager');
 var GetFastValue = require('../utils/object/GetFastValue');
-var PluginManager = require('../boot/PluginManager');
+var PluginManager = require('../plugins/PluginManager');
 var XHRSettings = require('./XHRSettings');
 
 /**

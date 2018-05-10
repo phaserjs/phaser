@@ -18,7 +18,7 @@ var DOMContentLoaded = require('../dom/DOMContentLoaded');
 var EventEmitter = require('eventemitter3');
 var InputManager = require('../input/InputManager');
 var NOOP = require('../utils/NOOP');
-var PluginManager = require('./PluginManager');
+var PluginManager = require('../plugins/PluginManager');
 var SceneManager = require('../scene/SceneManager');
 var SoundManagerCreator = require('../sound/SoundManagerCreator');
 var TextureManager = require('../textures/TextureManager');
@@ -232,7 +232,7 @@ var Game = new Class({
          * those plugins into Scenes as required.
          *
          * @name Phaser.Game#plugins
-         * @type {Phaser.Boot.PluginManager}
+         * @type {Phaser.Plugins.PluginManager}
          * @since 3.0.0
          */
         this.plugins = new PluginManager(this, this.config);
@@ -386,6 +386,8 @@ var Game = new Class({
         }
 
         //  Global Managers
+
+        this.plugins.update(time, delta);
 
         this.input.update(time, delta);
 

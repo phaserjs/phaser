@@ -20,6 +20,7 @@ var InjectionMap = {
 
     anims: 'anims',
     cache: 'cache',
+    plugins: 'plugins',
     registry: 'registry',
     sound: 'sound',
     textures: 'textures',

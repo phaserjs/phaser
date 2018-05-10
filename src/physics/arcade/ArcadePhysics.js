@@ -10,7 +10,7 @@ var DistanceBetween = require('../../math/distance/DistanceBetween');
 var Factory = require('./Factory');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Merge = require('../../utils/object/Merge');
-var PluginManager = require('../../boot/PluginManager');
+var PluginManager = require('../../plugins/PluginManager');
 var Vector2 = require('../../math/Vector2');
 var World = require('./World');
 
