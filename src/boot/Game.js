@@ -92,7 +92,7 @@ var Game = new Class({
          * in your Game Config.
          *
          * @name Phaser.Game#context
-         * @type {(CanvasRenderingContext2D|WebGLRenderingContext)}
+         * @type {(CanvasRenderingContext2D|WebGLRenderingContext|WebGL2RenderingContext)}
          * @since 3.0.0
          */
         this.context = null;
