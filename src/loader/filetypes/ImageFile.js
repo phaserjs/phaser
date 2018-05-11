@@ -155,7 +155,6 @@ var ImageFile = new Class({
 
         if (linkFile && linkFile.state === CONST.FILE_COMPLETE)
         {
-
             if (this.type === 'image')
             {
                 texture = this.cache.addImage(this.key, this.data, linkFile.data);
