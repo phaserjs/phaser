@@ -233,7 +233,7 @@ var PluginManager = new Class({
     //  key = Scene.Systems property key
     //  plugin = code
     //  mapping = Scene key
-    installScenePlugin: function (key, plugin, mapping)
+    installScenePlugin: function (key, plugin, mapping, addToScene)
     {
         if (typeof plugin !== 'function')
         {
@@ -251,6 +251,20 @@ var PluginManager = new Class({
         corePlugins[key] = { plugin: plugin, mapping: mapping, custom: true };
 
         this.scenePlugins.push(key);
+
+        if (addToScene)
+        {
+            var instance = new plugin(addToScene, this);
+
+            addToScene.sys[key] = instance;
+
+            if (mapping && mapping !== '')
+            {
+                addToScene[mapping] = instance;
+            }
+
+            instance.boot();
+        }
     },
 
     /**
@@ -391,20 +405,6 @@ var PluginManager = new Class({
         {
             return entry.plugin;
         }
-    },
-
-    setScenePlugin: function (scene)
-    {
-    },
-
-    addGameObject: function ()
-    {
-
-    },
-
-    addFileType: function ()
-    {
-
     },
 
     /**
