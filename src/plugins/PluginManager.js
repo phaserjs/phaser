@@ -247,8 +247,6 @@ var PluginManager = new Class({
             return;
         }
 
-        console.log('installScenePlugin', key, 'mapped to', mapping);
-
         //  Add it to the plugin store
         corePlugins[key] = { plugin: plugin, mapping: mapping, custom: true };
 

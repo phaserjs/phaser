@@ -61,36 +61,37 @@ var ScenePlugin = new Class({
      * By this point the plugin properties `scene` and `systems` will have already been set.
      * 
      * In here you can listen for Scene events and set-up whatever you need for this plugin to run.
+     * Here are the Scene events you can listen to:
+     * 
+     * start
+     * ready
+     * preupdate
+     * update
+     * postupdate
+     * resize
+     * pause
+     * resume
+     * sleep
+     * wake
+     * transitioninit
+     * transitionstart
+     * transitioncomplete
+     * transitionout
+     * shutdown
+     * destroy
+     * 
+     * At the very least you should offer a destroy handler for when the Scene closes down, i.e:
+     *
+     * ```javascript
+     * var eventEmitter = this.systems.events;
+     * eventEmitter.once('destroy', this.sceneDestroy, this);
+     * ```
      *
      * @method Phaser.Plugins.ScenePlugin#boot
      * @since 3.8.0
      */
     boot: function ()
     {
-        //  Here are the Scene events you can listen to.
-        //  At the very least you should offer a destroy handler for when the Scene closes down:
-        //  
-        //  start
-        //  ready
-        //  preupdate
-        //  update
-        //  postupdate
-        //  resize
-        //  pause
-        //  resume
-        //  sleep
-        //  wake
-        //  transitioninit
-        //  transitionstart
-        //  transitioncomplete
-        //  transitionout
-        //  shutdown
-        //  destroy
-
-        //  I.e.:
-        // var eventEmitter = this.systems.events;
-        // eventEmitter.on('start', this.sceneStart, this);
-        // eventEmitter.once('destroy', this.sceneDestroy, this);
     }
 
 });
