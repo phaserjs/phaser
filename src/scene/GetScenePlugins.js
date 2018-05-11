@@ -18,7 +18,8 @@ var GetFastValue = require('../utils/object/GetFastValue');
  */
 var GetScenePlugins = function (sys)
 {
-    var defaultPlugins = sys.game.config.defaultPlugins;
+    var defaultPlugins = sys.plugins.getDefaultScenePlugins();
+
     var scenePlugins = GetFastValue(sys.settings, 'plugins', false);
 
     //  Scene Plugins always override Default Plugins
