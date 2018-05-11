@@ -25,6 +25,7 @@ module.exports = {
     MultiAtlasFile: require('./MultiAtlasFile'),
     PackFile: require('./PackFile'),
     PluginFile: require('./PluginFile'),
+    ScenePluginFile: require('./ScenePluginFile'),
     ScriptFile: require('./ScriptFile'),
     SpriteSheetFile: require('./SpriteSheetFile'),
     SVGFile: require('./SVGFile'),

@@ -13,42 +13,44 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
 var PluginManager = require('../../plugins/PluginManager');
 
 /**
- * @typedef {object} Phaser.Loader.FileTypes.PluginFileConfig
+ * @typedef {object} Phaser.Loader.FileTypes.ScenePluginFileConfig
  *
  * @property {string} key - The key of the file. Must be unique within the Loader.
- * @property {string} [url] - The absolute or relative URL to load the file from.
+ * @property {(string|function)} [url] - The absolute or relative URL to load the file from. Or, a Scene Plugin.
  * @property {string} [extension='js'] - The default file extension to use if no url is provided.
- * @property {boolean} [start=false] - Automatically start the plugin after loading?
+ * @property {string} [systemKey] - If this plugin is to be added to Scene.Systems, this is the property key for it.
+ * @property {string} [sceneKey] - If this plugin is to be added to the Scene, this is the property key for it.
  * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 
 /**
  * @classdesc
- * A single Plugin Script File suitable for loading by the Loader.
+ * A single Scene Plugin Script File suitable for loading by the Loader.
  *
- * These are created when you use the Phaser.Loader.LoaderPlugin#plugin method and are not typically created directly.
+ * These are created when you use the Phaser.Loader.LoaderPlugin#scenePlugin method and are not typically created directly.
  * 
- * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#plugin.
+ * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#scenePlugin.
  *
- * @class PluginFile
+ * @class ScenePluginFile
  * @extends Phaser.Loader.File
  * @memberOf Phaser.Loader.FileTypes
  * @constructor
- * @since 3.0.0
+ * @since 3.8.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {(string|Phaser.Loader.FileTypes.PluginFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {(string|Phaser.Loader.FileTypes.ScenePluginFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
- * @param {boolean} [start=false] - Automatically start the plugin after loading?
+ * @param {string} [systemKey] - If this plugin is to be added to Scene.Systems, this is the property key for it.
+ * @param {string} [sceneKey] - If this plugin is to be added to the Scene, this is the property key for it.
  * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
-var PluginFile = new Class({
+var ScenePluginFile = new Class({
 
     Extends: File,
 
     initialize:
 
-    function PluginFile (loader, key, url, start, xhrSettings)
+    function ScenePluginFile (loader, key, url, systemKey, sceneKey, xhrSettings)
     {
         var extension = 'js';
 
@@ -60,18 +62,22 @@ var PluginFile = new Class({
             url = GetFastValue(config, 'url');
             xhrSettings = GetFastValue(config, 'xhrSettings');
             extension = GetFastValue(config, 'extension', extension);
-            start = GetFastValue(config, 'start');
+            systemKey = GetFastValue(config, 'systemKey');
+            sceneKey = GetFastValue(config, 'sceneKey');
         }
 
         var fileConfig = {
-            type: 'plugin',
+            type: 'scenePlugin',
             cache: false,
             extension: extension,
             responseType: 'text',
             key: key,
             url: url,
             xhrSettings: xhrSettings,
-            config: { start: start }
+            config: {
+                systemKey: systemKey,
+                sceneKey: sceneKey
+            }
         };
 
         File.call(this, loader, fileConfig);
@@ -89,19 +95,21 @@ var PluginFile = new Class({
      * Called automatically by Loader.nextFile.
      * This method controls what extra work this File does with its loaded data.
      *
-     * @method Phaser.Loader.FileTypes.PluginFile#onProcess
-     * @since 3.7.0
+     * @method Phaser.Loader.FileTypes.ScenePluginFile#onProcess
+     * @since 3.8.0
      */
     onProcess: function ()
     {
         var pluginManager = this.loader.systems.plugins;
         var config = this.config;
 
-        var start = GetFastValue(config, 'start', false);
+        var key = this.key;
+        var systemKey = GetFastValue(config, 'systemKey', key);
+        var sceneKey = GetFastValue(config, 'sceneKey', key);
 
         if (this.state === CONST.FILE_POPULATED)
         {
-            pluginManager.install(this.key, this.data, start);
+            pluginManager.installScenePlugin(systemKey, this.data, sceneKey, this.loader.scene);
         }
         else
         {
@@ -116,7 +124,7 @@ var PluginFile = new Class({
 
             document.head.appendChild(this.data);
 
-            pluginManager.install(this.key, window[this.key], start);
+            pluginManager.installScenePlugin(systemKey, window[this.key], sceneKey, this.loader.scene);
         }
 
         this.onProcessComplete();
@@ -125,14 +133,14 @@ var PluginFile = new Class({
 });
 
 /**
- * Adds a Plugin Script file, or array of plugin files, to the current load queue.
+ * Adds a Scene Plugin Script file, or array of plugin files, to the current load queue.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
  * 
  * ```javascript
  * function preload ()
  * {
- *     this.load.plugin('modplayer', 'plugins/ModPlayer.js');
+ *     this.load.scenePlugin('ModPlayer', 'plugins/ModPlayer.js', 'modPlayer', 'mods');
  * }
  * ```
  *
@@ -149,13 +157,13 @@ var PluginFile = new Class({
  * Instead of passing arguments you can pass a configuration object, such as:
  * 
  * ```javascript
- * this.load.plugin({
+ * this.load.scenePlugin({
  *     key: 'modplayer',
  *     url: 'plugins/ModPlayer.js'
  * });
  * ```
  *
- * See the documentation for `Phaser.Loader.FileTypes.PluginFileConfig` for more details.
+ * See the documentation for `Phaser.Loader.FileTypes.ScenePluginFileConfig` for more details.
  *
  * Once the file has finished loading it will automatically be converted into a script element
  * via `document.createElement('script')`. It will have its language set to JavaScript, `defer` set to
@@ -171,33 +179,34 @@ var PluginFile = new Class({
  * Note: The ability to load this type of file will only be available if the Script File type has been built into Phaser.
  * It is available in the default build but can be excluded from custom builds.
  *
- * @method Phaser.Loader.LoaderPlugin#plugin
+ * @method Phaser.Loader.LoaderPlugin#scenePlugin
  * @fires Phaser.Loader.LoaderPlugin#addFileEvent
- * @since 3.0.0
+ * @since 3.8.0
  *
- * @param {(string|Phaser.Loader.FileTypes.PluginFileConfig|Phaser.Loader.FileTypes.PluginFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
- * @param {(string|function)} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js". Or, a plugin function.
- * @param {boolean} [start] - The plugin mapping configuration object.
+ * @param {(string|Phaser.Loader.FileTypes.ScenePluginFileConfig|Phaser.Loader.FileTypes.ScenePluginFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {(string|function)} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js". Or, set to a plugin function.
+ * @param {string} [systemKey] - If this plugin is to be added to Scene.Systems, this is the property key for it.
+ * @param {string} [sceneKey] - If this plugin is to be added to the Scene, this is the property key for it.
  * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */
-FileTypesManager.register('plugin', function (key, url, start, xhrSettings)
+FileTypesManager.register('scenePlugin', function (key, url, systemKey, sceneKey, xhrSettings)
 {
     if (Array.isArray(key))
     {
         for (var i = 0; i < key.length; i++)
         {
             //  If it's an array it has to be an array of Objects, so we get everything out of the 'key' object
-            this.addFile(new PluginFile(this, key[i]));
+            this.addFile(new ScenePluginFile(this, key[i]));
         }
     }
     else
     {
-        this.addFile(new PluginFile(this, key, url, start, xhrSettings));
+        this.addFile(new ScenePluginFile(this, key, url, systemKey, sceneKey, xhrSettings));
     }
 
     return this;
 });
 
-module.exports = PluginFile;
+module.exports = ScenePluginFile;
