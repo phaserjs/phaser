@@ -447,39 +447,25 @@ var Config = new Class({
 
         //  Plugins
 
-        /**
-         * @const {any} Phaser.Boot.Config#defaultPlugins - The plugins installed into every Scene (in addition to CoreScene and Global).
-         */
-        this.defaultPlugins = Plugins.DefaultScene;
-
-        /**
-         * @const {any} Phaser.Boot.Config#installPlugins - [description]
-         */
-        this.installPlugins = { global: [], scene: [], files: [] };
-
-        var plugins = GetValue(config, 'plugins', null);
-
         /*
          * Allows `plugins` property to either be an array, in which case it just replaces
-         * the default plugins like previously.
+         * the default plugins like previously, or a config object.
          *
          * plugins: {
          *    install: [
          *        ModPlayerPlugin,
          *        WireFramePlugin
          *    ],
-         *    filetypes: [
-         *        MODFile
-         *        OBJFile,
-         *    ],
          *    default: [], OR
          *    defaultMerge: {
-         *        'ModPlayer': 'mod'
+         *        'ModPlayer'
          *    }
          * }
-         *
-         * If an object, it checks for an 'install' property, 
          */
+
+        var plugins = GetValue(config, 'plugins', null);
+        var defaultPlugins = Plugins.DefaultScene;
+
         if (plugins)
         {
             //  Old 3.7 array format?
@@ -489,18 +475,28 @@ var Config = new Class({
             }
             else if (IsPlainObject(plugins))
             {
-                this.installPlugins.global = GetFastValue(plugins, 'install', []);
+                // this.installPlugins.global = GetFastValue(plugins, 'install', []);
 
                 if (Array.isArray(plugins.default))
                 {
-                    this.defaultPlugins = plugins.default;
+                    defaultPlugins = plugins.default;
                 }
                 else if (Array.isArray(plugins.defaultMerge))
                 {
-                    this.defaultPlugins = this.defaultPlugins.concat(plugins.defaultMerge);
+                    defaultPlugins = defaultPlugins.concat(plugins.defaultMerge);
                 }
             }
         }
+
+        /**
+         * @const {any} Phaser.Boot.Config#defaultPlugins - The plugins installed into every Scene (in addition to CoreScene and Global).
+         */
+        this.defaultPlugins = defaultPlugins;
+
+        /**
+         * @const {any} Phaser.Boot.Config#installPlugins - [description]
+         */
+        this.installPlugins = GetValue(config, 'plugins.install', []);
 
         //  Default / Missing Images
         var pngPrefix = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAg';

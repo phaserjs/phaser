@@ -5,9 +5,15 @@
  */
 
 var Class = require('../utils/Class');
+var EventEmitter = require('eventemitter3');
+var IsPlainObject = require('../utils/object/IsPlainObject');
+var GetFastValue = require('../utils/object/GetFastValue');
 
 //  Contains the plugins that Phaser uses globally and locally.
 //  These are the source objects, not instantiated.
+var corePlugins = {};
+
+//  Contains the plugins that the dev has loaded into their game
 var plugins = {};
 
 /**
@@ -25,10 +31,14 @@ var plugins = {};
  */
 var PluginManager = new Class({
 
+    Extends: EventEmitter,
+
     initialize:
 
     function PluginManager (game)
     {
+        EventEmitter.call(this);
+
         /**
          * [description]
          *
@@ -38,9 +48,12 @@ var PluginManager = new Class({
          */
         this.game = game;
 
-        //  Plugins currently running and managed by this Plugin Manager
-        //  These are Game instance specific
+        //  Plugins currently running and managed by this Plugin Manager.
+        //  These are Game instance specific.
         this.activePlugins = [];
+
+        //  Plugins that should be installed into Scenes
+        this.scenePlugins = [];
 
         if (game.isBooted)
         {
@@ -63,17 +76,15 @@ var PluginManager = new Class({
         this.game.events.once('destroy', this.destroy, this);
 
         //  Any plugins to install?
-        /*
         var list = this.game.config.installPlugins;
 
         if (list)
         {
             for (var key in list)
             {
-                this.add(key, list[key]);
+                // this.register(key, list[key]);
             }
         }
-        */
     },
 
     /**
@@ -87,7 +98,7 @@ var PluginManager = new Class({
      */
     installGlobal: function (sys, globalPlugins)
     {
-        var game = sys.game;
+        var game = this.game;
         var scene = sys.scene;
         var map = sys.settings.map;
 
@@ -130,12 +141,12 @@ var PluginManager = new Class({
         {
             var pluginKey = scenePlugins[i];
 
-            if (!plugins[pluginKey])
+            if (!corePlugins[pluginKey])
             {
                 continue;
             }
 
-            var source = plugins[pluginKey];
+            var source = corePlugins[pluginKey];
 
             var plugin = new source.plugin(scene);
             
@@ -156,37 +167,79 @@ var PluginManager = new Class({
     },
 
     /**
-     * Register a plugin with the PluginManager. This is the same as calling the
-     * static function, but is available via the game pluginManager instance.
+     * Registers a plugin with the PluginManager.
      * 
-     * Key is a reference used to get the plugin from the plugins object (i.e. InputPlugin)
-     * Plugin is the object to instantiate to create the plugin
-     * Mapping is what the plugin is injected into the Scene.Systems as (i.e. input)
+     * Key is a reference used to get the plugin from the plugins object (i.e. MyPlugin)
+     * Plugin is the function to instantiate to create a plugin instance.
      *
      * @method Phaser.Plugins.PluginManager#register
      * @since 3.8.0
      * 
      * @param {string} key - [description]
-     * @param {object} plugin - [description]
-     * @param {string} mapping - [description]
+     * @param {function} plugin - [description]
      */
-    register: function (key, plugin, mapping)
+    register: function (key, plugin, start, isScenePlugin)
     {
-        plugins[key] = { plugin: plugin, mapping: mapping };
+        if (start === undefined) { start = false; }
+        if (isScenePlugin === undefined) { isScenePlugin = false; }
+
+        if (typeof plugin !== 'function')
+        {
+            console.warn('Invalid Plugin: ' + key);
+            return;
+        }
+
+        if (plugins.hasOwnProperty(key))
+        {
+            console.warn('Plugin key in use: ' + key);
+            return;
+        }
+
+        //  Add it to the plugin store
+        plugins[key] = plugin;
+
+        if (start)
+        {
+            this.start(key);
+        }
+
+        if (isScenePlugin)
+        {
+
+        }
+
+        return this;
     },
 
-    add: function (plugin)
+    start: function (key)
     {
-        var instance = new plugin(this.game);
+        var instance;
+        var plugin = this.get(key);
 
-        var key = instance.key;
+        if (plugin)
+        {
+            instance = new plugin(this);
 
-        plugins[key] = { plugin: plugin };
-
-        this.activePlugins.push(instance);
+            this.activePlugins.push(instance);
+        }
 
         return instance;
     },
+
+    setScenePlugin: function (scene)
+    {
+    },
+
+    addGameObject: function ()
+    {
+
+    },
+
+    addFileType: function ()
+    {
+
+    },
+
 
     /**
      * [description]
@@ -200,22 +253,7 @@ var PluginManager = new Class({
      */
     get: function (key)
     {
-        return (plugins[key]) ? plugins[key].plugin : null;
-    },
-
-    update: function (time, delta)
-    {
-        var activePlugins = this.activePlugins;
-
-        for (var i = 0; i < activePlugins.length; i++)
-        {
-            var plugin = activePlugins[i];
-
-            if (plugin.active)
-            {
-                plugin.step(time, delta);
-            }
-        }
+        return (plugins.hasOwnProperty(key)) ? plugins[key] : null;
     },
 
     /**
@@ -245,7 +283,7 @@ var PluginManager = new Class({
 });
 
 /**
- * Static method called directly by the Plugins
+ * Static method called directly by the Core internal Plugins.
  * Key is a reference used to get the plugin from the plugins object (i.e. InputPlugin)
  * Plugin is the object to instantiate to create the plugin
  * Mapping is what the plugin is injected into the Scene.Systems as (i.e. input)
@@ -259,7 +297,7 @@ var PluginManager = new Class({
  */
 PluginManager.register = function (key, plugin, mapping)
 {
-    plugins[key] = { plugin: plugin, mapping: mapping };
+    corePlugins[key] = { plugin: plugin, mapping: mapping };
 };
 
 module.exports = PluginManager;
