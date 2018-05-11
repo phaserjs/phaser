@@ -2,6 +2,10 @@
 
 ## Version 3.next - in development
 
+### New Plugin Manager
+
+TODO
+
 ### New Features
 
 * You can pass in your own `canvas` and `context` elements in your Game Config and Phaser will use those to render with instead of creating its own. This also allows you to pass in a WebGL 2 context. Fix #3653 (thanks @tgrajewski)
@@ -11,9 +15,12 @@
 
 ### Updates
 
+* Game.step now emits a `prestep` event, which some of the global systems hook in to, like Sound and Input. You can use it to perform pre-step tasks, ideally from plugins.
+* Game.step now emits a `step` event. This is emitted once per frame. You can hook into it from plugins or code that exists outside of a Scene.
+* Game.step now emits a `poststep` event. This is the last chance you get to do things before the render process begins.
 * Optimized TextureTintPipeline.drawBlitter so it skips bobs that have alpha of zero and only calls `setTexture2D` if the bob sourceIndex has changed, previously it called it for every single bob.
 * Game.context used to be undefined if running in WebGL. It is now set to be the `WebGLRenderingContext` during WebGLRenderer.init. If you provided your own custom context, it is set to this instead.
-* Game.onStepCallback has been removed.
+* The Game `onStepCallback` has been removed. You can now listen for the new step events instead.
 * Phaser.EventEmitter was incorrectly namespaced, it's now only available under Phaser.Events.EventEmitter (thanks Tigran)
 
 ### Bug Fixes

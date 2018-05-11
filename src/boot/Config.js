@@ -113,7 +113,6 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @since 3.0.0
  *
  * @param {GameConfig} [GameConfig] - The configuration object for your Phaser Game instance.
- *
  */
 var Config = new Class({
 
@@ -452,9 +451,11 @@ var Config = new Class({
          * the default plugins like previously, or a config object.
          *
          * plugins: {
-         *    install: [
-         *        { key: 'TestPlugin', plugin: TestPlugin, start: false, isScenePlugin: false },
-         *        { key: 'WireFramePlugin', plugin: WireFramePlugin, start: true, isScenePlugin: true }
+         *    global: [
+         *        { key: 'TestPlugin', plugin: TestPlugin, start: true },
+         *    ],
+         *    scene: [
+         *        { key: 'WireFramePlugin', plugin: WireFramePlugin, systemKey: 'wireFramePlugin', sceneKey: 'wireframe' }
          *    ],
          *    default: [], OR
          *    defaultMerge: {

@@ -6,7 +6,6 @@
 
 var Class = require('../utils/Class');
 var EventEmitter = require('eventemitter3');
-var IsPlainObject = require('../utils/object/IsPlainObject');
 var GetFastValue = require('../utils/object/GetFastValue');
 
 //  Contains the plugins that Phaser uses globally and locally.
@@ -83,6 +82,11 @@ var PluginManager = new Class({
     boot: function ()
     {
         var i;
+        var entry;
+        var key;
+        var plugin;
+        var start;
+        var mapping;
         var config = this.game.config;
 
         //  Any plugins to install?
@@ -93,13 +97,13 @@ var PluginManager = new Class({
 
         for (i = 0; i < list.length; i++)
         {
-            var entry = list[i];
+            entry = list[i];
 
             // { key: 'TestPlugin', plugin: TestPlugin, start: true }
 
-            var key = GetFastValue(entry, 'key', null);
-            var plugin = GetFastValue(entry, 'plugin', null);
-            var start = GetFastValue(entry, 'start', false);
+            key = GetFastValue(entry, 'key', null);
+            plugin = GetFastValue(entry, 'plugin', null);
+            start = GetFastValue(entry, 'start', false);
 
             if (key && plugin)
             {
@@ -115,13 +119,13 @@ var PluginManager = new Class({
 
         for (i = 0; i < list.length; i++)
         {
-            var entry = list[i];
+            entry = list[i];
 
             // { key: 'moveSpritePlugin', plugin: MoveSpritePlugin, , mapping: 'move' }
 
-            var key = GetFastValue(entry, 'key', null);
-            var plugin = GetFastValue(entry, 'plugin', null);
-            var mapping = GetFastValue(entry, 'mapping', null);
+            key = GetFastValue(entry, 'key', null);
+            plugin = GetFastValue(entry, 'plugin', null);
+            mapping = GetFastValue(entry, 'mapping', null);
 
             if (key && plugin)
             {
