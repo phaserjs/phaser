@@ -14,6 +14,7 @@ var GetFastValue = require('../utils/object/GetFastValue');
 var corePlugins = {};
 
 //  Contains the plugins that the dev has loaded into their game
+//  These are the source objects, not instantiated.
 var gamePlugins = {};
 
 /**
@@ -50,18 +51,18 @@ var PluginManager = new Class({
 
         //  Plugins currently running and managed by this Plugin Manager.
         //  These are Game instance specific.
-        this.plugins = [];
-
         //  {
         //      key: '' <- the key set by the game, not the plugin author
         //      plugin: instance <- an instance of the plugin
         //      active: bool <- considered 'active' or not?
         //  }
+        this.plugins = [];
 
-        //  A list of plugin keys that should be installed into Scenes
+        //  A list of plugin keys that should be installed into Scenes as well as the Core Plugins
         this.scenePlugins = [];
 
-        this._pending = [];
+        this._pendingGlobal = [];
+        this._pendingScene = [];
 
         if (game.isBooted)
         {
@@ -81,32 +82,57 @@ var PluginManager = new Class({
      */
     boot: function ()
     {
-        this.game.events.once('destroy', this.destroy, this);
+        var i;
+        var config = this.game.config;
 
         //  Any plugins to install?
-        var list = this.game.config.installPlugins;
+        var list = config.installGlobalPlugins;
 
         //  Any plugins added outside of the game config, but before the game booted?
-        list = list.concat(this._pending);
+        list = list.concat(this._pendingGlobal);
 
-        for (var i = 0; i < list.length; i++)
+        for (i = 0; i < list.length; i++)
         {
             var entry = list[i];
 
-            // { key: 'TestPlugin', plugin: TestPlugin, start: true, isScenePlugin: false }
+            // { key: 'TestPlugin', plugin: TestPlugin, start: true }
 
             var key = GetFastValue(entry, 'key', null);
             var plugin = GetFastValue(entry, 'plugin', null);
             var start = GetFastValue(entry, 'start', false);
-            var isScenePlugin = GetFastValue(entry, 'isScenePlugin', false);
 
             if (key && plugin)
             {
-                this.install(key, plugin, start, isScenePlugin);
+                this.install(key, plugin, start);
             }
         }
 
-        this._pending = [];
+        //  Any scene plugins to install?
+        list = config.installScenePlugins;
+
+        //  Any plugins added outside of the game config, but before the game booted?
+        list = list.concat(this._pendingScene);
+
+        for (i = 0; i < list.length; i++)
+        {
+            var entry = list[i];
+
+            // { key: 'moveSpritePlugin', plugin: MoveSpritePlugin, , mapping: 'move' }
+
+            var key = GetFastValue(entry, 'key', null);
+            var plugin = GetFastValue(entry, 'plugin', null);
+            var mapping = GetFastValue(entry, 'mapping', null);
+
+            if (key && plugin)
+            {
+                this.installScenePlugin(key, plugin, mapping);
+            }
+        }
+
+        this._pendingGlobal = [];
+        this._pendingScene = [];
+
+        this.game.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -170,12 +196,16 @@ var PluginManager = new Class({
 
             var source = corePlugins[pluginKey];
 
-            var plugin = new source.plugin(scene);
+            var plugin = new source.plugin(scene, this);
             
             sys[source.mapping] = plugin;
 
             //  Scene level injection
-            if (map.hasOwnProperty(source.mapping))
+            if (source.custom)
+            {
+                scene[source.mapping] = plugin;
+            }
+            else if (map.hasOwnProperty(source.mapping))
             {
                 scene[map[source.mapping]] = plugin;
             }
@@ -188,8 +218,47 @@ var PluginManager = new Class({
         }
     },
 
+    //  Called by Scene.Systems to get the default list of plugins to install
+    getDefaultScenePlugins: function ()
+    {
+        var list = this.game.config.defaultPlugins;
+
+        //  Merge in custom Scene plugins
+        list = list.concat(this.scenePlugins);
+
+        return list;
+    },
+
+    //  private to the PM
+    //  key = Scene.Systems property key
+    //  plugin = code
+    //  mapping = Scene key
+    installScenePlugin: function (key, plugin, mapping)
+    {
+        if (typeof plugin !== 'function')
+        {
+            console.warn('Invalid Scene Plugin: ' + key);
+            return;
+        }
+
+        if (corePlugins.hasOwnProperty(key))
+        {
+            console.warn('Scene Plugin key in use: ' + key);
+            return;
+        }
+
+        console.log('installScenePlugin', key, 'mapped to', mapping);
+
+        //  Add it to the plugin store
+        corePlugins[key] = { plugin: plugin, mapping: mapping, custom: true };
+
+        this.scenePlugins.push(key);
+    },
+
     /**
-     * Installs a plugin into the PluginManager.
+     * Installs a global plugin into the PluginManager.
+     * Global plugins belong to the game and cannot be installed into a Scene.
+     * For Scene level plugins, see `installScenePlugin`.
      * 
      * Key is a reference used to get the plugin from the plugins object (i.e. MyPlugin)
      * Plugin is the function to instantiate to create a plugin instance.
@@ -200,10 +269,9 @@ var PluginManager = new Class({
      * @param {string} key - [description]
      * @param {function} plugin - [description]
      */
-    install: function (key, plugin, start, isScenePlugin)
+    install: function (key, plugin, start)
     {
         if (start === undefined) { start = false; }
-        if (isScenePlugin === undefined) { isScenePlugin = false; }
 
         if (typeof plugin !== 'function')
         {
@@ -219,17 +287,12 @@ var PluginManager = new Class({
 
         if (!this.game.isBooted)
         {
-            this._pending.push({ key: key, plugin: plugin, start: start, isScenePlugin: isScenePlugin });
+            this._pendingGlobal.push({ key: key, plugin: plugin, start: start });
         }
         else
         {
             //  Add it to the plugin store
             gamePlugins[key] = plugin;
-
-            // if (isScenePlugin)
-            // {
-            //     this.scenePlugins.push(key);
-            // }
 
             if (start)
             {
@@ -408,7 +471,7 @@ var PluginManager = new Class({
  */
 PluginManager.register = function (key, plugin, mapping)
 {
-    corePlugins[key] = { plugin: plugin, mapping: mapping };
+    corePlugins[key] = { plugin: plugin, mapping: mapping, custom: false };
 };
 
 module.exports = PluginManager;
