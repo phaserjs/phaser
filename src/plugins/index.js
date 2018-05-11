@@ -10,6 +10,8 @@
 
 module.exports = {
 
+    BasePlugin: require('./BasePlugin'),
+    DefaultPlugins: require('./DefaultPlugins'),
     PluginManager: require('./PluginManager')
 
 };

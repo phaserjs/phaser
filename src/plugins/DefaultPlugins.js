@@ -5,9 +5,14 @@
  */
 
 /**
- * @namespace Phaser.Plugins
+ * @typedef {object} Phaser.Plugins.DefaultPlugins
+ * 
+ * @property {array} Global - These are the Global Managers that are created by the Phaser.Game instance.
+ * @property {array} CoreScene - These are the core plugins that are installed into every Scene.Systems instance, no matter what.
+ * @property {array} DefaultScene - These plugins are created in Scene.Systems in addition to the CoreScenePlugins.
  */
-var Plugins = {
+
+var DefaultPlugins = {
 
     /**
      * These are the Global Managers that are created by the Phaser.Game instance.
@@ -80,10 +85,4 @@ var Plugins = {
 
 };
 
-/*
- * "Sometimes, the elegant implementation is just a function.
- * Not a method. Not a class. Not a framework. Just a function."
- *  -- John Carmack
- */
-
-module.exports = Plugins;
+module.exports = DefaultPlugins;

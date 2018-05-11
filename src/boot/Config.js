@@ -11,7 +11,7 @@ var GetValue = require('../utils/object/GetValue');
 var IsPlainObject = require('../utils/object/IsPlainObject');
 var MATH = require('../math/const');
 var NOOP = require('../utils/NOOP');
-var Plugins = require('../plugins');
+var DefaultPlugins = require('../plugins/DefaultPlugins');
 var ValueToColor = require('../display/color/ValueToColor');
 
 /**
@@ -453,8 +453,8 @@ var Config = new Class({
          *
          * plugins: {
          *    install: [
-         *        ModPlayerPlugin,
-         *        WireFramePlugin
+         *        { key: 'TestPlugin', plugin: TestPlugin, start: false, isScenePlugin: false },
+         *        { key: 'WireFramePlugin', plugin: WireFramePlugin, start: true, isScenePlugin: true }
          *    ],
          *    default: [], OR
          *    defaultMerge: {
@@ -464,7 +464,7 @@ var Config = new Class({
          */
 
         var plugins = GetValue(config, 'plugins', null);
-        var defaultPlugins = Plugins.DefaultScene;
+        var defaultPlugins = DefaultPlugins.DefaultScene;
 
         if (plugins)
         {
@@ -475,7 +475,7 @@ var Config = new Class({
             }
             else if (IsPlainObject(plugins))
             {
-                // this.installPlugins.global = GetFastValue(plugins, 'install', []);
+                this.installPlugins = GetFastValue(plugins, 'install', []);
 
                 if (Array.isArray(plugins.default))
                 {
