@@ -227,6 +227,7 @@ var InputManager = new Class({
         this.touch.boot();
         this.gamepad.boot();
 
+        this.game.events.on('prestep', this.update, this);
         this.game.events.once('destroy', this.destroy, this);
     },
 
