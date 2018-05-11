@@ -9,10 +9,6 @@ var EE = require('eventemitter3');
 var PluginManager = require('../plugins/PluginManager');
 
 /**
- * @namespace Phaser.Events
- */
-
-/**
  * @classdesc
  * EventEmitter is a Scene Systems plugin compatible version of eventemitter3.
  *
