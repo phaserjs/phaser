@@ -28,19 +28,8 @@ var BasePlugin = new Class({
 
     initialize:
 
-    function BasePlugin (key, pluginManager)
+    function BasePlugin (pluginManager)
     {
-        /**
-         * The unique (within this game instance) name of this plugin within the Plugin Manager.
-         * This is set by the developer in their game config, although you should provide a default value.
-         * 
-         * @name Phaser.Plugins.BasePlugin#key
-         * @type {string}
-         * @protected
-         * @since 3.8.0
-         */
-        this.key = key;
-
         /**
          * A handy reference to the Plugin Manager that is responsible for this plugin.
          * Can be used as a route to gain access to game systems and  events.
