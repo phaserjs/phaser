@@ -14,7 +14,7 @@ var GetFastValue = require('../utils/object/GetFastValue');
 var corePlugins = {};
 
 //  Contains the plugins that the dev has loaded into their game
-var plugins = {};
+var gamePlugins = {};
 
 /**
  * @classdesc
@@ -50,10 +50,18 @@ var PluginManager = new Class({
 
         //  Plugins currently running and managed by this Plugin Manager.
         //  These are Game instance specific.
-        this.activePlugins = [];
+        this.plugins = [];
 
-        //  Plugins that should be installed into Scenes
+        //  {
+        //      key: '' <- the key set by the game, not the plugin author
+        //      plugin: instance <- an instance of the plugin
+        //      active: bool <- considered 'active' or not?
+        //  }
+
+        //  A list of plugin keys that should be installed into Scenes
         this.scenePlugins = [];
+
+        this._pending = [];
 
         if (game.isBooted)
         {
@@ -78,13 +86,27 @@ var PluginManager = new Class({
         //  Any plugins to install?
         var list = this.game.config.installPlugins;
 
-        if (list)
+        //  Any plugins added outside of the game config, but before the game booted?
+        list = list.concat(this._pending);
+
+        for (var i = 0; i < list.length; i++)
         {
-            for (var key in list)
+            var entry = list[i];
+
+            // { key: 'TestPlugin', plugin: TestPlugin, start: true, isScenePlugin: false }
+
+            var key = GetFastValue(entry, 'key', null);
+            var plugin = GetFastValue(entry, 'plugin', null);
+            var start = GetFastValue(entry, 'start', false);
+            var isScenePlugin = GetFastValue(entry, 'isScenePlugin', false);
+
+            if (key && plugin)
             {
-                // this.register(key, list[key]);
+                this.install(key, plugin, start, isScenePlugin);
             }
         }
+
+        this._pending = [];
     },
 
     /**
@@ -167,18 +189,18 @@ var PluginManager = new Class({
     },
 
     /**
-     * Registers a plugin with the PluginManager.
+     * Installs a plugin into the PluginManager.
      * 
      * Key is a reference used to get the plugin from the plugins object (i.e. MyPlugin)
      * Plugin is the function to instantiate to create a plugin instance.
      *
-     * @method Phaser.Plugins.PluginManager#register
+     * @method Phaser.Plugins.PluginManager#install
      * @since 3.8.0
      * 
      * @param {string} key - [description]
      * @param {function} plugin - [description]
      */
-    register: function (key, plugin, start, isScenePlugin)
+    install: function (key, plugin, start, isScenePlugin)
     {
         if (start === undefined) { start = false; }
         if (isScenePlugin === undefined) { isScenePlugin = false; }
@@ -189,41 +211,125 @@ var PluginManager = new Class({
             return;
         }
 
-        if (plugins.hasOwnProperty(key))
+        if (gamePlugins.hasOwnProperty(key))
         {
             console.warn('Plugin key in use: ' + key);
             return;
         }
 
-        //  Add it to the plugin store
-        plugins[key] = plugin;
-
-        if (start)
+        if (!this.game.isBooted)
         {
-            this.start(key);
+            this._pending.push({ key: key, plugin: plugin, start: start, isScenePlugin: isScenePlugin });
+        }
+        else
+        {
+            //  Add it to the plugin store
+            gamePlugins[key] = plugin;
+
+            // if (isScenePlugin)
+            // {
+            //     this.scenePlugins.push(key);
+            // }
+
+            if (start)
+            {
+                return this.start(key);
+            }
+        }
+    },
+
+    getIndex: function (key)
+    {
+        var list = this.plugins;
+
+        for (var i = 0; i < list.length; i++)
+        {
+            var entry = list[i];
+
+            if (entry.key === key)
+            {
+                return i;
+            }
         }
 
-        if (isScenePlugin)
-        {
+        return -1;
+    },
 
+    getEntry: function (key)
+    {
+        var idx = this.getIndex(key);
+
+        if (idx !== -1)
+        {
+            return this.plugins[idx];
+        }
+    },
+
+    isActive: function (key)
+    {
+        var entry = this.getEntry(key);
+
+        return (entry && entry.active);
+    },
+
+    start: function (key, runAs)
+    {
+        if (runAs === undefined) { runAs = key; }
+
+        var entry = this.getEntry(runAs);
+
+        //  Plugin already running under this key?
+        if (entry && !entry.active)
+        {
+            //  It exists, we just need to start it up again
+            entry.active = true;
+            entry.plugin.start();
+        }
+        else if (!entry)
+        {
+            var plugin = this.getClass(key);
+
+            if (plugin)
+            {
+                var instance = new plugin(this);
+
+                entry = {
+                    key: runAs,
+                    plugin: instance,
+                    active: true
+                };
+
+                this.plugins.push(entry);
+
+                instance.init();
+                instance.start();
+            }
+        }
+
+        return (entry) ? entry.plugin : null;
+    },
+
+    stop: function (key)
+    {
+        var entry = this.getEntry(key);
+
+        if (entry && entry.active)
+        {
+            entry.active = false;
+            entry.plugin.stop();
         }
 
         return this;
     },
 
-    start: function (key)
+    get: function (key)
     {
-        var instance;
-        var plugin = this.get(key);
+        var entry = this.getEntry(key);
 
-        if (plugin)
+        if (entry)
         {
-            instance = new plugin(this);
-
-            this.activePlugins.push(instance);
+            return entry.plugin;
         }
-
-        return instance;
     },
 
     setScenePlugin: function (scene)
@@ -240,20 +346,19 @@ var PluginManager = new Class({
 
     },
 
-
     /**
      * [description]
      *
-     * @method Phaser.Plugins.PluginManager#get
+     * @method Phaser.Plugins.PluginManager#getClass
      * @since 3.8.0
      *
      * @param {string} key - [description]
      *
      * @return {Phaser.Plugins.Plugin} A Plugin object
      */
-    get: function (key)
+    getClass: function (key)
     {
-        return (plugins.hasOwnProperty(key)) ? plugins[key] : null;
+        return (gamePlugins.hasOwnProperty(key)) ? gamePlugins[key] : null;
     },
 
     /**
@@ -266,7 +371,7 @@ var PluginManager = new Class({
      */
     remove: function (key)
     {
-        delete plugins[key];
+        delete gamePlugins[key];
     },
 
     /**
@@ -281,6 +386,12 @@ var PluginManager = new Class({
     }
 
 });
+
+/*
+ * "Sometimes, the elegant implementation is just a function.
+ * Not a method. Not a class. Not a framework. Just a function."
+ *  -- John Carmack
+ */
 
 /**
  * Static method called directly by the Core internal Plugins.
