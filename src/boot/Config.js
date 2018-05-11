@@ -463,6 +463,16 @@ var Config = new Class({
          * }
          */
 
+        /**
+         * @const {any} Phaser.Boot.Config#installGlobalPlugins - [description]
+         */
+        this.installGlobalPlugins = [];
+
+        /**
+         * @const {any} Phaser.Boot.Config#installScenePlugins - [description]
+         */
+        this.installScenePlugins = [];
+
         var plugins = GetValue(config, 'plugins', null);
         var defaultPlugins = DefaultPlugins.DefaultScene;
 
@@ -475,7 +485,8 @@ var Config = new Class({
             }
             else if (IsPlainObject(plugins))
             {
-                this.installPlugins = GetFastValue(plugins, 'install', []);
+                this.installGlobalPlugins = GetFastValue(plugins, 'global', []);
+                this.installScenePlugins = GetFastValue(plugins, 'scene', []);
 
                 if (Array.isArray(plugins.default))
                 {
@@ -492,11 +503,6 @@ var Config = new Class({
          * @const {any} Phaser.Boot.Config#defaultPlugins - The plugins installed into every Scene (in addition to CoreScene and Global).
          */
         this.defaultPlugins = defaultPlugins;
-
-        /**
-         * @const {any} Phaser.Boot.Config#installPlugins - [description]
-         */
-        this.installPlugins = GetValue(config, 'plugins.install', []);
 
         //  Default / Missing Images
         var pngPrefix = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAg';
