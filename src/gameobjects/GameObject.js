@@ -148,7 +148,7 @@ var GameObject = new Class({
          * If this Game Object is enabled for physics then this property will contain a reference to a Physics Body.
          *
          * @name Phaser.GameObjects.GameObject#body
-         * @type {?object}
+         * @type {?(object|Phaser.Physics.Arcade.Body|Phaser.Physics.Impact.Body)}
          * @default null
          * @since 3.0.0
          */
@@ -293,11 +293,11 @@ var GameObject = new Class({
 
     /**
      * If this Game Object has previously been enabled for input, this will disable it.
-     * 
+     *
      * An object that is disabled for input stops processing or being considered for
      * input events, but can be turned back on again at any time by simply calling
      * `setInteractive()` with no arguments provided.
-     * 
+     *
      * If want to completely remove interaction from this Game Object then use `removeInteractive` instead.
      *
      * @method Phaser.GameObjects.GameObject#disableInteractive
@@ -382,7 +382,7 @@ var GameObject = new Class({
      * Returns an array containing the display list index of either this Game Object, or if it has one,
      * its parent Container. It then iterates up through all of the parent containers until it hits the
      * root of the display list (which is index 0 in the returned array).
-     * 
+     *
      * Used internally by the InputPlugin but also useful if you wish to find out the display depth of
      * this Game Object and all of its ancestors.
      *
@@ -398,7 +398,7 @@ var GameObject = new Class({
         var parent = this.parentContainer;
 
         var indexes = [];
-        
+
         while (parent)
         {
             // indexes.unshift([parent.getIndex(child), parent.name]);
