@@ -172,6 +172,56 @@ var KeyCodes = {
     NINE: 57,
 
     /**
+     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_ZERO
+     */
+    NUMPAD_ZERO: 96,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_ONE
+     */
+    NUMPAD_ONE: 97,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_TWO
+     */
+    NUMPAD_TWO: 98,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_THREE
+     */
+    NUMPAD_THREE: 99,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_FOUR
+     */
+    NUMPAD_FOUR: 100,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_FIVE
+     */
+    NUMPAD_FIVE: 101,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_SIX
+     */
+    NUMPAD_SIX: 102,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_SEVEN
+     */
+    NUMPAD_SEVEN: 103,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_EIGHT
+     */
+    NUMPAD_EIGHT: 104,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_NINE
+     */
+    NUMPAD_NINE: 105,
+
+    /**
      * @name Phaser.Input.Keyboard.KeyCodes.A
      */
     A: 65,
