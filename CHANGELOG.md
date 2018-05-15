@@ -48,6 +48,7 @@ The new Plugin Manager and associated classes are 100% covered by JSDocs and the
 * Utils.Array.BringToTop failed to move the penultimate item in an array due to an index error. Fix #3658 (thanks @agar3s)
 * The Headless renderer was broken due to an invalid access during TextureSource.init.
 * Animation.yoyo was ignored when calculating the next frame to advance to, breaking the yoyo effect. It now yoyos properly (thanks Tomas)
+* Corrected an error in Container.getBoundsTransformMatrix that called a missing method, causing a `getBounds` on a nested container to fail. Fix #3624 (thanks @poasher)
 
 ### Examples, Documentation and TypeScript
 

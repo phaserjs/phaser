@@ -416,7 +416,7 @@ var Container = new Class({
 
     /**
      * Returns the world transform matrix as used for Bounds checks.
-     * The returned matrix is a temporal and shouldn't be stored.
+     * The returned matrix is temporal and shouldn't be stored.
      *
      * @method Phaser.GameObjects.Container#getBoundsTransformMatrix
      * @since 3.4.0
@@ -425,17 +425,7 @@ var Container = new Class({
      */
     getBoundsTransformMatrix: function ()
     {
-        var tempMatrix = this.tempTransformMatrix;
-
-        tempMatrix.applyITRS(this.x, this.y, this.rotation, this.scaleX, this.scaleY);
-
-        if (this.parentContainer)
-        {
-            var parentMatrix = this.parentContainer.getTransformMatrix();
-            tempMatrix.multiply(parentMatrix);
-        }
-
-        return tempMatrix;
+        return this.getWorldTransformMatrix(this.tempTransformMatrix);
     },
 
     /**
