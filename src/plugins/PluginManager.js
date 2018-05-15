@@ -6,15 +6,11 @@
 
 var Class = require('../utils/Class');
 var EventEmitter = require('eventemitter3');
+var FileTypesManager = require('../loader/FileTypesManager');
+var GameObjectCreator = require('../gameobjects/GameObjectCreator');
+var GameObjectFactory = require('../gameobjects/GameObjectFactory');
 var GetFastValue = require('../utils/object/GetFastValue');
-
-//  Contains the plugins that Phaser uses globally and locally.
-//  These are the source objects, not instantiated.
-var corePlugins = {};
-
-//  Contains the plugins that the dev has loaded into their game
-//  These are the source objects, not instantiated.
-var gamePlugins = {};
+var PluginCache = require('./PluginCache');
 
 /**
  * @classdesc
@@ -142,13 +138,33 @@ var PluginManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Plugins.PluginManager#installGlobal
+     * @method Phaser.Plugins.PluginManager#addToScene
+     * @since 3.8.0
+     *
+     * @param {Phaser.Scenes.Systems} sys - [description]
+     * @param {array} globalPlugins - [description]
+     * @param {array} scenePlugins - [description]
+     */
+    addToScene: function (sys, globalPlugins, scenePlugins)
+    {
+        this.addGlobalToScene(sys, globalPlugins);
+
+        for (var i = 0; i < scenePlugins.length; i++)
+        {
+            this.addLocalToScene(sys, scenePlugins[i]);
+        }
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Plugins.PluginManager#addGlobalToScene
      * @since 3.0.0
      *
      * @param {Phaser.Scenes.Systems} sys - [description]
      * @param {array} globalPlugins - [description]
      */
-    installGlobal: function (sys, globalPlugins)
+    addGlobalToScene: function (sys, globalPlugins)
     {
         var game = this.game;
         var scene = sys.scene;
@@ -177,13 +193,13 @@ var PluginManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Plugins.PluginManager#installLocal
-     * @since 3.0.0
+     * @method Phaser.Plugins.PluginManager#addLocalToScene
+     * @since 3.8.0
      *
      * @param {Phaser.Scenes.Systems} sys - [description]
      * @param {array} scenePlugins - [description]
      */
-    installLocal: function (sys, scenePlugins)
+    addLocalToScene: function (sys, scenePlugins)
     {
         var scene = sys.scene;
         var map = sys.settings.map;
@@ -193,12 +209,12 @@ var PluginManager = new Class({
         {
             var pluginKey = scenePlugins[i];
 
-            if (!corePlugins[pluginKey])
+            if (!PluginCache.hasCore(pluginKey))
             {
                 continue;
             }
 
-            var source = corePlugins[pluginKey];
+            var source = PluginCache.getCore(pluginKey);
 
             var plugin = new source.plugin(scene, this);
             
@@ -245,14 +261,13 @@ var PluginManager = new Class({
             return;
         }
 
-        if (corePlugins.hasOwnProperty(key))
+        if (PluginCache.hasCore(key))
         {
             console.warn('Scene Plugin key in use: ' + key);
             return;
         }
 
-        //  Add it to the plugin store
-        corePlugins[key] = { plugin: plugin, mapping: mapping, custom: true };
+        PluginCache.register(key, plugin, mapping, true);
 
         this.scenePlugins.push(key);
 
@@ -295,7 +310,7 @@ var PluginManager = new Class({
             return;
         }
 
-        if (gamePlugins.hasOwnProperty(key))
+        if (PluginCache.hasCustom(key))
         {
             console.warn('Plugin key in use: ' + key);
             return;
@@ -308,7 +323,8 @@ var PluginManager = new Class({
         else
         {
             //  Add it to the plugin store
-            gamePlugins[key] = plugin;
+            PluginCache.registerCustom(key, plugin);
+            // gamePlugins[key] = plugin;
 
             if (start)
             {
@@ -423,7 +439,8 @@ var PluginManager = new Class({
      */
     getClass: function (key)
     {
-        return (gamePlugins.hasOwnProperty(key)) ? gamePlugins[key] : null;
+        // return (gamePlugins.hasOwnProperty(key)) ? gamePlugins[key] : null;
+        return PluginCache.getCustomClass(key);
     },
 
     /**
@@ -436,7 +453,36 @@ var PluginManager = new Class({
      */
     remove: function (key)
     {
-        delete gamePlugins[key];
+        // delete gamePlugins[key];
+        PluginCache.removeCustom(key);
+    },
+
+    //  When registering a factory function 'this' refers to the GameObjectFactory context.
+    //
+    //  There are several properties available to use:
+    //
+    //  this.scene - a reference to the Scene that owns the GameObjectFactory
+    //  this.displayList - a reference to the Display List the Scene owns
+    //  this.updateList - a reference to the Update List the Scene owns
+
+    registerGameObject: function (key, factoryCallback, creatorCallback)
+    {
+        if (factoryCallback)
+        {
+            GameObjectFactory.register(key, factoryCallback);
+        }
+
+        if (creatorCallback)
+        {
+            GameObjectCreator.register(key, creatorCallback);
+        }
+
+        return this;
+    },
+
+    registerFileType: function (key, callback)
+    {
+        FileTypesManager.register(key, callback);
     },
 
     /**
@@ -457,23 +503,5 @@ var PluginManager = new Class({
  * Not a method. Not a class. Not a framework. Just a function."
  *  -- John Carmack
  */
-
-/**
- * Static method called directly by the Core internal Plugins.
- * Key is a reference used to get the plugin from the plugins object (i.e. InputPlugin)
- * Plugin is the object to instantiate to create the plugin
- * Mapping is what the plugin is injected into the Scene.Systems as (i.e. input)
- *
- * @method Phaser.Plugins.PluginManager.register
- * @since 3.0.0
- * 
- * @param {string} key - [description]
- * @param {object} plugin - [description]
- * @param {string} mapping - [description]
- */
-PluginManager.register = function (key, plugin, mapping)
-{
-    corePlugins[key] = { plugin: plugin, mapping: mapping, custom: false };
-};
 
 module.exports = PluginManager;
