@@ -80,7 +80,7 @@ PluginCache.registerCustom = function (key, plugin, mapping)
 PluginCache.hasCore = function (key)
 {
     return corePlugins.hasOwnProperty(key);
-}
+};
 
 /**
  * Checks if the given key is already being used in the custom plugin cache.
@@ -95,7 +95,7 @@ PluginCache.hasCore = function (key)
 PluginCache.hasCustom = function (key)
 {
     return customPlugins.hasOwnProperty(key);
-}
+};
 
 /**
  * Returns the core plugin object from the cache based on the given key.
@@ -110,7 +110,7 @@ PluginCache.hasCustom = function (key)
 PluginCache.getCore = function (key)
 {
     return corePlugins[key];
-}
+};
 
 /**
  * Returns the custom plugin object from the cache based on the given key.
@@ -125,7 +125,7 @@ PluginCache.getCore = function (key)
 PluginCache.getCustom = function (key)
 {
     return customPlugins[key];
-}
+};
 
 /**
  * Returns an object from the custom cache based on the given key that can be instantiated.
@@ -140,7 +140,7 @@ PluginCache.getCustom = function (key)
 PluginCache.getCustomClass = function (key)
 {
     return (customPlugins.hasOwnProperty(key)) ? customPlugins[key].plugin : null;
-}
+};
 
 /**
  * Removes a core plugin based on the given key.
@@ -156,7 +156,7 @@ PluginCache.remove = function (key)
     {
         delete corePlugins[key];
     }
-}
+};
 
 /**
  * Removes a custom plugin based on the given key.
@@ -172,6 +172,6 @@ PluginCache.removeCustom = function (key)
     {
         delete customPlugins[key];
     }
-}
+};
 
 module.exports = PluginCache;

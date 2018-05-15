@@ -17,7 +17,6 @@ var Device = require('../device');
 var DOMContentLoaded = require('../dom/DOMContentLoaded');
 var EventEmitter = require('eventemitter3');
 var InputManager = require('../input/InputManager');
-var PluginCache = require('../plugins/PluginCache');
 var PluginManager = require('../plugins/PluginManager');
 var SceneManager = require('../scene/SceneManager');
 var SoundManagerCreator = require('../sound/SoundManagerCreator');

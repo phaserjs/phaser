@@ -403,6 +403,7 @@ var PluginManager = new Class({
         {
             //  Add it to the plugin store
             PluginCache.registerCustom(key, plugin);
+
             // gamePlugins[key] = plugin;
 
             if (start)
