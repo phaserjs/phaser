@@ -575,7 +575,7 @@ var Animation = new Class({
             //  We're at the end of the animation
 
             //  Yoyo? (happens before repeat)
-            if (component.yoyo)
+            if (component._yoyo)
             {
                 component.forward = false;
 

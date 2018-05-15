@@ -30,6 +30,7 @@ TODO
 * WebAudioSoundManager.unlock will now check if `document.body` is available before setting the listeners on it. Fixes old versions of Firefox, apparently. #3649 (thanks @squilibob)
 * Utils.Array.BringToTop failed to move the penultimate item in an array due to an index error. Fix #3658 (thanks @agar3s)
 * The Headless renderer was broken due to an invalid access during TextureSource.init.
+* Animation.yoyo was ignored when calculating the next frame to advance to, breaking the yoyo effect. It now yoyos properly (thanks Tomas)
 
 ### Examples, Documentation and TypeScript
 
