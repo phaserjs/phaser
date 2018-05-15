@@ -236,6 +236,38 @@ var Transform = {
     },
 
     /**
+     * Sets the position of this Game Object to be a random position within the confines of
+     * the given area.
+     * 
+     * If no area is specified a random position between 0 x 0 and the game width x height is used instead.
+     *
+     * The position does not factor in the size of this Game Object, meaning that only the origin is
+     * guaranteed to be within the area.
+     *
+     * @method Phaser.GameObjects.Components.Transform#setRandomPosition
+     * @since 3.8.0
+     *
+     * @param {number} [x=0] - The x position of the top-left of the random area.
+     * @param {number} [y=0] - The y position of the top-left of the random area.
+     * @param {number} [width] - The width of the random area.
+     * @param {number} [height] - The height of the random area.
+     *
+     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     */
+    setRandomPosition: function (x, y, width, height)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = this.scene.sys.game.config.width; }
+        if (height === undefined) { height = this.scene.sys.game.config.height; }
+
+        this.x = x + (Math.random() * width);
+        this.y = y + (Math.random() * height);
+
+        return this;
+    },
+
+    /**
      * Sets the rotation of this Game Object.
      *
      * @method Phaser.GameObjects.Components.Transform#setRotation
