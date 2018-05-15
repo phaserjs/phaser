@@ -152,7 +152,7 @@ var TextureSource = new Class({
      */
     init: function (game)
     {
-        if (this.renderer.gl)
+        if (this.renderer && this.renderer.gl)
         {
             if (this.isCanvas)
             {
