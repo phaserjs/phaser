@@ -10,7 +10,7 @@ var CustomSet = require('../structs/Set');
 var EventEmitter = require('eventemitter3');
 var FileTypesManager = require('./FileTypesManager');
 var GetFastValue = require('../utils/object/GetFastValue');
-var PluginManager = require('../plugins/PluginManager');
+var PluginCache = require('../plugins/PluginCache');
 var XHRSettings = require('./XHRSettings');
 
 /**
@@ -1069,6 +1069,6 @@ var LoaderPlugin = new Class({
 
 });
 
-PluginManager.register('Loader', LoaderPlugin, 'load');
+PluginCache.register('Loader', LoaderPlugin, 'load');
 
 module.exports = LoaderPlugin;

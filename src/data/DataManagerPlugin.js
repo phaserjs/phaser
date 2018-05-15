@@ -6,7 +6,7 @@
 
 var Class = require('../utils/Class');
 var DataManager = require('./DataManager');
-var PluginManager = require('../plugins/PluginManager');
+var PluginCache = require('../plugins/PluginCache');
 
 /**
  * @classdesc
@@ -115,6 +115,6 @@ var DataManagerPlugin = new Class({
 
 });
 
-PluginManager.register('DataManagerPlugin', DataManagerPlugin, 'data');
+PluginCache.register('DataManagerPlugin', DataManagerPlugin, 'data');
 
 module.exports = DataManagerPlugin;

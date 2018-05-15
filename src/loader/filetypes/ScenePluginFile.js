@@ -167,7 +167,7 @@ var ScenePluginFile = new Class({
  * Once the file has finished loading it will automatically be converted into a script element
  * via `document.createElement('script')`. It will have its language set to JavaScript, `defer` set to
  * false and then the resulting element will be appended to `document.head`. Any code then in the
- * script will be executed. It will then be passed to the Phaser PluginManager.register method.
+ * script will be executed. It will then be passed to the Phaser PluginCache.register method.
  *
  * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
  *

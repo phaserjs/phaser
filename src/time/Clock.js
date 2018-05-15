@@ -5,7 +5,7 @@
  */
 
 var Class = require('../utils/Class');
-var PluginManager = require('../plugins/PluginManager');
+var PluginCache = require('../plugins/PluginCache');
 var TimerEvent = require('./TimerEvent');
 
 /**
@@ -383,6 +383,6 @@ var Clock = new Class({
 
 });
 
-PluginManager.register('Clock', Clock, 'time');
+PluginCache.register('Clock', Clock, 'time');
 
 module.exports = Clock;

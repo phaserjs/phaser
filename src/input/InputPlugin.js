@@ -12,7 +12,7 @@ var Ellipse = require('../geom/ellipse/Ellipse');
 var EllipseContains = require('../geom/ellipse/Contains');
 var EventEmitter = require('eventemitter3');
 var CreateInteractiveObject = require('./CreateInteractiveObject');
-var PluginManager = require('../plugins/PluginManager');
+var PluginCache = require('../plugins/PluginCache');
 var Rectangle = require('../geom/rectangle/Rectangle');
 var RectangleContains = require('../geom/rectangle/Contains');
 var Triangle = require('../geom/triangle/Triangle');
@@ -1704,6 +1704,6 @@ var InputPlugin = new Class({
 
 });
 
-PluginManager.register('InputPlugin', InputPlugin, 'input');
+PluginCache.register('InputPlugin', InputPlugin, 'input');
 
 module.exports = InputPlugin;

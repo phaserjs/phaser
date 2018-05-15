@@ -233,13 +233,12 @@ var Systems = new Class({
 
         this.plugins = pluginManager;
 
-        pluginManager.installGlobal(this, DefaultPlugins.Global);
+        pluginManager.addToScene(this, DefaultPlugins.Global, [ DefaultPlugins.CoreScene, GetScenePlugins(this), GetPhysicsPlugins(this) ]);
 
-        pluginManager.installLocal(this, DefaultPlugins.CoreScene);
-
-        pluginManager.installLocal(this, GetScenePlugins(this));
-
-        pluginManager.installLocal(this, GetPhysicsPlugins(this));
+        // pluginManager.installSceneGlobal(this, DefaultPlugins.Global);
+        // pluginManager.installSceneLocal(this, DefaultPlugins.CoreScene);
+        // pluginManager.installSceneLocal(this, GetScenePlugins(this));
+        // pluginManager.installSceneLocal(this, GetPhysicsPlugins(this));
 
         this.events.emit('boot', this);
 

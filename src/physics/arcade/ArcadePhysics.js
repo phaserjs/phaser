@@ -10,7 +10,7 @@ var DistanceBetween = require('../../math/distance/DistanceBetween');
 var Factory = require('./Factory');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Merge = require('../../utils/object/Merge');
-var PluginManager = require('../../plugins/PluginManager');
+var PluginCache = require('../../plugins/PluginCache');
 var Vector2 = require('../../math/Vector2');
 var World = require('./World');
 
@@ -499,6 +499,6 @@ var ArcadePhysics = new Class({
 
 });
 
-PluginManager.register('ArcadePhysics', ArcadePhysics, 'arcadePhysics');
+PluginCache.register('ArcadePhysics', ArcadePhysics, 'arcadePhysics');
 
 module.exports = ArcadePhysics;

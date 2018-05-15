@@ -6,7 +6,7 @@
 
 var Class = require('../utils/Class');
 var NumberTweenBuilder = require('./builders/NumberTweenBuilder');
-var PluginManager = require('../plugins/PluginManager');
+var PluginCache = require('../plugins/PluginCache');
 var TimelineBuilder = require('./builders/TimelineBuilder');
 var TWEEN_CONST = require('./tween/const');
 var TweenBuilder = require('./builders/TweenBuilder');
@@ -670,6 +670,6 @@ var TweenManager = new Class({
 
 });
 
-PluginManager.register('TweenManager', TweenManager, 'tweens');
+PluginCache.register('TweenManager', TweenManager, 'tweens');
 
 module.exports = TweenManager;

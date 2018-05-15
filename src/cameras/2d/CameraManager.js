@@ -7,7 +7,7 @@
 var Camera = require('./Camera');
 var Class = require('../../utils/Class');
 var GetFastValue = require('../../utils/object/GetFastValue');
-var PluginManager = require('../../plugins/PluginManager');
+var PluginCache = require('../../plugins/PluginCache');
 var RectangleContains = require('../../geom/rectangle/Contains');
 
 /**
@@ -515,6 +515,6 @@ var CameraManager = new Class({
 
 });
 
-PluginManager.register('CameraManager', CameraManager, 'cameras');
+PluginCache.register('CameraManager', CameraManager, 'cameras');
 
 module.exports = CameraManager;

@@ -6,7 +6,7 @@
 
 var Class = require('../utils/Class');
 var List = require('../structs/List');
-var PluginManager = require('../plugins/PluginManager');
+var PluginCache = require('../plugins/PluginCache');
 var StableSort = require('../utils/array/StableSort');
 
 /**
@@ -205,6 +205,6 @@ var DisplayList = new Class({
 
 });
 
-PluginManager.register('DisplayList', DisplayList, 'displayList');
+PluginCache.register('DisplayList', DisplayList, 'displayList');
 
 module.exports = DisplayList;

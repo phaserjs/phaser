@@ -6,7 +6,7 @@
 
 var Class = require('../utils/Class');
 var EE = require('eventemitter3');
-var PluginManager = require('../plugins/PluginManager');
+var PluginCache = require('../plugins/PluginCache');
 
 /**
  * @classdesc
@@ -173,6 +173,6 @@ var EventEmitter = new Class({
  * @return {Phaser.Events.EventEmitter} `this`.
  */
 
-PluginManager.register('EventEmitter', EventEmitter, 'events');
+PluginCache.register('EventEmitter', EventEmitter, 'events');
 
 module.exports = EventEmitter;

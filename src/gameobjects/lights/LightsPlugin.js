@@ -6,7 +6,7 @@
 
 var Class = require('../../utils/Class');
 var LightsManager = require('./LightsManager');
-var PluginManager = require('../../plugins/PluginManager');
+var PluginCache = require('../../plugins/PluginCache');
 
 /**
  * @classdesc
@@ -84,6 +84,6 @@ var LightsPlugin = new Class({
 
 });
 
-PluginManager.register('LightsPlugin', LightsPlugin, 'lights');
+PluginCache.register('LightsPlugin', LightsPlugin, 'lights');
 
 module.exports = LightsPlugin;

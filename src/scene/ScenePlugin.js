@@ -8,7 +8,7 @@ var Clamp = require('../math/Clamp');
 var Class = require('../utils/Class');
 var CONST = require('./const');
 var GetFastValue = require('../utils/object/GetFastValue');
-var PluginManager = require('../plugins/PluginManager');
+var PluginCache = require('../plugins/PluginCache');
 
 /**
  * @classdesc
@@ -972,6 +972,6 @@ var ScenePlugin = new Class({
 
 });
 
-PluginManager.register('ScenePlugin', ScenePlugin, 'scenePlugin');
+PluginCache.register('ScenePlugin', ScenePlugin, 'scenePlugin');
 
 module.exports = ScenePlugin;

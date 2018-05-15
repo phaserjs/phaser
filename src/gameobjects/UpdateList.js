@@ -5,7 +5,7 @@
  */
 
 var Class = require('../utils/Class');
-var PluginManager = require('../plugins/PluginManager');
+var PluginCache = require('../plugins/PluginCache');
 
 /**
  * @classdesc
@@ -281,6 +281,6 @@ var UpdateList = new Class({
 
 });
 
-PluginManager.register('UpdateList', UpdateList, 'updateList');
+PluginCache.register('UpdateList', UpdateList, 'updateList');
 
 module.exports = UpdateList;
