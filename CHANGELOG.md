@@ -1,6 +1,6 @@
 # Change Log
 
-## Version 3.8.0 - in development
+## Version 3.8.0 - Klein - 16th May 2018
 
 ### New Plugin Manager
 
@@ -10,9 +10,9 @@ There is a new `Phaser.Plugins` namespace in which the classes live. The functio
 
 Plugins are split into two different types: A Global Plugin and a Scene Plugin.
 
-A Global Plugin is a plugin that lives within the Plugin Manager rather than a Scene. You can get access to it by calling `PluginManager.get` and providing a key. Any Scene that requests a plugin in this way will all get access to the same plugin instance, allowing you to use a single plugin across multiple Scenes.
+A **Global Plugin** is a plugin that lives within the Plugin Manager rather than a Scene. You can get access to it by calling `PluginManager.get` and providing a key. Any Scenes that request a plugin in this way all get access to the same plugin instance, allowing you to use a single plugin across multiple Scenes.
 
-A Scene Plugin is a plugin dedicated to running within a Scene. These are different to Global Plugins in that their instances do not live within the Plugin Manager, but within the Scene Systems class instead. And that every Scene created is given its own unique instance of a Scene Plugin. Examples of core Scene Plugins include the Input Plugin, the Tween Plugin and the physics Plugins.
+A **Scene Plugin** is a plugin dedicated to running within a Scene. These are different to Global Plugins in that their instances do not live within the Plugin Manager, but within the Scene Systems class instead. And that every Scene created is given its own unique instance of a Scene Plugin. Examples of core Scene Plugins include the Input Plugin, the Tween Plugin and the physics Plugins.
 
 Plugins can now be installed in 3 different ways: 1) You can preload them, using the `load.plugin` and the new `load.scenePlugin` methods. This will allow you to load externally hosted plugins into your game, or pull down a plugin dynamically at run-time. 2) You can install global and scene plugins in your Game Configuration. The plugin code can be bundled with your game code into a single bundle. By specifying plugins in the game config they're instantly available as soon as your game boots. Finally, you can install plugins at run-time directly from within a Scene.
 
@@ -55,7 +55,6 @@ The new Plugin Manager and associated classes are 100% covered by JSDocs and the
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
 @samme @mzguimaraes @NaNdreas @Matthew-Herman @melissaelopez @TheColorRed 
-
 
 ## Version 3.7.1 - Sinon - 8th May 2018
 
