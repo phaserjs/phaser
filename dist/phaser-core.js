@@ -60255,6 +60255,8 @@ var Text = __webpack_require__(107);
  */
 GameObjectCreator.register('text', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     // style Object = {
     //     font: [ 'font', '16px Courier' ],
     //     backgroundColor: [ 'backgroundColor', null ],
@@ -60341,6 +60343,8 @@ var Sprite = __webpack_require__(34);
  */
 GameObjectCreator.register('sprite', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var key = GetAdvancedValue(config, 'key', null);
     var frame = GetAdvancedValue(config, 'frame', null);
 
@@ -60391,6 +60395,8 @@ var Image = __webpack_require__(69);
  */
 GameObjectCreator.register('image', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var key = GetAdvancedValue(config, 'key', null);
     var frame = GetAdvancedValue(config, 'frame', null);
 
@@ -60437,6 +60443,8 @@ var Graphics = __webpack_require__(112);
  */
 GameObjectCreator.register('graphics', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     if (addToScene !== undefined)
     {
         config.add = addToScene;

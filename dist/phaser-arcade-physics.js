@@ -86992,6 +86992,8 @@ var Text = __webpack_require__(107);
  */
 GameObjectCreator.register('text', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     // style Object = {
     //     font: [ 'font', '16px Courier' ],
     //     backgroundColor: [ 'backgroundColor', null ],
@@ -87078,6 +87080,8 @@ var Sprite = __webpack_require__(34);
  */
 GameObjectCreator.register('sprite', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var key = GetAdvancedValue(config, 'key', null);
     var frame = GetAdvancedValue(config, 'frame', null);
 
@@ -87128,6 +87132,8 @@ var Image = __webpack_require__(69);
  */
 GameObjectCreator.register('image', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var key = GetAdvancedValue(config, 'key', null);
     var frame = GetAdvancedValue(config, 'frame', null);
 
@@ -87174,6 +87180,8 @@ var Graphics = __webpack_require__(112);
  */
 GameObjectCreator.register('graphics', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     if (addToScene !== undefined)
     {
         config.add = addToScene;
@@ -125854,6 +125862,8 @@ var Quad = __webpack_require__(230);
  */
 GameObjectCreator.register('quad', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var x = GetAdvancedValue(config, 'x', 0);
     var y = GetAdvancedValue(config, 'y', 0);
     var key = GetAdvancedValue(config, 'key', null);
@@ -125903,6 +125913,8 @@ var Mesh = __webpack_require__(143);
  */
 GameObjectCreator.register('mesh', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var key = GetAdvancedValue(config, 'key', null);
     var frame = GetAdvancedValue(config, 'frame', null);
     var vertices = GetValue(config, 'vertices', []);
@@ -126202,6 +126214,8 @@ var TileSprite = __webpack_require__(231);
  */
 GameObjectCreator.register('tileSprite', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var x = GetAdvancedValue(config, 'x', 0);
     var y = GetAdvancedValue(config, 'y', 0);
     var width = GetAdvancedValue(config, 'width', 512);
@@ -126255,6 +126269,8 @@ var GetValue = __webpack_require__(4);
  */
 GameObjectCreator.register('bitmapText', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var font = GetValue(config, 'font', '');
     var text = GetAdvancedValue(config, 'text', '');
     var size = GetAdvancedValue(config, 'size', false);
@@ -126307,6 +126323,8 @@ var Sprite3D = __webpack_require__(148);
  */
 GameObjectCreator.register('sprite3D', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var key = GetAdvancedValue(config, 'key', null);
     var frame = GetAdvancedValue(config, 'frame', null);
 
@@ -126368,6 +126386,8 @@ var RenderTexture = __webpack_require__(232);
  */
 GameObjectCreator.register('renderTexture', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var x = GetAdvancedValue(config, 'x', 0);
     var y = GetAdvancedValue(config, 'y', 0);
     var width = GetAdvancedValue(config, 'width', 32);
@@ -126416,6 +126436,8 @@ var ParticleEmitterManager = __webpack_require__(233);
  */
 GameObjectCreator.register('particles', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var key = GetAdvancedValue(config, 'key', null);
     var frame = GetAdvancedValue(config, 'frame', null);
     var emitters = GetFastValue(config, 'emitters', null);
@@ -126514,6 +126536,8 @@ var GetAdvancedValue = __webpack_require__(10);
  */
 GameObjectCreator.register('dynamicBitmapText', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var font = GetAdvancedValue(config, 'font', '');
     var text = GetAdvancedValue(config, 'text', '');
     var size = GetAdvancedValue(config, 'size', false);
@@ -126565,6 +126589,8 @@ var GetAdvancedValue = __webpack_require__(10);
  */
 GameObjectCreator.register('container', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var x = GetAdvancedValue(config, 'x', 0);
     var y = GetAdvancedValue(config, 'y', 0);
 
@@ -126611,6 +126637,8 @@ var GetAdvancedValue = __webpack_require__(10);
  */
 GameObjectCreator.register('blitter', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var key = GetAdvancedValue(config, 'key', null);
     var frame = GetAdvancedValue(config, 'frame', null);
 
