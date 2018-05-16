@@ -15,6 +15,7 @@
     "url": "https://photonstorm@github.com/photonstorm/phaser.git"
   },
   "scripts": {
+    "help": "node scripts/help.js",
     "build": "webpack",
     "watch": "webpack --watch",
     "dist": "webpack --config webpack.dist.config.js",
@@ -42,6 +43,7 @@
     "fs-extra": "^6.0.0",
     "node-sloc": "^0.1.10",
     "uglifyjs-webpack-plugin": "^1.2.5",
+    "vivid-cli": "^1.1.2",
     "webpack": "^4.6.0",
     "webpack-cli": "^2.1.2",
     "webpack-shell-plugin": "^0.5.0"
