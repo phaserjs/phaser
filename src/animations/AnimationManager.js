@@ -248,7 +248,7 @@ var AnimationManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - [description]
-     * @param {GenerateFrameNamesConfig} config - [description]
+     * @param {GenerateFrameNamesConfig} [config] - [description]
      *
      * @return {AnimationFrameConfig[]} [description]
      */
@@ -277,7 +277,7 @@ var AnimationManager = new Class({
         var i;
         var frame;
 
-        if (frames === false)
+        if (!config)
         {
             //  Use every frame in the atlas?
             frames = texture.getFrameNames();
