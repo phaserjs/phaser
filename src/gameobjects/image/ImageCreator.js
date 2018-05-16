@@ -24,6 +24,8 @@ var Image = require('./Image');
  */
 GameObjectCreator.register('image', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var key = GetAdvancedValue(config, 'key', null);
     var frame = GetAdvancedValue(config, 'frame', null);
 

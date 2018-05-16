@@ -25,6 +25,8 @@ var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
  */
 GameObjectCreator.register('container', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var x = GetAdvancedValue(config, 'x', 0);
     var y = GetAdvancedValue(config, 'y', 0);
 

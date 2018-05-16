@@ -33,6 +33,8 @@ var RenderTexture = require('./RenderTexture');
  */
 GameObjectCreator.register('renderTexture', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var x = GetAdvancedValue(config, 'x', 0);
     var y = GetAdvancedValue(config, 'y', 0);
     var width = GetAdvancedValue(config, 'width', 32);

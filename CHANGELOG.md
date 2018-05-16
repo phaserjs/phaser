@@ -49,6 +49,7 @@ The new Plugin Manager and associated classes are 100% covered by JSDocs and the
 * The Headless renderer was broken due to an invalid access during TextureSource.init.
 * Animation.yoyo was ignored when calculating the next frame to advance to, breaking the yoyo effect. It now yoyos properly (thanks Tomas)
 * Corrected an error in Container.getBoundsTransformMatrix that called a missing method, causing a `getBounds` on a nested container to fail. Fix #3624 (thanks @poasher)
+* Calling a creator, such as GraphicsCreator, without passing in a config object, would cause an error to be thrown. All Game Object creators now catch against this.
 
 ### Examples, Documentation and TypeScript
 

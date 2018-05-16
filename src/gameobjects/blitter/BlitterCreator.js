@@ -24,6 +24,8 @@ var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
  */
 GameObjectCreator.register('blitter', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var key = GetAdvancedValue(config, 'key', null);
     var frame = GetAdvancedValue(config, 'frame', null);
 

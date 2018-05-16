@@ -25,6 +25,8 @@ var Mesh = require('./Mesh');
  */
 GameObjectCreator.register('mesh', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var key = GetAdvancedValue(config, 'key', null);
     var frame = GetAdvancedValue(config, 'frame', null);
     var vertices = GetValue(config, 'vertices', []);

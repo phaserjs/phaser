@@ -25,6 +25,8 @@ var Sprite3D = require('./Sprite3D');
  */
 GameObjectCreator.register('sprite3D', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var key = GetAdvancedValue(config, 'key', null);
     var frame = GetAdvancedValue(config, 'frame', null);
 

@@ -24,6 +24,8 @@ var Quad = require('./Quad');
  */
 GameObjectCreator.register('quad', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var x = GetAdvancedValue(config, 'x', 0);
     var y = GetAdvancedValue(config, 'y', 0);
     var key = GetAdvancedValue(config, 'key', null);

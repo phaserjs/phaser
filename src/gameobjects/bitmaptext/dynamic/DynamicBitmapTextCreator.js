@@ -34,6 +34,8 @@ var GetAdvancedValue = require('../../../utils/object/GetAdvancedValue');
  */
 GameObjectCreator.register('dynamicBitmapText', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var font = GetAdvancedValue(config, 'font', '');
     var text = GetAdvancedValue(config, 'text', '');
     var size = GetAdvancedValue(config, 'size', false);

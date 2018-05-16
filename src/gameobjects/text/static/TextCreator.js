@@ -24,6 +24,8 @@ var Text = require('./Text');
  */
 GameObjectCreator.register('text', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     // style Object = {
     //     font: [ 'font', '16px Courier' ],
     //     backgroundColor: [ 'backgroundColor', null ],

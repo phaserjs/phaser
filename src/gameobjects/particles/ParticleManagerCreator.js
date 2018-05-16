@@ -24,6 +24,8 @@ var ParticleEmitterManager = require('./ParticleEmitterManager');
  */
 GameObjectCreator.register('particles', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var key = GetAdvancedValue(config, 'key', null);
     var frame = GetAdvancedValue(config, 'frame', null);
     var emitters = GetFastValue(config, 'emitters', null);

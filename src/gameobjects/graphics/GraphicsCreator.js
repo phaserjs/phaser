@@ -22,6 +22,8 @@ var Graphics = require('./Graphics');
  */
 GameObjectCreator.register('graphics', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     if (addToScene !== undefined)
     {
         config.add = addToScene;

@@ -25,6 +25,8 @@ var GetValue = require('../../../utils/object/GetValue');
  */
 GameObjectCreator.register('bitmapText', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var font = GetValue(config, 'font', '');
     var text = GetAdvancedValue(config, 'text', '');
     var size = GetAdvancedValue(config, 'size', false);
