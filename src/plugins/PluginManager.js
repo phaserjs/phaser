@@ -573,11 +573,14 @@ var PluginManager = new Class({
      * @since 3.8.0
      *
      * @param {string} key - The key of the plugin to get.
+     * @param {boolean} [autoStart=true] - Automatically start a new instance of the plugin if found in the cache, but not actively running.
      *
-     * @return {?Phaser.Plugins.BasePlugin} The plugin, or `null` if no plugin was found matching the key.
+     * @return {?(Phaser.Plugins.BasePlugin|function)} The plugin, or `null` if no plugin was found matching the key.
      */
-    get: function (key)
+    get: function (key, autoStart)
     {
+        if (autoStart === undefined) { autoStart = true; }
+
         var entry = this.getEntry(key);
 
         if (entry)
@@ -588,7 +591,7 @@ var PluginManager = new Class({
         {
             var plugin = this.getClass(key);
 
-            if (plugin)
+            if (plugin && autoStart)
             {
                 var instance = new plugin(this);
 
@@ -604,6 +607,10 @@ var PluginManager = new Class({
                 instance.start();
 
                 return instance;
+            }
+            else if (plugin)
+            {
+                return plugin;
             }
         }
 
