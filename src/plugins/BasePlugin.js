@@ -35,7 +35,7 @@ var BasePlugin = new Class({
          * Can be used as a route to gain access to game systems and  events.
          * 
          * @name Phaser.Plugins.BasePlugin#pluginManager
-         * @type {Phaser.Plugins.BasePluginManager}
+         * @type {Phaser.Plugins.PluginManager}
          * @protected
          * @since 3.8.0
          */
@@ -71,7 +71,7 @@ var BasePlugin = new Class({
          * You cannot use it during the `init` method, but you can during the `boot` method.
          *
          * @name Phaser.Plugins.BasePlugin#systems
-         * @type {?Phaser.Scene.Systems}
+         * @type {?Phaser.Scenes.Systems}
          * @protected
          * @since 3.8.0
          */

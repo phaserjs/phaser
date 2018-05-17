@@ -46,7 +46,7 @@ var ScenePlugin = new Class({
          * This property is only set when the plugin is instantiated and added to the Scene, not before.
          *
          * @name Phaser.Plugins.ScenePlugin#systems
-         * @type {?Phaser.Scene.Systems}
+         * @type {?Phaser.Scenes.Systems}
          * @protected
          * @since 3.8.0
          */
