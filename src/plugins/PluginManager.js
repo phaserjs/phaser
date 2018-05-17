@@ -773,7 +773,7 @@ var PluginManager = new Class({
     {
         for (var i = 0; i < this.plugins.length; i++)
         {
-            this.plugins[i].destroy();
+            this.plugins[i].plugin.destroy();
         }
 
         this.game = null;
