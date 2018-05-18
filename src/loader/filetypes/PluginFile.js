@@ -18,6 +18,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @property {string} [url] - The absolute or relative URL to load the file from.
  * @property {string} [extension='js'] - The default file extension to use if no url is provided.
  * @property {boolean} [start=false] - Automatically start the plugin after loading?
+ * @property {string} [mapping] - If this plugin is to be injected into the Scene, this is the property key used.
  * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 
@@ -39,6 +40,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {(string|Phaser.Loader.FileTypes.PluginFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
  * @param {boolean} [start=false] - Automatically start the plugin after loading?
+ * @param {string} [mapping] - If this plugin is to be injected into the Scene, this is the property key used.
  * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var PluginFile = new Class({
@@ -47,7 +49,7 @@ var PluginFile = new Class({
 
     initialize:
 
-    function PluginFile (loader, key, url, start, xhrSettings)
+    function PluginFile (loader, key, url, start, mapping, xhrSettings)
     {
         var extension = 'js';
 
@@ -60,6 +62,7 @@ var PluginFile = new Class({
             xhrSettings = GetFastValue(config, 'xhrSettings');
             extension = GetFastValue(config, 'extension', extension);
             start = GetFastValue(config, 'start');
+            mapping = GetFastValue(config, 'mapping');
         }
 
         var fileConfig = {
@@ -70,7 +73,10 @@ var PluginFile = new Class({
             key: key,
             url: url,
             xhrSettings: xhrSettings,
-            config: { start: start }
+            config: {
+                start: start,
+                mapping: mapping
+            }
         };
 
         File.call(this, loader, fileConfig);
@@ -97,10 +103,11 @@ var PluginFile = new Class({
         var config = this.config;
 
         var start = GetFastValue(config, 'start', false);
+        var mapping = GetFastValue(config, 'mapping', null);
 
         if (this.state === CONST.FILE_POPULATED)
         {
-            pluginManager.install(this.key, this.data, start);
+            pluginManager.install(this.key, this.data, start, mapping);
         }
         else
         {
@@ -115,7 +122,7 @@ var PluginFile = new Class({
 
             document.head.appendChild(this.data);
 
-            pluginManager.install(this.key, window[this.key], start);
+            pluginManager.install(this.key, window[this.key], start, mapping);
         }
 
         this.onProcessComplete();
@@ -167,7 +174,7 @@ var PluginFile = new Class({
  * and no URL is given then the Loader will set the URL to be "alien.js". It will always add `.js` as the extension, although
  * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
  *
- * Note: The ability to load this type of file will only be available if the Script File type has been built into Phaser.
+ * Note: The ability to load this type of file will only be available if the Plugin File type has been built into Phaser.
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#plugin
@@ -177,11 +184,12 @@ var PluginFile = new Class({
  * @param {(string|Phaser.Loader.FileTypes.PluginFileConfig|Phaser.Loader.FileTypes.PluginFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {(string|function)} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js". Or, a plugin function.
  * @param {boolean} [start] - The plugin mapping configuration object.
+ * @param {string} [mapping] - If this plugin is to be injected into the Scene, this is the property key used.
  * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */
-FileTypesManager.register('plugin', function (key, url, start, xhrSettings)
+FileTypesManager.register('plugin', function (key, url, start, mapping, xhrSettings)
 {
     if (Array.isArray(key))
     {
@@ -193,7 +201,7 @@ FileTypesManager.register('plugin', function (key, url, start, xhrSettings)
     }
     else
     {
-        this.addFile(new PluginFile(this, key, url, start, xhrSettings));
+        this.addFile(new PluginFile(this, key, url, start, mapping, xhrSettings));
     }
 
     return this;
