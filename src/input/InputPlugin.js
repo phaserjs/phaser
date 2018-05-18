@@ -1196,12 +1196,6 @@ var InputPlugin = new Class({
         {
             var gameObject = gameObjects[i];
 
-            if (gameObject.type === 'Container')
-            {
-                console.warn('Container.setInteractive() must specify a Shape');
-                continue;
-            }
-
             var frame = gameObject.frame;
 
             var width = 0;
@@ -1216,6 +1210,12 @@ var InputPlugin = new Class({
             {
                 width = gameObject.width;
                 height = gameObject.height;
+            }
+
+            if (gameObject.type === 'Container' && (width === 0 || height === 0))
+            {
+                console.warn('Container.setInteractive() must specify a Shape or call setSize() first');
+                continue;
             }
 
             if (width !== 0 && height !== 0)
@@ -1410,6 +1410,16 @@ var InputPlugin = new Class({
             //  Quick bail out when both children have the same container
             return childB.parentContainer.getIndex(childB) - childA.parentContainer.getIndex(childA);
         }
+        else if (childA.parentContainer === childB)
+        {
+            //  Quick bail out when childA is a child of childB
+            return -1;
+        }
+        else if (childB.parentContainer === childA)
+        {
+            //  Quick bail out when childA is a child of childB
+            return 1;
+        }
         else
         {
             //  Container index check
@@ -1419,8 +1429,6 @@ var InputPlugin = new Class({
 
             for (var i = 0; i < len; i++)
             {
-                // var indexA = listA[i][0];
-                // var indexB = listB[i][0];
                 var indexA = listA[i];
                 var indexB = listB[i];
 

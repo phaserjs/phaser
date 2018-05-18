@@ -6,9 +6,12 @@
 
 ### Updates
 
+* Container.setInteractive can now be called without any arguments as long as you have called Container.setSize first (thanks rex)
+
 ### Bug Fixes
 
 * PluginManager.destroy didn't reference the plugin correctly, throwing an Uncaught TypeError if you tried to destroy a game instance. Fix #3668 (thanks @Telokis)
+* If a Container and its child were both input enabled they will now be sorted correctly in the InputPlugin (thanks rex)
 
 ### Examples, Documentation and TypeScript
 
