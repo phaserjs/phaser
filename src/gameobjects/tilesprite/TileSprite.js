@@ -276,13 +276,12 @@ var TileSprite = new Class({
      */
     destroy: function ()
     {
-        if (this.renderer && this.renderer.gl)
-        {
+        if (this.renderer && this.renderer.gl) {
             this.renderer.deleteTexture(this.tileTexture);
         }
 
         if(this.canvasBuffer)
-    		CanvasPool.remove(this.canvasBuffer);
+            CanvasPool.remove(this.canvasBuffer);
 
         this.canvasPattern = null;
         this.canvasBufferCtx = null;
