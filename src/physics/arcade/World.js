@@ -1410,8 +1410,17 @@ var World = new Class({
     collideObjects: function (object1, object2, collideCallback, processCallback, callbackContext, overlapOnly)
     {
         var i;
-        object1 = object1.isParent && typeof(object1.physicsType) === 'undefined' ? object1.children.entries : object1;
-        object2 = object2.isParent && typeof(object2.physicsType) === 'undefined' ? object2.children.entries : object2;
+
+        if (object1.isParent && object1.physicsType === undefined)
+        {
+            object1 = object1.children.entries;
+        }
+
+        if (object2 && object2.isParent && object2.physicsType === undefined)
+        {
+            object2 = object2.children.entries;
+        }
+
         var object1isArray = Array.isArray(object1);
         var object2isArray = Array.isArray(object2);
 
