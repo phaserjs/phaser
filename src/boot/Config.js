@@ -4,15 +4,15 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Class = require('../utils/Class');
-var CONST = require('../const');
-var GetFastValue = require('../utils/object/GetFastValue');
-var GetValue = require('../utils/object/GetValue');
-var IsPlainObject = require('../utils/object/IsPlainObject');
-var MATH = require('../math/const');
-var NOOP = require('../utils/NOOP');
-var DefaultPlugins = require('../plugins/DefaultPlugins');
-var ValueToColor = require('../display/color/ValueToColor');
+const Class = require('../utils/Class');
+const CONST = require('../const');
+const GetFastValue = require('../utils/object/GetFastValue');
+const GetValue = require('../utils/object/GetValue');
+const IsPlainObject = require('../utils/object/IsPlainObject');
+const MATH = require('../math/const');
+const NOOP = require('../utils/NOOP');
+const DefaultPlugins = require('../plugins/DefaultPlugins');
+const ValueToColor = require('../display/color/ValueToColor');
 
 /**
  * This callback type is completely empty, a no-operation.
