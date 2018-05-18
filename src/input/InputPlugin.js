@@ -367,6 +367,7 @@ var InputPlugin = new Class({
 
         //  Clear the removal list
         removeList.length = 0;
+        this._pendingRemoval.length = 0;
 
         //  Move pendingInsertion to list (also clears pendingInsertion at the same time)
         this._list = current.concat(insertList.splice(0));
@@ -386,6 +387,13 @@ var InputPlugin = new Class({
     {
         var input = gameObject.input;
 
+        // If GameObject.input already cleared from higher class
+        if(!input)
+        {
+            return;
+        }
+
+        this.queueForRemoval(gameObject);
         input.gameObject = undefined;
         input.target = undefined;
         input.hitArea = undefined;
@@ -1635,7 +1643,7 @@ var InputPlugin = new Class({
     },
 
     /**
-     * The Scene that owns this plugin is being destroyed.
+     * The Scene that owns this plugin is being destroyed.     
      * We need to shutdown and then kill off all external references.
      *
      * @method Phaser.Input.InputPlugin#destroy
