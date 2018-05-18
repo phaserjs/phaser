@@ -67,6 +67,7 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {string} [title=''] - [description]
  * @property {string} [url='http://phaser.io'] - [description]
  * @property {string} [version=''] - [description]
+ * @property {boolean} [autoFocus=true] - Automatically call window.focus() when the game boots.
  * @property {(boolean|object)} [input] - [description]
  * @property {boolean} [input.keyboard=true] - [description]
  * @property {*} [input.keyboard.target=window] - [description]
@@ -203,6 +204,11 @@ var Config = new Class({
          * @const {string} Phaser.Boot.Config#gameVersion - [description]
          */
         this.gameVersion = GetValue(config, 'version', '');
+
+        /**
+         * @const {boolean} Phaser.Boot.Config#autoFocus - [description]
+         */
+        this.autoFocus = GetValue(config, 'autoFocus', true);
 
         //  Input
 

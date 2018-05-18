@@ -4,10 +4,15 @@
 
 ### New Features
 
+* Game has a new property `hasFocus` which is a read-only boolean that lets you know if the window the game is embedded in (including in an iframe) currently has focus or not.
+* Game.Config has a new property `autoFocus`, which is `true` by default, and will automatically call `window.focus()` when the game starts.
+* Clicking on the canvas will automatically call `window.focus`. This means in games that use keyboard controls if you tab or click away from the game, then click back on it again, the keys will carry on working (where-as before they would remain unfocused)
+
 ### Updates
 
 * Container.setInteractive can now be called without any arguments as long as you have called Container.setSize first (thanks rex)
 * Bob.reset will now reset the position, frame, flip, visible and alpha values of the Bob.
+* VisibilityHandler now takes a game instance as its sole argument, instead of an event emitter.
 
 ### Bug Fixes
 

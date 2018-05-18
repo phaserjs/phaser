@@ -252,6 +252,17 @@ var Game = new Class({
          */
         this.removeCanvas = false;
 
+        /**
+         * Does the window the game is running in currently have focus or not?
+         * This is modified by the VisibilityHandler.
+         *
+         * @name Phaser.Game#hasFocus
+         * @type {boolean}
+         * @readOnly
+         * @since 3.9.0
+         */
+        this.hasFocus = false;
+
         //  Wait for the DOM Ready event, then call boot.
         DOMContentLoaded(this.boot.bind(this));
     },
@@ -317,7 +328,7 @@ var Game = new Class({
             this.loop.start(this.headlessStep.bind(this));
         }
 
-        VisibilityHandler(this.events);
+        VisibilityHandler(this);
 
         var eventEmitter = this.events;
 
@@ -546,6 +557,8 @@ var Game = new Class({
      */
     onBlur: function ()
     {
+        this.hasFocus = false;
+
         this.loop.blur();
     },
 
@@ -559,6 +572,8 @@ var Game = new Class({
      */
     onFocus: function ()
     {
+        this.hasFocus = true;
+
         this.loop.focus();
     },
 
