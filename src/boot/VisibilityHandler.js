@@ -110,10 +110,9 @@ var VisibilityHandler = function (game)
     {
         window.focus();
 
-        game.canvas.addEventListener('mousedown', function () {
-
+        game.canvas.addEventListener('mousedown', function ()
+        {
             window.focus();
-
         }, { passive: true });
     }
 };
