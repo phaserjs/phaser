@@ -467,7 +467,6 @@ var TextureTintPipeline = new Class({
                 scrollY = 0.0;
             }
 
-
             if (!emitter.visible || aliveLength === 0)
             {
                 continue;
