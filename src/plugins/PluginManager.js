@@ -19,6 +19,7 @@ var Remove = require('../utils/array/Remove');
  * @property {string} key - The unique name of this plugin within the plugin cache.
  * @property {function} plugin - An instance of the plugin.
  * @property {boolean} [active] - Is the plugin active or not?
+ * @property {string} [mapping] - If this plugin is to be injected into the Scene Systems, this is the property key map used.
  */
 
 /**
@@ -157,15 +158,16 @@ var PluginManager = new Class({
         {
             entry = list[i];
 
-            // { key: 'TestPlugin', plugin: TestPlugin, start: true }
+            // { key: 'TestPlugin', plugin: TestPlugin, start: true, mapping: 'test' }
 
             key = GetFastValue(entry, 'key', null);
             plugin = GetFastValue(entry, 'plugin', null);
             start = GetFastValue(entry, 'start', false);
+            mapping = GetFastValue(entry, 'mapping', null);
 
             if (key && plugin)
             {
-                this.install(key, plugin, start);
+                this.install(key, plugin, start, mapping);
             }
         }
 
@@ -200,6 +202,10 @@ var PluginManager = new Class({
     /**
      * Called by the Scene Systems class. Tells the plugin manager to install all Scene plugins into it.
      *
+     * First it will install global references, i.e. references from the Game systems into the Scene Systems (and Scene if mapped.)
+     * Then it will install Core Scene Plugins followed by Scene Plugins registered with the PluginManager.
+     * Finally it will install any references to Global Plugins that have a Scene mapping property into the Scene itself.
+     *
      * @method Phaser.Plugins.PluginManager#addToScene
      * @protected
      * @since 3.8.0
@@ -212,6 +218,7 @@ var PluginManager = new Class({
     {
         var i;
         var pluginKey;
+        var pluginList;
         var game = this.game;
         var scene = sys.scene;
         var map = sys.settings.map;
@@ -236,7 +243,7 @@ var PluginManager = new Class({
 
         for (var s = 0; s < scenePlugins.length; s++)
         {
-            var pluginList = scenePlugins[s];
+            pluginList = scenePlugins[s];
 
             for (i = 0; i < pluginList.length; i++)
             {
@@ -268,6 +275,19 @@ var PluginManager = new Class({
                 {
                     plugin.boot();
                 }
+            }
+        }
+
+        //  And finally, inject any 'global scene plugins'
+        pluginList = this.plugins;
+
+        for (i = 0; i < pluginList.length; i++)
+        {
+            var entry = pluginList[i];
+           
+            if (entry.mapping)
+            {
+                scene[entry.mapping] = entry.plugin;
             }
         }
     },
@@ -377,11 +397,13 @@ var PluginManager = new Class({
      * 
      * @param {string} key - The unique handle given to this plugin within the Plugin Manager.
      * @param {function} plugin - The plugin code. This should be the non-instantiated version.
-     * @param {boolean} [start=false] - Automatically start the plugin running?
+     * @param {boolean} [start=false] - Automatically start the plugin running? This is always `true` if you provide a mapping value.
+     * @param {string} [mapping] - If this plugin is injected into the Phaser.Scene class, this is the property key to use.
      */
-    install: function (key, plugin, start)
+    install: function (key, plugin, start, mapping)
     {
         if (start === undefined) { start = false; }
+        if (mapping === undefined) { mapping = null; }
 
         if (typeof plugin !== 'function')
         {
@@ -395,16 +417,21 @@ var PluginManager = new Class({
             return;
         }
 
+        if (mapping !== null)
+        {
+            start = true;
+        }
+
+        console.log('install', key, start, mapping);
+
         if (!this.game.isBooted)
         {
-            this._pendingGlobal.push({ key: key, plugin: plugin, start: start });
+            this._pendingGlobal.push({ key: key, plugin: plugin, start: start, mapping: mapping });
         }
         else
         {
             //  Add it to the plugin store
-            PluginCache.registerCustom(key, plugin);
-
-            // gamePlugins[key] = plugin;
+            PluginCache.registerCustom(key, plugin, mapping);
 
             if (start)
             {
@@ -513,26 +540,46 @@ var PluginManager = new Class({
         }
         else if (!entry)
         {
-            var plugin = this.getClass(key);
-
-            if (plugin)
-            {
-                var instance = new plugin(this);
-
-                entry = {
-                    key: runAs,
-                    plugin: instance,
-                    active: true
-                };
-
-                this.plugins.push(entry);
-
-                instance.init();
-                instance.start();
-            }
+            entry = this.createEntry(key, runAs);
         }
 
         return (entry) ? entry.plugin : null;
+    },
+
+    /**
+     * Creates a new instance of a global plugin, adds an entry into the plugins array and returns it.
+     *
+     * @method Phaser.Plugins.PluginManager#createEntry
+     * @private
+     * @since 3.9.0
+     *
+     * @param {string} key - The key of the plugin to create an instance of.
+     * @param {string} [runAs] - Run the plugin under a new key. This allows you to run one plugin multiple times.
+     *
+     * @return {?Phaser.Plugins.BasePlugin} The plugin that was started, or `null` if invalid key given.
+     */
+    createEntry: function (key, runAs)
+    {
+        var entry = PluginCache.getCustom(key);
+
+        if (entry)
+        {
+            var instance = new entry.plugin(this);
+
+            entry = {
+                key: runAs,
+                plugin: instance,
+                active: true,
+                mapping: entry.mapping
+            };
+
+            this.plugins.push(entry);
+
+            instance.init();
+            instance.start();
+        }
+
+        return entry;
     },
 
     /**
@@ -593,20 +640,9 @@ var PluginManager = new Class({
 
             if (plugin && autoStart)
             {
-                var instance = new plugin(this);
+                entry = this.createEntry(key, key);
 
-                entry = {
-                    key: key,
-                    plugin: instance,
-                    active: true
-                };
-
-                this.plugins.push(entry);
-
-                instance.init();
-                instance.start();
-
-                return instance;
+                return (entry) ? entry.plugin : null;
             }
             else if (plugin)
             {
@@ -755,10 +791,16 @@ var PluginManager = new Class({
      *
      * @param {string} key - The key of the Game Object that the given callbacks will create, i.e. `image`, `sprite`.
      * @param {function} callback - The callback to invoke when the Game Object Factory is called.
+     * @param {Phaser.Scene} [addToScene] - Optionally add this file type into the Loader Plugin owned by the given Scene.
      */
-    registerFileType: function (key, callback)
+    registerFileType: function (key, callback, addToScene)
     {
         FileTypesManager.register(key, callback);
+
+        if (addToScene && addToScene.sys.load)
+        {
+            addToScene.sys.load[key] = callback;
+        }
     },
 
     /**

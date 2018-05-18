@@ -235,11 +235,6 @@ var Systems = new Class({
 
         pluginManager.addToScene(this, DefaultPlugins.Global, [ DefaultPlugins.CoreScene, GetScenePlugins(this), GetPhysicsPlugins(this) ]);
 
-        // pluginManager.installSceneGlobal(this, DefaultPlugins.Global);
-        // pluginManager.installSceneLocal(this, DefaultPlugins.CoreScene);
-        // pluginManager.installSceneLocal(this, GetScenePlugins(this));
-        // pluginManager.installSceneLocal(this, GetPhysicsPlugins(this));
-
         this.events.emit('boot', this);
 
         this.settings.isBooted = true;

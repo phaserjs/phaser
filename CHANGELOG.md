@@ -13,6 +13,10 @@
 * Container.setInteractive can now be called without any arguments as long as you have called Container.setSize first (thanks rex)
 * Bob.reset will now reset the position, frame, flip, visible and alpha values of the Bob.
 * VisibilityHandler now takes a game instance as its sole argument, instead of an event emitter.
+* PluginManager.registerFileType has a new property `addToScene` which allows you to inject the new file type into the LoaderPlugin of the given Scene. You could use this to add the file type into the Scene in which it was loaded.
+* PluginManager.install has a new property `mapping`. This allows you to give a Global Plugin a property key, so that it is automatically injected into any Scenes as a Scene level instance. This allows you to have a single global plugin running in the PluginManager, that is injected into every Scene automatically.
+* PluginManager.createEntry is a new private method to create a plugin entry and return it. This avoids code duplication in several other methods, which now use this instead.
+* The Plugin File Type has a new optional argument `mapping`, which allows a global plugin to be injected into a Scene as a reference.
 
 ### Bug Fixes
 
