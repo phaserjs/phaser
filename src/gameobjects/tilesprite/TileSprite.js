@@ -282,7 +282,9 @@ var TileSprite = new Class({
         }
 
         if(this.canvasBuffer)
+        {
             CanvasPool.remove(this.canvasBuffer);
+        }
 
         this.canvasPattern = null;
         this.canvasBufferCtx = null;
