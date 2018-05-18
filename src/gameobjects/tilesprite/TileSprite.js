@@ -276,7 +276,8 @@ var TileSprite = new Class({
      */
     destroy: function ()
     {
-        if (this.renderer && this.renderer.gl) {
+        if (this.renderer && this.renderer.gl)
+        {
             this.renderer.deleteTexture(this.tileTexture);
         }
 
