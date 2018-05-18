@@ -7,6 +7,7 @@
 ### Updates
 
 * Container.setInteractive can now be called without any arguments as long as you have called Container.setSize first (thanks rex)
+* Bob.reset will now reset the position, frame, flip, visible and alpha values of the Bob.
 
 ### Bug Fixes
 
