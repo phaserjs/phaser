@@ -193,21 +193,21 @@ var KeyboardManager = new Class({
     /**
      * @typedef {object} CursorKeys
      *
-     * @property {Phaser.Input.Keyboard.Key} [up] - [description]
-     * @property {Phaser.Input.Keyboard.Key} [down] - [description]
-     * @property {Phaser.Input.Keyboard.Key} [left] - [description]
-     * @property {Phaser.Input.Keyboard.Key} [right] - [description]
-     * @property {Phaser.Input.Keyboard.Key} [space] - [description]
-     * @property {Phaser.Input.Keyboard.Key} [shift] - [description]
+     * @property {Phaser.Input.Keyboard.Key} [up] - A Key object mapping to the UP arrow key.
+     * @property {Phaser.Input.Keyboard.Key} [down] - A Key object mapping to the DOWN arrow key.
+     * @property {Phaser.Input.Keyboard.Key} [left] - A Key object mapping to the LEFT arrow key.
+     * @property {Phaser.Input.Keyboard.Key} [right] - A Key object mapping to the RIGHT arrow key.
+     * @property {Phaser.Input.Keyboard.Key} [space] - A Key object mapping to the SPACE BAR key.
+     * @property {Phaser.Input.Keyboard.Key} [shift] - A Key object mapping to the SHIFT key.
      */
 
     /**
-     * Creates and returns an object containing 4 hotkeys for Up, Down, Left and Right, and also space and shift.
+     * Creates and returns an object containing 4 hotkeys for Up, Down, Left and Right, and also Space Bar and shift.
      *
      * @method Phaser.Input.Keyboard.KeyboardManager#createCursorKeys
      * @since 3.0.0
      *
-     * @return {CursorKeys} [description]
+     * @return {CursorKeys} An object containing the properties: `up`, `down`, `left`, `right`, `space` and `shift`.
      */
     createCursorKeys: function ()
     {

@@ -15,6 +15,7 @@ var Class = require('../utils/Class');
  *
  * @class ScenePlugin
  * @memberOf Phaser.Plugins
+ * @extends Phaser.Plugins.BasePlugin
  * @constructor
  * @since 3.8.0
  *
