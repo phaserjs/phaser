@@ -4178,7 +4178,7 @@ var CONST = {
      * @type {string}
      * @since 3.0.0
      */
-    VERSION: '3.9.0-beta1',
+    VERSION: '3.8.0',
 
     BlendModes: __webpack_require__(50),
 
@@ -18958,6 +18958,11 @@ var Systems = new Class({
 
         pluginManager.addToScene(this, DefaultPlugins.Global, [ DefaultPlugins.CoreScene, GetScenePlugins(this), GetPhysicsPlugins(this) ]);
 
+        // pluginManager.installSceneGlobal(this, DefaultPlugins.Global);
+        // pluginManager.installSceneLocal(this, DefaultPlugins.CoreScene);
+        // pluginManager.installSceneLocal(this, GetScenePlugins(this));
+        // pluginManager.installSceneLocal(this, GetPhysicsPlugins(this));
+
         this.events.emit('boot', this);
 
         this.settings.isBooted = true;
@@ -20603,8 +20608,8 @@ var Camera = new Class({
             var cullW = cameraW + objectW;
             var cullH = cameraH + objectH;
 
-            if (tx > -objectW && ty > -objectH && tx < cullW && ty < cullH &&
-                tw > -objectW && th > -objectH && tw < cullW && th < cullH)
+            if (tx > -objectW || ty > -objectH || tx < cullW || ty < cullH ||
+                tw > -objectW || th > -objectH || tw < cullW || th < cullH)
             {
                 culledObjects.push(object);
             }
@@ -20928,7 +20933,7 @@ var Camera = new Class({
 
     /**
      * Set the rotation of this Camera. This causes everything it renders to appear rotated.
-     *
+     * 
      * Rotating a camera does not rotate the viewport itself, it is applied during rendering.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setAngle
@@ -20949,7 +20954,7 @@ var Camera = new Class({
 
     /**
      * Sets the background color for this Camera.
-     *
+     * 
      * By default a Camera has a transparent background but it can be given a solid color, with any level
      * of transparency, via this method.
      *
@@ -21020,7 +21025,7 @@ var Camera = new Class({
 
     /**
      * Set the position of the Camera viewport within the game.
-     *
+     * 
      * This does not change where the camera is 'looking'. See `setScroll` to control that.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setPosition
@@ -21043,7 +21048,7 @@ var Camera = new Class({
 
     /**
      * Set the rotation of this Camera. This causes everything it renders to appear rotated.
-     *
+     * 
      * Rotating a camera does not rotate the viewport itself, it is applied during rendering.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setRotation
@@ -21101,7 +21106,7 @@ var Camera = new Class({
      * Set the position of where the Camera is looking within the game.
      * You can also modify the properties `Camera.scrollX` and `Camera.scrollY` directly.
      * Use this method, or the scroll properties, to move your camera around the game world.
-     *
+     * 
      * This does not change where the camera viewport is placed. See `setPosition` to control that.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setScroll
@@ -21153,7 +21158,7 @@ var Camera = new Class({
      * If you're trying to change where the Camera is looking at in your game, then see
      * the method `Camera.setScroll` instead. This method is for changing the viewport
      * itself, not what the camera can see.
-     *
+     * 
      * By default a Camera is the same size as the game, but can be made smaller via this method,
      * allowing you to create mini-cam style effects by creating and positioning a smaller Camera
      * viewport within your game.
@@ -22939,6 +22944,7 @@ var TextureTintPipeline = new Class({
                 scrollX = 0.0;
                 scrollY = 0.0;
             }
+
 
             if (!emitter.visible || aliveLength === 0)
             {
@@ -27772,7 +27778,7 @@ var BasePlugin = new Class({
          * Can be used as a route to gain access to game systems and  events.
          * 
          * @name Phaser.Plugins.BasePlugin#pluginManager
-         * @type {Phaser.Plugins.PluginManager}
+         * @type {Phaser.Plugins.BasePluginManager}
          * @protected
          * @since 3.8.0
          */
@@ -27808,7 +27814,7 @@ var BasePlugin = new Class({
          * You cannot use it during the `init` method, but you can during the `boot` method.
          *
          * @name Phaser.Plugins.BasePlugin#systems
-         * @type {?Phaser.Scenes.Systems}
+         * @type {?Phaser.Scene.Systems}
          * @protected
          * @since 3.8.0
          */
@@ -35394,7 +35400,6 @@ var Remove = __webpack_require__(186);
  * @property {string} key - The unique name of this plugin within the plugin cache.
  * @property {function} plugin - An instance of the plugin.
  * @property {boolean} [active] - Is the plugin active or not?
- * @property {string} [mapping] - If this plugin is to be injected into the Scene Systems, this is the property key map used.
  */
 
 /**
@@ -35533,16 +35538,15 @@ var PluginManager = new Class({
         {
             entry = list[i];
 
-            // { key: 'TestPlugin', plugin: TestPlugin, start: true, mapping: 'test' }
+            // { key: 'TestPlugin', plugin: TestPlugin, start: true }
 
             key = GetFastValue(entry, 'key', null);
             plugin = GetFastValue(entry, 'plugin', null);
             start = GetFastValue(entry, 'start', false);
-            mapping = GetFastValue(entry, 'mapping', null);
 
             if (key && plugin)
             {
-                this.install(key, plugin, start, mapping);
+                this.install(key, plugin, start);
             }
         }
 
@@ -35577,10 +35581,6 @@ var PluginManager = new Class({
     /**
      * Called by the Scene Systems class. Tells the plugin manager to install all Scene plugins into it.
      *
-     * First it will install global references, i.e. references from the Game systems into the Scene Systems (and Scene if mapped.)
-     * Then it will install Core Scene Plugins followed by Scene Plugins registered with the PluginManager.
-     * Finally it will install any references to Global Plugins that have a Scene mapping property into the Scene itself.
-     *
      * @method Phaser.Plugins.PluginManager#addToScene
      * @protected
      * @since 3.8.0
@@ -35593,7 +35593,6 @@ var PluginManager = new Class({
     {
         var i;
         var pluginKey;
-        var pluginList;
         var game = this.game;
         var scene = sys.scene;
         var map = sys.settings.map;
@@ -35618,7 +35617,7 @@ var PluginManager = new Class({
 
         for (var s = 0; s < scenePlugins.length; s++)
         {
-            pluginList = scenePlugins[s];
+            var pluginList = scenePlugins[s];
 
             for (i = 0; i < pluginList.length; i++)
             {
@@ -35650,19 +35649,6 @@ var PluginManager = new Class({
                 {
                     plugin.boot();
                 }
-            }
-        }
-
-        //  And finally, inject any 'global scene plugins'
-        pluginList = this.plugins;
-
-        for (i = 0; i < pluginList.length; i++)
-        {
-            var entry = pluginList[i];
-           
-            if (entry.mapping)
-            {
-                scene[entry.mapping] = entry.plugin;
             }
         }
     },
@@ -35772,13 +35758,11 @@ var PluginManager = new Class({
      * 
      * @param {string} key - The unique handle given to this plugin within the Plugin Manager.
      * @param {function} plugin - The plugin code. This should be the non-instantiated version.
-     * @param {boolean} [start=false] - Automatically start the plugin running? This is always `true` if you provide a mapping value.
-     * @param {string} [mapping] - If this plugin is injected into the Phaser.Scene class, this is the property key to use.
+     * @param {boolean} [start=false] - Automatically start the plugin running?
      */
-    install: function (key, plugin, start, mapping)
+    install: function (key, plugin, start)
     {
         if (start === undefined) { start = false; }
-        if (mapping === undefined) { mapping = null; }
 
         if (typeof plugin !== 'function')
         {
@@ -35792,21 +35776,16 @@ var PluginManager = new Class({
             return;
         }
 
-        if (mapping !== null)
-        {
-            start = true;
-        }
-
-        console.log('install', key, start, mapping);
-
         if (!this.game.isBooted)
         {
-            this._pendingGlobal.push({ key: key, plugin: plugin, start: start, mapping: mapping });
+            this._pendingGlobal.push({ key: key, plugin: plugin, start: start });
         }
         else
         {
             //  Add it to the plugin store
-            PluginCache.registerCustom(key, plugin, mapping);
+            PluginCache.registerCustom(key, plugin);
+
+            // gamePlugins[key] = plugin;
 
             if (start)
             {
@@ -35915,46 +35894,26 @@ var PluginManager = new Class({
         }
         else if (!entry)
         {
-            entry = this.createEntry(key, runAs);
+            var plugin = this.getClass(key);
+
+            if (plugin)
+            {
+                var instance = new plugin(this);
+
+                entry = {
+                    key: runAs,
+                    plugin: instance,
+                    active: true
+                };
+
+                this.plugins.push(entry);
+
+                instance.init();
+                instance.start();
+            }
         }
 
         return (entry) ? entry.plugin : null;
-    },
-
-    /**
-     * Creates a new instance of a global plugin, adds an entry into the plugins array and returns it.
-     *
-     * @method Phaser.Plugins.PluginManager#createEntry
-     * @private
-     * @since 3.9.0
-     *
-     * @param {string} key - The key of the plugin to create an instance of.
-     * @param {string} [runAs] - Run the plugin under a new key. This allows you to run one plugin multiple times.
-     *
-     * @return {?Phaser.Plugins.BasePlugin} The plugin that was started, or `null` if invalid key given.
-     */
-    createEntry: function (key, runAs)
-    {
-        var entry = PluginCache.getCustom(key);
-
-        if (entry)
-        {
-            var instance = new entry.plugin(this);
-
-            entry = {
-                key: runAs,
-                plugin: instance,
-                active: true,
-                mapping: entry.mapping
-            };
-
-            this.plugins.push(entry);
-
-            instance.init();
-            instance.start();
-        }
-
-        return entry;
     },
 
     /**
@@ -36015,9 +35974,20 @@ var PluginManager = new Class({
 
             if (plugin && autoStart)
             {
-                entry = this.createEntry(key, key);
+                var instance = new plugin(this);
 
-                return (entry) ? entry.plugin : null;
+                entry = {
+                    key: key,
+                    plugin: instance,
+                    active: true
+                };
+
+                this.plugins.push(entry);
+
+                instance.init();
+                instance.start();
+
+                return instance;
             }
             else if (plugin)
             {
@@ -36166,16 +36136,10 @@ var PluginManager = new Class({
      *
      * @param {string} key - The key of the Game Object that the given callbacks will create, i.e. `image`, `sprite`.
      * @param {function} callback - The callback to invoke when the Game Object Factory is called.
-     * @param {Phaser.Scene} [addToScene] - Optionally add this file type into the Loader Plugin owned by the given Scene.
      */
-    registerFileType: function (key, callback, addToScene)
+    registerFileType: function (key, callback)
     {
         FileTypesManager.register(key, callback);
-
-        if (addToScene && addToScene.sys.load)
-        {
-            addToScene.sys.load[key] = callback;
-        }
     },
 
     /**
@@ -36190,7 +36154,7 @@ var PluginManager = new Class({
     {
         for (var i = 0; i < this.plugins.length; i++)
         {
-            this.plugins[i].plugin.destroy();
+            this.plugins[i].destroy();
         }
 
         this.game = null;
@@ -38072,21 +38036,21 @@ var KeyboardManager = new Class({
     /**
      * @typedef {object} CursorKeys
      *
-     * @property {Phaser.Input.Keyboard.Key} [up] - A Key object mapping to the UP arrow key.
-     * @property {Phaser.Input.Keyboard.Key} [down] - A Key object mapping to the DOWN arrow key.
-     * @property {Phaser.Input.Keyboard.Key} [left] - A Key object mapping to the LEFT arrow key.
-     * @property {Phaser.Input.Keyboard.Key} [right] - A Key object mapping to the RIGHT arrow key.
-     * @property {Phaser.Input.Keyboard.Key} [space] - A Key object mapping to the SPACE BAR key.
-     * @property {Phaser.Input.Keyboard.Key} [shift] - A Key object mapping to the SHIFT key.
+     * @property {Phaser.Input.Keyboard.Key} [up] - [description]
+     * @property {Phaser.Input.Keyboard.Key} [down] - [description]
+     * @property {Phaser.Input.Keyboard.Key} [left] - [description]
+     * @property {Phaser.Input.Keyboard.Key} [right] - [description]
+     * @property {Phaser.Input.Keyboard.Key} [space] - [description]
+     * @property {Phaser.Input.Keyboard.Key} [shift] - [description]
      */
 
     /**
-     * Creates and returns an object containing 4 hotkeys for Up, Down, Left and Right, and also Space Bar and shift.
+     * Creates and returns an object containing 4 hotkeys for Up, Down, Left and Right, and also space and shift.
      *
      * @method Phaser.Input.Keyboard.KeyboardManager#createCursorKeys
      * @since 3.0.0
      *
-     * @return {CursorKeys} An object containing the properties: `up`, `down`, `left`, `right`, `space` and `shift`.
+     * @return {CursorKeys} [description]
      */
     createCursorKeys: function ()
     {
@@ -54411,8 +54375,8 @@ var ScenePlugin = new Class({
      * @property {integer} [duration=1000] - The duration, in ms, for the transition to last.
      * @property {boolean} [sleep=false] - Will the Scene responsible for the transition be sent to sleep on completion (`true`), or stopped? (`false`)
      * @property {boolean} [allowInput=false] - Will the Scenes Input system be able to process events while it is transitioning in or out?
-     * @property {boolean} [moveAbove] - Move the target Scene to be above this one before the transition starts.
-     * @property {boolean} [moveBelow] - Move the target Scene to be below this one before the transition starts.
+     * @property {boolean} [moveAbove] - More the target Scene to be above this one before the transition starts.
+     * @property {boolean} [moveBelow] - More the target Scene to be below this one before the transition starts.
      * @property {function} [onUpdate] - This callback is invoked every frame for the duration of the transition.
      * @property {any} [onUpdateScope] - The context in which the callback is invoked.
      * @property {any} [data] - An object containing any data you wish to be passed to the target Scenes init / create methods.
@@ -55192,7 +55156,6 @@ var Class = __webpack_require__(0);
  *
  * @class ScenePlugin
  * @memberOf Phaser.Plugins
- * @extends Phaser.Plugins.BasePlugin
  * @constructor
  * @since 3.8.0
  *
@@ -55224,7 +55187,7 @@ var ScenePlugin = new Class({
          * This property is only set when the plugin is instantiated and added to the Scene, not before.
          *
          * @name Phaser.Plugins.ScenePlugin#systems
-         * @type {?Phaser.Scenes.Systems}
+         * @type {?Phaser.Scene.Systems}
          * @protected
          * @since 3.8.0
          */
@@ -56807,7 +56770,6 @@ var IsPlainObject = __webpack_require__(8);
  * @property {string} [url] - The absolute or relative URL to load the file from.
  * @property {string} [extension='js'] - The default file extension to use if no url is provided.
  * @property {boolean} [start=false] - Automatically start the plugin after loading?
- * @property {string} [mapping] - If this plugin is to be injected into the Scene, this is the property key used.
  * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 
@@ -56829,7 +56791,6 @@ var IsPlainObject = __webpack_require__(8);
  * @param {(string|Phaser.Loader.FileTypes.PluginFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
  * @param {boolean} [start=false] - Automatically start the plugin after loading?
- * @param {string} [mapping] - If this plugin is to be injected into the Scene, this is the property key used.
  * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var PluginFile = new Class({
@@ -56838,7 +56799,7 @@ var PluginFile = new Class({
 
     initialize:
 
-    function PluginFile (loader, key, url, start, mapping, xhrSettings)
+    function PluginFile (loader, key, url, start, xhrSettings)
     {
         var extension = 'js';
 
@@ -56851,7 +56812,6 @@ var PluginFile = new Class({
             xhrSettings = GetFastValue(config, 'xhrSettings');
             extension = GetFastValue(config, 'extension', extension);
             start = GetFastValue(config, 'start');
-            mapping = GetFastValue(config, 'mapping');
         }
 
         var fileConfig = {
@@ -56862,10 +56822,7 @@ var PluginFile = new Class({
             key: key,
             url: url,
             xhrSettings: xhrSettings,
-            config: {
-                start: start,
-                mapping: mapping
-            }
+            config: { start: start }
         };
 
         File.call(this, loader, fileConfig);
@@ -56892,11 +56849,10 @@ var PluginFile = new Class({
         var config = this.config;
 
         var start = GetFastValue(config, 'start', false);
-        var mapping = GetFastValue(config, 'mapping', null);
 
         if (this.state === CONST.FILE_POPULATED)
         {
-            pluginManager.install(this.key, this.data, start, mapping);
+            pluginManager.install(this.key, this.data, start);
         }
         else
         {
@@ -56911,7 +56867,7 @@ var PluginFile = new Class({
 
             document.head.appendChild(this.data);
 
-            pluginManager.install(this.key, window[this.key], start, mapping);
+            pluginManager.install(this.key, window[this.key], start);
         }
 
         this.onProcessComplete();
@@ -56963,7 +56919,7 @@ var PluginFile = new Class({
  * and no URL is given then the Loader will set the URL to be "alien.js". It will always add `.js` as the extension, although
  * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
  *
- * Note: The ability to load this type of file will only be available if the Plugin File type has been built into Phaser.
+ * Note: The ability to load this type of file will only be available if the Script File type has been built into Phaser.
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#plugin
@@ -56973,12 +56929,11 @@ var PluginFile = new Class({
  * @param {(string|Phaser.Loader.FileTypes.PluginFileConfig|Phaser.Loader.FileTypes.PluginFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {(string|function)} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js". Or, a plugin function.
  * @param {boolean} [start] - The plugin mapping configuration object.
- * @param {string} [mapping] - If this plugin is to be injected into the Scene, this is the property key used.
  * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */
-FileTypesManager.register('plugin', function (key, url, start, mapping, xhrSettings)
+FileTypesManager.register('plugin', function (key, url, start, xhrSettings)
 {
     if (Array.isArray(key))
     {
@@ -56990,7 +56945,7 @@ FileTypesManager.register('plugin', function (key, url, start, mapping, xhrSetti
     }
     else
     {
-        this.addFile(new PluginFile(this, key, url, start, mapping, xhrSettings));
+        this.addFile(new PluginFile(this, key, url, start, xhrSettings));
     }
 
     return this;
@@ -59523,6 +59478,12 @@ var InputPlugin = new Class({
         {
             var gameObject = gameObjects[i];
 
+            if (gameObject.type === 'Container')
+            {
+                console.warn('Container.setInteractive() must specify a Shape');
+                continue;
+            }
+
             var frame = gameObject.frame;
 
             var width = 0;
@@ -59537,12 +59498,6 @@ var InputPlugin = new Class({
             {
                 width = gameObject.width;
                 height = gameObject.height;
-            }
-
-            if (gameObject.type === 'Container' && (width === 0 || height === 0))
-            {
-                console.warn('Container.setInteractive() must specify a Shape or call setSize() first');
-                continue;
             }
 
             if (width !== 0 && height !== 0)
@@ -59737,16 +59692,6 @@ var InputPlugin = new Class({
             //  Quick bail out when both children have the same container
             return childB.parentContainer.getIndex(childB) - childA.parentContainer.getIndex(childA);
         }
-        else if (childA.parentContainer === childB)
-        {
-            //  Quick bail out when childA is a child of childB
-            return -1;
-        }
-        else if (childB.parentContainer === childA)
-        {
-            //  Quick bail out when childA is a child of childB
-            return 1;
-        }
         else
         {
             //  Container index check
@@ -59756,6 +59701,8 @@ var InputPlugin = new Class({
 
             for (var i = 0; i < len; i++)
             {
+                // var indexA = listA[i][0];
+                // var indexB = listB[i][0];
                 var indexA = listA[i];
                 var indexB = listB[i];
 
@@ -65757,12 +65704,11 @@ module.exports = DisplayList;
  * @fires Phaser.Boot.VisibilityHandler#focus
  * @since 3.0.0
  *
- * @param {Phaser.Game} game - The Game instance this Visibility Handler is working on.
+ * @param {Phaser.Events.EventEmitter} eventEmitter - The EventEmitter that will emit the visibility events.
  */
-var VisibilityHandler = function (game)
+var VisibilityHandler = function (eventEmitter)
 {
     var hiddenVar;
-    var eventEmitter = game.events;
 
     if (document.hidden !== undefined)
     {
@@ -65813,17 +65759,6 @@ var VisibilityHandler = function (game)
     {
         eventEmitter.emit('focus');
     };
-
-    //  Automatically give the window focus unless config says otherwise
-    if (window.focus && game.config.autoFocus)
-    {
-        window.focus();
-
-        game.canvas.addEventListener('mousedown', function ()
-        {
-            window.focus();
-        }, { passive: true });
-    }
 };
 
 module.exports = VisibilityHandler;
@@ -68955,7 +68890,6 @@ var ValueToColor = __webpack_require__(128);
  * @property {string} [title=''] - [description]
  * @property {string} [url='http://phaser.io'] - [description]
  * @property {string} [version=''] - [description]
- * @property {boolean} [autoFocus=true] - Automatically call window.focus() when the game boots.
  * @property {(boolean|object)} [input] - [description]
  * @property {boolean} [input.keyboard=true] - [description]
  * @property {*} [input.keyboard.target=window] - [description]
@@ -69092,11 +69026,6 @@ var Config = new Class({
          * @const {string} Phaser.Boot.Config#gameVersion - [description]
          */
         this.gameVersion = GetValue(config, 'version', '');
-
-        /**
-         * @const {boolean} Phaser.Boot.Config#autoFocus - [description]
-         */
-        this.autoFocus = GetValue(config, 'autoFocus', true);
 
         //  Input
 
@@ -69511,7 +69440,7 @@ var Game = new Class({
          * in your Game Config.
          *
          * @name Phaser.Game#context
-         * @type {(CanvasRenderingContext2D|WebGLRenderingContext)}
+         * @type {(CanvasRenderingContext2D|WebGLRenderingContext|WebGL2RenderingContext)}
          * @since 3.0.0
          */
         this.context = null;
@@ -69676,17 +69605,6 @@ var Game = new Class({
          */
         this.removeCanvas = false;
 
-        /**
-         * Does the window the game is running in currently have focus or not?
-         * This is modified by the VisibilityHandler.
-         *
-         * @name Phaser.Game#hasFocus
-         * @type {boolean}
-         * @readOnly
-         * @since 3.9.0
-         */
-        this.hasFocus = false;
-
         //  Wait for the DOM Ready event, then call boot.
         DOMContentLoaded(this.boot.bind(this));
     },
@@ -69752,7 +69670,7 @@ var Game = new Class({
             this.loop.start(this.headlessStep.bind(this));
         }
 
-        VisibilityHandler(this);
+        VisibilityHandler(this.events);
 
         var eventEmitter = this.events;
 
@@ -69981,8 +69899,6 @@ var Game = new Class({
      */
     onBlur: function ()
     {
-        this.hasFocus = false;
-
         this.loop.blur();
     },
 
@@ -69996,8 +69912,6 @@ var Game = new Class({
      */
     onFocus: function ()
     {
-        this.hasFocus = true;
-
         this.loop.focus();
     },
 
