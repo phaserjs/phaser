@@ -276,6 +276,14 @@ var TileSprite = new Class({
      */
     destroy: function ()
     {
+        //  This Game Object had already been destroyed
+        if (!this.renderer || this.ignoreDestroy)
+        {
+            return;
+        }
+
+        this.emit('destroy', this);
+
         if (this.renderer.gl)
         {
             this.renderer.deleteTexture(this.tileTexture);
