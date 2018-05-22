@@ -17,6 +17,14 @@
 * PluginManager.install has a new property `mapping`. This allows you to give a Global Plugin a property key, so that it is automatically injected into any Scenes as a Scene level instance. This allows you to have a single global plugin running in the PluginManager, that is injected into every Scene automatically.
 * PluginManager.createEntry is a new private method to create a plugin entry and return it. This avoids code duplication in several other methods, which now use this instead.
 * The Plugin File Type has a new optional argument `mapping`, which allows a global plugin to be injected into a Scene as a reference.
+* TileSprite.destroy has been renamed to `preDestroy` to take advantage of the preDestroy callback system.
+* RenderTexture.destroy has been renamed to `preDestroy` to take advantage of the preDestroy callback system.
+* Group.destroy now respects the `ignoreDestroy` property.
+* Graphics.preDestroy now clears the command buffer array.
+* Container addHandler will now remove a child's Scene shutdown listener and only listens to `destroy` once.
+* Container removeHandler will re-instate a child's Scene shutdown listener.
+* Container preDestroy now handles the pre-destroy calls, such as clearing the container.
+* Blitter preDestroy will now clear the children List and renderList.
 
 ### Bug Fixes
 
@@ -24,6 +32,7 @@
 * If a Container and its child were both input enabled they will now be sorted correctly in the InputPlugin (thanks rex)
 * Fix TypeError when colliding a Group as the only argument in Arcade Physics. Fix #3665 (thanks @samme)
 * The Particle tint value was incorrectly calculated, causing the color channels to be inversed. Fix #3643 (thanks @rgk)
+* All Game Objects that were in Containers were being destroyed twice when a Scene was shutdown. Although not required it still worked in most cases, except with TileSprites. TileSprites specifically have been hardened against this now but all Game Objects inside Containers now have a different event flow, stopping them from being destroyed twice (thanks @laptou)
 
 ### Examples, Documentation and TypeScript
 

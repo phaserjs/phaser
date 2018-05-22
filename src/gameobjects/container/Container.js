@@ -174,9 +174,20 @@ var Container = new Class({
          *
          * @name Phaser.GameObjects.Container#_sortKey
          * @type {string}
+         * @private
          * @since 3.4.0
          */
         this._sortKey = '';
+
+        /**
+         * A reference to the Scene Systems Event Emitter.
+         *
+         * @name Phaser.GameObjects.Container#_sysEvents
+         * @type {Phaser.Events.EventEmitter}
+         * @private
+         * @since 3.9.0
+         */
+        this._sysEvents = scene.sys.events;
 
         this.setPosition(x, y);
 
@@ -347,7 +358,7 @@ var Container = new Class({
      */
     addHandler: function (gameObject)
     {
-        gameObject.on('destroy', this.remove, this);
+        gameObject.once('destroy', this.remove, this);
 
         if (this.exclusive)
         {
@@ -360,6 +371,10 @@ var Container = new Class({
 
             gameObject.parentContainer = this;
         }
+
+        //  Game Objects automatically listen to the Scene shutdown event, but
+        //  we don't need this if they're in a Container
+        this._sysEvents.off('shutdown', gameObject.destroy, gameObject);
     },
 
     /**
@@ -373,11 +388,13 @@ var Container = new Class({
      */
     removeHandler: function (gameObject)
     {
-        gameObject.off('destroy', this.remove, this);
+        gameObject.off('destroy', this.remove);
 
         if (this.exclusive)
         {
             gameObject.parentContainer = null;
+    
+            this._sysEvents.once('shutdown', gameObject.destroy, gameObject);
         }
     },
 
@@ -1192,21 +1209,13 @@ var Container = new Class({
     },
 
     /**
-     * Destroys this Container, removing it from the Display List.
+     * Internal destroy handler, called as part of the destroy process.
      *
-     * If `Container.exclusive` is `true` then it will also destroy all children.
-     *
-     * Use this to remove a Container from your game if you don't ever plan to use it again.
-     * As long as no reference to it exists within your own code it should become free for
-     * garbage collection.
-     *
-     * If you just want to temporarily disable an object then look at using the
-     * Game Object Pool instead of destroying it, as destroyed objects cannot be resurrected.
-     *
-     * @method Phaser.GameObjects.Container#destroy
-     * @since 3.4.0
+     * @method Phaser.GameObjects.Container#preDestroy
+     * @protected
+     * @since 3.9.0
      */
-    destroy: function ()
+    preDestroy: function ()
     {
         this.removeAll(!!this.exclusive);
 
@@ -1215,8 +1224,6 @@ var Container = new Class({
 
         this.list = [];
         this._displayList = null;
-
-        GameObject.prototype.destroy.call(this);
     }
 
 });
