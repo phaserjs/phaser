@@ -274,6 +274,20 @@ var Blitter = new Class({
     {
         this.children.removeAll();
         this.dirty = true;
+    },
+
+    /**
+     * Internal destroy handler, called as part of the destroy process.
+     *
+     * @method Phaser.GameObjects.Blitter#preDestroy
+     * @protected
+     * @since 3.9.0
+     */
+    preDestroy: function ()
+    {
+        this.children.destroy();
+
+        this.renderList = [];
     }
 
 });
