@@ -1142,7 +1142,7 @@ var Group = new Class({
     },
 
     /**
-     * Empties this group and removes it from the scene.
+     * Empties this group and removes it from the Scene.
      *
      * Does not call {@link Phaser.GameObjects.Group#removeCallback}.
      *
@@ -1154,6 +1154,12 @@ var Group = new Class({
     destroy: function (destroyChildren)
     {
         if (destroyChildren === undefined) { destroyChildren = false; }
+
+        //  This Game Object had already been destroyed
+        if (!this.scene || this.ignoreDestroy)
+        {
+            return;
+        }
 
         if (destroyChildren)
         {
