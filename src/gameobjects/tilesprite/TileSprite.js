@@ -269,14 +269,15 @@ var TileSprite = new Class({
     },
 
     /**
-     * [description]
+     * Internal destroy handler, called as part of the destroy process.
      *
-     * @method Phaser.GameObjects.TileSprite#destroy
-     * @since 3.0.0
+     * @method Phaser.GameObjects.TileSprite#preDestroy
+     * @protected
+     * @since 3.9.0
      */
-    destroy: function ()
+    preDestroy: function ()
     {
-        if (this.renderer.gl)
+        if (this.renderer && this.renderer.gl)
         {
             this.renderer.deleteTexture(this.tileTexture);
         }
@@ -288,7 +289,6 @@ var TileSprite = new Class({
         this.canvasBuffer = null;
 
         this.renderer = null;
-        this.visible = false;
     }
 
 });
