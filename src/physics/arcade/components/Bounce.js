@@ -70,7 +70,7 @@ var Bounce = {
      * @method Phaser.Physics.Arcade.Components.Bounce#setCollideWorldBounds
      * @since 3.0.0
      *
-     * @param {number} value - [description]
+     * @param {boolean} value - [description]
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
