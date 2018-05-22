@@ -33,6 +33,9 @@
 * Fix TypeError when colliding a Group as the only argument in Arcade Physics. Fix #3665 (thanks @samme)
 * The Particle tint value was incorrectly calculated, causing the color channels to be inversed. Fix #3643 (thanks @rgk)
 * All Game Objects that were in Containers were being destroyed twice when a Scene was shutdown. Although not required it still worked in most cases, except with TileSprites. TileSprites specifically have been hardened against this now but all Game Objects inside Containers now have a different event flow, stopping them from being destroyed twice (thanks @laptou)
+* Camera.cull will now accurately return only the Game Objects in the camera's view, instead of them all. Fix #3646 (thanks @KingCosmic @Yora)
+
+Changes the checks for Camera.cull to give only the game objects in the camera's view instead of all game objects
 
 ### Examples, Documentation and TypeScript
 
