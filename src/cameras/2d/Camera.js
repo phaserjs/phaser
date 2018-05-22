@@ -310,6 +310,16 @@ var Camera = new Class({
          * @since 3.0.0
          */
         this._follow = null;
+        
+        /**
+         * Offset position from follow target.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#followOffset
+         * @type {?any}
+         * @public
+         * @default null
+         */
+        this.followOffset = null;
 
         /**
          * Internal camera ID. Assigned by the Camera Manager and used in the camera pool.
@@ -687,9 +697,12 @@ var Camera = new Class({
         {
             originX = follow.x;
             originY = follow.y;
+            
+            var offsetX = this.followOffset ? this.followOffset.x : 0;
+            var offsetY = this.followOffset ? this.followOffset.y : 0;
 
-            this.scrollX = (originX - width * 0.5) / zoom;
-            this.scrollY = (originY - height * 0.5) / zoom;
+            this.scrollX = (originX - width * 0.5 + offsetX) / zoom;
+            this.scrollY = (originY - height * 0.5 + offsetY) / zoom;
         }
 
         if (this.useBounds)
