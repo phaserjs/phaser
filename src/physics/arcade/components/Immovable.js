@@ -20,7 +20,7 @@ var Immovable = {
      *
      * @param {boolean} [value=true] - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setImmovable: function (value)
     {

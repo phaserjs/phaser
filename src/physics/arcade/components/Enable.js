@@ -24,7 +24,7 @@ var Enable = {
      * @param {boolean} enableGameObject - [description]
      * @param {boolean} showGameObject - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     enableBody: function (reset, x, y, enableGameObject, showGameObject)
     {
@@ -57,7 +57,7 @@ var Enable = {
      * @param {boolean} [disableGameObject=false] - [description]
      * @param {boolean} [hideGameObject=false] - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     disableBody: function (disableGameObject, hideGameObject)
     {
@@ -90,7 +90,7 @@ var Enable = {
      * @method Phaser.Physics.Arcade.Components.Enable#refreshBody
      * @since 3.1.0
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     refreshBody: function ()
     {

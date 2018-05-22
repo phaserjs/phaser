@@ -22,7 +22,7 @@ var Debug = {
      * @param {boolean} showVelocity - [description]
      * @param {number} bodyColor - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setDebug: function (showBody, showVelocity, bodyColor)
     {
@@ -41,7 +41,7 @@ var Debug = {
      *
      * @param {number} value - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setDebugBodyColor: function (value)
     {

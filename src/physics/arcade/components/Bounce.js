@@ -21,7 +21,7 @@ var Bounce = {
      * @param {number} x - [description]
      * @param {number} [y=x] - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setBounce: function (x, y)
     {
@@ -38,7 +38,7 @@ var Bounce = {
      *
      * @param {number} value - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setBounceX: function (value)
     {
@@ -55,7 +55,7 @@ var Bounce = {
      *
      * @param {number} value - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setBounceY: function (value)
     {
@@ -72,7 +72,7 @@ var Bounce = {
      *
      * @param {boolean} value - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setCollideWorldBounds: function (value)
     {
