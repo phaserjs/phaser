@@ -17,6 +17,9 @@ var Group = require('../../gameobjects/group/Group');
  * @property {boolean} [collideWorldBounds=false] - Sets {@link Phaser.Physics.Arcade.Body#collideWorldBounds}.
  * @property {number} [accelerationX=0] - Sets {@link Phaser.Physics.Arcade.Body#acceleration acceleration.x}.
  * @property {number} [accelerationY=0] - Sets {@link Phaser.Physics.Arcade.Body#acceleration acceleration.y}.
+ * @property {boolean} [allowDrag=true] - Sets {@link Phaser.Physics.Arcade.Body#allowDrag}.
+ * @property {boolean} [allowGravity=true] - Sets {@link Phaser.Physics.Arcade.Body#allowGravity}.
+ * @property {boolean} [allowRotation=true] - Sets {@link Phaser.Physics.Arcade.Body#allowRotation}.
  * @property {number} [bounceX=0] - Sets {@link Phaser.Physics.Arcade.Body#bounce bounce.x}.
  * @property {number} [bounceY=0] - Sets {@link Phaser.Physics.Arcade.Body#bounce bounce.y}.
  * @property {number} [dragX=0] - Sets {@link Phaser.Physics.Arcade.Body#drag drag.x}.
@@ -40,6 +43,9 @@ var Group = require('../../gameobjects/group/Group');
  * @property {boolean} setCollideWorldBounds - [description]
  * @property {number} setAccelerationX - [description]
  * @property {number} setAccelerationY - [description]
+ * @property {boolean} setAllowDrag - [description]
+ * @property {boolean} setAllowGravity - [description]
+ * @property {boolean} setAllowRotation - [description]
  * @property {number} setBounceX - [description]
  * @property {number} setBounceY - [description]
  * @property {number} setDragX - [description]
@@ -133,6 +139,9 @@ var PhysicsGroup = new Class({
             setCollideWorldBounds: GetFastValue(config, 'collideWorldBounds', false),
             setAccelerationX: GetFastValue(config, 'accelerationX', 0),
             setAccelerationY: GetFastValue(config, 'accelerationY', 0),
+            setAllowDrag: GetFastValue(config, 'allowDrag', true),
+            setAllowGravity: GetFastValue(config, 'allowGravity', true),
+            setAllowRotation: GetFastValue(config, 'allowRotation', true),
             setBounceX: GetFastValue(config, 'bounceX', 0),
             setBounceY: GetFastValue(config, 'bounceY', 0),
             setDragX: GetFastValue(config, 'dragX', 0),
