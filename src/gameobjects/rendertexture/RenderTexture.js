@@ -138,23 +138,6 @@ var RenderTexture = new Class({
     /**
      * [description]
      *
-     * @method Phaser.GameObjects.RenderTexture#destroy
-     * @since 3.2.0
-     */
-    destroy: function ()
-    {
-        GameObject.prototype.destroy.call(this);
-
-        if (this.renderer.type === CONST.WEBGL)
-        {
-            this.renderer.deleteTexture(this.texture);
-            this.renderer.deleteFramebuffer(this.framebuffer);
-        }
-    },
-
-    /**
-     * [description]
-     *
      * @method Phaser.GameObjects.RenderTexture#setGlobalTint
      * @since 3.2.0
      *
@@ -184,6 +167,22 @@ var RenderTexture = new Class({
         this.globalAlpha = alpha;
 
         return this;
+    },
+
+    /**
+     * Internal destroy handler, called as part of the destroy process.
+     *
+     * @method Phaser.GameObjects.RenderTexture#preDestroy
+     * @protected
+     * @since 3.9.0
+     */
+    preDestroy: function ()
+    {
+        if (this.renderer  && this.renderer.gl)
+        {
+            this.renderer.deleteTexture(this.texture);
+            this.renderer.deleteFramebuffer(this.framebuffer);
+        }
     }
 
     /**
