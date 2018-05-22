@@ -220,7 +220,7 @@ var Factory = new Class({
      * @method Phaser.Physics.Arcade.Factory#staticGroup
      * @since 3.0.0
      *
-     * @param {array} [children] - [description]
+     * @param {object|object[]} [children] - [description]
      * @param {GroupConfig} [config] - [description]
      *
      * @return {Phaser.Physics.Arcade.StaticGroup} The Static Group object that was created.
@@ -237,7 +237,7 @@ var Factory = new Class({
      * @method Phaser.Physics.Arcade.Factory#group
      * @since 3.0.0
      *
-     * @param {array} [children] - [description]
+     * @param {object|object[]} [children] - [description]
      * @param {PhysicsGroupConfig} [config] - [description]
      *
      * @return {Phaser.Physics.Arcade.Group} The Group object that was created.
