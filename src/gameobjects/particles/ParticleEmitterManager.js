@@ -96,7 +96,7 @@ var ParticleEmitterManager = new Class({
          * Names of this Emitter Manager's texture frames.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitterManager#frameNames
-         * @type {Phaser.Textures.Frame[]}
+         * @type {string[]}
          * @since 3.0.0
          */
         this.frameNames = [];
@@ -116,7 +116,7 @@ var ParticleEmitterManager = new Class({
          * A list of Emitters being managed by this Emitter Manager.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitterManager#emitters
-             * @type {Phaser.Structs.List.<Phaser.GameObjects.Particles.ParticleEmitter>}
+         * @type {Phaser.Structs.List.<Phaser.GameObjects.Particles.ParticleEmitter>}
          * @since 3.0.0
          */
         this.emitters = new List(this);
