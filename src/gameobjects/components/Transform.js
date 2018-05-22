@@ -218,7 +218,7 @@ var Transform = {
      * @param {number} [z=0] - The z position of this Game Object.
      * @param {number} [w=0] - The w position of this Game Object.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setPosition: function (x, y, z, w)
     {
@@ -252,7 +252,7 @@ var Transform = {
      * @param {number} [width] - The width of the random area.
      * @param {number} [height] - The height of the random area.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setRandomPosition: function (x, y, width, height)
     {
@@ -275,7 +275,7 @@ var Transform = {
      *
      * @param {number} [radians=0] - The rotation of this Game Object, in radians.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setRotation: function (radians)
     {
@@ -294,7 +294,7 @@ var Transform = {
      *
      * @param {number} [degrees=0] - The rotation of this Game Object, in degrees.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setAngle: function (degrees)
     {
@@ -314,7 +314,7 @@ var Transform = {
      * @param {number} x - The horizontal scale of this Game Object.
      * @param {number} [y=x] - The vertical scale of this Game Object. If not set it will use the `x` value.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setScale: function (x, y)
     {
@@ -335,7 +335,7 @@ var Transform = {
      *
      * @param {number} [value=0] - The x position of this Game Object.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setX: function (value)
     {
@@ -354,7 +354,7 @@ var Transform = {
      *
      * @param {number} [value=0] - The y position of this Game Object.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setY: function (value)
     {
@@ -373,7 +373,7 @@ var Transform = {
      *
      * @param {number} [value=0] - The z position of this Game Object.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setZ: function (value)
     {
@@ -392,7 +392,7 @@ var Transform = {
      *
      * @param {number} [value=0] - The w position of this Game Object.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setW: function (value)
     {
