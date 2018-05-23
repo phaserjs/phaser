@@ -6,23 +6,17 @@
 
 var Class = require('../utils/Class');
 
-//  A Scene Level Plugin is installed into every Scene and belongs to that Scene.
-//  It can listen for Scene events and respond to them.
-//  It can map itself to a Scene property, or into the Scene Systems, or both.
-//  
-//  A Global Plugin is installed just once into the Game owned Plugin Manager.
-//  It can listen for Game events and respond to them.
-
 /**
  * @classdesc
- * [description]
+ * A Global Plugin is installed just once into the Game owned Plugin Manager.
+ * It can listen for Game events and respond to them.
  *
  * @class BasePlugin
  * @memberOf Phaser.Plugins
  * @constructor
  * @since 3.8.0
  *
- * @param {Phaser.Game} game - [description]
+ * @param {Phaser.Game} game - A reference to the Game instance this plugin is running under.
  */
 var BasePlugin = new Class({
 
@@ -33,7 +27,7 @@ var BasePlugin = new Class({
         /**
          * A handy reference to the Plugin Manager that is responsible for this plugin.
          * Can be used as a route to gain access to game systems and  events.
-         * 
+         *
          * @name Phaser.Plugins.BasePlugin#pluginManager
          * @type {Phaser.Plugins.PluginManager}
          * @protected
