@@ -134,9 +134,9 @@ var Vector3 = new Class({
     },
 
     /**
-     * Determine whether this Vector is equal to a given Vector.
+     * Check whether this Vector is equal to a given Vector.
      *
-     * Performs a strict equality comparison between each Vector's components.
+     * Performs a strict equality check against each Vector's components.
      *
      * @method Phaser.Math.Vector3#equals
      * @since 3.0.0
@@ -257,7 +257,7 @@ var Vector3 = new Class({
     /**
      * Perform a component-wise multiplication between this Vector and the given Vector.
      *
-     * This Vector is multiplied by the given Vector.
+     * Multiplies this Vector by the given Vector.
      *
      * @method Phaser.Math.Vector3#multiply
      * @since 3.0.0
@@ -306,7 +306,7 @@ var Vector3 = new Class({
     /**
      * Perform a component-wise division between this Vector and the given Vector.
      *
-     * This Vector is divided by the given Vector.
+     * Divides this Vector by the given Vector.
      *
      * @method Phaser.Math.Vector3#divide
      * @since 3.0.0
@@ -325,7 +325,7 @@ var Vector3 = new Class({
     },
 
     /**
-     * Negate the x, y and z components of this Vector.
+     * Negate the `x`, `y` and `z` components of this Vector.
      *
      * @method Phaser.Math.Vector3#negate
      * @since 3.0.0
@@ -342,14 +342,14 @@ var Vector3 = new Class({
     },
 
     /**
-     * Calculate the distance between this Vector, and the given Vector.
+     * Calculate the distance between this Vector and the given Vector.
      *
      * @method Phaser.Math.Vector3#distance
      * @since 3.0.0
      *
      * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3)} v - The Vector to calculate the distance to.
      *
-     * @return {number} The distance to the given Vector from this Vector.
+     * @return {number} The distance from this Vector to the given Vector.
      */
     distance: function (v)
     {
@@ -368,7 +368,7 @@ var Vector3 = new Class({
      *
      * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3)} v - The Vector to calculate the distance to.
      *
-     * @return {number} The distance between this Vector, and the given Vector, squared.
+     * @return {number} The distance from this Vector to the given Vector, squared.
      */
     distanceSq: function (v)
     {
@@ -486,6 +486,8 @@ var Vector3 = new Class({
     /**
      * Linearly interpolate between this Vector and the given Vector.
      *
+     * Interpolates this Vector towards the given Vector.
+     *
      * @method Phaser.Math.Vector3#lerp
      * @since 3.0.0
      *
@@ -563,7 +565,7 @@ var Vector3 = new Class({
      * @method Phaser.Math.Vector3#transformCoordinates
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Matrix4} mat - [description]
+     * @param {Phaser.Math.Matrix4} mat - The Matrix4 to transform this Vector3 with.
      *
      * @return {Phaser.Math.Vector3} This Vector3.
      */
@@ -628,7 +630,7 @@ var Vector3 = new Class({
      * @method Phaser.Math.Vector3#project
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Matrix4} mat - [description]
+     * @param {Phaser.Math.Matrix4} mat - The Matrix4 to multiply this Vector3 with.
      *
      * @return {Phaser.Math.Vector3} This Vector3.
      */
