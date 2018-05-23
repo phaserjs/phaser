@@ -457,7 +457,7 @@ var RandomDataGenerator = new Class({
      * @method Phaser.Math.RandomDataGenerator#shuffle
      * @since 3.7.0
      * 
-     * @param {array[]} [array] - The array to be shuffled.
+     * @param {array} [array] - The array to be shuffled.
      *
      * @return {array} The shuffled array.
      */
