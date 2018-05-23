@@ -172,8 +172,6 @@ var Vector3 = new Class({
     /**
      * Set the `x`, `y`, and `z` components of this Vector to the given `x`, `y`, and `z` values.
      *
-     * TODO: setTo() alias.
-     *
      * @method Phaser.Math.Vector3#set
      * @since 3.0.0
      *
@@ -199,6 +197,23 @@ var Vector3 = new Class({
         }
 
         return this;
+    },
+
+    /**
+     * This method is an alias for `Vector3.set`.
+     *
+     * @method Phaser.Math.Vector3#setTo
+     * @since 3.next
+     *
+     * @param {number} x - The x value to set for this Vector.
+     * @param {number} [y] - The y value to set for this Vector.
+     * @param {number} [z] - The z value to set for this Vector.
+     *
+     * @return {Phaser.Math.Vector3} This Vector3.
+     */
+    setTo: function (x, y, z)
+    {
+        return this.set(x, y, z);
     },
 
     /**
@@ -351,7 +366,7 @@ var Vector3 = new Class({
      * @method Phaser.Math.Vector3#distanceSq
      * @since 3.0.0
      *
-     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3)} v - [description]
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3)} v - The Vector to calculate the distance to.
      *
      * @return {number} The distance between this Vector, and the given Vector, squared.
      */
@@ -500,7 +515,7 @@ var Vector3 = new Class({
      * @method Phaser.Math.Vector3#transformMat3
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Matrix3} mat - The Matrix3 to transform this Vector2 with.
+     * @param {Phaser.Math.Matrix3} mat - The Matrix3 to transform this Vector3 with.
      *
      * @return {Phaser.Math.Vector3} This Vector3.
      */
@@ -524,7 +539,7 @@ var Vector3 = new Class({
      * @method Phaser.Math.Vector3#transformMat4
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Matrix4} mat - The Matrix4 to transform this Vector2 with.
+     * @param {Phaser.Math.Matrix4} mat - The Matrix4 to transform this Vector3 with.
      *
      * @return {Phaser.Math.Vector3} This Vector3.
      */
