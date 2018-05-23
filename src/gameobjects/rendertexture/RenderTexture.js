@@ -178,7 +178,7 @@ var RenderTexture = new Class({
      */
     preDestroy: function ()
     {
-        if (this.renderer  && this.renderer.gl)
+        if (this.renderer && this.renderer.gl)
         {
             this.renderer.deleteTexture(this.texture);
             this.renderer.deleteFramebuffer(this.framebuffer);
