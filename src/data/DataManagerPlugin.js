@@ -20,7 +20,7 @@ var PluginCache = require('../plugins/PluginCache');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - [description]
+ * @param {Phaser.Scene} scene - A reference to the Scene that this DataManager belongs to.
  */
 var DataManagerPlugin = new Class({
 
@@ -33,7 +33,7 @@ var DataManagerPlugin = new Class({
         DataManager.call(this, scene, scene.sys.events);
 
         /**
-         * [description]
+         * A reference to the Scene that this DataManager belongs to.
          *
          * @name Phaser.Data.DataManagerPlugin#scene
          * @type {Phaser.Scene}
@@ -42,7 +42,7 @@ var DataManagerPlugin = new Class({
         this.scene = scene;
 
         /**
-         * [description]
+         * A reference to the Scene's Systems.
          *
          * @name Phaser.Data.DataManagerPlugin#systems
          * @type {Phaser.Scenes.Systems}

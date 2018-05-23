@@ -20,7 +20,7 @@ var Vector2 = require('./Vector2');
  * @param {number} rotation - Rotation of the transform point, in radians.
  * @param {number} scaleX - Horizontal scale of the transform point.
  * @param {number} scaleY - Vertical scale of the transform point.
- * @param {(Phaser.Math.Vector2|Phaser.Geom.Point|object)} [output] - [description]
+ * @param {(Phaser.Math.Vector2|Phaser.Geom.Point|object)} [output] - The output vector, point or object for the translated coordinates.
  *
  * @return {(Phaser.Math.Vector2|Phaser.Geom.Point|object)} The translated point.
  */

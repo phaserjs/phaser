@@ -5,15 +5,15 @@
  */
 
 /**
- * [description]
+ * Compute a random integer between the `min` and `max` values, inclusive.
  *
  * @function Phaser.Math.Between
  * @since 3.0.0
  *
- * @param {integer} min - [description]
- * @param {integer} max - [description]
+ * @param {integer} min - The minimum value.
+ * @param {integer} max - The maximum value.
  *
- * @return {integer} [description]
+ * @return {integer} The random integer.
  */
 var Between = function (min, max)
 {
