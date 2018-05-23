@@ -40,6 +40,7 @@
 * Camera.cull will now accurately return only the Game Objects in the camera's view, instead of them all. Fix #3646 (thanks @KingCosmic @Yora)
 * The `dragend` event would be broadcast even if the drag distance or drag time thresholds were not met. Fix #3686 (thanks @RollinSafary)
 * Restarting a Tween immediately after creating it, without it having first started, would cause it to get stuck permanently in the Tween Managers add queue (thanks @Antriel @zacharysarette)
+* Setting an existing Game Object as a static Arcade Physics body would sometimes incorrectly pick-up the dimensions of the object, such as with TileSprites. Fix #3690 (thanks @fariazz)
 
 Changes the checks for Camera.cull to give only the game objects in the camera's view instead of all game objects
 

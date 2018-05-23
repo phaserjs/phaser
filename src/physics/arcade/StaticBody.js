@@ -28,6 +28,9 @@ var StaticBody = new Class({
 
     function StaticBody (world, gameObject)
     {
+        var width = (gameObject.width) ? gameObject.width : 64;
+        var height = (gameObject.height) ? gameObject.height : 64;
+
         /**
          * [description]
          *
@@ -119,7 +122,7 @@ var StaticBody = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.width = gameObject.displayWidth;
+        this.width = width;
 
         /**
          * [description]
@@ -128,7 +131,7 @@ var StaticBody = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.height = gameObject.displayHeight;
+        this.height = height;
 
         /**
          * [description]
