@@ -38,7 +38,7 @@ var SplineCurve = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Curves.SplineCurve#points
+         * @name Phaser.Curves.Spline#points
          * @type {Phaser.Math.Vector2[]}
          * @default []
          * @since 3.0.0
@@ -51,12 +51,12 @@ var SplineCurve = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Curves.SplineCurve#addPoints
+     * @method Phaser.Curves.Spline#addPoints
      * @since 3.0.0
      *
      * @param {(Phaser.Math.Vector2[]|number[]|number[][])} points - [description]
      *
-     * @return {Phaser.Curves.SplineCurve} This curve object.
+     * @return {Phaser.Curves.Spline} This curve object.
      */
     addPoints: function (points)
     {
@@ -91,7 +91,7 @@ var SplineCurve = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Curves.SplineCurve#addPoint
+     * @method Phaser.Curves.Spline#addPoint
      * @since 3.0.0
      *
      * @param {number} x - [description]
@@ -111,7 +111,7 @@ var SplineCurve = new Class({
     /**
      * Gets the starting point on the curve.
      *
-     * @method Phaser.Curves.SplineCurve#getStartPoint
+     * @method Phaser.Curves.Spline#getStartPoint
      * @since 3.0.0
      *
      * @generic {Phaser.Math.Vector2} O - [out,$return]
@@ -130,7 +130,7 @@ var SplineCurve = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Curves.SplineCurve#getResolution
+     * @method Phaser.Curves.Spline#getResolution
      * @since 3.0.0
      *
      * @param {number} divisions - [description]
@@ -145,7 +145,7 @@ var SplineCurve = new Class({
     /**
      * Get point at relative position in curve according to length.
      *
-     * @method Phaser.Curves.SplineCurve#getPoint
+     * @method Phaser.Curves.Spline#getPoint
      * @since 3.0.0
      *
      * @generic {Phaser.Math.Vector2} O - [out,$return]
@@ -178,7 +178,7 @@ var SplineCurve = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Curves.SplineCurve#toJSON
+     * @method Phaser.Curves.Spline#toJSON
      * @since 3.0.0
      *
      * @return {JSONCurve} The JSON object containing this curve data.
@@ -204,12 +204,12 @@ var SplineCurve = new Class({
 /**
  * [description]
  *
- * @function Phaser.Curves.SplineCurve.fromJSON
+ * @function Phaser.Curves.Spline.fromJSON
  * @since 3.0.0
  *
  * @param {JSONCurve} data - The JSON object containing this curve data.
  *
- * @return {Phaser.Curves.SplineCurve} [description]
+ * @return {Phaser.Curves.Spline} [description]
  */
 SplineCurve.fromJSON = function (data)
 {

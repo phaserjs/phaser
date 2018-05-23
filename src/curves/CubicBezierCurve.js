@@ -47,7 +47,7 @@ var CubicBezierCurve = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Curves.CubicBezierCurve#p0
+         * @name Phaser.Curves.CubicBezier#p0
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
@@ -56,7 +56,7 @@ var CubicBezierCurve = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Curves.CubicBezierCurve#p1
+         * @name Phaser.Curves.CubicBezier#p1
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
@@ -65,7 +65,7 @@ var CubicBezierCurve = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Curves.CubicBezierCurve#p2
+         * @name Phaser.Curves.CubicBezier#p2
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
@@ -74,7 +74,7 @@ var CubicBezierCurve = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Curves.CubicBezierCurve#p3
+         * @name Phaser.Curves.CubicBezier#p3
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
@@ -84,7 +84,7 @@ var CubicBezierCurve = new Class({
     /**
      * Gets the starting point on the curve.
      *
-     * @method Phaser.Curves.CubicBezierCurve#getStartPoint
+     * @method Phaser.Curves.CubicBezier#getStartPoint
      * @since 3.0.0
      *
      * @generic {Phaser.Math.Vector2} O - [out,$return]
@@ -103,7 +103,7 @@ var CubicBezierCurve = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Curves.CubicBezierCurve#getResolution
+     * @method Phaser.Curves.CubicBezier#getResolution
      * @since 3.0.0
      *
      * @param {number} divisions - The amount of divisions used by this curve.
@@ -118,7 +118,7 @@ var CubicBezierCurve = new Class({
     /**
      * Get point at relative position in curve according to length.
      *
-     * @method Phaser.Curves.CubicBezierCurve#getPoint
+     * @method Phaser.Curves.CubicBezier#getPoint
      * @since 3.0.0
      *
      * @generic {Phaser.Math.Vector2} O - [out,$return]
@@ -143,7 +143,7 @@ var CubicBezierCurve = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Curves.CubicBezierCurve#draw
+     * @method Phaser.Curves.CubicBezier#draw
      * @since 3.0.0
      *
      * @generic {Phaser.GameObjects.Graphics} G - [graphics,$return]
@@ -176,7 +176,7 @@ var CubicBezierCurve = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Curves.CubicBezierCurve#toJSON
+     * @method Phaser.Curves.CubicBezier#toJSON
      * @since 3.0.0
      *
      * @return {JSONCurve} The JSON object containing this curve data.
@@ -199,12 +199,12 @@ var CubicBezierCurve = new Class({
 /**
  * [description]
  *
- * @function Phaser.Curves.CubicBezierCurve.fromJSON
+ * @function Phaser.Curves.CubicBezier.fromJSON
  * @since 3.0.0
  *
  * @param {JSONCurve} data - The JSON object containing this curve data.
  *
- * @return {Phaser.Curves.CubicBezierCurve} [description]
+ * @return {Phaser.Curves.CubicBezier} [description]
  */
 CubicBezierCurve.fromJSON = function (data)
 {
