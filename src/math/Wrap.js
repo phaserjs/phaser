@@ -5,16 +5,16 @@
  */
 
 /**
- * [description]
+ * Wrap the given `value` between `min` and `max.
  *
  * @function Phaser.Math.Wrap
  * @since 3.0.0
  *
- * @param {number} value - [description]
- * @param {number} min - [description]
- * @param {number} max - [description]
+ * @param {number} value - The value to wrap.
+ * @param {number} min - The minimum value.
+ * @param {number} max - The maximum value.
  *
- * @return {number} [description]
+ * @return {number} The wrapped value.
  */
 var Wrap = function (value, min, max)
 {

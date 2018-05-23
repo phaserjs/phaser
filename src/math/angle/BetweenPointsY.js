@@ -10,10 +10,10 @@
  * @function Phaser.Math.Angle.BetweenPointsY
  * @since 3.0.0
  *
- * @param {(Phaser.Geom.Point|object)} point1 - [description]
- * @param {(Phaser.Geom.Point|object)} point2 - [description]
+ * @param {(Phaser.Geom.Point|object)} point1 - The first point.
+ * @param {(Phaser.Geom.Point|object)} point2 - The second point.
  *
- * @return {number} [description]
+ * @return {number} The angle in radians.
  */
 var BetweenPointsY = function (point1, point2)
 {
