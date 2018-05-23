@@ -5,16 +5,16 @@
  */
 
 /**
- * [description]
+ * Add an `amount` to a `value`, limiting the maximum result to `max`.
  *
  * @function Phaser.Math.MaxAdd
  * @since 3.0.0
  *
- * @param {number} value - [description]
- * @param {number} amount - [description]
- * @param {number} max - [description]
+ * @param {number} value - The value to add to.
+ * @param {number} amount - The amount to add.
+ * @param {number} max - The maximum value to return.
  *
- * @return {number} [description]
+ * @return {number} The resulting value.
  */
 var MaxAdd = function (value, amount, max)
 {

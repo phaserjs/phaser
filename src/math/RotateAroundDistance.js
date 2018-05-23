@@ -10,13 +10,13 @@
  * @function Phaser.Math.RotateAroundDistance
  * @since 3.0.0
  *
- * @param {(Phaser.Geom.Point|object)} point - The Point to be rotated.
+ * @param {(Phaser.Geom.Point|object)} point - The point to be rotated.
  * @param {number} x - The horizontal coordinate to rotate around.
  * @param {number} y - The vertical coordinate to rotate around.
  * @param {number} angle - The angle of rotation in radians.
  * @param {number} distance - [description]
  *
- * @return {Phaser.Geom.Point} [description]
+ * @return {Phaser.Geom.Point} The given point.
  */
 var RotateAroundDistance = function (point, x, y, angle, distance)
 {

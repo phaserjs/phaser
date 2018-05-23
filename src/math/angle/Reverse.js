@@ -7,14 +7,14 @@
 var Normalize = require('./Normalize');
 
 /**
- * [description]
+ * Reverse the given angle.
  *
  * @function Phaser.Math.Angle.Reverse
  * @since 3.0.0
  *
- * @param {number} angle - [description]
+ * @param {number} angle - The angle to reverse, in radians.
  *
- * @return {number} [description]
+ * @return {number} The reversed angle, in radians.
  */
 var Reverse = function (angle)
 {

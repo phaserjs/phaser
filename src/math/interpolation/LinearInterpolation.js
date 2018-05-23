@@ -14,7 +14,7 @@ var Linear = require('../Linear');
  * @see https://en.wikipedia.org/wiki/Linear_interpolation
  *
  * @param {number[]} v - The input array of values to interpolate between.
- * @param {!number} k - The percentage of interploation, between 0 and 1.
+ * @param {!number} k - The percentage of interpolation, between 0 and 1.
  *
  * @return {!number} The interpolated value.
  */
