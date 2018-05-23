@@ -12,8 +12,8 @@ var Class = require('../utils/Class');
 /**
  * @typedef {object} Vector2Like
  *
- * @property {number} x - [description]
- * @property {number} y - [description]
+ * @property {number} x - The x component.
+ * @property {number} y - The y component.
  */
 
 /**
@@ -395,7 +395,9 @@ var Vector2 = new Class({
     },
 
     /**
-     * Normalise this Vector, that is, make it a unit length vector (magnitude of 1) in the same direction.
+     * Normalise this Vector.
+     *
+     * Makes the vector a unit length vector (magnitude of 1) in the same direction.
      *
      * @method Phaser.Math.Vector2#normalize
      * @since 3.0.0
@@ -419,10 +421,7 @@ var Vector2 = new Class({
     },
 
     /**
-    * Right-hand normalize (make unit length) this Vector
-    */
-    /**
-     * [description]
+     * Right-hand normalize (make unit length) this Vector.
      *
      * @method Phaser.Math.Vector2#normalizeRightHand
      * @since 3.0.0
@@ -440,14 +439,14 @@ var Vector2 = new Class({
     },
 
     /**
-     * Perform a dot product between this Vector and the given Vector
+     * Compute the dot product of this Vector and the given Vector.
      *
      * @method Phaser.Math.Vector2#dot
      * @since 3.0.0
      *
      * @param {Phaser.Math.Vector2} src - The Vector2 to dot product with this Vector2.
      *
-     * @return {number} The result of the dot product
+     * @return {number} The dot product of this Vector and the given Vector.
      */
     dot: function (src)
     {
@@ -470,13 +469,13 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Linearly interpolate between this Vector and the given Vector.
      *
      * @method Phaser.Math.Vector2#lerp
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - [description]
-     * @param {number} [t=0] - [description]
+     * @param {Phaser.Math.Vector2} src - The Vector2 to interpolate towards.
+     * @param {number} [t=0] - The interpolation percentage, between 0 and 1.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -494,12 +493,12 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Transform this Vector with the given Matrix.
      *
      * @method Phaser.Math.Vector2#transformMat3
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Matrix3} mat - [description]
+     * @param {Phaser.Math.Matrix3} mat - The Matrix3 to transform this Vector2 with.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -516,12 +515,12 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Transform this Vector with the given Matrix.
      *
      * @method Phaser.Math.Vector2#transformMat4
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Matrix4} mat - [description]
+     * @param {Phaser.Math.Matrix4} mat - The Matrix4 to transform this Vector2 with.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */

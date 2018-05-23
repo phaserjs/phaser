@@ -5,16 +5,20 @@
  */
 
 /**
- * [description]
+ * Smoothly interpolate between two values.
+ *
+ * Computes a smooth step interpolation between `min` and `max` by `x`.
+ *
+ * Produces an even smoother interpolation than {@link Phaser.Math.SmoothStep}.
  *
  * @function Phaser.Math.SmootherStep
  * @since 3.0.0
  *
- * @param {number} x - [description]
- * @param {number} min - [description]
- * @param {number} max - [description]
+ * @param {number} x - The percentage of interpolation, between 0 and 1.
+ * @param {number} min - The minimum value.
+ * @param {number} max - The maximum value.
  *
- * @return {number} [description]
+ * @return {number} The smoothly interpolated value.
  */
 var SmootherStep = function (x, min, max)
 {

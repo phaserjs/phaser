@@ -5,17 +5,17 @@
  */
 
 /**
- * [description]
+ * Rotate a `point` around `x` and `y` by the given `angle`.
  *
  * @function Phaser.Math.RotateAround
  * @since 3.0.0
  *
- * @param {(Phaser.Geom.Point|object)} point - [description]
- * @param {number} x - [description]
- * @param {number} y - [description]
- * @param {number} angle - [description]
+ * @param {(Phaser.Geom.Point|object)} point - The point to be rotated.
+ * @param {number} x - The horizontal coordinate to rotate around.
+ * @param {number} y - The vertical coordinate to rotate around.
+ * @param {number} angle - The angle of rotation in radians.
  *
- * @return {Phaser.Geom.Point} [description]
+ * @return {Phaser.Geom.Point} The given point, rotated by the given angle around the given coordinates.
  */
 var RotateAround = function (point, x, y, angle)
 {

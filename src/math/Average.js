@@ -5,14 +5,14 @@
  */
 
 /**
- * [description]
+ * Calculate the mean average of the given values.
  *
  * @function Phaser.Math.Average
  * @since 3.0.0
  *
- * @param {number[]} values - [description]
+ * @param {number[]} values - The values to average.
  *
- * @return {number} [description]
+ * @return {number} The average value.
  */
 var Average = function (values)
 {
