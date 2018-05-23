@@ -200,23 +200,6 @@ var Vector3 = new Class({
     },
 
     /**
-     * This method is an alias for `Vector3.set`.
-     *
-     * @method Phaser.Math.Vector3#setTo
-     * @since 3.next
-     *
-     * @param {number} x - The x value to set for this Vector.
-     * @param {number} [y] - The y value to set for this Vector.
-     * @param {number} [z] - The z value to set for this Vector.
-     *
-     * @return {Phaser.Math.Vector3} This Vector3.
-     */
-    setTo: function (x, y, z)
-    {
-        return this.set(x, y, z);
-    },
-
-    /**
      * Add a given Vector to this Vector. Addition is component-wise.
      *
      * @method Phaser.Math.Vector3#add
