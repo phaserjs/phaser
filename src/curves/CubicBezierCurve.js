@@ -15,7 +15,7 @@ var Vector2 = require('../math/Vector2');
  * @classdesc
  * [description]
  *
- * @class CubicBezierCurve
+ * @class CubicBezier
  * @extends Phaser.Curves.Curve
  * @memberOf Phaser.Curves
  * @constructor

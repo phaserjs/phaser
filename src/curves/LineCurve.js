@@ -18,7 +18,7 @@ var tmpVec2 = new Vector2();
  * @classdesc
  * [description]
  *
- * @class LineCurve
+ * @class Line
  * @extends Phaser.Curves.Curve
  * @memberOf Phaser.Curves
  * @constructor

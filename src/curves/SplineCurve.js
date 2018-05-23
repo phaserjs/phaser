@@ -15,7 +15,7 @@ var Vector2 = require('../math/Vector2');
  * @classdesc
  * [description]
  *
- * @class SplineCurve
+ * @class Spline
  * @extends Phaser.Curves.Curve
  * @memberOf Phaser.Curves
  * @constructor
