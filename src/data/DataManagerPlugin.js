@@ -33,7 +33,7 @@ var DataManagerPlugin = new Class({
         DataManager.call(this, scene, scene.sys.events);
 
         /**
-         * The Scene that this DataManager belongs to.
+         * A reference to the Scene that this DataManager belongs to.
          *
          * @name Phaser.Data.DataManagerPlugin#scene
          * @type {Phaser.Scene}
@@ -42,7 +42,7 @@ var DataManagerPlugin = new Class({
         this.scene = scene;
 
         /**
-         * The Systems of the Scene that this DataManager belongs to.
+         * A reference to the Scene's Systems.
          *
          * @name Phaser.Data.DataManagerPlugin#systems
          * @type {Phaser.Scenes.Systems}
