@@ -5,7 +5,7 @@
  */
 
 /**
- * [description]
+ * Quintic ease-in.
  *
  * @function Phaser.Math.Easing.Quintic.In
  * @since 3.0.0

@@ -5,7 +5,7 @@
  */
 
 /**
- * [description]
+ * Circular ease-in.
  *
  * @function Phaser.Math.Easing.Circular.In
  * @since 3.0.0

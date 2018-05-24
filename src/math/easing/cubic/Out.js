@@ -5,7 +5,7 @@
  */
 
 /**
- * [description]
+ * Cubic ease-out.
  *
  * @function Phaser.Math.Easing.Cubic.Out
  * @since 3.0.0
