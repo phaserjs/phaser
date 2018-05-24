@@ -11,6 +11,7 @@ var Effects = require('./effects');
 var EventEmitter = require('eventemitter3');
 var Linear = require('../../math/Linear');
 var Rectangle = require('../../geom/rectangle/Rectangle');
+var SmoothStep = require('../../math/SmoothStep');
 var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 var ValueToColor = require('../../display/color/ValueToColor');
 var Vector2 = require('../../math/Vector2');
@@ -317,6 +318,16 @@ var Camera = new Class({
          * @since 3.9.0
          */
         this.lerp = new Vector2(1, 1);
+
+        /**
+         * The values stored in this property are added to the follow target position, allowing you to
+         * offset the camera from the actual target x/y coordinates by the followOffset amount.
+         * 
+         * @name Phaser.Cameras.Scene2D.Camera#followOffset
+         * @type {Phaser.Math.Vector2}
+         * @since 3.9.0
+         */
+        this.followOffset = new Vector2();
 
         /**
          * Internal follow target reference.
@@ -703,8 +714,8 @@ var Camera = new Class({
 
         if (follow)
         {
-            this.scrollX = Linear(this.scrollX, follow.x - originX, this.lerp.x) / zoom;
-            this.scrollY = Linear(this.scrollY, follow.y - originY, this.lerp.y) / zoom;
+            this.scrollX = Linear(this.scrollX, (follow.x - this.followOffset.x) - originX, this.lerp.x) / zoom;
+            this.scrollY = Linear(this.scrollY, (follow.y - this.followOffset.y) - originY, this.lerp.y) / zoom;
         }
 
         if (this.useBounds)
