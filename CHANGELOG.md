@@ -11,14 +11,17 @@
 * Arcade Physics Body has a new method `setAllowGravity` which toggles the `allowGravity` property (thanks @samme)
 * Arcade Physics Body has a new method `setAllowRotation` which toggles the `allowRotation` property (thanks @samme)
 * Arcade Physics Group Config has 3 new properties you can use: `allowDrag`, `allowGravity` and `allowRotation` (thanks @samme)
+* PluginManager.registerFileType has a new property `addToScene` which allows you to inject the new file type into the LoaderPlugin of the given Scene. You could use this to add the file type into the Scene in which it was loaded.
+* PluginManager.install has a new property `mapping`. This allows you to give a Global Plugin a property key, so that it is automatically injected into any Scenes as a Scene level instance. This allows you to have a single global plugin running in the PluginManager, that is injected into every Scene automatically.
+* Camera.lerp has been implemented and allows you to specify the linear interpolation value used when following a target, to provide for smoothed camera tracking.
+* Camera.startFollow has 2 new arguments: `lerpX` and `lerpY` which allow you to set the interpolation value used when following the target. The default is 1 (no interpolation).
+* Camera.startFollow will now immediately set the camera scrollX and Y values to be that of the target to avoid large initial lerps during the first few preUpdates.
 
 ### Updates
 
 * Container.setInteractive can now be called without any arguments as long as you have called Container.setSize first (thanks rex)
 * Bob.reset will now reset the position, frame, flip, visible and alpha values of the Bob.
 * VisibilityHandler now takes a game instance as its sole argument, instead of an event emitter.
-* PluginManager.registerFileType has a new property `addToScene` which allows you to inject the new file type into the LoaderPlugin of the given Scene. You could use this to add the file type into the Scene in which it was loaded.
-* PluginManager.install has a new property `mapping`. This allows you to give a Global Plugin a property key, so that it is automatically injected into any Scenes as a Scene level instance. This allows you to have a single global plugin running in the PluginManager, that is injected into every Scene automatically.
 * PluginManager.createEntry is a new private method to create a plugin entry and return it. This avoids code duplication in several other methods, which now use this instead.
 * The Plugin File Type has a new optional argument `mapping`, which allows a global plugin to be injected into a Scene as a reference.
 * TileSprite.destroy has been renamed to `preDestroy` to take advantage of the preDestroy callback system.
@@ -37,13 +40,11 @@
 * Fix TypeError when colliding a Group as the only argument in Arcade Physics. Fix #3665 (thanks @samme)
 * The Particle tint value was incorrectly calculated, causing the color channels to be inversed. Fix #3643 (thanks @rgk)
 * All Game Objects that were in Containers were being destroyed twice when a Scene was shutdown. Although not required it still worked in most cases, except with TileSprites. TileSprites specifically have been hardened against this now but all Game Objects inside Containers now have a different event flow, stopping them from being destroyed twice (thanks @laptou @PaNaVTEC)
-* Camera.cull will now accurately return only the Game Objects in the camera's view, instead of them all. Fix #3646 (thanks @KingCosmic @Yora)
+* Camera.cull will now accurately return only the Game Objects in the camera view, instead of them all. Fix #3646 (thanks @KingCosmic @Yora)
 * The `dragend` event would be broadcast even if the drag distance or drag time thresholds were not met. Fix #3686 (thanks @RollinSafary)
 * Restarting a Tween immediately after creating it, without it having first started, would cause it to get stuck permanently in the Tween Managers add queue (thanks @Antriel @zacharysarette)
 * Setting an existing Game Object as a static Arcade Physics body would sometimes incorrectly pick-up the dimensions of the object, such as with TileSprites. Fix #3690 (thanks @fariazz)
 * Interactive Objects were not fully removed from the Input Plugin when cleared, causing the internal _list array to grow. Fix #3645 (thanks @tjb295 for the fix and @rexrainbow for the issue)
-
-Changes the checks for Camera.cull to give only the game objects in the camera's view instead of all game objects
 
 ### Examples, Documentation and TypeScript
 
