@@ -14,8 +14,11 @@
 * PluginManager.registerFileType has a new property `addToScene` which allows you to inject the new file type into the LoaderPlugin of the given Scene. You could use this to add the file type into the Scene in which it was loaded.
 * PluginManager.install has a new property `mapping`. This allows you to give a Global Plugin a property key, so that it is automatically injected into any Scenes as a Scene level instance. This allows you to have a single global plugin running in the PluginManager, that is injected into every Scene automatically.
 * Camera.lerp has been implemented and allows you to specify the linear interpolation value used when following a target, to provide for smoothed camera tracking.
-* Camera.startFollow has 2 new arguments: `lerpX` and `lerpY` which allow you to set the interpolation value used when following the target. The default is 1 (no interpolation).
-* Camera.startFollow will now immediately set the camera scrollX and Y values to be that of the target to avoid large initial lerps during the first few preUpdates.
+* Camera.setLerp is a chainable method to set the Camera.lerp property.
+* Camera.followOffset is a new property that allows you to specify an offset from the target position that the camera is following (thanks @hermbit)
+* Camera.setFollowOffset is a chainable method to set the Camera.followOffset property.
+* Camera.startFollow has 4 new arguments: `lerpX` and `lerpY` which allow you to set the interpolation value used when following the target. The default is 1 (no interpolation) and `offsetX` and `offsetY` which allow you to set the follow offset values.
+* Camera.startFollow will now immediately set the camera `scrollX` and `scrollY` values to be that of the target position to avoid a large initial lerps during the first few preUpdates.
 
 ### Updates
 
