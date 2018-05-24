@@ -77,7 +77,7 @@ var Tint = {
      * @webglOnly
      * @since 3.0.0
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     clearTint: function ()
     {
@@ -98,7 +98,7 @@ var Tint = {
      * @param {integer} [bottomLeft] - The tint being applied to the bottom-left of the Game Object.
      * @param {integer} [bottomRight] - The tint being applied to the bottom-right of the Game Object.
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setTint: function (topLeft, topRight, bottomLeft, bottomRight)
     {

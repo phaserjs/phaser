@@ -243,7 +243,7 @@ var TransformMatrix = new Class({
      * @method Phaser.GameObjects.Components.TransformMatrix#loadIdentity
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     * @return {this} This TransformMatrix.
      */
     loadIdentity: function ()
     {
@@ -268,7 +268,7 @@ var TransformMatrix = new Class({
      * @param {number} x - [description]
      * @param {number} y - [description]
      *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     * @return {this} This TransformMatrix.
      */
     translate: function (x, y)
     {
@@ -289,7 +289,7 @@ var TransformMatrix = new Class({
      * @param {number} x - [description]
      * @param {number} y - [description]
      *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     * @return {this} This TransformMatrix.
      */
     scale: function (x, y)
     {
@@ -311,7 +311,7 @@ var TransformMatrix = new Class({
      *
      * @param {number} radian - [description]
      *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     * @return {this} This TransformMatrix.
      */
     rotate: function (radian)
     {
@@ -339,7 +339,7 @@ var TransformMatrix = new Class({
      *
      * @param {Phaser.GameObjects.Components.TransformMatrix} rhs - [description]
      *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     * @return {this} This TransformMatrix.
      */
     multiply: function (rhs)
     {
@@ -383,7 +383,7 @@ var TransformMatrix = new Class({
      * @param {number} tx - The Translate X value.
      * @param {number} ty - The Translate Y value.
      *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     * @return {this} This TransformMatrix.
      */
     transform: function (a, b, c, d, tx, ty)
     {
@@ -443,7 +443,7 @@ var TransformMatrix = new Class({
      * @method Phaser.GameObjects.Components.TransformMatrix#invert
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     * @return {this} This TransformMatrix.
      */
     invert: function ()
     {
@@ -481,7 +481,7 @@ var TransformMatrix = new Class({
      * @param {number} tx - [description]
      * @param {number} ty - [description]
      *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     * @return {this} This TransformMatrix.
      */
     setTransform: function (a, b, c, d, tx, ty)
     {
@@ -552,7 +552,7 @@ var TransformMatrix = new Class({
      * @param {number} scaleX - [description]
      * @param {number} scaleY - [description]
      *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     * @return {this} This TransformMatrix.
      */
     applyITRS: function (x, y, rotation, scaleX, scaleY)
     {

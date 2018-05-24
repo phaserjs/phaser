@@ -21,7 +21,7 @@ var Gravity = {
      * @param {number} x - [description]
      * @param {number} [y=x] - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setGravity: function (x, y)
     {
@@ -38,7 +38,7 @@ var Gravity = {
      *
      * @param {number} x - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setGravityX: function (x)
     {
@@ -55,7 +55,7 @@ var Gravity = {
      *
      * @param {number} y - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setGravityY: function (y)
     {

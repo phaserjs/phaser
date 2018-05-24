@@ -45,7 +45,7 @@ var Texture = {
      * @param {string} key - The key of the texture to be used, as stored in the Texture Manager.
      * @param {(string|integer)} [frame] - The name or index of the frame within the Texture.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setTexture: function (key, frame)
     {
@@ -71,7 +71,7 @@ var Texture = {
      * @param {boolean} [updateSize=true] - Should this call adjust the size of the Game Object?
      * @param {boolean} [updateOrigin=true] - Should this call adjust the origin of the Game Object?
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setFrame: function (frame, updateSize, updateOrigin)
     {

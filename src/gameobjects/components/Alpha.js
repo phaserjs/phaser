@@ -81,7 +81,7 @@ var Alpha = {
      * @method Phaser.GameObjects.Components.Alpha#clearAlpha
      * @since 3.0.0
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     clearAlpha: function ()
     {
@@ -103,7 +103,7 @@ var Alpha = {
      * @param {float} [bottomLeft] - The alpha value used for the bottom-left of the Game Object. WebGL only.
      * @param {float} [bottomRight] - The alpha value used for the bottom-right of the Game Object. WebGL only.
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setAlpha: function (topLeft, topRight, bottomLeft, bottomRight)
     {

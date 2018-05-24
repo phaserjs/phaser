@@ -69,7 +69,7 @@ var ScrollFactor = {
      * @param {number} x - The horizontal scroll factor of this Game Object.
      * @param {number} [y=x] - The vertical scroll factor of this Game Object. If not set it will use the `x` value.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setScrollFactor: function (x, y)
     {

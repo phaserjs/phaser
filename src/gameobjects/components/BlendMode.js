@@ -100,7 +100,7 @@ var BlendMode = {
      *
      * @param {(string|Phaser.BlendModes)} value - The BlendMode value. Either a string or a CONST.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setBlendMode: function (value)
     {

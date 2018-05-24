@@ -260,7 +260,7 @@ var Group = new Class({
      * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of the new Game Object.
      * @param {boolean} [active=true] - The {@link Phaser.GameObjects.GameObject#active} state of the new Game Object.
      *
-     * @return {Phaser.GameObjects.GameObject} The new Game Object.
+     * @return {any} The new Game Object (usually a Sprite, etc.).
      */
     create: function (x, y, key, frame, visible, active)
     {
@@ -306,7 +306,7 @@ var Group = new Class({
      *
      * @param {GroupCreateConfig|GroupCreateConfig[]} config - Creation settings. This can be a single configuration object or an array of such objects, which will be applied in turn.
      *
-     * @return {Phaser.GameObjects.GameObject[]} The newly created Game Objects.
+     * @return {any[]} The newly created Game Objects.
      */
     createMultiple: function (config)
     {
@@ -345,7 +345,7 @@ var Group = new Class({
      *
      * @param {GroupCreateConfig} options - Creation settings.
      *
-     * @return {Phaser.GameObjects.GameObject[]} The newly created Game Objects.
+     * @return {any[]} The newly created Game Objects.
      */
     createFromConfig: function (options)
     {
@@ -719,7 +719,7 @@ var Group = new Class({
      * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
      * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
      *
-     * @return {?Phaser.GameObjects.GameObject} The first matching group member, or a newly created member, or null.
+     * @return {?any} The first matching group member, or a newly created member, or null.
      */
     getFirst: function (state, createIfNull, x, y, key, frame, visible)
     {
@@ -745,7 +745,7 @@ var Group = new Class({
      * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
      * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
      *
-     * @return {?Phaser.GameObjects.GameObject} The first matching group member, or a newly created member, or null.
+     * @return {?any} The first matching group member, or a newly created member, or null.
      */
     getFirstNth: function (nth, state, createIfNull, x, y, key, frame, visible)
     {
@@ -770,7 +770,7 @@ var Group = new Class({
      * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
      * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
      *
-     * @return {?Phaser.GameObjects.GameObject} The first matching group member, or a newly created member, or null.
+     * @return {?any} The first matching group member, or a newly created member, or null.
      */
     getLast: function (state, createIfNull, x, y, key, frame, visible)
     {
@@ -796,7 +796,7 @@ var Group = new Class({
      * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
      * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
      *
-     * @return {?Phaser.GameObjects.GameObject} The first matching group member, or a newly created member, or null.
+     * @return {?any} The first matching group member, or a newly created member, or null.
      */
     getLastNth: function (nth, state, createIfNull, x, y, key, frame, visible)
     {
@@ -824,7 +824,7 @@ var Group = new Class({
      * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
      * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
      *
-     * @return {?Phaser.GameObjects.GameObject} The first matching group member, or a newly created member, or null.
+     * @return {?any} The first matching group member, or a newly created member, or null.
      */
     getHandler: function (forwards, nth, state, createIfNull, x, y, key, frame, visible)
     {
@@ -923,7 +923,7 @@ var Group = new Class({
      * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
      * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
      *
-     * @return {?Phaser.GameObjects.GameObject} The first inactive group member, or a newly created member, or null.
+     * @return {?any} The first inactive group member, or a newly created member, or null.
      */
     get: function (x, y, key, frame, visible)
     {
@@ -947,7 +947,7 @@ var Group = new Class({
      * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
      * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
      *
-     * @return {Phaser.GameObjects.GameObject} The first active group member, or a newly created member, or null.
+     * @return {any} The first active group member, or a newly created member, or null.
      */
     getFirstAlive: function (createIfNull, x, y, key, frame, visible)
     {
@@ -972,7 +972,7 @@ var Group = new Class({
      * @param {(string|integer)} [frame=defaultFrame] - A texture frame assigned to a new Game Object (if one is created).
      * @param {boolean} [visible=true] - The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created).
      *
-     * @return {Phaser.GameObjects.GameObject} The first inactive group member, or a newly created member, or null.
+     * @return {any} The first inactive group member, or a newly created member, or null.
      */
     getFirstDead: function (createIfNull, x, y, key, frame, visible)
     {

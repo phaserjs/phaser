@@ -21,7 +21,7 @@ var Drag = {
      * @param {number} x - [description]
      * @param {number} [y=x] - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setDrag: function (x, y)
     {
@@ -38,7 +38,7 @@ var Drag = {
      *
      * @param {number} value - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setDragX: function (value)
     {
@@ -55,7 +55,7 @@ var Drag = {
      *
      * @param {number} value - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setDragY: function (value)
     {

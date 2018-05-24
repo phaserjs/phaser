@@ -21,7 +21,7 @@ var Size = {
      * @param {number} x - [description]
      * @param {number} [y=x] - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setOffset: function (x, y)
     {
@@ -40,7 +40,7 @@ var Size = {
      * @param {number} height - [description]
      * @param {boolean} [center=true] - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setSize: function (width, height, center)
     {
@@ -59,7 +59,7 @@ var Size = {
      * @param {number} [offsetX] - [description]
      * @param {number} [offsetY] - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setCircle: function (radius, offsetX, offsetY)
     {

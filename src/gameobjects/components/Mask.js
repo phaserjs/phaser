@@ -40,7 +40,7 @@ var Mask = {
      *
      * @param {Phaser.Display.Masks.BitmapMask|Phaser.Display.Masks.GeometryMask} mask - The mask this Game Object will use when rendering.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setMask: function (mask)
     {
@@ -57,7 +57,7 @@ var Mask = {
      *
      * @param {boolean} [destroyMask=false] - Destroy the mask before clearing it?
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     clearMask: function (destroyMask)
     {
