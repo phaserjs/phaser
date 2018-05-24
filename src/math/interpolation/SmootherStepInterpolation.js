@@ -13,7 +13,7 @@ var SmootherStep = require('../SmootherStep');
  * @since 3.9.0
  * @see {@link https://en.wikipedia.org/wiki/Smoothstep#Variations}
  *
- * @param {number} x - The input value.
+ * @param {number} x - The percentage of interpolation, between 0 and 1.
  * @param {number} min - The minimum value, also known as the 'left edge', assumed smaller than the 'right edge'.
  * @param {number} max - The maximum value, also known as the 'right edge', assumed greater than the 'left edge'.
  *
@@ -21,9 +21,9 @@ var SmootherStep = require('../SmootherStep');
  */
 var SmootherStepInterpolation = function (x, min, max)
 {
-    var t = SmootherStep(x, min, max);
+    var t = SmootherStep(min + (max - min) * x, min, max);
 
-    return (max - min) * t + min;
+    return min + (max - min) * t;
 };
 
 module.exports = SmootherStepInterpolation;

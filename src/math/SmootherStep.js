@@ -5,7 +5,7 @@
  */
 
 /**
- * Calculate a smoother percentage of interpolation of `x` between `min` and `max`.
+ * Calculate a smoother interpolation percentage of `x` between `min` and `max`.
  *
  * The function receives the number `x` as an argument and returns 0 if `x` is less than or equal to the left edge,
  * 1 if `x` is greater than or equal to the right edge, and smoothly interpolates, using a Hermite polynomial,
@@ -21,7 +21,7 @@
  * @param {number} min - The minimum value, also known as the 'left edge', assumed smaller than the 'right edge'.
  * @param {number} max - The maximum value, also known as the 'right edge', assumed greater than the 'left edge'.
  *
- * @return {number} The smoothly interpolated value.
+ * @return {number} The percentage of interpolation, between 0 and 1.
  */
 var SmootherStep = function (x, min, max)
 {
