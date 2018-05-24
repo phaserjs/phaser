@@ -10,11 +10,11 @@
  * @function Phaser.Math.Easing.Elastic.In
  * @since 3.0.0
  *
- * @param {number} v - [description]
+ * @param {number} v - The value to be tweened.
  * @param {float} [amplitude=0.1] - [description]
  * @param {float} [period=0.1] - [description]
  *
- * @return {number} [description]
+ * @return {number} The tweened value.
  */
 var In = function (v, amplitude, period)
 {

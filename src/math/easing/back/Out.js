@@ -10,10 +10,10 @@
  * @function Phaser.Math.Easing.Back.Out
  * @since 3.0.0
  *
- * @param {number} v - [description]
+ * @param {number} v - The value to be tweened.
  * @param {number} [overshoot=1.70158] - [description]
  *
- * @return {number} [description]
+ * @return {number} The tweened value.
  */
 var Out = function (v, overshoot)
 {

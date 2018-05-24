@@ -10,10 +10,10 @@
  * @function Phaser.Math.Easing.Stepped.Stepped
  * @since 3.0.0
  *
- * @param {number} v - [description]
+ * @param {number} v - The value to be tweened.
  * @param {float} [steps=1] - [description]
  *
- * @return {number} [description]
+ * @return {number} The tweened value.
  */
 var Stepped = function (v, steps)
 {
