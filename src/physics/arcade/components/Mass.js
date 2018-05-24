@@ -20,7 +20,7 @@ var Mass = {
      *
      * @param {number} value - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setMass: function (value)
     {

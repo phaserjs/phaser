@@ -83,6 +83,16 @@ var ArcadeSprite = new Class({
     function ArcadeSprite (scene, x, y, texture, frame)
     {
         Sprite.call(this, scene, x, y, texture, frame);
+
+        /**
+         * If this Game Object is enabled for physics then this property will contain a reference to a Physics Body.
+         *
+         * @name Phaser.Physics.Arcade.Sprite#body
+         * @type {?Phaser.Physics.Arcade.Body}
+         * @default null
+         * @since 3.0.0
+         */
+        this.body = null;
     }
 
 });

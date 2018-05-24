@@ -20,7 +20,7 @@ var Angular = {
      *
      * @param {number} value - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setAngularVelocity: function (value)
     {
@@ -37,7 +37,7 @@ var Angular = {
      *
      * @param {number} value - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setAngularAcceleration: function (value)
     {
@@ -54,7 +54,7 @@ var Angular = {
      *
      * @param {number} value - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setAngularDrag: function (value)
     {
