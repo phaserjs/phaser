@@ -37,6 +37,7 @@
 * Container removeHandler will re-instate a child's Scene shutdown listener.
 * Container preDestroy now handles the pre-destroy calls, such as clearing the container.
 * Blitter preDestroy will now clear the children List and renderList.
+* The AudioContextMonkeyPatch has been updated to use an iife. Fix #3437 (thanks @NebSehemvi)
 
 ### Bug Fixes
 
