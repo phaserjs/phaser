@@ -5,7 +5,10 @@
  */
 
 /**
- * [description]
+ * Find the angle of a segment from (x1, y1) -> (x2, y2).
+ *
+ * The difference between this method and {@link Phaser.Math.Angle.Between} is that this assumes the y coordinate
+ * travels down the screen.
  *
  * @function Phaser.Math.Angle.BetweenY
  * @since 3.0.0

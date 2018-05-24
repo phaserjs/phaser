@@ -5,9 +5,7 @@
  */
 
 /**
- * Calculate the angle between two sets of coordinates (points).
- *
- * Calculates the angle of the vector from the first point to the second point.
+ * Find the angle of a segment from (x1, y1) -> (x2, y2).
  *
  * @function Phaser.Math.Angle.Between
  * @since 3.0.0

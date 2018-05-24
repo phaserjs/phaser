@@ -5,7 +5,7 @@
  */
 
 /**
- * Calculate the angle between two points.
+ * Find the angle of a segment from (point1.x, point1.y) -> (point2.x, point2.y).
  *
  * Calculates the angle of the vector from the first point to the second point.
  *
