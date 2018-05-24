@@ -10,9 +10,9 @@
  * @function Phaser.Math.RoundTo
  * @since 3.0.0
  *
- * @param {number} value - The value to be rounded.
- * @param {integer} [place=0] - The decimal place to round to.
- * @param {integer} [base=10] - [description]
+ * @param {number} value - The value to round.
+ * @param {integer} [place=0] - The place to round to.
+ * @param {integer} [base=10] - The base to round in. Default is 10 for decimal.
  *
  * @return {number} The rounded value.
  */
