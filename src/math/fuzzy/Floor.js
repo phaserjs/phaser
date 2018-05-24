@@ -5,7 +5,7 @@
  */
 
 /**
- * Calculate the floor of the given value.
+ * Calculate the fuzzy floor of the given value.
  *
  * @function Phaser.Math.Fuzzy.Floor
  * @since 3.0.0

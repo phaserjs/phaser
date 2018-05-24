@@ -5,7 +5,9 @@
  */
 
 /**
- * Check whether `a` is less than `b`.
+ * Check whether `a` is fuzzily less than `b`.
+ *
+ * `a` is fuzzily less than `b` if it is less than `b + epsilon`.
  *
  * @function Phaser.Math.Fuzzy.LessThan
  * @since 3.0.0
@@ -14,7 +16,7 @@
  * @param {number} b - The second value.
  * @param {float} [epsilon=0.0001] - The epsilon.
  *
- * @return {boolean} Whether `a` is less than `b`.
+ * @return {boolean} `true` if `a` is fuzzily less than `b`, otherwise `false`.
  */
 var LessThan = function (a, b, epsilon)
 {
