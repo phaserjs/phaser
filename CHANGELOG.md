@@ -48,7 +48,7 @@ Changes the checks for Camera.cull to give only the game objects in the camera's
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@mikez @wtravO
+@mikez @wtravO @thomastanck
 
 
 ## Version 3.8.0 - Klein - 16th May 2018
