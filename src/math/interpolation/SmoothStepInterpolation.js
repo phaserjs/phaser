@@ -21,9 +21,7 @@ var SmoothStep = require('../SmoothStep');
  */
 var SmoothStepInterpolation = function (x, min, max)
 {
-    var t = SmoothStep(min + (max - min) * x, min, max);
-
-    return min + (max - min) * t;
+    return min + (max - min) * SmoothStep(x, 0, 1);
 };
 
 module.exports = SmoothStepInterpolation;
