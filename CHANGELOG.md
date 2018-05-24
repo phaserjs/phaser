@@ -41,6 +41,7 @@
 * The `dragend` event would be broadcast even if the drag distance or drag time thresholds were not met. Fix #3686 (thanks @RollinSafary)
 * Restarting a Tween immediately after creating it, without it having first started, would cause it to get stuck permanently in the Tween Managers add queue (thanks @Antriel @zacharysarette)
 * Setting an existing Game Object as a static Arcade Physics body would sometimes incorrectly pick-up the dimensions of the object, such as with TileSprites. Fix #3690 (thanks @fariazz)
+* Interactive Objects were not fully removed from the Input Plugin when cleared, causing the internal _list array to grow. Fix #3645 (thanks @tjb295 for the fix and @rexrainbow for the issue)
 
 Changes the checks for Camera.cull to give only the game objects in the camera's view instead of all game objects
 

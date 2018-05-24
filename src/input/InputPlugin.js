@@ -388,12 +388,13 @@ var InputPlugin = new Class({
         var input = gameObject.input;
 
         // If GameObject.input already cleared from higher class
-        if(!input)
+        if (!input)
         {
             return;
         }
 
         this.queueForRemoval(gameObject);
+
         input.gameObject = undefined;
         input.target = undefined;
         input.hitArea = undefined;
