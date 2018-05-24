@@ -11,7 +11,6 @@ var Effects = require('./effects');
 var EventEmitter = require('eventemitter3');
 var Linear = require('../../math/Linear');
 var Rectangle = require('../../geom/rectangle/Rectangle');
-var SmoothStep = require('../../math/SmoothStep');
 var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 var ValueToColor = require('../../display/color/ValueToColor');
 var Vector2 = require('../../math/Vector2');
@@ -305,16 +304,16 @@ var Camera = new Class({
 
         /**
          * The linear interpolation value to use when following a target.
-         * 
+         *
          * Can also be set via `setLerp` or as part of the `startFollow` call.
-         * 
+         *
          * The default values of 1 means the camera will instantly snap to the target coordinates.
          * A lower value, such as 0.1 means the camera will more slowly track the target, giving
          * a smooth transition. You can set the horizontal and vertical values independently, and also
          * adjust this value in real-time during your game.
          *
          * Be sure to keep the value between 0 and 1. A value of zero will disable tracking on that axis.
-         * 
+         *
          * @name Phaser.Cameras.Scene2D.Camera#lerp
          * @type {Phaser.Math.Vector2}
          * @since 3.9.0
@@ -325,7 +324,7 @@ var Camera = new Class({
          * The values stored in this property are subtracted from the Camera targets position, allowing you to
          * offset the camera from the actual target x/y coordinates by this amount.
          * Can also be set via `setFollowOffset` or as part of the `startFollow` call.
-         * 
+         *
          * @name Phaser.Cameras.Scene2D.Camera#followOffset
          * @type {Phaser.Math.Vector2}
          * @since 3.9.0
@@ -803,7 +802,7 @@ var Camera = new Class({
 
     /**
      * Sets the linear interpolation value to use when following a target.
-     * 
+     *
      * The default values of 1 means the camera will instantly snap to the target coordinates.
      * A lower value, such as 0.1 means the camera will more slowly track the target, giving
      * a smooth transition. You can set the horizontal and vertical values independently, and also
@@ -1113,7 +1112,7 @@ var Camera = new Class({
      *
      * When enabled the Camera will automatically adjust its scroll position to keep the target Game Object
      * in its center.
-     * 
+     *
      * You can set the linear interpolation value used in the follow code.
      * Use low lerp values (such as 0.1) to automatically smooth the camera motion.
      *
