@@ -15,6 +15,7 @@ module.exports = {
     CubicBezier: require('./CubicBezierInterpolation'),
     Linear: require('./LinearInterpolation'),
     QuadraticBezier: require('./QuadraticBezierInterpolation'),
-    SmoothStep: require('./SmoothStepInterpolation')
+    SmoothStep: require('./SmoothStepInterpolation'),
+    SmootherStep: require('./SmootherStepInterpolation')
 
 };

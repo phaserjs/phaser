@@ -4,14 +4,14 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var SmoothStep = require('../SmoothStep');
+var SmootherStep = require('../SmootherStep');
 
 /**
- * A Smooth Step interpolation method.
+ * A Smoother Step interpolation method.
  *
- * @function Phaser.Math.Interpolation.SmoothStep
+ * @function Phaser.Math.Interpolation.SmootherStep
  * @since 3.9.0
- * @see {@link https://en.wikipedia.org/wiki/Smoothstep}
+ * @see {@link https://en.wikipedia.org/wiki/Smoothstep#Variations}
  *
  * @param {number} x - The input value.
  * @param {number} min - The minimum value, also known as the 'left edge', assumed smaller than the 'right edge'.
@@ -19,11 +19,11 @@ var SmoothStep = require('../SmoothStep');
  *
  * @return {number} The interpolated value.
  */
-var SmoothStepInterpolation = function (x, min, max)
+var SmootherStepInterpolation = function (x, min, max)
 {
-    var t = SmoothStep(x, min, max);
+    var t = SmootherStep(x, min, max);
 
     return (max - min) * t + min;
 };
 
-module.exports = SmoothStepInterpolation;
+module.exports = SmootherStepInterpolation;

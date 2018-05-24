@@ -11,7 +11,7 @@ var Linear = require('../Linear');
  *
  * @function Phaser.Math.Interpolation.Linear
  * @since 3.0.0
- * @see https://en.wikipedia.org/wiki/Linear_interpolation
+ * @see {@link https://en.wikipedia.org/wiki/Linear_interpolation}
  *
  * @param {number[]} v - The input array of values to interpolate between.
  * @param {!number} k - The percentage of interpolation, between 0 and 1.
