@@ -7,7 +7,7 @@
 var Linear = require('../Linear');
 
 /**
- * A Linear Interpolation Method.
+ * A linear interpolation method.
  *
  * @function Phaser.Math.Interpolation.Linear
  * @since 3.0.0

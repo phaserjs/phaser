@@ -5,16 +5,16 @@
  */
 
 /**
- * [description]
+ * Check whether the given values are equal.
  *
  * @function Phaser.Math.Fuzzy.Equal
  * @since 3.0.0
  *
- * @param {number} a - [description]
- * @param {number} b - [description]
- * @param {float} [epsilon=0.0001] - [description]
+ * @param {number} a - The first value.
+ * @param {number} b - The second value.
+ * @param {float} [epsilon=0.0001] - The epsilon.
  *
- * @return {boolean} [description]
+ * @return {boolean} Whether the given values are equal.
  */
 var Equal = function (a, b, epsilon)
 {
