@@ -76,7 +76,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1020);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1022);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1132,13 +1132,15 @@ var Class = __webpack_require__(0);
 /**
  * @typedef {object} Vector2Like
  *
- * @property {number} x - [description]
- * @property {number} y - [description]
+ * @property {number} x - The x component.
+ * @property {number} y - The y component.
  */
 
 /**
  * @classdesc
  * A representation of a vector in 2D space.
+ *
+ * A two-component vector.
  *
  * @class Vector2
  * @memberOf Phaser.Math
@@ -1202,7 +1204,7 @@ var Vector2 = new Class({
     },
 
     /**
-     * Copy the components of a given vector, into this Vector.
+     * Copy the components of a given Vector into this Vector.
      *
      * @method Phaser.Math.Vector2#copy
      * @since 3.0.0
@@ -1238,7 +1240,7 @@ var Vector2 = new Class({
     },
 
     /**
-     * Set the x and y components of the this Vector to the given x and y values.
+     * Set the `x` and `y` components of the this Vector to the given `x` and `y` values.
      *
      * @method Phaser.Math.Vector2#set
      * @since 3.0.0
@@ -1296,7 +1298,9 @@ var Vector2 = new Class({
     },
 
     /**
-     * Check if this Vector is equal to a given Vector.
+     * Check whether this Vector is equal to a given Vector.
+     *
+     * Performs a strict equality check against each Vector's components.
      *
      * @method Phaser.Math.Vector2#equals
      * @since 3.0.0
@@ -1333,7 +1337,7 @@ var Vector2 = new Class({
     },
 
     /**
-     * Add a given Vector to this Vector. Addition is element-wise.
+     * Add a given Vector to this Vector. Addition is component-wise.
      *
      * @method Phaser.Math.Vector2#add
      * @since 3.0.0
@@ -1351,7 +1355,7 @@ var Vector2 = new Class({
     },
 
     /**
-     * Subtract the given Vector from this Vector. Subtraction is element-wise.
+     * Subtract the given Vector from this Vector. Subtraction is component-wise.
      *
      * @method Phaser.Math.Vector2#subtract
      * @since 3.0.0
@@ -1369,7 +1373,9 @@ var Vector2 = new Class({
     },
 
     /**
-     * Perform an element-wise multiplication between this Vector and the given Vector.
+     * Perform a component-wise multiplication between this Vector and the given Vector.
+     *
+     * Multiplies this Vector by the given Vector.
      *
      * @method Phaser.Math.Vector2#multiply
      * @since 3.0.0
@@ -1413,7 +1419,9 @@ var Vector2 = new Class({
     },
 
     /**
-     * Perform an element-wise division between this Vector and the given Vector. This Vector is divided by the given Vector.
+     * Perform a component-wise division between this Vector and the given Vector.
+     *
+     * Divides this Vector by the given Vector.
      *
      * @method Phaser.Math.Vector2#divide
      * @since 3.0.0
@@ -1431,7 +1439,7 @@ var Vector2 = new Class({
     },
 
     /**
-     * Negate the x and y components of this Vector.
+     * Negate the `x` and `y` components of this Vector.
      *
      * @method Phaser.Math.Vector2#negate
      * @since 3.0.0
@@ -1447,14 +1455,14 @@ var Vector2 = new Class({
     },
 
     /**
-     * Calculate the distance between this Vector, and the given Vector.
+     * Calculate the distance between this Vector and the given Vector.
      *
      * @method Phaser.Math.Vector2#distance
      * @since 3.0.0
      *
      * @param {Phaser.Math.Vector2} src - The Vector to calculate the distance to.
      *
-     * @return {number} The distance to the given Vector from this Vector.
+     * @return {number} The distance from this Vector to the given Vector.
      */
     distance: function (src)
     {
@@ -1465,14 +1473,14 @@ var Vector2 = new Class({
     },
 
     /**
-     * The distance between this Vector, and the given Vector, squared.
+     * Calculate the distance between this Vector, and the given Vector, squared.
      *
      * @method Phaser.Math.Vector2#distanceSq
      * @since 3.0.0
      *
      * @param {Phaser.Math.Vector2} src - The Vector to calculate the distance to.
      *
-     * @return {number} The distance to this Vector and the given Vector, squared.
+     * @return {number} The distance from this Vector to the given Vector, squared.
      */
     distanceSq: function (src)
     {
@@ -1483,7 +1491,7 @@ var Vector2 = new Class({
     },
 
     /**
-     * The length (or magnitude) of this Vector.
+     * Calculate the length (or magnitude) of this Vector.
      *
      * @method Phaser.Math.Vector2#length
      * @since 3.0.0
@@ -1515,7 +1523,9 @@ var Vector2 = new Class({
     },
 
     /**
-     * Normalise this Vector, that is, make it a unit length vector (magnitude of 1) in the same direction.
+     * Normalize this Vector.
+     *
+     * Makes the vector a unit length vector (magnitude of 1) in the same direction.
      *
      * @method Phaser.Math.Vector2#normalize
      * @since 3.0.0
@@ -1531,6 +1541,7 @@ var Vector2 = new Class({
         if (len > 0)
         {
             len = 1 / Math.sqrt(len);
+
             this.x = x * len;
             this.y = y * len;
         }
@@ -1539,10 +1550,7 @@ var Vector2 = new Class({
     },
 
     /**
-    * Right-hand normalize (make unit length) this Vector
-    */
-    /**
-     * [description]
+     * Right-hand normalize (make unit length) this Vector.
      *
      * @method Phaser.Math.Vector2#normalizeRightHand
      * @since 3.0.0
@@ -1560,14 +1568,14 @@ var Vector2 = new Class({
     },
 
     /**
-     * Perform a dot product between this Vector and the given Vector
+     * Calculate the dot product of this Vector and the given Vector.
      *
      * @method Phaser.Math.Vector2#dot
      * @since 3.0.0
      *
      * @param {Phaser.Math.Vector2} src - The Vector2 to dot product with this Vector2.
      *
-     * @return {number} The result of the dot product
+     * @return {number} The dot product of this Vector and the given Vector.
      */
     dot: function (src)
     {
@@ -1590,13 +1598,15 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Linearly interpolate between this Vector and the given Vector.
+     *
+     * Interpolates this Vector towards the given Vector.
      *
      * @method Phaser.Math.Vector2#lerp
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - [description]
-     * @param {number} [t=0] - [description]
+     * @param {Phaser.Math.Vector2} src - The Vector2 to interpolate towards.
+     * @param {number} [t=0] - The interpolation percentage, between 0 and 1.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -1614,12 +1624,12 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Transform this Vector with the given Matrix.
      *
      * @method Phaser.Math.Vector2#transformMat3
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Matrix3} mat - [description]
+     * @param {Phaser.Math.Matrix3} mat - The Matrix3 to transform this Vector2 with.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -1636,12 +1646,12 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Transform this Vector with the given Matrix.
      *
      * @method Phaser.Math.Vector2#transformMat4
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Matrix4} mat - [description]
+     * @param {Phaser.Math.Matrix4} mat - The Matrix4 to transform this Vector2 with.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */
@@ -2712,10 +2722,10 @@ module.exports = GameObjectCreator;
 
 var Class = __webpack_require__(0);
 var Contains = __webpack_require__(31);
-var GetPoint = __webpack_require__(131);
-var GetPoints = __webpack_require__(292);
+var GetPoint = __webpack_require__(132);
+var GetPoints = __webpack_require__(294);
 var Line = __webpack_require__(95);
-var Random = __webpack_require__(151);
+var Random = __webpack_require__(152);
 
 /**
  * @classdesc
@@ -3208,7 +3218,7 @@ module.exports = Rectangle;
 module.exports = {
 
     Alpha: __webpack_require__(582),
-    Animation: __webpack_require__(300),
+    Animation: __webpack_require__(302),
     BlendMode: __webpack_require__(581),
     ComputedSize: __webpack_require__(580),
     Depth: __webpack_require__(579),
@@ -3217,7 +3227,7 @@ module.exports = {
     Mask: __webpack_require__(576),
     MatrixStack: __webpack_require__(575),
     Origin: __webpack_require__(574),
-    Pipeline: __webpack_require__(289),
+    Pipeline: __webpack_require__(291),
     ScaleMode: __webpack_require__(573),
     ScrollFactor: __webpack_require__(572),
     Size: __webpack_require__(571),
@@ -3241,7 +3251,7 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var RND = __webpack_require__(295);
+var RND = __webpack_require__(297);
 
 var MATH_CONST = {
 
@@ -3570,7 +3580,7 @@ var CONST = __webpack_require__(17);
 var GetFastValue = __webpack_require__(1);
 var GetURL = __webpack_require__(106);
 var MergeXHRSettings = __webpack_require__(105);
-var XHRLoader = __webpack_require__(165);
+var XHRLoader = __webpack_require__(166);
 var XHRSettings = __webpack_require__(74);
 
 /**
@@ -4178,7 +4188,7 @@ var CONST = {
      * @type {string}
      * @since 3.0.0
      */
-    VERSION: '3.8.0',
+    VERSION: '3.9.0',
 
     BlendModes: __webpack_require__(50),
 
@@ -4302,7 +4312,7 @@ module.exports = CONST;
  */
 
 var CONST = __webpack_require__(20);
-var Smoothing = __webpack_require__(127);
+var Smoothing = __webpack_require__(128);
 
 // The pool into which the canvas elements are placed.
 var pool = [];
@@ -4554,6 +4564,36 @@ module.exports = CanvasPool();
 
 /***/ }),
 /* 23 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Force a value within the boundaries by clamping it to the range `min`, `max`.
+ *
+ * @function Phaser.Math.Clamp
+ * @since 3.0.0
+ *
+ * @param {number} value - The value to be clamped.
+ * @param {number} min - The minimum bounds.
+ * @param {number} max - The maximum bounds.
+ *
+ * @return {number} The clamped value.
+ */
+var Clamp = function (value, min, max)
+{
+    return Math.max(min, Math.min(max, value));
+};
+
+module.exports = Clamp;
+
+
+/***/ }),
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -4703,36 +4743,6 @@ var BuildGameObject = function (scene, gameObject, config)
 };
 
 module.exports = BuildGameObject;
-
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Force a value within the boundaries by clamping it to the range `min`, `max`.
- *
- * @function Phaser.Math.Clamp
- * @since 3.0.0
- *
- * @param {number} value - The value to be clamped.
- * @param {number} min - The minimum bounds.
- * @param {number} max - The maximum bounds.
- *
- * @return {number} The clamped value.
- */
-var Clamp = function (value, min, max)
-{
-    return Math.max(min, Math.min(max, value));
-};
-
-module.exports = Clamp;
 
 
 /***/ }),
@@ -5172,7 +5182,7 @@ module.exports = SafeRange;
  */
 
 var Class = __webpack_require__(0);
-var GetColor = __webpack_require__(149);
+var GetColor = __webpack_require__(150);
 var GetColor32 = __webpack_require__(284);
 
 /**
@@ -5806,7 +5816,7 @@ module.exports = Clone;
 var Class = __webpack_require__(0);
 var Components = __webpack_require__(15);
 var GameObject = __webpack_require__(2);
-var SpriteRender = __webpack_require__(547);
+var SpriteRender = __webpack_require__(549);
 
 /**
  * @classdesc
@@ -6481,16 +6491,16 @@ module.exports = DegToRad;
  */
 
 /**
- * [description]
+ * Wrap the given `value` between `min` and `max.
  *
  * @function Phaser.Math.Wrap
  * @since 3.0.0
  *
- * @param {number} value - [description]
- * @param {number} min - [description]
- * @param {number} max - [description]
+ * @param {number} value - The value to wrap.
+ * @param {number} min - The minimum value.
+ * @param {number} max - The maximum value.
  *
- * @return {number} [description]
+ * @return {number} The wrapped value.
  */
 var Wrap = function (value, min, max)
 {
@@ -7062,7 +7072,7 @@ function init ()
 
 module.exports = init();
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(528)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(530)))
 
 /***/ }),
 /* 57 */
@@ -7075,17 +7085,17 @@ module.exports = init();
  */
 
 /**
- * [description]
+ * Calculate the distance between two sets of coordinates (points).
  *
  * @function Phaser.Math.Distance.Between
  * @since 3.0.0
  *
- * @param {number} x1 - [description]
- * @param {number} y1 - [description]
- * @param {number} x2 - [description]
- * @param {number} y2 - [description]
+ * @param {number} x1 - The x coordinate of the first point.
+ * @param {number} y1 - The y coordinate of the first point.
+ * @param {number} x2 - The x coordinate of the second point.
+ * @param {number} y2 - The y coordinate of the second point.
  *
- * @return {number} [description]
+ * @return {number} The distance between each point.
  */
 var DistanceBetween = function (x1, y1, x2, y2)
 {
@@ -7420,7 +7430,7 @@ module.exports = GetBoolean;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var EaseMap = __webpack_require__(438);
+var EaseMap = __webpack_require__(440);
 
 /**
  * [description]
@@ -7721,7 +7731,7 @@ var TransformMatrix = new Class({
      * @method Phaser.GameObjects.Components.TransformMatrix#loadIdentity
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     * @return {this} This TransformMatrix.
      */
     loadIdentity: function ()
     {
@@ -7746,7 +7756,7 @@ var TransformMatrix = new Class({
      * @param {number} x - [description]
      * @param {number} y - [description]
      *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     * @return {this} This TransformMatrix.
      */
     translate: function (x, y)
     {
@@ -7767,7 +7777,7 @@ var TransformMatrix = new Class({
      * @param {number} x - [description]
      * @param {number} y - [description]
      *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     * @return {this} This TransformMatrix.
      */
     scale: function (x, y)
     {
@@ -7789,7 +7799,7 @@ var TransformMatrix = new Class({
      *
      * @param {number} radian - [description]
      *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     * @return {this} This TransformMatrix.
      */
     rotate: function (radian)
     {
@@ -7817,7 +7827,7 @@ var TransformMatrix = new Class({
      *
      * @param {Phaser.GameObjects.Components.TransformMatrix} rhs - [description]
      *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     * @return {this} This TransformMatrix.
      */
     multiply: function (rhs)
     {
@@ -7861,7 +7871,7 @@ var TransformMatrix = new Class({
      * @param {number} tx - The Translate X value.
      * @param {number} ty - The Translate Y value.
      *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     * @return {this} This TransformMatrix.
      */
     transform: function (a, b, c, d, tx, ty)
     {
@@ -7921,7 +7931,7 @@ var TransformMatrix = new Class({
      * @method Phaser.GameObjects.Components.TransformMatrix#invert
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     * @return {this} This TransformMatrix.
      */
     invert: function ()
     {
@@ -7959,7 +7969,7 @@ var TransformMatrix = new Class({
      * @param {number} tx - [description]
      * @param {number} ty - [description]
      *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     * @return {this} This TransformMatrix.
      */
     setTransform: function (a, b, c, d, tx, ty)
     {
@@ -8030,7 +8040,7 @@ var TransformMatrix = new Class({
      * @param {number} scaleX - [description]
      * @param {number} scaleY - [description]
      *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} This TransformMatrix.
+     * @return {this} This TransformMatrix.
      */
     applyITRS: function (x, y, rotation, scaleX, scaleY)
     {
@@ -8079,7 +8089,7 @@ module.exports = TransformMatrix;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Clamp = __webpack_require__(24);
+var Clamp = __webpack_require__(23);
 
 /**
  * Return a value based on the range between `min` and `max` and the percentage given.
@@ -8088,10 +8098,10 @@ var Clamp = __webpack_require__(24);
  * @since 3.0.0
  *
  * @param {float} percent - A value between 0 and 1 representing the percentage.
- * @param {number} min - [description]
- * @param {number} [max] - [description]
+ * @param {number} min - The minimum value.
+ * @param {number} [max] - The maximum value.
  *
- * @return {number} [description]
+ * @return {number} The value that is `percent` percent between `min` and `max`.
  */
 var FromPercent = function (percent, min, max)
 {
@@ -8118,10 +8128,10 @@ module.exports = FromPercent;
 
 var Class = __webpack_require__(0);
 var Contains = __webpack_require__(59);
-var GetPoint = __webpack_require__(225);
-var GetPoints = __webpack_require__(224);
+var GetPoint = __webpack_require__(226);
+var GetPoints = __webpack_require__(225);
 var Line = __webpack_require__(95);
-var Random = __webpack_require__(150);
+var Random = __webpack_require__(151);
 
 /**
  * @classdesc
@@ -8554,7 +8564,7 @@ module.exports = Triangle;
 var Class = __webpack_require__(0);
 var Components = __webpack_require__(15);
 var GameObject = __webpack_require__(2);
-var ImageRender = __webpack_require__(446);
+var ImageRender = __webpack_require__(448);
 
 /**
  * @classdesc
@@ -9115,7 +9125,7 @@ var GetAdvancedValue = __webpack_require__(10);
 var GetBoolean = __webpack_require__(61);
 var GetEaseFunction = __webpack_require__(62);
 var GetNewValue = __webpack_require__(73);
-var GetProps = __webpack_require__(160);
+var GetProps = __webpack_require__(161);
 var GetTargets = __webpack_require__(101);
 var GetValue = __webpack_require__(4);
 var GetValueOp = __webpack_require__(100);
@@ -9385,7 +9395,7 @@ module.exports = XHRSettings;
 // Based on the routine from {@link http://jsfiddle.net/MrPolywhirl/NH42z/}.
 
 var CheckMatrix = __webpack_require__(113);
-var TransposeMatrix = __webpack_require__(172);
+var TransposeMatrix = __webpack_require__(173);
 
 /**
  * [description]
@@ -9955,10 +9965,10 @@ var NOOP = __webpack_require__(3);
 /**
  * @callback EachActiveSoundCallback
  *
- * @param {Phaser.Sound.BaseSoundManager} manager - [description]
- * @param {Phaser.Sound.BaseSound} sound - [description]
- * @param {number} index - [description]
- * @param {Phaser.Sound.BaseSound[]} sounds - [description]
+ * @param {Phaser.Sound.BaseSoundManager} manager - The SoundManager
+ * @param {Phaser.Sound.BaseSound} sound - The current active Sound
+ * @param {number} index - The index of the current active Sound
+ * @param {Phaser.Sound.BaseSound[]} sounds - All sounds
  */
 
 /**
@@ -10469,7 +10479,7 @@ var BaseSoundManager = new Class({
      * @private
      * @since 3.0.0
      *
-     * @param {EachActiveSoundCallback} callback - Callback function. (sound: ISound, index: number, array: ISound[]) => void
+     * @param {EachActiveSoundCallback} callback - Callback function. (manager: Phaser.Sound.BaseSoundManager, sound: Phaser.Sound.BaseSound, index: number, sounds: Phaser.Manager.BaseSound[]) => void
      * @param {*} [scope] - Callback context.
      */
     forEachActiveSound: function (callback, scope)
@@ -11987,9 +11997,9 @@ module.exports = IsSizePowerOfTwo;
 
 var Class = __webpack_require__(0);
 var Contains = __webpack_require__(32);
-var GetPoint = __webpack_require__(296);
-var GetPoints = __webpack_require__(294);
-var Random = __webpack_require__(154);
+var GetPoint = __webpack_require__(298);
+var GetPoints = __webpack_require__(296);
+var Random = __webpack_require__(155);
 
 /**
  * @classdesc
@@ -12352,7 +12362,7 @@ module.exports = Circle;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var ArrayUtils = __webpack_require__(145);
+var ArrayUtils = __webpack_require__(146);
 var Class = __webpack_require__(0);
 var NOOP = __webpack_require__(3);
 var StableSort = __webpack_require__(82);
@@ -13252,9 +13262,9 @@ module.exports = Shuffle;
  */
 
 var Class = __webpack_require__(0);
-var GetPoint = __webpack_require__(291);
-var GetPoints = __webpack_require__(153);
-var Random = __webpack_require__(152);
+var GetPoint = __webpack_require__(293);
+var GetPoints = __webpack_require__(154);
+var Random = __webpack_require__(153);
 var Vector2 = __webpack_require__(7);
 
 /**
@@ -15500,17 +15510,17 @@ module.exports = GetURL;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var AddToDOM = __webpack_require__(126);
+var AddToDOM = __webpack_require__(127);
 var CanvasPool = __webpack_require__(22);
 var Class = __webpack_require__(0);
 var Components = __webpack_require__(15);
 var CONST = __webpack_require__(20);
 var GameObject = __webpack_require__(2);
-var GetTextSize = __webpack_require__(402);
+var GetTextSize = __webpack_require__(404);
 var GetValue = __webpack_require__(4);
-var RemoveFromDOM = __webpack_require__(267);
-var TextRender = __webpack_require__(401);
-var TextStyle = __webpack_require__(398);
+var RemoveFromDOM = __webpack_require__(268);
+var TextRender = __webpack_require__(403);
+var TextStyle = __webpack_require__(400);
 
 /**
  * @classdesc
@@ -16591,9 +16601,10 @@ var Text = new Class({
     },
 
     /**
-     * [description]
+     * Internal destroy handler, called as part of the destroy process.
      *
      * @method Phaser.GameObjects.Text#preDestroy
+     * @protected
      * @since 3.0.0
      */
     preDestroy: function ()
@@ -16667,9 +16678,9 @@ module.exports = CircumferencePoint;
 
 var Class = __webpack_require__(0);
 var Contains = __webpack_require__(53);
-var GetPoint = __webpack_require__(170);
-var GetPoints = __webpack_require__(169);
-var Random = __webpack_require__(130);
+var GetPoint = __webpack_require__(171);
+var GetPoints = __webpack_require__(170);
+var Random = __webpack_require__(131);
 
 /**
  * @classdesc
@@ -17033,15 +17044,15 @@ module.exports = Ellipse;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Camera = __webpack_require__(120);
+var Camera = __webpack_require__(121);
 var Class = __webpack_require__(0);
 var Commands = __webpack_require__(117);
 var Components = __webpack_require__(15);
-var Ellipse = __webpack_require__(247);
+var Ellipse = __webpack_require__(248);
 var GameObject = __webpack_require__(2);
 var GetValue = __webpack_require__(4);
 var MATH_CONST = __webpack_require__(16);
-var Render = __webpack_require__(448);
+var Render = __webpack_require__(450);
 
 /**
  * @classdesc
@@ -18173,6 +18184,18 @@ var Graphics = new Class({
         }
 
         return this;
+    },
+
+    /**
+     * Internal destroy handler, called as part of the destroy process.
+     *
+     * @method Phaser.GameObjects.Graphics#preDestroy
+     * @protected
+     * @since 3.9.0
+     */
+    preDestroy: function ()
+    {
+        this.commandBuffer = [];
     }
 
 });
@@ -18258,8 +18281,8 @@ module.exports = CheckMatrix;
  */
 
 var Class = __webpack_require__(0);
-var Frame = __webpack_require__(124);
-var TextureSource = __webpack_require__(174);
+var Frame = __webpack_require__(125);
+var TextureSource = __webpack_require__(175);
 
 /**
  * @classdesc
@@ -18730,9 +18753,9 @@ module.exports = Texture;
 var Class = __webpack_require__(0);
 var CONST = __webpack_require__(54);
 var DefaultPlugins = __webpack_require__(119);
-var GetPhysicsPlugins = __webpack_require__(503);
-var GetScenePlugins = __webpack_require__(502);
-var Settings = __webpack_require__(183);
+var GetPhysicsPlugins = __webpack_require__(505);
+var GetScenePlugins = __webpack_require__(504);
+var Settings = __webpack_require__(184);
 
 /**
  * @classdesc
@@ -18957,11 +18980,6 @@ var Systems = new Class({
         this.plugins = pluginManager;
 
         pluginManager.addToScene(this, DefaultPlugins.Global, [ DefaultPlugins.CoreScene, GetScenePlugins(this), GetPhysicsPlugins(this) ]);
-
-        // pluginManager.installSceneGlobal(this, DefaultPlugins.Global);
-        // pluginManager.installSceneLocal(this, DefaultPlugins.CoreScene);
-        // pluginManager.installSceneLocal(this, GetScenePlugins(this));
-        // pluginManager.installSceneLocal(this, GetPhysicsPlugins(this));
 
         this.events.emit('boot', this);
 
@@ -20176,6 +20194,36 @@ module.exports = DefaultPlugins;
 
 /***/ }),
 /* 120 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Calculates a linear (interpolation) value over t.
+ *
+ * @function Phaser.Math.Linear
+ * @since 3.0.0
+ *
+ * @param {number} p0 - The first point.
+ * @param {number} p1 - The second point.
+ * @param {float} t - The percentage between p0 and p1 to return, represented as a number between 0 and 1.
+ *
+ * @return {number} The step t% of the way between p0 and p1.
+ */
+var Linear = function (p0, p1, t)
+{
+    return (p1 - p0) * t + p0;
+};
+
+module.exports = Linear;
+
+
+/***/ }),
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -20184,13 +20232,15 @@ module.exports = DefaultPlugins;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var Clamp = __webpack_require__(23);
 var Class = __webpack_require__(0);
 var DegToRad = __webpack_require__(38);
+var Effects = __webpack_require__(202);
 var EventEmitter = __webpack_require__(9);
-var Effects = __webpack_require__(201);
+var Linear = __webpack_require__(120);
 var Rectangle = __webpack_require__(14);
 var TransformMatrix = __webpack_require__(63);
-var ValueToColor = __webpack_require__(128);
+var ValueToColor = __webpack_require__(129);
 var Vector2 = __webpack_require__(7);
 
 /**
@@ -20481,6 +20531,35 @@ var Camera = new Class({
         this.culledObjects = [];
 
         /**
+         * The linear interpolation value to use when following a target.
+         *
+         * Can also be set via `setLerp` or as part of the `startFollow` call.
+         *
+         * The default values of 1 means the camera will instantly snap to the target coordinates.
+         * A lower value, such as 0.1 means the camera will more slowly track the target, giving
+         * a smooth transition. You can set the horizontal and vertical values independently, and also
+         * adjust this value in real-time during your game.
+         *
+         * Be sure to keep the value between 0 and 1. A value of zero will disable tracking on that axis.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#lerp
+         * @type {Phaser.Math.Vector2}
+         * @since 3.9.0
+         */
+        this.lerp = new Vector2(1, 1);
+
+        /**
+         * The values stored in this property are subtracted from the Camera targets position, allowing you to
+         * offset the camera from the actual target x/y coordinates by this amount.
+         * Can also be set via `setFollowOffset` or as part of the `startFollow` call.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#followOffset
+         * @type {Phaser.Math.Vector2}
+         * @since 3.9.0
+         */
+        this.followOffset = new Vector2();
+
+        /**
          * Internal follow target reference.
          *
          * @name Phaser.Cameras.Scene2D.Camera#_follow
@@ -20608,8 +20687,8 @@ var Camera = new Class({
             var cullW = cameraW + objectW;
             var cullH = cameraH + objectH;
 
-            if (tx > -objectW || ty > -objectH || tx < cullW || ty < cullH ||
-                tw > -objectW || th > -objectH || tw < cullW || th < cullH)
+            if (tx > -objectW && ty > -objectH && tx < cullW && ty < cullH &&
+                tw > -objectW && th > -objectH && tw < cullW && th < cullH)
             {
                 culledObjects.push(object);
             }
@@ -20863,13 +20942,10 @@ var Camera = new Class({
         var originY = height / 2;
         var follow = this._follow;
 
-        if (follow !== null)
+        if (follow)
         {
-            originX = follow.x;
-            originY = follow.y;
-
-            this.scrollX = (originX - width * 0.5) / zoom;
-            this.scrollY = (originY - height * 0.5) / zoom;
+            this.scrollX = Linear(this.scrollX, (follow.x - this.followOffset.x) - originX, this.lerp.x) / zoom;
+            this.scrollY = Linear(this.scrollY, (follow.y - this.followOffset.y) - originY, this.lerp.y) / zoom;
         }
 
         if (this.useBounds)
@@ -20933,7 +21009,7 @@ var Camera = new Class({
 
     /**
      * Set the rotation of this Camera. This causes everything it renders to appear rotated.
-     * 
+     *
      * Rotating a camera does not rotate the viewport itself, it is applied during rendering.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setAngle
@@ -20953,8 +21029,58 @@ var Camera = new Class({
     },
 
     /**
+     * Sets the linear interpolation value to use when following a target.
+     *
+     * The default values of 1 means the camera will instantly snap to the target coordinates.
+     * A lower value, such as 0.1 means the camera will more slowly track the target, giving
+     * a smooth transition. You can set the horizontal and vertical values independently, and also
+     * adjust this value in real-time during your game.
+     *
+     * Be sure to keep the value between 0 and 1. A value of zero will disable tracking on that axis.
+     *
+     * @method Phaser.Cameras.Scene2D.Camera#setLerp
+     * @since 3.9.0
+     *
+     * @param {number} [x=1] - The amount added to the horizontal linear interpolation of the follow target.
+     * @param {number} [y=1] - The amount added to the vertical linear interpolation of the follow target.
+     *
+     * @return {this} This Camera instance.
+     */
+    setLerp: function (x, y)
+    {
+        if (x === undefined) { x = 1; }
+        if (y === undefined) { y = x; }
+
+        this.lerp.set(x, y);
+
+        return this;
+    },
+
+    /**
+     * Sets the horizontal and vertical offset of the camera from its follow target.
+     * The values are subtracted from the targets position during the Cameras update step.
+     *
+     * @method Phaser.Cameras.Scene2D.Camera#setFollowOffset
+     * @since 3.9.0
+     *
+     * @param {number} [x=0] - The horizontal offset from the camera follow target.x position.
+     * @param {number} [y=0] - The vertical offset from the camera follow target.y position.
+     *
+     * @return {this} This Camera instance.
+     */
+    setFollowOffset: function (x, y)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+
+        this.followOffset.set(x, y);
+
+        return this;
+    },
+
+    /**
      * Sets the background color for this Camera.
-     * 
+     *
      * By default a Camera has a transparent background but it can be given a solid color, with any level
      * of transparency, via this method.
      *
@@ -21025,7 +21151,7 @@ var Camera = new Class({
 
     /**
      * Set the position of the Camera viewport within the game.
-     * 
+     *
      * This does not change where the camera is 'looking'. See `setScroll` to control that.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setPosition
@@ -21048,7 +21174,7 @@ var Camera = new Class({
 
     /**
      * Set the rotation of this Camera. This causes everything it renders to appear rotated.
-     * 
+     *
      * Rotating a camera does not rotate the viewport itself, it is applied during rendering.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setRotation
@@ -21106,7 +21232,7 @@ var Camera = new Class({
      * Set the position of where the Camera is looking within the game.
      * You can also modify the properties `Camera.scrollX` and `Camera.scrollY` directly.
      * Use this method, or the scroll properties, to move your camera around the game world.
-     * 
+     *
      * This does not change where the camera viewport is placed. See `setPosition` to control that.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setScroll
@@ -21158,7 +21284,7 @@ var Camera = new Class({
      * If you're trying to change where the Camera is looking at in your game, then see
      * the method `Camera.setScroll` instead. This method is for changing the viewport
      * itself, not what the camera can see.
-     * 
+     *
      * By default a Camera is the same size as the game, but can be made smaller via this method,
      * allowing you to create mini-cam style effects by creating and positioning a smaller Camera
      * viewport within your game.
@@ -21215,21 +21341,52 @@ var Camera = new Class({
      * When enabled the Camera will automatically adjust its scroll position to keep the target Game Object
      * in its center.
      *
+     * You can set the linear interpolation value used in the follow code.
+     * Use low lerp values (such as 0.1) to automatically smooth the camera motion.
+     *
+     * If you find you're getting a slight "jitter" effect when following an object it's probably to do with sub-pixel
+     * rendering of the targets position. This can be rounded by setting the `roundPixels` argument to `true` to
+     * force full pixel rounding rendering. Note that this can still be broken if you have specified a non-integer zoom
+     * value on the camera. So be sure to keep the camera zoom to integers.
+     *
      * @method Phaser.Cameras.Scene2D.Camera#startFollow
      * @since 3.0.0
      *
      * @param {(Phaser.GameObjects.GameObject|object)} target - The target for the Camera to follow.
-     * @param {boolean} [roundPx=false] - Round the movement pixels to whole integers?
+     * @param {boolean} [roundPixels=false] - Round the camera position to whole integers to avoid sub-pixel rendering?
+     * @param {float} [lerpX=1] - A value between 0 and 1. This value specifies the amount of linear interpolation to use when horizontally tracking the target. The closer the value to 1, the faster the camera will track.
+     * @param {float} [lerpY=1] - A value between 0 and 1. This value specifies the amount of linear interpolation to use when vertically tracking the target. The closer the value to 1, the faster the camera will track.
+     * @param {number} [offsetX=0] - The horizontal offset from the camera follow target.x position.
+     * @param {number} [offsetY=0] - The vertical offset from the camera follow target.y position.
      *
-     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     * @return {this} This Camera instance.
      */
-    startFollow: function (target, roundPx)
+    startFollow: function (target, roundPixels, lerpX, lerpY, offsetX, offsetY)
     {
-        if (roundPx === undefined) { roundPx = false; }
+        if (roundPixels === undefined) { roundPixels = false; }
+        if (lerpX === undefined) { lerpX = 1; }
+        if (lerpY === undefined) { lerpY = lerpX; }
+        if (offsetX === undefined) { offsetX = 0; }
+        if (offsetY === undefined) { offsetY = offsetX; }
 
         this._follow = target;
 
-        this.roundPixels = roundPx;
+        this.roundPixels = roundPixels;
+
+        lerpX = Clamp(lerpX, 0, 1);
+        lerpY = Clamp(lerpY, 0, 1);
+
+        this.lerp.set(lerpX, lerpY);
+
+        this.followOffset.set(offsetX, offsetY);
+
+        //  Move the camera there immediately, to avoid a large lerp during preUpdate
+        var zoom = this.zoom;
+        var originX = this.width / 2;
+        var originY = this.height / 2;
+
+        this.scrollX = (target.x - offsetX - originX) / zoom;
+        this.scrollY = (target.y - offsetY - originY) / zoom;
 
         return this;
     },
@@ -21350,11 +21507,11 @@ var Camera = new Class({
 
         this.culledObjects = [];
 
-        this.target = undefined;
+        this._follow = null;
 
-        this._bounds = undefined;
+        this._bounds = null;
 
-        this.scene = undefined;
+        this.scene = null;
     }
 
 });
@@ -21363,7 +21520,7 @@ module.exports = Camera;
 
 
 /***/ }),
-/* 121 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -21733,8 +21890,8 @@ module.exports = Map;
 
 
 /***/ }),
-/* 122 */,
-/* 123 */
+/* 123 */,
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -21823,7 +21980,7 @@ module.exports = BuildGameObjectAnimation;
 
 
 /***/ }),
-/* 124 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -22473,7 +22630,7 @@ module.exports = Frame;
 
 
 /***/ }),
-/* 125 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -22484,9 +22641,9 @@ module.exports = Frame;
  */
 
 var Class = __webpack_require__(0);
-var ModelViewProjection = __webpack_require__(199);
-var ShaderSourceFS = __webpack_require__(517);
-var ShaderSourceVS = __webpack_require__(516);
+var ModelViewProjection = __webpack_require__(200);
+var ShaderSourceFS = __webpack_require__(519);
+var ShaderSourceVS = __webpack_require__(518);
 var Utils = __webpack_require__(27);
 var WebGLPipeline = __webpack_require__(83);
 
@@ -22944,7 +23101,6 @@ var TextureTintPipeline = new Class({
                 scrollX = 0.0;
                 scrollY = 0.0;
             }
-
 
             if (!emitter.visible || aliveLength === 0)
             {
@@ -24677,7 +24833,7 @@ module.exports = TextureTintPipeline;
 
 
 /***/ }),
-/* 126 */
+/* 127 */
 /***/ (function(module, exports) {
 
 /**
@@ -24739,7 +24895,7 @@ module.exports = AddToDOM;
 
 
 /***/ }),
-/* 127 */
+/* 128 */
 /***/ (function(module, exports) {
 
 /**
@@ -24871,7 +25027,7 @@ module.exports = Smoothing();
 
 
 /***/ }),
-/* 128 */
+/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -24927,7 +25083,7 @@ module.exports = ValueToColor;
 
 
 /***/ }),
-/* 129 */
+/* 130 */
 /***/ (function(module, exports) {
 
 /**
@@ -25003,7 +25159,7 @@ module.exports = Pad;
 
 
 /***/ }),
-/* 130 */
+/* 131 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -25044,7 +25200,7 @@ module.exports = Random;
 
 
 /***/ }),
-/* 131 */
+/* 132 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -25121,7 +25277,7 @@ module.exports = GetPoint;
 
 
 /***/ }),
-/* 132 */
+/* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -25160,7 +25316,6 @@ module.exports = CircumferencePoint;
 
 
 /***/ }),
-/* 133 */,
 /* 134 */,
 /* 135 */,
 /* 136 */,
@@ -25168,7 +25323,8 @@ module.exports = CircumferencePoint;
 /* 138 */,
 /* 139 */,
 /* 140 */,
-/* 141 */
+/* 141 */,
+/* 142 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -25183,7 +25339,7 @@ var File = __webpack_require__(19);
 var FileTypesManager = __webpack_require__(6);
 var GetFastValue = __webpack_require__(1);
 var IsPlainObject = __webpack_require__(8);
-var ParseXML = __webpack_require__(268);
+var ParseXML = __webpack_require__(269);
 
 /**
  * @typedef {object} Phaser.Loader.FileTypes.XMLFileConfig
@@ -25362,9 +25518,9 @@ module.exports = XMLFile;
 
 
 /***/ }),
-/* 142 */,
 /* 143 */,
-/* 144 */
+/* 144 */,
+/* 145 */
 /***/ (function(module, exports) {
 
 /**
@@ -25399,7 +25555,7 @@ module.exports = GetRandom;
 
 
 /***/ }),
-/* 145 */
+/* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -25414,45 +25570,45 @@ module.exports = GetRandom;
 
 module.exports = {
 
-    Matrix: __webpack_require__(488),
+    Matrix: __webpack_require__(490),
 
-    Add: __webpack_require__(481),
-    AddAt: __webpack_require__(480),
-    BringToTop: __webpack_require__(479),
-    CountAllMatching: __webpack_require__(478),
-    Each: __webpack_require__(477),
-    EachInRange: __webpack_require__(476),
-    FindClosestInSorted: __webpack_require__(206),
-    GetAll: __webpack_require__(475),
-    GetFirst: __webpack_require__(474),
-    GetRandom: __webpack_require__(144),
-    MoveDown: __webpack_require__(473),
-    MoveTo: __webpack_require__(472),
-    MoveUp: __webpack_require__(471),
-    NumberArray: __webpack_require__(470),
-    NumberArrayStep: __webpack_require__(469),
-    QuickSelect: __webpack_require__(171),
-    Range: __webpack_require__(252),
-    Remove: __webpack_require__(186),
-    RemoveAt: __webpack_require__(468),
-    RemoveBetween: __webpack_require__(467),
-    RemoveRandomElement: __webpack_require__(466),
-    Replace: __webpack_require__(465),
-    RotateLeft: __webpack_require__(288),
-    RotateRight: __webpack_require__(287),
+    Add: __webpack_require__(483),
+    AddAt: __webpack_require__(482),
+    BringToTop: __webpack_require__(481),
+    CountAllMatching: __webpack_require__(480),
+    Each: __webpack_require__(479),
+    EachInRange: __webpack_require__(478),
+    FindClosestInSorted: __webpack_require__(207),
+    GetAll: __webpack_require__(477),
+    GetFirst: __webpack_require__(476),
+    GetRandom: __webpack_require__(145),
+    MoveDown: __webpack_require__(475),
+    MoveTo: __webpack_require__(474),
+    MoveUp: __webpack_require__(473),
+    NumberArray: __webpack_require__(472),
+    NumberArrayStep: __webpack_require__(471),
+    QuickSelect: __webpack_require__(172),
+    Range: __webpack_require__(253),
+    Remove: __webpack_require__(187),
+    RemoveAt: __webpack_require__(470),
+    RemoveBetween: __webpack_require__(469),
+    RemoveRandomElement: __webpack_require__(468),
+    Replace: __webpack_require__(467),
+    RotateLeft: __webpack_require__(290),
+    RotateRight: __webpack_require__(289),
     SafeRange: __webpack_require__(29),
-    SendToBack: __webpack_require__(464),
-    SetAll: __webpack_require__(463),
+    SendToBack: __webpack_require__(466),
+    SetAll: __webpack_require__(465),
     Shuffle: __webpack_require__(94),
     SpliceOne: __webpack_require__(55),
     StableSort: __webpack_require__(82),
-    Swap: __webpack_require__(462)
+    Swap: __webpack_require__(464)
 
 };
 
 
 /***/ }),
-/* 146 */
+/* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -25463,8 +25619,8 @@ module.exports = {
  */
 
 var Class = __webpack_require__(0);
-var ShaderSourceFS = __webpack_require__(518);
-var TextureTintPipeline = __webpack_require__(125);
+var ShaderSourceFS = __webpack_require__(520);
+var TextureTintPipeline = __webpack_require__(126);
 
 var LIGHT_COUNT = 10;
 
@@ -25868,7 +26024,7 @@ module.exports = ForwardDiffuseLightPipeline;
 
 
 /***/ }),
-/* 147 */
+/* 148 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -25898,8 +26054,8 @@ module.exports = RadToDeg;
 
 
 /***/ }),
-/* 148 */,
-/* 149 */
+/* 149 */,
+/* 150 */
 /***/ (function(module, exports) {
 
 /**
@@ -25929,7 +26085,7 @@ module.exports = GetColor;
 
 
 /***/ }),
-/* 150 */
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -25985,7 +26141,7 @@ module.exports = Random;
 
 
 /***/ }),
-/* 151 */
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -26023,7 +26179,7 @@ module.exports = Random;
 
 
 /***/ }),
-/* 152 */
+/* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -26063,7 +26219,7 @@ module.exports = Random;
 
 
 /***/ }),
-/* 153 */
+/* 154 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -26123,7 +26279,7 @@ module.exports = GetPoints;
 
 
 /***/ }),
-/* 154 */
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -26167,8 +26323,8 @@ module.exports = Random;
 
 
 /***/ }),
-/* 155 */,
-/* 156 */
+/* 156 */,
+/* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -27037,7 +27193,7 @@ module.exports = Timeline;
 
 
 /***/ }),
-/* 157 */
+/* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -27053,9 +27209,9 @@ var GetBoolean = __webpack_require__(61);
 var GetEaseFunction = __webpack_require__(62);
 var GetNewValue = __webpack_require__(73);
 var GetTargets = __webpack_require__(101);
-var GetTweens = __webpack_require__(159);
+var GetTweens = __webpack_require__(160);
 var GetValue = __webpack_require__(4);
-var Timeline = __webpack_require__(156);
+var Timeline = __webpack_require__(157);
 var TweenBuilder = __webpack_require__(72);
 
 /**
@@ -27189,7 +27345,7 @@ module.exports = TimelineBuilder;
 
 
 /***/ }),
-/* 158 */
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -27317,7 +27473,7 @@ module.exports = NumberTweenBuilder;
 
 
 /***/ }),
-/* 159 */
+/* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -27363,7 +27519,7 @@ module.exports = GetTweens;
 
 
 /***/ }),
-/* 160 */
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -27372,7 +27528,7 @@ module.exports = GetTweens;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var RESERVED = __webpack_require__(302);
+var RESERVED = __webpack_require__(304);
 
 /**
  * [description]
@@ -27421,7 +27577,7 @@ module.exports = GetProps;
 
 
 /***/ }),
-/* 161 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -27738,7 +27894,7 @@ module.exports = TimerEvent;
 
 
 /***/ }),
-/* 162 */
+/* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -27749,23 +27905,17 @@ module.exports = TimerEvent;
 
 var Class = __webpack_require__(0);
 
-//  A Scene Level Plugin is installed into every Scene and belongs to that Scene.
-//  It can listen for Scene events and respond to them.
-//  It can map itself to a Scene property, or into the Scene Systems, or both.
-//  
-//  A Global Plugin is installed just once into the Game owned Plugin Manager.
-//  It can listen for Game events and respond to them.
-
 /**
  * @classdesc
- * [description]
+ * A Global Plugin is installed just once into the Game owned Plugin Manager.
+ * It can listen for Game events and respond to them.
  *
  * @class BasePlugin
  * @memberOf Phaser.Plugins
  * @constructor
  * @since 3.8.0
  *
- * @param {Phaser.Game} game - [description]
+ * @param {Phaser.Game} game - A reference to the Game instance this plugin is running under.
  */
 var BasePlugin = new Class({
 
@@ -27776,9 +27926,9 @@ var BasePlugin = new Class({
         /**
          * A handy reference to the Plugin Manager that is responsible for this plugin.
          * Can be used as a route to gain access to game systems and  events.
-         * 
+         *
          * @name Phaser.Plugins.BasePlugin#pluginManager
-         * @type {Phaser.Plugins.BasePluginManager}
+         * @type {Phaser.Plugins.PluginManager}
          * @protected
          * @since 3.8.0
          */
@@ -27814,7 +27964,7 @@ var BasePlugin = new Class({
          * You cannot use it during the `init` method, but you can during the `boot` method.
          *
          * @name Phaser.Plugins.BasePlugin#systems
-         * @type {?Phaser.Scene.Systems}
+         * @type {?Phaser.Scenes.Systems}
          * @protected
          * @since 3.8.0
          */
@@ -27923,7 +28073,7 @@ module.exports = BasePlugin;
 
 
 /***/ }),
-/* 163 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -28119,7 +28269,7 @@ module.exports = HTML5AudioFile;
 
 
 /***/ }),
-/* 164 */
+/* 165 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -28133,7 +28283,7 @@ var CONST = __webpack_require__(20);
 var File = __webpack_require__(19);
 var FileTypesManager = __webpack_require__(6);
 var GetFastValue = __webpack_require__(1);
-var HTML5AudioFile = __webpack_require__(163);
+var HTML5AudioFile = __webpack_require__(164);
 var IsPlainObject = __webpack_require__(8);
 
 /**
@@ -28399,7 +28549,7 @@ module.exports = AudioFile;
 
 
 /***/ }),
-/* 165 */
+/* 166 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -28467,7 +28617,7 @@ module.exports = XHRLoader;
 
 
 /***/ }),
-/* 166 */
+/* 167 */
 /***/ (function(module, exports) {
 
 /**
@@ -28557,7 +28707,7 @@ module.exports = CreateInteractiveObject;
 
 
 /***/ }),
-/* 167 */
+/* 168 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -28829,7 +28979,7 @@ module.exports = GraphicsCanvasRenderer;
 
 
 /***/ }),
-/* 168 */
+/* 169 */
 /***/ (function(module, exports) {
 
 /**
@@ -28861,7 +29011,7 @@ module.exports = Circumference;
 
 
 /***/ }),
-/* 169 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -28870,7 +29020,7 @@ module.exports = Circumference;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Circumference = __webpack_require__(168);
+var Circumference = __webpack_require__(169);
 var CircumferencePoint = __webpack_require__(110);
 var FromPercent = __webpack_require__(64);
 var MATH_CONST = __webpack_require__(16);
@@ -28915,7 +29065,7 @@ module.exports = GetPoints;
 
 
 /***/ }),
-/* 170 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -28958,7 +29108,7 @@ module.exports = GetPoint;
 
 
 /***/ }),
-/* 171 */
+/* 172 */
 /***/ (function(module, exports) {
 
 /**
@@ -29076,7 +29226,7 @@ module.exports = QuickSelect;
 
 
 /***/ }),
-/* 172 */
+/* 173 */
 /***/ (function(module, exports) {
 
 /**
@@ -29122,7 +29272,7 @@ module.exports = TransposeMatrix;
 
 
 /***/ }),
-/* 173 */
+/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29137,20 +29287,20 @@ module.exports = TransposeMatrix;
 
 module.exports = {
 
-    AtlasXML: __webpack_require__(499),
-    Canvas: __webpack_require__(498),
-    Image: __webpack_require__(497),
-    JSONArray: __webpack_require__(496),
-    JSONHash: __webpack_require__(495),
-    SpriteSheet: __webpack_require__(494),
-    SpriteSheetFromAtlas: __webpack_require__(493),
-    UnityYAML: __webpack_require__(492)
+    AtlasXML: __webpack_require__(501),
+    Canvas: __webpack_require__(500),
+    Image: __webpack_require__(499),
+    JSONArray: __webpack_require__(498),
+    JSONHash: __webpack_require__(497),
+    SpriteSheet: __webpack_require__(496),
+    SpriteSheetFromAtlas: __webpack_require__(495),
+    UnityYAML: __webpack_require__(494)
 
 };
 
 
 /***/ }),
-/* 174 */
+/* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29389,7 +29539,7 @@ module.exports = TextureSource;
 
 
 /***/ }),
-/* 175 */
+/* 176 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29399,14 +29549,14 @@ module.exports = TextureSource;
  */
 
 var CanvasPool = __webpack_require__(22);
-var CanvasTexture = __webpack_require__(500);
+var CanvasTexture = __webpack_require__(502);
 var Class = __webpack_require__(0);
 var Color = __webpack_require__(30);
 var CONST = __webpack_require__(20);
 var EventEmitter = __webpack_require__(9);
 var GenerateTexture = __webpack_require__(276);
 var GetValue = __webpack_require__(4);
-var Parser = __webpack_require__(173);
+var Parser = __webpack_require__(174);
 var Texture = __webpack_require__(114);
 
 /**
@@ -30331,7 +30481,7 @@ module.exports = TextureManager;
 
 
 /***/ }),
-/* 176 */
+/* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -31298,7 +31448,7 @@ module.exports = WebAudioSound;
 
 
 /***/ }),
-/* 177 */
+/* 178 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -31310,7 +31460,7 @@ module.exports = WebAudioSound;
 
 var BaseSoundManager = __webpack_require__(77);
 var Class = __webpack_require__(0);
-var WebAudioSound = __webpack_require__(176);
+var WebAudioSound = __webpack_require__(177);
 
 /**
  * @classdesc
@@ -31625,7 +31775,7 @@ module.exports = WebAudioSoundManager;
 
 
 /***/ }),
-/* 178 */
+/* 179 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -31752,7 +31902,7 @@ module.exports = NoAudioSound;
 
 
 /***/ }),
-/* 179 */
+/* 180 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -31765,7 +31915,7 @@ module.exports = NoAudioSound;
 var BaseSoundManager = __webpack_require__(77);
 var Class = __webpack_require__(0);
 var EventEmitter = __webpack_require__(9);
-var NoAudioSound = __webpack_require__(178);
+var NoAudioSound = __webpack_require__(179);
 var NOOP = __webpack_require__(3);
 
 /**
@@ -31870,7 +32020,7 @@ module.exports = NoAudioSoundManager;
 
 
 /***/ }),
-/* 180 */
+/* 181 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -32852,7 +33002,7 @@ module.exports = HTML5AudioSound;
 
 
 /***/ }),
-/* 181 */
+/* 182 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -32864,7 +33014,7 @@ module.exports = HTML5AudioSound;
 
 var BaseSoundManager = __webpack_require__(77);
 var Class = __webpack_require__(0);
-var HTML5AudioSound = __webpack_require__(180);
+var HTML5AudioSound = __webpack_require__(181);
 
 /**
  * HTML5 Audio implementation of the Sound Manager.
@@ -33319,7 +33469,7 @@ module.exports = HTML5AudioSoundManager;
 
 
 /***/ }),
-/* 182 */
+/* 183 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -33329,9 +33479,9 @@ module.exports = HTML5AudioSoundManager;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var HTML5AudioSoundManager = __webpack_require__(181);
-var NoAudioSoundManager = __webpack_require__(179);
-var WebAudioSoundManager = __webpack_require__(177);
+var HTML5AudioSoundManager = __webpack_require__(182);
+var NoAudioSoundManager = __webpack_require__(180);
+var WebAudioSoundManager = __webpack_require__(178);
 
 /**
  * Creates a Web Audio, HTML5 Audio or No Audio Sound Manager based on config and device settings.
@@ -33369,7 +33519,7 @@ module.exports = SoundManagerCreator;
 
 
 /***/ }),
-/* 183 */
+/* 184 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -33381,7 +33531,7 @@ module.exports = SoundManagerCreator;
 var CONST = __webpack_require__(54);
 var GetValue = __webpack_require__(4);
 var Merge = __webpack_require__(93);
-var InjectionMap = __webpack_require__(501);
+var InjectionMap = __webpack_require__(503);
 
 /**
  * @namespace Phaser.Scenes.Settings
@@ -33497,7 +33647,7 @@ module.exports = Settings;
 
 
 /***/ }),
-/* 184 */
+/* 185 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -33776,7 +33926,7 @@ module.exports = Scene;
 
 
 /***/ }),
-/* 185 */
+/* 186 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -33789,7 +33939,7 @@ var Class = __webpack_require__(0);
 var CONST = __webpack_require__(54);
 var GetValue = __webpack_require__(4);
 var NOOP = __webpack_require__(3);
-var Scene = __webpack_require__(184);
+var Scene = __webpack_require__(185);
 var Systems = __webpack_require__(115);
 
 /**
@@ -35285,7 +35435,7 @@ module.exports = SceneManager;
 
 
 /***/ }),
-/* 186 */
+/* 187 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -35376,7 +35526,7 @@ module.exports = Remove;
 
 
 /***/ }),
-/* 187 */
+/* 188 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -35392,7 +35542,7 @@ var GameObjectCreator = __webpack_require__(13);
 var GameObjectFactory = __webpack_require__(11);
 var GetFastValue = __webpack_require__(1);
 var PluginCache = __webpack_require__(12);
-var Remove = __webpack_require__(186);
+var Remove = __webpack_require__(187);
 
 /**
  * @typedef {object} GlobalPlugin
@@ -35400,6 +35550,7 @@ var Remove = __webpack_require__(186);
  * @property {string} key - The unique name of this plugin within the plugin cache.
  * @property {function} plugin - An instance of the plugin.
  * @property {boolean} [active] - Is the plugin active or not?
+ * @property {string} [mapping] - If this plugin is to be injected into the Scene Systems, this is the property key map used.
  */
 
 /**
@@ -35538,15 +35689,16 @@ var PluginManager = new Class({
         {
             entry = list[i];
 
-            // { key: 'TestPlugin', plugin: TestPlugin, start: true }
+            // { key: 'TestPlugin', plugin: TestPlugin, start: true, mapping: 'test' }
 
             key = GetFastValue(entry, 'key', null);
             plugin = GetFastValue(entry, 'plugin', null);
             start = GetFastValue(entry, 'start', false);
+            mapping = GetFastValue(entry, 'mapping', null);
 
             if (key && plugin)
             {
-                this.install(key, plugin, start);
+                this.install(key, plugin, start, mapping);
             }
         }
 
@@ -35581,6 +35733,10 @@ var PluginManager = new Class({
     /**
      * Called by the Scene Systems class. Tells the plugin manager to install all Scene plugins into it.
      *
+     * First it will install global references, i.e. references from the Game systems into the Scene Systems (and Scene if mapped.)
+     * Then it will install Core Scene Plugins followed by Scene Plugins registered with the PluginManager.
+     * Finally it will install any references to Global Plugins that have a Scene mapping property into the Scene itself.
+     *
      * @method Phaser.Plugins.PluginManager#addToScene
      * @protected
      * @since 3.8.0
@@ -35593,6 +35749,7 @@ var PluginManager = new Class({
     {
         var i;
         var pluginKey;
+        var pluginList;
         var game = this.game;
         var scene = sys.scene;
         var map = sys.settings.map;
@@ -35617,7 +35774,7 @@ var PluginManager = new Class({
 
         for (var s = 0; s < scenePlugins.length; s++)
         {
-            var pluginList = scenePlugins[s];
+            pluginList = scenePlugins[s];
 
             for (i = 0; i < pluginList.length; i++)
             {
@@ -35649,6 +35806,19 @@ var PluginManager = new Class({
                 {
                     plugin.boot();
                 }
+            }
+        }
+
+        //  And finally, inject any 'global scene plugins'
+        pluginList = this.plugins;
+
+        for (i = 0; i < pluginList.length; i++)
+        {
+            var entry = pluginList[i];
+           
+            if (entry.mapping)
+            {
+                scene[entry.mapping] = entry.plugin;
             }
         }
     },
@@ -35758,11 +35928,13 @@ var PluginManager = new Class({
      * 
      * @param {string} key - The unique handle given to this plugin within the Plugin Manager.
      * @param {function} plugin - The plugin code. This should be the non-instantiated version.
-     * @param {boolean} [start=false] - Automatically start the plugin running?
+     * @param {boolean} [start=false] - Automatically start the plugin running? This is always `true` if you provide a mapping value.
+     * @param {string} [mapping] - If this plugin is injected into the Phaser.Scene class, this is the property key to use.
      */
-    install: function (key, plugin, start)
+    install: function (key, plugin, start, mapping)
     {
         if (start === undefined) { start = false; }
+        if (mapping === undefined) { mapping = null; }
 
         if (typeof plugin !== 'function')
         {
@@ -35776,16 +35948,21 @@ var PluginManager = new Class({
             return;
         }
 
+        if (mapping !== null)
+        {
+            start = true;
+        }
+
+        console.log('install', key, start, mapping);
+
         if (!this.game.isBooted)
         {
-            this._pendingGlobal.push({ key: key, plugin: plugin, start: start });
+            this._pendingGlobal.push({ key: key, plugin: plugin, start: start, mapping: mapping });
         }
         else
         {
             //  Add it to the plugin store
-            PluginCache.registerCustom(key, plugin);
-
-            // gamePlugins[key] = plugin;
+            PluginCache.registerCustom(key, plugin, mapping);
 
             if (start)
             {
@@ -35894,26 +36071,46 @@ var PluginManager = new Class({
         }
         else if (!entry)
         {
-            var plugin = this.getClass(key);
-
-            if (plugin)
-            {
-                var instance = new plugin(this);
-
-                entry = {
-                    key: runAs,
-                    plugin: instance,
-                    active: true
-                };
-
-                this.plugins.push(entry);
-
-                instance.init();
-                instance.start();
-            }
+            entry = this.createEntry(key, runAs);
         }
 
         return (entry) ? entry.plugin : null;
+    },
+
+    /**
+     * Creates a new instance of a global plugin, adds an entry into the plugins array and returns it.
+     *
+     * @method Phaser.Plugins.PluginManager#createEntry
+     * @private
+     * @since 3.9.0
+     *
+     * @param {string} key - The key of the plugin to create an instance of.
+     * @param {string} [runAs] - Run the plugin under a new key. This allows you to run one plugin multiple times.
+     *
+     * @return {?Phaser.Plugins.BasePlugin} The plugin that was started, or `null` if invalid key given.
+     */
+    createEntry: function (key, runAs)
+    {
+        var entry = PluginCache.getCustom(key);
+
+        if (entry)
+        {
+            var instance = new entry.plugin(this);
+
+            entry = {
+                key: runAs,
+                plugin: instance,
+                active: true,
+                mapping: entry.mapping
+            };
+
+            this.plugins.push(entry);
+
+            instance.init();
+            instance.start();
+        }
+
+        return entry;
     },
 
     /**
@@ -35974,20 +36171,9 @@ var PluginManager = new Class({
 
             if (plugin && autoStart)
             {
-                var instance = new plugin(this);
+                entry = this.createEntry(key, key);
 
-                entry = {
-                    key: key,
-                    plugin: instance,
-                    active: true
-                };
-
-                this.plugins.push(entry);
-
-                instance.init();
-                instance.start();
-
-                return instance;
+                return (entry) ? entry.plugin : null;
             }
             else if (plugin)
             {
@@ -36136,10 +36322,16 @@ var PluginManager = new Class({
      *
      * @param {string} key - The key of the Game Object that the given callbacks will create, i.e. `image`, `sprite`.
      * @param {function} callback - The callback to invoke when the Game Object Factory is called.
+     * @param {Phaser.Scene} [addToScene] - Optionally add this file type into the Loader Plugin owned by the given Scene.
      */
-    registerFileType: function (key, callback)
+    registerFileType: function (key, callback, addToScene)
     {
         FileTypesManager.register(key, callback);
+
+        if (addToScene && addToScene.sys.load)
+        {
+            addToScene.sys.load[key] = callback;
+        }
     },
 
     /**
@@ -36154,7 +36346,7 @@ var PluginManager = new Class({
     {
         for (var i = 0; i < this.plugins.length; i++)
         {
-            this.plugins[i].destroy();
+            this.plugins[i].plugin.destroy();
         }
 
         this.game = null;
@@ -36174,7 +36366,7 @@ module.exports = PluginManager;
 
 
 /***/ }),
-/* 188 */
+/* 189 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -36377,7 +36569,7 @@ module.exports = TouchManager;
 
 
 /***/ }),
-/* 189 */
+/* 190 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -37016,7 +37208,7 @@ module.exports = Pointer;
 
 
 /***/ }),
-/* 190 */
+/* 191 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -37328,7 +37520,7 @@ module.exports = MouseManager;
 
 
 /***/ }),
-/* 191 */
+/* 192 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -37339,8 +37531,8 @@ module.exports = MouseManager;
 
 var Class = __webpack_require__(0);
 var GetFastValue = __webpack_require__(1);
-var ProcessKeyCombo = __webpack_require__(509);
-var ResetKeyCombo = __webpack_require__(507);
+var ProcessKeyCombo = __webpack_require__(511);
+var ResetKeyCombo = __webpack_require__(509);
 
 /**
  * @callback KeyboardKeydownCallback
@@ -37613,7 +37805,7 @@ module.exports = KeyCombo;
 
 
 /***/ }),
-/* 192 */
+/* 193 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -37838,7 +38030,7 @@ module.exports = Key;
 
 
 /***/ }),
-/* 193 */
+/* 194 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -37849,12 +38041,12 @@ module.exports = Key;
 
 var Class = __webpack_require__(0);
 var EventEmitter = __webpack_require__(9);
-var Key = __webpack_require__(192);
+var Key = __webpack_require__(193);
 var KeyCodes = __webpack_require__(116);
-var KeyCombo = __webpack_require__(191);
-var KeyMap = __webpack_require__(506);
-var ProcessKeyDown = __webpack_require__(505);
-var ProcessKeyUp = __webpack_require__(504);
+var KeyCombo = __webpack_require__(192);
+var KeyMap = __webpack_require__(508);
+var ProcessKeyDown = __webpack_require__(507);
+var ProcessKeyUp = __webpack_require__(506);
 
 /**
  * @callback KeyboardHandler
@@ -38036,21 +38228,21 @@ var KeyboardManager = new Class({
     /**
      * @typedef {object} CursorKeys
      *
-     * @property {Phaser.Input.Keyboard.Key} [up] - [description]
-     * @property {Phaser.Input.Keyboard.Key} [down] - [description]
-     * @property {Phaser.Input.Keyboard.Key} [left] - [description]
-     * @property {Phaser.Input.Keyboard.Key} [right] - [description]
-     * @property {Phaser.Input.Keyboard.Key} [space] - [description]
-     * @property {Phaser.Input.Keyboard.Key} [shift] - [description]
+     * @property {Phaser.Input.Keyboard.Key} [up] - A Key object mapping to the UP arrow key.
+     * @property {Phaser.Input.Keyboard.Key} [down] - A Key object mapping to the DOWN arrow key.
+     * @property {Phaser.Input.Keyboard.Key} [left] - A Key object mapping to the LEFT arrow key.
+     * @property {Phaser.Input.Keyboard.Key} [right] - A Key object mapping to the RIGHT arrow key.
+     * @property {Phaser.Input.Keyboard.Key} [space] - A Key object mapping to the SPACE BAR key.
+     * @property {Phaser.Input.Keyboard.Key} [shift] - A Key object mapping to the SHIFT key.
      */
 
     /**
-     * Creates and returns an object containing 4 hotkeys for Up, Down, Left and Right, and also space and shift.
+     * Creates and returns an object containing 4 hotkeys for Up, Down, Left and Right, and also Space Bar and shift.
      *
      * @method Phaser.Input.Keyboard.KeyboardManager#createCursorKeys
      * @since 3.0.0
      *
-     * @return {CursorKeys} [description]
+     * @return {CursorKeys} An object containing the properties: `up`, `down`, `left`, `right`, `space` and `shift`.
      */
     createCursorKeys: function ()
     {
@@ -38286,7 +38478,7 @@ module.exports = KeyboardManager;
 
 
 /***/ }),
-/* 194 */
+/* 195 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -38406,7 +38598,7 @@ module.exports = Button;
 
 
 /***/ }),
-/* 195 */
+/* 196 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -38516,7 +38708,7 @@ module.exports = Axis;
 
 
 /***/ }),
-/* 196 */
+/* 197 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -38525,8 +38717,8 @@ module.exports = Axis;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Axis = __webpack_require__(195);
-var Button = __webpack_require__(194);
+var Axis = __webpack_require__(196);
+var Button = __webpack_require__(195);
 var Class = __webpack_require__(0);
 
 /**
@@ -38668,7 +38860,7 @@ module.exports = Gamepad;
 
 
 /***/ }),
-/* 197 */
+/* 198 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -38679,7 +38871,7 @@ module.exports = Gamepad;
 
 var Class = __webpack_require__(0);
 var EventEmitter = __webpack_require__(9);
-var Gamepad = __webpack_require__(196);
+var Gamepad = __webpack_require__(197);
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API
 // https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API
@@ -39067,7 +39259,7 @@ module.exports = GamepadManager;
 
 
 /***/ }),
-/* 198 */
+/* 199 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -39078,14 +39270,14 @@ module.exports = GamepadManager;
 
 var Class = __webpack_require__(0);
 var EventEmitter = __webpack_require__(9);
-var Gamepad = __webpack_require__(197);
-var Keyboard = __webpack_require__(193);
-var Mouse = __webpack_require__(190);
-var Pointer = __webpack_require__(189);
+var Gamepad = __webpack_require__(198);
+var Keyboard = __webpack_require__(194);
+var Mouse = __webpack_require__(191);
+var Pointer = __webpack_require__(190);
 var Rectangle = __webpack_require__(14);
-var Touch = __webpack_require__(188);
+var Touch = __webpack_require__(189);
 var TransformMatrix = __webpack_require__(63);
-var TransformXY = __webpack_require__(255);
+var TransformXY = __webpack_require__(256);
 
 /**
  * @classdesc
@@ -39715,7 +39907,7 @@ module.exports = InputManager;
 
 
 /***/ }),
-/* 199 */
+/* 200 */
 /***/ (function(module, exports) {
 
 /**
@@ -40306,7 +40498,7 @@ module.exports = ModelViewProjection;
 
 
 /***/ }),
-/* 200 */
+/* 201 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40420,7 +40612,7 @@ module.exports = init();
 
 
 /***/ }),
-/* 201 */
+/* 202 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40435,15 +40627,15 @@ module.exports = init();
 
 module.exports = {
 
-    Fade: __webpack_require__(556),
-    Flash: __webpack_require__(555),
-    Shake: __webpack_require__(554)
+    Fade: __webpack_require__(558),
+    Flash: __webpack_require__(557),
+    Shake: __webpack_require__(556)
 
 };
 
 
 /***/ }),
-/* 202 */
+/* 203 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40452,7 +40644,7 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseCache = __webpack_require__(203);
+var BaseCache = __webpack_require__(204);
 var Class = __webpack_require__(0);
 
 /**
@@ -40656,7 +40848,7 @@ module.exports = CacheManager;
 
 
 /***/ }),
-/* 203 */
+/* 204 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40666,7 +40858,7 @@ module.exports = CacheManager;
  */
 
 var Class = __webpack_require__(0);
-var CustomMap = __webpack_require__(121);
+var CustomMap = __webpack_require__(122);
 var EventEmitter = __webpack_require__(9);
 
 /**
@@ -40850,7 +41042,7 @@ module.exports = BaseCache;
 
 
 /***/ }),
-/* 204 */
+/* 205 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40859,12 +41051,12 @@ module.exports = BaseCache;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Animation = __webpack_require__(207);
+var Animation = __webpack_require__(208);
 var Class = __webpack_require__(0);
-var CustomMap = __webpack_require__(121);
+var CustomMap = __webpack_require__(122);
 var EventEmitter = __webpack_require__(9);
 var GetValue = __webpack_require__(4);
-var Pad = __webpack_require__(129);
+var Pad = __webpack_require__(130);
 
 /**
  * @typedef {object} JSONAnimationManager
@@ -41477,7 +41669,7 @@ module.exports = AnimationManager;
 
 
 /***/ }),
-/* 205 */
+/* 206 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -41660,7 +41852,7 @@ module.exports = AnimationFrame;
 
 
 /***/ }),
-/* 206 */
+/* 207 */
 /***/ (function(module, exports) {
 
 /**
@@ -41741,7 +41933,7 @@ module.exports = FindClosestInSorted;
 
 
 /***/ }),
-/* 207 */
+/* 208 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -41750,10 +41942,10 @@ module.exports = FindClosestInSorted;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Clamp = __webpack_require__(24);
+var Clamp = __webpack_require__(23);
 var Class = __webpack_require__(0);
-var FindClosestInSorted = __webpack_require__(206);
-var Frame = __webpack_require__(205);
+var FindClosestInSorted = __webpack_require__(207);
+var Frame = __webpack_require__(206);
 var GetValue = __webpack_require__(4);
 
 /**
@@ -42624,7 +42816,7 @@ module.exports = Animation;
 
 
 /***/ }),
-/* 208 */
+/* 209 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -42636,14 +42828,16 @@ module.exports = Animation;
 var Wrap = __webpack_require__(39);
 
 /**
- * [description]
+ * Wrap an angle in degrees.
+ *
+ * Wraps the angle to a value in the range of -180 to 180.
  *
  * @function Phaser.Math.Angle.WrapDegrees
  * @since 3.0.0
  *
- * @param {number} angle - [description]
+ * @param {number} angle - The angle to wrap, in degrees.
  *
- * @return {number} [description]
+ * @return {number} The wrapped angle, in degrees.
  */
 var WrapDegrees = function (angle)
 {
@@ -42654,7 +42848,7 @@ module.exports = WrapDegrees;
 
 
 /***/ }),
-/* 209 */
+/* 210 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -42666,14 +42860,16 @@ module.exports = WrapDegrees;
 var MathWrap = __webpack_require__(39);
 
 /**
- * [description]
+ * Wrap an angle.
+ *
+ * Wraps the angle to a value in the range of -PI to PI.
  *
  * @function Phaser.Math.Angle.Wrap
  * @since 3.0.0
  *
- * @param {number} angle - [description]
+ * @param {number} angle - The angle to wrap, in radians.
  *
- * @return {number} [description]
+ * @return {number} The wrapped angle, in radians.
  */
 var Wrap = function (angle)
 {
@@ -42684,7 +42880,7 @@ module.exports = Wrap;
 
 
 /***/ }),
-/* 210 */
+/* 211 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -42842,7 +43038,7 @@ module.exports = GeometryMask;
 
 
 /***/ }),
-/* 211 */
+/* 212 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -43064,7 +43260,7 @@ module.exports = BitmapMask;
 
 
 /***/ }),
-/* 212 */
+/* 213 */
 /***/ (function(module, exports) {
 
 var g;
@@ -43090,14 +43286,14 @@ module.exports = g;
 
 
 /***/ }),
-/* 213 */,
 /* 214 */,
 /* 215 */,
 /* 216 */,
 /* 217 */,
 /* 218 */,
 /* 219 */,
-/* 220 */
+/* 220 */,
+/* 221 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -43106,7 +43302,7 @@ module.exports = g;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var quickselect = __webpack_require__(171);
+var quickselect = __webpack_require__(172);
 
 /**
  * @classdesc
@@ -43705,7 +43901,7 @@ function multiSelect (arr, left, right, n, compare)
 module.exports = rbush;
 
 /***/ }),
-/* 221 */
+/* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -43921,7 +44117,7 @@ module.exports = ProcessQueue;
 
 
 /***/ }),
-/* 222 */
+/* 223 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44105,8 +44301,8 @@ module.exports = TextFile;
 
 
 /***/ }),
-/* 223 */,
-/* 224 */
+/* 224 */,
+/* 225 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44199,7 +44395,7 @@ module.exports = GetPoints;
 
 
 /***/ }),
-/* 225 */
+/* 226 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44287,7 +44483,6 @@ module.exports = GetPoint;
 
 
 /***/ }),
-/* 226 */,
 /* 227 */,
 /* 228 */,
 /* 229 */,
@@ -44295,7 +44490,8 @@ module.exports = GetPoint;
 /* 231 */,
 /* 232 */,
 /* 233 */,
-/* 234 */
+/* 234 */,
+/* 235 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44308,11 +44504,11 @@ module.exports = GetPoint;
  * @namespace Phaser.Math.Easing.Stepped
  */
 
-module.exports = __webpack_require__(406);
+module.exports = __webpack_require__(408);
 
 
 /***/ }),
-/* 235 */
+/* 236 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44327,32 +44523,9 @@ module.exports = __webpack_require__(406);
 
 module.exports = {
 
-    In: __webpack_require__(409),
-    Out: __webpack_require__(408),
-    InOut: __webpack_require__(407)
-
-};
-
-
-/***/ }),
-/* 236 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * @namespace Phaser.Math.Easing.Quintic
- */
-
-module.exports = {
-
-    In: __webpack_require__(412),
-    Out: __webpack_require__(411),
-    InOut: __webpack_require__(410)
+    In: __webpack_require__(411),
+    Out: __webpack_require__(410),
+    InOut: __webpack_require__(409)
 
 };
 
@@ -44368,14 +44541,14 @@ module.exports = {
  */
 
 /**
- * @namespace Phaser.Math.Easing.Quartic
+ * @namespace Phaser.Math.Easing.Quintic
  */
 
 module.exports = {
 
-    In: __webpack_require__(415),
-    Out: __webpack_require__(414),
-    InOut: __webpack_require__(413)
+    In: __webpack_require__(414),
+    Out: __webpack_require__(413),
+    InOut: __webpack_require__(412)
 
 };
 
@@ -44391,14 +44564,14 @@ module.exports = {
  */
 
 /**
- * @namespace Phaser.Math.Easing.Quadratic
+ * @namespace Phaser.Math.Easing.Quartic
  */
 
 module.exports = {
 
-    In: __webpack_require__(418),
-    Out: __webpack_require__(417),
-    InOut: __webpack_require__(416)
+    In: __webpack_require__(417),
+    Out: __webpack_require__(416),
+    InOut: __webpack_require__(415)
 
 };
 
@@ -44414,14 +44587,37 @@ module.exports = {
  */
 
 /**
- * @namespace Phaser.Math.Easing.Linear
+ * @namespace Phaser.Math.Easing.Quadratic
  */
 
-module.exports = __webpack_require__(419);
+module.exports = {
+
+    In: __webpack_require__(420),
+    Out: __webpack_require__(419),
+    InOut: __webpack_require__(418)
+
+};
 
 
 /***/ }),
 /* 240 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Easing.Linear
+ */
+
+module.exports = __webpack_require__(421);
+
+
+/***/ }),
+/* 241 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44436,32 +44632,9 @@ module.exports = __webpack_require__(419);
 
 module.exports = {
 
-    In: __webpack_require__(422),
-    Out: __webpack_require__(421),
-    InOut: __webpack_require__(420)
-
-};
-
-
-/***/ }),
-/* 241 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * @namespace Phaser.Math.Easing.Elastic
- */
-
-module.exports = {
-
-    In: __webpack_require__(425),
-    Out: __webpack_require__(424),
-    InOut: __webpack_require__(423)
+    In: __webpack_require__(424),
+    Out: __webpack_require__(423),
+    InOut: __webpack_require__(422)
 
 };
 
@@ -44477,14 +44650,14 @@ module.exports = {
  */
 
 /**
- * @namespace Phaser.Math.Easing.Cubic
+ * @namespace Phaser.Math.Easing.Elastic
  */
 
 module.exports = {
 
-    In: __webpack_require__(428),
-    Out: __webpack_require__(427),
-    InOut: __webpack_require__(426)
+    In: __webpack_require__(427),
+    Out: __webpack_require__(426),
+    InOut: __webpack_require__(425)
 
 };
 
@@ -44500,14 +44673,14 @@ module.exports = {
  */
 
 /**
- * @namespace Phaser.Math.Easing.Circular
+ * @namespace Phaser.Math.Easing.Cubic
  */
 
 module.exports = {
 
-    In: __webpack_require__(431),
-    Out: __webpack_require__(430),
-    InOut: __webpack_require__(429)
+    In: __webpack_require__(430),
+    Out: __webpack_require__(429),
+    InOut: __webpack_require__(428)
 
 };
 
@@ -44523,14 +44696,14 @@ module.exports = {
  */
 
 /**
- * @namespace Phaser.Math.Easing.Bounce
+ * @namespace Phaser.Math.Easing.Circular
  */
 
 module.exports = {
 
-    In: __webpack_require__(434),
-    Out: __webpack_require__(433),
-    InOut: __webpack_require__(432)
+    In: __webpack_require__(433),
+    Out: __webpack_require__(432),
+    InOut: __webpack_require__(431)
 
 };
 
@@ -44546,20 +44719,43 @@ module.exports = {
  */
 
 /**
- * @namespace Phaser.Math.Easing.Back
+ * @namespace Phaser.Math.Easing.Bounce
  */
 
 module.exports = {
 
-    In: __webpack_require__(437),
-    Out: __webpack_require__(436),
-    InOut: __webpack_require__(435)
+    In: __webpack_require__(436),
+    Out: __webpack_require__(435),
+    InOut: __webpack_require__(434)
 
 };
 
 
 /***/ }),
 /* 246 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Easing.Back
+ */
+
+module.exports = {
+
+    In: __webpack_require__(439),
+    Out: __webpack_require__(438),
+    InOut: __webpack_require__(437)
+
+};
+
+
+/***/ }),
+/* 247 */
 /***/ (function(module, exports) {
 
 /**
@@ -44588,7 +44784,7 @@ module.exports = FloatBetween;
 
 
 /***/ }),
-/* 247 */
+/* 248 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44599,31 +44795,31 @@ module.exports = FloatBetween;
 
 var Ellipse = __webpack_require__(111);
 
-Ellipse.Area = __webpack_require__(457);
-Ellipse.Circumference = __webpack_require__(168);
+Ellipse.Area = __webpack_require__(459);
+Ellipse.Circumference = __webpack_require__(169);
 Ellipse.CircumferencePoint = __webpack_require__(110);
-Ellipse.Clone = __webpack_require__(456);
+Ellipse.Clone = __webpack_require__(458);
 Ellipse.Contains = __webpack_require__(53);
-Ellipse.ContainsPoint = __webpack_require__(455);
-Ellipse.ContainsRect = __webpack_require__(454);
-Ellipse.CopyFrom = __webpack_require__(453);
-Ellipse.Equals = __webpack_require__(452);
-Ellipse.GetBounds = __webpack_require__(451);
-Ellipse.GetPoint = __webpack_require__(170);
-Ellipse.GetPoints = __webpack_require__(169);
-Ellipse.Offset = __webpack_require__(450);
-Ellipse.OffsetPoint = __webpack_require__(449);
-Ellipse.Random = __webpack_require__(130);
+Ellipse.ContainsPoint = __webpack_require__(457);
+Ellipse.ContainsRect = __webpack_require__(456);
+Ellipse.CopyFrom = __webpack_require__(455);
+Ellipse.Equals = __webpack_require__(454);
+Ellipse.GetBounds = __webpack_require__(453);
+Ellipse.GetPoint = __webpack_require__(171);
+Ellipse.GetPoints = __webpack_require__(170);
+Ellipse.Offset = __webpack_require__(452);
+Ellipse.OffsetPoint = __webpack_require__(451);
+Ellipse.Random = __webpack_require__(131);
 
 module.exports = Ellipse;
 
 
 /***/ }),
-/* 248 */,
 /* 249 */,
 /* 250 */,
 /* 251 */,
-/* 252 */
+/* 252 */,
+/* 253 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44763,7 +44959,7 @@ module.exports = Range;
 
 
 /***/ }),
-/* 253 */
+/* 254 */
 /***/ (function(module, exports) {
 
 /**
@@ -44792,7 +44988,7 @@ module.exports = RoundAwayFromZero;
 
 
 /***/ }),
-/* 254 */
+/* 255 */
 /***/ (function(module, exports) {
 
 /**
@@ -44829,7 +45025,7 @@ module.exports = UppercaseFirst;
 
 
 /***/ }),
-/* 255 */
+/* 256 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44854,7 +45050,7 @@ var Vector2 = __webpack_require__(7);
  * @param {number} rotation - Rotation of the transform point, in radians.
  * @param {number} scaleX - Horizontal scale of the transform point.
  * @param {number} scaleY - Vertical scale of the transform point.
- * @param {(Phaser.Math.Vector2|Phaser.Geom.Point|object)} [output] - [description]
+ * @param {(Phaser.Math.Vector2|Phaser.Geom.Point|object)} [output] - The output vector, point or object for the translated coordinates.
  *
  * @return {(Phaser.Math.Vector2|Phaser.Geom.Point|object)} The translated point.
  */
@@ -44895,7 +45091,7 @@ module.exports = TransformXY;
 
 
 /***/ }),
-/* 256 */
+/* 257 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -45570,7 +45766,7 @@ earcut.flatten = function (data) {
 };
 
 /***/ }),
-/* 257 */
+/* 258 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -45582,10 +45778,10 @@ earcut.flatten = function (data) {
 
 var Class = __webpack_require__(0);
 var Commands = __webpack_require__(117);
-var Earcut = __webpack_require__(256);
-var ModelViewProjection = __webpack_require__(199);
-var ShaderSourceFS = __webpack_require__(520);
-var ShaderSourceVS = __webpack_require__(519);
+var Earcut = __webpack_require__(257);
+var ModelViewProjection = __webpack_require__(200);
+var ShaderSourceFS = __webpack_require__(522);
+var ShaderSourceVS = __webpack_require__(521);
 var Utils = __webpack_require__(27);
 var WebGLPipeline = __webpack_require__(83);
 
@@ -46852,7 +47048,7 @@ module.exports = FlatTintPipeline;
 
 
 /***/ }),
-/* 258 */
+/* 259 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -46863,8 +47059,8 @@ module.exports = FlatTintPipeline;
  */
 
 var Class = __webpack_require__(0);
-var ShaderSourceFS = __webpack_require__(522);
-var ShaderSourceVS = __webpack_require__(521);
+var ShaderSourceFS = __webpack_require__(524);
+var ShaderSourceVS = __webpack_require__(523);
 var WebGLPipeline = __webpack_require__(83);
 
 /**
@@ -47079,7 +47275,7 @@ module.exports = BitmapMaskPipeline;
 
 
 /***/ }),
-/* 259 */
+/* 260 */
 /***/ (function(module, exports) {
 
 /**
@@ -47148,7 +47344,7 @@ module.exports = WebGLSnapshot;
 
 
 /***/ }),
-/* 260 */
+/* 261 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -47163,13 +47359,13 @@ var CONST = __webpack_require__(20);
 var IsSizePowerOfTwo = __webpack_require__(84);
 var SpliceOne = __webpack_require__(55);
 var Utils = __webpack_require__(27);
-var WebGLSnapshot = __webpack_require__(259);
+var WebGLSnapshot = __webpack_require__(260);
 
 // Default Pipelines
-var BitmapMaskPipeline = __webpack_require__(258);
-var FlatTintPipeline = __webpack_require__(257);
-var ForwardDiffuseLightPipeline = __webpack_require__(146);
-var TextureTintPipeline = __webpack_require__(125);
+var BitmapMaskPipeline = __webpack_require__(259);
+var FlatTintPipeline = __webpack_require__(258);
+var ForwardDiffuseLightPipeline = __webpack_require__(147);
+var TextureTintPipeline = __webpack_require__(126);
 
 /**
  * @callback WebGLContextCallback
@@ -49151,7 +49347,7 @@ module.exports = WebGLRenderer;
 
 
 /***/ }),
-/* 261 */
+/* 262 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -49161,7 +49357,7 @@ module.exports = WebGLRenderer;
  */
 
 var modes = __webpack_require__(50);
-var CanvasFeatures = __webpack_require__(200);
+var CanvasFeatures = __webpack_require__(201);
 
 /**
  * [description]
@@ -49201,7 +49397,7 @@ module.exports = GetBlendModes;
 
 
 /***/ }),
-/* 262 */
+/* 263 */
 /***/ (function(module, exports) {
 
 /**
@@ -49324,7 +49520,7 @@ module.exports = function (configRoundPixels)
 
 
 /***/ }),
-/* 263 */
+/* 264 */
 /***/ (function(module, exports) {
 
 /**
@@ -49363,7 +49559,7 @@ module.exports = CanvasSnapshot;
 
 
 /***/ }),
-/* 264 */
+/* 265 */
 /***/ (function(module, exports) {
 
 /**
@@ -49419,7 +49615,7 @@ module.exports = function (configRoundPixels)
 
 
 /***/ }),
-/* 265 */
+/* 266 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -49429,14 +49625,14 @@ module.exports = function (configRoundPixels)
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BlitImage = __webpack_require__(264);
-var CanvasSnapshot = __webpack_require__(263);
+var BlitImage = __webpack_require__(265);
+var CanvasSnapshot = __webpack_require__(264);
 var Class = __webpack_require__(0);
 var CONST = __webpack_require__(20);
-var DrawImage = __webpack_require__(262);
-var GetBlendModes = __webpack_require__(261);
+var DrawImage = __webpack_require__(263);
+var GetBlendModes = __webpack_require__(262);
 var ScaleModes = __webpack_require__(58);
-var Smoothing = __webpack_require__(127);
+var Smoothing = __webpack_require__(128);
 
 /**
  * @classdesc
@@ -49937,7 +50133,7 @@ module.exports = CanvasRenderer;
 
 
 /***/ }),
-/* 266 */
+/* 267 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -50134,7 +50330,7 @@ module.exports = RequestAnimationFrame;
 
 
 /***/ }),
-/* 267 */
+/* 268 */
 /***/ (function(module, exports) {
 
 /**
@@ -50163,7 +50359,7 @@ module.exports = RemoveFromDOM;
 
 
 /***/ }),
-/* 268 */
+/* 269 */
 /***/ (function(module, exports) {
 
 /**
@@ -50220,7 +50416,7 @@ module.exports = ParseXML;
 
 
 /***/ }),
-/* 269 */
+/* 270 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -50283,7 +50479,7 @@ module.exports = DOMContentLoaded;
 
 
 /***/ }),
-/* 270 */
+/* 271 */
 /***/ (function(module, exports) {
 
 /**
@@ -50293,15 +50489,15 @@ module.exports = DOMContentLoaded;
  */
 
 /**
- * [description]
+ * Compute a random integer between the `min` and `max` values, inclusive.
  *
  * @function Phaser.Math.Between
  * @since 3.0.0
  *
- * @param {integer} min - [description]
- * @param {integer} max - [description]
+ * @param {integer} min - The minimum value.
+ * @param {integer} max - The maximum value.
  *
- * @return {integer} [description]
+ * @return {integer} The random integer.
  */
 var Between = function (min, max)
 {
@@ -50312,7 +50508,6 @@ module.exports = Between;
 
 
 /***/ }),
-/* 271 */,
 /* 272 */
 /***/ (function(module, exports) {
 
@@ -50776,7 +50971,9 @@ module.exports = HexStringToColor;
 
 /***/ }),
 /* 286 */,
-/* 287 */
+/* 287 */,
+/* 288 */,
+/* 289 */
 /***/ (function(module, exports) {
 
 /**
@@ -50816,7 +51013,7 @@ module.exports = RotateRight;
 
 
 /***/ }),
-/* 288 */
+/* 290 */
 /***/ (function(module, exports) {
 
 /**
@@ -50856,7 +51053,7 @@ module.exports = RotateLeft;
 
 
 /***/ }),
-/* 289 */
+/* 291 */
 /***/ (function(module, exports) {
 
 /**
@@ -50985,7 +51182,7 @@ module.exports = Pipeline;
 
 
 /***/ }),
-/* 290 */
+/* 292 */
 /***/ (function(module, exports) {
 
 /**
@@ -50995,17 +51192,17 @@ module.exports = Pipeline;
  */
 
 /**
- * [description]
+ * Rotate a `point` around `x` and `y` by the given `angle`.
  *
  * @function Phaser.Math.RotateAround
  * @since 3.0.0
  *
- * @param {(Phaser.Geom.Point|object)} point - [description]
- * @param {number} x - [description]
- * @param {number} y - [description]
- * @param {number} angle - [description]
+ * @param {(Phaser.Geom.Point|object)} point - The point to be rotated.
+ * @param {number} x - The horizontal coordinate to rotate around.
+ * @param {number} y - The vertical coordinate to rotate around.
+ * @param {number} angle - The angle of rotation in radians.
  *
- * @return {Phaser.Geom.Point} [description]
+ * @return {Phaser.Geom.Point} The given point, rotated by the given angle around the given coordinates.
  */
 var RotateAround = function (point, x, y, angle)
 {
@@ -51025,7 +51222,7 @@ module.exports = RotateAround;
 
 
 /***/ }),
-/* 291 */
+/* 293 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -51067,7 +51264,7 @@ module.exports = GetPoint;
 
 
 /***/ }),
-/* 292 */
+/* 294 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -51076,7 +51273,7 @@ module.exports = GetPoint;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GetPoint = __webpack_require__(131);
+var GetPoint = __webpack_require__(132);
 var Perimeter = __webpack_require__(96);
 
 //  Return an array of points from the perimeter of the rectangle
@@ -51121,7 +51318,7 @@ module.exports = GetPoints;
 
 
 /***/ }),
-/* 293 */
+/* 295 */
 /***/ (function(module, exports) {
 
 /**
@@ -51149,7 +51346,7 @@ module.exports = Circumference;
 
 
 /***/ }),
-/* 294 */
+/* 296 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -51158,8 +51355,8 @@ module.exports = Circumference;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Circumference = __webpack_require__(293);
-var CircumferencePoint = __webpack_require__(132);
+var Circumference = __webpack_require__(295);
+var CircumferencePoint = __webpack_require__(133);
 var FromPercent = __webpack_require__(64);
 var MATH_CONST = __webpack_require__(16);
 
@@ -51201,7 +51398,7 @@ module.exports = GetPoints;
 
 
 /***/ }),
-/* 295 */
+/* 297 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -51214,14 +51411,14 @@ var Class = __webpack_require__(0);
 
 /**
  * @classdesc
- * [description]
+ * A seeded random data generator.
  *
  * @class RandomDataGenerator
  * @memberOf Phaser.Math
  * @constructor
  * @since 3.0.0
  *
- * @param {string[]} [seeds] - [description]
+ * @param {string[]} [seeds] - The seeds.
  */
 var RandomDataGenerator = new Class({
 
@@ -51285,7 +51482,7 @@ var RandomDataGenerator = new Class({
         this.n = 0;
 
         /**
-         * [description]
+         * Signs to choose from.
          *
          * @name Phaser.Math.RandomDataGenerator#signs
          * @type {number[]}
@@ -51306,7 +51503,7 @@ var RandomDataGenerator = new Class({
      * @since 3.0.0
      * @private
      *
-     * @return {number} [description]
+     * @return {number} A random number.
      */
     rnd: function ()
     {
@@ -51327,7 +51524,7 @@ var RandomDataGenerator = new Class({
      * @since 3.0.0
      * @private
      *
-     * @param {string} data - [description]
+     * @param {string} data - The value to hash.
      *
      * @return {number} The hashed value.
      */
@@ -51356,12 +51553,12 @@ var RandomDataGenerator = new Class({
     },
 
     /**
-     * [description]
+     * Initialize the state of the random data generator.
      *
      * @method Phaser.Math.RandomDataGenerator#init
      * @since 3.0.0
      *
-     * @param {(string|string[])} seeds - [description]
+     * @param {(string|string[])} seeds - The seeds to initialize the random data generator with.
      */
     init: function (seeds)
     {
@@ -51662,8 +51859,8 @@ var RandomDataGenerator = new Class({
      *
      * @method Phaser.Math.RandomDataGenerator#shuffle
      * @since 3.7.0
-     * 
-     * @param {array[]} [array] - The array to be shuffled.
+     *
+     * @param {array} [array] - The array to be shuffled.
      *
      * @return {array} The shuffled array.
      */
@@ -51689,7 +51886,7 @@ module.exports = RandomDataGenerator;
 
 
 /***/ }),
-/* 296 */
+/* 298 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -51698,7 +51895,7 @@ module.exports = RandomDataGenerator;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CircumferencePoint = __webpack_require__(132);
+var CircumferencePoint = __webpack_require__(133);
 var FromPercent = __webpack_require__(64);
 var MATH_CONST = __webpack_require__(16);
 var Point = __webpack_require__(5);
@@ -51732,10 +51929,10 @@ module.exports = GetPoint;
 
 
 /***/ }),
-/* 297 */,
-/* 298 */,
 /* 299 */,
-/* 300 */
+/* 300 */,
+/* 301 */,
+/* 302 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52703,7 +52900,7 @@ module.exports = Animation;
 
 
 /***/ }),
-/* 301 */
+/* 303 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52713,9 +52910,9 @@ module.exports = Animation;
  */
 
 var Class = __webpack_require__(0);
-var NumberTweenBuilder = __webpack_require__(158);
+var NumberTweenBuilder = __webpack_require__(159);
 var PluginCache = __webpack_require__(12);
-var TimelineBuilder = __webpack_require__(157);
+var TimelineBuilder = __webpack_require__(158);
 var TWEEN_CONST = __webpack_require__(60);
 var TweenBuilder = __webpack_require__(72);
 
@@ -53384,7 +53581,7 @@ module.exports = TweenManager;
 
 
 /***/ }),
-/* 302 */
+/* 304 */
 /***/ (function(module, exports) {
 
 /**
@@ -53456,7 +53653,7 @@ module.exports = [
 
 
 /***/ }),
-/* 303 */
+/* 305 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -53474,19 +53671,19 @@ module.exports = {
     GetBoolean: __webpack_require__(61),
     GetEaseFunction: __webpack_require__(62),
     GetNewValue: __webpack_require__(73),
-    GetProps: __webpack_require__(160),
+    GetProps: __webpack_require__(161),
     GetTargets: __webpack_require__(101),
-    GetTweens: __webpack_require__(159),
+    GetTweens: __webpack_require__(160),
     GetValueOp: __webpack_require__(100),
-    NumberTweenBuilder: __webpack_require__(158),
-    TimelineBuilder: __webpack_require__(157),
+    NumberTweenBuilder: __webpack_require__(159),
+    TimelineBuilder: __webpack_require__(158),
     TweenBuilder: __webpack_require__(72)
 
 };
 
 
 /***/ }),
-/* 304 */
+/* 306 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -53504,12 +53701,12 @@ var Extend = __webpack_require__(18);
 
 var Tweens = {
 
-    Builders: __webpack_require__(303),
+    Builders: __webpack_require__(305),
 
-    TweenManager: __webpack_require__(301),
+    TweenManager: __webpack_require__(303),
     Tween: __webpack_require__(98),
     TweenData: __webpack_require__(97),
-    Timeline: __webpack_require__(156)
+    Timeline: __webpack_require__(157)
 
 };
 
@@ -53520,7 +53717,7 @@ module.exports = Tweens;
 
 
 /***/ }),
-/* 305 */
+/* 307 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -53531,7 +53728,7 @@ module.exports = Tweens;
 
 var Class = __webpack_require__(0);
 var PluginCache = __webpack_require__(12);
-var TimerEvent = __webpack_require__(161);
+var TimerEvent = __webpack_require__(162);
 
 /**
  * @classdesc
@@ -53914,7 +54111,7 @@ module.exports = Clock;
 
 
 /***/ }),
-/* 306 */
+/* 308 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -53929,15 +54126,13 @@ module.exports = Clock;
 
 module.exports = {
 
-    Clock: __webpack_require__(305),
-    TimerEvent: __webpack_require__(161)
+    Clock: __webpack_require__(307),
+    TimerEvent: __webpack_require__(162)
 
 };
 
 
 /***/ }),
-/* 307 */,
-/* 308 */,
 /* 309 */,
 /* 310 */,
 /* 311 */,
@@ -53950,7 +54145,9 @@ module.exports = {
 /* 318 */,
 /* 319 */,
 /* 320 */,
-/* 321 */
+/* 321 */,
+/* 322 */,
+/* 323 */
 /***/ (function(module, exports) {
 
 /**
@@ -53990,7 +54187,7 @@ module.exports = CONST;
 
 
 /***/ }),
-/* 322 */
+/* 324 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -54000,7 +54197,7 @@ module.exports = CONST;
  */
 
 var Extend = __webpack_require__(18);
-var FilterMode = __webpack_require__(321);
+var FilterMode = __webpack_require__(323);
 
 /**
  * @namespace Phaser.Textures
@@ -54023,11 +54220,11 @@ var FilterMode = __webpack_require__(321);
 var Textures = {
 
     FilterMode: FilterMode,
-    Frame: __webpack_require__(124),
-    Parsers: __webpack_require__(173),
+    Frame: __webpack_require__(125),
+    Parsers: __webpack_require__(174),
     Texture: __webpack_require__(114),
-    TextureManager: __webpack_require__(175),
-    TextureSource: __webpack_require__(174)
+    TextureManager: __webpack_require__(176),
+    TextureSource: __webpack_require__(175)
 
 };
 
@@ -54037,7 +54234,7 @@ module.exports = Textures;
 
 
 /***/ }),
-/* 323 */
+/* 325 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -54053,16 +54250,16 @@ module.exports = Textures;
 module.exports = {
 
     List: __webpack_require__(92),
-    Map: __webpack_require__(121),
-    ProcessQueue: __webpack_require__(221),
-    RTree: __webpack_require__(220),
+    Map: __webpack_require__(122),
+    ProcessQueue: __webpack_require__(222),
+    RTree: __webpack_require__(221),
     Set: __webpack_require__(70)
 
 };
 
 
 /***/ }),
-/* 324 */
+/* 326 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -54103,25 +54300,25 @@ module.exports = {
 
 module.exports = {
 
-    SoundManagerCreator: __webpack_require__(182),
+    SoundManagerCreator: __webpack_require__(183),
 
     BaseSound: __webpack_require__(76),
     BaseSoundManager: __webpack_require__(77),
 
-    WebAudioSound: __webpack_require__(176),
-    WebAudioSoundManager: __webpack_require__(177),
+    WebAudioSound: __webpack_require__(177),
+    WebAudioSoundManager: __webpack_require__(178),
 
-    HTML5AudioSound: __webpack_require__(180),
-    HTML5AudioSoundManager: __webpack_require__(181),
+    HTML5AudioSound: __webpack_require__(181),
+    HTML5AudioSoundManager: __webpack_require__(182),
 
-    NoAudioSound: __webpack_require__(178),
-    NoAudioSoundManager: __webpack_require__(179)
+    NoAudioSound: __webpack_require__(179),
+    NoAudioSoundManager: __webpack_require__(180)
 
 };
 
 
 /***/ }),
-/* 325 */
+/* 327 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -54130,7 +54327,7 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Clamp = __webpack_require__(24);
+var Clamp = __webpack_require__(23);
 var Class = __webpack_require__(0);
 var CONST = __webpack_require__(54);
 var GetFastValue = __webpack_require__(1);
@@ -54375,8 +54572,8 @@ var ScenePlugin = new Class({
      * @property {integer} [duration=1000] - The duration, in ms, for the transition to last.
      * @property {boolean} [sleep=false] - Will the Scene responsible for the transition be sent to sleep on completion (`true`), or stopped? (`false`)
      * @property {boolean} [allowInput=false] - Will the Scenes Input system be able to process events while it is transitioning in or out?
-     * @property {boolean} [moveAbove] - More the target Scene to be above this one before the transition starts.
-     * @property {boolean} [moveBelow] - More the target Scene to be below this one before the transition starts.
+     * @property {boolean} [moveAbove] - Move the target Scene to be above this one before the transition starts.
+     * @property {boolean} [moveBelow] - Move the target Scene to be below this one before the transition starts.
      * @property {function} [onUpdate] - This callback is invoked every frame for the duration of the transition.
      * @property {any} [onUpdateScope] - The context in which the callback is invoked.
      * @property {any} [data] - An object containing any data you wish to be passed to the target Scenes init / create methods.
@@ -55104,7 +55301,7 @@ module.exports = ScenePlugin;
 
 
 /***/ }),
-/* 326 */
+/* 328 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -55122,9 +55319,9 @@ var Extend = __webpack_require__(18);
 
 var Scene = {
 
-    SceneManager: __webpack_require__(185),
-    ScenePlugin: __webpack_require__(325),
-    Settings: __webpack_require__(183),
+    SceneManager: __webpack_require__(186),
+    ScenePlugin: __webpack_require__(327),
+    Settings: __webpack_require__(184),
     Systems: __webpack_require__(115)
 
 };
@@ -55136,7 +55333,7 @@ module.exports = Scene;
 
 
 /***/ }),
-/* 327 */
+/* 329 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -55145,7 +55342,7 @@ module.exports = Scene;
 * @license      {@link https://github.com/photonstorm/phaser3-plugin-template/blob/master/LICENSE|MIT License}
 */
 
-var BasePlugin = __webpack_require__(162);
+var BasePlugin = __webpack_require__(163);
 var Class = __webpack_require__(0);
 
 /**
@@ -55156,10 +55353,11 @@ var Class = __webpack_require__(0);
  *
  * @class ScenePlugin
  * @memberOf Phaser.Plugins
+ * @extends Phaser.Plugins.BasePlugin
  * @constructor
  * @since 3.8.0
  *
- * @param {Phaser.Game} game - [description]
+ * @param {Phaser.Game} game - A reference to the Scene that has installed this plugin.
  */
 var ScenePlugin = new Class({
 
@@ -55187,7 +55385,7 @@ var ScenePlugin = new Class({
          * This property is only set when the plugin is instantiated and added to the Scene, not before.
          *
          * @name Phaser.Plugins.ScenePlugin#systems
-         * @type {?Phaser.Scene.Systems}
+         * @type {?Phaser.Scenes.Systems}
          * @protected
          * @since 3.8.0
          */
@@ -55241,7 +55439,7 @@ module.exports = ScenePlugin;
 
 
 /***/ }),
-/* 328 */
+/* 330 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -55256,18 +55454,16 @@ module.exports = ScenePlugin;
 
 module.exports = {
 
-    BasePlugin: __webpack_require__(162),
+    BasePlugin: __webpack_require__(163),
     DefaultPlugins: __webpack_require__(119),
     PluginCache: __webpack_require__(12),
-    PluginManager: __webpack_require__(187),
-    ScenePlugin: __webpack_require__(327)
+    PluginManager: __webpack_require__(188),
+    ScenePlugin: __webpack_require__(329)
 
 };
 
 
 /***/ }),
-/* 329 */,
-/* 330 */,
 /* 331 */,
 /* 332 */,
 /* 333 */,
@@ -55285,7 +55481,9 @@ module.exports = {
 /* 345 */,
 /* 346 */,
 /* 347 */,
-/* 348 */
+/* 348 */,
+/* 349 */,
+/* 350 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -56365,7 +56563,7 @@ module.exports = LoaderPlugin;
 
 
 /***/ }),
-/* 349 */
+/* 351 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -56567,7 +56765,7 @@ module.exports = SpriteSheetFile;
 
 
 /***/ }),
-/* 350 */
+/* 352 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -56747,7 +56945,7 @@ module.exports = ScriptFile;
 
 
 /***/ }),
-/* 351 */
+/* 353 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -56770,6 +56968,7 @@ var IsPlainObject = __webpack_require__(8);
  * @property {string} [url] - The absolute or relative URL to load the file from.
  * @property {string} [extension='js'] - The default file extension to use if no url is provided.
  * @property {boolean} [start=false] - Automatically start the plugin after loading?
+ * @property {string} [mapping] - If this plugin is to be injected into the Scene, this is the property key used.
  * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 
@@ -56791,6 +56990,7 @@ var IsPlainObject = __webpack_require__(8);
  * @param {(string|Phaser.Loader.FileTypes.PluginFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
  * @param {boolean} [start=false] - Automatically start the plugin after loading?
+ * @param {string} [mapping] - If this plugin is to be injected into the Scene, this is the property key used.
  * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var PluginFile = new Class({
@@ -56799,7 +56999,7 @@ var PluginFile = new Class({
 
     initialize:
 
-    function PluginFile (loader, key, url, start, xhrSettings)
+    function PluginFile (loader, key, url, start, mapping, xhrSettings)
     {
         var extension = 'js';
 
@@ -56812,6 +57012,7 @@ var PluginFile = new Class({
             xhrSettings = GetFastValue(config, 'xhrSettings');
             extension = GetFastValue(config, 'extension', extension);
             start = GetFastValue(config, 'start');
+            mapping = GetFastValue(config, 'mapping');
         }
 
         var fileConfig = {
@@ -56822,7 +57023,10 @@ var PluginFile = new Class({
             key: key,
             url: url,
             xhrSettings: xhrSettings,
-            config: { start: start }
+            config: {
+                start: start,
+                mapping: mapping
+            }
         };
 
         File.call(this, loader, fileConfig);
@@ -56849,10 +57053,11 @@ var PluginFile = new Class({
         var config = this.config;
 
         var start = GetFastValue(config, 'start', false);
+        var mapping = GetFastValue(config, 'mapping', null);
 
         if (this.state === CONST.FILE_POPULATED)
         {
-            pluginManager.install(this.key, this.data, start);
+            pluginManager.install(this.key, this.data, start, mapping);
         }
         else
         {
@@ -56867,7 +57072,7 @@ var PluginFile = new Class({
 
             document.head.appendChild(this.data);
 
-            pluginManager.install(this.key, window[this.key], start);
+            pluginManager.install(this.key, window[this.key], start, mapping);
         }
 
         this.onProcessComplete();
@@ -56919,7 +57124,7 @@ var PluginFile = new Class({
  * and no URL is given then the Loader will set the URL to be "alien.js". It will always add `.js` as the extension, although
  * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
  *
- * Note: The ability to load this type of file will only be available if the Script File type has been built into Phaser.
+ * Note: The ability to load this type of file will only be available if the Plugin File type has been built into Phaser.
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#plugin
@@ -56929,11 +57134,12 @@ var PluginFile = new Class({
  * @param {(string|Phaser.Loader.FileTypes.PluginFileConfig|Phaser.Loader.FileTypes.PluginFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {(string|function)} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js". Or, a plugin function.
  * @param {boolean} [start] - The plugin mapping configuration object.
+ * @param {string} [mapping] - If this plugin is to be injected into the Scene, this is the property key used.
  * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */
-FileTypesManager.register('plugin', function (key, url, start, xhrSettings)
+FileTypesManager.register('plugin', function (key, url, start, mapping, xhrSettings)
 {
     if (Array.isArray(key))
     {
@@ -56945,7 +57151,7 @@ FileTypesManager.register('plugin', function (key, url, start, xhrSettings)
     }
     else
     {
-        this.addFile(new PluginFile(this, key, url, start, xhrSettings));
+        this.addFile(new PluginFile(this, key, url, start, mapping, xhrSettings));
     }
 
     return this;
@@ -56955,7 +57161,7 @@ module.exports = PluginFile;
 
 
 /***/ }),
-/* 352 */
+/* 354 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -57291,7 +57497,7 @@ module.exports = MultiAtlasFile;
 
 
 /***/ }),
-/* 353 */
+/* 355 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -57300,7 +57506,7 @@ module.exports = MultiAtlasFile;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var AudioFile = __webpack_require__(164);
+var AudioFile = __webpack_require__(165);
 var Class = __webpack_require__(0);
 var FileTypesManager = __webpack_require__(6);
 var GetFastValue = __webpack_require__(1);
@@ -57592,7 +57798,7 @@ FileTypesManager.register('audioSprite', function (key, jsonURL, audioURL, audio
 
 
 /***/ }),
-/* 354 */
+/* 356 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -57854,7 +58060,7 @@ module.exports = AtlasJSONFile;
 
 
 /***/ }),
-/* 355 */
+/* 357 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58056,7 +58262,7 @@ module.exports = AnimationJSONFile;
 
 
 /***/ }),
-/* 356 */
+/* 358 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58072,14 +58278,14 @@ module.exports = AnimationJSONFile;
 /* eslint-disable */
 module.exports = {
 
-    TouchManager: __webpack_require__(188)
+    TouchManager: __webpack_require__(189)
        
 };
 /* eslint-enable */
 
 
 /***/ }),
-/* 357 */
+/* 359 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58095,14 +58301,14 @@ module.exports = {
 /* eslint-disable */
 module.exports = {
 
-    MouseManager: __webpack_require__(190)
+    MouseManager: __webpack_require__(191)
        
 };
 /* eslint-enable */
 
 
 /***/ }),
-/* 358 */
+/* 360 */
 /***/ (function(module, exports) {
 
 /**
@@ -58134,7 +58340,7 @@ module.exports = UpDuration;
 
 
 /***/ }),
-/* 359 */
+/* 361 */
 /***/ (function(module, exports) {
 
 /**
@@ -58166,7 +58372,7 @@ module.exports = DownDuration;
 
 
 /***/ }),
-/* 360 */
+/* 362 */
 /***/ (function(module, exports) {
 
 /**
@@ -58206,7 +58412,7 @@ module.exports = JustUp;
 
 
 /***/ }),
-/* 361 */
+/* 363 */
 /***/ (function(module, exports) {
 
 /**
@@ -58246,7 +58452,7 @@ module.exports = JustDown;
 
 
 /***/ }),
-/* 362 */
+/* 364 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58261,23 +58467,23 @@ module.exports = JustDown;
 
 module.exports = {
 
-    KeyboardManager: __webpack_require__(193),
+    KeyboardManager: __webpack_require__(194),
 
-    Key: __webpack_require__(192),
+    Key: __webpack_require__(193),
     KeyCodes: __webpack_require__(116),
 
-    KeyCombo: __webpack_require__(191),
+    KeyCombo: __webpack_require__(192),
 
-    JustDown: __webpack_require__(361),
-    JustUp: __webpack_require__(360),
-    DownDuration: __webpack_require__(359),
-    UpDuration: __webpack_require__(358)
+    JustDown: __webpack_require__(363),
+    JustUp: __webpack_require__(362),
+    DownDuration: __webpack_require__(361),
+    UpDuration: __webpack_require__(360)
     
 };
 
 
 /***/ }),
-/* 363 */
+/* 365 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58293,7 +58499,7 @@ var DistanceBetween = __webpack_require__(57);
 var Ellipse = __webpack_require__(111);
 var EllipseContains = __webpack_require__(53);
 var EventEmitter = __webpack_require__(9);
-var CreateInteractiveObject = __webpack_require__(166);
+var CreateInteractiveObject = __webpack_require__(167);
 var PluginCache = __webpack_require__(12);
 var Rectangle = __webpack_require__(14);
 var RectangleContains = __webpack_require__(31);
@@ -58649,6 +58855,7 @@ var InputPlugin = new Class({
 
         //  Clear the removal list
         removeList.length = 0;
+        this._pendingRemoval.length = 0;
 
         //  Move pendingInsertion to list (also clears pendingInsertion at the same time)
         this._list = current.concat(insertList.splice(0));
@@ -58667,6 +58874,14 @@ var InputPlugin = new Class({
     clear: function (gameObject)
     {
         var input = gameObject.input;
+
+        // If GameObject.input already cleared from higher class
+        if (!input)
+        {
+            return;
+        }
+
+        this.queueForRemoval(gameObject);
 
         input.gameObject = undefined;
         input.target = undefined;
@@ -58968,7 +59183,7 @@ var InputPlugin = new Class({
         }
 
         //  4 = Pointer actively dragging the draglist and has moved
-        if (pointer.dragState === 4 && pointer.justMoved)
+        if (pointer.dragState === 4 && pointer.justMoved && !pointer.justUp)
         {
             var dropZones = this._tempZones;
 
@@ -59061,32 +59276,36 @@ var InputPlugin = new Class({
 
                 input = gameObject.input;
 
-                input.dragState = 0;
-
-                input.dragX = input.localX - gameObject.displayOriginX;
-                input.dragY = input.localY - gameObject.displayOriginY;
-
-                var dropped = false;
-
-                if (input.target)
+                if (input.dragState === 2)
                 {
-                    gameObject.emit('drop', pointer, input.target);
+                    input.dragState = 0;
 
-                    this.emit('drop', pointer, gameObject, input.target);
+                    input.dragX = input.localX - gameObject.displayOriginX;
+                    input.dragY = input.localY - gameObject.displayOriginY;
 
-                    input.target = null;
+                    var dropped = false;
 
-                    dropped = true;
+                    if (input.target)
+                    {
+                        gameObject.emit('drop', pointer, input.target);
+
+                        this.emit('drop', pointer, gameObject, input.target);
+
+                        input.target = null;
+
+                        dropped = true;
+                    }
+
+                    //  And finally the dragend event
+
+                    gameObject.emit('dragend', pointer, input.dragX, input.dragY, dropped);
+
+                    this.emit('dragend', pointer, gameObject, dropped);
                 }
-
-                //  And finally the dragend event
-
-                gameObject.emit('dragend', pointer, input.dragX, input.dragY, dropped);
-
-                this.emit('dragend', pointer, gameObject, dropped);
             }
 
             pointer.dragState = 0;
+
             list.splice(0);
         }
 
@@ -59478,12 +59697,6 @@ var InputPlugin = new Class({
         {
             var gameObject = gameObjects[i];
 
-            if (gameObject.type === 'Container')
-            {
-                console.warn('Container.setInteractive() must specify a Shape');
-                continue;
-            }
-
             var frame = gameObject.frame;
 
             var width = 0;
@@ -59498,6 +59711,12 @@ var InputPlugin = new Class({
             {
                 width = gameObject.width;
                 height = gameObject.height;
+            }
+
+            if (gameObject.type === 'Container' && (width === 0 || height === 0))
+            {
+                console.warn('Container.setInteractive() must specify a Shape or call setSize() first');
+                continue;
             }
 
             if (width !== 0 && height !== 0)
@@ -59692,6 +59911,16 @@ var InputPlugin = new Class({
             //  Quick bail out when both children have the same container
             return childB.parentContainer.getIndex(childB) - childA.parentContainer.getIndex(childA);
         }
+        else if (childA.parentContainer === childB)
+        {
+            //  Quick bail out when childA is a child of childB
+            return -1;
+        }
+        else if (childB.parentContainer === childA)
+        {
+            //  Quick bail out when childA is a child of childB
+            return 1;
+        }
         else
         {
             //  Container index check
@@ -59701,8 +59930,6 @@ var InputPlugin = new Class({
 
             for (var i = 0; i < len; i++)
             {
-                // var indexA = listA[i][0];
-                // var indexB = listB[i][0];
                 var indexA = listA[i];
                 var indexB = listB[i];
 
@@ -59909,7 +60136,7 @@ var InputPlugin = new Class({
     },
 
     /**
-     * The Scene that owns this plugin is being destroyed.
+     * The Scene that owns this plugin is being destroyed.     
      * We need to shutdown and then kill off all external references.
      *
      * @method Phaser.Input.InputPlugin#destroy
@@ -59992,7 +60219,7 @@ module.exports = InputPlugin;
 
 
 /***/ }),
-/* 364 */
+/* 366 */
 /***/ (function(module, exports) {
 
 /**
@@ -60043,7 +60270,7 @@ module.exports = {
 
 
 /***/ }),
-/* 365 */
+/* 367 */
 /***/ (function(module, exports) {
 
 /**
@@ -60082,7 +60309,7 @@ module.exports = {
 
 
 /***/ }),
-/* 366 */
+/* 368 */
 /***/ (function(module, exports) {
 
 /**
@@ -60132,7 +60359,7 @@ module.exports = {
 
 
 /***/ }),
-/* 367 */
+/* 369 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60147,15 +60374,15 @@ module.exports = {
 
 module.exports = {
 
-    DUALSHOCK_4: __webpack_require__(366),
-    SNES_USB: __webpack_require__(365),
-    XBOX_360: __webpack_require__(364)
+    DUALSHOCK_4: __webpack_require__(368),
+    SNES_USB: __webpack_require__(367),
+    XBOX_360: __webpack_require__(366)
 
 };
 
 
 /***/ }),
-/* 368 */
+/* 370 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60170,17 +60397,17 @@ module.exports = {
 
 module.exports = {
 
-    Axis: __webpack_require__(195),
-    Button: __webpack_require__(194),
-    Gamepad: __webpack_require__(196),
-    GamepadManager: __webpack_require__(197),
+    Axis: __webpack_require__(196),
+    Button: __webpack_require__(195),
+    Gamepad: __webpack_require__(197),
+    GamepadManager: __webpack_require__(198),
     
-    Configs: __webpack_require__(367)
+    Configs: __webpack_require__(369)
 };
 
 
 /***/ }),
-/* 369 */
+/* 371 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60195,21 +60422,19 @@ module.exports = {
 
 module.exports = {
 
-    CreateInteractiveObject: __webpack_require__(166),
-    Gamepad: __webpack_require__(368),
-    InputManager: __webpack_require__(198),
-    InputPlugin: __webpack_require__(363),
-    Keyboard: __webpack_require__(362),
-    Mouse: __webpack_require__(357),
-    Pointer: __webpack_require__(189),
-    Touch: __webpack_require__(356)
+    CreateInteractiveObject: __webpack_require__(167),
+    Gamepad: __webpack_require__(370),
+    InputManager: __webpack_require__(199),
+    InputPlugin: __webpack_require__(365),
+    Keyboard: __webpack_require__(364),
+    Mouse: __webpack_require__(359),
+    Pointer: __webpack_require__(190),
+    Touch: __webpack_require__(358)
 
 };
 
 
 /***/ }),
-/* 370 */,
-/* 371 */,
 /* 372 */,
 /* 373 */,
 /* 374 */,
@@ -60226,7 +60451,9 @@ module.exports = {
 /* 385 */,
 /* 386 */,
 /* 387 */,
-/* 388 */
+/* 388 */,
+/* 389 */,
+/* 390 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60235,7 +60462,7 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BuildGameObject = __webpack_require__(23);
+var BuildGameObject = __webpack_require__(24);
 var GameObjectCreator = __webpack_require__(13);
 var GetAdvancedValue = __webpack_require__(10);
 var Text = __webpack_require__(107);
@@ -60313,7 +60540,7 @@ GameObjectCreator.register('text', function (config, addToScene)
 
 
 /***/ }),
-/* 389 */
+/* 391 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60322,8 +60549,8 @@ GameObjectCreator.register('text', function (config, addToScene)
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BuildGameObject = __webpack_require__(23);
-var BuildGameObjectAnimation = __webpack_require__(123);
+var BuildGameObject = __webpack_require__(24);
+var BuildGameObjectAnimation = __webpack_require__(124);
 var GameObjectCreator = __webpack_require__(13);
 var GetAdvancedValue = __webpack_require__(10);
 var Sprite = __webpack_require__(34);
@@ -60366,7 +60593,7 @@ GameObjectCreator.register('sprite', function (config, addToScene)
 
 
 /***/ }),
-/* 390 */
+/* 392 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60375,7 +60602,7 @@ GameObjectCreator.register('sprite', function (config, addToScene)
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BuildGameObject = __webpack_require__(23);
+var BuildGameObject = __webpack_require__(24);
 var GameObjectCreator = __webpack_require__(13);
 var GetAdvancedValue = __webpack_require__(10);
 var Image = __webpack_require__(69);
@@ -60416,7 +60643,7 @@ GameObjectCreator.register('image', function (config, addToScene)
 
 
 /***/ }),
-/* 391 */
+/* 393 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60464,7 +60691,7 @@ GameObjectCreator.register('graphics', function (config, addToScene)
 
 
 /***/ }),
-/* 392 */
+/* 394 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60506,7 +60733,7 @@ GameObjectFactory.register('text', function (x, y, text, style)
 
 
 /***/ }),
-/* 393 */
+/* 395 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60553,7 +60780,7 @@ GameObjectFactory.register('sprite', function (x, y, key, frame)
 
 
 /***/ }),
-/* 394 */
+/* 396 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60595,7 +60822,7 @@ GameObjectFactory.register('image', function (x, y, key, frame)
 
 
 /***/ }),
-/* 395 */
+/* 397 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60634,8 +60861,8 @@ GameObjectFactory.register('graphics', function (config)
 
 
 /***/ }),
-/* 396 */,
-/* 397 */
+/* 398 */,
+/* 399 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60770,7 +60997,7 @@ module.exports = MeasureText;
 
 
 /***/ }),
-/* 398 */
+/* 400 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60782,7 +61009,7 @@ module.exports = MeasureText;
 var Class = __webpack_require__(0);
 var GetAdvancedValue = __webpack_require__(10);
 var GetValue = __webpack_require__(4);
-var MeasureText = __webpack_require__(397);
+var MeasureText = __webpack_require__(399);
 
 //  Key: [ Object Key, Default Value ]
 
@@ -61720,7 +61947,7 @@ module.exports = TextStyle;
 
 
 /***/ }),
-/* 399 */
+/* 401 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -61815,7 +62042,7 @@ module.exports = TextCanvasRenderer;
 
 
 /***/ }),
-/* 400 */
+/* 402 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -61861,7 +62088,7 @@ module.exports = TextWebGLRenderer;
 
 
 /***/ }),
-/* 401 */
+/* 403 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -61875,12 +62102,12 @@ var renderCanvas = __webpack_require__(3);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(400);
+    renderWebGL = __webpack_require__(402);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(399);
+    renderCanvas = __webpack_require__(401);
 }
 
 module.exports = {
@@ -61892,7 +62119,7 @@ module.exports = {
 
 
 /***/ }),
-/* 402 */
+/* 404 */
 /***/ (function(module, exports) {
 
 /**
@@ -61979,10 +62206,10 @@ module.exports = GetTextSize;
 
 
 /***/ }),
-/* 403 */,
-/* 404 */,
 /* 405 */,
-/* 406 */
+/* 406 */,
+/* 407 */,
+/* 408 */
 /***/ (function(module, exports) {
 
 /**
@@ -61992,15 +62219,15 @@ module.exports = GetTextSize;
  */
 
 /**
- * [description]
+ * Stepped easing.
  *
  * @function Phaser.Math.Easing.Stepped.Stepped
  * @since 3.0.0
  *
- * @param {number} v - [description]
+ * @param {number} v - The value to be tweened.
  * @param {float} [steps=1] - [description]
  *
- * @return {number} [description]
+ * @return {number} The tweened value.
  */
 var Stepped = function (v, steps)
 {
@@ -62024,7 +62251,7 @@ module.exports = Stepped;
 
 
 /***/ }),
-/* 407 */
+/* 409 */
 /***/ (function(module, exports) {
 
 /**
@@ -62034,14 +62261,14 @@ module.exports = Stepped;
  */
 
 /**
- * [description]
+ * Sinusoidal ease-in/out.
  *
  * @function Phaser.Math.Easing.Sine.InOut
  * @since 3.0.0
  *
- * @param {number} v - [description]
+ * @param {number} v - The value to be tweened.
  *
- * @return {number} [description]
+ * @return {number} The tweened value.
  */
 var InOut = function (v)
 {
@@ -62063,7 +62290,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 408 */
+/* 410 */
 /***/ (function(module, exports) {
 
 /**
@@ -62073,14 +62300,14 @@ module.exports = InOut;
  */
 
 /**
- * [description]
+ * Sinusoidal ease-out.
  *
  * @function Phaser.Math.Easing.Sine.Out
  * @since 3.0.0
  *
- * @param {number} v - [description]
+ * @param {number} v - The value to be tweened.
  *
- * @return {number} [description]
+ * @return {number} The tweened value.
  */
 var Out = function (v)
 {
@@ -62102,7 +62329,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 409 */
+/* 411 */
 /***/ (function(module, exports) {
 
 /**
@@ -62112,14 +62339,14 @@ module.exports = Out;
  */
 
 /**
- * [description]
+ * Sinusoidal ease-in.
  *
  * @function Phaser.Math.Easing.Sine.In
  * @since 3.0.0
  *
- * @param {number} v - [description]
+ * @param {number} v - The value to be tweened.
  *
- * @return {number} [description]
+ * @return {number} The tweened value.
  */
 var In = function (v)
 {
@@ -62141,7 +62368,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 410 */
+/* 412 */
 /***/ (function(module, exports) {
 
 /**
@@ -62151,14 +62378,14 @@ module.exports = In;
  */
 
 /**
- * [description]
+ * Quintic ease-in/out.
  *
  * @function Phaser.Math.Easing.Quintic.InOut
  * @since 3.0.0
  *
- * @param {number} v - [description]
+ * @param {number} v - The value to be tweened.
  *
- * @return {number} [description]
+ * @return {number} The tweened value.
  */
 var InOut = function (v)
 {
@@ -62176,62 +62403,6 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 411 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * [description]
- *
- * @function Phaser.Math.Easing.Quintic.Out
- * @since 3.0.0
- *
- * @param {number} v - [description]
- *
- * @return {number} [description]
- */
-var Out = function (v)
-{
-    return --v * v * v * v * v + 1;
-};
-
-module.exports = Out;
-
-
-/***/ }),
-/* 412 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * [description]
- *
- * @function Phaser.Math.Easing.Quintic.In
- * @since 3.0.0
- *
- * @param {number} v - [description]
- *
- * @return {number} [description]
- */
-var In = function (v)
-{
-    return v * v * v * v * v;
-};
-
-module.exports = In;
-
-
-/***/ }),
 /* 413 */
 /***/ (function(module, exports) {
 
@@ -62242,14 +62413,70 @@ module.exports = In;
  */
 
 /**
- * [description]
+ * Quintic ease-out.
+ *
+ * @function Phaser.Math.Easing.Quintic.Out
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var Out = function (v)
+{
+    return --v * v * v * v * v + 1;
+};
+
+module.exports = Out;
+
+
+/***/ }),
+/* 414 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Quintic ease-in.
+ *
+ * @function Phaser.Math.Easing.Quintic.In
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var In = function (v)
+{
+    return v * v * v * v * v;
+};
+
+module.exports = In;
+
+
+/***/ }),
+/* 415 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Quartic ease-in/out.
  *
  * @function Phaser.Math.Easing.Quartic.InOut
  * @since 3.0.0
  *
- * @param {number} v - [description]
+ * @param {number} v - The value to be tweened.
  *
- * @return {number} [description]
+ * @return {number} The tweened value.
  */
 var InOut = function (v)
 {
@@ -62267,62 +62494,6 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 414 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * [description]
- *
- * @function Phaser.Math.Easing.Quartic.Out
- * @since 3.0.0
- *
- * @param {number} v - [description]
- *
- * @return {number} [description]
- */
-var Out = function (v)
-{
-    return 1 - (--v * v * v * v);
-};
-
-module.exports = Out;
-
-
-/***/ }),
-/* 415 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * [description]
- *
- * @function Phaser.Math.Easing.Quartic.In
- * @since 3.0.0
- *
- * @param {number} v - [description]
- *
- * @return {number} [description]
- */
-var In = function (v)
-{
-    return v * v * v * v;
-};
-
-module.exports = In;
-
-
-/***/ }),
 /* 416 */
 /***/ (function(module, exports) {
 
@@ -62333,14 +62504,70 @@ module.exports = In;
  */
 
 /**
- * [description]
+ * Quartic ease-out.
+ *
+ * @function Phaser.Math.Easing.Quartic.Out
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var Out = function (v)
+{
+    return 1 - (--v * v * v * v);
+};
+
+module.exports = Out;
+
+
+/***/ }),
+/* 417 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Quartic ease-in.
+ *
+ * @function Phaser.Math.Easing.Quartic.In
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var In = function (v)
+{
+    return v * v * v * v;
+};
+
+module.exports = In;
+
+
+/***/ }),
+/* 418 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Quadratic ease-in/out.
  *
  * @function Phaser.Math.Easing.Quadratic.InOut
  * @since 3.0.0
  *
- * @param {number} v - [description]
+ * @param {number} v - The value to be tweened.
  *
- * @return {number} [description]
+ * @return {number} The tweened value.
  */
 var InOut = function (v)
 {
@@ -62358,62 +62585,6 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 417 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * [description]
- *
- * @function Phaser.Math.Easing.Quadratic.Out
- * @since 3.0.0
- *
- * @param {number} v - [description]
- *
- * @return {number} [description]
- */
-var Out = function (v)
-{
-    return v * (2 - v);
-};
-
-module.exports = Out;
-
-
-/***/ }),
-/* 418 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * [description]
- *
- * @function Phaser.Math.Easing.Quadratic.In
- * @since 3.0.0
- *
- * @param {number} v - [description]
- *
- * @return {number} [description]
- */
-var In = function (v)
-{
-    return v * v;
-};
-
-module.exports = In;
-
-
-/***/ }),
 /* 419 */
 /***/ (function(module, exports) {
 
@@ -62424,21 +62595,21 @@ module.exports = In;
  */
 
 /**
- * [description]
+ * Quadratic ease-out.
  *
- * @function Phaser.Math.Easing.Linear.Linear
+ * @function Phaser.Math.Easing.Quadratic.Out
  * @since 3.0.0
  *
- * @param {number} v - [description]
+ * @param {number} v - The value to be tweened.
  *
- * @return {number} [description]
+ * @return {number} The tweened value.
  */
-var Linear = function (v)
+var Out = function (v)
 {
-    return v;
+    return v * (2 - v);
 };
 
-module.exports = Linear;
+module.exports = Out;
 
 
 /***/ }),
@@ -62452,14 +62623,70 @@ module.exports = Linear;
  */
 
 /**
- * [description]
+ * Quadratic ease-in.
+ *
+ * @function Phaser.Math.Easing.Quadratic.In
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var In = function (v)
+{
+    return v * v;
+};
+
+module.exports = In;
+
+
+/***/ }),
+/* 421 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Linear easing (no variation).
+ *
+ * @function Phaser.Math.Easing.Linear.Linear
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var Linear = function (v)
+{
+    return v;
+};
+
+module.exports = Linear;
+
+
+/***/ }),
+/* 422 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Exponential ease-in/out.
  *
  * @function Phaser.Math.Easing.Expo.InOut
  * @since 3.0.0
  *
- * @param {number} v - [description]
+ * @param {number} v - The value to be tweened.
  *
- * @return {number} [description]
+ * @return {number} The tweened value.
  */
 var InOut = function (v)
 {
@@ -62477,62 +62704,6 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 421 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * [description]
- *
- * @function Phaser.Math.Easing.Expo.Out
- * @since 3.0.0
- *
- * @param {number} v - [description]
- *
- * @return {number} [description]
- */
-var Out = function (v)
-{
-    return 1 - Math.pow(2, -10 * v);
-};
-
-module.exports = Out;
-
-
-/***/ }),
-/* 422 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * [description]
- *
- * @function Phaser.Math.Easing.Expo.In
- * @since 3.0.0
- *
- * @param {number} v - [description]
- *
- * @return {number} [description]
- */
-var In = function (v)
-{
-    return Math.pow(2, 10 * (v - 1)) - 0.001;
-};
-
-module.exports = In;
-
-
-/***/ }),
 /* 423 */
 /***/ (function(module, exports) {
 
@@ -62543,16 +62714,72 @@ module.exports = In;
  */
 
 /**
- * [description]
+ * Exponential ease-out.
+ *
+ * @function Phaser.Math.Easing.Expo.Out
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var Out = function (v)
+{
+    return 1 - Math.pow(2, -10 * v);
+};
+
+module.exports = Out;
+
+
+/***/ }),
+/* 424 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Exponential ease-in.
+ *
+ * @function Phaser.Math.Easing.Expo.In
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var In = function (v)
+{
+    return Math.pow(2, 10 * (v - 1)) - 0.001;
+};
+
+module.exports = In;
+
+
+/***/ }),
+/* 425 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Elastic ease-in/out.
  *
  * @function Phaser.Math.Easing.Elastic.InOut
  * @since 3.0.0
  *
- * @param {number} v - [description]
+ * @param {number} v - The value to be tweened.
  * @param {float} [amplitude=0.1] - [description]
  * @param {float} [period=0.1] - [description]
  *
- * @return {number} [description]
+ * @return {number} The tweened value.
  */
 var InOut = function (v, amplitude, period)
 {
@@ -62595,7 +62822,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 424 */
+/* 426 */
 /***/ (function(module, exports) {
 
 /**
@@ -62605,16 +62832,16 @@ module.exports = InOut;
  */
 
 /**
- * [description]
+ * Elastic ease-out.
  *
  * @function Phaser.Math.Easing.Elastic.Out
  * @since 3.0.0
  *
- * @param {number} v - [description]
+ * @param {number} v - The value to be tweened.
  * @param {float} [amplitude=0.1] - [description]
  * @param {float} [period=0.1] - [description]
  *
- * @return {number} [description]
+ * @return {number} The tweened value.
  */
 var Out = function (v, amplitude, period)
 {
@@ -62650,7 +62877,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 425 */
+/* 427 */
 /***/ (function(module, exports) {
 
 /**
@@ -62660,16 +62887,16 @@ module.exports = Out;
  */
 
 /**
- * [description]
+ * Elastic ease-in.
  *
  * @function Phaser.Math.Easing.Elastic.In
  * @since 3.0.0
  *
- * @param {number} v - [description]
+ * @param {number} v - The value to be tweened.
  * @param {float} [amplitude=0.1] - [description]
  * @param {float} [period=0.1] - [description]
  *
- * @return {number} [description]
+ * @return {number} The tweened value.
  */
 var In = function (v, amplitude, period)
 {
@@ -62705,7 +62932,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 426 */
+/* 428 */
 /***/ (function(module, exports) {
 
 /**
@@ -62715,14 +62942,14 @@ module.exports = In;
  */
 
 /**
- * [description]
+ * Cubic ease-in/out.
  *
  * @function Phaser.Math.Easing.Cubic.InOut
  * @since 3.0.0
  *
- * @param {number} v - [description]
+ * @param {number} v - The value to be tweened.
  *
- * @return {number} [description]
+ * @return {number} The tweened value.
  */
 var InOut = function (v)
 {
@@ -62740,62 +62967,6 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 427 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * [description]
- *
- * @function Phaser.Math.Easing.Cubic.Out
- * @since 3.0.0
- *
- * @param {number} v - [description]
- *
- * @return {number} [description]
- */
-var Out = function (v)
-{
-    return --v * v * v + 1;
-};
-
-module.exports = Out;
-
-
-/***/ }),
-/* 428 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * [description]
- *
- * @function Phaser.Math.Easing.Cubic.In
- * @since 3.0.0
- *
- * @param {number} v - [description]
- *
- * @return {number} [description]
- */
-var In = function (v)
-{
-    return v * v * v;
-};
-
-module.exports = In;
-
-
-/***/ }),
 /* 429 */
 /***/ (function(module, exports) {
 
@@ -62806,14 +62977,70 @@ module.exports = In;
  */
 
 /**
- * [description]
+ * Cubic ease-out.
+ *
+ * @function Phaser.Math.Easing.Cubic.Out
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var Out = function (v)
+{
+    return --v * v * v + 1;
+};
+
+module.exports = Out;
+
+
+/***/ }),
+/* 430 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Cubic ease-in.
+ *
+ * @function Phaser.Math.Easing.Cubic.In
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var In = function (v)
+{
+    return v * v * v;
+};
+
+module.exports = In;
+
+
+/***/ }),
+/* 431 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Circular ease-in/out.
  *
  * @function Phaser.Math.Easing.Circular.InOut
  * @since 3.0.0
  *
- * @param {number} v - [description]
+ * @param {number} v - The value to be tweened.
  *
- * @return {number} [description]
+ * @return {number} The tweened value.
  */
 var InOut = function (v)
 {
@@ -62831,62 +63058,6 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 430 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * [description]
- *
- * @function Phaser.Math.Easing.Circular.Out
- * @since 3.0.0
- *
- * @param {number} v - [description]
- *
- * @return {number} [description]
- */
-var Out = function (v)
-{
-    return Math.sqrt(1 - (--v * v));
-};
-
-module.exports = Out;
-
-
-/***/ }),
-/* 431 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * [description]
- *
- * @function Phaser.Math.Easing.Circular.In
- * @since 3.0.0
- *
- * @param {number} v - [description]
- *
- * @return {number} [description]
- */
-var In = function (v)
-{
-    return 1 - Math.sqrt(1 - v * v);
-};
-
-module.exports = In;
-
-
-/***/ }),
 /* 432 */
 /***/ (function(module, exports) {
 
@@ -62897,14 +63068,70 @@ module.exports = In;
  */
 
 /**
- * [description]
+ * Circular ease-out.
+ *
+ * @function Phaser.Math.Easing.Circular.Out
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var Out = function (v)
+{
+    return Math.sqrt(1 - (--v * v));
+};
+
+module.exports = Out;
+
+
+/***/ }),
+/* 433 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Circular ease-in.
+ *
+ * @function Phaser.Math.Easing.Circular.In
+ * @since 3.0.0
+ *
+ * @param {number} v - The value to be tweened.
+ *
+ * @return {number} The tweened value.
+ */
+var In = function (v)
+{
+    return 1 - Math.sqrt(1 - v * v);
+};
+
+module.exports = In;
+
+
+/***/ }),
+/* 434 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Bounce ease-in/out.
  *
  * @function Phaser.Math.Easing.Bounce.InOut
  * @since 3.0.0
  *
- * @param {number} v - [description]
+ * @param {number} v - The value to be tweened.
  *
- * @return {number} [description]
+ * @return {number} The tweened value.
  */
 var InOut = function (v)
 {
@@ -62951,7 +63178,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 433 */
+/* 435 */
 /***/ (function(module, exports) {
 
 /**
@@ -62961,14 +63188,14 @@ module.exports = InOut;
  */
 
 /**
- * [description]
+ * Bounce ease-out.
  *
  * @function Phaser.Math.Easing.Bounce.Out
  * @since 3.0.0
  *
- * @param {number} v - [description]
+ * @param {number} v - The value to be tweened.
  *
- * @return {number} [description]
+ * @return {number} The tweened value.
  */
 var Out = function (v)
 {
@@ -62994,7 +63221,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 434 */
+/* 436 */
 /***/ (function(module, exports) {
 
 /**
@@ -63004,14 +63231,14 @@ module.exports = Out;
  */
 
 /**
- * [description]
+ * Bounce ease-in.
  *
  * @function Phaser.Math.Easing.Bounce.In
  * @since 3.0.0
  *
- * @param {number} v - [description]
+ * @param {number} v - The value to be tweened.
  *
- * @return {number} [description]
+ * @return {number} The tweened value.
  */
 var In = function (v)
 {
@@ -63039,7 +63266,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 435 */
+/* 437 */
 /***/ (function(module, exports) {
 
 /**
@@ -63049,15 +63276,15 @@ module.exports = In;
  */
 
 /**
- * [description]
+ * Back ease-in/out.
  *
  * @function Phaser.Math.Easing.Back.InOut
  * @since 3.0.0
  *
- * @param {number} v - [description]
+ * @param {number} v - The value to be tweened.
  * @param {number} [overshoot=1.70158] - [description]
  *
- * @return {number} [description]
+ * @return {number} The tweened value.
  */
 var InOut = function (v, overshoot)
 {
@@ -63079,7 +63306,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 436 */
+/* 438 */
 /***/ (function(module, exports) {
 
 /**
@@ -63089,15 +63316,15 @@ module.exports = InOut;
  */
 
 /**
- * [description]
+ * Back ease-out.
  *
  * @function Phaser.Math.Easing.Back.Out
  * @since 3.0.0
  *
- * @param {number} v - [description]
+ * @param {number} v - The value to be tweened.
  * @param {number} [overshoot=1.70158] - [description]
  *
- * @return {number} [description]
+ * @return {number} The tweened value.
  */
 var Out = function (v, overshoot)
 {
@@ -63110,7 +63337,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 437 */
+/* 439 */
 /***/ (function(module, exports) {
 
 /**
@@ -63120,15 +63347,15 @@ module.exports = Out;
  */
 
 /**
- * [description]
+ * Back ease-in.
  *
  * @function Phaser.Math.Easing.Back.In
  * @since 3.0.0
  *
- * @param {number} v - [description]
+ * @param {number} v - The value to be tweened.
  * @param {number} [overshoot=1.70158] - [description]
  *
- * @return {number} [description]
+ * @return {number} The tweened value.
  */
 var In = function (v, overshoot)
 {
@@ -63141,7 +63368,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 438 */
+/* 440 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63150,18 +63377,18 @@ module.exports = In;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Back = __webpack_require__(245);
-var Bounce = __webpack_require__(244);
-var Circular = __webpack_require__(243);
-var Cubic = __webpack_require__(242);
-var Elastic = __webpack_require__(241);
-var Expo = __webpack_require__(240);
-var Linear = __webpack_require__(239);
-var Quadratic = __webpack_require__(238);
-var Quartic = __webpack_require__(237);
-var Quintic = __webpack_require__(236);
-var Sine = __webpack_require__(235);
-var Stepped = __webpack_require__(234);
+var Back = __webpack_require__(246);
+var Bounce = __webpack_require__(245);
+var Circular = __webpack_require__(244);
+var Cubic = __webpack_require__(243);
+var Elastic = __webpack_require__(242);
+var Expo = __webpack_require__(241);
+var Linear = __webpack_require__(240);
+var Quadratic = __webpack_require__(239);
+var Quartic = __webpack_require__(238);
+var Quintic = __webpack_require__(237);
+var Sine = __webpack_require__(236);
+var Stepped = __webpack_require__(235);
 
 //  EaseMap
 module.exports = {
@@ -63222,12 +63449,12 @@ module.exports = {
 
 
 /***/ }),
-/* 439 */,
-/* 440 */,
 /* 441 */,
 /* 442 */,
 /* 443 */,
-/* 444 */
+/* 444 */,
+/* 445 */,
+/* 446 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63267,7 +63494,7 @@ module.exports = ImageCanvasRenderer;
 
 
 /***/ }),
-/* 445 */
+/* 447 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63307,7 +63534,7 @@ module.exports = ImageWebGLRenderer;
 
 
 /***/ }),
-/* 446 */
+/* 448 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63321,12 +63548,12 @@ var renderCanvas = __webpack_require__(3);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(445);
+    renderWebGL = __webpack_require__(447);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(444);
+    renderCanvas = __webpack_require__(446);
 }
 
 module.exports = {
@@ -63338,7 +63565,7 @@ module.exports = {
 
 
 /***/ }),
-/* 447 */
+/* 449 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63378,7 +63605,7 @@ module.exports = GraphicsWebGLRenderer;
 
 
 /***/ }),
-/* 448 */
+/* 450 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63392,15 +63619,15 @@ var renderCanvas = __webpack_require__(3);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(447);
+    renderWebGL = __webpack_require__(449);
 
     //  Needed for Graphics.generateTexture
-    renderCanvas = __webpack_require__(167);
+    renderCanvas = __webpack_require__(168);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(167);
+    renderCanvas = __webpack_require__(168);
 }
 
 module.exports = {
@@ -63412,7 +63639,7 @@ module.exports = {
 
 
 /***/ }),
-/* 449 */
+/* 451 */
 /***/ (function(module, exports) {
 
 /**
@@ -63446,7 +63673,7 @@ module.exports = OffsetPoint;
 
 
 /***/ }),
-/* 450 */
+/* 452 */
 /***/ (function(module, exports) {
 
 /**
@@ -63481,7 +63708,7 @@ module.exports = Offset;
 
 
 /***/ }),
-/* 451 */
+/* 453 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63521,7 +63748,7 @@ module.exports = GetBounds;
 
 
 /***/ }),
-/* 452 */
+/* 454 */
 /***/ (function(module, exports) {
 
 /**
@@ -63556,7 +63783,7 @@ module.exports = Equals;
 
 
 /***/ }),
-/* 453 */
+/* 455 */
 /***/ (function(module, exports) {
 
 /**
@@ -63588,7 +63815,7 @@ module.exports = CopyFrom;
 
 
 /***/ }),
-/* 454 */
+/* 456 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63624,7 +63851,7 @@ module.exports = ContainsRect;
 
 
 /***/ }),
-/* 455 */
+/* 457 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63655,7 +63882,7 @@ module.exports = ContainsPoint;
 
 
 /***/ }),
-/* 456 */
+/* 458 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63685,7 +63912,7 @@ module.exports = Clone;
 
 
 /***/ }),
-/* 457 */
+/* 459 */
 /***/ (function(module, exports) {
 
 /**
@@ -63719,10 +63946,10 @@ module.exports = Area;
 
 
 /***/ }),
-/* 458 */,
-/* 459 */,
 /* 460 */,
-/* 461 */
+/* 461 */,
+/* 462 */,
+/* 463 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64014,7 +64241,7 @@ module.exports = UpdateList;
 
 
 /***/ }),
-/* 462 */
+/* 464 */
 /***/ (function(module, exports) {
 
 /**
@@ -64062,7 +64289,7 @@ module.exports = Swap;
 
 
 /***/ }),
-/* 463 */
+/* 465 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64117,7 +64344,7 @@ module.exports = SetAll;
 
 
 /***/ }),
-/* 464 */
+/* 466 */
 /***/ (function(module, exports) {
 
 /**
@@ -64155,7 +64382,7 @@ module.exports = SendToBack;
 
 
 /***/ }),
-/* 465 */
+/* 467 */
 /***/ (function(module, exports) {
 
 /**
@@ -64198,7 +64425,7 @@ module.exports = Replace;
 
 
 /***/ }),
-/* 466 */
+/* 468 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64236,7 +64463,7 @@ module.exports = RemoveRandomElement;
 
 
 /***/ }),
-/* 467 */
+/* 469 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64299,7 +64526,7 @@ module.exports = RemoveBetween;
 
 
 /***/ }),
-/* 468 */
+/* 470 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64350,7 +64577,7 @@ module.exports = RemoveAt;
 
 
 /***/ }),
-/* 469 */
+/* 471 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64359,7 +64586,7 @@ module.exports = RemoveAt;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var RoundAwayFromZero = __webpack_require__(253);
+var RoundAwayFromZero = __webpack_require__(254);
 
 /**
  * Create an array of numbers (positive and/or negative) progressing from `start`
@@ -64427,7 +64654,7 @@ module.exports = NumberArrayStep;
 
 
 /***/ }),
-/* 470 */
+/* 472 */
 /***/ (function(module, exports) {
 
 /**
@@ -64491,7 +64718,7 @@ module.exports = NumberArray;
 
 
 /***/ }),
-/* 471 */
+/* 473 */
 /***/ (function(module, exports) {
 
 /**
@@ -64533,7 +64760,7 @@ module.exports = MoveUp;
 
 
 /***/ }),
-/* 472 */
+/* 474 */
 /***/ (function(module, exports) {
 
 /**
@@ -64580,7 +64807,7 @@ module.exports = MoveTo;
 
 
 /***/ }),
-/* 473 */
+/* 475 */
 /***/ (function(module, exports) {
 
 /**
@@ -64622,7 +64849,7 @@ module.exports = MoveDown;
 
 
 /***/ }),
-/* 474 */
+/* 476 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64681,7 +64908,7 @@ module.exports = GetFirst;
 
 
 /***/ }),
-/* 475 */
+/* 477 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64743,7 +64970,7 @@ module.exports = GetAll;
 
 
 /***/ }),
-/* 476 */
+/* 478 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64799,7 +65026,7 @@ module.exports = EachInRange;
 
 
 /***/ }),
-/* 477 */
+/* 479 */
 /***/ (function(module, exports) {
 
 /**
@@ -64845,7 +65072,7 @@ module.exports = Each;
 
 
 /***/ }),
-/* 478 */
+/* 480 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64897,7 +65124,7 @@ module.exports = CountAllMatching;
 
 
 /***/ }),
-/* 479 */
+/* 481 */
 /***/ (function(module, exports) {
 
 /**
@@ -64935,7 +65162,7 @@ module.exports = BringToTop;
 
 
 /***/ }),
-/* 480 */
+/* 482 */
 /***/ (function(module, exports) {
 
 /**
@@ -65057,7 +65284,7 @@ module.exports = AddAt;
 
 
 /***/ }),
-/* 481 */
+/* 483 */
 /***/ (function(module, exports) {
 
 /**
@@ -65174,7 +65401,7 @@ module.exports = Add;
 
 
 /***/ }),
-/* 482 */
+/* 484 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -65204,7 +65431,7 @@ module.exports = RotateRight;
 
 
 /***/ }),
-/* 483 */
+/* 485 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -65234,7 +65461,7 @@ module.exports = RotateLeft;
 
 
 /***/ }),
-/* 484 */
+/* 486 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -65264,7 +65491,7 @@ module.exports = Rotate180;
 
 
 /***/ }),
-/* 485 */
+/* 487 */
 /***/ (function(module, exports) {
 
 /**
@@ -65292,7 +65519,7 @@ module.exports = ReverseRows;
 
 
 /***/ }),
-/* 486 */
+/* 488 */
 /***/ (function(module, exports) {
 
 /**
@@ -65325,7 +65552,7 @@ module.exports = ReverseColumns;
 
 
 /***/ }),
-/* 487 */
+/* 489 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -65334,7 +65561,7 @@ module.exports = ReverseColumns;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Pad = __webpack_require__(129);
+var Pad = __webpack_require__(130);
 var CheckMatrix = __webpack_require__(113);
 
 //  Generates a string (which you can pass to console.log) from the given
@@ -65406,7 +65633,7 @@ module.exports = MatrixToString;
 
 
 /***/ }),
-/* 488 */
+/* 490 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -65422,20 +65649,20 @@ module.exports = MatrixToString;
 module.exports = {
 
     CheckMatrix: __webpack_require__(113),
-    MatrixToString: __webpack_require__(487),
-    ReverseColumns: __webpack_require__(486),
-    ReverseRows: __webpack_require__(485),
-    Rotate180: __webpack_require__(484),
-    RotateLeft: __webpack_require__(483),
+    MatrixToString: __webpack_require__(489),
+    ReverseColumns: __webpack_require__(488),
+    ReverseRows: __webpack_require__(487),
+    Rotate180: __webpack_require__(486),
+    RotateLeft: __webpack_require__(485),
     RotateMatrix: __webpack_require__(75),
-    RotateRight: __webpack_require__(482),
-    TransposeMatrix: __webpack_require__(172)
+    RotateRight: __webpack_require__(484),
+    TransposeMatrix: __webpack_require__(173)
 
 };
 
 
 /***/ }),
-/* 489 */
+/* 491 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -65651,7 +65878,7 @@ module.exports = DisplayList;
 
 
 /***/ }),
-/* 490 */
+/* 492 */
 /***/ (function(module, exports) {
 
 /**
@@ -65704,11 +65931,12 @@ module.exports = DisplayList;
  * @fires Phaser.Boot.VisibilityHandler#focus
  * @since 3.0.0
  *
- * @param {Phaser.Events.EventEmitter} eventEmitter - The EventEmitter that will emit the visibility events.
+ * @param {Phaser.Game} game - The Game instance this Visibility Handler is working on.
  */
-var VisibilityHandler = function (eventEmitter)
+var VisibilityHandler = function (game)
 {
     var hiddenVar;
+    var eventEmitter = game.events;
 
     if (document.hidden !== undefined)
     {
@@ -65759,13 +65987,24 @@ var VisibilityHandler = function (eventEmitter)
     {
         eventEmitter.emit('focus');
     };
+
+    //  Automatically give the window focus unless config says otherwise
+    if (window.focus && game.config.autoFocus)
+    {
+        window.focus();
+
+        game.canvas.addEventListener('mousedown', function ()
+        {
+            window.focus();
+        }, { passive: true });
+    }
 };
 
 module.exports = VisibilityHandler;
 
 
 /***/ }),
-/* 491 */
+/* 493 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -65777,7 +66016,7 @@ module.exports = VisibilityHandler;
 var Class = __webpack_require__(0);
 var GetValue = __webpack_require__(4);
 var NOOP = __webpack_require__(3);
-var RequestAnimationFrame = __webpack_require__(266);
+var RequestAnimationFrame = __webpack_require__(267);
 
 //  Frame Rate config
 //      fps: {
@@ -66421,7 +66660,7 @@ module.exports = TimeStep;
 
 
 /***/ }),
-/* 492 */
+/* 494 */
 /***/ (function(module, exports) {
 
 /**
@@ -66591,7 +66830,7 @@ TextureImporter:
 
 
 /***/ }),
-/* 493 */
+/* 495 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -66782,7 +67021,7 @@ module.exports = SpriteSheetFromAtlas;
 
 
 /***/ }),
-/* 494 */
+/* 496 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -66902,7 +67141,7 @@ module.exports = SpriteSheet;
 
 
 /***/ }),
-/* 495 */
+/* 497 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -67001,7 +67240,7 @@ module.exports = JSONHash;
 
 
 /***/ }),
-/* 496 */
+/* 498 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -67108,7 +67347,7 @@ module.exports = JSONArray;
 
 
 /***/ }),
-/* 497 */
+/* 499 */
 /***/ (function(module, exports) {
 
 /**
@@ -67143,7 +67382,7 @@ module.exports = Image;
 
 
 /***/ }),
-/* 498 */
+/* 500 */
 /***/ (function(module, exports) {
 
 /**
@@ -67178,7 +67417,7 @@ module.exports = Canvas;
 
 
 /***/ }),
-/* 499 */
+/* 501 */
 /***/ (function(module, exports) {
 
 /**
@@ -67259,7 +67498,7 @@ module.exports = AtlasXML;
 
 
 /***/ }),
-/* 500 */
+/* 502 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -67468,7 +67707,7 @@ module.exports = CanvasTexture;
 
 
 /***/ }),
-/* 501 */
+/* 503 */
 /***/ (function(module, exports) {
 
 /**
@@ -67523,7 +67762,7 @@ module.exports = InjectionMap;
 
 
 /***/ }),
-/* 502 */
+/* 504 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -67570,7 +67809,7 @@ module.exports = GetScenePlugins;
 
 
 /***/ }),
-/* 503 */
+/* 505 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -67580,7 +67819,7 @@ module.exports = GetScenePlugins;
  */
 
 var GetFastValue = __webpack_require__(1);
-var UppercaseFirst = __webpack_require__(254);
+var UppercaseFirst = __webpack_require__(255);
 
 /**
  * Builds an array of which physics plugins should be activated for the given Scene.
@@ -67632,7 +67871,7 @@ module.exports = GetPhysicsPlugins;
 
 
 /***/ }),
-/* 504 */
+/* 506 */
 /***/ (function(module, exports) {
 
 /**
@@ -67682,7 +67921,7 @@ module.exports = ProcessKeyUp;
 
 
 /***/ }),
-/* 505 */
+/* 507 */
 /***/ (function(module, exports) {
 
 /**
@@ -67740,7 +67979,7 @@ module.exports = ProcessKeyDown;
 
 
 /***/ }),
-/* 506 */
+/* 508 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -67762,7 +68001,7 @@ module.exports = KeyMap;
 
 
 /***/ }),
-/* 507 */
+/* 509 */
 /***/ (function(module, exports) {
 
 /**
@@ -67796,7 +68035,7 @@ module.exports = ResetKeyCombo;
 
 
 /***/ }),
-/* 508 */
+/* 510 */
 /***/ (function(module, exports) {
 
 /**
@@ -67837,7 +68076,7 @@ module.exports = AdvanceKeyCombo;
 
 
 /***/ }),
-/* 509 */
+/* 511 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -67846,7 +68085,7 @@ module.exports = AdvanceKeyCombo;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var AdvanceKeyCombo = __webpack_require__(508);
+var AdvanceKeyCombo = __webpack_require__(510);
 
 /**
  * Used internally by the KeyCombo class.
@@ -67917,7 +68156,7 @@ module.exports = ProcessKeyCombo;
 
 
 /***/ }),
-/* 510 */
+/* 512 */
 /***/ (function(module, exports) {
 
 /**
@@ -68015,7 +68254,7 @@ module.exports = init();
 
 
 /***/ }),
-/* 511 */
+/* 513 */
 /***/ (function(module, exports) {
 
 /**
@@ -68100,7 +68339,7 @@ module.exports = init();
 
 
 /***/ }),
-/* 512 */
+/* 514 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -68225,7 +68464,7 @@ module.exports = init();
 
 
 /***/ }),
-/* 513 */
+/* 515 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -68304,7 +68543,7 @@ module.exports = init();
 
 
 /***/ }),
-/* 514 */
+/* 516 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -68341,17 +68580,17 @@ module.exports = {
     os: __webpack_require__(56),
     browser: __webpack_require__(78),
     features: __webpack_require__(118),
-    input: __webpack_require__(513),
-    audio: __webpack_require__(512),
-    video: __webpack_require__(511),
-    fullscreen: __webpack_require__(510),
-    canvasFeatures: __webpack_require__(200)
+    input: __webpack_require__(515),
+    audio: __webpack_require__(514),
+    video: __webpack_require__(513),
+    fullscreen: __webpack_require__(512),
+    canvasFeatures: __webpack_require__(201)
 
 };
 
 
 /***/ }),
-/* 515 */
+/* 517 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -68479,7 +68718,7 @@ module.exports = DebugHeader;
 
 
 /***/ }),
-/* 516 */
+/* 518 */
 /***/ (function(module, exports) {
 
 module.exports = [
@@ -68510,7 +68749,7 @@ module.exports = [
 
 
 /***/ }),
-/* 517 */
+/* 519 */
 /***/ (function(module, exports) {
 
 module.exports = [
@@ -68534,7 +68773,7 @@ module.exports = [
 
 
 /***/ }),
-/* 518 */
+/* 520 */
 /***/ (function(module, exports) {
 
 module.exports = [
@@ -68592,7 +68831,7 @@ module.exports = [
 
 
 /***/ }),
-/* 519 */
+/* 521 */
 /***/ (function(module, exports) {
 
 module.exports = [
@@ -68618,7 +68857,7 @@ module.exports = [
 
 
 /***/ }),
-/* 520 */
+/* 522 */
 /***/ (function(module, exports) {
 
 module.exports = [
@@ -68636,7 +68875,7 @@ module.exports = [
 
 
 /***/ }),
-/* 521 */
+/* 523 */
 /***/ (function(module, exports) {
 
 module.exports = [
@@ -68655,7 +68894,7 @@ module.exports = [
 
 
 /***/ }),
-/* 522 */
+/* 524 */
 /***/ (function(module, exports) {
 
 module.exports = [
@@ -68691,7 +68930,7 @@ module.exports = [
 
 
 /***/ }),
-/* 523 */
+/* 525 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -68789,8 +69028,8 @@ var CreateRenderer = function (game)
 
     if (true)
     {
-        CanvasRenderer = __webpack_require__(265);
-        WebGLRenderer = __webpack_require__(260);
+        CanvasRenderer = __webpack_require__(266);
+        WebGLRenderer = __webpack_require__(261);
 
         //  Let the config pick the renderer type, as both are included
         if (config.renderType === CONST.WEBGL)
@@ -68818,7 +69057,7 @@ module.exports = CreateRenderer;
 
 
 /***/ }),
-/* 524 */
+/* 526 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -68835,7 +69074,7 @@ var IsPlainObject = __webpack_require__(8);
 var MATH = __webpack_require__(16);
 var NOOP = __webpack_require__(3);
 var DefaultPlugins = __webpack_require__(119);
-var ValueToColor = __webpack_require__(128);
+var ValueToColor = __webpack_require__(129);
 
 /**
  * This callback type is completely empty, a no-operation.
@@ -68890,6 +69129,7 @@ var ValueToColor = __webpack_require__(128);
  * @property {string} [title=''] - [description]
  * @property {string} [url='http://phaser.io'] - [description]
  * @property {string} [version=''] - [description]
+ * @property {boolean} [autoFocus=true] - Automatically call window.focus() when the game boots.
  * @property {(boolean|object)} [input] - [description]
  * @property {boolean} [input.keyboard=true] - [description]
  * @property {*} [input.keyboard.target=window] - [description]
@@ -69026,6 +69266,11 @@ var Config = new Class({
          * @const {string} Phaser.Boot.Config#gameVersion - [description]
          */
         this.gameVersion = GetValue(config, 'version', '');
+
+        /**
+         * @const {boolean} Phaser.Boot.Config#autoFocus - [description]
+         */
+        this.autoFocus = GetValue(config, 'autoFocus', true);
 
         //  Input
 
@@ -69348,7 +69593,7 @@ module.exports = Config;
 
 
 /***/ }),
-/* 525 */
+/* 527 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -69357,25 +69602,25 @@ module.exports = Config;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var AddToDOM = __webpack_require__(126);
-var AnimationManager = __webpack_require__(204);
-var CacheManager = __webpack_require__(202);
+var AddToDOM = __webpack_require__(127);
+var AnimationManager = __webpack_require__(205);
+var CacheManager = __webpack_require__(203);
 var CanvasPool = __webpack_require__(22);
 var Class = __webpack_require__(0);
-var Config = __webpack_require__(524);
-var CreateRenderer = __webpack_require__(523);
+var Config = __webpack_require__(526);
+var CreateRenderer = __webpack_require__(525);
 var DataManager = __webpack_require__(79);
-var DebugHeader = __webpack_require__(515);
-var Device = __webpack_require__(514);
-var DOMContentLoaded = __webpack_require__(269);
+var DebugHeader = __webpack_require__(517);
+var Device = __webpack_require__(516);
+var DOMContentLoaded = __webpack_require__(270);
 var EventEmitter = __webpack_require__(9);
-var InputManager = __webpack_require__(198);
-var PluginManager = __webpack_require__(187);
-var SceneManager = __webpack_require__(185);
-var SoundManagerCreator = __webpack_require__(182);
-var TextureManager = __webpack_require__(175);
-var TimeStep = __webpack_require__(491);
-var VisibilityHandler = __webpack_require__(490);
+var InputManager = __webpack_require__(199);
+var PluginManager = __webpack_require__(188);
+var SceneManager = __webpack_require__(186);
+var SoundManagerCreator = __webpack_require__(183);
+var TextureManager = __webpack_require__(176);
+var TimeStep = __webpack_require__(493);
+var VisibilityHandler = __webpack_require__(492);
 
 /**
  * @classdesc
@@ -69440,7 +69685,7 @@ var Game = new Class({
          * in your Game Config.
          *
          * @name Phaser.Game#context
-         * @type {(CanvasRenderingContext2D|WebGLRenderingContext|WebGL2RenderingContext)}
+         * @type {(CanvasRenderingContext2D|WebGLRenderingContext)}
          * @since 3.0.0
          */
         this.context = null;
@@ -69605,6 +69850,17 @@ var Game = new Class({
          */
         this.removeCanvas = false;
 
+        /**
+         * Does the window the game is running in currently have focus or not?
+         * This is modified by the VisibilityHandler.
+         *
+         * @name Phaser.Game#hasFocus
+         * @type {boolean}
+         * @readOnly
+         * @since 3.9.0
+         */
+        this.hasFocus = false;
+
         //  Wait for the DOM Ready event, then call boot.
         DOMContentLoaded(this.boot.bind(this));
     },
@@ -69670,7 +69926,7 @@ var Game = new Class({
             this.loop.start(this.headlessStep.bind(this));
         }
 
-        VisibilityHandler(this.events);
+        VisibilityHandler(this);
 
         var eventEmitter = this.events;
 
@@ -69899,6 +70155,8 @@ var Game = new Class({
      */
     onBlur: function ()
     {
+        this.hasFocus = false;
+
         this.loop.blur();
     },
 
@@ -69912,6 +70170,8 @@ var Game = new Class({
      */
     onFocus: function ()
     {
+        this.hasFocus = true;
+
         this.loop.focus();
     },
 
@@ -70004,7 +70264,7 @@ module.exports = Game;
 
 
 /***/ }),
-/* 526 */
+/* 528 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -70188,7 +70448,7 @@ module.exports = EventEmitter;
 
 
 /***/ }),
-/* 527 */
+/* 529 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -70201,11 +70461,11 @@ module.exports = EventEmitter;
  * @namespace Phaser.Events
  */
 
-module.exports = { EventEmitter: __webpack_require__(526) };
+module.exports = { EventEmitter: __webpack_require__(528) };
 
 
 /***/ }),
-/* 528 */
+/* 530 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -70395,7 +70655,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 529 */
+/* 531 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -70410,18 +70670,18 @@ process.umask = function() { return 0; };
 
 module.exports = {
 
-    BitmapMask: __webpack_require__(211),
-    GeometryMask: __webpack_require__(210)
+    BitmapMask: __webpack_require__(212),
+    GeometryMask: __webpack_require__(211)
 
 };
 
 
 /***/ }),
-/* 530 */,
-/* 531 */,
 /* 532 */,
 /* 533 */,
-/* 534 */
+/* 534 */,
+/* 535 */,
+/* 536 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -70446,7 +70706,7 @@ var PluginCache = __webpack_require__(12);
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - [description]
+ * @param {Phaser.Scene} scene - A reference to the Scene that this DataManager belongs to.
  */
 var DataManagerPlugin = new Class({
 
@@ -70459,7 +70719,7 @@ var DataManagerPlugin = new Class({
         DataManager.call(this, scene, scene.sys.events);
 
         /**
-         * [description]
+         * A reference to the Scene that this DataManager belongs to.
          *
          * @name Phaser.Data.DataManagerPlugin#scene
          * @type {Phaser.Scene}
@@ -70468,7 +70728,7 @@ var DataManagerPlugin = new Class({
         this.scene = scene;
 
         /**
-         * [description]
+         * A reference to the Scene's Systems.
          *
          * @name Phaser.Data.DataManagerPlugin#systems
          * @type {Phaser.Scenes.Systems}
@@ -70547,7 +70807,7 @@ module.exports = DataManagerPlugin;
 
 
 /***/ }),
-/* 535 */
+/* 537 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -70563,14 +70823,12 @@ module.exports = DataManagerPlugin;
 module.exports = {
 
     DataManager: __webpack_require__(79),
-    DataManagerPlugin: __webpack_require__(534)
+    DataManagerPlugin: __webpack_require__(536)
 
 };
 
 
 /***/ }),
-/* 536 */,
-/* 537 */,
 /* 538 */,
 /* 539 */,
 /* 540 */,
@@ -70578,7 +70836,9 @@ module.exports = {
 /* 542 */,
 /* 543 */,
 /* 544 */,
-/* 545 */
+/* 545 */,
+/* 546 */,
+/* 547 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -70618,7 +70878,7 @@ module.exports = SpriteCanvasRenderer;
 
 
 /***/ }),
-/* 546 */
+/* 548 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -70658,7 +70918,7 @@ module.exports = SpriteWebGLRenderer;
 
 
 /***/ }),
-/* 547 */
+/* 549 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -70672,12 +70932,12 @@ var renderCanvas = __webpack_require__(3);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(546);
+    renderWebGL = __webpack_require__(548);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(545);
+    renderCanvas = __webpack_require__(547);
 }
 
 module.exports = {
@@ -70689,12 +70949,12 @@ module.exports = {
 
 
 /***/ }),
-/* 548 */,
-/* 549 */,
 /* 550 */,
 /* 551 */,
 /* 552 */,
-/* 553 */
+/* 553 */,
+/* 554 */,
+/* 555 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -70703,7 +70963,7 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Camera = __webpack_require__(120);
+var Camera = __webpack_require__(121);
 var Class = __webpack_require__(0);
 var GetFastValue = __webpack_require__(1);
 var PluginCache = __webpack_require__(12);
@@ -71220,7 +71480,7 @@ module.exports = CameraManager;
 
 
 /***/ }),
-/* 554 */
+/* 556 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -71229,7 +71489,7 @@ module.exports = CameraManager;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Clamp = __webpack_require__(24);
+var Clamp = __webpack_require__(23);
 var Class = __webpack_require__(0);
 var Vector2 = __webpack_require__(7);
 
@@ -71562,7 +71822,7 @@ module.exports = Shake;
 
 
 /***/ }),
-/* 555 */
+/* 557 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -71571,7 +71831,7 @@ module.exports = Shake;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Clamp = __webpack_require__(24);
+var Clamp = __webpack_require__(23);
 var Class = __webpack_require__(0);
 
 /**
@@ -71941,7 +72201,7 @@ module.exports = Flash;
 
 
 /***/ }),
-/* 556 */
+/* 558 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -71950,7 +72210,7 @@ module.exports = Flash;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Clamp = __webpack_require__(24);
+var Clamp = __webpack_require__(23);
 var Class = __webpack_require__(0);
 
 /**
@@ -72377,7 +72637,7 @@ module.exports = Fade;
 
 
 /***/ }),
-/* 557 */
+/* 559 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -72392,17 +72652,17 @@ module.exports = Fade;
 
 module.exports = {
 
-    Camera: __webpack_require__(120),
-    CameraManager: __webpack_require__(553),
-    Effects: __webpack_require__(201)
+    Camera: __webpack_require__(121),
+    CameraManager: __webpack_require__(555),
+    Effects: __webpack_require__(202)
 
 };
 
 
 /***/ }),
-/* 558 */,
-/* 559 */,
-/* 560 */
+/* 560 */,
+/* 561 */,
+/* 562 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -72417,14 +72677,14 @@ module.exports = {
 
 module.exports = {
 
-    BaseCache: __webpack_require__(203),
-    CacheManager: __webpack_require__(202)
+    BaseCache: __webpack_require__(204),
+    CacheManager: __webpack_require__(203)
 
 };
 
 
 /***/ }),
-/* 561 */
+/* 563 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -72439,16 +72699,14 @@ module.exports = {
 
 module.exports = {
 
-    Animation: __webpack_require__(207),
-    AnimationFrame: __webpack_require__(205),
-    AnimationManager: __webpack_require__(204)
+    Animation: __webpack_require__(208),
+    AnimationFrame: __webpack_require__(206),
+    AnimationManager: __webpack_require__(205)
 
 };
 
 
 /***/ }),
-/* 562 */,
-/* 563 */,
 /* 564 */,
 /* 565 */,
 /* 566 */
@@ -72526,7 +72784,7 @@ var Visible = {
      *
      * @param {boolean} value - The visible state of the Game Object.
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setVisible: function (value)
     {
@@ -72551,8 +72809,8 @@ module.exports = Visible;
 
 var MATH_CONST = __webpack_require__(16);
 var TransformMatrix = __webpack_require__(63);
-var WrapAngle = __webpack_require__(209);
-var WrapAngleDegrees = __webpack_require__(208);
+var WrapAngle = __webpack_require__(210);
+var WrapAngleDegrees = __webpack_require__(209);
 
 //  global bitmask flag for GameObject.renderMask (used by Scale)
 var _FLAG = 4; // 0100
@@ -72763,7 +73021,7 @@ var Transform = {
      * @param {number} [z=0] - The z position of this Game Object.
      * @param {number} [w=0] - The w position of this Game Object.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setPosition: function (x, y, z, w)
     {
@@ -72797,7 +73055,7 @@ var Transform = {
      * @param {number} [width] - The width of the random area.
      * @param {number} [height] - The height of the random area.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setRandomPosition: function (x, y, width, height)
     {
@@ -72820,7 +73078,7 @@ var Transform = {
      *
      * @param {number} [radians=0] - The rotation of this Game Object, in radians.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setRotation: function (radians)
     {
@@ -72839,7 +73097,7 @@ var Transform = {
      *
      * @param {number} [degrees=0] - The rotation of this Game Object, in degrees.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setAngle: function (degrees)
     {
@@ -72859,7 +73117,7 @@ var Transform = {
      * @param {number} x - The horizontal scale of this Game Object.
      * @param {number} [y=x] - The vertical scale of this Game Object. If not set it will use the `x` value.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setScale: function (x, y)
     {
@@ -72880,7 +73138,7 @@ var Transform = {
      *
      * @param {number} [value=0] - The x position of this Game Object.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setX: function (value)
     {
@@ -72899,7 +73157,7 @@ var Transform = {
      *
      * @param {number} [value=0] - The y position of this Game Object.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setY: function (value)
     {
@@ -72918,7 +73176,7 @@ var Transform = {
      *
      * @param {number} [value=0] - The z position of this Game Object.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setZ: function (value)
     {
@@ -72937,7 +73195,7 @@ var Transform = {
      *
      * @param {number} [value=0] - The w position of this Game Object.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setW: function (value)
     {
@@ -73190,7 +73448,7 @@ var Tint = {
      * @webglOnly
      * @since 3.0.0
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     clearTint: function ()
     {
@@ -73211,7 +73469,7 @@ var Tint = {
      * @param {integer} [bottomLeft] - The tint being applied to the bottom-left of the Game Object.
      * @param {integer} [bottomRight] - The tint being applied to the bottom-right of the Game Object.
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setTint: function (topLeft, topRight, bottomLeft, bottomRight)
     {
@@ -73396,7 +73654,7 @@ var Texture = {
      * @param {string} key - The key of the texture to be used, as stored in the Texture Manager.
      * @param {(string|integer)} [frame] - The name or index of the frame within the Texture.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setTexture: function (key, frame)
     {
@@ -73422,7 +73680,7 @@ var Texture = {
      * @param {boolean} [updateSize=true] - Should this call adjust the size of the Game Object?
      * @param {boolean} [updateOrigin=true] - Should this call adjust the origin of the Game Object?
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setFrame: function (frame, updateSize, updateOrigin)
     {
@@ -73565,7 +73823,7 @@ var Size = {
      *
      * @param {Phaser.Textures.Frame} frame - The frame to base the size of this Game Object on.
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setSizeToFrame: function (frame)
     {
@@ -73586,7 +73844,7 @@ var Size = {
      * @param {number} width - The width of this Game Object.
      * @param {number} height - The height of this Game Object.
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setSize: function (width, height)
     {
@@ -73606,7 +73864,7 @@ var Size = {
      * @param {number} width - The width of this Game Object.
      * @param {number} height - The height of this Game Object.
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setDisplaySize: function (width, height)
     {
@@ -73696,7 +73954,7 @@ var ScrollFactor = {
      * @param {number} x - The horizontal scroll factor of this Game Object.
      * @param {number} [y=x] - The vertical scroll factor of this Game Object. If not set it will use the `x` value.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setScrollFactor: function (x, y)
     {
@@ -73770,7 +74028,7 @@ var ScaleMode = {
      *
      * @param {Phaser.ScaleModes} value - The Scale Mode to be used by this Game Object.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setScaleMode: function (value)
     {
@@ -73906,7 +74164,7 @@ var Origin = {
      * @param {number} [x=0.5] - The horizontal origin value.
      * @param {number} [y=x] - The vertical origin value. If not defined it will be set to the value of `x`.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setOrigin: function (x, y)
     {
@@ -73925,7 +74183,7 @@ var Origin = {
      * @method Phaser.GameObjects.Components.Origin#setOriginFromFrame
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setOriginFromFrame: function ()
     {
@@ -73952,7 +74210,7 @@ var Origin = {
      * @param {number} [x=0] - The horizontal display origin value.
      * @param {number} [y=x] - The vertical display origin value. If not defined it will be set to the value of `x`.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setDisplayOrigin: function (x, y)
     {
@@ -73972,7 +74230,7 @@ var Origin = {
      * @method Phaser.GameObjects.Components.Origin#updateDisplayOrigin
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     updateDisplayOrigin: function ()
     {
@@ -74043,7 +74301,7 @@ var MatrixStack = {
      * @method Phaser.GameObjects.Components.MatrixStack#initMatrixStack
      * @since 3.2.0
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     initMatrixStack: function ()
     {
@@ -74060,7 +74318,7 @@ var MatrixStack = {
      * @method Phaser.GameObjects.Components.MatrixStack#save
      * @since 3.2.0
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     save: function ()
     {
@@ -74087,7 +74345,7 @@ var MatrixStack = {
      * @method Phaser.GameObjects.Components.MatrixStack#restore
      * @since 3.2.0
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     restore: function ()
     {
@@ -74115,7 +74373,7 @@ var MatrixStack = {
      * @method Phaser.GameObjects.Components.MatrixStack#loadIdentity
      * @since 3.2.0
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     loadIdentity: function ()
     {
@@ -74137,7 +74395,7 @@ var MatrixStack = {
      * @param {number} tx - [description]
      * @param {number} ty - [description]
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     transform: function (a, b, c, d, tx, ty)
     {
@@ -74172,7 +74430,7 @@ var MatrixStack = {
      * @param {number} tx - [description]
      * @param {number} ty - [description]
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setTransform: function (a, b, c, d, tx, ty)
     {
@@ -74197,7 +74455,7 @@ var MatrixStack = {
      * @param {number} x - [description]
      * @param {number} y - [description]
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     translate: function (x, y)
     {
@@ -74224,7 +74482,7 @@ var MatrixStack = {
      * @param {number} x - [description]
      * @param {number} y - [description]
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     scale: function (x, y)
     {
@@ -74250,7 +74508,7 @@ var MatrixStack = {
      *
      * @param {number} t - The angle of rotation, in radians.
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     rotate: function (t)
     {
@@ -74285,8 +74543,8 @@ module.exports = MatrixStack;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BitmapMask = __webpack_require__(211);
-var GeometryMask = __webpack_require__(210);
+var BitmapMask = __webpack_require__(212);
+var GeometryMask = __webpack_require__(211);
 
 /**
  * Provides methods used for getting and setting the mask of a Game Object.
@@ -74321,7 +74579,7 @@ var Mask = {
      *
      * @param {Phaser.Display.Masks.BitmapMask|Phaser.Display.Masks.GeometryMask} mask - The mask this Game Object will use when rendering.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setMask: function (mask)
     {
@@ -74338,7 +74596,7 @@ var Mask = {
      *
      * @param {boolean} [destroyMask=false] - Destroy the mask before clearing it?
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     clearMask: function (destroyMask)
     {
@@ -74429,7 +74687,7 @@ module.exports = Mask;
  */
 
 var Rectangle = __webpack_require__(14);
-var RotateAround = __webpack_require__(290);
+var RotateAround = __webpack_require__(292);
 var Vector2 = __webpack_require__(7);
 
 /**
@@ -74750,7 +75008,7 @@ var Flip = {
      * @method Phaser.GameObjects.Components.Flip#toggleFlipX
      * @since 3.0.0
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     toggleFlipX: function ()
     {
@@ -74765,7 +75023,7 @@ var Flip = {
      * @method Phaser.GameObjects.Components.Flip#toggleFlipY
      * @since 3.0.0
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     toggleFlipY: function ()
     {
@@ -74782,7 +75040,7 @@ var Flip = {
      *
      * @param {boolean} value - The flipped state. `false` for no flip, or `true` to be flipped.
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setFlipX: function (value)
     {
@@ -74799,7 +75057,7 @@ var Flip = {
      *
      * @param {boolean} value - The flipped state. `false` for no flip, or `true` to be flipped.
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setFlipY: function (value)
     {
@@ -74817,7 +75075,7 @@ var Flip = {
      * @param {boolean} x - The horizontal flipped state. `false` for no flip, or `true` to be flipped.
      * @param {boolean} y - The horizontal flipped state. `false` for no flip, or `true` to be flipped.
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setFlip: function (x, y)
     {
@@ -74833,7 +75091,7 @@ var Flip = {
      * @method Phaser.GameObjects.Components.Flip#resetFlip
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     resetFlip: function ()
     {
@@ -74925,7 +75183,7 @@ var Depth = {
      *
      * @param {integer} value - The depth of this Game Object.
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setDepth: function (value)
     {
@@ -75032,7 +75290,7 @@ var ComputedSize = {
      * @param {number} width - The width of this Game Object.
      * @param {number} height - The height of this Game Object.
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setSize: function (width, height)
     {
@@ -75052,7 +75310,7 @@ var ComputedSize = {
      * @param {number} width - The width of this Game Object.
      * @param {number} height - The height of this Game Object.
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setDisplaySize: function (width, height)
     {
@@ -75173,7 +75431,7 @@ var BlendMode = {
      *
      * @param {(string|Phaser.BlendModes)} value - The BlendMode value. Either a string or a CONST.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setBlendMode: function (value)
     {
@@ -75197,7 +75455,7 @@ module.exports = BlendMode;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Clamp = __webpack_require__(24);
+var Clamp = __webpack_require__(23);
 
 //  bitmask flag for GameObject.renderMask
 var _FLAG = 2; // 0010
@@ -75274,7 +75532,7 @@ var Alpha = {
      * @method Phaser.GameObjects.Components.Alpha#clearAlpha
      * @since 3.0.0
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     clearAlpha: function ()
     {
@@ -75296,7 +75554,7 @@ var Alpha = {
      * @param {float} [bottomLeft] - The alpha value used for the bottom-left of the Game Object. WebGL only.
      * @param {float} [bottomRight] - The alpha value used for the bottom-right of the Game Object. WebGL only.
      * 
-     * @return {Phaser.GameObjects.GameObject} This Game Object instance.
+     * @return {this} This Game Object instance.
      */
     setAlpha: function (topLeft, topRight, bottomLeft, bottomRight)
     {
@@ -75617,7 +75875,7 @@ if (!global.cancelAnimationFrame) {
     };
 }
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(212)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(213)))
 
 /***/ }),
 /* 597 */
@@ -75784,8 +76042,8 @@ and string types for AudioPannerNode.panningModel, AudioPannerNode.distanceModel
 BiquadFilterNode.type and OscillatorNode.type.
 
 */
-(function (global, exports, perf) {
-  'use strict';
+
+(function () {
 
   function fixSetTarget(param) {
     if (!param)	// if NYI, just return
@@ -75915,8 +76173,7 @@ BiquadFilterNode.type and OscillatorNode.type.
     window.OfflineAudioContext = webkitOfflineAudioContext;
   }
 
-}(window));
-
+})();
 
 
 /***/ }),
@@ -76065,10 +76322,10 @@ __webpack_require__(595);
 
 module.exports = {
 
-    BitmapMaskPipeline: __webpack_require__(258),
-    FlatTintPipeline: __webpack_require__(257),
-    ForwardDiffuseLightPipeline: __webpack_require__(146),
-    TextureTintPipeline: __webpack_require__(125)
+    BitmapMaskPipeline: __webpack_require__(259),
+    FlatTintPipeline: __webpack_require__(258),
+    ForwardDiffuseLightPipeline: __webpack_require__(147),
+    TextureTintPipeline: __webpack_require__(126)
 
 };
 
@@ -76091,7 +76348,7 @@ module.exports = {
 
     Utils: __webpack_require__(27),
     WebGLPipeline: __webpack_require__(83),
-    WebGLRenderer: __webpack_require__(260),
+    WebGLRenderer: __webpack_require__(261),
     Pipelines: __webpack_require__(664),
 
     // Constants
@@ -76126,8 +76383,8 @@ module.exports = {
 
 module.exports = {
 
-    Canvas: __webpack_require__(263),
-    WebGL: __webpack_require__(259)
+    Canvas: __webpack_require__(264),
+    WebGL: __webpack_require__(260)
 
 };
 
@@ -76148,10 +76405,10 @@ module.exports = {
 
 module.exports = {
 
-    BlitImage: __webpack_require__(264),
-    CanvasRenderer: __webpack_require__(265),
-    DrawImage: __webpack_require__(262),
-    GetBlendModes: __webpack_require__(261)
+    BlitImage: __webpack_require__(265),
+    CanvasRenderer: __webpack_require__(266),
+    DrawImage: __webpack_require__(263),
+    GetBlendModes: __webpack_require__(262)
 
 };
 
@@ -76542,7 +76799,9 @@ module.exports = {
 /* 1017 */,
 /* 1018 */,
 /* 1019 */,
-/* 1020 */
+/* 1020 */,
+/* 1021 */,
+/* 1022 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/**
@@ -76562,82 +76821,82 @@ var Extend = __webpack_require__(18);
 
 var Phaser = {
 
-    Animation: __webpack_require__(561),
-    Cache: __webpack_require__(560),
-    Cameras: { Scene2D: __webpack_require__(557) },
+    Animation: __webpack_require__(563),
+    Cache: __webpack_require__(562),
+    Cameras: { Scene2D: __webpack_require__(559) },
     Class: __webpack_require__(0),
-    Data: __webpack_require__(535),
-    Display: { Masks: __webpack_require__(529) },
-    Events: __webpack_require__(527),
-    Game: __webpack_require__(525),
+    Data: __webpack_require__(537),
+    Display: { Masks: __webpack_require__(531) },
+    Events: __webpack_require__(529),
+    Game: __webpack_require__(527),
     GameObjects: {
-        DisplayList: __webpack_require__(489),
+        DisplayList: __webpack_require__(491),
         GameObjectCreator: __webpack_require__(13),
         GameObjectFactory: __webpack_require__(11),
-        UpdateList: __webpack_require__(461),
+        UpdateList: __webpack_require__(463),
         Components: __webpack_require__(15),
-        BuildGameObject: __webpack_require__(23),
-        BuildGameObjectAnimation: __webpack_require__(123),
+        BuildGameObject: __webpack_require__(24),
+        BuildGameObjectAnimation: __webpack_require__(124),
         GameObject: __webpack_require__(2),
         Graphics: __webpack_require__(112),
         Image: __webpack_require__(69),
         Sprite: __webpack_require__(34),
         Text: __webpack_require__(107),
         Factories: {
-            Graphics: __webpack_require__(395),
-            Image: __webpack_require__(394),
-            Sprite: __webpack_require__(393),
-            Text: __webpack_require__(392)
+            Graphics: __webpack_require__(397),
+            Image: __webpack_require__(396),
+            Sprite: __webpack_require__(395),
+            Text: __webpack_require__(394)
         },
         Creators: {
-            Graphics: __webpack_require__(391),
-            Image: __webpack_require__(390),
-            Sprite: __webpack_require__(389),
-            Text: __webpack_require__(388)
+            Graphics: __webpack_require__(393),
+            Image: __webpack_require__(392),
+            Sprite: __webpack_require__(391),
+            Text: __webpack_require__(390)
         }
     },
-    Input: __webpack_require__(369),
+    Input: __webpack_require__(371),
     Loader: {
         FileTypes: {
-            AnimationJSONFile: __webpack_require__(355),
-            AtlasJSONFile: __webpack_require__(354),
-            AudioFile: __webpack_require__(164),
-            AudioSpriteFile: __webpack_require__(353),
-            HTML5AudioFile: __webpack_require__(163),
+            AnimationJSONFile: __webpack_require__(357),
+            AtlasJSONFile: __webpack_require__(356),
+            AudioFile: __webpack_require__(165),
+            AudioSpriteFile: __webpack_require__(355),
+            HTML5AudioFile: __webpack_require__(164),
             ImageFile: __webpack_require__(37),
             JSONFile: __webpack_require__(28),
-            MultiAtlasFile: __webpack_require__(352),
-            PluginFile: __webpack_require__(351),
-            ScriptFile: __webpack_require__(350),
-            SpriteSheetFile: __webpack_require__(349),
-            TextFile: __webpack_require__(222),
-            XMLFile: __webpack_require__(141)
+            MultiAtlasFile: __webpack_require__(354),
+            PluginFile: __webpack_require__(353),
+            ScriptFile: __webpack_require__(352),
+            SpriteSheetFile: __webpack_require__(351),
+            TextFile: __webpack_require__(223),
+            XMLFile: __webpack_require__(142)
         },
         File: __webpack_require__(19),
         FileTypesManager: __webpack_require__(6),
         GetURL: __webpack_require__(106),
-        LoaderPlugin: __webpack_require__(348),
+        LoaderPlugin: __webpack_require__(350),
         MergeXHRSettings: __webpack_require__(105),
         MultiFile: __webpack_require__(36),
-        XHRLoader: __webpack_require__(165),
+        XHRLoader: __webpack_require__(166),
         XHRSettings: __webpack_require__(74)
     },
     Math: {
-        Between: __webpack_require__(270),
+        Between: __webpack_require__(271),
         DegToRad: __webpack_require__(38),
-        FloatBetween: __webpack_require__(246),
-        RadToDeg: __webpack_require__(147),
+        FloatBetween: __webpack_require__(247),
+        RadToDeg: __webpack_require__(148),
         Vector2: __webpack_require__(7)
     },
-    Plugins: __webpack_require__(328),
+    Plugins: __webpack_require__(330),
     Renderer: __webpack_require__(668),
-    Scene: __webpack_require__(184),
-    Scenes: __webpack_require__(326),
-    Sound: __webpack_require__(324),
-    Structs: __webpack_require__(323),
-    Textures: __webpack_require__(322),
-    Time: __webpack_require__(306),
-    Tweens: __webpack_require__(304)
+    Scene: __webpack_require__(185),
+    Scenes: __webpack_require__(328),
+    Sound: __webpack_require__(326),
+    Structs: __webpack_require__(325),
+    Textures: __webpack_require__(324),
+    Time: __webpack_require__(308),
+    Tweens: __webpack_require__(306)
 };
 
 //   Merge in the consts
@@ -76656,7 +76915,7 @@ global.Phaser = Phaser;
  *  -- Dick Brandon
  */
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(212)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(213)))
 
 /***/ })
 /******/ ]);

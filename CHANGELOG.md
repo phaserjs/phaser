@@ -1,9 +1,10 @@
 # Change Log
 
-## Version 3.next - Yui - in development
+## Version 3.9.0 - Yui - 24th May 2018
 
 ### New Features
 
+* The command `npm run help` will display a friendly list of all the scripts available (run `npm install` first)
 * Game has a new property `hasFocus` which is a read-only boolean that lets you know if the window the game is embedded in (including in an iframe) currently has focus or not.
 * Game.Config has a new property `autoFocus`, which is `true` by default, and will automatically call `window.focus()` when the game starts.
 * Clicking on the canvas will automatically call `window.focus`. This means in games that use keyboard controls if you tab or click away from the game, then click back on it again, the keys will carry on working (where-as before they would remain unfocused)
@@ -55,10 +56,11 @@
 
 ### Examples, Documentation and TypeScript
 
+Thanks to the work of @hexus we have now documented nearly all of the Math namespace. This is hundreds of functions now covered by full docs and is work we'll continue in the coming weeks.
+
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@hexus @mikez @wtravO @thomastanck
-
+@mikez @wtravO @thomastanck
 
 ## Version 3.8.0 - Klein - 16th May 2018
 
