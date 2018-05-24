@@ -35,6 +35,8 @@ var CullTiles = function (layer, camera, outputArray)
     camera.matrix.translate(-originX, -originY);
     camera.matrix.invert();
 
+    camera.shakeEffect.preRender();
+
     var tilemapLayer = layer.tilemapLayer;
     var tileW = layer.tileWidth;
     var tileH = layer.tileHeight;
@@ -57,7 +59,6 @@ var CullTiles = function (layer, camera, outputArray)
     var tCullW = cullW * a + cullH * c + e;
     var tCullH = cullW * b + cullH * d + f;
 
-
     for (var y = 0; y < mapHeight; ++y)
     {
         for (var x = 0; x < mapWidth; ++x)
@@ -65,7 +66,9 @@ var CullTiles = function (layer, camera, outputArray)
             var tile = mapData[y][x];
 
             if (tile === null || tile.index === -1)
-            { continue; }
+            {
+                continue;
+            }
 
             var tileX = tile.pixelX * a + tile.pixelY * c + e;
             var tileY = tile.pixelX * b + tile.pixelY * d + f;
@@ -81,7 +84,6 @@ var CullTiles = function (layer, camera, outputArray)
             }
         }
     }
-
 
     /* var tilemapLayer = layer.tilemapLayer;
     var mapData = layer.data;
