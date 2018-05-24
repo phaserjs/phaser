@@ -5,7 +5,7 @@
  */
 
 /**
- * [description]
+ * Elastic ease-in/out.
  *
  * @function Phaser.Math.Easing.Elastic.InOut
  * @since 3.0.0

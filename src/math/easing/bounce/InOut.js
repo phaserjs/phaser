@@ -5,7 +5,7 @@
  */
 
 /**
- * [description]
+ * Bounce ease-in/out.
  *
  * @function Phaser.Math.Easing.Bounce.InOut
  * @since 3.0.0

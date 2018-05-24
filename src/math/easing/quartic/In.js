@@ -5,7 +5,7 @@
  */
 
 /**
- * [description]
+ * Quartic ease-in.
  *
  * @function Phaser.Math.Easing.Quartic.In
  * @since 3.0.0

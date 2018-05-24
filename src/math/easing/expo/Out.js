@@ -5,7 +5,7 @@
  */
 
 /**
- * [description]
+ * Exponential ease-out.
  *
  * @function Phaser.Math.Easing.Expo.Out
  * @since 3.0.0

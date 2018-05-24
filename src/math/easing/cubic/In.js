@@ -5,7 +5,7 @@
  */
 
 /**
- * [description]
+ * Cubic ease-in.
  *
  * @function Phaser.Math.Easing.Cubic.In
  * @since 3.0.0
