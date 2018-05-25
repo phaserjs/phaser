@@ -19,7 +19,8 @@ var Class = require('../utils/Class');
  * @constructor
  * @since 3.8.0
  *
- * @param {Phaser.Game} game - A reference to the Scene that has installed this plugin.
+ * @param {Phaser.Scene} scene - A reference to the Scene that has installed this plugin.
+ * @param {Phaser.Plugins.PluginManager} pluginManager - A reference to the Plugin Manager.
  */
 var ScenePlugin = new Class({
 

@@ -16,7 +16,7 @@ var Class = require('../utils/Class');
  * @constructor
  * @since 3.8.0
  *
- * @param {Phaser.Game} game - A reference to the Game instance this plugin is running under.
+ * @param {Phaser.Plugins.PluginManager} pluginManager - A reference to the Plugin Manager.
  */
 var BasePlugin = new Class({
 
