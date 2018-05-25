@@ -90,49 +90,87 @@ var InputManager = new Class({
         this.queue = [];
 
         /**
-         * [description]
+         * A reference to the Keyboard Manager class, if enabled via the `input.keyboard` Game Config property.
          *
          * @name Phaser.Input.InputManager#keyboard
-         * @type {Phaser.Input.Keyboard.KeyboardManager}
+         * @type {?Phaser.Input.Keyboard.KeyboardManager}
          * @since 3.0.0
          */
-        this.keyboard = new Keyboard(this);
+        this.keyboard = (config.inputKeyboard) ? new Keyboard(this) : null;
 
         /**
-         * [description]
+         * A reference to the Mouse Manager class, if enabled via the `input.mouse` Game Config property.
          *
          * @name Phaser.Input.InputManager#mouse
-         * @type {Phaser.Input.Mouse.MouseManager}
+         * @type {?Phaser.Input.Mouse.MouseManager}
          * @since 3.0.0
          */
-        this.mouse = new Mouse(this);
+        this.mouse = (config.inputMouse) ? new Mouse(this) : null;
 
         /**
-         * [description]
+         * A reference to the Touch Manager class, if enabled via the `input.touch` Game Config property.
          *
          * @name Phaser.Input.InputManager#touch
          * @type {Phaser.Input.Touch.TouchManager}
          * @since 3.0.0
          */
-        this.touch = new Touch(this);
+        this.touch = (config.inputTouch) ? new Touch(this) : null;
 
         /**
-         * [description]
+         * A reference to the Gamepad Manager class, if enabled via the `input.gamepad` Game Config property.
          *
          * @name Phaser.Input.InputManager#gamepad
          * @type {Phaser.Input.Gamepad.GamepadManager}
          * @since 3.0.0
          */
-        this.gamepad = new Gamepad(this);
+        this.gamepad = (config.inputGamepad) ? new Gamepad(this) : null;
 
         /**
-         * [description]
+         * An array of Pointers that have been added to the game.
+         * If you need more than 2 then use the `addPointer` method to create them.
+         *
+         * @name Phaser.Input.InputManager#pointers
+         * @type {Phaser.Input.Pointer[]}
+         * @since 3.10.0
+         */
+        this.pointers = [
+            new Pointer(this, 0),
+            new Pointer(this, 1)
+        ];
+
+        /**
+         * The mouse has its own unique Pointer object, which you can reference directly if making a _desktop specific game_.
+         * If you are supporting both desktop and touch devices then do not use this property, instead use `activePointer`
+         * which will always map to the most recently interacted pointer.
+         *
+         * @name Phaser.Input.InputManager#mousePointer
+         * @type {Phaser.Input.Pointer}
+         * @since 3.10.0
+         */
+        this.mousePointer = this.pointers[0];
+
+        /**
+         * The most recently active Pointer object.
+         *
+         * If you've only 1 Pointer in your game then this will accurately be either the first finger touched, or the mouse.
+         *
+         * If your game doesn't need to support multi-touch then you can safely use this property in all of your game
+         * code and it will adapt to be either the mouse or the touch, based on device.
          *
          * @name Phaser.Input.InputManager#activePointer
          * @type {Phaser.Input.Pointer}
          * @since 3.0.0
          */
-        this.activePointer = new Pointer(this, 0);
+        this.activePointer = this.pointers[0];
+
+        /**
+         * Reset every frame. Set to `true` if any of the Pointers are dirty this frame.
+         *
+         * @name Phaser.Input.InputManager#dirty
+         * @type {boolean}
+         * @since 3.10.0
+         */
+        this.dirty = false;
 
         /**
          * [description]
@@ -222,10 +260,7 @@ var InputManager = new Class({
 
         this.updateBounds();
 
-        this.keyboard.boot();
-        this.mouse.boot();
-        this.touch.boot();
-        this.gamepad.boot();
+        this.events.emit('boot');
 
         this.game.events.on('prestep', this.update, this);
         this.game.events.once('destroy', this.destroy, this);
@@ -282,17 +317,20 @@ var InputManager = new Class({
      */
     update: function (time)
     {
-        this.keyboard.update();
-        this.gamepad.update();
+        this.events.emit('update');
 
         this.ignoreEvents = false;
 
+        this.dirty = false;
+
         var len = this.queue.length;
 
-        //  Currently just 1 pointer supported
-        var pointer = this.activePointer;
+        var pointers = this.pointers;
 
-        pointer.reset();
+        for (var i = 0; i < pointers.length; i++)
+        {
+            pointers[i].reset();
+        }
 
         if (!this.enabled || len === 0)
         {
@@ -313,37 +351,48 @@ var InputManager = new Class({
         {
             var event = queue[i];
 
-            //  TODO: Move to CONSTs so we can do integer comparisons instead of strings.
             switch (event.type)
             {
                 case 'mousemove':
 
-                    pointer.move(event, time);
+                    this.mousePointer.move(event, time);
                     break;
 
                 case 'mousedown':
 
-                    pointer.down(event, time);
+                    this.mousePointer.down(event, time);
                     break;
 
                 case 'mouseup':
 
-                    pointer.up(event, time);
+                    this.mousePointer.up(event, time);
                     break;
 
                 case 'touchmove':
 
-                    pointer.touchmove(event, time);
+                    for (i = 0; i < event.changedTouches.length; i++)
+                    {
+                        this.updatePointer(event.changedTouches[i], event, time);
+                    }
+
                     break;
 
                 case 'touchstart':
 
-                    pointer.touchstart(event, time);
+                    for (i = 0; i < event.changedTouches.length; i++)
+                    {
+                        this.startPointer(event.changedTouches[i], event, time);
+                    }
+
                     break;
 
                 case 'touchend':
 
-                    pointer.touchend(event, time);
+                    for (i = 0; i < event.changedTouches.length; i++)
+                    {
+                        this.stopPointer(event.changedTouches[i], event, time);
+                    }
+
                     break;
 
                 case 'pointerlockchange':
@@ -352,6 +401,84 @@ var InputManager = new Class({
                     break;
             }
         }
+    },
+
+    //  event.targetTouches = list of all touches on the TARGET ELEMENT (i.e. game dom element)
+    //  event.touches = list of all touches on the ENTIRE DOCUMENT, not just the target element
+    //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
+    startPointer: function (changedTouch, event, time)
+    {
+        var pointers = this.pointers;
+
+        for (var i = 1; i < pointers.length; i++)
+        {
+            var pointer = pointers[i];
+
+            if (!pointer.active)
+            {
+                pointer.touchstart(changedTouch, time);
+                this.activePointer = pointer;
+                this.dirty = true;
+                break;
+            }
+        }
+    },
+
+    updatePointer: function (changedTouch, event, time)
+    {
+        var pointers = this.pointers;
+
+        for (var i = 1; i < pointers.length; i++)
+        {
+            var pointer = pointers[i];
+
+            if (pointer.active && pointer.identifier === changedTouch.identifier)
+            {
+                pointer.touchmove(changedTouch, time);
+                this.activePointer = pointer;
+                this.dirty = true;
+                break;
+            }
+        }
+    },
+
+    //  For touch end its a list of the touch points that have been removed from the surface
+    //  https://developer.mozilla.org/en-US/docs/DOM/TouchList
+    //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
+    stopPointer: function (changedTouch, event, time)
+    {
+        var pointers = this.pointers;
+
+        for (var i = 1; i < pointers.length; i++)
+        {
+            var pointer = pointers[i];
+
+            if (pointer.active && pointer.identifier === changedTouch.identifier)
+            {
+                pointer.touchend(changedTouch, time);
+                this.dirty = true;
+                break;
+            }
+        }
+    },
+
+    /**
+     * Add a new Pointer object to the Input Manager.
+     * By default Input creates 3 pointer objects: `mousePointer` (not include in part of general pointer pool), `pointer1` and `pointer2`.
+     * This method adds an additional pointer, up to a maximum of Phaser.Input.MAX_POINTERS (default of 10).
+     *
+     * @method Phaser.Input#addPointer
+     * @return {Phaser.Pointer|null} The new Pointer object that was created; null if a new pointer could not be added.
+     */
+    addPointer: function ()
+    {
+        var id = this.pointers.length;
+
+        var pointer = new Pointer(this, id);
+
+        this.pointers.push(pointer);
+
+        return pointer;
     },
 
     /**
