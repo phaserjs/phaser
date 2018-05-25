@@ -104,6 +104,8 @@ var GamepadManager = new Class({
          * @since 3.0.0
          */
         this.queue = [];
+
+        inputManager.events.once('boot', this.boot, this);
     },
 
     /**
@@ -158,6 +160,9 @@ var GamepadManager = new Class({
         target.addEventListener('gamepadbuttondown', handler, false);
         target.addEventListener('gamepadbuttonup', handler, false);
         target.addEventListener('gamepadaxismove', handler, false);
+
+        //  Finally, listen for an update event from the Input Manager
+        this.manager.events.on('update', this.update, this);
     },
 
     /**
@@ -177,6 +182,8 @@ var GamepadManager = new Class({
         target.removeEventListener('gamepadbuttondown', handler);
         target.removeEventListener('gamepadbuttonup', handler);
         target.removeEventListener('gamepadaxismove', handler);
+
+        this.manager.events.off('update', this.update);
     },
 
     /**

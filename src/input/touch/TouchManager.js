@@ -79,6 +79,8 @@ var TouchManager = new Class({
          * @since 3.0.0
          */
         this.handler;
+
+        inputManager.events.once('boot', this.boot, this);
     },
 
     /**

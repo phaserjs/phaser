@@ -124,6 +124,8 @@ var KeyboardManager = new Class({
          * @since 3.0.0
          */
         this.handler;
+
+        inputManager.events.once('boot', this.boot, this);
     },
 
     /**
@@ -176,6 +178,9 @@ var KeyboardManager = new Class({
 
         this.target.addEventListener('keydown', handler, false);
         this.target.addEventListener('keyup', handler, false);
+
+        //  Finally, listen for an update event from the Input Manager
+        this.manager.events.on('update', this.update, this);
     },
 
     /**
@@ -188,6 +193,8 @@ var KeyboardManager = new Class({
     {
         this.target.removeEventListener('keydown', this.handler);
         this.target.removeEventListener('keyup', this.handler);
+
+        this.manager.events.off('update', this.update);
     },
 
     /**

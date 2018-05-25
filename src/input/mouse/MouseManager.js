@@ -89,6 +89,8 @@ var MouseManager = new Class({
          * @since 3.0.0
          */
         this.locked = false;
+
+        inputManager.events.once('boot', this.boot, this);
     },
 
     /**
