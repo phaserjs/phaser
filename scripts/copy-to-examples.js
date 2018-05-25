@@ -1,5 +1,5 @@
 let fs = require('fs-extra');
-let sloc = require('node-sloc');
+// let sloc = require('node-sloc');
 
 let source = './build/phaser.js';
 let sourceMap = './build/phaser.js.map';
@@ -56,9 +56,9 @@ if (fs.existsSync(dest))
             extensions: [ '.js' ]
         };
  
-        sloc(options).then((res) => {
-            console.log('Source files: ' + res.sloc.files + '\nLines of code: ' + res.sloc.sloc);
-        });
+        // sloc(options).then((res) => {
+        //     console.log('Source files: ' + res.sloc.files + '\nLines of code: ' + res.sloc.sloc);
+        // });
 
     });
 }
