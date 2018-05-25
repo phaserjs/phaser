@@ -167,7 +167,6 @@ var Pointer = new Class({
          */
         this.primaryDown = false;
 
-
         /**
          * The Drag State of the Pointer:
          *
@@ -261,6 +260,35 @@ var Pointer = new Class({
          * @since 3.0.0
          */
         this.movementY = 0;
+
+        /**
+         * The identifier property of the Pointer as set by the DOM event when this Pointer is started.
+         *
+         * @name Phaser.Input.Pointer#identifier
+         * @type {number}
+         * @since 3.10.0
+         */
+        this.identifier = 0;
+
+        /**
+         * The pointerId property of the Pointer as set by the DOM event when this Pointer is started.
+         * The browser can and will recycle this value.
+         *
+         * @name Phaser.Input.Pointer#pointerId
+         * @type {number}
+         * @since 3.10.0
+         */
+        this.pointerId = null;
+
+        /**
+         * An active Pointer is one that is currently pressed down on the display.
+         * A Mouse is always considered as active.
+         *
+         * @name Phaser.Input.Pointer#active
+         * @type {boolean}
+         * @since 3.10.0
+         */
+        this.active = (id === 0) ? true : false;
     },
 
     /**
@@ -282,55 +310,11 @@ var Pointer = new Class({
     /**
      * [description]
      *
-     * @name Phaser.Input.Pointer#x
-     * @type {number}
-     * @since 3.0.0
-     */
-    x: {
-
-        get: function ()
-        {
-            return this.position.x;
-        },
-
-        set: function (value)
-        {
-            this.position.x = value;
-        }
-
-    },
-
-    /**
-     * [description]
-     *
-     * @name Phaser.Input.Pointer#y
-     * @type {number}
-     * @since 3.0.0
-     */
-    y: {
-
-        get: function ()
-        {
-            return this.position.y;
-        },
-
-        set: function (value)
-        {
-            this.position.y = value;
-        }
-
-    },
-
-    /**
-     * [description]
-     *
      * @method Phaser.Input.Pointer#reset
      * @since 3.0.0
      */
     reset: function ()
     {
-        // this.buttons = 0;
-
         this.dirty = false;
 
         this.justDown = false;
@@ -354,8 +338,8 @@ var Pointer = new Class({
     {
         this.event = event;
 
-        this.x = this.manager.transformX(event.changedTouches[0].pageX);
-        this.y = this.manager.transformY(event.changedTouches[0].pageY);
+        this.x = this.manager.transformX(event.pageX);
+        this.y = this.manager.transformY(event.pageY);
 
         this.justMoved = true;
 
@@ -448,12 +432,21 @@ var Pointer = new Class({
      */
     touchstart: function (event, time)
     {
+        if (event['pointerId'])
+        {
+            this.pointerId = event.pointerId;
+        }
+
+        this.identifier = event.identifier;
+        this.target = event.target;
+        this.active = true;
+
         this.buttons = 1;
 
         this.event = event;
 
-        this.x = this.manager.transformX(event.changedTouches[0].pageX);
-        this.y = this.manager.transformY(event.changedTouches[0].pageY);
+        this.x = this.manager.transformX(event.pageX);
+        this.y = this.manager.transformY(event.pageY);
 
         this.primaryDown = true;
         this.downX = this.x;
@@ -521,8 +514,8 @@ var Pointer = new Class({
 
         this.event = event;
 
-        this.x = this.manager.transformX(event.changedTouches[0].pageX);
-        this.y = this.manager.transformY(event.changedTouches[0].pageY);
+        this.x = this.manager.transformX(event.pageX);
+        this.y = this.manager.transformY(event.pageY);
 
         this.primaryDown = false;
         this.upX = this.x;
@@ -535,6 +528,8 @@ var Pointer = new Class({
         this.dirty = true;
 
         this.wasTouch = true;
+        
+        this.active = false;
     },
 
     /**
@@ -626,6 +621,48 @@ var Pointer = new Class({
         this.camera = null;
         this.manager = null;
         this.position = null;
+    },
+
+    /**
+     * [description]
+     *
+     * @name Phaser.Input.Pointer#x
+     * @type {number}
+     * @since 3.0.0
+     */
+    x: {
+
+        get: function ()
+        {
+            return this.position.x;
+        },
+
+        set: function (value)
+        {
+            this.position.x = value;
+        }
+
+    },
+
+    /**
+     * [description]
+     *
+     * @name Phaser.Input.Pointer#y
+     * @type {number}
+     * @since 3.0.0
+     */
+    y: {
+
+        get: function ()
+        {
+            return this.position.y;
+        },
+
+        set: function (value)
+        {
+            this.position.y = value;
+        }
+
     }
 
 });
