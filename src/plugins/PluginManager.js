@@ -422,8 +422,6 @@ var PluginManager = new Class({
             start = true;
         }
 
-        console.log('install', key, start, mapping);
-
         if (!this.game.isBooted)
         {
             this._pendingGlobal.push({ key: key, plugin: plugin, start: start, mapping: mapping });
