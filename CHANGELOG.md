@@ -4,6 +4,8 @@
 
 ### New Features
 
+* RenderTexture.resize will allow you to resize the underlying Render Texture to the new dimensions given. Doing this also clears the Render Texture at the same time (thanks @saqsun)
+
 ### Updates
 
 ### Bug Fixes

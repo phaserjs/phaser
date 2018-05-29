@@ -108,6 +108,36 @@ var RenderTexture = new Class({
          */
         this.globalAlpha = 1;
 
+        /**
+         * The HTML Canvas Element that the Render Texture is drawing to.
+         * This is only set if Phaser is running with the Canvas Renderer.
+         *
+         * @name Phaser.GameObjects.RenderTexture#canvas
+         * @type {?HTMLCanvasElement}
+         * @since 3.2.0
+         */
+        this.canvas = null;
+
+        /**
+         * A reference to the Rendering Context belonging to the Canvas Element this Render Texture is drawing to.
+         * This is only set if Phaser is running with the Canvas Renderer.
+         *
+         * @name Phaser.GameObjects.RenderTexture#context
+         * @type {?CanvasRenderingContext2D}
+         * @since 3.2.0
+         */
+        this.context = null;
+
+        /**
+         * A reference to the GL Frame Buffer this Render Texture is drawing to.
+         * This is only set if Phaser is running with the WebGL Renderer.
+         *
+         * @name Phaser.GameObjects.RenderTexture#framebuffer
+         * @type {?WebGLFramebuffer}
+         * @since 3.2.0
+         */
+        this.framebuffer = null;
+
         if (this.renderer.type === CONST.WEBGL)
         {
             var gl = this.renderer.gl;
@@ -133,6 +163,51 @@ var RenderTexture = new Class({
         this.setPosition(x, y);
         this.setSize(width, height);
         this.initPipeline('TextureTintPipeline');
+    },
+
+    /**
+     * Resizes the Render Texture to the new dimensions given.
+     * 
+     * In WebGL it will destroy and then re-create the frame buffer being used by the Render Texture.
+     * In Canvas it will resize the underlying canvas element.
+     * Both approaches will erase everything currently drawn to the Render Texture.
+     *
+     * If the dimensions given are the same as those already being used, calling this method will do nothing.
+     *
+     * @method Phaser.GameObjects.RenderTexture#resize
+     * @since 3.10.0
+     *
+     * @param {number} width - The new width of the Render Texture.
+     * @param {number} [height] - The new height of the Render Texture. If not specified, will be set the same as the `width`.
+     *
+     * @return {this} This Render Texture.
+     */
+    resize: function (width, height)
+    {
+        if (height === undefined) { height = width; }
+
+        if (width !== this.width || height !== this.height)
+        {
+            if (this.canvas)
+            {
+                this.canvas.width = width;
+                this.canvas.height = height;
+            }
+            else
+            {
+                this.renderer.deleteTexture(this.texture);
+                this.renderer.deleteFramebuffer(this.framebuffer);
+
+                var gl = this.renderer.gl;
+
+                this.texture = this.renderer.createTexture2D(0, gl.NEAREST, gl.NEAREST, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, null, width, height, false);
+                this.framebuffer = this.renderer.createFramebuffer(width, height, this.texture, false);
+            }
+
+            this.setSize(width, height);
+        }
+
+        return this;
     },
 
     /**
