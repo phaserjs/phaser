@@ -4,11 +4,14 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var CONST = require('./const');
+var Extend = require('../utils/object/Extend');
+
 /**
  * @namespace Phaser.Input
  */
 
-module.exports = {
+var Input = {
 
     CreateInteractiveObject: require('./CreateInteractiveObject'),
     Gamepad: require('./gamepad'),
@@ -20,3 +23,8 @@ module.exports = {
     Touch: require('./touch')
 
 };
+
+//   Merge in the consts
+Input = Extend(false, Input, CONST);
+
+module.exports = Input;
