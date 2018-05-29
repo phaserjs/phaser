@@ -113,8 +113,8 @@ or the minified version:
 
 ### API Documentation
 
-1. Go to https://photonstorm.github.io/phaser3-docs/index.html to read the docs online, or ...
-2. Checkout the [phaser3-docs](https://github.com/photonstorm/phaser3-docs) repository and then read the documentation by pointing your browser to the local `docs/` folder.
+1. Go to https://photonstorm.github.io/phaser3-docs/index.html to read the docs online. You can view a [list of all Classes](https://photonstorm.github.io/phaser3-docs/list_class.html) or you may wish to browse the [Namespaces list](https://photonstorm.github.io/phaser3-docs/list_namespace.html) instead. If you wish to run the docs locally you can ...
+2. Checkout the [phaser3-docs](https://github.com/photonstorm/phaser3-docs) repository and then read the documentation by pointing your browser to the local `docs/` folder, and again selecting from the Classes or Namespaces links at the top of the page.
 
 The documentation for Phaser 3 is an on-going project. Please help us by searching the Phaser code for any instance of the string `[description]` and then replacing it with some documentation.
 
