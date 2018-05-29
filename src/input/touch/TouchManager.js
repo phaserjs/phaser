@@ -116,7 +116,7 @@ var TouchManager = new Class({
             return;
         }
 
-        this.manager.queue.push(this.manager.startPointer, this.manager, event);
+        this.manager.queueTouchStart(event);
 
         if (this.capture)
         {
@@ -132,7 +132,7 @@ var TouchManager = new Class({
             return;
         }
 
-        this.manager.queue.push(this.manager.updatePointer, this.manager, event);
+        this.manager.queueTouchMove(event);
 
         if (this.capture)
         {
@@ -148,7 +148,7 @@ var TouchManager = new Class({
             return;
         }
 
-        this.manager.queue.push(this.manager.stopPointer, this.manager, event);
+        this.manager.queueTouchEnd(event);
 
         if (this.capture)
         {

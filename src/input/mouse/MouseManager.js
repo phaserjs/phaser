@@ -209,7 +209,7 @@ var MouseManager = new Class({
             return;
         }
 
-        this.manager.queue.push(this.manager.mousePointer.move, this.manager.mousePointer, event);
+        this.manager.queueMouseMove(event);
 
         if (this.capture)
         {
@@ -225,7 +225,7 @@ var MouseManager = new Class({
             return;
         }
 
-        this.manager.queue.push(this.manager.mousePointer.down, this.manager.mousePointer, event);
+        this.manager.queueMouseDown(event);
 
         if (this.capture)
         {
@@ -241,9 +241,7 @@ var MouseManager = new Class({
             return;
         }
 
-        this.manager.queue.push(this.manager.mousePointer.up, this.manager.mousePointer, event);
-
-        //  TODO - Add native callback support
+        this.manager.queueMouseUp(event);
 
         if (this.capture)
         {
