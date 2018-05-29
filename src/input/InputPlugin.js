@@ -1579,6 +1579,27 @@ var InputPlugin = new Class({
         }
     },
 
+    addUpCallback: function (callback, isOnce)
+    {
+        this.manager.addUpCallback(callback, isOnce);
+
+        return this;
+    },
+
+    addDownCallback: function (callback, isOnce)
+    {
+        this.manager.addDownCallback(callback, isOnce);
+
+        return this;
+    },
+
+    addMoveCallback: function (callback, isOnce)
+    {
+        this.manager.addMoveCallback(callback, isOnce);
+
+        return this;
+    },
+
     /**
      * The Scene that owns this plugin is transitioning in.
      *
