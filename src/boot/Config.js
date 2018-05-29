@@ -74,6 +74,7 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {(boolean|object)} [input.mouse=true] - [description]
  * @property {*} [input.mouse.target=null] - [description]
  * @property {boolean} [input.touch=true] - [description]
+ * @property {integer} [input.activePointers=1] - [description]
  * @property {*} [input.touch.target=null] - [description]
  * @property {boolean} [input.touch.capture=true] - [description]
  * @property {(boolean|object)} [input.gamepad=false] - [description]
@@ -253,6 +254,11 @@ var Config = new Class({
         this.inputTouchCapture = GetValue(config, 'input.touch.capture', true);
 
         /**
+         * @const {integer} Phaser.Boot.Config#inputActivePointers - [description]
+         */
+        this.inputActivePointers = GetValue(config, 'input.activePointers', 1);
+
+        /**
          * @const {boolean} Phaser.Boot.Config#inputGamepad - [description]
          */
         this.inputGamepad = GetValue(config, 'input.gamepad', false);
@@ -375,6 +381,7 @@ var Config = new Class({
         }
 
         //  Callbacks
+
         /**
          * @const {BootCallback} Phaser.Boot.Config#preBoot - [description]
          */
