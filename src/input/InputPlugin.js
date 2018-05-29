@@ -1521,7 +1521,7 @@ var InputPlugin = new Class({
 
         var pointers = this.manager.pointers;
 
-        for (var i = 0; i < pointers.length; i++)
+        for (var i = 0; i < this.manager.pointersTotal; i++)
         {
             var pointer = pointers[i];
 
@@ -1550,6 +1550,7 @@ var InputPlugin = new Class({
 
             var total = this.processDragEvents(pointer, time);
 
+            //  TODO: Enable for touch
             if (!pointer.wasTouch)
             {
                 total += this.processOverOutEvents(pointer);
@@ -1687,23 +1688,6 @@ var InputPlugin = new Class({
     },
 
     /**
-     * The current active input Pointer.
-     *
-     * @name Phaser.Input.InputPlugin#activePointer
-     * @type {Phaser.Input.Pointer}
-     * @readOnly
-     * @since 3.0.0
-     */
-    activePointer: {
-
-        get: function ()
-        {
-            return this.manager.activePointer;
-        }
-
-    },
-
-    /**
      * The x coordinates of the ActivePointer based on the first camera in the camera list.
      * This is only safe to use if your game has just 1 non-transformed camera and doesn't use multi-touch.
      *
@@ -1735,6 +1719,42 @@ var InputPlugin = new Class({
         get: function ()
         {
             return this.manager.activePointer.y;
+        }
+
+    },
+
+    /**
+     * The mouse has its own unique Pointer object, which you can reference directly if making a _desktop specific game_.
+     * If you are supporting both desktop and touch devices then do not use this property, instead use `activePointer`
+     * which will always map to the most recently interacted pointer.
+     *
+     * @name Phaser.Input.InputPlugin#mousePointer
+     * @type {Phaser.Input.Pointer}
+     * @readOnly
+     * @since 3.10.0
+     */
+    mousePointer: {
+
+        get: function ()
+        {
+            return this.manager.mousePointer;
+        }
+
+    },
+
+    /**
+     * The current active input Pointer.
+     *
+     * @name Phaser.Input.InputPlugin#activePointer
+     * @type {Phaser.Input.Pointer}
+     * @readOnly
+     * @since 3.0.0
+     */
+    activePointer: {
+
+        get: function ()
+        {
+            return this.manager.activePointer;
         }
 
     },

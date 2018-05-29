@@ -127,7 +127,9 @@ var InputManager = new Class({
 
         /**
          * An array of Pointers that have been added to the game.
-         * If you need more than 2 then use the `addPointer` method to create them.
+         * The first entry is reserved for the Mouse Pointer, the rest are Touch Pointers.
+         * 
+         * By default there are 2 pointers enabled. If you need more use the `addPointer` method to create them.
          *
          * @name Phaser.Input.InputManager#pointers
          * @type {Phaser.Input.Pointer[]}
@@ -135,8 +137,19 @@ var InputManager = new Class({
          */
         this.pointers = [
             new Pointer(this, 0),
-            new Pointer(this, 1)
+            new Pointer(this, 1),
+            new Pointer(this, 2),
+            new Pointer(this, 3),
+            new Pointer(this, 4),
+            new Pointer(this, 5),
+            new Pointer(this, 6),
+            new Pointer(this, 7),
+            new Pointer(this, 8),
+            new Pointer(this, 9),
+            new Pointer(this, 10)
         ];
+
+        this.pointersTotal = 2;
 
         /**
          * The mouse has its own unique Pointer object, which you can reference directly if making a _desktop specific game_.
@@ -144,10 +157,10 @@ var InputManager = new Class({
          * which will always map to the most recently interacted pointer.
          *
          * @name Phaser.Input.InputManager#mousePointer
-         * @type {Phaser.Input.Pointer}
+         * @type {?Phaser.Input.Pointer}
          * @since 3.10.0
          */
-        this.mousePointer = this.pointers[0];
+        this.mousePointer = (config.inputMouse) ? this.pointers[0] : null;
 
         /**
          * The most recently active Pointer object.
@@ -327,7 +340,7 @@ var InputManager = new Class({
 
         var pointers = this.pointers;
 
-        for (var i = 0; i < pointers.length; i++)
+        for (var i = 0; i < this.pointersTotal; i++)
         {
             pointers[i].reset();
         }
@@ -336,6 +349,8 @@ var InputManager = new Class({
         {
             return;
         }
+
+        this.dirty = true;
 
         this.updateBounds();
 
@@ -347,97 +362,62 @@ var InputManager = new Class({
         var queue = this.queue.splice(0, len);
 
         //  Process the event queue, dispatching all of the events that have stored up
-        for (var i = 0; i < len; i++)
+        for (var i = 0; i < len; i += 3)
         {
-            var event = queue[i];
+            var callback = queue[i];
+            var context = queue[i + 1];
+            var event = queue[i + 2];
 
-            switch (event.type)
-            {
-                case 'mousemove':
+            callback.call(context, event, time);
 
-                    this.mousePointer.move(event, time);
-                    break;
-
-                case 'mousedown':
-
-                    this.mousePointer.down(event, time);
-                    break;
-
-                case 'mouseup':
-
-                    this.mousePointer.up(event, time);
-                    break;
-
-                case 'touchmove':
-
-                    for (i = 0; i < event.changedTouches.length; i++)
-                    {
-                        this.updatePointer(event.changedTouches[i], event, time);
-                    }
-
-                    break;
-
-                case 'touchstart':
-
-                    for (i = 0; i < event.changedTouches.length; i++)
-                    {
-                        this.startPointer(event.changedTouches[i], event, time);
-                    }
-
-                    break;
-
-                case 'touchend':
-
-                    for (i = 0; i < event.changedTouches.length; i++)
-                    {
-                        this.stopPointer(event.changedTouches[i], event, time);
-                    }
-
-                    break;
-
-                case 'pointerlockchange':
-
-                    this.events.emit('pointerlockchange', event, this.mouse.locked);
-                    break;
-            }
+            // case 'pointerlockchange':
+            // this.events.emit('pointerlockchange', event, this.mouse.locked);
         }
     },
 
     //  event.targetTouches = list of all touches on the TARGET ELEMENT (i.e. game dom element)
     //  event.touches = list of all touches on the ENTIRE DOCUMENT, not just the target element
     //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
-    startPointer: function (changedTouch, event, time)
+    startPointer: function (event, time)
     {
         var pointers = this.pointers;
 
-        for (var i = 1; i < pointers.length; i++)
+        for (var c = 0; c < event.changedTouches.length; c++)
         {
-            var pointer = pointers[i];
+            var changedTouch = event.changedTouches[c];
 
-            if (!pointer.active)
+            for (var i = 1; i < this.pointersTotal; i++)
             {
-                pointer.touchstart(changedTouch, time);
-                this.activePointer = pointer;
-                this.dirty = true;
-                break;
+                var pointer = pointers[i];
+
+                if (!pointer.active)
+                {
+                    pointer.touchstart(changedTouch, time);
+                    this.activePointer = pointer;
+                    break;
+                }
             }
         }
     },
 
-    updatePointer: function (changedTouch, event, time)
+    updatePointer: function (event, time)
     {
         var pointers = this.pointers;
 
-        for (var i = 1; i < pointers.length; i++)
+        for (var c = 0; c < event.changedTouches.length; c++)
         {
-            var pointer = pointers[i];
+            var changedTouch = event.changedTouches[c];
 
-            if (pointer.active && pointer.identifier === changedTouch.identifier)
+            for (var i = 1; i < this.pointersTotal; i++)
             {
-                pointer.touchmove(changedTouch, time);
-                this.activePointer = pointer;
-                this.dirty = true;
-                break;
+                var pointer = pointers[i];
+
+                if (pointer.active && pointer.identifier === changedTouch.identifier)
+                {
+                    pointer.touchmove(changedTouch, time);
+                    this.activePointer = pointer;
+                    break;
+                }
             }
         }
     },
@@ -445,19 +425,23 @@ var InputManager = new Class({
     //  For touch end its a list of the touch points that have been removed from the surface
     //  https://developer.mozilla.org/en-US/docs/DOM/TouchList
     //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
-    stopPointer: function (changedTouch, event, time)
+    stopPointer: function (event, time)
     {
         var pointers = this.pointers;
 
-        for (var i = 1; i < pointers.length; i++)
+        for (var c = 0; c < event.changedTouches.length; c++)
         {
-            var pointer = pointers[i];
+            var changedTouch = event.changedTouches[c];
 
-            if (pointer.active && pointer.identifier === changedTouch.identifier)
+            for (var i = 1; i < this.pointersTotal; i++)
             {
-                pointer.touchend(changedTouch, time);
-                this.dirty = true;
-                break;
+                var pointer = pointers[i];
+
+                if (pointer.active && pointer.identifier === changedTouch.identifier)
+                {
+                    pointer.touchend(changedTouch, time);
+                    break;
+                }
             }
         }
     },
@@ -474,11 +458,22 @@ var InputManager = new Class({
     {
         var id = this.pointers.length;
 
-        var pointer = new Pointer(this, id);
+        if (this.pointersTotal < id)
+        {
+            this.pointersTotal++;
 
-        this.pointers.push(pointer);
+            return this.pointers[this.pointersTotal];
+        }
+        else
+        {
+            var pointer = new Pointer(this, id);
 
-        return pointer;
+            this.pointers.push(pointer);
+
+            this.pointersTotal++;
+
+            return pointer;
+        }
     },
 
     /**

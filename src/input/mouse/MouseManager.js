@@ -201,6 +201,56 @@ var MouseManager = new Class({
         }
     },
 
+    onMouseMove: function (event)
+    {
+        if (event.defaultPrevented)
+        {
+            // Do nothing if event already handled
+            return;
+        }
+
+        this.manager.queue.push(this.manager.mousePointer.move, this.manager.mousePointer, event);
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+    },
+
+    onMouseDown: function (event)
+    {
+        if (event.defaultPrevented)
+        {
+            // Do nothing if event already handled
+            return;
+        }
+
+        this.manager.queue.push(this.manager.mousePointer.down, this.manager.mousePointer, event);
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+    },
+
+    onMouseUp: function (event)
+    {
+        if (event.defaultPrevented)
+        {
+            // Do nothing if event already handled
+            return;
+        }
+
+        this.manager.queue.push(this.manager.mousePointer.up, this.manager.mousePointer, event);
+
+        //  TODO - Add native callback support
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+    },
+
     /**
      * [description]
      *
@@ -209,54 +259,23 @@ var MouseManager = new Class({
      */
     startListeners: function ()
     {
-        var queue = this.manager.queue;
         var target = this.target;
 
         var passive = { passive: true };
         var nonPassive = { passive: false };
 
-        var handler;
-
         if (this.capture)
         {
-            handler = function (event)
-            {
-                if (event.defaultPrevented)
-                {
-                    // Do nothing if event already handled
-                    return;
-                }
-
-                // console.log('mouse', event);
-
-                queue.push(event);
-
-                event.preventDefault();
-            };
-
-            target.addEventListener('mousemove', handler, nonPassive);
-            target.addEventListener('mousedown', handler, nonPassive);
-            target.addEventListener('mouseup', handler, nonPassive);
+            target.addEventListener('mousemove', this.onMouseMove.bind(this), nonPassive);
+            target.addEventListener('mousedown', this.onMouseDown.bind(this), nonPassive);
+            target.addEventListener('mouseup', this.onMouseUp.bind(this), nonPassive);
         }
         else
         {
-            handler = function (event)
-            {
-                if (event.defaultPrevented)
-                {
-                    // Do nothing if event already handled
-                    return;
-                }
-
-                queue.push(event);
-            };
-
-            target.addEventListener('mousemove', handler, passive);
-            target.addEventListener('mousedown', handler, passive);
-            target.addEventListener('mouseup', handler, passive);
+            target.addEventListener('mousemove', this.onMouseMove.bind(this), passive);
+            target.addEventListener('mousedown', this.onMouseDown.bind(this), passive);
+            target.addEventListener('mouseup', this.onMouseUp.bind(this), passive);
         }
-
-        this.handler = handler;
 
         if (Features.pointerLock)
         {
@@ -278,9 +297,9 @@ var MouseManager = new Class({
     {
         var target = this.target;
 
-        target.removeEventListener('mousemove', this.handler);
-        target.removeEventListener('mousedown', this.handler);
-        target.removeEventListener('mouseup', this.handler);
+        target.removeEventListener('mousemove', this.onMouseMove);
+        target.removeEventListener('mousedown', this.onMouseDown);
+        target.removeEventListener('mouseup', this.onMouseUp);
 
         if (Features.pointerLock)
         {

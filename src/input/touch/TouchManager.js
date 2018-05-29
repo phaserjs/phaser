@@ -108,6 +108,54 @@ var TouchManager = new Class({
         }
     },
 
+    onTouchStart: function (event)
+    {
+        if (event.defaultPrevented)
+        {
+            // Do nothing if event already handled
+            return;
+        }
+
+        this.manager.queue.push(this.manager.startPointer, this.manager, event);
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+    },
+
+    onTouchMove: function (event)
+    {
+        if (event.defaultPrevented)
+        {
+            // Do nothing if event already handled
+            return;
+        }
+
+        this.manager.queue.push(this.manager.updatePointer, this.manager, event);
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+    },
+
+    onTouchEnd: function (event)
+    {
+        if (event.defaultPrevented)
+        {
+            // Do nothing if event already handled
+            return;
+        }
+
+        this.manager.queue.push(this.manager.stopPointer, this.manager, event);
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+    },
+
     /**
      * [description]
      *
@@ -116,54 +164,23 @@ var TouchManager = new Class({
      */
     startListeners: function ()
     {
-        var queue = this.manager.queue;
         var target = this.target;
 
         var passive = { passive: true };
         var nonPassive = { passive: false };
 
-        var handler;
-
         if (this.capture)
         {
-            handler = function (event)
-            {
-                if (event.defaultPrevented)
-                {
-                    // Do nothing if event already handled
-                    return;
-                }
-
-                // console.log('touch', event);
-
-                queue.push(event);
-
-                event.preventDefault();
-            };
-
-            target.addEventListener('touchstart', handler, nonPassive);
-            target.addEventListener('touchmove', handler, nonPassive);
-            target.addEventListener('touchend', handler, nonPassive);
+            target.addEventListener('touchstart', this.onTouchStart.bind(this), nonPassive);
+            target.addEventListener('touchmove', this.onTouchMove.bind(this), nonPassive);
+            target.addEventListener('touchend', this.onTouchEnd.bind(this), nonPassive);
         }
         else
         {
-            handler = function (event)
-            {
-                if (event.defaultPrevented)
-                {
-                    // Do nothing if event already handled
-                    return;
-                }
-
-                queue.push(event);
-            };
-
-            target.addEventListener('touchstart', handler, passive);
-            target.addEventListener('touchmove', handler, passive);
-            target.addEventListener('touchend', handler, passive);
+            target.addEventListener('touchstart', this.onTouchStart.bind(this), passive);
+            target.addEventListener('touchmove', this.onTouchMove.bind(this), passive);
+            target.addEventListener('touchend', this.onTouchEnd.bind(this), passive);
         }
-
-        this.handler = handler;
     },
 
     /**
@@ -176,9 +193,9 @@ var TouchManager = new Class({
     {
         var target = this.target;
 
-        target.removeEventListener('touchstart', this.handler);
-        target.removeEventListener('touchmove', this.handler);
-        target.removeEventListener('touchend', this.handler);
+        target.removeEventListener('touchstart', this.onTouchStart);
+        target.removeEventListener('touchmove', this.onTouchMove);
+        target.removeEventListener('touchend', this.onTouchEnd);
     },
 
     /**
