@@ -22,9 +22,11 @@ var Render = require('./ParticleManagerRender');
  * @constructor
  * @since 3.0.0
  *
+ * @extends Phaser.GameObjects.Particles.Components.Alpha
  * @extends Phaser.GameObjects.Particles.Components.Depth
- * @extends Phaser.GameObjects.Particles.Components.Visible
  * @extends Phaser.GameObjects.Particles.Components.Pipeline
+ * @extends Phaser.GameObjects.Particles.Components.ScrollFactor
+ * @extends Phaser.GameObjects.Particles.Components.Visible
  *
  * @param {Phaser.Scene} scene - The Scene to which this Emitter Manager belongs.
  * @param {string} texture - The key of the Texture this Emitter Manager will use to render particles, as stored in the Texture Manager.
@@ -36,9 +38,11 @@ var ParticleEmitterManager = new Class({
     Extends: GameObject,
 
     Mixins: [
+        Components.Alpha,
         Components.Depth,
-        Components.Visible,
         Components.Pipeline,
+        Components.ScrollFactor,
+        Components.Visible,
         Render
     ],
 
