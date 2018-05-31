@@ -119,6 +119,28 @@ var Wrap = require('../../math/Wrap');
  */
 
 /**
+ * An Arcade Physics Collider Type.
+ * 
+ * @typedef {(
+ * Phaser.GameObjects.GameObject|
+ * Phaser.GameObjects.Group|
+ * Phaser.Physics.Arcade.Sprite|
+ * Phaser.Physics.Arcade.Image|
+ * Phaser.Physics.Arcade.StaticGroup|
+ * Phaser.Physics.Arcade.Group|
+ * Phaser.Tilemaps.DynamicTilemapLayer|
+ * Phaser.Tilemaps.StaticTilemapLayer|
+ * Phaser.GameObjects.GameObject[]|
+ * Phaser.Physics.Arcade.Sprite[]|
+ * Phaser.Physics.Arcade.Image[]|
+ * Phaser.Physics.Arcade.StaticGroup[]|
+ * Phaser.Physics.Arcade.Group[]|
+ * Phaser.Tilemaps.DynamicTilemapLayer[]|
+ * Phaser.Tilemaps.StaticTilemapLayer[]
+ * )} ArcadeColliderType
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -1352,8 +1374,8 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#overlap
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.Group} object1 - [description]
-     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.Group} object2 - [description]
+     * @param {ArcadeColliderType} object1 - [description]
+     * @param {ArcadeColliderType} [object2] - [description]
      * @param {ArcadePhysicsCallback} [overlapCallback] - [description]
      * @param {ArcadePhysicsCallback} [processCallback] - [description]
      * @param {*} [callbackContext] - [description]
@@ -1375,8 +1397,8 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#collide
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.Group} object1 - [description]
-     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.Group} object2 - [description]
+     * @param {ArcadeColliderType} object1 - [description]
+     * @param {ArcadeColliderType} [object2] - [description]
      * @param {ArcadePhysicsCallback} [collideCallback] - [description]
      * @param {ArcadePhysicsCallback} [processCallback] - [description]
      * @param {*} [callbackContext] - [description]
@@ -1398,8 +1420,8 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#collideObjects
      * @since 3.0.0
      *
-     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group|Phaser.GameObjects.Group[])} object1 - [description]
-     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group|Phaser.GameObjects.Group[])} object2 - [description]
+     * @param {ArcadeColliderType} object1 - [description]
+     * @param {ArcadeColliderType} [object2] - [description]
      * @param {ArcadePhysicsCallback} collideCallback - [description]
      * @param {ArcadePhysicsCallback} processCallback - [description]
      * @param {*} callbackContext - [description]
@@ -1468,8 +1490,8 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#collideHandler
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.Group} object1 - [description]
-     * @param {Phaser.GameObjects.GameObject|Phaser.GameObjects.Group} object2 - [description]
+     * @param {ArcadeColliderType} object1 - [description]
+     * @param {ArcadeColliderType} [object2] - [description]
      * @param {ArcadePhysicsCallback} collideCallback - [description]
      * @param {ArcadePhysicsCallback} processCallback - [description]
      * @param {*} callbackContext - [description]

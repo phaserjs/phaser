@@ -17,11 +17,11 @@ var Class = require('../../utils/Class');
  *
  * @param {Phaser.Physics.Arcade.World} world - [description]
  * @param {boolean} overlapOnly - [description]
- * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group|Phaser.GameObjects.Group[])} object1 - The first object to check for collision.
- * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group|Phaser.GameObjects.Group[])} object2 - The second object to check for collision.
+ * @param {ArcadeColliderType} object1 - The first object to check for collision.
+ * @param {ArcadeColliderType} object2 - The second object to check for collision.
  * @param {ArcadePhysicsCallback} collideCallback - The callback to invoke when the two objects collide.
  * @param {ArcadePhysicsCallback} processCallback - The callback to invoke when the two objects collide. Must return a boolean.
- * @param {object} callbackContext - The scope in which to call the callbacks.
+ * @param {any} callbackContext - The scope in which to call the callbacks.
  */
 var Collider = new Class({
 
@@ -70,7 +70,7 @@ var Collider = new Class({
          * [description]
          *
          * @name Phaser.Physics.Arcade.Collider#object1
-         * @type {Phaser.Physics.Arcade.Body}
+         * @type {ArcadeColliderType}
          * @since 3.0.0
          */
         this.object1 = object1;
@@ -79,7 +79,7 @@ var Collider = new Class({
          * [description]
          *
          * @name Phaser.Physics.Arcade.Collider#object2
-         * @type {Phaser.Physics.Arcade.Body}
+         * @type {ArcadeColliderType}
          * @since 3.0.0
          */
         this.object2 = object2;
