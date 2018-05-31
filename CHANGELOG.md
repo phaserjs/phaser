@@ -16,6 +16,7 @@
 * The Canvas RenderTexture drawImage method incorrectly set the values of the frame, causing them to appear wrongly scaled in the canvas renderer. Fix #3710 (thanks @saqsun).
 * Fixed `Math.Matrix4.makeRotationAxis()`.
 * Fixed an incorrect usage of `Math.abs()` in `Math.Quaternion.calculateW()` (thanks @qxzkjp).
+* Particle Emitter Managers can now be added to Containers (thanks @TadejZupancic)
 
 ## Version 3.9.0 - Yui - 24th May 2018
 
