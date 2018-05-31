@@ -30,33 +30,29 @@ var RandomOutside = function (outer, inner, out)
     if (ContainsRect(outer, inner))
     {
         //  Pick a random quadrant
-        //  
+        //
         //  The quadrants don't extend the full widths / heights of the outer rect to give
         //  us a better uniformed distribution, otherwise you get clumping in the corners where
         //  the 4 quads would overlap
 
         switch (Between(0, 3))
         {
-            //  Top
-            case 0:
+            case 0: // Top
                 out.x = outer.x + (Math.random() * (inner.right - outer.x));
                 out.y = outer.y + (Math.random() * (inner.top - outer.y));
                 break;
 
-            //  Bottom
-            case 1:
+            case 1: // Bottom
                 out.x = inner.x + (Math.random() * (outer.right - inner.x));
                 out.y = inner.bottom + (Math.random() * (outer.bottom - inner.bottom));
                 break;
 
-            //  Left
-            case 2:
+            case 2: // Left
                 out.x = outer.x + (Math.random() * (inner.x - outer.x));
                 out.y = inner.y + (Math.random() * (outer.bottom - inner.y));
                 break;
 
-            //  Right
-            case 3:
+            case 3: // Right
                 out.x = inner.right + (Math.random() * (outer.right - inner.right));
                 out.y = outer.y + (Math.random() * (inner.bottom - outer.y));
                 break;
