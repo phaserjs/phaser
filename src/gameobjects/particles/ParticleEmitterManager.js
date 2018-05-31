@@ -22,10 +22,8 @@ var Render = require('./ParticleManagerRender');
  * @constructor
  * @since 3.0.0
  *
- * @extends Phaser.GameObjects.Particles.Components.Alpha
  * @extends Phaser.GameObjects.Particles.Components.Depth
  * @extends Phaser.GameObjects.Particles.Components.Pipeline
- * @extends Phaser.GameObjects.Particles.Components.ScrollFactor
  * @extends Phaser.GameObjects.Particles.Components.Visible
  *
  * @param {Phaser.Scene} scene - The Scene to which this Emitter Manager belongs.
@@ -38,10 +36,8 @@ var ParticleEmitterManager = new Class({
     Extends: GameObject,
 
     Mixins: [
-        Components.Alpha,
         Components.Depth,
         Components.Pipeline,
-        Components.ScrollFactor,
         Components.Visible,
         Render
     ],
@@ -416,6 +412,30 @@ var ParticleEmitterManager = new Class({
                 emitter.preUpdate(time, delta);
             }
         }
+    },
+
+    /**
+     * A NOOP method so you can pass an EmitterManager to a Container.
+     * Calling this method will do nothing. It is intentionally empty.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitterManager#setAlpha
+     * @private
+     * @since 3.10.0
+     */
+    setAlpha: function ()
+    {
+    },
+
+    /**
+     * A NOOP method so you can pass an EmitterManager to a Container.
+     * Calling this method will do nothing. It is intentionally empty.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitterManager#setScrollFactor
+     * @private
+     * @since 3.10.0
+     */
+    setScrollFactor: function ()
+    {
     }
 
 });
