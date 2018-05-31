@@ -563,6 +563,8 @@ var Quaternion = new Class({
     /**
      * Convert this Quaternion into its conjugate.
      *
+     * Sets the x, y and z components.
+     *
      * @method Phaser.Math.Quaternion#conjugate
      * @since 3.0.0
      *
@@ -668,7 +670,9 @@ var Quaternion = new Class({
     },
 
     /**
-     * Calculate the w component of this Quaternion from its x, y, and z components.
+     * Create a unit (or rotation) Quaternion from its x, y, and z components.
+     *
+     * Sets the w component.
      *
      * @method Phaser.Math.Quaternion#calculateW
      * @since 3.0.0
