@@ -260,7 +260,7 @@ var Matrix3 = new Class({
     },
 
     /**
-     * [description]
+     * Calculate the adjoint, or adjugate, of this Matrix.
      *
      * @method Phaser.Math.Matrix3#adjoint
      * @since 3.0.0

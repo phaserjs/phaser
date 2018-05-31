@@ -378,7 +378,7 @@ var Matrix4 = new Class({
     },
 
     /**
-     * [description]
+     * Calculate the adjoint, or adjugate, of this Matrix.
      *
      * @method Phaser.Math.Matrix4#adjoint
      * @since 3.0.0
@@ -660,13 +660,13 @@ var Matrix4 = new Class({
     },
 
     /**
-     * [description]
+     * Derive a rotation matrix around the given axis.
      *
      * @method Phaser.Math.Matrix4#makeRotationAxis
      * @since 3.0.0
      *
-     * @param {(Phaser.Math.Vector3|Phaser.Math.Vector4)} axis - [description]
-     * @param {float} angle - The angle of rotation in radians.
+     * @param {(Phaser.Math.Vector3|Phaser.Math.Vector4)} axis - The rotation axis.
+     * @param {float} angle - The rotation angle in radians.
      *
      * @return {Phaser.Math.Matrix4} This Matrix4.
      */
@@ -683,13 +683,12 @@ var Matrix4 = new Class({
         var tx = t * x;
         var ty = t * y;
 
-        // TODO: Fix by using fromArray(), or change set() to accept individual values
-        this.set(
+        this.fromArray([
             tx * x + c, tx * y - s * z, tx * z + s * y, 0,
             tx * y + s * z, ty * y + c, ty * z - s * x, 0,
             tx * z - s * y, ty * z + s * x, t * z * z + c, 0,
             0, 0, 0, 1
-        );
+        ]);
 
         return this;
     },
