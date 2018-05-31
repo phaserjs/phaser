@@ -169,7 +169,7 @@ var InputManager = new Class({
         /**
          * An array of Pointers that have been added to the game.
          * The first entry is reserved for the Mouse Pointer, the rest are Touch Pointers.
-         * 
+         *
          * By default there is 1 touch pointer enabled. If you need more use the `addPointer` method to start them,
          * or set the `input.activePointers` property in the Game Config.
          *
@@ -181,7 +181,7 @@ var InputManager = new Class({
 
         /**
          * The number of touch objects activated and being processed each update.
-         * 
+         *
          * You can change this by either calling `addPointer` at run-time, or by
          * setting the `input.activePointers` property in the Game Config.
          *
@@ -377,6 +377,8 @@ var InputManager = new Class({
      */
     update: function (time)
     {
+        var i;
+
         this.events.emit('update');
 
         this.ignoreEvents = false;
@@ -387,7 +389,7 @@ var InputManager = new Class({
 
         var pointers = this.pointers;
 
-        for (var i = 0; i < this.pointersTotal; i++)
+        for (i = 0; i < this.pointersTotal; i++)
         {
             pointers[i].reset();
         }
@@ -410,7 +412,7 @@ var InputManager = new Class({
         var mouse = this.mousePointer;
 
         //  Process the event queue, dispatching all of the events that have stored up
-        for (var i = 0; i < len; i += 2)
+        for (i = 0; i < len; i += 2)
         {
             var type = queue[i];
             var event = queue[i + 1];
@@ -521,19 +523,19 @@ var InputManager = new Class({
 
     /**
      * Adds new Pointer objects to the Input Manager.
-     * 
+     *
      * By default Phaser creates 2 pointer objects: `mousePointer` and `pointer1`.
-     * 
+     *
      * You can create more either by calling this method, or by setting the `input.activePointers` property
      * in the Game Config.
-     * 
+     *
      * The first 10 pointers are available via the `InputPlugin.pointerX` properties.
      *
      * @method Phaser.Input.InputManager#addPointer
      * @since 3.10.0
      *
      * @param {integer} [quantity=1] The number of new Pointers to create.
-     * 
+     *
      * @return {Phaser.Input.Pointer[]} An array containing all of the new Pointer objects that were created.
      */
     addPointer: function (quantity)
