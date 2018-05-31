@@ -296,11 +296,7 @@ var Game = new Class({
 
         DebugHeader(this);
 
-        // If Phaser had to create its own canvas, add it to the DOM.
-        if (!this.config.canvas)
-        {
-            AddToDOM(this.canvas, this.config.parent);
-        }
+        AddToDOM(this.canvas, this.config.parent);
 
         this.events.emit('boot');
 
