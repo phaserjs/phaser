@@ -226,6 +226,16 @@ var WebGLPipeline = new Class({
          * @since 3.1.0
          */
         this.flushLocked = false;
+
+        /**
+         * Indicates if the current pipeline is active or not for this frame only.
+         * Reset in the onRender method.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#active
+         * @type {boolean}
+         * @since 3.10.0
+         */
+        this.active = false;
     },
 
     /**
