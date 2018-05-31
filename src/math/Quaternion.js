@@ -685,7 +685,7 @@ var Quaternion = new Class({
         var y = this.y;
         var z = this.z;
 
-        this.w = -Math.sqrt(Math.abs(1.0 - x * x - y * y - z * z));
+        this.w = -Math.sqrt(1.0 - x * x - y * y - z * z);
 
         return this;
     },
