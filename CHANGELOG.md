@@ -5,6 +5,7 @@
 ### New Features
 
 * RenderTexture.resize will allow you to resize the underlying Render Texture to the new dimensions given. Doing this also clears the Render Texture at the same time (thanks @saqsun)
+* Rectangle.RandomOutside is a new function that takes two Rectangles, `outer` and `inner`, and returns a random point that falls within the outer rectangle but is always outside of the inner rectangle.
 
 ### Updates
 

@@ -38,6 +38,7 @@ Rectangle.Overlaps = require('./Overlaps');
 Rectangle.Perimeter = require('./Perimeter');
 Rectangle.PerimeterPoint = require('./PerimeterPoint');
 Rectangle.Random = require('./Random');
+Rectangle.RandomOutside = require('./RandomOutside');
 Rectangle.Scale = require('./Scale');
 Rectangle.Union = require('./Union');
 
