@@ -561,7 +561,7 @@ var Quaternion = new Class({
     },
 
     /**
-     * Conjugate this Quaternion.
+     * Convert this Quaternion into its conjugate.
      *
      * @method Phaser.Math.Quaternion#conjugate
      * @since 3.0.0
