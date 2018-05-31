@@ -15,7 +15,7 @@
 
 * The Canvas RenderTexture drawImage method incorrectly set the values of the frame, causing them to appear wrongly scaled in the canvas renderer. Fix #3710 (thanks @saqsun).
 * Fixed `Math.Matrix4.makeRotationAxis()`.
-* Fixed an incorrect Math.abs in `Math.Quaternion.calculateW()` (thanks @qxzkjp).
+* Fixed an incorrect usage of `Math.abs()` in `Math.Quaternion.calculateW()` (thanks @qxzkjp).
 
 ## Version 3.9.0 - Yui - 24th May 2018
 
