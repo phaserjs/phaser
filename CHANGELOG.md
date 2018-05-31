@@ -14,6 +14,7 @@
 ### Bug Fixes
 
 * The Canvas RenderTexture drawImage method incorrectly set the values of the frame, causing them to appear wrongly scaled in the canvas renderer. Fix #3710 (thanks @saqsun)
+* Fixed `Matrix4.makeRotationAxis()`.
 
 ## Version 3.9.0 - Yui - 24th May 2018
 
