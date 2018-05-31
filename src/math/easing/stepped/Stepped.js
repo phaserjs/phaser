@@ -11,7 +11,7 @@
  * @since 3.0.0
  *
  * @param {number} v - The value to be tweened.
- * @param {float} [steps=1] - [description]
+ * @param {number} [steps=1] - The number of steps in the ease.
  *
  * @return {number} The tweened value.
  */

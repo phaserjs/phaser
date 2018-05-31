@@ -11,7 +11,7 @@
  * @since 3.0.0
  *
  * @param {number} v - The value to be tweened.
- * @param {float} [amplitude=0.1] - [description]
+ * @param {float} [amplitude=0.1] - The amplitude of the elastic ease.
  * @param {float} [period=0.1] - [description]
  *
  * @return {number} The tweened value.
