@@ -510,8 +510,8 @@ var Animation = new Class({
      * @private
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Components.Animation} component - [description]
-     * @param {integer} startFrame - [description]
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component to load values into.
+     * @param {integer} startFrame - The start frame of the animation to load.
      */
     load: function (component, startFrame)
     {
@@ -547,7 +547,7 @@ var Animation = new Class({
      *
      * @param {float} value - A value between 0 and 1.
      *
-     * @return {Phaser.Animations.AnimationFrame} [description]
+     * @return {Phaser.Animations.AnimationFrame} The frame closest to the given progress value.
      */
     getFrameByProgress: function (value)
     {
@@ -557,12 +557,12 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Advance the animation frame.
      *
      * @method Phaser.Animations.Animation#nextFrame
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Components.Animation} component - [description]
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component to advance.
      */
     nextFrame: function (component)
     {

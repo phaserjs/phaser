@@ -9,14 +9,18 @@ var PluginCache = require('../plugins/PluginCache');
 
 /**
  * @classdesc
- * [description]
+ * The Update List plugin.
+ *
+ * Update Lists belong to a Scene and maintain the list Game Objects to be updated every frame.
+ *
+ * Some or all of these Game Objects may also be part of the Scene's [Display List]{@link Phaser.GameObjects.DisplayList}, for Rendering.
  *
  * @class UpdateList
  * @memberOf Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - [description]
+ * @param {Phaser.Scene} scene - The Scene that the Update List belongs to.
  */
 var UpdateList = new Class({
 
@@ -25,7 +29,7 @@ var UpdateList = new Class({
     function UpdateList (scene)
     {
         /**
-         * [description]
+         * The Scene that the Update List belongs to.
          *
          * @name Phaser.GameObjects.UpdateList#scene
          * @type {Phaser.Scene}
@@ -34,7 +38,7 @@ var UpdateList = new Class({
         this.scene = scene;
 
         /**
-         * [description]
+         * The Scene's Systems.
          *
          * @name Phaser.GameObjects.UpdateList#systems
          * @type {Phaser.Scenes.Systems}
@@ -43,7 +47,7 @@ var UpdateList = new Class({
         this.systems = scene.sys;
 
         /**
-         * [description]
+         * The list of Game Objects.
          *
          * @name Phaser.GameObjects.UpdateList#_list
          * @type {array}
@@ -54,7 +58,7 @@ var UpdateList = new Class({
         this._list = [];
 
         /**
-         * [description]
+         * Game Objects that are pending insertion into the list.
          *
          * @name Phaser.GameObjects.UpdateList#_pendingInsertion
          * @type {array}
@@ -65,7 +69,7 @@ var UpdateList = new Class({
         this._pendingInsertion = [];
 
         /**
-         * [description]
+         * Game Objects that are pending removal from the list.
          *
          * @name Phaser.GameObjects.UpdateList#_pendingRemoval
          * @type {array}
@@ -111,14 +115,14 @@ var UpdateList = new Class({
     },
 
     /**
-     * [description]
+     * Add a Game Object to the Update List.
      *
      * @method Phaser.GameObjects.UpdateList#add
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} child - [description]
+     * @param {Phaser.GameObjects.GameObject} child - The Game Object to add.
      *
-     * @return {Phaser.GameObjects.GameObject} [description]
+     * @return {Phaser.GameObjects.GameObject} The added Game Object.
      */
     add: function (child)
     {
@@ -133,13 +137,12 @@ var UpdateList = new Class({
     },
 
     /**
-     * [description]
+     * The pre-update step.
+     *
+     * Handles Game Objects that are pending insertion to and removal from the list.
      *
      * @method Phaser.GameObjects.UpdateList#preUpdate
      * @since 3.0.0
-     *
-     * @param {number} time - [description]
-     * @param {number} delta - [description]
      */
     preUpdate: function ()
     {
@@ -177,13 +180,15 @@ var UpdateList = new Class({
     },
 
     /**
-     * [description]
+     * The update step.
+     *
+     * Pre-updates every active Game Object in the list.
      *
      * @method Phaser.GameObjects.UpdateList#update
      * @since 3.0.0
      *
-     * @param {number} time - [description]
-     * @param {number} delta - [description]
+     * @param {number} time - The current timestamp.
+     * @param {number} delta - The delta time elapsed since the last frame.
      */
     update: function (time, delta)
     {
@@ -199,14 +204,14 @@ var UpdateList = new Class({
     },
 
     /**
-     * [description]
+     * Remove a Game Object from the list.
      *
      * @method Phaser.GameObjects.UpdateList#remove
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} child - [description]
+     * @param {Phaser.GameObjects.GameObject} child - The Game Object to remove from the list.
      *
-     * @return {Phaser.GameObjects.GameObject} [description]
+     * @return {Phaser.GameObjects.GameObject} The removed Game Object.
      */
     remove: function (child)
     {
@@ -216,12 +221,12 @@ var UpdateList = new Class({
         {
             this._list.splice(index, 1);
         }
-        
+
         return child;
     },
 
     /**
-     * [description]
+     * Remove all Game Objects from the list.
      *
      * @method Phaser.GameObjects.UpdateList#removeAll
      * @since 3.0.0

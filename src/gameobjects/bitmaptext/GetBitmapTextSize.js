@@ -5,14 +5,48 @@
  */
 
 /**
- * [description]
+ * @typedef {object} BitmapTextSize
+ *
+ * @property {GlobalBitmapTextSize} global - The position and size of the BitmapText, taking into consideration the position and scale of the Game Object.
+ * @property {LocalBitmapTextSize} local - The position and size of the BitmapText, taking just the font size into consideration.
+ */
+
+/**
+ * @typedef {object} GlobalBitmapTextSize
+ *
+ * @property {number} x - The x position of the BitmapText, taking into consideration the x coordinate of the Game Object.
+ * @property {number} y - The y position of the BitmapText, taking into consideration the y coordinate of the Game Object.
+ * @property {number} width - The width of the BitmapText, taking into consideration the x scale of the Game Object.
+ * @property {number} width - The height of the BitmapText, taking into consideration the y scale of the Game Object.
+ */
+
+/**
+ * @typedef {object} LocalBitmapTextSize
+ *
+ * @property {number} x - The x position of the BitmapText.
+ * @property {number} y - The y position of the BitmapText.
+ * @property {number} width - The width of the BitmapText.
+ * @property {number} width - The height of the BitmapText.
+ */
+
+/**
+ * Calculate the position, width and height of a BitmapText Game Object.
+ *
+ * Returns a BitmapTextSize object that contains global and local variants of the Game Objects x and y coordinates and
+ * its width and height.
+ *
+ * The global position and size take into consideration the Game Object's position and scale.
+ *
+ * The local position and size just takes into consideration the font data.
  *
  * @function GetBitmapTextSize
  * @since 3.0.0
  * @private
  *
- * @param {(Phaser.GameObjects.DynamicBitmapText|Phaser.GameObjects.BitmapText)} src - [description]
- * @param {boolean} round - [description]
+ * @param {(Phaser.GameObjects.DynamicBitmapText|Phaser.GameObjects.BitmapText)} src - The BitmapText to calculate the position, width and height of.
+ * @param {boolean} round - Whether to round the results to the nearest integer.
+ *
+ * @return {BitmapTextSize} The calculated position, width and height of the BitmapText.
  */
 var GetBitmapTextSize = function (src, round)
 {

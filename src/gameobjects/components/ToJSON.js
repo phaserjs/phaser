@@ -29,18 +29,17 @@
  * @property {object} data - The data of this Game Object.
  */
 
-//  Default Game Object JSON export
-//  Is extended further by Game Object specific implementations
-
 /**
- * [description]
+ * Export a Game Object as a JSON object.
+ *
+ * This is typically extended further by Game Object specific implementations.
  *
  * @method Phaser.GameObjects.Components.ToJSON
  * @since 3.0.0
  *
- * @param {Phaser.GameObjects.GameObject} gameObject - [description]
+ * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to export.
  *
- * @return {JSONGameObject} [description]
+ * @return {JSONGameObject} The exported Game Object.
  */
 var ToJSON = function (gameObject)
 {
