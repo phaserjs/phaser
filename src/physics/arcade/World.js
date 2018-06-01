@@ -63,6 +63,8 @@ var Wrap = require('../../math/Wrap');
 /**
  * @typedef {object} ArcadeWorldConfig
  *
+ * @property {number} [fps=60] - Sets {@link Phaser.Physics.Arcade.World#fps}.
+ * @property {number} [timeScale=1] - Sets {@link Phaser.Physics.Arcade.World#timeScale}.
  * @property {object} [gravity] - Sets {@link Phaser.Physics.Arcade.World#gravity}.
  * @property {number} [gravity.x=0] - [description]
  * @property {number} [gravity.y=0] - [description]
@@ -87,6 +89,7 @@ var Wrap = require('../../math/Wrap');
  * @property {number} [debugStaticBodyColor=0x0000ff] - Sets {@link Phaser.Physics.Arcade.World#defaults debugStaticBodyColor}.
  * @property {number} [debugVelocityColor=0x00ff00] - Sets {@link Phaser.Physics.Arcade.World#defaults debugVelocityColor}.
  * @property {number} [maxEntries=16] - Sets {@link Phaser.Physics.Arcade.World#maxEntries}.
+ * @property {boolean} [useTree=true] - Sets {@link Phaser.Physics.Arcade.World#useTree}.
  */
 
 /**
@@ -246,17 +249,20 @@ var World = new Class({
         };
 
         /**
-         * [description]
+         * The number of physics steps to be taken per second.
+         * 
+         * This property is read-only. Use the `setFPS` method to modify it at run-time.
          *
-         * @name Phaser.Physics.Arcade.World#desiredFps
+         * @name Phaser.Physics.Arcade.World#fps
          * @readOnly
          * @type {number}
+         * @default 60
          * @since 3.10.0
          */
-        this.desiredFps = GetValue(config, 'desiredFps', 60);
+        this.fps = GetValue(config, 'fps', 60);
 
         /**
-         * [description]
+         * The amount of elapsed ms since the last frame.
          *
          * @name Phaser.Physics.Arcade.World#_elapsed
          * @private
@@ -265,35 +271,49 @@ var World = new Class({
          */
         this._elapsed = 0;
 
-        this._desiredFpsMult = 1 / this.desiredFps;
+        /**
+         * Internal frame time value.
+         *
+         * @name Phaser.Physics.Arcade.World#_frameTime
+         * @private
+         * @type {number}
+         * @since 3.10.0
+         */
+        this._frameTime = 1 / this.fps;
 
         /**
-        * @property {number} _lastCount - Remember how many 'catch-up' iterations were used on the logicUpdate last frame.
-        * @private
-        */
-        this._lastCount = 0;
+         * Internal frame time ms value.
+         *
+         * @name Phaser.Physics.Arcade.World#_frameTimeMS
+         * @private
+         * @type {number}
+         * @since 3.10.0
+         */
+        this._frameTimeMS = 1000 * this._frameTime;
 
         /**
-        * @property {number} _spiraling - If the 'catch-up' iterations are spiraling out of control, this counter is incremented.
-        * @private
-        */
-        this._spiraling = 0;
-
-        this._nextFpsNotification = 0;
+         * The number of steps that took place in the last frame.
+         *
+         * @name Phaser.Physics.Arcade.World#stepsLastFrame
+         * @readOnly
+         * @type {number}
+         * @since 3.10.0
+         */
+        this.stepsLastFrame = 0;
 
         /**
-        * Scaling factor to make the game move smoothly in slow motion (or fast motion)
-        *
-        * - 1.0 = normal speed
-        * - 2.0 = half speed
-        * - 0.5 = double speed
-        *
-        * You likely need to adjust {@link #desiredFps} as well such that `desiredFps / timeScale === 60`.
-        *
-        * @property {number} timeScale
-        * @default
-        */
-        this.timeScale = 1.0;
+         * Scaling factor applied to the frame rate.
+         *
+         * - 1.0 = normal speed
+         * - 2.0 = half speed
+         * - 0.5 = double speed
+         *
+         * @name Phaser.Physics.Arcade.World#timeScale
+         * @property {number} 
+         * @default 1
+         * @since 3.10.0
+         */
+        this.timeScale = GetValue(config, 'timeScale', 1);
 
         /**
          * The maximum absolute difference of a Body's per-step velocity and its overlap with another Body that will result in separation on *each axis*.
@@ -388,7 +408,11 @@ var World = new Class({
         };
 
         /**
-         * The maximum number of items per tree node.
+         * The maximum number of items per node on the RTree.
+         * 
+         * This is ignored if `useTree` is `false`. If you have a large number of bodies in
+         * your world then you may find search performance improves by increasing this value,
+         * to allow more items per node and less node division.
          *
          * @name Phaser.Physics.Arcade.World#maxEntries
          * @type {integer}
@@ -396,6 +420,29 @@ var World = new Class({
          * @since 3.0.0
          */
         this.maxEntries = GetValue(config, 'maxEntries', 16);
+
+        /**
+         * Should this Arcade Physics World use an RTree for Dynamic Physics bodies or not?
+         * 
+         * An RTree is a fast way of spatially sorting of all the moving bodies in the world.
+         * However, at certain limits, the cost of clearing and inserting the bodies into the
+         * tree every frame becomes more expensive than the search speed gains it provides.
+         *
+         * If you have a large number of dynamic bodies in your world then it may be best to
+         * disable the use of the RTree by setting this property to `true`.
+         * The number it can cope with depends on browser and device, but a conservative estimate
+         * of around 5,000 bodies should be considered the max before disabling it.
+         *
+         * Note this only applies to dynamic bodies. Static bodies are always kept in an RTree,
+         * because they don't have to be cleared every frame, so you benefit from the
+         * massive search speeds all the time.
+         *
+         * @name Phaser.Physics.Arcade.World#useTree
+         * @type {boolean}
+         * @default true
+         * @since 3.10.0
+         */
+        this.useTree = GetValue(config, 'useTree', true);
 
         /**
          * The spatial index of Dynamic Bodies.
@@ -802,9 +849,40 @@ var World = new Class({
     },
 
     /**
-     * Advances the simulation.
+     * Sets the frame rate to run the simulation at.
+     *
+     * The frame rate value is used to simulate a fixed update time step. This fixed
+     * time step allows for a straightforward implementation of a deterministic game state.
+     *
+     * This frame rate is independent of the frequency at which the game is rendering. The
+     * higher you set the fps, the more physics simulation steps will occur per game step.
+     * Conversely, the lower you set it, the less will take place.
+     *
+     * You can optionally advance the simulation directly yourself by calling the `step` method.
+     *
+     * @method Phaser.Physics.Arcade.World#setFPS
+     * @since 3.10.0
+     *
+     * @param {integer} framerate - The frame rate to advance the simulation at.
+     *
+     * @return {this} This World object.
+     */
+    setFPS: function (framerate)
+    {
+        this.fps = framerate;
+        this._frameTime = 1 / this.fps;
+        this._frameTimeMS = 1000 * this._frameTime;
+
+        return this;
+    },
+
+    /**
+     * Advances the simulation based on the elapsed time and fps rate.
+     *
+     * This is called automatically by your Scene and does not need to be invoked directly.
      *
      * @method Phaser.Physics.Arcade.World#update
+     * @protected
      * @since 3.0.0
      *
      * @param {number} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
@@ -817,71 +895,33 @@ var World = new Class({
             return;
         }
 
-        // if the logic time is spiraling upwards, skip a frame entirely
-        if (this._spiraling > 1)
+        var stepsThisFrame = 0;
+        var fixedDelta = this._frameTime;
+        var msPerFrame = this._frameTimeMS * this.timeScale;
+
+        this._elapsed += delta;
+
+        while (this._elapsed >= msPerFrame)
         {
-            // cause an event to warn the program that this CPU can't keep up with the current desiredFps rate
-            if (time > this._nextFpsNotification)
-            {
-                // only permit one fps notification per 10 seconds
-                this._nextFpsNotification = time + 10000;
+            this._elapsed -= msPerFrame;
 
-                console.log('fps warning');
+            stepsThisFrame++;
 
-                // dispatch the notification signal
-                // this.fpsProblemNotifier.dispatch();
-            }
-
-            // reset the _deltaTime accumulator which will cause all pending late updates to be permanently skipped
-            // console.log('skipped', this._spiraling);
-
-            this._elapsed = 0;
-            this._spiraling = 0;
+            this.step(fixedDelta);
         }
-        else
-        {
-            //  stepsThisFrame
-            //  
-            //  TODO - Allow you to run the update at a HIGHER frame rate, if required
-            //  TODO - Disable RTree entirely
-            //  TODO - Option to load the RTree so it doesn't get cleared every frame
 
-            //  Step size taking into account the slow motion speed
-            var slowStep = this.timeScale * 1000.0 / this.desiredFps;
-
-            //  Accumulate time until the slowStep threshold is met or exceeded... up to a limit of 3 catch-up frames at slowStep intervals
-            this._elapsed += Math.max(Math.min(slowStep * 3, delta), 0);
-
-            //  Run the update logic multiple times if necessary to "catch up" with dropped frames
-            var count = 0;
-
-            while (this._elapsed >= slowStep)
-            {
-                this._elapsed -= slowStep;
-
-                this.updateLogic(this._desiredFpsMult);
-
-                count++;
-            }
-
-            // detect spiraling (if the catch-up loop isn't fast enough, the number of iterations will increase constantly)
-            if (count > this._lastCount)
-            {
-                this._spiraling++;
-                // console.log('spiral++', this._spiraling, 'count', count, 'last', this._lastCount);
-            }
-            else if (count < this._lastCount)
-            {
-                // looks like it caught up successfully, reset the spiral alert counter
-                // console.log('spiral solved', this._spiraling, 'count', count, 'last', this._lastCount);
-                this._spiraling = 0;
-            }
-
-            this._lastCount = count;
-        }
+        this.stepsLastFrame = stepsThisFrame;
     },
 
-    updateLogic: function (delta)
+    /**
+     * Advances the simulation by one step.
+     *
+     * @method Phaser.Physics.Arcade.World#step
+     * @since 3.10.0
+     *
+     * @param {number} delta - The delta time amount, in ms, by which to advance the simulation.
+     */
+    step: function (delta)
     {
         //  Update all active bodies
         var i;
@@ -899,13 +939,12 @@ var World = new Class({
             }
         }
 
-        //  Populate our dynamic collision tree
-        //  
-        //  If we skip the tree clear + load we can
-        //  go from 10,000 bodies updating per frame to 75,000
-
-        this.tree.clear();
-        this.tree.load(bodies);
+        //  Optionally populate our dynamic collision tree
+        if (this.useTree)
+        {
+            this.tree.clear();
+            this.tree.load(bodies);
+        }
 
         //  Process any colliders
         var colliders = this.colliders.update();
@@ -917,6 +956,18 @@ var World = new Class({
             if (collider.active)
             {
                 collider.update();
+            }
+        }
+
+        len = bodies.length;
+
+        for (i = 0; i < len; i++)
+        {
+            body = bodies[i];
+
+            if (body.enable)
+            {
+                body.postUpdate();
             }
         }
     },
@@ -938,16 +989,6 @@ var World = new Class({
 
         var bodies = dynamic.entries;
         var len = bodies.length;
-
-        for (i = 0; i < len; i++)
-        {
-            body = bodies[i];
-
-            if (body.enable)
-            {
-                body.postUpdate();
-            }
-        }
 
         if (this.drawDebug)
         {
@@ -1017,19 +1058,20 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Physics.Arcade.Body} body - [description]
+     * @param {number} delta - [description]
      */
-    updateMotion: function (body)
+    updateMotion: function (body, delta)
     {
         if (body.allowRotation)
         {
-            var velocityDelta = this.computeVelocity(0, body, body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity;
+            var velocityDelta = this.computeVelocity(0, body, body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular, delta) - body.angularVelocity;
 
             body.angularVelocity += velocityDelta;
-            body.rotation += (body.angularVelocity * this._desiredFpsMult);
+            body.rotation += (body.angularVelocity * delta);
         }
 
-        body.velocity.x = this.computeVelocity(1, body, body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x);
-        body.velocity.y = this.computeVelocity(2, body, body.velocity.y, body.acceleration.y, body.drag.y, body.maxVelocity.y);
+        body.velocity.x = this.computeVelocity(1, body, body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x, delta);
+        body.velocity.y = this.computeVelocity(2, body, body.velocity.y, body.acceleration.y, body.drag.y, body.maxVelocity.y, delta);
     },
 
     /**
@@ -1044,14 +1086,13 @@ var World = new Class({
      * @param {number} acceleration - [description]
      * @param {number} drag - [description]
      * @param {number} max - [description]
+     * @param {number} delta - [description]
      *
      * @return {number} [description]
      */
-    computeVelocity: function (axis, body, velocity, acceleration, drag, max)
+    computeVelocity: function (axis, body, velocity, acceleration, drag, max, delta)
     {
         if (max === undefined) { max = 10000; }
-
-        var delta = this._desiredFpsMult;
 
         if (axis === 1 && body.allowGravity)
         {
@@ -1379,7 +1420,7 @@ var World = new Class({
             }
         }
 
-        var delta = this._desiredFpsMult;
+        var delta = this._frameTime;
 
         if (!body1.immovable)
         {
@@ -1419,7 +1460,17 @@ var World = new Class({
             return false;
         }
 
-        if (body1.isCircle)
+        if (!body1.isCircle && !body2.isCircle)
+        {
+            //  Rect vs. Rect
+            return !(
+                body1.right <= body2.position.x ||
+                body1.bottom <= body2.position.y ||
+                body1.position.x >= body2.right ||
+                body1.position.y >= body2.bottom
+            );
+        }
+        else if (body1.isCircle)
         {
             if (body2.isCircle)
             {
@@ -1432,35 +1483,10 @@ var World = new Class({
                 return this.circleBodyIntersects(body1, body2);
             }
         }
-        else if (body2.isCircle)
+        else
         {
             //  Rect vs. Circle
             return this.circleBodyIntersects(body2, body1);
-        }
-        else
-        {
-            //  Rect vs. Rect
-            if (body1.right <= body2.position.x)
-            {
-                return false;
-            }
-
-            if (body1.bottom <= body2.position.y)
-            {
-                return false;
-            }
-
-            if (body1.position.x >= body2.right)
-            {
-                return false;
-            }
-
-            if (body1.position.y >= body2.bottom)
-            {
-                return false;
-            }
-
-            return true;
         }
     },
 
@@ -1734,49 +1760,76 @@ var World = new Class({
     {
         var bodyA = sprite.body;
 
-        if (group.length === 0 || !bodyA)
+        if (group.length === 0 || !bodyA || !bodyA.enable)
         {
             return;
         }
 
         //  Does sprite collide with anything?
 
-        var minMax = this.treeMinMax;
+        var i;
+        var len;
+        var bodyB;
 
-        minMax.minX = bodyA.left;
-        minMax.minY = bodyA.top;
-        minMax.maxX = bodyA.right;
-        minMax.maxY = bodyA.bottom;
-
-        //  TODO - Optional tree
-        //  TODO - Can we just get the body from the results array, rather than doing an indexOf???
-
-        var results = (group.physicsType === CONST.DYNAMIC_BODY) ? this.tree.search(minMax) : this.staticTree.search(minMax);
-
-        if (results.length === 0)
+        if (this.useTree)
         {
-            return;
-        }
+            var minMax = this.treeMinMax;
 
-        var children = group.getChildren();
+            minMax.minX = bodyA.left;
+            minMax.minY = bodyA.top;
+            minMax.maxX = bodyA.right;
+            minMax.maxY = bodyA.bottom;
 
-        for (var i = 0; i < children.length; i++)
-        {
-            var bodyB = children[i].body;
+            var results = (group.physicsType === CONST.DYNAMIC_BODY) ? this.tree.search(minMax) : this.staticTree.search(minMax);
 
-            if (!bodyB || bodyA === bodyB || results.indexOf(bodyB) === -1)
+            len = results.length;
+
+            for (i = 0; i < len; i++)
             {
-                continue;
-            }
+                bodyB = results[i];
 
-            if (this.separate(bodyA, bodyB, processCallback, callbackContext, overlapOnly))
-            {
-                if (collideCallback)
+                if (bodyA === bodyB)
                 {
-                    collideCallback.call(callbackContext, bodyA.gameObject, bodyB.gameObject);
+                    //  Skip if comparing against itself
+                    continue;
                 }
 
-                this._total++;
+                if (this.separate(bodyA, bodyB, processCallback, callbackContext, overlapOnly))
+                {
+                    if (collideCallback)
+                    {
+                        collideCallback.call(callbackContext, bodyA.gameObject, bodyB.gameObject);
+                    }
+
+                    this._total++;
+                }
+            }
+        }
+        else
+        {
+            var children = group.getChildren();
+            var skipIndex = group.children.entries.indexOf(sprite);
+
+            len = children.length;
+
+            for (i = 0; i < len; i++)
+            {
+                bodyB = children[i].body;
+
+                if (!bodyB || i === skipIndex || !bodyB.enable)
+                {
+                    continue;
+                }
+
+                if (this.separate(bodyA, bodyB, processCallback, callbackContext, overlapOnly))
+                {
+                    if (collideCallback)
+                    {
+                        collideCallback.call(callbackContext, bodyA.gameObject, bodyB.gameObject);
+                    }
+
+                    this._total++;
+                }
             }
         }
     },
@@ -1889,7 +1942,7 @@ var World = new Class({
             tileWorldRect.top = tilemapLayer.tileToWorldY(tile.y);
 
             // If the map's base tile size differs from the layer's tile size, only the top of the rect
-            // needs to be adjusted since it's origin is (0, 1).
+            // needs to be adjusted since its origin is (0, 1).
             if (tile.baseHeight !== tile.height)
             {
                 tileWorldRect.top -= (tile.height - tile.baseHeight) * tilemapLayer.scaleY;
@@ -1953,16 +2006,16 @@ var World = new Class({
     },
 
     /**
-    * Wrap an object's coordinates (or several objects' coordinates) within {@link Phaser.Physics.Arcade.World#bounds}.
-    *
-    * If the object is outside any boundary edge (left, top, right, bottom), it will be moved to the same offset from the opposite edge (the interior).
-    *
-    * @method Phaser.Physics.Arcade.World#wrap
-    * @since 3.3.0
-    *
-    * @param {*} object - A Game Object, a Group, an object with `x` and `y` coordinates, or an array of such objects.
-    * @param {number} [padding=0] - An amount added to each boundary edge during the operation.
-    */
+     * Wrap an object's coordinates (or several objects' coordinates) within {@link Phaser.Physics.Arcade.World#bounds}.
+     *
+     * If the object is outside any boundary edge (left, top, right, bottom), it will be moved to the same offset from the opposite edge (the interior).
+     *
+     * @method Phaser.Physics.Arcade.World#wrap
+     * @since 3.3.0
+     *
+     * @param {*} object - A Game Object, a Group, an object with `x` and `y` coordinates, or an array of such objects.
+     * @param {number} [padding=0] - An amount added to each boundary edge during the operation.
+     */
     wrap: function (object, padding)
     {
         if (object.body)
@@ -1985,42 +2038,34 @@ var World = new Class({
 
 
     /**
-    * Wrap each object's coordinates within {@link Phaser.Physics.Arcade.World#bounds}.
-    *
-    * @method Phaser.Physics.Arcade.World#wrapArray
-    * @since 3.3.0
-    *
-    * @param {Array.<*>} arr
-    * @param {number} [padding=0] - An amount added to the boundary.
-    */
-    wrapArray: function (arr, padding)
+     * Wrap each object's coordinates within {@link Phaser.Physics.Arcade.World#bounds}.
+     *
+     * @method Phaser.Physics.Arcade.World#wrapArray
+     * @since 3.3.0
+     *
+     * @param {Array.<*>} objects - An array of objects to be wrapped.
+     * @param {number} [padding=0] - An amount added to the boundary.
+     */
+    wrapArray: function (objects, padding)
     {
-        if (arr.length === 0)
+        for (var i = 0; i < objects.length; i++)
         {
-            return;
-        }
-
-        for (var i = 0, len = arr.length; i < len; i++)
-        {
-            this.wrapObject(arr[i], padding);
+            this.wrapObject(objects[i], padding);
         }
     },
 
     /**
-    * Wrap an object's coordinates within {@link Phaser.Physics.Arcade.World#bounds}.
-    *
-    * @method Phaser.Physics.Arcade.World#wrapObject
-    * @since 3.3.0
-    *
-    * @param {*} object - A Game Object, a Physics Body, or any object with `x` and `y` coordinates
-    * @param {number} [padding=0] - An amount added to the boundary.
-    */
+     * Wrap an object's coordinates within {@link Phaser.Physics.Arcade.World#bounds}.
+     *
+     * @method Phaser.Physics.Arcade.World#wrapObject
+     * @since 3.3.0
+     *
+     * @param {*} object - A Game Object, a Physics Body, or any object with `x` and `y` coordinates
+     * @param {number} [padding=0] - An amount added to the boundary.
+     */
     wrapObject: function (object, padding)
     {
-        if (padding === undefined)
-        {
-            padding = 0;
-        }
+        if (padding === undefined) { padding = 0; }
 
         object.x = Wrap(object.x, this.bounds.left - padding, this.bounds.right + padding);
         object.y = Wrap(object.y, this.bounds.top - padding, this.bounds.bottom + padding);
