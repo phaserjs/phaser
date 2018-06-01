@@ -363,6 +363,30 @@ var StaticBody = new Class({
          * @since 3.0.0
          */
         this.physicsType = CONST.STATIC_BODY;
+
+        /**
+         * The calculated change in the Body's horizontal position during the current step.
+         * For a static body this is always zero.
+         *
+         * @name Phaser.Physics.Arcade.StaticBody#_dx
+         * @type {number}
+         * @private
+         * @default 0
+         * @since 3.10.0
+         */
+        this._dx = 0;
+
+        /**
+         * The calculated change in the Body's vertical position during the current step.
+         * For a static body this is always zero.
+         *
+         * @name Phaser.Physics.Arcade.StaticBody#_dy
+         * @type {number}
+         * @private
+         * @default 0
+         * @since 3.10.0
+         */
+        this._dy = 0;
     },
 
     /**
