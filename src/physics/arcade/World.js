@@ -246,6 +246,56 @@ var World = new Class({
         };
 
         /**
+         * [description]
+         *
+         * @name Phaser.Physics.Arcade.World#desiredFps
+         * @readOnly
+         * @type {number}
+         * @since 3.10.0
+         */
+        this.desiredFps = GetValue(config, 'desiredFps', 60);
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Physics.Arcade.World#_elapsed
+         * @private
+         * @type {number}
+         * @since 3.10.0
+         */
+        this._elapsed = 0;
+
+        this._desiredFpsMult = 1 / this.desiredFps;
+
+        /**
+        * @property {number} _lastCount - Remember how many 'catch-up' iterations were used on the logicUpdate last frame.
+        * @private
+        */
+        this._lastCount = 0;
+
+        /**
+        * @property {number} _spiraling - If the 'catch-up' iterations are spiraling out of control, this counter is incremented.
+        * @private
+        */
+        this._spiraling = 0;
+
+        this._nextFpsNotification = 0;
+
+        /**
+        * Scaling factor to make the game move smoothly in slow motion (or fast motion)
+        *
+        * - 1.0 = normal speed
+        * - 2.0 = half speed
+        * - 0.5 = double speed
+        *
+        * You likely need to adjust {@link #desiredFps} as well such that `desiredFps / timeScale === 60`.
+        *
+        * @property {number} timeScale
+        * @default
+        */
+        this.timeScale = 1.0;
+
+        /**
          * The maximum absolute difference of a Body's per-step velocity and its overlap with another Body that will result in separation on *each axis*.
          * Larger values favor separation.
          * Smaller values favor no separation.
@@ -436,7 +486,7 @@ var World = new Class({
      */
     enableBody: function (object, bodyType)
     {
-        if (object.body === null)
+        if (!object.body)
         {
             if (bodyType === CONST.DYNAMIC_BODY)
             {
@@ -767,13 +817,73 @@ var World = new Class({
             return;
         }
 
-        // this.delta = Math.min(delta / 1000, this.maxStep) * this.timeScale;
-        delta /= 1000;
+        // if the logic time is spiraling upwards, skip a frame entirely
+        if (this._spiraling > 1)
+        {
+            // cause an event to warn the program that this CPU can't keep up with the current desiredFps rate
+            if (time > this._nextFpsNotification)
+            {
+                // only permit one fps notification per 10 seconds
+                this._nextFpsNotification = time + 10000;
 
-        this.delta = delta;
+                console.log('fps warning');
 
+                // dispatch the notification signal
+                // this.fpsProblemNotifier.dispatch();
+            }
+
+            // reset the _deltaTime accumulator which will cause all pending late updates to be permanently skipped
+            // console.log('skipped', this._spiraling);
+
+            this._elapsed = 0;
+            this._spiraling = 0;
+        }
+        else
+        {
+            //  stepsThisFrame
+            //  
+            //  TODO - Allow you to run the update at a HIGHER frame rate, if required
+            //  TODO - Disable RTree entirely
+            //  TODO - Option to load the RTree so it doesn't get cleared every frame
+
+            //  Step size taking into account the slow motion speed
+            var slowStep = this.timeScale * 1000.0 / this.desiredFps;
+
+            //  Accumulate time until the slowStep threshold is met or exceeded... up to a limit of 3 catch-up frames at slowStep intervals
+            this._elapsed += Math.max(Math.min(slowStep * 3, delta), 0);
+
+            //  Run the update logic multiple times if necessary to "catch up" with dropped frames
+            var count = 0;
+
+            while (this._elapsed >= slowStep)
+            {
+                this._elapsed -= slowStep;
+
+                this.updateLogic(this._desiredFpsMult);
+
+                count++;
+            }
+
+            // detect spiraling (if the catch-up loop isn't fast enough, the number of iterations will increase constantly)
+            if (count > this._lastCount)
+            {
+                this._spiraling++;
+                // console.log('spiral++', this._spiraling, 'count', count, 'last', this._lastCount);
+            }
+            else if (count < this._lastCount)
+            {
+                // looks like it caught up successfully, reset the spiral alert counter
+                // console.log('spiral solved', this._spiraling, 'count', count, 'last', this._lastCount);
+                this._spiraling = 0;
+            }
+
+            this._lastCount = count;
+        }
+    },
+
+    updateLogic: function (delta)
+    {
         //  Update all active bodies
-
         var i;
         var body;
         var bodies = this.bodies.entries;
@@ -790,6 +900,10 @@ var World = new Class({
         }
 
         //  Populate our dynamic collision tree
+        //  
+        //  If we skip the tree clear + load we can
+        //  go from 10,000 bodies updating per frame to 75,000
+
         this.tree.clear();
         this.tree.load(bodies);
 
@@ -911,7 +1025,7 @@ var World = new Class({
             var velocityDelta = this.computeVelocity(0, body, body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular) - body.angularVelocity;
 
             body.angularVelocity += velocityDelta;
-            body.rotation += (body.angularVelocity * this.delta);
+            body.rotation += (body.angularVelocity * this._desiredFpsMult);
         }
 
         body.velocity.x = this.computeVelocity(1, body, body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x);
@@ -937,22 +1051,24 @@ var World = new Class({
     {
         if (max === undefined) { max = 10000; }
 
+        var delta = this._desiredFpsMult;
+
         if (axis === 1 && body.allowGravity)
         {
-            velocity += (this.gravity.x + body.gravity.x) * this.delta;
+            velocity += (this.gravity.x + body.gravity.x) * delta;
         }
         else if (axis === 2 && body.allowGravity)
         {
-            velocity += (this.gravity.y + body.gravity.y) * this.delta;
+            velocity += (this.gravity.y + body.gravity.y) * delta;
         }
 
         if (acceleration)
         {
-            velocity += acceleration * this.delta;
+            velocity += acceleration * delta;
         }
         else if (drag && body.allowDrag)
         {
-            drag *= this.delta;
+            drag *= delta;
 
             if (velocity - drag > 0)
             {
@@ -1263,16 +1379,18 @@ var World = new Class({
             }
         }
 
+        var delta = this._desiredFpsMult;
+
         if (!body1.immovable)
         {
-            body1.x += (body1.velocity.x * this.delta) - overlap * Math.cos(angleCollision);
-            body1.y += (body1.velocity.y * this.delta) - overlap * Math.sin(angleCollision);
+            body1.x += (body1.velocity.x * delta) - overlap * Math.cos(angleCollision);
+            body1.y += (body1.velocity.y * delta) - overlap * Math.sin(angleCollision);
         }
 
         if (!body2.immovable)
         {
-            body2.x += (body2.velocity.x * this.delta) + overlap * Math.cos(angleCollision);
-            body2.y += (body2.velocity.y * this.delta) + overlap * Math.sin(angleCollision);
+            body2.x += (body2.velocity.x * delta) + overlap * Math.cos(angleCollision);
+            body2.y += (body2.velocity.y * delta) + overlap * Math.sin(angleCollision);
         }
 
         if (body1.onCollide || body2.onCollide)
@@ -1629,6 +1747,9 @@ var World = new Class({
         minMax.minY = bodyA.top;
         minMax.maxX = bodyA.right;
         minMax.maxY = bodyA.bottom;
+
+        //  TODO - Optional tree
+        //  TODO - Can we just get the body from the results array, rather than doing an indexOf???
 
         var results = (group.physicsType === CONST.DYNAMIC_BODY) ? this.tree.search(minMax) : this.staticTree.search(minMax);
 
