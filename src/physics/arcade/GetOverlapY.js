@@ -22,13 +22,13 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
     var overlap = 0;
     var maxOverlap = body1.deltaAbsY() + body2.deltaAbsY() + bias;
 
-    if (body1.deltaY() === 0 && body2.deltaY() === 0)
+    if (body1._dy === 0 && body2._dy === 0)
     {
         //  They overlap but neither of them are moving
         body1.embedded = true;
         body2.embedded = true;
     }
-    else if (body1.deltaY() > body2.deltaY())
+    else if (body1._dy > body2._dy)
     {
         //  Body1 is moving down and/or Body2 is moving up
         overlap = body1.bottom - body2.y;
@@ -45,7 +45,7 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
             body2.touching.up = true;
         }
     }
-    else if (body1.deltaY() < body2.deltaY())
+    else if (body1._dy < body2._dy)
     {
         //  Body1 is moving up and/or Body2 is moving down
         overlap = body1.y - body2.bottom;
