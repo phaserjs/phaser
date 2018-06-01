@@ -7,8 +7,8 @@
 /**
  * @typedef {object} BitmapTextSize
  *
- * @property {GlobalBitmapTextSize} global - The position and size of the BitmapFont, taking into consideration the position and scale of the BitmapText Game Object.
- * @property {LocalBitmapTextSize} local - The position and size of the BitmapFont, taking just the font into consideration.
+ * @property {GlobalBitmapTextSize} global - The position and size of the BitmapText, taking into consideration the position and scale of the Game Object.
+ * @property {LocalBitmapTextSize} local - The position and size of the BitmapText, taking just the font size into consideration.
  */
 
 /**
