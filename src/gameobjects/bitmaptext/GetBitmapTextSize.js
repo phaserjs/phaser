@@ -31,7 +31,7 @@
 
 /**
  * Calculate the position, width and height of a BitmapText Game Object.
- * 
+ *
  * Returns a BitmapTextSize object that contains global and local variants of the Game Objects x and y coordinates and
  * its width and height.
  *
@@ -43,9 +43,9 @@
  * @since 3.0.0
  * @private
  *
- * @param {(Phaser.GameObjects.DynamicBitmapText|Phaser.GameObjects.BitmapText)} src - The BitmapText object to inspect.
+ * @param {(Phaser.GameObjects.DynamicBitmapText|Phaser.GameObjects.BitmapText)} src - The BitmapText to calculate the position, width and height of.
  * @param {boolean} round - Whether to round the results to the nearest integer.
- * @return {BitmapTextSize} The calculated
+ * @return {BitmapTextSize} The calculated position, width and height of the BitmapText.
  */
 var GetBitmapTextSize = function (src, round)
 {
