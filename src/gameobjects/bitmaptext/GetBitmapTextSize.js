@@ -45,6 +45,7 @@
  *
  * @param {(Phaser.GameObjects.DynamicBitmapText|Phaser.GameObjects.BitmapText)} src - The BitmapText to calculate the position, width and height of.
  * @param {boolean} round - Whether to round the results to the nearest integer.
+ *
  * @return {BitmapTextSize} The calculated position, width and height of the BitmapText.
  */
 var GetBitmapTextSize = function (src, round)
