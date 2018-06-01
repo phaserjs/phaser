@@ -566,12 +566,12 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Handle the removal of an animation from the Animation Manager.
      *
      * @method Phaser.GameObjects.Components.Animation#remove
      * @since 3.0.0
      *
-     * @param {Phaser.Animations.Animation} [event] - [description]
+     * @param {Phaser.Animations.Animation} [event] - The removed Animation.
      */
     remove: function (event)
     {

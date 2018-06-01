@@ -6,17 +6,17 @@
 
 /**
  * Provides methods used for setting the WebGL rendering pipeline of a Game Object.
- * 
+ *
  * @name Phaser.GameObjects.Components.Pipeline
  * @webglOnly
  * @since 3.0.0
  */
 
 var Pipeline = {
-    
+
     /**
-     * [description]
-     * 
+     * The initial WebGL pipeline of this Game Object.
+     *
      * @name Phaser.GameObjects.Components.Pipeline#defaultPipeline
      * @type {Phaser.Renderer.WebGL.WebGLPipeline}
      * @default null
@@ -26,8 +26,8 @@ var Pipeline = {
     defaultPipeline: null,
 
     /**
-     * [description]
-     * 
+     * The current WebGL pipeline of this Game Object.
+     *
      * @name Phaser.GameObjects.Components.Pipeline#pipeline
      * @type {Phaser.Renderer.WebGL.WebGLPipeline}
      * @default null
@@ -39,13 +39,13 @@ var Pipeline = {
     /**
      * Sets the initial WebGL Pipeline of this Game Object.
      * This should only be called during the instantiation of the Game Object.
-     * 
+     *
      * @method Phaser.GameObjects.Components.Pipeline#initPipeline
      * @webglOnly
      * @since 3.0.0
      *
      * @param {string} pipelineName - The name of the pipeline to set on this Game Object.
-     * 
+     *
      * @return {boolean} `true` if the pipeline was set successfully, otherwise `false`.
      */
     initPipeline: function (pipelineName)
@@ -65,13 +65,13 @@ var Pipeline = {
 
     /**
      * Sets the active WebGL Pipeline of this Game Object.
-     * 
+     *
      * @method Phaser.GameObjects.Components.Pipeline#setPipeline
      * @webglOnly
      * @since 3.0.0
      *
      * @param {string} pipelineName - The name of the pipeline to set on this Game Object.
-     * 
+     *
      * @return {boolean} `true` if the pipeline was set successfully, otherwise `false`.
      */
     setPipeline: function (pipelineName)
@@ -84,13 +84,13 @@ var Pipeline = {
 
             return true;
         }
-        
+
         return false;
     },
 
     /**
      * Resets the WebGL Pipeline of this Game Object back to the default it was created with.
-     * 
+     *
      * @method Phaser.GameObjects.Components.Pipeline#resetPipeline
      * @webglOnly
      * @since 3.0.0
@@ -106,7 +106,7 @@ var Pipeline = {
 
     /**
      * Gets the name of the WebGL Pipeline this Game Object is currently using.
-     * 
+     *
      * @method Phaser.GameObjects.Components.Pipeline#getPipelineName
      * @webglOnly
      * @since 3.0.0
