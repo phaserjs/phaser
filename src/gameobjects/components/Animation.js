@@ -381,8 +381,8 @@ var Animation = new Class({
      * @protected
      * @since 3.0.0
      *
-     * @param {string} key - [description]
-     * @param {integer} [startFrame=0] - [description]
+     * @param {string} key - The key of the animation to load.
+     * @param {integer} [startFrame=0] - The start frame of the animation to load.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -549,7 +549,7 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#setProgress
      * @since 3.4.0
      *
-     * @param {float} [value=0] - [description]
+     * @param {float} [value=0] - The progress value, between 0 and 1.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -610,7 +610,7 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#setRepeat
      * @since 3.4.0
      *
-     * @param {integer} value - [description]
+     * @param {integer} value - The number of times that the animation should repeat.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -662,7 +662,7 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#restart
      * @since 3.0.0
      *
-     * @param {boolean} [includeDelay=false] - [description]
+     * @param {boolean} [includeDelay=false] - Whether to include the delay value of the animation when restarting.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -812,10 +812,10 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#update
      * @since 3.0.0
      *
-     * @param {number} timestamp - [description]
+     * @param {number} time - The current timestamp.
      * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
-    update: function (timestamp, delta)
+    update: function (time, delta)
     {
         if (!this.currentAnim || !this.isPlaying || this.currentAnim.paused)
         {
@@ -882,7 +882,7 @@ var Animation = new Class({
      * @private
      * @since 3.0.0
      *
-     * @param {Phaser.Animations.AnimationFrame} animationFrame - [description]
+     * @param {Phaser.Animations.AnimationFrame} animationFrame - The animation frame to change to.
      */
     updateFrame: function (animationFrame)
     {
@@ -941,7 +941,9 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Destroy this Animation component.
+     *
+     * Unregisters event listeners and cleans up its references.
      *
      * @method Phaser.GameObjects.Components.Animation#destroy
      * @since 3.0.0
