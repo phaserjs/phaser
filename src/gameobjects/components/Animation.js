@@ -571,13 +571,14 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#remove
      * @since 3.0.0
      *
-     * @param {Phaser.Animations.Animation} [event] - The removed Animation.
+     * @param {string} [key] - The key of the removed Animation.
+     * @param {Phaser.Animations.Animation} [animation] - The removed Animation.
      */
-    remove: function (event)
+    remove: function (key, animation)
     {
-        if (event === undefined) { event = this.currentAnim; }
+        if (animation === undefined) { animation = this.currentAnim; }
 
-        if (this.isPlaying && event.key === this.currentAnim.key)
+        if (this.isPlaying && animation.key === this.currentAnim.key)
         {
             this.stop();
 

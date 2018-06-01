@@ -17,6 +17,7 @@
 * Fixed `Math.Matrix4.makeRotationAxis()`.
 * Fixed an incorrect usage of `Math.abs()` in `Math.Quaternion.calculateW()` (thanks @qxzkjp).
 * Particle Emitter Managers can now be added to Containers (thanks @TadejZupancic)
+* Fixed a method signature issue with the Animation component's `remove()` handler when `Animation`s are removed from the `AnimationManager`. This prevented removed animations from stopping correctly.
 
 ## Version 3.9.0 - Yui - 24th May 2018
 
