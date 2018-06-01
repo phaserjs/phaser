@@ -2,6 +2,22 @@
 
 ## Version 3.10.0 - Hayashi - in development
 
+### Arcade Physics New Features + Updates
+
+* Arcade Physics now uses a fixed time-step for all internal calculations. There is a new `fps` config value and property (defaults to 60fps), which you can change at run-time using the `setFPS` method. The core update loop has been recoded so that it steps based entirely on the given frame rate, and not the wall-clock or game step delta. This fixed time step allows for a straightforward implementation of a deterministic game state. Meaning you can now set the fps rate to a high value such as 240, regardless of the browser update speed (it will simply perform more physics steps per game step). This is handy if you want to increase the accuracy of the simulation in certain cases.
+* You can also optionally call the `step` function directly, to manually advance the simulation.
+* There is a new property `timeScale` which will scale all time-step calculations at run-time, allowing you to speed-up or slow-down your simulation at will, without adjusting the frame rate.
+* You can now disable the use of the RTree for dynamic bodies via the config property `useTree`. In certain situations, i.e. densely packed worlds, this may give better performance. Static bodies will always use an RTree.
+* collideSpriteVsGroup has been rewritten. If you are using an RTree it now uses the results directly from the tree search, instead of iterating all children in the Group, which dramatically reduces the iteration count. If you have disabled the RTree it performs a brute-force O(N2) Sprite vs. Group iteration sweep. We tested multiple axis sorting variants but the cost of the array allocation and/or sorting, with large amounts of bodies (10,000+), far outweighed the simple math involved in the separation logic.
+* GetOverlapX/Y now use the calculated delta values, not the deltaX/Y methods.
+* collideSpriteVsGroup aborts early if the Sprite body has been disabled.
+* updateMotion has a new argument `delta` which should typically be a fixed-time delta value.
+* computeVelocity has a new argument `delta` which should typically be a fixed-time delta value.
+* intersects has been restructured to prioritize rect vs. rect checks.
+* Body update and postUpdate have been recoded to handle the new fixed time-step system in place. update now takes a new argument, delta, which is used internally for calculations.
+* Body.dirty has been removed as a property as it's no longer used internally.
+* Body.deltaAbsX and deltaAbsY now return the cached absolute delta value from the previous update, and no longer calculate it during the actual call.
+
 ### New Features
 
 * RenderTexture.resize will allow you to resize the underlying Render Texture to the new dimensions given. Doing this also clears the Render Texture at the same time (thanks @saqsun).
