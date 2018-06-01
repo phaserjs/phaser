@@ -638,16 +638,6 @@ var Body = new Class({
         this.blocked = { none: true, up: false, down: false, left: false, right: false };
 
         /**
-         * Whether this Body is in its `update` phase.
-         *
-         * @name Phaser.Physics.Arcade.Body#dirty
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.dirty = false;
-
-        /**
          * Whether to automatically synchronize this Body's dimensions to the dimensions of its Game Object's visual bounds.
          *
          * @name Phaser.Physics.Arcade.Body#syncBounds
@@ -789,33 +779,32 @@ var Body = new Class({
             transform.scaleY = sprite.scaleY;
         }
 
+        var recalc = false;
+
         if (this.syncBounds)
         {
             var b = sprite.getBounds(this._bounds);
 
-            if (b.width !== this.width || b.height !== this.height)
-            {
-                this.width = b.width;
-                this.height = b.height;
-                this._reset = true;
-            }
+            this.width = b.width;
+            this.height = b.height;
+            recalc = true;
         }
         else
         {
             var asx = Math.abs(transform.scaleX);
             var asy = Math.abs(transform.scaleY);
 
-            if (asx !== this._sx || asy !== this._sy)
+            if (this._sx !== asx || this._sy !== asy)
             {
                 this.width = this.sourceWidth * asx;
                 this.height = this.sourceHeight * asy;
                 this._sx = asx;
                 this._sy = asy;
-                this._reset = true;
+                recalc = true;
             }
         }
 
-        if (this._reset)
+        if (recalc)
         {
             this.halfWidth = Math.floor(this.width / 2);
             this.halfHeight = Math.floor(this.height / 2);
@@ -845,8 +834,6 @@ var Body = new Class({
      */
     update: function (delta)
     {
-        this.dirty = true;
-
         //  Store and reset collision flags
         this.wasTouching.none = this.touching.none;
         this.wasTouching.up = this.touching.up;
@@ -894,21 +881,19 @@ var Body = new Class({
 
         if (this.moves)
         {
-            this.world.updateMotion(this);
+            this.world.updateMotion(this, delta);
 
-            this.newVelocity.set(this.velocity.x * delta, this.velocity.y * delta);
+            var vx = this.velocity.x;
+            var vy = this.velocity.y;
 
-            this.position.x += this.newVelocity.x;
-            this.position.y += this.newVelocity.y;
+            this.newVelocity.set(vx * delta, vy * delta);
+
+            this.position.add(this.newVelocity);
 
             this.updateCenter();
 
-            if (this.position.x !== this.prev.x || this.position.y !== this.prev.y)
-            {
-                this.angle = Math.atan2(this.velocity.y, this.velocity.x);
-            }
-
-            this.speed = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
+            this.angle = Math.atan2(vy, vx);
+            this.speed = Math.sqrt(vx * vx + vy * vy);
 
             //  Now the State update will throw collision checks at the Body
             //  And finally we'll integrate the new position back to the Sprite in postUpdate
@@ -921,8 +906,6 @@ var Body = new Class({
 
         this._dx = this.deltaX();
         this._dy = this.deltaY();
-
-        this._reset = false;
     },
 
     /**
@@ -930,37 +913,13 @@ var Body = new Class({
      *
      * @method Phaser.Physics.Arcade.Body#postUpdate
      * @since 3.0.0
+     *
+     * @param {boolean} resetDelta - Reset the delta properties?
      */
     postUpdate: function ()
     {
-        //  Only allow postUpdate to be called once per frame
-        if (!this.enable || !this.dirty)
-        {
-            return;
-        }
-
-        this.dirty = false;
-
         this._dx = this.deltaX();
         this._dy = this.deltaY();
-
-        if (this._dx < 0)
-        {
-            this.facing = CONST.FACING_LEFT;
-        }
-        else if (this._dx > 0)
-        {
-            this.facing = CONST.FACING_RIGHT;
-        }
-
-        if (this._dy < 0)
-        {
-            this.facing = CONST.FACING_UP;
-        }
-        else if (this._dy > 0)
-        {
-            this.facing = CONST.FACING_DOWN;
-        }
 
         if (this.moves)
         {
@@ -988,16 +947,29 @@ var Body = new Class({
                 }
             }
 
-            // this.transform.x += this._dx;
-            // this.transform.y += this._dy;
-
             this.gameObject.x += this._dx;
             this.gameObject.y += this._dy;
 
             this._reset = true;
         }
 
-        this.updateCenter();
+        if (this._dx < 0)
+        {
+            this.facing = CONST.FACING_LEFT;
+        }
+        else if (this._dx > 0)
+        {
+            this.facing = CONST.FACING_RIGHT;
+        }
+
+        if (this._dy < 0)
+        {
+            this.facing = CONST.FACING_UP;
+        }
+        else if (this._dy > 0)
+        {
+            this.facing = CONST.FACING_DOWN;
+        }
 
         if (this.allowRotation)
         {
@@ -1292,8 +1264,7 @@ var Body = new Class({
     },
 
     /**
-     * The absolute (nonnegative) change in this Body's horizontal position from the previous step.
-     * This value is set only during the Body's `dirty` (update) phase.
+     * The absolute (non-negative) change in this Body's horizontal position from the previous step.
      *
      * @method Phaser.Physics.Arcade.Body#deltaAbsX
      * @since 3.0.0
@@ -1302,12 +1273,11 @@ var Body = new Class({
      */
     deltaAbsX: function ()
     {
-        return (this.deltaX() > 0) ? this.deltaX() : -this.deltaX();
+        return (this._dx > 0) ? this._dx : -this._dx;
     },
 
     /**
-     * The absolute (nonnegative) change in this Body's horizontal position from the previous step.
-     * This value is set only during the Body's `dirty` (update) phase.
+     * The absolute (non-negative) change in this Body's vertical position from the previous step.
      *
      * @method Phaser.Physics.Arcade.Body#deltaAbsY
      * @since 3.0.0
@@ -1316,12 +1286,12 @@ var Body = new Class({
      */
     deltaAbsY: function ()
     {
-        return (this.deltaY() > 0) ? this.deltaY() : -this.deltaY();
+        return (this._dy > 0) ? this._dy : -this._dy;
     },
 
     /**
      * The change in this Body's horizontal position from the previous step.
-     * This value is set only during the Body's `dirty` (update) phase.
+     * This value is set during the Body's update phase.
      *
      * @method Phaser.Physics.Arcade.Body#deltaX
      * @since 3.0.0
@@ -1335,6 +1305,7 @@ var Body = new Class({
 
     /**
      * The change in this Body's vertical position from the previous step.
+     * This value is set during the Body's update phase.
      *
      * @method Phaser.Physics.Arcade.Body#deltaY
      * @since 3.0.0
@@ -1446,7 +1417,7 @@ var Body = new Class({
      * @since 3.0.0
      *
      * @param {number} x - The horizontal velocity, in pixels per second.
-     * @param {number} y - The vertical velocity, in pixels per second.
+     * @param {number} [y=x] - The vertical velocity, in pixels per second.
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
@@ -1487,6 +1458,24 @@ var Body = new Class({
     setVelocityY: function (value)
     {
         this.velocity.y = value;
+
+        return this;
+    },
+
+    /**
+     * Sets the Body's maximum velocity.
+     *
+     * @method Phaser.Physics.Arcade.Body#setMaxVelocity
+     * @since 3.10.0
+     *
+     * @param {number} x - The horizontal velocity, in pixels per second.
+     * @param {number} [y=x] - The vertical velocity, in pixels per second.
+     *
+     * @return {Phaser.Physics.Arcade.Body} This Body object.
+     */
+    setMaxVelocity: function (x, y)
+    {
+        this.maxVelocity.set(x, y);
 
         return this;
     },
