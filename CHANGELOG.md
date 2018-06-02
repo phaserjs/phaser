@@ -17,6 +17,11 @@
 * Body update and postUpdate have been recoded to handle the new fixed time-step system in place. update now takes a new argument, delta, which is used internally for calculations.
 * Body.dirty has been removed as a property as it's no longer used internally.
 * Body.deltaAbsX and deltaAbsY now return the cached absolute delta value from the previous update, and no longer calculate it during the actual call.
+* World.enable has been recoded to remove all the `hasOwnProperty` checks and streamline the internal flow.
+* World.disable has been recoded to remove all the `hasOwnProperty` checks and streamline the internal flow.
+* World.add is a new method that adds an existing body to the simulation. World.enableBody now passes its newly created bodies to this method.
+* World.disableGameObjectBody has been removed as it duplicated what World.disable did.
+* There is a new internal flow with regard to the creation and disabling of bodies. Calling World.enable will pass the objects to World.enableBody, which will create a new Body object if required, and finally pass it to World.add. World.disable does the same, but removes the bodies from the simulation. It passes the bodies to World.disableBody, which in turn passes it to World.remove. Both of these work for single objects, an array of objects, Groups or even arrays of Groups.
 
 ### New Features
 
