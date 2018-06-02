@@ -66,17 +66,17 @@ var Wrap = require('../../math/Wrap');
  * @property {number} [fps=60] - Sets {@link Phaser.Physics.Arcade.World#fps}.
  * @property {number} [timeScale=1] - Sets {@link Phaser.Physics.Arcade.World#timeScale}.
  * @property {object} [gravity] - Sets {@link Phaser.Physics.Arcade.World#gravity}.
- * @property {number} [gravity.x=0] - [description]
- * @property {number} [gravity.y=0] - [description]
+ * @property {number} [gravity.x=0] - The horizontal world gravity value.
+ * @property {number} [gravity.y=0] - The vertical world gravity value.
  * @property {number} [x=0] - Sets {@link Phaser.Physics.Arcade.World#bounds bounds.x}.
  * @property {number} [y=0] - Sets {@link Phaser.Physics.Arcade.World#bounds bounds.y}.
  * @property {number} [width=0] - Sets {@link Phaser.Physics.Arcade.World#bounds bounds.width}.
  * @property {number} [height=0] - Sets {@link Phaser.Physics.Arcade.World#bounds bounds.height}.
  * @property {object} [checkCollision] - Sets {@link Phaser.Physics.Arcade.World#checkCollision}.
- * @property {boolean} [checkCollision.up=true] - [description]
- * @property {boolean} [checkCollision.down=true] - [description]
- * @property {boolean} [checkCollision.left=true] - [description]
- * @property {boolean} [checkCollision.right=true] - [description]
+ * @property {boolean} [checkCollision.up=true] - Should bodies collide with the top of the world bounds?
+ * @property {boolean} [checkCollision.down=true] - Should bodies collide with the bottom of the world bounds?
+ * @property {boolean} [checkCollision.left=true] - Should bodies collide with the left of the world bounds?
+ * @property {boolean} [checkCollision.right=true] - Should bodies collide with the right of the world bounds?
  * @property {number} [overlapBias=4] - Sets {@link Phaser.Physics.Arcade.World#OVERLAP_BIAS}.
  * @property {number} [tileBias=16] - Sets {@link Phaser.Physics.Arcade.World#TILE_BIAS}.
  * @property {boolean} [forceX=false] - Sets {@link Phaser.Physics.Arcade.World#forceX}.
@@ -145,7 +145,11 @@ var Wrap = require('../../math/Wrap');
 
 /**
  * @classdesc
- * [description]
+ * The Arcade Physics World.
+ *
+ * The World is responsible for creating, managing, colliding and updating all of the bodies within it.
+ *
+ * An instance of the World belongs to a Phaser.Scene and is accessed via the property `physics.world`.
  *
  * @class World
  * @extends Phaser.Events.EventEmitter
@@ -153,8 +157,8 @@ var Wrap = require('../../math/Wrap');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - [description]
- * @param {ArcadeWorldConfig} config - [description]
+ * @param {Phaser.Scene} scene - The Scene to which this World instance belongs.
+ * @param {ArcadeWorldConfig} config - An Arcade Physics Configuration object.
  */
 var World = new Class({
 
@@ -478,175 +482,239 @@ var World = new Class({
     },
 
     /**
-     * Adds an Arcade Physics Body to a Game Object.
+     * Adds an Arcade Physics Body to a Game Object, an array of Game Objects, or the children of a Group.
+     * 
+     * The difference between this and the `enableBody` method is that you can pass arrays or Groups
+     * to this method.
+     *
+     * You can specify if the bodies are to be Dynamic or Static. A dynamic body can move via velocity and
+     * acceleration. A static body remains fixed in place and as such is able to use an optimized search
+     * tree, making it ideal for static elements such as level objects. You can still collide and overlap
+     * with static bodies.
+     *
+     * Normally, rather than calling this method directly, you'd use the helper methods available in the
+     * Arcade Physics Factory, such as:
+     *
+     * ```javascript
+     * this.physics.add.image(x, y, textureKey);
+     * this.physics.add.sprite(x, y, textureKey);
+     * ```
+     *
+     * Calling factory methods encapsulates the creation of a Game Object and the creation of its
+     * body at the same time. If you are creating custom classes then you can pass them to this
+     * method to have their bodies created.
      *
      * @method Phaser.Physics.Arcade.World#enable
      * @since 3.0.0
      *
-     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group|Phaser.GameObjects.Group[])} object - [description]
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group|Phaser.GameObjects.Group[])} object - The object, or objects, on which to create the bodies.
      * @param {integer} [bodyType] - The type of Body to create. Either `DYNAMIC_BODY` or `STATIC_BODY`.
      */
     enable: function (object, bodyType)
     {
         if (bodyType === undefined) { bodyType = CONST.DYNAMIC_BODY; }
 
-        var i = 1;
-
-        if (Array.isArray(object))
+        if (!Array.isArray(object))
         {
-            i = object.length;
+            object = [ object ];
+        }
 
-            while (i--)
+        for (var i = 0; i < object.length; i++)
+        {
+            var entry = object[i];
+
+            if (entry.isParent)
             {
-                if (object[i].hasOwnProperty('children'))
+                var children = entry.getChildren();
+
+                for (var c = 0; c < children.length; c++)
                 {
-                    //  If it's a Group then we do it on the children regardless
-                    this.enable(object[i].children.entries, bodyType);
-                }
-                else
-                {
-                    this.enableBody(object[i], bodyType);
+                    var child = children[c];
+
+                    if (child.isParent)
+                    {
+                        //  Handle Groups nested inside of Groups
+                        this.enable(child, bodyType);
+                    }
+                    else
+                    {
+                        this.enableBody(child, bodyType);
+                    }
                 }
             }
-        }
-        else if (object.hasOwnProperty('children'))
-        {
-            //  If it's a Group then we do it on the children regardless
-            this.enable(object.children.entries, bodyType);
-        }
-        else
-        {
-            this.enableBody(object, bodyType);
+            else
+            {
+                this.enableBody(entry, bodyType);
+            }
         }
     },
 
     /**
-     * Helper for Phaser.Physics.Arcade.World#enable.
+     * Creates an Arcade Physics Body on a single Game Object.
+     *
+     * If the Game Object already has a body, this method will simply add it back into the simulation.
+     *
+     * You can specify if the body is Dynamic or Static. A dynamic body can move via velocity and
+     * acceleration. A static body remains fixed in place and as such is able to use an optimized search
+     * tree, making it ideal for static elements such as level objects. You can still collide and overlap
+     * with static bodies.
+     *
+     * Normally, rather than calling this method directly, you'd use the helper methods available in the
+     * Arcade Physics Factory, such as:
+     *
+     * ```javascript
+     * this.physics.add.image(x, y, textureKey);
+     * this.physics.add.sprite(x, y, textureKey);
+     * ```
+     *
+     * Calling factory methods encapsulates the creation of a Game Object and the creation of its
+     * body at the same time. If you are creating custom classes then you can pass them to this
+     * method to have their bodies created.
      *
      * @method Phaser.Physics.Arcade.World#enableBody
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} object - [description]
+     * @param {Phaser.GameObjects.GameObject} object - The Game Object on which to create the body.
      * @param {integer} [bodyType] - The type of Body to create. Either `DYNAMIC_BODY` or `STATIC_BODY`.
      *
-     * @return {Phaser.GameObjects.GameObject} [description]
+     * @return {Phaser.GameObjects.GameObject} The Game Object on which the body was created.
      */
     enableBody: function (object, bodyType)
     {
+        if (bodyType === undefined) { bodyType = CONST.DYNAMIC_BODY; }
+
         if (!object.body)
         {
             if (bodyType === CONST.DYNAMIC_BODY)
             {
                 object.body = new Body(this, object);
-
-                this.bodies.set(object.body);
             }
             else if (bodyType === CONST.STATIC_BODY)
             {
                 object.body = new StaticBody(this, object);
-
-                this.staticBodies.set(object.body);
-
-                this.staticTree.insert(object.body);
             }
         }
+
+        this.add(object.body);
 
         return object;
     },
 
     /**
-     * Remove a Body from the simulation.
+     * Adds an existing Arcade Physics Body or StaticBody to the simulation.
      *
-     * @method Phaser.Physics.Arcade.World#remove
-     * @since 3.0.0
+     * The body is enabled and added to the local search trees.
      *
-     * @param {Phaser.Physics.Arcade.Body} object - [description]
+     * @method Phaser.Physics.Arcade.World#add
+     * @since 3.10.0
+     *
+     * @param {(Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody)} body - The Body to be added to the simulation.
+     * 
+     * @return {(Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody)} The Body that was added to the simulation.
      */
-    remove: function (object)
+    add: function (body)
     {
-        this.disableBody(object);
+        if (body.physicsType === CONST.DYNAMIC_BODY)
+        {
+            this.bodies.set(body);
+        }
+        else if (body.physicsType === CONST.STATIC_BODY)
+        {
+            this.staticBodies.set(body);
+
+            this.staticTree.insert(body);
+        }
+
+        body.enable = true;
+
+        return body;
     },
 
     /**
-     * Disables the Body of a Game Object, or the Bodies of several Game Objects.
+     * Disables the Arcade Physics Body of a Game Object, an array of Game Objects, or the children of a Group.
+     * 
+     * The difference between this and the `disableBody` method is that you can pass arrays or Groups
+     * to this method.
+     * 
+     * The body itself is not deleted, it just has its `enable` property set to false, which
+     * means you can re-enable it again at any point by passing it to enable `World.enable` or `World.add`.
      *
      * @method Phaser.Physics.Arcade.World#disable
      * @since 3.0.0
      *
-     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group|Phaser.GameObjects.Group[])} object - [description]
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group|Phaser.GameObjects.Group[])} object - The object, or objects, on which to disable the bodies.
      */
     disable: function (object)
     {
-        var i = 1;
-
-        if (Array.isArray(object))
+        if (!Array.isArray(object))
         {
-            i = object.length;
+            object = [ object ];
+        }
 
-            while (i--)
+        for (var i = 0; i < object.length; i++)
+        {
+            var entry = object[i];
+
+            if (entry.isParent)
             {
-                if (object[i].hasOwnProperty('children'))
+                var children = entry.getChildren();
+
+                for (var c = 0; c < children.length; c++)
                 {
-                    //  If it's a Group then we do it on the children regardless
-                    this.disable(object[i].children.entries);
-                }
-                else
-                {
-                    this.disableGameObjectBody(object[i]);
+                    var child = children[c];
+
+                    if (child.isParent)
+                    {
+                        //  Handle Groups nested inside of Groups
+                        this.disable(child);
+                    }
+                    else
+                    {
+                        this.disableBody(child);
+                    }
                 }
             }
-        }
-        else if (object.hasOwnProperty('children'))
-        {
-            //  If it's a Group then we do it on the children regardless
-            this.disable(object.children.entries);
-        }
-        else
-        {
-            this.disableGameObjectBody(object);
+            else
+            {
+                this.disableBody(entry);
+            }
         }
     },
 
     /**
-     * Disables the Body of a Game Object.
+     * Disables an existing Arcade Physics Body or StaticBody and removes it from the simulation.
      *
-     * @method Phaser.Physics.Arcade.World#disableGameObjectBody
-     * @since 3.1.0
+     * The body is disabled and removed from the local search trees.
      *
-     * @param {Phaser.GameObjects.GameObject} object - [description]
-     *
-     * @return {Phaser.GameObjects.GameObject} [description]
-     */
-    disableGameObjectBody: function (object)
-    {
-        if (object.body)
-        {
-            if (object.body.physicsType === CONST.DYNAMIC_BODY)
-            {
-                this.bodies.delete(object.body);
-            }
-            else if (object.body.physicsType === CONST.STATIC_BODY)
-            {
-                this.staticBodies.delete(object.body);
-                this.staticTree.remove(object.body);
-            }
-
-            object.body.enable = false;
-        }
-
-        return object;
-    },
-
-    /**
-     * Disables a Body.
-     * A disabled Body is ignored by the simulation. It doesn't move or interact with other Bodies.
+     * The body itself is not deleted, it just has its `enable` property set to false, which
+     * means you can re-enable it again at any point by passing it to enable `World.enable` or `World.add`.
      *
      * @method Phaser.Physics.Arcade.World#disableBody
      * @since 3.0.0
      *
-     * @param {Phaser.Physics.Arcade.Body} body - [description]
+     * @param {(Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody)} body - The Body to be disabled.
      */
     disableBody: function (body)
+    {
+        this.remove(body);
+
+        body.enable = false;
+    },
+
+    /**
+     * Removes an existing Arcade Physics Body or StaticBody from the simulation.
+     *
+     * The body is disabled and removed from the local search trees.
+     *
+     * The body itself is not deleted, it just has its `enabled` property set to false, which
+     * means you can re-enable it again at any point by passing it to enable `enable` or `add`.
+     *
+     * @method Phaser.Physics.Arcade.World#remove
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody)} body - The body to be removed from the simulation.
+     */
+    remove: function (body)
     {
         if (body.physicsType === CONST.DYNAMIC_BODY)
         {
@@ -658,17 +726,24 @@ var World = new Class({
             this.staticBodies.delete(body);
             this.staticTree.remove(body);
         }
-
-        body.enable = false;
     },
 
     /**
-     * Creates the graphics object responsible for debug display.
+     * Creates a Graphics Game Object that the world will use to render the debug display to.
+     *
+     * This is called automatically when the World is instantiated if the `debug` config property
+     * was set to `true`. However, you can call it at any point should you need to display the
+     * debug Graphic from a fixed point.
+     *
+     * You can control which objects are drawn to the Graphics object, and the colors they use,
+     * by setting the debug properties in the physics config.
+     *
+     * You should not typically use this in a production game. Use it to aid during debugging.
      *
      * @method Phaser.Physics.Arcade.World#createDebugGraphic
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Graphics} [description]
+     * @return {Phaser.GameObjects.Graphics} The Graphics object that was created for use by the World.
      */
     createDebugGraphic: function ()
     {
@@ -684,19 +759,24 @@ var World = new Class({
     },
 
     /**
-     * Sets the dimensions of the world boundary.
+     * Sets the position, size and properties of the World boundary.
+     *
+     * The World boundary is an invisible rectangle that defines the edges of the World.
+     * If a Body is set to collide with the world bounds then it will automatically stop
+     * when it reaches any of the edges. You can optionally set which edges of the boundary
+     * should be checked against.
      *
      * @method Phaser.Physics.Arcade.World#setBounds
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} height - [description]
-     * @param {boolean} [checkLeft] - [description]
-     * @param {boolean} [checkRight] - [description]
-     * @param {boolean} [checkUp] - [description]
-     * @param {boolean} [checkDown] - [description]
+     * @param {number} x - The top-left x coordinate of the boundary.
+     * @param {number} y - The top-left y coordinate of the boundary.
+     * @param {number} width - The width of the boundary.
+     * @param {number} height - The height of the boundary.
+     * @param {boolean} [checkLeft] - Should bodies check against the left edge of the boundary?
+     * @param {boolean} [checkRight] - Should bodies check against the right edge of the boundary?
+     * @param {boolean} [checkUp] - Should bodies check against the top edge of the boundary?
+     * @param {boolean} [checkDown] - Should bodies check against the bottom edge of the boundary?
      *
      * @return {Phaser.Physics.Arcade.World} This World object.
      */
@@ -713,15 +793,15 @@ var World = new Class({
     },
 
     /**
-     * Enables or disables collisions on each boundary edge.
+     * Enables or disables collisions on each edge of the World boundary.
      *
      * @method Phaser.Physics.Arcade.World#setBoundsCollision
      * @since 3.0.0
      *
-     * @param {boolean} [left=true] - [description]
-     * @param {boolean} [right=true] - [description]
-     * @param {boolean} [up=true] - [description]
-     * @param {boolean} [down=true] - [description]
+     * @param {boolean} [left=true] - Should bodies check against the left edge of the boundary?
+     * @param {boolean} [right=true] - Should bodies check against the right edge of the boundary?
+     * @param {boolean} [up=true] - Should bodies check against the top edge of the boundary?
+     * @param {boolean} [down=true] - Should bodies check against the bottom edge of the boundary?
      *
      * @return {Phaser.Physics.Arcade.World} This World object.
      */
@@ -742,6 +822,11 @@ var World = new Class({
 
     /**
      * Pauses the simulation.
+     *
+     * A paused simulation does not update any existing bodies, or run any Colliders.
+     *
+     * However, you can still enable and disable bodies within it, or manually run collide or overlap
+     * checks.
      *
      * @method Phaser.Physics.Arcade.World#pause
      * @fires Phaser.Physics.Arcade.World#pause
@@ -777,14 +862,22 @@ var World = new Class({
     },
 
     /**
-     * Adds a collision processor, which runs automatically.
+     * Creates a new Collider object and adds it to the simulation.
+     *
+     * A Collider is a way to automatically perform collision checks between two objects,
+     * calling the collide and process callbacks if they occur.
+     *
+     * Colliders are run as part of the World update, after all of the Bodies have updated.
+     *
+     * By creating a Collider you don't need then call `World.collide` in your `update` loop,
+     * as it will be handled for you automatically.
      *
      * @method Phaser.Physics.Arcade.World#addCollider
      * @since 3.0.0
      * @see Phaser.Physics.Arcade.World#collide
      *
-     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group|Phaser.GameObjects.Group[])} object1 - The first object to check for collision.
-     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group|Phaser.GameObjects.Group[])} object2 - The second object to check for collision.
+     * @param {ArcadeColliderType} object1 - The first object to check for collision.
+     * @param {ArcadeColliderType} object2 - The second object to check for collision.
      * @param {ArcadePhysicsCallback} [collideCallback] - The callback to invoke when the two objects collide.
      * @param {ArcadePhysicsCallback} [processCallback] - The callback to invoke when the two objects collide. Must return a boolean.
      * @param {*} [callbackContext] - The scope in which to call the callbacks.
@@ -805,13 +898,21 @@ var World = new Class({
     },
 
     /**
-     * Adds an overlap processor, which runs automatically.
+     * Creates a new Overlap Collider object and adds it to the simulation.
+     *
+     * A Collider is a way to automatically perform overlap checks between two objects,
+     * calling the collide and process callbacks if they occur.
+     *
+     * Colliders are run as part of the World update, after all of the Bodies have updated.
+     *
+     * By creating a Collider you don't need then call `World.overlap` in your `update` loop,
+     * as it will be handled for you automatically.
      *
      * @method Phaser.Physics.Arcade.World#addOverlap
      * @since 3.0.0
      *
-     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group|Phaser.GameObjects.Group[])} object1 - The first object to check for overlap.
-     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group|Phaser.GameObjects.Group[])} object2 - The second object to check for overlap.
+     * @param {ArcadeColliderType} object1 - The first object to check for overlap.
+     * @param {ArcadeColliderType} object2 - The second object to check for overlap.
      * @param {ArcadePhysicsCallback} [collideCallback] - The callback to invoke when the two objects overlap.
      * @param {ArcadePhysicsCallback} [processCallback] - The callback to invoke when the two objects overlap. Must return a boolean.
      * @param {*} [callbackContext] - The scope in which to call the callbacks.
@@ -832,12 +933,19 @@ var World = new Class({
     },
 
     /**
-     * Removes a collision or overlap processor.
+     * Removes a Collider from the simulation so it is no longer processed.
+     *
+     * This method does not destroy the Collider. If you wish to add it back at a later stage you can call
+     * `World.colliders.add(Collider)`.
+     *
+     * If you no longer need the Collider you can call the `Collider.destroy` method instead, which will
+     * automatically clear all of its references and then remove it from the World. If you call destroy on
+     * a Collider you _don't_ need to pass it to this method too.
      *
      * @method Phaser.Physics.Arcade.World#removeCollider
      * @since 3.0.0
      *
-     * @param {Phaser.Physics.Arcade.Collider} collider - [description]
+     * @param {Phaser.Physics.Arcade.Collider} collider - The Collider to remove from the simulation.
      *
      * @return {Phaser.Physics.Arcade.World} This World object.
      */
@@ -1057,8 +1165,8 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#updateMotion
      * @since 3.0.0
      *
-     * @param {Phaser.Physics.Arcade.Body} body - [description]
-     * @param {number} delta - [description]
+     * @param {Phaser.Physics.Arcade.Body} body - The Body to be updated.
+     * @param {number} delta - The delta value to be used in the motion calculations.
      */
     updateMotion: function (body, delta)
     {
@@ -1080,20 +1188,18 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#computeVelocity
      * @since 3.0.0
      *
-     * @param {integer} axis - [description]
-     * @param {Phaser.Physics.Arcade.Body} body - [description]
-     * @param {number} velocity - [description]
-     * @param {number} acceleration - [description]
-     * @param {number} drag - [description]
-     * @param {number} max - [description]
-     * @param {number} delta - [description]
+     * @param {integer} axis - The velocity axis. 0 for rotation, 1 for x and 2 for y.
+     * @param {Phaser.Physics.Arcade.Body} body - The Body to compute the velocity for.
+     * @param {number} velocity - The velocity component.
+     * @param {number} acceleration - The acceleration component.
+     * @param {number} drag - The drag component.
+     * @param {number} max - The maximum allowed velocity.
+     * @param {number} delta - The delta value to be used in the calculation.
      *
-     * @return {number} [description]
+     * @return {number} The new velocity value.
      */
     computeVelocity: function (axis, body, velocity, acceleration, drag, max, delta)
     {
-        if (max === undefined) { max = 10000; }
-
         if (axis === 1 && body.allowGravity)
         {
             velocity += (this.gravity.x + body.gravity.x) * delta;
@@ -1138,20 +1244,20 @@ var World = new Class({
     },
 
     /**
-     * Separates two Bodies, when at least one is rectangular.
+     * Separates two Bodies.
      *
      * @method Phaser.Physics.Arcade.World#separate
      * @fires Phaser.Physics.Arcade.World#collide
      * @fires Phaser.Physics.Arcade.World#overlap
      * @since 3.0.0
      *
-     * @param {Phaser.Physics.Arcade.Body} body1 - [description]
-     * @param {Phaser.Physics.Arcade.Body} body2 - [description]
-     * @param {ArcadePhysicsCallback} [processCallback] - [description]
-     * @param {*} [callbackContext] - [description]
-     * @param {boolean} [overlapOnly] - [description]
+     * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to be separated.
+     * @param {Phaser.Physics.Arcade.Body} body2 - The second Body to be separated.
+     * @param {ArcadePhysicsCallback} [processCallback] - The process callback.
+     * @param {*} [callbackContext] - The context in which to invoke the callback.
+     * @param {boolean} [overlapOnly] - If this a collide or overlap check?
      *
-     * @return {boolean} [description]
+     * @return {boolean} True if separation occurred, otherwise false.
      */
     separate: function (body1, body2, processCallback, callbackContext, overlapOnly)
     {
@@ -1254,12 +1360,12 @@ var World = new Class({
      * @fires Phaser.Physics.Arcade.World#overlap
      * @since 3.0.0
      *
-     * @param {Phaser.Physics.Arcade.Body} body1 - [description]
-     * @param {Phaser.Physics.Arcade.Body} body2 - [description]
-     * @param {boolean} overlapOnly - [description]
-     * @param {number} bias - [description]
+     * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to be separated.
+     * @param {Phaser.Physics.Arcade.Body} body2 - The second Body to be separated.
+     * @param {boolean} [overlapOnly] - If this a collide or overlap check?
+     * @param {number} bias - A small value added to the calculations.
      *
-     * @return {boolean} [description]
+     * @return {boolean} True if separation occurred, otherwise false.
      */
     separateCircle: function (body1, body2, overlapOnly, bias)
     {
@@ -1443,15 +1549,15 @@ var World = new Class({
     },
 
     /**
-     * Tests of two bodies intersect (overlap).
+     * Checks to see if two Bodies intersect at all.
      *
      * @method Phaser.Physics.Arcade.World#intersects
      * @since 3.0.0
      *
-     * @param {Phaser.Physics.Arcade.Body} body1 - [description]
-     * @param {Phaser.Physics.Arcade.Body} body2 - [description]
+     * @param {Phaser.Physics.Arcade.Body} body1 - The first body to check.
+     * @param {Phaser.Physics.Arcade.Body} body2 - The second body to check.
      *
-     * @return {boolean} [description]
+     * @return {boolean} True if the two bodies intersect, otherwise false.
      */
     intersects: function (body1, body2)
     {
@@ -1496,10 +1602,10 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#circleBodyIntersects
      * @since 3.0.0
      *
-     * @param {Phaser.Physics.Arcade.Body} circle - [description]
-     * @param {Phaser.Physics.Arcade.Body} body - [description]
+     * @param {Phaser.Physics.Arcade.Body} circle - The circular body to test.
+     * @param {Phaser.Physics.Arcade.Body} body - The rectangular body to test.
      *
-     * @return {boolean} [description]
+     * @return {boolean} True if the two bodies intersect, otherwise false.
      */
     circleBodyIntersects: function (circle, body)
     {
