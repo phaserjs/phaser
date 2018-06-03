@@ -474,7 +474,7 @@ var TweenManager = new Class({
             {
                 tween = list[i];
 
-                for (var t = 0; t < target.length; i++)
+                for (var t = 0; t < target.length; t++)
                 {
                     if (tween.hasTarget(target[t]))
                     {

@@ -282,6 +282,23 @@ var UpdateList = new Class({
 
         this.scene = null;
         this.systems = null;
+    },
+
+    /**
+     * [description]
+     *
+     * @name Phaser.GameObjects.UpdateList#length
+     * @type {integer}
+     * @readOnly
+     * @since 3.10.0
+     */
+    length: {
+
+        get: function ()
+        {
+            return this._list.length;
+        }
+
     }
 
 });
