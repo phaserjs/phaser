@@ -9,6 +9,7 @@
 * There is a new property `timeScale` which will scale all time-step calculations at run-time, allowing you to speed-up or slow-down your simulation at will, without adjusting the frame rate.
 * You can now disable the use of the RTree for dynamic bodies via the config property `useTree`. In certain situations, i.e. densely packed worlds, this may give better performance. Static bodies will always use an RTree.
 * collideSpriteVsGroup has been rewritten. If you are using an RTree it now uses the results directly from the tree search, instead of iterating all children in the Group, which dramatically reduces the iteration count. If you have disabled the RTree it performs a brute-force O(N2) Sprite vs. Group iteration sweep. We tested multiple axis sorting variants but the cost of the array allocation and/or sorting, with large amounts of bodies (10,000+), far outweighed the simple math involved in the separation logic.
+* Body.useDamping is a new boolean property that allows you to use a damping effect for drag, rather than the default linear deceleration. This gives much better results if you need smooth deceleration across both axis, such as the way the ship slows down in the game Asteroids, without the tell-tale axis drift associated with linear drag.
 * GetOverlapX/Y now use the calculated delta values, not the deltaX/Y methods.
 * collideSpriteVsGroup aborts early if the Sprite body has been disabled.
 * updateMotion has a new argument `delta` which should typically be a fixed-time delta value.
@@ -22,6 +23,12 @@
 * World.add is a new method that adds an existing body to the simulation. World.enableBody now passes its newly created bodies to this method.
 * World.disableGameObjectBody has been removed as it duplicated what World.disable did.
 * There is a new internal flow with regard to the creation and disabling of bodies. Calling World.enable will pass the objects to World.enableBody, which will create a new Body object if required, and finally pass it to World.add. World.disable does the same, but removes the bodies from the simulation. It passes the bodies to World.disableBody, which in turn passes it to World.remove. Both of these work for single objects, an array of objects, Groups or even arrays of Groups.
+* World.computeAngularVelocity is a new method that specifically calculates the angular velocity of a Body.
+* World.computeVelocity has had its signature changed. Rather than taking a bunch of arguments all it now takes is a Body and a delta value. Internally it now calculates both the x and y velocity components together in the same single call (before it was split into two calls).
+* World.computeVelocity no longer returns the new velocities, they are now set directly on the body within the method.
+* World.computeVelocity has been recoded to use Fuzzy Greater Than and Less Than calls when factoring in drag to a previously accelerated body. Using a fuzzy epsilon allows us to mitigate the ping-pong issue, where a decelerating body would constantly flip between a small negative and positive velocity value and never come to an actual rest.
+* World.computeVelocity now uses the Body.useDamping property to perform either linear deceleration or damping on the Body.
+* World.updateMotion has changed to call the new `computeAngularVelocity` and `computeVelocity` methods.
 
 ### New Features
 
