@@ -11,6 +11,9 @@ var Collider = require('./Collider');
 var CONST = require('./const');
 var DistanceBetween = require('../../math/distance/DistanceBetween');
 var EventEmitter = require('eventemitter3');
+var FuzzyEqual = require('../../math/fuzzy/Equal');
+var FuzzyGreaterThan = require('../../math/fuzzy/GreaterThan');
+var FuzzyLessThan = require('../../math/fuzzy/LessThan');
 var GetOverlapX = require('./GetOverlapX');
 var GetOverlapY = require('./GetOverlapY');
 var GetValue = require('../../utils/object/GetValue');
@@ -1172,56 +1175,41 @@ var World = new Class({
     {
         if (body.allowRotation)
         {
-            var velocityDelta = this.computeVelocity(0, body, body.angularVelocity, body.angularAcceleration, body.angularDrag, body.maxAngular, delta) - body.angularVelocity;
-
-            body.angularVelocity += velocityDelta;
-            body.rotation += (body.angularVelocity * delta);
+            this.computeAngularVelocity(body, delta);
         }
 
-        body.velocity.x = this.computeVelocity(1, body, body.velocity.x, body.acceleration.x, body.drag.x, body.maxVelocity.x, delta);
-        body.velocity.y = this.computeVelocity(2, body, body.velocity.y, body.acceleration.y, body.drag.y, body.maxVelocity.y, delta);
+        this.computeVelocity(body, delta);
     },
 
     /**
-     * Calculates a Body's per-axis velocity.
+     * Calculates a Body's angular velocity.
      *
-     * @method Phaser.Physics.Arcade.World#computeVelocity
-     * @since 3.0.0
+     * @method Phaser.Physics.Arcade.World#computeAngularVelocity
+     * @since 3.10.0
      *
-     * @param {integer} axis - The velocity axis. 0 for rotation, 1 for x and 2 for y.
      * @param {Phaser.Physics.Arcade.Body} body - The Body to compute the velocity for.
-     * @param {number} velocity - The velocity component.
-     * @param {number} acceleration - The acceleration component.
-     * @param {number} drag - The drag component.
-     * @param {number} max - The maximum allowed velocity.
      * @param {number} delta - The delta value to be used in the calculation.
-     *
-     * @return {number} The new velocity value.
      */
-    computeVelocity: function (axis, body, velocity, acceleration, drag, max, delta)
+    computeAngularVelocity: function (body, delta)
     {
-        if (axis === 1 && body.allowGravity)
-        {
-            velocity += (this.gravity.x + body.gravity.x) * delta;
-        }
-        else if (axis === 2 && body.allowGravity)
-        {
-            velocity += (this.gravity.y + body.gravity.y) * delta;
-        }
+        var velocity = body.angularVelocity;
+        var acceleration = body.angularAcceleration;
+        var drag = body.angularDrag;
+        var max = body.maxAngular;
 
         if (acceleration)
         {
             velocity += acceleration * delta;
         }
-        else if (drag && body.allowDrag)
+        else if (body.allowDrag && drag)
         {
             drag *= delta;
 
-            if (velocity - drag > 0)
+            if (FuzzyGreaterThan(velocity - drag, 0, 0.1))
             {
                 velocity -= drag;
             }
-            else if (velocity + drag < 0)
+            else if (FuzzyLessThan(velocity + drag, 0, 0.1))
             {
                 velocity += drag;
             }
@@ -1231,16 +1219,121 @@ var World = new Class({
             }
         }
 
-        if (velocity > max)
+        velocity = Clamp(velocity, -max, max);
+
+        var velocityDelta = velocity - body.angularVelocity;
+
+        body.angularVelocity += velocityDelta;
+        body.rotation += (body.angularVelocity * delta);
+    },
+
+    /**
+     * Calculates a Body's per-axis velocity.
+     *
+     * @method Phaser.Physics.Arcade.World#computeVelocity
+     * @since 3.0.0
+     *
+     * @param {Phaser.Physics.Arcade.Body} body - The Body to compute the velocity for.
+     * @param {number} delta - The delta value to be used in the calculation.
+     */
+    computeVelocity: function (body, delta)
+    {
+        var velocityX = body.velocity.x;
+        var accelerationX = body.acceleration.x;
+        var dragX = body.drag.x;
+        var maxX = body.maxVelocity.x;
+
+        var velocityY = body.velocity.y;
+        var accelerationY = body.acceleration.y;
+        var dragY = body.drag.y;
+        var maxY = body.maxVelocity.y;
+
+        var speed = body.speed;
+        var allowDrag = body.allowDrag;
+        var useDamping = body.useDamping;
+
+        if (body.allowGravity)
         {
-            velocity = max;
-        }
-        else if (velocity < -max)
-        {
-            velocity = -max;
+            velocityX += (this.gravity.x + body.gravity.x) * delta;
+            velocityY += (this.gravity.y + body.gravity.y) * delta;
         }
 
-        return velocity;
+        if (accelerationX)
+        {
+            velocityX += accelerationX * delta;
+        }
+        else if (allowDrag && dragX)
+        {
+            if (useDamping)
+            {
+                //  Damping based deceleration
+                velocityX *= dragX;
+
+                if (FuzzyEqual(speed, 0, 0.001))
+                {
+                    velocityX = 0;
+                }
+            }
+            else
+            {
+                //  Linear deceleration
+                dragX *= delta;
+
+                if (FuzzyGreaterThan(velocityX - dragX, 0, 0.01))
+                {
+                    velocityX -= dragX;
+                }
+                else if (FuzzyLessThan(velocityX + dragX, 0, 0.01))
+                {
+                    velocityX += dragX;
+                }
+                else
+                {
+                    velocityX = 0;
+                }
+            }
+        }
+
+        if (accelerationY)
+        {
+            velocityY += accelerationY * delta;
+        }
+        else if (allowDrag && dragY)
+        {
+            if (useDamping)
+            {
+                //  Damping based deceleration
+                velocityY *= dragY;
+
+                if (FuzzyEqual(speed, 0, 0.001))
+                {
+                    velocityY = 0;
+                }
+            }
+            else
+            {
+                //  Linear deceleration
+                dragY *= delta;
+
+                if (FuzzyGreaterThan(velocityY - dragY, 0, 0.01))
+                {
+                    velocityY -= dragY;
+                }
+                else if (FuzzyLessThan(velocityY + dragY, 0, 0.01))
+                {
+                    velocityY += dragY;
+                }
+                else
+                {
+                    velocityY = 0;
+                }
+            }
+        }
+
+        velocityX = Clamp(velocityX, -maxX, maxX);
+        velocityY = Clamp(velocityY, -maxY, maxY);
+
+        body.velocity.set(velocityX, velocityY);
     },
 
     /**
