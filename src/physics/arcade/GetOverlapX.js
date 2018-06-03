@@ -4,6 +4,8 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var CONST = require('./const');
+
 /**
  * [description]
  *
@@ -41,8 +43,19 @@ var GetOverlapX = function (body1, body2, overlapOnly, bias)
         {
             body1.touching.none = false;
             body1.touching.right = true;
+
             body2.touching.none = false;
             body2.touching.left = true;
+
+            if (body2.physicsType === CONST.STATIC_BODY)
+            {
+                body1.blocked.right = true;
+            }
+
+            if (body1.physicsType === CONST.STATIC_BODY)
+            {
+                body2.blocked.left = true;
+            }
         }
     }
     else if (body1._dx < body2._dx)
@@ -58,8 +71,19 @@ var GetOverlapX = function (body1, body2, overlapOnly, bias)
         {
             body1.touching.none = false;
             body1.touching.left = true;
+
             body2.touching.none = false;
             body2.touching.right = true;
+
+            if (body2.physicsType === CONST.STATIC_BODY)
+            {
+                body1.blocked.left = true;
+            }
+
+            if (body1.physicsType === CONST.STATIC_BODY)
+            {
+                body2.blocked.right = true;
+            }
         }
     }
 

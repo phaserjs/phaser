@@ -438,7 +438,7 @@ var Body = new Class({
          * the game Asteroids) then you will get a far smoother and more visually correct deceleration
          * by using damping, avoiding the axis-drift that is prone with linear deceleration.
          *
-         * If you enable this property then you should use far smaller `drag` values with linear, as
+         * If you enable this property then you should use far smaller `drag` values than with linear, as
          * they are used as a multiplier on the velocity. Values such as 0.95 will give a nice slow
          * deceleration, where-as smaller values, such as 0.5 will stop an object almost immediately.
          *

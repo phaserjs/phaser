@@ -29,11 +29,15 @@
 * World.computeVelocity has been recoded to use Fuzzy Greater Than and Less Than calls when factoring in drag to a previously accelerated body. Using a fuzzy epsilon allows us to mitigate the ping-pong issue, where a decelerating body would constantly flip between a small negative and positive velocity value and never come to an actual rest.
 * World.computeVelocity now uses the Body.useDamping property to perform either linear deceleration or damping on the Body.
 * World.updateMotion has changed to call the new `computeAngularVelocity` and `computeVelocity` methods.
+* Bodies set to bounce would eventually run out of velocity and stop. This has been fixed as part of the refactoring of the time step and velocity computation updates. Fix #3593 (thanks @helmi77)
+* If a Body collides with a Static Body it will now set the `blocked` properties accordingly (before it only set the `touching` properties.) This means you can now use checks like `Body.onFloor()` when traversing static bodies (thanks @fariazz)
 
 ### New Features
 
 * RenderTexture.resize will allow you to resize the underlying Render Texture to the new dimensions given. Doing this also clears the Render Texture at the same time (thanks @saqsun).
 * Rectangle.RandomOutside is a new function that takes two Rectangles, `outer` and `inner`, and returns a random point that falls within the outer rectangle but is always outside of the inner rectangle.
+* The Update List has a new read-only property `length`, making it consistent with the Display List (thanks @samme)
+* The 2D Camera class has two new read-only properties `centerX` and `centerY` which return the coordinates of the center of the viewport, relative to the canvas (thanks @samme)
 
 ### Updates
 
@@ -46,6 +50,8 @@
 * Fixed an incorrect usage of `Math.abs()` in `Math.Quaternion.calculateW()` (thanks @qxzkjp).
 * Particle Emitter Managers can now be added to Containers (thanks @TadejZupancic)
 * Fixed a method signature issue with the Animation component's `remove()` handler when `Animation`s are removed from the `AnimationManager`. This prevented removed animations from stopping correctly.
+* If you set Phaser to use a pre-existing Canvas element it is no longer re-added to the DOM (thanks @NQNStudios)
+* The `TweenManager.getTweensOf` method has been fixed to remove a potential endless loop should multiple targets be passed in to it (thanks @cyantree)
 
 ## Version 3.9.0 - Yui - 24th May 2018
 
