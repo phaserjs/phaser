@@ -411,7 +411,8 @@ var Body = new Class({
         this.onOverlap = false;
 
         /**
-         * The Body's absolute maximum velocity, in pixels per second.
+         * The Body's absolute maximum velocity.
+         * 
          * This limits the Body's rate of movement but not its `velocity` values (which can still exceed `maxVelocity`).
          *
          * @name Phaser.Physics.Arcade.Body#maxVelocity
@@ -429,6 +430,24 @@ var Body = new Class({
          * @since 3.0.0
          */
         this.friction = new Vector2(1, 0);
+
+        /**
+         * If this Body is using `drag` for deceleration this property controls how the drag is applied.
+         * If set to `true` drag will use a damping effect rather than a linear approach. If you are
+         * creating a game where the Body moves freely at any angle (i.e. like the way the ship moves in
+         * the game Asteroids) then you will get a far smoother and more visually correct deceleration
+         * by using damping, avoiding the axis-drift that is prone with linear deceleration.
+         *
+         * If you enable this property then you should use far smaller `drag` values with linear, as
+         * they are used as a multiplier on the velocity. Values such as 0.95 will give a nice slow
+         * deceleration, where-as smaller values, such as 0.5 will stop an object almost immediately.
+         *
+         * @name Phaser.Physics.Arcade.Body#useDamping
+         * @type {boolean}
+         * @default false
+         * @since 3.10.0
+         */
+        this.useDamping = false;
 
         /**
          * The rate of change of this Body's rotation, in degrees per second.

@@ -62,6 +62,23 @@ var Drag = {
         this.body.drag.y = value;
 
         return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Arcade.Components.Drag#setDamping
+     * @since 3.10.0
+     *
+     * @param {boolean} value - `true` to use damping for deceleration, or `false` to use linear deceleration.
+     *
+     * @return {this} This Game Object.
+     */
+    setDamping: function (value)
+    {
+        this.body.useDamping = value;
+
+        return this;
     }
 
 };
