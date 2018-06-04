@@ -915,6 +915,49 @@ var InputManager = new Class({
     },
 
     /**
+     * Checks if the given Game Object should be considered as a candidate for input or not.
+     *
+     * Checks if the Game Object has an input component that is enabled, that it will render,
+     * and finally, if it has a parent, that the parent parent, or any ancestor, is visible or not.
+     *
+     * @method Phaser.Input.InputManager#inputCandidate
+     * @private
+     * @since 3.10.0
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to test.
+     *
+     * @return {boolean} `true` if the Game Object should be considered for input, otherwise `false`.
+     */
+    inputCandidate: function (gameObject)
+    {
+        var input = gameObject.input;
+
+        if (!input || !input.enabled || !gameObject.willRender())
+        {
+            return false;
+        }
+
+        var visible = true;
+        var parent = gameObject.parentContainer;
+
+        if (parent)
+        {
+            do {
+                if (!parent.visible)
+                {
+                    visible = false;
+                    break;
+                }
+
+                parent = parent.parentContainer;
+
+            } while (parent);
+        }
+
+        return visible;
+    },
+
+    /**
      * Performs a hit test using the given Pointer and camera, against an array of interactive Game Objects.
      *
      * The Game Objects are culled against the camera, and then the coordinates are translated into the local camera space
@@ -970,7 +1013,7 @@ var InputManager = new Class({
         {
             var gameObject = culledGameObjects[i];
 
-            if (!gameObject.input || !gameObject.input.enabled || !gameObject.willRender())
+            if (!this.inputCandidate(gameObject))
             {
                 continue;
             }

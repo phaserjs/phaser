@@ -83,6 +83,7 @@
 * Fixed a method signature issue with the Animation component's `remove()` handler when `Animation`s are removed from the `AnimationManager`. This prevented removed animations from stopping correctly.
 * If you set Phaser to use a pre-existing Canvas element it is no longer re-added to the DOM (thanks @NQNStudios)
 * The `TweenManager.getTweensOf` method has been fixed to remove a potential endless loop should multiple targets be passed in to it (thanks @cyantree)
+* Interactive Objects inside of Containers would still fire their input events even if the Container (or any ancestor) was set to be invisible. Objects now check their ancestor tree during the input cull and now properly skip input events if not visible. Fix #3620 (thanks @NemoStein)
 
 ### Examples, Documentation and TypeScript
 
