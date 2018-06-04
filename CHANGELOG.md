@@ -5,7 +5,7 @@
 ### Input System New Features + Updates
 
 * All Input classes are now covered 100% by JSDocs.
-* The Input Manager and Input Plugin have been updated to support multiple simultaneous Pointers. Before, only one active pointer (mouse or touch) was supported. Now, you can have as many active pointers as you need, allowing for complex mulit-touch games. These are stored in the Input Manager `pointers` array.
+* The Input Manager and Input Plugin have been updated to support multiple simultaneous Pointers. Before, only one active pointer (mouse or touch) was supported. Now, you can have as many active pointers as you need, allowing for complex multi-touch games. These are stored in the Input Manager `pointers` array.
 * InputManager.addPointer allows you to add one, or more, new pointers to the Input Manager. There is no hard-coded limit to the amount you can have, although realistically you should never need more than 10. InputPlugin.addPointer is an alias for this method, allowing you to use `this.input.addPointer` from your game code.
 * InputManager.pointersTotal contains the total number of active pointers, which can be set in the Game Config using the `input.activePointers` property.
 * InputManager.mousePointer is a new property that is specifically allocated for mouse use only. This is perfect for desktop only games but should be ignored if you're creating a mouse + touch game (use activePointer instead)
