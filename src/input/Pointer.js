@@ -7,26 +7,28 @@
 var Class = require('../utils/Class');
 var Vector2 = require('../math/Vector2');
 
-// DOM event button value:
-// A number representing a given button:
-// 0: Main button pressed, usually the left button or the un-initialized state
-// 1: Auxiliary button pressed, usually the wheel button or the middle button (if present)
-// 2: Secondary button pressed, usually the right button
-// 3: Fourth button, typically the Browser Back button
-// 4: Fifth button, typically the Browser Forward button
-// For a mouse configured for left-handed use, the button actions are reversed. In this case, the values are read from right to left.
-
 /**
  * @classdesc
- * [description]
+ * A Pointer object encapsulates both mouse and touch input within Phaser.
+ *
+ * By default, Phaser will create 2 pointers for your game to use. If you require more, i.e. for a multi-touch
+ * game, then use the `InputPlugin.addPointer` method to do so, rather than instantiating this class directly,
+ * otherwise it won't be managed by the input system.
+ *
+ * You can reference the current active pointer via `InputPlugin.activePointer`. You can also use the properties
+ * `InputPlugin.pointer1` through to `pointer10`, for each pointer you have enabled in your game.
+ *
+ * The properties of this object are set by the Input Plugin during processing. This object is then sent in all
+ * input related events that the Input Plugin emits, so you can reference properties from it directly in your
+ * callbacks.
  *
  * @class Pointer
  * @memberOf Phaser.Input
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Input.InputManager} manager - [description]
- * @param {integer} id - [description]
+ * @param {Phaser.Input.InputManager} manager - A reference to the Input Manager.
+ * @param {integer} id - The internal ID of this Pointer.
  */
 var Pointer = new Class({
 
@@ -35,7 +37,7 @@ var Pointer = new Class({
     function Pointer (manager, id)
     {
         /**
-         * [description]
+         * A reference to the Input Manager.
          *
          * @name Phaser.Input.Pointer#manager
          * @type {Phaser.Input.InputManager}
@@ -44,25 +46,27 @@ var Pointer = new Class({
         this.manager = manager;
 
         /**
-         * [description]
+         * The internal ID of this Pointer.
          *
          * @name Phaser.Input.Pointer#id
          * @type {integer}
+         * @readOnly
          * @since 3.0.0
          */
         this.id = id;
 
         /**
-         * [description]
+         * The most recent native DOM Event this Pointer has processed.
          *
          * @name Phaser.Input.Pointer#event
-         * @type {any}
+         * @type {(TouchEvent|MouseEvent)}
          * @since 3.0.0
          */
         this.event;
 
         /**
          * The camera the Pointer interacted with during its last update.
+         * 
          * A Pointer can only ever interact with one camera at once, which will be the top-most camera
          * in the list should multiple cameras be positioned on-top of each other.
          *
@@ -80,16 +84,19 @@ var Pointer = new Class({
          * 4: Wheel button or middle button
          * 8: 4th button (typically the "Browser Back" button)
          * 16: 5th button (typically the "Browser Forward" button)
+         * 
+         * For a mouse configured for left-handed use, the button actions are reversed.
+         * In this case, the values are read from right to left.
          *
          * @name Phaser.Input.Pointer#buttons
-         * @type {number}
+         * @type {integer}
          * @default 0
          * @since 3.0.0
          */
         this.buttons = 0;
 
         /**
-         * [description]
+         * The position of the Pointer in screen space.
          *
          * @name Phaser.Input.Pointer#position
          * @type {Phaser.Math.Vector2}
@@ -212,7 +219,7 @@ var Pointer = new Class({
         this.isDown = false;
 
         /**
-         * [description]
+         * A dirty flag for this Pointer, used internally by the Input Plugin.
          *
          * @name Phaser.Input.Pointer#dirty
          * @type {boolean}
@@ -222,7 +229,7 @@ var Pointer = new Class({
         this.dirty = false;
 
         /**
-         * [description]
+         * Is this Pointer considered as being "just down" or not?
          *
          * @name Phaser.Input.Pointer#justDown
          * @type {boolean}
@@ -232,7 +239,7 @@ var Pointer = new Class({
         this.justDown = false;
 
         /**
-         * [description]
+         * Is this Pointer considered as being "just up" or not?
          *
          * @name Phaser.Input.Pointer#justUp
          * @type {boolean}
@@ -242,7 +249,7 @@ var Pointer = new Class({
         this.justUp = false;
 
         /**
-         * [description]
+         * Is this Pointer considered as being "just moved" or not?
          *
          * @name Phaser.Input.Pointer#justMoved
          * @type {boolean}
@@ -312,15 +319,16 @@ var Pointer = new Class({
     },
 
     /**
-     * [description]
+     * Takes a Camera and returns a Vector2 containing the translated position of this Pointer
+     * within that Camera. This can be used to convert this Pointers position into camera space.
      *
      * @method Phaser.Input.Pointer#positionToCamera
      * @since 3.0.0
      *
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {(Phaser.Math.Vector2|object)} [output] - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use for the translation.
+     * @param {(Phaser.Math.Vector2|object)} [output] - A Vector2-like object in which to store the translated position.
      *
-     * @return {(Phaser.Math.Vector2|object)} [description]
+     * @return {(Phaser.Math.Vector2|object)} A Vector2 containing the translated coordinates of this Pointer, based on the given camera.
      */
     positionToCamera: function (camera, output)
     {
@@ -328,9 +336,11 @@ var Pointer = new Class({
     },
 
     /**
-     * [description]
+     * Resets the temporal properties of this Pointer.
+     * Called automatically by the Input Plugin each update.
      *
      * @method Phaser.Input.Pointer#reset
+     * @private
      * @since 3.0.0
      */
     reset: function ()
@@ -346,12 +356,13 @@ var Pointer = new Class({
     },
 
     /**
-     * [description]
+     * Internal method to handle a Mouse Up Event.
      *
      * @method Phaser.Input.Pointer#up
+     * @private
      * @since 3.0.0
      *
-     * @param {MouseEvent} event - [description]
+     * @param {MouseEvent} event - The Mouse Event to process.
      * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
      */
     up: function (event, time)
@@ -363,8 +374,8 @@ var Pointer = new Class({
 
         this.event = event;
 
-        this.x = this.manager.transformX(event.pageX);
-        this.y = this.manager.transformY(event.pageY);
+        //  Sets the local x/y properties
+        this.manager.transformPointer(this, event.pageX, event.pageY);
 
         //  0: Main button pressed, usually the left button or the un-initialized state
         if (event.button === 0)
@@ -384,12 +395,13 @@ var Pointer = new Class({
     },
 
     /**
-     * [description]
+     * Internal method to handle a Mouse Down Event.
      *
      * @method Phaser.Input.Pointer#down
+     * @private
      * @since 3.0.0
      *
-     * @param {MouseEvent} event - [description]
+     * @param {MouseEvent} event - The Mouse Event to process.
      * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
      */
     down: function (event, time)
@@ -401,8 +413,8 @@ var Pointer = new Class({
 
         this.event = event;
 
-        this.x = this.manager.transformX(event.pageX);
-        this.y = this.manager.transformY(event.pageY);
+        //  Sets the local x/y properties
+        this.manager.transformPointer(this, event.pageX, event.pageY);
 
         //  0: Main button pressed, usually the left button or the un-initialized state
         if (event.button === 0)
@@ -422,12 +434,13 @@ var Pointer = new Class({
     },
 
     /**
-     * [description]
+     * Internal method to handle a Mouse Move Event.
      *
      * @method Phaser.Input.Pointer#move
+     * @private
      * @since 3.0.0
      *
-     * @param {MouseEvent} event - [description]
+     * @param {MouseEvent} event - The Mouse Event to process.
      * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
      */
     move: function (event)
@@ -439,8 +452,8 @@ var Pointer = new Class({
 
         this.event = event;
 
-        this.x = this.manager.transformX(event.pageX);
-        this.y = this.manager.transformY(event.pageY);
+        //  Sets the local x/y properties
+        this.manager.transformPointer(this, event.pageX, event.pageY);
 
         if (this.manager.mouse.locked)
         {
@@ -457,12 +470,13 @@ var Pointer = new Class({
     },
 
     /**
-     * [description]
+     * Internal method to handle a Touch Start Event.
      *
      * @method Phaser.Input.Pointer#touchstart
+     * @private
      * @since 3.0.0
      *
-     * @param {TouchEvent} event - [description]
+     * @param {TouchEvent} event - The Touch Event to process.
      * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
      */
     touchstart: function (event, time)
@@ -480,8 +494,8 @@ var Pointer = new Class({
 
         this.event = event;
 
-        this.x = this.manager.transformX(event.pageX);
-        this.y = this.manager.transformY(event.pageY);
+        //  Sets the local x/y properties
+        this.manager.transformPointer(this, event.pageX, event.pageY);
 
         this.primaryDown = true;
         this.downX = this.x;
@@ -497,20 +511,21 @@ var Pointer = new Class({
     },
 
     /**
-     * [description]
+     * Internal method to handle a Touch Move Event.
      *
      * @method Phaser.Input.Pointer#touchmove
+     * @private
      * @since 3.0.0
      *
-     * @param {TouchEvent} event - [description]
+     * @param {TouchEvent} event - The Touch Event to process.
      * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
      */
     touchmove: function (event)
     {
         this.event = event;
 
-        this.x = this.manager.transformX(event.pageX);
-        this.y = this.manager.transformY(event.pageY);
+        //  Sets the local x/y properties
+        this.manager.transformPointer(this, event.pageX, event.pageY);
 
         this.justMoved = true;
 
@@ -520,12 +535,13 @@ var Pointer = new Class({
     },
 
     /**
-     * [description]
+     * Internal method to handle a Touch End Event.
      *
      * @method Phaser.Input.Pointer#touchend
+     * @private
      * @since 3.0.0
      *
-     * @param {TouchEvent} event - [description]
+     * @param {TouchEvent} event - The Touch Event to process.
      * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
      */
     touchend: function (event, time)
@@ -534,8 +550,8 @@ var Pointer = new Class({
 
         this.event = event;
 
-        this.x = this.manager.transformX(event.pageX);
-        this.y = this.manager.transformY(event.pageY);
+        //  Sets the local x/y properties
+        this.manager.transformPointer(this, event.pageX, event.pageY);
 
         this.primaryDown = false;
         this.upX = this.x;
@@ -553,12 +569,12 @@ var Pointer = new Class({
     },
 
     /**
-     * [description]
+     * Checks to see if any buttons are being held down on this Pointer.
      *
      * @method Phaser.Input.Pointer#noButtonDown
      * @since 3.0.0
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if no buttons are being held down.
      */
     noButtonDown: function ()
     {
@@ -566,12 +582,12 @@ var Pointer = new Class({
     },
 
     /**
-     * [description]
+     * Checks to see if the left button is being held down on this Pointer.
      *
      * @method Phaser.Input.Pointer#leftButtonDown
      * @since 3.0.0
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if the left button is being held down.
      */
     leftButtonDown: function ()
     {
@@ -579,12 +595,12 @@ var Pointer = new Class({
     },
 
     /**
-     * [description]
+     * Checks to see if the right button is being held down on this Pointer.
      *
      * @method Phaser.Input.Pointer#rightButtonDown
      * @since 3.0.0
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if the right button is being held down.
      */
     rightButtonDown: function ()
     {
@@ -592,12 +608,12 @@ var Pointer = new Class({
     },
 
     /**
-     * [description]
+     * Checks to see if the middle button is being held down on this Pointer.
      *
      * @method Phaser.Input.Pointer#middleButtonDown
      * @since 3.0.0
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if the middle button is being held down.
      */
     middleButtonDown: function ()
     {
@@ -605,12 +621,12 @@ var Pointer = new Class({
     },
 
     /**
-     * [description]
+     * Checks to see if the back button is being held down on this Pointer.
      *
      * @method Phaser.Input.Pointer#backButtonDown
      * @since 3.0.0
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if the back button is being held down.
      */
     backButtonDown: function ()
     {
@@ -618,12 +634,12 @@ var Pointer = new Class({
     },
 
     /**
-     * [description]
+     * Checks to see if the forward button is being held down on this Pointer.
      *
      * @method Phaser.Input.Pointer#forwardButtonDown
      * @since 3.0.0
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if the forward button is being held down.
      */
     forwardButtonDown: function ()
     {
@@ -631,7 +647,7 @@ var Pointer = new Class({
     },
 
     /**
-     * [description]
+     * Destroys this Pointer instance and resets its external references.
      *
      * @method Phaser.Input.Pointer#destroy
      * @since 3.0.0
@@ -644,7 +660,9 @@ var Pointer = new Class({
     },
 
     /**
-     * [description]
+     * The x position of this Pointer.
+     * The value is in screen space.
+     * See `worldX` to get a camera converted position.
      *
      * @name Phaser.Input.Pointer#x
      * @type {number}
@@ -665,7 +683,9 @@ var Pointer = new Class({
     },
 
     /**
-     * [description]
+     * The y position of this Pointer.
+     * The value is in screen space.
+     * See `worldY` to get a camera converted position.
      *
      * @name Phaser.Input.Pointer#y
      * @type {number}

@@ -18,7 +18,15 @@ var TransformXY = require('../math/TransformXY');
 
 /**
  * @classdesc
- * [description]
+ * The Input Manager is responsible for handling all of the input related systems in a single Phaser Game instance.
+ *
+ * Based on the Game Config it will create handlers for mouse, touch, keyboard and gamepad support.
+ *
+ * It then manages the event queue, pointer creation and general hit test related operations.
+ *
+ * You rarely need to interact with the Input Manager directly, and as such, all of its properties and methods
+ * should be considered private. Instead, you should use the Input Plugin, which is a Scene level system, responsible
+ * for dealing with all input events for a Scene.
  *
  * @class InputManager
  * @memberOf Phaser.Input
@@ -1058,6 +1066,22 @@ var InputManager = new Class({
         object.localY = y;
 
         return object.hitAreaCallback(object.hitArea, x, y, object);
+    },
+
+    /**
+     * Transforms the pageX and pageY values of a Pointer into the scaled coordinate space of the Input Manager.
+     *
+     * @method Phaser.Input.InputManager#transformPointer
+     * @since 3.10.0
+     *
+     * @param {Phaser.Input.Pointer} pointer - The Pointer to transform the values for.
+     *
+     * @return {number} The translated value.
+     */
+    transformPointer: function (pointer, pageX, pageY)
+    {
+        pointer.x = (pageX - this.bounds.left) * this.scale.x;
+        pointer.y = (pageY - this.bounds.top) * this.scale.y;
     },
 
     /**
