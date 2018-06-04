@@ -240,6 +240,7 @@ var CameraManager = new Class({
         {
             this.cameras.push(camera);
             this.cameraPool.slice(poolIndex, 1);
+
             return camera;
         }
 
@@ -284,6 +285,7 @@ var CameraManager = new Class({
             camera.scrollX = GetFastValue(cameraConfig, 'scrollX', 0);
             camera.scrollY = GetFastValue(cameraConfig, 'scrollY', 0);
             camera.roundPixels = GetFastValue(cameraConfig, 'roundPixels', false);
+            camera.visible = GetFastValue(cameraConfig, 'visible', true);
 
             // Background Color
 
@@ -336,29 +338,38 @@ var CameraManager = new Class({
     },
 
     /**
-     * [description]
+     * Returns an array of all cameras below the given Pointer.
+     * 
+     * The first camera in the array is the top-most camera in the camera list.
      *
-     * @method Phaser.Cameras.Scene2D.CameraManager#getCameraBelowPointer
-     * @since 3.0.0
+     * @method Phaser.Cameras.Scene2D.CameraManager#getCamerasBelowPointer
+     * @since 3.10.0
      *
-     * @param {Phaser.Input.Pointer} pointer - [description]
+     * @param {Phaser.Input.Pointer} pointer - The Pointer to check against.
      *
-     * @return {Phaser.Cameras.Scene2D.Camera} [description]
+     * @return {Phaser.Cameras.Scene2D.Camera[]} An array of cameras below the Pointer.
      */
-    getCameraBelowPointer: function (pointer)
+    getCamerasBelowPointer: function (pointer)
     {
         var cameras = this.cameras;
 
-        //  Start from the most recently added camera (the 'top' camera)
-        for (var i = cameras.length - 1; i >= 0; i--)
+        var x = pointer.x;
+        var y = pointer.y;
+
+        var output = [];
+
+        for (var i = 0; i < cameras.length; i++)
         {
             var camera = cameras[i];
 
-            if (camera.inputEnabled && RectangleContains(camera, pointer.x, pointer.y))
+            if (camera.visible && camera.inputEnabled && RectangleContains(camera, x, y))
             {
-                return camera;
+                //  So the top-most camera is at the top of the search array
+                output.unshift(camera);
             }
         }
+
+        return output;
     },
 
     /**
@@ -404,9 +415,12 @@ var CameraManager = new Class({
         {
             var camera = cameras[i];
 
-            camera.preRender(baseScale, renderer.config.resolution);
+            if (camera.visible)
+            {
+                camera.preRender(baseScale, renderer.config.resolution);
 
-            renderer.render(this.scene, children, interpolation, camera);
+                renderer.render(this.scene, children, interpolation, camera);
+            }
         }
     },
 
