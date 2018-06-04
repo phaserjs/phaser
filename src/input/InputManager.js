@@ -25,8 +25,8 @@ var TransformXY = require('../math/TransformXY');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Game} game - [description]
- * @param {object} config - [description]
+ * @param {Phaser.Game} game - The Game instance that owns the Input Manager.
+ * @param {object} config - The Input Configuration object, as set in the Game Config.
  */
 var InputManager = new Class({
 
@@ -35,16 +35,18 @@ var InputManager = new Class({
     function InputManager (game, config)
     {
         /**
-         * [description]
+         * The Game instance that owns the Input Manager.
+         * A Game only maintains on instance of the Input Manager at any time.
          *
          * @name Phaser.Input.InputManager#game
          * @type {Phaser.Game}
+         * @readOnly
          * @since 3.0.0
          */
         this.game = game;
 
         /**
-         * [description]
+         * The Canvas that is used for all DOM event input listeners.
          *
          * @name Phaser.Input.InputManager#canvas
          * @type {HTMLCanvasElement}
@@ -53,7 +55,7 @@ var InputManager = new Class({
         this.canvas;
 
         /**
-         * [description]
+         * The Input Configuration object, as set in the Game Config.
          *
          * @name Phaser.Input.InputManager#config
          * @type {object}
@@ -62,7 +64,7 @@ var InputManager = new Class({
         this.config = config;
 
         /**
-         * [description]
+         * If set, the Input Manager will run its update loop every frame.
          *
          * @name Phaser.Input.InputManager#enabled
          * @type {boolean}
@@ -72,7 +74,7 @@ var InputManager = new Class({
         this.enabled = true;
 
         /**
-         * [description]
+         * The Event Emitter instance that the Input Manager uses to emit events from.
          *
          * @name Phaser.Input.InputManager#events
          * @type {Phaser.Events.EventEmitter}
@@ -81,7 +83,7 @@ var InputManager = new Class({
         this.events = new EventEmitter();
 
         /**
-         * Standard FIFO queue.
+         * A standard FIFO queue for the native DOM events waiting to be handled by the Input Manager.
          *
          * @name Phaser.Input.InputManager#queue
          * @type {array}
@@ -232,10 +234,10 @@ var InputManager = new Class({
         this.dirty = false;
 
         /**
-         * [description]
+         * The Scale factor being applied to input coordinates.
          *
          * @name Phaser.Input.InputManager#scale
-         * @type {{x:number,y:number}}
+         * @type { { x:number, y:number } }
          * @since 3.0.0
          */
         this.scale = { x: 1, y: 1 };
@@ -254,7 +256,8 @@ var InputManager = new Class({
         this.globalTopOnly = true;
 
         /**
-         * [description]
+         * An internal flag that controls if the Input Manager will ignore or process native DOM events this frame.
+         * Set via the InputPlugin.stopPropagation method.
          *
          * @name Phaser.Input.InputManager#ignoreEvents
          * @type {boolean}
@@ -264,7 +267,7 @@ var InputManager = new Class({
         this.ignoreEvents = false;
 
         /**
-         * [description]
+         * The bounds of the Input Manager, used for pointer hit test calculations.
          *
          * @name Phaser.Input.InputManager#bounds
          * @type {Phaser.Geom.Rectangle}
@@ -273,7 +276,7 @@ var InputManager = new Class({
         this.bounds = new Rectangle();
 
         /**
-         * [description]
+         * A re-cycled point-like object to store hit test values in.
          *
          * @name Phaser.Input.InputManager#_tempPoint
          * @type {{x:number,y:number}}
@@ -283,7 +286,7 @@ var InputManager = new Class({
         this._tempPoint = { x: 0, y: 0 };
 
         /**
-         * [description]
+         * A re-cycled array to store hit results in.
          *
          * @name Phaser.Input.InputManager#_tempHitTest
          * @type {array}
@@ -294,7 +297,7 @@ var InputManager = new Class({
         this._tempHitTest = [];
 
         /**
-         * [description]
+         * A re-cycled matrix used in hit test calculations.
          *
          * @name Phaser.Input.InputManager#_tempMatrix
          * @type {Phaser.GameObjects.Components.TransformMatrix}
@@ -311,6 +314,7 @@ var InputManager = new Class({
      * The renderer is available by now.
      *
      * @method Phaser.Input.InputManager#boot
+     * @protected
      * @since 3.0.0
      */
     boot: function ()
@@ -326,7 +330,8 @@ var InputManager = new Class({
     },
 
     /**
-     * [description]
+     * Updates the Input Manager bounds rectangle to match the bounding client rectangle of the
+     * canvas element being used to track input events.
      *
      * @method Phaser.Input.InputManager#updateBounds
      * @since 3.0.0
@@ -344,7 +349,7 @@ var InputManager = new Class({
     },
 
     /**
-     * [description]
+     * Resizes the Input Manager internal values, including the bounds and scale factor.
      *
      * @method Phaser.Input.InputManager#resize
      * @since 3.2.0
@@ -367,13 +372,13 @@ var InputManager = new Class({
     },
 
     /**
-     * [description]
+     * Internal update loop, called automatically by the Game Step.
      *
      * @method Phaser.Input.InputManager#update
      * @private
      * @since 3.0.0
      *
-     * @param {number} time - [description]
+     * @param {number} time - The time stamp value of this game step.
      */
     update: function (time)
     {
@@ -453,6 +458,17 @@ var InputManager = new Class({
     //  event.targetTouches = list of all touches on the TARGET ELEMENT (i.e. game dom element)
     //  event.touches = list of all touches on the ENTIRE DOCUMENT, not just the target element
     //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
+
+    /**
+     * Called by the main update loop when a Touch Start Event is received.
+     *
+     * @method Phaser.Input.InputManager#startPointer
+     * @private
+     * @since 3.10.0
+     *
+     * @param {TouchEvent} event - The native DOM event to be processed.
+     * @param {number} time - The time stamp value of this game step.
+     */
     startPointer: function (event, time)
     {
         var pointers = this.pointers;
@@ -475,6 +491,16 @@ var InputManager = new Class({
         }
     },
 
+    /**
+     * Called by the main update loop when a Touch Move Event is received.
+     *
+     * @method Phaser.Input.InputManager#updatePointer
+     * @private
+     * @since 3.10.0
+     *
+     * @param {TouchEvent} event - The native DOM event to be processed.
+     * @param {number} time - The time stamp value of this game step.
+     */
     updatePointer: function (event, time)
     {
         var pointers = this.pointers;
@@ -500,6 +526,17 @@ var InputManager = new Class({
     //  For touch end its a list of the touch points that have been removed from the surface
     //  https://developer.mozilla.org/en-US/docs/DOM/TouchList
     //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
+
+    /**
+     * Called by the main update loop when a Touch End Event is received.
+     *
+     * @method Phaser.Input.InputManager#stopPointer
+     * @private
+     * @since 3.10.0
+     *
+     * @param {TouchEvent} event - The native DOM event to be processed.
+     * @param {number} time - The time stamp value of this game step.
+     */
     stopPointer: function (event, time)
     {
         var pointers = this.pointers;
@@ -529,7 +566,8 @@ var InputManager = new Class({
      * You can create more either by calling this method, or by setting the `input.activePointers` property
      * in the Game Config.
      *
-     * The first 10 pointers are available via the `InputPlugin.pointerX` properties.
+     * The first 10 pointers are available via the `InputPlugin.pointerX` properties, once they have been added
+     * via this method.
      *
      * @method Phaser.Input.InputManager#addPointer
      * @since 3.10.0
@@ -600,7 +638,7 @@ var InputManager = new Class({
      * @private
      * @since 3.10.0
      *
-     * @param {any} event - The native DOM event.
+     * @param {TouchEvent} event - The native DOM Touch event.
      */
     queueTouchStart: function (event)
     {
@@ -622,7 +660,7 @@ var InputManager = new Class({
      * @private
      * @since 3.10.0
      *
-     * @param {any} event - The native DOM event.
+     * @param {TouchEvent} event - The native DOM Touch event.
      */
     queueTouchMove: function (event)
     {
@@ -644,7 +682,7 @@ var InputManager = new Class({
      * @private
      * @since 3.10.0
      *
-     * @param {any} event - The native DOM event.
+     * @param {TouchEvent} event - The native DOM Touch event.
      */
     queueTouchEnd: function (event)
     {
@@ -666,7 +704,7 @@ var InputManager = new Class({
      * @private
      * @since 3.10.0
      *
-     * @param {any} event - The native DOM event.
+     * @param {MouseEvent} event - The native DOM Mouse event.
      */
     queueMouseDown: function (event)
     {
@@ -688,7 +726,7 @@ var InputManager = new Class({
      * @private
      * @since 3.10.0
      *
-     * @param {any} event - The native DOM event.
+     * @param {MouseEvent} event - The native DOM Mouse event.
      */
     queueMouseMove: function (event)
     {
@@ -710,7 +748,7 @@ var InputManager = new Class({
      * @private
      * @since 3.10.0
      *
-     * @param {any} event - The native DOM event.
+     * @param {MouseEvent} event - The native DOM Mouse event.
      */
     queueMouseUp: function (event)
     {
@@ -869,23 +907,26 @@ var InputManager = new Class({
     },
 
     /**
-     * Will always return an array.
-     * Array contains matching Interactive Objects.
-     * Array will be empty if no objects were matched.
-     * x/y = pointer x/y (un-translated)
+     * Performs a hit test using the given Pointer and camera, against an array of interactive Game Objects.
+     *
+     * The Game Objects are culled against the camera, and then the coordinates are translated into the local camera space
+     * and used to determine if they fall within the remaining Game Objects hit areas or not.
+     *
+     * If nothing is matched an empty array is returned.
+     *
+     * This method is called automatically by InputPlugin.hitTestPointer and doesn't usually need to be invoked directly.
      *
      * @method Phaser.Input.InputManager#hitTest
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {array} gameObjects - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {array} output - [description]
+     * @param {Phaser.Input.Pointer} pointer - The Pointer to test against.
+     * @param {array} gameObjects - An array of interactive Game Objects to check.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera which is being tested against.
+     * @param {array} [output] - An array to store the results in. If not given, a new empty array is created.
      *
-     * @return {array} [description]
+     * @return {array} An array of the Game Objects that were hit during this hit test.
      */
-    hitTest: function (x, y, gameObjects, camera, output)
+    hitTest: function (pointer, gameObjects, camera, output)
     {
         if (output === undefined) { output = this._tempHitTest; }
 
@@ -895,6 +936,9 @@ var InputManager = new Class({
 
         output.length = 0;
 
+        var x = pointer.x;
+        var y = pointer.y;
+
         if (!(x >= camera.x && y >= camera.y && x <= camera.x + cameraW && y <= camera.y + cameraH))
         {
             return output;
@@ -902,6 +946,9 @@ var InputManager = new Class({
 
         //  Stores the world point inside of tempPoint
         camera.getWorldPoint(x, y, tempPoint);
+
+        pointer.worldX = tempPoint.x;
+        pointer.worldY = tempPoint.y;
 
         var culledGameObjects = camera.cull(gameObjects);
 
@@ -944,27 +991,30 @@ var InputManager = new Class({
     },
 
     /**
-     * x/y MUST be translated before being passed to this function,
-     * unless the gameObject is guaranteed to not be rotated or scaled in any way.
+     * Checks if the given x and y coordinate are within the hit area of the Game Object.
+     *
+     * This method assumes that the coordinate values have already been translated into the space of the Game Object.
+     *
+     * If the coordinates are within the hit area they are set into the Game Objects Input `localX` and `localY` properties.
      *
      * @method Phaser.Input.InputManager#pointWithinHitArea
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} gameObject - [description]
-     * @param {number} x - [description]
-     * @param {number} y - [description]
+     * @param {Phaser.GameObjects.GameObject} gameObject - The interactive Game Object to check against.
+     * @param {number} x - The translated x coordinate for the hit test.
+     * @param {number} y - The translated y coordinate for the hit test.
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if the coordinates were inside the Game Objects hit area, otherwise `false`.
      */
     pointWithinHitArea: function (gameObject, x, y)
     {
-        var input = gameObject.input;
-
         //  Normalize the origin
         x += gameObject.displayOriginX;
         y += gameObject.displayOriginY;
 
-        if (input.hitAreaCallback(input.hitArea, x, y, gameObject))
+        var input = gameObject.input;
+
+        if (input && input.hitAreaCallback(input.hitArea, x, y, gameObject))
         {
             input.localX = x;
             input.localY = y;
@@ -978,17 +1028,20 @@ var InputManager = new Class({
     },
 
     /**
-     * x/y MUST be translated before being passed to this function,
-     * unless the gameObject is guaranteed to not be rotated or scaled in any way.
+     * Checks if the given x and y coordinate are within the hit area of the Interactive Object.
+     *
+     * This method assumes that the coordinate values have already been translated into the space of the Interactive Object.
+     *
+     * If the coordinates are within the hit area they are set into the Interactive Objects Input `localX` and `localY` properties.
      *
      * @method Phaser.Input.InputManager#pointWithinInteractiveObject
      * @since 3.0.0
      *
-     * @param {Phaser.Input.InteractiveObject} object - [description]
-     * @param {number} x - [description]
-     * @param {number} y - [description]
+     * @param {Phaser.Input.InteractiveObject} object - The Interactive Object to check against.
+     * @param {number} x - The translated x coordinate for the hit test.
+     * @param {number} y - The translated y coordinate for the hit test.
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if the coordinates were inside the Game Objects hit area, otherwise `false`.
      */
     pointWithinInteractiveObject: function (object, x, y)
     {
@@ -1008,14 +1061,14 @@ var InputManager = new Class({
     },
 
     /**
-     * [description]
+     * Transforms the pageX value into the scaled coordinate space of the Input Manager.
      *
      * @method Phaser.Input.InputManager#transformX
      * @since 3.0.0
      *
-     * @param {number} pageX - [description]
+     * @param {number} pageX - The DOM pageX value.
      *
-     * @return {number} [description]
+     * @return {number} The translated value.
      */
     transformX: function (pageX)
     {
@@ -1023,14 +1076,14 @@ var InputManager = new Class({
     },
 
     /**
-     * [description]
+     * Transforms the pageY value into the scaled coordinate space of the Input Manager.
      *
      * @method Phaser.Input.InputManager#transformY
      * @since 3.0.0
      *
-     * @param {number} pageY - [description]
+     * @param {number} pageY - The DOM pageY value.
      *
-     * @return {number} [description]
+     * @return {number} The translated value.
      */
     transformY: function (pageY)
     {
@@ -1038,12 +1091,12 @@ var InputManager = new Class({
     },
 
     /**
-     * [description]
+     * Returns the left offset of the Input bounds.
      *
      * @method Phaser.Input.InputManager#getOffsetX
      * @since 3.0.0
      *
-     * @return {number} [description]
+     * @return {number} The left bounds value.
      */
     getOffsetX: function ()
     {
@@ -1051,12 +1104,12 @@ var InputManager = new Class({
     },
 
     /**
-     * [description]
+     * Returns the top offset of the Input bounds.
      *
      * @method Phaser.Input.InputManager#getOffsetY
      * @since 3.0.0
      *
-     * @return {number} [description]
+     * @return {number} The top bounds value.
      */
     getOffsetY: function ()
     {
@@ -1064,12 +1117,12 @@ var InputManager = new Class({
     },
 
     /**
-     * [description]
+     * Returns the horizontal Input Scale value.
      *
      * @method Phaser.Input.InputManager#getScaleX
      * @since 3.0.0
      *
-     * @return {number} [description]
+     * @return {number} The horizontal scale factor of the input.
      */
     getScaleX: function ()
     {
@@ -1077,12 +1130,12 @@ var InputManager = new Class({
     },
 
     /**
-     * [description]
+     * Returns the vertical Input Scale value.
      *
      * @method Phaser.Input.InputManager#getScaleY
      * @since 3.0.0
      *
-     * @return {number} [description]
+     * @return {number} The vertical scale factor of the input.
      */
     getScaleY: function ()
     {
@@ -1090,7 +1143,9 @@ var InputManager = new Class({
     },
 
     /**
-     * [description]
+     * Destroys the Input Manager and all of its systems.
+     *
+     * There is no way to recover from doing this.
      *
      * @method Phaser.Input.InputManager#destroy
      * @since 3.0.0
@@ -1099,15 +1154,37 @@ var InputManager = new Class({
     {
         this.events.removeAllListeners();
 
-        this.keyboard.destroy();
-        this.mouse.destroy();
-        this.touch.destroy();
-        this.gamepad.destroy();
+        if (this.keyboard)
+        {
+            this.keyboard.destroy();
+        }
 
-        this.activePointer.destroy();
+        if (this.mouse)
+        {
+            this.mouse.destroy();
+        }
 
+        if (this.touch)
+        {
+            this.touch.destroy();
+        }
+
+        if (this.gamepad)
+        {
+            this.gamepad.destroy();
+        }
+
+        for (var i = 0; i < this.pointers.length; i++)
+        {
+            this.pointers[i].destroy();
+        }
+
+        this.domCallbacks = {};
+        this.pointers = [];
         this.queue = [];
-
+        this._tempHitTest = [];
+        this._tempMatrix.destroy();
+        this.canvas = null;
         this.game = null;
     }
 
