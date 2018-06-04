@@ -2,6 +2,27 @@
 
 ## Version 3.10.0 - Hayashi - in development
 
+### Input System New Features + Updates
+
+* The Input Manager and Input Plugin have been updated to support multiple simultaneous Pointers. Before, only one active pointer (mouse or touch) was supported. Now, you can have as many active pointers as you need, allowing for complex mulit-touch games. These are stored in the Input Manager `pointers` array.
+* InputManager.addPointer allows you to add one, or more, new pointers to the Input Manager. There is no hard-coded limit to the amount you can have, although realistically you should never need more than 10. InputPlugin.addPointer is an alias for this method, allowing you to use `this.input.addPointer` from your game code.
+* InputManager.pointersTotal contains the total number of active pointers, which can be set in the Game Config using the `input.activePointers` property.
+* InputManager.mousePointer is a new property that is specifically allocated for mouse use only. This is perfect for desktop only games but should be ignored if you're creating a mouse + touch game (use activePointer instead)
+* InputManager.activePointer will now reflect the most recently active pointer on the game, which is considered as being the most recent pointer to have interacted with the game canvas.
+* The InputManager and InputPlugin have three new methods: `addUpCallback`, `addDownCallback` and `addMoveCallback`. These methods allow you to add callbacks to be invoked whenever native DOM mouse or touch events are received. Callbacks passed to this method are invoked _immediately_ when the DOM event happens, within the scope of the DOM event handler. Therefore, they are considered as 'native' from the perspective of the browser. This means they can be used for tasks such as opening new browser windows, or anything which explicitly requires user input to activate. However, as a result of this, they come with their own risks, and as such should not be used for general game input, but instead be reserved for special circumstances. The callbacks can be set as `isOnce` so you can control if the callback is called once then removed, or every time the DOM event occurs.
+* Pointer has two new properties `worldX` and `worldY` which contain the  position of the Pointer, translated into the coordinate space of the most recent Camera it interacted with.
+* InputManager.dirty is a new internal property that reflects if any of the Pointers have updated this frame.
+* InputManager.update now uses constants internally for the event type checking, rather than string-based like before.
+* InputManager.startPointer is a new internal method, called automatically by the update loop, that handles touch start events.
+* InputManager.updatePointer is a new internal method, called automatically by the update loop, that handles touch move events.
+* InputManager.stopPointer is a new internal method, called automatically by the update loop, that handles touch end events.
+* InputManager.hitTest has had its arguments changed. It no longer takes x/y properties as the first two arguments, but instead takes a Pointer object (from which the x/y coordinates are extracted).
+
+
+* TouchManager.handler has been removed as it's no longer used internally.
+* TouchManager.onTouchStart, onTouchMove and onTouchEnd are the new DOM Touch Event handlers. They pass the events on to the InputManagers `queueTouchStart`, `queueTouchMove` and `queueTouchEnd` methods respectively.
+
+
 ### Arcade Physics New Features + Updates
 
 * Arcade Physics now uses a fixed time-step for all internal calculations. There is a new `fps` config value and property (defaults to 60fps), which you can change at run-time using the `setFPS` method. The core update loop has been recoded so that it steps based entirely on the given frame rate, and not the wall-clock or game step delta. This fixed time step allows for a straightforward implementation of a deterministic game state. Meaning you can now set the fps rate to a high value such as 240, regardless of the browser update speed (it will simply perform more physics steps per game step). This is handy if you want to increase the accuracy of the simulation in certain cases.
@@ -52,6 +73,15 @@
 * Fixed a method signature issue with the Animation component's `remove()` handler when `Animation`s are removed from the `AnimationManager`. This prevented removed animations from stopping correctly.
 * If you set Phaser to use a pre-existing Canvas element it is no longer re-added to the DOM (thanks @NQNStudios)
 * The `TweenManager.getTweensOf` method has been fixed to remove a potential endless loop should multiple targets be passed in to it (thanks @cyantree)
+
+### Examples, Documentation and TypeScript
+
+Thanks to the work of @hexus we have now documented nearly all of the Math namespace. This is hundreds of functions now covered by full docs and is work we'll continue in the coming weeks.
+
+
+
+
+
 
 ## Version 3.9.0 - Yui - 24th May 2018
 
