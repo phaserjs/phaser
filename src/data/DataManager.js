@@ -171,15 +171,18 @@ var DataManager = new Class({
      *
      * @param {string} key - The key to set the value for.
      * @param {*} data - The value to set.
+     * @param {boolean} [customUpdateEvent] - Allow event emitter to emit a custom update for this data update - event name = ${key}_update
      *
      * @return {Phaser.Data.DataManager} This DataManager object.
      */
-    set: function (key, data)
+    set: function (key, data, customUpdateEvent)
     {
         if (this._frozen)
         {
             return this;
         }
+
+        if (customUpdateEvent === undefined) { customUpdateEvent = false; }
 
         if (this.events.listenerCount('changedata') > 0)
         {
@@ -206,6 +209,11 @@ var DataManager = new Class({
         this.list[key] = data;
 
         this.events.emit('setdata', this.parent, key, data);
+
+        if (customUpdateEvent)
+        {
+            this.events.emit(key + '_updated', data);
+        }
 
         return this;
     },
