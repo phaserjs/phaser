@@ -312,101 +312,122 @@ var KeyboardManager = new Class({
     },
 
     /**
-     * If you need more fine-grained control over a Key you can create a new Phaser.Key object via this method.
-     * The Key object can then be polled, have events attached to it, etc.
+     * Adds a Key object to the Keyboard Manager.
+     *
+     * The given argument can be either an existing Key object, a string, such as `A` or `SPACE`, or a key code value.
+     *
+     * If a Key object is given, and one already exists matching the same key code, the existing one is replaced with the new one.
      *
      * @method Phaser.Input.Keyboard.KeyboardManager#addKey
      * @since 3.0.0
      *
-     * @param {(string|integer)} keyCode - [description]
+     * @param {(Phaser.Input.Keyboard.Key|string|integer)} key - Either a Key object, a string, such as `A` or `SPACE`, or a key code value.
      *
-     * @return {Phaser.Input.Keyboard.Key} [description]
+     * @return {Phaser.Input.Keyboard.Key} The newly created Key object, or a reference to it if it already existed in the keys array.
      */
-    addKey: function (keyCode)
+    addKey: function (key)
     {
         var keys = this.keys;
 
-        if (typeof keyCode === 'string')
+        if (key instanceof Key)
         {
-            keyCode = KeyCodes[keyCode.toUpperCase()];
+            var idx = keys.indexOf(key);
+
+            if (idx > -1)
+            {
+                keys[idx] = key;
+            }
+            else
+            {
+                keys[key.keyCode] = key;
+            }
+
+            return key;
         }
 
-        if (!keys[keyCode])
+        if (typeof key === 'string')
         {
-            keys[keyCode] = new Key(keyCode);
+            key = KeyCodes[key.toUpperCase()];
         }
 
-        return keys[keyCode];
+        if (!keys[key])
+        {
+            keys[key] = new Key(key);
+        }
+
+        return keys[key];
     },
 
     /**
-     * Removes a Key object from the Keyboard manager.
+     * Removes a Key object from the Keyboard Manager.
+     *
+     * The given argument can be either a Key object, a string, such as `A` or `SPACE`, or a key code value.
      *
      * @method Phaser.Input.Keyboard.KeyboardManager#removeKey
      * @since 3.0.0
      *
-     * @param {(string|integer)} keyCode - [description]
+     * @param {(Phaser.Input.Keyboard.Key|string|integer)} key - Either a Key object, a string, such as `A` or `SPACE`, or a key code value.
      */
-    removeKey: function (keyCode)
+    removeKey: function (key)
     {
-        if (this.keys[keyCode])
+        var keys = this.keys;
+
+        if (key instanceof Key)
         {
-            this.keys[keyCode] = undefined;
+            var idx = keys.indexOf(key);
+
+            if (idx > -1)
+            {
+                this.keys[idx] = undefined;
+            }
+        }
+        else if (typeof key === 'string')
+        {
+            key = KeyCodes[key.toUpperCase()];
+        }
+
+        if (keys[key])
+        {
+            keys[key] = undefined;
         }
     },
 
     /**
-     * [description]
+     * Creates a new KeyCombo.
+     * 
+     * A KeyCombo will listen for a specific string of keys from the Keyboard, and when it receives them
+     * it will emit a `keycombomatch` event from the Keyboard Manager.
      *
-     * @method Phaser.Input.Keyboard.KeyboardManager#addKeyCapture
-     * @since 3.0.0
+     * The keys to be listened for can be defined as:
      *
-     * @param {(string|integer|string[]|integer[])} keyCodes - [description]
-    addKeyCapture: function (keyCodes)
-    {
-        if (!Array.isArray(keyCodes))
-        {
-            keyCodes = [ keyCodes ];
-        }
-
-        for (var i = 0; i < keyCodes.length; i++)
-        {
-            this.captures[keyCodes[i]] = true;
-        }
-    },
-     */
-
-    /**
-     * [description]
+     * A string (i.e. 'ATARI')
+     * An array of either integers (key codes) or strings, or a mixture of both
+     * An array of objects (such as Key objects) with a public 'keyCode' property
      *
-     * @method Phaser.Input.Keyboard.KeyboardManager#removeKeyCapture
-     * @since 3.0.0
+     * For example, to listen for the Konami code (up, up, up, down, down, down, left, left, left, right, right, right)
+     * you could pass the following array of key codes:
      *
-     * @param {(string|integer|string[]|integer[])} keyCodes - [description]
-    removeKeyCapture: function (keyCodes)
-    {
-        if (!Array.isArray(keyCodes))
-        {
-            keyCodes = [ keyCodes ];
-        }
-
-        for (var i = 0; i < keyCodes.length; i++)
-        {
-            this.captures[keyCodes[i]] = false;
-        }
-    },
-     */
-
-    /**
-     * [description]
+     * ```javascript
+     * this.input.keyboard.createCombo([ 38, 38, 38, 40, 40, 40, 37, 37, 37, 39, 39, 39 ], { resetOnMatch: true });
+     *
+     * this.input.keyboard.on('keycombomatch', function (event) {
+     *     console.log('Konami Code entered!');
+     * });
+     * ```
+     *
+     * Or, to listen for the user entering the word PHASER:
+     *
+     * ```javascript
+     * this.input.keyboard.createCombo('PHASER');
+     * ```
      *
      * @method Phaser.Input.Keyboard.KeyboardManager#createCombo
      * @since 3.0.0
      *
-     * @param {(string|integer[]|object[])} keys - [description]
-     * @param {KeyComboConfig} config - [description]
+     * @param {(string|integer[]|object[])} keys - The keys that comprise this combo.
+     * @param {KeyComboConfig} [config] - A Key Combo configuration object.
      *
-     * @return {Phaser.Input.Keyboard.KeyCombo} [description]
+     * @return {Phaser.Input.Keyboard.KeyCombo} The new KeyCombo object.
      */
     createCombo: function (keys, config)
     {
@@ -414,9 +435,10 @@ var KeyboardManager = new Class({
     },
 
     /**
-     * [description]
+     * Internal update handler called by the Input Manager, which is in turn invoked by the Game step.
      *
      * @method Phaser.Input.Keyboard.KeyboardManager#update
+     * @private
      * @since 3.0.0
      */
     update: function ()
@@ -471,7 +493,8 @@ var KeyboardManager = new Class({
     },
 
     /**
-     * [description]
+     * Shuts the Keyboard Manager down.
+     * All this does is remove any listeners bound to it.
      *
      * @method Phaser.Input.Keyboard.KeyboardManager#shutdown
      * @since 3.0.0
@@ -482,7 +505,7 @@ var KeyboardManager = new Class({
     },
 
     /**
-     * Destroys this Keyboard Manager instance.
+     * Destroys this Keyboard Manager instance and all references it holds, plus clears out local arrays.
      *
      * @method Phaser.Input.Keyboard.KeyboardManager#destroy
      * @since 3.0.0
