@@ -535,7 +535,7 @@ var InputPlugin = new Class({
      * it is currently above.
      *
      * The hit test is performed against which-ever Camera the Pointer is over. If it is over multiple
-     * cameras, the one on the top of the camera list is used.
+     * cameras, it starts checking the camera at the top of the camera list, and if nothing is found, iterates down the list.
      *
      * @method Phaser.Input.InputPlugin#hitTestPointer
      * @since 3.0.0
@@ -546,11 +546,11 @@ var InputPlugin = new Class({
      */
     hitTestPointer: function (pointer)
     {
-        var camera = this.cameras.getCameraBelowPointer(pointer);
+        var cameras = this.cameras.getCamerasBelowPointer(pointer);
 
-        if (camera)
+        for (var c = 0; c < cameras.length; c++)
         {
-            pointer.camera = camera;
+            var camera = cameras[c];
 
             //  Get a list of all objects that can be seen by the camera below the pointer in the scene and store in 'output' array.
             //  All objects in this array are input enabled, as checked by the hitTest method, so we don't need to check later on as well.
@@ -567,12 +567,15 @@ var InputPlugin = new Class({
                 }
             }
 
-            return over;
+            if (over.length > 0)
+            {
+                pointer.camera = camera;
+
+                return over;
+            }
         }
-        else
-        {
-            return [];
-        }
+
+        return [];
     },
 
     /**
