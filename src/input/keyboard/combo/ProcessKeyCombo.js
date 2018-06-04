@@ -10,12 +10,13 @@ var AdvanceKeyCombo = require('./AdvanceKeyCombo');
  * Used internally by the KeyCombo class.
  *
  * @function Phaser.Input.Keyboard.KeyCombo.ProcessKeyCombo
+ * @private
  * @since 3.0.0
  *
- * @param {KeyboardEvent} event - [description]
- * @param {Phaser.Input.Keyboard.KeyCombo} combo - [description]
+ * @param {KeyboardEvent} event - The native Keyboard Event.
+ * @param {Phaser.Input.Keyboard.KeyCombo} combo - The KeyCombo object to be processed.
  *
- * @return {boolean} [description]
+ * @return {boolean} `true` if the combo was matched, otherwise `false`.
  */
 var ProcessKeyCombo = function (event, combo)
 {

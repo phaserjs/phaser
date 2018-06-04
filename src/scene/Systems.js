@@ -266,8 +266,8 @@ var Systems = new Class({
      * @method Phaser.Scenes.Systems#step
      * @since 3.0.0
      *
-     * @param {number} time - [description]
-     * @param {number} delta - [description]
+     * @param {number} time - The time value from the most recent Game step. Typically a high-resolution timer value, or Date.now().
+     * @param {number} delta - The delta value since the last frame. This is smoothed to avoid delta spikes by the TimeStep class.
      */
     step: function (time, delta)
     {

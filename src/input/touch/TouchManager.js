@@ -106,11 +106,11 @@ var TouchManager = new Class({
      * @method Phaser.Input.Touch.TouchManager#onTouchStart
      * @since 3.10.0
      *
-     * @param {TouchEVent} event - The native DOM Touch Start Event.
+     * @param {TouchEvent} event - The native DOM Touch Start Event.
      */
     onTouchStart: function (event)
     {
-        if (event.defaultPrevented)
+        if (event.defaultPrevented || !this.enabled)
         {
             // Do nothing if event already handled
             return;
@@ -130,11 +130,11 @@ var TouchManager = new Class({
      * @method Phaser.Input.Touch.TouchManager#onTouchMove
      * @since 3.10.0
      *
-     * @param {TouchEVent} event - The native DOM Touch Move Event.
+     * @param {TouchEvent} event - The native DOM Touch Move Event.
      */
     onTouchMove: function (event)
     {
-        if (event.defaultPrevented)
+        if (event.defaultPrevented || !this.enabled)
         {
             // Do nothing if event already handled
             return;
@@ -154,11 +154,11 @@ var TouchManager = new Class({
      * @method Phaser.Input.Touch.TouchManager#onTouchEnd
      * @since 3.10.0
      *
-     * @param {TouchEVent} event - The native DOM Touch End Event.
+     * @param {TouchEvent} event - The native DOM Touch End Event.
      */
     onTouchEnd: function (event)
     {
-        if (event.defaultPrevented)
+        if (event.defaultPrevented || !this.enabled)
         {
             // Do nothing if event already handled
             return;
@@ -226,6 +226,7 @@ var TouchManager = new Class({
     {
         this.stopListeners();
 
+        this.target = null;
         this.manager = null;
     }
 

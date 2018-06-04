@@ -20,7 +20,28 @@ var TriangleContains = require('../geom/triangle/Contains');
 
 /**
  * @classdesc
- * [description]
+ * The Input Plugin belongs to a Scene and handles all input related events and operations for it.
+ *
+ * You can access it from within a Scene using `this.input`.
+ *
+ * It emits events directly. For example, you can do:
+ *
+ * ```javascript
+ * this.input.on('pointerdown', callback, context);
+ * ```
+ *
+ * To listen for a pointer down event anywhere on the game canvas.
+ *
+ * Game Objects can be enabled for input by calling their `setInteractive` method. After which they
+ * will directly emit input events:
+ *
+ * ```javascript
+ * var sprite = this.add.sprite(x, y, texture);
+ * sprite.setInteractive();
+ * sprite.on('pointerdown', callback, context);
+ * ```
+ *
+ * Please see the Input examples and tutorials for more information.
  *
  * @class InputPlugin
  * @extends Phaser.Events.EventEmitter
@@ -28,7 +49,7 @@ var TriangleContains = require('../geom/triangle/Contains');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - The Scene that owns this plugin.
+ * @param {Phaser.Scene} scene - A reference to the Scene that this Input Plugin is responsible for.
  */
 var InputPlugin = new Class({
 
@@ -41,7 +62,7 @@ var InputPlugin = new Class({
         EventEmitter.call(this);
 
         /**
-         * The Scene that owns this plugin.
+         * A reference to the Scene that this Input Plugin is responsible for.
          *
          * @name Phaser.Input.InputPlugin#scene
          * @type {Phaser.Scene}
@@ -50,7 +71,7 @@ var InputPlugin = new Class({
         this.scene = scene;
 
         /**
-         * [description]
+         * A reference to the Scene Systems class.
          *
          * @name Phaser.Input.InputPlugin#systems
          * @type {Phaser.Scenes.Systems}
@@ -59,7 +80,7 @@ var InputPlugin = new Class({
         this.systems = scene.sys;
 
         /**
-         * [description]
+         * A reference to the Scene Systems Settings.
          *
          * @name Phaser.Input.InputPlugin#settings
          * @type {Phaser.Scenes.Settings.Object}
@@ -68,7 +89,7 @@ var InputPlugin = new Class({
         this.settings = scene.sys.settings;
 
         /**
-         * [description]
+         * A reference to the Game Input Manager.
          *
          * @name Phaser.Input.InputPlugin#manager
          * @type {Phaser.Input.InputManager}
@@ -77,7 +98,7 @@ var InputPlugin = new Class({
         this.manager = scene.sys.game.input;
 
         /**
-         * [description]
+         * If set, the Input Plugin will run its update loop every frame.
          *
          * @name Phaser.Input.InputPlugin#enabled
          * @type {boolean}
@@ -87,7 +108,7 @@ var InputPlugin = new Class({
         this.enabled = true;
 
         /**
-         * A reference to this.scene.sys.displayList (set in boot)
+         * A reference to the Scene Display List. This property is set during the `boot` method.
          *
          * @name Phaser.Input.InputPlugin#displayList
          * @type {Phaser.GameObjects.DisplayList}
@@ -96,44 +117,54 @@ var InputPlugin = new Class({
         this.displayList;
 
         /**
-         * A reference to the this.scene.sys.cameras (set in boot)
+         * A reference to the Scene Cameras Manager. This property is set during the `boot` method.
          *
          * @name Phaser.Input.InputPlugin#cameras
-         * @type {null}
+         * @type {Phaser.Cameras.Scene2D.CameraManager}
          * @since 3.0.0
          */
         this.cameras;
 
         /**
-         * [description]
+         * A reference to the Keyboard Manager.
+         * 
+         * This property is only set if Keyboard support has been enabled in your Game Configuration file.
          *
          * @name Phaser.Input.InputPlugin#keyboard
-         * @type {Phaser.Input.Keyboard.KeyboardManager}
+         * @type {?Phaser.Input.Keyboard.KeyboardManager}
          * @since 3.0.0
          */
         this.keyboard = this.manager.keyboard;
 
         /**
-         * [description]
+         * A reference to the Mouse Manager.
+         * 
+         * This property is only set if Mouse support has been enabled in your Game Configuration file.
+         * 
+         * If you just wish to get access to the mouse pointer, use the `mousePointer` property instead.
          *
          * @name Phaser.Input.InputPlugin#mouse
-         * @type {Phaser.Input.Mouse.MouseManager}
+         * @type {?Phaser.Input.Mouse.MouseManager}
          * @since 3.0.0
          */
         this.mouse = this.manager.mouse;
 
         /**
-         * [description]
+         * A reference to the Gamepad Manager.
+         * 
+         * This property is only set if Gamepad support has been enabled in your Game Configuration file.
          *
          * @name Phaser.Input.InputPlugin#gamepad
-         * @type {Phaser.Input.Gamepad.GamepadManager}
+         * @type {?Phaser.Input.Gamepad.GamepadManager}
          * @since 3.0.0
          */
         this.gamepad = this.manager.gamepad;
 
         /**
-         * Only fire callbacks and events on the top-most Game Object in the display list (emulating DOM behavior)
-         * and ignore any GOs below it, or call them all?
+         * When set to `true` (the default) the Input Plugin will emulate DOM behavior by only emitting events from
+         * the top-most Game Objects in the Display List.
+         *
+         * If set to `false` it will emit events from all Game Objects below a Pointer, not just the top one.
          *
          * @name Phaser.Input.InputPlugin#topOnly
          * @type {boolean}
@@ -143,10 +174,18 @@ var InputPlugin = new Class({
         this.topOnly = true;
 
         /**
-         * How often should the pointer input be checked?
-         * Time given in ms
-         * Pointer will *always* be checked if it has been moved by the user.
-         * This controls how often it will be polled if it hasn't been moved.
+         * How often should the Pointers be checked?
+         * 
+         * The value is a time, given in ms, and is the time that must have elapsed between game steps before
+         * the Pointers will be polled again. When a pointer is polled it runs a hit test to see which Game
+         * Objects are currently below it, or being interacted with it.
+         * 
+         * Pointers will *always* be checked if they have been moved by the user, or press or released.
+         * 
+         * This property only controls how often they will be polled if they have not been updated.
+         * You should set this if you want to have Game Objects constantly check against the pointers, even
+         * if the pointer didn't move itself.
+         * 
          * Set to 0 to poll constantly. Set to -1 to only poll on user movement.
          *
          * @name Phaser.Input.InputPlugin#pollRate
@@ -157,7 +196,7 @@ var InputPlugin = new Class({
         this.pollRate = -1;
 
         /**
-         * [description]
+         * Internal poll timer value.
          *
          * @name Phaser.Input.InputPlugin#_pollTimer
          * @type {number}
@@ -168,7 +207,7 @@ var InputPlugin = new Class({
         this._pollTimer = 0;
 
         /**
-         * The distance, in pixels, the pointer has to move while being held down, before it thinks it is being dragged.
+         * The distance, in pixels, a pointer has to move while being held down, before it thinks it is being dragged.
          *
          * @name Phaser.Input.InputPlugin#dragDistanceThreshold
          * @type {number}
@@ -178,7 +217,7 @@ var InputPlugin = new Class({
         this.dragDistanceThreshold = 0;
 
         /**
-         * The amount of time, in ms, the pointer has to be held down before it thinks it is dragging.
+         * The amount of time, in ms, a pointer has to be held down before it thinks it is dragging.
          *
          * @name Phaser.Input.InputPlugin#dragTimeThreshold
          * @type {number}
@@ -210,7 +249,7 @@ var InputPlugin = new Class({
         this._tempZones = [];
 
         /**
-         * A list of all Game Objects that have been set to be interactive.
+         * A list of all Game Objects that have been set to be interactive in the Scene this Input Plugin is managing.
          *
          * @name Phaser.Input.InputPlugin#_list
          * @type {Phaser.GameObjects.GameObject[]}
@@ -274,7 +313,7 @@ var InputPlugin = new Class({
         this._over = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] };
 
         /**
-         * [description]
+         * A list of valid DOM event types.
          *
          * @name Phaser.Input.InputPlugin#_validTypes
          * @type {string[]}
@@ -329,9 +368,11 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * The pre-update handler is responsible for checking the pending removal and insertion lists and
+     * deleting old Game Objects.
      *
      * @method Phaser.Input.InputPlugin#preUpdate
+     * @private
      * @since 3.0.0
      */
     preUpdate: function ()
@@ -374,14 +415,15 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Clears a Game Object so it no longer has an Interactive Object associated with it.
+     * The Game Object is then queued for removal from the Input Plugin on the next update.
      *
      * @method Phaser.Input.InputPlugin#clear
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} gameObject - [description]
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that will have its Interactive Object removed.
      *
-     * @return {Phaser.GameObjects.GameObject} [description]
+     * @return {Phaser.GameObjects.GameObject} The Game Object that had its Interactive Object removed.
      */
     clear: function (gameObject)
     {
@@ -429,12 +471,15 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Disables Input on a single Game Object.
+     *
+     * An input disabled Game Object still retains its Interactive Object component and can be re-enabled
+     * at any time, by passing it to `InputPlugin.enable`.
      *
      * @method Phaser.Input.InputPlugin#disable
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} gameObject - [description]
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to have its input system disabled.
      */
     disable: function (gameObject)
     {
@@ -442,15 +487,23 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Enable a Game Object for interaction.
+     *
+     * If the Game Object already has an Interactive Object component, it is enabled and returned.
+     *
+     * Otherwise, a new Interactive Object component is created and assigned to the Game Object's `input` property.
+     *
+     * An optional hit area shape and callback can be provided.
+     *
+     * Finally, the Game Object can also be flagged as being a valid drop zone for dragged items.
      *
      * @method Phaser.Input.InputPlugin#enable
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} gameObject - [description]
-     * @param {object} shape - [description]
-     * @param {HitAreaCallback} callback - [description]
-     * @param {boolean} [dropZone=false] - [description]
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to be enabled for input.
+     * @param {object} [shape] - The shape or object to check if the pointer is within for hit area checks.
+     * @param {HitAreaCallback} [callback] - The 'contains' function to invoke to check if the pointer is within the hit area.
+     * @param {boolean} [dropZone=false] - Is this Game Object a drop zone or not?
      *
      * @return {Phaser.Input.InputPlugin} This Input Plugin.
      */
@@ -478,14 +531,18 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Takes the given Pointer and performs a hit test against it, to see which interactive Game Objects
+     * it is currently above.
+     *
+     * The hit test is performed against which-ever Camera the Pointer is over. If it is over multiple
+     * cameras, the one on the top of the camera list is used.
      *
      * @method Phaser.Input.InputPlugin#hitTestPointer
      * @since 3.0.0
      *
-     * @param {Phaser.Input.Pointer} pointer - [description]
+     * @param {Phaser.Input.Pointer} pointer - The Pointer to check against the Game Objects.
      *
-     * @return {array} [description]
+     * @return {Phaser.GameObjects.GameObject[]} An array of all the interactive Game Objects the Pointer was above.
      */
     hitTestPointer: function (pointer)
     {
@@ -519,12 +576,13 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * An internal method that handles the Pointer down event.
      *
      * @method Phaser.Input.InputPlugin#processDownEvents
+     * @private
      * @since 3.0.0
      *
-     * @param {Phaser.Input.Pointer} pointer - The Pointer to check for events against.
+     * @param {Phaser.Input.Pointer} pointer - The Pointer being tested.
      *
      * @return {integer} The total number of objects interacted with.
      */
@@ -558,15 +616,16 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * An internal method that handles the Pointer drag events.
      *
      * @method Phaser.Input.InputPlugin#processDragEvents
+     * @private
      * @since 3.0.0
      *
-     * @param {number} pointer - [description]
-     * @param {number} time - [description]
+     * @param {Phaser.Input.Pointer} pointer - The Pointer to check against the Game Objects.
+     * @param {number} time - The time stamp of the most recent Game step.
      *
-     * @return {integer} [description]
+     * @return {integer} The total number of objects interacted with.
      */
     processDragEvents: function (pointer, time)
     {
@@ -825,9 +884,10 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * An internal method that handles the Pointer movement event.
      *
      * @method Phaser.Input.InputPlugin#processMoveEvents
+     * @private
      * @since 3.0.0
      *
      * @param {Phaser.Input.Pointer} pointer - The pointer to check for events against.
@@ -868,14 +928,15 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * An internal method that handles the Pointer over and out events.
      *
      * @method Phaser.Input.InputPlugin#processOverOutEvents
+     * @private
      * @since 3.0.0
      *
-     * @param {Phaser.Input.Pointer} pointer - [description]
+     * @param {Phaser.Input.Pointer} pointer - The pointer to check for events against.
      *
-     * @return {integer} The number of objects interacted with.
+     * @return {integer} The total number of objects interacted with.
      */
     processOverOutEvents: function (pointer)
     {
@@ -990,12 +1051,15 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * An internal method that handles the Pointer up events.
      *
      * @method Phaser.Input.InputPlugin#processUpEvents
+     * @private
      * @since 3.0.0
      *
-     * @param {Phaser.Input.Pointer} pointer - [description]
+     * @param {Phaser.Input.Pointer} pointer - The pointer to check for events against.
+     *
+     * @return {integer} The total number of objects interacted with.
      */
     processUpEvents: function (pointer)
     {
@@ -1025,9 +1089,10 @@ var InputPlugin = new Class({
     },
 
     /**
-     * Queues a Game Object for insertion into this Input Manager on the next update.
+     * Queues a Game Object for insertion into this Input Plugin on the next update.
      *
      * @method Phaser.Input.InputPlugin#queueForInsertion
+     * @private
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to add.
@@ -1045,9 +1110,10 @@ var InputPlugin = new Class({
     },
 
     /**
-     * Queues a Game Object for removal from this Input Manager on the next update.
+     * Queues a Game Object for removal from this Input Plugin on the next update.
      *
      * @method Phaser.Input.InputPlugin#queueForRemoval
+     * @private
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to remove.
@@ -1062,7 +1128,11 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Sets the draggable state of the given array of Game Objects.
+     *
+     * They can either be set to be draggable, or can have their draggable state removed by passing `false`.
+     *
+     * A Game Object will not fire drag events unless it has been specifically enabled for drag.
      *
      * @method Phaser.Input.InputPlugin#setDraggable
      * @since 3.0.0
@@ -1103,13 +1173,23 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Sets the hit area for the given array of Game Objects.
+     *
+     * A hit area is typically one of the geometric shapes Phaser provides, such as a `Phaser.Geom.Rectangle`
+     * or `Phaser.Geom.Circle`. However, it can be any object as long as it works with the provided callback.
+     *
+     * If no hit area is provided a Rectangle is created based on the size of the Game Object, if possible
+     * to calculate.
+     *
+     * The hit area callback is the function that takes an `x` and `y` coordinate and returns a boolean if
+     * those values fall within the area of the shape or not. All of the Phaser geometry objects provide this,
+     * such as `Phaser.Geom.Rectangle.Contains`.
      *
      * @method Phaser.Input.InputPlugin#setHitArea
      * @since 3.0.0
      *
      * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObjects - An array of Game Objects to set the hit area on.
-     * @param {object} [shape] - The shape or object to check if the pointer is within for hit area checks.
+     * @param {any} [shape] - The shape or object to check if the pointer is within for hit area checks.
      * @param {HitAreaCallback} [callback] - The 'contains' function to invoke to check if the pointer is within the hit area.
      *
      * @return {Phaser.Input.InputPlugin} This InputPlugin object.
@@ -1139,7 +1219,8 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Sets the hit area for an array of Game Objects to be a `Phaser.Geom.Circle` shape, using
+     * the given coordinates and radius to control its position and size.
      *
      * @method Phaser.Input.InputPlugin#setHitAreaCircle
      * @since 3.0.0
@@ -1162,7 +1243,8 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Sets the hit area for an array of Game Objects to be a `Phaser.Geom.Ellipse` shape, using
+     * the given coordinates and dimensions to control its position and size.
      *
      * @method Phaser.Input.InputPlugin#setHitAreaEllipse
      * @since 3.0.0
@@ -1186,7 +1268,8 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Sets the hit area for an array of Game Objects to be a `Phaser.Geom.Rectangle` shape, using
+     * the Game Objects texture frame to define the position and size of the hit area.
      *
      * @method Phaser.Input.InputPlugin#setHitAreaFromTexture
      * @since 3.0.0
@@ -1243,7 +1326,8 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Sets the hit area for an array of Game Objects to be a `Phaser.Geom.Rectangle` shape, using
+     * the given coordinates and dimensions to control its position and size.
      *
      * @method Phaser.Input.InputPlugin#setHitAreaRectangle
      * @since 3.0.0
@@ -1267,7 +1351,8 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Sets the hit area for an array of Game Objects to be a `Phaser.Geom.Triangle` shape, using
+     * the given coordinates to control the position of its points.
      *
      * @method Phaser.Input.InputPlugin#setHitAreaTriangle
      * @since 3.0.0
@@ -1293,7 +1378,14 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Sets the Pointers to always poll.
+     * 
+     * When a pointer is polled it runs a hit test to see which Game Objects are currently below it,
+     * or being interacted with it, regardless if the Pointer has actually moved or not.
+     *
+     * You should enable this if you want objects in your game to fire over / out events, and the objects
+     * are constantly moving, but the pointer may not have. Polling every frame has additional computation
+     * costs, especially if there are a large number of interactive objects in your game.
      *
      * @method Phaser.Input.InputPlugin#setPollAlways
      * @since 3.0.0
@@ -1309,7 +1401,10 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Sets the Pointers to only poll when they are moved or updated.
+     * 
+     * When a pointer is polled it runs a hit test to see which Game Objects are currently below it,
+     * or being interacted with it.
      *
      * @method Phaser.Input.InputPlugin#setPollOnMove
      * @since 3.0.0
@@ -1325,12 +1420,13 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Sets the poll rate value. This is the amount of time that should have elapsed before a pointer
+     * will be polled again. See the `setPollAlways` and `setPollOnMove` methods.
      *
      * @method Phaser.Input.InputPlugin#setPollRate
      * @since 3.0.0
      *
-     * @param {number} value - [description]
+     * @param {number} value - The amount of time, in ms, that should elapsed before re-polling the pointers.
      *
      * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
@@ -1343,12 +1439,15 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * When set to `true` the global Input Manager will emulate DOM behavior by only emitting events from
+     * the top-most Game Objects in the Display List.
+     *
+     * If set to `false` it will emit events from all Game Objects below a Pointer, not just the top one.
      *
      * @method Phaser.Input.InputPlugin#setGlobalTopOnly
      * @since 3.0.0
      *
-     * @param {boolean} value - [description]
+     * @param {boolean} value - `true` to only include the top-most Game Object, or `false` to include all Game Objects in a hit test.
      *
      * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
@@ -1360,12 +1459,15 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * When set to `true` this Input Plugin will emulate DOM behavior by only emitting events from
+     * the top-most Game Objects in the Display List.
+     *
+     * If set to `false` it will emit events from all Game Objects below a Pointer, not just the top one.
      *
      * @method Phaser.Input.InputPlugin#setTopOnly
      * @since 3.0.0
      *
-     * @param {boolean} value - [description]
+     * @param {boolean} value - `true` to only include the top-most Game Object, or `false` to include all Game Objects in a hit test.
      *
      * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
@@ -1377,15 +1479,15 @@ var InputPlugin = new Class({
     },
 
     /**
-     * Given an array of Game Objects, sort the array and return it,
-     * so that the objects are in index order with the lowest at the bottom.
+     * Given an array of Game Objects, sort the array and return it, so that the objects are in depth index order
+     * with the lowest at the bottom.
      *
      * @method Phaser.Input.InputPlugin#sortGameObjects
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject[]} gameObjects - [description]
+     * @param {Phaser.GameObjects.GameObject[]} gameObjects - An array of Game Objects to be sorted.
      *
-     * @return {Phaser.GameObjects.GameObject[]} [description]
+     * @return {Phaser.GameObjects.GameObject[]} The sorted array of Game Objects.
      */
     sortGameObjects: function (gameObjects)
     {
@@ -1404,6 +1506,7 @@ var InputPlugin = new Class({
      * Will iterate through all parent containers, if present.
      *
      * @method Phaser.Input.InputPlugin#sortHandlerGO
+     * @private
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} childA - The first Game Object to compare.
@@ -1463,7 +1566,7 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Causes the Input Manager to stop emitting any events for the remainder of this game step.
      *
      * @method Phaser.Input.InputPlugin#stopPropagation
      * @since 3.0.0
@@ -1481,13 +1584,15 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * The internal update loop for the Input Plugin.
+     * Called automatically by the Scene Systems step.
      *
      * @method Phaser.Input.InputPlugin#update
+     * @private
      * @since 3.0.0
      *
-     * @param {number} time - [description]
-     * @param {number} delta - [description]
+     * @param {number} time - The time value from the most recent Game step. Typically a high-resolution timer value, or Date.now().
+     * @param {number} delta - The delta value since the last frame. This is smoothed to avoid delta spikes by the TimeStep class.
      */
     update: function (time, delta)
     {
@@ -1604,7 +1709,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#addUpCallback
      * @since 3.10.0
      *
-     * @param {function} callback - The callback to be invoked on this dom event.
+     * @param {function} callback - The callback to be invoked on this DOM event.
      * @param {boolean} [isOnce=true] - `true` if the callback will only be invoked once, `false` to call every time this event happens.
      *
      * @return {this} The Input Plugin.

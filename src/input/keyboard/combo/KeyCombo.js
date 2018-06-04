@@ -12,36 +12,54 @@ var ResetKeyCombo = require('./ResetKeyCombo');
 /**
  * @callback KeyboardKeydownCallback
  *
- * @param {KeyboardEvent} event - [description]
+ * @param {KeyboardEvent} event - The Keyboard Event.
  */
 
 /**
  * @typedef {object} KeyComboConfig
  *
- * @property {boolean} [resetOnWrongKey=true] - [description]
- * @property {number} [maxKeyDelay=0] - [description]
- * @property {boolean} [resetOnMatch=false] - [description]
- * @property {boolean} [deleteOnMatch=false] - [description]
+ * @property {boolean} [resetOnWrongKey=true] - If they press the wrong key do we reset the combo?
+ * @property {number} [maxKeyDelay=0] - The max delay in ms between each key press. Above this the combo is reset. 0 means disabled.
+ * @property {boolean} [resetOnMatch=false] - If previously matched and they press the first key of the combo again, will it reset?
+ * @property {boolean} [deleteOnMatch=false] - If the combo matches, will it delete itself?
  */
 
 /**
  * @classdesc
- * [description]
+ * A KeyCombo will listen for a specific string of keys from the Keyboard, and when it receives them
+ * it will emit a `keycombomatch` event from the Keyboard Manager.
  *
- * `keys` argument can be:
+ * The keys to be listened for can be defined as:
  *
- * A string (ATARI)
+ * A string (i.e. 'ATARI')
  * An array of either integers (key codes) or strings, or a mixture of both
  * An array of objects (such as Key objects) with a public 'keyCode' property
+ *
+ * For example, to listen for the Konami code (up, up, up, down, down, down, left, left, left, right, right, right)
+ * you could pass the following array of key codes:
+ *
+ * ```javascript
+ * this.input.keyboard.createCombo([ 38, 38, 38, 40, 40, 40, 37, 37, 37, 39, 39, 39 ], { resetOnMatch: true });
+ *
+ * this.input.keyboard.on('keycombomatch', function (event) {
+ *     console.log('Konami Code entered!');
+ * });
+ * ```
+ *
+ * Or, to listen for the user entering the word PHASER:
+ *
+ * ```javascript
+ * this.input.keyboard.createCombo('PHASER');
+ * ```
  *
  * @class KeyCombo
  * @memberOf Phaser.Input.Keyboard
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Input.Keyboard.KeyboardManager} keyboardManager - [description]
- * @param {(string|integer[]|object[])} keys - [description]
- * @param {KeyComboConfig} [config] - [description]
+ * @param {Phaser.Input.Keyboard.KeyboardManager} keyboardManager - A reference to the Keyboard Manager.
+ * @param {(string|integer[]|object[])} keys - The keys that comprise this combo.
+ * @param {KeyComboConfig} [config] - A Key Combo configuration object.
  */
 var KeyCombo = new Class({
 
@@ -58,7 +76,7 @@ var KeyCombo = new Class({
         }
 
         /**
-         * [description]
+         * A reference to the Keyboard Manager
          *
          * @name Phaser.Input.Keyboard.KeyCombo#manager
          * @type {Phaser.Input.Keyboard.KeyboardManager}
@@ -67,7 +85,7 @@ var KeyCombo = new Class({
         this.manager = keyboardManager;
 
         /**
-         * [description]
+         * A flag that controls if this Key Combo is actively processing keys or not.
          *
          * @name Phaser.Input.Keyboard.KeyCombo#enabled
          * @type {boolean}
@@ -77,7 +95,7 @@ var KeyCombo = new Class({
         this.enabled = true;
 
         /**
-         * [description]
+         * An array of the keycodes that comprise this combo.
          *
          * @name Phaser.Input.Keyboard.KeyCombo#keyCodes
          * @type {array}
@@ -119,7 +137,7 @@ var KeyCombo = new Class({
          * The current index of the key being waited for in the 'keys' string.
          *
          * @name Phaser.Input.Keyboard.KeyCombo#index
-         * @type {number}
+         * @type {integer}
          * @default 0
          * @since 3.0.0
          */
@@ -185,7 +203,7 @@ var KeyCombo = new Class({
         this.maxKeyDelay = GetFastValue(config, 'maxKeyDelay', 0);
 
         /**
-         * If previously matched and they press Key 1 again, will it reset?
+         * If previously matched and they press the first key of the combo again, will it reset?
          *
          * @name Phaser.Input.Keyboard.KeyCombo#resetOnMatch
          * @type {boolean}
@@ -231,9 +249,10 @@ var KeyCombo = new Class({
         };
 
         /**
-         * [description]
+         * The internal Key Down handler.
          *
          * @name Phaser.Input.Keyboard.KeyCombo#onKeyDown
+         * @private
          * @type {KeyboardKeydownCallback}
          * @since 3.0.0
          */
@@ -260,7 +279,7 @@ var KeyCombo = new Class({
     },
 
     /**
-     * [description]
+     * Destroys this Key Combo and all of its references.
      *
      * @method Phaser.Input.Keyboard.KeyCombo#destroy
      * @since 3.0.0
@@ -271,7 +290,8 @@ var KeyCombo = new Class({
         this.keyCodes = [];
 
         this.manager.off('keydown', this.onKeyDown);
-        this.manager = undefined;
+
+        this.manager = null;
     }
 
 });
