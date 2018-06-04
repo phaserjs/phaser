@@ -56,7 +56,7 @@ var Pointer = new Class({
          * [description]
          *
          * @name Phaser.Input.Pointer#event
-         * @type {null}
+         * @type {any}
          * @since 3.0.0
          */
         this.event;
@@ -96,6 +96,26 @@ var Pointer = new Class({
          * @since 3.0.0
          */
         this.position = new Vector2();
+
+        /**
+         * The x position of this Pointer, translated into the coordinate space of the most recent Camera it interacted with.
+         *
+         * @name Phaser.Input.Pointer#worldX
+         * @type {number}
+         * @default 0
+         * @since 3.10.0
+         */
+        this.worldX = 0;
+
+        /**
+         * The y position of this Pointer, translated into the coordinate space of the most recent Camera it interacted with.
+         *
+         * @name Phaser.Input.Pointer#worldY
+         * @type {number}
+         * @default 0
+         * @since 3.10.0
+         */
+        this.worldY = 0;
 
         /**
          * X coordinate of the Pointer when Button 1 (left button), or Touch, was pressed, used for dragging objects.
