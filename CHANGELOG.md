@@ -12,6 +12,7 @@
 * `activePointer` will now reflect the most recently active pointer on the game, which is considered as being the pointer to have interacted with the game canvas most recently.
 * The InputManager and InputPlugin have three new methods: `addUpCallback`, `addDownCallback` and `addMoveCallback`. These methods allow you to add callbacks to be invoked whenever native DOM mouse or touch events are received. Callbacks passed to this method are invoked _immediately_ when the DOM event happens, within the scope of the DOM event handler. Therefore, they are considered as 'native' from the perspective of the browser. This means they can be used for tasks such as opening new browser windows, or anything which explicitly requires user input to activate. However, as a result of this, they come with their own risks, and as such should not be used for general game input, but instead be reserved for special circumstances. The callbacks can be set as `isOnce` so you can control if the callback is called once then removed, or every time the DOM event occurs.
 * Pointer has two new properties `worldX` and `worldY` which contain the  position of the Pointer, translated into the coordinate space of the most recent Camera it interacted with.
+* When checking to see if a Pointer has interacted with any objects it will now iterate through the Camera list. Previously, it would only check against the top-most Camera in the list, but now if the top-most camera doesn't return anything, it will move to the next camera and so on. This also addresses #3631 (thanks @samid737)
 * `InputManager.dirty` is a new internal property that reflects if any of the Pointers have updated this frame.
 * `InputManager.update` now uses constants internally for the event type checking, rather than string-based like before.
 * `InputManager.startPointer` is a new internal method, called automatically by the update loop, that handles touch start events.
@@ -69,10 +70,14 @@
 * `Rectangle.RandomOutside` is a new function that takes two Rectangles, `outer` and `inner`, and returns a random point that falls within the outer rectangle but is always outside of the inner rectangle.
 * The Update List has a new read-only property `length`, making it consistent with the Display List (thanks @samme)
 * The 2D Camera class has two new read-only properties `centerX` and `centerY` which return the coordinates of the center of the viewport, relative to the canvas (thanks @samme)
+* Camera has a new property `visible`. An invisible Camera will skip rendering and input tests of everything it can see. This allows you to create say a mini-cam and then toggle it on and off without needing to re-create it each time.
+* Camera has a new method `setVisible` which toggles its visible property.
+* `CameraManager.fromJSON` will now set the visible property is defined in the config.
 
 ### Updates
 
 * The `ForwardDiffuseLightPipeline`, used by the Lights system, now sets a flag if the Scene doesn't contain any lights. All of the Game Objects now check this flag and don't even bother adding themselves to the batch if there are no lights in the Scene, as they'd never render anyway. This also avoids the ghost-image problem if you swap Scenes to a new Scene with the Light Manager enabled, but no actual lights defined. Fix #3707 (thanks @samvieten).
+* `CameraManager.getCameraBelowPointer` has been renamed to `getCamerasBelowPointer` and it now returns an array of all the cameras below the given pointer, not just the top-most one. The array is sorted so that the top-most camera is at the start of the array.
 
 ### Bug Fixes
 
