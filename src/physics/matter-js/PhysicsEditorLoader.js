@@ -17,19 +17,22 @@ var PhysicsEditorLoader = {
 
     loadBody: function (x, y, w, h, config)
     {
-        const fixtureConfigs = GetFastValue(config, 'fixtures', []);
-        const fixtures = [];
-        for (let fixtureConfig of fixtureConfigs)
+        var fixtureConfigs = GetFastValue(config, 'fixtures', []);
+        var fixtures = [];
+        for (var fc = 0; fc < fixtureConfigs.length; fc++)
         {
-            const f = this.loadFixture(fixtureConfig);
-            fixtures.push(...f);
+            var fixtureParts = this.loadFixture(fixtureConfigs[fc]);
+            for(var i = 0; i < fixtureParts.length; i++)
+            {
+                fixtures.push(fixtureParts[i]);
+            }
         }
 
         var matterConfig = Common.extend({}, false, config);
         delete matterConfig.fixtures;
         delete matterConfig.type;
 
-        const body = Body.create(matterConfig);
+        var body = Body.create(matterConfig);
         Body.setParts(body, fixtures);
         body.render.sprite.xOffset = body.position.x / w;
         body.render.sprite.yOffset = body.position.y / h;
@@ -45,12 +48,12 @@ var PhysicsEditorLoader = {
         delete matterConfig.circle;
         delete matterConfig.vertices;
 
-        let fixtures;
+        var fixtures;
         if (fixtureConfig.circle)
         {
-            const x = GetFastValue(fixtureConfig.circle, 'x');
-            const y = GetFastValue(fixtureConfig.circle, 'y');
-            const r = GetFastValue(fixtureConfig.circle, 'radius');
+            var x = GetFastValue(fixtureConfig.circle, 'x');
+            var y = GetFastValue(fixtureConfig.circle, 'y');
+            var r = GetFastValue(fixtureConfig.circle, 'radius');
             fixtures = [ Bodies.circle(x, y, r, matterConfig) ];
         }
         else if (fixtureConfig.vertices)
