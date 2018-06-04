@@ -4,6 +4,7 @@
 
 ### Input System New Features + Updates
 
+* All Input classes are now covered 100% by JSDocs.
 * The Input Manager and Input Plugin have been updated to support multiple simultaneous Pointers. Before, only one active pointer (mouse or touch) was supported. Now, you can have as many active pointers as you need, allowing for complex mulit-touch games. These are stored in the Input Manager `pointers` array.
 * InputManager.addPointer allows you to add one, or more, new pointers to the Input Manager. There is no hard-coded limit to the amount you can have, although realistically you should never need more than 10. InputPlugin.addPointer is an alias for this method, allowing you to use `this.input.addPointer` from your game code.
 * InputManager.pointersTotal contains the total number of active pointers, which can be set in the Game Config using the `input.activePointers` property.
@@ -17,11 +18,13 @@
 * InputManager.updatePointer is a new internal method, called automatically by the update loop, that handles touch move events.
 * InputManager.stopPointer is a new internal method, called automatically by the update loop, that handles touch end events.
 * InputManager.hitTest has had its arguments changed. It no longer takes x/y properties as the first two arguments, but instead takes a Pointer object (from which the x/y coordinates are extracted).
-
-
 * TouchManager.handler has been removed as it's no longer used internally.
 * TouchManager.onTouchStart, onTouchMove and onTouchEnd are the new DOM Touch Event handlers. They pass the events on to the InputManagers `queueTouchStart`, `queueTouchMove` and `queueTouchEnd` methods respectively.
-
+* MouseManager.handler has been removed as it's no longer used internally.
+* MouseManager.onMouseDown, onMouseMove and onMouseUp are the new DOM Mouse Event handlers. They pass the events on to the InputManagers `queueMouseDown`, `queueMouseMove` and `queueMouseUp` methods respectively.
+* Setting `enabled` to false on either the TouchManager or MouseManager will prevent it from handling any native DOM events until you set it back again.
+* InputPlugin has the following new read-only properties: `mousePointer`, `pointer1`, `pointer2`, `pointer3`, `pointer4`, `pointer5`, `pointer6`, `pointer7`, `pointer8`, `pointer9` and `pointer10`. Most of these will be undefined unless you call `addPointer` first.
+* InputManager has a new method `transformPointer` which will set the transformed x and y properties of a Pointer in one call, rather than the 2 calls it took before. This is now used by all Pointer event handlers.
 
 ### Arcade Physics New Features + Updates
 
@@ -76,12 +79,9 @@
 
 ### Examples, Documentation and TypeScript
 
-Thanks to the work of @hexus we have now documented nearly all of the Math namespace. This is hundreds of functions now covered by full docs and is work we'll continue in the coming weeks.
+Thanks to the work of @hexus we have now documented all of the Math namespace and made good progress on the Game Objects.
 
-
-
-
-
+I personally have also documented the entire Input system, which was 328 classes, properties and methods to describe.
 
 ## Version 3.9.0 - Yui - 24th May 2018
 
