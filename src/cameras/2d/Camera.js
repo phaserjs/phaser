@@ -150,6 +150,19 @@ var Camera = new Class({
         this.roundPixels = false;
 
         /**
+         * Is this Camera visible or not?
+         * 
+         * A visible camera will render and perform input tests.
+         * An invisible camera will not render anything and will skip input tests.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#visible
+         * @type {boolean}
+         * @default true
+         * @since 3.10.0
+         */
+        this.visible = true;
+
+        /**
          * Is this Camera using a bounds to restrict scrolling movement?
          * Set this property along with the bounds via `Camera.setBounds`.
          *
@@ -1108,6 +1121,25 @@ var Camera = new Class({
     },
 
     /**
+     * Sets the visibility of this Camera.
+     * 
+     * An invisible Camera will skip rendering and input tests of everything it can see.
+     *
+     * @method Phaser.Cameras.Scene2D.Camera#setVisible
+     * @since 3.10.0
+     *
+     * @param {boolean} value - The visible state of the Camera.
+     * 
+     * @return {this} This Camera instance.
+     */
+    setVisible: function (value)
+    {
+        this.visible = value;
+
+        return this;
+    },
+
+    /**
      * Sets the Camera to follow a Game Object.
      *
      * When enabled the Camera will automatically adjust its scroll position to keep the target Game Object
@@ -1245,9 +1277,12 @@ var Camera = new Class({
      */
     update: function (time, delta)
     {
-        this.shakeEffect.update(time, delta);
-        this.flashEffect.update(time, delta);
-        this.fadeEffect.update(time, delta);
+        if (this.visible)
+        {
+            this.shakeEffect.update(time, delta);
+            this.flashEffect.update(time, delta);
+            this.fadeEffect.update(time, delta);
+        }
     },
 
     /**
