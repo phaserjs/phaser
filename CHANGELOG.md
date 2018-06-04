@@ -25,6 +25,12 @@
 * Setting `enabled` to false on either the TouchManager or MouseManager will prevent it from handling any native DOM events until you set it back again.
 * InputPlugin has the following new read-only properties: `mousePointer`, `pointer1`, `pointer2`, `pointer3`, `pointer4`, `pointer5`, `pointer6`, `pointer7`, `pointer8`, `pointer9` and `pointer10`. Most of these will be undefined unless you call `addPointer` first.
 * InputManager has a new method `transformPointer` which will set the transformed x and y properties of a Pointer in one call, rather than the 2 calls it took before. This is now used by all Pointer event handlers.
+* KeyboardManager.handler has been removed as it's no longer used internally.
+* The KeyboardManager.captures property has been removed as it can be more effectively handled by polling the `keys` object instead.
+* The Keyboard Manager will no longer process key down or up events if its `enabled` property is set to false.
+* The Keyboard Manager will now call `event.preventDefault` on the native DOM event as long as the Key exists in the keys array and has its `preventDefault` property set to `true` (which is the default). This means you can now control specifically which key prevents default on the browser, where-as before every key added did so.
+* KeyboardManager.addKeys can now take either an object or key codes, or a comma-separated string, as its input. This means you can now do things like this: `keyboard.addKeys('W,S,A,D')` and get an object back with the properties WSAD mapped to the relevant Key objects.
+* KeyboardManager.addKey can now take either a Key Code value, or a String.
 
 ### Arcade Physics New Features + Updates
 
