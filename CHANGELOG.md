@@ -29,8 +29,10 @@
 * The KeyboardManager.captures property has been removed as it can be more effectively handled by polling the `keys` object instead.
 * The Keyboard Manager will no longer process key down or up events if its `enabled` property is set to false.
 * The Keyboard Manager will now call `event.preventDefault` on the native DOM event as long as the Key exists in the keys array and has its `preventDefault` property set to `true` (which is the default). This means you can now control specifically which key prevents default on the browser, where-as before every key added did so.
+* KeyboardManager `addKeyCapture` and `removeKeyCapture` have been removed as you now control which keys prevent capture by using the `addKey` or `addKeys` methods (see entry above). The act of creating a Key is now enough to enable capture of it and can be toggled (at run-time) on a per-Key basis now.
 * KeyboardManager.addKeys can now take either an object or key codes, or a comma-separated string, as its input. This means you can now do things like this: `keyboard.addKeys('W,S,A,D')` and get an object back with the properties WSAD mapped to the relevant Key objects.
 * KeyboardManager.addKey can now take either a Key Code value, or a String.
+* KeyboardManager.removeKey can now take either a Key object, a string, such as `A` or `SPACE`, or a key code value.
 
 ### Arcade Physics New Features + Updates
 
