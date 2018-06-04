@@ -6,33 +6,33 @@
 
 * All Input classes are now covered 100% by JSDocs.
 * The Input Manager and Input Plugin have been updated to support multiple simultaneous Pointers. Before, only one active pointer (mouse or touch) was supported. Now, you can have as many active pointers as you need, allowing for complex multi-touch games. These are stored in the Input Manager `pointers` array.
-* InputManager.addPointer allows you to add one, or more, new pointers to the Input Manager. There is no hard-coded limit to the amount you can have, although realistically you should never need more than 10. InputPlugin.addPointer is an alias for this method, allowing you to use `this.input.addPointer` from your game code.
-* InputManager.pointersTotal contains the total number of active pointers, which can be set in the Game Config using the `input.activePointers` property.
-* InputManager.mousePointer is a new property that is specifically allocated for mouse use only. This is perfect for desktop only games but should be ignored if you're creating a mouse + touch game (use activePointer instead)
-* InputManager.activePointer will now reflect the most recently active pointer on the game, which is considered as being the most recent pointer to have interacted with the game canvas.
+* `addPointer` allows you to add one, or more, new pointers to the Input Manager. There is no hard-coded limit to the amount you can have, although realistically you should never need more than 10. This method is available on both the Input Manager and Plugin, allowing you to use `this.input.addPointer` from within your game code.
+* InputManager `pointersTotal` contains the total number of active pointers, which can be set in the Game Config using the `input.activePointers` property. Phaser will create 2 pointers on start unless a different value is given in the config, or you can add them at run-time.
+* `mousePointer` is a new property that is specifically allocated for mouse use only. This is perfect for desktop only games but should be ignored if you're creating a mouse + touch game (use activePointer instead).
+* `activePointer` will now reflect the most recently active pointer on the game, which is considered as being the pointer to have interacted with the game canvas most recently.
 * The InputManager and InputPlugin have three new methods: `addUpCallback`, `addDownCallback` and `addMoveCallback`. These methods allow you to add callbacks to be invoked whenever native DOM mouse or touch events are received. Callbacks passed to this method are invoked _immediately_ when the DOM event happens, within the scope of the DOM event handler. Therefore, they are considered as 'native' from the perspective of the browser. This means they can be used for tasks such as opening new browser windows, or anything which explicitly requires user input to activate. However, as a result of this, they come with their own risks, and as such should not be used for general game input, but instead be reserved for special circumstances. The callbacks can be set as `isOnce` so you can control if the callback is called once then removed, or every time the DOM event occurs.
 * Pointer has two new properties `worldX` and `worldY` which contain the  position of the Pointer, translated into the coordinate space of the most recent Camera it interacted with.
-* InputManager.dirty is a new internal property that reflects if any of the Pointers have updated this frame.
-* InputManager.update now uses constants internally for the event type checking, rather than string-based like before.
-* InputManager.startPointer is a new internal method, called automatically by the update loop, that handles touch start events.
-* InputManager.updatePointer is a new internal method, called automatically by the update loop, that handles touch move events.
-* InputManager.stopPointer is a new internal method, called automatically by the update loop, that handles touch end events.
-* InputManager.hitTest has had its arguments changed. It no longer takes x/y properties as the first two arguments, but instead takes a Pointer object (from which the x/y coordinates are extracted).
-* TouchManager.handler has been removed as it's no longer used internally.
-* TouchManager.onTouchStart, onTouchMove and onTouchEnd are the new DOM Touch Event handlers. They pass the events on to the InputManagers `queueTouchStart`, `queueTouchMove` and `queueTouchEnd` methods respectively.
-* MouseManager.handler has been removed as it's no longer used internally.
-* MouseManager.onMouseDown, onMouseMove and onMouseUp are the new DOM Mouse Event handlers. They pass the events on to the InputManagers `queueMouseDown`, `queueMouseMove` and `queueMouseUp` methods respectively.
-* Setting `enabled` to false on either the TouchManager or MouseManager will prevent it from handling any native DOM events until you set it back again.
-* InputPlugin has the following new read-only properties: `mousePointer`, `pointer1`, `pointer2`, `pointer3`, `pointer4`, `pointer5`, `pointer6`, `pointer7`, `pointer8`, `pointer9` and `pointer10`. Most of these will be undefined unless you call `addPointer` first.
+* `InputManager.dirty` is a new internal property that reflects if any of the Pointers have updated this frame.
+* `InputManager.update` now uses constants internally for the event type checking, rather than string-based like before.
+* `InputManager.startPointer` is a new internal method, called automatically by the update loop, that handles touch start events.
+* `InputManager.updatePointer` is a new internal method, called automatically by the update loop, that handles touch move events.
+* `InputManager.stopPointer` is a new internal method, called automatically by the update loop, that handles touch end events.
+* `InputManager.hitTest` has had its arguments changed. It no longer takes x/y properties as the first two arguments, but instead takes a Pointer object (from which the x/y coordinates are extracted).
+* `TouchManager.handler` has been removed as it's no longer used internally.
+* `TouchManager.onTouchStart`, `onTouchMove` and `onTouchEnd` are the new DOM Touch Event handlers. They pass the events on to the InputManagers `queueTouchStart`, `queueTouchMove` and `queueTouchEnd` methods respectively.
+* `MouseManager.handler` has been removed as it's no longer used internally.
+* `MouseManager.onMouseDown`, `onMouseMove` and `onMouseUp` are the new DOM Mouse Event handlers. They pass the events on to the InputManagers `queueMouseDown`, `queueMouseMove` and `queueMouseUp` methods respectively.
+* Setting `enabled` to false on either the TouchManager, MouseManager or KeyboardManager will prevent it from handling any native DOM events until you set it back again.
+* InputPlugin has the following new read-only properties: `mousePointer`, `pointer1`, `pointer2`, `pointer3`, `pointer4`, `pointer5`, `pointer6`, `pointer7`, `pointer8`, `pointer9` and `pointer10`. Most of these will be undefined unless you call `addPointer` first, or set the active pointers quantity in your Game Config.
 * InputManager has a new method `transformPointer` which will set the transformed x and y properties of a Pointer in one call, rather than the 2 calls it took before. This is now used by all Pointer event handlers.
-* KeyboardManager.handler has been removed as it's no longer used internally.
-* The KeyboardManager.captures property has been removed as it can be more effectively handled by polling the `keys` object instead.
+* `KeyboardManager.handler` has been removed as it's no longer used internally.
+* The `KeyboardManager.captures` property has been removed as it can be more effectively handled by polling the `keys` object instead.
 * The Keyboard Manager will no longer process key down or up events if its `enabled` property is set to false.
 * The Keyboard Manager will now call `event.preventDefault` on the native DOM event as long as the Key exists in the keys array and has its `preventDefault` property set to `true` (which is the default). This means you can now control specifically which key prevents default on the browser, where-as before every key added did so.
-* KeyboardManager `addKeyCapture` and `removeKeyCapture` have been removed as you now control which keys prevent capture by using the `addKey` or `addKeys` methods (see entry above). The act of creating a Key is now enough to enable capture of it and can be toggled (at run-time) on a per-Key basis now.
-* KeyboardManager.addKeys can now take either an object or key codes, or a comma-separated string, as its input. This means you can now do things like this: `keyboard.addKeys('W,S,A,D')` and get an object back with the properties WSAD mapped to the relevant Key objects.
-* KeyboardManager.addKey can now take either a Key Code value, or a String.
-* KeyboardManager.removeKey can now take either a Key object, a string, such as `A` or `SPACE`, or a key code value.
+* KeyboardManager `addKeyCapture` and `removeKeyCapture` have been removed as you now control which keys prevent capture by using the `addKey` or `addKeys` methods (see entry above). The act of creating a Key is now enough to enable capture of it and can be toggled (at run-time) on a per-Key basis.
+* `KeyboardManager.addKeys` can now take either an object, or key codes, or a comma-separated string as its input. This means you can now do things like: `keyboard.addKeys('W,S,A,D')` and get an object back with the properties WSAD mapped to the relevant Key objects.
+* `KeyboardManager.addKey` can now take either a Key object, a string, such as `A` or `SPACE`, or a key code value.
+* `KeyboardManager.removeKey` can now take either a Key object, a string, such as `A` or `SPACE`, or a key code value.
 
 ### Arcade Physics New Features + Updates
 
@@ -40,45 +40,44 @@
 * You can also optionally call the `step` function directly, to manually advance the simulation.
 * There is a new property `timeScale` which will scale all time-step calculations at run-time, allowing you to speed-up or slow-down your simulation at will, without adjusting the frame rate.
 * You can now disable the use of the RTree for dynamic bodies via the config property `useTree`. In certain situations, i.e. densely packed worlds, this may give better performance. Static bodies will always use an RTree.
-* collideSpriteVsGroup has been rewritten. If you are using an RTree it now uses the results directly from the tree search, instead of iterating all children in the Group, which dramatically reduces the iteration count. If you have disabled the RTree it performs a brute-force O(N2) Sprite vs. Group iteration sweep. We tested multiple axis sorting variants but the cost of the array allocation and/or sorting, with large amounts of bodies (10,000+), far outweighed the simple math involved in the separation logic.
-* Body.useDamping is a new boolean property that allows you to use a damping effect for drag, rather than the default linear deceleration. This gives much better results if you need smooth deceleration across both axis, such as the way the ship slows down in the game Asteroids, without the tell-tale axis drift associated with linear drag.
-* GetOverlapX/Y now use the calculated delta values, not the deltaX/Y methods.
-* collideSpriteVsGroup aborts early if the Sprite body has been disabled.
-* updateMotion has a new argument `delta` which should typically be a fixed-time delta value.
-* computeVelocity has a new argument `delta` which should typically be a fixed-time delta value.
-* intersects has been restructured to prioritize rect vs. rect checks.
-* Body update and postUpdate have been recoded to handle the new fixed time-step system in place. update now takes a new argument, delta, which is used internally for calculations.
-* Body.dirty has been removed as a property as it's no longer used internally.
-* Body.deltaAbsX and deltaAbsY now return the cached absolute delta value from the previous update, and no longer calculate it during the actual call.
-* World.enable has been recoded to remove all the `hasOwnProperty` checks and streamline the internal flow.
-* World.disable has been recoded to remove all the `hasOwnProperty` checks and streamline the internal flow.
-* World.add is a new method that adds an existing body to the simulation. World.enableBody now passes its newly created bodies to this method.
-* World.disableGameObjectBody has been removed as it duplicated what World.disable did.
-* There is a new internal flow with regard to the creation and disabling of bodies. Calling World.enable will pass the objects to World.enableBody, which will create a new Body object if required, and finally pass it to World.add. World.disable does the same, but removes the bodies from the simulation. It passes the bodies to World.disableBody, which in turn passes it to World.remove. Both of these work for single objects, an array of objects, Groups or even arrays of Groups.
-* World.computeAngularVelocity is a new method that specifically calculates the angular velocity of a Body.
-* World.computeVelocity has had its signature changed. Rather than taking a bunch of arguments all it now takes is a Body and a delta value. Internally it now calculates both the x and y velocity components together in the same single call (before it was split into two calls).
-* World.computeVelocity no longer returns the new velocities, they are now set directly on the body within the method.
-* World.computeVelocity has been recoded to use Fuzzy Greater Than and Less Than calls when factoring in drag to a previously accelerated body. Using a fuzzy epsilon allows us to mitigate the ping-pong issue, where a decelerating body would constantly flip between a small negative and positive velocity value and never come to an actual rest.
-* World.computeVelocity now uses the Body.useDamping property to perform either linear deceleration or damping on the Body.
-* World.updateMotion has changed to call the new `computeAngularVelocity` and `computeVelocity` methods.
-* Bodies set to bounce would eventually run out of velocity and stop. This has been fixed as part of the refactoring of the time step and velocity computation updates. Fix #3593 (thanks @helmi77)
+* `collideSpriteVsGroup` has been rewritten. If you are using an RTree it now uses the results directly from the tree search, instead of iterating all children in the Group, which dramatically reduces the work it does. If you have disabled the RTree it performs a brute-force O(N2) Sprite vs. Group iteration sweep. We tested multiple axis sorting variants but the cost of the array allocation and/or sorting, with large amounts of bodies (10,000+), far outweighed the simple math involved in the separation logic.
+* `Body.useDamping` is a new boolean property that allows you to use a damping effect for drag, rather than the default linear deceleration. This gives much better results if you need smooth deceleration across both axis, such as the way the ship slows down in the game Asteroids, without the tell-tale axis drift associated with linear drag.
+* `GetOverlapX` and `GetOverlapY` now use the calculated delta values, not the deltaX/Y methods.
+* `collideSpriteVsGroup` aborts early if the Sprite body has been disabled.
+* `updateMotion` has a new argument `delta` which should typically be a fixed-time delta value.
+* `intersects` has been restructured to prioritize rect vs. rect checks.
+* Body `update` and `postUpdate` have been recoded to handle the new fixed time-step system in place. `update` now takes a new argument, delta, which is used internally for calculations.
+* `Body.dirty` has been removed as a property as it's no longer used internally.
+* `Body.deltaAbsX` and `deltaAbsY` now return the cached absolute delta value from the previous update, and no longer calculate it during the actual call.
+* `World.enable` has been recoded to remove all the `hasOwnProperty` checks and streamline the internal flow.
+* `World.disable` has been recoded to remove all the `hasOwnProperty` checks and streamline the internal flow.
+* `World.add` is a new method that adds an existing body to the simulation and `enableBody` now passes its newly created bodies to this method.
+* `World.disableGameObjectBody` has been removed as it duplicated what the `disable` method did.
+* There is a new internal flow with regard to the creation and disabling of bodies. Calling `World.enable` will pass the objects to `enableBody`, which will create a new Body object, if required, and finally pass it to `add`. `World.disable` does the same, but removes the bodies from the simulation. It passes the bodies to `disableBody`, which in turn passes it to `remove`. Both of these work for single objects, an array of objects, Groups or even arrays of Groups.
+* `World.computeAngularVelocity` is a new method that specifically calculates the angular velocity of a Body.
+* `World.computeVelocity` has had its signature changed. Rather than taking a bunch of arguments all it now takes is a Body and a delta value. Internally it now calculates both the x and y velocity components together in the same single call, where-as before it was split into two calls and multiple assignments.
+* `World.computeVelocity` no longer returns the new velocities, they are now set directly on the body within the method.
+* `World.computeVelocity` has been recoded to use Fuzzy Greater Than and Less Than calls when applying drag to a previously accelerated body. Using a fuzzy epsilon allows us to mitigate the ping-pong issue, where a decelerating body would constantly flip between a small negative and positive velocity value and never come to an actual rest.
+* `World.computeVelocity` now checks the `Body.useDamping` property to perform either linear deceleration or damping on the Body.
+* `World.updateMotion` has changed to call the new `computeAngularVelocity` and `computeVelocity` methods.
+* Bodies set to bounce would eventually run out of velocity and stop. This has been fixed as part of the refactoring of the time step and compute velocity updates. Fix #3593 (thanks @helmi77)
 * If a Body collides with a Static Body it will now set the `blocked` properties accordingly (before it only set the `touching` properties.) This means you can now use checks like `Body.onFloor()` when traversing static bodies (thanks @fariazz)
 
 ### New Features
 
-* RenderTexture.resize will allow you to resize the underlying Render Texture to the new dimensions given. Doing this also clears the Render Texture at the same time (thanks @saqsun).
-* Rectangle.RandomOutside is a new function that takes two Rectangles, `outer` and `inner`, and returns a random point that falls within the outer rectangle but is always outside of the inner rectangle.
+* `RenderTexture.resize` will allow you to resize the underlying Render Texture to the new dimensions given. Doing this also clears the Render Texture at the same time (thanks @saqsun).
+* `Rectangle.RandomOutside` is a new function that takes two Rectangles, `outer` and `inner`, and returns a random point that falls within the outer rectangle but is always outside of the inner rectangle.
 * The Update List has a new read-only property `length`, making it consistent with the Display List (thanks @samme)
 * The 2D Camera class has two new read-only properties `centerX` and `centerY` which return the coordinates of the center of the viewport, relative to the canvas (thanks @samme)
 
 ### Updates
 
-* The ForwardDiffuseLightPipeline, used by the Lights system, now sets a flag if the Scene doesn't contain any lights. All of the Game Objects now check this flag and don't even bother adding themselves to the batch if there are no lights in the Scene, as they'd never render anyway. This also avoids the ghost-image problem if you swap Scenes to a new Scene with the Light Manager enabled, but no actual lights defined. Fix #3707 (thanks @samvieten).
+* The `ForwardDiffuseLightPipeline`, used by the Lights system, now sets a flag if the Scene doesn't contain any lights. All of the Game Objects now check this flag and don't even bother adding themselves to the batch if there are no lights in the Scene, as they'd never render anyway. This also avoids the ghost-image problem if you swap Scenes to a new Scene with the Light Manager enabled, but no actual lights defined. Fix #3707 (thanks @samvieten).
 
 ### Bug Fixes
 
-* The Canvas RenderTexture drawImage method incorrectly set the values of the frame, causing them to appear wrongly scaled in the canvas renderer. Fix #3710 (thanks @saqsun).
-* Fixed `Math.Matrix4.makeRotationAxis()`.
+* The Canvas `RenderTexture.drawImage` method incorrectly set the values of the frame, causing them to appear wrongly scaled in the canvas renderer. Fix #3710 (thanks @saqsun).
+* Fixed `Math.Matrix4.makeRotationAxis()` (thanks @hexus)
 * Fixed an incorrect usage of `Math.abs()` in `Math.Quaternion.calculateW()` (thanks @qxzkjp).
 * Particle Emitter Managers can now be added to Containers (thanks @TadejZupancic)
 * Fixed a method signature issue with the Animation component's `remove()` handler when `Animation`s are removed from the `AnimationManager`. This prevented removed animations from stopping correctly.
