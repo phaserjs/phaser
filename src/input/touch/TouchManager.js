@@ -174,9 +174,9 @@ var TouchManager = new Class({
 
     /**
      * Starts the Touch Event listeners running.
+     * This is called automatically and does not need to be manually invoked.
      *
      * @method Phaser.Input.Touch.TouchManager#startListeners
-     * @private
      * @since 3.0.0
      */
     startListeners: function ()
@@ -202,9 +202,9 @@ var TouchManager = new Class({
 
     /**
      * Stops the Touch Event listeners.
+     * This is called automatically and does not need to be manually invoked.
      *
      * @method Phaser.Input.Touch.TouchManager#stopListeners
-     * @private
      * @since 3.0.0
      */
     stopListeners: function ()

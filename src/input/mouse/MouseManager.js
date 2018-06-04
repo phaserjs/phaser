@@ -272,6 +272,7 @@ var MouseManager = new Class({
 
     /**
      * Starts the Mouse Event listeners running.
+     * This is called automatically and does not need to be manually invoked.
      *
      * @method Phaser.Input.Mouse.MouseManager#startListeners
      * @since 3.0.0
@@ -308,6 +309,7 @@ var MouseManager = new Class({
 
     /**
      * Stops the Mouse Event listeners.
+     * This is called automatically and does not need to be manually invoked.
      *
      * @method Phaser.Input.Mouse.MouseManager#stopListeners
      * @since 3.0.0
