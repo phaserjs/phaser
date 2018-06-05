@@ -210,7 +210,7 @@ var GameObject = new Class({
     },
 
     /**
-     * Adds a DataManager to this object.
+     * Adds a Data Manager component to this Game Object.
      *
      * @method Phaser.GameObjects.GameObject#setDataEnabled
      * @since 3.0.0
@@ -229,16 +229,51 @@ var GameObject = new Class({
     },
 
     /**
-     * This is a quick chainable alias to the `DataProxy.set` method.
-     * It allows you to set a key and value in this Game Objects data store.
+     * Allows you to store a key value pair within this Game Objects Data Manager.
+     * 
+     * If the Game Object has not been enabled for data (via `setDataEnabled`) then it will be enabled
+     * before setting the value.
+     * 
+     * If the key doesn't already exist in the Data Manager then it is created.
+     * 
+     * ```javascript
+     * sprite.setData('name', 'Red Gem Stone');
+     * ```
+     *
+     * You can also pass in an object of key value pairs as the first argument:
+     *
+     * ```javascript
+     * sprite.setData({ name: 'Red Gem Stone', level: 2, owner: 'Link', gold: 50 });
+     * ```
+     *
+     * To get a value back again you can call `getData`:
+     * 
+     * ```javascript
+     * sprite.getData('gold');
+     * ```
+     * 
+     * Or you can access the value directly via the `values` property, where it works like any other variable:
+     * 
+     * ```javascript
+     * sprite.data.values.gold += 50;
+     * ```
+     *
+     * When the value is first set, a `setdata` event is emitted from this Game Object.
+     *
+     * If the key already exists, a `changedata` event is emitted instead, along an event named after the key.
+     * For example, if you updated an existing key called `PlayerLives` then it would emit the event `changedata_PlayerLives`.
+     * These events will be emitted regardless if you use this method to set the value, or the direct `values` setter.
+     *
+     * Please note that the data keys are case-sensitive and must be valid JavaScript Object property strings.
+     * This means the keys `gold` and `Gold` are treated as two unique values within the Data Manager.
      *
      * @method Phaser.GameObjects.GameObject#setData
      * @since 3.0.0
      *
-     * @param {string} key - The key of the property to be stored.
-     * @param {*} value - The value to store with the key. Can be a string, number, array or object.
+     * @param {(string|object)} key - The key to set the value for. Or an object or key value pairs. If an object the `data` argument is ignored.
+     * @param {*} data - The value to set for the given key. If an object is provided as the key this argument is ignored.
      *
-     * @return {Phaser.GameObjects.GameObject} This GameObject.
+     * @return {this} This GameObject.
      */
     setData: function (key, value)
     {
@@ -253,14 +288,34 @@ var GameObject = new Class({
     },
 
     /**
-     * This is a quick alias to the `DataProxy.get` method to remain consistent with `setData`.
+     * Retrieves the value for the given key in this Game Objects Data Manager, or undefined if it doesn't exist.
+     *
+     * You can also access values via the `values` object. For example, if you had a key called `gold` you can do either:
+     * 
+     * ```javascript
+     * sprite.getData('gold');
+     * ```
+     *
+     * Or access the value directly:
+     * 
+     * ```javascript
+     * sprite.data.values.gold;
+     * ```
+     *
+     * You can also pass in an array of keys, in which case an array of values will be returned:
+     * 
+     * ```javascript
+     * sprite.getData([ 'gold', 'armor', 'health' ]);
+     * ```
+     *
+     * This approach is useful for destructuring arrays in ES6.
      *
      * @method Phaser.GameObjects.GameObject#getData
      * @since 3.0.0
      *
-     * @param {string} key - The key of the property to be retrieved.
+     * @param {(string|string[])} key - The key of the value to retrieve, or an array of keys.
      *
-     * @return {*} The data, if present in the Data Store.
+     * @return {*} The value belonging to the given key, or an array of values, the order of which will match the input array.
      */
     getData: function (key)
     {

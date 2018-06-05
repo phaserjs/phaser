@@ -64,6 +64,18 @@
 * Bodies set to bounce would eventually run out of velocity and stop. This has been fixed as part of the refactoring of the time step and compute velocity updates. Fix #3593 (thanks @helmi77)
 * If a Body collides with a Static Body it will now set the `blocked` properties accordingly (before it only set the `touching` properties.) This means you can now use checks like `Body.onFloor()` when traversing static bodies (thanks @fariazz)
 
+### Data Manager New Features and Updates
+
+* You can now access anything set in the DataManager using the new `values` property. For example, if you set a new value such as this: `data.set('gold', 50)` you can now access it via: `data.values.gold`, where it is treated as a normal property, allowing you to use it in conditional evaluations `if (data.values.level === 2)`, or modify it: `data.values.gold += 50`.
+* Each time a value is updated it emits a `changedata` event, regardless if it is changed via the `set` method, or the new `values` approach.
+* Each time a value is updated it emits a new event named after the value. For example, if the value was called `PlayerLives`, it will emit the event `changedata_PlayerLives`. This happens regardless if it is changed via the `set` method, or the new `values` approach.
+* The `set` method can now take an object containing key value pairs as the first argument. This means you can now set a bunch of values all at once, i.e: `data.set({ name: 'Red Gem Stone', level: 2, owner: 'Link', gold: 50 })`.
+* The `get` method can now take an array of keys, and will return an array of matching values. This is handy for array destructuring in ES6.
+* The `remove` method can now take an array of keys, and will remove all matching values, emitting the `removedata` event for each.
+* The order of events has been updated. When a value is first set, and doesn't already exist in the Data Manager, it will emit a `setdata` event. If a value is set that already exists, it instead emits a `changedata` and related `changedata_key` event. Setting a new value no longer emits both events.
+* The `resetFunction` function has been removed from the `changedata` event arguments. Previously this was used to allow you to stop a value being updated by calling the reset function instead. However, it created brand new anonymous functions every single time a value was updated. As you can now access stored data via the `values` property you can use this for much easier conditional checks and sets.
+* The `blockSet` property has been removed as it's no longer used internally.
+
 ### New Features
 
 * `RenderTexture.resize` will allow you to resize the underlying Render Texture to the new dimensions given. Doing this also clears the Render Texture at the same time (thanks @saqsun).
