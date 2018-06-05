@@ -119,7 +119,6 @@ var PhysicsEditorLoader = {
 
         return parts;
     }
-
 };
 
 module.exports = PhysicsEditorLoader;
