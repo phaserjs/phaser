@@ -143,11 +143,7 @@ var DataManager = new Class({
     {
         var list = this.list;
 
-        if (typeof key === 'string')
-        {
-            return list[key];
-        }
-        else
+        if (Array.isArray(key))
         {
             var output = [];
 
@@ -157,6 +153,10 @@ var DataManager = new Class({
             }
 
             return output;
+        }
+        else
+        {
+            return list[key];
         }
     },
 
@@ -263,11 +263,9 @@ var DataManager = new Class({
         }
         else
         {
-            var config = key;
-
-            for (var key in config)
+            for (var entry in key)
             {
-                this.setValue(key, config[key]);
+                this.setValue(entry, key[entry]);
             }
         }
 
@@ -309,14 +307,13 @@ var DataManager = new Class({
 
                 enumerable: true,
 
-                get: function () {
-
+                get: function ()
+                {
                     return list[key];
-
                 },
 
-                set: function (value) {
-
+                set: function (value)
+                {
                     if (!_this._frozen)
                     {
                         list[key] = value;
@@ -324,7 +321,6 @@ var DataManager = new Class({
                         events.emit('changedata', parent, key, data);
                         events.emit('changedata_' + key, parent, data);
                     }
-
                 }
 
             });
@@ -363,7 +359,7 @@ var DataManager = new Class({
             args[1] = key;
             args[2] = this.list[key];
 
-            callback.apply(scope, args);
+            callback.apply(context, args);
         }
 
         return this;
@@ -425,18 +421,16 @@ var DataManager = new Class({
             return this;
         }
 
-        var list = this.list;
-
-        if (typeof key === 'string')
-        {
-            return this.removeValue(key);
-        }
-        else
+        if (Array.isArray(key))
         {
             for (var i = 0; i < key.length; i++)
             {
                 this.removeValue(key[i]);
             }
+        }
+        else
+        {
+            return this.removeValue(key);
         }
 
         return this;

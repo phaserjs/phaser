@@ -942,7 +942,8 @@ var InputManager = new Class({
 
         if (parent)
         {
-            do {
+            do
+            {
                 if (!parent.visible)
                 {
                     visible = false;
