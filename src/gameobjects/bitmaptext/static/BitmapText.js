@@ -46,9 +46,9 @@ var Render = require('./BitmapTextRender');
  * @typedef {object} JSONBitmapText
  * @extends {JSONGameObject}
  *
- * @property {string} font - [description]
- * @property {string} text - [description]
- * @property {number} fontSize - [description]
+ * @property {string} font - The name of the font.
+ * @property {string} text - The text that this Bitmap Text displays.
+ * @property {number} fontSize - The size of the font.
  * @property {number} letterSpacing - Adds/Removes spacing between characters
  */
 
