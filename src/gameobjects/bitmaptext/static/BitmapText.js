@@ -281,7 +281,7 @@ var BitmapText = new Class({
      *
      * @name Phaser.GameObjects.BitmapText#width
      * @type {number}
-     * @readonly
+     * @readOnly
      * @since 3.0.0
      */
     width: {
@@ -300,7 +300,7 @@ var BitmapText = new Class({
      *
      * @name Phaser.GameObjects.BitmapText#height
      * @type {number}
-     * @readonly
+     * @readOnly
      * @since 3.0.0
      */
     height: {

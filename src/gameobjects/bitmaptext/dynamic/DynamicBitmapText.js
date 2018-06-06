@@ -352,7 +352,7 @@ var DynamicBitmapText = new Class({
      *
      * @name Phaser.GameObjects.DynamicBitmapText#width
      * @type {number}
-     * @readonly
+     * @readOnly
      * @since 3.0.0
      */
     width: {
@@ -370,6 +370,7 @@ var DynamicBitmapText = new Class({
      *
      * @name Phaser.GameObjects.DynamicBitmapText#height
      * @type {number}
+     * @readOnly
      * @since 3.0.0
      */
     height: {
