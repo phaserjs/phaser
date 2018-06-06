@@ -264,6 +264,11 @@ var Config = new Class({
         this.inputGamepad = GetValue(config, 'input.gamepad', false);
 
         /**
+         * @const {*} Phaser.Boot.Config#inputGamepadEventTarget - [description]
+         */
+        this.inputGamepadEventTarget = GetValue(config, 'input.gamepad.target', window);
+
+        /**
          * @const {boolean} Phaser.Boot.Config#disableContextMenu - [description]
          */
         this.disableContextMenu = GetValue(config, 'disableContextMenu', false);
