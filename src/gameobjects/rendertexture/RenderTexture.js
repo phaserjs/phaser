@@ -89,7 +89,7 @@ var RenderTexture = new Class({
         this.renderer = scene.sys.game.renderer;
 
         /**
-         * [description]
+         * The tint of the Render Texture when rendered.
          *
          * @name Phaser.GameObjects.RenderTexture#globalTint
          * @type {number}
@@ -99,10 +99,10 @@ var RenderTexture = new Class({
         this.globalTint = 0xffffff;
 
         /**
-         * [description]
+         * The alpha of the Render Texture when rendered.
          *
          * @name Phaser.GameObjects.RenderTexture#globalAlpha
-         * @type {float}
+         * @type {number}
          * @default 1
          * @since 3.2.0
          */
@@ -167,7 +167,7 @@ var RenderTexture = new Class({
 
     /**
      * Resizes the Render Texture to the new dimensions given.
-     * 
+     *
      * In WebGL it will destroy and then re-create the frame buffer being used by the Render Texture.
      * In Canvas it will resize the underlying canvas element.
      * Both approaches will erase everything currently drawn to the Render Texture.
@@ -211,14 +211,14 @@ var RenderTexture = new Class({
     },
 
     /**
-     * [description]
+     * Set the tint to use when rendering this Render Texture.
      *
      * @method Phaser.GameObjects.RenderTexture#setGlobalTint
      * @since 3.2.0
      *
-     * @param {integer} tint [description]
+     * @param {integer} tint - The tint value.
      *
-     * @return {Phaser.GameObjects.RenderTexture} [description]
+     * @return {this} This Render Texture.
      */
     setGlobalTint: function (tint)
     {
@@ -228,14 +228,14 @@ var RenderTexture = new Class({
     },
 
     /**
-     * [description]
+     * Set the alpha to use when rendering this Render Texture.
      *
      * @method Phaser.GameObjects.RenderTexture#setGlobalAlpha
      * @since 3.2.0
      *
-     * @param {float} alpha [description]
+     * @param {number} alpha - The alpha value.
      *
-     * @return {Phaser.GameObjects.RenderTexture} [description]
+     * @return {this} This Render Texture.
      */
     setGlobalAlpha: function (alpha)
     {

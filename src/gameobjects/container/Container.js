@@ -23,7 +23,7 @@ var Vector2 = require('../../math/Vector2');
  * By default it will be removed from the Display List and instead added to the Containers own internal list.
  *
  * The position of the Game Object automatically becomes relative to the position of the Container.
- * 
+ *
  * When the Container is rendered, all of its children are rendered as well, in the order in which they exist
  * within the Container. Container children can be repositioned using methods such as `MoveUp`, `MoveDown` and `SendToBack`.
  *
@@ -102,10 +102,10 @@ var Container = new Class({
 
         /**
          * Does this Container exclusively manage its children?
-         * 
+         *
          * The default is `true` which means a child added to this Container cannot
          * belong in another Container, which includes the Scene display list.
-         * 
+         *
          * If you disable this then this Container will no longer exclusively manage its children.
          * This allows you to create all kinds of interesting graphical effects, such as replicating
          * Game Objects without reparenting them all over the Scene.
@@ -159,7 +159,7 @@ var Container = new Class({
          * @since 3.4.0
          */
         this.tempTransformMatrix = new Components.TransformMatrix();
- 
+
         /**
          * A reference to the Scene Display List.
          *
@@ -274,10 +274,10 @@ var Container = new Class({
 
     /**
      * Does this Container exclusively manage its children?
-     * 
+     *
      * The default is `true` which means a child added to this Container cannot
      * belong in another Container, which includes the Scene display list.
-     * 
+     *
      * If you disable this then this Container will no longer exclusively manage its children.
      * This allows you to create all kinds of interesting graphical effects, such as replicating
      * Game Objects without reparenting them all over the Scene.
@@ -308,10 +308,10 @@ var Container = new Class({
      *
      * Some children are unable to return their bounds, such as Graphics objects, in which case
      * they are skipped.
-     * 
+     *
      * Depending on the quantity of children in this Container it could be a really expensive call,
      * so cache it and only poll it as needed.
-     * 
+     *
      * The values are stored and returned in a Rectangle object.
      *
      * @method Phaser.GameObjects.Container#getBounds
@@ -394,7 +394,7 @@ var Container = new Class({
         if (this.exclusive)
         {
             gameObject.parentContainer = null;
-    
+
             this._sysEvents.once('shutdown', gameObject.destroy, gameObject);
         }
     },
@@ -448,7 +448,7 @@ var Container = new Class({
 
     /**
      * Adds the given Game Object, or array of Game Objects, to this Container.
-     * 
+     *
      * Each Game Object must be unique within the Container.
      *
      * @method Phaser.GameObjects.Container#add
@@ -467,9 +467,9 @@ var Container = new Class({
 
     /**
      * Adds the given Game Object, or array of Game Objects, to this Container at the specified position.
-     * 
+     *
      * Existing Game Objects in the Container are shifted up.
-     * 
+     *
      * Each Game Object must be unique within the Container.
      *
      * @method Phaser.GameObjects.Container#addAt
@@ -594,7 +594,7 @@ var Container = new Class({
      *
      * You can also specify a property and value to search for, in which case it will return the first
      * Game Object in this Container with a matching property and / or value.
-     * 
+     *
      * For example: `getFirst('visible', true)` would return the first Game Object that had its `visible` property set.
      *
      * You can limit the search to the `startIndex` - `endIndex` range.
@@ -622,7 +622,7 @@ var Container = new Class({
      * For example: `getAll('body')` would return only Game Objects that have a body property.
      *
      * You can also specify a value to compare the property to:
-     * 
+     *
      * `getAll('visible', true)` would return only Game Objects that have their visible property set to `true`.
      *
      * Optionally you can specify a start and end index. For example if this Container had 100 Game Objects,
@@ -647,16 +647,16 @@ var Container = new Class({
     /**
      * Returns the total number of Game Objects in this Container that have a property
      * matching the given value.
-     * 
+     *
      * For example: `count('visible', true)` would count all the elements that have their visible property set.
-     * 
+     *
      * You can optionally limit the operation to the `startIndex` - `endIndex` range.
      *
      * @method Phaser.GameObjects.Container#count
      * @since 3.4.0
      *
-     * @param {string} property - [description]
-     * @param {any} value - [description]
+     * @param {string} property - The property to check.
+     * @param {any} value - The value to check.
      * @param {integer} [startIndex=0] - An optional start index to search from.
      * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
      *
@@ -676,7 +676,7 @@ var Container = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} child1 - The first Game Object to swap.
      * @param {Phaser.GameObjects.GameObject} child2 - The second Game Object to swap.
-     * 
+     *
      * @return {Phaser.GameObjects.Container} This Container instance.
      */
     swap: function (child1, child2)
@@ -688,7 +688,7 @@ var Container = new Class({
 
     /**
      * Moves a Game Object to a new position within this Container.
-     * 
+     *
      * The Game Object must already be a child of this Container.
      *
      * The Game Object is removed from its old position and inserted into the new one.
@@ -711,7 +711,7 @@ var Container = new Class({
 
     /**
      * Removes the given Game Object, or array of Game Objects, from this Container.
-     * 
+     *
      * The Game Objects must already be children of this Container.
      *
      * You can also optionally call `destroy` on each Game Object that is removed from the Container.
@@ -746,7 +746,7 @@ var Container = new Class({
 
     /**
      * Removes the Game Object at the given position in this Container.
-     * 
+     *
      * You can also optionally call `destroy` on the Game Object, if one is found.
      *
      * @method Phaser.GameObjects.Container#removeAt
@@ -771,7 +771,7 @@ var Container = new Class({
 
     /**
      * Removes the Game Objects between the given positions in this Container.
-     * 
+     *
      * You can also optionally call `destroy` on each Game Object that is removed from the Container.
      *
      * @method Phaser.GameObjects.Container#removeBetween
@@ -800,7 +800,7 @@ var Container = new Class({
 
     /**
      * Removes all Game Objects from this Container.
-     * 
+     *
      * You can also optionally call `destroy` on each Game Object that is removed from the Container.
      *
      * @method Phaser.GameObjects.Container#removeAll
@@ -958,7 +958,7 @@ var Container = new Class({
 
     /**
      * Returns `true` if the given Game Object is a direct child of this Container.
-     * 
+     *
      * This check does not scan nested Containers.
      *
      * @method Phaser.GameObjects.Container#exists
@@ -975,7 +975,7 @@ var Container = new Class({
 
     /**
      * Sets the property to the given value on all Game Objects in this Container.
-     * 
+     *
      * Optionally you can specify a start and end index. For example if this Container had 100 Game Objects,
      * and you set `startIndex` to 0 and `endIndex` to 50, it would return matches from only
      * the first 50 Game Objects.
@@ -987,7 +987,7 @@ var Container = new Class({
      * @param {any} value - The value to get the property to.
      * @param {integer} [startIndex=0] - An optional start index to search from.
      * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
-     * 
+     *
      * @return {Phaser.GameObjects.Container} This Container instance.
      */
     setAll: function (property, value, startIndex, endIndex)
@@ -1010,7 +1010,7 @@ var Container = new Class({
      *
      * A copy of the Container is made before passing each entry to your callback.
      * This protects against the callback itself modifying the Container.
-     * 
+     *
      * If you know for sure that the callback will not change the size of this Container
      * then you can use the more performant `Container.iterate` method instead.
      *
@@ -1020,7 +1020,7 @@ var Container = new Class({
      * @param {function} callback - The function to call.
      * @param {object} [context] - Value to use as `this` when executing callback.
      * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
-     * 
+     *
      * @return {Phaser.GameObjects.Container} This Container instance.
      */
     each: function (callback, context)
@@ -1057,7 +1057,7 @@ var Container = new Class({
      * @param {function} callback - The function to call.
      * @param {object} [context] - Value to use as `this` when executing callback.
      * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
-     * 
+     *
      * @return {Phaser.GameObjects.Container} This Container instance.
      */
     iterate: function (callback, context)
@@ -1099,7 +1099,7 @@ var Container = new Class({
 
     /**
      * Returns the first Game Object within the Container, or `null` if it is empty.
-     * 
+     *
      * You can move the cursor by calling `Container.next` and `Container.previous`.
      *
      * @name Phaser.GameObjects.Container#first
@@ -1127,7 +1127,7 @@ var Container = new Class({
 
     /**
      * Returns the last Game Object within the Container, or `null` if it is empty.
-     * 
+     *
      * You can move the cursor by calling `Container.next` and `Container.previous`.
      *
      * @name Phaser.GameObjects.Container#last
@@ -1155,7 +1155,7 @@ var Container = new Class({
 
     /**
      * Returns the next Game Object within the Container, or `null` if it is empty.
-     * 
+     *
      * You can move the cursor by calling `Container.next` and `Container.previous`.
      *
      * @name Phaser.GameObjects.Container#next
@@ -1183,7 +1183,7 @@ var Container = new Class({
 
     /**
      * Returns the previous Game Object within the Container, or `null` if it is empty.
-     * 
+     *
      * You can move the cursor by calling `Container.next` and `Container.previous`.
      *
      * @name Phaser.GameObjects.Container#previous

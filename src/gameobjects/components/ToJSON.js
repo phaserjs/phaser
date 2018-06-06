@@ -30,16 +30,16 @@
  */
 
 /**
- * Export a Game Object as a JSON object.
+ * Build a JSON representation of the given Game Object.
  *
  * This is typically extended further by Game Object specific implementations.
  *
  * @method Phaser.GameObjects.Components.ToJSON
  * @since 3.0.0
  *
- * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to export.
+ * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to export as JSON.
  *
- * @return {JSONGameObject} The exported Game Object.
+ * @return {JSONGameObject} The JSON representation of the Game Object.
  */
 var ToJSON = function (gameObject)
 {

@@ -15,6 +15,8 @@ var GetValue = require('../../utils/object/GetValue');
  *
  * @param {Phaser.Scene} scene - A reference to the Phaser Scene.
  * @param {Phaser.GameObjects.RetroFont.Config} config - The font configuration object.
+ *
+ * @return {object} A parsed Bitmap Font data entry for the Bitmap Font cache.
  */
 var ParseRetroFont = function (scene, config)
 {

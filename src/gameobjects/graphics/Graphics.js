@@ -33,7 +33,7 @@ var Render = require('./GraphicsRender');
  * @extends Phaser.GameObjects.Components.Visible
  * @extends Phaser.GameObjects.Components.ScrollFactor
  *
- * @param {Phaser.Scene} scene - [description]
+ * @param {Phaser.Scene} scene - The Scene to which this Graphics object belongs.
  * @param {object} options - [description]
  */
 var Graphics = new Class({
@@ -85,7 +85,7 @@ var Graphics = new Class({
         this.displayOriginY = 0;
 
         /**
-         * [description]
+         * The array of commands used to render the Graphics.
          *
          * @name Phaser.GameObjects.Graphics#commandBuffer
          * @type {array}
@@ -95,7 +95,7 @@ var Graphics = new Class({
         this.commandBuffer = [];
 
         /**
-         * [description]
+         * The default fill color for shapes rendered by this Graphics object.
          *
          * @name Phaser.GameObjects.Graphics#defaultFillColor
          * @type {number}
@@ -105,7 +105,7 @@ var Graphics = new Class({
         this.defaultFillColor = -1;
 
         /**
-         * [description]
+         * The default fill alpha for shapes rendered by this Graphics object.
          *
          * @name Phaser.GameObjects.Graphics#defaultFillAlpha
          * @type {number}
@@ -115,7 +115,7 @@ var Graphics = new Class({
         this.defaultFillAlpha = 1;
 
         /**
-         * [description]
+         * The default stroke width for shapes rendered by this Graphics object.
          *
          * @name Phaser.GameObjects.Graphics#defaultStrokeWidth
          * @type {number}
@@ -125,7 +125,7 @@ var Graphics = new Class({
         this.defaultStrokeWidth = 1;
 
         /**
-         * [description]
+         * The default stroke color for shapes rendered by this Graphics object.
          *
          * @name Phaser.GameObjects.Graphics#defaultStrokeColor
          * @type {number}
@@ -135,7 +135,7 @@ var Graphics = new Class({
         this.defaultStrokeColor = -1;
 
         /**
-         * [description]
+         * The default stroke alpha for shapes rendered by this Graphics object.
          *
          * @name Phaser.GameObjects.Graphics#defaultStrokeAlpha
          * @type {number}
@@ -158,12 +158,12 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Set the default styles for this Graphics object.
      *
      * @method Phaser.GameObjects.Graphics#setDefaultStyles
      * @since 3.0.0
      *
-     * @param {object} options - [description]
+     * @param {object} options - The styles to set as defaults.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */

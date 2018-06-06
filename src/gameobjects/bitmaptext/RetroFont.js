@@ -10,7 +10,7 @@ var Extend = require('../../utils/object/Extend');
 /**
  * @typedef {object} Phaser.GameObjects.RetroFont.Config
  * 
- * @property {string} image - [description]
+ * @property {string} image - The key of the image containing the font.
  * @property {number} offset.x - If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.
  * @property {number} offset.y - If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
  * @property {number} width - The width of each character in the font set.

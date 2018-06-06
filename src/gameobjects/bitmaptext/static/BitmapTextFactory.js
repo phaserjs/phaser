@@ -17,9 +17,9 @@ var GameObjectFactory = require('../../GameObjectFactory');
  *
  * @param {number} x - The x position of the Game Object.
  * @param {number} y - The y position of the Game Object.
- * @param {string} font - [description]
- * @param {(string|string[])} [text] - [description]
- * @param {number} [size] - [description]
+ * @param {string} font - The key of the font to use from the BitmapFont cache.
+ * @param {(string|string[])} [text] - The string, or array of strings, to be set as the content of this Bitmap Text.
+ * @param {number} [size] - The font size to set.
  *
  * @return {Phaser.GameObjects.BitmapText} The Game Object that was created.
  */

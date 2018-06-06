@@ -13,10 +13,9 @@ var GetAdvancedValue = require('../../../utils/object/GetAdvancedValue');
  * @typedef {object} BitmapTextConfig
  * @extends GameObjectConfig
  *
- * @property {string} [font=''] - [description]
- * @property {string} [text=''] - [description]
- * @property {(number|false)} [size=false] - [description]
- * @property {string} [align='left'] - [description]
+ * @property {string} [font=''] - The key of the font to use from the BitmapFont cache.
+ * @property {string} [text=''] - The string, or array of strings, to be set as the content of this Bitmap Text.
+ * @property {(number|false)} [size=false] - The font size to set.
  */
 
 /**
@@ -39,9 +38,8 @@ GameObjectCreator.register('dynamicBitmapText', function (config, addToScene)
     var font = GetAdvancedValue(config, 'font', '');
     var text = GetAdvancedValue(config, 'text', '');
     var size = GetAdvancedValue(config, 'size', false);
-    var align = GetAdvancedValue(config, 'align', 'left');
 
-    var bitmapText = new BitmapText(this.scene, 0, 0, font, text, size, align);
+    var bitmapText = new BitmapText(this.scene, 0, 0, font, text, size);
 
     if (addToScene !== undefined)
     {
