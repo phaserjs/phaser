@@ -16,19 +16,22 @@ var Gamepad = require('./Gamepad');
 /**
  * @typedef {object} Pad
  *
- * @property {string} id - [description]
- * @property {integer} index - [description]
- */
-
-/**
- * @callback GamepadHandler
- *
- * @property {GamepadEvent} event - [description]
+ * @property {string} id - The ID of the Gamepad.
+ * @property {integer} index - The index of the Gamepad.
  */
 
 /**
  * @classdesc
- * [description]
+ * The Gamepad Manager is a helper class that belongs to the Input Manager.
+ * 
+ * Its role is to listen for native DOM Gamepad Events and then process them.
+ * 
+ * You do not need to create this class directly, the Input Manager will create an instance of it automatically.
+ * 
+ * You can access it from within a Scene using `this.input.gamepad`. For example, you can do:
+ *
+ * ```javascript
+ * ```
  *
  * @class GamepadManager
  * @extends Phaser.Events.EventEmitter
@@ -36,7 +39,7 @@ var Gamepad = require('./Gamepad');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Input.InputManager} inputManager - [description]
+ * @param {Phaser.Input.InputManager} inputManager - A reference to the Input Manager.
  */
 var GamepadManager = new Class({
 
@@ -49,7 +52,7 @@ var GamepadManager = new Class({
         EventEmitter.call(this);
 
         /**
-         * [description]
+         * A reference to the Input Manager.
          *
          * @name Phaser.Input.Gamepad.GamepadManager#manager
          * @type {Phaser.Input.InputManager}
@@ -58,35 +61,28 @@ var GamepadManager = new Class({
         this.manager = inputManager;
 
         /**
-         * [description]
+         * A boolean that controls if the Gamepad Manager is enabled or not.
+         * Can be toggled on the fly.
          *
          * @name Phaser.Input.Gamepad.GamepadManager#enabled
          * @type {boolean}
-         * @default false
+         * @default true
          * @since 3.0.0
          */
-        this.enabled = false;
+        this.enabled = true;
 
         /**
-         * [description]
+         * The Gamepad Event target, as defined in the Game Config.
+         * Typically the browser window, but can be any interactive DOM element.
          *
          * @name Phaser.Input.Gamepad.GamepadManager#target
-         * @type {?object}
+         * @type {any}
          * @since 3.0.0
          */
         this.target;
 
         /**
-         * [description]
-         *
-         * @name Phaser.Input.Gamepad.GamepadManager#handler
-         * @type {?GamepadHandler}
-         * @since 3.0.0
-         */
-        this.handler;
-
-        /**
-         * [description]
+         * An array of the connected Gamepads.
          *
          * @name Phaser.Input.Gamepad.GamepadManager#gamepads
          * @type {Phaser.Input.Gamepad.Gamepad[]}
@@ -96,20 +92,25 @@ var GamepadManager = new Class({
         this.gamepads = [];
 
         /**
-         * Standard FIFO queue.
+         * An internal event queue.
          *
          * @name Phaser.Input.Gamepad.GamepadManager#queue
          * @type {GamepadEvent[]}
-         * @default []
+         * @private
          * @since 3.0.0
          */
         this.queue = [];
+
+        this._pad1;
+        this._pad2;
+        this._pad3;
+        this._pad4;
 
         inputManager.events.once('boot', this.boot, this);
     },
 
     /**
-     * [description]
+     * The Boot handler is called by Phaser.Game when it first starts up.
      *
      * @method Phaser.Input.Gamepad.GamepadManager#boot
      * @since 3.0.0
@@ -118,9 +119,8 @@ var GamepadManager = new Class({
     {
         var config = this.manager.config;
 
-        this.enabled = config.inputGamepad && this.manager.game.device.input.gamepads;
-
-        this.target = window;
+        this.enabled = (config.inputGamepad && this.manager.game.device.input.gamepads);
+        this.target = config.inputGamepadEventTarget;
 
         if (this.enabled)
         {
@@ -129,44 +129,74 @@ var GamepadManager = new Class({
     },
 
     /**
-     * [description]
+     * The Gamepad Connected Event Handler.
+     *
+     * @method Phaser.Input.Gamepad.GamepadManager#onGamepadConnected
+     * @since 3.10.0
+     *
+     * @param {GamepadEvent} event - The native DOM Gamepad Event.
+     */
+    onGamepadConnected: function (event)
+    {
+        // console.log(event);
+
+        if (event.defaultPrevented || !this.enabled)
+        {
+            // Do nothing if event already handled
+            return;
+        }
+
+        this.refreshPads();
+
+        this.queue.push(event);
+    },
+
+    /**
+     * The Gamepad Disconnected Event Handler.
+     *
+     * @method Phaser.Input.Gamepad.GamepadManager#onGamepadDisconnected
+     * @since 3.10.0
+     *
+     * @param {GamepadEvent} event - The native DOM Gamepad Event.
+     */
+    onGamepadDisconnected: function (event)
+    {
+        if (event.defaultPrevented || !this.enabled)
+        {
+            // Do nothing if event already handled
+            return;
+        }
+
+        this.refreshPads();
+
+        this.queue.push(event);
+    },
+
+    /**
+     * Starts the Gamepad Event listeners running.
+     * This is called automatically and does not need to be manually invoked.
      *
      * @method Phaser.Input.Gamepad.GamepadManager#startListeners
      * @since 3.0.0
      */
     startListeners: function ()
     {
-        var queue = this.queue;
-
-        var handler = function handler (event)
-        {
-            if (event.defaultPrevented)
-            {
-                // Do nothing if event already handled
-                return;
-            }
-
-            queue.push(event);
-        };
-
-        this.handler = handler;
-
         var target = this.target;
 
-        target.addEventListener('gamepadconnected', handler, false);
-        target.addEventListener('gamepaddisconnected', handler, false);
+        target.addEventListener('gamepadconnected', this.onGamepadConnected.bind(this), false);
+        target.addEventListener('gamepaddisconnected', this.onGamepadDisconnected.bind(this), false);
 
-        //  FF only for now:
-        target.addEventListener('gamepadbuttondown', handler, false);
-        target.addEventListener('gamepadbuttonup', handler, false);
-        target.addEventListener('gamepadaxismove', handler, false);
+        //  FF also supports gamepadbuttondown, gamepadbuttonup and gamepadaxismove but
+        //  nothing else does, and we can get those values via the gamepads anyway, so we will
+        //  until more browsers support this
 
         //  Finally, listen for an update event from the Input Manager
         this.manager.events.on('update', this.update, this);
     },
 
     /**
-     * [description]
+     * Stops the Gamepad Event listeners.
+     * This is called automatically and does not need to be manually invoked.
      *
      * @method Phaser.Input.Gamepad.GamepadManager#stopListeners
      * @since 3.0.0
@@ -174,20 +204,15 @@ var GamepadManager = new Class({
     stopListeners: function ()
     {
         var target = this.target;
-        var handler = this.handler;
 
-        target.removeEventListener('gamepadconnected', handler);
-        target.removeEventListener('gamepaddisconnected', handler);
-
-        target.removeEventListener('gamepadbuttondown', handler);
-        target.removeEventListener('gamepadbuttonup', handler);
-        target.removeEventListener('gamepadaxismove', handler);
+        target.removeEventListener('gamepadconnected', this.onGamepadConnected);
+        target.removeEventListener('gamepaddisconnected', this.onGamepadDisconnected);
 
         this.manager.events.off('update', this.update);
     },
 
     /**
-     * [description]
+     * Disconnects all current Gamepads.
      *
      * @method Phaser.Input.Gamepad.GamepadManager#disconnectAll
      * @since 3.0.0
@@ -201,92 +226,99 @@ var GamepadManager = new Class({
     },
 
     /**
-     * [description]
-     *
-     * @method Phaser.Input.Gamepad.GamepadManager#addPad
-     * @since 3.0.0
-     *
-     * @param {Pad} pad - [description]
-     *
-     * @return {Phaser.Input.Gamepad.Gamepad} [description]
-     */
-    addPad: function (pad)
-    {
-        var gamepad = new Gamepad(this, pad.id, pad.index);
-
-        this.gamepads[pad.index] = gamepad;
-
-        return gamepad;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Gamepad.GamepadManager#removePad
-     * @since 3.0.0
-     * @todo  Code this feature
-     *
-     * @param {number} index - [description]
-     * @param {Pad} pad - [description]
-     */
-    removePad: function ()
-    {
-        //  TODO
-    },
-
-    /**
-     * [description]
+     * Refreshes the list of connected Gamepads.
+     * 
+     * This is called automatically when a gamepad is connected or disconnected,
+     * and during the update loop.
      *
      * @method Phaser.Input.Gamepad.GamepadManager#refreshPads
+     * @private
      * @since 3.0.0
-     *
-     * @param {Pad[]} pads - [description]
      */
-    refreshPads: function (pads)
+    refreshPads: function ()
     {
-        if (!pads)
+        var connectedPads = navigator.getGamepads();
+
+        if (!connectedPads)
         {
             this.disconnectAll();
         }
         else
         {
-            for (var i = 0; i < pads.length; i++)
-            {
-                var pad = pads[i];
+            var currentPads = this.gamepads;
 
-                if (!pad)
+            for (var i = 0; i < connectedPads.length; i++)
+            {
+                var livePad = connectedPads[i];
+
+                //  Because sometimes they're null (yes, really)
+                if (!livePad)
                 {
-                    //  removePad?
                     continue;
                 }
 
-                if (this.gamepads[pad.index] === undefined)
-                {
-                    this.addPad(pad);
-                }
+                var id = livePad.id;
+                var index = livePad.index;
+                var currentPad = currentPads[index];
 
-                this.gamepads[pad.index].update(pad);
+                if (!currentPad)
+                {
+                    //  A new Gamepad, not currently stored locally
+                    var newPad  = new Gamepad(this, livePad);
+
+                    currentPads[index] = newPad;
+
+                    if (!this._pad1)
+                    {
+                        this._pad1 = newPad;
+                    }
+                    else if (!this._pad2)
+                    {
+                        this._pad2 = newPad;
+                    }
+                    else if (!this._pad3)
+                    {
+                        this._pad3 = newPad;
+                    }
+                    else if (!this._pad4)
+                    {
+                        this._pad4 = newPad;
+                    }
+                }
+                else if (currentPad.id !== id)
+                {
+                    //  A new Gamepad with a different vendor string, but it has got the same index as an old one
+                    currentPad.destroy();
+
+                    currentPads[index] = new Gamepad(this, livePad);
+                }
+                else
+                {
+                    //  If neither of these, it's a pad we've already got, so update it
+                    currentPad.update(livePad);
+                }
             }
         }
     },
 
     /**
-     * [description]
+     * Returns an array of all currently connected Gamepads.
      *
      * @method Phaser.Input.Gamepad.GamepadManager#getAll
      * @since 3.0.0
      *
-     * @return {Phaser.Input.Gamepad.Gamepad[]} [description]
+     * @return {Phaser.Input.Gamepad.Gamepad[]} An array of all currently connected Gamepads.
      */
     getAll: function ()
     {
         var out = [];
+        var pads = this.gamepads;
 
-        for (var i = 0; i < this.gamepads.length; i++)
+        for (var i = 0; i < pads.length; i++)
         {
-            if (this.gamepads[i])
+            if (pads[i])
             {
-                out.push(this.gamepads[i]);
+                out.push(pads[i]);
             }
         }
 
@@ -294,30 +326,35 @@ var GamepadManager = new Class({
     },
 
     /**
-     * [description]
+     * Looks-up a single Gamepad based on the given index value.
      *
      * @method Phaser.Input.Gamepad.GamepadManager#getPad
      * @since 3.0.0
      *
-     * @param {number} index - [description]
+     * @param {number} index - The index of the Gamepad to get.
      *
-     * @return {Phaser.Input.Gamepad.Gamepad} [description]
+     * @return {Phaser.Input.Gamepad.Gamepad} The Gamepad matching the given index, or undefined if none were found.
      */
     getPad: function (index)
     {
-        for (var i = 0; i < this.gamepads.length; i++)
+        var pads = this.gamepads;
+
+        for (var i = 0; i < pads.length; i++)
         {
-            if (this.gamepads[i].index === index)
+            if (pads[i] && pads[i].index === index)
             {
-                return this.gamepads[i];
+                return pads[i];
             }
         }
     },
 
     /**
-     * [description]
+     * The internal update loop. Refreshes all connected gamepads and processes their events.
+     * 
+     * Called automatically by the Input Manager, invoked from the Game step.
      *
      * @method Phaser.Input.Gamepad.GamepadManager#update
+     * @private
      * @since 3.0.0
      */
     update: function ()
@@ -327,7 +364,7 @@ var GamepadManager = new Class({
             return;
         }
 
-        this.refreshPads(navigator.getGamepads());
+        this.refreshPads();
 
         var len = this.queue.length;
 
@@ -366,7 +403,7 @@ var GamepadManager = new Class({
     },
 
     /**
-     * [description]
+     * Destroys this Gamepad Manager, disconnecting all Gamepads and releasing internal references.
      *
      * @method Phaser.Input.Gamepad.GamepadManager#destroy
      * @since 3.0.0
@@ -376,14 +413,27 @@ var GamepadManager = new Class({
         this.stopListeners();
         this.disconnectAll();
 
+        this.removeAllListeners();
+
+        for (var i = 0; i < this.gamepads.length; i++)
+        {
+            if (this.gamepads[i])
+            {
+                this.gamepads[i].destroy();
+            }
+        }
+
         this.gamepads = [];
+
+        this.target = null;
+        this.manager = null;
     },
 
     /**
      * The total number of connected game pads.
      *
      * @name Phaser.Input.Gamepad.GamepadManager#total
-     * @type {number}
+     * @type {integer}
      * @since 3.0.0
      */
     total: {
@@ -391,6 +441,86 @@ var GamepadManager = new Class({
         get: function ()
         {
             return this.gamepads.length;
+        }
+
+    },
+
+    /**
+     * A reference to the first connected Gamepad.
+     * 
+     * This will be undefined if either no pads are connected, or the browser
+     * has not yet issued a gamepadconnect, which can happen even if a Gamepad
+     * is plugged in, but hasn't yet had any buttons pressed on it.
+     *
+     * @name Phaser.Input.Gamepad.GamepadManager#pad1
+     * @type {Phaser.Input.Gamepad.Gamepad}
+     * @since 3.10.0
+     */
+    pad1: {
+
+        get: function ()
+        {
+            return this._pad1;
+        }
+
+    },
+
+    /**
+     * A reference to the second connected Gamepad.
+     * 
+     * This will be undefined if either no pads are connected, or the browser
+     * has not yet issued a gamepadconnect, which can happen even if a Gamepad
+     * is plugged in, but hasn't yet had any buttons pressed on it.
+     *
+     * @name Phaser.Input.Gamepad.GamepadManager#pad2
+     * @type {Phaser.Input.Gamepad.Gamepad}
+     * @since 3.10.0
+     */
+    pad2: {
+
+        get: function ()
+        {
+            return this._pad2;
+        }
+
+    },
+
+    /**
+     * A reference to the third connected Gamepad.
+     * 
+     * This will be undefined if either no pads are connected, or the browser
+     * has not yet issued a gamepadconnect, which can happen even if a Gamepad
+     * is plugged in, but hasn't yet had any buttons pressed on it.
+     *
+     * @name Phaser.Input.Gamepad.GamepadManager#pad3
+     * @type {Phaser.Input.Gamepad.Gamepad}
+     * @since 3.10.0
+     */
+    pad3: {
+
+        get: function ()
+        {
+            return this._pad3;
+        }
+
+    },
+
+    /**
+     * A reference to the fourth connected Gamepad.
+     * 
+     * This will be undefined if either no pads are connected, or the browser
+     * has not yet issued a gamepadconnect, which can happen even if a Gamepad
+     * is plugged in, but hasn't yet had any buttons pressed on it.
+     *
+     * @name Phaser.Input.Gamepad.GamepadManager#pad4
+     * @type {Phaser.Input.Gamepad.Gamepad}
+     * @since 3.10.0
+     */
+    pad4: {
+
+        get: function ()
+        {
+            return this._pad4;
         }
 
     }
