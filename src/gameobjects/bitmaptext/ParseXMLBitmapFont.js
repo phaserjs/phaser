@@ -14,7 +14,43 @@ function getValue (node, attribute)
     return parseInt(node.getAttribute(attribute), 10);
 }
 
+// TODO: These typedefs should be kept somewhere else.
+// TODO: Elaborate on the kerning property description.
+
 /**
+ * The font data for an individual character of a Bitmap Font.
+ *
+ * Describes the character's position, size, offset and kerning.
+ *
+ * @typedef {object} BitmapFontCharacterData
+ *
+ * @property {number} x - The x position of the character.
+ * @property {number} y - The y position of the character.
+ * @property {number} width - The width of the character.
+ * @property {number} height - The height of the character.
+ * @property {number} centerX - The center x position of the character.
+ * @property {number} centerY - The center y position of the character.
+ * @property {number} xOffset - The x offset of the character.
+ * @property {number} yOffset - The y offset of the character.
+ * @property {object} data - Extra data for the character.
+ * @property {object} kerning - Kerning values. [description]
+ */
+
+/**
+ * Bitmap Font data that can be used by a BitmapText Game Object.
+ *
+ * @typedef {object} BitmapFontData
+ *
+ * @property {string} font - The name of the font.
+ * @property {number} size - The size of the font.
+ * @property {number} lineHeight - The line height of the font.
+ * @property {boolean} retroFont - Whether this font is a retro font (monospace).
+ * @property {Object.<number, BitmapFontCharacterData>} chars - The character data of the font, keyed by character code. Each character datum includes a position, size, offset and more.
+ */
+
+/**
+ * Parse an XML font so you can pass it to the BitmapText constructor and create a BitmapText object.
+ *
  * @function ParseXMLBitmapFont
  * @since 3.0.0
  * @private
@@ -23,6 +59,8 @@ function getValue (node, attribute)
  * @param {integer} [xSpacing=0] - The x-axis spacing to add between each letter.
  * @param {integer} [ySpacing=0] - The y-axis spacing to add to the line height.
  * @param {Phaser.Textures.Frame} [frame] - The texture frame to take into account while parsing.
+ *
+ * @return {BitmapFontData} The parsed Bitmap Font data.
  */
 var ParseXMLBitmapFont = function (xml, xSpacing, ySpacing, frame)
 {
