@@ -231,7 +231,7 @@ var UpdateList = new Class({
      * @method Phaser.GameObjects.UpdateList#removeAll
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.UpdateList} The UpdateList object.
+     * @return {Phaser.GameObjects.UpdateList} This UpdateList.
      */
     removeAll: function ()
     {
@@ -285,7 +285,7 @@ var UpdateList = new Class({
     },
 
     /**
-     * [description]
+     * The length of the list.
      *
      * @name Phaser.GameObjects.UpdateList#length
      * @type {integer}
