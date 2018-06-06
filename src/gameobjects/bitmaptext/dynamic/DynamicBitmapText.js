@@ -53,9 +53,9 @@ var Render = require('./DynamicBitmapTextRender');
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. It can only belong to one Scene at any given time.
  * @param {number} x - The x coordinate of this Game Object in world space.
  * @param {number} y - The y coordinate of this Game Object in world space.
- * @param {string} font - [description]
- * @param {(string|string[])} [text] - [description]
- * @param {number} [size] - [description]
+ * @param {string} font - The key of the font to use from the Bitmap Font cache.
+ * @param {(string|string[])} [text] - The string, or array of strings, to be set as the content of this Bitmap Text.
+ * @param {number} [size] - The font size of this Bitmap Text.
  */
 var DynamicBitmapText = new Class({
 
@@ -114,7 +114,7 @@ var DynamicBitmapText = new Class({
         this.text = '';
 
         /**
-         * The size of this Bitmap Text.
+         * The font size of this Bitmap Text.
          *
          * @name Phaser.GameObjects.DynamicBitmapText#fontSize
          * @type {number}

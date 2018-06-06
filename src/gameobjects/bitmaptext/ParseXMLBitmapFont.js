@@ -5,9 +5,16 @@
  */
 
 /**
+ * Read an integer value from an XML Node.
+ *
  * @function getValue
  * @since 3.0.0
  * @private
+ *
+ * @param {Node} node - The XML Node.
+ * @param {string} attribute - The attribute to read.
+ *
+ * @return {integer} The parsed value.
  */
 function getValue (node, attribute)
 {
@@ -15,7 +22,7 @@ function getValue (node, attribute)
 }
 
 /**
- * Parse an XML font so you can pass it to the BitmapText constructor and create a BitmapText object.
+ * Parse an XML font to Bitmap Font data for the Bitmap Font cache.
  *
  * @function ParseXMLBitmapFont
  * @since 3.0.0

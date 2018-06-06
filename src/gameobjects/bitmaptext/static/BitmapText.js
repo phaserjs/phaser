@@ -80,7 +80,7 @@ var Render = require('./BitmapTextRender');
  * @param {number} y - The y coordinate of this Game Object in world space.
  * @param {string} font - The key of the font to use from the Bitmap Font cache.
  * @param {(string|string[])} [text] - The string, or array of strings, to be set as the content of this Bitmap Text.
- * @param {number} [size] - The size of this Bitmap Text.
+ * @param {number} [size] - The font size of this Bitmap Text.
  */
 var BitmapText = new Class({
 
@@ -140,7 +140,7 @@ var BitmapText = new Class({
         this.text = '';
 
         /**
-         * The size of this Bitmap Text.
+         * The font size of this Bitmap Text.
          *
          * @name Phaser.GameObjects.BitmapText#fontSize
          * @type {number}
