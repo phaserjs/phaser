@@ -14,8 +14,8 @@
 /**
  * @typedef {object} GlobalBitmapTextSize
  *
- * @property {number} x - The x position of the BitmapText, taking into consideration the x coordinate of the Game Object.
- * @property {number} y - The y position of the BitmapText, taking into consideration the y coordinate of the Game Object.
+ * @property {number} x - The x position of the BitmapText, taking into consideration the x position and scale of the Game Object.
+ * @property {number} y - The y position of the BitmapText, taking into consideration the y position and scale of the Game Object.
  * @property {number} width - The width of the BitmapText, taking into consideration the x scale of the Game Object.
  * @property {number} width - The height of the BitmapText, taking into consideration the y scale of the Game Object.
  */
