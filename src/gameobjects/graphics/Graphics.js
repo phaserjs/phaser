@@ -15,6 +15,44 @@ var MATH_CONST = require('../../math/const');
 var Render = require('./GraphicsRender');
 
 /**
+ * Graphics line style (or stroke style) settings.
+ *
+ * @typedef {object} GraphicsLineStyle
+ *
+ * @property {number} width - The stroke width.
+ * @property {number} color - The stroke color.
+ * @property {number} alpha - The stroke alpha.
+ */
+
+/**
+ * Graphics fill style settings.
+ *
+ * @typedef {object} GraphicsFillStyle
+ *
+ * @property {number} color - The fill color.
+ * @property {number} alpha - The fill alpha.
+ */
+
+/**
+ * Graphics style settings.
+ *
+ * @typedef {object} GraphicsStyle
+ *
+ * @property {GraphicsLineStyle} lineStyle - The style applied to shape outlines.
+ * @property {GraphicsFillStyle} fillStyle - The style applied to shape areas.
+ */
+
+/**
+ * Options for the Graphics game Object.
+ *
+ * @typedef {object} GraphicsOptions
+ * @extends GraphicsStyle
+ *
+ * @property {number} x - The x coordinate of the Graphics.
+ * @property {number} y - The y coordinate of the Graphics.
+ */
+
+/**
  * @classdesc
  * [description]
  *
@@ -34,7 +72,7 @@ var Render = require('./GraphicsRender');
  * @extends Phaser.GameObjects.Components.ScrollFactor
  *
  * @param {Phaser.Scene} scene - The Scene to which this Graphics object belongs.
- * @param {object} options - [description]
+ * @param {GraphicsOptions} options - Options that set the position and default style of this Graphics object.
  */
 var Graphics = new Class({
 
@@ -158,7 +196,7 @@ var Graphics = new Class({
     },
 
     /**
-     * Set the default styles for this Graphics object.
+     * Set the default style settings for this Graphics object.
      *
      * @method Phaser.GameObjects.Graphics#setDefaultStyles
      * @since 3.0.0
