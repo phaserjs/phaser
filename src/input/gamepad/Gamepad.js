@@ -316,6 +316,66 @@ var Gamepad = new Class({
     },
 
     /**
+     * Gets the total number of axis this Gamepad claims to support.
+     *
+     * @method Phaser.Input.Gamepad.Gamepad#getAxisTotal
+     * @since 3.10.0
+     *
+     * @return {integer} The total number of axes this Gamepad claims to support.
+     */
+    getAxisTotal: function ()
+    {
+        return this.axes.length;
+    },
+
+    /**
+     * Gets the value of an axis based on the given index.
+     * The index must be valid within the range of axes supported by this Gamepad.
+     * The return value will be a float between 0 and 1.
+     *
+     * @method Phaser.Input.Gamepad.Gamepad#getAxisValue
+     * @since 3.10.0
+     *
+     * @param {integer} index - The index of the axes to get the value for.
+     *
+     * @return {number} The value of the axis, between 0 and 1.
+     */
+    getAxisValue: function (index)
+    {
+        return this.axes[index].getValue();
+    },
+
+    /**
+     * Sets the threshold value of all axis on this Gamepad.
+     * The value is a float between 0 and 1 and is the amount below which the axis is considered as not having been moved.
+     *
+     * @method Phaser.Input.Gamepad.Gamepad#setAxisThreshold
+     * @since 3.10.0
+     *
+     * @param {number} value - A value between 0 and 1.
+     */
+    setAxisThreshold: function (value)
+    {
+        for (var i = 0; i < this.axes.length; i++)
+        {
+            this.axes[i].threshold = value;
+        }
+    },
+
+    /**
+     * Gets the total number of buttons this Gamepad claims to have.
+     *
+     * @method Phaser.Input.Gamepad.Gamepad#getButtonTotal
+     * @since 3.10.0
+     *
+     * @return {integer} The total number of buttons this Gamepad claims to have.
+     */
+    getButtonTotal: function ()
+    {
+        return this.buttons.length;
+    },
+
+    /**
      * Gets the value of a button based on the given index.
      * The index must be valid within the range of buttons supported by this Gamepad.
      * 
