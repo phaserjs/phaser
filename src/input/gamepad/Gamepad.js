@@ -12,7 +12,7 @@ var EventEmitter = require('eventemitter3');
 /**
  * @classdesc
  * A single Gamepad.
- * 
+ *
  * These are created, updated and managed by the Gamepad Manager.
  *
  * @class Gamepad
@@ -54,13 +54,13 @@ var Gamepad = new Class({
 
         /**
          * A string containing some information about the controller.
-         * 
+         *
          * This is not strictly specified, but in Firefox it will contain three pieces of information
          * separated by dashes (-): two 4-digit hexadecimal strings containing the USB vendor and
          * product id of the controller, and the name of the controller as provided by the driver.
          * In Chrome it will contain the name of the controller as provided by the driver,
          * followed by vendor and product 4-digit hexadecimal strings.
-         * 
+         *
          * @name Phaser.Input.Gamepad.Gamepad#id
          * @type {string}
          * @since 3.0.0
@@ -142,7 +142,7 @@ var Gamepad = new Class({
          * @private
          * @since 3.10.0
          */
-        this._LCRight = (buttons[15]) ? buttons[15] : _noButton;;
+        this._LCRight = (buttons[15]) ? buttons[15] : _noButton;
 
         /**
          * A reference to the Top Button in the Left Cluster.
@@ -152,7 +152,7 @@ var Gamepad = new Class({
          * @private
          * @since 3.10.0
          */
-        this._LCTop = (buttons[12]) ? buttons[12] : _noButton;;
+        this._LCTop = (buttons[12]) ? buttons[12] : _noButton;
 
         /**
          * A reference to the Bottom Button in the Left Cluster.
@@ -162,7 +162,7 @@ var Gamepad = new Class({
          * @private
          * @since 3.10.0
          */
-        this._LCBottom = (buttons[13]) ? buttons[13] : _noButton;;
+        this._LCBottom = (buttons[13]) ? buttons[13] : _noButton;
 
         /**
          * A reference to the Left Button in the Right Cluster.
@@ -172,7 +172,7 @@ var Gamepad = new Class({
          * @private
          * @since 3.10.0
          */
-        this._RCLeft = (buttons[2]) ? buttons[2] : _noButton;;
+        this._RCLeft = (buttons[2]) ? buttons[2] : _noButton;
 
         /**
          * A reference to the Right Button in the Right Cluster.
@@ -182,7 +182,7 @@ var Gamepad = new Class({
          * @private
          * @since 3.10.0
          */
-        this._RCRight = (buttons[1]) ? buttons[1] : _noButton;;
+        this._RCRight = (buttons[1]) ? buttons[1] : _noButton;
 
         /**
          * A reference to the Top Button in the Right Cluster.
@@ -192,7 +192,7 @@ var Gamepad = new Class({
          * @private
          * @since 3.10.0
          */
-        this._RCTop = (buttons[3]) ? buttons[3] : _noButton;;
+        this._RCTop = (buttons[3]) ? buttons[3] : _noButton;
 
         /**
          * A reference to the Bottom Button in the Right Cluster.
@@ -202,7 +202,7 @@ var Gamepad = new Class({
          * @private
          * @since 3.10.0
          */
-        this._RCBottom = (buttons[0]) ? buttons[0] : _noButton;;
+        this._RCBottom = (buttons[0]) ? buttons[0] : _noButton;
 
         /**
          * A reference to the Top Left Front Button (L1 Shoulder Button)
@@ -212,7 +212,7 @@ var Gamepad = new Class({
          * @private
          * @since 3.10.0
          */
-        this._FBLeftTop = (buttons[4]) ? buttons[4] : _noButton;;
+        this._FBLeftTop = (buttons[4]) ? buttons[4] : _noButton;
 
         /**
          * A reference to the Bottom Left Front Button (L2 Shoulder Button)
@@ -222,7 +222,7 @@ var Gamepad = new Class({
          * @private
          * @since 3.10.0
          */
-        this._FBLeftBottom = (buttons[6]) ? buttons[6] : _noButton;;
+        this._FBLeftBottom = (buttons[6]) ? buttons[6] : _noButton;
 
         /**
          * A reference to the Top Right Front Button (R1 Shoulder Button)
@@ -232,7 +232,7 @@ var Gamepad = new Class({
          * @private
          * @since 3.10.0
          */
-        this._FBRightTop = (buttons[5]) ? buttons[5] : _noButton;;
+        this._FBRightTop = (buttons[5]) ? buttons[5] : _noButton;
 
         /**
          * A reference to the Bottom Right Front Button (R2 Shoulder Button)
@@ -242,7 +242,7 @@ var Gamepad = new Class({
          * @private
          * @since 3.10.0
          */
-        this._FBRightBottom = (buttons[7]) ? buttons[7] : _noButton;;
+        this._FBRightBottom = (buttons[7]) ? buttons[7] : _noButton;
 
         var _noAxis = { value: 0 };
 
@@ -290,7 +290,7 @@ var Gamepad = new Class({
     /**
      * Gets the value of a button based on the given index.
      * The index must be valid within the range of buttons supported by this Gamepad.
-     * 
+     *
      * The return value will be either 0 or 1 for an analogue button, or a float between 0 and 1
      * for a pressure-sensitive digital button, such as the shoulder buttons on a Dual Shock.
      *

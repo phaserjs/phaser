@@ -23,11 +23,11 @@ var Gamepad = require('./Gamepad');
 /**
  * @classdesc
  * The Gamepad Manager is a helper class that belongs to the Input Manager.
- * 
+ *
  * Its role is to listen for native DOM Gamepad Events and then process them.
- * 
+ *
  * You do not need to create this class directly, the Input Manager will create an instance of it automatically.
- * 
+ *
  * You can access it from within a Scene using `this.input.gamepad`. For example, you can do:
  *
  * ```javascript
@@ -227,7 +227,7 @@ var GamepadManager = new Class({
 
     /**
      * Refreshes the list of connected Gamepads.
-     * 
+     *
      * This is called automatically when a gamepad is connected or disconnected,
      * and during the update loop.
      *
@@ -264,7 +264,7 @@ var GamepadManager = new Class({
                 if (!currentPad)
                 {
                     //  A new Gamepad, not currently stored locally
-                    var newPad  = new Gamepad(this, livePad);
+                    var newPad = new Gamepad(this, livePad);
 
                     currentPads[index] = newPad;
 
@@ -350,7 +350,7 @@ var GamepadManager = new Class({
 
     /**
      * The internal update loop. Refreshes all connected gamepads and processes their events.
-     * 
+     *
      * Called automatically by the Input Manager, invoked from the Game step.
      *
      * @method Phaser.Input.Gamepad.GamepadManager#update
@@ -447,7 +447,7 @@ var GamepadManager = new Class({
 
     /**
      * A reference to the first connected Gamepad.
-     * 
+     *
      * This will be undefined if either no pads are connected, or the browser
      * has not yet issued a gamepadconnect, which can happen even if a Gamepad
      * is plugged in, but hasn't yet had any buttons pressed on it.
@@ -467,7 +467,7 @@ var GamepadManager = new Class({
 
     /**
      * A reference to the second connected Gamepad.
-     * 
+     *
      * This will be undefined if either no pads are connected, or the browser
      * has not yet issued a gamepadconnect, which can happen even if a Gamepad
      * is plugged in, but hasn't yet had any buttons pressed on it.
@@ -487,7 +487,7 @@ var GamepadManager = new Class({
 
     /**
      * A reference to the third connected Gamepad.
-     * 
+     *
      * This will be undefined if either no pads are connected, or the browser
      * has not yet issued a gamepadconnect, which can happen even if a Gamepad
      * is plugged in, but hasn't yet had any buttons pressed on it.
@@ -507,7 +507,7 @@ var GamepadManager = new Class({
 
     /**
      * A reference to the fourth connected Gamepad.
-     * 
+     *
      * This will be undefined if either no pads are connected, or the browser
      * has not yet issued a gamepadconnect, which can happen even if a Gamepad
      * is plugged in, but hasn't yet had any buttons pressed on it.
