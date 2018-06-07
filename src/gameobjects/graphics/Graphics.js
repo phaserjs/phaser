@@ -36,7 +36,7 @@ var Render = require('./GraphicsRender');
 /**
  * Graphics style settings.
  *
- * @typedef {object} GraphicsStyle
+ * @typedef {object} GraphicsStyles
  *
  * @property {GraphicsLineStyle} lineStyle - The style applied to shape outlines.
  * @property {GraphicsFillStyle} fillStyle - The style applied to shape areas.
@@ -46,7 +46,7 @@ var Render = require('./GraphicsRender');
  * Options for the Graphics game Object.
  *
  * @typedef {object} GraphicsOptions
- * @extends GraphicsStyle
+ * @extends GraphicsStyles
  *
  * @property {number} x - The x coordinate of the Graphics.
  * @property {number} y - The y coordinate of the Graphics.
@@ -54,7 +54,44 @@ var Render = require('./GraphicsRender');
 
 /**
  * @classdesc
- * [description]
+ * A Graphics object is a way to draw primitive shapes to you game. Primitives include forms of geometry, such as
+ * Rectangles, Circles, and Polygons. They also include lines, arcs and curves. When you initially create a Graphics
+ * object it will be empty.
+ *
+ * To draw to it you must first specify a line style or fill style (or both), draw shapes using paths, and finally
+ * fill or stroke them. For example:
+ *
+ * ```javascript
+ * graphics.lineStyle(5, 0xFF00FF, 1.0);
+ * graphics.beginPath();
+ * graphics.moveTo(100, 100);
+ * graphics.lineTo(200, 200);
+ * graphics.closePath();
+ * graphics.strokePath();
+ * ```
+ *
+ * There are also many helpful methods that draw and fill/stroke common shapes for you.
+ *
+ * ```javascript
+ * graphics.lineStyle(5, 0xFF00FF, 1.0);
+ * graphics.fillStyle(0xFFFFFF, 1.0);
+ * graphics.fillRect(50, 50, 200, 200);
+ * graphics.strokeRect(50, 50, 200, 200);
+ * ```
+ *
+ * When a Graphics object is rendered it will render differently based on if the game is running under Canvas or WebGL.
+ * Under Canvas it will use the HTML Canvas context drawing operations to draw the path.
+ * Under WebGL the graphics data is decomposed into polygons. Both of these are expensive processes, especially with
+ * complex shapes.
+ *
+ * If your Graphics object doesn't change much (or at all) once you've drawn your shape to it, then you will help
+ * performance by calling {@link Phaser.GameObjects.Graphics#generateTexture}. This will 'bake' the Graphics object into
+ * a Texture, and return it. You can then use this Texture for Sprites or other display objects. If your Graphics object
+ * updates frequently then you should avoid doing this, as it will constantly generate new textures, which will consume
+ * memory.
+ *
+ * As you can tell, Graphics objects are a bit of a trade-off. While they are extremely useful, you need to be careful
+ * in their complexity and quantity of them in your game.
  *
  * @class Graphics
  * @extends Phaser.GameObjects.GameObject
@@ -103,7 +140,7 @@ var Graphics = new Class({
         this.initPipeline('FlatTintPipeline');
 
         /**
-         * [description]
+         * The horizontal display origin of the Graphics.
          *
          * @name Phaser.GameObjects.Graphics#displayOriginX
          * @type {number}
@@ -113,7 +150,7 @@ var Graphics = new Class({
         this.displayOriginX = 0;
 
         /**
-         * [description]
+         * The vertical display origin of the Graphics.
          *
          * @name Phaser.GameObjects.Graphics#displayOriginY
          * @type {number}
@@ -183,7 +220,7 @@ var Graphics = new Class({
         this.defaultStrokeAlpha = 1;
 
         /**
-         * [description]
+         * Internal property that keeps track of the line width style setting.
          *
          * @name Phaser.GameObjects.Graphics#_lineWidth
          * @type {number}
@@ -201,7 +238,7 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#setDefaultStyles
      * @since 3.0.0
      *
-     * @param {object} options - The styles to set as defaults.
+     * @param {GraphicsStyles} options - The styles to set as defaults.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -1039,13 +1076,13 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Translate the graphics.
      *
      * @method Phaser.GameObjects.Graphics#translate
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
+     * @param {number} x - The horizontal translation to apply.
+     * @param {number} y - The vertical translation to apply.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -1060,13 +1097,13 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Scale the graphics.
      *
      * @method Phaser.GameObjects.Graphics#scale
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
+     * @param {number} x - The horizontal scale to apply.
+     * @param {number} y - The vertical scale to apply.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -1081,12 +1118,12 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Rotate the graphics.
      *
      * @method Phaser.GameObjects.Graphics#rotate
      * @since 3.0.0
      *
-     * @param {number} radians - [description]
+     * @param {number} radians - The rotation angle, in radians.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -1101,7 +1138,7 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Clear the command buffer and reset the fill style and line style to their defaults.
      *
      * @method Phaser.GameObjects.Graphics#clear
      * @since 3.0.0
