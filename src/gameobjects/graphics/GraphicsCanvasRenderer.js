@@ -21,7 +21,7 @@ var GameObject = require('../GameObject');
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
- * @param {CanvasRenderingContext2D} renderTargetCtx - [description]
+ * @param {CanvasRenderingContext2D} [renderTargetCtx] - The target rendering context.
  * @param {boolean} allowClip - [description]
  */
 var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix, renderTargetCtx, allowClip)

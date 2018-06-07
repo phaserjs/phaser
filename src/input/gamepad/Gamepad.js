@@ -438,7 +438,7 @@ var Gamepad = new Class({
 
         var localAxes = this.axes;
         var gamepadAxes = pad.axes;
-        
+
         len = localAxes.length;
 
         for (i = 0; i < len; i++)
@@ -682,7 +682,7 @@ var Gamepad = new Class({
 
         get: function ()
         {
-            return this._FBLeftTop.value
+            return this._FBLeftTop.value;
         }
 
     },
@@ -702,7 +702,7 @@ var Gamepad = new Class({
 
         get: function ()
         {
-            return this._FBLeftBottom.value
+            return this._FBLeftBottom.value;
         }
 
     },
@@ -722,7 +722,7 @@ var Gamepad = new Class({
 
         get: function ()
         {
-            return this._FBRightTop.value
+            return this._FBRightTop.value;
         }
 
     },
@@ -742,7 +742,7 @@ var Gamepad = new Class({
 
         get: function ()
         {
-            return this._FBRightBottom.value
+            return this._FBRightBottom.value;
         }
 
     }

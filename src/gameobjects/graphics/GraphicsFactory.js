@@ -15,8 +15,8 @@ var GameObjectFactory = require('../GameObjectFactory');
  * @method Phaser.GameObjects.GameObjectFactory#graphics
  * @since 3.0.0
  *
- * @param {object} [config] - [description]
- * 
+ * @param {GraphicsOptions} [config] - The Graphics configuration.
+ *
  * @return {Phaser.GameObjects.Graphics} The Game Object that was created.
  */
 GameObjectFactory.register('graphics', function (config)
@@ -25,9 +25,9 @@ GameObjectFactory.register('graphics', function (config)
 });
 
 //  When registering a factory function 'this' refers to the GameObjectFactory context.
-//  
+//
 //  There are several properties available to use:
-//  
+//
 //  this.scene - a reference to the Scene that owns the GameObjectFactory
 //  this.displayList - a reference to the Display List the Scene owns
 //  this.updateList - a reference to the Update List the Scene owns

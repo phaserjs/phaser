@@ -75,8 +75,8 @@ var Render = require('./GraphicsRender');
  * ```javascript
  * graphics.lineStyle(5, 0xFF00FF, 1.0);
  * graphics.fillStyle(0xFFFFFF, 1.0);
- * graphics.fillRect(50, 50, 200, 200);
- * graphics.strokeRect(50, 50, 200, 200);
+ * graphics.fillRect(50, 50, 400, 200);
+ * graphics.strokeRect(50, 50, 400, 200);
  * ```
  *
  * When a Graphics object is rendered it will render differently based on if the game is running under Canvas or WebGL.
