@@ -112,7 +112,11 @@ var Settings = {
 
             //  Plugins
 
-            plugins: GetValue(config, 'plugins', false)
+            plugins: GetValue(config, 'plugins', false),
+
+            //  Input
+
+            input: GetValue(config, 'input', {})
 
         };
     }
