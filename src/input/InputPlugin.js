@@ -153,17 +153,6 @@ var InputPlugin = new Class({
         this.mouse = this.manager.mouse;
 
         /**
-         * A reference to the Gamepad Manager.
-         * 
-         * This property is only set if Gamepad support has been enabled in your Game Configuration file.
-         *
-         * @name Phaser.Input.InputPlugin#gamepad
-         * @type {?Phaser.Input.Gamepad.GamepadManager}
-         * @since 3.0.0
-         */
-        this.gamepad = this.manager.gamepad;
-
-        /**
          * When set to `true` (the default) the Input Plugin will emulate DOM behavior by only emitting events from
          * the top-most Game Objects in the Display List.
          *
@@ -1953,9 +1942,7 @@ var InputPlugin = new Class({
         this.cameras = null;
         this.manager = null;
         this.events = null;
-        this.keyboard = null;
         this.mouse = null;
-        this.gamepad = null;
     },
 
     /**

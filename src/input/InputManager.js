@@ -7,7 +7,6 @@
 var Class = require('../utils/Class');
 var CONST = require('./const');
 var EventEmitter = require('eventemitter3');
-var Gamepad = require('./gamepad/GamepadManager');
 var Mouse = require('./mouse/MouseManager');
 var Pointer = require('./Pointer');
 var Rectangle = require('../geom/rectangle/Rectangle');
@@ -158,15 +157,6 @@ var InputManager = new Class({
          * @since 3.0.0
          */
         this.touch = (config.inputTouch) ? new Touch(this) : null;
-
-        /**
-         * A reference to the Gamepad Manager class, if enabled via the `input.gamepad` Game Config property.
-         *
-         * @name Phaser.Input.InputManager#gamepad
-         * @type {Phaser.Input.Gamepad.GamepadManager}
-         * @since 3.0.0
-         */
-        this.gamepad = (config.inputGamepad) ? new Gamepad(this) : null;
 
         /**
          * An array of Pointers that have been added to the game.
@@ -1222,11 +1212,6 @@ var InputManager = new Class({
         if (this.touch)
         {
             this.touch.destroy();
-        }
-
-        if (this.gamepad)
-        {
-            this.gamepad.destroy();
         }
 
         for (var i = 0; i < this.pointers.length; i++)
