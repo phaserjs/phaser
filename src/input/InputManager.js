@@ -140,6 +140,9 @@ var InputManager = new Class({
          */
         this._hasMoveCallback = false;
 
+        // this._usingHandCursor = false;
+        this.setHandCursor = false;
+
         /**
          * A reference to the Mouse Manager class, if enabled via the `input.mouse` Game Config property.
          *
@@ -374,6 +377,10 @@ var InputManager = new Class({
     {
         var i;
 
+        //  Was the hand cursor set this frame?
+        this.setHandCursor = false;
+
+        //  TODO: Move to AFTER the events have all been processed, so the plugins are more current and not 1 frame behind?
         this.events.emit('update');
 
         this.ignoreEvents = false;
@@ -444,6 +451,11 @@ var InputManager = new Class({
             }
         }
     },
+
+    // useHandCursor: function ()
+    // {
+    //     return (this._usingHandCursor && this._setHandCursor)
+    // },
 
     //  event.targetTouches = list of all touches on the TARGET ELEMENT (i.e. game dom element)
     //  event.touches = list of all touches on the ENTIRE DOCUMENT, not just the target element

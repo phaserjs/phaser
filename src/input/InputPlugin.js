@@ -1163,6 +1163,11 @@ var InputPlugin = new Class({
 
                 gameObject.emit('pointerover', pointer, gameObject.input.localX, gameObject.input.localY);
 
+                // if (gameObject.input.useHandCursor && manager.useHandCursor())
+                // {
+                //     manager.isUsingHandCursor = true;
+                // }
+
                 totalInteracted++;
             }
         }
