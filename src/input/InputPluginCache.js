@@ -1,0 +1,89 @@
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+//  Contains the plugins that Phaser uses globally and locally.
+//  These are the source objects, not instantiated.
+var inputPlugins = {};
+
+/**
+ * @typedef {object} InputPluginContainer
+ *
+ * @property {string} key - The unique name of this plugin in the input plugin cache.
+ * @property {function} plugin - The plugin to be stored. Should be the source object, not instantiated.
+ * @property {string} [mapping] - If this plugin is to be injected into the Input Plugin, this is the property key map used.
+ */
+
+var InputPluginCache = {};
+
+/**
+ * Static method called directly by the Core internal Plugins.
+ * Key is a reference used to get the plugin from the plugins object (i.e. InputPlugin)
+ * Plugin is the object to instantiate to create the plugin
+ * Mapping is what the plugin is injected into the Scene.Systems as (i.e. input)
+ *
+ * @method Phaser.Input.InputPluginCache.register
+ * @since 3.10.0
+ * 
+ * @param {string} key - A reference used to get this plugin from the plugin cache.
+ * @param {function} plugin - The plugin to be stored. Should be the core object, not instantiated.
+ * @param {string} mapping - If this plugin is to be injected into the Input Plugin, this is the property key used.
+ */
+InputPluginCache.register = function (key, plugin, mapping)
+{
+    inputPlugins[key] = { plugin: plugin, mapping: mapping };
+};
+
+/**
+ * Returns the input plugin object from the cache based on the given key.
+ *
+ * @method Phaser.Input.InputPluginCache.getCore
+ * @since 3.10.0
+ * 
+ * @param {string} key - The key of the input plugin to get.
+ *
+ * @return {InputPluginContainer} The input plugin object.
+ */
+InputPluginCache.getPlugin = function (key)
+{
+    return inputPlugins[key];
+};
+
+/**
+ * Installs all of the registered Input Plugins into the given target.
+ *
+ * @method Phaser.Input.InputPluginCache.install
+ * @since 3.10.0
+ * 
+ * @param {Phaser.Input.InputPlugin} target - The target InputPlugin to install the plugins into.
+ */
+InputPluginCache.install = function (target)
+{
+    for (var key in inputPlugins)
+    {
+        var source = inputPlugins[key].plugin;
+        var mapping = inputPlugins[key].mapping;
+        
+        target[mapping] = new source(target);
+    }
+};
+
+/**
+ * Removes an input plugin based on the given key.
+ *
+ * @method Phaser.Input.InputPluginCache.remove
+ * @since 3.10.0
+ * 
+ * @param {string} key - The key of the input plugin to remove.
+ */
+InputPluginCache.remove = function (key)
+{
+    if (inputPlugins.hasOwnProperty(key))
+    {
+        delete inputPlugins[key];
+    }
+};
+
+module.exports = InputPluginCache;
