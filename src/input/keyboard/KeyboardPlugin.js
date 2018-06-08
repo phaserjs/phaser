@@ -6,6 +6,8 @@
 
 var Class = require('../../utils/Class');
 var EventEmitter = require('eventemitter3');
+var GetValue = require('../../utils/object/GetValue');
+var InputPluginCache = require('../InputPluginCache');
 var Key = require('./keys/Key');
 var KeyCodes = require('./keys/KeyCodes');
 var KeyCombo = require('./combo/KeyCombo');
@@ -15,11 +17,11 @@ var ProcessKeyUp = require('./keys/ProcessKeyUp');
 
 /**
  * @classdesc
- * The Keyboard Manager is a helper class that belongs to the Input Manager.
+ * The Keyboard Plugin is an input plugin that belongs to the Scene-owned Input system.
  * 
  * Its role is to listen for native DOM Keyboard Events and then process them.
  * 
- * You do not need to create this class directly, the Input Manager will create an instance of it automatically.
+ * You do not need to create this class directly, the Input system will create an instance of it automatically.
  * 
  * You can access it from within a Scene using `this.input.keyboard`. For example, you can do:
  *
@@ -46,186 +48,217 @@ var ProcessKeyUp = require('./keys/ProcessKeyUp');
  * For example the Chrome extension vimium is known to disable Phaser from using the D key, while EverNote disables the backtick key.
  * And there are others. So, please check your extensions before opening Phaser issues about keys that don't work.
  *
- * @class KeyboardManager
+ * @class KeyboardPlugin
  * @extends Phaser.Events.EventEmitter
  * @memberOf Phaser.Input.Keyboard
  * @constructor
- * @since 3.0.0
+ * @since 3.10.0
  *
- * @param {Phaser.Input.InputManager} inputManager - A reference to the Input Manager.
+ * @param {Phaser.Input.InputPlugin} sceneInputPlugin - A reference to the Scene Input Plugin that the KeyboardPlugin belongs to.
  */
-var KeyboardManager = new Class({
+var KeyboardPlugin = new Class({
 
     Extends: EventEmitter,
 
     initialize:
 
-    function KeyboardManager (inputManager)
+    function KeyboardPlugin (sceneInputPlugin)
     {
         EventEmitter.call(this);
 
         /**
-         * A reference to the Input Manager.
+         * A reference to the Scene that this Input Plugin is responsible for.
          *
-         * @name Phaser.Input.Keyboard.KeyboardManager#manager
-         * @type {Phaser.Input.InputManager}
-         * @since 3.0.0
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#scene
+         * @type {Phaser.Scene}
+         * @since 3.10.0
          */
-        this.manager = inputManager;
+        this.scene = sceneInputPlugin.scene;
+
+        /**
+         * A reference to the Scene Systems Settings.
+         *
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#settings
+         * @type {Phaser.Scenes.Settings.Object}
+         * @since 3.10.0
+         */
+        this.settings = this.scene.sys.settings;
+
+        /**
+         * A reference to the Scene Input Plugin that created this Keyboard Plugin.
+         *
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#sceneInputPlugin
+         * @type {Phaser.Input.InputPlugin}
+         * @since 3.10.0
+         */
+        this.sceneInputPlugin = sceneInputPlugin;
 
         /**
          * A boolean that controls if the Keyboard Manager is enabled or not.
          * Can be toggled on the fly.
          *
-         * @name Phaser.Input.Keyboard.KeyboardManager#enabled
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#enabled
          * @type {boolean}
-         * @default false
-         * @since 3.0.0
+         * @default true
+         * @since 3.10.0
          */
-        this.enabled = false;
+        this.enabled = true;
 
         /**
-         * The Keyboard Event target, as defined in the Game Config.
+         * The Keyboard Event target, as defined in the Scene or Game Config.
          * Typically the browser window, but can be any interactive DOM element.
          *
-         * @name Phaser.Input.Keyboard.KeyboardManager#target
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#target
          * @type {any}
-         * @since 3.0.0
+         * @since 3.10.0
          */
         this.target;
 
         /**
          * An array of Key objects to process.
          *
-         * @name Phaser.Input.Keyboard.KeyboardManager#keys
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#keys
          * @type {Phaser.Input.Keyboard.Key[]}
-         * @since 3.0.0
+         * @since 3.10.0
          */
         this.keys = [];
 
         /**
          * An array of KeyCombo objects to process.
          *
-         * @name Phaser.Input.Keyboard.KeyboardManager#combos
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#combos
          * @type {Phaser.Input.Keyboard.KeyCombo[]}
-         * @since 3.0.0
+         * @since 3.10.0
          */
         this.combos = [];
 
         /**
          * An internal event queue.
          *
-         * @name Phaser.Input.Keyboard.KeyboardManager#queue
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#queue
          * @type {KeyboardEvent[]}
          * @private
-         * @since 3.0.0
+         * @since 3.10.0
          */
         this.queue = [];
 
-        inputManager.events.once('boot', this.boot, this);
+        /**
+         * Internal event handler.
+         *
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#onKeyHandler
+         * @type {function}
+         * @private
+         * @since 3.10.0
+         */
+        this.onKeyHandler;
+
+        sceneInputPlugin.pluginEvents.once('boot', this.boot, this);
+        sceneInputPlugin.pluginEvents.on('start', this.start, this);
     },
 
     /**
-     * The Boot handler is called by Phaser.Game when it first starts up.
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
      *
-     * @method Phaser.Input.Keyboard.KeyboardManager#boot
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#boot
      * @private
-     * @since 3.0.0
+     * @since 3.10.0
      */
     boot: function ()
     {
-        var config = this.manager.config;
+        var settings = this.settings.input;
+        var config = this.scene.sys.game.config;
 
-        this.enabled = config.inputKeyboard;
-        this.target = config.inputKeyboardEventTarget;
+        this.enabled = GetValue(settings, 'keyboard', config.inputKeyboard);
+        this.target = GetValue(settings, 'keyboard.target', config.inputKeyboardEventTarget);
 
+        this.sceneInputPlugin.pluginEvents.once('destroy', this.destroy, this);
+    },
+
+    /**
+     * This method is called automatically by the Scene when it is starting up.
+     * It is responsible for creating local systems, properties and listening for Scene events.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#start
+     * @private
+     * @since 3.10.0
+     */
+    start: function ()
+    {
         if (this.enabled)
         {
             this.startListeners();
         }
+
+        this.sceneInputPlugin.pluginEvents.once('shutdown', this.shutdown, this);
     },
 
     /**
-     * The Keyboard Down Event Handler.
+     * Checks to see if both this plugin and the Scene to which it belongs is active.
      *
-     * @method Phaser.Input.Keyboard.KeyboardManager#onKeyDown
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#isActive
      * @since 3.10.0
      *
-     * @param {KeyboardEvent} event - The native DOM Keyboard Event.
+     * @return {boolean} `true` if the plugin and the Scene it belongs to is active.
      */
-    onKeyDown: function (event)
+    isActive: function ()
     {
-        if (event.defaultPrevented || !this.enabled)
-        {
-            // Do nothing if event already handled
-            return;
-        }
-
-        this.queue.push(event);
-
-        var key = this.keys[event.keyCode];
-
-        if (key && key.preventDefault)
-        {
-            event.preventDefault();
-        }
-    },
-
-    /**
-     * The Keyboard Up Event Handler.
-     *
-     * @method Phaser.Input.Keyboard.KeyboardManager#onKeyUp
-     * @since 3.10.0
-     *
-     * @param {KeyboardEvent} event - The native DOM Keyboard Event.
-     */
-    onKeyUp: function (event)
-    {
-        if (event.defaultPrevented || !this.enabled)
-        {
-            // Do nothing if event already handled
-            return;
-        }
-
-        this.queue.push(event);
-
-        var key = this.keys[event.keyCode];
-
-        if (key && key.preventDefault)
-        {
-            event.preventDefault();
-        }
+        return (this.enabled && this.scene.sys.isActive());
     },
 
     /**
      * Starts the Keyboard Event listeners running.
      * This is called automatically and does not need to be manually invoked.
      *
-     * @method Phaser.Input.Keyboard.KeyboardManager#startListeners
-     * @since 3.0.0
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#startListeners
+     * @since 3.10.0
      */
     startListeners: function ()
     {
-        this.target.addEventListener('keydown', this.onKeyDown.bind(this), false);
-        this.target.addEventListener('keyup', this.onKeyUp.bind(this), false);
+        var _this = this;
+
+        var handler = function (event)
+        {
+            if (event.defaultPrevented || !_this.isActive())
+            {
+                // Do nothing if event already handled
+                return;
+            }
+
+            _this.queue.push(event);
+
+            var key = _this.keys[event.keyCode];
+
+            if (key && key.preventDefault)
+            {
+                event.preventDefault();
+            }
+
+        };
+
+        this.onKeyHandler = handler;
+
+        this.target.addEventListener('keydown', handler, false);
+        this.target.addEventListener('keyup', handler, false);
 
         //  Finally, listen for an update event from the Input Manager
-        this.manager.events.on('update', this.update, this);
+        this.sceneInputPlugin.pluginEvents.on('update', this.update, this);
     },
 
     /**
      * Stops the Keyboard Event listeners.
      * This is called automatically and does not need to be manually invoked.
      *
-     * @method Phaser.Input.Keyboard.KeyboardManager#stopListeners
-     * @since 3.0.0
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#stopListeners
+     * @since 3.10.0
      */
     stopListeners: function ()
     {
-        this.target.removeEventListener('keydown', this.onKeyDown);
-        this.target.removeEventListener('keyup', this.onKeyUp);
+        this.target.removeEventListener('keydown', this.onKeyHandler);
+        this.target.removeEventListener('keyup', this.onKeyHandler);
 
-        this.manager.events.off('update', this.update);
+        this.sceneInputPlugin.pluginEvents.off('update', this.update);
     },
 
     /**
@@ -242,8 +275,8 @@ var KeyboardManager = new Class({
     /**
      * Creates and returns an object containing 4 hotkeys for Up, Down, Left and Right, and also Space Bar and shift.
      *
-     * @method Phaser.Input.Keyboard.KeyboardManager#createCursorKeys
-     * @since 3.0.0
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#createCursorKeys
+     * @since 3.10.0
      *
      * @return {CursorKeys} An object containing the properties: `up`, `down`, `left`, `right`, `space` and `shift`.
      */
@@ -280,8 +313,8 @@ var KeyboardManager = new Class({
      *
      * To use non-alpha numeric keys, use a string, such as 'UP', 'SPACE' or 'LEFT'.
      *
-     * @method Phaser.Input.Keyboard.KeyboardManager#addKeys
-     * @since 3.0.0
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#addKeys
+     * @since 3.10.0
      *
      * @param {(object|string)} keys - An object containing Key Codes, or a comma-separated string.
      *
@@ -318,8 +351,8 @@ var KeyboardManager = new Class({
      *
      * If a Key object is given, and one already exists matching the same key code, the existing one is replaced with the new one.
      *
-     * @method Phaser.Input.Keyboard.KeyboardManager#addKey
-     * @since 3.0.0
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#addKey
+     * @since 3.10.0
      *
      * @param {(Phaser.Input.Keyboard.Key|string|integer)} key - Either a Key object, a string, such as `A` or `SPACE`, or a key code value.
      *
@@ -363,8 +396,8 @@ var KeyboardManager = new Class({
      *
      * The given argument can be either a Key object, a string, such as `A` or `SPACE`, or a key code value.
      *
-     * @method Phaser.Input.Keyboard.KeyboardManager#removeKey
-     * @since 3.0.0
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#removeKey
+     * @since 3.10.0
      *
      * @param {(Phaser.Input.Keyboard.Key|string|integer)} key - Either a Key object, a string, such as `A` or `SPACE`, or a key code value.
      */
@@ -421,8 +454,8 @@ var KeyboardManager = new Class({
      * this.input.keyboard.createCombo('PHASER');
      * ```
      *
-     * @method Phaser.Input.Keyboard.KeyboardManager#createCombo
-     * @since 3.0.0
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#createCombo
+     * @since 3.10.0
      *
      * @param {(string|integer[]|object[])} keys - The keys that comprise this combo.
      * @param {KeyComboConfig} [config] - A Key Combo configuration object.
@@ -437,9 +470,9 @@ var KeyboardManager = new Class({
     /**
      * Internal update handler called by the Input Manager, which is in turn invoked by the Game step.
      *
-     * @method Phaser.Input.Keyboard.KeyboardManager#update
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#update
      * @private
-     * @since 3.0.0
+     * @since 3.10.0
      */
     update: function ()
     {
@@ -496,33 +529,45 @@ var KeyboardManager = new Class({
      * Shuts the Keyboard Manager down.
      * All this does is remove any listeners bound to it.
      *
-     * @method Phaser.Input.Keyboard.KeyboardManager#shutdown
-     * @since 3.0.0
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#shutdown
+     * @since 3.10.0
      */
     shutdown: function ()
     {
+        this.stopListeners();
+
         this.removeAllListeners();
     },
 
     /**
      * Destroys this Keyboard Manager instance and all references it holds, plus clears out local arrays.
      *
-     * @method Phaser.Input.Keyboard.KeyboardManager#destroy
-     * @since 3.0.0
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#destroy
+     * @since 3.10.0
      */
     destroy: function ()
     {
-        this.stopListeners();
-
-        this.removeAllListeners();
+        this.shutdown();
 
         this.keys = [];
         this.combos = [];
         this.queue = [];
 
-        this.manager = null;
+        this.scene = null;
+        this.settings = null;
+        this.sceneInputPlugin = null;
     }
 
 });
 
-module.exports = KeyboardManager;
+/**
+ * An instance of the Keyboard Plugin class, if enabled via the `input.keyboard` Scene or Game Config property.
+ * Use this to create Key objects and listen for keyboard specific events.
+ *
+ * @name Phaser.Input.InputPlugin#keyboard
+ * @type {?Phaser.Input.Keyboard.KeyboardPlugin}
+ * @since 3.10.0
+ */
+InputPluginCache.register('KeyboardPlugin', KeyboardPlugin, 'keyboard');
+
+module.exports = KeyboardPlugin;

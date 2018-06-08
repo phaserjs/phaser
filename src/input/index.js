@@ -17,6 +17,7 @@ var Input = {
     Gamepad: require('./gamepad'),
     InputManager: require('./InputManager'),
     InputPlugin: require('./InputPlugin'),
+    InputPluginCache: require('./InputPluginCache'),
     Keyboard: require('./keyboard'),
     Mouse: require('./mouse'),
     Pointer: require('./Pointer'),
