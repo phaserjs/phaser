@@ -79,7 +79,7 @@ var Sprite = new Class({
         GameObject.call(this, scene, 'Sprite');
 
         /**
-         * [description]
+         * The Animation Controller of this Sprite.
          *
          * @name Phaser.GameObjects.Sprite#anims
          * @type {Phaser.GameObjects.Components.Animation}
@@ -95,14 +95,14 @@ var Sprite = new Class({
     },
 
     /**
-     * [description]
+     * Update this Sprite's animations.
      *
      * @method Phaser.GameObjects.Sprite#preUpdate
      * @protected
      * @since 3.0.0
      *
-     * @param {number} time - [description]
-     * @param {number} delta - [description]
+     * @param {number} time - The current timestamp.
+     * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
     preUpdate: function (time, delta)
     {
@@ -110,14 +110,14 @@ var Sprite = new Class({
     },
 
     /**
-     * [description]
+     * Start playing the given animation.
      *
      * @method Phaser.GameObjects.Sprite#play
      * @since 3.0.0
      *
-     * @param {string} key - [description]
-     * @param {boolean} [ignoreIfPlaying=false] - [description]
-     * @param {integer} [startFrame=0] - [description]
+     * @param {string} key - The string-based key of the animation to play.
+     * @param {boolean} [ignoreIfPlaying=false] - If an animation is already playing then ignore this call.
+     * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
      *
      * @return {Phaser.GameObjects.Sprite} This Game Object.
      */
@@ -129,7 +129,7 @@ var Sprite = new Class({
     },
 
     /**
-     * [description]
+     * Build a JSON representation of this Sprite.
      *
      * @method Phaser.GameObjects.Sprite#toJSON
      * @since 3.0.0
