@@ -28,6 +28,7 @@ TODO - Out of Canvas events
 * Setting `enabled` to false on either the TouchManager, MouseManager or KeyboardManager will prevent it from handling any native DOM events until you set it back again.
 * InputPlugin has the following new read-only properties: `mousePointer`, `pointer1`, `pointer2`, `pointer3`, `pointer4`, `pointer5`, `pointer6`, `pointer7`, `pointer8`, `pointer9` and `pointer10`. Most of these will be undefined unless you call `addPointer` first, or set the active pointers quantity in your Game Config.
 * InputManager has a new method `transformPointer` which will set the transformed x and y properties of a Pointer in one call, rather than the 2 calls it took before. This is now used by all Pointer event handlers.
+* InputPlugin has a new method `makePixelPerfect` which allows you to specify a texture-based Game Object as being pixel perfect when performing all input checks against it. You use it like this: `this.add.sprite(x, y, key).setInteractive(this.input.makePixelPerfect())` - you can also pass in an optional alpha tolerance level. See the method docs for full details and the new examples to see it in action. Note that as a pointer interacts with the Game Object it will constantly poll the texture, extracting a single pixel from the given coordinates and checking its color values. This is an expensive process, so should only be enabled on Game Objects that really need it.
 
 ### Input - Keyboard Manager Updates
 
@@ -102,6 +103,7 @@ TODO - Out of Canvas events
 * Camera has a new method `setVisible` which toggles its visible property.
 * `CameraManager.fromJSON` will now set the visible property is defined in the config.
 * `ScenePlugin.run` is a new method that will run the given Scene and not change the state of the current Scene at all. If the scene is asleep, it will be woken. If it's paused, it will be resumed. If not running at all, it will be started.
+* `TextureManager.getPixelAlpha` is a new method that will return the alpha value of a pixel from the given texture and frame. It will return `null` if the coordinates were out of bounds, otherwise a value between 0 and 255.
 
 ### Updates
 

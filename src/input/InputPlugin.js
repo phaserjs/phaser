@@ -8,6 +8,7 @@ var Circle = require('../geom/circle/Circle');
 var CircleContains = require('../geom/circle/Contains');
 var Class = require('../utils/Class');
 var CreateInteractiveObject = require('./CreateInteractiveObject');
+var CreatePixelPerfectHandler = require('./CreatePixelPerfectHandler');
 var DistanceBetween = require('../math/distance/DistanceBetween');
 var Ellipse = require('../geom/ellipse/Ellipse');
 var EllipseContains = require('../geom/ellipse/Contains');
@@ -1298,6 +1299,48 @@ var InputPlugin = new Class({
     },
 
     /**
+     * Creates a function that can be passed to `setInteractive`, `enable` or `setHitArea` that will handle
+     * pixel-perfect input detection on an Image or Sprite based Game Object, or any custom class that extends them.
+     *
+     * The following will create a sprite that is clickable on any pixel that has an alpha value >= 1.
+     *
+     * ```javascript
+     * this.add.sprite(x, y, key).setInteractive(this.input.makePixelPerfect());
+     * ```
+     * 
+     * The following will create a sprite that is clickable on any pixel that has an alpha value >= 150.
+     *
+     * ```javascript
+     * this.add.sprite(x, y, key).setInteractive(this.input.makePixelPerfect(150));
+     * ```
+     *
+     * Once you have made an Interactive Object pixel perfect it impacts all input related events for it: down, up,
+     * dragstart, drag, etc.
+     *
+     * As a pointer interacts with the Game Object it will constantly poll the texture, extracting a single pixel from
+     * the given coordinates and checking its color values. This is an expensive process, so should only be enabled on
+     * Game Objects that really need it.
+     * 
+     * You cannot make non-texture based Game Objects pixel perfect. So this will not work on Graphics, BitmapText,
+     * Render Textures, Text, Tilemaps, Containers or Particles.
+     *
+     * @method Phaser.Input.InputPlugin#makePixelPerfect
+     * @since 3.10.0
+     *
+     * @param {integer} [alphaTolerance=1] - The alpha level that the pixel should be above to be included as a successful interaction.
+     *
+     * @return {function} A Pixel Perfect Handler for use as a hitArea shape callback.
+     */
+    makePixelPerfect: function (alphaTolerance)
+    {
+        if (alphaTolerance === undefined) { alphaTolerance = 1; }
+
+        var textureManager = this.systems.textures;
+
+        return CreatePixelPerfectHandler(textureManager, alphaTolerance);
+    },
+
+    /**
      * Sets the hit area for the given array of Game Objects.
      *
      * A hit area is typically one of the geometric shapes Phaser provides, such as a `Phaser.Geom.Rectangle`
@@ -1329,6 +1372,12 @@ var InputPlugin = new Class({
         if (!Array.isArray(gameObjects))
         {
             gameObjects = [ gameObjects ];
+        }
+
+        if (typeof shape === 'function' && !callback)
+        {
+            callback = shape;
+            shape = {};
         }
 
         for (var i = 0; i < gameObjects.length; i++)
