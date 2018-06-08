@@ -38,10 +38,10 @@ var MeshRender = require('./MeshRender');
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
- * @param {float[]} vertices - An array containing the vertices data for this Mesh.
- * @param {float[]} uv - An array containing the uv data for this Mesh.
- * @param {float[]} colors - An array containing the color data for this Mesh.
- * @param {float[]} alphas - An array containing the alpha data for this Mesh.
+ * @param {number[]} vertices - An array containing the vertices data for this Mesh.
+ * @param {number[]} uv - An array containing the uv data for this Mesh.
+ * @param {number[]} colors - An array containing the color data for this Mesh.
+ * @param {number[]} alphas - An array containing the alpha data for this Mesh.
  * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
  */
@@ -115,7 +115,7 @@ var Mesh = new Class({
         }
 
         /**
-         * [description]
+         * An array containing the vertices data for this Mesh.
          *
          * @name Phaser.GameObjects.Mesh#vertices
          * @type {Float32Array}
@@ -124,7 +124,7 @@ var Mesh = new Class({
         this.vertices = new Float32Array(vertices);
 
         /**
-         * [description]
+         * An array containing the uv data for this Mesh.
          *
          * @name Phaser.GameObjects.Mesh#uv
          * @type {Float32Array}
@@ -133,7 +133,7 @@ var Mesh = new Class({
         this.uv = new Float32Array(uv);
 
         /**
-         * [description]
+         * An array containing the color data for this Mesh.
          *
          * @name Phaser.GameObjects.Mesh#colors
          * @type {Uint32Array}
@@ -142,7 +142,7 @@ var Mesh = new Class({
         this.colors = new Uint32Array(colors);
 
         /**
-         * [description]
+         * An array containing the alpha data for this Mesh.
          *
          * @name Phaser.GameObjects.Mesh#alphas
          * @type {Float32Array}
