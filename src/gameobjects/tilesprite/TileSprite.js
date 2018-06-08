@@ -78,7 +78,7 @@ var TileSprite = new Class({
         GameObject.call(this, scene, 'TileSprite');
 
         /**
-         * [description]
+         * The horizontal scroll position of the Tile Sprite.
          *
          * @name Phaser.GameObjects.TileSprite#tilePositionX
          * @type {number}
@@ -88,7 +88,7 @@ var TileSprite = new Class({
         this.tilePositionX = 0;
 
         /**
-         * [description]
+         * The vertical scroll position of the Tile Sprite.
          *
          * @name Phaser.GameObjects.TileSprite#tilePositionY
          * @type {number}
@@ -98,7 +98,9 @@ var TileSprite = new Class({
         this.tilePositionY = 0;
 
         /**
-         * [description]
+         * Whether the Tile Sprite has changed in some way, requiring an re-render of its tile texture.
+         *
+         * Such changes include the texture frame and scroll position of the Tile Sprite.
          *
          * @name Phaser.GameObjects.TileSprite#dirty
          * @type {boolean}
@@ -108,7 +110,7 @@ var TileSprite = new Class({
         this.dirty = true;
 
         /**
-         * [description]
+         * The texture that the Tile Sprite is rendered to, which is then rendered to a Scene.
          *
          * @name Phaser.GameObjects.TileSprite#tileTexture
          * @type {?WebGLTexture}
@@ -118,7 +120,7 @@ var TileSprite = new Class({
         this.tileTexture = null;
 
         /**
-         * [description]
+         * The renderer in use by this Tile Sprite.
          *
          * @name Phaser.GameObjects.TileSprite#renderer
          * @type {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)}
@@ -222,7 +224,7 @@ var TileSprite = new Class({
     },
 
     /**
-     * [description]
+     * Render the tile texture if it is dirty, or if the frame has changed.
      *
      * @method Phaser.GameObjects.TileSprite#updateTileTexture
      * @since 3.0.0
