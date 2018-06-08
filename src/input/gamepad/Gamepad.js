@@ -14,7 +14,7 @@ var Vector2 = require('../../math/Vector2');
  * @classdesc
  * A single Gamepad.
  *
- * These are created, updated and managed by the Gamepad Manager.
+ * These are created, updated and managed by the Gamepad Plugin.
  *
  * @class Gamepad
  * @extends Phaser.Events.EventEmitter
@@ -22,7 +22,7 @@ var Vector2 = require('../../math/Vector2');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Input.Gamepad.GamepadManager} manager - A reference to the Gamepad Manager.
+ * @param {Phaser.Input.Gamepad.GamepadPlugin} manager - A reference to the Gamepad Plugin.
  * @param {Pad} pad - The Gamepad object, as extracted from GamepadEvent.
  */
 var Gamepad = new Class({
@@ -36,10 +36,10 @@ var Gamepad = new Class({
         EventEmitter.call(this);
 
         /**
-         * A reference to the Gamepad Manager.
+         * A reference to the Gamepad Plugin.
          *
          * @name Phaser.Input.Gamepad.Gamepad#manager
-         * @type {Phaser.Input.Gamepad.GamepadManager}
+         * @type {Phaser.Input.Gamepad.GamepadPlugin}
          * @since 3.0.0
          */
         this.manager = manager;

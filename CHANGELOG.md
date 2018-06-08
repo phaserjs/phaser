@@ -28,6 +28,9 @@ TODO - Out of Canvas events
 * Setting `enabled` to false on either the TouchManager, MouseManager or KeyboardManager will prevent it from handling any native DOM events until you set it back again.
 * InputPlugin has the following new read-only properties: `mousePointer`, `pointer1`, `pointer2`, `pointer3`, `pointer4`, `pointer5`, `pointer6`, `pointer7`, `pointer8`, `pointer9` and `pointer10`. Most of these will be undefined unless you call `addPointer` first, or set the active pointers quantity in your Game Config.
 * InputManager has a new method `transformPointer` which will set the transformed x and y properties of a Pointer in one call, rather than the 2 calls it took before. This is now used by all Pointer event handlers.
+
+### Input - Keyboard Manager Updates
+
 * The `KeyboardManager` class has been removed. It has been replaced with `KeyboardPlugin` which is now an Input level plugin, that registers itself with the new `InputPluginCache`. The Input Plugin class (which belongs to a Scene) will now automatically inject registered plugins into itself on boot. Every Scene has its own instance of the Input Plugin (if enabled in the scene plugins), which in turn has its own instance of the KeyboardPlugin. The `InputManager` no longer has any reference to the Keyboard class at all. The benefits of this are two-fold: First, it allows you to now entirely exclude all of the keyboard classes from a custom build, saving a lot of space if not required. Secondly, it means that the Scenes themselves are now responsible for keyboard events, where-as before they were entirely global. This means a Scene can be paused and stop processing keyboard events, and stop having its Key objects updated, while another Scene can still carry on doing this. It also prevents key related callbacks in sleeping Scenes from being fired (which resolves issue #3733, thanks @JoeMoov2)
 * `KeyboardManager.handler` has been renamed to `onKeyHandler`.
 * The `KeyboardManager.captures` property has been removed as it can be more effectively handled by polling the `keys` object instead.
@@ -37,6 +40,16 @@ TODO - Out of Canvas events
 * `KeyboardManager.addKeys` can now take either an object, or key codes, or a comma-separated string as its input. This means you can now do: `keyboard.addKeys('W,S,A,D')` and get an object back with the properties WSAD mapped to the relevant Key objects.
 * `KeyboardManager.addKey` can now take either a Key object, a string, such as `A` or `SPACE`, or a key code value.
 * `KeyboardManager.removeKey` can now take either a Key object, a string, such as `A` or `SPACE`, or a key code value.
+
+### Input - Gamepad Manager Updates
+
+* The `GamepadManager` class has been removed. It has been replaced with `GamepadPlugin` which is now an Input level plugin, that registers itself with the new `InputPluginCache`. The Input Plugin class (which belongs to a Scene) will now automatically inject the registered plugins into itself on boot. Every Scene has its own instance of the Input Plugin (if enabled in the scene plugins), which in turn has its own instance of the GamepadPlugin. The `InputManager` no longer has any reference to the Gamepad class at all. The benefits of this are two-fold: First, it allows you to now entirely exclude all of the gamepad classes from a custom build, saving a lot of space if not required. Secondly, it means that the Scenes themselves are now responsible for gamepad events, where-as before they were entirely global. This means a Scene can be paused and stop processing gamepad events, and stop having its Gamepad objects updated, while another Scene can still carry on doing this. It also prevents gamepad related callbacks in sleeping Scenes from being fired.
+* The Gamepad Plugin has been rewritten from scratch. It now offers a lot more features and far easier access to the Gamepads and their properties. You can now access the first 4 gamepads connected to the browser via the `pad1` to `pad4` properties, meaning you can do: `this.input.gamepad.pad1` for direct access to a pad once it's connected.
+* The Gamepad class has also been rewritten from scratch. It will no longer create Buttons or Axes dynamically, instead doing so on instantiation.
+* The Gamepad class now has a bunch of new properties for easy access to the various standard mapping buttons. These include `left`, `right`, `up`, `down` for directions, `A`, `Y`, `X` and `B` for buttons, `L1`, `L2`, `R1` and `R2` for shoulder buttons, and `leftStick` and `rightStick` for the axis sticks. You can still use `Gamepad.getButtonValue()` to get the value from a button and `Gamepad.getButtonTotal()` to get the total number of buttons available on the pad.
+* `Gamepad.getAxisTotal` and `Gamepad.getAxisValue` will return the total number of axis, and an axis value, accordingly.
+* `Gamepad.setAxisThreshold` will now let you set the threshold across all axis of a Gamepad in one call.
+* The Gamepad `Button` objects will now emit 2 events, one from the button itself and another from the Gamepad. This means you can listen for button events in 3 ways: 1) By directly polling the button value in an update loop, 2) Listening for events on the Gamepad Plugin: `this.input.gamepad.on('down')`, or 3) By listening for events on the Gamepad itself: `gamepadReference.on('down')`.
 
 ### Arcade Physics New Features + Updates
 
