@@ -861,6 +861,48 @@ var TextureManager = new Class({
     },
 
     /**
+     * Given a Texture and an `x` and `y` coordinate this method will return a value between 0 and 255
+     * corresponding to the alpha value of the pixel at that location in the Texture. If the coordinate
+     * is out of bounds it will return null.
+     *
+     * @method Phaser.Textures.TextureManager#getPixelAlpha
+     * @since 3.10.0
+     *
+     * @param {integer} x - The x coordinate of the pixel within the Texture.
+     * @param {integer} y - The y coordinate of the pixel within the Texture.
+     * @param {string} key - The unique string-based key of the Texture.
+     * @param {(string|integer)} frame - The string or index of the Frame.
+     *
+     * @return {integer} A value between 0 and 255, or `null` if the coordinates were out of bounds.
+     */
+    getPixelAlpha: function (x, y, key, frame)
+    {
+        var textureFrame = this.getFrame(key, frame);
+
+        if (textureFrame)
+        {
+            var source = textureFrame.source.image;
+
+            if (x >= 0 && x <= source.width && y >= 0 && y <= source.height)
+            {
+                x += textureFrame.cutX;
+                y += textureFrame.cutY;
+
+                var context = this._tempContext;
+
+                context.clearRect(0, 0, 1, 1);
+                context.drawImage(source, x, y, 1, 1, 0, 0, 1, 1);
+
+                var rgb = context.getImageData(0, 0, 1, 1);
+
+                return rgb.data[3];
+            }
+        }
+
+        return null;
+    },
+
+    /**
      * Sets the given Game Objects `texture` and `frame` properties so that it uses
      * the Texture and Frame specified in the `key` and `frame` arguments to this method.
      *
