@@ -5,20 +5,17 @@
  */
 
 /**
- * Creates a new Interactive Object.
- * 
- * This is called automatically by the Input Manager when you enable a Game Object for input.
+ * Creates a new Pixel Perfect Handler function.
  *
- * The resulting Interactive Object is mapped to the Game Object's `input` property.
+ * Access via `InputPlugin.makePixelPerfect` rather than calling it directly.
  *
  * @function Phaser.Input.CreatePixelPerfectHandler
  * @since 3.10.0
  *
- * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to which this Interactive Object is bound.
- * @param {any} hitArea - The hit area for this Interactive Object. Typically a geometry shape, like a Rectangle or Circle.
- * @param {HitAreaCallback} hitAreaCallback - The 'contains' check callback that the hit area shape will use for all hit tests.
+ * @param {Phaser.Textures.TextureManager} textureManager - A reference to the Texture Manager.
+ * @param {integer} alphaTolerance - The alpha level that the pixel should be above to be included as a successful interaction.
  *
- * @return {Phaser.Input.InteractiveObject} The new Interactive Object.
+ * @return {function} The new Pixel Perfect Handler function.
  */
 var CreatePixelPerfectHandler = function (textureManager, alphaTolerance)
 {
@@ -26,7 +23,7 @@ var CreatePixelPerfectHandler = function (textureManager, alphaTolerance)
     {
         var alpha = textureManager.getPixelAlpha(x, y, gameObject.texture.key, gameObject.frame.key);
 
-        return (alpha && alpha >= alphaTolerance)
+        return (alpha && alpha >= alphaTolerance);
     };
 };
 
