@@ -8,7 +8,6 @@ var Class = require('../utils/Class');
 var CONST = require('./const');
 var EventEmitter = require('eventemitter3');
 var Gamepad = require('./gamepad/GamepadManager');
-var Keyboard = require('./keyboard/KeyboardManager');
 var Mouse = require('./mouse/MouseManager');
 var Pointer = require('./Pointer');
 var Rectangle = require('../geom/rectangle/Rectangle');
@@ -18,9 +17,11 @@ var TransformXY = require('../math/TransformXY');
 
 /**
  * @classdesc
- * The Input Manager is responsible for handling all of the input related systems in a single Phaser Game instance.
+ * The Input Manager is responsible for handling the pointer related systems in a single Phaser Game instance.
  *
- * Based on the Game Config it will create handlers for mouse, touch, keyboard and gamepad support.
+ * Based on the Game Config it will create handlers for mouse and touch support.
+ *
+ * Keyboard and Gamepad are plugins, handled directly by the InputPlugin class.
  *
  * It then manages the event queue, pointer creation and general hit test related operations.
  *
@@ -139,15 +140,6 @@ var InputManager = new Class({
          * @since 3.10.0
          */
         this._hasMoveCallback = false;
-
-        /**
-         * A reference to the Keyboard Manager class, if enabled via the `input.keyboard` Game Config property.
-         *
-         * @name Phaser.Input.InputManager#keyboard
-         * @type {?Phaser.Input.Keyboard.KeyboardManager}
-         * @since 3.0.0
-         */
-        this.keyboard = (config.inputKeyboard) ? new Keyboard(this) : null;
 
         /**
          * A reference to the Mouse Manager class, if enabled via the `input.mouse` Game Config property.
@@ -1221,11 +1213,6 @@ var InputManager = new Class({
     destroy: function ()
     {
         this.events.removeAllListeners();
-
-        if (this.keyboard)
-        {
-            this.keyboard.destroy();
-        }
 
         if (this.mouse)
         {
