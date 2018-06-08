@@ -4,6 +4,8 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var GetValue = require('../utils/object/GetValue');
+
 //  Contains the plugins that Phaser uses globally and locally.
 //  These are the source objects, not instantiated.
 var inputPlugins = {};
@@ -30,10 +32,12 @@ var InputPluginCache = {};
  * @param {string} key - A reference used to get this plugin from the plugin cache.
  * @param {function} plugin - The plugin to be stored. Should be the core object, not instantiated.
  * @param {string} mapping - If this plugin is to be injected into the Input Plugin, this is the property key used.
+ * @param {string} settingsKey - The key in the Scene Settings to check to see if this plugin should install or not.
+ * @param {string} configKey - The key in the Game Config to check to see if this plugin should install or not.
  */
-InputPluginCache.register = function (key, plugin, mapping)
+InputPluginCache.register = function (key, plugin, mapping, settingsKey, configKey)
 {
-    inputPlugins[key] = { plugin: plugin, mapping: mapping };
+    inputPlugins[key] = { plugin: plugin, mapping: mapping, settingsKey: settingsKey, configKey: configKey };
 };
 
 /**
@@ -61,12 +65,21 @@ InputPluginCache.getPlugin = function (key)
  */
 InputPluginCache.install = function (target)
 {
+    var sys = target.scene.sys;
+    var settings = sys.settings.input;
+    var config = sys.game.config;
+
     for (var key in inputPlugins)
     {
         var source = inputPlugins[key].plugin;
         var mapping = inputPlugins[key].mapping;
-        
-        target[mapping] = new source(target);
+        var settingsKey = inputPlugins[key].settingsKey;
+        var configKey = inputPlugins[key].configKey;
+
+        if (GetValue(settings, settingsKey, config[configKey]))
+        {
+            target[mapping] = new source(target);
+        }
     }
 };
 
