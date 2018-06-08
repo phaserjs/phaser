@@ -94,7 +94,7 @@ var KeyboardPlugin = new Class({
         this.sceneInputPlugin = sceneInputPlugin;
 
         /**
-         * A boolean that controls if the Keyboard Manager is enabled or not.
+         * A boolean that controls if the Keyboard Plugin is enabled or not.
          * Can be toggled on the fly.
          *
          * @name Phaser.Input.Keyboard.KeyboardPlugin#enabled
@@ -212,6 +212,7 @@ var KeyboardPlugin = new Class({
      * This is called automatically and does not need to be manually invoked.
      *
      * @method Phaser.Input.Keyboard.KeyboardPlugin#startListeners
+     * @private
      * @since 3.10.0
      */
     startListeners: function ()
@@ -242,7 +243,7 @@ var KeyboardPlugin = new Class({
         this.target.addEventListener('keydown', handler, false);
         this.target.addEventListener('keyup', handler, false);
 
-        //  Finally, listen for an update event from the Input Manager
+        //  Finally, listen for an update event from the Input Plugin
         this.sceneInputPlugin.pluginEvents.on('update', this.update, this);
     },
 
@@ -251,6 +252,7 @@ var KeyboardPlugin = new Class({
      * This is called automatically and does not need to be manually invoked.
      *
      * @method Phaser.Input.Keyboard.KeyboardPlugin#stopListeners
+     * @private
      * @since 3.10.0
      */
     stopListeners: function ()
@@ -345,7 +347,7 @@ var KeyboardPlugin = new Class({
     },
 
     /**
-     * Adds a Key object to the Keyboard Manager.
+     * Adds a Key object to this Keyboard Plugin.
      *
      * The given argument can be either an existing Key object, a string, such as `A` or `SPACE`, or a key code value.
      *
@@ -392,7 +394,7 @@ var KeyboardPlugin = new Class({
     },
 
     /**
-     * Removes a Key object from the Keyboard Manager.
+     * Removes a Key object from this Keyboard Plugin.
      *
      * The given argument can be either a Key object, a string, such as `A` or `SPACE`, or a key code value.
      *
@@ -429,7 +431,7 @@ var KeyboardPlugin = new Class({
      * Creates a new KeyCombo.
      * 
      * A KeyCombo will listen for a specific string of keys from the Keyboard, and when it receives them
-     * it will emit a `keycombomatch` event from the Keyboard Manager.
+     * it will emit a `keycombomatch` event from this Keyboard Plugin.
      *
      * The keys to be listened for can be defined as:
      *
@@ -526,10 +528,11 @@ var KeyboardPlugin = new Class({
     },
 
     /**
-     * Shuts the Keyboard Manager down.
+     * Shuts the Keyboard Plugin down.
      * All this does is remove any listeners bound to it.
      *
      * @method Phaser.Input.Keyboard.KeyboardPlugin#shutdown
+     * @private
      * @since 3.10.0
      */
     shutdown: function ()
@@ -540,9 +543,10 @@ var KeyboardPlugin = new Class({
     },
 
     /**
-     * Destroys this Keyboard Manager instance and all references it holds, plus clears out local arrays.
+     * Destroys this Keyboard Plugin instance and all references it holds, plus clears out local arrays.
      *
      * @method Phaser.Input.Keyboard.KeyboardPlugin#destroy
+     * @private
      * @since 3.10.0
      */
     destroy: function ()
@@ -556,6 +560,7 @@ var KeyboardPlugin = new Class({
         this.scene = null;
         this.settings = null;
         this.sceneInputPlugin = null;
+        this.target = null;
     }
 
 });
@@ -568,6 +573,6 @@ var KeyboardPlugin = new Class({
  * @type {?Phaser.Input.Keyboard.KeyboardPlugin}
  * @since 3.10.0
  */
-InputPluginCache.register('KeyboardPlugin', KeyboardPlugin, 'keyboard');
+InputPluginCache.register('KeyboardPlugin', KeyboardPlugin, 'keyboard', 'keyboard', 'inputKeyboard');
 
 module.exports = KeyboardPlugin;
