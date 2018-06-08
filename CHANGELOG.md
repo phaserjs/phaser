@@ -87,6 +87,7 @@ TODO - Out of Canvas events
 * Camera has a new property `visible`. An invisible Camera will skip rendering and input tests of everything it can see. This allows you to create say a mini-cam and then toggle it on and off without needing to re-create it each time.
 * Camera has a new method `setVisible` which toggles its visible property.
 * `CameraManager.fromJSON` will now set the visible property is defined in the config.
+* `ScenePlugin.run` is a new method that will run the given Scene and not change the state of the current Scene at all. If the scene is asleep, it will be woken. If it's paused, it will be resumed. If not running at all, it will be started.
 
 ### Updates
 

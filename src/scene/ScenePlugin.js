@@ -499,6 +499,37 @@ var ScenePlugin = new Class({
     },
 
     /**
+     * Runs the given Scene, but does not change the state of this Scene.
+     * 
+     * If the given Scene is paused, it will resume it. If sleeping, it will wake it.
+     * If not running at all, it will be started.
+     *
+     * Use this if you wish to open a modal Scene by calling `pause` on the current
+     * Scene, then `run` on the modal Scene.
+     *
+     * @method Phaser.Scenes.ScenePlugin#run
+     * @since 3.10.0
+     *
+     * @param {string} key - The Scene to run.
+     * @param {object} [data] - A data object that will be passed to the Scene that is run _only if the Scene isn't asleep or paused_.
+     *
+     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     */
+    run: function (key, data)
+    {
+        if (this.settings.status !== CONST.RUNNING)
+        {
+            this.manager.queueOp('run', key, data);
+        }
+        else
+        {
+            this.manager.run(key, data);
+        }
+
+        return this;
+    },
+
+    /**
      * Pause the Scene - this stops the update step from happening but it still renders.
      *
      * @method Phaser.Scenes.ScenePlugin#pause

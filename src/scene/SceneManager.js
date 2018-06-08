@@ -1012,6 +1012,49 @@ var SceneManager = new Class({
     },
 
     /**
+     * Runs the given Scene, but does not change the state of this Scene.
+     * 
+     * If the given Scene is paused, it will resume it. If sleeping, it will wake it.
+     * If not running at all, it will be started.
+     *
+     * Use this if you wish to open a modal Scene by calling `pause` on the current
+     * Scene, then `run` on the modal Scene.
+     *
+     * @method Phaser.Scenes.SceneManager#run
+     * @since 3.10.0
+     *
+     * @param {string} key - The Scene to run.
+     * @param {object} [data] - A data object that will be passed to the Scene that is run _only if the Scene isn't asleep or paused_.
+     *
+     * @return {Phaser.Scenes.SceneManager} This Scene Manager.
+     */
+    run: function (key, data)
+    {
+        var scene = this.getScene(key);
+
+        if (!scene)
+        {
+            return this;
+        }
+
+        if (scene.sys.isSleeping())
+        {
+            //  Sleeping?
+            scene.sys.wake();
+        }
+        else if (scene.sys.isBooted && !scene.sys.isActive())
+        {
+            //  Paused?
+            scene.sys.resume();
+        }
+        else
+        {
+            //  Not actually running?
+            this.start(key, data);
+        }
+    },
+
+    /**
      * Starts the given Scene.
      *
      * @method Phaser.Scenes.SceneManager#start
