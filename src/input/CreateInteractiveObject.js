@@ -22,6 +22,7 @@
  * @property {boolean} enabled - Is this Interactive Object currently enabled for input events?
  * @property {boolean} draggable - Is this Interactive Object draggable? Enable with `InputPlugin.setDraggable`.
  * @property {boolean} dropZone - Is this Interactive Object a drag-targets drop zone? Set when the object is created.
+ * @property {boolean} useHandCursor - Should this Interactive Object change the cursor to a pointer (via css) when over? (desktop only)
  * @property {?Phaser.GameObjects.GameObject} target - An optional drop target for a draggable Interactive Object.
  * @property {Phaser.Cameras.Scene2D.Camera} camera - The most recent Camera to be tested against this Interactive Object.
  * @property {any} hitArea - The hit area for this Interactive Object. Typically a geometry shape, like a Rectangle or Circle.
@@ -60,6 +61,7 @@ var CreateInteractiveObject = function (gameObject, hitArea, hitAreaCallback)
         enabled: true,
         draggable: false,
         dropZone: false,
+        useHandCursor: false,
 
         target: null,
 
