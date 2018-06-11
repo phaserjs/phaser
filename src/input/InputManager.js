@@ -1122,7 +1122,8 @@ var InputManager = new Class({
         pointer.worldX = tempPoint.x;
         pointer.worldY = tempPoint.y;
 
-        var culledGameObjects = camera.cull(gameObjects);
+        //  Disable until fixed.
+        // var culledGameObjects = camera.cull(gameObjects);
 
         var point = { x: 0, y: 0 };
 
@@ -1130,9 +1131,9 @@ var InputManager = new Class({
 
         var matrix = this._tempMatrix;
 
-        for (var i = 0; i < culledGameObjects.length; i++)
+        for (var i = 0; i < gameObjects.length; i++)
         {
-            var gameObject = culledGameObjects[i];
+            var gameObject = gameObjects[i];
 
             if (!this.inputCandidate(gameObject))
             {
