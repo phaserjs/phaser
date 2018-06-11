@@ -295,7 +295,7 @@ var InputPlugin = new Class({
          * @private
          * @since 3.0.0
          */
-        this._drag = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] };
+        this._drag = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [] };
 
         /**
          * A list of all Interactive Objects currently considered as being 'over' by any pointer, indexed by pointer ID.
@@ -305,7 +305,7 @@ var InputPlugin = new Class({
          * @private
          * @since 3.0.0
          */
-        this._over = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] };
+        this._over = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [] };
 
         /**
          * A list of valid DOM event types.
@@ -1942,7 +1942,7 @@ var InputPlugin = new Class({
      * By default Phaser creates 2 pointer objects: `mousePointer` and `pointer1`.
      *
      * You can create more either by calling this method, or by setting the `input.activePointers` property
-     * in the Game Config.
+     * in the Game Config, up to a maximum of 10 pointers.
      *
      * The first 10 pointers are available via the `InputPlugin.pointerX` properties, once they have been added
      * via this method.
@@ -1950,7 +1950,7 @@ var InputPlugin = new Class({
      * @method Phaser.Input.InputPlugin#addPointer
      * @since 3.10.0
      * 
-     * @param {integer} [quantity=1] The number of new Pointers to create.
+     * @param {integer} [quantity=1] The number of new Pointers to create. A maximum of 10 is allowed in total.
      *
      * @return {Phaser.Input.Pointer[]} An array containing all of the new Pointer objects that were created.
      */

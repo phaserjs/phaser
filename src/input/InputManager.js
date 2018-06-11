@@ -687,7 +687,7 @@ var InputManager = new Class({
      * By default Phaser creates 2 pointer objects: `mousePointer` and `pointer1`.
      *
      * You can create more either by calling this method, or by setting the `input.activePointers` property
-     * in the Game Config.
+     * in the Game Config, up to a maximum of 10 pointers.
      *
      * The first 10 pointers are available via the `InputPlugin.pointerX` properties, once they have been added
      * via this method.
@@ -695,7 +695,7 @@ var InputManager = new Class({
      * @method Phaser.Input.InputManager#addPointer
      * @since 3.10.0
      *
-     * @param {integer} [quantity=1] The number of new Pointers to create.
+     * @param {integer} [quantity=1] The number of new Pointers to create. A maximum of 10 is allowed in total.
      *
      * @return {Phaser.Input.Pointer[]} An array containing all of the new Pointer objects that were created.
      */
@@ -704,6 +704,11 @@ var InputManager = new Class({
         if (quantity === undefined) { quantity = 1; }
 
         var output = [];
+
+        if (this.pointersTotal + quantity > 10)
+        {
+            quantity = 10 - this.pointersTotal;
+        }
 
         for (var i = 0; i < quantity; i++)
         {
