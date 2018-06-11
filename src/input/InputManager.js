@@ -509,15 +509,20 @@ var InputManager = new Class({
      *
      * If an Interactive Object also sets a custom cursor, this is the cursor that is reset after its use.
      *
-     * Any valid CSS cursor value is allowed, including paths to image files. Please read about the differences
-     * between browsers when it comes to the file formats and sizes supported:
+     * Any valid CSS cursor value is allowed, including paths to image files, i.e.:
+     *
+     * ```javascript
+     * this.input.setDefaultCursor('url(assets/cursors/sword.cur), pointer');
+     * ```
+     * 
+     * Please read about the differences between browsers when it comes to the file formats and sizes they support:
      *
      * https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
      * https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_User_Interface/Using_URL_values_for_the_cursor_property
      *
      * It's up to you to pick a suitable cursor format that works across the range of browsers you need to support.
      *
-     * @method Phaser.Input.InputManager#setCursor
+     * @method Phaser.Input.InputManager#setDefaultCursor
      * @since 3.10.0
      * 
      * @param {string} cursor - The CSS to be used when setting the default cursor.

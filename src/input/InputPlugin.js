@@ -1361,6 +1361,7 @@ var InputPlugin = new Class({
      * @property {function} [hitAreaCallback] - The callback that determines if the pointer is within the Hit Area shape or not.
      * @property {boolean} [draggable=false] - If `true` the Interactive Object will be set to be draggable and emit drag events.
      * @property {boolean} [dropZone=false] - If `true` the Interactive Object will be set to be a drop zone for draggable objects.
+     * @property {boolean} [useHandCursor=false] - If `true` the Interactive Object will set the `pointer` hand cursor when a pointer is over it. This is a short-cut for setting `cursor: 'pointer'`.
      * @property {string} [cursor] - The CSS string to be used when the cursor is over this Interactive Object.
      * @property {boolean} [pixelPerfect=false] - If `true` the a pixel perfect function will be set for the hit area callback. Only works with texture based Game Objects.
      * @property {integer} [alphaTolerance=1] - If `pixelPerfect` is set, this is the alpha tolerance threshold value used in the callback.
@@ -1415,6 +1416,7 @@ var InputPlugin = new Class({
             draggable = GetFastValue(config, 'draggable', false);
             dropZone = GetFastValue(config, 'dropZone', false);
             cursor = GetFastValue(config, 'cursor', false);
+            useHandCursor = GetFastValue(config, 'useHandCursor', false);
             pixelPerfect = GetFastValue(config, 'pixelPerfect', false);
             alphaTolerance = GetFastValue(config, 'alphaTolerance', 1);
 
@@ -1443,7 +1445,7 @@ var InputPlugin = new Class({
             var io = (!gameObject.input) ? CreateInteractiveObject(gameObject, shape, callback) : gameObject.input;
 
             io.dropZone = dropZone;
-            io.cursor = cursor;
+            io.cursor = (useHandCursor) ? 'pointer' : cursor;
 
             gameObject.input = io;
 
@@ -1964,15 +1966,20 @@ var InputPlugin = new Class({
      *
      * If an Interactive Object also sets a custom cursor, this is the cursor that is reset after its use.
      *
-     * Any valid CSS cursor value is allowed, including paths to image files. Please read about the differences
-     * between browsers when it comes to the file formats and sizes supported:
+     * Any valid CSS cursor value is allowed, including paths to image files, i.e.:
+     *
+     * ```javascript
+     * this.input.setDefaultCursor('url(assets/cursors/sword.cur), pointer');
+     * ```
+     * 
+     * Please read about the differences between browsers when it comes to the file formats and sizes they support:
      *
      * https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
      * https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_User_Interface/Using_URL_values_for_the_cursor_property
      *
      * It's up to you to pick a suitable cursor format that works across the range of browsers you need to support.
      *
-     * @method Phaser.Input.InputPlugin#setCursor
+     * @method Phaser.Input.InputPlugin#setDefaultCursor
      * @since 3.10.0
      * 
      * @param {string} cursor - The CSS to be used when setting the default cursor.
