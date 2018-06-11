@@ -121,12 +121,13 @@ TODO - Out of Canvas events
 * If you set Phaser to use a pre-existing Canvas element it is no longer re-added to the DOM (thanks @NQNStudios)
 * The `TweenManager.getTweensOf` method has been fixed to remove a potential endless loop should multiple targets be passed in to it (thanks @cyantree)
 * Interactive Objects inside of Containers would still fire their input events even if the Container (or any ancestor) was set to be invisible. Objects now check their ancestor tree during the input cull and now properly skip input events if not visible. Fix #3620 (thanks @NemoStein)
+* Fixed Device.os incorrectly reporting Linux as OS on Android devices (thanks @AleBles)
 
 ### Examples, Documentation and TypeScript
 
 Thanks to the work of @hexus we have now documented all of the Math namespace and made good progress on the Game Objects.
 
-I personally have also documented the entire Input system, which was 328 classes, properties and methods to describe.
+I personally have also documented the entire Input system, which was 328 classes, properties and methods to describe, as well as lots of other areas.
 
 ## Version 3.9.0 - Yui - 24th May 2018
 

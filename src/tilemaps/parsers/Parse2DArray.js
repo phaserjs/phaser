@@ -56,7 +56,7 @@ var Parse2DArray = function (name, data, tileWidth, tileHeight, insertNull)
         {
             var tileIndex = parseInt(row[x], 10);
 
-            if (Number.isNaN(tileIndex) || tileIndex === -1)
+            if (isNaN(tileIndex) || tileIndex === -1)
             {
                 tiles[y][x] = insertNull
                     ? null
