@@ -9,10 +9,10 @@
  * These values are read-only and populated during the boot sequence of the game.
  * They are then referenced by internal game systems and are available for you to access
  * via `this.sys.game.device.os` from within any Scene.
- * 
+ *
  * @typedef {object} Phaser.Device.OS
  * @since 3.0.0
- * 
+ *
  * @property {boolean} android - Is running on android?
  * @property {boolean} chromeOS - Is running on chromeOS?
  * @property {boolean} cocoonJS - Is the game running under CocoonJS?
@@ -75,13 +75,13 @@ function init ()
     {
         OS.macOS = true;
     }
-    else if (/Linux/.test(ua))
-    {
-        OS.linux = true;
-    }
     else if (/Android/.test(ua))
     {
         OS.android = true;
+    }
+    else if (/Linux/.test(ua))
+    {
+        OS.linux = true;
     }
     else if (/iP[ao]d|iPhone/i.test(ua))
     {
@@ -128,24 +128,24 @@ function init ()
     {
         OS.webApp = true;
     }
-    
+
     if (window.cordova !== undefined)
     {
         OS.cordova = true;
     }
-    
+
     if (process && process.versions && process.versions.node)
     {
         OS.node = true;
     }
-    
+
     if (OS.node && typeof process.versions === 'object')
     {
         OS.nodeWebkit = !!process.versions['node-webkit'];
-        
+
         OS.electron = !!process.versions.electron;
     }
-    
+
     if (navigator.isCocoonJS)
     {
         OS.cocoonJS = true;
