@@ -1401,10 +1401,10 @@ var InputPlugin = new Class({
             gameObjects = [ gameObjects ];
         }
 
-        var i;
         var draggable = false;
         var dropZone = false;
         var cursor = false;
+        var useHandCursor = false;
 
         //  Config object?
         if (IsPlainObject(shape))
@@ -1417,8 +1417,9 @@ var InputPlugin = new Class({
             dropZone = GetFastValue(config, 'dropZone', false);
             cursor = GetFastValue(config, 'cursor', false);
             useHandCursor = GetFastValue(config, 'useHandCursor', false);
-            pixelPerfect = GetFastValue(config, 'pixelPerfect', false);
-            alphaTolerance = GetFastValue(config, 'alphaTolerance', 1);
+
+            var pixelPerfect = GetFastValue(config, 'pixelPerfect', false);
+            var alphaTolerance = GetFastValue(config, 'alphaTolerance', 1);
 
             if (pixelPerfect)
             {
