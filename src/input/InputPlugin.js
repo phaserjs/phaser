@@ -13,7 +13,9 @@ var DistanceBetween = require('../math/distance/DistanceBetween');
 var Ellipse = require('../geom/ellipse/Ellipse');
 var EllipseContains = require('../geom/ellipse/Contains');
 var EventEmitter = require('eventemitter3');
+var GetFastValue = require('../utils/object/GetFastValue');
 var InputPluginCache = require('./InputPluginCache');
+var IsPlainObject = require('../utils/object/IsPlainObject');
 var PluginCache = require('../plugins/PluginCache');
 var Rectangle = require('../geom/rectangle/Rectangle');
 var RectangleContains = require('../geom/rectangle/Contains');
@@ -616,15 +618,21 @@ var InputPlugin = new Class({
      *
      * Otherwise, a new Interactive Object component is created and assigned to the Game Object's `input` property.
      *
-     * An optional hit area shape and callback can be provided.
+     * Input works by using hit areas, these are nearly always geometric shapes, such as rectangles or circles, that act as the hit area
+     * for the Game Object. However, you can provide your own hit area shape and callback, should you wish to handle some more advanced
+     * input detection.
      *
-     * Finally, the Game Object can also be flagged as being a valid drop zone for dragged items.
+     * If no arguments are provided it will try and create a rectangle hit area based on the texture frame the Game Object is using. If
+     * this isn't a texture-bound object, such as a Graphics or BitmapText object, this will fail, and you'll need to provide a specific
+     * shape for it to use.
+     *
+     * You can also provide an Input Configuration Object as the only argument to this method.
      *
      * @method Phaser.Input.InputPlugin#enable
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to be enabled for input.
-     * @param {object} [shape] - The shape or object to check if the pointer is within for hit area checks.
+     * @param {(Phaser.Input.InputConfiguration|any)} [shape] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
      * @param {HitAreaCallback} [callback] - The 'contains' function to invoke to check if the pointer is within the hit area.
      * @param {boolean} [dropZone=false] - Is this Game Object a drop zone or not?
      *
@@ -645,7 +653,7 @@ var InputPlugin = new Class({
             this.setHitArea(gameObject, shape, callback);
         }
 
-        if (gameObject.input)
+        if (gameObject.input && dropZone && !gameObject.input.dropZone)
         {
             gameObject.input.dropZone = dropZone;
         }
@@ -1076,6 +1084,8 @@ var InputPlugin = new Class({
         var previouslyOver = this._over[pointer.id];
         var currentlyDragging = this._drag[pointer.id];
 
+        var manager = this.manager;
+
         //  Go through all objects the pointer was previously over, and see if it still is.
         //  Splits the previouslyOver array into two parts: justOut and stillOver
 
@@ -1136,6 +1146,8 @@ var InputPlugin = new Class({
 
                 gameObject.emit('pointerout', pointer);
 
+                manager.resetCursor(gameObject.input);
+
                 totalInteracted++;
             }
         }
@@ -1163,10 +1175,7 @@ var InputPlugin = new Class({
 
                 gameObject.emit('pointerover', pointer, gameObject.input.localX, gameObject.input.localY);
 
-                // if (gameObject.input.useHandCursor && manager.useHandCursor())
-                // {
-                //     manager.isUsingHandCursor = true;
-                // }
+                manager.setCursor(gameObject.input);
 
                 totalInteracted++;
             }
@@ -1346,6 +1355,18 @@ var InputPlugin = new Class({
     },
 
     /**
+     * @typedef {object} Phaser.Input.InputConfiguration
+     *
+     * @property {any} [hitArea] - The object / shape to use as the Hit Area. If not given it will try to create a Rectangle based on the texture frame.
+     * @property {function} [hitAreaCallback] - The callback that determines if the pointer is within the Hit Area shape or not.
+     * @property {boolean} [draggable=false] - If `true` the Interactive Object will be set to be draggable and emit drag events.
+     * @property {boolean} [dropZone=false] - If `true` the Interactive Object will be set to be a drop zone for draggable objects.
+     * @property {string} [cursor] - The CSS string to be used when the cursor is over this Interactive Object.
+     * @property {boolean} [pixelPerfect=false] - If `true` the a pixel perfect function will be set for the hit area callback. Only works with texture based Game Objects.
+     * @property {integer} [alphaTolerance=1] - If `pixelPerfect` is set, this is the alpha tolerance threshold value used in the callback.
+     */
+
+    /**
      * Sets the hit area for the given array of Game Objects.
      *
      * A hit area is typically one of the geometric shapes Phaser provides, such as a `Phaser.Geom.Rectangle`
@@ -1362,7 +1383,7 @@ var InputPlugin = new Class({
      * @since 3.0.0
      *
      * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObjects - An array of Game Objects to set the hit area on.
-     * @param {any} [shape] - The shape or object to check if the pointer is within for hit area checks.
+     * @param {(Phaser.Input.InputConfiguration|any)} [shape] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
      * @param {HitAreaCallback} [callback] - The 'contains' function to invoke to check if the pointer is within the hit area.
      *
      * @return {Phaser.Input.InputPlugin} This InputPlugin object.
@@ -1379,7 +1400,37 @@ var InputPlugin = new Class({
             gameObjects = [ gameObjects ];
         }
 
-        if (typeof shape === 'function' && !callback)
+        var i;
+        var draggable = false;
+        var dropZone = false;
+        var cursor = false;
+
+        //  Config object?
+        if (IsPlainObject(shape))
+        {
+            var config = shape;
+
+            shape = GetFastValue(config, 'hitArea', null);
+            callback = GetFastValue(config, 'hitAreaCallback', null);
+            draggable = GetFastValue(config, 'draggable', false);
+            dropZone = GetFastValue(config, 'dropZone', false);
+            cursor = GetFastValue(config, 'cursor', false);
+            pixelPerfect = GetFastValue(config, 'pixelPerfect', false);
+            alphaTolerance = GetFastValue(config, 'alphaTolerance', 1);
+
+            if (pixelPerfect)
+            {
+                shape = {};
+                callback = this.makePixelPerfect(alphaTolerance);
+            }
+
+            //  Still no hitArea or callback?
+            if (!shape || !callback)
+            {
+                this.setHitAreaFromTexture(gameObjects);
+            }
+        }
+        else if (typeof shape === 'function' && !callback)
         {
             callback = shape;
             shape = {};
@@ -1389,7 +1440,17 @@ var InputPlugin = new Class({
         {
             var gameObject = gameObjects[i];
 
-            gameObject.input = CreateInteractiveObject(gameObject, shape, callback);
+            var io = (!gameObject.input) ? CreateInteractiveObject(gameObject, shape, callback) : gameObject.input;
+
+            io.dropZone = dropZone;
+            io.cursor = cursor;
+
+            gameObject.input = io;
+
+            if (draggable)
+            {
+                this.setDraggable(gameObject);
+            }
 
             this.queueForInsertion(gameObject);
         }
@@ -1894,6 +1955,35 @@ var InputPlugin = new Class({
     addPointer: function (quantity)
     {
         return this.manager.addPointer(quantity);
+    },
+
+    /**
+     * Tells the Input system to set a custom cursor.
+     * 
+     * This cursor will be the default cursor used when interacting with the game canvas.
+     *
+     * If an Interactive Object also sets a custom cursor, this is the cursor that is reset after its use.
+     *
+     * Any valid CSS cursor value is allowed, including paths to image files. Please read about the differences
+     * between browsers when it comes to the file formats and sizes supported:
+     *
+     * https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
+     * https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_User_Interface/Using_URL_values_for_the_cursor_property
+     *
+     * It's up to you to pick a suitable cursor format that works across the range of browsers you need to support.
+     *
+     * @method Phaser.Input.InputPlugin#setCursor
+     * @since 3.10.0
+     * 
+     * @param {string} cursor - The CSS to be used when setting the default cursor.
+     *
+     * @return {Phaser.Input.InputPlugin} This Input instance.
+     */
+    setDefaultCursor: function (cursor)
+    {
+        this.manager.setDefaultCursor(cursor);
+
+        return this;
     },
 
     /**
