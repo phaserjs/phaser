@@ -115,6 +115,21 @@ var VisibilityHandler = function (game)
             window.focus();
         }, { passive: true });
     }
+
+    if (game.canvas)
+    {
+        game.canvas.onmouseout = function ()
+        {
+            game.isOver = false;
+            eventEmitter.emit('mouseout');
+        };
+
+        game.canvas.onmouseover = function ()
+        {
+            game.isOver = true;
+            eventEmitter.emit('mouseover');
+        };
+    }
 };
 
 module.exports = VisibilityHandler;
