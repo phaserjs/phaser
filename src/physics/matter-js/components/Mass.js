@@ -49,6 +49,14 @@ var Mass = {
         return this;
     },
 
+    /**
+     * The body's center of mass.
+     *
+     * @name Phaser.Physics.Matter.Components.Mass#centerOfMass
+     * @since 3.10.0
+     *
+     * @return {Phaser.Math.Vector2} The center of mass.
+     */
     centerOfMass: {
 
         get: function ()

@@ -7,7 +7,7 @@
 var Bodies = require('../lib/factory/Bodies');
 var Body = require('../lib/body/Body');
 var GetFastValue = require('../../../utils/object/GetFastValue');
-var PhysicsEditorLoader = require('../PhysicsEditorLoader');
+var PhysicsEditorParser = require('../PhysicsEditorParser');
 
 /**
  * [description]
@@ -209,7 +209,7 @@ var SetBody = {
                 break;
 
             case 'fromPhysicsEditor':
-                body = PhysicsEditorLoader.loadBody(bodyX, bodyY, bodyWidth, bodyHeight, config);
+                body = PhysicsEditorParser.parseBody(bodyX, bodyY, bodyWidth, bodyHeight, config);
                 break;
         }
 

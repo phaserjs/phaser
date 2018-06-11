@@ -13,15 +13,34 @@ var Bounds = require('./lib/geometry/Bounds');
 var Vector = require('./lib/geometry/Vector');
 
 
-var PhysicsEditorLoader = {
+/**
+ * Use PhysicsEditorParser.parseBody() to build a Matter body object, based on a physics data file
+ * created and exported with PhysicsEditor (https://www.codeandweb.com/physicseditor).
+ *
+ * @name Phaser.Physics.Matter.PhysicsEditorParser
+ * @since 3.10.0
+ */
+var PhysicsEditorParser = {
 
-    loadBody: function (x, y, w, h, config)
+    /**
+     * Parses a body element exported by PhysicsEditor.
+     *
+     * @method Phaser.Physics.Matter.PhysicsEditorParser#parseBody
+     *
+     * @param {number} x - x position
+     * @param {number} y - y position
+     * @param {number} w - width
+     * @param {number} h - height
+     * @param {object} config - body configuration and fixture (child body) definitions
+     * @return {object} a matter body, consisting of several parts (child bodies)
+     */
+    parseBody: function (x, y, w, h, config)
     {
         var fixtureConfigs = GetFastValue(config, 'fixtures', []);
         var fixtures = [];
         for (var fc = 0; fc < fixtureConfigs.length; fc++)
         {
-            var fixtureParts = this.loadFixture(fixtureConfigs[fc]);
+            var fixtureParts = this.parseFixture(fixtureConfigs[fc]);
             for(var i = 0; i < fixtureParts.length; i++)
             {
                 fixtures.push(fixtureParts[i]);
@@ -42,7 +61,15 @@ var PhysicsEditorLoader = {
     },
 
 
-    loadFixture: function (fixtureConfig)
+    /**
+     * Parses an element of the "fixtures" list exported by PhysicsEditor
+     *
+     * @method Phaser.Physics.Matter.PhysicsEditorParser#parseFixture
+     *
+     * @param {object} fixtureConfig - the fixture object to parse
+     * @return {object[]} - a list of matter bodies
+     */
+    parseFixture: function (fixtureConfig)
     {
         var matterConfig = Common.extend({}, false, fixtureConfig);
         delete matterConfig.circle;
@@ -58,13 +85,22 @@ var PhysicsEditorLoader = {
         }
         else if (fixtureConfig.vertices)
         {
-            fixtures = this.loadVertices(fixtureConfig.vertices, matterConfig);
+            fixtures = this.parseVertices(fixtureConfig.vertices, matterConfig);
         }
         return fixtures;
     },
 
 
-    loadVertices: function (vertexSets, options)
+    /**
+     * Parses the "vertices" lists exported by PhysicsEditor
+     *
+     * @method Phaser.Physics.Matter.PhysicsEditorParser#parseVertices
+     *
+     * @param {object} vertexSets - the vertex lists to parse
+     * @param {object} options - matter body options
+     * @return {object[]} - a list of matter bodies
+     */
+    parseVertices: function (vertexSets, options)
     {
         var i, j, k, v, z;
         var parts = [];
@@ -121,4 +157,4 @@ var PhysicsEditorLoader = {
     }
 };
 
-module.exports = PhysicsEditorLoader;
+module.exports = PhysicsEditorParser;
