@@ -140,8 +140,40 @@ var InputManager = new Class({
          */
         this._hasMoveCallback = false;
 
-        // this._usingHandCursor = false;
-        this.setHandCursor = false;
+        /**
+         * Is a custom cursor currently set? (desktop only)
+         *
+         * @name Phaser.Input.InputManager#_customCursor
+         * @private
+         * @type {string}
+         * @since 3.10.0
+         */
+        this._customCursor = '';
+
+        /**
+         * Custom cursor tracking value.
+         *
+         * 0 - No change.
+         * 1 - Set new cursor.
+         * 2 - Reset cursor.
+         *
+         * @name Phaser.Input.InputManager#_setCursor
+         * @private
+         * @type {integer}
+         * @since 3.10.0
+         */
+        this._setCursor = 0;
+
+        /**
+         * The default CSS cursor to be used when interacting with your game.
+         *
+         * See the `setDefaultCursor` method for more details.
+         *
+         * @name Phaser.Input.InputManager#defaultCursor
+         * @type {string}
+         * @since 3.10.0
+         */
+        this.defaultCursor = '';
 
         /**
          * A reference to the Mouse Manager class, if enabled via the `input.mouse` Game Config property.
@@ -319,6 +351,7 @@ var InputManager = new Class({
         this.events.emit('boot');
 
         this.game.events.on('prestep', this.update, this);
+        this.game.events.on('poststep', this.postUpdate, this);
         this.game.events.once('destroy', this.destroy, this);
     },
 
@@ -377,10 +410,8 @@ var InputManager = new Class({
     {
         var i;
 
-        //  Was the hand cursor set this frame?
-        this.setHandCursor = false;
+        this._setCursor = 0;
 
-        //  TODO: Move to AFTER the events have all been processed, so the plugins are more current and not 1 frame behind?
         this.events.emit('update');
 
         this.ignoreEvents = false;
@@ -452,10 +483,95 @@ var InputManager = new Class({
         }
     },
 
-    // useHandCursor: function ()
-    // {
-    //     return (this._usingHandCursor && this._setHandCursor)
-    // },
+    /**
+     * Internal post-update, called automatically by the Game step.
+     *
+     * @method Phaser.Input.InputManager#postUpdate
+     * @private
+     * @since 3.10.0
+     */
+    postUpdate: function ()
+    {
+        if (this._setCursor === 1)
+        {
+            this.canvas.style.cursor = this._customCursor;
+        }
+        else if (this._setCursor === 2)
+        {
+            this.canvas.style.cursor = this.defaultCursor;
+        }
+    },
+
+    /**
+     * Tells the Input system to set a custom cursor.
+     * 
+     * This cursor will be the default cursor used when interacting with the game canvas.
+     *
+     * If an Interactive Object also sets a custom cursor, this is the cursor that is reset after its use.
+     *
+     * Any valid CSS cursor value is allowed, including paths to image files. Please read about the differences
+     * between browsers when it comes to the file formats and sizes supported:
+     *
+     * https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
+     * https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_User_Interface/Using_URL_values_for_the_cursor_property
+     *
+     * It's up to you to pick a suitable cursor format that works across the range of browsers you need to support.
+     *
+     * @method Phaser.Input.InputManager#setCursor
+     * @since 3.10.0
+     * 
+     * @param {string} cursor - The CSS to be used when setting the default cursor.
+     */
+    setDefaultCursor: function (cursor)
+    {
+        this.defaultCursor = cursor;
+
+        if (this.canvas.style.cursor !== cursor)
+        {
+            this.canvas.style.cursor = cursor;
+        }
+    },
+
+    /**
+     * Called by the InputPlugin when processing over and out events.
+     * 
+     * Tells the Input Manager to set a custom cursor during its postUpdate step.
+     *
+     * https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
+     *
+     * @method Phaser.Input.InputManager#setCursor
+     * @private
+     * @since 3.10.0
+     * 
+     * @param {Phaser.Input.InteractiveObject} interactiveObject - The Interactive Object that called this method.
+     */
+    setCursor: function (interactiveObject)
+    {
+        if (interactiveObject.cursor)
+        {
+            this._setCursor = 1;
+            this._customCursor = interactiveObject.cursor;
+        }
+    },
+
+    /**
+     * Called by the InputPlugin when processing over and out events.
+     * 
+     * Tells the Input Manager to clear the hand cursor, if set, during its postUpdate step.
+     *
+     * @method Phaser.Input.InputManager#resetCursor
+     * @private
+     * @since 3.10.0
+     * 
+     * @param {Phaser.Input.InteractiveObject} interactiveObject - The Interactive Object that called this method.
+     */
+    resetCursor: function (interactiveObject)
+    {
+        if (interactiveObject.cursor)
+        {
+            this._setCursor = 2;
+        }
+    },
 
     //  event.targetTouches = list of all touches on the TARGET ELEMENT (i.e. game dom element)
     //  event.touches = list of all touches on the ENTIRE DOCUMENT, not just the target element
