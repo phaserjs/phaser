@@ -714,6 +714,8 @@ var LoaderPlugin = new Class({
             this.updateProgress();
 
             this.checkLoadQueue();
+
+            this.systems.events.on('update', this.update, this);
         }
     },
 
@@ -742,6 +744,20 @@ var LoaderPlugin = new Class({
     },
 
     /**
+     * Called automatically during the load process.
+     *
+     * @method Phaser.Loader.LoaderPlugin#update
+     * @since 3.10.0
+     */
+    update: function ()
+    {
+        if (this.state === CONST.LOADER_LOADING && this.list.size > 0 && this.inflight.size < this.maxParallelDownloads)
+        {
+            this.checkLoadQueue();
+        }
+    },
+
+    /**
      * An internal method called by the Loader.
      * 
      * It will check to see if there are any more files in the pending list that need loading, and if so it will move
@@ -763,8 +779,7 @@ var LoaderPlugin = new Class({
 
                 this.list.delete(file);
 
-                //  If the file doesn't have its own crossOrigin set,
-                //  we'll use the Loaders (which is undefined by default)
+                //  If the file doesn't have its own crossOrigin set, we'll use the Loaders (which is undefined by default)
                 if (!file.crossOrigin)
                 {
                     file.crossOrigin = this.crossOrigin;
@@ -834,11 +849,6 @@ var LoaderPlugin = new Class({
 
             this.emit('loaderror', file);
         }
-
-        if (this.list.size > 0)
-        {
-            this.checkLoadQueue();
-        }
     },
 
     /**
@@ -846,7 +856,7 @@ var LoaderPlugin = new Class({
      *
      * If the process was successful, and the File isn't part of a MultiFile, its `addToCache` method is called.
      *
-     * It this then removed from the queue. If there are more files to load, `checkLoadQueue` is called, otherwise `loadComplete` is.
+     * It this then removed from the queue. If there are no more files to load `loadComplete` is called.
      *
      * @method Phaser.Loader.LoaderPlugin#fileProcessComplete
      * @since 3.7.0
@@ -888,11 +898,6 @@ var LoaderPlugin = new Class({
         {
             this.loadComplete();
         }
-        else
-        {
-            //  In case we've added to the list by processing this file
-            this.checkLoadQueue();
-        }
     },
 
     /**
@@ -924,6 +929,8 @@ var LoaderPlugin = new Class({
         this.progress = 1;
 
         this.state = CONST.LOADER_COMPLETE;
+
+        this.systems.events.off('update', this.update, this);
 
         //  Call 'destroy' on each file ready for deletion
         this._deleteQueue.iterateLocal('destroy');
@@ -1038,6 +1045,7 @@ var LoaderPlugin = new Class({
 
         this.state = CONST.LOADER_SHUTDOWN;
 
+        this.systems.events.off('update', this.update, this);
         this.systems.events.off('shutdown', this.shutdown, this);
     },
 
@@ -1055,6 +1063,7 @@ var LoaderPlugin = new Class({
 
         this.state = CONST.LOADER_DESTROYED;
 
+        this.systems.events.off('update', this.update, this);
         this.systems.events.off('start', this.pluginStart, this);
 
         this.list = null;
