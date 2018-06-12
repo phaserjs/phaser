@@ -7,6 +7,7 @@
 var Bodies = require('../lib/factory/Bodies');
 var Body = require('../lib/body/Body');
 var GetFastValue = require('../../../utils/object/GetFastValue');
+var PhysicsEditorParser = require('../PhysicsEditorParser');
 
 /**
  * [description]
@@ -205,6 +206,10 @@ var SetBody = {
                     var minimumArea = GetFastValue(config, 'minimumArea', 10);
                     body = Bodies.fromVertices(bodyX, bodyY, verts, options, flagInternal, removeCollinear, minimumArea);
                 }
+                break;
+
+            case 'fromPhysicsEditor':
+                body = PhysicsEditorParser.parseBody(bodyX, bodyY, bodyWidth, bodyHeight, config);
                 break;
         }
 
