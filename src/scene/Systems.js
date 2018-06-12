@@ -9,6 +9,7 @@ var CONST = require('./const');
 var DefaultPlugins = require('../plugins/DefaultPlugins');
 var GetPhysicsPlugins = require('./GetPhysicsPlugins');
 var GetScenePlugins = require('./GetScenePlugins');
+var NOOP = require('../utils/NOOP');
 var Settings = require('./Settings');
 
 /**
@@ -207,6 +208,19 @@ var Systems = new Class({
          * @since 3.0.0
          */
         this.updateList;
+
+        /**
+         * The Scene Update function.
+         * 
+         * This starts out as NOOP during init, preload and create, and at the end of create
+         * it swaps to be whatever the Scene.update function is.
+         *
+         * @name Phaser.Scenes.Systems#sceneUpdate
+         * @type {function}
+         * @private
+         * @since 3.10.0
+         */
+        this.sceneUpdate = NOOP;
     },
 
     /**
@@ -223,6 +237,9 @@ var Systems = new Class({
     init: function (game)
     {
         this.settings.status = CONST.INIT;
+
+        //  This will get replaced by the SceneManager with the actual update function, if it exists, once create is over.
+        this.sceneUpdate = NOOP;
 
         this.game = game;
 
@@ -275,7 +292,7 @@ var Systems = new Class({
 
         this.events.emit('update', time, delta);
 
-        this.scene.update.call(this.scene, time, delta);
+        this.sceneUpdate.call(this.scene, time, delta);
 
         this.events.emit('postupdate', time, delta);
     },
