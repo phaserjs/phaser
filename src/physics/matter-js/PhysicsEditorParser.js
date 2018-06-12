@@ -16,7 +16,7 @@ var Vertices = require('./lib/geometry/Vertices');
  * Use PhysicsEditorParser.parseBody() to build a Matter body object, based on a physics data file
  * created and exported with PhysicsEditor (https://www.codeandweb.com/physicseditor).
  *
- * @name Phaser.Physics.Matter.PhysicsEditorParser
+ * @namespace Phaser.Physics.Matter.PhysicsEditorParser
  * @since 3.10.0
  */
 var PhysicsEditorParser = {
