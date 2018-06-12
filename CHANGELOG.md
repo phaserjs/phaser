@@ -124,6 +124,7 @@
 * `Game.isOver` is a new read-only boolean property that indicates if the mouse pointer is currently over the game canvas or not. It is set by the VisibilityHandler and is only reliable on desktop systems.
 * A new event `Game.mouseout` is dispatched if the mouse leaves the game canvas. You can listen to it from `this.sys.game.events.on('mouseout')` from within a Scene.
 * A new event `Game.mouseover` is dispatched if the mouse enters the game canvas, having previously been outside of it. You can listen to it from `this.sys.game.events.on('mouseover')` from within a Scene.
+* You can now use PhysicsEditor (https://www.codeandweb.com/physicseditor) to create complex Matter.js bodies. Load them as normal JSON and then just pass it to the Matter Sprite as a shape property: `this.matter.add.sprite(x, y, texture, frame, { shape: shapes.banana })` (where `shapes.banana` is one of the exported PhysicsEditor shapes in the JSON you loaded). See the 'physics/matterjs/advanced shape creation.js' example for more details.
 
 ### Updates
 
