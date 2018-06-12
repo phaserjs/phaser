@@ -57,7 +57,7 @@ var ResetKeyCombo = require('./ResetKeyCombo');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Input.Keyboard.KeyboardManager} keyboardManager - A reference to the Keyboard Manager.
+ * @param {Phaser.Input.Keyboard.KeyboardPlugin} keyboardPlugin - A reference to the Keyboard Plugin.
  * @param {(string|integer[]|object[])} keys - The keys that comprise this combo.
  * @param {KeyComboConfig} [config] - A Key Combo configuration object.
  */
@@ -65,7 +65,7 @@ var KeyCombo = new Class({
 
     initialize:
 
-    function KeyCombo (keyboardManager, keys, config)
+    function KeyCombo (keyboardPlugin, keys, config)
     {
         if (config === undefined) { config = {}; }
 
@@ -79,10 +79,10 @@ var KeyCombo = new Class({
          * A reference to the Keyboard Manager
          *
          * @name Phaser.Input.Keyboard.KeyCombo#manager
-         * @type {Phaser.Input.Keyboard.KeyboardManager}
+         * @type {Phaser.Input.Keyboard.KeyboardPlugin}
          * @since 3.0.0
          */
-        this.manager = keyboardManager;
+        this.manager = keyboardPlugin;
 
         /**
          * A flag that controls if this Key Combo is actively processing keys or not.

@@ -5,7 +5,7 @@
  */
 
 /**
- * Used internally by the KeyboardManager.
+ * Used internally by the Keyboard Plugin.
  *
  * @function Phaser.Input.Keyboard.ProcessKeyUp
  * @private
