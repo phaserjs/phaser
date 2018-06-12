@@ -170,7 +170,7 @@ var MouseManager = new Class({
      * @method Phaser.Input.Mouse.MouseManager#pointerLockChange
      * @since 3.0.0
      *
-     * @param {MouseHandler} event - The native event from the browser.
+     * @param {MouseEvent} event - The native event from the browser.
      */
     pointerLockChange: function (event)
     {

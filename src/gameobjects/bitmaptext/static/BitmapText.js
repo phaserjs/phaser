@@ -27,7 +27,7 @@ var Render = require('./BitmapTextRender');
  * @property {number} xOffset - The x offset of the character.
  * @property {number} yOffset - The y offset of the character.
  * @property {object} data - Extra data for the character.
- * @property {Object.<integer, number>} kerning - Kerning values, keyed by character code.
+ * @property {Object.<number>} kerning - Kerning values, keyed by character code.
  */
 
 /**
@@ -39,7 +39,7 @@ var Render = require('./BitmapTextRender');
  * @property {number} size - The size of the font.
  * @property {number} lineHeight - The line height of the font.
  * @property {boolean} retroFont - Whether this font is a retro font (monospace).
- * @property {Object.<integer, BitmapFontCharacterData>} chars - The character data of the font, keyed by character code. Each character datum includes a position, size, offset and more.
+ * @property {Object.<number, BitmapFontCharacterData>} chars - The character data of the font, keyed by character code. Each character datum includes a position, size, offset and more.
  */
 
 /**
