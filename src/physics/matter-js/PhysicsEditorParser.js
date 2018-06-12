@@ -6,12 +6,11 @@
 
 var Bodies = require('./lib/factory/Bodies');
 var Body = require('./lib/body/Body');
-var GetFastValue = require('../../utils/object/GetFastValue');
-var Common = require('./lib/core/Common');
-var Vertices = require('./lib/geometry/Vertices');
 var Bounds = require('./lib/geometry/Bounds');
+var Common = require('./lib/core/Common');
+var GetFastValue = require('../../utils/object/GetFastValue');
 var Vector = require('./lib/geometry/Vector');
-
+var Vertices = require('./lib/geometry/Vertices');
 
 /**
  * Use PhysicsEditorParser.parseBody() to build a Matter body object, based on a physics data file
@@ -25,33 +24,39 @@ var PhysicsEditorParser = {
     /**
      * Parses a body element exported by PhysicsEditor.
      *
-     * @method Phaser.Physics.Matter.PhysicsEditorParser#parseBody
+     * @function Phaser.Physics.Matter.PhysicsEditorParser.parseBody
+     * @since 3.10.0
      *
-     * @param {number} x - x position
-     * @param {number} y - y position
-     * @param {number} w - width
-     * @param {number} h - height
-     * @param {object} config - body configuration and fixture (child body) definitions
-     * @return {object} a matter body, consisting of several parts (child bodies)
+     * @param {number} x - x position.
+     * @param {number} y - y position.
+     * @param {number} w - width.
+     * @param {number} h - height.
+     * @param {object} config - body configuration and fixture (child body) definitions.
+     * 
+     * @return {object} A matter body, consisting of several parts (child bodies)
      */
     parseBody: function (x, y, w, h, config)
     {
         var fixtureConfigs = GetFastValue(config, 'fixtures', []);
         var fixtures = [];
+
         for (var fc = 0; fc < fixtureConfigs.length; fc++)
         {
             var fixtureParts = this.parseFixture(fixtureConfigs[fc]);
-            for(var i = 0; i < fixtureParts.length; i++)
+
+            for (var i = 0; i < fixtureParts.length; i++)
             {
                 fixtures.push(fixtureParts[i]);
             }
         }
 
         var matterConfig = Common.extend({}, false, config);
+
         delete matterConfig.fixtures;
         delete matterConfig.type;
 
         var body = Body.create(matterConfig);
+
         Body.setParts(body, fixtures);
         body.render.sprite.xOffset = body.position.x / w;
         body.render.sprite.yOffset = body.position.y / h;
@@ -64,18 +69,22 @@ var PhysicsEditorParser = {
     /**
      * Parses an element of the "fixtures" list exported by PhysicsEditor
      *
-     * @method Phaser.Physics.Matter.PhysicsEditorParser#parseFixture
+     * @function Phaser.Physics.Matter.PhysicsEditorParser.parseFixture
+     * @since 3.10.0
      *
      * @param {object} fixtureConfig - the fixture object to parse
-     * @return {object[]} - a list of matter bodies
+     * 
+     * @return {object[]} - A list of matter bodies
      */
     parseFixture: function (fixtureConfig)
     {
         var matterConfig = Common.extend({}, false, fixtureConfig);
+
         delete matterConfig.circle;
         delete matterConfig.vertices;
 
         var fixtures;
+
         if (fixtureConfig.circle)
         {
             var x = GetFastValue(fixtureConfig.circle, 'x');
@@ -87,18 +96,20 @@ var PhysicsEditorParser = {
         {
             fixtures = this.parseVertices(fixtureConfig.vertices, matterConfig);
         }
+
         return fixtures;
     },
 
-
     /**
-     * Parses the "vertices" lists exported by PhysicsEditor
+     * Parses the "vertices" lists exported by PhysicsEditor.
      *
-     * @method Phaser.Physics.Matter.PhysicsEditorParser#parseVertices
+     * @function Phaser.Physics.Matter.PhysicsEditorParser.parseVertices
+     * @since 3.10.0
      *
-     * @param {object} vertexSets - the vertex lists to parse
-     * @param {object} options - matter body options
-     * @return {object[]} - a list of matter bodies
+     * @param {object} vertexSets - The vertex lists to parse.
+     * @param {object} options - Matter body options.
+     * 
+     * @return {object[]} - A list of matter bodies.
      */
     parseVertices: function (vertexSets, options)
     {
