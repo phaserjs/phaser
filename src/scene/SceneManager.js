@@ -540,7 +540,7 @@ var SceneManager = new Class({
         {
             var sys = this.scenes[i].sys;
 
-            if (sys.settings.status === CONST.RUNNING)
+            if (sys.settings.status > CONST.START && sys.settings.status <= CONST.RUNNING)
             {
                 sys.step(time, delta);
             }
@@ -617,6 +617,12 @@ var SceneManager = new Class({
             }
         }
 
+        //  If the Scene has an update function we'll set it now, otherwise it'll remain as NOOP
+        if (scene.update)
+        {
+            sys.sceneUpdate = scene.update;
+        }
+
         settings.status = CONST.RUNNING;
     },
 
@@ -659,11 +665,6 @@ var SceneManager = new Class({
             newScene.sys.settings.key = key;
 
             newScene.sys.init(this.game);
-
-            if (!newScene.update)
-            {
-                newScene.update = NOOP;
-            }
 
             return newScene;
         }
@@ -735,12 +736,6 @@ var SceneManager = new Class({
         for (var i = 0; i < defaults.length; i++)
         {
             var sceneCallback = GetValue(sceneConfig, defaults[i], null);
-
-            //  Must always have an update function, no matter what (the rest are optional)
-            if (defaults[i] === 'update' && !sceneCallback)
-            {
-                sceneCallback = NOOP;
-            }
 
             if (sceneCallback)
             {
