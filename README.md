@@ -104,13 +104,13 @@ npm install phaser
 [Phaser is on jsDelivr](https://www.jsdelivr.com/projects/phaser) which is a "super-fast CDN for developers". Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.10.0/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.10.1/dist/phaser.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.10.0/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.10.1/dist/phaser.min.js"></script>
 ```
 
 ### API Documentation
@@ -270,7 +270,11 @@ You can then run `webpack` to create a development build in the `build` folder w
 
 # Change Log
 
-# Change Log
+## Version 3.10.1 - Hayashi - 13th June 2018
+
+### Bug Fixes
+
+* The InputManager would only create 1 Pointer, even if Touch input was enabled in the config, which meant you couldn't use touch events unless you first called `addPointer` or specified one in the config. Now, it Touch is enabled in the config, it'll always create 2 pointers by default.
 
 ## Version 3.10.0 - Hayashi - 13th June 2018
 
@@ -462,8 +466,8 @@ All rights reserved.
 
 "Above all, video games are meant to be just one thing: fun. Fun for everyone." - Satoru Iwata
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.10.0/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.10.0/phaser.min.js
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.10.1/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.10.1/phaser.min.js
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-ghwin]: github-windows://openRepo/https://github.com/photonstorm/phaser
