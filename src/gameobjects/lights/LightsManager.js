@@ -12,12 +12,14 @@ var Utils = require('../../renderer/webgl/Utils');
 /**
  * @callback LightForEach
  *
- * @param {Phaser.GameObjects.Light} light - [description]
+ * @param {Phaser.GameObjects.Light} light - The Light.
  */
 
 /**
  * @classdesc
- * [description]
+ * Manages Lights for a Scene.
+ *
+ * Affects the rendering of Game Objects using the `Light2D` pipeline.
  *
  * @class LightsManager
  * @memberOf Phaser.GameObjects
@@ -31,7 +33,9 @@ var LightsManager = new Class({
     function LightsManager ()
     {
         /**
-         * [description]
+         * The pool of Lights.
+         *
+         * Used to recycle removed Lights for a more efficient use of memory.
          *
          * @name Phaser.GameObjects.LightsManager#lightPool
          * @type {Phaser.GameObjects.Light[]}
@@ -41,7 +45,7 @@ var LightsManager = new Class({
         this.lightPool = [];
 
         /**
-         * [description]
+         * The Lights in the Scene.
          *
          * @name Phaser.GameObjects.LightsManager#lights
          * @type {Phaser.GameObjects.Light[]}
@@ -51,7 +55,9 @@ var LightsManager = new Class({
         this.lights = [];
 
         /**
-         * [description]
+         * Lights that have been culled from a Camera's viewport.
+         *
+         * Lights in this list will not be rendered.
          *
          * @name Phaser.GameObjects.LightsManager#culledLights
          * @type {Phaser.GameObjects.Light[]}
@@ -61,7 +67,7 @@ var LightsManager = new Class({
         this.culledLights = [];
 
         /**
-         * [description]
+         * The ambient color.
          *
          * @name Phaser.GameObjects.LightsManager#ambientColor
          * @type {{ r: float, g: float, b: float }}
@@ -70,7 +76,7 @@ var LightsManager = new Class({
         this.ambientColor = { r: 0.1, g: 0.1, b: 0.1 };
 
         /**
-         * [description]
+         * Whether the Lights Manager is enabled.
          *
          * @name Phaser.GameObjects.LightsManager#active
          * @type {boolean}
@@ -81,7 +87,7 @@ var LightsManager = new Class({
     },
 
     /**
-     * [description]
+     * Enable the Lights Manager.
      *
      * @method Phaser.GameObjects.LightsManager#enable
      * @since 3.0.0
@@ -96,7 +102,7 @@ var LightsManager = new Class({
     },
 
     /**
-     * [description]
+     * Disable the Lights Manager.
      *
      * @method Phaser.GameObjects.LightsManager#disable
      * @since 3.0.0
@@ -111,14 +117,16 @@ var LightsManager = new Class({
     },
 
     /**
-     * [description]
+     * Cull any Lights that aren't visible to the given Camera.
+     *
+     * Culling Lights improves performance by ensuring that only Lights within a Camera's viewport are rendered.
      *
      * @method Phaser.GameObjects.LightsManager#cull
      * @since 3.0.0
      *
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to cull Lights for.
      *
-     * @return {Phaser.GameObjects.Light[]} [description]
+     * @return {Phaser.GameObjects.Light[]} The culled Lights.
      */
     cull: function (camera)
     {
@@ -156,12 +164,12 @@ var LightsManager = new Class({
     },
 
     /**
-     * [description]
+     * Iterate over each Light with a callback.
      *
      * @method Phaser.GameObjects.LightsManager#forEachLight
      * @since 3.0.0
      *
-     * @param {LightForEach} callback - [description]
+     * @param {LightForEach} callback - The callback that is called with each Light.
      *
      * @return {Phaser.GameObjects.LightsManager} This Lights Manager object.
      */
@@ -184,12 +192,12 @@ var LightsManager = new Class({
     },
 
     /**
-     * [description]
+     * Set the ambient light color.
      *
      * @method Phaser.GameObjects.LightsManager#setAmbientColor
      * @since 3.0.0
      *
-     * @param {number} rgb - [description]
+     * @param {number} rgb - The integer RGB color of the ambient light.
      *
      * @return {Phaser.GameObjects.LightsManager} This Lights Manager object.
      */
@@ -210,7 +218,7 @@ var LightsManager = new Class({
      * @method Phaser.GameObjects.LightsManager#getMaxVisibleLights
      * @since 3.0.0
      *
-     * @return {integer} [description]
+     * @return {integer} The maximum number of Lights allowed to appear at once.
      */
     getMaxVisibleLights: function ()
     {
@@ -218,12 +226,12 @@ var LightsManager = new Class({
     },
 
     /**
-     * [description]
+     * Get the number of Lights managed by this Lights Manager.
      *
      * @method Phaser.GameObjects.LightsManager#getLightCount
      * @since 3.0.0
      *
-     * @return {integer} [description]
+     * @return {integer} The number of Lights managed by this Lights Manager.
      */
     getLightCount: function ()
     {
@@ -231,18 +239,18 @@ var LightsManager = new Class({
     },
 
     /**
-     * [description]
+     * Add a Light.
      *
      * @method Phaser.GameObjects.LightsManager#addLight
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} radius - [description]
-     * @param {number} rgb - [description]
-     * @param {number} intensity - [description]
+     * @param {number} x - The horizontal position of the Light.
+     * @param {number} y - The vertical position of the Light.
+     * @param {number} radius - The radius of the Light.
+     * @param {number} rgb - The integer RGB color of the light.
+     * @param {number} intensity - The intensity of the Light.
      *
-     * @return {Phaser.GameObjects.Light} [description]
+     * @return {Phaser.GameObjects.Light} The Light that was added.
      */
     addLight: function (x, y, radius, rgb, intensity)
     {
@@ -274,12 +282,12 @@ var LightsManager = new Class({
     },
 
     /**
-     * [description]
+     * Remove a Light.
      *
      * @method Phaser.GameObjects.LightsManager#removeLight
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Light} light - [description]
+     * @param {Phaser.GameObjects.Light} light - The Light to remove.
      *
      * @return {Phaser.GameObjects.LightsManager} This Lights Manager object.
      */
@@ -297,7 +305,10 @@ var LightsManager = new Class({
     },
 
     /**
-     * [description]
+     * Shut down the Lights Manager.
+     *
+     * Recycles all active Lights into the Light pool, resets ambient light color and clears the lists of Lights and
+     * culled Lights.
      *
      * @method Phaser.GameObjects.LightsManager#shutdown
      * @since 3.0.0
@@ -315,7 +326,9 @@ var LightsManager = new Class({
     },
 
     /**
-     * [description]
+     * Destroy the Lights Manager.
+     *
+     * Cleans up all references by calling {@link Phaser.GameObjects.LightsManager#shutdown}.
      *
      * @method Phaser.GameObjects.LightsManager#destroy
      * @since 3.0.0

@@ -10,7 +10,22 @@ var PluginCache = require('../../plugins/PluginCache');
 
 /**
  * @classdesc
- * [description]
+ * A Scene plugin that provides a {@link Phaser.GameObjects.LightsManager} for the Light2D pipeline.
+ *
+ * Available from within a Scene via `this.lights`.
+ *
+ * Add Lights using the {@link Phaser.GameObjects.LightsManager#addLight} method:
+ *
+ * ```javascript
+ * // Create a Light at [400, 300] and a radius of 200.
+ * this.lights.addLight(400, 300, 200);
+ * ```
+ *
+ * For Game Objects to be affected by the Lights when rendered, you will need to set them to use the `Light2D` pipeline like so:
+ *
+ * ```javascript
+ * sprite.setPipeline('Light2D');
+ * ```
  *
  * @class LightsPlugin
  * @extends Phaser.GameObjects.LightsManager
@@ -18,7 +33,7 @@ var PluginCache = require('../../plugins/PluginCache');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - [description]
+ * @param {Phaser.Scene} scene - The Scene that this Lights Plugin belongs to.
  */
 var LightsPlugin = new Class({
 
@@ -29,7 +44,7 @@ var LightsPlugin = new Class({
     function LightsPlugin (scene)
     {
         /**
-         * [description]
+         * A reference to the Scene that this Lights Plugin belongs to.
          *
          * @name Phaser.GameObjects.LightsPlugin#scene
          * @type {Phaser.Scene}
@@ -38,7 +53,7 @@ var LightsPlugin = new Class({
         this.scene = scene;
 
         /**
-         * [description]
+         * A reference to the Scene's systems.
          *
          * @name Phaser.GameObjects.LightsPlugin#systems
          * @type {Phaser.Scenes.Systems}
@@ -55,7 +70,7 @@ var LightsPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Boot the Lights Plugin.
      *
      * @method Phaser.GameObjects.LightsPlugin#boot
      * @since 3.0.0
@@ -69,7 +84,9 @@ var LightsPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Destroy the Lights Plugin.
+     *
+     * Cleans up all references.
      *
      * @method Phaser.GameObjects.LightsPlugin#destroy
      * @since 3.0.0

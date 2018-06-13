@@ -8,7 +8,15 @@ var Class = require('../../utils/Class');
 
 /**
  * @classdesc
- * [description]
+ * A Matrix used for display transformations for rendering.
+ *
+ * It is represented like so:
+ *
+ * ```
+ * | a | c | tx |
+ * | b | d | ty |
+ * | 0 | 0 | 1  |
+ * ```
  *
  * @class TransformMatrix
  * @memberOf Phaser.GameObjects.Components

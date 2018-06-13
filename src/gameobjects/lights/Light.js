@@ -11,7 +11,11 @@ var Utils = require('../../renderer/webgl/Utils');
  * @classdesc
  * A 2D point light.
  *
- * Add these to a scene using the ForwardDiffuseLightPipeline for lighting effects, or just to represent a point light.
+ * These are typically created by a {@link Phaser.GameObjects.LightsManager}, available from within a scene via `this.lights`.
+ *
+ * Any Game Objects using the Light2D pipeline will then be affected by these Lights.
+ *
+ * They can also simply be used to represent a point light for your own purposes.
  *
  * @class Light
  * @memberOf Phaser.GameObjects
@@ -180,7 +184,7 @@ var Light = new Class({
      * @method Phaser.GameObjects.Light#setColor
      * @since 3.0.0
      *
-     * @param {number} rgb - [description]
+     * @param {number} rgb - The integer RGB color of the light.
      *
      * @return {Phaser.GameObjects.Light} This Light object.
      */
