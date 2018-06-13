@@ -607,9 +607,9 @@ var SceneManager = new Class({
 
         if (scene.create)
         {
-            scene.sys.settings.status = CONST.CREATING;
+            settings.status = CONST.CREATING;
 
-            scene.create.call(scene, scene.sys.settings.data);
+            scene.create.call(scene, settings.data);
 
             if (settings.isTransition)
             {
@@ -623,7 +623,10 @@ var SceneManager = new Class({
             sys.sceneUpdate = scene.update;
         }
 
-        settings.status = CONST.RUNNING;
+        if (settings.status === CONST.CREATING)
+        {
+            settings.status = CONST.RUNNING;
+        }
     },
 
     /**
