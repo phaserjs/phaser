@@ -1043,7 +1043,6 @@ var SceneManager = new Class({
             }
             if (isFound)
             {
-                this.queueOp('stop', key);
                 this.queueOp('start', key, data);
             }
             return this;
