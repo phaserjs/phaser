@@ -117,7 +117,7 @@ var MatrixStack = {
     },
 
     /**
-     * Resets the current matrix to the identity matrix.
+     * Reset the current matrix to the identity matrix.
      *
      * @method Phaser.GameObjects.Components.MatrixStack#loadIdentity
      * @since 3.2.0
