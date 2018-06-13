@@ -290,8 +290,7 @@ var TimeStep = new Class({
          * [description]
          *
          * @name Phaser.Boot.TimeStep#deltaHistory
-         * @type {array}
-         * @default 0
+         * @type {integer[]}
          * @since 3.0.0
          */
         this.deltaHistory = [];

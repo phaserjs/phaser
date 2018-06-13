@@ -1797,11 +1797,11 @@ var ParticleEmitter = new Class({
      * @since 3.0.0
      *
      * @param {ParticleEmitterCallback} callback - The function.
-     * @param {*} thisArg - The function's calling context.
+     * @param {*} context - The function's calling context.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
-    forEachAlive: function (callback, thisArg)
+    forEachAlive: function (callback, context)
     {
         var alive = this.alive;
         var length = alive.length;
@@ -1809,7 +1809,7 @@ var ParticleEmitter = new Class({
         for (var index = 0; index < length; ++index)
         {
             //  Sends the Particle and the Emitter
-            callback.call(thisArg, alive[index], this);
+            callback.call(context, alive[index], this);
         }
 
         return this;
@@ -1822,11 +1822,11 @@ var ParticleEmitter = new Class({
      * @since 3.0.0
      *
      * @param {ParticleEmitterCallback} callback - The function.
-     * @param {*} thisArg - The function's calling context.
+     * @param {*} context - The function's calling context.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
-    forEachDead: function (callback, thisArg)
+    forEachDead: function (callback, context)
     {
         var dead = this.dead;
         var length = dead.length;
@@ -1834,7 +1834,7 @@ var ParticleEmitter = new Class({
         for (var index = 0; index < length; ++index)
         {
             //  Sends the Particle and the Emitter
-            callback.call(thisArg, dead[index], this);
+            callback.call(context, dead[index], this);
         }
 
         return this;

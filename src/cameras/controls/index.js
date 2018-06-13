@@ -10,26 +10,7 @@
 
 module.exports = {
 
-    /**
-     * This alias will be removed in a future version.
-     * Use `FixedKeyControl` instead.
-     * 
-     * @deprecated
-     * @name Phaser.Cameras.Controls.Fixed
-     */
-    Fixed: require('./FixedKeyControl'),
-
     FixedKeyControl: require('./FixedKeyControl'),
-
-    /**
-     * This alias will be removed in a future version.
-     * Use `SmoothedKeyControl` instead.
-     * 
-     * @deprecated
-     * @name Phaser.Cameras.Controls.Smoothed
-     */
-    Smoothed: require('./SmoothedKeyControl'),
-
     SmoothedKeyControl: require('./SmoothedKeyControl')
 
 };

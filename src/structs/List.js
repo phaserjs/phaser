@@ -639,7 +639,7 @@ var List = new Class({
      * @genericUse {EachListCallback.<T>} - [callback]
      *
      * @param {EachListCallback} callback - The function to call.
-     * @param {*} [thisArg] - Value to use as `this` when executing callback.
+     * @param {*} [context] - Value to use as `this` when executing callback.
      * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
      */
     each: function (callback, context)
