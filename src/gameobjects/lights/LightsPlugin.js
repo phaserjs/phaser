@@ -17,7 +17,10 @@ var PluginCache = require('../../plugins/PluginCache');
  * Add Lights using the {@link Phaser.GameObjects.LightsManager#addLight} method:
  *
  * ```javascript
- * // Create a Light at [400, 300] and a radius of 200.
+ * // Enable the Lights Manager because it is disabled by default
+ * this.lights.enable();
+ *
+ * // Create a Light at [400, 300] with a radius of 200
  * this.lights.addLight(400, 300, 200);
  * ```
  *
