@@ -12,7 +12,11 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
  * @classdesc
- * [description]
+ * An Arcade Physics Static Group object.
+ *
+ * All Game Objects created by this Group will automatically be given static Arcade Physics bodies.
+ *
+ * Its dynamic counterpart is {@link Phaser.Physics.Arcade.Group}.
  *
  * @class StaticGroup
  * @extends Phaser.GameObjects.Group
@@ -82,6 +86,7 @@ var StaticPhysicsGroup = new Class({
          *
          * @name Phaser.Physics.Arcade.StaticGroup#physicsType
          * @type {integer}
+         * @default STATIC_BODY
          * @since 3.0.0
          */
         this.physicsType = CONST.STATIC_BODY;
@@ -135,12 +140,15 @@ var StaticPhysicsGroup = new Class({
     },
 
     /**
-     * [description]
+     * Resets each Body to the position of its parent Game Object.
+     * Body sizes aren't changed (use {@link Phaser.Physics.Arcade.Components.Enable#refreshBody} for that).
      *
      * @method Phaser.Physics.Arcade.StaticGroup#refresh
      * @since 3.0.0
      *
      * @return {Phaser.Physics.Arcade.StaticGroup} [description]
+     *
+     * @see Phaser.Physics.Arcade.StaticBody#reset
      */
     refresh: function ()
     {

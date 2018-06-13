@@ -68,7 +68,9 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @classdesc
  * An Arcade Physics Group object.
  *
- * All Game Objects created by this Group will automatically be dynamic Arcade Physics objects.
+ * All Game Objects created by this Group will automatically be given dynamic Arcade Physics bodies.
+ *
+ * Its static counterpart is {@link Phaser.Physics.Arcade.StaticGroup}.
  *
  * @class Group
  * @extends Phaser.GameObjects.Group
@@ -129,9 +131,10 @@ var PhysicsGroup = new Class({
 
         /**
          * The class to create new group members from.
+         * This should be ArcadeImage, ArcadeSprite, or a class extending one of those.
          *
          * @name Phaser.Physics.Arcade.Group#classType
-         * @type {Phaser.Physics.Arcade.Sprite}
+         * @type {(Phaser.Physics.Arcade.Image|Phaser.Physics.Arcade.Sprite)}
          * @default ArcadeSprite
          */
         config.classType = GetFastValue(config, 'classType', ArcadeSprite);
@@ -141,12 +144,13 @@ var PhysicsGroup = new Class({
          *
          * @name Phaser.Physics.Arcade.Group#physicsType
          * @type {integer}
+         * @default DYNAMIC_BODY
          * @since 3.0.0
          */
         this.physicsType = CONST.DYNAMIC_BODY;
 
         /**
-         * [description]
+         * Default physics properties applied to Game Objects added to the Group or created by the Group. Derived from the `config` argument.
          *
          * @name Phaser.Physics.Arcade.Group#defaults
          * @type {PhysicsGroupDefaults}
@@ -180,7 +184,7 @@ var PhysicsGroup = new Class({
     },
 
     /**
-     * [description]
+     * Enables a Game Object's Body and assigns `defaults`. Called when a Group member is added or created.
      *
      * @method Phaser.Physics.Arcade.Group#createCallbackHandler
      * @since 3.0.0
@@ -203,7 +207,7 @@ var PhysicsGroup = new Class({
     },
 
     /**
-     * [description]
+     * Disables a Game Object's Body. Called when a Group member is removed.
      *
      * @method Phaser.Physics.Arcade.Group#removeCallbackHandler
      * @since 3.0.0
@@ -219,7 +223,7 @@ var PhysicsGroup = new Class({
     },
 
     /**
-     * [description]
+     * Sets the velocity of each Group member.
      *
      * @method Phaser.Physics.Arcade.Group#setVelocity
      * @since 3.0.0
@@ -245,7 +249,7 @@ var PhysicsGroup = new Class({
     },
 
     /**
-     * [description]
+     * Sets the horizontal velocity of each Group member.
      *
      * @method Phaser.Physics.Arcade.Group#setVelocityX
      * @since 3.0.0
@@ -270,7 +274,7 @@ var PhysicsGroup = new Class({
     },
 
     /**
-     * [description]
+     * Sets the vertical velocity of each Group member.
      *
      * @method Phaser.Physics.Arcade.Group#setVelocityY
      * @since 3.0.0

@@ -6,35 +6,41 @@
 
 /**
  * Arcade Physics consts.
- * 
+ *
  * @ignore
  */
 
 var CONST = {
 
     /**
-     * [description]
-     * 
+     * Dynamic Body.
+     *
      * @name Phaser.Physics.Arcade.DYNAMIC_BODY
      * @readOnly
      * @type {number}
      * @since 3.0.0
+     *
+     * @see Phaser.Physics.Arcade.Body#physicsType
+     * @see Phaser.Physics.Arcade.Group#physicsType
      */
     DYNAMIC_BODY: 0,
 
     /**
-     * [description]
-     * 
+     * Static Body.
+     *
      * @name Phaser.Physics.Arcade.STATIC_BODY
      * @readOnly
      * @type {number}
      * @since 3.0.0
+     *
+     * @see Phaser.Physics.Arcade.Body#physicsType
+     * @see Phaser.Physics.Arcade.StaticBody#physicsType
      */
     STATIC_BODY: 1,
 
     /**
      * [description]
-     * 
+     *
      * @name Phaser.Physics.Arcade.GROUP
      * @readOnly
      * @type {number}
@@ -44,7 +50,7 @@ var CONST = {
 
     /**
      * [description]
-     * 
+     *
      * @name Phaser.Physics.Arcade.TILEMAPLAYER
      * @readOnly
      * @type {number}
@@ -53,52 +59,62 @@ var CONST = {
     TILEMAPLAYER: 3,
 
     /**
-     * [description]
-     * 
+     * Facing no direction (initial value).
+     *
      * @name Phaser.Physics.Arcade.FACING_NONE
      * @readOnly
      * @type {number}
      * @since 3.0.0
+     *
+     * @see Phaser.Physics.Arcade.Body#facing
      */
     FACING_NONE: 10,
 
     /**
-     * [description]
-     * 
+     * Facing up.
+     *
      * @name Phaser.Physics.Arcade.FACING_UP
      * @readOnly
      * @type {number}
      * @since 3.0.0
+     *
+     * @see Phaser.Physics.Arcade.Body#facing
      */
     FACING_UP: 11,
 
     /**
-     * [description]
-     * 
+     * Facing down.
+     *
      * @name Phaser.Physics.Arcade.FACING_DOWN
      * @readOnly
      * @type {number}
      * @since 3.0.0
+     *
+     * @see Phaser.Physics.Arcade.Body#facing
      */
     FACING_DOWN: 12,
 
     /**
-     * [description]
-     * 
+     * Facing left.
+     *
      * @name Phaser.Physics.Arcade.FACING_LEFT
      * @readOnly
      * @type {number}
      * @since 3.0.0
+     *
+     * @see Phaser.Physics.Arcade.Body#facing
      */
     FACING_LEFT: 13,
 
     /**
-     * [description]
-     * 
+     * Facing right.
+     *
      * @name Phaser.Physics.Arcade.FACING_RIGHT
      * @readOnly
      * @type {number}
      * @since 3.0.0
+     *
+     * @see Phaser.Physics.Arcade.Body#facing
      */
     FACING_RIGHT: 14
 
