@@ -1,6 +1,6 @@
 # Change Log
 
-## Version 3.10.0 - Hayashi - in development
+## Version 3.10.0 - Hayashi - 13th June 2018
 
 ### Input System New Features + Updates
 
@@ -138,6 +138,8 @@
 * The `ForwardDiffuseLightPipeline`, used by the Lights system, now sets a flag if the Scene doesn't contain any lights. All of the Game Objects now check this flag and don't even bother adding themselves to the batch if there are no lights in the Scene, as they'd never render anyway. This also avoids the ghost-image problem if you swap Scenes to a new Scene with the Light Manager enabled, but no actual lights defined. Fix #3707 (thanks @samvieten).
 * `CameraManager.getCameraBelowPointer` has been renamed to `getCamerasBelowPointer` and it now returns an array of all the cameras below the given pointer, not just the top-most one. The array is sorted so that the top-most camera is at the start of the array.
 * In `TimeStep.step` the `rawDelta` and `delta` values are checked to make sure they are non-negative, which can happen in Chrome when the delta is reset and out of sync with the value passed to Request Animation Frame. Fix #3088 (thanks @Antriel)
+* `Cameras.Controls.Fixed` has been removed. It's was deprecated a few versions ago. Please use `FixedKeyControl` instead.
+* `Cameras.Controls.Smoothed` has been removed. It's was deprecated a few versions ago. Please use `SmoothedKeyControl` instead.
 
 ### Bug Fixes
 

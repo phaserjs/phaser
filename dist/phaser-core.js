@@ -76,7 +76,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1022);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1026);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -372,7 +372,7 @@ module.exports = GetFastValue;
 
 var Class = __webpack_require__(0);
 var Components = __webpack_require__(15);
-var DataManager = __webpack_require__(79);
+var DataManager = __webpack_require__(81);
 var EventEmitter = __webpack_require__(9);
 
 /**
@@ -576,7 +576,7 @@ var GameObject = new Class({
     },
 
     /**
-     * Adds a DataManager to this object.
+     * Adds a Data Manager component to this Game Object.
      *
      * @method Phaser.GameObjects.GameObject#setDataEnabled
      * @since 3.0.0
@@ -595,16 +595,51 @@ var GameObject = new Class({
     },
 
     /**
-     * This is a quick chainable alias to the `DataProxy.set` method.
-     * It allows you to set a key and value in this Game Objects data store.
+     * Allows you to store a key value pair within this Game Objects Data Manager.
+     * 
+     * If the Game Object has not been enabled for data (via `setDataEnabled`) then it will be enabled
+     * before setting the value.
+     * 
+     * If the key doesn't already exist in the Data Manager then it is created.
+     * 
+     * ```javascript
+     * sprite.setData('name', 'Red Gem Stone');
+     * ```
+     *
+     * You can also pass in an object of key value pairs as the first argument:
+     *
+     * ```javascript
+     * sprite.setData({ name: 'Red Gem Stone', level: 2, owner: 'Link', gold: 50 });
+     * ```
+     *
+     * To get a value back again you can call `getData`:
+     * 
+     * ```javascript
+     * sprite.getData('gold');
+     * ```
+     * 
+     * Or you can access the value directly via the `values` property, where it works like any other variable:
+     * 
+     * ```javascript
+     * sprite.data.values.gold += 50;
+     * ```
+     *
+     * When the value is first set, a `setdata` event is emitted from this Game Object.
+     *
+     * If the key already exists, a `changedata` event is emitted instead, along an event named after the key.
+     * For example, if you updated an existing key called `PlayerLives` then it would emit the event `changedata_PlayerLives`.
+     * These events will be emitted regardless if you use this method to set the value, or the direct `values` setter.
+     *
+     * Please note that the data keys are case-sensitive and must be valid JavaScript Object property strings.
+     * This means the keys `gold` and `Gold` are treated as two unique values within the Data Manager.
      *
      * @method Phaser.GameObjects.GameObject#setData
      * @since 3.0.0
      *
-     * @param {string} key - The key of the property to be stored.
-     * @param {*} value - The value to store with the key. Can be a string, number, array or object.
+     * @param {(string|object)} key - The key to set the value for. Or an object or key value pairs. If an object the `data` argument is ignored.
+     * @param {*} data - The value to set for the given key. If an object is provided as the key this argument is ignored.
      *
-     * @return {Phaser.GameObjects.GameObject} This GameObject.
+     * @return {this} This GameObject.
      */
     setData: function (key, value)
     {
@@ -619,14 +654,34 @@ var GameObject = new Class({
     },
 
     /**
-     * This is a quick alias to the `DataProxy.get` method to remain consistent with `setData`.
+     * Retrieves the value for the given key in this Game Objects Data Manager, or undefined if it doesn't exist.
+     *
+     * You can also access values via the `values` object. For example, if you had a key called `gold` you can do either:
+     * 
+     * ```javascript
+     * sprite.getData('gold');
+     * ```
+     *
+     * Or access the value directly:
+     * 
+     * ```javascript
+     * sprite.data.values.gold;
+     * ```
+     *
+     * You can also pass in an array of keys, in which case an array of values will be returned:
+     * 
+     * ```javascript
+     * sprite.getData([ 'gold', 'armor', 'health' ]);
+     * ```
+     *
+     * This approach is useful for destructuring arrays in ES6.
      *
      * @method Phaser.GameObjects.GameObject#getData
      * @since 3.0.0
      *
-     * @param {string} key - The key of the property to be retrieved.
+     * @param {(string|string[])} key - The key of the value to retrieve, or an array of keys.
      *
-     * @return {*} The data, if present in the Data Store.
+     * @return {*} The value belonging to the given key, or an array of values, the order of which will match the input array.
      */
     getData: function (key)
     {
@@ -641,10 +696,20 @@ var GameObject = new Class({
     /**
      * Pass this Game Object to the Input Manager to enable it for Input.
      *
+     * Input works by using hit areas, these are nearly always geometric shapes, such as rectangles or circles, that act as the hit area
+     * for the Game Object. However, you can provide your own hit area shape and callback, should you wish to handle some more advanced
+     * input detection.
+     *
+     * If no arguments are provided it will try and create a rectangle hit area based on the texture frame the Game Object is using. If
+     * this isn't a texture-bound object, such as a Graphics or BitmapText object, this will fail, and you'll need to provide a specific
+     * shape for it to use.
+     *
+     * You can also provide an Input Configuration Object as the only argument to this method.
+     *
      * @method Phaser.GameObjects.GameObject#setInteractive
      * @since 3.0.0
      *
-     * @param {*} [shape] - A geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
+     * @param {(Phaser.Input.InputConfiguration|any)} [shape] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
      * @param {HitAreaCallback} [callback] - A callback to be invoked when the Game Object is interacted with. If you provide a shape you must also provide a callback.
      * @param {boolean} [dropZone=false] - Should this Game Object be treated as a drop zone target?
      *
@@ -1051,71 +1116,6 @@ module.exports = Point;
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var types = {};
-
-var FileTypesManager = {
-
-    /**
-     * Static method called when a LoaderPlugin is created.
-     * 
-     * Loops through the local types object and injects all of them as
-     * properties into the LoaderPlugin instance.
-     *
-     * @method Phaser.Loader.FileTypesManager.register
-     * @since 3.0.0
-     * 
-     * @param {Phaser.Loader.LoaderPlugin} loader - The LoaderPlugin to install the types into.
-     */
-    install: function (loader)
-    {
-        for (var key in types)
-        {
-            loader[key] = types[key];
-        }
-    },
-
-    /**
-     * Static method called directly by the File Types.
-     * 
-     * The key is a reference to the function used to load the files via the Loader, i.e. `image`.
-     *
-     * @method Phaser.Loader.FileTypesManager.register
-     * @since 3.0.0
-     * 
-     * @param {string} key - The key that will be used as the method name in the LoaderPlugin.
-     * @param {function} factoryFunction - The function that will be called when LoaderPlugin.key is invoked.
-     */
-    register: function (key, factoryFunction)
-    {
-        types[key] = factoryFunction;
-    },
-
-    /**
-     * Removed all associated file types.
-     *
-     * @method Phaser.Loader.FileTypesManager.destroy
-     * @since 3.0.0
-     */
-    destroy: function ()
-    {
-        types = {};
-    }
-
-};
-
-module.exports = FileTypesManager;
-
-
-/***/ }),
-/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -1147,8 +1147,8 @@ var Class = __webpack_require__(0);
  * @constructor
  * @since 3.0.0
  *
- * @param {number} [x] - The x component of this Vector.
- * @param {number} [y] - The y component of this Vector.
+ * @param {number} [x] - The x component.
+ * @param {number} [y] - The y component.
  */
 var Vector2 = new Class({
 
@@ -1694,6 +1694,71 @@ var Vector2 = new Class({
 Vector2.ZERO = new Vector2();
 
 module.exports = Vector2;
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var types = {};
+
+var FileTypesManager = {
+
+    /**
+     * Static method called when a LoaderPlugin is created.
+     * 
+     * Loops through the local types object and injects all of them as
+     * properties into the LoaderPlugin instance.
+     *
+     * @method Phaser.Loader.FileTypesManager.register
+     * @since 3.0.0
+     * 
+     * @param {Phaser.Loader.LoaderPlugin} loader - The LoaderPlugin to install the types into.
+     */
+    install: function (loader)
+    {
+        for (var key in types)
+        {
+            loader[key] = types[key];
+        }
+    },
+
+    /**
+     * Static method called directly by the File Types.
+     * 
+     * The key is a reference to the function used to load the files via the Loader, i.e. `image`.
+     *
+     * @method Phaser.Loader.FileTypesManager.register
+     * @since 3.0.0
+     * 
+     * @param {string} key - The key that will be used as the method name in the LoaderPlugin.
+     * @param {function} factoryFunction - The function that will be called when LoaderPlugin.key is invoked.
+     */
+    register: function (key, factoryFunction)
+    {
+        types[key] = factoryFunction;
+    },
+
+    /**
+     * Removed all associated file types.
+     *
+     * @method Phaser.Loader.FileTypesManager.destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        types = {};
+    }
+
+};
+
+module.exports = FileTypesManager;
 
 
 /***/ }),
@@ -2722,10 +2787,10 @@ module.exports = GameObjectCreator;
 
 var Class = __webpack_require__(0);
 var Contains = __webpack_require__(31);
-var GetPoint = __webpack_require__(132);
+var GetPoint = __webpack_require__(135);
 var GetPoints = __webpack_require__(294);
-var Line = __webpack_require__(95);
-var Random = __webpack_require__(152);
+var Line = __webpack_require__(96);
+var Random = __webpack_require__(154);
 
 /**
  * @classdesc
@@ -3217,26 +3282,26 @@ module.exports = Rectangle;
 
 module.exports = {
 
-    Alpha: __webpack_require__(582),
+    Alpha: __webpack_require__(587),
     Animation: __webpack_require__(302),
-    BlendMode: __webpack_require__(581),
-    ComputedSize: __webpack_require__(580),
-    Depth: __webpack_require__(579),
-    Flip: __webpack_require__(578),
-    GetBounds: __webpack_require__(577),
-    Mask: __webpack_require__(576),
-    MatrixStack: __webpack_require__(575),
-    Origin: __webpack_require__(574),
+    BlendMode: __webpack_require__(586),
+    ComputedSize: __webpack_require__(585),
+    Depth: __webpack_require__(584),
+    Flip: __webpack_require__(583),
+    GetBounds: __webpack_require__(582),
+    Mask: __webpack_require__(581),
+    MatrixStack: __webpack_require__(580),
+    Origin: __webpack_require__(579),
     Pipeline: __webpack_require__(291),
-    ScaleMode: __webpack_require__(573),
-    ScrollFactor: __webpack_require__(572),
-    Size: __webpack_require__(571),
-    Texture: __webpack_require__(570),
-    Tint: __webpack_require__(569),
-    ToJSON: __webpack_require__(568),
-    Transform: __webpack_require__(567),
-    TransformMatrix: __webpack_require__(63),
-    Visible: __webpack_require__(566)
+    ScaleMode: __webpack_require__(578),
+    ScrollFactor: __webpack_require__(577),
+    Size: __webpack_require__(576),
+    Texture: __webpack_require__(575),
+    Tint: __webpack_require__(574),
+    ToJSON: __webpack_require__(573),
+    Transform: __webpack_require__(572),
+    TransformMatrix: __webpack_require__(64),
+    Visible: __webpack_require__(571)
 
 };
 
@@ -3316,6 +3381,105 @@ module.exports = MATH_CONST;
 
 /***/ }),
 /* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var IsPlainObject = __webpack_require__(8);
+
+// @param {boolean} deep - Perform a deep copy?
+// @param {object} target - The target object to copy to.
+// @return {object} The extended object.
+
+/**
+ * This is a slightly modified version of http://api.jquery.com/jQuery.extend/
+ *
+ * @function Phaser.Utils.Object.Extend
+ * @since 3.0.0
+ *
+ * @return {object} [description]
+ */
+var Extend = function ()
+{
+    var options, name, src, copy, copyIsArray, clone,
+        target = arguments[0] || {},
+        i = 1,
+        length = arguments.length,
+        deep = false;
+
+    // Handle a deep copy situation
+    if (typeof target === 'boolean')
+    {
+        deep = target;
+        target = arguments[1] || {};
+
+        // skip the boolean and the target
+        i = 2;
+    }
+
+    // extend Phaser if only one argument is passed
+    if (length === i)
+    {
+        target = this;
+        --i;
+    }
+
+    for (; i < length; i++)
+    {
+        // Only deal with non-null/undefined values
+        if ((options = arguments[i]) != null)
+        {
+            // Extend the base object
+            for (name in options)
+            {
+                src = target[name];
+                copy = options[name];
+
+                // Prevent never-ending loop
+                if (target === copy)
+                {
+                    continue;
+                }
+
+                // Recurse if we're merging plain objects or arrays
+                if (deep && copy && (IsPlainObject(copy) || (copyIsArray = Array.isArray(copy))))
+                {
+                    if (copyIsArray)
+                    {
+                        copyIsArray = false;
+                        clone = src && Array.isArray(src) ? src : [];
+                    }
+                    else
+                    {
+                        clone = src && IsPlainObject(src) ? src : {};
+                    }
+
+                    // Never move original objects, clone them
+                    target[name] = Extend(deep, clone, copy);
+
+                // Don't bring in undefined values
+                }
+                else if (copy !== undefined)
+                {
+                    target[name] = copy;
+                }
+            }
+        }
+    }
+
+    // Return the modified object
+    return target;
+};
+
+module.exports = Extend;
+
+
+/***/ }),
+/* 18 */
 /***/ (function(module, exports) {
 
 /**
@@ -3467,105 +3631,6 @@ module.exports = FILE_CONST;
 
 
 /***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var IsPlainObject = __webpack_require__(8);
-
-// @param {boolean} deep - Perform a deep copy?
-// @param {object} target - The target object to copy to.
-// @return {object} The extended object.
-
-/**
- * This is a slightly modified version of http://api.jquery.com/jQuery.extend/
- *
- * @function Phaser.Utils.Object.Extend
- * @since 3.0.0
- *
- * @return {object} [description]
- */
-var Extend = function ()
-{
-    var options, name, src, copy, copyIsArray, clone,
-        target = arguments[0] || {},
-        i = 1,
-        length = arguments.length,
-        deep = false;
-
-    // Handle a deep copy situation
-    if (typeof target === 'boolean')
-    {
-        deep = target;
-        target = arguments[1] || {};
-
-        // skip the boolean and the target
-        i = 2;
-    }
-
-    // extend Phaser if only one argument is passed
-    if (length === i)
-    {
-        target = this;
-        --i;
-    }
-
-    for (; i < length; i++)
-    {
-        // Only deal with non-null/undefined values
-        if ((options = arguments[i]) != null)
-        {
-            // Extend the base object
-            for (name in options)
-            {
-                src = target[name];
-                copy = options[name];
-
-                // Prevent never-ending loop
-                if (target === copy)
-                {
-                    continue;
-                }
-
-                // Recurse if we're merging plain objects or arrays
-                if (deep && copy && (IsPlainObject(copy) || (copyIsArray = Array.isArray(copy))))
-                {
-                    if (copyIsArray)
-                    {
-                        copyIsArray = false;
-                        clone = src && Array.isArray(src) ? src : [];
-                    }
-                    else
-                    {
-                        clone = src && IsPlainObject(src) ? src : {};
-                    }
-
-                    // Never move original objects, clone them
-                    target[name] = Extend(deep, clone, copy);
-
-                // Don't bring in undefined values
-                }
-                else if (copy !== undefined)
-                {
-                    target[name] = copy;
-                }
-            }
-        }
-    }
-
-    // Return the modified object
-    return target;
-};
-
-module.exports = Extend;
-
-
-/***/ }),
 /* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3576,12 +3641,12 @@ module.exports = Extend;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(17);
+var CONST = __webpack_require__(18);
 var GetFastValue = __webpack_require__(1);
-var GetURL = __webpack_require__(106);
-var MergeXHRSettings = __webpack_require__(105);
-var XHRLoader = __webpack_require__(166);
-var XHRSettings = __webpack_require__(74);
+var GetURL = __webpack_require__(108);
+var MergeXHRSettings = __webpack_require__(107);
+var XHRLoader = __webpack_require__(169);
+var XHRSettings = __webpack_require__(75);
 
 /**
  * @typedef {object} FileConfig
@@ -3722,7 +3787,7 @@ var File = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.state = typeof(this.url) === 'function' ? CONST.FILE_POPULATED : CONST.FILE_PENDING;
+        this.state = (typeof(this.url) === 'function') ? CONST.FILE_POPULATED : CONST.FILE_PENDING;
 
         /**
          * The total size of this file.
@@ -4188,11 +4253,11 @@ var CONST = {
      * @type {string}
      * @since 3.0.0
      */
-    VERSION: '3.9.0',
+    VERSION: '3.10.0',
 
-    BlendModes: __webpack_require__(50),
+    BlendModes: __webpack_require__(51),
 
-    ScaleModes: __webpack_require__(58),
+    ScaleModes: __webpack_require__(59),
 
     /**
      * AUTO Detect Renderer.
@@ -4312,7 +4377,7 @@ module.exports = CONST;
  */
 
 var CONST = __webpack_require__(20);
-var Smoothing = __webpack_require__(128);
+var Smoothing = __webpack_require__(131);
 
 // The pool into which the canvas elements are placed.
 var pool = [];
@@ -4602,28 +4667,28 @@ module.exports = Clamp;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BlendModes = __webpack_require__(50);
+var BlendModes = __webpack_require__(51);
 var GetAdvancedValue = __webpack_require__(10);
-var ScaleModes = __webpack_require__(58);
+var ScaleModes = __webpack_require__(59);
 
 /**
  * @typedef {object} GameObjectConfig
  *
- * @property {number} [x=0] - [description]
- * @property {number} [y=0] - [description]
- * @property {number} [depth=0] - [description]
- * @property {boolean} [flipX=false] - [description]
- * @property {boolean} [flipY=false] - [description]
- * @property {?(number|object)} [scale=null] - [description]
- * @property {?(number|object)} [scrollFactor=null] - [description]
- * @property {number} [rotation=0] - [description]
- * @property {?number} [angle=null] - [description]
- * @property {number} [alpha=1] - [description]
- * @property {?(number|object)} [origin=null] - [description]
- * @property {number} [scaleMode=ScaleModes.DEFAULT] - [description]
- * @property {number} [blendMode=BlendModes.DEFAULT] - [description]
- * @property {boolean} [visible=true] - [description]
- * @property {boolean} [add=true] - [description]
+ * @property {number} [x=0] - The x position of the Game Object.
+ * @property {number} [y=0] - The y position of the Game Object.
+ * @property {number} [depth=0] - The depth of the GameObject.
+ * @property {boolean} [flipX=false] - The horizontally flipped state of the Game Object.
+ * @property {boolean} [flipY=false] - The vertically flipped state of the Game Object.
+ * @property {?(number|object)} [scale=null] - The scale of the GameObject.
+ * @property {?(number|object)} [scrollFactor=null] - The scroll factor of the GameObject.
+ * @property {number} [rotation=0] - The rotation angle of the Game Object, in radians.
+ * @property {?number} [angle=null] - The rotation angle of the Game Object, in degrees.
+ * @property {number} [alpha=1] - The alpha (opacity) of the Game Object.
+ * @property {?(number|object)} [origin=null] - The origin of the Game Object.
+ * @property {number} [scaleMode=ScaleModes.DEFAULT] - The scale mode of the GameObject.
+ * @property {number} [blendMode=BlendModes.DEFAULT] - The blend mode of the GameObject.
+ * @property {boolean} [visible=true] - The visible state of the Game Object.
+ * @property {boolean} [add=true] - Add the GameObject to the scene.
  */
 
 /**
@@ -4632,9 +4697,9 @@ var ScaleModes = __webpack_require__(58);
  * @function Phaser.GameObjects.BuildGameObject
  * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - [description]
- * @param {Phaser.GameObjects.GameObject} gameObject - [description]
- * @param {GameObjectConfig} config - [description]
+ * @param {Phaser.Scene} scene - A reference to the Scene.
+ * @param {Phaser.GameObjects.GameObject} gameObject - The initial GameObject.
+ * @param {GameObjectConfig} config - The config to build the GameObject with.
  *
  * @return {Phaser.GameObjects.GameObject} The built Game Object.
  */
@@ -4893,9 +4958,9 @@ module.exports = {
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(17);
+var CONST = __webpack_require__(18);
 var File = __webpack_require__(19);
-var FileTypesManager = __webpack_require__(6);
+var FileTypesManager = __webpack_require__(7);
 var GetFastValue = __webpack_require__(1);
 var GetValue = __webpack_require__(4);
 var IsPlainObject = __webpack_require__(8);
@@ -5182,7 +5247,7 @@ module.exports = SafeRange;
  */
 
 var Class = __webpack_require__(0);
-var GetColor = __webpack_require__(150);
+var GetColor = __webpack_require__(152);
 var GetColor32 = __webpack_require__(284);
 
 /**
@@ -5816,7 +5881,7 @@ module.exports = Clone;
 var Class = __webpack_require__(0);
 var Components = __webpack_require__(15);
 var GameObject = __webpack_require__(2);
-var SpriteRender = __webpack_require__(549);
+var SpriteRender = __webpack_require__(556);
 
 /**
  * @classdesc
@@ -5888,7 +5953,7 @@ var Sprite = new Class({
         GameObject.call(this, scene, 'Sprite');
 
         /**
-         * [description]
+         * The Animation Controller of this Sprite.
          *
          * @name Phaser.GameObjects.Sprite#anims
          * @type {Phaser.GameObjects.Components.Animation}
@@ -5904,14 +5969,14 @@ var Sprite = new Class({
     },
 
     /**
-     * [description]
+     * Update this Sprite's animations.
      *
      * @method Phaser.GameObjects.Sprite#preUpdate
      * @protected
      * @since 3.0.0
      *
-     * @param {number} time - [description]
-     * @param {number} delta - [description]
+     * @param {number} time - The current timestamp.
+     * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
     preUpdate: function (time, delta)
     {
@@ -5919,14 +5984,14 @@ var Sprite = new Class({
     },
 
     /**
-     * [description]
+     * Start playing the given animation.
      *
      * @method Phaser.GameObjects.Sprite#play
      * @since 3.0.0
      *
-     * @param {string} key - [description]
-     * @param {boolean} [ignoreIfPlaying=false] - [description]
-     * @param {integer} [startFrame=0] - [description]
+     * @param {string} key - The string-based key of the animation to play.
+     * @param {boolean} [ignoreIfPlaying=false] - If an animation is already playing then ignore this call.
+     * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
      *
      * @return {Phaser.GameObjects.Sprite} This Game Object.
      */
@@ -5938,7 +6003,7 @@ var Sprite = new Class({
     },
 
     /**
-     * [description]
+     * Build a JSON representation of this Sprite.
      *
      * @method Phaser.GameObjects.Sprite#toJSON
      * @since 3.0.0
@@ -6165,9 +6230,9 @@ module.exports = MultiFile;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(17);
+var CONST = __webpack_require__(18);
 var File = __webpack_require__(19);
-var FileTypesManager = __webpack_require__(6);
+var FileTypesManager = __webpack_require__(7);
 var GetFastValue = __webpack_require__(1);
 var IsPlainObject = __webpack_require__(8);
 
@@ -6523,7 +6588,8 @@ module.exports = Wrap;
 /* 47 */,
 /* 48 */,
 /* 49 */,
-/* 50 */
+/* 50 */,
+/* 51 */
 /***/ (function(module, exports) {
 
 /**
@@ -6674,9 +6740,9 @@ module.exports = {
 
 
 /***/ }),
-/* 51 */,
 /* 52 */,
-/* 53 */
+/* 53 */,
+/* 54 */
 /***/ (function(module, exports) {
 
 /**
@@ -6718,7 +6784,7 @@ module.exports = Contains;
 
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports) {
 
 /**
@@ -6841,7 +6907,7 @@ module.exports = CONST;
 
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports) {
 
 /**
@@ -6887,7 +6953,7 @@ module.exports = SpliceOne;
 
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process) {/**
@@ -6901,10 +6967,10 @@ module.exports = SpliceOne;
  * These values are read-only and populated during the boot sequence of the game.
  * They are then referenced by internal game systems and are available for you to access
  * via `this.sys.game.device.os` from within any Scene.
- * 
+ *
  * @typedef {object} Phaser.Device.OS
  * @since 3.0.0
- * 
+ *
  * @property {boolean} android - Is running on android?
  * @property {boolean} chromeOS - Is running on chromeOS?
  * @property {boolean} cocoonJS - Is the game running under CocoonJS?
@@ -6967,13 +7033,13 @@ function init ()
     {
         OS.macOS = true;
     }
-    else if (/Linux/.test(ua))
-    {
-        OS.linux = true;
-    }
     else if (/Android/.test(ua))
     {
         OS.android = true;
+    }
+    else if (/Linux/.test(ua))
+    {
+        OS.linux = true;
     }
     else if (/iP[ao]d|iPhone/i.test(ua))
     {
@@ -7020,24 +7086,24 @@ function init ()
     {
         OS.webApp = true;
     }
-    
+
     if (window.cordova !== undefined)
     {
         OS.cordova = true;
     }
-    
+
     if (process && process.versions && process.versions.node)
     {
         OS.node = true;
     }
-    
+
     if (OS.node && typeof process.versions === 'object')
     {
         OS.nodeWebkit = !!process.versions['node-webkit'];
-        
+
         OS.electron = !!process.versions.electron;
     }
-    
+
     if (navigator.isCocoonJS)
     {
         OS.cocoonJS = true;
@@ -7072,10 +7138,10 @@ function init ()
 
 module.exports = init();
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(530)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(537)))
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports) {
 
 /**
@@ -7109,7 +7175,7 @@ module.exports = DistanceBetween;
 
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports) {
 
 /**
@@ -7155,7 +7221,7 @@ module.exports = {
 
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports) {
 
 /**
@@ -7208,7 +7274,7 @@ module.exports = Contains;
 
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports) {
 
 /**
@@ -7380,7 +7446,7 @@ module.exports = TWEEN_CONST;
 
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports) {
 
 /**
@@ -7421,7 +7487,7 @@ module.exports = GetBoolean;
 
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -7430,7 +7496,7 @@ module.exports = GetBoolean;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var EaseMap = __webpack_require__(440);
+var EaseMap = __webpack_require__(453);
 
 /**
  * [description]
@@ -7483,7 +7549,7 @@ module.exports = GetEaseFunction;
 
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -8080,7 +8146,7 @@ module.exports = TransformMatrix;
 
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -8114,7 +8180,6 @@ module.exports = FromPercent;
 
 
 /***/ }),
-/* 65 */,
 /* 66 */,
 /* 67 */,
 /* 68 */
@@ -8127,11 +8192,11 @@ module.exports = FromPercent;
  */
 
 var Class = __webpack_require__(0);
-var Contains = __webpack_require__(59);
-var GetPoint = __webpack_require__(226);
-var GetPoints = __webpack_require__(225);
-var Line = __webpack_require__(95);
-var Random = __webpack_require__(151);
+var Contains = __webpack_require__(60);
+var GetPoint = __webpack_require__(227);
+var GetPoints = __webpack_require__(226);
+var Line = __webpack_require__(96);
+var Random = __webpack_require__(153);
 
 /**
  * @classdesc
@@ -8564,7 +8629,7 @@ module.exports = Triangle;
 var Class = __webpack_require__(0);
 var Components = __webpack_require__(15);
 var GameObject = __webpack_require__(2);
-var ImageRender = __webpack_require__(448);
+var ImageRender = __webpack_require__(461);
 
 /**
  * @classdesc
@@ -9120,17 +9185,17 @@ module.exports = Length;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Defaults = __webpack_require__(99);
+var Defaults = __webpack_require__(100);
 var GetAdvancedValue = __webpack_require__(10);
-var GetBoolean = __webpack_require__(61);
-var GetEaseFunction = __webpack_require__(62);
+var GetBoolean = __webpack_require__(62);
+var GetEaseFunction = __webpack_require__(63);
 var GetNewValue = __webpack_require__(73);
-var GetProps = __webpack_require__(161);
-var GetTargets = __webpack_require__(101);
+var GetProps = __webpack_require__(163);
+var GetTargets = __webpack_require__(102);
 var GetValue = __webpack_require__(4);
-var GetValueOp = __webpack_require__(100);
-var Tween = __webpack_require__(98);
-var TweenData = __webpack_require__(97);
+var GetValueOp = __webpack_require__(101);
+var Tween = __webpack_require__(99);
+var TweenData = __webpack_require__(98);
 
 /**
  * [description]
@@ -9305,7 +9370,8 @@ module.exports = GetNewValue;
 
 
 /***/ }),
-/* 74 */
+/* 74 */,
+/* 75 */
 /***/ (function(module, exports) {
 
 /**
@@ -9383,7 +9449,115 @@ module.exports = XHRSettings;
 
 
 /***/ }),
-/* 75 */
+/* 76 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var GetValue = __webpack_require__(4);
+
+//  Contains the plugins that Phaser uses globally and locally.
+//  These are the source objects, not instantiated.
+var inputPlugins = {};
+
+/**
+ * @typedef {object} InputPluginContainer
+ *
+ * @property {string} key - The unique name of this plugin in the input plugin cache.
+ * @property {function} plugin - The plugin to be stored. Should be the source object, not instantiated.
+ * @property {string} [mapping] - If this plugin is to be injected into the Input Plugin, this is the property key map used.
+ */
+
+var InputPluginCache = {};
+
+/**
+ * Static method called directly by the Core internal Plugins.
+ * Key is a reference used to get the plugin from the plugins object (i.e. InputPlugin)
+ * Plugin is the object to instantiate to create the plugin
+ * Mapping is what the plugin is injected into the Scene.Systems as (i.e. input)
+ *
+ * @method Phaser.Input.InputPluginCache.register
+ * @since 3.10.0
+ * 
+ * @param {string} key - A reference used to get this plugin from the plugin cache.
+ * @param {function} plugin - The plugin to be stored. Should be the core object, not instantiated.
+ * @param {string} mapping - If this plugin is to be injected into the Input Plugin, this is the property key used.
+ * @param {string} settingsKey - The key in the Scene Settings to check to see if this plugin should install or not.
+ * @param {string} configKey - The key in the Game Config to check to see if this plugin should install or not.
+ */
+InputPluginCache.register = function (key, plugin, mapping, settingsKey, configKey)
+{
+    inputPlugins[key] = { plugin: plugin, mapping: mapping, settingsKey: settingsKey, configKey: configKey };
+};
+
+/**
+ * Returns the input plugin object from the cache based on the given key.
+ *
+ * @method Phaser.Input.InputPluginCache.getCore
+ * @since 3.10.0
+ * 
+ * @param {string} key - The key of the input plugin to get.
+ *
+ * @return {InputPluginContainer} The input plugin object.
+ */
+InputPluginCache.getPlugin = function (key)
+{
+    return inputPlugins[key];
+};
+
+/**
+ * Installs all of the registered Input Plugins into the given target.
+ *
+ * @method Phaser.Input.InputPluginCache.install
+ * @since 3.10.0
+ * 
+ * @param {Phaser.Input.InputPlugin} target - The target InputPlugin to install the plugins into.
+ */
+InputPluginCache.install = function (target)
+{
+    var sys = target.scene.sys;
+    var settings = sys.settings.input;
+    var config = sys.game.config;
+
+    for (var key in inputPlugins)
+    {
+        var source = inputPlugins[key].plugin;
+        var mapping = inputPlugins[key].mapping;
+        var settingsKey = inputPlugins[key].settingsKey;
+        var configKey = inputPlugins[key].configKey;
+
+        if (GetValue(settings, settingsKey, config[configKey]))
+        {
+            target[mapping] = new source(target);
+        }
+    }
+};
+
+/**
+ * Removes an input plugin based on the given key.
+ *
+ * @method Phaser.Input.InputPluginCache.remove
+ * @since 3.10.0
+ * 
+ * @param {string} key - The key of the input plugin to remove.
+ */
+InputPluginCache.remove = function (key)
+{
+    if (inputPlugins.hasOwnProperty(key))
+    {
+        delete inputPlugins[key];
+    }
+};
+
+module.exports = InputPluginCache;
+
+
+/***/ }),
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -9394,8 +9568,8 @@ module.exports = XHRSettings;
 
 // Based on the routine from {@link http://jsfiddle.net/MrPolywhirl/NH42z/}.
 
-var CheckMatrix = __webpack_require__(113);
-var TransposeMatrix = __webpack_require__(173);
+var CheckMatrix = __webpack_require__(116);
+var TransposeMatrix = __webpack_require__(181);
 
 /**
  * [description]
@@ -9449,7 +9623,7 @@ module.exports = RotateMatrix;
 
 
 /***/ }),
-/* 76 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -9461,7 +9635,7 @@ module.exports = RotateMatrix;
 
 var Class = __webpack_require__(0);
 var EventEmitter = __webpack_require__(9);
-var Extend = __webpack_require__(18);
+var Extend = __webpack_require__(17);
 var NOOP = __webpack_require__(3);
 
 /**
@@ -9947,7 +10121,7 @@ module.exports = BaseSound;
 
 
 /***/ }),
-/* 77 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -10614,7 +10788,7 @@ module.exports = BaseSoundManager;
 
 
 /***/ }),
-/* 78 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -10623,7 +10797,7 @@ module.exports = BaseSoundManager;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var OS = __webpack_require__(56);
+var OS = __webpack_require__(57);
 
 /**
  * Determines the browser type and version running this Phaser Game instance.
@@ -10724,7 +10898,7 @@ module.exports = init();
 
 
 /***/ }),
-/* 79 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -10798,17 +10972,28 @@ var DataManager = new Class({
         this.list = {};
 
         /**
-         * Whether setting data is blocked for this DataManager.
+         * The public values list. You can use this to access anything you have stored
+         * in this Data Manager. For example, if you set a value called `gold` you can
+         * access it via:
          *
-         * Used temporarily to allow 'changedata' event listeners to prevent
-         * specific data from being set.
+         * ```javascript
+         * this.data.values.gold;
+         * ```
          *
-         * @name Phaser.Data.DataManager#blockSet
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
+         * You can also modify it directly:
+         * 
+         * ```javascript
+         * this.data.values.gold += 1000;
+         * ```
+         *
+         * Doing so will emit a `setdata` event from the parent of this Data Manager.
+         *
+         * @name Phaser.Data.DataManager#values
+         * @type {Object.<string, *>}
+         * @default {}
+         * @since 3.10.0
          */
-        this.blockSet = false;
+        this.values = {};
 
         /**
          * Whether setting data is frozen for this DataManager.
@@ -10830,20 +11015,56 @@ var DataManager = new Class({
     /**
      * Retrieves the value for the given key, or undefined if it doesn't exist.
      *
+     * You can also access values via the `values` object. For example, if you had a key called `gold` you can do either:
+     * 
+     * ```javascript
+     * this.data.get('gold');
+     * ```
+     *
+     * Or access the value directly:
+     * 
+     * ```javascript
+     * this.data.values.gold;
+     * ```
+     *
+     * You can also pass in an array of keys, in which case an array of values will be returned:
+     * 
+     * ```javascript
+     * this.data.get([ 'gold', 'armor', 'health' ]);
+     * ```
+     *
+     * This approach is useful for destructuring arrays in ES6.
+     *
      * @method Phaser.Data.DataManager#get
      * @since 3.0.0
      *
-     * @param {string} key - The key of the value to retrieve.
+     * @param {(string|string[])} key - The key of the value to retrieve, or an array of keys.
      *
-     * @return {*} The value belonging to the given key.
+     * @return {*} The value belonging to the given key, or an array of values, the order of which will match the input array.
      */
     get: function (key)
     {
-        return this.list[key];
+        var list = this.list;
+
+        if (Array.isArray(key))
+        {
+            var output = [];
+
+            for (var i = 0; i < key.length; i++)
+            {
+                output.push(list[key[i]]);
+            }
+
+            return output;
+        }
+        else
+        {
+            return list[key];
+        }
     },
 
     /**
-     * Retrieves all data values.
+     * Retrieves all data values in a new object.
      *
      * @method Phaser.Data.DataManager#getAll
      * @since 3.0.0
@@ -10856,7 +11077,7 @@ var DataManager = new Class({
 
         for (var key in this.list)
         {
-            if(this.list.hasOwnProperty(key))
+            if (this.list.hasOwnProperty(key))
             {
                 results[key] = this.list[key];
             }
@@ -10866,12 +11087,12 @@ var DataManager = new Class({
     },
 
     /**
-     * Queries the DataManager for the values of keys matching the given search string.
+     * Queries the DataManager for the values of keys matching the given regular expression.
      *
      * @method Phaser.Data.DataManager#query
      * @since 3.0.0
      *
-     * @param {string} search - The search string.
+     * @param {RegExp} search - A regular expression object. If a non-RegExp object obj is passed, it is implicitly converted to a RegExp by using new RegExp(obj).
      *
      * @return {Object.<string, *>} The values of the keys matching the search string.
      */
@@ -10891,15 +11112,44 @@ var DataManager = new Class({
     },
 
     /**
-     * Sets the value for the given key.
+     * Sets a value for the given key. If the key doesn't already exist in the Data Manager then it is created.
+     * 
+     * ```javascript
+     * data.set('name', 'Red Gem Stone');
+     * ```
      *
-     * Emits the 'changedata' and 'setdata' events.
+     * You can also pass in an object of key value pairs as the first argument:
+     *
+     * ```javascript
+     * data.set({ name: 'Red Gem Stone', level: 2, owner: 'Link', gold: 50 });
+     * ```
+     *
+     * To get a value back again you can call `get`:
+     * 
+     * ```javascript
+     * data.get('gold');
+     * ```
+     * 
+     * Or you can access the value directly via the `values` property, where it works like any other variable:
+     * 
+     * ```javascript
+     * data.values.gold += 50;
+     * ```
+     *
+     * When the value is first set, a `setdata` event is emitted.
+     *
+     * If the key already exists, a `changedata` event is emitted instead, along an event named after the key.
+     * For example, if you updated an existing key called `PlayerLives` then it would emit the event `changedata_PlayerLives`.
+     * These events will be emitted regardless if you use this method to set the value, or the direct `values` setter.
+     *
+     * Please note that the data keys are case-sensitive and must be valid JavaScript Object property strings.
+     * This means the keys `gold` and `Gold` are treated as two unique values within the Data Manager.
      *
      * @method Phaser.Data.DataManager#set
      * @since 3.0.0
      *
-     * @param {string} key - The key to set the value for.
-     * @param {*} data - The value to set.
+     * @param {(string|object)} key - The key to set the value for. Or an object or key value pairs. If an object the `data` argument is ignored.
+     * @param {*} data - The value to set for the given key. If an object is provided as the key this argument is ignored.
      *
      * @return {Phaser.Data.DataManager} This DataManager object.
      */
@@ -10910,48 +11160,95 @@ var DataManager = new Class({
             return this;
         }
 
-        if (this.events.listenerCount('changedata') > 0)
+        if (typeof key === 'string')
         {
-            this.blockSet = false;
-
-            var _this = this;
-
-            var resetFunction = function (value)
+            return this.setValue(key, data);
+        }
+        else
+        {
+            for (var entry in key)
             {
-                _this.blockSet = true;
-                _this.list[key] = value;
-                _this.events.emit('setdata', _this.parent, key, value);
-            };
-
-            this.events.emit('changedata', this.parent, key, data, resetFunction);
-
-            //  One of the listeners blocked this update from being set, so abort
-            if (this.blockSet)
-            {
-                return this;
+                this.setValue(entry, key[entry]);
             }
         }
-
-        this.list[key] = data;
-
-        this.events.emit('setdata', this.parent, key, data);
 
         return this;
     },
 
     /**
-     * Passes all data entries to the given callback. Stores the result of the callback.
+     * Internal value setter, called automatically by the `set` method.
+     *
+     * @method Phaser.Data.DataManager#setValue
+     * @private
+     * @since 3.10.0
+     *
+     * @param {string} key - The key to set the value for.
+     * @param {*} data - The value to set.
+     *
+     * @return {Phaser.Data.DataManager} This DataManager object.
+     */
+    setValue: function (key, data)
+    {
+        if (this._frozen)
+        {
+            return this;
+        }
+
+        if (this.has(key))
+        {
+            //  Hit the key getter, which will in turn emit the events.
+            this.values[key] = data;
+        }
+        else
+        {
+            var _this = this;
+            var list = this.list;
+            var events = this.events;
+            var parent = this.parent;
+
+            Object.defineProperty(this.values, key, {
+
+                enumerable: true,
+
+                get: function ()
+                {
+                    return list[key];
+                },
+
+                set: function (value)
+                {
+                    if (!_this._frozen)
+                    {
+                        list[key] = value;
+
+                        events.emit('changedata', parent, key, data);
+                        events.emit('changedata_' + key, parent, data);
+                    }
+                }
+
+            });
+
+            list[key] = data;
+
+            events.emit('setdata', parent, key, data);
+        }
+
+        return this;
+    },
+
+    /**
+     * Passes all data entries to the given callback.
      *
      * @method Phaser.Data.DataManager#each
      * @since 3.0.0
      *
      * @param {DataEachCallback} callback - The function to call.
-     * @param {*} [scope] - Value to use as `this` when executing callback.
+     * @param {*} [context] - Value to use as `this` when executing callback.
      * @param {...*} [args] - Additional arguments that will be passed to the callback, after the game object, key, and data.
      *
      * @return {Phaser.Data.DataManager} This DataManager object.
      */
-    each: function (callback, scope)
+    each: function (callback, context)
     {
         var args = [ this.parent, null, undefined ];
 
@@ -10965,20 +11262,23 @@ var DataManager = new Class({
             args[1] = key;
             args[2] = this.list[key];
 
-            callback.apply(scope, args);
+            callback.apply(context, args);
         }
 
         return this;
     },
 
     /**
-     * Merge the given data object into this DataManager's data object.
+     * Merge the given object of key value pairs into this DataManager.
+     *
+     * Any newly created values will emit a `setdata` event. Any updated values (see the `overwrite` argument)
+     * will emit a `changedata` event.
      *
      * @method Phaser.Data.DataManager#merge
      * @since 3.0.0
      *
      * @param {Object.<string, *>} data - The data to merge.
-     * @param {boolean} overwrite - Whether to overwrite existing data. Defaults to true.
+     * @param {boolean} [overwrite=true] - Whether to overwrite existing data. Defaults to true.
      *
      * @return {Phaser.Data.DataManager} This DataManager object.
      */
@@ -10991,7 +11291,7 @@ var DataManager = new Class({
         {
             if (data.hasOwnProperty(key) && (overwrite || (!overwrite && !this.has(key))))
             {
-                this.list[key] = data[key];
+                this.setValue(key, data[key]);
             }
         }
 
@@ -11001,20 +11301,63 @@ var DataManager = new Class({
     /**
      * Remove the value for the given key.
      *
+     * If the key is found in this Data Manager it is removed from the internal lists and a
+     * `removedata` event is emitted.
+     * 
+     * You can also pass in an array of keys, in which case all keys in the array will be removed:
+     * 
+     * ```javascript
+     * this.data.remove([ 'gold', 'armor', 'health' ]);
+     * ```
+     *
      * @method Phaser.Data.DataManager#remove
      * @since 3.0.0
      *
-     * @param {string} key - The key to remove
+     * @param {(string|string[])} key - The key to remove, or an array of keys to remove.
      *
      * @return {Phaser.Data.DataManager} This DataManager object.
      */
     remove: function (key)
     {
-        if (!this._frozen && this.has(key))
+        if (this._frozen)
+        {
+            return this;
+        }
+
+        if (Array.isArray(key))
+        {
+            for (var i = 0; i < key.length; i++)
+            {
+                this.removeValue(key[i]);
+            }
+        }
+        else
+        {
+            return this.removeValue(key);
+        }
+
+        return this;
+    },
+
+    /**
+     * Internal value remover, called automatically by the `remove` method.
+     *
+     * @method Phaser.Data.DataManager#removeValue
+     * @private
+     * @since 3.10.0
+     *
+     * @param {string} key - The key to set the value for.
+     *
+     * @return {Phaser.Data.DataManager} This DataManager object.
+     */
+    removeValue: function (key)
+    {
+        if (this.has(key))
         {
             var data = this.list[key];
 
             delete this.list[key];
+            delete this.values[key];
 
             this.events.emit('removedata', this, key, data);
         }
@@ -11023,7 +11366,7 @@ var DataManager = new Class({
     },
 
     /**
-     * Retrieves the data associated with the given 'key', deletes it from this Data store, then returns it.
+     * Retrieves the data associated with the given 'key', deletes it from this Data Manager, then returns it.
      *
      * @method Phaser.Data.DataManager#pop
      * @since 3.0.0
@@ -11041,6 +11384,7 @@ var DataManager = new Class({
             data = this.list[key];
 
             delete this.list[key];
+            delete this.values[key];
 
             this.events.emit('removedata', this, key, data);
         }
@@ -11049,14 +11393,17 @@ var DataManager = new Class({
     },
 
     /**
-     * Determines whether the given key is set in this Data store.
+     * Determines whether the given key is set in this Data Manager.
+     * 
+     * Please note that the keys are case-sensitive and must be valid JavaScript Object property strings.
+     * This means the keys `gold` and `Gold` are treated as two unique values within the Data Manager.
      *
      * @method Phaser.Data.DataManager#has
      * @since 3.0.0
      *
      * @param {string} key - The key to check.
      *
-     * @return {boolean} Whether the key is set.
+     * @return {boolean} Returns `true` if the key exists, otherwise `false`.
      */
     has: function (key)
     {
@@ -11064,12 +11411,13 @@ var DataManager = new Class({
     },
 
     /**
-     * Freeze or unfreeze this Data store, to allow or prevent setting its values.
+     * Freeze or unfreeze this Data Manager. A frozen Data Manager will block all attempts
+     * to create new values or update existing ones.
      *
      * @method Phaser.Data.DataManager#setFreeze
      * @since 3.0.0
      *
-     * @param {boolean} value - Whether to freeze the Data store.
+     * @param {boolean} value - Whether to freeze or unfreeze the Data Manager.
      *
      * @return {Phaser.Data.DataManager} This DataManager object.
      */
@@ -11081,7 +11429,7 @@ var DataManager = new Class({
     },
 
     /**
-     * Delete all data in this Data store and unfreeze it.
+     * Delete all data in this Data Manager and unfreeze it.
      *
      * @method Phaser.Data.DataManager#reset
      * @since 3.0.0
@@ -11093,9 +11441,9 @@ var DataManager = new Class({
         for (var key in this.list)
         {
             delete this.list[key];
+            delete this.values[key];
         }
 
-        this.blockSet = false;
         this._frozen = false;
 
         return this;
@@ -11119,7 +11467,8 @@ var DataManager = new Class({
     },
 
     /**
-     * Freeze this Data component, so no values can be set.
+     * Gets or sets the frozen state of this Data Manager.
+     * A frozen Data Manager will block all attempts to create new values or update existing ones.
      *
      * @name Phaser.Data.DataManager#freeze
      * @type {boolean}
@@ -11140,7 +11489,7 @@ var DataManager = new Class({
     },
 
     /**
-     * Return the total number of entries in this Data component.
+     * Return the total number of entries in this Data Manager.
      *
      * @name Phaser.Data.DataManager#count
      * @type {integer}
@@ -11171,9 +11520,8 @@ module.exports = DataManager;
 
 
 /***/ }),
-/* 80 */,
-/* 81 */,
-/* 82 */
+/* 82 */,
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -11293,7 +11641,7 @@ else {}
 })();
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -11524,6 +11872,16 @@ var WebGLPipeline = new Class({
          * @since 3.1.0
          */
         this.flushLocked = false;
+
+        /**
+         * Indicates if the current pipeline is active or not for this frame only.
+         * Reset in the onRender method.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#active
+         * @type {boolean}
+         * @since 3.10.0
+         */
+        this.active = false;
     },
 
     /**
@@ -11954,7 +12312,7 @@ module.exports = WebGLPipeline;
 
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports) {
 
 /**
@@ -11984,9 +12342,9 @@ module.exports = IsSizePowerOfTwo;
 
 
 /***/ }),
-/* 85 */,
 /* 86 */,
-/* 87 */
+/* 87 */,
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -11999,7 +12357,7 @@ var Class = __webpack_require__(0);
 var Contains = __webpack_require__(32);
 var GetPoint = __webpack_require__(298);
 var GetPoints = __webpack_require__(296);
-var Random = __webpack_require__(155);
+var Random = __webpack_require__(157);
 
 /**
  * @classdesc
@@ -12349,11 +12707,11 @@ module.exports = Circle;
 
 
 /***/ }),
-/* 88 */,
 /* 89 */,
 /* 90 */,
 /* 91 */,
-/* 92 */
+/* 92 */,
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -12362,10 +12720,10 @@ module.exports = Circle;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var ArrayUtils = __webpack_require__(146);
+var ArrayUtils = __webpack_require__(147);
 var Class = __webpack_require__(0);
 var NOOP = __webpack_require__(3);
-var StableSort = __webpack_require__(82);
+var StableSort = __webpack_require__(83);
 
 /**
  * @callback EachListCallback
@@ -12997,7 +13355,7 @@ var List = new Class({
      * @genericUse {EachListCallback.<T>} - [callback]
      *
      * @param {EachListCallback} callback - The function to call.
-     * @param {*} [thisArg] - Value to use as `this` when executing callback.
+     * @param {*} [context] - Value to use as `this` when executing callback.
      * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
      */
     each: function (callback, context)
@@ -13172,7 +13530,7 @@ module.exports = List;
 
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -13214,7 +13572,7 @@ module.exports = Merge;
 
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports) {
 
 /**
@@ -13252,7 +13610,7 @@ module.exports = Shuffle;
 
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -13263,9 +13621,9 @@ module.exports = Shuffle;
 
 var Class = __webpack_require__(0);
 var GetPoint = __webpack_require__(293);
-var GetPoints = __webpack_require__(154);
-var Random = __webpack_require__(153);
-var Vector2 = __webpack_require__(7);
+var GetPoints = __webpack_require__(156);
+var Random = __webpack_require__(155);
+var Vector2 = __webpack_require__(6);
 
 /**
  * @classdesc
@@ -13572,7 +13930,7 @@ module.exports = Line;
 
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports) {
 
 /**
@@ -13600,7 +13958,7 @@ module.exports = Perimeter;
 
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports) {
 
 /**
@@ -13753,7 +14111,7 @@ module.exports = TweenData;
 
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -13765,7 +14123,7 @@ module.exports = TweenData;
 var Class = __webpack_require__(0);
 var GameObjectCreator = __webpack_require__(13);
 var GameObjectFactory = __webpack_require__(11);
-var TWEEN_CONST = __webpack_require__(60);
+var TWEEN_CONST = __webpack_require__(61);
 
 /**
  * @classdesc
@@ -15146,7 +15504,7 @@ module.exports = Tween;
 
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports) {
 
 /**
@@ -15189,7 +15547,7 @@ module.exports = TWEEN_DEFAULTS;
 
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports) {
 
 /**
@@ -15362,7 +15720,7 @@ module.exports = GetValueOp;
 
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -15409,10 +15767,11 @@ module.exports = GetTargets;
 
 
 /***/ }),
-/* 102 */,
 /* 103 */,
 /* 104 */,
-/* 105 */
+/* 105 */,
+/* 106 */,
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -15421,8 +15780,8 @@ module.exports = GetTargets;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Extend = __webpack_require__(18);
-var XHRSettings = __webpack_require__(74);
+var Extend = __webpack_require__(17);
+var XHRSettings = __webpack_require__(75);
 
 /**
  * Takes two XHRSettings Objects and creates a new XHRSettings object from them.
@@ -15460,7 +15819,7 @@ module.exports = MergeXHRSettings;
 
 
 /***/ }),
-/* 106 */
+/* 108 */
 /***/ (function(module, exports) {
 
 /**
@@ -15501,7 +15860,484 @@ module.exports = GetURL;
 
 
 /***/ }),
-/* 107 */
+/* 109 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Keyboard Codes.
+ * 
+ * @name Phaser.Input.Keyboard.KeyCodes
+ * @enum {integer}
+ * @memberOf Phaser.Input.Keyboard
+ * @readOnly
+ * @since 3.0.0
+ */
+
+var KeyCodes = {
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.BACKSPACE
+     */
+    BACKSPACE: 8,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.TAB
+     */
+    TAB: 9,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.ENTER
+     */
+    ENTER: 13,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.SHIFT
+     */
+    SHIFT: 16,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.CTRL
+     */
+    CTRL: 17,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.ALT
+     */
+    ALT: 18,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.PAUSE
+     */
+    PAUSE: 19,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.CAPS_LOCK
+     */
+    CAPS_LOCK: 20,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.ESC
+     */
+    ESC: 27,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.SPACE
+     */
+    SPACE: 32,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.PAGE_UP
+     */
+    PAGE_UP: 33,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.PAGE_DOWN
+     */
+    PAGE_DOWN: 34,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.END
+     */
+    END: 35,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.HOME
+     */
+    HOME: 36,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.LEFT
+     */
+    LEFT: 37,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.UP
+     */
+    UP: 38,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.RIGHT
+     */
+    RIGHT: 39,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.DOWN
+     */
+    DOWN: 40,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.PRINT_SCREEN
+     */
+    PRINT_SCREEN: 42,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.INSERT
+     */
+    INSERT: 45,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.DELETE
+     */
+    DELETE: 46,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.ZERO
+     */
+    ZERO: 48,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.ONE
+     */
+    ONE: 49,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.TWO
+     */
+    TWO: 50,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.THREE
+     */
+    THREE: 51,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.FOUR
+     */
+    FOUR: 52,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.FIVE
+     */
+    FIVE: 53,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.SIX
+     */
+    SIX: 54,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.SEVEN
+     */
+    SEVEN: 55,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.EIGHT
+     */
+    EIGHT: 56,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.NINE
+     */
+    NINE: 57,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_ZERO
+     */
+    NUMPAD_ZERO: 96,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_ONE
+     */
+    NUMPAD_ONE: 97,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_TWO
+     */
+    NUMPAD_TWO: 98,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_THREE
+     */
+    NUMPAD_THREE: 99,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_FOUR
+     */
+    NUMPAD_FOUR: 100,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_FIVE
+     */
+    NUMPAD_FIVE: 101,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_SIX
+     */
+    NUMPAD_SIX: 102,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_SEVEN
+     */
+    NUMPAD_SEVEN: 103,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_EIGHT
+     */
+    NUMPAD_EIGHT: 104,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_NINE
+     */
+    NUMPAD_NINE: 105,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.A
+     */
+    A: 65,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.B
+     */
+    B: 66,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.C
+     */
+    C: 67,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.D
+     */
+    D: 68,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.E
+     */
+    E: 69,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.F
+     */
+    F: 70,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.G
+     */
+    G: 71,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.H
+     */
+    H: 72,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.I
+     */
+    I: 73,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.J
+     */
+    J: 74,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.K
+     */
+    K: 75,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.L
+     */
+    L: 76,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.M
+     */
+    M: 77,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.N
+     */
+    N: 78,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.O
+     */
+    O: 79,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.P
+     */
+    P: 80,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.Q
+     */
+    Q: 81,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.R
+     */
+    R: 82,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.S
+     */
+    S: 83,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.T
+     */
+    T: 84,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.U
+     */
+    U: 85,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.V
+     */
+    V: 86,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.W
+     */
+    W: 87,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.X
+     */
+    X: 88,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.Y
+     */
+    Y: 89,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.Z
+     */
+    Z: 90,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.F1
+     */
+    F1: 112,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.F2
+     */
+    F2: 113,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.F3
+     */
+    F3: 114,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.F4
+     */
+    F4: 115,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.F5
+     */
+    F5: 116,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.F6
+     */
+    F6: 117,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.F7
+     */
+    F7: 118,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.F8
+     */
+    F8: 119,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.F9
+     */
+    F9: 120,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.F10
+     */
+    F10: 121,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.F11
+     */
+    F11: 122,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.F12
+     */
+    F12: 123,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.SEMICOLON
+     */
+    SEMICOLON: 186,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.PLUS
+     */
+    PLUS: 187,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.COMMA
+     */
+    COMMA: 188,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.MINUS
+     */
+    MINUS: 189,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.PERIOD
+     */
+    PERIOD: 190,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.FORWARD_SLASH
+     */
+    FORWARD_SLASH: 191,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.BACK_SLASH
+     */
+    BACK_SLASH: 220,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.QUOTES
+     */
+    QUOTES: 222,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.BACKTICK
+     */
+    BACKTICK: 192,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.OPEN_BRACKET
+     */
+    OPEN_BRACKET: 219,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.CLOSED_BRACKET
+     */
+    CLOSED_BRACKET: 221
+
+};
+
+module.exports = KeyCodes;
+
+
+/***/ }),
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -15510,17 +16346,17 @@ module.exports = GetURL;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var AddToDOM = __webpack_require__(127);
+var AddToDOM = __webpack_require__(130);
 var CanvasPool = __webpack_require__(22);
 var Class = __webpack_require__(0);
 var Components = __webpack_require__(15);
 var CONST = __webpack_require__(20);
 var GameObject = __webpack_require__(2);
-var GetTextSize = __webpack_require__(404);
+var GetTextSize = __webpack_require__(417);
 var GetValue = __webpack_require__(4);
-var RemoveFromDOM = __webpack_require__(268);
-var TextRender = __webpack_require__(403);
-var TextStyle = __webpack_require__(400);
+var RemoveFromDOM = __webpack_require__(269);
+var TextRender = __webpack_require__(416);
+var TextStyle = __webpack_require__(413);
 
 /**
  * @classdesc
@@ -16623,9 +17459,9 @@ module.exports = Text;
 
 
 /***/ }),
-/* 108 */,
-/* 109 */,
-/* 110 */
+/* 111 */,
+/* 112 */,
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -16667,7 +17503,7 @@ module.exports = CircumferencePoint;
 
 
 /***/ }),
-/* 111 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -16677,10 +17513,10 @@ module.exports = CircumferencePoint;
  */
 
 var Class = __webpack_require__(0);
-var Contains = __webpack_require__(53);
-var GetPoint = __webpack_require__(171);
-var GetPoints = __webpack_require__(170);
-var Random = __webpack_require__(131);
+var Contains = __webpack_require__(54);
+var GetPoint = __webpack_require__(179);
+var GetPoints = __webpack_require__(178);
+var Random = __webpack_require__(134);
 
 /**
  * @classdesc
@@ -17035,7 +17871,7 @@ module.exports = Ellipse;
 
 
 /***/ }),
-/* 112 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -17044,19 +17880,94 @@ module.exports = Ellipse;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Camera = __webpack_require__(121);
+var Camera = __webpack_require__(123);
 var Class = __webpack_require__(0);
-var Commands = __webpack_require__(117);
+var Commands = __webpack_require__(119);
 var Components = __webpack_require__(15);
-var Ellipse = __webpack_require__(248);
+var Ellipse = __webpack_require__(249);
 var GameObject = __webpack_require__(2);
 var GetValue = __webpack_require__(4);
 var MATH_CONST = __webpack_require__(16);
-var Render = __webpack_require__(450);
+var Render = __webpack_require__(463);
+
+/**
+ * Graphics line style (or stroke style) settings.
+ *
+ * @typedef {object} GraphicsLineStyle
+ *
+ * @property {number} width - The stroke width.
+ * @property {number} color - The stroke color.
+ * @property {number} alpha - The stroke alpha.
+ */
+
+/**
+ * Graphics fill style settings.
+ *
+ * @typedef {object} GraphicsFillStyle
+ *
+ * @property {number} color - The fill color.
+ * @property {number} alpha - The fill alpha.
+ */
+
+/**
+ * Graphics style settings.
+ *
+ * @typedef {object} GraphicsStyles
+ *
+ * @property {GraphicsLineStyle} lineStyle - The style applied to shape outlines.
+ * @property {GraphicsFillStyle} fillStyle - The style applied to shape areas.
+ */
+
+/**
+ * Options for the Graphics game Object.
+ *
+ * @typedef {object} GraphicsOptions
+ * @extends GraphicsStyles
+ *
+ * @property {number} x - The x coordinate of the Graphics.
+ * @property {number} y - The y coordinate of the Graphics.
+ */
 
 /**
  * @classdesc
- * [description]
+ * A Graphics object is a way to draw primitive shapes to you game. Primitives include forms of geometry, such as
+ * Rectangles, Circles, and Polygons. They also include lines, arcs and curves. When you initially create a Graphics
+ * object it will be empty.
+ *
+ * To draw to it you must first specify a line style or fill style (or both), draw shapes using paths, and finally
+ * fill or stroke them. For example:
+ *
+ * ```javascript
+ * graphics.lineStyle(5, 0xFF00FF, 1.0);
+ * graphics.beginPath();
+ * graphics.moveTo(100, 100);
+ * graphics.lineTo(200, 200);
+ * graphics.closePath();
+ * graphics.strokePath();
+ * ```
+ *
+ * There are also many helpful methods that draw and fill/stroke common shapes for you.
+ *
+ * ```javascript
+ * graphics.lineStyle(5, 0xFF00FF, 1.0);
+ * graphics.fillStyle(0xFFFFFF, 1.0);
+ * graphics.fillRect(50, 50, 400, 200);
+ * graphics.strokeRect(50, 50, 400, 200);
+ * ```
+ *
+ * When a Graphics object is rendered it will render differently based on if the game is running under Canvas or WebGL.
+ * Under Canvas it will use the HTML Canvas context drawing operations to draw the path.
+ * Under WebGL the graphics data is decomposed into polygons. Both of these are expensive processes, especially with
+ * complex shapes.
+ *
+ * If your Graphics object doesn't change much (or at all) once you've drawn your shape to it, then you will help
+ * performance by calling {@link Phaser.GameObjects.Graphics#generateTexture}. This will 'bake' the Graphics object into
+ * a Texture, and return it. You can then use this Texture for Sprites or other display objects. If your Graphics object
+ * updates frequently then you should avoid doing this, as it will constantly generate new textures, which will consume
+ * memory.
+ *
+ * As you can tell, Graphics objects are a bit of a trade-off. While they are extremely useful, you need to be careful
+ * in their complexity and quantity of them in your game.
  *
  * @class Graphics
  * @extends Phaser.GameObjects.GameObject
@@ -17073,8 +17984,8 @@ var Render = __webpack_require__(450);
  * @extends Phaser.GameObjects.Components.Visible
  * @extends Phaser.GameObjects.Components.ScrollFactor
  *
- * @param {Phaser.Scene} scene - [description]
- * @param {object} options - [description]
+ * @param {Phaser.Scene} scene - The Scene to which this Graphics object belongs.
+ * @param {GraphicsOptions} options - Options that set the position and default style of this Graphics object.
  */
 var Graphics = new Class({
 
@@ -17105,7 +18016,7 @@ var Graphics = new Class({
         this.initPipeline('FlatTintPipeline');
 
         /**
-         * [description]
+         * The horizontal display origin of the Graphics.
          *
          * @name Phaser.GameObjects.Graphics#displayOriginX
          * @type {number}
@@ -17115,7 +18026,7 @@ var Graphics = new Class({
         this.displayOriginX = 0;
 
         /**
-         * [description]
+         * The vertical display origin of the Graphics.
          *
          * @name Phaser.GameObjects.Graphics#displayOriginY
          * @type {number}
@@ -17125,7 +18036,7 @@ var Graphics = new Class({
         this.displayOriginY = 0;
 
         /**
-         * [description]
+         * The array of commands used to render the Graphics.
          *
          * @name Phaser.GameObjects.Graphics#commandBuffer
          * @type {array}
@@ -17135,7 +18046,7 @@ var Graphics = new Class({
         this.commandBuffer = [];
 
         /**
-         * [description]
+         * The default fill color for shapes rendered by this Graphics object.
          *
          * @name Phaser.GameObjects.Graphics#defaultFillColor
          * @type {number}
@@ -17145,7 +18056,7 @@ var Graphics = new Class({
         this.defaultFillColor = -1;
 
         /**
-         * [description]
+         * The default fill alpha for shapes rendered by this Graphics object.
          *
          * @name Phaser.GameObjects.Graphics#defaultFillAlpha
          * @type {number}
@@ -17155,7 +18066,7 @@ var Graphics = new Class({
         this.defaultFillAlpha = 1;
 
         /**
-         * [description]
+         * The default stroke width for shapes rendered by this Graphics object.
          *
          * @name Phaser.GameObjects.Graphics#defaultStrokeWidth
          * @type {number}
@@ -17165,7 +18076,7 @@ var Graphics = new Class({
         this.defaultStrokeWidth = 1;
 
         /**
-         * [description]
+         * The default stroke color for shapes rendered by this Graphics object.
          *
          * @name Phaser.GameObjects.Graphics#defaultStrokeColor
          * @type {number}
@@ -17175,7 +18086,7 @@ var Graphics = new Class({
         this.defaultStrokeColor = -1;
 
         /**
-         * [description]
+         * The default stroke alpha for shapes rendered by this Graphics object.
          *
          * @name Phaser.GameObjects.Graphics#defaultStrokeAlpha
          * @type {number}
@@ -17185,7 +18096,7 @@ var Graphics = new Class({
         this.defaultStrokeAlpha = 1;
 
         /**
-         * [description]
+         * Internal property that keeps track of the line width style setting.
          *
          * @name Phaser.GameObjects.Graphics#_lineWidth
          * @type {number}
@@ -17198,12 +18109,12 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Set the default style settings for this Graphics object.
      *
      * @method Phaser.GameObjects.Graphics#setDefaultStyles
      * @since 3.0.0
      *
-     * @param {object} options - [description]
+     * @param {GraphicsStyles} options - The styles to set as defaults.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17230,14 +18141,14 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Set the current line style.
      *
      * @method Phaser.GameObjects.Graphics#lineStyle
      * @since 3.0.0
      *
-     * @param {number} lineWidth - [description]
-     * @param {number} color - [description]
-     * @param {float} [alpha=1] - [description]
+     * @param {number} lineWidth - The stroke width.
+     * @param {number} color - The stroke color.
+     * @param {number} [alpha=1] - The stroke alpha.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17256,13 +18167,13 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Set the current fill style.
      *
      * @method Phaser.GameObjects.Graphics#fillStyle
      * @since 3.0.0
      *
-     * @param {number} color - [description]
-     * @param {float} [alpha=1] - [description]
+     * @param {number} color - The fill color.
+     * @param {number} [alpha=1] - The fill alpha.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17279,7 +18190,7 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Start a new shape path.
      *
      * @method Phaser.GameObjects.Graphics#beginPath
      * @since 3.0.0
@@ -17296,7 +18207,7 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Close the current path.
      *
      * @method Phaser.GameObjects.Graphics#closePath
      * @since 3.0.0
@@ -17313,7 +18224,7 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill the current path.
      *
      * @method Phaser.GameObjects.Graphics#fillPath
      * @since 3.0.0
@@ -17330,7 +18241,7 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Stroke the current path.
      *
      * @method Phaser.GameObjects.Graphics#strokePath
      * @since 3.0.0
@@ -17347,12 +18258,12 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill the given circle.
      *
      * @method Phaser.GameObjects.Graphics#fillCircleShape
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Circle} circle - [description]
+     * @param {Phaser.Geom.Circle} circle - The circle to fill.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17362,12 +18273,12 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Stroke the given circle.
      *
      * @method Phaser.GameObjects.Graphics#strokeCircleShape
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Circle} circle - [description]
+     * @param {Phaser.Geom.Circle} circle - The circle to stroke.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17377,14 +18288,14 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill a circle with the given position and radius.
      *
      * @method Phaser.GameObjects.Graphics#fillCircle
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} radius - [description]
+     * @param {number} x - The x coordinate of the center of the circle.
+     * @param {number} y - The y coordinate of the center of the circle.
+     * @param {number} radius - The radius of the circle.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17398,14 +18309,14 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Stroke a circle with the given position and radius.
      *
      * @method Phaser.GameObjects.Graphics#strokeCircle
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} radius - [description]
+     * @param {number} x - The x coordinate of the center of the circle.
+     * @param {number} y - The y coordinate of the center of the circle.
+     * @param {number} radius - The radius of the circle.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17419,12 +18330,12 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill the given rectangle.
      *
      * @method Phaser.GameObjects.Graphics#fillRectShape
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Rectangle} rect - [description]
+     * @param {Phaser.Geom.Rectangle} rect - The rectangle to fill.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17434,12 +18345,12 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Stroke the given rectangle.
      *
      * @method Phaser.GameObjects.Graphics#strokeRectShape
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Rectangle} rect - [description]
+     * @param {Phaser.Geom.Rectangle} rect - The rectangle to stroke.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17449,15 +18360,15 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill a rectangle with the given position and size.
      *
      * @method Phaser.GameObjects.Graphics#fillRect
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} height - [description]
+     * @param {number} x - The x coordinate of the top-left of the rectangle.
+     * @param {number} y - The y coordinate of the top-left of the rectangle.
+     * @param {number} width - The width of the rectangle.
+     * @param {number} height - The height of the rectangle.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17472,15 +18383,15 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Stroke a rectangle with the given position and size.
      *
      * @method Phaser.GameObjects.Graphics#strokeRect
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} height - [description]
+     * @param {number} x - The x coordinate of the top-left of the rectangle.
+     * @param {number} y - The y coordinate of the top-left of the rectangle.
+     * @param {number} width - The width of the rectangle.
+     * @param {number} height - The height of the rectangle.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17514,13 +18425,15 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill the given point.
+     *
+     * Draws a square at the given position, 1 pixel in size by default.
      *
      * @method Phaser.GameObjects.Graphics#fillPointShape
      * @since 3.0.0
      *
-     * @param {(Phaser.Geom.Point|Phaser.Math.Vector2|object)} point - [description]
-     * @param {number} [size=1] - [description]
+     * @param {(Phaser.Geom.Point|Phaser.Math.Vector2|object)} point - The point to fill.
+     * @param {number} [size=1] - The size of the square to draw.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17530,14 +18443,16 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill a point at the given position.
+     *
+     * Draws a square at the given position, 1 pixel in size by default.
      *
      * @method Phaser.GameObjects.Graphics#fillPoint
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} [size=1] - [description]
+     * @param {number} x - The x coordinate of the point.
+     * @param {number} y - The y coordinate of the point.
+     * @param {number} [size=1] - The size of the square to draw.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17562,12 +18477,12 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill the given triangle.
      *
      * @method Phaser.GameObjects.Graphics#fillTriangleShape
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Triangle} triangle - [description]
+     * @param {Phaser.Geom.Triangle} triangle - The triangle to fill.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17577,12 +18492,12 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Stroke the given triangle.
      *
      * @method Phaser.GameObjects.Graphics#strokeTriangleShape
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Triangle} triangle - [description]
+     * @param {Phaser.Geom.Triangle} triangle - The triangle to stroke.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17592,17 +18507,17 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill a triangle with the given points.
      *
      * @method Phaser.GameObjects.Graphics#fillTriangle
      * @since 3.0.0
      *
-     * @param {number} x0 - [description]
-     * @param {number} y0 - [description]
-     * @param {number} x1 - [description]
-     * @param {number} y1 - [description]
-     * @param {number} x2 - [description]
-     * @param {number} y2 - [description]
+     * @param {number} x0 - The x coordinate of the first point.
+     * @param {number} y0 - The y coordinate of the first point.
+     * @param {number} x1 - The x coordinate of the second point.
+     * @param {number} y1 - The y coordinate of the second point.
+     * @param {number} x2 - The x coordinate of the third point.
+     * @param {number} y2 - The y coordinate of the third point.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17617,17 +18532,17 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Stroke a triangle with the given points.
      *
      * @method Phaser.GameObjects.Graphics#strokeTriangle
      * @since 3.0.0
      *
-     * @param {number} x0 - [description]
-     * @param {number} y0 - [description]
-     * @param {number} x1 - [description]
-     * @param {number} y1 - [description]
-     * @param {number} x2 - [description]
-     * @param {number} y2 - [description]
+     * @param {number} x0 - The x coordinate of the first point.
+     * @param {number} y0 - The y coordinate of the first point.
+     * @param {number} x1 - The x coordinate of the second point.
+     * @param {number} y1 - The y coordinate of the second point.
+     * @param {number} x2 - The x coordinate of the third point.
+     * @param {number} y2 - The y coordinate of the third point.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17642,12 +18557,12 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Draw the given line.
      *
      * @method Phaser.GameObjects.Graphics#strokeLineShape
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Line} line - [description]
+     * @param {Phaser.Geom.Line} line - The line to stroke.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17657,15 +18572,15 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Draw a line between the given points.
      *
      * @method Phaser.GameObjects.Graphics#lineBetween
      * @since 3.0.0
      *
-     * @param {number} x1 - [description]
-     * @param {number} y1 - [description]
-     * @param {number} x2 - [description]
-     * @param {number} y2 - [description]
+     * @param {number} x1 - The x coordinate of the start point of the line.
+     * @param {number} y1 - The y coordinate of the start point of the line.
+     * @param {number} x2 - The x coordinate of the end point of the line.
+     * @param {number} y2 - The y coordinate of the end point of the line.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17680,13 +18595,15 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Draw a line from the current drawing position to the given position.
+     *
+     * Moves the current drawing position to the given position.
      *
      * @method Phaser.GameObjects.Graphics#lineTo
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
+     * @param {number} x - The x coordinate to draw the line to.
+     * @param {number} y - The y coordinate to draw the line to.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17701,13 +18618,13 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Move the current drawing position to the given position.
      *
      * @method Phaser.GameObjects.Graphics#moveTo
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
+     * @param {number} x - The x coordinate to move to.
+     * @param {number} y - The y coordinate to move to.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17768,14 +18685,16 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Stroke the shape represented by the given array of points.
+     *
+     * Pass `true` to `autoClose` to close the shape automatically.
      *
      * @method Phaser.GameObjects.Graphics#strokePoints
      * @since 3.0.0
      *
-     * @param {(array|Phaser.Geom.Point[])} points - [description]
-     * @param {boolean} [autoClose=false] - [description]
-     * @param {integer} [endIndex] - [description]
+     * @param {(array|Phaser.Geom.Point[])} points - The points to stroke.
+     * @param {boolean} [autoClose=false] - When `true`, the shape is closed by joining the last point to the first point.
+     * @param {integer} [endIndex] - The index of `points` to stop drawing at. Defaults to `points.length`.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17804,14 +18723,16 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill the shape represented by the given array of points.
+     *
+     * Pass `true` to `autoClose` to close the shape automatically.
      *
      * @method Phaser.GameObjects.Graphics#fillPoints
      * @since 3.0.0
      *
-     * @param {(array|Phaser.Geom.Point[])} points - [description]
-     * @param {boolean} [autoClose=false] - [description]
-     * @param {integer} [endIndex] - [description]
+     * @param {(array|Phaser.Geom.Point[])} points - The points to fill.
+     * @param {boolean} [autoClose=false] - Whether to automatically close the polygon.
+     * @param {integer} [endIndex] - The index of `points` to stop at. Defaults to `points.length`.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17840,13 +18761,13 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Stroke the given ellipse.
      *
      * @method Phaser.GameObjects.Graphics#strokeEllipseShape
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Ellipse} ellipse - [description]
-     * @param {integer} [smoothness=32] - [description]
+     * @param {Phaser.Geom.Ellipse} ellipse - The ellipse to stroke.
+     * @param {integer} [smoothness=32] - The number of points to draw the ellipse with.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17860,16 +18781,16 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Stroke an ellipse with the given position and size.
      *
      * @method Phaser.GameObjects.Graphics#strokeEllipse
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} height - [description]
-     * @param {integer} [smoothness=32] - [description]
+     * @param {number} x - The x coordinate of the center of the ellipse.
+     * @param {number} y - The y coordinate of the center of the ellipse.
+     * @param {number} width - The width of the ellipse.
+     * @param {number} height - The height of the ellipse.
+     * @param {integer} [smoothness=32] - The number of points to draw the ellipse with.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17885,13 +18806,13 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill the given ellipse.
      *
      * @method Phaser.GameObjects.Graphics#fillEllipseShape
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Ellipse} ellipse - [description]
-     * @param {integer} [smoothness=32] - [description]
+     * @param {Phaser.Geom.Ellipse} ellipse - The ellipse to fill.
+     * @param {integer} [smoothness=32] - The number of points to draw the ellipse with.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17905,16 +18826,16 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill an ellipse with the given position and size.
      *
      * @method Phaser.GameObjects.Graphics#fillEllipse
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} height - [description]
-     * @param {integer} [smoothness=32] - [description]
+     * @param {number} x - The x coordinate of the center of the ellipse.
+     * @param {number} y - The y coordinate of the center of the ellipse.
+     * @param {number} width - The width of the ellipse.
+     * @param {number} height - The height of the ellipse.
+     * @param {integer} [smoothness=32] - The number of points to draw the ellipse with.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -17930,17 +18851,22 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Draw an arc.
+     *
+     * This method can be used to create circles, or parts of circles.
+     *
+     * Call {@link Phaser.GameObjects.Graphics#fillPath} or {@link Phaser.GameObjects.Graphics#strokePath} after calling
+     * this method to draw the arc.
      *
      * @method Phaser.GameObjects.Graphics#arc
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} radius - [description]
-     * @param {number} startAngle - [description]
-     * @param {number} endAngle - [description]
-     * @param {boolean} anticlockwise - [description]
+     * @param {number} x - The x coordinate of the center of the circle.
+     * @param {number} y - The y coordinate of the center of the circle.
+     * @param {number} radius - The radius of the circle.
+     * @param {number} startAngle - The starting angle, in radians.
+     * @param {number} endAngle - The ending angle, in radians.
+     * @param {boolean} [anticlockwise=false] - Whether the drawing should be anticlockwise or clockwise.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -18026,13 +18952,13 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Translate the graphics.
      *
      * @method Phaser.GameObjects.Graphics#translate
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
+     * @param {number} x - The horizontal translation to apply.
+     * @param {number} y - The vertical translation to apply.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -18047,13 +18973,13 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Scale the graphics.
      *
      * @method Phaser.GameObjects.Graphics#scale
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
+     * @param {number} x - The horizontal scale to apply.
+     * @param {number} y - The vertical scale to apply.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -18068,12 +18994,12 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Rotate the graphics.
      *
      * @method Phaser.GameObjects.Graphics#rotate
      * @since 3.0.0
      *
-     * @param {number} radians - [description]
+     * @param {number} radians - The rotation angle, in radians.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -18088,7 +19014,7 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Clear the command buffer and reset the fill style and line style to their defaults.
      *
      * @method Phaser.GameObjects.Graphics#clear
      * @since 3.0.0
@@ -18113,18 +19039,20 @@ var Graphics = new Class({
     },
 
     /**
-     * If key is a string it'll generate a new texture using it and add it into the
+     * Generate a texture from this Graphics object.
+     *
+     * If `key` is a string it'll generate a new texture using it and add it into the
      * Texture Manager (assuming no key conflict happens).
      *
-     * If key is a Canvas it will draw the texture to that canvas context. Note that it will NOT
+     * If `key` is a Canvas it will draw the texture to that canvas context. Note that it will NOT
      * automatically upload it to the GPU in WebGL mode.
      *
      * @method Phaser.GameObjects.Graphics#generateTexture
      * @since 3.0.0
      *
-     * @param {(string|HTMLCanvasElement)} key - [description]
-     * @param {integer} [width] - [description]
-     * @param {integer} [height] - [description]
+     * @param {(string|HTMLCanvasElement)} key - The key to store the texture with in the Texture Manager, or a Canvas to draw to.
+     * @param {integer} [width] - The width of the graphics to generate.
+     * @param {integer} [height] - The height of the graphics to generate.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -18213,7 +19141,7 @@ module.exports = Graphics;
 
 
 /***/ }),
-/* 113 */
+/* 116 */
 /***/ (function(module, exports) {
 
 /**
@@ -18271,7 +19199,7 @@ module.exports = CheckMatrix;
 
 
 /***/ }),
-/* 114 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -18281,8 +19209,8 @@ module.exports = CheckMatrix;
  */
 
 var Class = __webpack_require__(0);
-var Frame = __webpack_require__(125);
-var TextureSource = __webpack_require__(175);
+var Frame = __webpack_require__(128);
+var TextureSource = __webpack_require__(183);
 
 /**
  * @classdesc
@@ -18741,7 +19669,7 @@ module.exports = Texture;
 
 
 /***/ }),
-/* 115 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -18751,11 +19679,12 @@ module.exports = Texture;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(54);
-var DefaultPlugins = __webpack_require__(119);
-var GetPhysicsPlugins = __webpack_require__(505);
-var GetScenePlugins = __webpack_require__(504);
-var Settings = __webpack_require__(184);
+var CONST = __webpack_require__(55);
+var DefaultPlugins = __webpack_require__(121);
+var GetPhysicsPlugins = __webpack_require__(518);
+var GetScenePlugins = __webpack_require__(517);
+var NOOP = __webpack_require__(3);
+var Settings = __webpack_require__(192);
 
 /**
  * @classdesc
@@ -18953,6 +19882,19 @@ var Systems = new Class({
          * @since 3.0.0
          */
         this.updateList;
+
+        /**
+         * The Scene Update function.
+         * 
+         * This starts out as NOOP during init, preload and create, and at the end of create
+         * it swaps to be whatever the Scene.update function is.
+         *
+         * @name Phaser.Scenes.Systems#sceneUpdate
+         * @type {function}
+         * @private
+         * @since 3.10.0
+         */
+        this.sceneUpdate = NOOP;
     },
 
     /**
@@ -18969,6 +19911,9 @@ var Systems = new Class({
     init: function (game)
     {
         this.settings.status = CONST.INIT;
+
+        //  This will get replaced by the SceneManager with the actual update function, if it exists, once create is over.
+        this.sceneUpdate = NOOP;
 
         this.game = game;
 
@@ -19012,8 +19957,8 @@ var Systems = new Class({
      * @method Phaser.Scenes.Systems#step
      * @since 3.0.0
      *
-     * @param {number} time - [description]
-     * @param {number} delta - [description]
+     * @param {number} time - The time value from the most recent Game step. Typically a high-resolution timer value, or Date.now().
+     * @param {number} delta - The delta value since the last frame. This is smoothed to avoid delta spikes by the TimeStep class.
      */
     step: function (time, delta)
     {
@@ -19021,7 +19966,7 @@ var Systems = new Class({
 
         this.events.emit('update', time, delta);
 
-        this.scene.update.call(this.scene, time, delta);
+        this.sceneUpdate.call(this.scene, time, delta);
 
         this.events.emit('postupdate', time, delta);
     },
@@ -19386,484 +20331,7 @@ module.exports = Systems;
 
 
 /***/ }),
-/* 116 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Keyboard Codes.
- * 
- * @name Phaser.Input.Keyboard.KeyCodes
- * @enum {integer}
- * @memberOf Phaser.Input.Keyboard
- * @readOnly
- * @since 3.0.0
- */
-
-var KeyCodes = {
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.BACKSPACE
-     */
-    BACKSPACE: 8,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.TAB
-     */
-    TAB: 9,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.ENTER
-     */
-    ENTER: 13,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.SHIFT
-     */
-    SHIFT: 16,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.CTRL
-     */
-    CTRL: 17,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.ALT
-     */
-    ALT: 18,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.PAUSE
-     */
-    PAUSE: 19,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.CAPS_LOCK
-     */
-    CAPS_LOCK: 20,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.ESC
-     */
-    ESC: 27,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.SPACE
-     */
-    SPACE: 32,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.PAGE_UP
-     */
-    PAGE_UP: 33,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.PAGE_DOWN
-     */
-    PAGE_DOWN: 34,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.END
-     */
-    END: 35,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.HOME
-     */
-    HOME: 36,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.LEFT
-     */
-    LEFT: 37,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.UP
-     */
-    UP: 38,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.RIGHT
-     */
-    RIGHT: 39,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.DOWN
-     */
-    DOWN: 40,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.PRINT_SCREEN
-     */
-    PRINT_SCREEN: 42,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.INSERT
-     */
-    INSERT: 45,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.DELETE
-     */
-    DELETE: 46,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.ZERO
-     */
-    ZERO: 48,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.ONE
-     */
-    ONE: 49,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.TWO
-     */
-    TWO: 50,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.THREE
-     */
-    THREE: 51,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.FOUR
-     */
-    FOUR: 52,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.FIVE
-     */
-    FIVE: 53,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.SIX
-     */
-    SIX: 54,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.SEVEN
-     */
-    SEVEN: 55,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.EIGHT
-     */
-    EIGHT: 56,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.NINE
-     */
-    NINE: 57,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_ZERO
-     */
-    NUMPAD_ZERO: 96,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_ONE
-     */
-    NUMPAD_ONE: 97,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_TWO
-     */
-    NUMPAD_TWO: 98,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_THREE
-     */
-    NUMPAD_THREE: 99,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_FOUR
-     */
-    NUMPAD_FOUR: 100,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_FIVE
-     */
-    NUMPAD_FIVE: 101,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_SIX
-     */
-    NUMPAD_SIX: 102,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_SEVEN
-     */
-    NUMPAD_SEVEN: 103,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_EIGHT
-     */
-    NUMPAD_EIGHT: 104,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.NUMPAD_NINE
-     */
-    NUMPAD_NINE: 105,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.A
-     */
-    A: 65,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.B
-     */
-    B: 66,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.C
-     */
-    C: 67,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.D
-     */
-    D: 68,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.E
-     */
-    E: 69,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.F
-     */
-    F: 70,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.G
-     */
-    G: 71,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.H
-     */
-    H: 72,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.I
-     */
-    I: 73,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.J
-     */
-    J: 74,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.K
-     */
-    K: 75,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.L
-     */
-    L: 76,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.M
-     */
-    M: 77,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.N
-     */
-    N: 78,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.O
-     */
-    O: 79,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.P
-     */
-    P: 80,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.Q
-     */
-    Q: 81,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.R
-     */
-    R: 82,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.S
-     */
-    S: 83,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.T
-     */
-    T: 84,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.U
-     */
-    U: 85,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.V
-     */
-    V: 86,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.W
-     */
-    W: 87,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.X
-     */
-    X: 88,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.Y
-     */
-    Y: 89,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.Z
-     */
-    Z: 90,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.F1
-     */
-    F1: 112,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.F2
-     */
-    F2: 113,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.F3
-     */
-    F3: 114,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.F4
-     */
-    F4: 115,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.F5
-     */
-    F5: 116,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.F6
-     */
-    F6: 117,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.F7
-     */
-    F7: 118,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.F8
-     */
-    F8: 119,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.F9
-     */
-    F9: 120,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.F10
-     */
-    F10: 121,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.F11
-     */
-    F11: 122,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.F12
-     */
-    F12: 123,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.SEMICOLON
-     */
-    SEMICOLON: 186,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.PLUS
-     */
-    PLUS: 187,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.COMMA
-     */
-    COMMA: 188,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.MINUS
-     */
-    MINUS: 189,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.PERIOD
-     */
-    PERIOD: 190,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.FORWARD_SLASH
-     */
-    FORWARD_SLASH: 191,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.BACK_SLASH
-     */
-    BACK_SLASH: 220,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.QUOTES
-     */
-    QUOTES: 222,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.BACKTICK
-     */
-    BACKTICK: 192,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.OPEN_BRACKET
-     */
-    OPEN_BRACKET: 219,
-
-    /**
-     * @name Phaser.Input.Keyboard.KeyCodes.CLOSED_BRACKET
-     */
-    CLOSED_BRACKET: 221
-
-};
-
-module.exports = KeyCodes;
-
-
-/***/ }),
-/* 117 */
+/* 119 */
 /***/ (function(module, exports) {
 
 /**
@@ -19902,7 +20370,7 @@ module.exports = {
 
 
 /***/ }),
-/* 118 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -19911,8 +20379,8 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var OS = __webpack_require__(56);
-var Browser = __webpack_require__(78);
+var OS = __webpack_require__(57);
+var Browser = __webpack_require__(80);
 var CanvasPool = __webpack_require__(22);
 
 /**
@@ -20099,7 +20567,7 @@ module.exports = init();
 
 
 /***/ }),
-/* 119 */
+/* 121 */
 /***/ (function(module, exports) {
 
 /**
@@ -20193,7 +20661,7 @@ module.exports = DefaultPlugins;
 
 
 /***/ }),
-/* 120 */
+/* 122 */
 /***/ (function(module, exports) {
 
 /**
@@ -20223,7 +20691,7 @@ module.exports = Linear;
 
 
 /***/ }),
-/* 121 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -20235,13 +20703,13 @@ module.exports = Linear;
 var Clamp = __webpack_require__(23);
 var Class = __webpack_require__(0);
 var DegToRad = __webpack_require__(38);
-var Effects = __webpack_require__(202);
+var Effects = __webpack_require__(204);
 var EventEmitter = __webpack_require__(9);
-var Linear = __webpack_require__(120);
+var Linear = __webpack_require__(122);
 var Rectangle = __webpack_require__(14);
-var TransformMatrix = __webpack_require__(63);
-var ValueToColor = __webpack_require__(129);
-var Vector2 = __webpack_require__(7);
+var TransformMatrix = __webpack_require__(64);
+var ValueToColor = __webpack_require__(132);
+var Vector2 = __webpack_require__(6);
 
 /**
  * @typedef {object} JSONCameraBounds
@@ -20376,6 +20844,19 @@ var Camera = new Class({
          * @since 3.0.0
          */
         this.roundPixels = false;
+
+        /**
+         * Is this Camera visible or not?
+         * 
+         * A visible camera will render and perform input tests.
+         * An invisible camera will not render anything and will skip input tests.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#visible
+         * @type {boolean}
+         * @default true
+         * @since 3.10.0
+         */
+        this.visible = true;
 
         /**
          * Is this Camera using a bounds to restrict scrolling movement?
@@ -21336,6 +21817,25 @@ var Camera = new Class({
     },
 
     /**
+     * Sets the visibility of this Camera.
+     * 
+     * An invisible Camera will skip rendering and input tests of everything it can see.
+     *
+     * @method Phaser.Cameras.Scene2D.Camera#setVisible
+     * @since 3.10.0
+     *
+     * @param {boolean} value - The visible state of the Camera.
+     * 
+     * @return {this} This Camera instance.
+     */
+    setVisible: function (value)
+    {
+        this.visible = value;
+
+        return this;
+    },
+
+    /**
      * Sets the Camera to follow a Game Object.
      *
      * When enabled the Camera will automatically adjust its scroll position to keep the target Game Object
@@ -21473,9 +21973,12 @@ var Camera = new Class({
      */
     update: function (time, delta)
     {
-        this.shakeEffect.update(time, delta);
-        this.flashEffect.update(time, delta);
-        this.fadeEffect.update(time, delta);
+        if (this.visible)
+        {
+            this.shakeEffect.update(time, delta);
+            this.flashEffect.update(time, delta);
+            this.fadeEffect.update(time, delta);
+        }
     },
 
     /**
@@ -21512,6 +22015,40 @@ var Camera = new Class({
         this._bounds = null;
 
         this.scene = null;
+    },
+
+    /**
+     * The x position of the center of the Camera's viewport, relative to the top-left of the game canvas.
+     *
+     * @name Phaser.Cameras.Scene2D.Camera#centerX
+     * @type {number}
+     * @readOnly
+     * @since 3.10.0
+     */
+    centerX: {
+
+        get: function ()
+        {
+            return this.x + (0.5 * this.width);
+        }
+
+    },
+
+    /**
+     * The y position of the center of the Camera's viewport, relative to the top-left of the game canvas.
+     *
+     * @name Phaser.Cameras.Scene2D.Camera#centerY
+     * @type {number}
+     * @readOnly
+     * @since 3.10.0
+     */
+    centerY: {
+
+        get: function ()
+        {
+            return this.y + (0.5 * this.height);
+        }
+
     }
 
 });
@@ -21520,7 +22057,7 @@ module.exports = Camera;
 
 
 /***/ }),
-/* 122 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -21890,8 +22427,9 @@ module.exports = Map;
 
 
 /***/ }),
-/* 123 */,
-/* 124 */
+/* 125 */,
+/* 126 */,
+/* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -21908,8 +22446,8 @@ var GetAdvancedValue = __webpack_require__(10);
  * @function Phaser.GameObjects.BuildGameObjectAnimation
  * @since 3.0.0
  *
- * @param {Phaser.GameObjects.Sprite} sprite - [description]
- * @param {object} config - [description]
+ * @param {Phaser.GameObjects.Sprite} sprite - The sprite to add an Animation component to.
+ * @param {object} config - The animation config.
  *
  * @return {Phaser.GameObjects.Sprite} The updated Sprite.
  */
@@ -21950,7 +22488,7 @@ var BuildGameObjectAnimation = function (sprite, config)
         var repeat = GetAdvancedValue(animConfig, 'repeat', 0);
         var repeatDelay = GetAdvancedValue(animConfig, 'repeatDelay', 0);
         var yoyo = GetAdvancedValue(animConfig, 'yoyo', false);
-        
+
         var play = GetAdvancedValue(animConfig, 'play', false);
         var delayedPlay = GetAdvancedValue(animConfig, 'delayedPlay', 0);
 
@@ -21980,7 +22518,7 @@ module.exports = BuildGameObjectAnimation;
 
 
 /***/ }),
-/* 125 */
+/* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -21990,7 +22528,7 @@ module.exports = BuildGameObjectAnimation;
  */
 
 var Class = __webpack_require__(0);
-var Extend = __webpack_require__(18);
+var Extend = __webpack_require__(17);
 
 /**
  * @classdesc
@@ -22630,7 +23168,7 @@ module.exports = Frame;
 
 
 /***/ }),
-/* 126 */
+/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -22641,11 +23179,11 @@ module.exports = Frame;
  */
 
 var Class = __webpack_require__(0);
-var ModelViewProjection = __webpack_require__(200);
-var ShaderSourceFS = __webpack_require__(519);
-var ShaderSourceVS = __webpack_require__(518);
+var ModelViewProjection = __webpack_require__(202);
+var ShaderSourceFS = __webpack_require__(526);
+var ShaderSourceVS = __webpack_require__(525);
 var Utils = __webpack_require__(27);
-var WebGLPipeline = __webpack_require__(83);
+var WebGLPipeline = __webpack_require__(84);
 
 /**
  * @classdesc
@@ -24833,7 +25371,7 @@ module.exports = TextureTintPipeline;
 
 
 /***/ }),
-/* 127 */
+/* 130 */
 /***/ (function(module, exports) {
 
 /**
@@ -24874,6 +25412,10 @@ var AddToDOM = function (element, parent, overflowHidden)
             target = parent;
         }
     }
+    else if (element.parentElement)
+    {
+        return element;
+    }
 
     //  Fallback, covers an invalid ID and a non HTMLelement object
     if (!target)
@@ -24895,7 +25437,7 @@ module.exports = AddToDOM;
 
 
 /***/ }),
-/* 128 */
+/* 131 */
 /***/ (function(module, exports) {
 
 /**
@@ -25027,7 +25569,7 @@ module.exports = Smoothing();
 
 
 /***/ }),
-/* 129 */
+/* 132 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -25083,7 +25625,7 @@ module.exports = ValueToColor;
 
 
 /***/ }),
-/* 130 */
+/* 133 */
 /***/ (function(module, exports) {
 
 /**
@@ -25159,7 +25701,7 @@ module.exports = Pad;
 
 
 /***/ }),
-/* 131 */
+/* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -25200,7 +25742,7 @@ module.exports = Random;
 
 
 /***/ }),
-/* 132 */
+/* 135 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -25209,7 +25751,7 @@ module.exports = Random;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Perimeter = __webpack_require__(96);
+var Perimeter = __webpack_require__(97);
 var Point = __webpack_require__(5);
 
 /**
@@ -25277,7 +25819,7 @@ module.exports = GetPoint;
 
 
 /***/ }),
-/* 133 */
+/* 136 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -25316,15 +25858,13 @@ module.exports = CircumferencePoint;
 
 
 /***/ }),
-/* 134 */,
-/* 135 */,
-/* 136 */,
 /* 137 */,
 /* 138 */,
 /* 139 */,
 /* 140 */,
 /* 141 */,
-/* 142 */
+/* 142 */,
+/* 143 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -25334,12 +25874,12 @@ module.exports = CircumferencePoint;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(17);
+var CONST = __webpack_require__(18);
 var File = __webpack_require__(19);
-var FileTypesManager = __webpack_require__(6);
+var FileTypesManager = __webpack_require__(7);
 var GetFastValue = __webpack_require__(1);
 var IsPlainObject = __webpack_require__(8);
-var ParseXML = __webpack_require__(269);
+var ParseXML = __webpack_require__(270);
 
 /**
  * @typedef {object} Phaser.Loader.FileTypes.XMLFileConfig
@@ -25518,9 +26058,9 @@ module.exports = XMLFile;
 
 
 /***/ }),
-/* 143 */,
 /* 144 */,
-/* 145 */
+/* 145 */,
+/* 146 */
 /***/ (function(module, exports) {
 
 /**
@@ -25555,7 +26095,7 @@ module.exports = GetRandom;
 
 
 /***/ }),
-/* 146 */
+/* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -25570,45 +26110,45 @@ module.exports = GetRandom;
 
 module.exports = {
 
-    Matrix: __webpack_require__(490),
+    Matrix: __webpack_require__(503),
 
-    Add: __webpack_require__(483),
-    AddAt: __webpack_require__(482),
-    BringToTop: __webpack_require__(481),
-    CountAllMatching: __webpack_require__(480),
-    Each: __webpack_require__(479),
-    EachInRange: __webpack_require__(478),
-    FindClosestInSorted: __webpack_require__(207),
-    GetAll: __webpack_require__(477),
-    GetFirst: __webpack_require__(476),
-    GetRandom: __webpack_require__(145),
-    MoveDown: __webpack_require__(475),
-    MoveTo: __webpack_require__(474),
-    MoveUp: __webpack_require__(473),
-    NumberArray: __webpack_require__(472),
-    NumberArrayStep: __webpack_require__(471),
-    QuickSelect: __webpack_require__(172),
-    Range: __webpack_require__(253),
-    Remove: __webpack_require__(187),
-    RemoveAt: __webpack_require__(470),
-    RemoveBetween: __webpack_require__(469),
-    RemoveRandomElement: __webpack_require__(468),
-    Replace: __webpack_require__(467),
+    Add: __webpack_require__(496),
+    AddAt: __webpack_require__(495),
+    BringToTop: __webpack_require__(494),
+    CountAllMatching: __webpack_require__(493),
+    Each: __webpack_require__(492),
+    EachInRange: __webpack_require__(491),
+    FindClosestInSorted: __webpack_require__(209),
+    GetAll: __webpack_require__(490),
+    GetFirst: __webpack_require__(489),
+    GetRandom: __webpack_require__(146),
+    MoveDown: __webpack_require__(488),
+    MoveTo: __webpack_require__(487),
+    MoveUp: __webpack_require__(486),
+    NumberArray: __webpack_require__(485),
+    NumberArrayStep: __webpack_require__(484),
+    QuickSelect: __webpack_require__(180),
+    Range: __webpack_require__(254),
+    Remove: __webpack_require__(195),
+    RemoveAt: __webpack_require__(483),
+    RemoveBetween: __webpack_require__(482),
+    RemoveRandomElement: __webpack_require__(481),
+    Replace: __webpack_require__(480),
     RotateLeft: __webpack_require__(290),
     RotateRight: __webpack_require__(289),
     SafeRange: __webpack_require__(29),
-    SendToBack: __webpack_require__(466),
-    SetAll: __webpack_require__(465),
-    Shuffle: __webpack_require__(94),
-    SpliceOne: __webpack_require__(55),
-    StableSort: __webpack_require__(82),
-    Swap: __webpack_require__(464)
+    SendToBack: __webpack_require__(479),
+    SetAll: __webpack_require__(478),
+    Shuffle: __webpack_require__(95),
+    SpliceOne: __webpack_require__(56),
+    StableSort: __webpack_require__(83),
+    Swap: __webpack_require__(477)
 
 };
 
 
 /***/ }),
-/* 147 */
+/* 148 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -25619,8 +26159,8 @@ module.exports = {
  */
 
 var Class = __webpack_require__(0);
-var ShaderSourceFS = __webpack_require__(520);
-var TextureTintPipeline = __webpack_require__(126);
+var ShaderSourceFS = __webpack_require__(527);
+var TextureTintPipeline = __webpack_require__(129);
 
 var LIGHT_COUNT = 10;
 
@@ -25688,24 +26228,28 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     onRender: function (scene, camera)
     {
+        this.active = false;
+
         var lightManager = scene.sys.lights;
 
-        if (!lightManager)
+        if (!lightManager || lightManager.lights.length <= 0 || !lightManager.active)
+        {
+            //  Passthru
+            return this;
+        }
+
+        var lights = lightManager.cull(camera);
+        var lightCount = Math.min(lights.length, LIGHT_COUNT);
+
+        if (lightCount === 0)
         {
             return this;
         }
 
-        lightManager.culledLights.length = 0;
-
-        if (lightManager.lights.length <= 0 || !lightManager.active)
-        {
-            return this; // If not visible lights just passthrough
-        }
+        this.active = true;
 
         var renderer = this.renderer;
         var program = this.program;
-        var lights = lightManager.cull(camera);
-        var lightCount = Math.min(lights.length, LIGHT_COUNT);
         var cameraMatrix = camera.matrix;
         var point = {x: 0, y: 0};
         var height = renderer.height;
@@ -25713,10 +26257,9 @@ var ForwardDiffuseLightPipeline = new Class({
 
         for (index = 0; index < LIGHT_COUNT; ++index)
         {
-            renderer.setFloat1(program, 'uLights[' + index + '].radius', 0); // reset lights
+            //  Reset lights
+            renderer.setFloat1(program, 'uLights[' + index + '].radius', 0);
         }
-
-        if (lightCount <= 0) { return this; }
 
         renderer.setFloat4(program, 'uCamera', camera.x, camera.y, camera.rotation, camera.zoom);
         renderer.setFloat3(program, 'uAmbientLightColor', lightManager.ambientColor.r, lightManager.ambientColor.g, lightManager.ambientColor.b);
@@ -25725,7 +26268,9 @@ var ForwardDiffuseLightPipeline = new Class({
         {
             var light = lights[index];
             var lightName = 'uLights[' + index + '].';
+
             cameraMatrix.transformPoint(light.x, light.y, point);
+
             renderer.setFloat2(program, lightName + 'position', point.x - (camera.scrollX * light.scrollFactorX * camera.zoom), height - (point.y - (camera.scrollY * light.scrollFactorY) * camera.zoom));
             renderer.setFloat3(program, lightName + 'color', light.r, light.g, light.b);
             renderer.setFloat1(program, lightName + 'intensity', light.intensity);
@@ -25748,6 +26293,11 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     drawStaticTilemapLayer: function (tilemap, camera, parentTransformMatrix)
     {
+        if (!this.active)
+        {
+            return;
+        }
+
         var normalTexture = tilemap.tileset.image.dataSource[0];
 
         if (normalTexture)
@@ -25776,6 +26326,11 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     drawEmitterManager: function (emitterManager, camera, parentTransformMatrix)
     {
+        if (!this.active)
+        {
+            return;
+        }
+
         var normalTexture = emitterManager.texture.dataSource[emitterManager.frame.sourceIndex];
 
         if (normalTexture)
@@ -25804,6 +26359,11 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     drawBlitter: function (blitter, camera, parentTransformMatrix)
     {
+        if (!this.active)
+        {
+            return;
+        }
+
         var normalTexture = blitter.texture.dataSource[blitter.frame.sourceIndex];
 
         if (normalTexture)
@@ -25832,6 +26392,11 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     batchSprite: function (sprite, camera, parentTransformMatrix)
     {
+        if (!this.active)
+        {
+            return;
+        }
+
         var normalTexture = sprite.texture.dataSource[sprite.frame.sourceIndex];
 
         if (normalTexture)
@@ -25860,6 +26425,11 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     batchMesh: function (mesh, camera, parentTransformMatrix)
     {
+        if (!this.active)
+        {
+            return;
+        }
+
         var normalTexture = mesh.texture.dataSource[mesh.frame.sourceIndex];
 
         if (normalTexture)
@@ -25889,6 +26459,11 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     batchBitmapText: function (bitmapText, camera, parentTransformMatrix)
     {
+        if (!this.active)
+        {
+            return;
+        }
+
         var normalTexture = bitmapText.texture.dataSource[bitmapText.frame.sourceIndex];
 
         if (normalTexture)
@@ -25945,6 +26520,11 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     batchText: function (text, camera, parentTransformMatrix)
     {
+        if (!this.active)
+        {
+            return;
+        }
+
         var normalTexture = text.texture.dataSource[text.frame.sourceIndex];
 
         if (normalTexture)
@@ -25973,6 +26553,11 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     batchDynamicTilemapLayer: function (tilemapLayer, camera, parentTransformMatrix)
     {
+        if (!this.active)
+        {
+            return;
+        }
+
         var normalTexture = tilemapLayer.tileset.image.dataSource[0];
 
         if (normalTexture)
@@ -26001,6 +26586,11 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     batchTileSprite: function (tileSprite, camera, parentTransformMatrix)
     {
+        if (!this.active)
+        {
+            return;
+        }
+
         var normalTexture = tileSprite.texture.dataSource[tileSprite.frame.sourceIndex];
 
         if (normalTexture)
@@ -26024,7 +26614,36 @@ module.exports = ForwardDiffuseLightPipeline;
 
 
 /***/ }),
-/* 148 */
+/* 149 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Compute a random integer between the `min` and `max` values, inclusive.
+ *
+ * @function Phaser.Math.Between
+ * @since 3.0.0
+ *
+ * @param {integer} min - The minimum value.
+ * @param {integer} max - The maximum value.
+ *
+ * @return {integer} The random integer.
+ */
+var Between = function (min, max)
+{
+    return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
+module.exports = Between;
+
+
+/***/ }),
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -26054,8 +26673,8 @@ module.exports = RadToDeg;
 
 
 /***/ }),
-/* 149 */,
-/* 150 */
+/* 151 */,
+/* 152 */
 /***/ (function(module, exports) {
 
 /**
@@ -26085,7 +26704,7 @@ module.exports = GetColor;
 
 
 /***/ }),
-/* 151 */
+/* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -26141,7 +26760,7 @@ module.exports = Random;
 
 
 /***/ }),
-/* 152 */
+/* 154 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -26179,7 +26798,7 @@ module.exports = Random;
 
 
 /***/ }),
-/* 153 */
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -26219,7 +26838,7 @@ module.exports = Random;
 
 
 /***/ }),
-/* 154 */
+/* 156 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -26279,7 +26898,7 @@ module.exports = GetPoints;
 
 
 /***/ }),
-/* 155 */
+/* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -26323,8 +26942,8 @@ module.exports = Random;
 
 
 /***/ }),
-/* 156 */,
-/* 157 */
+/* 158 */,
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -26336,7 +26955,7 @@ module.exports = Random;
 var Class = __webpack_require__(0);
 var EventEmitter = __webpack_require__(9);
 var TweenBuilder = __webpack_require__(72);
-var TWEEN_CONST = __webpack_require__(60);
+var TWEEN_CONST = __webpack_require__(61);
 
 /**
  * @classdesc
@@ -27193,7 +27812,7 @@ module.exports = Timeline;
 
 
 /***/ }),
-/* 158 */
+/* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -27203,15 +27822,15 @@ module.exports = Timeline;
  */
 
 var Clone = __webpack_require__(33);
-var Defaults = __webpack_require__(99);
+var Defaults = __webpack_require__(100);
 var GetAdvancedValue = __webpack_require__(10);
-var GetBoolean = __webpack_require__(61);
-var GetEaseFunction = __webpack_require__(62);
+var GetBoolean = __webpack_require__(62);
+var GetEaseFunction = __webpack_require__(63);
 var GetNewValue = __webpack_require__(73);
-var GetTargets = __webpack_require__(101);
-var GetTweens = __webpack_require__(160);
+var GetTargets = __webpack_require__(102);
+var GetTweens = __webpack_require__(162);
 var GetValue = __webpack_require__(4);
-var Timeline = __webpack_require__(157);
+var Timeline = __webpack_require__(159);
 var TweenBuilder = __webpack_require__(72);
 
 /**
@@ -27345,7 +27964,7 @@ module.exports = TimelineBuilder;
 
 
 /***/ }),
-/* 159 */
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -27354,15 +27973,15 @@ module.exports = TimelineBuilder;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Defaults = __webpack_require__(99);
+var Defaults = __webpack_require__(100);
 var GetAdvancedValue = __webpack_require__(10);
-var GetBoolean = __webpack_require__(61);
-var GetEaseFunction = __webpack_require__(62);
+var GetBoolean = __webpack_require__(62);
+var GetEaseFunction = __webpack_require__(63);
 var GetNewValue = __webpack_require__(73);
 var GetValue = __webpack_require__(4);
-var GetValueOp = __webpack_require__(100);
-var Tween = __webpack_require__(98);
-var TweenData = __webpack_require__(97);
+var GetValueOp = __webpack_require__(101);
+var Tween = __webpack_require__(99);
+var TweenData = __webpack_require__(98);
 
 /**
  * [description]
@@ -27473,7 +28092,7 @@ module.exports = NumberTweenBuilder;
 
 
 /***/ }),
-/* 160 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -27519,7 +28138,7 @@ module.exports = GetTweens;
 
 
 /***/ }),
-/* 161 */
+/* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -27577,7 +28196,7 @@ module.exports = GetProps;
 
 
 /***/ }),
-/* 162 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -27894,7 +28513,7 @@ module.exports = TimerEvent;
 
 
 /***/ }),
-/* 163 */
+/* 165 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -27915,7 +28534,7 @@ var Class = __webpack_require__(0);
  * @constructor
  * @since 3.8.0
  *
- * @param {Phaser.Game} game - A reference to the Game instance this plugin is running under.
+ * @param {Phaser.Plugins.PluginManager} pluginManager - A reference to the Plugin Manager.
  */
 var BasePlugin = new Class({
 
@@ -28073,7 +28692,8 @@ module.exports = BasePlugin;
 
 
 /***/ }),
-/* 164 */
+/* 166 */,
+/* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -28085,7 +28705,7 @@ module.exports = BasePlugin;
 var Class = __webpack_require__(0);
 var File = __webpack_require__(19);
 var GetFastValue = __webpack_require__(1);
-var GetURL = __webpack_require__(106);
+var GetURL = __webpack_require__(108);
 var IsPlainObject = __webpack_require__(8);
 
 /**
@@ -28269,7 +28889,7 @@ module.exports = HTML5AudioFile;
 
 
 /***/ }),
-/* 165 */
+/* 168 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -28281,9 +28901,9 @@ module.exports = HTML5AudioFile;
 var Class = __webpack_require__(0);
 var CONST = __webpack_require__(20);
 var File = __webpack_require__(19);
-var FileTypesManager = __webpack_require__(6);
+var FileTypesManager = __webpack_require__(7);
 var GetFastValue = __webpack_require__(1);
-var HTML5AudioFile = __webpack_require__(164);
+var HTML5AudioFile = __webpack_require__(167);
 var IsPlainObject = __webpack_require__(8);
 
 /**
@@ -28549,7 +29169,7 @@ module.exports = AudioFile;
 
 
 /***/ }),
-/* 166 */
+/* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -28558,7 +29178,7 @@ module.exports = AudioFile;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var MergeXHRSettings = __webpack_require__(105);
+var MergeXHRSettings = __webpack_require__(107);
 
 /**
  * Creates a new XMLHttpRequest (xhr) object based on the given File and XHRSettings
@@ -28617,7 +29237,1561 @@ module.exports = XHRLoader;
 
 
 /***/ }),
-/* 167 */
+/* 170 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+var GetFastValue = __webpack_require__(1);
+var ProcessKeyCombo = __webpack_require__(372);
+var ResetKeyCombo = __webpack_require__(370);
+
+/**
+ * @callback KeyboardKeydownCallback
+ *
+ * @param {KeyboardEvent} event - The Keyboard Event.
+ */
+
+/**
+ * @typedef {object} KeyComboConfig
+ *
+ * @property {boolean} [resetOnWrongKey=true] - If they press the wrong key do we reset the combo?
+ * @property {number} [maxKeyDelay=0] - The max delay in ms between each key press. Above this the combo is reset. 0 means disabled.
+ * @property {boolean} [resetOnMatch=false] - If previously matched and they press the first key of the combo again, will it reset?
+ * @property {boolean} [deleteOnMatch=false] - If the combo matches, will it delete itself?
+ */
+
+/**
+ * @classdesc
+ * A KeyCombo will listen for a specific string of keys from the Keyboard, and when it receives them
+ * it will emit a `keycombomatch` event from the Keyboard Manager.
+ *
+ * The keys to be listened for can be defined as:
+ *
+ * A string (i.e. 'ATARI')
+ * An array of either integers (key codes) or strings, or a mixture of both
+ * An array of objects (such as Key objects) with a public 'keyCode' property
+ *
+ * For example, to listen for the Konami code (up, up, up, down, down, down, left, left, left, right, right, right)
+ * you could pass the following array of key codes:
+ *
+ * ```javascript
+ * this.input.keyboard.createCombo([ 38, 38, 38, 40, 40, 40, 37, 37, 37, 39, 39, 39 ], { resetOnMatch: true });
+ *
+ * this.input.keyboard.on('keycombomatch', function (event) {
+ *     console.log('Konami Code entered!');
+ * });
+ * ```
+ *
+ * Or, to listen for the user entering the word PHASER:
+ *
+ * ```javascript
+ * this.input.keyboard.createCombo('PHASER');
+ * ```
+ *
+ * @class KeyCombo
+ * @memberOf Phaser.Input.Keyboard
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Input.Keyboard.KeyboardPlugin} keyboardPlugin - A reference to the Keyboard Plugin.
+ * @param {(string|integer[]|object[])} keys - The keys that comprise this combo.
+ * @param {KeyComboConfig} [config] - A Key Combo configuration object.
+ */
+var KeyCombo = new Class({
+
+    initialize:
+
+    function KeyCombo (keyboardPlugin, keys, config)
+    {
+        if (config === undefined) { config = {}; }
+
+        //  Can't have a zero or single length combo (string or array based)
+        if (keys.length < 2)
+        {
+            return false;
+        }
+
+        /**
+         * A reference to the Keyboard Manager
+         *
+         * @name Phaser.Input.Keyboard.KeyCombo#manager
+         * @type {Phaser.Input.Keyboard.KeyboardPlugin}
+         * @since 3.0.0
+         */
+        this.manager = keyboardPlugin;
+
+        /**
+         * A flag that controls if this Key Combo is actively processing keys or not.
+         *
+         * @name Phaser.Input.Keyboard.KeyCombo#enabled
+         * @type {boolean}
+         * @default true
+         * @since 3.0.0
+         */
+        this.enabled = true;
+
+        /**
+         * An array of the keycodes that comprise this combo.
+         *
+         * @name Phaser.Input.Keyboard.KeyCombo#keyCodes
+         * @type {array}
+         * @default []
+         * @since 3.0.0
+         */
+        this.keyCodes = [];
+
+        //  if 'keys' is a string we need to get the keycode of each character in it
+
+        for (var i = 0; i < keys.length; i++)
+        {
+            var char = keys[i];
+
+            if (typeof char === 'string')
+            {
+                this.keyCodes.push(char.toUpperCase().charCodeAt(0));
+            }
+            else if (typeof char === 'number')
+            {
+                this.keyCodes.push(char);
+            }
+            else if (char.hasOwnProperty('keyCode'))
+            {
+                this.keyCodes.push(char.keyCode);
+            }
+        }
+
+        /**
+         * The current keyCode the combo is waiting for.
+         *
+         * @name Phaser.Input.Keyboard.KeyCombo#current
+         * @type {integer}
+         * @since 3.0.0
+         */
+        this.current = this.keyCodes[0];
+
+        /**
+         * The current index of the key being waited for in the 'keys' string.
+         *
+         * @name Phaser.Input.Keyboard.KeyCombo#index
+         * @type {integer}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.index = 0;
+
+        /**
+         * The length of this combo (in keycodes)
+         *
+         * @name Phaser.Input.Keyboard.KeyCombo#size
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.size = this.keyCodes.length;
+
+        /**
+         * The time the previous key in the combo was matched.
+         *
+         * @name Phaser.Input.Keyboard.KeyCombo#timeLastMatched
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.timeLastMatched = 0;
+
+        /**
+         * Has this Key Combo been matched yet?
+         *
+         * @name Phaser.Input.Keyboard.KeyCombo#matched
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.matched = false;
+
+        /**
+         * The time the entire combo was matched.
+         *
+         * @name Phaser.Input.Keyboard.KeyCombo#timeMatched
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.timeMatched = 0;
+
+        /**
+         * If they press the wrong key do we reset the combo?
+         *
+         * @name Phaser.Input.Keyboard.KeyCombo#resetOnWrongKey
+         * @type {boolean}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.resetOnWrongKey = GetFastValue(config, 'resetOnWrongKey', true);
+
+        /**
+         * The max delay in ms between each key press. Above this the combo is reset. 0 means disabled.
+         *
+         * @name Phaser.Input.Keyboard.KeyCombo#maxKeyDelay
+         * @type {integer}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.maxKeyDelay = GetFastValue(config, 'maxKeyDelay', 0);
+
+        /**
+         * If previously matched and they press the first key of the combo again, will it reset?
+         *
+         * @name Phaser.Input.Keyboard.KeyCombo#resetOnMatch
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.resetOnMatch = GetFastValue(config, 'resetOnMatch', false);
+
+        /**
+         * If the combo matches, will it delete itself?
+         *
+         * @name Phaser.Input.Keyboard.KeyCombo#deleteOnMatch
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.deleteOnMatch = GetFastValue(config, 'deleteOnMatch', false);
+
+        var _this = this;
+
+        var onKeyDownHandler = function (event)
+        {
+            if (_this.matched || !_this.enabled)
+            {
+                return;
+            }
+
+            var matched = ProcessKeyCombo(event, _this);
+
+            if (matched)
+            {
+                _this.manager.emit('keycombomatch', _this, event);
+
+                if (_this.resetOnMatch)
+                {
+                    ResetKeyCombo(_this);
+                }
+                else if (_this.deleteOnMatch)
+                {
+                    _this.destroy();
+                }
+            }
+        };
+
+        /**
+         * The internal Key Down handler.
+         *
+         * @name Phaser.Input.Keyboard.KeyCombo#onKeyDown
+         * @private
+         * @type {KeyboardKeydownCallback}
+         * @since 3.0.0
+         */
+        this.onKeyDown = onKeyDownHandler;
+
+        this.manager.on('keydown', onKeyDownHandler);
+    },
+
+    /**
+     * How far complete is this combo? A value between 0 and 1.
+     *
+     * @name Phaser.Input.Keyboard.KeyCombo#progress
+     * @type {number}
+     * @readOnly
+     * @since 3.0.0
+     */
+    progress: {
+
+        get: function ()
+        {
+            return this.index / this.size;
+        }
+
+    },
+
+    /**
+     * Destroys this Key Combo and all of its references.
+     *
+     * @method Phaser.Input.Keyboard.KeyCombo#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.enabled = false;
+        this.keyCodes = [];
+
+        this.manager.off('keydown', this.onKeyDown);
+
+        this.manager = null;
+    }
+
+});
+
+module.exports = KeyCombo;
+
+
+/***/ }),
+/* 171 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+
+/**
+ * @classdesc
+ * A generic Key object which can be passed to the Process functions (and so on)
+ * keycode must be an integer
+ *
+ * @class Key
+ * @memberOf Phaser.Input.Keyboard
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {integer} keyCode - The keycode of this key.
+ */
+var Key = new Class({
+
+    initialize:
+
+    function Key (keyCode)
+    {
+        /**
+         * The keycode of this key.
+         *
+         * @name Phaser.Input.Keyboard.Key#keyCode
+         * @type {integer}
+         * @since 3.0.0
+         */
+        this.keyCode = keyCode;
+
+        /**
+         * The original DOM event.
+         *
+         * @name Phaser.Input.Keyboard.Key#originalEvent
+         * @type {KeyboardEvent}
+         * @since 3.0.0
+         */
+        this.originalEvent = undefined;
+
+        /**
+         * Should this Key prevent event propagation?
+         *
+         * @name Phaser.Input.Keyboard.Key#preventDefault
+         * @type {boolean}
+         * @default true
+         * @since 3.0.0
+         */
+        this.preventDefault = true;
+
+        /**
+         * Can this Key be processed?
+         *
+         * @name Phaser.Input.Keyboard.Key#enabled
+         * @type {boolean}
+         * @default true
+         * @since 3.0.0
+         */
+        this.enabled = true;
+
+        /**
+         * The "down" state of the key. This will remain `true` for as long as the keyboard thinks this key is held down.
+         *
+         * @name Phaser.Input.Keyboard.Key#isDown
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.isDown = false;
+
+        /**
+         * The "up" state of the key. This will remain `true` for as long as the keyboard thinks this key is up.
+         *
+         * @name Phaser.Input.Keyboard.Key#isUp
+         * @type {boolean}
+         * @default true
+         * @since 3.0.0
+         */
+        this.isUp = true;
+
+        /**
+         * The down state of the ALT key, if pressed at the same time as this key.
+         *
+         * @name Phaser.Input.Keyboard.Key#altKey
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.altKey = false;
+
+        /**
+         * The down state of the CTRL key, if pressed at the same time as this key.
+         *
+         * @name Phaser.Input.Keyboard.Key#ctrlKey
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.ctrlKey = false;
+
+        /**
+         * The down state of the SHIFT key, if pressed at the same time as this key.
+         *
+         * @name Phaser.Input.Keyboard.Key#shiftKey
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.shiftKey = false;
+
+        /**
+         * The location of the modifier key. 0 for standard (or unknown), 1 for left, 2 for right, 3 for numpad.
+         *
+         * @name Phaser.Input.Keyboard.Key#location
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.location = 0;
+
+        /**
+         * The timestamp when the key was last pressed down.
+         *
+         * @name Phaser.Input.Keyboard.Key#timeDown
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.timeDown = 0;
+
+        /**
+         * The number of milliseconds this key has been held down for.
+         * If the key is down this value holds the duration of that key press and is constantly updated.
+         * If the key is up it holds the duration of the previous down session.
+         *
+         * @name Phaser.Input.Keyboard.Key#duration
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.duration = 0;
+
+        /**
+         * The timestamp when the key was last released.
+         *
+         * @name Phaser.Input.Keyboard.Key#timeUp
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.timeUp = 0;
+
+        /**
+         * If a key is held down this holds down the number of times the key has 'repeated'.
+         *
+         * @name Phaser.Input.Keyboard.Key#repeats
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.repeats = 0;
+
+        /**
+         * True if the key has just been pressed (NOTE: requires to be reset, see justDown getter)
+         *
+         * @name Phaser.Input.Keyboard.Key#_justDown
+         * @type {boolean}
+         * @private
+         * @default false
+         * @since 3.0.0
+         */
+        this._justDown = false;
+
+        /**
+         * True if the key has just been pressed (NOTE: requires to be reset, see justDown getter)
+         *
+         * @name Phaser.Input.Keyboard.Key#_justUp
+         * @type {boolean}
+         * @private
+         * @default false
+         * @since 3.0.0
+         */
+        this._justUp = false;
+    },
+
+    /**
+     * Resets this Key object back to its default un-pressed state.
+     *
+     * @method Phaser.Input.Keyboard.Key.reset
+     * @since 3.6.0
+     * 
+     * @return {Phaser.Input.Keyboard.Key} This Key instance.
+     */
+    reset: function ()
+    {
+        this.preventDefault = true;
+        this.enabled = true;
+        this.isDown = false;
+        this.isUp = true;
+        this.altKey = false;
+        this.ctrlKey = false;
+        this.shiftKey = false;
+        this.timeDown = 0;
+        this.duration = 0;
+        this.timeUp = 0;
+        this.repeats = 0;
+        this._justDown = false;
+        this._justUp = false;
+
+        return this;
+    }
+
+});
+
+module.exports = Key;
+
+
+/***/ }),
+/* 172 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Axis = __webpack_require__(174);
+var Button = __webpack_require__(173);
+var Class = __webpack_require__(0);
+var EventEmitter = __webpack_require__(9);
+var Vector2 = __webpack_require__(6);
+
+/**
+ * @classdesc
+ * A single Gamepad.
+ *
+ * These are created, updated and managed by the Gamepad Plugin.
+ *
+ * @class Gamepad
+ * @extends Phaser.Events.EventEmitter
+ * @memberOf Phaser.Input.Gamepad
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Input.Gamepad.GamepadPlugin} manager - A reference to the Gamepad Plugin.
+ * @param {Pad} pad - The Gamepad object, as extracted from GamepadEvent.
+ */
+var Gamepad = new Class({
+
+    Extends: EventEmitter,
+
+    initialize:
+
+    function Gamepad (manager, pad)
+    {
+        EventEmitter.call(this);
+
+        /**
+         * A reference to the Gamepad Plugin.
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#manager
+         * @type {Phaser.Input.Gamepad.GamepadPlugin}
+         * @since 3.0.0
+         */
+        this.manager = manager;
+
+        /**
+         * A reference to the native Gamepad object that is connected to the browser.
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#pad
+         * @type {any}
+         * @since 3.10.0
+         */
+        this.pad = pad;
+
+        /**
+         * A string containing some information about the controller.
+         *
+         * This is not strictly specified, but in Firefox it will contain three pieces of information
+         * separated by dashes (-): two 4-digit hexadecimal strings containing the USB vendor and
+         * product id of the controller, and the name of the controller as provided by the driver.
+         * In Chrome it will contain the name of the controller as provided by the driver,
+         * followed by vendor and product 4-digit hexadecimal strings.
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#id
+         * @type {string}
+         * @since 3.0.0
+         */
+        this.id = pad.id;
+
+        /**
+         * An integer that is unique for each Gamepad currently connected to the system.
+         * This can be used to distinguish multiple controllers.
+         * Note that disconnecting a device and then connecting a new device may reuse the previous index.
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#index
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.index = pad.index;
+
+        var buttons = [];
+
+        for (var i = 0; i < pad.buttons.length; i++)
+        {
+            buttons.push(new Button(this, i));
+        }
+
+        /**
+         * An array of Gamepad Button objects, corresponding to the different buttons available on the Gamepad.
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#buttons
+         * @type {Phaser.Input.Gamepad.Button[]}
+         * @since 3.0.0
+         */
+        this.buttons = buttons;
+
+        var axes = [];
+
+        for (i = 0; i < pad.axes.length; i++)
+        {
+            axes.push(new Axis(this, i));
+        }
+
+        /**
+         * An array of Gamepad Axis objects, corresponding to the different axes available on the Gamepad, if any.
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#axes
+         * @type {Phaser.Input.Gamepad.Axis[]}
+         * @since 3.0.0
+         */
+        this.axes = axes;
+
+        /**
+         * The Gamepad's Haptic Actuator (Vibration / Rumble support).
+         * This is highly experimental and only set if both present on the device,
+         * and exposed by both the hardware and browser.
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#vibration
+         * @type {GamepadHapticActuator}
+         * @since 3.10.0
+         */
+        this.vibration = pad.vibrationActuator;
+
+        // https://w3c.github.io/gamepad/#remapping
+
+        var _noButton = { value: 0, pressed: false };
+
+        /**
+         * A reference to the Left Button in the Left Cluster.
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#_LCLeft
+         * @type {Phaser.Input.Gamepad.Button}
+         * @private
+         * @since 3.10.0
+         */
+        this._LCLeft = (buttons[14]) ? buttons[14] : _noButton;
+
+        /**
+         * A reference to the Right Button in the Left Cluster.
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#_LCRight
+         * @type {Phaser.Input.Gamepad.Button}
+         * @private
+         * @since 3.10.0
+         */
+        this._LCRight = (buttons[15]) ? buttons[15] : _noButton;
+
+        /**
+         * A reference to the Top Button in the Left Cluster.
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#_LCTop
+         * @type {Phaser.Input.Gamepad.Button}
+         * @private
+         * @since 3.10.0
+         */
+        this._LCTop = (buttons[12]) ? buttons[12] : _noButton;
+
+        /**
+         * A reference to the Bottom Button in the Left Cluster.
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#_LCBottom
+         * @type {Phaser.Input.Gamepad.Button}
+         * @private
+         * @since 3.10.0
+         */
+        this._LCBottom = (buttons[13]) ? buttons[13] : _noButton;
+
+        /**
+         * A reference to the Left Button in the Right Cluster.
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#_RCLeft
+         * @type {Phaser.Input.Gamepad.Button}
+         * @private
+         * @since 3.10.0
+         */
+        this._RCLeft = (buttons[2]) ? buttons[2] : _noButton;
+
+        /**
+         * A reference to the Right Button in the Right Cluster.
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#_RCRight
+         * @type {Phaser.Input.Gamepad.Button}
+         * @private
+         * @since 3.10.0
+         */
+        this._RCRight = (buttons[1]) ? buttons[1] : _noButton;
+
+        /**
+         * A reference to the Top Button in the Right Cluster.
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#_RCTop
+         * @type {Phaser.Input.Gamepad.Button}
+         * @private
+         * @since 3.10.0
+         */
+        this._RCTop = (buttons[3]) ? buttons[3] : _noButton;
+
+        /**
+         * A reference to the Bottom Button in the Right Cluster.
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#_RCBottom
+         * @type {Phaser.Input.Gamepad.Button}
+         * @private
+         * @since 3.10.0
+         */
+        this._RCBottom = (buttons[0]) ? buttons[0] : _noButton;
+
+        /**
+         * A reference to the Top Left Front Button (L1 Shoulder Button)
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#_FBLeftTop
+         * @type {Phaser.Input.Gamepad.Button}
+         * @private
+         * @since 3.10.0
+         */
+        this._FBLeftTop = (buttons[4]) ? buttons[4] : _noButton;
+
+        /**
+         * A reference to the Bottom Left Front Button (L2 Shoulder Button)
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#_FBLeftBottom
+         * @type {Phaser.Input.Gamepad.Button}
+         * @private
+         * @since 3.10.0
+         */
+        this._FBLeftBottom = (buttons[6]) ? buttons[6] : _noButton;
+
+        /**
+         * A reference to the Top Right Front Button (R1 Shoulder Button)
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#_FBRightTop
+         * @type {Phaser.Input.Gamepad.Button}
+         * @private
+         * @since 3.10.0
+         */
+        this._FBRightTop = (buttons[5]) ? buttons[5] : _noButton;
+
+        /**
+         * A reference to the Bottom Right Front Button (R2 Shoulder Button)
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#_FBRightBottom
+         * @type {Phaser.Input.Gamepad.Button}
+         * @private
+         * @since 3.10.0
+         */
+        this._FBRightBottom = (buttons[7]) ? buttons[7] : _noButton;
+
+        var _noAxis = { value: 0 };
+
+        /**
+         * A reference to the Horizontal Axis for the Left Stick.
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#_HAxisLeft
+         * @type {Phaser.Input.Gamepad.Button}
+         * @private
+         * @since 3.10.0
+         */
+        this._HAxisLeft = (axes[0]) ? axes[0] : _noAxis;
+
+        /**
+         * A reference to the Vertical Axis for the Left Stick.
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#_VAxisLeft
+         * @type {Phaser.Input.Gamepad.Button}
+         * @private
+         * @since 3.10.0
+         */
+        this._VAxisLeft = (axes[1]) ? axes[1] : _noAxis;
+
+        /**
+         * A reference to the Horizontal Axis for the Right Stick.
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#_HAxisRight
+         * @type {Phaser.Input.Gamepad.Button}
+         * @private
+         * @since 3.10.0
+         */
+        this._HAxisRight = (axes[2]) ? axes[2] : _noAxis;
+
+        /**
+         * A reference to the Vertical Axis for the Right Stick.
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#_VAxisRight
+         * @type {Phaser.Input.Gamepad.Button}
+         * @private
+         * @since 3.10.0
+         */
+        this._VAxisRight = (axes[3]) ? axes[3] : _noAxis;
+
+        /**
+         * A Vector2 containing the most recent values from the Gamepad's left axis stick.
+         * This is updated automatically as part of the Gamepad.update cycle.
+         * The H Axis is mapped to the `Vector2.x` property, and the V Axis to the `Vector2.y` property.
+         * The values are based on the Axis thresholds.
+         * If the Gamepad does not have a left axis stick, the values will always be zero.
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#leftStick
+         * @type {Phaser.Math.Vector2}
+         * @since 3.10.0
+         */
+        this.leftStick = new Vector2();
+
+        /**
+         * A Vector2 containing the most recent values from the Gamepad's right axis stick.
+         * This is updated automatically as part of the Gamepad.update cycle.
+         * The H Axis is mapped to the `Vector2.x` property, and the V Axis to the `Vector2.y` property.
+         * The values are based on the Axis thresholds.
+         * If the Gamepad does not have a right axis stick, the values will always be zero.
+         *
+         * @name Phaser.Input.Gamepad.Gamepad#rightStick
+         * @type {Phaser.Math.Vector2}
+         * @since 3.10.0
+         */
+        this.rightStick = new Vector2();
+    },
+
+    /**
+     * Gets the total number of axis this Gamepad claims to support.
+     *
+     * @method Phaser.Input.Gamepad.Gamepad#getAxisTotal
+     * @since 3.10.0
+     *
+     * @return {integer} The total number of axes this Gamepad claims to support.
+     */
+    getAxisTotal: function ()
+    {
+        return this.axes.length;
+    },
+
+    /**
+     * Gets the value of an axis based on the given index.
+     * The index must be valid within the range of axes supported by this Gamepad.
+     * The return value will be a float between 0 and 1.
+     *
+     * @method Phaser.Input.Gamepad.Gamepad#getAxisValue
+     * @since 3.10.0
+     *
+     * @param {integer} index - The index of the axes to get the value for.
+     *
+     * @return {number} The value of the axis, between 0 and 1.
+     */
+    getAxisValue: function (index)
+    {
+        return this.axes[index].getValue();
+    },
+
+    /**
+     * Sets the threshold value of all axis on this Gamepad.
+     * The value is a float between 0 and 1 and is the amount below which the axis is considered as not having been moved.
+     *
+     * @method Phaser.Input.Gamepad.Gamepad#setAxisThreshold
+     * @since 3.10.0
+     *
+     * @param {number} value - A value between 0 and 1.
+     */
+    setAxisThreshold: function (value)
+    {
+        for (var i = 0; i < this.axes.length; i++)
+        {
+            this.axes[i].threshold = value;
+        }
+    },
+
+    /**
+     * Gets the total number of buttons this Gamepad claims to have.
+     *
+     * @method Phaser.Input.Gamepad.Gamepad#getButtonTotal
+     * @since 3.10.0
+     *
+     * @return {integer} The total number of buttons this Gamepad claims to have.
+     */
+    getButtonTotal: function ()
+    {
+        return this.buttons.length;
+    },
+
+    /**
+     * Gets the value of a button based on the given index.
+     * The index must be valid within the range of buttons supported by this Gamepad.
+     *
+     * The return value will be either 0 or 1 for an analogue button, or a float between 0 and 1
+     * for a pressure-sensitive digital button, such as the shoulder buttons on a Dual Shock.
+     *
+     * @method Phaser.Input.Gamepad.Gamepad#getButtonValue
+     * @since 3.10.0
+     *
+     * @param {integer} index - The index of the button to get the value for.
+     *
+     * @return {number} The value of the button, between 0 and 1.
+     */
+    getButtonValue: function (index)
+    {
+        return this.buttons[index].value;
+    },
+
+    /**
+     * Returns if the button is pressed down or not.
+     * The index must be valid within the range of buttons supported by this Gamepad.
+     *
+     * @method Phaser.Input.Gamepad.Gamepad#isButtonDown
+     * @since 3.10.0
+     *
+     * @param {integer} index - The index of the button to get the value for.
+     *
+     * @return {boolean} `true` if the button is considered as being pressed down, otherwise `false`.
+     */
+    isButtonDown: function (index)
+    {
+        return this.buttons[index].pressed;
+    },
+
+    /**
+     * Internal update handler for this Gamepad.
+     * Called automatically by the Gamepad Manager as part of its update.
+     *
+     * @method Phaser.Input.Gamepad.Gamepad#update
+     * @private
+     * @since 3.0.0
+     */
+    update: function (pad)
+    {
+        var i;
+
+        //  Sync the button values
+
+        var localButtons = this.buttons;
+        var gamepadButtons = pad.buttons;
+
+        var len = localButtons.length;
+
+        for (i = 0; i < len; i++)
+        {
+            localButtons[i].update(gamepadButtons[i].value);
+        }
+
+        //  Sync the axis values
+
+        var localAxes = this.axes;
+        var gamepadAxes = pad.axes;
+
+        len = localAxes.length;
+
+        for (i = 0; i < len; i++)
+        {
+            localAxes[i].update(gamepadAxes[i]);
+        }
+
+        if (len >= 2)
+        {
+            this.leftStick.set(localAxes[0].getValue(), localAxes[1].getValue());
+
+            if (len >= 4)
+            {
+                this.rightStick.set(localAxes[2].getValue(), localAxes[3].getValue());
+            }
+        }
+    },
+
+    /**
+     * Destroys this Gamepad instance, its buttons and axes, and releases external references it holds.
+     *
+     * @method Phaser.Input.Gamepad.Gamepad#destroy
+     * @since 3.10.0
+     */
+    destroy: function ()
+    {
+        this.removeAllListeners();
+
+        this.manager = null;
+        this.pad = null;
+
+        var i;
+
+        for (i = 0; i < this.buttons.length; i++)
+        {
+            this.buttons[i].destroy();
+        }
+
+        for (i = 0; i < this.axes.length; i++)
+        {
+            this.axes[i].destroy();
+        }
+
+        this.buttons = [];
+        this.axes = [];
+    },
+
+    /**
+     * Is this Gamepad currently connected or not?
+     *
+     * @name Phaser.Input.Gamepad.Gamepad#connected
+     * @type {boolean}
+     * @default true
+     * @since 3.0.0
+     */
+    connected: {
+
+        get: function ()
+        {
+            return this.pad.connected;
+        }
+
+    },
+
+    /**
+     * A timestamp containing the most recent time this Gamepad was updated.
+     *
+     * @name Phaser.Input.Gamepad.Gamepad#timestamp
+     * @type {number}
+     * @since 3.0.0
+     */
+    timestamp: {
+
+        get: function ()
+        {
+            return this.pad.timestamp;
+        }
+
+    },
+
+    /**
+     * Is the Gamepad's Left button being pressed?
+     * If the Gamepad doesn't have this button it will always return false.
+     * This is the d-pad left button under standard Gamepad mapping.
+     *
+     * @name Phaser.Input.Gamepad.Gamepad#left
+     * @type {boolean}
+     * @since 3.10.0
+     */
+    left: {
+
+        get: function ()
+        {
+            return this._LCLeft.pressed;
+        }
+
+    },
+
+    /**
+     * Is the Gamepad's Right button being pressed?
+     * If the Gamepad doesn't have this button it will always return false.
+     * This is the d-pad right button under standard Gamepad mapping.
+     *
+     * @name Phaser.Input.Gamepad.Gamepad#right
+     * @type {boolean}
+     * @since 3.10.0
+     */
+    right: {
+
+        get: function ()
+        {
+            return this._LCRight.pressed;
+        }
+
+    },
+
+    /**
+     * Is the Gamepad's Up button being pressed?
+     * If the Gamepad doesn't have this button it will always return false.
+     * This is the d-pad up button under standard Gamepad mapping.
+     *
+     * @name Phaser.Input.Gamepad.Gamepad#up
+     * @type {boolean}
+     * @since 3.10.0
+     */
+    up: {
+
+        get: function ()
+        {
+            return this._LCTop.pressed;
+        }
+
+    },
+
+    /**
+     * Is the Gamepad's Down button being pressed?
+     * If the Gamepad doesn't have this button it will always return false.
+     * This is the d-pad down button under standard Gamepad mapping.
+     *
+     * @name Phaser.Input.Gamepad.Gamepad#down
+     * @type {boolean}
+     * @since 3.10.0
+     */
+    down: {
+
+        get: function ()
+        {
+            return this._LCBottom.pressed;
+        }
+
+    },
+
+    /**
+     * Is the Gamepad's bottom button in the right button cluster being pressed?
+     * If the Gamepad doesn't have this button it will always return false.
+     * On a Dual Shock controller it's the X button.
+     * On an XBox controller it's the A button.
+     *
+     * @name Phaser.Input.Gamepad.Gamepad#A
+     * @type {boolean}
+     * @since 3.10.0
+     */
+    A: {
+
+        get: function ()
+        {
+            return this._RCBottom.pressed;
+        }
+
+    },
+
+    /**
+     * Is the Gamepad's top button in the right button cluster being pressed?
+     * If the Gamepad doesn't have this button it will always return false.
+     * On a Dual Shock controller it's the Triangle button.
+     * On an XBox controller it's the Y button.
+     *
+     * @name Phaser.Input.Gamepad.Gamepad#Y
+     * @type {boolean}
+     * @since 3.10.0
+     */
+    Y: {
+
+        get: function ()
+        {
+            return this._RCTop.pressed;
+        }
+
+    },
+
+    /**
+     * Is the Gamepad's left button in the right button cluster being pressed?
+     * If the Gamepad doesn't have this button it will always return false.
+     * On a Dual Shock controller it's the Square button.
+     * On an XBox controller it's the X button.
+     *
+     * @name Phaser.Input.Gamepad.Gamepad#X
+     * @type {boolean}
+     * @since 3.10.0
+     */
+    X: {
+
+        get: function ()
+        {
+            return this._RCLeft.pressed;
+        }
+
+    },
+
+    /**
+     * Is the Gamepad's right button in the right button cluster being pressed?
+     * If the Gamepad doesn't have this button it will always return false.
+     * On a Dual Shock controller it's the Circle button.
+     * On an XBox controller it's the B button.
+     *
+     * @name Phaser.Input.Gamepad.Gamepad#B
+     * @type {boolean}
+     * @since 3.10.0
+     */
+    B: {
+
+        get: function ()
+        {
+            return this._RCRight.pressed;
+        }
+
+    },
+
+    /**
+     * Returns the value of the Gamepad's top left shoulder button.
+     * If the Gamepad doesn't have this button it will always return zero.
+     * The value is a float between 0 and 1, corresponding to how depressed the button is.
+     * On a Dual Shock controller it's the L1 button.
+     * On an XBox controller it's the LB button.
+     *
+     * @name Phaser.Input.Gamepad.Gamepad#L1
+     * @type {number}
+     * @since 3.10.0
+     */
+    L1: {
+
+        get: function ()
+        {
+            return this._FBLeftTop.value;
+        }
+
+    },
+
+    /**
+     * Returns the value of the Gamepad's bottom left shoulder button.
+     * If the Gamepad doesn't have this button it will always return zero.
+     * The value is a float between 0 and 1, corresponding to how depressed the button is.
+     * On a Dual Shock controller it's the L2 button.
+     * On an XBox controller it's the LT button.
+     *
+     * @name Phaser.Input.Gamepad.Gamepad#L2
+     * @type {number}
+     * @since 3.10.0
+     */
+    L2: {
+
+        get: function ()
+        {
+            return this._FBLeftBottom.value;
+        }
+
+    },
+
+    /**
+     * Returns the value of the Gamepad's top right shoulder button.
+     * If the Gamepad doesn't have this button it will always return zero.
+     * The value is a float between 0 and 1, corresponding to how depressed the button is.
+     * On a Dual Shock controller it's the R1 button.
+     * On an XBox controller it's the RB button.
+     *
+     * @name Phaser.Input.Gamepad.Gamepad#R1
+     * @type {number}
+     * @since 3.10.0
+     */
+    R1: {
+
+        get: function ()
+        {
+            return this._FBRightTop.value;
+        }
+
+    },
+
+    /**
+     * Returns the value of the Gamepad's bottom right shoulder button.
+     * If the Gamepad doesn't have this button it will always return zero.
+     * The value is a float between 0 and 1, corresponding to how depressed the button is.
+     * On a Dual Shock controller it's the R2 button.
+     * On an XBox controller it's the RT button.
+     *
+     * @name Phaser.Input.Gamepad.Gamepad#R2
+     * @type {number}
+     * @since 3.10.0
+     */
+    R2: {
+
+        get: function ()
+        {
+            return this._FBRightBottom.value;
+        }
+
+    }
+
+});
+
+module.exports = Gamepad;
+
+
+/***/ }),
+/* 173 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+
+/**
+ * @classdesc
+ * Contains information about a specific button on a Gamepad.
+ * Button objects are created automatically by the Gamepad as they are needed.
+ *
+ * @class Button
+ * @memberOf Phaser.Input.Gamepad
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Input.Gamepad.Gamepad} pad - A reference to the Gamepad that this Button belongs to.
+ * @param {integer} index - The index of this Button.
+ */
+var Button = new Class({
+
+    initialize:
+
+    function Button (pad, index)
+    {
+        /**
+         * A reference to the Gamepad that this Button belongs to.
+         *
+         * @name Phaser.Input.Gamepad.Button#pad
+         * @type {Phaser.Input.Gamepad.Gamepad}
+         * @since 3.0.0
+         */
+        this.pad = pad;
+
+        /**
+         * An event emitter to use to emit the button events.
+         *
+         * @name Phaser.Input.Gamepad.Button#events
+         * @type {Phaser.Events.EventEmitter}
+         * @since 3.0.0
+         */
+        this.events = pad.manager;
+
+        /**
+         * The index of this Button.
+         *
+         * @name Phaser.Input.Gamepad.Button#index
+         * @type {integer}
+         * @since 3.0.0
+         */
+        this.index = index;
+
+        /**
+         * Between 0 and 1.
+         *
+         * @name Phaser.Input.Gamepad.Button#value
+         * @type {float}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.value = 0;
+
+        /**
+         * Can be set for analogue buttons to enable a 'pressure' threshold,
+         * before a button is considered as being 'pressed'.
+         *
+         * @name Phaser.Input.Gamepad.Button#threshold
+         * @type {float}
+         * @default 1
+         * @since 3.0.0
+         */
+        this.threshold = 1;
+
+        /**
+         * Is the Button being pressed down or not?
+         *
+         * @name Phaser.Input.Gamepad.Button#pressed
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.pressed = false;
+    },
+
+    /**
+     * Internal update handler for this Button.
+     * Called automatically by the Gamepad as part of its update.
+     *
+     * @method Phaser.Input.Gamepad.Button#update
+     * @private
+     * @since 3.0.0
+     *
+     * @param {number} value - The GamepadButton value.
+     */
+    update: function (value)
+    {
+        this.value = value;
+
+        var pad = this.pad;
+        var index = this.index;
+
+        if (value >= this.threshold)
+        {
+            if (!this.pressed)
+            {
+                this.pressed = true;
+                this.events.emit('down', pad, this, value);
+                this.pad.emit('down', index, value, this);
+            }
+        }
+        else if (this.pressed)
+        {
+            this.pressed = false;
+            this.events.emit('up', pad, this, value);
+            this.pad.emit('up', index, value, this);
+        }
+    },
+
+    /**
+     * Destroys this Button instance and releases external references it holds.
+     *
+     * @method Phaser.Input.Gamepad.Button#destroy
+     * @since 3.10.0
+     */
+    destroy: function ()
+    {
+        this.pad = null;
+        this.events = null;
+    }
+
+});
+
+module.exports = Button;
+
+
+/***/ }),
+/* 174 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+
+/**
+ * @classdesc
+ * Contains information about a specific Gamepad Axis.
+ * Axis objects are created automatically by the Gamepad as they are needed.
+ *
+ * @class Axis
+ * @memberOf Phaser.Input.Gamepad
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Input.Gamepad.Gamepad} pad - A reference to the Gamepad that this Axis belongs to.
+ * @param {integer} index - The index of this Axis.
+ */
+var Axis = new Class({
+
+    initialize:
+
+    function Axis (pad, index)
+    {
+        /**
+         * A reference to the Gamepad that this Axis belongs to.
+         *
+         * @name Phaser.Input.Gamepad.Axis#pad
+         * @type {Phaser.Input.Gamepad.Gamepad}
+         * @since 3.0.0
+         */
+        this.pad = pad;
+
+        /**
+         * An event emitter to use to emit the axis events.
+         *
+         * @name Phaser.Input.Gamepad.Axis#events
+         * @type {Phaser.Events.EventEmitter}
+         * @since 3.0.0
+         */
+        this.events = pad.events;
+
+        /**
+         * The index of this Axis.
+         *
+         * @name Phaser.Input.Gamepad.Axis#index
+         * @type {integer}
+         * @since 3.0.0
+         */
+        this.index = index;
+
+        /**
+         * The raw axis value, between -1 and 1 with 0 being dead center.
+         * Use the method `getValue` to get a normalized value with the threshold applied.
+         *
+         * @name Phaser.Input.Gamepad.Axis#value
+         * @type {float}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.value = 0;
+
+        /**
+         * Movement tolerance threshold below which axis values are ignored in `getValue`.
+         *
+         * @name Phaser.Input.Gamepad.Axis#threshold
+         * @type {float}
+         * @default 0.1
+         * @since 3.0.0
+         */
+        this.threshold = 0.1;
+    },
+
+    /**
+     * Internal update handler for this Axis.
+     * Called automatically by the Gamepad as part of its update.
+     *
+     * @method Phaser.Input.Gamepad.Axis#update
+     * @private
+     * @since 3.0.0
+     *
+     * @param {float} value - The value of the axis movement.
+     */
+    update: function (value)
+    {
+        this.value = value;
+    },
+
+    /**
+     * Applies the `threshold` value to the axis and returns it.
+     *
+     * @method Phaser.Input.Gamepad.Axis#getValue
+     * @since 3.0.0
+     *
+     * @return {float} The axis value, adjusted for the movement threshold.
+     */
+    getValue: function ()
+    {
+        return (Math.abs(this.value) < this.threshold) ? 0 : this.value;
+    },
+
+    /**
+     * Destroys this Axis instance and releases external references it holds.
+     *
+     * @method Phaser.Input.Gamepad.Axis#destroy
+     * @since 3.10.0
+     */
+    destroy: function ()
+    {
+        this.pad = null;
+        this.events = null;
+    }
+
+});
+
+module.exports = Axis;
+
+
+/***/ }),
+/* 175 */
 /***/ (function(module, exports) {
 
 /**
@@ -28629,45 +30803,50 @@ module.exports = XHRLoader;
 /**
  * @callback HitAreaCallback
  *
- * @param {*} hitArea - [description]
- * @param {number} x - [description]
- * @param {number} y - [description]
- * @param {Phaser.GameObjects.GameObject} gameObject - [description]
+ * @param {any} hitArea - The hit area object.
+ * @param {number} x - The translated x coordinate of the hit test event.
+ * @param {number} y - The translated y coordinate of the hit test event.
+ * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that invoked the hit test.
  *
- * @return {boolean} [description]
+ * @return {boolean} `true` if the coordinates fall within the space of the hitArea, otherwise `false`.
  */
 
 /**
  * @typedef {object} Phaser.Input.InteractiveObject
  *
- * @property {Phaser.GameObjects.GameObject} gameObject - [description]
- * @property {boolean} enabled - [description]
- * @property {boolean} draggable - [description]
- * @property {boolean} dropZone - [description]
- * @property {?Phaser.GameObjects.GameObject} target - [description]
- * @property {Phaser.Cameras.Scene2D.Camera} camera - [description]
- * @property {*} hitArea - [description]
- * @property {HitAreaCallback} hitAreaCallback - [description]
- * @property {number} localX - [description]
- * @property {number} localY - [description]
- * @property {(0|1|2)} dragState - [description]
- * @property {number} dragStartX - [description]
- * @property {number} dragStartY - [description]
- * @property {number} dragX - [description]
- * @property {number} dragY - [description]
+ * @property {Phaser.GameObjects.GameObject} gameObject - The Game Object to which this Interactive Object is bound.
+ * @property {boolean} enabled - Is this Interactive Object currently enabled for input events?
+ * @property {boolean} draggable - Is this Interactive Object draggable? Enable with `InputPlugin.setDraggable`.
+ * @property {boolean} dropZone - Is this Interactive Object a drag-targets drop zone? Set when the object is created.
+ * @property {(boolean|string)} cursor - Should this Interactive Object change the cursor (via css) when over? (desktop only)
+ * @property {?Phaser.GameObjects.GameObject} target - An optional drop target for a draggable Interactive Object.
+ * @property {Phaser.Cameras.Scene2D.Camera} camera - The most recent Camera to be tested against this Interactive Object.
+ * @property {any} hitArea - The hit area for this Interactive Object. Typically a geometry shape, like a Rectangle or Circle.
+ * @property {HitAreaCallback} hitAreaCallback - The 'contains' check callback that the hit area shape will use for all hit tests.
+ * @property {number} localX - The x coordinate that the Pointer interacted with this object on, relative to the Game Object's top-left position.
+ * @property {number} localY - The y coordinate that the Pointer interacted with this object on, relative to the Game Object's top-left position.
+ * @property {(0|1|2)} dragState - The current drag state of this Interactive Object. 0 = Not being dragged, 1 = being checked for drag, or 2 = being actively dragged.
+ * @property {number} dragStartX - The x coordinate that the Pointer started dragging this Interactive Object from.
+ * @property {number} dragStartY - The y coordinate that the Pointer started dragging this Interactive Object from.
+ * @property {number} dragX - The x coordinate that this Interactive Object is currently being dragged to.
+ * @property {number} dragY - The y coordinate that this Interactive Object is currently being dragged to.
  */
 
 /**
- * [description]
+ * Creates a new Interactive Object.
+ * 
+ * This is called automatically by the Input Manager when you enable a Game Object for input.
+ *
+ * The resulting Interactive Object is mapped to the Game Object's `input` property.
  *
  * @function Phaser.Input.CreateInteractiveObject
  * @since 3.0.0
  *
- * @param {Phaser.GameObjects.GameObject} gameObject - [description]
- * @param {*} hitArea - [description]
- * @param {HitAreaCallback} hitAreaCallback - [description]
+ * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to which this Interactive Object is bound.
+ * @param {any} hitArea - The hit area for this Interactive Object. Typically a geometry shape, like a Rectangle or Circle.
+ * @param {HitAreaCallback} hitAreaCallback - The 'contains' check callback that the hit area shape will use for all hit tests.
  *
- * @return {Phaser.Input.InteractiveObject} [description]
+ * @return {Phaser.Input.InteractiveObject} The new Interactive Object.
  */
 var CreateInteractiveObject = function (gameObject, hitArea, hitAreaCallback)
 {
@@ -28678,6 +30857,7 @@ var CreateInteractiveObject = function (gameObject, hitArea, hitAreaCallback)
         enabled: true,
         draggable: false,
         dropZone: false,
+        cursor: false,
 
         target: null,
 
@@ -28707,7 +30887,7 @@ module.exports = CreateInteractiveObject;
 
 
 /***/ }),
-/* 168 */
+/* 176 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -28716,7 +30896,7 @@ module.exports = CreateInteractiveObject;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Commands = __webpack_require__(117);
+var Commands = __webpack_require__(119);
 var GameObject = __webpack_require__(2);
 
 /**
@@ -28733,7 +30913,7 @@ var GameObject = __webpack_require__(2);
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
- * @param {CanvasRenderingContext2D} renderTargetCtx - [description]
+ * @param {CanvasRenderingContext2D} [renderTargetCtx] - The target rendering context.
  * @param {boolean} allowClip - [description]
  */
 var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix, renderTargetCtx, allowClip)
@@ -28979,7 +31159,7 @@ module.exports = GraphicsCanvasRenderer;
 
 
 /***/ }),
-/* 169 */
+/* 177 */
 /***/ (function(module, exports) {
 
 /**
@@ -29011,7 +31191,7 @@ module.exports = Circumference;
 
 
 /***/ }),
-/* 170 */
+/* 178 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29020,9 +31200,9 @@ module.exports = Circumference;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Circumference = __webpack_require__(169);
-var CircumferencePoint = __webpack_require__(110);
-var FromPercent = __webpack_require__(64);
+var Circumference = __webpack_require__(177);
+var CircumferencePoint = __webpack_require__(113);
+var FromPercent = __webpack_require__(65);
 var MATH_CONST = __webpack_require__(16);
 
 /**
@@ -29065,7 +31245,7 @@ module.exports = GetPoints;
 
 
 /***/ }),
-/* 171 */
+/* 179 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29074,8 +31254,8 @@ module.exports = GetPoints;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CircumferencePoint = __webpack_require__(110);
-var FromPercent = __webpack_require__(64);
+var CircumferencePoint = __webpack_require__(113);
+var FromPercent = __webpack_require__(65);
 var MATH_CONST = __webpack_require__(16);
 var Point = __webpack_require__(5);
 
@@ -29108,7 +31288,7 @@ module.exports = GetPoint;
 
 
 /***/ }),
-/* 172 */
+/* 180 */
 /***/ (function(module, exports) {
 
 /**
@@ -29226,7 +31406,7 @@ module.exports = QuickSelect;
 
 
 /***/ }),
-/* 173 */
+/* 181 */
 /***/ (function(module, exports) {
 
 /**
@@ -29272,7 +31452,7 @@ module.exports = TransposeMatrix;
 
 
 /***/ }),
-/* 174 */
+/* 182 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29287,20 +31467,20 @@ module.exports = TransposeMatrix;
 
 module.exports = {
 
-    AtlasXML: __webpack_require__(501),
-    Canvas: __webpack_require__(500),
-    Image: __webpack_require__(499),
-    JSONArray: __webpack_require__(498),
-    JSONHash: __webpack_require__(497),
-    SpriteSheet: __webpack_require__(496),
-    SpriteSheetFromAtlas: __webpack_require__(495),
-    UnityYAML: __webpack_require__(494)
+    AtlasXML: __webpack_require__(514),
+    Canvas: __webpack_require__(513),
+    Image: __webpack_require__(512),
+    JSONArray: __webpack_require__(511),
+    JSONHash: __webpack_require__(510),
+    SpriteSheet: __webpack_require__(509),
+    SpriteSheetFromAtlas: __webpack_require__(508),
+    UnityYAML: __webpack_require__(507)
 
 };
 
 
 /***/ }),
-/* 175 */
+/* 183 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29311,8 +31491,8 @@ module.exports = {
 
 var CanvasPool = __webpack_require__(22);
 var Class = __webpack_require__(0);
-var IsSizePowerOfTwo = __webpack_require__(84);
-var ScaleModes = __webpack_require__(58);
+var IsSizePowerOfTwo = __webpack_require__(85);
+var ScaleModes = __webpack_require__(59);
 
 /**
  * @classdesc
@@ -29539,7 +31719,7 @@ module.exports = TextureSource;
 
 
 /***/ }),
-/* 176 */
+/* 184 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29549,15 +31729,15 @@ module.exports = TextureSource;
  */
 
 var CanvasPool = __webpack_require__(22);
-var CanvasTexture = __webpack_require__(502);
+var CanvasTexture = __webpack_require__(515);
 var Class = __webpack_require__(0);
 var Color = __webpack_require__(30);
 var CONST = __webpack_require__(20);
 var EventEmitter = __webpack_require__(9);
 var GenerateTexture = __webpack_require__(276);
 var GetValue = __webpack_require__(4);
-var Parser = __webpack_require__(174);
-var Texture = __webpack_require__(114);
+var Parser = __webpack_require__(182);
+var Texture = __webpack_require__(117);
 
 /**
  * @callback EachTextureCallback
@@ -30405,6 +32585,48 @@ var TextureManager = new Class({
     },
 
     /**
+     * Given a Texture and an `x` and `y` coordinate this method will return a value between 0 and 255
+     * corresponding to the alpha value of the pixel at that location in the Texture. If the coordinate
+     * is out of bounds it will return null.
+     *
+     * @method Phaser.Textures.TextureManager#getPixelAlpha
+     * @since 3.10.0
+     *
+     * @param {integer} x - The x coordinate of the pixel within the Texture.
+     * @param {integer} y - The y coordinate of the pixel within the Texture.
+     * @param {string} key - The unique string-based key of the Texture.
+     * @param {(string|integer)} frame - The string or index of the Frame.
+     *
+     * @return {integer} A value between 0 and 255, or `null` if the coordinates were out of bounds.
+     */
+    getPixelAlpha: function (x, y, key, frame)
+    {
+        var textureFrame = this.getFrame(key, frame);
+
+        if (textureFrame)
+        {
+            var source = textureFrame.source.image;
+
+            if (x >= 0 && x <= source.width && y >= 0 && y <= source.height)
+            {
+                x += textureFrame.cutX;
+                y += textureFrame.cutY;
+
+                var context = this._tempContext;
+
+                context.clearRect(0, 0, 1, 1);
+                context.drawImage(source, x, y, 1, 1, 0, 0, 1, 1);
+
+                var rgb = context.getImageData(0, 0, 1, 1);
+
+                return rgb.data[3];
+            }
+        }
+
+        return null;
+    },
+
+    /**
      * Sets the given Game Objects `texture` and `frame` properties so that it uses
      * the Texture and Frame specified in the `key` and `frame` arguments to this method.
      *
@@ -30481,7 +32703,7 @@ module.exports = TextureManager;
 
 
 /***/ }),
-/* 177 */
+/* 185 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -30491,7 +32713,7 @@ module.exports = TextureManager;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseSound = __webpack_require__(76);
+var BaseSound = __webpack_require__(78);
 var Class = __webpack_require__(0);
 
 /**
@@ -31448,7 +33670,7 @@ module.exports = WebAudioSound;
 
 
 /***/ }),
-/* 178 */
+/* 186 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -31458,9 +33680,9 @@ module.exports = WebAudioSound;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseSoundManager = __webpack_require__(77);
+var BaseSoundManager = __webpack_require__(79);
 var Class = __webpack_require__(0);
-var WebAudioSound = __webpack_require__(177);
+var WebAudioSound = __webpack_require__(185);
 
 /**
  * @classdesc
@@ -31775,7 +33997,7 @@ module.exports = WebAudioSoundManager;
 
 
 /***/ }),
-/* 179 */
+/* 187 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -31785,10 +34007,10 @@ module.exports = WebAudioSoundManager;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseSound = __webpack_require__(76);
+var BaseSound = __webpack_require__(78);
 var Class = __webpack_require__(0);
 var EventEmitter = __webpack_require__(9);
-var Extend = __webpack_require__(18);
+var Extend = __webpack_require__(17);
 
 /**
  * @classdesc
@@ -31902,7 +34124,7 @@ module.exports = NoAudioSound;
 
 
 /***/ }),
-/* 180 */
+/* 188 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -31912,10 +34134,10 @@ module.exports = NoAudioSound;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseSoundManager = __webpack_require__(77);
+var BaseSoundManager = __webpack_require__(79);
 var Class = __webpack_require__(0);
 var EventEmitter = __webpack_require__(9);
-var NoAudioSound = __webpack_require__(179);
+var NoAudioSound = __webpack_require__(187);
 var NOOP = __webpack_require__(3);
 
 /**
@@ -32020,7 +34242,7 @@ module.exports = NoAudioSoundManager;
 
 
 /***/ }),
-/* 181 */
+/* 189 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -32030,7 +34252,7 @@ module.exports = NoAudioSoundManager;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseSound = __webpack_require__(76);
+var BaseSound = __webpack_require__(78);
 var Class = __webpack_require__(0);
 
 /**
@@ -33002,7 +35224,7 @@ module.exports = HTML5AudioSound;
 
 
 /***/ }),
-/* 182 */
+/* 190 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -33012,9 +35234,9 @@ module.exports = HTML5AudioSound;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseSoundManager = __webpack_require__(77);
+var BaseSoundManager = __webpack_require__(79);
 var Class = __webpack_require__(0);
-var HTML5AudioSound = __webpack_require__(181);
+var HTML5AudioSound = __webpack_require__(189);
 
 /**
  * HTML5 Audio implementation of the Sound Manager.
@@ -33469,7 +35691,7 @@ module.exports = HTML5AudioSoundManager;
 
 
 /***/ }),
-/* 183 */
+/* 191 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -33479,9 +35701,9 @@ module.exports = HTML5AudioSoundManager;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var HTML5AudioSoundManager = __webpack_require__(182);
-var NoAudioSoundManager = __webpack_require__(180);
-var WebAudioSoundManager = __webpack_require__(178);
+var HTML5AudioSoundManager = __webpack_require__(190);
+var NoAudioSoundManager = __webpack_require__(188);
+var WebAudioSoundManager = __webpack_require__(186);
 
 /**
  * Creates a Web Audio, HTML5 Audio or No Audio Sound Manager based on config and device settings.
@@ -33519,7 +35741,7 @@ module.exports = SoundManagerCreator;
 
 
 /***/ }),
-/* 184 */
+/* 192 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -33528,10 +35750,10 @@ module.exports = SoundManagerCreator;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CONST = __webpack_require__(54);
+var CONST = __webpack_require__(55);
 var GetValue = __webpack_require__(4);
-var Merge = __webpack_require__(93);
-var InjectionMap = __webpack_require__(503);
+var Merge = __webpack_require__(94);
+var InjectionMap = __webpack_require__(516);
 
 /**
  * @namespace Phaser.Scenes.Settings
@@ -33636,7 +35858,11 @@ var Settings = {
 
             //  Plugins
 
-            plugins: GetValue(config, 'plugins', false)
+            plugins: GetValue(config, 'plugins', false),
+
+            //  Input
+
+            input: GetValue(config, 'input', {})
 
         };
     }
@@ -33647,7 +35873,7 @@ module.exports = Settings;
 
 
 /***/ }),
-/* 185 */
+/* 193 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -33657,7 +35883,7 @@ module.exports = Settings;
  */
 
 var Class = __webpack_require__(0);
-var Systems = __webpack_require__(115);
+var Systems = __webpack_require__(118);
 
 /**
  * @classdesc
@@ -33926,7 +36152,7 @@ module.exports = Scene;
 
 
 /***/ }),
-/* 186 */
+/* 194 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -33936,11 +36162,11 @@ module.exports = Scene;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(54);
+var CONST = __webpack_require__(55);
 var GetValue = __webpack_require__(4);
 var NOOP = __webpack_require__(3);
-var Scene = __webpack_require__(185);
-var Systems = __webpack_require__(115);
+var Scene = __webpack_require__(193);
+var Systems = __webpack_require__(118);
 
 /**
  * @classdesc
@@ -34471,7 +36697,7 @@ var SceneManager = new Class({
         {
             var sys = this.scenes[i].sys;
 
-            if (sys.settings.status === CONST.RUNNING)
+            if (sys.settings.status > CONST.START && sys.settings.status <= CONST.RUNNING)
             {
                 sys.step(time, delta);
             }
@@ -34548,6 +36774,12 @@ var SceneManager = new Class({
             }
         }
 
+        //  If the Scene has an update function we'll set it now, otherwise it'll remain as NOOP
+        if (scene.update)
+        {
+            sys.sceneUpdate = scene.update;
+        }
+
         settings.status = CONST.RUNNING;
     },
 
@@ -34590,11 +36822,6 @@ var SceneManager = new Class({
             newScene.sys.settings.key = key;
 
             newScene.sys.init(this.game);
-
-            if (!newScene.update)
-            {
-                newScene.update = NOOP;
-            }
 
             return newScene;
         }
@@ -34666,12 +36893,6 @@ var SceneManager = new Class({
         for (var i = 0; i < defaults.length; i++)
         {
             var sceneCallback = GetValue(sceneConfig, defaults[i], null);
-
-            //  Must always have an update function, no matter what (the rest are optional)
-            if (defaults[i] === 'update' && !sceneCallback)
-            {
-                sceneCallback = NOOP;
-            }
 
             if (sceneCallback)
             {
@@ -34940,6 +37161,49 @@ var SceneManager = new Class({
         }
 
         return this;
+    },
+
+    /**
+     * Runs the given Scene, but does not change the state of this Scene.
+     * 
+     * If the given Scene is paused, it will resume it. If sleeping, it will wake it.
+     * If not running at all, it will be started.
+     *
+     * Use this if you wish to open a modal Scene by calling `pause` on the current
+     * Scene, then `run` on the modal Scene.
+     *
+     * @method Phaser.Scenes.SceneManager#run
+     * @since 3.10.0
+     *
+     * @param {string} key - The Scene to run.
+     * @param {object} [data] - A data object that will be passed to the Scene that is run _only if the Scene isn't asleep or paused_.
+     *
+     * @return {Phaser.Scenes.SceneManager} This Scene Manager.
+     */
+    run: function (key, data)
+    {
+        var scene = this.getScene(key);
+
+        if (!scene)
+        {
+            return this;
+        }
+
+        if (scene.sys.isSleeping())
+        {
+            //  Sleeping?
+            scene.sys.wake();
+        }
+        else if (scene.sys.isBooted && !scene.sys.isActive())
+        {
+            //  Paused?
+            scene.sys.resume();
+        }
+        else
+        {
+            //  Not actually running?
+            this.start(key, data);
+        }
     },
 
     /**
@@ -35435,7 +37699,7 @@ module.exports = SceneManager;
 
 
 /***/ }),
-/* 187 */
+/* 195 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -35444,7 +37708,7 @@ module.exports = SceneManager;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var SpliceOne = __webpack_require__(55);
+var SpliceOne = __webpack_require__(56);
 
 /**
  * Removes the given item, or array of items, from the array.
@@ -35526,7 +37790,7 @@ module.exports = Remove;
 
 
 /***/ }),
-/* 188 */
+/* 196 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -35537,12 +37801,12 @@ module.exports = Remove;
 
 var Class = __webpack_require__(0);
 var EventEmitter = __webpack_require__(9);
-var FileTypesManager = __webpack_require__(6);
+var FileTypesManager = __webpack_require__(7);
 var GameObjectCreator = __webpack_require__(13);
 var GameObjectFactory = __webpack_require__(11);
 var GetFastValue = __webpack_require__(1);
 var PluginCache = __webpack_require__(12);
-var Remove = __webpack_require__(187);
+var Remove = __webpack_require__(195);
 
 /**
  * @typedef {object} GlobalPlugin
@@ -35952,8 +38216,6 @@ var PluginManager = new Class({
         {
             start = true;
         }
-
-        console.log('install', key, start, mapping);
 
         if (!this.game.isBooted)
         {
@@ -36366,7 +38628,7 @@ module.exports = PluginManager;
 
 
 /***/ }),
-/* 189 */
+/* 197 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -36382,21 +38644,19 @@ var Class = __webpack_require__(0);
 // https://www.html5rocks.com/en/mobile/touch/
 
 /**
- * @callback TouchHandler
- *
- * @param {TouchEvent} event - [description]
- */
-
-/**
  * @classdesc
- * [description]
+ * The Touch Manager is a helper class that belongs to the Input Manager.
+ * 
+ * Its role is to listen for native DOM Touch Events and then pass them onto the Input Manager for further processing.
+ * 
+ * You do not need to create this class directly, the Input Manager will create an instance of it automatically.
  *
  * @class TouchManager
  * @memberOf Phaser.Input.Touch
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Input.InputManager} inputManager - [description]
+ * @param {Phaser.Input.InputManager} inputManager - A reference to the Input Manager.
  */
 var TouchManager = new Class({
 
@@ -36405,7 +38665,7 @@ var TouchManager = new Class({
     function TouchManager (inputManager)
     {
         /**
-         * [description]
+         * A reference to the Input Manager.
          *
          * @name Phaser.Input.Touch.TouchManager#manager
          * @type {Phaser.Input.InputManager}
@@ -36424,7 +38684,8 @@ var TouchManager = new Class({
         this.capture = true;
 
         /**
-         * [description]
+         * A boolean that controls if the Touch Manager is enabled or not.
+         * Can be toggled on the fly.
          *
          * @name Phaser.Input.Touch.TouchManager#enabled
          * @type {boolean}
@@ -36434,28 +38695,23 @@ var TouchManager = new Class({
         this.enabled = false;
 
         /**
-         * [description]
+         * The Touch Event target, as defined in the Game Config.
+         * Typically the canvas to which the game is rendering, but can be any interactive DOM element.
          *
          * @name Phaser.Input.Touch.TouchManager#target
-         * @type {null}
+         * @type {any}
          * @since 3.0.0
          */
         this.target;
 
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Touch.TouchManager#handler
-         * @type {?TouchHandler}
-         * @since 3.0.0
-         */
-        this.handler;
+        inputManager.events.once('boot', this.boot, this);
     },
 
     /**
-     * [description]
+     * The Touch Manager boot process.
      *
      * @method Phaser.Input.Touch.TouchManager#boot
+     * @private
      * @since 3.0.0
      */
     boot: function ()
@@ -36478,65 +38734,108 @@ var TouchManager = new Class({
     },
 
     /**
-     * [description]
+     * The Touch Start Event Handler.
+     *
+     * @method Phaser.Input.Touch.TouchManager#onTouchStart
+     * @since 3.10.0
+     *
+     * @param {TouchEvent} event - The native DOM Touch Start Event.
+     */
+    onTouchStart: function (event)
+    {
+        if (event.defaultPrevented || !this.enabled)
+        {
+            // Do nothing if event already handled
+            return;
+        }
+
+        this.manager.queueTouchStart(event);
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+    },
+
+    /**
+     * The Touch Move Event Handler.
+     *
+     * @method Phaser.Input.Touch.TouchManager#onTouchMove
+     * @since 3.10.0
+     *
+     * @param {TouchEvent} event - The native DOM Touch Move Event.
+     */
+    onTouchMove: function (event)
+    {
+        if (event.defaultPrevented || !this.enabled)
+        {
+            // Do nothing if event already handled
+            return;
+        }
+
+        this.manager.queueTouchMove(event);
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+    },
+
+    /**
+     * The Touch End Event Handler.
+     *
+     * @method Phaser.Input.Touch.TouchManager#onTouchEnd
+     * @since 3.10.0
+     *
+     * @param {TouchEvent} event - The native DOM Touch End Event.
+     */
+    onTouchEnd: function (event)
+    {
+        if (event.defaultPrevented || !this.enabled)
+        {
+            // Do nothing if event already handled
+            return;
+        }
+
+        this.manager.queueTouchEnd(event);
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+    },
+
+    /**
+     * Starts the Touch Event listeners running.
+     * This is called automatically and does not need to be manually invoked.
      *
      * @method Phaser.Input.Touch.TouchManager#startListeners
      * @since 3.0.0
      */
     startListeners: function ()
     {
-        var queue = this.manager.queue;
         var target = this.target;
 
         var passive = { passive: true };
         var nonPassive = { passive: false };
 
-        var handler;
-
         if (this.capture)
         {
-            handler = function (event)
-            {
-                if (event.defaultPrevented)
-                {
-                    // Do nothing if event already handled
-                    return;
-                }
-
-                // console.log('touch', event);
-
-                queue.push(event);
-
-                event.preventDefault();
-            };
-
-            target.addEventListener('touchstart', handler, nonPassive);
-            target.addEventListener('touchmove', handler, nonPassive);
-            target.addEventListener('touchend', handler, nonPassive);
+            target.addEventListener('touchstart', this.onTouchStart.bind(this), nonPassive);
+            target.addEventListener('touchmove', this.onTouchMove.bind(this), nonPassive);
+            target.addEventListener('touchend', this.onTouchEnd.bind(this), nonPassive);
         }
         else
         {
-            handler = function (event)
-            {
-                if (event.defaultPrevented)
-                {
-                    // Do nothing if event already handled
-                    return;
-                }
-
-                queue.push(event);
-            };
-
-            target.addEventListener('touchstart', handler, passive);
-            target.addEventListener('touchmove', handler, passive);
-            target.addEventListener('touchend', handler, passive);
+            target.addEventListener('touchstart', this.onTouchStart.bind(this), passive);
+            target.addEventListener('touchmove', this.onTouchMove.bind(this), passive);
+            target.addEventListener('touchend', this.onTouchEnd.bind(this), passive);
         }
-
-        this.handler = handler;
     },
 
     /**
-     * [description]
+     * Stops the Touch Event listeners.
+     * This is called automatically and does not need to be manually invoked.
      *
      * @method Phaser.Input.Touch.TouchManager#stopListeners
      * @since 3.0.0
@@ -36545,13 +38844,13 @@ var TouchManager = new Class({
     {
         var target = this.target;
 
-        target.removeEventListener('touchstart', this.handler);
-        target.removeEventListener('touchmove', this.handler);
-        target.removeEventListener('touchend', this.handler);
+        target.removeEventListener('touchstart', this.onTouchStart);
+        target.removeEventListener('touchmove', this.onTouchMove);
+        target.removeEventListener('touchend', this.onTouchEnd);
     },
 
     /**
-     * [description]
+     * Destroys this Touch Manager instance.
      *
      * @method Phaser.Input.Touch.TouchManager#destroy
      * @since 3.0.0
@@ -36560,6 +38859,7 @@ var TouchManager = new Class({
     {
         this.stopListeners();
 
+        this.target = null;
         this.manager = null;
     }
 
@@ -36569,7 +38869,7 @@ module.exports = TouchManager;
 
 
 /***/ }),
-/* 190 */
+/* 198 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -36579,28 +38879,30 @@ module.exports = TouchManager;
  */
 
 var Class = __webpack_require__(0);
-var Vector2 = __webpack_require__(7);
-
-// DOM event button value:
-// A number representing a given button:
-// 0: Main button pressed, usually the left button or the un-initialized state
-// 1: Auxiliary button pressed, usually the wheel button or the middle button (if present)
-// 2: Secondary button pressed, usually the right button
-// 3: Fourth button, typically the Browser Back button
-// 4: Fifth button, typically the Browser Forward button
-// For a mouse configured for left-handed use, the button actions are reversed. In this case, the values are read from right to left.
+var Vector2 = __webpack_require__(6);
 
 /**
  * @classdesc
- * [description]
+ * A Pointer object encapsulates both mouse and touch input within Phaser.
+ *
+ * By default, Phaser will create 2 pointers for your game to use. If you require more, i.e. for a multi-touch
+ * game, then use the `InputPlugin.addPointer` method to do so, rather than instantiating this class directly,
+ * otherwise it won't be managed by the input system.
+ *
+ * You can reference the current active pointer via `InputPlugin.activePointer`. You can also use the properties
+ * `InputPlugin.pointer1` through to `pointer10`, for each pointer you have enabled in your game.
+ *
+ * The properties of this object are set by the Input Plugin during processing. This object is then sent in all
+ * input related events that the Input Plugin emits, so you can reference properties from it directly in your
+ * callbacks.
  *
  * @class Pointer
  * @memberOf Phaser.Input
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Input.InputManager} manager - [description]
- * @param {integer} id - [description]
+ * @param {Phaser.Input.InputManager} manager - A reference to the Input Manager.
+ * @param {integer} id - The internal ID of this Pointer.
  */
 var Pointer = new Class({
 
@@ -36609,7 +38911,7 @@ var Pointer = new Class({
     function Pointer (manager, id)
     {
         /**
-         * [description]
+         * A reference to the Input Manager.
          *
          * @name Phaser.Input.Pointer#manager
          * @type {Phaser.Input.InputManager}
@@ -36618,25 +38920,27 @@ var Pointer = new Class({
         this.manager = manager;
 
         /**
-         * [description]
+         * The internal ID of this Pointer.
          *
          * @name Phaser.Input.Pointer#id
          * @type {integer}
+         * @readOnly
          * @since 3.0.0
          */
         this.id = id;
 
         /**
-         * [description]
+         * The most recent native DOM Event this Pointer has processed.
          *
          * @name Phaser.Input.Pointer#event
-         * @type {null}
+         * @type {(TouchEvent|MouseEvent)}
          * @since 3.0.0
          */
         this.event;
 
         /**
          * The camera the Pointer interacted with during its last update.
+         * 
          * A Pointer can only ever interact with one camera at once, which will be the top-most camera
          * in the list should multiple cameras be positioned on-top of each other.
          *
@@ -36654,22 +38958,45 @@ var Pointer = new Class({
          * 4: Wheel button or middle button
          * 8: 4th button (typically the "Browser Back" button)
          * 16: 5th button (typically the "Browser Forward" button)
+         * 
+         * For a mouse configured for left-handed use, the button actions are reversed.
+         * In this case, the values are read from right to left.
          *
          * @name Phaser.Input.Pointer#buttons
-         * @type {number}
+         * @type {integer}
          * @default 0
          * @since 3.0.0
          */
         this.buttons = 0;
 
         /**
-         * [description]
+         * The position of the Pointer in screen space.
          *
          * @name Phaser.Input.Pointer#position
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
         this.position = new Vector2();
+
+        /**
+         * The x position of this Pointer, translated into the coordinate space of the most recent Camera it interacted with.
+         *
+         * @name Phaser.Input.Pointer#worldX
+         * @type {number}
+         * @default 0
+         * @since 3.10.0
+         */
+        this.worldX = 0;
+
+        /**
+         * The y position of this Pointer, translated into the coordinate space of the most recent Camera it interacted with.
+         *
+         * @name Phaser.Input.Pointer#worldY
+         * @type {number}
+         * @default 0
+         * @since 3.10.0
+         */
+        this.worldY = 0;
 
         /**
          * X coordinate of the Pointer when Button 1 (left button), or Touch, was pressed, used for dragging objects.
@@ -36741,7 +39068,6 @@ var Pointer = new Class({
          */
         this.primaryDown = false;
 
-
         /**
          * The Drag State of the Pointer:
          *
@@ -36767,7 +39093,7 @@ var Pointer = new Class({
         this.isDown = false;
 
         /**
-         * [description]
+         * A dirty flag for this Pointer, used internally by the Input Plugin.
          *
          * @name Phaser.Input.Pointer#dirty
          * @type {boolean}
@@ -36777,7 +39103,7 @@ var Pointer = new Class({
         this.dirty = false;
 
         /**
-         * [description]
+         * Is this Pointer considered as being "just down" or not?
          *
          * @name Phaser.Input.Pointer#justDown
          * @type {boolean}
@@ -36787,7 +39113,7 @@ var Pointer = new Class({
         this.justDown = false;
 
         /**
-         * [description]
+         * Is this Pointer considered as being "just up" or not?
          *
          * @name Phaser.Input.Pointer#justUp
          * @type {boolean}
@@ -36797,7 +39123,7 @@ var Pointer = new Class({
         this.justUp = false;
 
         /**
-         * [description]
+         * Is this Pointer considered as being "just moved" or not?
          *
          * @name Phaser.Input.Pointer#justMoved
          * @type {boolean}
@@ -36835,18 +39161,48 @@ var Pointer = new Class({
          * @since 3.0.0
          */
         this.movementY = 0;
+
+        /**
+         * The identifier property of the Pointer as set by the DOM event when this Pointer is started.
+         *
+         * @name Phaser.Input.Pointer#identifier
+         * @type {number}
+         * @since 3.10.0
+         */
+        this.identifier = 0;
+
+        /**
+         * The pointerId property of the Pointer as set by the DOM event when this Pointer is started.
+         * The browser can and will recycle this value.
+         *
+         * @name Phaser.Input.Pointer#pointerId
+         * @type {number}
+         * @since 3.10.0
+         */
+        this.pointerId = null;
+
+        /**
+         * An active Pointer is one that is currently pressed down on the display.
+         * A Mouse is always considered as active.
+         *
+         * @name Phaser.Input.Pointer#active
+         * @type {boolean}
+         * @since 3.10.0
+         */
+        this.active = (id === 0) ? true : false;
     },
 
     /**
-     * [description]
+     * Takes a Camera and returns a Vector2 containing the translated position of this Pointer
+     * within that Camera. This can be used to convert this Pointers position into camera space.
      *
      * @method Phaser.Input.Pointer#positionToCamera
      * @since 3.0.0
      *
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {(Phaser.Math.Vector2|object)} [output] - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use for the translation.
+     * @param {(Phaser.Math.Vector2|object)} [output] - A Vector2-like object in which to store the translated position.
      *
-     * @return {(Phaser.Math.Vector2|object)} [description]
+     * @return {(Phaser.Math.Vector2|object)} A Vector2 containing the translated coordinates of this Pointer, based on the given camera.
      */
     positionToCamera: function (camera, output)
     {
@@ -36854,7 +39210,333 @@ var Pointer = new Class({
     },
 
     /**
-     * [description]
+     * Resets the temporal properties of this Pointer.
+     * Called automatically by the Input Plugin each update.
+     *
+     * @method Phaser.Input.Pointer#reset
+     * @private
+     * @since 3.0.0
+     */
+    reset: function ()
+    {
+        this.dirty = false;
+
+        this.justDown = false;
+        this.justUp = false;
+        this.justMoved = false;
+
+        this.movementX = 0;
+        this.movementY = 0;
+    },
+
+    /**
+     * Internal method to handle a Mouse Up Event.
+     *
+     * @method Phaser.Input.Pointer#up
+     * @private
+     * @since 3.0.0
+     *
+     * @param {MouseEvent} event - The Mouse Event to process.
+     * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
+     */
+    up: function (event, time)
+    {
+        if (event.buttons)
+        {
+            this.buttons = event.buttons;
+        }
+
+        this.event = event;
+
+        //  Sets the local x/y properties
+        this.manager.transformPointer(this, event.pageX, event.pageY);
+
+        //  0: Main button pressed, usually the left button or the un-initialized state
+        if (event.button === 0)
+        {
+            this.primaryDown = false;
+            this.upX = this.x;
+            this.upY = this.y;
+            this.upTime = time;
+        }
+
+        this.justUp = true;
+        this.isDown = false;
+
+        this.dirty = true;
+
+        this.wasTouch = false;
+    },
+
+    /**
+     * Internal method to handle a Mouse Down Event.
+     *
+     * @method Phaser.Input.Pointer#down
+     * @private
+     * @since 3.0.0
+     *
+     * @param {MouseEvent} event - The Mouse Event to process.
+     * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
+     */
+    down: function (event, time)
+    {
+        if (event.buttons)
+        {
+            this.buttons = event.buttons;
+        }
+
+        this.event = event;
+
+        //  Sets the local x/y properties
+        this.manager.transformPointer(this, event.pageX, event.pageY);
+
+        //  0: Main button pressed, usually the left button or the un-initialized state
+        if (event.button === 0)
+        {
+            this.primaryDown = true;
+            this.downX = this.x;
+            this.downY = this.y;
+            this.downTime = time;
+        }
+
+        this.justDown = true;
+        this.isDown = true;
+
+        this.dirty = true;
+
+        this.wasTouch = false;
+    },
+
+    /**
+     * Internal method to handle a Mouse Move Event.
+     *
+     * @method Phaser.Input.Pointer#move
+     * @private
+     * @since 3.0.0
+     *
+     * @param {MouseEvent} event - The Mouse Event to process.
+     * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
+     */
+    move: function (event)
+    {
+        if (event.buttons)
+        {
+            this.buttons = event.buttons;
+        }
+
+        this.event = event;
+
+        //  Sets the local x/y properties
+        this.manager.transformPointer(this, event.pageX, event.pageY);
+
+        if (this.manager.mouse.locked)
+        {
+            // Multiple DOM events may occur within one frame, but only one Phaser event will fire
+            this.movementX += event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+            this.movementY += event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+        }
+
+        this.justMoved = true;
+
+        this.dirty = true;
+
+        this.wasTouch = false;
+    },
+
+    /**
+     * Internal method to handle a Touch Start Event.
+     *
+     * @method Phaser.Input.Pointer#touchstart
+     * @private
+     * @since 3.0.0
+     *
+     * @param {TouchEvent} event - The Touch Event to process.
+     * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
+     */
+    touchstart: function (event, time)
+    {
+        if (event['pointerId'])
+        {
+            this.pointerId = event.pointerId;
+        }
+
+        this.identifier = event.identifier;
+        this.target = event.target;
+        this.active = true;
+
+        this.buttons = 1;
+
+        this.event = event;
+
+        //  Sets the local x/y properties
+        this.manager.transformPointer(this, event.pageX, event.pageY);
+
+        this.primaryDown = true;
+        this.downX = this.x;
+        this.downY = this.y;
+        this.downTime = time;
+
+        this.justDown = true;
+        this.isDown = true;
+
+        this.dirty = true;
+
+        this.wasTouch = true;
+    },
+
+    /**
+     * Internal method to handle a Touch Move Event.
+     *
+     * @method Phaser.Input.Pointer#touchmove
+     * @private
+     * @since 3.0.0
+     *
+     * @param {TouchEvent} event - The Touch Event to process.
+     * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
+     */
+    touchmove: function (event)
+    {
+        this.event = event;
+
+        //  Sets the local x/y properties
+        this.manager.transformPointer(this, event.pageX, event.pageY);
+
+        this.justMoved = true;
+
+        this.dirty = true;
+
+        this.wasTouch = true;
+    },
+
+    /**
+     * Internal method to handle a Touch End Event.
+     *
+     * @method Phaser.Input.Pointer#touchend
+     * @private
+     * @since 3.0.0
+     *
+     * @param {TouchEvent} event - The Touch Event to process.
+     * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
+     */
+    touchend: function (event, time)
+    {
+        this.buttons = 0;
+
+        this.event = event;
+
+        //  Sets the local x/y properties
+        this.manager.transformPointer(this, event.pageX, event.pageY);
+
+        this.primaryDown = false;
+        this.upX = this.x;
+        this.upY = this.y;
+        this.upTime = time;
+
+        this.justUp = true;
+        this.isDown = false;
+
+        this.dirty = true;
+
+        this.wasTouch = true;
+        
+        this.active = false;
+    },
+
+    /**
+     * Checks to see if any buttons are being held down on this Pointer.
+     *
+     * @method Phaser.Input.Pointer#noButtonDown
+     * @since 3.0.0
+     *
+     * @return {boolean} `true` if no buttons are being held down.
+     */
+    noButtonDown: function ()
+    {
+        return (this.buttons === 0);
+    },
+
+    /**
+     * Checks to see if the left button is being held down on this Pointer.
+     *
+     * @method Phaser.Input.Pointer#leftButtonDown
+     * @since 3.0.0
+     *
+     * @return {boolean} `true` if the left button is being held down.
+     */
+    leftButtonDown: function ()
+    {
+        return (this.buttons & 1);
+    },
+
+    /**
+     * Checks to see if the right button is being held down on this Pointer.
+     *
+     * @method Phaser.Input.Pointer#rightButtonDown
+     * @since 3.0.0
+     *
+     * @return {boolean} `true` if the right button is being held down.
+     */
+    rightButtonDown: function ()
+    {
+        return (this.buttons & 2);
+    },
+
+    /**
+     * Checks to see if the middle button is being held down on this Pointer.
+     *
+     * @method Phaser.Input.Pointer#middleButtonDown
+     * @since 3.0.0
+     *
+     * @return {boolean} `true` if the middle button is being held down.
+     */
+    middleButtonDown: function ()
+    {
+        return (this.buttons & 4);
+    },
+
+    /**
+     * Checks to see if the back button is being held down on this Pointer.
+     *
+     * @method Phaser.Input.Pointer#backButtonDown
+     * @since 3.0.0
+     *
+     * @return {boolean} `true` if the back button is being held down.
+     */
+    backButtonDown: function ()
+    {
+        return (this.buttons & 8);
+    },
+
+    /**
+     * Checks to see if the forward button is being held down on this Pointer.
+     *
+     * @method Phaser.Input.Pointer#forwardButtonDown
+     * @since 3.0.0
+     *
+     * @return {boolean} `true` if the forward button is being held down.
+     */
+    forwardButtonDown: function ()
+    {
+        return (this.buttons & 16);
+    },
+
+    /**
+     * Destroys this Pointer instance and resets its external references.
+     *
+     * @method Phaser.Input.Pointer#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        this.camera = null;
+        this.manager = null;
+        this.position = null;
+    },
+
+    /**
+     * The x position of this Pointer.
+     * The value is in screen space.
+     * See `worldX` to get a camera converted position.
      *
      * @name Phaser.Input.Pointer#x
      * @type {number}
@@ -36875,7 +39557,9 @@ var Pointer = new Class({
     },
 
     /**
-     * [description]
+     * The y position of this Pointer.
+     * The value is in screen space.
+     * See `worldY` to get a camera converted position.
      *
      * @name Phaser.Input.Pointer#y
      * @type {number}
@@ -36893,313 +39577,6 @@ var Pointer = new Class({
             this.position.y = value;
         }
 
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Pointer#reset
-     * @since 3.0.0
-     */
-    reset: function ()
-    {
-        // this.buttons = 0;
-
-        this.dirty = false;
-
-        this.justDown = false;
-        this.justUp = false;
-        this.justMoved = false;
-
-        this.movementX = 0;
-        this.movementY = 0;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Pointer#touchmove
-     * @since 3.0.0
-     *
-     * @param {TouchEvent} event - [description]
-     * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
-     */
-    touchmove: function (event)
-    {
-        this.event = event;
-
-        this.x = this.manager.transformX(event.changedTouches[0].pageX);
-        this.y = this.manager.transformY(event.changedTouches[0].pageY);
-
-        this.justMoved = true;
-
-        this.dirty = true;
-
-        this.wasTouch = true;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Pointer#move
-     * @since 3.0.0
-     *
-     * @param {MouseEvent} event - [description]
-     * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
-     */
-    move: function (event)
-    {
-        if (event.buttons)
-        {
-            this.buttons = event.buttons;
-        }
-
-        this.event = event;
-
-        this.x = this.manager.transformX(event.pageX);
-        this.y = this.manager.transformY(event.pageY);
-
-        if (this.manager.mouse.locked)
-        {
-            // Multiple DOM events may occur within one frame, but only one Phaser event will fire
-            this.movementX += event.movementX || event.mozMovementX || event.webkitMovementX || 0;
-            this.movementY += event.movementY || event.mozMovementY || event.webkitMovementY || 0;
-        }
-
-        this.justMoved = true;
-
-        this.dirty = true;
-
-        this.wasTouch = false;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Pointer#down
-     * @since 3.0.0
-     *
-     * @param {MouseEvent} event - [description]
-     * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
-     */
-    down: function (event, time)
-    {
-        if (event.buttons)
-        {
-            this.buttons = event.buttons;
-        }
-
-        this.event = event;
-
-        this.x = this.manager.transformX(event.pageX);
-        this.y = this.manager.transformY(event.pageY);
-
-        //  0: Main button pressed, usually the left button or the un-initialized state
-        if (event.button === 0)
-        {
-            this.primaryDown = true;
-            this.downX = this.x;
-            this.downY = this.y;
-            this.downTime = time;
-        }
-
-        this.justDown = true;
-        this.isDown = true;
-
-        this.dirty = true;
-
-        this.wasTouch = false;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Pointer#touchstart
-     * @since 3.0.0
-     *
-     * @param {TouchEvent} event - [description]
-     * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
-     */
-    touchstart: function (event, time)
-    {
-        this.buttons = 1;
-
-        this.event = event;
-
-        this.x = this.manager.transformX(event.changedTouches[0].pageX);
-        this.y = this.manager.transformY(event.changedTouches[0].pageY);
-
-        this.primaryDown = true;
-        this.downX = this.x;
-        this.downY = this.y;
-        this.downTime = time;
-
-        this.justDown = true;
-        this.isDown = true;
-
-        this.dirty = true;
-
-        this.wasTouch = true;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Pointer#up
-     * @since 3.0.0
-     *
-     * @param {MouseEvent} event - [description]
-     * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
-     */
-    up: function (event, time)
-    {
-        if (event.buttons)
-        {
-            this.buttons = event.buttons;
-        }
-
-        this.event = event;
-
-        this.x = this.manager.transformX(event.pageX);
-        this.y = this.manager.transformY(event.pageY);
-
-        //  0: Main button pressed, usually the left button or the un-initialized state
-        if (event.button === 0)
-        {
-            this.primaryDown = false;
-            this.upX = this.x;
-            this.upY = this.y;
-            this.upTime = time;
-        }
-
-        this.justUp = true;
-        this.isDown = false;
-
-        this.dirty = true;
-
-        this.wasTouch = false;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Pointer#touchend
-     * @since 3.0.0
-     *
-     * @param {TouchEvent} event - [description]
-     * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
-     */
-    touchend: function (event, time)
-    {
-        this.buttons = 0;
-
-        this.event = event;
-
-        this.x = this.manager.transformX(event.changedTouches[0].pageX);
-        this.y = this.manager.transformY(event.changedTouches[0].pageY);
-
-        this.primaryDown = false;
-        this.upX = this.x;
-        this.upY = this.y;
-        this.upTime = time;
-
-        this.justUp = true;
-        this.isDown = false;
-
-        this.dirty = true;
-
-        this.wasTouch = true;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Pointer#noButtonDown
-     * @since 3.0.0
-     *
-     * @return {boolean} [description]
-     */
-    noButtonDown: function ()
-    {
-        return (this.buttons === 0);
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Pointer#leftButtonDown
-     * @since 3.0.0
-     *
-     * @return {boolean} [description]
-     */
-    leftButtonDown: function ()
-    {
-        return (this.buttons & 1);
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Pointer#rightButtonDown
-     * @since 3.0.0
-     *
-     * @return {boolean} [description]
-     */
-    rightButtonDown: function ()
-    {
-        return (this.buttons & 2);
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Pointer#middleButtonDown
-     * @since 3.0.0
-     *
-     * @return {boolean} [description]
-     */
-    middleButtonDown: function ()
-    {
-        return (this.buttons & 4);
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Pointer#backButtonDown
-     * @since 3.0.0
-     *
-     * @return {boolean} [description]
-     */
-    backButtonDown: function ()
-    {
-        return (this.buttons & 8);
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Pointer#forwardButtonDown
-     * @since 3.0.0
-     *
-     * @return {boolean} [description]
-     */
-    forwardButtonDown: function ()
-    {
-        return (this.buttons & 16);
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Pointer#destroy
-     * @since 3.0.0
-     */
-    destroy: function ()
-    {
-        this.camera = null;
-        this.manager = null;
-        this.position = null;
     }
 
 });
@@ -37208,7 +39585,7 @@ module.exports = Pointer;
 
 
 /***/ }),
-/* 191 */
+/* 199 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -37218,27 +39595,25 @@ module.exports = Pointer;
  */
 
 var Class = __webpack_require__(0);
-var Features = __webpack_require__(118);
+var Features = __webpack_require__(120);
 
 //  https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent
 //  https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
 
 /**
- * @callback MouseHandler
- *
- * @property {MouseEvent} event - [description]
- */
-
-/**
  * @classdesc
- * [description]
+ * The Mouse Manager is a helper class that belongs to the Input Manager.
+ * 
+ * Its role is to listen for native DOM Mouse Events and then pass them onto the Input Manager for further processing.
+ * 
+ * You do not need to create this class directly, the Input Manager will create an instance of it automatically.
  *
  * @class MouseManager
  * @memberOf Phaser.Input.Mouse
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Input.InputManager} inputManager - [description]
+ * @param {Phaser.Input.InputManager} inputManager - A reference to the Input Manager.
  */
 var MouseManager = new Class({
 
@@ -37247,7 +39622,7 @@ var MouseManager = new Class({
     function MouseManager (inputManager)
     {
         /**
-         * [description]
+         * A reference to the Input Manager.
          *
          * @name Phaser.Input.Mouse.MouseManager#manager
          * @type {Phaser.Input.InputManager}
@@ -37266,7 +39641,8 @@ var MouseManager = new Class({
         this.capture = true;
 
         /**
-         * [description]
+         * A boolean that controls if the Mouse Manager is enabled or not.
+         * Can be toggled on the fly.
          *
          * @name Phaser.Input.Mouse.MouseManager#enabled
          * @type {boolean}
@@ -37276,22 +39652,14 @@ var MouseManager = new Class({
         this.enabled = false;
 
         /**
-         * [description]
+         * The Touch Event target, as defined in the Game Config.
+         * Typically the canvas to which the game is rendering, but can be any interactive DOM element.
          *
          * @name Phaser.Input.Mouse.MouseManager#target
-         * @type {null}
+         * @type {any}
          * @since 3.0.0
          */
         this.target;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Mouse.MouseManager#handler
-         * @type {?MouseHandler}
-         * @since 3.0.0
-         */
-        this.handler;
 
         /**
          * If the mouse has been pointer locked successfully this will be set to true.
@@ -37302,12 +39670,15 @@ var MouseManager = new Class({
          * @since 3.0.0
          */
         this.locked = false;
+
+        inputManager.events.once('boot', this.boot, this);
     },
 
     /**
-     * [description]
+     * The Touch Manager boot process.
      *
      * @method Phaser.Input.Mouse.MouseManager#boot
+     * @private
      * @since 3.0.0
      */
     boot: function ()
@@ -37335,12 +39706,17 @@ var MouseManager = new Class({
     },
 
     /**
-     * [description]
+     * Attempts to disable the context menu from appearing if you right-click on the browser.
+     * 
+     * Works by listening for the `contextmenu` event and prevent defaulting it.
+     * 
+     * Use this if you need to enable right-button mouse support in your game, and the browser
+     * menu keeps getting in the way.
      *
      * @method Phaser.Input.Mouse.MouseManager#disableContextMenu
      * @since 3.0.0
      *
-     * @return {Phaser.Input.Mouse.MouseManager} [description]
+     * @return {Phaser.Input.Mouse.MouseManager} This Mouse Manager instance.
      */
     disableContextMenu: function ()
     {
@@ -37384,7 +39760,7 @@ var MouseManager = new Class({
      * @method Phaser.Input.Mouse.MouseManager#pointerLockChange
      * @since 3.0.0
      *
-     * @param {MouseHandler} event - The native event from the browser.
+     * @param {MouseEvent} event - The native event from the browser.
      */
     pointerLockChange: function (event)
     {
@@ -37413,61 +39789,103 @@ var MouseManager = new Class({
     },
 
     /**
-     * [description]
+     * The Mouse Move Event Handler.
+     *
+     * @method Phaser.Input.Mouse.MouseManager#onMouseMove
+     * @since 3.10.0
+     *
+     * @param {MouseEvent} event - The native DOM Mouse Move Event.
+     */
+    onMouseMove: function (event)
+    {
+        if (event.defaultPrevented || !this.enabled)
+        {
+            // Do nothing if event already handled
+            return;
+        }
+
+        this.manager.queueMouseMove(event);
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+    },
+
+    /**
+     * The Mouse Down Event Handler.
+     *
+     * @method Phaser.Input.Mouse.MouseManager#onMouseDown
+     * @since 3.10.0
+     *
+     * @param {MouseEvent} event - The native DOM Mouse Down Event.
+     */
+    onMouseDown: function (event)
+    {
+        if (event.defaultPrevented || !this.enabled)
+        {
+            // Do nothing if event already handled
+            return;
+        }
+
+        this.manager.queueMouseDown(event);
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+    },
+
+    /**
+     * The Mouse Up Event Handler.
+     *
+     * @method Phaser.Input.Mouse.MouseManager#onMouseUp
+     * @since 3.10.0
+     *
+     * @param {MouseEvent} event - The native DOM Mouse Up Event.
+     */
+    onMouseUp: function (event)
+    {
+        if (event.defaultPrevented || !this.enabled)
+        {
+            // Do nothing if event already handled
+            return;
+        }
+
+        this.manager.queueMouseUp(event);
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+    },
+
+    /**
+     * Starts the Mouse Event listeners running.
+     * This is called automatically and does not need to be manually invoked.
      *
      * @method Phaser.Input.Mouse.MouseManager#startListeners
      * @since 3.0.0
      */
     startListeners: function ()
     {
-        var queue = this.manager.queue;
         var target = this.target;
 
         var passive = { passive: true };
         var nonPassive = { passive: false };
 
-        var handler;
-
         if (this.capture)
         {
-            handler = function (event)
-            {
-                if (event.defaultPrevented)
-                {
-                    // Do nothing if event already handled
-                    return;
-                }
-
-                // console.log('mouse', event);
-
-                queue.push(event);
-
-                event.preventDefault();
-            };
-
-            target.addEventListener('mousemove', handler, nonPassive);
-            target.addEventListener('mousedown', handler, nonPassive);
-            target.addEventListener('mouseup', handler, nonPassive);
+            target.addEventListener('mousemove', this.onMouseMove.bind(this), nonPassive);
+            target.addEventListener('mousedown', this.onMouseDown.bind(this), nonPassive);
+            target.addEventListener('mouseup', this.onMouseUp.bind(this), nonPassive);
         }
         else
         {
-            handler = function (event)
-            {
-                if (event.defaultPrevented)
-                {
-                    // Do nothing if event already handled
-                    return;
-                }
-
-                queue.push(event);
-            };
-
-            target.addEventListener('mousemove', handler, passive);
-            target.addEventListener('mousedown', handler, passive);
-            target.addEventListener('mouseup', handler, passive);
+            target.addEventListener('mousemove', this.onMouseMove.bind(this), passive);
+            target.addEventListener('mousedown', this.onMouseDown.bind(this), passive);
+            target.addEventListener('mouseup', this.onMouseUp.bind(this), passive);
         }
-
-        this.handler = handler;
 
         if (Features.pointerLock)
         {
@@ -37480,7 +39898,8 @@ var MouseManager = new Class({
     },
 
     /**
-     * [description]
+     * Stops the Mouse Event listeners.
+     * This is called automatically and does not need to be manually invoked.
      *
      * @method Phaser.Input.Mouse.MouseManager#stopListeners
      * @since 3.0.0
@@ -37489,9 +39908,9 @@ var MouseManager = new Class({
     {
         var target = this.target;
 
-        target.removeEventListener('mousemove', this.handler);
-        target.removeEventListener('mousedown', this.handler);
-        target.removeEventListener('mouseup', this.handler);
+        target.removeEventListener('mousemove', this.onMouseMove);
+        target.removeEventListener('mousedown', this.onMouseDown);
+        target.removeEventListener('mouseup', this.onMouseUp);
 
         if (Features.pointerLock)
         {
@@ -37502,7 +39921,7 @@ var MouseManager = new Class({
     },
 
     /**
-     * [description]
+     * Destroys this Mouse Manager instance.
      *
      * @method Phaser.Input.Mouse.MouseManager#destroy
      * @since 3.0.0
@@ -37511,6 +39930,7 @@ var MouseManager = new Class({
     {
         this.stopListeners();
 
+        this.target = null;
         this.manager = null;
     }
 
@@ -37520,8 +39940,8 @@ module.exports = MouseManager;
 
 
 /***/ }),
-/* 192 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 200 */
+/***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
@@ -37529,508 +39949,78 @@ module.exports = MouseManager;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Class = __webpack_require__(0);
-var GetFastValue = __webpack_require__(1);
-var ProcessKeyCombo = __webpack_require__(511);
-var ResetKeyCombo = __webpack_require__(509);
-
-/**
- * @callback KeyboardKeydownCallback
- *
- * @param {KeyboardEvent} event - [description]
- */
-
-/**
- * @typedef {object} KeyComboConfig
- *
- * @property {boolean} [resetOnWrongKey=true] - [description]
- * @property {number} [maxKeyDelay=0] - [description]
- * @property {boolean} [resetOnMatch=false] - [description]
- * @property {boolean} [deleteOnMatch=false] - [description]
- */
-
-/**
- * @classdesc
- * [description]
- *
- * `keys` argument can be:
- *
- * A string (ATARI)
- * An array of either integers (key codes) or strings, or a mixture of both
- * An array of objects (such as Key objects) with a public 'keyCode' property
- *
- * @class KeyCombo
- * @memberOf Phaser.Input.Keyboard
- * @constructor
- * @since 3.0.0
- *
- * @param {Phaser.Input.Keyboard.KeyboardManager} keyboardManager - [description]
- * @param {(string|integer[]|object[])} keys - [description]
- * @param {KeyComboConfig} [config] - [description]
- */
-var KeyCombo = new Class({
-
-    initialize:
-
-    function KeyCombo (keyboardManager, keys, config)
-    {
-        if (config === undefined) { config = {}; }
-
-        //  Can't have a zero or single length combo (string or array based)
-        if (keys.length < 2)
-        {
-            return false;
-        }
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Keyboard.KeyCombo#manager
-         * @type {Phaser.Input.Keyboard.KeyboardManager}
-         * @since 3.0.0
-         */
-        this.manager = keyboardManager;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Keyboard.KeyCombo#enabled
-         * @type {boolean}
-         * @default true
-         * @since 3.0.0
-         */
-        this.enabled = true;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Keyboard.KeyCombo#keyCodes
-         * @type {array}
-         * @default []
-         * @since 3.0.0
-         */
-        this.keyCodes = [];
-
-        //  if 'keys' is a string we need to get the keycode of each character in it
-
-        for (var i = 0; i < keys.length; i++)
-        {
-            var char = keys[i];
-
-            if (typeof char === 'string')
-            {
-                this.keyCodes.push(char.toUpperCase().charCodeAt(0));
-            }
-            else if (typeof char === 'number')
-            {
-                this.keyCodes.push(char);
-            }
-            else if (char.hasOwnProperty('keyCode'))
-            {
-                this.keyCodes.push(char.keyCode);
-            }
-        }
-
-        /**
-         * The current keyCode the combo is waiting for.
-         *
-         * @name Phaser.Input.Keyboard.KeyCombo#current
-         * @type {integer}
-         * @since 3.0.0
-         */
-        this.current = this.keyCodes[0];
-
-        /**
-         * The current index of the key being waited for in the 'keys' string.
-         *
-         * @name Phaser.Input.Keyboard.KeyCombo#index
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.index = 0;
-
-        /**
-         * The length of this combo (in keycodes)
-         *
-         * @name Phaser.Input.Keyboard.KeyCombo#size
-         * @type {number}
-         * @since 3.0.0
-         */
-        this.size = this.keyCodes.length;
-
-        /**
-         * The time the previous key in the combo was matched.
-         *
-         * @name Phaser.Input.Keyboard.KeyCombo#timeLastMatched
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.timeLastMatched = 0;
-
-        /**
-         * Has this Key Combo been matched yet?
-         *
-         * @name Phaser.Input.Keyboard.KeyCombo#matched
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.matched = false;
-
-        /**
-         * The time the entire combo was matched.
-         *
-         * @name Phaser.Input.Keyboard.KeyCombo#timeMatched
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.timeMatched = 0;
-
-        /**
-         * If they press the wrong key do we reset the combo?
-         *
-         * @name Phaser.Input.Keyboard.KeyCombo#resetOnWrongKey
-         * @type {boolean}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.resetOnWrongKey = GetFastValue(config, 'resetOnWrongKey', true);
-
-        /**
-         * The max delay in ms between each key press. Above this the combo is reset. 0 means disabled.
-         *
-         * @name Phaser.Input.Keyboard.KeyCombo#maxKeyDelay
-         * @type {integer}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.maxKeyDelay = GetFastValue(config, 'maxKeyDelay', 0);
-
-        /**
-         * If previously matched and they press Key 1 again, will it reset?
-         *
-         * @name Phaser.Input.Keyboard.KeyCombo#resetOnMatch
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.resetOnMatch = GetFastValue(config, 'resetOnMatch', false);
-
-        /**
-         * If the combo matches, will it delete itself?
-         *
-         * @name Phaser.Input.Keyboard.KeyCombo#deleteOnMatch
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.deleteOnMatch = GetFastValue(config, 'deleteOnMatch', false);
-
-        var _this = this;
-
-        var onKeyDownHandler = function (event)
-        {
-            if (_this.matched || !_this.enabled)
-            {
-                return;
-            }
-
-            var matched = ProcessKeyCombo(event, _this);
-
-            if (matched)
-            {
-                _this.manager.emit('keycombomatch', _this, event);
-
-                if (_this.resetOnMatch)
-                {
-                    ResetKeyCombo(_this);
-                }
-                else if (_this.deleteOnMatch)
-                {
-                    _this.destroy();
-                }
-            }
-        };
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Keyboard.KeyCombo#onKeyDown
-         * @type {KeyboardKeydownCallback}
-         * @since 3.0.0
-         */
-        this.onKeyDown = onKeyDownHandler;
-
-        this.manager.on('keydown', onKeyDownHandler);
-    },
+var INPUT_CONST = {
 
     /**
-     * How far complete is this combo? A value between 0 and 1.
-     *
-     * @name Phaser.Input.Keyboard.KeyCombo#progress
-     * @type {number}
-     * @readOnly
-     * @since 3.0.0
-     */
-    progress: {
-
-        get: function ()
-        {
-            return this.index / this.size;
-        }
-
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Keyboard.KeyCombo#destroy
-     * @since 3.0.0
-     */
-    destroy: function ()
-    {
-        this.enabled = false;
-        this.keyCodes = [];
-
-        this.manager.off('keydown', this.onKeyDown);
-        this.manager = undefined;
-    }
-
-});
-
-module.exports = KeyCombo;
-
-
-/***/ }),
-/* 193 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var Class = __webpack_require__(0);
-
-/**
- * @classdesc
- * A generic Key object which can be passed to the Process functions (and so on)
- * keycode must be an integer
- *
- * @class Key
- * @memberOf Phaser.Input.Keyboard
- * @constructor
- * @since 3.0.0
- *
- * @param {integer} keyCode - The keycode of this key.
- */
-var Key = new Class({
-
-    initialize:
-
-    function Key (keyCode)
-    {
-        /**
-         * The keycode of this key.
-         *
-         * @name Phaser.Input.Keyboard.Key#keyCode
-         * @type {integer}
-         * @since 3.0.0
-         */
-        this.keyCode = keyCode;
-
-        /**
-         * The original DOM event.
-         *
-         * @name Phaser.Input.Keyboard.Key#originalEvent
-         * @type {KeyboardEvent}
-         * @since 3.0.0
-         */
-        this.originalEvent = undefined;
-
-        /**
-         * Should this Key prevent event propagation?
-         *
-         * @name Phaser.Input.Keyboard.Key#preventDefault
-         * @type {boolean}
-         * @default true
-         * @since 3.0.0
-         */
-        this.preventDefault = true;
-
-        /**
-         * Can this Key be processed?
-         *
-         * @name Phaser.Input.Keyboard.Key#enabled
-         * @type {boolean}
-         * @default true
-         * @since 3.0.0
-         */
-        this.enabled = true;
-
-        /**
-         * The "down" state of the key. This will remain `true` for as long as the keyboard thinks this key is held down.
-         *
-         * @name Phaser.Input.Keyboard.Key#isDown
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.isDown = false;
-
-        /**
-         * The "up" state of the key. This will remain `true` for as long as the keyboard thinks this key is up.
-         *
-         * @name Phaser.Input.Keyboard.Key#isUp
-         * @type {boolean}
-         * @default true
-         * @since 3.0.0
-         */
-        this.isUp = true;
-
-        /**
-         * The down state of the ALT key, if pressed at the same time as this key.
-         *
-         * @name Phaser.Input.Keyboard.Key#altKey
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.altKey = false;
-
-        /**
-         * The down state of the CTRL key, if pressed at the same time as this key.
-         *
-         * @name Phaser.Input.Keyboard.Key#ctrlKey
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.ctrlKey = false;
-
-        /**
-         * The down state of the SHIFT key, if pressed at the same time as this key.
-         *
-         * @name Phaser.Input.Keyboard.Key#shiftKey
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.shiftKey = false;
-
-        /**
-         * The location of the modifier key. 0 for standard (or unknown), 1 for left, 2 for right, 3 for numpad.
-         *
-         * @name Phaser.Input.Keyboard.Key#location
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.location = 0;
-
-        /**
-         * The timestamp when the key was last pressed down.
-         *
-         * @name Phaser.Input.Keyboard.Key#timeDown
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.timeDown = 0;
-
-        /**
-         * The number of milliseconds this key has been held down for.
-         * If the key is down this value holds the duration of that key press and is constantly updated.
-         * If the key is up it holds the duration of the previous down session.
-         *
-         * @name Phaser.Input.Keyboard.Key#duration
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.duration = 0;
-
-        /**
-         * The timestamp when the key was last released.
-         *
-         * @name Phaser.Input.Keyboard.Key#timeUp
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.timeUp = 0;
-
-        /**
-         * If a key is held down this holds down the number of times the key has 'repeated'.
-         *
-         * @name Phaser.Input.Keyboard.Key#repeats
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.repeats = 0;
-
-        /**
-         * True if the key has just been pressed (NOTE: requires to be reset, see justDown getter)
-         *
-         * @name Phaser.Input.Keyboard.Key#_justDown
-         * @type {boolean}
-         * @private
-         * @default false
-         * @since 3.0.0
-         */
-        this._justDown = false;
-
-        /**
-         * True if the key has just been pressed (NOTE: requires to be reset, see justDown getter)
-         *
-         * @name Phaser.Input.Keyboard.Key#_justUp
-         * @type {boolean}
-         * @private
-         * @default false
-         * @since 3.0.0
-         */
-        this._justUp = false;
-    },
-
-    /**
-     * Resets this Key object back to its default un-pressed state.
-     *
-     * @method Phaser.Input.Keyboard.Key.reset
-     * @since 3.6.0
+     * The mouse pointer is being held down.
      * 
-     * @return {Phaser.Input.Keyboard.Key} This Key instance.
+     * @name Phaser.Input.MOUSE_DOWN
+     * @type {integer}
+     * @since 3.10.0
      */
-    reset: function ()
-    {
-        this.preventDefault = true;
-        this.enabled = true;
-        this.isDown = false;
-        this.isUp = true;
-        this.altKey = false;
-        this.ctrlKey = false;
-        this.shiftKey = false;
-        this.timeDown = 0;
-        this.duration = 0;
-        this.timeUp = 0;
-        this.repeats = 0;
-        this._justDown = false;
-        this._justUp = false;
+    MOUSE_DOWN: 0,
 
-        return this;
-    }
+    /**
+     * The mouse pointer is being moved.
+     * 
+     * @name Phaser.Input.MOUSE_MOVE
+     * @type {integer}
+     * @since 3.10.0
+     */
+    MOUSE_MOVE: 1,
 
-});
+    /**
+     * The mouse pointer is released.
+     * 
+     * @name Phaser.Input.MOUSE_UP
+     * @type {integer}
+     * @since 3.10.0
+     */
+    MOUSE_UP: 2,
 
-module.exports = Key;
+    /**
+     * A touch pointer has been started.
+     * 
+     * @name Phaser.Input.TOUCH_START
+     * @type {integer}
+     * @since 3.10.0
+     */
+    TOUCH_START: 3,
+
+    /**
+     * A touch pointer has been started.
+     * 
+     * @name Phaser.Input.TOUCH_MOVE
+     * @type {integer}
+     * @since 3.10.0
+     */
+    TOUCH_MOVE: 4,
+
+    /**
+     * A touch pointer has been started.
+     * 
+     * @name Phaser.Input.TOUCH_END
+     * @type {integer}
+     * @since 3.10.0
+     */
+    TOUCH_END: 5,
+
+    /**
+     * The pointer lock has changed.
+     * 
+     * @name Phaser.Input.POINTER_LOCK_CHANGE
+     * @type {integer}
+     * @since 3.10.0
+     */
+    POINTER_LOCK_CHANGE: 6
+
+};
+
+module.exports = INPUT_CONST;
 
 
 /***/ }),
-/* 194 */
+/* 201 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -38040,1256 +40030,36 @@ module.exports = Key;
  */
 
 var Class = __webpack_require__(0);
+var CONST = __webpack_require__(200);
 var EventEmitter = __webpack_require__(9);
-var Key = __webpack_require__(193);
-var KeyCodes = __webpack_require__(116);
-var KeyCombo = __webpack_require__(192);
-var KeyMap = __webpack_require__(508);
-var ProcessKeyDown = __webpack_require__(507);
-var ProcessKeyUp = __webpack_require__(506);
-
-/**
- * @callback KeyboardHandler
- *
- * @property {KeyboardEvent} event - [description]
- */
-
-/**
- * @classdesc
- * The Keyboard class monitors keyboard input and dispatches keyboard events.
- *
- * _Note_: many keyboards are unable to process certain combinations of keys due to hardware limitations known as ghosting.
- * See http://www.html5gamedevs.com/topic/4876-impossible-to-use-more-than-2-keyboard-input-buttons-at-the-same-time/ for more details.
- *
- * Also please be aware that certain browser extensions can disable or override Phaser keyboard handling.
- * For example the Chrome extension vimium is known to disable Phaser from using the D key. And there are others.
- * So please check your extensions before opening Phaser issues.
- *
- * @class KeyboardManager
- * @extends Phaser.Events.EventEmitter
- * @memberOf Phaser.Input.Keyboard
- * @constructor
- * @since 3.0.0
- *
- * @param {Phaser.Input.InputManager} inputManager - [description]
- */
-var KeyboardManager = new Class({
-
-    Extends: EventEmitter,
-
-    initialize:
-
-    function KeyboardManager (inputManager)
-    {
-        EventEmitter.call(this);
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Keyboard.KeyboardManager#manager
-         * @type {Phaser.Input.InputManager}
-         * @since 3.0.0
-         */
-        this.manager = inputManager;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Keyboard.KeyboardManager#enabled
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.enabled = false;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Keyboard.KeyboardManager#target
-         * @type {?object}
-         * @since 3.0.0
-         */
-        this.target;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Keyboard.KeyboardManager#keys
-         * @type {Phaser.Input.Keyboard.Key[]}
-         * @default []
-         * @since 3.0.0
-         */
-        this.keys = [];
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Keyboard.KeyboardManager#combos
-         * @type {Phaser.Input.Keyboard.KeyCombo[]}
-         * @default []
-         * @since 3.0.0
-         */
-        this.combos = [];
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Keyboard.KeyboardManager#captures
-         * @type {array}
-         * @default []
-         * @since 3.0.0
-         */
-        this.captures = [];
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Keyboard.KeyboardManager#queue
-         * @type {KeyboardEvent[]}
-         * @default []
-         * @since 3.0.0
-         */
-        this.queue = [];
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Keyboard.KeyboardManager#handler
-         * @type {?KeyboardHandler}
-         * @since 3.0.0
-         */
-        this.handler;
-    },
-
-    /**
-     * The Boot handler is called by Phaser.Game when it first starts up.
-     *
-     * @method Phaser.Input.Keyboard.KeyboardManager#boot
-     * @since 3.0.0
-     */
-    boot: function ()
-    {
-        var config = this.manager.config;
-
-        this.enabled = config.inputKeyboard;
-        this.target = config.inputKeyboardEventTarget;
-
-        if (this.enabled)
-        {
-            this.startListeners();
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Keyboard.KeyboardManager#startListeners
-     * @since 3.0.0
-     */
-    startListeners: function ()
-    {
-        var queue = this.queue;
-        var captures = this.captures;
-
-        var handler = function (event)
-        {
-            if (event.defaultPrevented)
-            {
-                // Do nothing if event already handled
-                return;
-            }
-
-            queue.push(event);
-
-            if (captures[event.keyCode])
-            {
-                event.preventDefault();
-            }
-        };
-
-        this.handler = handler;
-
-        this.target.addEventListener('keydown', handler, false);
-        this.target.addEventListener('keyup', handler, false);
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Keyboard.KeyboardManager#stopListeners
-     * @since 3.0.0
-     */
-    stopListeners: function ()
-    {
-        this.target.removeEventListener('keydown', this.handler);
-        this.target.removeEventListener('keyup', this.handler);
-    },
-
-    /**
-     * @typedef {object} CursorKeys
-     *
-     * @property {Phaser.Input.Keyboard.Key} [up] - A Key object mapping to the UP arrow key.
-     * @property {Phaser.Input.Keyboard.Key} [down] - A Key object mapping to the DOWN arrow key.
-     * @property {Phaser.Input.Keyboard.Key} [left] - A Key object mapping to the LEFT arrow key.
-     * @property {Phaser.Input.Keyboard.Key} [right] - A Key object mapping to the RIGHT arrow key.
-     * @property {Phaser.Input.Keyboard.Key} [space] - A Key object mapping to the SPACE BAR key.
-     * @property {Phaser.Input.Keyboard.Key} [shift] - A Key object mapping to the SHIFT key.
-     */
-
-    /**
-     * Creates and returns an object containing 4 hotkeys for Up, Down, Left and Right, and also Space Bar and shift.
-     *
-     * @method Phaser.Input.Keyboard.KeyboardManager#createCursorKeys
-     * @since 3.0.0
-     *
-     * @return {CursorKeys} An object containing the properties: `up`, `down`, `left`, `right`, `space` and `shift`.
-     */
-    createCursorKeys: function ()
-    {
-        return this.addKeys({
-            up: KeyCodes.UP,
-            down: KeyCodes.DOWN,
-            left: KeyCodes.LEFT,
-            right: KeyCodes.RIGHT,
-            space: KeyCodes.SPACE,
-            shift: KeyCodes.SHIFT
-        });
-    },
-
-    /**
-     * A practical way to create an object containing user selected hotkeys.
-     *
-     * For example,
-     *
-     *     addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.W, 'down': Phaser.Input.Keyboard.KeyCodes.S });
-     *
-     * would return an object containing properties (`up` and `down`) referring to {@link Phaser.Input.Keyboard.Key} objects.
-     *
-     * @method Phaser.Input.Keyboard.KeyboardManager#addKeys
-     * @since 3.0.0
-     *
-     * @param {object} keys - [description]
-     *
-     * @return {object} [description]
-     */
-    addKeys: function (keys)
-    {
-        var output = {};
-
-        for (var key in keys)
-        {
-            output[key] = this.addKey(keys[key]);
-        }
-
-        return output;
-    },
-
-    /**
-     * If you need more fine-grained control over a Key you can create a new Phaser.Key object via this method.
-     * The Key object can then be polled, have events attached to it, etc.
-     *
-     * @method Phaser.Input.Keyboard.KeyboardManager#addKey
-     * @since 3.0.0
-     *
-     * @param {(string|integer)} keyCode - [description]
-     *
-     * @return {Phaser.Input.Keyboard.Key} [description]
-     */
-    addKey: function (keyCode)
-    {
-        var keys = this.keys;
-
-        if (!keys[keyCode])
-        {
-            keys[keyCode] = new Key(keyCode);
-            this.captures[keyCode] = true;
-        }
-
-        return keys[keyCode];
-    },
-
-    /**
-     * Removes a Key object from the Keyboard manager.
-     *
-     * @method Phaser.Input.Keyboard.KeyboardManager#removeKey
-     * @since 3.0.0
-     *
-     * @param {(string|integer)} keyCode - [description]
-     */
-    removeKey: function (keyCode)
-    {
-        if (this.keys[keyCode])
-        {
-            this.keys[keyCode] = undefined;
-            this.captures[keyCode] = false;
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Keyboard.KeyboardManager#addKeyCapture
-     * @since 3.0.0
-     *
-     * @param {(string|integer|string[]|integer[])} keyCodes - [description]
-     */
-    addKeyCapture: function (keyCodes)
-    {
-        if (!Array.isArray(keyCodes))
-        {
-            keyCodes = [ keyCodes ];
-        }
-
-        for (var i = 0; i < keyCodes.length; i++)
-        {
-            this.captures[keyCodes[i]] = true;
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Keyboard.KeyboardManager#removeKeyCapture
-     * @since 3.0.0
-     *
-     * @param {(string|integer|string[]|integer[])} keyCodes - [description]
-     */
-    removeKeyCapture: function (keyCodes)
-    {
-        if (!Array.isArray(keyCodes))
-        {
-            keyCodes = [ keyCodes ];
-        }
-
-        for (var i = 0; i < keyCodes.length; i++)
-        {
-            this.captures[keyCodes[i]] = false;
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Keyboard.KeyboardManager#createCombo
-     * @since 3.0.0
-     *
-     * @param {(string|integer[]|object[])} keys - [description]
-     * @param {KeyComboConfig} config - [description]
-     *
-     * @return {Phaser.Input.Keyboard.KeyCombo} [description]
-     */
-    createCombo: function (keys, config)
-    {
-        return new KeyCombo(this, keys, config);
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Keyboard.KeyboardManager#update
-     * @since 3.0.0
-     */
-    update: function ()
-    {
-        var len = this.queue.length;
-
-        if (!this.enabled || len === 0)
-        {
-            return;
-        }
-
-        //  Clears the queue array, and also means we don't work on array data that could potentially
-        //  be modified during the processing phase
-        var queue = this.queue.splice(0, len);
-
-        var keys = this.keys;
-
-        //  Process the event queue, dispatching all of the events that have stored up
-        for (var i = 0; i < len; i++)
-        {
-            var event = queue[i];
-            var code = event.keyCode;
-
-            if (event.type === 'keydown')
-            {
-                if (KeyMap[code] && (keys[code] === undefined || keys[code].isDown === false))
-                {
-                    //  Will emit a keyboard or keyup event
-                    this.emit(event.type, event);
-
-                    this.emit('keydown_' + KeyMap[code], event);
-                }
-
-                if (keys[code])
-                {
-                    ProcessKeyDown(keys[code], event);
-                }
-            }
-            else
-            {
-                //  Will emit a keyboard or keyup event
-                this.emit(event.type, event);
-
-                this.emit('keyup_' + KeyMap[code], event);
-
-                if (keys[code])
-                {
-                    ProcessKeyUp(keys[code], event);
-                }
-            }
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Keyboard.KeyboardManager#shutdown
-     * @since 3.0.0
-     */
-    shutdown: function ()
-    {
-        this.removeAllListeners();
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Keyboard.KeyboardManager#destroy
-     * @since 3.0.0
-     */
-    destroy: function ()
-    {
-        this.stopListeners();
-
-        this.removeAllListeners();
-
-        this.keys = [];
-        this.combos = [];
-        this.captures = [];
-        this.queue = [];
-        this.handler = undefined;
-
-        this.manager = null;
-    }
-
-});
-
-module.exports = KeyboardManager;
-
-
-/***/ }),
-/* 195 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var Class = __webpack_require__(0);
-
-/**
- * @classdesc
- * [description]
- *
- * @class Button
- * @memberOf Phaser.Input.Gamepad
- * @constructor
- * @since 3.0.0
- *
- * @param {Phaser.Input.Gamepad.Gamepad} pad - [description]
- * @param {integer} index - [description]
- */
-var Button = new Class({
-
-    initialize:
-
-    function Button (pad, index)
-    {
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Gamepad.Button#pad
-         * @type {Phaser.Input.Gamepad.Gamepad}
-         * @since 3.0.0
-         */
-        this.pad = pad;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Gamepad.Button#events
-         * @type {Phaser.Events.EventEmitter}
-         * @since 3.0.0
-         */
-        this.events = pad.manager;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Gamepad.Button#index
-         * @type {integer}
-         * @since 3.0.0
-         */
-        this.index = index;
-
-        /**
-         * Between 0 and 1.
-         *
-         * @name Phaser.Input.Gamepad.Button#value
-         * @type {float}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.value = 0;
-
-        /**
-         * Can be set for Analogue buttons to enable a 'pressure' threshold before considered as 'pressed'.
-         *
-         * @name Phaser.Input.Gamepad.Button#threshold
-         * @type {float}
-         * @default 1
-         * @since 3.0.0
-         */
-        this.threshold = 1;
-
-        /**
-         * Is the Button being pressed down or not?
-         *
-         * @name Phaser.Input.Gamepad.Button#pressed
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.pressed = false;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Gamepad.Button#update
-     * @since 3.0.0
-     *
-     * @param {GamepadButton} data - [description]
-     */
-    update: function (data)
-    {
-        this.value = data.value;
-
-        if (this.value >= this.threshold)
-        {
-            if (!this.pressed)
-            {
-                this.pressed = true;
-                this.events.emit('down', this.pad, this, this.value, data);
-            }
-        }
-        else if (this.pressed)
-        {
-            this.pressed = false;
-            this.events.emit('up', this.pad, this, this.value, data);
-        }
-    }
-
-});
-
-module.exports = Button;
-
-
-/***/ }),
-/* 196 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var Class = __webpack_require__(0);
-
-/**
- * @classdesc
- * [description]
- *
- * @class Axis
- * @memberOf Phaser.Input.Gamepad
- * @constructor
- * @since 3.0.0
- *
- * @param {Phaser.Input.Gamepad.Gamepad} pad - [description]
- * @param {integer} index - [description]
- */
-var Axis = new Class({
-
-    initialize:
-
-    function Axis (pad, index)
-    {
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Gamepad.Axis#pad
-         * @type {Phaser.Input.Gamepad.Gamepad}
-         * @since 3.0.0
-         */
-        this.pad = pad;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Gamepad.Axis#events
-         * @type {Phaser.Events.EventEmitter}
-         * @since 3.0.0
-         */
-        this.events = pad.events;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Gamepad.Axis#index
-         * @type {integer}
-         * @since 3.0.0
-         */
-        this.index = index;
-
-        /**
-         * The raw axis value, between -1 and 1 with 0 being dead center.
-         * Use the method `getValue` to get a normalized value with the threshold applied.
-         *
-         * @name Phaser.Input.Gamepad.Axis#value
-         * @type {float}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.value = 0;
-
-        /**
-         * Movement tolerance threshold below which axis values are ignored in `getValue`.
-         *
-         * @name Phaser.Input.Gamepad.Axis#threshold
-         * @type {float}
-         * @default 0.1
-         * @since 3.0.0
-         */
-        this.threshold = 0.1;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Gamepad.Axis#update
-     * @since 3.0.0
-     *
-     * @param {float} value - [description]
-     */
-    update: function (value)
-    {
-        this.value = value;
-    },
-
-    /**
-     * Applies threshold to the value and returns it.
-     *
-     * @method Phaser.Input.Gamepad.Axis#getValue
-     * @since 3.0.0
-     *
-     * @return {float} [description]
-     */
-    getValue: function ()
-    {
-        return (Math.abs(this.value) < this.threshold) ? 0 : this.value;
-    }
-
-});
-
-module.exports = Axis;
-
-
-/***/ }),
-/* 197 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var Axis = __webpack_require__(196);
-var Button = __webpack_require__(195);
-var Class = __webpack_require__(0);
-
-/**
- * @classdesc
- * [description]
- *
- * @class Gamepad
- * @memberOf Phaser.Input.Gamepad
- * @constructor
- * @since 3.0.0
- *
- * @param {Phaser.Input.Gamepad.GamepadManager} manager - [description]
- * @param {string} id - [description]
- * @param {number} index - [description]
- */
-var Gamepad = new Class({
-
-    initialize:
-
-    function Gamepad (manager, id, index)
-    {
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Gamepad.Gamepad#manager
-         * @type {Phaser.Input.Gamepad.GamepadManager}
-         * @since 3.0.0
-         */
-        this.manager = manager;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Gamepad.Gamepad#id
-         * @type {string}
-         * @since 3.0.0
-         */
-        this.id = id;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Gamepad.Gamepad#index
-         * @type {number}
-         * @since 3.0.0
-         */
-        this.index = index;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Gamepad.Gamepad#connected
-         * @type {boolean}
-         * @default true
-         * @since 3.0.0
-         */
-        this.connected = true;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Gamepad.Gamepad#timestamp
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.timestamp = 0;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Gamepad.Gamepad#buttons
-         * @type {Phaser.Input.Gamepad.Button[]}
-         * @default []
-         * @since 3.0.0
-         */
-        this.buttons = [];
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Gamepad.Gamepad#axes
-         * @type {Phaser.Input.Gamepad.Axis[]}
-         * @default []
-         * @since 3.0.0
-         */
-        this.axes = [];
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Gamepad.Gamepad#update
-     * @since 3.0.0
-     *
-     * @param {Gamepad} data - [description]
-     */
-    update: function (data)
-    {
-        this.timestamp = data.timestamp;
-        this.connected = data.connected;
-
-        var i;
-
-        var axes = this.axes;
-        var buttons = this.buttons;
-
-        for (i = 0; i < data.buttons.length; i++)
-        {
-            var buttonData = data.buttons[i];
-
-            if (buttons[i] === undefined)
-            {
-                buttons[i] = new Button(this, i);
-            }
-
-            buttons[i].update(buttonData);
-        }
-
-        //  Axes
-        for (i = 0; i < data.axes.length; i++)
-        {
-            var axisData = data.axes[i];
-
-            if (axes[i] === undefined)
-            {
-                axes[i] = new Axis(this, i);
-            }
-            else
-            {
-                axes[i].update(axisData);
-            }
-        }
-    }
-
-});
-
-module.exports = Gamepad;
-
-
-/***/ }),
-/* 198 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var Class = __webpack_require__(0);
-var EventEmitter = __webpack_require__(9);
-var Gamepad = __webpack_require__(197);
-
-// https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API
-// https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API
-// https://www.smashingmagazine.com/2015/11/gamepad-api-in-web-games/
-// http://html5gamepad.com/
-
-/**
- * @typedef {object} Pad
- *
- * @property {string} id - [description]
- * @property {integer} index - [description]
- */
-
-/**
- * @callback GamepadHandler
- *
- * @property {GamepadEvent} event - [description]
- */
-
-/**
- * @classdesc
- * [description]
- *
- * @class GamepadManager
- * @extends Phaser.Events.EventEmitter
- * @memberOf Phaser.Input.Gamepad
- * @constructor
- * @since 3.0.0
- *
- * @param {Phaser.Input.InputManager} inputManager - [description]
- */
-var GamepadManager = new Class({
-
-    Extends: EventEmitter,
-
-    initialize:
-
-    function GamepadManager (inputManager)
-    {
-        EventEmitter.call(this);
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Gamepad.GamepadManager#manager
-         * @type {Phaser.Input.InputManager}
-         * @since 3.0.0
-         */
-        this.manager = inputManager;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Gamepad.GamepadManager#enabled
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.enabled = false;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Gamepad.GamepadManager#target
-         * @type {?object}
-         * @since 3.0.0
-         */
-        this.target;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Gamepad.GamepadManager#handler
-         * @type {?GamepadHandler}
-         * @since 3.0.0
-         */
-        this.handler;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Gamepad.GamepadManager#gamepads
-         * @type {Phaser.Input.Gamepad.Gamepad[]}
-         * @default []
-         * @since 3.0.0
-         */
-        this.gamepads = [];
-
-        /**
-         * Standard FIFO queue.
-         *
-         * @name Phaser.Input.Gamepad.GamepadManager#queue
-         * @type {GamepadEvent[]}
-         * @default []
-         * @since 3.0.0
-         */
-        this.queue = [];
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Gamepad.GamepadManager#boot
-     * @since 3.0.0
-     */
-    boot: function ()
-    {
-        var config = this.manager.config;
-
-        this.enabled = config.inputGamepad && this.manager.game.device.input.gamepads;
-
-        this.target = window;
-
-        if (this.enabled)
-        {
-            this.startListeners();
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Gamepad.GamepadManager#startListeners
-     * @since 3.0.0
-     */
-    startListeners: function ()
-    {
-        var queue = this.queue;
-
-        var handler = function handler (event)
-        {
-            if (event.defaultPrevented)
-            {
-                // Do nothing if event already handled
-                return;
-            }
-
-            queue.push(event);
-        };
-
-        this.handler = handler;
-
-        var target = this.target;
-
-        target.addEventListener('gamepadconnected', handler, false);
-        target.addEventListener('gamepaddisconnected', handler, false);
-
-        //  FF only for now:
-        target.addEventListener('gamepadbuttondown', handler, false);
-        target.addEventListener('gamepadbuttonup', handler, false);
-        target.addEventListener('gamepadaxismove', handler, false);
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Gamepad.GamepadManager#stopListeners
-     * @since 3.0.0
-     */
-    stopListeners: function ()
-    {
-        var target = this.target;
-        var handler = this.handler;
-
-        target.removeEventListener('gamepadconnected', handler);
-        target.removeEventListener('gamepaddisconnected', handler);
-
-        target.removeEventListener('gamepadbuttondown', handler);
-        target.removeEventListener('gamepadbuttonup', handler);
-        target.removeEventListener('gamepadaxismove', handler);
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Gamepad.GamepadManager#disconnectAll
-     * @since 3.0.0
-     */
-    disconnectAll: function ()
-    {
-        for (var i = 0; i < this.gamepads.length; i++)
-        {
-            this.gamepads.connected = false;
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Gamepad.GamepadManager#addPad
-     * @since 3.0.0
-     *
-     * @param {Pad} pad - [description]
-     *
-     * @return {Phaser.Input.Gamepad.Gamepad} [description]
-     */
-    addPad: function (pad)
-    {
-        var gamepad = new Gamepad(this, pad.id, pad.index);
-
-        this.gamepads[pad.index] = gamepad;
-
-        return gamepad;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Gamepad.GamepadManager#removePad
-     * @since 3.0.0
-     * @todo  Code this feature
-     *
-     * @param {number} index - [description]
-     * @param {Pad} pad - [description]
-     */
-    removePad: function ()
-    {
-        //  TODO
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Gamepad.GamepadManager#refreshPads
-     * @since 3.0.0
-     *
-     * @param {Pad[]} pads - [description]
-     */
-    refreshPads: function (pads)
-    {
-        if (!pads)
-        {
-            this.disconnectAll();
-        }
-        else
-        {
-            for (var i = 0; i < pads.length; i++)
-            {
-                var pad = pads[i];
-
-                if (!pad)
-                {
-                    //  removePad?
-                    continue;
-                }
-
-                if (this.gamepads[pad.index] === undefined)
-                {
-                    this.addPad(pad);
-                }
-
-                this.gamepads[pad.index].update(pad);
-            }
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Gamepad.GamepadManager#getAll
-     * @since 3.0.0
-     *
-     * @return {Phaser.Input.Gamepad.Gamepad[]} [description]
-     */
-    getAll: function ()
-    {
-        var out = [];
-
-        for (var i = 0; i < this.gamepads.length; i++)
-        {
-            if (this.gamepads[i])
-            {
-                out.push(this.gamepads[i]);
-            }
-        }
-
-        return out;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Gamepad.GamepadManager#getPad
-     * @since 3.0.0
-     *
-     * @param {number} index - [description]
-     *
-     * @return {Phaser.Input.Gamepad.Gamepad} [description]
-     */
-    getPad: function (index)
-    {
-        for (var i = 0; i < this.gamepads.length; i++)
-        {
-            if (this.gamepads[i].index === index)
-            {
-                return this.gamepads[i];
-            }
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Gamepad.GamepadManager#update
-     * @since 3.0.0
-     */
-    update: function ()
-    {
-        if (!this.enabled)
-        {
-            return;
-        }
-
-        this.refreshPads(navigator.getGamepads());
-
-        var len = this.queue.length;
-
-        if (len === 0)
-        {
-            return;
-        }
-
-        var queue = this.queue.splice(0, len);
-
-        //  Process the event queue, dispatching all of the events that have stored up
-        for (var i = 0; i < len; i++)
-        {
-            var event = queue[i];
-            var pad;
-
-            switch (event.type)
-            {
-                case 'gamepadconnected':
-
-                    pad = this.getPad(event.gamepad.index);
-
-                    this.emit('connected', pad, event);
-
-                    break;
-
-                case 'gamepaddisconnected':
-
-                    pad = this.getPad(event.gamepad.index);
-
-                    this.emit('disconnected', pad, event);
-
-                    break;
-            }
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Input.Gamepad.GamepadManager#destroy
-     * @since 3.0.0
-     */
-    destroy: function ()
-    {
-        this.stopListeners();
-        this.disconnectAll();
-
-        this.gamepads = [];
-    },
-
-    /**
-     * The total number of connected game pads.
-     *
-     * @name Phaser.Input.Gamepad.GamepadManager#total
-     * @type {number}
-     * @since 3.0.0
-     */
-    total: {
-
-        get: function ()
-        {
-            return this.gamepads.length;
-        }
-
-    }
-
-});
-
-module.exports = GamepadManager;
-
-
-/***/ }),
-/* 199 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var Class = __webpack_require__(0);
-var EventEmitter = __webpack_require__(9);
-var Gamepad = __webpack_require__(198);
-var Keyboard = __webpack_require__(194);
-var Mouse = __webpack_require__(191);
-var Pointer = __webpack_require__(190);
+var Mouse = __webpack_require__(199);
+var Pointer = __webpack_require__(198);
 var Rectangle = __webpack_require__(14);
-var Touch = __webpack_require__(189);
-var TransformMatrix = __webpack_require__(63);
-var TransformXY = __webpack_require__(256);
+var Touch = __webpack_require__(197);
+var TransformMatrix = __webpack_require__(64);
+var TransformXY = __webpack_require__(257);
 
 /**
  * @classdesc
- * [description]
+ * The Input Manager is responsible for handling the pointer related systems in a single Phaser Game instance.
+ *
+ * Based on the Game Config it will create handlers for mouse and touch support.
+ *
+ * Keyboard and Gamepad are plugins, handled directly by the InputPlugin class.
+ *
+ * It then manages the event queue, pointer creation and general hit test related operations.
+ *
+ * You rarely need to interact with the Input Manager directly, and as such, all of its properties and methods
+ * should be considered private. Instead, you should use the Input Plugin, which is a Scene level system, responsible
+ * for dealing with all input events for a Scene.
  *
  * @class InputManager
  * @memberOf Phaser.Input
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Game} game - [description]
- * @param {object} config - [description]
+ * @param {Phaser.Game} game - The Game instance that owns the Input Manager.
+ * @param {object} config - The Input Configuration object, as set in the Game Config.
  */
 var InputManager = new Class({
 
@@ -39298,16 +40068,18 @@ var InputManager = new Class({
     function InputManager (game, config)
     {
         /**
-         * [description]
+         * The Game instance that owns the Input Manager.
+         * A Game only maintains on instance of the Input Manager at any time.
          *
          * @name Phaser.Input.InputManager#game
          * @type {Phaser.Game}
+         * @readOnly
          * @since 3.0.0
          */
         this.game = game;
 
         /**
-         * [description]
+         * The Canvas that is used for all DOM event input listeners.
          *
          * @name Phaser.Input.InputManager#canvas
          * @type {HTMLCanvasElement}
@@ -39316,7 +40088,7 @@ var InputManager = new Class({
         this.canvas;
 
         /**
-         * [description]
+         * The Input Configuration object, as set in the Game Config.
          *
          * @name Phaser.Input.InputManager#config
          * @type {object}
@@ -39325,7 +40097,7 @@ var InputManager = new Class({
         this.config = config;
 
         /**
-         * [description]
+         * If set, the Input Manager will run its update loop every frame.
          *
          * @name Phaser.Input.InputManager#enabled
          * @type {boolean}
@@ -39335,7 +40107,7 @@ var InputManager = new Class({
         this.enabled = true;
 
         /**
-         * [description]
+         * The Event Emitter instance that the Input Manager uses to emit events from.
          *
          * @name Phaser.Input.InputManager#events
          * @type {Phaser.Events.EventEmitter}
@@ -39344,7 +40116,7 @@ var InputManager = new Class({
         this.events = new EventEmitter();
 
         /**
-         * Standard FIFO queue.
+         * A standard FIFO queue for the native DOM events waiting to be handled by the Input Manager.
          *
          * @name Phaser.Input.InputManager#queue
          * @type {array}
@@ -39354,55 +40126,168 @@ var InputManager = new Class({
         this.queue = [];
 
         /**
-         * [description]
+         * DOM Callbacks container.
          *
-         * @name Phaser.Input.InputManager#keyboard
-         * @type {Phaser.Input.Keyboard.KeyboardManager}
-         * @since 3.0.0
+         * @name Phaser.Input.InputManager#domCallbacks
+         * @private
+         * @type {object}
+         * @since 3.10.0
          */
-        this.keyboard = new Keyboard(this);
+        this.domCallbacks = { up: [], down: [], move: [], upOnce: [], downOnce: [], moveOnce: [] };
 
         /**
-         * [description]
+         * Are there any up callbacks defined?
+         *
+         * @name Phaser.Input.InputManager#_hasUpCallback
+         * @private
+         * @type {boolean}
+         * @since 3.10.0
+         */
+        this._hasUpCallback = false;
+
+        /**
+         * Are there any down callbacks defined?
+         *
+         * @name Phaser.Input.InputManager#_hasDownCallback
+         * @private
+         * @type {boolean}
+         * @since 3.10.0
+         */
+        this._hasDownCallback = false;
+
+        /**
+         * Are there any move callbacks defined?
+         *
+         * @name Phaser.Input.InputManager#_hasMoveCallback
+         * @private
+         * @type {boolean}
+         * @since 3.10.0
+         */
+        this._hasMoveCallback = false;
+
+        /**
+         * Is a custom cursor currently set? (desktop only)
+         *
+         * @name Phaser.Input.InputManager#_customCursor
+         * @private
+         * @type {string}
+         * @since 3.10.0
+         */
+        this._customCursor = '';
+
+        /**
+         * Custom cursor tracking value.
+         *
+         * 0 - No change.
+         * 1 - Set new cursor.
+         * 2 - Reset cursor.
+         *
+         * @name Phaser.Input.InputManager#_setCursor
+         * @private
+         * @type {integer}
+         * @since 3.10.0
+         */
+        this._setCursor = 0;
+
+        /**
+         * The default CSS cursor to be used when interacting with your game.
+         *
+         * See the `setDefaultCursor` method for more details.
+         *
+         * @name Phaser.Input.InputManager#defaultCursor
+         * @type {string}
+         * @since 3.10.0
+         */
+        this.defaultCursor = '';
+
+        /**
+         * A reference to the Mouse Manager class, if enabled via the `input.mouse` Game Config property.
          *
          * @name Phaser.Input.InputManager#mouse
-         * @type {Phaser.Input.Mouse.MouseManager}
+         * @type {?Phaser.Input.Mouse.MouseManager}
          * @since 3.0.0
          */
-        this.mouse = new Mouse(this);
+        this.mouse = (config.inputMouse) ? new Mouse(this) : null;
 
         /**
-         * [description]
+         * A reference to the Touch Manager class, if enabled via the `input.touch` Game Config property.
          *
          * @name Phaser.Input.InputManager#touch
          * @type {Phaser.Input.Touch.TouchManager}
          * @since 3.0.0
          */
-        this.touch = new Touch(this);
+        this.touch = (config.inputTouch) ? new Touch(this) : null;
 
         /**
-         * [description]
+         * An array of Pointers that have been added to the game.
+         * The first entry is reserved for the Mouse Pointer, the rest are Touch Pointers.
          *
-         * @name Phaser.Input.InputManager#gamepad
-         * @type {Phaser.Input.Gamepad.GamepadManager}
-         * @since 3.0.0
+         * By default there is 1 touch pointer enabled. If you need more use the `addPointer` method to start them,
+         * or set the `input.activePointers` property in the Game Config.
+         *
+         * @name Phaser.Input.InputManager#pointers
+         * @type {Phaser.Input.Pointer[]}
+         * @since 3.10.0
          */
-        this.gamepad = new Gamepad(this);
+        this.pointers = [];
 
         /**
-         * [description]
+         * The number of touch objects activated and being processed each update.
+         *
+         * You can change this by either calling `addPointer` at run-time, or by
+         * setting the `input.activePointers` property in the Game Config.
+         *
+         * @name Phaser.Input.InputManager#pointersTotal
+         * @type {integer}
+         * @readOnly
+         * @since 3.10.0
+         */
+        this.pointersTotal = config.inputActivePointers;
+
+        for (var i = 0; i <= this.pointersTotal; i++)
+        {
+            this.pointers.push(new Pointer(this, i));
+        }
+
+        /**
+         * The mouse has its own unique Pointer object, which you can reference directly if making a _desktop specific game_.
+         * If you are supporting both desktop and touch devices then do not use this property, instead use `activePointer`
+         * which will always map to the most recently interacted pointer.
+         *
+         * @name Phaser.Input.InputManager#mousePointer
+         * @type {?Phaser.Input.Pointer}
+         * @since 3.10.0
+         */
+        this.mousePointer = (config.inputMouse) ? this.pointers[0] : null;
+
+        /**
+         * The most recently active Pointer object.
+         *
+         * If you've only 1 Pointer in your game then this will accurately be either the first finger touched, or the mouse.
+         *
+         * If your game doesn't need to support multi-touch then you can safely use this property in all of your game
+         * code and it will adapt to be either the mouse or the touch, based on device.
          *
          * @name Phaser.Input.InputManager#activePointer
          * @type {Phaser.Input.Pointer}
          * @since 3.0.0
          */
-        this.activePointer = new Pointer(this, 0);
+        this.activePointer = this.pointers[0];
 
         /**
-         * [description]
+         * Reset every frame. Set to `true` if any of the Pointers are dirty this frame.
+         *
+         * @name Phaser.Input.InputManager#dirty
+         * @type {boolean}
+         * @since 3.10.0
+         */
+        this.dirty = false;
+
+        /**
+         * The Scale factor being applied to input coordinates.
          *
          * @name Phaser.Input.InputManager#scale
-         * @type {{x:number,y:number}}
+         * @type { { x:number, y:number } }
          * @since 3.0.0
          */
         this.scale = { x: 1, y: 1 };
@@ -39421,7 +40306,8 @@ var InputManager = new Class({
         this.globalTopOnly = true;
 
         /**
-         * [description]
+         * An internal flag that controls if the Input Manager will ignore or process native DOM events this frame.
+         * Set via the InputPlugin.stopPropagation method.
          *
          * @name Phaser.Input.InputManager#ignoreEvents
          * @type {boolean}
@@ -39431,7 +40317,7 @@ var InputManager = new Class({
         this.ignoreEvents = false;
 
         /**
-         * [description]
+         * The bounds of the Input Manager, used for pointer hit test calculations.
          *
          * @name Phaser.Input.InputManager#bounds
          * @type {Phaser.Geom.Rectangle}
@@ -39440,7 +40326,7 @@ var InputManager = new Class({
         this.bounds = new Rectangle();
 
         /**
-         * [description]
+         * A re-cycled point-like object to store hit test values in.
          *
          * @name Phaser.Input.InputManager#_tempPoint
          * @type {{x:number,y:number}}
@@ -39450,7 +40336,7 @@ var InputManager = new Class({
         this._tempPoint = { x: 0, y: 0 };
 
         /**
-         * [description]
+         * A re-cycled array to store hit results in.
          *
          * @name Phaser.Input.InputManager#_tempHitTest
          * @type {array}
@@ -39461,7 +40347,7 @@ var InputManager = new Class({
         this._tempHitTest = [];
 
         /**
-         * [description]
+         * A re-cycled matrix used in hit test calculations.
          *
          * @name Phaser.Input.InputManager#_tempMatrix
          * @type {Phaser.GameObjects.Components.TransformMatrix}
@@ -39478,6 +40364,7 @@ var InputManager = new Class({
      * The renderer is available by now.
      *
      * @method Phaser.Input.InputManager#boot
+     * @protected
      * @since 3.0.0
      */
     boot: function ()
@@ -39486,17 +40373,16 @@ var InputManager = new Class({
 
         this.updateBounds();
 
-        this.keyboard.boot();
-        this.mouse.boot();
-        this.touch.boot();
-        this.gamepad.boot();
+        this.events.emit('boot');
 
         this.game.events.on('prestep', this.update, this);
+        this.game.events.on('poststep', this.postUpdate, this);
         this.game.events.once('destroy', this.destroy, this);
     },
 
     /**
-     * [description]
+     * Updates the Input Manager bounds rectangle to match the bounding client rectangle of the
+     * canvas element being used to track input events.
      *
      * @method Phaser.Input.InputManager#updateBounds
      * @since 3.0.0
@@ -39514,7 +40400,7 @@ var InputManager = new Class({
     },
 
     /**
-     * [description]
+     * Resizes the Input Manager internal values, including the bounds and scale factor.
      *
      * @method Phaser.Input.InputManager#resize
      * @since 3.2.0
@@ -39537,31 +40423,41 @@ var InputManager = new Class({
     },
 
     /**
-     * [description]
+     * Internal update loop, called automatically by the Game Step.
      *
      * @method Phaser.Input.InputManager#update
+     * @private
      * @since 3.0.0
      *
-     * @param {number} time - [description]
+     * @param {number} time - The time stamp value of this game step.
      */
     update: function (time)
     {
-        this.keyboard.update();
-        this.gamepad.update();
+        var i;
+
+        this._setCursor = 0;
+
+        this.events.emit('update');
 
         this.ignoreEvents = false;
 
+        this.dirty = false;
+
         var len = this.queue.length;
 
-        //  Currently just 1 pointer supported
-        var pointer = this.activePointer;
+        var pointers = this.pointers;
 
-        pointer.reset();
+        for (i = 0; i < this.pointersTotal; i++)
+        {
+            pointers[i].reset();
+        }
 
         if (!this.enabled || len === 0)
         {
             return;
         }
+
+        this.dirty = true;
 
         this.updateBounds();
 
@@ -39571,47 +40467,41 @@ var InputManager = new Class({
         //  Clears the queue array, and also means we don't work on array data that could potentially
         //  be modified during the processing phase
         var queue = this.queue.splice(0, len);
+        var mouse = this.mousePointer;
 
         //  Process the event queue, dispatching all of the events that have stored up
-        for (var i = 0; i < len; i++)
+        for (i = 0; i < len; i += 2)
         {
-            var event = queue[i];
+            var type = queue[i];
+            var event = queue[i + 1];
 
-            //  TODO: Move to CONSTs so we can do integer comparisons instead of strings.
-            switch (event.type)
+            switch (type)
             {
-                case 'mousemove':
-
-                    pointer.move(event, time);
+                case CONST.MOUSE_DOWN:
+                    mouse.down(event, time);
                     break;
 
-                case 'mousedown':
-
-                    pointer.down(event, time);
+                case CONST.MOUSE_MOVE:
+                    mouse.move(event, time);
                     break;
 
-                case 'mouseup':
-
-                    pointer.up(event, time);
+                case CONST.MOUSE_UP:
+                    mouse.up(event, time);
                     break;
 
-                case 'touchmove':
-
-                    pointer.touchmove(event, time);
+                case CONST.TOUCH_START:
+                    this.startPointer(event, time);
                     break;
 
-                case 'touchstart':
-
-                    pointer.touchstart(event, time);
+                case CONST.TOUCH_MOVE:
+                    this.updatePointer(event, time);
                     break;
 
-                case 'touchend':
-
-                    pointer.touchend(event, time);
+                case CONST.TOUCH_END:
+                    this.stopPointer(event, time);
                     break;
 
-                case 'pointerlockchange':
-
+                case CONST.POINTER_LOCK_CHANGE:
                     this.events.emit('pointerlockchange', event, this.mouse.locked);
                     break;
             }
@@ -39619,23 +40509,621 @@ var InputManager = new Class({
     },
 
     /**
-     * Will always return an array.
-     * Array contains matching Interactive Objects.
-     * Array will be empty if no objects were matched.
-     * x/y = pointer x/y (un-translated)
+     * Internal post-update, called automatically by the Game step.
+     *
+     * @method Phaser.Input.InputManager#postUpdate
+     * @private
+     * @since 3.10.0
+     */
+    postUpdate: function ()
+    {
+        if (this._setCursor === 1)
+        {
+            this.canvas.style.cursor = this._customCursor;
+        }
+        else if (this._setCursor === 2)
+        {
+            this.canvas.style.cursor = this.defaultCursor;
+        }
+    },
+
+    /**
+     * Tells the Input system to set a custom cursor.
+     * 
+     * This cursor will be the default cursor used when interacting with the game canvas.
+     *
+     * If an Interactive Object also sets a custom cursor, this is the cursor that is reset after its use.
+     *
+     * Any valid CSS cursor value is allowed, including paths to image files, i.e.:
+     *
+     * ```javascript
+     * this.input.setDefaultCursor('url(assets/cursors/sword.cur), pointer');
+     * ```
+     * 
+     * Please read about the differences between browsers when it comes to the file formats and sizes they support:
+     *
+     * https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
+     * https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_User_Interface/Using_URL_values_for_the_cursor_property
+     *
+     * It's up to you to pick a suitable cursor format that works across the range of browsers you need to support.
+     *
+     * @method Phaser.Input.InputManager#setDefaultCursor
+     * @since 3.10.0
+     * 
+     * @param {string} cursor - The CSS to be used when setting the default cursor.
+     */
+    setDefaultCursor: function (cursor)
+    {
+        this.defaultCursor = cursor;
+
+        if (this.canvas.style.cursor !== cursor)
+        {
+            this.canvas.style.cursor = cursor;
+        }
+    },
+
+    /**
+     * Called by the InputPlugin when processing over and out events.
+     * 
+     * Tells the Input Manager to set a custom cursor during its postUpdate step.
+     *
+     * https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
+     *
+     * @method Phaser.Input.InputManager#setCursor
+     * @private
+     * @since 3.10.0
+     * 
+     * @param {Phaser.Input.InteractiveObject} interactiveObject - The Interactive Object that called this method.
+     */
+    setCursor: function (interactiveObject)
+    {
+        if (interactiveObject.cursor)
+        {
+            this._setCursor = 1;
+            this._customCursor = interactiveObject.cursor;
+        }
+    },
+
+    /**
+     * Called by the InputPlugin when processing over and out events.
+     * 
+     * Tells the Input Manager to clear the hand cursor, if set, during its postUpdate step.
+     *
+     * @method Phaser.Input.InputManager#resetCursor
+     * @private
+     * @since 3.10.0
+     * 
+     * @param {Phaser.Input.InteractiveObject} interactiveObject - The Interactive Object that called this method.
+     */
+    resetCursor: function (interactiveObject)
+    {
+        if (interactiveObject.cursor)
+        {
+            this._setCursor = 2;
+        }
+    },
+
+    //  event.targetTouches = list of all touches on the TARGET ELEMENT (i.e. game dom element)
+    //  event.touches = list of all touches on the ENTIRE DOCUMENT, not just the target element
+    //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
+
+    /**
+     * Called by the main update loop when a Touch Start Event is received.
+     *
+     * @method Phaser.Input.InputManager#startPointer
+     * @private
+     * @since 3.10.0
+     *
+     * @param {TouchEvent} event - The native DOM event to be processed.
+     * @param {number} time - The time stamp value of this game step.
+     */
+    startPointer: function (event, time)
+    {
+        var pointers = this.pointers;
+
+        for (var c = 0; c < event.changedTouches.length; c++)
+        {
+            var changedTouch = event.changedTouches[c];
+
+            for (var i = 1; i < this.pointersTotal; i++)
+            {
+                var pointer = pointers[i];
+
+                if (!pointer.active)
+                {
+                    pointer.touchstart(changedTouch, time);
+                    this.activePointer = pointer;
+                    break;
+                }
+            }
+        }
+    },
+
+    /**
+     * Called by the main update loop when a Touch Move Event is received.
+     *
+     * @method Phaser.Input.InputManager#updatePointer
+     * @private
+     * @since 3.10.0
+     *
+     * @param {TouchEvent} event - The native DOM event to be processed.
+     * @param {number} time - The time stamp value of this game step.
+     */
+    updatePointer: function (event, time)
+    {
+        var pointers = this.pointers;
+
+        for (var c = 0; c < event.changedTouches.length; c++)
+        {
+            var changedTouch = event.changedTouches[c];
+
+            for (var i = 1; i < this.pointersTotal; i++)
+            {
+                var pointer = pointers[i];
+
+                if (pointer.active && pointer.identifier === changedTouch.identifier)
+                {
+                    pointer.touchmove(changedTouch, time);
+                    this.activePointer = pointer;
+                    break;
+                }
+            }
+        }
+    },
+
+    //  For touch end its a list of the touch points that have been removed from the surface
+    //  https://developer.mozilla.org/en-US/docs/DOM/TouchList
+    //  event.changedTouches = the touches that CHANGED in this event, not the total number of them
+
+    /**
+     * Called by the main update loop when a Touch End Event is received.
+     *
+     * @method Phaser.Input.InputManager#stopPointer
+     * @private
+     * @since 3.10.0
+     *
+     * @param {TouchEvent} event - The native DOM event to be processed.
+     * @param {number} time - The time stamp value of this game step.
+     */
+    stopPointer: function (event, time)
+    {
+        var pointers = this.pointers;
+
+        for (var c = 0; c < event.changedTouches.length; c++)
+        {
+            var changedTouch = event.changedTouches[c];
+
+            for (var i = 1; i < this.pointersTotal; i++)
+            {
+                var pointer = pointers[i];
+
+                if (pointer.active && pointer.identifier === changedTouch.identifier)
+                {
+                    pointer.touchend(changedTouch, time);
+                    break;
+                }
+            }
+        }
+    },
+
+    /**
+     * Adds new Pointer objects to the Input Manager.
+     *
+     * By default Phaser creates 2 pointer objects: `mousePointer` and `pointer1`.
+     *
+     * You can create more either by calling this method, or by setting the `input.activePointers` property
+     * in the Game Config, up to a maximum of 10 pointers.
+     *
+     * The first 10 pointers are available via the `InputPlugin.pointerX` properties, once they have been added
+     * via this method.
+     *
+     * @method Phaser.Input.InputManager#addPointer
+     * @since 3.10.0
+     *
+     * @param {integer} [quantity=1] The number of new Pointers to create. A maximum of 10 is allowed in total.
+     *
+     * @return {Phaser.Input.Pointer[]} An array containing all of the new Pointer objects that were created.
+     */
+    addPointer: function (quantity)
+    {
+        if (quantity === undefined) { quantity = 1; }
+
+        var output = [];
+
+        if (this.pointersTotal + quantity > 10)
+        {
+            quantity = 10 - this.pointersTotal;
+        }
+
+        for (var i = 0; i < quantity; i++)
+        {
+            var id = this.pointers.length;
+
+            var pointer = new Pointer(this, id);
+
+            this.pointers.push(pointer);
+
+            this.pointersTotal++;
+
+            output.push(pointer);
+        }
+
+        return output;
+    },
+
+    /**
+     * Process any pending DOM callbacks.
+     *
+     * @method Phaser.Input.InputManager#processDomCallbacks
+     * @private
+     * @since 3.10.0
+     *
+     * @param {array} once - The isOnce callbacks to invoke.
+     * @param {array} every - The every frame callbacks to invoke.
+     * @param {any} event - The native DOM event that is passed to the callbacks.
+     *
+     * @return {boolean} `true` if there are callbacks still in the list, otherwise `false`.
+     */
+    processDomCallbacks: function (once, every, event)
+    {
+        var i = 0;
+
+        for (i = 0; i < once.length; i++)
+        {
+            once[i](event);
+        }
+
+        for (i = 0; i < every.length; i++)
+        {
+            every[i](event);
+        }
+
+        once = [];
+
+        return (every.length > 0);
+    },
+
+    /**
+     * Queues a touch start event, as passed in by the TouchManager.
+     * Also dispatches any DOM callbacks for this event.
+     *
+     * @method Phaser.Input.InputManager#queueTouchStart
+     * @private
+     * @since 3.10.0
+     *
+     * @param {TouchEvent} event - The native DOM Touch event.
+     */
+    queueTouchStart: function (event)
+    {
+        this.queue.push(CONST.TOUCH_START, event);
+
+        if (this._hasDownCallback)
+        {
+            var callbacks = this.domCallbacks;
+
+            this._hasDownCallback = this.processDomCallbacks(callbacks.downOnce, callbacks.down, event);
+        }
+    },
+
+    /**
+     * Queues a touch move event, as passed in by the TouchManager.
+     * Also dispatches any DOM callbacks for this event.
+     *
+     * @method Phaser.Input.InputManager#queueTouchMove
+     * @private
+     * @since 3.10.0
+     *
+     * @param {TouchEvent} event - The native DOM Touch event.
+     */
+    queueTouchMove: function (event)
+    {
+        this.queue.push(CONST.TOUCH_MOVE, event);
+
+        if (this._hasMoveCallback)
+        {
+            var callbacks = this.domCallbacks;
+
+            this._hasMoveCallback = this.processDomCallbacks(callbacks.moveOnce, callbacks.move, event);
+        }
+    },
+
+    /**
+     * Queues a touch end event, as passed in by the TouchManager.
+     * Also dispatches any DOM callbacks for this event.
+     *
+     * @method Phaser.Input.InputManager#queueTouchEnd
+     * @private
+     * @since 3.10.0
+     *
+     * @param {TouchEvent} event - The native DOM Touch event.
+     */
+    queueTouchEnd: function (event)
+    {
+        this.queue.push(CONST.TOUCH_END, event);
+
+        if (this._hasUpCallback)
+        {
+            var callbacks = this.domCallbacks;
+
+            this._hasUpCallback = this.processDomCallbacks(callbacks.upOnce, callbacks.up, event);
+        }
+    },
+
+    /**
+     * Queues a mouse down event, as passed in by the MouseManager.
+     * Also dispatches any DOM callbacks for this event.
+     *
+     * @method Phaser.Input.InputManager#queueMouseDown
+     * @private
+     * @since 3.10.0
+     *
+     * @param {MouseEvent} event - The native DOM Mouse event.
+     */
+    queueMouseDown: function (event)
+    {
+        this.queue.push(CONST.MOUSE_DOWN, event);
+
+        if (this._hasDownCallback)
+        {
+            var callbacks = this.domCallbacks;
+
+            this._hasDownCallback = this.processDomCallbacks(callbacks.downOnce, callbacks.down, event);
+        }
+    },
+
+    /**
+     * Queues a mouse move event, as passed in by the MouseManager.
+     * Also dispatches any DOM callbacks for this event.
+     *
+     * @method Phaser.Input.InputManager#queueMouseMove
+     * @private
+     * @since 3.10.0
+     *
+     * @param {MouseEvent} event - The native DOM Mouse event.
+     */
+    queueMouseMove: function (event)
+    {
+        this.queue.push(CONST.MOUSE_MOVE, event);
+
+        if (this._hasMoveCallback)
+        {
+            var callbacks = this.domCallbacks;
+
+            this._hasMoveCallback = this.processDomCallbacks(callbacks.moveOnce, callbacks.move, event);
+        }
+    },
+
+    /**
+     * Queues a mouse up event, as passed in by the MouseManager.
+     * Also dispatches any DOM callbacks for this event.
+     *
+     * @method Phaser.Input.InputManager#queueMouseUp
+     * @private
+     * @since 3.10.0
+     *
+     * @param {MouseEvent} event - The native DOM Mouse event.
+     */
+    queueMouseUp: function (event)
+    {
+        this.queue.push(CONST.MOUSE_UP, event);
+
+        if (this._hasUpCallback)
+        {
+            var callbacks = this.domCallbacks;
+
+            this._hasUpCallback = this.processDomCallbacks(callbacks.upOnce, callbacks.up, event);
+        }
+    },
+
+    /**
+     * Adds a callback to be invoked whenever the native DOM `mouseup` or `touchend` events are received.
+     * By setting the `isOnce` argument you can control if the callback is called once,
+     * or every time the DOM event occurs.
+     *
+     * Callbacks passed to this method are invoked _immediately_ when the DOM event happens,
+     * within the scope of the DOM event handler. Therefore, they are considered as 'native'
+     * from the perspective of the browser. This means they can be used for tasks such as
+     * opening new browser windows, or anything which explicitly requires user input to activate.
+     * However, as a result of this, they come with their own risks, and as such should not be used
+     * for general game input, but instead be reserved for special circumstances.
+     *
+     * If all you're trying to do is execute a callback when a pointer is released, then
+     * please use the internal Input event system instead.
+     *
+     * Please understand that these callbacks are invoked when the browser feels like doing so,
+     * which may be entirely out of the normal flow of the Phaser Game Loop. Therefore, you should absolutely keep
+     * Phaser related operations to a minimum in these callbacks. For example, don't destroy Game Objects,
+     * change Scenes or manipulate internal systems, otherwise you run a very real risk of creating
+     * heisenbugs (https://en.wikipedia.org/wiki/Heisenbug) that prove a challenge to reproduce, never mind
+     * solve.
+     *
+     * @method Phaser.Input.InputManager#addUpCallback
+     * @since 3.10.0
+     *
+     * @param {function} callback - The callback to be invoked on this dom event.
+     * @param {boolean} [isOnce=true] - `true` if the callback will only be invoked once, `false` to call every time this event happens.
+     *
+     * @return {this} The Input Manager.
+     */
+    addUpCallback: function (callback, isOnce)
+    {
+        if (isOnce === undefined) { isOnce = true; }
+
+        if (isOnce)
+        {
+            this.domCallbacks.upOnce.push(callback);
+        }
+        else
+        {
+            this.domCallbacks.up.push(callback);
+        }
+
+        this._hasUpCallback = true;
+
+        return this;
+    },
+
+    /**
+     * Adds a callback to be invoked whenever the native DOM `mousedown` or `touchstart` events are received.
+     * By setting the `isOnce` argument you can control if the callback is called once,
+     * or every time the DOM event occurs.
+     *
+     * Callbacks passed to this method are invoked _immediately_ when the DOM event happens,
+     * within the scope of the DOM event handler. Therefore, they are considered as 'native'
+     * from the perspective of the browser. This means they can be used for tasks such as
+     * opening new browser windows, or anything which explicitly requires user input to activate.
+     * However, as a result of this, they come with their own risks, and as such should not be used
+     * for general game input, but instead be reserved for special circumstances.
+     *
+     * If all you're trying to do is execute a callback when a pointer is down, then
+     * please use the internal Input event system instead.
+     *
+     * Please understand that these callbacks are invoked when the browser feels like doing so,
+     * which may be entirely out of the normal flow of the Phaser Game Loop. Therefore, you should absolutely keep
+     * Phaser related operations to a minimum in these callbacks. For example, don't destroy Game Objects,
+     * change Scenes or manipulate internal systems, otherwise you run a very real risk of creating
+     * heisenbugs (https://en.wikipedia.org/wiki/Heisenbug) that prove a challenge to reproduce, never mind
+     * solve.
+     *
+     * @method Phaser.Input.InputManager#addDownCallback
+     * @since 3.10.0
+     *
+     * @param {function} callback - The callback to be invoked on this dom event.
+     * @param {boolean} [isOnce=true] - `true` if the callback will only be invoked once, `false` to call every time this event happens.
+     *
+     * @return {this} The Input Manager.
+     */
+    addDownCallback: function (callback, isOnce)
+    {
+        if (isOnce === undefined) { isOnce = true; }
+
+        if (isOnce)
+        {
+            this.domCallbacks.downOnce.push(callback);
+        }
+        else
+        {
+            this.domCallbacks.down.push(callback);
+        }
+
+        this._hasDownCallback = true;
+
+        return this;
+    },
+
+    /**
+     * Adds a callback to be invoked whenever the native DOM `mousemove` or `touchmove` events are received.
+     * By setting the `isOnce` argument you can control if the callback is called once,
+     * or every time the DOM event occurs.
+     *
+     * Callbacks passed to this method are invoked _immediately_ when the DOM event happens,
+     * within the scope of the DOM event handler. Therefore, they are considered as 'native'
+     * from the perspective of the browser. This means they can be used for tasks such as
+     * opening new browser windows, or anything which explicitly requires user input to activate.
+     * However, as a result of this, they come with their own risks, and as such should not be used
+     * for general game input, but instead be reserved for special circumstances.
+     *
+     * If all you're trying to do is execute a callback when a pointer is moved, then
+     * please use the internal Input event system instead.
+     *
+     * Please understand that these callbacks are invoked when the browser feels like doing so,
+     * which may be entirely out of the normal flow of the Phaser Game Loop. Therefore, you should absolutely keep
+     * Phaser related operations to a minimum in these callbacks. For example, don't destroy Game Objects,
+     * change Scenes or manipulate internal systems, otherwise you run a very real risk of creating
+     * heisenbugs (https://en.wikipedia.org/wiki/Heisenbug) that prove a challenge to reproduce, never mind
+     * solve.
+     *
+     * @method Phaser.Input.InputManager#addMoveCallback
+     * @since 3.10.0
+     *
+     * @param {function} callback - The callback to be invoked on this dom event.
+     * @param {boolean} [isOnce=false] - `true` if the callback will only be invoked once, `false` to call every time this event happens.
+     *
+     * @return {this} The Input Manager.
+     */
+    addMoveCallback: function (callback, isOnce)
+    {
+        if (isOnce === undefined) { isOnce = false; }
+
+        if (isOnce)
+        {
+            this.domCallbacks.moveOnce.push(callback);
+        }
+        else
+        {
+            this.domCallbacks.move.push(callback);
+        }
+
+        this._hasMoveCallback = true;
+
+        return this;
+    },
+
+    /**
+     * Checks if the given Game Object should be considered as a candidate for input or not.
+     *
+     * Checks if the Game Object has an input component that is enabled, that it will render,
+     * and finally, if it has a parent, that the parent parent, or any ancestor, is visible or not.
+     *
+     * @method Phaser.Input.InputManager#inputCandidate
+     * @private
+     * @since 3.10.0
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to test.
+     *
+     * @return {boolean} `true` if the Game Object should be considered for input, otherwise `false`.
+     */
+    inputCandidate: function (gameObject)
+    {
+        var input = gameObject.input;
+
+        if (!input || !input.enabled || !gameObject.willRender())
+        {
+            return false;
+        }
+
+        var visible = true;
+        var parent = gameObject.parentContainer;
+
+        if (parent)
+        {
+            do
+            {
+                if (!parent.visible)
+                {
+                    visible = false;
+                    break;
+                }
+
+                parent = parent.parentContainer;
+
+            } while (parent);
+        }
+
+        return visible;
+    },
+
+    /**
+     * Performs a hit test using the given Pointer and camera, against an array of interactive Game Objects.
+     *
+     * The Game Objects are culled against the camera, and then the coordinates are translated into the local camera space
+     * and used to determine if they fall within the remaining Game Objects hit areas or not.
+     *
+     * If nothing is matched an empty array is returned.
+     *
+     * This method is called automatically by InputPlugin.hitTestPointer and doesn't usually need to be invoked directly.
      *
      * @method Phaser.Input.InputManager#hitTest
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {array} gameObjects - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {array} output - [description]
+     * @param {Phaser.Input.Pointer} pointer - The Pointer to test against.
+     * @param {array} gameObjects - An array of interactive Game Objects to check.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera which is being tested against.
+     * @param {array} [output] - An array to store the results in. If not given, a new empty array is created.
      *
-     * @return {array} [description]
+     * @return {array} An array of the Game Objects that were hit during this hit test.
      */
-    hitTest: function (x, y, gameObjects, camera, output)
+    hitTest: function (pointer, gameObjects, camera, output)
     {
         if (output === undefined) { output = this._tempHitTest; }
 
@@ -39645,6 +41133,9 @@ var InputManager = new Class({
 
         output.length = 0;
 
+        var x = pointer.x;
+        var y = pointer.y;
+
         if (!(x >= camera.x && y >= camera.y && x <= camera.x + cameraW && y <= camera.y + cameraH))
         {
             return output;
@@ -39653,7 +41144,11 @@ var InputManager = new Class({
         //  Stores the world point inside of tempPoint
         camera.getWorldPoint(x, y, tempPoint);
 
-        var culledGameObjects = camera.cull(gameObjects);
+        pointer.worldX = tempPoint.x;
+        pointer.worldY = tempPoint.y;
+
+        //  Disable until fixed.
+        // var culledGameObjects = camera.cull(gameObjects);
 
         var point = { x: 0, y: 0 };
 
@@ -39661,11 +41156,11 @@ var InputManager = new Class({
 
         var matrix = this._tempMatrix;
 
-        for (var i = 0; i < culledGameObjects.length; i++)
+        for (var i = 0; i < gameObjects.length; i++)
         {
-            var gameObject = culledGameObjects[i];
+            var gameObject = gameObjects[i];
 
-            if (!gameObject.input || !gameObject.input.enabled || !gameObject.willRender())
+            if (!this.inputCandidate(gameObject))
             {
                 continue;
             }
@@ -39693,68 +41188,31 @@ var InputManager = new Class({
         return output;
     },
 
-    /*
-    debugHitTest: function (x, y, gameObject, camera, output)
-    {
-        if (output === undefined) { output = this._tempHitTest; }
-
-        var tempPoint = this._tempPoint;
-
-        //  Stores the translated world point inside of tempPoint
-        camera.getWorldPoint(x, y, tempPoint);
-
-        var point = { x: 0, y: 0 };
-
-        var res = this.game.config.resolution;
-
-        var matrix = this._tempMatrix;
-
-        var px = tempPoint.x * res + (camera.scrollX * gameObject.scrollFactorX) - camera.scrollX;
-        var py = tempPoint.y * res + (camera.scrollY * gameObject.scrollFactorY) - camera.scrollY;
-
-        gameObject.getWorldTransformMatrix(matrix);
-
-        // matrix.invert();
-        matrix.transformPoint(px, py, point);
-
-        // var tt = new TransformMatrix();
-
-        // tt.translate(px, py);
-
-        // matrix.invert();
-        // matrix.multiply(tt);
-
-        // TransformXY(px, py, matrix.tx, matrix.ty, matrix.rotation, matrix.scaleX, matrix.scaleY, point);
-
-        // point.x = px;
-        // point.y = py;
-
-        return [ matrix, point, this.pointWithinHitArea(gameObject, point.x, point.y) ];
-    },
-    */
-
     /**
-     * x/y MUST be translated before being passed to this function,
-     * unless the gameObject is guaranteed to not be rotated or scaled in any way.
+     * Checks if the given x and y coordinate are within the hit area of the Game Object.
+     *
+     * This method assumes that the coordinate values have already been translated into the space of the Game Object.
+     *
+     * If the coordinates are within the hit area they are set into the Game Objects Input `localX` and `localY` properties.
      *
      * @method Phaser.Input.InputManager#pointWithinHitArea
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} gameObject - [description]
-     * @param {number} x - [description]
-     * @param {number} y - [description]
+     * @param {Phaser.GameObjects.GameObject} gameObject - The interactive Game Object to check against.
+     * @param {number} x - The translated x coordinate for the hit test.
+     * @param {number} y - The translated y coordinate for the hit test.
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if the coordinates were inside the Game Objects hit area, otherwise `false`.
      */
     pointWithinHitArea: function (gameObject, x, y)
     {
-        var input = gameObject.input;
-
         //  Normalize the origin
         x += gameObject.displayOriginX;
         y += gameObject.displayOriginY;
 
-        if (input.hitAreaCallback(input.hitArea, x, y, gameObject))
+        var input = gameObject.input;
+
+        if (input && input.hitAreaCallback(input.hitArea, x, y, gameObject))
         {
             input.localX = x;
             input.localY = y;
@@ -39768,17 +41226,20 @@ var InputManager = new Class({
     },
 
     /**
-     * x/y MUST be translated before being passed to this function,
-     * unless the gameObject is guaranteed to not be rotated or scaled in any way.
+     * Checks if the given x and y coordinate are within the hit area of the Interactive Object.
+     *
+     * This method assumes that the coordinate values have already been translated into the space of the Interactive Object.
+     *
+     * If the coordinates are within the hit area they are set into the Interactive Objects Input `localX` and `localY` properties.
      *
      * @method Phaser.Input.InputManager#pointWithinInteractiveObject
      * @since 3.0.0
      *
-     * @param {Phaser.Input.InteractiveObject} object - [description]
-     * @param {number} x - [description]
-     * @param {number} y - [description]
+     * @param {Phaser.Input.InteractiveObject} object - The Interactive Object to check against.
+     * @param {number} x - The translated x coordinate for the hit test.
+     * @param {number} y - The translated y coordinate for the hit test.
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if the coordinates were inside the Game Objects hit area, otherwise `false`.
      */
     pointWithinInteractiveObject: function (object, x, y)
     {
@@ -39798,14 +41259,30 @@ var InputManager = new Class({
     },
 
     /**
-     * [description]
+     * Transforms the pageX and pageY values of a Pointer into the scaled coordinate space of the Input Manager.
+     *
+     * @method Phaser.Input.InputManager#transformPointer
+     * @since 3.10.0
+     *
+     * @param {Phaser.Input.Pointer} pointer - The Pointer to transform the values for.
+     *
+     * @return {number} The translated value.
+     */
+    transformPointer: function (pointer, pageX, pageY)
+    {
+        pointer.x = (pageX - this.bounds.left) * this.scale.x;
+        pointer.y = (pageY - this.bounds.top) * this.scale.y;
+    },
+
+    /**
+     * Transforms the pageX value into the scaled coordinate space of the Input Manager.
      *
      * @method Phaser.Input.InputManager#transformX
      * @since 3.0.0
      *
-     * @param {number} pageX - [description]
+     * @param {number} pageX - The DOM pageX value.
      *
-     * @return {number} [description]
+     * @return {number} The translated value.
      */
     transformX: function (pageX)
     {
@@ -39813,14 +41290,14 @@ var InputManager = new Class({
     },
 
     /**
-     * [description]
+     * Transforms the pageY value into the scaled coordinate space of the Input Manager.
      *
      * @method Phaser.Input.InputManager#transformY
      * @since 3.0.0
      *
-     * @param {number} pageY - [description]
+     * @param {number} pageY - The DOM pageY value.
      *
-     * @return {number} [description]
+     * @return {number} The translated value.
      */
     transformY: function (pageY)
     {
@@ -39828,12 +41305,12 @@ var InputManager = new Class({
     },
 
     /**
-     * [description]
+     * Returns the left offset of the Input bounds.
      *
      * @method Phaser.Input.InputManager#getOffsetX
      * @since 3.0.0
      *
-     * @return {number} [description]
+     * @return {number} The left bounds value.
      */
     getOffsetX: function ()
     {
@@ -39841,12 +41318,12 @@ var InputManager = new Class({
     },
 
     /**
-     * [description]
+     * Returns the top offset of the Input bounds.
      *
      * @method Phaser.Input.InputManager#getOffsetY
      * @since 3.0.0
      *
-     * @return {number} [description]
+     * @return {number} The top bounds value.
      */
     getOffsetY: function ()
     {
@@ -39854,12 +41331,12 @@ var InputManager = new Class({
     },
 
     /**
-     * [description]
+     * Returns the horizontal Input Scale value.
      *
      * @method Phaser.Input.InputManager#getScaleX
      * @since 3.0.0
      *
-     * @return {number} [description]
+     * @return {number} The horizontal scale factor of the input.
      */
     getScaleX: function ()
     {
@@ -39867,12 +41344,12 @@ var InputManager = new Class({
     },
 
     /**
-     * [description]
+     * Returns the vertical Input Scale value.
      *
      * @method Phaser.Input.InputManager#getScaleY
      * @since 3.0.0
      *
-     * @return {number} [description]
+     * @return {number} The vertical scale factor of the input.
      */
     getScaleY: function ()
     {
@@ -39880,7 +41357,9 @@ var InputManager = new Class({
     },
 
     /**
-     * [description]
+     * Destroys the Input Manager and all of its systems.
+     *
+     * There is no way to recover from doing this.
      *
      * @method Phaser.Input.InputManager#destroy
      * @since 3.0.0
@@ -39889,15 +41368,27 @@ var InputManager = new Class({
     {
         this.events.removeAllListeners();
 
-        this.keyboard.destroy();
-        this.mouse.destroy();
-        this.touch.destroy();
-        this.gamepad.destroy();
+        if (this.mouse)
+        {
+            this.mouse.destroy();
+        }
 
-        this.activePointer.destroy();
+        if (this.touch)
+        {
+            this.touch.destroy();
+        }
 
+        for (var i = 0; i < this.pointers.length; i++)
+        {
+            this.pointers[i].destroy();
+        }
+
+        this.domCallbacks = {};
+        this.pointers = [];
         this.queue = [];
-
+        this._tempHitTest = [];
+        this._tempMatrix.destroy();
+        this.canvas = null;
         this.game = null;
     }
 
@@ -39907,7 +41398,7 @@ module.exports = InputManager;
 
 
 /***/ }),
-/* 200 */
+/* 202 */
 /***/ (function(module, exports) {
 
 /**
@@ -40498,7 +41989,7 @@ module.exports = ModelViewProjection;
 
 
 /***/ }),
-/* 201 */
+/* 203 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40612,7 +42103,7 @@ module.exports = init();
 
 
 /***/ }),
-/* 202 */
+/* 204 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40627,15 +42118,15 @@ module.exports = init();
 
 module.exports = {
 
-    Fade: __webpack_require__(558),
-    Flash: __webpack_require__(557),
-    Shake: __webpack_require__(556)
+    Fade: __webpack_require__(565),
+    Flash: __webpack_require__(564),
+    Shake: __webpack_require__(563)
 
 };
 
 
 /***/ }),
-/* 203 */
+/* 205 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40644,7 +42135,7 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseCache = __webpack_require__(204);
+var BaseCache = __webpack_require__(206);
 var Class = __webpack_require__(0);
 
 /**
@@ -40848,7 +42339,7 @@ module.exports = CacheManager;
 
 
 /***/ }),
-/* 204 */
+/* 206 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40858,7 +42349,7 @@ module.exports = CacheManager;
  */
 
 var Class = __webpack_require__(0);
-var CustomMap = __webpack_require__(122);
+var CustomMap = __webpack_require__(124);
 var EventEmitter = __webpack_require__(9);
 
 /**
@@ -41042,7 +42533,7 @@ module.exports = BaseCache;
 
 
 /***/ }),
-/* 205 */
+/* 207 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -41051,12 +42542,12 @@ module.exports = BaseCache;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Animation = __webpack_require__(208);
+var Animation = __webpack_require__(210);
 var Class = __webpack_require__(0);
-var CustomMap = __webpack_require__(122);
+var CustomMap = __webpack_require__(124);
 var EventEmitter = __webpack_require__(9);
 var GetValue = __webpack_require__(4);
-var Pad = __webpack_require__(130);
+var Pad = __webpack_require__(133);
 
 /**
  * @typedef {object} JSONAnimationManager
@@ -41669,7 +43160,7 @@ module.exports = AnimationManager;
 
 
 /***/ }),
-/* 206 */
+/* 208 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -41852,7 +43343,7 @@ module.exports = AnimationFrame;
 
 
 /***/ }),
-/* 207 */
+/* 209 */
 /***/ (function(module, exports) {
 
 /**
@@ -41933,7 +43424,7 @@ module.exports = FindClosestInSorted;
 
 
 /***/ }),
-/* 208 */
+/* 210 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -41944,8 +43435,8 @@ module.exports = FindClosestInSorted;
 
 var Clamp = __webpack_require__(23);
 var Class = __webpack_require__(0);
-var FindClosestInSorted = __webpack_require__(207);
-var Frame = __webpack_require__(206);
+var FindClosestInSorted = __webpack_require__(209);
+var Frame = __webpack_require__(208);
 var GetValue = __webpack_require__(4);
 
 /**
@@ -42448,8 +43939,8 @@ var Animation = new Class({
      * @private
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Components.Animation} component - [description]
-     * @param {integer} startFrame - [description]
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component to load values into.
+     * @param {integer} startFrame - The start frame of the animation to load.
      */
     load: function (component, startFrame)
     {
@@ -42485,7 +43976,7 @@ var Animation = new Class({
      *
      * @param {float} value - A value between 0 and 1.
      *
-     * @return {Phaser.Animations.AnimationFrame} [description]
+     * @return {Phaser.Animations.AnimationFrame} The frame closest to the given progress value.
      */
     getFrameByProgress: function (value)
     {
@@ -42495,12 +43986,12 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Advance the animation frame.
      *
      * @method Phaser.Animations.Animation#nextFrame
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Components.Animation} component - [description]
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component to advance.
      */
     nextFrame: function (component)
     {
@@ -42816,7 +44307,7 @@ module.exports = Animation;
 
 
 /***/ }),
-/* 209 */
+/* 211 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -42848,7 +44339,7 @@ module.exports = WrapDegrees;
 
 
 /***/ }),
-/* 210 */
+/* 212 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -42880,7 +44371,7 @@ module.exports = Wrap;
 
 
 /***/ }),
-/* 211 */
+/* 213 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -43038,7 +44529,7 @@ module.exports = GeometryMask;
 
 
 /***/ }),
-/* 212 */
+/* 214 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -43260,7 +44751,7 @@ module.exports = BitmapMask;
 
 
 /***/ }),
-/* 213 */
+/* 215 */
 /***/ (function(module, exports) {
 
 var g;
@@ -43286,14 +44777,13 @@ module.exports = g;
 
 
 /***/ }),
-/* 214 */,
-/* 215 */,
 /* 216 */,
 /* 217 */,
 /* 218 */,
 /* 219 */,
 /* 220 */,
-/* 221 */
+/* 221 */,
+/* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -43302,7 +44792,7 @@ module.exports = g;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var quickselect = __webpack_require__(172);
+var quickselect = __webpack_require__(180);
 
 /**
  * @classdesc
@@ -43901,7 +45391,7 @@ function multiSelect (arr, left, right, n, compare)
 module.exports = rbush;
 
 /***/ }),
-/* 222 */
+/* 223 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44117,7 +45607,7 @@ module.exports = ProcessQueue;
 
 
 /***/ }),
-/* 223 */
+/* 224 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44127,9 +45617,9 @@ module.exports = ProcessQueue;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(17);
+var CONST = __webpack_require__(18);
 var File = __webpack_require__(19);
-var FileTypesManager = __webpack_require__(6);
+var FileTypesManager = __webpack_require__(7);
 var GetFastValue = __webpack_require__(1);
 var IsPlainObject = __webpack_require__(8);
 
@@ -44301,8 +45791,8 @@ module.exports = TextFile;
 
 
 /***/ }),
-/* 224 */,
-/* 225 */
+/* 225 */,
+/* 226 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44395,7 +45885,7 @@ module.exports = GetPoints;
 
 
 /***/ }),
-/* 226 */
+/* 227 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44483,7 +45973,6 @@ module.exports = GetPoint;
 
 
 /***/ }),
-/* 227 */,
 /* 228 */,
 /* 229 */,
 /* 230 */,
@@ -44491,7 +45980,8 @@ module.exports = GetPoint;
 /* 232 */,
 /* 233 */,
 /* 234 */,
-/* 235 */
+/* 235 */,
+/* 236 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44504,11 +45994,11 @@ module.exports = GetPoint;
  * @namespace Phaser.Math.Easing.Stepped
  */
 
-module.exports = __webpack_require__(408);
+module.exports = __webpack_require__(421);
 
 
 /***/ }),
-/* 236 */
+/* 237 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44523,32 +46013,9 @@ module.exports = __webpack_require__(408);
 
 module.exports = {
 
-    In: __webpack_require__(411),
-    Out: __webpack_require__(410),
-    InOut: __webpack_require__(409)
-
-};
-
-
-/***/ }),
-/* 237 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * @namespace Phaser.Math.Easing.Quintic
- */
-
-module.exports = {
-
-    In: __webpack_require__(414),
-    Out: __webpack_require__(413),
-    InOut: __webpack_require__(412)
+    In: __webpack_require__(424),
+    Out: __webpack_require__(423),
+    InOut: __webpack_require__(422)
 
 };
 
@@ -44564,14 +46031,14 @@ module.exports = {
  */
 
 /**
- * @namespace Phaser.Math.Easing.Quartic
+ * @namespace Phaser.Math.Easing.Quintic
  */
 
 module.exports = {
 
-    In: __webpack_require__(417),
-    Out: __webpack_require__(416),
-    InOut: __webpack_require__(415)
+    In: __webpack_require__(427),
+    Out: __webpack_require__(426),
+    InOut: __webpack_require__(425)
 
 };
 
@@ -44587,14 +46054,14 @@ module.exports = {
  */
 
 /**
- * @namespace Phaser.Math.Easing.Quadratic
+ * @namespace Phaser.Math.Easing.Quartic
  */
 
 module.exports = {
 
-    In: __webpack_require__(420),
-    Out: __webpack_require__(419),
-    InOut: __webpack_require__(418)
+    In: __webpack_require__(430),
+    Out: __webpack_require__(429),
+    InOut: __webpack_require__(428)
 
 };
 
@@ -44610,14 +46077,37 @@ module.exports = {
  */
 
 /**
- * @namespace Phaser.Math.Easing.Linear
+ * @namespace Phaser.Math.Easing.Quadratic
  */
 
-module.exports = __webpack_require__(421);
+module.exports = {
+
+    In: __webpack_require__(433),
+    Out: __webpack_require__(432),
+    InOut: __webpack_require__(431)
+
+};
 
 
 /***/ }),
 /* 241 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Easing.Linear
+ */
+
+module.exports = __webpack_require__(434);
+
+
+/***/ }),
+/* 242 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44632,32 +46122,9 @@ module.exports = __webpack_require__(421);
 
 module.exports = {
 
-    In: __webpack_require__(424),
-    Out: __webpack_require__(423),
-    InOut: __webpack_require__(422)
-
-};
-
-
-/***/ }),
-/* 242 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * @namespace Phaser.Math.Easing.Elastic
- */
-
-module.exports = {
-
-    In: __webpack_require__(427),
-    Out: __webpack_require__(426),
-    InOut: __webpack_require__(425)
+    In: __webpack_require__(437),
+    Out: __webpack_require__(436),
+    InOut: __webpack_require__(435)
 
 };
 
@@ -44673,14 +46140,14 @@ module.exports = {
  */
 
 /**
- * @namespace Phaser.Math.Easing.Cubic
+ * @namespace Phaser.Math.Easing.Elastic
  */
 
 module.exports = {
 
-    In: __webpack_require__(430),
-    Out: __webpack_require__(429),
-    InOut: __webpack_require__(428)
+    In: __webpack_require__(440),
+    Out: __webpack_require__(439),
+    InOut: __webpack_require__(438)
 
 };
 
@@ -44696,14 +46163,14 @@ module.exports = {
  */
 
 /**
- * @namespace Phaser.Math.Easing.Circular
+ * @namespace Phaser.Math.Easing.Cubic
  */
 
 module.exports = {
 
-    In: __webpack_require__(433),
-    Out: __webpack_require__(432),
-    InOut: __webpack_require__(431)
+    In: __webpack_require__(443),
+    Out: __webpack_require__(442),
+    InOut: __webpack_require__(441)
 
 };
 
@@ -44719,14 +46186,14 @@ module.exports = {
  */
 
 /**
- * @namespace Phaser.Math.Easing.Bounce
+ * @namespace Phaser.Math.Easing.Circular
  */
 
 module.exports = {
 
-    In: __webpack_require__(436),
-    Out: __webpack_require__(435),
-    InOut: __webpack_require__(434)
+    In: __webpack_require__(446),
+    Out: __webpack_require__(445),
+    InOut: __webpack_require__(444)
 
 };
 
@@ -44742,20 +46209,43 @@ module.exports = {
  */
 
 /**
- * @namespace Phaser.Math.Easing.Back
+ * @namespace Phaser.Math.Easing.Bounce
  */
 
 module.exports = {
 
-    In: __webpack_require__(439),
-    Out: __webpack_require__(438),
-    InOut: __webpack_require__(437)
+    In: __webpack_require__(449),
+    Out: __webpack_require__(448),
+    InOut: __webpack_require__(447)
 
 };
 
 
 /***/ }),
 /* 247 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * @namespace Phaser.Math.Easing.Back
+ */
+
+module.exports = {
+
+    In: __webpack_require__(452),
+    Out: __webpack_require__(451),
+    InOut: __webpack_require__(450)
+
+};
+
+
+/***/ }),
+/* 248 */
 /***/ (function(module, exports) {
 
 /**
@@ -44784,7 +46274,7 @@ module.exports = FloatBetween;
 
 
 /***/ }),
-/* 248 */
+/* 249 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44793,33 +46283,33 @@ module.exports = FloatBetween;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Ellipse = __webpack_require__(111);
+var Ellipse = __webpack_require__(114);
 
-Ellipse.Area = __webpack_require__(459);
-Ellipse.Circumference = __webpack_require__(169);
-Ellipse.CircumferencePoint = __webpack_require__(110);
-Ellipse.Clone = __webpack_require__(458);
-Ellipse.Contains = __webpack_require__(53);
-Ellipse.ContainsPoint = __webpack_require__(457);
-Ellipse.ContainsRect = __webpack_require__(456);
-Ellipse.CopyFrom = __webpack_require__(455);
-Ellipse.Equals = __webpack_require__(454);
-Ellipse.GetBounds = __webpack_require__(453);
-Ellipse.GetPoint = __webpack_require__(171);
-Ellipse.GetPoints = __webpack_require__(170);
-Ellipse.Offset = __webpack_require__(452);
-Ellipse.OffsetPoint = __webpack_require__(451);
-Ellipse.Random = __webpack_require__(131);
+Ellipse.Area = __webpack_require__(472);
+Ellipse.Circumference = __webpack_require__(177);
+Ellipse.CircumferencePoint = __webpack_require__(113);
+Ellipse.Clone = __webpack_require__(471);
+Ellipse.Contains = __webpack_require__(54);
+Ellipse.ContainsPoint = __webpack_require__(470);
+Ellipse.ContainsRect = __webpack_require__(469);
+Ellipse.CopyFrom = __webpack_require__(468);
+Ellipse.Equals = __webpack_require__(467);
+Ellipse.GetBounds = __webpack_require__(466);
+Ellipse.GetPoint = __webpack_require__(179);
+Ellipse.GetPoints = __webpack_require__(178);
+Ellipse.Offset = __webpack_require__(465);
+Ellipse.OffsetPoint = __webpack_require__(464);
+Ellipse.Random = __webpack_require__(134);
 
 module.exports = Ellipse;
 
 
 /***/ }),
-/* 249 */,
 /* 250 */,
 /* 251 */,
 /* 252 */,
-/* 253 */
+/* 253 */,
+/* 254 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44829,7 +46319,7 @@ module.exports = Ellipse;
  */
 
 var GetValue = __webpack_require__(4);
-var Shuffle = __webpack_require__(94);
+var Shuffle = __webpack_require__(95);
 
 var BuildChunk = function (a, b, qty)
 {
@@ -44959,7 +46449,7 @@ module.exports = Range;
 
 
 /***/ }),
-/* 254 */
+/* 255 */
 /***/ (function(module, exports) {
 
 /**
@@ -44988,7 +46478,7 @@ module.exports = RoundAwayFromZero;
 
 
 /***/ }),
-/* 255 */
+/* 256 */
 /***/ (function(module, exports) {
 
 /**
@@ -45025,7 +46515,7 @@ module.exports = UppercaseFirst;
 
 
 /***/ }),
-/* 256 */
+/* 257 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -45034,7 +46524,7 @@ module.exports = UppercaseFirst;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Vector2 = __webpack_require__(7);
+var Vector2 = __webpack_require__(6);
 
 /**
  * Takes the `x` and `y` coordinates and transforms them into the same space as
@@ -45091,7 +46581,7 @@ module.exports = TransformXY;
 
 
 /***/ }),
-/* 257 */
+/* 258 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -45766,7 +47256,7 @@ earcut.flatten = function (data) {
 };
 
 /***/ }),
-/* 258 */
+/* 259 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -45777,13 +47267,13 @@ earcut.flatten = function (data) {
  */
 
 var Class = __webpack_require__(0);
-var Commands = __webpack_require__(117);
-var Earcut = __webpack_require__(257);
-var ModelViewProjection = __webpack_require__(200);
-var ShaderSourceFS = __webpack_require__(522);
-var ShaderSourceVS = __webpack_require__(521);
+var Commands = __webpack_require__(119);
+var Earcut = __webpack_require__(258);
+var ModelViewProjection = __webpack_require__(202);
+var ShaderSourceFS = __webpack_require__(529);
+var ShaderSourceVS = __webpack_require__(528);
 var Utils = __webpack_require__(27);
-var WebGLPipeline = __webpack_require__(83);
+var WebGLPipeline = __webpack_require__(84);
 
 var Point = function (x, y, width, rgb, alpha)
 {
@@ -47048,7 +48538,7 @@ module.exports = FlatTintPipeline;
 
 
 /***/ }),
-/* 259 */
+/* 260 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -47059,9 +48549,9 @@ module.exports = FlatTintPipeline;
  */
 
 var Class = __webpack_require__(0);
-var ShaderSourceFS = __webpack_require__(524);
-var ShaderSourceVS = __webpack_require__(523);
-var WebGLPipeline = __webpack_require__(83);
+var ShaderSourceFS = __webpack_require__(531);
+var ShaderSourceVS = __webpack_require__(530);
+var WebGLPipeline = __webpack_require__(84);
 
 /**
  * @classdesc
@@ -47275,7 +48765,7 @@ module.exports = BitmapMaskPipeline;
 
 
 /***/ }),
-/* 260 */
+/* 261 */
 /***/ (function(module, exports) {
 
 /**
@@ -47344,7 +48834,7 @@ module.exports = WebGLSnapshot;
 
 
 /***/ }),
-/* 261 */
+/* 262 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -47356,16 +48846,16 @@ module.exports = WebGLSnapshot;
 
 var Class = __webpack_require__(0);
 var CONST = __webpack_require__(20);
-var IsSizePowerOfTwo = __webpack_require__(84);
-var SpliceOne = __webpack_require__(55);
+var IsSizePowerOfTwo = __webpack_require__(85);
+var SpliceOne = __webpack_require__(56);
 var Utils = __webpack_require__(27);
-var WebGLSnapshot = __webpack_require__(260);
+var WebGLSnapshot = __webpack_require__(261);
 
 // Default Pipelines
-var BitmapMaskPipeline = __webpack_require__(259);
-var FlatTintPipeline = __webpack_require__(258);
-var ForwardDiffuseLightPipeline = __webpack_require__(147);
-var TextureTintPipeline = __webpack_require__(126);
+var BitmapMaskPipeline = __webpack_require__(260);
+var FlatTintPipeline = __webpack_require__(259);
+var ForwardDiffuseLightPipeline = __webpack_require__(148);
+var TextureTintPipeline = __webpack_require__(129);
 
 /**
  * @callback WebGLContextCallback
@@ -49347,7 +50837,7 @@ module.exports = WebGLRenderer;
 
 
 /***/ }),
-/* 262 */
+/* 263 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -49356,8 +50846,8 @@ module.exports = WebGLRenderer;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var modes = __webpack_require__(50);
-var CanvasFeatures = __webpack_require__(201);
+var modes = __webpack_require__(51);
+var CanvasFeatures = __webpack_require__(203);
 
 /**
  * [description]
@@ -49397,7 +50887,7 @@ module.exports = GetBlendModes;
 
 
 /***/ }),
-/* 263 */
+/* 264 */
 /***/ (function(module, exports) {
 
 /**
@@ -49520,7 +51010,7 @@ module.exports = function (configRoundPixels)
 
 
 /***/ }),
-/* 264 */
+/* 265 */
 /***/ (function(module, exports) {
 
 /**
@@ -49559,7 +51049,7 @@ module.exports = CanvasSnapshot;
 
 
 /***/ }),
-/* 265 */
+/* 266 */
 /***/ (function(module, exports) {
 
 /**
@@ -49615,7 +51105,7 @@ module.exports = function (configRoundPixels)
 
 
 /***/ }),
-/* 266 */
+/* 267 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -49625,14 +51115,14 @@ module.exports = function (configRoundPixels)
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BlitImage = __webpack_require__(265);
-var CanvasSnapshot = __webpack_require__(264);
+var BlitImage = __webpack_require__(266);
+var CanvasSnapshot = __webpack_require__(265);
 var Class = __webpack_require__(0);
 var CONST = __webpack_require__(20);
-var DrawImage = __webpack_require__(263);
-var GetBlendModes = __webpack_require__(262);
-var ScaleModes = __webpack_require__(58);
-var Smoothing = __webpack_require__(128);
+var DrawImage = __webpack_require__(264);
+var GetBlendModes = __webpack_require__(263);
+var ScaleModes = __webpack_require__(59);
+var Smoothing = __webpack_require__(131);
 
 /**
  * @classdesc
@@ -50133,7 +51623,7 @@ module.exports = CanvasRenderer;
 
 
 /***/ }),
-/* 267 */
+/* 268 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -50330,7 +51820,7 @@ module.exports = RequestAnimationFrame;
 
 
 /***/ }),
-/* 268 */
+/* 269 */
 /***/ (function(module, exports) {
 
 /**
@@ -50359,7 +51849,7 @@ module.exports = RemoveFromDOM;
 
 
 /***/ }),
-/* 269 */
+/* 270 */
 /***/ (function(module, exports) {
 
 /**
@@ -50416,7 +51906,7 @@ module.exports = ParseXML;
 
 
 /***/ }),
-/* 270 */
+/* 271 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -50425,7 +51915,7 @@ module.exports = ParseXML;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var OS = __webpack_require__(56);
+var OS = __webpack_require__(57);
 
 /**
  * @callback ContentLoadedCallback
@@ -50476,35 +51966,6 @@ var DOMContentLoaded = function (callback)
 };
 
 module.exports = DOMContentLoaded;
-
-
-/***/ }),
-/* 271 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Compute a random integer between the `min` and `max` values, inclusive.
- *
- * @function Phaser.Math.Between
- * @since 3.0.0
- *
- * @param {integer} min - The minimum value.
- * @param {integer} max - The maximum value.
- *
- * @return {integer} The random integer.
- */
-var Between = function (min, max)
-{
-    return Math.floor(Math.random() * (max - min + 1) + min);
-};
-
-module.exports = Between;
 
 
 /***/ }),
@@ -51064,17 +52525,17 @@ module.exports = RotateLeft;
 
 /**
  * Provides methods used for setting the WebGL rendering pipeline of a Game Object.
- * 
+ *
  * @name Phaser.GameObjects.Components.Pipeline
  * @webglOnly
  * @since 3.0.0
  */
 
 var Pipeline = {
-    
+
     /**
-     * [description]
-     * 
+     * The initial WebGL pipeline of this Game Object.
+     *
      * @name Phaser.GameObjects.Components.Pipeline#defaultPipeline
      * @type {Phaser.Renderer.WebGL.WebGLPipeline}
      * @default null
@@ -51084,8 +52545,8 @@ var Pipeline = {
     defaultPipeline: null,
 
     /**
-     * [description]
-     * 
+     * The current WebGL pipeline of this Game Object.
+     *
      * @name Phaser.GameObjects.Components.Pipeline#pipeline
      * @type {Phaser.Renderer.WebGL.WebGLPipeline}
      * @default null
@@ -51097,13 +52558,13 @@ var Pipeline = {
     /**
      * Sets the initial WebGL Pipeline of this Game Object.
      * This should only be called during the instantiation of the Game Object.
-     * 
+     *
      * @method Phaser.GameObjects.Components.Pipeline#initPipeline
      * @webglOnly
      * @since 3.0.0
      *
      * @param {string} pipelineName - The name of the pipeline to set on this Game Object.
-     * 
+     *
      * @return {boolean} `true` if the pipeline was set successfully, otherwise `false`.
      */
     initPipeline: function (pipelineName)
@@ -51123,13 +52584,13 @@ var Pipeline = {
 
     /**
      * Sets the active WebGL Pipeline of this Game Object.
-     * 
+     *
      * @method Phaser.GameObjects.Components.Pipeline#setPipeline
      * @webglOnly
      * @since 3.0.0
      *
      * @param {string} pipelineName - The name of the pipeline to set on this Game Object.
-     * 
+     *
      * @return {boolean} `true` if the pipeline was set successfully, otherwise `false`.
      */
     setPipeline: function (pipelineName)
@@ -51142,13 +52603,13 @@ var Pipeline = {
 
             return true;
         }
-        
+
         return false;
     },
 
     /**
      * Resets the WebGL Pipeline of this Game Object back to the default it was created with.
-     * 
+     *
      * @method Phaser.GameObjects.Components.Pipeline#resetPipeline
      * @webglOnly
      * @since 3.0.0
@@ -51164,7 +52625,7 @@ var Pipeline = {
 
     /**
      * Gets the name of the WebGL Pipeline this Game Object is currently using.
-     * 
+     *
      * @method Phaser.GameObjects.Components.Pipeline#getPipelineName
      * @webglOnly
      * @since 3.0.0
@@ -51273,8 +52734,8 @@ module.exports = GetPoint;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GetPoint = __webpack_require__(132);
-var Perimeter = __webpack_require__(96);
+var GetPoint = __webpack_require__(135);
+var Perimeter = __webpack_require__(97);
 
 //  Return an array of points from the perimeter of the rectangle
 //  each spaced out based on the quantity or step required
@@ -51356,8 +52817,8 @@ module.exports = Circumference;
  */
 
 var Circumference = __webpack_require__(295);
-var CircumferencePoint = __webpack_require__(133);
-var FromPercent = __webpack_require__(64);
+var CircumferencePoint = __webpack_require__(136);
+var FromPercent = __webpack_require__(65);
 var MATH_CONST = __webpack_require__(16);
 
 /**
@@ -51895,8 +53356,8 @@ module.exports = RandomDataGenerator;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CircumferencePoint = __webpack_require__(133);
-var FromPercent = __webpack_require__(64);
+var CircumferencePoint = __webpack_require__(136);
+var FromPercent = __webpack_require__(65);
 var MATH_CONST = __webpack_require__(16);
 var Point = __webpack_require__(5);
 
@@ -52318,8 +53779,8 @@ var Animation = new Class({
      * @protected
      * @since 3.0.0
      *
-     * @param {string} key - [description]
-     * @param {integer} [startFrame=0] - [description]
+     * @param {string} key - The key of the animation to load.
+     * @param {integer} [startFrame=0] - The start frame of the animation to load.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -52486,7 +53947,7 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#setProgress
      * @since 3.4.0
      *
-     * @param {float} [value=0] - [description]
+     * @param {float} [value=0] - The progress value, between 0 and 1.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -52503,18 +53964,19 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Handle the removal of an animation from the Animation Manager.
      *
      * @method Phaser.GameObjects.Components.Animation#remove
      * @since 3.0.0
      *
-     * @param {Phaser.Animations.Animation} [event] - [description]
+     * @param {string} [key] - The key of the removed Animation.
+     * @param {Phaser.Animations.Animation} [animation] - The removed Animation.
      */
-    remove: function (event)
+    remove: function (key, animation)
     {
-        if (event === undefined) { event = this.currentAnim; }
+        if (animation === undefined) { animation = this.currentAnim; }
 
-        if (this.isPlaying && event.key === this.currentAnim.key)
+        if (this.isPlaying && animation.key === this.currentAnim.key)
         {
             this.stop();
 
@@ -52547,7 +54009,7 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#setRepeat
      * @since 3.4.0
      *
-     * @param {integer} value - [description]
+     * @param {integer} value - The number of times that the animation should repeat.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -52599,7 +54061,7 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#restart
      * @since 3.0.0
      *
-     * @param {boolean} [includeDelay=false] - [description]
+     * @param {boolean} [includeDelay=false] - Whether to include the delay value of the animation when restarting.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -52749,10 +54211,10 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#update
      * @since 3.0.0
      *
-     * @param {number} timestamp - [description]
+     * @param {number} time - The current timestamp.
      * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
-    update: function (timestamp, delta)
+    update: function (time, delta)
     {
         if (!this.currentAnim || !this.isPlaying || this.currentAnim.paused)
         {
@@ -52819,7 +54281,7 @@ var Animation = new Class({
      * @private
      * @since 3.0.0
      *
-     * @param {Phaser.Animations.AnimationFrame} animationFrame - [description]
+     * @param {Phaser.Animations.AnimationFrame} animationFrame - The animation frame to change to.
      */
     updateFrame: function (animationFrame)
     {
@@ -52878,7 +54340,9 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Destroy this Animation component.
+     *
+     * Unregisters event listeners and cleans up its references.
      *
      * @method Phaser.GameObjects.Components.Animation#destroy
      * @since 3.0.0
@@ -52910,10 +54374,10 @@ module.exports = Animation;
  */
 
 var Class = __webpack_require__(0);
-var NumberTweenBuilder = __webpack_require__(159);
+var NumberTweenBuilder = __webpack_require__(161);
 var PluginCache = __webpack_require__(12);
-var TimelineBuilder = __webpack_require__(158);
-var TWEEN_CONST = __webpack_require__(60);
+var TimelineBuilder = __webpack_require__(160);
+var TWEEN_CONST = __webpack_require__(61);
 var TweenBuilder = __webpack_require__(72);
 
 /**
@@ -53379,7 +54843,7 @@ var TweenManager = new Class({
             {
                 tween = list[i];
 
-                for (var t = 0; t < target.length; i++)
+                for (var t = 0; t < target.length; t++)
                 {
                     if (tween.hasTarget(target[t]))
                     {
@@ -53668,15 +55132,15 @@ module.exports = [
 
 module.exports = {
 
-    GetBoolean: __webpack_require__(61),
-    GetEaseFunction: __webpack_require__(62),
+    GetBoolean: __webpack_require__(62),
+    GetEaseFunction: __webpack_require__(63),
     GetNewValue: __webpack_require__(73),
-    GetProps: __webpack_require__(161),
-    GetTargets: __webpack_require__(101),
-    GetTweens: __webpack_require__(160),
-    GetValueOp: __webpack_require__(100),
-    NumberTweenBuilder: __webpack_require__(159),
-    TimelineBuilder: __webpack_require__(158),
+    GetProps: __webpack_require__(163),
+    GetTargets: __webpack_require__(102),
+    GetTweens: __webpack_require__(162),
+    GetValueOp: __webpack_require__(101),
+    NumberTweenBuilder: __webpack_require__(161),
+    TimelineBuilder: __webpack_require__(160),
     TweenBuilder: __webpack_require__(72)
 
 };
@@ -53692,8 +55156,8 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CONST = __webpack_require__(60);
-var Extend = __webpack_require__(18);
+var CONST = __webpack_require__(61);
+var Extend = __webpack_require__(17);
 
 /**
  * @namespace Phaser.Tweens
@@ -53704,9 +55168,9 @@ var Tweens = {
     Builders: __webpack_require__(305),
 
     TweenManager: __webpack_require__(303),
-    Tween: __webpack_require__(98),
-    TweenData: __webpack_require__(97),
-    Timeline: __webpack_require__(157)
+    Tween: __webpack_require__(99),
+    TweenData: __webpack_require__(98),
+    Timeline: __webpack_require__(159)
 
 };
 
@@ -53728,7 +55192,7 @@ module.exports = Tweens;
 
 var Class = __webpack_require__(0);
 var PluginCache = __webpack_require__(12);
-var TimerEvent = __webpack_require__(162);
+var TimerEvent = __webpack_require__(164);
 
 /**
  * @classdesc
@@ -54127,7 +55591,7 @@ module.exports = Clock;
 module.exports = {
 
     Clock: __webpack_require__(307),
-    TimerEvent: __webpack_require__(162)
+    TimerEvent: __webpack_require__(164)
 
 };
 
@@ -54196,7 +55660,7 @@ module.exports = CONST;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Extend = __webpack_require__(18);
+var Extend = __webpack_require__(17);
 var FilterMode = __webpack_require__(323);
 
 /**
@@ -54220,11 +55684,11 @@ var FilterMode = __webpack_require__(323);
 var Textures = {
 
     FilterMode: FilterMode,
-    Frame: __webpack_require__(125),
-    Parsers: __webpack_require__(174),
-    Texture: __webpack_require__(114),
-    TextureManager: __webpack_require__(176),
-    TextureSource: __webpack_require__(175)
+    Frame: __webpack_require__(128),
+    Parsers: __webpack_require__(182),
+    Texture: __webpack_require__(117),
+    TextureManager: __webpack_require__(184),
+    TextureSource: __webpack_require__(183)
 
 };
 
@@ -54249,10 +55713,10 @@ module.exports = Textures;
 
 module.exports = {
 
-    List: __webpack_require__(92),
-    Map: __webpack_require__(122),
-    ProcessQueue: __webpack_require__(222),
-    RTree: __webpack_require__(221),
+    List: __webpack_require__(93),
+    Map: __webpack_require__(124),
+    ProcessQueue: __webpack_require__(223),
+    RTree: __webpack_require__(222),
     Set: __webpack_require__(70)
 
 };
@@ -54300,19 +55764,19 @@ module.exports = {
 
 module.exports = {
 
-    SoundManagerCreator: __webpack_require__(183),
+    SoundManagerCreator: __webpack_require__(191),
 
-    BaseSound: __webpack_require__(76),
-    BaseSoundManager: __webpack_require__(77),
+    BaseSound: __webpack_require__(78),
+    BaseSoundManager: __webpack_require__(79),
 
-    WebAudioSound: __webpack_require__(177),
-    WebAudioSoundManager: __webpack_require__(178),
+    WebAudioSound: __webpack_require__(185),
+    WebAudioSoundManager: __webpack_require__(186),
 
-    HTML5AudioSound: __webpack_require__(181),
-    HTML5AudioSoundManager: __webpack_require__(182),
+    HTML5AudioSound: __webpack_require__(189),
+    HTML5AudioSoundManager: __webpack_require__(190),
 
-    NoAudioSound: __webpack_require__(179),
-    NoAudioSoundManager: __webpack_require__(180)
+    NoAudioSound: __webpack_require__(187),
+    NoAudioSoundManager: __webpack_require__(188)
 
 };
 
@@ -54329,7 +55793,7 @@ module.exports = {
 
 var Clamp = __webpack_require__(23);
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(54);
+var CONST = __webpack_require__(55);
 var GetFastValue = __webpack_require__(1);
 var PluginCache = __webpack_require__(12);
 
@@ -54816,6 +56280,37 @@ var ScenePlugin = new Class({
             {
                 this.manager.start(key, data);
             }
+        }
+
+        return this;
+    },
+
+    /**
+     * Runs the given Scene, but does not change the state of this Scene.
+     * 
+     * If the given Scene is paused, it will resume it. If sleeping, it will wake it.
+     * If not running at all, it will be started.
+     *
+     * Use this if you wish to open a modal Scene by calling `pause` on the current
+     * Scene, then `run` on the modal Scene.
+     *
+     * @method Phaser.Scenes.ScenePlugin#run
+     * @since 3.10.0
+     *
+     * @param {string} key - The Scene to run.
+     * @param {object} [data] - A data object that will be passed to the Scene that is run _only if the Scene isn't asleep or paused_.
+     *
+     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     */
+    run: function (key, data)
+    {
+        if (this.settings.status !== CONST.RUNNING)
+        {
+            this.manager.queueOp('run', key, data);
+        }
+        else
+        {
+            this.manager.run(key, data);
         }
 
         return this;
@@ -55310,8 +56805,8 @@ module.exports = ScenePlugin;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CONST = __webpack_require__(54);
-var Extend = __webpack_require__(18);
+var CONST = __webpack_require__(55);
+var Extend = __webpack_require__(17);
 
 /**
  * @namespace Phaser.Scenes
@@ -55319,10 +56814,10 @@ var Extend = __webpack_require__(18);
 
 var Scene = {
 
-    SceneManager: __webpack_require__(186),
+    SceneManager: __webpack_require__(194),
     ScenePlugin: __webpack_require__(327),
-    Settings: __webpack_require__(184),
-    Systems: __webpack_require__(115)
+    Settings: __webpack_require__(192),
+    Systems: __webpack_require__(118)
 
 };
 
@@ -55342,7 +56837,7 @@ module.exports = Scene;
 * @license      {@link https://github.com/photonstorm/phaser3-plugin-template/blob/master/LICENSE|MIT License}
 */
 
-var BasePlugin = __webpack_require__(163);
+var BasePlugin = __webpack_require__(165);
 var Class = __webpack_require__(0);
 
 /**
@@ -55357,7 +56852,8 @@ var Class = __webpack_require__(0);
  * @constructor
  * @since 3.8.0
  *
- * @param {Phaser.Game} game - A reference to the Scene that has installed this plugin.
+ * @param {Phaser.Scene} scene - A reference to the Scene that has installed this plugin.
+ * @param {Phaser.Plugins.PluginManager} pluginManager - A reference to the Plugin Manager.
  */
 var ScenePlugin = new Class({
 
@@ -55454,10 +56950,10 @@ module.exports = ScenePlugin;
 
 module.exports = {
 
-    BasePlugin: __webpack_require__(163),
-    DefaultPlugins: __webpack_require__(119),
+    BasePlugin: __webpack_require__(165),
+    DefaultPlugins: __webpack_require__(121),
     PluginCache: __webpack_require__(12),
-    PluginManager: __webpack_require__(188),
+    PluginManager: __webpack_require__(196),
     ScenePlugin: __webpack_require__(329)
 
 };
@@ -55483,7 +56979,10 @@ module.exports = {
 /* 347 */,
 /* 348 */,
 /* 349 */,
-/* 350 */
+/* 350 */,
+/* 351 */,
+/* 352 */,
+/* 353 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -55493,13 +56992,13 @@ module.exports = {
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(17);
+var CONST = __webpack_require__(18);
 var CustomSet = __webpack_require__(70);
 var EventEmitter = __webpack_require__(9);
-var FileTypesManager = __webpack_require__(6);
+var FileTypesManager = __webpack_require__(7);
 var GetFastValue = __webpack_require__(1);
 var PluginCache = __webpack_require__(12);
-var XHRSettings = __webpack_require__(74);
+var XHRSettings = __webpack_require__(75);
 
 /**
  * @classdesc
@@ -56202,6 +57701,8 @@ var LoaderPlugin = new Class({
             this.updateProgress();
 
             this.checkLoadQueue();
+
+            this.systems.events.on('update', this.update, this);
         }
     },
 
@@ -56230,6 +57731,20 @@ var LoaderPlugin = new Class({
     },
 
     /**
+     * Called automatically during the load process.
+     *
+     * @method Phaser.Loader.LoaderPlugin#update
+     * @since 3.10.0
+     */
+    update: function ()
+    {
+        if (this.state === CONST.LOADER_LOADING && this.list.size > 0 && this.inflight.size < this.maxParallelDownloads)
+        {
+            this.checkLoadQueue();
+        }
+    },
+
+    /**
      * An internal method called by the Loader.
      * 
      * It will check to see if there are any more files in the pending list that need loading, and if so it will move
@@ -56251,8 +57766,7 @@ var LoaderPlugin = new Class({
 
                 this.list.delete(file);
 
-                //  If the file doesn't have its own crossOrigin set,
-                //  we'll use the Loaders (which is undefined by default)
+                //  If the file doesn't have its own crossOrigin set, we'll use the Loaders (which is undefined by default)
                 if (!file.crossOrigin)
                 {
                     file.crossOrigin = this.crossOrigin;
@@ -56322,11 +57836,6 @@ var LoaderPlugin = new Class({
 
             this.emit('loaderror', file);
         }
-
-        if (this.list.size > 0)
-        {
-            this.checkLoadQueue();
-        }
     },
 
     /**
@@ -56334,7 +57843,7 @@ var LoaderPlugin = new Class({
      *
      * If the process was successful, and the File isn't part of a MultiFile, its `addToCache` method is called.
      *
-     * It this then removed from the queue. If there are more files to load, `checkLoadQueue` is called, otherwise `loadComplete` is.
+     * It this then removed from the queue. If there are no more files to load `loadComplete` is called.
      *
      * @method Phaser.Loader.LoaderPlugin#fileProcessComplete
      * @since 3.7.0
@@ -56376,11 +57885,6 @@ var LoaderPlugin = new Class({
         {
             this.loadComplete();
         }
-        else
-        {
-            //  In case we've added to the list by processing this file
-            this.checkLoadQueue();
-        }
     },
 
     /**
@@ -56412,6 +57916,8 @@ var LoaderPlugin = new Class({
         this.progress = 1;
 
         this.state = CONST.LOADER_COMPLETE;
+
+        this.systems.events.off('update', this.update, this);
 
         //  Call 'destroy' on each file ready for deletion
         this._deleteQueue.iterateLocal('destroy');
@@ -56526,6 +58032,7 @@ var LoaderPlugin = new Class({
 
         this.state = CONST.LOADER_SHUTDOWN;
 
+        this.systems.events.off('update', this.update, this);
         this.systems.events.off('shutdown', this.shutdown, this);
     },
 
@@ -56543,6 +58050,7 @@ var LoaderPlugin = new Class({
 
         this.state = CONST.LOADER_DESTROYED;
 
+        this.systems.events.off('update', this.update, this);
         this.systems.events.off('start', this.pluginStart, this);
 
         this.list = null;
@@ -56563,7 +58071,7 @@ module.exports = LoaderPlugin;
 
 
 /***/ }),
-/* 351 */
+/* 354 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -56573,7 +58081,7 @@ module.exports = LoaderPlugin;
  */
 
 var Class = __webpack_require__(0);
-var FileTypesManager = __webpack_require__(6);
+var FileTypesManager = __webpack_require__(7);
 var ImageFile = __webpack_require__(37);
 
 /**
@@ -56765,7 +58273,7 @@ module.exports = SpriteSheetFile;
 
 
 /***/ }),
-/* 352 */
+/* 355 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -56775,9 +58283,9 @@ module.exports = SpriteSheetFile;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(17);
+var CONST = __webpack_require__(18);
 var File = __webpack_require__(19);
-var FileTypesManager = __webpack_require__(6);
+var FileTypesManager = __webpack_require__(7);
 var GetFastValue = __webpack_require__(1);
 var IsPlainObject = __webpack_require__(8);
 
@@ -56945,7 +58453,7 @@ module.exports = ScriptFile;
 
 
 /***/ }),
-/* 353 */
+/* 356 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -56955,9 +58463,9 @@ module.exports = ScriptFile;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(17);
+var CONST = __webpack_require__(18);
 var File = __webpack_require__(19);
-var FileTypesManager = __webpack_require__(6);
+var FileTypesManager = __webpack_require__(7);
 var GetFastValue = __webpack_require__(1);
 var IsPlainObject = __webpack_require__(8);
 
@@ -57161,7 +58669,7 @@ module.exports = PluginFile;
 
 
 /***/ }),
-/* 354 */
+/* 357 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -57171,7 +58679,7 @@ module.exports = PluginFile;
  */
 
 var Class = __webpack_require__(0);
-var FileTypesManager = __webpack_require__(6);
+var FileTypesManager = __webpack_require__(7);
 var GetFastValue = __webpack_require__(1);
 var ImageFile = __webpack_require__(37);
 var IsPlainObject = __webpack_require__(8);
@@ -57497,7 +59005,7 @@ module.exports = MultiAtlasFile;
 
 
 /***/ }),
-/* 355 */
+/* 358 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -57506,9 +59014,9 @@ module.exports = MultiAtlasFile;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var AudioFile = __webpack_require__(165);
+var AudioFile = __webpack_require__(168);
 var Class = __webpack_require__(0);
-var FileTypesManager = __webpack_require__(6);
+var FileTypesManager = __webpack_require__(7);
 var GetFastValue = __webpack_require__(1);
 var IsPlainObject = __webpack_require__(8);
 var JSONFile = __webpack_require__(28);
@@ -57798,7 +59306,7 @@ FileTypesManager.register('audioSprite', function (key, jsonURL, audioURL, audio
 
 
 /***/ }),
-/* 356 */
+/* 359 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -57808,7 +59316,7 @@ FileTypesManager.register('audioSprite', function (key, jsonURL, audioURL, audio
  */
 
 var Class = __webpack_require__(0);
-var FileTypesManager = __webpack_require__(6);
+var FileTypesManager = __webpack_require__(7);
 var GetFastValue = __webpack_require__(1);
 var ImageFile = __webpack_require__(37);
 var IsPlainObject = __webpack_require__(8);
@@ -58060,7 +59568,7 @@ module.exports = AtlasJSONFile;
 
 
 /***/ }),
-/* 357 */
+/* 360 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58070,7 +59578,7 @@ module.exports = AtlasJSONFile;
  */
 
 var Class = __webpack_require__(0);
-var FileTypesManager = __webpack_require__(6);
+var FileTypesManager = __webpack_require__(7);
 var JSONFile = __webpack_require__(28);
 
 /**
@@ -58262,7 +59770,7 @@ module.exports = AnimationJSONFile;
 
 
 /***/ }),
-/* 358 */
+/* 361 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58278,14 +59786,14 @@ module.exports = AnimationJSONFile;
 /* eslint-disable */
 module.exports = {
 
-    TouchManager: __webpack_require__(189)
+    TouchManager: __webpack_require__(197)
        
 };
 /* eslint-enable */
 
 
 /***/ }),
-/* 359 */
+/* 362 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58301,14 +59809,14 @@ module.exports = {
 /* eslint-disable */
 module.exports = {
 
-    MouseManager: __webpack_require__(191)
+    MouseManager: __webpack_require__(199)
        
 };
 /* eslint-enable */
 
 
 /***/ }),
-/* 360 */
+/* 363 */
 /***/ (function(module, exports) {
 
 /**
@@ -58324,10 +59832,10 @@ module.exports = {
  * @function Phaser.Input.Keyboard.UpDuration
  * @since 3.0.0
  *
- * @param {Phaser.Input.Keyboard.Key} key - [description]
- * @param {integer} [duration=50] - [description]
+ * @param {Phaser.Input.Keyboard.Key} key - The Key object to test.
+ * @param {integer} [duration=50] - The duration, in ms, within which the key must have been released.
  *
- * @return {boolean} [description]
+ * @return {boolean} `true` if the Key was released within `duration` ms, otherwise `false`.
  */
 var UpDuration = function (key, duration)
 {
@@ -58340,7 +59848,7 @@ module.exports = UpDuration;
 
 
 /***/ }),
-/* 361 */
+/* 364 */
 /***/ (function(module, exports) {
 
 /**
@@ -58356,10 +59864,10 @@ module.exports = UpDuration;
  * @function Phaser.Input.Keyboard.DownDuration
  * @since 3.0.0
  *
- * @param {Phaser.Input.Keyboard.Key} key - [description]
- * @param {integer} [duration=50] - [description]
+ * @param {Phaser.Input.Keyboard.Key} key - The Key object to test.
+ * @param {integer} [duration=50] - The duration, in ms, within which the key must have been pressed down.
  *
- * @return {boolean} [description]
+ * @return {boolean} `true` if the Key was pressed down within `duration` ms, otherwise `false`.
  */
 var DownDuration = function (key, duration)
 {
@@ -58372,7 +59880,7 @@ module.exports = DownDuration;
 
 
 /***/ }),
-/* 362 */
+/* 365 */
 /***/ (function(module, exports) {
 
 /**
@@ -58383,16 +59891,18 @@ module.exports = DownDuration;
 
 /**
  * The justUp value allows you to test if this Key has just been released or not.
+ * 
  * When you check this value it will return `true` if the Key is up, otherwise `false`.
- * You can only call justUp once per key release. It will only return `true` once, until the Key is pressed down and released again.
- * This allows you to use it in situations where you want to check if this key is up without using a Signal, such as in a core game loop.
+ * 
+ * You can only call JustUp once per key release. It will only return `true` once, until the Key is pressed down and released again.
+ * This allows you to use it in situations where you want to check if this key is up without using an event, such as in a core game loop.
  *
  * @function Phaser.Input.Keyboard.JustUp
  * @since 3.0.0
  *
- * @param {Phaser.Input.Keyboard.Key} key - [description]
+ * @param {Phaser.Input.Keyboard.Key} key - The Key to check to see if it's just up or not.
  *
- * @return {boolean} [description]
+ * @return {boolean} `true` if the Key was just released, otherwise `false`.
  */
 var JustUp = function (key)
 {
@@ -58412,7 +59922,7 @@ module.exports = JustUp;
 
 
 /***/ }),
-/* 363 */
+/* 366 */
 /***/ (function(module, exports) {
 
 /**
@@ -58423,16 +59933,18 @@ module.exports = JustUp;
 
 /**
  * The justDown value allows you to test if this Key has just been pressed down or not.
+ * 
  * When you check this value it will return `true` if the Key is down, otherwise `false`.
+ * 
  * You can only call justDown once per key press. It will only return `true` once, until the Key is released and pressed down again.
- * This allows you to use it in situations where you want to check if this key is down without using a Signal, such as in a core game loop.
+ * This allows you to use it in situations where you want to check if this key is down without using an event, such as in a core game loop.
  *
  * @function Phaser.Input.Keyboard.JustDown
  * @since 3.0.0
  *
- * @param {Phaser.Input.Keyboard.Key} key - [description]
+ * @param {Phaser.Input.Keyboard.Key} key - The Key to check to see if it's just down or not.
  *
- * @return {boolean} [description]
+ * @return {boolean} `true` if the Key was just pressed, otherwise `false`.
  */
 var JustDown = function (key)
 {
@@ -58452,7 +59964,881 @@ module.exports = JustDown;
 
 
 /***/ }),
-/* 364 */
+/* 367 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Used internally by the Keyboard Plugin.
+ *
+ * @function Phaser.Input.Keyboard.ProcessKeyUp
+ * @private
+ * @since 3.0.0
+ *
+ * @param {Phaser.Input.Keyboard.Key} key - The Key to process the event for.
+ * @param {KeyboardEvent} event - The native Keyboard event.
+ *
+ * @return {Phaser.Input.Keyboard.Key} The Key that was processed.
+ */
+var ProcessKeyUp = function (key, event)
+{
+    key.originalEvent = event;
+
+    if (key.preventDefault)
+    {
+        event.preventDefault();
+    }
+
+    if (!key.enabled)
+    {
+        return;
+    }
+
+    key.isDown = false;
+    key.isUp = true;
+    key.timeUp = event.timeStamp;
+    key.duration = key.timeUp - key.timeDown;
+    key.repeats = 0;
+
+    key._justDown = false;
+    key._justUp = true;
+
+    return key;
+};
+
+module.exports = ProcessKeyUp;
+
+
+/***/ }),
+/* 368 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Used internally by the Keyboard Plugin.
+ *
+ * @function Phaser.Input.Keyboard.ProcessKeyDown
+ * @private
+ * @since 3.0.0
+ *
+ * @param {Phaser.Input.Keyboard.Key} key - The Key to process the event for.
+ * @param {KeyboardEvent} event - The native Keyboard event.
+ *
+ * @return {Phaser.Input.Keyboard.Key} The Key that was processed.
+ */
+var ProcessKeyDown = function (key, event)
+{
+    key.originalEvent = event;
+
+    if (key.preventDefault)
+    {
+        event.preventDefault();
+    }
+
+    if (!key.enabled)
+    {
+        return;
+    }
+
+    key.altKey = event.altKey;
+    key.ctrlKey = event.ctrlKey;
+    key.shiftKey = event.shiftKey;
+    key.location = event.location;
+
+    if (key.isDown === false)
+    {
+        key.isDown = true;
+        key.isUp = false;
+        key.timeDown = event.timeStamp;
+        key.duration = 0;
+        key._justDown = true;
+        key._justUp = false;
+    }
+
+    key.repeats++;
+
+    return key;
+};
+
+module.exports = ProcessKeyDown;
+
+
+/***/ }),
+/* 369 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var KeyCodes = __webpack_require__(109);
+
+var KeyMap = {};
+
+for (var key in KeyCodes)
+{
+    KeyMap[KeyCodes[key]] = key;
+}
+
+module.exports = KeyMap;
+
+
+/***/ }),
+/* 370 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Used internally by the KeyCombo class.
+ *
+ * @function Phaser.Input.Keyboard.KeyCombo.ResetKeyCombo
+ * @private
+ * @since 3.0.0
+ *
+ * @param {Phaser.Input.Keyboard.KeyCombo} combo - The KeyCombo to reset.
+ *
+ * @return {Phaser.Input.Keyboard.KeyCombo} The KeyCombo.
+ */
+var ResetKeyCombo = function (combo)
+{
+    combo.current = combo.keyCodes[0];
+    combo.index = 0;
+    combo.timeLastMatched = 0;
+    combo.matched = false;
+    combo.timeMatched = 0;
+
+    return combo;
+};
+
+module.exports = ResetKeyCombo;
+
+
+/***/ }),
+/* 371 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Used internally by the KeyCombo class.
+ * Return `true` if it reached the end of the combo, `false` if not.
+ *
+ * @function Phaser.Input.Keyboard.KeyCombo.AdvanceKeyCombo
+ * @private
+ * @since 3.0.0
+ *
+ * @param {KeyboardEvent} event - The native Keyboard Event.
+ * @param {Phaser.Input.Keyboard.KeyCombo} combo - The KeyCombo object to advance.
+ *
+ * @return {boolean} `true` if it reached the end of the combo, `false` if not.
+ */
+var AdvanceKeyCombo = function (event, combo)
+{
+    combo.timeLastMatched = event.timeStamp;
+    combo.index++;
+
+    if (combo.index === combo.size)
+    {
+        return true;
+    }
+    else
+    {
+        combo.current = combo.keyCodes[combo.index];
+        return false;
+    }
+};
+
+module.exports = AdvanceKeyCombo;
+
+
+/***/ }),
+/* 372 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var AdvanceKeyCombo = __webpack_require__(371);
+
+/**
+ * Used internally by the KeyCombo class.
+ *
+ * @function Phaser.Input.Keyboard.KeyCombo.ProcessKeyCombo
+ * @private
+ * @since 3.0.0
+ *
+ * @param {KeyboardEvent} event - The native Keyboard Event.
+ * @param {Phaser.Input.Keyboard.KeyCombo} combo - The KeyCombo object to be processed.
+ *
+ * @return {boolean} `true` if the combo was matched, otherwise `false`.
+ */
+var ProcessKeyCombo = function (event, combo)
+{
+    if (combo.matched)
+    {
+        return true;
+    }
+
+    var comboMatched = false;
+    var keyMatched = false;
+
+    if (event.keyCode === combo.current)
+    {
+        //  Key was correct
+
+        if (combo.index > 0 && combo.maxKeyDelay > 0)
+        {
+            //  We have to check to see if the delay between
+            //  the new key and the old one was too long (if enabled)
+
+            var timeLimit = combo.timeLastMatched + combo.maxKeyDelay;
+
+            //  Check if they pressed it in time or not
+            if (event.timeStamp <= timeLimit)
+            {
+                keyMatched = true;
+                comboMatched = AdvanceKeyCombo(event, combo);
+            }
+        }
+        else
+        {
+            keyMatched = true;
+
+            //  We don't check the time for the first key pressed, so just advance it
+            comboMatched = AdvanceKeyCombo(event, combo);
+        }
+    }
+
+    if (!keyMatched && combo.resetOnWrongKey)
+    {
+        //  Wrong key was pressed
+        combo.index = 0;
+        combo.current = combo.keyCodes[0];
+    }
+
+    if (comboMatched)
+    {
+        combo.timeLastMatched = event.timeStamp;
+        combo.matched = true;
+        combo.timeMatched = event.timeStamp;
+    }
+
+    return comboMatched;
+};
+
+module.exports = ProcessKeyCombo;
+
+
+/***/ }),
+/* 373 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+var EventEmitter = __webpack_require__(9);
+var GetValue = __webpack_require__(4);
+var InputPluginCache = __webpack_require__(76);
+var Key = __webpack_require__(171);
+var KeyCodes = __webpack_require__(109);
+var KeyCombo = __webpack_require__(170);
+var KeyMap = __webpack_require__(369);
+var ProcessKeyDown = __webpack_require__(368);
+var ProcessKeyUp = __webpack_require__(367);
+
+/**
+ * @classdesc
+ * The Keyboard Plugin is an input plugin that belongs to the Scene-owned Input system.
+ * 
+ * Its role is to listen for native DOM Keyboard Events and then process them.
+ * 
+ * You do not need to create this class directly, the Input system will create an instance of it automatically.
+ * 
+ * You can access it from within a Scene using `this.input.keyboard`. For example, you can do:
+ *
+ * ```javascript
+ * this.input.keyboard.on('keydown', callback, context);
+ * ```
+ *
+ * Or, to listen for a specific key:
+ * 
+ * ```javascript
+ * this.input.keyboard.on('keydown_A', callback, context);
+ * ```
+ *
+ * You can also create Key objects, which you can then poll in your game loop:
+ *
+ * ```javascript
+ * var spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+ * ```
+ *
+ * _Note_: Many keyboards are unable to process certain combinations of keys due to hardware limitations known as ghosting.
+ * See http://www.html5gamedevs.com/topic/4876-impossible-to-use-more-than-2-keyboard-input-buttons-at-the-same-time/ for more details.
+ *
+ * Also please be aware that certain browser extensions can disable or override Phaser keyboard handling.
+ * For example the Chrome extension vimium is known to disable Phaser from using the D key, while EverNote disables the backtick key.
+ * And there are others. So, please check your extensions before opening Phaser issues about keys that don't work.
+ *
+ * @class KeyboardPlugin
+ * @extends Phaser.Events.EventEmitter
+ * @memberOf Phaser.Input.Keyboard
+ * @constructor
+ * @since 3.10.0
+ *
+ * @param {Phaser.Input.InputPlugin} sceneInputPlugin - A reference to the Scene Input Plugin that the KeyboardPlugin belongs to.
+ */
+var KeyboardPlugin = new Class({
+
+    Extends: EventEmitter,
+
+    initialize:
+
+    function KeyboardPlugin (sceneInputPlugin)
+    {
+        EventEmitter.call(this);
+
+        /**
+         * A reference to the Scene that this Input Plugin is responsible for.
+         *
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#scene
+         * @type {Phaser.Scene}
+         * @since 3.10.0
+         */
+        this.scene = sceneInputPlugin.scene;
+
+        /**
+         * A reference to the Scene Systems Settings.
+         *
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#settings
+         * @type {Phaser.Scenes.Settings.Object}
+         * @since 3.10.0
+         */
+        this.settings = this.scene.sys.settings;
+
+        /**
+         * A reference to the Scene Input Plugin that created this Keyboard Plugin.
+         *
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#sceneInputPlugin
+         * @type {Phaser.Input.InputPlugin}
+         * @since 3.10.0
+         */
+        this.sceneInputPlugin = sceneInputPlugin;
+
+        /**
+         * A boolean that controls if the Keyboard Plugin is enabled or not.
+         * Can be toggled on the fly.
+         *
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#enabled
+         * @type {boolean}
+         * @default true
+         * @since 3.10.0
+         */
+        this.enabled = true;
+
+        /**
+         * The Keyboard Event target, as defined in the Scene or Game Config.
+         * Typically the browser window, but can be any interactive DOM element.
+         *
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#target
+         * @type {any}
+         * @since 3.10.0
+         */
+        this.target;
+
+        /**
+         * An array of Key objects to process.
+         *
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#keys
+         * @type {Phaser.Input.Keyboard.Key[]}
+         * @since 3.10.0
+         */
+        this.keys = [];
+
+        /**
+         * An array of KeyCombo objects to process.
+         *
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#combos
+         * @type {Phaser.Input.Keyboard.KeyCombo[]}
+         * @since 3.10.0
+         */
+        this.combos = [];
+
+        /**
+         * An internal event queue.
+         *
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#queue
+         * @type {KeyboardEvent[]}
+         * @private
+         * @since 3.10.0
+         */
+        this.queue = [];
+
+        /**
+         * Internal event handler.
+         *
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#onKeyHandler
+         * @type {function}
+         * @private
+         * @since 3.10.0
+         */
+        this.onKeyHandler;
+
+        sceneInputPlugin.pluginEvents.once('boot', this.boot, this);
+        sceneInputPlugin.pluginEvents.on('start', this.start, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#boot
+     * @private
+     * @since 3.10.0
+     */
+    boot: function ()
+    {
+        var settings = this.settings.input;
+        var config = this.scene.sys.game.config;
+
+        this.enabled = GetValue(settings, 'keyboard', config.inputKeyboard);
+        this.target = GetValue(settings, 'keyboard.target', config.inputKeyboardEventTarget);
+
+        this.sceneInputPlugin.pluginEvents.once('destroy', this.destroy, this);
+    },
+
+    /**
+     * This method is called automatically by the Scene when it is starting up.
+     * It is responsible for creating local systems, properties and listening for Scene events.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#start
+     * @private
+     * @since 3.10.0
+     */
+    start: function ()
+    {
+        if (this.enabled)
+        {
+            this.startListeners();
+        }
+
+        this.sceneInputPlugin.pluginEvents.once('shutdown', this.shutdown, this);
+    },
+
+    /**
+     * Checks to see if both this plugin and the Scene to which it belongs is active.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#isActive
+     * @since 3.10.0
+     *
+     * @return {boolean} `true` if the plugin and the Scene it belongs to is active.
+     */
+    isActive: function ()
+    {
+        return (this.enabled && this.scene.sys.isActive());
+    },
+
+    /**
+     * Starts the Keyboard Event listeners running.
+     * This is called automatically and does not need to be manually invoked.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#startListeners
+     * @private
+     * @since 3.10.0
+     */
+    startListeners: function ()
+    {
+        var _this = this;
+
+        var handler = function (event)
+        {
+            if (event.defaultPrevented || !_this.isActive())
+            {
+                // Do nothing if event already handled
+                return;
+            }
+
+            _this.queue.push(event);
+
+            var key = _this.keys[event.keyCode];
+
+            if (key && key.preventDefault)
+            {
+                event.preventDefault();
+            }
+
+        };
+
+        this.onKeyHandler = handler;
+
+        this.target.addEventListener('keydown', handler, false);
+        this.target.addEventListener('keyup', handler, false);
+
+        //  Finally, listen for an update event from the Input Plugin
+        this.sceneInputPlugin.pluginEvents.on('update', this.update, this);
+    },
+
+    /**
+     * Stops the Keyboard Event listeners.
+     * This is called automatically and does not need to be manually invoked.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#stopListeners
+     * @private
+     * @since 3.10.0
+     */
+    stopListeners: function ()
+    {
+        this.target.removeEventListener('keydown', this.onKeyHandler);
+        this.target.removeEventListener('keyup', this.onKeyHandler);
+
+        this.sceneInputPlugin.pluginEvents.off('update', this.update);
+    },
+
+    /**
+     * @typedef {object} CursorKeys
+     *
+     * @property {Phaser.Input.Keyboard.Key} [up] - A Key object mapping to the UP arrow key.
+     * @property {Phaser.Input.Keyboard.Key} [down] - A Key object mapping to the DOWN arrow key.
+     * @property {Phaser.Input.Keyboard.Key} [left] - A Key object mapping to the LEFT arrow key.
+     * @property {Phaser.Input.Keyboard.Key} [right] - A Key object mapping to the RIGHT arrow key.
+     * @property {Phaser.Input.Keyboard.Key} [space] - A Key object mapping to the SPACE BAR key.
+     * @property {Phaser.Input.Keyboard.Key} [shift] - A Key object mapping to the SHIFT key.
+     */
+
+    /**
+     * Creates and returns an object containing 4 hotkeys for Up, Down, Left and Right, and also Space Bar and shift.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#createCursorKeys
+     * @since 3.10.0
+     *
+     * @return {CursorKeys} An object containing the properties: `up`, `down`, `left`, `right`, `space` and `shift`.
+     */
+    createCursorKeys: function ()
+    {
+        return this.addKeys({
+            up: KeyCodes.UP,
+            down: KeyCodes.DOWN,
+            left: KeyCodes.LEFT,
+            right: KeyCodes.RIGHT,
+            space: KeyCodes.SPACE,
+            shift: KeyCodes.SHIFT
+        });
+    },
+
+    /**
+     * A practical way to create an object containing user selected hotkeys.
+     *
+     * For example:
+     *
+     * ```javascript
+     * this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.W, 'down': Phaser.Input.Keyboard.KeyCodes.S });
+     * ```
+     * 
+     * would return an object containing the properties (`up` and `down`) mapped to W and S {@link Phaser.Input.Keyboard.Key} objects.
+     *
+     * You can also pass in a comma-separated string:
+     * 
+     * ```javascript
+     * this.input.keyboard.addKeys('W,S,A,D');
+     * ```
+     *
+     * Which will return an object with the properties W, S, A and D mapped to the relevant Key objects.
+     *
+     * To use non-alpha numeric keys, use a string, such as 'UP', 'SPACE' or 'LEFT'.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#addKeys
+     * @since 3.10.0
+     *
+     * @param {(object|string)} keys - An object containing Key Codes, or a comma-separated string.
+     *
+     * @return {object} An object containing Key objects mapped to the input properties.
+     */
+    addKeys: function (keys)
+    {
+        var output = {};
+
+        if (typeof keys === 'string')
+        {
+            keys = keys.split(',');
+
+            for (var i = 0; i < keys.length; i++)
+            {
+                output[keys[i]] = this.addKey(keys[i]);
+            }
+        }
+        else
+        {
+            for (var key in keys)
+            {
+                output[key] = this.addKey(keys[key]);
+            }
+        }
+
+        return output;
+    },
+
+    /**
+     * Adds a Key object to this Keyboard Plugin.
+     *
+     * The given argument can be either an existing Key object, a string, such as `A` or `SPACE`, or a key code value.
+     *
+     * If a Key object is given, and one already exists matching the same key code, the existing one is replaced with the new one.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#addKey
+     * @since 3.10.0
+     *
+     * @param {(Phaser.Input.Keyboard.Key|string|integer)} key - Either a Key object, a string, such as `A` or `SPACE`, or a key code value.
+     *
+     * @return {Phaser.Input.Keyboard.Key} The newly created Key object, or a reference to it if it already existed in the keys array.
+     */
+    addKey: function (key)
+    {
+        var keys = this.keys;
+
+        if (key instanceof Key)
+        {
+            var idx = keys.indexOf(key);
+
+            if (idx > -1)
+            {
+                keys[idx] = key;
+            }
+            else
+            {
+                keys[key.keyCode] = key;
+            }
+
+            return key;
+        }
+
+        if (typeof key === 'string')
+        {
+            key = KeyCodes[key.toUpperCase()];
+        }
+
+        if (!keys[key])
+        {
+            keys[key] = new Key(key);
+        }
+
+        return keys[key];
+    },
+
+    /**
+     * Removes a Key object from this Keyboard Plugin.
+     *
+     * The given argument can be either a Key object, a string, such as `A` or `SPACE`, or a key code value.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#removeKey
+     * @since 3.10.0
+     *
+     * @param {(Phaser.Input.Keyboard.Key|string|integer)} key - Either a Key object, a string, such as `A` or `SPACE`, or a key code value.
+     */
+    removeKey: function (key)
+    {
+        var keys = this.keys;
+
+        if (key instanceof Key)
+        {
+            var idx = keys.indexOf(key);
+
+            if (idx > -1)
+            {
+                this.keys[idx] = undefined;
+            }
+        }
+        else if (typeof key === 'string')
+        {
+            key = KeyCodes[key.toUpperCase()];
+        }
+
+        if (keys[key])
+        {
+            keys[key] = undefined;
+        }
+    },
+
+    /**
+     * Creates a new KeyCombo.
+     * 
+     * A KeyCombo will listen for a specific string of keys from the Keyboard, and when it receives them
+     * it will emit a `keycombomatch` event from this Keyboard Plugin.
+     *
+     * The keys to be listened for can be defined as:
+     *
+     * A string (i.e. 'ATARI')
+     * An array of either integers (key codes) or strings, or a mixture of both
+     * An array of objects (such as Key objects) with a public 'keyCode' property
+     *
+     * For example, to listen for the Konami code (up, up, up, down, down, down, left, left, left, right, right, right)
+     * you could pass the following array of key codes:
+     *
+     * ```javascript
+     * this.input.keyboard.createCombo([ 38, 38, 38, 40, 40, 40, 37, 37, 37, 39, 39, 39 ], { resetOnMatch: true });
+     *
+     * this.input.keyboard.on('keycombomatch', function (event) {
+     *     console.log('Konami Code entered!');
+     * });
+     * ```
+     *
+     * Or, to listen for the user entering the word PHASER:
+     *
+     * ```javascript
+     * this.input.keyboard.createCombo('PHASER');
+     * ```
+     *
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#createCombo
+     * @since 3.10.0
+     *
+     * @param {(string|integer[]|object[])} keys - The keys that comprise this combo.
+     * @param {KeyComboConfig} [config] - A Key Combo configuration object.
+     *
+     * @return {Phaser.Input.Keyboard.KeyCombo} The new KeyCombo object.
+     */
+    createCombo: function (keys, config)
+    {
+        return new KeyCombo(this, keys, config);
+    },
+
+    /**
+     * Internal update handler called by the Input Manager, which is in turn invoked by the Game step.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#update
+     * @private
+     * @since 3.10.0
+     */
+    update: function ()
+    {
+        var len = this.queue.length;
+
+        if (!this.enabled || len === 0)
+        {
+            return;
+        }
+
+        //  Clears the queue array, and also means we don't work on array data that could potentially
+        //  be modified during the processing phase
+        var queue = this.queue.splice(0, len);
+
+        var keys = this.keys;
+
+        //  Process the event queue, dispatching all of the events that have stored up
+        for (var i = 0; i < len; i++)
+        {
+            var event = queue[i];
+            var code = event.keyCode;
+
+            if (event.type === 'keydown')
+            {
+                if (KeyMap[code] && (keys[code] === undefined || keys[code].isDown === false))
+                {
+                    //  Will emit a keyboard or keyup event
+                    this.emit(event.type, event);
+
+                    this.emit('keydown_' + KeyMap[code], event);
+                }
+
+                if (keys[code])
+                {
+                    ProcessKeyDown(keys[code], event);
+                }
+            }
+            else
+            {
+                //  Will emit a keyboard or keyup event
+                this.emit(event.type, event);
+
+                this.emit('keyup_' + KeyMap[code], event);
+
+                if (keys[code])
+                {
+                    ProcessKeyUp(keys[code], event);
+                }
+            }
+        }
+    },
+
+    /**
+     * Shuts the Keyboard Plugin down.
+     * All this does is remove any listeners bound to it.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#shutdown
+     * @private
+     * @since 3.10.0
+     */
+    shutdown: function ()
+    {
+        this.stopListeners();
+
+        this.removeAllListeners();
+    },
+
+    /**
+     * Destroys this Keyboard Plugin instance and all references it holds, plus clears out local arrays.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#destroy
+     * @private
+     * @since 3.10.0
+     */
+    destroy: function ()
+    {
+        this.shutdown();
+
+        this.keys = [];
+        this.combos = [];
+        this.queue = [];
+
+        this.scene = null;
+        this.settings = null;
+        this.sceneInputPlugin = null;
+        this.target = null;
+    }
+
+});
+
+/**
+ * An instance of the Keyboard Plugin class, if enabled via the `input.keyboard` Scene or Game Config property.
+ * Use this to create Key objects and listen for keyboard specific events.
+ *
+ * @name Phaser.Input.InputPlugin#keyboard
+ * @type {?Phaser.Input.Keyboard.KeyboardPlugin}
+ * @since 3.10.0
+ */
+InputPluginCache.register('KeyboardPlugin', KeyboardPlugin, 'keyboard', 'keyboard', 'inputKeyboard');
+
+module.exports = KeyboardPlugin;
+
+
+/***/ }),
+/* 374 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58467,23 +60853,59 @@ module.exports = JustDown;
 
 module.exports = {
 
-    KeyboardManager: __webpack_require__(194),
+    KeyboardPlugin: __webpack_require__(373),
 
-    Key: __webpack_require__(193),
-    KeyCodes: __webpack_require__(116),
+    Key: __webpack_require__(171),
+    KeyCodes: __webpack_require__(109),
 
-    KeyCombo: __webpack_require__(192),
+    KeyCombo: __webpack_require__(170),
 
-    JustDown: __webpack_require__(363),
-    JustUp: __webpack_require__(362),
-    DownDuration: __webpack_require__(361),
-    UpDuration: __webpack_require__(360)
+    JustDown: __webpack_require__(366),
+    JustUp: __webpack_require__(365),
+    DownDuration: __webpack_require__(364),
+    UpDuration: __webpack_require__(363)
     
 };
 
 
 /***/ }),
-/* 365 */
+/* 375 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Creates a new Pixel Perfect Handler function.
+ *
+ * Access via `InputPlugin.makePixelPerfect` rather than calling it directly.
+ *
+ * @function Phaser.Input.CreatePixelPerfectHandler
+ * @since 3.10.0
+ *
+ * @param {Phaser.Textures.TextureManager} textureManager - A reference to the Texture Manager.
+ * @param {integer} alphaTolerance - The alpha level that the pixel should be above to be included as a successful interaction.
+ *
+ * @return {function} The new Pixel Perfect Handler function.
+ */
+var CreatePixelPerfectHandler = function (textureManager, alphaTolerance)
+{
+    return function (hitArea, x, y, gameObject)
+    {
+        var alpha = textureManager.getPixelAlpha(x, y, gameObject.texture.key, gameObject.frame.key);
+
+        return (alpha && alpha >= alphaTolerance);
+    };
+};
+
+module.exports = CreatePixelPerfectHandler;
+
+
+/***/ }),
+/* 376 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58492,23 +60914,48 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Circle = __webpack_require__(87);
+var Circle = __webpack_require__(88);
 var CircleContains = __webpack_require__(32);
 var Class = __webpack_require__(0);
-var DistanceBetween = __webpack_require__(57);
-var Ellipse = __webpack_require__(111);
-var EllipseContains = __webpack_require__(53);
+var CreateInteractiveObject = __webpack_require__(175);
+var CreatePixelPerfectHandler = __webpack_require__(375);
+var DistanceBetween = __webpack_require__(58);
+var Ellipse = __webpack_require__(114);
+var EllipseContains = __webpack_require__(54);
 var EventEmitter = __webpack_require__(9);
-var CreateInteractiveObject = __webpack_require__(167);
+var GetFastValue = __webpack_require__(1);
+var InputPluginCache = __webpack_require__(76);
+var IsPlainObject = __webpack_require__(8);
 var PluginCache = __webpack_require__(12);
 var Rectangle = __webpack_require__(14);
 var RectangleContains = __webpack_require__(31);
 var Triangle = __webpack_require__(68);
-var TriangleContains = __webpack_require__(59);
+var TriangleContains = __webpack_require__(60);
 
 /**
  * @classdesc
- * [description]
+ * The Input Plugin belongs to a Scene and handles all input related events and operations for it.
+ *
+ * You can access it from within a Scene using `this.input`.
+ *
+ * It emits events directly. For example, you can do:
+ *
+ * ```javascript
+ * this.input.on('pointerdown', callback, context);
+ * ```
+ *
+ * To listen for a pointer down event anywhere on the game canvas.
+ *
+ * Game Objects can be enabled for input by calling their `setInteractive` method. After which they
+ * will directly emit input events:
+ *
+ * ```javascript
+ * var sprite = this.add.sprite(x, y, texture);
+ * sprite.setInteractive();
+ * sprite.on('pointerdown', callback, context);
+ * ```
+ *
+ * Please see the Input examples and tutorials for more information.
  *
  * @class InputPlugin
  * @extends Phaser.Events.EventEmitter
@@ -58516,7 +60963,7 @@ var TriangleContains = __webpack_require__(59);
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - The Scene that owns this plugin.
+ * @param {Phaser.Scene} scene - A reference to the Scene that this Input Plugin is responsible for.
  */
 var InputPlugin = new Class({
 
@@ -58529,7 +60976,7 @@ var InputPlugin = new Class({
         EventEmitter.call(this);
 
         /**
-         * The Scene that owns this plugin.
+         * A reference to the Scene that this Input Plugin is responsible for.
          *
          * @name Phaser.Input.InputPlugin#scene
          * @type {Phaser.Scene}
@@ -58538,7 +60985,7 @@ var InputPlugin = new Class({
         this.scene = scene;
 
         /**
-         * [description]
+         * A reference to the Scene Systems class.
          *
          * @name Phaser.Input.InputPlugin#systems
          * @type {Phaser.Scenes.Systems}
@@ -58547,7 +60994,7 @@ var InputPlugin = new Class({
         this.systems = scene.sys;
 
         /**
-         * [description]
+         * A reference to the Scene Systems Settings.
          *
          * @name Phaser.Input.InputPlugin#settings
          * @type {Phaser.Scenes.Settings.Object}
@@ -58556,7 +61003,7 @@ var InputPlugin = new Class({
         this.settings = scene.sys.settings;
 
         /**
-         * [description]
+         * A reference to the Game Input Manager.
          *
          * @name Phaser.Input.InputPlugin#manager
          * @type {Phaser.Input.InputManager}
@@ -58565,7 +61012,17 @@ var InputPlugin = new Class({
         this.manager = scene.sys.game.input;
 
         /**
-         * [description]
+         * Internal event queue used for plugins only.
+         *
+         * @name Phaser.Input.InputPlugin#pluginEvents
+         * @type {Phaser.Events.EventEmitter}
+         * @private
+         * @since 3.10.0
+         */
+        this.pluginEvents = new EventEmitter();
+
+        /**
+         * If set, the Input Plugin will run its update loop every frame.
          *
          * @name Phaser.Input.InputPlugin#enabled
          * @type {boolean}
@@ -58575,7 +61032,7 @@ var InputPlugin = new Class({
         this.enabled = true;
 
         /**
-         * A reference to this.scene.sys.displayList (set in boot)
+         * A reference to the Scene Display List. This property is set during the `boot` method.
          *
          * @name Phaser.Input.InputPlugin#displayList
          * @type {Phaser.GameObjects.DisplayList}
@@ -58584,44 +61041,35 @@ var InputPlugin = new Class({
         this.displayList;
 
         /**
-         * A reference to the this.scene.sys.cameras (set in boot)
+         * A reference to the Scene Cameras Manager. This property is set during the `boot` method.
          *
          * @name Phaser.Input.InputPlugin#cameras
-         * @type {null}
+         * @type {Phaser.Cameras.Scene2D.CameraManager}
          * @since 3.0.0
          */
         this.cameras;
 
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.InputPlugin#keyboard
-         * @type {Phaser.Input.Keyboard.KeyboardManager}
-         * @since 3.0.0
-         */
-        this.keyboard = this.manager.keyboard;
+        //  Inject the available input plugins into this class
+        InputPluginCache.install(this);
 
         /**
-         * [description]
+         * A reference to the Mouse Manager.
+         * 
+         * This property is only set if Mouse support has been enabled in your Game Configuration file.
+         * 
+         * If you just wish to get access to the mouse pointer, use the `mousePointer` property instead.
          *
          * @name Phaser.Input.InputPlugin#mouse
-         * @type {Phaser.Input.Mouse.MouseManager}
+         * @type {?Phaser.Input.Mouse.MouseManager}
          * @since 3.0.0
          */
         this.mouse = this.manager.mouse;
 
         /**
-         * [description]
+         * When set to `true` (the default) the Input Plugin will emulate DOM behavior by only emitting events from
+         * the top-most Game Objects in the Display List.
          *
-         * @name Phaser.Input.InputPlugin#gamepad
-         * @type {Phaser.Input.Gamepad.GamepadManager}
-         * @since 3.0.0
-         */
-        this.gamepad = this.manager.gamepad;
-
-        /**
-         * Only fire callbacks and events on the top-most Game Object in the display list (emulating DOM behavior)
-         * and ignore any GOs below it, or call them all?
+         * If set to `false` it will emit events from all Game Objects below a Pointer, not just the top one.
          *
          * @name Phaser.Input.InputPlugin#topOnly
          * @type {boolean}
@@ -58631,10 +61079,18 @@ var InputPlugin = new Class({
         this.topOnly = true;
 
         /**
-         * How often should the pointer input be checked?
-         * Time given in ms
-         * Pointer will *always* be checked if it has been moved by the user.
-         * This controls how often it will be polled if it hasn't been moved.
+         * How often should the Pointers be checked?
+         * 
+         * The value is a time, given in ms, and is the time that must have elapsed between game steps before
+         * the Pointers will be polled again. When a pointer is polled it runs a hit test to see which Game
+         * Objects are currently below it, or being interacted with it.
+         * 
+         * Pointers will *always* be checked if they have been moved by the user, or press or released.
+         * 
+         * This property only controls how often they will be polled if they have not been updated.
+         * You should set this if you want to have Game Objects constantly check against the pointers, even
+         * if the pointer didn't move itself.
+         * 
          * Set to 0 to poll constantly. Set to -1 to only poll on user movement.
          *
          * @name Phaser.Input.InputPlugin#pollRate
@@ -58645,7 +61101,7 @@ var InputPlugin = new Class({
         this.pollRate = -1;
 
         /**
-         * [description]
+         * Internal poll timer value.
          *
          * @name Phaser.Input.InputPlugin#_pollTimer
          * @type {number}
@@ -58656,7 +61112,7 @@ var InputPlugin = new Class({
         this._pollTimer = 0;
 
         /**
-         * The distance, in pixels, the pointer has to move while being held down, before it thinks it is being dragged.
+         * The distance, in pixels, a pointer has to move while being held down, before it thinks it is being dragged.
          *
          * @name Phaser.Input.InputPlugin#dragDistanceThreshold
          * @type {number}
@@ -58666,7 +61122,7 @@ var InputPlugin = new Class({
         this.dragDistanceThreshold = 0;
 
         /**
-         * The amount of time, in ms, the pointer has to be held down before it thinks it is dragging.
+         * The amount of time, in ms, a pointer has to be held down before it thinks it is dragging.
          *
          * @name Phaser.Input.InputPlugin#dragTimeThreshold
          * @type {number}
@@ -58698,7 +61154,7 @@ var InputPlugin = new Class({
         this._tempZones = [];
 
         /**
-         * A list of all Game Objects that have been set to be interactive.
+         * A list of all Game Objects that have been set to be interactive in the Scene this Input Plugin is managing.
          *
          * @name Phaser.Input.InputPlugin#_list
          * @type {Phaser.GameObjects.GameObject[]}
@@ -58749,7 +61205,7 @@ var InputPlugin = new Class({
          * @private
          * @since 3.0.0
          */
-        this._drag = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] };
+        this._drag = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [] };
 
         /**
          * A list of all Interactive Objects currently considered as being 'over' by any pointer, indexed by pointer ID.
@@ -58759,10 +61215,10 @@ var InputPlugin = new Class({
          * @private
          * @since 3.0.0
          */
-        this._over = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [] };
+        this._over = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [] };
 
         /**
-         * [description]
+         * A list of valid DOM event types.
          *
          * @name Phaser.Input.InputPlugin#_validTypes
          * @type {string[]}
@@ -58790,6 +61246,9 @@ var InputPlugin = new Class({
         this.displayList = this.systems.displayList;
 
         this.systems.events.once('destroy', this.destroy, this);
+
+        //  Registered input plugins listen for this
+        this.pluginEvents.emit('boot');
     },
 
     /**
@@ -58814,16 +61273,24 @@ var InputPlugin = new Class({
         eventEmitter.once('shutdown', this.shutdown, this);
 
         this.enabled = true;
+
+        //  Registered input plugins listen for this
+        this.pluginEvents.emit('start');
     },
 
     /**
-     * [description]
+     * The pre-update handler is responsible for checking the pending removal and insertion lists and
+     * deleting old Game Objects.
      *
      * @method Phaser.Input.InputPlugin#preUpdate
+     * @private
      * @since 3.0.0
      */
     preUpdate: function ()
     {
+        //  Registered input plugins listen for this
+        this.pluginEvents.emit('preUpdate');
+
         var removeList = this._pendingRemoval;
         var insertList = this._pendingInsertion;
 
@@ -58862,14 +61329,136 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Checks to see if both this plugin and the Scene to which it belongs is active.
+     *
+     * @method Phaser.Input.InputPlugin#isActive
+     * @since 3.10.0
+     *
+     * @return {boolean} `true` if the plugin and the Scene it belongs to is active.
+     */
+    isActive: function ()
+    {
+        return (this.enabled && this.scene.sys.isActive());
+    },
+
+    /**
+     * The internal update loop for the Input Plugin.
+     * Called automatically by the Scene Systems step.
+     *
+     * @method Phaser.Input.InputPlugin#update
+     * @private
+     * @since 3.0.0
+     *
+     * @param {number} time - The time value from the most recent Game step. Typically a high-resolution timer value, or Date.now().
+     * @param {number} delta - The delta value since the last frame. This is smoothed to avoid delta spikes by the TimeStep class.
+     */
+    update: function (time, delta)
+    {
+        if (!this.isActive())
+        {
+            return;
+        }
+
+        this.pluginEvents.emit('update', time, delta);
+
+        var manager = this.manager;
+
+        //  Another Scene above this one has already consumed the input events, or we're in transition
+        if (manager.globalTopOnly && manager.ignoreEvents)
+        {
+            return;
+        }
+
+        var runUpdate = (manager.dirty || this.pollRate === 0);
+
+        if (this.pollRate > -1)
+        {
+            this._pollTimer -= delta;
+
+            if (this._pollTimer < 0)
+            {
+                runUpdate = true;
+
+                //  Discard timer diff
+                this._pollTimer = this.pollRate;
+            }
+        }
+
+        if (!runUpdate)
+        {
+            return;
+        }
+
+        var pointers = this.manager.pointers;
+
+        for (var i = 0; i < this.manager.pointersTotal; i++)
+        {
+            var pointer = pointers[i];
+
+            //  Always reset this array
+            this._tempZones = [];
+
+            //  _temp contains a hit tested and camera culled list of IO objects
+            this._temp = this.hitTestPointer(pointer);
+
+            this.sortGameObjects(this._temp);
+            this.sortGameObjects(this._tempZones);
+
+            if (this.topOnly)
+            {
+                //  Only the top-most one counts now, so safely ignore the rest
+                if (this._temp.length)
+                {
+                    this._temp.splice(1);
+                }
+
+                if (this._tempZones.length)
+                {
+                    this._tempZones.splice(1);
+                }
+            }
+
+            var total = this.processDragEvents(pointer, time);
+
+            //  TODO: Enable for touch
+            if (!pointer.wasTouch)
+            {
+                total += this.processOverOutEvents(pointer);
+            }
+
+            if (pointer.justDown)
+            {
+                total += this.processDownEvents(pointer);
+            }
+
+            if (pointer.justUp)
+            {
+                total += this.processUpEvents(pointer);
+            }
+
+            if (pointer.justMoved)
+            {
+                total += this.processMoveEvents(pointer);
+            }
+
+            if (total > 0 && manager.globalTopOnly)
+            {
+                //  We interacted with an event in this Scene, so block any Scenes below us from doing the same this frame
+                manager.ignoreEvents = true;
+            }
+        }
+    },
+
+    /**
+     * Clears a Game Object so it no longer has an Interactive Object associated with it.
+     * The Game Object is then queued for removal from the Input Plugin on the next update.
      *
      * @method Phaser.Input.InputPlugin#clear
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} gameObject - [description]
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that will have its Interactive Object removed.
      *
-     * @return {Phaser.GameObjects.GameObject} [description]
+     * @return {Phaser.GameObjects.GameObject} The Game Object that had its Interactive Object removed.
      */
     clear: function (gameObject)
     {
@@ -58917,12 +61506,15 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Disables Input on a single Game Object.
+     *
+     * An input disabled Game Object still retains its Interactive Object component and can be re-enabled
+     * at any time, by passing it to `InputPlugin.enable`.
      *
      * @method Phaser.Input.InputPlugin#disable
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} gameObject - [description]
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to have its input system disabled.
      */
     disable: function (gameObject)
     {
@@ -58930,15 +61522,29 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Enable a Game Object for interaction.
+     *
+     * If the Game Object already has an Interactive Object component, it is enabled and returned.
+     *
+     * Otherwise, a new Interactive Object component is created and assigned to the Game Object's `input` property.
+     *
+     * Input works by using hit areas, these are nearly always geometric shapes, such as rectangles or circles, that act as the hit area
+     * for the Game Object. However, you can provide your own hit area shape and callback, should you wish to handle some more advanced
+     * input detection.
+     *
+     * If no arguments are provided it will try and create a rectangle hit area based on the texture frame the Game Object is using. If
+     * this isn't a texture-bound object, such as a Graphics or BitmapText object, this will fail, and you'll need to provide a specific
+     * shape for it to use.
+     *
+     * You can also provide an Input Configuration Object as the only argument to this method.
      *
      * @method Phaser.Input.InputPlugin#enable
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} gameObject - [description]
-     * @param {object} shape - [description]
-     * @param {HitAreaCallback} callback - [description]
-     * @param {boolean} [dropZone=false] - [description]
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to be enabled for input.
+     * @param {(Phaser.Input.InputConfiguration|any)} [shape] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
+     * @param {HitAreaCallback} [callback] - The 'contains' function to invoke to check if the pointer is within the hit area.
+     * @param {boolean} [dropZone=false] - Is this Game Object a drop zone or not?
      *
      * @return {Phaser.Input.InputPlugin} This Input Plugin.
      */
@@ -58957,7 +61563,7 @@ var InputPlugin = new Class({
             this.setHitArea(gameObject, shape, callback);
         }
 
-        if (gameObject.input)
+        if (gameObject.input && dropZone && !gameObject.input.dropZone)
         {
             gameObject.input.dropZone = dropZone;
         }
@@ -58966,26 +61572,30 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Takes the given Pointer and performs a hit test against it, to see which interactive Game Objects
+     * it is currently above.
+     *
+     * The hit test is performed against which-ever Camera the Pointer is over. If it is over multiple
+     * cameras, it starts checking the camera at the top of the camera list, and if nothing is found, iterates down the list.
      *
      * @method Phaser.Input.InputPlugin#hitTestPointer
      * @since 3.0.0
      *
-     * @param {Phaser.Input.Pointer} pointer - [description]
+     * @param {Phaser.Input.Pointer} pointer - The Pointer to check against the Game Objects.
      *
-     * @return {array} [description]
+     * @return {Phaser.GameObjects.GameObject[]} An array of all the interactive Game Objects the Pointer was above.
      */
     hitTestPointer: function (pointer)
     {
-        var camera = this.cameras.getCameraBelowPointer(pointer);
+        var cameras = this.cameras.getCamerasBelowPointer(pointer);
 
-        if (camera)
+        for (var c = 0; c < cameras.length; c++)
         {
-            pointer.camera = camera;
+            var camera = cameras[c];
 
             //  Get a list of all objects that can be seen by the camera below the pointer in the scene and store in 'output' array.
             //  All objects in this array are input enabled, as checked by the hitTest method, so we don't need to check later on as well.
-            var over = this.manager.hitTest(pointer.x, pointer.y, this._list, camera);
+            var over = this.manager.hitTest(pointer, this._list, camera);
 
             //  Filter out the drop zones
             for (var i = 0; i < over.length; i++)
@@ -58998,21 +61608,25 @@ var InputPlugin = new Class({
                 }
             }
 
-            return over;
+            if (over.length > 0)
+            {
+                pointer.camera = camera;
+
+                return over;
+            }
         }
-        else
-        {
-            return [];
-        }
+
+        return [];
     },
 
     /**
-     * [description]
+     * An internal method that handles the Pointer down event.
      *
      * @method Phaser.Input.InputPlugin#processDownEvents
+     * @private
      * @since 3.0.0
      *
-     * @param {Phaser.Input.Pointer} pointer - The Pointer to check for events against.
+     * @param {Phaser.Input.Pointer} pointer - The Pointer being tested.
      *
      * @return {integer} The total number of objects interacted with.
      */
@@ -59046,15 +61660,16 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * An internal method that handles the Pointer drag events.
      *
      * @method Phaser.Input.InputPlugin#processDragEvents
+     * @private
      * @since 3.0.0
      *
-     * @param {number} pointer - [description]
-     * @param {number} time - [description]
+     * @param {Phaser.Input.Pointer} pointer - The Pointer to check against the Game Objects.
+     * @param {number} time - The time stamp of the most recent Game step.
      *
-     * @return {integer} [description]
+     * @return {integer} The total number of objects interacted with.
      */
     processDragEvents: function (pointer, time)
     {
@@ -59313,9 +61928,10 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * An internal method that handles the Pointer movement event.
      *
      * @method Phaser.Input.InputPlugin#processMoveEvents
+     * @private
      * @since 3.0.0
      *
      * @param {Phaser.Input.Pointer} pointer - The pointer to check for events against.
@@ -59356,14 +61972,15 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * An internal method that handles the Pointer over and out events.
      *
      * @method Phaser.Input.InputPlugin#processOverOutEvents
+     * @private
      * @since 3.0.0
      *
-     * @param {Phaser.Input.Pointer} pointer - [description]
+     * @param {Phaser.Input.Pointer} pointer - The pointer to check for events against.
      *
-     * @return {integer} The number of objects interacted with.
+     * @return {integer} The total number of objects interacted with.
      */
     processOverOutEvents: function (pointer)
     {
@@ -59376,6 +61993,8 @@ var InputPlugin = new Class({
         var stillOver = [];
         var previouslyOver = this._over[pointer.id];
         var currentlyDragging = this._drag[pointer.id];
+
+        var manager = this.manager;
 
         //  Go through all objects the pointer was previously over, and see if it still is.
         //  Splits the previouslyOver array into two parts: justOut and stillOver
@@ -59437,6 +62056,8 @@ var InputPlugin = new Class({
 
                 gameObject.emit('pointerout', pointer);
 
+                manager.resetCursor(gameObject.input);
+
                 totalInteracted++;
             }
         }
@@ -59464,6 +62085,8 @@ var InputPlugin = new Class({
 
                 gameObject.emit('pointerover', pointer, gameObject.input.localX, gameObject.input.localY);
 
+                manager.setCursor(gameObject.input);
+
                 totalInteracted++;
             }
         }
@@ -59478,12 +62101,15 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * An internal method that handles the Pointer up events.
      *
      * @method Phaser.Input.InputPlugin#processUpEvents
+     * @private
      * @since 3.0.0
      *
-     * @param {Phaser.Input.Pointer} pointer - [description]
+     * @param {Phaser.Input.Pointer} pointer - The pointer to check for events against.
+     *
+     * @return {integer} The total number of objects interacted with.
      */
     processUpEvents: function (pointer)
     {
@@ -59513,9 +62139,10 @@ var InputPlugin = new Class({
     },
 
     /**
-     * Queues a Game Object for insertion into this Input Manager on the next update.
+     * Queues a Game Object for insertion into this Input Plugin on the next update.
      *
      * @method Phaser.Input.InputPlugin#queueForInsertion
+     * @private
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to add.
@@ -59533,9 +62160,10 @@ var InputPlugin = new Class({
     },
 
     /**
-     * Queues a Game Object for removal from this Input Manager on the next update.
+     * Queues a Game Object for removal from this Input Plugin on the next update.
      *
      * @method Phaser.Input.InputPlugin#queueForRemoval
+     * @private
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} child - The Game Object to remove.
@@ -59550,7 +62178,11 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Sets the draggable state of the given array of Game Objects.
+     *
+     * They can either be set to be draggable, or can have their draggable state removed by passing `false`.
+     *
+     * A Game Object will not fire drag events unless it has been specifically enabled for drag.
      *
      * @method Phaser.Input.InputPlugin#setDraggable
      * @since 3.0.0
@@ -59591,13 +62223,78 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Creates a function that can be passed to `setInteractive`, `enable` or `setHitArea` that will handle
+     * pixel-perfect input detection on an Image or Sprite based Game Object, or any custom class that extends them.
+     *
+     * The following will create a sprite that is clickable on any pixel that has an alpha value >= 1.
+     *
+     * ```javascript
+     * this.add.sprite(x, y, key).setInteractive(this.input.makePixelPerfect());
+     * ```
+     * 
+     * The following will create a sprite that is clickable on any pixel that has an alpha value >= 150.
+     *
+     * ```javascript
+     * this.add.sprite(x, y, key).setInteractive(this.input.makePixelPerfect(150));
+     * ```
+     *
+     * Once you have made an Interactive Object pixel perfect it impacts all input related events for it: down, up,
+     * dragstart, drag, etc.
+     *
+     * As a pointer interacts with the Game Object it will constantly poll the texture, extracting a single pixel from
+     * the given coordinates and checking its color values. This is an expensive process, so should only be enabled on
+     * Game Objects that really need it.
+     * 
+     * You cannot make non-texture based Game Objects pixel perfect. So this will not work on Graphics, BitmapText,
+     * Render Textures, Text, Tilemaps, Containers or Particles.
+     *
+     * @method Phaser.Input.InputPlugin#makePixelPerfect
+     * @since 3.10.0
+     *
+     * @param {integer} [alphaTolerance=1] - The alpha level that the pixel should be above to be included as a successful interaction.
+     *
+     * @return {function} A Pixel Perfect Handler for use as a hitArea shape callback.
+     */
+    makePixelPerfect: function (alphaTolerance)
+    {
+        if (alphaTolerance === undefined) { alphaTolerance = 1; }
+
+        var textureManager = this.systems.textures;
+
+        return CreatePixelPerfectHandler(textureManager, alphaTolerance);
+    },
+
+    /**
+     * @typedef {object} Phaser.Input.InputConfiguration
+     *
+     * @property {any} [hitArea] - The object / shape to use as the Hit Area. If not given it will try to create a Rectangle based on the texture frame.
+     * @property {function} [hitAreaCallback] - The callback that determines if the pointer is within the Hit Area shape or not.
+     * @property {boolean} [draggable=false] - If `true` the Interactive Object will be set to be draggable and emit drag events.
+     * @property {boolean} [dropZone=false] - If `true` the Interactive Object will be set to be a drop zone for draggable objects.
+     * @property {boolean} [useHandCursor=false] - If `true` the Interactive Object will set the `pointer` hand cursor when a pointer is over it. This is a short-cut for setting `cursor: 'pointer'`.
+     * @property {string} [cursor] - The CSS string to be used when the cursor is over this Interactive Object.
+     * @property {boolean} [pixelPerfect=false] - If `true` the a pixel perfect function will be set for the hit area callback. Only works with texture based Game Objects.
+     * @property {integer} [alphaTolerance=1] - If `pixelPerfect` is set, this is the alpha tolerance threshold value used in the callback.
+     */
+
+    /**
+     * Sets the hit area for the given array of Game Objects.
+     *
+     * A hit area is typically one of the geometric shapes Phaser provides, such as a `Phaser.Geom.Rectangle`
+     * or `Phaser.Geom.Circle`. However, it can be any object as long as it works with the provided callback.
+     *
+     * If no hit area is provided a Rectangle is created based on the size of the Game Object, if possible
+     * to calculate.
+     *
+     * The hit area callback is the function that takes an `x` and `y` coordinate and returns a boolean if
+     * those values fall within the area of the shape or not. All of the Phaser geometry objects provide this,
+     * such as `Phaser.Geom.Rectangle.Contains`.
      *
      * @method Phaser.Input.InputPlugin#setHitArea
      * @since 3.0.0
      *
      * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObjects - An array of Game Objects to set the hit area on.
-     * @param {object} [shape] - The shape or object to check if the pointer is within for hit area checks.
+     * @param {(Phaser.Input.InputConfiguration|any)} [shape] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
      * @param {HitAreaCallback} [callback] - The 'contains' function to invoke to check if the pointer is within the hit area.
      *
      * @return {Phaser.Input.InputPlugin} This InputPlugin object.
@@ -59614,11 +62311,59 @@ var InputPlugin = new Class({
             gameObjects = [ gameObjects ];
         }
 
+        var draggable = false;
+        var dropZone = false;
+        var cursor = false;
+        var useHandCursor = false;
+
+        //  Config object?
+        if (IsPlainObject(shape))
+        {
+            var config = shape;
+
+            shape = GetFastValue(config, 'hitArea', null);
+            callback = GetFastValue(config, 'hitAreaCallback', null);
+            draggable = GetFastValue(config, 'draggable', false);
+            dropZone = GetFastValue(config, 'dropZone', false);
+            cursor = GetFastValue(config, 'cursor', false);
+            useHandCursor = GetFastValue(config, 'useHandCursor', false);
+
+            var pixelPerfect = GetFastValue(config, 'pixelPerfect', false);
+            var alphaTolerance = GetFastValue(config, 'alphaTolerance', 1);
+
+            if (pixelPerfect)
+            {
+                shape = {};
+                callback = this.makePixelPerfect(alphaTolerance);
+            }
+
+            //  Still no hitArea or callback?
+            if (!shape || !callback)
+            {
+                this.setHitAreaFromTexture(gameObjects);
+            }
+        }
+        else if (typeof shape === 'function' && !callback)
+        {
+            callback = shape;
+            shape = {};
+        }
+
         for (var i = 0; i < gameObjects.length; i++)
         {
             var gameObject = gameObjects[i];
 
-            gameObject.input = CreateInteractiveObject(gameObject, shape, callback);
+            var io = (!gameObject.input) ? CreateInteractiveObject(gameObject, shape, callback) : gameObject.input;
+
+            io.dropZone = dropZone;
+            io.cursor = (useHandCursor) ? 'pointer' : cursor;
+
+            gameObject.input = io;
+
+            if (draggable)
+            {
+                this.setDraggable(gameObject);
+            }
 
             this.queueForInsertion(gameObject);
         }
@@ -59627,7 +62372,8 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Sets the hit area for an array of Game Objects to be a `Phaser.Geom.Circle` shape, using
+     * the given coordinates and radius to control its position and size.
      *
      * @method Phaser.Input.InputPlugin#setHitAreaCircle
      * @since 3.0.0
@@ -59650,7 +62396,8 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Sets the hit area for an array of Game Objects to be a `Phaser.Geom.Ellipse` shape, using
+     * the given coordinates and dimensions to control its position and size.
      *
      * @method Phaser.Input.InputPlugin#setHitAreaEllipse
      * @since 3.0.0
@@ -59674,7 +62421,8 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Sets the hit area for an array of Game Objects to be a `Phaser.Geom.Rectangle` shape, using
+     * the Game Objects texture frame to define the position and size of the hit area.
      *
      * @method Phaser.Input.InputPlugin#setHitAreaFromTexture
      * @since 3.0.0
@@ -59731,7 +62479,8 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Sets the hit area for an array of Game Objects to be a `Phaser.Geom.Rectangle` shape, using
+     * the given coordinates and dimensions to control its position and size.
      *
      * @method Phaser.Input.InputPlugin#setHitAreaRectangle
      * @since 3.0.0
@@ -59755,7 +62504,8 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Sets the hit area for an array of Game Objects to be a `Phaser.Geom.Triangle` shape, using
+     * the given coordinates to control the position of its points.
      *
      * @method Phaser.Input.InputPlugin#setHitAreaTriangle
      * @since 3.0.0
@@ -59781,7 +62531,14 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Sets the Pointers to always poll.
+     * 
+     * When a pointer is polled it runs a hit test to see which Game Objects are currently below it,
+     * or being interacted with it, regardless if the Pointer has actually moved or not.
+     *
+     * You should enable this if you want objects in your game to fire over / out events, and the objects
+     * are constantly moving, but the pointer may not have. Polling every frame has additional computation
+     * costs, especially if there are a large number of interactive objects in your game.
      *
      * @method Phaser.Input.InputPlugin#setPollAlways
      * @since 3.0.0
@@ -59797,7 +62554,10 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Sets the Pointers to only poll when they are moved or updated.
+     * 
+     * When a pointer is polled it runs a hit test to see which Game Objects are currently below it,
+     * or being interacted with it.
      *
      * @method Phaser.Input.InputPlugin#setPollOnMove
      * @since 3.0.0
@@ -59813,12 +62573,13 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Sets the poll rate value. This is the amount of time that should have elapsed before a pointer
+     * will be polled again. See the `setPollAlways` and `setPollOnMove` methods.
      *
      * @method Phaser.Input.InputPlugin#setPollRate
      * @since 3.0.0
      *
-     * @param {number} value - [description]
+     * @param {number} value - The amount of time, in ms, that should elapsed before re-polling the pointers.
      *
      * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
@@ -59831,12 +62592,15 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * When set to `true` the global Input Manager will emulate DOM behavior by only emitting events from
+     * the top-most Game Objects in the Display List.
+     *
+     * If set to `false` it will emit events from all Game Objects below a Pointer, not just the top one.
      *
      * @method Phaser.Input.InputPlugin#setGlobalTopOnly
      * @since 3.0.0
      *
-     * @param {boolean} value - [description]
+     * @param {boolean} value - `true` to only include the top-most Game Object, or `false` to include all Game Objects in a hit test.
      *
      * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
@@ -59848,12 +62612,15 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * When set to `true` this Input Plugin will emulate DOM behavior by only emitting events from
+     * the top-most Game Objects in the Display List.
+     *
+     * If set to `false` it will emit events from all Game Objects below a Pointer, not just the top one.
      *
      * @method Phaser.Input.InputPlugin#setTopOnly
      * @since 3.0.0
      *
-     * @param {boolean} value - [description]
+     * @param {boolean} value - `true` to only include the top-most Game Object, or `false` to include all Game Objects in a hit test.
      *
      * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
@@ -59865,15 +62632,15 @@ var InputPlugin = new Class({
     },
 
     /**
-     * Given an array of Game Objects, sort the array and return it,
-     * so that the objects are in index order with the lowest at the bottom.
+     * Given an array of Game Objects, sort the array and return it, so that the objects are in depth index order
+     * with the lowest at the bottom.
      *
      * @method Phaser.Input.InputPlugin#sortGameObjects
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject[]} gameObjects - [description]
+     * @param {Phaser.GameObjects.GameObject[]} gameObjects - An array of Game Objects to be sorted.
      *
-     * @return {Phaser.GameObjects.GameObject[]} [description]
+     * @return {Phaser.GameObjects.GameObject[]} The sorted array of Game Objects.
      */
     sortGameObjects: function (gameObjects)
     {
@@ -59892,6 +62659,7 @@ var InputPlugin = new Class({
      * Will iterate through all parent containers, if present.
      *
      * @method Phaser.Input.InputPlugin#sortHandlerGO
+     * @private
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} childA - The first Game Object to compare.
@@ -59951,7 +62719,7 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Causes the Input Manager to stop emitting any events for the remainder of this game step.
      *
      * @method Phaser.Input.InputPlugin#stopPropagation
      * @since 3.0.0
@@ -59969,96 +62737,171 @@ var InputPlugin = new Class({
     },
 
     /**
-     * [description]
+     * Adds a callback to be invoked whenever the native DOM `mouseup` or `touchend` events are received.
+     * By setting the `isOnce` argument you can control if the callback is called once,
+     * or every time the DOM event occurs.
      *
-     * @method Phaser.Input.InputPlugin#update
-     * @since 3.0.0
+     * Callbacks passed to this method are invoked _immediately_ when the DOM event happens,
+     * within the scope of the DOM event handler. Therefore, they are considered as 'native'
+     * from the perspective of the browser. This means they can be used for tasks such as
+     * opening new browser windows, or anything which explicitly requires user input to activate.
+     * However, as a result of this, they come with their own risks, and as such should not be used
+     * for general game input, but instead be reserved for special circumstances.
      *
-     * @param {number} time - [description]
-     * @param {number} delta - [description]
+     * If all you're trying to do is execute a callback when a pointer is released, then
+     * please use the internal Input event system instead.
+     *
+     * Please understand that these callbacks are invoked when the browser feels like doing so,
+     * which may be entirely out of the normal flow of the Phaser Game Loop. Therefore, you should absolutely keep
+     * Phaser related operations to a minimum in these callbacks. For example, don't destroy Game Objects,
+     * change Scenes or manipulate internal systems, otherwise you run a very real risk of creating
+     * heisenbugs (https://en.wikipedia.org/wiki/Heisenbug) that prove a challenge to reproduce, never mind
+     * solve.
+     *
+     * @method Phaser.Input.InputPlugin#addUpCallback
+     * @since 3.10.0
+     *
+     * @param {function} callback - The callback to be invoked on this DOM event.
+     * @param {boolean} [isOnce=true] - `true` if the callback will only be invoked once, `false` to call every time this event happens.
+     *
+     * @return {this} The Input Plugin.
      */
-    update: function (time, delta)
+    addUpCallback: function (callback, isOnce)
     {
-        var manager = this.manager;
+        this.manager.addUpCallback(callback, isOnce);
 
-        //  Another Scene above this one has already consumed the input events, or we're in transition
-        if (!this.enabled || (manager.globalTopOnly && manager.ignoreEvents))
-        {
-            return;
-        }
+        return this;
+    },
 
-        var pointer = manager.activePointer;
+    /**
+     * Adds a callback to be invoked whenever the native DOM `mousedown` or `touchstart` events are received.
+     * By setting the `isOnce` argument you can control if the callback is called once,
+     * or every time the DOM event occurs.
+     *
+     * Callbacks passed to this method are invoked _immediately_ when the DOM event happens,
+     * within the scope of the DOM event handler. Therefore, they are considered as 'native'
+     * from the perspective of the browser. This means they can be used for tasks such as
+     * opening new browser windows, or anything which explicitly requires user input to activate.
+     * However, as a result of this, they come with their own risks, and as such should not be used
+     * for general game input, but instead be reserved for special circumstances.
+     *
+     * If all you're trying to do is execute a callback when a pointer is down, then
+     * please use the internal Input event system instead.
+     *
+     * Please understand that these callbacks are invoked when the browser feels like doing so,
+     * which may be entirely out of the normal flow of the Phaser Game Loop. Therefore, you should absolutely keep
+     * Phaser related operations to a minimum in these callbacks. For example, don't destroy Game Objects,
+     * change Scenes or manipulate internal systems, otherwise you run a very real risk of creating
+     * heisenbugs (https://en.wikipedia.org/wiki/Heisenbug) that prove a challenge to reproduce, never mind
+     * solve.
+     *
+     * @method Phaser.Input.InputPlugin#addDownCallback
+     * @since 3.10.0
+     *
+     * @param {function} callback - The callback to be invoked on this dom event.
+     * @param {boolean} [isOnce=true] - `true` if the callback will only be invoked once, `false` to call every time this event happens.
+     *
+     * @return {this} The Input Plugin.
+     */
+    addDownCallback: function (callback, isOnce)
+    {
+        this.manager.addDownCallback(callback, isOnce);
 
-        var runUpdate = (pointer.dirty || this.pollRate === 0);
+        return this;
+    },
 
-        if (this.pollRate > -1)
-        {
-            this._pollTimer -= delta;
+    /**
+     * Adds a callback to be invoked whenever the native DOM `mousemove` or `touchmove` events are received.
+     * By setting the `isOnce` argument you can control if the callback is called once,
+     * or every time the DOM event occurs.
+     *
+     * Callbacks passed to this method are invoked _immediately_ when the DOM event happens,
+     * within the scope of the DOM event handler. Therefore, they are considered as 'native'
+     * from the perspective of the browser. This means they can be used for tasks such as
+     * opening new browser windows, or anything which explicitly requires user input to activate.
+     * However, as a result of this, they come with their own risks, and as such should not be used
+     * for general game input, but instead be reserved for special circumstances.
+     *
+     * If all you're trying to do is execute a callback when a pointer is moved, then
+     * please use the internal Input event system instead.
+     *
+     * Please understand that these callbacks are invoked when the browser feels like doing so,
+     * which may be entirely out of the normal flow of the Phaser Game Loop. Therefore, you should absolutely keep
+     * Phaser related operations to a minimum in these callbacks. For example, don't destroy Game Objects,
+     * change Scenes or manipulate internal systems, otherwise you run a very real risk of creating
+     * heisenbugs (https://en.wikipedia.org/wiki/Heisenbug) that prove a challenge to reproduce, never mind
+     * solve.
+     *
+     * @method Phaser.Input.InputPlugin#addMoveCallback
+     * @since 3.10.0
+     *
+     * @param {function} callback - The callback to be invoked on this dom event.
+     * @param {boolean} [isOnce=false] - `true` if the callback will only be invoked once, `false` to call every time this event happens.
+     *
+     * @return {this} The Input Plugin.
+     */
+    addMoveCallback: function (callback, isOnce)
+    {
+        this.manager.addMoveCallback(callback, isOnce);
 
-            if (this._pollTimer < 0)
-            {
-                runUpdate = true;
+        return this;
+    },
 
-                //  Discard timer diff
-                this._pollTimer = this.pollRate;
-            }
-        }
+    /**
+     * Adds new Pointer objects to the Input Manager.
+     *
+     * By default Phaser creates 2 pointer objects: `mousePointer` and `pointer1`.
+     *
+     * You can create more either by calling this method, or by setting the `input.activePointers` property
+     * in the Game Config, up to a maximum of 10 pointers.
+     *
+     * The first 10 pointers are available via the `InputPlugin.pointerX` properties, once they have been added
+     * via this method.
+     *
+     * @method Phaser.Input.InputPlugin#addPointer
+     * @since 3.10.0
+     * 
+     * @param {integer} [quantity=1] The number of new Pointers to create. A maximum of 10 is allowed in total.
+     *
+     * @return {Phaser.Input.Pointer[]} An array containing all of the new Pointer objects that were created.
+     */
+    addPointer: function (quantity)
+    {
+        return this.manager.addPointer(quantity);
+    },
 
-        if (!runUpdate)
-        {
-            return;
-        }
+    /**
+     * Tells the Input system to set a custom cursor.
+     * 
+     * This cursor will be the default cursor used when interacting with the game canvas.
+     *
+     * If an Interactive Object also sets a custom cursor, this is the cursor that is reset after its use.
+     *
+     * Any valid CSS cursor value is allowed, including paths to image files, i.e.:
+     *
+     * ```javascript
+     * this.input.setDefaultCursor('url(assets/cursors/sword.cur), pointer');
+     * ```
+     * 
+     * Please read about the differences between browsers when it comes to the file formats and sizes they support:
+     *
+     * https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
+     * https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_User_Interface/Using_URL_values_for_the_cursor_property
+     *
+     * It's up to you to pick a suitable cursor format that works across the range of browsers you need to support.
+     *
+     * @method Phaser.Input.InputPlugin#setDefaultCursor
+     * @since 3.10.0
+     * 
+     * @param {string} cursor - The CSS to be used when setting the default cursor.
+     *
+     * @return {Phaser.Input.InputPlugin} This Input instance.
+     */
+    setDefaultCursor: function (cursor)
+    {
+        this.manager.setDefaultCursor(cursor);
 
-        //  Always reset this array
-        this._tempZones = [];
-
-        //  _temp contains a hit tested and camera culled list of IO objects
-        this._temp = this.hitTestPointer(pointer);
-
-        this.sortGameObjects(this._temp);
-        this.sortGameObjects(this._tempZones);
-
-        if (this.topOnly)
-        {
-            //  Only the top-most one counts now, so safely ignore the rest
-            if (this._temp.length)
-            {
-                this._temp.splice(1);
-            }
-
-            if (this._tempZones.length)
-            {
-                this._tempZones.splice(1);
-            }
-        }
-
-        var total = this.processDragEvents(pointer, time);
-
-        if (!pointer.wasTouch)
-        {
-            total += this.processOverOutEvents(pointer);
-        }
-
-        if (pointer.justDown)
-        {
-            total += this.processDownEvents(pointer);
-        }
-
-        if (pointer.justUp)
-        {
-            total += this.processUpEvents(pointer);
-        }
-
-        if (pointer.justMoved)
-        {
-            total += this.processMoveEvents(pointer);
-        }
-
-        if (total > 0 && manager.globalTopOnly)
-        {
-            //  We interacted with an event in this Scene, so block any Scenes below us from doing the same this frame
-            manager.ignoreEvents = true;
-        }
+        return this;
     },
 
     /**
@@ -60110,6 +62953,9 @@ var InputPlugin = new Class({
      */
     shutdown: function ()
     {
+        //  Registered input plugins listen for this
+        this.pluginEvents.emit('shutdown');
+
         this._temp.length = 0;
         this._list.length = 0;
         this._draggable.length = 0;
@@ -60147,32 +62993,18 @@ var InputPlugin = new Class({
     {
         this.shutdown();
 
+        //  Registered input plugins listen for this
+        this.pluginEvents.emit('destroy');
+
+        this.pluginEvents.removeAllListeners();
+
         this.scene.sys.events.off('start', this.start, this);
 
         this.scene = null;
         this.cameras = null;
         this.manager = null;
         this.events = null;
-        this.keyboard = null;
         this.mouse = null;
-        this.gamepad = null;
-    },
-
-    /**
-     * The current active input Pointer.
-     *
-     * @name Phaser.Input.InputPlugin#activePointer
-     * @type {Phaser.Input.Pointer}
-     * @readOnly
-     * @since 3.0.0
-     */
-    activePointer: {
-
-        get: function ()
-        {
-            return this.manager.activePointer;
-        }
-
     },
 
     /**
@@ -60209,6 +63041,222 @@ var InputPlugin = new Class({
             return this.manager.activePointer.y;
         }
 
+    },
+
+    /**
+     * The mouse has its own unique Pointer object, which you can reference directly if making a _desktop specific game_.
+     * If you are supporting both desktop and touch devices then do not use this property, instead use `activePointer`
+     * which will always map to the most recently interacted pointer.
+     *
+     * @name Phaser.Input.InputPlugin#mousePointer
+     * @type {Phaser.Input.Pointer}
+     * @readOnly
+     * @since 3.10.0
+     */
+    mousePointer: {
+
+        get: function ()
+        {
+            return this.manager.mousePointer;
+        }
+
+    },
+
+    /**
+     * The current active input Pointer.
+     *
+     * @name Phaser.Input.InputPlugin#activePointer
+     * @type {Phaser.Input.Pointer}
+     * @readOnly
+     * @since 3.0.0
+     */
+    activePointer: {
+
+        get: function ()
+        {
+            return this.manager.activePointer;
+        }
+
+    },
+
+    /**
+     * A touch-based Pointer object.
+     * This will be `undefined` by default unless you add a new Pointer using `addPointer`.
+     *
+     * @name Phaser.Input.InputPlugin#pointer1
+     * @type {Phaser.Input.Pointer}
+     * @readOnly
+     * @since 3.10.0
+     */
+    pointer1: {
+
+        get: function ()
+        {
+            return this.manager.pointers[1];
+        }
+
+    },
+
+    /**
+     * A touch-based Pointer object.
+     * This will be `undefined` by default unless you add a new Pointer using `addPointer`.
+     *
+     * @name Phaser.Input.InputPlugin#pointer2
+     * @type {Phaser.Input.Pointer}
+     * @readOnly
+     * @since 3.10.0
+     */
+    pointer2: {
+
+        get: function ()
+        {
+            return this.manager.pointers[2];
+        }
+
+    },
+
+    /**
+     * A touch-based Pointer object.
+     * This will be `undefined` by default unless you add a new Pointer using `addPointer`.
+     *
+     * @name Phaser.Input.InputPlugin#pointer3
+     * @type {Phaser.Input.Pointer}
+     * @readOnly
+     * @since 3.10.0
+     */
+    pointer3: {
+
+        get: function ()
+        {
+            return this.manager.pointers[3];
+        }
+
+    },
+
+    /**
+     * A touch-based Pointer object.
+     * This will be `undefined` by default unless you add a new Pointer using `addPointer`.
+     *
+     * @name Phaser.Input.InputPlugin#pointer4
+     * @type {Phaser.Input.Pointer}
+     * @readOnly
+     * @since 3.10.0
+     */
+    pointer4: {
+
+        get: function ()
+        {
+            return this.manager.pointers[4];
+        }
+
+    },
+
+    /**
+     * A touch-based Pointer object.
+     * This will be `undefined` by default unless you add a new Pointer using `addPointer`.
+     *
+     * @name Phaser.Input.InputPlugin#pointer5
+     * @type {Phaser.Input.Pointer}
+     * @readOnly
+     * @since 3.10.0
+     */
+    pointer5: {
+
+        get: function ()
+        {
+            return this.manager.pointers[5];
+        }
+
+    },
+
+    /**
+     * A touch-based Pointer object.
+     * This will be `undefined` by default unless you add a new Pointer using `addPointer`.
+     *
+     * @name Phaser.Input.InputPlugin#pointer6
+     * @type {Phaser.Input.Pointer}
+     * @readOnly
+     * @since 3.10.0
+     */
+    pointer6: {
+
+        get: function ()
+        {
+            return this.manager.pointers[6];
+        }
+
+    },
+
+    /**
+     * A touch-based Pointer object.
+     * This will be `undefined` by default unless you add a new Pointer using `addPointer`.
+     *
+     * @name Phaser.Input.InputPlugin#pointer7
+     * @type {Phaser.Input.Pointer}
+     * @readOnly
+     * @since 3.10.0
+     */
+    pointer7: {
+
+        get: function ()
+        {
+            return this.manager.pointers[7];
+        }
+
+    },
+
+    /**
+     * A touch-based Pointer object.
+     * This will be `undefined` by default unless you add a new Pointer using `addPointer`.
+     *
+     * @name Phaser.Input.InputPlugin#pointer8
+     * @type {Phaser.Input.Pointer}
+     * @readOnly
+     * @since 3.10.0
+     */
+    pointer8: {
+
+        get: function ()
+        {
+            return this.manager.pointers[8];
+        }
+
+    },
+
+    /**
+     * A touch-based Pointer object.
+     * This will be `undefined` by default unless you add a new Pointer using `addPointer`.
+     *
+     * @name Phaser.Input.InputPlugin#pointer9
+     * @type {Phaser.Input.Pointer}
+     * @readOnly
+     * @since 3.10.0
+     */
+    pointer9: {
+
+        get: function ()
+        {
+            return this.manager.pointers[9];
+        }
+
+    },
+
+    /**
+     * A touch-based Pointer object.
+     * This will be `undefined` by default unless you add a new Pointer using `addPointer`.
+     *
+     * @name Phaser.Input.InputPlugin#pointer10
+     * @type {Phaser.Input.Pointer}
+     * @readOnly
+     * @since 3.10.0
+     */
+    pointer10: {
+
+        get: function ()
+        {
+            return this.manager.pointers[10];
+        }
+
     }
 
 });
@@ -60219,7 +63267,7 @@ module.exports = InputPlugin;
 
 
 /***/ }),
-/* 366 */
+/* 377 */
 /***/ (function(module, exports) {
 
 /**
@@ -60270,7 +63318,7 @@ module.exports = {
 
 
 /***/ }),
-/* 367 */
+/* 378 */
 /***/ (function(module, exports) {
 
 /**
@@ -60309,7 +63357,7 @@ module.exports = {
 
 
 /***/ }),
-/* 368 */
+/* 379 */
 /***/ (function(module, exports) {
 
 /**
@@ -60359,7 +63407,7 @@ module.exports = {
 
 
 /***/ }),
-/* 369 */
+/* 380 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60374,15 +63422,658 @@ module.exports = {
 
 module.exports = {
 
-    DUALSHOCK_4: __webpack_require__(368),
-    SNES_USB: __webpack_require__(367),
-    XBOX_360: __webpack_require__(366)
+    DUALSHOCK_4: __webpack_require__(379),
+    SNES_USB: __webpack_require__(378),
+    XBOX_360: __webpack_require__(377)
 
 };
 
 
 /***/ }),
-/* 370 */
+/* 381 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+var EventEmitter = __webpack_require__(9);
+var Gamepad = __webpack_require__(172);
+var GetValue = __webpack_require__(4);
+var InputPluginCache = __webpack_require__(76);
+
+/**
+ * @typedef {object} Pad
+ *
+ * @property {string} id - The ID of the Gamepad.
+ * @property {integer} index - The index of the Gamepad.
+ */
+
+/**
+ * @classdesc
+ * The Gamepad Plugin is an input plugin that belongs to the Scene-owned Input system.
+ *
+ * Its role is to listen for native DOM Gamepad Events and then process them.
+ *
+ * You do not need to create this class directly, the Input system will create an instance of it automatically.
+ *
+ * You can access it from within a Scene using `this.input.gamepad`.
+ *
+ * To listen for a gamepad being connected:
+ *
+ * ```javascript
+ * this.input.gamepad.once('connected', function (pad) {
+ *     //   'pad' is a reference to the gamepad that was just connected
+ * });
+ * ```
+ *
+ * Note that the browser may require you to press a button on a gamepad before it will allow you to access it,
+ * this is for security reasons. However, it may also trust the page already, in which case you won't get the
+ * 'connected' event and instead should check `GamepadPlugin.total` to see if it thinks there are any gamepads
+ * already connected.
+ *
+ * Once you have received the connected event, or polled the gamepads and found them enabled, you can access
+ * them via the built-in properties `GamepadPlugin.pad1` to `pad4`, for up to 4 game pads. With a reference
+ * to the gamepads you can poll its buttons and axis sticks. See the properties and methods available on
+ * the `Gamepad` class for more details.
+ *
+ * For more information about Gamepad support in browsers see the following resources:
+ *
+ * https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API
+ * https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API
+ * https://www.smashingmagazine.com/2015/11/gamepad-api-in-web-games/
+ * http://html5gamepad.com/
+ *
+ * @class GamepadPlugin
+ * @extends Phaser.Events.EventEmitter
+ * @memberOf Phaser.Input.Gamepad
+ * @constructor
+ * @since 3.10.0
+ *
+ * @param {Phaser.Input.InputPlugin} sceneInputPlugin - A reference to the Scene Input Plugin that the KeyboardPlugin belongs to.
+ */
+var GamepadPlugin = new Class({
+
+    Extends: EventEmitter,
+
+    initialize:
+
+    function GamepadPlugin (sceneInputPlugin)
+    {
+        EventEmitter.call(this);
+
+        /**
+         * A reference to the Scene that this Input Plugin is responsible for.
+         *
+         * @name Phaser.Input.Gamepad.GamepadPlugin#scene
+         * @type {Phaser.Scene}
+         * @since 3.10.0
+         */
+        this.scene = sceneInputPlugin.scene;
+
+        /**
+         * A reference to the Scene Systems Settings.
+         *
+         * @name Phaser.Input.Gamepad.GamepadPlugin#settings
+         * @type {Phaser.Scenes.Settings.Object}
+         * @since 3.10.0
+         */
+        this.settings = this.scene.sys.settings;
+
+        /**
+         * A reference to the Scene Input Plugin that created this Keyboard Plugin.
+         *
+         * @name Phaser.Input.Gamepad.GamepadPlugin#sceneInputPlugin
+         * @type {Phaser.Input.InputPlugin}
+         * @since 3.10.0
+         */
+        this.sceneInputPlugin = sceneInputPlugin;
+
+        /**
+         * A boolean that controls if the Gamepad Manager is enabled or not.
+         * Can be toggled on the fly.
+         *
+         * @name Phaser.Input.Gamepad.GamepadPlugin#enabled
+         * @type {boolean}
+         * @default true
+         * @since 3.10.0
+         */
+        this.enabled = true;
+
+        /**
+         * The Gamepad Event target, as defined in the Game Config.
+         * Typically the browser window, but can be any interactive DOM element.
+         *
+         * @name Phaser.Input.Gamepad.GamepadPlugin#target
+         * @type {any}
+         * @since 3.10.0
+         */
+        this.target;
+
+        /**
+         * An array of the connected Gamepads.
+         *
+         * @name Phaser.Input.Gamepad.GamepadPlugin#gamepads
+         * @type {Phaser.Input.Gamepad.Gamepad[]}
+         * @default []
+         * @since 3.10.0
+         */
+        this.gamepads = [];
+
+        /**
+         * An internal event queue.
+         *
+         * @name Phaser.Input.Gamepad.GamepadPlugin#queue
+         * @type {GamepadEvent[]}
+         * @private
+         * @since 3.10.0
+         */
+        this.queue = [];
+
+        /**
+         * Internal event handler.
+         *
+         * @name Phaser.Input.Gamepad.GamepadPlugin#onGamepadHandler
+         * @type {function}
+         * @private
+         * @since 3.10.0
+         */
+        this.onGamepadHandler;
+
+        /**
+         * Internal Gamepad reference.
+         *
+         * @name Phaser.Input.Gamepad.GamepadPlugin#_pad1
+         * @type {Phaser.Input.Gamepad.Gamepad}
+         * @private
+         * @since 3.10.0
+         */
+        this._pad1;
+
+        /**
+         * Internal Gamepad reference.
+         *
+         * @name Phaser.Input.Gamepad.GamepadPlugin#_pad2
+         * @type {Phaser.Input.Gamepad.Gamepad}
+         * @private
+         * @since 3.10.0
+         */
+        this._pad2;
+
+        /**
+         * Internal Gamepad reference.
+         *
+         * @name Phaser.Input.Gamepad.GamepadPlugin#_pad3
+         * @type {Phaser.Input.Gamepad.Gamepad}
+         * @private
+         * @since 3.10.0
+         */
+        this._pad3;
+
+        /**
+         * Internal Gamepad reference.
+         *
+         * @name Phaser.Input.Gamepad.GamepadPlugin#_pad4
+         * @type {Phaser.Input.Gamepad.Gamepad}
+         * @private
+         * @since 3.10.0
+         */
+        this._pad4;
+
+        sceneInputPlugin.pluginEvents.once('boot', this.boot, this);
+        sceneInputPlugin.pluginEvents.on('start', this.start, this);
+    },
+
+    /**
+     * This method is called automatically, only once, when the Scene is first created.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Input.Gamepad.GamepadPlugin#boot
+     * @private
+     * @since 3.10.0
+     */
+    boot: function ()
+    {
+        var game = this.scene.sys.game;
+        var settings = this.settings.input;
+        var config = game.config;
+
+        this.enabled = GetValue(settings, 'gamepad', config.inputGamepad) && game.device.input.gamepads;
+        this.target = GetValue(settings, 'gamepad.target', config.inputGamepadEventTarget);
+
+        this.sceneInputPlugin.pluginEvents.once('destroy', this.destroy, this);
+    },
+
+    /**
+     * This method is called automatically by the Scene when it is starting up.
+     * It is responsible for creating local systems, properties and listening for Scene events.
+     * Do not invoke it directly.
+     *
+     * @method Phaser.Input.Gamepad.GamepadPlugin#start
+     * @private
+     * @since 3.10.0
+     */
+    start: function ()
+    {
+        if (this.enabled)
+        {
+            this.startListeners();
+        }
+
+        this.sceneInputPlugin.pluginEvents.once('shutdown', this.shutdown, this);
+    },
+
+    /**
+     * Checks to see if both this plugin and the Scene to which it belongs is active.
+     *
+     * @method Phaser.Input.Gamepad.GamepadPlugin#isActive
+     * @since 3.10.0
+     *
+     * @return {boolean} `true` if the plugin and the Scene it belongs to is active.
+     */
+    isActive: function ()
+    {
+        return (this.enabled && this.scene.sys.isActive());
+    },
+
+    /**
+     * Starts the Gamepad Event listeners running.
+     * This is called automatically and does not need to be manually invoked.
+     *
+     * @method Phaser.Input.Gamepad.GamepadPlugin#startListeners
+     * @private
+     * @since 3.10.0
+     */
+    startListeners: function ()
+    {
+        var _this = this;
+        var target = this.target;
+
+        var handler = function (event)
+        {
+            // console.log(event);
+
+            if (event.defaultPrevented || !_this.isActive())
+            {
+                // Do nothing if event already handled
+                return;
+            }
+
+            _this.refreshPads();
+
+            _this.queue.push(event);
+        };
+
+        this.onGamepadHandler = handler;
+
+        target.addEventListener('gamepadconnected', handler, false);
+        target.addEventListener('gamepaddisconnected', handler, false);
+
+        //  FF also supports gamepadbuttondown, gamepadbuttonup and gamepadaxismove but
+        //  nothing else does, and we can get those values via the gamepads anyway, so we will
+        //  until more browsers support this
+
+        //  Finally, listen for an update event from the Input Plugin
+        this.sceneInputPlugin.pluginEvents.on('update', this.update, this);
+    },
+
+    /**
+     * Stops the Gamepad Event listeners.
+     * This is called automatically and does not need to be manually invoked.
+     *
+     * @method Phaser.Input.Gamepad.GamepadPlugin#stopListeners
+     * @private
+     * @since 3.10.0
+     */
+    stopListeners: function ()
+    {
+        this.target.removeEventListener('gamepadconnected', this.onGamepadHandler);
+        this.target.removeEventListener('gamepaddisconnected', this.onGamepadHandler);
+
+        this.sceneInputPlugin.pluginEvents.off('update', this.update);
+    },
+
+    /**
+     * Disconnects all current Gamepads.
+     *
+     * @method Phaser.Input.Gamepad.GamepadPlugin#disconnectAll
+     * @since 3.10.0
+     */
+    disconnectAll: function ()
+    {
+        for (var i = 0; i < this.gamepads.length; i++)
+        {
+            this.gamepads.connected = false;
+        }
+    },
+
+    /**
+     * Refreshes the list of connected Gamepads.
+     *
+     * This is called automatically when a gamepad is connected or disconnected,
+     * and during the update loop.
+     *
+     * @method Phaser.Input.Gamepad.GamepadPlugin#refreshPads
+     * @private
+     * @since 3.10.0
+     */
+    refreshPads: function ()
+    {
+        var connectedPads = navigator.getGamepads();
+
+        if (!connectedPads)
+        {
+            this.disconnectAll();
+        }
+        else
+        {
+            var currentPads = this.gamepads;
+
+            for (var i = 0; i < connectedPads.length; i++)
+            {
+                var livePad = connectedPads[i];
+
+                //  Because sometimes they're null (yes, really)
+                if (!livePad)
+                {
+                    continue;
+                }
+
+                var id = livePad.id;
+                var index = livePad.index;
+                var currentPad = currentPads[index];
+
+                if (!currentPad)
+                {
+                    //  A new Gamepad, not currently stored locally
+                    var newPad = new Gamepad(this, livePad);
+
+                    currentPads[index] = newPad;
+
+                    if (!this._pad1)
+                    {
+                        this._pad1 = newPad;
+                    }
+                    else if (!this._pad2)
+                    {
+                        this._pad2 = newPad;
+                    }
+                    else if (!this._pad3)
+                    {
+                        this._pad3 = newPad;
+                    }
+                    else if (!this._pad4)
+                    {
+                        this._pad4 = newPad;
+                    }
+                }
+                else if (currentPad.id !== id)
+                {
+                    //  A new Gamepad with a different vendor string, but it has got the same index as an old one
+                    currentPad.destroy();
+
+                    currentPads[index] = new Gamepad(this, livePad);
+                }
+                else
+                {
+                    //  If neither of these, it's a pad we've already got, so update it
+                    currentPad.update(livePad);
+                }
+            }
+        }
+    },
+
+    /**
+     * Returns an array of all currently connected Gamepads.
+     *
+     * @method Phaser.Input.Gamepad.GamepadPlugin#getAll
+     * @since 3.10.0
+     *
+     * @return {Phaser.Input.Gamepad.Gamepad[]} An array of all currently connected Gamepads.
+     */
+    getAll: function ()
+    {
+        var out = [];
+        var pads = this.gamepads;
+
+        for (var i = 0; i < pads.length; i++)
+        {
+            if (pads[i])
+            {
+                out.push(pads[i]);
+            }
+        }
+
+        return out;
+    },
+
+    /**
+     * Looks-up a single Gamepad based on the given index value.
+     *
+     * @method Phaser.Input.Gamepad.GamepadPlugin#getPad
+     * @since 3.10.0
+     *
+     * @param {number} index - The index of the Gamepad to get.
+     *
+     * @return {Phaser.Input.Gamepad.Gamepad} The Gamepad matching the given index, or undefined if none were found.
+     */
+    getPad: function (index)
+    {
+        var pads = this.gamepads;
+
+        for (var i = 0; i < pads.length; i++)
+        {
+            if (pads[i] && pads[i].index === index)
+            {
+                return pads[i];
+            }
+        }
+    },
+
+    /**
+     * The internal update loop. Refreshes all connected gamepads and processes their events.
+     *
+     * Called automatically by the Input Manager, invoked from the Game step.
+     *
+     * @method Phaser.Input.Gamepad.GamepadPlugin#update
+     * @private
+     * @since 3.10.0
+     */
+    update: function ()
+    {
+        if (!this.enabled)
+        {
+            return;
+        }
+
+        this.refreshPads();
+
+        var len = this.queue.length;
+
+        if (len === 0)
+        {
+            return;
+        }
+
+        var queue = this.queue.splice(0, len);
+
+        //  Process the event queue, dispatching all of the events that have stored up
+        for (var i = 0; i < len; i++)
+        {
+            var event = queue[i];
+            var pad = this.getPad(event.gamepad.index);
+
+            if (event.type === 'gamepadconnected')
+            {
+                this.emit('connected', pad, event);
+            }
+            else if (event.type === 'gamepaddisconnected')
+            {
+                this.emit('disconnected', pad, event);
+            }
+        }
+    },
+
+    /**
+     * Shuts the Gamepad Plugin down.
+     * All this does is remove any listeners bound to it.
+     *
+     * @method Phaser.Input.Gamepad.GamepadPlugin#shutdown
+     * @private
+     * @since 3.10.0
+     */
+    shutdown: function ()
+    {
+        this.stopListeners();
+
+        this.disconnectAll();
+
+        this.removeAllListeners();
+    },
+
+    /**
+     * Destroys this Gamepad Plugin, disconnecting all Gamepads and releasing internal references.
+     *
+     * @method Phaser.Input.Gamepad.GamepadPlugin#destroy
+     * @private
+     * @since 3.10.0
+     */
+    destroy: function ()
+    {
+        this.shutdown();
+
+        for (var i = 0; i < this.gamepads.length; i++)
+        {
+            if (this.gamepads[i])
+            {
+                this.gamepads[i].destroy();
+            }
+        }
+
+        this.gamepads = [];
+
+        this.scene = null;
+        this.settings = null;
+        this.sceneInputPlugin = null;
+        this.target = null;
+    },
+
+    /**
+     * The total number of connected game pads.
+     *
+     * @name Phaser.Input.Gamepad.GamepadPlugin#total
+     * @type {integer}
+     * @since 3.10.0
+     */
+    total: {
+
+        get: function ()
+        {
+            return this.gamepads.length;
+        }
+
+    },
+
+    /**
+     * A reference to the first connected Gamepad.
+     *
+     * This will be undefined if either no pads are connected, or the browser
+     * has not yet issued a gamepadconnect, which can happen even if a Gamepad
+     * is plugged in, but hasn't yet had any buttons pressed on it.
+     *
+     * @name Phaser.Input.Gamepad.GamepadPlugin#pad1
+     * @type {Phaser.Input.Gamepad.Gamepad}
+     * @since 3.10.0
+     */
+    pad1: {
+
+        get: function ()
+        {
+            return this._pad1;
+        }
+
+    },
+
+    /**
+     * A reference to the second connected Gamepad.
+     *
+     * This will be undefined if either no pads are connected, or the browser
+     * has not yet issued a gamepadconnect, which can happen even if a Gamepad
+     * is plugged in, but hasn't yet had any buttons pressed on it.
+     *
+     * @name Phaser.Input.Gamepad.GamepadPlugin#pad2
+     * @type {Phaser.Input.Gamepad.Gamepad}
+     * @since 3.10.0
+     */
+    pad2: {
+
+        get: function ()
+        {
+            return this._pad2;
+        }
+
+    },
+
+    /**
+     * A reference to the third connected Gamepad.
+     *
+     * This will be undefined if either no pads are connected, or the browser
+     * has not yet issued a gamepadconnect, which can happen even if a Gamepad
+     * is plugged in, but hasn't yet had any buttons pressed on it.
+     *
+     * @name Phaser.Input.Gamepad.GamepadPlugin#pad3
+     * @type {Phaser.Input.Gamepad.Gamepad}
+     * @since 3.10.0
+     */
+    pad3: {
+
+        get: function ()
+        {
+            return this._pad3;
+        }
+
+    },
+
+    /**
+     * A reference to the fourth connected Gamepad.
+     *
+     * This will be undefined if either no pads are connected, or the browser
+     * has not yet issued a gamepadconnect, which can happen even if a Gamepad
+     * is plugged in, but hasn't yet had any buttons pressed on it.
+     *
+     * @name Phaser.Input.Gamepad.GamepadPlugin#pad4
+     * @type {Phaser.Input.Gamepad.Gamepad}
+     * @since 3.10.0
+     */
+    pad4: {
+
+        get: function ()
+        {
+            return this._pad4;
+        }
+
+    }
+
+});
+
+/**
+ * An instance of the Gamepad Plugin class, if enabled via the `input.gamepad` Scene or Game Config property.
+ * Use this to create access Gamepads connected to the browser and respond to gamepad buttons.
+ *
+ * @name Phaser.Input.InputPlugin#gamepad
+ * @type {?Phaser.Input.Gamepad.GamepadPlugin}
+ * @since 3.10.0
+ */
+InputPluginCache.register('GamepadPlugin', GamepadPlugin, 'gamepad', 'gamepad', 'inputGamepad');
+
+module.exports = GamepadPlugin;
+
+
+/***/ }),
+/* 382 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60397,17 +64088,17 @@ module.exports = {
 
 module.exports = {
 
-    Axis: __webpack_require__(196),
-    Button: __webpack_require__(195),
-    Gamepad: __webpack_require__(197),
-    GamepadManager: __webpack_require__(198),
+    Axis: __webpack_require__(174),
+    Button: __webpack_require__(173),
+    Gamepad: __webpack_require__(172),
+    GamepadPlugin: __webpack_require__(381),
     
-    Configs: __webpack_require__(369)
+    Configs: __webpack_require__(380)
 };
 
 
 /***/ }),
-/* 371 */
+/* 383 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60416,44 +64107,54 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var CONST = __webpack_require__(200);
+var Extend = __webpack_require__(17);
+
 /**
  * @namespace Phaser.Input
  */
 
-module.exports = {
+var Input = {
 
-    CreateInteractiveObject: __webpack_require__(167),
-    Gamepad: __webpack_require__(370),
-    InputManager: __webpack_require__(199),
-    InputPlugin: __webpack_require__(365),
-    Keyboard: __webpack_require__(364),
-    Mouse: __webpack_require__(359),
-    Pointer: __webpack_require__(190),
-    Touch: __webpack_require__(358)
+    CreateInteractiveObject: __webpack_require__(175),
+    Gamepad: __webpack_require__(382),
+    InputManager: __webpack_require__(201),
+    InputPlugin: __webpack_require__(376),
+    InputPluginCache: __webpack_require__(76),
+    Keyboard: __webpack_require__(374),
+    Mouse: __webpack_require__(362),
+    Pointer: __webpack_require__(198),
+    Touch: __webpack_require__(361)
 
 };
 
+//   Merge in the consts
+Input = Extend(false, Input, CONST);
+
+module.exports = Input;
+
 
 /***/ }),
-/* 372 */,
-/* 373 */,
-/* 374 */,
-/* 375 */,
-/* 376 */,
-/* 377 */,
-/* 378 */,
-/* 379 */,
-/* 380 */,
-/* 381 */,
-/* 382 */,
-/* 383 */,
 /* 384 */,
 /* 385 */,
 /* 386 */,
 /* 387 */,
 /* 388 */,
 /* 389 */,
-/* 390 */
+/* 390 */,
+/* 391 */,
+/* 392 */,
+/* 393 */,
+/* 394 */,
+/* 395 */,
+/* 396 */,
+/* 397 */,
+/* 398 */,
+/* 399 */,
+/* 400 */,
+/* 401 */,
+/* 402 */,
+/* 403 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60465,7 +64166,7 @@ module.exports = {
 var BuildGameObject = __webpack_require__(24);
 var GameObjectCreator = __webpack_require__(13);
 var GetAdvancedValue = __webpack_require__(10);
-var Text = __webpack_require__(107);
+var Text = __webpack_require__(110);
 
 /**
  * Creates a new Text Game Object and returns it.
@@ -60540,7 +64241,7 @@ GameObjectCreator.register('text', function (config, addToScene)
 
 
 /***/ }),
-/* 391 */
+/* 404 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60550,7 +64251,7 @@ GameObjectCreator.register('text', function (config, addToScene)
  */
 
 var BuildGameObject = __webpack_require__(24);
-var BuildGameObjectAnimation = __webpack_require__(124);
+var BuildGameObjectAnimation = __webpack_require__(127);
 var GameObjectCreator = __webpack_require__(13);
 var GetAdvancedValue = __webpack_require__(10);
 var Sprite = __webpack_require__(34);
@@ -60593,7 +64294,7 @@ GameObjectCreator.register('sprite', function (config, addToScene)
 
 
 /***/ }),
-/* 392 */
+/* 405 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60643,7 +64344,7 @@ GameObjectCreator.register('image', function (config, addToScene)
 
 
 /***/ }),
-/* 393 */
+/* 406 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60653,7 +64354,7 @@ GameObjectCreator.register('image', function (config, addToScene)
  */
 
 var GameObjectCreator = __webpack_require__(13);
-var Graphics = __webpack_require__(112);
+var Graphics = __webpack_require__(115);
 
 /**
  * Creates a new Graphics Game Object and returns it.
@@ -60691,7 +64392,7 @@ GameObjectCreator.register('graphics', function (config, addToScene)
 
 
 /***/ }),
-/* 394 */
+/* 407 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60700,7 +64401,7 @@ GameObjectCreator.register('graphics', function (config, addToScene)
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Text = __webpack_require__(107);
+var Text = __webpack_require__(110);
 var GameObjectFactory = __webpack_require__(11);
 
 /**
@@ -60733,7 +64434,7 @@ GameObjectFactory.register('text', function (x, y, text, style)
 
 
 /***/ }),
-/* 395 */
+/* 408 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60780,7 +64481,7 @@ GameObjectFactory.register('sprite', function (x, y, key, frame)
 
 
 /***/ }),
-/* 396 */
+/* 409 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60822,7 +64523,7 @@ GameObjectFactory.register('image', function (x, y, key, frame)
 
 
 /***/ }),
-/* 397 */
+/* 410 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60831,7 +64532,7 @@ GameObjectFactory.register('image', function (x, y, key, frame)
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Graphics = __webpack_require__(112);
+var Graphics = __webpack_require__(115);
 var GameObjectFactory = __webpack_require__(11);
 
 /**
@@ -60842,8 +64543,8 @@ var GameObjectFactory = __webpack_require__(11);
  * @method Phaser.GameObjects.GameObjectFactory#graphics
  * @since 3.0.0
  *
- * @param {object} [config] - [description]
- * 
+ * @param {GraphicsOptions} [config] - The Graphics configuration.
+ *
  * @return {Phaser.GameObjects.Graphics} The Game Object that was created.
  */
 GameObjectFactory.register('graphics', function (config)
@@ -60852,17 +64553,17 @@ GameObjectFactory.register('graphics', function (config)
 });
 
 //  When registering a factory function 'this' refers to the GameObjectFactory context.
-//  
+//
 //  There are several properties available to use:
-//  
+//
 //  this.scene - a reference to the Scene that owns the GameObjectFactory
 //  this.displayList - a reference to the Display List the Scene owns
 //  this.updateList - a reference to the Update List the Scene owns
 
 
 /***/ }),
-/* 398 */,
-/* 399 */
+/* 411 */,
+/* 412 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60997,7 +64698,7 @@ module.exports = MeasureText;
 
 
 /***/ }),
-/* 400 */
+/* 413 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -61009,7 +64710,7 @@ module.exports = MeasureText;
 var Class = __webpack_require__(0);
 var GetAdvancedValue = __webpack_require__(10);
 var GetValue = __webpack_require__(4);
-var MeasureText = __webpack_require__(399);
+var MeasureText = __webpack_require__(412);
 
 //  Key: [ Object Key, Default Value ]
 
@@ -61947,7 +65648,7 @@ module.exports = TextStyle;
 
 
 /***/ }),
-/* 401 */
+/* 414 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -62042,7 +65743,7 @@ module.exports = TextCanvasRenderer;
 
 
 /***/ }),
-/* 402 */
+/* 415 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -62088,7 +65789,7 @@ module.exports = TextWebGLRenderer;
 
 
 /***/ }),
-/* 403 */
+/* 416 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -62102,12 +65803,12 @@ var renderCanvas = __webpack_require__(3);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(402);
+    renderWebGL = __webpack_require__(415);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(401);
+    renderCanvas = __webpack_require__(414);
 }
 
 module.exports = {
@@ -62119,7 +65820,7 @@ module.exports = {
 
 
 /***/ }),
-/* 404 */
+/* 417 */
 /***/ (function(module, exports) {
 
 /**
@@ -62206,10 +65907,10 @@ module.exports = GetTextSize;
 
 
 /***/ }),
-/* 405 */,
-/* 406 */,
-/* 407 */,
-/* 408 */
+/* 418 */,
+/* 419 */,
+/* 420 */,
+/* 421 */
 /***/ (function(module, exports) {
 
 /**
@@ -62225,7 +65926,7 @@ module.exports = GetTextSize;
  * @since 3.0.0
  *
  * @param {number} v - The value to be tweened.
- * @param {float} [steps=1] - [description]
+ * @param {number} [steps=1] - The number of steps in the ease.
  *
  * @return {number} The tweened value.
  */
@@ -62251,7 +65952,7 @@ module.exports = Stepped;
 
 
 /***/ }),
-/* 409 */
+/* 422 */
 /***/ (function(module, exports) {
 
 /**
@@ -62290,7 +65991,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 410 */
+/* 423 */
 /***/ (function(module, exports) {
 
 /**
@@ -62329,7 +66030,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 411 */
+/* 424 */
 /***/ (function(module, exports) {
 
 /**
@@ -62368,7 +66069,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 412 */
+/* 425 */
 /***/ (function(module, exports) {
 
 /**
@@ -62403,7 +66104,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 413 */
+/* 426 */
 /***/ (function(module, exports) {
 
 /**
@@ -62431,7 +66132,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 414 */
+/* 427 */
 /***/ (function(module, exports) {
 
 /**
@@ -62459,7 +66160,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 415 */
+/* 428 */
 /***/ (function(module, exports) {
 
 /**
@@ -62494,7 +66195,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 416 */
+/* 429 */
 /***/ (function(module, exports) {
 
 /**
@@ -62522,7 +66223,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 417 */
+/* 430 */
 /***/ (function(module, exports) {
 
 /**
@@ -62550,7 +66251,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 418 */
+/* 431 */
 /***/ (function(module, exports) {
 
 /**
@@ -62585,7 +66286,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 419 */
+/* 432 */
 /***/ (function(module, exports) {
 
 /**
@@ -62613,7 +66314,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 420 */
+/* 433 */
 /***/ (function(module, exports) {
 
 /**
@@ -62641,7 +66342,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 421 */
+/* 434 */
 /***/ (function(module, exports) {
 
 /**
@@ -62669,7 +66370,7 @@ module.exports = Linear;
 
 
 /***/ }),
-/* 422 */
+/* 435 */
 /***/ (function(module, exports) {
 
 /**
@@ -62704,7 +66405,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 423 */
+/* 436 */
 /***/ (function(module, exports) {
 
 /**
@@ -62732,7 +66433,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 424 */
+/* 437 */
 /***/ (function(module, exports) {
 
 /**
@@ -62760,7 +66461,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 425 */
+/* 438 */
 /***/ (function(module, exports) {
 
 /**
@@ -62776,7 +66477,7 @@ module.exports = In;
  * @since 3.0.0
  *
  * @param {number} v - The value to be tweened.
- * @param {float} [amplitude=0.1] - [description]
+ * @param {float} [amplitude=0.1] - The amplitude of the elastic ease.
  * @param {float} [period=0.1] - [description]
  *
  * @return {number} The tweened value.
@@ -62822,7 +66523,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 426 */
+/* 439 */
 /***/ (function(module, exports) {
 
 /**
@@ -62838,7 +66539,7 @@ module.exports = InOut;
  * @since 3.0.0
  *
  * @param {number} v - The value to be tweened.
- * @param {float} [amplitude=0.1] - [description]
+ * @param {float} [amplitude=0.1] - The amplitude of the elastic ease.
  * @param {float} [period=0.1] - [description]
  *
  * @return {number} The tweened value.
@@ -62877,7 +66578,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 427 */
+/* 440 */
 /***/ (function(module, exports) {
 
 /**
@@ -62893,7 +66594,7 @@ module.exports = Out;
  * @since 3.0.0
  *
  * @param {number} v - The value to be tweened.
- * @param {float} [amplitude=0.1] - [description]
+ * @param {float} [amplitude=0.1] - The amplitude of the elastic ease.
  * @param {float} [period=0.1] - [description]
  *
  * @return {number} The tweened value.
@@ -62932,7 +66633,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 428 */
+/* 441 */
 /***/ (function(module, exports) {
 
 /**
@@ -62967,7 +66668,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 429 */
+/* 442 */
 /***/ (function(module, exports) {
 
 /**
@@ -62995,7 +66696,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 430 */
+/* 443 */
 /***/ (function(module, exports) {
 
 /**
@@ -63023,7 +66724,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 431 */
+/* 444 */
 /***/ (function(module, exports) {
 
 /**
@@ -63058,7 +66759,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 432 */
+/* 445 */
 /***/ (function(module, exports) {
 
 /**
@@ -63086,7 +66787,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 433 */
+/* 446 */
 /***/ (function(module, exports) {
 
 /**
@@ -63114,7 +66815,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 434 */
+/* 447 */
 /***/ (function(module, exports) {
 
 /**
@@ -63178,7 +66879,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 435 */
+/* 448 */
 /***/ (function(module, exports) {
 
 /**
@@ -63221,7 +66922,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 436 */
+/* 449 */
 /***/ (function(module, exports) {
 
 /**
@@ -63266,7 +66967,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 437 */
+/* 450 */
 /***/ (function(module, exports) {
 
 /**
@@ -63282,7 +66983,7 @@ module.exports = In;
  * @since 3.0.0
  *
  * @param {number} v - The value to be tweened.
- * @param {number} [overshoot=1.70158] - [description]
+ * @param {number} [overshoot=1.70158] - The overshoot amount.
  *
  * @return {number} The tweened value.
  */
@@ -63306,7 +67007,7 @@ module.exports = InOut;
 
 
 /***/ }),
-/* 438 */
+/* 451 */
 /***/ (function(module, exports) {
 
 /**
@@ -63322,7 +67023,7 @@ module.exports = InOut;
  * @since 3.0.0
  *
  * @param {number} v - The value to be tweened.
- * @param {number} [overshoot=1.70158] - [description]
+ * @param {number} [overshoot=1.70158] - The overshoot amount.
  *
  * @return {number} The tweened value.
  */
@@ -63337,7 +67038,7 @@ module.exports = Out;
 
 
 /***/ }),
-/* 439 */
+/* 452 */
 /***/ (function(module, exports) {
 
 /**
@@ -63353,7 +67054,7 @@ module.exports = Out;
  * @since 3.0.0
  *
  * @param {number} v - The value to be tweened.
- * @param {number} [overshoot=1.70158] - [description]
+ * @param {number} [overshoot=1.70158] - The overshoot amount.
  *
  * @return {number} The tweened value.
  */
@@ -63368,7 +67069,7 @@ module.exports = In;
 
 
 /***/ }),
-/* 440 */
+/* 453 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63377,18 +67078,18 @@ module.exports = In;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Back = __webpack_require__(246);
-var Bounce = __webpack_require__(245);
-var Circular = __webpack_require__(244);
-var Cubic = __webpack_require__(243);
-var Elastic = __webpack_require__(242);
-var Expo = __webpack_require__(241);
-var Linear = __webpack_require__(240);
-var Quadratic = __webpack_require__(239);
-var Quartic = __webpack_require__(238);
-var Quintic = __webpack_require__(237);
-var Sine = __webpack_require__(236);
-var Stepped = __webpack_require__(235);
+var Back = __webpack_require__(247);
+var Bounce = __webpack_require__(246);
+var Circular = __webpack_require__(245);
+var Cubic = __webpack_require__(244);
+var Elastic = __webpack_require__(243);
+var Expo = __webpack_require__(242);
+var Linear = __webpack_require__(241);
+var Quadratic = __webpack_require__(240);
+var Quartic = __webpack_require__(239);
+var Quintic = __webpack_require__(238);
+var Sine = __webpack_require__(237);
+var Stepped = __webpack_require__(236);
 
 //  EaseMap
 module.exports = {
@@ -63449,12 +67150,12 @@ module.exports = {
 
 
 /***/ }),
-/* 441 */,
-/* 442 */,
-/* 443 */,
-/* 444 */,
-/* 445 */,
-/* 446 */
+/* 454 */,
+/* 455 */,
+/* 456 */,
+/* 457 */,
+/* 458 */,
+/* 459 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63494,7 +67195,7 @@ module.exports = ImageCanvasRenderer;
 
 
 /***/ }),
-/* 447 */
+/* 460 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63534,7 +67235,7 @@ module.exports = ImageWebGLRenderer;
 
 
 /***/ }),
-/* 448 */
+/* 461 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63548,12 +67249,12 @@ var renderCanvas = __webpack_require__(3);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(447);
+    renderWebGL = __webpack_require__(460);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(446);
+    renderCanvas = __webpack_require__(459);
 }
 
 module.exports = {
@@ -63565,7 +67266,7 @@ module.exports = {
 
 
 /***/ }),
-/* 449 */
+/* 462 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63605,7 +67306,7 @@ module.exports = GraphicsWebGLRenderer;
 
 
 /***/ }),
-/* 450 */
+/* 463 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63619,15 +67320,15 @@ var renderCanvas = __webpack_require__(3);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(449);
+    renderWebGL = __webpack_require__(462);
 
     //  Needed for Graphics.generateTexture
-    renderCanvas = __webpack_require__(168);
+    renderCanvas = __webpack_require__(176);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(168);
+    renderCanvas = __webpack_require__(176);
 }
 
 module.exports = {
@@ -63639,7 +67340,7 @@ module.exports = {
 
 
 /***/ }),
-/* 451 */
+/* 464 */
 /***/ (function(module, exports) {
 
 /**
@@ -63673,7 +67374,7 @@ module.exports = OffsetPoint;
 
 
 /***/ }),
-/* 452 */
+/* 465 */
 /***/ (function(module, exports) {
 
 /**
@@ -63708,7 +67409,7 @@ module.exports = Offset;
 
 
 /***/ }),
-/* 453 */
+/* 466 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63748,7 +67449,7 @@ module.exports = GetBounds;
 
 
 /***/ }),
-/* 454 */
+/* 467 */
 /***/ (function(module, exports) {
 
 /**
@@ -63783,7 +67484,7 @@ module.exports = Equals;
 
 
 /***/ }),
-/* 455 */
+/* 468 */
 /***/ (function(module, exports) {
 
 /**
@@ -63815,7 +67516,7 @@ module.exports = CopyFrom;
 
 
 /***/ }),
-/* 456 */
+/* 469 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63824,7 +67525,7 @@ module.exports = CopyFrom;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Contains = __webpack_require__(53);
+var Contains = __webpack_require__(54);
 
 /**
  * Check to see if the Ellipse contains all four points of the given Rectangle object.
@@ -63851,7 +67552,7 @@ module.exports = ContainsRect;
 
 
 /***/ }),
-/* 457 */
+/* 470 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63860,7 +67561,7 @@ module.exports = ContainsRect;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Contains = __webpack_require__(53);
+var Contains = __webpack_require__(54);
 
 /**
  * Check to see if the Ellipse contains the given Point object.
@@ -63882,7 +67583,7 @@ module.exports = ContainsPoint;
 
 
 /***/ }),
-/* 458 */
+/* 471 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63891,7 +67592,7 @@ module.exports = ContainsPoint;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Ellipse = __webpack_require__(111);
+var Ellipse = __webpack_require__(114);
 
 /**
  * Creates a new Ellipse instance based on the values contained in the given source.
@@ -63912,7 +67613,7 @@ module.exports = Clone;
 
 
 /***/ }),
-/* 459 */
+/* 472 */
 /***/ (function(module, exports) {
 
 /**
@@ -63946,10 +67647,10 @@ module.exports = Area;
 
 
 /***/ }),
-/* 460 */,
-/* 461 */,
-/* 462 */,
-/* 463 */
+/* 473 */,
+/* 474 */,
+/* 475 */,
+/* 476 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63963,14 +67664,18 @@ var PluginCache = __webpack_require__(12);
 
 /**
  * @classdesc
- * [description]
+ * The Update List plugin.
+ *
+ * Update Lists belong to a Scene and maintain the list Game Objects to be updated every frame.
+ *
+ * Some or all of these Game Objects may also be part of the Scene's [Display List]{@link Phaser.GameObjects.DisplayList}, for Rendering.
  *
  * @class UpdateList
  * @memberOf Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - [description]
+ * @param {Phaser.Scene} scene - The Scene that the Update List belongs to.
  */
 var UpdateList = new Class({
 
@@ -63979,7 +67684,7 @@ var UpdateList = new Class({
     function UpdateList (scene)
     {
         /**
-         * [description]
+         * The Scene that the Update List belongs to.
          *
          * @name Phaser.GameObjects.UpdateList#scene
          * @type {Phaser.Scene}
@@ -63988,7 +67693,7 @@ var UpdateList = new Class({
         this.scene = scene;
 
         /**
-         * [description]
+         * The Scene's Systems.
          *
          * @name Phaser.GameObjects.UpdateList#systems
          * @type {Phaser.Scenes.Systems}
@@ -63997,7 +67702,7 @@ var UpdateList = new Class({
         this.systems = scene.sys;
 
         /**
-         * [description]
+         * The list of Game Objects.
          *
          * @name Phaser.GameObjects.UpdateList#_list
          * @type {array}
@@ -64008,7 +67713,7 @@ var UpdateList = new Class({
         this._list = [];
 
         /**
-         * [description]
+         * Game Objects that are pending insertion into the list.
          *
          * @name Phaser.GameObjects.UpdateList#_pendingInsertion
          * @type {array}
@@ -64019,7 +67724,7 @@ var UpdateList = new Class({
         this._pendingInsertion = [];
 
         /**
-         * [description]
+         * Game Objects that are pending removal from the list.
          *
          * @name Phaser.GameObjects.UpdateList#_pendingRemoval
          * @type {array}
@@ -64065,14 +67770,14 @@ var UpdateList = new Class({
     },
 
     /**
-     * [description]
+     * Add a Game Object to the Update List.
      *
      * @method Phaser.GameObjects.UpdateList#add
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} child - [description]
+     * @param {Phaser.GameObjects.GameObject} child - The Game Object to add.
      *
-     * @return {Phaser.GameObjects.GameObject} [description]
+     * @return {Phaser.GameObjects.GameObject} The added Game Object.
      */
     add: function (child)
     {
@@ -64087,13 +67792,12 @@ var UpdateList = new Class({
     },
 
     /**
-     * [description]
+     * The pre-update step.
+     *
+     * Handles Game Objects that are pending insertion to and removal from the list.
      *
      * @method Phaser.GameObjects.UpdateList#preUpdate
      * @since 3.0.0
-     *
-     * @param {number} time - [description]
-     * @param {number} delta - [description]
      */
     preUpdate: function ()
     {
@@ -64131,13 +67835,15 @@ var UpdateList = new Class({
     },
 
     /**
-     * [description]
+     * The update step.
+     *
+     * Pre-updates every active Game Object in the list.
      *
      * @method Phaser.GameObjects.UpdateList#update
      * @since 3.0.0
      *
-     * @param {number} time - [description]
-     * @param {number} delta - [description]
+     * @param {number} time - The current timestamp.
+     * @param {number} delta - The delta time elapsed since the last frame.
      */
     update: function (time, delta)
     {
@@ -64153,14 +67859,14 @@ var UpdateList = new Class({
     },
 
     /**
-     * [description]
+     * Remove a Game Object from the list.
      *
      * @method Phaser.GameObjects.UpdateList#remove
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} child - [description]
+     * @param {Phaser.GameObjects.GameObject} child - The Game Object to remove from the list.
      *
-     * @return {Phaser.GameObjects.GameObject} [description]
+     * @return {Phaser.GameObjects.GameObject} The removed Game Object.
      */
     remove: function (child)
     {
@@ -64170,17 +67876,17 @@ var UpdateList = new Class({
         {
             this._list.splice(index, 1);
         }
-        
+
         return child;
     },
 
     /**
-     * [description]
+     * Remove all Game Objects from the list.
      *
      * @method Phaser.GameObjects.UpdateList#removeAll
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.UpdateList} The UpdateList object.
+     * @return {Phaser.GameObjects.UpdateList} This UpdateList.
      */
     removeAll: function ()
     {
@@ -64231,6 +67937,23 @@ var UpdateList = new Class({
 
         this.scene = null;
         this.systems = null;
+    },
+
+    /**
+     * The length of the list.
+     *
+     * @name Phaser.GameObjects.UpdateList#length
+     * @type {integer}
+     * @readOnly
+     * @since 3.10.0
+     */
+    length: {
+
+        get: function ()
+        {
+            return this._list.length;
+        }
+
     }
 
 });
@@ -64241,7 +67964,7 @@ module.exports = UpdateList;
 
 
 /***/ }),
-/* 464 */
+/* 477 */
 /***/ (function(module, exports) {
 
 /**
@@ -64289,7 +68012,7 @@ module.exports = Swap;
 
 
 /***/ }),
-/* 465 */
+/* 478 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64344,7 +68067,7 @@ module.exports = SetAll;
 
 
 /***/ }),
-/* 466 */
+/* 479 */
 /***/ (function(module, exports) {
 
 /**
@@ -64382,7 +68105,7 @@ module.exports = SendToBack;
 
 
 /***/ }),
-/* 467 */
+/* 480 */
 /***/ (function(module, exports) {
 
 /**
@@ -64425,7 +68148,7 @@ module.exports = Replace;
 
 
 /***/ }),
-/* 468 */
+/* 481 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64434,7 +68157,7 @@ module.exports = Replace;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var SpliceOne = __webpack_require__(55);
+var SpliceOne = __webpack_require__(56);
 
 /**
  * Removes a random object from the given array and returns it.
@@ -64463,7 +68186,7 @@ module.exports = RemoveRandomElement;
 
 
 /***/ }),
-/* 469 */
+/* 482 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64526,7 +68249,7 @@ module.exports = RemoveBetween;
 
 
 /***/ }),
-/* 470 */
+/* 483 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64535,7 +68258,7 @@ module.exports = RemoveBetween;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var SpliceOne = __webpack_require__(55);
+var SpliceOne = __webpack_require__(56);
 
 /**
  * Removes the item from the given position in the array.
@@ -64577,7 +68300,7 @@ module.exports = RemoveAt;
 
 
 /***/ }),
-/* 471 */
+/* 484 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64586,7 +68309,7 @@ module.exports = RemoveAt;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var RoundAwayFromZero = __webpack_require__(254);
+var RoundAwayFromZero = __webpack_require__(255);
 
 /**
  * Create an array of numbers (positive and/or negative) progressing from `start`
@@ -64654,7 +68377,7 @@ module.exports = NumberArrayStep;
 
 
 /***/ }),
-/* 472 */
+/* 485 */
 /***/ (function(module, exports) {
 
 /**
@@ -64718,7 +68441,7 @@ module.exports = NumberArray;
 
 
 /***/ }),
-/* 473 */
+/* 486 */
 /***/ (function(module, exports) {
 
 /**
@@ -64760,7 +68483,7 @@ module.exports = MoveUp;
 
 
 /***/ }),
-/* 474 */
+/* 487 */
 /***/ (function(module, exports) {
 
 /**
@@ -64807,7 +68530,7 @@ module.exports = MoveTo;
 
 
 /***/ }),
-/* 475 */
+/* 488 */
 /***/ (function(module, exports) {
 
 /**
@@ -64849,7 +68572,7 @@ module.exports = MoveDown;
 
 
 /***/ }),
-/* 476 */
+/* 489 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64908,7 +68631,7 @@ module.exports = GetFirst;
 
 
 /***/ }),
-/* 477 */
+/* 490 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64970,7 +68693,7 @@ module.exports = GetAll;
 
 
 /***/ }),
-/* 478 */
+/* 491 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -65026,7 +68749,7 @@ module.exports = EachInRange;
 
 
 /***/ }),
-/* 479 */
+/* 492 */
 /***/ (function(module, exports) {
 
 /**
@@ -65072,7 +68795,7 @@ module.exports = Each;
 
 
 /***/ }),
-/* 480 */
+/* 493 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -65124,7 +68847,7 @@ module.exports = CountAllMatching;
 
 
 /***/ }),
-/* 481 */
+/* 494 */
 /***/ (function(module, exports) {
 
 /**
@@ -65162,7 +68885,7 @@ module.exports = BringToTop;
 
 
 /***/ }),
-/* 482 */
+/* 495 */
 /***/ (function(module, exports) {
 
 /**
@@ -65284,7 +69007,7 @@ module.exports = AddAt;
 
 
 /***/ }),
-/* 483 */
+/* 496 */
 /***/ (function(module, exports) {
 
 /**
@@ -65401,7 +69124,7 @@ module.exports = Add;
 
 
 /***/ }),
-/* 484 */
+/* 497 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -65410,7 +69133,7 @@ module.exports = Add;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var RotateMatrix = __webpack_require__(75);
+var RotateMatrix = __webpack_require__(77);
 
 /**
  * [description]
@@ -65431,7 +69154,7 @@ module.exports = RotateRight;
 
 
 /***/ }),
-/* 485 */
+/* 498 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -65440,7 +69163,7 @@ module.exports = RotateRight;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var RotateMatrix = __webpack_require__(75);
+var RotateMatrix = __webpack_require__(77);
 
 /**
  * [description]
@@ -65461,7 +69184,7 @@ module.exports = RotateLeft;
 
 
 /***/ }),
-/* 486 */
+/* 499 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -65470,7 +69193,7 @@ module.exports = RotateLeft;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var RotateMatrix = __webpack_require__(75);
+var RotateMatrix = __webpack_require__(77);
 
 /**
  * [description]
@@ -65491,7 +69214,7 @@ module.exports = Rotate180;
 
 
 /***/ }),
-/* 487 */
+/* 500 */
 /***/ (function(module, exports) {
 
 /**
@@ -65519,7 +69242,7 @@ module.exports = ReverseRows;
 
 
 /***/ }),
-/* 488 */
+/* 501 */
 /***/ (function(module, exports) {
 
 /**
@@ -65552,7 +69275,7 @@ module.exports = ReverseColumns;
 
 
 /***/ }),
-/* 489 */
+/* 502 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -65561,8 +69284,8 @@ module.exports = ReverseColumns;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Pad = __webpack_require__(130);
-var CheckMatrix = __webpack_require__(113);
+var Pad = __webpack_require__(133);
+var CheckMatrix = __webpack_require__(116);
 
 //  Generates a string (which you can pass to console.log) from the given
 //  Array Matrix.
@@ -65633,7 +69356,7 @@ module.exports = MatrixToString;
 
 
 /***/ }),
-/* 490 */
+/* 503 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -65648,21 +69371,21 @@ module.exports = MatrixToString;
 
 module.exports = {
 
-    CheckMatrix: __webpack_require__(113),
-    MatrixToString: __webpack_require__(489),
-    ReverseColumns: __webpack_require__(488),
-    ReverseRows: __webpack_require__(487),
-    Rotate180: __webpack_require__(486),
-    RotateLeft: __webpack_require__(485),
-    RotateMatrix: __webpack_require__(75),
-    RotateRight: __webpack_require__(484),
-    TransposeMatrix: __webpack_require__(173)
+    CheckMatrix: __webpack_require__(116),
+    MatrixToString: __webpack_require__(502),
+    ReverseColumns: __webpack_require__(501),
+    ReverseRows: __webpack_require__(500),
+    Rotate180: __webpack_require__(499),
+    RotateLeft: __webpack_require__(498),
+    RotateMatrix: __webpack_require__(77),
+    RotateRight: __webpack_require__(497),
+    TransposeMatrix: __webpack_require__(181)
 
 };
 
 
 /***/ }),
-/* 491 */
+/* 504 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -65672,13 +69395,17 @@ module.exports = {
  */
 
 var Class = __webpack_require__(0);
-var List = __webpack_require__(92);
+var List = __webpack_require__(93);
 var PluginCache = __webpack_require__(12);
-var StableSort = __webpack_require__(82);
+var StableSort = __webpack_require__(83);
 
 /**
  * @classdesc
- * [description]
+ * The Display List plugin.
+ *
+ * Display Lists belong to a Scene and maintain the list of Game Objects to render every frame.
+ *
+ * Some of these Game Objects may also be part of the Scene's [Update List]{@link Phaser.GameObjects.UpdateList}, for updating.
  *
  * @class DisplayList
  * @extends Phaser.Structs.List.<Phaser.GameObjects.GameObject>
@@ -65686,7 +69413,7 @@ var StableSort = __webpack_require__(82);
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - [description]
+ * @param {Phaser.Scene} scene - The Scene that this Display List belongs to.
  */
 var DisplayList = new Class({
 
@@ -65699,7 +69426,7 @@ var DisplayList = new Class({
         List.call(this, scene);
 
         /**
-         * [description]
+         * The flag the determines whether Game Objects should be sorted when `depthSort()` is called.
          *
          * @name Phaser.GameObjects.DisplayList#sortChildrenFlag
          * @type {boolean}
@@ -65709,7 +69436,7 @@ var DisplayList = new Class({
         this.sortChildrenFlag = false;
 
         /**
-         * [description]
+         * The Scene that this Display List belongs to.
          *
          * @name Phaser.GameObjects.DisplayList#scene
          * @type {Phaser.Scene}
@@ -65718,7 +69445,7 @@ var DisplayList = new Class({
         this.scene = scene;
 
         /**
-         * [description]
+         * The Scene's Systems.
          *
          * @name Phaser.GameObjects.DisplayList#systems
          * @type {Phaser.Scenes.Systems}
@@ -65785,15 +69512,15 @@ var DisplayList = new Class({
     },
 
     /**
-     * [description]
+     * Compare the depth of two Game Objects.
      *
      * @method Phaser.GameObjects.DisplayList#sortByDepth
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} childA - [description]
-     * @param {Phaser.GameObjects.GameObject} childB - [description]
+     * @param {Phaser.GameObjects.GameObject} childA - The first Game Object.
+     * @param {Phaser.GameObjects.GameObject} childB - The second Game Object.
      *
-     * @return {integer} [description]
+     * @return {integer} The difference between the depths of each Game Object.
      */
     sortByDepth: function (childA, childB)
     {
@@ -65801,15 +69528,15 @@ var DisplayList = new Class({
     },
 
     /**
-     * Given an array of Game Objects, sort the array and return it,
-     * so that the objects are in index order with the lowest at the bottom.
+     * Given an array of Game Objects, sort the array and return it, so that
+     * the objects are in index order with the lowest at the bottom.
      *
      * @method Phaser.GameObjects.DisplayList#sortGameObjects
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject[]} gameObjects - [description]
+     * @param {Phaser.GameObjects.GameObject[]} gameObjects - The array of Game Objects to sort.
      *
-     * @return {array} [description]
+     * @return {array} The sorted array of Game Objects.
      */
     sortGameObjects: function (gameObjects)
     {
@@ -65821,14 +69548,16 @@ var DisplayList = new Class({
     },
 
     /**
+     * Get the top-most Game Object in the given array of Game Objects, after sorting it.
+     *
      * Note that the given array is sorted in place, even though it isn't returned directly it will still be updated.
      *
      * @method Phaser.GameObjects.DisplayList#getTopGameObject
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject[]} gameObjects - [description]
+     * @param {Phaser.GameObjects.GameObject[]} gameObjects - The array of Game Objects.
      *
-     * @return {Phaser.GameObjects.GameObject} The top-most Game Object on the Display List.
+     * @return {Phaser.GameObjects.GameObject} The top-most Game Object in the array of Game Objects.
      */
     getTopGameObject: function (gameObjects)
     {
@@ -65878,7 +69607,7 @@ module.exports = DisplayList;
 
 
 /***/ }),
-/* 492 */
+/* 505 */
 /***/ (function(module, exports) {
 
 /**
@@ -65998,13 +69727,28 @@ var VisibilityHandler = function (game)
             window.focus();
         }, { passive: true });
     }
+
+    if (game.canvas)
+    {
+        game.canvas.onmouseout = function ()
+        {
+            game.isOver = false;
+            eventEmitter.emit('mouseout');
+        };
+
+        game.canvas.onmouseover = function ()
+        {
+            game.isOver = true;
+            eventEmitter.emit('mouseover');
+        };
+    }
 };
 
 module.exports = VisibilityHandler;
 
 
 /***/ }),
-/* 493 */
+/* 506 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -66016,7 +69760,7 @@ module.exports = VisibilityHandler;
 var Class = __webpack_require__(0);
 var GetValue = __webpack_require__(4);
 var NOOP = __webpack_require__(3);
-var RequestAnimationFrame = __webpack_require__(267);
+var RequestAnimationFrame = __webpack_require__(268);
 
 //  Frame Rate config
 //      fps: {
@@ -66299,8 +70043,7 @@ var TimeStep = new Class({
          * [description]
          *
          * @name Phaser.Boot.TimeStep#deltaHistory
-         * @type {array}
-         * @default 0
+         * @type {integer[]}
          * @since 3.0.0
          */
         this.deltaHistory = [];
@@ -66456,20 +70199,28 @@ var TimeStep = new Class({
      * @method Phaser.Boot.TimeStep#step
      * @since 3.0.0
      *
-     * @param {integer} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
+     * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
      */
     step: function (time)
     {
         this.frame++;
 
-        this.rawDelta = time - this.lastTime;
+        var before = time - this.lastTime;
+
+        if (before < 0)
+        {
+            //  Because, Chrome.
+            before = 0;
+        }
+
+        this.rawDelta = before;
 
         var idx = this.deltaIndex;
         var history = this.deltaHistory;
         var max = this.deltaSmoothingMax;
 
         //  delta time (time is in ms)
-        var dt = (time - this.lastTime);
+        var dt = before;
 
         //  When a browser switches tab, then comes back again, it takes around 10 frames before
         //  the delta time settles down so we employ a 'cooling down' period before we start
@@ -66660,7 +70411,7 @@ module.exports = TimeStep;
 
 
 /***/ }),
-/* 494 */
+/* 507 */
 /***/ (function(module, exports) {
 
 /**
@@ -66830,7 +70581,7 @@ TextureImporter:
 
 
 /***/ }),
-/* 495 */
+/* 508 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -67021,7 +70772,7 @@ module.exports = SpriteSheetFromAtlas;
 
 
 /***/ }),
-/* 496 */
+/* 509 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -67141,7 +70892,7 @@ module.exports = SpriteSheet;
 
 
 /***/ }),
-/* 497 */
+/* 510 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -67240,7 +70991,7 @@ module.exports = JSONHash;
 
 
 /***/ }),
-/* 498 */
+/* 511 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -67347,7 +71098,7 @@ module.exports = JSONArray;
 
 
 /***/ }),
-/* 499 */
+/* 512 */
 /***/ (function(module, exports) {
 
 /**
@@ -67382,7 +71133,7 @@ module.exports = Image;
 
 
 /***/ }),
-/* 500 */
+/* 513 */
 /***/ (function(module, exports) {
 
 /**
@@ -67417,7 +71168,7 @@ module.exports = Canvas;
 
 
 /***/ }),
-/* 501 */
+/* 514 */
 /***/ (function(module, exports) {
 
 /**
@@ -67498,7 +71249,7 @@ module.exports = AtlasXML;
 
 
 /***/ }),
-/* 502 */
+/* 515 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -67508,8 +71259,8 @@ module.exports = AtlasXML;
  */
 
 var Class = __webpack_require__(0);
-var IsSizePowerOfTwo = __webpack_require__(84);
-var Texture = __webpack_require__(114);
+var IsSizePowerOfTwo = __webpack_require__(85);
+var Texture = __webpack_require__(117);
 
 /**
  * @classdesc
@@ -67707,7 +71458,7 @@ module.exports = CanvasTexture;
 
 
 /***/ }),
-/* 503 */
+/* 516 */
 /***/ (function(module, exports) {
 
 /**
@@ -67762,7 +71513,7 @@ module.exports = InjectionMap;
 
 
 /***/ }),
-/* 504 */
+/* 517 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -67809,7 +71560,7 @@ module.exports = GetScenePlugins;
 
 
 /***/ }),
-/* 505 */
+/* 518 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -67819,7 +71570,7 @@ module.exports = GetScenePlugins;
  */
 
 var GetFastValue = __webpack_require__(1);
-var UppercaseFirst = __webpack_require__(255);
+var UppercaseFirst = __webpack_require__(256);
 
 /**
  * Builds an array of which physics plugins should be activated for the given Scene.
@@ -67871,292 +71622,7 @@ module.exports = GetPhysicsPlugins;
 
 
 /***/ }),
-/* 506 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Used internally by the KeyboardManager.
- *
- * @function Phaser.Input.Keyboard.ProcessKeyUp
- * @since 3.0.0
- *
- * @param {Phaser.Input.Keyboard.Key} key - [description]
- * @param {KeyboardEvent} event - [description]
- *
- * @return {Phaser.Input.Keyboard.Key} [description]
- */
-var ProcessKeyUp = function (key, event)
-{
-    key.originalEvent = event;
-
-    if (key.preventDefault)
-    {
-        event.preventDefault();
-    }
-
-    if (!key.enabled)
-    {
-        return;
-    }
-
-    key.isDown = false;
-    key.isUp = true;
-    key.timeUp = event.timeStamp;
-    key.duration = key.timeUp - key.timeDown;
-    key.repeats = 0;
-
-    key._justDown = false;
-    key._justUp = true;
-
-    return key;
-};
-
-module.exports = ProcessKeyUp;
-
-
-/***/ }),
-/* 507 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Used internally by the KeyboardManager.
- *
- * @function Phaser.Input.Keyboard.ProcessKeyDown
- * @since 3.0.0
- *
- * @param {Phaser.Input.Keyboard.Key} key - [description]
- * @param {KeyboardEvent} event - [description]
- *
- * @return {Phaser.Input.Keyboard.Key} [description]
- */
-var ProcessKeyDown = function (key, event)
-{
-    key.originalEvent = event;
-
-    if (key.preventDefault)
-    {
-        event.preventDefault();
-    }
-
-    if (!key.enabled)
-    {
-        return;
-    }
-
-    key.altKey = event.altKey;
-    key.ctrlKey = event.ctrlKey;
-    key.shiftKey = event.shiftKey;
-    key.location = event.location;
-
-    if (key.isDown === false)
-    {
-        key.isDown = true;
-        key.isUp = false;
-        key.timeDown = event.timeStamp;
-        key.duration = 0;
-        key._justDown = true;
-        key._justUp = false;
-    }
-
-    key.repeats++;
-
-    return key;
-};
-
-module.exports = ProcessKeyDown;
-
-
-/***/ }),
-/* 508 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var KeyCodes = __webpack_require__(116);
-
-var KeyMap = {};
-
-for (var key in KeyCodes)
-{
-    KeyMap[KeyCodes[key]] = key;
-}
-
-module.exports = KeyMap;
-
-
-/***/ }),
-/* 509 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Used internally by the KeyCombo class.
- *
- * @function Phaser.Input.Keyboard.KeyCombo.ResetKeyCombo
- * @since 3.0.0
- *
- * @param {Phaser.Input.Keyboard.KeyCombo} combo - The KeyCombo to reset.
- *
- * @return {Phaser.Input.Keyboard.KeyCombo} The KeyCombo.
- */
-var ResetKeyCombo = function (combo)
-{
-    combo.current = combo.keyCodes[0];
-    combo.index = 0;
-    combo.timeLastMatched = 0;
-    combo.matched = false;
-    combo.timeMatched = 0;
-
-    return combo;
-};
-
-module.exports = ResetKeyCombo;
-
-
-/***/ }),
-/* 510 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Used internally by the KeyCombo class.
- * Return `true` if it reached the end of the combo, `false` if not.
- *
- * @function Phaser.Input.Keyboard.KeyCombo.AdvanceKeyCombo
- * @since 3.0.0
- *
- * @param {KeyboardEvent} event - [description]
- * @param {Phaser.Input.Keyboard.KeyCombo} combo - [description]
- *
- * @return {boolean} `true` if it reached the end of the combo, `false` if not.
- */
-var AdvanceKeyCombo = function (event, combo)
-{
-    combo.timeLastMatched = event.timeStamp;
-    combo.index++;
-
-    if (combo.index === combo.size)
-    {
-        return true;
-    }
-    else
-    {
-        combo.current = combo.keyCodes[combo.index];
-        return false;
-    }
-};
-
-module.exports = AdvanceKeyCombo;
-
-
-/***/ }),
-/* 511 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var AdvanceKeyCombo = __webpack_require__(510);
-
-/**
- * Used internally by the KeyCombo class.
- *
- * @function Phaser.Input.Keyboard.KeyCombo.ProcessKeyCombo
- * @since 3.0.0
- *
- * @param {KeyboardEvent} event - [description]
- * @param {Phaser.Input.Keyboard.KeyCombo} combo - [description]
- *
- * @return {boolean} [description]
- */
-var ProcessKeyCombo = function (event, combo)
-{
-    if (combo.matched)
-    {
-        return true;
-    }
-
-    var comboMatched = false;
-    var keyMatched = false;
-
-    if (event.keyCode === combo.current)
-    {
-        //  Key was correct
-
-        if (combo.index > 0 && combo.maxKeyDelay > 0)
-        {
-            //  We have to check to see if the delay between
-            //  the new key and the old one was too long (if enabled)
-
-            var timeLimit = combo.timeLastMatched + combo.maxKeyDelay;
-
-            //  Check if they pressed it in time or not
-            if (event.timeStamp <= timeLimit)
-            {
-                keyMatched = true;
-                comboMatched = AdvanceKeyCombo(event, combo);
-            }
-        }
-        else
-        {
-            keyMatched = true;
-
-            //  We don't check the time for the first key pressed, so just advance it
-            comboMatched = AdvanceKeyCombo(event, combo);
-        }
-    }
-
-    if (!keyMatched && combo.resetOnWrongKey)
-    {
-        //  Wrong key was pressed
-        combo.index = 0;
-        combo.current = combo.keyCodes[0];
-    }
-
-    if (comboMatched)
-    {
-        combo.timeLastMatched = event.timeStamp;
-        combo.matched = true;
-        combo.timeMatched = event.timeStamp;
-    }
-
-    return comboMatched;
-};
-
-module.exports = ProcessKeyCombo;
-
-
-/***/ }),
-/* 512 */
+/* 519 */
 /***/ (function(module, exports) {
 
 /**
@@ -68254,7 +71720,7 @@ module.exports = init();
 
 
 /***/ }),
-/* 513 */
+/* 520 */
 /***/ (function(module, exports) {
 
 /**
@@ -68339,7 +71805,7 @@ module.exports = init();
 
 
 /***/ }),
-/* 514 */
+/* 521 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -68348,7 +71814,7 @@ module.exports = init();
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Browser = __webpack_require__(78);
+var Browser = __webpack_require__(80);
 
 /**
  * Determines the audio playback capabilities of the device running this Phaser Game instance.
@@ -68464,7 +71930,7 @@ module.exports = init();
 
 
 /***/ }),
-/* 515 */
+/* 522 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -68473,8 +71939,8 @@ module.exports = init();
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var OS = __webpack_require__(56);
-var Browser = __webpack_require__(78);
+var OS = __webpack_require__(57);
+var Browser = __webpack_require__(80);
 
 /**
  * Determines the input support of the browser running this Phaser Game instance.
@@ -68543,7 +72009,7 @@ module.exports = init();
 
 
 /***/ }),
-/* 516 */
+/* 523 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -68577,20 +72043,20 @@ module.exports = init();
 
 module.exports = {
 
-    os: __webpack_require__(56),
-    browser: __webpack_require__(78),
-    features: __webpack_require__(118),
-    input: __webpack_require__(515),
-    audio: __webpack_require__(514),
-    video: __webpack_require__(513),
-    fullscreen: __webpack_require__(512),
-    canvasFeatures: __webpack_require__(201)
+    os: __webpack_require__(57),
+    browser: __webpack_require__(80),
+    features: __webpack_require__(120),
+    input: __webpack_require__(522),
+    audio: __webpack_require__(521),
+    video: __webpack_require__(520),
+    fullscreen: __webpack_require__(519),
+    canvasFeatures: __webpack_require__(203)
 
 };
 
 
 /***/ }),
-/* 517 */
+/* 524 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -68718,7 +72184,7 @@ module.exports = DebugHeader;
 
 
 /***/ }),
-/* 518 */
+/* 525 */
 /***/ (function(module, exports) {
 
 module.exports = [
@@ -68749,7 +72215,7 @@ module.exports = [
 
 
 /***/ }),
-/* 519 */
+/* 526 */
 /***/ (function(module, exports) {
 
 module.exports = [
@@ -68773,7 +72239,7 @@ module.exports = [
 
 
 /***/ }),
-/* 520 */
+/* 527 */
 /***/ (function(module, exports) {
 
 module.exports = [
@@ -68831,7 +72297,7 @@ module.exports = [
 
 
 /***/ }),
-/* 521 */
+/* 528 */
 /***/ (function(module, exports) {
 
 module.exports = [
@@ -68857,7 +72323,7 @@ module.exports = [
 
 
 /***/ }),
-/* 522 */
+/* 529 */
 /***/ (function(module, exports) {
 
 module.exports = [
@@ -68875,7 +72341,7 @@ module.exports = [
 
 
 /***/ }),
-/* 523 */
+/* 530 */
 /***/ (function(module, exports) {
 
 module.exports = [
@@ -68894,7 +72360,7 @@ module.exports = [
 
 
 /***/ }),
-/* 524 */
+/* 531 */
 /***/ (function(module, exports) {
 
 module.exports = [
@@ -68930,7 +72396,7 @@ module.exports = [
 
 
 /***/ }),
-/* 525 */
+/* 532 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -68942,7 +72408,7 @@ module.exports = [
 var CanvasInterpolation = __webpack_require__(272);
 var CanvasPool = __webpack_require__(22);
 var CONST = __webpack_require__(20);
-var Features = __webpack_require__(118);
+var Features = __webpack_require__(120);
 
 /**
  * Called automatically by Phaser.Game and responsible for creating the renderer it will use.
@@ -69028,8 +72494,8 @@ var CreateRenderer = function (game)
 
     if (true)
     {
-        CanvasRenderer = __webpack_require__(266);
-        WebGLRenderer = __webpack_require__(261);
+        CanvasRenderer = __webpack_require__(267);
+        WebGLRenderer = __webpack_require__(262);
 
         //  Let the config pick the renderer type, as both are included
         if (config.renderType === CONST.WEBGL)
@@ -69057,7 +72523,7 @@ module.exports = CreateRenderer;
 
 
 /***/ }),
-/* 526 */
+/* 533 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -69073,8 +72539,8 @@ var GetValue = __webpack_require__(4);
 var IsPlainObject = __webpack_require__(8);
 var MATH = __webpack_require__(16);
 var NOOP = __webpack_require__(3);
-var DefaultPlugins = __webpack_require__(119);
-var ValueToColor = __webpack_require__(129);
+var DefaultPlugins = __webpack_require__(121);
+var ValueToColor = __webpack_require__(132);
 
 /**
  * This callback type is completely empty, a no-operation.
@@ -69136,6 +72602,7 @@ var ValueToColor = __webpack_require__(129);
  * @property {(boolean|object)} [input.mouse=true] - [description]
  * @property {*} [input.mouse.target=null] - [description]
  * @property {boolean} [input.touch=true] - [description]
+ * @property {integer} [input.activePointers=1] - [description]
  * @property {*} [input.touch.target=null] - [description]
  * @property {boolean} [input.touch.capture=true] - [description]
  * @property {(boolean|object)} [input.gamepad=false] - [description]
@@ -69315,9 +72782,19 @@ var Config = new Class({
         this.inputTouchCapture = GetValue(config, 'input.touch.capture', true);
 
         /**
+         * @const {integer} Phaser.Boot.Config#inputActivePointers - [description]
+         */
+        this.inputActivePointers = GetValue(config, 'input.activePointers', 1);
+
+        /**
          * @const {boolean} Phaser.Boot.Config#inputGamepad - [description]
          */
         this.inputGamepad = GetValue(config, 'input.gamepad', false);
+
+        /**
+         * @const {*} Phaser.Boot.Config#inputGamepadEventTarget - [description]
+         */
+        this.inputGamepadEventTarget = GetValue(config, 'input.gamepad.target', window);
 
         /**
          * @const {boolean} Phaser.Boot.Config#disableContextMenu - [description]
@@ -69437,6 +72914,7 @@ var Config = new Class({
         }
 
         //  Callbacks
+
         /**
          * @const {BootCallback} Phaser.Boot.Config#preBoot - [description]
          */
@@ -69593,7 +73071,7 @@ module.exports = Config;
 
 
 /***/ }),
-/* 527 */
+/* 534 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -69602,25 +73080,25 @@ module.exports = Config;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var AddToDOM = __webpack_require__(127);
-var AnimationManager = __webpack_require__(205);
-var CacheManager = __webpack_require__(203);
+var AddToDOM = __webpack_require__(130);
+var AnimationManager = __webpack_require__(207);
+var CacheManager = __webpack_require__(205);
 var CanvasPool = __webpack_require__(22);
 var Class = __webpack_require__(0);
-var Config = __webpack_require__(526);
-var CreateRenderer = __webpack_require__(525);
-var DataManager = __webpack_require__(79);
-var DebugHeader = __webpack_require__(517);
-var Device = __webpack_require__(516);
-var DOMContentLoaded = __webpack_require__(270);
+var Config = __webpack_require__(533);
+var CreateRenderer = __webpack_require__(532);
+var DataManager = __webpack_require__(81);
+var DebugHeader = __webpack_require__(524);
+var Device = __webpack_require__(523);
+var DOMContentLoaded = __webpack_require__(271);
 var EventEmitter = __webpack_require__(9);
-var InputManager = __webpack_require__(199);
-var PluginManager = __webpack_require__(188);
-var SceneManager = __webpack_require__(186);
-var SoundManagerCreator = __webpack_require__(183);
-var TextureManager = __webpack_require__(176);
-var TimeStep = __webpack_require__(493);
-var VisibilityHandler = __webpack_require__(492);
+var InputManager = __webpack_require__(201);
+var PluginManager = __webpack_require__(196);
+var SceneManager = __webpack_require__(194);
+var SoundManagerCreator = __webpack_require__(191);
+var TextureManager = __webpack_require__(184);
+var TimeStep = __webpack_require__(506);
+var VisibilityHandler = __webpack_require__(505);
 
 /**
  * @classdesc
@@ -69860,6 +73338,17 @@ var Game = new Class({
          * @since 3.9.0
          */
         this.hasFocus = false;
+
+        /**
+         * Is the mouse pointer currently over the game canvas or not?
+         * This is modified by the VisibilityHandler.
+         *
+         * @name Phaser.Game#isOver
+         * @type {boolean}
+         * @readOnly
+         * @since 3.10.0
+         */
+        this.isOver = true;
 
         //  Wait for the DOM Ready event, then call boot.
         DOMContentLoaded(this.boot.bind(this));
@@ -70264,7 +73753,7 @@ module.exports = Game;
 
 
 /***/ }),
-/* 528 */
+/* 535 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -70448,7 +73937,7 @@ module.exports = EventEmitter;
 
 
 /***/ }),
-/* 529 */
+/* 536 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -70461,11 +73950,11 @@ module.exports = EventEmitter;
  * @namespace Phaser.Events
  */
 
-module.exports = { EventEmitter: __webpack_require__(528) };
+module.exports = { EventEmitter: __webpack_require__(535) };
 
 
 /***/ }),
-/* 530 */
+/* 537 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -70655,7 +74144,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 531 */
+/* 538 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -70670,18 +74159,18 @@ process.umask = function() { return 0; };
 
 module.exports = {
 
-    BitmapMask: __webpack_require__(212),
-    GeometryMask: __webpack_require__(211)
+    BitmapMask: __webpack_require__(214),
+    GeometryMask: __webpack_require__(213)
 
 };
 
 
 /***/ }),
-/* 532 */,
-/* 533 */,
-/* 534 */,
-/* 535 */,
-/* 536 */
+/* 539 */,
+/* 540 */,
+/* 541 */,
+/* 542 */,
+/* 543 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -70691,7 +74180,7 @@ module.exports = {
  */
 
 var Class = __webpack_require__(0);
-var DataManager = __webpack_require__(79);
+var DataManager = __webpack_require__(81);
 var PluginCache = __webpack_require__(12);
 
 /**
@@ -70807,7 +74296,7 @@ module.exports = DataManagerPlugin;
 
 
 /***/ }),
-/* 537 */
+/* 544 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -70822,23 +74311,23 @@ module.exports = DataManagerPlugin;
 
 module.exports = {
 
-    DataManager: __webpack_require__(79),
-    DataManagerPlugin: __webpack_require__(536)
+    DataManager: __webpack_require__(81),
+    DataManagerPlugin: __webpack_require__(543)
 
 };
 
 
 /***/ }),
-/* 538 */,
-/* 539 */,
-/* 540 */,
-/* 541 */,
-/* 542 */,
-/* 543 */,
-/* 544 */,
 /* 545 */,
 /* 546 */,
-/* 547 */
+/* 547 */,
+/* 548 */,
+/* 549 */,
+/* 550 */,
+/* 551 */,
+/* 552 */,
+/* 553 */,
+/* 554 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -70878,7 +74367,7 @@ module.exports = SpriteCanvasRenderer;
 
 
 /***/ }),
-/* 548 */
+/* 555 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -70918,7 +74407,7 @@ module.exports = SpriteWebGLRenderer;
 
 
 /***/ }),
-/* 549 */
+/* 556 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -70932,12 +74421,12 @@ var renderCanvas = __webpack_require__(3);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(548);
+    renderWebGL = __webpack_require__(555);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(547);
+    renderCanvas = __webpack_require__(554);
 }
 
 module.exports = {
@@ -70949,12 +74438,12 @@ module.exports = {
 
 
 /***/ }),
-/* 550 */,
-/* 551 */,
-/* 552 */,
-/* 553 */,
-/* 554 */,
-/* 555 */
+/* 557 */,
+/* 558 */,
+/* 559 */,
+/* 560 */,
+/* 561 */,
+/* 562 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -70963,7 +74452,7 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Camera = __webpack_require__(121);
+var Camera = __webpack_require__(123);
 var Class = __webpack_require__(0);
 var GetFastValue = __webpack_require__(1);
 var PluginCache = __webpack_require__(12);
@@ -71199,6 +74688,7 @@ var CameraManager = new Class({
         {
             this.cameras.push(camera);
             this.cameraPool.slice(poolIndex, 1);
+
             return camera;
         }
 
@@ -71243,6 +74733,7 @@ var CameraManager = new Class({
             camera.scrollX = GetFastValue(cameraConfig, 'scrollX', 0);
             camera.scrollY = GetFastValue(cameraConfig, 'scrollY', 0);
             camera.roundPixels = GetFastValue(cameraConfig, 'roundPixels', false);
+            camera.visible = GetFastValue(cameraConfig, 'visible', true);
 
             // Background Color
 
@@ -71295,29 +74786,38 @@ var CameraManager = new Class({
     },
 
     /**
-     * [description]
+     * Returns an array of all cameras below the given Pointer.
+     * 
+     * The first camera in the array is the top-most camera in the camera list.
      *
-     * @method Phaser.Cameras.Scene2D.CameraManager#getCameraBelowPointer
-     * @since 3.0.0
+     * @method Phaser.Cameras.Scene2D.CameraManager#getCamerasBelowPointer
+     * @since 3.10.0
      *
-     * @param {Phaser.Input.Pointer} pointer - [description]
+     * @param {Phaser.Input.Pointer} pointer - The Pointer to check against.
      *
-     * @return {Phaser.Cameras.Scene2D.Camera} [description]
+     * @return {Phaser.Cameras.Scene2D.Camera[]} An array of cameras below the Pointer.
      */
-    getCameraBelowPointer: function (pointer)
+    getCamerasBelowPointer: function (pointer)
     {
         var cameras = this.cameras;
 
-        //  Start from the most recently added camera (the 'top' camera)
-        for (var i = cameras.length - 1; i >= 0; i--)
+        var x = pointer.x;
+        var y = pointer.y;
+
+        var output = [];
+
+        for (var i = 0; i < cameras.length; i++)
         {
             var camera = cameras[i];
 
-            if (camera.inputEnabled && RectangleContains(camera, pointer.x, pointer.y))
+            if (camera.visible && camera.inputEnabled && RectangleContains(camera, x, y))
             {
-                return camera;
+                //  So the top-most camera is at the top of the search array
+                output.unshift(camera);
             }
         }
+
+        return output;
     },
 
     /**
@@ -71363,9 +74863,12 @@ var CameraManager = new Class({
         {
             var camera = cameras[i];
 
-            camera.preRender(baseScale, renderer.config.resolution);
+            if (camera.visible)
+            {
+                camera.preRender(baseScale, renderer.config.resolution);
 
-            renderer.render(this.scene, children, interpolation, camera);
+                renderer.render(this.scene, children, interpolation, camera);
+            }
         }
     },
 
@@ -71480,7 +74983,7 @@ module.exports = CameraManager;
 
 
 /***/ }),
-/* 556 */
+/* 563 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -71491,7 +74994,7 @@ module.exports = CameraManager;
 
 var Clamp = __webpack_require__(23);
 var Class = __webpack_require__(0);
-var Vector2 = __webpack_require__(7);
+var Vector2 = __webpack_require__(6);
 
 /**
  * @classdesc
@@ -71822,7 +75325,7 @@ module.exports = Shake;
 
 
 /***/ }),
-/* 557 */
+/* 564 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -72201,7 +75704,7 @@ module.exports = Flash;
 
 
 /***/ }),
-/* 558 */
+/* 565 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -72637,7 +76140,7 @@ module.exports = Fade;
 
 
 /***/ }),
-/* 559 */
+/* 566 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -72652,17 +76155,15 @@ module.exports = Fade;
 
 module.exports = {
 
-    Camera: __webpack_require__(121),
-    CameraManager: __webpack_require__(555),
-    Effects: __webpack_require__(202)
+    Camera: __webpack_require__(123),
+    CameraManager: __webpack_require__(562),
+    Effects: __webpack_require__(204)
 
 };
 
 
 /***/ }),
-/* 560 */,
-/* 561 */,
-/* 562 */
+/* 567 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -72677,14 +76178,14 @@ module.exports = {
 
 module.exports = {
 
-    BaseCache: __webpack_require__(204),
-    CacheManager: __webpack_require__(203)
+    BaseCache: __webpack_require__(206),
+    CacheManager: __webpack_require__(205)
 
 };
 
 
 /***/ }),
-/* 563 */
+/* 568 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -72699,17 +76200,17 @@ module.exports = {
 
 module.exports = {
 
-    Animation: __webpack_require__(208),
-    AnimationFrame: __webpack_require__(206),
-    AnimationManager: __webpack_require__(205)
+    Animation: __webpack_require__(210),
+    AnimationFrame: __webpack_require__(208),
+    AnimationManager: __webpack_require__(207)
 
 };
 
 
 /***/ }),
-/* 564 */,
-/* 565 */,
-/* 566 */
+/* 569 */,
+/* 570 */,
+/* 571 */
 /***/ (function(module, exports) {
 
 /**
@@ -72798,7 +76299,7 @@ module.exports = Visible;
 
 
 /***/ }),
-/* 567 */
+/* 572 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -72808,9 +76309,9 @@ module.exports = Visible;
  */
 
 var MATH_CONST = __webpack_require__(16);
-var TransformMatrix = __webpack_require__(63);
-var WrapAngle = __webpack_require__(210);
-var WrapAngleDegrees = __webpack_require__(209);
+var TransformMatrix = __webpack_require__(64);
+var WrapAngle = __webpack_require__(212);
+var WrapAngleDegrees = __webpack_require__(211);
 
 //  global bitmask flag for GameObject.renderMask (used by Scale)
 var _FLAG = 4; // 0100
@@ -73278,7 +76779,7 @@ module.exports = Transform;
 
 
 /***/ }),
-/* 568 */
+/* 573 */
 /***/ (function(module, exports) {
 
 /**
@@ -73312,18 +76813,17 @@ module.exports = Transform;
  * @property {object} data - The data of this Game Object.
  */
 
-//  Default Game Object JSON export
-//  Is extended further by Game Object specific implementations
-
 /**
- * [description]
+ * Build a JSON representation of the given Game Object.
+ *
+ * This is typically extended further by Game Object specific implementations.
  *
  * @method Phaser.GameObjects.Components.ToJSON
  * @since 3.0.0
  *
- * @param {Phaser.GameObjects.GameObject} gameObject - [description]
+ * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to export as JSON.
  *
- * @return {JSONGameObject} [description]
+ * @return {JSONGameObject} The JSON representation of the Game Object.
  */
 var ToJSON = function (gameObject)
 {
@@ -73366,7 +76866,7 @@ module.exports = ToJSON;
 
 
 /***/ }),
-/* 569 */
+/* 574 */
 /***/ (function(module, exports) {
 
 /**
@@ -73604,7 +77104,7 @@ module.exports = Tint;
 
 
 /***/ }),
-/* 570 */
+/* 575 */
 /***/ (function(module, exports) {
 
 /**
@@ -73724,7 +77224,7 @@ module.exports = Texture;
 
 
 /***/ }),
-/* 571 */
+/* 576 */
 /***/ (function(module, exports) {
 
 /**
@@ -73880,7 +77380,7 @@ module.exports = Size;
 
 
 /***/ }),
-/* 572 */
+/* 577 */
 /***/ (function(module, exports) {
 
 /**
@@ -73972,7 +77472,7 @@ module.exports = ScrollFactor;
 
 
 /***/ }),
-/* 573 */
+/* 578 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -73981,7 +77481,7 @@ module.exports = ScrollFactor;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var ScaleModes = __webpack_require__(58);
+var ScaleModes = __webpack_require__(59);
 
 /**
  * Provides methods used for getting and setting the scale of a Game Object.
@@ -74043,7 +77543,7 @@ module.exports = ScaleMode;
 
 
 /***/ }),
-/* 574 */
+/* 579 */
 /***/ (function(module, exports) {
 
 /**
@@ -74246,7 +77746,7 @@ module.exports = Origin;
 
 
 /***/ }),
-/* 575 */
+/* 580 */
 /***/ (function(module, exports) {
 
 /**
@@ -74534,7 +78034,7 @@ module.exports = MatrixStack;
 
 
 /***/ }),
-/* 576 */
+/* 581 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -74543,8 +78043,8 @@ module.exports = MatrixStack;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BitmapMask = __webpack_require__(212);
-var GeometryMask = __webpack_require__(211);
+var BitmapMask = __webpack_require__(214);
+var GeometryMask = __webpack_require__(213);
 
 /**
  * Provides methods used for getting and setting the mask of a Game Object.
@@ -74677,7 +78177,7 @@ module.exports = Mask;
 
 
 /***/ }),
-/* 577 */
+/* 582 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -74688,7 +78188,7 @@ module.exports = Mask;
 
 var Rectangle = __webpack_require__(14);
 var RotateAround = __webpack_require__(292);
-var Vector2 = __webpack_require__(7);
+var Vector2 = __webpack_require__(6);
 
 /**
  * Provides methods used for obtaining the bounds of a Game Object.
@@ -74959,7 +78459,7 @@ module.exports = GetBounds;
 
 
 /***/ }),
-/* 578 */
+/* 583 */
 /***/ (function(module, exports) {
 
 /**
@@ -75107,7 +78607,7 @@ module.exports = Flip;
 
 
 /***/ }),
-/* 579 */
+/* 584 */
 /***/ (function(module, exports) {
 
 /**
@@ -75200,7 +78700,7 @@ module.exports = Depth;
 
 
 /***/ }),
-/* 580 */
+/* 585 */
 /***/ (function(module, exports) {
 
 /**
@@ -75326,7 +78826,7 @@ module.exports = ComputedSize;
 
 
 /***/ }),
-/* 581 */
+/* 586 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -75335,7 +78835,7 @@ module.exports = ComputedSize;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BlendModes = __webpack_require__(50);
+var BlendModes = __webpack_require__(51);
 
 /**
  * Provides methods used for setting the blend mode of a Game Object.
@@ -75446,7 +78946,7 @@ module.exports = BlendMode;
 
 
 /***/ }),
-/* 582 */
+/* 587 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -75463,7 +78963,7 @@ var _FLAG = 2; // 0010
 /**
  * Provides methods used for setting the alpha properties of a Game Object.
  * Should be applied as a mixin and not used directly.
- * 
+ *
  * @name Phaser.GameObjects.Components.Alpha
  * @since 3.0.0
  */
@@ -75472,7 +78972,7 @@ var Alpha = {
 
     /**
      * Private internal value. Holds the global alpha value.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Alpha#_alpha
      * @type {float}
      * @private
@@ -75483,7 +78983,7 @@ var Alpha = {
 
     /**
      * Private internal value. Holds the top-left alpha value.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Alpha#_alphaTL
      * @type {float}
      * @private
@@ -75494,7 +78994,7 @@ var Alpha = {
 
     /**
      * Private internal value. Holds the top-right alpha value.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Alpha#_alphaTR
      * @type {float}
      * @private
@@ -75505,7 +79005,7 @@ var Alpha = {
 
     /**
      * Private internal value. Holds the bottom-left alpha value.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Alpha#_alphaBL
      * @type {float}
      * @private
@@ -75516,7 +79016,7 @@ var Alpha = {
 
     /**
      * Private internal value. Holds the bottom-right alpha value.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Alpha#_alphaBR
      * @type {float}
      * @private
@@ -75527,11 +79027,12 @@ var Alpha = {
 
     /**
      * Clears all alpha values associated with this Game Object.
-     * Immediately sets the alpha levels back to 1 (fully opaque)
+     *
+     * Immediately sets the alpha levels back to 1 (fully opaque).
      *
      * @method Phaser.GameObjects.Components.Alpha#clearAlpha
      * @since 3.0.0
-     * 
+     *
      * @return {this} This Game Object instance.
      */
     clearAlpha: function ()
@@ -75548,12 +79049,12 @@ var Alpha = {
      *
      * @method Phaser.GameObjects.Components.Alpha#setAlpha
      * @since 3.0.0
-     * 
+     *
      * @param {float} [topLeft=1] - The alpha value used for the top-left of the Game Object. If this is the only value given it's applied across the whole Game Object.
      * @param {float} [topRight] - The alpha value used for the top-right of the Game Object. WebGL only.
      * @param {float} [bottomLeft] - The alpha value used for the bottom-left of the Game Object. WebGL only.
      * @param {float} [bottomRight] - The alpha value used for the bottom-right of the Game Object. WebGL only.
-     * 
+     *
      * @return {this} This Game Object instance.
      */
     setAlpha: function (topLeft, topRight, bottomLeft, bottomRight)
@@ -75580,7 +79081,7 @@ var Alpha = {
      * The alpha value of the Game Object.
      *
      * This is a global value, impacting the entire Game Object, not just a region of it.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Alpha#alpha
      * @type {float}
      * @since 3.0.0
@@ -75617,7 +79118,7 @@ var Alpha = {
     /**
      * The alpha value starting from the top-left of the Game Object.
      * This value is interpolated from the corner to the center of the Game Object.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Alpha#alphaTopLeft
      * @type {float}
      * @webglOnly
@@ -75647,7 +79148,7 @@ var Alpha = {
     /**
      * The alpha value starting from the top-right of the Game Object.
      * This value is interpolated from the corner to the center of the Game Object.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Alpha#alphaTopRight
      * @type {float}
      * @webglOnly
@@ -75677,7 +79178,7 @@ var Alpha = {
     /**
      * The alpha value starting from the bottom-left of the Game Object.
      * This value is interpolated from the corner to the center of the Game Object.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Alpha#alphaBottomLeft
      * @type {float}
      * @webglOnly
@@ -75707,7 +79208,7 @@ var Alpha = {
     /**
      * The alpha value starting from the bottom-right of the Game Object.
      * This value is interpolated from the corner to the center of the Game Object.
-     * 
+     *
      * @name Phaser.GameObjects.Components.Alpha#alphaBottomRight
      * @type {float}
      * @webglOnly
@@ -75740,11 +79241,6 @@ module.exports = Alpha;
 
 
 /***/ }),
-/* 583 */,
-/* 584 */,
-/* 585 */,
-/* 586 */,
-/* 587 */,
 /* 588 */,
 /* 589 */,
 /* 590 */,
@@ -75752,7 +79248,12 @@ module.exports = Alpha;
 /* 592 */,
 /* 593 */,
 /* 594 */,
-/* 595 */
+/* 595 */,
+/* 596 */,
+/* 597 */,
+/* 598 */,
+/* 599 */,
+/* 600 */
 /***/ (function(module, exports) {
 
 /**
@@ -75805,7 +79306,7 @@ if (typeof window.Uint32Array !== 'function' && typeof window.Uint32Array !== 'o
 
 
 /***/ }),
-/* 596 */
+/* 601 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {// References:
@@ -75875,10 +79376,10 @@ if (!global.cancelAnimationFrame) {
     };
 }
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(213)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(215)))
 
 /***/ }),
-/* 597 */
+/* 602 */
 /***/ (function(module, exports) {
 
 /**
@@ -75915,7 +79416,7 @@ if (!global.cancelAnimationFrame) {
 
 
 /***/ }),
-/* 598 */
+/* 603 */
 /***/ (function(module, exports) {
 
 // ES6 Math.trunc - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/trunc
@@ -75927,7 +79428,7 @@ if (!Math.trunc) {
 
 
 /***/ }),
-/* 599 */
+/* 604 */
 /***/ (function(module, exports) {
 
 /**
@@ -75975,7 +79476,7 @@ if (!Function.prototype.bind) {
 
 
 /***/ }),
-/* 600 */
+/* 605 */
 /***/ (function(module, exports) {
 
 /**
@@ -75990,7 +79491,7 @@ if (!window.console)
 
 
 /***/ }),
-/* 601 */
+/* 606 */
 /***/ (function(module, exports) {
 
 /* Copyright 2013 Chris Wilson
@@ -76177,7 +79678,7 @@ BiquadFilterNode.type and OscillatorNode.type.
 
 
 /***/ }),
-/* 602 */
+/* 607 */
 /***/ (function(module, exports) {
 
 /**
@@ -76193,7 +79694,7 @@ if (!Array.isArray)
 
 
 /***/ }),
-/* 603 */
+/* 608 */
 /***/ (function(module, exports) {
 
 /**
@@ -76233,26 +79734,21 @@ if (!Array.prototype.forEach)
 
 
 /***/ }),
-/* 604 */
+/* 609 */
 /***/ (function(module, exports, __webpack_require__) {
 
+__webpack_require__(608);
+__webpack_require__(607);
+__webpack_require__(606);
+__webpack_require__(605);
+__webpack_require__(604);
 __webpack_require__(603);
 __webpack_require__(602);
 __webpack_require__(601);
 __webpack_require__(600);
-__webpack_require__(599);
-__webpack_require__(598);
-__webpack_require__(597);
-__webpack_require__(596);
-__webpack_require__(595);
 
 
 /***/ }),
-/* 605 */,
-/* 606 */,
-/* 607 */,
-/* 608 */,
-/* 609 */,
 /* 610 */,
 /* 611 */,
 /* 612 */,
@@ -76307,7 +79803,12 @@ __webpack_require__(595);
 /* 661 */,
 /* 662 */,
 /* 663 */,
-/* 664 */
+/* 664 */,
+/* 665 */,
+/* 666 */,
+/* 667 */,
+/* 668 */,
+/* 669 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -76322,16 +79823,16 @@ __webpack_require__(595);
 
 module.exports = {
 
-    BitmapMaskPipeline: __webpack_require__(259),
-    FlatTintPipeline: __webpack_require__(258),
-    ForwardDiffuseLightPipeline: __webpack_require__(147),
-    TextureTintPipeline: __webpack_require__(126)
+    BitmapMaskPipeline: __webpack_require__(260),
+    FlatTintPipeline: __webpack_require__(259),
+    ForwardDiffuseLightPipeline: __webpack_require__(148),
+    TextureTintPipeline: __webpack_require__(129)
 
 };
 
 
 /***/ }),
-/* 665 */
+/* 670 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -76347,9 +79848,9 @@ module.exports = {
 module.exports = {
 
     Utils: __webpack_require__(27),
-    WebGLPipeline: __webpack_require__(83),
-    WebGLRenderer: __webpack_require__(261),
-    Pipelines: __webpack_require__(664),
+    WebGLPipeline: __webpack_require__(84),
+    WebGLRenderer: __webpack_require__(262),
+    Pipelines: __webpack_require__(669),
 
     // Constants
     BYTE: 0,
@@ -76362,7 +79863,7 @@ module.exports = {
 
 
 /***/ }),
-/* 666 */
+/* 671 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -76383,14 +79884,14 @@ module.exports = {
 
 module.exports = {
 
-    Canvas: __webpack_require__(264),
-    WebGL: __webpack_require__(260)
+    Canvas: __webpack_require__(265),
+    WebGL: __webpack_require__(261)
 
 };
 
 
 /***/ }),
-/* 667 */
+/* 672 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -76405,16 +79906,16 @@ module.exports = {
 
 module.exports = {
 
-    BlitImage: __webpack_require__(265),
-    CanvasRenderer: __webpack_require__(266),
-    DrawImage: __webpack_require__(263),
-    GetBlendModes: __webpack_require__(262)
+    BlitImage: __webpack_require__(266),
+    CanvasRenderer: __webpack_require__(267),
+    DrawImage: __webpack_require__(264),
+    GetBlendModes: __webpack_require__(263)
 
 };
 
 
 /***/ }),
-/* 668 */
+/* 673 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -76440,19 +79941,14 @@ module.exports = {
 
 module.exports = {
 
-    Canvas: __webpack_require__(667),
-    Snapshot: __webpack_require__(666),
-    WebGL: __webpack_require__(665)
+    Canvas: __webpack_require__(672),
+    Snapshot: __webpack_require__(671),
+    WebGL: __webpack_require__(670)
 
 };
 
 
 /***/ }),
-/* 669 */,
-/* 670 */,
-/* 671 */,
-/* 672 */,
-/* 673 */,
 /* 674 */,
 /* 675 */,
 /* 676 */,
@@ -76801,7 +80297,11 @@ module.exports = {
 /* 1019 */,
 /* 1020 */,
 /* 1021 */,
-/* 1022 */
+/* 1022 */,
+/* 1023 */,
+/* 1024 */,
+/* 1025 */,
+/* 1026 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/**
@@ -76810,10 +80310,10 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-__webpack_require__(604);
+__webpack_require__(609);
 
 var CONST = __webpack_require__(20);
-var Extend = __webpack_require__(18);
+var Extend = __webpack_require__(17);
 
 /**
  * @namespace Phaser
@@ -76821,76 +80321,76 @@ var Extend = __webpack_require__(18);
 
 var Phaser = {
 
-    Animation: __webpack_require__(563),
-    Cache: __webpack_require__(562),
-    Cameras: { Scene2D: __webpack_require__(559) },
+    Animation: __webpack_require__(568),
+    Cache: __webpack_require__(567),
+    Cameras: { Scene2D: __webpack_require__(566) },
     Class: __webpack_require__(0),
-    Data: __webpack_require__(537),
-    Display: { Masks: __webpack_require__(531) },
-    Events: __webpack_require__(529),
-    Game: __webpack_require__(527),
+    Data: __webpack_require__(544),
+    Display: { Masks: __webpack_require__(538) },
+    Events: __webpack_require__(536),
+    Game: __webpack_require__(534),
     GameObjects: {
-        DisplayList: __webpack_require__(491),
+        DisplayList: __webpack_require__(504),
         GameObjectCreator: __webpack_require__(13),
         GameObjectFactory: __webpack_require__(11),
-        UpdateList: __webpack_require__(463),
+        UpdateList: __webpack_require__(476),
         Components: __webpack_require__(15),
         BuildGameObject: __webpack_require__(24),
-        BuildGameObjectAnimation: __webpack_require__(124),
+        BuildGameObjectAnimation: __webpack_require__(127),
         GameObject: __webpack_require__(2),
-        Graphics: __webpack_require__(112),
+        Graphics: __webpack_require__(115),
         Image: __webpack_require__(69),
         Sprite: __webpack_require__(34),
-        Text: __webpack_require__(107),
+        Text: __webpack_require__(110),
         Factories: {
-            Graphics: __webpack_require__(397),
-            Image: __webpack_require__(396),
-            Sprite: __webpack_require__(395),
-            Text: __webpack_require__(394)
+            Graphics: __webpack_require__(410),
+            Image: __webpack_require__(409),
+            Sprite: __webpack_require__(408),
+            Text: __webpack_require__(407)
         },
         Creators: {
-            Graphics: __webpack_require__(393),
-            Image: __webpack_require__(392),
-            Sprite: __webpack_require__(391),
-            Text: __webpack_require__(390)
+            Graphics: __webpack_require__(406),
+            Image: __webpack_require__(405),
+            Sprite: __webpack_require__(404),
+            Text: __webpack_require__(403)
         }
     },
-    Input: __webpack_require__(371),
+    Input: __webpack_require__(383),
     Loader: {
         FileTypes: {
-            AnimationJSONFile: __webpack_require__(357),
-            AtlasJSONFile: __webpack_require__(356),
-            AudioFile: __webpack_require__(165),
-            AudioSpriteFile: __webpack_require__(355),
-            HTML5AudioFile: __webpack_require__(164),
+            AnimationJSONFile: __webpack_require__(360),
+            AtlasJSONFile: __webpack_require__(359),
+            AudioFile: __webpack_require__(168),
+            AudioSpriteFile: __webpack_require__(358),
+            HTML5AudioFile: __webpack_require__(167),
             ImageFile: __webpack_require__(37),
             JSONFile: __webpack_require__(28),
-            MultiAtlasFile: __webpack_require__(354),
-            PluginFile: __webpack_require__(353),
-            ScriptFile: __webpack_require__(352),
-            SpriteSheetFile: __webpack_require__(351),
-            TextFile: __webpack_require__(223),
-            XMLFile: __webpack_require__(142)
+            MultiAtlasFile: __webpack_require__(357),
+            PluginFile: __webpack_require__(356),
+            ScriptFile: __webpack_require__(355),
+            SpriteSheetFile: __webpack_require__(354),
+            TextFile: __webpack_require__(224),
+            XMLFile: __webpack_require__(143)
         },
         File: __webpack_require__(19),
-        FileTypesManager: __webpack_require__(6),
-        GetURL: __webpack_require__(106),
-        LoaderPlugin: __webpack_require__(350),
-        MergeXHRSettings: __webpack_require__(105),
+        FileTypesManager: __webpack_require__(7),
+        GetURL: __webpack_require__(108),
+        LoaderPlugin: __webpack_require__(353),
+        MergeXHRSettings: __webpack_require__(107),
         MultiFile: __webpack_require__(36),
-        XHRLoader: __webpack_require__(166),
-        XHRSettings: __webpack_require__(74)
+        XHRLoader: __webpack_require__(169),
+        XHRSettings: __webpack_require__(75)
     },
     Math: {
-        Between: __webpack_require__(271),
+        Between: __webpack_require__(149),
         DegToRad: __webpack_require__(38),
-        FloatBetween: __webpack_require__(247),
-        RadToDeg: __webpack_require__(148),
-        Vector2: __webpack_require__(7)
+        FloatBetween: __webpack_require__(248),
+        RadToDeg: __webpack_require__(150),
+        Vector2: __webpack_require__(6)
     },
     Plugins: __webpack_require__(330),
-    Renderer: __webpack_require__(668),
-    Scene: __webpack_require__(185),
+    Renderer: __webpack_require__(673),
+    Scene: __webpack_require__(193),
     Scenes: __webpack_require__(328),
     Sound: __webpack_require__(326),
     Structs: __webpack_require__(325),
@@ -76915,7 +80415,7 @@ global.Phaser = Phaser;
  *  -- Dick Brandon
  */
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(213)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(215)))
 
 /***/ })
 /******/ ]);
