@@ -4253,7 +4253,7 @@ var CONST = {
      * @type {string}
      * @since 3.0.0
      */
-    VERSION: '3.10.0',
+    VERSION: '3.10.1',
 
     BlendModes: __webpack_require__(51),
 
@@ -46559,6 +46559,11 @@ var InputManager = new Class({
          * @since 3.10.0
          */
         this.pointersTotal = config.inputActivePointers;
+
+        if (config.inputTouch && this.pointersTotal === 1)
+        {
+            this.pointersTotal = 2;
+        }
 
         for (var i = 0; i <= this.pointersTotal; i++)
         {
@@ -113673,7 +113678,7 @@ module.exports = Origin;
 /**
  * Provides methods used for getting and setting the transform values of a Game Object.
  * Should be applied as a mixin and not used directly.
- * 
+ *
  * @name Phaser.GameObjects.Components.MatrixStack
  * @since 3.2.0
  */
@@ -113681,8 +113686,8 @@ module.exports = Origin;
 var MatrixStack = {
 
     /**
-     * [description]
-     * 
+     * The matrix stack.
+     *
      * @name Phaser.GameObjects.Components.MatrixStack#matrixStack
      * @type {Float32Array}
      * @private
@@ -113691,8 +113696,8 @@ var MatrixStack = {
     matrixStack: null,
 
     /**
-     * [description]
-     * 
+     * The current matrix.
+     *
      * @name Phaser.GameObjects.Components.MatrixStack#currentMatrix
      * @type {Float32Array}
      * @private
@@ -113701,8 +113706,8 @@ var MatrixStack = {
     currentMatrix: null,
 
     /**
-     * [description]
-     * 
+     * The current index of the top of the matrix stack.
+     *
      * @name Phaser.GameObjects.Components.MatrixStack#currentMatrixIndex
      * @type {integer}
      * @private
@@ -113711,8 +113716,8 @@ var MatrixStack = {
     currentMatrixIndex: 0,
 
     /**
-     * [description]
-     * 
+     * Initialize the matrix stack.
+     *
      * @method Phaser.GameObjects.Components.MatrixStack#initMatrixStack
      * @since 3.2.0
      *
@@ -113728,11 +113733,11 @@ var MatrixStack = {
     },
 
     /**
-     * [description]
-     * 
+     * Push the current matrix onto the matrix stack.
+     *
      * @method Phaser.GameObjects.Components.MatrixStack#save
      * @since 3.2.0
-     * 
+     *
      * @return {this} This Game Object instance.
      */
     save: function ()
@@ -113750,16 +113755,16 @@ var MatrixStack = {
         matrixStack[currentMatrixIndex + 3] = currentMatrix[3];
         matrixStack[currentMatrixIndex + 4] = currentMatrix[4];
         matrixStack[currentMatrixIndex + 5] = currentMatrix[5];
-        
+
         return this;
     },
 
     /**
-     * [description]
-     * 
+     * Pop the top of the matrix stack into the current matrix.
+     *
      * @method Phaser.GameObjects.Components.MatrixStack#restore
      * @since 3.2.0
-     * 
+     *
      * @return {this} This Game Object instance.
      */
     restore: function ()
@@ -113783,11 +113788,11 @@ var MatrixStack = {
     },
 
     /**
-     * [description]
-     * 
+     * Resets the current matrix to the identity matrix.
+     *
      * @method Phaser.GameObjects.Components.MatrixStack#loadIdentity
      * @since 3.2.0
-     * 
+     *
      * @return {this} This Game Object instance.
      */
     loadIdentity: function ()
@@ -113798,18 +113803,18 @@ var MatrixStack = {
     },
 
     /**
-     * [description]
-     * 
+     * Transform the current matrix.
+     *
      * @method Phaser.GameObjects.Components.MatrixStack#transform
      * @since 3.2.0
      *
-     * @param {number} a - [description]
-     * @param {number} b - [description]
-     * @param {number} c - [description]
-     * @param {number} d - [description]
-     * @param {number} tx - [description]
-     * @param {number} ty - [description]
-     * 
+     * @param {number} a - The Scale X value.
+     * @param {number} b - The Shear Y value.
+     * @param {number} c - The Shear X value.
+     * @param {number} d - The Scale Y value.
+     * @param {number} tx - The Translate X value.
+     * @param {number} ty - The Translate Y value.
+     *
      * @return {this} This Game Object instance.
      */
     transform: function (a, b, c, d, tx, ty)
@@ -113833,18 +113838,18 @@ var MatrixStack = {
     },
 
     /**
-     * [description]
-     * 
+     * Set a transform matrix as the current matrix.
+     *
      * @method Phaser.GameObjects.Components.MatrixStack#setTransform
      * @since 3.2.0
      *
-     * @param {number} a - [description]
-     * @param {number} b - [description]
-     * @param {number} c - [description]
-     * @param {number} d - [description]
-     * @param {number} tx - [description]
-     * @param {number} ty - [description]
-     * 
+     * @param {number} a - The Scale X value.
+     * @param {number} b - The Shear Y value.
+     * @param {number} c - The Shear X value.
+     * @param {number} d - The Scale Y value.
+     * @param {number} tx - The Translate X value.
+     * @param {number} ty - The Translate Y value.
+     *
      * @return {this} This Game Object instance.
      */
     setTransform: function (a, b, c, d, tx, ty)
@@ -113862,14 +113867,14 @@ var MatrixStack = {
     },
 
     /**
-     * [description]
-     * 
+     * Translate the current matrix.
+     *
      * @method Phaser.GameObjects.Components.MatrixStack#translate
      * @since 3.2.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * 
+     * @param {number} x - The horizontal translation value.
+     * @param {number} y - The vertical translation value.
+     *
      * @return {this} This Game Object instance.
      */
     translate: function (x, y)
@@ -113889,14 +113894,14 @@ var MatrixStack = {
     },
 
     /**
-     * [description]
-     * 
+     * Scale the current matrix.
+     *
      * @method Phaser.GameObjects.Components.MatrixStack#scale
      * @since 3.2.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * 
+     * @param {number} x - The horizontal scale value.
+     * @param {number} y - The vertical scale value.
+     *
      * @return {this} This Game Object instance.
      */
     scale: function (x, y)
@@ -113916,13 +113921,13 @@ var MatrixStack = {
     },
 
     /**
-     * [description]
-     * 
+     * Rotate the current matrix.
+     *
      * @method Phaser.GameObjects.Components.MatrixStack#rotate
      * @since 3.2.0
      *
      * @param {number} t - The angle of rotation, in radians.
-     * 
+     *
      * @return {this} This Game Object instance.
      */
     rotate: function (t)
