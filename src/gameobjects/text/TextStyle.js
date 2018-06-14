@@ -326,13 +326,13 @@ var TextStyle = new Class({
      * For example:
      *
      * ```javascript
-     * text.style.setStyle({
-     *      fontSize: '64px',
-     *      fontFamily: 'Arial',
-     *      color: '#ffffff',
-     *      align: 'center',
-     *      backgroundColor: '#ff00ff'
-     *  });
+     * text.setStyle({
+     *     fontSize: '64px',
+     *     fontFamily: 'Arial',
+     *     color: '#ffffff',
+     *     align: 'center',
+     *     backgroundColor: '#ff00ff'
+     * });
      * ```
      *
      * @method Phaser.GameObjects.Text.TextStyle#setStyle

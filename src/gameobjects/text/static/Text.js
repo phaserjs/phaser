@@ -546,12 +546,12 @@ var Text = new Class({
      *
      * ```javascript
      * text.setStyle({
-     *      fontSize: '64px',
-     *      fontFamily: 'Arial',
-     *      color: '#ffffff',
-     *      align: 'center',
-     *      backgroundColor: '#ff00ff'
-     *  });
+     *     fontSize: '64px',
+     *     fontFamily: 'Arial',
+     *     color: '#ffffff',
+     *     align: 'center',
+     *     backgroundColor: '#ff00ff'
+     * });
      * ```
      *
      * @method Phaser.GameObjects.Text#setStyle
