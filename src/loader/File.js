@@ -517,7 +517,7 @@ var File = new Class({
         var type = this.type;
 
         this.loader.emit('filecomplete', key, type, data);
-        this.loader.emit('filecomplete_' + type + '_' + key, key, type, data);
+        this.loader.emit('filecomplete-' + type + '-' + key, key, type, data);
 
         this.loader.flagForRemoval(this);
     },
