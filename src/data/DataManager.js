@@ -318,8 +318,8 @@ var DataManager = new Class({
                     {
                         list[key] = value;
 
-                        events.emit('changedata', parent, key, data);
-                        events.emit('changedata_' + key, parent, data);
+                        events.emit('changedata', parent, key, value);
+                        events.emit('changedata_' + key, parent, value);
                     }
                 }
 
