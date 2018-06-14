@@ -344,7 +344,7 @@ var Vector3 = new Class({
     },
 
     /**
-     * Calculate the distance between this Vector, and the given Vector, squared.
+     * Calculate the distance between this Vector and the given Vector, squared.
      *
      * @method Phaser.Math.Vector3#distanceSq
      * @since 3.0.0
