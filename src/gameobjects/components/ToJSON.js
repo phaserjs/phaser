@@ -39,7 +39,7 @@
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to export as JSON.
  *
- * @return {JSONGameObject} The JSON representation of the Game Object.
+ * @return {JSONGameObject} A JSON representation of the Game Object.
  */
 var ToJSON = function (gameObject)
 {
