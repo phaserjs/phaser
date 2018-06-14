@@ -6,7 +6,12 @@
 
 ### Updates
 
+* DataManager.removeValue (and by extension the `remove` method too) will not emit the parent of the DataManager as the 2nd argument in the `removedata` event, to keep it consistent with the set events (thanks @rexrainbow)
+
 ### Bug Fixes
+
+* The DataManager `changedata` event was emitting the original value of the data instead of new value (thanks @iamchristopher) 
+* The LoaderPlugin didn't emit the `filecomplete` event if any of files failed to load, causing it to fail to run the Scene `create` function as well. Fix #3750 (thanks @NokFrt)
 
 
 

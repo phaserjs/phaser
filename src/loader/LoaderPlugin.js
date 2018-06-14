@@ -848,6 +848,8 @@ var LoaderPlugin = new Class({
             this._deleteQueue.set(file);
 
             this.emit('loaderror', file);
+
+            this.fileProcessComplete(file);
         }
     },
 
@@ -894,6 +896,7 @@ var LoaderPlugin = new Class({
         this.queue.delete(file);
 
         //  Nothing left to do?
+
         if (this.list.size === 0 && this.inflight.size === 0 && this.queue.size === 0)
         {
             this.loadComplete();
