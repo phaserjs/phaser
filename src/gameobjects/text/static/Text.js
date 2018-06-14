@@ -542,9 +542,7 @@ var Text = new Class({
     /**
      * Set the text style.
      *
-     * For example:
-     *
-     * ```javascript
+     * @example
      * text.setStyle({
      *     fontSize: '64px',
      *     fontFamily: 'Arial',
@@ -552,7 +550,6 @@ var Text = new Class({
      *     align: 'center',
      *     backgroundColor: '#ff00ff'
      * });
-     * ```
      *
      * @method Phaser.GameObjects.Text#setStyle
      * @since 3.0.0
