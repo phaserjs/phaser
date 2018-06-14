@@ -140,7 +140,7 @@ var SceneManager = new Class({
                 });
             }
         }
-        
+
         game.events.once('ready', this.bootQueue, this);
     },
 
@@ -1011,7 +1011,7 @@ var SceneManager = new Class({
 
     /**
      * Runs the given Scene, but does not change the state of this Scene.
-     * 
+     *
      * If the given Scene is paused, it will resume it. If sleeping, it will wake it.
      * If not running at all, it will be started.
      *
@@ -1022,7 +1022,7 @@ var SceneManager = new Class({
      * @since 3.10.0
      *
      * @param {string} key - The Scene to run.
-     * @param {object} [data] - A data object that will be passed to the Scene that is run _only if the Scene isn't asleep or paused_.
+     * @param {object} [data] - A data object that will be passed to the Scene on start, wake, or resume.
      *
      * @return {Phaser.Scenes.SceneManager} This Scene Manager.
      */
@@ -1038,12 +1038,12 @@ var SceneManager = new Class({
         if (scene.sys.isSleeping())
         {
             //  Sleeping?
-            scene.sys.wake();
+            scene.sys.wake(data);
         }
         else if (scene.sys.isBooted && !scene.sys.isActive())
         {
             //  Paused?
-            scene.sys.resume();
+            scene.sys.resume(data);
         }
         else
         {
