@@ -568,19 +568,19 @@ var Graphics = new Class({
      */
     fillRoundedRect: function (x, y, width, height, radius)
     {
-        if (typeof radius === 'number') 
+        if (typeof radius === 'number')
         {
             radius = {tl: radius, tr: radius, br: radius, bl: radius};
-        } 
-        else if (typeof radius === 'object') 
+        }
+        else if (typeof radius === 'object')
         {
             var defaultRadius = {tl: 0, tr: 0, br: 0, bl: 0};
-            for (var side in defaultRadius) 
+            for (var side in defaultRadius)
             {
                 radius[side] = radius[side] || defaultRadius[side];
             }
         }
-        else 
+        else
         {
             radius = {tl: 20, tr: 20, br: 20, bl: 20};
         }
@@ -620,19 +620,19 @@ var Graphics = new Class({
      */
     strokeRoundedRect: function (x, y, width, height, radius)
     {
-        if (typeof radius === 'number') 
+        if (typeof radius === 'number')
         {
             radius = {tl: radius, tr: radius, br: radius, bl: radius};
-        } 
-        else if (typeof radius === 'object') 
+        }
+        else if (typeof radius === 'object')
         {
             var defaultRadius = {tl: 0, tr: 0, br: 0, bl: 0};
-            for (var side in defaultRadius) 
+            for (var side in defaultRadius)
             {
                 radius[side] = radius[side] || defaultRadius[side];
             }
         }
-        else 
+        else
         {
             radius = {tl: 20, tr: 20, br: 20, bl: 20};
         }
