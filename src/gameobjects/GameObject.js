@@ -182,7 +182,7 @@ var GameObject = new Class({
      *
      * @param {boolean} value - True if this Game Object should be set as active, false if not.
      *
-     * @return {Phaser.GameObjects.GameObject} This GameObject.
+     * @return {this} This GameObject.
      */
     setActive: function (value)
     {
@@ -200,7 +200,7 @@ var GameObject = new Class({
      *
      * @param {string} value - The name to be given to this Game Object.
      *
-     * @return {Phaser.GameObjects.GameObject} This GameObject.
+     * @return {this} This GameObject.
      */
     setName: function (value)
     {
@@ -216,7 +216,7 @@ var GameObject = new Class({
      * @since 3.0.0
      * @see Phaser.Data.DataManager
      *
-     * @return {Phaser.GameObjects.GameObject} This GameObject.
+     * @return {this} This GameObject.
      */
     setDataEnabled: function ()
     {
@@ -347,7 +347,7 @@ var GameObject = new Class({
      * @param {HitAreaCallback} [callback] - A callback to be invoked when the Game Object is interacted with. If you provide a shape you must also provide a callback.
      * @param {boolean} [dropZone=false] - Should this Game Object be treated as a drop zone target?
      *
-     * @return {Phaser.GameObjects.GameObject} This GameObject.
+     * @return {this} This GameObject.
      */
     setInteractive: function (shape, callback, dropZone)
     {
@@ -368,7 +368,7 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#disableInteractive
      * @since 3.7.0
      *
-     * @return {Phaser.GameObjects.GameObject} This GameObject.
+     * @return {this} This GameObject.
      */
     disableInteractive: function ()
     {
@@ -396,7 +396,7 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#removeInteractive
      * @since 3.7.0
      *
-     * @return {Phaser.GameObjects.GameObject} This GameObject.
+     * @return {this} This GameObject.
      */
     removeInteractive: function ()
     {
