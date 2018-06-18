@@ -574,11 +574,10 @@ var Graphics = new Class({
         }
         else if (typeof radius === 'object')
         {
-            var defaultRadius = {tl: 0, tr: 0, br: 0, bl: 0};
-            for (var side in defaultRadius)
-            {
-                radius[side] = radius[side] || defaultRadius[side];
-            }
+            radius.tl = radius.tl || 0;
+            radius.tr = radius.tr || 0;
+            radius.br = radius.br || 0;
+            radius.bl = radius.bl || 0;
         }
         else
         {
@@ -626,11 +625,10 @@ var Graphics = new Class({
         }
         else if (typeof radius === 'object')
         {
-            var defaultRadius = {tl: 0, tr: 0, br: 0, bl: 0};
-            for (var side in defaultRadius)
-            {
-                radius[side] = radius[side] || defaultRadius[side];
-            }
+            radius.tl = radius.tl || 0;
+            radius.tr = radius.tr || 0;
+            radius.br = radius.br || 0;
+            radius.bl = radius.bl || 0;
         }
         else
         {
