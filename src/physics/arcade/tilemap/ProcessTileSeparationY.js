@@ -17,10 +17,12 @@ var ProcessTileSeparationY = function (body, y)
 {
     if (y < 0)
     {
+        body.blocked.none = false;
         body.blocked.up = true;
     }
     else if (y > 0)
     {
+        body.blocked.none = false;
         body.blocked.down = true;
     }
 
