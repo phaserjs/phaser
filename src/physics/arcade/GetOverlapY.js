@@ -49,11 +49,13 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
 
             if (body2.physicsType === CONST.STATIC_BODY)
             {
+                body1.blocked.none = false;
                 body1.blocked.down = true;
             }
 
             if (body1.physicsType === CONST.STATIC_BODY)
             {
+                body2.blocked.none = false;
                 body2.blocked.up = true;
             }
         }
@@ -77,11 +79,13 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
 
             if (body2.physicsType === CONST.STATIC_BODY)
             {
+                body1.blocked.none = false;
                 body1.blocked.up = true;
             }
 
             if (body1.physicsType === CONST.STATIC_BODY)
             {
+                body2.blocked.none = false;
                 body2.blocked.down = true;
             }
         }
