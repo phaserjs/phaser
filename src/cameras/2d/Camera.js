@@ -4,6 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var CenterOn = require('../../geom/rectangle/CenterOn');
 var Clamp = require('../../math/Clamp');
 var Class = require('../../utils/Class');
 var DegToRad = require('../../math/DegToRad');
@@ -343,6 +344,28 @@ var Camera = new Class({
          * @since 3.9.0
          */
         this.followOffset = new Vector2();
+
+        /**
+         * The mid-point of the Camera in 'world' coordinates.
+         * 
+         * This value is updated in the preRender method, after the scroll values and follower
+         * update have been calculated.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#midPoint
+         * @type {Phaser.Math.Vector2}
+         * @readOnly
+         * @since 3.11.0
+         */
+        this.midPoint = new Vector2(width / 2, height / 2);
+
+        /**
+         * Camera dead zone.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#deadzone
+         * @type {?Phaser.Geom.Rectangle}
+         * @since 3.11.0
+         */
+        this.deadzone = null;
 
         /**
          * Internal follow target reference.
@@ -726,11 +749,45 @@ var Camera = new Class({
         var originX = width / 2;
         var originY = height / 2;
         var follow = this._follow;
+        var deadzone = this.deadzone;
 
         if (follow)
         {
-            this.scrollX = Linear(this.scrollX, (follow.x - this.followOffset.x) - originX, this.lerp.x) / zoom;
-            this.scrollY = Linear(this.scrollY, (follow.y - this.followOffset.y) - originY, this.lerp.y) / zoom;
+            var fx = (follow.x - this.followOffset.x);
+            var fy = (follow.y - this.followOffset.y);
+
+            this._fx = fx;
+            this._fy = fy;
+
+            if (deadzone)
+            {
+                CenterOn(deadzone, this.midPoint.x, this.midPoint.y);
+
+                if (fx <= deadzone.x)
+                {
+                    this.scrollX = Linear(fx, deadzone.x, this.lerp.x) / zoom;
+                    this.scrollX -= deadzone.x;
+                    console.log(this.scrollX);
+                    // debugger;
+                }
+                else if (fx >= deadzone.right)
+                {
+                    this.scrollX = Linear(fx, deadzone.right, this.lerp.x) / zoom;
+                    this.scrollX -= deadzone.right;
+                    console.log(this.scrollX);
+                    // debugger;
+                }
+
+                // if (fy < deadzone.y || fy > deadzone.bottom)
+                // {
+                //     this.scrollY = Linear(this.scrollY, fy - originY, this.lerp.y) / zoom;
+                // }
+            }
+            else
+            {
+                this.scrollX = Linear(this.scrollX, fx, this.lerp.x) / zoom;
+                this.scrollY = Linear(this.scrollY, fy, this.lerp.y) / zoom;
+            }
         }
 
         if (this.useBounds)
@@ -764,6 +821,8 @@ var Camera = new Class({
             this.scrollX = Math.round(this.scrollX);
             this.scrollY = Math.round(this.scrollY);
         }
+
+        this.midPoint.set(this.scrollX + originX, this.scrollY + originY);
 
         matrix.loadIdentity();
         matrix.scale(resolution, resolution);
