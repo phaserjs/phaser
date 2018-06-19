@@ -549,6 +549,108 @@ var Graphics = new Class({
     },
 
     /**
+     * Fill a rounded rectangle with the given position, size and radius.
+     *
+     * @method Phaser.GameObjects.Graphics#fillRoundedRect
+     * @since 3.11.0
+     *
+     * @param {number} x - The x coordinate of the top-left of the rectangle.
+     * @param {number} y - The y coordinate of the top-left of the rectangle.
+     * @param {number} width - The width of the rectangle.
+     * @param {number} height - The height of the rectangle.
+     * @param {number} [radius = 20] - The corner radius; It can also be an object to specify different radii for corners
+     * @param {number} [radius.tl = 0] Top left
+     * @param {number} [radius.tr = 0] Top right
+     * @param {number} [radius.br = 0] Bottom right
+     * @param {number} [radius.bl = 0] Bottom left
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
+    fillRoundedRect: function (x, y, width, height, radius)
+    {
+        if (typeof radius === 'number')
+        {
+            radius = {tl: radius, tr: radius, br: radius, bl: radius};
+        }
+        else if (typeof radius === 'object')
+        {
+            radius.tl = radius.tl || 0;
+            radius.tr = radius.tr || 0;
+            radius.br = radius.br || 0;
+            radius.bl = radius.bl || 0;
+        }
+        else
+        {
+            radius = {tl: 20, tr: 20, br: 20, bl: 20};
+        }
+
+        this.beginPath();
+        this.moveTo(x + radius.tl, y);
+        this.lineTo(x + width - radius.tr, y);
+        this.arc(x + width - radius.tr, y + radius.tr, radius.tr, -MATH_CONST.TAU, 0);
+        this.lineTo(x + width, y + height - radius.br);
+        this.arc(x + width - radius.br, y + height - radius.br, radius.br, 0, MATH_CONST.TAU);
+        this.lineTo(x + radius.bl, y + height);
+        this.arc(x + radius.bl, y + height - radius.bl, radius.bl, MATH_CONST.TAU, Math.PI);
+        this.lineTo(x, y + radius.tl);
+        this.arc(x + radius.tl, y + radius.tl, radius.tl, -Math.PI, -MATH_CONST.TAU);
+        this.fillPath();
+
+        return this;
+    },
+
+    /**
+     * Stroke a rounded rectangle with the given position, size and radius.
+     *
+     * @method Phaser.GameObjects.Graphics#strokeRoundedRect
+     * @since 3.11.0
+     *
+     * @param {number} x - The x coordinate of the top-left of the rectangle.
+     * @param {number} y - The y coordinate of the top-left of the rectangle.
+     * @param {number} width - The width of the rectangle.
+     * @param {number} height - The height of the rectangle.
+     * @param {number} [radius = 20] - The corner radius; It can also be an object to specify different radii for corners
+     * @param {number} [radius.tl = 0] Top left
+     * @param {number} [radius.tr = 0] Top right
+     * @param {number} [radius.br = 0] Bottom right
+     * @param {number} [radius.bl = 0] Bottom left
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
+    strokeRoundedRect: function (x, y, width, height, radius)
+    {
+        if (typeof radius === 'number')
+        {
+            radius = {tl: radius, tr: radius, br: radius, bl: radius};
+        }
+        else if (typeof radius === 'object')
+        {
+            radius.tl = radius.tl || 0;
+            radius.tr = radius.tr || 0;
+            radius.br = radius.br || 0;
+            radius.bl = radius.bl || 0;
+        }
+        else
+        {
+            radius = {tl: 20, tr: 20, br: 20, bl: 20};
+        }
+
+        this.beginPath();
+        this.moveTo(x + radius.tl, y);
+        this.lineTo(x + width - radius.tr, y);
+        this.arc(x + width - radius.tr, y + radius.tr, radius.tr, -MATH_CONST.TAU, 0);
+        this.lineTo(x + width, y + height - radius.br);
+        this.arc(x + width - radius.br, y + height - radius.br, radius.br, 0, MATH_CONST.TAU);
+        this.lineTo(x + radius.bl, y + height);
+        this.arc(x + radius.bl, y + height - radius.bl, radius.bl, MATH_CONST.TAU, Math.PI);
+        this.lineTo(x, y + radius.tl);
+        this.arc(x + radius.tl, y + radius.tl, radius.tl, -Math.PI, -MATH_CONST.TAU);
+        this.strokePath();
+
+        return this;
+    },
+
+    /**
      * Fill the given point.
      *
      * Draws a square at the given position, 1 pixel in size by default.
