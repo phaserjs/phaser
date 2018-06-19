@@ -803,7 +803,7 @@ var InputPlugin = new Class({
             {
                 gameObject = currentlyOver[i];
 
-                if (gameObject.input.draggable)
+                if (gameObject.input.draggable && (gameObject.input.dragState === 0))
                 {
                     draglist.push(gameObject);
                 }
