@@ -1047,7 +1047,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#startFollow
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Particles.Particle} target - The Game Object to follow.
+     * @param {Phaser.GameObjects.GameObject} target - The Game Object to follow.
      * @param {float} [offsetX=0] - Horizontal offset of the particle origin from the Game Object.
      * @param {float} [offsetY=0] - Vertical offset of the particle origin from the Game Object.
      * @param {boolean} [trackVisible=false] - Whether the emitter's visible state will track the target's visible state.
