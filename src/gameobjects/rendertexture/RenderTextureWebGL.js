@@ -27,12 +27,21 @@ var RenderTextureWebGL = {
     draw: function (texture, frame, x, y)
     {
         var glTexture = texture.source[frame.sourceIndex].glTexture;
+
         var tint = (this.globalTint >> 16) + (this.globalTint & 0xff00) + ((this.globalTint & 0xff) << 16);
+
         this.renderer.setFramebuffer(this.framebuffer);
-        this.renderer.pipelines.TextureTintPipeline.projOrtho(0, this.renderer.pipelines.TextureTintPipeline.width, 0, this.renderer.pipelines.TextureTintPipeline.height, -1000.0, 1000.0);
-        this.renderer.pipelines.TextureTintPipeline.drawTexture(glTexture, x, y, tint, this.globalAlpha, frame.cutX, frame.cutY, frame.cutWidth, frame.cutHeight, this.currentMatrix, null, this);
+
+        var ttp = this.renderer.pipelines.TextureTintPipeline;
+
+        ttp.projOrtho(0, ttp.width, 0, ttp.height, -1000.0, 1000.0);
+
+        ttp.drawTexture(glTexture, x, y, tint, this.globalAlpha, frame.cutX, frame.cutY, frame.cutWidth, frame.cutHeight, this.currentMatrix, null, this);
+
         this.renderer.setFramebuffer(null);
-        this.renderer.pipelines.TextureTintPipeline.projOrtho(0, this.renderer.pipelines.TextureTintPipeline.width, this.renderer.pipelines.TextureTintPipeline.height, 0, -1000.0, 1000.0);
+
+        ttp.projOrtho(0, ttp.width, ttp.height, 0, -1000.0, 1000.0);
+
         return this;
     }
 

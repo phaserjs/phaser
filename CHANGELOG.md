@@ -18,12 +18,13 @@
 
 * The DataManager `changedata` event was emitting the original value of the data instead of new value (thanks @iamchristopher) 
 * The LoaderPlugin didn't emit the `filecomplete` event if any of files failed to load, causing it to fail to run the Scene `create` function as well. Fix #3750 (thanks @NokFrt)
+* Fix setter calls in BuildGameObjectAnimation so it will now properly set the delay, repeat, repeat delay and yoyo of a config based animation (thanks @DannyT)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@DannyT @squilibob @dvdbrink @t1gu1 
+@DannyT @squilibob @dvdbrink @t1gu1 @cyantree @DrevanTonder
 
 Also, a special mention to @andygroff for his excellent work enhancing the search box on the examples site.
 
