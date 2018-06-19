@@ -674,6 +674,8 @@ var Tween = new Class({
 
                 onStart.func.apply(onStart.scope, onStart.params);
             }
+
+            this.parent.makeActive(this);
         }
     },
 
