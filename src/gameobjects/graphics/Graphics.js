@@ -10,6 +10,7 @@ var Commands = require('./Commands');
 var Components = require('../components');
 var Ellipse = require('../../geom/ellipse/');
 var GameObject = require('../GameObject');
+var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
 var MATH_CONST = require('../../math/const');
 var Render = require('./GraphicsRender');
@@ -559,41 +560,40 @@ var Graphics = new Class({
      * @param {number} width - The width of the rectangle.
      * @param {number} height - The height of the rectangle.
      * @param {number} [radius = 20] - The corner radius; It can also be an object to specify different radii for corners
-     * @param {number} [radius.tl = 0] Top left
-     * @param {number} [radius.tr = 0] Top right
-     * @param {number} [radius.br = 0] Bottom right
-     * @param {number} [radius.bl = 0] Bottom left
+     * @param {number} [radius.tl = 20] Top left
+     * @param {number} [radius.tr = 20] Top right
+     * @param {number} [radius.br = 20] Bottom right
+     * @param {number} [radius.bl = 20] Bottom left
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
     fillRoundedRect: function (x, y, width, height, radius)
     {
-        if (typeof radius === 'number')
+        if (radius === undefined) { radius = 20; }
+
+        var tl = radius;
+        var tr = radius;
+        var bl = radius;
+        var br = radius;
+
+        if (typeof radius !== 'number')
         {
-            radius = {tl: radius, tr: radius, br: radius, bl: radius};
-        }
-        else if (typeof radius === 'object')
-        {
-            radius.tl = radius.tl || 0;
-            radius.tr = radius.tr || 0;
-            radius.br = radius.br || 0;
-            radius.bl = radius.bl || 0;
-        }
-        else
-        {
-            radius = {tl: 20, tr: 20, br: 20, bl: 20};
+            tl = GetFastValue(radius, 'tl', 20);
+            tr = GetFastValue(radius, 'tr', 20);
+            bl = GetFastValue(radius, 'bl', 20);
+            br = GetFastValue(radius, 'br', 20);
         }
 
         this.beginPath();
-        this.moveTo(x + radius.tl, y);
-        this.lineTo(x + width - radius.tr, y);
-        this.arc(x + width - radius.tr, y + radius.tr, radius.tr, -MATH_CONST.TAU, 0);
-        this.lineTo(x + width, y + height - radius.br);
-        this.arc(x + width - radius.br, y + height - radius.br, radius.br, 0, MATH_CONST.TAU);
-        this.lineTo(x + radius.bl, y + height);
-        this.arc(x + radius.bl, y + height - radius.bl, radius.bl, MATH_CONST.TAU, Math.PI);
-        this.lineTo(x, y + radius.tl);
-        this.arc(x + radius.tl, y + radius.tl, radius.tl, -Math.PI, -MATH_CONST.TAU);
+        this.moveTo(x + tl, y);
+        this.lineTo(x + width - tr, y);
+        this.arc(x + width - tr, y + tr, tr, -MATH_CONST.TAU, 0);
+        this.lineTo(x + width, y + height - br);
+        this.arc(x + width - br, y + height - br, br, 0, MATH_CONST.TAU);
+        this.lineTo(x + bl, y + height);
+        this.arc(x + bl, y + height - bl, bl, MATH_CONST.TAU, Math.PI);
+        this.lineTo(x, y + tl);
+        this.arc(x + tl, y + tl, tl, -Math.PI, -MATH_CONST.TAU);
         this.fillPath();
 
         return this;
@@ -610,41 +610,40 @@ var Graphics = new Class({
      * @param {number} width - The width of the rectangle.
      * @param {number} height - The height of the rectangle.
      * @param {number} [radius = 20] - The corner radius; It can also be an object to specify different radii for corners
-     * @param {number} [radius.tl = 0] Top left
-     * @param {number} [radius.tr = 0] Top right
-     * @param {number} [radius.br = 0] Bottom right
-     * @param {number} [radius.bl = 0] Bottom left
+     * @param {number} [radius.tl = 20] Top left
+     * @param {number} [radius.tr = 20] Top right
+     * @param {number} [radius.br = 20] Bottom right
+     * @param {number} [radius.bl = 20] Bottom left
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
     strokeRoundedRect: function (x, y, width, height, radius)
     {
-        if (typeof radius === 'number')
+        if (radius === undefined) { radius = 20; }
+
+        var tl = radius;
+        var tr = radius;
+        var bl = radius;
+        var br = radius;
+
+        if (typeof radius !== 'number')
         {
-            radius = {tl: radius, tr: radius, br: radius, bl: radius};
-        }
-        else if (typeof radius === 'object')
-        {
-            radius.tl = radius.tl || 0;
-            radius.tr = radius.tr || 0;
-            radius.br = radius.br || 0;
-            radius.bl = radius.bl || 0;
-        }
-        else
-        {
-            radius = {tl: 20, tr: 20, br: 20, bl: 20};
+            tl = GetFastValue(radius, 'tl', 20);
+            tr = GetFastValue(radius, 'tr', 20);
+            bl = GetFastValue(radius, 'bl', 20);
+            br = GetFastValue(radius, 'br', 20);
         }
 
         this.beginPath();
-        this.moveTo(x + radius.tl, y);
-        this.lineTo(x + width - radius.tr, y);
-        this.arc(x + width - radius.tr, y + radius.tr, radius.tr, -MATH_CONST.TAU, 0);
-        this.lineTo(x + width, y + height - radius.br);
-        this.arc(x + width - radius.br, y + height - radius.br, radius.br, 0, MATH_CONST.TAU);
-        this.lineTo(x + radius.bl, y + height);
-        this.arc(x + radius.bl, y + height - radius.bl, radius.bl, MATH_CONST.TAU, Math.PI);
-        this.lineTo(x, y + radius.tl);
-        this.arc(x + radius.tl, y + radius.tl, radius.tl, -Math.PI, -MATH_CONST.TAU);
+        this.moveTo(x + tl, y);
+        this.lineTo(x + width - tr, y);
+        this.arc(x + width - tr, y + tr, tr, -MATH_CONST.TAU, 0);
+        this.lineTo(x + width, y + height - br);
+        this.arc(x + width - br, y + height - br, br, 0, MATH_CONST.TAU);
+        this.lineTo(x + bl, y + height);
+        this.arc(x + bl, y + height - bl, bl, MATH_CONST.TAU, Math.PI);
+        this.lineTo(x, y + tl);
+        this.arc(x + tl, y + tl, tl, -Math.PI, -MATH_CONST.TAU);
         this.strokePath();
 
         return this;
