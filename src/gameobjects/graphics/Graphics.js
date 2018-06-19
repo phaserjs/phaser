@@ -1042,7 +1042,9 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Saves the state of the Graphics by pushing the current state onto a stack.
+     *
+     * The most recently saved state can then be restored with {@link Phaser.GameObjects.Graphics#restore}.
      *
      * @method Phaser.GameObjects.Graphics#save
      * @since 3.0.0
@@ -1059,7 +1061,11 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Restores the most recently saved state of the Graphics by popping from the state stack.
+     *
+     * Use {@link Phaser.GameObjects.Graphics#save} to save the current state, and call this afterwards to restore that state.
+     *
+     * If there is no saved state, this command does nothing.
      *
      * @method Phaser.GameObjects.Graphics#restore
      * @since 3.0.0
