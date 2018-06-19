@@ -20,9 +20,9 @@ var Render = require('./GraphicsRender');
  *
  * @typedef {object} GraphicsLineStyle
  *
- * @property {number} width - The stroke width.
- * @property {number} color - The stroke color.
- * @property {number} alpha - The stroke alpha.
+ * @property {number} [width] - The stroke width.
+ * @property {number} [color] - The stroke color.
+ * @property {number} [alpha] - The stroke alpha.
  */
 
 /**
@@ -30,8 +30,8 @@ var Render = require('./GraphicsRender');
  *
  * @typedef {object} GraphicsFillStyle
  *
- * @property {number} color - The fill color.
- * @property {number} alpha - The fill alpha.
+ * @property {number} [color] - The fill color.
+ * @property {number} [alpha] - The fill alpha.
  */
 
 /**
@@ -39,8 +39,8 @@ var Render = require('./GraphicsRender');
  *
  * @typedef {object} GraphicsStyles
  *
- * @property {GraphicsLineStyle} lineStyle - The style applied to shape outlines.
- * @property {GraphicsFillStyle} fillStyle - The style applied to shape areas.
+ * @property {GraphicsLineStyle} [lineStyle] - The style applied to shape outlines.
+ * @property {GraphicsFillStyle} [fillStyle] - The style applied to shape areas.
  */
 
 /**
@@ -49,8 +49,8 @@ var Render = require('./GraphicsRender');
  * @typedef {object} GraphicsOptions
  * @extends GraphicsStyles
  *
- * @property {number} x - The x coordinate of the Graphics.
- * @property {number} y - The y coordinate of the Graphics.
+ * @property {number} [x] - The x coordinate of the Graphics.
+ * @property {number} [y] - The y coordinate of the Graphics.
  */
 
 /**
@@ -110,7 +110,7 @@ var Render = require('./GraphicsRender');
  * @extends Phaser.GameObjects.Components.ScrollFactor
  *
  * @param {Phaser.Scene} scene - The Scene to which this Graphics object belongs.
- * @param {GraphicsOptions} options - Options that set the position and default style of this Graphics object.
+ * @param {GraphicsOptions} [options] - Options that set the position and default style of this Graphics object.
  */
 var Graphics = new Class({
 
