@@ -466,8 +466,8 @@ var Camera = new Class({
 
                 this.midPoint.set(fx, fy);
     
-                this.scrollX = fx - originX / this.zoom;
-                this.scrollY = fy - originY / this.zoom;
+                this.scrollX = fx - originX;
+                this.scrollY = fy - originY;
             }
 
             CenterOn(this.deadzone, this.midPoint.x, this.midPoint.y);
@@ -851,26 +851,26 @@ var Camera = new Class({
             {
                 if (fx < deadzone.x)
                 {
-                    this.scrollX = Linear(this.scrollX, this.scrollX - (deadzone.x - fx), this.lerp.x) / zoom;
+                    this.scrollX = Linear(this.scrollX, this.scrollX - (deadzone.x - fx), this.lerp.x);
                 }
                 else if (fx > deadzone.right)
                 {
-                    this.scrollX = Linear(this.scrollX, this.scrollX + (fx - deadzone.right), this.lerp.x) / zoom;
+                    this.scrollX = Linear(this.scrollX, this.scrollX + (fx - deadzone.right), this.lerp.x);
                 }
 
                 if (fy < deadzone.y)
                 {
-                    this.scrollY = Linear(this.scrollY, this.scrollY - (deadzone.y - fy), this.lerp.y) / zoom;
+                    this.scrollY = Linear(this.scrollY, this.scrollY - (deadzone.y - fy), this.lerp.y);
                 }
                 else if (fy > deadzone.bottom)
                 {
-                    this.scrollY = Linear(this.scrollY, this.scrollY + (fy - deadzone.bottom), this.lerp.y) / zoom;
+                    this.scrollY = Linear(this.scrollY, this.scrollY + (fy - deadzone.bottom), this.lerp.y);
                 }
             }
             else
             {
-                this.scrollX = Linear(this.scrollX, fx - originX, this.lerp.x) / zoom;
-                this.scrollY = Linear(this.scrollY, fy - originY, this.lerp.y) / zoom;
+                this.scrollX = Linear(this.scrollX, fx - originX, this.lerp.x);
+                this.scrollY = Linear(this.scrollY, fy - originY, this.lerp.y);
             }
         }
 
@@ -1335,8 +1335,8 @@ var Camera = new Class({
 
         this.midPoint.set(fx, fy);
 
-        this.scrollX = fx - originX / this.zoom;
-        this.scrollY = fy - originY / this.zoom;
+        this.scrollX = fx - originX;
+        this.scrollY = fy - originY;
 
         return this;
     },
