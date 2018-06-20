@@ -41,7 +41,7 @@ var Sprite3D = new Class({
         GameObject.call(this, scene, 'Sprite3D');
 
         /**
-         * [description]
+         * The encapsulated Sprite.
          *
          * @name Phaser.GameObjects.Sprite3D#gameObject
          * @type {Phaser.GameObjects.GameObject}
@@ -50,7 +50,7 @@ var Sprite3D = new Class({
         this.gameObject = new Sprite(scene, 0, 0, texture, frame);
 
         /**
-         * [description]
+         * The position of the Sprite.
          *
          * @name Phaser.GameObjects.Sprite3D#position
          * @type {Phaser.Math.Vector4}
@@ -59,7 +59,7 @@ var Sprite3D = new Class({
         this.position = new Vector4(x, y, z);
 
         /**
-         * [description]
+         * The 2D size of the Sprite.
          *
          * @name Phaser.GameObjects.Sprite3D#size
          * @type {Phaser.Math.Vector2}
@@ -68,7 +68,7 @@ var Sprite3D = new Class({
         this.size = new Vector2(this.gameObject.width, this.gameObject.height);
 
         /**
-         * [description]
+         * The 2D scale of the Sprite.
          *
          * @name Phaser.GameObjects.Sprite3D#scale
          * @type {Phaser.Math.Vector2}
@@ -77,7 +77,7 @@ var Sprite3D = new Class({
         this.scale = new Vector2(1, 1);
 
         /**
-         * [description]
+         * Whether to automatically set the horizontal scale of the encapsulated Sprite.
          *
          * @name Phaser.GameObjects.Sprite3D#adjustScaleX
          * @type {boolean}
@@ -87,7 +87,7 @@ var Sprite3D = new Class({
         this.adjustScaleX = true;
 
         /**
-         * [description]
+         * Whether to automatically set the vertical scale of the encapsulated Sprite.
          *
          * @name Phaser.GameObjects.Sprite3D#adjustScaleY
          * @type {boolean}
@@ -97,7 +97,7 @@ var Sprite3D = new Class({
         this.adjustScaleY = true;
 
         /**
-         * [description]
+         * The visible state of the Game Object.
          *
          * @name Phaser.GameObjects.Sprite3D#_visible
          * @type {boolean}
@@ -109,7 +109,7 @@ var Sprite3D = new Class({
     },
 
     /**
-     * [description]
+     * Project this Sprite onto the given 3D Camera.
      *
      * @method Phaser.GameObjects.Sprite3D#project
      * @since 3.0.0
@@ -152,12 +152,12 @@ var Sprite3D = new Class({
     },
 
     /**
-     * [description]
+     * Set the visible state of the Game Object.
      *
      * @method Phaser.GameObjects.Sprite3D#setVisible
      * @since 3.0.0
      *
-     * @param {boolean} value - [description]
+     * @param {boolean} value - The visible state of the Game Object.
      *
      * @return {Phaser.GameObjects.Sprite3D} This Sprite3D Object.
      */
