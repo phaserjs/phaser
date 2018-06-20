@@ -105,7 +105,9 @@ var Camera = new Class({
         this.name = '';
 
         /**
-         * The x position of the Camera, relative to the top-left of the game canvas.
+         * The x position of the Camera viewport, relative to the top-left of the game canvas.
+         * The viewport is the area into which the camera renders.
+         * To adjust the position the camera is looking at in the game world, see the `scrollX` value.
          *
          * @name Phaser.Cameras.Scene2D.Camera#x
          * @type {number}
@@ -115,6 +117,8 @@ var Camera = new Class({
 
         /**
          * The y position of the Camera, relative to the top-left of the game canvas.
+         * The viewport is the area into which the camera renders.
+         * To adjust the position the camera is looking at in the game world, see the `scrollY` value.
          *
          * @name Phaser.Cameras.Scene2D.Camera#y
          * @type {number}
@@ -229,6 +233,7 @@ var Camera = new Class({
 
         /**
          * The rotation of the Camera. This influences the rendering of all Game Objects visible by this camera.
+         * It does not rotate the camera viewport.
          *
          * @name Phaser.Cameras.Scene2D.Camera#rotation
          * @type {number}
@@ -312,6 +317,7 @@ var Camera = new Class({
          * @name Phaser.Cameras.Scene2D.Camera#culledObjects
          * @type {Phaser.GameObjects.GameObject[]}
          * @default []
+         * @private
          * @since 3.0.0
          */
         this.culledObjects = [];
@@ -348,8 +354,10 @@ var Camera = new Class({
         /**
          * The mid-point of the Camera in 'world' coordinates.
          * 
+         * Use it to obtain exactly where in the world the center of the camera is currently looking.
+         * 
          * This value is updated in the preRender method, after the scroll values and follower
-         * update have been calculated.
+         * have been processed. 
          *
          * @name Phaser.Cameras.Scene2D.Camera#midPoint
          * @type {Phaser.Math.Vector2}
@@ -359,7 +367,23 @@ var Camera = new Class({
         this.midPoint = new Vector2(width / 2, height / 2);
 
         /**
-         * Camera dead zone.
+         * The Camera dead zone.
+         * 
+         * The deadzone is only used when the camera is following a target.
+         * 
+         * It defines a rectangular region within which if the target is present, the camera will not scroll.
+         * If the target moves outside of this area, the camera will begin scrolling in order to follow it.
+         * 
+         * The `lerp` values that you can set for a follower target also apply when using a deadzone.
+         * 
+         * You can directly set this property to be an instance of a Rectangle. Or, you can use the
+         * `setDeadzone` method for a chainable approach.
+         * 
+         * The rectangle you provide can have its dimensions adjusted dynamically, however, please
+         * note that its position is updated every frame, as it is constantly re-centered on the cameras mid point.
+         * 
+         * Calling `setDeadzone` with no arguments will reset an active deadzone, as will setting this property
+         * to `null`.
          *
          * @name Phaser.Cameras.Scene2D.Camera#deadzone
          * @type {?Phaser.Geom.Rectangle}
@@ -388,6 +412,68 @@ var Camera = new Class({
          * @since 3.0.0
          */
         this._id = 0;
+    },
+
+    /**
+     * Sets the Camera dead zone.
+     * 
+     * The deadzone is only used when the camera is following a target.
+     * 
+     * It defines a rectangular region within which if the target is present, the camera will not scroll.
+     * If the target moves outside of this area, the camera will begin scrolling in order to follow it.
+     * 
+     * The deadzone rectangle is re-positioned every frame so that it is centered on the mid-point
+     * of the camera. This allows you to use the object for additional game related checks, such as
+     * testing if an object is within it or not via a Rectangle.contains call.
+     * 
+     * The `lerp` values that you can set for a follower target also apply when using a deadzone.
+     * 
+     * Calling this method with no arguments will reset an active deadzone.
+     *
+     * @method Phaser.Cameras.Scene2D.Camera#setDeadzone
+     * @since 3.11.0
+     * 
+     * @param {number} [width] - The width of the deadzone rectangle in pixels. If not specified the deadzone is removed.
+     * @param {number} [height] - The height of the deadzone rectangle in pixels.
+     *
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     */
+    setDeadzone: function (width, height)
+    {
+        if (width === undefined)
+        {
+            this.deadzone = null;
+        }
+        else
+        {
+            if (this.deadzone)
+            {
+                this.deadzone.width = width;
+                this.deadzone.height = height;
+            }
+            else
+            {
+                this.deadzone = new Rectangle(0, 0, width, height);
+            }
+
+            if (this._follow)
+            {
+                var originX = this.width / 2;
+                var originY = this.height / 2;
+
+                var fx = this._follow.x - this.followOffset.x;
+                var fy = this._follow.y - this.followOffset.y;
+
+                this.midPoint.set(fx, fy);
+    
+                this.scrollX = fx - originX / this.zoom;
+                this.scrollY = fy - originY / this.zoom;
+            }
+
+            CenterOn(this.deadzone, this.midPoint.x, this.midPoint.y);
+        }
+
+        return this;
     },
 
     /**
@@ -751,42 +837,40 @@ var Camera = new Class({
         var follow = this._follow;
         var deadzone = this.deadzone;
 
+        if (deadzone)
+        {
+            CenterOn(deadzone, this.midPoint.x, this.midPoint.y);
+        }
+
         if (follow)
         {
             var fx = (follow.x - this.followOffset.x);
             var fy = (follow.y - this.followOffset.y);
 
-            this._fx = fx;
-            this._fy = fy;
-
             if (deadzone)
             {
-                CenterOn(deadzone, this.midPoint.x, this.midPoint.y);
-
-                if (fx <= deadzone.x)
+                if (fx < deadzone.x)
                 {
-                    this.scrollX = Linear(fx, deadzone.x, this.lerp.x) / zoom;
-                    this.scrollX -= deadzone.x;
-                    console.log(this.scrollX);
-                    // debugger;
+                    this.scrollX = Linear(this.scrollX, this.scrollX - (deadzone.x - fx), this.lerp.x) / zoom;
                 }
-                else if (fx >= deadzone.right)
+                else if (fx > deadzone.right)
                 {
-                    this.scrollX = Linear(fx, deadzone.right, this.lerp.x) / zoom;
-                    this.scrollX -= deadzone.right;
-                    console.log(this.scrollX);
-                    // debugger;
+                    this.scrollX = Linear(this.scrollX, this.scrollX + (fx - deadzone.right), this.lerp.x) / zoom;
                 }
 
-                // if (fy < deadzone.y || fy > deadzone.bottom)
-                // {
-                //     this.scrollY = Linear(this.scrollY, fy - originY, this.lerp.y) / zoom;
-                // }
+                if (fy < deadzone.y)
+                {
+                    this.scrollY = Linear(this.scrollY, this.scrollY - (deadzone.y - fy), this.lerp.y) / zoom;
+                }
+                else if (fy > deadzone.bottom)
+                {
+                    this.scrollY = Linear(this.scrollY, this.scrollY + (fy - deadzone.bottom), this.lerp.y) / zoom;
+                }
             }
             else
             {
-                this.scrollX = Linear(this.scrollX, fx, this.lerp.x) / zoom;
-                this.scrollY = Linear(this.scrollY, fy, this.lerp.y) / zoom;
+                this.scrollX = Linear(this.scrollX, fx - originX, this.lerp.x) / zoom;
+                this.scrollY = Linear(this.scrollY, fy - originY, this.lerp.y) / zoom;
             }
         }
 
@@ -1243,13 +1327,16 @@ var Camera = new Class({
 
         this.followOffset.set(offsetX, offsetY);
 
-        //  Move the camera there immediately, to avoid a large lerp during preUpdate
-        var zoom = this.zoom;
         var originX = this.width / 2;
         var originY = this.height / 2;
 
-        this.scrollX = (target.x - offsetX - originX) / zoom;
-        this.scrollY = (target.y - offsetY - originY) / zoom;
+        var fx = target.x - offsetX;
+        var fy = target.y - offsetY;
+
+        this.midPoint.set(fx, fy);
+
+        this.scrollX = fx - originX / this.zoom;
+        this.scrollY = fy - originY / this.zoom;
 
         return this;
     },
