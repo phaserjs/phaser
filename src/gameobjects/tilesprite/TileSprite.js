@@ -14,6 +14,11 @@ var TileSpriteRender = require('./TileSpriteRender');
 
 /**
  * @classdesc
+ * A TileSprite is a Sprite that has a repeating texture.
+ *
+ * The texture can be scrolled and scaled independently of the TileSprite itself. Textures will automatically wrap and
+ * are designed so that you can create game backdrops using seamless textures as a source.
+ *
  * [description]
  *
  * @class TileSprite
@@ -153,7 +158,7 @@ var TileSprite = new Class({
         this.potHeight = GetPowerOfTwo(this.frame.height);
 
         /**
-         * [description]
+         * The Canvas Pattern used to repeat the TileSprite's texture.
          *
          * @name Phaser.GameObjects.TileSprite#canvasPattern
          * @type {?CanvasPattern}
@@ -163,7 +168,7 @@ var TileSprite = new Class({
         this.canvasPattern = null;
 
         /**
-         * [description]
+         * The Canvas that the TileSprite's texture is rendered to.
          *
          * @name Phaser.GameObjects.TileSprite#canvasBuffer
          * @type {HTMLCanvasElement}
@@ -172,7 +177,7 @@ var TileSprite = new Class({
         this.canvasBuffer = CanvasPool.create2D(this, this.potWidth, this.potHeight);
 
         /**
-         * [description]
+         * The Canvas Context used to render the TileSprite's texture.
          *
          * @name Phaser.GameObjects.TileSprite#canvasBufferCtx
          * @type {CanvasRenderingContext2D}
