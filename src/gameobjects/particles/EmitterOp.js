@@ -116,7 +116,7 @@ var EmitterOp = new Class({
         }
 
         /**
-         * The key of this Particle Emitter property.
+         * The key of this property.
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#propertyKey
          * @type {string}
@@ -125,7 +125,7 @@ var EmitterOp = new Class({
         this.propertyKey = key;
 
         /**
-         * The value of this Particle Emitter property.
+         * The value of this property.
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#propertyValue
          * @type {number}
@@ -134,7 +134,7 @@ var EmitterOp = new Class({
         this.propertyValue = defaultValue;
 
         /**
-         * The default value of this Particle Emitter property.
+         * The default value of this property.
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#defaultValue
          * @type {number}
@@ -143,7 +143,8 @@ var EmitterOp = new Class({
         this.defaultValue = defaultValue;
 
         /**
-         * [description]
+         * The number of steps for stepped easing between {@link Phaser.GameObjects.Particles.EmitterOp#start} and
+         * {@link Phaser.GameObjects.Particles.EmitterOp#end} values, per emit.
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#steps
          * @type {number}
@@ -153,7 +154,7 @@ var EmitterOp = new Class({
         this.steps = 0;
 
         /**
-         * [description]
+         * The step counter for stepped easing, per emit.
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#counter
          * @type {number}
@@ -163,7 +164,7 @@ var EmitterOp = new Class({
         this.counter = 0;
 
         /**
-         * [description]
+         * The start value for this property to ease between.
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#start
          * @type {number}
@@ -173,7 +174,7 @@ var EmitterOp = new Class({
         this.start = 0;
 
         /**
-         * [description]
+         * The end value for this property to ease between.
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#end
          * @type {number}
@@ -183,7 +184,7 @@ var EmitterOp = new Class({
         this.end = 0;
 
         /**
-         * [description]
+         * The easing function to use for interpolating this property.
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#ease
          * @type {?function}
@@ -192,7 +193,13 @@ var EmitterOp = new Class({
         this.ease;
 
         /**
-         * [description]
+         * Whether this property can only be modified when a Particle is emitted.
+         *
+         * Set to `true` to allow only {@link Phaser.GameObjects.Particles.EmitterOp#onEmit} callbacks to be set and
+         * affect this property.
+         *
+         * Set to `false` to allow both {@link Phaser.GameObjects.Particles.EmitterOp#onEmit} and
+         * {@link Phaser.GameObjects.Particles.EmitterOp#onUpdate} callbacks to be set and affect this property.
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#emitOnly
          * @type {boolean}
@@ -201,7 +208,7 @@ var EmitterOp = new Class({
         this.emitOnly = emitOnly;
 
         /**
-         * [description]
+         * The callback to run for Particles when they are emitted from the Particle Emitter.
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#onEmit
          * @type {EmitterOpOnEmitCallback}
@@ -210,7 +217,7 @@ var EmitterOp = new Class({
         this.onEmit = this.defaultEmit;
 
         /**
-         * [description]
+         * The callback to run for Particles when they are updated.
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#onUpdate
          * @type {EmitterOpOnUpdateCallback}
@@ -290,7 +297,9 @@ var EmitterOp = new Class({
     },
 
     /**
-     * [description]
+     * Update the {@link Phaser.GameObjects.Particles.EmitterOp#onEmit} and
+     * {@link Phaser.GameObjects.Particles.EmitterOp#onUpdate} callbacks based on the type of the current
+     * {@link Phaser.GameObjects.Particles.EmitterOp#propertyValue}.
      *
      * @method Phaser.GameObjects.Particles.EmitterOp#setMethods
      * @since 3.0.0

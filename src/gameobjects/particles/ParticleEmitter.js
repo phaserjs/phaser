@@ -356,7 +356,7 @@ var ParticleEmitter = new Class({
         this.gravityY = 0;
 
         /**
-         * Whether accelerationX and accelerationY are nonzero. Set automatically during configuration.
+         * Whether accelerationX and accelerationY are non-zero. Set automatically during configuration.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#acceleration
          * @type {boolean}
