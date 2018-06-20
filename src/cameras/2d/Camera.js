@@ -152,7 +152,7 @@ var Camera = new Class({
 
         /**
          * Is this Camera visible or not?
-         * 
+         *
          * A visible camera will render and perform input tests.
          * An invisible camera will not render anything and will skip input tests.
          *
@@ -347,7 +347,7 @@ var Camera = new Class({
 
         /**
          * The mid-point of the Camera in 'world' coordinates.
-         * 
+         *
          * This value is updated in the preRender method, after the scroll values and follower
          * update have been calculated.
          *
@@ -768,6 +768,7 @@ var Camera = new Class({
                     this.scrollX = Linear(fx, deadzone.x, this.lerp.x) / zoom;
                     this.scrollX -= deadzone.x;
                     console.log(this.scrollX);
+
                     // debugger;
                 }
                 else if (fx >= deadzone.right)
@@ -775,6 +776,7 @@ var Camera = new Class({
                     this.scrollX = Linear(fx, deadzone.right, this.lerp.x) / zoom;
                     this.scrollX -= deadzone.right;
                     console.log(this.scrollX);
+
                     // debugger;
                 }
 
@@ -1181,14 +1183,14 @@ var Camera = new Class({
 
     /**
      * Sets the visibility of this Camera.
-     * 
+     *
      * An invisible Camera will skip rendering and input tests of everything it can see.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setVisible
      * @since 3.10.0
      *
      * @param {boolean} value - The visible state of the Camera.
-     * 
+     *
      * @return {this} This Camera instance.
      */
     setVisible: function (value)
