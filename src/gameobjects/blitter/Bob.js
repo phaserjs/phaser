@@ -147,11 +147,11 @@ var Bob = new Class({
     {
         if (frame === undefined)
         {
-            frame = this.parent.frame;
+            this.frame = this.parent.frame;
         }
         else
         {
-            frame = this.parent.texture.get(frame);
+            this.frame = this.parent.texture.get(frame);
         }
 
         return this;
