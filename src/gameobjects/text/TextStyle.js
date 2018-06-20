@@ -51,6 +51,16 @@ var propertyMap = {
 };
 
 /**
+ * Font metrics for a Text Style object.
+ *
+ * @typedef {object} TextMetrics
+ *
+ * @property {number} ascent - The ascent of the font.
+ * @property {number} descent - The descent of the font.
+ * @property {number} fontSize - The size of the font.
+ */
+
+/**
  * @classdesc
  * Style settings for a Text object.
  *
@@ -60,7 +70,7 @@ var propertyMap = {
  * @since 3.0.0
  *
  * @param {Phaser.GameObjects.Text} text - The Text object that this TextStyle is styling.
- * @param {CSSStyleRule} style - The style settings to set.
+ * @param {object} style - The style settings to set.
  */
 var TextStyle = new Class({
 
@@ -919,7 +929,7 @@ var TextStyle = new Class({
      * @method Phaser.GameObjects.Text.TextStyle#getTextMetrics
      * @since 3.0.0
      *
-     * @return {object} The text metrics.
+     * @return {TextMetrics} The text metrics.
      */
     getTextMetrics: function ()
     {
