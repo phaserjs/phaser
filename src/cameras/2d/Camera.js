@@ -836,6 +836,8 @@ var Camera = new Class({
         var originY = height / 2;
         var follow = this._follow;
         var deadzone = this.deadzone;
+        var sx = this.scrollX;
+        var sy = this.scrollY;
 
         if (deadzone)
         {
@@ -851,62 +853,72 @@ var Camera = new Class({
             {
                 if (fx < deadzone.x)
                 {
-                    this.scrollX = Linear(this.scrollX, this.scrollX - (deadzone.x - fx), this.lerp.x);
+                    sx = Linear(sx, sx - (deadzone.x - fx), this.lerp.x);
                 }
                 else if (fx > deadzone.right)
                 {
-                    this.scrollX = Linear(this.scrollX, this.scrollX + (fx - deadzone.right), this.lerp.x);
+                    sx = Linear(sx, sx + (fx - deadzone.right), this.lerp.x);
                 }
 
                 if (fy < deadzone.y)
                 {
-                    this.scrollY = Linear(this.scrollY, this.scrollY - (deadzone.y - fy), this.lerp.y);
+                    sy = Linear(sy, sy - (deadzone.y - fy), this.lerp.y);
                 }
                 else if (fy > deadzone.bottom)
                 {
-                    this.scrollY = Linear(this.scrollY, this.scrollY + (fy - deadzone.bottom), this.lerp.y);
+                    sy = Linear(sy, sy + (fy - deadzone.bottom), this.lerp.y);
                 }
             }
             else
             {
-                this.scrollX = Linear(this.scrollX, fx - originX, this.lerp.x);
-                this.scrollY = Linear(this.scrollY, fy - originY, this.lerp.y);
+                sx = Linear(sx, fx - originX, this.lerp.x);
+                sy = Linear(sy, fy - originY, this.lerp.y);
             }
         }
 
         if (this.useBounds)
         {
             var bounds = this._bounds;
+            var dw = this.displayWidth;
+            var dh = this.displayHeight;
 
-            var bw = Math.max(0, bounds.right - width);
-            var bh = Math.max(0, bounds.bottom - height);
+            var bx = (dw - width) / 2;
+            var by = (dh - height) / 2;
+            var bw = bounds.width - dw;
+            var bh = bounds.height - dh;
 
-            if (this.scrollX < bounds.x)
+            bw = Math.max(0, bx + bw);
+            bh = Math.max(0, by + bh);
+
+            if (sx < bx)
             {
-                this.scrollX = bounds.x;
+                sx = bx;
             }
-            else if (this.scrollX > bw)
+            else if (sx > bw)
             {
-                this.scrollX = bw;
+                sx = bw;
             }
 
-            if (this.scrollY < bounds.y)
+            if (sy < by)
             {
-                this.scrollY = bounds.y;
+                sy = by;
             }
-            else if (this.scrollY > bh)
+            else if (sy > bh)
             {
-                this.scrollY = bh;
+                sy = bh;
             }
         }
 
         if (this.roundPixels)
         {
-            this.scrollX = Math.round(this.scrollX);
-            this.scrollY = Math.round(this.scrollY);
+            sx = Math.round(sx);
+            sy = Math.round(sy);
         }
 
-        this.midPoint.set(this.scrollX + originX, this.scrollY + originY);
+        this.scrollX = sx;
+        this.scrollY = sy;
+
+        this.midPoint.set(sx + originX, sy + originY);
 
         matrix.loadIdentity();
         matrix.scale(resolution, resolution);
@@ -1461,10 +1473,9 @@ var Camera = new Class({
         this.culledObjects = [];
 
         this._follow = null;
-
         this._bounds = null;
-
         this.scene = null;
+        this.deadzone = null;
     },
 
     /**
@@ -1497,6 +1508,52 @@ var Camera = new Class({
         get: function ()
         {
             return this.y + (0.5 * this.height);
+        }
+
+    },
+
+    /**
+     * The displayed width of the camera viewport, factoring in the camera zoom level.
+     * 
+     * If a camera has a viewport width of 800 and a zoom of 0.5 then its display width
+     * would be 1600, as it's displaying twice as many pixels as zoom level 1.
+     * 
+     * Equally, a camera with a width of 800 and zoom of 2 would have a display width
+     * of 400 pixels.
+     *
+     * @name Phaser.Cameras.Scene2D.Camera#displayWidth
+     * @type {number}
+     * @readOnly
+     * @since 3.11.0
+     */
+    displayWidth: {
+
+        get: function ()
+        {
+            return this.width / this.zoom;
+        }
+
+    },
+
+    /**
+     * The displayed height of the camera viewport, factoring in the camera zoom level.
+     * 
+     * If a camera has a viewport height of 600 and a zoom of 0.5 then its display height
+     * would be 1200, as it's displaying twice as many pixels as zoom level 1.
+     * 
+     * Equally, a camera with a height of 600 and zoom of 2 would have a display height
+     * of 300 pixels.
+     *
+     * @name Phaser.Cameras.Scene2D.Camera#displayHeight
+     * @type {number}
+     * @readOnly
+     * @since 3.11.0
+     */
+    displayHeight: {
+
+        get: function ()
+        {
+            return this.height / this.zoom;
         }
 
     }
