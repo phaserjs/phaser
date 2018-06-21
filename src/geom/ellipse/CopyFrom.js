@@ -16,7 +16,7 @@
  * @param {Phaser.Geom.Ellipse} source - The source Ellipse to copy the values from.
  * @param {Phaser.Geom.Ellipse} dest - The destination Ellipse to copy the values to.
  *
- * @return {Phaser.Geom.Ellipse} The dest Ellipse.
+ * @return {Phaser.Geom.Ellipse} The destination Ellipse.
  */
 var CopyFrom = function (source, dest)
 {
