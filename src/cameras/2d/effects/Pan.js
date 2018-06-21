@@ -77,6 +77,15 @@ var Pan = new Class({
         this.source = new Vector2();
 
         /**
+         * The constantly updated value based on zoom.
+         * 
+         * @name Phaser.Cameras.Scene2D.Effects.Pan#current
+         * @type {Phaser.Math.Vector2}
+         * @since 3.11.0
+         */
+        this.current = new Vector2();
+
+        /**
          * The destination scroll coordinates to pan the camera to.
          * 
          * @name Phaser.Cameras.Scene2D.Effects.Pan#destination
@@ -206,8 +215,11 @@ var Pan = new Class({
         //  Starting from
         this.source.set(cam.scrollX, cam.scrollY);
 
-        //  Panning to
-        cam.getScroll(x, y, this.destination);
+        //  Destination
+        this.destination.set(x, y);
+
+        //  Zoom factored version
+        cam.getScroll(x, y, this.current);
 
         //  Using this ease
         if (typeof ease === 'string' && EaseMap.hasOwnProperty(ease))
@@ -247,29 +259,35 @@ var Pan = new Class({
 
         this._elapsed += delta;
 
-        this.progress = Clamp(this._elapsed / this.duration, 0, 1);
+        var progress = Clamp(this._elapsed / this.duration, 0, 1);
+
+        this.progress = progress;
+
+        var cam = this.camera;
 
         if (this._elapsed < this.duration)
         {
-            var v = this.ease(this.progress);
+            var v = this.ease(progress);
 
-            var x = this.source.x + ((this.destination.x - this.source.x) * v);
-            var y = this.source.y + ((this.destination.y - this.source.y) * v);
+            cam.getScroll(this.destination.x, this.destination.y, this.current);
 
-            this.camera.setScroll(x, y);
+            var x = this.source.x + ((this.current.x - this.source.x) * v);
+            var y = this.source.y + ((this.current.y - this.source.y) * v);
+
+            cam.setScroll(x, y);
 
             if (this._onUpdate)
             {
-                this._onUpdate.call(this._onUpdateScope, this.camera, this.progress, x, y);
+                this._onUpdate.call(this._onUpdateScope, cam, progress, x, y);
             }
         }
         else
         {
-            this.camera.setScroll(this.destination.x, this.destination.y);
+            cam.centerOn(this.destination.x, this.destination.y);
 
             if (this._onUpdate)
             {
-                this._onUpdate.call(this._onUpdateScope, this.camera, this.progress, this.destination.x, this.destination.y);
+                this._onUpdate.call(this._onUpdateScope, cam, progress, cam.scrollX, cam.scrollY);
             }
     
             this.effectComplete();
