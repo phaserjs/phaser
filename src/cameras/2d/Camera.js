@@ -1078,36 +1078,6 @@ var Camera = new Class({
         {
             sx = this.clampX(sx);
             sy = this.clampY(sy);
-
-            /*
-            var bounds = this._bounds;
-
-            var dw = this.displayWidth;
-            var dh = this.displayHeight;
-
-            var bx = bounds.x + ((dw - width) / 2);
-            var by = bounds.y + ((dh - height) / 2);
-            var bw = Math.max(bx, bx + bounds.width - dw);
-            var bh = Math.max(by, by + bounds.height - dh);
-
-            if (sx < bx)
-            {
-                sx = bx;
-            }
-            else if (sx > bw)
-            {
-                sx = bw;
-            }
-
-            if (sy < by)
-            {
-                sy = by;
-            }
-            else if (sy > bh)
-            {
-                sy = bh;
-            }
-            */
         }
 
         if (this.roundPixels)
@@ -1131,6 +1101,17 @@ var Camera = new Class({
         this.shakeEffect.preRender();
     },
 
+    /**
+     * Takes an x value and checks it's within the range of the Camera bounds, adjusting if required.
+     * Do not call this method if you are not using camera bounds.
+     *
+     * @method Phaser.Cameras.Scene2D.Camera#clampX
+     * @since 3.11.0
+     * 
+     * @param {number} x - The value to horizontally scroll clamp.
+     *
+     * @return {number} The adjusted value to use as scrollX.
+     */
     clampX: function (x)
     {
         var bounds = this._bounds;
@@ -1152,6 +1133,17 @@ var Camera = new Class({
         return x;
     },
 
+    /**
+     * Takes a y value and checks it's within the range of the Camera bounds, adjusting if required.
+     * Do not call this method if you are not using camera bounds.
+     *
+     * @method Phaser.Cameras.Scene2D.Camera#clampY
+     * @since 3.11.0
+     * 
+     * @param {number} y - The value to vertically scroll clamp.
+     *
+     * @return {number} The adjusted value to use as scrollY.
+     */
     clampY: function (y)
     {
         var bounds = this._bounds;
@@ -1174,33 +1166,8 @@ var Camera = new Class({
     },
 
     /*
-    getRenderX: function (src)
-    {
-        if (this.roundPixels)
-        {
-            var gap = this._zoomInversed;
-
-            return gap * Math.round((src.x - this.scrollX * src.scrollFactorX) / gap);
-        }
-        else
-        {
-            return src.x - this.scrollX * src.scrollFactorX;
-        }
-    },
-
-    getRenderY: function (src)
-    {
-        if (this.roundPixels)
-        {
-            var gap = this._zoomInversed;
-
-            return gap * Math.round((src.y - this.scrollY * src.scrollFactorY) / gap);
-        }
-        else
-        {
-            return src.y - this.scrollY * src.scrollFactorY;
-        }
-    },
+        var gap = this._zoomInversed;
+        return gap * Math.round((src.x - this.scrollX * src.scrollFactorX) / gap);
     */
 
     /**
