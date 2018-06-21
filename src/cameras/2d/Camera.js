@@ -228,8 +228,8 @@ var Camera = new Class({
          * @type {float}
          * @default 1
          * @since 3.0.0
-         */
         this.zoom = 1;
+         */
 
         /**
          * The rotation of the Camera. This influences the rendering of all Game Objects visible by this camera.
@@ -412,6 +412,9 @@ var Camera = new Class({
          * @since 3.0.0
          */
         this._id = 0;
+
+        this._zoom = 1;
+        this._zoomInversed = 1;
     },
 
     /**
@@ -830,7 +833,7 @@ var Camera = new Class({
     {
         var width = this.width;
         var height = this.height;
-        var zoom = this.zoom * baseScale;
+        var zoom = this._zoom * baseScale;
         var matrix = this.matrix;
         var originX = width / 2;
         var originY = height / 2;
@@ -911,8 +914,8 @@ var Camera = new Class({
 
         if (this.roundPixels)
         {
-            sx = Math.round(sx);
-            sy = Math.round(sy);
+            originX = Math.round(originX);
+            originY = Math.round(originY);
         }
 
         this.scrollX = sx;
@@ -929,6 +932,36 @@ var Camera = new Class({
 
         this.shakeEffect.preRender();
     },
+
+    /*
+    getRenderX: function (src)
+    {
+        if (this.roundPixels)
+        {
+            var gap = this._zoomInversed;
+
+            return gap * Math.round((src.x - this.scrollX * src.scrollFactorX) / gap);
+        }
+        else
+        {
+            return src.x - this.scrollX * src.scrollFactorX;
+        }
+    },
+
+    getRenderY: function (src)
+    {
+        if (this.roundPixels)
+        {
+            var gap = this._zoomInversed;
+
+            return gap * Math.round((src.y - this.scrollY * src.scrollFactorY) / gap);
+        }
+        else
+        {
+            return src.y - this.scrollY * src.scrollFactorY;
+        }
+    },
+    */
 
     /**
      * If this Camera has previously had movement bounds set on it, this will remove them.
@@ -1262,13 +1295,18 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#setZoom
      * @since 3.0.0
      *
-     * @param {float} [value=1] - The zoom value of the Camera.
+     * @param {float} [value=1] - The zoom value of the Camera. The minimum it can be is 0.001.
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
     setZoom: function (value)
     {
         if (value === undefined) { value = 1; }
+
+        if (value === 0)
+        {
+            value = 0.001;
+        }
 
         this.zoom = value;
 
@@ -1554,6 +1592,26 @@ var Camera = new Class({
         get: function ()
         {
             return this.height / this.zoom;
+        }
+
+    },
+
+    zoom: {
+
+        get: function ()
+        {
+            return this._zoom;
+        },
+
+        set: function (value)
+        {
+            if (value === 0)
+            {
+                value = 0.001;
+            }
+
+            this._zoom = value;
+            this._zoomInversed = 1 / value;
         }
 
     }
