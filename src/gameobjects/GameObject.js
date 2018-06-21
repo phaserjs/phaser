@@ -374,7 +374,7 @@ var GameObject = new Class({
     {
         if (this.input)
         {
-            this.input.enabled = (this.input.enabled) ? false : true;
+            this.input.enabled = false;
         }
 
         return this;
