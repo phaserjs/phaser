@@ -367,6 +367,32 @@ var Camera = new Class({
         this.midPoint = new Vector2(width / 2, height / 2);
 
         /**
+         * The horizontal origin of this Game Object.
+         * The origin maps the relationship between the size and position of the Game Object.
+         * The default value is 0.5, meaning all Game Objects are positioned based on their center.
+         * Setting the value to 0 means the position now relates to the left of the Game Object.
+         *
+         * @name Phaser.GameObjects.Components.Origin#originX
+         * @type {float}
+         * @default 0.5
+         * @since 3.11.0
+         */
+        this.originX = 0.5;
+
+        /**
+         * The vertical origin of this Game Object.
+         * The origin maps the relationship between the size and position of the Game Object.
+         * The default value is 0.5, meaning all Game Objects are positioned based on their center.
+         * Setting the value to 0 means the position now relates to the top of the Game Object.
+         *
+         * @name Phaser.GameObjects.Components.Origin#originY
+         * @type {float}
+         * @default 0.5
+         * @since 3.11.0
+         */
+        this.originY = 0.5;
+
+        /**
          * The Camera dead zone.
          * 
          * The deadzone is only used when the camera is following a target.
@@ -415,6 +441,30 @@ var Camera = new Class({
 
         this._zoom = 1;
         this._zoomInversed = 1;
+    },
+
+    /**
+     * Sets the rotation origin of this Camera.
+     *
+     * The values are given in the range 0 to 1 and are only used when calculating Camera rotation.
+     *
+     * @method Phaser.GameObjects.Components.Origin#setOrigin
+     * @since 3.11.0
+     *
+     * @param {number} [x=0.5] - The horizontal origin value.
+     * @param {number} [y=x] - The vertical origin value. If not defined it will be set to the value of `x`.
+     *
+     * @return {this} This Camera instance.
+     */
+    setOrigin: function (x, y)
+    {
+        if (x === undefined) { x = 0.5; }
+        if (y === undefined) { y = x; }
+
+        this.originX = x;
+        this.originY = y;
+
+        return this;
     },
 
     /**
@@ -491,8 +541,10 @@ var Camera = new Class({
     {
         if (this.useBounds)
         {
-            this.scrollX = (this._bounds.width * 0.5) - (this.width * 0.5);
-            this.scrollY = (this._bounds.height * 0.5) - (this.height * 0.5);
+            var bounds = this._bounds;
+
+            this.scrollX = bounds.centerX - (this.width * 0.5);
+            this.scrollY = bounds.centerY - (this.height * 0.5);
         }
 
         return this;
@@ -835,8 +887,8 @@ var Camera = new Class({
         var height = this.height;
         var zoom = this._zoom * baseScale;
         var matrix = this.matrix;
-        var originX = width / 2;
-        var originY = height / 2;
+        var originX = width * this.originX;
+        var originY = height * this.originY;
         var follow = this._follow;
         var deadzone = this.deadzone;
         var sx = this.scrollX;
@@ -891,7 +943,7 @@ var Camera = new Class({
             var bw = Math.max(bx, bx + bounds.width - dw);
             var bh = Math.max(by, by + bounds.height - dh);
 
-            this._tb = new Rectangle(bx, by, bw, bh);
+            // this._tb = new Rectangle(bx, by, bw, bh);
 
             if (sx < bx)
             {
