@@ -10,6 +10,7 @@
 * `Camera.midPoint` is a new Vec2 property that is updated every frame. Use it to obtain exactly where in the world the center of the camera is currently looking.
 * `Camera.displayWidth` is a new property that returns the display width of the camera, factoring in the current zoom level.
 * `Camera.displayHeight` is a new property that returns the display height of the camera, factoring in the current zoom level.
+* `Camera.centerOn` is a new method that will move the camera so its viewport is centered on the given coordinates. A handy way of jumping to different points around a map without needing to calculate the scroll offsets.
 
 ### Updates
 
