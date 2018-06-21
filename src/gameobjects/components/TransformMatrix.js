@@ -317,7 +317,7 @@ var TransformMatrix = new Class({
      * @method Phaser.GameObjects.Components.TransformMatrix#rotate
      * @since 3.0.0
      *
-     * @param {number} radian - The angle of rotation, in radians.
+     * @param {number} radian - The angle of rotation in radians.
      *
      * @return {this} This TransformMatrix.
      */
@@ -556,7 +556,7 @@ var TransformMatrix = new Class({
      *
      * @param {number} x - The horizontal translation.
      * @param {number} y - The vertical translation.
-     * @param {number} rotation - The angle of rotation, in radians.
+     * @param {number} rotation - The angle of rotation in radians.
      * @param {number} scaleX - The horizontal scale.
      * @param {number} scaleY - The vertical scale.
      *

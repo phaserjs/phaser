@@ -5,17 +5,17 @@
  */
 
 /**
- * [description]
+ * Copy the values of one line to another line.
  *
  * @function Phaser.Geom.Line.CopyFrom
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Line} O - [dest,$return]
  *
- * @param {Phaser.Geom.Line} source - [description]
- * @param {Phaser.Geom.Line} dest - [description]
+ * @param {Phaser.Geom.Line} source - The source line to copy from.
+ * @param {Phaser.Geom.Line} dest - The destination line to copy to.
  *
- * @return {Phaser.Geom.Line} [description]
+ * @return {Phaser.Geom.Line} The destination line after copying.
  */
 var CopyFrom = function (source, dest)
 {

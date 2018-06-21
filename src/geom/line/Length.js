@@ -5,14 +5,14 @@
  */
 
 /**
- * [description]
+ * Calculate the length of the given line.
  *
  * @function Phaser.Geom.Line.Length
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Line} line - [description]
+ * @param {Phaser.Geom.Line} line - The line to calculate the length of.
  *
- * @return {number} [description]
+ * @return {number} The length of the line.
  */
 var Length = function (line)
 {
