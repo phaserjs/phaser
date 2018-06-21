@@ -343,6 +343,16 @@ var Camera = new Class({
         this.panEffect = new Effects.Pan(this);
 
         /**
+         * The Camera Zoom effect handler.
+         * To pan this camera see the `Camera.zoom` method.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#zoomEffect
+         * @type {Phaser.Cameras.Scene2D.Effects.Zoom}
+         * @since 3.11.0
+         */
+        this.zoomEffect = new Effects.Zoom(this);
+
+        /**
          * Should the camera cull Game Objects before checking them for input hit tests?
          * In some special cases it may be beneficial to disable this.
          *
@@ -916,6 +926,28 @@ var Camera = new Class({
     pan: function (x, y, duration, ease, force, callback, context)
     {
         return this.panEffect.start(x, y, duration, ease, force, callback, context);
+    },
+
+    /**
+     * This effect will zoom the Camera to the given scale, over the duration and with the ease specified.
+     *
+     * @method Phaser.Cameras.Scene2D.Camera#zoomTo
+     * @since 3.11.0
+     *
+     * @param {number} zoom - The target Camera zoom value.
+     * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
+     * @param {(string|function)} [ease='Linear'] - The ease to use for the pan. Can be any of the Phaser Easing constants or a custom function.
+     * @param {boolean} [force=false] - Force the shake effect to start immediately, even if already running.
+     * @param {CameraPanCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
+     * It is sent four arguments: A reference to the camera, a progress amount between 0 and 1 indicating how complete the effect is,
+     * the current camera scroll x coordinate and the current camera scroll y coordinate.
+     * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
+     *
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     */
+    zoomTo: function (zoom, duration, ease, force, callback, context)
+    {
+        return this.zoomEffect.start(zoom, duration, ease, force, callback, context);
     },
 
     /**
@@ -1684,6 +1716,7 @@ var Camera = new Class({
         if (this.visible)
         {
             this.panEffect.update(time, delta);
+            this.zoomEffect.update(time, delta);
             this.shakeEffect.update(time, delta);
             this.flashEffect.update(time, delta);
             this.fadeEffect.update(time, delta);

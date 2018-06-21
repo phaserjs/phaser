@@ -11,34 +11,30 @@ var EaseMap = require('../../../math/easing/EaseMap');
 
 /**
  * @classdesc
- * A Camera Pan effect.
+ * A Camera Zoom effect.
  *
- * This effect will scroll the Camera so that the center of its viewport finishes at the given destination,
- * over the duration and with the ease specified.
- *
- * Only the camera scroll is moved. None of the objects it is displaying are impacted, i.e. their positions do
- * not change.
+ * This effect will zoom the Camera to the given scale, over the duration and with the ease specified.
  *
  * The effect will dispatch several events on the Camera itself and you can also specify an `onUpdate` callback,
  * which is invoked each frame for the duration of the effect if required.
  *
- * @class Pan
+ * @class Zoom
  * @memberOf Phaser.Cameras.Scene2D.Effects
  * @constructor
  * @since 3.11.0
  *
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera this effect is acting upon.
  */
-var Pan = new Class({
+var Zoom = new Class({
 
     initialize:
 
-    function Pan (camera)
+    function Zoom (camera)
     {
         /**
          * The Camera this effect belongs to.
          *
-         * @name Phaser.Cameras.Scene2D.Effects.Pan#camera
+         * @name Phaser.Cameras.Scene2D.Effects.Zoom#camera
          * @type {Phaser.Cameras.Scene2D.Camera}
          * @readOnly
          * @since 3.11.0
@@ -48,7 +44,7 @@ var Pan = new Class({
         /**
          * Is this effect actively running?
          *
-         * @name Phaser.Cameras.Scene2D.Effects.Pan#isRunning
+         * @name Phaser.Cameras.Scene2D.Effects.Zoom#isRunning
          * @type {boolean}
          * @readOnly
          * @default false
@@ -59,7 +55,7 @@ var Pan = new Class({
         /**
          * The duration of the effect, in milliseconds.
          *
-         * @name Phaser.Cameras.Scene2D.Effects.Pan#duration
+         * @name Phaser.Cameras.Scene2D.Effects.Zoom#duration
          * @type {integer}
          * @readOnly
          * @default 0
@@ -68,27 +64,27 @@ var Pan = new Class({
         this.duration = 0;
 
         /**
-         * The starting scroll coordinates to pan the camera from.
+         * The starting zoom value;
          * 
-         * @name Phaser.Cameras.Scene2D.Effects.Pan#source
-         * @type {Phaser.Math.Vector2}
+         * @name Phaser.Cameras.Scene2D.Effects.Zoom#source
+         * @type {number}
          * @since 3.11.0
          */
-        this.source = new Vector2();
+        this.source = 1;
 
         /**
-         * The destination scroll coordinates to pan the camera to.
+         * The destination zoom value.
          * 
-         * @name Phaser.Cameras.Scene2D.Effects.Pan#destination
-         * @type {Phaser.Math.Vector2}
+         * @name Phaser.Cameras.Scene2D.Effects.Zoom#destination
+         * @type {number}
          * @since 3.11.0
          */
-        this.destination = new Vector2();
+        this.destination = 1;
 
         /**
-         * The ease function to use during the pan.
+         * The ease function to use during the zoom.
          * 
-         * @name Phaser.Cameras.Scene2D.Effects.Pan#ease
+         * @name Phaser.Cameras.Scene2D.Effects.Zoom#ease
          * @type {function}
          * @since 3.11.0
          */
@@ -97,8 +93,8 @@ var Pan = new Class({
         /**
          * If this effect is running this holds the current percentage of the progress, a value between 0 and 1.
          *
-         * @name Phaser.Cameras.Scene2D.Effects.Pan#progress
-         * @type {float}
+         * @name Phaser.Cameras.Scene2D.Effects.Zoom#progress
+         * @type {number}
          * @since 3.11.0
          */
         this.progress = 0;
@@ -106,7 +102,7 @@ var Pan = new Class({
         /**
          * Effect elapsed timer.
          *
-         * @name Phaser.Cameras.Scene2D.Effects.Pan#_elapsed
+         * @name Phaser.Cameras.Scene2D.Effects.Zoom#_elapsed
          * @type {number}
          * @private
          * @since 3.11.0
@@ -114,19 +110,18 @@ var Pan = new Class({
         this._elapsed = 0;
 
         /**
-         * @callback CameraPanCallback
+         * @callback CameraZoomCallback
          *
          * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera on which the effect is running.
-         * @param {float} progress - The progress of the effect. A value between 0 and 1.
-         * @param {number} x - The Camera's new scrollX coordinate.
-         * @param {number} y - The Camera's new scrollY coordinate.
+         * @param {number} progress - The progress of the effect. A value between 0 and 1.
+         * @param {number} zoom - The Camera's new zoom value.
          */
 
         /**
          * This callback is invoked every frame for the duration of the effect.
          *
-         * @name Phaser.Cameras.Scene2D.Effects.Pan#_onUpdate
-         * @type {?CameraPanCallback}
+         * @name Phaser.Cameras.Scene2D.Effects.Zoom#_onUpdate
+         * @type {?CameraZoomCallback}
          * @private
          * @default null
          * @since 3.11.0
@@ -136,7 +131,7 @@ var Pan = new Class({
         /**
          * On Complete callback scope.
          *
-         * @name Phaser.Cameras.Scene2D.Effects.Pan#_onUpdateScope
+         * @name Phaser.Cameras.Scene2D.Effects.Zoom#_onUpdateScope
          * @type {any}
          * @private
          * @since 3.11.0
@@ -145,46 +140,43 @@ var Pan = new Class({
     },
 
     /**
-     * This event is fired when the pan effect begins to run on a camera.
+     * This event is fired when the Zoom effect begins to run on a camera.
      *
-     * @event CameraPanStartEvent
+     * @event CameraZoomStartEvent
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.Pan} effect - A reference to the effect instance.
+     * @param {Phaser.Cameras.Scene2D.Effects.Zoom} effect - A reference to the effect instance.
      * @param {integer} duration - The duration of the effect.
-     * @param {number} x - The destination scroll x coordinate.
-     * @param {number} y - The destination scroll y coordinate.
+     * @param {number} zoom - The destination zoom value.
      */
 
     /**
-     * This event is fired when the pan effect completes.
+     * This event is fired when the Zoom effect completes.
      *
-     * @event CameraPanCompleteEvent
+     * @event CameraZoomCompleteEvent
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.Pan} effect - A reference to the effect instance.
+     * @param {Phaser.Cameras.Scene2D.Effects.Zoom} effect - A reference to the effect instance.
      */
 
     /**
-     * This effect will scroll the Camera so that the center of its viewport finishes at the given destination,
-     * over the duration and with the ease specified.
+     * This effect will zoom the Camera to the given scale, over the duration and with the ease specified.
      *
-     * @method Phaser.Cameras.Scene2D.Effects.Pan#start
-     * @fires CameraPanStartEvent
-     * @fires CameraPanCompleteEvent
+     * @method Phaser.Cameras.Scene2D.Effects.Zoom#start
+     * @fires CameraZoomStartEvent
+     * @fires CameraZoomCompleteEvent
      * @since 3.11.0
      *
-     * @param {number} x - The destination x coordinate to scroll the center of the Camera viewport to.
-     * @param {number} y - The destination y coordinate to scroll the center of the Camera viewport to.
+     * @param {number} zoom - The target Camera zoom value.
      * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
-     * @param {(string|function)} [ease='Linear'] - The ease to use for the pan. Can be any of the Phaser Easing constants or a custom function.
+     * @param {(string|function)} [ease='Linear'] - The ease to use for the Zoom. Can be any of the Phaser Easing constants or a custom function.
      * @param {boolean} [force=false] - Force the shake effect to start immediately, even if already running.
-     * @param {CameraPanCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
-     * It is sent four arguments: A reference to the camera, a progress amount between 0 and 1 indicating how complete the effect is,
-     * the current camera scroll x coordinate and the current camera scroll y coordinate.
+     * @param {CameraZoomCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
+     * It is sent three arguments: A reference to the camera, a progress amount between 0 and 1 indicating how complete the effect is,
+     * and the current camera zoom value.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *
      * @return {Phaser.Cameras.Scene2D.Camera} The Camera on which the effect was started.
      */
-    start: function (x, y, duration, ease, force, callback, context)
+    start: function (zoom, duration, ease, force, callback, context)
     {
         if (duration === undefined) { duration = 1000; }
         if (ease === undefined) { ease = EaseMap.Linear; }
@@ -204,10 +196,10 @@ var Pan = new Class({
         this.progress = 0;
 
         //  Starting from
-        this.source.set(cam.scrollX, cam.scrollY);
+        this.source = cam.zoom;
 
-        //  Panning to
-        cam.getScroll(x, y, this.destination);
+        //  Zooming to
+        this.destination = zoom;
 
         //  Using this ease
         if (typeof ease === 'string' && EaseMap.hasOwnProperty(ease))
@@ -224,7 +216,7 @@ var Pan = new Class({
         this._onUpdate = callback;
         this._onUpdateScope = context;
 
-        this.camera.emit('camerapanstart', this.camera, this, duration, x, y);
+        this.camera.emit('camerazoomstart', this.camera, this, duration, zoom);
 
         return cam;
     },
@@ -232,7 +224,7 @@ var Pan = new Class({
     /**
      * The main update loop for this effect. Called automatically by the Camera.
      *
-     * @method Phaser.Cameras.Scene2D.Effects.Pan#update
+     * @method Phaser.Cameras.Scene2D.Effects.Zoom#update
      * @since 3.11.0
      *
      * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
@@ -251,25 +243,20 @@ var Pan = new Class({
 
         if (this._elapsed < this.duration)
         {
-            var v = this.ease(this.progress);
-
-            var x = this.source.x + ((this.destination.x - this.source.x) * v);
-            var y = this.source.y + ((this.destination.y - this.source.y) * v);
-
-            this.camera.setScroll(x, y);
+            this.camera.zoom = this.source + ((this.destination - this.source) * this.ease(this.progress));
 
             if (this._onUpdate)
             {
-                this._onUpdate.call(this._onUpdateScope, this.camera, this.progress, x, y);
+                this._onUpdate.call(this._onUpdateScope, this.camera, this.progress, this.camera.zoom);
             }
         }
         else
         {
-            this.camera.setScroll(this.destination.x, this.destination.y);
+            this.camera.zoom = this.destination;
 
             if (this._onUpdate)
             {
-                this._onUpdate.call(this._onUpdateScope, this.camera, this.progress, this.destination.x, this.destination.y);
+                this._onUpdate.call(this._onUpdateScope, this.camera, this.progress, this.destination);
             }
     
             this.effectComplete();
@@ -279,7 +266,7 @@ var Pan = new Class({
     /**
      * Called internally when the effect completes.
      *
-     * @method Phaser.Cameras.Scene2D.Effects.Pan#effectComplete
+     * @method Phaser.Cameras.Scene2D.Effects.Zoom#effectComplete
      * @since 3.11.0
      */
     effectComplete: function ()
@@ -289,14 +276,14 @@ var Pan = new Class({
 
         this.isRunning = false;
 
-        this.camera.emit('camerapancomplete', this.camera, this);
+        this.camera.emit('camerazoomcomplete', this.camera, this);
     },
 
     /**
      * Resets this camera effect.
      * If it was previously running, it stops instantly without calling its onComplete callback or emitting an event.
      *
-     * @method Phaser.Cameras.Scene2D.Effects.Pan#reset
+     * @method Phaser.Cameras.Scene2D.Effects.Zoom#reset
      * @since 3.11.0
      */
     reset: function ()
@@ -310,7 +297,7 @@ var Pan = new Class({
     /**
      * Destroys this effect, releasing it from the Camera.
      *
-     * @method Phaser.Cameras.Scene2D.Effects.Pan#destroy
+     * @method Phaser.Cameras.Scene2D.Effects.Zoom#destroy
      * @since 3.11.0
      */
     destroy: function ()
@@ -318,10 +305,8 @@ var Pan = new Class({
         this.reset();
 
         this.camera = null;
-        this.source = null;
-        this.destination = null;
     }
 
 });
 
-module.exports = Pan;
+module.exports = Zoom;

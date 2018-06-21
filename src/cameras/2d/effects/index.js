@@ -13,6 +13,7 @@ module.exports = {
     Fade: require('./Fade'),
     Flash: require('./Flash'),
     Pan: require('./Pan'),
-    Shake: require('./Shake')
+    Shake: require('./Shake'),
+    Zoom: require('./Zoom')
 
 };
