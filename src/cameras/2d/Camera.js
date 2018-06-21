@@ -882,16 +882,14 @@ var Camera = new Class({
         if (this.useBounds)
         {
             var bounds = this._bounds;
+
             var dw = this.displayWidth;
             var dh = this.displayHeight;
 
             var bx = (dw - width) / 2;
             var by = (dh - height) / 2;
-            var bw = bounds.width - dw;
-            var bh = bounds.height - dh;
-
-            bw = Math.max(0, bx + bw);
-            bh = Math.max(0, by + bh);
+            var bw = Math.max(bx, bx + bounds.width - dw);
+            var bh = Math.max(by, by + bounds.height - dh);
 
             if (sx < bx)
             {
@@ -1568,7 +1566,7 @@ var Camera = new Class({
 
         get: function ()
         {
-            return this.width / this.zoom;
+            return this.width / this._zoom;
         }
 
     },
@@ -1591,7 +1589,7 @@ var Camera = new Class({
 
         get: function ()
         {
-            return this.height / this.zoom;
+            return this.height / this._zoom;
         }
 
     },
