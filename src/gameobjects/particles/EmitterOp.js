@@ -100,9 +100,9 @@ var Wrap = require('../../math/Wrap');
  * @since 3.0.0
  *
  * @param {ParticleEmitterConfig} config - Settings for the Particle Emitter that owns this property.
- * @param {string} key - The name of the Particle Emitter property.
- * @param {number} defaultValue - The default value of the Particle Emitter property.
- * @param {boolean} [emitOnly=false] - [description]
+ * @param {string} key - The name of the property.
+ * @param {number} defaultValue - The default value of the property.
+ * @param {boolean} [emitOnly=false] - Whether the property can only be modified when a Particle is emitted.
  */
 var EmitterOp = new Class({
 
