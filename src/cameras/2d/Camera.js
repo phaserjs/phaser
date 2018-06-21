@@ -886,10 +886,12 @@ var Camera = new Class({
             var dw = this.displayWidth;
             var dh = this.displayHeight;
 
-            var bx = (dw - width) / 2;
-            var by = (dh - height) / 2;
+            var bx = bounds.x + ((dw - width) / 2);
+            var by = bounds.y + ((dh - height) / 2);
             var bw = Math.max(bx, bx + bounds.width - dw);
             var bh = Math.max(by, by + bounds.height - dh);
+
+            this._tb = new Rectangle(bx, by, bw, bh);
 
             if (sx < bx)
             {
