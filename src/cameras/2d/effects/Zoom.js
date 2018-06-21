@@ -6,7 +6,6 @@
 
 var Clamp = require('../../../math/Clamp');
 var Class = require('../../../utils/Class');
-var Vector2 = require('../../../math/Vector2');
 var EaseMap = require('../../../math/easing/EaseMap');
 
 /**
@@ -65,7 +64,7 @@ var Zoom = new Class({
 
         /**
          * The starting zoom value;
-         * 
+         *
          * @name Phaser.Cameras.Scene2D.Effects.Zoom#source
          * @type {number}
          * @since 3.11.0
@@ -74,7 +73,7 @@ var Zoom = new Class({
 
         /**
          * The destination zoom value.
-         * 
+         *
          * @name Phaser.Cameras.Scene2D.Effects.Zoom#destination
          * @type {number}
          * @since 3.11.0
@@ -83,7 +82,7 @@ var Zoom = new Class({
 
         /**
          * The ease function to use during the zoom.
-         * 
+         *
          * @name Phaser.Cameras.Scene2D.Effects.Zoom#ease
          * @type {function}
          * @since 3.11.0
@@ -258,7 +257,7 @@ var Zoom = new Class({
             {
                 this._onUpdate.call(this._onUpdateScope, this.camera, this.progress, this.destination);
             }
-    
+
             this.effectComplete();
         }
     },
