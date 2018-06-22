@@ -140,7 +140,7 @@ var SceneManager = new Class({
                 });
             }
         }
-        
+
         game.events.once('ready', this.bootQueue, this);
     },
 
@@ -1011,7 +1011,7 @@ var SceneManager = new Class({
 
     /**
      * Runs the given Scene, but does not change the state of this Scene.
-     * 
+     *
      * If the given Scene is paused, it will resume it. If sleeping, it will wake it.
      * If not running at all, it will be started.
      *
@@ -1032,6 +1032,14 @@ var SceneManager = new Class({
 
         if (!scene)
         {
+            for (var i = 0; i < this._pending.length; i++)
+            {
+                if (this._pending[i].key === key)
+                {
+                    this.queueOp('start', key, data);
+                    break;
+                }
+            }
             return this;
         }
 
