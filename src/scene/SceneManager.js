@@ -1032,18 +1032,13 @@ var SceneManager = new Class({
 
         if (!scene)
         {
-            var isFound = false;
             for (var i = 0; i < this._pending.length; i++)
             {
                 if (this._pending[i].key === key)
                 {
-                    isFound = true;
+                    this.queueOp('start', key, data);
                     break;
                 }
-            }
-            if (isFound)
-            {
-                this.queueOp('start', key, data);
             }
             return this;
         }
