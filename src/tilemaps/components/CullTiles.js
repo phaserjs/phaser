@@ -70,8 +70,8 @@ var CullTiles = function (layer, camera, outputArray)
                 continue;
             }
 
-            var tileX = tile.pixelX * a + tile.pixelY * c + e;
-            var tileY = tile.pixelX * b + tile.pixelY * d + f;
+            var tileX = tilemapLayer.x + (tile.pixelX * a + tile.pixelY * c + e);
+            var tileY = tilemapLayer.y + (tile.pixelX * b + tile.pixelY * d + f);
 
             if (tile.visible &&
                 tileX >= tCullX &&
