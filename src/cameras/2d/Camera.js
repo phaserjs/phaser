@@ -96,6 +96,7 @@ var Camera = new Class({
 
         /**
          * The Camera ID. Assigned by the Camera Manager and used to handle camera exclusion.
+         * This value is a bitmask.
          *
          * @name Phaser.Cameras.Scene2D.Camera#id
          * @type {integer}
