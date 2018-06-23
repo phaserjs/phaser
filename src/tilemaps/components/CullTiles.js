@@ -69,7 +69,7 @@ var CullTiles = function (layer, camera, outputArray)
             {
                 continue;
             }
-            
+
             var tileX = ((tile.pixelX + tilemapLayer.x) * a + (tile.pixelY + tilemapLayer.y) * c + e);
             var tileY = ((tile.pixelX + tilemapLayer.x) * b + (tile.pixelY + tilemapLayer.y) * d + f);
 
