@@ -95,6 +95,16 @@ var Camera = new Class({
         this.scene;
 
         /**
+         * The Camera ID. Assigned by the Camera Manager and used to handle camera exclusion.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#id
+         * @type {integer}
+         * @readOnly
+         * @since 3.11.0
+         */
+        this.id = 0;
+
+        /**
          * The name of the Camera. This is left empty for your own use.
          *
          * @name Phaser.Cameras.Scene2D.Camera#name
@@ -487,17 +497,6 @@ var Camera = new Class({
          * @since 3.0.0
          */
         this._follow = null;
-
-        /**
-         * Internal camera ID. Assigned by the Camera Manager and used in the camera pool.
-         *
-         * @name Phaser.Cameras.Scene2D.Camera#_id
-         * @type {integer}
-         * @private
-         * @default 0
-         * @since 3.0.0
-         */
-        this._id = 0;
     },
 
     /**
@@ -1329,14 +1328,20 @@ var Camera = new Class({
      * @param {integer} y - The top-left y coordinate of the bounds.
      * @param {integer} width - The width of the bounds, in pixels.
      * @param {integer} height - The height of the bounds, in pixels.
+     * @param {boolean} [centerOn] - If `true` the Camera will automatically be centered on the new bounds.
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
-    setBounds: function (x, y, width, height)
+    setBounds: function (x, y, width, height, centerOn)
     {
         this._bounds.setTo(x, y, width, height);
 
         this.useBounds = true;
+
+        if (centerOn)
+        {
+            this.centerToBounds();
+        }
 
         return this;
     },
