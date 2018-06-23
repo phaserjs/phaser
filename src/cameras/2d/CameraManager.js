@@ -87,15 +87,6 @@ var CameraManager = new Class({
         this.cameras = [];
 
         /**
-         * A pool of Camera objects available to be used by the Camera Manager.
-         *
-         * @name Phaser.Cameras.Scene2D.CameraManager#cameraPool
-         * @type {Phaser.Cameras.Scene2D.Camera[]}
-         * @since 3.0.0
-         */
-        this.cameraPool = [];
-
-        /**
          * The default Camera in the Camera Manager.
          *
          * @name Phaser.Cameras.Scene2D.CameraManager#main
@@ -191,18 +182,7 @@ var CameraManager = new Class({
         if (makeMain === undefined) { makeMain = false; }
         if (name === undefined) { name = ''; }
 
-        var camera = null;
-
-        if (this.cameraPool.length > 0)
-        {
-            camera = this.cameraPool.pop();
-
-            camera.setViewport(x, y, width, height);
-        }
-        else
-        {
-            camera = new Camera(x, y, width, height);
-        }
+        var camera = new Camera(x, y, width, height);
 
         camera.setName(name);
         camera.setScene(this.scene);
@@ -214,7 +194,7 @@ var CameraManager = new Class({
             this.main = camera;
         }
 
-        camera._id = this.currentCameraId;
+        camera.id = this.currentCameraId;
 
         this.currentCameraId = this.currentCameraId << 1;
 
@@ -234,12 +214,14 @@ var CameraManager = new Class({
     addExisting: function (camera)
     {
         var index = this.cameras.indexOf(camera);
-        var poolIndex = this.cameraPool.indexOf(camera);
 
-        if (index < 0 && poolIndex >= 0)
+        if (index == -1)
         {
+            camera.id = this.currentCameraId;
+
+            this.currentCameraId = this.currentCameraId << 1;
+            
             this.cameras.push(camera);
-            this.cameraPool.slice(poolIndex, 1);
 
             return camera;
         }
@@ -386,7 +368,6 @@ var CameraManager = new Class({
 
         if (cameraIndex >= 0 && this.cameras.length > 1)
         {
-            this.cameraPool.push(this.cameras[cameraIndex]);
             this.cameras.splice(cameraIndex, 1);
 
             if (this.main === camera)
@@ -434,10 +415,14 @@ var CameraManager = new Class({
      */
     resetAll: function ()
     {
-        while (this.cameras.length > 0)
+        for (var i = 0; i < this.cameras.length; i++)
         {
-            this.cameraPool.push(this.cameras.pop());
+            this.cameras[i].destroy();
         }
+
+        this.cameras = [];
+
+        this.currentCameraId = 1;
 
         this.main = this.add();
 
@@ -495,13 +480,7 @@ var CameraManager = new Class({
             this.cameras[i].destroy();
         }
 
-        for (i = 0; i < this.cameraPool.length; i++)
-        {
-            this.cameraPool[i].destroy();
-        }
-
         this.cameras = [];
-        this.cameraPool = [];
 
         var eventEmitter = this.systems.events;
 
