@@ -467,6 +467,8 @@ var Pointer = new Class({
         this.dirty = true;
 
         this.wasTouch = false;
+
+        this.isDown = (event.buttons > 0);
     },
 
     /**
