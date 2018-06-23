@@ -18,7 +18,7 @@ var Texture = require('./Texture');
 /**
  * @callback EachTextureCallback
  *
- * @param {Phaser.Textures.Texture} texture - [description]
+ * @param {Phaser.Textures.Texture} texture - Each texture in Texture Manager.
  * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
  */
 
@@ -37,7 +37,7 @@ var Texture = require('./Texture');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Game} game - [description]
+ * @param {Phaser.Game} game - The Phaser.Game instance this Texture Manager belongs to.
  */
 var TextureManager = new Class({
 
@@ -50,7 +50,7 @@ var TextureManager = new Class({
         EventEmitter.call(this);
 
         /**
-         * [description]
+         * The Game that this TextureManager belongs to.
          *
          * @name Phaser.Textures.TextureManager#game
          * @type {Phaser.Game}
@@ -59,7 +59,7 @@ var TextureManager = new Class({
         this.game = game;
 
         /**
-         * [description]
+         * The name of this manager.
          *
          * @name Phaser.Textures.TextureManager#name
          * @type {string}
@@ -68,7 +68,8 @@ var TextureManager = new Class({
         this.name = 'TextureManager';
 
         /**
-         * [description]
+         * An object that has all of textures that Texture Manager creates.
+         * Textures are assigned to keys so we can access to any texture that this object has directly by key value without iteration.
          *
          * @name Phaser.Textures.TextureManager#list
          * @type {object}
@@ -78,7 +79,7 @@ var TextureManager = new Class({
         this.list = {};
 
         /**
-         * [description]
+         * The temporary canvas element to save an pixel data of an arbitrary texture in getPixel() and getPixelAlpha() method.
          *
          * @name Phaser.Textures.TextureManager#_tempCanvas
          * @type {HTMLCanvasElement}
@@ -88,7 +89,7 @@ var TextureManager = new Class({
         this._tempCanvas = CanvasPool.create2D(this, 1, 1);
 
         /**
-         * [description]
+         * The context of the temporary canvas element made to save an pixel data in getPixel() and getPixelAlpha() method.
          *
          * @name Phaser.Textures.TextureManager#_tempContext
          * @type {CanvasRenderingContext2D}
@@ -98,7 +99,7 @@ var TextureManager = new Class({
         this._tempContext = this._tempCanvas.getContext('2d');
 
         /**
-         * [description]
+         * An counting value used for emitting 'ready' event after all of managers in game is loaded.
          *
          * @name Phaser.Textures.TextureManager#_pending
          * @type {integer}
@@ -112,7 +113,7 @@ var TextureManager = new Class({
     },
 
     /**
-     * [description]
+     * The Boot Handler called by Phaser.Game when it first starts up.
      *
      * @method Phaser.Textures.TextureManager#boot
      * @since 3.0.0
@@ -131,7 +132,7 @@ var TextureManager = new Class({
     },
 
     /**
-     * [description]
+     * After 'onload' or 'onerror' invoked twice, emit 'ready' event.
      *
      * @method Phaser.Textures.TextureManager#updatePending
      * @since 3.0.0
@@ -296,7 +297,7 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {object} config - [description]
+     * @param {object} config - The configuration object needed to generate the texture.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
@@ -909,7 +910,7 @@ var TextureManager = new Class({
      * @method Phaser.Textures.TextureManager#setTexture
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} gameObject - [description]
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object the texture would be set on.
      * @param {string} key - The unique string-based key of the Texture.
      * @param {(string|integer)} frame - The string or index of the Frame.
      *
