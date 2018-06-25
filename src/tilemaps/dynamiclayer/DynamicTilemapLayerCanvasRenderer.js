@@ -67,7 +67,7 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPe
             ctx.scale(tile.flipX ? -1 : 1, tile.flipY ? -1 : 1);
         }
 
-        ctx.globalAlpha = src.alpha * tile.alpha;
+        ctx.globalAlpha = camera.alpha * src.alpha * tile.alpha;
 
         ctx.drawImage(
             image,

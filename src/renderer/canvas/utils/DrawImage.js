@@ -31,11 +31,8 @@ var DrawImage = function (src, camera, parentMatrix)
         //  Nothing to see, so abort early
         return;
     }
-    else if (renderer.currentAlpha !== alpha)
-    {
-        renderer.currentAlpha = alpha;
-        ctx.globalAlpha = alpha;
-    }
+
+    ctx.globalAlpha = alpha;
 
     //  Blend Mode
 

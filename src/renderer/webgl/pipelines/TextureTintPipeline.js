@@ -813,10 +813,10 @@ var TextureTintPipeline = new Class({
         var scaleX = sprite.scaleX;
         var scaleY = sprite.scaleY;
         var rotation = sprite.rotation;
-        var alphaTL = sprite._alphaTL;
-        var alphaTR = sprite._alphaTR;
-        var alphaBL = sprite._alphaBL;
-        var alphaBR = sprite._alphaBR;
+        var alphaTL = camera.alpha * sprite._alphaTL;
+        var alphaTR = camera.alpha * sprite._alphaTR;
+        var alphaBL = camera.alpha * sprite._alphaBL;
+        var alphaBR = camera.alpha * sprite._alphaBR;
         var tintTL = sprite._tintTL;
         var tintTR = sprite._tintTR;
         var tintBL = sprite._tintBL;
@@ -1062,7 +1062,7 @@ var TextureTintPipeline = new Class({
             vertexViewF32[vertexOffset + 1] = ty;
             vertexViewF32[vertexOffset + 2] = uvs[index + 0];
             vertexViewF32[vertexOffset + 3] = uvs[index + 1];
-            vertexViewU32[vertexOffset + 4] = getTint(colors[index0], alphas[index0]);
+            vertexViewU32[vertexOffset + 4] = getTint(colors[index0], camera.alpha * alphas[index0]);
 
             vertexOffset += 5;
             index0 += 1;
@@ -1116,7 +1116,7 @@ var TextureTintPipeline = new Class({
         var lineHeight = fontData.lineHeight;
         var scale = (bitmapText.fontSize / fontData.size);
         var chars = fontData.chars;
-        var alpha = bitmapText.alpha;
+        var alpha = camera.alpha * bitmapText.alpha;
         var vTintTL = getTint(bitmapText._tintTL, alpha);
         var vTintTR = getTint(bitmapText._tintTR, alpha);
         var vTintBL = getTint(bitmapText._tintBL, alpha);
@@ -1393,7 +1393,7 @@ var TextureTintPipeline = new Class({
         var lineHeight = fontData.lineHeight;
         var scale = (bitmapText.fontSize / fontData.size);
         var chars = fontData.chars;
-        var alpha = bitmapText.alpha;
+        var alpha = camera.alpha * bitmapText.alpha;
         var vTintTL = getTint(bitmapText._tintTL, alpha);
         var vTintTR = getTint(bitmapText._tintTR, alpha);
         var vTintBL = getTint(bitmapText._tintBL, alpha);
@@ -1724,10 +1724,10 @@ var TextureTintPipeline = new Class({
             text.scrollFactorX, text.scrollFactorY,
             text.displayOriginX, text.displayOriginY,
             0, 0, text.canvasTexture.width, text.canvasTexture.height,
-            getTint(text._tintTL, text._alphaTL),
-            getTint(text._tintTR, text._alphaTR),
-            getTint(text._tintBL, text._alphaBL),
-            getTint(text._tintBR, text._alphaBR),
+            getTint(text._tintTL, camera.alpha * text._alphaTL),
+            getTint(text._tintTR, camera.alpha * text._alphaTR),
+            getTint(text._tintBL, camera.alpha * text._alphaBL),
+            getTint(text._tintBR, camera.alpha * text._alphaBR),
             0, 0,
             camera,
             parentTransformMatrix
@@ -1752,7 +1752,7 @@ var TextureTintPipeline = new Class({
         var tileset = tilemapLayer.tileset;
         var scrollFactorX = tilemapLayer.scrollFactorX;
         var scrollFactorY = tilemapLayer.scrollFactorY;
-        var alpha = tilemapLayer.alpha;
+        var alpha = camera.alpha * tilemapLayer.alpha;
         var x = tilemapLayer.x;
         var y = tilemapLayer.y;
         var sx = tilemapLayer.scaleX;
@@ -1818,10 +1818,10 @@ var TextureTintPipeline = new Class({
             tileSprite.scrollFactorX, tileSprite.scrollFactorY,
             tileSprite.originX * tileSprite.width, tileSprite.originY * tileSprite.height,
             0, 0, tileSprite.width, tileSprite.height,
-            getTint(tileSprite._tintTL, tileSprite._alphaTL),
-            getTint(tileSprite._tintTR, tileSprite._alphaTR),
-            getTint(tileSprite._tintBL, tileSprite._alphaBL),
-            getTint(tileSprite._tintBR, tileSprite._alphaBR),
+            getTint(tileSprite._tintTL, camera.alpha * tileSprite._alphaTL),
+            getTint(tileSprite._tintTR, camera.alpha * tileSprite._alphaTR),
+            getTint(tileSprite._tintBL, camera.alpha * tileSprite._alphaBL),
+            getTint(tileSprite._tintBR, camera.alpha * tileSprite._alphaBR),
             (tileSprite.tilePositionX % tileSprite.frame.width) / tileSprite.frame.width,
             (tileSprite.tilePositionY % tileSprite.frame.height) / tileSprite.frame.height,
             camera,

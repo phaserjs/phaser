@@ -42,7 +42,7 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, src, interpolationPer
     ctx.rotate(src.rotation);
     ctx.scale(src.scaleX, src.scaleY);
     ctx.scale(src.flipX ? -1 : 1, src.flipY ? -1 : 1);
-    ctx.globalAlpha = src.alpha;
+    ctx.globalAlpha = camera.alpha * src.alpha;
 
     for (var index = 0; index < tileCount; ++index)
     {

@@ -4,6 +4,7 @@
 
 ### Camera - New Features, Updates and Fixes
 
+* `Camera.alpha` (and its related method `Camera.setAlpha`) allows you to get an alpha level for the entire camera. This impacts everything it is rendering, even if those objects also have their own alpha values too. You can tween the property to make the camera contents fade in / out, or you can set it as needed in your game.
 * `Camera.deadzone` (and its related method `Camera.setDeadzone`) allows you to specify the deadzone for a camera. The deadzone is a rectangular region used when a camera is following a target. If the target is within the deadzone then the camera will not scroll. As soon as the target leaves the deadzone, the camera will begin tracking it (applying lerp if needed.) It allows you to set a region of the camera in which a player can move freely before tracking begins. The deadzone is re-centered on the camera mid point every frame, meaning you can also use the rectangle for other in-game chcecks as needed.
 * `Camera.midPoint` is a new Vec2 property that is updated every frame. Use it to obtain exactly where in the world the center of the camera is currently looking.
 * `Camera.displayWidth` is a new property that returns the display width of the camera, factoring in the current zoom level.
