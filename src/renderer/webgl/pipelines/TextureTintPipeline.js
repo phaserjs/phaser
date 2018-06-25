@@ -665,6 +665,8 @@ var TextureTintPipeline = new Class({
 
         var prevTextureSourceIndex;
 
+        var alpha = camera.alpha * blitter.alpha;
+
         for (var batchIndex = 0; batchIndex < batchCount; ++batchIndex)
         {
             var batchSize = Math.min(length, this.maxQuads);
@@ -673,15 +675,15 @@ var TextureTintPipeline = new Class({
             {
                 var bob = list[batchOffset + index];
                 var frame = bob.frame;
-                var alpha = bob.alpha;
+                var bobAlpha = bob.alpha * alpha;
 
-                if (alpha === 0)
+                if (bobAlpha === 0)
                 {
                     //  Nothing to see here, moving on ...
                     continue;
                 }
 
-                var tint = getTint(0xffffff, alpha);
+                var tint = getTint(0xffffff, bobAlpha);
                 var uvs = frame.uvs;
                 var flipX = bob.flipX;
                 var flipY = bob.flipY;
