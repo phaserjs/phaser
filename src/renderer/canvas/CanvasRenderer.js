@@ -395,11 +395,9 @@ var CanvasRenderer = new Class({
             ctx.fillRect(camera.x, camera.y, camera.width, camera.height);
         }
 
-        if (this.currentAlpha !== 1)
-        {
-            ctx.globalAlpha = 1;
-            this.currentAlpha = 1;
-        }
+        ctx.globalAlpha = camera.alpha;
+
+        this.currentAlpha = camera.alpha;
 
         if (this.currentBlendMode !== 0)
         {
@@ -442,6 +440,7 @@ var CanvasRenderer = new Class({
 
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.globalCompositeOperation = 'source-over';
+        ctx.globalAlpha = 1;
 
         camera.flashEffect.postRenderCanvas(ctx);
         camera.fadeEffect.postRenderCanvas(ctx);

@@ -33,20 +33,27 @@ var TileSpriteCanvasRenderer = function (renderer, src, interpolationPercentage,
 
     src.updateTileTexture();
 
+    //  Alpha
+
+    var alpha = camera.alpha * src.alpha;
+
+    if (alpha === 0)
+    {
+        //  Nothing to see, so abort early
+        return;
+    }
+    else if (renderer.currentAlpha !== alpha)
+    {
+        renderer.currentAlpha = alpha;
+        ctx.globalAlpha = alpha;
+    }
+
     //  Blend Mode
 
     if (renderer.currentBlendMode !== src.blendMode)
     {
         renderer.currentBlendMode = src.blendMode;
         ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
-    }
-
-    //  Alpha
-
-    if (renderer.currentAlpha !== src.alpha)
-    {
-        renderer.currentAlpha = src.alpha;
-        ctx.globalAlpha = src.alpha;
     }
 
     //  Smoothing

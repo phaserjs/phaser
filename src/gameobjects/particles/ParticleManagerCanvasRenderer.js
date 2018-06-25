@@ -33,9 +33,11 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
     var ctx = renderer.currentContext;
 
     ctx.save();
+
     if (parentMatrix !== undefined)
     {
         var matrix = parentMatrix.matrix;
+
         ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
     }
 
@@ -51,8 +53,8 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
             continue;
         }
 
-
         var lastAlpha = ctx.globalAlpha;
+
         var cameraScrollX = camera.scrollX * emitter.scrollFactorX;
         var cameraScrollY = camera.scrollY * emitter.scrollFactorY;
 
@@ -68,9 +70,9 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
         {
             var particle = particles[index];
 
-            var alpha = ((particle.color >> 24) & 0xFF) / 255.0;
+            var particleAlpha = camera.alpha * ((particle.color >> 24) & 0xFF) / 255;
 
-            if (alpha <= 0)
+            if (particleAlpha <= 0)
             {
                 continue;
             }
@@ -94,7 +96,7 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
                 ty |= 0;
             }
 
-            ctx.globalAlpha = alpha;
+            ctx.globalAlpha = particleAlpha;
         
             ctx.save();
 

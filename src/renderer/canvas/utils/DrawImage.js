@@ -22,20 +22,27 @@ var DrawImage = function (src, camera, parentMatrix)
     var frame = src.frame;
     var cd = frame.canvasData;
 
+    //  Alpha
+
+    var alpha = camera.alpha * src.alpha;
+
+    if (alpha === 0)
+    {
+        //  Nothing to see, so abort early
+        return;
+    }
+    else if (renderer.currentAlpha !== alpha)
+    {
+        renderer.currentAlpha = alpha;
+        ctx.globalAlpha = alpha;
+    }
+
     //  Blend Mode
 
     if (this.currentBlendMode !== src.blendMode)
     {
         this.currentBlendMode = src.blendMode;
         ctx.globalCompositeOperation = this.blendModes[src.blendMode];
-    }
-
-    //  Alpha
-
-    if (this.currentAlpha !== src.alpha)
-    {
-        this.currentAlpha = src.alpha;
-        ctx.globalAlpha = src.alpha;
     }
 
     //  Smoothing

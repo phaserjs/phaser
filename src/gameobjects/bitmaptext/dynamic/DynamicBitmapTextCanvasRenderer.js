@@ -68,6 +68,21 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
     var rotation = 0;
     var scale = (src.fontSize / src.fontData.size);
 
+    //  Alpha
+
+    var alpha = camera.alpha * src.alpha;
+
+    if (alpha === 0)
+    {
+        //  Nothing to see, so abort early
+        return;
+    }
+    else if (renderer.currentAlpha !== alpha)
+    {
+        renderer.currentAlpha = alpha;
+        ctx.globalAlpha = alpha;
+    }
+
     //  Blend Mode
     if (renderer.currentBlendMode !== src.blendMode)
     {
