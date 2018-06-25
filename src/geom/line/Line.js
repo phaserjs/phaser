@@ -73,15 +73,15 @@ var Line = new Class({
     },
 
     /**
-     * [description]
+     * Get a point on a line that's a given percentage along its length.
      *
      * @method Phaser.Geom.Line#getPoint
      * @since 3.0.0
      *
      * @generic {Phaser.Geom.Point} O - [output,$return]
      *
-     * @param {float} position - [description]
-     * @param {(Phaser.Geom.Point|object)} [output] - [description]
+     * @param {number} position - A value between 0 and 1, where 0 is the start, 0.5 is the middle and 1 is the end of the line.
+     * @param {(Phaser.Geom.Point|object)} [output] - An optional point, or point-like object, to store the coordinates of the point on the line.
      *
      * @return {(Phaser.Geom.Point|object)} A Point, or point-like object, containing the coordinates of the point on the line.
      */
@@ -91,18 +91,23 @@ var Line = new Class({
     },
 
     /**
-     * [description]
+     * Get a number of points along a line's length.
+     *
+     * Provide a `quantity` to get an exact number of points along the line.
+     *
+     * Provide a `stepRate` to ensure a specific distance between each point on the line. Set `quantity` to `0` when
+     * providing a `stepRate`.
      *
      * @method Phaser.Geom.Line#getPoints
      * @since 3.0.0
      *
      * @generic {Phaser.Geom.Point} O - [output,$return]
      *
-     * @param {integer} quantity - [description]
-     * @param {integer} [stepRate] - [description]
-     * @param {(array|Phaser.Geom.Point[])} [output] - [description]
+     * @param {integer} quantity - The number of points to place on the line. Set to `0` to use `stepRate` instead.
+     * @param {integer} [stepRate] - The distance between each point on the line. When set, `quantity` is implied and should be set to `0`.
+     * @param {(array|Phaser.Geom.Point[])} [output] - An optional array of Points, or point-like objects, to store the coordinates of the points on the line.
      *
-     * @return {(array|Phaser.Geom.Point[])} [description]
+     * @return {(array|Phaser.Geom.Point[])} An array of Points, or point-like objects, containing the coordinates of the points on the line.
      */
     getPoints: function (quantity, stepRate, output)
     {

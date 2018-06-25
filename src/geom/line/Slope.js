@@ -5,14 +5,14 @@
  */
 
 /**
- * [description]
+ * Calculate the slope of the given line.
  *
  * @function Phaser.Geom.Line.Slope
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Line} line - [description]
+ * @param {Phaser.Geom.Line} line - The line to calculate the slope of.
  *
- * @return {number} [description]
+ * @return {number} The slope of the line.
  */
 var Slope = function (line)
 {

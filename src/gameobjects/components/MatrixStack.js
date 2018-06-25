@@ -255,7 +255,7 @@ var MatrixStack = {
      * @method Phaser.GameObjects.Components.MatrixStack#rotate
      * @since 3.2.0
      *
-     * @param {number} t - The angle of rotation, in radians.
+     * @param {number} t - The angle of rotation in radians.
      *
      * @return {this} This Game Object instance.
      */

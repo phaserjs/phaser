@@ -23,7 +23,7 @@ var tmpVec3 = new Vector3();
  *
  * @param {Phaser.Math.Vector3} vec - The vector to be rotated.
  * @param {Phaser.Math.Vector3} axis - The axis to rotate around.
- * @param {float} radians - The angle of rotation in radians.
+ * @param {number} radians - The angle of rotation in radians.
  *
  * @return {Phaser.Math.Vector3} The given vector.
  */

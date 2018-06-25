@@ -5,19 +5,19 @@
  */
 
 /**
- * [description]
+ * Rotate a line around the given coordinates by the given angle in radians.
  *
  * @function Phaser.Geom.Line.RotateAroundXY
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Line} O - [line,$return]
  *
- * @param {Phaser.Geom.Line} line - [description]
- * @param {number} x - [description]
- * @param {number} y - [description]
- * @param {number} angle - [description]
+ * @param {Phaser.Geom.Line} line - The line to rotate.
+ * @param {number} x - The horizontal coordinate to rotate the line around.
+ * @param {number} y - The vertical coordinate to rotate the line around.
+ * @param {number} angle - The angle of rotation in radians.
  *
- * @return {Phaser.Geom.Line} [description]
+ * @return {Phaser.Geom.Line} The rotated line.
  */
 var RotateAroundXY = function (line, x, y, angle)
 {

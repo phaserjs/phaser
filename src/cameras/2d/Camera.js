@@ -139,7 +139,7 @@ var Camera = new Class({
 
         /**
          * The width of the Camera viewport, in pixels.
-         * 
+         *
          * The viewport is the area into which the Camera renders. Setting the viewport does
          * not restrict where the Camera can scroll to.
          *
@@ -151,7 +151,7 @@ var Camera = new Class({
 
         /**
          * The height of the Camera viewport, in pixels.
-         * 
+         *
          * The viewport is the area into which the Camera renders. Setting the viewport does
          * not restrict where the Camera can scroll to.
          *
@@ -186,7 +186,7 @@ var Camera = new Class({
 
         /**
          * Is this Camera using a bounds to restrict scrolling movement?
-         * 
+         *
          * Set this property along with the bounds via `Camera.setBounds`.
          *
          * @name Phaser.Cameras.Scene2D.Camera#useBounds
@@ -218,12 +218,12 @@ var Camera = new Class({
 
         /**
          * The horizontal scroll position of this Camera.
-         * 
+         *
          * Change this value to cause the Camera to scroll around your Scene.
-         * 
+         *
          * Alternatively, setting the Camera to follow a Game Object, via the `startFollow` method,
          * will automatically adjust the Camera scroll values accordingly.
-         * 
+         *
          * You can set the bounds within which the Camera can scroll via the `setBounds` method.
          *
          * @name Phaser.Cameras.Scene2D.Camera#scrollX
@@ -235,12 +235,12 @@ var Camera = new Class({
 
         /**
          * The vertical scroll position of this Camera.
-         * 
+         *
          * Change this value to cause the Camera to scroll around your Scene.
-         * 
+         *
          * Alternatively, setting the Camera to follow a Game Object, via the `startFollow` method,
          * will automatically adjust the Camera scroll values accordingly.
-         * 
+         *
          * You can set the bounds within which the Camera can scroll via the `setBounds` method.
          *
          * @name Phaser.Cameras.Scene2D.Camera#scrollY
@@ -252,13 +252,13 @@ var Camera = new Class({
 
         /**
          * The Camera zoom value. Change this value to zoom in, or out of, a Scene.
-         * 
+         *
          * A value of 0.5 would zoom the Camera out, so you can now see twice as much
          * of the Scene as before. A value of 2 would zoom the Camera in, so every pixel
          * now takes up 2 pixels when rendered.
-         * 
+         *
          * Set to 1 to return to the default zoom level.
-         * 
+         *
          * Be careful to never set this value to zero.
          *
          * @name Phaser.Cameras.Scene2D.Camera#zoom
@@ -270,10 +270,10 @@ var Camera = new Class({
 
         /**
          * The rotation of the Camera in radians.
-         * 
+         *
          * Camera rotation always takes place based on the Camera viewport. By default, rotation happens
          * in the center of the viewport. You can adjust this with the `originX` and `originY` properties.
-         * 
+         *
          * Rotation influences the rendering of _all_ Game Objects visible by this Camera. However, it does not
          * rotate the Camera viewport itself, which always remains an axis-aligned rectangle.
          *
@@ -365,7 +365,7 @@ var Camera = new Class({
 
         /**
          * The Camera Zoom effect handler.
-         * To pan this camera see the `Camera.zoom` method.
+         * To zoom this camera see the `Camera.zoom` method.
          *
          * @name Phaser.Cameras.Scene2D.Camera#zoomEffect
          * @type {Phaser.Cameras.Scene2D.Effects.Zoom}
@@ -426,11 +426,11 @@ var Camera = new Class({
 
         /**
          * The mid-point of the Camera in 'world' coordinates.
-         * 
+         *
          * Use it to obtain exactly where in the world the center of the camera is currently looking.
-         * 
+         *
          * This value is updated in the preRender method, after the scroll values and follower
-         * have been processed. 
+         * have been processed.
          *
          * @name Phaser.Cameras.Scene2D.Camera#midPoint
          * @type {Phaser.Math.Vector2}
@@ -441,12 +441,12 @@ var Camera = new Class({
 
         /**
          * The horizontal origin of rotation for this Camera.
-         * 
+         *
          * By default the camera rotates around the center of the viewport.
-         * 
+         *
          * Changing the origin allows you to adjust the point in the viewport from which rotation happens.
          * A value of 0 would rotate from the top-left of the viewport. A value of 1 from the bottom right.
-         * 
+         *
          * See `setOrigin` to set both origins in a single, chainable call.
          *
          * @name Phaser.Cameras.Scene2D.Camera#originX
@@ -458,12 +458,12 @@ var Camera = new Class({
 
         /**
          * The vertical origin of rotation for this Camera.
-         * 
+         *
          * By default the camera rotates around the center of the viewport.
-         * 
+         *
          * Changing the origin allows you to adjust the point in the viewport from which rotation happens.
          * A value of 0 would rotate from the top-left of the viewport. A value of 1 from the bottom right.
-         * 
+         *
          * See `setOrigin` to set both origins in a single, chainable call.
          *
          * @name Phaser.Cameras.Scene2D.Camera#originY
@@ -475,20 +475,20 @@ var Camera = new Class({
 
         /**
          * The Camera dead zone.
-         * 
+         *
          * The deadzone is only used when the camera is following a target.
-         * 
+         *
          * It defines a rectangular region within which if the target is present, the camera will not scroll.
          * If the target moves outside of this area, the camera will begin scrolling in order to follow it.
-         * 
+         *
          * The `lerp` values that you can set for a follower target also apply when using a deadzone.
-         * 
+         *
          * You can directly set this property to be an instance of a Rectangle. Or, you can use the
          * `setDeadzone` method for a chainable approach.
-         * 
+         *
          * The rectangle you provide can have its dimensions adjusted dynamically, however, please
          * note that its position is updated every frame, as it is constantly re-centered on the cameras mid point.
-         * 
+         *
          * Calling `setDeadzone` with no arguments will reset an active deadzone, as will setting this property
          * to `null`.
          *
@@ -514,9 +514,9 @@ var Camera = new Class({
      * Sets the rotation origin of this Camera.
      *
      * The values are given in the range 0 to 1 and are only used when calculating Camera rotation.
-     * 
+     *
      * By default the camera rotates around the center of the viewport.
-     * 
+     *
      * Changing the origin allows you to adjust the point in the viewport from which rotation happens.
      * A value of 0 would rotate from the top-left of the viewport. A value of 1 from the bottom right.
      *
@@ -541,23 +541,23 @@ var Camera = new Class({
 
     /**
      * Sets the Camera dead zone.
-     * 
+     *
      * The deadzone is only used when the camera is following a target.
-     * 
+     *
      * It defines a rectangular region within which if the target is present, the camera will not scroll.
      * If the target moves outside of this area, the camera will begin scrolling in order to follow it.
-     * 
+     *
      * The deadzone rectangle is re-positioned every frame so that it is centered on the mid-point
      * of the camera. This allows you to use the object for additional game related checks, such as
      * testing if an object is within it or not via a Rectangle.contains call.
-     * 
+     *
      * The `lerp` values that you can set for a follower target also apply when using a deadzone.
-     * 
+     *
      * Calling this method with no arguments will reset an active deadzone.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setDeadzone
      * @since 3.11.0
-     * 
+     *
      * @param {number} [width] - The width of the deadzone rectangle in pixels. If not specified the deadzone is removed.
      * @param {number} [height] - The height of the deadzone rectangle in pixels.
      *
@@ -590,7 +590,7 @@ var Camera = new Class({
                 var fy = this._follow.y - this.followOffset.y;
 
                 this.midPoint.set(fx, fy);
-    
+
                 this.scrollX = fx - originX;
                 this.scrollY = fy - originY;
             }
@@ -608,7 +608,7 @@ var Camera = new Class({
      *
      * @method Phaser.Cameras.Scene2D.Camera#getScroll
      * @since 3.11.0
-     * 
+     *
      * @param {number} x - The horizontal coordinate to center on.
      * @param {number} y - The vertical coordinate to center on.
      * @param {Phaser.Math.Vector2} [out] - A Vec2 to store the values in. If not given a new Vec2 is created.
@@ -639,7 +639,7 @@ var Camera = new Class({
      *
      * @method Phaser.Cameras.Scene2D.Camera#centerOn
      * @since 3.11.0
-     * 
+     *
      * @param {number} x - The horizontal coordinate to center on.
      * @param {number} y - The vertical coordinate to center on.
      *
@@ -679,7 +679,7 @@ var Camera = new Class({
             var bounds = this._bounds;
             var originX = this.width * 0.5;
             var originY = this.height * 0.5;
-    
+
             this.midPoint.set(bounds.centerX, bounds.centerY);
 
             this.scrollX = bounds.centerX - originX;
@@ -1149,7 +1149,7 @@ var Camera = new Class({
      *
      * @method Phaser.Cameras.Scene2D.Camera#clampX
      * @since 3.11.0
-     * 
+     *
      * @param {number} x - The value to horizontally scroll clamp.
      *
      * @return {number} The adjusted value to use as scrollX.
@@ -1181,7 +1181,7 @@ var Camera = new Class({
      *
      * @method Phaser.Cameras.Scene2D.Camera#clampY
      * @since 3.11.0
-     * 
+     *
      * @param {number} y - The value to vertically scroll clamp.
      *
      * @return {number} The adjusted value to use as scrollY.
@@ -1828,10 +1828,10 @@ var Camera = new Class({
 
     /**
      * The displayed width of the camera viewport, factoring in the camera zoom level.
-     * 
+     *
      * If a camera has a viewport width of 800 and a zoom of 0.5 then its display width
      * would be 1600, as it's displaying twice as many pixels as zoom level 1.
-     * 
+     *
      * Equally, a camera with a width of 800 and zoom of 2 would have a display width
      * of 400 pixels.
      *
@@ -1851,10 +1851,10 @@ var Camera = new Class({
 
     /**
      * The displayed height of the camera viewport, factoring in the camera zoom level.
-     * 
+     *
      * If a camera has a viewport height of 600 and a zoom of 0.5 then its display height
      * would be 1200, as it's displaying twice as many pixels as zoom level 1.
-     * 
+     *
      * Equally, a camera with a height of 600 and zoom of 2 would have a display height
      * of 300 pixels.
      *

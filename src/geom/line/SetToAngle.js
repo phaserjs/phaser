@@ -5,20 +5,20 @@
  */
 
 /**
- * [description]
+ * Set a line to a given position, angle and length.
  *
  * @function Phaser.Geom.Line.SetToAngle
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Line} O - [line,$return]
  *
- * @param {Phaser.Geom.Line} line - [description]
- * @param {number} x - [description]
- * @param {number} y - [description]
- * @param {number} angle - [description]
- * @param {number} length - [description]
+ * @param {Phaser.Geom.Line} line - The line to set.
+ * @param {number} x - The horizontal start position of the line.
+ * @param {number} y - The vertical start position of the line.
+ * @param {number} angle - The angle of the line in radians.
+ * @param {number} length - The length of the line.
  *
- * @return {Phaser.Geom.Line} [description]
+ * @return {Phaser.Geom.Line} The updated line.
  */
 var SetToAngle = function (line, x, y, angle, length)
 {

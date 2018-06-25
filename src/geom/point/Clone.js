@@ -7,14 +7,14 @@
 var Point = require('./Point');
 
 /**
- * [description]
+ * Clone the given Point.
  *
  * @function Phaser.Geom.Point.Clone
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Point} source - [description]
+ * @param {Phaser.Geom.Point} source - The source Point to clone.
  *
- * @return {Phaser.Geom.Point} [description]
+ * @return {Phaser.Geom.Point} The cloned Point.
  */
 var Clone = function (source)
 {
