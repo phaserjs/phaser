@@ -31,6 +31,9 @@ var RectangleContains = require('../../geom/rectangle/Contains');
  * @property {number} [bounds.height] - [description]
  */
 
+//  TODO stop it assigning more than 32 cameras (or whatever the limit is)
+//  The remove method leaves gaps in the ID list
+
 /**
  * @classdesc
  * [description]
@@ -67,18 +70,22 @@ var CameraManager = new Class({
         this.systems = scene.sys;
 
         /**
-         * The current Camera ID.
+         * The ID that will be assigned to the next Camera that is created.
+         * This is a bitmask value, meaning only up to 31 cameras can be created in total.
          *
-         * @name Phaser.Cameras.Scene2D.CameraManager#currentCameraId
-         * @type {number}
+         * @name Phaser.Cameras.Scene2D.CameraManager#nextID
+         * @type {integer}
          * @default 1
          * @readOnly
          * @since 3.0.0
          */
-        this.currentCameraId = 1;
+        this.nextID = 1;
 
         /**
          * An Array of the Camera objects being managed by this Camera Manager.
+         * The Cameras are updated and rendered in the same order in which they appear in this array.
+         * Do not directly add or remove entries to this array. However, you can move the contents
+         * around the array should you wish to adjust the display order.
          *
          * @name Phaser.Cameras.Scene2D.CameraManager#cameras
          * @type {Phaser.Cameras.Scene2D.Camera[]}
@@ -87,7 +94,15 @@ var CameraManager = new Class({
         this.cameras = [];
 
         /**
-         * The default Camera in the Camera Manager.
+         * A handy reference to the 'main' camera. By default this is the first Camera the
+         * Camera Manager creates. You can also set it directly, or use the `makeMain` argument
+         * in the `add` and `addExisting` methods. It allows you to access it from your game:
+         * 
+         * ```javascript
+         * var cam = this.cameras.main;
+         * ```
+         * 
+         * Also see the properties `camera1`, `camera2` and so on.
          *
          * @name Phaser.Cameras.Scene2D.CameraManager#main
          * @type {Phaser.Cameras.Scene2D.Camera}
@@ -96,7 +111,7 @@ var CameraManager = new Class({
         this.main;
 
         /**
-         * This scale affects all cameras. It's used by Scale Manager.
+         * This scale affects all cameras. It's used by the Scale Manager.
          *
          * @name Phaser.Cameras.Scene2D.CameraManager#baseScale
          * @type {number}
@@ -194,9 +209,9 @@ var CameraManager = new Class({
             this.main = camera;
         }
 
-        camera.id = this.currentCameraId;
+        camera.id = this.nextID;
 
-        this.currentCameraId = this.currentCameraId << 1;
+        this.nextID = this.nextID << 1;
 
         return camera;
     },
@@ -208,21 +223,29 @@ var CameraManager = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {boolean} [makeMain=false] - [description]
      *
      * @return {Phaser.Cameras.Scene2D.Camera} [description]
      */
-    addExisting: function (camera)
+    addExisting: function (camera, makeMain)
     {
+        if (makeMain === undefined) { makeMain = false; }
+
         var index = this.cameras.indexOf(camera);
 
-        if (index == -1)
+        if (index === -1)
         {
-            camera.id = this.currentCameraId;
-
-            this.currentCameraId = this.currentCameraId << 1;
-            
             this.cameras.push(camera);
 
+            camera.id = this.nextID;
+
+            this.nextID = this.nextID << 1;
+
+            if (makeMain)
+            {
+                this.main = camera;
+            }
+    
             return camera;
         }
 
@@ -304,15 +327,17 @@ var CameraManager = new Class({
      *
      * @param {string} name - [description]
      *
-     * @return {Phaser.Cameras.Scene2D.Camera} [description]
+     * @return {?Phaser.Cameras.Scene2D.Camera} [description]
      */
     getCamera: function (name)
     {
-        for (var i = 0; i < this.cameras.length; i++)
+        var cameras = this.cameras;
+
+        for (var i = 0; i < cameras.length; i++)
         {
-            if (this.cameras[i].name === name)
+            if (cameras[i].name === name)
             {
-                return this.cameras[i];
+                return cameras[i];
             }
         }
 
@@ -389,18 +414,20 @@ var CameraManager = new Class({
      */
     render: function (renderer, children, interpolation)
     {
+        var scene = this.scene;
         var cameras = this.cameras;
         var baseScale = this.baseScale;
+        var resolution = renderer.config.resolution;
 
-        for (var i = 0, l = cameras.length; i < l; ++i)
+        for (var i = 0; i < this.cameras.length; i++)
         {
             var camera = cameras[i];
 
-            if (camera.visible)
+            if (camera.visible && camera.alpha > 0)
             {
-                camera.preRender(baseScale, renderer.config.resolution);
+                camera.preRender(baseScale, resolution);
 
-                renderer.render(this.scene, children, interpolation, camera);
+                renderer.render(scene, children, interpolation, camera);
             }
         }
     },
@@ -422,7 +449,7 @@ var CameraManager = new Class({
 
         this.cameras = [];
 
-        this.currentCameraId = 1;
+        this.nextID = 1;
 
         this.main = this.add();
 
@@ -440,7 +467,7 @@ var CameraManager = new Class({
      */
     update: function (timestep, delta)
     {
-        for (var i = 0, l = this.cameras.length; i < l; ++i)
+        for (var i = 0; i < this.cameras.length; i++)
         {
             this.cameras[i].update(timestep, delta);
         }
@@ -457,7 +484,7 @@ var CameraManager = new Class({
      */
     resize: function (width, height)
     {
-        for (var i = 0, l = this.cameras.length; i < l; ++i)
+        for (var i = 0; i < this.cameras.length; i++)
         {
             this.cameras[i].setSize(width, height);
         }
@@ -504,6 +531,195 @@ var CameraManager = new Class({
 
         this.scene = null;
         this.systems = null;
+    },
+
+    /**
+     * A reference to Camera 1 in the Camera Manager.
+     * 
+     * Create additional cameras using the `add` method.
+     *
+     * @name Phaser.Cameras.Scene2D.CameraManager#camera1
+     * @type {Phaser.Cameras.Scene2D.Camera}
+     * @readOnly
+     * @since 3.11.0
+     */
+    camera1: {
+
+        get: function ()
+        {
+            return this.cameras[0];
+        }
+
+    },
+
+    /**
+     * A reference to Camera 2 in the Camera Manager.
+     * 
+     * This will be `undefined` by default unless you have created new cameras via `add` or `addExisting`.
+     *
+     * @name Phaser.Cameras.Scene2D.CameraManager#camera2
+     * @type {Phaser.Cameras.Scene2D.Camera}
+     * @readOnly
+     * @since 3.11.0
+     */
+    camera2: {
+
+        get: function ()
+        {
+            return this.cameras[1];
+        }
+
+    },
+
+    /**
+     * A reference to Camera 3 in the Camera Manager.
+     * 
+     * This will be `undefined` by default unless you have created new cameras via `add` or `addExisting`.
+     *
+     * @name Phaser.Cameras.Scene2D.CameraManager#camera3
+     * @type {Phaser.Cameras.Scene2D.Camera}
+     * @readOnly
+     * @since 3.11.0
+     */
+    camera3: {
+
+        get: function ()
+        {
+            return this.cameras[2];
+        }
+
+    },
+
+    /**
+     * A reference to Camera 4 in the Camera Manager.
+     * 
+     * This will be `undefined` by default unless you have created new cameras via `add` or `addExisting`.
+     *
+     * @name Phaser.Cameras.Scene2D.CameraManager#camera4
+     * @type {Phaser.Cameras.Scene2D.Camera}
+     * @readOnly
+     * @since 3.11.0
+     */
+    camera4: {
+
+        get: function ()
+        {
+            return this.cameras[3];
+        }
+
+    },
+
+    /**
+     * A reference to Camera 5 in the Camera Manager.
+     * 
+     * This will be `undefined` by default unless you have created new cameras via `add` or `addExisting`.
+     *
+     * @name Phaser.Cameras.Scene2D.CameraManager#camera5
+     * @type {Phaser.Cameras.Scene2D.Camera}
+     * @readOnly
+     * @since 3.11.0
+     */
+    camera5: {
+
+        get: function ()
+        {
+            return this.cameras[4];
+        }
+
+    },
+
+    /**
+     * A reference to Camera 6 in the Camera Manager.
+     * 
+     * This will be `undefined` by default unless you have created new cameras via `add` or `addExisting`.
+     *
+     * @name Phaser.Cameras.Scene2D.CameraManager#camera6
+     * @type {Phaser.Cameras.Scene2D.Camera}
+     * @readOnly
+     * @since 3.11.0
+     */
+    camera6: {
+
+        get: function ()
+        {
+            return this.cameras[5];
+        }
+
+    },
+
+    /**
+     * A reference to Camera 7 in the Camera Manager.
+     * 
+     * This will be `undefined` by default unless you have created new cameras via `add` or `addExisting`.
+     *
+     * @name Phaser.Cameras.Scene2D.CameraManager#camera7
+     * @type {Phaser.Cameras.Scene2D.Camera}
+     * @readOnly
+     * @since 3.11.0
+     */
+    camera7: {
+
+        get: function ()
+        {
+            return this.cameras[6];
+        }
+
+    },
+
+    /**
+     * A reference to Camera 8 in the Camera Manager.
+     * 
+     * This will be `undefined` by default unless you have created new cameras via `add` or `addExisting`.
+     *
+     * @name Phaser.Cameras.Scene2D.CameraManager#camera8
+     * @type {Phaser.Cameras.Scene2D.Camera}
+     * @readOnly
+     * @since 3.11.0
+     */
+    camera8: {
+
+        get: function ()
+        {
+            return this.cameras[7];
+        }
+
+    },
+
+    /**
+     * A reference to Camera 9 in the Camera Manager.
+     * 
+     * This will be `undefined` by default unless you have created new cameras via `add` or `addExisting`.
+     *
+     * @name Phaser.Cameras.Scene2D.CameraManager#camera9
+     * @type {Phaser.Cameras.Scene2D.Camera}
+     * @readOnly
+     * @since 3.11.0
+     */
+    camera9: {
+
+        get: function ()
+        {
+            return this.cameras[8];
+        }
+
+    },
+    /**
+     * A reference to Camera 10 in the Camera Manager.
+     * 
+     * This will be `undefined` by default unless you have created new cameras via `add` or `addExisting`.
+     *
+     * @name Phaser.Cameras.Scene2D.CameraManager#camera10
+     * @type {Phaser.Cameras.Scene2D.Camera}
+     * @readOnly
+     * @since 3.11.0
+     */
+    camera10: {
+
+        get: function ()
+        {
+            return this.cameras[9];
+        }
+
     }
 
 });

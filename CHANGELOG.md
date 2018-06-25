@@ -16,7 +16,8 @@
 * The Camera Manager `cameraPool` has been removed entirely. It was mostly pointless in practise as Cameras are not regenerated frequently enough to need pooling. It also didn't maintain the bitmask list correctly before.
 * `CameraManager.resetAll` now destroys all current Cameras, resets the camera ID marker to 1 and adds a single new Camera.
 * `CameraManager.currentCameraId` has been renamed to `nextID` and marked as read-only.
-* `addExisting` has new property `makeMain`.
+* `CameraManager.addExisting` no longer needs to be passed a Camera that already exists in the pool (as the pool has been removed), meaning you can now create your own Cameras and pass them to `addExisting` and have them treated as normal cameras and not be ignored by the manager. They are also assigned a proper ID when added.
+* `CameraManager.addExisting` has a new boolean argument `makeMain` which will make the new camera the main one.
 
 ### New Features
 
