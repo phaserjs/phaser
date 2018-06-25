@@ -314,7 +314,9 @@ var Camera = new Class({
         this.backgroundColor = ValueToColor('rgba(0,0,0,0)');
 
         /**
-         * The Camera alpha value.
+         * The Camera alpha value. Setting this property impacts every single object that this Camera
+         * renders. You can either set the property directly, i.e. via a Tween, to fade a Camera in or out,
+         * or via the chainable `setAlpha` method instead.
          *
          * @name Phaser.Cameras.Scene2D.Camera#alpha
          * @type {number}
@@ -508,6 +510,26 @@ var Camera = new Class({
          * @since 3.0.0
          */
         this._follow = null;
+    },
+
+    /**
+     * Set the Alpha level of this Camera. The alpha controls the opacity of the Camera as it renders.
+     * Alpha values are provided as a float between 0, fully transparent, and 1, fully opaque.
+     *
+     * @method Phaser.GameObjects.Components.Origin#setAlpha
+     * @since 3.11.0
+     *
+     * @param {number} [value=1] - The Camera alpha value.
+     *
+     * @return {this} This Camera instance.
+     */
+    setAlpha: function (value)
+    {
+        if (value === undefined) { value = 1; }
+
+        this.alpha = value;
+
+        return this;
     },
 
     /**
