@@ -635,7 +635,7 @@ var ParticleEmitter = new Class({
         /**
          * Controls if the emitter is currently emitting a particle flow (when frequency >= 0).
          * Already alive particles will continue to update until they expire.
-         * Controlled by {@link Phaser.GameObjects.Particles.ParticleEmitter#start}.
+         * Controlled by {@link Phaser.GameObjects.Particles.ParticleEmitter#start} and {@link Phaser.GameObjects.Particles.ParticleEmitter#stop}.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#on
          * @type {boolean}
@@ -1858,6 +1858,21 @@ var ParticleEmitter = new Class({
         this.on = true;
 
         this._counter = 0;
+
+        return this;
+    },
+
+    /**
+     * Turns {@link Phaser.GameObjects.Particles.ParticleEmitter#on off} the emitter.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#stop
+     * @since 3.11.0
+     *
+     * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
+     */
+    stop: function ()
+    {
+        this.on = false;
 
         return this;
     },
