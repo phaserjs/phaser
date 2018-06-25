@@ -23,12 +23,29 @@ var GameObject = require('../GameObject');
  */
 var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)))
+    var list = src.getRenderList();
+
+    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)) || list.length === 0)
     {
         return;
     }
 
-    var list = src.getRenderList();
+    //  Alpha
+
+    var alpha = camera.alpha * src.alpha;
+
+    if (alpha === 0)
+    {
+        //  Nothing to see, so abort early
+        return;
+    }
+    else if (renderer.currentAlpha !== alpha)
+    {
+        renderer.currentAlpha = alpha;
+        ctx.globalAlpha = alpha;
+    }
+
+    //  Blend Mode
 
     renderer.setBlendMode(src.blendMode);
 
