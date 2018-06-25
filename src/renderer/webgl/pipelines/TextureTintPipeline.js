@@ -502,18 +502,21 @@ var TextureTintPipeline = new Class({
                     var yh = y + frame.height;
                     var sr = sin(particle.rotation);
                     var cr = cos(particle.rotation);
+
                     var sra = cr * particle.scaleX;
                     var srb = sr * particle.scaleX;
                     var src = -sr * particle.scaleY;
                     var srd = cr * particle.scaleY;
                     var sre = particle.x - scrollX;
                     var srf = particle.y - scrollY;
+
                     var mva = sra * cma + srb * cmc;
                     var mvb = sra * cmb + srb * cmd;
                     var mvc = src * cma + srd * cmc;
                     var mvd = src * cmb + srd * cmd;
                     var mve = sre * cma + srf * cmc + cme;
                     var mvf = sre * cmb + srf * cmd + cmf;
+
                     var tx0 = x * mva + y * mvc + mve;
                     var ty0 = x * mvb + y * mvd + mvf;
                     var tx1 = x * mva + yh * mvc + mve;
@@ -522,6 +525,7 @@ var TextureTintPipeline = new Class({
                     var ty2 = xw * mvb + yh * mvd + mvf;
                     var tx3 = xw * mva + y * mvc + mve;
                     var ty3 = xw * mvb + y * mvd + mvf;
+
                     var vertexOffset = this.vertexCount * vertexComponentCount;
 
                     if (roundPixels)
@@ -541,26 +545,31 @@ var TextureTintPipeline = new Class({
                     vertexViewF32[vertexOffset + 2] = uvs.x0;
                     vertexViewF32[vertexOffset + 3] = uvs.y0;
                     vertexViewU32[vertexOffset + 4] = color;
+
                     vertexViewF32[vertexOffset + 5] = tx1;
                     vertexViewF32[vertexOffset + 6] = ty1;
                     vertexViewF32[vertexOffset + 7] = uvs.x1;
                     vertexViewF32[vertexOffset + 8] = uvs.y1;
                     vertexViewU32[vertexOffset + 9] = color;
+
                     vertexViewF32[vertexOffset + 10] = tx2;
                     vertexViewF32[vertexOffset + 11] = ty2;
                     vertexViewF32[vertexOffset + 12] = uvs.x2;
                     vertexViewF32[vertexOffset + 13] = uvs.y2;
                     vertexViewU32[vertexOffset + 14] = color;
+
                     vertexViewF32[vertexOffset + 15] = tx0;
                     vertexViewF32[vertexOffset + 16] = ty0;
                     vertexViewF32[vertexOffset + 17] = uvs.x0;
                     vertexViewF32[vertexOffset + 18] = uvs.y0;
                     vertexViewU32[vertexOffset + 19] = color;
+
                     vertexViewF32[vertexOffset + 20] = tx2;
                     vertexViewF32[vertexOffset + 21] = ty2;
                     vertexViewF32[vertexOffset + 22] = uvs.x2;
                     vertexViewF32[vertexOffset + 23] = uvs.y2;
                     vertexViewU32[vertexOffset + 24] = color;
+
                     vertexViewF32[vertexOffset + 25] = tx3;
                     vertexViewF32[vertexOffset + 26] = ty3;
                     vertexViewF32[vertexOffset + 27] = uvs.x3;
@@ -574,7 +583,6 @@ var TextureTintPipeline = new Class({
                         this.flush();
                         this.setTexture2D(texture, 0);
                     }
-
                 }
 
                 particleOffset += batchSize;
