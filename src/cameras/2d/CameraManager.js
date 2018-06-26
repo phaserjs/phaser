@@ -703,6 +703,7 @@ var CameraManager = new Class({
         }
 
     },
+
     /**
      * A reference to Camera 10 in the Camera Manager.
      * 
