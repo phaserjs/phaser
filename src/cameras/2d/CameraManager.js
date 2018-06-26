@@ -18,11 +18,11 @@ var RectangleContains = require('../../geom/rectangle/Contains');
  * @property {integer} [y=0] - The vertical position of the Camera viewport.
  * @property {integer} [width] - The width of the Camera viewport.
  * @property {integer} [height] - The height of the Camera viewport.
- * @property {float} [zoom=1] - The default zoom level of the Camera.
- * @property {float} [rotation=0] - The rotation of the Camera, in radians.
+ * @property {number} [zoom=1] - The default zoom level of the Camera.
+ * @property {number} [rotation=0] - The rotation of the Camera, in radians.
  * @property {boolean} [roundPixels=false] - Should the Camera round pixels before rendering?
- * @property {float} [scrollX=0] - The horizontal scroll position of the Camera.
- * @property {float} [scrollY=0] - The vertical scroll position of the Camera.
+ * @property {number} [scrollX=0] - The horizontal scroll position of the Camera.
+ * @property {number} [scrollY=0] - The vertical scroll position of the Camera.
  * @property {(false|string)} [backgroundColor=false] - A CSS color string controlling the Camera background color.
  * @property {?object} [bounds] - Defines the Camera bounds.
  * @property {number} [bounds.x=0] - The top-left extent of the Camera bounds.

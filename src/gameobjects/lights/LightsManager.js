@@ -70,7 +70,7 @@ var LightsManager = new Class({
          * The ambient color.
          *
          * @name Phaser.GameObjects.LightsManager#ambientColor
-         * @type {{ r: float, g: float, b: float }}
+         * @type {{ r: number, g: number, b: number }}
          * @since 3.0.0
          */
         this.ambientColor = { r: 0.1, g: 0.1, b: 0.1 };

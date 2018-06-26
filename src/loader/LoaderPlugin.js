@@ -215,7 +215,7 @@ var LoaderPlugin = new Class({
          * Note that it is possible for this value to go down again if you add content to the current load queue during a load.
          *
          * @name Phaser.Loader.LoaderPlugin#progress
-         * @type {float}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -724,7 +724,7 @@ var LoaderPlugin = new Class({
      * a file having completed loading.
      * 
      * @event Phaser.Loader.LoaderPlugin#progressEvent
-     * @param {float} progress - The current progress of the load. A value between 0 and 1.
+     * @param {number} progress - The current progress of the load. A value between 0 and 1.
      */
 
     /**

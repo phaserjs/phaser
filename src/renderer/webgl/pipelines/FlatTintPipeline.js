@@ -187,23 +187,23 @@ var FlatTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchFillRect
      * @since 3.0.0
      *
-     * @param {float} srcX - Graphics horizontal component for translation
-     * @param {float} srcY - Graphics vertical component for translation
-     * @param {float} srcScaleX - Graphics horizontal component for scale
-     * @param {float} srcScaleY - Graphics vertical component for scale
-     * @param {float} srcRotation - Graphics rotation
-     * @param {float} x - Horiztonal top left coordinate of the rectangle
-     * @param {float} y - Vertical top left coordinate of the rectangle
-     * @param {float} width - Width of the rectangle
-     * @param {float} height - Height of the rectangle
+     * @param {number} srcX - Graphics horizontal component for translation
+     * @param {number} srcY - Graphics vertical component for translation
+     * @param {number} srcScaleX - Graphics horizontal component for scale
+     * @param {number} srcScaleY - Graphics vertical component for scale
+     * @param {number} srcRotation - Graphics rotation
+     * @param {number} x - Horiztonal top left coordinate of the rectangle
+     * @param {number} y - Vertical top left coordinate of the rectangle
+     * @param {number} width - Width of the rectangle
+     * @param {number} height - Height of the rectangle
      * @param {integer} fillColor - RGB color packed as a uint
-     * @param {float} fillAlpha - Alpha represented as float
-     * @param {float} a1 - Matrix stack top a component
-     * @param {float} b1 - Matrix stack top b component
-     * @param {float} c1 - Matrix stack top c component
-     * @param {float} d1 - Matrix stack top d component
-     * @param {float} e1 - Matrix stack top e component
-     * @param {float} f1 - Matrix stack top f component
+     * @param {number} fillAlpha - Alpha represented as float
+     * @param {number} a1 - Matrix stack top a component
+     * @param {number} b1 - Matrix stack top b component
+     * @param {number} c1 - Matrix stack top c component
+     * @param {number} d1 - Matrix stack top d component
+     * @param {number} e1 - Matrix stack top e component
+     * @param {number} f1 - Matrix stack top f component
      * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
     batchFillRect: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, x, y, width, height, fillColor, fillAlpha, a1, b1, c1, d1, e1, f1, currentMatrix)
@@ -270,25 +270,25 @@ var FlatTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchFillTriangle
      * @since 3.0.0
      *
-     * @param {float} srcX - Graphics horizontal component for translation
-     * @param {float} srcY - Graphics vertical component for translation
-     * @param {float} srcScaleX - Graphics horizontal component for scale
-     * @param {float} srcScaleY - Graphics vertical component for scale
-     * @param {float} srcRotation - Graphics rotation
-     * @param {float} x0 - Point 0 x coordinate
-     * @param {float} y0 - Point 0 y coordinate
-     * @param {float} x1 - Point 1 x coordinate
-     * @param {float} y1 - Point 1 y coordinate
-     * @param {float} x2 - Point 2 x coordinate
-     * @param {float} y2 - Point 2 y coordinate
+     * @param {number} srcX - Graphics horizontal component for translation
+     * @param {number} srcY - Graphics vertical component for translation
+     * @param {number} srcScaleX - Graphics horizontal component for scale
+     * @param {number} srcScaleY - Graphics vertical component for scale
+     * @param {number} srcRotation - Graphics rotation
+     * @param {number} x0 - Point 0 x coordinate
+     * @param {number} y0 - Point 0 y coordinate
+     * @param {number} x1 - Point 1 x coordinate
+     * @param {number} y1 - Point 1 y coordinate
+     * @param {number} x2 - Point 2 x coordinate
+     * @param {number} y2 - Point 2 y coordinate
      * @param {integer} fillColor - RGB color packed as a uint
-     * @param {float} fillAlpha - Alpha represented as float
-     * @param {float} a1 - Matrix stack top a component
-     * @param {float} b1 - Matrix stack top b component
-     * @param {float} c1 - Matrix stack top c component
-     * @param {float} d1 - Matrix stack top d component
-     * @param {float} e1 - Matrix stack top e component
-     * @param {float} f1 - Matrix stack top f component
+     * @param {number} fillAlpha - Alpha represented as float
+     * @param {number} a1 - Matrix stack top a component
+     * @param {number} b1 - Matrix stack top b component
+     * @param {number} c1 - Matrix stack top c component
+     * @param {number} d1 - Matrix stack top d component
+     * @param {number} e1 - Matrix stack top e component
+     * @param {number} f1 - Matrix stack top f component
      * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
     batchFillTriangle: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, x0, y0, x1, y1, x2, y2, fillColor, fillAlpha, a1, b1, c1, d1, e1, f1, currentMatrix)
@@ -342,26 +342,26 @@ var FlatTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchStrokeTriangle
      * @since 3.0.0
      *
-     * @param {float} srcX - Graphics horizontal component for translation
-     * @param {float} srcY - Graphics vertical component for translation
-     * @param {float} srcScaleX - Graphics horizontal component for scale
-     * @param {float} srcScaleY - Graphics vertical component for scale
-     * @param {float} srcRotation - Graphics rotation
-     * @param {float} x0 - [description]
-     * @param {float} y0 - [description]
-     * @param {float} x1 - [description]
-     * @param {float} y1 - [description]
-     * @param {float} x2 - [description]
-     * @param {float} y2 - [description]
-     * @param {float} lineWidth - Size of the line as a float value
+     * @param {number} srcX - Graphics horizontal component for translation
+     * @param {number} srcY - Graphics vertical component for translation
+     * @param {number} srcScaleX - Graphics horizontal component for scale
+     * @param {number} srcScaleY - Graphics vertical component for scale
+     * @param {number} srcRotation - Graphics rotation
+     * @param {number} x0 - [description]
+     * @param {number} y0 - [description]
+     * @param {number} x1 - [description]
+     * @param {number} y1 - [description]
+     * @param {number} x2 - [description]
+     * @param {number} y2 - [description]
+     * @param {number} lineWidth - Size of the line as a float value
      * @param {integer} lineColor - RGB color packed as a uint
-     * @param {float} lineAlpha - Alpha represented as float
-     * @param {float} a - Matrix stack top a component
-     * @param {float} b - Matrix stack top b component
-     * @param {float} c - Matrix stack top c component
-     * @param {float} d - Matrix stack top d component
-     * @param {float} e - Matrix stack top e component
-     * @param {float} f - Matrix stack top f component
+     * @param {number} lineAlpha - Alpha represented as float
+     * @param {number} a - Matrix stack top a component
+     * @param {number} b - Matrix stack top b component
+     * @param {number} c - Matrix stack top c component
+     * @param {number} d - Matrix stack top d component
+     * @param {number} e - Matrix stack top e component
+     * @param {number} f - Matrix stack top f component
      * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
     batchStrokeTriangle: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, x0, y0, x1, y1, x2, y2, lineWidth, lineColor, lineAlpha, a, b, c, d, e, f, currentMatrix)
@@ -404,20 +404,20 @@ var FlatTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchFillPath
      * @since 3.0.0
      *
-     * @param {float} srcX - Graphics horizontal component for translation
-     * @param {float} srcY - Graphics vertical component for translation
-     * @param {float} srcScaleX - Graphics horizontal component for scale
-     * @param {float} srcScaleY - Graphics vertical component for scale
-     * @param {float} srcRotation - Graphics rotation
-     * @param {float} path - Collection of points that represent the path
+     * @param {number} srcX - Graphics horizontal component for translation
+     * @param {number} srcY - Graphics vertical component for translation
+     * @param {number} srcScaleX - Graphics horizontal component for scale
+     * @param {number} srcScaleY - Graphics vertical component for scale
+     * @param {number} srcRotation - Graphics rotation
+     * @param {number} path - Collection of points that represent the path
      * @param {integer} fillColor - RGB color packed as a uint
-     * @param {float} fillAlpha - Alpha represented as float
-     * @param {float} a1 - Matrix stack top a component
-     * @param {float} b1 - Matrix stack top b component
-     * @param {float} c1 - Matrix stack top c component
-     * @param {float} d1 - Matrix stack top d component
-     * @param {float} e1 - Matrix stack top e component
-     * @param {float} f1 - Matrix stack top f component
+     * @param {number} fillAlpha - Alpha represented as float
+     * @param {number} a1 - Matrix stack top a component
+     * @param {number} b1 - Matrix stack top b component
+     * @param {number} c1 - Matrix stack top c component
+     * @param {number} d1 - Matrix stack top d component
+     * @param {number} e1 - Matrix stack top e component
+     * @param {number} f1 - Matrix stack top f component
      * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
     batchFillPath: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, path, fillColor, fillAlpha, a1, b1, c1, d1, e1, f1, currentMatrix)
@@ -506,21 +506,21 @@ var FlatTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchStrokePath
      * @since 3.0.0
      *
-     * @param {float} srcX - Graphics horizontal component for translation
-     * @param {float} srcY - Graphics vertical component for translation
-     * @param {float} srcScaleX - Graphics horizontal component for scale
-     * @param {float} srcScaleY - Graphics vertical component for scale
-     * @param {float} srcRotation - Graphics rotation
+     * @param {number} srcX - Graphics horizontal component for translation
+     * @param {number} srcY - Graphics vertical component for translation
+     * @param {number} srcScaleX - Graphics horizontal component for scale
+     * @param {number} srcScaleY - Graphics vertical component for scale
+     * @param {number} srcRotation - Graphics rotation
      * @param {array} path - [description]
-     * @param {float} lineWidth - [description]
+     * @param {number} lineWidth - [description]
      * @param {integer} lineColor - RGB color packed as a uint
-     * @param {float} lineAlpha - Alpha represented as float
-     * @param {float} a - Matrix stack top a component
-     * @param {float} b - Matrix stack top b component
-     * @param {float} c - Matrix stack top c component
-     * @param {float} d - Matrix stack top d component
-     * @param {float} e - Matrix stack top e component
-     * @param {float} f - Matrix stack top f component
+     * @param {number} lineAlpha - Alpha represented as float
+     * @param {number} a - Matrix stack top a component
+     * @param {number} b - Matrix stack top b component
+     * @param {number} c - Matrix stack top c component
+     * @param {number} d - Matrix stack top d component
+     * @param {number} e - Matrix stack top e component
+     * @param {number} f - Matrix stack top f component
      * @param {boolean} isLastPath - Indicates if the path should be closed
      * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
@@ -599,26 +599,26 @@ var FlatTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchLine
      * @since 3.0.0
      *
-     * @param {float} srcX - Graphics horizontal component for translation
-     * @param {float} srcY - Graphics vertical component for translation
-     * @param {float} srcScaleX - Graphics horizontal component for scale
-     * @param {float} srcScaleY - Graphics vertical component for scale
-     * @param {float} srcRotation - Graphics rotation
-     * @param {float} ax - X coordinate to the start of the line
-     * @param {float} ay - Y coordinate to the start of the line
-     * @param {float} bx - X coordinate to the end of the line
-     * @param {float} by - Y coordinate to the end of the line
-     * @param {float} aLineWidth - Width of the start of the line
-     * @param {float} bLineWidth - Width of the end of the line
+     * @param {number} srcX - Graphics horizontal component for translation
+     * @param {number} srcY - Graphics vertical component for translation
+     * @param {number} srcScaleX - Graphics horizontal component for scale
+     * @param {number} srcScaleY - Graphics vertical component for scale
+     * @param {number} srcRotation - Graphics rotation
+     * @param {number} ax - X coordinate to the start of the line
+     * @param {number} ay - Y coordinate to the start of the line
+     * @param {number} bx - X coordinate to the end of the line
+     * @param {number} by - Y coordinate to the end of the line
+     * @param {number} aLineWidth - Width of the start of the line
+     * @param {number} bLineWidth - Width of the end of the line
      * @param {integer} aLineColor - RGB color packed as a uint
      * @param {integer} bLineColor - RGB color packed as a uint
-     * @param {float} lineAlpha - Alpha represented as float
-     * @param {float} a1 - Matrix stack top a component
-     * @param {float} b1 - Matrix stack top b component
-     * @param {float} c1 - Matrix stack top c component
-     * @param {float} d1 - Matrix stack top d component
-     * @param {float} e1 - Matrix stack top e component
-     * @param {float} f1 - Matrix stack top f component
+     * @param {number} lineAlpha - Alpha represented as float
+     * @param {number} a1 - Matrix stack top a component
+     * @param {number} b1 - Matrix stack top b component
+     * @param {number} c1 - Matrix stack top c component
+     * @param {number} d1 - Matrix stack top d component
+     * @param {number} e1 - Matrix stack top e component
+     * @param {number} f1 - Matrix stack top f component
      * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
     batchLine: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, ax, ay, bx, by, aLineWidth, bLineWidth, aLineColor, bLineColor, lineAlpha, a1, b1, c1, d1, e1, f1, currentMatrix)

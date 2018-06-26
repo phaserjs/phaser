@@ -180,7 +180,7 @@ var File = new Class({
          * Only set if loading via XHR.
          *
          * @name Phaser.Loader.File#percentComplete
-         * @type {float}
+         * @type {number}
          * @default -1
          * @since 3.0.0
          */

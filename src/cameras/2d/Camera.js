@@ -262,7 +262,7 @@ var Camera = new Class({
          * Be careful to never set this value to zero.
          *
          * @name Phaser.Cameras.Scene2D.Camera#zoom
-         * @type {float}
+         * @type {number}
          * @default 1
          * @since 3.0.0
          */
@@ -452,7 +452,7 @@ var Camera = new Class({
          * See `setOrigin` to set both origins in a single, chainable call.
          *
          * @name Phaser.Cameras.Scene2D.Camera#originX
-         * @type {float}
+         * @type {number}
          * @default 0.5
          * @since 3.11.0
          */
@@ -469,7 +469,7 @@ var Camera = new Class({
          * See `setOrigin` to set both origins in a single, chainable call.
          *
          * @name Phaser.Cameras.Scene2D.Camera#originY
-         * @type {float}
+         * @type {number}
          * @default 0.5
          * @since 3.11.0
          */
@@ -1590,7 +1590,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Scene2D.Camera#setZoom
      * @since 3.0.0
      *
-     * @param {float} [value=1] - The zoom value of the Camera. The minimum it can be is 0.001.
+     * @param {number} [value=1] - The zoom value of the Camera. The minimum it can be is 0.001.
      *
      * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
      */
@@ -1646,8 +1646,8 @@ var Camera = new Class({
      *
      * @param {(Phaser.GameObjects.GameObject|object)} target - The target for the Camera to follow.
      * @param {boolean} [roundPixels=false] - Round the camera position to whole integers to avoid sub-pixel rendering?
-     * @param {float} [lerpX=1] - A value between 0 and 1. This value specifies the amount of linear interpolation to use when horizontally tracking the target. The closer the value to 1, the faster the camera will track.
-     * @param {float} [lerpY=1] - A value between 0 and 1. This value specifies the amount of linear interpolation to use when vertically tracking the target. The closer the value to 1, the faster the camera will track.
+     * @param {number} [lerpX=1] - A value between 0 and 1. This value specifies the amount of linear interpolation to use when horizontally tracking the target. The closer the value to 1, the faster the camera will track.
+     * @param {number} [lerpY=1] - A value between 0 and 1. This value specifies the amount of linear interpolation to use when vertically tracking the target. The closer the value to 1, the faster the camera will track.
      * @param {number} [offsetX=0] - The horizontal offset from the camera follow target.x position.
      * @param {number} [offsetY=0] - The vertical offset from the camera follow target.y position.
      *

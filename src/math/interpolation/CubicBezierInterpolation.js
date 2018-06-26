@@ -41,7 +41,7 @@ function P3 (t, p)
  * @function Phaser.Math.Interpolation.CubicBezier
  * @since 3.0.0
  *
- * @param {float} t - The percentage of interpolation, between 0 and 1.
+ * @param {number} t - The percentage of interpolation, between 0 and 1.
  * @param {number} p0 - The start point.
  * @param {number} p1 - The first control point.
  * @param {number} p2 - The second control point.

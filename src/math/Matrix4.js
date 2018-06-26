@@ -666,7 +666,7 @@ var Matrix4 = new Class({
      * @since 3.0.0
      *
      * @param {(Phaser.Math.Vector3|Phaser.Math.Vector4)} axis - The rotation axis.
-     * @param {float} angle - The rotation angle in radians.
+     * @param {number} angle - The rotation angle in radians.
      *
      * @return {Phaser.Math.Matrix4} This Matrix4.
      */
@@ -699,7 +699,7 @@ var Matrix4 = new Class({
      * @method Phaser.Math.Matrix4#rotate
      * @since 3.0.0
      *
-     * @param {float} rad - The angle in radians to rotate by.
+     * @param {number} rad - The angle in radians to rotate by.
      * @param {Phaser.Math.Vector3} axis - The axis to rotate upon.
      *
      * @return {Phaser.Math.Matrix4} This Matrix4.
@@ -777,7 +777,7 @@ var Matrix4 = new Class({
      * @method Phaser.Math.Matrix4#rotateX
      * @since 3.0.0
      *
-     * @param {float} rad - The angle in radians to rotate by.
+     * @param {number} rad - The angle in radians to rotate by.
      *
      * @return {Phaser.Math.Matrix4} This Matrix4.
      */
@@ -816,7 +816,7 @@ var Matrix4 = new Class({
      * @method Phaser.Math.Matrix4#rotateY
      * @since 3.0.0
      *
-     * @param {float} rad - The angle to rotate by, in radians.
+     * @param {number} rad - The angle to rotate by, in radians.
      *
      * @return {Phaser.Math.Matrix4} This Matrix4.
      */
@@ -855,7 +855,7 @@ var Matrix4 = new Class({
      * @method Phaser.Math.Matrix4#rotateZ
      * @since 3.0.0
      *
-     * @param {float} rad - The angle to rotate by, in radians.
+     * @param {number} rad - The angle to rotate by, in radians.
      *
      * @return {Phaser.Math.Matrix4} This Matrix4.
      */

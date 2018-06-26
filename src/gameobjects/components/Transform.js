@@ -25,7 +25,7 @@ var Transform = {
      * Private internal value. Holds the horizontal scale value.
      * 
      * @name Phaser.GameObjects.Components.Transform#_scaleX
-     * @type {float}
+     * @type {number}
      * @private
      * @default 1
      * @since 3.0.0
@@ -36,7 +36,7 @@ var Transform = {
      * Private internal value. Holds the vertical scale value.
      * 
      * @name Phaser.GameObjects.Components.Transform#_scaleY
-     * @type {float}
+     * @type {number}
      * @private
      * @default 1
      * @since 3.0.0
@@ -47,7 +47,7 @@ var Transform = {
      * Private internal value. Holds the rotation value in radians.
      * 
      * @name Phaser.GameObjects.Components.Transform#_rotation
-     * @type {float}
+     * @type {number}
      * @private
      * @default 0
      * @since 3.0.0

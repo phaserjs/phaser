@@ -32,7 +32,7 @@ var GetValue = require('../utils/object/GetValue');
  *
  * @property {string} key - The key that the animation will be associated with. i.e. sprite.animations.play(key)
  * @property {(string|number)} frame - [description]
- * @property {float} [duration=0] - [description]
+ * @property {number} [duration=0] - [description]
  * @property {boolean} [visible] - [description]
  */
 
@@ -545,7 +545,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#getFrameByProgress
      * @since 3.4.0
      *
-     * @param {float} value - A value between 0 and 1.
+     * @param {number} value - A value between 0 and 1.
      *
      * @return {Phaser.Animations.AnimationFrame} The frame closest to the given progress value.
      */

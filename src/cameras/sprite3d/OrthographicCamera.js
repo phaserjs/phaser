@@ -60,7 +60,7 @@ var OrthographicCamera = new Class({
          * [description]
          *
          * @name Phaser.Cameras.Sprite3D.OrthographicCamera#_zoom
-         * @type {float}
+         * @type {number}
          * @private
          * @since 3.0.0
          */

@@ -11,7 +11,7 @@
  * @since 3.0.0
  *
  * @param {Phaser.Math.Vector4} vec4 - The Vector to compute random values for.
- * @param {float} [scale=1] - The scale of the random values.
+ * @param {number} [scale=1] - The scale of the random values.
  *
  * @return {Phaser.Math.Vector4} The given Vector.
  */

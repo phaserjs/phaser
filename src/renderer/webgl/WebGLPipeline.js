@@ -459,7 +459,7 @@ var WebGLPipeline = new Class({
      * @since 3.2.0
      *
      * @param {string} name - [description]
-     * @param {float} x - [description]
+     * @param {number} x - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
@@ -476,8 +476,8 @@ var WebGLPipeline = new Class({
      * @since 3.2.0
      *
      * @param {string} name - [description]
-     * @param {float} x - [description]
-     * @param {float} y - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
@@ -495,9 +495,9 @@ var WebGLPipeline = new Class({
      * @since 3.2.0
      *
      * @param {string} name - [description]
-     * @param {float} x - [description]
-     * @param {float} y - [description]
-     * @param {float} z - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} z - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
@@ -515,10 +515,10 @@ var WebGLPipeline = new Class({
      * @since 3.2.0
      *
      * @param {string} name - Name of the uniform
-     * @param {float} x - X component of the uniform
-     * @param {float} y - Y component of the uniform
-     * @param {float} z - Z component of the uniform
-     * @param {float} w - W component of the uniform
+     * @param {number} x - X component of the uniform
+     * @param {number} y - Y component of the uniform
+     * @param {number} z - Z component of the uniform
+     * @param {number} w - W component of the uniform
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */

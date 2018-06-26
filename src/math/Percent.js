@@ -18,7 +18,7 @@
  * @param {number} [max] - The maximum value.
  * @param {number} [upperMax] - The mid-way point in the range that represents 100%.
  *
- * @return {float} A value between 0 and 1 representing the percentage.
+ * @return {number} A value between 0 and 1 representing the percentage.
  */
 var Percent = function (value, min, max, upperMax)
 {

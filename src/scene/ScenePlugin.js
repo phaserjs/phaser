@@ -77,7 +77,7 @@ var ScenePlugin = new Class({
          * the current percentage of the transition progress, between 0 and 1.
          *
          * @name Phaser.Scenes.ScenePlugin#transitionProgress
-         * @type {float}
+         * @type {number}
          * @since 3.5.0
          */
         this.transitionProgress = 0;

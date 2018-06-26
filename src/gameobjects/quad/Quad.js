@@ -260,7 +260,7 @@ var Quad = new Class({
      * The top-left alpha value of this Quad.
      *
      * @name Phaser.GameObjects.Quad#topLeftAlpha
-     * @type {float}
+     * @type {number}
      * @since 3.0.0
      */
     topLeftAlpha: {
@@ -282,7 +282,7 @@ var Quad = new Class({
      * The top-right alpha value of this Quad.
      *
      * @name Phaser.GameObjects.Quad#topRightAlpha
-     * @type {float}
+     * @type {number}
      * @since 3.0.0
      */
     topRightAlpha: {
@@ -303,7 +303,7 @@ var Quad = new Class({
      * The bottom-left alpha value of this Quad.
      *
      * @name Phaser.GameObjects.Quad#bottomLeftAlpha
-     * @type {float}
+     * @type {number}
      * @since 3.0.0
      */
     bottomLeftAlpha: {
@@ -324,7 +324,7 @@ var Quad = new Class({
      * The bottom-right alpha value of this Quad.
      *
      * @name Phaser.GameObjects.Quad#bottomRightAlpha
-     * @type {float}
+     * @type {number}
      * @since 3.0.0
      */
     bottomRightAlpha: {

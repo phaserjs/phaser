@@ -80,7 +80,7 @@ var Shake = new Class({
          * If this effect is running this holds the current percentage of the progress, a value between 0 and 1.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Shake#progress
-         * @type {float}
+         * @type {number}
          * @since 3.5.0
          */
         this.progress = 0;
@@ -121,7 +121,7 @@ var Shake = new Class({
          * @callback CameraShakeCallback
          *
          * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera on which the effect is running.
-         * @param {float} progress - The progress of the effect. A value between 0 and 1.
+         * @param {number} progress - The progress of the effect. A value between 0 and 1.
          */
 
         /**
@@ -153,7 +153,7 @@ var Shake = new Class({
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
      * @param {Phaser.Cameras.Scene2D.Effects.Shake} effect - A reference to the effect instance.
      * @param {integer} duration - The duration of the effect.
-     * @param {float} intensity - The intensity of the effect.
+     * @param {number} intensity - The intensity of the effect.
      */
 
     /**

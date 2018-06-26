@@ -34,7 +34,7 @@ var Origin = {
      * Setting the value to 0 means the position now relates to the left of the Game Object.
      *
      * @name Phaser.GameObjects.Components.Origin#originX
-     * @type {float}
+     * @type {number}
      * @default 0.5
      * @since 3.0.0
      */
@@ -47,7 +47,7 @@ var Origin = {
      * Setting the value to 0 means the position now relates to the top of the Game Object.
      *
      * @name Phaser.GameObjects.Components.Origin#originY
-     * @type {float}
+     * @type {number}
      * @default 0.5
      * @since 3.0.0
      */
@@ -63,7 +63,7 @@ var Origin = {
      * The displayOrigin is a pixel value, based on the size of the Game Object combined with the origin.
      *
      * @name Phaser.GameObjects.Components.Origin#displayOriginX
-     * @type {float}
+     * @type {number}
      * @since 3.0.0
      */
     displayOriginX: {
@@ -87,7 +87,7 @@ var Origin = {
      * The displayOrigin is a pixel value, based on the size of the Game Object combined with the origin.
      *
      * @name Phaser.GameObjects.Components.Origin#displayOriginY
-     * @type {float}
+     * @type {number}
      * @since 3.0.0
      */
     displayOriginY: {

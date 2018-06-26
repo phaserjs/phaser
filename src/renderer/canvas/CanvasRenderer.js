@@ -324,9 +324,9 @@ var CanvasRenderer = new Class({
      * @method Phaser.Renderer.Canvas.CanvasRenderer#setAlpha
      * @since 3.0.0
      *
-     * @param {float} alpha - [description]
+     * @param {number} alpha - [description]
      *
-     * @return {float} [description]
+     * @return {number} [description]
      */
     setAlpha: function (alpha)
     {
@@ -375,7 +375,7 @@ var CanvasRenderer = new Class({
      *
      * @param {Phaser.Scene} scene - [description]
      * @param {Phaser.GameObjects.DisplayList} children - [description]
-     * @param {float} interpolationPercentage - [description]
+     * @param {number} interpolationPercentage - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      */
     render: function (scene, children, interpolationPercentage, camera)

@@ -102,7 +102,7 @@ var Flash = new Class({
          * A value between 0 and 1.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Flash#alpha
-         * @type {float}
+         * @type {number}
          * @private
          * @since 3.5.0
          */
@@ -112,7 +112,7 @@ var Flash = new Class({
          * If this effect is running this holds the current percentage of the progress, a value between 0 and 1.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Flash#progress
-         * @type {float}
+         * @type {number}
          * @since 3.5.0
          */
         this.progress = 0;
@@ -131,7 +131,7 @@ var Flash = new Class({
          * @callback CameraFlashCallback
          *
          * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera on which the effect is running.
-         * @param {float} progress - The progress of the effect. A value between 0 and 1.
+         * @param {number} progress - The progress of the effect. A value between 0 and 1.
          */
 
         /**

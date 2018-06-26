@@ -1847,29 +1847,29 @@ var TextureTintPipeline = new Class({
      * @param {WebGLTexture} texture - Raw WebGLTexture associated with the quad
      * @param {integer} textureWidth - Real texture width
      * @param {integer} textureHeight - Real texture height
-     * @param {float} srcX - X coordinate of the quad
-     * @param {float} srcY - Y coordinate of the quad
-     * @param {float} srcWidth - Width of the quad
-     * @param {float} srcHeight - Height of the quad
-     * @param {float} scaleX - X component of scale
-     * @param {float} scaleY - Y component of scale
-     * @param {float} rotation - Rotation of the quad
+     * @param {number} srcX - X coordinate of the quad
+     * @param {number} srcY - Y coordinate of the quad
+     * @param {number} srcWidth - Width of the quad
+     * @param {number} srcHeight - Height of the quad
+     * @param {number} scaleX - X component of scale
+     * @param {number} scaleY - Y component of scale
+     * @param {number} rotation - Rotation of the quad
      * @param {boolean} flipX - Indicates if the quad is horizontally flipped
      * @param {boolean} flipY - Indicates if the quad is vertically flipped
-     * @param {float} scrollFactorX - By which factor is the quad affected by the camera horizontal scroll
-     * @param {float} scrollFactorY - By which factor is the quad effected by the camera vertical scroll
-     * @param {float} displayOriginX - Horizontal origin in pixels
-     * @param {float} displayOriginY - Vertical origin in pixels
-     * @param {float} frameX - X coordinate of the texture frame
-     * @param {float} frameY - Y coordinate of the texture frame
-     * @param {float} frameWidth - Width of the texture frame
-     * @param {float} frameHeight - Height of the texture frame
+     * @param {number} scrollFactorX - By which factor is the quad affected by the camera horizontal scroll
+     * @param {number} scrollFactorY - By which factor is the quad effected by the camera vertical scroll
+     * @param {number} displayOriginX - Horizontal origin in pixels
+     * @param {number} displayOriginY - Vertical origin in pixels
+     * @param {number} frameX - X coordinate of the texture frame
+     * @param {number} frameY - Y coordinate of the texture frame
+     * @param {number} frameWidth - Width of the texture frame
+     * @param {number} frameHeight - Height of the texture frame
      * @param {integer} tintTL - Tint for top left
      * @param {integer} tintTR - Tint for top right
      * @param {integer} tintBL - Tint for bottom left
      * @param {integer} tintBR - Tint for bottom right
-     * @param {float} uOffset - Horizontal offset on texture coordinate
-     * @param {float} vOffset - Vertical offset on texture coordinate
+     * @param {number} uOffset - Horizontal offset on texture coordinate
+     * @param {number} vOffset - Vertical offset on texture coordinate
      * @param {Phaser.Cameras.Scene2D.Camera} camera - Current used camera
      * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - Parent container
      */

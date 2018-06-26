@@ -278,7 +278,7 @@ var Curve = new Class({
      *
      * @generic {Phaser.Math.Vector2} O - [out,$return]
      *
-     * @param {float} u - [description]
+     * @param {number} u - [description]
      * @param {Phaser.Math.Vector2} [out] - [description]
      *
      * @return {Phaser.Math.Vector2} [description]
@@ -434,7 +434,7 @@ var Curve = new Class({
      *
      * @generic {Phaser.Math.Vector2} O - [out,$return]
      *
-     * @param {float} u - [description]
+     * @param {number} u - [description]
      * @param {Phaser.Math.Vector2} [out] - [description]
      *
      * @return {Phaser.Math.Vector2} [description]
@@ -456,7 +456,7 @@ var Curve = new Class({
      * @param {integer} distance - [description]
      * @param {integer} [divisions] - [description]
      *
-     * @return {float} [description]
+     * @return {number} [description]
      */
     getTFromDistance: function (distance, divisions)
     {
@@ -476,7 +476,7 @@ var Curve = new Class({
      * @method Phaser.Curves.Curve#getUtoTmapping
      * @since 3.0.0
      *
-     * @param {float} u - [description]
+     * @param {number} u - [description]
      * @param {integer} distance - [description]
      * @param {integer} [divisions] - [description]
      *
