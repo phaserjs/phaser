@@ -13,7 +13,7 @@
  * @param {array} array - The array to search.
  * @param {function} callback - A callback to be invoked for each item in the array.
  * @param {object} context - The context in which the callback is invoked.
- * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
+ * @param {...*} [args] - Additional arguments that will be passed to the callback, after the current array item.
  *
  * @return {array} The input array.
  */
