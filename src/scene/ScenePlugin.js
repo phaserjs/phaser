@@ -200,16 +200,8 @@ var ScenePlugin = new Class({
     {
         if (key === undefined) { key = this.key; }
 
-        if (this.settings.status !== CONST.RUNNING)
-        {
-            this.manager.queueOp('stop', this.key);
-            this.manager.queueOp('start', key, data);
-        }
-        else
-        {
-            this.manager.stop(this.key);
-            this.manager.start(key, data);
-        }
+        this.manager.queueOp('stop', this.key);
+        this.manager.queueOp('start', key, data);
 
         return this;
     },
@@ -228,16 +220,8 @@ var ScenePlugin = new Class({
     {
         var key = this.key;
 
-        if (this.settings.status !== CONST.RUNNING)
-        {
-            this.manager.queueOp('stop', key);
-            this.manager.queueOp('start', key, data);
-        }
-        else
-        {
-            this.manager.stop(key);
-            this.manager.start(key, data);
-        }
+        this.manager.queueOp('stop', key);
+        this.manager.queueOp('start', key, data);
 
         return this;
     },

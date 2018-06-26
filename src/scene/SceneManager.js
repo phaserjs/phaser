@@ -441,6 +441,8 @@ var SceneManager = new Class({
         {
             scene.init.call(scene, settings.data);
 
+            settings.status = CONST.INIT;
+
             if (settings.isTransition)
             {
                 sys.events.emit('transitioninit', settings.transitionFrom, settings.transitionDuration);
@@ -623,10 +625,7 @@ var SceneManager = new Class({
             sys.sceneUpdate = scene.update;
         }
 
-        if (settings.status === CONST.CREATING)
-        {
-            settings.status = CONST.RUNNING;
-        }
+        settings.status = CONST.RUNNING;
     },
 
     /**
