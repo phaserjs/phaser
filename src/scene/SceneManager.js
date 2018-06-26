@@ -928,16 +928,17 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The Scene to pause.
+     * @param {object} [data] - An optional data object that will be passed to the Scene and emitted by its pause event.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
-    pause: function (key)
+    pause: function (key, data)
     {
         var scene = this.getScene(key);
 
         if (scene)
         {
-            scene.sys.pause();
+            scene.sys.pause(data);
         }
 
         return this;
@@ -950,16 +951,17 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The Scene to resume.
+     * @param {object} [data] - An optional data object that will be passed to the Scene and emitted by its resume event.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
-    resume: function (key)
+    resume: function (key, data)
     {
         var scene = this.getScene(key);
 
         if (scene)
         {
-            scene.sys.resume();
+            scene.sys.resume(data);
         }
 
         return this;
@@ -972,16 +974,17 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The Scene to put to sleep.
+     * @param {object} [data] - An optional data object that will be passed to the Scene and emitted by its sleep event.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
-    sleep: function (key)
+    sleep: function (key, data)
     {
         var scene = this.getScene(key);
 
         if (scene && !scene.sys.isTransitioning())
         {
-            scene.sys.sleep();
+            scene.sys.sleep(data);
         }
 
         return this;
@@ -994,16 +997,17 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The Scene to wake up.
+     * @param {object} [data] - An optional data object that will be passed to the Scene and emitted by its wake event.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
-    wake: function (key)
+    wake: function (key, data)
     {
         var scene = this.getScene(key);
 
         if (scene)
         {
-            scene.sys.wake();
+            scene.sys.wake(data);
         }
 
         return this;
