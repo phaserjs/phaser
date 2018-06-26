@@ -22,7 +22,7 @@ var Each = function (array, callback, context)
     var i;
     var args = [ null ];
 
-    for (i = 2; i < arguments.length; i++)
+    for (i = 3; i < arguments.length; i++)
     {
         args.push(arguments[i]);
     }
