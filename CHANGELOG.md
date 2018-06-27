@@ -24,6 +24,8 @@
 * `CameraManager.addExisting` no longer needs to be passed a Camera that already exists in the pool (as the pool has been removed), meaning you can now create your own Cameras and pass them to `addExisting` and have them treated as normal cameras and not be ignored by the manager. They are also assigned a proper ID when added.
 * `CameraManager.addExisting` has a new boolean argument `makeMain` which will make the new camera the main one.
 * `CameraManager.getTotal` is a new method that will return the total number of Cameras being managed, with an optional `isVisible` argument, that only counts visible cameras if set.
+* `CameraManager.remove` can now take an array of cameras to be removed from the manager, as well as a single camera.
+* `CameraManager.remove` would previously not allow you to remove a camera if it meant there would be no cameras left in the Camera Manager. This restriction has been removed. A Camera Manager can now run even with zero cameras. Your game obviously won't display anything, but it's still now possible.
 
 ### New Features
 

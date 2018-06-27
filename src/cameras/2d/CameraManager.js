@@ -492,7 +492,7 @@ var CameraManager = new Class({
     },
 
     /**
-     * Removes the given Camera from this Camera Manager.
+     * Removes the given Camera, or an array of Cameras, from this Camera Manager.
      * 
      * If found in the Camera Manager it will be immediately removed from the local cameras array.
      * If also currently the 'main' camera, 'main' will be reset to be camera 0.
@@ -503,20 +503,31 @@ var CameraManager = new Class({
      * @method Phaser.Cameras.Scene2D.CameraManager#remove
      * @since 3.0.0
      *
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to be removed from this Camera Manager.
+     * @param {(Phaser.Cameras.Scene2D.Camera|Phaser.Cameras.Scene2D.Camera[])} camera - The Camera, or an array of Cameras, to be removed from this Camera Manager.
      */
     remove: function (camera)
     {
-        var cameraIndex = this.cameras.indexOf(camera);
-
-        if (cameraIndex >= 0 && this.cameras.length > 1)
+        if (!Array.isArray(camera))
         {
-            this.cameras.splice(cameraIndex, 1);
+            camera = [ camera ];
+        }
 
-            if (this.main === camera)
+        var cameras = this.cameras;
+
+        for (var i = 0; i < camera.length; i++)
+        {
+            var index = cameras.indexOf(camera);
+
+            if (index !== -1)
             {
-                this.main = this.cameras[0];
+                cameras.splice(index, 1);
+    
             }
+        }
+
+        if (!this.main)
+        {
+            this.main = this.cameras[0];
         }
     },
 
