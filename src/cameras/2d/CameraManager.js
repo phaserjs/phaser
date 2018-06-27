@@ -516,7 +516,7 @@ var CameraManager = new Class({
 
         for (var i = 0; i < camera.length; i++)
         {
-            var index = cameras.indexOf(camera);
+            var index = cameras.indexOf(camera[i]);
 
             if (index !== -1)
             {
@@ -527,7 +527,7 @@ var CameraManager = new Class({
 
         if (!this.main)
         {
-            this.main = this.cameras[0];
+            this.main = cameras[0];
         }
     },
 
