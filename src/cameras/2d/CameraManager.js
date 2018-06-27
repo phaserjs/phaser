@@ -238,6 +238,47 @@ var CameraManager = new Class({
     },
 
     /**
+     * Adds an existing Camera into the Camera Manager.
+     * 
+     * The Camera should either be a `Phaser.Cameras.Scene2D.Camera` instance, or a class that extends from it.
+     * 
+     * The Camera will be assigned an ID, which is used for Game Object exclusion and then added to the
+     * manager. As long as it doesn't already exist in the manager it will be added then returned.
+     * 
+     * If this method returns `null` then the Camera already exists in this Camera Manager.
+     *
+     * @method Phaser.Cameras.Scene2D.CameraManager#addExisting
+     * @since 3.0.0
+     *
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to be added to the Camera Manager.
+     * @param {boolean} [makeMain=false] - Set this Camera as being the 'main' camera. This just makes the property `main` a reference to it.
+     *
+     * @return {?Phaser.Cameras.Scene2D.Camera} The Camera that was added to the Camera Manager, or `null` if it couldn't be added.
+     */
+    addExisting: function (camera, makeMain)
+    {
+        if (makeMain === undefined) { makeMain = false; }
+
+        var index = this.cameras.indexOf(camera);
+
+        if (index === -1)
+        {
+            camera.id = this.getNextID();
+
+            this.cameras.push(camera);
+
+            if (makeMain)
+            {
+                this.main = camera;
+            }
+    
+            return camera;
+        }
+
+        return null;
+    },
+
+    /**
      * Gets the next available Camera ID number.
      * 
      * The Camera Manager supports up to 31 unique cameras, after which the ID returned will always be zero.
@@ -286,44 +327,36 @@ var CameraManager = new Class({
     },
 
     /**
-     * Adds an existing Camera into the Camera Manager.
+     * Gets the total number of Cameras in this Camera Manager.
      * 
-     * The Camera should either be a `Phaser.Cameras.Scene2D.Camera` instance, or a class that extends from it.
+     * If the optional `isVisible` argument is set it will only count Cameras that are currently visible.
+     *
+     * @method Phaser.Cameras.Scene2D.CameraManager#getTotal
+     * @since 3.11.0
      * 
-     * The Camera will be assigned an ID, which is used for Game Object exclusion and then added to the
-     * manager. As long as it doesn't already exist in the manager it will be added then returned.
-     * 
-     * If this method returns `null` then the Camera already exists in this Camera Manager.
+     * @param {boolean} [isVisible=false] - Set the `true` to only include visible Cameras in the total.
      *
-     * @method Phaser.Cameras.Scene2D.CameraManager#addExisting
-     * @since 3.0.0
-     *
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to be added to the Camera Manager.
-     * @param {boolean} [makeMain=false] - Set this Camera as being the 'main' camera. This just makes the property `main` a reference to it.
-     *
-     * @return {?Phaser.Cameras.Scene2D.Camera} The Camera that was added to the Camera Manager, or `null` if it couldn't be added.
+     * @return {integer} The total number of Cameras in this Camera Manager.
      */
-    addExisting: function (camera, makeMain)
+    getTotal: function (isVisible)
     {
-        if (makeMain === undefined) { makeMain = false; }
+        if (isVisible === undefined) { isVisible = false; }
 
-        var index = this.cameras.indexOf(camera);
+        var total = 0;
 
-        if (index === -1)
+        var cameras = this.cameras;
+
+        for (var i = 0; i < cameras.length; i++)
         {
-            camera.id = this.getNextID();
+            var camera = cameras[i];
 
-            this.cameras.push(camera);
-
-            if (makeMain)
+            if (!isVisible || (isVisible && camera.visible))
             {
-                this.main = camera;
+                total++;
             }
-    
-            return camera;
         }
 
-        return null;
+        return total;
     },
 
     /**
