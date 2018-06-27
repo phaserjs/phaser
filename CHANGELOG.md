@@ -57,12 +57,14 @@
 * `SceneManager.run` would ignore scenes that are currently in the queue of scenes pending to be added. This has now been fixed so that the scene is queued to be started once it's ready (thanks @rook2pawn)
 * `GameObject.disableInteractive` was toggling input. Every second call would turn the input back on (thanks @TadejZupancic)
 * The position of the TilemapLayer wasn't taken into account when culling tiles for the Camera. It's now calculated as part of the cull flow (thanks @Upperfoot)
+* Fix extra argument passing in Array.Each (thanks @samme)
+* TileSprite was using the Size compontent instead of ComputedSize, meaning its `getBounds` and `displayWidth` and `displayHeight` results were incorrect. Fix #3789 (thanks @jjalonso) 
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@DannyT @squilibob @dvdbrink @t1gu1 @cyantree @DrevanTonder
+@DannyT @squilibob @dvdbrink @t1gu1 @cyantree @DrevanTonder @mikewesthad
 
 Also, a special mention to @andygroff for his excellent work enhancing the search box on the examples site.
 

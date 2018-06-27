@@ -29,6 +29,7 @@ var TileSpriteRender = require('./TileSpriteRender');
  *
  * @extends Phaser.GameObjects.Components.Alpha
  * @extends Phaser.GameObjects.Components.BlendMode
+ * @extends Phaser.GameObjects.Components.ComputedSize
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.GetBounds
@@ -37,7 +38,6 @@ var TileSpriteRender = require('./TileSpriteRender');
  * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.ScaleMode
  * @extends Phaser.GameObjects.Components.ScrollFactor
- * @extends Phaser.GameObjects.Components.Size
  * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Tint
  * @extends Phaser.GameObjects.Components.Transform
@@ -58,6 +58,7 @@ var TileSprite = new Class({
     Mixins: [
         Components.Alpha,
         Components.BlendMode,
+        Components.ComputedSize,
         Components.Depth,
         Components.Flip,
         Components.GetBounds,
@@ -66,7 +67,6 @@ var TileSprite = new Class({
         Components.Pipeline,
         Components.ScaleMode,
         Components.ScrollFactor,
-        Components.Size,
         Components.Texture,
         Components.Tint,
         Components.Transform,
