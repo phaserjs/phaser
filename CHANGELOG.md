@@ -58,7 +58,8 @@
 * `GameObject.disableInteractive` was toggling input. Every second call would turn the input back on (thanks @TadejZupancic)
 * The position of the TilemapLayer wasn't taken into account when culling tiles for the Camera. It's now calculated as part of the cull flow (thanks @Upperfoot)
 * Fix extra argument passing in Array.Each (thanks @samme)
-* TileSprite was using the Size compontent instead of ComputedSize, meaning its `getBounds` and `displayWidth` and `displayHeight` results were incorrect. Fix #3789 (thanks @jjalonso) 
+* TileSprite was using the Size compontent instead of ComputedSize, meaning its `getBounds` and `displayWidth` and `displayHeight` results were incorrect. Fix #3789 (thanks @jjalonso)
+* ArrayUtils.AddAt didn't calculate the array offset correctly if you passed an array in to be merged with an existing array. This also caused Container.addAt to fail if an array was passed to it. Fix #3788 (thanks @jjalonso)
 
 ### Examples, Documentation and TypeScript
 
