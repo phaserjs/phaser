@@ -1061,7 +1061,7 @@ var Camera = new Class({
      */
     ignore: function (gameObject)
     {
-        var id = this._id;
+        var id = this.id;
 
         if (Array.isArray(gameObject))
         {
