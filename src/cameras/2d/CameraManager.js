@@ -504,6 +504,8 @@ var CameraManager = new Class({
      * @since 3.0.0
      *
      * @param {(Phaser.Cameras.Scene2D.Camera|Phaser.Cameras.Scene2D.Camera[])} camera - The Camera, or an array of Cameras, to be removed from this Camera Manager.
+     * 
+     * @return {integer} The total number of Cameras removed.
      */
     remove: function (camera)
     {
@@ -512,6 +514,7 @@ var CameraManager = new Class({
             camera = [ camera ];
         }
 
+        var total = 0;
         var cameras = this.cameras;
 
         for (var i = 0; i < camera.length; i++)
@@ -521,7 +524,7 @@ var CameraManager = new Class({
             if (index !== -1)
             {
                 cameras.splice(index, 1);
-    
+                total++;
             }
         }
 
@@ -529,6 +532,8 @@ var CameraManager = new Class({
         {
             this.main = cameras[0];
         }
+
+        return total;
     },
 
     /**
