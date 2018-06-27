@@ -86,7 +86,6 @@ var CanvasRenderer = new Class({
          */
         this.config = {
             clearBeforeRender: game.config.clearBeforeRender,
-            pixelArt: game.config.pixelArt,
             backgroundColor: game.config.backgroundColor,
             resolution: game.config.resolution,
             autoResize: game.config.autoResize,
@@ -101,7 +100,7 @@ var CanvasRenderer = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.scaleMode = (game.config.pixelArt || !game.config.antialias) ? ScaleModes.NEAREST : ScaleModes.LINEAR;
+        this.scaleMode = (game.config.antialias) ? ScaleModes.LINEAR : ScaleModes.NEAREST;
 
         /**
          * [description]

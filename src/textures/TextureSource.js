@@ -164,7 +164,7 @@ var TextureSource = new Class({
             }
         }
 
-        if (game.config.pixelArt || !game.config.antialias)
+        if (!game.config.antialias)
         {
             this.setFilter(1);
         }

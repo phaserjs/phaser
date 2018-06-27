@@ -209,9 +209,8 @@ var CameraManager = new Class({
      * By default Cameras are transparent and will render anything that they can see based on their `scrollX`
      * and `scrollY` values. Game Objects can be set to be ignored by a Camera by using the `Camera.ignore` method.
      * 
-     * Please note that it will have its `roundPixels` propery set to whatever is set on the game and renderer
-     * configuration. So if you've got a game config with `pixelArt: true` in it, then `roundPixels` will always
-     * be set to `true` on the new Camera.
+     * The Camera will have its `roundPixels` propery set to whatever `CameraManager.roundPixels` is. You can change
+     * it after creation if required.
      * 
      * See the Camera class documentation for more details.
      *
@@ -259,9 +258,8 @@ var CameraManager = new Class({
      * 
      * The Camera should either be a `Phaser.Cameras.Scene2D.Camera` instance, or a class that extends from it.
      * 
-     * Please note that it will have its `roundPixels` propery set to whatever is set on the game and renderer
-     * configuration. So if you've got a game config with `pixelArt: true` in it, then `roundPixels` will always
-     * be set to `true` on the Camera added to this Camera Manager.
+     * The Camera will have its `roundPixels` propery set to whatever `CameraManager.roundPixels` is. You can change
+     * it after addition if required.
      * 
      * The Camera will be assigned an ID, which is used for Game Object exclusion and then added to the
      * manager. As long as it doesn't already exist in the manager it will be added then returned.

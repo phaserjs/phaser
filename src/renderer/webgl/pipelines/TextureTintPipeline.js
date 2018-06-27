@@ -2080,7 +2080,7 @@ var TextureTintPipeline = new Class({
             this.flush();
         }
 
-        var roundPixels = camera.roundPixels;
+        var roundPixels = this.renderer.config.roundPixels;
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
         var width = frameWidth;
