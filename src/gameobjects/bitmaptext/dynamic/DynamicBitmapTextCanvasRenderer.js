@@ -127,8 +127,6 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
         ctx.clip();
     }
 
-    var roundPixels = renderer.config.roundPixels;
-
     for (var index = 0; index < textLength; ++index)
     {
         //  Reset the scale (in case the callback changed it)
@@ -186,7 +184,7 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
         x -= cameraScrollX;
         y -= cameraScrollY;
 
-        if (roundPixels)
+        if (camera.roundPixels)
         {
             x |= 0;
             y |= 0;

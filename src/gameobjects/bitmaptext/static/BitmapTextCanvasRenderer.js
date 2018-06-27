@@ -91,12 +91,10 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
         renderer.currentScaleMode = src.scaleMode;
     }
 
-    var roundPixels = renderer.config.roundPixels;
-
     var tx = (src.x - camera.scrollX * src.scrollFactorX) + src.frame.x;
     var ty = (src.y - camera.scrollY * src.scrollFactorY) + src.frame.y;
 
-    if (roundPixels)
+    if (camera.roundPixels)
     {
         tx |= 0;
         ty |= 0;
@@ -167,7 +165,7 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
             continue;
         }
 
-        if (roundPixels)
+        if (camera.roundPixels)
         {
             x |= 0;
             y |= 0;

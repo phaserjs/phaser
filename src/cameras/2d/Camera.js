@@ -1462,8 +1462,9 @@ var Camera = new Class({
     },
 
     /**
-     * Should the Camera round pixel values to whole integers when scrolling?
-     * In some types of game this is required to prevent sub-pixel aliasing.
+     * Should the Camera round pixel values to whole integers when rendering Game Objects?
+     * 
+     * In some types of game, especially with pixel art, this is required to prevent sub-pixel aliasing.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setRoundPixels
      * @since 3.0.0

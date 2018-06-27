@@ -4,8 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var roundPixels = false;
-
 /**
  * [description]
  *
@@ -80,7 +78,7 @@ var DrawImage = function (src, camera, parentMatrix)
     var tx = src.x - camera.scrollX * src.scrollFactorX;
     var ty = src.y - camera.scrollY * src.scrollFactorY;
 
-    if (roundPixels)
+    if (camera.roundPixels)
     {
         tx |= 0;
         ty |= 0;
@@ -111,11 +109,4 @@ var DrawImage = function (src, camera, parentMatrix)
     ctx.restore();
 };
 
-//  Special return so we can store the config value locally
-
-module.exports = function (configRoundPixels)
-{
-    roundPixels = configRoundPixels;
-
-    return DrawImage;
-};
+module.exports = DrawImage;

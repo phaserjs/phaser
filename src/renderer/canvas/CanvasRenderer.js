@@ -90,6 +90,7 @@ var CanvasRenderer = new Class({
             backgroundColor: game.config.backgroundColor,
             resolution: game.config.resolution,
             autoResize: game.config.autoResize,
+            antialias: game.config.antialias,
             roundPixels: game.config.roundPixels
         };
 
@@ -100,7 +101,7 @@ var CanvasRenderer = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.scaleMode = (game.config.pixelArt) ? ScaleModes.NEAREST : ScaleModes.LINEAR;
+        this.scaleMode = (game.config.pixelArt || !game.config.antialias) ? ScaleModes.NEAREST : ScaleModes.LINEAR;
 
         /**
          * [description]
@@ -136,7 +137,7 @@ var CanvasRenderer = new Class({
          * @type {function}
          * @since 3.0.0
          */
-        this.drawImage = DrawImage(this.config.roundPixels);
+        this.drawImage = DrawImage;
 
         /**
          * [description]

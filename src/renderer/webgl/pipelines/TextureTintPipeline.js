@@ -397,7 +397,7 @@ var TextureTintPipeline = new Class({
 
         this.renderer.setPipeline(this);
 
-        var roundPixels = this.renderer.config.roundPixels;
+        var roundPixels = camera.roundPixels;
         var emitters = emitterManager.emitters.list;
         var emitterCount = emitters.length;
         var vertexViewF32 = this.vertexViewF32;
@@ -620,7 +620,7 @@ var TextureTintPipeline = new Class({
 
         this.renderer.setPipeline(this);
 
-        var roundPixels = this.renderer.config.roundPixels;
+        var roundPixels = camera.roundPixels;
         var getTint = Utils.getTintAppendFloatAlpha;
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
@@ -801,7 +801,7 @@ var TextureTintPipeline = new Class({
             this.flush();
         }
         
-        var roundPixels = this.renderer.config.roundPixels;
+        var roundPixels = camera.roundPixels;
         var getTint = Utils.getTintAppendFloatAlpha;
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
@@ -978,7 +978,7 @@ var TextureTintPipeline = new Class({
             this.flush();
         }
 
-        var roundPixels = this.renderer.config.roundPixels;
+        var roundPixels = camera.roundPixels;
         var getTint = Utils.getTintAppendFloatAlpha;
         var uvs = mesh.uv;
         var colors = mesh.colors;
@@ -1105,7 +1105,7 @@ var TextureTintPipeline = new Class({
             this.flush();
         }
 
-        var roundPixels = this.renderer.config.roundPixels;
+        var roundPixels = camera.roundPixels;
         var text = bitmapText.text;
         var textLength = text.length;
         var getTint = Utils.getTintAppendFloatAlpha;
@@ -1382,7 +1382,7 @@ var TextureTintPipeline = new Class({
             this.flush();
         }
 
-        var roundPixels = this.renderer.config.roundPixels;
+        var roundPixels = camera.roundPixels;
         var displayCallback = bitmapText.displayCallback;
         var text = bitmapText.text;
         var textLength = text.length;
@@ -1906,7 +1906,7 @@ var TextureTintPipeline = new Class({
 
         flipY = flipY ^ (texture.isRenderTexture ? 1 : 0);
 
-        var roundPixels = this.renderer.config.roundPixels;
+        var roundPixels = camera.roundPixels;
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
         var cameraMatrix = camera.matrix.matrix;
@@ -2080,7 +2080,7 @@ var TextureTintPipeline = new Class({
             this.flush();
         }
 
-        var roundPixels = this.renderer.config.roundPixels;
+        var roundPixels = camera.roundPixels;
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
         var width = frameWidth;

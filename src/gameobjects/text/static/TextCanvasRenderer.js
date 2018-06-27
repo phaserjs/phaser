@@ -73,7 +73,7 @@ var TextCanvasRenderer = function (renderer, src, interpolationPercentage, camer
     var tx = src.x - camera.scrollX * src.scrollFactorX;
     var ty = src.y - camera.scrollY * src.scrollFactorY;
 
-    if (renderer.config.roundPixels)
+    if (camera.roundPixels)
     {
         tx |= 0;
         ty |= 0;

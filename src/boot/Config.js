@@ -341,7 +341,7 @@ var Config = new Class({
         /**
          * @const {boolean} Phaser.Boot.Config#roundPixels - [description]
          */
-        this.roundPixels = GetValue(renderConfig, 'roundPixels', false);
+        this.roundPixels = GetValue(renderConfig, 'roundPixels', this.pixelArt);
 
         /**
          * @const {boolean} Phaser.Boot.Config#transparent - [description]

@@ -64,8 +64,6 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
             ctx.globalCompositeOperation = renderer.blendModes[emitter.blendMode];
         }
 
-        var roundPixels = renderer.config.roundPixels;
-
         for (var index = 0; index < length; ++index)
         {
             var particle = particles[index];
@@ -90,7 +88,7 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
             var tx = particle.x - cameraScrollX;
             var ty = particle.y - cameraScrollY;
 
-            if (roundPixels)
+            if (camera.roundPixels)
             {
                 tx |= 0;
                 ty |= 0;

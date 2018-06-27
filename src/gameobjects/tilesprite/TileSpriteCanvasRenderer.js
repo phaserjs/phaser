@@ -86,7 +86,7 @@ var TileSpriteCanvasRenderer = function (renderer, src, interpolationPercentage,
         dy += src.height;
     }
 
-    if (renderer.config.roundPixels)
+    if (camera.roundPixels)
     {
         dx |= 0;
         dy |= 0;

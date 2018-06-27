@@ -81,6 +81,7 @@ var WebGLRenderer = new Class({
         this.config = {
             clearBeforeRender: gameConfig.clearBeforeRender,
             pixelArt: gameConfig.pixelArt,
+            antialias: gameConfig.antialias,
             backgroundColor: gameConfig.backgroundColor,
             contextCreation: contextCreationConfig,
             resolution: gameConfig.resolution,
@@ -1124,7 +1125,7 @@ var WebGLRenderer = new Class({
         {
             filter = gl.LINEAR;
         }
-        else if (scaleMode === CONST.ScaleModes.NEAREST || this.config.pixelArt)
+        else if (scaleMode === CONST.ScaleModes.NEAREST || this.config.pixelArt || !this.config.antialias)
         {
             filter = gl.NEAREST;
         }
