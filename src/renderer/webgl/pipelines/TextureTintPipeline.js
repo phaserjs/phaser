@@ -1883,8 +1883,10 @@ var TextureTintPipeline = new Class({
         var height = srcHeight * (flipY ? -1.0 : 1.0);
         var x = -displayOriginX + ((srcWidth) * (flipX ? 1.0 : 0.0));
         var y = -displayOriginY + ((srcHeight) * (flipY ? 1.0 : 0.0));
+
         // var x = -displayOriginX + frameX + ((frameWidth) * (flipX ? 1.0 : 0.0));
         // var y = -displayOriginY + frameY + ((frameHeight) * (flipY ? 1.0 : 0.0));
+
         var xw = (roundPixels ? (x | 0) : x) + width;
         var yh = (roundPixels ? (y | 0) : y) + height;
         var sr = Math.sin(rotation);
