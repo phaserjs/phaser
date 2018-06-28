@@ -63,7 +63,7 @@ There is a third game config property called `pixelArt`. If set to `true` it's t
 * If the Blitter object has no Bob's to render it will now abort immediately, avoiding several context calls in Canvas mode.
 * `Scene.run` will now pass the optional `data` object in all cases, no matter if it's waking, resuming or starting a Scene (thanks @rook2pawn)
 * `ScenePlugin.start` and `ScenePlugin.restart` will now always queue the op with the Scene Manager, regardless of the state of the Scene, in order to avoid issues where plugins carry on running for a frame before closing down. Fix #3776 (thanks @jjalonso)
-* The `batchTileSprite` method has been removed from the `TextureTintPipeline` class, because it is now handled internally bu the Tile Sprite object itself.
+* The `batchTileSprite` method has been removed from the `TextureTintPipeline` class, because it is now handled internally by the Tile Sprite object itself.
 
 ### Bug Fixes
 
@@ -81,6 +81,7 @@ There is a third game config property called `pixelArt`. If set to `true` it's t
 * TileSprite was using the Size compontent instead of ComputedSize, meaning its `getBounds` and `displayWidth` and `displayHeight` results were incorrect. Fix #3789 (thanks @jjalonso)
 * ArrayUtils.AddAt didn't calculate the array offset correctly if you passed an array in to be merged with an existing array. This also caused Container.addAt to fail if an array was passed to it. Fix #3788 (thanks @jjalonso)
 * The `Pointer.camera` property would only be set if there was a viable Game Object in the camera view. Now it is set regardless, to always be the Camera the Pointer interacted with.
+* Added the Mask compontent to Container. It worked without it, but this brings it in-line with the documentation and other Game Objects. Fix #3797 (thanks @zilbuz)
 
 ### Examples, Documentation and TypeScript
 
