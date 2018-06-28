@@ -99,6 +99,7 @@ var TileSpriteCanvasRenderer = function (renderer, src, interpolationPercentage,
     if (parentMatrix !== undefined)
     {
         var matrix = parentMatrix.matrix;
+
         ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
     }
 
@@ -116,9 +117,12 @@ var TileSpriteCanvasRenderer = function (renderer, src, interpolationPercentage,
     ctx.translate(-(src.originX * src.width), -(src.originY * src.height));
 
     // Draw
+
+    ctx.scale(src.tileScaleX, src.tileScaleY);
+
     ctx.translate(-this.tilePositionX, -this.tilePositionY);
-    ctx.fillStyle = src.canvasPattern;
-    ctx.fillRect(this.tilePositionX, this.tilePositionY, src.width, src.height);
+    ctx.fillStyle = src.tileTexture;
+    ctx.fillRect(this.tilePositionX, this.tilePositionY, src.width / src.tileScaleX, src.height / src.tileScaleY);
 
     ctx.restore();
 };

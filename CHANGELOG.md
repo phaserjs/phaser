@@ -52,6 +52,7 @@ There is a third game config property called `pixelArt`. If set to `true` it's t
 * `ScenePlugin.sleep` (and the corresponding methods in Scene Systems and the Scene Manager) now has a new optional `data` argument, which is passed to the target Scene and emitted in its 'sleep' event.
 * `ScenePlugin.wake` (and the corresponding methods in Scene Systems and the Scene Manager) now has a new optional `data` argument, which is passed to the target Scene and emitted in its 'wake' event.
 * `ScenePlugin.setActive` now has a new optional `data` argument, which is passed to the target Scene and emitted in its 'pause' or 'resume' events.
+* `TileSprite.tileScaleX` and `tileScaleY` are two new properties that allow you to control the scale of the texture within the Tile Sprite. This impacts the way the repeating texture is scaled, and is independent to scaling the Tile Sprite itself. It works in both Canvas and WebGL mode.
 
 ### Updates
 
@@ -62,6 +63,7 @@ There is a third game config property called `pixelArt`. If set to `true` it's t
 * If the Blitter object has no Bob's to render it will now abort immediately, avoiding several context calls in Canvas mode.
 * `Scene.run` will now pass the optional `data` object in all cases, no matter if it's waking, resuming or starting a Scene (thanks @rook2pawn)
 * `ScenePlugin.start` and `ScenePlugin.restart` will now always queue the op with the Scene Manager, regardless of the state of the Scene, in order to avoid issues where plugins carry on running for a frame before closing down. Fix #3776 (thanks @jjalonso)
+* The `batchTileSprite` method has been removed from the `TextureTintPipeline` class, because it is now handled internally bu the Tile Sprite object itself.
 
 ### Bug Fixes
 

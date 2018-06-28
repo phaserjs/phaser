@@ -1120,13 +1120,9 @@ var WebGLRenderer = new Class({
             wrap = gl.REPEAT;
         }
 
-        if (scaleMode === CONST.ScaleModes.LINEAR)
+        if (scaleMode === CONST.ScaleModes.LINEAR && this.config.antialias)
         {
             filter = gl.LINEAR;
-        }
-        else if (scaleMode === CONST.ScaleModes.NEAREST || !this.config.antialias)
-        {
-            filter = gl.NEAREST;
         }
 
         if (!source && typeof width === 'number' && typeof height === 'number')
@@ -1157,7 +1153,7 @@ var WebGLRenderer = new Class({
      * @param {object} pixels - pixel data
      * @param {integer} width - Width of the texture in pixels
      * @param {integer} height - Height of the texture in pixels
-     * @param {boolean} pma - Does the texture hace premultiplied alpha.
+     * @param {boolean} pma - Does the texture have premultiplied alpha?
      *
      * @return {WebGLTexture} Raw WebGLTexture
      */

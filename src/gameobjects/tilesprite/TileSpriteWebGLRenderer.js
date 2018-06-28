@@ -5,6 +5,7 @@
  */
 
 var GameObject = require('../GameObject');
+var Utils = require('../../renderer/webgl/Utils');
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -30,7 +31,29 @@ var TileSpriteWebGLRenderer = function (renderer, src, interpolationPercentage, 
 
     src.updateTileTexture();
 
-    this.pipeline.batchTileSprite(this, camera, parentMatrix);
+    var getTint = Utils.getTintAppendFloatAlpha;
+
+    this.pipeline.batchTexture(
+        src,
+        src.tileTexture,
+        src.frame.width * src.tileScaleX, src.frame.height * src.tileScaleY,
+        src.x, src.y,
+        src.width, src.height,
+        src.scaleX, src.scaleY,
+        src.rotation,
+        src.flipX, src.flipY,
+        src.scrollFactorX, src.scrollFactorY,
+        src.originX * src.width, src.originY * src.height,
+        0, 0, src.width, src.height,
+        getTint(src._tintTL, camera.alpha * src._alphaTL),
+        getTint(src._tintTR, camera.alpha * src._alphaTR),
+        getTint(src._tintBL, camera.alpha * src._alphaBL),
+        getTint(src._tintBR, camera.alpha * src._alphaBR),
+        (src.tilePositionX % src.frame.width) / src.frame.width,
+        (src.tilePositionY % src.frame.height) / src.frame.height,
+        camera,
+        parentMatrix
+    );
 };
 
 module.exports = TileSpriteWebGLRenderer;

@@ -19,7 +19,21 @@ var TileSpriteRender = require('./TileSpriteRender');
  * The texture can be scrolled and scaled independently of the TileSprite itself. Textures will automatically wrap and
  * are designed so that you can create game backdrops using seamless textures as a source.
  *
- * [description]
+ * You shouldn't ever create a TileSprite any larger than your actual screen size. If you want to create a large repeating background
+ * that scrolls across the whole map of your game, then you create a TileSprite that fits the screen size and then use the `tilePosition`
+ * property to scroll the texture as the player moves. If you create a TileSprite that is thousands of pixels in size then it will 
+ * consume huge amounts of memory and cause performance issues. Remember: use `tilePosition` to scroll your texture and `tileScale` to
+ * adjust the scale of the texture - don't resize the sprite itself or make it larger than it needs.
+ * 
+ * An important note about Tile Sprites and NPOT textures: Internally, TileSprite textures use GL_REPEAT to provide
+ * seamless repeating of the textures. This, combined with the way in which the textures are handled in WebGL, means
+ * they need to be POT (power-of-two) sizes in order to wrap. If you provide a NPOT (non power-of-two) texture to a
+ * TileSprite it will generate a POT sized canvas and draw your texture to it, scaled up to the POT size. It's then
+ * scaled back down again during rendering to the original dimensions. While this works, in that it allows you to use
+ * any size texture for a Tile Sprite, it does mean that NPOT textures are going to appear anti-aliased when rendered,
+ * due to the interpolation that took place when it was resized into a POT texture. This is especially visible in
+ * pixel art graphics. If you notice it and it becomes an issue, the only way to avoid it is to ensure that you
+ * provide POT textures for Tile Sprites.
  *
  * @class TileSprite
  * @extends Phaser.GameObjects.GameObject
@@ -103,6 +117,26 @@ var TileSprite = new Class({
         this.tilePositionY = 0;
 
         /**
+         * The horizontal scale of the Tile Sprite texture.
+         *
+         * @name Phaser.GameObjects.TileSprite#tileScaleX
+         * @type {number}
+         * @default 1
+         * @since 3.11.0
+         */
+        this.tileScaleX = 1;
+
+        /**
+         * The vertical scale of the Tile Sprite texture.
+         *
+         * @name Phaser.GameObjects.TileSprite#tileScaleY
+         * @type {number}
+         * @default 1
+         * @since 3.11.0
+         */
+        this.tileScaleY = 1;
+
+        /**
          * Whether the Tile Sprite has changed in some way, requiring an re-render of its tile texture.
          *
          * Such changes include the texture frame and scroll position of the Tile Sprite.
@@ -116,9 +150,10 @@ var TileSprite = new Class({
 
         /**
          * The texture that the Tile Sprite is rendered to, which is then rendered to a Scene.
+         * In WebGL this is a WebGLTexture. In Canvas it's a Canvas Fill Pattern.
          *
          * @name Phaser.GameObjects.TileSprite#tileTexture
-         * @type {?WebGLTexture}
+         * @type {?(WebGLTexture|CanvasPattern)}
          * @default null
          * @since 3.0.0
          */
@@ -165,7 +200,7 @@ var TileSprite = new Class({
          * @default null
          * @since 3.0.0
          */
-        this.canvasPattern = null;
+        // this.canvasPattern = null;
 
         /**
          * The Canvas that the TileSprite's texture is rendered to.
@@ -185,6 +220,14 @@ var TileSprite = new Class({
          */
         this.canvasBufferCtx = this.canvasBuffer.getContext('2d');
 
+        /**
+         * The previous Texture Frame being used.
+         *
+         * @name Phaser.GameObjects.Components.Texture#oldFrame
+         * @type {Phaser.Textures.Frame}
+         * @private
+         * @since 3.0.0
+         */
         this.oldFrame = null;
 
         this.updateTileTexture();
@@ -236,41 +279,41 @@ var TileSprite = new Class({
      */
     updateTileTexture: function ()
     {
-        if (!this.dirty && this.oldFrame === this.frame)
+        var frame = this.frame;
+
+        if (!this.dirty && this.oldFrame === frame)
         {
             return;
         }
 
-        this.oldFrame = this.frame;
+        this.oldFrame = frame;
 
-        this.canvasBufferCtx.clearRect(0, 0, this.canvasBuffer.width, this.canvasBuffer.height);
+        var ctx = this.canvasBufferCtx;
+        var canvas = this.canvasBuffer;
 
-        if (this.renderer.gl)
+        var fw = this.potWidth;
+        var fh = this.potHeight;
+
+        if (!this.renderer.gl)
         {
-            this.canvasBufferCtx.drawImage(
-                this.frame.source.image,
-                this.frame.cutX, this.frame.cutY,
-                this.frame.cutWidth, this.frame.cutHeight,
-                0, 0,
-                this.potWidth, this.potHeight
-            );
-
-            this.tileTexture = this.renderer.canvasToTexture(this.canvasBuffer, this.tileTexture);
+            fw = frame.cutWidth;
+            fh = frame.cutHeight;
         }
-        else
-        {
-            this.canvasBuffer.width = this.frame.cutWidth;
-            this.canvasBuffer.height = this.frame.cutHeight;
-            this.canvasBufferCtx.drawImage(
-                this.frame.source.image,
-                this.frame.cutX, this.frame.cutY,
-                this.frame.cutWidth, this.frame.cutHeight,
-                0, 0,
-                this.frame.cutWidth, this.frame.cutHeight
-            );
 
-            this.canvasPattern = this.canvasBufferCtx.createPattern(this.canvasBuffer, 'repeat');
-        }
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        canvas.width = fw;
+        canvas.height = fh;
+
+        ctx.drawImage(
+            frame.source.image,
+            frame.cutX, frame.cutY,
+            frame.cutWidth, frame.cutHeight,
+            0, 0,
+            fw, fh
+        );
+
+        this.tileTexture = (this.renderer.gl) ? this.renderer.canvasToTexture(canvas, this.tileTexture) : ctx.createPattern(canvas, 'repeat');
 
         this.dirty = false;
     },
@@ -291,7 +334,7 @@ var TileSprite = new Class({
 
         CanvasPool.remove(this.canvasBuffer);
 
-        this.canvasPattern = null;
+        this.tileTexture = null;
         this.canvasBufferCtx = null;
         this.canvasBuffer = null;
 
