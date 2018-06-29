@@ -18,7 +18,7 @@
 * `Camera.setBounds` has a new optional argument `centerOn`. If specified it will automatically center the camera on the new bounds given.
 * The Camera will no longer stutter when following Game Objects at high zoom levels.
 * `Camera._id` has been renamed to `Camera.id`, a read-only bitmask used for camera exclusion from Game Objects.
-* The Camera Manager `cameraPool` has been removed entirely. It was mostly pointless in practise as Cameras are not regenerated frequently enough to need pooling. It also didn't maintain the bitmask list correctly before.
+* The Camera Manager `cameraPool` has been removed entirely. It was mostly pointless in practice as Cameras are not regenerated frequently enough to need pooling. It also didn't maintain the bitmask list correctly before.
 * `CameraManager.resetAll` now destroys all current Cameras, resets the camera ID marker to 1 and adds a single new Camera.
 * `CameraManager.currentCameraId` has been removed. IDs are assigned more intelligently now, via the `getNextID` internal method.
 * `CameraManager.addExisting` no longer needs to be passed a Camera that already exists in the pool (as the pool has been removed), meaning you can now create your own Cameras and pass them to `addExisting` and have them treated as normal cameras and not be ignored by the manager. They are also assigned a proper ID when added.
@@ -78,10 +78,10 @@ There is a third game config property called `pixelArt`. If set to `true` it's t
 * `GameObject.disableInteractive` was toggling input. Every second call would turn the input back on (thanks @TadejZupancic)
 * The position of the TilemapLayer wasn't taken into account when culling tiles for the Camera. It's now calculated as part of the cull flow (thanks @Upperfoot)
 * Fix extra argument passing in Array.Each (thanks @samme)
-* TileSprite was using the Size compontent instead of ComputedSize, meaning its `getBounds` and `displayWidth` and `displayHeight` results were incorrect. Fix #3789 (thanks @jjalonso)
-* ArrayUtils.AddAt didn't calculate the array offset correctly if you passed an array in to be merged with an existing array. This also caused Container.addAt to fail if an array was passed to it. Fix #3788 (thanks @jjalonso)
+* TileSprite was using the Size component instead of ComputedSize, meaning its `getBounds` and `displayWidth` and `displayHeight` results were incorrect. Fix #3789 (thanks @jjalonso)
+* `ArrayUtils.AddAt` didn't calculate the array offset correctly if you passed an array in to be merged with an existing array. This also caused Container.addAt to fail if an array was passed to it. Fix #3788 (thanks @jjalonso)
 * The `Pointer.camera` property would only be set if there was a viable Game Object in the camera view. Now it is set regardless, to always be the Camera the Pointer interacted with.
-* Added the Mask compontent to Container. It worked without it, but this brings it in-line with the documentation and other Game Objects. Fix #3797 (thanks @zilbuz)
+* Added the Mask component to Container. It worked without it, but this brings it in-line with the documentation and other Game Objects. Fix #3797 (thanks @zilbuz)
 
 ### Examples, Documentation and TypeScript
 
@@ -89,7 +89,7 @@ My thanks to the following for helping with the Phaser 3 Examples, Docs and Type
 
 @DannyT @squilibob @dvdbrink @t1gu1 @cyantree @DrevanTonder @mikewesthad
 
-Also, a special mention to @andygroff for his excellent work enhancing the search box on the examples site.
+Also, a special mention to @andygroff for his excellent work enhancing the search box on the examples site, and @hexus for his assistance completing the documentation for the Game Objects.
 
 
 ## Version 3.10.1 - Hayashi - 13th June 2018
