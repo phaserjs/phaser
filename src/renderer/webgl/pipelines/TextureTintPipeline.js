@@ -2162,20 +2162,6 @@ var TextureTintPipeline = new Class({
 
         // Force an immediate draw
         this.flush();
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchGraphics
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Graphics} graphics - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     */
-    batchGraphics: function ()
-    {
-        // Stub
     }
 
 });

@@ -133,7 +133,7 @@ var FlatTintPipeline = new Class({
         ];
 
         /**
-         * Used internally by for triangulating a polyong
+         * Used internally for triangulating a polygon
          *
          * @name Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#polygonCache
          * @type {array}
@@ -245,18 +245,23 @@ var FlatTintPipeline = new Class({
         vertexViewF32[vertexOffset + 0] = tx0;
         vertexViewF32[vertexOffset + 1] = ty0;
         vertexViewU32[vertexOffset + 2] = tint;
+
         vertexViewF32[vertexOffset + 3] = tx1;
         vertexViewF32[vertexOffset + 4] = ty1;
         vertexViewU32[vertexOffset + 5] = tint;
+
         vertexViewF32[vertexOffset + 6] = tx2;
         vertexViewF32[vertexOffset + 7] = ty2;
         vertexViewU32[vertexOffset + 8] = tint;
+
         vertexViewF32[vertexOffset + 9] = tx0;
         vertexViewF32[vertexOffset + 10] = ty0;
         vertexViewU32[vertexOffset + 11] = tint;
+
         vertexViewF32[vertexOffset + 12] = tx2;
         vertexViewF32[vertexOffset + 13] = ty2;
         vertexViewU32[vertexOffset + 14] = tint;
+
         vertexViewF32[vertexOffset + 15] = tx3;
         vertexViewF32[vertexOffset + 16] = ty3;
         vertexViewU32[vertexOffset + 17] = tint;
@@ -326,9 +331,11 @@ var FlatTintPipeline = new Class({
         vertexViewF32[vertexOffset + 0] = tx0;
         vertexViewF32[vertexOffset + 1] = ty0;
         vertexViewU32[vertexOffset + 2] = tint;
+
         vertexViewF32[vertexOffset + 3] = tx1;
         vertexViewF32[vertexOffset + 4] = ty1;
         vertexViewU32[vertexOffset + 5] = tint;
+
         vertexViewF32[vertexOffset + 6] = tx2;
         vertexViewF32[vertexOffset + 7] = ty2;
         vertexViewU32[vertexOffset + 8] = tint;
@@ -487,9 +494,11 @@ var FlatTintPipeline = new Class({
             vertexViewF32[vertexOffset + 0] = tx0;
             vertexViewF32[vertexOffset + 1] = ty0;
             vertexViewU32[vertexOffset + 2] = tint;
+
             vertexViewF32[vertexOffset + 3] = tx1;
             vertexViewF32[vertexOffset + 4] = ty1;
             vertexViewU32[vertexOffset + 5] = tint;
+
             vertexViewF32[vertexOffset + 6] = tx2;
             vertexViewF32[vertexOffset + 7] = ty2;
             vertexViewU32[vertexOffset + 8] = tint;
@@ -571,18 +580,23 @@ var FlatTintPipeline = new Class({
             vertexViewF32[vertexOffset + 0] = last[3 * 2 + 0];
             vertexViewF32[vertexOffset + 1] = last[3 * 2 + 1];
             vertexViewU32[vertexOffset + 2] = getTint(last[3 * 2 + 2], lineAlpha);
+
             vertexViewF32[vertexOffset + 3] = last[3 * 0 + 0];
             vertexViewF32[vertexOffset + 4] = last[3 * 0 + 1];
             vertexViewU32[vertexOffset + 5] = getTint(last[3 * 0 + 2], lineAlpha);
+
             vertexViewF32[vertexOffset + 6] = curr[3 * 3 + 0];
             vertexViewF32[vertexOffset + 7] = curr[3 * 3 + 1];
             vertexViewU32[vertexOffset + 8] = getTint(curr[3 * 3 + 2], lineAlpha);
+
             vertexViewF32[vertexOffset + 9] = last[3 * 0 + 0];
             vertexViewF32[vertexOffset + 10] = last[3 * 0 + 1];
             vertexViewU32[vertexOffset + 11] = getTint(last[3 * 0 + 2], lineAlpha);
+
             vertexViewF32[vertexOffset + 12] = last[3 * 2 + 0];
             vertexViewF32[vertexOffset + 13] = last[3 * 2 + 1];
             vertexViewU32[vertexOffset + 14] = getTint(last[3 * 2 + 2], lineAlpha);
+
             vertexViewF32[vertexOffset + 15] = curr[3 * 1 + 0];
             vertexViewF32[vertexOffset + 16] = curr[3 * 1 + 1];
             vertexViewU32[vertexOffset + 17] = getTint(curr[3 * 1 + 2], lineAlpha);
@@ -675,18 +689,23 @@ var FlatTintPipeline = new Class({
         vertexViewF32[vertexOffset + 0] = x0;
         vertexViewF32[vertexOffset + 1] = y0;
         vertexViewU32[vertexOffset + 2] = bTint;
+
         vertexViewF32[vertexOffset + 3] = x1;
         vertexViewF32[vertexOffset + 4] = y1;
         vertexViewU32[vertexOffset + 5] = aTint;
+
         vertexViewF32[vertexOffset + 6] = x2;
         vertexViewF32[vertexOffset + 7] = y2;
         vertexViewU32[vertexOffset + 8] = bTint;
+
         vertexViewF32[vertexOffset + 9] = x1;
         vertexViewF32[vertexOffset + 10] = y1;
         vertexViewU32[vertexOffset + 11] = aTint;
+
         vertexViewF32[vertexOffset + 12] = x3;
         vertexViewF32[vertexOffset + 13] = y3;
         vertexViewU32[vertexOffset + 14] = aTint;
+
         vertexViewF32[vertexOffset + 15] = x2;
         vertexViewF32[vertexOffset + 16] = y2;
         vertexViewU32[vertexOffset + 17] = bTint;
@@ -1137,138 +1156,6 @@ var FlatTintPipeline = new Class({
                     break;
             }
         }
-    },
-
-    // Stubs
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#drawStaticTilemapLayer
-     * @since 3.0.0
-     *
-     * @param {Phaser.Tilemaps.StaticTilemapLayer} tilemap - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     */
-    drawStaticTilemapLayer: function ()
-    {
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#drawEmitterManager
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Particles.ParticleEmitterManager} emitterManager - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     */
-    drawEmitterManager: function ()
-    {
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#drawBlitter
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Blitter} blitter - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     */
-    drawBlitter: function ()
-    {
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchSprite
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Sprite} sprite - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     */
-    batchSprite: function ()
-    {
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchMesh
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Mesh} mesh - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     */
-    batchMesh: function ()
-    {
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchBitmapText
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.BitmapText} bitmapText - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     */
-    batchBitmapText: function ()
-    {
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchDynamicBitmapText
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.DynamicBitmapText} bitmapText - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     */
-    batchDynamicBitmapText: function ()
-    {
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchText
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Text} text - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     */
-    batchText: function ()
-    {
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchDynamicTilemapLayer
-     * @since 3.0.0
-     *
-     * @param {Phaser.Tilemaps.DynamicTilemapLayer} tilemapLayer - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     */
-    batchDynamicTilemapLayer: function ()
-    {
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchTileSprite
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.TileSprite} tileSprite - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     */
-    batchTileSprite: function ()
-    {
     }
 
 });
