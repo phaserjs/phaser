@@ -57,6 +57,15 @@ var MapData = new Class({
 
         /**
          * [description]
+         *
+         * @name Phaser.Tilemaps.MapData#infinite
+         * @type {boolean}
+         * @since 3.0.0
+         */
+        this.infinite = GetFastValue(config, 'infinite', false);
+
+        /**
+         * [description]
          * 
          * @name Phaser.Tilemaps.MapData#tileWidth
          * @type {number}
