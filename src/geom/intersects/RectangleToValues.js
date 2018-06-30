@@ -15,7 +15,7 @@
  * @param {number} right - [description]
  * @param {number} top - [description]
  * @param {number} bottom - [description]
- * @param {float} [tolerance=0] - [description]
+ * @param {number} [tolerance=0] - [description]
  *
  * @return {boolean} [description]
  */

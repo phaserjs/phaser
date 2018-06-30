@@ -23,16 +23,34 @@ var GameObject = require('../GameObject');
  */
 var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
+    var list = src.getRenderList();
+
+    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)) || list.length === 0)
     {
         return;
     }
 
-    var list = src.getRenderList();
+    var ctx = renderer.gameContext;
+
+    //  Alpha
+
+    var alpha = camera.alpha * src.alpha;
+
+    if (alpha === 0)
+    {
+        //  Nothing to see, so abort early
+        return;
+    }
+    else if (renderer.currentAlpha !== alpha)
+    {
+        renderer.currentAlpha = alpha;
+        ctx.globalAlpha = alpha;
+    }
+
+    //  Blend Mode
 
     renderer.setBlendMode(src.blendMode);
 
-    var ctx = renderer.gameContext;
     var cameraScrollX = src.x - camera.scrollX * src.scrollFactorX;
     var cameraScrollY = src.y - camera.scrollY * src.scrollFactorY;
 
@@ -56,6 +74,18 @@ var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, ca
         var fx = 1;
         var fy = 1;
 
+        var bobAlpha = bob.alpha * alpha;
+
+        if (bobAlpha === 0)
+        {
+            continue;
+        }
+        else if (renderer.currentAlpha !== bobAlpha)
+        {
+            renderer.currentAlpha = bobAlpha;
+            ctx.globalAlpha = bobAlpha;
+        }
+    
         if (!flip)
         {
             renderer.blitImage(dx + bob.x + cameraScrollX, dy + bob.y + cameraScrollY, bob.frame);

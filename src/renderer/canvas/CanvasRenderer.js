@@ -86,10 +86,10 @@ var CanvasRenderer = new Class({
          */
         this.config = {
             clearBeforeRender: game.config.clearBeforeRender,
-            pixelArt: game.config.pixelArt,
             backgroundColor: game.config.backgroundColor,
             resolution: game.config.resolution,
             autoResize: game.config.autoResize,
+            antialias: game.config.antialias,
             roundPixels: game.config.roundPixels
         };
 
@@ -100,7 +100,7 @@ var CanvasRenderer = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.scaleMode = (game.config.pixelArt) ? ScaleModes.NEAREST : ScaleModes.LINEAR;
+        this.scaleMode = (game.config.antialias) ? ScaleModes.LINEAR : ScaleModes.NEAREST;
 
         /**
          * [description]
@@ -136,7 +136,7 @@ var CanvasRenderer = new Class({
          * @type {function}
          * @since 3.0.0
          */
-        this.drawImage = DrawImage(this.config.roundPixels);
+        this.drawImage = DrawImage;
 
         /**
          * [description]
@@ -324,9 +324,9 @@ var CanvasRenderer = new Class({
      * @method Phaser.Renderer.Canvas.CanvasRenderer#setAlpha
      * @since 3.0.0
      *
-     * @param {float} alpha - [description]
+     * @param {number} alpha - [description]
      *
-     * @return {float} [description]
+     * @return {number} [description]
      */
     setAlpha: function (alpha)
     {
@@ -375,7 +375,7 @@ var CanvasRenderer = new Class({
      *
      * @param {Phaser.Scene} scene - [description]
      * @param {Phaser.GameObjects.DisplayList} children - [description]
-     * @param {float} interpolationPercentage - [description]
+     * @param {number} interpolationPercentage - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      */
     render: function (scene, children, interpolationPercentage, camera)
@@ -395,11 +395,9 @@ var CanvasRenderer = new Class({
             ctx.fillRect(camera.x, camera.y, camera.width, camera.height);
         }
 
-        if (this.currentAlpha !== 1)
-        {
-            ctx.globalAlpha = 1;
-            this.currentAlpha = 1;
-        }
+        ctx.globalAlpha = camera.alpha;
+
+        this.currentAlpha = camera.alpha;
 
         if (this.currentBlendMode !== 0)
         {
@@ -442,6 +440,7 @@ var CanvasRenderer = new Class({
 
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.globalCompositeOperation = 'source-over';
+        ctx.globalAlpha = 1;
 
         camera.flashEffect.postRenderCanvas(ctx);
         camera.fadeEffect.postRenderCanvas(ctx);

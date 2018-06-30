@@ -131,7 +131,7 @@ var LayerData = new Class({
          * [description]
          *
          * @name Phaser.Tilemaps.LayerData#alpha
-         * @type {float}
+         * @type {number}
          * @since 3.0.0
          */
         this.alpha = GetFastValue(config, 'alpha', 1);

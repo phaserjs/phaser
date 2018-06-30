@@ -441,6 +441,8 @@ var SceneManager = new Class({
         {
             scene.init.call(scene, settings.data);
 
+            settings.status = CONST.INIT;
+
             if (settings.isTransition)
             {
                 sys.events.emit('transitioninit', settings.transitionFrom, settings.transitionDuration);
@@ -623,10 +625,7 @@ var SceneManager = new Class({
             sys.sceneUpdate = scene.update;
         }
 
-        if (settings.status === CONST.CREATING)
-        {
-            settings.status = CONST.RUNNING;
-        }
+        settings.status = CONST.RUNNING;
     },
 
     /**
@@ -928,16 +927,17 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The Scene to pause.
+     * @param {object} [data] - An optional data object that will be passed to the Scene and emitted by its pause event.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
-    pause: function (key)
+    pause: function (key, data)
     {
         var scene = this.getScene(key);
 
         if (scene)
         {
-            scene.sys.pause();
+            scene.sys.pause(data);
         }
 
         return this;
@@ -950,16 +950,17 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The Scene to resume.
+     * @param {object} [data] - An optional data object that will be passed to the Scene and emitted by its resume event.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
-    resume: function (key)
+    resume: function (key, data)
     {
         var scene = this.getScene(key);
 
         if (scene)
         {
-            scene.sys.resume();
+            scene.sys.resume(data);
         }
 
         return this;
@@ -972,16 +973,17 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The Scene to put to sleep.
+     * @param {object} [data] - An optional data object that will be passed to the Scene and emitted by its sleep event.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
-    sleep: function (key)
+    sleep: function (key, data)
     {
         var scene = this.getScene(key);
 
         if (scene && !scene.sys.isTransitioning())
         {
-            scene.sys.sleep();
+            scene.sys.sleep(data);
         }
 
         return this;
@@ -994,16 +996,17 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The Scene to wake up.
+     * @param {object} [data] - An optional data object that will be passed to the Scene and emitted by its wake event.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
-    wake: function (key)
+    wake: function (key, data)
     {
         var scene = this.getScene(key);
 
         if (scene)
         {
-            scene.sys.wake();
+            scene.sys.wake(data);
         }
 
         return this;
@@ -1022,7 +1025,7 @@ var SceneManager = new Class({
      * @since 3.10.0
      *
      * @param {string} key - The Scene to run.
-     * @param {object} [data] - A data object that will be passed to the Scene that is run _only if the Scene isn't asleep or paused_.
+     * @param {object} [data] - A data object that will be passed to the Scene on start, wake, or resume.
      *
      * @return {Phaser.Scenes.SceneManager} This Scene Manager.
      */
@@ -1046,12 +1049,12 @@ var SceneManager = new Class({
         if (scene.sys.isSleeping())
         {
             //  Sleeping?
-            scene.sys.wake();
+            scene.sys.wake(data);
         }
         else if (scene.sys.isBooted && !scene.sys.isActive())
         {
             //  Paused?
-            scene.sys.resume();
+            scene.sys.resume(data);
         }
         else
         {

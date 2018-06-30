@@ -29,7 +29,7 @@ var TextureTintPipeline = require('./pipelines/TextureTintPipeline');
  *
  * @property {SnapshotCallback} callback - [description]
  * @property {string} type - [description]
- * @property {float} encoder - [description]
+ * @property {number} encoder - [description]
  */
 
 /**
@@ -80,7 +80,7 @@ var WebGLRenderer = new Class({
          */
         this.config = {
             clearBeforeRender: gameConfig.clearBeforeRender,
-            pixelArt: gameConfig.pixelArt,
+            antialias: gameConfig.antialias,
             backgroundColor: gameConfig.backgroundColor,
             contextCreation: contextCreationConfig,
             resolution: gameConfig.resolution,
@@ -1120,13 +1120,9 @@ var WebGLRenderer = new Class({
             wrap = gl.REPEAT;
         }
 
-        if (scaleMode === CONST.ScaleModes.LINEAR)
+        if (scaleMode === CONST.ScaleModes.LINEAR && this.config.antialias)
         {
             filter = gl.LINEAR;
-        }
-        else if (scaleMode === CONST.ScaleModes.NEAREST || this.config.pixelArt)
-        {
-            filter = gl.NEAREST;
         }
 
         if (!source && typeof width === 'number' && typeof height === 'number')
@@ -1157,7 +1153,7 @@ var WebGLRenderer = new Class({
      * @param {object} pixels - pixel data
      * @param {integer} width - Width of the texture in pixels
      * @param {integer} height - Height of the texture in pixels
-     * @param {boolean} pma - Does the texture hace premultiplied alpha.
+     * @param {boolean} pma - Does the texture have premultiplied alpha?
      *
      * @return {WebGLTexture} Raw WebGLTexture
      */
@@ -1607,7 +1603,7 @@ var WebGLRenderer = new Class({
      *
      * @param {SnapshotCallback} callback - [description]
      * @param {string} type - [description]
-     * @param {float} encoderOptions - [description]
+     * @param {number} encoderOptions - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
@@ -1695,7 +1691,7 @@ var WebGLRenderer = new Class({
      *
      * @param {WebGLProgram} program - [description]
      * @param {string} name - [description]
-     * @param {float} x - [description]
+     * @param {number} x - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
@@ -1716,8 +1712,8 @@ var WebGLRenderer = new Class({
      *
      * @param {WebGLProgram} program - [description]
      * @param {string} name - [description]
-     * @param {float} x - [description]
-     * @param {float} y - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
@@ -1738,9 +1734,9 @@ var WebGLRenderer = new Class({
      *
      * @param {WebGLProgram} program - [description]
      * @param {string} name - [description]
-     * @param {float} x - [description]
-     * @param {float} y - [description]
-     * @param {float} z - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} z - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
@@ -1761,10 +1757,10 @@ var WebGLRenderer = new Class({
      *
      * @param {WebGLProgram} program - Target program
      * @param {string} name - Name of the uniform
-     * @param {float} x - X component
-     * @param {float} y - Y component
-     * @param {float} z - Z component
-     * @param {float} w - W component
+     * @param {number} x - X component
+     * @param {number} y - Y component
+     * @param {number} z - Z component
+     * @param {number} w - W component
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */

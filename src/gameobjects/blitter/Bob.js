@@ -291,7 +291,7 @@ var Bob = new Class({
      * @method Phaser.GameObjects.Blitter.Bob#setAlpha
      * @since 3.0.0
      *
-     * @param {float} value - The alpha value used for this Bob. Between 0 and 1.
+     * @param {number} value - The alpha value used for this Bob. Between 0 and 1.
      *
      * @return {Phaser.GameObjects.Blitter.Bob} This Bob Game Object.
      */

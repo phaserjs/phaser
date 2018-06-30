@@ -22,7 +22,7 @@ var GameObject = require('../../gameobjects/GameObject');
  */
 var StaticTilemapLayerCanvasRenderer = function (renderer, src, interpolationPercentage, camera)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
+    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)))
     {
         return;
     }
@@ -42,7 +42,7 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, src, interpolationPer
     ctx.rotate(src.rotation);
     ctx.scale(src.scaleX, src.scaleY);
     ctx.scale(src.flipX ? -1 : 1, src.flipY ? -1 : 1);
-    ctx.globalAlpha = src.alpha;
+    ctx.globalAlpha = camera.alpha * src.alpha;
 
     for (var index = 0; index < tileCount; ++index)
     {

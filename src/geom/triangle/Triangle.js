@@ -127,7 +127,7 @@ var Triangle = new Class({
      *
      * @generic {Phaser.Geom.Point} O - [output,$return]
      *
-     * @param {float} position - [description]
+     * @param {number} position - [description]
      * @param {(Phaser.Geom.Point|object)} [output] - [description]
      *
      * @return {(Phaser.Geom.Point|object)} [description]

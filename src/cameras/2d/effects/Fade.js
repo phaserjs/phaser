@@ -127,7 +127,7 @@ var Fade = new Class({
          * A value between 0 and 1.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Fade#alpha
-         * @type {float}
+         * @type {number}
          * @private
          * @since 3.5.0
          */
@@ -137,7 +137,7 @@ var Fade = new Class({
          * If this effect is running this holds the current percentage of the progress, a value between 0 and 1.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Fade#progress
-         * @type {float}
+         * @type {number}
          * @since 3.5.0
          */
         this.progress = 0;
@@ -156,7 +156,7 @@ var Fade = new Class({
          * @callback CameraFadeCallback
          *
          * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera on which the effect is running.
-         * @param {float} progress - The progress of the effect. A value between 0 and 1.
+         * @param {number} progress - The progress of the effect. A value between 0 and 1.
          */
 
         /**

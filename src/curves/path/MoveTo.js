@@ -55,7 +55,7 @@ var MoveTo = new Class({
      *
      * @generic {Phaser.Math.Vector2} O - [out,$return]
      *
-     * @param {float} t - The position along the curve to return. Where 0 is the start and 1 is the end.
+     * @param {number} t - The position along the curve to return. Where 0 is the start and 1 is the end.
      * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not given will be created.
      *
      * @return {Phaser.Math.Vector2} The coordinates of the point on the curve. If an `out` object was given this will be returned.
@@ -75,7 +75,7 @@ var MoveTo = new Class({
      *
      * @generic {Phaser.Math.Vector2} O - [out,$return]
      *
-     * @param {float} u - [description]
+     * @param {number} u - [description]
      * @param {Phaser.Math.Vector2} [out] - [description]
      *
      * @return {Phaser.Math.Vector2} [description]

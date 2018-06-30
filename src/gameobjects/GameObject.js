@@ -124,7 +124,11 @@ var GameObject = new Class({
 
         /**
          * A bitmask that controls if this Game Object is drawn by a Camera or not.
-         * Not usually set directly. Instead call `Camera.ignore`.
+         * Not usually set directly, instead call `Camera.ignore`, however you can
+         * set this property directly using the Camera.id property:
+         * 
+         * @example
+         * this.cameraFilter |= camera.id
          *
          * @name Phaser.GameObjects.GameObject#cameraFilter
          * @type {number}
@@ -374,7 +378,7 @@ var GameObject = new Class({
     {
         if (this.input)
         {
-            this.input.enabled = (this.input.enabled) ? false : true;
+            this.input.enabled = false;
         }
 
         return this;

@@ -162,8 +162,8 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#setToPolar
      * @since 3.0.0
      *
-     * @param {float} azimuth - The angular coordinate, in radians.
-     * @param {float} [radius=1] - The radial coordinate (length).
+     * @param {number} azimuth - The angular coordinate, in radians.
+     * @param {number} [radius=1] - The radial coordinate (length).
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */

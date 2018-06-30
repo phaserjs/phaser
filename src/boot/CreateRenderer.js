@@ -48,7 +48,7 @@ var CreateRenderer = function (game)
     }
 
     //  Pixel Art mode?
-    if (config.pixelArt)
+    if (!config.antialias)
     {
         CanvasPool.disableSmoothing();
     }
@@ -70,7 +70,7 @@ var CreateRenderer = function (game)
     }
 
     //  Pixel Art mode?
-    if (config.pixelArt)
+    if (!config.antialias)
     {
         CanvasInterpolation.setCrisp(game.canvas);
     }

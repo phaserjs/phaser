@@ -528,7 +528,7 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#getProgress
      * @since 3.4.0
      *
-     * @return {float} The progress of the current animation, between 0 and 1.
+     * @return {number} The progress of the current animation, between 0 and 1.
      */
     getProgress: function ()
     {
@@ -549,7 +549,7 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#setProgress
      * @since 3.4.0
      *
-     * @param {float} [value=0] - The progress value, between 0 and 1.
+     * @param {number} [value=0] - The progress value, between 0 and 1.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */

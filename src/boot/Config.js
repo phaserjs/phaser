@@ -324,24 +324,30 @@ var Config = new Class({
         var renderConfig = GetValue(config, 'render', config);
 
         /**
+         * @const {boolean} Phaser.Boot.Config#autoResize - [description]
+         */
+        this.autoResize = GetValue(renderConfig, 'autoResize', false);
+
+        /**
          * @const {boolean} Phaser.Boot.Config#antialias - [description]
          */
         this.antialias = GetValue(renderConfig, 'antialias', true);
+
+        /**
+         * @const {boolean} Phaser.Boot.Config#roundPixels - [description]
+         */
+        this.roundPixels = GetValue(renderConfig, 'roundPixels', false);
 
         /**
          * @const {boolean} Phaser.Boot.Config#pixelArt - [description]
          */
         this.pixelArt = GetValue(renderConfig, 'pixelArt', false);
 
-        /**
-         * @const {boolean} Phaser.Boot.Config#autoResize - [description]
-         */
-        this.autoResize = GetValue(renderConfig, 'autoResize', false);
-
-        /**
-         * @const {boolean} Phaser.Boot.Config#roundPixels - [description]
-         */
-        this.roundPixels = GetValue(renderConfig, 'roundPixels', false);
+        if (this.pixelArt)
+        {
+            this.antialias = false;
+            this.roundPixels = true;
+        }
 
         /**
          * @const {boolean} Phaser.Boot.Config#transparent - [description]

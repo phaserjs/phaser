@@ -23,7 +23,7 @@ var GameObject = require('../GameObject');
  */
 var TileSpriteCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
+    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)))
     {
         return;
     }
@@ -33,20 +33,27 @@ var TileSpriteCanvasRenderer = function (renderer, src, interpolationPercentage,
 
     src.updateTileTexture();
 
+    //  Alpha
+
+    var alpha = camera.alpha * src.alpha;
+
+    if (alpha === 0)
+    {
+        //  Nothing to see, so abort early
+        return;
+    }
+    else if (renderer.currentAlpha !== alpha)
+    {
+        renderer.currentAlpha = alpha;
+        ctx.globalAlpha = alpha;
+    }
+
     //  Blend Mode
 
     if (renderer.currentBlendMode !== src.blendMode)
     {
         renderer.currentBlendMode = src.blendMode;
         ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
-    }
-
-    //  Alpha
-
-    if (renderer.currentAlpha !== src.alpha)
-    {
-        renderer.currentAlpha = src.alpha;
-        ctx.globalAlpha = src.alpha;
     }
 
     //  Smoothing
@@ -79,7 +86,7 @@ var TileSpriteCanvasRenderer = function (renderer, src, interpolationPercentage,
         dy += src.height;
     }
 
-    if (renderer.config.roundPixels)
+    if (camera.roundPixels)
     {
         dx |= 0;
         dy |= 0;
@@ -92,6 +99,7 @@ var TileSpriteCanvasRenderer = function (renderer, src, interpolationPercentage,
     if (parentMatrix !== undefined)
     {
         var matrix = parentMatrix.matrix;
+
         ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
     }
 
@@ -109,9 +117,12 @@ var TileSpriteCanvasRenderer = function (renderer, src, interpolationPercentage,
     ctx.translate(-(src.originX * src.width), -(src.originY * src.height));
 
     // Draw
+
+    ctx.scale(src.tileScaleX, src.tileScaleY);
+
     ctx.translate(-this.tilePositionX, -this.tilePositionY);
-    ctx.fillStyle = src.canvasPattern;
-    ctx.fillRect(this.tilePositionX, this.tilePositionY, src.width, src.height);
+    ctx.fillStyle = src.tileTexture;
+    ctx.fillRect(this.tilePositionX, this.tilePositionY, src.width / src.tileScaleX, src.height / src.tileScaleY);
 
     ctx.restore();
 };
