@@ -54,7 +54,6 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage, cam
     var prevTextureSourceIndex = -1;
     var tintEffect = false;
     var alpha = camera.alpha * src.alpha;
-    var getTint = Utils.getTintAppendFloatAlpha;
     var roundPixels = camera.roundPixels;
 
     for (var index = 0; index < list.length; index++)
@@ -94,8 +93,7 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage, cam
         var tx1 = xw * matrix.a + yh * matrix.c + matrix.e;
         var ty1 = xw * matrix.b + yh * matrix.d + matrix.f;
 
-        var tint = getTint(0xffffff, bobAlpha);
-        var uvs = frame.uvs;
+        var tint = Utils.getTintAppendFloatAlpha(0xffffff, bobAlpha);
 
         //  Bind texture only if the Texture Source is different from before
         if (frame.sourceIndex !== prevTextureSourceIndex)
@@ -114,7 +112,7 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage, cam
         }
 
         //  TL x/y, BL x/y, BR x/y, TR x/y
-        if (pipeline.batchVertices(tx0, ty0, tx0, ty1, tx1, ty1, tx1, ty0, uvs, tint, tint, tint, tint, tintEffect))
+        if (pipeline.batchVertices(tx0, ty0, tx0, ty1, tx1, ty1, tx1, ty0, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect))
         {
             prevTextureSourceIndex = -1;
         }
