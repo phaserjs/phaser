@@ -68,6 +68,16 @@ var Frame = new Class({
         this.sourceIndex = sourceIndex;
 
         /**
+         * A reference to the Texture Source WebGL Texture that this Frame is using.
+         *
+         * @name Phaser.Textures.Frame#glTexture
+         * @type {?WebGLTexture}
+         * @default null
+         * @since 3.11.0
+         */
+        this.glTexture = this.source.glTexture;
+
+        /**
          * X position within the source image to cut from.
          *
          * @name Phaser.Textures.Frame#cutX
