@@ -256,6 +256,46 @@ var Frame = new Class({
         this.customData = {};
 
         /**
+         * WebGL UV u0 value.
+         *
+         * @name Phaser.Textures.Frame#u0
+         * @type {number}
+         * @default 0
+         * @since 3.11.0
+         */
+        this.u0 = 0;
+
+        /**
+         * WebGL UV v0 value.
+         *
+         * @name Phaser.Textures.Frame#v0
+         * @type {number}
+         * @default 0
+         * @since 3.11.0
+         */
+        this.v0 = 0;
+
+        /**
+         * WebGL UV u1 value.
+         *
+         * @name Phaser.Textures.Frame#u1
+         * @type {number}
+         * @default 0
+         * @since 3.11.0
+         */
+        this.u1 = 0;
+
+        /**
+         * WebGL UV v1 value.
+         *
+         * @name Phaser.Textures.Frame#v1
+         * @type {number}
+         * @default 0
+         * @since 3.11.0
+         */
+        this.v1 = 0;
+
+        /**
          * The un-modified source frame, trim and UV data.
          *
          * @name Phaser.Textures.Frame#data
@@ -282,16 +322,6 @@ var Frame = new Class({
                 y: 0,
                 w: 0,
                 h: 0
-            },
-            uvs: {
-                x0: 0,
-                y0: 0,
-                x1: 0,
-                y1: 0,
-                x2: 0,
-                y2: 0,
-                x3: 0,
-                y3: 0
             },
             radius: 0,
             drawImage: {
@@ -448,19 +478,12 @@ var Frame = new Class({
 
         var tw = this.source.width;
         var th = this.source.height;
-        var uvs = this.data.uvs;
 
-        uvs.x0 = cx / tw;
-        uvs.y0 = cy / th;
+        this.u0 = cx / tw;
+        this.v0 = cy / th;
 
-        uvs.x1 = cx / tw;
-        uvs.y1 = (cy + ch) / th;
-
-        uvs.x2 = (cx + cw) / tw;
-        uvs.y2 = (cy + ch) / th;
-
-        uvs.x3 = (cx + cw) / tw;
-        uvs.y3 = cy / th;
+        this.u1 = (cx + cw) / tw;
+        this.v1 = (cy + ch) / th;
 
         return this;
     },
@@ -477,19 +500,12 @@ var Frame = new Class({
     {
         var tw = this.source.width;
         var th = this.source.height;
-        var uvs = this.data.uvs;
 
-        uvs.x3 = (this.cutX + this.cutHeight) / tw;
-        uvs.y3 = (this.cutY + this.cutWidth) / th;
+        this.u0 = (this.cutX + this.cutHeight) / tw;
+        this.v0 = this.cutY / th;
 
-        uvs.x2 = this.cutX / tw;
-        uvs.y2 = (this.cutY + this.cutWidth) / th;
-
-        uvs.x1 = this.cutX / tw;
-        uvs.y1 = this.cutY / th;
-
-        uvs.x0 = (this.cutX + this.cutHeight) / tw;
-        uvs.y0 = this.cutY / th;
+        this.u1 = this.cutX / tw;
+        this.v1 = (this.cutY + this.cutWidth) / th;
 
         return this;
     },
@@ -577,23 +593,6 @@ var Frame = new Class({
         get: function ()
         {
             return this.data.sourceSize.h;
-        }
-
-    },
-
-    /**
-     * The UV data for this Frame.
-     *
-     * @name Phaser.Textures.Frame#uvs
-     * @type {object}
-     * @readOnly
-     * @since 3.0.0
-     */
-    uvs: {
-
-        get: function ()
-        {
-            return this.data.uvs;
         }
 
     },

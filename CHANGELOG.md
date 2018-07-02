@@ -51,6 +51,11 @@ The Texture Tint Pipeline has been rewritten to tidy up hundreds of lines of dup
 * The `batchText` method has been removed from the `TextureTintPipeline` class, because it is now handled internally by the Game Object itself.
 * The `batchDynamicTilemapLayer` method has been removed from the `TextureTintPipeline` class, because it is now handled internally by the Game Object itself.
 
+Due to the changes in the Texture Tint Pipeline the Texture Frame class has also been updated. The following changes concern the Frame UV data:
+
+* Previously, the UV data spanned 8 properties: `x0`, `y0`, `x1`, `y1`, `x2`, `y2`, `x3` and `y3` and was stored in the `data.uvs` object. These have been replaced with directly accessible properties: `u0`, `v0`, `u1` and `v1`. These 4 properties are used directly in all renderer code now. Although it was clearer having 8 properties, 4 of them were just duplicates, so we've traded a little clarity for a smaller overall object and less dictionary look-ups.
+* `Frame.uvs` (and the corresponding `Frame.data.uvs`) object has been removed.
+
 ### New Tint Effects
 
 As well as tidying the Texture Tint Pipeline, I also updated the shader. It now has a new attribute 'tintEffect' which allows you to control how a tint is applied to a Game Object. The default way tinting worked was for the tint color values to be multiplied with the texture pixel values. This meant you were unable to do things like tint a Game Object white, because multiplying a color by white doesn't change it. The new tint mode allows you to literally replace the pixel color values.
