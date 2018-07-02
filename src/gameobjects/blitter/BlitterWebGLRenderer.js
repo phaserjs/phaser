@@ -113,7 +113,8 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage, cam
             ty1 |= 0;
         }
 
-        if (pipeline.batchVertices(tx0, ty0, tx1, ty1, uvs, tint, tint, tint, tint, tintEffect))
+        //  TL x/y, BL x/y, BR x/y, TR x/y
+        if (pipeline.batchVertices(tx0, ty0, tx0, ty1, tx1, ty1, tx1, ty0, uvs, tint, tint, tint, tint, tintEffect))
         {
             prevTextureSourceIndex = -1;
         }
