@@ -217,6 +217,7 @@ var Tint = {
         set: function (value)
         {
             this._tintTL = GetColor(value);
+            this._isTinted = true;
         }
 
     },
@@ -240,6 +241,7 @@ var Tint = {
         set: function (value)
         {
             this._tintTR = GetColor(value);
+            this._isTinted = true;
         }
 
     },
@@ -263,6 +265,7 @@ var Tint = {
         set: function (value)
         {
             this._tintBL = GetColor(value);
+            this._isTinted = true;
         }
 
     },
@@ -286,6 +289,7 @@ var Tint = {
         set: function (value)
         {
             this._tintBR = GetColor(value);
+            this._isTinted = true;
         }
 
     },
