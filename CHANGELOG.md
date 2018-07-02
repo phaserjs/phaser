@@ -42,6 +42,25 @@ There is a third game config property called `pixelArt`. If set to `true` it's t
 * If in your game config you have enabled either pixel art mode or roundPixels, then all Cameras will have their `roundPixels` values set to `true` by default. You can toggle this by changing the `CameraManager.roundPixels` property, or change it on a camera-by-camera basis, as needed.
 * `Camera.roundPixels` is now used across all rendering code for both Canvas and WebGL. Previously, it would check the renderer config value, but now all renderer code uses the camera value to decide if it should floor the drawing position or not.
 
+### Texture Tint Pipeline - New Features, Updates and Fixes
+
+The Texture Tint Pipeline has been rewritten to tidy up hundreds of lines of duplicate code and to move the responsibility of drawing to the Game Objects themselves. Previously, had you excluded say Tilemaps from your build of Phaser, the renderer would still include masses of code dealing with the drawing of them. Now, this task has been moved to the Game Objects and the pipeline just provides a set of clean utility functions for batching, flushing and drawing.
+
+* The `batchTileSprite` method has been removed from the `TextureTintPipeline` class, because it is now handled internally by the Game Object itself.
+* The `drawStaticTilemapLayer` method has been removed from the `TextureTintPipeline` class, because it is now handled internally by the Game Object itself.
+* The `batchText` method has been removed from the `TextureTintPipeline` class, because it is now handled internally by the Game Object itself.
+* The `batchDynamicTilemapLayer` method has been removed from the `TextureTintPipeline` class, because it is now handled internally by the Game Object itself.
+
+### New Tint Effects
+
+As well as tidying the Texture Tint Pipeline, I also updated the shader. It now has a new attribute 'tintEffect' which allows you to control how a tint is applied to a Game Object. The default way tinting worked was for the tint color values to be multiplied with the texture pixel values. This meant you were unable to do things like tint a Game Object white, because multiplying a color by white doesn't change it. The new tint mode allows you to literally replace the pixel color values.
+
+* `setTintFill` is a new method available to all Game Objects that have the Tint component. It differs from `setTint` in that the colors literally replace the pixel values from the texture (while still respecting the alpha). This means you can now create effects such as flashing a sprite white if it gets hit, or red for damage, etc. You can still use different colors per corner of the Game Object, allowing you to create nice seamless gradient effects.
+* `tintFill` is a new boolean property that allows you to toggle between the two different tint types: multiply or replace.
+* `_isTinted` is a new private boolean indicating if a Game Object is tinted or not.
+
+The Tint component documentation has been overhauled to explain these differences in more detail, and you can find lots of new examples as well.
+
 ### New Features
 
 * `Graphics.fillRoundedRect` will draw a stroked rounded rectangle to a Graphics object. The radius of the corners can be either a number, or an object, allowing you to specify different radius per corner (thanks @TadejZupancic)
@@ -64,7 +83,7 @@ There is a third game config property called `pixelArt`. If set to `true` it's t
 * If the Blitter object has no Bob's to render it will now abort immediately, avoiding several context calls in Canvas mode.
 * `Scene.run` will now pass the optional `data` object in all cases, no matter if it's waking, resuming or starting a Scene (thanks @rook2pawn)
 * `ScenePlugin.start` and `ScenePlugin.restart` will now always queue the op with the Scene Manager, regardless of the state of the Scene, in order to avoid issues where plugins carry on running for a frame before closing down. Fix #3776 (thanks @jjalonso)
-* The `batchTileSprite` method has been removed from the `TextureTintPipeline` class, because it is now handled internally by the Tile Sprite object itself.
+* `Tileset.glTexture` is a new property that maps to the WebGL Texture for the Tileset image. It's used internally by the renderer to avoid expensive object look-ups and is set automatically in the `Tileset.setImage` method.
 
 ### Bug Fixes
 
