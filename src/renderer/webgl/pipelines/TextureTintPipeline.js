@@ -584,6 +584,16 @@ var TextureTintPipeline = new Class({
         this.setTexture2D(texture, 0);
     },
 
+    /**
+     * Batches Sprite game object
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchSprite
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.Sprite} sprite - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
+     */
     batchSprite: function (sprite, camera, parentTransformMatrix)
     {
         this.renderer.setPipeline(this);
@@ -682,19 +692,35 @@ var TextureTintPipeline = new Class({
 
         var tintEffect = (sprite._isTinted && sprite.tintFill);
 
-        this.batchVerticesWithFlip(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.uvs, tintTL, tintTR, tintBL, tintBR, tintEffect);
+        this.batchVertices(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.uvs, tintTL, tintTR, tintBL, tintBR, tintEffect);
     },
 
     /**
-     * [description]
+     * Adds the vertices data into the batch and flushes if full.
+     * 
+     * Assumes 6 vertices in the following arrangement:
+     * 
+     * 0----3
+     * |\  B|
+     * | \  |
+     * |  \ |
+     * | A \|
+     * |    \
+     * 1----2
+     * 
+     * Where tx0/ty0 = 0, tx1/ty1 = 1, tx2/ty2 = 2 and tx3/ty3 = 3
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchVertices
      * @since 3.11.0
      *
      * @param {number} tx0 - The top-left x position.
      * @param {number} ty0 - The top-left y position.
-     * @param {number} tx1 - The bottom-right x position.
-     * @param {number} ty1 - The bottom-right y position.
+     * @param {number} tx1 - The bottom-left x position.
+     * @param {number} ty1 - The bottom-left y position.
+     * @param {number} tx2 - The bottom-right x position.
+     * @param {number} ty2 - The bottom-right y position.
+     * @param {number} tx3 - The top-right x position.
+     * @param {number} ty3 - The top-right y position.
      * @param {object} uvs - An object containing the vertice UV coordinates in properties named `x0` and `y0` through to `x3` and `y3`.
      * @param {number} tintTL - The top-left tint color value.
      * @param {number} tintTR - The top-right tint color value.
@@ -704,93 +730,7 @@ var TextureTintPipeline = new Class({
      * 
      * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
      */
-    batchVertices: function (tx0, ty0, tx1, ty1, uvs, tintTL, tintTR, tintBL, tintBR, tintEffect)
-    {
-        var vertexViewF32 = this.vertexViewF32;
-        var vertexViewU32 = this.vertexViewU32;
-
-        var vertexOffset = this.vertexCount * this.vertexComponentCount - 1;
-            
-        vertexViewF32[++vertexOffset] = tx0;
-        vertexViewF32[++vertexOffset] = ty0;
-        vertexViewF32[++vertexOffset] = uvs.x0;
-        vertexViewF32[++vertexOffset] = uvs.y0;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintTL;
-
-        vertexViewF32[++vertexOffset] = tx0;
-        vertexViewF32[++vertexOffset] = ty1;
-        vertexViewF32[++vertexOffset] = uvs.x1;
-        vertexViewF32[++vertexOffset] = uvs.y1;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintBL;
-
-        vertexViewF32[++vertexOffset] = tx1;
-        vertexViewF32[++vertexOffset] = ty1;
-        vertexViewF32[++vertexOffset] = uvs.x2;
-        vertexViewF32[++vertexOffset] = uvs.y2;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintBR;
-
-        vertexViewF32[++vertexOffset] = tx0;
-        vertexViewF32[++vertexOffset] = ty0;
-        vertexViewF32[++vertexOffset] = uvs.x0;
-        vertexViewF32[++vertexOffset] = uvs.y0;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintTL;
-
-        vertexViewF32[++vertexOffset] = tx1;
-        vertexViewF32[++vertexOffset] = ty1;
-        vertexViewF32[++vertexOffset] = uvs.x2;
-        vertexViewF32[++vertexOffset] = uvs.y2;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintBR;
-
-        vertexViewF32[++vertexOffset] = tx1;
-        vertexViewF32[++vertexOffset] = ty0;
-        vertexViewF32[++vertexOffset] = uvs.x3;
-        vertexViewF32[++vertexOffset] = uvs.y3;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintTR;
-
-        this.vertexCount += 6;
-
-        if (this.vertexCount >= this.vertexCapacity)
-        {
-            this.flush();
-
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchVerticesWithFlip
-     * @since 3.11.0
-     *
-     * @param {number} tx0 - The top-left x position.
-     * @param {number} ty0 - The top-left y position.
-     * @param {number} tx1 - The bottom-right x position.
-     * @param {number} ty1 - The bottom-right y position.
-     * @param {number} tx2 - The top-left x position.
-     * @param {number} ty2 - The top-left y position.
-     * @param {number} tx3 - The bottom-right x position.
-     * @param {number} ty3 - The bottom-right y position.
-     * @param {object} uvs - An object containing the vertice UV coordinates in properties named `x0` and `y0` through to `x3` and `y3`.
-     * @param {number} tintTL - The top-left tint color value.
-     * @param {number} tintTR - The top-right tint color value.
-     * @param {number} tintBL - The bottom-left tint color value.
-     * @param {number} tintBR - The bottom-right tint color value.
-     * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
-     * 
-     * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
-     */
-    batchVerticesWithFlip: function (tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, uvs, tintTL, tintTR, tintBL, tintBR, tintEffect)
+    batchVertices: function (tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, uvs, tintTL, tintTR, tintBL, tintBR, tintEffect)
     {
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
@@ -941,201 +881,6 @@ var TextureTintPipeline = new Class({
                 prevTextureSourceIndex = -1;
             }
         }
-    },
-    */
-
-    /**
-     * Batches Sprite game object
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchSprite
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Sprite} sprite - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
-    OLDbatchSprite: function (sprite, camera, parentTransformMatrix)
-    {
-        // var parentMatrix = null;
-
-        // if (parentTransformMatrix)
-        // {
-        //     parentMatrix = parentTransformMatrix.matrix;
-        // }
-
-        // this.renderer.setPipeline(this);
-
-        // if (this.vertexCount + 6 > this.vertexCapacity)
-        // {
-        //     this.flush();
-        // }
-
-        // var frame = sprite.frame;
-
-        // var texture = frame.texture.source[frame.sourceIndex].glTexture;
-
-        // var texture = frame.glTexture;
-        // var getTint = Utils.getTintAppendFloatAlpha;
-        // var forceFlipY = (texture.isRenderTexture ? true : false);
-        // var flipX = sprite.flipX;
-        // var flipY = sprite.flipY ^ forceFlipY;
-        // var uvs = frame.uvs;
-
-        // var scaleX = sprite.scaleX;
-        // var scaleY = sprite.scaleY;
-        // var rotation = sprite.rotation;
-        // var alphaTL = camera.alpha * sprite._alphaTL;
-        // var alphaTR = camera.alpha * sprite._alphaTR;
-        // var alphaBL = camera.alpha * sprite._alphaBL;
-        // var alphaBR = camera.alpha * sprite._alphaBR;
-        // var tintTL = sprite._tintTL;
-        // var tintTR = sprite._tintTR;
-        // var tintBL = sprite._tintBL;
-        // var tintBR = sprite._tintBR;
-        
-        // var roundPixels = camera.roundPixels;
-        // var vertexViewF32 = this.vertexViewF32;
-        // var vertexViewU32 = this.vertexViewU32;
-        // var cameraMatrix = camera.matrix.matrix;
-
-        // var width = frame.width * (flipX ? -1.0 : 1.0);
-        // var height = frame.height * (flipY ? -1.0 : 1.0);
-        // var x = -sprite.displayOriginX + frame.x + ((frame.width) * (flipX ? 1.0 : 0.0));
-        // var y = -sprite.displayOriginY + frame.y + ((frame.height) * (flipY ? 1.0 : 0.0));
-
-        // var xw = (roundPixels ? (x | 0) : x) + width;
-        // var yh = (roundPixels ? (y | 0) : y) + height;
-
-        //  = applyITRS
-        // var sr = Math.sin(rotation);
-        // var cr = Math.cos(rotation);
-        // var sra = cr * scaleX;
-        // var srb = sr * scaleX;
-        // var src = -sr * scaleY;
-        // var srd = cr * scaleY;
-        // var sre = sprite.x;
-        // var srf = sprite.y;
-
-        // var cma = cameraMatrix[0];
-        // var cmb = cameraMatrix[1];
-        // var cmc = cameraMatrix[2];
-        // var cmd = cameraMatrix[3];
-        // var cme = cameraMatrix[4];
-        // var cmf = cameraMatrix[5];
-        // var mva, mvb, mvc, mvd, mve, mvf;
-
-        // if (parentMatrix)
-        // {
-            // var pma = parentMatrix[0];
-            // var pmb = parentMatrix[1];
-            // var pmc = parentMatrix[2];
-            // var pmd = parentMatrix[3];
-            // var pme = parentMatrix[4];
-            // var pmf = parentMatrix[5];
-            // var cse = -camera.scrollX * sprite.scrollFactorX;
-            // var csf = -camera.scrollY * sprite.scrollFactorY;
-            // var pse = cse * cma + csf * cmc + cme;
-            // var psf = cse * cmb + csf * cmd + cmf;
-            // var pca = pma * cma + pmb * cmc;
-            // var pcb = pma * cmb + pmb * cmd;
-            // var pcc = pmc * cma + pmd * cmc;
-            // var pcd = pmc * cmb + pmd * cmd;
-            // var pce = pme * cma + pmf * cmc + pse;
-            // var pcf = pme * cmb + pmf * cmd + psf;
-
-            // mva = sra * pca + srb * pcc;
-            // mvb = sra * pcb + srb * pcd;
-            // mvc = src * pca + srd * pcc;
-            // mvd = src * pcb + srd * pcd;
-            // mve = sre * pca + srf * pcc + pce;
-            // mvf = sre * pcb + srf * pcd + pcf;
-        // }
-        // else
-        // {
-            // sre -= camera.scrollX * sprite.scrollFactorX;
-            // srf -= camera.scrollY * sprite.scrollFactorY;
-
-            // mva = sra * cma + srb * cmc;
-            // mvb = sra * cmb + srb * cmd;
-            // mvc = src * cma + srd * cmc;
-            // mvd = src * cmb + srd * cmd;
-            // mve = sre * cma + srf * cmc + cme;
-            // mvf = sre * cmb + srf * cmd + cmf;
-        // }
-
-        // var tx0 = x * mva + y * mvc + mve;
-        // var ty0 = x * mvb + y * mvd + mvf;
-        // var tx1 = x * mva + yh * mvc + mve;
-        // var ty1 = x * mvb + yh * mvd + mvf;
-        // var tx2 = xw * mva + yh * mvc + mve;
-        // var ty2 = xw * mvb + yh * mvd + mvf;
-        // var tx3 = xw * mva + y * mvc + mve;
-        // var ty3 = xw * mvb + y * mvd + mvf;
-        // var vTintTL = getTint(tintTL, alphaTL);
-        // var vTintTR = getTint(tintTR, alphaTR);
-        // var vTintBL = getTint(tintBL, alphaBL);
-        // var vTintBR = getTint(tintBR, alphaBR);
-
-        // if (roundPixels)
-        // {
-        //     tx0 |= 0;
-        //     ty0 |= 0;
-        //     tx1 |= 0;
-        //     ty1 |= 0;
-        //     tx2 |= 0;
-        //     ty2 |= 0;
-        //     tx3 |= 0;
-        //     ty3 |= 0;
-        // }
-
-        // this.setTexture2D(texture, 0);
-
-        // var vertexOffset = (this.vertexCount * this.vertexComponentCount) - 1;
-
-        // var tintEffect = (sprite._isTinted && sprite.tintFill);
-
-        // vertexViewF32[++vertexOffset] = tx0;
-        // vertexViewF32[++vertexOffset] = ty0;
-        // vertexViewF32[++vertexOffset] = uvs.x0;
-        // vertexViewF32[++vertexOffset] = uvs.y0;
-        // vertexViewF32[++vertexOffset] = tintEffect;
-        // vertexViewU32[++vertexOffset] = vTintTL;
-
-        // vertexViewF32[++vertexOffset] = tx1;
-        // vertexViewF32[++vertexOffset] = ty1;
-        // vertexViewF32[++vertexOffset] = uvs.x1;
-        // vertexViewF32[++vertexOffset] = uvs.y1;
-        // vertexViewF32[++vertexOffset] = tintEffect;
-        // vertexViewU32[++vertexOffset] = vTintBL;
-
-        // vertexViewF32[++vertexOffset] = tx2;
-        // vertexViewF32[++vertexOffset] = ty2;
-        // vertexViewF32[++vertexOffset] = uvs.x2;
-        // vertexViewF32[++vertexOffset] = uvs.y2;
-        // vertexViewF32[++vertexOffset] = tintEffect;
-        // vertexViewU32[++vertexOffset] = vTintBR;
-
-        // vertexViewF32[++vertexOffset] = tx0;
-        // vertexViewF32[++vertexOffset] = ty0;
-        // vertexViewF32[++vertexOffset] = uvs.x0;
-        // vertexViewF32[++vertexOffset] = uvs.y0;
-        // vertexViewF32[++vertexOffset] = tintEffect;
-        // vertexViewU32[++vertexOffset] = vTintTL;
-
-        // vertexViewF32[++vertexOffset] = tx2;
-        // vertexViewF32[++vertexOffset] = ty2;
-        // vertexViewF32[++vertexOffset] = uvs.x2;
-        // vertexViewF32[++vertexOffset] = uvs.y2;
-        // vertexViewF32[++vertexOffset] = tintEffect;
-        // vertexViewU32[++vertexOffset] = vTintBR;
-
-        // vertexViewF32[++vertexOffset] = tx3;
-        // vertexViewF32[++vertexOffset] = ty3;
-        // vertexViewF32[++vertexOffset] = uvs.x3;
-        // vertexViewF32[++vertexOffset] = uvs.y3;
-        // vertexViewF32[++vertexOffset] = tintEffect;
-        // vertexViewU32[++vertexOffset] = vTintTR;
-
-        // this.vertexCount += 6;
     },
     */
 
