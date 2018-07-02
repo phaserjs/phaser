@@ -5,6 +5,7 @@
  */
 
 var GameObject = require('../../gameobjects/GameObject');
+var Utils = require('../../renderer/webgl/Utils');
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -29,7 +30,66 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPer
 
     src.cull(camera);
 
-    this.pipeline.batchDynamicTilemapLayer(src, camera);
+    var pipeline = this.pipeline;
+
+    var getTint = Utils.getTintAppendFloatAlpha;
+
+    var renderTiles = src.culledTiles;
+    var length = renderTiles.length;
+    var tileset = src.tileset;
+    var texture = tileset.glTexture;
+
+    var scrollFactorX = src.scrollFactorX;
+    var scrollFactorY = src.scrollFactorY;
+
+    var alpha = camera.alpha * src.alpha;
+
+    var x = src.x;
+    var y = src.y;
+
+    var sx = src.scaleX;
+    var sy = src.scaleY;
+
+    for (var index = 0; index < length; index++)
+    {
+        var tile = renderTiles[index];
+
+        var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
+
+        if (tileTexCoords === null)
+        {
+            continue;
+        }
+
+        var frameWidth = tile.width;
+        var frameHeight = tile.height;
+
+        var frameX = tileTexCoords.x;
+        var frameY = tileTexCoords.y;
+
+        var tw = tile.width * 0.5;
+        var th = tile.height * 0.5;
+
+        var tint = getTint(tile.tint, alpha * tile.alpha);
+
+        pipeline.batchTexture(
+            src,
+            texture,
+            texture.width, texture.height,
+            tw + x + tile.pixelX * sx, th + y + tile.pixelY * sy,
+            tile.width * sx, tile.height * sy,
+            1, 1,
+            tile.rotation,
+            tile.flipX, tile.flipY,
+            scrollFactorX, scrollFactorY,
+            tw, th,
+            frameX, frameY, frameWidth, frameHeight,
+            tint, tint, tint, tint, false,
+            0, 0,
+            camera,
+            null
+        );
+    }
 };
 
 module.exports = DynamicTilemapLayerWebGLRenderer;
