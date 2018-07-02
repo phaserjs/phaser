@@ -238,8 +238,9 @@ var StaticTilemapLayer = new Class({
                 var gl = renderer.gl;
                 var vertexBuffer = this.vertexBuffer;
                 var bufferData = this.bufferData;
-                var voffset = 0;
+                var voffset = -1;
                 var vertexCount = 0;
+                var tintEffect = false;
                 var bufferSize = (mapWidth * mapHeight) * pipeline.vertexSize * 6;
 
                 if (bufferData === null)
@@ -258,7 +259,11 @@ var StaticTilemapLayer = new Class({
                     for (col = 0; col < mapWidth; ++col)
                     {
                         tile = mapData[row][col];
-                        if (tile === null || tile.index === -1) { continue; }
+
+                        if (tile === null || tile.index === -1)
+                        {
+                            continue;
+                        }
 
                         var tx = tile.pixelX;
                         var ty = tile.pixelY;
@@ -266,7 +271,11 @@ var StaticTilemapLayer = new Class({
                         var tyh = ty + tile.height;
 
                         texCoords = tileset.getTileTextureCoordinates(tile.index);
-                        if (texCoords === null) { continue; }
+
+                        if (texCoords === null)
+                        {
+                            continue;
+                        }
 
                         var u0 = texCoords.x / width;
                         var v0 = texCoords.y / height;
@@ -281,46 +290,58 @@ var StaticTilemapLayer = new Class({
                         var ty2 = tyh;
                         var tx3 = txw;
                         var ty3 = ty;
+
                         var tint = Utils.getTintAppendFloatAlpha(0xffffff, camera.alpha * this.alpha * tile.alpha);
 
-                        vertexViewF32[voffset + 0] = tx0;
-                        vertexViewF32[voffset + 1] = ty0;
-                        vertexViewF32[voffset + 2] = u0;
-                        vertexViewF32[voffset + 3] = v0;
-                        vertexViewU32[voffset + 4] = tint;
-                        vertexViewF32[voffset + 5] = tx1;
-                        vertexViewF32[voffset + 6] = ty1;
-                        vertexViewF32[voffset + 7] = u0;
-                        vertexViewF32[voffset + 8] = v1;
-                        vertexViewU32[voffset + 9] = tint;
-                        vertexViewF32[voffset + 10] = tx2;
-                        vertexViewF32[voffset + 11] = ty2;
-                        vertexViewF32[voffset + 12] = u1;
-                        vertexViewF32[voffset + 13] = v1;
-                        vertexViewU32[voffset + 14] = tint;
-                        vertexViewF32[voffset + 15] = tx0;
-                        vertexViewF32[voffset + 16] = ty0;
-                        vertexViewF32[voffset + 17] = u0;
-                        vertexViewF32[voffset + 18] = v0;
-                        vertexViewU32[voffset + 19] = tint;
-                        vertexViewF32[voffset + 20] = tx2;
-                        vertexViewF32[voffset + 21] = ty2;
-                        vertexViewF32[voffset + 22] = u1;
-                        vertexViewF32[voffset + 23] = v1;
-                        vertexViewU32[voffset + 24] = tint;
-                        vertexViewF32[voffset + 25] = tx3;
-                        vertexViewF32[voffset + 26] = ty3;
-                        vertexViewF32[voffset + 27] = u1;
-                        vertexViewF32[voffset + 28] = v0;
-                        vertexViewU32[voffset + 29] = tint;
+                        vertexViewF32[++voffset] = tx0;
+                        vertexViewF32[++voffset] = ty0;
+                        vertexViewF32[++voffset] = u0;
+                        vertexViewF32[++voffset] = v0;
+                        vertexViewF32[++voffset] = tintEffect;
+                        vertexViewU32[++voffset] = tint;
 
-                        voffset += 30;
+                        vertexViewF32[++voffset] = tx1;
+                        vertexViewF32[++voffset] = ty1;
+                        vertexViewF32[++voffset] = u0;
+                        vertexViewF32[++voffset] = v1;
+                        vertexViewF32[++voffset] = tintEffect;
+                        vertexViewU32[++voffset] = tint;
+
+                        vertexViewF32[++voffset] = tx2;
+                        vertexViewF32[++voffset] = ty2;
+                        vertexViewF32[++voffset] = u1;
+                        vertexViewF32[++voffset] = v1;
+                        vertexViewF32[++voffset] = tintEffect;
+                        vertexViewU32[++voffset] = tint;
+
+                        vertexViewF32[++voffset] = tx0;
+                        vertexViewF32[++voffset] = ty0;
+                        vertexViewF32[++voffset] = u0;
+                        vertexViewF32[++voffset] = v0;
+                        vertexViewF32[++voffset] = tintEffect;
+                        vertexViewU32[++voffset] = tint;
+
+                        vertexViewF32[++voffset] = tx2;
+                        vertexViewF32[++voffset] = ty2;
+                        vertexViewF32[++voffset] = u1;
+                        vertexViewF32[++voffset] = v1;
+                        vertexViewF32[++voffset] = tintEffect;
+                        vertexViewU32[++voffset] = tint;
+
+                        vertexViewF32[++voffset] = tx3;
+                        vertexViewF32[++voffset] = ty3;
+                        vertexViewF32[++voffset] = u1;
+                        vertexViewF32[++voffset] = v0;
+                        vertexViewF32[++voffset] = tintEffect;
+                        vertexViewU32[++voffset] = tint;
+
                         vertexCount += 6;
                     }
                 }
 
                 this.vertexCount = vertexCount;
                 this.dirty = false;
+
                 if (vertexBuffer === null)
                 {
                     vertexBuffer = renderer.createVertexBuffer(bufferData, gl.STATIC_DRAW);

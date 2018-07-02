@@ -344,45 +344,10 @@ var TextureTintPipeline = new Class({
     resize: function (width, height, resolution)
     {
         WebGLPipeline.prototype.resize.call(this, width, height, resolution);
+
         this.projOrtho(0, this.width, this.height, 0, -1000.0, 1000.0);
+
         return this;
-    },
-
-    /**
-     * Renders immediately a static tilemap. This function won't use
-     * the batching functionality of the pipeline.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#drawStaticTilemapLayer
-     * @since 3.0.0
-     *
-     * @param {Phaser.Tilemaps.StaticTilemapLayer} tilemap - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
-     */
-    drawStaticTilemapLayer: function (tilemap)
-    {
-        if (tilemap.vertexCount > 0)
-        {
-            var pipelineVertexBuffer = this.vertexBuffer;
-            var gl = this.gl;
-            var renderer = this.renderer;
-            var frame = tilemap.tileset.image.get();
-
-            if (renderer.currentPipeline &&
-                renderer.currentPipeline.vertexCount > 0)
-            {
-                renderer.flush();
-            }
-
-            this.vertexBuffer = tilemap.vertexBuffer;
-            renderer.setPipeline(this);
-            renderer.setTexture2D(frame.source.glTexture, 0);
-            gl.drawArrays(this.topology, 0, tilemap.vertexCount);
-            this.vertexBuffer = pipelineVertexBuffer;
-        }
-
-        this.viewIdentity();
-        this.modelIdentity();
     },
 
     /**
