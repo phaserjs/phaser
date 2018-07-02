@@ -39,7 +39,7 @@ var TextureTintPipeline = require('./pipelines/TextureTintPipeline');
  * any context change that happens for WebGL rendering inside of Phaser. This means
  * if raw webgl functions are called outside the WebGLRenderer of the Phaser WebGL
  * rendering ecosystem they might pollute the current WebGLRenderingContext state producing
- * unexpected behaviour. It's recommended that WebGL interaction is done through 
+ * unexpected behavior. It's recommended that WebGL interaction is done through 
  * WebGLRenderer and/or WebGLPipeline.
  *
  * @class WebGLRenderer
@@ -87,7 +87,8 @@ var WebGLRenderer = new Class({
             autoResize: gameConfig.autoResize,
             roundPixels: gameConfig.roundPixels,
             maxTextures: gameConfig.maxTextures,
-            maxTextureSize: gameConfig.maxTextureSize
+            maxTextureSize: gameConfig.maxTextureSize,
+            batchSize: gameConfig.batchSize
         };
 
         /**
@@ -442,7 +443,7 @@ var WebGLRenderer = new Class({
 
         this.gl = gl;
 
-        //  Set it back into the Game, so devs can access it from there too
+        //  Set it back into the Game, so developers can access it from there too
         this.game.context = gl;
 
         for (var i = 0; i <= 16; i++)

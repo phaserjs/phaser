@@ -46,21 +46,19 @@ var TextureTintPipeline = new Class({
 
     function TextureTintPipeline (config)
     {
+        var rendererConfig = config.renderer.config;
+
+        //  Vertex Size = attribute size added together (2 + 2 + 1 + 4)
+
         WebGLPipeline.call(this, {
             game: config.game,
             renderer: config.renderer,
             gl: config.renderer.gl,
-            topology: (config.topology ? config.topology : config.renderer.gl.TRIANGLES),
-            vertShader: (config.vertShader ? config.vertShader : ShaderSourceVS),
-            fragShader: (config.fragShader ? config.fragShader : ShaderSourceFS),
-            vertexCapacity: (config.vertexCapacity ? config.vertexCapacity : 6 * 2000),
-
-            vertexSize: (config.vertexSize ? config.vertexSize :
-                Float32Array.BYTES_PER_ELEMENT * 2 +
-                Float32Array.BYTES_PER_ELEMENT * 2 +
-                Float32Array.BYTES_PER_ELEMENT * 1 +
-                Uint8Array.BYTES_PER_ELEMENT * 4
-            ),
+            topology: config.renderer.gl.TRIANGLES,
+            vertShader: ShaderSourceVS,
+            fragShader: ShaderSourceFS,
+            vertexCapacity: 6 * rendererConfig.batchSize,
+            vertexSize: Float32Array.BYTES_PER_ELEMENT * 5 + Uint8Array.BYTES_PER_ELEMENT * 4,
 
             attributes: [
                 {
@@ -117,10 +115,9 @@ var TextureTintPipeline = new Class({
          *
          * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#maxQuads
          * @type {integer}
-         * @default 2000
          * @since 3.0.0
          */
-        this.maxQuads = 2000;
+        this.maxQuads = rendererConfig.batchSize;
 
         /**
          * Collection of batch information

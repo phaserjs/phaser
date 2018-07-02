@@ -94,6 +94,7 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {boolean} [render.preserveDrawingBuffer=false] - [description]
  * @property {boolean} [render.failIfMajorPerformanceCaveat=false] - [description]
  * @property {string} [render.powerPreference='default'] - "high-performance", "low-power" or "default"
+ * @property {integer} [render.batchSize=2000] - The default WebGL batch size.
  * @property {(string|number)} [backgroundColor=0x000000] - [description]
  * @property {object} [callbacks] - [description]
  * @property {BootCallback} [callbacks.preBoot=NOOP] - [description]
@@ -355,7 +356,7 @@ var Config = new Class({
         this.transparent = GetValue(renderConfig, 'transparent', false);
 
         /**
-         * @const {boolean} Phaser.Boot.Config#zoclearBeforeRenderom - [description]
+         * @const {boolean} Phaser.Boot.Config#clearBeforeRender - [description]
          */
         this.clearBeforeRender = GetValue(renderConfig, 'clearBeforeRender', true);
 
@@ -378,6 +379,11 @@ var Config = new Class({
          * @const {string} Phaser.Boot.Config#powerPreference - [description]
          */
         this.powerPreference = GetValue(renderConfig, 'powerPreference', 'default');
+
+        /**
+         * @const {integer} Phaser.Boot.Config#batchSize - The default WebGL Batch size.
+         */
+        this.batchSize = GetValue(renderConfig, 'batchSize', 2000);
 
         var bgc = GetValue(config, 'backgroundColor', 0);
 
