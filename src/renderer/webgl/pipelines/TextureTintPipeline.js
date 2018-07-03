@@ -747,7 +747,7 @@ var TextureTintPipeline = new Class({
      */
     batchVertices: function (tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect)
     {
-        if (this.vertexCount + 6 >= this.vertexCapacity)
+        if (this.vertexCount + 6 > this.vertexCapacity)
         {
             this.flush();
         }
@@ -755,7 +755,7 @@ var TextureTintPipeline = new Class({
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
 
-        var vertexOffset = this.vertexCount * this.vertexComponentCount - 1;
+        var vertexOffset = (this.vertexCount * this.vertexComponentCount) - 1;
             
         vertexViewF32[++vertexOffset] = tx0;
         vertexViewF32[++vertexOffset] = ty0;
@@ -801,8 +801,9 @@ var TextureTintPipeline = new Class({
 
         this.vertexCount += 6;
 
-        if (this.vertexCount >= this.vertexCapacity)
+        if (this.vertexCapacity - this.vertexCount < 6)
         {
+            //  No more room at the inn
             this.flush();
 
             return true;
