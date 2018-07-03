@@ -26,7 +26,7 @@ var GameObject = require('../GameObject');
  */
 var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix, renderTargetCtx, allowClip)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
+    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)))
     {
         return;
     }
@@ -49,18 +49,26 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
     var green = 0;
     var blue = 0;
 
+    //  Alpha
+
+    var alpha = camera.alpha * src.alpha;
+
+    if (alpha === 0)
+    {
+        //  Nothing to see, so abort early
+        return;
+    }
+    else if (renderer.currentAlpha !== alpha)
+    {
+        renderer.currentAlpha = alpha;
+        ctx.globalAlpha = alpha;
+    }
+
     //  Blend Mode
     if (renderer.currentBlendMode !== src.blendMode)
     {
         renderer.currentBlendMode = src.blendMode;
         ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
-    }
-
-    //  Alpha
-    if (renderer.currentAlpha !== src.alpha)
-    {
-        renderer.currentAlpha = src.alpha;
-        ctx.globalAlpha = src.alpha;
     }
 
     //  Smoothing
@@ -70,11 +78,14 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
     }
 
     ctx.save();
+
     if (parentMatrix)
     {
         var matrix = parentMatrix.matrix;
+
         ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
     }
+
     ctx.translate(srcX - cameraScrollX, srcY - cameraScrollY);
     ctx.rotate(srcRotation);
     ctx.scale(srcScaleX, srcScaleY);
@@ -252,10 +263,6 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                     commandBuffer[index + 1]
                 );
                 index += 1;
-                break;
-
-            default:
-                // console.error('Phaser: Invalid Graphics Command ID ' + commandID);
                 break;
         }
     }

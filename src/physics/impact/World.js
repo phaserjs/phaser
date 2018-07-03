@@ -22,7 +22,7 @@ var TYPE = require('./TYPE');
  * @property {number} [gravity=0] - [description]
  * @property {number} [cellSize=64] - [description]
  * @property {number} [timeScale=1] - [description]
- * @property {float} [maxStep=0.05] - [description]
+ * @property {number} [maxStep=0.05] - [description]
  * @property {boolean} [debug=false] - [description]
  * @property {number} [maxVelocity=100] - [description]
  * @property {boolean} [debugShowBody=true] - [description]
@@ -145,7 +145,7 @@ var World = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.World#timeScale
-         * @type {float}
+         * @type {number}
          * @default 1
          * @since 3.0.0
          */

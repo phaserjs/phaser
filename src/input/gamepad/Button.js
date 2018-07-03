@@ -56,7 +56,7 @@ var Button = new Class({
          * Between 0 and 1.
          *
          * @name Phaser.Input.Gamepad.Button#value
-         * @type {float}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -67,7 +67,7 @@ var Button = new Class({
          * before a button is considered as being 'pressed'.
          *
          * @name Phaser.Input.Gamepad.Button#threshold
-         * @type {float}
+         * @type {number}
          * @default 1
          * @since 3.0.0
          */

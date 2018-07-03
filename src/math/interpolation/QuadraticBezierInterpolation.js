@@ -33,7 +33,7 @@ function P2 (t, p)
  * @function Phaser.Math.Interpolation.QuadraticBezier
  * @since 3.2.0
  *
- * @param {float} t - The percentage of interpolation, between 0 and 1.
+ * @param {number} t - The percentage of interpolation, between 0 and 1.
  * @param {number} p0 - The start point.
  * @param {number} p1 - The control point.
  * @param {number} p2 - The end point.

@@ -23,30 +23,38 @@ var GameObject = require('../../GameObject');
  */
 var TextCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)) || src.text === '')
+    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)) || src.text === '')
     {
         return;
     }
     
     var ctx = renderer.currentContext;
 
-    // var resolution = src.resolution;
+    //  Alpha
 
+    var alpha = camera.alpha * src.alpha;
+
+    if (alpha === 0)
+    {
+        //  Nothing to see, so abort early
+        return;
+    }
+    else if (renderer.currentAlpha !== alpha)
+    {
+        renderer.currentAlpha = alpha;
+        ctx.globalAlpha = alpha;
+    }
+    
     //  Blend Mode
+
     if (renderer.currentBlendMode !== src.blendMode)
     {
         renderer.currentBlendMode = src.blendMode;
         ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
     }
 
-    //  Alpha
-    if (renderer.currentAlpha !== src.alpha)
-    {
-        renderer.currentAlpha = src.alpha;
-        ctx.globalAlpha = src.alpha;
-    }
-
     //  Smoothing
+
     if (renderer.currentScaleMode !== src.scaleMode)
     {
         renderer.currentScaleMode = src.scaleMode;
@@ -65,7 +73,7 @@ var TextCanvasRenderer = function (renderer, src, interpolationPercentage, camer
     var tx = src.x - camera.scrollX * src.scrollFactorX;
     var ty = src.y - camera.scrollY * src.scrollFactorY;
 
-    if (renderer.config.roundPixels)
+    if (camera.roundPixels)
     {
         tx |= 0;
         ty |= 0;

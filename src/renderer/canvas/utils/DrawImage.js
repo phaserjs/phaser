@@ -4,8 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var roundPixels = false;
-
 /**
  * [description]
  *
@@ -22,20 +20,24 @@ var DrawImage = function (src, camera, parentMatrix)
     var frame = src.frame;
     var cd = frame.canvasData;
 
+    //  Alpha
+
+    var alpha = camera.alpha * src.alpha;
+
+    if (alpha === 0)
+    {
+        //  Nothing to see, so abort early
+        return;
+    }
+
+    ctx.globalAlpha = alpha;
+
     //  Blend Mode
 
     if (this.currentBlendMode !== src.blendMode)
     {
         this.currentBlendMode = src.blendMode;
         ctx.globalCompositeOperation = this.blendModes[src.blendMode];
-    }
-
-    //  Alpha
-
-    if (this.currentAlpha !== src.alpha)
-    {
-        this.currentAlpha = src.alpha;
-        ctx.globalAlpha = src.alpha;
     }
 
     //  Smoothing
@@ -76,7 +78,7 @@ var DrawImage = function (src, camera, parentMatrix)
     var tx = src.x - camera.scrollX * src.scrollFactorX;
     var ty = src.y - camera.scrollY * src.scrollFactorY;
 
-    if (roundPixels)
+    if (camera.roundPixels)
     {
         tx |= 0;
         ty |= 0;
@@ -107,11 +109,4 @@ var DrawImage = function (src, camera, parentMatrix)
     ctx.restore();
 };
 
-//  Special return so we can store the config value locally
-
-module.exports = function (configRoundPixels)
-{
-    roundPixels = configRoundPixels;
-
-    return DrawImage;
-};
+module.exports = DrawImage;

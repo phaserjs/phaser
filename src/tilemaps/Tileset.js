@@ -129,6 +129,16 @@ var Tileset = new Class({
         this.image = null;
 
         /**
+         * The gl texture used by the WebGL renderer.
+         *
+         * @name Phaser.Tilemaps.Tileset#glTexture
+         * @type {?WebGLTexture}
+         * @readOnly
+         * @since 3.11.0
+         */
+        this.glTexture = null;
+
+        /**
          * The number of tile rows in the the tileset.
          *
          * @name Phaser.Tilemaps.Tileset#rows
@@ -275,6 +285,8 @@ var Tileset = new Class({
     setImage: function (texture)
     {
         this.image = texture;
+
+        this.glTexture = texture.get().source.glTexture;
 
         this.updateTileData(this.image.source[0].width, this.image.source[0].height);
 

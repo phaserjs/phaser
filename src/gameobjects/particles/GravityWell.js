@@ -144,7 +144,7 @@ var GravityWell = new Class({
      *
      * @param {Phaser.GameObjects.Particles.Particle} particle - The Particle to update.
      * @param {number} delta - The delta time in ms.
-     * @param {float} step - The delta value divided by 1000.
+     * @param {number} step - The delta value divided by 1000.
      */
     update: function (particle, delta)
     {

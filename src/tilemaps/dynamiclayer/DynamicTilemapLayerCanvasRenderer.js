@@ -22,7 +22,7 @@ var GameObject = require('../../gameobjects/GameObject');
  */
 var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPercentage, camera)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
+    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)))
     {
         return;
     }
@@ -67,7 +67,7 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPe
             ctx.scale(tile.flipX ? -1 : 1, tile.flipY ? -1 : 1);
         }
 
-        ctx.globalAlpha = src.alpha * tile.alpha;
+        ctx.globalAlpha = camera.alpha * src.alpha * tile.alpha;
 
         ctx.drawImage(
             image,

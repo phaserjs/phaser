@@ -77,7 +77,7 @@ var ScenePlugin = new Class({
          * the current percentage of the transition progress, between 0 and 1.
          *
          * @name Phaser.Scenes.ScenePlugin#transitionProgress
-         * @type {float}
+         * @type {number}
          * @since 3.5.0
          */
         this.transitionProgress = 0;
@@ -191,7 +191,7 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#start
      * @since 3.0.0
      *
-     * @param {string} key - The Scene to start.
+     * @param {string} [key] - The Scene to start.
      * @param {object} [data] - The Scene data.
      *
      * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
@@ -200,16 +200,8 @@ var ScenePlugin = new Class({
     {
         if (key === undefined) { key = this.key; }
 
-        if (this.settings.status !== CONST.RUNNING)
-        {
-            this.manager.queueOp('stop', this.key);
-            this.manager.queueOp('start', key, data);
-        }
-        else
-        {
-            this.manager.stop(this.key);
-            this.manager.start(key, data);
-        }
+        this.manager.queueOp('stop', this.key);
+        this.manager.queueOp('start', key, data);
 
         return this;
     },
@@ -228,16 +220,8 @@ var ScenePlugin = new Class({
     {
         var key = this.key;
 
-        if (this.settings.status !== CONST.RUNNING)
-        {
-            this.manager.queueOp('stop', key);
-            this.manager.queueOp('start', key, data);
-        }
-        else
-        {
-            this.manager.stop(key);
-            this.manager.start(key, data);
-        }
+        this.manager.queueOp('stop', key);
+        this.manager.queueOp('start', key, data);
 
         return this;
     },
@@ -511,7 +495,7 @@ var ScenePlugin = new Class({
      * @since 3.10.0
      *
      * @param {string} key - The Scene to run.
-     * @param {object} [data] - A data object that will be passed to the Scene that is run _only if the Scene isn't asleep or paused_.
+     * @param {object} [data] - A data object that will be passed to the Scene and emitted in its ready, wake, or resume events.
      *
      * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
      */
@@ -535,15 +519,16 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#pause
      * @since 3.0.0
      *
-     * @param {string} key - The Scene to pause.
+     * @param {string} [key] - The Scene to pause.
+     * @param {object} [data] - An optional data object that will be passed to the Scene and emitted in its pause event.
      *
      * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
      */
-    pause: function (key)
+    pause: function (key, data)
     {
         if (key === undefined) { key = this.key; }
 
-        this.manager.pause(key);
+        this.manager.pause(key, data);
 
         return this;
     },
@@ -554,15 +539,16 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#resume
      * @since 3.0.0
      *
-     * @param {string} key - The Scene to resume.
+     * @param {string} [key] - The Scene to resume.
+     * @param {object} [data] - An optional data object that will be passed to the Scene and emitted in its resume event.
      *
      * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
      */
-    resume: function (key)
+    resume: function (key, data)
     {
         if (key === undefined) { key = this.key; }
 
-        this.manager.resume(key);
+        this.manager.resume(key, data);
 
         return this;
     },
@@ -573,15 +559,16 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#sleep
      * @since 3.0.0
      *
-     * @param {string} key - The Scene to put to sleep.
+     * @param {string} [key] - The Scene to put to sleep.
+     * @param {object} [data] - An optional data object that will be passed to the Scene and emitted in its sleep event.
      *
      * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
      */
-    sleep: function (key)
+    sleep: function (key, data)
     {
         if (key === undefined) { key = this.key; }
 
-        this.manager.sleep(key);
+        this.manager.sleep(key, data);
 
         return this;
     },
@@ -593,14 +580,15 @@ var ScenePlugin = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The Scene to wake up.
+     * @param {object} [data] - An optional data object that will be passed to the Scene and emitted in its wake event.
      *
      * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
      */
-    wake: function (key)
+    wake: function (key, data)
     {
         if (key === undefined) { key = this.key; }
 
-        this.manager.wake(key);
+        this.manager.wake(key, data);
 
         return this;
     },
@@ -657,12 +645,13 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#setActive
      * @since 3.0.0
      *
-     * @param {boolean} value - The active value.
-     * @param {string} [key] - The Scene to set the active state for.
+     * @param {boolean} value - If `true` the Scene will be resumed. If `false` it will be paused.
+     * @param {string} [key] - The Scene to set the active state of.
+     * @param {object} [data] - An optional data object that will be passed to the Scene and emitted with its events.
      *
      * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
      */
-    setActive: function (value, key)
+    setActive: function (value, key, data)
     {
         if (key === undefined) { key = this.key; }
 
@@ -670,7 +659,7 @@ var ScenePlugin = new Class({
 
         if (scene)
         {
-            scene.sys.setActive(value);
+            scene.sys.setActive(value, data);
         }
 
         return this;

@@ -26,7 +26,7 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
     var text = src.text;
     var textLength = text.length;
 
-    if (GameObject.RENDER_MASK !== src.renderFlags || textLength === 0 || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
+    if (GameObject.RENDER_MASK !== src.renderFlags || textLength === 0 || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)))
     {
         return;
     }
@@ -63,18 +63,26 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
 
     var scale = (src.fontSize / src.fontData.size);
 
+    //  Alpha
+
+    var alpha = camera.alpha * src.alpha;
+
+    if (alpha === 0)
+    {
+        //  Nothing to see, so abort early
+        return;
+    }
+    else if (renderer.currentAlpha !== alpha)
+    {
+        renderer.currentAlpha = alpha;
+        ctx.globalAlpha = alpha;
+    }
+
     //  Blend Mode
     if (renderer.currentBlendMode !== src.blendMode)
     {
         renderer.currentBlendMode = src.blendMode;
         ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
-    }
-
-    //  Alpha
-    if (renderer.currentAlpha !== src.alpha)
-    {
-        renderer.currentAlpha = src.alpha;
-        ctx.globalAlpha = src.alpha;
     }
 
     //  Smoothing
@@ -83,12 +91,10 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
         renderer.currentScaleMode = src.scaleMode;
     }
 
-    var roundPixels = renderer.config.roundPixels;
-
     var tx = (src.x - camera.scrollX * src.scrollFactorX) + src.frame.x;
     var ty = (src.y - camera.scrollY * src.scrollFactorY) + src.frame.y;
 
-    if (roundPixels)
+    if (camera.roundPixels)
     {
         tx |= 0;
         ty |= 0;
@@ -159,7 +165,7 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
             continue;
         }
 
-        if (roundPixels)
+        if (camera.roundPixels)
         {
             x |= 0;
             y |= 0;

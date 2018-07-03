@@ -683,7 +683,7 @@ var InputPlugin = new Class({
         {
             var camera = cameras[c];
 
-            //  Get a list of all objects that can be seen by the camera below the pointer in the scene and store in 'output' array.
+            //  Get a list of all objects that can be seen by the camera below the pointer in the scene and store in 'over' array.
             //  All objects in this array are input enabled, as checked by the hitTest method, so we don't need to check later on as well.
             var over = this.manager.hitTest(pointer, this._list, camera);
 
@@ -705,6 +705,11 @@ var InputPlugin = new Class({
                 return over;
             }
         }
+
+        //  If we got this far then there were no Game Objects below the pointer, but it was still over
+        //  a camera, so set that the top-most one into the pointer
+
+        pointer.camera = cameras[0];
 
         return [];
     },

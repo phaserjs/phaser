@@ -155,6 +155,48 @@ var TransformMatrix = new Class({
     /**
      * The Translate X value.
      *
+     * @name Phaser.GameObjects.Components.TransformMatrix#e
+     * @type {number}
+     * @since 3.11.0
+     */
+    e: {
+
+        get: function ()
+        {
+            return this.matrix[4];
+        },
+
+        set: function (value)
+        {
+            this.matrix[4] = value;
+        }
+
+    },
+
+    /**
+     * The Translate Y value.
+     *
+     * @name Phaser.GameObjects.Components.TransformMatrix#f
+     * @type {number}
+     * @since 3.11.0
+     */
+    f: {
+
+        get: function ()
+        {
+            return this.matrix[5];
+        },
+
+        set: function (value)
+        {
+            this.matrix[5] = value;
+        }
+
+    },
+
+    /**
+     * The Translate X value.
+     *
      * @name Phaser.GameObjects.Components.TransformMatrix#tx
      * @type {number}
      * @since 3.4.0
@@ -379,6 +421,53 @@ var TransformMatrix = new Class({
     },
 
     /**
+     * Multiply this Matrix by the matrix given, including the offset.
+     * 
+     * The offsetX is added to the tx value: `offsetX * a + offsetY * c + tx`.
+     * The offsetY is added to the ty value: `offsetY * b + offsetY * d + ty`.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#multiplyWithOffset
+     * @since 3.11.0
+     *
+     * @param {Phaser.GameObjects.Components.TransformMatrix} src - The source Matrix to copy from.
+     * @param {number} offsetX - Horizontal offset to factor in to the multiplication.
+     * @param {number} offsetY - Vertical offset to factor in to the multiplication.
+     *
+     * @return {this} This TransformMatrix.
+     */
+    multiplyWithOffset: function (src, offsetX, offsetY)
+    {
+        var matrix = this.matrix;
+        var otherMatrix = src.matrix;
+
+        var a0 = matrix[0];
+        var b0 = matrix[1];
+        var c0 = matrix[2];
+        var d0 = matrix[3];
+        var tx0 = matrix[4];
+        var ty0 = matrix[5];
+
+        var pse = offsetX * a0 + offsetY * c0 + tx0;
+        var psf = offsetX * b0 + offsetY * d0 + ty0;
+
+        var a1 = otherMatrix[0];
+        var b1 = otherMatrix[1];
+        var c1 = otherMatrix[2];
+        var d1 = otherMatrix[3];
+        var tx1 = otherMatrix[4];
+        var ty1 = otherMatrix[5];
+
+        matrix[0] = a1 * a0 + b1 * c0;
+        matrix[1] = a1 * b0 + b1 * d0;
+        matrix[2] = c1 * a0 + d1 * c0;
+        matrix[3] = c1 * b0 + d1 * d0;
+        matrix[4] = tx1 * a0 + ty1 * c0 + pse;
+        matrix[5] = tx1 * b0 + ty1 * d0 + psf;
+
+        return this;
+    },
+
+    /**
      * Transform the Matrix.
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#transform
@@ -472,6 +561,30 @@ var TransformMatrix = new Class({
         matrix[3] = a / n;
         matrix[4] = (c * ty - d * tx) / n;
         matrix[5] = -(a * ty - b * tx) / n;
+
+        return this;
+    },
+
+    /**
+     * Set the values of this Matrix to copy those of the matrix given.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#copyFrom
+     * @since 3.11.0
+     *
+     * @param {Phaser.GameObjects.Components.TransformMatrix} src - The source Matrix to copy from.
+     *
+     * @return {this} This TransformMatrix.
+     */
+    copyFrom: function (src)
+    {
+        var matrix = this.matrix;
+
+        matrix[0] = src.a;
+        matrix[1] = src.b;
+        matrix[2] = src.c;
+        matrix[3] = src.d;
+        matrix[4] = src.tx;
+        matrix[5] = src.ty;
 
         return this;
     },

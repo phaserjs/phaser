@@ -211,7 +211,7 @@ var Systems = new Class({
 
         /**
          * The Scene Update function.
-         * 
+         *
          * This starts out as NOOP during init, preload and create, and at the end of create
          * it swaps to be whatever the Scene.update function is.
          *
@@ -345,10 +345,12 @@ var Systems = new Class({
      *
      * @method Phaser.Scenes.Systems#pause
      * @since 3.0.0
+     * 
+     * @param {object} [data] - A data object that will be passed in the 'pause' event.
      *
      * @return {Phaser.Scenes.Systems} This Systems object.
      */
-    pause: function ()
+    pause: function (data)
     {
         if (this.settings.active)
         {
@@ -356,7 +358,7 @@ var Systems = new Class({
 
             this.settings.active = false;
 
-            this.events.emit('pause', this);
+            this.events.emit('pause', this, data);
         }
 
         return this;
@@ -368,9 +370,11 @@ var Systems = new Class({
      * @method Phaser.Scenes.Systems#resume
      * @since 3.0.0
      *
+     * @param {object} [data] - A data object that will be passed in the 'resume' event.
+     *
      * @return {Phaser.Scenes.Systems} This Systems object.
      */
-    resume: function ()
+    resume: function (data)
     {
         if (!this.settings.active)
         {
@@ -378,7 +382,7 @@ var Systems = new Class({
 
             this.settings.active = true;
 
-            this.events.emit('resume', this);
+            this.events.emit('resume', this, data);
         }
 
         return this;
@@ -394,17 +398,19 @@ var Systems = new Class({
      *
      * @method Phaser.Scenes.Systems#sleep
      * @since 3.0.0
+     * 
+     * @param {object} [data] - A data object that will be passed in the 'sleep' event.
      *
      * @return {Phaser.Scenes.Systems} This Systems object.
      */
-    sleep: function ()
+    sleep: function (data)
     {
         this.settings.status = CONST.SLEEPING;
 
         this.settings.active = false;
         this.settings.visible = false;
 
-        this.events.emit('sleep', this);
+        this.events.emit('sleep', this, data);
 
         return this;
     },
@@ -415,9 +421,11 @@ var Systems = new Class({
      * @method Phaser.Scenes.Systems#wake
      * @since 3.0.0
      *
+     * @param {object} [data] - A data object that will be passed in the 'wake' event.
+     *
      * @return {Phaser.Scenes.Systems} This Systems object.
      */
-    wake: function ()
+    wake: function (data)
     {
         var settings = this.settings;
 
@@ -426,7 +434,7 @@ var Systems = new Class({
         settings.active = true;
         settings.visible = true;
 
-        this.events.emit('wake', this);
+        this.events.emit('wake', this, data);
 
         if (settings.isTransition)
         {
@@ -534,24 +542,26 @@ var Systems = new Class({
 
     /**
      * Set the active state of this Scene.
+     * 
      * An active Scene will run its core update loop.
      *
      * @method Phaser.Scenes.Systems#setActive
      * @since 3.0.0
      *
      * @param {boolean} value - If `true` the Scene will be resumed, if previously paused. If `false` it will be paused.
+     * @param {object} [data] - A data object that will be passed in the 'resume' or 'pause' events.
      *
      * @return {Phaser.Scenes.Systems} This Systems object.
      */
-    setActive: function (value)
+    setActive: function (value, data)
     {
         if (value)
         {
-            return this.resume();
+            return this.resume(data);
         }
         else
         {
-            return this.pause();
+            return this.pause(data);
         }
     },
 
@@ -580,7 +590,7 @@ var Systems = new Class({
         this.events.emit('start', this);
 
         //  For user-land code to listen out for
-        this.events.emit('ready', this);
+        this.events.emit('ready', this, data);
     },
 
     /**
@@ -607,8 +617,10 @@ var Systems = new Class({
      *
      * @method Phaser.Scenes.Systems#shutdown
      * @since 3.0.0
+     * 
+     * @param {object} [data] - A data object that will be passed in the 'shutdown' event.
      */
-    shutdown: function ()
+    shutdown: function (data)
     {
         this.events.off('transitioninit');
         this.events.off('transitionstart');
@@ -620,7 +632,7 @@ var Systems = new Class({
         this.settings.active = false;
         this.settings.visible = false;
 
-        this.events.emit('shutdown', this);
+        this.events.emit('shutdown', this, data);
     },
 
     /**

@@ -26,7 +26,7 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
     var text = src.text;
     var textLength = text.length;
 
-    if (GameObject.RENDER_MASK !== src.renderFlags || textLength === 0 || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
+    if (GameObject.RENDER_MASK !== src.renderFlags || textLength === 0 || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)))
     {
         return;
     }
@@ -67,6 +67,21 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
 
     var rotation = 0;
     var scale = (src.fontSize / src.fontData.size);
+
+    //  Alpha
+
+    var alpha = camera.alpha * src.alpha;
+
+    if (alpha === 0)
+    {
+        //  Nothing to see, so abort early
+        return;
+    }
+    else if (renderer.currentAlpha !== alpha)
+    {
+        renderer.currentAlpha = alpha;
+        ctx.globalAlpha = alpha;
+    }
 
     //  Blend Mode
     if (renderer.currentBlendMode !== src.blendMode)
@@ -111,8 +126,6 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
         ctx.rect(0, 0, src.cropWidth, src.cropHeight);
         ctx.clip();
     }
-
-    var roundPixels = renderer.config.roundPixels;
 
     for (var index = 0; index < textLength; ++index)
     {
@@ -171,7 +184,7 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
         x -= cameraScrollX;
         y -= cameraScrollY;
 
-        if (roundPixels)
+        if (camera.roundPixels)
         {
             x |= 0;
             y |= 0;
