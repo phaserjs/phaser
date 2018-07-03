@@ -35,6 +35,73 @@ var Texture = {
     frame: null,
 
     /**
+     * A boolean flag indicating if this Game Object is being cropped or not.
+     * You can toggle this at any time after `setCrop` has been called, to turn cropping on or off.
+     * Equally, calling `setCrop` with no arguments will reset the crop and disable it.
+     *
+     * @name Phaser.GameObjects.Components.Texture#isCropped
+     * @type {boolean}
+     * @since 3.11.0
+     */
+    isCropped: false,
+
+    /**
+     * The internal crop data object, as used by `setCrop` and passed to the `Frame.getCropUVs` method.
+     *
+     * @name Phaser.GameObjects.Components.Texture#isCropped
+     * @type {object}
+     * @private
+     * @since 3.11.0
+     */
+    _crop: { u0: 0, v0: 0, u1: 0, v1: 0, width: 0, height: 0, x: 0, y: 0 },
+
+    /**
+     * Applies a crop to a texture based Game Object, such as a Sprite or Image.
+     * 
+     * The crop is a rectangle that limits the area of the texture frame that is visible during rendering.
+     * 
+     * Cropping a Game Object does not change its size, dimensions, physics body or hit area, it just
+     * changes what is shown when rendered.
+     * 
+     * The crop coordinates are relative to the texture frame, not the Game Object, meaning 0 x 0 is the top-left.
+     * 
+     * Therefore, if you had a Game Object that had an 800x600 sized texture, and you wanted to show only the left
+     * half of it, you could call `setCrop(0, 0, 400, 600)`.
+     * 
+     * Call this method with no arguments to reset the crop, or toggle the property `isCropped` to `false`.
+     * 
+     * You should do this if the crop rectangle becomes the same size as the frame itself, as it will allow
+     * the renderer to skip several internal calculations.
+     *
+     * @method Phaser.GameObjects.Components.Texture#setCrop
+     * @since 3.11.0
+     *
+     * @param {number} [x] - The x coordinate to start the crop from.
+     * @param {number} [y] - The y coordinate to start the crop from.
+     * @param {number} [width] - The width of the crop rectangle in pixels.
+     * @param {number} [height] - The height of the crop rectangle in pixels.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setCrop: function (x, y, width, height)
+    {
+        if (x === undefined)
+        {
+            this.isCropped = false;
+        }
+        else if (this.frame)
+        {
+            this._crop = this.frame.getCropUVs(this._crop, x, y, width, height);
+
+            console.log(this._crop);
+
+            this.isCropped = true;
+        }
+
+        return this;
+    },
+
+    /**
      * Sets the texture and frame this Game Object will use to render with.
      *
      * Textures are referenced by their string-based keys, as stored in the Texture Manager.
