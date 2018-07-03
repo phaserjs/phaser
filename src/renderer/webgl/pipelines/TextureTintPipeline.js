@@ -621,22 +621,53 @@ var TextureTintPipeline = new Class({
         var frame = sprite.frame;
         var texture = frame.glTexture;
 
-        var width = frame.width;
-        var height = frame.height;
+        var u0 = frame.u0;
+        var v0 = frame.v0;
+        var u1 = frame.u1;
+        var v1 = frame.v1;
+        var frameX = frame.x;
+        var frameY = frame.y;
+        var frameWidth = frame.width;
+        var frameHeight = frame.height;
 
-        var x = -sprite.displayOriginX + frame.x;
-        var y = -sprite.displayOriginY + frame.y;
+        var x = -sprite.displayOriginX + frameX;
+        var y = -sprite.displayOriginY + frameY;
 
-        if (sprite.flipX)
+        if (sprite.isCropped)
         {
-            width *= -1;
-            x += frame.width;
+            var crop = sprite._crop;
+
+            u0 = crop.u0;
+            v0 = crop.v0;
+            u1 = crop.u1;
+            v1 = crop.v1;
+            frameWidth = crop.width;
+            frameHeight = crop.height;
+            frameX = crop.x;
+            frameY = crop.y;
+
+            x = -sprite.displayOriginX + frameX;
+            y = -sprite.displayOriginY + frameY;
+
+            // if (sprite.flipX)
+            // {
+            //     frameWidth *= -1;
+            //     x -= frameWidth;
+            // }
         }
-
-        if (sprite.flipY || texture.isRenderTexture)
+        else
         {
-            height *= -1;
-            y += frame.height;
+            if (sprite.flipX)
+            {
+                frameWidth *= -1;
+                x += frame.width;
+            }
+    
+            if (sprite.flipY || texture.isRenderTexture)
+            {
+                frameHeight *= -1;
+                y += frame.height;
+            }
         }
 
         if (camera.roundPixels)
@@ -645,8 +676,8 @@ var TextureTintPipeline = new Class({
             y |= 0;
         }
 
-        var xw = x + width;
-        var yh = y + height;
+        var xw = x + frameWidth;
+        var yh = y + frameHeight;
 
         camMatrix.copyFrom(camera.matrix);
 
@@ -702,7 +733,7 @@ var TextureTintPipeline = new Class({
 
         var tintEffect = (sprite._isTinted && sprite.tintFill);
 
-        this.batchVertices(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tintTL, tintTR, tintBL, tintBR, tintEffect);
+        this.batchVertices(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect);
     },
 
     /**
@@ -1738,169 +1769,6 @@ var TextureTintPipeline = new Class({
         this.setTexture2D(texture, 0);
 
         this.batchVertices(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect);
-
-        // var texture = frame.glTexture;
-
-        /*
-        var parentMatrix = null;
-
-        if (parentTransformMatrix)
-        {
-            parentMatrix = parentTransformMatrix.matrix;
-        }
-
-        this.renderer.setPipeline(this);
-
-        if (this.vertexCount + 6 > this.vertexCapacity)
-        {
-            this.flush();
-        }
-
-        flipY = flipY ^ (texture.isRenderTexture ? 1 : 0);
-
-        var roundPixels = camera.roundPixels;
-        var vertexViewF32 = this.vertexViewF32;
-        var vertexViewU32 = this.vertexViewU32;
-        var cameraMatrix = camera.matrix.matrix;
-        var width = srcWidth * (flipX ? -1.0 : 1.0);
-        var height = srcHeight * (flipY ? -1.0 : 1.0);
-        var x = -displayOriginX + ((srcWidth) * (flipX ? 1.0 : 0.0));
-        var y = -displayOriginY + ((srcHeight) * (flipY ? 1.0 : 0.0));
-
-        // var x = -displayOriginX + frameX + ((frameWidth) * (flipX ? 1.0 : 0.0));
-        // var y = -displayOriginY + frameY + ((frameHeight) * (flipY ? 1.0 : 0.0));
-
-        var xw = (roundPixels ? (x | 0) : x) + width;
-        var yh = (roundPixels ? (y | 0) : y) + height;
-        var sr = Math.sin(rotation);
-        var cr = Math.cos(rotation);
-        var sra = cr * scaleX;
-        var srb = sr * scaleX;
-        var src = -sr * scaleY;
-        var srd = cr * scaleY;
-        var sre = srcX;
-        var srf = srcY;
-        var cma = cameraMatrix[0];
-        var cmb = cameraMatrix[1];
-        var cmc = cameraMatrix[2];
-        var cmd = cameraMatrix[3];
-        var cme = cameraMatrix[4];
-        var cmf = cameraMatrix[5];
-        var mva, mvb, mvc, mvd, mve, mvf;
-
-        if (parentMatrix)
-        {
-            var pma = parentMatrix[0];
-            var pmb = parentMatrix[1];
-            var pmc = parentMatrix[2];
-            var pmd = parentMatrix[3];
-            var pme = parentMatrix[4];
-            var pmf = parentMatrix[5];
-            var cse = -camera.scrollX * scrollFactorX;
-            var csf = -camera.scrollY * scrollFactorY;
-            var pse = cse * cma + csf * cmc + cme;
-            var psf = cse * cmb + csf * cmd + cmf;
-            var pca = pma * cma + pmb * cmc;
-            var pcb = pma * cmb + pmb * cmd;
-            var pcc = pmc * cma + pmd * cmc;
-            var pcd = pmc * cmb + pmd * cmd;
-            var pce = pme * cma + pmf * cmc + pse;
-            var pcf = pme * cmb + pmf * cmd + psf;
-
-            mva = sra * pca + srb * pcc;
-            mvb = sra * pcb + srb * pcd;
-            mvc = src * pca + srd * pcc;
-            mvd = src * pcb + srd * pcd;
-            mve = sre * pca + srf * pcc + pce;
-            mvf = sre * pcb + srf * pcd + pcf;
-        }
-        else
-        {
-            sre -= camera.scrollX * scrollFactorX;
-            srf -= camera.scrollY * scrollFactorY;
-
-            mva = sra * cma + srb * cmc;
-            mvb = sra * cmb + srb * cmd;
-            mvc = src * cma + srd * cmc;
-            mvd = src * cmb + srd * cmd;
-            mve = sre * cma + srf * cmc + cme;
-            mvf = sre * cmb + srf * cmd + cmf;
-        }
-
-        var tx0 = x * mva + y * mvc + mve;
-        var ty0 = x * mvb + y * mvd + mvf;
-        var tx1 = x * mva + yh * mvc + mve;
-        var ty1 = x * mvb + yh * mvd + mvf;
-        var tx2 = xw * mva + yh * mvc + mve;
-        var ty2 = xw * mvb + yh * mvd + mvf;
-        var tx3 = xw * mva + y * mvc + mve;
-        var ty3 = xw * mvb + y * mvd + mvf;
-
-        var u0 = (frameX / textureWidth) + uOffset;
-        var v0 = (frameY / textureHeight) + vOffset;
-        var u1 = (frameX + frameWidth) / textureWidth + uOffset;
-        var v1 = (frameY + frameHeight) / textureHeight + vOffset;
-
-        if (roundPixels)
-        {
-            tx0 |= 0;
-            ty0 |= 0;
-            tx1 |= 0;
-            ty1 |= 0;
-            tx2 |= 0;
-            ty2 |= 0;
-            tx3 |= 0;
-            ty3 |= 0;
-        }
-
-        this.setTexture2D(texture, 0);
-
-        var vertexOffset = (this.vertexCount * this.vertexComponentCount) - 1;
-
-        vertexViewF32[++vertexOffset] = tx0;
-        vertexViewF32[++vertexOffset] = ty0;
-        vertexViewF32[++vertexOffset] = u0;
-        vertexViewF32[++vertexOffset] = v0;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintTL;
-
-        vertexViewF32[++vertexOffset] = tx1;
-        vertexViewF32[++vertexOffset] = ty1;
-        vertexViewF32[++vertexOffset] = u0;
-        vertexViewF32[++vertexOffset] = v1;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintTR;
-
-        vertexViewF32[++vertexOffset] = tx2;
-        vertexViewF32[++vertexOffset] = ty2;
-        vertexViewF32[++vertexOffset] = u1;
-        vertexViewF32[++vertexOffset] = v1;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintBL;
-
-        vertexViewF32[++vertexOffset] = tx0;
-        vertexViewF32[++vertexOffset] = ty0;
-        vertexViewF32[++vertexOffset] = u0;
-        vertexViewF32[++vertexOffset] = v0;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintTL;
-
-        vertexViewF32[++vertexOffset] = tx2;
-        vertexViewF32[++vertexOffset] = ty2;
-        vertexViewF32[++vertexOffset] = u1;
-        vertexViewF32[++vertexOffset] = v1;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintBL;
-
-        vertexViewF32[++vertexOffset] = tx3;
-        vertexViewF32[++vertexOffset] = ty3;
-        vertexViewF32[++vertexOffset] = u1;
-        vertexViewF32[++vertexOffset] = v0;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tintBR;
-
-        this.vertexCount += 6;
-        */
     },
 
     /**
