@@ -5,6 +5,7 @@
  */
 
 var Class = require('../utils/Class');
+var Clamp = require('../math/Clamp');
 var Extend = require('../utils/object/Extend');
 
 /**
@@ -448,6 +449,58 @@ var Frame = new Class({
         this.centerY = Math.floor(destHeight / 2);
 
         return this.updateUVs();
+    },
+
+    /**
+     * Takes a crop data object and, based on the rectangular region given, calculates the
+     * required UV coordinates in order to crop this Frame for WebGL and Canvas rendering.
+     * 
+     * This is called directly by the Game Object Texture Components `setCrop` method.
+     * Please use that method to crop a Game Object.
+     *
+     * @method Phaser.Textures.Frame#getCropUVs
+     * @since 3.11.0
+     * 
+     * @param {object} crop - The crop data object. This is the `GameObject._crop` property.
+     * @param {number} x - The x coordinate to start the crop from. Cannot be negative or exceed the Frame width.
+     * @param {number} y - The y coordinate to start the crop from. Cannot be negative or exceed the Frame height.
+     * @param {number} width - The width of the crop rectangle. Cannot exceed the Frame width.
+     * @param {number} height - The height of the crop rectangle. Cannot exceed the Frame height.
+     *
+     * @return {object} The updated crop data object.
+     */
+    getCropUVs: function (crop, x, y, width, height)
+    {
+        //  Clamp the input values
+
+        x = Clamp(x, 0, this.width);
+        y = Clamp(y, 0, this.height);
+        width = Clamp(width, 0, this.width);
+        height = Clamp(height, 0, this.height);
+
+        if (x + width > this.width)
+        {
+            width = (this.width - x);
+        }
+
+        if (y + height > this.height)
+        {
+            height = (this.height - y);
+        }
+
+        var tw = this.source.width;
+        var th = this.source.height;
+
+        crop.u0 = (x / tw);
+        crop.v0 = (y / th);
+        crop.u1 = (x + width) / tw;
+        crop.v1 = (y + height) / th;
+        crop.width = width;
+        crop.height = height;
+        crop.x = x;
+        crop.y = y;
+
+        return crop;
     },
 
     /**
