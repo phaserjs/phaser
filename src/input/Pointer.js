@@ -445,10 +445,7 @@ var Pointer = new Class({
      */
     move: function (event)
     {
-        if (event.buttons)
-        {
-            this.buttons = event.buttons;
-        }
+        this.buttons = event.buttons;
 
         this.event = event;
 
