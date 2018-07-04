@@ -326,12 +326,10 @@ var Frame = new Class({
             },
             radius: 0,
             drawImage: {
-                sx: 0,
-                sy: 0,
-                sWidth: 0,
-                sHeight: 0,
-                dWidth: 0,
-                dHeight: 0
+                x: 0,
+                y: 0,
+                width: 0,
+                height: 0
             }
         };
 
@@ -393,12 +391,10 @@ var Frame = new Class({
 
         var drawImage = data.drawImage;
 
-        drawImage.sx = x;
-        drawImage.sy = y;
-        drawImage.sWidth = width;
-        drawImage.sHeight = height;
-        drawImage.dWidth = width;
-        drawImage.dHeight = height;
+        drawImage.x = x;
+        drawImage.y = y;
+        drawImage.width = width;
+        drawImage.height = height;
 
         return this.updateUVs();
     },
@@ -475,49 +471,89 @@ var Frame = new Class({
     {
         //  Clamp the input values
 
-        x = Clamp(x, 0, this.width);
-        y = Clamp(y, 0, this.height);
-        width = Clamp(width, 0, this.width);
-        height = Clamp(height, 0, this.height);
+        var cx = this.cutX;
+        var cy = this.cutY;
+        var cw = this.cutWidth;
+        var ch = this.cutHeight;
 
-        if (x + width > this.width)
+        x = Clamp(x, 0, cw);
+        y = Clamp(y, 0, ch);
+        width = Clamp(width, 0, cw);
+        height = Clamp(height, 0, ch);
+
+        //  Reserved for flipX/Y
+        var cropWidth = width;
+        var cropHeight = height;
+
+        if (x + width > cw)
         {
-            width = (this.width - x);
+            width = (cw - x);
         }
 
-        if (y + height > this.height)
+        if (y + height > ch)
         {
-            height = (this.height - y);
+            height = (ch - y);
         }
 
         var tw = this.source.width;
         var th = this.source.height;
-        var ox = 0;
-        var oy = 0;
+
+        var ox = cx;
+        var oy = cy;
 
         if (flipX)
         {
             ox = (tw - width) - (x * 2);
+            // ox -= cropWidth;
         }
 
         if (flipY)
         {
             oy = (th - height) - (y * 2);
+            // oy -= cropHeight;
         }
 
-        crop.u0 = (x + ox) / tw;
-        crop.v0 = (y + oy) / th;
-        crop.u1 = (x + ox + width) / tw;
-        crop.v1 = (y + oy + height) / th;
+        this.setUVs(crop, ox + x, oy + y, width, height);
+
+        // console.log(crop.u0, crop.v0, crop.u1, crop.v1);
+        
+
+        // crop.u0 = (x + ox) / tw;
+        // crop.v0 = (y + oy) / th;
+        // crop.u1 = (x + ox + width) / tw;
+        // crop.v1 = (y + oy + height) / th;
+
+        // crop.u0 = (cx + x + ox) / tw;
+        // crop.v0 = (cy + y + oy) / th;
+        // crop.u1 = (cx + x + ox + width) / tw;
+        // crop.v1 = (cy + y + oy + height) / th;
 
         crop.width = width;
         crop.height = height;
+
         crop.x = x;
         crop.y = y;
+
+        crop.cx = cx + x;
+        crop.cy = cy + y;
+
         crop.flipX = flipX;
         crop.flipY = flipY;
 
         return crop;
+    },
+
+    setUVs: function (dest, x, y, width, height)
+    {
+        var tw = this.source.width;
+        var th = this.source.height;
+
+        //  Map the given coordinates into UV space, clamping to the 0-1 range.
+
+        dest.u0 = Math.max(0, x / tw);
+        dest.v0 = Math.max(0, y / th);
+        dest.u1 = Math.min(1, (x + width) / tw);
+        dest.v1 = Math.min(1, (y + height) / th);
     },
 
     /**
@@ -557,10 +593,8 @@ var Frame = new Class({
 
         var cd = this.data.drawImage;
 
-        cd.sWidth = cw;
-        cd.sHeight = ch;
-        cd.dWidth = cw;
-        cd.dHeight = ch;
+        cd.width = cw;
+        cd.height = ch;
 
         //  WebGL data
 

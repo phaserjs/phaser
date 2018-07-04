@@ -58,7 +58,7 @@ var DrawImage = function (src, camera, parentMatrix)
     if (src.flipX)
     {
         fx = -1;
-        dx -= cd.dWidth - src.displayOriginX;
+        dx -= cd.width - src.displayOriginX;
     }
     else
     {
@@ -68,7 +68,7 @@ var DrawImage = function (src, camera, parentMatrix)
     if (src.flipY)
     {
         fy = -1;
-        dy -= cd.dHeight - src.displayOriginY;
+        dy -= cd.height - src.displayOriginY;
     }
     else
     {
@@ -104,7 +104,16 @@ var DrawImage = function (src, camera, parentMatrix)
     ctx.scale(src.scaleX, src.scaleY);
     ctx.scale(fx, fy);
 
-    ctx.drawImage(frame.source.image, cd.sx, cd.sy, cd.sWidth, cd.sHeight, dx, dy, cd.dWidth, cd.dHeight);
+    if (src.isCropped)
+    {
+        var crop = src._crop;
+
+        ctx.drawImage(frame.source.image, crop.cx, crop.cy, crop.width, crop.height, crop.x + dx, crop.y + dy, crop.width, crop.height);
+    }
+    else
+    {
+        ctx.drawImage(frame.source.image, cd.x, cd.y, cd.width, cd.height, dx, dy, cd.width, cd.height);
+    }
 
     ctx.restore();
 };

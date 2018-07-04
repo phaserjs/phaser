@@ -29,14 +29,14 @@ var BlitImage = function (dx, dy, frame)
 
     ctx.drawImage(
         frame.source.image,
-        cd.sx,
-        cd.sy,
-        cd.sWidth,
-        cd.sHeight,
+        cd.x,
+        cd.y,
+        cd.width,
+        cd.height,
         dx,
         dy,
-        cd.dWidth,
-        cd.dHeight
+        cd.width,
+        cd.height
     );
 };
 
