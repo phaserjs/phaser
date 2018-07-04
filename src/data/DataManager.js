@@ -306,6 +306,8 @@ var DataManager = new Class({
             Object.defineProperty(this.values, key, {
 
                 enumerable: true,
+                
+                configurable: true,
 
                 get: function ()
                 {
