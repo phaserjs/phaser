@@ -111,6 +111,7 @@ The Tint component documentation has been overhauled to explain these difference
 * `ArrayUtils.AddAt` didn't calculate the array offset correctly if you passed an array in to be merged with an existing array. This also caused Container.addAt to fail if an array was passed to it. Fix #3788 (thanks @jjalonso)
 * The `Pointer.camera` property would only be set if there was a viable Game Object in the camera view. Now it is set regardless, to always be the Camera the Pointer interacted with.
 * Added the Mask component to Container. It worked without it, but this brings it in-line with the documentation and other Game Objects. Fix #3797 (thanks @zilbuz)
+* The DataManager couldn't redefine previously removed properties. Fix #3803 (thanks @AleBles @oo7ph)
 
 ### Examples, Documentation and TypeScript
 

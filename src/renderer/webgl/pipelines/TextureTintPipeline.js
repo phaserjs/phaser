@@ -648,32 +648,18 @@ var TextureTintPipeline = new Class({
 
             x = -sprite.displayOriginX + frameX;
             y = -sprite.displayOriginY + frameY;
-
-            // if (sprite.flipX)
-            // {
-            //     frameWidth *= -1;
-            //     x -= frameWidth;
-            // }
-        }
-        else
-        {
-            if (sprite.flipX)
-            {
-                frameWidth *= -1;
-                x += frame.width;
-            }
-    
-            if (sprite.flipY || texture.isRenderTexture)
-            {
-                frameHeight *= -1;
-                y += frame.height;
-            }
         }
 
-        if (camera.roundPixels)
+        if (sprite.flipX)
         {
-            x |= 0;
-            y |= 0;
+            x += frameWidth;
+            frameWidth *= -1;
+        }
+
+        if (sprite.flipY)
+        {
+            y += frameHeight;
+            frameHeight *= -1;
         }
 
         var xw = x + frameWidth;
@@ -721,10 +707,13 @@ var TextureTintPipeline = new Class({
         {
             tx0 |= 0;
             ty0 |= 0;
+
             tx1 |= 0;
             ty1 |= 0;
+
             tx2 |= 0;
             ty2 |= 0;
+
             tx3 |= 0;
             ty3 |= 0;
         }
@@ -732,6 +721,29 @@ var TextureTintPipeline = new Class({
         this.setTexture2D(texture, 0);
 
         var tintEffect = (sprite._isTinted && sprite.tintFill);
+
+        if (sprite.isCropped && (sprite.flipX || sprite.flipY))
+        {
+            var ox = 0;
+            var oy = 0;
+            var textureSourceWidth = frame.source.width;
+            var textureSourceHeight = frame.source.height;
+
+            if (sprite.flipX)
+            {
+                ox = (textureSourceWidth + frameWidth) - (crop.x * 2);
+            }
+
+            if (sprite.flipY)
+            {
+                oy = (textureSourceHeight + frameHeight) - (crop.y * 2);
+            }
+
+            u0 = (crop.x + ox) / textureSourceWidth;
+            v0 = (crop.y + oy) / textureSourceHeight;
+            u1 = (crop.x + ox + crop.width) / textureSourceWidth;
+            v1 = (crop.y + oy + crop.height) / textureSourceHeight;
+        }
 
         this.batchVertices(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect);
     },

@@ -93,8 +93,6 @@ var Texture = {
         {
             this._crop = this.frame.getCropUVs(this._crop, x, y, width, height);
 
-            console.log(this._crop);
-
             this.isCropped = true;
         }
 
