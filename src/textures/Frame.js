@@ -458,7 +458,7 @@ var Frame = new Class({
      * This is called directly by the Game Object Texture Components `setCrop` method.
      * Please use that method to crop a Game Object.
      *
-     * @method Phaser.Textures.Frame#getCropUVs
+     * @method Phaser.Textures.Frame#setCropUVs
      * @since 3.11.0
      * 
      * @param {object} crop - The crop data object. This is the `GameObject._crop` property.
@@ -466,10 +466,12 @@ var Frame = new Class({
      * @param {number} y - The y coordinate to start the crop from. Cannot be negative or exceed the Frame height.
      * @param {number} width - The width of the crop rectangle. Cannot exceed the Frame width.
      * @param {number} height - The height of the crop rectangle. Cannot exceed the Frame height.
+     * @param {boolean} flipX - Does the parent Game Object have flipX set?
+     * @param {boolean} flipY - Does the parent Game Object have flipY set?
      *
      * @return {object} The updated crop data object.
      */
-    getCropUVs: function (crop, x, y, width, height)
+    setCropUVs: function (crop, x, y, width, height, flipX, flipY)
     {
         //  Clamp the input values
 
@@ -490,17 +492,50 @@ var Frame = new Class({
 
         var tw = this.source.width;
         var th = this.source.height;
+        var ox = 0;
+        var oy = 0;
 
-        crop.u0 = (x / tw);
-        crop.v0 = (y / th);
-        crop.u1 = (x + width) / tw;
-        crop.v1 = (y + height) / th;
+        if (flipX)
+        {
+            ox = (tw - width) - (x * 2);
+        }
+
+        if (flipY)
+        {
+            oy = (th - height) - (y * 2);
+        }
+
+        crop.u0 = (x + ox) / tw;
+        crop.v0 = (y + oy) / th;
+        crop.u1 = (x + ox + width) / tw;
+        crop.v1 = (y + oy + height) / th;
+
         crop.width = width;
         crop.height = height;
         crop.x = x;
         crop.y = y;
+        crop.flipX = flipX;
+        crop.flipY = flipY;
 
         return crop;
+    },
+
+    /**
+     * Takes a crop data object and recalculates the UVs based on the dimensions inside the crop object.
+     * Called automatically by `setFrame`.
+     *
+     * @method Phaser.Textures.Frame#updateCropUVs
+     * @since 3.11.0
+     * 
+     * @param {object} crop - The crop data object. This is the `GameObject._crop` property.
+     * @param {boolean} flipX - Does the parent Game Object have flipX set?
+     * @param {boolean} flipY - Does the parent Game Object have flipY set?
+     *
+     * @return {object} The updated crop data object.
+     */
+    updateCropUVs: function (crop, flipX, flipY)
+    {
+        return this.setCropUVs(crop, crop.x, crop.y, crop.width, crop.height, flipX, flipY);
     },
 
     /**

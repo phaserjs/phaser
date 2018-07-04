@@ -53,7 +53,7 @@ var Texture = {
      * @private
      * @since 3.11.0
      */
-    _crop: { u0: 0, v0: 0, u1: 0, v1: 0, width: 0, height: 0, x: 0, y: 0 },
+    _crop: { u0: 0, v0: 0, u1: 0, v1: 0, width: 0, height: 0, x: 0, y: 0, flipX: false, flipY: false },
 
     /**
      * Applies a crop to a texture based Game Object, such as a Sprite or Image.
@@ -91,7 +91,7 @@ var Texture = {
         }
         else if (this.frame)
         {
-            this._crop = this.frame.getCropUVs(this._crop, x, y, width, height);
+            this.frame.setCropUVs(this._crop, x, y, width, height, this.flipX, this.flipY);
 
             this.isCropped = true;
         }
@@ -169,6 +169,11 @@ var Texture = {
             {
                 this.updateDisplayOrigin();
             }
+        }
+
+        if (this.isCropped)
+        {
+            this.frame.updateCropUVs(this._crop, this.flipX, this.flipY);
         }
 
         return this;

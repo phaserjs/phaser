@@ -637,12 +637,19 @@ var TextureTintPipeline = new Class({
         {
             var crop = sprite._crop;
 
+            if (crop.flipX !== sprite.flipX || crop.flipY !== sprite.flipY)
+            {
+                frame.updateCropUVs(crop, sprite.flipX, sprite.flipY);
+            }
+
             u0 = crop.u0;
             v0 = crop.v0;
             u1 = crop.u1;
             v1 = crop.v1;
+
             frameWidth = crop.width;
             frameHeight = crop.height;
+
             frameX = crop.x;
             frameY = crop.y;
 
@@ -721,29 +728,6 @@ var TextureTintPipeline = new Class({
         this.setTexture2D(texture, 0);
 
         var tintEffect = (sprite._isTinted && sprite.tintFill);
-
-        if (sprite.isCropped && (sprite.flipX || sprite.flipY))
-        {
-            var ox = 0;
-            var oy = 0;
-            var textureSourceWidth = frame.source.width;
-            var textureSourceHeight = frame.source.height;
-
-            if (sprite.flipX)
-            {
-                ox = (textureSourceWidth + frameWidth) - (crop.x * 2);
-            }
-
-            if (sprite.flipY)
-            {
-                oy = (textureSourceHeight + frameHeight) - (crop.y * 2);
-            }
-
-            u0 = (crop.x + ox) / textureSourceWidth;
-            v0 = (crop.y + oy) / textureSourceHeight;
-            u1 = (crop.x + ox + crop.width) / textureSourceWidth;
-            v1 = (crop.y + oy + crop.height) / textureSourceHeight;
-        }
 
         this.batchVertices(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect);
     },
