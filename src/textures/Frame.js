@@ -475,12 +475,20 @@ var Frame = new Class({
         var cy = this.cutY;
         var cw = this.cutWidth;
         var ch = this.cutHeight;
+        var rw = this.realWidth;
+        var rh = this.realHeight;
 
-        x = Clamp(x, 0, cw);
-        y = Clamp(y, 0, ch);
+        // x = Clamp(x, 0, cw);
+        // y = Clamp(y, 0, ch);
 
-        width = Clamp(width, 0, cw - x);
-        height = Clamp(height, 0, ch - y);
+        // width = Clamp(width, 0, cw - x);
+        // height = Clamp(height, 0, ch - y);
+
+        x = Clamp(x, 0, rw);
+        y = Clamp(y, 0, rh);
+
+        width = Clamp(width, 0, rw - x);
+        height = Clamp(height, 0, rh - y);
 
         var ox = cx + x;
         var oy = cy + y;
@@ -493,6 +501,22 @@ var Frame = new Class({
         if (flipY)
         {
             oy = cy + (ch - y - height);
+        }
+
+        //  Check ox/oy within cut region, otherwise make UVs empty
+
+        if (this.data.trim)
+        {
+            //  Need to check for intersection between the cut xywh and ox
+            //  If there is none, we set UV to be empty, otherwise set it to be the intersection rect
+
+            // return !(rectA.right < rectB.x || rectA.bottom < rectB.y || rectA.x > rectB.right || rectA.y > rectB.bottom);
+
+            // out.x = Math.max(rectA.x, rectB.x);
+            // out.y = Math.max(rectA.y, rectB.y);
+            // out.width = Math.min(rectA.right, rectB.right) - out.x;
+            // out.height = Math.min(rectA.bottom, rectB.bottom) - out.y;
+    
         }
 
         var tw = this.source.width;
