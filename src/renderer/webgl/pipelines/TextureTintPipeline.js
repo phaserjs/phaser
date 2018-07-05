@@ -669,25 +669,6 @@ var TextureTintPipeline = new Class({
             frameHeight *= -1;
         }
 
-        if (sprite.isCropped)
-        {
-            //  Positions at the correct place, UVs also correct (when unflipped)
-            //  += (sourceSize w - frame width) / 2
-            // tx0 += 125;
-            // tx1 += 125;
-            // tx2 += 125;
-            // tx3 += 125;
-
-            //  += (sourceSize h - frame height) / 2
-            // ty0 += 259;
-            // ty1 += 259;
-            // ty2 += 259;
-            // ty3 += 259;
-
-            // x += 125;
-            // y += 259;
-        }
-
         var xw = x + frameWidth;
         var yh = y + frameHeight;
 
