@@ -90,6 +90,7 @@ There is a new Game Object Component called `TextureCrop`. It replaces the Textu
 * `TileSprite.tileScaleX` and `tileScaleY` are two new properties that allow you to control the scale of the texture within the Tile Sprite. This impacts the way the repeating texture is scaled, and is independent to scaling the Tile Sprite itself. It works in both Canvas and WebGL mode.
 * `TransformMatrix.copyFrom` is a new method that will copy the given matrix into the values of the current one.
 * `TransformMatrix.multiplyWithOffset` is a new method that will multiply the given matrix with the current one, factoring in an additional offset to the results. This is used internally by the renderer code in various places.
+* `Rectangle.Intersection` will take two Rectangle objects and return the area of intersection between them. If there is no intersection, an empty Rectangle is returned.
 
 ### Updates
 
