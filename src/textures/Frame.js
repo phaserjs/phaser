@@ -478,55 +478,32 @@ var Frame = new Class({
 
         x = Clamp(x, 0, cw);
         y = Clamp(y, 0, ch);
-        width = Clamp(width, 0, cw);
-        height = Clamp(height, 0, ch);
 
-        //  Reserved for flipX/Y
-        var cropWidth = width;
-        var cropHeight = height;
+        width = Clamp(width, 0, cw - x);
+        height = Clamp(height, 0, ch - y);
 
-        if (x + width > cw)
+        var ox = cx + x;
+        var oy = cy + y;
+
+        if (flipX)
         {
-            width = (cw - x);
+            ox = cx + (cw - x - width);
         }
 
-        if (y + height > ch)
+        if (flipY)
         {
-            height = (ch - y);
+            oy = cy + (ch - y - height);
         }
 
         var tw = this.source.width;
         var th = this.source.height;
 
-        var ox = cx;
-        var oy = cy;
+        //  Map the given coordinates into UV space, clamping to the 0-1 range.
 
-        if (flipX)
-        {
-            ox = (tw - width) - (x * 2);
-            // ox -= cropWidth;
-        }
-
-        if (flipY)
-        {
-            oy = (th - height) - (y * 2);
-            // oy -= cropHeight;
-        }
-
-        this.setUVs(crop, ox + x, oy + y, width, height);
-
-        // console.log(crop.u0, crop.v0, crop.u1, crop.v1);
-        
-
-        // crop.u0 = (x + ox) / tw;
-        // crop.v0 = (y + oy) / th;
-        // crop.u1 = (x + ox + width) / tw;
-        // crop.v1 = (y + oy + height) / th;
-
-        // crop.u0 = (cx + x + ox) / tw;
-        // crop.v0 = (cy + y + oy) / th;
-        // crop.u1 = (cx + x + ox + width) / tw;
-        // crop.v1 = (cy + y + oy + height) / th;
+        crop.u0 = Math.max(0, ox / tw);
+        crop.v0 = Math.max(0, oy / th);
+        crop.u1 = Math.min(1, (ox + width) / tw);
+        crop.v1 = Math.min(1, (oy + height) / th);
 
         crop.width = width;
         crop.height = height;
@@ -541,19 +518,6 @@ var Frame = new Class({
         crop.flipY = flipY;
 
         return crop;
-    },
-
-    setUVs: function (dest, x, y, width, height)
-    {
-        var tw = this.source.width;
-        var th = this.source.height;
-
-        //  Map the given coordinates into UV space, clamping to the 0-1 range.
-
-        dest.u0 = Math.max(0, x / tw);
-        dest.v0 = Math.max(0, y / th);
-        dest.u1 = Math.min(1, (x + width) / tw);
-        dest.v1 = Math.min(1, (y + height) / th);
     },
 
     /**

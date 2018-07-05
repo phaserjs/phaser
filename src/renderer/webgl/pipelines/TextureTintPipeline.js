@@ -688,7 +688,6 @@ var TextureTintPipeline = new Class({
             // y += 259;
         }
 
-
         var xw = x + frameWidth;
         var yh = y + frameHeight;
 
