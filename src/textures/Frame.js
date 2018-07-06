@@ -572,11 +572,13 @@ var Frame = new Class({
         crop.u1 = Math.min(1, (ox + ow) / tw);
         crop.v1 = Math.min(1, (oy + oh) / th);
 
-        crop.cx = cx + x;
-        crop.cy = cy + y;
-
         crop.x = x;
         crop.y = y;
+
+        crop.cx = ox;
+        crop.cy = oy;
+        crop.cw = ow;
+        crop.ch = oh;
 
         crop.width = width;
         crop.height = height;
