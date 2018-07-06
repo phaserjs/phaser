@@ -65,7 +65,7 @@ As well as tidying the Texture Tint Pipeline, I also updated the shader. It now 
 
 * `setTintFill` is a new method available to all Game Objects that have the Tint component. It differs from `setTint` in that the colors literally replace the pixel values from the texture (while still respecting the alpha). This means you can now create effects such as flashing a sprite white if it gets hit, or red for damage, etc. You can still use different colors per corner of the Game Object, allowing you to create nice seamless gradient effects.
 * `tintFill` is a new boolean property that allows you to toggle between the two different tint types: multiply or replace.
-* `_isTinted` is a new private boolean indicating if a Game Object is tinted or not.
+* `isTinted` is a new read-only boolean indicating if a Game Object is tinted or not. Handy for knowing if you need to clear a tint after an effect.
 
 The Tint component documentation has been overhauled to explain these differences in more detail, and you can find lots of new examples as well.
 
@@ -123,6 +123,7 @@ There is a new Game Object Component called `TextureCrop`. It replaces the Textu
 * The `Pointer.camera` property would only be set if there was a viable Game Object in the camera view. Now it is set regardless, to always be the Camera the Pointer interacted with.
 * Added the Mask component to Container. It worked without it, but this brings it in-line with the documentation and other Game Objects. Fix #3797 (thanks @zilbuz)
 * The DataManager couldn't redefine previously removed properties. Fix #3803 (thanks @AleBles @oo7ph)
+* The Canvas DrawImage function has been recoded entirely so it now correctly supports parent matrix and camera matrix calculations. This fixes an issue where children inside Containers would lose their rotation, and other issues, when in the Canvas Renderer. Fix #3728 (thanks @samid737)
 
 ### Examples, Documentation and TypeScript
 

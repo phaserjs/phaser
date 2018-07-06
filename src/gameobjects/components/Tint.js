@@ -308,6 +308,24 @@ var Tint = {
         {
             this.setTint(value, value, value, value);
         }
+    },
+
+    /**
+     * Does this Game Object have a tint applied to it or not?
+     * 
+     * @name Phaser.GameObjects.Components.Tint#isTinted
+     * @type {boolean}
+     * @webglOnly
+     * @readOnly
+     * @since 3.11.0
+     */
+    isTinted: {
+
+        get: function ()
+        {
+            return this._isTinted;
+        }
+
     }
 
 };
