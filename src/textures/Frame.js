@@ -478,12 +478,6 @@ var Frame = new Class({
         var rw = this.realWidth;
         var rh = this.realHeight;
 
-        // x = Clamp(x, 0, cw);
-        // y = Clamp(y, 0, ch);
-
-        // width = Clamp(width, 0, cw - x);
-        // height = Clamp(height, 0, ch - y);
-
         x = Clamp(x, 0, rw);
         y = Clamp(y, 0, rh);
 
@@ -492,6 +486,8 @@ var Frame = new Class({
 
         var ox = cx + x;
         var oy = cy + y;
+        var ow = width;
+        var oh = height;
 
         if (flipX)
         {
@@ -503,20 +499,55 @@ var Frame = new Class({
             oy = cy + (ch - y - height);
         }
 
-        //  Check ox/oy within cut region, otherwise make UVs empty
+        var data = this.data;
 
-        if (this.data.trim)
+        if (data.trim)
         {
+            var ss = data.spriteSourceSize;
+
             //  Need to check for intersection between the cut xywh and ox
             //  If there is none, we set UV to be empty, otherwise set it to be the intersection rect
 
-            // return !(rectA.right < rectB.x || rectA.bottom < rectB.y || rectA.x > rectB.right || rectA.y > rectB.bottom);
+            //  The cut region
+            var rectA = { x: ss.x, y: ss.y, w: ss.w, h: ss.h, right: ss.x + ss.w, bottom: ss.y + ss.h };
 
-            // out.x = Math.max(rectA.x, rectB.x);
-            // out.y = Math.max(rectA.y, rectB.y);
-            // out.width = Math.min(rectA.right, rectB.right) - out.x;
-            // out.height = Math.min(rectA.bottom, rectB.bottom) - out.y;
+            //  The crop region
+            var rectB = { x: x, y: y, w: width, h: height, right: x + width, bottom: y + height };
+
+            var intersects = !(rectA.right < rectB.x || rectA.bottom < rectB.y || rectA.x > rectB.right || rectA.y > rectB.bottom);
+
+            window.rectA = rectA;
+            window.rectB = rectB;
+
+            if (intersects)
+            {
+                var rx = Math.max(rectA.x, rectB.x);
+                var ry = Math.max(rectA.y, rectB.y);
+                var rw = Math.min(rectA.right, rectB.right) - rx;
+                var rh = Math.min(rectA.bottom, rectB.bottom) - ry;
+
+                var rectC = { x: rx, y: ry, w: rw, h: rh, right: rx + rw, bottom: ry + rh };
+
+                window.rectC = rectC;
+
+                ox = cx + (rx - ss.x);
+                oy = cy + (ry - ss.y);
+                ow = rw;
+                oh = rh;
     
+                x = rx;
+                y = ry;
+
+                width = rw;
+                height = rh;
+            }
+            else
+            {
+                ox = 0;
+                oy = 0;
+                ow = 0;
+                oh = 0;
+            }
         }
 
         var tw = this.source.width;
@@ -526,17 +557,17 @@ var Frame = new Class({
 
         crop.u0 = Math.max(0, ox / tw);
         crop.v0 = Math.max(0, oy / th);
-        crop.u1 = Math.min(1, (ox + width) / tw);
-        crop.v1 = Math.min(1, (oy + height) / th);
+        crop.u1 = Math.min(1, (ox + ow) / tw);
+        crop.v1 = Math.min(1, (oy + oh) / th);
 
-        crop.width = width;
-        crop.height = height;
+        crop.cx = cx + x;
+        crop.cy = cy + y;
 
         crop.x = x;
         crop.y = y;
 
-        crop.cx = cx + x;
-        crop.cy = cy + y;
+        crop.width = width;
+        crop.height = height;
 
         crop.flipX = flipX;
         crop.flipY = flipY;
