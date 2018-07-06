@@ -149,6 +149,16 @@ var Mesh = new Class({
          * @since 3.0.0
          */
         this.alphas = new Float32Array(alphas);
+
+        /**
+         * Fill or additive mode used when blending the color values?
+         * 
+         * @name Phaser.GameObjects.Mesh#tintFill
+         * @type {boolean}
+         * @default false
+         * @since 3.11.0
+         */
+        this.tintFill = false;
     }
 
 });
