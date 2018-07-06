@@ -394,28 +394,28 @@ var TransformMatrix = new Class({
     multiply: function (rhs)
     {
         var matrix = this.matrix;
-        var otherMatrix = rhs.matrix;
+        var source = rhs.matrix;
 
-        var a0 = matrix[0];
-        var b0 = matrix[1];
-        var c0 = matrix[2];
-        var d0 = matrix[3];
-        var tx0 = matrix[4];
-        var ty0 = matrix[5];
+        var localA = matrix[0];
+        var localB = matrix[1];
+        var localC = matrix[2];
+        var localD = matrix[3];
+        var localE = matrix[4];
+        var localF = matrix[5];
 
-        var a1 = otherMatrix[0];
-        var b1 = otherMatrix[1];
-        var c1 = otherMatrix[2];
-        var d1 = otherMatrix[3];
-        var tx1 = otherMatrix[4];
-        var ty1 = otherMatrix[5];
+        var sourceA = source[0];
+        var sourceB = source[1];
+        var sourceC = source[2];
+        var sourceD = source[3];
+        var sourceE = source[4];
+        var sourceF = source[5];
 
-        matrix[0] = a1 * a0 + b1 * c0;
-        matrix[1] = a1 * b0 + b1 * d0;
-        matrix[2] = c1 * a0 + d1 * c0;
-        matrix[3] = c1 * b0 + d1 * d0;
-        matrix[4] = tx1 * a0 + ty1 * c0 + tx0;
-        matrix[5] = tx1 * b0 + ty1 * d0 + ty0;
+        matrix[0] = sourceA * localA + sourceB * localC;
+        matrix[1] = sourceA * localB + sourceB * localD;
+        matrix[2] = sourceC * localA + sourceD * localC;
+        matrix[3] = sourceC * localB + sourceD * localD;
+        matrix[4] = sourceE * localA + sourceF * localC + localE;
+        matrix[5] = sourceE * localB + sourceF * localD + localF;
 
         return this;
     },
