@@ -1079,6 +1079,9 @@ var Graphics = new Class({
      * Draw an arc.
      *
      * This method can be used to create circles, or parts of circles.
+     * 
+     * Use the optional `overshoot` argument to allow the arc to extend beyond 360 degrees. This is useful if you're drawing
+     * an arc with an especially thick line, as it will allow the arc to fully join-up. Try small values at first, i.e. 0.01.
      *
      * Call {@link Phaser.GameObjects.Graphics#fillPath} or {@link Phaser.GameObjects.Graphics#strokePath} after calling
      * this method to draw the arc.
@@ -1092,11 +1095,44 @@ var Graphics = new Class({
      * @param {number} startAngle - The starting angle, in radians.
      * @param {number} endAngle - The ending angle, in radians.
      * @param {boolean} [anticlockwise=false] - Whether the drawing should be anticlockwise or clockwise.
+     * @param {number} [overshoot=0] - This value allows you to overshoot the endAngle by this amount. Useful if the arc has a thick stroke and needs to overshoot to join-up cleanly.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
-    arc: function (x, y, radius, startAngle, endAngle, anticlockwise)
+    arc: function (x, y, radius, startAngle, endAngle, anticlockwise, overshoot)
     {
+        if (anticlockwise === undefined) { anticlockwise = false; }
+        if (overshoot === undefined) { overshoot = 0; }
+
+        var PI2 = Math.PI * 2;
+
+        if (anticlockwise)
+        {
+            if (endAngle < -PI2)
+            {
+                endAngle = -PI2 - overshoot;
+            }
+            else if (endAngle > 0)
+            {
+                endAngle = -PI2 + endAngle % PI2 - overshoot;
+            }
+        }
+        else
+        {
+            endAngle -= startAngle;
+            endAngle += overshoot;
+
+            if (endAngle > PI2 + overshoot)
+            {
+                endAngle = PI2 + overshoot;
+                
+            }
+            else if (endAngle < -overshoot)
+            {
+                endAngle = PI2 + endAngle % PI2 - overshoot;
+            }
+        }
+
         this.commandBuffer.push(
             Commands.ARC,
             x, y, radius, startAngle, endAngle, anticlockwise
