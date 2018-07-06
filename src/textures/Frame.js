@@ -322,7 +322,9 @@ var Frame = new Class({
                 x: 0,
                 y: 0,
                 w: 0,
-                h: 0
+                h: 0,
+                r: 0,
+                b: 0
             },
             radius: 0,
             drawImage: {
@@ -430,6 +432,8 @@ var Frame = new Class({
         ss.y = destY;
         ss.w = destWidth;
         ss.h = destHeight;
+        ss.r = destX + destWidth;
+        ss.b = destY + destHeight;
 
         //  Adjust properties
         this.x = destX;
@@ -508,38 +512,28 @@ var Frame = new Class({
             //  Need to check for intersection between the cut xywh and ox
             //  If there is none, we set UV to be empty, otherwise set it to be the intersection rect
 
-            //  The cut region
-            var rectA = { x: ss.x, y: ss.y, w: ss.w, h: ss.h, right: ss.x + ss.w, bottom: ss.y + ss.h };
+            var cropRight = x + width;
+            var cropBottom = y + height;
 
-            //  The crop region
-            var rectB = { x: x, y: y, w: width, h: height, right: x + width, bottom: y + height };
-
-            var intersects = !(rectA.right < rectB.x || rectA.bottom < rectB.y || rectA.x > rectB.right || rectA.y > rectB.bottom);
-
-            window.rectA = rectA;
-            window.rectB = rectB;
+            var intersects = !(ss.r < x || ss.b < y || ss.x > cropRight || ss.y > cropBottom);
 
             if (intersects)
             {
-                var rx = Math.max(rectA.x, rectB.x);
-                var ry = Math.max(rectA.y, rectB.y);
-                var rw = Math.min(rectA.right, rectB.right) - rx;
-                var rh = Math.min(rectA.bottom, rectB.bottom) - ry;
+                var ix = Math.max(ss.x, x);
+                var iy = Math.max(ss.y, y);
+                var iw = Math.min(ss.r, cropRight) - ix;
+                var ih = Math.min(ss.b, cropBottom) - iy;
 
-                var rectC = { x: rx, y: ry, w: rw, h: rh, right: rx + rw, bottom: ry + rh };
-
-                window.rectC = rectC;
-
-                ox = cx + (rx - ss.x);
-                oy = cy + (ry - ss.y);
-                ow = rw;
-                oh = rh;
+                ox = cx + (ix - ss.x);
+                oy = cy + (iy - ss.y);
+                ow = iw;
+                oh = ih;
     
-                x = rx;
-                y = ry;
+                x = ix;
+                y = iy;
 
-                width = rw;
-                height = rh;
+                width = iw;
+                height = ih;
             }
             else
             {
