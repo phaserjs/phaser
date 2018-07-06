@@ -68,7 +68,12 @@ var TextureCrop = {
      * Therefore, if you had a Game Object that had an 800x600 sized texture, and you wanted to show only the left
      * half of it, you could call `setCrop(0, 0, 400, 600)`.
      * 
-     * Call this method with no arguments to reset the crop, or toggle the property `isCropped` to `false`.
+     * It is also scaled to match the Game Object scale automatically. Therefore a crop rect of 100x50 would crop
+     * an area of 200x100 when applied to a Game Object that had a scale factor of 2.
+     * 
+     * You can either pass in numeric values directly, or you can provide a single Rectangle object as the first argument.
+     * 
+     * Call this method with no arguments at all to reset the crop, or toggle the property `isCropped` to `false`.
      * 
      * You should do this if the crop rectangle becomes the same size as the frame itself, as it will allow
      * the renderer to skip several internal calculations.
@@ -76,7 +81,7 @@ var TextureCrop = {
      * @method Phaser.GameObjects.Components.TextureCrop#setCrop
      * @since 3.11.0
      *
-     * @param {number} [x] - The x coordinate to start the crop from.
+     * @param {(number|Phaser.Geom.Rectangle)} [x] - The x coordinate to start the crop from. Or a Phaser.Geom.Rectangle object, in which case the rest of the arguments are ignored.
      * @param {number} [y] - The y coordinate to start the crop from.
      * @param {number} [width] - The width of the crop rectangle in pixels.
      * @param {number} [height] - The height of the crop rectangle in pixels.
@@ -91,7 +96,16 @@ var TextureCrop = {
         }
         else if (this.frame)
         {
-            this.frame.setCropUVs(this._crop, x, y, width, height, this.flipX, this.flipY);
+            if (typeof x === 'number')
+            {
+                this.frame.setCropUVs(this._crop, x, y, width, height, this.flipX, this.flipY);
+            }
+            else
+            {
+                var rect = x;
+
+                this.frame.setCropUVs(this._crop, rect.x, rect.y, rect.width, rect.height, this.flipX, this.flipY);
+            }
 
             this.isCropped = true;
         }
