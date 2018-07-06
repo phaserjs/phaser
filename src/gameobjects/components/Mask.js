@@ -63,7 +63,7 @@ var Mask = {
     {
         if (destroyMask === undefined) { destroyMask = false; }
 
-        if (destroyMask)
+        if (destroyMask && this.mask)
         {
             this.mask.destroy();
         }
