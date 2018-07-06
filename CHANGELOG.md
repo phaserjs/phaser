@@ -51,6 +51,7 @@ The Texture Tint Pipeline has been rewritten to tidy up hundreds of lines of dup
 * The `drawStaticTilemapLayer` method has been removed from the `TextureTintPipeline` class, because it is now handled internally by the Game Object itself.
 * The `batchText` method has been removed from the `TextureTintPipeline` class, because it is now handled internally by the Game Object itself.
 * The `batchDynamicTilemapLayer` method has been removed from the `TextureTintPipeline` class, because it is now handled internally by the Game Object itself.
+* The `batchMesh` method has been removed from the `TextureTintPipeline` class, because it is now handled in the Mesh WebGL Renderer function.
 * The shader has a new attribute: `tintEffect`. This is a single FLOAT.
 * The vertex size has increased by 1 FLOAT to account for the extra shader attribute.
 
@@ -66,6 +67,7 @@ As well as tidying the Texture Tint Pipeline, I also updated the shader. It now 
 * `setTintFill` is a new method available to all Game Objects that have the Tint component. It differs from `setTint` in that the colors literally replace the pixel values from the texture (while still respecting the alpha). This means you can now create effects such as flashing a sprite white if it gets hit, or red for damage, etc. You can still use different colors per corner of the Game Object, allowing you to create nice seamless gradient effects.
 * `tintFill` is a new boolean property that allows you to toggle between the two different tint types: multiply or replace.
 * `isTinted` is a new read-only boolean indicating if a Game Object is tinted or not. Handy for knowing if you need to clear a tint after an effect.
+* `Mesh.tintFill` allows you to control the tint effect applied to the Mesh vertices when color blending.
 
 The Tint component documentation has been overhauled to explain these differences in more detail, and you can find lots of new examples as well.
 

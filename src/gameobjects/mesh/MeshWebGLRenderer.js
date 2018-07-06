@@ -5,6 +5,7 @@
  */
 
 var GameObject = require('../GameObject');
+var Utils = require('../../renderer/webgl/Utils');
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -28,7 +29,87 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
         return;
     }
 
-    this.pipeline.batchMesh(src, camera, parentMatrix);
+    var pipeline = this.pipeline;
+
+    renderer.setPipeline(pipeline);
+
+    var camMatrix = pipeline._tempCameraMatrix;
+    var spriteMatrix = pipeline._tempSpriteMatrix;
+
+    spriteMatrix.applyITRS(src.x - camera.scrollX * src.scrollFactorX, src.y - camera.scrollY * src.scrollFactorY, src.rotation, src.scaleX, src.scaleY);
+
+    camMatrix.copyFrom(camera.matrix);
+
+    var calcMatrix;
+
+    if (parentMatrix)
+    {
+        //  Multiply the camera by the parent matrix
+        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
+
+        //  Undo the camera scroll
+        spriteMatrix.e = src.x;
+        spriteMatrix.f = src.y;
+
+        //  Multiply by the Sprite matrix
+        calcMatrix = camMatrix.multiply(spriteMatrix);
+    }
+    else
+    {
+        calcMatrix = camMatrix.multiply(spriteMatrix);
+    }
+
+    var frame = src.frame;
+    var texture = frame.glTexture;
+
+    pipeline.setTexture2D(texture, 0);
+
+    var vertices = src.vertices;
+    var uvs = src.uv;
+    var colors = src.colors;
+    var alphas = src.alphas;
+
+    var meshVerticesLength = vertices.length;
+    var vertexCount = Math.floor(meshVerticesLength * 0.5);
+
+    if (pipeline.vertexCount + vertexCount >= pipeline.vertexCapacity)
+    {
+        pipeline.flush();
+    }
+
+    var vertexViewF32 = pipeline.vertexViewF32;
+    var vertexViewU32 = pipeline.vertexViewU32;
+
+    var vertexOffset = (pipeline.vertexCount * pipeline.vertexComponentCount) - 1;
+
+    var colorIndex = 0;
+    var tintEffect = src.tintFill;
+
+    for (var i = 0; i < meshVerticesLength; i += 2)
+    {
+        var x = vertices[i + 0];
+        var y = vertices[i + 1];
+
+        var tx = x * calcMatrix.a + y * calcMatrix.c + calcMatrix.e;
+        var ty = x * calcMatrix.b + y * calcMatrix.d + calcMatrix.f;
+
+        if (camera.roundPixels)
+        {
+            tx |= 0;
+            ty |= 0;
+        }
+
+        vertexViewF32[++vertexOffset] = tx;
+        vertexViewF32[++vertexOffset] = ty;
+        vertexViewF32[++vertexOffset] = uvs[i + 0];
+        vertexViewF32[++vertexOffset] = uvs[i + 1];
+        vertexViewF32[++vertexOffset] = tintEffect;
+        vertexViewU32[++vertexOffset] = Utils.getTintAppendFloatAlpha(colors[colorIndex], camera.alpha * alphas[colorIndex]);
+
+        colorIndex++;
+    }
+
+    pipeline.vertexCount += vertexCount;
 };
 
 module.exports = MeshWebGLRenderer;
