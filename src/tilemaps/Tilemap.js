@@ -543,7 +543,13 @@ var Tilemap = new Class({
 
             if (found)
             {
-                var config = Extend({}, spriteConfig, obj.properties);
+                var props = {}
+                for (var j=0; j < obj.properties.length; j++)
+                {
+                    props[obj.properties[j].name] = obj.properties[j].value
+                }
+
+                var config = Extend({}, spriteConfig, props);
 
                 config.x = obj.x;
                 config.y = obj.y;
