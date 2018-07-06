@@ -493,24 +493,14 @@ var Frame = new Class({
         var ow = width;
         var oh = height;
 
-        if (flipX)
-        {
-            ox = cx + (cw - x - width);
-        }
-
-        if (flipY)
-        {
-            oy = cy + (ch - y - height);
-        }
-
         var data = this.data;
 
         if (data.trim)
         {
             var ss = data.spriteSourceSize;
 
-            //  Need to check for intersection between the cut xywh and ox
-            //  If there is none, we set UV to be empty, otherwise set it to be the intersection rect
+            //  Need to check for intersection between the cut area and the crop area
+            //  If there is none, we set UV to be empty, otherwise set it to be the intersection area
 
             var cropRight = x + width;
             var cropBottom = y + height;
@@ -524,11 +514,27 @@ var Frame = new Class({
                 var iw = Math.min(ss.r, cropRight) - ix;
                 var ih = Math.min(ss.b, cropBottom) - iy;
 
-                ox = cx + (ix - ss.x);
-                oy = cy + (iy - ss.y);
                 ow = iw;
                 oh = ih;
     
+                if (flipX)
+                {
+                    ox = cx + (cw - (ix - ss.x) - iw);
+                }
+                else
+                {
+                    ox = cx + (ix - ss.x);
+                }
+        
+                if (flipY)
+                {
+                    oy = cy + (ch - (iy - ss.y) - ih);
+                }
+                else
+                {
+                    oy = cy + (iy - ss.y);
+                }
+
                 x = ix;
                 y = iy;
 
@@ -541,6 +547,18 @@ var Frame = new Class({
                 oy = 0;
                 ow = 0;
                 oh = 0;
+            }
+        }
+        else
+        {
+            if (flipX)
+            {
+                ox = cx + (cw - x - width);
+            }
+    
+            if (flipY)
+            {
+                oy = cy + (ch - y - height);
             }
         }
 
