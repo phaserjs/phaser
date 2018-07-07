@@ -5,6 +5,7 @@
  */
 
 var GameObject = require('../../GameObject');
+var Utils = require('../../../renderer/webgl/Utils');
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -16,22 +17,171 @@ var GameObject = require('../../GameObject');
  * @private
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
- * @param {Phaser.GameObjects.BitmapText} gameObject - The Game Object being rendered in this call.
+ * @param {Phaser.GameObjects.BitmapText} src - The Game Object being rendered in this call.
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var BitmapTextWebGLRenderer = function (renderer, gameObject, interpolationPercentage, camera, parentMatrix)
+var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    var text = gameObject.text;
+    var text = src.text;
     var textLength = text.length;
 
-    if (GameObject.RENDER_MASK !== gameObject.renderFlags || textLength === 0 || (gameObject.cameraFilter > 0 && (gameObject.cameraFilter & camera._id)))
+    if (GameObject.RENDER_MASK !== src.renderFlags || textLength === 0 || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
     {
         return;
     }
 
-    this.pipeline.batchBitmapText(this, camera, parentMatrix);
+    var pipeline = this.pipeline;
+
+    renderer.setPipeline(pipeline);
+
+    var camMatrix = pipeline._tempCameraMatrix;
+    var spriteMatrix = pipeline._tempSpriteMatrix;
+
+    spriteMatrix.applyITRS(src.x - camera.scrollX * src.scrollFactorX, src.y - camera.scrollY * src.scrollFactorY, src.rotation, src.scaleX, src.scaleY);
+
+    camMatrix.copyFrom(camera.matrix);
+
+    var calcMatrix;
+
+    if (parentMatrix)
+    {
+        //  Multiply the camera by the parent matrix
+        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
+
+        //  Undo the camera scroll
+        spriteMatrix.e = src.x;
+        spriteMatrix.f = src.y;
+
+        //  Multiply by the Sprite matrix
+        calcMatrix = camMatrix.multiply(spriteMatrix);
+    }
+    else
+    {
+        calcMatrix = camMatrix.multiply(spriteMatrix);
+    }
+
+    var frame = src.frame;
+    var texture = frame.glTexture;
+    var textureX = frame.cutX;
+    var textureY = frame.cutY;
+    var textureWidth = texture.width;
+    var textureHeight = texture.height;
+
+    var tintEffect = (src._isTinted && src.tintFill);
+    var tintTL = Utils.getTintAppendFloatAlpha(src._tintTL, camera.alpha * src._alphaTL);
+    var tintTR = Utils.getTintAppendFloatAlpha(src._tintTR, camera.alpha * src._alphaTR);
+    var tintBL = Utils.getTintAppendFloatAlpha(src._tintBL, camera.alpha * src._alphaBL);
+    var tintBR = Utils.getTintAppendFloatAlpha(src._tintBR, camera.alpha * src._alphaBR);
+
+    pipeline.setTexture2D(texture, 0);
+
+    var xAdvance = 0;
+    var yAdvance = 0;
+    var indexCount = 0;
+    var charCode = 0;
+    var lastCharCode = 0;
+    var letterSpacing = src.letterSpacing;
+    var glyph;
+    var glyphX = 0;
+    var glyphY = 0;
+    var glyphW = 0;
+    var glyphH = 0;
+    var lastGlyph;
+
+    var fontData = src.fontData;
+    var chars = fontData.chars;
+    var lineHeight = fontData.lineHeight;
+    var scale = (src.fontSize / fontData.size);
+
+    var roundPixels = camera.roundPixels;
+
+    for (var i = 0; i < textLength; i++)
+    {
+        charCode = text.charCodeAt(i);
+
+        //  Carriage-return
+        if (charCode === 10)
+        {
+            xAdvance = 0;
+            indexCount = 0;
+            yAdvance += lineHeight;
+            lastGlyph = null;
+
+            continue;
+        }
+
+        glyph = chars[charCode];
+
+        if (!glyph)
+        {
+            continue;
+        }
+
+        glyphX = textureX + glyph.x;
+        glyphY = textureY + glyph.y;
+
+        glyphW = glyph.width;
+        glyphH = glyph.height;
+
+        var x = (indexCount + glyph.xOffset + xAdvance) * scale;
+        var y = (glyph.yOffset + yAdvance) * scale;
+
+        if (lastGlyph !== null)
+        {
+            var kerningOffset = glyph.kerning[lastCharCode];
+            x += (kerningOffset !== undefined) ? kerningOffset : 0;
+        }
+
+        xAdvance += glyph.xAdvance + letterSpacing;
+        indexCount++;
+        lastGlyph = glyph;
+        lastCharCode = charCode;
+
+        //  Nothing to render or a space? Then skip to the next glyph
+        if (glyphW === 0 || glyphH === 0 || charCode === 32)
+        {
+            continue;
+        }
+
+        var u0 = glyphX / textureWidth;
+        var v0 = glyphY / textureHeight;
+        var u1 = (glyphX + glyphW) / textureWidth;
+        var v1 = (glyphY + glyphH) / textureHeight;
+
+        var xw = x + glyphW * scale;
+        var yh = y + glyphH * scale;
+
+        var tx0 = x * calcMatrix.a + y * calcMatrix.c + calcMatrix.e;
+        var ty0 = x * calcMatrix.b + y * calcMatrix.d + calcMatrix.f;
+
+        var tx1 = x * calcMatrix.a + yh * calcMatrix.c + calcMatrix.e;
+        var ty1 = x * calcMatrix.b + yh * calcMatrix.d + calcMatrix.f;
+
+        var tx2 = xw * calcMatrix.a + yh * calcMatrix.c + calcMatrix.e;
+        var ty2 = xw * calcMatrix.b + yh * calcMatrix.d + calcMatrix.f;
+
+        var tx3 = xw * calcMatrix.a + y * calcMatrix.c + calcMatrix.e;
+        var ty3 = xw * calcMatrix.b + y * calcMatrix.d + calcMatrix.f;
+
+        if (roundPixels)
+        {
+            tx0 |= 0;
+            ty0 |= 0;
+
+            tx1 |= 0;
+            ty1 |= 0;
+
+            tx2 |= 0;
+            ty2 |= 0;
+
+            tx3 |= 0;
+            ty3 |= 0;
+        }
+
+        pipeline.batchVertices(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect);
+    }
 };
 
 module.exports = BitmapTextWebGLRenderer;
