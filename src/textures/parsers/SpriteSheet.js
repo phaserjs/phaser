@@ -58,6 +58,11 @@ var SpriteSheet = function (texture, sourceIndex, x, y, width, height, config)
     var column = Math.floor((height - margin + spacing) / (frameHeight + spacing));
     var total = row * column;
 
+    if (total === 0)
+    {
+        console.warn('SpriteSheet frame dimensions will result in zero frames.');
+    }
+
     if (startFrame > total || startFrame < -total)
     {
         startFrame = 0;
