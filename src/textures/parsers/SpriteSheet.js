@@ -58,9 +58,9 @@ var SpriteSheet = function (texture, sourceIndex, x, y, width, height, config)
     var column = Math.floor((height - margin + spacing) / (frameHeight + spacing));
     var total = row * column;
 
-    if(total === 0)
+    if (total === 0)
     {
-        console.warn('TextureManager.SpriteSheet: Frame config produces zero frames. Check frameWidth and frameHeight.');
+        console.warn('SpriteSheet frame dimensions will result in zero frames.');
     }
 
     if (startFrame > total || startFrame < -total)
