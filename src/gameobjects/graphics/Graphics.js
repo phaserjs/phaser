@@ -1112,7 +1112,7 @@ var Graphics = new Class({
             {
                 endAngle = -PI2 - overshoot;
             }
-            else if (endAngle > 0)
+            else if (endAngle >= 0)
             {
                 endAngle = -PI2 + endAngle % PI2 - overshoot;
             }
@@ -1159,13 +1159,44 @@ var Graphics = new Class({
      * @param {number} radius - The radius of the slice.
      * @param {number} startAngle - The start angle of the slice, given in radians.
      * @param {number} endAngle - The end angle of the slice, given in radians.
-     * @param {boolean} [anticlockwise=false] - Draw the slice piece anticlockwise or clockwise?
+     * @param {boolean} [anticlockwise=false] - Whether the drawing should be anticlockwise or clockwise.
+     * @param {number} [overshoot=0] - This value allows you to overshoot the endAngle by this amount. Useful if the arc has a thick stroke and needs to overshoot to join-up cleanly.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
-    slice: function (x, y, radius, startAngle, endAngle, anticlockwise)
+    slice: function (x, y, radius, startAngle, endAngle, anticlockwise, overshoot)
     {
         if (anticlockwise === undefined) { anticlockwise = false; }
+        if (overshoot === undefined) { overshoot = 0; }
+
+        var PI2 = Math.PI * 2;
+
+        if (anticlockwise)
+        {
+            if (endAngle < -PI2)
+            {
+                endAngle = -PI2 - overshoot;
+            }
+            else if (endAngle >= 0)
+            {
+                endAngle = -PI2 + endAngle % PI2 - overshoot;
+            }
+        }
+        else
+        {
+            endAngle -= startAngle;
+            endAngle += overshoot;
+
+            if (endAngle > PI2 + overshoot)
+            {
+                endAngle = PI2 + overshoot;
+                
+            }
+            else if (endAngle <= -overshoot)
+            {
+                endAngle = PI2 + endAngle % PI2 - overshoot;
+            }
+        }
 
         this.commandBuffer.push(Commands.BEGIN_PATH);
 
