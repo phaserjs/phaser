@@ -40,7 +40,6 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
     var xAdvance = 0;
     var yAdvance = 0;
 
-    var indexCount = 0;
     var charCode = 0;
 
     var glyph = null;
@@ -123,7 +122,6 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
         if (charCode === 10)
         {
             xAdvance = 0;
-            indexCount = 0;
             yAdvance += lineHeight;
             lastGlyph = null;
             continue;
@@ -142,7 +140,7 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
         glyphW = glyph.width;
         glyphH = glyph.height;
 
-        x = indexCount + glyph.xOffset + xAdvance;
+        x = glyph.xOffset + xAdvance;
         y = glyph.yOffset + yAdvance;
 
         if (lastGlyph !== null)
@@ -155,7 +153,6 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
         y *= scale;
 
         xAdvance += glyph.xAdvance + letterSpacing;
-        indexCount += 1;
         lastGlyph = glyph;
         lastCharCode = charCode;
 

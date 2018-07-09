@@ -257,7 +257,7 @@ var BitmapText = new Class({
      *
      * Local size is based on just the font size and a [0, 0] position.
      *
-     * Global size takes into account the Game Object's scale and world position.
+     * Global size takes into account the Game Object's scale, world position and display origin.
      *
      * @method Phaser.GameObjects.BitmapText#getTextBounds
      * @since 3.0.0

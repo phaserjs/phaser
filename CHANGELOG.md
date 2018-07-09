@@ -52,6 +52,7 @@ The Texture Tint Pipeline has been rewritten to tidy up hundreds of lines of dup
 * The `batchText` method has been removed from the `TextureTintPipeline` class, because it is now handled internally by the Game Object itself.
 * The `batchDynamicTilemapLayer` method has been removed from the `TextureTintPipeline` class, because it is now handled internally by the Game Object itself.
 * The `batchMesh` method has been removed from the `TextureTintPipeline` class, because it is now handled in the Mesh WebGL Renderer function.
+* The `batchBitmapText` method has been removed from the `TextureTintPipeline` class, because it is now handled in the BitmapText WebGL Renderer function.
 * The shader has a new attribute: `tintEffect`. This is a single FLOAT.
 * The vertex size has increased by 1 FLOAT to account for the extra shader attribute.
 
@@ -110,6 +111,8 @@ There is a new Game Object Component called `TextureCrop`. It replaces the Textu
 * The TextureManager Sprite Sheet Parser will now throw a concise console warning if you specify invalid frame sizes that would result in no frames being generated (thanks @andygroff)
 * The `Quad` Game Object now has a new `setFrame` method that allows you to change the frame being rendered by the Quad, including using frames that are part of a texture atlas. Fix #3161 (thanks @halgorithm)
 * The `ScenePlugin` will now queue all of the following ops with the Scene Manager: `start`, `run`, `pause`, `resume`, `sleep`, `wake`, `switch` and `stop`. This means for all of these calls the Scene Manager will add the call into its queue and process it at the start of the next frame. This fixes #3812 and keeps things more predictable (thanks @Waclaw-I)
+* `GetBitmapTextSize`, which is used internally in the BitmapText Game Objects, will now produce different bounds from the previous version. Previously, the bounds were tight against the letters in the text. However, this meant the bounds were not properly aligned with the origin of the BitmapText, and consequently you'd get different bounds if the text consisted of different characters. The bounds are now calculated purely based on the glyph data and letter spacing values. This will give a far more consistent overall experience, but it does mean if you were using the bounds to position text previously, you'll need to revisit that code again. See issue #3799 for more details (and to discuss this further if you wish) (thanks @SBCGames)
+* `GetBitmapTextSize` and its exposed method `BitmapText.getTextBounds` now factor in the display origin of the BitmapText into the `global` position returned.
 
 ### Bug Fixes
 

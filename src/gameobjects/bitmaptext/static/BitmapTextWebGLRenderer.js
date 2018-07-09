@@ -79,7 +79,6 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
 
     var xAdvance = 0;
     var yAdvance = 0;
-    var indexCount = 0;
     var charCode = 0;
     var lastCharCode = 0;
     var letterSpacing = src.letterSpacing;
@@ -105,7 +104,6 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
         if (charCode === 10)
         {
             xAdvance = 0;
-            indexCount = 0;
             yAdvance += lineHeight;
             lastGlyph = null;
 
@@ -125,8 +123,8 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
         glyphW = glyph.width;
         glyphH = glyph.height;
 
-        var x = (indexCount + glyph.xOffset + xAdvance) * scale;
-        var y = (glyph.yOffset + yAdvance) * scale;
+        var x = (glyph.xOffset + xAdvance) - src.displayOriginX;
+        var y = (glyph.yOffset + yAdvance) - src.displayOriginY;
 
         if (lastGlyph !== null)
         {
@@ -135,7 +133,6 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
         }
 
         xAdvance += glyph.xAdvance + letterSpacing;
-        indexCount++;
         lastGlyph = glyph;
         lastCharCode = charCode;
 
@@ -145,13 +142,16 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
             continue;
         }
 
+        x *= scale;
+        y *= scale;
+
         var u0 = glyphX / textureWidth;
         var v0 = glyphY / textureHeight;
         var u1 = (glyphX + glyphW) / textureWidth;
         var v1 = (glyphY + glyphH) / textureHeight;
 
-        var xw = x + glyphW * scale;
-        var yh = y + glyphH * scale;
+        var xw = x + (glyphW * scale);
+        var yh = y + (glyphH * scale);
 
         var tx0 = x * calcMatrix.a + y * calcMatrix.c + calcMatrix.e;
         var ty0 = x * calcMatrix.b + y * calcMatrix.d + calcMatrix.f;

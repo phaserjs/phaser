@@ -69,12 +69,9 @@ var GetBitmapTextSize = function (src, round)
     var xAdvance = 0;
     var yAdvance = 0;
 
-    var indexCount = 0;
     var charCode = 0;
 
     var glyph = null;
-    var glyphW = 0;
-    var glyphH = 0;
 
     var x = 0;
     var y = 0;
@@ -89,7 +86,6 @@ var GetBitmapTextSize = function (src, round)
         if (charCode === 10)
         {
             xAdvance = 0;
-            indexCount = 0;
             yAdvance += lineHeight;
             lastGlyph = null;
             continue;
@@ -102,11 +98,8 @@ var GetBitmapTextSize = function (src, round)
             continue;
         }
 
-        glyphW = glyph.width;
-        glyphH = glyph.height;
-
-        x = indexCount + glyph.xOffset + xAdvance;
-        y = glyph.yOffset + yAdvance;
+        x = xAdvance;
+        y = yAdvance;
 
         if (lastGlyph !== null)
         {
@@ -124,8 +117,8 @@ var GetBitmapTextSize = function (src, round)
             by = y;
         }
 
-        var gw = x + glyphW - bx;
-        var gh = y + glyphH - by;
+        var gw = x + glyph.xAdvance;
+        var gh = y + lineHeight;
 
         if (bw < gw)
         {
@@ -138,7 +131,6 @@ var GetBitmapTextSize = function (src, round)
         }
 
         xAdvance += glyph.xAdvance + letterSpacing;
-        indexCount += 1;
         lastGlyph = glyph;
         lastCharCode = charCode;
     }
@@ -155,8 +147,8 @@ var GetBitmapTextSize = function (src, round)
             height: bh * scale
         },
         global: {
-            x: src.x + (bx * sx),
-            y: src.y + (by * sy),
+            x: (src.x - src.displayOriginX) + (bx * sx),
+            y: (src.y - src.displayOriginY) + (by * sy),
             width: bw * sx,
             height: bh * sy
         }
