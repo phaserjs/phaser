@@ -94,6 +94,11 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
     var lineHeight = fontData.lineHeight;
     var scale = (src.fontSize / fontData.size);
 
+    var align = src.align;
+    var currentLine = 0;
+    var lineData = src._bounds.lines;
+    var alignOffsetX = 0;
+
     var roundPixels = camera.roundPixels;
 
     for (var i = 0; i < textLength; i++)
