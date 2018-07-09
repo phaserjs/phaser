@@ -313,9 +313,9 @@ var BitmapText = new Class({
     },
 
     /**
-     * Set the content of this BitmapText.
+     * Set the textual content of this BitmapText.
      *
-     * An array of strings will be converted multi-line text.
+     * An array of strings will be converted into multi-line text. Use the align methods to change multi-line alignment.
      *
      * @method Phaser.GameObjects.BitmapText#setText
      * @since 3.0.0
@@ -357,6 +357,8 @@ var BitmapText = new Class({
      * Local size is based on just the font size and a [0, 0] position.
      *
      * Global size takes into account the Game Object's scale, world position and display origin.
+     * 
+     * Also in the object is data each the length of each line, should this be a multi-line BitmapText.
      *
      * @method Phaser.GameObjects.BitmapText#getTextBounds
      * @since 3.0.0
@@ -380,7 +382,10 @@ var BitmapText = new Class({
     },
 
     /**
-     * TODO
+     * Changes the font this BitmapText is using to render.
+     * 
+     * The new texture is loaded and applied to the BitmapText. The existing test, size and alignment are preserved,
+     * unless overridden via the arguments.
      *
      * @method Phaser.GameObjects.BitmapText#setFont
      * @since 3.11.0
@@ -406,6 +411,8 @@ var BitmapText = new Class({
                 this.fontData = entry.data;
                 this._fontSize = size;
                 this._align = align;
+
+                this.setTexture(entry.texture, entry.frame);
 
                 GetBitmapTextSize(this, false, this._bounds);
             }
