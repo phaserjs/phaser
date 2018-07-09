@@ -469,14 +469,7 @@ var ScenePlugin = new Class({
     {
         if (key && key !== this.key)
         {
-            if (this.settings.status !== CONST.RUNNING)
-            {
-                this.manager.queueOp('start', key, data);
-            }
-            else
-            {
-                this.manager.start(key, data);
-            }
+            this.manager.queueOp('start', key, data);
         }
 
         return this;
@@ -501,13 +494,9 @@ var ScenePlugin = new Class({
      */
     run: function (key, data)
     {
-        if (this.settings.status !== CONST.RUNNING)
+        if (key && key !== this.key)
         {
             this.manager.queueOp('run', key, data);
-        }
-        else
-        {
-            this.manager.run(key, data);
         }
 
         return this;
@@ -528,7 +517,7 @@ var ScenePlugin = new Class({
     {
         if (key === undefined) { key = this.key; }
 
-        this.manager.pause(key, data);
+        this.manager.queueOp('pause', key, data);
 
         return this;
     },
@@ -548,7 +537,7 @@ var ScenePlugin = new Class({
     {
         if (key === undefined) { key = this.key; }
 
-        this.manager.resume(key, data);
+        this.manager.queueOp('resume', key, data);
 
         return this;
     },
@@ -568,7 +557,7 @@ var ScenePlugin = new Class({
     {
         if (key === undefined) { key = this.key; }
 
-        this.manager.sleep(key, data);
+        this.manager.queueOp('sleep', key, data);
 
         return this;
     },
@@ -579,7 +568,7 @@ var ScenePlugin = new Class({
      * @method Phaser.Scenes.ScenePlugin#wake
      * @since 3.0.0
      *
-     * @param {string} key - The Scene to wake up.
+     * @param {string} [key] - The Scene to wake up.
      * @param {object} [data] - An optional data object that will be passed to the Scene and emitted in its wake event.
      *
      * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
@@ -588,7 +577,7 @@ var ScenePlugin = new Class({
     {
         if (key === undefined) { key = this.key; }
 
-        this.manager.wake(key, data);
+        this.manager.queueOp('wake', key, data);
 
         return this;
     },
@@ -607,14 +596,7 @@ var ScenePlugin = new Class({
     {
         if (key !== this.key)
         {
-            if (this.settings.status !== CONST.RUNNING)
-            {
-                this.manager.queueOp('switch', this.key, key);
-            }
-            else
-            {
-                this.manager.switch(this.key, key);
-            }
+            this.manager.queueOp('switch', this.key, key);
         }
 
         return this;
@@ -634,7 +616,7 @@ var ScenePlugin = new Class({
     {
         if (key === undefined) { key = this.key; }
 
-        this.manager.stop(key);
+        this.manager.queueOp('stop', key);
 
         return this;
     },
