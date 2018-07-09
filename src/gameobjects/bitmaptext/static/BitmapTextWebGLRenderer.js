@@ -31,7 +31,7 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
     {
         return;
     }
-
+ 
     var pipeline = this.pipeline;
 
     renderer.setPipeline(pipeline);
@@ -123,8 +123,8 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
         glyphW = glyph.width;
         glyphH = glyph.height;
 
-        var x = (glyph.xOffset + xAdvance) - src.displayOriginX;
-        var y = (glyph.yOffset + yAdvance) - src.displayOriginY;
+        var x = glyph.xOffset + xAdvance;
+        var y = glyph.yOffset + yAdvance;
 
         if (lastGlyph !== null)
         {
@@ -144,6 +144,9 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
 
         x *= scale;
         y *= scale;
+
+        x -= src.displayOriginX;
+        y -= src.displayOriginY;
 
         var u0 = glyphX / textureWidth;
         var v0 = glyphY / textureHeight;
