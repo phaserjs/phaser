@@ -159,6 +159,21 @@ var BitmapText = new Class({
          */
         this.letterSpacing = 0;
 
+        /**
+         * Aligns the BitmapText when using multiple lines of text (has no effect on single-lines of text)
+         * 
+         * 0 = Left aligned (default)
+         * 1 = Right aligned
+         * 2 = Middle aligned
+         * 
+         * The alignment position is based on the longest line of text.
+         *
+         * @name Phaser.GameObjects.BitmapText#align
+         * @type {integer}
+         * @since 3.11.0
+         */
+        this.align = 0;
+
         this.setText(text);
 
         this.setTexture(entry.texture, entry.frame);
@@ -244,6 +259,8 @@ var BitmapText = new Class({
             this.text = value.toString();
 
             this.updateDisplayOrigin();
+
+            GetBitmapTextSize(this, false, this._bounds);
         }
 
         return this;
@@ -268,10 +285,11 @@ var BitmapText = new Class({
      */
     getTextBounds: function (round)
     {
-        //  local = the BitmapText based on fontSize and 0x0 coords
-        //  global = the BitmapText, taking into account scale and world position
+        //  local = The BitmapText based on fontSize and 0x0 coords
+        //  global = The BitmapText, taking into account scale and world position
+        //  lines = The BitmapText line data
 
-        this._bounds = GetBitmapTextSize(this, round);
+        GetBitmapTextSize(this, round, this._bounds);
 
         return this._bounds;
     },
