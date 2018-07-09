@@ -118,7 +118,6 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
         if (charCode === 10)
         {
             xAdvance = 0;
-            indexCount = 0;
             yAdvance += lineHeight;
             lastGlyph = null;
 
@@ -138,7 +137,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
         glyphW = glyph.width;
         glyphH = glyph.height;
 
-        var x = (indexCount + glyph.xOffset + xAdvance) * scale;
+        var x = (glyph.xOffset + xAdvance) * scale;
         var y = (glyph.yOffset + yAdvance) * scale;
 
         if (lastGlyph !== null)
@@ -148,7 +147,6 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
         }
 
         xAdvance += glyph.xAdvance + letterSpacing;
-        indexCount++;
         lastGlyph = glyph;
         lastCharCode = charCode;
 
@@ -158,6 +156,8 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
             continue;
         }
 
+        x -= src.displayOriginX;
+        y -= src.displayOriginY;
         scale = (src.fontSize / src.fontData.size);
         rotation = 0;
 
