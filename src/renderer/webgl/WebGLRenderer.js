@@ -404,6 +404,16 @@ var WebGLRenderer = new Class({
             S3TC: false
         };
 
+        /**
+         * Cached drawing buffer height to reduce gl calls.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#drawingBufferHeight
+         * @type {number}
+         * @readOnly
+         * @since 3.11.0
+         */
+        this.drawingBufferHeight = 0;
+
         this.init(this.config);
     },
 
@@ -486,7 +496,9 @@ var WebGLRenderer = new Class({
         // Setup initial WebGL state
         gl.disable(gl.DEPTH_TEST);
         gl.disable(gl.CULL_FACE);
-        gl.disable(gl.SCISSOR_TEST);
+        
+        // gl.disable(gl.SCISSOR_TEST);
+
         gl.enable(gl.BLEND);
         gl.clearColor(clearColor.redGL, clearColor.greenGL, clearColor.blueGL, 1.0);
 
@@ -548,6 +560,8 @@ var WebGLRenderer = new Class({
         }
                 
         this.currentScissor.set([ 0, 0, this.width, this.height ]);
+        
+        this.drawingBufferHeight = gl.drawingBufferHeight;
 
         return this;
     },
@@ -734,7 +748,10 @@ var WebGLRenderer = new Class({
     {
         var gl = this.gl;
         var currentScissor = this.currentScissor;
-        var enabled = (x === 0 && y === 0 && w === gl.canvas.width && h === gl.canvas.height && w >= 0 && h >= 0);
+        var enabled = (x === 0 && y === 0 && w === this.width && h === this.height && w >= 0 && h >= 0);
+
+        //  TODO: If new scissor is same as old scissor, skip setting it again
+        //  TODO: If scissor is viewport size, skip setting altogether
 
         if (currentScissor[0] !== x ||
             currentScissor[1] !== y ||
@@ -759,7 +776,7 @@ var WebGLRenderer = new Class({
         }
 
         gl.enable(gl.SCISSOR_TEST);
-        gl.scissor(x, (gl.drawingBufferHeight - y - h), w, h);
+        gl.scissor(x, (this.drawingBufferHeight - y - h), w, h);
 
         return this;
     },
