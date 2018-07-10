@@ -60,7 +60,7 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
 
         //  Multiply by the Sprite matrix, store result in calcMatrix
         camMatrix.multiply(spriteMatrix, calcMatrix);
-}
+    }
 
     var frame = src.frame;
     var texture = frame.glTexture;

@@ -6,14 +6,12 @@
 
 var BitmapText = require('../static/BitmapText');
 var Class = require('../../../utils/Class');
-var Components = require('../../components');
-var GameObject = require('../../GameObject');
-var GetBitmapTextSize = require('../GetBitmapTextSize');
 var Render = require('./DynamicBitmapTextRender');
 
 /**
  * @typedef {object} DisplayCallbackConfig
- * @property {{topLeft:number,topRight:number,bottomLeft:number,bottomRight:number}} tint - The tint of the character being rendered.
+ * 
+ * @property {{topLeft:number, topRight:number, bottomLeft:number, bottomRight:number}} tint - The tint of the character being rendered.
  * @property {number} index - The index of the character being rendered.
  * @property {number} charCode - The character code of the character being rendered.
  * @property {number} x - The x position of the character being rendered.
@@ -115,10 +113,15 @@ var DynamicBitmapText = new Class({
         this.displayCallback;
 
         /**
-         * A callback that alters how each character of the Bitmap Text is rendered.
+         * The data object that is populated during rendering, then passed to the displayCallback.
+         * You should modify this object then return it back from the callback. It's updated values
+         * will be used to render the specific glyph.
+         * 
+         * Please note that if you need a reference to this object locally in your game code then you
+         * should shallow copy it, as it's updated and re-used for every glyph in the text.
          *
          * @name Phaser.GameObjects.DynamicBitmapText#callbackData
-         * @type {object}
+         * @type {DisplayCallbackConfig}
          * @since 3.11.0
          */
         this.callbackData = {

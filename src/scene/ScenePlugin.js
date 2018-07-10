@@ -6,7 +6,6 @@
 
 var Clamp = require('../math/Clamp');
 var Class = require('../utils/Class');
-var CONST = require('./const');
 var GetFastValue = require('../utils/object/GetFastValue');
 var PluginCache = require('../plugins/PluginCache');
 

@@ -47,12 +47,16 @@ There is a third game config property called `pixelArt`. If set to `true` it's t
 The Texture Tint Pipeline has been rewritten to tidy up hundreds of lines of duplicate code and to move the responsibility of drawing to the Game Objects themselves. Previously, had you excluded say Tilemaps from your build of Phaser, the renderer would still include masses of code dealing with the drawing of them. Now, this task has been moved to the Game Objects and the pipeline just provides a set of clean utility functions for batching, flushing and drawing.
 
 * You can now set the WebGL batch size in the Game Config via the property `batchSize`. The default is 2000 before the batch will flush, which is a happy average between desktop and mobile. If targeting desktop specifically, you may wish to increase this value to reduce draw calls.
-* The `batchTileSprite` method has been removed from the `TextureTintPipeline` class, because it is now handled internally by the Game Object itself.
-* The `drawStaticTilemapLayer` method has been removed from the `TextureTintPipeline` class, because it is now handled internally by the Game Object itself.
-* The `batchText` method has been removed from the `TextureTintPipeline` class, because it is now handled internally by the Game Object itself.
-* The `batchDynamicTilemapLayer` method has been removed from the `TextureTintPipeline` class, because it is now handled internally by the Game Object itself.
-* The `batchMesh` method has been removed from the `TextureTintPipeline` class, because it is now handled in the Mesh WebGL Renderer function.
-* The `batchBitmapText` method has been removed from the `TextureTintPipeline` class, because it is now handled in the BitmapText WebGL Renderer function.
+* There is a new method `batchVertices` which will add a vertices block to the current batch. This is now used internally by nearly all render functions.
+* All of the rendering functions now use the `TransformMatrix` class far more than before. This allows the matrix operations to be run-time compiled and cut down on masses of code.
+* The `batchTileSprite` method has been removed from the `TextureTintPipeline` class, because it is now handled in the TileSprite WebGL Render function.
+* The `drawStaticTilemapLayer` method has been removed from the `TextureTintPipeline` class, because it is now handled in the Static Tilemap Layer WebGL Render function.
+* The `batchText` method has been removed from the `TextureTintPipeline` class, because it is now handled in the Static Text WebGL Render function.
+* The `batchDynamicTilemapLayer` method has been removed from the `TextureTintPipeline` class, because it is now handled in the Dynamic Tilemap Layer WebGL Render function.
+* The `batchMesh` method has been removed from the `TextureTintPipeline` class, because it is now handled in the Mesh WebGL Render function.
+* The `batchBitmapText` method has been removed from the `TextureTintPipeline` class, because it is now handled in the BitmapText WebGL Render function.
+* The `batchDynamicBitmapText` method has been removed from the `TextureTintPipeline` class, because it is now handled in the DynamicBitmapText WebGL Render function.
+* The `batchBlitter` method has been removed from the `TextureTintPipeline` class, because it is now handled in the Blitter WebGL Render function.
 * The shader has a new attribute: `tintEffect`. This is a single FLOAT.
 * The vertex size has increased by 1 FLOAT to account for the extra shader attribute.
 
@@ -93,8 +97,10 @@ There is a new Game Object Component called `TextureCrop`. It replaces the Textu
 * `GetBitmapTextSize`, which is used internally in the BitmapText Game Objects, will now produce different bounds from the previous version. Previously, the bounds were tight against the letters in the text. However, this meant the bounds were not properly aligned with the origin of the BitmapText, and consequently you'd get different bounds if the text consisted of different characters. The bounds are now calculated purely based on the glyph data and letter spacing values. This will give a far more consistent overall experience, but it does mean if you were using the bounds to position text previously, you'll need to revisit that code again. See issue #3799 for more details (and to discuss this further if you wish) (thanks @SBCGames)
 * `GetBitmapTextSize` and its exposed method `BitmapText.getTextBounds` now factor in the display origin of the BitmapText into the `global` position returned.
 * The `BitmapText` WebGL Renderer incorrectly calculated the font scale at very small sizes, causing characters to overlap when they shouldn't. Scale is now applied to the correct component parts in the render code.
-* Under WebGL BitmapText would be cut off if you specified a resolution value > 1. Fix #3642 (thanks @kanthi0802)
-* Under WebGL, Dynamic BitmapText that had a crop set on it would fail to render if anything was above it on the display list. It now crops properly, no matter what is above or below it on the display list.
+* Under WebGL `BitmapText` would be cut off if you specified a resolution value > 1. Fix #3642 (thanks @kanthi0802)
+* Under WebGL, `DynamicBitmapText` that had a crop set on it would fail to render if anything was above it on the display list. It now crops properly, no matter what is above or below it on the display list.
+* The `DynamicBitmapText` class now extends the `BitmapText` class. This saves on lots of space in the bundle and consolidates functionality between the two. Please be aware of it if you have classes that extend either of them.
+* If you were using the `displayCallback` in the `DynamicBitmapText` class it would generate a brand new object containing all the glyph data, every frame, for every glyph, and send it to the callback. This has been changed so it now uses a new cached local object: `callbackData`. This object is recycled for every glyph, stopping un-needed gc from building up.
 
 ### New Features
 
