@@ -36,14 +36,28 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
 
     renderer.setPipeline(pipeline);
 
-    var camMatrix = pipeline._tempCameraMatrix;
-    var spriteMatrix = pipeline._tempSpriteMatrix;
+    var crop = (src.cropWidth > 0 || src.cropHeight > 0);
 
-    spriteMatrix.applyITRS(src.x - camera.scrollX * src.scrollFactorX, src.y - camera.scrollY * src.scrollFactorY, src.rotation, src.scaleX, src.scaleY);
+    if (crop)
+    {
+        pipeline.flush();
+
+        renderer.pushScissor(
+            src.x,
+            src.y,
+            src.cropWidth * src.scaleX,
+            src.cropHeight * src.scaleY
+        );
+    }
+
+    var camMatrix = pipeline._tempMatrix1;
+    var spriteMatrix = pipeline._tempMatrix2;
+    var calcMatrix = pipeline._tempMatrix3;
+    var fontMatrix = pipeline._tempMatrix4;
+
+    spriteMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
 
     camMatrix.copyFrom(camera.matrix);
-
-    var calcMatrix;
 
     if (parentMatrix)
     {
@@ -54,12 +68,16 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
         spriteMatrix.e = src.x;
         spriteMatrix.f = src.y;
 
-        //  Multiply by the Sprite matrix
-        calcMatrix = camMatrix.multiply(spriteMatrix);
+        //  Multiply by the Sprite matrix, store result in calcMatrix
+        camMatrix.multiply(spriteMatrix, calcMatrix);
     }
     else
     {
-        calcMatrix = camMatrix.multiply(spriteMatrix);
+        spriteMatrix.e -= camera.scrollX * src.scrollFactorX;
+        spriteMatrix.f -= camera.scrollY * src.scrollFactorY;
+
+        //  Multiply by the Sprite matrix, store result in calcMatrix
+        camMatrix.multiply(spriteMatrix, calcMatrix);
     }
 
     var frame = src.frame;
@@ -79,7 +97,6 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
 
     var xAdvance = 0;
     var yAdvance = 0;
-    var indexCount = 0;
     var charCode = 0;
     var lastCharCode = 0;
     var letterSpacing = src.letterSpacing;
@@ -89,6 +106,8 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
     var glyphW = 0;
     var glyphH = 0;
     var lastGlyph;
+    var scrollX = src.scrollX;
+    var scrollY = src.scrollY;
 
     var fontData = src.fontData;
     var chars = fontData.chars;
@@ -96,19 +115,27 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
     var scale = (src.fontSize / fontData.size);
     var rotation = 0;
 
+    var align = src._align;
+    var currentLine = 0;
+    var lineOffsetX = 0;
+
+    //  Update the bounds - skipped internally if not dirty
+    src.getTextBounds(false);
+
+    var lineData = src._bounds.lines;
+
+    if (align === 1)
+    {
+        lineOffsetX = (lineData.longest - lineData.lengths[0]) / 2;
+    }
+    else if (align === 2)
+    {
+        lineOffsetX = (lineData.longest - lineData.lengths[0]);
+    }
+
     var roundPixels = camera.roundPixels;
     var displayCallback = src.displayCallback;
-    var crop = (src.cropWidth > 0 || src.cropHeight > 0);
-
-    if (crop)
-    {
-        renderer.pushScissor(
-            src.x,
-            src.y,
-            src.cropWidth * src.scaleX,
-            src.cropHeight * src.scaleY
-        );
-    }
+    var callbackData = src.callbackData;
 
     for (var i = 0; i < textLength; i++)
     {
@@ -117,6 +144,17 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
         //  Carriage-return
         if (charCode === 10)
         {
+            currentLine++;
+
+            if (align === 1)
+            {
+                lineOffsetX = (lineData.longest - lineData.lengths[currentLine]) / 2;
+            }
+            else if (align === 2)
+            {
+                lineOffsetX = (lineData.longest - lineData.lengths[currentLine]);
+            }
+
             xAdvance = 0;
             yAdvance += lineHeight;
             lastGlyph = null;
@@ -137,8 +175,8 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
         glyphW = glyph.width;
         glyphH = glyph.height;
 
-        var x = (glyph.xOffset + xAdvance) * scale;
-        var y = (glyph.yOffset + yAdvance) * scale;
+        var x = (glyph.xOffset + xAdvance) - scrollX;
+        var y = (glyph.yOffset + yAdvance) - scrollY;
 
         if (lastGlyph !== null)
         {
@@ -156,29 +194,25 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
             continue;
         }
 
-        x -= src.displayOriginX;
-        y -= src.displayOriginY;
         scale = (src.fontSize / src.fontData.size);
         rotation = 0;
 
         if (displayCallback)
         {
-            var output = displayCallback({
-                color: 0,
-                tint: {
-                    topLeft: tintTL,
-                    topRight: tintTR,
-                    bottomLeft: tintBL,
-                    bottomRight: tintBR
-                },
-                index: i,
-                charCode: charCode,
-                x: x,
-                y: y,
-                scale: scale,
-                rotation: rotation,
-                data: glyph.data
-            });
+            callbackData.color = 0;
+            callbackData.tint.topLeft = tintTL;
+            callbackData.tint.topRight = tintTR;
+            callbackData.tint.bottomLeft = tintBL;
+            callbackData.tint.bottomRight = tintBR;
+            callbackData.index = i;
+            callbackData.charCode = charCode;
+            callbackData.x = x;
+            callbackData.y = y;
+            callbackData.scale = scale;
+            callbackData.rotation = rotation;
+            callbackData.data = glyph.data;
+
+            var output = displayCallback(callbackData);
 
             x = output.x;
             y = output.y;
@@ -206,25 +240,37 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
             tintBR = Utils.getTintAppendFloatAlpha(tintBR, camera.alpha * src._alphaBR);
         }
 
+        x *= scale;
+        y *= scale;
+
+        x -= src.displayOriginX;
+        y -= src.displayOriginY;
+
+        x += lineOffsetX;
+
+        fontMatrix.applyITRS(x, y, rotation, scale, scale);
+
+        calcMatrix.multiply(fontMatrix, spriteMatrix);
+
         var u0 = glyphX / textureWidth;
         var v0 = glyphY / textureHeight;
         var u1 = (glyphX + glyphW) / textureWidth;
         var v1 = (glyphY + glyphH) / textureHeight;
 
-        var xw = x + glyphW * scale;
-        var yh = y + glyphH * scale;
+        var xw = glyphW;
+        var yh = glyphH;
 
-        var tx0 = x * calcMatrix.a + y * calcMatrix.c + calcMatrix.e;
-        var ty0 = x * calcMatrix.b + y * calcMatrix.d + calcMatrix.f;
+        var tx0 = spriteMatrix.e;
+        var ty0 = spriteMatrix.f;
 
-        var tx1 = x * calcMatrix.a + yh * calcMatrix.c + calcMatrix.e;
-        var ty1 = x * calcMatrix.b + yh * calcMatrix.d + calcMatrix.f;
+        var tx1 = yh * spriteMatrix.c + spriteMatrix.e;
+        var ty1 = yh * spriteMatrix.d + spriteMatrix.f;
 
-        var tx2 = xw * calcMatrix.a + yh * calcMatrix.c + calcMatrix.e;
-        var ty2 = xw * calcMatrix.b + yh * calcMatrix.d + calcMatrix.f;
+        var tx2 = xw * spriteMatrix.a + yh * spriteMatrix.c + spriteMatrix.e;
+        var ty2 = xw * spriteMatrix.b + yh * spriteMatrix.d + spriteMatrix.f;
 
-        var tx3 = xw * calcMatrix.a + y * calcMatrix.c + calcMatrix.e;
-        var ty3 = xw * calcMatrix.b + y * calcMatrix.d + calcMatrix.f;
+        var tx3 = xw * spriteMatrix.a + spriteMatrix.e;
+        var ty3 = xw * spriteMatrix.b + spriteMatrix.f;
 
         if (roundPixels)
         {
@@ -246,6 +292,8 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
 
     if (crop)
     {
+        pipeline.flush();
+
         renderer.popScissor();
     }
 };
