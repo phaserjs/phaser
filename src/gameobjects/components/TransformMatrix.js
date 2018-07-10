@@ -383,15 +383,20 @@ var TransformMatrix = new Class({
 
     /**
      * Multiply this Matrix by the given Matrix.
+     * 
+     * If an `out` Matrix is given then the results will be stored in it.
+     * If it is not given, this matrix will be updated in place instead.
+     * Use an `out` Matrix if you do not wish to mutate this matrix.
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#multiply
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Components.TransformMatrix} rhs - The Matrix to multiply by.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [out] - An optional Matrix to store the results in.
      *
-     * @return {this} This TransformMatrix.
+     * @return {Phaser.GameObjects.Components.TransformMatrix} Either this TransformMatrix, or the `out` Matrix, if given in the arguments.
      */
-    multiply: function (rhs)
+    multiply: function (rhs, out)
     {
         var matrix = this.matrix;
         var source = rhs.matrix;
@@ -410,14 +415,16 @@ var TransformMatrix = new Class({
         var sourceE = source[4];
         var sourceF = source[5];
 
-        matrix[0] = sourceA * localA + sourceB * localC;
-        matrix[1] = sourceA * localB + sourceB * localD;
-        matrix[2] = sourceC * localA + sourceD * localC;
-        matrix[3] = sourceC * localB + sourceD * localD;
-        matrix[4] = sourceE * localA + sourceF * localC + localE;
-        matrix[5] = sourceE * localB + sourceF * localD + localF;
+        var destinationMatrix = (out === undefined) ? this : out;
 
-        return this;
+        destinationMatrix.a = sourceA * localA + sourceB * localC;
+        destinationMatrix.b = sourceA * localB + sourceB * localD;
+        destinationMatrix.c = sourceC * localA + sourceD * localC;
+        destinationMatrix.d = sourceC * localB + sourceD * localD;
+        destinationMatrix.e = sourceE * localA + sourceF * localC + localE;
+        destinationMatrix.f = sourceE * localB + sourceF * localD + localF;
+
+        return destinationMatrix;
     },
 
     /**
@@ -583,8 +590,8 @@ var TransformMatrix = new Class({
         matrix[1] = src.b;
         matrix[2] = src.c;
         matrix[3] = src.d;
-        matrix[4] = src.tx;
-        matrix[5] = src.ty;
+        matrix[4] = src.e;
+        matrix[5] = src.f;
 
         return this;
     },
