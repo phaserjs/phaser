@@ -27,8 +27,9 @@ var ImageWebGLRenderer = function (renderer, src, interpolationPercentage, camer
     {
         return;
     }
-    
+
     this.pipeline.batchSprite(src, camera, parentMatrix);
+
 };
 
 module.exports = ImageWebGLRenderer;

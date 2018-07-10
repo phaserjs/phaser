@@ -132,22 +132,32 @@ var TextureTintPipeline = new Class({
         /**
          * A temporary Transform Matrix, re-used internally during batching.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#_tempCameraMatrix
+         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#_tempMatrix1
          * @private
          * @type {Phaser.GameObjects.Components.TransformMatrix}
          * @since 3.11.0
          */
-        this._tempCameraMatrix = new TransformMatrix();
+        this._tempMatrix1 = new TransformMatrix();
 
         /**
          * A temporary Transform Matrix, re-used internally during batching.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#_tempSpriteMatrix
+         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#_tempMatrix2
          * @private
          * @type {Phaser.GameObjects.Components.TransformMatrix}
          * @since 3.11.0
          */
-        this._tempSpriteMatrix = new TransformMatrix();
+        this._tempMatrix2 = new TransformMatrix();
+
+        /**
+         * A temporary Transform Matrix, re-used internally during batching.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#_tempMatrix3
+         * @private
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.11.0
+         */
+        this._tempMatrix3 = new TransformMatrix();
 
         this.mvpInit();
     },
@@ -599,6 +609,157 @@ var TextureTintPipeline = new Class({
         this.setTexture2D(texture, 0);
     },
 
+    /*
+    OLDbatchSprite: function (sprite, camera, parentTransformMatrix)
+    {
+        var parentMatrix = null;
+
+        if (parentTransformMatrix)
+        {
+            parentMatrix = parentTransformMatrix.matrix;
+        }
+
+        this.renderer.setPipeline(this);
+
+        if (this.vertexCount + 6 > this.vertexCapacity)
+        {
+            this.flush();
+        }
+
+        var frame = sprite.frame;
+        var texture = frame.texture.source[frame.sourceIndex].glTexture;
+        var getTint = Utils.getTintAppendFloatAlpha;
+        var alphaTL = camera.alpha * sprite._alphaTL;
+        var alphaTR = camera.alpha * sprite._alphaTR;
+        var alphaBL = camera.alpha * sprite._alphaBL;
+        var alphaBR = camera.alpha * sprite._alphaBR;
+        var tintTL = sprite._tintTL;
+        var tintTR = sprite._tintTR;
+        var tintBL = sprite._tintBL;
+        var tintBR = sprite._tintBR;
+
+        var forceFlipY = (texture.isRenderTexture ? true : false);
+        var flipX = sprite.flipX;
+        var flipY = sprite.flipY ^ forceFlipY;
+
+        var scaleX = sprite.scaleX;
+        var scaleY = sprite.scaleY;
+        var rotation = sprite.rotation;
+        
+        var roundPixels = camera.roundPixels;
+        var cameraMatrix = camera.matrix.matrix;
+
+        var width = frame.width * (flipX ? -1.0 : 1.0);
+        var height = frame.height * (flipY ? -1.0 : 1.0);
+
+        var x = -sprite.displayOriginX + frame.x + ((frame.width) * (flipX ? 1.0 : 0.0));
+        var y = -sprite.displayOriginY + frame.y + ((frame.height) * (flipY ? 1.0 : 0.0));
+
+        var xw = (roundPixels ? (x | 0) : x) + width;
+        var yh = (roundPixels ? (y | 0) : y) + height;
+
+        //  ITRS
+
+        var sr = Math.sin(rotation);
+        var cr = Math.cos(rotation);
+
+        var sra = cr * scaleX;
+        var srb = sr * scaleX;
+        var src = -sr * scaleY;
+        var srd = cr * scaleY;
+        var sre = sprite.x;
+        var srf = sprite.y;
+
+        var cma = cameraMatrix[0];
+        var cmb = cameraMatrix[1];
+        var cmc = cameraMatrix[2];
+        var cmd = cameraMatrix[3];
+        var cme = cameraMatrix[4];
+        var cmf = cameraMatrix[5];
+
+        var mva, mvb, mvc, mvd, mve, mvf;
+
+        if (parentMatrix)
+        {
+            var pma = parentMatrix[0];
+            var pmb = parentMatrix[1];
+            var pmc = parentMatrix[2];
+            var pmd = parentMatrix[3];
+            var pme = parentMatrix[4];
+            var pmf = parentMatrix[5];
+            var cse = -camera.scrollX * sprite.scrollFactorX;
+            var csf = -camera.scrollY * sprite.scrollFactorY;
+            var pse = cse * cma + csf * cmc + cme;
+            var psf = cse * cmb + csf * cmd + cmf;
+            var pca = pma * cma + pmb * cmc;
+            var pcb = pma * cmb + pmb * cmd;
+            var pcc = pmc * cma + pmd * cmc;
+            var pcd = pmc * cmb + pmd * cmd;
+            var pce = pme * cma + pmf * cmc + pse;
+            var pcf = pme * cmb + pmf * cmd + psf;
+
+            mva = sra * pca + srb * pcc;
+            mvb = sra * pcb + srb * pcd;
+            mvc = src * pca + srd * pcc;
+            mvd = src * pcb + srd * pcd;
+            mve = sre * pca + srf * pcc + pce;
+            mvf = sre * pcb + srf * pcd + pcf;
+        }
+        else
+        {
+            sre -= camera.scrollX * sprite.scrollFactorX;
+            srf -= camera.scrollY * sprite.scrollFactorY;
+
+            //  SRx = sprite matrix
+            //  CMx = camera matrix
+            //  MVx = matrix to store results in
+            mva = sra * cma + srb * cmc;
+            mvb = sra * cmb + srb * cmd;
+            mvc = src * cma + srd * cmc;
+            mvd = src * cmb + srd * cmd;
+            mve = sre * cma + srf * cmc + cme;
+            mvf = sre * cmb + srf * cmd + cmf;
+        }
+
+        var tx0 = x * mva + y * mvc + mve;
+        var ty0 = x * mvb + y * mvd + mvf;
+        var tx1 = x * mva + yh * mvc + mve;
+        var ty1 = x * mvb + yh * mvd + mvf;
+        var tx2 = xw * mva + yh * mvc + mve;
+        var ty2 = xw * mvb + yh * mvd + mvf;
+        var tx3 = xw * mva + y * mvc + mve;
+        var ty3 = xw * mvb + y * mvd + mvf;
+
+        var vTintTL = getTint(tintTL, alphaTL);
+        var vTintTR = getTint(tintTR, alphaTR);
+        var vTintBL = getTint(tintBL, alphaBL);
+        var vTintBR = getTint(tintBR, alphaBR);
+
+        if (roundPixels)
+        {
+            tx0 |= 0;
+            ty0 |= 0;
+            tx1 |= 0;
+            ty1 |= 0;
+            tx2 |= 0;
+            ty2 |= 0;
+            tx3 |= 0;
+            ty3 |= 0;
+        }
+
+        this.setTexture2D(texture, 0);
+
+        var tintEffect = (sprite._isTinted && sprite.tintFill);
+
+        var u0 = frame.u0;
+        var v0 = frame.v0;
+        var u1 = frame.u1;
+        var v1 = frame.v1;
+
+        this.batchVertices(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, vTintTL, vTintTR, vTintBL, vTintBR, tintEffect);
+    },
+    */
+
     /**
      * Batches Sprite game object
      *
@@ -613,10 +774,9 @@ var TextureTintPipeline = new Class({
     {
         this.renderer.setPipeline(this);
 
-        var camMatrix = this._tempCameraMatrix;
-        var spriteMatrix = this._tempSpriteMatrix;
-
-        spriteMatrix.applyITRS(sprite.x - camera.scrollX * sprite.scrollFactorX, sprite.y - camera.scrollY * sprite.scrollFactorY, sprite.rotation, sprite.scaleX, sprite.scaleY);
+        var camMatrix = this._tempMatrix1;
+        var spriteMatrix = this._tempMatrix2;
+        var calcMatrix = this._tempMatrix3;
 
         var frame = sprite.frame;
         var texture = frame.glTexture;
@@ -672,9 +832,9 @@ var TextureTintPipeline = new Class({
         var xw = x + frameWidth;
         var yh = y + frameHeight;
 
-        camMatrix.copyFrom(camera.matrix);
+        spriteMatrix.applyITRS(sprite.x, sprite.y, sprite.rotation, sprite.scaleX, sprite.scaleY);
 
-        var calcMatrix;
+        camMatrix.copyFrom(camera.matrix);
 
         if (parentTransformMatrix)
         {
@@ -685,12 +845,16 @@ var TextureTintPipeline = new Class({
             spriteMatrix.e = sprite.x;
             spriteMatrix.f = sprite.y;
 
-            //  Multiply by the Sprite matrix
-            calcMatrix = camMatrix.multiply(spriteMatrix);
+            //  Multiply by the Sprite matrix, store result in calcMatrix
+            camMatrix.multiply(spriteMatrix, calcMatrix);
         }
         else
         {
-            calcMatrix = spriteMatrix.multiply(camMatrix);
+            spriteMatrix.e -= camera.scrollX * sprite.scrollFactorX;
+            spriteMatrix.f -= camera.scrollY * sprite.scrollFactorY;
+    
+            //  Multiply by the Sprite matrix, store result in calcMatrix
+            camMatrix.multiply(spriteMatrix, calcMatrix);
         }
 
         var tx0 = x * calcMatrix.a + y * calcMatrix.c + calcMatrix.e;
@@ -1259,10 +1423,9 @@ var TextureTintPipeline = new Class({
     {
         this.renderer.setPipeline(this);
 
-        var camMatrix = this._tempCameraMatrix;
-        var spriteMatrix = this._tempSpriteMatrix;
-
-        spriteMatrix.applyITRS(srcX - camera.scrollX * scrollFactorX, srcY - camera.scrollY * scrollFactorY, rotation, scaleX, scaleY);
+        var camMatrix = this._tempMatrix1;
+        var spriteMatrix = this._tempMatrix2;
+        var calcMatrix = this._tempMatrix3;
 
         var width = srcWidth;
         var height = srcHeight;
@@ -1291,9 +1454,9 @@ var TextureTintPipeline = new Class({
         var xw = x + width;
         var yh = y + height;
 
-        camMatrix.copyFrom(camera.matrix);
+        spriteMatrix.applyITRS(srcX, srcY, rotation, scaleX, scaleY);
 
-        var calcMatrix;
+        camMatrix.copyFrom(camera.matrix);
 
         if (parentTransformMatrix)
         {
@@ -1304,12 +1467,16 @@ var TextureTintPipeline = new Class({
             spriteMatrix.e = srcX;
             spriteMatrix.f = srcY;
 
-            //  Multiply by the Sprite matrix
-            calcMatrix = camMatrix.multiply(spriteMatrix);
+            //  Multiply by the Sprite matrix, store result in calcMatrix
+            camMatrix.multiply(spriteMatrix, calcMatrix);
         }
         else
         {
-            calcMatrix = spriteMatrix.multiply(camMatrix);
+            spriteMatrix.e -= camera.scrollX * scrollFactorX;
+            spriteMatrix.f -= camera.scrollY * scrollFactorY;
+    
+            //  Multiply by the Sprite matrix, store result in calcMatrix
+            camMatrix.multiply(spriteMatrix, calcMatrix);
         }
 
         var tx0 = x * calcMatrix.a + y * calcMatrix.c + calcMatrix.e;
@@ -1328,10 +1495,13 @@ var TextureTintPipeline = new Class({
         {
             tx0 |= 0;
             ty0 |= 0;
+
             tx1 |= 0;
             ty1 |= 0;
+
             tx2 |= 0;
             ty2 |= 0;
+
             tx3 |= 0;
             ty3 |= 0;
         }

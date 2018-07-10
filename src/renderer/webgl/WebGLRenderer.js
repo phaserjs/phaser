@@ -1536,6 +1536,7 @@ var WebGLRenderer = new Class({
             pipelines[key].onRender(scene, camera);
         }
 
+        //   Apply scissor for cam region + render background color, if not transparent
         this.preRenderCamera(camera);
 
         for (var index = 0; index < childCount; ++index)
@@ -1567,6 +1568,8 @@ var WebGLRenderer = new Class({
 
         this.flush();
         this.setBlendMode(CONST.BlendModes.NORMAL);
+
+        //  Applies camera effects and pops the scissor, if set
         this.postRenderCamera(camera);
     },
 
