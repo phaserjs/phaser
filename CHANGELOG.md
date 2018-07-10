@@ -94,6 +94,7 @@ There is a new Game Object Component called `TextureCrop`. It replaces the Textu
 * `GetBitmapTextSize` and its exposed method `BitmapText.getTextBounds` now factor in the display origin of the BitmapText into the `global` position returned.
 * The `BitmapText` WebGL Renderer incorrectly calculated the font scale at very small sizes, causing characters to overlap when they shouldn't. Scale is now applied to the correct component parts in the render code.
 * Under WebGL BitmapText would be cut off if you specified a resolution value > 1. Fix #3642 (thanks @kanthi0802)
+* Under WebGL, Dynamic BitmapText that had a crop set on it would fail to render if anything was above it on the display list. It now crops properly, no matter what is above or below it on the display list.
 
 ### New Features
 
