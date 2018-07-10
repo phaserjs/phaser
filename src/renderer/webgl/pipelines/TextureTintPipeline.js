@@ -1035,13 +1035,99 @@ var TextureTintPipeline = new Class({
      */
     drawTexture: function (
         texture,
-        srcX, srcY,
+        x, y,
         tint, alpha,
         frameX, frameY, frameWidth, frameHeight,
         transformMatrix,
         parentTransformMatrix
     )
     {
+        this.renderer.setPipeline(this);
+
+        if (this.vertexCount + 6 > this.vertexCapacity)
+        {
+            this.flush();
+        }
+
+        var spriteMatrix = this._tempMatrix1;
+        var calcMatrix = this._tempMatrix2;
+
+        spriteMatrix.copyFrom(transformMatrix);
+
+        var xw = x + frameWidth;
+        var yh = y + frameHeight;
+
+        if (parentTransformMatrix)
+        {
+            // var pma = parentMatrix[0];
+            // var pmb = parentMatrix[1];
+            // var pmc = parentMatrix[2];
+            // var pmd = parentMatrix[3];
+            // var pme = parentMatrix[4];
+            // var pmf = parentMatrix[5];
+            // var pca = mva * pma + mvb * pmc;
+            // var pcb = mva * pmb + mvb * pmd;
+            // var pcc = mvc * pma + mvd * pmc;
+            // var pcd = mvc * pmb + mvd * pmd;
+            // var pce = mve * pma + mvf * pmc + pme;
+            // var pcf = mve * pmb + mvf * pmd + pmf;
+            // mva = pca;
+            // mvb = pcb;
+            // mvc = pcc;
+            // mvd = pcd;
+            // mve = pce;
+            // mvf = pcf;
+
+            spriteMatrix.multiply(parentTransformMatrix, calcMatrix);
+        }
+        else
+        {
+            calcMatrix = spriteMatrix;
+        }
+
+        var tx0 = x * calcMatrix.a + y * calcMatrix.c + calcMatrix.e;
+        var ty0 = x * calcMatrix.b + y * calcMatrix.d + calcMatrix.f;
+
+        var tx1 = x * calcMatrix.a + yh * calcMatrix.c + calcMatrix.e;
+        var ty1 = x * calcMatrix.b + yh * calcMatrix.d + calcMatrix.f;
+
+        var tx2 = xw * calcMatrix.a + yh * calcMatrix.c + calcMatrix.e;
+        var ty2 = xw * calcMatrix.b + yh * calcMatrix.d + calcMatrix.f;
+
+        var tx3 = xw * calcMatrix.a + y * calcMatrix.c + calcMatrix.e;
+        var ty3 = xw * calcMatrix.b + y * calcMatrix.d + calcMatrix.f;
+
+        if (this.renderer.config.roundPixels)
+        {
+            tx0 |= 0;
+            ty0 |= 0;
+
+            tx1 |= 0;
+            ty1 |= 0;
+
+            tx2 |= 0;
+            ty2 |= 0;
+
+            tx3 |= 0;
+            ty3 |= 0;
+        }
+
+        var textureWidth = texture.width;
+        var textureHeight = texture.height;
+
+        var u0 = (frameX / textureWidth);
+        var v0 = (frameY / textureHeight);
+        var u1 = (frameX + frameWidth) / textureWidth;
+        var v1 = (frameY + frameHeight) / textureHeight;
+
+        this.setTexture2D(texture, 0);
+
+        if (!this.batchVertices(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tint, tint, tint, tint, 0))
+        {
+            this.flush();
+        }
+
+        /*
         var parentMatrix = null;
 
         if (parentTransformMatrix)
@@ -1173,6 +1259,7 @@ var TextureTintPipeline = new Class({
 
         // Force an immediate draw
         this.flush();
+        */
     }
 
 });
