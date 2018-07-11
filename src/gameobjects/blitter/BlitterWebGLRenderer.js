@@ -31,7 +31,7 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage, cam
 
     var pipeline = this.pipeline;
 
-    renderer.setPipeline(pipeline);
+    renderer.setPipeline(pipeline, src);
 
     var cameraScrollX = camera.scrollX * src.scrollFactorX;
     var cameraScrollY = camera.scrollY * src.scrollFactorY;

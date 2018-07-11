@@ -34,7 +34,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
 
     var pipeline = this.pipeline;
 
-    renderer.setPipeline(pipeline);
+    renderer.setPipeline(pipeline, src);
 
     var crop = (src.cropWidth > 0 || src.cropHeight > 0);
 

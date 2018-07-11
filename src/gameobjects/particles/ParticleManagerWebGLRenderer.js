@@ -39,7 +39,6 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
     renderer.setPipeline(pipeline);
 
     var roundPixels = camera.roundPixels;
-    // var emitters = emitterManager.emitters.list;
     var texture = emitterManager.defaultFrame.glTexture;
 
     pipeline.setTexture2D(texture, 0);

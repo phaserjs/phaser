@@ -34,7 +34,7 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
  
     var pipeline = this.pipeline;
 
-    renderer.setPipeline(pipeline);
+    renderer.setPipeline(pipeline, src);
 
     var camMatrix = pipeline._tempMatrix1;
     var spriteMatrix = pipeline._tempMatrix2;

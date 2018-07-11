@@ -31,7 +31,7 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
 
     var pipeline = this.pipeline;
 
-    renderer.setPipeline(pipeline);
+    renderer.setPipeline(pipeline, src);
 
     var camMatrix = pipeline._tempMatrix1;
     var spriteMatrix = pipeline._tempMatrix2;
