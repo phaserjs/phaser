@@ -39,15 +39,17 @@ var ForwardDiffuseLightPipeline = new Class({
     },
 
     /**
-     * This function binds it's base class resources and this lights 2D resources.
+     * This function binds its base class resources and this lights 2D resources.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#onBind
      * @override
      * @since 3.0.0
+     * 
+     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
      *
      * @return {Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline} [description]
      */
-    onBind: function ()
+    onBind: function (gameObject)
     {
         TextureTintPipeline.prototype.onBind.call(this);
 
@@ -58,6 +60,11 @@ var ForwardDiffuseLightPipeline = new Class({
 
         renderer.setInt1(program, 'uNormSampler', 1);
         renderer.setFloat2(program, 'uResolution', this.width, this.height);
+
+        if (gameObject)
+        {
+            this.setNormalMap(gameObject);
+        }
 
         return this;
     },
@@ -226,6 +233,26 @@ var ForwardDiffuseLightPipeline = new Class({
         }
     },
 
+    setNormalMap: function (gameObject)
+    {
+        if (!this.active || !gameObject || !gameObject.texture)
+        {
+            return;
+        }
+
+        var normalTexture = gameObject.texture.dataSource[gameObject.frame.sourceIndex];
+
+        if (normalTexture)
+        {
+            //  Should already be set!
+            // this.renderer.setPipeline(this);
+
+            this.setTexture2D(normalTexture.glTexture, 1);
+
+            this.renderer.setPipeline(gameObject.defaultPipeline);
+        }
+    },
+
     /**
      * [description]
      *
@@ -236,7 +263,6 @@ var ForwardDiffuseLightPipeline = new Class({
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      *
-     */
     batchSprite: function (sprite, camera, parentTransformMatrix)
     {
         if (!this.active)
@@ -258,6 +284,7 @@ var ForwardDiffuseLightPipeline = new Class({
             this.renderer.pipelines.TextureTintPipeline.batchSprite(sprite, camera, parentTransformMatrix);
         }
     },
+     */
 
     /**
      * [description]
