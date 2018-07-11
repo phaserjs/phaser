@@ -1250,6 +1250,11 @@ var InputManager = new Class({
      */
     transformPointer: function (pointer, pageX, pageY)
     {
+        //  Store the previous position
+        pointer.prevPosition.x = pointer.x;
+        pointer.prevPosition.y = pointer.y;
+
+        //  Set the new position
         pointer.x = (pageX - this.bounds.left) * this.scale.x;
         pointer.y = (pageY - this.bounds.top) * this.scale.y;
     },

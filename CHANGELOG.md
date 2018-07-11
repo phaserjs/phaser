@@ -45,21 +45,24 @@ There is a third game config property called `pixelArt`. If set to `true` it's t
 
 ### Texture Tint Pipeline - New Features, Updates and Fixes
 
-The Texture Tint Pipeline has been rewritten to tidy up hundreds of lines of duplicate code and to move the responsibility of drawing to the Game Objects themselves. Previously, had you excluded say Tilemaps from your build of Phaser, the renderer would still include masses of code dealing with the drawing of them. Now, this task has been moved to the Game Objects and the pipeline just provides a set of clean utility functions for batching, flushing and drawing.
+The Texture Tint Pipeline has been rewritten to tidy up hundreds of lines of duplicate code and to move the responsibility of drawing to the Game Objects themselves. Previously, had you excluded say Tilemaps from your build of Phaser, the renderer would still include masses of code dealing with the drawing of them. This task has been moved to the Game Objects and the pipeline just provides a set of clean utility functions for batching, flushing and drawing.
+
+The decision to make this change was not taken lightly. However, I felt that none of the pipelines actually lived up to their name. You could never actually pass objects through one pipeline to another as they didn't have entry and exit points and were instead just glorified singular batches. Although you could change the pipeline being used on a Game Object this action meant that every pipeline had to be responsible for every single type of Game Object, both now and in the future, and they were full of redundant stub functions as a result. The payload size was also considerable.
 
 * You can now set the WebGL batch size in the Game Config via the property `batchSize`. The default is 2000 before the batch will flush, which is a happy average between desktop and mobile. If targeting desktop specifically, you may wish to increase this value to reduce draw calls.
 * There is a new method `batchVertices` which will add a vertices block to the current batch. This is now used internally by nearly all render functions.
-* All of the rendering functions now use the `TransformMatrix` class far more than before. This allows the matrix operations to be run-time compiled and cut down on masses of code.
-* The `batchTileSprite` method has been removed from the `TextureTintPipeline` class, because it is now handled in the TileSprite WebGL Render function.
-* The `drawStaticTilemapLayer` method has been removed from the `TextureTintPipeline` class, because it is now handled in the Static Tilemap Layer WebGL Render function.
-* The `batchText` method has been removed from the `TextureTintPipeline` class, because it is now handled in the Static Text WebGL Render function.
-* The `batchDynamicTilemapLayer` method has been removed from the `TextureTintPipeline` class, because it is now handled in the Dynamic Tilemap Layer WebGL Render function.
-* The `batchMesh` method has been removed from the `TextureTintPipeline` class, because it is now handled in the Mesh WebGL Render function.
-* The `batchBitmapText` method has been removed from the `TextureTintPipeline` class, because it is now handled in the BitmapText WebGL Render function.
-* The `batchDynamicBitmapText` method has been removed from the `TextureTintPipeline` class, because it is now handled in the DynamicBitmapText WebGL Render function.
-* The `batchBlitter` method has been removed from the `TextureTintPipeline` class, because it is now handled in the Blitter WebGL Render function.
 * The shader has a new attribute: `tintEffect`. This is a single FLOAT.
 * The vertex size has increased by 1 FLOAT to account for the extra shader attribute.
+* All of the rendering functions now use the `TransformMatrix` class far more than before. This allows the matrix operations to be run-time compiled and cut down on masses of code.
+* The `drawTexture` method has been removed. It has been replaced by `drawTextureFrame` which has a new and more concise signature. See the API docs for details.
+* The `batchTileSprite` method has been removed. It is now handled in the TileSprite WebGL Render function.
+* The `drawStaticTilemapLayer` method has been removed. It is now handled in the Static Tilemap Layer WebGL Render function.
+* The `batchText` method has been removed. It is now handled in the Static Text WebGL Render function.
+* The `batchDynamicTilemapLayer` method has been removed. It is now handled in the Dynamic Tilemap Layer WebGL Render function.
+* The `batchMesh` method has been removed. It is now handled in the Mesh WebGL Render function.
+* The `batchBitmapText` method has been removed. It is now handled in the BitmapText WebGL Render function.
+* The `batchDynamicBitmapText` method has been removed. It is now handled in the DynamicBitmapText WebGL Render function.
+* The `batchBlitter` method has been removed. It is now handled in the Blitter WebGL Render function.
 
 Due to the changes in the Texture Tint Pipeline the `Textures.Frame` class has also been updated. The following changes concern the Frame UV data:
 
@@ -117,6 +120,8 @@ There is a new Game Object Component called `TextureCrop`. It replaces the Textu
 * `TransformMatrix.copyFrom` is a new method that will copy the given matrix into the values of the current one.
 * `TransformMatrix.multiplyWithOffset` is a new method that will multiply the given matrix with the current one, factoring in an additional offset to the results. This is used internally by the renderer code in various places.
 * `Rectangle.Intersection` will take two Rectangle objects and return the area of intersection between them. If there is no intersection, an empty Rectangle is returned.
+* `Pointer.prevPosition` is a new Vector2 that stores the previous position of the Pointer, prior to the most recent DOM event. You can use this when performing calculations between the old and current positions, such as for tracking the pointer speed.
+* `Pointer.getInterpolatedPosition` is a new method that will return an array of smoothly interpolated values between the old and previous position of the Pointer. You can configure how many interpolation steps should take place (the default is 10) and provide an output array to store them in. This method is handy if you've got an object tracking a pointer and you want to ensure it has smooth movement (as the DOM will often process pointer events at a faster rate than the game loop can update).
 
 ### Updates
 
