@@ -775,7 +775,7 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(string|integer)} frame - The string or index of the Frame.
+     * @param {(string|integer)} [frame] - The string-based name, or integer based index, of the Frame to get from the Texture.
      *
      * @return {Phaser.Textures.Frame} A Texture Frame object.
      */
