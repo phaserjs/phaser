@@ -400,7 +400,7 @@ var TextureTintPipeline = new Class({
      */
     batchSprite: function (sprite, camera, parentTransformMatrix)
     {
-        this.renderer.setPipeline(this, sprite);
+        this.renderer.setPipeline(this);
 
         var camMatrix = this._tempMatrix1;
         var spriteMatrix = this._tempMatrix2;

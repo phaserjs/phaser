@@ -135,104 +135,13 @@ var ForwardDiffuseLightPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Sets the Game Objects normal map as the active texture.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#drawStaticTilemapLayer
-     * @override
-     * @since 3.0.0
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#setNormalMap
+     * @since 3.11.0
      *
-     * @param {Phaser.Tilemaps.StaticTilemapLayer} tilemap - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
+     * @param {Phaser.GameObjects.GameObject} gameObject - [description]
      */
-    drawStaticTilemapLayer: function (tilemap, camera, parentTransformMatrix)
-    {
-        if (!this.active)
-        {
-            return;
-        }
-
-        var normalTexture = tilemap.tileset.image.dataSource[0];
-
-        if (normalTexture)
-        {
-            this.renderer.setPipeline(this);
-            this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.drawStaticTilemapLayer.call(this, tilemap, camera, parentTransformMatrix);
-        }
-        else
-        {
-            console.warn('Normal map texture missing for using Light2D pipeline. StaticTilemapLayer rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.drawStaticTilemapLayer(tilemap, camera, parentTransformMatrix);
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#drawEmitterManager
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Particles.ParticleEmitterManager} emitterManager - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
-     *
-     */
-    drawEmitterManager: function (emitterManager, camera, parentTransformMatrix)
-    {
-        if (!this.active)
-        {
-            return;
-        }
-
-        var normalTexture = emitterManager.texture.dataSource[emitterManager.frame.sourceIndex];
-
-        if (normalTexture)
-        {
-            this.renderer.setPipeline(this);
-            this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.drawEmitterManager.call(this, emitterManager, camera, parentTransformMatrix);
-        }
-        else
-        {
-            console.warn('Normal map texture missing for using Light2D pipeline. EmitterManager rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.drawEmitterManager(emitterManager, camera, parentTransformMatrix);
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#drawBlitter
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Blitter} blitter - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
-     *
-     */
-    drawBlitter: function (blitter, camera, parentTransformMatrix)
-    {
-        if (!this.active)
-        {
-            return;
-        }
-
-        var normalTexture = blitter.texture.dataSource[blitter.frame.sourceIndex];
-
-        if (normalTexture)
-        {
-            this.renderer.setPipeline(this);
-            this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.drawBlitter.call(this, blitter, camera, parentTransformMatrix);
-        }
-        else
-        {
-            console.warn('Normal map texture missing for using Light2D pipeline. Blitter rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.drawBlitter(blitter, camera, parentTransformMatrix);
-        }
-    },
-
     setNormalMap: function (gameObject)
     {
         if (!this.active || !gameObject || !gameObject.texture)
@@ -240,17 +149,15 @@ var ForwardDiffuseLightPipeline = new Class({
             return;
         }
 
+        // var normalTexture = tilemapLayer.tileset.image.dataSource[0];
         var normalTexture = gameObject.texture.dataSource[gameObject.frame.sourceIndex];
 
         if (normalTexture)
         {
-            //  Should already be set!
-            // this.renderer.setPipeline(this);
-
             this.setTexture2D(normalTexture.glTexture, 1);
-
-            this.renderer.setPipeline(gameObject.defaultPipeline);
         }
+
+        this.renderer.setPipeline(gameObject.defaultPipeline);
     },
 
     /**
@@ -263,6 +170,7 @@ var ForwardDiffuseLightPipeline = new Class({
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
      *
+     */
     batchSprite: function (sprite, camera, parentTransformMatrix)
     {
         if (!this.active)
@@ -275,208 +183,10 @@ var ForwardDiffuseLightPipeline = new Class({
         if (normalTexture)
         {
             this.renderer.setPipeline(this);
+
             this.setTexture2D(normalTexture.glTexture, 1);
+
             TextureTintPipeline.prototype.batchSprite.call(this, sprite, camera, parentTransformMatrix);
-        }
-        else
-        {
-            console.warn('Normal map texture missing for using Light2D pipeline. Sprite rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.batchSprite(sprite, camera, parentTransformMatrix);
-        }
-    },
-     */
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchMesh
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Mesh} mesh - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
-     *
-     */
-    batchMesh: function (mesh, camera, parentTransformMatrix)
-    {
-        if (!this.active)
-        {
-            return;
-        }
-
-        var normalTexture = mesh.texture.dataSource[mesh.frame.sourceIndex];
-
-        if (normalTexture)
-        {
-            this.renderer.setPipeline(this);
-            this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.batchMesh.call(this, mesh, camera, parentTransformMatrix);
-        }
-        else
-        {
-            console.warn('Normal map texture missing for using Light2D pipeline. Mesh rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.batchMesh(mesh, camera, parentTransformMatrix);
-
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchBitmapText
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.BitmapText} bitmapText - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
-     *
-     */
-    batchBitmapText: function (bitmapText, camera, parentTransformMatrix)
-    {
-        if (!this.active)
-        {
-            return;
-        }
-
-        var normalTexture = bitmapText.texture.dataSource[bitmapText.frame.sourceIndex];
-
-        if (normalTexture)
-        {
-            this.renderer.setPipeline(this);
-            this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.batchBitmapText.call(this, bitmapText, camera, parentTransformMatrix);
-        }
-        else
-        {
-            console.warn('Normal map texture missing for using Light2D pipeline. BitmapText rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.batchBitmapText(bitmapText, camera, parentTransformMatrix);
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchDynamicBitmapText
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.DynamicBitmapText} bitmapText - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
-     *
-     */
-    batchDynamicBitmapText: function (bitmapText, camera, parentTransformMatrix)
-    {
-        var normalTexture = bitmapText.texture.dataSource[bitmapText.frame.sourceIndex];
-
-        if (normalTexture)
-        {
-            this.renderer.setPipeline(this);
-            this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.batchDynamicBitmapText.call(this, bitmapText, camera, parentTransformMatrix);
-        }
-        else
-        {
-            console.warn('Normal map texture missing for using Light2D pipeline. DynamicBitmapText rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.batchDynamicBitmapText(bitmapText, camera, parentTransformMatrix);
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchText
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Text} text - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
-     *
-     */
-    batchText: function (text, camera, parentTransformMatrix)
-    {
-        if (!this.active)
-        {
-            return;
-        }
-
-        var normalTexture = text.texture.dataSource[text.frame.sourceIndex];
-
-        if (normalTexture)
-        {
-            this.renderer.setPipeline(this);
-            this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.batchText.call(this, text, camera, parentTransformMatrix);
-        }
-        else
-        {
-            console.warn('Normal map texture missing for using Light2D pipeline. Text rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.batchText(text, camera, parentTransformMatrix);
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchDynamicTilemapLayer
-     * @since 3.0.0
-     *
-     * @param {Phaser.Tilemaps.DynamicTilemapLayer} tilemapLayer - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
-     *
-     */
-    batchDynamicTilemapLayer: function (tilemapLayer, camera, parentTransformMatrix)
-    {
-        if (!this.active)
-        {
-            return;
-        }
-
-        var normalTexture = tilemapLayer.tileset.image.dataSource[0];
-
-        if (normalTexture)
-        {
-            this.renderer.setPipeline(this);
-            this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.batchDynamicTilemapLayer.call(this, tilemapLayer, camera, parentTransformMatrix);
-        }
-        else
-        {
-            console.warn('Normal map texture missing for using Light2D pipeline. DynamicTilemapLayer rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.batchDynamicTilemapLayer(tilemapLayer, camera, parentTransformMatrix);
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchTileSprite
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.TileSprite} tileSprite - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
-     *
-     */
-    batchTileSprite: function (tileSprite, camera, parentTransformMatrix)
-    {
-        if (!this.active)
-        {
-            return;
-        }
-
-        var normalTexture = tileSprite.texture.dataSource[tileSprite.frame.sourceIndex];
-
-        if (normalTexture)
-        {
-            this.renderer.setPipeline(this);
-            this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.batchTileSprite.call(this, tileSprite, camera, parentTransformMatrix);
-        }
-        else
-        {
-            console.warn('Normal map texture missing for using Light2D pipeline. TileSprite rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.batchTileSprite(tileSprite, camera, parentTransformMatrix);
         }
     }
 
