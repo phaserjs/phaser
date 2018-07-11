@@ -49,9 +49,9 @@ var TileSpriteWebGLRenderer = function (renderer, src, interpolationPercentage, 
         getTint(src._tintTR, camera.alpha * src._alphaTR),
         getTint(src._tintBL, camera.alpha * src._alphaBL),
         getTint(src._tintBR, camera.alpha * src._alphaBR),
+        (src._isTinted && src.tintFill),
         (src.tilePositionX % src.frame.width) / src.frame.width,
         (src.tilePositionY % src.frame.height) / src.frame.height,
-        (src._isTinted && src.tintFill),
         camera,
         parentMatrix
     );
