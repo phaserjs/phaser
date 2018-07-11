@@ -841,11 +841,12 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setPipeline
      * @since 3.0.0
      *
-     * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipelineInstance - [description]
+     * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipelineInstance - The pipeline instance to be activated.
+     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
      *
-     * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} The pipeline that was activated.
      */
-    setPipeline: function (pipelineInstance)
+    setPipeline: function (pipelineInstance, gameObject)
     {
         if (this.currentPipeline !== pipelineInstance ||
             this.currentPipeline.vertexBuffer !== this.currentVertexBuffer ||
@@ -856,7 +857,7 @@ var WebGLRenderer = new Class({
             this.currentPipeline.bind();
         }
 
-        this.currentPipeline.onBind();
+        this.currentPipeline.onBind(gameObject);
 
         return this.currentPipeline;
     },
