@@ -57,6 +57,7 @@ The decision to make this change was not taken lightly. However, I felt that non
 * The `drawTexture` method has been removed. It has been replaced by `drawTextureFrame` which has a new and more concise signature. See the API docs for details.
 * The `batchTileSprite` method has been removed. It is now handled in the TileSprite WebGL Render function.
 * The `drawStaticTilemapLayer` method has been removed. It is now handled in the Static Tilemap Layer WebGL Render function.
+* The `drawEmitterManager` method has been removed. It is now handled in the Particle Manager WebGL Render function.
 * The `batchText` method has been removed. It is now handled in the Static Text WebGL Render function.
 * The `batchDynamicTilemapLayer` method has been removed. It is now handled in the Dynamic Tilemap Layer WebGL Render function.
 * The `batchMesh` method has been removed. It is now handled in the Mesh WebGL Render function.
