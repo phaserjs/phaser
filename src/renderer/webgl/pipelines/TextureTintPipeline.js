@@ -411,11 +411,7 @@ var TextureTintPipeline = new Class({
 
         var roundPixels = camera.roundPixels;
         var emitters = emitterManager.emitters.list;
-        var emitterCount = emitters.length;
-        var vertexViewF32 = this.vertexViewF32;
-        var vertexViewU32 = this.vertexViewU32;
         var renderer = this.renderer;
-        var maxQuads = this.maxQuads;
         var cameraScrollX = camera.scrollX;
         var cameraScrollY = camera.scrollY;
         var cameraMatrix = camera.matrix.matrix;
@@ -427,8 +423,6 @@ var TextureTintPipeline = new Class({
         var cmf = cameraMatrix[5];
         var sin = Math.sin;
         var cos = Math.cos;
-        var vertexComponentCount = this.vertexComponentCount;
-        var vertexCapacity = this.vertexCapacity;
         var texture = emitterManager.defaultFrame.source.glTexture;
         var pca, pcb, pcc, pcd, pce, pcf;
         var pma, pmb, pmc, pmd, pme, pmf;
@@ -445,13 +439,11 @@ var TextureTintPipeline = new Class({
 
         this.setTexture2D(texture, 0);
         
-        for (var emitterIndex = 0; emitterIndex < emitterCount; ++emitterIndex)
+        for (var e = 0; e < emitters.length; e++)
         {
-            var emitter = emitters[emitterIndex];
+            var emitter = emitters[e];
             var particles = emitter.alive;
             var aliveLength = particles.length;
-            var batchCount = Math.ceil(aliveLength / maxQuads);
-            var particleOffset = 0;
             var scrollX = cameraScrollX * emitter.scrollFactorX;
             var scrollY = cameraScrollY * emitter.scrollFactorY;
 
@@ -486,137 +478,67 @@ var TextureTintPipeline = new Class({
 
             renderer.setBlendMode(emitter.blendMode);
 
-            if (this.vertexCount >= vertexCapacity)
-            {
-                this.flush();
-                this.setTexture2D(texture, 0);
-            }
-
             var tintEffect = false;
 
-            for (var batchIndex = 0; batchIndex < batchCount; ++batchIndex)
+            for (var i = 0; i < aliveLength; i++)
             {
-                var batchSize = Math.min(aliveLength, maxQuads);
+                var particle = particles[i];
 
-                for (var index = 0; index < batchSize; ++index)
+                if (particle.alpha <= 0)
                 {
-                    var particle = particles[particleOffset + index];
-
-                    if (particle.alpha <= 0)
-                    {
-                        continue;
-                    }
-
-                    var frame = particle.frame;
-                    var uvs = frame.uvs;
-                    var x = -(frame.halfWidth);
-                    var y = -(frame.halfHeight);
-                    var color = particle.color;
-                    var xw = x + frame.width;
-                    var yh = y + frame.height;
-                    var sr = sin(particle.rotation);
-                    var cr = cos(particle.rotation);
-
-                    var sra = cr * particle.scaleX;
-                    var srb = sr * particle.scaleX;
-                    var src = -sr * particle.scaleY;
-                    var srd = cr * particle.scaleY;
-                    var sre = particle.x - scrollX;
-                    var srf = particle.y - scrollY;
-
-                    var mva = sra * cma + srb * cmc;
-                    var mvb = sra * cmb + srb * cmd;
-                    var mvc = src * cma + srd * cmc;
-                    var mvd = src * cmb + srd * cmd;
-                    var mve = sre * cma + srf * cmc + cme;
-                    var mvf = sre * cmb + srf * cmd + cmf;
-
-                    var tx0 = x * mva + y * mvc + mve;
-                    var ty0 = x * mvb + y * mvd + mvf;
-                    var tx1 = x * mva + yh * mvc + mve;
-                    var ty1 = x * mvb + yh * mvd + mvf;
-                    var tx2 = xw * mva + yh * mvc + mve;
-                    var ty2 = xw * mvb + yh * mvd + mvf;
-                    var tx3 = xw * mva + y * mvc + mve;
-                    var ty3 = xw * mvb + y * mvd + mvf;
-
-                    if (roundPixels)
-                    {
-                        tx0 |= 0;
-                        ty0 |= 0;
-                        tx1 |= 0;
-                        ty1 |= 0;
-                        tx2 |= 0;
-                        ty2 |= 0;
-                        tx3 |= 0;
-                        ty3 |= 0;
-                    }
-
-                    var vertexOffset = (this.vertexCount * vertexComponentCount) - 1;
-
-                    vertexViewF32[++vertexOffset] = tx0;
-                    vertexViewF32[++vertexOffset] = ty0;
-                    vertexViewF32[++vertexOffset] = uvs.x0;
-                    vertexViewF32[++vertexOffset] = uvs.y0;
-                    vertexViewF32[++vertexOffset] = tintEffect;
-                    vertexViewU32[++vertexOffset] = color;
-
-                    vertexViewF32[++vertexOffset] = tx1;
-                    vertexViewF32[++vertexOffset] = ty1;
-                    vertexViewF32[++vertexOffset] = uvs.x1;
-                    vertexViewF32[++vertexOffset] = uvs.y1;
-                    vertexViewF32[++vertexOffset] = tintEffect;
-                    vertexViewU32[++vertexOffset] = color;
-
-                    vertexViewF32[++vertexOffset] = tx2;
-                    vertexViewF32[++vertexOffset] = ty2;
-                    vertexViewF32[++vertexOffset] = uvs.x2;
-                    vertexViewF32[++vertexOffset] = uvs.y2;
-                    vertexViewF32[++vertexOffset] = tintEffect;
-                    vertexViewU32[++vertexOffset] = color;
-
-                    vertexViewF32[++vertexOffset] = tx0;
-                    vertexViewF32[++vertexOffset] = ty0;
-                    vertexViewF32[++vertexOffset] = uvs.x0;
-                    vertexViewF32[++vertexOffset] = uvs.y0;
-                    vertexViewF32[++vertexOffset] = tintEffect;
-                    vertexViewU32[++vertexOffset] = color;
-
-                    vertexViewF32[++vertexOffset] = tx2;
-                    vertexViewF32[++vertexOffset] = ty2;
-                    vertexViewF32[++vertexOffset] = uvs.x2;
-                    vertexViewF32[++vertexOffset] = uvs.y2;
-                    vertexViewF32[++vertexOffset] = tintEffect;
-                    vertexViewU32[++vertexOffset] = color;
-
-                    vertexViewF32[++vertexOffset] = tx3;
-                    vertexViewF32[++vertexOffset] = ty3;
-                    vertexViewF32[++vertexOffset] = uvs.x3;
-                    vertexViewF32[++vertexOffset] = uvs.y3;
-                    vertexViewF32[++vertexOffset] = tintEffect;
-                    vertexViewU32[++vertexOffset] = color;
-
-                    this.vertexCount += 6;
-
-                    if (this.vertexCount >= vertexCapacity)
-                    {
-                        this.flush();
-                        this.setTexture2D(texture, 0);
-                    }
+                    continue;
                 }
 
-                particleOffset += batchSize;
-                aliveLength -= batchSize;
+                var frame = particle.frame;
+                var x = -(frame.halfWidth);
+                var y = -(frame.halfHeight);
+                var color = particle.color;
+                var xw = x + frame.width;
+                var yh = y + frame.height;
+                var sr = sin(particle.rotation);
+                var cr = cos(particle.rotation);
 
-                if (this.vertexCount >= vertexCapacity)
+                var sra = cr * particle.scaleX;
+                var srb = sr * particle.scaleX;
+                var src = -sr * particle.scaleY;
+                var srd = cr * particle.scaleY;
+                var sre = particle.x - scrollX;
+                var srf = particle.y - scrollY;
+
+                var mva = sra * cma + srb * cmc;
+                var mvb = sra * cmb + srb * cmd;
+                var mvc = src * cma + srd * cmc;
+                var mvd = src * cmb + srd * cmd;
+                var mve = sre * cma + srf * cmc + cme;
+                var mvf = sre * cmb + srf * cmd + cmf;
+
+                var tx0 = x * mva + y * mvc + mve;
+                var ty0 = x * mvb + y * mvd + mvf;
+                var tx1 = x * mva + yh * mvc + mve;
+                var ty1 = x * mvb + yh * mvd + mvf;
+                var tx2 = xw * mva + yh * mvc + mve;
+                var ty2 = xw * mvb + yh * mvd + mvf;
+                var tx3 = xw * mva + y * mvc + mve;
+                var ty3 = xw * mvb + y * mvd + mvf;
+
+                if (roundPixels)
                 {
-                    this.flush();
+                    tx0 |= 0;
+                    ty0 |= 0;
+                    tx1 |= 0;
+                    ty1 |= 0;
+                    tx2 |= 0;
+                    ty2 |= 0;
+                    tx3 |= 0;
+                    ty3 |= 0;
+                }
+
+                if (this.batchVertices(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, color, color, color, color, tintEffect))
+                {
                     this.setTexture2D(texture, 0);
                 }
             }
         }
-        
-        this.setTexture2D(texture, 0);
     },
 
     /**
