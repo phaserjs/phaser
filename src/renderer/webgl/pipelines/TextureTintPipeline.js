@@ -6,6 +6,7 @@
  */
 
 var Class = require('../../../utils/Class');
+var GetFastValue = require('../../../utils/object/GetFastValue');
 var ModelViewProjection = require('./components/ModelViewProjection');
 var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
 var ShaderSourceFS = require('../shaders/TextureTint-frag.js');
@@ -55,12 +56,11 @@ var TextureTintPipeline = new Class({
             game: config.game,
             renderer: config.renderer,
             gl: config.renderer.gl,
-            topology: config.renderer.gl.TRIANGLES,
-            vertShader: ShaderSourceVS,
-            fragShader: ShaderSourceFS,
-            vertexCapacity: 6 * rendererConfig.batchSize,
-            vertexSize: Float32Array.BYTES_PER_ELEMENT * 5 + Uint8Array.BYTES_PER_ELEMENT * 4,
-
+            topology: GetFastValue(config, 'topology', config.renderer.gl.TRIANGLES),
+            vertShader: GetFastValue(config, 'vertShader', ShaderSourceVS),
+            fragShader: GetFastValue(config, 'fragShader', ShaderSourceFS),
+            vertexCapacity: GetFastValue(config, 'vertexCapacity', 6 * rendererConfig.batchSize),
+            vertexSize: GetFastValue(config, 'vertexSize', Float32Array.BYTES_PER_ELEMENT * 5 + Uint8Array.BYTES_PER_ELEMENT * 4),
             attributes: [
                 {
                     name: 'inPosition',
@@ -400,7 +400,7 @@ var TextureTintPipeline = new Class({
      */
     batchSprite: function (sprite, camera, parentTransformMatrix)
     {
-        this.renderer.setPipeline(this);
+        this.renderer.setPipeline(this, sprite);
 
         var camMatrix = this._tempMatrix1;
         var spriteMatrix = this._tempMatrix2;
@@ -689,7 +689,7 @@ var TextureTintPipeline = new Class({
         camera,
         parentTransformMatrix)
     {
-        this.renderer.setPipeline(this);
+        this.renderer.setPipeline(this, gameObject);
 
         var camMatrix = this._tempMatrix1;
         var spriteMatrix = this._tempMatrix2;
