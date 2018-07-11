@@ -719,9 +719,13 @@ var TextureTintPipeline = new Class({
      */
     batchVertices: function (tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect)
     {
+        var hasFlushed = false;
+
         if (this.vertexCount + 6 > this.vertexCapacity)
         {
             this.flush();
+
+            hasFlushed = true;
         }
 
         var vertexViewF32 = this.vertexViewF32;
@@ -778,12 +782,10 @@ var TextureTintPipeline = new Class({
             //  No more room at the inn
             this.flush();
 
-            return true;
+            hasFlushed = true;
         }
-        else
-        {
-            return false;
-        }
+
+        return hasFlushed;
     },
 
     /**
