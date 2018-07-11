@@ -172,13 +172,13 @@ var BitmapText = new Class({
          * Controls the alignment of each line of text in this BitmapText object.
          * Only has any effect when this BitmapText contains multiple lines of text, split with carriage-returns.
          * Has no effect with single-lines of text.
-         * 
+         *
          * See the methods `setLeftAlign`, `setCenterAlign` and `setRightAlign`.
-         * 
+         *
          * 0 = Left aligned (default)
          * 1 = Middle aligned
          * 2 = Right aligned
-         * 
+         *
          * The alignment position is based on the longest line of text.
          *
          * @name Phaser.GameObjects.BitmapText#_align
@@ -357,8 +357,8 @@ var BitmapText = new Class({
      * Local size is based on just the font size and a [0, 0] position.
      *
      * Global size takes into account the Game Object's scale, world position and display origin.
-     * 
-     * Also in the object is data each the length of each line, should this be a multi-line BitmapText.
+     *
+     * Also in the object is data regarding the length of each line, should this be a multi-line BitmapText.
      *
      * @method Phaser.GameObjects.BitmapText#getTextBounds
      * @since 3.0.0
@@ -383,7 +383,7 @@ var BitmapText = new Class({
 
     /**
      * Changes the font this BitmapText is using to render.
-     * 
+     *
      * The new texture is loaded and applied to the BitmapText. The existing test, size and alignment are preserved,
      * unless overridden via the arguments.
      *
@@ -423,16 +423,16 @@ var BitmapText = new Class({
 
     /**
      * Controls the alignment of each line of text in this BitmapText object.
-     * 
+     *
      * Only has any effect when this BitmapText contains multiple lines of text, split with carriage-returns.
      * Has no effect with single-lines of text.
-     * 
+     *
      * See the methods `setLeftAlign`, `setCenterAlign` and `setRightAlign`.
-     * 
+     *
      * 0 = Left aligned (default)
      * 1 = Middle aligned
      * 2 = Right aligned
-     * 
+     *
      * The alignment position is based on the longest line of text.
      *
      * @name Phaser.GameObjects.BitmapText#align
@@ -456,7 +456,7 @@ var BitmapText = new Class({
 
     /**
      * The text that this Bitmap Text object displays.
-     * 
+     *
      * You can also use the method `setText` if you want a chainable way to change the text content.
      *
      * @name Phaser.GameObjects.BitmapText#text
@@ -479,7 +479,7 @@ var BitmapText = new Class({
 
     /**
      * The font size of this Bitmap Text.
-     * 
+     *
      * You can also use the method `setFontSize` if you want a chainable way to change the font size.
      *
      * @name Phaser.GameObjects.BitmapText#fontSize
@@ -505,7 +505,7 @@ var BitmapText = new Class({
      * Adds / Removes spacing between characters.
      *
      * Can be a negative or positive number.
-     * 
+     *
      * You can also use the method `setLetterSpacing` if you want a chainable way to change the letter spacing.
      *
      * @name Phaser.GameObjects.BitmapText#letterSpacing
@@ -596,7 +596,7 @@ var BitmapText = new Class({
 
 /**
  * Left align the text characters in a multi-line BitmapText object.
- * 
+ *
  * @name Phaser.GameObjects.BitmapText.ALIGN_LEFT
  * @type {integer}
  * @since 3.11.0
@@ -605,7 +605,7 @@ BitmapText.ALIGN_LEFT = 0;
 
 /**
  * Center align the text characters in a multi-line BitmapText object.
- * 
+ *
  * @name Phaser.GameObjects.BitmapText.ALIGN_CENTER
  * @type {integer}
  * @since 3.11.0
@@ -614,7 +614,7 @@ BitmapText.ALIGN_CENTER = 1;
 
 /**
  * Right align the text characters in a multi-line BitmapText object.
- * 
+ *
  * @name Phaser.GameObjects.BitmapText.ALIGN_RIGHT
  * @type {integer}
  * @since 3.11.0
