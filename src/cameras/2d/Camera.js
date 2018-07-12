@@ -209,19 +209,24 @@ var Camera = new Class({
         this._bounds = new Rectangle();
 
         /**
-         * 
+         * The World View is a Rectangle that defines the area of the 'world' the Camera is currently looking at.
+         * This factors in the Camera viewport size, zoom and scroll position and is updated in the Camera preRender step.
+         * If you have enabled Camera bounds the worldview will be clamped to those bounds accordingly.
+         * You can use it for culling or intersection checks.
          *
-         * @name Phaser.Cameras.Scene2D.Camera#worldBounds
+         * @name Phaser.Cameras.Scene2D.Camera#worldView
          * @type {Phaser.Geom.Rectangle}
          * @readOnly
          * @since 3.11.0
          */
-        this.worldBounds = new Rectangle();
+        this.worldView = new Rectangle();
 
         /**
          * Is this Camera dirty?
          * 
-         * A dirty Camera has had either its viewport, its scroll, its rotation or its zoom level changed since the last frame.
+         * A dirty Camera has had either its viewport size, bounds, scroll, rotation or zoom levels changed since the last frame.
+         * 
+         * This flag is cleared during the `postRenderCamera` method of the renderer.
          *
          * @name Phaser.Cameras.Scene2D.Camera#dirty
          * @type {boolean}
@@ -1120,12 +1125,19 @@ var Camera = new Class({
     {
         var width = this.width;
         var height = this.height;
+
+        var halfWidth = width * 0.5;
+        var halfHeight = height * 0.5;
+
         var zoom = this.zoom * baseScale;
         var matrix = this.matrix;
+
         var originX = width * this.originX;
         var originY = height * this.originY;
+
         var follow = this._follow;
         var deadzone = this.deadzone;
+
         var sx = this.scrollX;
         var sy = this.scrollY;
 
@@ -1178,16 +1190,25 @@ var Camera = new Class({
             originY = Math.round(originY);
         }
 
+        //  Values are in pixels and not impacted by zooming the Camera
         this.scrollX = sx;
         this.scrollY = sy;
 
-        this.midPoint.set(sx + (width * 0.5), sy + (height * 0.5));
+        var midX = sx + halfWidth;
+        var midY = sy + halfHeight;
 
-        this.worldBounds.setTo(
-            sx,
-            sy,
-            sx + width,
-            sy + height
+        //  The center of the camera, in world space, so taking zoom into account
+        //  Basically the pixel value of what it's looking at in the middle of the cam
+        this.midPoint.set(midX, midY);
+
+        var displayWidth = width / zoom;
+        var displayHeight = height / zoom;
+
+        this.worldView.setTo(
+            midX - (displayWidth / 2),
+            midY - (displayHeight / 2),
+            displayWidth,
+            displayHeight
         );
 
         matrix.loadIdentity();
