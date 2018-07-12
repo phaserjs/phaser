@@ -237,12 +237,7 @@ var StaticTilemapLayer = new Class({
                 var row;
                 var col;
                 var texCoords;
-        
-                var boundsLeft = camera.worldBounds.left;
-                var boundsRight = camera.worldBounds.right;
-                var boundsTop = camera.worldBounds.top;
-                var boundsBottom = camera.worldBounds.bottom;
-    
+   
                 var vertexBuffer = this.vertexBuffer;
                 var bufferData = this.bufferData;
                 var voffset = -1;
@@ -282,19 +277,11 @@ var StaticTilemapLayer = new Class({
                         var txw = tx + tile.width;
                         var tyh = ty + tile.height;
 
-                        var tilePixelX = (tx + this.x);
-                        var tilePixelY = (ty + this.y);
-
                         texCoords = tileset.getTileTextureCoordinates(tile.index);
 
                         if (!texCoords)
                         {
                             continue;
-                        }
-            
-                        if (!texCoords || tilePixelX < boundsLeft || tilePixelX > boundsRight || tilePixelY < boundsTop || tilePixelY > boundsBottom)
-                        {
-                            // continue;
                         }
 
                         var u0 = texCoords.x / width;
