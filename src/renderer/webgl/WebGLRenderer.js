@@ -1499,6 +1499,8 @@ var WebGLRenderer = new Class({
             FlatTintPipeline.flush();
         }
 
+        camera.dirty = false;
+
         this.popScissor();
     },
 

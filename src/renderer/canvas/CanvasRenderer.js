@@ -445,6 +445,8 @@ var CanvasRenderer = new Class({
         camera.flashEffect.postRenderCanvas(ctx);
         camera.fadeEffect.postRenderCanvas(ctx);
 
+        camera.dirty = false;
+
         //  Reset the camera scissor
         if (scissor)
         {
