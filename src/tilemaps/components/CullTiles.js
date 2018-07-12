@@ -28,6 +28,7 @@ var CullTiles = function (layer, camera, outputArray)
     outputArray.length = 0;
     
     var tilemapLayer = layer.tilemapLayer;
+    var skipCull = tilemapLayer.skipCull;
 
     var tileW = Math.floor(layer.tileWidth * tilemapLayer.scaleX);
     var tileH = Math.floor(layer.tileHeight * tilemapLayer.scaleY);
@@ -51,17 +52,24 @@ var CullTiles = function (layer, camera, outputArray)
         {
             var tile = mapData[y][x];
 
-            if (!tile || tile.index === -1 || !tile.visible)
+            if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
             {
                 continue;
             }
 
-            var tilePixelX = (tile.pixelX + tilemapLayer.x) * tilemapLayer.scaleX;
-            var tilePixelY = (tile.pixelY + tilemapLayer.y) * tilemapLayer.scaleY;
-
-            if (tilePixelX >= boundsLeft && tilePixelX + tileW <= boundsRight && tilePixelY >= boundsTop && tilePixelY + tileH <= boundsBottom)
+            if (skipCull)
             {
                 outputArray.push(tile);
+            }
+            else
+            {
+                var tilePixelX = (tile.pixelX + tilemapLayer.x) * tilemapLayer.scaleX;
+                var tilePixelY = (tile.pixelY + tilemapLayer.y) * tilemapLayer.scaleY;
+    
+                if (tilePixelX >= boundsLeft && tilePixelX + tileW <= boundsRight && tilePixelY >= boundsTop && tilePixelY + tileH <= boundsBottom)
+                {
+                    outputArray.push(tile);
+                }
             }
 
             i++;

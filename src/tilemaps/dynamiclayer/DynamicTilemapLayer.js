@@ -131,6 +131,19 @@ var DynamicTilemapLayer = new Class({
          */
         this.culledTiles = [];
 
+        /**
+         * You can control if the Cameras should cull tiles before rendering them or not.
+         * By default the camera will try to cull the tiles in this layer, to avoid over-drawing to the renderer.
+         * 
+         * However, there are some instances when you may wish to disable this, and toggling this flag allows
+         * you to do so. Also see `setSkipCull` for a chainable method that does the same thing.
+         *
+         * @name Phaser.Tilemaps.DynamicTilemapLayer#skipCull
+         * @type {boolean}
+         * @since 3.11.0
+         */
+        this.skipCull = false;
+
         this.setAlpha(this.layer.alpha);
         this.setPosition(x, y);
         this.setOrigin();
@@ -738,6 +751,28 @@ var DynamicTilemapLayer = new Class({
     replaceByIndex: function (findIndex, newIndex, tileX, tileY, width, height)
     {
         TilemapComponents.ReplaceByIndex(findIndex, newIndex, tileX, tileY, width, height, this.layer);
+
+        return this;
+    },
+
+    /**
+     * You can control if the Cameras should cull tiles before rendering them or not.
+     * By default the camera will try to cull the tiles in this layer, to avoid over-drawing to the renderer.
+     * 
+     * However, there are some instances when you may wish to disable this.
+     * 
+     * @method Phaser.Tilemaps.DynamicTilemapLayer#setSkipCull
+     * @since 3.11.0
+     *
+     * @param {boolean} [value=true] - Set to `true` to stop culling tiles. Set to `false` to enable culling again.
+     *
+     * @return {this} This Tilemap Layer object.
+     */
+    setSkipCull: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.skipCull = value;
 
         return this;
     },
