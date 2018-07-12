@@ -9,7 +9,6 @@ var Components = require('../../gameobjects/components');
 var DynamicTilemapLayerRender = require('./DynamicTilemapLayerRender');
 var GameObject = require('../../gameobjects/GameObject');
 var TilemapComponents = require('../components');
-var Vector2 = require('../../math/Vector2');
 
 /**
  * @classdesc
@@ -166,15 +165,28 @@ var DynamicTilemapLayer = new Class({
         this.tilesTotal = this.layer.width * this.layer.height;
 
         /**
-         * The amount of tiles to add into the cull rectangle.
+         * The amount of extra tiles to add into the cull rectangle when calculating its horizontal size.
          * 
          * See the method `setCullPadding` for more details.
          *
-         * @name Phaser.Tilemaps.DynamicTilemapLayer#cullPadding
-         * @type {Phaser.Math.Vector2}
+         * @name Phaser.Tilemaps.DynamicTilemapLayer#cullPaddingX
+         * @type {number}
+         * @default 1
          * @since 3.11.0
          */
-        this.cullPadding = new Vector2(1, 1);
+        this.cullPaddingX = 1;
+
+        /**
+         * The amount of extra tiles to add into the cull rectangle when calculating its vertical size.
+         * 
+         * See the method `setCullPadding` for more details.
+         *
+         * @name Phaser.Tilemaps.DynamicTilemapLayer#cullPaddingY
+         * @type {number}
+         * @default 1
+         * @since 3.11.0
+         */
+        this.cullPaddingY = 1;
 
         this.setAlpha(this.layer.alpha);
         this.setPosition(x, y);
@@ -829,7 +841,8 @@ var DynamicTilemapLayer = new Class({
         if (paddingX === undefined) { paddingX = 1; }
         if (paddingY === undefined) { paddingY = 1; }
 
-        this.cullPadding.set(paddingX, paddingY);
+        this.cullPaddingX = paddingX;
+        this.cullPaddingY = paddingY;
 
         return this;
     },
