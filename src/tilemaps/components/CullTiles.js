@@ -24,68 +24,94 @@ var CullTiles = function (layer, camera, outputArray)
 
     outputArray.length = 0;
     
-    var zoom = camera.zoom;
-    var originX = camera.width / 2;
-    var originY = camera.height / 2;
+    // var zoom = camera.zoom;
+    // var originX = camera.width / 2;
+    // var originY = camera.height / 2;
 
-    camera.matrix.loadIdentity();
-    camera.matrix.translate(camera.x + originX, camera.y + originY);
-    camera.matrix.rotate(camera.rotation);
-    camera.matrix.scale(zoom, zoom);
-    camera.matrix.translate(-originX, -originY);
-    camera.matrix.invert();
+    // var matrix = camera.matrix;
 
-    camera.shakeEffect.preRender();
+    // matrix.applyITRS(camera.x, camera.y, camera.rotation, zoom, zoom);
+
+    // camera.matrix.loadIdentity();
+    // camera.matrix.translate(camera.x + originX, camera.y + originY);
+    // camera.matrix.rotate(camera.rotation);
+    // camera.matrix.scale(zoom, zoom);
+    // camera.matrix.translate(-originX, -originY);
+    // camera.matrix.invert();
+
+    // camera.shakeEffect.preRender();
 
     var tilemapLayer = layer.tilemapLayer;
-    var tileW = layer.tileWidth;
-    var tileH = layer.tileHeight;
-    var cullX = ((camera.scrollX * tilemapLayer.scrollFactorX) - tileW);
-    var cullY = ((camera.scrollY * tilemapLayer.scrollFactorY) - tileH);
-    var cullW = (cullX + (camera.width + tileW * 2));
-    var cullH = (cullY + (camera.height + tileH * 2));
+
+    // var tileW = layer.tileWidth;
+    // var tileH = layer.tileHeight;
+
+    // var cullX = ((camera.scrollX * tilemapLayer.scrollFactorX) - tileW);
+    // var cullY = ((camera.scrollY * tilemapLayer.scrollFactorY) - tileH);
+    // var cullW = (cullX + (camera.width + tileW * 2));
+    // var cullH = (cullY + (camera.height + tileH * 2));
+
     var mapData = layer.data;
     var mapWidth = layer.width;
     var mapHeight = layer.height;
-    var cameraMatrix = camera.matrix.matrix;
-    var a = cameraMatrix[0];
-    var b = cameraMatrix[1];
-    var c = cameraMatrix[2];
-    var d = cameraMatrix[3];
-    var e = cameraMatrix[4];
-    var f = cameraMatrix[5];
-    var tCullX = cullX * a + cullY * c + e;
-    var tCullY = cullX * b + cullY * d + f;
-    var tCullW = cullW * a + cullH * c + e;
-    var tCullH = cullW * b + cullH * d + f;
 
-    for (var y = 0; y < mapHeight; ++y)
+    var boundsLeft = camera.worldBounds.left;
+    var boundsRight = camera.worldBounds.right;
+    var boundsTop = camera.worldBounds.top;
+    var boundsBottom = camera.worldBounds.bottom;
+
+    // var cameraMatrix = camera.matrix.matrix;
+    // var a = cameraMatrix[0];
+    // var b = cameraMatrix[1];
+    // var c = cameraMatrix[2];
+    // var d = cameraMatrix[3];
+    // var e = cameraMatrix[4];
+    // var f = cameraMatrix[5];
+    // var tCullX = cullX * a + cullY * c + e;
+    // var tCullY = cullX * b + cullY * d + f;
+    // var tCullW = cullW * a + cullH * c + e;
+    // var tCullH = cullW * b + cullH * d + f;
+
+    var i = 0;
+
+    for (var y = 0; y < mapHeight; y++)
     {
-        for (var x = 0; x < mapWidth; ++x)
+        for (var x = 0; x < mapWidth; x++)
         {
             var tile = mapData[y][x];
 
-            if (tile === null || tile.index === -1)
+            if (!tile || tile.index === -1 || !tile.visible)
             {
                 continue;
             }
 
             var tilePixelX = (tile.pixelX + tilemapLayer.x);
             var tilePixelY = (tile.pixelY + tilemapLayer.y);
-            var tileX = (tilePixelX * a + tilePixelY * c + e);
-            var tileY = (tilePixelX * b + tilePixelY * d + f);
 
-            if (tile.visible &&
-                tileX >= tCullX &&
-                tileY >= tCullY &&
-                tileX + tileW <= tCullW &&
-                tileY + tileH <= tCullH
-            )
+            if (tilePixelX >= boundsLeft && tilePixelX < boundsRight && tilePixelY >= boundsTop && tilePixelY < boundsBottom)
             {
                 outputArray.push(tile);
             }
+
+            i++;
+
+            // var tileX = (tilePixelX * a + tilePixelY * c + e);
+            // var tileY = (tilePixelX * b + tilePixelY * d + f);
+
+            // if (tile.visible &&
+            //     tileX >= tCullX &&
+            //     tileY >= tCullY &&
+            //     tileX + tileW <= tCullW &&
+            //     tileY + tileH <= tCullH
+            // )
+            // {
+            //     outputArray.push(tile);
+            // }
         }
     }
+
+    window.noCull = i;
+    window.cull = outputArray.length;
 
     /* var tilemapLayer = layer.tilemapLayer;
     var mapData = layer.data;

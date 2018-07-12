@@ -217,25 +217,32 @@ var StaticTilemapLayer = new Class({
      */
     upload: function (camera)
     {
-        var tileset = this.tileset;
-        var mapWidth = this.layer.width;
-        var mapHeight = this.layer.height;
-        var width = tileset.image.source[0].width;
-        var height = tileset.image.source[0].height;
-        var mapData = this.layer.data;
         var renderer = this.renderer;
-        var tile;
-        var row;
-        var col;
-        var texCoords;
 
-        if (renderer.gl)
+        var gl = renderer.gl;
+
+        if (gl)
         {
             var pipeline = renderer.pipelines.TextureTintPipeline;
 
             if (this.dirty)
             {
-                var gl = renderer.gl;
+                var tileset = this.tileset;
+                var mapWidth = this.layer.width;
+                var mapHeight = this.layer.height;
+                var width = tileset.image.source[0].width;
+                var height = tileset.image.source[0].height;
+                var mapData = this.layer.data;
+                var tile;
+                var row;
+                var col;
+                var texCoords;
+        
+                var boundsLeft = camera.worldBounds.left;
+                var boundsRight = camera.worldBounds.right;
+                var boundsTop = camera.worldBounds.top;
+                var boundsBottom = camera.worldBounds.bottom;
+    
                 var vertexBuffer = this.vertexBuffer;
                 var bufferData = this.bufferData;
                 var voffset = -1;
@@ -254,13 +261,18 @@ var StaticTilemapLayer = new Class({
                 var vertexViewF32 = this.vertexViewF32;
                 var vertexViewU32 = this.vertexViewU32;
 
+                var c = 0;
+                var i = 0;
+
                 for (row = 0; row < mapHeight; ++row)
                 {
                     for (col = 0; col < mapWidth; ++col)
                     {
+                        c++;
+
                         tile = mapData[row][col];
 
-                        if (tile === null || tile.index === -1)
+                        if (!tile || tile.index === -1 || !tile.visible)
                         {
                             continue;
                         }
@@ -270,17 +282,27 @@ var StaticTilemapLayer = new Class({
                         var txw = tx + tile.width;
                         var tyh = ty + tile.height;
 
+                        var tilePixelX = (tx + this.x);
+                        var tilePixelY = (ty + this.y);
+
                         texCoords = tileset.getTileTextureCoordinates(tile.index);
 
-                        if (texCoords === null)
+                        if (!texCoords)
                         {
                             continue;
+                        }
+            
+                        if (!texCoords || tilePixelX < boundsLeft || tilePixelX > boundsRight || tilePixelY < boundsTop || tilePixelY > boundsBottom)
+                        {
+                            // continue;
                         }
 
                         var u0 = texCoords.x / width;
                         var v0 = texCoords.y / height;
                         var u1 = (texCoords.x + tile.width) / width;
                         var v1 = (texCoords.y + tile.height) / height;
+
+                        var tint = Utils.getTintAppendFloatAlpha(0xffffff, camera.alpha * this.alpha * tile.alpha);
 
                         var tx0 = tx;
                         var ty0 = ty;
@@ -290,8 +312,6 @@ var StaticTilemapLayer = new Class({
                         var ty2 = tyh;
                         var tx3 = txw;
                         var ty3 = ty;
-
-                        var tint = Utils.getTintAppendFloatAlpha(0xffffff, camera.alpha * this.alpha * tile.alpha);
 
                         vertexViewF32[++voffset] = tx0;
                         vertexViewF32[++voffset] = ty0;
@@ -336,27 +356,35 @@ var StaticTilemapLayer = new Class({
                         vertexViewU32[++voffset] = tint;
 
                         vertexCount += 6;
+
+                        i++;
                     }
                 }
 
                 this.vertexCount = vertexCount;
+
                 this.dirty = false;
 
                 if (vertexBuffer === null)
                 {
                     vertexBuffer = renderer.createVertexBuffer(bufferData, gl.STATIC_DRAW);
+
                     this.vertexBuffer = vertexBuffer;
                 }
                 else
                 {
                     renderer.setVertexBuffer(vertexBuffer);
+
                     gl.bufferSubData(gl.ARRAY_BUFFER, 0, bufferData);
                 }
+
+                window.noCull = c;
+                window.cull = i;
             }
 
             pipeline.modelIdentity();
-            pipeline.modelTranslate(this.x - (camera.scrollX * this.scrollFactorX), this.y - (camera.scrollY * this.scrollFactorY), 0.0);
-            pipeline.modelScale(this.scaleX, this.scaleY, 1.0);
+            pipeline.modelTranslate(this.x - (camera.scrollX * this.scrollFactorX), this.y - (camera.scrollY * this.scrollFactorY), 0);
+            pipeline.modelScale(this.scaleX, this.scaleY, 1);
             pipeline.viewLoad2D(camera.matrix.matrix);
         }
 
