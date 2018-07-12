@@ -23,8 +23,11 @@ var Utils = require('../../renderer/webgl/Utils');
  */
 var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)))
+    var alpha = camera.alpha * src.alpha;
+
+    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)) || alpha <= 0)
     {
+        //  There's nothing to render, so abort!
         return;
     }
 
@@ -41,8 +44,6 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPer
 
     var scrollFactorX = src.scrollFactorX;
     var scrollFactorY = src.scrollFactorY;
-
-    var alpha = camera.alpha * src.alpha;
 
     var x = src.x;
     var y = src.y;
