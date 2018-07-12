@@ -49,7 +49,7 @@ var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPerc
     
         renderer.setPipeline(pipeline);
     
-        renderer.setTexture2D(frame.source.glTexture, 0);
+        renderer.setTexture2D(frame.glTexture, 0);
     
         gl.drawArrays(pipeline.topology, 0, src.vertexCount);
     
