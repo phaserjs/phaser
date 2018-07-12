@@ -39,10 +39,10 @@ var CullTiles = function (layer, camera, outputArray)
 
     //  Camera world view bounds, snapped for tile size
 
-    var boundsLeft = SnapFloor(camera.worldView.x, tileW) - tileW;
-    var boundsRight = SnapCeil(camera.worldView.right, tileW) + tileW;
-    var boundsTop = SnapFloor(camera.worldView.y, tileH) - tileH;
-    var boundsBottom = SnapCeil(camera.worldView.bottom, tileH) + tileH;
+    var boundsLeft = SnapFloor(camera.worldView.x, tileW) - (tilemapLayer.cullPadding.x * tileW);
+    var boundsRight = SnapCeil(camera.worldView.right, tileW) + (tilemapLayer.cullPadding.x * tileW);
+    var boundsTop = SnapFloor(camera.worldView.y, tileH) - (tilemapLayer.cullPadding.y * tileH);
+    var boundsBottom = SnapCeil(camera.worldView.bottom, tileH) + (tilemapLayer.cullPadding.y * tileH);
 
     for (var y = 0; y < mapHeight; y++)
     {

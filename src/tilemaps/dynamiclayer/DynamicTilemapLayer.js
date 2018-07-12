@@ -9,6 +9,7 @@ var Components = require('../../gameobjects/components');
 var DynamicTilemapLayerRender = require('./DynamicTilemapLayerRender');
 var GameObject = require('../../gameobjects/GameObject');
 var TilemapComponents = require('../components');
+var Vector2 = require('../../math/Vector2');
 
 /**
  * @classdesc
@@ -163,6 +164,17 @@ var DynamicTilemapLayer = new Class({
          * @since 3.11.0
          */
         this.tilesTotal = this.layer.width * this.layer.height;
+
+        /**
+         * The amount of tiles to add into the cull rectangle.
+         * 
+         * See the method `setCullPadding` for more details.
+         *
+         * @name Phaser.Tilemaps.DynamicTilemapLayer#cullPadding
+         * @type {Phaser.Math.Vector2}
+         * @since 3.11.0
+         */
+        this.cullPadding = new Vector2(1, 1);
 
         this.setAlpha(this.layer.alpha);
         this.setPosition(x, y);
@@ -793,6 +805,31 @@ var DynamicTilemapLayer = new Class({
         if (value === undefined) { value = true; }
 
         this.skipCull = value;
+
+        return this;
+    },
+
+    /**
+     * When a Camera culls the tiles in this layer it does so using its view into the world, building up a 
+     * rectangle inside which the tiles must exist or they will be culled. Sometimes you may need to expand the size
+     * of this 'cull rectangle', especially if you plan on rotating the Camera viewing the layer. Do so
+     * by providing the padding values. The values given are in tiles, not pixels. So if the tile width was 32px
+     * and you set `paddingX` to be 4, it would add 32px x 4 to the cull rectangle (adjusted for scale)
+     * 
+     * @method Phaser.Tilemaps.DynamicTilemapLayer#setCullPadding
+     * @since 3.11.0
+     *
+     * @param {number} [paddingX=1] - The amount of extra horizontal tiles to add to the cull check padding.
+     * @param {number} [paddingY=1] - The amount of extra vertical tiles to add to the cull check padding.
+     *
+     * @return {this} This Tilemap Layer object.
+     */
+    setCullPadding: function (paddingX, paddingY)
+    {
+        if (paddingX === undefined) { paddingX = 1; }
+        if (paddingY === undefined) { paddingY = 1; }
+
+        this.cullPadding.set(paddingX, paddingY);
 
         return this;
     },
