@@ -44,8 +44,6 @@ var CullTiles = function (layer, camera, outputArray)
     var boundsTop = SnapFloor(camera.worldView.y, tileH);
     var boundsBottom = SnapCeil(camera.worldView.bottom, tileH);
 
-    var i = 0;
-
     for (var y = 0; y < mapHeight; y++)
     {
         for (var x = 0; x < mapWidth; x++)
@@ -57,27 +55,18 @@ var CullTiles = function (layer, camera, outputArray)
                 continue;
             }
 
-            if (skipCull)
+            var tilePixelX = (tile.pixelX + tilemapLayer.x) * tilemapLayer.scaleX;
+            var tilePixelY = (tile.pixelY + tilemapLayer.y) * tilemapLayer.scaleY;
+
+            if (skipCull || (tilePixelX >= boundsLeft && tilePixelX + tileW <= boundsRight && tilePixelY >= boundsTop && tilePixelY + tileH <= boundsBottom))
             {
                 outputArray.push(tile);
             }
-            else
-            {
-                var tilePixelX = (tile.pixelX + tilemapLayer.x) * tilemapLayer.scaleX;
-                var tilePixelY = (tile.pixelY + tilemapLayer.y) * tilemapLayer.scaleY;
-    
-                if (tilePixelX >= boundsLeft && tilePixelX + tileW <= boundsRight && tilePixelY >= boundsTop && tilePixelY + tileH <= boundsBottom)
-                {
-                    outputArray.push(tile);
-                }
-            }
-
-            i++;
         }
     }
 
-    window.noCull = i;
-    window.cull = outputArray.length;
+    tilemapLayer.tilesDrawn = outputArray.length;
+    tilemapLayer.tilesTotal = mapWidth * mapHeight;
 
     return outputArray;
 };

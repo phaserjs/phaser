@@ -144,6 +144,26 @@ var DynamicTilemapLayer = new Class({
          */
         this.skipCull = false;
 
+        /**
+         * The total number of tiles drawn by the renderer in the last frame.
+         *
+         * @name Phaser.Tilemaps.DynamicTilemapLayer#tilesDrawn
+         * @type {number}
+         * @readOnly
+         * @since 3.11.0
+         */
+        this.tilesDrawn = 0;
+
+        /**
+         * The total number of tiles in this layer. Updated every frame.
+         *
+         * @name Phaser.Tilemaps.DynamicTilemapLayer#tilesTotal
+         * @type {number}
+         * @readOnly
+         * @since 3.11.0
+         */
+        this.tilesTotal = this.layer.width * this.layer.height;
+
         this.setAlpha(this.layer.alpha);
         this.setPosition(x, y);
         this.setOrigin();
