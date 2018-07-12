@@ -188,6 +188,25 @@ var DynamicTilemapLayer = new Class({
          */
         this.cullPaddingY = 1;
 
+        /**
+         * The callback that is invoked when the tiles are culled.
+         * 
+         * By default it will call `TilemapComponents.CullTiles` but you can override this to call any function you like.
+         * 
+         * It will be sent 3 arguments:
+         * 
+         * 1) The Phaser.Tilemaps.LayerData object for this Layer
+         * 2) The Camera that is culling the layer. You can check its `dirty` property to see if it has changed since the last cull.
+         * 3) A reference to the `culledTiles` array, which should be used to store the tiles you want rendered.
+         * 
+         * See the `TilemapComponents.CullTiles` source code for details on implementing your own culling system.
+         *
+         * @name Phaser.Tilemaps.DynamicTilemapLayer#cullCallback
+         * @type {function}
+         * @since 3.11.0
+         */
+        this.cullCallback = TilemapComponents.CullTiles;
+
         this.setAlpha(this.layer.alpha);
         this.setPosition(x, y);
         this.setOrigin();
@@ -276,7 +295,7 @@ var DynamicTilemapLayer = new Class({
      */
     cull: function (camera)
     {
-        return TilemapComponents.CullTiles(this.layer, camera, this.culledTiles);
+        return this.cullCallback(this.layer, camera, this.culledTiles);
     },
 
     /**
@@ -322,6 +341,7 @@ var DynamicTilemapLayer = new Class({
         this.layer = undefined;
         this.tileset = undefined;
         this.culledTiles.length = 0;
+        this.cullCallback = null;
 
         GameObject.prototype.destroy.call(this);
     },
