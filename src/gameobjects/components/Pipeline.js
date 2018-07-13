@@ -72,7 +72,7 @@ var Pipeline = {
      *
      * @param {string} pipelineName - The name of the pipeline to set on this Game Object.
      *
-     * @return {boolean} `true` if the pipeline was set successfully, otherwise `false`.
+     * @return {this} This Game Object instance.
      */
     setPipeline: function (pipelineName)
     {
@@ -81,11 +81,9 @@ var Pipeline = {
         if (renderer && renderer.gl && renderer.hasPipeline(pipelineName))
         {
             this.pipeline = renderer.getPipeline(pipelineName);
-
-            return true;
         }
 
-        return false;
+        return this;
     },
 
     /**
