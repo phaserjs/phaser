@@ -1,1 +1,0 @@
-{"version":3,"file":"GetMagnitudeSq.js","sourceRoot":"","sources":["../../../srcTS/geom/point/GetMagnitudeSq.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH;;;;;;;;;GASG;AACH,IAAI,cAAc,GAAG,UAAU,KAAK;IAEhC,OAAO,CAAC,KAAK,CAAC,CAAC,GAAG,KAAK,CAAC,CAAC,CAAC,GAAG,CAAC,KAAK,CAAC,CAAC,GAAG,KAAK,CAAC,CAAC,CAAC,CAAC;AACrD,CAAC,CAAC;AAEF,MAAM,CAAC,OAAO,GAAG,cAAc,CAAC"}

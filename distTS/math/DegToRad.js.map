@@ -1,1 +1,0 @@
-{"version":3,"file":"DegToRad.js","sourceRoot":"","sources":["../../srcTS/math/DegToRad.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,IAAI,KAAK,GAAG,OAAO,CAAC,SAAS,CAAC,CAAC;AAE/B;;;;;;;;;GASG;AACH,IAAI,QAAQ,GAAG,UAAU,OAAO;IAE5B,OAAO,OAAO,GAAG,KAAK,CAAC,UAAU,CAAC;AACtC,CAAC,CAAC;AAEF,MAAM,CAAC,OAAO,GAAG,QAAQ,CAAC"}

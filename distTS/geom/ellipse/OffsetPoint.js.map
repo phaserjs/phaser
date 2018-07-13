@@ -1,1 +1,0 @@
-{"version":3,"file":"OffsetPoint.js","sourceRoot":"","sources":["../../../srcTS/geom/ellipse/OffsetPoint.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH;;;;;;;;;;;;GAYG;AACH,IAAI,WAAW,GAAG,UAAU,OAAO,EAAE,KAAK;IAEtC,OAAO,CAAC,CAAC,IAAI,KAAK,CAAC,CAAC,CAAC;IACrB,OAAO,CAAC,CAAC,IAAI,KAAK,CAAC,CAAC,CAAC;IAErB,OAAO,OAAO,CAAC;AACnB,CAAC,CAAC;AAEF,MAAM,CAAC,OAAO,GAAG,WAAW,CAAC"}

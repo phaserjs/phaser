@@ -1,1 +1,0 @@
-{"version":3,"file":"WrapDegrees.js","sourceRoot":"","sources":["../../../srcTS/math/angle/WrapDegrees.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,IAAI,IAAI,GAAG,OAAO,CAAC,SAAS,CAAC,CAAC;AAE9B;;;;;;;;;;;GAWG;AACH,IAAI,WAAW,GAAG,UAAU,KAAK;IAE7B,OAAO,IAAI,CAAC,KAAK,EAAE,CAAC,GAAG,EAAE,GAAG,CAAC,CAAC;AAClC,CAAC,CAAC;AAEF,MAAM,CAAC,OAAO,GAAG,WAAW,CAAC"}

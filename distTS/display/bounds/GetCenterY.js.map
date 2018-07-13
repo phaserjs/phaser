@@ -1,1 +1,0 @@
-{"version":3,"file":"GetCenterY.js","sourceRoot":"","sources":["../../../srcTS/display/bounds/GetCenterY.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH;;;;;;;;;GASG;AACH,IAAI,UAAU,GAAG,UAAU,UAAU;IAEjC,OAAO,UAAU,CAAC,CAAC,GAAG,CAAC,UAAU,CAAC,MAAM,GAAG,UAAU,CAAC,OAAO,CAAC,GAAG,CAAC,UAAU,CAAC,MAAM,GAAG,GAAG,CAAC,CAAC;AAC/F,CAAC,CAAC;AAEF,MAAM,CAAC,OAAO,GAAG,UAAU,CAAC"}

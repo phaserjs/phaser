@@ -1,1 +1,0 @@
-{"version":3,"file":"GetCenterX.js","sourceRoot":"","sources":["../../../srcTS/display/bounds/GetCenterX.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH;;;;;;;;;GASG;AACH,IAAI,UAAU,GAAG,UAAU,UAAU;IAEjC,OAAO,UAAU,CAAC,CAAC,GAAG,CAAC,UAAU,CAAC,KAAK,GAAG,UAAU,CAAC,OAAO,CAAC,GAAG,CAAC,UAAU,CAAC,KAAK,GAAG,GAAG,CAAC,CAAC;AAC7F,CAAC,CAAC;AAEF,MAAM,CAAC,OAAO,GAAG,UAAU,CAAC"}

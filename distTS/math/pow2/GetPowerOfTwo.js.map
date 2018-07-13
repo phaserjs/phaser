@@ -1,1 +1,0 @@
-{"version":3,"file":"GetPowerOfTwo.js","sourceRoot":"","sources":["../../../srcTS/math/pow2/GetPowerOfTwo.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH;;;;;;;;;GASG;AACH,IAAI,aAAa,GAAG,UAAU,KAAK;IAE/B,IAAI,KAAK,GAAG,IAAI,CAAC,GAAG,CAAC,KAAK,CAAC,GAAG,kBAAkB,CAAC;IAEjD,OAAO,CAAC,CAAC,IAAI,IAAI,CAAC,IAAI,CAAC,KAAK,CAAC,CAAC,CAAC;AACnC,CAAC,CAAC;AAEF,MAAM,CAAC,OAAO,GAAG,aAAa,CAAC"}

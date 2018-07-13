@@ -1,1 +1,0 @@
-{"version":3,"file":"GreaterThan.js","sourceRoot":"","sources":["../../../srcTS/math/fuzzy/GreaterThan.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH;;;;;;;;;;;;;GAaG;AACH,IAAI,WAAW,GAAG,UAAU,CAAC,EAAE,CAAC,EAAE,OAAO;IAErC,IAAI,OAAO,KAAK,SAAS,EAAE;QAAE,OAAO,GAAG,MAAM,CAAC;KAAE;IAEhD,OAAO,CAAC,GAAG,CAAC,GAAG,OAAO,CAAC;AAC3B,CAAC,CAAC;AAEF,MAAM,CAAC,OAAO,GAAG,WAAW,CAAC"}

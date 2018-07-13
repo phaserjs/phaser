@@ -1,1 +1,0 @@
-{"version":3,"file":"GetAspectRatio.js","sourceRoot":"","sources":["../../../srcTS/geom/rectangle/GetAspectRatio.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH;;;;;;;;;GASG;AACH,IAAI,cAAc,GAAG,UAAU,IAAI;IAE/B,OAAO,CAAC,IAAI,CAAC,MAAM,KAAK,CAAC,CAAC,CAAC,CAAC,CAAC,GAAG,CAAC,CAAC,CAAC,IAAI,CAAC,KAAK,GAAG,IAAI,CAAC,MAAM,CAAC;AAChE,CAAC,CAAC;AAEF,MAAM,CAAC,OAAO,GAAG,cAAc,CAAC"}

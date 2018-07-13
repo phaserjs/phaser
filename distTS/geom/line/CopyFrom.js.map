@@ -1,1 +1,0 @@
-{"version":3,"file":"CopyFrom.js","sourceRoot":"","sources":["../../../srcTS/geom/line/CopyFrom.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH;;;;;;;;;;;;GAYG;AACH,IAAI,QAAQ,GAAG,UAAU,MAAM,EAAE,IAAI;IAEjC,OAAO,IAAI,CAAC,KAAK,CAAC,MAAM,CAAC,EAAE,EAAE,MAAM,CAAC,EAAE,EAAE,MAAM,CAAC,EAAE,EAAE,MAAM,CAAC,EAAE,CAAC,CAAC;AAClE,CAAC,CAAC;AAEF,MAAM,CAAC,OAAO,GAAG,QAAQ,CAAC"}

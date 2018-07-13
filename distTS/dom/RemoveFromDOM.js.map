@@ -1,1 +1,0 @@
-{"version":3,"file":"RemoveFromDOM.js","sourceRoot":"","sources":["../../srcTS/dom/RemoveFromDOM.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH;;;;;;;GAOG;AACH,IAAI,aAAa,GAAG,UAAU,OAAO;IAEjC,IAAI,OAAO,CAAC,UAAU,EACtB;QACI,OAAO,CAAC,UAAU,CAAC,WAAW,CAAC,OAAO,CAAC,CAAC;KAC3C;AACL,CAAC,CAAC;AAEF,MAAM,CAAC,OAAO,GAAG,aAAa,CAAC"}

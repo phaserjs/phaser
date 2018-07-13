@@ -1,1 +1,0 @@
-{"version":3,"file":"JustUp.js","sourceRoot":"","sources":["../../../../srcTS/input/keyboard/keys/JustUp.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH;;;;;;;;;;;;;;GAcG;AACH,IAAI,MAAM,GAAG,UAAU,GAAG;IAEtB,IAAI,GAAG,CAAC,OAAO,EACf;QACI,GAAG,CAAC,OAAO,GAAG,KAAK,CAAC;QAEpB,OAAO,IAAI,CAAC;KACf;SAED;QACI,OAAO,KAAK,CAAC;KAChB;AACL,CAAC,CAAC;AAEF,MAAM,CAAC,OAAO,GAAG,MAAM,CAAC"}

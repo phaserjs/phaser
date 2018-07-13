@@ -1,1 +1,0 @@
-{"version":3,"file":"Equals.js","sourceRoot":"","sources":["../../../srcTS/geom/point/Equals.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH;;;;;;;;;;GAUG;AACH,IAAI,MAAM,GAAG,UAAU,KAAK,EAAE,SAAS;IAEnC,OAAO,CAAC,KAAK,CAAC,CAAC,KAAK,SAAS,CAAC,CAAC,IAAI,KAAK,CAAC,CAAC,KAAK,SAAS,CAAC,CAAC,CAAC,CAAC;AAChE,CAAC,CAAC;AAEF,MAAM,CAAC,OAAO,GAAG,MAAM,CAAC"}

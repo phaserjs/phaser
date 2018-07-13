@@ -1,1 +1,0 @@
-{"version":3,"file":"Bounce.js","sourceRoot":"","sources":["../../../../srcTS/physics/matter-js/components/Bounce.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH;;;;;GAKG;AACH,IAAI,MAAM,GAAG;IAET;;;;;;;;;OASG;IACH,SAAS,EAAE,UAAU,KAAK;QAEtB,IAAI,CAAC,IAAI,CAAC,WAAW,GAAG,KAAK,CAAC;QAE9B,OAAO,IAAI,CAAC;IAChB,CAAC;CAEJ,CAAC;AAEF,MAAM,CAAC,OAAO,GAAG,MAAM,CAAC"}
