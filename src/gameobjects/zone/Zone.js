@@ -262,7 +262,7 @@ var Zone = new Class({
      *
      * @method Phaser.GameObjects.Zone#setAlpha
      * @private
-     * @since 3.10.0
+     * @since 3.11.0
      */
     setAlpha: function ()
     {
