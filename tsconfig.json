@@ -1,7 +1,7 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-        "rootDir": "srcT",
+        "rootDir": "srcTS",
         "outDir": "distTS/",
         "sourceMap": true,
         "target": "es6",
