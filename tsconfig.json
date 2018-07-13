@@ -1,0 +1,44 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "rootDir": "srcT",
+        "outDir": "distTS/",
+        "sourceMap": true,
+        "target": "es6",
+        "module": "commonjs",
+        "declaration": true,
+        "noImplicitAny": false,
+        "noImplicitReturns": false,
+        "noImplicitUseStrict": false,
+        "noUnusedParameters": false,
+        "suppressImplicitAnyIndexErrors": false,
+        "noFallthroughCasesInSwitch": false,
+        "noImplicitThis": false,
+        "noUnusedLocals": false,
+        "allowUnreachableCode": false,
+        "removeComments": false,
+        "emitDecoratorMetadata": false,
+        "importHelpers": false,
+        "allowJs": false,
+        "strictNullChecks": false,
+        "experimentalDecorators": true,
+        "moduleResolution": "node",
+        "baseUrl": "./",
+        "lib": [
+            "es2017",
+            "dom"
+        ]
+    },
+    "filesGlob": [],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "distTS",
+        "scripts",
+        "github",
+        "src"
+    ],
+    "atom": {
+        "rewriteTsconfig": false
+    }
+}
