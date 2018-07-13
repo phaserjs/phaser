@@ -38,6 +38,7 @@ var ProcessKeyUp = function (key, event)
 
     key._justDown = false;
     key._justUp = true;
+    key._tick = -1;
 
     return key;
 };
