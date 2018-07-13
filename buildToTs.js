@@ -2,6 +2,8 @@
 const fs = require('fs');
 const path = require('path');
 
+
+// copies all files from * to *
 const copyRecursiveSync = function (src, dest) {
     var exists = fs.existsSync(src);
     var stats = exists && fs.statSync(src);
@@ -18,6 +20,7 @@ const copyRecursiveSync = function (src, dest) {
 };
 
 
+// delets all files in folder *
 const deleteFolderRecursive = function (path) {
     if (fs.existsSync(path)) {
         fs.readdirSync(path).forEach(function (file, index) {
@@ -33,6 +36,7 @@ const deleteFolderRecursive = function (path) {
 };
 
 
+//renames all files in folder * from .js to *ts
 const renameDir = function (dir) {
     var files = fs.readdirSync(dir),
         f,
@@ -53,11 +57,19 @@ const renameDir = function (dir) {
     }
 }
 
+// remove srcTS
 deleteFolderRecursive('srcTS')
+
+// copy src to srcTS
 copyRecursiveSync('src', 'srcTS');
+
+// rename files in folder from js to ts
 renameDir('srcTS');
 
 
+
+// user fusebox-typechecker to tslint and typecheck srcTS folder
+// will emit js & d.ts filers under distTS folder
 var Transpile = require('fuse-box-typechecker').TypeHelper
 
 // configure
@@ -70,6 +82,7 @@ var transpile = Transpile({
     yellowOnLint: true,
     emit: true,
     clearOnEmit: true,
+    // skip there errors, fusebox typechker is strict, does not emit files if ANY error!
     skipTsErrors: [2403, 2554, 2339, 2300, 2393, 2304, 2552, 2540, 2551, 2322, 2356, 2362, 2348, 2350, 2351]
 });
 
