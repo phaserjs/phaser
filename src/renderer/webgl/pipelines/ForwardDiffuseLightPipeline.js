@@ -36,6 +36,31 @@ var ForwardDiffuseLightPipeline = new Class({
         config.fragShader = ShaderSourceFS.replace('%LIGHT_COUNT%', LIGHT_COUNT.toString());
 
         TextureTintPipeline.call(this, config);
+
+        /**
+         * Default normal map texture to use.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#defaultNormalMap
+         * @type {Phaser.Texture.Frame}
+         * @private
+         * @since 3.11.0
+         */
+        this.defaultNormalMap;
+    },
+
+    /**
+     * Called when the Game has fully booted and the Renderer has finished setting up.
+     * 
+     * By this stage all Game level systems are now in place and you can perform any final
+     * tasks that the pipeline may need that relied on game systems such as the Texture Manager.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#boot
+     * @override
+     * @since 3.11.0
+     */
+    boot: function ()
+    {
+        this.defaultNormalMap = this.game.textures.getFrame('__DEFAULT');
     },
 
     /**
@@ -135,6 +160,181 @@ var ForwardDiffuseLightPipeline = new Class({
     },
 
     /**
+     * Generic function for batching a textured quad
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTexture
+     * @since 3.0.0
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - Source GameObject
+     * @param {WebGLTexture} texture - Raw WebGLTexture associated with the quad
+     * @param {integer} textureWidth - Real texture width
+     * @param {integer} textureHeight - Real texture height
+     * @param {number} srcX - X coordinate of the quad
+     * @param {number} srcY - Y coordinate of the quad
+     * @param {number} srcWidth - Width of the quad
+     * @param {number} srcHeight - Height of the quad
+     * @param {number} scaleX - X component of scale
+     * @param {number} scaleY - Y component of scale
+     * @param {number} rotation - Rotation of the quad
+     * @param {boolean} flipX - Indicates if the quad is horizontally flipped
+     * @param {boolean} flipY - Indicates if the quad is vertically flipped
+     * @param {number} scrollFactorX - By which factor is the quad affected by the camera horizontal scroll
+     * @param {number} scrollFactorY - By which factor is the quad effected by the camera vertical scroll
+     * @param {number} displayOriginX - Horizontal origin in pixels
+     * @param {number} displayOriginY - Vertical origin in pixels
+     * @param {number} frameX - X coordinate of the texture frame
+     * @param {number} frameY - Y coordinate of the texture frame
+     * @param {number} frameWidth - Width of the texture frame
+     * @param {number} frameHeight - Height of the texture frame
+     * @param {integer} tintTL - Tint for top left
+     * @param {integer} tintTR - Tint for top right
+     * @param {integer} tintBL - Tint for bottom left
+     * @param {integer} tintBR - Tint for bottom right
+     * @param {number} tintEffect - The tint effect (0 for additive, 1 for replacement)
+     * @param {number} uOffset - Horizontal offset on texture coordinate
+     * @param {number} vOffset - Vertical offset on texture coordinate
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - Current used camera
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - Parent container
+     */
+    batchTexture: function (
+        gameObject,
+        texture,
+        textureWidth, textureHeight,
+        srcX, srcY,
+        srcWidth, srcHeight,
+        scaleX, scaleY,
+        rotation,
+        flipX, flipY,
+        scrollFactorX, scrollFactorY,
+        displayOriginX, displayOriginY,
+        frameX, frameY, frameWidth, frameHeight,
+        tintTL, tintTR, tintBL, tintBR, tintEffect,
+        uOffset, vOffset,
+        camera,
+        parentTransformMatrix)
+    {
+        if (!this.active)
+        {
+            return;
+        }
+
+        this.renderer.setPipeline(this);
+
+        var normalTexture;
+
+        if (gameObject.texture)
+        {
+            normalTexture = gameObject.texture.dataSource[gameObject.frame.sourceIndex];
+        }
+        else if (gameObject.tileset)
+        {
+            normalTexture = gameObject.tileset.image.dataSource[0];
+        }
+
+        if (!normalTexture)
+        {
+            normalTexture = this.defaultNormalMap;
+        }
+
+        this.setTexture2D(normalTexture.glTexture, 1);
+
+        var camMatrix = this._tempMatrix1;
+        var spriteMatrix = this._tempMatrix2;
+        var calcMatrix = this._tempMatrix3;
+
+        var width = srcWidth;
+        var height = srcHeight;
+
+        var x = -displayOriginX;
+        var y = -displayOriginY;
+
+        //  Invert the flipY if this is a RenderTexture
+        flipY = flipY ^ (texture.isRenderTexture ? 1 : 0);
+
+        if (flipX)
+        {
+            width *= -1;
+            x += srcWidth;
+        }
+
+        if (flipY)
+        {
+            height *= -1;
+            y += srcHeight;
+        }
+
+        if (camera.roundPixels)
+        {
+            x |= 0;
+            y |= 0;
+        }
+
+        var xw = x + width;
+        var yh = y + height;
+
+        spriteMatrix.applyITRS(srcX, srcY, rotation, scaleX, scaleY);
+
+        camMatrix.copyFrom(camera.matrix);
+
+        if (parentTransformMatrix)
+        {
+            //  Multiply the camera by the parent matrix
+            camMatrix.multiplyWithOffset(parentTransformMatrix, -camera.scrollX * scrollFactorX, -camera.scrollY * scrollFactorY);
+
+            //  Undo the camera scroll
+            spriteMatrix.e = srcX;
+            spriteMatrix.f = srcY;
+
+            //  Multiply by the Sprite matrix, store result in calcMatrix
+            camMatrix.multiply(spriteMatrix, calcMatrix);
+        }
+        else
+        {
+            spriteMatrix.e -= camera.scrollX * scrollFactorX;
+            spriteMatrix.f -= camera.scrollY * scrollFactorY;
+    
+            //  Multiply by the Sprite matrix, store result in calcMatrix
+            camMatrix.multiply(spriteMatrix, calcMatrix);
+        }
+
+        var tx0 = x * calcMatrix.a + y * calcMatrix.c + calcMatrix.e;
+        var ty0 = x * calcMatrix.b + y * calcMatrix.d + calcMatrix.f;
+
+        var tx1 = x * calcMatrix.a + yh * calcMatrix.c + calcMatrix.e;
+        var ty1 = x * calcMatrix.b + yh * calcMatrix.d + calcMatrix.f;
+
+        var tx2 = xw * calcMatrix.a + yh * calcMatrix.c + calcMatrix.e;
+        var ty2 = xw * calcMatrix.b + yh * calcMatrix.d + calcMatrix.f;
+
+        var tx3 = xw * calcMatrix.a + y * calcMatrix.c + calcMatrix.e;
+        var ty3 = xw * calcMatrix.b + y * calcMatrix.d + calcMatrix.f;
+
+        if (camera.roundPixels)
+        {
+            tx0 |= 0;
+            ty0 |= 0;
+
+            tx1 |= 0;
+            ty1 |= 0;
+
+            tx2 |= 0;
+            ty2 |= 0;
+
+            tx3 |= 0;
+            ty3 |= 0;
+        }
+
+        var u0 = (frameX / textureWidth) + uOffset;
+        var v0 = (frameY / textureHeight) + vOffset;
+        var u1 = (frameX + frameWidth) / textureWidth + uOffset;
+        var v1 = (frameY + frameHeight) / textureHeight + vOffset;
+
+        this.setTexture2D(texture, 0);
+
+        this.batchVertices(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect);
+    },
+
+    /**
      * Sets the Game Objects normal map as the active texture.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#setNormalMap
@@ -144,18 +344,24 @@ var ForwardDiffuseLightPipeline = new Class({
      */
     setNormalMap: function (gameObject)
     {
-        if (!this.active || !gameObject || !gameObject.texture)
+        if (!this.active || !gameObject)
         {
             return;
         }
 
-        // var normalTexture = tilemapLayer.tileset.image.dataSource[0];
-        var normalTexture = gameObject.texture.dataSource[gameObject.frame.sourceIndex];
+        var normalTexture;
 
-        if (normalTexture)
+        if (gameObject.texture)
         {
-            this.setTexture2D(normalTexture.glTexture, 1);
+            normalTexture = gameObject.texture.dataSource[gameObject.frame.sourceIndex];
         }
+
+        if (!normalTexture)
+        {
+            normalTexture = this.defaultNormalMap;
+        }
+
+        this.setTexture2D(normalTexture.glTexture, 1);
 
         this.renderer.setPipeline(gameObject.defaultPipeline);
     },
