@@ -519,7 +519,24 @@ var WebGLRenderer = new Class({
         this.setBlendMode(CONST.BlendModes.NORMAL);
         this.resize(this.width, this.height);
 
+        this.game.events.once('ready', this.boot, this);
+
         return this;
+    },
+
+    /**
+     * Internal boot handler. Calls 'boot' on each pipeline.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#boot
+     * @private
+     * @since 3.11.0
+     */
+    boot: function ()
+    {
+        for (var pipelineName in this.pipelines)
+        {
+            this.pipelines[pipelineName].boot();
+        }
     },
 
     /**
@@ -553,7 +570,7 @@ var WebGLRenderer = new Class({
 
         gl.viewport(0, 0, this.width, this.height);
 
-        // Update all registered pipelines
+        //  Update all registered pipelines
         for (var pipelineName in pipelines)
         {
             pipelines[pipelineName].resize(width, height, resolution);

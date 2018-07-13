@@ -239,6 +239,19 @@ var WebGLPipeline = new Class({
     },
 
     /**
+     * Called when the Game has fully booted and the Renderer has finished setting up.
+     * 
+     * By this stage all Game level systems are now in place and you can perform any final
+     * tasks that the pipeline may need that relied on game systems such as the Texture Manager.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#boot
+     * @since 3.11.0
+     */
+    boot: function ()
+    {
+    },
+
+    /**
      * Adds a description of vertex attribute to the pipeline
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#addAttribute
