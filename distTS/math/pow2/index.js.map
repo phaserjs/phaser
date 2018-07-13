@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../srcTS/math/pow2/index.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH;;GAEG;AAEH,MAAM,CAAC,OAAO,GAAG;IAEb,OAAO,EAAE,OAAO,CAAC,iBAAiB,CAAC;IACnC,MAAM,EAAE,OAAO,CAAC,oBAAoB,CAAC;IACrC,OAAO,EAAE,OAAO,CAAC,qBAAqB,CAAC;CAE1C,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"Gravity.js","sourceRoot":"","sources":["../../../../srcTS/physics/matter-js/components/Gravity.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH;;;;;GAKG;AACH,IAAI,OAAO,GAAG;IAEV;;;;;;;;;OASG;IACH,gBAAgB,EAAE,UAAU,KAAK;QAE7B,IAAI,CAAC,IAAI,CAAC,aAAa,GAAG,KAAK,CAAC;QAEhC,OAAO,IAAI,CAAC;IAChB,CAAC;CAEJ,CAAC;AAEF,MAAM,CAAC,OAAO,GAAG,OAAO,CAAC"}

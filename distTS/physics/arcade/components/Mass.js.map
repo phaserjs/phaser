@@ -1,0 +1,1 @@
+{"version":3,"file":"Mass.js","sourceRoot":"","sources":["../../../../srcTS/physics/arcade/components/Mass.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH;;;;;GAKG;AACH,IAAI,IAAI,GAAG;IAEP;;;;;;;;;OASG;IACH,OAAO,EAAE,UAAU,KAAK;QAEpB,IAAI,CAAC,IAAI,CAAC,IAAI,GAAG,KAAK,CAAC;QAEvB,OAAO,IAAI,CAAC;IAChB,CAAC;CAEJ,CAAC;AAEF,MAAM,CAAC,OAAO,GAAG,IAAI,CAAC"}

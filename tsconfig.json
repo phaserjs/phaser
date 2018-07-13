@@ -4,7 +4,7 @@
         "rootDir": "srcTS",
         "outDir": "distTS/",
         "sourceMap": true,
-        "target": "es6",
+        "target": "es5",
         "module": "commonjs",
         "declaration": true,
         "noImplicitAny": false,
