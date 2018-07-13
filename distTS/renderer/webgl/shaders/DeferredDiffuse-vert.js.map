@@ -1,1 +1,0 @@
-{"version":3,"file":"DeferredDiffuse-vert.js","sourceRoot":"","sources":["../../../../srcTS/renderer/webgl/shaders/DeferredDiffuse-vert.ts"],"names":[],"mappings":"AAAA,MAAM,CAAC,OAAO,GAAG;IACb,gDAAgD;IAChD,EAAE;IACF,0BAA0B;IAC1B,EAAE;IACF,4BAA4B;IAC5B,EAAE;IACF,aAAa;IACb,GAAG;IACH,+CAA+C;IAC/C,GAAG;IACH,EAAE;CACL,CAAC,IAAI,CAAC,IAAI,CAAC,CAAC"}

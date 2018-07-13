@@ -1,1 +1,0 @@
-{"version":3,"file":"LessThan.js","sourceRoot":"","sources":["../../../srcTS/math/fuzzy/LessThan.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH;;;;;;;;;;;;;GAaG;AACH,IAAI,QAAQ,GAAG,UAAU,CAAC,EAAE,CAAC,EAAE,OAAO;IAElC,IAAI,OAAO,KAAK,SAAS,EAAE;QAAE,OAAO,GAAG,MAAM,CAAC;KAAE;IAEhD,OAAO,CAAC,GAAG,CAAC,GAAG,OAAO,CAAC;AAC3B,CAAC,CAAC;AAEF,MAAM,CAAC,OAAO,GAAG,QAAQ,CAAC"}
