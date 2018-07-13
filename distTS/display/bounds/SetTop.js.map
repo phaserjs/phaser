@@ -1,0 +1,1 @@
+{"version":3,"file":"SetTop.js","sourceRoot":"","sources":["../../../srcTS/display/bounds/SetTop.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH;;;;;;;;;;;;GAYG;AACH,IAAI,MAAM,GAAG,UAAU,UAAU,EAAE,KAAK;IAEpC,UAAU,CAAC,CAAC,GAAG,KAAK,GAAG,CAAC,UAAU,CAAC,MAAM,GAAG,UAAU,CAAC,OAAO,CAAC,CAAC;IAEhE,OAAO,UAAU,CAAC;AACtB,CAAC,CAAC;AAEF,MAAM,CAAC,OAAO,GAAG,MAAM,CAAC"}

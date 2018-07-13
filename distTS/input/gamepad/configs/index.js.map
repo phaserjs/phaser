@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../../srcTS/input/gamepad/configs/index.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH;;GAEG;AAEH,MAAM,CAAC,OAAO,GAAG;IAEb,WAAW,EAAE,OAAO,CAAC,gCAAgC,CAAC;IACtD,QAAQ,EAAE,OAAO,CAAC,uBAAuB,CAAC;IAC1C,QAAQ,EAAE,OAAO,CAAC,sBAAsB,CAAC;CAE5C,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"GetBottom.js","sourceRoot":"","sources":["../../../srcTS/display/bounds/GetBottom.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH;;;;;;;;;GASG;AACH,IAAI,SAAS,GAAG,UAAU,UAAU;IAEhC,OAAO,CAAC,UAAU,CAAC,CAAC,GAAG,UAAU,CAAC,MAAM,CAAC,GAAG,CAAC,UAAU,CAAC,MAAM,GAAG,UAAU,CAAC,OAAO,CAAC,CAAC;AACzF,CAAC,CAAC;AAEF,MAAM,CAAC,OAAO,GAAG,SAAS,CAAC"}

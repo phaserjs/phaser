@@ -1,0 +1,1 @@
+{"version":3,"file":"SetLeft.js","sourceRoot":"","sources":["../../../srcTS/display/bounds/SetLeft.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH;;;;;;;;;;;;GAYG;AACH,IAAI,OAAO,GAAG,UAAU,UAAU,EAAE,KAAK;IAErC,UAAU,CAAC,CAAC,GAAG,KAAK,GAAG,CAAC,UAAU,CAAC,KAAK,GAAG,UAAU,CAAC,OAAO,CAAC,CAAC;IAE/D,OAAO,UAAU,CAAC;AACtB,CAAC,CAAC;AAEF,MAAM,CAAC,OAAO,GAAG,OAAO,CAAC"}

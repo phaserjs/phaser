@@ -1,0 +1,1 @@
+{"version":3,"file":"BetweenPoints.js","sourceRoot":"","sources":["../../../srcTS/math/angle/BetweenPoints.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH;;;;;;;;;;;;GAYG;AACH,IAAI,aAAa,GAAG,UAAU,MAAM,EAAE,MAAM;IAExC,OAAO,IAAI,CAAC,KAAK,CAAC,MAAM,CAAC,CAAC,GAAG,MAAM,CAAC,CAAC,EAAE,MAAM,CAAC,CAAC,GAAG,MAAM,CAAC,CAAC,CAAC,CAAC;AAChE,CAAC,CAAC;AAEF,MAAM,CAAC,OAAO,GAAG,aAAa,CAAC"}

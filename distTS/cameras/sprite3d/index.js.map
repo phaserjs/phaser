@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../srcTS/cameras/sprite3d/index.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH;;GAEG;AAEH,MAAM,CAAC,OAAO,GAAG;IAEb,MAAM,EAAE,OAAO,CAAC,UAAU,CAAC;IAC3B,aAAa,EAAE,OAAO,CAAC,iBAAiB,CAAC;IACzC,kBAAkB,EAAE,OAAO,CAAC,sBAAsB,CAAC;IACnD,iBAAiB,EAAE,OAAO,CAAC,qBAAqB,CAAC;CAEpD,CAAC"}

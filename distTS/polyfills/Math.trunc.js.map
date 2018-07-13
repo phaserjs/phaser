@@ -1,0 +1,1 @@
+{"version":3,"file":"Math.trunc.js","sourceRoot":"","sources":["../../srcTS/polyfills/Math.trunc.ts"],"names":[],"mappings":"AAAA,+GAA+G;AAC/G,IAAI,CAAC,IAAI,CAAC,KAAK,EAAE;IACb,IAAI,CAAC,KAAK,GAAG,eAAe,CAAC;QACzB,OAAO,CAAC,GAAG,CAAC,CAAC,CAAC,CAAC,IAAI,CAAC,IAAI,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,IAAI,CAAC,KAAK,CAAC,CAAC,CAAC,CAAC;IAChD,CAAC,CAAC;CACL"}

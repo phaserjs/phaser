@@ -1,0 +1,1 @@
+{"version":3,"file":"KeyMap.js","sourceRoot":"","sources":["../../../../srcTS/input/keyboard/keys/KeyMap.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,IAAI,QAAQ,GAAG,OAAO,CAAC,YAAY,CAAC,CAAC;AAErC,IAAI,MAAM,GAAG,EAAE,CAAC;AAEhB,KAAK,IAAI,GAAG,IAAI,QAAQ,EACxB;IACI,MAAM,CAAC,QAAQ,CAAC,GAAG,CAAC,CAAC,GAAG,GAAG,CAAC;CAC/B;AAED,MAAM,CAAC,OAAO,GAAG,MAAM,CAAC"}

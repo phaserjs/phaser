@@ -1,0 +1,1 @@
+{"version":3,"file":"JustDown.js","sourceRoot":"","sources":["../../../../srcTS/input/keyboard/keys/JustDown.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH;;;;;;;;;;;;;;GAcG;AACH,IAAI,QAAQ,GAAG,UAAU,GAAG;IAExB,IAAI,GAAG,CAAC,SAAS,EACjB;QACI,GAAG,CAAC,SAAS,GAAG,KAAK,CAAC;QAEtB,OAAO,IAAI,CAAC;KACf;SAED;QACI,OAAO,KAAK,CAAC;KAChB;AACL,CAAC,CAAC;AAEF,MAAM,CAAC,OAAO,GAAG,QAAQ,CAAC"}
