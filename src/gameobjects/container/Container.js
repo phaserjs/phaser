@@ -79,6 +79,7 @@ var Container = new Class({
         Components.BlendMode,
         Components.ComputedSize,
         Components.Depth,
+        Components.Mask,
         Components.ScrollFactor,
         Components.Transform,
         Components.Visible,

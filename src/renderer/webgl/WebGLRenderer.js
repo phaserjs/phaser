@@ -29,7 +29,7 @@ var TextureTintPipeline = require('./pipelines/TextureTintPipeline');
  *
  * @property {SnapshotCallback} callback - [description]
  * @property {string} type - [description]
- * @property {float} encoder - [description]
+ * @property {number} encoder - [description]
  */
 
 /**
@@ -39,7 +39,7 @@ var TextureTintPipeline = require('./pipelines/TextureTintPipeline');
  * any context change that happens for WebGL rendering inside of Phaser. This means
  * if raw webgl functions are called outside the WebGLRenderer of the Phaser WebGL
  * rendering ecosystem they might pollute the current WebGLRenderingContext state producing
- * unexpected behaviour. It's recommended that WebGL interaction is done through 
+ * unexpected behavior. It's recommended that WebGL interaction is done through 
  * WebGLRenderer and/or WebGLPipeline.
  *
  * @class WebGLRenderer
@@ -80,14 +80,15 @@ var WebGLRenderer = new Class({
          */
         this.config = {
             clearBeforeRender: gameConfig.clearBeforeRender,
-            pixelArt: gameConfig.pixelArt,
+            antialias: gameConfig.antialias,
             backgroundColor: gameConfig.backgroundColor,
             contextCreation: contextCreationConfig,
             resolution: gameConfig.resolution,
             autoResize: gameConfig.autoResize,
             roundPixels: gameConfig.roundPixels,
             maxTextures: gameConfig.maxTextures,
-            maxTextureSize: gameConfig.maxTextureSize
+            maxTextureSize: gameConfig.maxTextureSize,
+            batchSize: gameConfig.batchSize
         };
 
         /**
@@ -403,6 +404,16 @@ var WebGLRenderer = new Class({
             S3TC: false
         };
 
+        /**
+         * Cached drawing buffer height to reduce gl calls.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#drawingBufferHeight
+         * @type {number}
+         * @readOnly
+         * @since 3.11.0
+         */
+        this.drawingBufferHeight = 0;
+
         this.init(this.config);
     },
 
@@ -442,7 +453,7 @@ var WebGLRenderer = new Class({
 
         this.gl = gl;
 
-        //  Set it back into the Game, so devs can access it from there too
+        //  Set it back into the Game, so developers can access it from there too
         this.game.context = gl;
 
         for (var i = 0; i <= 16; i++)
@@ -485,7 +496,9 @@ var WebGLRenderer = new Class({
         // Setup initial WebGL state
         gl.disable(gl.DEPTH_TEST);
         gl.disable(gl.CULL_FACE);
-        gl.disable(gl.SCISSOR_TEST);
+        
+        // gl.disable(gl.SCISSOR_TEST);
+
         gl.enable(gl.BLEND);
         gl.clearColor(clearColor.redGL, clearColor.greenGL, clearColor.blueGL, 1.0);
 
@@ -506,7 +519,24 @@ var WebGLRenderer = new Class({
         this.setBlendMode(CONST.BlendModes.NORMAL);
         this.resize(this.width, this.height);
 
+        this.game.events.once('ready', this.boot, this);
+
         return this;
+    },
+
+    /**
+     * Internal boot handler. Calls 'boot' on each pipeline.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#boot
+     * @private
+     * @since 3.11.0
+     */
+    boot: function ()
+    {
+        for (var pipelineName in this.pipelines)
+        {
+            this.pipelines[pipelineName].boot();
+        }
     },
 
     /**
@@ -540,13 +570,15 @@ var WebGLRenderer = new Class({
 
         gl.viewport(0, 0, this.width, this.height);
 
-        // Update all registered pipelines
+        //  Update all registered pipelines
         for (var pipelineName in pipelines)
         {
             pipelines[pipelineName].resize(width, height, resolution);
         }
                 
         this.currentScissor.set([ 0, 0, this.width, this.height ]);
+        
+        this.drawingBufferHeight = gl.drawingBufferHeight;
 
         return this;
     },
@@ -733,7 +765,10 @@ var WebGLRenderer = new Class({
     {
         var gl = this.gl;
         var currentScissor = this.currentScissor;
-        var enabled = (x === 0 && y === 0 && w === gl.canvas.width && h === gl.canvas.height && w >= 0 && h >= 0);
+        var enabled = (x === 0 && y === 0 && w === this.width && h === this.height && w >= 0 && h >= 0);
+
+        //  TODO: If new scissor is same as old scissor, skip setting it again
+        //  TODO: If scissor is viewport size, skip setting altogether
 
         if (currentScissor[0] !== x ||
             currentScissor[1] !== y ||
@@ -758,7 +793,7 @@ var WebGLRenderer = new Class({
         }
 
         gl.enable(gl.SCISSOR_TEST);
-        gl.scissor(x, (gl.drawingBufferHeight - y - h), w, h);
+        gl.scissor(x, (this.drawingBufferHeight - y - h), w, h);
 
         return this;
     },
@@ -823,11 +858,12 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setPipeline
      * @since 3.0.0
      *
-     * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipelineInstance - [description]
+     * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipelineInstance - The pipeline instance to be activated.
+     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
      *
-     * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} The pipeline that was activated.
      */
-    setPipeline: function (pipelineInstance)
+    setPipeline: function (pipelineInstance, gameObject)
     {
         if (this.currentPipeline !== pipelineInstance ||
             this.currentPipeline.vertexBuffer !== this.currentVertexBuffer ||
@@ -838,7 +874,7 @@ var WebGLRenderer = new Class({
             this.currentPipeline.bind();
         }
 
-        this.currentPipeline.onBind();
+        this.currentPipeline.onBind(gameObject);
 
         return this.currentPipeline;
     },
@@ -1120,13 +1156,9 @@ var WebGLRenderer = new Class({
             wrap = gl.REPEAT;
         }
 
-        if (scaleMode === CONST.ScaleModes.LINEAR)
+        if (scaleMode === CONST.ScaleModes.LINEAR && this.config.antialias)
         {
             filter = gl.LINEAR;
-        }
-        else if (scaleMode === CONST.ScaleModes.NEAREST || this.config.pixelArt)
-        {
-            filter = gl.NEAREST;
         }
 
         if (!source && typeof width === 'number' && typeof height === 'number')
@@ -1157,7 +1189,7 @@ var WebGLRenderer = new Class({
      * @param {object} pixels - pixel data
      * @param {integer} width - Width of the texture in pixels
      * @param {integer} height - Height of the texture in pixels
-     * @param {boolean} pma - Does the texture hace premultiplied alpha.
+     * @param {boolean} pma - Does the texture have premultiplied alpha?
      *
      * @return {WebGLTexture} Raw WebGLTexture
      */
@@ -1484,6 +1516,8 @@ var WebGLRenderer = new Class({
             FlatTintPipeline.flush();
         }
 
+        camera.dirty = false;
+
         this.popScissor();
     },
 
@@ -1539,6 +1573,7 @@ var WebGLRenderer = new Class({
             pipelines[key].onRender(scene, camera);
         }
 
+        //   Apply scissor for cam region + render background color, if not transparent
         this.preRenderCamera(camera);
 
         for (var index = 0; index < childCount; ++index)
@@ -1570,6 +1605,8 @@ var WebGLRenderer = new Class({
 
         this.flush();
         this.setBlendMode(CONST.BlendModes.NORMAL);
+
+        //  Applies camera effects and pops the scissor, if set
         this.postRenderCamera(camera);
     },
 
@@ -1607,7 +1644,7 @@ var WebGLRenderer = new Class({
      *
      * @param {SnapshotCallback} callback - [description]
      * @param {string} type - [description]
-     * @param {float} encoderOptions - [description]
+     * @param {number} encoderOptions - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
@@ -1695,7 +1732,7 @@ var WebGLRenderer = new Class({
      *
      * @param {WebGLProgram} program - [description]
      * @param {string} name - [description]
-     * @param {float} x - [description]
+     * @param {number} x - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
@@ -1716,8 +1753,8 @@ var WebGLRenderer = new Class({
      *
      * @param {WebGLProgram} program - [description]
      * @param {string} name - [description]
-     * @param {float} x - [description]
-     * @param {float} y - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
@@ -1738,9 +1775,9 @@ var WebGLRenderer = new Class({
      *
      * @param {WebGLProgram} program - [description]
      * @param {string} name - [description]
-     * @param {float} x - [description]
-     * @param {float} y - [description]
-     * @param {float} z - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} z - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */
@@ -1761,10 +1798,10 @@ var WebGLRenderer = new Class({
      *
      * @param {WebGLProgram} program - Target program
      * @param {string} name - Name of the uniform
-     * @param {float} x - X component
-     * @param {float} y - Y component
-     * @param {float} z - Z component
-     * @param {float} w - W component
+     * @param {number} x - X component
+     * @param {number} y - Y component
+     * @param {number} z - Z component
+     * @param {number} w - W component
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
      */

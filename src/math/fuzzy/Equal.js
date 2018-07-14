@@ -14,7 +14,7 @@
  *
  * @param {number} a - The first value.
  * @param {number} b - The second value.
- * @param {float} [epsilon=0.0001] - The epsilon.
+ * @param {number} [epsilon=0.0001] - The epsilon.
  *
  * @return {boolean} `true` if the values are fuzzily equal, otherwise `false`.
  */

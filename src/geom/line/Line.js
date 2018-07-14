@@ -182,7 +182,7 @@ var Line = new Class({
     },
 
     /**
-     * Returns a Vector2 object that corresponds to the start of this Line.
+     * Returns a Vector2 object that corresponds to the end of this Line.
      *
      * @method Phaser.Geom.Line#getPointB
      * @since 3.0.0
@@ -191,7 +191,7 @@ var Line = new Class({
      *
      * @param {Phaser.Math.Vector2} [vec2] - A Vector2 object to set the results in. If `undefined` a new Vector2 will be created.
      *
-     * @return {Phaser.Math.Vector2} A Vector2 object that corresponds to the start of this Line.
+     * @return {Phaser.Math.Vector2} A Vector2 object that corresponds to the end of this Line.
      */
     getPointB: function (vec2)
     {

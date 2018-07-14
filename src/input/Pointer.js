@@ -5,7 +5,9 @@
  */
 
 var Class = require('../utils/Class');
+var SmoothStepInterpolation = require('../math/interpolation/SmoothStepInterpolation');
 var Vector2 = require('../math/Vector2');
+
 
 /**
  * @classdesc
@@ -103,6 +105,20 @@ var Pointer = new Class({
          * @since 3.0.0
          */
         this.position = new Vector2();
+
+        /**
+         * The previous position of the Pointer in screen space.
+         * 
+         * The old x and y values are stored in here during the InputManager.transformPointer call.
+         * 
+         * You can use it to track how fast the pointer is moving, or to smoothly interpolate between the old and current position.
+         * See the `Pointer.getInterpolatedPosition` method to assist in this.
+         *
+         * @name Phaser.Input.Pointer#prevPosition
+         * @type {Phaser.Math.Vector2}
+         * @since 3.11.0
+         */
+        this.prevPosition = new Vector2();
 
         /**
          * The x position of this Pointer, translated into the coordinate space of the most recent Camera it interacted with.
@@ -644,6 +660,57 @@ var Pointer = new Class({
     forwardButtonDown: function ()
     {
         return (this.buttons & 16);
+    },
+
+    /**
+     * Takes the previous and current Pointer positions and then generates an array of interpolated values between
+     * the two. The array will be populated up to the size of the `steps` argument.
+     * 
+     * ```javaScript
+     * var points = pointer.getInterpolatedPosition(4);
+     * 
+     * // points[0] = { x: 0, y: 0 }
+     * // points[1] = { x: 2, y: 1 }
+     * // points[2] = { x: 3, y: 2 }
+     * // points[3] = { x: 6, y: 3 }
+     * ```
+     * 
+     * Use this if you need to get smoothed values between the previous and current pointer positions. DOM pointer
+     * events can often fire faster than the main browser loop, and this will help you avoid janky movement
+     * especially if you have an object following a Pointer.
+     * 
+     * Note that if you provide an output array it will only be populated up to the number of steps provided.
+     * It will not clear any previous data that may have existed beyond the range of the steps count.
+     * 
+     * Internally it uses the Smooth Step interpolation calculation.
+     *
+     * @method Phaser.Input.Pointer#getInterpolatedPosition
+     * @since 3.11.0
+     * 
+     * @param {integer} [steps=10] - The number of interpolation steps to use.
+     * @param {array} [out] - An array to store the results in. If not provided a new one will be created.
+     * 
+     * @return {array} An array of interpolated values.
+     */
+    getInterpolatedPosition: function (steps, out)
+    {
+        if (steps === undefined) { steps = 10; }
+        if (out === undefined) { out = []; }
+
+        var prevX = this.prevPosition.x;
+        var prevY = this.prevPosition.y;
+
+        var curX = this.position.x;
+        var curY = this.position.y;
+
+        for (var i = 0; i < steps; i++)
+        {
+            var t = (1 / steps) * i;
+
+            out[i] = { x: SmoothStepInterpolation(t, prevX, curX), y: SmoothStepInterpolation(t, prevY, curY) };
+        }
+
+        return out;
     },
 
     /**

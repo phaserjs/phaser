@@ -217,29 +217,32 @@ var StaticTilemapLayer = new Class({
      */
     upload: function (camera)
     {
-        var tileset = this.tileset;
-        var mapWidth = this.layer.width;
-        var mapHeight = this.layer.height;
-        var width = tileset.image.source[0].width;
-        var height = tileset.image.source[0].height;
-        var mapData = this.layer.data;
         var renderer = this.renderer;
-        var tile;
-        var row;
-        var col;
-        var texCoords;
 
-        if (renderer.gl)
+        var gl = renderer.gl;
+
+        if (gl)
         {
             var pipeline = renderer.pipelines.TextureTintPipeline;
 
             if (this.dirty)
             {
-                var gl = renderer.gl;
+                var tileset = this.tileset;
+                var mapWidth = this.layer.width;
+                var mapHeight = this.layer.height;
+                var width = tileset.image.source[0].width;
+                var height = tileset.image.source[0].height;
+                var mapData = this.layer.data;
+                var tile;
+                var row;
+                var col;
+                var texCoords;
+   
                 var vertexBuffer = this.vertexBuffer;
                 var bufferData = this.bufferData;
-                var voffset = 0;
+                var voffset = -1;
                 var vertexCount = 0;
+                var tintEffect = false;
                 var bufferSize = (mapWidth * mapHeight) * pipeline.vertexSize * 6;
 
                 if (bufferData === null)
@@ -253,12 +256,21 @@ var StaticTilemapLayer = new Class({
                 var vertexViewF32 = this.vertexViewF32;
                 var vertexViewU32 = this.vertexViewU32;
 
+                var c = 0;
+                var i = 0;
+
                 for (row = 0; row < mapHeight; ++row)
                 {
                     for (col = 0; col < mapWidth; ++col)
                     {
+                        c++;
+
                         tile = mapData[row][col];
-                        if (tile === null || tile.index === -1) { continue; }
+
+                        if (!tile || tile.index === -1 || !tile.visible)
+                        {
+                            continue;
+                        }
 
                         var tx = tile.pixelX;
                         var ty = tile.pixelY;
@@ -266,12 +278,18 @@ var StaticTilemapLayer = new Class({
                         var tyh = ty + tile.height;
 
                         texCoords = tileset.getTileTextureCoordinates(tile.index);
-                        if (texCoords === null) { continue; }
+
+                        if (!texCoords)
+                        {
+                            continue;
+                        }
 
                         var u0 = texCoords.x / width;
                         var v0 = texCoords.y / height;
                         var u1 = (texCoords.x + tile.width) / width;
                         var v1 = (texCoords.y + tile.height) / height;
+
+                        var tint = Utils.getTintAppendFloatAlpha(0xffffff, camera.alpha * this.alpha * tile.alpha);
 
                         var tx0 = tx;
                         var ty0 = ty;
@@ -281,61 +299,79 @@ var StaticTilemapLayer = new Class({
                         var ty2 = tyh;
                         var tx3 = txw;
                         var ty3 = ty;
-                        var tint = Utils.getTintAppendFloatAlpha(0xffffff, this.alpha * tile.alpha);
 
-                        vertexViewF32[voffset + 0] = tx0;
-                        vertexViewF32[voffset + 1] = ty0;
-                        vertexViewF32[voffset + 2] = u0;
-                        vertexViewF32[voffset + 3] = v0;
-                        vertexViewU32[voffset + 4] = tint;
-                        vertexViewF32[voffset + 5] = tx1;
-                        vertexViewF32[voffset + 6] = ty1;
-                        vertexViewF32[voffset + 7] = u0;
-                        vertexViewF32[voffset + 8] = v1;
-                        vertexViewU32[voffset + 9] = tint;
-                        vertexViewF32[voffset + 10] = tx2;
-                        vertexViewF32[voffset + 11] = ty2;
-                        vertexViewF32[voffset + 12] = u1;
-                        vertexViewF32[voffset + 13] = v1;
-                        vertexViewU32[voffset + 14] = tint;
-                        vertexViewF32[voffset + 15] = tx0;
-                        vertexViewF32[voffset + 16] = ty0;
-                        vertexViewF32[voffset + 17] = u0;
-                        vertexViewF32[voffset + 18] = v0;
-                        vertexViewU32[voffset + 19] = tint;
-                        vertexViewF32[voffset + 20] = tx2;
-                        vertexViewF32[voffset + 21] = ty2;
-                        vertexViewF32[voffset + 22] = u1;
-                        vertexViewF32[voffset + 23] = v1;
-                        vertexViewU32[voffset + 24] = tint;
-                        vertexViewF32[voffset + 25] = tx3;
-                        vertexViewF32[voffset + 26] = ty3;
-                        vertexViewF32[voffset + 27] = u1;
-                        vertexViewF32[voffset + 28] = v0;
-                        vertexViewU32[voffset + 29] = tint;
+                        vertexViewF32[++voffset] = tx0;
+                        vertexViewF32[++voffset] = ty0;
+                        vertexViewF32[++voffset] = u0;
+                        vertexViewF32[++voffset] = v0;
+                        vertexViewF32[++voffset] = tintEffect;
+                        vertexViewU32[++voffset] = tint;
 
-                        voffset += 30;
+                        vertexViewF32[++voffset] = tx1;
+                        vertexViewF32[++voffset] = ty1;
+                        vertexViewF32[++voffset] = u0;
+                        vertexViewF32[++voffset] = v1;
+                        vertexViewF32[++voffset] = tintEffect;
+                        vertexViewU32[++voffset] = tint;
+
+                        vertexViewF32[++voffset] = tx2;
+                        vertexViewF32[++voffset] = ty2;
+                        vertexViewF32[++voffset] = u1;
+                        vertexViewF32[++voffset] = v1;
+                        vertexViewF32[++voffset] = tintEffect;
+                        vertexViewU32[++voffset] = tint;
+
+                        vertexViewF32[++voffset] = tx0;
+                        vertexViewF32[++voffset] = ty0;
+                        vertexViewF32[++voffset] = u0;
+                        vertexViewF32[++voffset] = v0;
+                        vertexViewF32[++voffset] = tintEffect;
+                        vertexViewU32[++voffset] = tint;
+
+                        vertexViewF32[++voffset] = tx2;
+                        vertexViewF32[++voffset] = ty2;
+                        vertexViewF32[++voffset] = u1;
+                        vertexViewF32[++voffset] = v1;
+                        vertexViewF32[++voffset] = tintEffect;
+                        vertexViewU32[++voffset] = tint;
+
+                        vertexViewF32[++voffset] = tx3;
+                        vertexViewF32[++voffset] = ty3;
+                        vertexViewF32[++voffset] = u1;
+                        vertexViewF32[++voffset] = v0;
+                        vertexViewF32[++voffset] = tintEffect;
+                        vertexViewU32[++voffset] = tint;
+
                         vertexCount += 6;
+
+                        i++;
                     }
                 }
 
                 this.vertexCount = vertexCount;
+
                 this.dirty = false;
+
                 if (vertexBuffer === null)
                 {
                     vertexBuffer = renderer.createVertexBuffer(bufferData, gl.STATIC_DRAW);
+
                     this.vertexBuffer = vertexBuffer;
                 }
                 else
                 {
                     renderer.setVertexBuffer(vertexBuffer);
+
                     gl.bufferSubData(gl.ARRAY_BUFFER, 0, bufferData);
                 }
+
+                window.noCull = c;
+                window.cull = i;
             }
 
             pipeline.modelIdentity();
-            pipeline.modelTranslate(this.x - (camera.scrollX * this.scrollFactorX), this.y - (camera.scrollY * this.scrollFactorY), 0.0);
-            pipeline.modelScale(this.scaleX, this.scaleY, 1.0);
+            pipeline.modelTranslate(this.x - (camera.scrollX * this.scrollFactorX), this.y - (camera.scrollY * this.scrollFactorY), 0);
+            pipeline.modelScale(this.scaleX, this.scaleY, 1);
             pipeline.viewLoad2D(camera.matrix.matrix);
         }
 

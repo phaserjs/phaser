@@ -8,7 +8,7 @@
  * @typedef {object} RendererConfig
  *
  * @property {boolean} clearBeforeRender - [description]
- * @property {boolean} pixelArt - [description]
+ * @property {boolean} antialias - [description]
  * @property {Phaser.Display.Color} backgroundColor - [description]
  * @property {number} resolution - [description]
  * @property {boolean} autoResize - [description]

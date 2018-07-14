@@ -17,7 +17,7 @@ var Length = require('../line/Length');
  * @generic {Phaser.Geom.Point} O - [out,$return]
  *
  * @param {Phaser.Geom.Triangle} triangle - [description]
- * @param {float} position - [description]
+ * @param {number} position - [description]
  * @param {(Phaser.Geom.Point|object)} [out] - [description]
  *
  * @return {(Phaser.Geom.Point|object)} [description]

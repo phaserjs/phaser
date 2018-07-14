@@ -14,6 +14,7 @@ var KeyCombo = require('./combo/KeyCombo');
 var KeyMap = require('./keys/KeyMap');
 var ProcessKeyDown = require('./keys/ProcessKeyDown');
 var ProcessKeyUp = require('./keys/ProcessKeyUp');
+var SnapFloor = require('../../math/snap/SnapFloor');
 
 /**
  * @classdesc
@@ -151,6 +152,16 @@ var KeyboardPlugin = new Class({
          * @since 3.10.0
          */
         this.onKeyHandler;
+
+        /**
+         * Internal time value.
+         *
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#time
+         * @type {number}
+         * @private
+         * @since 3.11.0
+         */
+        this.time = 0;
 
         sceneInputPlugin.pluginEvents.once('boot', this.boot, this);
         sceneInputPlugin.pluginEvents.on('start', this.start, this);
@@ -470,14 +481,53 @@ var KeyboardPlugin = new Class({
     },
 
     /**
+     * Checks if the given Key object is currently being held down.
+     * 
+     * The difference between this method and checking the `Key.isDown` property directly is that you can provide
+     * a duration to this method. For example, if you wanted a key press to fire a bullet, but you only wanted
+     * it to be able to fire every 100ms, then you can call this method with a `duration` of 100 and it
+     * will only return `true` every 100ms.
+     * 
+     * If the Keyboard Plugin has been disabled, this method will always return `false`.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#checkDown
+     * @since 3.11.0
+     *
+     * @param {Phaser.Input.Keyboard.Key} key - A Key object.
+     * @param {number} [duration=0] - The duration which must have elapsed before this Key is considered as being down.
+     * 
+     * @return {boolean} `True` if the Key is down within the duration specified, otherwise `false`.
+     */
+    checkDown: function (key, duration)
+    {
+        if (this.enabled && key.isDown)
+        {
+            var t = SnapFloor(this.time - key.timeDown, duration);
+
+            if (t > key._tick)
+            {
+                key._tick = t;
+
+                return true;
+            }
+        }
+
+        return false;
+    },
+
+    /**
      * Internal update handler called by the Input Manager, which is in turn invoked by the Game step.
      *
      * @method Phaser.Input.Keyboard.KeyboardPlugin#update
      * @private
      * @since 3.10.0
+     * 
+     * @param {number} time - The game loop time value.
      */
-    update: function ()
+    update: function (time)
     {
+        this.time = time;
+
         var len = this.queue.length;
 
         if (!this.enabled || len === 0)

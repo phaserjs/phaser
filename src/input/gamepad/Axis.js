@@ -57,7 +57,7 @@ var Axis = new Class({
          * Use the method `getValue` to get a normalized value with the threshold applied.
          *
          * @name Phaser.Input.Gamepad.Axis#value
-         * @type {float}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -67,7 +67,7 @@ var Axis = new Class({
          * Movement tolerance threshold below which axis values are ignored in `getValue`.
          *
          * @name Phaser.Input.Gamepad.Axis#threshold
-         * @type {float}
+         * @type {number}
          * @default 0.1
          * @since 3.0.0
          */
@@ -82,7 +82,7 @@ var Axis = new Class({
      * @private
      * @since 3.0.0
      *
-     * @param {float} value - The value of the axis movement.
+     * @param {number} value - The value of the axis movement.
      */
     update: function (value)
     {
@@ -95,7 +95,7 @@ var Axis = new Class({
      * @method Phaser.Input.Gamepad.Axis#getValue
      * @since 3.0.0
      *
-     * @return {float} The axis value, adjusted for the movement threshold.
+     * @return {number} The axis value, adjusted for the movement threshold.
      */
     getValue: function ()
     {

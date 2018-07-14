@@ -23,10 +23,10 @@ var GameObject = require('../../GameObject');
  */
 var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    var text = src.text;
+    var text = src._text;
     var textLength = text.length;
 
-    if (GameObject.RENDER_MASK !== src.renderFlags || textLength === 0 || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
+    if (GameObject.RENDER_MASK !== src.renderFlags || textLength === 0 || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)))
     {
         return;
     }
@@ -35,12 +35,11 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
 
     var chars = src.fontData.chars;
     var lineHeight = src.fontData.lineHeight;
-    var letterSpacing = src.letterSpacing;
+    var letterSpacing = src._letterSpacing;
 
     var xAdvance = 0;
     var yAdvance = 0;
 
-    var indexCount = 0;
     var charCode = 0;
 
     var glyph = null;
@@ -61,7 +60,40 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
     var textureX = textureFrame.cutX;
     var textureY = textureFrame.cutY;
 
-    var scale = (src.fontSize / src.fontData.size);
+    var scale = (src._fontSize / src.fontData.size);
+
+    var align = src._align;
+    var currentLine = 0;
+    var lineOffsetX = 0;
+
+    //  Update the bounds - skipped internally if not dirty
+    src.getTextBounds(false);
+
+    var lineData = src._bounds.lines;
+
+    if (align === 1)
+    {
+        lineOffsetX = (lineData.longest - lineData.lengths[0]) / 2;
+    }
+    else if (align === 2)
+    {
+        lineOffsetX = (lineData.longest - lineData.lengths[0]);
+    }
+
+    //  Alpha
+
+    var alpha = camera.alpha * src.alpha;
+
+    if (alpha === 0)
+    {
+        //  Nothing to see, so abort early
+        return;
+    }
+    else if (renderer.currentAlpha !== alpha)
+    {
+        renderer.currentAlpha = alpha;
+        ctx.globalAlpha = alpha;
+    }
 
     //  Blend Mode
     if (renderer.currentBlendMode !== src.blendMode)
@@ -70,23 +102,16 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
         ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
     }
 
-    //  Alpha
-    if (renderer.currentAlpha !== src.alpha)
-    {
-        renderer.currentAlpha = src.alpha;
-        ctx.globalAlpha = src.alpha;
-    }
-
     //  Smoothing
     if (renderer.currentScaleMode !== src.scaleMode)
     {
         renderer.currentScaleMode = src.scaleMode;
     }
 
-    var roundPixels = renderer.config.roundPixels;
-
     var tx = (src.x - camera.scrollX * src.scrollFactorX) + src.frame.x;
     var ty = (src.y - camera.scrollY * src.scrollFactorY) + src.frame.y;
+
+    var roundPixels = camera.roundPixels;
 
     if (roundPixels)
     {
@@ -110,16 +135,27 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
 
     ctx.scale(src.scaleX, src.scaleY);
 
-    for (var index = 0; index < textLength; ++index)
+    for (var i = 0; i < textLength; i++)
     {
-        charCode = text.charCodeAt(index);
+        charCode = text.charCodeAt(i);
 
         if (charCode === 10)
         {
+            currentLine++;
+
+            if (align === 1)
+            {
+                lineOffsetX = (lineData.longest - lineData.lengths[currentLine]) / 2;
+            }
+            else if (align === 2)
+            {
+                lineOffsetX = (lineData.longest - lineData.lengths[currentLine]);
+            }
+
             xAdvance = 0;
-            indexCount = 0;
             yAdvance += lineHeight;
             lastGlyph = null;
+
             continue;
         }
 
@@ -136,7 +172,7 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
         glyphW = glyph.width;
         glyphH = glyph.height;
 
-        x = indexCount + glyph.xOffset + xAdvance;
+        x = glyph.xOffset + xAdvance;
         y = glyph.yOffset + yAdvance;
 
         if (lastGlyph !== null)
@@ -148,8 +184,9 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
         x *= scale;
         y *= scale;
 
+        x += lineOffsetX;
+
         xAdvance += glyph.xAdvance + letterSpacing;
-        indexCount += 1;
         lastGlyph = glyph;
         lastCharCode = charCode;
 

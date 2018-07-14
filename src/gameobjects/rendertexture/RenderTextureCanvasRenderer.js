@@ -30,17 +30,30 @@ var RenderTextureCanvasRenderer = function (renderer, renderTexture, interpolati
 
     var ctx = renderer.currentContext;
 
+    //  Alpha
+
+    var alpha = camera.alpha * renderTexture.alpha;
+
+    if (alpha === 0)
+    {
+        //  Nothing to see, so abort early
+        return;
+    }
+    else if (renderer.currentAlpha !== alpha)
+    {
+        renderer.currentAlpha = alpha;
+        ctx.globalAlpha = alpha;
+    }
+
+    //  Blend Mode
+
     if (renderer.currentBlendMode !== renderTexture.blendMode)
     {
         renderer.currentBlendMode = renderTexture.blendMode;
         ctx.globalCompositeOperation = renderer.blendModes[renderTexture.blendMode];
     }
 
-    if (renderer.currentAlpha !== renderTexture.alpha)
-    {
-        renderer.currentAlpha = renderTexture.alpha;
-        ctx.globalAlpha = renderTexture.alpha;
-    }
+    //  Scale Mode
 
     if (renderer.currentScaleMode !== renderTexture.scaleMode)
     {
@@ -74,11 +87,14 @@ var RenderTextureCanvasRenderer = function (renderer, renderTexture, interpolati
     }
 
     ctx.save();
+
     if (parentMatrix !== undefined)
     {
         var matrix = parentMatrix.matrix;
+
         ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
     }
+
     ctx.translate(renderTexture.x - camera.scrollX * renderTexture.scrollFactorX, renderTexture.y - camera.scrollY * renderTexture.scrollFactorY);
     ctx.rotate(renderTexture.rotation);
     ctx.scale(renderTexture.scaleX, renderTexture.scaleY);

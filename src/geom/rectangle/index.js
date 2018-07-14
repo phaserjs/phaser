@@ -28,6 +28,7 @@ Rectangle.GetPoint = require('./GetPoint');
 Rectangle.GetPoints = require('./GetPoints');
 Rectangle.GetSize = require('./GetSize');
 Rectangle.Inflate = require('./Inflate');
+Rectangle.Intersection = require('./Intersection');
 Rectangle.MarchingAnts = require('./MarchingAnts');
 Rectangle.MergePoints = require('./MergePoints');
 Rectangle.MergeRect = require('./MergeRect');

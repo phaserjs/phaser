@@ -257,6 +257,18 @@ var Zone = new Class({
     },
 
     /**
+     * A NOOP method so you can pass a Zone to a Container.
+     * Calling this method will do nothing. It is intentionally empty.
+     *
+     * @method Phaser.GameObjects.Zone#setAlpha
+     * @private
+     * @since 3.11.0
+     */
+    setAlpha: function ()
+    {
+    },
+    
+    /**
      * A Zone does not render.
      *
      * @method Phaser.GameObjects.Zone#renderCanvas

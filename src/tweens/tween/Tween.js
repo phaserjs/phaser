@@ -752,7 +752,7 @@ var Tween = new Class({
      * @method Phaser.Tweens.Tween#seek
      * @since 3.0.0
      *
-     * @param {float} toPosition - A value between 0 and 1.
+     * @param {number} toPosition - A value between 0 and 1.
      */
     seek: function (toPosition)
     {
@@ -885,7 +885,7 @@ var Tween = new Class({
      * @method Phaser.Tweens.Tween#stop
      * @since 3.0.0
      *
-     * @param {float} [resetTo] - A value between 0 and 1.
+     * @param {number} [resetTo] - A value between 0 and 1.
      */
     stop: function (resetTo)
     {

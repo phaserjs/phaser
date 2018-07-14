@@ -25,6 +25,7 @@ module.exports = {
     ScrollFactor: require('./ScrollFactor'),
     Size: require('./Size'),
     Texture: require('./Texture'),
+    TextureCrop: require('./TextureCrop'),
     Tint: require('./Tint'),
     ToJSON: require('./ToJSON'),
     Transform: require('./Transform'),

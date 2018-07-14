@@ -372,13 +372,15 @@ var Tilemap = new Class({
      *
      * @param {string} name - The name of this layer. Must be unique within the map.
      * @param {Phaser.Tilemaps.Tileset} tileset - The tileset the new layer will use.
-     * @param {integer} width - The width of the layer in tiles. If not specified, it will default
+     * @param {number} [x=0] - The world x position where the top left of this layer will be placed.
+     * @param {number} [y=0] - The world y position where the top left of this layer will be placed.
+     * @param {integer} [width] - The width of the layer in tiles. If not specified, it will default
      * to the map's width.
-     * @param {integer} height - The height of the layer in tiles. If not specified, it will default
+     * @param {integer} [height] - The height of the layer in tiles. If not specified, it will default
      * to the map's height.
-     * @param {integer} tileWidth - The width of the tiles the layer uses for calculations. If not
+     * @param {integer} [tileWidth] - The width of the tiles the layer uses for calculations. If not
      * specified, it will default to the map's tileWidth.
-     * @param {integer} tileHeight - The height of the tiles the layer uses for calculations. If not
+     * @param {integer} [tileHeight] - The height of the tiles the layer uses for calculations. If not
      * specified, it will default to the map's tileHeight.
      * @return {?Phaser.Tilemaps.DynamicTilemapLayer} Returns the new layer was created, or null if it failed.
      */
@@ -1522,7 +1524,6 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#removeTileAt
      * @since 3.0.0
      *
-     * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
      * @param {integer} tileX - [description]
      * @param {integer} tileY - [description]
      * @param {boolean} [replaceWithNull=true] - If true, this will replace the tile at the specified
@@ -1553,7 +1554,6 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#removeTileAtWorldXY
      * @since 3.0.0
      *
-     * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
      * @param {number} worldX - [description]
      * @param {number} worldY - [description]
      * @param {boolean} [replaceWithNull=true] - If true, this will replace the tile at the specified

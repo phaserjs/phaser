@@ -4,7 +4,10 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var roundPixels = false;
+var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
+
+var _tempCameraMatrix = new TransformMatrix();
+var _tempSpriteMatrix = new TransformMatrix();
 
 /**
  * [description]
@@ -14,13 +17,23 @@ var roundPixels = false;
  *
  * @param {Phaser.GameObjects.GameObject} src - [description]
  * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
- * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - [description]
+ * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
  */
-var DrawImage = function (src, camera, parentMatrix)
+var DrawImage = function (src, camera, parentTransformMatrix)
 {
     var ctx = this.currentContext;
-    var frame = src.frame;
-    var cd = frame.canvasData;
+
+    //  Alpha
+
+    var alpha = camera.alpha * src.alpha;
+
+    if (alpha === 0)
+    {
+        //  Nothing to see, so abort early
+        return;
+    }
+
+    ctx.globalAlpha = alpha;
 
     //  Blend Mode
 
@@ -30,88 +43,99 @@ var DrawImage = function (src, camera, parentMatrix)
         ctx.globalCompositeOperation = this.blendModes[src.blendMode];
     }
 
-    //  Alpha
+    var camMatrix = _tempCameraMatrix;
+    var spriteMatrix = _tempSpriteMatrix;
 
-    if (this.currentAlpha !== src.alpha)
+    spriteMatrix.applyITRS(src.x - camera.scrollX * src.scrollFactorX, src.y - camera.scrollY * src.scrollFactorY, src.rotation, src.scaleX, src.scaleY);
+
+    var frame = src.frame;
+
+    var cd = frame.canvasData;
+
+    var frameX = cd.x;
+    var frameY = cd.y;
+    var frameWidth = frame.width;
+    var frameHeight = frame.height;
+
+    var x = -src.displayOriginX + frame.x;
+    var y = -src.displayOriginY + frame.y;
+
+    var fx = (src.flipX) ? -1 : 1;
+    var fy = (src.flipY) ? -1 : 1;
+
+    if (src.isCropped)
     {
-        this.currentAlpha = src.alpha;
-        ctx.globalAlpha = src.alpha;
+        var crop = src._crop;
+
+        if (crop.flipX !== src.flipX || crop.flipY !== src.flipY)
+        {
+            frame.updateCropUVs(crop, src.flipX, src.flipY);
+        }
+
+        frameWidth = crop.cw;
+        frameHeight = crop.ch;
+
+        frameX = crop.cx;
+        frameY = crop.cy;
+
+        x = -src.displayOriginX + crop.x;
+        y = -src.displayOriginY + crop.y;
+
+        if (fx === -1)
+        {
+            if (x >= 0)
+            {
+                x = -(x + frameWidth);
+            }
+            else if (x < 0)
+            {
+                x = (Math.abs(x) - frameWidth);
+            }
+        }
+    
+        if (fy === -1)
+        {
+            if (y >= 0)
+            {
+                y = -(y + frameHeight);
+            }
+            else if (y < 0)
+            {
+                y = (Math.abs(y) - frameHeight);
+            }
+        }
     }
 
-    //  Smoothing
+    camMatrix.copyFrom(camera.matrix);
 
-    if (this.currentScaleMode !== src.scaleMode)
+    var calcMatrix;
+
+    if (parentTransformMatrix)
     {
-        this.currentScaleMode = src.scaleMode;
+        //  Multiply the camera by the parent matrix
+        camMatrix.multiplyWithOffset(parentTransformMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
 
-        // ctx[this.smoothProperty] = (source.scaleMode === ScaleModes.LINEAR);
-    }
+        //  Undo the camera scroll
+        spriteMatrix.e = src.x;
+        spriteMatrix.f = src.y;
 
-    var dx = frame.x;
-    var dy = frame.y;
-
-    var fx = 1;
-    var fy = 1;
-
-    if (src.flipX)
-    {
-        fx = -1;
-        dx -= cd.dWidth - src.displayOriginX;
+        //  Multiply by the Sprite matrix
+        calcMatrix = camMatrix.multiply(spriteMatrix);
     }
     else
     {
-        dx -= src.displayOriginX;
+        calcMatrix = spriteMatrix.multiply(camMatrix);
     }
-
-    if (src.flipY)
-    {
-        fy = -1;
-        dy -= cd.dHeight - src.displayOriginY;
-    }
-    else
-    {
-        dy -= src.displayOriginY;
-    }
-
-    var tx = src.x - camera.scrollX * src.scrollFactorX;
-    var ty = src.y - camera.scrollY * src.scrollFactorY;
-
-    if (roundPixels)
-    {
-        tx |= 0;
-        ty |= 0;
-        dx |= 0;
-        dy |= 0;
-    }
-
-    //  Perform Matrix ITRS
 
     ctx.save();
 
-    if (parentMatrix)
-    {
-        var matrix = parentMatrix.matrix;
+    ctx.transform(calcMatrix.a, calcMatrix.b, calcMatrix.c, calcMatrix.d, calcMatrix.e, calcMatrix.f);
 
-        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
-    }
-
-    ctx.translate(tx, ty);
-
-    ctx.rotate(src.rotation);
-
-    ctx.scale(src.scaleX, src.scaleY);
     ctx.scale(fx, fy);
 
-    ctx.drawImage(frame.source.image, cd.sx, cd.sy, cd.sWidth, cd.sHeight, dx, dy, cd.dWidth, cd.dHeight);
+    ctx.drawImage(frame.source.image, frameX, frameY, frameWidth, frameHeight, x, y, frameWidth, frameHeight);
 
     ctx.restore();
 };
 
-//  Special return so we can store the config value locally
-
-module.exports = function (configRoundPixels)
-{
-    roundPixels = configRoundPixels;
-
-    return DrawImage;
-};
+module.exports = DrawImage;

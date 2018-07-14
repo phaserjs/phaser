@@ -59,7 +59,7 @@ var Clock = new Class({
          * [description]
          *
          * @name Phaser.Time.Clock#timeScale
-         * @type {float}
+         * @type {number}
          * @default 1
          * @since 3.0.0
          */

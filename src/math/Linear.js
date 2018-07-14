@@ -12,7 +12,7 @@
  *
  * @param {number} p0 - The first point.
  * @param {number} p1 - The second point.
- * @param {float} t - The percentage between p0 and p1 to return, represented as a number between 0 and 1.
+ * @param {number} t - The percentage between p0 and p1 to return, represented as a number between 0 and 1.
  *
  * @return {number} The step t% of the way between p0 and p1.
  */

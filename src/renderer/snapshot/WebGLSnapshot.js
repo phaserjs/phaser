@@ -12,7 +12,7 @@
  *
  * @param {HTMLCanvasElement} sourceCanvas - [description]
  * @param {string} [type='image/png'] - [description]
- * @param {float} [encoderOptions=0.92] - [description]
+ * @param {number} [encoderOptions=0.92] - [description]
  *
  * @return {HTMLImageElement} [description]
  */

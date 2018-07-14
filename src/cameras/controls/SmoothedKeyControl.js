@@ -30,10 +30,10 @@ var GetValue = require('../../utils/object/GetValue');
  * @property {Phaser.Input.Keyboard.Key} [up] - The Key to be pressed that will move the Camera up.
  * @property {Phaser.Input.Keyboard.Key} [zoomIn] - The Key to be pressed that will zoom the Camera in.
  * @property {Phaser.Input.Keyboard.Key} [zoomOut] - The Key to be pressed that will zoom the Camera out.
- * @property {float} [zoomSpeed=0.01] - The speed at which the camera will zoom if the `zoomIn` or `zoomOut` keys are pressed.
- * @property {(float|{x:float,y:float})} [acceleration=0] - The horizontal and vertical acceleration the camera will move.
- * @property {(float|{x:float,y:float})} [drag=0] - The horizontal and vertical drag applied to the camera when it is moving.
- * @property {(float|{x:float,y:float})} [maxSpeed=0] - The maximum horizontal and vertical speed the camera will move.
+ * @property {number} [zoomSpeed=0.01] - The speed at which the camera will zoom if the `zoomIn` or `zoomOut` keys are pressed.
+ * @property {(number|{x:number,y:number})} [acceleration=0] - The horizontal and vertical acceleration the camera will move.
+ * @property {(number|{x:number,y:number})} [drag=0] - The horizontal and vertical drag applied to the camera when it is moving.
+ * @property {(number|{x:number,y:number})} [maxSpeed=0] - The maximum horizontal and vertical speed the camera will move.
  */
 
 /**
@@ -127,7 +127,7 @@ var SmoothedKeyControl = new Class({
          * The speed at which the camera will zoom if the `zoomIn` or `zoomOut` keys are pressed.
          *
          * @name Phaser.Cameras.Controls.SmoothedKeyControl#zoomSpeed
-         * @type {float}
+         * @type {number}
          * @default 0.01
          * @since 3.0.0
          */
@@ -137,7 +137,7 @@ var SmoothedKeyControl = new Class({
          * The horizontal acceleration the camera will move.
          *
          * @name Phaser.Cameras.Controls.SmoothedKeyControl#accelX
-         * @type {float}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -147,7 +147,7 @@ var SmoothedKeyControl = new Class({
          * The vertical acceleration the camera will move.
          *
          * @name Phaser.Cameras.Controls.SmoothedKeyControl#accelY
-         * @type {float}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -170,7 +170,7 @@ var SmoothedKeyControl = new Class({
          * The horizontal drag applied to the camera when it is moving.
          *
          * @name Phaser.Cameras.Controls.SmoothedKeyControl#dragX
-         * @type {float}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -180,7 +180,7 @@ var SmoothedKeyControl = new Class({
          * The vertical drag applied to the camera when it is moving.
          *
          * @name Phaser.Cameras.Controls.SmoothedKeyControl#dragY
-         * @type {float}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -203,7 +203,7 @@ var SmoothedKeyControl = new Class({
          * The maximum horizontal speed the camera will move.
          *
          * @name Phaser.Cameras.Controls.SmoothedKeyControl#maxSpeedX
-         * @type {float}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -213,7 +213,7 @@ var SmoothedKeyControl = new Class({
          * The maximum vertical speed the camera will move.
          *
          * @name Phaser.Cameras.Controls.SmoothedKeyControl#maxSpeedY
-         * @type {float}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */

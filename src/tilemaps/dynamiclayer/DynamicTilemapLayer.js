@@ -131,6 +131,82 @@ var DynamicTilemapLayer = new Class({
          */
         this.culledTiles = [];
 
+        /**
+         * You can control if the Cameras should cull tiles before rendering them or not.
+         * By default the camera will try to cull the tiles in this layer, to avoid over-drawing to the renderer.
+         * 
+         * However, there are some instances when you may wish to disable this, and toggling this flag allows
+         * you to do so. Also see `setSkipCull` for a chainable method that does the same thing.
+         *
+         * @name Phaser.Tilemaps.DynamicTilemapLayer#skipCull
+         * @type {boolean}
+         * @since 3.11.0
+         */
+        this.skipCull = false;
+
+        /**
+         * The total number of tiles drawn by the renderer in the last frame.
+         *
+         * @name Phaser.Tilemaps.DynamicTilemapLayer#tilesDrawn
+         * @type {number}
+         * @readOnly
+         * @since 3.11.0
+         */
+        this.tilesDrawn = 0;
+
+        /**
+         * The total number of tiles in this layer. Updated every frame.
+         *
+         * @name Phaser.Tilemaps.DynamicTilemapLayer#tilesTotal
+         * @type {number}
+         * @readOnly
+         * @since 3.11.0
+         */
+        this.tilesTotal = this.layer.width * this.layer.height;
+
+        /**
+         * The amount of extra tiles to add into the cull rectangle when calculating its horizontal size.
+         * 
+         * See the method `setCullPadding` for more details.
+         *
+         * @name Phaser.Tilemaps.DynamicTilemapLayer#cullPaddingX
+         * @type {number}
+         * @default 1
+         * @since 3.11.0
+         */
+        this.cullPaddingX = 1;
+
+        /**
+         * The amount of extra tiles to add into the cull rectangle when calculating its vertical size.
+         * 
+         * See the method `setCullPadding` for more details.
+         *
+         * @name Phaser.Tilemaps.DynamicTilemapLayer#cullPaddingY
+         * @type {number}
+         * @default 1
+         * @since 3.11.0
+         */
+        this.cullPaddingY = 1;
+
+        /**
+         * The callback that is invoked when the tiles are culled.
+         * 
+         * By default it will call `TilemapComponents.CullTiles` but you can override this to call any function you like.
+         * 
+         * It will be sent 3 arguments:
+         * 
+         * 1) The Phaser.Tilemaps.LayerData object for this Layer
+         * 2) The Camera that is culling the layer. You can check its `dirty` property to see if it has changed since the last cull.
+         * 3) A reference to the `culledTiles` array, which should be used to store the tiles you want rendered.
+         * 
+         * See the `TilemapComponents.CullTiles` source code for details on implementing your own culling system.
+         *
+         * @name Phaser.Tilemaps.DynamicTilemapLayer#cullCallback
+         * @type {function}
+         * @since 3.11.0
+         */
+        this.cullCallback = TilemapComponents.CullTiles;
+
         this.setAlpha(this.layer.alpha);
         this.setPosition(x, y);
         this.setOrigin();
@@ -219,7 +295,7 @@ var DynamicTilemapLayer = new Class({
      */
     cull: function (camera)
     {
-        return TilemapComponents.CullTiles(this.layer, camera, this.culledTiles);
+        return this.cullCallback(this.layer, camera, this.culledTiles);
     },
 
     /**
@@ -265,6 +341,7 @@ var DynamicTilemapLayer = new Class({
         this.layer = undefined;
         this.tileset = undefined;
         this.culledTiles.length = 0;
+        this.cullCallback = null;
 
         GameObject.prototype.destroy.call(this);
     },
@@ -738,6 +815,54 @@ var DynamicTilemapLayer = new Class({
     replaceByIndex: function (findIndex, newIndex, tileX, tileY, width, height)
     {
         TilemapComponents.ReplaceByIndex(findIndex, newIndex, tileX, tileY, width, height, this.layer);
+
+        return this;
+    },
+
+    /**
+     * You can control if the Cameras should cull tiles before rendering them or not.
+     * By default the camera will try to cull the tiles in this layer, to avoid over-drawing to the renderer.
+     * 
+     * However, there are some instances when you may wish to disable this.
+     * 
+     * @method Phaser.Tilemaps.DynamicTilemapLayer#setSkipCull
+     * @since 3.11.0
+     *
+     * @param {boolean} [value=true] - Set to `true` to stop culling tiles. Set to `false` to enable culling again.
+     *
+     * @return {this} This Tilemap Layer object.
+     */
+    setSkipCull: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.skipCull = value;
+
+        return this;
+    },
+
+    /**
+     * When a Camera culls the tiles in this layer it does so using its view into the world, building up a 
+     * rectangle inside which the tiles must exist or they will be culled. Sometimes you may need to expand the size
+     * of this 'cull rectangle', especially if you plan on rotating the Camera viewing the layer. Do so
+     * by providing the padding values. The values given are in tiles, not pixels. So if the tile width was 32px
+     * and you set `paddingX` to be 4, it would add 32px x 4 to the cull rectangle (adjusted for scale)
+     * 
+     * @method Phaser.Tilemaps.DynamicTilemapLayer#setCullPadding
+     * @since 3.11.0
+     *
+     * @param {number} [paddingX=1] - The amount of extra horizontal tiles to add to the cull check padding.
+     * @param {number} [paddingY=1] - The amount of extra vertical tiles to add to the cull check padding.
+     *
+     * @return {this} This Tilemap Layer object.
+     */
+    setCullPadding: function (paddingX, paddingY)
+    {
+        if (paddingX === undefined) { paddingX = 1; }
+        if (paddingY === undefined) { paddingY = 1; }
+
+        this.cullPaddingX = paddingX;
+        this.cullPaddingY = paddingY;
 
         return this;
     },
