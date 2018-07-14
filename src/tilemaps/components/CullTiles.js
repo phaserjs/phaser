@@ -27,6 +27,10 @@ var CullTiles = function (layer, camera, outputArray)
 
     outputArray.length = 0;
     
+	var y = 0;
+	var x = 0;
+	var tile = null;
+	
     var tilemapLayer = layer.tilemapLayer;
 
     var tileW = Math.floor(layer.tileWidth * tilemapLayer.scaleX);
@@ -47,11 +51,11 @@ var CullTiles = function (layer, camera, outputArray)
     
     if(tilemapLayer.skipCull)
     {
-        for (var y = 0; y < mapHeight; y++)
+        for (y = 0; y < mapHeight; y++)
         {
-            for (var x = 0; x < mapWidth; x++)
+            for (x = 0; x < mapWidth; x++)
             {
-                var tile = mapData[y][x];
+                tile = mapData[y][x];
 
                 if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
                 {
@@ -69,11 +73,11 @@ var CullTiles = function (layer, camera, outputArray)
         var drawTop = Math.max(0, boundsTop / layer.tileHeight);
         var drawBottom = Math.min(mapHeight, boundsBottom / layer.tileHeight);
         
-        for (var y = drawTop; y < drawBottom; y++)
+        for (y = drawTop; y < drawBottom; y++)
         {
-            for (var x = drawLeft; x < drawRight; x++)
+            for (x = drawLeft; x < drawRight; x++)
             {
-                var tile = mapData[y][x];
+                tile = mapData[y][x];
 
                 if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
                 {
