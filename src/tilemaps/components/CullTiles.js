@@ -27,10 +27,10 @@ var CullTiles = function (layer, camera, outputArray)
 
     outputArray.length = 0;
     
-	var y = 0;
-	var x = 0;
-	var tile = null;
-	
+    var y = 0;
+    var x = 0;
+    var tile = null;
+    
     var tilemapLayer = layer.tilemapLayer;
 
     var tileW = Math.floor(layer.tileWidth * tilemapLayer.scaleX);
