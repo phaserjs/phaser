@@ -42,49 +42,49 @@ var CullTiles = function (layer, camera, outputArray)
     var boundsRight = SnapCeil(camera.worldView.right, tileW) + (tilemapLayer.cullPaddingX * tileW);
     var boundsTop = SnapFloor(camera.worldView.y, tileH) - (tilemapLayer.cullPaddingY * tileH);
     var boundsBottom = SnapCeil(camera.worldView.bottom, tileH) + (tilemapLayer.cullPaddingY * tileH);
-	
-	// If skipping cull, loop through every tile in the map.
-	
-	if(tilemapLayer.skipCull)
-	{
-		for (var y = 0; y < mapHeight; y++)
-		{
-			for (var x = 0; x < mapWidth; x++)
-			{
-				var tile = mapData[y][x];
+    
+    // If skipping cull, loop through every tile in the map.
+    
+    if(tilemapLayer.skipCull)
+    {
+        for (var y = 0; y < mapHeight; y++)
+        {
+            for (var x = 0; x < mapWidth; x++)
+            {
+                var tile = mapData[y][x];
 
-				if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
-				{
-					continue;
-				}
+                if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                {
+                    continue;
+                }
 
-				outputArray.push(tile);
-			}
-		}
-	}
-	else
-	{
-		var drawLeft = Math.max(0, boundsLeft / layer.tileWidth);
-		var drawRight = Math.min(mapWidth, boundsRight / layer.tileWidth);
-		var drawTop = Math.max(0, boundsTop / layer.tileHeight);
-		var drawBottom = Math.min(mapHeight, boundsBottom / layer.tileHeight);
-		
-		for (var y = drawTop; y < drawBottom; y++)
-		{
-			for (var x = drawLeft; x < drawRight; x++)
-			{
-				var tile = mapData[y][x];
+                outputArray.push(tile);
+            }
+        }
+    }
+    else
+    {
+        var drawLeft = Math.max(0, boundsLeft / layer.tileWidth);
+        var drawRight = Math.min(mapWidth, boundsRight / layer.tileWidth);
+        var drawTop = Math.max(0, boundsTop / layer.tileHeight);
+        var drawBottom = Math.min(mapHeight, boundsBottom / layer.tileHeight);
+        
+        for (var y = drawTop; y < drawBottom; y++)
+        {
+            for (var x = drawLeft; x < drawRight; x++)
+            {
+                var tile = mapData[y][x];
 
-				if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
-				{
-					continue;
-				}
+                if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                {
+                    continue;
+                }
 
-				outputArray.push(tile);
-			}
-		}
-	}
-	
+                outputArray.push(tile);
+            }
+        }
+    }
+    
     tilemapLayer.tilesDrawn = outputArray.length;
     tilemapLayer.tilesTotal = mapWidth * mapHeight;
 
