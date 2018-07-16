@@ -97,7 +97,7 @@ var AudioFile = new Class({
             function (e)
             {
                 // eslint-disable-next-line no-console
-                console.error('Error decoding audio: ' + this.key + ' - ', e.message);
+                console.error('Error decoding audio: ' + this.key + ' - ', e ? e.message : null);
 
                 _this.onProcessError();
             }
