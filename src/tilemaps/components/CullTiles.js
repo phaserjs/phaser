@@ -40,19 +40,26 @@ var CullTiles = function (layer, camera, outputArray)
     var tileW = Math.floor(layer.tileWidth * tilemapLayer.scaleX);
     var tileH = Math.floor(layer.tileHeight * tilemapLayer.scaleY);
 
-    //  Camera world view bounds, snapped for tile size
+    //  Camera world view bounds, snapped for scaled tile size
 
     var boundsLeft = SnapFloor(camera.worldView.x, tileW) - (tilemapLayer.cullPaddingX * tileW);
     var boundsRight = SnapCeil(camera.worldView.right, tileW) + (tilemapLayer.cullPaddingX * tileW);
     var boundsTop = SnapFloor(camera.worldView.y, tileH) - (tilemapLayer.cullPaddingY * tileH);
     var boundsBottom = SnapCeil(camera.worldView.bottom, tileH) + (tilemapLayer.cullPaddingY * tileH);
 
-    var skipCull = tilemapLayer.skipCull;
-    var drawLeft = skipCull ? 0 : Math.max(0, boundsLeft / layer.tileWidth);
-    var drawRight = skipCull ? mapWidth : Math.min(mapWidth, boundsRight / layer.tileWidth);
-    var drawTop = skipCull ? 0 : Math.max(0, boundsTop / layer.tileHeight);
-    var drawBottom = skipCull ? mapHeight : Math.min(mapHeight, boundsBottom / layer.tileHeight);
-    
+    var drawLeft = 0
+    var drawRight = mapWidth;
+    var drawTop = 0;
+    var drawBottom = mapHeight;
+
+    if (!tilemapLayer.skipCull)
+    {
+        drawLeft = Math.max(0, boundsLeft / layer.tileWidth);
+        drawRight = Math.min(mapWidth, boundsRight / layer.tileWidth);
+        drawTop = Math.max(0, boundsTop / layer.tileHeight);
+        drawBottom = Math.min(mapHeight, boundsBottom / layer.tileHeight);
+    }
+
     for (y = drawTop; y < drawBottom; y++)
     {
         for (x = drawLeft; x < drawRight; x++)
