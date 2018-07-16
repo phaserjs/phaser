@@ -26,16 +26,19 @@ var CullTiles = function (layer, camera, outputArray)
     if (outputArray === undefined) { outputArray = []; }
 
     outputArray.length = 0;
-    
-    var tilemapLayer = layer.tilemapLayer;
-    var skipCull = tilemapLayer.skipCull;
 
-    var tileW = Math.floor(layer.tileWidth * tilemapLayer.scaleX);
-    var tileH = Math.floor(layer.tileHeight * tilemapLayer.scaleY);
+    var y = 0;
+    var x = 0;
+    var tile = null;
+
+    var tilemapLayer = layer.tilemapLayer;
 
     var mapData = layer.data;
     var mapWidth = layer.width;
     var mapHeight = layer.height;
+
+    var tileW = Math.floor(layer.tileWidth * tilemapLayer.scaleX);
+    var tileH = Math.floor(layer.tileHeight * tilemapLayer.scaleY);
 
     //  Camera world view bounds, snapped for tile size
 
@@ -44,27 +47,27 @@ var CullTiles = function (layer, camera, outputArray)
     var boundsTop = SnapFloor(camera.worldView.y, tileH) - (tilemapLayer.cullPaddingY * tileH);
     var boundsBottom = SnapCeil(camera.worldView.bottom, tileH) + (tilemapLayer.cullPaddingY * tileH);
 
-    for (var y = 0; y < mapHeight; y++)
+    var skipCull = tilemapLayer.skipCull;
+    var drawLeft = skipCull ? 0 : Math.max(0, boundsLeft / layer.tileWidth);
+    var drawRight = skipCull ? mapWidth : Math.min(mapWidth, boundsRight / layer.tileWidth);
+    var drawTop = skipCull ? 0 : Math.max(0, boundsTop / layer.tileHeight);
+    var drawBottom = skipCull ? mapHeight : Math.min(mapHeight, boundsBottom / layer.tileHeight);
+    
+    for (y = drawTop; y < drawBottom; y++)
     {
-        for (var x = 0; x < mapWidth; x++)
+        for (x = drawLeft; x < drawRight; x++)
         {
-            var tile = mapData[y][x];
+            tile = mapData[y][x];
 
             if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
             {
                 continue;
             }
 
-            var tilePixelX = (tile.pixelX + tilemapLayer.x) * tilemapLayer.scaleX;
-            var tilePixelY = (tile.pixelY + tilemapLayer.y) * tilemapLayer.scaleY;
-
-            if (skipCull || (tilePixelX >= boundsLeft && tilePixelX + tileW <= boundsRight && tilePixelY >= boundsTop && tilePixelY + tileH <= boundsBottom))
-            {
-                outputArray.push(tile);
-            }
+            outputArray.push(tile);
         }
     }
-
+    
     tilemapLayer.tilesDrawn = outputArray.length;
     tilemapLayer.tilesTotal = mapWidth * mapHeight;
 
