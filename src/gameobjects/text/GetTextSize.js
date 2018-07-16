@@ -11,7 +11,7 @@
  * @since 3.0.0
  *
  * @param {Phaser.GameObjects.Text} text - The Text object to calculate the size from.
- * @param {TextMetrics} size - The Text metrics to use when calculating the size.
+ * @param {BitmapTextMetrics} size - The Text metrics to use when calculating the size.
  * @param {array} lines - The lines of text to calculate the size from.
  *
  * @return {object} An object containing dimensions of the Text object.
