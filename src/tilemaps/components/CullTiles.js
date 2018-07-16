@@ -54,10 +54,10 @@ var CullTiles = function (layer, camera, outputArray)
 
     if (!tilemapLayer.skipCull)
     {
-        drawLeft = Math.max(0, boundsLeft / layer.tileWidth);
-        drawRight = Math.min(mapWidth, boundsRight / layer.tileWidth);
-        drawTop = Math.max(0, boundsTop / layer.tileHeight);
-        drawBottom = Math.min(mapHeight, boundsBottom / layer.tileHeight);
+        drawLeft = Math.max(0, boundsLeft / tileW);
+        drawRight = Math.min(mapWidth, boundsRight / tileW);
+        drawTop = Math.max(0, boundsTop / tileH);
+        drawBottom = Math.min(mapHeight, boundsBottom / tileH);
     }
 
     for (y = drawTop; y < drawBottom; y++)
