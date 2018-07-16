@@ -238,7 +238,7 @@ var AnimationManager = new Class({
      * @property {string} [suffix=''] - [description]
      * @property {integer} [zeroPad=0] - [description]
      * @property {AnimationFrameConfig[]} [outputArray=[]] - [description]
-     * @property {boolean} [frames=false] - [description]
+     * @property {boolean|number[]} [frames=false] - [description]
      */
 
     /**
@@ -323,7 +323,7 @@ var AnimationManager = new Class({
      * @property {integer} [end=-1] - [description]
      * @property {boolean} [first=false] - [description]
      * @property {AnimationFrameConfig[]} [outputArray=[]] - [description]
-     * @property {boolean} [frames=false] - [description]
+     * @property {boolean|number[]} [frames=false] - [description]
      */
 
     /**
