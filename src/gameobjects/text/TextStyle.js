@@ -53,7 +53,7 @@ var propertyMap = {
 /**
  * Font metrics for a Text Style object.
  *
- * @typedef {object} TextMetrics
+ * @typedef {object} BitmapTextMetrics
  *
  * @property {number} ascent - The ascent of the font.
  * @property {number} descent - The descent of the font.
@@ -929,7 +929,7 @@ var TextStyle = new Class({
      * @method Phaser.GameObjects.Text.TextStyle#getTextMetrics
      * @since 3.0.0
      *
-     * @return {TextMetrics} The text metrics.
+     * @return {BitmapTextMetrics} The text metrics.
      */
     getTextMetrics: function ()
     {

@@ -1,5 +1,23 @@
 # Change Log
 
+## Version 3.12.0 - Silica - in development
+
+### New Features
+
+### Updates
+
+### Bug Fixes
+
+* If an AudioFile failed to load and throw an incomplete error, it would cause the console.log to crash JavaScript when trying to log the error. It now only logs the message if it exists. Fix #3830 (thanks @kelostrada)
+
+### Examples, Documentation and TypeScript
+
+My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
+
+@DannyT @squilibob @dvdbrink @t1gu1 @cyantree @DrevanTonder @mikewesthad @tarsupin @shadowofsoul
+
+
+
 ## Version 3.11.0 - Leafa - 13th July 2018
 
 ### Camera - New Features, Updates and Fixes
