@@ -1484,7 +1484,7 @@ var WebGLRenderer = new Class({
 
             FlatTintPipeline.batchFillRect(
                 0, 0, 1, 1, 0,
-                camera.x, camera.y, camera.width, camera.height,
+                cx, cy, cw, ch,
                 Utils.getTintFromFloats(color.redGL, color.greenGL, color.blueGL, 1.0),
                 color.alphaGL,
                 1, 0, 0, 1, 0, 0,

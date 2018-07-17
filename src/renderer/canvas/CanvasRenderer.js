@@ -385,6 +385,11 @@ var CanvasRenderer = new Class({
         var list = children.list;
         var resolution = this.config.resolution;
 
+        var cx = Math.floor(camera.x * resolution);
+        var cy = Math.floor(camera.y * resolution);
+        var cw = Math.floor(camera.width * resolution);
+        var ch = Math.floor(camera.height * resolution);
+
         this.currentContext = ctx;
 
         //  If the alpha or blend mode didn't change since the last render, then don't set them again (saves 2 ops)
@@ -392,7 +397,7 @@ var CanvasRenderer = new Class({
         if (!camera.transparent)
         {
             ctx.fillStyle = camera.backgroundColor.rgba;
-            ctx.fillRect(camera.x, camera.y, camera.width, camera.height);
+            ctx.fillRect(cx, cy, cw, ch);
         }
 
         ctx.globalAlpha = camera.alpha;
@@ -413,7 +418,7 @@ var CanvasRenderer = new Class({
         {
             ctx.save();
             ctx.beginPath();
-            ctx.rect(camera.x * resolution, camera.y * resolution, camera.width * resolution, camera.height * resolution);
+            ctx.rect(cx, cy, cw, ch);
             ctx.clip();
         }
 
