@@ -351,6 +351,9 @@ var InputManager = new Class({
     {
         this.canvas = this.game.canvas;
 
+        // this.scale.x = this.game.config.resolution;
+        // this.scale.y = this.game.config.resolution;
+
         this.updateBounds();
 
         this.events.emit('boot');
@@ -1255,6 +1258,8 @@ var InputManager = new Class({
         pointer.prevPosition.y = pointer.y;
 
         //  Set the new position
+        var res = this.game.config.resolution;
+
         pointer.x = (pageX - this.bounds.left) * this.scale.x;
         pointer.y = (pageY - this.bounds.top) * this.scale.y;
     },
