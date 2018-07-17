@@ -549,7 +549,7 @@ var Camera = new Class({
      * Set the Alpha level of this Camera. The alpha controls the opacity of the Camera as it renders.
      * Alpha values are provided as a float between 0, fully transparent, and 1, fully opaque.
      *
-     * @method Phaser.GameObjects.Components.Origin#setAlpha
+     * @method Phaser.Cameras.Scene2D.Camera#setAlpha
      * @since 3.11.0
      *
      * @param {number} [value=1] - The Camera alpha value.
@@ -575,7 +575,7 @@ var Camera = new Class({
      * Changing the origin allows you to adjust the point in the viewport from which rotation happens.
      * A value of 0 would rotate from the top-left of the viewport. A value of 1 from the bottom right.
      *
-     * @method Phaser.GameObjects.Components.Origin#setOrigin
+     * @method Phaser.Cameras.Scene2D.Camera#setOrigin
      * @since 3.11.0
      *
      * @param {number} [x=0.5] - The horizontal origin value.
