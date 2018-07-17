@@ -42,7 +42,7 @@ var TextWebGLRenderer = function (renderer, src, interpolationPercentage, camera
         src.canvasTexture,
         src.canvasTexture.width, src.canvasTexture.height,
         src.x, src.y,
-        src.canvasTexture.width, src.canvasTexture.height,
+        src.canvasTexture.width / src.style.resolution, src.canvasTexture.height / src.style.resolution,
         src.scaleX, src.scaleY,
         src.rotation,
         src.flipX, src.flipY,

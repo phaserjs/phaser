@@ -40,6 +40,7 @@ var propertyMap = {
     maxLines: [ 'maxLines', 0 ],
     fixedWidth: [ 'fixedWidth', 0 ],
     fixedHeight: [ 'fixedHeight', 0 ],
+    resolution: [ 'resolution', 0 ],
     rtl: [ 'rtl', false ],
     testString: [ 'testString', '|MÃ‰qgy' ],
     baselineX: [ 'baselineX', 1.2 ],
@@ -258,6 +259,17 @@ var TextStyle = new Class({
          * @since 3.0.0
          */
         this.fixedHeight;
+
+        /**
+         * The resolution the text is rendered to its internal canvas at.
+         * The default is 0, which means it will use the resolution set in the Game Config.
+         *
+         * @name Phaser.GameObjects.Text.TextStyle#resolution
+         * @type {number}
+         * @default 0
+         * @since 3.12.0
+         */
+        this.resolution;
 
         /**
          * Whether the text should render right to left.

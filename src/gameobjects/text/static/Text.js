@@ -142,16 +142,6 @@ var Text = new Class({
         this.text = '';
 
         /**
-         * The resolution of the text.
-         *
-         * @name Phaser.GameObjects.Text#resolution
-         * @type {number}
-         * @default 1
-         * @since 3.0.0
-         */
-        this.resolution = 1;
-
-        /**
          * Specify a padding value which is added to the line width and height when calculating the Text size.
          * Allows you to add extra spacing if the browser is unable to accurately determine the true font dimensions.
          *
@@ -200,6 +190,12 @@ var Text = new Class({
          * @since 3.0.0
          */
         this.dirty = false;
+
+        //  If resolution wasn't set, then we get it from the game config
+        if (this.style.resolution === 0)
+        {
+            this.style.resolution = scene.sys.game.config.resolution;
+        }
 
         this.initRTL();
 
@@ -951,7 +947,7 @@ var Text = new Class({
         var canvas = this.canvas;
         var context = this.context;
         var style = this.style;
-        var resolution = this.resolution;
+        var resolution = style.resolution;
         var size = style.metrics;
 
         style.syncFont(canvas, context);
@@ -1004,7 +1000,7 @@ var Text = new Class({
 
         context.save();
 
-        // context.scale(resolution, resolution);
+        context.scale(resolution, resolution);
 
         if (style.backgroundColor)
         {
@@ -1105,7 +1101,6 @@ var Text = new Class({
             autoRound: this.autoRound,
             text: this.text,
             style: this.style.toJSON(),
-            resolution: this.resolution,
             padding: {
                 left: this.padding.left,
                 right: this.padding.right,

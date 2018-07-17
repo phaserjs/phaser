@@ -89,7 +89,7 @@ var TextCanvasRenderer = function (renderer, src, interpolationPercentage, camer
 
     ctx.scale(src.flipX ? -1 : 1, src.flipY ? -1 : 1);
 
-    ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, -src.displayOriginX, -src.displayOriginY, canvas.width, canvas.height);
+    ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, -src.displayOriginX, -src.displayOriginY, canvas.width / src.style.resolution, canvas.height / src.style.resolution);
 
     ctx.restore();
 };
