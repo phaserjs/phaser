@@ -854,6 +854,29 @@ var Text = new Class({
     },
 
     /**
+     * Set the resolution used by this Text object.
+     *
+     * By default it will be set to match the resolution set in the Game Config,
+     * but you can override it via this method, or by specifying it in the Text style configuration object.
+     * 
+     * It allows for much clearer text on High DPI devices, at the cost of memory because it uses larger
+     * internal Canvas textures for the Text.
+     * 
+     * Therefore, please use with caution, as the more high res Text you have, the more memory it uses.
+     *
+     * @method Phaser.GameObjects.Text#setResolution
+     * @since 3.12.0
+     *
+     * @param {number} value - The resolution for this Text object to use.
+     *
+     * @return {Phaser.GameObjects.Text} This Text object.
+     */
+    setResolution: function (value)
+    {
+        return this.style.setResolution(value);
+    },
+
+    /**
      * Set the text padding.
      *
      * 'left' can be an object.
