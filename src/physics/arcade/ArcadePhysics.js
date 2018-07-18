@@ -300,7 +300,7 @@ var ArcadePhysics = new Class({
      */
     closest: function (source)
     {
-        var bodies = this.tree.all();
+        var bodies = this.world.tree.all();
 
         var min = Number.MAX_VALUE;
         var closest = null;
@@ -334,7 +334,7 @@ var ArcadePhysics = new Class({
      */
     furthest: function (source)
     {
-        var bodies = this.tree.all();
+        var bodies = this.world.tree.all();
 
         var max = -1;
         var farthest = null;
