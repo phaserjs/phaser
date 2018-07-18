@@ -23,7 +23,7 @@ var CreateDOMContainer = function (game)
     //  DOM Element Container
     var div = document.createElement('div');
 
-    div.style = 'width: ' + width + 'px; height: ' + height + 'px; padding: 0; margin: 0; position: absolute; overflow: hidden; pointer-events: none; z-index: ' + z;
+    div.style = 'display: block; width: ' + width + 'px; height: ' + height + 'px; padding: 0; margin: 0; position: absolute; overflow: hidden; pointer-events: none; z-index: ' + z;
 
     // game.canvas.style.position = 'absolute';
     // game.canvas.style.zIndex = '2';

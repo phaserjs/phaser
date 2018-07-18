@@ -6,8 +6,9 @@
 
 var Class = require('../../utils/Class');
 var Components = require('../components');
-var GameObject = require('../GameObject');
 var DOMElementRender = require('./DOMElementRender');
+var GameObject = require('../GameObject');
+var Vector4 = require('../../math/Vector4');
 
 /**
  * @classdesc
@@ -21,24 +22,17 @@ var DOMElementRender = require('./DOMElementRender');
  *
  * @extends Phaser.GameObjects.Components.Alpha
  * @extends Phaser.GameObjects.Components.BlendMode
+ * @extends Phaser.GameObjects.Components.ComputedSize
  * @extends Phaser.GameObjects.Components.Depth
- * @extends Phaser.GameObjects.Components.Flip
- * @extends Phaser.GameObjects.Components.GetBounds
- * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.ScaleMode
  * @extends Phaser.GameObjects.Components.ScrollFactor
- * @extends Phaser.GameObjects.Components.Size
- * @extends Phaser.GameObjects.Components.TextureCrop
- * @extends Phaser.GameObjects.Components.Tint
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
- * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+ * @param {(string|HTMLElement)} [element] - The DOM Element to use.
  */
 var DOMElement = new Class({
 
@@ -47,17 +41,10 @@ var DOMElement = new Class({
     Mixins: [
         Components.Alpha,
         Components.BlendMode,
+        Components.ComputedSize,
         Components.Depth,
-        // Components.Flip,
-        // Components.GetBounds,
-        // Components.Mask,
-        // Components.Origin,
-        // Components.Pipeline,
-        // Components.ScaleMode,
+        Components.Origin,
         Components.ScrollFactor,
-        // Components.Size,
-        // Components.TextureCrop,
-        // Components.Tint,
         Components.Transform,
         Components.Visible,
         DOMElementRender
@@ -69,20 +56,45 @@ var DOMElement = new Class({
     {
         GameObject.call(this, scene, 'DOMElement');
 
-        // this.setTexture(texture, frame);
-        this.setPosition(x, y);
-        // this.setSizeToFrame();
-        // this.setOriginFromFrame();
-        // this.initPipeline('TextureTintPipeline');
-
         this.parent = scene.sys.game.domContainer;
 
         this.node;
 
-        this.setNode(element);
+        this.skewX = 0;
+        this.skewY = 0;
+
+        //  https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/rotate3d
+        this.rotate3d = new Vector4();
+        this.rotate3dAngle = 'deg';
+
+        this.setPosition(x, y);
+
+        if (element)
+        {
+            this.setElement(element);
+        }
     },
 
-    setNode: function (element)
+    setSkew: function (x, y)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = x; }
+
+        this.skewX = x;
+        this.skewY = y;
+
+        return this;
+    },
+
+    setPerspective: function (value)
+    {
+        //  Sets it on the DOM Container!
+        this.parent.style.perspective = value + 'px';
+
+        return this;
+    },
+
+    setElement: function (element)
     {
         var target;
 
@@ -103,12 +115,44 @@ var DOMElement = new Class({
         this.node = target;
 
         target.style.zIndex = '0';
+        target.style.display = 'block';
         target.style.position = 'absolute';
 
         if (this.parent)
         {
             this.parent.appendChild(target);
         }
+
+        var nodeBounds = target.getBoundingClientRect();
+
+        this.setSize(nodeBounds.width || 0, nodeBounds.height || 0);
+
+        return this;
+    },
+
+    setText: function (text)
+    {
+        if (this.node)
+        {
+            this.node.innerText = text;
+        }
+
+        return this;
+    },
+
+    setHTML: function (html)
+    {
+        if (this.node)
+        {
+            this.node.innerHTML = html;
+        }
+
+        return this;
+    },
+
+    destroy: function ()
+    {
+
     }
 
 });
