@@ -51,6 +51,13 @@ var ValueToColor = require('../display/color/ValueToColor');
  */
 
 /**
+ * @typedef {object} DOMContainerConfig
+ *
+ * @property {boolean} [createContainer=false] - Create a div element in which DOM Elements will be contained. You must also provide a parent.
+ * @property {boolean} [behindCanvas=false] - Place the DOM Container behind the Phaser Canvas. The default is to place it over the Canvas.
+ */
+
+/**
  * @typedef {object} GameConfig
  *
  * @property {(integer|string)} [width=1024] - [description]
@@ -83,6 +90,7 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {boolean} [banner.hidePhaser=false] - [description]
  * @property {string} [banner.text='#ffffff'] - [description]
  * @property {string[]} [banner.background] - [description]
+ * @property {DOMContainerConfig} [dom] - The DOM Container configuration object.
  * @property {FPSConfig} [fps] - [description]
  * @property {boolean} [render.antialias=true] - [description]
  * @property {boolean} [render.pixelArt=false] - [description]
@@ -211,6 +219,18 @@ var Config = new Class({
          * @const {boolean} Phaser.Boot.Config#autoFocus - [description]
          */
         this.autoFocus = GetValue(config, 'autoFocus', true);
+
+        //  DOM Element Container
+
+        /**
+         * @const {?boolean} Phaser.Boot.Config#domCreateContainer - [description]
+         */
+        this.domCreateContainer = GetValue(config, 'dom.createContainer', false);
+
+        /**
+         * @const {?boolean} Phaser.Boot.Config#domBehindCanvas - [description]
+         */
+        this.domBehindCanvas = GetValue(config, 'dom.behindCanvas', false);
 
         //  Input
 
