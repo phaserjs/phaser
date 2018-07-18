@@ -4,7 +4,12 @@
 
 ### New Features
 
+* `Camera.resolution` is a new read-only property that holds the current game config resolution that the camera is using. This is used internally for viewport calculations.
+
 ### Updates
+
+* `Camera.x` and `Camera.y` have been turned into getters / setters, mapped to the internal private values `_x` and `_y` respectively. This is so that setting the Camera viewport position directly will now update the new internal resolution calculation vars too.
+* `Camera.setScene` will now set the Cameras `resolution` property at the same time and update the internal viewport vars.
 
 ### Bug Fixes
 
