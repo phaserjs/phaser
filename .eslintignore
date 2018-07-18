@@ -8,3 +8,4 @@ src/geom/polygon/Earcut.js
 src/utils/array/StableSort.js
 src/utils/object/Extend.js
 src/structs/RTree.js
+src/boot/ScaleManager.js

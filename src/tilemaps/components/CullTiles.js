@@ -47,7 +47,7 @@ var CullTiles = function (layer, camera, outputArray)
     var boundsTop = SnapFloor(camera.worldView.y, tileH) - (tilemapLayer.cullPaddingY * tileH);
     var boundsBottom = SnapCeil(camera.worldView.bottom, tileH) + (tilemapLayer.cullPaddingY * tileH);
 
-    var drawLeft = 0
+    var drawLeft = 0;
     var drawRight = mapWidth;
     var drawTop = 0;
     var drawBottom = mapHeight;

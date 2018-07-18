@@ -1257,9 +1257,6 @@ var InputManager = new Class({
         pointer.prevPosition.x = pointer.x;
         pointer.prevPosition.y = pointer.y;
 
-        //  Set the new position
-        var res = this.game.config.resolution;
-
         pointer.x = (pageX - this.bounds.left) * this.scale.x;
         pointer.y = (pageY - this.bounds.top) * this.scale.y;
     },
