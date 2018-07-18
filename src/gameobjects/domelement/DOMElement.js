@@ -115,7 +115,7 @@ var DOMElement = new Class({
         this.node = target;
 
         target.style.zIndex = '0';
-        target.style.display = 'block';
+        target.style.display = 'inline';
         target.style.position = 'absolute';
 
         if (this.parent)
@@ -128,6 +128,22 @@ var DOMElement = new Class({
         this.setSize(nodeBounds.width || 0, nodeBounds.height || 0);
 
         return this;
+    },
+
+    createFromCache: function (key, elementType)
+    {
+        return this.createFromHTML(this.scene.sys.cache.text.get(key), elementType);
+    },
+
+    createFromHTML: function (html, elementType)
+    {
+        if (elementType === undefined) { elementType = 'div'; }
+
+        var element = document.createElement(elementType);
+
+        element.innerHTML = html;
+
+        return this.setElement(element);
     },
 
     setText: function (text)
