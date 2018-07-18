@@ -380,14 +380,14 @@ var CanvasRenderer = new Class({
      */
     render: function (scene, children, interpolationPercentage, camera)
     {
-        var ctx = scene.sys.context;
-        var scissor = (camera.x !== 0 || camera.y !== 0 || camera.width !== ctx.canvas.width || camera.height !== ctx.canvas.height);
-        var list = children.list;
-
         var cx = camera._cx;
         var cy = camera._cy;
         var cw = camera._cw;
         var ch = camera._ch;
+
+        var ctx = scene.sys.context;
+        var scissor = (cx !== 0 || cy !== 0 || cw !== ctx.canvas.width || ch !== ctx.canvas.height);
+        var list = children.list;
 
         this.currentContext = ctx;
 

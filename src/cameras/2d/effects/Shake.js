@@ -261,8 +261,8 @@ var Shake = new Class({
         if (this._elapsed < this.duration)
         {
             var intensity = this.intensity;
-            var width = this.camera.width;
-            var height = this.camera.height;
+            var width = this.camera._cw;
+            var height = this.camera._ch;
             var zoom = this.camera.zoom;
 
             this._offsetX = (Math.random() * intensity.x * width * 2 - intensity.x * width) * zoom;

@@ -12,6 +12,17 @@
 * `Camera.x` and `Camera.y` have been turned into getters / setters, mapped to the internal private values `_x` and `_y` respectively. This is so that setting the Camera viewport position directly will now update the new internal resolution calculation vars too.
 * `Camera.setScene` will now set the Cameras `resolution` property at the same time and update the internal viewport vars.
 
+### Game Config Resolution Specific Bug Fixes
+
+Setting the `resolution` property in the Game Config to a value other than 1 would cause various errors in the API. The following have been fixed:
+
+* The game canvas would be sized incorrectly, unless you had enabled auto resizing. It now scales the canvas to the size given, maintaining the resolution. Fix #3468 (thanks @Legomite)
+* Cameras with background colors set would display the filled color area at the wrong size. Camera fills now respect the resolution.
+* The Camera Fade Effect would display the fade fill rectangle at the wrong size. Camera fades now respect the resolution.
+* The Camera Flash Effect would display the fade fill rectangle at the wrong size. Camera flashes now respect the resolution.
+* The Camera Shake Effect would shake the Camera using the wrong width values. Camera Shakes now respect the resolution.
+* Input calculations would not factor in the Game Resolution correctly. If a Camera viewport was not at 0x0 or not the full size, or the Camera was rotated or zoomed, the input areas would be wrong if `resolution` was > 1. These are now factored in correctly and changing the resolution no longer breaks input. Fix #3606 (thanks @Secretmapper)
+
 ### Bug Fixes
 
 * If an AudioFile failed to load and throw an incomplete error, it would cause the console.log to crash JavaScript when trying to log the error. It now only logs the message if it exists. Fix #3830 (thanks @kelostrada)
