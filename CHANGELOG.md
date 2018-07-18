@@ -26,6 +26,7 @@ Setting the `resolution` property in the Game Config to a value other than 1 wou
 
 ### Bug Fixes
 
+* The `setCrop` method stored its crop object on the prototype chain by mistake, causing all Images or Sprites that were cropped to display the same frame. The crop data has been moved to the Game Object instance, where it should be, fixing this issue (thanks NoxBrutalis)
 * If an AudioFile failed to load and throw an incomplete error, it would cause the console.log to crash JavaScript when trying to log the error. It now only logs the message if it exists. Fix #3830 (thanks @kelostrada)
 
 ### Examples, Documentation and TypeScript

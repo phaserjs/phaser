@@ -75,6 +75,16 @@ var Image = new Class({
     {
         GameObject.call(this, scene, 'Image');
 
+        /**
+         * The internal crop data object, as used by `setCrop` and passed to the `Frame.setCropUVs` method.
+         *
+         * @name Phaser.GameObjects.Image#_crop
+         * @type {object}
+         * @private
+         * @since 3.11.0
+         */
+        this._crop = { u0: 0, v0: 0, u1: 0, v1: 0, width: 0, height: 0, x: 0, y: 0, flipX: false, flipY: false, cx: 0, cy: 0, cw: 0, ch: 0 };
+
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
