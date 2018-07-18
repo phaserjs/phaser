@@ -1468,12 +1468,10 @@ var WebGLRenderer = new Class({
      */
     preRenderCamera: function (camera)
     {
-        var resolution = this.config.resolution;
-
-        var cx = Math.floor(camera.x * resolution);
-        var cy = Math.floor(camera.y * resolution);
-        var cw = Math.floor(camera.width * resolution);
-        var ch = Math.floor(camera.height * resolution);
+        var cx = camera._cx;
+        var cy = camera._cy;
+        var cw = camera._cw;
+        var ch = camera._ch;
 
         this.pushScissor(cx, cy, cw, ch);
 
