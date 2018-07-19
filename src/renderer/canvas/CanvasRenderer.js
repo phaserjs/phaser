@@ -380,6 +380,9 @@ var CanvasRenderer = new Class({
      */
     render: function (scene, children, interpolationPercentage, camera)
     {
+        var list = children.list;
+        var childCount = list.length;
+
         var cx = camera._cx;
         var cy = camera._cy;
         var cw = camera._cw;
@@ -387,7 +390,6 @@ var CanvasRenderer = new Class({
 
         var ctx = scene.sys.context;
         var scissor = (cx !== 0 || cy !== 0 || cw !== ctx.canvas.width || ch !== ctx.canvas.height);
-        var list = children.list;
 
         this.currentContext = ctx;
 
@@ -425,9 +427,14 @@ var CanvasRenderer = new Class({
 
         ctx.setTransform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
 
-        for (var c = 0; c < list.length; c++)
+        for (var i = 0; i < childCount; i++)
         {
-            var child = list[c];
+            var child = list[i];
+
+            if (!child.willRender(camera))
+            {
+                continue;
+            }
 
             if (child.mask)
             {

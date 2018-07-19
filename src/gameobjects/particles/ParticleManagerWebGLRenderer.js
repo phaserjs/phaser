@@ -24,8 +24,9 @@ var GameObject = require('../GameObject');
 var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpolationPercentage, camera, parentMatrix)
 {
     var emitters = emitterManager.emitters.list;
+    var emittersLength = emitters.length;
 
-    if (emitters.length === 0 || GameObject.RENDER_MASK !== emitterManager.renderFlags || (emitterManager.cameraFilter > 0 && (emitterManager.cameraFilter & camera._id)))
+    if (emittersLength === 0)
     {
         return;
     }
@@ -43,7 +44,7 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
 
     pipeline.setTexture2D(texture, 0);
     
-    for (var e = 0; e < emitters.length; e++)
+    for (var e = 0; e < emittersLength; e++)
     {
         var emitter = emitters[e];
         var particles = emitter.alive;

@@ -23,7 +23,7 @@ var GameObject = require('../../GameObject');
  */
 var TextCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)) || src.text === '')
+    if (src.text === '')
     {
         return;
     }

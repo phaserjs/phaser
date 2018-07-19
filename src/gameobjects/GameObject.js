@@ -436,15 +436,18 @@ var GameObject = new Class({
 
     /**
      * Compares the renderMask with the renderFlags to see if this Game Object will render or not.
+     * Also checks the Game Object against the given Cameras exclusion list.
      *
      * @method Phaser.GameObjects.GameObject#willRender
      * @since 3.0.0
+     * 
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to check against this Game Object.
      *
      * @return {boolean} True if the Game Object should be rendered, otherwise false.
      */
-    willRender: function ()
+    willRender: function (camera)
     {
-        return (GameObject.RENDER_MASK === this.renderFlags);
+        return !(GameObject.RENDER_MASK !== this.renderFlags || (this.cameraFilter > 0 && (this.cameraFilter & camera.id)));
     },
 
     /**

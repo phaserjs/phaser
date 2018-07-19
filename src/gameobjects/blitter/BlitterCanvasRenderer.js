@@ -25,7 +25,7 @@ var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, ca
 {
     var list = src.getRenderList();
 
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)) || list.length === 0)
+    if (list.length === 0)
     {
         return;
     }

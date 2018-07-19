@@ -1574,11 +1574,11 @@ var WebGLRenderer = new Class({
         //   Apply scissor for cam region + render background color, if not transparent
         this.preRenderCamera(camera);
 
-        for (var index = 0; index < childCount; ++index)
+        for (var i = 0; i < childCount; i++)
         {
-            var child = list[index];
+            var child = list[i];
 
-            if (!child.willRender())
+            if (!child.willRender(camera))
             {
                 continue;
             }

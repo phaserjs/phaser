@@ -26,7 +26,7 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
     var text = src._text;
     var textLength = text.length;
 
-    if (GameObject.RENDER_MASK !== src.renderFlags || textLength === 0 || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)))
+    if (textLength === 0)
     {
         return;
     }
