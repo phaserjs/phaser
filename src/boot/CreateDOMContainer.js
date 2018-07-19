@@ -15,19 +15,18 @@ var CreateDOMContainer = function (game)
         return;
     }
 
-    var width = game.canvas.width;
-    var height = game.canvas.height;
-
-    var z = (config.domBehindCanvas) ? 1 : 3;
-
     //  DOM Element Container
     var div = document.createElement('div');
 
-    div.style = 'display: block; width: ' + width + 'px; height: ' + height + 'px; padding: 0; margin: 0; position: absolute; overflow: hidden; pointer-events: none; z-index: ' + z;
-
-    // game.canvas.style.position = 'absolute';
-    // game.canvas.style.zIndex = '2';
-    // game.canvas.parentElement.style.position = 'relative';
+    div.style = [
+        'display: block;',
+        'width: ' + game.canvas.width + 'px;',
+        'height: ' + game.canvas.height + 'px;',
+        'padding: 0; margin: 0;',
+        'position: absolute;',
+        'overflow: hidden;',
+        'pointer-events: none;'
+    ].join();
 
     game.domContainer = div;
 
