@@ -58,6 +58,8 @@ var DOMElement = new Class({
 
         this.parent = scene.sys.game.domContainer;
 
+        this.cache = scene.sys.cache.html;
+
         this.node;
 
         this.skewX = 0;
@@ -94,6 +96,41 @@ var DOMElement = new Class({
         return this;
     },
 
+    /**
+     * Compares the renderMask with the renderFlags to see if this Game Object will render or not.
+     *
+     * @method Phaser.GameObjects.GameObject#willRender
+     * @since 3.0.0
+     *
+     * @return {boolean} True if the Game Object should be rendered, otherwise false.
+     */
+    willRender: function ()
+    {
+        return true;
+    },
+
+    listen: function (events)
+    {
+        if (!this.node)
+        {
+            return;
+        }
+
+        events = events.split(' ');
+
+        for (var i = 0; i < events.length; i++)
+        {
+            this.node.addEventListener(events[i], this.dispatchNativeEvent.bind(this), false);
+        }
+
+        return this;
+    },
+
+    dispatchNativeEvent: function (event)
+    {
+        this.emit(event.type, event);
+    },
+
     setElement: function (element)
     {
         var target;
@@ -118,6 +155,10 @@ var DOMElement = new Class({
         target.style.display = 'inline';
         target.style.position = 'absolute';
 
+        //  Node handler
+
+        target.phaserElement = this;
+
         if (this.parent)
         {
             this.parent.appendChild(target);
@@ -132,12 +173,14 @@ var DOMElement = new Class({
 
     createFromCache: function (key, elementType)
     {
-        return this.createFromHTML(this.scene.sys.cache.text.get(key), elementType);
+        return this.createFromHTML(this.cache.get(key), elementType);
     },
 
     createFromHTML: function (html, elementType)
     {
         if (elementType === undefined) { elementType = 'div'; }
+
+        console.log(html);
 
         var element = document.createElement(elementType);
 
