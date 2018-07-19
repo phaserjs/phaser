@@ -61,10 +61,11 @@ PluginCache.register = function (key, plugin, mapping, custom)
  * @param {string} key - A reference used to get this plugin from the plugin cache.
  * @param {function} plugin - The plugin to be stored. Should be the core object, not instantiated.
  * @param {string} mapping - If this plugin is to be injected into the Scene Systems, this is the property key map used.
+ * @param {?any} data - A value to be passed to the plugin's `init` method.
  */
-PluginCache.registerCustom = function (key, plugin, mapping)
+PluginCache.registerCustom = function (key, plugin, mapping, data)
 {
-    customPlugins[key] = { plugin: plugin, mapping: mapping };
+    customPlugins[key] = { plugin: plugin, mapping: mapping, data: data };
 };
 
 /**
