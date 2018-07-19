@@ -26,7 +26,7 @@ var CreateDOMContainer = function (game)
         'position: absolute;',
         'overflow: hidden;',
         'pointer-events: none;'
-    ].join();
+    ].join(' ');
 
     game.domContainer = div;
 
