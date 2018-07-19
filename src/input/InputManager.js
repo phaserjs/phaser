@@ -351,9 +351,6 @@ var InputManager = new Class({
     {
         this.canvas = this.game.canvas;
 
-        // this.scale.x = this.game.config.resolution;
-        // this.scale.y = this.game.config.resolution;
-
         this.updateBounds();
 
         this.events.emit('boot');
