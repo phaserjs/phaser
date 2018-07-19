@@ -103,6 +103,15 @@ var CacheManager = new Class({
         this.text = new BaseCache();
 
         /**
+         * A Cache storing all html files, typically added via the Loader.
+         *
+         * @name Phaser.Cache.CacheManager#html
+         * @type {Phaser.Cache.BaseCache}
+         * @since 3.12.0
+         */
+        this.html = new BaseCache();
+
+        /**
          * A Cache storing all WaveFront OBJ files, typically added via the Loader.
          *
          * @name Phaser.Cache.CacheManager#obj
@@ -181,6 +190,7 @@ var CacheManager = new Class({
             'shader',
             'audio',
             'text',
+            'html',
             'obj',
             'tilemap',
             'xml'
