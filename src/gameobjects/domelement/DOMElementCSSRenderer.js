@@ -56,9 +56,9 @@ var DOMElementCSSRenderer = function (renderer, src, interpolationPercentage, ca
 
     // https://developer.mozilla.org/en-US/docs/Web/CSS/transform
 
-    node.style.transform = 
+    node.style.transform =
         calcMatrix.getCSSMatrix() +
-        ' skew(' + src.skewX + 'rad, ' + src.skewY + 'rad)' + 
+        ' skew(' + src.skewX + 'rad, ' + src.skewY + 'rad)' +
         ' rotate3d(' + src.rotate3d.x + ',' + src.rotate3d.y + ',' + src.rotate3d.z + ',' + src.rotate3d.w + src.rotate3dAngle + ')';
 
     node.style.transformOrigin = (100 * src.originX) + '% ' + (100 * src.originY) + '%';
