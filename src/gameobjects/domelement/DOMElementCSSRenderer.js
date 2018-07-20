@@ -61,6 +61,8 @@ var DOMElementCSSRenderer = function (renderer, src, interpolationPercentage, ca
         ' skew(' + src.skewX + 'rad, ' + src.skewY + 'rad)' +
         ' rotate3d(' + src.rotate3d.x + ',' + src.rotate3d.y + ',' + src.rotate3d.z + ',' + src.rotate3d.w + src.rotate3dAngle + ')';
 
+    // node.style.transform = calcMatrix.getCSSMatrix();
+
     node.style.transformOrigin = (100 * src.originX) + '% ' + (100 * src.originY) + '%';
 };
 
