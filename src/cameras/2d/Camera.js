@@ -122,9 +122,10 @@ var Camera = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Camera#x
          * @type {number}
+         * @private
          * @since 3.0.0
          */
-        this.x = x;
+        this._x = x;
 
         /**
          * The y position of the Camera, relative to the top-left of the game canvas.
@@ -133,9 +134,60 @@ var Camera = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Camera#y
          * @type {number}
+         * @private
          * @since 3.0.0
          */
-        this.y = y;
+        this._y = y;
+
+        /**
+         * The resolution of the Game, used in most Camera calculations.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#resolution
+         * @type {number}
+         * @readOnly
+         * @since 3.12.0
+         */
+        this.resolution = 1;
+
+        /**
+         * Internal Camera X value multiplied by the resolution.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#_cx
+         * @type {number}
+         * @private
+         * @since 3.12.0
+         */
+        this._cx = 0;
+
+        /**
+         * Internal Camera Y value multiplied by the resolution.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#_cy
+         * @type {number}
+         * @private
+         * @since 3.12.0
+         */
+        this._cy = 0;
+
+        /**
+         * Internal Camera Width value multiplied by the resolution.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#_cw
+         * @type {number}
+         * @private
+         * @since 3.12.0
+         */
+        this._cw = 0;
+
+        /**
+         * Internal Camera Height value multiplied by the resolution.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#_ch
+         * @type {number}
+         * @private
+         * @since 3.12.0
+         */
+        this._ch = 0;
 
         /**
          * The width of the Camera viewport, in pixels.
@@ -549,7 +601,7 @@ var Camera = new Class({
      * Set the Alpha level of this Camera. The alpha controls the opacity of the Camera as it renders.
      * Alpha values are provided as a float between 0, fully transparent, and 1, fully opaque.
      *
-     * @method Phaser.GameObjects.Components.Origin#setAlpha
+     * @method Phaser.Cameras.Scene2D.Camera#setAlpha
      * @since 3.11.0
      *
      * @param {number} [value=1] - The Camera alpha value.
@@ -575,7 +627,7 @@ var Camera = new Class({
      * Changing the origin allows you to adjust the point in the viewport from which rotation happens.
      * A value of 0 would rotate from the top-left of the viewport. A value of 1 from the bottom right.
      *
-     * @method Phaser.GameObjects.Components.Origin#setOrigin
+     * @method Phaser.Cameras.Scene2D.Camera#setOrigin
      * @since 3.11.0
      *
      * @param {number} [x=0.5] - The horizontal origin value.
@@ -1071,8 +1123,10 @@ var Camera = new Class({
         var scrollX = this.scrollX;
         var scrollY = this.scrollY;
 
-        var sx = x + ((scrollX * c - scrollY * s) * zoom);
-        var sy = y + ((scrollX * s + scrollY * c) * zoom);
+        var res = this.resolution;
+
+        var sx = x * res + ((scrollX * c - scrollY * s) * zoom);
+        var sy = y * res + ((scrollX * s + scrollY * c) * zoom);
 
         /* Apply transform to point */
         output.x = (sx * ima + sy * imc + ime);
@@ -1541,6 +1595,7 @@ var Camera = new Class({
 
     /**
      * Sets the Scene the Camera is bound to.
+     * Also populates the `resolution` property and updates the internal size values.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setScene
      * @since 3.0.0
@@ -1552,6 +1607,15 @@ var Camera = new Class({
     setScene: function (scene)
     {
         this.scene = scene;
+
+        var res = scene.sys.game.config.resolution;
+
+        this.resolution = res;
+
+        this._cx = this._x * res;
+        this._cy = this._y * res;
+        this._cw = this._width * res;
+        this._ch = this._height * res;
 
         return this;
     },
@@ -1875,6 +1939,56 @@ var Camera = new Class({
     },
 
     /**
+     * The x position of the Camera viewport, relative to the top-left of the game canvas.
+     * The viewport is the area into which the camera renders.
+     * To adjust the position the camera is looking at in the game world, see the `scrollX` value.
+     *
+     * @name Phaser.Cameras.Scene2D.Camera#x
+     * @type {number}
+     * @since 3.0.0
+     */
+    x: {
+
+        get: function ()
+        {
+            return this._x;
+        },
+
+        set: function (value)
+        {
+            this._x = value;
+            this._cx = value * this.resolution;
+            this.dirty = true;
+        }
+
+    },
+
+    /**
+     * The y position of the Camera viewport, relative to the top-left of the game canvas.
+     * The viewport is the area into which the camera renders.
+     * To adjust the position the camera is looking at in the game world, see the `scrollY` value.
+     *
+     * @name Phaser.Cameras.Scene2D.Camera#y
+     * @type {number}
+     * @since 3.0.0
+     */
+    y: {
+
+        get: function ()
+        {
+            return this._y;
+        },
+
+        set: function (value)
+        {
+            this._y = value;
+            this._cy = value * this.resolution;
+            this.dirty = true;
+        }
+
+    },
+
+    /**
      * The width of the Camera viewport, in pixels.
      *
      * The viewport is the area into which the Camera renders. Setting the viewport does
@@ -1894,6 +2008,7 @@ var Camera = new Class({
         set: function (value)
         {
             this._width = value;
+            this._cw = value * this.resolution;
             this.dirty = true;
         }
 
@@ -1919,6 +2034,7 @@ var Camera = new Class({
         set: function (value)
         {
             this._height = value;
+            this._ch = value * this.resolution;
             this.dirty = true;
         }
 

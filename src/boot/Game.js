@@ -10,6 +10,7 @@ var CacheManager = require('../cache/CacheManager');
 var CanvasPool = require('../display/canvas/CanvasPool');
 var Class = require('../utils/Class');
 var Config = require('./Config');
+var CreateDOMContainer = require('./CreateDOMContainer');
 var CreateRenderer = require('./CreateRenderer');
 var DataManager = require('../data/DataManager');
 var DebugHeader = require('./DebugHeader');
@@ -67,6 +68,20 @@ var Game = new Class({
          * @since 3.0.0
          */
         this.renderer = null;
+
+        /**
+         * A reference to an HTML Div Element used as a DOM Element Container.
+         * 
+         * Only set if `createDOMContainer` is `true` in the game config (by default it is `false`) and
+         * if you provide a parent element to insert the Phaser Game inside.
+         *
+         * See the DOM Element Game Object for more details.
+         *
+         * @name Phaser.Game#domContainer
+         * @type {HTMLDivElement}
+         * @since 3.12.0
+         */
+        this.domContainer = null;
 
         /**
          * A reference to the HTML Canvas Element that Phaser uses to render the game.
@@ -304,6 +319,8 @@ var Game = new Class({
         this.config.preBoot(this);
 
         CreateRenderer(this);
+
+        CreateDOMContainer(this);
 
         DebugHeader(this);
 
@@ -611,6 +628,12 @@ var Game = new Class({
         this.config.width = width;
         this.config.height = height;
 
+        if (this.domContainer)
+        {
+            this.domContainer.style.width = width + 'px';
+            this.domContainer.style.height = height + 'px';
+        }
+
         this.renderer.resize(width, height);
 
         this.input.resize();
@@ -664,6 +687,11 @@ var Game = new Class({
             {
                 this.canvas.parentNode.removeChild(this.canvas);
             }
+        }
+
+        if (this.domContainer)
+        {
+            this.domContainer.parentNode.removeChild(this.domContainer);
         }
 
         this.loop.destroy();

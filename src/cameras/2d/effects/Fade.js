@@ -337,7 +337,7 @@ var Fade = new Class({
         var camera = this.camera;
 
         ctx.fillStyle = 'rgba(' + this.red + ',' + this.green + ',' + this.blue + ',' + this.alpha + ')';
-        ctx.fillRect(camera.x, camera.y, camera.width, camera.height);
+        ctx.fillRect(camera._cx, camera._cy, camera._cw, camera._ch);
 
         return true;
     },
@@ -367,7 +367,7 @@ var Fade = new Class({
 
         pipeline.batchFillRect(
             0, 0, 1, 1, 0,
-            camera.x, camera.y, camera.width, camera.height,
+            camera._cx, camera._cy, camera._cw, camera._ch,
             getTintFunction(red, green, blue, 1),
             this.alpha,
             1, 0, 0, 1, 0, 0,

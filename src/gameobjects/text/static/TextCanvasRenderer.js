@@ -4,8 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = require('../../GameObject');
-
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -23,7 +21,7 @@ var GameObject = require('../../GameObject');
  */
 var TextCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)) || src.text === '')
+    if (src.text === '')
     {
         return;
     }
@@ -89,7 +87,7 @@ var TextCanvasRenderer = function (renderer, src, interpolationPercentage, camer
 
     ctx.scale(src.flipX ? -1 : 1, src.flipY ? -1 : 1);
 
-    ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, -src.displayOriginX, -src.displayOriginY, canvas.width, canvas.height);
+    ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, -src.displayOriginX, -src.displayOriginY, canvas.width / src.style.resolution, canvas.height / src.style.resolution);
 
     ctx.restore();
 };

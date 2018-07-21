@@ -5,7 +5,6 @@
  */
 
 var Commands = require('./Commands');
-var GameObject = require('../GameObject');
 
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
@@ -26,7 +25,10 @@ var GameObject = require('../GameObject');
  */
 var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix, renderTargetCtx, allowClip)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)))
+    var commandBuffer = src.commandBuffer;
+    var commandBufferLength = commandBuffer.length;
+
+    if (commandBufferLength === 0)
     {
         return;
     }
@@ -38,7 +40,6 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
     var srcScaleX = src.scaleX;
     var srcScaleY = src.scaleY;
     var srcRotation = src.rotation;
-    var commandBuffer = src.commandBuffer;
     var ctx = renderTargetCtx || renderer.currentContext;
     var lineAlpha = 1.0;
     var fillAlpha = 1.0;
@@ -92,7 +93,7 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
     ctx.fillStyle = '#fff';
     ctx.globalAlpha = src.alpha;
 
-    for (var index = 0, length = commandBuffer.length; index < length; ++index)
+    for (var index = 0; index < commandBufferLength; ++index)
     {
         var commandID = commandBuffer[index];
 

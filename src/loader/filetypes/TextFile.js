@@ -129,7 +129,7 @@ var TextFile = new Class({
  * Once the file has finished loading you can access it from its Cache using its key:
  * 
  * ```javascript
- * this.load.image('story', 'files/IntroStory.txt');
+ * this.load.text('story', 'files/IntroStory.txt');
  * // and later in your game ...
  * var data = this.cache.text.get('story');
  * ```

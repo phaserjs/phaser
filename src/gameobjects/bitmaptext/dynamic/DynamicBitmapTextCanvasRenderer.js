@@ -4,8 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = require('../../GameObject');
-
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -26,7 +24,7 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
     var text = src.text;
     var textLength = text.length;
 
-    if (GameObject.RENDER_MASK !== src.renderFlags || textLength === 0 || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)))
+    if (textLength === 0)
     {
         return;
     }

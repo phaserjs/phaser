@@ -1108,15 +1108,20 @@ var InputManager = new Class({
         if (output === undefined) { output = this._tempHitTest; }
 
         var tempPoint = this._tempPoint;
-        var cameraW = camera.width;
-        var cameraH = camera.height;
+
+        var cx = camera._cx;
+        var cy = camera._cy;
+        var cw = camera._cw;
+        var ch = camera._ch;
+        var csx = camera.scrollX;
+        var csy = camera.scrollY;
 
         output.length = 0;
 
         var x = pointer.x;
         var y = pointer.y;
 
-        if (!(x >= camera.x && y >= camera.y && x <= camera.x + cameraW && y <= camera.y + cameraH))
+        if (!(x >= cx && y >= cy && x <= cx + cw && y <= cy + ch))
         {
             return output;
         }
@@ -1127,12 +1132,7 @@ var InputManager = new Class({
         pointer.worldX = tempPoint.x;
         pointer.worldY = tempPoint.y;
 
-        //  Disable until fixed.
-        // var culledGameObjects = camera.cull(gameObjects);
-
         var point = { x: 0, y: 0 };
-
-        var res = this.game.config.resolution;
 
         var matrix = this._tempMatrix;
 
@@ -1145,8 +1145,8 @@ var InputManager = new Class({
                 continue;
             }
 
-            var px = tempPoint.x * res + (camera.scrollX * gameObject.scrollFactorX) - camera.scrollX;
-            var py = tempPoint.y * res + (camera.scrollY * gameObject.scrollFactorY) - camera.scrollY;
+            var px = tempPoint.x + (csx * gameObject.scrollFactorX) - csx;
+            var py = tempPoint.y + (csy * gameObject.scrollFactorY) - csy;
 
             if (gameObject.parentContainer)
             {
@@ -1245,8 +1245,8 @@ var InputManager = new Class({
      * @since 3.10.0
      *
      * @param {Phaser.Input.Pointer} pointer - The Pointer to transform the values for.
-     *
-     * @return {number} The translated value.
+     * @param {number} pageX - The Page X value.
+     * @param {number} pageY - The Page Y value.
      */
     transformPointer: function (pointer, pageX, pageY)
     {
@@ -1254,7 +1254,6 @@ var InputManager = new Class({
         pointer.prevPosition.x = pointer.x;
         pointer.prevPosition.y = pointer.y;
 
-        //  Set the new position
         pointer.x = (pageX - this.bounds.left) * this.scale.x;
         pointer.y = (pageY - this.bounds.top) * this.scale.y;
     },

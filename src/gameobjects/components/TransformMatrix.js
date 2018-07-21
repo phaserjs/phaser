@@ -728,6 +728,21 @@ var TransformMatrix = new Class({
     },
 
     /**
+     * Returns a string that can be used in a CSS Transform call as a `matrix` property.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#getCSSMatrix
+     * @since 3.12.0
+     *
+     * @return {string} A string containing the CSS Transform matrix values.
+     */
+    getCSSMatrix: function ()
+    {
+        var m = this.matrix;
+
+        return 'matrix(' + m[0] + ',' + m[1] + ',' + m[2] + ',' + m[3] + ',' + m[4] + ',' + m[5] + ')';
+    },
+
+    /**
      * Destroys this Transform Matrix.
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#destroy

@@ -4,7 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = require('../../GameObject');
 var Utils = require('../../../renderer/webgl/Utils');
 
 /**
@@ -27,7 +26,7 @@ var BitmapTextWebGLRenderer = function (renderer, src, interpolationPercentage, 
     var text = src._text;
     var textLength = text.length;
 
-    if (GameObject.RENDER_MASK !== src.renderFlags || textLength === 0 || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
+    if (textLength === 0)
     {
         return;
     }

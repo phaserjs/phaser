@@ -1,5 +1,48 @@
 # Change Log
 
+## Version 3.12.0 - Silica - in development
+
+### New Features
+
+* `Camera.resolution` is a new read-only property that holds the current game config resolution that the camera is using. This is used internally for viewport calculations.
+* `Text.resolution` and the method `Text.setResolution` allows you to control the resolution of a Static Text Game Object. By default it will be set to match the resolution set in the Game Config, but you can override it yourself via the TextStyle. It allows for much clearer text on High DPI devices, at the cost of larger internal Canvas textures for the Text - so please use with caution, as the more high res Text you have, the more memory it uses up. Fix #3528 (thanks @kirillbunin)
+* `TransformMatrix.getCSSMatrix` will return a CSS transform matrix formatted string from the current matrix values.
+* `CacheManager` now creates a new cache called `html` which is used to store all loaded HTML snippets.
+* `FileType.HTML` is a new file type loader that will load an HTML snippet and store it in the new `html` cache. Access it via `load.html` (this method was previously used to load html to textures, please see `load.htmlTexture` for this feature now)
+
+### Updates
+
+* `Camera.x` and `Camera.y` have been turned into getters / setters, mapped to the internal private values `_x` and `_y` respectively. This is so that setting the Camera viewport position directly will now update the new internal resolution calculation vars too.
+* `Camera.setScene` will now set the Cameras `resolution` property at the same time and update the internal viewport vars.
+* The `Cull Tiles` method used by the Dynamic Tilemap Layer has had a nice and significant optimization. It will now use the cull area dimensions to restrict the amount of tile iteration that takes place per layer, resulting in dramatic reductions in processing time on large layers, or multiple layers (thanks @tarsupin)
+* `GameObject.willRender` now takes a Camera as its only argument and uses it within the check. This has allowed me to remove 23 duplicate checks spread across the various Game Objects, all of which did the same thing, saving both KB and CPU time as the flags were being checked twice in most cases.
+* The file type loader `HTML` has been renamed to `HTMLTexture`. If you were using this then please change your calls from `load.html` to `load.htmlTexture`. The arguments remain the same.
+
+### Game Config Resolution Specific Bug Fixes
+
+Setting the `resolution` property in the Game Config to a value other than 1 would cause various errors in the API. The following have been fixed:
+
+* The game canvas would be sized incorrectly, unless you had enabled auto resizing. It now scales the canvas to the size given, maintaining the resolution. Fix #3468 (thanks @Legomite)
+* Cameras with background colors set would display the filled color area at the wrong size. Camera fills now respect the resolution.
+* The Camera Fade Effect would display the fade fill rectangle at the wrong size. Camera fades now respect the resolution.
+* The Camera Flash Effect would display the fade fill rectangle at the wrong size. Camera flashes now respect the resolution.
+* The Camera Shake Effect would shake the Camera using the wrong width values. Camera Shakes now respect the resolution.
+* Input calculations would not factor in the Game Resolution correctly. If a Camera viewport was not at 0x0 or not the full size, or the Camera was rotated or zoomed, the input areas would be wrong if `resolution` was > 1. These are now factored in correctly and changing the resolution no longer breaks input. Fix #3606 (thanks @Secretmapper)
+
+### Bug Fixes
+
+* The `setCrop` method stored its crop object on the prototype chain by mistake, causing all Images or Sprites that were cropped to display the same frame. The crop data has been moved to the Game Object instance, where it should be, fixing this issue (thanks NoxBrutalis)
+* If an AudioFile failed to load and throw an incomplete error, it would cause the console.log to crash JavaScript when trying to log the error. It now only logs the message if it exists. Fix #3830 (thanks @kelostrada)
+
+### Examples, Documentation and TypeScript
+
+My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
+
+@SBCGames 
+
+Thanks to @khaleb85 for fixing the super-annoying lag on the API Docs pages when it hung the browser while indexing the search field.
+
+
 ## Version 3.11.0 - Leafa - 13th July 2018
 
 ### Camera - New Features, Updates and Fixes

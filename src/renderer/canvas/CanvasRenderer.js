@@ -380,10 +380,16 @@ var CanvasRenderer = new Class({
      */
     render: function (scene, children, interpolationPercentage, camera)
     {
-        var ctx = scene.sys.context;
-        var scissor = (camera.x !== 0 || camera.y !== 0 || camera.width !== ctx.canvas.width || camera.height !== ctx.canvas.height);
         var list = children.list;
-        var resolution = this.config.resolution;
+        var childCount = list.length;
+
+        var cx = camera._cx;
+        var cy = camera._cy;
+        var cw = camera._cw;
+        var ch = camera._ch;
+
+        var ctx = scene.sys.context;
+        var scissor = (cx !== 0 || cy !== 0 || cw !== ctx.canvas.width || ch !== ctx.canvas.height);
 
         this.currentContext = ctx;
 
@@ -392,7 +398,7 @@ var CanvasRenderer = new Class({
         if (!camera.transparent)
         {
             ctx.fillStyle = camera.backgroundColor.rgba;
-            ctx.fillRect(camera.x, camera.y, camera.width, camera.height);
+            ctx.fillRect(cx, cy, cw, ch);
         }
 
         ctx.globalAlpha = camera.alpha;
@@ -413,7 +419,7 @@ var CanvasRenderer = new Class({
         {
             ctx.save();
             ctx.beginPath();
-            ctx.rect(camera.x * resolution, camera.y * resolution, camera.width * resolution, camera.height * resolution);
+            ctx.rect(cx, cy, cw, ch);
             ctx.clip();
         }
 
@@ -421,9 +427,14 @@ var CanvasRenderer = new Class({
 
         ctx.setTransform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
 
-        for (var c = 0; c < list.length; c++)
+        for (var i = 0; i < childCount; i++)
         {
-            var child = list[c];
+            var child = list[i];
+
+            if (!child.willRender(camera))
+            {
+                continue;
+            }
 
             if (child.mask)
             {

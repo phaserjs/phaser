@@ -4,7 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = require('../GameObject');
 var Utils = require('../../renderer/webgl/Utils');
 
 /**
@@ -24,11 +23,6 @@ var Utils = require('../../renderer/webgl/Utils');
  */
 var TileSpriteWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)))
-    {
-        return;
-    }
-
     src.updateTileTexture();
 
     var getTint = Utils.getTintAppendFloatAlpha;

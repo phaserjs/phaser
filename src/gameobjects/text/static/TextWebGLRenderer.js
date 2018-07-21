@@ -4,7 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = require('../../GameObject');
 var Utils = require('../../../renderer/webgl/Utils');
 
 /**
@@ -24,7 +23,7 @@ var Utils = require('../../../renderer/webgl/Utils');
  */
 var TextWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)) || src.text === '')
+    if (src.text === '')
     {
         return;
     }
@@ -42,7 +41,7 @@ var TextWebGLRenderer = function (renderer, src, interpolationPercentage, camera
         src.canvasTexture,
         src.canvasTexture.width, src.canvasTexture.height,
         src.x, src.y,
-        src.canvasTexture.width, src.canvasTexture.height,
+        src.canvasTexture.width / src.style.resolution, src.canvasTexture.height / src.style.resolution,
         src.scaleX, src.scaleY,
         src.rotation,
         src.flipX, src.flipY,

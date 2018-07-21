@@ -391,7 +391,7 @@ var GameObject = new Class({
      * removed from the Input Manager and cleared from this Game Object.
      *
      * If you wish to re-enable this Game Object at a later date you will need to
-     * re-create its InteractiveOobject by calling `setInteractive` again.
+     * re-create its InteractiveObject by calling `setInteractive` again.
      *
      * If you wish to only temporarily stop an object from receiving input then use
      * `disableInteractive` instead, as that toggles the interactive state, where-as
@@ -436,15 +436,18 @@ var GameObject = new Class({
 
     /**
      * Compares the renderMask with the renderFlags to see if this Game Object will render or not.
+     * Also checks the Game Object against the given Cameras exclusion list.
      *
      * @method Phaser.GameObjects.GameObject#willRender
      * @since 3.0.0
+     * 
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to check against this Game Object.
      *
      * @return {boolean} True if the Game Object should be rendered, otherwise false.
      */
-    willRender: function ()
+    willRender: function (camera)
     {
-        return (GameObject.RENDER_MASK === this.renderFlags);
+        return !(GameObject.RENDER_MASK !== this.renderFlags || (this.cameraFilter > 0 && (this.cameraFilter & camera.id)));
     },
 
     /**

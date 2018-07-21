@@ -4,8 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = require('../GameObject');
-
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -24,8 +22,9 @@ var GameObject = require('../GameObject');
 var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpolationPercentage, camera, parentMatrix)
 {
     var emitters = emitterManager.emitters.list;
+    var emittersLength = emitters.length;
 
-    if (emitters.length === 0 || GameObject.RENDER_MASK !== emitterManager.renderFlags || (emitterManager.cameraFilter > 0 && (emitterManager.cameraFilter & camera._id)))
+    if (emittersLength === 0)
     {
         return;
     }
@@ -41,7 +40,7 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
         ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
     }
 
-    for (var i = 0; i < emitters.length; i++)
+    for (var i = 0; i < emittersLength; i++)
     {
         var emitter = emitters[i];
 
