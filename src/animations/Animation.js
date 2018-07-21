@@ -109,7 +109,7 @@ var Animation = new Class({
 
         // if config.reverse is true, reverse sequence of AnimationFrameConfig[]
         var animFrames = GetValue(config, 'frames', []);
-        if(GetValue(config, 'reverse', false))        
+        if(GetValue(config, 'reverse', false))
         {
             animFrames.reverse();
         }
