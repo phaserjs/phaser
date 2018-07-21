@@ -51,6 +51,7 @@ var GetValue = require('../utils/object/GetValue');
  * @property {boolean} [yoyo=false] - Should the animation yoyo? (reverse back down to the start) before repeating?
  * @property {boolean} [showOnStart=false] - Should sprite.visible = true when the animation starts to play?
  * @property {boolean} [hideOnComplete=false] - Should sprite.visible = false when the animation finishes?
+ * @property {boolean} [reverse=false] - Should the animation be played in reversed sequence?
  */
 
 /**
@@ -106,6 +107,13 @@ var Animation = new Class({
          */
         this.type = 'frame';
 
+        // if config.reverse is true, reverse sequence of AnimationFrameConfig[]
+        var animFrames = GetValue(config, 'frames', []);
+        if(GetValue(config, 'reverse', false))        
+        {
+            animFrames.reverse();
+        }
+
         /**
          * Extract all the frame data into the frames array
          *
@@ -115,7 +123,7 @@ var Animation = new Class({
          */
         this.frames = this.getFrames(
             manager.textureManager,
-            GetValue(config, 'frames', []),
+            animFrames,
             GetValue(config, 'defaultTextureKey', null)
         );
 
