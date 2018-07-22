@@ -536,7 +536,14 @@ var Animation = new Class({
             component._yoyo = this.yoyo;
         }
 
-        component.updateFrame(this.frames[startFrame]);
+        var frame = this.frames[startFrame];
+
+        if(startFrame === 0 && !component.forward)
+        {
+            frame = this.getLastFrame();
+        }
+
+        component.updateFrame(frame);
     },
 
     /**
@@ -603,6 +610,18 @@ var Animation = new Class({
     },
 
     /**
+     * Returns the animation last frame.
+     *
+     * @method Phaser.Animations.Animation#getLastFrame
+     *
+     * @return {Phaser.Animations.AnimationFrame} component - The Animation Last Frame.
+     */
+    getLastFrame: function ()
+    {
+        return this.frames[this.frames.length - 1];
+    },
+
+    /**
      * [description]
      *
      * @method Phaser.Animations.Animation#previousFrame
@@ -622,8 +641,18 @@ var Animation = new Class({
 
             if (component.repeatCounter > 0)
             {
-                //  Repeat (happens before complete)
-                this.repeatAnimation(component);
+                if(!component.forward)
+                {
+                    component.currentFrame = this.getLastFrame();
+
+                    component.updateFrame(component.currentFrame);
+                    this.getNextTick(component);
+                }
+                else
+                {
+                    //  Repeat (happens before complete)
+                    this.repeatAnimation(component);
+                }
             }
             else
             {
@@ -705,9 +734,7 @@ var Animation = new Class({
         {
             component.repeatCounter--;
 
-            component.forward = true;
-
-            component.updateFrame(component.currentFrame.nextFrame);
+            component.updateFrame(component.currentFrame[(component.forward) ? 'nextFrame' : 'prevFrame']);
 
             if (component.isPlaying)
             {

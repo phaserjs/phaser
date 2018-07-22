@@ -521,6 +521,23 @@ var Animation = new Class({
     },
 
     /**
+     * Revert an Animation that is already playing on the Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Animation#revert
+     *
+     * @param {string} key - The string-based key of the animation to play, as defined previously in the Animation Manager.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    revert: function (key)
+    {
+        if (!this.isPlaying || this.currentAnim.key !== key) { return this.parent; }
+        this.forward = !this.forward;
+
+        return this.parent;
+    },
+
+    /**
      * Returns a value between 0 and 1 indicating how far this animation is through, ignoring repeats and yoyos.
      * If the animation has a non-zero repeat defined, `getProgress` and `getTotalProgress` will be different
      * because `getProgress` doesn't include any repeats or repeat delays, whereas `getTotalProgress` does.
