@@ -208,7 +208,7 @@ var Animation = new Class({
         this._yoyo = false;
 
         /**
-         * Will the playhead move forwards (`true`) or in reverse (`false`)
+         * Will the playhead move forwards (`true`) or in reverse (`false`).
          *
          * @name Phaser.GameObjects.Components.Animation#forward
          * @type {boolean}
@@ -216,6 +216,16 @@ var Animation = new Class({
          * @since 3.0.0
          */
         this.forward = true;
+
+        /**
+         * An Internal trigger that's play the animation in reverse mode ('true') or not ('false'),
+         * needed because forward can be changed by yoyo feature.
+         *
+         * @name Phaser.GameObjects.Components.Animation#forward
+         * @type {boolean}
+         * @default false
+         */
+        this._reverse = false;
 
         /**
          * Internal time overflow accumulator.
@@ -497,6 +507,7 @@ var Animation = new Class({
         }
 
         this.forward = true;
+        this._reverse = false;
         return this._startAnimation(key, startFrame);
     },
 
@@ -523,6 +534,7 @@ var Animation = new Class({
         }
 
         this.forward = false;
+        this._reverse = true;
         return this._startAnimation(key, startFrame);
     },
 
@@ -575,6 +587,7 @@ var Animation = new Class({
     revert: function (key)
     {
         if (!this.isPlaying || this.currentAnim.key !== key) { return this.parent; }
+        this._reverse = !this._reverse;
         this.forward = !this.forward;
 
         return this.parent;

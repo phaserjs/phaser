@@ -585,16 +585,20 @@ var Animation = new Class({
             if (component._yoyo)
             {
                 component.forward = false;
-
-                component.updateFrame(frame.prevFrame);
-
-                //  Delay for the current frame
-                this.getNextTick(component);
+                this._updateAndGetNextTick(component, frame.prevFrame);
             }
             else if (component.repeatCounter > 0)
             {
                 //  Repeat (happens before complete)
-                this.repeatAnimation(component);
+
+                if(component._reverse && component.forward)
+                {
+                    component.forward = false;
+                }
+                else
+                {
+                    this.repeatAnimation(component);
+                }
             }
             else
             {
@@ -603,9 +607,7 @@ var Animation = new Class({
         }
         else
         {
-            component.updateFrame(frame.nextFrame);
-
-            this.getNextTick(component);
+            this._updateAndGetNextTick(component, frame.nextFrame);
         }
     },
 
@@ -639,18 +641,22 @@ var Animation = new Class({
         {
             //  We're at the start of the animation
 
-            if (component.repeatCounter > 0)
+            if (component._yoyo)
             {
-                if(!component.forward)
+                component.forward = true;
+                this._updateAndGetNextTick(component, frame.nextFrame);
+            }
+            else if (component.repeatCounter > 0)
+            {
+                if(component._reverse && !component.forward)
                 {
                     component.currentFrame = this.getLastFrame();
-
-                    component.updateFrame(component.currentFrame);
-                    this.getNextTick(component);
+                    this._updateAndGetNextTick(component, component.currentFrame);
                 }
                 else
                 {
                     //  Repeat (happens before complete)
+                    component.forward = true;
                     this.repeatAnimation(component);
                 }
             }
@@ -661,10 +667,22 @@ var Animation = new Class({
         }
         else
         {
-            component.updateFrame(frame.prevFrame);
-
-            this.getNextTick(component);
+            this._updateAndGetNextTick(component, frame.prevFrame);
         }
+    },
+
+    /**
+     * Update Frame and Wait next tick
+     *
+     * @method Phaser.Animations.Animation#_updateAndGetNextTick
+     *
+     * @param {Phaser.Animations.AnimationFrame} frame - An Animation frame
+     *
+     */
+    _updateAndGetNextTick: function (component, frame)
+    {
+        component.updateFrame(frame);
+        this.getNextTick(component);
     },
 
     /**
