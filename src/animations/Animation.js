@@ -250,6 +250,16 @@ var Animation = new Class({
          */
         this.paused = false;
 
+        /**
+         * The initial frame index, the animation should start with.
+         *
+         * @name Phaser.Animations.Animation#startFrame
+         * @type {integer}
+         * @default 0
+         * @since 3.11.0
+         */
+        this.startFrame = 0;
+
         this.manager.on('pauseall', this.pause, this);
         this.manager.on('resumeall', this.resume, this);
     },
@@ -520,6 +530,8 @@ var Animation = new Class({
             startFrame = 0;
         }
 
+        this.startFrame = startFrame;
+
         if (component.currentAnim !== this)
         {
             component.currentAnim = this;
@@ -536,7 +548,7 @@ var Animation = new Class({
             component._yoyo = this.yoyo;
         }
 
-        component.updateFrame(this.frames[startFrame]);
+        component.updateFrame(this.frames[this.startFrame]);
     },
 
     /**
@@ -557,72 +569,65 @@ var Animation = new Class({
     },
 
     /**
+     * Check if the frame is the last for the given animation (depending on the forward property).
+     *
+     * @method Phaser.Animations.Animation#isLastFrame
+     * @since 3.11.0
+     *
+     * @param {Phaser.Animations.AnimationFrame} frame - The Frame in question.
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component we want run the comparison.
+     */
+    isLastFrame: function (frame, component)
+    {
+        return (frame.isLast && component.forward) || (frame.isFirst && !component.forward);
+    },
+
+    /**
      * Advance the animation frame.
      *
      * @method Phaser.Animations.Animation#nextFrame
      * @since 3.0.0
+     * @deprecated
      *
      * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component to advance.
      */
-    nextFrame: function (component)
-    {
-        var frame = component.currentFrame;
-
-        //  TODO: Add frame skip support
-
-        if (frame.isLast)
-        {
-            //  We're at the end of the animation
-
-            //  Yoyo? (happens before repeat)
-            if (component._yoyo)
-            {
-                component.forward = false;
-
-                component.updateFrame(frame.prevFrame);
-
-                //  Delay for the current frame
-                this.getNextTick(component);
-            }
-            else if (component.repeatCounter > 0)
-            {
-                //  Repeat (happens before complete)
-                this.repeatAnimation(component);
-            }
-            else
-            {
-                this.completeAnimation(component);
-            }
-        }
-        else
-        {
-            component.updateFrame(frame.nextFrame);
-
-            this.getNextTick(component);
-        }
-    },
 
     /**
      * [description]
      *
      * @method Phaser.Animations.Animation#previousFrame
      * @since 3.0.0
+     * @deprecated
      *
      * @param {Phaser.GameObjects.Components.Animation} component - [description]
      */
-    previousFrame: function (component)
+
+    /**
+     * Advance the animation frame depending on the forward property of the component.
+     *
+     * @method Phaser.Animations.Animation#advanceFrame
+     * @since 3.11.0
+     *
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component to advance.
+     */
+    advanceFrame: function (component)
     {
         var frame = component.currentFrame;
 
         //  TODO: Add frame skip support
 
-        if (frame.isFirst)
+        if (this.isLastFrame(frame, component))
         {
-            //  We're at the start of the animation
-
-            if (component.repeatCounter > 0)
+            if (component._yoyo && (component.forward === component.initialForward))
             {
-                //  Repeat (happens before complete)
+                component.forward = !component.forward;
+
+                component.updateFrame(this.getNextFrame(frame, component));
+
+                this.getNextTick(component);
+            }
+            else if (component.repeatCounter > 0)
+            {
                 this.repeatAnimation(component);
             }
             else
@@ -632,10 +637,26 @@ var Animation = new Class({
         }
         else
         {
-            component.updateFrame(frame.prevFrame);
+            component.updateFrame(this.getNextFrame(frame, component));
 
             this.getNextTick(component);
         }
+    },
+
+    /**
+     * Get the next Animation frame depending on the forward property.
+     *
+     * @method Phaser.Animations.Animation#advanceFrame
+     * @since 3.11.0
+     *
+     * @param @param {Phaser.Animations.AnimationFrame} frame - The current component's Animation Frame.
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component to advance.
+     * 
+     * @return {Phaser.Animations.AnimationFrame} The next frame (depending on the forward property). 
+     */
+    getNextFrame: function (frame, component)
+    {
+        return component.forward ? frame.nextFrame : frame.prevFrame;
     },
 
     /**
@@ -705,9 +726,9 @@ var Animation = new Class({
         {
             component.repeatCounter--;
 
-            component.forward = true;
+            component.forward = component.initialForward;
 
-            component.updateFrame(component.currentFrame.nextFrame);
+            component.updateFrame(this.getNextFrame(component.currentFrame, component));
 
             if (component.isPlaying)
             {
@@ -731,14 +752,7 @@ var Animation = new Class({
     setFrame: function (component)
     {
         //  Work out which frame should be set next on the child, and set it
-        if (component.forward)
-        {
-            this.nextFrame(component);
-        }
-        else
-        {
-            this.previousFrame(component);
-        }
+        this.advanceFrame(component);
     },
 
     /**

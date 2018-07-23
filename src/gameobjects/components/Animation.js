@@ -212,10 +212,22 @@ var Animation = new Class({
          *
          * @name Phaser.GameObjects.Components.Animation#forward
          * @type {boolean}
+         * @private
          * @default true
          * @since 3.0.0
          */
         this.forward = true;
+
+        /**
+         * Initial state of the playhead: forwards (`true`) or reverse (`false`)
+         *
+         * @name Phaser.GameObjects.Components.Animation#initialForward
+         * @type {boolean}
+         * @private
+         * @default true
+         * @since 3.11.0
+         */
+        this.initialForward = true;
 
         /**
          * Internal time overflow accumulator.
@@ -483,13 +495,15 @@ var Animation = new Class({
      * @param {string} key - The string-based key of the animation to play, as defined previously in the Animation Manager.
      * @param {boolean} [ignoreIfPlaying=false] - If an animation is already playing then ignore this call.
      * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
+     * @param {boolean} [reverse=false] - Optionnaly play the animation in reverse.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
-    play: function (key, ignoreIfPlaying, startFrame)
+    play: function (key, ignoreIfPlaying, startFrame, reverse)
     {
         if (ignoreIfPlaying === undefined) { ignoreIfPlaying = false; }
         if (startFrame === undefined) { startFrame = 0; }
+        if (reverse === undefined) { reverse = false; }
 
         if (ignoreIfPlaying && this.isPlaying && this.currentAnim.key === key)
         {
@@ -506,7 +520,8 @@ var Animation = new Class({
 
         anim.getFirstTick(this);
 
-        this.forward = true;
+        this.forward = !reverse;
+        this.initialForward = this.forward;
         this.isPlaying = true;
         this.pendingRepeat = false;
 
@@ -673,13 +688,13 @@ var Animation = new Class({
 
         this.currentAnim.getFirstTick(this, includeDelay);
 
-        this.forward = true;
+        this.forward = this.initialForward;
         this.isPlaying = true;
         this.pendingRepeat = false;
         this._paused = false;
 
         //  Set frame
-        this.updateFrame(this.currentAnim.frames[0]);
+        this.updateFrame(this.currentAnim.frames[this.currentAnim.startFrame]);
 
         return this.parent;
     },
