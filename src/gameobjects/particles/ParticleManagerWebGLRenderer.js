@@ -65,7 +65,11 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
             scrollY = 0;
         }
 
-        renderer.setBlendMode(emitter.blendMode);
+        if (renderer.setBlendMode(emitter.blendMode))
+        {
+            //  Rebind the texture if we've flushed
+            pipeline.setTexture2D(texture, 0);
+        }
 
         var tintEffect = false;
 
