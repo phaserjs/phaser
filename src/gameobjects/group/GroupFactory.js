@@ -22,11 +22,5 @@ var GameObjectFactory = require('../GameObjectFactory');
  */
 GameObjectFactory.register('group', function (children, config)
 {
-    if (typeof children === 'object' && config === undefined)
-    {
-        config = children;
-        children = [];
-    }
-
     return this.updateList.add(new Group(this.scene, children, config));
 });
