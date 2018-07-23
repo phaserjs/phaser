@@ -626,7 +626,7 @@ var Animation = new Class({
 
                 this.getNextTick(component);
             }
-            else if (component.repeatCounter > 0 )
+            else if (component.repeatCounter > 0)
             {
                 this.repeatAnimation(component);
             }
