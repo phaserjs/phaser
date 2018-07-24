@@ -208,7 +208,7 @@ var Animation = new Class({
         this._yoyo = false;
 
         /**
-         * Will the playhead move forwards (`true`) or in reverse (`false`)
+         * Will the playhead move forwards (`true`) or in reverse (`false`).
          *
          * @name Phaser.GameObjects.Components.Animation#forward
          * @type {boolean}
@@ -216,6 +216,17 @@ var Animation = new Class({
          * @since 3.0.0
          */
         this.forward = true;
+
+        /**
+         * An Internal trigger that's play the animation in reverse mode ('true') or not ('false'),
+         * needed because forward can be changed by yoyo feature.
+         *
+         * @name Phaser.GameObjects.Components.Animation#forward
+         * @type {boolean}
+         * @default false
+         * @since 3.12.0
+         */
+        this._reverse = false;
 
         /**
          * Internal time overflow accumulator.
@@ -496,6 +507,54 @@ var Animation = new Class({
             return this.parent;
         }
 
+        this.forward = true;
+        this._reverse = false;
+        return this._startAnimation(key, startFrame);
+    },
+
+    /**
+     * Plays an Animation (in reverse mode) on the Game Object that owns this Animation Component.
+     *
+     * @method Phaser.GameObjects.Components.Animation#playReverse
+     * @fires Phaser.GameObjects.Components.Animation#onStartEvent
+     * @since 3.12.0
+     *
+     * @param {string} key - The string-based key of the animation to play, as defined previously in the Animation Manager.
+     * @param {boolean} [ignoreIfPlaying=false] - If an animation is already playing then ignore this call.
+     * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    playReverse: function (key, ignoreIfPlaying, startFrame)
+    {
+        if (ignoreIfPlaying === undefined) { ignoreIfPlaying = false; }
+        if (startFrame === undefined) { startFrame = 0; }
+
+        if (ignoreIfPlaying && this.isPlaying && this.currentAnim.key === key)
+        {
+            return this.parent;
+        }
+
+        this.forward = false;
+        this._reverse = true;
+        return this._startAnimation(key, startFrame);
+    },
+
+    /**
+     * Load an Animation and fires 'onStartEvent' event,
+     * extracted from 'play' method
+     *
+     * @method Phaser.GameObjects.Components.Animation#_startAnimation
+     * @fires Phaser.GameObjects.Components.Animation#onStartEvent
+     * @since 3.12.0
+     *
+     * @param {string} key - The string-based key of the animation to play, as defined previously in the Animation Manager.
+     * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    _startAnimation: function (key, startFrame)
+    {
         this.load(key, startFrame);
 
         var anim = this.currentAnim;
@@ -506,7 +565,6 @@ var Animation = new Class({
 
         anim.getFirstTick(this);
 
-        this.forward = true;
         this.isPlaying = true;
         this.pendingRepeat = false;
 
@@ -518,6 +576,25 @@ var Animation = new Class({
         gameObject.emit('animationstart', this.currentAnim, this.currentFrame);
 
         return gameObject;
+    },
+
+    /**
+     * Reverse an Animation that is already playing on the Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Animation#reverse
+     * @since 3.12.0
+     *
+     * @param {string} key - The string-based key of the animation to play, as defined previously in the Animation Manager.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    reverse: function (key)
+    {
+        if (!this.isPlaying || this.currentAnim.key !== key) { return this.parent; }
+        this._reverse = !this._reverse;
+        this.forward = !this.forward;
+
+        return this.parent;
     },
 
     /**
