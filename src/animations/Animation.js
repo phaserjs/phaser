@@ -538,7 +538,7 @@ var Animation = new Class({
 
         var frame = this.frames[startFrame];
 
-        if(startFrame === 0 && !component.forward)
+        if (startFrame === 0 && !component.forward)
         {
             frame = this.getLastFrame();
         }
