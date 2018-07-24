@@ -8,7 +8,13 @@ var Class = require('../../utils/Class');
 
 /**
  * @classdesc
- * A seeded random data generator.
+ * A seeded Random Data Generator.
+ * 
+ * Access via `Phaser.Math.RND` which is an instance of this class pre-defined
+ * by Phaser. Or, create your own instance to use as you require.
+ * 
+ * The generator is seeded by the Game Config property value `seed`.
+ * If no such config property exists, a random number is used.
  *
  * @class RandomDataGenerator
  * @memberOf Phaser.Math
