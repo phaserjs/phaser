@@ -8,9 +8,10 @@
 var Class = require('../../../utils/Class');
 var Commands = require('../../../gameobjects/graphics/Commands');
 var Earcut = require('../../../geom/polygon/Earcut');
+var GetFastValue = require('../../../utils/object/GetFastValue');
 var ModelViewProjection = require('./components/ModelViewProjection');
-var ShaderSourceFS = require('../shaders/FlatTint-frag.js');
-var ShaderSourceVS = require('../shaders/FlatTint-vert.js');
+var ShaderSourceFS = require('../shaders/TextureTint-frag.js');
+var ShaderSourceVS = require('../shaders/TextureTint-vert.js');
 var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
 var Utils = require('../Utils');
 var WebGLPipeline = require('../WebGLPipeline');
@@ -70,19 +71,17 @@ var FlatTintPipeline = new Class({
 
     function FlatTintPipeline (config)
     {
+        var rendererConfig = config.renderer.config;
+
         WebGLPipeline.call(this, {
             game: config.game,
             renderer: config.renderer,
             gl: config.renderer.gl,
-            topology: (config.topology ? config.topology : config.renderer.gl.TRIANGLES),
-            vertShader: (config.vertShader ? config.vertShader : ShaderSourceVS),
-            fragShader: (config.fragShader ? config.fragShader : ShaderSourceFS),
-            vertexCapacity: (config.vertexCapcity ? config.vertexCapacity : 12000),
-
-            vertexSize: (config.vertexSize ? config.vertexSize :
-                Float32Array.BYTES_PER_ELEMENT * 2 +
-                Uint8Array.BYTES_PER_ELEMENT * 4),
-
+            topology: GetFastValue(config, 'topology', config.renderer.gl.TRIANGLES),
+            vertShader: GetFastValue(config, 'vertShader', ShaderSourceVS),
+            fragShader: GetFastValue(config, 'fragShader', ShaderSourceFS),
+            vertexCapacity: GetFastValue(config, 'vertexCapacity', 6 * rendererConfig.batchSize),
+            vertexSize: GetFastValue(config, 'vertexSize', Float32Array.BYTES_PER_ELEMENT * 5 + Uint8Array.BYTES_PER_ELEMENT * 4),
             attributes: [
                 {
                     name: 'inPosition',
@@ -92,11 +91,25 @@ var FlatTintPipeline = new Class({
                     offset: 0
                 },
                 {
+                    name: 'inTexCoord',
+                    size: 2,
+                    type: config.renderer.gl.FLOAT,
+                    normalized: false,
+                    offset: Float32Array.BYTES_PER_ELEMENT * 2
+                },
+                {
+                    name: 'inTintEffect',
+                    size: 1,
+                    type: config.renderer.gl.FLOAT,
+                    normalized: false,
+                    offset: Float32Array.BYTES_PER_ELEMENT * 4
+                },
+                {
                     name: 'inTint',
                     size: 4,
                     type: config.renderer.gl.UNSIGNED_BYTE,
                     normalized: true,
-                    offset: Float32Array.BYTES_PER_ELEMENT * 2
+                    offset: Float32Array.BYTES_PER_ELEMENT * 5
                 }
             ]
         });
@@ -222,6 +235,44 @@ var FlatTintPipeline = new Class({
         return this;
     },
 
+    /**
+     * Uploads the vertex data and emits a draw call
+     * for the current batch of vertices.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#flush
+     * @since 3.0.0
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
+     */
+    flush: function ()
+    {
+        if (this.flushLocked) { return this; }
+
+        this.flushLocked = true;
+
+        var gl = this.gl;
+        var vertexCount = this.vertexCount;
+        var topology = this.topology;
+        var vertexSize = this.vertexSize;
+        var renderer = this.renderer;
+
+        if (vertexCount === 0)
+        {
+            this.flushLocked = false;
+            return;
+        }
+
+        renderer.setTexture2D(renderer.blankTexture, 0);
+
+        gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
+        gl.drawArrays(topology, 0, vertexCount);
+
+        this.vertexCount = 0;
+        this.flushLocked = false;
+
+        return this;
+    },
+
     batchVertex: function (x, y, tint)
     {
         var vertexViewF32 = this.vertexViewF32;
@@ -231,12 +282,9 @@ var FlatTintPipeline = new Class({
 
         vertexViewF32[++vertexOffset] = x;
         vertexViewF32[++vertexOffset] = y;
-
-        //  For the TTP
-        // vertexViewF32[++vertexOffset] = u0;
-        // vertexViewF32[++vertexOffset] = v0;
-        // vertexViewF32[++vertexOffset] = tintEffect;
-
+        vertexViewF32[++vertexOffset] = 0;
+        vertexViewF32[++vertexOffset] = 0;
+        vertexViewF32[++vertexOffset] = 0.5;
         vertexViewU32[++vertexOffset] = tint;
 
         this.vertexCount++;
@@ -251,14 +299,23 @@ var FlatTintPipeline = new Class({
 
         vertexViewF32[++vertexOffset] = x1;
         vertexViewF32[++vertexOffset] = y1;
+        vertexViewF32[++vertexOffset] = 0;
+        vertexViewF32[++vertexOffset] = 0;
+        vertexViewF32[++vertexOffset] = 0.5;
         vertexViewU32[++vertexOffset] = tint;
 
         vertexViewF32[++vertexOffset] = x2;
         vertexViewF32[++vertexOffset] = y2;
+        vertexViewF32[++vertexOffset] = 0;
+        vertexViewF32[++vertexOffset] = 0;
+        vertexViewF32[++vertexOffset] = 0.5;
         vertexViewU32[++vertexOffset] = tint;
 
         vertexViewF32[++vertexOffset] = x3;
         vertexViewF32[++vertexOffset] = y3;
+        vertexViewF32[++vertexOffset] = 0;
+        vertexViewF32[++vertexOffset] = 0;
+        vertexViewF32[++vertexOffset] = 0.5;
         vertexViewU32[++vertexOffset] = tint;
 
         this.vertexCount += 3;

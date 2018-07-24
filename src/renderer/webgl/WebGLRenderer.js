@@ -533,6 +533,8 @@ var WebGLRenderer = new Class({
      */
     boot: function ()
     {
+        this.blankTexture = this.game.textures.getFrame('__DEFAULT').glTexture;
+
         for (var pipelineName in this.pipelines)
         {
             this.pipelines[pipelineName].boot();

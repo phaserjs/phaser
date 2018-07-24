@@ -18,7 +18,7 @@ module.exports = [
     '        texel = texture2D(uMainSampler, outTexCoord);',
     '        texel.rgb = mix(texel.rgb, outTint.rgb, texel.a);',
     '    }',
-    '    else',
+    '    else if (outTintEffect == 0.0)',
     '    {',
     '        texel *= texture2D(uMainSampler, outTexCoord);',
     '    }',
