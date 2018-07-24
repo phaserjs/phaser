@@ -224,6 +224,7 @@ var Animation = new Class({
          * @name Phaser.GameObjects.Components.Animation#forward
          * @type {boolean}
          * @default false
+         * @since 3.12.0
          */
         this._reverse = false;
 
@@ -516,6 +517,7 @@ var Animation = new Class({
      *
      * @method Phaser.GameObjects.Components.Animation#playReverse
      * @fires Phaser.GameObjects.Components.Animation#onStartEvent
+     * @since 3.12.0
      *
      * @param {string} key - The string-based key of the animation to play, as defined previously in the Animation Manager.
      * @param {boolean} [ignoreIfPlaying=false] - If an animation is already playing then ignore this call.
@@ -544,6 +546,7 @@ var Animation = new Class({
      *
      * @method Phaser.GameObjects.Components.Animation#_startAnimation
      * @fires Phaser.GameObjects.Components.Animation#onStartEvent
+     * @since 3.12.0
      *
      * @param {string} key - The string-based key of the animation to play, as defined previously in the Animation Manager.
      * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
@@ -561,7 +564,7 @@ var Animation = new Class({
         this.repeatCounter = (this._repeat === -1) ? Number.MAX_VALUE : this._repeat;
 
         anim.getFirstTick(this);
-        
+
         this.isPlaying = true;
         this.pendingRepeat = false;
 
@@ -576,15 +579,16 @@ var Animation = new Class({
     },
 
     /**
-     * Revert an Animation that is already playing on the Game Object.
+     * Reverse an Animation that is already playing on the Game Object.
      *
-     * @method Phaser.GameObjects.Components.Animation#revert
+     * @method Phaser.GameObjects.Components.Animation#reverse
+     * @since 3.12.0
      *
      * @param {string} key - The string-based key of the animation to play, as defined previously in the Animation Manager.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
-    revert: function (key)
+    reverse: function (key)
     {
         if (!this.isPlaying || this.currentAnim.key !== key) { return this.parent; }
         this._reverse = !this._reverse;

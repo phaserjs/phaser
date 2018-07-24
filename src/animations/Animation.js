@@ -591,7 +591,7 @@ var Animation = new Class({
             {
                 //  Repeat (happens before complete)
 
-                if(component._reverse && component.forward)
+                if (component._reverse && component.forward)
                 {
                     component.forward = false;
                 }
@@ -615,6 +615,7 @@ var Animation = new Class({
      * Returns the animation last frame.
      *
      * @method Phaser.Animations.Animation#getLastFrame
+     * @since 3.12.0
      *
      * @return {Phaser.Animations.AnimationFrame} component - The Animation Last Frame.
      */
@@ -648,7 +649,7 @@ var Animation = new Class({
             }
             else if (component.repeatCounter > 0)
             {
-                if(component._reverse && !component.forward)
+                if (component._reverse && !component.forward)
                 {
                     component.currentFrame = this.getLastFrame();
                     this._updateAndGetNextTick(component, component.currentFrame);
@@ -675,6 +676,7 @@ var Animation = new Class({
      * Update Frame and Wait next tick
      *
      * @method Phaser.Animations.Animation#_updateAndGetNextTick
+     * @since 3.12.0
      *
      * @param {Phaser.Animations.AnimationFrame} frame - An Animation frame
      *
