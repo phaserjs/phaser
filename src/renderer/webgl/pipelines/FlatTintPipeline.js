@@ -11,6 +11,7 @@ var Earcut = require('../../../geom/polygon/Earcut');
 var ModelViewProjection = require('./components/ModelViewProjection');
 var ShaderSourceFS = require('../shaders/FlatTint-frag.js');
 var ShaderSourceVS = require('../shaders/FlatTint-vert.js');
+var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
 var Utils = require('../Utils');
 var WebGLPipeline = require('../WebGLPipeline');
 
@@ -142,6 +143,46 @@ var FlatTintPipeline = new Class({
          */
         this.polygonCache = [];
 
+        /**
+         * A temporary Transform Matrix, re-used internally during batching.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#_tempMatrix1
+         * @private
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.12.0
+         */
+        this._tempMatrix1 = new TransformMatrix();
+
+        /**
+         * A temporary Transform Matrix, re-used internally during batching.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#_tempMatrix2
+         * @private
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.12.0
+         */
+        this._tempMatrix2 = new TransformMatrix();
+
+        /**
+         * A temporary Transform Matrix, re-used internally during batching.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#_tempMatrix3
+         * @private
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.12.0
+         */
+        this._tempMatrix3 = new TransformMatrix();
+
+        /**
+         * A temporary Transform Matrix, re-used internally during batching.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#_tempMatrix4
+         * @private
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.12.0
+         */
+        this._tempMatrix4 = new TransformMatrix();
+
         this.mvpInit();
     },
 
@@ -181,6 +222,48 @@ var FlatTintPipeline = new Class({
         return this;
     },
 
+    batchVertex: function (x, y, tint)
+    {
+        var vertexViewF32 = this.vertexViewF32;
+        var vertexViewU32 = this.vertexViewU32;
+
+        var vertexOffset = (this.vertexCount * this.vertexComponentCount) - 1;
+
+        vertexViewF32[++vertexOffset] = x;
+        vertexViewF32[++vertexOffset] = y;
+
+        //  For the TTP
+        // vertexViewF32[++vertexOffset] = u0;
+        // vertexViewF32[++vertexOffset] = v0;
+        // vertexViewF32[++vertexOffset] = tintEffect;
+
+        vertexViewU32[++vertexOffset] = tint;
+
+        this.vertexCount++;
+    },
+
+    batchTri: function (x1, y1, x2, y2, x3, y3, tint)
+    {
+        var vertexViewF32 = this.vertexViewF32;
+        var vertexViewU32 = this.vertexViewU32;
+
+        var vertexOffset = (this.vertexCount * this.vertexComponentCount) - 1;
+
+        vertexViewF32[++vertexOffset] = x1;
+        vertexViewF32[++vertexOffset] = y1;
+        vertexViewU32[++vertexOffset] = tint;
+
+        vertexViewF32[++vertexOffset] = x2;
+        vertexViewF32[++vertexOffset] = y2;
+        vertexViewU32[++vertexOffset] = tint;
+
+        vertexViewF32[++vertexOffset] = x3;
+        vertexViewF32[++vertexOffset] = y3;
+        vertexViewU32[++vertexOffset] = tint;
+
+        this.vertexCount += 3;
+    },
+
     /**
      * Pushes a rectangle into the vertex batch
      *
@@ -215,9 +298,6 @@ var FlatTintPipeline = new Class({
             this.flush();
         }
         
-        var vertexViewF32 = this.vertexViewF32;
-        var vertexViewU32 = this.vertexViewU32;
-        var vertexOffset = this.vertexCount * this.vertexComponentCount;
         var xw = x + width;
         var yh = y + height;
         var a0 = currentMatrix[0];
@@ -242,31 +322,8 @@ var FlatTintPipeline = new Class({
         var ty3 = xw * b + y * d + f;
         var tint = Utils.getTintAppendFloatAlphaAndSwap(fillColor, fillAlpha);
 
-        vertexViewF32[vertexOffset + 0] = tx0;
-        vertexViewF32[vertexOffset + 1] = ty0;
-        vertexViewU32[vertexOffset + 2] = tint;
-
-        vertexViewF32[vertexOffset + 3] = tx1;
-        vertexViewF32[vertexOffset + 4] = ty1;
-        vertexViewU32[vertexOffset + 5] = tint;
-
-        vertexViewF32[vertexOffset + 6] = tx2;
-        vertexViewF32[vertexOffset + 7] = ty2;
-        vertexViewU32[vertexOffset + 8] = tint;
-
-        vertexViewF32[vertexOffset + 9] = tx0;
-        vertexViewF32[vertexOffset + 10] = ty0;
-        vertexViewU32[vertexOffset + 11] = tint;
-
-        vertexViewF32[vertexOffset + 12] = tx2;
-        vertexViewF32[vertexOffset + 13] = ty2;
-        vertexViewU32[vertexOffset + 14] = tint;
-
-        vertexViewF32[vertexOffset + 15] = tx3;
-        vertexViewF32[vertexOffset + 16] = ty3;
-        vertexViewU32[vertexOffset + 17] = tint;
-
-        this.vertexCount += 6;
+        this.batchTri(tx0, ty0, tx1, ty1, tx2, ty2, tint);
+        this.batchTri(tx0, ty0, tx2, ty2, tx3, ty3, tint);
     },
 
     /**
@@ -305,9 +362,6 @@ var FlatTintPipeline = new Class({
             this.flush();
         }
 
-        var vertexViewF32 = this.vertexViewF32;
-        var vertexViewU32 = this.vertexViewU32;
-        var vertexOffset = this.vertexCount * this.vertexComponentCount;
         var a0 = currentMatrix[0];
         var b0 = currentMatrix[1];
         var c0 = currentMatrix[2];
@@ -328,19 +382,7 @@ var FlatTintPipeline = new Class({
         var ty2 = x2 * b + y2 * d + f;
         var tint = Utils.getTintAppendFloatAlphaAndSwap(fillColor, fillAlpha);
 
-        vertexViewF32[vertexOffset + 0] = tx0;
-        vertexViewF32[vertexOffset + 1] = ty0;
-        vertexViewU32[vertexOffset + 2] = tint;
-
-        vertexViewF32[vertexOffset + 3] = tx1;
-        vertexViewF32[vertexOffset + 4] = ty1;
-        vertexViewU32[vertexOffset + 5] = tint;
-
-        vertexViewF32[vertexOffset + 6] = tx2;
-        vertexViewF32[vertexOffset + 7] = ty2;
-        vertexViewU32[vertexOffset + 8] = tint;
-
-        this.vertexCount += 3;
+        this.batchTri(tx0, ty0, tx1, ty1, tx2, ty2, tint);
     },
 
     /**
@@ -436,9 +478,6 @@ var FlatTintPipeline = new Class({
         var polygonIndexArray;
         var point;
         var v0, v1, v2;
-        var vertexViewF32 = this.vertexViewF32;
-        var vertexViewU32 = this.vertexViewU32;
-        var vertexOffset = 0;
         var x0, y0, x1, y1, x2, y2;
         var tx0, ty0, tx1, ty1, tx2, ty2;
         var a0 = currentMatrix[0];
@@ -475,8 +514,6 @@ var FlatTintPipeline = new Class({
                 this.flush();
             }
 
-            vertexOffset = this.vertexCount * this.vertexComponentCount;
-
             x0 = polygonCache[v0 + 0];
             y0 = polygonCache[v0 + 1];
             x1 = polygonCache[v1 + 0];
@@ -491,19 +528,7 @@ var FlatTintPipeline = new Class({
             tx2 = x2 * a + y2 * c + e;
             ty2 = x2 * b + y2 * d + f;
 
-            vertexViewF32[vertexOffset + 0] = tx0;
-            vertexViewF32[vertexOffset + 1] = ty0;
-            vertexViewU32[vertexOffset + 2] = tint;
-
-            vertexViewF32[vertexOffset + 3] = tx1;
-            vertexViewF32[vertexOffset + 4] = ty1;
-            vertexViewU32[vertexOffset + 5] = tint;
-
-            vertexViewF32[vertexOffset + 6] = tx2;
-            vertexViewF32[vertexOffset + 7] = ty2;
-            vertexViewU32[vertexOffset + 8] = tint;
-
-            this.vertexCount += 3;
+            this.batchTri(tx0, ty0, tx1, ty1, tx2, ty2, tint);
         }
 
         polygonCache.length = 0;
@@ -541,9 +566,6 @@ var FlatTintPipeline = new Class({
         var pathLength = path.length;
         var polylines = this.polygonCache;
         var last, curr;
-        var vertexViewF32 = this.vertexViewF32;
-        var vertexViewU32 = this.vertexViewU32;
-        var vertexOffset;
         var line;
         var getTint = Utils.getTintAppendFloatAlphaAndSwap;
 
@@ -575,33 +597,37 @@ var FlatTintPipeline = new Class({
 
             last = polylines[index - 1] || polylines[polylinesLength - 1];
             curr = polylines[index];
-            vertexOffset = this.vertexCount * this.vertexComponentCount;
 
-            vertexViewF32[vertexOffset + 0] = last[3 * 2 + 0];
-            vertexViewF32[vertexOffset + 1] = last[3 * 2 + 1];
-            vertexViewU32[vertexOffset + 2] = getTint(last[3 * 2 + 2], lineAlpha);
+            var tx0 = last[3 * 2 + 0];
+            var ty0 = last[3 * 2 + 1];
+            var tint0 = getTint(last[3 * 2 + 2], lineAlpha);
 
-            vertexViewF32[vertexOffset + 3] = last[3 * 0 + 0];
-            vertexViewF32[vertexOffset + 4] = last[3 * 0 + 1];
-            vertexViewU32[vertexOffset + 5] = getTint(last[3 * 0 + 2], lineAlpha);
+            var tx1 = last[3 * 0 + 0];
+            var ty1 = last[3 * 0 + 1];
+            var tint1 = getTint(last[3 * 0 + 2], lineAlpha);
 
-            vertexViewF32[vertexOffset + 6] = curr[3 * 3 + 0];
-            vertexViewF32[vertexOffset + 7] = curr[3 * 3 + 1];
-            vertexViewU32[vertexOffset + 8] = getTint(curr[3 * 3 + 2], lineAlpha);
+            var tx2 = curr[3 * 3 + 0];
+            var ty2 = curr[3 * 3 + 1];
+            var tint2 = getTint(curr[3 * 3 + 2], lineAlpha);
 
-            vertexViewF32[vertexOffset + 9] = last[3 * 0 + 0];
-            vertexViewF32[vertexOffset + 10] = last[3 * 0 + 1];
-            vertexViewU32[vertexOffset + 11] = getTint(last[3 * 0 + 2], lineAlpha);
+            // var tx3 = last[3 * 0 + 0]; //tx1
+            // var ty3 = last[3 * 0 + 1]; //ty1
+            // var tint3 = getTint(last[3 * 0 + 2], lineAlpha); //tint1
 
-            vertexViewF32[vertexOffset + 12] = last[3 * 2 + 0];
-            vertexViewF32[vertexOffset + 13] = last[3 * 2 + 1];
-            vertexViewU32[vertexOffset + 14] = getTint(last[3 * 2 + 2], lineAlpha);
+            // var tx4 = last[3 * 2 + 0]; //tx0
+            // var ty4 = last[3 * 2 + 1]; //ty0
+            // var tint4 = getTint(last[3 * 2 + 2], lineAlpha); //tint0
 
-            vertexViewF32[vertexOffset + 15] = curr[3 * 1 + 0];
-            vertexViewF32[vertexOffset + 16] = curr[3 * 1 + 1];
-            vertexViewU32[vertexOffset + 17] = getTint(curr[3 * 1 + 2], lineAlpha);
+            var tx5 = curr[3 * 1 + 0];
+            var ty5 = curr[3 * 1 + 1];
+            var tint5 = getTint(curr[3 * 1 + 2], lineAlpha);
 
-            this.vertexCount += 6;
+            this.batchVertex(tx0, ty0, tint0);
+            this.batchVertex(tx1, ty1, tint1);
+            this.batchVertex(tx2, ty2, tint2);
+            this.batchVertex(tx1, ty1, tint1);
+            this.batchVertex(tx0, ty0, tint0);
+            this.batchVertex(tx5, ty5, tint5);
         }
 
         polylines.length = 0;
@@ -656,8 +682,6 @@ var FlatTintPipeline = new Class({
         var d = c1 * b0 + d1 * d0;
         var e = e1 * a0 + f1 * c0 + e0;
         var f = e1 * b0 + f1 * d0 + f0;
-        var vertexViewF32 = this.vertexViewF32;
-        var vertexViewU32 = this.vertexViewU32;
         var dx = bx - ax;
         var dy = by - ay;
         var len = Math.sqrt(dx * dx + dy * dy);
@@ -684,33 +708,13 @@ var FlatTintPipeline = new Class({
         var getTint = Utils.getTintAppendFloatAlphaAndSwap;
         var aTint = getTint(aLineColor, lineAlpha);
         var bTint = getTint(bLineColor, lineAlpha);
-        var vertexOffset = this.vertexCount * this.vertexComponentCount;
 
-        vertexViewF32[vertexOffset + 0] = x0;
-        vertexViewF32[vertexOffset + 1] = y0;
-        vertexViewU32[vertexOffset + 2] = bTint;
-
-        vertexViewF32[vertexOffset + 3] = x1;
-        vertexViewF32[vertexOffset + 4] = y1;
-        vertexViewU32[vertexOffset + 5] = aTint;
-
-        vertexViewF32[vertexOffset + 6] = x2;
-        vertexViewF32[vertexOffset + 7] = y2;
-        vertexViewU32[vertexOffset + 8] = bTint;
-
-        vertexViewF32[vertexOffset + 9] = x1;
-        vertexViewF32[vertexOffset + 10] = y1;
-        vertexViewU32[vertexOffset + 11] = aTint;
-
-        vertexViewF32[vertexOffset + 12] = x3;
-        vertexViewF32[vertexOffset + 13] = y3;
-        vertexViewU32[vertexOffset + 14] = aTint;
-
-        vertexViewF32[vertexOffset + 15] = x2;
-        vertexViewF32[vertexOffset + 16] = y2;
-        vertexViewU32[vertexOffset + 17] = bTint;
-
-        this.vertexCount += 6;
+        this.batchVertex(x0, y0, bTint);
+        this.batchVertex(x1, y1, aTint);
+        this.batchVertex(x2, y2, bTint);
+        this.batchVertex(x1, y1, aTint);
+        this.batchVertex(x3, y3, aTint);
+        this.batchVertex(x2, y2, bTint);
 
         return [
             x0, y0, bLineColor,
