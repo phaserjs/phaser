@@ -622,6 +622,40 @@ var TransformMatrix = new Class({
     },
 
     /**
+     * Copy the values in this Matrix to the array given.
+     * 
+     * Where array indexes 0, 1, 2, 3, 4 and 5 are mapped to a, b, c, d, e and f.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#copyToArray
+     * @since 3.12.0
+     *
+     * @param {array} [out] - The array to copy the matrix values in to.
+     *
+     * @return {array} An array where elements 0 to 5 contain the values from this matrix.
+     */
+    copyToArray: function (out)
+    {
+        var matrix = this.matrix;
+
+        if (out === undefined)
+        {
+            out = [ matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5] ];
+        }
+        else
+        {
+
+            out[0] = matrix[0];
+            out[1] = matrix[1];
+            out[2] = matrix[2];
+            out[3] = matrix[3];
+            out[4] = matrix[4];
+            out[5] = matrix[5];
+        }
+
+        return out;
+    },
+
+    /**
      * Set the values of this Matrix.
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#setTransform
