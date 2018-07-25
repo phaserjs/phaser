@@ -315,7 +315,7 @@ var File = new Class({
      */
     onLoad: function (xhr, event)
     {
-        var success = !(event.target && event.target.status !== 200);
+        var success = !(event.target && (event.target.status !== 200 && event.target.status !== 0));
 
         //  Handle HTTP status codes of 4xx and 5xx as errors, even if xhr.onerror was not called.
         if (xhr.readyState === 4 && xhr.status >= 400 && xhr.status <= 599)
