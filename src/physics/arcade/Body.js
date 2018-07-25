@@ -1089,8 +1089,8 @@ var Body = new Class({
 
         var gameObject = this.gameObject;
 
-        if(width === undefined) { width = gameObject.frame.data.sourceSize.w; }
-        if(height === undefined) { height = gameObject.frame.data.sourceSize.h; }
+        if (width === undefined) { width = gameObject.frame.data.sourceSize.w; }
+        if (height === undefined) { height = gameObject.frame.data.sourceSize.h; }
         
         this.sourceWidth = width;
         this.sourceHeight = height;
