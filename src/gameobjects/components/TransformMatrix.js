@@ -762,6 +762,40 @@ var TransformMatrix = new Class({
     },
 
     /**
+     * Returns the X component of this matrix multiplied by the given values.
+     * This is the same as `x * a + y * c + e`.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#getX
+     * @since 3.12.0
+     * 
+     * @param {number} x - The x value.
+     * @param {number} y - The y value.
+     *
+     * @return {number} The calculated x value.
+     */
+    getX: function (x, y)
+    {
+        return x * this.a + y * this.c + this.e;
+    },
+
+    /**
+     * Returns the Y component of this matrix multiplied by the given values.
+     * This is the same as `x * b + y * d + f`.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#getY
+     * @since 3.12.0
+     * 
+     * @param {number} x - The x value.
+     * @param {number} y - The y value.
+     *
+     * @return {number} The calculated y value.
+     */
+    getY: function (x, y)
+    {
+        return x * this.b + y * this.d + this.f;
+    },
+
+    /**
      * Returns a string that can be used in a CSS Transform call as a `matrix` property.
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#getCSSMatrix
