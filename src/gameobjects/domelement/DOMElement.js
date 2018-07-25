@@ -69,6 +69,8 @@ var DOMElement = new Class({
         this.rotate3d = new Vector4();
         this.rotate3dAngle = 'deg';
 
+        this.handler = this.dispatchNativeEvent.bind(this);
+
         this.setPosition(x, y);
 
         if (element)
@@ -88,6 +90,20 @@ var DOMElement = new Class({
         return this;
     },
 
+    perspective: {
+
+        get: function ()
+        {
+            return parseFloat(this.parent.style.perspective);
+        },
+
+        set: function (value)
+        {
+            this.parent.style.perspective = value + 'px';
+        }
+
+    },
+
     setPerspective: function (value)
     {
         //  Sets it on the DOM Container!
@@ -96,31 +112,31 @@ var DOMElement = new Class({
         return this;
     },
 
-    /**
-     * Compares the renderMask with the renderFlags to see if this Game Object will render or not.
-     *
-     * @method Phaser.GameObjects.GameObject#willRender
-     * @since 3.0.0
-     *
-     * @return {boolean} True if the Game Object should be rendered, otherwise false.
-     */
-    willRender: function ()
+    addListener: function (events)
     {
-        return true;
-    },
-
-    listen: function (events)
-    {
-        if (!this.node)
+        if (this.node)
         {
-            return;
+            events = events.split(' ');
+
+            for (var i = 0; i < events.length; i++)
+            {
+                this.node.addEventListener(events[i], this.handler, false);
+            }
         }
 
-        events = events.split(' ');
+        return this;
+    },
 
-        for (var i = 0; i < events.length; i++)
+    removeListener: function (events)
+    {
+        if (this.node)
         {
-            this.node.addEventListener(events[i], this.dispatchNativeEvent.bind(this), false);
+            events = events.split(' ');
+
+            for (var i = 0; i < events.length; i++)
+            {
+                this.node.removeEventListener(events[i], this.handler);
+            }
         }
 
         return this;
@@ -157,7 +173,7 @@ var DOMElement = new Class({
 
         //  Node handler
 
-        target.phaserElement = this;
+        target.phaser = this;
 
         if (this.parent)
         {
@@ -180,13 +196,58 @@ var DOMElement = new Class({
     {
         if (elementType === undefined) { elementType = 'div'; }
 
-        console.log(html);
-
         var element = document.createElement(elementType);
+
+        this.node = element;
+
+        element.style.zIndex = '0';
+        element.style.display = 'inline';
+        element.style.position = 'absolute';
+
+        //  Node handler
+
+        element.phaser = this;
+
+        if (this.parent)
+        {
+            this.parent.appendChild(element);
+        }
 
         element.innerHTML = html;
 
-        return this.setElement(element);
+        var nodeBounds = element.getBoundingClientRect();
+
+        this.setSize(nodeBounds.width || 0, nodeBounds.height || 0);
+
+        return this;
+    },
+
+    getChildByProperty: function (property, value)
+    {
+        if (this.node)
+        {
+            var children = this.node.querySelectorAll('*');
+
+            for (var i = 0; i < children.length; i++)
+            {
+                if (children[i][property] === value)
+                {
+                    return children[i];
+                }
+            }
+        }
+
+        return null;
+    },
+
+    getChildByID: function (id)
+    {
+        return this.getChildByProperty('id', id);
+    },
+
+    getChildByName: function (name)
+    {
+        return this.getChildByProperty('name', name);
     },
 
     setText: function (text)
@@ -207,6 +268,21 @@ var DOMElement = new Class({
         }
 
         return this;
+    },
+
+    /**
+     * Compares the renderMask with the renderFlags to see if this Game Object will render or not.
+     * 
+     * DOMElements always return `true` as they need to still set values during the render pass, even if not visible.
+     *
+     * @method Phaser.GameObjects.DOMElement#willRender
+     * @since 3.12.0
+     *
+     * @return {boolean} True if the Game Object should be rendered, otherwise false.
+     */
+    willRender: function ()
+    {
+        return true;
     },
 
     destroy: function ()
