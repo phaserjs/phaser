@@ -1072,6 +1072,7 @@ var Body = new Class({
     /**
      * Sizes and positions this Body's boundary, as a rectangle.
      * Modifies the Body's `offset` if `center` is true (the default).
+     * Resets the width and height to match current frame, if no width and height provided.
      *
      * @method Phaser.Physics.Arcade.Body#setSize
      * @since 3.0.0
@@ -1088,6 +1089,9 @@ var Body = new Class({
 
         var gameObject = this.gameObject;
 
+        if(width === undefined) { width = gameObject.frame.data.sourceSize.w; }
+        if(height === undefined) { height = gameObject.frame.data.sourceSize.h; }
+        
         this.sourceWidth = width;
         this.sourceHeight = height;
 
