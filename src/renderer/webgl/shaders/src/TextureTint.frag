@@ -10,17 +10,25 @@ varying vec4 outTint;
 
 void main()
 {
+    vec4 texture = texture2D(uMainSampler, outTexCoord);
     vec4 texel = vec4(outTint.rgb * outTint.a, outTint.a);
+    vec4 color = texture;
 
-    if (outTintEffect == 1.0)
+    if (outTintEffect == 0.0)
     {
-        texel = texture2D(uMainSampler, outTexCoord);
-        texel.rgb = mix(texel.rgb, outTint.rgb, texel.a);
+        //  Multiply texture tint
+        color = texture * texel;
     }
-    else if (outTintEffect == 0.0)
+    else if (outTintEffect == 1.0)
     {
-        texel *= texture2D(uMainSampler, outTexCoord);
+        //  Solid color + texture alpha
+        color.rgb = mix(texture.rgb, outTint.rgb, texture.a);
+    }
+    else if (outTintEffect == 2.0)
+    {
+        //  Solid color, no texture
+        color = texel;
     }
 
-    gl_FragColor = texel;
+    gl_FragColor = color;
 }
