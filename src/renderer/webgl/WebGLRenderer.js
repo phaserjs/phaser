@@ -533,12 +533,16 @@ var WebGLRenderer = new Class({
      */
     boot: function ()
     {
-        this.blankTexture = this.game.textures.getFrame('__DEFAULT').glTexture;
-
         for (var pipelineName in this.pipelines)
         {
             this.pipelines[pipelineName].boot();
         }
+
+        var blank = this.game.textures.getFrame('__DEFAULT');
+
+        this.pipelines.FlatTintPipeline.currentFrame = blank;
+
+        this.blankTexture = blank;
     },
 
     /**
@@ -986,6 +990,24 @@ var WebGLRenderer = new Class({
         }
 
         return this;
+    },
+
+    /**
+     * Sets the current active texture for texture unit zero to be a blank texture.
+     * This only happens if there isn't a texture already in use by texture unit zero.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#setBlankTexture
+     * @private
+     * @since 3.12.0
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLRenderer} This WebGL Renderer.
+     */
+    setBlankTexture: function ()
+    {
+        if (this.currentActiveTextureUnit !== 0 || !this.currentTextures[0])
+        {
+            this.setTexture2D(this.blankTexture.glTexture, 0);
+        }
     },
 
     /**
