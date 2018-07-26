@@ -743,14 +743,8 @@ var FlatTintPipeline = new Class({
                 lineAlpha,
                 currentMatrix,
                 parentMatrix,
-                true
+                (pathIndex > 0)
             );
-
-            //  Render joint
-            if (pathIndex > 0)
-            {
-                // var prev = this.prevQuad;
-            }
         }
 
         /* Render joints */
@@ -829,7 +823,7 @@ var FlatTintPipeline = new Class({
      * @param {number} f1 - Matrix stack top f component
      * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
-    batchLine: function (ax, ay, bx, by, aLineWidth, bLineWidth, aLineColor, bLineColor, lineAlpha, currentMatrix, parentMatrix, save)
+    batchLine: function (ax, ay, bx, by, aLineWidth, bLineWidth, aLineColor, bLineColor, lineAlpha, currentMatrix, parentMatrix, join)
     {
         this.renderer.setPipeline(this);
 
@@ -862,44 +856,60 @@ var FlatTintPipeline = new Class({
         var ly3 = ay + al1;
 
         //  tx0 = bottom right
-        var tx0 = calcMatrix.getX(lx0, ly0);
-        var ty0 = calcMatrix.getY(lx0, ly0);
+        var brX = calcMatrix.getX(lx0, ly0);
+        var brY = calcMatrix.getY(lx0, ly0);
 
         //  tx1 = bottom left
-        var tx1 = calcMatrix.getX(lx1, ly1);
-        var ty1 = calcMatrix.getY(lx1, ly1);
+        var blX = calcMatrix.getX(lx1, ly1);
+        var blY = calcMatrix.getY(lx1, ly1);
 
         //  tx2 = top right
-        var tx2 = calcMatrix.getX(lx2, ly2);
-        var ty2 = calcMatrix.getY(lx2, ly2);
+        var trX = calcMatrix.getX(lx2, ly2);
+        var trY = calcMatrix.getY(lx2, ly2);
 
         //  tx3 = top left
-        var tx3 = calcMatrix.getX(lx3, ly3);
-        var ty3 = calcMatrix.getY(lx3, ly3);
+        var tlX = calcMatrix.getX(lx3, ly3);
+        var tlY = calcMatrix.getY(lx3, ly3);
 
         var aTint = Utils.getTintAppendFloatAlphaAndSwap(aLineColor, lineAlpha);
         var bTint = Utils.getTintAppendFloatAlphaAndSwap(bLineColor, lineAlpha);
 
-        this.batchQuad(tx3, ty3, tx1, ty1, tx0, ty0, tx2, ty2, 0, 0, 1, 1, aTint, bTint, aTint, bTint, 2);
+        //  TL, BL, BR, TR
+        this.batchQuad(tlX, tlY, blX, blY, brX, brY, trX, trY, 0, 0, 1, 1, aTint, bTint, aTint, bTint, 2);
+
+        var prev = this.prevQuad;
+
+        if (join)
+        {
+            // tx0 = prev[0]; // TL
+            // ty0 = prev[1];
+            // tx1 = prev[3]; // BL
+            // ty1 = prev[4];
+            // tx2 = prev[6]; // BR
+            // ty2 = prev[7];
+            // tx3 = prev[9]; // TR
+            // ty3 = prev[10];
+
+            aTint = Utils.getTintAppendFloatAlphaAndSwap(0xff0000, lineAlpha);
+            bTint = Utils.getTintAppendFloatAlphaAndSwap(0xff0000, lineAlpha);
+    
+            //  TL, BL, BR, TR
+            //this.batchQuad(tx3, ty3, tx1, ty1, tx0, ty0, tx2, ty2, 0, 0, 1, 1, aTint, bTint, aTint, bTint, 2);
+        }
 
         //  Store it
-        if (save)
-        {
-            var prev = this.prevQuad;
-
-            prev[0] = tx0;
-            prev[1] = ty0;
-            prev[2] = bLineColor;
-            prev[3] = tx1;
-            prev[4] = ty1;
-            prev[5] = aLineColor;
-            prev[6] = tx2;
-            prev[7] = ty2;
-            prev[8] = bLineColor;
-            prev[9] = tx3;
-            prev[10] = ty3;
-            prev[11] = aLineColor;
-        }
+        prev[0] = tlX;
+        prev[1] = tlY;
+        prev[2] = bLineColor;
+        prev[3] = blX;
+        prev[4] = blY;
+        prev[5] = aLineColor;
+        prev[6] = brX;
+        prev[7] = brY;
+        prev[8] = bLineColor;
+        prev[9] = trX;
+        prev[10] = trY;
+        prev[11] = aLineColor;
     },
 
     /**
