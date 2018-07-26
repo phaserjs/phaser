@@ -95,6 +95,25 @@ var Camera = new Class({
         this.scene;
 
         /**
+         * A reference to the Game Scene Manager.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#sceneManager
+         * @type {Phaser.Scenes.SceneManager}
+         * @since 3.12.0
+         */
+        this.sceneManager;
+
+        /**
+         * A reference to the Game Config.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#config
+         * @type {object}
+         * @readOnly
+         * @since 3.12.0
+         */
+        this.config;
+
+        /**
          * The Camera ID. Assigned by the Camera Manager and used to handle camera exclusion.
          * This value is a bitmask.
          *
@@ -114,6 +133,88 @@ var Camera = new Class({
          * @since 3.0.0
          */
         this.name = '';
+
+        /**
+         * The resolution of the Game, used in most Camera calculations.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#resolution
+         * @type {number}
+         * @readOnly
+         * @since 3.12.0
+         */
+        this.resolution = 1;
+
+        /**
+         * Should this camera round its pixel values to integers?
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#roundPixels
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.roundPixels = false;
+
+        /**
+         * Is this Camera visible or not?
+         *
+         * A visible camera will render and perform input tests.
+         * An invisible camera will not render anything and will skip input tests.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#visible
+         * @type {boolean}
+         * @default true
+         * @since 3.10.0
+         */
+        this.visible = true;
+
+        /**
+         * Is this Camera using a bounds to restrict scrolling movement?
+         *
+         * Set this property along with the bounds via `Camera.setBounds`.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#useBounds
+         * @type {boolean}
+         * @default false
+         * @since 3.0.0
+         */
+        this.useBounds = false;
+
+        /**
+         * The World View is a Rectangle that defines the area of the 'world' the Camera is currently looking at.
+         * This factors in the Camera viewport size, zoom and scroll position and is updated in the Camera preRender step.
+         * If you have enabled Camera bounds the worldview will be clamped to those bounds accordingly.
+         * You can use it for culling or intersection checks.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#worldView
+         * @type {Phaser.Geom.Rectangle}
+         * @readOnly
+         * @since 3.11.0
+         */
+        this.worldView = new Rectangle();
+
+        /**
+         * Is this Camera dirty?
+         * 
+         * A dirty Camera has had either its viewport size, bounds, scroll, rotation or zoom levels changed since the last frame.
+         * 
+         * This flag is cleared during the `postRenderCamera` method of the renderer.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#dirty
+         * @type {boolean}
+         * @default true
+         * @since 3.11.0
+         */
+        this.dirty = true;
+
+        /**
+         * Does this Camera allow the Game Objects it renders to receive input events?
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#inputEnabled
+         * @type {boolean}
+         * @default true
+         * @since 3.0.0
+         */
+        this.inputEnabled = true;
 
         /**
          * The x position of the Camera viewport, relative to the top-left of the game canvas.
@@ -138,16 +239,6 @@ var Camera = new Class({
          * @since 3.0.0
          */
         this._y = y;
-
-        /**
-         * The resolution of the Game, used in most Camera calculations.
-         *
-         * @name Phaser.Cameras.Scene2D.Camera#resolution
-         * @type {number}
-         * @readOnly
-         * @since 3.12.0
-         */
-        this.resolution = 1;
 
         /**
          * Internal Camera X value multiplied by the resolution.
@@ -216,41 +307,6 @@ var Camera = new Class({
         this._height = height;
 
         /**
-         * Should this camera round its pixel values to integers?
-         *
-         * @name Phaser.Cameras.Scene2D.Camera#roundPixels
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.roundPixels = false;
-
-        /**
-         * Is this Camera visible or not?
-         *
-         * A visible camera will render and perform input tests.
-         * An invisible camera will not render anything and will skip input tests.
-         *
-         * @name Phaser.Cameras.Scene2D.Camera#visible
-         * @type {boolean}
-         * @default true
-         * @since 3.10.0
-         */
-        this.visible = true;
-
-        /**
-         * Is this Camera using a bounds to restrict scrolling movement?
-         *
-         * Set this property along with the bounds via `Camera.setBounds`.
-         *
-         * @name Phaser.Cameras.Scene2D.Camera#useBounds
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.useBounds = false;
-
-        /**
          * The bounds the camera is restrained to during scrolling.
          *
          * @name Phaser.Cameras.Scene2D.Camera#_bounds
@@ -259,43 +315,6 @@ var Camera = new Class({
          * @since 3.0.0
          */
         this._bounds = new Rectangle();
-
-        /**
-         * The World View is a Rectangle that defines the area of the 'world' the Camera is currently looking at.
-         * This factors in the Camera viewport size, zoom and scroll position and is updated in the Camera preRender step.
-         * If you have enabled Camera bounds the worldview will be clamped to those bounds accordingly.
-         * You can use it for culling or intersection checks.
-         *
-         * @name Phaser.Cameras.Scene2D.Camera#worldView
-         * @type {Phaser.Geom.Rectangle}
-         * @readOnly
-         * @since 3.11.0
-         */
-        this.worldView = new Rectangle();
-
-        /**
-         * Is this Camera dirty?
-         * 
-         * A dirty Camera has had either its viewport size, bounds, scroll, rotation or zoom levels changed since the last frame.
-         * 
-         * This flag is cleared during the `postRenderCamera` method of the renderer.
-         *
-         * @name Phaser.Cameras.Scene2D.Camera#dirty
-         * @type {boolean}
-         * @default true
-         * @since 3.11.0
-         */
-        this.dirty = true;
-
-        /**
-         * Does this Camera allow the Game Objects it renders to receive input events?
-         *
-         * @name Phaser.Cameras.Scene2D.Camera#inputEnabled
-         * @type {boolean}
-         * @default true
-         * @since 3.0.0
-         */
-        this.inputEnabled = true;
 
         /**
          * The horizontal scroll position of this Camera.
@@ -595,6 +614,17 @@ var Camera = new Class({
          * @since 3.0.0
          */
         this._follow = null;
+
+        /**
+         * Does this Camera have a custom viewport?
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#_customViewport
+         * @type {boolean}
+         * @private
+         * @default false
+         * @since 3.12.0
+         */
+        this._customViewport = false;
     },
 
     /**
@@ -1595,6 +1625,7 @@ var Camera = new Class({
 
     /**
      * Sets the Scene the Camera is bound to.
+     * 
      * Also populates the `resolution` property and updates the internal size values.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setScene
@@ -1608,7 +1639,10 @@ var Camera = new Class({
     {
         this.scene = scene;
 
-        var res = scene.sys.game.config.resolution;
+        this.config = scene.sys.game.config;
+        this.sceneManager = scene.sys.game.scene;
+
+        var res = this.config.resolution;
 
         this.resolution = res;
 
@@ -1904,6 +1938,49 @@ var Camera = new Class({
     },
 
     /**
+     * Internal method called automatically when the viewport changes.
+     *
+     * @method Phaser.Cameras.Scene2D.Camera#updateSystem
+     * @protected
+     * @since 3.12.0
+     */
+    updateSystem: function ()
+    {
+        var custom = false;
+
+        if (this._x !== 0 || this._y !== 0)
+        {
+            custom = true;
+        }
+        else
+        {
+            var gameWidth = this.config.width;
+            var gameHeight = this.config.height;
+
+            if (gameWidth !== this._width || gameHeight !== this._height)
+            {
+                custom = true;
+            }
+        }
+
+        var sceneManager = this.sceneManager;
+
+        if (custom && !this._customViewport)
+        {
+            //  We need a custom viewport for this Camera
+            sceneManager.customViewports++;
+        }
+        else if (!custom && this._customViewport)
+        {
+            //  We're turning off a custom viewport for this Camera
+            sceneManager.customViewports--;
+        }
+
+        this.dirty = true;
+        this._customViewport = custom;
+    },
+
+    /**
      * This event is fired when a camera is destroyed by the Camera Manager.
      *
      * @event CameraDestroyEvent
@@ -1932,10 +2009,19 @@ var Camera = new Class({
 
         this.culledObjects = [];
 
+        if (this._customViewport)
+        {
+            //  We're turning off a custom viewport for this Camera
+            this.sceneManager.customViewports--;
+        }
+
         this._follow = null;
         this._bounds = null;
-        this.scene = null;
         this.deadzone = null;
+
+        this.scene = null;
+        this.config = null;
+        this.sceneManager = null;
     },
 
     /**
@@ -1958,7 +2044,7 @@ var Camera = new Class({
         {
             this._x = value;
             this._cx = value * this.resolution;
-            this.dirty = true;
+            this.updateSystem();
         }
 
     },
@@ -1983,7 +2069,7 @@ var Camera = new Class({
         {
             this._y = value;
             this._cy = value * this.resolution;
-            this.dirty = true;
+            this.updateSystem();
         }
 
     },
@@ -2009,7 +2095,7 @@ var Camera = new Class({
         {
             this._width = value;
             this._cw = value * this.resolution;
-            this.dirty = true;
+            this.updateSystem();
         }
 
     },
@@ -2035,7 +2121,7 @@ var Camera = new Class({
         {
             this._height = value;
             this._ch = value * this.resolution;
-            this.dirty = true;
+            this.updateSystem();
         }
 
     },
