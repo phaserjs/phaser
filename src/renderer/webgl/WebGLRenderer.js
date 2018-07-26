@@ -518,8 +518,6 @@ var WebGLRenderer = new Class({
 
         this.setBlendMode(CONST.BlendModes.NORMAL);
 
-        // this.pushScissor(0, 0, this.width, this.height);
-
         this.resize(this.width, this.height);
 
         this.game.events.once('ready', this.boot, this);
@@ -584,11 +582,6 @@ var WebGLRenderer = new Class({
         {
             pipelines[pipelineName].resize(width, height, resolution);
         }
-                
-        // if (this.currentScissor)
-        // {
-        //     this.currentScissor = [ 0, 0, this.width, this.height ];
-        // }
         
         this.drawingBufferHeight = gl.drawingBufferHeight;
 
@@ -761,36 +754,6 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Sets the current scissor state
-     *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#setScissor
-     * @since 3.0.0
-     */
-    setScissor: function ()
-    {
-        var gl = this.gl;
-
-        var current = this.currentScissor;
-
-        var x = current[0];
-        var y = current[1];
-        var w = current[2];
-        var h = current[3];
-
-        // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/scissor
-        var box = gl.getParameter(gl.SCISSOR_BOX);
-
-        if (box && (box[0] !== x || box[1] !== y || box[2] !== w || box[3] !== h))
-        {
-            this.flush();
-
-            gl.enable(gl.SCISSOR_TEST);
-
-            gl.scissor(x, (this.drawingBufferHeight - y - h), w, h);
-        }
-    },
-
-    /**
      * Pushes a new scissor state. This is used to set nested scissor states.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#pushScissor
@@ -806,17 +769,42 @@ var WebGLRenderer = new Class({
     pushScissor: function (x, y, w, h)
     {
         var scissorStack = this.scissorStack;
-        var stackLength = scissorStack.length;
 
         var scissor = [ x, y, w, h ];
         
         scissorStack.push(scissor);
 
+        this.setScissor(x, y, w, h);
+
         this.currentScissor = scissor;
 
-        this.setScissor();
-
         return scissor;
+    },
+
+    /**
+     * Sets the current scissor state
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#setScissor
+     * @since 3.0.0
+     */
+    setScissor: function (x, y, w, h)
+    {
+        var gl = this.gl;
+
+        var current = this.currentScissor;
+
+        var cx = current[0];
+        var cy = current[1];
+        var cw = current[2];
+        var ch = current[3];
+
+        if (cx !== x || cy !== y || cw !== w || ch !== h)
+        {
+            this.flush();
+
+            // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/scissor
+            gl.scissor(x, (this.drawingBufferHeight - y - h), w, h);
+        }
     },
 
     /**
@@ -829,9 +817,11 @@ var WebGLRenderer = new Class({
     {
         var scissorStack = this.scissorStack;
 
-        this.currentScissor = scissorStack.pop();
+        var scissor = scissorStack.pop();
+       
+        this.setScissor(scissor[0], scissor[1], scissor[2], scissor[3]);
 
-        this.setScissor();
+        this.currentScissor = scissor;
     },
 
     /**
@@ -1540,8 +1530,18 @@ var WebGLRenderer = new Class({
             pipelines[key].onPreRender();
         }
 
-        this.scissorStack = [];
-        this.currentScissor = null;
+        //  TODO - Find a way to stop needing to create these arrays every frame
+        //  and equally not need a huge array buffer created to hold them
+
+        this.currentScissor = [ 0, 0, this.width, this.height ];
+        this.scissorStack = [ this.currentScissor ];
+
+        if (this.game.scene.customViewports)
+        {
+            gl.enable(gl.SCISSOR_TEST);
+
+            gl.scissor(0, (this.drawingBufferHeight - this.height), this.width, this.height);
+        }
 
         this.setPipeline(this.pipelines.TextureTintPipeline);
     },
