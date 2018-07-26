@@ -17,29 +17,22 @@ var Utils = require('../Utils');
 var WebGLPipeline = require('../WebGLPipeline');
 
 //  TODO: Remove the use of this
-var Point = function (x, y, width, rgb, alpha)
+var Point = function (x, y, width)
 {
     this.x = x;
     this.y = y;
     this.width = width;
-    this.rgb = rgb;
-    this.alpha = alpha;
 };
 
 //  TODO: Remove the use of this
-var Path = function (x, y, width, rgb, alpha)
+var Path = function (x, y, width)
 {
     this.points = [];
     this.pointsLength = 1;
-    this.points[0] = new Point(x, y, width, rgb, alpha);
+    this.points[0] = new Point(x, y, width);
 };
 
-// var currentMatrix = new Float32Array([ 1, 0, 0, 1, 0, 0 ]);
-// var matrixStack = new Float32Array(6 * 1000);
-// var matrixStackLength = 0;
-
 var matrixStack = [];
-var pathArray = [];
 
 /**
  * @classdesc
@@ -150,7 +143,23 @@ var FlatTintPipeline = new Class({
             {x: 0, y: 0, width: 0, rgb: 0xFFFFFF, alpha: 1.0}
         ];
 
-        this.prevQuad = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
+        //  0 = texture multiplied by color
+        //  1 = solid color + texture alpha
+        //  2 = solid color, no texture
+        //  3 = solid texture, no color
+        this.tintEffect = 2;
+
+        this.strokeTint;
+        this.fillTint;
+
+        // this.tintTL = 0;
+        // this.tintTR = 0;
+        // this.tintBL = 0;
+        // this.tintBR = 0;
+
+        this.firstQuad = [ 0, 0, 0, 0 ];
+
+        this.prevQuad = [ 0, 0, 0, 0 ];
 
         /**
          * Used internally for triangulating a polygon
@@ -279,58 +288,84 @@ var FlatTintPipeline = new Class({
         return this;
     },
 
-    batchVertex: function (x, y, tint)
+    /**
+     * Adds the vertices data into the batch and flushes if full.
+     * 
+     * Assumes 3 vertices in the following arrangement:
+     * 
+     * ```
+     * ```
+     * 
+     * 
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTri
+     * @since 3.12.0
+     *
+     * @param {number} x1 - The bottom-left x position.
+     * @param {number} y1 - The bottom-left y position.
+     * @param {number} x2 - The bottom-right x position.
+     * @param {number} y2 - The bottom-right y position.
+     * @param {number} x3 - The top-right x position.
+     * @param {number} y3 - The top-right y position.
+     * @param {number} u0 - UV u0 value.
+     * @param {number} v0 - UV v0 value.
+     * @param {number} u1 - UV u1 value.
+     * @param {number} v1 - UV v1 value.
+     * @param {number} tint1 - The top-left tint color value.
+     * @param {number} tint2 - The top-right tint color value.
+     * @param {number} tint3 - The bottom-left tint color value.
+     * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
+     * 
+     * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
+     */
+    batchTri: function (x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tint1, tint2, tint3, tintEffect)
     {
+        var hasFlushed = false;
+
+        if (this.vertexCount + 3 > this.vertexCapacity)
+        {
+            this.flush();
+
+            hasFlushed = true;
+        }
+
         var vertexViewF32 = this.vertexViewF32;
         var vertexViewU32 = this.vertexViewU32;
 
         var vertexOffset = (this.vertexCount * this.vertexComponentCount) - 1;
-
-        vertexViewF32[++vertexOffset] = x;
-        vertexViewF32[++vertexOffset] = y;
-        vertexViewF32[++vertexOffset] = 0;
-        vertexViewF32[++vertexOffset] = 0;
-        vertexViewF32[++vertexOffset] = 2;
-        vertexViewU32[++vertexOffset] = tint;
-
-        this.vertexCount++;
-    },
-
-    // batchTri: function (x1, y1, x2, y2, x3, y3, tint)
-    batchTri: function (x1, y1, x2, y2, x3, y3, tint1, tint2, tint3)
-    {
-        var vertexViewF32 = this.vertexViewF32;
-        var vertexViewU32 = this.vertexViewU32;
-
-        var vertexOffset = (this.vertexCount * this.vertexComponentCount) - 1;
-
-        //  0 = texture multiplied by color
-        //  1 = solid color + texture alpha
-        //  2 = solid color, no texture
-        //  3 = solid texture, no color
 
         vertexViewF32[++vertexOffset] = x1;
         vertexViewF32[++vertexOffset] = y1;
-        vertexViewF32[++vertexOffset] = 0;
-        vertexViewF32[++vertexOffset] = 0;
-        vertexViewF32[++vertexOffset] = 2;
+        vertexViewF32[++vertexOffset] = u0;
+        vertexViewF32[++vertexOffset] = v0;
+        vertexViewF32[++vertexOffset] = tintEffect;
         vertexViewU32[++vertexOffset] = tint1;
 
         vertexViewF32[++vertexOffset] = x2;
         vertexViewF32[++vertexOffset] = y2;
-        vertexViewF32[++vertexOffset] = 0;
-        vertexViewF32[++vertexOffset] = 1;
-        vertexViewF32[++vertexOffset] = 2;
+        vertexViewF32[++vertexOffset] = u0;
+        vertexViewF32[++vertexOffset] = v1;
+        vertexViewF32[++vertexOffset] = tintEffect;
         vertexViewU32[++vertexOffset] = tint2;
 
         vertexViewF32[++vertexOffset] = x3;
         vertexViewF32[++vertexOffset] = y3;
-        vertexViewF32[++vertexOffset] = 1;
-        vertexViewF32[++vertexOffset] = 1;
-        vertexViewF32[++vertexOffset] = 2;
+        vertexViewF32[++vertexOffset] = u1;
+        vertexViewF32[++vertexOffset] = v1;
+        vertexViewF32[++vertexOffset] = tintEffect;
         vertexViewU32[++vertexOffset] = tint3;
 
         this.vertexCount += 3;
+
+        // if (this.vertexCount === this.vertexCapacity)
+        // {
+        //     //  No more room at the inn
+        //     this.flush();
+
+        //     hasFlushed = true;
+        // }
+
+        return hasFlushed;
     },
 
     /**
@@ -353,14 +388,14 @@ var FlatTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchVertices
      * @since 3.11.0
      *
-     * @param {number} tx0 - The top-left x position.
-     * @param {number} ty0 - The top-left y position.
-     * @param {number} tx1 - The bottom-left x position.
-     * @param {number} ty1 - The bottom-left y position.
-     * @param {number} tx2 - The bottom-right x position.
-     * @param {number} ty2 - The bottom-right y position.
-     * @param {number} tx3 - The top-right x position.
-     * @param {number} ty3 - The top-right y position.
+     * @param {number} x0 - The top-left x position.
+     * @param {number} y0 - The top-left y position.
+     * @param {number} x1 - The bottom-left x position.
+     * @param {number} y1 - The bottom-left y position.
+     * @param {number} x2 - The bottom-right x position.
+     * @param {number} y2 - The bottom-right y position.
+     * @param {number} x3 - The top-right x position.
+     * @param {number} y3 - The top-right y position.
      * @param {number} u0 - UV u0 value.
      * @param {number} v0 - UV v0 value.
      * @param {number} u1 - UV u1 value.
@@ -373,7 +408,7 @@ var FlatTintPipeline = new Class({
      * 
      * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
      */
-    batchQuad: function (tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect)
+    batchQuad: function (x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect)
     {
         var hasFlushed = false;
 
@@ -389,43 +424,43 @@ var FlatTintPipeline = new Class({
 
         var vertexOffset = (this.vertexCount * this.vertexComponentCount) - 1;
             
-        vertexViewF32[++vertexOffset] = tx0;
-        vertexViewF32[++vertexOffset] = ty0;
+        vertexViewF32[++vertexOffset] = x0;
+        vertexViewF32[++vertexOffset] = y0;
         vertexViewF32[++vertexOffset] = u0;
         vertexViewF32[++vertexOffset] = v0;
         vertexViewF32[++vertexOffset] = tintEffect;
         vertexViewU32[++vertexOffset] = tintTL;
 
-        vertexViewF32[++vertexOffset] = tx1;
-        vertexViewF32[++vertexOffset] = ty1;
+        vertexViewF32[++vertexOffset] = x1;
+        vertexViewF32[++vertexOffset] = y1;
         vertexViewF32[++vertexOffset] = u0;
         vertexViewF32[++vertexOffset] = v1;
         vertexViewF32[++vertexOffset] = tintEffect;
         vertexViewU32[++vertexOffset] = tintBL;
 
-        vertexViewF32[++vertexOffset] = tx2;
-        vertexViewF32[++vertexOffset] = ty2;
+        vertexViewF32[++vertexOffset] = x2;
+        vertexViewF32[++vertexOffset] = y2;
         vertexViewF32[++vertexOffset] = u1;
         vertexViewF32[++vertexOffset] = v1;
         vertexViewF32[++vertexOffset] = tintEffect;
         vertexViewU32[++vertexOffset] = tintBR;
 
-        vertexViewF32[++vertexOffset] = tx0;
-        vertexViewF32[++vertexOffset] = ty0;
+        vertexViewF32[++vertexOffset] = x0;
+        vertexViewF32[++vertexOffset] = y0;
         vertexViewF32[++vertexOffset] = u0;
         vertexViewF32[++vertexOffset] = v0;
         vertexViewF32[++vertexOffset] = tintEffect;
         vertexViewU32[++vertexOffset] = tintTL;
 
-        vertexViewF32[++vertexOffset] = tx2;
-        vertexViewF32[++vertexOffset] = ty2;
+        vertexViewF32[++vertexOffset] = x2;
+        vertexViewF32[++vertexOffset] = y2;
         vertexViewF32[++vertexOffset] = u1;
         vertexViewF32[++vertexOffset] = v1;
         vertexViewF32[++vertexOffset] = tintEffect;
         vertexViewU32[++vertexOffset] = tintBR;
 
-        vertexViewF32[++vertexOffset] = tx3;
-        vertexViewF32[++vertexOffset] = ty3;
+        vertexViewF32[++vertexOffset] = x3;
+        vertexViewF32[++vertexOffset] = y3;
         vertexViewF32[++vertexOffset] = u1;
         vertexViewF32[++vertexOffset] = v0;
         vertexViewF32[++vertexOffset] = tintEffect;
@@ -433,13 +468,13 @@ var FlatTintPipeline = new Class({
 
         this.vertexCount += 6;
 
-        if (this.vertexCapacity - this.vertexCount < 6)
-        {
-            //  No more room at the inn
-            this.flush();
+        // if (this.vertexCapacity - this.vertexCount < 6)
+        // {
+        //     //  No more room at the inn
+        //     this.flush();
 
-            hasFlushed = true;
-        }
+        //     hasFlushed = true;
+        // }
 
         return hasFlushed;
     },
@@ -464,14 +499,9 @@ var FlatTintPipeline = new Class({
      * @param {number} f1 - Matrix stack top f component
      * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
-    batchFillRect: function (x, y, width, height, fillColor, fillAlpha, currentMatrix, parentMatrix)
+    batchFillRect: function (x, y, width, height, currentMatrix, parentMatrix)
     {
         this.renderer.setPipeline(this);
-
-        if (this.vertexCount + 6 > this.vertexCapacity)
-        {
-            this.flush();
-        }
 
         var calcMatrix = this._tempMatrix3;
 
@@ -481,22 +511,26 @@ var FlatTintPipeline = new Class({
         var xw = x + width;
         var yh = y + height;
 
-        var tx0 = calcMatrix.getX(x, y);
-        var ty0 = calcMatrix.getY(x, y);
+        var x0 = calcMatrix.getX(x, y);
+        var y0 = calcMatrix.getY(x, y);
 
-        var tx1 = calcMatrix.getX(x, yh);
-        var ty1 = calcMatrix.getY(x, yh);
+        var x1 = calcMatrix.getX(x, yh);
+        var y1 = calcMatrix.getY(x, yh);
 
-        var tx2 = calcMatrix.getX(xw, yh);
-        var ty2 = calcMatrix.getY(xw, yh);
+        var x2 = calcMatrix.getX(xw, yh);
+        var y2 = calcMatrix.getY(xw, yh);
 
-        var tx3 = calcMatrix.getX(xw, y);
-        var ty3 = calcMatrix.getY(xw, y);
+        var x3 = calcMatrix.getX(xw, y);
+        var y3 = calcMatrix.getY(xw, y);
 
-        var tint = Utils.getTintAppendFloatAlphaAndSwap(fillColor, fillAlpha);
+        var u0 = 0;
+        var v0 = 0;
+        var u1 = 1;
+        var v1 = 1;
 
-        this.batchTri(tx0, ty0, tx1, ty1, tx2, ty2, tint);
-        this.batchTri(tx0, ty0, tx2, ty2, tx3, ty3, tint);
+        var tint = this.fillTint;
+
+        this.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tint, tint, tint, tint, this.tintEffect);
     },
 
     /**
@@ -526,14 +560,9 @@ var FlatTintPipeline = new Class({
      * @param {number} f1 - Matrix stack top f component
      * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
-    batchFillTriangle: function (x0, y0, x1, y1, x2, y2, fillColor, fillAlpha, currentMatrix, parentMatrix)
+    batchFillTriangle: function (x0, y0, x1, y1, x2, y2, currentMatrix, parentMatrix)
     {
         this.renderer.setPipeline(this);
-
-        if (this.vertexCount + 3 > this.vertexCapacity)
-        {
-            this.flush();
-        }
 
         var calcMatrix = this._tempMatrix3;
 
@@ -549,9 +578,14 @@ var FlatTintPipeline = new Class({
         var tx2 = calcMatrix.getX(x2, y2);
         var ty2 = calcMatrix.getY(x2, y2);
 
-        var tint = Utils.getTintAppendFloatAlphaAndSwap(fillColor, fillAlpha);
+        var u0 = 0;
+        var v0 = 0;
+        var u1 = 1;
+        var v1 = 1;
 
-        this.batchTri(tx0, ty0, tx1, ty1, tx2, ty2, tint);
+        var tint = this.fillTint;
+
+        this.batchTri(tx0, ty0, tx1, ty1, tx2, ty2, u0, v0, u1, v1, tint, tint, tint, this.tintEffect);
     },
 
     /**
@@ -582,38 +616,27 @@ var FlatTintPipeline = new Class({
      * @param {number} f - Matrix stack top f component
      * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
-    batchStrokeTriangle: function (srcX, srcY, srcScaleX, srcScaleY, srcRotation, x0, y0, x1, y1, x2, y2, lineWidth, lineColor, lineAlpha, a, b, c, d, e, f, currentMatrix)
+    batchStrokeTriangle: function (x0, y0, x1, y1, x2, y2, lineWidth, currentMatrix, parentMatrix)
     {
         var tempTriangle = this.tempTriangle;
 
         tempTriangle[0].x = x0;
         tempTriangle[0].y = y0;
         tempTriangle[0].width = lineWidth;
-        tempTriangle[0].rgb = lineColor;
-        tempTriangle[0].alpha = lineAlpha;
+
         tempTriangle[1].x = x1;
         tempTriangle[1].y = y1;
         tempTriangle[1].width = lineWidth;
-        tempTriangle[1].rgb = lineColor;
-        tempTriangle[1].alpha = lineAlpha;
+
         tempTriangle[2].x = x2;
         tempTriangle[2].y = y2;
         tempTriangle[2].width = lineWidth;
-        tempTriangle[2].rgb = lineColor;
-        tempTriangle[2].alpha = lineAlpha;
+
         tempTriangle[3].x = x0;
         tempTriangle[3].y = y0;
         tempTriangle[3].width = lineWidth;
-        tempTriangle[3].rgb = lineColor;
-        tempTriangle[3].alpha = lineAlpha;
 
-        this.batchStrokePath(
-            srcX, srcY, srcScaleX, srcScaleY, srcRotation,
-            tempTriangle, lineWidth, lineColor, lineAlpha,
-            a, b, c, d, e, f,
-            false,
-            currentMatrix
-        );
+        this.batchStrokePath(tempTriangle, lineWidth, false, currentMatrix, parentMatrix);
     },
 
     /**
@@ -638,7 +661,7 @@ var FlatTintPipeline = new Class({
      * @param {number} f1 - Matrix stack top f component
      * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
-    batchFillPath: function (path, fillColor, fillAlpha, currentMatrix, parentMatrix)
+    batchFillPath: function (path, currentMatrix, parentMatrix)
     {
         this.renderer.setPipeline(this);
 
@@ -652,7 +675,8 @@ var FlatTintPipeline = new Class({
         var polygonIndexArray;
         var point;
 
-        var tint = Utils.getTintAppendFloatAlphaAndSwap(fillColor, fillAlpha);
+        var tint = this.fillTint;
+        var tintEffect = this.tintEffect;
 
         for (var pathIndex = 0; pathIndex < length; ++pathIndex)
         {
@@ -665,16 +689,16 @@ var FlatTintPipeline = new Class({
 
         for (var index = 0; index < length; index += 3)
         {
-            var v0 = polygonIndexArray[index + 0] * 2;
-            var v1 = polygonIndexArray[index + 1] * 2;
-            var v2 = polygonIndexArray[index + 2] * 2;
+            var p0 = polygonIndexArray[index + 0] * 2;
+            var p1 = polygonIndexArray[index + 1] * 2;
+            var p2 = polygonIndexArray[index + 2] * 2;
 
-            var x0 = polygonCache[v0 + 0];
-            var y0 = polygonCache[v0 + 1];
-            var x1 = polygonCache[v1 + 0];
-            var y1 = polygonCache[v1 + 1];
-            var x2 = polygonCache[v2 + 0];
-            var y2 = polygonCache[v2 + 1];
+            var x0 = polygonCache[p0 + 0];
+            var y0 = polygonCache[p0 + 1];
+            var x1 = polygonCache[p1 + 0];
+            var y1 = polygonCache[p1 + 1];
+            var x2 = polygonCache[p2 + 0];
+            var y2 = polygonCache[p2 + 1];
 
             var tx0 = calcMatrix.getX(x0, y0);
             var ty0 = calcMatrix.getY(x0, y0);
@@ -685,12 +709,12 @@ var FlatTintPipeline = new Class({
             var tx2 = calcMatrix.getX(x2, y2);
             var ty2 = calcMatrix.getY(x2, y2);
 
-            if (this.vertexCount + 3 > this.vertexCapacity)
-            {
-                this.flush();
-            }
-
-            this.batchTri(tx0, ty0, tx1, ty1, tx2, ty2, tint);
+            var u0 = 0;
+            var v0 = 0;
+            var u1 = 1;
+            var v1 = 1;
+    
+            this.batchTri(tx0, ty0, tx1, ty1, tx2, ty2, u0, v0, u1, v1, tint, tint, tint, tintEffect);
         }
 
         polygonCache.length = 0;
@@ -720,13 +744,13 @@ var FlatTintPipeline = new Class({
      * @param {boolean} isLastPath - Indicates if the path should be closed
      * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
-    batchStrokePath: function (path, lineWidth, lineColor, lineAlpha, isLastPath, currentMatrix, parentMatrix)
+    batchStrokePath: function (path, lineWidth, pathOpen, currentMatrix, parentMatrix)
     {
         this.renderer.setPipeline(this);
 
-        var pathLength = path.length;
+        var pathLength = path.length - 1;
 
-        for (var pathIndex = 0; pathIndex + 1 < pathLength; pathIndex++)
+        for (var pathIndex = 0; pathIndex < pathLength; pathIndex++)
         {
             var point0 = path[pathIndex];
             var point1 = path[pathIndex + 1];
@@ -738,61 +762,13 @@ var FlatTintPipeline = new Class({
                 point1.y,
                 point0.width / 2,
                 point1.width / 2,
-                point0.rgb,
-                point1.rgb,
-                lineAlpha,
+                lineWidth,
+                pathIndex,
+                !pathOpen && (pathIndex === pathLength - 1),
                 currentMatrix,
-                parentMatrix,
-                (pathIndex > 0)
+                parentMatrix
             );
         }
-
-        /* Render joints */
-        /*
-        for (var index = 1, polylinesLength = polylines.length; index < polylinesLength; ++index)
-        {
-            if (this.vertexCount + 6 > this.vertexCapacity)
-            {
-                this.flush();
-            }
-
-            last = polylines[index - 1] || polylines[polylinesLength - 1];
-            curr = polylines[index];
-
-            var tx0 = last[3 * 2 + 0];
-            var ty0 = last[3 * 2 + 1];
-            var tint0 = getTint(last[3 * 2 + 2], lineAlpha);
-
-            var tx1 = last[3 * 0 + 0];
-            var ty1 = last[3 * 0 + 1];
-            var tint1 = getTint(last[3 * 0 + 2], lineAlpha);
-
-            var tx2 = curr[3 * 3 + 0];
-            var ty2 = curr[3 * 3 + 1];
-            var tint2 = getTint(curr[3 * 3 + 2], lineAlpha);
-
-            // var tx3 = last[3 * 0 + 0]; //tx1
-            // var ty3 = last[3 * 0 + 1]; //ty1
-            // var tint3 = getTint(last[3 * 0 + 2], lineAlpha); //tint1
-
-            // var tx4 = last[3 * 2 + 0]; //tx0
-            // var ty4 = last[3 * 2 + 1]; //ty0
-            // var tint4 = getTint(last[3 * 2 + 2], lineAlpha); //tint0
-
-            var tx5 = curr[3 * 1 + 0];
-            var ty5 = curr[3 * 1 + 1];
-            var tint5 = getTint(curr[3 * 1 + 2], lineAlpha);
-
-            this.batchVertex(tx0, ty0, tint0);
-            this.batchVertex(tx1, ty1, tint1);
-            this.batchVertex(tx2, ty2, tint2);
-            this.batchVertex(tx1, ty1, tint1);
-            this.batchVertex(tx0, ty0, tint0);
-            this.batchVertex(tx5, ty5, tint5);
-        }
-
-        polylines.length = 0;
-        */
     },
 
     /**
@@ -823,7 +799,7 @@ var FlatTintPipeline = new Class({
      * @param {number} f1 - Matrix stack top f component
      * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
-    batchLine: function (ax, ay, bx, by, aLineWidth, bLineWidth, aLineColor, bLineColor, lineAlpha, currentMatrix, parentMatrix, join)
+    batchLine: function (ax, ay, bx, by, aLineWidth, bLineWidth, lineWidth, index, closePath, currentMatrix, parentMatrix)
     {
         this.renderer.setPipeline(this);
 
@@ -871,45 +847,47 @@ var FlatTintPipeline = new Class({
         var tlX = calcMatrix.getX(lx3, ly3);
         var tlY = calcMatrix.getY(lx3, ly3);
 
-        var aTint = Utils.getTintAppendFloatAlphaAndSwap(aLineColor, lineAlpha);
-        var bTint = Utils.getTintAppendFloatAlphaAndSwap(bLineColor, lineAlpha);
+        var tint = this.strokeTint;
+        var tintEffect = this.tintEffect;
 
         //  TL, BL, BR, TR
-        this.batchQuad(tlX, tlY, blX, blY, brX, brY, trX, trY, 0, 0, 1, 1, aTint, bTint, aTint, bTint, 2);
+        this.batchQuad(tlX, tlY, blX, blY, brX, brY, trX, trY, 0, 0, 1, 1, tint, tint, tint, tint, tintEffect);
 
-        var prev = this.prevQuad;
-
-        if (join)
+        if (lineWidth <= 1)
         {
-            // tx0 = prev[0]; // TL
-            // ty0 = prev[1];
-            // tx1 = prev[3]; // BL
-            // ty1 = prev[4];
-            // tx2 = prev[6]; // BR
-            // ty2 = prev[7];
-            // tx3 = prev[9]; // TR
-            // ty3 = prev[10];
-
-            aTint = Utils.getTintAppendFloatAlphaAndSwap(0xff0000, lineAlpha);
-            bTint = Utils.getTintAppendFloatAlphaAndSwap(0xff0000, lineAlpha);
-    
-            //  TL, BL, BR, TR
-            //this.batchQuad(tx3, ty3, tx1, ty1, tx0, ty0, tx2, ty2, 0, 0, 1, 1, aTint, bTint, aTint, bTint, 2);
+            //  No point doing a linejoin if the line isn't thick enough
+            return;
         }
 
-        //  Store it
-        prev[0] = tlX;
-        prev[1] = tlY;
-        prev[2] = bLineColor;
-        prev[3] = blX;
-        prev[4] = blY;
-        prev[5] = aLineColor;
-        prev[6] = brX;
-        prev[7] = brY;
-        prev[8] = bLineColor;
-        prev[9] = trX;
-        prev[10] = trY;
-        prev[11] = aLineColor;
+        var prev = this.prevQuad;
+        var first = this.firstQuad;
+
+        if (index > 0)
+        {
+            this.batchQuad(tlX, tlY, blX, blY, prev[0], prev[1], prev[2], prev[3], 0, 0, 1, 1, tint, tint, tint, tint, tintEffect);
+        }
+        else
+        {
+            first[0] = blX;
+            first[1] = blY;
+            first[2] = tlX;
+            first[3] = tlY;
+        }
+
+        if (closePath)
+        {
+            //  Add a join for the final path segment
+            this.batchQuad(first[0], first[1], first[2], first[3], brX, brY, trX, trY, 0, 0, 1, 1, tint, tint, tint, tint, tintEffect);
+        }
+        else
+        {
+            //  Store it
+
+            prev[0] = brX;
+            prev[1] = brY;
+            prev[2] = trX;
+            prev[3] = trY;
+        }
     },
 
     /**
@@ -926,7 +904,6 @@ var FlatTintPipeline = new Class({
     {
         var camMatrix = this._tempMatrix1;
         var graphicsMatrix = this._tempMatrix2;
-        var calcMatrix = this._tempMatrix3;
         var currentMatrix = this._tempMatrix4;
        
         this.renderer.setPipeline(this);
@@ -980,6 +957,7 @@ var FlatTintPipeline = new Class({
         var cmd;
         var path = [];
         var pathIndex = 0;
+        var pathOpen = false;
 
         for (var cmdIndex = 0, cmdLength = commands.length; cmdIndex < cmdLength; ++cmdIndex)
         {
@@ -990,9 +968,11 @@ var FlatTintPipeline = new Class({
                 case Commands.BEGIN_PATH:
                     path.length = 0;
                     lastPath = null;
+                    pathOpen = true;
                     break;
 
                 case Commands.CLOSE_PATH:
+                    pathOpen = false;
                     if (lastPath && lastPath.points.length)
                     {
                         lastPath.points.push(lastPath.points[0]);
@@ -1004,8 +984,6 @@ var FlatTintPipeline = new Class({
                     {
                         this.batchFillPath(
                             path[pathIndex].points,
-                            fillColor,
-                            fillAlpha * alpha,
                             currentMatrix,
                             camMatrix
                         );
@@ -1018,9 +996,7 @@ var FlatTintPipeline = new Class({
                         this.batchStrokePath(
                             path[pathIndex].points,
                             lineWidth,
-                            lineColor,
-                            lineAlpha * alpha,
-                            true,
+                            pathOpen,
                             currentMatrix,
                             camMatrix
                         );
@@ -1031,11 +1007,48 @@ var FlatTintPipeline = new Class({
                     lineWidth = commands[++cmdIndex];
                     lineColor = commands[++cmdIndex];
                     lineAlpha = commands[++cmdIndex];
+                    this.strokeTint = Utils.getTintAppendFloatAlphaAndSwap(lineColor, lineAlpha * alpha);
                     break;
 
                 case Commands.FILL_STYLE:
                     fillColor = commands[++cmdIndex];
                     fillAlpha = commands[++cmdIndex];
+                    this.fillTint = Utils.getTintAppendFloatAlphaAndSwap(fillColor, fillAlpha * alpha);
+                    break;
+
+                case Commands.ARC:
+                    iteration = 0;
+                    x = commands[++cmdIndex];
+                    y = commands[++cmdIndex];
+                    radius = commands[++cmdIndex];
+                    startAngle = commands[++cmdIndex];
+                    endAngle = commands[++cmdIndex];
+                    var anticlockwise = commands[++cmdIndex];
+
+                    if (lastPath === null)
+                    {
+                        lastPath = new Path(x + Math.cos(startAngle) * radius, y + Math.sin(startAngle) * radius, lineWidth);
+                        path.push(lastPath);
+                        iteration += iterStep;
+                    }
+
+                    while (iteration < 1)
+                    {
+                        ta = endAngle * iteration + startAngle;
+                        tx = x + Math.cos(ta) * radius;
+                        ty = y + Math.sin(ta) * radius;
+
+                        lastPath.points.push(new Point(tx, ty, lineWidth));
+
+                        iteration += iterStep;
+                    }
+
+                    ta = endAngle + startAngle;
+                    tx = x + Math.cos(ta) * radius;
+                    ty = y + Math.sin(ta) * radius;
+
+                    lastPath.points.push(new Point(tx, ty, lineWidth));
+
                     break;
 
                 case Commands.FILL_RECT:
@@ -1044,8 +1057,6 @@ var FlatTintPipeline = new Class({
                         commands[++cmdIndex],
                         commands[++cmdIndex],
                         commands[++cmdIndex],
-                        fillColor,
-                        fillAlpha * alpha,
                         currentMatrix,
                         camMatrix
                     );
@@ -1059,8 +1070,20 @@ var FlatTintPipeline = new Class({
                         commands[++cmdIndex],
                         commands[++cmdIndex],
                         commands[++cmdIndex],
-                        fillColor,
-                        fillAlpha * alpha,
+                        currentMatrix,
+                        camMatrix
+                    );
+                    break;
+
+                case Commands.STROKE_TRIANGLE:
+                    this.batchStrokeTriangle(
+                        commands[++cmdIndex],
+                        commands[++cmdIndex],
+                        commands[++cmdIndex],
+                        commands[++cmdIndex],
+                        commands[++cmdIndex],
+                        commands[++cmdIndex],
+                        lineWidth,
                         currentMatrix,
                         camMatrix
                     );
@@ -1069,18 +1092,18 @@ var FlatTintPipeline = new Class({
                 case Commands.LINE_TO:
                     if (lastPath !== null)
                     {
-                        lastPath.points.push(new Point(commands[cmdIndex + 1], commands[cmdIndex + 2], lineWidth, lineColor, lineAlpha * alpha));
+                        lastPath.points.push(new Point(commands[cmdIndex + 1], commands[cmdIndex + 2], lineWidth));
                     }
                     else
                     {
-                        lastPath = new Path(commands[cmdIndex + 1], commands[cmdIndex + 2], lineWidth, lineColor, lineAlpha * alpha);
+                        lastPath = new Path(commands[cmdIndex + 1], commands[cmdIndex + 2], lineWidth);
                         path.push(lastPath);
                     }
                     cmdIndex += 2;
                     break;
 
                 case Commands.MOVE_TO:
-                    lastPath = new Path(commands[cmdIndex + 1], commands[cmdIndex + 2], lineWidth, lineColor, lineAlpha * alpha);
+                    lastPath = new Path(commands[cmdIndex + 1], commands[cmdIndex + 2], lineWidth);
                     path.push(lastPath);
                     cmdIndex += 2;
                     break;
@@ -1115,87 +1138,6 @@ var FlatTintPipeline = new Class({
             /**
             switch (cmd)
             {
-                case Commands.ARC:
-                    iteration = 0;
-                    x = commands[cmdIndex + 1];
-                    y = commands[cmdIndex + 2];
-                    radius = commands[cmdIndex + 3];
-                    startAngle = commands[cmdIndex + 4];
-                    endAngle = commands[cmdIndex + 5];
-
-                    if (lastPath === null)
-                    {
-                        lastPath = new Path(x + Math.cos(startAngle) * radius, y + Math.sin(startAngle) * radius, lineWidth, lineColor, lineAlpha * alpha);
-                        pathArray.push(lastPath);
-                        iteration += iterStep;
-                    }
-
-                    while (iteration < 1)
-                    {
-                        ta = endAngle * iteration + startAngle;
-                        tx = x + Math.cos(ta) * radius;
-                        ty = y + Math.sin(ta) * radius;
-
-                        lastPath.points.push(new Point(tx, ty, lineWidth, lineColor, lineAlpha * alpha));
-
-                        iteration += iterStep;
-                    }
-
-                    ta = endAngle + startAngle;
-                    tx = x + Math.cos(ta) * radius;
-                    ty = y + Math.sin(ta) * radius;
-
-                    lastPath.points.push(new Point(tx, ty, lineWidth, lineColor, lineAlpha * alpha));
-
-                    cmdIndex += 6;
-                    break;
-
-
-                case Commands.STROKE_PATH:
-                    for (pathArrayIndex = 0, pathArrayLength = pathArray.length;
-                        pathArrayIndex < pathArrayLength;
-                        ++pathArrayIndex)
-                    {
-                        path = pathArray[pathArrayIndex];
-                        this.batchStrokePath(
-
-                            srcX, srcY, srcScaleX, srcScaleY, srcRotation,
-
-                            path.points,
-                            lineWidth,
-                            lineColor,
-                            lineAlpha * alpha,
-
-                            mva, mvb, mvc, mvd, mve, mvf,
-                            path === this._lastPath,
-                            currentMatrix
-                        );
-                    }
-                    break;
-                   
-
-                case Commands.STROKE_TRIANGLE:
-                    this.batchStrokeTriangle(
-
-                        srcX, srcY, srcScaleX, srcScaleY, srcRotation,
-
-                        commands[cmdIndex + 1],
-                        commands[cmdIndex + 2],
-                        commands[cmdIndex + 3],
-                        commands[cmdIndex + 4],
-                        commands[cmdIndex + 5],
-                        commands[cmdIndex + 6],
-                        lineWidth,
-                        lineColor,
-                        lineAlpha * alpha,
-
-                        mva, mvb, mvc, mvd, mve, mvf,
-                        currentMatrix
-                    );
-                    
-                    cmdIndex += 6;
-                    break;
-
                 case Commands.LINE_FX_TO:
                     if (lastPath !== null)
                     {
