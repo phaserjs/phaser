@@ -312,13 +312,10 @@ var Flash = new Class({
         var blue = this.blue / 255;
         var green = this.green / 255;
 
-        pipeline.batchFillRect(
-            0, 0, 1, 1, 0,
+        pipeline.drawFillRect(
             camera._cx, camera._cy, camera._cw, camera._ch,
             getTintFunction(red, green, blue, 1),
-            this.alpha,
-            1, 0, 0, 1, 0, 0,
-            [ 1, 0, 0, 1, 0, 0 ]
+            this.alpha
         );
 
         return true;
