@@ -137,10 +137,10 @@ var FlatTintPipeline = new Class({
          * @since 3.0.0
          */
         this.tempTriangle = [
-            {x: 0, y: 0, width: 0, rgb: 0xFFFFFF, alpha: 1.0},
-            {x: 0, y: 0, width: 0, rgb: 0xFFFFFF, alpha: 1.0},
-            {x: 0, y: 0, width: 0, rgb: 0xFFFFFF, alpha: 1.0},
-            {x: 0, y: 0, width: 0, rgb: 0xFFFFFF, alpha: 1.0}
+            { x: 0, y: 0, width: 0 },
+            { x: 0, y: 0, width: 0 },
+            { x: 0, y: 0, width: 0 },
+            { x: 0, y: 0, width: 0 }
         ];
 
         //  0 = texture multiplied by color
@@ -151,6 +151,9 @@ var FlatTintPipeline = new Class({
 
         this.strokeTint;
         this.fillTint;
+
+        //  Set during Renderer boot
+        this.currentFrame = null;
 
         // this.tintTL = 0;
         // this.tintTR = 0;
@@ -277,7 +280,7 @@ var FlatTintPipeline = new Class({
             return;
         }
 
-        renderer.setTexture2D(renderer.blankTexture, 0);
+        renderer.setBlankTexture();
 
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
         gl.drawArrays(topology, 0, vertexCount);
@@ -356,14 +359,6 @@ var FlatTintPipeline = new Class({
         vertexViewU32[++vertexOffset] = tint3;
 
         this.vertexCount += 3;
-
-        // if (this.vertexCount === this.vertexCapacity)
-        // {
-        //     //  No more room at the inn
-        //     this.flush();
-
-        //     hasFlushed = true;
-        // }
 
         return hasFlushed;
     },
@@ -468,14 +463,6 @@ var FlatTintPipeline = new Class({
 
         this.vertexCount += 6;
 
-        // if (this.vertexCapacity - this.vertexCount < 6)
-        // {
-        //     //  No more room at the inn
-        //     this.flush();
-
-        //     hasFlushed = true;
-        // }
-
         return hasFlushed;
     },
 
@@ -489,14 +476,6 @@ var FlatTintPipeline = new Class({
      * @param {number} y - Vertical top left coordinate of the rectangle
      * @param {number} width - Width of the rectangle
      * @param {number} height - Height of the rectangle
-     * @param {integer} fillColor - RGB color packed as a uint
-     * @param {number} fillAlpha - Alpha represented as float
-     * @param {number} a1 - Matrix stack top a component
-     * @param {number} b1 - Matrix stack top b component
-     * @param {number} c1 - Matrix stack top c component
-     * @param {number} d1 - Matrix stack top d component
-     * @param {number} e1 - Matrix stack top e component
-     * @param {number} f1 - Matrix stack top f component
      * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
     batchFillRect: function (x, y, width, height, currentMatrix, parentMatrix)
@@ -523,10 +502,12 @@ var FlatTintPipeline = new Class({
         var x3 = calcMatrix.getX(xw, y);
         var y3 = calcMatrix.getY(xw, y);
 
-        var u0 = 0;
-        var v0 = 0;
-        var u1 = 1;
-        var v1 = 1;
+        var frame = this.currentFrame;
+
+        var u0 = frame.u0;
+        var v0 = frame.v0;
+        var u1 = frame.u1;
+        var v1 = frame.v1;
 
         var tint = this.fillTint;
 
@@ -539,25 +520,12 @@ var FlatTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchFillTriangle
      * @since 3.0.0
      *
-     * @param {number} srcX - Graphics horizontal component for translation
-     * @param {number} srcY - Graphics vertical component for translation
-     * @param {number} srcScaleX - Graphics horizontal component for scale
-     * @param {number} srcScaleY - Graphics vertical component for scale
-     * @param {number} srcRotation - Graphics rotation
      * @param {number} x0 - Point 0 x coordinate
      * @param {number} y0 - Point 0 y coordinate
      * @param {number} x1 - Point 1 x coordinate
      * @param {number} y1 - Point 1 y coordinate
      * @param {number} x2 - Point 2 x coordinate
      * @param {number} y2 - Point 2 y coordinate
-     * @param {integer} fillColor - RGB color packed as a uint
-     * @param {number} fillAlpha - Alpha represented as float
-     * @param {number} a1 - Matrix stack top a component
-     * @param {number} b1 - Matrix stack top b component
-     * @param {number} c1 - Matrix stack top c component
-     * @param {number} d1 - Matrix stack top d component
-     * @param {number} e1 - Matrix stack top e component
-     * @param {number} f1 - Matrix stack top f component
      * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
     batchFillTriangle: function (x0, y0, x1, y1, x2, y2, currentMatrix, parentMatrix)
@@ -578,10 +546,12 @@ var FlatTintPipeline = new Class({
         var tx2 = calcMatrix.getX(x2, y2);
         var ty2 = calcMatrix.getY(x2, y2);
 
-        var u0 = 0;
-        var v0 = 0;
-        var u1 = 1;
-        var v1 = 1;
+        var frame = this.currentFrame;
+
+        var u0 = frame.u0;
+        var v0 = frame.v0;
+        var u1 = frame.u1;
+        var v1 = frame.v1;
 
         var tint = this.fillTint;
 
@@ -594,11 +564,6 @@ var FlatTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchStrokeTriangle
      * @since 3.0.0
      *
-     * @param {number} srcX - Graphics horizontal component for translation
-     * @param {number} srcY - Graphics vertical component for translation
-     * @param {number} srcScaleX - Graphics horizontal component for scale
-     * @param {number} srcScaleY - Graphics vertical component for scale
-     * @param {number} srcRotation - Graphics rotation
      * @param {number} x0 - [description]
      * @param {number} y0 - [description]
      * @param {number} x1 - [description]
@@ -606,14 +571,6 @@ var FlatTintPipeline = new Class({
      * @param {number} x2 - [description]
      * @param {number} y2 - [description]
      * @param {number} lineWidth - Size of the line as a float value
-     * @param {integer} lineColor - RGB color packed as a uint
-     * @param {number} lineAlpha - Alpha represented as float
-     * @param {number} a - Matrix stack top a component
-     * @param {number} b - Matrix stack top b component
-     * @param {number} c - Matrix stack top c component
-     * @param {number} d - Matrix stack top d component
-     * @param {number} e - Matrix stack top e component
-     * @param {number} f - Matrix stack top f component
      * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
     batchStrokeTriangle: function (x0, y0, x1, y1, x2, y2, lineWidth, currentMatrix, parentMatrix)
@@ -645,20 +602,7 @@ var FlatTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchFillPath
      * @since 3.0.0
      *
-     * @param {number} srcX - Graphics horizontal component for translation
-     * @param {number} srcY - Graphics vertical component for translation
-     * @param {number} srcScaleX - Graphics horizontal component for scale
-     * @param {number} srcScaleY - Graphics vertical component for scale
-     * @param {number} srcRotation - Graphics rotation
      * @param {number} path - Collection of points that represent the path
-     * @param {integer} fillColor - RGB color packed as a uint
-     * @param {number} fillAlpha - Alpha represented as float
-     * @param {number} a1 - Matrix stack top a component
-     * @param {number} b1 - Matrix stack top b component
-     * @param {number} c1 - Matrix stack top c component
-     * @param {number} d1 - Matrix stack top d component
-     * @param {number} e1 - Matrix stack top e component
-     * @param {number} f1 - Matrix stack top f component
      * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
     batchFillPath: function (path, currentMatrix, parentMatrix)
@@ -687,6 +631,8 @@ var FlatTintPipeline = new Class({
         polygonIndexArray = Earcut(polygonCache);
         length = polygonIndexArray.length;
 
+        var frame = this.currentFrame;
+
         for (var index = 0; index < length; index += 3)
         {
             var p0 = polygonIndexArray[index + 0] * 2;
@@ -709,11 +655,11 @@ var FlatTintPipeline = new Class({
             var tx2 = calcMatrix.getX(x2, y2);
             var ty2 = calcMatrix.getY(x2, y2);
 
-            var u0 = 0;
-            var v0 = 0;
-            var u1 = 1;
-            var v1 = 1;
-    
+            var u0 = frame.u0;
+            var v0 = frame.v0;
+            var u1 = frame.u1;
+            var v1 = frame.v1;
+        
             this.batchTri(tx0, ty0, tx1, ty1, tx2, ty2, u0, v0, u1, v1, tint, tint, tint, tintEffect);
         }
 
@@ -726,22 +672,9 @@ var FlatTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchStrokePath
      * @since 3.0.0
      *
-     * @param {number} srcX - Graphics horizontal component for translation
-     * @param {number} srcY - Graphics vertical component for translation
-     * @param {number} srcScaleX - Graphics horizontal component for scale
-     * @param {number} srcScaleY - Graphics vertical component for scale
-     * @param {number} srcRotation - Graphics rotation
      * @param {array} path - [description]
      * @param {number} lineWidth - [description]
-     * @param {integer} lineColor - RGB color packed as a uint
-     * @param {number} lineAlpha - Alpha represented as float
-     * @param {number} a - Matrix stack top a component
-     * @param {number} b - Matrix stack top b component
-     * @param {number} c - Matrix stack top c component
-     * @param {number} d - Matrix stack top d component
-     * @param {number} e - Matrix stack top e component
-     * @param {number} f - Matrix stack top f component
-     * @param {boolean} isLastPath - Indicates if the path should be closed
+     * @param {boolean} pathOpen - Indicates if the path should be closed
      * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
     batchStrokePath: function (path, lineWidth, pathOpen, currentMatrix, parentMatrix)
@@ -777,26 +710,12 @@ var FlatTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchLine
      * @since 3.0.0
      *
-     * @param {number} srcX - Graphics horizontal component for translation
-     * @param {number} srcY - Graphics vertical component for translation
-     * @param {number} srcScaleX - Graphics horizontal component for scale
-     * @param {number} srcScaleY - Graphics vertical component for scale
-     * @param {number} srcRotation - Graphics rotation
      * @param {number} ax - X coordinate to the start of the line
      * @param {number} ay - Y coordinate to the start of the line
      * @param {number} bx - X coordinate to the end of the line
      * @param {number} by - Y coordinate to the end of the line
      * @param {number} aLineWidth - Width of the start of the line
      * @param {number} bLineWidth - Width of the end of the line
-     * @param {integer} aLineColor - RGB color packed as a uint
-     * @param {integer} bLineColor - RGB color packed as a uint
-     * @param {number} lineAlpha - Alpha represented as float
-     * @param {number} a1 - Matrix stack top a component
-     * @param {number} b1 - Matrix stack top b component
-     * @param {number} c1 - Matrix stack top c component
-     * @param {number} d1 - Matrix stack top d component
-     * @param {number} e1 - Matrix stack top e component
-     * @param {number} f1 - Matrix stack top f component
      * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
      */
     batchLine: function (ax, ay, bx, by, aLineWidth, bLineWidth, lineWidth, index, closePath, currentMatrix, parentMatrix)
@@ -850,8 +769,15 @@ var FlatTintPipeline = new Class({
         var tint = this.strokeTint;
         var tintEffect = this.tintEffect;
 
+        var frame = this.currentFrame;
+
+        var u0 = frame.u0;
+        var v0 = frame.v0;
+        var u1 = frame.u1;
+        var v1 = frame.v1;
+
         //  TL, BL, BR, TR
-        this.batchQuad(tlX, tlY, blX, blY, brX, brY, trX, trY, 0, 0, 1, 1, tint, tint, tint, tint, tintEffect);
+        this.batchQuad(tlX, tlY, blX, blY, brX, brY, trX, trY, u0, v0, u1, v1, tint, tint, tint, tint, tintEffect);
 
         if (lineWidth <= 1)
         {
@@ -864,7 +790,7 @@ var FlatTintPipeline = new Class({
 
         if (index > 0)
         {
-            this.batchQuad(tlX, tlY, blX, blY, prev[0], prev[1], prev[2], prev[3], 0, 0, 1, 1, tint, tint, tint, tint, tintEffect);
+            this.batchQuad(tlX, tlY, blX, blY, prev[0], prev[1], prev[2], prev[3], u0, v0, u1, v1, tint, tint, tint, tint, tintEffect);
         }
         else
         {
@@ -877,7 +803,7 @@ var FlatTintPipeline = new Class({
         if (closePath)
         {
             //  Add a join for the final path segment
-            this.batchQuad(first[0], first[1], first[2], first[3], brX, brY, trX, trY, 0, 0, 1, 1, tint, tint, tint, tint, tintEffect);
+            this.batchQuad(first[0], first[1], first[2], first[3], brX, brY, trX, trY, u0, v0, u1, v1, tint, tint, tint, tint, tintEffect);
         }
         else
         {
@@ -887,295 +813,6 @@ var FlatTintPipeline = new Class({
             prev[1] = brY;
             prev[2] = trX;
             prev[3] = trY;
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchGraphics
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Graphics} graphics - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
-     */
-    batchGraphics: function (graphics, camera, parentTransformMatrix)
-    {
-        var camMatrix = this._tempMatrix1;
-        var graphicsMatrix = this._tempMatrix2;
-        var currentMatrix = this._tempMatrix4;
-       
-        this.renderer.setPipeline(this);
-
-        currentMatrix.loadIdentity();
-
-        graphicsMatrix.applyITRS(graphics.x, graphics.y, graphics.rotation, graphics.scaleX, graphics.scaleY);
-
-        camMatrix.copyFrom(camera.matrix);
-
-        if (parentTransformMatrix)
-        {
-            //  Multiply the camera by the parent matrix
-            camMatrix.multiplyWithOffset(parentTransformMatrix, -camera.scrollX * graphics.scrollFactorX, -camera.scrollY * graphics.scrollFactorY);
-
-            //  Undo the camera scroll
-            graphicsMatrix.e = graphics.x;
-            graphicsMatrix.f = graphics.y;
-
-            //  Multiply by the Sprite matrix, store result in calcMatrix
-            camMatrix.multiply(graphicsMatrix);
-        }
-        else
-        {
-            graphicsMatrix.e -= camera.scrollX * graphics.scrollFactorX;
-            graphicsMatrix.f -= camera.scrollY * graphics.scrollFactorY;
-    
-            //  Multiply by the Sprite matrix, store result in calcMatrix
-            camMatrix.multiply(graphicsMatrix);
-        }
-
-        var commands = graphics.commandBuffer;
-        var alpha = camera.alpha * graphics.alpha;
-        var lineAlpha = 1.0;
-        var fillAlpha = 1.0;
-        var lineColor = 0;
-        var fillColor = 0;
-        var lineWidth = 1.0;
-        var lastPath = null;
-        var iteration = 0;
-        var iterStep = 0.01;
-        var tx = 0;
-        var ty = 0;
-        var ta = 0;
-        var x = 0;
-        var y = 0;
-        var radius = 0;
-        var startAngle = 0;
-        var endAngle = 0;
-
-        var cmd;
-        var path = [];
-        var pathIndex = 0;
-        var pathOpen = false;
-
-        for (var cmdIndex = 0, cmdLength = commands.length; cmdIndex < cmdLength; ++cmdIndex)
-        {
-            cmd = commands[cmdIndex];
-
-            switch (cmd)
-            {
-                case Commands.BEGIN_PATH:
-                    path.length = 0;
-                    lastPath = null;
-                    pathOpen = true;
-                    break;
-
-                case Commands.CLOSE_PATH:
-                    pathOpen = false;
-                    if (lastPath && lastPath.points.length)
-                    {
-                        lastPath.points.push(lastPath.points[0]);
-                    }
-                    break;
-
-                case Commands.FILL_PATH:
-                    for (pathIndex = 0; pathIndex < path.length; pathIndex++)
-                    {
-                        this.batchFillPath(
-                            path[pathIndex].points,
-                            currentMatrix,
-                            camMatrix
-                        );
-                    }
-                    break;
-
-                case Commands.STROKE_PATH:
-                    for (pathIndex = 0; pathIndex < path.length; pathIndex++)
-                    {
-                        this.batchStrokePath(
-                            path[pathIndex].points,
-                            lineWidth,
-                            pathOpen,
-                            currentMatrix,
-                            camMatrix
-                        );
-                    }
-                    break;
-
-                case Commands.LINE_STYLE:
-                    lineWidth = commands[++cmdIndex];
-                    lineColor = commands[++cmdIndex];
-                    lineAlpha = commands[++cmdIndex];
-                    this.strokeTint = Utils.getTintAppendFloatAlphaAndSwap(lineColor, lineAlpha * alpha);
-                    break;
-
-                case Commands.FILL_STYLE:
-                    fillColor = commands[++cmdIndex];
-                    fillAlpha = commands[++cmdIndex];
-                    this.fillTint = Utils.getTintAppendFloatAlphaAndSwap(fillColor, fillAlpha * alpha);
-                    break;
-
-                case Commands.ARC:
-                    iteration = 0;
-                    x = commands[++cmdIndex];
-                    y = commands[++cmdIndex];
-                    radius = commands[++cmdIndex];
-                    startAngle = commands[++cmdIndex];
-                    endAngle = commands[++cmdIndex];
-                    var anticlockwise = commands[++cmdIndex];
-
-                    if (lastPath === null)
-                    {
-                        lastPath = new Path(x + Math.cos(startAngle) * radius, y + Math.sin(startAngle) * radius, lineWidth);
-                        path.push(lastPath);
-                        iteration += iterStep;
-                    }
-
-                    while (iteration < 1)
-                    {
-                        ta = endAngle * iteration + startAngle;
-                        tx = x + Math.cos(ta) * radius;
-                        ty = y + Math.sin(ta) * radius;
-
-                        lastPath.points.push(new Point(tx, ty, lineWidth));
-
-                        iteration += iterStep;
-                    }
-
-                    ta = endAngle + startAngle;
-                    tx = x + Math.cos(ta) * radius;
-                    ty = y + Math.sin(ta) * radius;
-
-                    lastPath.points.push(new Point(tx, ty, lineWidth));
-
-                    break;
-
-                case Commands.FILL_RECT:
-                    this.batchFillRect(
-                        commands[++cmdIndex],
-                        commands[++cmdIndex],
-                        commands[++cmdIndex],
-                        commands[++cmdIndex],
-                        currentMatrix,
-                        camMatrix
-                    );
-                    break;
-
-                case Commands.FILL_TRIANGLE:
-                    this.batchFillTriangle(
-                        commands[++cmdIndex],
-                        commands[++cmdIndex],
-                        commands[++cmdIndex],
-                        commands[++cmdIndex],
-                        commands[++cmdIndex],
-                        commands[++cmdIndex],
-                        currentMatrix,
-                        camMatrix
-                    );
-                    break;
-
-                case Commands.STROKE_TRIANGLE:
-                    this.batchStrokeTriangle(
-                        commands[++cmdIndex],
-                        commands[++cmdIndex],
-                        commands[++cmdIndex],
-                        commands[++cmdIndex],
-                        commands[++cmdIndex],
-                        commands[++cmdIndex],
-                        lineWidth,
-                        currentMatrix,
-                        camMatrix
-                    );
-                    break;
-
-                case Commands.LINE_TO:
-                    if (lastPath !== null)
-                    {
-                        lastPath.points.push(new Point(commands[cmdIndex + 1], commands[cmdIndex + 2], lineWidth));
-                    }
-                    else
-                    {
-                        lastPath = new Path(commands[cmdIndex + 1], commands[cmdIndex + 2], lineWidth);
-                        path.push(lastPath);
-                    }
-                    cmdIndex += 2;
-                    break;
-
-                case Commands.MOVE_TO:
-                    lastPath = new Path(commands[cmdIndex + 1], commands[cmdIndex + 2], lineWidth);
-                    path.push(lastPath);
-                    cmdIndex += 2;
-                    break;
-
-                case Commands.SAVE:
-                    matrixStack.push(currentMatrix.copyToArray());
-                    break;
-
-                case Commands.RESTORE:
-                    currentMatrix.copyFromArray(matrixStack.pop());
-                    break;
-
-                case Commands.TRANSLATE:
-                    x = commands[++cmdIndex];
-                    y = commands[++cmdIndex];
-                    currentMatrix.translate(x, y);
-                    break;
-
-                case Commands.SCALE:
-                    x = commands[++cmdIndex];
-                    y = commands[++cmdIndex];
-                    currentMatrix.scale(x, y);
-                    break;
-
-                case Commands.ROTATE:
-                    var r = commands[++cmdIndex];
-                    currentMatrix.rotate(r);
-                    break;
-
-            }
-
-            /**
-            switch (cmd)
-            {
-                case Commands.LINE_FX_TO:
-                    if (lastPath !== null)
-                    {
-                        lastPath.points.push(new Point(
-                            commands[cmdIndex + 1],
-                            commands[cmdIndex + 2],
-                            commands[cmdIndex + 3],
-                            commands[cmdIndex + 4],
-                            commands[cmdIndex + 5] * alpha
-                        ));
-                    }
-                    else
-                    {
-                        lastPath = new Path(
-                            commands[cmdIndex + 1],
-                            commands[cmdIndex + 2],
-                            commands[cmdIndex + 3],
-                            commands[cmdIndex + 4],
-                            commands[cmdIndex + 5] * alpha
-                        );
-                        pathArray.push(lastPath);
-                    }
-                    cmdIndex += 5;
-                    break;
-
-                case Commands.MOVE_FX_TO:
-                    lastPath = new Path(
-                        commands[cmdIndex + 1],
-                        commands[cmdIndex + 2],
-                        commands[cmdIndex + 3],
-                        commands[cmdIndex + 4],
-                        commands[cmdIndex + 5] * alpha
-                    );
-                    pathArray.push(lastPath);
-                    cmdIndex += 5;
-                    break;
-            }
-            */
         }
     }
 
