@@ -172,7 +172,9 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
                 radius = commands[++cmdIndex];
                 startAngle = commands[++cmdIndex];
                 endAngle = commands[++cmdIndex];
-                var anticlockwise = commands[++cmdIndex];
+
+                // var anticlockwise
+                cmdIndex++;
 
                 if (lastPath === null)
                 {
