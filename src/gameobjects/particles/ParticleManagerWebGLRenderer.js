@@ -124,7 +124,7 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
                 ty3 |= 0;
             }
 
-            if (pipeline.batchVertices(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, color, color, color, color, tintEffect))
+            if (pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, color, color, color, color, tintEffect))
             {
                 pipeline.setTexture2D(texture, 0);
             }

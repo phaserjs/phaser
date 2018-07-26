@@ -286,7 +286,7 @@ var DynamicBitmapTextWebGLRenderer = function (renderer, src, interpolationPerce
             ty3 |= 0;
         }
 
-        pipeline.batchVertices(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect);
+        pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect);
     }
 
     if (crop)
