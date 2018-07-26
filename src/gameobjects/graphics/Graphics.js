@@ -315,6 +315,62 @@ var Graphics = new Class({
     },
 
     /**
+     * Sets the texture and frame this Graphics Object will use when texturing the shapes it renders.
+     *
+     * Textures are referenced by their string-based keys, as stored in the Texture Manager.
+     * 
+     * Once set, all shapes will use this texture. Call this method with no arguments to clear a previously texture.
+     * 
+     * The textures are not tiled. They are stretched to the dimensions of the shapes being rendered. For this reason,
+     * it works best with seamless / tileable textures.
+     * 
+     * The mode argument controls how the textures are combined with the fill colors. The default value (0) will
+     * multiply the texture by the fill color. A value of 1 will use just the fill color, but the alpha data from the texture,
+     * and a value of 2 will use just the texture and no fill color at all.
+     *
+     * @method Phaser.GameObjects.Graphics#setTexture
+     * @since 3.12.0
+     * @webglOnly
+     *
+     * @param {string} [key] - The key of the texture to be used, as stored in the Texture Manager. Leave blank to clear a previously set texture.
+     * @param {(string|integer)} [frame] - The name or index of the frame within the Texture.
+     * @param {number} [mode=0] - The texture tint mode. 0 is multiply, 1 is alpha only and 2 is texture only.
+     *
+     * @return {this} This Game Object.
+     */
+    setTexture: function (key, frame, mode)
+    {
+        if (mode === undefined) { mode = 0; }
+
+        if (key === undefined)
+        {
+            this.commandBuffer.push(
+                Commands.CLEAR_TEXTURE
+            );
+        }
+        else
+        {
+            var textureFrame = this.scene.sys.textures.getFrame(key, frame);
+
+            if (textureFrame)
+            {
+                if (mode === 2)
+                {
+                    mode = 3;
+                }
+
+                this.commandBuffer.push(
+                    Commands.SET_TEXTURE,
+                    textureFrame,
+                    mode
+                );
+            }
+        }
+
+        return this;
+    },
+
+    /**
      * Start a new shape path.
      *
      * @method Phaser.GameObjects.Graphics#beginPath

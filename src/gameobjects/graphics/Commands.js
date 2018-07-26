@@ -28,6 +28,8 @@ module.exports = {
     RESTORE: 15,
     TRANSLATE: 16,
     SCALE: 17,
-    ROTATE: 18
+    ROTATE: 18,
+    SET_TEXTURE: 19,
+    CLEAR_TEXTURE: 20
 
 };
