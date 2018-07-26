@@ -1941,7 +1941,7 @@ var Camera = new Class({
      * Internal method called automatically when the viewport changes.
      *
      * @method Phaser.Cameras.Scene2D.Camera#updateSystem
-     * @protected
+     * @private
      * @since 3.12.0
      */
     updateSystem: function ()

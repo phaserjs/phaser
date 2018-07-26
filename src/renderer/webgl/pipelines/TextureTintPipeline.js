@@ -162,11 +162,12 @@ var TextureTintPipeline = new Class({
         this._tempMatrix4 = new TransformMatrix();
 
         /**
-         * Used internally to draw triangles
+         * Used internally to draw stroked triangles.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#tempTriangle
+         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#tempTriangle
          * @type {array}
-         * @since 3.0.0
+         * @private
+         * @since 3.12.0
          */
         this.tempTriangle = [
             { x: 0, y: 0, width: 0 },
@@ -175,34 +176,78 @@ var TextureTintPipeline = new Class({
             { x: 0, y: 0, width: 0 }
         ];
 
-        //  0 = texture multiplied by color
-        //  1 = solid color + texture alpha
-        //  2 = solid color, no texture
-        //  3 = solid texture, no color
+        /**
+         * The tint effect to be applied by the shader in the next geometry draw:
+         * 
+         * 0 = texture multiplied by color
+         * 1 = solid color + texture alpha
+         * 2 = solid color, no texture
+         * 3 = solid texture, no color
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#tintEffect
+         * @type {number}
+         * @private
+         * @since 3.12.0
+         */
         this.tintEffect = 2;
 
-        this.strokeTint;
-        this.fillTint;
+        /**
+         * Cached stroke tint.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#strokeTint
+         * @type {number}
+         * @private
+         * @since 3.12.0
+         */
+        this.strokeTint = 0;
 
-        //  Set during Renderer boot
+        /**
+         * Cached fill tint.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#fillTint
+         * @type {number}
+         * @private
+         * @since 3.12.0
+         */
+        this.fillTint = 0;
+
+        /**
+         * Internal texture frame reference.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#currentFrame
+         * @type {Phaser.Textures.Frame}
+         * @private
+         * @since 3.12.0
+         */
         this.currentFrame = null;
 
-        // this.tintTL = 0;
-        // this.tintTR = 0;
-        // this.tintBL = 0;
-        // this.tintBR = 0;
-
+        /**
+         * Internal path quad cache.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#firstQuad
+         * @type {array}
+         * @private
+         * @since 3.12.0
+         */
         this.firstQuad = [ 0, 0, 0, 0 ];
 
+        /**
+         * Internal path quad cache.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#prevQuad
+         * @type {array}
+         * @private
+         * @since 3.12.0
+         */
         this.prevQuad = [ 0, 0, 0, 0 ];
 
         /**
-         * Used internally for triangulating a polygon
+         * Used internally for triangulating a polygon.
          *
-         * @name Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#polygonCache
+         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#polygonCache
          * @type {array}
-         * @default []
-         * @since 3.0.0
+         * @private
+         * @since 3.12.0
          */
         this.polygonCache = [];
 
@@ -268,13 +313,12 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * Uploads the vertex data and emits a draw call
-     * for the current batch of vertices.
+     * Uploads the vertex data and emits a draw call for the current batch of vertices.
      *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#flush
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#flush
      * @since 3.0.0
      *
-     * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
+     * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} This pipeline instance.
      */
     flush: function ()
     {
@@ -303,78 +347,6 @@ var TextureTintPipeline = new Class({
         this.flushLocked = false;
 
         return this;
-    },
-
-    /**
-     * Adds the vertices data into the batch and flushes if full.
-     * 
-     * Assumes 3 vertices in the following arrangement:
-     * 
-     * ```
-     * ```
-     * 
-     * 
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTri
-     * @since 3.12.0
-     *
-     * @param {number} x1 - The bottom-left x position.
-     * @param {number} y1 - The bottom-left y position.
-     * @param {number} x2 - The bottom-right x position.
-     * @param {number} y2 - The bottom-right y position.
-     * @param {number} x3 - The top-right x position.
-     * @param {number} y3 - The top-right y position.
-     * @param {number} u0 - UV u0 value.
-     * @param {number} v0 - UV v0 value.
-     * @param {number} u1 - UV u1 value.
-     * @param {number} v1 - UV v1 value.
-     * @param {number} tint1 - The top-left tint color value.
-     * @param {number} tint2 - The top-right tint color value.
-     * @param {number} tint3 - The bottom-left tint color value.
-     * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
-     * 
-     * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
-     */
-    batchTri: function (x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tint1, tint2, tint3, tintEffect)
-    {
-        var hasFlushed = false;
-
-        if (this.vertexCount + 3 > this.vertexCapacity)
-        {
-            this.flush();
-
-            hasFlushed = true;
-        }
-
-        var vertexViewF32 = this.vertexViewF32;
-        var vertexViewU32 = this.vertexViewU32;
-
-        var vertexOffset = (this.vertexCount * this.vertexComponentCount) - 1;
-
-        vertexViewF32[++vertexOffset] = x1;
-        vertexViewF32[++vertexOffset] = y1;
-        vertexViewF32[++vertexOffset] = u0;
-        vertexViewF32[++vertexOffset] = v0;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tint1;
-
-        vertexViewF32[++vertexOffset] = x2;
-        vertexViewF32[++vertexOffset] = y2;
-        vertexViewF32[++vertexOffset] = u0;
-        vertexViewF32[++vertexOffset] = v1;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tint2;
-
-        vertexViewF32[++vertexOffset] = x3;
-        vertexViewF32[++vertexOffset] = y3;
-        vertexViewF32[++vertexOffset] = u1;
-        vertexViewF32[++vertexOffset] = v1;
-        vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tint3;
-
-        this.vertexCount += 3;
-
-        return hasFlushed;
     },
 
     /**
@@ -531,7 +503,7 @@ var TextureTintPipeline = new Class({
      * Where tx0/ty0 = 0, tx1/ty1 = 1, tx2/ty2 = 2 and tx3/ty3 = 3
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchQuad
-     * @since 3.11.0
+     * @since 3.12.0
      *
      * @param {number} x0 - The top-left x position.
      * @param {number} y0 - The top-left y position.
@@ -613,53 +585,122 @@ var TextureTintPipeline = new Class({
 
         this.vertexCount += 6;
 
-        // if (this.vertexCapacity - this.vertexCount < 6)
-        // {
-        //     //  No more room at the inn
-        //     this.flush();
+        return hasFlushed;
+    },
 
-        //     hasFlushed = true;
-        // }
+    /**
+     * Adds the vertices data into the batch and flushes if full.
+     * 
+     * Assumes 3 vertices in the following arrangement:
+     * 
+     * ```
+     * 0
+     * |\
+     * | \
+     * |  \
+     * |   \
+     * |    \
+     * 1----2
+     * ```
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTri
+     * @since 3.12.0
+     *
+     * @param {number} x1 - The bottom-left x position.
+     * @param {number} y1 - The bottom-left y position.
+     * @param {number} x2 - The bottom-right x position.
+     * @param {number} y2 - The bottom-right y position.
+     * @param {number} x3 - The top-right x position.
+     * @param {number} y3 - The top-right y position.
+     * @param {number} u0 - UV u0 value.
+     * @param {number} v0 - UV v0 value.
+     * @param {number} u1 - UV u1 value.
+     * @param {number} v1 - UV v1 value.
+     * @param {number} tint1 - The top-left tint color value.
+     * @param {number} tint2 - The top-right tint color value.
+     * @param {number} tint3 - The bottom-left tint color value.
+     * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
+     * 
+     * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
+     */
+    batchTri: function (x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tint1, tint2, tint3, tintEffect)
+    {
+        var hasFlushed = false;
+
+        if (this.vertexCount + 3 > this.vertexCapacity)
+        {
+            this.flush();
+
+            hasFlushed = true;
+        }
+
+        var vertexViewF32 = this.vertexViewF32;
+        var vertexViewU32 = this.vertexViewU32;
+
+        var vertexOffset = (this.vertexCount * this.vertexComponentCount) - 1;
+
+        vertexViewF32[++vertexOffset] = x1;
+        vertexViewF32[++vertexOffset] = y1;
+        vertexViewF32[++vertexOffset] = u0;
+        vertexViewF32[++vertexOffset] = v0;
+        vertexViewF32[++vertexOffset] = tintEffect;
+        vertexViewU32[++vertexOffset] = tint1;
+
+        vertexViewF32[++vertexOffset] = x2;
+        vertexViewF32[++vertexOffset] = y2;
+        vertexViewF32[++vertexOffset] = u0;
+        vertexViewF32[++vertexOffset] = v1;
+        vertexViewF32[++vertexOffset] = tintEffect;
+        vertexViewU32[++vertexOffset] = tint2;
+
+        vertexViewF32[++vertexOffset] = x3;
+        vertexViewF32[++vertexOffset] = y3;
+        vertexViewF32[++vertexOffset] = u1;
+        vertexViewF32[++vertexOffset] = v1;
+        vertexViewF32[++vertexOffset] = tintEffect;
+        vertexViewU32[++vertexOffset] = tint3;
+
+        this.vertexCount += 3;
 
         return hasFlushed;
     },
 
     /**
-     * Generic function for batching a textured quad
+     * Generic function for batching a textured quad using argument values instead of a Game Object.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTexture
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} gameObject - Source GameObject
-     * @param {WebGLTexture} texture - Raw WebGLTexture associated with the quad
-     * @param {integer} textureWidth - Real texture width
-     * @param {integer} textureHeight - Real texture height
-     * @param {number} srcX - X coordinate of the quad
-     * @param {number} srcY - Y coordinate of the quad
-     * @param {number} srcWidth - Width of the quad
-     * @param {number} srcHeight - Height of the quad
-     * @param {number} scaleX - X component of scale
-     * @param {number} scaleY - Y component of scale
-     * @param {number} rotation - Rotation of the quad
-     * @param {boolean} flipX - Indicates if the quad is horizontally flipped
-     * @param {boolean} flipY - Indicates if the quad is vertically flipped
-     * @param {number} scrollFactorX - By which factor is the quad affected by the camera horizontal scroll
-     * @param {number} scrollFactorY - By which factor is the quad effected by the camera vertical scroll
-     * @param {number} displayOriginX - Horizontal origin in pixels
-     * @param {number} displayOriginY - Vertical origin in pixels
-     * @param {number} frameX - X coordinate of the texture frame
-     * @param {number} frameY - Y coordinate of the texture frame
-     * @param {number} frameWidth - Width of the texture frame
-     * @param {number} frameHeight - Height of the texture frame
-     * @param {integer} tintTL - Tint for top left
-     * @param {integer} tintTR - Tint for top right
-     * @param {integer} tintBL - Tint for bottom left
-     * @param {integer} tintBR - Tint for bottom right
-     * @param {number} tintEffect - The tint effect (0 for additive, 1 for replacement)
-     * @param {number} uOffset - Horizontal offset on texture coordinate
-     * @param {number} vOffset - Vertical offset on texture coordinate
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - Current used camera
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - Parent container
+     * @param {Phaser.GameObjects.GameObject} gameObject - Source GameObject.
+     * @param {WebGLTexture} texture - Raw WebGLTexture associated with the quad.
+     * @param {integer} textureWidth - Real texture width.
+     * @param {integer} textureHeight - Real texture height.
+     * @param {number} srcX - X coordinate of the quad.
+     * @param {number} srcY - Y coordinate of the quad.
+     * @param {number} srcWidth - Width of the quad.
+     * @param {number} srcHeight - Height of the quad.
+     * @param {number} scaleX - X component of scale.
+     * @param {number} scaleY - Y component of scale.
+     * @param {number} rotation - Rotation of the quad.
+     * @param {boolean} flipX - Indicates if the quad is horizontally flipped.
+     * @param {boolean} flipY - Indicates if the quad is vertically flipped.
+     * @param {number} scrollFactorX - By which factor is the quad affected by the camera horizontal scroll.
+     * @param {number} scrollFactorY - By which factor is the quad effected by the camera vertical scroll.
+     * @param {number} displayOriginX - Horizontal origin in pixels.
+     * @param {number} displayOriginY - Vertical origin in pixels.
+     * @param {number} frameX - X coordinate of the texture frame.
+     * @param {number} frameY - Y coordinate of the texture frame.
+     * @param {number} frameWidth - Width of the texture frame.
+     * @param {number} frameHeight - Height of the texture frame.
+     * @param {integer} tintTL - Tint for top left.
+     * @param {integer} tintTR - Tint for top right.
+     * @param {integer} tintBL - Tint for bottom left.
+     * @param {integer} tintBR - Tint for bottom right.
+     * @param {number} tintEffect - The tint effect.
+     * @param {number} uOffset - Horizontal offset on texture coordinate.
+     * @param {number} vOffset - Vertical offset on texture coordinate.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - Current used camera.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - Parent container.
      */
     batchTexture: function (
         gameObject,
@@ -789,8 +830,6 @@ var TextureTintPipeline = new Class({
      * @param {number} alpha - The alpha value.
      * @param {array} transformMatrix - An array of matrix values.
      * @param {Phaser.GameObjects.Components.TransformMatrix} [parentTransformMatrix] - A parent Transform Matrix.
-     *
-     * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} This Pipeline.
      */
     drawTextureFrame: function (
         frame,
@@ -857,14 +896,15 @@ var TextureTintPipeline = new Class({
         {
             this.flush();
         }
-
     },
 
     /**
      * Pushes a filled rectangle into the vertex batch.
+     * Rectangle has no transform values and isn't transformed into the local space.
+     * Used for directly batching untransformed rectangles, such as Camera background colors.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#drawFillRect
-     * @since 3.0.0
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#drawFillRect
+     * @since 3.12.0
      *
      * @param {number} x - Horizontal top left coordinate of the rectangle.
      * @param {number} y - Vertical top left coordinate of the rectangle.
@@ -878,31 +918,24 @@ var TextureTintPipeline = new Class({
         var xw = x + width;
         var yh = y + height;
 
-        var x0 = x;
-        var y0 = y;
-        var x1 = x;
-        var y1 = yh;
-        var x2 = xw;
-        var y2 = yh;
-        var x3 = xw;
-        var y3 = y;
-
         var tint = Utils.getTintAppendFloatAlphaAndSwap(color, alpha);
 
-        this.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 2);
+        this.batchQuad(x, y, x, yh, xw, yh, xw, y, 0, 0, 1, 1, tint, tint, tint, tint, 2);
     },
 
     /**
      * Pushes a filled rectangle into the vertex batch.
+     * Rectangle factors in the given transform matrices before adding to the batch.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchFillRect
-     * @since 3.0.0
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchFillRect
+     * @since 3.12.0
      *
-     * @param {number} x - Horizontal top left coordinate of the rectangle
-     * @param {number} y - Vertical top left coordinate of the rectangle
-     * @param {number} width - Width of the rectangle
-     * @param {number} height - Height of the rectangle
-     * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
+     * @param {number} x - Horizontal top left coordinate of the rectangle.
+     * @param {number} y - Vertical top left coordinate of the rectangle.
+     * @param {number} width - Width of the rectangle.
+     * @param {number} height - Height of the rectangle.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} currentMatrix - The current transform.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - The parent transform.
      */
     batchFillRect: function (x, y, width, height, currentMatrix, parentMatrix)
     {
@@ -941,18 +974,20 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Pushes a filled triangle into the vertex batch.
+     * Triangle factors in the given transform matrices before adding to the batch.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchFillTriangle
-     * @since 3.0.0
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchFillTriangle
+     * @since 3.12.0
      *
-     * @param {number} x0 - Point 0 x coordinate
-     * @param {number} y0 - Point 0 y coordinate
-     * @param {number} x1 - Point 1 x coordinate
-     * @param {number} y1 - Point 1 y coordinate
-     * @param {number} x2 - Point 2 x coordinate
-     * @param {number} y2 - Point 2 y coordinate
-     * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
+     * @param {number} x0 - Point 0 x coordinate.
+     * @param {number} y0 - Point 0 y coordinate.
+     * @param {number} x1 - Point 1 x coordinate.
+     * @param {number} y1 - Point 1 y coordinate.
+     * @param {number} x2 - Point 2 x coordinate.
+     * @param {number} y2 - Point 2 y coordinate.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} currentMatrix - The current transform.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - The parent transform.
      */
     batchFillTriangle: function (x0, y0, x1, y1, x2, y2, currentMatrix, parentMatrix)
     {
@@ -985,19 +1020,22 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Pushes a stroked triangle into the vertex batch.
+     * Triangle factors in the given transform matrices before adding to the batch.
+     * The triangle is created from 3 lines and drawn using the `batchStrokePath` method.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchStrokeTriangle
-     * @since 3.0.0
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchStrokeTriangle
+     * @since 3.12.0
      *
-     * @param {number} x0 - [description]
-     * @param {number} y0 - [description]
-     * @param {number} x1 - [description]
-     * @param {number} y1 - [description]
-     * @param {number} x2 - [description]
-     * @param {number} y2 - [description]
-     * @param {number} lineWidth - Size of the line as a float value
-     * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
+     * @param {number} x0 - Point 0 x coordinate.
+     * @param {number} y0 - Point 0 y coordinate.
+     * @param {number} x1 - Point 1 x coordinate.
+     * @param {number} y1 - Point 1 y coordinate.
+     * @param {number} x2 - Point 2 x coordinate.
+     * @param {number} y2 - Point 2 y coordinate.
+     * @param {number} lineWidth - The width of the line in pixels.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} currentMatrix - The current transform.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - The parent transform.
      */
     batchStrokeTriangle: function (x0, y0, x1, y1, x2, y2, lineWidth, currentMatrix, parentMatrix)
     {
@@ -1023,13 +1061,19 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Adds the given path to the vertex batch for rendering.
+     * 
+     * It works by taking the array of path data and then passing it through Earcut, which
+     * creates a list of polygons. Each polygon is then added to the batch.
+     * 
+     * The path is always automatically closed because it's filled.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchFillPath
-     * @since 3.0.0
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchFillPath
+     * @since 3.12.0
      *
-     * @param {number} path - Collection of points that represent the path
-     * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
+     * @param {array} path - Collection of points that represent the path.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} currentMatrix - The current transform.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - The parent transform.
      */
     batchFillPath: function (path, currentMatrix, parentMatrix)
     {
@@ -1093,15 +1137,21 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Adds the given path to the vertex batch for rendering.
+     * 
+     * It works by taking the array of path data and calling `batchLine` for each section
+     * of the path.
+     * 
+     * The path is optionally closed at the end.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchStrokePath
-     * @since 3.0.0
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchStrokePath
+     * @since 3.12.0
      *
-     * @param {array} path - [description]
-     * @param {number} lineWidth - [description]
-     * @param {boolean} pathOpen - Indicates if the path should be closed
-     * @param {Float32Array} currentMatrix - Parent matrix, generally used by containers
+     * @param {array} path - Collection of points that represent the path.
+     * @param {number} lineWidth - The width of the line segments in pixels.
+     * @param {boolean} pathOpen - Indicates if the path should be closed or left open.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} currentMatrix - The current transform.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - The parent transform.
      */
     batchStrokePath: function (path, lineWidth, pathOpen, currentMatrix, parentMatrix)
     {
@@ -1131,10 +1181,10 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Creates a quad and adds it to the vertex batch based on the given line values.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchLine
-     * @since 3.0.0
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchLine
+     * @since 3.12.0
      *
      * @param {number} ax - X coordinate to the start of the line
      * @param {number} ay - Y coordinate to the start of the line
