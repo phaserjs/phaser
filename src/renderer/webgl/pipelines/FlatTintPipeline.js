@@ -6,33 +6,13 @@
  */
 
 var Class = require('../../../utils/Class');
-var Commands = require('../../../gameobjects/graphics/Commands');
 var Earcut = require('../../../geom/polygon/Earcut');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var ModelViewProjection = require('./components/ModelViewProjection');
 var ShaderSourceFS = require('../shaders/TextureTint-frag.js');
 var ShaderSourceVS = require('../shaders/TextureTint-vert.js');
 var TransformMatrix = require('../../../gameobjects/components/TransformMatrix');
-var Utils = require('../Utils');
 var WebGLPipeline = require('../WebGLPipeline');
-
-//  TODO: Remove the use of this
-var Point = function (x, y, width)
-{
-    this.x = x;
-    this.y = y;
-    this.width = width;
-};
-
-//  TODO: Remove the use of this
-var Path = function (x, y, width)
-{
-    this.points = [];
-    this.pointsLength = 1;
-    this.points[0] = new Point(x, y, width);
-};
-
-var matrixStack = [];
 
 /**
  * @classdesc
@@ -467,7 +447,7 @@ var FlatTintPipeline = new Class({
     },
 
     /**
-     * Pushes a rectangle into the vertex batch
+     * Pushes a filled rectangle into the vertex batch.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline#batchFillRect
      * @since 3.0.0
