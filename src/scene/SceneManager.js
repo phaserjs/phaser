@@ -122,6 +122,17 @@ var SceneManager = new Class({
          */
         this.isBooted = false;
 
+        /**
+         * Do any of the Cameras in any of the Scenes require a custom viewport?
+         * If not we can skip scissor tests.
+         *
+         * @name Phaser.Scenes.SceneManager#customViewports
+         * @type {number}
+         * @default 0
+         * @since 3.12.0
+         */
+        this.customViewports = 0;
+
         if (sceneConfig)
         {
             if (!Array.isArray(sceneConfig))
