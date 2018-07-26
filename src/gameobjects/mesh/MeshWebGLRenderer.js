@@ -59,8 +59,6 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     var frame = src.frame;
     var texture = frame.glTexture;
 
-    pipeline.setTexture2D(texture, 0);
-
     var vertices = src.vertices;
     var uvs = src.uv;
     var colors = src.colors;
@@ -73,6 +71,8 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     {
         pipeline.flush();
     }
+
+    pipeline.setTexture2D(texture, 0);
 
     var vertexViewF32 = pipeline.vertexViewF32;
     var vertexViewU32 = pipeline.vertexViewU32;
