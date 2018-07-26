@@ -4,6 +4,27 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var Commands = require('./Commands');
+var Utils = require('../../renderer/webgl/Utils');
+
+//  TODO: Remove the use of this
+var Point = function (x, y, width)
+{
+    this.x = x;
+    this.y = y;
+    this.width = width;
+};
+
+//  TODO: Remove the use of this
+var Path = function (x, y, width)
+{
+    this.points = [];
+    this.pointsLength = 1;
+    this.points[0] = new Point(x, y, width);
+};
+
+var matrixStack = [];
+
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -21,15 +42,265 @@
  */
 var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    var commandBuffer = src.commandBuffer;
-    var commandBufferLength = commandBuffer.length;
-
-    if (commandBufferLength === 0)
+    if (src.commandBuffer.length === 0)
     {
         return;
     }
 
-    this.pipeline.batchGraphics(src, camera, parentMatrix);
+    var pipeline = this.pipeline;
+
+    var camMatrix = pipeline._tempMatrix1;
+    var graphicsMatrix = pipeline._tempMatrix2;
+    var currentMatrix = pipeline._tempMatrix4;
+   
+    renderer.setPipeline(pipeline);
+
+    currentMatrix.loadIdentity();
+
+    graphicsMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
+
+    camMatrix.copyFrom(camera.matrix);
+
+    if (parentMatrix)
+    {
+        //  Multiply the camera by the parent matrix
+        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
+
+        //  Undo the camera scroll
+        graphicsMatrix.e = src.x;
+        graphicsMatrix.f = src.y;
+
+        //  Multiply by the Sprite matrix, store result in calcMatrix
+        camMatrix.multiply(graphicsMatrix);
+    }
+    else
+    {
+        graphicsMatrix.e -= camera.scrollX * src.scrollFactorX;
+        graphicsMatrix.f -= camera.scrollY * src.scrollFactorY;
+
+        //  Multiply by the Sprite matrix, store result in calcMatrix
+        camMatrix.multiply(graphicsMatrix);
+    }
+
+    var commands = src.commandBuffer;
+    var alpha = camera.alpha * src.alpha;
+    var lineAlpha = 1.0;
+    var fillAlpha = 1.0;
+    var lineColor = 0;
+    var fillColor = 0;
+    var lineWidth = 1.0;
+    var lastPath = null;
+    var iteration = 0;
+    var iterStep = 0.01;
+    var tx = 0;
+    var ty = 0;
+    var ta = 0;
+    var x = 0;
+    var y = 0;
+    var radius = 0;
+    var startAngle = 0;
+    var endAngle = 0;
+    var cmd;
+    var path = [];
+    var pathIndex = 0;
+    var pathOpen = false;
+
+    for (var cmdIndex = 0; cmdIndex < commands.length; cmdIndex++)
+    {
+        cmd = commands[cmdIndex];
+
+        switch (cmd)
+        {
+            case Commands.BEGIN_PATH:
+
+                path.length = 0;
+                lastPath = null;
+                pathOpen = true;
+                break;
+
+            case Commands.CLOSE_PATH:
+
+                pathOpen = false;
+
+                if (lastPath && lastPath.points.length)
+                {
+                    lastPath.points.push(lastPath.points[0]);
+                }
+                break;
+
+            case Commands.FILL_PATH:
+                for (pathIndex = 0; pathIndex < path.length; pathIndex++)
+                {
+                    pipeline.batchFillPath(
+                        path[pathIndex].points,
+                        currentMatrix,
+                        camMatrix
+                    );
+                }
+                break;
+
+            case Commands.STROKE_PATH:
+                for (pathIndex = 0; pathIndex < path.length; pathIndex++)
+                {
+                    pipeline.batchStrokePath(
+                        path[pathIndex].points,
+                        lineWidth,
+                        pathOpen,
+                        currentMatrix,
+                        camMatrix
+                    );
+                }
+                break;
+
+            case Commands.LINE_STYLE:
+                lineWidth = commands[++cmdIndex];
+                lineColor = commands[++cmdIndex];
+                lineAlpha = commands[++cmdIndex];
+                pipeline.strokeTint = Utils.getTintAppendFloatAlphaAndSwap(lineColor, lineAlpha * alpha);
+                break;
+
+            case Commands.FILL_STYLE:
+                fillColor = commands[++cmdIndex];
+                fillAlpha = commands[++cmdIndex];
+                pipeline.fillTint = Utils.getTintAppendFloatAlphaAndSwap(fillColor, fillAlpha * alpha);
+                break;
+
+            case Commands.ARC:
+                iteration = 0;
+                x = commands[++cmdIndex];
+                y = commands[++cmdIndex];
+                radius = commands[++cmdIndex];
+                startAngle = commands[++cmdIndex];
+                endAngle = commands[++cmdIndex];
+                var anticlockwise = commands[++cmdIndex];
+
+                if (lastPath === null)
+                {
+                    lastPath = new Path(x + Math.cos(startAngle) * radius, y + Math.sin(startAngle) * radius, lineWidth);
+                    path.push(lastPath);
+                    iteration += iterStep;
+                }
+
+                while (iteration < 1)
+                {
+                    ta = endAngle * iteration + startAngle;
+                    tx = x + Math.cos(ta) * radius;
+                    ty = y + Math.sin(ta) * radius;
+
+                    lastPath.points.push(new Point(tx, ty, lineWidth));
+
+                    iteration += iterStep;
+                }
+
+                ta = endAngle + startAngle;
+                tx = x + Math.cos(ta) * radius;
+                ty = y + Math.sin(ta) * radius;
+
+                lastPath.points.push(new Point(tx, ty, lineWidth));
+
+                break;
+
+            case Commands.FILL_RECT:
+                pipeline.batchFillRect(
+                    commands[++cmdIndex],
+                    commands[++cmdIndex],
+                    commands[++cmdIndex],
+                    commands[++cmdIndex],
+                    currentMatrix,
+                    camMatrix
+                );
+                break;
+
+            case Commands.FILL_TRIANGLE:
+                pipeline.batchFillTriangle(
+                    commands[++cmdIndex],
+                    commands[++cmdIndex],
+                    commands[++cmdIndex],
+                    commands[++cmdIndex],
+                    commands[++cmdIndex],
+                    commands[++cmdIndex],
+                    currentMatrix,
+                    camMatrix
+                );
+                break;
+
+            case Commands.STROKE_TRIANGLE:
+                pipeline.batchStrokeTriangle(
+                    commands[++cmdIndex],
+                    commands[++cmdIndex],
+                    commands[++cmdIndex],
+                    commands[++cmdIndex],
+                    commands[++cmdIndex],
+                    commands[++cmdIndex],
+                    lineWidth,
+                    currentMatrix,
+                    camMatrix
+                );
+                break;
+
+            case Commands.LINE_TO:
+                if (lastPath !== null)
+                {
+                    lastPath.points.push(new Point(commands[cmdIndex + 1], commands[cmdIndex + 2], lineWidth));
+                }
+                else
+                {
+                    lastPath = new Path(commands[cmdIndex + 1], commands[cmdIndex + 2], lineWidth);
+                    path.push(lastPath);
+                }
+                cmdIndex += 2;
+                break;
+
+            case Commands.MOVE_TO:
+                lastPath = new Path(commands[cmdIndex + 1], commands[cmdIndex + 2], lineWidth);
+                path.push(lastPath);
+                cmdIndex += 2;
+                break;
+
+            case Commands.SAVE:
+                matrixStack.push(currentMatrix.copyToArray());
+                break;
+
+            case Commands.RESTORE:
+                currentMatrix.copyFromArray(matrixStack.pop());
+                break;
+
+            case Commands.TRANSLATE:
+                x = commands[++cmdIndex];
+                y = commands[++cmdIndex];
+                currentMatrix.translate(x, y);
+                break;
+
+            case Commands.SCALE:
+                x = commands[++cmdIndex];
+                y = commands[++cmdIndex];
+                currentMatrix.scale(x, y);
+                break;
+
+            case Commands.ROTATE:
+                var r = commands[++cmdIndex];
+                currentMatrix.rotate(r);
+                break;
+
+            case Commands.SET_TEXTURE:
+                var frame = commands[++cmdIndex];
+                var mode = commands[++cmdIndex];
+
+                pipeline.currentFrame = frame;
+                renderer.setTexture2D(frame.glTexture, 0);
+                pipeline.tintEffect = mode;
+
+                break;
+
+            case Commands.CLEAR_TEXTURE:
+                pipeline.currentFrame = renderer.blankTexture;
+                renderer.setTexture2D(renderer.blankTexture.glTexture, 0);
+                pipeline.tintEffect = 2;
+
+                break;
+
+        }
+    }
 };
 
 module.exports = GraphicsWebGLRenderer;
