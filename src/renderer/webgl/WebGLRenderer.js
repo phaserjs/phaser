@@ -14,7 +14,6 @@ var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
 
 // Default Pipelines
 var BitmapMaskPipeline = require('./pipelines/BitmapMaskPipeline');
-var FlatTintPipeline = require('./pipelines/FlatTintPipeline');
 var ForwardDiffuseLightPipeline = require('./pipelines/ForwardDiffuseLightPipeline');
 var TextureTintPipeline = require('./pipelines/TextureTintPipeline');
 
@@ -512,7 +511,6 @@ var WebGLRenderer = new Class({
         this.pipelines = {};
 
         this.addPipeline('TextureTintPipeline', new TextureTintPipeline({ game: this.game, renderer: this }));
-        this.addPipeline('FlatTintPipeline', new FlatTintPipeline({ game: this.game, renderer: this }));
         this.addPipeline('BitmapMaskPipeline', new BitmapMaskPipeline({ game: this.game, renderer: this }));
         this.addPipeline('Light2D', new ForwardDiffuseLightPipeline({ game: this.game, renderer: this }));
 
@@ -540,7 +538,7 @@ var WebGLRenderer = new Class({
 
         var blank = this.game.textures.getFrame('__DEFAULT');
 
-        this.pipelines.FlatTintPipeline.currentFrame = blank;
+        this.pipelines.TextureTintPipeline.currentFrame = blank;
 
         this.blankTexture = blank;
     },
@@ -1506,18 +1504,13 @@ var WebGLRenderer = new Class({
         if (camera.backgroundColor.alphaGL > 0)
         {
             var color = camera.backgroundColor;
-            var FlatTintPipeline = this.pipelines.FlatTintPipeline;
+            var TextureTintPipeline = this.pipelines.TextureTintPipeline;
 
-            FlatTintPipeline.batchFillRect(
-                0, 0, 1, 1, 0,
+            TextureTintPipeline.drawFillRect(
                 cx, cy, cw, ch,
                 Utils.getTintFromFloats(color.redGL, color.greenGL, color.blueGL, 1.0),
-                color.alphaGL,
-                1, 0, 0, 1, 0, 0,
-                [ 1, 0, 0, 1, 0, 0 ]
+                color.alphaGL
             );
-
-            FlatTintPipeline.flush();
         }
     },
 
@@ -1532,15 +1525,10 @@ var WebGLRenderer = new Class({
      */
     postRenderCamera: function (camera)
     {
-        var FlatTintPipeline = this.pipelines.FlatTintPipeline;
+        var TextureTintPipeline = this.pipelines.TextureTintPipeline;
 
-        var isFlashing = camera.flashEffect.postRenderWebGL(FlatTintPipeline, Utils.getTintFromFloats);
-        var isFading = camera.fadeEffect.postRenderWebGL(FlatTintPipeline, Utils.getTintFromFloats);
-
-        if (isFading || isFlashing)
-        {
-            FlatTintPipeline.flush();
-        }
+        camera.flashEffect.postRenderWebGL(TextureTintPipeline, Utils.getTintFromFloats);
+        camera.fadeEffect.postRenderWebGL(TextureTintPipeline, Utils.getTintFromFloats);
 
         camera.dirty = false;
 
@@ -1573,6 +1561,8 @@ var WebGLRenderer = new Class({
         {
             pipelines[key].onPreRender();
         }
+
+        this.setPipeline(this.pipelines.TextureTintPipeline);
     },
 
     /**
@@ -1629,7 +1619,6 @@ var WebGLRenderer = new Class({
             }
         }
 
-        this.flush();
         this.setBlendMode(CONST.BlendModes.NORMAL);
 
         //  Applies camera effects and pops the scissor, if set
@@ -1645,6 +1634,8 @@ var WebGLRenderer = new Class({
     postRender: function ()
     {
         if (this.contextLost) { return; }
+
+        this.flush();
 
         // Unbind custom framebuffer here
 
