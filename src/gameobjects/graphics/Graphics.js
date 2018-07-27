@@ -323,9 +323,11 @@ var Graphics = new Class({
      * 
      * When filling a triangle only the first 3 color values provided are used for the 3 points of a triangle.
      * 
+     * This feature is best used only on rectangles and triangles. All other shapes will give strange results.
+     * 
      * Note that for objects such as arcs or ellipses, or anything which is made out of triangles, each triangle used
      * will be filled with a gradient on its own. There is no ability to gradient fill a shape or path as a single
-     * item at this time.
+     * entity at this time.
      *
      * @method Phaser.GameObjects.Graphics#fillGradientStyle
      * @webglOnly
@@ -358,9 +360,11 @@ var Graphics = new Class({
      * The gradient is used to color all stroked shapes and paths drawn after calling this method.
      * If you wish to turn a gradient off, call `lineStyle` and provide a new single line color.
      * 
+     * This feature is best used only on single lines. All other shapes will give strange results.
+     * 
      * Note that for objects such as arcs or ellipses, or anything which is made out of triangles, each triangle used
      * will be filled with a gradient on its own. There is no ability to gradient stroke a shape or path as a single
-     * item at this time.
+     * entity at this time.
      *
      * @method Phaser.GameObjects.Graphics#lineGradientStyle
      * @webglOnly
