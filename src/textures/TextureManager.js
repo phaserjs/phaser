@@ -255,6 +255,39 @@ var TextureManager = new Class({
         }
     },
 
+    getBase64: function (key, frame)
+    {
+        var data = '';
+
+        var textureFrame = this.getFrame(key, frame);
+
+        if (textureFrame)
+        {
+            var cd = textureFrame.canvasData;
+
+            var canvas = CanvasPool.create2D(this, cd.width, cd.height);
+            var ctx = canvas.getContext('2d');
+
+            ctx.drawImage(
+                textureFrame.source.image,
+                cd.x,
+                cd.y,
+                cd.width,
+                cd.height,
+                0,
+                0,
+                cd.width,
+                cd.height
+            );
+
+            data = canvas.toDataURL('image/png').replace(/^data:image\/(png|jpg);base64,/, '');
+
+            CanvasPool.remove(canvas);
+        }
+
+        return data;
+    },
+
     /**
      * Adds a new Texture to the Texture Manager created from the given Image element.
      *
