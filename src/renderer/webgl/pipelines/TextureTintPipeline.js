@@ -195,21 +195,21 @@ var TextureTintPipeline = new Class({
          * Cached stroke tint.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#strokeTint
-         * @type {number}
+         * @type {object}
          * @private
          * @since 3.12.0
          */
-        this.strokeTint = 0;
+        this.strokeTint = { TL: 0, TR: 0, BL: 0, BR: 0 };
 
         /**
          * Cached fill tint.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#fillTint
-         * @type {number}
+         * @type {object}
          * @private
          * @since 3.12.0
          */
-        this.fillTint = 0;
+        this.fillTint = { TL: 0, TR: 0, BL: 0, BR: 0 };
 
         /**
          * Internal texture frame reference.
@@ -600,7 +600,7 @@ var TextureTintPipeline = new Class({
      * |  \
      * |   \
      * |    \
-     * 1----2
+     * 1-----2
      * ```
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTri
@@ -616,14 +616,14 @@ var TextureTintPipeline = new Class({
      * @param {number} v0 - UV v0 value.
      * @param {number} u1 - UV u1 value.
      * @param {number} v1 - UV v1 value.
-     * @param {number} tint1 - The top-left tint color value.
-     * @param {number} tint2 - The top-right tint color value.
-     * @param {number} tint3 - The bottom-left tint color value.
+     * @param {number} tintTL - The top-left tint color value.
+     * @param {number} tintTR - The top-right tint color value.
+     * @param {number} tintBL - The bottom-left tint color value.
      * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
      * 
      * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
      */
-    batchTri: function (x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tint1, tint2, tint3, tintEffect)
+    batchTri: function (x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintEffect)
     {
         var hasFlushed = false;
 
@@ -644,21 +644,21 @@ var TextureTintPipeline = new Class({
         vertexViewF32[++vertexOffset] = u0;
         vertexViewF32[++vertexOffset] = v0;
         vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tint1;
+        vertexViewU32[++vertexOffset] = tintTL;
 
         vertexViewF32[++vertexOffset] = x2;
         vertexViewF32[++vertexOffset] = y2;
         vertexViewF32[++vertexOffset] = u0;
         vertexViewF32[++vertexOffset] = v1;
         vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tint2;
+        vertexViewU32[++vertexOffset] = tintTR;
 
         vertexViewF32[++vertexOffset] = x3;
         vertexViewF32[++vertexOffset] = y3;
         vertexViewF32[++vertexOffset] = u1;
         vertexViewF32[++vertexOffset] = v1;
         vertexViewF32[++vertexOffset] = tintEffect;
-        vertexViewU32[++vertexOffset] = tint3;
+        vertexViewU32[++vertexOffset] = tintBL;
 
         this.vertexCount += 3;
 
@@ -968,9 +968,7 @@ var TextureTintPipeline = new Class({
         var u1 = frame.u1;
         var v1 = frame.v1;
 
-        var tint = this.fillTint;
-
-        this.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tint, tint, tint, tint, this.tintEffect);
+        this.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, this.fillTint.TL, this.fillTint.TR, this.fillTint.BL, this.fillTint.BR, this.tintEffect);
     },
 
     /**
@@ -1014,9 +1012,7 @@ var TextureTintPipeline = new Class({
         var u1 = frame.u1;
         var v1 = frame.v1;
 
-        var tint = this.fillTint;
-
-        this.batchTri(tx0, ty0, tx1, ty1, tx2, ty2, u0, v0, u1, v1, tint, tint, tint, this.tintEffect);
+        this.batchTri(tx0, ty0, tx1, ty1, tx2, ty2, u0, v0, u1, v1, this.fillTint.TL, this.fillTint.TR, this.fillTint.BL, this.tintEffect);
     },
 
     /**
@@ -1089,7 +1085,9 @@ var TextureTintPipeline = new Class({
         var polygonIndexArray;
         var point;
 
-        var tint = this.fillTint;
+        var tintTL = this.fillTint.TL;
+        var tintTR = this.fillTint.TR;
+        var tintBL = this.fillTint.BL;
         var tintEffect = this.tintEffect;
 
         for (var pathIndex = 0; pathIndex < length; ++pathIndex)
@@ -1130,7 +1128,7 @@ var TextureTintPipeline = new Class({
             var u1 = frame.u1;
             var v1 = frame.v1;
         
-            this.batchTri(tx0, ty0, tx1, ty1, tx2, ty2, u0, v0, u1, v1, tint, tint, tint, tintEffect);
+            this.batchTri(tx0, ty0, tx1, ty1, tx2, ty2, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintEffect);
         }
 
         polygonCache.length = 0;
@@ -1252,8 +1250,13 @@ var TextureTintPipeline = new Class({
         var u1 = frame.u1;
         var v1 = frame.v1;
 
+        var tintTL = this.strokeTint.TL;
+        var tintTR = this.strokeTint.TR;
+        var tintBL = this.strokeTint.BL;
+        var tintBR = this.strokeTint.BR;
+
         //  TL, BL, BR, TR
-        this.batchQuad(tlX, tlY, blX, blY, brX, brY, trX, trY, u0, v0, u1, v1, tint, tint, tint, tint, tintEffect);
+        this.batchQuad(tlX, tlY, blX, blY, brX, brY, trX, trY, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect);
 
         if (lineWidth <= 1)
         {
@@ -1266,7 +1269,7 @@ var TextureTintPipeline = new Class({
 
         if (index > 0)
         {
-            this.batchQuad(tlX, tlY, blX, blY, prev[0], prev[1], prev[2], prev[3], u0, v0, u1, v1, tint, tint, tint, tint, tintEffect);
+            this.batchQuad(tlX, tlY, blX, blY, prev[0], prev[1], prev[2], prev[3], u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect);
         }
         else
         {
@@ -1279,7 +1282,7 @@ var TextureTintPipeline = new Class({
         if (closePath)
         {
             //  Add a join for the final path segment
-            this.batchQuad(first[0], first[1], first[2], first[3], brX, brY, trX, trY, u0, v0, u1, v1, tint, tint, tint, tint, tintEffect);
+            this.batchQuad(first[0], first[1], first[2], first[3], brX, brY, trX, trY, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect);
         }
         else
         {
