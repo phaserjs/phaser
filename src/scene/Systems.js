@@ -55,6 +55,15 @@ var Systems = new Class({
         /**
          * [description]
          *
+         * @name Phaser.Scenes.Systems#facebook
+         * @type {any}
+         * @since 3.12.0
+         */
+        this.facebook;
+
+        /**
+         * [description]
+         *
          * @name Phaser.Scenes.Systems#config
          * @type {(string|Phaser.Scenes.Settings.Config)}
          * @since 3.0.0

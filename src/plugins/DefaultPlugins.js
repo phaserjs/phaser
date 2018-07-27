@@ -26,6 +26,7 @@ var DefaultPlugins = {
 
         'anims',
         'cache',
+        'facebook',
         'plugins',
         'registry',
         'sound',

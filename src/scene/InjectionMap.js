@@ -24,6 +24,7 @@ var InjectionMap = {
     registry: 'registry',
     sound: 'sound',
     textures: 'textures',
+    facebook: 'facebook',
 
     events: 'events',
     cameras: 'cameras',

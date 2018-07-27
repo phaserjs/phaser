@@ -17,6 +17,7 @@ var DebugHeader = require('./DebugHeader');
 var Device = require('../device');
 var DOMContentLoaded = require('../dom/DOMContentLoaded');
 var EventEmitter = require('eventemitter3');
+var FacebookInstantGamesPlugin = require('../fbinstant/FacebookInstantGamesPlugin');
 var InputManager = require('../input/InputManager');
 var PluginManager = require('../plugins/PluginManager');
 var SceneManager = require('../scene/SceneManager');
@@ -246,6 +247,15 @@ var Game = new Class({
          * @since 3.0.0
          */
         this.plugins = new PluginManager(this, this.config);
+
+        /**
+         * An instance of the Facebook Instant Games Manager.
+         *
+         * @name Phaser.Game#facebook
+         * @type {any}
+         * @since 3.12.0
+         */
+        this.facebook = new FacebookInstantGamesPlugin(this);
 
         /**
          * Is this Game pending destruction at the start of the next frame?
