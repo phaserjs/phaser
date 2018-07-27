@@ -392,11 +392,11 @@ var Graphics = new Class({
     },
 
     /**
-     * Sets the texture and frame this Graphics Object will use when texturing the shapes it renders.
+     * Sets the texture frame this Graphics Object will use when drawing all shapes defined after calling this.
      *
      * Textures are referenced by their string-based keys, as stored in the Texture Manager.
      * 
-     * Once set, all shapes will use this texture. Call this method with no arguments to clear a previously texture.
+     * Once set, all shapes will use this texture. Call this method with no arguments to clear it.
      * 
      * The textures are not tiled. They are stretched to the dimensions of the shapes being rendered. For this reason,
      * it works best with seamless / tileable textures.
