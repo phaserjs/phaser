@@ -84,26 +84,24 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
 
     var commands = src.commandBuffer;
     var alpha = camera.alpha * src.alpha;
-    var lineAlpha = 1.0;
-    var fillAlpha = 1.0;
-    var lineColor = 0;
-    var fillColor = 0;
-    var lineWidth = 1.0;
-    var lastPath = null;
-    var iteration = 0;
-    var iterStep = 0.01;
+
+    var lineWidth = 1;
+    var fillTint = pipeline.fillTint;
+    var strokeTint = pipeline.strokeTint;
+
     var tx = 0;
     var ty = 0;
     var ta = 0;
-    var x = 0;
-    var y = 0;
-    var radius = 0;
-    var startAngle = 0;
-    var endAngle = 0;
+    var iterStep = 0.01;
+
     var cmd;
+
     var path = [];
     var pathIndex = 0;
     var pathOpen = false;
+    var lastPath = null;
+
+    var getTint = Utils.getTintAppendFloatAlphaAndSwap;
 
     for (var cmdIndex = 0; cmdIndex < commands.length; cmdIndex++)
     {
@@ -154,27 +152,51 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
 
             case Commands.LINE_STYLE:
                 lineWidth = commands[++cmdIndex];
-                lineColor = commands[++cmdIndex];
-                lineAlpha = commands[++cmdIndex];
-                pipeline.strokeTint = Utils.getTintAppendFloatAlphaAndSwap(lineColor, lineAlpha * alpha);
+                var strokeColor = commands[++cmdIndex];
+                var strokeAlpha = commands[++cmdIndex] * alpha;
+                var strokeTintColor = getTint(strokeColor, strokeAlpha);
+                strokeTint.TL = strokeTintColor;
+                strokeTint.TR = strokeTintColor;
+                strokeTint.BL = strokeTintColor;
+                strokeTint.BR = strokeTintColor;
                 break;
 
             case Commands.FILL_STYLE:
-                fillColor = commands[++cmdIndex];
-                fillAlpha = commands[++cmdIndex];
-                pipeline.fillTint = Utils.getTintAppendFloatAlphaAndSwap(fillColor, fillAlpha * alpha);
+                var fillColor = commands[++cmdIndex];
+                var fillAlpha = commands[++cmdIndex] * alpha;
+                var fillTintColor = getTint(fillColor, fillAlpha);
+                fillTint.TL = fillTintColor;
+                fillTint.TR = fillTintColor;
+                fillTint.BL = fillTintColor;
+                fillTint.BR = fillTintColor;
+                break;
+
+            case Commands.GRADIENT_FILL_STYLE:
+                var gradientFillAlpha = commands[++cmdIndex] * alpha;
+                fillTint.TL = getTint(commands[++cmdIndex], gradientFillAlpha);
+                fillTint.TR = getTint(commands[++cmdIndex], gradientFillAlpha);
+                fillTint.BL = getTint(commands[++cmdIndex], gradientFillAlpha);
+                fillTint.BR = getTint(commands[++cmdIndex], gradientFillAlpha);
+                break;
+
+            case Commands.GRADIENT_LINE_STYLE:
+                lineWidth = commands[++cmdIndex];
+                var gradientLineAlpha = commands[++cmdIndex] * alpha;
+                strokeTint.TL = getTint(commands[++cmdIndex], gradientLineAlpha);
+                strokeTint.TR = getTint(commands[++cmdIndex], gradientLineAlpha);
+                strokeTint.BL = getTint(commands[++cmdIndex], gradientLineAlpha);
+                strokeTint.BR = getTint(commands[++cmdIndex], gradientLineAlpha);
                 break;
 
             case Commands.ARC:
-                iteration = 0;
-                x = commands[++cmdIndex];
-                y = commands[++cmdIndex];
-                radius = commands[++cmdIndex];
-                startAngle = commands[++cmdIndex];
-                endAngle = commands[++cmdIndex];
+                var iteration = 0;
+                var x = commands[++cmdIndex];
+                var y = commands[++cmdIndex];
+                var radius = commands[++cmdIndex];
+                var startAngle = commands[++cmdIndex];
+                var endAngle = commands[++cmdIndex];
 
-                // var anticlockwise
-                cmdIndex++;
+                cmdIndex++; // anticlockwise (canvas only)
 
                 if (lastPath === null)
                 {
@@ -243,20 +265,18 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
             case Commands.LINE_TO:
                 if (lastPath !== null)
                 {
-                    lastPath.points.push(new Point(commands[cmdIndex + 1], commands[cmdIndex + 2], lineWidth));
+                    lastPath.points.push(new Point(commands[++cmdIndex], commands[++cmdIndex], lineWidth));
                 }
                 else
                 {
-                    lastPath = new Path(commands[cmdIndex + 1], commands[cmdIndex + 2], lineWidth);
+                    lastPath = new Path(commands[++cmdIndex], commands[++cmdIndex], lineWidth);
                     path.push(lastPath);
                 }
-                cmdIndex += 2;
                 break;
 
             case Commands.MOVE_TO:
-                lastPath = new Path(commands[cmdIndex + 1], commands[cmdIndex + 2], lineWidth);
+                lastPath = new Path(commands[++cmdIndex], commands[++cmdIndex], lineWidth);
                 path.push(lastPath);
-                cmdIndex += 2;
                 break;
 
             case Commands.SAVE:
@@ -280,8 +300,7 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
                 break;
 
             case Commands.ROTATE:
-                var r = commands[++cmdIndex];
-                currentMatrix.rotate(r);
+                currentMatrix.rotate(commands[++cmdIndex]);
                 break;
 
             case Commands.SET_TEXTURE:
@@ -291,14 +310,12 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
                 pipeline.currentFrame = frame;
                 renderer.setTexture2D(frame.glTexture, 0);
                 pipeline.tintEffect = mode;
-
                 break;
 
             case Commands.CLEAR_TEXTURE:
                 pipeline.currentFrame = renderer.blankTexture;
                 renderer.setTexture2D(renderer.blankTexture.glTexture, 0);
                 pipeline.tintEffect = 2;
-
                 break;
 
         }

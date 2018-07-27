@@ -315,6 +315,79 @@ var Graphics = new Class({
     },
 
     /**
+     * Sets a gradient fill style. This is a WebGL only feature.
+     * 
+     * The gradient color values represent the 4 corners of an untransformed rectangle.
+     * The gradient is used to color all filled shapes and paths drawn after calling this method.
+     * If you wish to turn a gradient off, call `fillStyle` and provide a new single fill color.
+     * 
+     * When filling a triangle only the first 3 color values provided are used for the 3 points of a triangle.
+     * 
+     * Note that for objects such as arcs or ellipses, or anything which is made out of triangles, each triangle used
+     * will be filled with a gradient on its own. There is no ability to gradient fill a shape or path as a single
+     * item at this time.
+     *
+     * @method Phaser.GameObjects.Graphics#fillGradientStyle
+     * @webglOnly
+     * @since 3.12.0
+     *
+     * @param {integer} topLeft - The tint being applied to the top-left of the Game Object.
+     * @param {integer} topRight - The tint being applied to the top-right of the Game Object.
+     * @param {integer} bottomLeft - The tint being applied to the bottom-left of the Game Object.
+     * @param {integer} bottomRight - The tint being applied to the bottom-right of the Game Object.
+     * @param {number} [alpha=1] - The fill alpha.
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
+    fillGradientStyle: function (topLeft, topRight, bottomLeft, bottomRight, alpha)
+    {
+        if (alpha === undefined) { alpha = 1; }
+
+        this.commandBuffer.push(
+            Commands.GRADIENT_FILL_STYLE,
+            alpha, topLeft, topRight, bottomLeft, bottomRight
+        );
+
+        return this;
+    },
+
+    /**
+     * Sets a gradient line style. This is a WebGL only feature.
+     * 
+     * The gradient color values represent the 4 corners of an untransformed rectangle.
+     * The gradient is used to color all stroked shapes and paths drawn after calling this method.
+     * If you wish to turn a gradient off, call `lineStyle` and provide a new single line color.
+     * 
+     * Note that for objects such as arcs or ellipses, or anything which is made out of triangles, each triangle used
+     * will be filled with a gradient on its own. There is no ability to gradient stroke a shape or path as a single
+     * item at this time.
+     *
+     * @method Phaser.GameObjects.Graphics#lineGradientStyle
+     * @webglOnly
+     * @since 3.12.0
+     *
+     * @param {number} lineWidth - The stroke width.
+     * @param {integer} topLeft - The tint being applied to the top-left of the Game Object.
+     * @param {integer} topRight - The tint being applied to the top-right of the Game Object.
+     * @param {integer} bottomLeft - The tint being applied to the bottom-left of the Game Object.
+     * @param {integer} bottomRight - The tint being applied to the bottom-right of the Game Object.
+     * @param {number} [alpha=1] - The fill alpha.
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
+    lineGradientStyle: function (lineWidth, topLeft, topRight, bottomLeft, bottomRight, alpha)
+    {
+        if (alpha === undefined) { alpha = 1; }
+
+        this.commandBuffer.push(
+            Commands.GRADIENT_LINE_STYLE,
+            lineWidth, alpha, topLeft, topRight, bottomLeft, bottomRight
+        );
+
+        return this;
+    },
+
+    /**
      * Sets the texture and frame this Graphics Object will use when texturing the shapes it renders.
      *
      * Textures are referenced by their string-based keys, as stored in the Texture Manager.
