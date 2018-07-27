@@ -1243,17 +1243,17 @@ var TextureTintPipeline = new Class({
         var tint = this.strokeTint;
         var tintEffect = this.tintEffect;
 
+        var tintTL = tint.TL;
+        var tintTR = tint.TR;
+        var tintBL = tint.BL;
+        var tintBR = tint.BR;
+
         var frame = this.currentFrame;
 
         var u0 = frame.u0;
         var v0 = frame.v0;
         var u1 = frame.u1;
         var v1 = frame.v1;
-
-        var tintTL = this.strokeTint.TL;
-        var tintTR = this.strokeTint.TR;
-        var tintBL = this.strokeTint.BL;
-        var tintBR = this.strokeTint.BR;
 
         //  TL, BL, BR, TR
         this.batchQuad(tlX, tlY, blX, blY, brX, brY, trX, trY, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect);
