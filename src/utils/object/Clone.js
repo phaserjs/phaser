@@ -7,7 +7,7 @@
 /**
  * Shallow Object Clone. Will not clone nested objects.
  *
- * @function Phaser.Utils.Object.Clone
+ * @function Phaser.Utils.Objects.Clone
  * @since 3.0.0
  *
  * @param {object} obj - the object from which to clone

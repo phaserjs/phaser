@@ -11,7 +11,7 @@
 /**
  * [description]
  *
- * @function Phaser.Utils.Object.GetValue
+ * @function Phaser.Utils.Objects.GetValue
  * @since 3.0.0
  *
  * @param {object} source - [description]
