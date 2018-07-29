@@ -93,19 +93,19 @@ var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, ca
             if (bob.flipX)
             {
                 fx = -1;
-                dx -= cd.dWidth;
+                dx -= cd.width;
             }
 
             if (bob.flipY)
             {
                 fy = -1;
-                dy -= cd.dHeight;
+                dy -= cd.height;
             }
 
             ctx.save();
             ctx.translate(bob.x + cameraScrollX, bob.y + cameraScrollY);
             ctx.scale(fx, fy);
-            ctx.drawImage(frame.source.image, cd.sx, cd.sy, cd.sWidth, cd.sHeight, dx, dy, cd.dWidth, cd.dHeight);
+            ctx.drawImage(frame.source.image, cd.x, cd.y, cd.width, cd.height, dx, dy, cd.width, cd.height);
             ctx.restore();
         }
     }
