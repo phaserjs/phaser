@@ -103,7 +103,7 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
 
             ctx.scale(particle.scaleX, particle.scaleY);
 
-            ctx.drawImage(frame.source.image, cd.sx, cd.sy, cd.sWidth, cd.sHeight, x, y, cd.dWidth, cd.dHeight);
+            ctx.drawImage(frame.source.image, cd.x, cd.y, cd.width, cd.height, x, y, cd.width, cd.height);
 
             ctx.restore();
         }
