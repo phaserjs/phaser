@@ -77,6 +77,12 @@ Setting the `resolution` property in the Game Config to a value other than 1 wou
 * Adding an array of children to a Group would cause it to mistakenly think you were passing a config object. Fix #3854 (thanks @pedro-w)
 * Graphics paths in WebGL would not render the line join between the final and the first path if the path was closed, leaving a noticeable gap if you used particularly thick strokes. If the path is closed it will now render the final line join properly.
 * If a Mesh caused a batch flush it would fail to render as its texture was lost. It's now rebound correctly after the flush.
+* `ArcadePhysics.closest` and `ArcadePhysics.furthest` used the wrong tree reference, causing them to throw errors (thanks @samme)
+* `BlitterCanvasRenderer` would fail to render a Bob in Canvas mode if it was flipped (thanks @SBCGames)
+* `RenderTexture.draw` would fail to draw the frame in Canvas mode (thanks @SBCGames)
+* `ParticleEmitter` would fail to draw a textured particle in Canvas mode (thanks @SBCGames)
+* `RenderTexture.preDestroy` will now release the canvas back to the CanvasPool if running in canvas mode (thanks @SBCGames)
+* The `alpha` value is now always set for Render Textures in canvas mode, regardless of the previous alpha value in the renderer (thanks @SBCGames)
 
 ### Examples, Documentation and TypeScript
 
