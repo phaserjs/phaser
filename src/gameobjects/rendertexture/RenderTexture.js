@@ -146,7 +146,6 @@ var RenderTexture = new Class({
             this.fill = RenderTextureWebGL.fill;
             this.clear = RenderTextureWebGL.clear;
             this.draw = RenderTextureWebGL.draw;
-            this.drawFrame = RenderTextureWebGL.drawFrame;
             this.texture = this.renderer.createTexture2D(0, gl.NEAREST, gl.NEAREST, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, null, width, height, false);
             this.framebuffer = this.renderer.createFramebuffer(width, height, this.texture, false);
         }
@@ -155,7 +154,6 @@ var RenderTexture = new Class({
             this.fill = RenderTextureCanvas.fill;
             this.clear = RenderTextureCanvas.clear;
             this.draw = RenderTextureCanvas.draw;
-            this.drawFrame = RenderTextureCanvas.drawFrame;
             this.canvas = CanvasPool.create2D(this, width, height);
             this.context = this.canvas.getContext('2d');
         }
@@ -253,6 +251,11 @@ var RenderTexture = new Class({
      */
     preDestroy: function ()
     {
+        if (this.canvas)
+        {
+            CanvasPool.remove(this.canvas);
+        }
+
         if (this.renderer && this.renderer.gl)
         {
             this.renderer.deleteTexture(this.texture);
