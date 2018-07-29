@@ -100,6 +100,8 @@ var Zone = new Class({
          * @since 3.0.0
          */
         this.blendMode = BlendModes.NORMAL;
+
+        this.updateDisplayOrigin();
     },
 
     /**

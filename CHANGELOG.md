@@ -83,6 +83,7 @@ Setting the `resolution` property in the Game Config to a value other than 1 wou
 * `ParticleEmitter` would fail to draw a textured particle in Canvas mode (thanks @SBCGames)
 * `RenderTexture.preDestroy` will now release the canvas back to the CanvasPool if running in canvas mode (thanks @SBCGames)
 * The `alpha` value is now always set for Render Textures in canvas mode, regardless of the previous alpha value in the renderer (thanks @SBCGames)
+* Zone now calls `updateDisplayOrigin` in its constructor, causing the `displayOriginX` and `displayOriginY` values to now be correct if you create a Zone and then don't resize it. Fix #3865 (thanks @rexrainbow)
 
 ### Examples, Documentation and TypeScript
 
