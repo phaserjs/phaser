@@ -32,26 +32,6 @@ var RenderTextureCanvasRenderer = function (renderer, renderTexture, interpolati
         //  Nothing to see, so abort early
         return;
     }
-    else if (renderer.currentAlpha !== alpha)
-    {
-        renderer.currentAlpha = alpha;
-        ctx.globalAlpha = alpha;
-    }
-
-    //  Blend Mode
-
-    if (renderer.currentBlendMode !== renderTexture.blendMode)
-    {
-        renderer.currentBlendMode = renderTexture.blendMode;
-        ctx.globalCompositeOperation = renderer.blendModes[renderTexture.blendMode];
-    }
-
-    //  Scale Mode
-
-    if (renderer.currentScaleMode !== renderTexture.scaleMode)
-    {
-        renderer.currentScaleMode = renderTexture.scaleMode;
-    }
 
     var dx = 0;
     var dy = 0;
@@ -81,6 +61,23 @@ var RenderTextureCanvasRenderer = function (renderer, renderTexture, interpolati
 
     ctx.save();
 
+    ctx.globalAlpha = alpha;
+
+    //  Blend Mode
+
+    if (renderer.currentBlendMode !== renderTexture.blendMode)
+    {
+        renderer.currentBlendMode = renderTexture.blendMode;
+        ctx.globalCompositeOperation = renderer.blendModes[renderTexture.blendMode];
+    }
+
+    //  Scale Mode
+
+    if (renderer.currentScaleMode !== renderTexture.scaleMode)
+    {
+        renderer.currentScaleMode = renderTexture.scaleMode;
+    }
+
     if (parentMatrix !== undefined)
     {
         var matrix = parentMatrix.matrix;
@@ -93,6 +90,7 @@ var RenderTextureCanvasRenderer = function (renderer, renderTexture, interpolati
     ctx.scale(renderTexture.scaleX, renderTexture.scaleY);
     ctx.scale(fx, fy);
     ctx.drawImage(renderTexture.canvas, dx, dy);
+
     ctx.restore();
 };
 
