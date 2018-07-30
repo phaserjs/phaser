@@ -55,7 +55,7 @@ var Render = require('./GraphicsRender');
 
 /**
  * @classdesc
- * A Graphics object is a way to draw primitive shapes to you game. Primitives include forms of geometry, such as
+ * A Graphics object is a way to draw primitive shapes to your game. Primitives include forms of geometry, such as
  * Rectangles, Circles, and Polygons. They also include lines, arcs and curves. When you initially create a Graphics
  * object it will be empty.
  *
@@ -316,15 +316,15 @@ var Graphics = new Class({
 
     /**
      * Sets a gradient fill style. This is a WebGL only feature.
-     * 
+     *
      * The gradient color values represent the 4 corners of an untransformed rectangle.
      * The gradient is used to color all filled shapes and paths drawn after calling this method.
      * If you wish to turn a gradient off, call `fillStyle` and provide a new single fill color.
-     * 
+     *
      * When filling a triangle only the first 3 color values provided are used for the 3 points of a triangle.
-     * 
+     *
      * This feature is best used only on rectangles and triangles. All other shapes will give strange results.
-     * 
+     *
      * Note that for objects such as arcs or ellipses, or anything which is made out of triangles, each triangle used
      * will be filled with a gradient on its own. There is no ability to gradient fill a shape or path as a single
      * entity at this time.
@@ -355,13 +355,13 @@ var Graphics = new Class({
 
     /**
      * Sets a gradient line style. This is a WebGL only feature.
-     * 
+     *
      * The gradient color values represent the 4 corners of an untransformed rectangle.
      * The gradient is used to color all stroked shapes and paths drawn after calling this method.
      * If you wish to turn a gradient off, call `lineStyle` and provide a new single line color.
-     * 
+     *
      * This feature is best used only on single lines. All other shapes will give strange results.
-     * 
+     *
      * Note that for objects such as arcs or ellipses, or anything which is made out of triangles, each triangle used
      * will be filled with a gradient on its own. There is no ability to gradient stroke a shape or path as a single
      * entity at this time.
@@ -395,12 +395,12 @@ var Graphics = new Class({
      * Sets the texture frame this Graphics Object will use when drawing all shapes defined after calling this.
      *
      * Textures are referenced by their string-based keys, as stored in the Texture Manager.
-     * 
+     *
      * Once set, all shapes will use this texture. Call this method with no arguments to clear it.
-     * 
+     *
      * The textures are not tiled. They are stretched to the dimensions of the shapes being rendered. For this reason,
      * it works best with seamless / tileable textures.
-     * 
+     *
      * The mode argument controls how the textures are combined with the fill colors. The default value (0) will
      * multiply the texture by the fill color. A value of 1 will use just the fill color, but the alpha data from the texture,
      * and a value of 2 will use just the texture and no fill color at all.
@@ -1212,7 +1212,7 @@ var Graphics = new Class({
      * Draw an arc.
      *
      * This method can be used to create circles, or parts of circles.
-     * 
+     *
      * Use the optional `overshoot` argument to allow the arc to extend beyond 360 degrees. This is useful if you're drawing
      * an arc with an especially thick line, as it will allow the arc to fully join-up. Try small values at first, i.e. 0.01.
      *
@@ -1258,7 +1258,7 @@ var Graphics = new Class({
             if (endAngle > PI2 + overshoot)
             {
                 endAngle = PI2 + overshoot;
-                
+
             }
             else if (endAngle < -overshoot)
             {
@@ -1323,7 +1323,7 @@ var Graphics = new Class({
             if (endAngle > PI2 + overshoot)
             {
                 endAngle = PI2 + overshoot;
-                
+
             }
             else if (endAngle <= -overshoot)
             {
@@ -1494,6 +1494,7 @@ var Graphics = new Class({
         if (width === undefined) { width = sys.game.config.width; }
         if (height === undefined) { height = sys.game.config.height; }
 
+        Graphics.TargetCamera.setScene(this.scene);
         Graphics.TargetCamera.setViewport(0, 0, width, height);
         Graphics.TargetCamera.scrollX = this.x;
         Graphics.TargetCamera.scrollY = this.y;
