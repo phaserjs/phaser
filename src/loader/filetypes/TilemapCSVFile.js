@@ -26,7 +26,7 @@ var TILEMAP_FORMATS = require('../../tilemaps/Formats');
  * A single Tilemap CSV File suitable for loading by the Loader.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#tilemapCSV method and are not typically created directly.
- * 
+ *
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#tilemapCSV.
  *
  * @class TilemapCSVFile
@@ -112,11 +112,11 @@ var TilemapCSVFile = new Class({
  * Adds a CSV Tilemap file, or array of CSV files, to the current load queue.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
- * 
+ *
  * ```javascript
  * function preload ()
  * {
- *     this.load.tilemapCSV('level1', maps/Level1.csv');
+ *     this.load.tilemapCSV('level1', 'maps/Level1.csv');
  * }
  * ```
  *
@@ -129,14 +129,14 @@ var TilemapCSVFile = new Class({
  * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
  * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
  * loaded.
- * 
+ *
  * The key must be a unique String. It is used to add the file to the global Tilemap Cache upon a successful load.
  * The key should be unique both in terms of files being loaded and files already present in the Tilemap Cache.
  * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
  * then remove it from the Text Cache first, before loading a new one.
  *
  * Instead of passing arguments you can pass a configuration object, such as:
- * 
+ *
  * ```javascript
  * this.load.tilemapCSV({
  *     key: 'level1',
@@ -147,7 +147,7 @@ var TilemapCSVFile = new Class({
  * See the documentation for `Phaser.Loader.FileTypes.TilemapCSVFileConfig` for more details.
  *
  * Once the file has finished loading you can access it from its Cache using its key:
- * 
+ *
  * ```javascript
  * this.load.tilemapCSV('level1', 'maps/Level1.csv');
  * // and later in your game ...
