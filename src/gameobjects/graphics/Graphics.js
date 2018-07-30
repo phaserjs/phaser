@@ -1494,6 +1494,7 @@ var Graphics = new Class({
         if (width === undefined) { width = sys.game.config.width; }
         if (height === undefined) { height = sys.game.config.height; }
 
+        Graphics.TargetCamera.setScene(this.scene);
         Graphics.TargetCamera.setViewport(0, 0, width, height);
         Graphics.TargetCamera.scrollX = this.x;
         Graphics.TargetCamera.scrollY = this.y;
