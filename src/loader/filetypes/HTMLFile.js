@@ -25,7 +25,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * A single HTML File suitable for loading by the Loader.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#html method and are not typically created directly.
- * 
+ *
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#html.
  *
  * @class HTMLFile
@@ -94,11 +94,11 @@ var HTMLFile = new Class({
  * Adds an HTML file, or array of HTML files, to the current load queue.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
- * 
+ *
  * ```javascript
  * function preload ()
  * {
- *     this.load.html('story', files/LoginForm.html');
+ *     this.load.html('story', 'files/LoginForm.html');
  * }
  * ```
  *
@@ -109,14 +109,14 @@ var HTMLFile = new Class({
  * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
  * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
  * loaded.
- * 
+ *
  * The key must be a unique String. It is used to add the file to the global HTML Cache upon a successful load.
  * The key should be unique both in terms of files being loaded and files already present in the HTML Cache.
  * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
  * then remove it from the HTML Cache first, before loading a new one.
  *
  * Instead of passing arguments you can pass a configuration object, such as:
- * 
+ *
  * ```javascript
  * this.load.html({
  *     key: 'login',
@@ -127,7 +127,7 @@ var HTMLFile = new Class({
  * See the documentation for `Phaser.Loader.FileTypes.HTMLFileConfig` for more details.
  *
  * Once the file has finished loading you can access it from its Cache using its key:
- * 
+ *
  * ```javascript
  * this.load.html('login', 'files/LoginForm.html');
  * // and later in your game ...
