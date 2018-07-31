@@ -80,6 +80,8 @@ var BasePlugin = new Class({
      *
      * @method Phaser.Plugins.BasePlugin#init
      * @since 3.8.0
+     *
+     * @param {?any} [data] - A value specified by the user, if any, from the `data` property of the plugin's configuration object (if started at game boot) or passed in the PluginManager's `install` method (if started manually).
      */
     init: function ()
     {

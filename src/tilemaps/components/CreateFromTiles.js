@@ -23,7 +23,7 @@ var ReplaceByIndex = require('./ReplaceByIndex');
  * @param {(integer|array)} replacements - The tile index, or array of indexes, to change a converted
  * tile to. Set to `null` to leave the tiles unchanged. If an array is given, it is assumed to be a
  * one-to-one mapping with the indexes array.
- * @param {object} spriteConfig - The config object to pass into the Sprite creator (i.e.
+ * @param {SpriteConfig} spriteConfig - The config object to pass into the Sprite creator (i.e.
  * scene.make.sprite).
  * @param {Phaser.Scene} [scene=scene the map is within] - The Scene to create the Sprites within.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when determining the world XY
