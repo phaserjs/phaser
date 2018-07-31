@@ -87,9 +87,6 @@ var RenderTextureWebGL = {
      */
     draw: function (stamp, x, y, tint)
     {
-        if (x === undefined) { x = 0; }
-        if (y === undefined) { y = 0; }
-
         if (!Array.isArray(stamp))
         {
             stamp = [ stamp ];
@@ -97,19 +94,22 @@ var RenderTextureWebGL = {
 
         this.renderer.setFramebuffer(this.framebuffer);
 
+        this.camera.preRender(1, 1, 1);
+
         var pipeline = this.pipeline;
 
         pipeline.projOrtho(0, this.width, 0, this.height, -1000.0, 1000.0);
 
         for (var i = 0; i < stamp.length; i++)
         {
-            if (stamp[i].frame)
-            {
+            // if (stamp[i].frame)
+            // {
                 this.drawGameObject(stamp[i], x, y);
-            }
-            {
-                this.drawFrame(stamp[i], x, y, tint);
-            }
+            // }
+            // else
+            // {
+            //     this.drawFrame(stamp[i], x, y, tint);
+            // }
         }
 
         pipeline.flush();
@@ -123,6 +123,26 @@ var RenderTextureWebGL = {
 
     drawGameObject: function (gameObject, x, y)
     {
+        if (x === undefined) { x = gameObject.x; }
+        if (y === undefined) { y = gameObject.y; }
+
+        var prevX = gameObject.x;
+        var prevY = gameObject.y;
+
+        this.renderer.setBlendMode(gameObject.blendMode);
+
+        gameObject.setPosition(x, y);
+
+        gameObject.renderWebGL(this.renderer, gameObject, 0, this.camera, null);
+
+        gameObject.setPosition(prevX, prevY);
+    },
+
+    NEWdrawGameObject: function (gameObject, x, y)
+    {
+        if (x === undefined) { x = gameObject.x; }
+        if (y === undefined) { y = gameObject.y; }
+
         var getTint = Utils.getTintAppendFloatAlpha;
 
         this.pipeline.batchTextureFrame(
@@ -145,6 +165,9 @@ var RenderTextureWebGL = {
 
     drawFrame: function (frame, x, y, tint)
     {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+
         if (tint === undefined)
         {
             tint = (this.globalTint >> 16) + (this.globalTint & 0xff00) + ((this.globalTint & 0xff) << 16);
