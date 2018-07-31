@@ -188,7 +188,20 @@ var CameraManager = new Class({
     {
         if (!this.main)
         {
-            this.boot();
+            var sys = this.systems;
+
+            if (sys.settings.cameras)
+            {
+                //  We have cameras to create
+                this.fromJSON(sys.settings.cameras);
+            }
+            else
+            {
+                //  Make one
+                this.add();
+            }
+    
+            this.main = this.cameras[0];
         }
 
         var eventEmitter = this.systems.events;
