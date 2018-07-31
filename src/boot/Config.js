@@ -502,7 +502,7 @@ var Config = new Class({
          *
          * plugins: {
          *    global: [
-         *        { key: 'TestPlugin', plugin: TestPlugin, start: true },
+         *        { key: 'TestPlugin', plugin: TestPlugin, start: true, data: { msg: 'The plugin is alive' } },
          *    ],
          *    scene: [
          *        { key: 'WireFramePlugin', plugin: WireFramePlugin, systemKey: 'wireFramePlugin', sceneKey: 'wireframe' }
