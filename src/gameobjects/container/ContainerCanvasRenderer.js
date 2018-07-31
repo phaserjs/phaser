@@ -51,6 +51,12 @@ var ContainerCanvasRenderer = function (renderer, container, interpolationPercen
     for (var i = 0; i < children.length; i++)
     {
         var child = children[i];
+
+        if (!child.willRender(camera))
+        {
+            continue;
+        }
+
         var childAlpha = child._alpha;
         var childScrollFactorX = child.scrollFactorX;
         var childScrollFactorY = child.scrollFactorY;

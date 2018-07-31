@@ -5,6 +5,8 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var GameObject = require('../GameObject');
+
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -51,6 +53,12 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
     for (var i = 0; i < children.length; i++)
     {
         var child = children[i];
+
+        if (!child.willRender(camera))
+        {
+            continue;
+        }
+
         var childAlpha = child._alpha;
         var childScrollFactorX = child.scrollFactorX;
         var childScrollFactorY = child.scrollFactorY;
