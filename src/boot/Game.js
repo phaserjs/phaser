@@ -19,6 +19,7 @@ var DOMContentLoaded = require('../dom/DOMContentLoaded');
 var EventEmitter = require('eventemitter3');
 var FacebookInstantGamesPlugin = require('../fbinstant/FacebookInstantGamesPlugin');
 var InputManager = require('../input/InputManager');
+var PluginCache = require('../plugins/PluginCache');
 var PluginManager = require('../plugins/PluginManager');
 var SceneManager = require('../scene/SceneManager');
 var SoundManagerCreator = require('../sound/SoundManagerCreator');
@@ -278,6 +279,17 @@ var Game = new Class({
         this.removeCanvas = false;
 
         /**
+         * Remove everything when the game is destroyed.
+         * You cannot create a new Phaser instance on the same web page after doing this.
+         *
+         * @name Phaser.Game#noReturn
+         * @type {boolean}
+         * @private
+         * @since 3.12.0
+         */
+        this.noReturn = false;
+
+        /**
          * Does the window the game is running in currently have focus or not?
          * This is modified by the VisibilityHandler.
          *
@@ -324,6 +336,12 @@ var Game = new Class({
      */
     boot: function ()
     {
+        if (!PluginCache.hasCore('EventEmitter'))
+        {
+            console.warn('Core Phaser Plugins missing. Cannot start.');
+            return;
+        }
+
         this.isBooted = true;
 
         this.config.preBoot(this);
@@ -656,17 +674,24 @@ var Game = new Class({
     /**
      * Flags this Game instance as needing to be destroyed on the next frame.
      * It will wait until the current frame has completed and then call `runDestroy` internally.
+     * 
+     * If you **do not** need to run Phaser again on the same web page you can set the `noReturn` argument to `true` and it will free-up
+     * memory being held by the core Phaser plugins. If you do need to create another game instance on the same page, leave this as `false`.
      *
      * @method Phaser.Game#destroy
      * @since 3.0.0
      *
      * @param {boolean} removeCanvas - Set to `true` if you would like the parent canvas element removed from the DOM, or `false` to leave it in place.
+     * @param {boolean} [noReturn=false] - If `true` all the core Phaser plugins are destroyed. You cannot create another instance of Phaser on the same web page if you do this.
      */
-    destroy: function (removeCanvas)
+    destroy: function (removeCanvas, noReturn)
     {
+        if (noReturn === undefined) { noReturn = false; }
+        
         this.pendingDestroy = true;
 
         this.removeCanvas = removeCanvas;
+        this.noReturn = noReturn;
     },
 
     /**
@@ -705,7 +730,7 @@ var Game = new Class({
         }
 
         this.loop.destroy();
-
+        
         this.pendingDestroy = false;
     }
 
