@@ -13,6 +13,7 @@ var DrawImage = require('./utils/DrawImage');
 var GetBlendModes = require('./utils/GetBlendModes');
 var ScaleModes = require('../ScaleModes');
 var Smoothing = require('../../display/canvas/Smoothing');
+var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 
 /**
  * @classdesc
@@ -215,6 +216,46 @@ var CanvasRenderer = new Class({
          * @since 3.0.0
          */
         this.snapshotEncoder = null;
+
+        /**
+         * A temporary Transform Matrix, re-used internally during batching.
+         *
+         * @name Phaser.Renderer.Canvas.CanvasRenderer#_tempMatrix1
+         * @private
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.12.0
+         */
+        this._tempMatrix1 = new TransformMatrix();
+
+        /**
+         * A temporary Transform Matrix, re-used internally during batching.
+         *
+         * @name Phaser.Renderer.Canvas.CanvasRenderer#_tempMatrix2
+         * @private
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.12.0
+         */
+        this._tempMatrix2 = new TransformMatrix();
+
+        /**
+         * A temporary Transform Matrix, re-used internally during batching.
+         *
+         * @name Phaser.Renderer.Canvas.CanvasRenderer#_tempMatrix3
+         * @private
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.12.0
+         */
+        this._tempMatrix3 = new TransformMatrix();
+
+        /**
+         * A temporary Transform Matrix, re-used internally during batching.
+         *
+         * @name Phaser.Renderer.Canvas.CanvasRenderer#_tempMatrix4
+         * @private
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.12.0
+         */
+        this._tempMatrix4 = new TransformMatrix();
 
         this.init();
     },
