@@ -1018,7 +1018,7 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setFramebuffer
      * @since 3.0.0
      *
-     * @param {WebGLFramebuffer} framebuffer - The framebuffer that needs to be bound
+     * @param {WebGLFramebuffer} framebuffer - The framebuffer that needs to be bound.
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} This WebGL Renderer.
      */
@@ -1026,11 +1026,20 @@ var WebGLRenderer = new Class({
     {
         var gl = this.gl;
 
+        var width = this.width;
+        var height = this.height;
+
         if (framebuffer !== this.currentFramebuffer)
         {
-            this.flush();
+            if (framebuffer && framebuffer.renderTexture)
+            {
+                width = framebuffer.renderTexture.width;
+                height = framebuffer.renderTexture.height;
+            }
 
             gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+
+            gl.viewport(0, 0, width, height);
 
             this.currentFramebuffer = framebuffer;
         }
