@@ -57,6 +57,7 @@ The process of managing scissors in the WebGLRenderer has been completely rewrit
 * The `setBlendMode` method in the WebGL Renderer now returns a boolean. True if a new blend mode was set, otherwise false. Previously in returned a reference to the renderer instance.
 * The `load.html` method has been renamed to `load.htmlTexture`.
 * The method `batchVertices` in the TextureTintPipeline has been renamed to `batchQuad` which more accurately describes what it does.
+* In ArcadePhysics `Body.setSize` you can now choose to not pass width and height values to the method. If you do this it will check to see if the parent Game Object has a texture frame, and if so, it will use the frame sizes for the Body dimensions (thanks @tarsupin)
 
 ### Game Config Resolution Specific Bug Fixes
 
