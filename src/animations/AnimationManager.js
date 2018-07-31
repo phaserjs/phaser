@@ -319,23 +319,23 @@ var AnimationManager = new Class({
     /**
      * @typedef {object} GenerateFrameNumbersConfig
      *
-     * @property {integer} [start=0] - The starting frame of the animation
-     * @property {integer} [end=-1] - The ending frame of the animation
-     * @property {boolean|integer} [first=false] - A frame to put at the beginning of the animation, before `start` or `outputArray` or `frames`
-     * @property {AnimationFrameConfig[]} [outputArray=[]] - An array to concatenate the output onto
-     * @property {boolean|integer[]} [frames=false] - A custom sequence of frames
+     * @property {integer} [start=0] - The starting frame of the animation.
+     * @property {integer} [end=-1] - The ending frame of the animation.
+     * @property {(boolean|integer)} [first=false] - A frame to put at the beginning of the animation, before `start` or `outputArray` or `frames`.
+     * @property {AnimationFrameConfig[]} [outputArray=[]] - An array to concatenate the output onto.
+     * @property {(boolean|integer[])} [frames=false] - A custom sequence of frames.
      */
 
     /**
-     * Generates an array of {@link AnimationFrameConfig} objects from a texture key and configuration object
+     * Generates an array of {@link AnimationFrameConfig} objects from a texture key and configuration object.
      *
      * @method Phaser.Animations.AnimationManager#generateFrameNumbers
      * @since 3.0.0
      *
-     * @param {string} key - The key for the texture containing the animation frames
-     * @param {GenerateFrameNumbersConfig} config - The configuration object for the animation frames
+     * @param {string} key - The key for the texture containing the animation frames.
+     * @param {GenerateFrameNumbersConfig} config - The configuration object for the animation frames.
      *
-     * @return {AnimationFrameConfig[]} The array of {@link AnimationFrameConfig} objects
+     * @return {AnimationFrameConfig[]} The array of {@link AnimationFrameConfig} objects.
      */
     generateFrameNumbers: function (key, config)
     {
