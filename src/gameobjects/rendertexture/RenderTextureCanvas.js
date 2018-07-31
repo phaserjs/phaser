@@ -42,18 +42,33 @@ var RenderTextureCanvas = {
 
     /**
      * Draws the Texture Frame to the Render Texture at the given position.
+     * 
+     * You can either pass in a Game Object frame property:
+     * 
+     * ```javascript
+     * var rt = this.add.renderTexture(100, 100, 400, 300);
+     * var bunny = this.make.sprite({ key: 'bunny' }, false);
+     * rt.draw(bunny.frame, 0, 0);
+     * ```
+     * 
+     * Or get a frame reference from the Texture Manager:
+     * 
+     * ```javascript
+     * var rt = this.add.renderTexture(100, 100, 400, 300);
+     * var bunny = this.textures.getFrame('bunny');
+     * rt.draw(bunny, 0, 0);
+     * ```
      *
      * @method Phaser.GameObjects.RenderTexture#draw
      * @since 3.2.0
      *
-     * @param {Phaser.Textures.Texture} texture - Currently unused.
-     * @param {Phaser.Textures.Frame} frame - The Texture Frame that will be drawn to the Render Texture. Get this from the Texture Manager via `this.textures.getFrame(key)`.
+     * @param {Phaser.Textures.Frame} frame - The Texture Frame that will be drawn to the Render Texture.
      * @param {number} x - The x position to draw the frame at.
      * @param {number} y - The y position to draw the frame at.
      *
-     * @return {Phaser.GameObjects.RenderTexture} This Game Object.
+     * @return {this} This Game Object.
      */
-    draw: function (texture, frame, x, y)
+    draw: function (frame, x, y)
     {
         var cd = frame.canvasData;
         var source = frame.source.image;

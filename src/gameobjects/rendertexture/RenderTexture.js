@@ -57,7 +57,6 @@ var RenderTexture = new Class({
         Components.Flip,
         Components.GetBounds,
         Components.Mask,
-        Components.MatrixStack,
         Components.Origin,
         Components.Pipeline,
         Components.ScaleMode,
@@ -77,7 +76,7 @@ var RenderTexture = new Class({
 
         GameObject.call(this, scene, 'RenderTexture');
 
-        this.initMatrixStack();
+        // this.initMatrixStack();
 
         /**
          * A reference to either the Canvas or WebGL Renderer that the Game instance is using.
@@ -138,6 +137,8 @@ var RenderTexture = new Class({
          */
         this.framebuffer = null;
 
+        this.currentMatrix = new Components.TransformMatrix();
+
         if (this.renderer.type === CONST.WEBGL)
         {
             var gl = this.renderer.gl;
@@ -146,6 +147,8 @@ var RenderTexture = new Class({
             this.fill = RenderTextureWebGL.fill;
             this.clear = RenderTextureWebGL.clear;
             this.draw = RenderTextureWebGL.draw;
+            this.drawFrame = RenderTextureWebGL.drawFrame;
+            this.drawGameObject = RenderTextureWebGL.drawGameObject;
             this.texture = this.renderer.createTexture2D(0, gl.NEAREST, gl.NEAREST, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, null, width, height, false);
             this.framebuffer = this.renderer.createFramebuffer(width, height, this.texture, false);
         }
