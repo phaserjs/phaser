@@ -66,6 +66,7 @@ The process of managing scissors in the WebGLRenderer has been completely rewrit
 * `Game.destroy` has a new boolean argument `noReturn`. If set it will remove all Core plugins when the game instance is destroyed. You cannot restart Phaser on the same web page after doing this, so only set it if you know you're done and don't need to run Phaser again.
 * The `MouseManager` will no longer process its native events if the manager reference has been removed (i.e. you move the pointer as the game is destroying itself)
 * The `TouchManager` will no longer process its native events if the manager reference has been removed (i.e. you move the pointer as the game is destroying itself)
+* `Particle.color` has been removed as it's now calculated during rendering to allow for Camera alpha support.
 
 ### Game Config Resolution Specific Bug Fixes
 
