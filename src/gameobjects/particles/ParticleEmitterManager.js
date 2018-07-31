@@ -24,6 +24,7 @@ var Render = require('./ParticleManagerRender');
  *
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  *
  * @param {Phaser.Scene} scene - The Scene to which this Emitter Manager belongs.
@@ -38,6 +39,7 @@ var ParticleEmitterManager = new Class({
     Mixins: [
         Components.Depth,
         Components.Pipeline,
+        Components.Transform,
         Components.Visible,
         Render
     ],

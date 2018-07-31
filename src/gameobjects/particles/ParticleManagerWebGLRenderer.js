@@ -4,6 +4,8 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+ var Utils = require('../../renderer/webgl/Utils');
+
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -34,14 +36,18 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
     var camMatrix = pipeline._tempMatrix1.copyFrom(camera.matrix);
     var calcMatrix = pipeline._tempMatrix2;
     var particleMatrix = pipeline._tempMatrix3;
+    var managerMatrix = pipeline._tempMatrix4.applyITRS(emitterManager.x, emitterManager.y, emitterManager.rotation, emitterManager.scaleX, emitterManager.scaleY);
+
+    camMatrix.multiply(managerMatrix);
 
     renderer.setPipeline(pipeline);
 
     var roundPixels = camera.roundPixels;
     var texture = emitterManager.defaultFrame.glTexture;
+    var getTint = Utils.getTintAppendFloatAlphaAndSwap;
 
     pipeline.setTexture2D(texture, 0);
-    
+
     for (var e = 0; e < emittersLength; e++)
     {
         var emitter = emitters[e];
@@ -71,19 +77,20 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
             pipeline.setTexture2D(texture, 0);
         }
 
-        var tintEffect = false;
+        var tintEffect = 0;
 
         for (var i = 0; i < particleCount; i++)
         {
             var particle = particles[i];
 
-            if (particle.alpha <= 0)
+            var alpha = particle.alpha * camera.alpha;
+
+            if (alpha <= 0)
             {
                 continue;
             }
 
             var frame = particle.frame;
-            var color = particle.color;
 
             var x = -(frame.halfWidth);
             var y = -(frame.halfHeight);
@@ -124,7 +131,9 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
                 ty3 |= 0;
             }
 
-            if (pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, color, color, color, color, tintEffect))
+            var tint = getTint(particle.tint, alpha);
+
+            if (pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect))
             {
                 pipeline.setTexture2D(texture, 0);
             }

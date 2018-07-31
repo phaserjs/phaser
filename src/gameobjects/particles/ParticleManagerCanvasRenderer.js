@@ -29,13 +29,21 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
         return;
     }
 
+    var camMatrix = renderer._tempMatrix1.copyFrom(camera.matrix);
+    var managerMatrix = renderer._tempMatrix2.applyITRS(emitterManager.x, emitterManager.y, emitterManager.rotation, emitterManager.scaleX, emitterManager.scaleY);
+
+    camMatrix.multiply(managerMatrix);
+
     var ctx = renderer.currentContext;
+    var matrix = camMatrix.matrix;
 
     ctx.save();
 
+    ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+
     if (parentMatrix !== undefined)
     {
-        var matrix = parentMatrix.matrix;
+        matrix = parentMatrix.matrix;
 
         ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
     }
