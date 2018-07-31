@@ -804,7 +804,8 @@ var PluginManager = new Class({
     /**
      * Destroys this Plugin Manager and all associated plugins.
      * It will iterate all plugins found and call their `destroy` methods.
-     * Note that the PluginCache is NOT cleared by this as it doesn't hold any plugin instances.
+     * 
+     * The PluginCache will remove all custom plugins.
      *
      * @method Phaser.Plugins.PluginManager#destroy
      * @since 3.8.0
@@ -814,6 +815,13 @@ var PluginManager = new Class({
         for (var i = 0; i < this.plugins.length; i++)
         {
             this.plugins[i].plugin.destroy();
+        }
+
+        PluginCache.destroyCustomPlugins();
+
+        if (this.game.noReturn)
+        {
+            PluginCache.destroyCorePlugins();
         }
 
         this.game = null;
