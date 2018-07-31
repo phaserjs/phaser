@@ -134,7 +134,7 @@ var DynamicTilemapLayer = new Class({
         /**
          * You can control if the Cameras should cull tiles before rendering them or not.
          * By default the camera will try to cull the tiles in this layer, to avoid over-drawing to the renderer.
-         * 
+         *
          * However, there are some instances when you may wish to disable this, and toggling this flag allows
          * you to do so. Also see `setSkipCull` for a chainable method that does the same thing.
          *
@@ -166,7 +166,7 @@ var DynamicTilemapLayer = new Class({
 
         /**
          * The amount of extra tiles to add into the cull rectangle when calculating its horizontal size.
-         * 
+         *
          * See the method `setCullPadding` for more details.
          *
          * @name Phaser.Tilemaps.DynamicTilemapLayer#cullPaddingX
@@ -178,7 +178,7 @@ var DynamicTilemapLayer = new Class({
 
         /**
          * The amount of extra tiles to add into the cull rectangle when calculating its vertical size.
-         * 
+         *
          * See the method `setCullPadding` for more details.
          *
          * @name Phaser.Tilemaps.DynamicTilemapLayer#cullPaddingY
@@ -190,15 +190,15 @@ var DynamicTilemapLayer = new Class({
 
         /**
          * The callback that is invoked when the tiles are culled.
-         * 
+         *
          * By default it will call `TilemapComponents.CullTiles` but you can override this to call any function you like.
-         * 
+         *
          * It will be sent 3 arguments:
-         * 
+         *
          * 1) The Phaser.Tilemaps.LayerData object for this Layer
          * 2) The Camera that is culling the layer. You can check its `dirty` property to see if it has changed since the last cull.
          * 3) A reference to the `culledTiles` array, which should be used to store the tiles you want rendered.
-         * 
+         *
          * See the `TilemapComponents.CullTiles` source code for details on implementing your own culling system.
          *
          * @name Phaser.Tilemaps.DynamicTilemapLayer#cullCallback
@@ -270,7 +270,7 @@ var DynamicTilemapLayer = new Class({
      * @param {(integer|array)} replacements - The tile index, or array of indexes, to change a converted
      * tile to. Set to `null` to leave the tiles unchanged. If an array is given, it is assumed to be a
      * one-to-one mapping with the indexes array.
-     * @param {object} spriteConfig - The config object to pass into the Sprite creator (i.e.
+     * @param {SpriteConfig} spriteConfig - The config object to pass into the Sprite creator (i.e.
      * scene.make.sprite).
      * @param {Phaser.Scene} [scene=scene the map is within] - The Scene to create the Sprites within.
      * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when determining the world XY
@@ -822,9 +822,9 @@ var DynamicTilemapLayer = new Class({
     /**
      * You can control if the Cameras should cull tiles before rendering them or not.
      * By default the camera will try to cull the tiles in this layer, to avoid over-drawing to the renderer.
-     * 
+     *
      * However, there are some instances when you may wish to disable this.
-     * 
+     *
      * @method Phaser.Tilemaps.DynamicTilemapLayer#setSkipCull
      * @since 3.11.0
      *
@@ -842,12 +842,12 @@ var DynamicTilemapLayer = new Class({
     },
 
     /**
-     * When a Camera culls the tiles in this layer it does so using its view into the world, building up a 
+     * When a Camera culls the tiles in this layer it does so using its view into the world, building up a
      * rectangle inside which the tiles must exist or they will be culled. Sometimes you may need to expand the size
      * of this 'cull rectangle', especially if you plan on rotating the Camera viewing the layer. Do so
      * by providing the padding values. The values given are in tiles, not pixels. So if the tile width was 32px
      * and you set `paddingX` to be 4, it would add 32px x 4 to the cull rectangle (adjusted for scale)
-     * 
+     *
      * @method Phaser.Tilemaps.DynamicTilemapLayer#setCullPadding
      * @since 3.11.0
      *

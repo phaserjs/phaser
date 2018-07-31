@@ -126,7 +126,7 @@ var GameObject = new Class({
          * A bitmask that controls if this Game Object is drawn by a Camera or not.
          * Not usually set directly, instead call `Camera.ignore`, however you can
          * set this property directly using the Camera.id property:
-         * 
+         *
          * @example
          * this.cameraFilter |= camera.id
          *
@@ -234,12 +234,12 @@ var GameObject = new Class({
 
     /**
      * Allows you to store a key value pair within this Game Objects Data Manager.
-     * 
+     *
      * If the Game Object has not been enabled for data (via `setDataEnabled`) then it will be enabled
      * before setting the value.
-     * 
+     *
      * If the key doesn't already exist in the Data Manager then it is created.
-     * 
+     *
      * ```javascript
      * sprite.setData('name', 'Red Gem Stone');
      * ```
@@ -251,13 +251,13 @@ var GameObject = new Class({
      * ```
      *
      * To get a value back again you can call `getData`:
-     * 
+     *
      * ```javascript
      * sprite.getData('gold');
      * ```
-     * 
+     *
      * Or you can access the value directly via the `values` property, where it works like any other variable:
-     * 
+     *
      * ```javascript
      * sprite.data.values.gold += 50;
      * ```
@@ -295,19 +295,19 @@ var GameObject = new Class({
      * Retrieves the value for the given key in this Game Objects Data Manager, or undefined if it doesn't exist.
      *
      * You can also access values via the `values` object. For example, if you had a key called `gold` you can do either:
-     * 
+     *
      * ```javascript
      * sprite.getData('gold');
      * ```
      *
      * Or access the value directly:
-     * 
+     *
      * ```javascript
      * sprite.data.values.gold;
      * ```
      *
      * You can also pass in an array of keys, in which case an array of values will be returned:
-     * 
+     *
      * ```javascript
      * sprite.getData([ 'gold', 'armor', 'health' ]);
      * ```
@@ -416,6 +416,8 @@ var GameObject = new Class({
      *
      * @method Phaser.GameObjects.GameObject#update
      * @since 3.0.0
+     *
+     * @param {...*} [args] - args
      */
     update: function ()
     {
@@ -440,7 +442,7 @@ var GameObject = new Class({
      *
      * @method Phaser.GameObjects.GameObject#willRender
      * @since 3.0.0
-     * 
+     *
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to check against this Game Object.
      *
      * @return {boolean} True if the Game Object should be rendered, otherwise false.
