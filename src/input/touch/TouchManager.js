@@ -110,7 +110,7 @@ var TouchManager = new Class({
      */
     onTouchStart: function (event)
     {
-        if (event.defaultPrevented || !this.enabled)
+        if (event.defaultPrevented || !this.enabled || !this.manager)
         {
             // Do nothing if event already handled
             return;
@@ -134,7 +134,7 @@ var TouchManager = new Class({
      */
     onTouchMove: function (event)
     {
-        if (event.defaultPrevented || !this.enabled)
+        if (event.defaultPrevented || !this.enabled || !this.manager)
         {
             // Do nothing if event already handled
             return;
@@ -158,7 +158,7 @@ var TouchManager = new Class({
      */
     onTouchEnd: function (event)
     {
-        if (event.defaultPrevented || !this.enabled)
+        if (event.defaultPrevented || !this.enabled || !this.manager)
         {
             // Do nothing if event already handled
             return;
