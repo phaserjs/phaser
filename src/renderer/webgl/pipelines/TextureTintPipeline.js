@@ -818,12 +818,106 @@ var TextureTintPipeline = new Class({
     },
 
     /**
+     * Generic function for batching a textured quad using argument values instead of a Game Object.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTextureFrame
+     * @since 3.12.0
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - Source GameObject.
+     * @param {Phaser.Textures.Frame} frame - The Texture Frame to be rendered.
+     * @param {number} srcX - X coordinate of the quad.
+     * @param {number} srcY - Y coordinate of the quad.
+     * @param {number} srcWidth - Width of the quad.
+     * @param {number} srcHeight - Height of the quad.
+     * @param {number} scaleX - X component of scale.
+     * @param {number} scaleY - Y component of scale.
+     * @param {number} rotation - Rotation of the quad.
+     * @param {boolean} flipX - Indicates if the quad is horizontally flipped.
+     * @param {boolean} flipY - Indicates if the quad is vertically flipped.
+     * @param {number} displayOriginX - Horizontal origin in pixels.
+     * @param {number} displayOriginY - Vertical origin in pixels.
+     * @param {integer} tintTL - Tint for top left.
+     * @param {integer} tintTR - Tint for top right.
+     * @param {integer} tintBL - Tint for bottom left.
+     * @param {integer} tintBR - Tint for bottom right.
+     * @param {number} tintEffect - The tint effect.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentTransformMatrix] - A parent Transform Matrix.
+     */
+    batchTextureFrame: function (
+        gameObject,
+        frame,
+        srcX, srcY,
+        srcWidth, srcHeight,
+        scaleX, scaleY,
+        rotation,
+        flipX, flipY,
+        displayOriginX, displayOriginY,
+        tintTL, tintTR, tintBL, tintBR, tintEffect,
+        parentTransformMatrix)
+    {
+        this.renderer.setPipeline(this, gameObject);
+
+        var spriteMatrix = this._tempMatrix1;
+        var calcMatrix = this._tempMatrix2;
+
+        var width = srcWidth;
+        var height = srcHeight;
+
+        var x = -displayOriginX;
+        var y = -displayOriginY;
+
+        if (flipX)
+        {
+            width *= -1;
+            x += srcWidth;
+        }
+
+        if (flipY)
+        {
+            height *= -1;
+            y += srcHeight;
+        }
+
+        var xw = x + width;
+        var yh = y + height;
+
+        spriteMatrix.applyITRS(srcX, srcY, rotation, scaleX, scaleY);
+
+        if (parentTransformMatrix)
+        {
+            //  Multiply by the Sprite matrix, store result in calcMatrix
+            spriteMatrix.multiply(parentTransformMatrix, calcMatrix);
+        }
+        else
+        {
+            //  Multiply by the Sprite matrix, store result in calcMatrix
+            calcMatrix = spriteMatrix;
+        }
+
+        var tx0 = calcMatrix.getX(x, y);
+        var ty0 = calcMatrix.getY(x, y);
+
+        var tx1 = calcMatrix.getX(x, yh);
+        var ty1 = calcMatrix.getY(x, yh);
+
+        var tx2 = calcMatrix.getX(xw, yh);
+        var ty2 = calcMatrix.getY(xw, yh);
+
+        var tx3 = calcMatrix.getX(xw, y);
+        var ty3 = calcMatrix.getY(xw, y);
+
+        this.setTexture2D(frame.glTexture, 0);
+
+        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tintTL, tintTR, tintBL, tintBR, tintEffect);
+    },
+
+    /**
      * Immediately draws a Texture Frame with no batching.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#drawTexture
      * @since 3.11.0
      *
-     * @param {WebGLTexture} texture - The WebGL Texture to be rendered.
+     * @param {Phaser.Textures.Frame} frame - The Texture Frame to be rendered.
      * @param {number} x - The horizontal position to render the texture at.
      * @param {number} y - The vertical position to render the texture at.
      * @param {number} tint - The tint color.
@@ -841,12 +935,8 @@ var TextureTintPipeline = new Class({
     {
         this.renderer.setPipeline(this);
 
-        if (this.vertexCount + 6 > this.vertexCapacity)
-        {
-            this.flush();
-        }
-
-        var spriteMatrix = this._tempMatrix1.copyFromArray(transformMatrix);
+        // var spriteMatrix = this._tempMatrix1.copyFromArray(transformMatrix);
+        var spriteMatrix = this._tempMatrix1.copyFrom(transformMatrix);
         var calcMatrix = this._tempMatrix2;
 
         var xw = x + frame.width;
@@ -892,10 +982,7 @@ var TextureTintPipeline = new Class({
 
         tint = Utils.getTintAppendFloatAlpha(tint, alpha);
 
-        if (!this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, 0))
-        {
-            this.flush();
-        }
+        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, 0);
     },
 
     /**
