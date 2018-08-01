@@ -68,6 +68,7 @@ The process of managing scissors in the WebGLRenderer has been completely rewrit
 * The `MouseManager` will no longer process its native events if the manager reference has been removed (i.e. you move the pointer as the game is destroying itself)
 * The `TouchManager` will no longer process its native events if the manager reference has been removed (i.e. you move the pointer as the game is destroying itself)
 * `Particle.color` has been removed as it's now calculated during rendering to allow for Camera alpha support.
+* The Game boot event flow has changed slightly. The Game will now listen for a `texturesready` event, which is dispatched by the Texture Manager when the default textures have finished processing. Upon receiving this, the Game will emit the `ready` event, which all the other systems listen for and respond to. The difference is that the Renderer uses the `texturesready` event to ensure that it is the first thing to be activated, before any other system.
 
 ### Game Config Resolution Specific Bug Fixes
 

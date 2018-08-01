@@ -520,7 +520,7 @@ var WebGLRenderer = new Class({
 
         this.resize(this.width, this.height);
 
-        this.game.events.once('ready', this.boot, this);
+        this.game.events.once('texturesready', this.boot, this);
 
         return this;
     },
@@ -544,6 +544,8 @@ var WebGLRenderer = new Class({
         this.pipelines.TextureTintPipeline.currentFrame = blank;
 
         this.blankTexture = blank;
+
+        console.log('renderer boot', this.pipelines.TextureTintPipeline.currentFrame);
     },
 
     /**
@@ -965,12 +967,16 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setBlankTexture
      * @private
      * @since 3.12.0
+     * 
+     * @param {boolean} [force=false] - Force a blank texture set, regardless of what's already bound?
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} This WebGL Renderer.
      */
-    setBlankTexture: function ()
+    setBlankTexture: function (force)
     {
-        if (this.currentActiveTextureUnit !== 0 || !this.currentTextures[0])
+        if (force === undefined) { force = false; }
+
+        if (force || this.currentActiveTextureUnit !== 0 || !this.currentTextures[0])
         {
             this.setTexture2D(this.blankTexture.glTexture, 0);
         }

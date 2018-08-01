@@ -116,6 +116,7 @@ var TextureManager = new Class({
      * The Boot Handler called by Phaser.Game when it first starts up.
      *
      * @method Phaser.Textures.TextureManager#boot
+     * @private
      * @since 3.0.0
      */
     boot: function ()
@@ -135,6 +136,7 @@ var TextureManager = new Class({
      * After 'onload' or 'onerror' invoked twice, emit 'ready' event.
      *
      * @method Phaser.Textures.TextureManager#updatePending
+     * @private
      * @since 3.0.0
      */
     updatePending: function ()
@@ -146,7 +148,7 @@ var TextureManager = new Class({
             this.off('onload');
             this.off('onerror');
 
-            this.game.events.emit('ready');
+            this.game.events.emit('texturesready');
         }
     },
 

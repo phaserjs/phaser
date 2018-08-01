@@ -356,8 +356,26 @@ var Game = new Class({
 
         this.events.emit('boot');
 
-        //  The Texture Manager has to wait on a couple of non-blocking events before it's fully ready, so it will emit this event
-        this.events.once('ready', this.start, this);
+        //  The Texture Manager has to wait on a couple of non-blocking events before it's fully ready.
+        //  So it will emit this internal event when done:
+        this.events.once('texturesready', this.texturesReady, this);
+    },
+
+    /**
+     * Called automatically when the Texture Manager has finished setting up and preparing the
+     * default textures.
+     *
+     * @method Phaser.Game#texturesReady
+     * @private
+     * @fires Phaser.Game#ready
+     * @since 3.12.0
+     */
+    texturesReady: function ()
+    {
+        //  Start all the other systems
+        this.events.emit('ready');
+
+        this.start();
     },
 
     /**
