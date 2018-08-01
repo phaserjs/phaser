@@ -46,6 +46,9 @@ var RenderTextureWebGLRenderer = function (renderer, src, interpolationPercentag
         camera,
         parentMatrix
     );
+
+    //  Force clear the current texture so that items next in the batch (like Graphics) don't try and use it
+    renderer.setBlankTexture(true);
 };
 
 module.exports = RenderTextureWebGLRenderer;
