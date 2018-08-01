@@ -1,3 +1,4 @@
+var Frame = require('../../textures/Frame');
 var Utils = require('../../renderer/webgl/Utils');
 
 var RenderTextureWebGL = {
@@ -85,11 +86,11 @@ var RenderTextureWebGL = {
      *
      * @return {this} This Game Object.
      */
-    draw: function (stamp, x, y, tint)
+    draw: function (entries, x, y, tint)
     {
-        if (!Array.isArray(stamp))
+        if (!Array.isArray(entries))
         {
-            stamp = [ stamp ];
+            entries = [ entries ];
         }
 
         this.renderer.setFramebuffer(this.framebuffer);
@@ -100,17 +101,7 @@ var RenderTextureWebGL = {
 
         pipeline.projOrtho(0, this.width, 0, this.height, -1000.0, 1000.0);
 
-        for (var i = 0; i < stamp.length; i++)
-        {
-            // if (stamp[i].frame)
-            // {
-                this.drawGameObject(stamp[i], x, y);
-            // }
-            // else
-            // {
-            //     this.drawFrame(stamp[i], x, y, tint);
-            // }
-        }
+        this.drawList(entries, x, y, tint);
 
         pipeline.flush();
 
@@ -119,6 +110,54 @@ var RenderTextureWebGL = {
         pipeline.projOrtho(0, pipeline.width, pipeline.height, 0, -1000.0, 1000.0);
 
         return this;
+    },
+
+    drawList: function (children, x, y, tint)
+    {
+        for (var i = 0; i < children.length; i++)
+        {
+            var entry = children[i];
+
+            if (!entry || entry === this)
+            {
+                continue;
+            }
+
+            if (entry.renderWebGL)
+            {
+                //  Game Objects
+                this.drawGameObject(entry, x, y);
+            }
+            else if (entry.isParent)
+            {
+                //  Groups
+                this.drawGroup(entry.getChildren(), x, y);
+            }
+            else if (entry instanceof Frame)
+            {
+                //  Texture Frames
+                this.drawFrame(entry, x, y, tint);
+            }
+        }
+    },
+
+    drawGroup: function (children, x, y)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+
+        for (var i = 0; i < children.length; i++)
+        {
+            var entry = children[i];
+
+            if (entry.renderWebGL)
+            {
+                var tx = entry.x + x;
+                var ty = entry.y + y;
+
+                this.drawGameObject(entry, tx, ty);
+            }
+        }
     },
 
     drawGameObject: function (gameObject, x, y)
@@ -138,29 +177,43 @@ var RenderTextureWebGL = {
         gameObject.setPosition(prevX, prevY);
     },
 
-    NEWdrawGameObject: function (gameObject, x, y)
+    drawTexture: function (key, frame, x, y, alpha, tint)
     {
-        if (x === undefined) { x = gameObject.x; }
-        if (y === undefined) { y = gameObject.y; }
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (alpha === undefined) { alpha = this.globalAlpha; }
 
-        var getTint = Utils.getTintAppendFloatAlpha;
+        if (tint === undefined)
+        {
+            tint = (this.globalTint >> 16) + (this.globalTint & 0xff00) + ((this.globalTint & 0xff) << 16);
+        }
+        else
+        {
+            tint = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16);
+        }
 
-        this.pipeline.batchTextureFrame(
-            gameObject,
-            gameObject.frame,
-            x, y,
-            gameObject.width, gameObject.height,
-            gameObject.scaleX, gameObject.scaleY,
-            gameObject.rotation,
-            gameObject.flipX, gameObject.flipY,
-            gameObject.displayOriginX, gameObject.displayOriginY,
-            getTint(gameObject._tintTL, this.alpha * gameObject._alphaTL),
-            getTint(gameObject._tintTR, this.alpha * gameObject._alphaTR),
-            getTint(gameObject._tintBL, this.alpha * gameObject._alphaBL),
-            getTint(gameObject._tintBR, this.alpha * gameObject._alphaBR),
-            (gameObject._isTinted && gameObject.tintFill),
-            null
-        );
+        var textureFrame = this.textureManager.getFrame(key, frame);
+
+        if (textureFrame)
+        {
+            this.renderer.setFramebuffer(this.framebuffer);
+
+            this.camera.preRender(1, 1, 1);
+    
+            var pipeline = this.pipeline;
+    
+            pipeline.projOrtho(0, this.width, 0, this.height, -1000.0, 1000.0);
+    
+            this.pipeline.batchTextureFrame(frame, x, y, tint, alpha, this.camera.matrix, null);
+        
+            pipeline.flush();
+    
+            this.renderer.setFramebuffer(null);
+    
+            pipeline.projOrtho(0, pipeline.width, pipeline.height, 0, -1000.0, 1000.0);
+        }
+
+        return this;
     },
 
     drawFrame: function (frame, x, y, tint)
@@ -177,9 +230,7 @@ var RenderTextureWebGL = {
             tint = (tint >> 16) + (tint & 0xff00) + ((tint & 0xff) << 16);
         }
 
-        this.pipeline.drawTextureFrame(frame, x, y, tint, this.globalAlpha, this.currentMatrix, null);
-
-        // pipeline.drawTextureFrame(frame, x, y, tint, this.globalAlpha, [1,0,0,1,0,0,0,0,1], null);
+        this.pipeline.batchTextureFrame(frame, x, y, tint, this.globalAlpha, this.camera.matrix, null);
     }
 
 };
