@@ -4,8 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = require('../../gameobjects/GameObject');
-
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
  * 
@@ -25,11 +23,6 @@ var GameObject = require('../../gameobjects/GameObject');
  */
 var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)))
-    {
-        return;
-    }
-
     src.upload(camera);
 
     if (src.vertexCount > 0)
