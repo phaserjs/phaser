@@ -148,8 +148,8 @@ var RenderTexture = new Class({
 
         this.camera.setScene(scene);
 
-        // this.currentMatrix = new Components.TransformMatrix();
-
+        this.dirty = false;
+        
         if (this.renderer.type === CONST.WEBGL)
         {
             var gl = this.renderer.gl;
