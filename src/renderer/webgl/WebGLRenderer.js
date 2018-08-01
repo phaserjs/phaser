@@ -415,6 +415,17 @@ var WebGLRenderer = new Class({
          */
         this.drawingBufferHeight = 0;
 
+        /**
+         * A blank 32x32 transparent texture, as used by the Graphics system where needed.
+         * This is set in the `boot` method.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#blankTexture
+         * @type {WebGLTexture}
+         * @readOnly
+         * @since 3.12.0
+         */
+        this.blankTexture = null;
+
         this.init(this.config);
     },
 
@@ -544,8 +555,6 @@ var WebGLRenderer = new Class({
         this.pipelines.TextureTintPipeline.currentFrame = blank;
 
         this.blankTexture = blank;
-
-        console.log('renderer boot', this.pipelines.TextureTintPipeline.currentFrame);
     },
 
     /**
