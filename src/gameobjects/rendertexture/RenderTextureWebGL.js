@@ -44,15 +44,20 @@ var RenderTextureWebGL = {
      */
     clear: function ()
     {
-        this.renderer.setFramebuffer(this.framebuffer);
+        if (this.dirty)
+        {
+            this.renderer.setFramebuffer(this.framebuffer);
 
-        var gl = this.gl;
+            var gl = this.gl;
+    
+            gl.clearColor(0, 0, 0, 0);
+    
+            gl.clear(gl.COLOR_BUFFER_BIT);
+    
+            this.renderer.setFramebuffer(null);
 
-        gl.clearColor(0, 0, 0, 0);
-
-        gl.clear(gl.COLOR_BUFFER_BIT);
-
-        this.renderer.setFramebuffer(null);
+            this.dirty = false;
+        }
 
         return this;
     },
@@ -109,6 +114,8 @@ var RenderTextureWebGL = {
 
         pipeline.projOrtho(0, pipeline.width, pipeline.height, 0, -1000.0, 1000.0);
 
+        this.dirty = true;
+
         return this;
     },
 
@@ -150,7 +157,7 @@ var RenderTextureWebGL = {
         {
             var entry = children[i];
 
-            if (entry.renderWebGL)
+            if (entry.renderWebGL && entry.willRender())
             {
                 var tx = entry.x + x;
                 var ty = entry.y + y;
@@ -211,6 +218,8 @@ var RenderTextureWebGL = {
             this.renderer.setFramebuffer(null);
     
             pipeline.projOrtho(0, pipeline.width, pipeline.height, 0, -1000.0, 1000.0);
+
+            this.dirty = true;
         }
 
         return this;
