@@ -4,12 +4,11 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-//  Phaser.Physics.Arcade.StaticGroup
-
 var ArcadeSprite = require('./ArcadeSprite');
 var Class = require('../../utils/Class');
 var CONST = require('./const');
 var Group = require('../../gameobjects/group/Group');
+var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
  * @classdesc
@@ -34,14 +33,39 @@ var StaticPhysicsGroup = new Class({
 
     function StaticPhysicsGroup (world, scene, children, config)
     {
-        if (config === undefined && !Array.isArray(children) && typeof children === 'object')
+        if (!children && !config)
         {
+            config = {
+                createCallback: this.createCallbackHandler,
+                removeCallback: this.removeCallbackHandler,
+                createMultipleCallback: this.createMultipleCallbackHandler,
+                classType: ArcadeSprite
+            };
+        }
+        else if (IsPlainObject(children))
+        {
+            //  children is a plain object, so swizzle them:
             config = children;
             children = null;
+
+            config.createCallback = this.createCallbackHandler;
+            config.removeCallback = this.removeCallbackHandler;
+            config.createMultipleCallback = this.createMultipleCallbackHandler;
+            config.classType = ArcadeSprite;
         }
-        else if (config === undefined)
+        else if (Array.isArray(children) && IsPlainObject(children[0]))
         {
-            config = {};
+            //  children is an array of plain objects
+            config = children;
+            children = null;
+
+            config.forEach(function (singleConfig)
+            {
+                singleConfig.createCallback = this.createCallbackHandler;
+                singleConfig.removeCallback = this.removeCallbackHandler;
+                singleConfig.createMultipleCallback = this.createMultipleCallbackHandler;
+                singleConfig.classType = ArcadeSprite;
+            });
         }
 
         /**
@@ -52,12 +76,6 @@ var StaticPhysicsGroup = new Class({
          * @since 3.0.0
          */
         this.world = world;
-
-        config.createCallback = this.createCallbackHandler;
-        config.removeCallback = this.removeCallbackHandler;
-        config.createMultipleCallback = this.createMultipleCallbackHandler;
-
-        config.classType = ArcadeSprite;
 
         /**
          * [description]

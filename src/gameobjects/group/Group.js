@@ -126,9 +126,11 @@ var Group = new Class({
 
         //  Or they can pass in a child, or array of children AND a config object
 
-        if (config !== undefined)
+        if (config)
         {
-            if (!Array.isArray(children))
+            //  config has been set, are the children an array?
+
+            if (children && !Array.isArray(children))
             {
                 children = [ children ];
             }
@@ -349,18 +351,16 @@ var Group = new Class({
             config = [ config ];
         }
 
-        if (config[0].key === undefined)
-        {
-            return [];
-        }
-
         var output = [];
 
-        for (var i = 0; i < config.length; i++)
+        if (config[0].key)
         {
-            var entries = this.createFromConfig(config[i]);
-
-            output = output.concat(entries);
+            for (var i = 0; i < config.length; i++)
+            {
+                var entries = this.createFromConfig(config[i]);
+    
+                output = output.concat(entries);
+            }
         }
 
         return output;

@@ -9,6 +9,7 @@ var Class = require('../../utils/Class');
 var CONST = require('./const');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Group = require('../../gameobjects/group/Group');
+var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
  * @typedef {object} PhysicsGroupConfig
@@ -88,14 +89,33 @@ var PhysicsGroup = new Class({
 
     function PhysicsGroup (world, scene, children, config)
     {
-        if (config === undefined && !Array.isArray(children) && typeof children === 'object')
+        if (!children && !config)
         {
+            config = {
+                createCallback: this.createCallbackHandler,
+                removeCallback: this.removeCallbackHandler
+            };
+        }
+        else if (IsPlainObject(children))
+        {
+            //  children is a plain object, so swizzle them:
             config = children;
             children = null;
+
+            config.createCallback = this.createCallbackHandler;
+            config.removeCallback = this.removeCallbackHandler;
         }
-        else if (config === undefined)
+        else if (Array.isArray(children) && IsPlainObject(children[0]))
         {
-            config = {};
+            //  children is an array of plain objects
+            config = children;
+            children = null;
+
+            config.forEach(function (singleConfig)
+            {
+                singleConfig.createCallback = this.createCallbackHandler;
+                singleConfig.removeCallback = this.removeCallbackHandler;
+            });
         }
 
         /**
@@ -106,9 +126,6 @@ var PhysicsGroup = new Class({
          * @since 3.0.0
          */
         this.world = world;
-
-        config.createCallback = this.createCallbackHandler;
-        config.removeCallback = this.removeCallbackHandler;
 
         /**
          * The class to create new group members from.
