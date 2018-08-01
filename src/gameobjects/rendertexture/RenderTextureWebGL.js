@@ -128,7 +128,7 @@ var RenderTextureWebGL = {
                 //  Game Objects
                 this.drawGameObject(entry, x, y);
             }
-            else if (entry.isParent)
+            else if (entry.isParent || entry.list)
             {
                 //  Groups
                 this.drawGroup(entry.getChildren(), x, y);
