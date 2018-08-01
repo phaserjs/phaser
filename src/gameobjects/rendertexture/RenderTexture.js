@@ -86,6 +86,15 @@ var RenderTexture = new Class({
         this.renderer = scene.sys.game.renderer;
 
         /**
+         * A reference to the Texture Manager.
+         *
+         * @name Phaser.GameObjects.RenderTexture#textureManager
+         * @type {Phaser.Textures.TextureManager}
+         * @since 3.12.0
+         */
+        this.textureManager = scene.sys.textures;
+
+        /**
          * The tint of the Render Texture when rendered.
          *
          * @name Phaser.GameObjects.RenderTexture#globalTint
@@ -149,8 +158,11 @@ var RenderTexture = new Class({
             this.fill = RenderTextureWebGL.fill;
             this.clear = RenderTextureWebGL.clear;
             this.draw = RenderTextureWebGL.draw;
-            this.drawFrame = RenderTextureWebGL.drawFrame;
+            this.drawList = RenderTextureWebGL.drawList;
             this.drawGameObject = RenderTextureWebGL.drawGameObject;
+            this.drawTexture = RenderTextureWebGL.drawTexture;
+            this.drawFrame = RenderTextureWebGL.drawFrame;
+            this.drawGroup = RenderTextureWebGL.drawGroup;
             this.texture = this.renderer.createTexture2D(0, gl.NEAREST, gl.NEAREST, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, null, width, height, false);
             this.framebuffer = this.renderer.createFramebuffer(width, height, this.texture, false);
         }
