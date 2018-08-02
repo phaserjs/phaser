@@ -76,9 +76,6 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
     var camMatrix = renderer._tempMatrix1;
     var graphicsMatrix = renderer._tempMatrix2;
     var calcMatrix = renderer._tempMatrix3;
-    var currentMatrix = renderer._tempMatrix4;
-   
-    currentMatrix.loadIdentity();
 
     graphicsMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
 
