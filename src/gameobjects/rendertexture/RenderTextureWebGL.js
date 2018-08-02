@@ -1,5 +1,4 @@
 var Frame = require('../../textures/Frame');
-var Utils = require('../../renderer/webgl/Utils');
 
 var RenderTextureWebGL = {
 
@@ -211,7 +210,7 @@ var RenderTextureWebGL = {
     
             pipeline.projOrtho(0, this.width, 0, this.height, -1000.0, 1000.0);
     
-            this.pipeline.batchTextureFrame(frame, x, y, tint, alpha, this.camera.matrix, null);
+            this.pipeline.batchTextureFrame(textureFrame, x, y, tint, alpha, this.camera.matrix, null);
         
             pipeline.flush();
     
