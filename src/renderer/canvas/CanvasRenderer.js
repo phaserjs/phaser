@@ -360,6 +360,23 @@ var CanvasRenderer = new Class({
     },
 
     /**
+     * Changes the Canvas Rendering Context that all draw operations are performed against.
+     *
+     * @method Phaser.Renderer.Canvas.CanvasRenderer#setContext
+     * @since 3.12.0
+     *
+     * @param {?CanvasRenderingContext2D} [ctx] - The new Canvas Rendering Context to draw everything to. Leave empty to reset to the Game Canvas.
+     *
+     * @return {this} The Canvas Renderer instance.
+     */
+    setContext: function (ctx)
+    {
+        this.currentContext = (ctx) ? ctx : this.gameContext;
+
+        return this;
+    },
+
+    /**
      * [description]
      *
      * @method Phaser.Renderer.Canvas.CanvasRenderer#setAlpha
