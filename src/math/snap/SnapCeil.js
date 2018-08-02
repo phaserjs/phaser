@@ -16,10 +16,11 @@
  * @param {number} value - The value to snap.
  * @param {number} gap - The interval gap of the grid.
  * @param {number} [start=0] - Optional starting offset for gap.
+ * @param {boolean} [divide=false] - If `true` it will divide the snapped value by the gap before returning.
  *
  * @return {number} The snapped value.
  */
-var SnapCeil = function (value, gap, start)
+var SnapCeil = function (value, gap, start, divide)
 {
     if (start === undefined) { start = 0; }
 
@@ -31,7 +32,7 @@ var SnapCeil = function (value, gap, start)
     value -= start;
     value = gap * Math.ceil(value / gap);
 
-    return start + value;
+    return (divide) ? (start + value) / gap : start + value;
 };
 
 module.exports = SnapCeil;
