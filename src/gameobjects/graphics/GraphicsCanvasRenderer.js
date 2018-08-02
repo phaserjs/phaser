@@ -80,16 +80,40 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
 
     ctx.save();
 
+    var camMatrix = renderer._tempMatrix1;
+    var graphicsMatrix = renderer._tempMatrix2;
+    var calcMatrix = renderer._tempMatrix3;
+    var currentMatrix = renderer._tempMatrix4;
+   
+    currentMatrix.loadIdentity();
+
+    graphicsMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
+
+    camMatrix.copyFrom(camera.matrix);
+
     if (parentMatrix)
     {
-        var matrix = parentMatrix.matrix;
+        //  Multiply the camera by the parent matrix
+        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
 
-        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+        //  Undo the camera scroll
+        graphicsMatrix.e = src.x;
+        graphicsMatrix.f = src.y;
+
+        //  Multiply by the Sprite matrix, store result in calcMatrix
+        camMatrix.multiply(graphicsMatrix, calcMatrix);
+    }
+    else
+    {
+        graphicsMatrix.e -= camera.scrollX * src.scrollFactorX;
+        graphicsMatrix.f -= camera.scrollY * src.scrollFactorY;
+
+        //  Multiply by the Sprite matrix, store result in calcMatrix
+        camMatrix.multiply(graphicsMatrix, calcMatrix);
     }
 
-    ctx.translate(srcX - cameraScrollX, srcY - cameraScrollY);
-    ctx.rotate(srcRotation);
-    ctx.scale(srcScaleX, srcScaleY);
+    calcMatrix.copyToContext(ctx);
+
     ctx.fillStyle = '#fff';
     ctx.globalAlpha = src.alpha;
 
