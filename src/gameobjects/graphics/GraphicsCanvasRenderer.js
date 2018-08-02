@@ -21,7 +21,7 @@ var Commands = require('./Commands');
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  * @param {CanvasRenderingContext2D} [renderTargetCtx] - The target rendering context.
- * @param {boolean} allowClip - [description]
+ * @param {boolean} allowClip - If `true` then path operations will be used instead of fill operations.
  */
 var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix, renderTargetCtx, allowClip)
 {
