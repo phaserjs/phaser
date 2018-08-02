@@ -148,7 +148,7 @@ var DynamicTilemapLayer = new Class({
          * The total number of tiles drawn by the renderer in the last frame.
          *
          * @name Phaser.Tilemaps.DynamicTilemapLayer#tilesDrawn
-         * @type {number}
+         * @type {integer}
          * @readOnly
          * @since 3.11.0
          */
@@ -158,7 +158,7 @@ var DynamicTilemapLayer = new Class({
          * The total number of tiles in this layer. Updated every frame.
          *
          * @name Phaser.Tilemaps.DynamicTilemapLayer#tilesTotal
-         * @type {number}
+         * @type {integer}
          * @readOnly
          * @since 3.11.0
          */
@@ -170,7 +170,7 @@ var DynamicTilemapLayer = new Class({
          * See the method `setCullPadding` for more details.
          *
          * @name Phaser.Tilemaps.DynamicTilemapLayer#cullPaddingX
-         * @type {number}
+         * @type {integer}
          * @default 1
          * @since 3.11.0
          */
@@ -182,7 +182,7 @@ var DynamicTilemapLayer = new Class({
          * See the method `setCullPadding` for more details.
          *
          * @name Phaser.Tilemaps.DynamicTilemapLayer#cullPaddingY
-         * @type {number}
+         * @type {integer}
          * @default 1
          * @since 3.11.0
          */
@@ -851,8 +851,8 @@ var DynamicTilemapLayer = new Class({
      * @method Phaser.Tilemaps.DynamicTilemapLayer#setCullPadding
      * @since 3.11.0
      *
-     * @param {number} [paddingX=1] - The amount of extra horizontal tiles to add to the cull check padding.
-     * @param {number} [paddingY=1] - The amount of extra vertical tiles to add to the cull check padding.
+     * @param {integer} [paddingX=1] - The amount of extra horizontal tiles to add to the cull check padding.
+     * @param {integer} [paddingY=1] - The amount of extra vertical tiles to add to the cull check padding.
      *
      * @return {this} This Tilemap Layer object.
      */
