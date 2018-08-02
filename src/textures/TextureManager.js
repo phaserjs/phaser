@@ -342,6 +342,34 @@ var TextureManager = new Class({
     },
 
     /**
+     * Adds a Render Texture to the Texture Manager using the given key.
+     * This allows you to then use the Render Texture as a normal texture for texture based Game Objects like Sprites.
+     *
+     * @method Phaser.Textures.TextureManager#addRenderTexture
+     * @since 3.12.0
+     *
+     * @param {string} key - The unique string-based key of the Texture.
+     * @param {Phaser.GameObjects.RenderTexture} renderTexture - The source Render Texture.
+     *
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
+     */
+    addRenderTexture: function (key, renderTexture)
+    {
+        var texture = null;
+
+        if (this.checkKey(key))
+        {
+            texture = this.create(key, renderTexture);
+
+            texture.add('__BASE', 0, 0, 0, renderTexture.width, renderTexture.height);
+
+            this.emit('addtexture', key, texture);
+        }
+        
+        return texture;
+    },
+
+    /**
      * Creates a new Texture using the given config values.
      * Generated textures consist of a Canvas element to which the texture data is drawn.
      * See the Phaser.Create function for the more direct way to create textures.
