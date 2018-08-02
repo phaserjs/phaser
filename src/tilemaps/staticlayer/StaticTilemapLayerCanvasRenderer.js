@@ -70,9 +70,9 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, src, interpolationPer
 
     ctx.globalAlpha = camera.alpha * src.alpha;
 
-    for (var index = 0; index < tileCount; ++index)
+    for (var i = 0; i < tileCount; i++)
     {
-        var tile = renderTiles[index];
+        var tile = renderTiles[i];
 
         var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
 
