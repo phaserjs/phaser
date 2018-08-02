@@ -33,19 +33,12 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
         return;
     }
 
-    var cameraScrollX = camera.scrollX * src.scrollFactorX;
-    var cameraScrollY = camera.scrollY * src.scrollFactorY;
-    var srcX = src.x;
-    var srcY = src.y;
-    var srcScaleX = src.scaleX;
-    var srcScaleY = src.scaleY;
-    var srcRotation = src.rotation;
     var ctx = renderTargetCtx || renderer.currentContext;
-    var lineAlpha = 1.0;
-    var fillAlpha = 1.0;
+    var lineAlpha = 1;
+    var fillAlpha = 1;
     var lineColor = 0;
     var fillColor = 0;
-    var lineWidth = 1.0;
+    var lineWidth = 1;
     var red = 0;
     var green = 0;
     var blue = 0;
