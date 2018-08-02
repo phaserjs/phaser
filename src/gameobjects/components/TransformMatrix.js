@@ -622,6 +622,25 @@ var TransformMatrix = new Class({
     },
 
     /**
+     * Copy the values from this Matrix to the given Canvas Rendering Context.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#copyToContext
+     * @since 3.12.0
+     *
+     * @param {CanvasRenderingContext2D} ctx - The Canvas Rendering Context to copy the matrix values to.
+     *
+     * @return {CanvasRenderingContext2D} The Canvas Rendering Context.
+     */
+    copyToContext: function (ctx)
+    {
+        var matrix = this.matrix;
+
+        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+
+        return ctx;
+    },
+
+    /**
      * Copy the values in this Matrix to the array given.
      * 
      * Where array indexes 0, 1, 2, 3, 4 and 5 are mapped to a, b, c, d, e and f.
@@ -643,7 +662,6 @@ var TransformMatrix = new Class({
         }
         else
         {
-
             out[0] = matrix[0];
             out[1] = matrix[1];
             out[2] = matrix[2];
