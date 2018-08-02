@@ -123,14 +123,104 @@ var StaticTilemapLayer = new Class({
         this.tileset = tileset;
 
         /**
-         * Used internally with the canvas render. This holds the tiles that are visible within the
-         * camera.
+         * Used internally by the Canvas renderer.
+         * This holds the tiles that are visible within the camera in the last frame.
          *
          * @name Phaser.Tilemaps.StaticTilemapLayer#culledTiles
          * @type {array}
          * @since 3.0.0
          */
         this.culledTiles = [];
+
+        /**
+         * Canvas only.
+         * 
+         * You can control if the Cameras should cull tiles before rendering them or not.
+         * By default the camera will try to cull the tiles in this layer, to avoid over-drawing to the renderer.
+         *
+         * However, there are some instances when you may wish to disable this, and toggling this flag allows
+         * you to do so. Also see `setSkipCull` for a chainable method that does the same thing.
+         *
+         * @name Phaser.Tilemaps.StaticTilemapLayer#skipCull
+         * @type {boolean}
+         * @since 3.12.0
+         */
+        this.skipCull = false;
+
+        /**
+         * Canvas only.
+         * 
+         * The total number of tiles drawn by the renderer in the last frame.
+         * 
+         * This only works when rending with Canvas.
+         *
+         * @name Phaser.Tilemaps.StaticTilemapLayer#tilesDrawn
+         * @type {integer}
+         * @readOnly
+         * @since 3.12.0
+         */
+        this.tilesDrawn = 0;
+
+        /**
+         * Canvas only.
+         * 
+         * The total number of tiles in this layer. Updated every frame.
+         *
+         * @name Phaser.Tilemaps.StaticTilemapLayer#tilesTotal
+         * @type {integer}
+         * @readOnly
+         * @since 3.12.0
+         */
+        this.tilesTotal = this.layer.width * this.layer.height;
+
+        /**
+         * Canvas only.
+         * 
+         * The amount of extra tiles to add into the cull rectangle when calculating its horizontal size.
+         *
+         * See the method `setCullPadding` for more details.
+         *
+         * @name Phaser.Tilemaps.StaticTilemapLayer#cullPaddingX
+         * @type {integer}
+         * @default 1
+         * @since 3.12.0
+         */
+        this.cullPaddingX = 1;
+
+        /**
+         * Canvas only.
+         * 
+         * The amount of extra tiles to add into the cull rectangle when calculating its vertical size.
+         *
+         * See the method `setCullPadding` for more details.
+         *
+         * @name Phaser.Tilemaps.StaticTilemapLayer#cullPaddingY
+         * @type {integer}
+         * @default 1
+         * @since 3.12.0
+         */
+        this.cullPaddingY = 1;
+
+        /**
+         * Canvas only.
+         * 
+         * The callback that is invoked when the tiles are culled.
+         *
+         * By default it will call `TilemapComponents.CullTiles` but you can override this to call any function you like.
+         *
+         * It will be sent 3 arguments:
+         *
+         * 1) The Phaser.Tilemaps.LayerData object for this Layer
+         * 2) The Camera that is culling the layer. You can check its `dirty` property to see if it has changed since the last cull.
+         * 3) A reference to the `culledTiles` array, which should be used to store the tiles you want rendered.
+         *
+         * See the `TilemapComponents.CullTiles` source code for details on implementing your own culling system.
+         *
+         * @name Phaser.Tilemaps.StaticTilemapLayer#cullCallback
+         * @type {function}
+         * @since 3.12.0
+         */
+        this.cullCallback = TilemapComponents.CullTiles;
 
         /**
          * @name Phaser.Tilemaps.StaticTilemapLayer#vertexBuffer
@@ -458,28 +548,59 @@ var StaticTilemapLayer = new Class({
      */
     cull: function (camera)
     {
-        return TilemapComponents.CullTiles(this.layer, camera, this.culledTiles);
+        return this.cullCallback(this.layer, camera, this.culledTiles);
     },
 
     /**
-     * Destroys this StaticTilemapLayer and removes its link to the associated LayerData.
+     * Canvas only.
+     * 
+     * You can control if the Cameras should cull tiles before rendering them or not.
+     * By default the camera will try to cull the tiles in this layer, to avoid over-drawing to the renderer.
      *
-     * @method Phaser.Tilemaps.StaticTilemapLayer#destroy
-     * @since 3.0.0
+     * However, there are some instances when you may wish to disable this.
+     *
+     * @method Phaser.Tilemaps.StaticTilemapLayer#setSkipCull
+     * @since 3.12.0
+     *
+     * @param {boolean} [value=true] - Set to `true` to stop culling tiles. Set to `false` to enable culling again.
+     *
+     * @return {this} This Tilemap Layer object.
      */
-    destroy: function ()
+    setSkipCull: function (value)
     {
-        // Uninstall this layer only if it is still installed on the LayerData object
-        if (this.layer.tilemapLayer === this)
-        {
-            this.layer.tilemapLayer = undefined;
-        }
+        if (value === undefined) { value = true; }
 
-        this.tilemap = undefined;
-        this.layer = undefined;
-        this.tileset = undefined;
+        this.skipCull = value;
 
-        GameObject.prototype.destroy.call(this);
+        return this;
+    },
+
+    /**
+     * Canvas only.
+     * 
+     * When a Camera culls the tiles in this layer it does so using its view into the world, building up a
+     * rectangle inside which the tiles must exist or they will be culled. Sometimes you may need to expand the size
+     * of this 'cull rectangle', especially if you plan on rotating the Camera viewing the layer. Do so
+     * by providing the padding values. The values given are in tiles, not pixels. So if the tile width was 32px
+     * and you set `paddingX` to be 4, it would add 32px x 4 to the cull rectangle (adjusted for scale)
+     *
+     * @method Phaser.Tilemaps.StaticTilemapLayer#setCullPadding
+     * @since 3.12.0
+     *
+     * @param {integer} [paddingX=1] - The amount of extra horizontal tiles to add to the cull check padding.
+     * @param {integer} [paddingY=1] - The amount of extra vertical tiles to add to the cull check padding.
+     *
+     * @return {this} This Tilemap Layer object.
+     */
+    setCullPadding: function (paddingX, paddingY)
+    {
+        if (paddingX === undefined) { paddingX = 1; }
+        if (paddingY === undefined) { paddingY = 1; }
+
+        this.cullPaddingX = paddingX;
+        this.cullPaddingY = paddingY;
+
+        return this;
     },
 
     /**
@@ -1052,7 +1173,30 @@ var StaticTilemapLayer = new Class({
     worldToTileXY: function (worldX, worldY, snapToFloor, point, camera)
     {
         return TilemapComponents.WorldToTileXY(worldX, worldY, snapToFloor, point, camera, this.layer);
-    }
+    },
+
+    /**
+     * Destroys this StaticTilemapLayer and removes its link to the associated LayerData.
+     *
+     * @method Phaser.Tilemaps.StaticTilemapLayer#destroy
+     * @since 3.0.0
+     */
+    destroy: function ()
+    {
+        // Uninstall this layer only if it is still installed on the LayerData object
+        if (this.layer.tilemapLayer === this)
+        {
+            this.layer.tilemapLayer = undefined;
+        }
+
+        this.tilemap = undefined;
+        this.layer = undefined;
+        this.tileset = undefined;
+        this.culledTiles.length = 0;
+        this.cullCallback = null;
+
+        GameObject.prototype.destroy.call(this);
+    },
 
 });
 
