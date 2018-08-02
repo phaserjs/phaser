@@ -28,14 +28,25 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, src, interpolationPer
     var tileCount = renderTiles.length;
 
     var image = tileset.image.getSourceImage();
-    var tx = src.x - camera.scrollX * src.scrollFactorX;
-    var ty = src.y - camera.scrollY * src.scrollFactorY;
+
+    var camMatrix = renderer._tempMatrix1;
+    var layerMatrix = renderer._tempMatrix2;
+    var calcMatrix = renderer._tempMatrix3;
+
+    layerMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
 
     ctx.save();
-    ctx.translate(tx, ty);
-    ctx.rotate(src.rotation);
-    ctx.scale(src.scaleX, src.scaleY);
-    ctx.scale(src.flipX ? -1 : 1, src.flipY ? -1 : 1);
+
+    camMatrix.copyFrom(camera.matrix);
+
+    layerMatrix.e -= camera.scrollX * src.scrollFactorX;
+    layerMatrix.f -= camera.scrollY * src.scrollFactorY;
+
+    //  Multiply by the Sprite matrix, store result in calcMatrix
+    camMatrix.multiply(layerMatrix, calcMatrix);
+
+    calcMatrix.copyToContext(ctx);
+
     ctx.globalAlpha = camera.alpha * src.alpha;
 
     for (var index = 0; index < tileCount; ++index)
