@@ -17,17 +17,19 @@
  * @param {Phaser.Tilemaps.StaticTilemapLayer} src - The Game Object being rendered in this call.
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var StaticTilemapLayerCanvasRenderer = function (renderer, src, interpolationPercentage, camera)
+var StaticTilemapLayerCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
     src.cull(camera);
 
     var renderTiles = src.culledTiles;
-    var tileset = this.tileset;
-    var ctx = renderer.currentContext;
     var tileCount = renderTiles.length;
 
-    var image = tileset.image.getSourceImage();
+    if (tileCount === 0)
+    {
+        return;
+    }
 
     var camMatrix = renderer._tempMatrix1;
     var layerMatrix = renderer._tempMatrix2;
@@ -35,15 +37,34 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, src, interpolationPer
 
     layerMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
 
-    ctx.save();
-
     camMatrix.copyFrom(camera.matrix);
 
-    layerMatrix.e -= camera.scrollX * src.scrollFactorX;
-    layerMatrix.f -= camera.scrollY * src.scrollFactorY;
+    if (parentMatrix)
+    {
+        //  Multiply the camera by the parent matrix
+        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
 
-    //  Multiply by the Sprite matrix, store result in calcMatrix
-    camMatrix.multiply(layerMatrix, calcMatrix);
+        //  Undo the camera scroll
+        layerMatrix.e = src.x;
+        layerMatrix.f = src.y;
+
+        //  Multiply by the Sprite matrix, store result in calcMatrix
+        camMatrix.multiply(layerMatrix, calcMatrix);
+    }
+    else
+    {
+        layerMatrix.e -= camera.scrollX * src.scrollFactorX;
+        layerMatrix.f -= camera.scrollY * src.scrollFactorY;
+
+        //  Multiply by the Sprite matrix, store result in calcMatrix
+        camMatrix.multiply(layerMatrix, calcMatrix);
+    }
+
+    var tileset = src.tileset;
+    var ctx = renderer.currentContext;
+    var image = tileset.image.getSourceImage();
+
+    ctx.save();
 
     calcMatrix.copyToContext(ctx);
 
@@ -55,15 +76,16 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, src, interpolationPer
 
         var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
 
-        if (tileTexCoords === null) { continue; }
-
-        ctx.drawImage(
-            image,
-            tileTexCoords.x, tileTexCoords.y,
-            tile.width, tile.height,
-            tile.pixelX, tile.pixelY,
-            tile.width, tile.height
-        );
+        if (tileTexCoords)
+        {
+            ctx.drawImage(
+                image,
+                tileTexCoords.x, tileTexCoords.y,
+                tile.width, tile.height,
+                tile.pixelX, tile.pixelY,
+                tile.width, tile.height
+            );
+        }
     }
 
     ctx.restore();
