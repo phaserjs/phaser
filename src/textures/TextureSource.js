@@ -53,11 +53,21 @@ var TextureSource = new Class({
         this.texture = texture;
 
         /**
-         * The source image data.
+         * The source of the image data.
          * This is either an Image Element, a Canvas Element or a RenderTexture.
          *
-         * @name Phaser.Textures.TextureSource#image
+         * @name Phaser.Textures.TextureSource#source
          * @type {(HTMLImageElement|HTMLCanvasElement|Phaser.GameObjects.RenderTexture)}
+         * @since 3.12.0
+         */
+        this.source = source;
+
+        /**
+         * The image data.
+         * This is either an Image element or a Canvas element.
+         *
+         * @name Phaser.Textures.TextureSource#image
+         * @type {(HTMLImageElement|HTMLCanvasElement)}
          * @since 3.0.0
          */
         this.image = source;
@@ -162,19 +172,27 @@ var TextureSource = new Class({
      */
     init: function (game)
     {
-        if (this.renderer && this.renderer.gl)
+        if (this.renderer)
         {
-            if (this.isCanvas)
+            if (this.renderer.gl)
             {
-                this.glTexture = this.renderer.canvasToTexture(this.image);
+                if (this.isCanvas)
+                {
+                    this.glTexture = this.renderer.canvasToTexture(this.image);
+                }
+                else if (this.isRenderTexture)
+                {
+                    this.glTexture = this.source.texture;
+                    this.image = this.source.canvas;
+                }
+                else
+                {
+                    this.glTexture = this.renderer.createTextureFromSource(this.image, this.width, this.height, this.scaleMode);
+                }
             }
             else if (this.isRenderTexture)
             {
-                this.glTexture = this.image.texture;
-            }
-            else
-            {
-                this.glTexture = this.renderer.createTextureFromSource(this.image, this.width, this.height, this.scaleMode);
+                this.image = this.source.canvas;
             }
         }
 
@@ -239,7 +257,9 @@ var TextureSource = new Class({
 
         this.renderer = null;
         this.texture = null;
+        this.source = null;
         this.image = null;
+        this.glTexture = null;
     }
 
 });

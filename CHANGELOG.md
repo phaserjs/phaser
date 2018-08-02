@@ -53,6 +53,7 @@ The process of managing scissors in the WebGLRenderer has been completely rewrit
 * TextureSource has a new boolean property `isRenderTexture` which is set automatically when it's created.
 * The Canvas Renderer has a new method `setContext` which allows it to swap the context being drawn to by all draw operations. Call the method with no arguments to reset it to the default game canvas.
 * If you set `window.FORCE_WEBGL` or `window.FORCE_CANVAS` in the window in which the Phaser game is loaded it will over-ride the renderer type setting in your game config, and force either WebGL or Canvas. This is handy for quickly testing the differences between renderers without having to do a new build each time.
+* `TextureSource.source` is a new property that contains the original source of the Texture image. It is cleared when the source is destroyed.
 
 ### Updates
 
