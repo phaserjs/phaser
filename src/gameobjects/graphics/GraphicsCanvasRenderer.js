@@ -265,6 +265,18 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 );
                 index += 1;
                 break;
+
+            case Commands.GRADIENT_FILL_STYLE:
+                index += 5;
+                break;
+
+            case Commands.GRADIENT_LINE_STYLE:
+                index += 6;
+                break;
+
+            case Commands.SET_TEXTURE:
+                index += 2;
+                break;
         }
     }
 
