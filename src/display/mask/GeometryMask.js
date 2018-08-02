@@ -115,7 +115,7 @@ var GeometryMask = new Class({
 
         renderer.currentContext.save();
 
-        geometryMask.renderCanvas(renderer, geometryMask, 0.0, camera, undefined, null, true);
+        geometryMask.renderCanvas(renderer, geometryMask, 0, camera, null, null, true);
 
         renderer.currentContext.clip();
     },
