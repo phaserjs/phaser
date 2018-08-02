@@ -324,14 +324,16 @@ var Texture = new Class({
 
         var frame = this.frames[name];
 
-        if (!frame)
+        if (frame)
+        {
+            return frame.source.image;
+        }
+        else
         {
             console.warn(TEXTURE_MISSING_ERROR + name);
 
-            frame = '__BASE';
+            return this.frames['__BASE'].source.image;
         }
-
-        return this.frames[frame].source.image;
     },
 
     /**
