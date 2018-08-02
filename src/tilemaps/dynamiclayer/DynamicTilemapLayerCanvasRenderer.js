@@ -29,7 +29,7 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPe
 
     var tx = src.x - camera.scrollX * src.scrollFactorX;
     var ty = src.y - camera.scrollY * src.scrollFactorY;
-    var ctx = renderer.gameContext;
+    var ctx = renderer.currentContext;
 
     ctx.save();
     ctx.translate(tx, ty);
