@@ -567,6 +567,18 @@ var Config = new Class({
          * @const {string} Phaser.Boot.Config#missingImage - [description]
          */
         this.missingImage = GetValue(config, 'images.missing', pngPrefix + 'CAIAAAD8GO2jAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJ9JREFUeNq01ssOwyAMRFG46v//Mt1ESmgh+DFmE2GPOBARKb2NVjo+17PXLD8a1+pl5+A+wSgFygymWYHBb0FtsKhJDdZlncG2IzJ4ayoMDv20wTmSMzClEgbWYNTAkQ0Z+OJ+A/eWnAaR9+oxCF4Os0H8htsMUp+pwcgBBiMNnAwF8GqIgL2hAzaGFFgZauDPKABmowZ4GL369/0rwACp2yA/ttmvsQAAAABJRU5ErkJggg==');
+
+        if (window)
+        {
+            if (window.FORCE_WEBGL)
+            {
+                this.renderType = CONST.WEBGL;
+            }
+            else if (window.FORCE_CANVAS)
+            {
+                this.renderType = CONST.CANVAS;
+            }
+        }
     }
 
 });
