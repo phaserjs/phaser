@@ -260,6 +260,41 @@ var RenderTexture = new Class({
     },
 
     /**
+     * Stores a copy of this Render Texture in the Texture Manager using the given key.
+     * 
+     * After doing this, any texture based Game Object, such as a Sprite, can use the contents of this
+     * Render Texture for its texture by using the texture key:
+     * 
+     * ```javascript
+     * var rt = this.add.renderTexture(0, 0, 128, 128);
+     * 
+     * // Draw something to the Render Texture
+     * 
+     * rt.saveTexture('doodle');
+     * 
+     * this.add.image(400, 300, 'doodle');
+     * ```
+     * 
+     * Updating the contents of this Render Texture will automatically update _any_ Game Object
+     * that is using it as a texture.
+     * 
+     * By default it will create a single base texture. You can add frames to the texture
+     * by using the `Texture.add` method. After doing this, you can then allow Game Objects
+     * to use a specific frame from a Render Texture.
+     *
+     * @method Phaser.GameObjects.RenderTexture#saveTexture
+     * @since 3.12.0
+     *
+     * @param {string} key - The unique key to store the texture as within the global Texture Manager.
+     *
+     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if it could not be saved.
+     */
+    saveTexture: function (key)
+    {
+        return this.textureManager.addRenderTexture(key, this);
+    },
+
+    /**
      * Internal destroy handler, called as part of the destroy process.
      *
      * @method Phaser.GameObjects.RenderTexture#preDestroy
@@ -279,40 +314,6 @@ var RenderTexture = new Class({
             this.renderer.deleteFramebuffer(this.framebuffer);
         }
     }
-
-    /**
-     * Fills the Render Texture with the given color.
-     *
-     * @method Phaser.GameObjects.RenderTexture#fill
-     * @since 3.2.0
-     *
-     * @param {number} rgb - The color to fill the Render Texture with.
-     *
-     * @return {Phaser.GameObjects.RenderTexture} This Game Object.
-     */
-
-    /**
-     * Clears the Render Texture.
-     *
-     * @method Phaser.GameObjects.RenderTexture#clear
-     * @since 3.2.0
-     *
-     * @return {Phaser.GameObjects.RenderTexture} This Game Object.
-     */
-
-    /**
-     * Draws a texture frame to the Render Texture at the given position.
-     *
-     * @method Phaser.GameObjects.RenderTexture#draw
-     * @since 3.2.0
-     *
-     * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
-     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
-     * @param {number} x - The x position to draw the frame at.
-     * @param {number} y - The y position to draw the frame at.
-     *
-     * @return {Phaser.GameObjects.RenderTexture} This Game Object.
-     */
 
 });
 
