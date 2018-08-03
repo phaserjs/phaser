@@ -522,6 +522,119 @@ var CanvasRenderer = new Class({
         this.snapshotEncoder = encoderOptions;
     },
 
+    batchSprite: function (sprite, frame, camera, parentTransformMatrix)
+    {
+        var alpha = camera.alpha * sprite.alpha;
+
+        if (alpha === 0)
+        {
+            //  Nothing to see, so abort early
+            return;
+        }
+    
+        var ctx = this.currentContext;
+
+        var camMatrix = this._tempMatrix1;
+        var spriteMatrix = this._tempMatrix2;
+        var calcMatrix = this._tempMatrix3;
+
+        var cd = frame.canvasData;
+
+        var frameX = cd.x;
+        var frameY = cd.y;
+        var frameWidth = frame.width;
+        var frameHeight = frame.height;
+        var res = frame.source.resolution;
+
+        var x = -sprite.displayOriginX + frame.x;
+        var y = -sprite.displayOriginY + frame.y;
+
+        var fx = (sprite.flipX) ? -1 : 1;
+        var fy = (sprite.flipY) ? -1 : 1;
+    
+        if (sprite.isCropped)
+        {
+            var crop = sprite._crop;
+
+            if (crop.flipX !== sprite.flipX || crop.flipY !== sprite.flipY)
+            {
+                frame.updateCropUVs(crop, sprite.flipX, sprite.flipY);
+            }
+
+            frameWidth = crop.cw;
+            frameHeight = crop.ch;
+    
+            frameX = crop.cx;
+            frameY = crop.cy;
+
+            x = -sprite.displayOriginX + crop.x;
+            y = -sprite.displayOriginY + crop.y;
+
+            if (fx === -1)
+            {
+                if (x >= 0)
+                {
+                    x = -(x + frameWidth);
+                }
+                else if (x < 0)
+                {
+                    x = (Math.abs(x) - frameWidth);
+                }
+            }
+        
+            if (fy === -1)
+            {
+                if (y >= 0)
+                {
+                    y = -(y + frameHeight);
+                }
+                else if (y < 0)
+                {
+                    y = (Math.abs(y) - frameHeight);
+                }
+            }
+        }
+
+        spriteMatrix.applyITRS(sprite.x, sprite.y, sprite.rotation, sprite.scaleX, sprite.scaleY);
+
+        camMatrix.copyFrom(camera.matrix);
+
+        if (parentTransformMatrix)
+        {
+            //  Multiply the camera by the parent matrix
+            camMatrix.multiplyWithOffset(parentTransformMatrix, -camera.scrollX * sprite.scrollFactorX, -camera.scrollY * sprite.scrollFactorY);
+
+            //  Undo the camera scroll
+            spriteMatrix.e = sprite.x;
+            spriteMatrix.f = sprite.y;
+
+            //  Multiply by the Sprite matrix, store result in calcMatrix
+            camMatrix.multiply(spriteMatrix, calcMatrix);
+        }
+        else
+        {
+            spriteMatrix.e -= camera.scrollX * sprite.scrollFactorX;
+            spriteMatrix.f -= camera.scrollY * sprite.scrollFactorY;
+    
+            //  Multiply by the Sprite matrix, store result in calcMatrix
+            camMatrix.multiply(spriteMatrix, calcMatrix);
+        }
+
+        ctx.save();
+       
+        calcMatrix.setToContext(ctx);
+
+        ctx.scale(fx, fy);
+
+        ctx.globalCompositeOperation = this.blendModes[sprite.blendMode];
+
+        ctx.globalAlpha = alpha;
+
+        ctx.drawImage(frame.source.image, frameX, frameY, frameWidth, frameHeight, x, y, frameWidth / res, frameHeight / res);
+
+        ctx.restore();
+    },
+
     /**
      * [description]
      *

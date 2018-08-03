@@ -21,85 +21,9 @@
  */
 var TileSpriteCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    var ctx = renderer.currentContext;
-    var frame = src.frame;
+    src.updateCanvas();
 
-    src.updateTileTexture();
-
-    var alpha = camera.alpha * src.alpha;
-
-    if (alpha === 0)
-    {
-        //  Nothing to see, so abort early
-        return;
-    }
-
-    //  Blend Mode
-    ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
-
-    //  Alpha
-    ctx.globalAlpha = alpha;
-
-    var dx = frame.x - (src.originX * src.width);
-    var dy = frame.y - (src.originY * src.height);
-
-    var tx = src.x - camera.scrollX * src.scrollFactorX;
-    var ty = src.y - camera.scrollY * src.scrollFactorY;
-
-    var fx = 1;
-    var fy = 1;
-
-    // Flipping
-
-    if (src.flipX)
-    {
-        fx = -1;
-        dx += src.width;
-    }
-
-    if (src.flipY)
-    {
-        fy = -1;
-        dy += src.height;
-    }
-
-    if (camera.roundPixels)
-    {
-        dx |= 0;
-        dy |= 0;
-        tx |= 0;
-        ty |= 0;
-    }
-
-    ctx.save();
-
-    if (parentMatrix)
-    {
-        parentMatrix.copyToContext(ctx);
-    }
-
-    ctx.translate(dx, dy);
-
-    ctx.translate(tx, ty);
-
-    // Flip
-    ctx.scale(fx, fy);
-
-    // Rotate and scale around center
-    ctx.translate((src.originX * src.width), (src.originY * src.height));
-    ctx.rotate(fx * fy * src.rotation);
-    ctx.scale(this.scaleX, this.scaleY);
-    ctx.translate(-(src.originX * src.width), -(src.originY * src.height));
-
-    // Draw
-
-    ctx.scale(src.tileScaleX, src.tileScaleY);
-
-    ctx.translate(-this.tilePositionX, -this.tilePositionY);
-    ctx.fillStyle = src.tileTexture;
-    ctx.fillRect(this.tilePositionX, this.tilePositionY, src.width / src.tileScaleX, src.height / src.tileScaleY);
-
-    ctx.restore();
+    renderer.batchSprite(src, src.frame, camera, parentMatrix);
 };
 
 module.exports = TileSpriteCanvasRenderer;
