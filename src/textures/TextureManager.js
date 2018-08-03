@@ -431,22 +431,29 @@ var TextureManager = new Class({
     },
 
     /**
-     * Creates a new Canvas Texture object from an existing Canvas element and adds
-     * it to this Texture Manager.
+     * Creates a new Canvas Texture object from an existing Canvas element
+     * and adds it to this Texture Manager, unless `skipCache` is true.
      *
      * @method Phaser.Textures.TextureManager#addCanvas
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
      * @param {HTMLCanvasElement} source - The Canvas element to form the base of the new Texture.
+     * @param {boolean} [skipCache=false] - Skip adding this Texture into the Cache?
      *
      * @return {?Phaser.Textures.CanvasTexture} The Canvas Texture that was created, or `null` if the key is already in use.
      */
-    addCanvas: function (key, source)
+    addCanvas: function (key, source, skipCache)
     {
+        if (skipCache === undefined) { skipCache = false; }
+
         var texture = null;
 
-        if (this.checkKey(key))
+        if (skipCache)
+        {
+            texture = new CanvasTexture(this, key, source, source.width, source.height);
+        }
+        else if (this.checkKey(key))
         {
             texture = new CanvasTexture(this, key, source, source.width, source.height);
 
@@ -1006,6 +1013,40 @@ var TextureManager = new Class({
         }
 
         return gameObject;
+    },
+
+    /**
+     * Changes the key being used by a Texture to the new key provided.
+     * 
+     * The old key is removed, allowing it to be re-used.
+     * 
+     * Game Objects are linked to Textures by a reference to the Texture object, so
+     * all existing references will be retained.
+     *
+     * @method Phaser.Textures.TextureManager#renameTexture
+     * @since 3.12.0
+     *
+     * @param {string} currentKey - The current string-based key of the Texture you wish to rename.
+     * @param {string} newKey - The new unique string-based key to use for the Texture.
+     *
+     * @return {boolean} `true` if the Texture key was successfully renamed, otherwise `false`.
+     */
+    renameTexture: function (currentKey, newKey)
+    {
+        var texture = this.get(currentKey);
+
+        if (texture && currentKey !== newKey)
+        {
+            texture.key = newKey;
+
+            this.list[newKey] = texture;
+
+            delete this.list[currentKey];
+
+            return true;
+        }
+
+        return false;
     },
 
     /**
