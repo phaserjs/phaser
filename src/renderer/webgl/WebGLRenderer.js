@@ -306,23 +306,12 @@ var WebGLRenderer = new Class({
         this.currentScissor = null;
 
         /**
-         * Index to the scissor stack top
-         *
-         * @name Phaser.Renderer.WebGL.WebGLRenderer#currentScissorIdx
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        // this.currentScissorIdx = 0;
-
-        /**
          * Stack of scissor data
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#scissorStack
          * @type {Uint32Array}
          * @since 3.0.0
          */
-        // this.scissorStack = new Uint32Array(4 * 1000);
         this.scissorStack = [];
 
         // Setup context lost and restore event listeners
