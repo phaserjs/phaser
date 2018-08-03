@@ -34,7 +34,26 @@ The process of managing scissors in the WebGLRenderer has been completely rewrit
 
 ### Render Texture New Features and Updates
 
-The Render Texture class has been rewritten from scratch.
+The Render Texture class has been rewritten from scratch and all Game Objects have been updated to support it. Previously it was very restricted in what you could do with it. It used to have a matrix stack for internal transforms, but this has been replaced with a Camera instead. This means you have the full power of a Camera system (scrolling, zooming, rotation) but it only impacts the contents of the Render Texture.
+
+* The biggest update is the change in what the `draw` method can accept. Previously you had to pass is a texture and frame reference. This has changed, as has the method signature. It can now accept any of the following:
+
+    - Any renderable Game Object, such as a Sprite, Text, Graphics or TileSprite.
+    - Dynamic and Static Tilemap Layers.
+    - A Group. The contents of which will be iterated and drawn in turn.
+    - A Container. The contents of which will be iterated fully, and drawn in turn.
+    - A Scene. Pass in `Scene.children` to draw the whole display list.
+    - Another Render Texture.
+    - A Texture Frame instance.
+    - A string. This is used to look-up a texture from the Texture Manager.
+
+* There is a new method `drawFrame` which allows you to pass in a string-based texture and frame key and have it drawn to the Render Texture.
+* The new method `saveTexture` allows you to save the Render Texture into the Texture Manager using your own key. You can then use the Render Texture for any Game Object that accepts textures as a source, such as Sprites or even Tilemap Layers. You can add frame data to a Render Texture using the `RenderTexture.texture.add` method.
+* The new `camera` property is an instance of a complete 2D Camera. You can use it to change the view into your Render Texture. Scroll, rotate, zoom, just like you would with a normal Camera, except it will only influence is the objects being drawn to the Render Texture.
+* All of the matrix-style methods have been removed: `save`, `translate`, `restore`, `scale`, `rotate`. You can now achieve the same thing by either transforming the object you want to draw to the Render Texture, or using the built-in Camera.
+* You can now crop a Render Texture. Use the `setCrop` method to define the crop region.
+
+See the fully complete documentation for more details and the extensive examples and tests created.
 
 ### Text Game Object New Features and Updates
 
