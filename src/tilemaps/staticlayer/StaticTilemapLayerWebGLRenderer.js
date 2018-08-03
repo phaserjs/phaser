@@ -30,9 +30,8 @@ var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPerc
         var gl = renderer.gl;
         var pipeline = this.pipeline;
         var pipelineVertexBuffer = pipeline.vertexBuffer;
-    
-        var frame = src.tileset.image.get();
-    
+        var texture = src.tileset.glTexture;
+   
         if (renderer.currentPipeline && renderer.currentPipeline.vertexCount > 0)
         {
             renderer.flush();
@@ -42,7 +41,7 @@ var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPerc
     
         renderer.setPipeline(pipeline);
     
-        renderer.setTexture2D(frame.glTexture, 0);
+        renderer.setTexture2D(texture, 0);
     
         gl.drawArrays(pipeline.topology, 0, src.vertexCount);
     
