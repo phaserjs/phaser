@@ -28,9 +28,7 @@ var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, ca
         return;
     }
 
-    var ctx = renderer.gameContext;
-
-    //  Alpha
+    var ctx = renderer.currentContext;
 
     var alpha = camera.alpha * src.alpha;
 
@@ -39,25 +37,18 @@ var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, ca
         //  Nothing to see, so abort early
         return;
     }
-    else if (renderer.currentAlpha !== alpha)
-    {
-        renderer.currentAlpha = alpha;
-        ctx.globalAlpha = alpha;
-    }
 
     //  Blend Mode
-
-    renderer.setBlendMode(src.blendMode);
+    ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
 
     var cameraScrollX = src.x - camera.scrollX * src.scrollFactorX;
     var cameraScrollY = src.y - camera.scrollY * src.scrollFactorY;
 
     ctx.save();
 
-    if (parentMatrix !== undefined)
+    if (parentMatrix)
     {
-        var matrix = parentMatrix.matrix;
-        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+        parentMatrix.copyToContext(ctx);
     }
 
     //  Render bobs
@@ -78,11 +69,8 @@ var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, ca
         {
             continue;
         }
-        else if (renderer.currentAlpha !== bobAlpha)
-        {
-            renderer.currentAlpha = bobAlpha;
-            ctx.globalAlpha = bobAlpha;
-        }
+
+        ctx.globalAlpha = bobAlpha;
     
         if (!flip)
         {

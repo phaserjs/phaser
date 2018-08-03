@@ -61,9 +61,14 @@ var ContainerCanvasRenderer = function (renderer, container, interpolationPercen
         var childScrollFactorX = child.scrollFactorX;
         var childScrollFactorY = child.scrollFactorY;
 
+        //  Set new values
         child.setScrollFactor(childScrollFactorX * scrollFactorX, childScrollFactorY * scrollFactorY);
         child.setAlpha(childAlpha * alpha);
+
+        //  Render
         child.renderCanvas(renderer, child, interpolationPercentage, camera, transformMatrix);
+
+        //  Restore old values
         child.setAlpha(childAlpha);
         child.setScrollFactor(childScrollFactorX, childScrollFactorY);
     }

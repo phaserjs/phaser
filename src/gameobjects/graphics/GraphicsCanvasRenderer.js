@@ -91,7 +91,6 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
     calcMatrix.copyToContext(ctx);
 
     ctx.fillStyle = '#fff';
-    ctx.globalAlpha = src.alpha;
 
     for (var index = 0; index < commandBufferLength; ++index)
     {

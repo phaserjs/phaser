@@ -66,8 +66,6 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
     var rotation = 0;
     var scale = (src.fontSize / src.fontData.size);
 
-    //  Alpha
-
     var alpha = camera.alpha * src.alpha;
 
     if (alpha === 0)
@@ -75,24 +73,18 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
         //  Nothing to see, so abort early
         return;
     }
-    else if (renderer.currentAlpha !== alpha)
-    {
-        renderer.currentAlpha = alpha;
-        ctx.globalAlpha = alpha;
-    }
 
     //  Blend Mode
     ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
 
     //  Alpha
-    ctx.globalAlpha = src.alpha;
+    ctx.globalAlpha = alpha;
 
     ctx.save();
 
-    if (parentMatrix !== undefined)
+    if (parentMatrix)
     {
-        var matrix = parentMatrix.matrix;
-        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+        parentMatrix.copyToContext(ctx);
     }
 
     ctx.translate(src.x, src.y);

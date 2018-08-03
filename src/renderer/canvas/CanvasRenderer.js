@@ -160,26 +160,6 @@ var CanvasRenderer = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.Canvas.CanvasRenderer#currentAlpha
-         * @type {number}
-         * @default 1
-         * @since 3.0.0
-         */
-        this.currentAlpha = 1;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Renderer.Canvas.CanvasRenderer#currentBlendMode
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.currentBlendMode = 0;
-
-        /**
-         * [description]
-         *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#currentScaleMode
          * @type {number}
          * @default 0
@@ -346,17 +326,13 @@ var CanvasRenderer = new Class({
      *
      * @param {number} blendMode - [description]
      *
-     * @return {number} [description]
+     * @return {this} [description]
      */
     setBlendMode: function (blendMode)
     {
-        if (this.currentBlendMode !== blendMode)
-        {
-            this.currentContext.globalCompositeOperation = blendMode;
-            this.currentBlendMode = blendMode;
-        }
+        this.currentContext.globalCompositeOperation = blendMode;
 
-        return this.currentBlendMode;
+        return this;
     },
 
     /**
@@ -384,17 +360,13 @@ var CanvasRenderer = new Class({
      *
      * @param {number} alpha - [description]
      *
-     * @return {number} [description]
+     * @return {this} [description]
      */
     setAlpha: function (alpha)
     {
-        if (this.currentAlpha !== alpha)
-        {
-            this.currentContext.globalAlpha = alpha;
-            this.currentAlpha = alpha;
-        }
+        this.currentContext.globalAlpha = alpha;
 
-        return this.currentAlpha;
+        return this;
     },
 
     /**
@@ -461,15 +433,7 @@ var CanvasRenderer = new Class({
 
         ctx.globalAlpha = camera.alpha;
 
-        this.currentAlpha = camera.alpha;
-
-        if (this.currentBlendMode !== 0)
-        {
-            ctx.globalCompositeOperation = 'source-over';
-            this.currentBlendMode = 0;
-        }
-
-        this.currentScaleMode = 0;
+        ctx.globalCompositeOperation = 'source-over';
 
         this.drawCount += list.length;
 
@@ -481,9 +445,7 @@ var CanvasRenderer = new Class({
             ctx.clip();
         }
 
-        var matrix = camera.matrix.matrix;
-
-        ctx.setTransform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+        camera.matrix.copyToContext(ctx);
 
         for (var i = 0; i < childCount; i++)
         {
@@ -535,9 +497,6 @@ var CanvasRenderer = new Class({
 
         ctx.globalAlpha = 1;
         ctx.globalCompositeOperation = 'source-over';
-
-        this.currentAlpha = 1;
-        this.currentBlendMode = 0;
 
         if (this.snapshotCallback)
         {

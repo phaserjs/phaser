@@ -28,8 +28,6 @@ var TextCanvasRenderer = function (renderer, src, interpolationPercentage, camer
     
     var ctx = renderer.currentContext;
 
-    //  Alpha
-
     var alpha = camera.alpha * src.alpha;
 
     if (alpha === 0)
