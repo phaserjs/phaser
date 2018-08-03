@@ -61,28 +61,15 @@ var RenderTextureCanvasRenderer = function (renderer, renderTexture, interpolati
 
     ctx.save();
 
+    //  Blend Mode
+    ctx.globalCompositeOperation = renderer.blendModes[renderTexture.blendMode];
+
+    //  Alpha
     ctx.globalAlpha = alpha;
 
-    //  Blend Mode
-
-    if (renderer.currentBlendMode !== renderTexture.blendMode)
+    if (parentMatrix)
     {
-        renderer.currentBlendMode = renderTexture.blendMode;
-        ctx.globalCompositeOperation = renderer.blendModes[renderTexture.blendMode];
-    }
-
-    //  Scale Mode
-
-    if (renderer.currentScaleMode !== renderTexture.scaleMode)
-    {
-        renderer.currentScaleMode = renderTexture.scaleMode;
-    }
-
-    if (parentMatrix !== undefined)
-    {
-        var matrix = parentMatrix.matrix;
-
-        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+        parentMatrix.copyToContext(ctx);
     }
 
     ctx.translate(renderTexture.x - camera.scrollX * renderTexture.scrollFactorX, renderTexture.y - camera.scrollY * renderTexture.scrollFactorY);

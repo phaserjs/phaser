@@ -87,24 +87,12 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
         //  Nothing to see, so abort early
         return;
     }
-    else if (renderer.currentAlpha !== alpha)
-    {
-        renderer.currentAlpha = alpha;
-        ctx.globalAlpha = alpha;
-    }
 
     //  Blend Mode
-    if (renderer.currentBlendMode !== src.blendMode)
-    {
-        renderer.currentBlendMode = src.blendMode;
-        ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
-    }
+    ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
 
-    //  Smoothing
-    if (renderer.currentScaleMode !== src.scaleMode)
-    {
-        renderer.currentScaleMode = src.scaleMode;
-    }
+    //  Alpha
+    ctx.globalAlpha = alpha;
 
     var tx = (src.x - camera.scrollX * src.scrollFactorX) + src.frame.x;
     var ty = (src.y - camera.scrollY * src.scrollFactorY) + src.frame.y;
@@ -119,10 +107,9 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
 
     ctx.save();
 
-    if (parentMatrix !== undefined)
+    if (parentMatrix)
     {
-        var matrix = parentMatrix.matrix;
-        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+        parentMatrix.copyToContext(ctx);
     }
 
     ctx.translate(tx, ty);

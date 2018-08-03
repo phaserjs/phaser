@@ -65,11 +65,7 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
             scrollY = 0;
         }
 
-        if (renderer.currentBlendMode !== emitter.blendMode)
-        {
-            renderer.currentBlendMode = emitter.blendMode;
-            ctx.globalCompositeOperation = renderer.blendModes[emitter.blendMode];
-        }
+        ctx.globalCompositeOperation = renderer.blendModes[emitter.blendMode];
 
         for (var i = 0; i < particleCount; i++)
         {
@@ -83,14 +79,10 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
             }
 
             var frame = particle.frame;
+            var cd = frame.canvasData;
 
             var x = -(frame.halfWidth);
             var y = -(frame.halfHeight);
-
-            // var width = frame.width;
-            // var height = frame.height;
-            // var ox = width * 0.5;
-            // var oy = height * 0.5;
 
             particleMatrix.applyITRS(0, 0, particle.rotation, particle.scaleX, particle.scaleY);
 
@@ -98,18 +90,6 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
             particleMatrix.f = particle.y - scrollY;
 
             camMatrix.multiply(particleMatrix, calcMatrix);
-
-            // var x = -ox;
-            // var y = -oy;
-
-            // var tx = particle.x - cameraScrollX;
-            // var ty = particle.y - cameraScrollY;
-
-            // if (camera.roundPixels)
-            // {
-            //     tx |= 0;
-            //     ty |= 0;
-            // }
 
             ctx.globalAlpha = alpha;
         
@@ -122,14 +102,6 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
                 x |= 0;
                 y |= 0;
             }
-
-            // ctx.translate(tx, ty);
-
-            // ctx.rotate(particle.rotation);
-
-            // ctx.scale(particle.scaleX, particle.scaleY);
-
-            var cd = frame.canvasData;
 
             ctx.drawImage(frame.source.image, cd.x, cd.y, cd.width, cd.height, x, y, cd.width, cd.height);
 

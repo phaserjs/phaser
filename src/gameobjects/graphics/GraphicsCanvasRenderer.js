@@ -43,8 +43,6 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
     var green = 0;
     var blue = 0;
 
-    //  Alpha
-
     var alpha = camera.alpha * src.alpha;
 
     if (alpha === 0)
@@ -52,24 +50,12 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
         //  Nothing to see, so abort early
         return;
     }
-    else if (renderer.currentAlpha !== alpha)
-    {
-        renderer.currentAlpha = alpha;
-        ctx.globalAlpha = alpha;
-    }
 
     //  Blend Mode
-    if (renderer.currentBlendMode !== src.blendMode)
-    {
-        renderer.currentBlendMode = src.blendMode;
-        ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
-    }
+    ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
 
-    //  Smoothing
-    if (renderer.currentScaleMode !== src.scaleMode)
-    {
-        renderer.currentScaleMode = src.scaleMode;
-    }
+    //  Alpha
+    ctx.globalAlpha = alpha;
 
     ctx.save();
 

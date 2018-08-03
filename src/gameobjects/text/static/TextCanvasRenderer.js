@@ -37,35 +37,20 @@ var TextCanvasRenderer = function (renderer, src, interpolationPercentage, camer
         //  Nothing to see, so abort early
         return;
     }
-    else if (renderer.currentAlpha !== alpha)
-    {
-        renderer.currentAlpha = alpha;
-        ctx.globalAlpha = alpha;
-    }
     
     //  Blend Mode
+    ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
 
-    if (renderer.currentBlendMode !== src.blendMode)
-    {
-        renderer.currentBlendMode = src.blendMode;
-        ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
-    }
-
-    //  Smoothing
-
-    if (renderer.currentScaleMode !== src.scaleMode)
-    {
-        renderer.currentScaleMode = src.scaleMode;
-    }
+    //  Alpha
+    ctx.globalAlpha = alpha;
 
     var canvas = src.canvas;
 
     ctx.save();
 
-    if (parentMatrix !== undefined)
+    if (parentMatrix)
     {
-        var matrix = parentMatrix.matrix;
-        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+        parentMatrix.copyToContext(ctx);
     }
 
     var tx = src.x - camera.scrollX * src.scrollFactorX;

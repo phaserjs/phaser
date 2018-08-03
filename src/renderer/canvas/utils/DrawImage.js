@@ -33,15 +33,11 @@ var DrawImage = function (src, camera, parentTransformMatrix)
         return;
     }
 
-    ctx.globalAlpha = alpha;
-
     //  Blend Mode
+    ctx.globalCompositeOperation = this.blendModes[src.blendMode];
 
-    if (this.currentBlendMode !== src.blendMode)
-    {
-        this.currentBlendMode = src.blendMode;
-        ctx.globalCompositeOperation = this.blendModes[src.blendMode];
-    }
+    //  Alpha
+    ctx.globalAlpha = alpha;
 
     var camMatrix = _tempCameraMatrix;
     var spriteMatrix = _tempSpriteMatrix;

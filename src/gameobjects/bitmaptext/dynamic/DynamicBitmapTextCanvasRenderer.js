@@ -82,24 +82,10 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
     }
 
     //  Blend Mode
-    if (renderer.currentBlendMode !== src.blendMode)
-    {
-        renderer.currentBlendMode = src.blendMode;
-        ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
-    }
+    ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
 
     //  Alpha
-    if (renderer.currentAlpha !== src.alpha)
-    {
-        renderer.currentAlpha = src.alpha;
-        ctx.globalAlpha = src.alpha;
-    }
-
-    //  Smoothing
-    if (renderer.currentScaleMode !== src.scaleMode)
-    {
-        renderer.currentScaleMode = src.scaleMode;
-    }
+    ctx.globalAlpha = src.alpha;
 
     ctx.save();
 

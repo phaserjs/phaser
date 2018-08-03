@@ -26,8 +26,6 @@ var TileSpriteCanvasRenderer = function (renderer, src, interpolationPercentage,
 
     src.updateTileTexture();
 
-    //  Alpha
-
     var alpha = camera.alpha * src.alpha;
 
     if (alpha === 0)
@@ -35,26 +33,12 @@ var TileSpriteCanvasRenderer = function (renderer, src, interpolationPercentage,
         //  Nothing to see, so abort early
         return;
     }
-    else if (renderer.currentAlpha !== alpha)
-    {
-        renderer.currentAlpha = alpha;
-        ctx.globalAlpha = alpha;
-    }
 
     //  Blend Mode
+    ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
 
-    if (renderer.currentBlendMode !== src.blendMode)
-    {
-        renderer.currentBlendMode = src.blendMode;
-        ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
-    }
-
-    //  Smoothing
-
-    if (renderer.currentScaleMode !== src.scaleMode)
-    {
-        renderer.currentScaleMode = src.scaleMode;
-    }
+    //  Alpha
+    ctx.globalAlpha = alpha;
 
     var dx = frame.x - (src.originX * src.width);
     var dy = frame.y - (src.originY * src.height);
@@ -89,11 +73,9 @@ var TileSpriteCanvasRenderer = function (renderer, src, interpolationPercentage,
 
     ctx.save();
 
-    if (parentMatrix !== undefined)
+    if (parentMatrix)
     {
-        var matrix = parentMatrix.matrix;
-
-        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+        parentMatrix.copyToContext(ctx);
     }
 
     ctx.translate(dx, dy);
