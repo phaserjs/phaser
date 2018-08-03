@@ -12,6 +12,7 @@ var CONST = require('../../const');
 var Frame = require('../../textures/Frame');
 var GameObject = require('../GameObject');
 var Render = require('./RenderTextureRender');
+var UUID = require('../../utils/string/UUID');
 
 /**
  * @classdesc
@@ -52,6 +53,7 @@ var RenderTexture = new Class({
         Components.Alpha,
         Components.BlendMode,
         Components.ComputedSize,
+        Components.Crop,
         Components.Depth,
         Components.Flip,
         Components.GetBounds,
@@ -117,23 +119,22 @@ var RenderTexture = new Class({
 
         /**
          * The HTML Canvas Element that the Render Texture is drawing to.
-         * This is only set if Phaser is running with the Canvas Renderer.
+         * This is only populated if Phaser is running with the Canvas Renderer.
          *
          * @name Phaser.GameObjects.RenderTexture#canvas
-         * @type {?HTMLCanvasElement}
+         * @type {HTMLCanvasElement}
          * @since 3.2.0
          */
-        this.canvas = null;
+        this.canvas = CanvasPool.create2D(this, width, height);
 
         /**
          * A reference to the Rendering Context belonging to the Canvas Element this Render Texture is drawing to.
-         * This is only set if Phaser is running with the Canvas Renderer.
          *
          * @name Phaser.GameObjects.RenderTexture#context
-         * @type {?CanvasRenderingContext2D}
+         * @type {CanvasRenderingContext2D}
          * @since 3.2.0
          */
-        this.context = null;
+        this.context = this.canvas.getContext('2d');
 
         /**
          * A reference to the GL Frame Buffer this Render Texture is drawing to.
@@ -145,12 +146,50 @@ var RenderTexture = new Class({
          */
         this.framebuffer = null;
 
+        /**
+         * The internal crop data object, as used by `setCrop` and passed to the `Frame.setCropUVs` method.
+         *
+         * @name Phaser.GameObjects.RenderTexture#_crop
+         * @type {object}
+         * @private
+         * @since 3.12.0
+         */
+        this._crop = this.resetCropObject();
+
+        //  Create a Texture for this Text object
+        this.texture = scene.sys.textures.addCanvas(UUID(), this.canvas);
+
+        //  Get the frame
+        this.frame = this.texture.get();
+
+        /**
+         * An internal Camera that can be used to move around the Render Texture!
+         *
+         * @name Phaser.GameObjects.RenderTexture#camera
+         * @type {object}
+         * @since 3.12.0
+         */
         this.camera = new Camera(0, 0, width, height);
 
         this.camera.setScene(scene);
 
+        /**
+         * Is this Render Texture dirty or not? If not it won't spend time clearing or filling itself.
+         *
+         * @name Phaser.GameObjects.RenderTexture#dirty
+         * @type {boolean}
+         * @since 3.12.0
+         */
         this.dirty = false;
 
+        /**
+         * [description]
+         *
+         * @name Phaser.GameObjects.RenderTexture#gl
+         * @type {WebGLRenderingContext}
+         * @default null
+         * @since 3.0.0
+         */
         this.gl = null;
 
         var renderer = this.renderer;
@@ -161,19 +200,33 @@ var RenderTexture = new Class({
 
             this.gl = gl;
             this.drawGameObject = this.batchGameObjectWebGL;
-            this.texture = renderer.createTexture2D(0, gl.NEAREST, gl.NEAREST, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, null, width, height, false);
-            this.framebuffer = renderer.createFramebuffer(width, height, this.texture, false);
+            this.framebuffer = renderer.createFramebuffer(width, height, this.frame.source.glTexture, false);
         }
         else if (renderer.type === CONST.CANVAS)
         {
             this.drawGameObject = this.batchGameObjectCanvas;
-            this.canvas = CanvasPool.create2D(this, width, height);
-            this.context = this.canvas.getContext('2d');
         }
 
         this.setPosition(x, y);
         this.setSize(width, height);
+        this.setOrigin(0, 0);
         this.initPipeline('TextureTintPipeline');
+    },
+
+    /**
+     * Sets the size of this Game Object.
+     * 
+     * @method Phaser.GameObjects.Components.Size#setSize
+     * @since 3.0.0
+     *
+     * @param {number} width - The width of this Game Object.
+     * @param {number} height - The height of this Game Object.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setSize: function (width, height)
+    {
+        return this.resize(width, height);
     },
 
     /**
@@ -208,14 +261,19 @@ var RenderTexture = new Class({
             {
                 var gl = this.gl;
 
-                this.renderer.deleteTexture(this.texture);
+                this.renderer.deleteTexture(this.frame.source.glTexture);
                 this.renderer.deleteFramebuffer(this.framebuffer);
 
-                this.texture = this.renderer.createTexture2D(0, gl.NEAREST, gl.NEAREST, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, null, width, height, false);
+                this.frame.source.glTexture = this.renderer.createTexture2D(0, gl.NEAREST, gl.NEAREST, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, null, width, height, false);
                 this.framebuffer = this.renderer.createFramebuffer(width, height, this.texture, false);
+
+                this.frame.glTexture = this.frame.source.glTexture;
             }
 
-            this.setSize(width, height);
+            this.frame.setSize(width, height);
+
+            this.width = width;
+            this.height = height;
         }
 
         return this;
@@ -259,7 +317,7 @@ var RenderTexture = new Class({
      * Stores a copy of this Render Texture in the Texture Manager using the given key.
      * 
      * After doing this, any texture based Game Object, such as a Sprite, can use the contents of this
-     * Render Texture for its texture by using the texture key:
+     * Render Texture by using the texture key:
      * 
      * ```javascript
      * var rt = this.add.renderTexture(0, 0, 128, 128);
@@ -272,7 +330,8 @@ var RenderTexture = new Class({
      * ```
      * 
      * Updating the contents of this Render Texture will automatically update _any_ Game Object
-     * that is using it as a texture.
+     * that is using it as a texture. Calling `saveTexture` again will not save another copy
+     * of the same texture, it will just rename the key of the existing copy.
      * 
      * By default it will create a single base texture. You can add frames to the texture
      * by using the `Texture.add` method. After doing this, you can then allow Game Objects
@@ -283,11 +342,13 @@ var RenderTexture = new Class({
      *
      * @param {string} key - The unique key to store the texture as within the global Texture Manager.
      *
-     * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if it could not be saved.
+     * @return {Phaser.Textures.Texture} The Texture that was saved.
      */
     saveTexture: function (key)
     {
-        return this.textureManager.addRenderTexture(key, this);
+        this.textureManager.renameTexture(this.texture.key, key);
+
+        return this.texture;
     },
 
     /**
@@ -376,7 +437,7 @@ var RenderTexture = new Class({
      * It can accept any of the following:
      * 
      * * Any renderable Game Object, such as a Sprite, Text, Graphics or TileSprite.
-     * * Dynamic and Static Tilemap Layers
+     * * Dynamic and Static Tilemap Layers.
      * * A Group. The contents of which will be iterated and drawn in turn.
      * * A Container. The contents of which will be iterated fully, and drawn in turn.
      * * A Scene's Display List. Pass in `Scene.children` to draw the whole list.
@@ -391,7 +452,7 @@ var RenderTexture = new Class({
      * 5 of which have `visible=false` will only draw the 5 visible ones.
      * 
      * If passing in an array of Game Objects it will draw them all, regardless if
-     * they render or not.
+     * they pass a `willRender` check or not.
      * 
      * You can pass in a string in which case it will look for a texture in the Texture
      * Manager matching that string, and draw the base frame. If you need to specify
@@ -682,8 +743,6 @@ var RenderTexture = new Class({
         var prevX = gameObject.x;
         var prevY = gameObject.y;
 
-        this.renderer.setBlendMode(gameObject.blendMode);
-
         gameObject.setPosition(x, y);
 
         gameObject.renderCanvas(this.renderer, gameObject, 0, this.camera, null);
@@ -773,6 +832,8 @@ var RenderTexture = new Class({
             this.renderer.deleteTexture(this.texture);
             this.renderer.deleteFramebuffer(this.framebuffer);
         }
+
+        this.texture.destroy();
     }
 
 });
