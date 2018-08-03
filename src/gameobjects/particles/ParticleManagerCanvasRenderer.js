@@ -30,40 +30,40 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
     }
 
     var camMatrix = renderer._tempMatrix1.copyFrom(camera.matrix);
-    var managerMatrix = renderer._tempMatrix2.applyITRS(emitterManager.x, emitterManager.y, emitterManager.rotation, emitterManager.scaleX, emitterManager.scaleY);
+    var calcMatrix = renderer._tempMatrix2;
+    var particleMatrix = renderer._tempMatrix3;
+    var managerMatrix = renderer._tempMatrix4.applyITRS(emitterManager.x, emitterManager.y, emitterManager.rotation, emitterManager.scaleX, emitterManager.scaleY);
 
     camMatrix.multiply(managerMatrix);
 
+    var roundPixels = camera.roundPixels;
+
     var ctx = renderer.currentContext;
-    var matrix = camMatrix.matrix;
 
     ctx.save();
 
-    ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
-
-    if (parentMatrix !== undefined)
+    for (var e = 0; e < emittersLength; e++)
     {
-        matrix = parentMatrix.matrix;
-
-        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
-    }
-
-    for (var i = 0; i < emittersLength; i++)
-    {
-        var emitter = emitters[i];
-
+        var emitter = emitters[e];
         var particles = emitter.alive;
-        var length = particles.length;
+        var particleCount = particles.length;
 
-        if (!emitter.visible || length === 0)
+        if (!emitter.visible || particleCount === 0)
         {
             continue;
         }
 
-        var lastAlpha = ctx.globalAlpha;
+        var scrollX = camera.scrollX * emitter.scrollFactorX;
+        var scrollY = camera.scrollY * emitter.scrollFactorY;
 
-        var cameraScrollX = camera.scrollX * emitter.scrollFactorX;
-        var cameraScrollY = camera.scrollY * emitter.scrollFactorY;
+        if (parentMatrix)
+        {
+            //  Multiply the camera by the parent matrix
+            camMatrix.multiplyWithOffset(parentMatrix, -scrollX, -scrollY);
+
+            scrollX = 0;
+            scrollY = 0;
+        }
 
         if (renderer.currentBlendMode !== emitter.blendMode)
         {
@@ -71,52 +71,70 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
             ctx.globalCompositeOperation = renderer.blendModes[emitter.blendMode];
         }
 
-        for (var index = 0; index < length; ++index)
+        for (var i = 0; i < particleCount; i++)
         {
-            var particle = particles[index];
+            var particle = particles[i];
 
-            var particleAlpha = camera.alpha * ((particle.color >> 24) & 0xFF) / 255;
+            var alpha = particle.alpha * camera.alpha;
 
-            if (particleAlpha <= 0)
+            if (alpha <= 0)
             {
                 continue;
             }
 
             var frame = particle.frame;
-            var width = frame.width;
-            var height = frame.height;
-            var ox = width * 0.5;
-            var oy = height * 0.5;
-            var cd = frame.canvasData;
 
-            var x = -ox;
-            var y = -oy;
+            var x = -(frame.halfWidth);
+            var y = -(frame.halfHeight);
 
-            var tx = particle.x - cameraScrollX;
-            var ty = particle.y - cameraScrollY;
+            // var width = frame.width;
+            // var height = frame.height;
+            // var ox = width * 0.5;
+            // var oy = height * 0.5;
 
-            if (camera.roundPixels)
-            {
-                tx |= 0;
-                ty |= 0;
-            }
+            particleMatrix.applyITRS(0, 0, particle.rotation, particle.scaleX, particle.scaleY);
 
-            ctx.globalAlpha = particleAlpha;
+            particleMatrix.e = particle.x - scrollX;
+            particleMatrix.f = particle.y - scrollY;
+
+            camMatrix.multiply(particleMatrix, calcMatrix);
+
+            // var x = -ox;
+            // var y = -oy;
+
+            // var tx = particle.x - cameraScrollX;
+            // var ty = particle.y - cameraScrollY;
+
+            // if (camera.roundPixels)
+            // {
+            //     tx |= 0;
+            //     ty |= 0;
+            // }
+
+            ctx.globalAlpha = alpha;
         
             ctx.save();
 
-            ctx.translate(tx, ty);
+            calcMatrix.copyToContext(ctx);
 
-            ctx.rotate(particle.rotation);
+            if (roundPixels)
+            {
+                x |= 0;
+                y |= 0;
+            }
 
-            ctx.scale(particle.scaleX, particle.scaleY);
+            // ctx.translate(tx, ty);
+
+            // ctx.rotate(particle.rotation);
+
+            // ctx.scale(particle.scaleX, particle.scaleY);
+
+            var cd = frame.canvasData;
 
             ctx.drawImage(frame.source.image, cd.x, cd.y, cd.width, cd.height, x, y, cd.width, cd.height);
 
             ctx.restore();
         }
-
-        ctx.globalAlpha = lastAlpha;
     }
 
     ctx.restore();
