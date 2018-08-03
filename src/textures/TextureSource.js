@@ -182,8 +182,9 @@ var TextureSource = new Class({
                 }
                 else if (this.isRenderTexture)
                 {
-                    this.glTexture = this.source.texture;
                     this.image = this.source.canvas;
+                 
+                    this.glTexture = this.renderer.createTextureFromSource(null, this.width, this.height, this.scaleMode);
                 }
                 else
                 {
