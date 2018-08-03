@@ -4,6 +4,8 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var SetTransform = require('../../../renderer/canvas/utils/SetTransform');
+
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -24,7 +26,9 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
     var text = src.text;
     var textLength = text.length;
 
-    if (textLength === 0)
+    var ctx = renderer.currentContext;
+
+    if (textLength === 0 || !SetTransform(renderer, ctx, src, camera, parentMatrix))
     {
         return;
     }
@@ -57,7 +61,7 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
     var lastGlyph = null;
     var lastCharCode = 0;
 
-    var ctx = renderer.currentContext;
+    // var ctx = renderer.currentContext;
     var image = src.frame.source.image;
 
     var textureX = textureFrame.cutX;
@@ -65,35 +69,6 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
 
     var rotation = 0;
     var scale = (src.fontSize / src.fontData.size);
-
-    var alpha = camera.alpha * src.alpha;
-
-    if (alpha === 0)
-    {
-        //  Nothing to see, so abort early
-        return;
-    }
-
-    //  Blend Mode
-    ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
-
-    //  Alpha
-    ctx.globalAlpha = alpha;
-
-    ctx.save();
-
-    if (parentMatrix)
-    {
-        parentMatrix.copyToContext(ctx);
-    }
-
-    ctx.translate(src.x, src.y);
-
-    ctx.rotate(src.rotation);
-
-    ctx.translate(-src.displayOriginX, -src.displayOriginY);
-
-    ctx.scale(src.scaleX, src.scaleY);
 
     if (src.cropWidth > 0 && src.cropHeight > 0)
     {

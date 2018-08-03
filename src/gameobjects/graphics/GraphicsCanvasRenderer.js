@@ -5,6 +5,7 @@
  */
 
 var Commands = require('./Commands');
+var SetTransform = require('../../renderer/canvas/utils/SetTransform');
 
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
@@ -28,12 +29,13 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
     var commandBuffer = src.commandBuffer;
     var commandBufferLength = commandBuffer.length;
 
-    if (commandBufferLength === 0)
+    var ctx = renderTargetCtx || renderer.currentContext;
+
+    if (commandBufferLength === 0 || !SetTransform(renderer, ctx, src, camera, parentMatrix))
     {
         return;
     }
 
-    var ctx = renderTargetCtx || renderer.currentContext;
     var lineAlpha = 1;
     var fillAlpha = 1;
     var lineColor = 0;
@@ -42,53 +44,6 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
     var red = 0;
     var green = 0;
     var blue = 0;
-
-    var alpha = camera.alpha * src.alpha;
-
-    if (alpha === 0)
-    {
-        //  Nothing to see, so abort early
-        return;
-    }
-
-    //  Blend Mode
-    ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
-
-    //  Alpha
-    ctx.globalAlpha = alpha;
-
-    ctx.save();
-
-    var camMatrix = renderer._tempMatrix1;
-    var graphicsMatrix = renderer._tempMatrix2;
-    var calcMatrix = renderer._tempMatrix3;
-
-    graphicsMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
-
-    camMatrix.copyFrom(camera.matrix);
-
-    if (parentMatrix)
-    {
-        //  Multiply the camera by the parent matrix
-        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
-
-        //  Undo the camera scroll
-        graphicsMatrix.e = src.x;
-        graphicsMatrix.f = src.y;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(graphicsMatrix, calcMatrix);
-    }
-    else
-    {
-        graphicsMatrix.e -= camera.scrollX * src.scrollFactorX;
-        graphicsMatrix.f -= camera.scrollY * src.scrollFactorY;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(graphicsMatrix, calcMatrix);
-    }
-
-    calcMatrix.copyToContext(ctx);
 
     ctx.fillStyle = '#fff';
 

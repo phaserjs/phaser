@@ -13,6 +13,7 @@ module.exports = {
     BlitImage: require('./utils/BlitImage'),
     CanvasRenderer: require('./CanvasRenderer'),
     DrawImage: require('./utils/DrawImage'),
-    GetBlendModes: require('./utils/GetBlendModes')
+    GetBlendModes: require('./utils/GetBlendModes'),
+    SetTransform: require('./utils/SetTransform')
 
 };

@@ -522,6 +522,17 @@ var CanvasRenderer = new Class({
         this.snapshotEncoder = encoderOptions;
     },
 
+    /**
+     * Takes a Sprite Game Object, or any object that extends it, and draws it to the current context.
+     *
+     * @method Phaser.Renderer.Canvas.CanvasRenderer#batchSprite
+     * @since 3.12.0
+     *
+     * @param {Phaser.GameObjects.GameObject} sprite - The texture based Game Object to draw.
+     * @param {Phaser.Textures.Frame} frame - The frame to draw, doesn't have to be that owned by the Game Object.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use for the rendering transform.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentTransformMatrix] - The transform matrix of the parent container, if set.
+     */
     batchSprite: function (sprite, frame, camera, parentTransformMatrix)
     {
         var alpha = camera.alpha * sprite.alpha;
