@@ -83,7 +83,7 @@ var Image = new Class({
          * @private
          * @since 3.11.0
          */
-        this._crop = { u0: 0, v0: 0, u1: 0, v1: 0, width: 0, height: 0, x: 0, y: 0, flipX: false, flipY: false, cx: 0, cy: 0, cw: 0, ch: 0 };
+        this._crop = this.resetCropObject();
 
         this.setTexture(texture, frame);
         this.setPosition(x, y);

@@ -56,7 +56,8 @@ The process of managing scissors in the WebGLRenderer has been completely rewrit
 * `TextureSource.source` is a new property that contains the original source of the Texture image. It is cleared when the source is destroyed.
 * `TransformMatrix.copyToContext` is a new method that will copy the values from the Matrix to the given Canvas Rendering Context.
 * `Phaser.Utils.String.UUID` will return an RFC4122 complaint UUID as a string. This is used internally to avoid cache key conflicts, but is exposed for your own use as well.
-* There is a new `Crop` Component which is used by non-texture based Game Objects, such as Text and TileSprite.
+* There is a new `Crop` Component which is used by non-texture based Game Objects, such as Text and TileSprite. You either use `TextureCrop` or `Crop`, not both together on the same object.
+* 
 
 ### Updates
 
@@ -83,6 +84,7 @@ The process of managing scissors in the WebGLRenderer has been completely rewrit
 * The Math.Snap methods `Snap.Floor`, `Snap.Ceil` and `Snap.To` have all gained a new optional boolean argument `divide`. If set the resulting snapped value will be divided by the gap amount before returning. This is handy if you're trying to quickly snap a value into a grid or array location.
 * The `currentBlendMode` property has been removed from the Canvas Renderer and is no longer checked by any class. Blend modes are now set directly on the context to avoid state saving invalidation.
 * The `currentAlpha` property has been removed from the Canvas Renderer and is no longer checked by any class. Alpha values are now set directly on the context to avoid state saving invalidation.
+* `TextureCrop` and `Crop` have a new method `resetCropObject` which generates the crop data object required by Game Objects that support cropping. This allows us to remove duplicate code from a number of Game Objects and replace it with a single function call.
 
 ### Game Config Resolution Specific Bug Fixes
 
