@@ -19,7 +19,6 @@ module.exports = {
     Flip: require('./Flip'),
     GetBounds: require('./GetBounds'),
     Mask: require('./Mask'),
-    MatrixStack: require('./MatrixStack'),
     Origin: require('./Origin'),
     Pipeline: require('./Pipeline'),
     ScaleMode: require('./ScaleMode'),
