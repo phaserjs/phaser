@@ -55,6 +55,7 @@ The process of managing scissors in the WebGLRenderer has been completely rewrit
 * If you set `window.FORCE_WEBGL` or `window.FORCE_CANVAS` in the window in which the Phaser game is loaded it will over-ride the renderer type setting in your game config, and force either WebGL or Canvas. This is handy for quickly testing the differences between renderers without having to do a new build each time.
 * `TextureSource.source` is a new property that contains the original source of the Texture image. It is cleared when the source is destroyed.
 * `TransformMatrix.copyToContext` is a new method that will copy the values from the Matrix to the given Canvas Rendering Context.
+* `Phaser.Utils.String.UUID` will return an RFC4122 complaint UUID as a string. This is used internally to avoid cache key conflicts, but is exposed for your own use as well.
 
 ### Updates
 
