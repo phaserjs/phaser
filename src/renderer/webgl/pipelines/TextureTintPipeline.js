@@ -725,11 +725,54 @@ var TextureTintPipeline = new Class({
         var spriteMatrix = this._tempMatrix2;
         var calcMatrix = this._tempMatrix3;
 
+        var u0 = (frameX / textureWidth) + uOffset;
+        var v0 = (frameY / textureHeight) + vOffset;
+        var u1 = (frameX + frameWidth) / textureWidth + uOffset;
+        var v1 = (frameY + frameHeight) / textureHeight + vOffset;
+
         var width = srcWidth;
         var height = srcHeight;
 
+        // var x = -displayOriginX + frameX;
+        // var y = -displayOriginY + frameY;
+
         var x = -displayOriginX;
         var y = -displayOriginY;
+
+        if (gameObject.isCropped)
+        {
+            var crop = gameObject._crop;
+
+            width = crop.width;
+            height = crop.height;
+
+            srcWidth = crop.width;
+            srcHeight = crop.height;
+
+            frameX = crop.x;
+            frameY = crop.y;
+
+            var ox = frameX;
+            var oy = frameY;
+
+            if (flipX)
+            {
+                ox = (frameWidth - crop.x - crop.width);
+            }
+    
+            if (flipY && !texture.isRenderTexture)
+            {
+                oy = (frameHeight - crop.y - crop.height);
+            }
+
+            u0 = (ox / textureWidth) + uOffset;
+            v0 = (oy / textureHeight) + vOffset;
+            u1 = (ox + crop.width) / textureWidth + uOffset;
+            v1 = (oy + crop.height) / textureHeight + vOffset;
+
+            x = -displayOriginX + frameX;
+            y = -displayOriginY + frameY;
+        }
 
         //  Invert the flipY if this is a RenderTexture
         flipY = flipY ^ (texture.isRenderTexture ? 1 : 0);
@@ -746,11 +789,12 @@ var TextureTintPipeline = new Class({
             y += srcHeight;
         }
 
-        if (camera.roundPixels)
-        {
-            x |= 0;
-            y |= 0;
-        }
+        //  Do we need this? (doubt it)
+        // if (camera.roundPixels)
+        // {
+        //     x |= 0;
+        //     y |= 0;
+        // }
 
         var xw = x + width;
         var yh = y + height;
@@ -806,11 +850,6 @@ var TextureTintPipeline = new Class({
             tx3 |= 0;
             ty3 |= 0;
         }
-
-        var u0 = (frameX / textureWidth) + uOffset;
-        var v0 = (frameY / textureHeight) + vOffset;
-        var u1 = (frameX + frameWidth) / textureWidth + uOffset;
-        var v1 = (frameY + frameHeight) / textureHeight + vOffset;
 
         this.setTexture2D(texture, 0);
 
