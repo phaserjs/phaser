@@ -4,9 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-//  bitmask flag for GameObject.renderMask
-var _FLAG = 8; // 1000
-
 /**
  * Provides methods used for getting and setting the texture of a Game Object.
  *

@@ -1196,7 +1196,7 @@ var StaticTilemapLayer = new Class({
         this.cullCallback = null;
 
         GameObject.prototype.destroy.call(this);
-    },
+    }
 
 });
 

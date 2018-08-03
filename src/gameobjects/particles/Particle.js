@@ -8,11 +8,6 @@ var Class = require('../../utils/Class');
 var DegToRad = require('../../math/DegToRad');
 var DistanceBetween = require('../../math/distance/DistanceBetween');
 
-var GetColor = function (value)
-{
-    return (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
-};
-
 /**
  * @classdesc
  * A Particle is a simple Game Object controlled by a Particle Emitter and Manager, and rendered by the Manager.
