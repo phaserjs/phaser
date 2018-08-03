@@ -32,6 +32,33 @@ The process of managing scissors in the WebGLRenderer has been completely rewrit
 * Cameras have a new internal method `updateSystem` which is automatically called if you change any Camera viewport values. This in turn tells the Scene Manager if there are any cameras with custom viewports, in any Scene of your game. If there are not then the scissor is never even enabled or set, meaning zero gl ops! If your game uses full sized Cameras it now doesn't cost anything at all with regard to scissoring.
 * If a new scissor is set it will now check to see if it's the same size and position as the current scissor, and if so, it'll skip setting it at all.
 
+### Render Texture New Features and Updates
+
+The Render Texture class has been rewritten from scratch.
+
+### Text Game Object New Features and Updates
+
+The Text Game Object has been given an internal overhaul to make it more flexible. Some properties have been renamed or moved and new features added:
+
+* Text can now be cropped in WebGL and Canvas! Use the `setCrop` method to crop the text.
+* Text now keeps a reference to the renderer in the `renderer` property.
+* The `canvasTexture` property has been removed.
+* Text now has internal `texture` and `frame` properties. These replace the old `canvasTexture` but perform the same task, while allowing for texture cropping and much smaller renderer code.
+
+### Tile Sprite Object New Features and Updates
+
+The Tile Sprite Game Object has been given an internal overhaul to make it more flexible. Some properties have been renamed or moved and new features added:
+
+* Tile Sprites can now be cropped in WebGL and Canvas! Use the `setCrop` method to crop the tile sprite.
+* There is a new method `setTileScale` which will set the tile scale in a chainable call.
+* There is a new internal `canvas` property. Tile Sprites work differently than before in Canvas mode: Previously they would use the `fillRect` command on the game canvas to draw themselves every frame, even if they hadn't changed. They now draw to an internal canvas only when their position or scale changes. This canvas is then drawn to the game canvas instead. It's faster, as it doesn't fillRect every frame and also allows you to draw them to other contexts, such as Render Textures.
+* There are two new internal properties `_tilePosition` and `_tileScale` which are Vector 2s that hold the position and scale. Getters have been added, so use the same properties as before in your code.
+* There are two new properties `displayTexture` and `displayFrame`. These replace the previous `texture` and `frame` properties and hold references to the source texture the Tile Sprite is using.
+* The `canvasPattern` property has been renamed to `fillPattern`.
+* The `oldFrame` property has been removed.
+* The `canvasBuffer` property has been renamed to `fillCanvas`.
+* The `canvasBufferCtx` property has been renamed to `fillContext`.
+
 ### New Features
 
 * `Camera.resolution` is a new read-only property that holds the current game config resolution that the camera is using. This is used internally for viewport calculations.
@@ -57,7 +84,9 @@ The process of managing scissors in the WebGLRenderer has been completely rewrit
 * `TransformMatrix.copyToContext` is a new method that will copy the values from the Matrix to the given Canvas Rendering Context.
 * `Phaser.Utils.String.UUID` will return an RFC4122 complaint UUID as a string. This is used internally to avoid cache key conflicts, but is exposed for your own use as well.
 * There is a new `Crop` Component which is used by non-texture based Game Objects, such as Text and TileSprite. You either use `TextureCrop` or `Crop`, not both together on the same object.
-* 
+* `TransformMatrix.setToContext` is a new method that will set the values from the Matrix to the given Canvas Rendering Context using setTransform rather than transform.
+* `SetTransform` is a new Canvas Renderer function that consolidates the process of preparing a Game Object for rendering, without actually rendering it. This is used internally by the Graphics and Bitmap Text classes.
+* The Texture Manager has a new method called `renameTexture` which will let you rename a texture, changing the key to the new one given. All existing Game Objects will still maintain their reference, even after a rename.
 
 ### Updates
 
@@ -86,6 +115,8 @@ The process of managing scissors in the WebGLRenderer has been completely rewrit
 * The `currentAlpha` property has been removed from the Canvas Renderer and is no longer checked by any class. Alpha values are now set directly on the context to avoid state saving invalidation.
 * `TextureCrop` and `Crop` have a new method `resetCropObject` which generates the crop data object required by Game Objects that support cropping. This allows us to remove duplicate code from a number of Game Objects and replace it with a single function call.
 * The Canvas Renderer has a new `batchSprite` method that consolidates the process of drawing a texture-based Game Object to the canvas. It processes the alpha, blend mode and matrix calculations in a single function and now is used by nearly all Game Object canvas renderers.
+* The `batchTexture` method in the Texture Tint Pipeline now supports cropped Game Objects and will adjust the drawn texture frame accordingly.
+* The `Matrix Stack` Component has been removed. It's no longer used internally and was just wasting space.
 
 ### Game Config Resolution Specific Bug Fixes
 
