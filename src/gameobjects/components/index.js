@@ -14,6 +14,7 @@ module.exports = {
     Animation: require('./Animation'),
     BlendMode: require('./BlendMode'),
     ComputedSize: require('./ComputedSize'),
+    Crop: require('./Crop'),
     Depth: require('./Depth'),
     Flip: require('./Flip'),
     GetBounds: require('./GetBounds'),
