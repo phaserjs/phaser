@@ -22,16 +22,21 @@ var Utils = require('../../renderer/webgl/Utils');
  */
 var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
 {
+    src.cull(camera);
+
+    var renderTiles = src.culledTiles;
+    var tileCount = renderTiles.length;
     var alpha = camera.alpha * src.alpha;
 
-    src.cull(camera);
+    if (tileCount === 0 || alpha <= 0)
+    {
+        return;
+    }
 
     var pipeline = this.pipeline;
 
     var getTint = Utils.getTintAppendFloatAlpha;
 
-    var renderTiles = src.culledTiles;
-    var length = renderTiles.length;
     var tileset = src.tileset;
     var texture = tileset.glTexture;
 
@@ -44,9 +49,9 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPer
     var sx = src.scaleX;
     var sy = src.scaleY;
 
-    for (var index = 0; index < length; index++)
+    for (var i = 0; i < tileCount; i++)
     {
-        var tile = renderTiles[index];
+        var tile = renderTiles[i];
 
         var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
 
