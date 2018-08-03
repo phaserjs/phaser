@@ -29,6 +29,7 @@ var TextStyle = require('../TextStyle');
  * @extends Phaser.GameObjects.Components.Alpha
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.ComputedSize
+ * @extends Phaser.GameObjects.Components.Crop
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.GetBounds
@@ -55,6 +56,7 @@ var Text = new Class({
         Components.Alpha,
         Components.BlendMode,
         Components.ComputedSize,
+        Components.Crop,
         Components.Depth,
         Components.Flip,
         Components.GetBounds,
@@ -77,6 +79,15 @@ var Text = new Class({
         if (y === undefined) { y = 0; }
 
         GameObject.call(this, scene, 'Text');
+
+        /**
+         * The renderer in use by this Text object.
+         *
+         * @name Phaser.GameObjects.Text#renderer
+         * @type {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)}
+         * @since 3.12.0
+         */
+        this.renderer = scene.sys.game.renderer;
 
         this.setPosition(x, y);
         this.setOrigin(0, 0);
@@ -172,16 +183,6 @@ var Text = new Class({
         this.height = 1;
 
         /**
-         * The Canvas Texture that the text is rendered to for WebGL rendering.
-         *
-         * @name Phaser.GameObjects.Text#canvasTexture
-         * @type {HTMLCanvasElement}
-         * @default null
-         * @since 3.0.0
-         */
-        this.canvasTexture = null;
-
-        /**
          * Whether the text or its settings have changed and need updating.
          *
          * @name Phaser.GameObjects.Text#dirty
@@ -195,6 +196,34 @@ var Text = new Class({
         if (this.style.resolution === 0)
         {
             this.style.resolution = scene.sys.game.config.resolution;
+        }
+
+        /**
+         * The internal crop data object, as used by `setCrop` and passed to the `Frame.setCropUVs` method.
+         *
+         * @name Phaser.GameObjects.Text#_crop
+         * @type {object}
+         * @private
+         * @since 3.12.0
+         */
+        this._crop = this.resetCropObject();
+
+        //  Create a Texture for this Text object
+        this.texture = scene.sys.textures.addCanvas(null, this.canvas, true);
+
+        //  Get the frame
+        this.frame = this.texture.get();
+
+        //  Set the resolution
+        this.frame.source.resolution = this.style.resolution;
+
+        if (this.renderer && this.renderer.gl)
+        {
+            //  Clear the default 1x1 glTexture, as we override it later
+
+            this.renderer.deleteTexture(this.frame.source.glTexture);
+
+            this.frame.source.glTexture = null;
         }
 
         this.initRTL();
@@ -215,7 +244,6 @@ var Text = new Class({
         {
             scene.sys.game.renderer.onContextRestored(function ()
             {
-                this.canvasTexture = null;
                 this.dirty = true;
             }, this);
         }
@@ -1014,6 +1042,9 @@ var Text = new Class({
         {
             canvas.width = w;
             canvas.height = h;
+
+            this.frame.setSize(w, h);
+
             style.syncFont(canvas, context); // Resizing resets the context
         }
         else
@@ -1088,6 +1119,12 @@ var Text = new Class({
 
         context.restore();
 
+        if (this.renderer.gl)
+        {
+            this.frame.source.glTexture = this.renderer.canvasToTexture(canvas, this.frame.source.glTexture);
+            this.frame.glTexture = this.frame.source.glTexture;
+        }
+
         this.dirty = true;
 
         return this;
@@ -1152,6 +1189,8 @@ var Text = new Class({
         }
 
         CanvasPool.remove(this.canvas);
+
+        this.texture.destroy();
     }
 
 });
