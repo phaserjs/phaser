@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Camera = require('../../cameras/2d/Camera');
+var Camera = require('../../cameras/2d/BaseCamera');
 var CanvasPool = require('../../display/canvas/CanvasPool');
 var Class = require('../../utils/Class');
 var Components = require('../components');
@@ -166,7 +166,7 @@ var RenderTexture = new Class({
          * An internal Camera that can be used to move around the Render Texture!
          *
          * @name Phaser.GameObjects.RenderTexture#camera
-         * @type {object}
+         * @type {Phaser.Cameras.Scene2D.BaseCamera}
          * @since 3.12.0
          */
         this.camera = new Camera(0, 0, width, height);
