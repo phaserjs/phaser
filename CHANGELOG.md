@@ -139,6 +139,7 @@ The Tile Sprite Game Object has been given an internal overhaul to make it more 
 * The `Matrix Stack` Component has been removed. It's no longer used internally and was just wasting space.
 * You can now specify the `lineHeight` of a Retro Font in the Retro Font Config object (thanks @FelixNemis)
 * When a Static Tilemap Layer is generated in WebGL it will use the Cameras `roundPixels` value to clamp the tile coordinates.
+* The `CanvasRenderer.DrawImage` function has been removed, as has the associated `drawImage` property from the Canvas Renderer as they're no longer used.
 
 ### Game Config Resolution Specific Bug Fixes
 

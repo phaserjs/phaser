@@ -935,12 +935,12 @@ var TextureManager = new Class({
                 //     y -= this.sprite.texture.trim.y;
                 // }
 
-                var context = this._tempContext;
+                var ctx = this._tempContext;
 
-                context.clearRect(0, 0, 1, 1);
-                context.drawImage(source, x, y, 1, 1, 0, 0, 1, 1);
+                ctx.clearRect(0, 0, 1, 1);
+                ctx.drawImage(source, x, y, 1, 1, 0, 0, 1, 1);
 
-                var rgb = context.getImageData(0, 0, 1, 1);
+                var rgb = ctx.getImageData(0, 0, 1, 1);
 
                 return new Color(rgb.data[0], rgb.data[1], rgb.data[2], rgb.data[3]);
             }
@@ -977,12 +977,12 @@ var TextureManager = new Class({
                 x += textureFrame.cutX;
                 y += textureFrame.cutY;
 
-                var context = this._tempContext;
+                var ctx = this._tempContext;
 
-                context.clearRect(0, 0, 1, 1);
-                context.drawImage(source, x, y, 1, 1, 0, 0, 1, 1);
+                ctx.clearRect(0, 0, 1, 1);
+                ctx.drawImage(source, x, y, 1, 1, 0, 0, 1, 1);
 
-                var rgb = context.getImageData(0, 0, 1, 1);
+                var rgb = ctx.getImageData(0, 0, 1, 1);
 
                 return rgb.data[3];
             }

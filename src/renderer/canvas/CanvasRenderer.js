@@ -9,7 +9,6 @@ var BlitImage = require('./utils/BlitImage');
 var CanvasSnapshot = require('../snapshot/CanvasSnapshot');
 var Class = require('../../utils/Class');
 var CONST = require('../../const');
-var DrawImage = require('./utils/DrawImage');
 var GetBlendModes = require('./utils/GetBlendModes');
 var ScaleModes = require('../ScaleModes');
 var Smoothing = require('../../display/canvas/Smoothing');
@@ -129,15 +128,6 @@ var CanvasRenderer = new Class({
          * @since 3.0.0
          */
         this.currentContext = this.gameContext;
-
-        /**
-         * Map to the required function.
-         *
-         * @name Phaser.Renderer.Canvas.CanvasRenderer#drawImage
-         * @type {function}
-         * @since 3.0.0
-         */
-        this.drawImage = DrawImage;
 
         /**
          * [description]
