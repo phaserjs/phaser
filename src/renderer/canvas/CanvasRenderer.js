@@ -132,15 +132,6 @@ var CanvasRenderer = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Renderer.Canvas.CanvasRenderer#blitImage
-         * @type {function}
-         * @since 3.0.0
-         */
-        this.blitImage = BlitImage(this.config.roundPixels);
-
-        /**
-         * [description]
-         *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#blendModes
          * @type {array}
          * @since 3.0.0

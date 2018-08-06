@@ -51,6 +51,8 @@ var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, ca
         parentMatrix.copyToContext(ctx);
     }
 
+    var roundPixels = camera.roundPixels;
+
     //  Render bobs
     for (var i = 0; i < list.length; i++)
     {
@@ -74,7 +76,23 @@ var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, ca
     
         if (!flip)
         {
-            renderer.blitImage(dx + bob.x + cameraScrollX, dy + bob.y + cameraScrollY, bob.frame);
+            if (roundPixels)
+            {
+                dx |= 0;
+                dy |= 0;
+            }
+
+            ctx.drawImage(
+                frame.source.image,
+                cd.x,
+                cd.y,
+                cd.width,
+                cd.height,
+                dx + bob.x + cameraScrollX,
+                dy + bob.y + cameraScrollY,
+                cd.width,
+                cd.height
+            );
         }
         else
         {
