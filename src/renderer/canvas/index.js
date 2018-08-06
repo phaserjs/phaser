@@ -10,7 +10,6 @@
 
 module.exports = {
 
-    BlitImage: require('./utils/BlitImage'),
     CanvasRenderer: require('./CanvasRenderer'),
     GetBlendModes: require('./utils/GetBlendModes'),
     SetTransform: require('./utils/SetTransform')
