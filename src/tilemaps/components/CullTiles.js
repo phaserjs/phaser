@@ -27,14 +27,18 @@ var CullTiles = function (layer, camera, outputArray)
 
     outputArray.length = 0;
 
+    var tilemap = layer.tilemapLayer.tilemap;
     var tilemapLayer = layer.tilemapLayer;
 
     var mapData = layer.data;
     var mapWidth = layer.width;
     var mapHeight = layer.height;
 
-    var tileW = Math.floor(layer.tileWidth * tilemapLayer.scaleX);
-    var tileH = Math.floor(layer.tileHeight * tilemapLayer.scaleY);
+    //  We need to use the tile sizes defined for the map as a whole, not the layer,
+    //  in order to calculate the bounds correctly. As different sized tiles may be
+    //  placed on the grid and we cannot trust layer.baseTileWidth to give us the true size.
+    var tileW = Math.floor(tilemap.tileWidth * tilemapLayer.scaleX);
+    var tileH = Math.floor(tilemap.tileHeight * tilemapLayer.scaleY);
 
     var drawLeft = 0;
     var drawRight = mapWidth;
