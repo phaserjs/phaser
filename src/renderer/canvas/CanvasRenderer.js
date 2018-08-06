@@ -137,6 +137,9 @@ var CanvasRenderer = new Class({
          */
         this.blendModes = GetBlendModes();
 
+        // image-rendering: optimizeSpeed;
+        // image-rendering: pixelated;
+
         /**
          * [description]
          *

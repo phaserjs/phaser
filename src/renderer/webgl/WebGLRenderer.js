@@ -9,6 +9,7 @@ var Class = require('../../utils/Class');
 var CONST = require('../../const');
 var IsSizePowerOfTwo = require('../../math/pow2/IsSizePowerOfTwo');
 var SpliceOne = require('../../utils/array/SpliceOne');
+var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 var Utils = require('./Utils');
 var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
 
@@ -414,6 +415,46 @@ var WebGLRenderer = new Class({
          * @since 3.12.0
          */
         this.blankTexture = null;
+
+        /**
+         * A temporary Transform Matrix, re-used internally during batching.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#_tempMatrix1
+         * @private
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.12.0
+         */
+        this._tempMatrix1 = new TransformMatrix();
+
+        /**
+         * A temporary Transform Matrix, re-used internally during batching.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#_tempMatrix2
+         * @private
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.12.0
+         */
+        this._tempMatrix2 = new TransformMatrix();
+
+        /**
+         * A temporary Transform Matrix, re-used internally during batching.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#_tempMatrix3
+         * @private
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.12.0
+         */
+        this._tempMatrix3 = new TransformMatrix();
+
+        /**
+         * A temporary Transform Matrix, re-used internally during batching.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#_tempMatrix4
+         * @private
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.12.0
+         */
+        this._tempMatrix4 = new TransformMatrix();
 
         this.init(this.config);
     },

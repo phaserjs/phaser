@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Camera = require('../../cameras/2d/Camera.js');
+var BaseCamera = require('../../cameras/2d/BaseCamera.js');
 var Class = require('../../utils/Class');
 var Commands = require('./Commands');
 var Components = require('../components');
@@ -1490,6 +1490,7 @@ var Graphics = new Class({
     generateTexture: function (key, width, height)
     {
         var sys = this.scene.sys;
+        var renderer = sys.game.renderer;
 
         if (width === undefined) { width = sys.game.config.width; }
         if (height === undefined) { height = sys.game.config.height; }
@@ -1535,11 +1536,12 @@ var Graphics = new Class({
 
         if (ctx)
         {
-            this.renderCanvas(sys.game.renderer, this, 0.0, Graphics.TargetCamera, null, ctx);
+            // var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix, renderTargetCtx, allowClip)
+            this.renderCanvas(renderer, this, 0, Graphics.TargetCamera, null, ctx, false);
 
-            if (sys.game.renderer.gl && texture)
+            if (renderer.gl && texture)
             {
-                texture.source[0].glTexture = sys.game.renderer.canvasToTexture(ctx.canvas, texture.source[0].glTexture);
+                texture.source[0].glTexture = renderer.canvasToTexture(ctx.canvas, texture.source[0].glTexture);
             }
         }
 
@@ -1567,6 +1569,6 @@ var Graphics = new Class({
  * @type {Phaser.Cameras.Scene2D.Camera}
  * @since 3.1.0
  */
-Graphics.TargetCamera = new Camera(0, 0, 0, 0);
+Graphics.TargetCamera = new BaseCamera();
 
 module.exports = Graphics;

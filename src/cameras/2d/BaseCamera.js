@@ -84,6 +84,11 @@ var BaseCamera = new Class({
 
     function BaseCamera (x, y, width, height)
     {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = 0; }
+        if (height === undefined) { height = 0; }
+
         EventEmitter.call(this);
 
         /**
