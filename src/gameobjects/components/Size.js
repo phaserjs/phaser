@@ -107,7 +107,12 @@ var Size = {
     },
 
     /**
-     * Sets the size of this Game Object.
+     * Sets the internal size of this Game Object, as used for frame or physics body creation.
+     * 
+     * This will not change the size that the Game Object is rendered in-game.
+     * For that you need to either set the scale of the Game Object (`setScale`) or call the
+     * `setDisplaySize` method, which is the same thing as changing the scale but allows you
+     * to do so by giving pixel values.
      * 
      * @method Phaser.GameObjects.Components.Size#setSize
      * @since 3.0.0
@@ -127,6 +132,7 @@ var Size = {
 
     /**
      * Sets the display size of this Game Object.
+     * 
      * Calling this will adjust the scale.
      * 
      * @method Phaser.GameObjects.Components.Size#setDisplaySize
