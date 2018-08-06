@@ -225,6 +225,18 @@ var FacebookInstantGamesPlugin = new Class({
         return this;
     },
 
+    flushData: function ()
+    {
+        var _this = this;
+
+        FBInstant.player.flushDataAsync().then(function() {
+            console.log('data flushed');
+            _this.emit('flushdata');
+        });
+
+        return this;
+    },
+
     getStats: function (keys)
     {
         var _this = this;
@@ -375,6 +387,22 @@ var FacebookInstantGamesPlugin = new Class({
         {
             FBInstant.logEvent(name, parseFloat(value), params);
         }
+
+        return this;
+    },
+
+    getPlayers: function ()
+    {
+        var _this = this;
+
+        FBInstant.player.getConnectedPlayersAsync().then(function(players) {
+            console.log('got player data');
+            console.log(players);
+            _this.emit('players', players);
+
+            // id: player.getID(),
+            // name: player.getName(),
+        });
 
         return this;
     },
