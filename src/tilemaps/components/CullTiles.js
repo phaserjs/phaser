@@ -45,7 +45,7 @@ var CullTiles = function (layer, camera, outputArray)
     var drawTop = 0;
     var drawBottom = mapHeight;
 
-    if (!tilemapLayer.skipCull)
+    if (!tilemapLayer.skipCull && tilemapLayer.scrollFactorX === 1 && tilemapLayer.scrollFactorY === 1)
     {
         //  Camera world view bounds, snapped for scaled tile size
         //  Cull Padding values are given in tiles, not pixels
