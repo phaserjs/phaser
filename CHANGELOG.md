@@ -138,6 +138,7 @@ The Tile Sprite Game Object has been given an internal overhaul to make it more 
 * The `batchTexture` method in the Texture Tint Pipeline now supports cropped Game Objects and will adjust the drawn texture frame accordingly.
 * The `Matrix Stack` Component has been removed. It's no longer used internally and was just wasting space.
 * You can now specify the `lineHeight` of a Retro Font in the Retro Font Config object (thanks @FelixNemis)
+* When a Static Tilemap Layer is generated in WebGL it will use the Cameras `roundPixels` value to clamp the tile coordinates.
 
 ### Game Config Resolution Specific Bug Fixes
 
