@@ -19,6 +19,7 @@ var Extend = require('../../utils/object/Extend');
  * @property {number} charsPerRow - The number of characters per row in the font set. If not given charsPerRow will be the image width / characterWidth.
  * @property {number} spacing.x - If the characters in the font set have horizontal spacing between them set the required amount here.
  * @property {number} spacing.y - If the characters in the font set have vertical spacing between them set the required amount here.
+ * @property {number} lineSpacing - The amount of vertical space to add to the line height of the font.
 */
 
 /**
