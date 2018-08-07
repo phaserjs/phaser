@@ -4,30 +4,18 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Class = require('../utils/Class');
-
-/**
- * @classdesc
- * [description]
- *
- * @class FacebookInstantGamesPlugin
- * @memberOf Phaser
- * @constructor
- * @since 3.12.0
- */
-var LeaderboardScore = new Class({
-
-    initialize:
-
-    function LeaderboardScore ()
-    {
-        this.value;
-        this.valueFormatted;
-        this.timestamp;
-        this.rank;
-        this.data;
-    }
-
-});
+var LeaderboardScore = function (entry)
+{
+    return {
+        score: entry.getScore(),
+        scoreFormatted: entry.getFormattedScore(),
+        timestamp: entry.getTimestamp(),
+        rank: entry.getRank(),
+        data: entry.getExtraData(),
+        playerName: entry.getPlayer().getName(),
+        playerPhotoURL: entry.getPlayer().getPhoto(),
+        playerID: entry.getPlayer().getID()
+    };
+};
 
 module.exports = LeaderboardScore;

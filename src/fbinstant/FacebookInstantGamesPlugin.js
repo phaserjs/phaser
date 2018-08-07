@@ -8,7 +8,7 @@ var Class = require('../utils/Class');
 var DataManager = require('../data/DataManager');
 var EventEmitter = require('eventemitter3');
 var GetValue = require('../utils/object/GetValue');
-var LeaderboardScore = require('./LeaderboardScore');
+var Leaderboard = require('./Leaderboard');
 var Product = require('./Product');
 var Purchase = require('./Purchase');
 
@@ -55,7 +55,6 @@ var FacebookInstantGamesPlugin = new Class({
 
         this.supportedAPIs = [];
 
-        console.log(this.supportedAPIs);
         this.entryPoint = '';
         this.entryPointData = null;
         this.contextID = 0;
@@ -76,6 +75,8 @@ var FacebookInstantGamesPlugin = new Class({
         this.paymentsReady = false;
         this.catalog = [];
         this.purchases = [];
+
+        this.leaderboards = {};
     },
 
     setDataHandler: function (parent, key, value)
@@ -888,6 +889,60 @@ var FacebookInstantGamesPlugin = new Class({
 
         return this;
     },
+
+    matchPlayer: function (matchTag, switchImmediately)
+    {
+        if (matchTag === undefined) { matchTag = null; }
+        if (switchImmediately === undefined) { switchImmediately = false; }
+
+        if (!this.checkAPI('matchPlayerAsync'))
+        {
+            return this;
+        }
+
+        var _this = this;
+
+        FBInstant.matchPlayerAsync(matchTag, switchImmediately).then(function () {
+
+            console.log('match player');
+
+            _this.getID();
+            _this.getType();
+
+            _this.emit('matchplayer', _this.contextID, _this.contextType);
+
+        });
+
+        return this;
+    },
+
+    //  TODO: checkCanPlayerMatchAsync ?
+
+    getLeaderboard: function (name)
+    {
+        if (!this.checkAPI('getLeaderboardAsync'))
+        {
+            return this;
+        }
+
+        var _this = this;
+
+        FBInstant.getLeaderboardAsync(name).then(function (data) {
+
+            console.log('leaderboard');
+            console.log(data);
+
+            var leaderboard = new Leaderboard(_this, data);
+
+            _this.leaderboards[name] = leaderboard;
+
+            _this.emit('leaderboard', leaderboard);
+
+        });
+
+        return this;
+    },
+
 
     /**
      * Destroys the FacebookInstantGamesPlugin.
