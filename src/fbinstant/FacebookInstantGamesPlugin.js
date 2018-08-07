@@ -73,6 +73,7 @@ var FacebookInstantGamesPlugin = new Class({
         this.playerID = null;
         this.playerName = null;
         this.playerPhotoURL = null;
+        this.playerCanSubscribeBot = false;
 
         this.paymentsReady = false;
         this.catalog = [];
@@ -331,6 +332,41 @@ var FacebookInstantGamesPlugin = new Class({
             }, this);
     
             scene.load.start();
+        }
+
+        return this;
+    },
+
+    canSubscribeBot: function ()
+    {
+        if (this.supportedAPIs.playerCanSubscribeBotAsync)
+        {
+            var _this = this;
+
+            FBInstant.player.canSubscribeBotAsync().then(function ()
+            {
+                _this.playerCanSubscribeBot = true;
+
+                _this.emit('cansubscribebot');
+            });
+        }
+
+        return this;
+    },
+
+    subscribeBot: function ()
+    {
+        if (this.playerCanSubscribeBot)
+        {
+            var _this = this;
+
+            FBInstant.player.subscribeBotAsync().then(function ()
+            {
+                _this.emit('subscribebot');
+            }).catch(function ()
+            {
+                _this.emit('subscribebotfailed');
+            });
         }
 
         return this;
