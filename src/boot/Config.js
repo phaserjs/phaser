@@ -72,6 +72,26 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {boolean} [behindCanvas=false] - Place the DOM Container behind the Phaser Canvas. The default is to place it over the Canvas.
  */
 
+/** 
+ * @typedef {object} PluginObjectItem
+ * 
+ * @property {string} [key] - [description]
+ * @property {*} [plugin] - [description]
+ * @property {boolean} [start] - [description]
+ * @property {string} [systemKey] - [description]
+ * @property {string} [sceneKey] - [description]
+ * @property {*} [data] - [description]
+ */
+
+/** 
+ * @typedef {object} PluginObject
+ * 
+ * @property {PluginObjectItem[]} [global=null] - [description]
+ * @property {PluginObjectItem[]} [scene=null] - [description]
+ * @property {Array} [default=[]] - [description]
+ * @property {*} [defaultMerge={}] - [description]
+ */
+
 /**
  * @typedef {object} GameConfig
  *
@@ -127,6 +147,7 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {string} [images.default] - [description]
  * @property {string} [images.missing] - [description]
  * @property {object} [physics] - [description]
+ * @property {PluginObject|PluginObjectItem[]} [plugins] - [description]
  */
 
 /**
