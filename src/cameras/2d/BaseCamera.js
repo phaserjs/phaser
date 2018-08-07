@@ -1398,6 +1398,11 @@ var BaseCamera = new Class({
      */
     updateSystem: function ()
     {
+        if (!this.config)
+        {
+            return;
+        }
+
         var custom = false;
 
         if (this._x !== 0 || this._y !== 0)
