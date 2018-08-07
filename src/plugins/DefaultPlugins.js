@@ -24,6 +24,7 @@ var DefaultPlugins = {
      */
     Global: [
 
+        'game',
         'anims',
         'cache',
         'facebook',

@@ -241,6 +241,10 @@ var PluginManager = new Class({
                     scene[map[pluginKey]] = sys[pluginKey];
                 }
             }
+            else if (pluginKey === 'game' && map.hasOwnProperty(pluginKey))
+            {
+                scene[map[pluginKey]] = game;
+            }
         }
 
         for (var s = 0; s < scenePlugins.length; s++)
