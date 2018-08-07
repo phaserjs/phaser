@@ -37,6 +37,21 @@ var ValueToColor = require('../display/color/ValueToColor');
  */
 
 /**
+ * @typedef {object} ScaleConfig
+ *
+ * @property {(integer|string)} [width=1024] - The base width of your game.
+ * @property {(integer|string)} [height=768] - The base height of your game.
+ * @property {integer} [zoom=1] - The zoom value of the game canvas.
+ * @property {number} [resolution=1] - The rendering resolution of the canvas.
+ * @property {any} [parent] - The parent DOM element.
+ * @property {integer} [mode=0] - The scale mode to apply to the canvas.
+ * @property {integer} [minWidth] - The minimum width the canvas can be scaled down to.
+ * @property {integer} [minHeight] - The minimum height the canvas can be scaled down to.
+ * @property {integer} [maxWidth] - The maximum width the canvas can be scaled up to.
+ * @property {integer} [maxHeight] - The maximum height the canvas can be scaled up to.
+ */
+
+/**
  * @typedef {object} LoaderConfig
  *
  * @property {string} [baseURL] - [description]
@@ -164,14 +179,35 @@ var Config = new Class({
         this.resolution = GetValue(config, 'resolution', 1);
 
         /**
-         * @const {number} Phaser.Boot.Config#renderType - [description]
-         */
-        this.renderType = GetValue(config, 'type', CONST.AUTO);
-
-        /**
          * @const {?*} Phaser.Boot.Config#parent - [description]
          */
         this.parent = GetValue(config, 'parent', null);
+
+        /**
+         * @const {?*} Phaser.Boot.Config#scaleMode - [description]
+         */
+        this.scaleMode = GetValue(config, 'scaleMode', 0);
+
+        //  Scale Manager - Anything set in here over-rides anything set above
+
+        var scaleConfig = GetValue(config, 'scale', null);
+
+        if (scaleConfig)
+        {
+            this.width = GetValue(scaleConfig, 'width', this.width);
+            this.height = GetValue(scaleConfig, 'height', this.height);
+            this.zoom = GetValue(scaleConfig, 'zoom', this.zoom);
+            this.resolution = GetValue(scaleConfig, 'resolution', this.resolution);
+            this.parent = GetValue(scaleConfig, 'parent', this.parent);
+            this.scaleMode = GetValue(scaleConfig, 'mode', this.scaleMode);
+
+            //  TODO: Add in min / max sizes
+        }
+
+        /**
+         * @const {number} Phaser.Boot.Config#renderType - [description]
+         */
+        this.renderType = GetValue(config, 'type', CONST.AUTO);
 
         /**
          * @const {?HTMLCanvasElement} Phaser.Boot.Config#canvas - Force Phaser to use your own Canvas element instead of creating one.

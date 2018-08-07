@@ -21,6 +21,7 @@ var FacebookInstantGamesPlugin = require('../fbinstant/FacebookInstantGamesPlugi
 var InputManager = require('../input/InputManager');
 var PluginCache = require('../plugins/PluginCache');
 var PluginManager = require('../plugins/PluginManager');
+var ScaleManager = require('./ScaleManager');
 var SceneManager = require('../scene/SceneManager');
 var SoundManagerCreator = require('../sound/SoundManagerCreator');
 var TextureManager = require('../textures/TextureManager');
@@ -213,6 +214,17 @@ var Game = new Class({
          * @since 3.0.0
          */
         this.device = Device;
+
+        /**
+         * An instance of the Scale Manager.
+         *
+         * The Scale Manager is a global system responsible for handling game scaling events.
+         *
+         * @name Phaser.Game#scaleManager
+         * @type {Phaser.Boot.ScaleManager}
+         * @since 3.12.0
+         */
+        this.scaleManager = new ScaleManager(this, this.config);
 
         /**
          * An instance of the base Sound Manager.
