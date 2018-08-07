@@ -228,6 +228,8 @@ var TextureManager = new Class({
      *
      * @param {string} key - The unique string-based key of the Texture.
      * @param {*} data - The Base64 encoded data.
+     * 
+     * @return {this} This Texture Manager instance.
      */
     addBase64: function (key, data)
     {
@@ -255,6 +257,8 @@ var TextureManager = new Class({
 
             image.src = data;
         }
+
+        return this;
     },
 
     /**
