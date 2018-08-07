@@ -36,33 +36,43 @@ var Leaderboard = new Class({
 
         this.playerScore = null;
         this.scores = [];
+
+        this.getEntryCount();
     },
 
     getEntryCount: function ()
     {
         var _this = this;
 
-        this.ref.getEntryCountAsync().then(function (count) {
-
+        this.ref.getEntryCountAsync().then(function (count)
+        {
             console.log('entry count', count);
 
             _this.entryCount = count;
 
             _this.emit('getentrycount', count, _this.name);
 
+        }).catch(function (e)
+        {
+            console.warn(e);
         });
     },
 
     setScore: function (score, data)
     {
+        if (data === undefined) { data = ''; }
+
         var _this = this;
 
-        this.ref.setScoreAsync(score, data).then(function (entry) {
-
+        this.ref.setScoreAsync(score, data).then(function (entry)
+        {
             console.log('set score', entry);
 
             _this.emit('setscore', entry.getScore(), entry.getExtraData(), _this.name);
 
+        }).catch(function (e)
+        {
+            console.warn(e);
         });
     },
 
@@ -70,16 +80,21 @@ var Leaderboard = new Class({
     {
         var _this = this;
 
-        this.ref.getPlayerEntryAsync().then(function (entry) {
-
-            console.log('get player score', entry);
+        this.ref.getPlayerEntryAsync().then(function (entry)
+        {
+            console.log('get player score');
 
             var score = LeaderboardScore(entry);
+
+            console.log(score);
 
             _this.playerScore = score;
 
             _this.emit('getplayerscore', score, _this.name);
 
+        }).catch(function (e)
+        {
+            console.warn(e);
         });
 
     },
@@ -91,13 +106,14 @@ var Leaderboard = new Class({
 
         var _this = this;
 
-        this.ref.getEntriesAsync().then(function (entries) {
-
+        this.ref.getEntriesAsync().then(function (entries)
+        {
             console.log('get scores', entries);
 
             _this.scores = [];
 
-            entries.forEach(function (entry) {
+            entries.forEach(function (entry)
+            {
 
                 _this.scores.push(LeaderboardScore(entry));
 
@@ -105,6 +121,9 @@ var Leaderboard = new Class({
 
             _this.emit('getscores', _this.scores, _this.name);
 
+        }).catch(function (e)
+        {
+            console.warn(e);
         });
 
     }

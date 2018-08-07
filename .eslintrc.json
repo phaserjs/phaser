@@ -16,7 +16,8 @@
         "CANVAS_RENDERER": true,
         "Phaser": true,
         "process": true,
-        "ActiveXObject": true
+        "ActiveXObject": true,
+        "FBInstant": true
     },
     "rules": {
 
