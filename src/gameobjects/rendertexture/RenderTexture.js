@@ -832,7 +832,6 @@ var RenderTexture = new Class({
 
         if (this.gl)
         {
-            this.renderer.deleteTexture(this.texture);
             this.renderer.deleteFramebuffer(this.framebuffer);
         }
 
