@@ -825,24 +825,35 @@ var BaseCamera = new Class({
      * @method Phaser.Cameras.Scene2D.BaseCamera#ignore
      * @since 3.0.0
      *
-     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[])} gameObject - The Game Object, or array of Game Objects, to be ignored by this Camera.
+     * @param {(Phaser.GameObjects.GameObject|Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group)} entries - The Game Object, or array of Game Objects, to be ignored by this Camera.
      *
      * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
      */
-    ignore: function (gameObject)
+    ignore: function (entries)
     {
         var id = this.id;
 
-        if (Array.isArray(gameObject))
+        if (!Array.isArray(entries))
         {
-            for (var i = 0; i < gameObject.length; i++)
-            {
-                gameObject[i].cameraFilter |= id;
-            }
+            entries = [ entries ];
         }
-        else
+
+        for (var i = 0; i < entries.length; i++)
         {
-            gameObject.cameraFilter |= id;
+            var entry = entries[i];
+
+            if (Array.isArray(entry))
+            {
+                this.ignore(entry);
+            }
+            else if (entry.isParent)
+            {
+                this.ignore(entry.getChildren());
+            }
+            else
+            {
+                entry.cameraFilter |= id;
+            }
         }
 
         return this;
