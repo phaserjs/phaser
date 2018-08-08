@@ -27,6 +27,10 @@ var Size = {
     /**
      * The native (un-scaled) width of this Game Object.
      * 
+     * Changing this value will not change the size that the Game Object is rendered in-game.
+     * For that you need to either set the scale of the Game Object (`setScale`) or use
+     * the `displayWidth` property.
+     * 
      * @name Phaser.GameObjects.Components.Size#width
      * @type {number}
      * @since 3.0.0
@@ -36,6 +40,10 @@ var Size = {
     /**
      * The native (un-scaled) height of this Game Object.
      * 
+     * Changing this value will not change the size that the Game Object is rendered in-game.
+     * For that you need to either set the scale of the Game Object (`setScale`) or use
+     * the `displayHeight` property.
+     * 
      * @name Phaser.GameObjects.Components.Size#height
      * @type {number}
      * @since 3.0.0
@@ -44,7 +52,10 @@ var Size = {
 
     /**
      * The displayed width of this Game Object.
+     * 
      * This value takes into account the scale factor.
+     * 
+     * Setting this value will adjust the Game Object's scale property.
      * 
      * @name Phaser.GameObjects.Components.Size#displayWidth
      * @type {number}
@@ -66,7 +77,10 @@ var Size = {
 
     /**
      * The displayed height of this Game Object.
+     * 
      * This value takes into account the scale factor.
+     * 
+     * Setting this value will adjust the Game Object's scale property.
      * 
      * @name Phaser.GameObjects.Components.Size#displayHeight
      * @type {number}
@@ -88,6 +102,14 @@ var Size = {
 
     /**
      * Sets the size of this Game Object to be that of the given Frame.
+     * 
+     * This will not change the size that the Game Object is rendered in-game.
+     * For that you need to either set the scale of the Game Object (`setScale`) or call the
+     * `setDisplaySize` method, which is the same thing as changing the scale but allows you
+     * to do so by giving pixel values.
+     * 
+     * If you have enabled this Game Object for input, changing the size will _not_ change the
+     * size of the hit area. To do this you should adjust the `input.hitArea` object directly.
      * 
      * @method Phaser.GameObjects.Components.Size#setSizeToFrame
      * @since 3.0.0
@@ -113,6 +135,9 @@ var Size = {
      * For that you need to either set the scale of the Game Object (`setScale`) or call the
      * `setDisplaySize` method, which is the same thing as changing the scale but allows you
      * to do so by giving pixel values.
+     * 
+     * If you have enabled this Game Object for input, changing the size will _not_ change the
+     * size of the hit area. To do this you should adjust the `input.hitArea` object directly.
      * 
      * @method Phaser.GameObjects.Components.Size#setSize
      * @since 3.0.0
