@@ -9,6 +9,7 @@ var CanvasPool = require('../../display/canvas/CanvasPool');
 var CenterOn = require('../../geom/rectangle/CenterOn');
 var Clamp = require('../../math/Clamp');
 var Class = require('../../utils/Class');
+var Components = require('../../gameobjects/components');
 var Effects = require('./effects');
 var Linear = require('../../math/Linear');
 var Rectangle = require('../../geom/rectangle/Rectangle');
@@ -38,10 +39,13 @@ var Vector2 = require('../../math/Vector2');
  * A Camera also has built-in special effects including Fade, Flash and Camera Shake.
  *
  * @class Camera
- * @extends Phaser.Cameras.Scene2D.BaseCamera
  * @memberOf Phaser.Cameras.Scene2D
  * @constructor
  * @since 3.0.0
+ * 
+ * @extends Phaser.Cameras.Scene2D.BaseCamera
+ * @extends Phaser.GameObjects.Components.Flip
+ * @extends Phaser.GameObjects.Components.Tint
  *
  * @param {number} x - The x position of the Camera, relative to the top-left of the game canvas.
  * @param {number} y - The y position of the Camera, relative to the top-left of the game canvas.
@@ -51,6 +55,11 @@ var Vector2 = require('../../math/Vector2');
 var Camera = new Class({
 
     Extends: BaseCamera,
+
+    Mixins: [
+        Components.Flip,
+        Components.Tint
+    ],
 
     initialize:
 
@@ -226,18 +235,18 @@ var Camera = new Class({
 
         this.pipeline = null;
 
-        this.flipX = false;
-        this.flipY = false;
-        this.tintFill = 0;
-        this._isTinted = false;
-        this._tintTL = 0xffffff;
-        this._tintTR = 0xffffff;
-        this._tintBL = 0xffffff;
-        this._tintBR = 0xffffff;
-        this._alphaTL = 1;
-        this._alphaTR = 1;
-        this._alphaBL = 1;
-        this._alphaBR = 1;
+        // this.flipX = false;
+        // this.flipY = false;
+        // this.tintFill = 0;
+        // this._isTinted = false;
+        // this._tintTL = 0xffffff;
+        // this._tintTR = 0xffffff;
+        // this._tintBL = 0xffffff;
+        // this._tintBR = 0xffffff;
+        // this._alphaTL = 1;
+        // this._alphaTR = 1;
+        // this._alphaBL = 1;
+        // this._alphaBR = 1;
     },
 
     setRenderToTexture: function (pipeline)
@@ -257,7 +266,10 @@ var Camera = new Class({
 
         this.renderToTexture = true;
 
-        this.pipeline = pipeline;
+        if (pipeline)
+        {
+            this.pipeline = pipeline;
+        }
 
         return this;
     },

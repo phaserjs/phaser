@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
+var Components = require('../../gameobjects/components');
 var DegToRad = require('../../math/DegToRad');
 var EventEmitter = require('eventemitter3');
 var Rectangle = require('../../geom/rectangle/Rectangle');
@@ -66,10 +67,13 @@ var Vector2 = require('../../math/Vector2');
  * to when they were added to the Camera class.
  *
  * @class BaseCamera
- * @extends Phaser.Events.EventEmitter
  * @memberOf Phaser.Cameras.Scene2D
  * @constructor
  * @since 3.12.0
+ * 
+ * @extends Phaser.Events.EventEmitter
+ * @extends Phaser.GameObjects.Components.Alpha
+ * @extends Phaser.GameObjects.Components.Visible
  *
  * @param {number} x - The x position of the Camera, relative to the top-left of the game canvas.
  * @param {number} y - The y position of the Camera, relative to the top-left of the game canvas.
@@ -79,6 +83,11 @@ var Vector2 = require('../../math/Vector2');
 var BaseCamera = new Class({
 
     Extends: EventEmitter,
+
+    Mixins: [
+        Components.Alpha,
+        Components.Visible
+    ],
 
     initialize:
 
@@ -170,8 +179,8 @@ var BaseCamera = new Class({
          * @type {boolean}
          * @default true
          * @since 3.10.0
-         */
         this.visible = true;
+         */
 
         /**
          * Is this Camera using a bounds to restrict scrolling movement?
@@ -422,8 +431,8 @@ var BaseCamera = new Class({
          * @type {number}
          * @default 1
          * @since 3.11.0
-         */
         this.alpha = 1;
+         */
 
         /**
          * Should the camera cull Game Objects before checking them for input hit tests?
@@ -518,7 +527,6 @@ var BaseCamera = new Class({
      * @param {number} [value=1] - The Camera alpha value.
      *
      * @return {this} This Camera instance.
-     */
     setAlpha: function (value)
     {
         if (value === undefined) { value = 1; }
@@ -527,6 +535,7 @@ var BaseCamera = new Class({
 
         return this;
     },
+     */
 
     /**
      * Sets the rotation origin of this Camera.
@@ -1329,13 +1338,13 @@ var BaseCamera = new Class({
      * @param {boolean} value - The visible state of the Camera.
      *
      * @return {this} This Camera instance.
-     */
     setVisible: function (value)
     {
         this.visible = value;
 
         return this;
     },
+     */
 
     /**
      * Returns an Object suitable for JSON storage containing all of the Camera viewport and rendering properties.

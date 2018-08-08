@@ -1592,8 +1592,10 @@ var WebGLRenderer = new Class({
             TextureTintPipeline.projOrtho(0, TextureTintPipeline.width, TextureTintPipeline.height, 0, -1000.0, 1000.0);
 
             var getTint = Utils.getTintAppendFloatAlpha;
+
+            var p = (camera.pipeline) ? camera.pipeline : TextureTintPipeline;
         
-            camera.pipeline.batchTexture(
+            p.batchTexture(
                 camera,
                 camera.glTexture,
                 camera.width, camera.height,
@@ -1605,10 +1607,10 @@ var WebGLRenderer = new Class({
                 1, 1,
                 0, 0,
                 0, 0, camera.width, camera.height,
-                getTint(camera._tintTL, camera.alpha * camera._alphaTL),
-                getTint(camera._tintTR, camera.alpha * camera._alphaTR),
-                getTint(camera._tintBL, camera.alpha * camera._alphaBL),
-                getTint(camera._tintBR, camera.alpha * camera._alphaBR),
+                getTint(camera._tintTL, camera._alphaTL),
+                getTint(camera._tintTR, camera._alphaTR),
+                getTint(camera._tintBL, camera._alphaBL),
+                getTint(camera._tintBR, camera._alphaBR),
                 (camera._isTinted && camera.tintFill),
                 0, 0,
                 this.defaultCamera,
