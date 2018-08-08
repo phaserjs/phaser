@@ -11,7 +11,7 @@ var Clone = require('./Clone');
  * 
  * Then scans obj2. If a property is found in obj2 that *also* exists in obj1, the value from obj2 is used, otherwise the property is skipped.
  *
- * @function Phaser.Utils.Object.MergeRight
+ * @function Phaser.Utils.Objects.MergeRight
  * @since 3.0.0
  *
  * @param {object} obj1 - [description]

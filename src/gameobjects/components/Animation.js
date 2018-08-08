@@ -208,7 +208,7 @@ var Animation = new Class({
         this._yoyo = false;
 
         /**
-         * Will the playhead move forwards (`true`) or in reverse (`false`)
+         * Will the playhead move forwards (`true`) or in reverse (`false`).
          *
          * @name Phaser.GameObjects.Components.Animation#forward
          * @type {boolean}
@@ -216,6 +216,17 @@ var Animation = new Class({
          * @since 3.0.0
          */
         this.forward = true;
+
+        /**
+         * An Internal trigger that's play the animation in reverse mode ('true') or not ('false'),
+         * needed because forward can be changed by yoyo feature.
+         *
+         * @name Phaser.GameObjects.Components.Animation#forward
+         * @type {boolean}
+         * @default false
+         * @since 3.12.0
+         */
+        this._reverse = false;
 
         /**
          * Internal time overflow accumulator.
@@ -381,8 +392,8 @@ var Animation = new Class({
      * @protected
      * @since 3.0.0
      *
-     * @param {string} key - [description]
-     * @param {integer} [startFrame=0] - [description]
+     * @param {string} key - The key of the animation to load.
+     * @param {integer} [startFrame=0] - The start frame of the animation to load.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -496,6 +507,54 @@ var Animation = new Class({
             return this.parent;
         }
 
+        this.forward = true;
+        this._reverse = false;
+        return this._startAnimation(key, startFrame);
+    },
+
+    /**
+     * Plays an Animation (in reverse mode) on the Game Object that owns this Animation Component.
+     *
+     * @method Phaser.GameObjects.Components.Animation#playReverse
+     * @fires Phaser.GameObjects.Components.Animation#onStartEvent
+     * @since 3.12.0
+     *
+     * @param {string} key - The string-based key of the animation to play, as defined previously in the Animation Manager.
+     * @param {boolean} [ignoreIfPlaying=false] - If an animation is already playing then ignore this call.
+     * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    playReverse: function (key, ignoreIfPlaying, startFrame)
+    {
+        if (ignoreIfPlaying === undefined) { ignoreIfPlaying = false; }
+        if (startFrame === undefined) { startFrame = 0; }
+
+        if (ignoreIfPlaying && this.isPlaying && this.currentAnim.key === key)
+        {
+            return this.parent;
+        }
+
+        this.forward = false;
+        this._reverse = true;
+        return this._startAnimation(key, startFrame);
+    },
+
+    /**
+     * Load an Animation and fires 'onStartEvent' event,
+     * extracted from 'play' method
+     *
+     * @method Phaser.GameObjects.Components.Animation#_startAnimation
+     * @fires Phaser.GameObjects.Components.Animation#onStartEvent
+     * @since 3.12.0
+     *
+     * @param {string} key - The string-based key of the animation to play, as defined previously in the Animation Manager.
+     * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    _startAnimation: function (key, startFrame)
+    {
         this.load(key, startFrame);
 
         var anim = this.currentAnim;
@@ -506,7 +565,6 @@ var Animation = new Class({
 
         anim.getFirstTick(this);
 
-        this.forward = true;
         this.isPlaying = true;
         this.pendingRepeat = false;
 
@@ -521,6 +579,25 @@ var Animation = new Class({
     },
 
     /**
+     * Reverse an Animation that is already playing on the Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Animation#reverse
+     * @since 3.12.0
+     *
+     * @param {string} key - The string-based key of the animation to play, as defined previously in the Animation Manager.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    reverse: function (key)
+    {
+        if (!this.isPlaying || this.currentAnim.key !== key) { return this.parent; }
+        this._reverse = !this._reverse;
+        this.forward = !this.forward;
+
+        return this.parent;
+    },
+
+    /**
      * Returns a value between 0 and 1 indicating how far this animation is through, ignoring repeats and yoyos.
      * If the animation has a non-zero repeat defined, `getProgress` and `getTotalProgress` will be different
      * because `getProgress` doesn't include any repeats or repeat delays, whereas `getTotalProgress` does.
@@ -528,7 +605,7 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#getProgress
      * @since 3.4.0
      *
-     * @return {float} The progress of the current animation, between 0 and 1.
+     * @return {number} The progress of the current animation, between 0 and 1.
      */
     getProgress: function ()
     {
@@ -549,7 +626,7 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#setProgress
      * @since 3.4.0
      *
-     * @param {float} [value=0] - [description]
+     * @param {number} [value=0] - The progress value, between 0 and 1.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -566,18 +643,19 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Handle the removal of an animation from the Animation Manager.
      *
      * @method Phaser.GameObjects.Components.Animation#remove
      * @since 3.0.0
      *
-     * @param {Phaser.Animations.Animation} [event] - [description]
+     * @param {string} [key] - The key of the removed Animation.
+     * @param {Phaser.Animations.Animation} [animation] - The removed Animation.
      */
-    remove: function (event)
+    remove: function (key, animation)
     {
-        if (event === undefined) { event = this.currentAnim; }
+        if (animation === undefined) { animation = this.currentAnim; }
 
-        if (this.isPlaying && event.key === this.currentAnim.key)
+        if (this.isPlaying && animation.key === this.currentAnim.key)
         {
             this.stop();
 
@@ -610,7 +688,7 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#setRepeat
      * @since 3.4.0
      *
-     * @param {integer} value - [description]
+     * @param {integer} value - The number of times that the animation should repeat.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -662,7 +740,7 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#restart
      * @since 3.0.0
      *
-     * @param {boolean} [includeDelay=false] - [description]
+     * @param {boolean} [includeDelay=false] - Whether to include the delay value of the animation when restarting.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -812,10 +890,10 @@ var Animation = new Class({
      * @method Phaser.GameObjects.Components.Animation#update
      * @since 3.0.0
      *
-     * @param {number} timestamp - [description]
+     * @param {number} time - The current timestamp.
      * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
-    update: function (timestamp, delta)
+    update: function (time, delta)
     {
         if (!this.currentAnim || !this.isPlaying || this.currentAnim.paused)
         {
@@ -882,7 +960,7 @@ var Animation = new Class({
      * @private
      * @since 3.0.0
      *
-     * @param {Phaser.Animations.AnimationFrame} animationFrame - [description]
+     * @param {Phaser.Animations.AnimationFrame} animationFrame - The animation frame to change to.
      */
     updateFrame: function (animationFrame)
     {
@@ -941,7 +1019,9 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Destroy this Animation component.
+     *
+     * Unregisters event listeners and cleans up its references.
      *
      * @method Phaser.GameObjects.Components.Animation#destroy
      * @since 3.0.0

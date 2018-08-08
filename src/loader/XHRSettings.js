@@ -7,14 +7,15 @@
 /**
  * @typedef {object} XHRSettingsObject
  *
- * @property {XMLHttpRequestResponseType} responseType - [description]
- * @property {boolean} async - [description]
- * @property {string} user - [description]
- * @property {string} password - [description]
- * @property {number} timeout - [description]
- * @property {?string} header - [description]
- * @property {?string} headerValue - [description]
- * @property {(string|undefined)} overrideMimeType - [description]
+ * @property {XMLHttpRequestResponseType} responseType - The response type of the XHR request, i.e. `blob`, `text`, etc.
+ * @property {boolean} [async=true] - Should the XHR request use async or not?
+ * @property {string} [user=''] - Optional username for the XHR request.
+ * @property {string} [password=''] - Optional password for the XHR request.
+ * @property {integer} [timeout=0] - Optional XHR timeout value.
+ * @property {(string|undefined)} [header] - This value is used to populate the XHR `setRequestHeader` and is undefined by default.
+ * @property {(string|undefined)} [headerValue] - This value is used to populate the XHR `setRequestHeader` and is undefined by default.
+ * @property {(string|undefined)} [requestedWith] - This value is used to populate the XHR `setRequestHeader` and is undefined by default.
+ * @property {(string|undefined)} [overrideMimeType] - Provide a custom mime-type to use instead of the default.
  */
 
 /**
@@ -60,6 +61,7 @@ var XHRSettings = function (responseType, async, user, password, timeout)
         //  setRequestHeader
         header: undefined,
         headerValue: undefined,
+        requestedWith: false,
 
         //  overrideMimeType
         overrideMimeType: undefined

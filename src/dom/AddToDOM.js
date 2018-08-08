@@ -36,6 +36,10 @@ var AddToDOM = function (element, parent, overflowHidden)
             target = parent;
         }
     }
+    else if (element.parentElement)
+    {
+        return element;
+    }
 
     //  Fallback, covers an invalid ID and a non HTMLelement object
     if (!target)

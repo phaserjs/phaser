@@ -12,8 +12,8 @@ var GetAdvancedValue = require('../utils/object/GetAdvancedValue');
  * @function Phaser.GameObjects.BuildGameObjectAnimation
  * @since 3.0.0
  *
- * @param {Phaser.GameObjects.Sprite} sprite - [description]
- * @param {object} config - [description]
+ * @param {Phaser.GameObjects.Sprite} sprite - The sprite to add an Animation component to.
+ * @param {object} config - The animation config.
  *
  * @return {Phaser.GameObjects.Sprite} The updated Sprite.
  */
@@ -54,14 +54,14 @@ var BuildGameObjectAnimation = function (sprite, config)
         var repeat = GetAdvancedValue(animConfig, 'repeat', 0);
         var repeatDelay = GetAdvancedValue(animConfig, 'repeatDelay', 0);
         var yoyo = GetAdvancedValue(animConfig, 'yoyo', false);
-        
+
         var play = GetAdvancedValue(animConfig, 'play', false);
         var delayedPlay = GetAdvancedValue(animConfig, 'delayedPlay', 0);
 
-        anims.delay(delay);
-        anims.repeat(repeat);
-        anims.repeatDelay(repeatDelay);
-        anims.yoyo(yoyo);
+        anims.setDelay(delay);
+        anims.setRepeat(repeat);
+        anims.setRepeatDelay(repeatDelay);
+        anims.setYoyo(yoyo);
 
         if (play)
         {

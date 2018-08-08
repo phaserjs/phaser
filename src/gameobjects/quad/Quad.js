@@ -24,7 +24,7 @@ var Mesh = require('../mesh/Mesh');
  * @webglOnly
  * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - [description]
+ * @param {Phaser.Scene} scene - The Scene to which this Quad belongs.
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
  * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
@@ -54,6 +54,7 @@ var Quad = new Class({
             0, 0, // br
             0, 0 // tr
         ];
+
         var uv = [
             0, 0, // tl
             0, 1, // bl
@@ -62,6 +63,7 @@ var Quad = new Class({
             1, 1, // br
             1, 0 // tr
         ];
+
         var colors = [
             0xffffff, // tl
             0xffffff, // bl
@@ -70,6 +72,7 @@ var Quad = new Class({
             0xffffff, // br
             0xffffff // tr
         ];
+
         var alphas = [
             1, // tl
             1, // bl
@@ -82,6 +85,65 @@ var Quad = new Class({
         Mesh.call(this, scene, x, y, vertices, uv, colors, alphas, texture, frame);
 
         this.resetPosition();
+    },
+
+    /**
+     * Sets the frame this Game Object will use to render with.
+     *
+     * The Frame has to belong to the current Texture being used.
+     *
+     * It can be either a string or an index.
+     *
+     * Calling `setFrame` will modify the `width` and `height` properties of your Game Object.
+     * It will also change the `origin` if the Frame has a custom pivot point, as exported from packages like Texture Packer.
+     *
+     * @method Phaser.GameObjects.Quad#setFrame
+     * @since 3.11.0
+     *
+     * @param {(string|integer)} frame - The name or index of the frame within the Texture.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setFrame: function (frame)
+    {
+        this.frame = this.texture.get(frame);
+
+        if (!this.frame.cutWidth || !this.frame.cutHeight)
+        {
+            this.renderFlags &= ~8;
+        }
+        else
+        {
+            this.renderFlags |= 8;
+        }
+
+        frame = this.frame;
+
+        //   TL
+        this.uv[0] = frame.u0;
+        this.uv[1] = frame.v0;
+
+        //   BL
+        this.uv[2] = frame.u0;
+        this.uv[3] = frame.v1;
+
+        //   BR
+        this.uv[4] = frame.u1;
+        this.uv[5] = frame.v1;
+
+        //   TL
+        this.uv[6] = frame.u0;
+        this.uv[7] = frame.v0;
+
+        //   BR
+        this.uv[8] = frame.u1;
+        this.uv[9] = frame.v1;
+
+        //   TR
+        this.uv[10] = frame.u1;
+        this.uv[11] = frame.v0;
+
+        return this;
     },
 
     /**
@@ -260,7 +322,7 @@ var Quad = new Class({
      * The top-left alpha value of this Quad.
      *
      * @name Phaser.GameObjects.Quad#topLeftAlpha
-     * @type {float}
+     * @type {number}
      * @since 3.0.0
      */
     topLeftAlpha: {
@@ -282,7 +344,7 @@ var Quad = new Class({
      * The top-right alpha value of this Quad.
      *
      * @name Phaser.GameObjects.Quad#topRightAlpha
-     * @type {float}
+     * @type {number}
      * @since 3.0.0
      */
     topRightAlpha: {
@@ -303,7 +365,7 @@ var Quad = new Class({
      * The bottom-left alpha value of this Quad.
      *
      * @name Phaser.GameObjects.Quad#bottomLeftAlpha
-     * @type {float}
+     * @type {number}
      * @since 3.0.0
      */
     bottomLeftAlpha: {
@@ -324,7 +386,7 @@ var Quad = new Class({
      * The bottom-right alpha value of this Quad.
      *
      * @name Phaser.GameObjects.Quad#bottomRightAlpha
-     * @type {float}
+     * @type {number}
      * @since 3.0.0
      */
     bottomRightAlpha: {

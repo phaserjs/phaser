@@ -32,7 +32,7 @@ var Texture = require('./Texture');
  * @extends Phaser.Textures.Texture
  * @memberOf Phaser.Textures
  * @constructor
- * @since 3.6.1
+ * @since 3.7.0
  *
  * @param {Phaser.Textures.TextureManager} manager - A reference to the Texture Manager this Texture belongs to.
  * @param {string} key - The unique string-based key of this Texture.
@@ -58,7 +58,7 @@ var CanvasTexture = new Class({
          * @name Phaser.Textures.TextureManager#_source
          * @type {Phaser.Textures.TextureSource}
          * @private
-         * @since 3.6.1
+         * @since 3.7.0
          */
         this._source = this.frames['__BASE'].source;
 
@@ -68,7 +68,7 @@ var CanvasTexture = new Class({
          * @name Phaser.Textures.TextureManager#canvas
          * @readOnly
          * @type {HTMLCanvasElement}
-         * @since 3.6.1
+         * @since 3.7.0
          */
         this.canvas = this._source.image;
 
@@ -78,7 +78,7 @@ var CanvasTexture = new Class({
          * @name Phaser.Textures.TextureManager#canvas
          * @readOnly
          * @type {CanvasRenderingContext2D}
-         * @since 3.6.1
+         * @since 3.7.0
          */
         this.context = this.canvas.getContext('2d');
 
@@ -89,7 +89,7 @@ var CanvasTexture = new Class({
          * @name Phaser.Textures.TextureManager#width
          * @readOnly
          * @type {integer}
-         * @since 3.6.1
+         * @since 3.7.0
          */
         this.width = width;
 
@@ -100,7 +100,7 @@ var CanvasTexture = new Class({
          * @name Phaser.Textures.TextureManager#height
          * @readOnly
          * @type {integer}
-         * @since 3.6.1
+         * @since 3.7.0
          */
         this.height = height;
     },
@@ -111,7 +111,7 @@ var CanvasTexture = new Class({
      * canvas has changed, as there is a significant GPU texture allocation cost involved in doing so.
      *
      * @method Phaser.Textures.CanvasTexture#refresh
-     * @since 3.6.1
+     * @since 3.7.0
      *
      * @return {Phaser.Textures.CanvasTexture} This CanvasTexture.
      */
@@ -126,7 +126,7 @@ var CanvasTexture = new Class({
      * Gets the Canvas Element.
      *
      * @method Phaser.Textures.CanvasTexture#getCanvas
-     * @since 3.6.1
+     * @since 3.7.0
      *
      * @return {HTMLCanvasElement} The Canvas DOM element this texture is using.
      */
@@ -139,7 +139,7 @@ var CanvasTexture = new Class({
      * Gets the 2D Canvas Rendering Context.
      *
      * @method Phaser.Textures.CanvasTexture#getContext
-     * @since 3.6.1
+     * @since 3.7.0
      *
      * @return {CanvasRenderingContext2D} The Canvas Rendering Context this texture is using.
      */
@@ -152,7 +152,7 @@ var CanvasTexture = new Class({
      * Clears this Canvas Texture, resetting it back to transparent.
      *
      * @method Phaser.Textures.CanvasTexture#clear
-     * @since 3.6.1
+     * @since 3.7.0
      *
      * @return {Phaser.Textures.CanvasTexture} The Canvas Texture.
      */
@@ -167,7 +167,7 @@ var CanvasTexture = new Class({
      * Changes the size of this Canvas Texture.
      *
      * @method Phaser.Textures.CanvasTexture#setSize
-     * @since 3.6.1
+     * @since 3.7.0
      *
      * @param {integer} width - The new width of the Canvas.
      * @param {integer} [height] - The new height of the Canvas. If not given it will use the width as the height.

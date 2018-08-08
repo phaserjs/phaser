@@ -21,10 +21,11 @@ var GetValue = require('../../utils/object/GetValue');
  * @property {Phaser.Input.Keyboard.Key} [left] - The Key to be pressed that will move the Camera left.
  * @property {Phaser.Input.Keyboard.Key} [right] - The Key to be pressed that will move the Camera right.
  * @property {Phaser.Input.Keyboard.Key} [up] - The Key to be pressed that will move the Camera up.
+ * @property {Phaser.Input.Keyboard.Key} [down] - The Key to be pressed that will move the Camera down.
  * @property {Phaser.Input.Keyboard.Key} [zoomIn] - The Key to be pressed that will zoom the Camera in.
  * @property {Phaser.Input.Keyboard.Key} [zoomOut] - The Key to be pressed that will zoom the Camera out.
- * @property {float} [zoomSpeed=0.01] - The speed at which the camera will zoom if the `zoomIn` or `zoomOut` keys are pressed.
- * @property {(float|{x:float,y:float})} [speed=0] - The horizontal and vertical speed the camera will move.
+ * @property {number} [zoomSpeed=0.01] - The speed at which the camera will zoom if the `zoomIn` or `zoomOut` keys are pressed.
+ * @property {(number|{x:number,y:number})} [speed=0] - The horizontal and vertical speed the camera will move.
  */
 
 /**
@@ -118,7 +119,7 @@ var FixedKeyControl = new Class({
          * The speed at which the camera will zoom if the `zoomIn` or `zoomOut` keys are pressed.
          *
          * @name Phaser.Cameras.Controls.FixedKeyControl#zoomSpeed
-         * @type {float}
+         * @type {number}
          * @default 0.01
          * @since 3.0.0
          */
@@ -128,7 +129,7 @@ var FixedKeyControl = new Class({
          * The horizontal speed the camera will move.
          *
          * @name Phaser.Cameras.Controls.FixedKeyControl#speedX
-         * @type {float}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
@@ -138,7 +139,7 @@ var FixedKeyControl = new Class({
          * The vertical speed the camera will move.
          *
          * @name Phaser.Cameras.Controls.FixedKeyControl#speedY
-         * @type {float}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */

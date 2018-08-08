@@ -22,14 +22,15 @@ var Render = require('./ParticleManagerRender');
  * @constructor
  * @since 3.0.0
  *
- * @extends Phaser.GameObjects.Particles.Components.Depth
- * @extends Phaser.GameObjects.Particles.Components.Visible
- * @extends Phaser.GameObjects.Particles.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.Pipeline
+ * @extends Phaser.GameObjects.Components.Transform
+ * @extends Phaser.GameObjects.Components.Visible
  *
  * @param {Phaser.Scene} scene - The Scene to which this Emitter Manager belongs.
  * @param {string} texture - The key of the Texture this Emitter Manager will use to render particles, as stored in the Texture Manager.
- * @param {(string|integer)} frame - An optional frame from the Texture this Emitter Manager will use to render particles.
- * @param {ParticleEmitterConfig|ParticleEmitterConfig[]} emitters - Configuration settings for one or more emitters to create.
+ * @param {(string|integer)} [frame] - An optional frame from the Texture this Emitter Manager will use to render particles.
+ * @param {ParticleEmitterConfig|ParticleEmitterConfig[]} [emitters] - Configuration settings for one or more emitters to create.
  */
 var ParticleEmitterManager = new Class({
 
@@ -37,8 +38,9 @@ var ParticleEmitterManager = new Class({
 
     Mixins: [
         Components.Depth,
-        Components.Visible,
         Components.Pipeline,
+        Components.Transform,
+        Components.Visible,
         Render
     ],
 
@@ -50,7 +52,7 @@ var ParticleEmitterManager = new Class({
         GameObject.call(this, scene, 'ParticleEmitterManager');
 
         /**
-         * [description]
+         * The blend mode applied to all emitters and particles.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitterManager#blendMode
          * @type {integer}
@@ -66,7 +68,7 @@ var ParticleEmitterManager = new Class({
          * This is multiplied with any timeScale set on each individual emitter.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitterManager#timeScale
-         * @type {float}
+         * @type {number}
          * @default 1
          * @since 3.0.0
          */
@@ -96,7 +98,7 @@ var ParticleEmitterManager = new Class({
          * Names of this Emitter Manager's texture frames.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitterManager#frameNames
-         * @type {Phaser.Textures.Frame[]}
+         * @type {string[]}
          * @since 3.0.0
          */
         this.frameNames = [];
@@ -116,7 +118,7 @@ var ParticleEmitterManager = new Class({
          * A list of Emitters being managed by this Emitter Manager.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitterManager#emitters
-             * @type {Phaser.Structs.List.<Phaser.GameObjects.Particles.ParticleEmitter>}
+         * @type {Phaser.Structs.List.<Phaser.GameObjects.Particles.ParticleEmitter>}
          * @since 3.0.0
          */
         this.emitters = new List(this);
@@ -255,7 +257,7 @@ var ParticleEmitterManager = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitterManager#createEmitter
      * @since 3.0.0
      *
-     * @param {object} config - [description]
+     * @param {ParticleEmitterConfig} config - Configuration settings for the Particle Emitter to create.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} The Particle Emitter that was created.
      */
@@ -285,7 +287,7 @@ var ParticleEmitterManager = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitterManager#createGravityWell
      * @since 3.0.0
      *
-     * @param {object} config - [description]
+     * @param {GravityWellConfig} config - Configuration settings for the Gravity Well to create.
      *
      * @return {Phaser.GameObjects.Particles.GravityWell} The Gravity Well that was created.
      */
@@ -301,8 +303,8 @@ var ParticleEmitterManager = new Class({
      * @since 3.0.0
      *
      * @param {integer} [count] - The number of particles to release from each emitter. The default is the emitter's own {@link Phaser.GameObjects.Particles.ParticleEmitter#quantity}.
-     * @param {float} [x] - The x-coordinate to to emit particles from. The default is the x-coordinate of the emitter's current location.
-     * @param {float} [y] - The y-coordinate to to emit particles from. The default is the y-coordinate of the emitter's current location.
+     * @param {number} [x] - The x-coordinate to to emit particles from. The default is the x-coordinate of the emitter's current location.
+     * @param {number} [y] - The y-coordinate to to emit particles from. The default is the y-coordinate of the emitter's current location.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitterManager} This Emitter Manager.
      */
@@ -329,8 +331,8 @@ var ParticleEmitterManager = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitterManager#emitParticleAt
      * @since 3.0.0
      *
-     * @param {float} [x] - The x-coordinate to to emit particles from. The default is the x-coordinate of the emitter's current location.
-     * @param {float} [y] - The y-coordinate to to emit particles from. The default is the y-coordinate of the emitter's current location.
+     * @param {number} [x] - The x-coordinate to to emit particles from. The default is the x-coordinate of the emitter's current location.
+     * @param {number} [y] - The y-coordinate to to emit particles from. The default is the y-coordinate of the emitter's current location.
      * @param {integer} [count] - The number of particles to release from each emitter. The default is the emitter's own {@link Phaser.GameObjects.Particles.ParticleEmitter#quantity}.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitterManager} This Emitter Manager.
@@ -394,7 +396,7 @@ var ParticleEmitterManager = new Class({
      * @since 3.0.0
      *
      * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
-     * @param {float} delta - The delta time, in ms, elapsed since the last frame.
+     * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
     preUpdate: function (time, delta)
     {
@@ -412,6 +414,30 @@ var ParticleEmitterManager = new Class({
                 emitter.preUpdate(time, delta);
             }
         }
+    },
+
+    /**
+     * A NOOP method so you can pass an EmitterManager to a Container.
+     * Calling this method will do nothing. It is intentionally empty.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitterManager#setAlpha
+     * @private
+     * @since 3.10.0
+     */
+    setAlpha: function ()
+    {
+    },
+
+    /**
+     * A NOOP method so you can pass an EmitterManager to a Container.
+     * Calling this method will do nothing. It is intentionally empty.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitterManager#setScrollFactor
+     * @private
+     * @since 3.10.0
+     */
+    setScrollFactor: function ()
+    {
     }
 
 });

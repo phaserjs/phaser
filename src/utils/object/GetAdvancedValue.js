@@ -37,7 +37,7 @@ var GetValue = require('./GetValue');
 /**
  * [description]
  *
- * @function Phaser.Utils.Object.GetAdvancedValue
+ * @function Phaser.Utils.Objects.GetAdvancedValue
  * @since 3.0.0
  *
  * @param {object} source - [description]

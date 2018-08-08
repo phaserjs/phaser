@@ -4,19 +4,95 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Camera = require('../../cameras/2d/Camera.js');
+var BaseCamera = require('../../cameras/2d/BaseCamera.js');
 var Class = require('../../utils/Class');
 var Commands = require('./Commands');
 var Components = require('../components');
 var Ellipse = require('../../geom/ellipse/');
 var GameObject = require('../GameObject');
+var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
 var MATH_CONST = require('../../math/const');
 var Render = require('./GraphicsRender');
 
 /**
+ * Graphics line style (or stroke style) settings.
+ *
+ * @typedef {object} GraphicsLineStyle
+ *
+ * @property {number} [width] - The stroke width.
+ * @property {number} [color] - The stroke color.
+ * @property {number} [alpha] - The stroke alpha.
+ */
+
+/**
+ * Graphics fill style settings.
+ *
+ * @typedef {object} GraphicsFillStyle
+ *
+ * @property {number} [color] - The fill color.
+ * @property {number} [alpha] - The fill alpha.
+ */
+
+/**
+ * Graphics style settings.
+ *
+ * @typedef {object} GraphicsStyles
+ *
+ * @property {GraphicsLineStyle} [lineStyle] - The style applied to shape outlines.
+ * @property {GraphicsFillStyle} [fillStyle] - The style applied to shape areas.
+ */
+
+/**
+ * Options for the Graphics game Object.
+ *
+ * @typedef {object} GraphicsOptions
+ * @extends GraphicsStyles
+ *
+ * @property {number} [x] - The x coordinate of the Graphics.
+ * @property {number} [y] - The y coordinate of the Graphics.
+ */
+
+/**
  * @classdesc
- * [description]
+ * A Graphics object is a way to draw primitive shapes to your game. Primitives include forms of geometry, such as
+ * Rectangles, Circles, and Polygons. They also include lines, arcs and curves. When you initially create a Graphics
+ * object it will be empty.
+ *
+ * To draw to it you must first specify a line style or fill style (or both), draw shapes using paths, and finally
+ * fill or stroke them. For example:
+ *
+ * ```javascript
+ * graphics.lineStyle(5, 0xFF00FF, 1.0);
+ * graphics.beginPath();
+ * graphics.moveTo(100, 100);
+ * graphics.lineTo(200, 200);
+ * graphics.closePath();
+ * graphics.strokePath();
+ * ```
+ *
+ * There are also many helpful methods that draw and fill/stroke common shapes for you.
+ *
+ * ```javascript
+ * graphics.lineStyle(5, 0xFF00FF, 1.0);
+ * graphics.fillStyle(0xFFFFFF, 1.0);
+ * graphics.fillRect(50, 50, 400, 200);
+ * graphics.strokeRect(50, 50, 400, 200);
+ * ```
+ *
+ * When a Graphics object is rendered it will render differently based on if the game is running under Canvas or WebGL.
+ * Under Canvas it will use the HTML Canvas context drawing operations to draw the path.
+ * Under WebGL the graphics data is decomposed into polygons. Both of these are expensive processes, especially with
+ * complex shapes.
+ *
+ * If your Graphics object doesn't change much (or at all) once you've drawn your shape to it, then you will help
+ * performance by calling {@link Phaser.GameObjects.Graphics#generateTexture}. This will 'bake' the Graphics object into
+ * a Texture, and return it. You can then use this Texture for Sprites or other display objects. If your Graphics object
+ * updates frequently then you should avoid doing this, as it will constantly generate new textures, which will consume
+ * memory.
+ *
+ * As you can tell, Graphics objects are a bit of a trade-off. While they are extremely useful, you need to be careful
+ * in their complexity and quantity of them in your game.
  *
  * @class Graphics
  * @extends Phaser.GameObjects.GameObject
@@ -33,8 +109,8 @@ var Render = require('./GraphicsRender');
  * @extends Phaser.GameObjects.Components.Visible
  * @extends Phaser.GameObjects.Components.ScrollFactor
  *
- * @param {Phaser.Scene} scene - [description]
- * @param {object} options - [description]
+ * @param {Phaser.Scene} scene - The Scene to which this Graphics object belongs.
+ * @param {GraphicsOptions} [options] - Options that set the position and default style of this Graphics object.
  */
 var Graphics = new Class({
 
@@ -62,10 +138,10 @@ var Graphics = new Class({
         GameObject.call(this, scene, 'Graphics');
 
         this.setPosition(x, y);
-        this.initPipeline('FlatTintPipeline');
+        this.initPipeline('TextureTintPipeline');
 
         /**
-         * [description]
+         * The horizontal display origin of the Graphics.
          *
          * @name Phaser.GameObjects.Graphics#displayOriginX
          * @type {number}
@@ -75,7 +151,7 @@ var Graphics = new Class({
         this.displayOriginX = 0;
 
         /**
-         * [description]
+         * The vertical display origin of the Graphics.
          *
          * @name Phaser.GameObjects.Graphics#displayOriginY
          * @type {number}
@@ -85,7 +161,7 @@ var Graphics = new Class({
         this.displayOriginY = 0;
 
         /**
-         * [description]
+         * The array of commands used to render the Graphics.
          *
          * @name Phaser.GameObjects.Graphics#commandBuffer
          * @type {array}
@@ -95,7 +171,7 @@ var Graphics = new Class({
         this.commandBuffer = [];
 
         /**
-         * [description]
+         * The default fill color for shapes rendered by this Graphics object.
          *
          * @name Phaser.GameObjects.Graphics#defaultFillColor
          * @type {number}
@@ -105,7 +181,7 @@ var Graphics = new Class({
         this.defaultFillColor = -1;
 
         /**
-         * [description]
+         * The default fill alpha for shapes rendered by this Graphics object.
          *
          * @name Phaser.GameObjects.Graphics#defaultFillAlpha
          * @type {number}
@@ -115,7 +191,7 @@ var Graphics = new Class({
         this.defaultFillAlpha = 1;
 
         /**
-         * [description]
+         * The default stroke width for shapes rendered by this Graphics object.
          *
          * @name Phaser.GameObjects.Graphics#defaultStrokeWidth
          * @type {number}
@@ -125,7 +201,7 @@ var Graphics = new Class({
         this.defaultStrokeWidth = 1;
 
         /**
-         * [description]
+         * The default stroke color for shapes rendered by this Graphics object.
          *
          * @name Phaser.GameObjects.Graphics#defaultStrokeColor
          * @type {number}
@@ -135,7 +211,7 @@ var Graphics = new Class({
         this.defaultStrokeColor = -1;
 
         /**
-         * [description]
+         * The default stroke alpha for shapes rendered by this Graphics object.
          *
          * @name Phaser.GameObjects.Graphics#defaultStrokeAlpha
          * @type {number}
@@ -145,7 +221,7 @@ var Graphics = new Class({
         this.defaultStrokeAlpha = 1;
 
         /**
-         * [description]
+         * Internal property that keeps track of the line width style setting.
          *
          * @name Phaser.GameObjects.Graphics#_lineWidth
          * @type {number}
@@ -158,12 +234,12 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Set the default style settings for this Graphics object.
      *
      * @method Phaser.GameObjects.Graphics#setDefaultStyles
      * @since 3.0.0
      *
-     * @param {object} options - [description]
+     * @param {GraphicsStyles} options - The styles to set as defaults.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -190,14 +266,14 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Set the current line style.
      *
      * @method Phaser.GameObjects.Graphics#lineStyle
      * @since 3.0.0
      *
-     * @param {number} lineWidth - [description]
-     * @param {number} color - [description]
-     * @param {float} [alpha=1] - [description]
+     * @param {number} lineWidth - The stroke width.
+     * @param {number} color - The stroke color.
+     * @param {number} [alpha=1] - The stroke alpha.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -216,13 +292,13 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Set the current fill style.
      *
      * @method Phaser.GameObjects.Graphics#fillStyle
      * @since 3.0.0
      *
-     * @param {number} color - [description]
-     * @param {float} [alpha=1] - [description]
+     * @param {number} color - The fill color.
+     * @param {number} [alpha=1] - The fill alpha.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -239,7 +315,140 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Sets a gradient fill style. This is a WebGL only feature.
+     *
+     * The gradient color values represent the 4 corners of an untransformed rectangle.
+     * The gradient is used to color all filled shapes and paths drawn after calling this method.
+     * If you wish to turn a gradient off, call `fillStyle` and provide a new single fill color.
+     *
+     * When filling a triangle only the first 3 color values provided are used for the 3 points of a triangle.
+     *
+     * This feature is best used only on rectangles and triangles. All other shapes will give strange results.
+     *
+     * Note that for objects such as arcs or ellipses, or anything which is made out of triangles, each triangle used
+     * will be filled with a gradient on its own. There is no ability to gradient fill a shape or path as a single
+     * entity at this time.
+     *
+     * @method Phaser.GameObjects.Graphics#fillGradientStyle
+     * @webglOnly
+     * @since 3.12.0
+     *
+     * @param {integer} topLeft - The tint being applied to the top-left of the Game Object.
+     * @param {integer} topRight - The tint being applied to the top-right of the Game Object.
+     * @param {integer} bottomLeft - The tint being applied to the bottom-left of the Game Object.
+     * @param {integer} bottomRight - The tint being applied to the bottom-right of the Game Object.
+     * @param {number} [alpha=1] - The fill alpha.
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
+    fillGradientStyle: function (topLeft, topRight, bottomLeft, bottomRight, alpha)
+    {
+        if (alpha === undefined) { alpha = 1; }
+
+        this.commandBuffer.push(
+            Commands.GRADIENT_FILL_STYLE,
+            alpha, topLeft, topRight, bottomLeft, bottomRight
+        );
+
+        return this;
+    },
+
+    /**
+     * Sets a gradient line style. This is a WebGL only feature.
+     *
+     * The gradient color values represent the 4 corners of an untransformed rectangle.
+     * The gradient is used to color all stroked shapes and paths drawn after calling this method.
+     * If you wish to turn a gradient off, call `lineStyle` and provide a new single line color.
+     *
+     * This feature is best used only on single lines. All other shapes will give strange results.
+     *
+     * Note that for objects such as arcs or ellipses, or anything which is made out of triangles, each triangle used
+     * will be filled with a gradient on its own. There is no ability to gradient stroke a shape or path as a single
+     * entity at this time.
+     *
+     * @method Phaser.GameObjects.Graphics#lineGradientStyle
+     * @webglOnly
+     * @since 3.12.0
+     *
+     * @param {number} lineWidth - The stroke width.
+     * @param {integer} topLeft - The tint being applied to the top-left of the Game Object.
+     * @param {integer} topRight - The tint being applied to the top-right of the Game Object.
+     * @param {integer} bottomLeft - The tint being applied to the bottom-left of the Game Object.
+     * @param {integer} bottomRight - The tint being applied to the bottom-right of the Game Object.
+     * @param {number} [alpha=1] - The fill alpha.
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
+    lineGradientStyle: function (lineWidth, topLeft, topRight, bottomLeft, bottomRight, alpha)
+    {
+        if (alpha === undefined) { alpha = 1; }
+
+        this.commandBuffer.push(
+            Commands.GRADIENT_LINE_STYLE,
+            lineWidth, alpha, topLeft, topRight, bottomLeft, bottomRight
+        );
+
+        return this;
+    },
+
+    /**
+     * Sets the texture frame this Graphics Object will use when drawing all shapes defined after calling this.
+     *
+     * Textures are referenced by their string-based keys, as stored in the Texture Manager.
+     *
+     * Once set, all shapes will use this texture. Call this method with no arguments to clear it.
+     *
+     * The textures are not tiled. They are stretched to the dimensions of the shapes being rendered. For this reason,
+     * it works best with seamless / tileable textures.
+     *
+     * The mode argument controls how the textures are combined with the fill colors. The default value (0) will
+     * multiply the texture by the fill color. A value of 1 will use just the fill color, but the alpha data from the texture,
+     * and a value of 2 will use just the texture and no fill color at all.
+     *
+     * @method Phaser.GameObjects.Graphics#setTexture
+     * @since 3.12.0
+     * @webglOnly
+     *
+     * @param {string} [key] - The key of the texture to be used, as stored in the Texture Manager. Leave blank to clear a previously set texture.
+     * @param {(string|integer)} [frame] - The name or index of the frame within the Texture.
+     * @param {number} [mode=0] - The texture tint mode. 0 is multiply, 1 is alpha only and 2 is texture only.
+     *
+     * @return {this} This Game Object.
+     */
+    setTexture: function (key, frame, mode)
+    {
+        if (mode === undefined) { mode = 0; }
+
+        if (key === undefined)
+        {
+            this.commandBuffer.push(
+                Commands.CLEAR_TEXTURE
+            );
+        }
+        else
+        {
+            var textureFrame = this.scene.sys.textures.getFrame(key, frame);
+
+            if (textureFrame)
+            {
+                if (mode === 2)
+                {
+                    mode = 3;
+                }
+
+                this.commandBuffer.push(
+                    Commands.SET_TEXTURE,
+                    textureFrame,
+                    mode
+                );
+            }
+        }
+
+        return this;
+    },
+
+    /**
+     * Start a new shape path.
      *
      * @method Phaser.GameObjects.Graphics#beginPath
      * @since 3.0.0
@@ -256,7 +465,7 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Close the current path.
      *
      * @method Phaser.GameObjects.Graphics#closePath
      * @since 3.0.0
@@ -273,7 +482,7 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill the current path.
      *
      * @method Phaser.GameObjects.Graphics#fillPath
      * @since 3.0.0
@@ -290,7 +499,7 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Stroke the current path.
      *
      * @method Phaser.GameObjects.Graphics#strokePath
      * @since 3.0.0
@@ -307,12 +516,12 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill the given circle.
      *
      * @method Phaser.GameObjects.Graphics#fillCircleShape
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Circle} circle - [description]
+     * @param {Phaser.Geom.Circle} circle - The circle to fill.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -322,12 +531,12 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Stroke the given circle.
      *
      * @method Phaser.GameObjects.Graphics#strokeCircleShape
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Circle} circle - [description]
+     * @param {Phaser.Geom.Circle} circle - The circle to stroke.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -337,14 +546,14 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill a circle with the given position and radius.
      *
      * @method Phaser.GameObjects.Graphics#fillCircle
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} radius - [description]
+     * @param {number} x - The x coordinate of the center of the circle.
+     * @param {number} y - The y coordinate of the center of the circle.
+     * @param {number} radius - The radius of the circle.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -358,14 +567,14 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Stroke a circle with the given position and radius.
      *
      * @method Phaser.GameObjects.Graphics#strokeCircle
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} radius - [description]
+     * @param {number} x - The x coordinate of the center of the circle.
+     * @param {number} y - The y coordinate of the center of the circle.
+     * @param {number} radius - The radius of the circle.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -379,12 +588,12 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill the given rectangle.
      *
      * @method Phaser.GameObjects.Graphics#fillRectShape
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Rectangle} rect - [description]
+     * @param {Phaser.Geom.Rectangle} rect - The rectangle to fill.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -394,12 +603,12 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Stroke the given rectangle.
      *
      * @method Phaser.GameObjects.Graphics#strokeRectShape
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Rectangle} rect - [description]
+     * @param {Phaser.Geom.Rectangle} rect - The rectangle to stroke.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -409,15 +618,15 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill a rectangle with the given position and size.
      *
      * @method Phaser.GameObjects.Graphics#fillRect
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} height - [description]
+     * @param {number} x - The x coordinate of the top-left of the rectangle.
+     * @param {number} y - The y coordinate of the top-left of the rectangle.
+     * @param {number} width - The width of the rectangle.
+     * @param {number} height - The height of the rectangle.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -432,15 +641,15 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Stroke a rectangle with the given position and size.
      *
      * @method Phaser.GameObjects.Graphics#strokeRect
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} height - [description]
+     * @param {number} x - The x coordinate of the top-left of the rectangle.
+     * @param {number} y - The y coordinate of the top-left of the rectangle.
+     * @param {number} width - The width of the rectangle.
+     * @param {number} height - The height of the rectangle.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -474,13 +683,115 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill a rounded rectangle with the given position, size and radius.
+     *
+     * @method Phaser.GameObjects.Graphics#fillRoundedRect
+     * @since 3.11.0
+     *
+     * @param {number} x - The x coordinate of the top-left of the rectangle.
+     * @param {number} y - The y coordinate of the top-left of the rectangle.
+     * @param {number} width - The width of the rectangle.
+     * @param {number} height - The height of the rectangle.
+     * @param {number} [radius = 20] - The corner radius; It can also be an object to specify different radii for corners
+     * @param {number} [radius.tl = 20] Top left
+     * @param {number} [radius.tr = 20] Top right
+     * @param {number} [radius.br = 20] Bottom right
+     * @param {number} [radius.bl = 20] Bottom left
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
+    fillRoundedRect: function (x, y, width, height, radius)
+    {
+        if (radius === undefined) { radius = 20; }
+
+        var tl = radius;
+        var tr = radius;
+        var bl = radius;
+        var br = radius;
+
+        if (typeof radius !== 'number')
+        {
+            tl = GetFastValue(radius, 'tl', 20);
+            tr = GetFastValue(radius, 'tr', 20);
+            bl = GetFastValue(radius, 'bl', 20);
+            br = GetFastValue(radius, 'br', 20);
+        }
+
+        this.beginPath();
+        this.moveTo(x + tl, y);
+        this.lineTo(x + width - tr, y);
+        this.arc(x + width - tr, y + tr, tr, -MATH_CONST.TAU, 0);
+        this.lineTo(x + width, y + height - br);
+        this.arc(x + width - br, y + height - br, br, 0, MATH_CONST.TAU);
+        this.lineTo(x + bl, y + height);
+        this.arc(x + bl, y + height - bl, bl, MATH_CONST.TAU, Math.PI);
+        this.lineTo(x, y + tl);
+        this.arc(x + tl, y + tl, tl, -Math.PI, -MATH_CONST.TAU);
+        this.fillPath();
+
+        return this;
+    },
+
+    /**
+     * Stroke a rounded rectangle with the given position, size and radius.
+     *
+     * @method Phaser.GameObjects.Graphics#strokeRoundedRect
+     * @since 3.11.0
+     *
+     * @param {number} x - The x coordinate of the top-left of the rectangle.
+     * @param {number} y - The y coordinate of the top-left of the rectangle.
+     * @param {number} width - The width of the rectangle.
+     * @param {number} height - The height of the rectangle.
+     * @param {number} [radius = 20] - The corner radius; It can also be an object to specify different radii for corners
+     * @param {number} [radius.tl = 20] Top left
+     * @param {number} [radius.tr = 20] Top right
+     * @param {number} [radius.br = 20] Bottom right
+     * @param {number} [radius.bl = 20] Bottom left
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
+    strokeRoundedRect: function (x, y, width, height, radius)
+    {
+        if (radius === undefined) { radius = 20; }
+
+        var tl = radius;
+        var tr = radius;
+        var bl = radius;
+        var br = radius;
+
+        if (typeof radius !== 'number')
+        {
+            tl = GetFastValue(radius, 'tl', 20);
+            tr = GetFastValue(radius, 'tr', 20);
+            bl = GetFastValue(radius, 'bl', 20);
+            br = GetFastValue(radius, 'br', 20);
+        }
+
+        this.beginPath();
+        this.moveTo(x + tl, y);
+        this.lineTo(x + width - tr, y);
+        this.arc(x + width - tr, y + tr, tr, -MATH_CONST.TAU, 0);
+        this.lineTo(x + width, y + height - br);
+        this.arc(x + width - br, y + height - br, br, 0, MATH_CONST.TAU);
+        this.lineTo(x + bl, y + height);
+        this.arc(x + bl, y + height - bl, bl, MATH_CONST.TAU, Math.PI);
+        this.lineTo(x, y + tl);
+        this.arc(x + tl, y + tl, tl, -Math.PI, -MATH_CONST.TAU);
+        this.strokePath();
+
+        return this;
+    },
+
+    /**
+     * Fill the given point.
+     *
+     * Draws a square at the given position, 1 pixel in size by default.
      *
      * @method Phaser.GameObjects.Graphics#fillPointShape
      * @since 3.0.0
      *
-     * @param {(Phaser.Geom.Point|Phaser.Math.Vector2|object)} point - [description]
-     * @param {number} [size=1] - [description]
+     * @param {(Phaser.Geom.Point|Phaser.Math.Vector2|object)} point - The point to fill.
+     * @param {number} [size=1] - The size of the square to draw.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -490,14 +801,16 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill a point at the given position.
+     *
+     * Draws a square at the given position, 1 pixel in size by default.
      *
      * @method Phaser.GameObjects.Graphics#fillPoint
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} [size=1] - [description]
+     * @param {number} x - The x coordinate of the point.
+     * @param {number} y - The y coordinate of the point.
+     * @param {number} [size=1] - The size of the square to draw.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -522,12 +835,12 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill the given triangle.
      *
      * @method Phaser.GameObjects.Graphics#fillTriangleShape
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Triangle} triangle - [description]
+     * @param {Phaser.Geom.Triangle} triangle - The triangle to fill.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -537,12 +850,12 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Stroke the given triangle.
      *
      * @method Phaser.GameObjects.Graphics#strokeTriangleShape
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Triangle} triangle - [description]
+     * @param {Phaser.Geom.Triangle} triangle - The triangle to stroke.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -552,17 +865,17 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill a triangle with the given points.
      *
      * @method Phaser.GameObjects.Graphics#fillTriangle
      * @since 3.0.0
      *
-     * @param {number} x0 - [description]
-     * @param {number} y0 - [description]
-     * @param {number} x1 - [description]
-     * @param {number} y1 - [description]
-     * @param {number} x2 - [description]
-     * @param {number} y2 - [description]
+     * @param {number} x0 - The x coordinate of the first point.
+     * @param {number} y0 - The y coordinate of the first point.
+     * @param {number} x1 - The x coordinate of the second point.
+     * @param {number} y1 - The y coordinate of the second point.
+     * @param {number} x2 - The x coordinate of the third point.
+     * @param {number} y2 - The y coordinate of the third point.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -577,17 +890,17 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Stroke a triangle with the given points.
      *
      * @method Phaser.GameObjects.Graphics#strokeTriangle
      * @since 3.0.0
      *
-     * @param {number} x0 - [description]
-     * @param {number} y0 - [description]
-     * @param {number} x1 - [description]
-     * @param {number} y1 - [description]
-     * @param {number} x2 - [description]
-     * @param {number} y2 - [description]
+     * @param {number} x0 - The x coordinate of the first point.
+     * @param {number} y0 - The y coordinate of the first point.
+     * @param {number} x1 - The x coordinate of the second point.
+     * @param {number} y1 - The y coordinate of the second point.
+     * @param {number} x2 - The x coordinate of the third point.
+     * @param {number} y2 - The y coordinate of the third point.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -602,12 +915,12 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Draw the given line.
      *
      * @method Phaser.GameObjects.Graphics#strokeLineShape
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Line} line - [description]
+     * @param {Phaser.Geom.Line} line - The line to stroke.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -617,15 +930,15 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Draw a line between the given points.
      *
      * @method Phaser.GameObjects.Graphics#lineBetween
      * @since 3.0.0
      *
-     * @param {number} x1 - [description]
-     * @param {number} y1 - [description]
-     * @param {number} x2 - [description]
-     * @param {number} y2 - [description]
+     * @param {number} x1 - The x coordinate of the start point of the line.
+     * @param {number} y1 - The y coordinate of the start point of the line.
+     * @param {number} x2 - The x coordinate of the end point of the line.
+     * @param {number} y2 - The y coordinate of the end point of the line.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -640,13 +953,15 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Draw a line from the current drawing position to the given position.
+     *
+     * Moves the current drawing position to the given position.
      *
      * @method Phaser.GameObjects.Graphics#lineTo
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
+     * @param {number} x - The x coordinate to draw the line to.
+     * @param {number} y - The y coordinate to draw the line to.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -661,13 +976,13 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Move the current drawing position to the given position.
      *
      * @method Phaser.GameObjects.Graphics#moveTo
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
+     * @param {number} x - The x coordinate to move to.
+     * @param {number} y - The y coordinate to move to.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -728,14 +1043,16 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Stroke the shape represented by the given array of points.
+     *
+     * Pass `true` to `autoClose` to close the shape automatically.
      *
      * @method Phaser.GameObjects.Graphics#strokePoints
      * @since 3.0.0
      *
-     * @param {(array|Phaser.Geom.Point[])} points - [description]
-     * @param {boolean} [autoClose=false] - [description]
-     * @param {integer} [endIndex] - [description]
+     * @param {(array|Phaser.Geom.Point[])} points - The points to stroke.
+     * @param {boolean} [autoClose=false] - When `true`, the shape is closed by joining the last point to the first point.
+     * @param {integer} [endIndex] - The index of `points` to stop drawing at. Defaults to `points.length`.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -764,14 +1081,16 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill the shape represented by the given array of points.
+     *
+     * Pass `true` to `autoClose` to close the shape automatically.
      *
      * @method Phaser.GameObjects.Graphics#fillPoints
      * @since 3.0.0
      *
-     * @param {(array|Phaser.Geom.Point[])} points - [description]
-     * @param {boolean} [autoClose=false] - [description]
-     * @param {integer} [endIndex] - [description]
+     * @param {(array|Phaser.Geom.Point[])} points - The points to fill.
+     * @param {boolean} [autoClose=false] - Whether to automatically close the polygon.
+     * @param {integer} [endIndex] - The index of `points` to stop at. Defaults to `points.length`.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -800,13 +1119,13 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Stroke the given ellipse.
      *
      * @method Phaser.GameObjects.Graphics#strokeEllipseShape
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Ellipse} ellipse - [description]
-     * @param {integer} [smoothness=32] - [description]
+     * @param {Phaser.Geom.Ellipse} ellipse - The ellipse to stroke.
+     * @param {integer} [smoothness=32] - The number of points to draw the ellipse with.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -820,16 +1139,16 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Stroke an ellipse with the given position and size.
      *
      * @method Phaser.GameObjects.Graphics#strokeEllipse
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} height - [description]
-     * @param {integer} [smoothness=32] - [description]
+     * @param {number} x - The x coordinate of the center of the ellipse.
+     * @param {number} y - The y coordinate of the center of the ellipse.
+     * @param {number} width - The width of the ellipse.
+     * @param {number} height - The height of the ellipse.
+     * @param {integer} [smoothness=32] - The number of points to draw the ellipse with.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -845,13 +1164,13 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill the given ellipse.
      *
      * @method Phaser.GameObjects.Graphics#fillEllipseShape
      * @since 3.0.0
      *
-     * @param {Phaser.Geom.Ellipse} ellipse - [description]
-     * @param {integer} [smoothness=32] - [description]
+     * @param {Phaser.Geom.Ellipse} ellipse - The ellipse to fill.
+     * @param {integer} [smoothness=32] - The number of points to draw the ellipse with.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -865,16 +1184,16 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Fill an ellipse with the given position and size.
      *
      * @method Phaser.GameObjects.Graphics#fillEllipse
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} height - [description]
-     * @param {integer} [smoothness=32] - [description]
+     * @param {number} x - The x coordinate of the center of the ellipse.
+     * @param {number} y - The y coordinate of the center of the ellipse.
+     * @param {number} width - The width of the ellipse.
+     * @param {number} height - The height of the ellipse.
+     * @param {integer} [smoothness=32] - The number of points to draw the ellipse with.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -890,22 +1209,63 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Draw an arc.
+     *
+     * This method can be used to create circles, or parts of circles.
+     *
+     * Use the optional `overshoot` argument to allow the arc to extend beyond 360 degrees. This is useful if you're drawing
+     * an arc with an especially thick line, as it will allow the arc to fully join-up. Try small values at first, i.e. 0.01.
+     *
+     * Call {@link Phaser.GameObjects.Graphics#fillPath} or {@link Phaser.GameObjects.Graphics#strokePath} after calling
+     * this method to draw the arc.
      *
      * @method Phaser.GameObjects.Graphics#arc
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} radius - [description]
-     * @param {number} startAngle - [description]
-     * @param {number} endAngle - [description]
-     * @param {boolean} anticlockwise - [description]
+     * @param {number} x - The x coordinate of the center of the circle.
+     * @param {number} y - The y coordinate of the center of the circle.
+     * @param {number} radius - The radius of the circle.
+     * @param {number} startAngle - The starting angle, in radians.
+     * @param {number} endAngle - The ending angle, in radians.
+     * @param {boolean} [anticlockwise=false] - Whether the drawing should be anticlockwise or clockwise.
+     * @param {number} [overshoot=0] - This value allows you to overshoot the endAngle by this amount. Useful if the arc has a thick stroke and needs to overshoot to join-up cleanly.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
-    arc: function (x, y, radius, startAngle, endAngle, anticlockwise)
+    arc: function (x, y, radius, startAngle, endAngle, anticlockwise, overshoot)
     {
+        if (anticlockwise === undefined) { anticlockwise = false; }
+        if (overshoot === undefined) { overshoot = 0; }
+
+        var PI2 = Math.PI * 2;
+
+        if (anticlockwise)
+        {
+            if (endAngle < -PI2)
+            {
+                endAngle = -PI2 - overshoot;
+            }
+            else if (endAngle >= 0)
+            {
+                endAngle = -PI2 + endAngle % PI2 - overshoot;
+            }
+        }
+        else
+        {
+            endAngle -= startAngle;
+            endAngle += overshoot;
+
+            if (endAngle > PI2 + overshoot)
+            {
+                endAngle = PI2 + overshoot;
+
+            }
+            else if (endAngle < -overshoot)
+            {
+                endAngle = PI2 + endAngle % PI2 - overshoot;
+            }
+        }
+
         this.commandBuffer.push(
             Commands.ARC,
             x, y, radius, startAngle, endAngle, anticlockwise
@@ -932,13 +1292,44 @@ var Graphics = new Class({
      * @param {number} radius - The radius of the slice.
      * @param {number} startAngle - The start angle of the slice, given in radians.
      * @param {number} endAngle - The end angle of the slice, given in radians.
-     * @param {boolean} [anticlockwise=false] - Draw the slice piece anticlockwise or clockwise?
+     * @param {boolean} [anticlockwise=false] - Whether the drawing should be anticlockwise or clockwise.
+     * @param {number} [overshoot=0] - This value allows you to overshoot the endAngle by this amount. Useful if the arc has a thick stroke and needs to overshoot to join-up cleanly.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
-    slice: function (x, y, radius, startAngle, endAngle, anticlockwise)
+    slice: function (x, y, radius, startAngle, endAngle, anticlockwise, overshoot)
     {
         if (anticlockwise === undefined) { anticlockwise = false; }
+        if (overshoot === undefined) { overshoot = 0; }
+
+        var PI2 = Math.PI * 2;
+
+        if (anticlockwise)
+        {
+            if (endAngle < -PI2)
+            {
+                endAngle = -PI2 - overshoot;
+            }
+            else if (endAngle >= 0)
+            {
+                endAngle = -PI2 + endAngle % PI2 - overshoot;
+            }
+        }
+        else
+        {
+            endAngle -= startAngle;
+            endAngle += overshoot;
+
+            if (endAngle > PI2 + overshoot)
+            {
+                endAngle = PI2 + overshoot;
+
+            }
+            else if (endAngle <= -overshoot)
+            {
+                endAngle = PI2 + endAngle % PI2 - overshoot;
+            }
+        }
 
         this.commandBuffer.push(Commands.BEGIN_PATH);
 
@@ -952,7 +1343,9 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Saves the state of the Graphics by pushing the current state onto a stack.
+     *
+     * The most recently saved state can then be restored with {@link Phaser.GameObjects.Graphics#restore}.
      *
      * @method Phaser.GameObjects.Graphics#save
      * @since 3.0.0
@@ -969,7 +1362,11 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Restores the most recently saved state of the Graphics by popping from the state stack.
+     *
+     * Use {@link Phaser.GameObjects.Graphics#save} to save the current state, and call this afterwards to restore that state.
+     *
+     * If there is no saved state, this command does nothing.
      *
      * @method Phaser.GameObjects.Graphics#restore
      * @since 3.0.0
@@ -986,13 +1383,13 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Translate the graphics.
      *
      * @method Phaser.GameObjects.Graphics#translate
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
+     * @param {number} x - The horizontal translation to apply.
+     * @param {number} y - The vertical translation to apply.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -1007,13 +1404,13 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Scale the graphics.
      *
      * @method Phaser.GameObjects.Graphics#scale
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
+     * @param {number} x - The horizontal scale to apply.
+     * @param {number} y - The vertical scale to apply.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -1028,12 +1425,12 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Rotate the graphics.
      *
      * @method Phaser.GameObjects.Graphics#rotate
      * @since 3.0.0
      *
-     * @param {number} radians - [description]
+     * @param {number} radians - The rotation angle, in radians.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -1048,7 +1445,7 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Clear the command buffer and reset the fill style and line style to their defaults.
      *
      * @method Phaser.GameObjects.Graphics#clear
      * @since 3.0.0
@@ -1073,28 +1470,32 @@ var Graphics = new Class({
     },
 
     /**
-     * If key is a string it'll generate a new texture using it and add it into the
+     * Generate a texture from this Graphics object.
+     *
+     * If `key` is a string it'll generate a new texture using it and add it into the
      * Texture Manager (assuming no key conflict happens).
      *
-     * If key is a Canvas it will draw the texture to that canvas context. Note that it will NOT
+     * If `key` is a Canvas it will draw the texture to that canvas context. Note that it will NOT
      * automatically upload it to the GPU in WebGL mode.
      *
      * @method Phaser.GameObjects.Graphics#generateTexture
      * @since 3.0.0
      *
-     * @param {(string|HTMLCanvasElement)} key - [description]
-     * @param {integer} [width] - [description]
-     * @param {integer} [height] - [description]
+     * @param {(string|HTMLCanvasElement)} key - The key to store the texture with in the Texture Manager, or a Canvas to draw to.
+     * @param {integer} [width] - The width of the graphics to generate.
+     * @param {integer} [height] - The height of the graphics to generate.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
     generateTexture: function (key, width, height)
     {
         var sys = this.scene.sys;
+        var renderer = sys.game.renderer;
 
         if (width === undefined) { width = sys.game.config.width; }
         if (height === undefined) { height = sys.game.config.height; }
 
+        Graphics.TargetCamera.setScene(this.scene);
         Graphics.TargetCamera.setViewport(0, 0, width, height);
         Graphics.TargetCamera.scrollX = this.x;
         Graphics.TargetCamera.scrollY = this.y;
@@ -1135,15 +1536,28 @@ var Graphics = new Class({
 
         if (ctx)
         {
-            this.renderCanvas(sys.game.renderer, this, 0.0, Graphics.TargetCamera, null, ctx);
+            // var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix, renderTargetCtx, allowClip)
+            this.renderCanvas(renderer, this, 0, Graphics.TargetCamera, null, ctx, false);
 
-            if (sys.game.renderer.gl && texture)
+            if (renderer.gl && texture)
             {
-                texture.source[0].glTexture = sys.game.renderer.canvasToTexture(ctx.canvas, texture.source[0].glTexture);
+                texture.source[0].glTexture = renderer.canvasToTexture(ctx.canvas, texture.source[0].glTexture);
             }
         }
 
         return this;
+    },
+
+    /**
+     * Internal destroy handler, called as part of the destroy process.
+     *
+     * @method Phaser.GameObjects.Graphics#preDestroy
+     * @protected
+     * @since 3.9.0
+     */
+    preDestroy: function ()
+    {
+        this.commandBuffer = [];
     }
 
 });
@@ -1155,6 +1569,6 @@ var Graphics = new Class({
  * @type {Phaser.Cameras.Scene2D.Camera}
  * @since 3.1.0
  */
-Graphics.TargetCamera = new Camera(0, 0, 0, 0);
+Graphics.TargetCamera = new BaseCamera();
 
 module.exports = Graphics;

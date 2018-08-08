@@ -5,7 +5,7 @@
  */
 
 var Commands = require('./Commands');
-var GameObject = require('../GameObject');
+var SetTransform = require('../../renderer/canvas/utils/SetTransform');
 
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
@@ -21,67 +21,33 @@ var GameObject = require('../GameObject');
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
- * @param {CanvasRenderingContext2D} renderTargetCtx - [description]
- * @param {boolean} allowClip - [description]
+ * @param {CanvasRenderingContext2D} [renderTargetCtx] - The target rendering context.
+ * @param {boolean} allowClip - If `true` then path operations will be used instead of fill operations.
  */
 var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix, renderTargetCtx, allowClip)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
+    var commandBuffer = src.commandBuffer;
+    var commandBufferLength = commandBuffer.length;
+
+    var ctx = renderTargetCtx || renderer.currentContext;
+
+    if (commandBufferLength === 0 || !SetTransform(renderer, ctx, src, camera, parentMatrix))
     {
         return;
     }
 
-    var cameraScrollX = camera.scrollX * src.scrollFactorX;
-    var cameraScrollY = camera.scrollY * src.scrollFactorY;
-    var srcX = src.x;
-    var srcY = src.y;
-    var srcScaleX = src.scaleX;
-    var srcScaleY = src.scaleY;
-    var srcRotation = src.rotation;
-    var commandBuffer = src.commandBuffer;
-    var ctx = renderTargetCtx || renderer.currentContext;
-    var lineAlpha = 1.0;
-    var fillAlpha = 1.0;
+    var lineAlpha = 1;
+    var fillAlpha = 1;
     var lineColor = 0;
     var fillColor = 0;
-    var lineWidth = 1.0;
+    var lineWidth = 1;
     var red = 0;
     var green = 0;
     var blue = 0;
 
-    //  Blend Mode
-    if (renderer.currentBlendMode !== src.blendMode)
-    {
-        renderer.currentBlendMode = src.blendMode;
-        ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
-    }
-
-    //  Alpha
-    if (renderer.currentAlpha !== src.alpha)
-    {
-        renderer.currentAlpha = src.alpha;
-        ctx.globalAlpha = src.alpha;
-    }
-
-    //  Smoothing
-    if (renderer.currentScaleMode !== src.scaleMode)
-    {
-        renderer.currentScaleMode = src.scaleMode;
-    }
-
-    ctx.save();
-    if (parentMatrix)
-    {
-        var matrix = parentMatrix.matrix;
-        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
-    }
-    ctx.translate(srcX - cameraScrollX, srcY - cameraScrollY);
-    ctx.rotate(srcRotation);
-    ctx.scale(srcScaleX, srcScaleY);
     ctx.fillStyle = '#fff';
-    ctx.globalAlpha = src.alpha;
 
-    for (var index = 0, length = commandBuffer.length; index < length; ++index)
+    for (var index = 0; index < commandBufferLength; ++index)
     {
         var commandID = commandBuffer[index];
 
@@ -254,8 +220,16 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                 index += 1;
                 break;
 
-            default:
-                // console.error('Phaser: Invalid Graphics Command ID ' + commandID);
+            case Commands.GRADIENT_FILL_STYLE:
+                index += 5;
+                break;
+
+            case Commands.GRADIENT_LINE_STYLE:
+                index += 6;
+                break;
+
+            case Commands.SET_TEXTURE:
+                index += 2;
                 break;
         }
     }

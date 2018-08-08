@@ -17,18 +17,26 @@ var ParticleEmitterManager = require('./ParticleEmitterManager');
  * @method Phaser.GameObjects.GameObjectCreator#particles
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {object} config - The configuration object this Game Object will use to create itself.
+ * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.Particles.ParticleEmitterManager} The Game Object that was created.
  */
-GameObjectCreator.register('particles', function (config)
+GameObjectCreator.register('particles', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var key = GetAdvancedValue(config, 'key', null);
     var frame = GetAdvancedValue(config, 'frame', null);
     var emitters = GetFastValue(config, 'emitters', null);
 
     //  frame is optional and can contain the emitters array or object if skipped
     var manager = new ParticleEmitterManager(this.scene, key, frame, emitters);
+
+    if (addToScene !== undefined)
+    {
+        config.add = addToScene;
+    }
 
     var add = GetFastValue(config, 'add', false);
 
@@ -41,11 +49,3 @@ GameObjectCreator.register('particles', function (config)
 
     return manager;
 });
-
-//  When registering a factory function 'this' refers to the GameObjectCreator context.
-//  
-//  There are several properties available to use:
-//  
-//  this.scene - a reference to the Scene that owns the GameObjectFactory
-//  this.displayList - a reference to the Display List the Scene owns
-//  this.updateList - a reference to the Update List the Scene owns

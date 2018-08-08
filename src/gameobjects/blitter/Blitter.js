@@ -13,10 +13,10 @@ var GameObject = require('../GameObject');
 var List = require('../../structs/List');
 
 /**
- * @callback Phaser.GameObjects.Blitter.BlitterFromCallback
+ * @callback Phaser.GameObjects.Blitter.CreateCallback
  *
- * @param {Phaser.GameObjects.Blitter} blitter - [description]
- * @param {integer} index - [description]
+ * @param {Phaser.GameObjects.Blitter.Bob} bob - The Bob that was created by the Blitter.
+ * @param {integer} index - The position of the Bob within the Blitter display list.
  */
 
 /**
@@ -89,7 +89,8 @@ var Blitter = new Class({
         this.initPipeline('TextureTintPipeline');
 
         /**
-         * [description]
+         * The children of this Blitter.
+         * This List contains all of the Bob objects created by the Blitter.
          *
          * @name Phaser.GameObjects.Blitter#children
          * @type {Phaser.Structs.List.<Phaser.GameObjects.Blitter.Bob>}
@@ -98,20 +99,33 @@ var Blitter = new Class({
         this.children = new List();
 
         /**
-         * [description]
+         * A transient array that holds all of the Bobs that will be rendered this frame.
+         * The array is re-populated whenever the dirty flag is set.
          *
          * @name Phaser.GameObjects.Blitter#renderList
          * @type {Phaser.GameObjects.Blitter.Bob[]}
          * @default []
+         * @private
          * @since 3.0.0
          */
         this.renderList = [];
 
+        /**
+         * Is the Blitter considered dirty?
+         * A 'dirty' Blitter has had its child count changed since the last frame.
+         *
+         * @name Phaser.GameObjects.Blitter#dirty
+         * @type {boolean}
+         * @since 3.0.0
+         */
         this.dirty = false;
     },
 
     /**
-     * [description]
+     * Creates a new Bob in this Blitter.
+     *
+     * The Bob is created at the given coordinates, relative to the Blitter and uses the given frame.
+     * A Bob can use any frame belonging to the texture bound to the Blitter.
      *
      * @method Phaser.GameObjects.Blitter#create
      * @since 3.0.0
@@ -148,15 +162,15 @@ var Blitter = new Class({
     },
 
     /**
-     * [description]
+     * Creates multiple Bob objects within this Blitter and then passes each of them to the specified callback.
      *
      * @method Phaser.GameObjects.Blitter#createFromCallback
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Blitter.BlitterFromCallback} callback - The callback to invoke after creating a bob. It will be sent two arguments: The Bob and the index of the Bob.
+     * @param {Phaser.GameObjects.Blitter.CreateCallback} callback - The callback to invoke after creating a bob. It will be sent two arguments: The Bob and the index of the Bob.
      * @param {integer} quantity - The quantity of Bob objects to create.
      * @param {(string|integer|Phaser.Textures.Frame|string[]|integer[]|Phaser.Textures.Frame[])} [frame] - The Frame the Bobs will use. It must be part of the Blitter Texture.
-     * @param {boolean} [visible=true] - [description]
+     * @param {boolean} [visible=true] - Should the created Bob render or not?
      *
      * @return {Phaser.GameObjects.Blitter.Bob[]} An array of Bob objects that were created.
      */
@@ -175,14 +189,19 @@ var Blitter = new Class({
     },
 
     /**
-     * [description]
+     * Creates multiple Bobs in one call.
+     *
+     * The amount created is controlled by a combination of the `quantity` argument and the number of frames provided.
+     *
+     * If the quantity is set to 10 and you provide 2 frames, then 20 Bobs will be created. 10 with the first
+     * frame and 10 with the second.
      *
      * @method Phaser.GameObjects.Blitter#createMultiple
      * @since 3.0.0
      *
      * @param {integer} quantity - The quantity of Bob objects to create.
      * @param {(string|integer|Phaser.Textures.Frame|string[]|integer[]|Phaser.Textures.Frame[])} [frame] - The Frame the Bobs will use. It must be part of the Blitter Texture.
-     * @param {boolean} [visible=true] - [description]
+     * @param {boolean} [visible=true] - Should the created Bob render or not?
      *
      * @return {Phaser.GameObjects.Blitter.Bob[]} An array of Bob objects that were created.
      */
@@ -211,14 +230,14 @@ var Blitter = new Class({
     },
 
     /**
-     * [description]
+     * Checks if the given child can render or not, by checking its `visible` and `alpha` values.
      *
      * @method Phaser.GameObjects.Blitter#childCanRender
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Blitter.Bob} child - [description]
+     * @param {Phaser.GameObjects.Blitter.Bob} child - The Bob to check for rendering.
      *
-     * @return {boolean} [description]
+     * @return {boolean} Returns `true` if the given child can render, otherwise `false`.
      */
     childCanRender: function (child)
     {
@@ -226,7 +245,8 @@ var Blitter = new Class({
     },
 
     /**
-     * [description]
+     * Returns an array of Bobs to be rendered.
+     * If the Blitter is dirty then a new list is generated and stored in `renderList`.
      *
      * @method Phaser.GameObjects.Blitter#getRenderList
      * @since 3.0.0
@@ -245,7 +265,7 @@ var Blitter = new Class({
     },
 
     /**
-     * [description]
+     * Removes all Bobs from the children List and clears the dirty flag.
      *
      * @method Phaser.GameObjects.Blitter#clear
      * @since 3.0.0
@@ -254,6 +274,20 @@ var Blitter = new Class({
     {
         this.children.removeAll();
         this.dirty = true;
+    },
+
+    /**
+     * Internal destroy handler, called as part of the destroy process.
+     *
+     * @method Phaser.GameObjects.Blitter#preDestroy
+     * @protected
+     * @since 3.9.0
+     */
+    preDestroy: function ()
+    {
+        this.children.destroy();
+
+        this.renderList = [];
     }
 
 });

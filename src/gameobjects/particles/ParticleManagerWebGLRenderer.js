@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = require('../GameObject');
+var Utils = require('../../renderer/webgl/Utils');
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -23,14 +23,122 @@ var GameObject = require('../GameObject');
  */
 var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpolationPercentage, camera, parentMatrix)
 {
-    var emitters = emitterManager.emitters;
+    var emitters = emitterManager.emitters.list;
+    var emittersLength = emitters.length;
 
-    if (emitters.length === 0 || GameObject.RENDER_MASK !== emitterManager.renderFlags || (emitterManager.cameraFilter > 0 && (emitterManager.cameraFilter & camera._id)))
+    if (emittersLength === 0)
     {
         return;
     }
 
-    this.pipeline.drawEmitterManager(emitterManager, camera, parentMatrix);
+    var pipeline = this.pipeline;
+
+    var camMatrix = pipeline._tempMatrix1.copyFrom(camera.matrix);
+    var calcMatrix = pipeline._tempMatrix2;
+    var particleMatrix = pipeline._tempMatrix3;
+    var managerMatrix = pipeline._tempMatrix4.applyITRS(emitterManager.x, emitterManager.y, emitterManager.rotation, emitterManager.scaleX, emitterManager.scaleY);
+
+    camMatrix.multiply(managerMatrix);
+
+    renderer.setPipeline(pipeline);
+
+    var roundPixels = camera.roundPixels;
+    var texture = emitterManager.defaultFrame.glTexture;
+    var getTint = Utils.getTintAppendFloatAlphaAndSwap;
+
+    pipeline.setTexture2D(texture, 0);
+
+    for (var e = 0; e < emittersLength; e++)
+    {
+        var emitter = emitters[e];
+        var particles = emitter.alive;
+        var particleCount = particles.length;
+
+        if (!emitter.visible || particleCount === 0)
+        {
+            continue;
+        }
+
+        var scrollX = camera.scrollX * emitter.scrollFactorX;
+        var scrollY = camera.scrollY * emitter.scrollFactorY;
+
+        if (parentMatrix)
+        {
+            //  Multiply the camera by the parent matrix
+            camMatrix.multiplyWithOffset(parentMatrix, -scrollX, -scrollY);
+
+            scrollX = 0;
+            scrollY = 0;
+        }
+
+        if (renderer.setBlendMode(emitter.blendMode))
+        {
+            //  Rebind the texture if we've flushed
+            pipeline.setTexture2D(texture, 0);
+        }
+
+        var tintEffect = 0;
+
+        for (var i = 0; i < particleCount; i++)
+        {
+            var particle = particles[i];
+
+            var alpha = particle.alpha * camera.alpha;
+
+            if (alpha <= 0)
+            {
+                continue;
+            }
+
+            var frame = particle.frame;
+
+            var x = -(frame.halfWidth);
+            var y = -(frame.halfHeight);
+            var xw = x + frame.width;
+            var yh = y + frame.height;
+
+            particleMatrix.applyITRS(0, 0, particle.rotation, particle.scaleX, particle.scaleY);
+
+            particleMatrix.e = particle.x - scrollX;
+            particleMatrix.f = particle.y - scrollY;
+
+            camMatrix.multiply(particleMatrix, calcMatrix);
+
+            var tx0 = calcMatrix.getX(x, y);
+            var ty0 = calcMatrix.getY(x, y);
+    
+            var tx1 = calcMatrix.getX(x, yh);
+            var ty1 = calcMatrix.getY(x, yh);
+    
+            var tx2 = calcMatrix.getX(xw, yh);
+            var ty2 = calcMatrix.getY(xw, yh);
+    
+            var tx3 = calcMatrix.getX(xw, y);
+            var ty3 = calcMatrix.getY(xw, y);
+
+            if (roundPixels)
+            {
+                tx0 |= 0;
+                ty0 |= 0;
+
+                tx1 |= 0;
+                ty1 |= 0;
+
+                tx2 |= 0;
+                ty2 |= 0;
+
+                tx3 |= 0;
+                ty3 |= 0;
+            }
+
+            var tint = getTint(particle.tint, alpha);
+
+            if (pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect))
+            {
+                pipeline.setTexture2D(texture, 0);
+            }
+        }
+    }
 };
 
 module.exports = ParticleManagerWebGLRenderer;

@@ -10,7 +10,7 @@ var Clone = require('./Clone');
  * Creates a new Object using all values from obj1 and obj2.
  * If a value exists in both obj1 and obj2, the value in obj1 is used.
  *
- * @function Phaser.Utils.Object.Merge
+ * @function Phaser.Utils.Objects.Merge
  * @since 3.0.0
  *
  * @param {object} obj1 - [description]

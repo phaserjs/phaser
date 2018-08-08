@@ -372,13 +372,15 @@ var Tilemap = new Class({
      *
      * @param {string} name - The name of this layer. Must be unique within the map.
      * @param {Phaser.Tilemaps.Tileset} tileset - The tileset the new layer will use.
-     * @param {integer} width - The width of the layer in tiles. If not specified, it will default
+     * @param {number} [x=0] - The world x position where the top left of this layer will be placed.
+     * @param {number} [y=0] - The world y position where the top left of this layer will be placed.
+     * @param {integer} [width] - The width of the layer in tiles. If not specified, it will default
      * to the map's width.
-     * @param {integer} height - The height of the layer in tiles. If not specified, it will default
+     * @param {integer} [height] - The height of the layer in tiles. If not specified, it will default
      * to the map's height.
-     * @param {integer} tileWidth - The width of the tiles the layer uses for calculations. If not
+     * @param {integer} [tileWidth] - The width of the tiles the layer uses for calculations. If not
      * specified, it will default to the map's tileWidth.
-     * @param {integer} tileHeight - The height of the tiles the layer uses for calculations. If not
+     * @param {integer} [tileHeight] - The height of the tiles the layer uses for calculations. If not
      * specified, it will default to the map's tileHeight.
      * @return {?Phaser.Tilemaps.DynamicTilemapLayer} Returns the new layer was created, or null if it failed.
      */
@@ -506,7 +508,7 @@ var Tilemap = new Class({
      * @param {(integer|string)} id - Either the id (object), gid (tile object) or name (object or
      * tile object) from Tiled. Ids are unique in Tiled, but a gid is shared by all tile objects
      * with the same graphic. The same name can be used on multiple objects.
-     * @param {object} spriteConfig - The config object to pass into the Sprite creator (i.e.
+     * @param {SpriteConfig} spriteConfig - The config object to pass into the Sprite creator (i.e.
      * scene.make.sprite).
      * @param {Phaser.Scene} [scene=the scene the map is within] - The Scene to create the Sprites within.
      *
@@ -597,7 +599,7 @@ var Tilemap = new Class({
      * @param {(integer|array)} replacements - The tile index, or array of indexes, to change a converted
      * tile to. Set to `null` to leave the tiles unchanged. If an array is given, it is assumed to be a
      * one-to-one mapping with the indexes array.
-     * @param {object} spriteConfig - The config object to pass into the Sprite creator (i.e.
+     * @param {SpriteConfig} spriteConfig - The config object to pass into the Sprite creator (i.e.
      * scene.make.sprite).
      * @param {Phaser.Scene} [scene=scene the map is within] - The Scene to create the Sprites within.
      * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when determining the world XY
@@ -1522,7 +1524,6 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#removeTileAt
      * @since 3.0.0
      *
-     * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
      * @param {integer} tileX - [description]
      * @param {integer} tileY - [description]
      * @param {boolean} [replaceWithNull=true] - If true, this will replace the tile at the specified
@@ -1553,7 +1554,6 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#removeTileAtWorldXY
      * @since 3.0.0
      *
-     * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
      * @param {number} worldX - [description]
      * @param {number} worldY - [description]
      * @param {boolean} [replaceWithNull=true] - If true, this will replace the tile at the specified

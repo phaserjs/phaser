@@ -5,15 +5,15 @@
  */
 
 /**
- * [description]
+ * Calculate the fuzzy floor of the given value.
  *
  * @function Phaser.Math.Fuzzy.Floor
  * @since 3.0.0
  *
- * @param {number} value - [description]
- * @param {float} [epsilon=0.0001] - [description]
+ * @param {number} value - The value.
+ * @param {number} [epsilon=0.0001] - The epsilon.
  *
- * @return {number} [description]
+ * @return {number} The floor of the value.
  */
 var Floor = function (value, epsilon)
 {

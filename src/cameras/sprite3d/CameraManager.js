@@ -7,7 +7,7 @@
 var Class = require('../../utils/Class');
 var OrthographicCamera = require('./OrthographicCamera');
 var PerspectiveCamera = require('./PerspectiveCamera');
-var PluginManager = require('../../boot/PluginManager');
+var PluginCache = require('../../plugins/PluginCache');
 
 /**
  * @classdesc
@@ -273,6 +273,6 @@ var CameraManager = new Class({
 
 });
 
-PluginManager.register('CameraManager3D', CameraManager, 'cameras3d');
+PluginCache.register('CameraManager3D', CameraManager, 'cameras3d');
 
 module.exports = CameraManager;

@@ -9,8 +9,8 @@ var Class = require('../../../utils/Class');
 /**
  * @callback DeathZoneSourceCallback
  *
- * @param {float} x - [description]
- * @param {float} y - [description]
+ * @param {number} x - The x coordinate of the particle to check against this source area.
+ * @param {number} y - The y coordinate of the particle to check against this source area.
  *
  * @return {boolean} - True if the coordinates are within the source area.
  */

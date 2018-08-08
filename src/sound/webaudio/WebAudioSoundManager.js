@@ -73,7 +73,7 @@ var WebAudioSoundManager = new Class({
          */
         this.destination = this.masterMuteNode;
 
-        this.locked = this.context.state === 'suspended' && 'ontouchstart' in window;
+        this.locked = this.context.state === 'suspended' && ('ontouchstart' in window || 'onclick' in window);
 
         BaseSoundManager.call(this, game);
 
@@ -85,7 +85,7 @@ var WebAudioSoundManager = new Class({
 
     /**
      * Method responsible for instantiating and returning AudioContext instance.
-     * If an instance of an AudioContext class was provided trough the game config,
+     * If an instance of an AudioContext class was provided through the game config,
      * that instance will be returned instead. This can come in handy if you are reloading
      * a Phaser game on a page that never properly refreshes (such as in an SPA project)
      * and you want to reuse already instantiated AudioContext.
@@ -133,7 +133,7 @@ var WebAudioSoundManager = new Class({
     },
 
     /**
-     * Unlocks Web Audio API on iOS devices on the initial touch event.
+     * Unlocks Web Audio API on the initial input event.
      *
      * Read more about how this issue is handled here in [this article](https://medium.com/@pgoloskokovic/unlocking-web-audio-the-smarter-way-8858218c0e09).
      *
@@ -150,13 +150,18 @@ var WebAudioSoundManager = new Class({
             {
                 document.body.removeEventListener('touchstart', unlock);
                 document.body.removeEventListener('touchend', unlock);
+                document.body.removeEventListener('click', unlock);
 
                 _this.unlocked = true;
             });
         };
 
-        document.body.addEventListener('touchstart', unlock, false);
-        document.body.addEventListener('touchend', unlock, false);
+        if (document.body)
+        {
+            document.body.addEventListener('touchstart', unlock, false);
+            document.body.addEventListener('touchend', unlock, false);
+            document.body.addEventListener('click', unlock, false);
+        }
     },
 
     /**

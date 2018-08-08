@@ -20,9 +20,11 @@ var InjectionMap = {
 
     anims: 'anims',
     cache: 'cache',
+    plugins: 'plugins',
     registry: 'registry',
     sound: 'sound',
     textures: 'textures',
+    facebook: 'facebook',
 
     events: 'events',
     cameras: 'cameras',

@@ -5,16 +5,16 @@
  */
 
 /**
- * [description]
+ * Round a value to a given decimal place.
  *
  * @function Phaser.Math.RoundTo
  * @since 3.0.0
  *
- * @param {number} value - [description]
- * @param {integer} [place=0] - [description]
- * @param {integer} [base=10] - [description]
+ * @param {number} value - The value to round.
+ * @param {integer} [place=0] - The place to round to.
+ * @param {integer} [base=10] - The base to round in. Default is 10 for decimal.
  *
- * @return {number} [description]
+ * @return {number} The rounded value.
  */
 var RoundTo = function (value, place, base)
 {

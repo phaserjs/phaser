@@ -5,16 +5,16 @@
  */
 
 /**
- * [description]
+ * Subtract an `amount` from `value`, limiting the minimum result to `min`.
  *
  * @function Phaser.Math.MinSub
  * @since 3.0.0
  *
- * @param {number} value - [description]
- * @param {number} amount - [description]
- * @param {number} min - [description]
+ * @param {number} value - The value to subtract from.
+ * @param {number} amount - The amount to subtract.
+ * @param {number} min - The minimum value to return.
  *
- * @return {number} [description]
+ * @return {number} The resulting value.
  */
 var MinSub = function (value, amount, min)
 {

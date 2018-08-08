@@ -37,10 +37,10 @@ var Wrap = require('../../math/Wrap');
 /**
  * @typedef {object} ParticleEmitterBounds
  *
- * @property {float} x - The left edge of the rectangle.
- * @property {float} y - The top edge of the rectangle.
- * @property {float} width - The width of the rectangle.
- * @property {float} height - The height of the rectangle.
+ * @property {number} x - The left edge of the rectangle.
+ * @property {number} y - The top edge of the rectangle.
+ * @property {number} width - The width of the rectangle.
+ * @property {number} height - The height of the rectangle.
  *
  * @see Phaser.GameObjects.Particles.ParticleEmitter#setBounds
  */
@@ -48,10 +48,10 @@ var Wrap = require('../../math/Wrap');
 /**
  * @typedef {object} ParticleEmitterBoundsAlt
  *
- * @property {float} x - The left edge of the rectangle.
- * @property {float} y - The top edge of the rectangle.
- * @property {float} w - The width of the rectangle.
- * @property {float} h - The height of the rectangle.
+ * @property {number} x - The left edge of the rectangle.
+ * @property {number} y - The top edge of the rectangle.
+ * @property {number} w - The width of the rectangle.
+ * @property {number} h - The height of the rectangle.
  *
  * @see Phaser.GameObjects.Particles.ParticleEmitter#setBounds
  */
@@ -69,7 +69,7 @@ var Wrap = require('../../math/Wrap');
  * @property {EdgeZoneSource} source - A shape representing the zone. See {@link Phaser.GameObjects.Particles.Zones.EdgeZone#source}.
  * @property {string} type - 'edge'.
  * @property {integer} quantity - The number of particles to place on the source edge. Set to 0 to use `stepRate` instead.
- * @property {float} [stepRate] - The distance between each particle. When set, `quantity` is implied and should be set to 0.
+ * @property {number} [stepRate] - The distance between each particle. When set, `quantity` is implied and should be set to 0.
  * @property {boolean} [yoyo=false] - Whether particles are placed from start to end and then end to start.
  * @property {boolean} [seamless=true] - Whether one endpoint will be removed if it's identical to the other.
  */
@@ -96,45 +96,45 @@ var Wrap = require('../../math/Wrap');
  * @property {function} [emitCallback] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#emitCallback}.
  * @property {*} [emitCallbackScope] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#emitCallbackScope}.
  * @property {Phaser.GameObjects.GameObject} [follow] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#follow}.
- * @property {float} [frequency] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#frequency}.
- * @property {float} [gravityX] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#gravityX}.
- * @property {float} [gravityY] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#gravityY}.
+ * @property {number} [frequency] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#frequency}.
+ * @property {number} [gravityX] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#gravityX}.
+ * @property {number} [gravityY] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#gravityY}.
  * @property {integer} [maxParticles] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#maxParticles}.
  * @property {string} [name] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#name}.
  * @property {boolean} [on] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#on}.
  * @property {boolean} [particleBringToTop] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#particleBringToTop}.
  * @property {Phaser.GameObjects.Particles.Particle} [particleClass] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#particleClass}.
  * @property {boolean} [radial] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#radial}.
- * @property {float} [timeScale] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#timeScale}.
+ * @property {number} [timeScale] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#timeScale}.
  * @property {boolean} [trackVisible] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#trackVisible}.
  * @property {boolean} [visible] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#visible}.
- * @property {float|float[]|EmitterOpOnEmitCallback|object} [accelerationX] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#accelerationX} (emit only).
- * @property {float|float[]|EmitterOpOnEmitCallback|object} [accelerationY] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#accelerationY} (emit only).
- * @property {float|float[]|EmitterOpOnUpdateCallback|object} [alpha] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#alpha}.
- * @property {float|float[]|EmitterOpOnEmitCallback|object} [angle] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#angle} (emit only)
- * @property {float|float[]|EmitterOpOnEmitCallback|object} [bounce] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#bounce} (emit only).
- * @property {float|float[]|EmitterOpOnEmitCallback|object} [delay] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#delay} (emit only).
- * @property {float|float[]|EmitterOpOnEmitCallback|object} [lifespan] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#lifespan} (emit only).
- * @property {float|float[]|EmitterOpOnEmitCallback|object} [maxVelocityX] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#maxVelocityX} (emit only).
- * @property {float|float[]|EmitterOpOnEmitCallback|object} [maxVelocityY] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#maxVelocityY} (emit only).
- * @property {float|float[]|EmitterOpOnEmitCallback|object} [moveToX] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#moveToX} (emit only).
- * @property {float|float[]|EmitterOpOnEmitCallback|object} [moveToY] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#moveToY} (emit only).
- * @property {float|float[]|EmitterOpOnEmitCallback|object} [quantity] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#quantity} (emit only).
- * @property {float|float[]|EmitterOpOnUpdateCallback|object} [rotate] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#rotate}.
- * @property {float|float[]|EmitterOpOnUpdateCallback|object} [scale] - As {@link Phaser.GameObjects.Particles.ParticleEmitter#setScale}.
- * @property {float|float[]|EmitterOpOnUpdateCallback|object} [scaleX] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#scaleX}.
- * @property {float|float[]|EmitterOpOnUpdateCallback|object} [scaleY] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#scaleY}.
- * @property {float|float[]|EmitterOpOnEmitCallback|object} [speed] - As {@link Phaser.GameObjects.Particles.ParticleEmitter#setSpeed} (emit only).
- * @property {float|float[]|EmitterOpOnEmitCallback|object} [speedX] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#speedX} (emit only).
- * @property {float|float[]|EmitterOpOnEmitCallback|object} [speedY] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#speedY} (emit only).
- * @property {float|float[]|EmitterOpOnEmitCallback|object} [tint] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#tint}.
- * @property {float|float[]|EmitterOpOnEmitCallback|object} [x] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#x} (emit only).
- * @property {float|float[]|EmitterOpOnEmitCallback|object} [y] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#y} (emit only).
+ * @property {number|number[]|EmitterOpOnEmitCallback|object} [accelerationX] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#accelerationX} (emit only).
+ * @property {number|number[]|EmitterOpOnEmitCallback|object} [accelerationY] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#accelerationY} (emit only).
+ * @property {number|number[]|EmitterOpOnUpdateCallback|object} [alpha] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#alpha}.
+ * @property {number|number[]|EmitterOpOnEmitCallback|object} [angle] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#angle} (emit only)
+ * @property {number|number[]|EmitterOpOnEmitCallback|object} [bounce] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#bounce} (emit only).
+ * @property {number|number[]|EmitterOpOnEmitCallback|object} [delay] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#delay} (emit only).
+ * @property {number|number[]|EmitterOpOnEmitCallback|object} [lifespan] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#lifespan} (emit only).
+ * @property {number|number[]|EmitterOpOnEmitCallback|object} [maxVelocityX] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#maxVelocityX} (emit only).
+ * @property {number|number[]|EmitterOpOnEmitCallback|object} [maxVelocityY] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#maxVelocityY} (emit only).
+ * @property {number|number[]|EmitterOpOnEmitCallback|object} [moveToX] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#moveToX} (emit only).
+ * @property {number|number[]|EmitterOpOnEmitCallback|object} [moveToY] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#moveToY} (emit only).
+ * @property {number|number[]|EmitterOpOnEmitCallback|object} [quantity] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#quantity} (emit only).
+ * @property {number|number[]|EmitterOpOnUpdateCallback|object} [rotate] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#rotate}.
+ * @property {number|number[]|EmitterOpOnUpdateCallback|object} [scale] - As {@link Phaser.GameObjects.Particles.ParticleEmitter#setScale}.
+ * @property {number|number[]|EmitterOpOnUpdateCallback|object} [scaleX] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#scaleX}.
+ * @property {number|number[]|EmitterOpOnUpdateCallback|object} [scaleY] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#scaleY}.
+ * @property {number|number[]|EmitterOpOnEmitCallback|object} [speed] - As {@link Phaser.GameObjects.Particles.ParticleEmitter#setSpeed} (emit only).
+ * @property {number|number[]|EmitterOpOnEmitCallback|object} [speedX] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#speedX} (emit only).
+ * @property {number|number[]|EmitterOpOnEmitCallback|object} [speedY] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#speedY} (emit only).
+ * @property {number|number[]|EmitterOpOnEmitCallback|object} [tint] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#tint}.
+ * @property {number|number[]|EmitterOpOnEmitCallback|object} [x] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#x} (emit only).
+ * @property {number|number[]|EmitterOpOnEmitCallback|object} [y] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#y} (emit only).
  * @property {object} [emitZone] - As {@link Phaser.GameObjects.Particles.ParticleEmitter#setEmitZone}.
  * @property {ParticleEmitterBounds|ParticleEmitterBoundsAlt} [bounds] - As {@link Phaser.GameObjects.Particles.ParticleEmitter#setBounds}.
  * @property {object} [followOffset] - Assigns to {@link Phaser.GameObjects.Particles.ParticleEmitter#followOffset}.
- * @property {float} [followOffset.x] - x-coordinate of the offset.
- * @property {float} [followOffset.y] - y-coordinate of the offset.
+ * @property {number} [followOffset.x] - x-coordinate of the offset.
+ * @property {number} [followOffset.y] - y-coordinate of the offset.
  * @property {number|number[]|string|string[]|Phaser.Textures.Frame|Phaser.Textures.Frame[]|ParticleEmitterFrameConfig} [frames] - Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#frames}.
  */
 
@@ -337,7 +337,7 @@ var ParticleEmitter = new Class({
          * Horizontal acceleration applied to emitted particles, in pixels per second squared.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#gravityX
-         * @type {float}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          * @see Phaser.GameObjects.Particles.ParticleEmitter#setGravity
@@ -348,7 +348,7 @@ var ParticleEmitter = new Class({
          * Vertical acceleration applied to emitted particles, in pixels per second squared.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#gravityY
-         * @type {float}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          * @see Phaser.GameObjects.Particles.ParticleEmitter#setGravity
@@ -356,7 +356,7 @@ var ParticleEmitter = new Class({
         this.gravityY = 0;
 
         /**
-         * Whether accelerationX and accelerationY are nonzero. Set automatically during configuration.
+         * Whether accelerationX and accelerationY are non-zero. Set automatically during configuration.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#acceleration
          * @type {boolean}
@@ -625,7 +625,7 @@ var ParticleEmitter = new Class({
          * Calling {@link Phaser.GameObjects.Particles.ParticleEmitter#explode} also puts the emitter in explode mode (frequency = -1).
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#frequency
-         * @type {float}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          * @see Phaser.GameObjects.Particles.ParticleEmitter#setFrequency
@@ -635,7 +635,7 @@ var ParticleEmitter = new Class({
         /**
          * Controls if the emitter is currently emitting a particle flow (when frequency >= 0).
          * Already alive particles will continue to update until they expire.
-         * Controlled by {@link Phaser.GameObjects.Particles.ParticleEmitter#start}.
+         * Controlled by {@link Phaser.GameObjects.Particles.ParticleEmitter#start} and {@link Phaser.GameObjects.Particles.ParticleEmitter#stop}.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#on
          * @type {boolean}
@@ -659,7 +659,7 @@ var ParticleEmitter = new Class({
          * The time rate applied to active particles, affecting lifespan, movement, and tweens. Values larger than 1 are faster than normal.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#timeScale
-         * @type {float}
+         * @type {number}
          * @default 1
          * @since 3.0.0
          */
@@ -863,7 +863,7 @@ var ParticleEmitter = new Class({
          * The time until the next flow cycle.
          *
          * @name Phaser.GameObjects.Particles.ParticleEmitter#_counter
-         * @type {float}
+         * @type {number}
          * @private
          * @default 0
          * @since 3.0.0
@@ -1047,9 +1047,9 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#startFollow
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Particles.Particle} target - The Game Object to follow.
-     * @param {float} [offsetX=0] - Horizontal offset of the particle origin from the Game Object.
-     * @param {float} [offsetY=0] - Vertical offset of the particle origin from the Game Object.
+     * @param {Phaser.GameObjects.GameObject} target - The Game Object to follow.
+     * @param {number} [offsetX=0] - Horizontal offset of the particle origin from the Game Object.
+     * @param {number} [offsetY=0] - Vertical offset of the particle origin from the Game Object.
      * @param {boolean} [trackVisible=false] - Whether the emitter's visible state will track the target's visible state.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
@@ -1207,8 +1207,8 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setPosition
      * @since 3.0.0
      *
-     * @param {float|float[]|EmitterOpOnEmitCallback|object} x - The x-coordinate of the particle origin.
-     * @param {float|float[]|EmitterOpOnEmitCallback|object} y - The y-coordinate of the particle origin.
+     * @param {number|float[]|EmitterOpOnEmitCallback|object} x - The x-coordinate of the particle origin.
+     * @param {number|float[]|EmitterOpOnEmitCallback|object} y - The y-coordinate of the particle origin.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1229,9 +1229,9 @@ var ParticleEmitter = new Class({
      * @since 3.0.0
      *
      * @param {(number|ParticleEmitterBounds|ParticleEmitterBoundsAlt)} x - The x-coordinate of the left edge of the boundary, or an object representing a rectangle.
-     * @param {float} y - The y-coordinate of the top edge of the boundary.
-     * @param {float} width - The width of the boundary.
-     * @param {float} height - The height of the boundary.
+     * @param {number} y - The y-coordinate of the top edge of the boundary.
+     * @param {number} width - The width of the boundary.
+     * @param {number} height - The height of the boundary.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1266,7 +1266,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setSpeedX
      * @since 3.0.0
      *
-     * @param {float|float[]|EmitterOpOnEmitCallback|object} value - The speed, in pixels per second.
+     * @param {number|float[]|EmitterOpOnEmitCallback|object} value - The speed, in pixels per second.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1287,7 +1287,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setSpeedY
      * @since 3.0.0
      *
-     * @param {float|float[]|EmitterOpOnEmitCallback|object} value - The speed, in pixels per second.
+     * @param {number|float[]|EmitterOpOnEmitCallback|object} value - The speed, in pixels per second.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1311,7 +1311,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setSpeed
      * @since 3.0.0
      *
-     * @param {float|float[]|EmitterOpOnEmitCallback|object} value - The speed, in pixels per second.
+     * @param {number|float[]|EmitterOpOnEmitCallback|object} value - The speed, in pixels per second.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1332,7 +1332,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setScaleX
      * @since 3.0.0
      *
-     * @param {float|float[]|EmitterOpOnUpdateCallback|object} value - The scale, relative to 1.
+     * @param {number|float[]|EmitterOpOnUpdateCallback|object} value - The scale, relative to 1.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1349,7 +1349,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setScaleY
      * @since 3.0.0
      *
-     * @param {float|float[]|EmitterOpOnUpdateCallback|object} value - The scale, relative to 1.
+     * @param {number|float[]|EmitterOpOnUpdateCallback|object} value - The scale, relative to 1.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1366,7 +1366,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setScale
      * @since 3.0.0
      *
-     * @param {float|float[]|EmitterOpOnUpdateCallback|object} value - The scale, relative to 1.
+     * @param {number|float[]|EmitterOpOnUpdateCallback|object} value - The scale, relative to 1.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1384,7 +1384,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setGravityX
      * @since 3.0.0
      *
-     * @param {float} value - Acceleration due to gravity, in pixels per second squared.
+     * @param {number} value - Acceleration due to gravity, in pixels per second squared.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1401,7 +1401,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setGravityY
      * @since 3.0.0
      *
-     * @param {float} value - Acceleration due to gravity, in pixels per second squared.
+     * @param {number} value - Acceleration due to gravity, in pixels per second squared.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1418,8 +1418,8 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setGravity
      * @since 3.0.0
      *
-     * @param {float} x - Horizontal acceleration due to gravity, in pixels per second squared.
-     * @param {float} y - Vertical acceleration due to gravity, in pixels per second squared.
+     * @param {number} x - Horizontal acceleration due to gravity, in pixels per second squared.
+     * @param {number} y - Vertical acceleration due to gravity, in pixels per second squared.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1437,7 +1437,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setAlpha
      * @since 3.0.0
      *
-     * @param {float|float[]|EmitterOpOnUpdateCallback|object} value - A value between 0 (transparent) and 1 (opaque).
+     * @param {number|float[]|EmitterOpOnUpdateCallback|object} value - A value between 0 (transparent) and 1 (opaque).
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1454,7 +1454,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setEmitterAngle
      * @since 3.0.0
      *
-     * @param {float|float[]|EmitterOpOnEmitCallback|object} value - The angle of the initial velocity of emitted particles.
+     * @param {number|float[]|EmitterOpOnEmitCallback|object} value - The angle of the initial velocity of emitted particles.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1471,7 +1471,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setAngle
      * @since 3.0.0
      *
-     * @param {float|float[]|EmitterOpOnEmitCallback|object} value - The angle of the initial velocity of emitted particles.
+     * @param {number|float[]|EmitterOpOnEmitCallback|object} value - The angle of the initial velocity of emitted particles.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1488,7 +1488,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setLifespan
      * @since 3.0.0
      *
-     * @param {float|float[]|EmitterOpOnEmitCallback|object} value - The particle lifespan, in ms.
+     * @param {number|float[]|EmitterOpOnEmitCallback|object} value - The particle lifespan, in ms.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1505,7 +1505,7 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setQuantity
      * @since 3.0.0
      *
-     * @param {float|float[]|EmitterOpOnEmitCallback|object} quantity - The number of particles to release at each flow cycle or explosion.
+     * @param {number|float[]|EmitterOpOnEmitCallback|object} quantity - The number of particles to release at each flow cycle or explosion.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1523,8 +1523,8 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#setFrequency
      * @since 3.0.0
      *
-     * @param {float} frequency - The time interval (>= 0) of each flow cycle, in ms; or -1 to put the emitter in explosion mode.
-     * @param {float|float[]|EmitterOpOnEmitCallback|object} [quantity] - The number of particles to release at each flow cycle or explosion.
+     * @param {number} frequency - The time interval (>= 0) of each flow cycle, in ms; or -1 to put the emitter in explosion mode.
+     * @param {number|float[]|EmitterOpOnEmitCallback|object} [quantity] - The number of particles to release at each flow cycle or explosion.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1797,11 +1797,11 @@ var ParticleEmitter = new Class({
      * @since 3.0.0
      *
      * @param {ParticleEmitterCallback} callback - The function.
-     * @param {*} thisArg - The function's calling context.
+     * @param {*} context - The function's calling context.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
-    forEachAlive: function (callback, thisArg)
+    forEachAlive: function (callback, context)
     {
         var alive = this.alive;
         var length = alive.length;
@@ -1809,7 +1809,7 @@ var ParticleEmitter = new Class({
         for (var index = 0; index < length; ++index)
         {
             //  Sends the Particle and the Emitter
-            callback.call(thisArg, alive[index], this);
+            callback.call(context, alive[index], this);
         }
 
         return this;
@@ -1822,11 +1822,11 @@ var ParticleEmitter = new Class({
      * @since 3.0.0
      *
      * @param {ParticleEmitterCallback} callback - The function.
-     * @param {*} thisArg - The function's calling context.
+     * @param {*} context - The function's calling context.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
-    forEachDead: function (callback, thisArg)
+    forEachDead: function (callback, context)
     {
         var dead = this.dead;
         var length = dead.length;
@@ -1834,7 +1834,7 @@ var ParticleEmitter = new Class({
         for (var index = 0; index < length; ++index)
         {
             //  Sends the Particle and the Emitter
-            callback.call(thisArg, dead[index], this);
+            callback.call(context, dead[index], this);
         }
 
         return this;
@@ -1858,6 +1858,21 @@ var ParticleEmitter = new Class({
         this.on = true;
 
         this._counter = 0;
+
+        return this;
+    },
+
+    /**
+     * Turns {@link Phaser.GameObjects.Particles.ParticleEmitter#on off} the emitter.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitter#stop
+     * @since 3.11.0
+     *
+     * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
+     */
+    stop: function ()
+    {
+        this.on = false;
 
         return this;
     },
@@ -1915,8 +1930,8 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#flow
      * @since 3.0.0
      *
-     * @param {float} frequency - The time interval (>= 0) of each flow cycle, in ms.
-     * @param {float|float[]|EmitterOpOnEmitCallback|object} [count=1] - The number of particles to emit at each flow cycle.
+     * @param {number} frequency - The time interval (>= 0) of each flow cycle, in ms.
+     * @param {number|float[]|EmitterOpOnEmitCallback|object} [count=1] - The number of particles to emit at each flow cycle.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} This Particle Emitter.
      */
@@ -1938,8 +1953,8 @@ var ParticleEmitter = new Class({
      * @since 3.0.0
      *
      * @param {integer} count - The amount of Particles to emit.
-     * @param {float} x - The x coordinate to emit the Particles from.
-     * @param {float} y - The y coordinate to emit the Particles from.
+     * @param {number} x - The x coordinate to emit the Particles from.
+     * @param {number} y - The y coordinate to emit the Particles from.
      *
      * @return {Phaser.GameObjects.Particles.Particle} The most recently emitted Particle.
      */
@@ -1956,8 +1971,8 @@ var ParticleEmitter = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitter#emitParticleAt
      * @since 3.0.0
      *
-     * @param {float} [x=this.x] - The x coordinate to emit the Particles from.
-     * @param {float} [y=this.x] - The y coordinate to emit the Particles from.
+     * @param {number} [x=this.x] - The x coordinate to emit the Particles from.
+     * @param {number} [y=this.x] - The y coordinate to emit the Particles from.
      * @param {integer} [count=this.quantity] - The number of Particles to emit.
      *
      * @return {Phaser.GameObjects.Particles.Particle} The most recently emitted Particle.
@@ -1974,8 +1989,8 @@ var ParticleEmitter = new Class({
      * @since 3.0.0
      *
      * @param {integer} [count=this.quantity] - The number of Particles to emit.
-     * @param {float} [x=this.x] - The x coordinate to emit the Particles from.
-     * @param {float} [y=this.x] - The y coordinate to emit the Particles from.
+     * @param {number} [x=this.x] - The x coordinate to emit the Particles from.
+     * @param {number} [y=this.x] - The y coordinate to emit the Particles from.
      *
      * @return {Phaser.GameObjects.Particles.Particle} The most recently emitted Particle.
      *
@@ -2040,7 +2055,7 @@ var ParticleEmitter = new Class({
      * @since 3.0.0
      *
      * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
-     * @param {float} delta - The delta time, in ms, elapsed since the last frame.
+     * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
     preUpdate: function (time, delta)
     {

@@ -19,7 +19,7 @@ var InjectionMap = require('./InjectionMap');
  * @property {string} [key] - [description]
  * @property {boolean} [active=false] - [description]
  * @property {boolean} [visible=true] - [description]
- * @property {(false|LoaderFileObject[])} [files=false] - [description]
+ * @property {(false|Phaser.Loader.FileTypes.PackFileConfig)} [pack=false] - [description]
  * @property {?(InputJSONCameraObject|InputJSONCameraObject[])} [cameras=null] - [description]
  * @property {Object.<string, string>} [map] - Overwrites the default injection map for a scene.
  * @property {Object.<string, string>} [mapAdd] - Extends the injection map for a scene.
@@ -41,7 +41,7 @@ var InjectionMap = require('./InjectionMap');
  * @property {integer} transitionDuration - [description]
  * @property {boolean} transitionAllowInput - [description]
  * @property {object} data - [description]
- * @property {(false|LoaderFileObject[])} files - [description]
+ * @property {(false|Phaser.Loader.FileTypes.PackFileConfig)} pack - [description]
  * @property {?(InputJSONCameraObject|InputJSONCameraObject[])} cameras - [description]
  * @property {Object.<string, string>} map - [description]
  * @property {object} physics - [description]
@@ -92,7 +92,7 @@ var Settings = {
 
             data: {},
 
-            files: GetValue(config, 'files', false),
+            pack: GetValue(config, 'pack', false),
 
             //  Cameras
 
@@ -112,7 +112,11 @@ var Settings = {
 
             //  Plugins
 
-            plugins: GetValue(config, 'plugins', false)
+            plugins: GetValue(config, 'plugins', false),
+
+            //  Input
+
+            input: GetValue(config, 'input', {})
 
         };
     }

@@ -226,6 +226,29 @@ var WebGLPipeline = new Class({
          * @since 3.1.0
          */
         this.flushLocked = false;
+
+        /**
+         * Indicates if the current pipeline is active or not for this frame only.
+         * Reset in the onRender method.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLPipeline#active
+         * @type {boolean}
+         * @since 3.10.0
+         */
+        this.active = false;
+    },
+
+    /**
+     * Called when the Game has fully booted and the Renderer has finished setting up.
+     * 
+     * By this stage all Game level systems are now in place and you can perform any final
+     * tasks that the pipeline may need that relied on game systems such as the Texture Manager.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#boot
+     * @since 3.11.0
+     */
+    boot: function ()
+    {
     },
 
     /**
@@ -449,13 +472,14 @@ var WebGLPipeline = new Class({
      * @since 3.2.0
      *
      * @param {string} name - [description]
-     * @param {float} x - [description]
+     * @param {number} x - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
     setFloat1: function (name, x)
     {
         this.renderer.setFloat1(this.program, name, x);
+
         return this;
     },
 
@@ -466,15 +490,15 @@ var WebGLPipeline = new Class({
      * @since 3.2.0
      *
      * @param {string} name - [description]
-     * @param {float} x - [description]
-     * @param {float} y - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
     setFloat2: function (name, x, y)
     {
-
         this.renderer.setFloat2(this.program, name, x, y);
+
         return this;
     },
 
@@ -485,16 +509,16 @@ var WebGLPipeline = new Class({
      * @since 3.2.0
      *
      * @param {string} name - [description]
-     * @param {float} x - [description]
-     * @param {float} y - [description]
-     * @param {float} z - [description]
+     * @param {number} x - [description]
+     * @param {number} y - [description]
+     * @param {number} z - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
     setFloat3: function (name, x, y, z)
     {
-
         this.renderer.setFloat3(this.program, name, x, y, z);
+
         return this;
     },
 
@@ -505,17 +529,17 @@ var WebGLPipeline = new Class({
      * @since 3.2.0
      *
      * @param {string} name - Name of the uniform
-     * @param {float} x - X component of the uniform
-     * @param {float} y - Y component of the uniform
-     * @param {float} z - Z component of the uniform
-     * @param {float} w - W component of the uniform
+     * @param {number} x - X component of the uniform
+     * @param {number} y - Y component of the uniform
+     * @param {number} z - Z component of the uniform
+     * @param {number} w - W component of the uniform
      *
      * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
      */
     setFloat4: function (name, x, y, z, w)
     {
-
         this.renderer.setFloat4(this.program, name, x, y, z, w);
+
         return this;
     },
 
@@ -533,6 +557,7 @@ var WebGLPipeline = new Class({
     setInt1: function (name, x)
     {
         this.renderer.setInt1(this.program, name, x);
+
         return this;
     },
 
@@ -551,6 +576,7 @@ var WebGLPipeline = new Class({
     setInt2: function (name, x, y)
     {
         this.renderer.setInt2(this.program, name, x, y);
+
         return this;
     },
 
@@ -570,6 +596,7 @@ var WebGLPipeline = new Class({
     setInt3: function (name, x, y, z)
     {
         this.renderer.setInt3(this.program, name, x, y, z);
+
         return this;
     },
 
@@ -590,6 +617,7 @@ var WebGLPipeline = new Class({
     setInt4: function (name, x, y, z, w)
     {
         this.renderer.setInt4(this.program, name, x, y, z, w);
+
         return this;
     },
 
@@ -609,6 +637,7 @@ var WebGLPipeline = new Class({
     setMatrix2: function (name, transpose, matrix)
     {
         this.renderer.setMatrix2(this.program, name, transpose, matrix);
+
         return this;
     },
 
@@ -629,6 +658,7 @@ var WebGLPipeline = new Class({
     setMatrix3: function (name, transpose, matrix)
     {
         this.renderer.setMatrix3(this.program, name, transpose, matrix);
+
         return this;
     },
 
@@ -647,6 +677,7 @@ var WebGLPipeline = new Class({
     setMatrix4: function (name, transpose, matrix)
     {
         this.renderer.setMatrix4(this.program, name, transpose, matrix);
+
         return this;
     }
 

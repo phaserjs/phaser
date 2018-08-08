@@ -5,7 +5,7 @@
  */
 
 var Class = require('../utils/Class');
-var PluginManager = require('../boot/PluginManager');
+var PluginCache = require('../plugins/PluginCache');
 
 /**
  * @classdesc
@@ -148,6 +148,6 @@ GameObjectCreator.register = function (factoryType, factoryFunction)
     }
 };
 
-PluginManager.register('GameObjectCreator', GameObjectCreator, 'make');
+PluginCache.register('GameObjectCreator', GameObjectCreator, 'make');
 
 module.exports = GameObjectCreator;

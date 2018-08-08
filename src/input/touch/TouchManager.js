@@ -11,21 +11,19 @@ var Class = require('../../utils/Class');
 // https://www.html5rocks.com/en/mobile/touch/
 
 /**
- * @callback TouchHandler
- *
- * @param {TouchEvent} event - [description]
- */
-
-/**
  * @classdesc
- * [description]
+ * The Touch Manager is a helper class that belongs to the Input Manager.
+ * 
+ * Its role is to listen for native DOM Touch Events and then pass them onto the Input Manager for further processing.
+ * 
+ * You do not need to create this class directly, the Input Manager will create an instance of it automatically.
  *
  * @class TouchManager
  * @memberOf Phaser.Input.Touch
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Input.InputManager} inputManager - [description]
+ * @param {Phaser.Input.InputManager} inputManager - A reference to the Input Manager.
  */
 var TouchManager = new Class({
 
@@ -34,7 +32,7 @@ var TouchManager = new Class({
     function TouchManager (inputManager)
     {
         /**
-         * [description]
+         * A reference to the Input Manager.
          *
          * @name Phaser.Input.Touch.TouchManager#manager
          * @type {Phaser.Input.InputManager}
@@ -53,7 +51,8 @@ var TouchManager = new Class({
         this.capture = true;
 
         /**
-         * [description]
+         * A boolean that controls if the Touch Manager is enabled or not.
+         * Can be toggled on the fly.
          *
          * @name Phaser.Input.Touch.TouchManager#enabled
          * @type {boolean}
@@ -63,28 +62,23 @@ var TouchManager = new Class({
         this.enabled = false;
 
         /**
-         * [description]
+         * The Touch Event target, as defined in the Game Config.
+         * Typically the canvas to which the game is rendering, but can be any interactive DOM element.
          *
          * @name Phaser.Input.Touch.TouchManager#target
-         * @type {null}
+         * @type {any}
          * @since 3.0.0
          */
         this.target;
 
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Touch.TouchManager#handler
-         * @type {?TouchHandler}
-         * @since 3.0.0
-         */
-        this.handler;
+        inputManager.events.once('boot', this.boot, this);
     },
 
     /**
-     * [description]
+     * The Touch Manager boot process.
      *
      * @method Phaser.Input.Touch.TouchManager#boot
+     * @private
      * @since 3.0.0
      */
     boot: function ()
@@ -107,65 +101,108 @@ var TouchManager = new Class({
     },
 
     /**
-     * [description]
+     * The Touch Start Event Handler.
+     *
+     * @method Phaser.Input.Touch.TouchManager#onTouchStart
+     * @since 3.10.0
+     *
+     * @param {TouchEvent} event - The native DOM Touch Start Event.
+     */
+    onTouchStart: function (event)
+    {
+        if (event.defaultPrevented || !this.enabled || !this.manager)
+        {
+            // Do nothing if event already handled
+            return;
+        }
+
+        this.manager.queueTouchStart(event);
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+    },
+
+    /**
+     * The Touch Move Event Handler.
+     *
+     * @method Phaser.Input.Touch.TouchManager#onTouchMove
+     * @since 3.10.0
+     *
+     * @param {TouchEvent} event - The native DOM Touch Move Event.
+     */
+    onTouchMove: function (event)
+    {
+        if (event.defaultPrevented || !this.enabled || !this.manager)
+        {
+            // Do nothing if event already handled
+            return;
+        }
+
+        this.manager.queueTouchMove(event);
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+    },
+
+    /**
+     * The Touch End Event Handler.
+     *
+     * @method Phaser.Input.Touch.TouchManager#onTouchEnd
+     * @since 3.10.0
+     *
+     * @param {TouchEvent} event - The native DOM Touch End Event.
+     */
+    onTouchEnd: function (event)
+    {
+        if (event.defaultPrevented || !this.enabled || !this.manager)
+        {
+            // Do nothing if event already handled
+            return;
+        }
+
+        this.manager.queueTouchEnd(event);
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+    },
+
+    /**
+     * Starts the Touch Event listeners running.
+     * This is called automatically and does not need to be manually invoked.
      *
      * @method Phaser.Input.Touch.TouchManager#startListeners
      * @since 3.0.0
      */
     startListeners: function ()
     {
-        var queue = this.manager.queue;
         var target = this.target;
 
         var passive = { passive: true };
         var nonPassive = { passive: false };
 
-        var handler;
-
         if (this.capture)
         {
-            handler = function (event)
-            {
-                if (event.defaultPrevented)
-                {
-                    // Do nothing if event already handled
-                    return;
-                }
-
-                // console.log('touch', event);
-
-                queue.push(event);
-
-                event.preventDefault();
-            };
-
-            target.addEventListener('touchstart', handler, nonPassive);
-            target.addEventListener('touchmove', handler, nonPassive);
-            target.addEventListener('touchend', handler, nonPassive);
+            target.addEventListener('touchstart', this.onTouchStart.bind(this), nonPassive);
+            target.addEventListener('touchmove', this.onTouchMove.bind(this), nonPassive);
+            target.addEventListener('touchend', this.onTouchEnd.bind(this), nonPassive);
         }
         else
         {
-            handler = function (event)
-            {
-                if (event.defaultPrevented)
-                {
-                    // Do nothing if event already handled
-                    return;
-                }
-
-                queue.push(event);
-            };
-
-            target.addEventListener('touchstart', handler, passive);
-            target.addEventListener('touchmove', handler, passive);
-            target.addEventListener('touchend', handler, passive);
+            target.addEventListener('touchstart', this.onTouchStart.bind(this), passive);
+            target.addEventListener('touchmove', this.onTouchMove.bind(this), passive);
+            target.addEventListener('touchend', this.onTouchEnd.bind(this), passive);
         }
-
-        this.handler = handler;
     },
 
     /**
-     * [description]
+     * Stops the Touch Event listeners.
+     * This is called automatically and does not need to be manually invoked.
      *
      * @method Phaser.Input.Touch.TouchManager#stopListeners
      * @since 3.0.0
@@ -174,13 +211,13 @@ var TouchManager = new Class({
     {
         var target = this.target;
 
-        target.removeEventListener('touchstart', this.handler);
-        target.removeEventListener('touchmove', this.handler);
-        target.removeEventListener('touchend', this.handler);
+        target.removeEventListener('touchstart', this.onTouchStart);
+        target.removeEventListener('touchmove', this.onTouchMove);
+        target.removeEventListener('touchend', this.onTouchEnd);
     },
 
     /**
-     * [description]
+     * Destroys this Touch Manager instance.
      *
      * @method Phaser.Input.Touch.TouchManager#destroy
      * @since 3.0.0
@@ -189,6 +226,7 @@ var TouchManager = new Class({
     {
         this.stopListeners();
 
+        this.target = null;
         this.manager = null;
     }
 

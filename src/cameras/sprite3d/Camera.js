@@ -504,7 +504,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Sprite3D.Camera#randomCube
      * @since 3.0.0
      *
-     * @param {float} [scale=1] - [description]
+     * @param {number} [scale=1] - [description]
      * @param {Phaser.GameObjects.Sprite3D[]} [sprites] - [description]
      *
      * @return {Phaser.Cameras.Sprite3D.Camera} This Camera object.
@@ -662,7 +662,7 @@ var Camera = new Class({
      * @method Phaser.Cameras.Sprite3D.Camera#rotate
      * @since 3.0.0
      *
-     * @param {float} radians - [description]
+     * @param {number} radians - [description]
      * @param {Phaser.Math.Vector3} axis - [description]
      *
      * @return {Phaser.Cameras.Sprite3D.Camera} This Camera object.
@@ -682,7 +682,7 @@ var Camera = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Math.Vector3} point - [description]
-     * @param {float} radians - [description]
+     * @param {number} radians - [description]
      * @param {Phaser.Math.Vector3} axis - [description]
      *
      * @return {Phaser.Cameras.Sprite3D.Camera} This Camera object.

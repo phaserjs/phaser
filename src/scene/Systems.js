@@ -6,9 +6,10 @@
 
 var Class = require('../utils/Class');
 var CONST = require('./const');
+var DefaultPlugins = require('../plugins/DefaultPlugins');
 var GetPhysicsPlugins = require('./GetPhysicsPlugins');
 var GetScenePlugins = require('./GetScenePlugins');
-var Plugins = require('../plugins');
+var NOOP = require('../utils/NOOP');
 var Settings = require('./Settings');
 
 /**
@@ -50,6 +51,15 @@ var Systems = new Class({
          * @since 3.0.0
          */
         this.game;
+
+        /**
+         * [description]
+         *
+         * @name Phaser.Scenes.Systems#facebook
+         * @type {any}
+         * @since 3.12.0
+         */
+        this.facebook;
 
         /**
          * [description]
@@ -111,7 +121,7 @@ var Systems = new Class({
          * [description]
          *
          * @name Phaser.Scenes.Systems#plugins
-         * @type {Phaser.Boot.PluginManager}
+         * @type {Phaser.Plugins.PluginManager}
          * @since 3.0.0
          */
         this.plugins;
@@ -207,6 +217,19 @@ var Systems = new Class({
          * @since 3.0.0
          */
         this.updateList;
+
+        /**
+         * The Scene Update function.
+         *
+         * This starts out as NOOP during init, preload and create, and at the end of create
+         * it swaps to be whatever the Scene.update function is.
+         *
+         * @name Phaser.Scenes.Systems#sceneUpdate
+         * @type {function}
+         * @private
+         * @since 3.10.0
+         */
+        this.sceneUpdate = NOOP;
     },
 
     /**
@@ -224,6 +247,9 @@ var Systems = new Class({
     {
         this.settings.status = CONST.INIT;
 
+        //  This will get replaced by the SceneManager with the actual update function, if it exists, once create is over.
+        this.sceneUpdate = NOOP;
+
         this.game = game;
 
         this.canvas = game.canvas;
@@ -233,13 +259,7 @@ var Systems = new Class({
 
         this.plugins = pluginManager;
 
-        pluginManager.installGlobal(this, Plugins.Global);
-
-        pluginManager.installLocal(this, Plugins.CoreScene);
-
-        pluginManager.installLocal(this, GetScenePlugins(this));
-
-        pluginManager.installLocal(this, GetPhysicsPlugins(this));
+        pluginManager.addToScene(this, DefaultPlugins.Global, [ DefaultPlugins.CoreScene, GetScenePlugins(this), GetPhysicsPlugins(this) ]);
 
         this.events.emit('boot', this);
 
@@ -272,8 +292,8 @@ var Systems = new Class({
      * @method Phaser.Scenes.Systems#step
      * @since 3.0.0
      *
-     * @param {number} time - [description]
-     * @param {number} delta - [description]
+     * @param {number} time - The time value from the most recent Game step. Typically a high-resolution timer value, or Date.now().
+     * @param {number} delta - The delta value since the last frame. This is smoothed to avoid delta spikes by the TimeStep class.
      */
     step: function (time, delta)
     {
@@ -281,7 +301,7 @@ var Systems = new Class({
 
         this.events.emit('update', time, delta);
 
-        this.scene.update.call(this.scene, time, delta);
+        this.sceneUpdate.call(this.scene, time, delta);
 
         this.events.emit('postupdate', time, delta);
     },
@@ -334,10 +354,12 @@ var Systems = new Class({
      *
      * @method Phaser.Scenes.Systems#pause
      * @since 3.0.0
+     * 
+     * @param {object} [data] - A data object that will be passed in the 'pause' event.
      *
      * @return {Phaser.Scenes.Systems} This Systems object.
      */
-    pause: function ()
+    pause: function (data)
     {
         if (this.settings.active)
         {
@@ -345,7 +367,7 @@ var Systems = new Class({
 
             this.settings.active = false;
 
-            this.events.emit('pause', this);
+            this.events.emit('pause', this, data);
         }
 
         return this;
@@ -357,9 +379,11 @@ var Systems = new Class({
      * @method Phaser.Scenes.Systems#resume
      * @since 3.0.0
      *
+     * @param {object} [data] - A data object that will be passed in the 'resume' event.
+     *
      * @return {Phaser.Scenes.Systems} This Systems object.
      */
-    resume: function ()
+    resume: function (data)
     {
         if (!this.settings.active)
         {
@@ -367,7 +391,7 @@ var Systems = new Class({
 
             this.settings.active = true;
 
-            this.events.emit('resume', this);
+            this.events.emit('resume', this, data);
         }
 
         return this;
@@ -383,17 +407,19 @@ var Systems = new Class({
      *
      * @method Phaser.Scenes.Systems#sleep
      * @since 3.0.0
+     * 
+     * @param {object} [data] - A data object that will be passed in the 'sleep' event.
      *
      * @return {Phaser.Scenes.Systems} This Systems object.
      */
-    sleep: function ()
+    sleep: function (data)
     {
         this.settings.status = CONST.SLEEPING;
 
         this.settings.active = false;
         this.settings.visible = false;
 
-        this.events.emit('sleep', this);
+        this.events.emit('sleep', this, data);
 
         return this;
     },
@@ -404,9 +430,11 @@ var Systems = new Class({
      * @method Phaser.Scenes.Systems#wake
      * @since 3.0.0
      *
+     * @param {object} [data] - A data object that will be passed in the 'wake' event.
+     *
      * @return {Phaser.Scenes.Systems} This Systems object.
      */
-    wake: function ()
+    wake: function (data)
     {
         var settings = this.settings;
 
@@ -415,7 +443,7 @@ var Systems = new Class({
         settings.active = true;
         settings.visible = true;
 
-        this.events.emit('wake', this);
+        this.events.emit('wake', this, data);
 
         if (settings.isTransition)
         {
@@ -523,24 +551,26 @@ var Systems = new Class({
 
     /**
      * Set the active state of this Scene.
+     * 
      * An active Scene will run its core update loop.
      *
      * @method Phaser.Scenes.Systems#setActive
      * @since 3.0.0
      *
      * @param {boolean} value - If `true` the Scene will be resumed, if previously paused. If `false` it will be paused.
+     * @param {object} [data] - A data object that will be passed in the 'resume' or 'pause' events.
      *
      * @return {Phaser.Scenes.Systems} This Systems object.
      */
-    setActive: function (value)
+    setActive: function (value, data)
     {
         if (value)
         {
-            return this.resume();
+            return this.resume(data);
         }
         else
         {
-            return this.pause();
+            return this.pause(data);
         }
     },
 
@@ -569,7 +599,7 @@ var Systems = new Class({
         this.events.emit('start', this);
 
         //  For user-land code to listen out for
-        this.events.emit('ready', this);
+        this.events.emit('ready', this, data);
     },
 
     /**
@@ -596,8 +626,10 @@ var Systems = new Class({
      *
      * @method Phaser.Scenes.Systems#shutdown
      * @since 3.0.0
+     * 
+     * @param {object} [data] - A data object that will be passed in the 'shutdown' event.
      */
-    shutdown: function ()
+    shutdown: function (data)
     {
         this.events.off('transitioninit');
         this.events.off('transitionstart');
@@ -609,7 +641,7 @@ var Systems = new Class({
         this.settings.active = false;
         this.settings.visible = false;
 
-        this.events.emit('shutdown', this);
+        this.events.emit('shutdown', this, data);
     },
 
     /**

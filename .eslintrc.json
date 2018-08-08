@@ -5,16 +5,41 @@
         "es6": true,
         "commonjs": true
     },
-    "extends": "eslint:recommended",
+    "plugins": [
+        "es5"
+    ],
+    "extends": [
+        "eslint:recommended"
+    ],
     "globals": {
         "WEBGL_RENDERER": true,
         "CANVAS_RENDERER": true,
         "Phaser": true,
-        "p2": true,
         "process": true,
-        "ActiveXObject": true
+        "ActiveXObject": true,
+        "FBInstant": true
     },
     "rules": {
+
+        "es5/no-arrow-functions": 2,
+        "es5/no-binary-and-octal-literals": 2,
+        "es5/no-block-scoping": 2,
+        "es5/no-classes": 2,
+        "es5/no-computed-properties": 2,
+        "es5/no-default-parameters": 2,
+        "es5/no-destructuring": 2,
+        "es5/no-es6-static-methods": 2,
+        "es5/no-for-of": 2,
+        "es5/no-generators": 2,
+        "es5/no-modules": 2,
+        "es5/no-object-super": 2,
+        "es5/no-rest-parameters": 2,
+        "es5/no-shorthand-properties": 2,
+        "es5/no-spread": 2,
+        "es5/no-template-literals": 2,
+        "es5/no-typeof-symbol": 2,
+        "es5/no-unicode-code-point-escape": 2,
+        "es5/no-unicode-regex": 2,
 
         "no-cond-assign": [ "error", "except-parens" ],
         "no-duplicate-case": [ "error" ],
@@ -47,7 +72,8 @@
         "eol-last": [ "error" ],
         "func-call-spacing": [ "error", "never" ],
         "indent": [ "error", 4, { "SwitchCase": 1 } ],
-        "key-spacing": [ "error", { "beforeColon": false, "afterColon": true }],
+        "key-spacing": [ "error", { "beforeColon": false, "afterColon": true } ],
+        "keyword-spacing": [ "error", { "after": true } ],
         "linebreak-style": [ "off" ],
         "lines-around-comment": [ "error", { "beforeBlockComment": true, "afterBlockComment": false, "beforeLineComment": true, "afterLineComment": false, "allowBlockStart": true, "allowBlockEnd": false, "allowObjectStart": true, "allowArrayStart": true }],
         "new-parens": "error",

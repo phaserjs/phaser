@@ -5,18 +5,18 @@
  */
 
 /**
- * [description]
+ * Offset a line by the given amount.
  *
  * @function Phaser.Geom.Line.Offset
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Line} O - [line,$return]
  *
- * @param {Phaser.Geom.Line} line - [description]
- * @param {number} x - [description]
- * @param {number} y - [description]
+ * @param {Phaser.Geom.Line} line - The line to offset.
+ * @param {number} x - The horizontal offset to add to the line.
+ * @param {number} y - The vertical offset to add to the line.
  *
- * @return {Phaser.Geom.Line} [description]
+ * @return {Phaser.Geom.Line} The offset line.
  */
 var Offset = function (line, x, y)
 {

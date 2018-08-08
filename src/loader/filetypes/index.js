@@ -8,44 +8,25 @@
  * @namespace Phaser.Loader.FileTypes
  */
 
-/**
- * @typedef {object} XHRConfig
- *
- * @property {string} key - [description]
- * @property {string} texture - [description]
- * @property {string} [data] - [description]
- * @property {XHRConfig} [xhr] - [description]
- */
-
-/**
- * @typedef {object} FileTypeConfig
- *
- * @property {string} key - [description]
- * @property {string} texture - [description]
- * @property {string} [data] - [description]
- * @property {string} [url] - [description]
- * @property {string} [path] - [description]
- * @property {string} [extension] - [description]
- * @property {string} [responseType] - [description]
- * @property {object} [config] - [description]
- * @property {XHRConfig} [xhr] - [description]
- */
-
 module.exports = {
 
     AnimationJSONFile: require('./AnimationJSONFile'),
     AtlasJSONFile: require('./AtlasJSONFile'),
+    AtlasXMLFile: require('./AtlasXMLFile'),
     AudioFile: require('./AudioFile'),
-    AudioSprite: require('./AudioSprite'),
+    AudioSpriteFile: require('./AudioSpriteFile'),
     BinaryFile: require('./BinaryFile'),
     BitmapFontFile: require('./BitmapFontFile'),
     GLSLFile: require('./GLSLFile'),
     HTML5AudioFile: require('./HTML5AudioFile'),
     HTMLFile: require('./HTMLFile'),
+    HTMLTextureFile: require('./HTMLTextureFile'),
     ImageFile: require('./ImageFile'),
     JSONFile: require('./JSONFile'),
-    MultiAtlas: require('./MultiAtlas'),
+    MultiAtlasFile: require('./MultiAtlasFile'),
+    PackFile: require('./PackFile'),
     PluginFile: require('./PluginFile'),
+    ScenePluginFile: require('./ScenePluginFile'),
     ScriptFile: require('./ScriptFile'),
     SpriteSheetFile: require('./SpriteSheetFile'),
     SVGFile: require('./SVGFile'),

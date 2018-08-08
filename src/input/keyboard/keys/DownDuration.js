@@ -11,10 +11,10 @@
  * @function Phaser.Input.Keyboard.DownDuration
  * @since 3.0.0
  *
- * @param {Phaser.Input.Keyboard.Key} key - [description]
- * @param {integer} [duration=50] - [description]
+ * @param {Phaser.Input.Keyboard.Key} key - The Key object to test.
+ * @param {integer} [duration=50] - The duration, in ms, within which the key must have been pressed down.
  *
- * @return {boolean} [description]
+ * @return {boolean} `true` if the Key was pressed down within `duration` ms, otherwise `false`.
  */
 var DownDuration = function (key, duration)
 {

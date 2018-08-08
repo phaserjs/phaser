@@ -18,7 +18,7 @@ var tmpVec2 = new Vector2();
  * @classdesc
  * [description]
  *
- * @class LineCurve
+ * @class Line
  * @extends Phaser.Curves.Curve
  * @memberOf Phaser.Curves
  * @constructor
@@ -47,7 +47,7 @@ var LineCurve = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Curves.LineCurve#p0
+         * @name Phaser.Curves.Line#p0
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
@@ -56,7 +56,7 @@ var LineCurve = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Curves.LineCurve#p1
+         * @name Phaser.Curves.Line#p1
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
@@ -66,7 +66,7 @@ var LineCurve = new Class({
     /**
      * Returns a Rectangle where the position and dimensions match the bounds of this Curve.
      *
-     * @method Phaser.Curves.LineCurve#getBounds
+     * @method Phaser.Curves.Line#getBounds
      * @since 3.0.0
      *
      * @generic {Phaser.Geom.Rectangle} O - [out,$return]
@@ -85,7 +85,7 @@ var LineCurve = new Class({
     /**
      * Gets the starting point on the curve.
      *
-     * @method Phaser.Curves.LineCurve#getStartPoint
+     * @method Phaser.Curves.Line#getStartPoint
      * @since 3.0.0
      *
      * @generic {Phaser.Math.Vector2} O - [out,$return]
@@ -104,7 +104,7 @@ var LineCurve = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Curves.LineCurve#getResolution
+     * @method Phaser.Curves.Line#getResolution
      * @since 3.0.0
      *
      * @param {number} [divisions=1] - [description]
@@ -121,12 +121,12 @@ var LineCurve = new Class({
     /**
      * Get point at relative position in curve according to length.
      *
-     * @method Phaser.Curves.LineCurve#getPoint
+     * @method Phaser.Curves.Line#getPoint
      * @since 3.0.0
      *
      * @generic {Phaser.Math.Vector2} O - [out,$return]
      *
-     * @param {float} t - The position along the curve to return. Where 0 is the start and 1 is the end.
+     * @param {number} t - The position along the curve to return. Where 0 is the start and 1 is the end.
      * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not given will be created.
      *
      * @return {Phaser.Math.Vector2} The coordinates of the point on the curve. If an `out` object was given this will be returned.
@@ -150,12 +150,12 @@ var LineCurve = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Curves.LineCurve#getPointAt
+     * @method Phaser.Curves.Line#getPointAt
      * @since 3.0.0
      *
      * @generic {Phaser.Math.Vector2} O - [out,$return]
      *
-     * @param {float} u - The position along the curve to return. Where 0 is the start and 1 is the end.
+     * @param {number} u - The position along the curve to return. Where 0 is the start and 1 is the end.
      * @param {Phaser.Math.Vector2} [out] - A Vector2 object to store the result in. If not given will be created.
      *
      * @return {Phaser.Math.Vector2} The coordinates of the point on the curve. If an `out` object was given this will be returned.
@@ -168,7 +168,7 @@ var LineCurve = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Curves.LineCurve#getTangent
+     * @method Phaser.Curves.Line#getTangent
      * @since 3.0.0
      * 
      * @generic {Phaser.Math.Vector2} O - [out,$return]
@@ -190,7 +190,7 @@ var LineCurve = new Class({
      * The curve is drawn using `Graphics.lineBetween` so will be drawn at whatever the present Graphics line color is.
      * The Graphics object is not cleared before the draw, so the curve will appear on-top of anything else already rendered to it.
      *
-     * @method Phaser.Curves.LineCurve#draw
+     * @method Phaser.Curves.Line#draw
      * @since 3.0.0
      *
      * @generic {Phaser.GameObjects.Graphics} G - [graphics,$return]
@@ -210,7 +210,7 @@ var LineCurve = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Curves.LineCurve#toJSON
+     * @method Phaser.Curves.Line#toJSON
      * @since 3.0.0
      *
      * @return {JSONCurve} The JSON object containing this curve data.
@@ -231,12 +231,12 @@ var LineCurve = new Class({
 /**
  * [description]
  *
- * @function Phaser.Curves.LineCurve.fromJSON
+ * @function Phaser.Curves.Line.fromJSON
  * @since 3.0.0
  *
  * @param {JSONCurve} data - The JSON object containing this curve data.
  *
- * @return {Phaser.Curves.LineCurve} [description]
+ * @return {Phaser.Curves.Line} [description]
  */
 LineCurve.fromJSON = function (data)
 {

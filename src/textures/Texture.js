@@ -8,6 +8,8 @@ var Class = require('../utils/Class');
 var Frame = require('./Frame');
 var TextureSource = require('./TextureSource');
 
+var TEXTURE_MISSING_ERROR = 'Texture.frame missing: ';
+
 /**
  * @classdesc
  * A Texture consists of a source, usually an Image from the Cache, and a collection of Frames.
@@ -27,7 +29,7 @@ var TextureSource = require('./TextureSource');
  *
  * @param {Phaser.Textures.TextureManager} manager - A reference to the Texture Manager this Texture belongs to.
  * @param {string} key - The unique string-based key of this Texture.
- * @param {(HTMLImageElement|HTMLCanvasElement)} source - The source that is used to create the texture. Usually an Image, but can also be a Canvas.
+ * @param {(HTMLImageElement[]|HTMLCanvasElement[])} source - An array of sources that are used to create the texture. Usually Images, but can also be a Canvas.
  * @param {number} [width] - The width of the Texture. This is optional and automatically derived from the source images.
  * @param {number} [height] - The height of the Texture. This is optional and automatically derived from the source images.
  */
@@ -203,7 +205,7 @@ var Texture = new Class({
 
         if (!frame)
         {
-            console.warn('No Texture.frame found with name ' + name);
+            console.warn(TEXTURE_MISSING_ERROR + name);
 
             frame = this.frames[this.firstFrame];
         }
@@ -311,7 +313,7 @@ var Texture = new Class({
      *
      * @param {(string|integer)} [name] - The string-based name, or integer based index, of the Frame to get from this Texture.
      *
-     * @return {(HTMLImageElement|HTMLCanvasElement)} The DOM Image or Canvas Element.
+     * @return {(HTMLImageElement|HTMLCanvasElement|Phaser.GameObjects.RenderTexture)} The DOM Image, Canvas Element or Render Texture.
      */
     getSourceImage: function (name)
     {
@@ -322,16 +324,53 @@ var Texture = new Class({
 
         var frame = this.frames[name];
 
-        if (!frame)
-        {
-            console.warn('No Texture.frame found with name ' + name);
-
-            return this.frames['__BASE'].source.image;
-        }
-        else
+        if (frame)
         {
             return frame.source.image;
         }
+        else
+        {
+            console.warn(TEXTURE_MISSING_ERROR + name);
+
+            return this.frames['__BASE'].source.image;
+        }
+    },
+
+    /**
+     * Given a Frame name, return the data source image it uses to render with.
+     * You can use this to get the normal map for an image for example.
+     *
+     * This will return the actual DOM Image.
+     *
+     * @method Phaser.Textures.Texture#getDataSourceImage
+     * @since 3.7.0
+     *
+     * @param {(string|integer)} [name] - The string-based name, or integer based index, of the Frame to get from this Texture.
+     *
+     * @return {(HTMLImageElement|HTMLCanvasElement)} The DOM Image or Canvas Element.
+     */
+    getDataSourceImage: function (name)
+    {
+        if (name === undefined || name === null || this.frameTotal === 1)
+        {
+            name = '__BASE';
+        }
+
+        var frame = this.frames[name];
+        var idx;
+
+        if (!frame)
+        {
+            console.warn(TEXTURE_MISSING_ERROR + name);
+
+            idx = this.frames['__BASE'].sourceIndex;
+        }
+        else
+        {
+            idx = frame.sourceIndex;
+        }
+
+        return this.dataSource[idx].image;
     },
 
     /**
@@ -351,7 +390,7 @@ var Texture = new Class({
         {
             data = [ data ];
         }
-
+        
         for (var i = 0; i < data.length; i++)
         {
             var source = this.source[i];

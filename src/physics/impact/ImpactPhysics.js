@@ -8,7 +8,7 @@ var Class = require('../../utils/Class');
 var Factory = require('./Factory');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Merge = require('../../utils/object/Merge');
-var PluginManager = require('../../boot/PluginManager');
+var PluginCache = require('../../plugins/PluginCache');
 var World = require('./World');
 
 /**
@@ -205,6 +205,6 @@ var ImpactPhysics = new Class({
 
 });
 
-PluginManager.register('ImpactPhysics', ImpactPhysics, 'impactPhysics');
+PluginCache.register('ImpactPhysics', ImpactPhysics, 'impactPhysics');
 
 module.exports = ImpactPhysics;

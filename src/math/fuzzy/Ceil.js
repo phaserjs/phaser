@@ -5,15 +5,15 @@
  */
 
 /**
- * [description]
+ * Calculate the fuzzy ceiling of the given value.
  *
  * @function Phaser.Math.Fuzzy.Ceil
  * @since 3.0.0
  *
- * @param {number} value - [description]
- * @param {float} [epsilon=0.0001] - [description]
+ * @param {number} value - The value.
+ * @param {number} [epsilon=0.0001] - The epsilon.
  *
- * @return {number} [description]
+ * @return {number} The fuzzy ceiling of the value.
  */
 var Ceil = function (value, epsilon)
 {

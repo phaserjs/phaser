@@ -127,7 +127,7 @@ var Fade = new Class({
          * A value between 0 and 1.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Fade#alpha
-         * @type {float}
+         * @type {number}
          * @private
          * @since 3.5.0
          */
@@ -137,7 +137,7 @@ var Fade = new Class({
          * If this effect is running this holds the current percentage of the progress, a value between 0 and 1.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Fade#progress
-         * @type {float}
+         * @type {number}
          * @since 3.5.0
          */
         this.progress = 0;
@@ -156,7 +156,7 @@ var Fade = new Class({
          * @callback CameraFadeCallback
          *
          * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera on which the effect is running.
-         * @param {float} progress - The progress of the effect. A value between 0 and 1.
+         * @param {number} progress - The progress of the effect. A value between 0 and 1.
          */
 
         /**
@@ -337,7 +337,7 @@ var Fade = new Class({
         var camera = this.camera;
 
         ctx.fillStyle = 'rgba(' + this.red + ',' + this.green + ',' + this.blue + ',' + this.alpha + ')';
-        ctx.fillRect(camera.x, camera.y, camera.width, camera.height);
+        ctx.fillRect(camera._cx, camera._cy, camera._cw, camera._ch);
 
         return true;
     },
@@ -365,13 +365,10 @@ var Fade = new Class({
         var blue = this.blue / 255;
         var green = this.green / 255;
 
-        pipeline.batchFillRect(
-            0, 0, 1, 1, 0,
-            camera.x, camera.y, camera.width, camera.height,
+        pipeline.drawFillRect(
+            camera._cx, camera._cy, camera._cw, camera._ch,
             getTintFunction(red, green, blue, 1),
-            this.alpha,
-            1, 0, 0, 1, 0, 0,
-            [ 1, 0, 0, 1, 0, 0 ]
+            this.alpha
         );
 
         return true;

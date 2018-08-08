@@ -8,15 +8,16 @@ var Class = require('../../utils/Class');
 
 /**
  * @classdesc
- * [description]
+ * Contains information about a specific button on a Gamepad.
+ * Button objects are created automatically by the Gamepad as they are needed.
  *
  * @class Button
  * @memberOf Phaser.Input.Gamepad
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Input.Gamepad.Gamepad} pad - [description]
- * @param {integer} index - [description]
+ * @param {Phaser.Input.Gamepad.Gamepad} pad - A reference to the Gamepad that this Button belongs to.
+ * @param {integer} index - The index of this Button.
  */
 var Button = new Class({
 
@@ -25,7 +26,7 @@ var Button = new Class({
     function Button (pad, index)
     {
         /**
-         * [description]
+         * A reference to the Gamepad that this Button belongs to.
          *
          * @name Phaser.Input.Gamepad.Button#pad
          * @type {Phaser.Input.Gamepad.Gamepad}
@@ -34,7 +35,7 @@ var Button = new Class({
         this.pad = pad;
 
         /**
-         * [description]
+         * An event emitter to use to emit the button events.
          *
          * @name Phaser.Input.Gamepad.Button#events
          * @type {Phaser.Events.EventEmitter}
@@ -43,7 +44,7 @@ var Button = new Class({
         this.events = pad.manager;
 
         /**
-         * [description]
+         * The index of this Button.
          *
          * @name Phaser.Input.Gamepad.Button#index
          * @type {integer}
@@ -55,17 +56,18 @@ var Button = new Class({
          * Between 0 and 1.
          *
          * @name Phaser.Input.Gamepad.Button#value
-         * @type {float}
+         * @type {number}
          * @default 0
          * @since 3.0.0
          */
         this.value = 0;
 
         /**
-         * Can be set for Analogue buttons to enable a 'pressure' threshold before considered as 'pressed'.
+         * Can be set for analogue buttons to enable a 'pressure' threshold,
+         * before a button is considered as being 'pressed'.
          *
          * @name Phaser.Input.Gamepad.Button#threshold
-         * @type {float}
+         * @type {number}
          * @default 1
          * @since 3.0.0
          */
@@ -83,30 +85,49 @@ var Button = new Class({
     },
 
     /**
-     * [description]
+     * Internal update handler for this Button.
+     * Called automatically by the Gamepad as part of its update.
      *
      * @method Phaser.Input.Gamepad.Button#update
+     * @private
      * @since 3.0.0
      *
-     * @param {GamepadButton} data - [description]
+     * @param {number} value - The GamepadButton value.
      */
-    update: function (data)
+    update: function (value)
     {
-        this.value = data.value;
+        this.value = value;
 
-        if (this.value >= this.threshold)
+        var pad = this.pad;
+        var index = this.index;
+
+        if (value >= this.threshold)
         {
             if (!this.pressed)
             {
                 this.pressed = true;
-                this.events.emit('down', this.pad, this, this.value, data);
+                this.events.emit('down', pad, this, value);
+                this.pad.emit('down', index, value, this);
             }
         }
         else if (this.pressed)
         {
             this.pressed = false;
-            this.events.emit('up', this.pad, this, this.value, data);
+            this.events.emit('up', pad, this, value);
+            this.pad.emit('up', index, value, this);
         }
+    },
+
+    /**
+     * Destroys this Button instance and releases external references it holds.
+     *
+     * @method Phaser.Input.Gamepad.Button#destroy
+     * @since 3.10.0
+     */
+    destroy: function ()
+    {
+        this.pad = null;
+        this.events = null;
     }
 
 });

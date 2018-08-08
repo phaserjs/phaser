@@ -11,16 +11,17 @@ var Class = require('../utils/Class');
 
 /**
  * @classdesc
- * [description]
+ * A three-dimensional matrix.
+ *
+ * Defaults to the identity matrix when instantiated.
  *
  * @class Matrix3
  * @memberOf Phaser.Math
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Math.Matrix3} [m] - [description]
+ * @param {Phaser.Math.Matrix3} [m] - Optional Matrix3 to copy values from.
  */
-
 var Matrix3 = new Class({
 
     initialize:
@@ -28,7 +29,7 @@ var Matrix3 = new Class({
     function Matrix3 (m)
     {
         /**
-         * [description]
+         * The matrix values.
          *
          * @name Phaser.Math.Matrix3#val
          * @type {Float32Array}
@@ -49,12 +50,12 @@ var Matrix3 = new Class({
     },
 
     /**
-     * [description]
+     * Make a clone of this Matrix3.
      *
      * @method Phaser.Math.Matrix3#clone
      * @since 3.0.0
      *
-     * @return {Phaser.Math.Matrix3} A new Matrix3 object.
+     * @return {Phaser.Math.Matrix3} A clone of this Matrix3.
      */
     clone: function ()
     {
@@ -62,14 +63,14 @@ var Matrix3 = new Class({
     },
 
     /**
-     * [description]
+     * This method is an alias for `Matrix3.copy`.
      *
      * @method Phaser.Math.Matrix3#set
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Matrix3} src - [description]
+     * @param {Phaser.Math.Matrix3} src - The Matrix to set the values of this Matrix's from.
      *
-     * @return {Phaser.Math.Matrix3} This Matrix3 object.
+     * @return {Phaser.Math.Matrix3} This Matrix3.
      */
     set: function (src)
     {
@@ -77,14 +78,14 @@ var Matrix3 = new Class({
     },
 
     /**
-     * [description]
+     * Copy the values of a given Matrix into this Matrix.
      *
      * @method Phaser.Math.Matrix3#copy
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Matrix3} src - [description]
+     * @param {Phaser.Math.Matrix3} src - The Matrix to copy the values from.
      *
-     * @return {Phaser.Math.Matrix3} This Matrix3 object.
+     * @return {Phaser.Math.Matrix3} This Matrix3.
      */
     copy: function (src)
     {
@@ -105,14 +106,14 @@ var Matrix3 = new Class({
     },
 
     /**
-     * [description]
+     * Copy the values of a given Matrix4 into this Matrix3.
      *
      * @method Phaser.Math.Matrix3#fromMat4
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Matrix4} m - [description]
+     * @param {Phaser.Math.Matrix4} m - The Matrix4 to copy the values from.
      *
-     * @return {Phaser.Math.Matrix3} This Matrix3 object.
+     * @return {Phaser.Math.Matrix3} This Matrix3.
      */
     fromMat4: function (m)
     {
@@ -133,14 +134,14 @@ var Matrix3 = new Class({
     },
 
     /**
-     * [description]
+     * Set the values of this Matrix from the given array.
      *
      * @method Phaser.Math.Matrix3#fromArray
      * @since 3.0.0
      *
-     * @param {array} a - [description]
+     * @param {array} a - The array to copy the values from.
      *
-     * @return {Phaser.Math.Matrix3} This Matrix3 object.
+     * @return {Phaser.Math.Matrix3} This Matrix3.
      */
     fromArray: function (a)
     {
@@ -160,12 +161,12 @@ var Matrix3 = new Class({
     },
 
     /**
-     * [description]
+     * Reset this Matrix to an identity (default) matrix.
      *
      * @method Phaser.Math.Matrix3#identity
      * @since 3.0.0
      *
-     * @return {Phaser.Math.Matrix3} This Matrix3 object.
+     * @return {Phaser.Math.Matrix3} This Matrix3.
      */
     identity: function ()
     {
@@ -185,12 +186,12 @@ var Matrix3 = new Class({
     },
 
     /**
-     * [description]
+     * Transpose this Matrix.
      *
      * @method Phaser.Math.Matrix3#transpose
      * @since 3.0.0
      *
-     * @return {Phaser.Math.Matrix3} This Matrix3 object.
+     * @return {Phaser.Math.Matrix3} This Matrix3.
      */
     transpose: function ()
     {
@@ -210,12 +211,12 @@ var Matrix3 = new Class({
     },
 
     /**
-     * [description]
+     * Invert this Matrix.
      *
      * @method Phaser.Math.Matrix3#invert
      * @since 3.0.0
      *
-     * @return {Phaser.Math.Matrix3} This Matrix3 object.
+     * @return {Phaser.Math.Matrix3} This Matrix3.
      */
     invert: function ()
     {
@@ -259,12 +260,12 @@ var Matrix3 = new Class({
     },
 
     /**
-     * [description]
+     * Calculate the adjoint, or adjugate, of this Matrix.
      *
      * @method Phaser.Math.Matrix3#adjoint
      * @since 3.0.0
      *
-     * @return {Phaser.Math.Matrix3} This Matrix3 object.
+     * @return {Phaser.Math.Matrix3} This Matrix3.
      */
     adjoint: function ()
     {
@@ -294,12 +295,12 @@ var Matrix3 = new Class({
     },
 
     /**
-     * [description]
+     * Calculate the determinant of this Matrix.
      *
      * @method Phaser.Math.Matrix3#determinant
      * @since 3.0.0
      *
-     * @return {number} [description]
+     * @return {number} The determinant of this Matrix.
      */
     determinant: function ()
     {
@@ -319,14 +320,14 @@ var Matrix3 = new Class({
     },
 
     /**
-     * [description]
+     * Multiply this Matrix by the given Matrix.
      *
      * @method Phaser.Math.Matrix3#multiply
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Matrix3} src - [description]
+     * @param {Phaser.Math.Matrix3} src - The Matrix to multiply this Matrix by.
      *
-     * @return {Phaser.Math.Matrix3} This Matrix3 object.
+     * @return {Phaser.Math.Matrix3} This Matrix3.
      */
     multiply: function (src)
     {
@@ -370,14 +371,14 @@ var Matrix3 = new Class({
     },
 
     /**
-     * [description]
+     * Translate this Matrix using the given Vector.
      *
      * @method Phaser.Math.Matrix3#translate
      * @since 3.0.0
      *
-     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4)} v - [description]
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4)} v - The Vector to translate this Matrix with.
      *
-     * @return {Phaser.Math.Matrix3} This Matrix3 object.
+     * @return {Phaser.Math.Matrix3} This Matrix3.
      */
     translate: function (v)
     {
@@ -393,14 +394,14 @@ var Matrix3 = new Class({
     },
 
     /**
-     * [description]
+     * Apply a rotation transformation to this Matrix.
      *
      * @method Phaser.Math.Matrix3#rotate
      * @since 3.0.0
      *
-     * @param {number} rad - [description]
+     * @param {number} rad - The angle in radians to rotate by.
      *
-     * @return {Phaser.Math.Matrix3} This Matrix3 object.
+     * @return {Phaser.Math.Matrix3} This Matrix3.
      */
     rotate: function (rad)
     {
@@ -428,14 +429,16 @@ var Matrix3 = new Class({
     },
 
     /**
-     * [description]
+     * Apply a scale transformation to this Matrix.
+     *
+     * Uses the `x` and `y` components of the given Vector to scale the Matrix.
      *
      * @method Phaser.Math.Matrix3#scale
      * @since 3.0.0
      *
-     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4)} v - [description]
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4)} v - The Vector to scale this Matrix with.
      *
-     * @return {Phaser.Math.Matrix3} This Matrix3 object.
+     * @return {Phaser.Math.Matrix3} This Matrix3.
      */
     scale: function (v)
     {
@@ -455,14 +458,14 @@ var Matrix3 = new Class({
     },
 
     /**
-     * [description]
+     * Set the values of this Matrix from the given Quaternion.
      *
      * @method Phaser.Math.Matrix3#fromQuat
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Quaternion} q - [description]
+     * @param {Phaser.Math.Quaternion} q - The Quaternion to set the values of this Matrix from.
      *
-     * @return {Phaser.Math.Matrix3} This Matrix3 object.
+     * @return {Phaser.Math.Matrix3} This Matrix3.
      */
     fromQuat: function (q)
     {
@@ -512,7 +515,7 @@ var Matrix3 = new Class({
      *
      * @param {Phaser.Math.Matrix4} m - [description]
      *
-     * @return {Phaser.Math.Matrix3} This Matrix3 object.
+     * @return {Phaser.Math.Matrix3} This Matrix3.
      */
     normalFromMat4: function (m)
     {

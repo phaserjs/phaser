@@ -41,7 +41,7 @@ var RectangleContains = require('../../geom/rectangle/Contains');
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Visible
  *
- * @param {Phaser.Scene} scene - [description]
+ * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs.
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
  * @param {number} [width=1] - The width of the Game Object.
@@ -100,6 +100,8 @@ var Zone = new Class({
          * @since 3.0.0
          */
         this.blendMode = BlendModes.NORMAL;
+
+        this.updateDisplayOrigin();
     },
 
     /**
@@ -256,6 +258,18 @@ var Zone = new Class({
         return this;
     },
 
+    /**
+     * A NOOP method so you can pass a Zone to a Container.
+     * Calling this method will do nothing. It is intentionally empty.
+     *
+     * @method Phaser.GameObjects.Zone#setAlpha
+     * @private
+     * @since 3.11.0
+     */
+    setAlpha: function ()
+    {
+    },
+    
     /**
      * A Zone does not render.
      *

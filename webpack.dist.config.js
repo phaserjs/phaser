@@ -26,14 +26,7 @@ module.exports = {
         umdNamedDefine: true
     },
 
-    module: {
-        rules: [
-            {
-                test: [ /\.vert$/, /\.frag$/ ],
-                use: 'raw-loader'
-            }
-        ]
-    },
+    performance: { hints: false },
 
     optimization: {
         minimizer: [
@@ -55,7 +48,6 @@ module.exports = {
 
     plugins: [
         new webpack.DefinePlugin({
-            "typeof SHADER_REQUIRE": JSON.stringify(false),
             "typeof CANVAS_RENDERER": JSON.stringify(true),
             "typeof WEBGL_RENDERER": JSON.stringify(true)
         }),

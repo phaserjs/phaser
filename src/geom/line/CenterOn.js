@@ -6,16 +6,16 @@
 
 
 /**
- * [description]
+ * Center a line on the given coordinates.
  *
  * @function Phaser.Geom.Line.CenterOn
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Line} line - [description]
- * @param {number} x - [description]
- * @param {number} y - [description]
+ * @param {Phaser.Geom.Line} line - The line to center.
+ * @param {number} x - The horizontal coordinate to center the line on.
+ * @param {number} y - The vertical coordinate to center the line on.
  *
- * @return {Phaser.Geom.Line} [description]
+ * @return {Phaser.Geom.Line} The centered line.
  */
 var CenterOn = function (line, x, y)
 {

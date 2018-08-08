@@ -21,7 +21,7 @@ var Acceleration = {
      * @param {number} x - The horizontal acceleration
      * @param {number} [y=x] - The vertical acceleration
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setAcceleration: function (x, y)
     {
@@ -38,7 +38,7 @@ var Acceleration = {
      *
      * @param {number} value - The horizontal acceleration
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setAccelerationX: function (value)
     {
@@ -55,7 +55,7 @@ var Acceleration = {
      *
      * @param {number} value - The vertical acceleration
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setAccelerationY: function (value)
     {

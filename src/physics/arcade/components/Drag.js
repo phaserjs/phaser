@@ -21,7 +21,7 @@ var Drag = {
      * @param {number} x - [description]
      * @param {number} [y=x] - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setDrag: function (x, y)
     {
@@ -38,7 +38,7 @@ var Drag = {
      *
      * @param {number} value - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setDragX: function (value)
     {
@@ -55,11 +55,28 @@ var Drag = {
      *
      * @param {number} value - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setDragY: function (value)
     {
         this.body.drag.y = value;
+
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Physics.Arcade.Components.Drag#setDamping
+     * @since 3.10.0
+     *
+     * @param {boolean} value - `true` to use damping for deceleration, or `false` to use linear deceleration.
+     *
+     * @return {this} This Game Object.
+     */
+    setDamping: function (value)
+    {
+        this.body.useDamping = value;
 
         return this;
     }

@@ -4,8 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = require('../../gameobjects/GameObject');
-
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -19,65 +17,96 @@ var GameObject = require('../../gameobjects/GameObject');
  * @param {Phaser.Tilemaps.DynamicTilemapLayer} src - The Game Object being rendered in this call.
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPercentage, camera)
+var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
+    src.cull(camera);
+
+    var renderTiles = src.culledTiles;
+    var tileCount = renderTiles.length;
+
+    if (tileCount === 0)
     {
         return;
     }
 
-    src.cull(camera);
+    var camMatrix = renderer._tempMatrix1;
+    var layerMatrix = renderer._tempMatrix2;
+    var calcMatrix = renderer._tempMatrix3;
 
-    var renderTiles = src.culledTiles;
-    var length = renderTiles.length;
-    var image = src.tileset.image.getSourceImage();
-    var tileset = this.tileset;
+    layerMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
 
-    var tx = src.x - camera.scrollX * src.scrollFactorX;
-    var ty = src.y - camera.scrollY * src.scrollFactorY;
-    var ctx = renderer.gameContext;
+    camMatrix.copyFrom(camera.matrix);
+
+    if (parentMatrix)
+    {
+        //  Multiply the camera by the parent matrix
+        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
+
+        //  Undo the camera scroll
+        layerMatrix.e = src.x;
+        layerMatrix.f = src.y;
+
+        //  Multiply by the Sprite matrix, store result in calcMatrix
+        camMatrix.multiply(layerMatrix, calcMatrix);
+    }
+    else
+    {
+        layerMatrix.e -= camera.scrollX * src.scrollFactorX;
+        layerMatrix.f -= camera.scrollY * src.scrollFactorY;
+
+        //  Multiply by the Sprite matrix, store result in calcMatrix
+        camMatrix.multiply(layerMatrix, calcMatrix);
+    }
+
+    var tileset = src.tileset;
+    var ctx = renderer.currentContext;
+    var image = tileset.image.getSourceImage();
 
     ctx.save();
-    ctx.translate(tx, ty);
-    ctx.rotate(src.rotation);
-    ctx.scale(src.scaleX, src.scaleY);
-    ctx.scale(src.flipX ? -1 : 1, src.flipY ? -1 : 1);
 
-    for (var index = 0; index < length; ++index)
+    calcMatrix.copyToContext(ctx);
+
+    var alpha = camera.alpha * src.alpha;
+
+    for (var i = 0; i < tileCount; i++)
     {
-        var tile = renderTiles[index];
+        var tile = renderTiles[i];
 
         var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
-        if (tileTexCoords === null) { continue; }
 
-        var halfWidth = tile.width / 2;
-        var halfHeight = tile.height / 2;
-
-        ctx.save();
-        ctx.translate(tile.pixelX + halfWidth, tile.pixelY + halfHeight);
-
-        if (tile.rotation !== 0)
+        if (tileTexCoords)
         {
-            ctx.rotate(tile.rotation);
+            var halfWidth = tile.width / 2;
+            var halfHeight = tile.height / 2;
+    
+            ctx.save();
+
+            ctx.translate(tile.pixelX + halfWidth, tile.pixelY + halfHeight);
+    
+            if (tile.rotation !== 0)
+            {
+                ctx.rotate(tile.rotation);
+            }
+    
+            if (tile.flipX || tile.flipY)
+            {
+                ctx.scale((tile.flipX) ? -1 : 1, (tile.flipY) ? -1 : 1);
+            }
+    
+            ctx.globalAlpha = alpha * tile.alpha;
+    
+            ctx.drawImage(
+                image,
+                tileTexCoords.x, tileTexCoords.y,
+                tile.width, tile.height,
+                -halfWidth, -halfHeight,
+                tile.width, tile.height
+            );
+    
+            ctx.restore();
         }
-
-        if (tile.flipX || tile.flipY)
-        {
-            ctx.scale(tile.flipX ? -1 : 1, tile.flipY ? -1 : 1);
-        }
-
-        ctx.globalAlpha = src.alpha * tile.alpha;
-
-        ctx.drawImage(
-            image,
-            tileTexCoords.x, tileTexCoords.y,
-            tile.width, tile.height,
-            -halfWidth, -halfHeight,
-            tile.width, tile.height
-        );
-
-        ctx.restore();
     }
 
     ctx.restore();

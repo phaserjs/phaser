@@ -13,7 +13,7 @@ module.exports = {
     Axis: require('./Axis'),
     Button: require('./Button'),
     Gamepad: require('./Gamepad'),
-    GamepadManager: require('./GamepadManager'),
+    GamepadPlugin: require('./GamepadPlugin'),
     
     Configs: require('./configs/')
 };

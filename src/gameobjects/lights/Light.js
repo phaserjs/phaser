@@ -9,7 +9,13 @@ var Utils = require('../../renderer/webgl/Utils');
 
 /**
  * @classdesc
- * [description]
+ * A 2D point light.
+ *
+ * These are typically created by a {@link Phaser.GameObjects.LightsManager}, available from within a scene via `this.lights`.
+ *
+ * Any Game Objects using the Light2D pipeline will then be affected by these Lights.
+ *
+ * They can also simply be used to represent a point light for your own purposes.
  *
  * @class Light
  * @memberOf Phaser.GameObjects
@@ -19,9 +25,9 @@ var Utils = require('../../renderer/webgl/Utils');
  * @param {number} x - The horizontal position of the light.
  * @param {number} y - The vertical position of the light.
  * @param {number} radius - The radius of the light.
- * @param {number} r - The red color. A value between 0 and 1.
- * @param {number} g - The green color. A value between 0 and 1.
- * @param {number} b - The blue color. A value between 0 and 1.
+ * @param {number} r - The red color of the light. A value between 0 and 1.
+ * @param {number} g - The green color of the light. A value between 0 and 1.
+ * @param {number} b - The blue color of the light. A value between 0 and 1.
  * @param {number} intensity - The intensity of the light.
  */
 var Light = new Class({
@@ -31,7 +37,7 @@ var Light = new Class({
     function Light (x, y, radius, r, g, b, intensity)
     {
         /**
-         * [description]
+         * The horizontal position of the light.
          *
          * @name Phaser.GameObjects.Light#x
          * @type {number}
@@ -40,7 +46,7 @@ var Light = new Class({
         this.x = x;
 
         /**
-         * [description]
+         * The vertical position of the light.
          *
          * @name Phaser.GameObjects.Light#y
          * @type {number}
@@ -49,7 +55,7 @@ var Light = new Class({
         this.y = y;
 
         /**
-         * [description]
+         * The radius of the light.
          *
          * @name Phaser.GameObjects.Light#radius
          * @type {number}
@@ -58,7 +64,7 @@ var Light = new Class({
         this.radius = radius;
 
         /**
-         * [description]
+         * The red color of the light. A value between 0 and 1.
          *
          * @name Phaser.GameObjects.Light#r
          * @type {number}
@@ -67,7 +73,7 @@ var Light = new Class({
         this.r = r;
 
         /**
-         * [description]
+         * The green color of the light. A value between 0 and 1.
          *
          * @name Phaser.GameObjects.Light#g
          * @type {number}
@@ -76,7 +82,7 @@ var Light = new Class({
         this.g = g;
 
         /**
-         * [description]
+         * The blue color of the light. A value between 0 and 1.
          *
          * @name Phaser.GameObjects.Light#b
          * @type {number}
@@ -85,7 +91,7 @@ var Light = new Class({
         this.b = b;
 
         /**
-         * [description]
+         * The intensity of the light.
          *
          * @name Phaser.GameObjects.Light#intensity
          * @type {number}
@@ -94,7 +100,7 @@ var Light = new Class({
         this.intensity = intensity;
 
         /**
-         * [description]
+         * The horizontal scroll factor of the light.
          *
          * @name Phaser.GameObjects.Light#scrollFactorX
          * @type {number}
@@ -103,7 +109,7 @@ var Light = new Class({
         this.scrollFactorX = 1.0;
 
         /**
-         * [description]
+         * The vertical scroll factor of the light.
          *
          * @name Phaser.GameObjects.Light#scrollFactorY
          * @type {number}
@@ -113,7 +119,10 @@ var Light = new Class({
     },
 
     /**
-     * [description]
+     * Set the properties of the light.
+     *
+     * Sets both horizontal and vertical scroll factor to 1. Use {@link Phaser.GameObjects.Light#setScrollFactor} to set
+     * the scroll factor.
      *
      * @method Phaser.GameObjects.Light#set
      * @since 3.0.0
@@ -148,7 +157,7 @@ var Light = new Class({
     },
 
     /**
-     * [description]
+     * Set the scroll factor of the light.
      *
      * @method Phaser.GameObjects.Light#setScrollFactor
      * @since 3.0.0
@@ -170,33 +179,33 @@ var Light = new Class({
     },
 
     /**
-     * [description]
+     * Set the color of the light from a single integer RGB value.
      *
      * @method Phaser.GameObjects.Light#setColor
      * @since 3.0.0
      *
-     * @param {number} rgb - [description]
+     * @param {number} rgb - The integer RGB color of the light.
      *
      * @return {Phaser.GameObjects.Light} This Light object.
      */
     setColor: function (rgb)
     {
         var color = Utils.getFloatsFromUintRGB(rgb);
-        
+
         this.r = color[0];
         this.g = color[1];
         this.b = color[2];
-        
+
         return this;
     },
 
     /**
-     * [description]
+     * Set the intensity of the light.
      *
      * @method Phaser.GameObjects.Light#setIntensity
      * @since 3.0.0
      *
-     * @param {number} intensity - [description]
+     * @param {number} intensity - The intensity of the light.
      *
      * @return {Phaser.GameObjects.Light} This Light object.
      */
@@ -208,7 +217,7 @@ var Light = new Class({
     },
 
     /**
-     * [description]
+     * Set the position of the light.
      *
      * @method Phaser.GameObjects.Light#setPosition
      * @since 3.0.0
@@ -227,12 +236,12 @@ var Light = new Class({
     },
 
     /**
-     * [description]
+     * Set the radius of the light.
      *
      * @method Phaser.GameObjects.Light#setRadius
      * @since 3.0.0
      *
-     * @param {number} radius - [description]
+     * @param {number} radius - The radius of the light.
      *
      * @return {Phaser.GameObjects.Light} This Light object.
      */

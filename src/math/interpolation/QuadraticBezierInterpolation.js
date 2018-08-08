@@ -28,17 +28,17 @@ function P2 (t, p)
 // https://github.com/mrdoob/three.js/blob/master/src/extras/core/Interpolations.js
 
 /**
- * [description]
+ * A quadratic bezier interpolation method.
  *
  * @function Phaser.Math.Interpolation.QuadraticBezier
  * @since 3.2.0
  *
- * @param {float} t - [description]
- * @param {number} p0 - [description]
- * @param {number} p1 - [description]
- * @param {number} p2 - [description]
+ * @param {number} t - The percentage of interpolation, between 0 and 1.
+ * @param {number} p0 - The start point.
+ * @param {number} p1 - The control point.
+ * @param {number} p2 - The end point.
  *
- * @return {number} [description]
+ * @return {number} The interpolated value.
  */
 var QuadraticBezierInterpolation = function (t, p0, p1, p2)
 {

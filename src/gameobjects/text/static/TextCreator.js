@@ -17,12 +17,15 @@ var Text = require('./Text');
  * @method Phaser.GameObjects.GameObjectCreator#text
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {object} config - The configuration object this Game Object will use to create itself.
+ * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.Text} The Game Object that was created.
  */
-GameObjectCreator.register('text', function (config)
+GameObjectCreator.register('text', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     // style Object = {
     //     font: [ 'font', '16px Courier' ],
     //     backgroundColor: [ 'backgroundColor', null ],
@@ -59,6 +62,11 @@ GameObjectCreator.register('text', function (config)
     }
 
     var text = new Text(this.scene, 0, 0, content, style);
+
+    if (addToScene !== undefined)
+    {
+        config.add = addToScene;
+    }
 
     BuildGameObject(this.scene, text, config);
 

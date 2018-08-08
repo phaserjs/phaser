@@ -21,7 +21,7 @@ var Phaser = {
     Class: require('./utils/Class'),
     Data: require('./data'),
     Display: { Masks: require('./display/mask') },
-    EventEmitter: require('./events/EventEmitter'),
+    Events: require('./events'),
     Game: require('./boot/Game'),
     GameObjects: {
         DisplayList: require('./gameobjects/DisplayList'),
@@ -55,17 +55,25 @@ var Phaser = {
             AnimationJSONFile: require('./loader/filetypes/AnimationJSONFile'),
             AtlasJSONFile: require('./loader/filetypes/AtlasJSONFile'),
             AudioFile: require('./loader/filetypes/AudioFile'),
-            AudioSprite: require('./loader/filetypes/AudioSprite'),
+            AudioSpriteFile: require('./loader/filetypes/AudioSpriteFile'),
             HTML5AudioFile: require('./loader/filetypes/HTML5AudioFile'),
             ImageFile: require('./loader/filetypes/ImageFile'),
             JSONFile: require('./loader/filetypes/JSONFile'),
-            MultiAtlas: require('./loader/filetypes/MultiAtlas'),
+            MultiAtlasFile: require('./loader/filetypes/MultiAtlasFile'),
             PluginFile: require('./loader/filetypes/PluginFile'),
             ScriptFile: require('./loader/filetypes/ScriptFile'),
             SpriteSheetFile: require('./loader/filetypes/SpriteSheetFile'),
             TextFile: require('./loader/filetypes/TextFile'),
             XMLFile: require('./loader/filetypes/XMLFile')
-        }
+        },
+        File: require('./loader/File'),
+        FileTypesManager: require('./loader/FileTypesManager'),
+        GetURL: require('./loader/GetURL'),
+        LoaderPlugin: require('./loader/LoaderPlugin'),
+        MergeXHRSettings: require('./loader/MergeXHRSettings'),
+        MultiFile: require('./loader/MultiFile'),
+        XHRLoader: require('./loader/XHRLoader'),
+        XHRSettings: require('./loader/XHRSettings')
     },
     Math: {
         Between: require('./math/Between'),
@@ -74,6 +82,7 @@ var Phaser = {
         RadToDeg: require('./math/RadToDeg'),
         Vector2: require('./math/Vector2')
     },
+    Plugins: require('./plugins'),
     Renderer: require('./renderer'),
     Scene: require('./scene/Scene'),
     Scenes: require('./scene'),

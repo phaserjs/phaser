@@ -6,16 +6,17 @@
  */
 
 var Class = require('../utils/Class');
+var Clone = require('../utils/object/Clone');
 var EventEmitter = require('eventemitter3');
 var NOOP = require('../utils/NOOP');
 
 /**
  * @callback EachActiveSoundCallback
  *
- * @param {Phaser.Sound.BaseSoundManager} manager - [description]
- * @param {Phaser.Sound.BaseSound} sound - [description]
- * @param {number} index - [description]
- * @param {Phaser.Sound.BaseSound[]} sounds - [description]
+ * @param {Phaser.Sound.BaseSoundManager} manager - The SoundManager
+ * @param {Phaser.Sound.BaseSound} sound - The current active Sound
+ * @param {number} index - The index of the current active Sound
+ * @param {Phaser.Sound.BaseSound[]} sounds - All sounds
  */
 
 /**
@@ -64,6 +65,16 @@ var BaseSoundManager = new Class({
         this.game = game;
 
         /**
+         * Local reference to the JSON Cache, as used by Audio Sprites.
+         *
+         * @name Phaser.Sound.BaseSoundManager#jsonCache
+         * @type {Phaser.Cache.BaseCache}
+         * @readOnly
+         * @since 3.7.0
+         */
+        this.jsonCache = game.cache.json;
+
+        /**
          * An array containing all added sounds.
          *
          * @name Phaser.Sound.BaseSoundManager#sounds
@@ -104,24 +115,6 @@ var BaseSoundManager = new Class({
          * @since 3.0.0
          */
         this.pauseOnBlur = true;
-
-        game.events.on('blur', function ()
-        {
-            if (this.pauseOnBlur)
-            {
-                this.onBlur();
-            }
-        }, this);
-
-        game.events.on('focus', function ()
-        {
-            if (this.pauseOnBlur)
-            {
-                this.onFocus();
-            }
-        }, this);
-
-        game.events.once('destroy', this.destroy, this);
 
         /**
          * Property that actually holds the value of global playback rate.
@@ -168,6 +161,25 @@ var BaseSoundManager = new Class({
          * @since 3.0.0
          */
         this.unlocked = false;
+
+        game.events.on('blur', function ()
+        {
+            if (this.pauseOnBlur)
+            {
+                this.onBlur();
+            }
+        }, this);
+
+        game.events.on('focus', function ()
+        {
+            if (this.pauseOnBlur)
+            {
+                this.onFocus();
+            }
+        }, this);
+
+        game.events.on('prestep', this.update, this);
+        game.events.once('destroy', this.destroy, this);
     },
 
     /**
@@ -186,6 +198,8 @@ var BaseSoundManager = new Class({
 
     /**
      * Adds a new audio sprite sound into the sound manager.
+     * Audio Sprites are a combination of audio files and a JSON configuration.
+     * The JSON follows the format of that created by https://github.com/tonistiigi/audiosprite
      *
      * @method Phaser.Sound.BaseSoundManager#addAudioSprite
      * @since 3.0.0
@@ -197,9 +211,11 @@ var BaseSoundManager = new Class({
      */
     addAudioSprite: function (key, config)
     {
+        if (config === undefined) { config = {}; }
+
         var sound = this.add(key, config);
 
-        sound.spritemap = this.game.cache.json.get(key).spritemap;
+        sound.spritemap = this.jsonCache.get(key).spritemap;
 
         for (var markerName in sound.spritemap)
         {
@@ -208,13 +224,17 @@ var BaseSoundManager = new Class({
                 continue;
             }
 
+            var markerConfig = Clone(config);
+
             var marker = sound.spritemap[markerName];
+
+            markerConfig.loop = (marker.hasOwnProperty('loop')) ? marker.loop : false;
 
             sound.addMarker({
                 name: markerName,
                 start: marker.start,
                 duration: marker.end - marker.start,
-                config: config
+                config: markerConfig
             });
         }
 
@@ -507,7 +527,7 @@ var BaseSoundManager = new Class({
      * @private
      * @since 3.0.0
      *
-     * @param {EachActiveSoundCallback} callback - Callback function. (sound: ISound, index: number, array: ISound[]) => void
+     * @param {EachActiveSoundCallback} callback - Callback function. (manager: Phaser.Sound.BaseSoundManager, sound: Phaser.Sound.BaseSound, index: number, sounds: Phaser.Manager.BaseSound[]) => void
      * @param {*} [scope] - Callback context.
      */
     forEachActiveSound: function (callback, scope)

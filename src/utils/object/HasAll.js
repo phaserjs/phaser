@@ -7,7 +7,7 @@
 /**
  * Verifies that an object contains all requested keys
  *
- * @function Phaser.Utils.Object.HasAll
+ * @function Phaser.Utils.Objects.HasAll
  * @since 3.0.0
  *
  * @param {object} source - an object on which to check for key existence

@@ -15,6 +15,8 @@ var GetValue = require('../../utils/object/GetValue');
  *
  * @param {Phaser.Scene} scene - A reference to the Phaser Scene.
  * @param {Phaser.GameObjects.RetroFont.Config} config - The font configuration object.
+ *
+ * @return {object} A parsed Bitmap Font data entry for the Bitmap Font cache.
  */
 var ParseRetroFont = function (scene, config)
 {
@@ -34,6 +36,7 @@ var ParseRetroFont = function (scene, config)
     var offsetY = GetValue(config, 'offset.y', 0);
     var spacingX = GetValue(config, 'spacing.x', 0);
     var spacingY = GetValue(config, 'spacing.y', 0);
+    var lineSpacing = GetValue(config, 'lineSpacing', 0);
 
     var charsPerRow = GetValue(config, 'charsPerRow', null);
 
@@ -54,7 +57,7 @@ var ParseRetroFont = function (scene, config)
         retroFont: true,
         font: key,
         size: w,
-        lineHeight: h,
+        lineHeight: h + lineSpacing,
         chars: {}
     };
 

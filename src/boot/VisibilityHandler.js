@@ -48,11 +48,12 @@
  * @fires Phaser.Boot.VisibilityHandler#focus
  * @since 3.0.0
  *
- * @param {Phaser.Events.EventEmitter} eventEmitter - The EventEmitter that will emit the visibility events.
+ * @param {Phaser.Game} game - The Game instance this Visibility Handler is working on.
  */
-var VisibilityHandler = function (eventEmitter)
+var VisibilityHandler = function (game)
 {
     var hiddenVar;
+    var eventEmitter = game.events;
 
     if (document.hidden !== undefined)
     {
@@ -103,6 +104,32 @@ var VisibilityHandler = function (eventEmitter)
     {
         eventEmitter.emit('focus');
     };
+
+    //  Automatically give the window focus unless config says otherwise
+    if (window.focus && game.config.autoFocus)
+    {
+        window.focus();
+
+        game.canvas.addEventListener('mousedown', function ()
+        {
+            window.focus();
+        }, { passive: true });
+    }
+
+    if (game.canvas)
+    {
+        game.canvas.onmouseout = function ()
+        {
+            game.isOver = false;
+            eventEmitter.emit('mouseout');
+        };
+
+        game.canvas.onmouseover = function ()
+        {
+            game.isOver = true;
+            eventEmitter.emit('mouseover');
+        };
+    }
 };
 
 module.exports = VisibilityHandler;

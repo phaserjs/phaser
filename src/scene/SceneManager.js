@@ -122,6 +122,17 @@ var SceneManager = new Class({
          */
         this.isBooted = false;
 
+        /**
+         * Do any of the Cameras in any of the Scenes require a custom viewport?
+         * If not we can skip scissor tests.
+         *
+         * @name Phaser.Scenes.SceneManager#customViewports
+         * @type {number}
+         * @default 0
+         * @since 3.12.0
+         */
+        this.customViewports = 0;
+
         if (sceneConfig)
         {
             if (!Array.isArray(sceneConfig))
@@ -140,7 +151,7 @@ var SceneManager = new Class({
                 });
             }
         }
-        
+
         game.events.once('ready', this.bootQueue, this);
     },
 
@@ -377,7 +388,7 @@ var SceneManager = new Class({
      * The Scene is removed from the local scenes array, it's key is cleared from the keys
      * cache and Scene.Systems.destroy is then called on it.
      *
-     * If the SceneManager is processing the Scenes when this method is called it wil
+     * If the SceneManager is processing the Scenes when this method is called it will
      * queue the operation for the next update sequence.
      *
      * @method Phaser.Scenes.SceneManager#remove
@@ -440,6 +451,8 @@ var SceneManager = new Class({
         if (scene.init)
         {
             scene.init.call(scene, settings.data);
+
+            settings.status = CONST.INIT;
 
             if (settings.isTransition)
             {
@@ -540,7 +553,7 @@ var SceneManager = new Class({
         {
             var sys = this.scenes[i].sys;
 
-            if (sys.settings.status === CONST.RUNNING)
+            if (sys.settings.status > CONST.START && sys.settings.status <= CONST.RUNNING)
             {
                 sys.step(time, delta);
             }
@@ -607,14 +620,20 @@ var SceneManager = new Class({
 
         if (scene.create)
         {
-            scene.sys.settings.status = CONST.CREATING;
+            settings.status = CONST.CREATING;
 
-            scene.create.call(scene, scene.sys.settings.data);
+            scene.create.call(scene, settings.data);
 
             if (settings.isTransition)
             {
                 sys.events.emit('transitionstart', settings.transitionFrom, settings.transitionDuration);
             }
+        }
+
+        //  If the Scene has an update function we'll set it now, otherwise it'll remain as NOOP
+        if (scene.update)
+        {
+            sys.sceneUpdate = scene.update;
         }
 
         settings.status = CONST.RUNNING;
@@ -659,11 +678,6 @@ var SceneManager = new Class({
             newScene.sys.settings.key = key;
 
             newScene.sys.init(this.game);
-
-            if (!newScene.update)
-            {
-                newScene.update = NOOP;
-            }
 
             return newScene;
         }
@@ -735,12 +749,6 @@ var SceneManager = new Class({
         for (var i = 0; i < defaults.length; i++)
         {
             var sceneCallback = GetValue(sceneConfig, defaults[i], null);
-
-            //  Must always have an update function, no matter what (the rest are optional)
-            if (defaults[i] === 'update' && !sceneCallback)
-            {
-                sceneCallback = NOOP;
-            }
 
             if (sceneCallback)
             {
@@ -930,16 +938,17 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The Scene to pause.
+     * @param {object} [data] - An optional data object that will be passed to the Scene and emitted by its pause event.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
-    pause: function (key)
+    pause: function (key, data)
     {
         var scene = this.getScene(key);
 
         if (scene)
         {
-            scene.sys.pause();
+            scene.sys.pause(data);
         }
 
         return this;
@@ -952,16 +961,17 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The Scene to resume.
+     * @param {object} [data] - An optional data object that will be passed to the Scene and emitted by its resume event.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
-    resume: function (key)
+    resume: function (key, data)
     {
         var scene = this.getScene(key);
 
         if (scene)
         {
-            scene.sys.resume();
+            scene.sys.resume(data);
         }
 
         return this;
@@ -974,16 +984,17 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The Scene to put to sleep.
+     * @param {object} [data] - An optional data object that will be passed to the Scene and emitted by its sleep event.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
-    sleep: function (key)
+    sleep: function (key, data)
     {
         var scene = this.getScene(key);
 
         if (scene && !scene.sys.isTransitioning())
         {
-            scene.sys.sleep();
+            scene.sys.sleep(data);
         }
 
         return this;
@@ -996,19 +1007,71 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The Scene to wake up.
+     * @param {object} [data] - An optional data object that will be passed to the Scene and emitted by its wake event.
      *
      * @return {Phaser.Scenes.SceneManager} This SceneManager.
      */
-    wake: function (key)
+    wake: function (key, data)
     {
         var scene = this.getScene(key);
 
         if (scene)
         {
-            scene.sys.wake();
+            scene.sys.wake(data);
         }
 
         return this;
+    },
+
+    /**
+     * Runs the given Scene, but does not change the state of this Scene.
+     *
+     * If the given Scene is paused, it will resume it. If sleeping, it will wake it.
+     * If not running at all, it will be started.
+     *
+     * Use this if you wish to open a modal Scene by calling `pause` on the current
+     * Scene, then `run` on the modal Scene.
+     *
+     * @method Phaser.Scenes.SceneManager#run
+     * @since 3.10.0
+     *
+     * @param {string} key - The Scene to run.
+     * @param {object} [data] - A data object that will be passed to the Scene on start, wake, or resume.
+     *
+     * @return {Phaser.Scenes.SceneManager} This Scene Manager.
+     */
+    run: function (key, data)
+    {
+        var scene = this.getScene(key);
+
+        if (!scene)
+        {
+            for (var i = 0; i < this._pending.length; i++)
+            {
+                if (this._pending[i].key === key)
+                {
+                    this.queueOp('start', key, data);
+                    break;
+                }
+            }
+            return this;
+        }
+
+        if (scene.sys.isSleeping())
+        {
+            //  Sleeping?
+            scene.sys.wake(data);
+        }
+        else if (scene.sys.isBooted && !scene.sys.isActive())
+        {
+            //  Paused?
+            scene.sys.resume(data);
+        }
+        else
+        {
+            //  Not actually running?
+            this.start(key, data);
+        }
     },
 
     /**
@@ -1049,11 +1112,11 @@ var SceneManager = new Class({
             }
 
             //  Files payload?
-            if (loader && Array.isArray(scene.sys.settings.files))
+            if (loader && scene.sys.settings.hasOwnProperty('pack'))
             {
                 loader.reset();
 
-                if (loader.loadArray(scene.sys.settings.files))
+                if (loader.addPack({ payload: scene.sys.settings.pack }))
                 {
                     scene.sys.settings.status = CONST.LOADING;
 
@@ -1480,7 +1543,7 @@ var SceneManager = new Class({
      */
     destroy: function ()
     {
-        for (var i = this.scenes.length - 1; i >= 0; i--)
+        for (var i = 0; i < this.scenes.length; i++)
         {
             var sys = this.scenes[i].sys;
 

@@ -8,10 +8,15 @@ var Class = require('../../utils/Class');
 var File = require('../File');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetURL = require('../GetURL');
+var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
  * @classdesc
- * [description]
+ * A single Audio File suitable for loading by the Loader.
+ *
+ * These are created when you use the Phaser.Loader.LoaderPlugin#audio method and are not typically created directly.
+ * 
+ * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#audio.
  *
  * @class HTML5AudioFile
  * @extends Phaser.Loader.File
@@ -19,10 +24,10 @@ var GetURL = require('../GetURL');
  * @constructor
  * @since 3.0.0
  *
- * @param {string} key - [description]
- * @param {string} url - [description]
- * @param {string} path - [description]
- * @param {XHRSettingsObject} [config] - [description]
+ * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
+ * @param {(string|Phaser.Loader.FileTypes.AudioFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {string} [urlConfig] - The absolute or relative URL to load this file from.
+ * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var HTML5AudioFile = new Class({
 
@@ -30,28 +35,43 @@ var HTML5AudioFile = new Class({
 
     initialize:
 
-    function HTML5AudioFile (loader, key, url, config)
+    function HTML5AudioFile (loader, key, urlConfig, audioConfig)
     {
-        this.locked = 'ontouchstart' in window;
+        if (IsPlainObject(key))
+        {
+            var config = key;
 
-        this.loaded = false;
+            key = GetFastValue(config, 'key');
+            audioConfig = GetFastValue(config, 'config', audioConfig);
+        }
 
         var fileConfig = {
             type: 'audio',
             cache: loader.cacheManager.audio,
-            extension: GetFastValue(url, 'type', ''),
+            extension: urlConfig.type,
             key: key,
-            url: GetFastValue(url, 'uri', url),
-            path: loader.path,
-            config: config
+            url: urlConfig.url,
+            config: audioConfig
         };
 
         File.call(this, loader, fileConfig);
+
+        //  New properties specific to this class
+        this.locked = 'ontouchstart' in window;
+        this.loaded = false;
+        this.filesLoaded = 0;
+        this.filesTotal = 0;
     },
 
+    /**
+     * Called when the file finishes loading.
+     *
+     * @method Phaser.Loader.FileTypes.HTML5AudioFile#onLoad
+     * @since 3.0.0
+     */
     onLoad: function ()
     {
-        if(this.loaded)
+        if (this.loaded)
         {
             return;
         }
@@ -61,11 +81,18 @@ var HTML5AudioFile = new Class({
         this.loader.nextFile(this, true);
     },
 
+    /**
+     * Called if the file errors while loading.
+     *
+     * @method Phaser.Loader.FileTypes.HTML5AudioFile#onError
+     * @since 3.0.0
+     */
     onError: function ()
     {
         for (var i = 0; i < this.data.length; i++)
         {
             var audio = this.data[i];
+
             audio.oncanplaythrough = null;
             audio.onerror = null;
         }
@@ -73,9 +100,16 @@ var HTML5AudioFile = new Class({
         this.loader.nextFile(this, false);
     },
 
+    /**
+     * Called during the file load progress. Is sent a DOM ProgressEvent.
+     *
+     * @method Phaser.Loader.FileTypes.HTML5AudioFile#onProgress
+     * @since 3.0.0
+     */
     onProgress: function (event)
     {
         var audio = event.target;
+
         audio.oncanplaythrough = null;
         audio.onerror = null;
 
@@ -85,17 +119,22 @@ var HTML5AudioFile = new Class({
 
         this.loader.emit('fileprogress', this, this.percentComplete);
 
-        if(this.filesLoaded === this.filesTotal)
+        if (this.filesLoaded === this.filesTotal)
         {
             this.onLoad();
         }
     },
 
-    //  Called by the Loader, starts the actual file downloading
-    load: function (loader)
+    /**
+     * Called by the Loader, starts the actual file downloading.
+     * During the load the methods onLoad, onError and onProgress are called, based on the XHR events.
+     * You shouldn't normally call this method directly, it's meant to be invoked by the Loader.
+     *
+     * @method Phaser.Loader.FileTypes.HTML5AudioFile#load
+     * @since 3.0.0
+     */
+    load: function ()
     {
-        this.loader = loader;
-
         this.data = [];
 
         var instances = (this.config && this.config.instances) || 1;
@@ -104,10 +143,11 @@ var HTML5AudioFile = new Class({
         this.filesLoaded = 0;
         this.percentComplete = 0;
 
-        for(var i = 0; i < instances; i++)
+        for (var i = 0; i < instances; i++)
         {
             var audio = new Audio();
-            audio.dataset.name = this.key + ('0' + i).slice(-2); // Useful for debugging
+
+            audio.dataset.name = this.key + ('0' + i).slice(-2);
             audio.dataset.used = 'false';
 
             if (this.locked)
@@ -129,7 +169,7 @@ var HTML5AudioFile = new Class({
         for (i = 0; i < this.data.length; i++)
         {
             audio = this.data[i];
-            audio.src = GetURL(this, loader.baseURL);
+            audio.src = GetURL(this, this.loader.baseURL);
 
             if (!this.locked)
             {
@@ -139,6 +179,8 @@ var HTML5AudioFile = new Class({
 
         if (this.locked)
         {
+            //  This is super-dangerous but works. Race condition potential high.
+            //  Is there another way?
             setTimeout(this.onLoad.bind(this));
         }
     }

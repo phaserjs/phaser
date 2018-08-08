@@ -18,7 +18,7 @@ var Bounce = {
      * @method Phaser.Physics.Matter.Components.Bounce#setBounce
      * @since 3.0.0
      *
-     * @param {float} value - [description]
+     * @param {number} value - [description]
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */

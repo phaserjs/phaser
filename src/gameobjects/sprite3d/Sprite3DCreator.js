@@ -18,24 +18,30 @@ var Sprite3D = require('./Sprite3D');
  * @method Phaser.GameObjects.GameObjectCreator#sprite3D
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {object} config - The configuration object this Game Object will use to create itself.
+ * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.Sprite3D} The Game Object that was created.
  */
-GameObjectCreator.register('sprite3D', function (config)
+GameObjectCreator.register('sprite3D', function (config, addToScene)
 {
+    if (config === undefined) { config = {}; }
+
     var key = GetAdvancedValue(config, 'key', null);
     var frame = GetAdvancedValue(config, 'frame', null);
 
     var sprite = new Sprite3D(this.scene, 0, 0, key, frame);
+
+    if (addToScene !== undefined)
+    {
+        config.add = addToScene;
+    }
 
     BuildGameObject(this.scene, sprite, config);
 
     //  Sprite specific config options:
 
     BuildGameObjectAnimation(sprite, config);
-
-    //  Physics, Input, etc to follow ...
 
     return sprite;
 });

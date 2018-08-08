@@ -15,7 +15,7 @@ var HSVToRGB = require('./HSVToRGB');
  * @param {number} [s=1] - The saturation, in the range 0 - 1.
  * @param {number} [v=1] - The value, in the range 0 - 1.
  *
- * @return {array} An array containing 360 elements, where each contains a single numeric value corresponding to the color at that point in the HSV color wheel.
+ * @return {ColorObject[]} An array containing 360 elements, where each contains a single numeric value corresponding to the color at that point in the HSV color wheel.
  */
 var HSVColorWheel = function (s, v)
 {

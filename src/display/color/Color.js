@@ -171,10 +171,10 @@ var Color = new Class({
      * @method Phaser.Display.Color#setGLTo
      * @since 3.0.0
      *
-     * @param {float} red - The red color value. A number between 0 and 1.
-     * @param {float} green - The green color value. A number between 0 and 1.
-     * @param {float} blue - The blue color value. A number between 0 and 1.
-     * @param {float} [alpha=1] - The alpha value. A number between 0 and 1.
+     * @param {number} red - The red color value. A number between 0 and 1.
+     * @param {number} green - The green color value. A number between 0 and 1.
+     * @param {number} blue - The blue color value. A number between 0 and 1.
+     * @param {number} [alpha=1] - The alpha value. A number between 0 and 1.
      *
      * @return {Phaser.Display.Color} This Color object.
      */
@@ -299,7 +299,7 @@ var Color = new Class({
      * The red color value, normalized to the range 0 to 1.
      *
      * @name Phaser.Display.Color#redGL
-     * @type {float}
+     * @type {number}
      * @since 3.0.0
      */
     redGL: {
@@ -324,7 +324,7 @@ var Color = new Class({
      * The green color value, normalized to the range 0 to 1.
      *
      * @name Phaser.Display.Color#greenGL
-     * @type {float}
+     * @type {number}
      * @since 3.0.0
      */
     greenGL: {
@@ -349,7 +349,7 @@ var Color = new Class({
      * The blue color value, normalized to the range 0 to 1.
      *
      * @name Phaser.Display.Color#blueGL
-     * @type {float}
+     * @type {number}
      * @since 3.0.0
      */
     blueGL: {
@@ -374,7 +374,7 @@ var Color = new Class({
      * The alpha color value, normalized to the range 0 to 1.
      *
      * @name Phaser.Display.Color#alphaGL
-     * @type {float}
+     * @type {number}
      * @since 3.0.0
      */
     alphaGL: {

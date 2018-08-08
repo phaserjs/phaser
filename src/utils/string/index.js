@@ -13,6 +13,7 @@ module.exports = {
     Format: require('./Format'),
     Pad: require('./Pad'),
     Reverse: require('./Reverse'),
-    UppercaseFirst: require('./UppercaseFirst')
+    UppercaseFirst: require('./UppercaseFirst'),
+    UUID: require('./UUID')
 
 };

@@ -13,7 +13,7 @@ var MatterLib = require('./lib/core/Matter');
 var MatterWrap = require('./lib/plugins/MatterWrap');
 var Merge = require('../../utils/object/Merge');
 var Plugin = require('./lib/core/Plugin');
-var PluginManager = require('../../boot/PluginManager');
+var PluginCache = require('../../plugins/PluginCache');
 var World = require('./World');
 
 /**
@@ -324,6 +324,6 @@ var MatterPhysics = new Class({
 
 });
 
-PluginManager.register('MatterPhysics', MatterPhysics, 'matterPhysics');
+PluginCache.register('MatterPhysics', MatterPhysics, 'matterPhysics');
 
 module.exports = MatterPhysics;

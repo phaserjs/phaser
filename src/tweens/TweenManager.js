@@ -6,7 +6,7 @@
 
 var Class = require('../utils/Class');
 var NumberTweenBuilder = require('./builders/NumberTweenBuilder');
-var PluginManager = require('../boot/PluginManager');
+var PluginCache = require('../plugins/PluginCache');
 var TimelineBuilder = require('./builders/TimelineBuilder');
 var TWEEN_CONST = require('./tween/const');
 var TweenBuilder = require('./builders/TweenBuilder');
@@ -474,7 +474,7 @@ var TweenManager = new Class({
             {
                 tween = list[i];
 
-                for (var t = 0; t < target.length; i++)
+                for (var t = 0; t < target.length; t++)
                 {
                     if (tween.hasTarget(target[t]))
                     {
@@ -615,7 +615,7 @@ var TweenManager = new Class({
      * @method Phaser.Tweens.TweenManager#setGlobalTimeScale
      * @since 3.0.0
      *
-     * @param {float} value - [description]
+     * @param {number} value - [description]
      *
      * @return {Phaser.Tweens.TweenManager} [description]
      */
@@ -670,6 +670,6 @@ var TweenManager = new Class({
 
 });
 
-PluginManager.register('TweenManager', TweenManager, 'tweens');
+PluginCache.register('TweenManager', TweenManager, 'tweens');
 
 module.exports = TweenManager;

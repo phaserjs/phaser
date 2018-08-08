@@ -35,6 +35,11 @@ var XHRLoader = function (file, globalXHRSettings)
         xhr.setRequestHeader(config.header, config.headerValue);
     }
 
+    if (config.requestedWith)
+    {
+        xhr.setRequestHeader('X-Requested-With', config.requestedWith);
+    }
+
     if (config.overrideMimeType)
     {
         xhr.overrideMimeType(config.overrideMimeType);
@@ -42,7 +47,7 @@ var XHRLoader = function (file, globalXHRSettings)
 
     // After a successful request, the xhr.response property will contain the requested data as a DOMString, ArrayBuffer, Blob, or Document (depending on what was set for responseType.)
 
-    xhr.onload = file.onLoad.bind(file);
+    xhr.onload = file.onLoad.bind(file, xhr);
     xhr.onerror = file.onError.bind(file);
     xhr.onprogress = file.onProgress.bind(file);
 

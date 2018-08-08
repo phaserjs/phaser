@@ -4,8 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = require('../GameObject');
-
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -23,12 +21,7 @@ var GameObject = require('../GameObject');
  */
 var SpriteCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
-    {
-        return;
-    }
-
-    renderer.drawImage(src, camera, parentMatrix);
+    renderer.batchSprite(src, src.frame, camera, parentMatrix);
 };
 
 module.exports = SpriteCanvasRenderer;

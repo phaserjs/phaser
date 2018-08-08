@@ -5,7 +5,7 @@
  */
 
 /**
- * [description]
+ * Calculate the speed required to cover a distance in the time given.
  *
  * @function Phaser.Math.GetSpeed
  * @since 3.0.0

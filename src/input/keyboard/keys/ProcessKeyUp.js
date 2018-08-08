@@ -5,15 +5,16 @@
  */
 
 /**
- * Used internally by the KeyboardManager.
+ * Used internally by the Keyboard Plugin.
  *
  * @function Phaser.Input.Keyboard.ProcessKeyUp
+ * @private
  * @since 3.0.0
  *
- * @param {Phaser.Input.Keyboard.Key} key - [description]
- * @param {KeyboardEvent} event - [description]
+ * @param {Phaser.Input.Keyboard.Key} key - The Key to process the event for.
+ * @param {KeyboardEvent} event - The native Keyboard event.
  *
- * @return {Phaser.Input.Keyboard.Key} [description]
+ * @return {Phaser.Input.Keyboard.Key} The Key that was processed.
  */
 var ProcessKeyUp = function (key, event)
 {
@@ -37,6 +38,7 @@ var ProcessKeyUp = function (key, event)
 
     key._justDown = false;
     key._justUp = true;
+    key._tick = -1;
 
     return key;
 };

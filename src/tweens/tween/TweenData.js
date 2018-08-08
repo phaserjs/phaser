@@ -31,8 +31,8 @@
  * @property {number} [repeatDelay=0] - Time in ms/frames before the repeat will start.
  * @property {boolean} [flipX=false] - Automatically call toggleFlipX when the TweenData yoyos or repeats
  * @property {boolean} [flipY=false] - Automatically call toggleFlipY when the TweenData yoyos or repeats
- * @property {float} [progress=0] - Between 0 and 1 showing completion of this TweenData.
- * @property {float} [elapsed=0] - Delta counter
+ * @property {number} [progress=0] - Between 0 and 1 showing completion of this TweenData.
+ * @property {number} [elapsed=0] - Delta counter
  * @property {integer} [repeatCounter=0] - How many repeats are left to run?
  * @property {number} [start=0] - Ease value data.
  * @property {number} [current=0] - Ease value data.

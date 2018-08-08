@@ -1,5 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  * @copyright    2018 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
@@ -9,13 +10,12 @@ var Class = require('../../utils/Class');
 var HTML5AudioSound = require('./HTML5AudioSound');
 
 /**
- * HTML5 Audio implementation of the sound manager.
+ * HTML5 Audio implementation of the Sound Manager.
  *
  * @class HTML5AudioSoundManager
  * @extends Phaser.Sound.BaseSoundManager
  * @memberOf Phaser.Sound
  * @constructor
- * @author Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
  * @since 3.0.0
  *
  * @param {Phaser.Game} game - Reference to the current game instance.
@@ -173,7 +173,7 @@ var HTML5AudioSoundManager = new Class({
             return true;
         });
 
-        if(!this.locked)
+        if (!this.locked)
         {
             return;
         }
@@ -242,7 +242,7 @@ var HTML5AudioSoundManager = new Class({
         {
             this.forEachActiveSound(function (sound)
             {
-                if(sound.currentMarker === null && sound.duration === 0)
+                if (sound.currentMarker === null && sound.duration === 0)
                 {
                     sound.duration = sound.tags[0].duration;
                 }
@@ -250,7 +250,7 @@ var HTML5AudioSoundManager = new Class({
                 sound.totalDuration = sound.tags[0].duration;
             });
 
-            while(this.lockedActionsQueue.length)
+            while (this.lockedActionsQueue.length)
             {
                 var lockedAction = this.lockedActionsQueue.shift();
 

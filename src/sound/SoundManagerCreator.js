@@ -12,6 +12,8 @@ var WebAudioSoundManager = require('./webaudio/WebAudioSoundManager');
 /**
  * Creates a Web Audio, HTML5 Audio or No Audio Sound Manager based on config and device settings.
  *
+ * Be aware of https://developers.google.com/web/updates/2017/09/autoplay-policy-changes
+ *
  * @function Phaser.Sound.SoundManagerCreator
  * @since 3.0.0
  *

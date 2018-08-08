@@ -5,14 +5,14 @@
  */
 
 /**
- * [description]
+ * Normalize an angle to the [0, 2pi] range.
  *
  * @function Phaser.Math.Angle.Normalize
  * @since 3.0.0
  *
- * @param {number} angle - [description]
+ * @param {number} angle - The angle to normalize, in radians.
  *
- * @return {number} [description]
+ * @return {number} The normalized angle, in radians.
  */
 var Normalize = function (angle)
 {

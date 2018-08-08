@@ -21,7 +21,7 @@ var Friction = {
      * @param {number} x - [description]
      * @param {number} [y=x] - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setFriction: function (x, y)
     {
@@ -38,7 +38,7 @@ var Friction = {
      *
      * @param {number} x - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setFrictionX: function (x)
     {
@@ -55,7 +55,7 @@ var Friction = {
      *
      * @param {number} y - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setFrictionY: function (y)
     {

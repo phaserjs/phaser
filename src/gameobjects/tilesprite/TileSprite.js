@@ -11,10 +11,33 @@ var CONST = require('../../const');
 var GameObject = require('../GameObject');
 var GetPowerOfTwo = require('../../math/pow2/GetPowerOfTwo');
 var TileSpriteRender = require('./TileSpriteRender');
+var Vector2 = require('../../math/Vector2');
+
+//  bitmask flag for GameObject.renderMask
+var _FLAG = 8; // 1000
 
 /**
  * @classdesc
- * [description]
+ * A TileSprite is a Sprite that has a repeating texture.
+ *
+ * The texture can be scrolled and scaled independently of the TileSprite itself. Textures will automatically wrap and
+ * are designed so that you can create game backdrops using seamless textures as a source.
+ *
+ * You shouldn't ever create a TileSprite any larger than your actual screen size. If you want to create a large repeating background
+ * that scrolls across the whole map of your game, then you create a TileSprite that fits the screen size and then use the `tilePosition`
+ * property to scroll the texture as the player moves. If you create a TileSprite that is thousands of pixels in size then it will 
+ * consume huge amounts of memory and cause performance issues. Remember: use `tilePosition` to scroll your texture and `tileScale` to
+ * adjust the scale of the texture - don't resize the sprite itself or make it larger than it needs.
+ * 
+ * An important note about Tile Sprites and NPOT textures: Internally, TileSprite textures use GL_REPEAT to provide
+ * seamless repeating of the textures. This, combined with the way in which the textures are handled in WebGL, means
+ * they need to be POT (power-of-two) sizes in order to wrap. If you provide a NPOT (non power-of-two) texture to a
+ * TileSprite it will generate a POT sized canvas and draw your texture to it, scaled up to the POT size. It's then
+ * scaled back down again during rendering to the original dimensions. While this works, in that it allows you to use
+ * any size texture for a Tile Sprite, it does mean that NPOT textures are going to appear anti-aliased when rendered,
+ * due to the interpolation that took place when it was resized into a POT texture. This is especially visible in
+ * pixel art graphics. If you notice it and it becomes an issue, the only way to avoid it is to ensure that you
+ * provide POT textures for Tile Sprites.
  *
  * @class TileSprite
  * @extends Phaser.GameObjects.GameObject
@@ -24,6 +47,8 @@ var TileSpriteRender = require('./TileSpriteRender');
  *
  * @extends Phaser.GameObjects.Components.Alpha
  * @extends Phaser.GameObjects.Components.BlendMode
+ * @extends Phaser.GameObjects.Components.ComputedSize
+ * @extends Phaser.GameObjects.Components.Crop
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.GetBounds
@@ -32,8 +57,6 @@ var TileSpriteRender = require('./TileSpriteRender');
  * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.ScaleMode
  * @extends Phaser.GameObjects.Components.ScrollFactor
- * @extends Phaser.GameObjects.Components.Size
- * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Tint
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
@@ -43,8 +66,8 @@ var TileSpriteRender = require('./TileSpriteRender');
  * @param {number} y - The vertical position of this Game Object in the world.
  * @param {number} width - The width of the Game Object.
  * @param {number} height - The height of the Game Object.
- * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
- * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
+ * @param {string} textureKey - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+ * @param {(string|integer)} [frameKey] - An optional frame from the Texture this Game Object is rendering with.
  */
 var TileSprite = new Class({
 
@@ -53,6 +76,8 @@ var TileSprite = new Class({
     Mixins: [
         Components.Alpha,
         Components.BlendMode,
+        Components.ComputedSize,
+        Components.Crop,
         Components.Depth,
         Components.Flip,
         Components.GetBounds,
@@ -61,8 +86,6 @@ var TileSprite = new Class({
         Components.Pipeline,
         Components.ScaleMode,
         Components.ScrollFactor,
-        Components.Size,
-        Components.Texture,
         Components.Tint,
         Components.Transform,
         Components.Visible,
@@ -71,54 +94,46 @@ var TileSprite = new Class({
 
     initialize:
 
-    function TileSprite (scene, x, y, width, height, texture, frame)
+    function TileSprite (scene, x, y, width, height, textureKey, frameKey)
     {
         var renderer = scene.sys.game.renderer;
 
         GameObject.call(this, scene, 'TileSprite');
 
         /**
-         * [description]
+         * Internal tile position vector.
          *
-         * @name Phaser.GameObjects.TileSprite#tilePositionX
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
+         * @name Phaser.GameObjects.TileSprite#_tilePosition
+         * @type {Phaser.Math.Vector2}
+         * @private
+         * @since 3.12.0
          */
-        this.tilePositionX = 0;
+        this._tilePosition = new Vector2();
 
         /**
-         * [description]
+         * Internal tile scale vector.
          *
-         * @name Phaser.GameObjects.TileSprite#tilePositionY
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
+         * @name Phaser.GameObjects.TileSprite#_tileScale
+         * @type {Phaser.Math.Vector2}
+         * @private
+         * @since 3.12.0
          */
-        this.tilePositionY = 0;
+        this._tileScale = new Vector2(1, 1);
 
         /**
-         * [description]
+         * Whether the Tile Sprite has changed in some way, requiring an re-render of its tile texture.
+         *
+         * Such changes include the texture frame and scroll position of the Tile Sprite.
          *
          * @name Phaser.GameObjects.TileSprite#dirty
          * @type {boolean}
-         * @default true
+         * @default false
          * @since 3.0.0
          */
-        this.dirty = true;
+        this.dirty = false;
 
         /**
-         * [description]
-         *
-         * @name Phaser.GameObjects.TileSprite#tileTexture
-         * @type {?WebGLTexture}
-         * @default null
-         * @since 3.0.0
-         */
-        this.tileTexture = null;
-
-        /**
-         * [description]
+         * The renderer in use by this Tile Sprite.
          *
          * @name Phaser.GameObjects.TileSprite#renderer
          * @type {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)}
@@ -126,59 +141,117 @@ var TileSprite = new Class({
          */
         this.renderer = renderer;
 
-        this.setTexture(texture, frame);
+        /**
+         * The Canvas element that the TileSprite renders its fill pattern in to.
+         * Only used in Canvas mode.
+         *
+         * @name Phaser.GameObjects.TileSprite#canvas
+         * @type {?HTMLCanvasElement}
+         * @since 3.12.0
+         */
+        this.canvas = CanvasPool.create(this, width, height);
+
+        /**
+         * The Context of the Canvas element that the TileSprite renders its fill pattern in to.
+         * Only used in Canvas mode.
+         *
+         * @name Phaser.GameObjects.TileSprite#context
+         * @type {CanvasRenderingContext2D}
+         * @since 3.12.0
+         */
+        this.context = this.canvas.getContext('2d');
+
+        /**
+         * The Texture the TileSprite is using as its fill pattern.
+         *
+         * @name Phaser.GameObjects.TileSprite#displayTexture
+         * @type {Phaser.Textures.Texture|Phaser.Textures.CanvasTexture}
+         * @private
+         * @since 3.12.0
+         */
+        this.displayTexture = null;
+
+        /**
+         * The Frame the TileSprite is using as its fill pattern.
+         *
+         * @name Phaser.GameObjects.TileSprite#displayFrame
+         * @type {Phaser.Textures.Frame}
+         * @private
+         * @since 3.12.0
+         */
+        this.displayFrame = null;
+
+        /**
+         * The internal crop data object, as used by `setCrop` and passed to the `Frame.setCropUVs` method.
+         *
+         * @name Phaser.GameObjects.TileSprite#_crop
+         * @type {object}
+         * @private
+         * @since 3.12.0
+         */
+        this._crop = this.resetCropObject();
+
+        //  Create a Texture for this object
+        this.texture = scene.sys.textures.addCanvas(null, this.canvas, true);
+
+        //  Get the frame
+        this.frame = this.texture.get();
+
+        this.setTexture(textureKey, frameKey);
         this.setPosition(x, y);
         this.setSize(width, height);
         this.setOriginFromFrame();
         this.initPipeline('TextureTintPipeline');
 
         /**
-         * The next power of two value from the width of the Frame.
+         * The next power of two value from the width of the Fill Pattern frame.
          *
          * @name Phaser.GameObjects.TileSprite#potWidth
          * @type {integer}
          * @since 3.0.0
          */
-        this.potWidth = GetPowerOfTwo(this.frame.width);
+        this.potWidth = GetPowerOfTwo(this.displayFrame.width);
 
         /**
-         * The next power of two value from the height of the Frame.
+         * The next power of two value from the height of the Fill Pattern frame.
          *
          * @name Phaser.GameObjects.TileSprite#potHeight
          * @type {integer}
          * @since 3.0.0
          */
-        this.potHeight = GetPowerOfTwo(this.frame.height);
+        this.potHeight = GetPowerOfTwo(this.displayFrame.height);
 
         /**
-         * [description]
+         * The Canvas that the TileSprites texture is rendered to.
+         * This is used to create a WebGL texture from.
          *
-         * @name Phaser.GameObjects.TileSprite#canvasPattern
-         * @type {?CanvasPattern}
-         * @default null
-         * @since 3.0.0
-         */
-        this.canvasPattern = null;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.GameObjects.TileSprite#canvasBuffer
+         * @name Phaser.GameObjects.TileSprite#fillCanvas
          * @type {HTMLCanvasElement}
-         * @since 3.0.0
+         * @since 3.12.0
          */
-        this.canvasBuffer = CanvasPool.create2D(this, this.potWidth, this.potHeight);
+        this.fillCanvas = CanvasPool.create2D(this, this.potWidth, this.potHeight);
 
         /**
-         * [description]
+         * The Canvas Context used to render the TileSprites texture.
          *
-         * @name Phaser.GameObjects.TileSprite#canvasBufferCtx
+         * @name Phaser.GameObjects.TileSprite#fillContext
          * @type {CanvasRenderingContext2D}
-         * @since 3.0.0
+         * @since 3.12.0
          */
-        this.canvasBufferCtx = this.canvasBuffer.getContext('2d');
+        this.fillContext = this.fillCanvas.getContext('2d');
 
-        this.oldFrame = null;
+        /**
+         * The texture that the Tile Sprite is rendered to, which is then rendered to a Scene.
+         * In WebGL this is a WebGLTexture. In Canvas it's a Canvas Fill Pattern.
+         *
+         * @name Phaser.GameObjects.TileSprite#fillPattern
+         * @type {?(WebGLTexture|CanvasPattern)}
+         * @since 3.12.0
+         */
+        this.fillPattern = null;
+
+        //  Update the fill pattern
+        this.dirty = true;
 
         this.updateTileTexture();
 
@@ -188,11 +261,88 @@ var TileSprite = new Class({
             {
                 var gl = renderer.gl;
 
-                this.tileTexture = null;
                 this.dirty = true;
-                this.tileTexture = renderer.createTexture2D(0, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT, gl.RGBA, this.canvasBuffer, this.potWidth, this.potHeight);
+                this.fillPattern = null;
+                this.fillPattern = renderer.createTexture2D(0, gl.LINEAR, gl.LINEAR, gl.REPEAT, gl.REPEAT, gl.RGBA, this.fillCanvas, this.potWidth, this.potHeight);
             }, this);
         }
+    },
+
+    /**
+     * Sets the texture and frame this Game Object will use to render with.
+     *
+     * Textures are referenced by their string-based keys, as stored in the Texture Manager.
+     *
+     * @method Phaser.GameObjects.TileSprite#setTexture
+     * @since 3.0.0
+     *
+     * @param {string} key - The key of the texture to be used, as stored in the Texture Manager.
+     * @param {(string|integer)} [frame] - The name or index of the frame within the Texture.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setTexture: function (key, frame)
+    {
+        this.displayTexture = this.scene.sys.textures.get(key);
+
+        return this.setFrame(frame);
+    },
+
+    /**
+     * Sets the frame this Game Object will use to render with.
+     *
+     * The Frame has to belong to the current Texture being used.
+     *
+     * It can be either a string or an index.
+     *
+     * Calling `setFrame` will modify the `width` and `height` properties of your Game Object.
+     * It will also change the `origin` if the Frame has a custom pivot point, as exported from packages like Texture Packer.
+     *
+     * @method Phaser.GameObjects.TileSprite#setFrame
+     * @since 3.0.0
+     *
+     * @param {(string|integer)} frame - The name or index of the frame within the Texture.
+     * @param {boolean} [updateSize=true] - Should this call adjust the size of the Game Object?
+     * @param {boolean} [updateOrigin=true] - Should this call adjust the origin of the Game Object?
+     *
+     * @return {this} This Game Object instance.
+     */
+    setFrame: function (frame, updateSize, updateOrigin)
+    {
+        if (updateSize === undefined) { updateSize = true; }
+        if (updateOrigin === undefined) { updateOrigin = true; }
+
+        this.displayFrame = this.displayTexture.get(frame);
+
+        if (!this.displayFrame.cutWidth || !this.displayFrame.cutHeight)
+        {
+            this.renderFlags &= ~_FLAG;
+        }
+        else
+        {
+            this.renderFlags |= _FLAG;
+        }
+
+        if (this._sizeComponent && updateSize)
+        {
+            this.setSizeToFrame();
+        }
+
+        if (this._originComponent && updateOrigin)
+        {
+            if (this.displayFrame.customPivot)
+            {
+                this.setOrigin(this.displayFrame.pivotX, this.displayFrame.pivotY);
+            }
+            else
+            {
+                this.updateDisplayOrigin();
+            }
+        }
+
+        this.updateTileTexture();
+
+        return this;
     },
 
     /**
@@ -204,7 +354,7 @@ var TileSprite = new Class({
      * @param {number} [x] - The x position of this sprite's tiling texture.
      * @param {number} [y] - The y position of this sprite's tiling texture.
      *
-     * @return {Phaser.GameObjects.TileSprite} This Tile Sprite instance.
+     * @return {this} This Tile Sprite instance.
      */
     setTilePosition: function (x, y)
     {
@@ -222,73 +372,257 @@ var TileSprite = new Class({
     },
 
     /**
-     * [description]
+     * Sets {@link Phaser.GameObjects.TileSprite#tileScaleX} and {@link Phaser.GameObjects.TileSprite#tileScaleY}.
+     *
+     * @method Phaser.GameObjects.TileSprite#setTileScale
+     * @since 3.12.0
+     *
+     * @param {number} [x] - The horizontal scale of the tiling texture.
+     * @param {number} [y] - The vertical scale of the tiling texture.
+     *
+     * @return {this} This Tile Sprite instance.
+     */
+    setTileScale: function (x, y)
+    {
+        if (x !== undefined)
+        {
+            this.tilePositionX = x;
+        }
+
+        if (y !== undefined)
+        {
+            this.tilePositionY = y;
+        }
+
+        return this;
+    },
+
+    /**
+     * Render the tile texture if it is dirty, or if the frame has changed.
      *
      * @method Phaser.GameObjects.TileSprite#updateTileTexture
+     * @private
      * @since 3.0.0
      */
     updateTileTexture: function ()
     {
-        if (!this.dirty && this.oldFrame === this.frame)
+        if (!this.dirty)
         {
             return;
         }
 
-        this.oldFrame = this.frame;
+        //  Draw the displayTexture to our fillCanvas
 
-        this.canvasBufferCtx.clearRect(0, 0, this.canvasBuffer.width, this.canvasBuffer.height);
+        var frame = this.displayFrame;
+
+        var ctx = this.fillContext;
+        var canvas = this.fillCanvas;
+
+        var fw = this.potWidth;
+        var fh = this.potHeight;
+
+        if (!this.renderer.gl)
+        {
+            fw = frame.cutWidth;
+            fh = frame.cutHeight;
+        }
+
+        ctx.clearRect(0, 0, fw, fh);
+
+        canvas.width = fw;
+        canvas.height = fh;
+
+        ctx.drawImage(
+            frame.source.image,
+            frame.cutX, frame.cutY,
+            frame.cutWidth, frame.cutHeight,
+            0, 0,
+            fw, fh
+        );
 
         if (this.renderer.gl)
         {
-            this.canvasBufferCtx.drawImage(
-                this.frame.source.image,
-                this.frame.cutX, this.frame.cutY,
-                this.frame.cutWidth, this.frame.cutHeight,
-                0, 0,
-                this.potWidth, this.potHeight
-            );
-
-            this.tileTexture = this.renderer.canvasToTexture(this.canvasBuffer, this.tileTexture);
+            this.fillPattern = this.renderer.canvasToTexture(canvas, this.fillPattern);
         }
         else
         {
-            this.canvasBuffer.width = this.frame.cutWidth;
-            this.canvasBuffer.height = this.frame.cutHeight;
-            this.canvasBufferCtx.drawImage(
-                this.frame.source.image,
-                this.frame.cutX, this.frame.cutY,
-                this.frame.cutWidth, this.frame.cutHeight,
-                0, 0,
-                this.frame.cutWidth, this.frame.cutHeight
-            );
-
-            this.canvasPattern = this.canvasBufferCtx.createPattern(this.canvasBuffer, 'repeat');
+            this.fillPattern = ctx.createPattern(canvas, 'repeat');
         }
+
+        this.updateCanvas();
 
         this.dirty = false;
     },
 
     /**
-     * [description]
+     * Draw the fill pattern to the internal canvas.
      *
-     * @method Phaser.GameObjects.TileSprite#destroy
-     * @since 3.0.0
+     * @method Phaser.GameObjects.TileSprite#updateCanvas
+     * @private
+     * @since 3.12.0
      */
-    destroy: function ()
+    updateCanvas: function ()
     {
-        if (this.renderer.gl)
+        var canvas = this.canvas;
+
+        if (canvas.width !== this.width || canvas.height !== this.height)
         {
-            this.renderer.deleteTexture(this.tileTexture);
+            canvas.width = this.width;
+            canvas.height = this.height;
+
+            this.frame.resize(this.width, this.height);
         }
 
-        CanvasPool.remove(this.canvasBuffer);
+        if (!this.dirty || this.renderer && this.renderer.gl)
+        {
+            this.dirty = false;
+            return;
+        }
 
-        this.canvasPattern = null;
-        this.canvasBufferCtx = null;
-        this.canvasBuffer = null;
+        var ctx = this.context;
+
+        var scaleX = this._tileScale.x;
+        var scaleY = this._tileScale.y;
+
+        var positionX = this._tilePosition.x;
+        var positionY = this._tilePosition.y;
+
+        ctx.clearRect(0, 0, this.width, this.height);
+
+        ctx.save();
+
+        ctx.scale(scaleX, scaleY);
+
+        ctx.translate(-positionX, -positionY);
+
+        ctx.fillStyle = this.fillPattern;
+
+        ctx.fillRect(positionX, positionY, this.width / scaleX, this.height / scaleY);
+
+        ctx.restore();
+
+        this.dirty = false;
+    },
+
+    /**
+     * Internal destroy handler, called as part of the destroy process.
+     *
+     * @method Phaser.GameObjects.TileSprite#preDestroy
+     * @protected
+     * @since 3.9.0
+     */
+    preDestroy: function ()
+    {
+        if (this.renderer && this.renderer.gl)
+        {
+            this.renderer.deleteTexture(this.fillPattern);
+        }
+
+        CanvasPool.remove(this.canvas);
+        CanvasPool.remove(this.fillCanvas);
+
+        this.fillPattern = null;
+        this.fillContext = null;
+        this.fillCanvas = null;
+
+        this.displayTexture = null;
+        this.displayFrame = null;
+
+        this.texture.destroy();
 
         this.renderer = null;
-        this.visible = false;
+    },
+
+    /**
+     * The horizontal scroll position of the Tile Sprite.
+     *
+     * @name Phaser.GameObjects.TileSprite#tilePositionX
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    tilePositionX: {
+
+        get: function ()
+        {
+            return this._tilePosition.x;
+        },
+
+        set: function (value)
+        {
+            this._tilePosition.x = value;
+            this.dirty = true;
+        }
+
+    },
+
+    /**
+     * The vertical scroll position of the Tile Sprite.
+     *
+     * @name Phaser.GameObjects.TileSprite#tilePositionY
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    tilePositionY: {
+
+        get: function ()
+        {
+            return this._tilePosition.y;
+        },
+
+        set: function (value)
+        {
+            this._tilePosition.y = value;
+            this.dirty = true;
+        }
+
+    },
+
+    /**
+     * The horizontal scale of the Tile Sprite texture.
+     *
+     * @name Phaser.GameObjects.TileSprite#tileScaleX
+     * @type {number}
+     * @default 1
+     * @since 3.11.0
+     */
+    tileScaleX: {
+
+        get: function ()
+        {
+            return this._tileScale.x;
+        },
+
+        set: function (value)
+        {
+            this._tileScale.x = value;
+            this.dirty = true;
+        }
+
+    },
+
+    /**
+     * The vertical scale of the Tile Sprite texture.
+     *
+     * @name Phaser.GameObjects.TileSprite#tileScaleY
+     * @type {number}
+     * @default 1
+     * @since 3.11.0
+     */
+    tileScaleY: {
+
+        get: function ()
+        {
+            return this._tileScale.y;
+        },
+
+        set: function (value)
+        {
+            this._tileScale.y = value;
+            this.dirty = true;
+        }
+
     }
 
 });

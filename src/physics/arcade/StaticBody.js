@@ -28,6 +28,9 @@ var StaticBody = new Class({
 
     function StaticBody (world, gameObject)
     {
+        var width = (gameObject.width) ? gameObject.width : 64;
+        var height = (gameObject.height) ? gameObject.height : 64;
+
         /**
          * [description]
          *
@@ -119,7 +122,7 @@ var StaticBody = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.width = gameObject.displayWidth;
+        this.width = width;
 
         /**
          * [description]
@@ -128,7 +131,7 @@ var StaticBody = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.height = gameObject.displayHeight;
+        this.height = height;
 
         /**
          * [description]
@@ -360,6 +363,30 @@ var StaticBody = new Class({
          * @since 3.0.0
          */
         this.physicsType = CONST.STATIC_BODY;
+
+        /**
+         * The calculated change in the Body's horizontal position during the current step.
+         * For a static body this is always zero.
+         *
+         * @name Phaser.Physics.Arcade.StaticBody#_dx
+         * @type {number}
+         * @private
+         * @default 0
+         * @since 3.10.0
+         */
+        this._dx = 0;
+
+        /**
+         * The calculated change in the Body's vertical position during the current step.
+         * For a static body this is always zero.
+         *
+         * @name Phaser.Physics.Arcade.StaticBody#_dy
+         * @type {number}
+         * @private
+         * @default 0
+         * @since 3.10.0
+         */
+        this._dy = 0;
     },
 
     /**
@@ -459,15 +486,16 @@ var StaticBody = new Class({
     },
 
     /**
-     * [description]
+     * Sets the size of the body.
+     * Resets the width and height to match current frame, if no width and height provided and a frame is found.
      *
      * @method Phaser.Physics.Arcade.StaticBody#setSize
      * @since 3.0.0
      *
-     * @param {number} width - [description]
-     * @param {number} height - [description]
-     * @param {number} [offsetX] - [description]
-     * @param {number} [offsetY] - [description]
+     * @param {integer} [width] - The width of the Body in pixels. Cannot be zero. If not given, and the parent Game Object has a frame, it will use the frame width.
+     * @param {integer} [height] - The height of the Body in pixels. Cannot be zero. If not given, and the parent Game Object has a frame, it will use the frame height.
+     * @param {number} [offsetX] - The horizontal offset of the Body from the Game Object's center.
+     * @param {number} [offsetY] - The vertical offset of the Body from the Game Object's center.
      *
      * @return {Phaser.Physics.Arcade.StaticBody} This Static Body object.
      */
@@ -475,6 +503,18 @@ var StaticBody = new Class({
     {
         if (offsetX === undefined) { offsetX = this.offset.x; }
         if (offsetY === undefined) { offsetY = this.offset.y; }
+
+        var gameObject = this.gameObject;
+
+        if (!width && gameObject.frame)
+        {
+            width = gameObject.frame.realWidth;
+        }
+
+        if (!height && gameObject.frame)
+        {
+            height = gameObject.frame.realHeight;
+        }
 
         this.world.staticTree.remove(this);
 

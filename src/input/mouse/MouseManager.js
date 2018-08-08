@@ -11,21 +11,19 @@ var Features = require('../../device/Features');
 //  https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
 
 /**
- * @callback MouseHandler
- *
- * @property {MouseEvent} event - [description]
- */
-
-/**
  * @classdesc
- * [description]
+ * The Mouse Manager is a helper class that belongs to the Input Manager.
+ * 
+ * Its role is to listen for native DOM Mouse Events and then pass them onto the Input Manager for further processing.
+ * 
+ * You do not need to create this class directly, the Input Manager will create an instance of it automatically.
  *
  * @class MouseManager
  * @memberOf Phaser.Input.Mouse
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Input.InputManager} inputManager - [description]
+ * @param {Phaser.Input.InputManager} inputManager - A reference to the Input Manager.
  */
 var MouseManager = new Class({
 
@@ -34,7 +32,7 @@ var MouseManager = new Class({
     function MouseManager (inputManager)
     {
         /**
-         * [description]
+         * A reference to the Input Manager.
          *
          * @name Phaser.Input.Mouse.MouseManager#manager
          * @type {Phaser.Input.InputManager}
@@ -53,7 +51,8 @@ var MouseManager = new Class({
         this.capture = true;
 
         /**
-         * [description]
+         * A boolean that controls if the Mouse Manager is enabled or not.
+         * Can be toggled on the fly.
          *
          * @name Phaser.Input.Mouse.MouseManager#enabled
          * @type {boolean}
@@ -63,22 +62,14 @@ var MouseManager = new Class({
         this.enabled = false;
 
         /**
-         * [description]
+         * The Touch Event target, as defined in the Game Config.
+         * Typically the canvas to which the game is rendering, but can be any interactive DOM element.
          *
          * @name Phaser.Input.Mouse.MouseManager#target
-         * @type {null}
+         * @type {any}
          * @since 3.0.0
          */
         this.target;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Input.Mouse.MouseManager#handler
-         * @type {?MouseHandler}
-         * @since 3.0.0
-         */
-        this.handler;
 
         /**
          * If the mouse has been pointer locked successfully this will be set to true.
@@ -89,12 +80,15 @@ var MouseManager = new Class({
          * @since 3.0.0
          */
         this.locked = false;
+
+        inputManager.events.once('boot', this.boot, this);
     },
 
     /**
-     * [description]
+     * The Touch Manager boot process.
      *
      * @method Phaser.Input.Mouse.MouseManager#boot
+     * @private
      * @since 3.0.0
      */
     boot: function ()
@@ -122,12 +116,17 @@ var MouseManager = new Class({
     },
 
     /**
-     * [description]
+     * Attempts to disable the context menu from appearing if you right-click on the browser.
+     * 
+     * Works by listening for the `contextmenu` event and prevent defaulting it.
+     * 
+     * Use this if you need to enable right-button mouse support in your game, and the browser
+     * menu keeps getting in the way.
      *
      * @method Phaser.Input.Mouse.MouseManager#disableContextMenu
      * @since 3.0.0
      *
-     * @return {Phaser.Input.Mouse.MouseManager} [description]
+     * @return {Phaser.Input.Mouse.MouseManager} This Mouse Manager instance.
      */
     disableContextMenu: function ()
     {
@@ -171,7 +170,7 @@ var MouseManager = new Class({
      * @method Phaser.Input.Mouse.MouseManager#pointerLockChange
      * @since 3.0.0
      *
-     * @param {MouseHandler} event - The native event from the browser.
+     * @param {MouseEvent} event - The native event from the browser.
      */
     pointerLockChange: function (event)
     {
@@ -200,61 +199,103 @@ var MouseManager = new Class({
     },
 
     /**
-     * [description]
+     * The Mouse Move Event Handler.
+     *
+     * @method Phaser.Input.Mouse.MouseManager#onMouseMove
+     * @since 3.10.0
+     *
+     * @param {MouseEvent} event - The native DOM Mouse Move Event.
+     */
+    onMouseMove: function (event)
+    {
+        if (event.defaultPrevented || !this.enabled || !this.manager)
+        {
+            // Do nothing if event already handled
+            return;
+        }
+
+        this.manager.queueMouseMove(event);
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+    },
+
+    /**
+     * The Mouse Down Event Handler.
+     *
+     * @method Phaser.Input.Mouse.MouseManager#onMouseDown
+     * @since 3.10.0
+     *
+     * @param {MouseEvent} event - The native DOM Mouse Down Event.
+     */
+    onMouseDown: function (event)
+    {
+        if (event.defaultPrevented || !this.enabled)
+        {
+            // Do nothing if event already handled
+            return;
+        }
+
+        this.manager.queueMouseDown(event);
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+    },
+
+    /**
+     * The Mouse Up Event Handler.
+     *
+     * @method Phaser.Input.Mouse.MouseManager#onMouseUp
+     * @since 3.10.0
+     *
+     * @param {MouseEvent} event - The native DOM Mouse Up Event.
+     */
+    onMouseUp: function (event)
+    {
+        if (event.defaultPrevented || !this.enabled)
+        {
+            // Do nothing if event already handled
+            return;
+        }
+
+        this.manager.queueMouseUp(event);
+
+        if (this.capture)
+        {
+            event.preventDefault();
+        }
+    },
+
+    /**
+     * Starts the Mouse Event listeners running.
+     * This is called automatically and does not need to be manually invoked.
      *
      * @method Phaser.Input.Mouse.MouseManager#startListeners
      * @since 3.0.0
      */
     startListeners: function ()
     {
-        var queue = this.manager.queue;
         var target = this.target;
 
         var passive = { passive: true };
         var nonPassive = { passive: false };
 
-        var handler;
-
         if (this.capture)
         {
-            handler = function (event)
-            {
-                if (event.defaultPrevented)
-                {
-                    // Do nothing if event already handled
-                    return;
-                }
-
-                // console.log('mouse', event);
-
-                queue.push(event);
-
-                event.preventDefault();
-            };
-
-            target.addEventListener('mousemove', handler, nonPassive);
-            target.addEventListener('mousedown', handler, nonPassive);
-            target.addEventListener('mouseup', handler, nonPassive);
+            target.addEventListener('mousemove', this.onMouseMove.bind(this), nonPassive);
+            target.addEventListener('mousedown', this.onMouseDown.bind(this), nonPassive);
+            target.addEventListener('mouseup', this.onMouseUp.bind(this), nonPassive);
         }
         else
         {
-            handler = function (event)
-            {
-                if (event.defaultPrevented)
-                {
-                    // Do nothing if event already handled
-                    return;
-                }
-
-                queue.push(event);
-            };
-
-            target.addEventListener('mousemove', handler, passive);
-            target.addEventListener('mousedown', handler, passive);
-            target.addEventListener('mouseup', handler, passive);
+            target.addEventListener('mousemove', this.onMouseMove.bind(this), passive);
+            target.addEventListener('mousedown', this.onMouseDown.bind(this), passive);
+            target.addEventListener('mouseup', this.onMouseUp.bind(this), passive);
         }
-
-        this.handler = handler;
 
         if (Features.pointerLock)
         {
@@ -267,7 +308,8 @@ var MouseManager = new Class({
     },
 
     /**
-     * [description]
+     * Stops the Mouse Event listeners.
+     * This is called automatically and does not need to be manually invoked.
      *
      * @method Phaser.Input.Mouse.MouseManager#stopListeners
      * @since 3.0.0
@@ -276,9 +318,9 @@ var MouseManager = new Class({
     {
         var target = this.target;
 
-        target.removeEventListener('mousemove', this.handler);
-        target.removeEventListener('mousedown', this.handler);
-        target.removeEventListener('mouseup', this.handler);
+        target.removeEventListener('mousemove', this.onMouseMove);
+        target.removeEventListener('mousedown', this.onMouseDown);
+        target.removeEventListener('mouseup', this.onMouseUp);
 
         if (Features.pointerLock)
         {
@@ -289,7 +331,7 @@ var MouseManager = new Class({
     },
 
     /**
-     * [description]
+     * Destroys this Mouse Manager instance.
      *
      * @method Phaser.Input.Mouse.MouseManager#destroy
      * @since 3.0.0
@@ -298,6 +340,7 @@ var MouseManager = new Class({
     {
         this.stopListeners();
 
+        this.target = null;
         this.manager = null;
     }
 

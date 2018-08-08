@@ -290,8 +290,7 @@ var TimeStep = new Class({
          * [description]
          *
          * @name Phaser.Boot.TimeStep#deltaHistory
-         * @type {array}
-         * @default 0
+         * @type {integer[]}
          * @since 3.0.0
          */
         this.deltaHistory = [];
@@ -447,20 +446,28 @@ var TimeStep = new Class({
      * @method Phaser.Boot.TimeStep#step
      * @since 3.0.0
      *
-     * @param {integer} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
+     * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
      */
     step: function (time)
     {
         this.frame++;
 
-        this.rawDelta = time - this.lastTime;
+        var before = time - this.lastTime;
+
+        if (before < 0)
+        {
+            //  Because, Chrome.
+            before = 0;
+        }
+
+        this.rawDelta = before;
 
         var idx = this.deltaIndex;
         var history = this.deltaHistory;
         var max = this.deltaSmoothingMax;
 
         //  delta time (time is in ms)
-        var dt = (time - this.lastTime);
+        var dt = before;
 
         //  When a browser switches tab, then comes back again, it takes around 10 frames before
         //  the delta time settles down so we employ a 'cooling down' period before we start

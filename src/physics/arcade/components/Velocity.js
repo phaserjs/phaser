@@ -21,11 +21,11 @@ var Velocity = {
      * @param {number} x - [description]
      * @param {number} [y=x] - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setVelocity: function (x, y)
     {
-        this.body.velocity.set(x, y);
+        this.body.setVelocity(x, y);
 
         return this;
     },
@@ -38,11 +38,11 @@ var Velocity = {
      *
      * @param {number} x - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setVelocityX: function (x)
     {
-        this.body.velocity.x = x;
+        this.body.setVelocityX(x);
 
         return this;
     },
@@ -55,11 +55,11 @@ var Velocity = {
      *
      * @param {number} y - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setVelocityY: function (y)
     {
-        this.body.velocity.y = y;
+        this.body.setVelocityY(y);
 
         return this;
     },
@@ -73,7 +73,7 @@ var Velocity = {
      * @param {number} x - [description]
      * @param {number} [y=x] - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setMaxVelocity: function (x, y)
     {
