@@ -8,6 +8,7 @@ var Class = require('../../utils/Class');
 var Components = require('../components');
 var DOMElementRender = require('./DOMElementRender');
 var GameObject = require('../GameObject');
+var RemoveFromDOM = require('../../dom/RemoveFromDOM');
 var Vector4 = require('../../math/Vector4');
 
 /**
@@ -255,6 +256,10 @@ var DOMElement = new Class({
         if (this.node)
         {
             this.node.innerText = text;
+
+            var nodeBounds = this.node.getBoundingClientRect();
+
+            this.setSize(nodeBounds.width, nodeBounds.height);
         }
 
         return this;
@@ -265,6 +270,10 @@ var DOMElement = new Class({
         if (this.node)
         {
             this.node.innerHTML = html;
+
+            var nodeBounds = this.node.getBoundingClientRect();
+
+            this.setSize(nodeBounds.width, nodeBounds.height);
         }
 
         return this;
@@ -287,7 +296,7 @@ var DOMElement = new Class({
 
     destroy: function ()
     {
-
+        RemoveFromDOM(this.node);
     }
 
 });

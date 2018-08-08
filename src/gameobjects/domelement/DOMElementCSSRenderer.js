@@ -35,9 +35,9 @@ var DOMElementCSSRenderer = function (renderer, src, interpolationPercentage, ca
         return;
     }
 
-    var camMatrix = renderer.pipelines.TextureTintPipeline._tempMatrix1;
-    var spriteMatrix = renderer.pipelines.TextureTintPipeline._tempMatrix2;
-    var calcMatrix = renderer.pipelines.TextureTintPipeline._tempMatrix3;
+    var camMatrix = renderer._tempMatrix1;
+    var spriteMatrix = renderer._tempMatrix2;
+    var calcMatrix = renderer._tempMatrix3;
 
     var x = src.originX * src.width;
     var y = src.originY * src.height;
