@@ -81,50 +81,6 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
         lineOffsetX = (lineData.longest - lineData.lengths[0]);
     }
 
-    /*
-    //  Alpha
-
-    var alpha = camera.alpha * src.alpha;
-
-    if (alpha === 0)
-    {
-        //  Nothing to see, so abort early
-        return;
-    }
-
-    //  Blend Mode
-    ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
-
-    //  Alpha
-    ctx.globalAlpha = alpha;
-
-    var tx = (src.x - camera.scrollX * src.scrollFactorX) + src.frame.x;
-    var ty = (src.y - camera.scrollY * src.scrollFactorY) + src.frame.y;
-
-    var roundPixels = camera.roundPixels;
-
-    if (roundPixels)
-    {
-        tx |= 0;
-        ty |= 0;
-    }
-
-    ctx.save();
-
-    if (parentMatrix)
-    {
-        parentMatrix.copyToContext(ctx);
-    }
-
-    ctx.translate(tx, ty);
-
-    ctx.rotate(src.rotation);
-
-    ctx.translate(-src.displayOriginX, -src.displayOriginY);
-
-    ctx.scale(src.scaleX, src.scaleY);
-    */
-
     ctx.translate(-src.displayOriginX, -src.displayOriginY);
 
     var roundPixels = camera.roundPixels;
