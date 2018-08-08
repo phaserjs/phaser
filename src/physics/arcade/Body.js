@@ -1455,6 +1455,8 @@ var Body = new Class({
     {
         this.velocity.set(x, y);
 
+        this.speed = Math.sqrt(x * x + y * y);
+
         return this;
     },
 
@@ -1472,6 +1474,11 @@ var Body = new Class({
     {
         this.velocity.x = value;
 
+        var vx = value;
+        var vy = this.velocity.y;
+
+        this.speed = Math.sqrt(vx * vx + vy * vy);
+
         return this;
     },
 
@@ -1488,6 +1495,11 @@ var Body = new Class({
     setVelocityY: function (value)
     {
         this.velocity.y = value;
+
+        var vx = this.velocity.x;
+        var vy = value;
+
+        this.speed = Math.sqrt(vx * vx + vy * vy);
 
         return this;
     },
