@@ -27,6 +27,50 @@ var ValueToColor = require('../display/color/ValueToColor');
  */
 
 /**
+ * @typedef {object} InputConfig
+ *
+ * @property {(boolean|KeyboardInputConfig)} [keyboard=true] - [description]
+ * @property {(boolean|MouseInputConfig)} [mouse=true] - [description]
+ * @property {(boolean|TouchInputConfig)} [touch=true] - [description]
+ * @property {(boolean|GamepadInputConfig)} [gamepad=false] - [description]
+ * @property {integer} [activePointers=1] - [description]
+ */
+
+/**
+ * @typedef {object} MouseInputConfig
+ *
+ * @property {*} [target=null] - [description]
+ * @property {boolean} [capture=true] - [description]
+ */
+
+/**
+ * @typedef {object} KeyboardInputConfig
+ *
+ * @property {*} [target=window] - [description]
+ */
+
+/**
+ * @typedef {object} TouchInputConfig
+ *
+ * @property {*} [target=null] - [description]
+ * @property {boolean} [capture=true] - [description]
+ */
+
+/**
+ * @typedef {object} GamepadInputConfig
+ *
+ * @property {*} [target=window] - [description]
+ */
+
+/**
+ * @typedef {object} BannerConfig
+ *
+ * @property {boolean} [hidePhaser=false] - [description]
+ * @property {string} [text='#ffffff'] - [description]
+ * @property {string[]} [background] - [description]
+ */
+
+/**
  * @typedef {object} FPSConfig
  *
  * @property {integer} [min=10] - [description]
@@ -34,6 +78,22 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {boolean} [forceSetTimeOut=false] - [description]
  * @property {integer} [deltaHistory=10] - [description]
  * @property {integer} [panicMax=120] - [description]
+ */
+
+/**
+ * @typedef {object} RenderConfig
+ *
+ * @property {boolean} [antialias=true] - [description]
+ * @property {boolean} [pixelArt=false] - [description]
+ * @property {boolean} [autoResize=false] - [description]
+ * @property {boolean} [roundPixels=false] - [description]
+ * @property {boolean} [transparent=false] - [description]
+ * @property {boolean} [clearBeforeRender=true] - [description]
+ * @property {boolean} [premultipliedAlpha=true] - [description]
+ * @property {boolean} [preserveDrawingBuffer=false] - [description]
+ * @property {boolean} [failIfMajorPerformanceCaveat=false] - [description]
+ * @property {string} [powerPreference='default'] - "high-performance", "low-power" or "default"
+ * @property {integer} [batchSize=2000] - The default WebGL batch size.
  */
 
 /**
@@ -49,6 +109,13 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {integer} [minHeight] - The minimum height the canvas can be scaled down to.
  * @property {integer} [maxWidth] - The maximum width the canvas can be scaled up to.
  * @property {integer} [maxHeight] - The maximum height the canvas can be scaled up to.
+ */
+
+/**
+ * @typedef {object} CallbacksConfig
+ *
+ * @property {BootCallback} [preBoot=NOOP] - [description]
+ * @property {BootCallback} [postBoot=NOOP] - [description]
  */
 
 /**
@@ -72,9 +139,16 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {boolean} [behindCanvas=false] - Place the DOM Container behind the Phaser Canvas. The default is to place it over the Canvas.
  */
 
-/** 
+/**
+ * @typedef {object} ImagesConfig
+ *
+ * @property {string} [default] - [description]
+ * @property {string} [missing] - [description]
+ */
+
+/**
  * @typedef {object} PluginObjectItem
- * 
+ *
  * @property {string} [key] - [description]
  * @property {*} [plugin] - [description]
  * @property {boolean} [start] - [description]
@@ -83,9 +157,9 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {*} [data] - [description]
  */
 
-/** 
+/**
  * @typedef {object} PluginObject
- * 
+ *
  * @property {PluginObjectItem[]} [global=null] - [description]
  * @property {PluginObjectItem[]} [scene=null] - [description]
  * @property {Array} [default=[]] - [description]
@@ -110,42 +184,16 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {string} [url='http://phaser.io'] - [description]
  * @property {string} [version=''] - [description]
  * @property {boolean} [autoFocus=true] - Automatically call window.focus() when the game boots.
- * @property {(boolean|object)} [input] - [description]
- * @property {boolean} [input.keyboard=true] - [description]
- * @property {*} [input.keyboard.target=window] - [description]
- * @property {(boolean|object)} [input.mouse=true] - [description]
- * @property {*} [input.mouse.target=null] - [description]
- * @property {boolean} [input.touch=true] - [description]
- * @property {integer} [input.activePointers=1] - [description]
- * @property {*} [input.touch.target=null] - [description]
- * @property {boolean} [input.touch.capture=true] - [description]
- * @property {(boolean|object)} [input.gamepad=false] - [description]
+ * @property {(boolean|InputConfig)} [input] - [description]
  * @property {boolean} [disableContextMenu=false] - [description]
- * @property {(boolean|object)} [banner=false] - [description]
- * @property {boolean} [banner.hidePhaser=false] - [description]
- * @property {string} [banner.text='#ffffff'] - [description]
- * @property {string[]} [banner.background] - [description]
+ * @property {(boolean|BannerConfig)} [banner=false] - [description]
  * @property {DOMContainerConfig} [dom] - The DOM Container configuration object.
  * @property {FPSConfig} [fps] - [description]
- * @property {boolean} [render.antialias=true] - [description]
- * @property {boolean} [render.pixelArt=false] - [description]
- * @property {boolean} [render.autoResize=false] - [description]
- * @property {boolean} [render.roundPixels=false] - [description]
- * @property {boolean} [render.transparent=false] - [description]
- * @property {boolean} [render.clearBeforeRender=true] - [description]
- * @property {boolean} [render.premultipliedAlpha=true] - [description]
- * @property {boolean} [render.preserveDrawingBuffer=false] - [description]
- * @property {boolean} [render.failIfMajorPerformanceCaveat=false] - [description]
- * @property {string} [render.powerPreference='default'] - "high-performance", "low-power" or "default"
- * @property {integer} [render.batchSize=2000] - The default WebGL batch size.
+ * @property {RenderConfig} [render] - [description]
  * @property {(string|number)} [backgroundColor=0x000000] - [description]
- * @property {object} [callbacks] - [description]
- * @property {BootCallback} [callbacks.preBoot=NOOP] - [description]
- * @property {BootCallback} [callbacks.postBoot=NOOP] - [description]
+ * @property {CallbacksConfig} [callbacks] - [description]
  * @property {LoaderConfig} [loader] - [description]
- * @property {object} [images] - [description]
- * @property {string} [images.default] - [description]
- * @property {string} [images.missing] - [description]
+ * @property {ImagesConfig} [images] - [description]
  * @property {object} [physics] - [description]
  * @property {PluginObject|PluginObjectItem[]} [plugins] - [description]
  */
@@ -619,7 +667,7 @@ var Config = new Class({
          * @const {string} Phaser.Boot.Config#defaultImage - [description]
          */
         this.defaultImage = GetValue(config, 'images.default', pngPrefix + 'AQMAAABJtOi3AAAAA1BMVEX///+nxBvIAAAAAXRSTlMAQObYZgAAABVJREFUeF7NwIEAAAAAgKD9qdeocAMAoAABm3DkcAAAAABJRU5ErkJggg==');
-        
+
         /**
          * @const {string} Phaser.Boot.Config#missingImage - [description]
          */
