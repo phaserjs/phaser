@@ -340,9 +340,9 @@ var BitmapText = new Class({
         {
             this._text = value.toString();
 
-            this.updateDisplayOrigin();
-
             this._dirty = true;
+
+            this.updateDisplayOrigin();
         }
 
         return this;
