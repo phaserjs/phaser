@@ -37,7 +37,7 @@ function hasGetterOrSetter (def)
  * @param {string} [texture] - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
  *
- * @return {Phaser.GameObjects.PathFollower} The Game Object that was created.
+ * @return {Phaser.GameObjects.GameObject} The Game Object that was created.
  */
 GameObjectFactory.register('follower', function (path, x, y, key, frame)
 {
