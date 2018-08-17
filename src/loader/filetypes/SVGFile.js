@@ -83,23 +83,28 @@ var SVGFile = new Class({
     {
         this.state = CONST.FILE_PROCESSING;
 
-          var rText = this.xhrLoader.responseText,
-            svg = [rText],
-            configWidth = this.xhrSettings.width,
-            configHeight = this.xhrSettings.height;
+        var text = this.xhrLoader.responseText;
+        var svg = [ text ];
+        var width = this.xhrSettings.width;
+        var height = this.xhrSettings.height;
 
-        if (configWidth && configHeight) {
-            var xD = null,
-                parser = new DOMParser();
-            xD = parser.parseFromString(rText, "text/xml");
-            var svgXML = xD.getElementsByTagName("svg")[0];
-            gA = (a) => svgXML.getAttribute(a);
-            sA = (a, b) => svgXML.setAttribute(a, b);
-            gA('viewBox') ? '' : sA('viewBox', '0  0 ' + gA('width') + ' ' + gA('height'));
-            sA('width', configWidth);
-            sA('height', configHeight);
-            svg = [(new XMLSerializer()).serializeToString(svgXML)];
+        if (width && height)
+        {
+            var xml = null;
+            var parser = new DOMParser();
+            xml = parser.parseFromString( text , 'text/xml');
+            var svgXML = xml.getElementsByTagName('svg')[ 0 ];
+            
+            // Si no tiene el atributo viewBox, le asigna el valor del alto y ancho predefinidos, para no tener problemas en el escalado.
+            if (svgXML.getAttribute('viewBox'))
+            {
+                svgXML.setAttribute('viewBox', '0  0 ' + svgXML.getAttribute('width') + ' ' + svgXML.getAttribute('height'));
             }
+
+            svgXML.setAttribute('width', width);
+            svgXML.setAttribute('height', height);
+            svg = [ (new XMLSerializer()).serializeToString(svgXML) ];
+        }
 
         try
         {
