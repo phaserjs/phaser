@@ -92,8 +92,8 @@ var SVGFile = new Class({
         {
             var xml = null;
             var parser = new DOMParser();
-            xml = parser.parseFromString( text , 'text/xml');
-            var svgXML = xml.getElementsByTagName('svg')[ 0 ];
+            xml = parser.parseFromString(text , 'text/xml');
+            var svgXML = xml.getElementsByTagName('svg')[0];
             
             // Si no tiene el atributo viewBox, le asigna el valor del alto y ancho predefinidos, para no tener problemas en el escalado.
             if (svgXML.getAttribute('viewBox'))
