@@ -83,7 +83,23 @@ var SVGFile = new Class({
     {
         this.state = CONST.FILE_PROCESSING;
 
-        var svg = [ this.xhrLoader.responseText ];
+          var rText = this.xhrLoader.responseText,
+            svg = [rText],
+            configWidth = this.xhrSettings.width,
+            configHeight = this.xhrSettings.height;
+
+        if (configWidth && configHeight) {
+            var xD = null,
+                parser = new DOMParser();
+            xD = parser.parseFromString(rText, "text/xml");
+            var svgXML = xD.getElementsByTagName("svg")[0];
+            gA = (a) => svgXML.getAttribute(a);
+            sA = (a, b) => svgXML.setAttribute(a, b);
+            gA('viewBox') ? '' : sA('viewBox', '0  0 ' + gA('width') + ' ' + gA('height'));
+            sA('width', configWidth);
+            sA('height', configHeight);
+            svg = [(new XMLSerializer()).serializeToString(svgXML)];
+            }
 
         try
         {
