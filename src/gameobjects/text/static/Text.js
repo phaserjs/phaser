@@ -146,11 +146,12 @@ var Text = new Class({
         /**
          * The text to display.
          *
-         * @name Phaser.GameObjects.Text#text
+         * @name Phaser.GameObjects.Text#_text
          * @type {string}
-         * @since 3.0.0
+         * @private
+         * @since 3.12.0
          */
-        this.text = '';
+        this._text = '';
 
         /**
          * Specify a padding value which is added to the line width and height when calculating the Text size.
@@ -520,7 +521,7 @@ var Text = new Class({
      */
     getWrappedText: function (text)
     {
-        if (text === undefined) { text = this.text; }
+        if (text === undefined) { text = this._text; }
 
         this.style.syncFont(this.canvas, this.context);
 
@@ -553,9 +554,9 @@ var Text = new Class({
             value = value.join('\n');
         }
 
-        if (value !== this.text)
+        if (value !== this._text)
         {
-            this.text = value.toString();
+            this._text = value.toString();
 
             this.updateText();
         }
@@ -1003,11 +1004,11 @@ var Text = new Class({
 
         style.syncFont(canvas, context);
 
-        var outputText = this.text;
+        var outputText = this._text;
 
         if (style.wordWrapWidth || style.wordWrapCallback)
         {
-            outputText = this.runWordWrap(this.text);
+            outputText = this.runWordWrap(this._text);
         }
 
         //  Split text into lines
@@ -1144,6 +1145,27 @@ var Text = new Class({
     },
 
     /**
+     * The text string being rendered by this Text Game Object.
+     *
+     * @name Phaser.GameObjects.Text#text
+     * @type {string}
+     * @since 3.0.0
+     */
+    text: {
+
+        get: function ()
+        {
+            return this._text;
+        },
+
+        set: function (value)
+        {
+            this.setText(value);
+        }
+
+    },
+
+    /**
      * Build a JSON representation of the Text object.
      *
      * @method Phaser.GameObjects.Text#toJSON
@@ -1159,7 +1181,7 @@ var Text = new Class({
 
         var data = {
             autoRound: this.autoRound,
-            text: this.text,
+            text: this._text,
             style: this.style.toJSON(),
             padding: {
                 left: this.padding.left,

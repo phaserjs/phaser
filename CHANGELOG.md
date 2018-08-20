@@ -63,6 +63,7 @@ The Text Game Object has been given an internal overhaul to make it more flexibl
 * Text now keeps a reference to the renderer in the `renderer` property.
 * The `canvasTexture` property has been removed.
 * Text now has internal `texture` and `frame` properties. These replace the old `canvasTexture` but perform the same task, while allowing for texture cropping and much smaller renderer code.
+* Previously, changing a Text object by setting its `text` property directly wouldn't change the text being rendered as using `setText` was the expected way to change what was being displayed. Internally the `text` property has been renamed to `_text` and flagged as private, and a new getter / setter for `text` has been added, which hands over to the `setText` method, meaning you can now use both ways of setting the text. Fix #3919 (thanks @hackhat @samid737)
 
 ### Tile Sprite Object New Features and Updates
 
