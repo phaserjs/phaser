@@ -16,7 +16,6 @@ var WorldToTileY = require('./WorldToTileY');
  * @private
  * @since 3.0.0
  *
- * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
  * @param {number} worldX - [description]
  * @param {number} worldY - [description]
  * @param {boolean} [replaceWithNull=true] - If true, this will replace the tile at the specified
