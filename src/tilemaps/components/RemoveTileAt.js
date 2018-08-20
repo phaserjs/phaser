@@ -16,9 +16,8 @@ var CalculateFacesAt = require('./CalculateFacesAt');
  * @private
  * @since 3.0.0
  *
- * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
- * @param {integer} tileX - [description]
- * @param {integer} tileY - [description]
+ * @param {integer} tileX - The x coordinate.
+ * @param {integer} tileY - The y coordinate.
  * @param {boolean} [replaceWithNull=true] - If true, this will replace the tile at the specified
  * location with null instead of a Tile with an index of -1.
  * @param {boolean} [recalculateFaces=true] - [description]
