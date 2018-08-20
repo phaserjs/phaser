@@ -7,6 +7,7 @@
 var Class = require('../../utils/Class');
 var DegToRad = require('../../math/DegToRad');
 var DistanceBetween = require('../../math/distance/DistanceBetween');
+var DistanceSquared = require('../../math/distance/DistanceSquared');
 var Factory = require('./Factory');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Merge = require('../../utils/object/Merge');
@@ -310,7 +311,7 @@ var ArcadePhysics = new Class({
         for (var i = bodies.length - 1; i >= 0; i--)
         {
             var target = bodies[i];
-            var distance = DistanceBetween(x, y, target.x, target.y);
+            var distance = DistanceSquared(x, y, target.x, target.y);
 
             if (distance < min)
             {
@@ -344,7 +345,7 @@ var ArcadePhysics = new Class({
         for (var i = bodies.length - 1; i >= 0; i--)
         {
             var target = bodies[i];
-            var distance = DistanceBetween(x, y, target.x, target.y);
+            var distance = DistanceSquared(x, y, target.x, target.y);
 
             if (distance > max)
             {
