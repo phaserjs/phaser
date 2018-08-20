@@ -96,6 +96,9 @@ var TileSprite = new Class({
 
     function TileSprite (scene, x, y, width, height, textureKey, frameKey)
     {
+        width = Math.floor(width);
+        height = Math.floor(height);
+
         var renderer = scene.sys.game.renderer;
 
         GameObject.call(this, scene, 'TileSprite');
@@ -470,7 +473,7 @@ var TileSprite = new Class({
             canvas.width = this.width;
             canvas.height = this.height;
 
-            this.frame.resize(this.width, this.height);
+            this.frame.setSize(this.width, this.height);
         }
 
         if (!this.dirty || this.renderer && this.renderer.gl)
