@@ -1636,11 +1636,9 @@ var WebGLRenderer = new Class({
         var color = this.config.backgroundColor;
         var pipelines = this.pipelines;
 
-        // Bind custom framebuffer here
-        gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
-
         if (this.config.clearBeforeRender)
         {
+            gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
         }
 
