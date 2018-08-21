@@ -67,7 +67,7 @@ var BlendMode = {
 
             value |= 0;
 
-            if (value >= 0)
+            if (value >= -1)
             {
                 this._blendMode = value;
             }
