@@ -207,12 +207,77 @@ var DynamicTilemapLayer = new Class({
          */
         this.cullCallback = TilemapComponents.CullTiles;
 
+        /**
+         * The rendering (draw) order of the tiles in this layer.
+         * 
+         * The default is 0 which is 'right-down', meaning it will draw the tiles starting from the top-left,
+         * drawing to the right and then moving down to the next row.
+         * 
+         * The draw orders are:
+         * 
+         * 0 = right-down
+         * 1 = left-down
+         * 2 = right-up
+         * 3 = left-up
+         * 
+         * This can be changed via the `setRenderOrder` method.
+         *
+         * @name Phaser.Tilemaps.DynamicTilemapLayer#_renderOrder
+         * @type {integer}
+         * @default 0
+         * @private
+         * @since 3.12.0
+         */
+        this._renderOrder = 0;
+
         this.setAlpha(this.layer.alpha);
         this.setPosition(x, y);
         this.setOrigin();
         this.setSize(this.layer.tileWidth * this.layer.width, this.layer.tileHeight * this.layer.height);
 
         this.initPipeline('TextureTintPipeline');
+    },
+
+    /**
+     * Sets the rendering (draw) order of the tiles in this layer.
+     * 
+     * The default is 'right-down', meaning it will order the tiles starting from the top-left,
+     * drawing to the right and then moving down to the next row.
+     * 
+     * The draw orders are:
+     * 
+     * 0 = right-down
+     * 1 = left-down
+     * 2 = right-up
+     * 3 = left-up
+     * 
+     * Setting the render order does not change the tiles or how they are stored in the layer,
+     * it purely impacts the order in which they are rendered.
+     * 
+     * You can provide either an integer (0 to 3), or the string version of the order.
+     *
+     * @method Phaser.Tilemaps.DynamicTilemapLayer#setRenderOrder
+     * @since 3.12.0
+     *
+     * @param {(integer|string)} renderOrder - The render (draw) order value. Either an integer between 0 and 3, or a string: 'right-down', 'left-down', 'right-up' or 'left-up'.
+     *
+     * @return {this} This Tilemap Layer object.
+     */
+    setRenderOrder: function (renderOrder)
+    {
+        var orders = [ 'right-down', 'left-down', 'right-up', 'left-up' ];
+
+        if (typeof renderOrder === 'string')
+        {
+            renderOrder = orders.indexOf(renderOrder);
+        }
+
+        if (renderOrder >= 0 && renderOrder < 4)
+        {
+            this._renderOrder = renderOrder;
+        }
+
+        return this;
     },
 
     /**
@@ -295,7 +360,7 @@ var DynamicTilemapLayer = new Class({
      */
     cull: function (camera)
     {
-        return this.cullCallback(this.layer, camera, this.culledTiles);
+        return this.cullCallback(this.layer, camera, this.culledTiles, this._renderOrder);
     },
 
     /**
