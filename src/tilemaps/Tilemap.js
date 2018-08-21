@@ -501,6 +501,9 @@ var Tilemap = new Class({
      * way to configure Sprite properties from within the map editor. For example giving an object a
      * property of alpha: 0.5 in the map editor will duplicate that when the Sprite is created.
      *
+     * Custom object properties not sharing names with the Sprite's own properties are copied to the
+     * Sprite's {@link Phaser.GameObjects.Sprite#data data store}.
+     *
      * @method Phaser.Tilemaps.Tilemap#createFromObjects
      * @since 3.0.0
      *
@@ -578,6 +581,16 @@ var Tilemap = new Class({
                 }
 
                 if (!obj.visible) { sprite.visible = false; }
+
+                for (var key in obj.properties)
+                {
+                    if (sprite.hasOwnProperty(key))
+                    {
+                        continue;
+                    }
+
+                    sprite.setData(key, obj.properties[key]);
+                }
 
                 sprites.push(sprite);
             }
