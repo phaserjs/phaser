@@ -924,30 +924,19 @@ var TextureManager = new Class({
     {
         var textureFrame = this.getFrame(key, frame);
 
-        if (textureFrame)
+        if (textureFrame && x >= 0 && x < textureFrame.cutWidth && y >= 0 && y < textureFrame.cutHeight)
         {
-            var source = textureFrame.source.image;
+            x += textureFrame.cutX;
+            y += textureFrame.cutY;
 
-            if (x >= 0 && x <= source.width && y >= 0 && y <= source.height)
-            {
-                x += textureFrame.cutX;
-                y += textureFrame.cutY;
+            var ctx = this._tempContext;
 
-                // if (textureFrame.trimmed)
-                // {
-                //     x -= this.sprite.texture.trim.x;
-                //     y -= this.sprite.texture.trim.y;
-                // }
+            ctx.clearRect(0, 0, 1, 1);
+            ctx.drawImage(textureFrame.source.image, x, y, 1, 1, 0, 0, 1, 1);
 
-                var ctx = this._tempContext;
+            var rgb = ctx.getImageData(0, 0, 1, 1);
 
-                ctx.clearRect(0, 0, 1, 1);
-                ctx.drawImage(source, x, y, 1, 1, 0, 0, 1, 1);
-
-                var rgb = ctx.getImageData(0, 0, 1, 1);
-
-                return new Color(rgb.data[0], rgb.data[1], rgb.data[2], rgb.data[3]);
-            }
+            return new Color(rgb.data[0], rgb.data[1], rgb.data[2], rgb.data[3]);
         }
 
         return null;
@@ -972,24 +961,19 @@ var TextureManager = new Class({
     {
         var textureFrame = this.getFrame(key, frame);
 
-        if (textureFrame)
+        if (textureFrame && x >= 0 && x < textureFrame.cutWidth && y >= 0 && y < textureFrame.cutHeight)
         {
-            var source = textureFrame.source.image;
+            x += textureFrame.cutX;
+            y += textureFrame.cutY;
 
-            if (x >= 0 && x <= source.width && y >= 0 && y <= source.height)
-            {
-                x += textureFrame.cutX;
-                y += textureFrame.cutY;
+            var ctx = this._tempContext;
 
-                var ctx = this._tempContext;
+            ctx.clearRect(0, 0, 1, 1);
+            ctx.drawImage(textureFrame.source.image, x, y, 1, 1, 0, 0, 1, 1);
 
-                ctx.clearRect(0, 0, 1, 1);
-                ctx.drawImage(source, x, y, 1, 1, 0, 0, 1, 1);
+            var rgb = ctx.getImageData(0, 0, 1, 1);
 
-                var rgb = ctx.getImageData(0, 0, 1, 1);
-
-                return rgb.data[3];
-            }
+            return rgb.data[3];
         }
 
         return null;
