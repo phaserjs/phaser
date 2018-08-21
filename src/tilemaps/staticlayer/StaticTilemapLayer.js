@@ -278,6 +278,29 @@ var StaticTilemapLayer = new Class({
          */
         this.vertexCount = 0;
 
+        /**
+         * The rendering (draw) order of the tiles in this layer.
+         * 
+         * The default is 0 which is 'right-down', meaning it will draw the tiles starting from the top-left,
+         * drawing to the right and then moving down to the next row.
+         * 
+         * The draw orders are:
+         * 
+         * 0 = right-down
+         * 1 = left-down
+         * 2 = right-up
+         * 3 = left-up
+         * 
+         * This can be changed via the `setRenderOrder` method.
+         *
+         * @name Phaser.Tilemaps.StaticTilemapLayer#_renderOrder
+         * @type {integer}
+         * @default 0
+         * @private
+         * @since 3.12.0
+         */
+        this._renderOrder = 0;
+
         this.setAlpha(this.layer.alpha);
         this.setPosition(x, y);
         this.setOrigin();
@@ -293,6 +316,49 @@ var StaticTilemapLayer = new Class({
                 this.vertexBuffer = null;
             }, this);
         }
+    },
+
+    /**
+     * Sets the rendering (draw) order of the tiles in this layer.
+     * 
+     * The default is 'right-down', meaning it will order the tiles starting from the top-left,
+     * drawing to the right and then moving down to the next row.
+     * 
+     * The draw orders are:
+     * 
+     * 0 = right-down
+     * 1 = left-down
+     * 2 = right-up
+     * 3 = left-up
+     * 
+     * Setting the render order does not change the tiles or how they are stored in the layer,
+     * it purely impacts the order in which they are rendered.
+     * 
+     * You can provide either an integer (0 to 3), or the string version of the order.
+     *
+     * @method Phaser.Tilemaps.StaticTilemapLayer#setRenderOrder
+     * @since 3.12.0
+     *
+     * @param {(integer|string)} renderOrder - The render (draw) order value. Either an integer between 0 and 3, or a string: 'right-down', 'left-down', 'right-up' or 'left-up'.
+     *
+     * @return {this} This Tilemap Layer object.
+     */
+    setRenderOrder: function (renderOrder)
+    {
+        var orders = [ 'right-down', 'left-down', 'right-up', 'left-up' ];
+
+        if (typeof renderOrder === 'string')
+        {
+            renderOrder = orders.indexOf(renderOrder);
+        }
+
+        if (renderOrder >= 0 && renderOrder < 4)
+        {
+            this._renderOrder = renderOrder;
+            this.dirty = true;
+        }
+
+        return this;
     },
 
     /**
@@ -323,129 +389,103 @@ var StaticTilemapLayer = new Class({
             var tile;
             var row;
             var col;
-            var texCoords;
+            var renderOrder = this._renderOrder;
     
             var vertexBuffer = this.vertexBuffer;
             var bufferData = this.bufferData;
             var vOffset = -1;
-            var vertexCount = 0;
-            var tintEffect = false;
             var bufferSize = (mapWidth * mapHeight) * pipeline.vertexSize * 6;
+
+            this.vertexCount = 0;
     
             if (bufferData === null)
             {
                 bufferData = new ArrayBuffer(bufferSize);
+
                 this.bufferData = bufferData;
+
                 this.vertexViewF32 = new Float32Array(bufferData);
                 this.vertexViewU32 = new Uint32Array(bufferData);
             }
     
-            var vertexViewF32 = this.vertexViewF32;
-            var vertexViewU32 = this.vertexViewU32;
-    
-            for (row = 0; row < mapHeight; row++)
+            if (renderOrder === 0)
             {
-                for (col = 0; col < mapWidth; col++)
+                //  right-down
+        
+                for (row = 0; row < mapHeight; row++)
                 {
-                    tile = mapData[row][col];
-    
-                    if (!tile || tile.index === -1 || !tile.visible)
+                    for (col = 0; col < mapWidth; col++)
                     {
-                        continue;
+                        tile = mapData[row][col];
+        
+                        if (!tile || tile.index === -1 || !tile.visible)
+                        {
+                            continue;
+                        }
+    
+                        vOffset = this.batchTile(vOffset, tile, tileset, width, height, camera);
                     }
-    
-                    var tx = tile.pixelX;
-                    var ty = tile.pixelY;
-                    var txw = tx + tile.width;
-                    var tyh = ty + tile.height;
-    
-                    texCoords = tileset.getTileTextureCoordinates(tile.index);
-    
-                    if (!texCoords)
-                    {
-                        continue;
-                    }
-    
-                    var u0 = texCoords.x / width;
-                    var v0 = texCoords.y / height;
-                    var u1 = (texCoords.x + tile.width) / width;
-                    var v1 = (texCoords.y + tile.height) / height;
-    
-                    var tint = Utils.getTintAppendFloatAlpha(0xffffff, camera.alpha * this.alpha * tile.alpha);
-    
-                    var tx0 = tx;
-                    var ty0 = ty;
-                    var tx1 = tx;
-                    var ty1 = tyh;
-                    var tx2 = txw;
-                    var ty2 = tyh;
-                    var tx3 = txw;
-                    var ty3 = ty;
-    
-                    if (camera.roundPixels)
-                    {
-                        tx0 |= 0;
-                        ty0 |= 0;
-            
-                        tx1 |= 0;
-                        ty1 |= 0;
-            
-                        tx2 |= 0;
-                        ty2 |= 0;
-            
-                        tx3 |= 0;
-                        ty3 |= 0;
-                    }
-            
-                    vertexViewF32[++vOffset] = tx0;
-                    vertexViewF32[++vOffset] = ty0;
-                    vertexViewF32[++vOffset] = u0;
-                    vertexViewF32[++vOffset] = v0;
-                    vertexViewF32[++vOffset] = tintEffect;
-                    vertexViewU32[++vOffset] = tint;
-    
-                    vertexViewF32[++vOffset] = tx1;
-                    vertexViewF32[++vOffset] = ty1;
-                    vertexViewF32[++vOffset] = u0;
-                    vertexViewF32[++vOffset] = v1;
-                    vertexViewF32[++vOffset] = tintEffect;
-                    vertexViewU32[++vOffset] = tint;
-    
-                    vertexViewF32[++vOffset] = tx2;
-                    vertexViewF32[++vOffset] = ty2;
-                    vertexViewF32[++vOffset] = u1;
-                    vertexViewF32[++vOffset] = v1;
-                    vertexViewF32[++vOffset] = tintEffect;
-                    vertexViewU32[++vOffset] = tint;
-    
-                    vertexViewF32[++vOffset] = tx0;
-                    vertexViewF32[++vOffset] = ty0;
-                    vertexViewF32[++vOffset] = u0;
-                    vertexViewF32[++vOffset] = v0;
-                    vertexViewF32[++vOffset] = tintEffect;
-                    vertexViewU32[++vOffset] = tint;
-    
-                    vertexViewF32[++vOffset] = tx2;
-                    vertexViewF32[++vOffset] = ty2;
-                    vertexViewF32[++vOffset] = u1;
-                    vertexViewF32[++vOffset] = v1;
-                    vertexViewF32[++vOffset] = tintEffect;
-                    vertexViewU32[++vOffset] = tint;
-    
-                    vertexViewF32[++vOffset] = tx3;
-                    vertexViewF32[++vOffset] = ty3;
-                    vertexViewF32[++vOffset] = u1;
-                    vertexViewF32[++vOffset] = v0;
-                    vertexViewF32[++vOffset] = tintEffect;
-                    vertexViewU32[++vOffset] = tint;
-    
-                    vertexCount += 6;
                 }
             }
-
+            else if (renderOrder === 1)
+            {
+                //  left-down
+        
+                for (row = 0; row < mapHeight; row++)
+                {
+                    for (col = mapWidth - 1; col >= 0; col--)
+                    {
+                        tile = mapData[row][col];
+        
+                        if (!tile || tile.index === -1 || !tile.visible)
+                        {
+                            continue;
+                        }
+    
+                        vOffset = this.batchTile(vOffset, tile, tileset, width, height, camera);
+                    }
+                }
+            }
+            else if (renderOrder === 2)
+            {
+                //  right-up
+        
+                for (row = mapHeight - 1; row >= 0; row--)
+                {
+                    for (col = 0; col < mapWidth; col++)
+                    {
+                        tile = mapData[row][col];
+        
+                        if (!tile || tile.index === -1 || !tile.visible)
+                        {
+                            continue;
+                        }
+    
+                        vOffset = this.batchTile(vOffset, tile, tileset, width, height, camera);
+                    }
+                }
+            }
+            else if (renderOrder === 3)
+            {
+                //  left-up
+        
+                for (row = mapHeight - 1; row >= 0; row--)
+                {
+                    for (col = mapWidth - 1; col >= 0; col--)
+                    {
+                        tile = mapData[row][col];
+        
+                        if (!tile || tile.index === -1 || !tile.visible)
+                        {
+                            continue;
+                        }
+    
+                        vOffset = this.batchTile(vOffset, tile, tileset, width, height, camera);
+                    }
+                }
+            }
+        
             this.dirty = false;
-
-            this.vertexCount = vertexCount;
     
             if (vertexBuffer === null)
             {
@@ -467,6 +507,117 @@ var StaticTilemapLayer = new Class({
         pipeline.viewLoad2D(camera.matrix.matrix);
 
         return this;
+    },
+
+    /**
+     * Add a single tile into the batch.
+     *
+     * @method Phaser.Tilemaps.StaticTilemapLayer#batchTile
+     * @private
+     * @since 3.12.0
+     *
+     * @param {integer} vOffset - The vertex offset.
+     * @param {any} tile - The tile being rendered.
+     * @param {any} tileset - The tileset being used for rendering.
+     * @param {integer} width - The width of the layer.
+     * @param {integer} height - The height of the layer.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera the layer is being rendered with.
+     *
+     * @return {integer} The new vOffset value.
+     */
+    batchTile: function (vOffset, tile, tileset, width, height, camera)
+    {
+        var tx = tile.pixelX;
+        var ty = tile.pixelY;
+        var txw = tx + tile.width;
+        var tyh = ty + tile.height;
+
+        var texCoords = tileset.getTileTextureCoordinates(tile.index);
+
+        if (!texCoords)
+        {
+            return;
+        }
+
+        var u0 = texCoords.x / width;
+        var v0 = texCoords.y / height;
+        var u1 = (texCoords.x + tile.width) / width;
+        var v1 = (texCoords.y + tile.height) / height;
+
+        var tint = Utils.getTintAppendFloatAlpha(0xffffff, camera.alpha * this.alpha * tile.alpha);
+
+        var tx0 = tx;
+        var ty0 = ty;
+        var tx1 = tx;
+        var ty1 = tyh;
+        var tx2 = txw;
+        var ty2 = tyh;
+        var tx3 = txw;
+        var ty3 = ty;
+
+        if (camera.roundPixels)
+        {
+            tx0 |= 0;
+            ty0 |= 0;
+
+            tx1 |= 0;
+            ty1 |= 0;
+
+            tx2 |= 0;
+            ty2 |= 0;
+
+            tx3 |= 0;
+            ty3 |= 0;
+        }
+
+        var vertexViewF32 = this.vertexViewF32;
+        var vertexViewU32 = this.vertexViewU32;
+
+        vertexViewF32[++vOffset] = tx0;
+        vertexViewF32[++vOffset] = ty0;
+        vertexViewF32[++vOffset] = u0;
+        vertexViewF32[++vOffset] = v0;
+        vertexViewF32[++vOffset] = 0;
+        vertexViewU32[++vOffset] = tint;
+
+        vertexViewF32[++vOffset] = tx1;
+        vertexViewF32[++vOffset] = ty1;
+        vertexViewF32[++vOffset] = u0;
+        vertexViewF32[++vOffset] = v1;
+        vertexViewF32[++vOffset] = 0;
+        vertexViewU32[++vOffset] = tint;
+
+        vertexViewF32[++vOffset] = tx2;
+        vertexViewF32[++vOffset] = ty2;
+        vertexViewF32[++vOffset] = u1;
+        vertexViewF32[++vOffset] = v1;
+        vertexViewF32[++vOffset] = 0;
+        vertexViewU32[++vOffset] = tint;
+
+        vertexViewF32[++vOffset] = tx0;
+        vertexViewF32[++vOffset] = ty0;
+        vertexViewF32[++vOffset] = u0;
+        vertexViewF32[++vOffset] = v0;
+        vertexViewF32[++vOffset] = 0;
+        vertexViewU32[++vOffset] = tint;
+
+        vertexViewF32[++vOffset] = tx2;
+        vertexViewF32[++vOffset] = ty2;
+        vertexViewF32[++vOffset] = u1;
+        vertexViewF32[++vOffset] = v1;
+        vertexViewF32[++vOffset] = 0;
+        vertexViewU32[++vOffset] = tint;
+
+        vertexViewF32[++vOffset] = tx3;
+        vertexViewF32[++vOffset] = ty3;
+        vertexViewF32[++vOffset] = u1;
+        vertexViewF32[++vOffset] = v0;
+        vertexViewF32[++vOffset] = 0;
+        vertexViewU32[++vOffset] = tint;
+
+        this.vertexCount += 6;
+
+        return vOffset;
     },
 
     /**
