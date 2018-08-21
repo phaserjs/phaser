@@ -359,24 +359,26 @@ var TransformMatrix = new Class({
      * @method Phaser.GameObjects.Components.TransformMatrix#rotate
      * @since 3.0.0
      *
-     * @param {number} radian - The angle of rotation in radians.
+     * @param {number} angle - The angle of rotation in radians.
      *
      * @return {this} This TransformMatrix.
      */
-    rotate: function (radian)
+    rotate: function (angle)
     {
-        var radianSin = Math.sin(radian);
-        var radianCos = Math.cos(radian);
+        var sin = Math.sin(angle);
+        var cos = Math.cos(angle);
+
         var matrix = this.matrix;
+
         var a = matrix[0];
         var b = matrix[1];
         var c = matrix[2];
         var d = matrix[3];
 
-        matrix[0] = a * radianCos + c * radianSin;
-        matrix[1] = b * radianCos + d * radianSin;
-        matrix[2] = a * -radianSin + c * radianCos;
-        matrix[3] = b * -radianSin + d * radianCos;
+        matrix[0] = a * cos + c * sin;
+        matrix[1] = b * cos + d * sin;
+        matrix[2] = a * -sin + c * cos;
+        matrix[3] = b * -sin + d * cos;
 
         return this;
     },
