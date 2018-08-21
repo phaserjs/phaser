@@ -79,6 +79,26 @@ The Tile Sprite Game Object has been given an internal overhaul to make it more 
 * The `canvasBuffer` property has been renamed to `fillCanvas`.
 * The `canvasBufferCtx` property has been renamed to `fillContext`.
 
+### Tilemap New Features and Updates
+
+The Tilemap and Dynamic and Static Tilemap Layer classes now all support 4 different modes of render order for drawing the tiles. This allows you to control the z-order of the tiles during render. This feature was requested by @etienne (who provided the test maps too) - see the new examples in the Labs for better understand the impact this has.
+
+The default is 'right-down', meaning it will order the tiles starting from the top-left, drawing to the right and then moving down to the next row.
+
+The four draw orders are:
+
+0 = right-down
+1 = left-down
+2 = right-up
+3 = left-up
+
+* Tilemap has a new property `renderOrder` which is a string based version of the render order, as used when new layers are created via the map. If the map is created from Tiled JSON data, it will use whatever render order has been specified in the map data.
+* Tilemap has a new method `setRenderOrder`. This takes either an integer or a string-based version of the render order and stores it locally. It's then used during the creation of any layers from that point on.
+* The DynamicTilemapLayer has a new method `setRenderOrder`. This takes either an integer or a string-based version of the render order and stores it locally. It's then used during rendering of the layer. You can change the value on the fly.
+* The StaticTilemapLayer has a new method `setRenderOrder`. This takes either an integer or a string-based version of the render order and stores it locally. Under WebGL it will re-create the whole vertex buffer, using the new draw order. Under Canvas it uses it at run-time during rendering. You can change it on the fly.
+* ParseJSONTiled now extracts the `renderorder` property from the Tiled JSON.
+* MapData has a new `renderOrder` property, which is populated by the Tiled Parser.
+
 ### New Features
 
 * `Camera.resolution` is a new read-only property that holds the current game config resolution that the camera is using. This is used internally for viewport calculations.
