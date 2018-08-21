@@ -383,11 +383,7 @@ var Pointer = new Class({
      */
     up: function (event, time)
     {
-        if (event.buttons)
-        {
-            this.buttons = event.buttons;
-        }
-
+        this.buttons = event.buttons;
         this.event = event;
 
         //  Sets the local x/y properties
