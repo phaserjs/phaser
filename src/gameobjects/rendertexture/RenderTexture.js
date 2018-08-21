@@ -839,7 +839,10 @@ var RenderTexture = new Class({
             this.renderer.deleteFramebuffer(this.framebuffer);
         }
 
-        if (!this._saved) this.texture.destroy();
+        if (!this._saved)
+        {
+            this.texture.destroy();
+        }
     }
 
 });
