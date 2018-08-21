@@ -84,6 +84,8 @@ var Transform = {
 
         set: function (value)
         {
+            var factor = 1 / this._scaleX;
+
             this._scaleX = value;
 
             if (this._scaleX === 0)
@@ -94,6 +96,9 @@ var Transform = {
             {
                 this.renderFlags |= _FLAG;
             }
+
+            //  Reset Matter scale back to 1 (sigh)
+            Body.scale(this.body, factor, this._scaleY);
 
             Body.scale(this.body, value, this._scaleY);
         }
@@ -116,6 +121,8 @@ var Transform = {
 
         set: function (value)
         {
+            var factor = 1 / this._scaleY;
+
             this._scaleY = value;
 
             if (this._scaleY === 0)
@@ -126,6 +133,8 @@ var Transform = {
             {
                 this.renderFlags |= _FLAG;
             }
+
+            Body.scale(this.body, this._scaleX, factor);
 
             Body.scale(this.body, this._scaleX, value);
         }
@@ -273,8 +282,13 @@ var Transform = {
         if (x === undefined) { x = 1; }
         if (y === undefined) { y = x; }
 
+        var factorX = 1 / this._scaleX;
+        var factorY = 1 / this._scaleY;
+
         this._scaleX = x;
         this._scaleY = y;
+
+        Body.scale(this.body, factorX, factorY, point);
 
         Body.scale(this.body, x, y, point);
 
