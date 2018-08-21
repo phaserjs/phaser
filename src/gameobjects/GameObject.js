@@ -385,7 +385,9 @@ var GameObject = new Class({
     },
 
     /**
-     * If this Game Object has previously been enabled for input, this will remove it.
+     * If this Game Object has previously been enabled for input, this will queue it
+     * for removal, causing it to no longer be interactive. The removal happens on
+     * the next game step, it is not immediate.
      *
      * The Interactive Object that was assigned to this Game Object will be destroyed,
      * removed from the Input Manager and cleared from this Game Object.
@@ -396,6 +398,11 @@ var GameObject = new Class({
      * If you wish to only temporarily stop an object from receiving input then use
      * `disableInteractive` instead, as that toggles the interactive state, where-as
      * this erases it completely.
+     * 
+     * If you wish to resize a hit area, don't remove and then set it as being
+     * interactive. Instead, access the hitarea object directly and resize the shape
+     * being used. I.e.: `sprite.input.hitArea.setSize(width, height)` (assuming the
+     * shape is a Rectangle, which it is by default.)
      *
      * @method Phaser.GameObjects.GameObject#removeInteractive
      * @since 3.7.0
