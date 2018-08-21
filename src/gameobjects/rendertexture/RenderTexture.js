@@ -355,19 +355,28 @@ var RenderTexture = new Class({
     },
 
     /**
-     * Fills the Render Texture with the given color.
+     * Fills the whole/part of the Render Texture with the given color.
      *
      * @method Phaser.GameObjects.RenderTexture#fill
      * @since 3.2.0
      *
      * @param {number} rgb - The color to fill the Render Texture with.
      * @param {number} [alpha=1] - The alpha value used by the fill.
+     * @param {number} [x=0] - The x position of the rectangle to fill.
+     * @param {number} [y=0] - The y position of the rectangle to fill.
+     * @param {number} [width=this.canvas.width] - The width of the rectangle to fill.
+     * @param {number} [height=this.canvas.height] - The height of the rectangle to fill.
+     
      *
      * @return {this} This Render Texture instance.
      */
-    fill: function (rgb, alpha)
+    fill: function (rgb, alpha, x, y, width, height)
     {
         if (alpha === undefined) { alpha = 1; }
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = this.canvas.width; }
+        if (height === undefined) { height = this.canvas.height; }
 
         var ur = ((rgb >> 16)|0) & 0xff;
         var ug = ((rgb >> 8)|0) & 0xff;
@@ -378,17 +387,23 @@ var RenderTexture = new Class({
             this.renderer.setFramebuffer(this.framebuffer);
 
             var gl = this.gl;
-    
+            
+            gl.enable(gl.SCISSOR_TEST);
+
+            gl.scissor(x, y, width, height);
+
             gl.clearColor(ur / 255.0, ug / 255.0, ub / 255.0, alpha);
-    
+
             gl.clear(gl.COLOR_BUFFER_BIT);
-    
+
+            gl.disable(gl.SCISSOR_TEST);
+
             this.renderer.setFramebuffer(null);
         }
         else
         {
-            this.context.fillStyle = 'rgb(' + ur + ',' + ug + ',' + ub + ')';
-            this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            this.context.fillStyle = 'rgba(' + ur + ',' + ug + ',' + ub + ',' + alpha + ')';
+            this.context.fillRect(x, y, width, height);
         }
 
         return this;
