@@ -8,8 +8,7 @@ var SnapFloor = require('../../math/snap/SnapFloor');
 var SnapCeil = require('../../math/snap/SnapCeil');
 
 /**
- * Returns the tiles in the given layer that are within the camera's viewport. This is used
- * internally.
+ * Returns the tiles in the given layer that are within the camera's viewport. This is used internally.
  *
  * @function Phaser.Tilemaps.Components.CullTiles
  * @private
@@ -21,9 +20,10 @@ var SnapCeil = require('../../math/snap/SnapCeil');
  *
  * @return {Phaser.Tilemaps.Tile[]} An array of Tile objects.
  */
-var CullTiles = function (layer, camera, outputArray)
+var CullTiles = function (layer, camera, outputArray, renderOrder)
 {
     if (outputArray === undefined) { outputArray = []; }
+    if (renderOrder === undefined) { renderOrder = 0; }
 
     outputArray.length = 0;
 
@@ -61,21 +61,87 @@ var CullTiles = function (layer, camera, outputArray)
         drawBottom = Math.min(mapHeight, boundsBottom);
     }
 
-    for (var y = drawTop; y < drawBottom; y++)
+    var x;
+    var y;
+    var tile;
+
+    if (renderOrder === 0)
     {
-        for (var x = drawLeft; x < drawRight; x++)
+        //  right-down
+
+        for (y = drawTop; y < drawBottom; y++)
         {
-            var tile = mapData[y][x];
-
-            if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+            for (x = drawLeft; x < drawRight; x++)
             {
-                continue;
+                tile = mapData[y][x];
+    
+                if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                {
+                    continue;
+                }
+    
+                outputArray.push(tile);
             }
-
-            outputArray.push(tile);
         }
     }
+    else if (renderOrder === 1)
+    {
+        //  left-down
+
+        for (y = drawTop; y < drawBottom; y++)
+        {
+            for (x = drawRight; x >= drawLeft; x--)
+            {
+                tile = mapData[y][x];
     
+                if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                {
+                    continue;
+                }
+    
+                outputArray.push(tile);
+            }
+        }
+    }
+    else if (renderOrder === 2)
+    {
+        //  right-up
+
+        for (y = drawBottom; y >= drawTop; y--)
+        {
+            for (x = drawLeft; x < drawRight; x++)
+            {
+                tile = mapData[y][x];
+    
+                if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                {
+                    continue;
+                }
+    
+                outputArray.push(tile);
+            }
+        }
+    }
+    else if (renderOrder === 3)
+    {
+        //  left-up
+
+        for (y = drawBottom; y >= drawTop; y--)
+        {
+            for (x = drawRight; x >= drawLeft; x--)
+            {
+                tile = mapData[y][x];
+    
+                if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                {
+                    continue;
+                }
+    
+                outputArray.push(tile);
+            }
+        }
+    }
+
     tilemapLayer.tilesDrawn = outputArray.length;
     tilemapLayer.tilesTotal = mapWidth * mapHeight;
 
