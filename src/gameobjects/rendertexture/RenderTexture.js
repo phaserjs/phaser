@@ -365,8 +365,7 @@ var RenderTexture = new Class({
      * @param {number} [x=0] - The x position of the rectangle to fill.
      * @param {number} [y=0] - The y position of the rectangle to fill.
      * @param {number} [width=this.canvas.width] - The width of the rectangle to fill.
-     * @param {number} [height=this.canvas.height] - The height of the rectangle to fill.
-     
+     * @param {number} [height=this.canvas.height] - The height of the rectangle to fill.     
      *
      * @return {this} This Render Texture instance.
      */
