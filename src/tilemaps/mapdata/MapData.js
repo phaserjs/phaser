@@ -112,6 +112,15 @@ var MapData = new Class({
         /**
          * [description]
          * 
+         * @name Phaser.Tilemaps.MapData#renderOrder
+         * @type {string}
+         * @since 3.12.0
+         */
+        this.renderOrder = GetFastValue(config, 'renderOrder', 'right-down');
+
+        /**
+         * [description]
+         * 
          * @name Phaser.Tilemaps.MapData#version
          * @type {string}
          * @since 3.0.0
