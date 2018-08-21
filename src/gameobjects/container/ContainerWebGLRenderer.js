@@ -44,6 +44,14 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
         transformMatrix.applyITRS(container.x, container.y, container.rotation, container.scaleX, container.scaleY);
     }
 
+    var containerHasBlendMode = (container.blendMode !== -1);
+
+    if (!containerHasBlendMode)
+    {
+        //  If Container is SKIP_TEST then set blend mode to be Normal
+        renderer.setBlendMode(0);
+    }
+
     var alpha = container._alpha;
     var scrollFactorX = container.scrollFactorX;
     var scrollFactorY = container.scrollFactorY;
@@ -61,9 +69,20 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
         var childScrollFactorX = child.scrollFactorX;
         var childScrollFactorY = child.scrollFactorY;
 
+        if (!containerHasBlendMode && child.blendMode !== renderer.currentBlendMode)
+        {
+            //  If Container doesn't have its own blend mode, then a child can have one
+            renderer.setBlendMode(child.blendMode);
+        }
+
+        //  Set parent values
         child.setScrollFactor(childScrollFactorX * scrollFactorX, childScrollFactorY * scrollFactorY);
         child.setAlpha(childAlpha * alpha);
+
+        //  Render
         child.renderWebGL(renderer, child, interpolationPercentage, camera, transformMatrix);
+
+        //  Restore original values
         child.setAlpha(childAlpha);
         child.setScrollFactor(childScrollFactorX, childScrollFactorY);
     }

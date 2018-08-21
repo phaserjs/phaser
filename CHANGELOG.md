@@ -170,6 +170,7 @@ The four draw orders are:
 * The RandomDataGenerator will now create a default random seed if you instantiate your own version of the class (instead of using `Phaser.Math.RND`) and don't provide a seed for it (thanks michaeld)
 * The Tilemap `createFromObjects` method will now add custom properties to the Game Objects. It works by checking if the property exists or not, and if not, it sets it in the Game Objects Data Manager (thanks @scalemailted @samme)
 * In Matter.js if you scaled a Body it would only scale correctly once, due to the way Matter handles scaling internally. We now automatically reset the Matter scale before applying the new value, which allows you to keep the Phaser and Matter object scales in sync. Fix #3785 #3951 (thanks @bergben)
+* The default Container Blend Mode is now `SKIP_TEST`. This allows you to either set a blend mode for a Container, in which case all children use that blend mode. Or, you can set a blend mode on the children and the children will render using their own blend modes, as the Container doesn't have one set. The WebGL and Canvas Renderer functions have also been updated to support this change. Fix #3684 (thanks @TadejZupancic)
 
 ### Game Config Resolution Specific Bug Fixes
 

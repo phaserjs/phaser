@@ -6,6 +6,7 @@
  */
 
 var ArrayUtils = require('../../utils/array');
+var BlendModes = require('../../renderer/BlendModes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
@@ -194,6 +195,8 @@ var Container = new Class({
         this.setPosition(x, y);
 
         this.clearAlpha();
+
+        this.setBlendMode(BlendModes.SKIP_CHECK);
 
         if (children)
         {
