@@ -161,6 +161,8 @@ var RenderTexture = new Class({
 
         //  Get the frame
         this.frame = this.texture.get();
+        
+        this._saved = false;
 
         /**
          * An internal Camera that can be used to move around the Render Texture.
@@ -350,6 +352,8 @@ var RenderTexture = new Class({
     saveTexture: function (key)
     {
         this.textureManager.renameTexture(this.texture.key, key);
+        
+        this._saved = true;
 
         return this.texture;
     },
@@ -835,7 +839,7 @@ var RenderTexture = new Class({
             this.renderer.deleteFramebuffer(this.framebuffer);
         }
 
-        this.texture.destroy();
+        if (!this._saved) this.texture.destroy();
     }
 
 });
