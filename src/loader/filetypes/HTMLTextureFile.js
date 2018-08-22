@@ -26,9 +26,9 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @classdesc
  * A single HTML File suitable for loading by the Loader.
  *
- * These are created when you use the Phaser.Loader.LoaderPlugin#html method and are not typically created directly.
+ * These are created when you use the Phaser.Loader.LoaderPlugin#htmlTexture method and are not typically created directly.
  * 
- * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#html.
+ * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#htmlTexture.
  *
  * @class HTMLTextureFile
  * @extends Phaser.Loader.File
@@ -227,15 +227,15 @@ var HTMLTextureFile = new Class({
  * limitations on what HTML can be inside an SVG. You can find out more details in this
  * [Mozilla MDN entry](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Drawing_DOM_objects_into_a_canvas).
  *
- * Note: The ability to load this type of file will only be available if the Image File type has been built into Phaser.
+ * Note: The ability to load this type of file will only be available if the HTMLTextureFile File type has been built into Phaser.
  * It is available in the default build but can be excluded from custom builds.
  *
  * @method Phaser.Loader.LoaderPlugin#htmlTexture
  * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.12.0
  *
- * @param {(string|Phaser.Loader.FileTypes.ImageFileConfig|Phaser.Loader.FileTypes.ImageFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
- * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+ * @param {(string|Phaser.Loader.FileTypes.HTMLTextureFileConfig|Phaser.Loader.FileTypes.HTMLTextureFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.html`, i.e. if `key` was "alien" then the URL will be "alien.html".
  * @param {integer} [width=512] - The width of the texture the HTML will be rendered to.
  * @param {integer} [height=512] - The height of the texture the HTML will be rendered to.
  * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
