@@ -6,6 +6,7 @@
 
 var Class = require('../utils/Class');
 var CONST = require('../const');
+var Device = require('../device');
 var GetFastValue = require('../utils/object/GetFastValue');
 var GetValue = require('../utils/object/GetValue');
 var IsPlainObject = require('../utils/object/IsPlainObject');
@@ -367,7 +368,7 @@ var Config = new Class({
         /**
          * @const {boolean} Phaser.Boot.Config#inputTouch - [description]
          */
-        this.inputTouch = GetValue(config, 'input.touch', true);
+        this.inputTouch = GetValue(config, 'input.touch', Device.input.touch);
 
         /**
          * @const {?*} Phaser.Boot.Config#inputTouchEventTarget - [description]
