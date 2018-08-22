@@ -244,11 +244,11 @@ var LightsManager = new Class({
      * @method Phaser.GameObjects.LightsManager#addLight
      * @since 3.0.0
      *
-     * @param {number} x - The horizontal position of the Light.
-     * @param {number} y - The vertical position of the Light.
-     * @param {number} radius - The radius of the Light.
-     * @param {number} rgb - The integer RGB color of the light.
-     * @param {number} intensity - The intensity of the Light.
+     * @param {number} [x=0] - The horizontal position of the Light.
+     * @param {number} [y=0] - The vertical position of the Light.
+     * @param {number} [radius=100] - The radius of the Light.
+     * @param {number} [rgb=0xffffff] - The integer RGB color of the light.
+     * @param {number} [intensity=1] - The intensity of the Light.
      *
      * @return {Phaser.GameObjects.Light} The Light that was added.
      */
