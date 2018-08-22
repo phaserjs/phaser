@@ -146,6 +146,7 @@ var PluginManager = new Class({
         var plugin;
         var start;
         var mapping;
+        var data;
         var config = this.game.config;
 
         //  Any plugins to install?
@@ -158,16 +159,17 @@ var PluginManager = new Class({
         {
             entry = list[i];
 
-            // { key: 'TestPlugin', plugin: TestPlugin, start: true, mapping: 'test' }
+            // { key: 'TestPlugin', plugin: TestPlugin, start: true, mapping: 'test', data: { msg: 'The plugin is alive' } }
 
             key = GetFastValue(entry, 'key', null);
             plugin = GetFastValue(entry, 'plugin', null);
             start = GetFastValue(entry, 'start', false);
             mapping = GetFastValue(entry, 'mapping', null);
+            data = GetFastValue(entry, 'data', null);
 
             if (key && plugin)
             {
-                this.install(key, plugin, start, mapping);
+                this.install(key, plugin, start, mapping, data);
             }
         }
 
@@ -238,6 +240,10 @@ var PluginManager = new Class({
                 {
                     scene[map[pluginKey]] = sys[pluginKey];
                 }
+            }
+            else if (pluginKey === 'game' && map.hasOwnProperty(pluginKey))
+            {
+                scene[map[pluginKey]] = game;
             }
         }
 
@@ -399,11 +405,13 @@ var PluginManager = new Class({
      * @param {function} plugin - The plugin code. This should be the non-instantiated version.
      * @param {boolean} [start=false] - Automatically start the plugin running? This is always `true` if you provide a mapping value.
      * @param {string} [mapping] - If this plugin is injected into the Phaser.Scene class, this is the property key to use.
+     * @param {any} [data] - A value passed to the plugin's `init` method.
      */
-    install: function (key, plugin, start, mapping)
+    install: function (key, plugin, start, mapping, data)
     {
         if (start === undefined) { start = false; }
         if (mapping === undefined) { mapping = null; }
+        if (data === undefined) { data = null; }
 
         if (typeof plugin !== 'function')
         {
@@ -424,12 +432,12 @@ var PluginManager = new Class({
 
         if (!this.game.isBooted)
         {
-            this._pendingGlobal.push({ key: key, plugin: plugin, start: start, mapping: mapping });
+            this._pendingGlobal.push({ key: key, plugin: plugin, start: start, mapping: mapping, data: data });
         }
         else
         {
             //  Add it to the plugin store
-            PluginCache.registerCustom(key, plugin, mapping);
+            PluginCache.registerCustom(key, plugin, mapping, data);
 
             if (start)
             {
@@ -568,12 +576,13 @@ var PluginManager = new Class({
                 key: runAs,
                 plugin: instance,
                 active: true,
-                mapping: entry.mapping
+                mapping: entry.mapping,
+                data: entry.data
             };
 
             this.plugins.push(entry);
 
-            instance.init();
+            instance.init(entry.data);
             instance.start();
         }
 
@@ -804,7 +813,8 @@ var PluginManager = new Class({
     /**
      * Destroys this Plugin Manager and all associated plugins.
      * It will iterate all plugins found and call their `destroy` methods.
-     * Note that the PluginCache is NOT cleared by this as it doesn't hold any plugin instances.
+     * 
+     * The PluginCache will remove all custom plugins.
      *
      * @method Phaser.Plugins.PluginManager#destroy
      * @since 3.8.0
@@ -814,6 +824,13 @@ var PluginManager = new Class({
         for (var i = 0; i < this.plugins.length; i++)
         {
             this.plugins[i].plugin.destroy();
+        }
+
+        PluginCache.destroyCustomPlugins();
+
+        if (this.game.noReturn)
+        {
+            PluginCache.destroyCorePlugins();
         }
 
         this.game = null;

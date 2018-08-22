@@ -4,7 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = require('../GameObject');
 var Utils = require('../../renderer/webgl/Utils');
 
 /**
@@ -24,31 +23,32 @@ var Utils = require('../../renderer/webgl/Utils');
  */
 var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera._id)))
+    var list = src.getRenderList();
+
+    if (list.length === 0)
     {
         return;
     }
 
     var pipeline = this.pipeline;
 
-    renderer.setPipeline(pipeline);
+    renderer.setPipeline(pipeline, src);
 
     var cameraScrollX = camera.scrollX * src.scrollFactorX;
     var cameraScrollY = camera.scrollY * src.scrollFactorY;
 
-    var matrix = pipeline._tempCameraMatrix;
+    var calcMatrix = pipeline._tempMatrix1;
 
-    matrix.copyFrom(camera.matrix);
+    calcMatrix.copyFrom(camera.matrix);
 
     if (parentMatrix)
     {
-        matrix.multiplyWithOffset(parentMatrix, -cameraScrollX, -cameraScrollY);
+        calcMatrix.multiplyWithOffset(parentMatrix, -cameraScrollX, -cameraScrollY);
 
         cameraScrollX = 0;
         cameraScrollY = 0;
     }
 
-    var list = src.getRenderList();
     var blitterX = src.x - cameraScrollX;
     var blitterY = src.y - cameraScrollY;
     var prevTextureSourceIndex = -1;
@@ -88,10 +88,11 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage, cam
         var xw = x + width;
         var yh = y + height;
 
-        var tx0 = x * matrix.a + y * matrix.c + matrix.e;
-        var ty0 = x * matrix.b + y * matrix.d + matrix.f;
-        var tx1 = xw * matrix.a + yh * matrix.c + matrix.e;
-        var ty1 = xw * matrix.b + yh * matrix.d + matrix.f;
+        var tx0 = calcMatrix.getX(x, y);
+        var ty0 = calcMatrix.getY(x, y);
+
+        var tx1 = calcMatrix.getX(xw, yh);
+        var ty1 = calcMatrix.getY(xw, yh);
 
         var tint = Utils.getTintAppendFloatAlpha(0xffffff, bobAlpha);
 
@@ -107,12 +108,13 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage, cam
         {
             tx0 |= 0;
             ty0 |= 0;
+
             tx1 |= 0;
             ty1 |= 0;
         }
 
         //  TL x/y, BL x/y, BR x/y, TR x/y
-        if (pipeline.batchVertices(tx0, ty0, tx0, ty1, tx1, ty1, tx1, ty0, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect))
+        if (pipeline.batchQuad(tx0, ty0, tx0, ty1, tx1, ty1, tx1, ty0, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect))
         {
             prevTextureSourceIndex = -1;
         }

@@ -52,7 +52,8 @@ var ParseJSONTiled = function (name, json, insertNull)
         orientation: json.orientation,
         format: Formats.TILED_JSON,
         version: json.version,
-        properties: json.properties
+        properties: json.properties,
+        renderOrder: json.renderorder
     });
 
     mapData.layers = ParseTileLayers(json, insertNull);

@@ -169,7 +169,7 @@ var BitmapMaskPipeline = new Class({
             gl.clearColor(0, 0, 0, 0);
             gl.clear(gl.COLOR_BUFFER_BIT);
 
-            // We render out mask source
+            // We render our mask source
             bitmapMask.visible = true;
             bitmapMask.renderWebGL(renderer, bitmapMask, 0.0, camera);
             bitmapMask.visible = visible;

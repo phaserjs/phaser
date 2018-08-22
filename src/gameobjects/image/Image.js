@@ -35,7 +35,7 @@ var ImageRender = require('./ImageRender');
  * @extends Phaser.GameObjects.Components.ScaleMode
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Size
- * @extends Phaser.GameObjects.Components.Texture
+ * @extends Phaser.GameObjects.Components.TextureCrop
  * @extends Phaser.GameObjects.Components.Tint
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
@@ -62,7 +62,7 @@ var Image = new Class({
         Components.ScaleMode,
         Components.ScrollFactor,
         Components.Size,
-        Components.Texture,
+        Components.TextureCrop,
         Components.Tint,
         Components.Transform,
         Components.Visible,
@@ -74,6 +74,16 @@ var Image = new Class({
     function Image (scene, x, y, texture, frame)
     {
         GameObject.call(this, scene, 'Image');
+
+        /**
+         * The internal crop data object, as used by `setCrop` and passed to the `Frame.setCropUVs` method.
+         *
+         * @name Phaser.GameObjects.Image#_crop
+         * @type {object}
+         * @private
+         * @since 3.11.0
+         */
+        this._crop = this.resetCropObject();
 
         this.setTexture(texture, frame);
         this.setPosition(x, y);

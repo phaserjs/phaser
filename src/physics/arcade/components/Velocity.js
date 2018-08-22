@@ -25,7 +25,7 @@ var Velocity = {
      */
     setVelocity: function (x, y)
     {
-        this.body.velocity.set(x, y);
+        this.body.setVelocity(x, y);
 
         return this;
     },
@@ -42,7 +42,7 @@ var Velocity = {
      */
     setVelocityX: function (x)
     {
-        this.body.velocity.x = x;
+        this.body.setVelocityX(x);
 
         return this;
     },
@@ -59,7 +59,7 @@ var Velocity = {
      */
     setVelocityY: function (y)
     {
-        this.body.velocity.y = y;
+        this.body.setVelocityY(y);
 
         return this;
     },

@@ -26,6 +26,7 @@ var Phaser = {
     Display: require('./display'),
     DOM: require('./dom'),
     Events: require('./events'),
+    FBInstant: require('./fbinstant/FacebookInstantGamesPlugin'),
     Game: require('./boot/Game'),
     GameObjects: require('./gameobjects'),
     Geom: require('./geom'),

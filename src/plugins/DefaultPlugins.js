@@ -24,8 +24,10 @@ var DefaultPlugins = {
      */
     Global: [
 
+        'game',
         'anims',
         'cache',
+        'facebook',
         'plugins',
         'registry',
         'sound',

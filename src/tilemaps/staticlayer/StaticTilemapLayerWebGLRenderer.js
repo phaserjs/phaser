@@ -4,8 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = require('../../gameobjects/GameObject');
-
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
  * 
@@ -25,11 +23,6 @@ var GameObject = require('../../gameobjects/GameObject');
  */
 var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)))
-    {
-        return;
-    }
-
     src.upload(camera);
 
     if (src.vertexCount > 0)
@@ -37,9 +30,8 @@ var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPerc
         var gl = renderer.gl;
         var pipeline = this.pipeline;
         var pipelineVertexBuffer = pipeline.vertexBuffer;
-    
-        var frame = src.tileset.image.get();
-    
+        var texture = src.tileset.glTexture;
+   
         if (renderer.currentPipeline && renderer.currentPipeline.vertexCount > 0)
         {
             renderer.flush();
@@ -49,7 +41,7 @@ var StaticTilemapLayerWebGLRenderer = function (renderer, src, interpolationPerc
     
         renderer.setPipeline(pipeline);
     
-        renderer.setTexture2D(frame.source.glTexture, 0);
+        renderer.setTexture2D(texture, 0);
     
         gl.drawArrays(pipeline.topology, 0, src.vertexCount);
     

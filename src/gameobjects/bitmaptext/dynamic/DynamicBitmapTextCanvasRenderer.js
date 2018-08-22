@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = require('../../GameObject');
+var SetTransform = require('../../../renderer/canvas/utils/SetTransform');
 
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
@@ -26,7 +26,9 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
     var text = src.text;
     var textLength = text.length;
 
-    if (GameObject.RENDER_MASK !== src.renderFlags || textLength === 0 || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)))
+    var ctx = renderer.currentContext;
+
+    if (textLength === 0 || !SetTransform(renderer, ctx, src, camera, parentMatrix))
     {
         return;
     }
@@ -59,7 +61,7 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
     var lastGlyph = null;
     var lastCharCode = 0;
 
-    var ctx = renderer.currentContext;
+    // var ctx = renderer.currentContext;
     var image = src.frame.source.image;
 
     var textureX = textureFrame.cutX;
@@ -67,57 +69,6 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
 
     var rotation = 0;
     var scale = (src.fontSize / src.fontData.size);
-
-    //  Alpha
-
-    var alpha = camera.alpha * src.alpha;
-
-    if (alpha === 0)
-    {
-        //  Nothing to see, so abort early
-        return;
-    }
-    else if (renderer.currentAlpha !== alpha)
-    {
-        renderer.currentAlpha = alpha;
-        ctx.globalAlpha = alpha;
-    }
-
-    //  Blend Mode
-    if (renderer.currentBlendMode !== src.blendMode)
-    {
-        renderer.currentBlendMode = src.blendMode;
-        ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
-    }
-
-    //  Alpha
-    if (renderer.currentAlpha !== src.alpha)
-    {
-        renderer.currentAlpha = src.alpha;
-        ctx.globalAlpha = src.alpha;
-    }
-
-    //  Smoothing
-    if (renderer.currentScaleMode !== src.scaleMode)
-    {
-        renderer.currentScaleMode = src.scaleMode;
-    }
-
-    ctx.save();
-
-    if (parentMatrix !== undefined)
-    {
-        var matrix = parentMatrix.matrix;
-        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
-    }
-
-    ctx.translate(src.x, src.y);
-
-    ctx.rotate(src.rotation);
-
-    ctx.translate(-src.displayOriginX, -src.displayOriginY);
-
-    ctx.scale(src.scaleX, src.scaleY);
 
     if (src.cropWidth > 0 && src.cropHeight > 0)
     {

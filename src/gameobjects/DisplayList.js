@@ -177,6 +177,19 @@ var DisplayList = new Class({
     },
 
     /**
+     * All members of the group.
+     *
+     * @method Phaser.GameObjects.DisplayList#getChildren
+     * @since 3.12.0
+     *
+     * @return {Phaser.GameObjects.GameObject[]} The group members.
+     */
+    getChildren: function ()
+    {
+        return this.list;
+    },
+
+    /**
      * The Scene that owns this plugin is shutting down.
      * We need to kill and reset all internal properties as well as stop listening to Scene events.
      *

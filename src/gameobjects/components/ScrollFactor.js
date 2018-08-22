@@ -24,6 +24,11 @@ var ScrollFactor = {
      * A value of 1 means it will move exactly in sync with a camera.
      * A value of 0 means it will not move at all, even if the camera moves.
      * Other values control the degree to which the camera movement is mapped to this Game Object.
+     * 
+     * Please be aware that scroll factor values other than 1 are not taken in to consideration when
+     * calculating physics collisions. Bodies always collide based on their world position, but changing
+     * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
+     * them from physics bodies if not accounted for in your code.
      *
      * @name Phaser.GameObjects.Components.ScrollFactor#scrollFactorX
      * @type {number}
@@ -43,6 +48,11 @@ var ScrollFactor = {
      * A value of 1 means it will move exactly in sync with a camera.
      * A value of 0 means it will not move at all, even if the camera moves.
      * Other values control the degree to which the camera movement is mapped to this Game Object.
+     * 
+     * Please be aware that scroll factor values other than 1 are not taken in to consideration when
+     * calculating physics collisions. Bodies always collide based on their world position, but changing
+     * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
+     * them from physics bodies if not accounted for in your code.
      *
      * @name Phaser.GameObjects.Components.ScrollFactor#scrollFactorY
      * @type {number}
@@ -62,6 +72,11 @@ var ScrollFactor = {
      * A value of 1 means it will move exactly in sync with a camera.
      * A value of 0 means it will not move at all, even if the camera moves.
      * Other values control the degree to which the camera movement is mapped to this Game Object.
+     * 
+     * Please be aware that scroll factor values other than 1 are not taken in to consideration when
+     * calculating physics collisions. Bodies always collide based on their world position, but changing
+     * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
+     * them from physics bodies if not accounted for in your code.
      *
      * @method Phaser.GameObjects.Components.ScrollFactor#setScrollFactor
      * @since 3.0.0

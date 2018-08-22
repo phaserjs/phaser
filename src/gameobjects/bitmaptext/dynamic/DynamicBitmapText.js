@@ -4,15 +4,14 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var BitmapText = require('../static/BitmapText');
 var Class = require('../../../utils/Class');
-var Components = require('../../components');
-var GameObject = require('../../GameObject');
-var GetBitmapTextSize = require('../GetBitmapTextSize');
 var Render = require('./DynamicBitmapTextRender');
 
 /**
  * @typedef {object} DisplayCallbackConfig
- * @property {{topLeft:number,topRight:number,bottomLeft:number,bottomRight:number}} tint - The tint of the character being rendered.
+ * 
+ * @property {{topLeft:number, topRight:number, bottomLeft:number, bottomRight:number}} tint - The tint of the character being rendered.
  * @property {number} index - The index of the character being rendered.
  * @property {number} charCode - The character code of the character being rendered.
  * @property {number} x - The x position of the character being rendered.
@@ -35,22 +34,10 @@ var Render = require('./DynamicBitmapTextRender');
  * [description]
  *
  * @class DynamicBitmapText
- * @extends Phaser.GameObjects.GameObject
+ * @extends Phaser.GameObjects.BitmapText
  * @memberOf Phaser.GameObjects
  * @constructor
  * @since 3.0.0
- *
- * @extends Phaser.GameObjects.Components.Alpha
- * @extends Phaser.GameObjects.Components.BlendMode
- * @extends Phaser.GameObjects.Components.Depth
- * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.ScrollFactor
- * @extends Phaser.GameObjects.Components.Texture
- * @extends Phaser.GameObjects.Components.Tint
- * @extends Phaser.GameObjects.Components.Transform
- * @extends Phaser.GameObjects.Components.Visible
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. It can only belong to one Scene at any given time.
  * @param {number} x - The x coordinate of this Game Object in world space.
@@ -58,98 +45,23 @@ var Render = require('./DynamicBitmapTextRender');
  * @param {string} font - The key of the font to use from the Bitmap Font cache.
  * @param {(string|string[])} [text] - The string, or array of strings, to be set as the content of this Bitmap Text.
  * @param {number} [size] - The font size of this Bitmap Text.
+ * @param {integer} [align=0] - The alignment of the text in a multi-line BitmapText object.
  */
 var DynamicBitmapText = new Class({
 
-    Extends: GameObject,
+    Extends: BitmapText,
 
     Mixins: [
-        Components.Alpha,
-        Components.BlendMode,
-        Components.Depth,
-        Components.Mask,
-        Components.Origin,
-        Components.Pipeline,
-        Components.ScrollFactor,
-        Components.Texture,
-        Components.Tint,
-        Components.Transform,
-        Components.Visible,
         Render
     ],
 
     initialize:
 
-    function DynamicBitmapText (scene, x, y, font, text, size)
+    function DynamicBitmapText (scene, x, y, font, text, size, align)
     {
-        if (text === undefined) { text = ''; }
+        BitmapText.call(this, scene, x, y, font, text, size, align);
 
-        GameObject.call(this, scene, 'DynamicBitmapText');
-
-        /**
-         * The key of the Bitmap Font used by this Bitmap Text.
-         *
-         * @name Phaser.GameObjects.DynamicBitmapText#font
-         * @type {string}
-         * @since 3.0.0
-         */
-        this.font = font;
-
-        var entry = this.scene.sys.cache.bitmapFont.get(font);
-
-        /**
-         * The data of the Bitmap Font used by this Bitmap Text.
-         *
-         * @name Phaser.GameObjects.DynamicBitmapText#fontData
-         * @type {BitmapFontData}
-         * @since 3.0.0
-         */
-        this.fontData = entry.data;
-
-        /**
-         * The text that this Bitmap Text object displays.
-         *
-         * @name Phaser.GameObjects.DynamicBitmapText#text
-         * @type {string}
-         * @since 3.0.0
-         */
-        this.text = '';
-
-        /**
-         * The font size of this Bitmap Text.
-         *
-         * @name Phaser.GameObjects.DynamicBitmapText#fontSize
-         * @type {number}
-         * @since 3.0.0
-         */
-        this.fontSize = size || this.fontData.size;
-
-        /**
-         * Adds/Removes spacing between characters
-         * Can be a negative or positive number
-         *
-         * @name Phaser.GameObjects.DynamicBitmapText#letterSpacing
-         * @type {number}
-         * @since 3.5.0
-         */
-        this.letterSpacing = 0;
-
-        this.setText(text);
-
-        this.setTexture(entry.texture, entry.frame);
-        this.setPosition(x, y);
-        this.setOrigin(0, 0);
-        this.initPipeline('TextureTintPipeline');
-
-        /**
-         * An object that describes the size of this BitmapText.
-         *
-         * @name Phaser.GameObjects.DynamicBitmapText#_bounds
-         * @type {BitmapTextSize}
-         * @private
-         * @since 3.0.0
-         */
-        this._bounds = this.getTextBounds();
+        this.type = 'DynamicBitmapText';
 
         /**
          * The horizontal scroll position of the Bitmap Text.
@@ -194,11 +106,40 @@ var DynamicBitmapText = new Class({
         /**
          * A callback that alters how each character of the Bitmap Text is rendered.
          *
-         * @name Phaser.GameObjects.DynamicBitmapText#displayCallback;
+         * @name Phaser.GameObjects.DynamicBitmapText#displayCallback
          * @type {DisplayCallback}
          * @since 3.0.0
          */
         this.displayCallback;
+
+        /**
+         * The data object that is populated during rendering, then passed to the displayCallback.
+         * You should modify this object then return it back from the callback. It's updated values
+         * will be used to render the specific glyph.
+         * 
+         * Please note that if you need a reference to this object locally in your game code then you
+         * should shallow copy it, as it's updated and re-used for every glyph in the text.
+         *
+         * @name Phaser.GameObjects.DynamicBitmapText#callbackData
+         * @type {DisplayCallbackConfig}
+         * @since 3.11.0
+         */
+        this.callbackData = {
+            color: 0,
+            tint: {
+                topLeft: 0,
+                topRight: 0,
+                bottomLeft: 0,
+                bottomRight: 0
+            },
+            index: 0,
+            charCode: 0,
+            x: 0,
+            y: 0,
+            scale: 0,
+            rotation: 0,
+            data: 0
+        };
     },
 
     /**
@@ -244,57 +185,6 @@ var DynamicBitmapText = new Class({
     },
 
     /**
-     * Set the font size of this Bitmap Text.
-     *
-     * @method Phaser.GameObjects.DynamicBitmapText#setFontSize
-     * @since 3.0.0
-     *
-     * @param {number} size - The font size to set.
-     *
-     * @return {Phaser.GameObjects.DynamicBitmapText} This Game Object.
-     */
-    setFontSize: function (size)
-    {
-        this.fontSize = size;
-
-        return this;
-    },
-
-    /**
-     * Set the content of this BitmapText.
-     *
-     * An array of strings will be converted multi-line text.
-     *
-     * @method Phaser.GameObjects.DynamicBitmapText#setText
-     * @since 3.0.0
-     *
-     * @param {(string|string[])} value - The string, or array of strings, to be set as the content of this BitmapText.
-     *
-     * @return {Phaser.GameObjects.DynamicBitmapText} This Game Object.
-     */
-    setText: function (value)
-    {
-        if (!value && value !== 0)
-        {
-            value = '';
-        }
-
-        if (Array.isArray(value))
-        {
-            value = value.join('\n');
-        }
-
-        if (value !== this.text)
-        {
-            this.text = value.toString();
-
-            this.updateDisplayOrigin();
-        }
-
-        return this;
-    },
-
-    /**
      * Set the horizontal scroll position of this Bitmap Text.
      *
      * @method Phaser.GameObjects.DynamicBitmapText#setScrollX
@@ -326,94 +216,6 @@ var DynamicBitmapText = new Class({
         this.scrollY = value;
 
         return this;
-    },
-
-    /**
-     * Calculate the bounds of this Bitmap Text.
-     *
-     * An object is returned that contains the position, width and height of the Bitmap Text in local and global
-     * contexts.
-     *
-     * Local size is based on just the font size and a [0, 0] position.
-     *
-     * Global size takes into account the Game Object's scale and world position.
-     *
-     * @method Phaser.GameObjects.DynamicBitmapText#getTextBounds
-     * @since 3.0.0
-     *
-     * @param {boolean} [round] - Whether to round the results to the nearest integer.
-     *
-     * @return {BitmapTextSize} An object that describes the size of this Bitmap Text.
-     */
-    getTextBounds: function (round)
-    {
-        //  local = the BitmapText based on fontSize and 0x0 coords
-        //  global = the BitmapText, taking into account scale and world position
-
-        this._bounds = GetBitmapTextSize(this, round);
-
-        return this._bounds;
-    },
-
-    /**
-     * The width of this Bitmap Text.
-     *
-     * @name Phaser.GameObjects.DynamicBitmapText#width
-     * @type {number}
-     * @readOnly
-     * @since 3.0.0
-     */
-    width: {
-
-        get: function ()
-        {
-            this.getTextBounds(false);
-            return this._bounds.global.width;
-        }
-
-    },
-
-    /**
-     * The height of this Bitmap Text.
-     *
-     * @name Phaser.GameObjects.DynamicBitmapText#height
-     * @type {number}
-     * @readOnly
-     * @since 3.0.0
-     */
-    height: {
-
-        get: function ()
-        {
-            this.getTextBounds(false);
-            return this._bounds.global.height;
-        }
-
-    },
-
-    /**
-     * Build a JSON representation of this Bitmap Text.
-     *
-     * @method Phaser.GameObjects.DynamicBitmapText#toJSON
-     * @since 3.0.0
-     *
-     * @return {JSONBitmapText} A JSON representation of this Bitmap Text.
-     */
-    toJSON: function ()
-    {
-        var out = Components.ToJSON(this);
-
-        //  Extra data is added here
-
-        var data = {
-            font: this.font,
-            text: this.text,
-            fontSize: this.fontSize
-        };
-
-        out.data = data;
-
-        return out;
     }
 
 });

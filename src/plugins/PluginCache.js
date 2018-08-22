@@ -61,10 +61,11 @@ PluginCache.register = function (key, plugin, mapping, custom)
  * @param {string} key - A reference used to get this plugin from the plugin cache.
  * @param {function} plugin - The plugin to be stored. Should be the core object, not instantiated.
  * @param {string} mapping - If this plugin is to be injected into the Scene Systems, this is the property key map used.
+ * @param {?any} data - A value to be passed to the plugin's `init` method.
  */
-PluginCache.registerCustom = function (key, plugin, mapping)
+PluginCache.registerCustom = function (key, plugin, mapping, data)
 {
-    customPlugins[key] = { plugin: plugin, mapping: mapping };
+    customPlugins[key] = { plugin: plugin, mapping: mapping, data: data };
 };
 
 /**
@@ -171,6 +172,43 @@ PluginCache.removeCustom = function (key)
     if (customPlugins.hasOwnProperty(key))
     {
         delete customPlugins[key];
+    }
+};
+
+/**
+ * Removes all Core Plugins.
+ * 
+ * This includes all of the internal system plugins that Phaser needs, like the Input Plugin and Loader Plugin.
+ * So be sure you only call this if you do not wish to run Phaser again.
+ *
+ * @method Phaser.Plugins.PluginCache.destroyCorePlugins
+ * @since 3.12.0
+ */
+PluginCache.destroyCorePlugins = function ()
+{
+    for (var key in corePlugins)
+    {
+        if (corePlugins.hasOwnProperty(key))
+        {
+            delete corePlugins[key];
+        }
+    }
+};
+
+/**
+ * Removes all Custom Plugins.
+ *
+ * @method Phaser.Plugins.PluginCache.destroyCustomPlugins
+ * @since 3.12.0
+ */
+PluginCache.destroyCustomPlugins = function ()
+{
+    for (var key in customPlugins)
+    {
+        if (customPlugins.hasOwnProperty(key))
+        {
+            delete customPlugins[key];
+        }
     }
 };
 

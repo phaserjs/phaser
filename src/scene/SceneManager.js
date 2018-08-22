@@ -122,6 +122,17 @@ var SceneManager = new Class({
          */
         this.isBooted = false;
 
+        /**
+         * Do any of the Cameras in any of the Scenes require a custom viewport?
+         * If not we can skip scissor tests.
+         *
+         * @name Phaser.Scenes.SceneManager#customViewports
+         * @type {number}
+         * @default 0
+         * @since 3.12.0
+         */
+        this.customViewports = 0;
+
         if (sceneConfig)
         {
             if (!Array.isArray(sceneConfig))
@@ -377,7 +388,7 @@ var SceneManager = new Class({
      * The Scene is removed from the local scenes array, it's key is cleared from the keys
      * cache and Scene.Systems.destroy is then called on it.
      *
-     * If the SceneManager is processing the Scenes when this method is called it wil
+     * If the SceneManager is processing the Scenes when this method is called it will
      * queue the operation for the next update sequence.
      *
      * @method Phaser.Scenes.SceneManager#remove
@@ -1532,7 +1543,7 @@ var SceneManager = new Class({
      */
     destroy: function ()
     {
-        for (var i = this.scenes.length - 1; i >= 0; i--)
+        for (var i = 0; i < this.scenes.length; i++)
         {
             var sys = this.scenes[i].sys;
 

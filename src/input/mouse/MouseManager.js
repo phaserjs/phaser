@@ -208,7 +208,7 @@ var MouseManager = new Class({
      */
     onMouseMove: function (event)
     {
-        if (event.defaultPrevented || !this.enabled)
+        if (event.defaultPrevented || !this.enabled || !this.manager)
         {
             // Do nothing if event already handled
             return;

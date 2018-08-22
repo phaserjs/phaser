@@ -40,6 +40,7 @@ var propertyMap = {
     maxLines: [ 'maxLines', 0 ],
     fixedWidth: [ 'fixedWidth', 0 ],
     fixedHeight: [ 'fixedHeight', 0 ],
+    resolution: [ 'resolution', 0 ],
     rtl: [ 'rtl', false ],
     testString: [ 'testString', '|MÃ‰qgy' ],
     baselineX: [ 'baselineX', 1.2 ],
@@ -53,7 +54,7 @@ var propertyMap = {
 /**
  * Font metrics for a Text Style object.
  *
- * @typedef {object} TextMetrics
+ * @typedef {object} BitmapTextMetrics
  *
  * @property {number} ascent - The ascent of the font.
  * @property {number} descent - The descent of the font.
@@ -258,6 +259,17 @@ var TextStyle = new Class({
          * @since 3.0.0
          */
         this.fixedHeight;
+
+        /**
+         * The resolution the text is rendered to its internal canvas at.
+         * The default is 0, which means it will use the resolution set in the Game Config.
+         *
+         * @name Phaser.GameObjects.Text.TextStyle#resolution
+         * @type {number}
+         * @default 0
+         * @since 3.12.0
+         */
+        this.resolution;
 
         /**
          * Whether the text should render right to left.
@@ -676,6 +688,29 @@ var TextStyle = new Class({
     },
 
     /**
+     * Set the resolution used by the Text object.
+     *
+     * By default it will be set to match the resolution set in the Game Config,
+     * but you can override it via this method. It allows for much clearer text on High DPI devices,
+     * at the cost of memory because it uses larger internal Canvas textures for the Text.
+     * 
+     * Please use with caution, as the more high res Text you have, the more memory it uses up.
+     *
+     * @method Phaser.GameObjects.Text.TextStyle#setResolution
+     * @since 3.12.0
+     *
+     * @param {number} value - The resolution for this Text object to use.
+     *
+     * @return {Phaser.GameObjects.Text} The parent Text object.
+     */
+    setResolution: function (value)
+    {
+        this.resolution = value;
+
+        return this.update(false);
+    },
+
+    /**
      * Set the stroke settings.
      *
      * @method Phaser.GameObjects.Text.TextStyle#setStroke
@@ -929,7 +964,7 @@ var TextStyle = new Class({
      * @method Phaser.GameObjects.Text.TextStyle#getTextMetrics
      * @since 3.0.0
      *
-     * @return {TextMetrics} The text metrics.
+     * @return {BitmapTextMetrics} The text metrics.
      */
     getTextMetrics: function ()
     {

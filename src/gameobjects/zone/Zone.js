@@ -100,6 +100,8 @@ var Zone = new Class({
          * @since 3.0.0
          */
         this.blendMode = BlendModes.NORMAL;
+
+        this.updateDisplayOrigin();
     },
 
     /**
@@ -256,6 +258,18 @@ var Zone = new Class({
         return this;
     },
 
+    /**
+     * A NOOP method so you can pass a Zone to a Container.
+     * Calling this method will do nothing. It is intentionally empty.
+     *
+     * @method Phaser.GameObjects.Zone#setAlpha
+     * @private
+     * @since 3.11.0
+     */
+    setAlpha: function ()
+    {
+    },
+    
     /**
      * A Zone does not render.
      *

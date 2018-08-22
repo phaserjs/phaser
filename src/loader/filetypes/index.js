@@ -20,6 +20,7 @@ module.exports = {
     GLSLFile: require('./GLSLFile'),
     HTML5AudioFile: require('./HTML5AudioFile'),
     HTMLFile: require('./HTMLFile'),
+    HTMLTextureFile: require('./HTMLTextureFile'),
     ImageFile: require('./ImageFile'),
     JSONFile: require('./JSONFile'),
     MultiAtlasFile: require('./MultiAtlasFile'),

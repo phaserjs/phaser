@@ -5,8 +5,6 @@ BitmapMask.frag
 BitmapMask.vert
 DeferredDiffuse.frag
 DeferredDiffuse.vert
-FlatTint.frag
-FlatTint.vert
 ForwardDiffuse.frag
 GBuffer.frag
 TextureTint.frag

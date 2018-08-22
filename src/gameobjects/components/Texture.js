@@ -35,6 +35,16 @@ var Texture = {
     frame: null,
 
     /**
+     * Internal flag. Not to be set by this Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Texture#isCropped
+     * @type {boolean}
+     * @private
+     * @since 3.11.0
+     */
+    isCropped: false,
+
+    /**
      * Sets the texture and frame this Game Object will use to render with.
      *
      * Textures are referenced by their string-based keys, as stored in the Texture Manager.

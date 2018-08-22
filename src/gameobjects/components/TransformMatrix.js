@@ -359,65 +359,74 @@ var TransformMatrix = new Class({
      * @method Phaser.GameObjects.Components.TransformMatrix#rotate
      * @since 3.0.0
      *
-     * @param {number} radian - The angle of rotation in radians.
+     * @param {number} angle - The angle of rotation in radians.
      *
      * @return {this} This TransformMatrix.
      */
-    rotate: function (radian)
+    rotate: function (angle)
     {
-        var radianSin = Math.sin(radian);
-        var radianCos = Math.cos(radian);
+        var sin = Math.sin(angle);
+        var cos = Math.cos(angle);
+
         var matrix = this.matrix;
+
         var a = matrix[0];
         var b = matrix[1];
         var c = matrix[2];
         var d = matrix[3];
 
-        matrix[0] = a * radianCos + c * radianSin;
-        matrix[1] = b * radianCos + d * radianSin;
-        matrix[2] = a * -radianSin + c * radianCos;
-        matrix[3] = b * -radianSin + d * radianCos;
+        matrix[0] = a * cos + c * sin;
+        matrix[1] = b * cos + d * sin;
+        matrix[2] = a * -sin + c * cos;
+        matrix[3] = b * -sin + d * cos;
 
         return this;
     },
 
     /**
      * Multiply this Matrix by the given Matrix.
+     * 
+     * If an `out` Matrix is given then the results will be stored in it.
+     * If it is not given, this matrix will be updated in place instead.
+     * Use an `out` Matrix if you do not wish to mutate this matrix.
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#multiply
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Components.TransformMatrix} rhs - The Matrix to multiply by.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [out] - An optional Matrix to store the results in.
      *
-     * @return {this} This TransformMatrix.
+     * @return {Phaser.GameObjects.Components.TransformMatrix} Either this TransformMatrix, or the `out` Matrix, if given in the arguments.
      */
-    multiply: function (rhs)
+    multiply: function (rhs, out)
     {
         var matrix = this.matrix;
-        var otherMatrix = rhs.matrix;
+        var source = rhs.matrix;
 
-        var a0 = matrix[0];
-        var b0 = matrix[1];
-        var c0 = matrix[2];
-        var d0 = matrix[3];
-        var tx0 = matrix[4];
-        var ty0 = matrix[5];
+        var localA = matrix[0];
+        var localB = matrix[1];
+        var localC = matrix[2];
+        var localD = matrix[3];
+        var localE = matrix[4];
+        var localF = matrix[5];
 
-        var a1 = otherMatrix[0];
-        var b1 = otherMatrix[1];
-        var c1 = otherMatrix[2];
-        var d1 = otherMatrix[3];
-        var tx1 = otherMatrix[4];
-        var ty1 = otherMatrix[5];
+        var sourceA = source[0];
+        var sourceB = source[1];
+        var sourceC = source[2];
+        var sourceD = source[3];
+        var sourceE = source[4];
+        var sourceF = source[5];
 
-        matrix[0] = a1 * a0 + b1 * c0;
-        matrix[1] = a1 * b0 + b1 * d0;
-        matrix[2] = c1 * a0 + d1 * c0;
-        matrix[3] = c1 * b0 + d1 * d0;
-        matrix[4] = tx1 * a0 + ty1 * c0 + tx0;
-        matrix[5] = tx1 * b0 + ty1 * d0 + ty0;
+        var destinationMatrix = (out === undefined) ? this : out;
 
-        return this;
+        destinationMatrix.a = sourceA * localA + sourceB * localC;
+        destinationMatrix.b = sourceA * localB + sourceB * localD;
+        destinationMatrix.c = sourceC * localA + sourceD * localC;
+        destinationMatrix.d = sourceC * localB + sourceD * localD;
+        destinationMatrix.e = sourceE * localA + sourceF * localC + localE;
+        destinationMatrix.f = sourceE * localB + sourceF * localD + localF;
+
+        return destinationMatrix;
     },
 
     /**
@@ -583,10 +592,108 @@ var TransformMatrix = new Class({
         matrix[1] = src.b;
         matrix[2] = src.c;
         matrix[3] = src.d;
-        matrix[4] = src.tx;
-        matrix[5] = src.ty;
+        matrix[4] = src.e;
+        matrix[5] = src.f;
 
         return this;
+    },
+
+    /**
+     * Set the values of this Matrix to copy those of the array given.
+     * Where array indexes 0, 1, 2, 3, 4 and 5 are mapped to a, b, c, d, e and f.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#copyFromArray
+     * @since 3.11.0
+     *
+     * @param {array} src - The array of values to set into this matrix.
+     *
+     * @return {this} This TransformMatrix.
+     */
+    copyFromArray: function (src)
+    {
+        var matrix = this.matrix;
+
+        matrix[0] = src[0];
+        matrix[1] = src[1];
+        matrix[2] = src[2];
+        matrix[3] = src[3];
+        matrix[4] = src[4];
+        matrix[5] = src[5];
+
+        return this;
+    },
+
+    /**
+     * Copy the values from this Matrix to the given Canvas Rendering Context.
+     * This will use the Context.transform method.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#copyToContext
+     * @since 3.12.0
+     *
+     * @param {CanvasRenderingContext2D} ctx - The Canvas Rendering Context to copy the matrix values to.
+     *
+     * @return {CanvasRenderingContext2D} The Canvas Rendering Context.
+     */
+    copyToContext: function (ctx)
+    {
+        var matrix = this.matrix;
+
+        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+
+        return ctx;
+    },
+
+    /**
+     * Copy the values from this Matrix to the given Canvas Rendering Context.
+     * This will use the Context.setTransform method.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#setToContext
+     * @since 3.12.0
+     *
+     * @param {CanvasRenderingContext2D} ctx - The Canvas Rendering Context to copy the matrix values to.
+     *
+     * @return {CanvasRenderingContext2D} The Canvas Rendering Context.
+     */
+    setToContext: function (ctx)
+    {
+        var matrix = this.matrix;
+
+        ctx.setTransform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+
+        return ctx;
+    },
+
+    /**
+     * Copy the values in this Matrix to the array given.
+     * 
+     * Where array indexes 0, 1, 2, 3, 4 and 5 are mapped to a, b, c, d, e and f.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#copyToArray
+     * @since 3.12.0
+     *
+     * @param {array} [out] - The array to copy the matrix values in to.
+     *
+     * @return {array} An array where elements 0 to 5 contain the values from this matrix.
+     */
+    copyToArray: function (out)
+    {
+        var matrix = this.matrix;
+
+        if (out === undefined)
+        {
+            out = [ matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5] ];
+        }
+        else
+        {
+            out[0] = matrix[0];
+            out[1] = matrix[1];
+            out[2] = matrix[2];
+            out[3] = matrix[3];
+            out[4] = matrix[4];
+            out[5] = matrix[5];
+        }
+
+        return out;
     },
 
     /**
@@ -693,6 +800,55 @@ var TransformMatrix = new Class({
         matrix[3] = radianCos * scaleY;
 
         return this;
+    },
+
+    /**
+     * Returns the X component of this matrix multiplied by the given values.
+     * This is the same as `x * a + y * c + e`.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#getX
+     * @since 3.12.0
+     * 
+     * @param {number} x - The x value.
+     * @param {number} y - The y value.
+     *
+     * @return {number} The calculated x value.
+     */
+    getX: function (x, y)
+    {
+        return x * this.a + y * this.c + this.e;
+    },
+
+    /**
+     * Returns the Y component of this matrix multiplied by the given values.
+     * This is the same as `x * b + y * d + f`.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#getY
+     * @since 3.12.0
+     * 
+     * @param {number} x - The x value.
+     * @param {number} y - The y value.
+     *
+     * @return {number} The calculated y value.
+     */
+    getY: function (x, y)
+    {
+        return x * this.b + y * this.d + this.f;
+    },
+
+    /**
+     * Returns a string that can be used in a CSS Transform call as a `matrix` property.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#getCSSMatrix
+     * @since 3.12.0
+     *
+     * @return {string} A string containing the CSS Transform matrix values.
+     */
+    getCSSMatrix: function ()
+    {
+        var m = this.matrix;
+
+        return 'matrix(' + m[0] + ',' + m[1] + ',' + m[2] + ',' + m[3] + ',' + m[4] + ',' + m[5] + ')';
     },
 
     /**

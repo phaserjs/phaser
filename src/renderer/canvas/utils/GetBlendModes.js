@@ -19,24 +19,25 @@ var GetBlendModes = function ()
 {
     var output = [];
     var useNew = CanvasFeatures.supportNewBlendModes;
+    var so = 'source-over';
 
-    output[modes.NORMAL] = 'source-over';
+    output[modes.NORMAL] = so;
     output[modes.ADD] = 'lighter';
-    output[modes.MULTIPLY] = (useNew) ? 'multiply' : 'source-over';
-    output[modes.SCREEN] = (useNew) ? 'screen' : 'source-over';
-    output[modes.OVERLAY] = (useNew) ? 'overlay' : 'source-over';
-    output[modes.DARKEN] = (useNew) ? 'darken' : 'source-over';
-    output[modes.LIGHTEN] = (useNew) ? 'lighten' : 'source-over';
-    output[modes.COLOR_DODGE] = (useNew) ? 'color-dodge' : 'source-over';
-    output[modes.COLOR_BURN] = (useNew) ? 'color-burn' : 'source-over';
-    output[modes.HARD_LIGHT] = (useNew) ? 'hard-light' : 'source-over';
-    output[modes.SOFT_LIGHT] = (useNew) ? 'soft-light' : 'source-over';
-    output[modes.DIFFERENCE] = (useNew) ? 'difference' : 'source-over';
-    output[modes.EXCLUSION] = (useNew) ? 'exclusion' : 'source-over';
-    output[modes.HUE] = (useNew) ? 'hue' : 'source-over';
-    output[modes.SATURATION] = (useNew) ? 'saturation' : 'source-over';
-    output[modes.COLOR] = (useNew) ? 'color' : 'source-over';
-    output[modes.LUMINOSITY] = (useNew) ? 'luminosity' : 'source-over';
+    output[modes.MULTIPLY] = (useNew) ? 'multiply' : so;
+    output[modes.SCREEN] = (useNew) ? 'screen' : so;
+    output[modes.OVERLAY] = (useNew) ? 'overlay' : so;
+    output[modes.DARKEN] = (useNew) ? 'darken' : so;
+    output[modes.LIGHTEN] = (useNew) ? 'lighten' : so;
+    output[modes.COLOR_DODGE] = (useNew) ? 'color-dodge' : so;
+    output[modes.COLOR_BURN] = (useNew) ? 'color-burn' : so;
+    output[modes.HARD_LIGHT] = (useNew) ? 'hard-light' : so;
+    output[modes.SOFT_LIGHT] = (useNew) ? 'soft-light' : so;
+    output[modes.DIFFERENCE] = (useNew) ? 'difference' : so;
+    output[modes.EXCLUSION] = (useNew) ? 'exclusion' : so;
+    output[modes.HUE] = (useNew) ? 'hue' : so;
+    output[modes.SATURATION] = (useNew) ? 'saturation' : so;
+    output[modes.COLOR] = (useNew) ? 'color' : so;
+    output[modes.LUMINOSITY] = (useNew) ? 'luminosity' : so;
 
     return output;
 };

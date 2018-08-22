@@ -10,7 +10,7 @@ var Clamp = require('../../math/Clamp');
 /**
  * [description]
  *
- * @function Phaser.Utils.Object.GetMinMaxValue
+ * @function Phaser.Utils.Objects.GetMinMaxValue
  * @since 3.0.0
  *
  * @param {object} source - [description]

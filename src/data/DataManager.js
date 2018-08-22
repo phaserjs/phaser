@@ -306,6 +306,8 @@ var DataManager = new Class({
             Object.defineProperty(this.values, key, {
 
                 enumerable: true,
+                
+                configurable: true,
 
                 get: function ()
                 {
@@ -316,10 +318,11 @@ var DataManager = new Class({
                 {
                     if (!_this._frozen)
                     {
+                        var previousValue = list[key];
                         list[key] = value;
 
-                        events.emit('changedata', parent, key, value);
-                        events.emit('changedata_' + key, parent, value);
+                        events.emit('changedata', parent, key, value, previousValue);
+                        events.emit('changedata_' + key, parent, value, previousValue);
                     }
                 }
 

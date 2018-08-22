@@ -36,6 +36,7 @@ var ParseRetroFont = function (scene, config)
     var offsetY = GetValue(config, 'offset.y', 0);
     var spacingX = GetValue(config, 'spacing.x', 0);
     var spacingY = GetValue(config, 'spacing.y', 0);
+    var lineSpacing = GetValue(config, 'lineSpacing', 0);
 
     var charsPerRow = GetValue(config, 'charsPerRow', null);
 
@@ -56,7 +57,7 @@ var ParseRetroFont = function (scene, config)
         retroFont: true,
         font: key,
         size: w,
-        lineHeight: h,
+        lineHeight: h + lineSpacing,
         chars: {}
     };
 

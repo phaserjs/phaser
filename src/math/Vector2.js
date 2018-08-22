@@ -27,7 +27,7 @@ var Class = require('../utils/Class');
  * @constructor
  * @since 3.0.0
  *
- * @param {number} [x] - The x component.
+ * @param {number|Vector2Like} [x] - The x component, or an object with `x` and `y` properties.
  * @param {number} [y] - The y component.
  */
 var Vector2 = new Class({
@@ -568,7 +568,9 @@ var Vector2 = new Class({
 /**
  * A static zero Vector2 for use by reference.
  *
- * @method Phaser.Math.Vector2.ZERO
+ * @constant
+ * @name Phaser.Math.Vector2.ZERO
+ * @type {Vector2}
  * @since 3.1.0
  */
 Vector2.ZERO = new Vector2();

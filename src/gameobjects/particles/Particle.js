@@ -8,11 +8,6 @@ var Class = require('../../utils/Class');
 var DegToRad = require('../../math/DegToRad');
 var DistanceBetween = require('../../math/distance/DistanceBetween');
 
-var GetColor = function (value)
-{
-    return (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
-};
-
 /**
  * @classdesc
  * A Particle is a simple Game Object controlled by a Particle Emitter and Manager, and rendered by the Manager.
@@ -213,15 +208,6 @@ var Particle = new Class({
         this.tint = 0xffffff;
 
         /**
-         * The full color of this Particle, computed from its alpha and tint.
-         *
-         * @name Phaser.GameObjects.Particles.Particle#color
-         * @type {integer}
-         * @since 3.0.0
-         */
-        this.color = 16777215;
-
-        /**
          * The lifespan of this Particle in ms.
          *
          * @name Phaser.GameObjects.Particles.Particle#life
@@ -397,10 +383,6 @@ var Particle = new Class({
 
         this.tint = emitter.tint.onEmit(this, 'tint');
 
-        var ua = ((this.alpha * 255) | 0) & 0xFF;
-
-        this.color = ((ua << 24) | GetColor(this.tint)) >>> 0;
-
         this.index = emitter.alive.length;
     },
 
@@ -570,10 +552,6 @@ var Particle = new Class({
         this.alpha = emitter.alpha.onUpdate(this, 'alpha', t, this.alpha);
 
         this.tint = emitter.tint.onUpdate(this, 'tint', t, this.tint);
-
-        var ua = ((this.alpha * 255) | 0) & 0xFF;
-
-        this.color = ((ua << 24) | GetColor(this.tint)) >>> 0;
 
         this.lifeCurrent -= delta;
 

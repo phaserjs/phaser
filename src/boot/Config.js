@@ -27,6 +27,50 @@ var ValueToColor = require('../display/color/ValueToColor');
  */
 
 /**
+ * @typedef {object} InputConfig
+ *
+ * @property {(boolean|KeyboardInputConfig)} [keyboard=true] - [description]
+ * @property {(boolean|MouseInputConfig)} [mouse=true] - [description]
+ * @property {(boolean|TouchInputConfig)} [touch=true] - [description]
+ * @property {(boolean|GamepadInputConfig)} [gamepad=false] - [description]
+ * @property {integer} [activePointers=1] - [description]
+ */
+
+/**
+ * @typedef {object} MouseInputConfig
+ *
+ * @property {*} [target=null] - [description]
+ * @property {boolean} [capture=true] - [description]
+ */
+
+/**
+ * @typedef {object} KeyboardInputConfig
+ *
+ * @property {*} [target=window] - [description]
+ */
+
+/**
+ * @typedef {object} TouchInputConfig
+ *
+ * @property {*} [target=null] - [description]
+ * @property {boolean} [capture=true] - [description]
+ */
+
+/**
+ * @typedef {object} GamepadInputConfig
+ *
+ * @property {*} [target=window] - [description]
+ */
+
+/**
+ * @typedef {object} BannerConfig
+ *
+ * @property {boolean} [hidePhaser=false] - [description]
+ * @property {string} [text='#ffffff'] - [description]
+ * @property {string[]} [background] - [description]
+ */
+
+/**
  * @typedef {object} FPSConfig
  *
  * @property {integer} [min=10] - [description]
@@ -34,6 +78,44 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {boolean} [forceSetTimeOut=false] - [description]
  * @property {integer} [deltaHistory=10] - [description]
  * @property {integer} [panicMax=120] - [description]
+ */
+
+/**
+ * @typedef {object} RenderConfig
+ *
+ * @property {boolean} [antialias=true] - [description]
+ * @property {boolean} [pixelArt=false] - [description]
+ * @property {boolean} [autoResize=false] - [description]
+ * @property {boolean} [roundPixels=false] - [description]
+ * @property {boolean} [transparent=false] - [description]
+ * @property {boolean} [clearBeforeRender=true] - [description]
+ * @property {boolean} [premultipliedAlpha=true] - [description]
+ * @property {boolean} [preserveDrawingBuffer=false] - [description]
+ * @property {boolean} [failIfMajorPerformanceCaveat=false] - [description]
+ * @property {string} [powerPreference='default'] - "high-performance", "low-power" or "default"
+ * @property {integer} [batchSize=2000] - The default WebGL batch size.
+ */
+
+/**
+ * @typedef {object} ScaleConfig
+ *
+ * @property {(integer|string)} [width=1024] - The base width of your game.
+ * @property {(integer|string)} [height=768] - The base height of your game.
+ * @property {integer} [zoom=1] - The zoom value of the game canvas.
+ * @property {number} [resolution=1] - The rendering resolution of the canvas.
+ * @property {any} [parent] - The parent DOM element.
+ * @property {integer} [mode=0] - The scale mode to apply to the canvas.
+ * @property {integer} [minWidth] - The minimum width the canvas can be scaled down to.
+ * @property {integer} [minHeight] - The minimum height the canvas can be scaled down to.
+ * @property {integer} [maxWidth] - The maximum width the canvas can be scaled up to.
+ * @property {integer} [maxHeight] - The maximum height the canvas can be scaled up to.
+ */
+
+/**
+ * @typedef {object} CallbacksConfig
+ *
+ * @property {BootCallback} [preBoot=NOOP] - [description]
+ * @property {BootCallback} [postBoot=NOOP] - [description]
  */
 
 /**
@@ -48,6 +130,40 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {string} [user] - [description]
  * @property {string} [password] - [description]
  * @property {integer} [timeout=0] - [description]
+ */
+
+/**
+ * @typedef {object} DOMContainerConfig
+ *
+ * @property {boolean} [createContainer=false] - Create a div element in which DOM Elements will be contained. You must also provide a parent.
+ * @property {boolean} [behindCanvas=false] - Place the DOM Container behind the Phaser Canvas. The default is to place it over the Canvas.
+ */
+
+/**
+ * @typedef {object} ImagesConfig
+ *
+ * @property {string} [default] - [description]
+ * @property {string} [missing] - [description]
+ */
+
+/**
+ * @typedef {object} PluginObjectItem
+ *
+ * @property {string} [key] - [description]
+ * @property {*} [plugin] - [description]
+ * @property {boolean} [start] - [description]
+ * @property {string} [systemKey] - [description]
+ * @property {string} [sceneKey] - [description]
+ * @property {*} [data] - [description]
+ */
+
+/**
+ * @typedef {object} PluginObject
+ *
+ * @property {PluginObjectItem[]} [global=null] - [description]
+ * @property {PluginObjectItem[]} [scene=null] - [description]
+ * @property {Array} [default=[]] - [description]
+ * @property {*} [defaultMerge={}] - [description]
  */
 
 /**
@@ -68,42 +184,18 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {string} [url='http://phaser.io'] - [description]
  * @property {string} [version=''] - [description]
  * @property {boolean} [autoFocus=true] - Automatically call window.focus() when the game boots.
- * @property {(boolean|object)} [input] - [description]
- * @property {boolean} [input.keyboard=true] - [description]
- * @property {*} [input.keyboard.target=window] - [description]
- * @property {(boolean|object)} [input.mouse=true] - [description]
- * @property {*} [input.mouse.target=null] - [description]
- * @property {boolean} [input.touch=true] - [description]
- * @property {integer} [input.activePointers=1] - [description]
- * @property {*} [input.touch.target=null] - [description]
- * @property {boolean} [input.touch.capture=true] - [description]
- * @property {(boolean|object)} [input.gamepad=false] - [description]
+ * @property {(boolean|InputConfig)} [input] - [description]
  * @property {boolean} [disableContextMenu=false] - [description]
- * @property {(boolean|object)} [banner=false] - [description]
- * @property {boolean} [banner.hidePhaser=false] - [description]
- * @property {string} [banner.text='#ffffff'] - [description]
- * @property {string[]} [banner.background] - [description]
+ * @property {(boolean|BannerConfig)} [banner=false] - [description]
+ * @property {DOMContainerConfig} [dom] - The DOM Container configuration object.
  * @property {FPSConfig} [fps] - [description]
- * @property {boolean} [render.antialias=true] - [description]
- * @property {boolean} [render.pixelArt=false] - [description]
- * @property {boolean} [render.autoResize=false] - [description]
- * @property {boolean} [render.roundPixels=false] - [description]
- * @property {boolean} [render.transparent=false] - [description]
- * @property {boolean} [render.clearBeforeRender=true] - [description]
- * @property {boolean} [render.premultipliedAlpha=true] - [description]
- * @property {boolean} [render.preserveDrawingBuffer=false] - [description]
- * @property {boolean} [render.failIfMajorPerformanceCaveat=false] - [description]
- * @property {string} [render.powerPreference='default'] - "high-performance", "low-power" or "default"
- * @property {integer} [render.batchSize=2000] - The default WebGL batch size.
+ * @property {RenderConfig} [render] - [description]
  * @property {(string|number)} [backgroundColor=0x000000] - [description]
- * @property {object} [callbacks] - [description]
- * @property {BootCallback} [callbacks.preBoot=NOOP] - [description]
- * @property {BootCallback} [callbacks.postBoot=NOOP] - [description]
+ * @property {CallbacksConfig} [callbacks] - [description]
  * @property {LoaderConfig} [loader] - [description]
- * @property {object} [images] - [description]
- * @property {string} [images.default] - [description]
- * @property {string} [images.missing] - [description]
+ * @property {ImagesConfig} [images] - [description]
  * @property {object} [physics] - [description]
+ * @property {PluginObject|PluginObjectItem[]} [plugins] - [description]
  */
 
 /**
@@ -156,14 +248,35 @@ var Config = new Class({
         this.resolution = GetValue(config, 'resolution', 1);
 
         /**
-         * @const {number} Phaser.Boot.Config#renderType - [description]
-         */
-        this.renderType = GetValue(config, 'type', CONST.AUTO);
-
-        /**
          * @const {?*} Phaser.Boot.Config#parent - [description]
          */
         this.parent = GetValue(config, 'parent', null);
+
+        /**
+         * @const {?*} Phaser.Boot.Config#scaleMode - [description]
+         */
+        this.scaleMode = GetValue(config, 'scaleMode', 0);
+
+        //  Scale Manager - Anything set in here over-rides anything set above
+
+        var scaleConfig = GetValue(config, 'scale', null);
+
+        if (scaleConfig)
+        {
+            this.width = GetValue(scaleConfig, 'width', this.width);
+            this.height = GetValue(scaleConfig, 'height', this.height);
+            this.zoom = GetValue(scaleConfig, 'zoom', this.zoom);
+            this.resolution = GetValue(scaleConfig, 'resolution', this.resolution);
+            this.parent = GetValue(scaleConfig, 'parent', this.parent);
+            this.scaleMode = GetValue(scaleConfig, 'mode', this.scaleMode);
+
+            //  TODO: Add in min / max sizes
+        }
+
+        /**
+         * @const {number} Phaser.Boot.Config#renderType - [description]
+         */
+        this.renderType = GetValue(config, 'type', CONST.AUTO);
 
         /**
          * @const {?HTMLCanvasElement} Phaser.Boot.Config#canvas - Force Phaser to use your own Canvas element instead of creating one.
@@ -211,6 +324,18 @@ var Config = new Class({
          * @const {boolean} Phaser.Boot.Config#autoFocus - [description]
          */
         this.autoFocus = GetValue(config, 'autoFocus', true);
+
+        //  DOM Element Container
+
+        /**
+         * @const {?boolean} Phaser.Boot.Config#domCreateContainer - [description]
+         */
+        this.domCreateContainer = GetValue(config, 'dom.createContainer', false);
+
+        /**
+         * @const {?boolean} Phaser.Boot.Config#domBehindCanvas - [description]
+         */
+        this.domBehindCanvas = GetValue(config, 'dom.behindCanvas', false);
 
         //  Input
 
@@ -482,7 +607,7 @@ var Config = new Class({
          *
          * plugins: {
          *    global: [
-         *        { key: 'TestPlugin', plugin: TestPlugin, start: true },
+         *        { key: 'TestPlugin', plugin: TestPlugin, start: true, data: { msg: 'The plugin is alive' } },
          *    ],
          *    scene: [
          *        { key: 'WireFramePlugin', plugin: WireFramePlugin, systemKey: 'wireFramePlugin', sceneKey: 'wireframe' }
@@ -542,11 +667,23 @@ var Config = new Class({
          * @const {string} Phaser.Boot.Config#defaultImage - [description]
          */
         this.defaultImage = GetValue(config, 'images.default', pngPrefix + 'AQMAAABJtOi3AAAAA1BMVEX///+nxBvIAAAAAXRSTlMAQObYZgAAABVJREFUeF7NwIEAAAAAgKD9qdeocAMAoAABm3DkcAAAAABJRU5ErkJggg==');
-        
+
         /**
          * @const {string} Phaser.Boot.Config#missingImage - [description]
          */
         this.missingImage = GetValue(config, 'images.missing', pngPrefix + 'CAIAAAD8GO2jAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJ9JREFUeNq01ssOwyAMRFG46v//Mt1ESmgh+DFmE2GPOBARKb2NVjo+17PXLD8a1+pl5+A+wSgFygymWYHBb0FtsKhJDdZlncG2IzJ4ayoMDv20wTmSMzClEgbWYNTAkQ0Z+OJ+A/eWnAaR9+oxCF4Os0H8htsMUp+pwcgBBiMNnAwF8GqIgL2hAzaGFFgZauDPKABmowZ4GL369/0rwACp2yA/ttmvsQAAAABJRU5ErkJggg==');
+
+        if (window)
+        {
+            if (window.FORCE_WEBGL)
+            {
+                this.renderType = CONST.WEBGL;
+            }
+            else if (window.FORCE_CANVAS)
+            {
+                this.renderType = CONST.CANVAS;
+            }
+        }
     }
 
 });

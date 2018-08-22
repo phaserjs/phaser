@@ -29,6 +29,7 @@ var TextStyle = require('../TextStyle');
  * @extends Phaser.GameObjects.Components.Alpha
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.ComputedSize
+ * @extends Phaser.GameObjects.Components.Crop
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.GetBounds
@@ -55,6 +56,7 @@ var Text = new Class({
         Components.Alpha,
         Components.BlendMode,
         Components.ComputedSize,
+        Components.Crop,
         Components.Depth,
         Components.Flip,
         Components.GetBounds,
@@ -77,6 +79,15 @@ var Text = new Class({
         if (y === undefined) { y = 0; }
 
         GameObject.call(this, scene, 'Text');
+
+        /**
+         * The renderer in use by this Text object.
+         *
+         * @name Phaser.GameObjects.Text#renderer
+         * @type {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)}
+         * @since 3.12.0
+         */
+        this.renderer = scene.sys.game.renderer;
 
         this.setPosition(x, y);
         this.setOrigin(0, 0);
@@ -135,21 +146,12 @@ var Text = new Class({
         /**
          * The text to display.
          *
-         * @name Phaser.GameObjects.Text#text
+         * @name Phaser.GameObjects.Text#_text
          * @type {string}
-         * @since 3.0.0
+         * @private
+         * @since 3.12.0
          */
-        this.text = '';
-
-        /**
-         * The resolution of the text.
-         *
-         * @name Phaser.GameObjects.Text#resolution
-         * @type {number}
-         * @default 1
-         * @since 3.0.0
-         */
-        this.resolution = 1;
+        this._text = '';
 
         /**
          * Specify a padding value which is added to the line width and height when calculating the Text size.
@@ -182,16 +184,6 @@ var Text = new Class({
         this.height = 1;
 
         /**
-         * The Canvas Texture that the text is rendered to for WebGL rendering.
-         *
-         * @name Phaser.GameObjects.Text#canvasTexture
-         * @type {HTMLCanvasElement}
-         * @default null
-         * @since 3.0.0
-         */
-        this.canvasTexture = null;
-
-        /**
          * Whether the text or its settings have changed and need updating.
          *
          * @name Phaser.GameObjects.Text#dirty
@@ -200,6 +192,40 @@ var Text = new Class({
          * @since 3.0.0
          */
         this.dirty = false;
+
+        //  If resolution wasn't set, then we get it from the game config
+        if (this.style.resolution === 0)
+        {
+            this.style.resolution = scene.sys.game.config.resolution;
+        }
+
+        /**
+         * The internal crop data object, as used by `setCrop` and passed to the `Frame.setCropUVs` method.
+         *
+         * @name Phaser.GameObjects.Text#_crop
+         * @type {object}
+         * @private
+         * @since 3.12.0
+         */
+        this._crop = this.resetCropObject();
+
+        //  Create a Texture for this Text object
+        this.texture = scene.sys.textures.addCanvas(null, this.canvas, true);
+
+        //  Get the frame
+        this.frame = this.texture.get();
+
+        //  Set the resolution
+        this.frame.source.resolution = this.style.resolution;
+
+        if (this.renderer && this.renderer.gl)
+        {
+            //  Clear the default 1x1 glTexture, as we override it later
+
+            this.renderer.deleteTexture(this.frame.source.glTexture);
+
+            this.frame.source.glTexture = null;
+        }
 
         this.initRTL();
 
@@ -219,7 +245,6 @@ var Text = new Class({
         {
             scene.sys.game.renderer.onContextRestored(function ()
             {
-                this.canvasTexture = null;
                 this.dirty = true;
             }, this);
         }
@@ -496,7 +521,7 @@ var Text = new Class({
      */
     getWrappedText: function (text)
     {
-        if (text === undefined) { text = this.text; }
+        if (text === undefined) { text = this._text; }
 
         this.style.syncFont(this.canvas, this.context);
 
@@ -529,9 +554,9 @@ var Text = new Class({
             value = value.join('\n');
         }
 
-        if (value !== this.text)
+        if (value !== this._text)
         {
-            this.text = value.toString();
+            this._text = value.toString();
 
             this.updateText();
         }
@@ -858,6 +883,29 @@ var Text = new Class({
     },
 
     /**
+     * Set the resolution used by this Text object.
+     *
+     * By default it will be set to match the resolution set in the Game Config,
+     * but you can override it via this method, or by specifying it in the Text style configuration object.
+     * 
+     * It allows for much clearer text on High DPI devices, at the cost of memory because it uses larger
+     * internal Canvas textures for the Text.
+     * 
+     * Therefore, please use with caution, as the more high res Text you have, the more memory it uses.
+     *
+     * @method Phaser.GameObjects.Text#setResolution
+     * @since 3.12.0
+     *
+     * @param {number} value - The resolution for this Text object to use.
+     *
+     * @return {Phaser.GameObjects.Text} This Text object.
+     */
+    setResolution: function (value)
+    {
+        return this.style.setResolution(value);
+    },
+
+    /**
      * Set the text padding.
      *
      * 'left' can be an object.
@@ -951,16 +999,16 @@ var Text = new Class({
         var canvas = this.canvas;
         var context = this.context;
         var style = this.style;
-        var resolution = this.resolution;
+        var resolution = style.resolution;
         var size = style.metrics;
 
         style.syncFont(canvas, context);
 
-        var outputText = this.text;
+        var outputText = this._text;
 
         if (style.wordWrapWidth || style.wordWrapCallback)
         {
-            outputText = this.runWordWrap(this.text);
+            outputText = this.runWordWrap(this._text);
         }
 
         //  Split text into lines
@@ -995,6 +1043,9 @@ var Text = new Class({
         {
             canvas.width = w;
             canvas.height = h;
+
+            this.frame.setSize(w, h);
+
             style.syncFont(canvas, context); // Resizing resets the context
         }
         else
@@ -1004,7 +1055,7 @@ var Text = new Class({
 
         context.save();
 
-        // context.scale(resolution, resolution);
+        context.scale(resolution, resolution);
 
         if (style.backgroundColor)
         {
@@ -1069,6 +1120,12 @@ var Text = new Class({
 
         context.restore();
 
+        if (this.renderer.gl)
+        {
+            this.frame.source.glTexture = this.renderer.canvasToTexture(canvas, this.frame.source.glTexture);
+            this.frame.glTexture = this.frame.source.glTexture;
+        }
+
         this.dirty = true;
 
         return this;
@@ -1088,6 +1145,27 @@ var Text = new Class({
     },
 
     /**
+     * The text string being rendered by this Text Game Object.
+     *
+     * @name Phaser.GameObjects.Text#text
+     * @type {string}
+     * @since 3.0.0
+     */
+    text: {
+
+        get: function ()
+        {
+            return this._text;
+        },
+
+        set: function (value)
+        {
+            this.setText(value);
+        }
+
+    },
+
+    /**
      * Build a JSON representation of the Text object.
      *
      * @method Phaser.GameObjects.Text#toJSON
@@ -1103,9 +1181,8 @@ var Text = new Class({
 
         var data = {
             autoRound: this.autoRound,
-            text: this.text,
+            text: this._text,
             style: this.style.toJSON(),
-            resolution: this.resolution,
             padding: {
                 left: this.padding.left,
                 right: this.padding.right,
@@ -1134,6 +1211,8 @@ var Text = new Class({
         }
 
         CanvasPool.remove(this.canvas);
+
+        this.texture.destroy();
     }
 
 });

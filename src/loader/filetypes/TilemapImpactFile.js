@@ -23,7 +23,7 @@ var TILEMAP_FORMATS = require('../../tilemaps/Formats');
  * A single Impact.js Tilemap JSON File suitable for loading by the Loader.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#tilemapImpact method and are not typically created directly.
- * 
+ *
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#tilemapImpact.
  *
  * @class TilemapImpactFile
@@ -73,11 +73,11 @@ var TilemapImpactFile = new Class({
  * Adds an Impact.js Tilemap file, or array of map files, to the current load queue.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
- * 
+ *
  * ```javascript
  * function preload ()
  * {
- *     this.load.tilemapImpact('level1', maps/Level1.json');
+ *     this.load.tilemapImpact('level1', 'maps/Level1.json');
  * }
  * ```
  *
@@ -90,14 +90,14 @@ var TilemapImpactFile = new Class({
  * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
  * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
  * loaded.
- * 
+ *
  * The key must be a unique String. It is used to add the file to the global Tilemap Cache upon a successful load.
  * The key should be unique both in terms of files being loaded and files already present in the Tilemap Cache.
  * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
  * then remove it from the Text Cache first, before loading a new one.
  *
  * Instead of passing arguments you can pass a configuration object, such as:
- * 
+ *
  * ```javascript
  * this.load.tilemapImpact({
  *     key: 'level1',
@@ -108,7 +108,7 @@ var TilemapImpactFile = new Class({
  * See the documentation for `Phaser.Loader.FileTypes.TilemapImpactFileConfig` for more details.
  *
  * Once the file has finished loading you can access it from its Cache using its key:
- * 
+ *
  * ```javascript
  * this.load.tilemapImpact('level1', 'maps/Level1.json');
  * // and later in your game ...

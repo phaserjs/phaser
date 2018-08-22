@@ -73,12 +73,6 @@ var Mesh = new Class({
     {
         GameObject.call(this, scene, 'Mesh');
 
-        this.setTexture(texture, frame);
-        this.setPosition(x, y);
-        this.setSizeToFrame();
-        this.setOrigin();
-        this.initPipeline('TextureTintPipeline');
-
         if (vertices.length !== uv.length)
         {
             throw new Error('Mesh Vertex count must match UV count');
@@ -149,6 +143,22 @@ var Mesh = new Class({
          * @since 3.0.0
          */
         this.alphas = new Float32Array(alphas);
+
+        /**
+         * Fill or additive mode used when blending the color values?
+         * 
+         * @name Phaser.GameObjects.Mesh#tintFill
+         * @type {boolean}
+         * @default false
+         * @since 3.11.0
+         */
+        this.tintFill = false;
+
+        this.setTexture(texture, frame);
+        this.setPosition(x, y);
+        this.setSizeToFrame();
+        this.setOrigin();
+        this.initPipeline('TextureTintPipeline');
     }
 
 });

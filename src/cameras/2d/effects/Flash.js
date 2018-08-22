@@ -284,7 +284,7 @@ var Flash = new Class({
         var camera = this.camera;
 
         ctx.fillStyle = 'rgba(' + this.red + ',' + this.green + ',' + this.blue + ',' + this.alpha + ')';
-        ctx.fillRect(camera.x, camera.y, camera.width, camera.height);
+        ctx.fillRect(camera._cx, camera._cy, camera._cw, camera._ch);
 
         return true;
     },
@@ -312,13 +312,10 @@ var Flash = new Class({
         var blue = this.blue / 255;
         var green = this.green / 255;
 
-        pipeline.batchFillRect(
-            0, 0, 1, 1, 0,
-            camera.x, camera.y, camera.width, camera.height,
+        pipeline.drawFillRect(
+            camera._cx, camera._cy, camera._cw, camera._ch,
             getTintFunction(red, green, blue, 1),
-            this.alpha,
-            1, 0, 0, 1, 0, 0,
-            [ 1, 0, 0, 1, 0, 0 ]
+            this.alpha
         );
 
         return true;

@@ -4,7 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = require('../../gameobjects/GameObject');
 var Utils = require('../../renderer/webgl/Utils');
 
 /**
@@ -23,26 +22,26 @@ var Utils = require('../../renderer/webgl/Utils');
  */
 var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)))
+    src.cull(camera);
+
+    var renderTiles = src.culledTiles;
+    var tileCount = renderTiles.length;
+    var alpha = camera.alpha * src.alpha;
+
+    if (tileCount === 0 || alpha <= 0)
     {
         return;
     }
-
-    src.cull(camera);
 
     var pipeline = this.pipeline;
 
     var getTint = Utils.getTintAppendFloatAlpha;
 
-    var renderTiles = src.culledTiles;
-    var length = renderTiles.length;
     var tileset = src.tileset;
     var texture = tileset.glTexture;
 
     var scrollFactorX = src.scrollFactorX;
     var scrollFactorY = src.scrollFactorY;
-
-    var alpha = camera.alpha * src.alpha;
 
     var x = src.x;
     var y = src.y;
@@ -50,9 +49,9 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPer
     var sx = src.scaleX;
     var sy = src.scaleY;
 
-    for (var index = 0; index < length; index++)
+    for (var i = 0; i < tileCount; i++)
     {
-        var tile = renderTiles[index];
+        var tile = renderTiles[i];
 
         var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
 

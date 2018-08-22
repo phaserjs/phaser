@@ -36,18 +36,54 @@ var ForwardDiffuseLightPipeline = new Class({
         config.fragShader = ShaderSourceFS.replace('%LIGHT_COUNT%', LIGHT_COUNT.toString());
 
         TextureTintPipeline.call(this, config);
+
+        /**
+         * Default normal map texture to use.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#defaultNormalMap
+         * @type {Phaser.Texture.Frame}
+         * @private
+         * @since 3.11.0
+         */
+        this.defaultNormalMap;
+
+        /**
+         * Collection of batch information
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batches
+         * @type {array}
+         * @since 3.1.0
+         */
+        this.batches = [];
     },
 
     /**
-     * This function binds it's base class resources and this lights 2D resources.
+     * Called when the Game has fully booted and the Renderer has finished setting up.
+     * 
+     * By this stage all Game level systems are now in place and you can perform any final
+     * tasks that the pipeline may need that relied on game systems such as the Texture Manager.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#boot
+     * @override
+     * @since 3.11.0
+     */
+    boot: function ()
+    {
+        this.defaultNormalMap = this.game.textures.getFrame('__DEFAULT');
+    },
+
+    /**
+     * This function binds its base class resources and this lights 2D resources.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#onBind
      * @override
      * @since 3.0.0
+     * 
+     * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
      *
      * @return {Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline} [description]
      */
-    onBind: function ()
+    onBind: function (gameObject)
     {
         TextureTintPipeline.prototype.onBind.call(this);
 
@@ -56,8 +92,90 @@ var ForwardDiffuseLightPipeline = new Class({
 
         this.mvpUpdate();
 
+        if (this.batches.length === 0)
+        {
+            this.pushBatch();
+        }
+
         renderer.setInt1(program, 'uNormSampler', 1);
         renderer.setFloat2(program, 'uResolution', this.width, this.height);
+
+        if (gameObject)
+        {
+            this.setNormalMap(gameObject);
+        }
+
+        return this;
+    },
+
+    /**
+     * Creates a new batch object and pushes it to a batch array.
+     * The batch object contains information relevant to the current 
+     * vertex batch like the offset in the vertex buffer, vertex count and 
+     * the textures used by that batch.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#pushBatch
+     * @since 3.1.0
+     */
+    pushBatch: function ()
+    {
+        var batch = {
+            first: this.vertexCount,
+            texture: null,
+            textures: []
+        };
+
+        this.batches.push(batch);
+    },
+
+    /**
+     * Assigns a texture to the current batch. If a texture is already set it creates
+     * a new batch object.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#setTexture2D
+     * @since 3.1.0
+     *
+     * @param {WebGLTexture} texture - WebGLTexture that will be assigned to the current batch.
+     * @param {integer} textureUnit - Texture unit to which the texture needs to be bound.
+     *
+     * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} This pipeline instance.
+     */
+    setTexture2D: function (texture, unit)
+    {
+        if (!texture)
+        {
+            return this;
+        }
+
+        var batches = this.batches;
+
+        if (batches.length === 0)
+        {
+            this.pushBatch();
+        }
+
+        var batch = batches[batches.length - 1];
+
+        if (unit > 0)
+        {
+            if (batch.textures[unit - 1] &&
+                batch.textures[unit - 1] !== texture)
+            {
+                this.pushBatch();
+            }
+
+            batches[batches.length - 1].textures[unit - 1] = texture;
+        }
+        else
+        {
+            if (batch.texture !== null &&
+                batch.texture !== texture)
+            {
+                this.pushBatch();
+            }
+
+            batches[batches.length - 1].texture = texture;
+        }
 
         return this;
     },
@@ -128,102 +246,310 @@ var ForwardDiffuseLightPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Binds, uploads resources and processes all batches generating draw calls.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#drawStaticTilemapLayer
-     * @override
-     * @since 3.0.0
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#flush
+     * @since 3.1.0
      *
-     * @param {Phaser.Tilemaps.StaticTilemapLayer} tilemap - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
+     * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} This pipeline instance.
      */
-    drawStaticTilemapLayer: function (tilemap, camera, parentTransformMatrix)
+    flush: function ()
     {
-        if (!this.active)
+        if (this.flushLocked)
         {
-            return;
+            return this;
         }
 
-        var normalTexture = tilemap.tileset.image.dataSource[0];
+        this.flushLocked = true;
 
-        if (normalTexture)
+        var gl = this.gl;
+        var renderer = this.renderer;
+        var vertexCount = this.vertexCount;
+        var topology = this.topology;
+        var vertexSize = this.vertexSize;
+        var batches = this.batches;
+        var batchCount = batches.length;
+        var batchVertexCount = 0;
+        var batch = null;
+        var batchNext;
+        var textureIndex;
+        var nTexture;
+
+        if (batchCount === 0 || vertexCount === 0)
         {
-            this.renderer.setPipeline(this);
-            this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.drawStaticTilemapLayer.call(this, tilemap, camera, parentTransformMatrix);
+            this.flushLocked = false;
+            return this;
         }
-        else
+
+        gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
+
+        for (var index = 0; index < batches.length - 1; ++index)
         {
-            console.warn('Normal map texture missing for using Light2D pipeline. StaticTilemapLayer rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.drawStaticTilemapLayer(tilemap, camera, parentTransformMatrix);
+            batch = batches[index];
+            batchNext = batches[index + 1];
+
+            if (batch.textures.length > 0)
+            {
+                for (textureIndex = 0; textureIndex < batch.textures.length; ++textureIndex)
+                {
+                    nTexture = batch.textures[textureIndex];
+
+                    if (nTexture)
+                    {
+                        renderer.setTexture2D(nTexture, 1 + textureIndex);
+                    }
+                }
+
+                gl.activeTexture(gl.TEXTURE0);
+            }
+
+            batchVertexCount = batchNext.first - batch.first;
+
+            if (batch.texture === null || batchVertexCount <= 0) { continue; }
+
+            renderer.setTexture2D(batch.texture, 0);
+            gl.drawArrays(topology, batch.first, batchVertexCount);
         }
+
+        // Left over data
+        batch = batches[batches.length - 1];
+
+        if (batch.textures.length > 0)
+        {
+            for (textureIndex = 0; textureIndex < batch.textures.length; ++textureIndex)
+            {
+                nTexture = batch.textures[textureIndex];
+
+                if (nTexture)
+                {
+                    renderer.setTexture2D(nTexture, 1 + textureIndex);
+                }
+            }
+
+            gl.activeTexture(gl.TEXTURE0);
+        }
+
+        batchVertexCount = vertexCount - batch.first;
+
+        if (batch.texture && batchVertexCount > 0)
+        {
+            renderer.setTexture2D(batch.texture, 0);
+            gl.drawArrays(topology, batch.first, batchVertexCount);
+        }
+
+        this.vertexCount = 0;
+        batches.length = 0;
+        this.pushBatch();
+        this.flushLocked = false;
+
+        return this;
     },
 
     /**
-     * [description]
+     * Generic function for batching a textured quad
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#drawEmitterManager
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTexture
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Particles.ParticleEmitterManager} emitterManager - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
-     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - Source GameObject
+     * @param {WebGLTexture} texture - Raw WebGLTexture associated with the quad
+     * @param {integer} textureWidth - Real texture width
+     * @param {integer} textureHeight - Real texture height
+     * @param {number} srcX - X coordinate of the quad
+     * @param {number} srcY - Y coordinate of the quad
+     * @param {number} srcWidth - Width of the quad
+     * @param {number} srcHeight - Height of the quad
+     * @param {number} scaleX - X component of scale
+     * @param {number} scaleY - Y component of scale
+     * @param {number} rotation - Rotation of the quad
+     * @param {boolean} flipX - Indicates if the quad is horizontally flipped
+     * @param {boolean} flipY - Indicates if the quad is vertically flipped
+     * @param {number} scrollFactorX - By which factor is the quad affected by the camera horizontal scroll
+     * @param {number} scrollFactorY - By which factor is the quad effected by the camera vertical scroll
+     * @param {number} displayOriginX - Horizontal origin in pixels
+     * @param {number} displayOriginY - Vertical origin in pixels
+     * @param {number} frameX - X coordinate of the texture frame
+     * @param {number} frameY - Y coordinate of the texture frame
+     * @param {number} frameWidth - Width of the texture frame
+     * @param {number} frameHeight - Height of the texture frame
+     * @param {integer} tintTL - Tint for top left
+     * @param {integer} tintTR - Tint for top right
+     * @param {integer} tintBL - Tint for bottom left
+     * @param {integer} tintBR - Tint for bottom right
+     * @param {number} tintEffect - The tint effect (0 for additive, 1 for replacement)
+     * @param {number} uOffset - Horizontal offset on texture coordinate
+     * @param {number} vOffset - Vertical offset on texture coordinate
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - Current used camera
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - Parent container
      */
-    drawEmitterManager: function (emitterManager, camera, parentTransformMatrix)
+    batchTexture: function (
+        gameObject,
+        texture,
+        textureWidth, textureHeight,
+        srcX, srcY,
+        srcWidth, srcHeight,
+        scaleX, scaleY,
+        rotation,
+        flipX, flipY,
+        scrollFactorX, scrollFactorY,
+        displayOriginX, displayOriginY,
+        frameX, frameY, frameWidth, frameHeight,
+        tintTL, tintTR, tintBL, tintBR, tintEffect,
+        uOffset, vOffset,
+        camera,
+        parentTransformMatrix)
     {
         if (!this.active)
         {
             return;
         }
 
-        var normalTexture = emitterManager.texture.dataSource[emitterManager.frame.sourceIndex];
+        this.renderer.setPipeline(this);
 
-        if (normalTexture)
+        var normalTexture;
+
+        if (gameObject.texture)
         {
-            this.renderer.setPipeline(this);
-            this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.drawEmitterManager.call(this, emitterManager, camera, parentTransformMatrix);
+            normalTexture = gameObject.texture.dataSource[gameObject.frame.sourceIndex];
+        }
+        else if (gameObject.tileset)
+        {
+            normalTexture = gameObject.tileset.image.dataSource[0];
+        }
+
+        if (!normalTexture)
+        {
+            normalTexture = this.defaultNormalMap;
+        }
+
+        this.setTexture2D(normalTexture.glTexture, 1);
+
+        var camMatrix = this._tempMatrix1;
+        var spriteMatrix = this._tempMatrix2;
+        var calcMatrix = this._tempMatrix3;
+
+        var width = srcWidth;
+        var height = srcHeight;
+
+        var x = -displayOriginX;
+        var y = -displayOriginY;
+
+        //  Invert the flipY if this is a RenderTexture
+        flipY = flipY ^ (texture.isRenderTexture ? 1 : 0);
+
+        if (flipX)
+        {
+            width *= -1;
+            x += srcWidth;
+        }
+
+        if (flipY)
+        {
+            height *= -1;
+            y += srcHeight;
+        }
+
+        if (camera.roundPixels)
+        {
+            x |= 0;
+            y |= 0;
+        }
+
+        var xw = x + width;
+        var yh = y + height;
+
+        spriteMatrix.applyITRS(srcX, srcY, rotation, scaleX, scaleY);
+
+        camMatrix.copyFrom(camera.matrix);
+
+        if (parentTransformMatrix)
+        {
+            //  Multiply the camera by the parent matrix
+            camMatrix.multiplyWithOffset(parentTransformMatrix, -camera.scrollX * scrollFactorX, -camera.scrollY * scrollFactorY);
+
+            //  Undo the camera scroll
+            spriteMatrix.e = srcX;
+            spriteMatrix.f = srcY;
+
+            //  Multiply by the Sprite matrix, store result in calcMatrix
+            camMatrix.multiply(spriteMatrix, calcMatrix);
         }
         else
         {
-            console.warn('Normal map texture missing for using Light2D pipeline. EmitterManager rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.drawEmitterManager(emitterManager, camera, parentTransformMatrix);
+            spriteMatrix.e -= camera.scrollX * scrollFactorX;
+            spriteMatrix.f -= camera.scrollY * scrollFactorY;
+    
+            //  Multiply by the Sprite matrix, store result in calcMatrix
+            camMatrix.multiply(spriteMatrix, calcMatrix);
         }
+
+        var tx0 = x * calcMatrix.a + y * calcMatrix.c + calcMatrix.e;
+        var ty0 = x * calcMatrix.b + y * calcMatrix.d + calcMatrix.f;
+
+        var tx1 = x * calcMatrix.a + yh * calcMatrix.c + calcMatrix.e;
+        var ty1 = x * calcMatrix.b + yh * calcMatrix.d + calcMatrix.f;
+
+        var tx2 = xw * calcMatrix.a + yh * calcMatrix.c + calcMatrix.e;
+        var ty2 = xw * calcMatrix.b + yh * calcMatrix.d + calcMatrix.f;
+
+        var tx3 = xw * calcMatrix.a + y * calcMatrix.c + calcMatrix.e;
+        var ty3 = xw * calcMatrix.b + y * calcMatrix.d + calcMatrix.f;
+
+        if (camera.roundPixels)
+        {
+            tx0 |= 0;
+            ty0 |= 0;
+
+            tx1 |= 0;
+            ty1 |= 0;
+
+            tx2 |= 0;
+            ty2 |= 0;
+
+            tx3 |= 0;
+            ty3 |= 0;
+        }
+
+        var u0 = (frameX / textureWidth) + uOffset;
+        var v0 = (frameY / textureHeight) + vOffset;
+        var u1 = (frameX + frameWidth) / textureWidth + uOffset;
+        var v1 = (frameY + frameHeight) / textureHeight + vOffset;
+
+        this.setTexture2D(texture, 0);
+
+        this.batchVertices(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect);
     },
 
     /**
-     * [description]
+     * Sets the Game Objects normal map as the active texture.
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#drawBlitter
-     * @since 3.0.0
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#setNormalMap
+     * @since 3.11.0
      *
-     * @param {Phaser.GameObjects.Blitter} blitter - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
-     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - [description]
      */
-    drawBlitter: function (blitter, camera, parentTransformMatrix)
+    setNormalMap: function (gameObject)
     {
-        if (!this.active)
+        if (!this.active || !gameObject)
         {
             return;
         }
 
-        var normalTexture = blitter.texture.dataSource[blitter.frame.sourceIndex];
+        var normalTexture;
 
-        if (normalTexture)
+        if (gameObject.texture)
         {
-            this.renderer.setPipeline(this);
-            this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.drawBlitter.call(this, blitter, camera, parentTransformMatrix);
+            normalTexture = gameObject.texture.dataSource[gameObject.frame.sourceIndex];
         }
-        else
+
+        if (!normalTexture)
         {
-            console.warn('Normal map texture missing for using Light2D pipeline. Blitter rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.drawBlitter(blitter, camera, parentTransformMatrix);
+            normalTexture = this.defaultNormalMap;
         }
+
+        this.setTexture2D(normalTexture.glTexture, 1);
+
+        this.renderer.setPipeline(gameObject.defaultPipeline);
     },
 
     /**
@@ -249,207 +575,10 @@ var ForwardDiffuseLightPipeline = new Class({
         if (normalTexture)
         {
             this.renderer.setPipeline(this);
+
             this.setTexture2D(normalTexture.glTexture, 1);
+
             TextureTintPipeline.prototype.batchSprite.call(this, sprite, camera, parentTransformMatrix);
-        }
-        else
-        {
-            console.warn('Normal map texture missing for using Light2D pipeline. Sprite rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.batchSprite(sprite, camera, parentTransformMatrix);
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchMesh
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Mesh} mesh - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
-     *
-     */
-    batchMesh: function (mesh, camera, parentTransformMatrix)
-    {
-        if (!this.active)
-        {
-            return;
-        }
-
-        var normalTexture = mesh.texture.dataSource[mesh.frame.sourceIndex];
-
-        if (normalTexture)
-        {
-            this.renderer.setPipeline(this);
-            this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.batchMesh.call(this, mesh, camera, parentTransformMatrix);
-        }
-        else
-        {
-            console.warn('Normal map texture missing for using Light2D pipeline. Mesh rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.batchMesh(mesh, camera, parentTransformMatrix);
-
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchBitmapText
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.BitmapText} bitmapText - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
-     *
-     */
-    batchBitmapText: function (bitmapText, camera, parentTransformMatrix)
-    {
-        if (!this.active)
-        {
-            return;
-        }
-
-        var normalTexture = bitmapText.texture.dataSource[bitmapText.frame.sourceIndex];
-
-        if (normalTexture)
-        {
-            this.renderer.setPipeline(this);
-            this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.batchBitmapText.call(this, bitmapText, camera, parentTransformMatrix);
-        }
-        else
-        {
-            console.warn('Normal map texture missing for using Light2D pipeline. BitmapText rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.batchBitmapText(bitmapText, camera, parentTransformMatrix);
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchDynamicBitmapText
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.DynamicBitmapText} bitmapText - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
-     *
-     */
-    batchDynamicBitmapText: function (bitmapText, camera, parentTransformMatrix)
-    {
-        var normalTexture = bitmapText.texture.dataSource[bitmapText.frame.sourceIndex];
-
-        if (normalTexture)
-        {
-            this.renderer.setPipeline(this);
-            this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.batchDynamicBitmapText.call(this, bitmapText, camera, parentTransformMatrix);
-        }
-        else
-        {
-            console.warn('Normal map texture missing for using Light2D pipeline. DynamicBitmapText rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.batchDynamicBitmapText(bitmapText, camera, parentTransformMatrix);
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchText
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.Text} text - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
-     *
-     */
-    batchText: function (text, camera, parentTransformMatrix)
-    {
-        if (!this.active)
-        {
-            return;
-        }
-
-        var normalTexture = text.texture.dataSource[text.frame.sourceIndex];
-
-        if (normalTexture)
-        {
-            this.renderer.setPipeline(this);
-            this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.batchText.call(this, text, camera, parentTransformMatrix);
-        }
-        else
-        {
-            console.warn('Normal map texture missing for using Light2D pipeline. Text rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.batchText(text, camera, parentTransformMatrix);
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchDynamicTilemapLayer
-     * @since 3.0.0
-     *
-     * @param {Phaser.Tilemaps.DynamicTilemapLayer} tilemapLayer - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
-     *
-     */
-    batchDynamicTilemapLayer: function (tilemapLayer, camera, parentTransformMatrix)
-    {
-        if (!this.active)
-        {
-            return;
-        }
-
-        var normalTexture = tilemapLayer.tileset.image.dataSource[0];
-
-        if (normalTexture)
-        {
-            this.renderer.setPipeline(this);
-            this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.batchDynamicTilemapLayer.call(this, tilemapLayer, camera, parentTransformMatrix);
-        }
-        else
-        {
-            console.warn('Normal map texture missing for using Light2D pipeline. DynamicTilemapLayer rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.batchDynamicTilemapLayer(tilemapLayer, camera, parentTransformMatrix);
-        }
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchTileSprite
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.TileSprite} tileSprite - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
-     *
-     */
-    batchTileSprite: function (tileSprite, camera, parentTransformMatrix)
-    {
-        if (!this.active)
-        {
-            return;
-        }
-
-        var normalTexture = tileSprite.texture.dataSource[tileSprite.frame.sourceIndex];
-
-        if (normalTexture)
-        {
-            this.renderer.setPipeline(this);
-            this.setTexture2D(normalTexture.glTexture, 1);
-            TextureTintPipeline.prototype.batchTileSprite.call(this, tileSprite, camera, parentTransformMatrix);
-        }
-        else
-        {
-            console.warn('Normal map texture missing for using Light2D pipeline. TileSprite rendered with default pipeline.');
-            this.renderer.pipelines.TextureTintPipeline.batchTileSprite(tileSprite, camera, parentTransformMatrix);
         }
     }
 

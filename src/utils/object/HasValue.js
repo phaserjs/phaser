@@ -7,7 +7,7 @@
 /**
  * [description]
  *
- * @function Phaser.Utils.Object.HasValue
+ * @function Phaser.Utils.Objects.HasValue
  * @since 3.0.0
  *
  * @param {object} source - [description]

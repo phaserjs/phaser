@@ -30,10 +30,9 @@ GameObjectCreator.register('bitmapText', function (config, addToScene)
     var font = GetValue(config, 'font', '');
     var text = GetAdvancedValue(config, 'text', '');
     var size = GetAdvancedValue(config, 'size', false);
+    var align = GetValue(config, 'align', 0);
 
-    // var align = GetValue(config, 'align', 'left');
-
-    var bitmapText = new BitmapText(this.scene, 0, 0, font, text, size);
+    var bitmapText = new BitmapText(this.scene, 0, 0, font, text, size, align);
 
     if (addToScene !== undefined)
     {

@@ -8,6 +8,8 @@ var Class = require('../utils/Class');
 var Frame = require('./Frame');
 var TextureSource = require('./TextureSource');
 
+var TEXTURE_MISSING_ERROR = 'Texture.frame missing: ';
+
 /**
  * @classdesc
  * A Texture consists of a source, usually an Image from the Cache, and a collection of Frames.
@@ -203,7 +205,7 @@ var Texture = new Class({
 
         if (!frame)
         {
-            console.warn('No Texture.frame found with name ' + name);
+            console.warn(TEXTURE_MISSING_ERROR + name);
 
             frame = this.frames[this.firstFrame];
         }
@@ -311,7 +313,7 @@ var Texture = new Class({
      *
      * @param {(string|integer)} [name] - The string-based name, or integer based index, of the Frame to get from this Texture.
      *
-     * @return {(HTMLImageElement|HTMLCanvasElement)} The DOM Image or Canvas Element.
+     * @return {(HTMLImageElement|HTMLCanvasElement|Phaser.GameObjects.RenderTexture)} The DOM Image, Canvas Element or Render Texture.
      */
     getSourceImage: function (name)
     {
@@ -322,15 +324,15 @@ var Texture = new Class({
 
         var frame = this.frames[name];
 
-        if (!frame)
+        if (frame)
         {
-            console.warn('No Texture.frame found with name ' + name);
-
-            return this.frames['__BASE'].source.image;
+            return frame.source.image;
         }
         else
         {
-            return frame.source.image;
+            console.warn(TEXTURE_MISSING_ERROR + name);
+
+            return this.frames['__BASE'].source.image;
         }
     },
 
@@ -359,7 +361,7 @@ var Texture = new Class({
 
         if (!frame)
         {
-            console.warn('No Texture.frame found with name ' + name);
+            console.warn(TEXTURE_MISSING_ERROR + name);
 
             idx = this.frames['__BASE'].sourceIndex;
         }
@@ -388,7 +390,7 @@ var Texture = new Class({
         {
             data = [ data ];
         }
-
+        
         for (var i = 0; i < data.length; i++)
         {
             var source = this.source[i];

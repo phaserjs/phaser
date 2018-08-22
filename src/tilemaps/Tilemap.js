@@ -123,6 +123,24 @@ var Tilemap = new Class({
         this.orientation = mapData.orientation;
 
         /**
+         * The render (draw) order of the map data (as specified in Tiled), usually 'right-down'.
+         * 
+         * The draw orders are:
+         * 
+         * right-down
+         * left-down
+         * right-up
+         * left-up
+         * 
+         * This can be changed via the `setRenderOrder` method.
+         *
+         * @name Phaser.Tilemaps.Tilemap#renderOrder
+         * @type {string}
+         * @since 3.12.0
+         */
+        this.renderOrder = mapData.renderOrder;
+
+        /**
          * The format of the map data.
          *
          * @name Phaser.Tilemaps.Tilemap#format
@@ -219,6 +237,52 @@ var Tilemap = new Class({
          * @since 3.0.0
          */
         this.currentLayerIndex = 0;
+    },
+
+    /**
+     * Sets the rendering (draw) order of the tiles in this map.
+     * 
+     * The default is 'right-down', meaning it will order the tiles starting from the top-left,
+     * drawing to the right and then moving down to the next row.
+     * 
+     * The draw orders are:
+     * 
+     * 0 = right-down
+     * 1 = left-down
+     * 2 = right-up
+     * 3 = left-up
+     * 
+     * Setting the render order does not change the tiles or how they are stored in the layer,
+     * it purely impacts the order in which they are rendered.
+     * 
+     * You can provide either an integer (0 to 3), or the string version of the order.
+     * 
+     * Calling this method _after_ creating Static or Dynamic Tilemap Layers will **not** automatically
+     * update them to use the new render order. If you call this method after creating layers, use their
+     * own `setRenderOrder` methods to change them as needed.
+     *
+     * @method Phaser.Tilemaps.Tilemap#setRenderOrder
+     * @since 3.12.0
+     *
+     * @param {(integer|string)} renderOrder - The render (draw) order value. Either an integer between 0 and 3, or a string: 'right-down', 'left-down', 'right-up' or 'left-up'.
+     *
+     * @return {this} This Tilemap object.
+     */
+    setRenderOrder: function (renderOrder)
+    {
+        var orders = [ 'right-down', 'left-down', 'right-up', 'left-up' ];
+
+        if (typeof renderOrder === 'number')
+        {
+            renderOrder = orders[renderOrder];
+        }
+
+        if (orders.indexOf(renderOrder) > -1)
+        {
+            this.renderOrder = renderOrder;
+        }
+
+        return this;
     },
 
     /**
@@ -427,6 +491,9 @@ var Tilemap = new Class({
         this.currentLayerIndex = this.layers.length - 1;
 
         var dynamicLayer = new DynamicTilemapLayer(this.scene, this, this.currentLayerIndex, tileset, x, y);
+
+        dynamicLayer.setRenderOrder(this.renderOrder);
+
         this.scene.sys.displayList.add(dynamicLayer);
 
         return dynamicLayer;
@@ -462,7 +529,7 @@ var Tilemap = new Class({
 
         if (index === null)
         {
-            console.warn('Cannot create tilemap layer, invalid layer ID given: ' + layerID);
+            console.warn('Cannot create Tilemap Layer, invalid ID: ' + layerID);
             return null;
         }
 
@@ -471,7 +538,7 @@ var Tilemap = new Class({
         // Check for an associated static or dynamic tilemap layer
         if (layerData.tilemapLayer)
         {
-            console.warn('Cannot create dynamic tilemap layer since a static or dynamic tilemap layer exists for layer ID:' + layerID);
+            console.warn('Cannot create Tilemap Layer. ID: ' + layerID + ' already in use');
             return null;
         }
 
@@ -490,6 +557,9 @@ var Tilemap = new Class({
         if (y === undefined && this.layers[index].y) { y = this.layers[index].y; }
 
         var layer = new DynamicTilemapLayer(this.scene, this, index, tileset, x, y);
+
+        layer.setRenderOrder(this.renderOrder);
+
         this.scene.sys.displayList.add(layer);
 
         return layer;
@@ -501,6 +571,9 @@ var Tilemap = new Class({
      * way to configure Sprite properties from within the map editor. For example giving an object a
      * property of alpha: 0.5 in the map editor will duplicate that when the Sprite is created.
      *
+     * Custom object properties not sharing names with the Sprite's own properties are copied to the
+     * Sprite's {@link Phaser.GameObjects.Sprite#data data store}.
+     *
      * @method Phaser.Tilemaps.Tilemap#createFromObjects
      * @since 3.0.0
      *
@@ -508,7 +581,7 @@ var Tilemap = new Class({
      * @param {(integer|string)} id - Either the id (object), gid (tile object) or name (object or
      * tile object) from Tiled. Ids are unique in Tiled, but a gid is shared by all tile objects
      * with the same graphic. The same name can be used on multiple objects.
-     * @param {object} spriteConfig - The config object to pass into the Sprite creator (i.e.
+     * @param {SpriteConfig} spriteConfig - The config object to pass into the Sprite creator (i.e.
      * scene.make.sprite).
      * @param {Phaser.Scene} [scene=the scene the map is within] - The Scene to create the Sprites within.
      *
@@ -579,6 +652,16 @@ var Tilemap = new Class({
 
                 if (!obj.visible) { sprite.visible = false; }
 
+                for (var key in obj.properties)
+                {
+                    if (sprite.hasOwnProperty(key))
+                    {
+                        continue;
+                    }
+
+                    sprite.setData(key, obj.properties[key]);
+                }
+
                 sprites.push(sprite);
             }
         }
@@ -599,7 +682,7 @@ var Tilemap = new Class({
      * @param {(integer|array)} replacements - The tile index, or array of indexes, to change a converted
      * tile to. Set to `null` to leave the tiles unchanged. If an array is given, it is assumed to be a
      * one-to-one mapping with the indexes array.
-     * @param {object} spriteConfig - The config object to pass into the Sprite creator (i.e.
+     * @param {SpriteConfig} spriteConfig - The config object to pass into the Sprite creator (i.e.
      * scene.make.sprite).
      * @param {Phaser.Scene} [scene=scene the map is within] - The Scene to create the Sprites within.
      * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when determining the world XY
@@ -674,6 +757,9 @@ var Tilemap = new Class({
         if (y === undefined && this.layers[index].y) { y = this.layers[index].y; }
 
         var layer = new StaticTilemapLayer(this.scene, this, index, tileset, x, y);
+
+        layer.setRenderOrder(this.renderOrder);
+
         this.scene.sys.displayList.add(layer);
 
         return layer;

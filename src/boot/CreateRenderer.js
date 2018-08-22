@@ -60,7 +60,7 @@ var CreateRenderer = function (game)
     }
     else
     {
-        game.canvas = CanvasPool.create(game, config.width, config.height, config.renderType);
+        game.canvas = CanvasPool.create(game, config.width * config.resolution, config.height * config.resolution, config.renderType);
     }
 
     //  Does the game config provide some canvas css styles to use?
@@ -76,11 +76,8 @@ var CreateRenderer = function (game)
     }
 
     //  Zoomed?
-    if (config.zoom !== 1)
-    {
-        game.canvas.style.width = (config.width * config.zoom).toString() + 'px';
-        game.canvas.style.height = (config.height * config.zoom).toString() + 'px';
-    }
+    game.canvas.style.width = (config.width * config.zoom).toString() + 'px';
+    game.canvas.style.height = (config.height * config.zoom).toString() + 'px';
 
     if (config.renderType === CONST.HEADLESS)
     {
