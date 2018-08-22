@@ -386,16 +386,17 @@ var RenderTexture = new Class({
             this.renderer.setFramebuffer(this.framebuffer);
 
             var gl = this.gl;
-            
-            gl.enable(gl.SCISSOR_TEST);
 
-            gl.scissor(x, y, width, height);
+            if (width !== this.canvas.width || height !== this.canvas.height)
+            {
+                gl.enable(gl.SCISSOR_TEST);
+
+                gl.scissor(x, y, width, height);
+            }
 
             gl.clearColor(ur / 255.0, ug / 255.0, ub / 255.0, alpha);
 
             gl.clear(gl.COLOR_BUFFER_BIT);
-
-            gl.disable(gl.SCISSOR_TEST);
 
             this.renderer.setFramebuffer(null);
         }
