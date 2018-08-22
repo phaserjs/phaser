@@ -548,6 +548,10 @@ module.exports = Common;
      */
     Common._requireGlobal = function(globalName, moduleName) {
         var obj = (typeof window !== 'undefined' ? window[globalName] : typeof global !== 'undefined' ? global[globalName] : null);
-        return obj || require(moduleName);
+
+        //  Breaks webpack :(
+        // return obj || require(moduleName);
+
+        return obj;
     };
 })();
