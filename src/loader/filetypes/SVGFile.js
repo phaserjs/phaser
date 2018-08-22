@@ -25,7 +25,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * A single SVG File suitable for loading by the Loader.
  *
  * These are created when you use the Phaser.Loader.LoaderPlugin#svg method and are not typically created directly.
- * 
+ *
  * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#svg.
  *
  * @class SVGFile
@@ -45,7 +45,7 @@ var SVGFile = new Class({
 
     initialize:
 
-    function SVGFile (loader, key, url, xhrSettings)
+    function SVGFile (loader, key, url, svgConfig, xhrSettings)
     {
         var extension = 'svg';
 
@@ -55,6 +55,7 @@ var SVGFile = new Class({
 
             key = GetFastValue(config, 'key');
             url = GetFastValue(config, 'url');
+            svgConfig = GetFastValue(config, 'svgConfig');
             xhrSettings = GetFastValue(config, 'xhrSettings');
             extension = GetFastValue(config, 'extension', extension);
         }
@@ -66,6 +67,7 @@ var SVGFile = new Class({
             responseType: 'text',
             key: key,
             url: url,
+            svgConfig: svgConfig,
             xhrSettings: xhrSettings
         };
 
@@ -83,7 +85,27 @@ var SVGFile = new Class({
     {
         this.state = CONST.FILE_PROCESSING;
 
-        var svg = [ this.xhrLoader.responseText ];
+        var text = this.xhrLoader.responseText;
+        var svg = [ text ];
+        var width = this.svgConfig.width;
+        var height = this.svgConfig.height;
+
+        if (width && height)
+        {
+            var xml = null;
+            var parser = new DOMParser();
+            xml = parser.parseFromString(text, 'text/xml');
+            var svgXML = xml.getElementsByTagName('svg')[0];
+
+            if (svgXML.getAttribute('viewBox'))
+            {
+                svgXML.setAttribute('viewBox', '0  0 ' + svgXML.getAttribute('width') + ' ' + svgXML.getAttribute('height'));
+            }
+
+            svgXML.setAttribute('width', width);
+            svgXML.setAttribute('height', height);
+            svg = [ (new XMLSerializer()).serializeToString(svgXML) ];
+        }
 
         try
         {
@@ -152,7 +174,7 @@ var SVGFile = new Class({
  * Adds an SVG File, or array of SVG Files, to the current load queue.
  *
  * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
- * 
+ *
  * ```javascript
  * function preload ()
  * {
@@ -174,7 +196,7 @@ var SVGFile = new Class({
  * then remove it from the Texture Manager first, before loading a new one.
  *
  * Instead of passing arguments you can pass a configuration object, such as:
- * 
+ *
  * ```javascript
  * this.load.svg({
  *     key: 'morty',
@@ -185,7 +207,7 @@ var SVGFile = new Class({
  * See the documentation for `Phaser.Loader.FileTypes.SVGFileConfig` for more details.
  *
  * Once the file has finished loading you can use it as a texture for a Game Object by referencing its key:
- * 
+ *
  * ```javascript
  * this.load.svg('morty', 'images/Morty.svg');
  * // and later in your game ...
@@ -234,3 +256,4 @@ FileTypesManager.register('svg', function (key, url, xhrSettings)
 });
 
 module.exports = SVGFile;
+
