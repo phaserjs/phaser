@@ -19,7 +19,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @property {number} [scale] - An optional scale. If given it overrides the width / height properties. The SVG is scaled by the scale factor before being rendered to a texture.
  */
 
- /**
+/**
  * @typedef {object} Phaser.Loader.FileTypes.SVGFileConfig
  *
  * @property {string} key - The key of the file. Must be unique within both the Loader and the Texture Manager.
