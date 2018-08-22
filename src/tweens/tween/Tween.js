@@ -419,6 +419,8 @@ var Tween = new Class({
             this.stop();
             this.play();
         }
+
+        return this;
     },
 
     /**
@@ -480,6 +482,8 @@ var Tween = new Class({
         {
             this.totalDuration = this.duration + this.completeDelay;
         }
+
+        return this;        
     },
 
     /**
@@ -677,6 +681,8 @@ var Tween = new Class({
 
             this.parent.makeActive(this);
         }
+
+        return this;
     },
 
     /**
@@ -720,6 +726,8 @@ var Tween = new Class({
                 tweenData.state = TWEEN_CONST.PENDING_RENDER;
             }
         }
+
+        return this;
     },
 
     /**
@@ -820,6 +828,8 @@ var Tween = new Class({
 
             tweenData.target[tweenData.key] = tweenData.current;
         }
+
+        return this;
     },
 
     /**
@@ -877,6 +887,8 @@ var Tween = new Class({
 
             this.state = TWEEN_CONST.PENDING_REMOVE;
         }
+
+        return this;
     },
 
     /**
@@ -901,6 +913,8 @@ var Tween = new Class({
         {
             this.state = TWEEN_CONST.PENDING_REMOVE;
         }
+
+        return this;
     },
 
     /**
