@@ -184,11 +184,11 @@ var Axes = require('../geometry/Axes');
      * Prefer to use the actual setter functions in performance critical situations.
      * @method set
      * @param {body} body
-     * @param {object} settings A map of properties and values to set on the body.
+     * @param {} settings A property name (or map of properties and values) to set on the body.
+     * @param {} value The value to set if `settings` is a single property name.
      */
-    Body.set = function(body, settings) {
-        var property,
-            value;
+    Body.set = function(body, settings, value) {
+        var property;
 
         if (typeof settings === 'string') {
             property = settings;
@@ -417,7 +417,7 @@ var Axes = require('../geometry/Axes');
         }
 
         // sum the properties of all compound parts of the parent body
-        var total = _totalProperties(body);
+        var total = Body._totalProperties(body);
 
         body.area = total.area;
         body.parent = body;
@@ -543,33 +543,48 @@ var Axes = require('../geometry/Axes');
      * @param {vector} [point]
      */
     Body.scale = function(body, scaleX, scaleY, point) {
+        var totalArea = 0,
+            totalInertia = 0;
+
         point = point || body.position;
 
         for (var i = 0; i < body.parts.length; i++) {
             var part = body.parts[i];
-
-            // scale position
-            part.position.x = point.x + (part.position.x - point.x) * scaleX;
-            part.position.y = point.y + (part.position.y - point.y) * scaleY;
 
             // scale vertices
             Vertices.scale(part.vertices, scaleX, scaleY, point);
 
             // update properties
             part.axes = Axes.fromVertices(part.vertices);
+            part.area = Vertices.area(part.vertices);
+            Body.setMass(part, body.density * part.area);
 
-            if (!body.isStatic) {
-                part.area = Vertices.area(part.vertices);
-                Body.setMass(part, body.density * part.area);
+            // update inertia (requires vertices to be at origin)
+            Vertices.translate(part.vertices, { x: -part.position.x, y: -part.position.y });
+            Body.setInertia(part, Body._inertiaScale * Vertices.inertia(part.vertices, part.mass));
+            Vertices.translate(part.vertices, { x: part.position.x, y: part.position.y });
 
-                // update inertia (requires vertices to be at origin)
-                Vertices.translate(part.vertices, { x: -part.position.x, y: -part.position.y });
-                Body.setInertia(part, Vertices.inertia(part.vertices, part.mass));
-                Vertices.translate(part.vertices, { x: part.position.x, y: part.position.y });
+            if (i > 0) {
+                totalArea += part.area;
+                totalInertia += part.inertia;
             }
+
+            // scale position
+            part.position.x = point.x + (part.position.x - point.x) * scaleX;
+            part.position.y = point.y + (part.position.y - point.y) * scaleY;
 
             // update bounds
             Bounds.update(part.bounds, part.vertices, body.velocity);
+        }
+
+        // handle parent body
+        if (body.parts.length > 1) {
+            body.area = totalArea;
+
+            if (!body.isStatic) {
+                Body.setMass(body, body.density * totalArea);
+                Body.setInertia(body, totalInertia);
+            }
         }
 
         // handle circles
@@ -580,13 +595,6 @@ var Axes = require('../geometry/Axes');
                 // body is no longer a circle
                 body.circleRadius = null;
             }
-        }
-
-        if (!body.isStatic) {
-            var total = _totalProperties(body);
-            body.area = total.area;
-            Body.setMass(body, total.mass);
-            Body.setInertia(body, total.inertia);
         }
     };
 
@@ -668,7 +676,7 @@ var Axes = require('../geometry/Axes');
      * @param {body} body
      * @return {}
      */
-    var _totalProperties = function(body) {
+    Body._totalProperties = function(body) {
         // from equations at:
         // https://ecourses.ou.edu/cgi-bin/ebook.cgi?doc=&topic=st&chap_sec=07.2&page=theory
         // http://output.to/sideway/default.asp?qno=121100087
@@ -685,7 +693,7 @@ var Axes = require('../geometry/Axes');
             var part = body.parts[i],
                 mass = part.mass !== Infinity ? part.mass : 1;
 
-            properties.mass += part.mass;
+            properties.mass += mass;
             properties.area += part.area;
             properties.inertia += part.inertia;
             properties.centre = Vector.add(properties.centre, Vector.mult(part.position, mass));

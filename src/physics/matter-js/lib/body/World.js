@@ -97,6 +97,23 @@ var Common = require('../core/Common');
     // see src/module/Outro.js for these aliases:
     
     /**
+     * An alias for Composite.add
+     * @method add
+     * @param {world} world
+     * @param {} object
+     * @return {composite} The original world with the objects added
+     */
+
+    /**
+     * An alias for Composite.remove
+     * @method remove
+     * @param {world} world
+     * @param {} object
+     * @param {boolean} [deep=false]
+     * @return {composite} The original world with the objects removed
+     */
+
+    /**
      * An alias for Composite.clear
      * @method clear
      * @param {world} world
@@ -104,7 +121,7 @@ var Common = require('../core/Common');
      */
 
     /**
-     * An alias for Composite.add
+     * An alias for Composite.addComposite
      * @method addComposite
      * @param {world} world
      * @param {composite} composite

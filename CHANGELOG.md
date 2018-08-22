@@ -99,6 +99,23 @@ The four draw orders are:
 * ParseJSONTiled now extracts the `renderorder` property from the Tiled JSON.
 * MapData has a new `renderOrder` property, which is populated by the Tiled Parser.
 
+### Matter.js Updates
+
+The version of Matter.js used by Phaser has been updated from 0.13.1 to 0.14.2. To clarify why we don't include Matter via npm, it's because we use a customized version of Matter that includes extra features and optimizations not yet found in the official library.
+
+Most of the updates were about documentation and module namespacing, however those relevant to Phaser are listed below. You can also view the full [Matter Change Log](https://github.com/liabru/matter-js/blob/master/CHANGELOG.md).
+
+* fix Composite.bounds global issue, closes #627, closes #544 ([f7f77b4](https://github.com/liabru/matter-js/commit/f7f77b4)), closes [#627](https://github.com/liabru/matter-js/issues/627) [#544](https://github.com/liabru/matter-js/issues/544)
+* updated pathseg library, closes #548, closes #602, closes #424 ([1e5758f](https://github.com/liabru/matter-js/commit/1e5758f)), closes [#548](https://github.com/liabru/matter-js/issues/548) [#602](https://github.com/liabru/matter-js/issues/602) [#424](https://github.com/liabru/matter-js/issues/424)
+* fix Common.isElement on node, closes #535 ([ec38eeb](https://github.com/liabru/matter-js/commit/ec38eeb)), closes [#535](https://github.com/liabru/matter-js/issues/535)
+* added Query.collides, closes #478 ([6593a72](https://github.com/liabru/matter-js/commit/6593a72)), closes [#478](https://github.com/liabru/matter-js/issues/478)
+* fix `point` argument of Body.scale, closes #428 ([894c1ef](https://github.com/liabru/matter-js/commit/894c1ef)), closes [#428](https://github.com/liabru/matter-js/issues/428)
+* fix Body.scale for compound bodies ([50a89d0](https://github.com/liabru/matter-js/commit/50a89d0))
+* fix centroid for static compound bodies, closes #483 ([ece66e6](https://github.com/liabru/matter-js/commit/ece66e6)), closes [#483](https://github.com/liabru/matter-js/issues/483)
+* fix Common.isElement, closes #501, closes #507, closes #459, closes #468, closes #517 ([18a0845](https://github.com/liabru/matter-js/commit/18a0845)), closes [#501](https://github.com/liabru/matter-js/issues/501) [#507](https://github.com/liabru/matter-js/issues/507) [#459](https://github.com/liabru/matter-js/issues/459) [#468](https://github.com/liabru/matter-js/issues/468) [#517](https://github.com/liabru/matter-js/issues/517)
+* fix inertia change in Body.setMass, closes #378 ([f7d1877](https://github.com/liabru/matter-js/commit/f7d1877)), closes [#378](https://github.com/liabru/matter-js/issues/378)
+* fix Vertices.chamfer radius argument, closes #467 ([3bceef4](https://github.com/liabru/matter-js/commit/3bceef4)), closes [#467](https://github.com/liabru/matter-js/issues/467)
+
 ### New Features
 
 * `Camera.resolution` is a new read-only property that holds the current game config resolution that the camera is using. This is used internally for viewport calculations.
