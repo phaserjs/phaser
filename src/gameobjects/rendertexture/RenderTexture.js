@@ -829,7 +829,7 @@ var RenderTexture = new Class({
      */
     preDestroy: function ()
     {
-        if (this.canvas)
+        if (this.canvas && !this._saved)
         {
             CanvasPool.remove(this.canvas);
         }
