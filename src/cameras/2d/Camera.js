@@ -192,63 +192,84 @@ var Camera = new Class({
          */
         this._follow = null;
 
+        /**
+         * Is this Camera rendering directly or to a texture?
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#renderToTexture
+         * @type {boolean}
+         * @default false
+         * @private
+         * @since 3.12.0-EXPERIMENTAL
+         */
         this.renderToTexture = false;
 
         /**
-         * The HTML Canvas Element that the Render Texture is drawing to.
+         * The HTML Canvas Element that the Camera is drawing to if rendering to a texture.
          * This is only populated if Phaser is running with the Canvas Renderer.
          *
-         * @name Phaser.GameObjects.RenderTexture#canvas
+         * @name Phaser.Cameras.Scene2D.Camera#canvas
          * @type {HTMLCanvasElement}
-         * @since 3.12.0
+         * @private
+         * @since 3.12.0-EXPERIMENTAL
          */
         this.canvas = null;
 
         /**
-         * A reference to the Rendering Context belonging to the Canvas Element this Render Texture is drawing to.
+         * A reference to the Rendering Context belonging to the Canvas Element this Camera is rendering to a texture.
          *
-         * @name Phaser.GameObjects.RenderTexture#context
+         * @name Phaser.Cameras.Scene2D.Camera#context
          * @type {CanvasRenderingContext2D}
-         * @since 3.12.0
+         * @private
+         * @since 3.12.0-EXPERIMENTAL
          */
         this.context = null;
 
         /**
-         * A reference to the GL Frame Buffer this Render Texture is drawing to.
+         * A reference to the GL Frame Buffer this Camera ia drawing to if rendering to a texture.
          * This is only set if Phaser is running with the WebGL Renderer.
          *
-         * @name Phaser.GameObjects.RenderTexture#framebuffer
+         * @name Phaser.Cameras.Scene2D.Camera#framebuffer
          * @type {?WebGLFramebuffer}
-         * @since 3.12.0
+         * @private
+         * @since 3.12.0-EXPERIMENTAL
          */
         this.glTexture = null;
+
+        /**
+         * A reference to the GL Frame Buffer this Camera is drawing to if rendering to a texture.
+         * This is only set if Phaser is running with the WebGL Renderer.
+         *
+         * @name Phaser.Cameras.Scene2D.Camera#framebuffer
+         * @type {?WebGLFramebuffer}
+         * @private
+         * @since 3.12.0-EXPERIMENTAL
+         */
+        this.framebuffer = null;
 
         /**
          * A reference to the GL Frame Buffer this Render Texture is drawing to.
          * This is only set if Phaser is running with the WebGL Renderer.
          *
-         * @name Phaser.GameObjects.RenderTexture#framebuffer
-         * @type {?WebGLFramebuffer}
-         * @since 3.12.0
+         * @name Phaser.Cameras.Scene2D.Camera#pipeline
+         * @type {any}
+         * @private
+         * @since 3.12.0-EXPERIMENTAL
          */
-        this.framebuffer = null;
-
         this.pipeline = null;
-
-        // this.flipX = false;
-        // this.flipY = false;
-        // this.tintFill = 0;
-        // this._isTinted = false;
-        // this._tintTL = 0xffffff;
-        // this._tintTR = 0xffffff;
-        // this._tintBL = 0xffffff;
-        // this._tintBR = 0xffffff;
-        // this._alphaTL = 1;
-        // this._alphaTR = 1;
-        // this._alphaBL = 1;
-        // this._alphaBR = 1;
     },
 
+    /**
+     * Sets the Camera to render to a texture instead of to the main display.
+     * 
+     * This is an experimental feature and should be expected to change in the future.
+     *
+     * @method Phaser.Cameras.Scene2D.Camera#setRenderToTexture
+     * @since 3.12.0-EXPERIMENTAL
+     *
+     * @param {any} [pipeline] - An optional WebGL Pipeline to render with.
+     *
+     * @return {Phaser.Cameras.Scene2D.Camera} This Camera instance.
+     */
     setRenderToTexture: function (pipeline)
     {
         var renderer = this.scene.sys.game.renderer;
