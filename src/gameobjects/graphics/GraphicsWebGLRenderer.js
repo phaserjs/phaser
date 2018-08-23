@@ -93,6 +93,7 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
     var ty = 0;
     var ta = 0;
     var iterStep = 0.01;
+    var PI2 = Math.PI * 2;
 
     var cmd;
 
@@ -195,8 +196,30 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
                 var radius = commands[++cmdIndex];
                 var startAngle = commands[++cmdIndex];
                 var endAngle = commands[++cmdIndex];
+                var anticlockwise = commands[++cmdIndex];
+                var overshoot = commands[++cmdIndex];
 
-                cmdIndex++; // anticlockwise (canvas only)
+                endAngle -= startAngle;
+
+                if (anticlockwise)
+                {
+                    if (endAngle < -PI2)
+                    {
+                        endAngle = -PI2;
+                    }
+                    else if (endAngle > 0)
+                    {
+                        endAngle = -PI2 + endAngle % PI2;
+                    }
+                }
+                else if (endAngle > PI2)
+                {
+                    endAngle = PI2;
+                }
+                else if (endAngle < 0)
+                {
+                    endAngle = PI2 + endAngle % PI2;
+                }
 
                 if (lastPath === null)
                 {
@@ -205,7 +228,7 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
                     iteration += iterStep;
                 }
 
-                while (iteration < 1)
+                while (iteration < 1 + overshoot)
                 {
                     ta = endAngle * iteration + startAngle;
                     tx = x + Math.cos(ta) * radius;

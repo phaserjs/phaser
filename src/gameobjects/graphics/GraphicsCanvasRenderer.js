@@ -62,7 +62,9 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
                     commandBuffer[index + 5],
                     commandBuffer[index + 6]
                 );
-                index += 6;
+
+                //  +7 because overshoot is the 7th value, not used in Canvas
+                index += 7;
                 break;
 
             case Commands.LINE_STYLE:

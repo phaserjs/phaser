@@ -230,12 +230,13 @@ Setting the `resolution` property in the Game Config to a value other than 1 wou
 * The `getPixelAlpha` method in the Texture Manager wasn't using the correct frame name. This is now passed in correctly. Fix #3937 (thanks @goldfire)
 * The `getPixelAlpha` and `getPixel` methods in the Texture Manager would allow x/y coordinates from outside the cut area of a frame. It now tests to ensure they're within the frame. Fix #3937 (thanks @goldfire)
 * A Game Object couldn't have a blend mode of `SKIP_TEST` set by using the getter or the `setBlendMode` method.
+* In Arcade Physics the `World.disable` call was passing the wrong argument, so never disabling the actual body (thanks @samme)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@SBCGames @rgk @rook2pawn @robbintt @bguyl @halilcakarr @PhaserEditor2D @Edwin222 @tfelix @Yudikubota @hexus @guzmonne @ampled @thanh-taro @dcbriccetti @Dreaded-Gnu @padme-amidala @rootasjey @ampled @thejonanshow @polarstoat @jdjoshuadavison @alexeymolchan
+@SBCGames @rgk @rook2pawn @robbintt @bguyl @halilcakarr @PhaserEditor2D @Edwin222 @tfelix @Yudikubota @hexus @guzmonne @ampled @thanh-taro @dcbriccetti @Dreaded-Gnu @padme-amidala @rootasjey @ampled @thejonanshow @polarstoat @jdjoshuadavison @alexeymolchan @samme
 
 Thanks to @khaleb85 for fixing the super-annoying lag on the API Docs pages when it hung the browser while indexing the search field.
 
