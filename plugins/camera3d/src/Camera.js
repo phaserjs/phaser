@@ -300,6 +300,9 @@ var Camera = new Class({
     {
         this.children.set(sprite3D);
 
+        this.displayList.add(sprite3D.gameObject);
+        this.updateList.add(sprite3D.gameObject);
+
         this.updateChildren();
 
         return sprite3D;

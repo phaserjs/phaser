@@ -122,6 +122,8 @@ Support for Camera 3D and Sprite 3D Game Objects have been removed from the core
 
 You can find the source for Camera 3D in the new `plugins/camera3d` folder, along with a README file explaining how to now use the plugin in your games.
 
+* When a Sprite3D object is added to a Camera via `Camera.add` it is now added to the Display and Update Lists. Fix #3945 (thanks @vvega)
+
 ### New Features
 
 * `Camera.resolution` is a new read-only property that holds the current game config resolution that the camera is using. This is used internally for viewport calculations.
