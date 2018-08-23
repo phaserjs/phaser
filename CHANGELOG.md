@@ -36,7 +36,7 @@ The process of managing scissors in the WebGLRenderer has been completely rewrit
 
 The Render Texture class has been rewritten from scratch and all Game Objects have been updated to support it. Previously it was very restricted in what you could do with it. It used to have a matrix stack for internal transforms, but this has been replaced with a Camera instead. This means you have the full power of a Camera system (scrolling, zooming, rotation) but it only impacts the contents of the Render Texture.
 
-* The biggest update is the change in what the `draw` method can accept. Previously you had to pass is a texture and frame reference. This has changed, as has the method signature. It can now accept any of the following:
+* The biggest update is the change in what the `draw` method can accept. Previously you had to pass in a texture and frame reference. This has changed, as has the method signature. It can now accept any of the following:
 
     - Any renderable Game Object, such as a Sprite, Text, Graphics or TileSprite.
     - Dynamic and Static Tilemap Layers.
@@ -49,7 +49,7 @@ The Render Texture class has been rewritten from scratch and all Game Objects ha
 
 * There is a new method `drawFrame` which allows you to pass in a string-based texture and frame key and have it drawn to the Render Texture.
 * The new method `saveTexture` allows you to save the Render Texture into the Texture Manager using your own key. You can then use the Render Texture for any Game Object that accepts textures as a source, such as Sprites or even Tilemap Layers. You can add frame data to a Render Texture using the `RenderTexture.texture.add` method.
-* The new `camera` property is an instance of a complete 2D Camera. You can use it to change the view into your Render Texture. Scroll, rotate, zoom, just like you would with a normal Camera, except it will only influence is the objects being drawn to the Render Texture.
+* The new `camera` property is an instance of a complete 2D Camera. You can use it to change the view into your Render Texture. Scroll, rotate, zoom, just like you would with a normal Camera, except it will only influence the objects being drawn to the Render Texture.
 * All of the matrix-style methods have been removed: `save`, `translate`, `restore`, `scale`, `rotate`. You can now achieve the same thing by either transforming the object you want to draw to the Render Texture, or using the built-in Camera.
 * You can now crop a Render Texture. Use the `setCrop` method to define the crop region.
 
@@ -231,6 +231,7 @@ Setting the `resolution` property in the Game Config to a value other than 1 wou
 * The `getPixelAlpha` and `getPixel` methods in the Texture Manager would allow x/y coordinates from outside the cut area of a frame. It now tests to ensure they're within the frame. Fix #3937 (thanks @goldfire)
 * A Game Object couldn't have a blend mode of `SKIP_TEST` set by using the getter or the `setBlendMode` method.
 * In Arcade Physics the `World.disable` call was passing the wrong argument, so never disabling the actual body (thanks @samme)
+* There was a visual bug with Rounded Rectangles in Canvas mode, due to the addition of the `overshoot` argument in the Graphics arc call. This has been fixed, so arcs will now render correctly and consistently in WebGL and Canvas and Rounded Rectangles are back to normal again too. Fix #3912 (thanks @valse)
 
 ### Examples, Documentation and TypeScript
 
