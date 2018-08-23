@@ -5,8 +5,8 @@
  */
 
 var Camera = require('./Camera');
-var Class = require('../../utils/Class');
-var Vector3 = require('../../math/Vector3');
+var Class = require('../../../src/utils/Class');
+var Vector3 = require('../../../src/math/Vector3');
 
 //  Local cache vars
 var tmpVec3 = new Vector3();

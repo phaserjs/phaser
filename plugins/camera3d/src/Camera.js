@@ -4,16 +4,16 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Class = require('../../utils/Class');
-var Matrix4 = require('../../math/Matrix4');
-var RandomXYZ = require('../../math/RandomXYZ');
-var RandomXYZW = require('../../math/RandomXYZW');
-var RotateVec3 = require('../../math/RotateVec3');
-var Set = require('../../structs/Set');
-var Sprite3D = require('../../gameobjects/sprite3d/Sprite3D');
-var Vector2 = require('../../math/Vector2');
-var Vector3 = require('../../math/Vector3');
-var Vector4 = require('../../math/Vector4');
+var Class = require('../../../src/utils/Class');
+var Matrix4 = require('../../../src/math/Matrix4');
+var RandomXYZ = require('../../../src/math/RandomXYZ');
+var RandomXYZW = require('../../../src/math/RandomXYZW');
+var RotateVec3 = require('../../../src/math/RotateVec3');
+var Set = require('../../../src/structs/Set');
+var Sprite3D = require('./sprite3d/Sprite3D');
+var Vector2 = require('../../../src/math/Vector2');
+var Vector3 = require('../../../src/math/Vector3');
+var Vector4 = require('../../../src/math/Vector4');
 
 //  Local cache vars
 var tmpVec3 = new Vector3();

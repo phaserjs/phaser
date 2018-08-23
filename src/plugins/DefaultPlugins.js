@@ -75,7 +75,6 @@ var DefaultPlugins = {
      */
     DefaultScene: [
 
-        'CameraManager3D',
         'Clock',
         'DataManagerPlugin',
         'InputPlugin',

@@ -16,3 +16,19 @@ module.exports = {
     PerspectiveCamera: require('./PerspectiveCamera')
 
 };
+
+/*
+var GameObjects = {
+
+    Sprite3D: require('./sprite3d/Sprite3D'),
+
+    Factories: {
+        Sprite3D: require('./sprite3d/Sprite3DFactory')
+    },
+
+    Creators: {
+        Sprite3D: require('./sprite3d/Sprite3DCreator')
+    }
+
+};
+*/

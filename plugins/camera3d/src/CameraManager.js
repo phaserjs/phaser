@@ -4,10 +4,10 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Class = require('../../utils/Class');
+var Class = require('../../../src/utils/Class');
 var OrthographicCamera = require('./OrthographicCamera');
 var PerspectiveCamera = require('./PerspectiveCamera');
-var PluginCache = require('../../plugins/PluginCache');
+var PluginCache = require('../../../src/plugins/PluginCache');
 
 /**
  * @classdesc
