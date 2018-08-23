@@ -116,6 +116,12 @@ Most of the updates were about documentation and module namespacing, however tho
 * fix inertia change in Body.setMass, closes #378 ([f7d1877](https://github.com/liabru/matter-js/commit/f7d1877)), closes [#378](https://github.com/liabru/matter-js/issues/378)
 * fix Vertices.chamfer radius argument, closes #467 ([3bceef4](https://github.com/liabru/matter-js/commit/3bceef4)), closes [#467](https://github.com/liabru/matter-js/issues/467)
 
+### Camera 3D Plugin
+
+Support for Camera 3D and Sprite 3D Game Objects have been removed from the core Phaser bundle and moved to an optional plugin.
+
+You can find the source for Camera 3D in the new `plugins/camera3d` folder, along with a README file explaining how to now use the plugin in your games.
+
 ### New Features
 
 * `Camera.resolution` is a new read-only property that holds the current game config resolution that the camera is using. This is used internally for viewport calculations.

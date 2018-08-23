@@ -1,0 +1,47 @@
+Phaser 3 Camera 3D Plugin
+=========================
+
+In Phaser 3.12 Camera 3D support was moved to its own external plugin.
+
+There are two ways to use this in your games:
+
+## 1. External Plugin
+
+You can copy the `dist/camera3d.min.js` file to your project folder and preload it into Phaser:
+
+```
+function preload ()
+{
+    this.load.scenePlugin('Camera3DPlugin', 'plugins/camera3d.min.js', 'Camera3DPlugin', 'cameras3d');
+}
+```
+
+Then you can use it like usual.
+
+## 2. Bundled Plugin
+
+If you prefer you can configure Phaser to include it when it builds it's dist files.
+
+To do this you need to edit the webpack config files and change the following:
+
+```
+"typeof PLUGIN_CAMERA3D": JSON.stringify(false)
+```
+
+to
+
+```
+"typeof PLUGIN_CAMERA3D": JSON.stringify(true)
+```
+
+Then rebuild Phaser via webpack. The plugin will now be included by default and can be called from your game code.
+
+## Building the External Plugin
+
+If you wish to edit the plugin use the following files:
+
+`src/Camera3DPlugin.js` is the entry point for the external plugin. Edit this file if you're loading the plugin at run-time. Once you have finished making your changes, run the command `npm run plugin.cam3d` from the command-line to build a new version of the external plugin with Webpack.
+
+## Changing the Bundled Plugin
+
+`src/index.js` is the entry point for the bundled plugin. In here you'll find the module exports that Phaser uses when including the plugin internally. The file `CameraManager.js` is the Scene System. All other files are shared between both the external and bundled versions of the plugin.
