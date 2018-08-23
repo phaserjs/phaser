@@ -52,14 +52,17 @@ var Systems = new Class({
          */
         this.game;
 
-        /**
-         * [description]
-         *
-         * @name Phaser.Scenes.Systems#facebook
-         * @type {any}
-         * @since 3.12.0
-         */
-        this.facebook;
+        if (typeof PLUGIN_FBINSTANT)
+        {
+            /**
+             * [description]
+             *
+             * @name Phaser.Scenes.Systems#facebook
+             * @type {any}
+             * @since 3.12.0
+             */
+            this.facebook;
+        }
 
         /**
          * [description]

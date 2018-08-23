@@ -10,23 +10,32 @@ var CacheManager = require('../cache/CacheManager');
 var CanvasPool = require('../display/canvas/CanvasPool');
 var Class = require('../utils/Class');
 var Config = require('./Config');
-var CreateDOMContainer = require('./CreateDOMContainer');
 var CreateRenderer = require('./CreateRenderer');
 var DataManager = require('../data/DataManager');
 var DebugHeader = require('./DebugHeader');
 var Device = require('../device');
 var DOMContentLoaded = require('../dom/DOMContentLoaded');
 var EventEmitter = require('eventemitter3');
-var FacebookInstantGamesPlugin = require('../fbinstant/FacebookInstantGamesPlugin');
 var InputManager = require('../input/InputManager');
 var PluginCache = require('../plugins/PluginCache');
 var PluginManager = require('../plugins/PluginManager');
-var ScaleManager = require('./ScaleManager');
 var SceneManager = require('../scene/SceneManager');
 var SoundManagerCreator = require('../sound/SoundManagerCreator');
 var TextureManager = require('../textures/TextureManager');
 var TimeStep = require('./TimeStep');
 var VisibilityHandler = require('./VisibilityHandler');
+
+
+if (typeof EXPERIMENTAL)
+{
+    var CreateDOMContainer = require('./CreateDOMContainer');
+    var ScaleManager = require('./ScaleManager');
+}
+
+if (typeof PLUGIN_FBINSTANT)
+{
+    var FacebookInstantGamesPlugin = require('../fbinstant/FacebookInstantGamesPlugin');
+}
 
 /**
  * @classdesc
@@ -72,19 +81,22 @@ var Game = new Class({
          */
         this.renderer = null;
 
-        /**
-         * A reference to an HTML Div Element used as a DOM Element Container.
-         * 
-         * Only set if `createDOMContainer` is `true` in the game config (by default it is `false`) and
-         * if you provide a parent element to insert the Phaser Game inside.
-         *
-         * See the DOM Element Game Object for more details.
-         *
-         * @name Phaser.Game#domContainer
-         * @type {HTMLDivElement}
-         * @since 3.12.0
-         */
-        this.domContainer = null;
+        if (typeof EXPERIMENTAL)
+        {
+            /**
+             * A reference to an HTML Div Element used as a DOM Element Container.
+             * 
+             * Only set if `createDOMContainer` is `true` in the game config (by default it is `false`) and
+             * if you provide a parent element to insert the Phaser Game inside.
+             *
+             * See the DOM Element Game Object for more details.
+             *
+             * @name Phaser.Game#domContainer
+             * @type {HTMLDivElement}
+             * @since 3.12.0
+             */
+            this.domContainer = null;
+        }
 
         /**
          * A reference to the HTML Canvas Element that Phaser uses to render the game.
@@ -215,16 +227,19 @@ var Game = new Class({
          */
         this.device = Device;
 
-        /**
-         * An instance of the Scale Manager.
-         *
-         * The Scale Manager is a global system responsible for handling game scaling events.
-         *
-         * @name Phaser.Game#scaleManager
-         * @type {Phaser.Boot.ScaleManager}
-         * @since 3.12.0
-         */
-        this.scaleManager = new ScaleManager(this, this.config);
+        if (typeof EXPERIMENTAL)
+        {
+            /**
+             * An instance of the Scale Manager.
+             *
+             * The Scale Manager is a global system responsible for handling game scaling events.
+             *
+             * @name Phaser.Game#scaleManager
+             * @type {Phaser.Boot.ScaleManager}
+             * @since 3.12.0
+             */
+            this.scaleManager = new ScaleManager(this, this.config);
+        }
 
         /**
          * An instance of the base Sound Manager.
@@ -261,14 +276,17 @@ var Game = new Class({
          */
         this.plugins = new PluginManager(this, this.config);
 
-        /**
-         * An instance of the Facebook Instant Games Manager.
-         *
-         * @name Phaser.Game#facebook
-         * @type {any}
-         * @since 3.12.0
-         */
-        this.facebook = new FacebookInstantGamesPlugin(this);
+        if (typeof PLUGIN_FBINSTANT)
+        {
+            /**
+             * An instance of the Facebook Instant Games Manager.
+             *
+             * @name Phaser.Game#facebook
+             * @type {any}
+             * @since 3.12.0
+             */
+            this.facebook = new FacebookInstantGamesPlugin(this);
+        }
 
         /**
          * Is this Game pending destruction at the start of the next frame?
@@ -360,7 +378,10 @@ var Game = new Class({
 
         CreateRenderer(this);
 
-        CreateDOMContainer(this);
+        if (typeof EXPERIMENTAL)
+        {
+            CreateDOMContainer(this);
+        }
 
         DebugHeader(this);
 
@@ -686,10 +707,13 @@ var Game = new Class({
         this.config.width = width;
         this.config.height = height;
 
-        if (this.domContainer)
+        if (typeof EXPERIMENTAL)
         {
-            this.domContainer.style.width = width + 'px';
-            this.domContainer.style.height = height + 'px';
+            if (this.domContainer)
+            {
+                this.domContainer.style.width = width + 'px';
+                this.domContainer.style.height = height + 'px';
+            }
         }
 
         this.renderer.resize(width, height);
@@ -754,9 +778,12 @@ var Game = new Class({
             }
         }
 
-        if (this.domContainer)
+        if (typeof EXPERIMENTAL)
         {
-            this.domContainer.parentNode.removeChild(this.domContainer);
+            if (this.domContainer)
+            {
+                this.domContainer.parentNode.removeChild(this.domContainer);
+            }
         }
 
         this.loop.destroy();
