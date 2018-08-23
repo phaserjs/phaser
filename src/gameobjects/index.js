@@ -23,7 +23,6 @@ var GameObjects = {
     BitmapText: require('./bitmaptext/static/BitmapText'),
     Blitter: require('./blitter/Blitter'),
     Container: require('./container/Container'),
-    DOMElement: require('./domelement/DOMElement'),
     DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapText'),
     Graphics: require('./graphics/Graphics.js'),
     Group: require('./group/Group'),
@@ -42,7 +41,6 @@ var GameObjects = {
     Factories: {
         Blitter: require('./blitter/BlitterFactory'),
         Container: require('./container/ContainerFactory'),
-        DOMElement: require('./domelement/DOMElementFactory'),
         DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapTextFactory'),
         Graphics: require('./graphics/GraphicsFactory'),
         Group: require('./group/GroupFactory'),
@@ -74,6 +72,12 @@ var GameObjects = {
     }
 
 };
+
+if (typeof EXPERIMENTAL)
+{
+    GameObjects.DOMElement = require('./domelement/DOMElement');
+    GameObjects.Factories.DOMElement = require('./domelement/DOMElementFactory');
+}
 
 if (typeof WEBGL_RENDERER)
 {
