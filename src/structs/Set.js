@@ -221,7 +221,7 @@ var Set = new Class({
      * @genericUse {Phaser.Structs.Set.<T>} - [$return]
      *
      * @param {EachSetCallback} callback - [description]
-     * @param {*} callbackScope - [description]
+     * @param {*} [callbackScope] - [description]
      *
      * @return {Phaser.Structs.Set} This Set object.
      */

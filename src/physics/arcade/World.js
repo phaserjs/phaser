@@ -673,13 +673,13 @@ var World = new Class({
                     }
                     else
                     {
-                        this.disableBody(child);
+                        this.disableBody(child.body);
                     }
                 }
             }
             else
             {
-                this.disableBody(entry);
+                this.disableBody(entry.body);
             }
         }
     },
