@@ -1,6 +1,6 @@
 {
   "name": "phaser",
-  "version": "3.12.0-beta3",
+  "version": "3.12.0-beta4",
   "release": "Silica",
   "description": "A fast, free and fun HTML5 Game Framework for Desktop and Mobile web browsers.",
   "author": "Richard Davey <rich@photonstorm.com> (http://www.photonstorm.com)",
@@ -15,6 +15,7 @@
     "url": "https://photonstorm@github.com/photonstorm/phaser.git"
   },
   "scripts": {
+    "beta": "npm publish --tag beta",
     "help": "node scripts/help.js",
     "build": "webpack",
     "watch": "webpack --watch",
