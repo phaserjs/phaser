@@ -20,7 +20,7 @@ Then you can use it like usual.
 
 ## 2. Bundled Plugin
 
-If you prefer you can configure Phaser to include it when it builds it's dist files.
+If you prefer you can configure Phaser to include it when it builds its dist files.
 
 To do this you need to edit the webpack config files and change the following:
 
@@ -35,6 +35,52 @@ to
 ```
 
 Then rebuild Phaser via webpack. The plugin will now be included by default and can be called from your game code.
+
+## Using the Plugin
+
+Here is a basic example of using the plugin. You can find many more in the Phaser 3 Examples repo in the `cameras/3D Camera` folder.
+
+```
+var config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 600,
+    scene: {
+        preload: preload,
+        create: create,
+        update: update
+    }
+};
+
+var camera;
+var transform;
+
+var game = new Phaser.Game(config);
+
+function preload ()
+{
+    this.load.scenePlugin('Camera3DPlugin', 'plugins/camera3d.min.js', 'Camera3DPlugin', 'cameras3d');
+
+    this.load.image('particle', 'assets/sprites/mushroom2.png');
+}
+
+function create ()
+{
+    camera = this.cameras3d.add(85).setZ(300).setPixelScale(128);
+
+    var sprites = camera.createRect({ x: 4, y: 4, z: 16 }, { x: 48, y: 48, z: 32 }, 'particle');
+
+    //  Our rotation matrix
+    transform = new Phaser.Math.Matrix4().rotateX(-0.01).rotateY(-0.02).rotateZ(0.01);
+}
+
+function update ()
+{
+    camera.transformChildren(transform);
+
+    updateCamControls();
+}
+```
 
 ## Building the External Plugin
 
