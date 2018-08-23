@@ -46,4 +46,9 @@ var InjectionMap = {
 
 };
 
+if (typeof PLUGIN_CAMERA3D)
+{
+    InjectionMap.cameras3d = 'cameras3d';
+}
+
 module.exports = InjectionMap;

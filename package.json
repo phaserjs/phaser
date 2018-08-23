@@ -19,6 +19,7 @@
     "build": "webpack",
     "watch": "webpack --watch",
     "dist": "webpack --config webpack.dist.config.js",
+    "plugin.cam3d": "webpack --config plugins/camera3d/webpack.config.js",
     "lint": "eslint --config .eslintrc.json \"src/**/*.js\"",
     "lintfix": "eslint --config .eslintrc.json \"src/**/*.js\" --fix",
     "sloc": "node-sloc \"./src\" --include-extensions \"js\"",

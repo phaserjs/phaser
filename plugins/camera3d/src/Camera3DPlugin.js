@@ -4,57 +4,122 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var BuildGameObject = require('../../../src/gameobjects/BuildGameObject');
+var BuildGameObjectAnimation = require('../../../src/gameobjects/BuildGameObjectAnimation');
 var Class = require('../../../src/utils/Class');
+var GetAdvancedValue = require('../../../src/utils/object/GetAdvancedValue');
 var OrthographicCamera = require('./OrthographicCamera');
 var PerspectiveCamera = require('./PerspectiveCamera');
-var PluginCache = require('../../../src/plugins/PluginCache');
+var ScenePlugin = require('../../../src/plugins/ScenePlugin');
+var Sprite3D = require('./sprite3d/Sprite3D');
 
 /**
  * @classdesc
- * [description]
+ * The Camera 3D Plugin adds a new Camera type to Phaser that allows for movement and rendering
+ * in 3D space. It displays a special type of Sprite called a Sprite3D that is a billboard sprite,
+ * with a z-axis allowing for perspective depth.
  *
- * @class CameraManager
- * @memberOf Phaser.Cameras.Sprite3D
+ * This is an external plugin which you can include in your game by preloading it:
+ *
+ * ```javascript
+ * this.load.scenePlugin({
+ *   key: 'Camera3DPlugin',
+ *   url: 'plugins/camera3d.min.js',
+ *   sceneKey: 'cameras3d'
+ * });
+ * ```
+ *
+ * Once loaded you can create a 3D Camera using the `camera3d` property of a Scene:
+ *
+ * `var camera = this.cameras3d.add(85).setZ(500).setPixelScale(128);`
+ *
+ * See the examples for more information.
+ *
+ * @class Camera3DPlugin
  * @constructor
- * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - [description]
+ * @param {Phaser.Scene} scene - The Scene to which this plugin is being installed.
+ * @param {Phaser.Plugins.PluginManager} pluginManager - A reference to the Phaser Plugin Manager.
  */
-var CameraManager = new Class({
+var Camera3DPlugin = new Class({
+
+    Extends: ScenePlugin,
 
     initialize:
 
-    function CameraManager (scene)
+    function Camera3DPlugin (scene, pluginManager)
     {
-        /**
-         * [description]
-         *
-         * @name Phaser.Cameras.Sprite3D.CameraManager#scene
-         * @type {Phaser.Scene}
-         * @since 3.0.0
-         */
-        this.scene = scene;
-
-        /**
-         * [description]
-         *
-         * @name Phaser.Cameras.Sprite3D.CameraManager#systems
-         * @type {Phaser.Scenes.Systems}
-         * @since 3.0.0
-         */
-        this.systems = scene.sys;
+        ScenePlugin.call(this, scene, pluginManager);
 
         /**
          * An Array of the Camera objects being managed by this Camera Manager.
          *
-         * @name Phaser.Cameras.Sprite3D.CameraManager#cameras
+         * @name Camera3DPlugin#cameras
          * @type {Phaser.Cameras.Sprite3D.Camera[]}
          * @since 3.0.0
          */
         this.cameras = [];
 
-        scene.sys.events.once('boot', this.boot, this);
-        scene.sys.events.on('start', this.start, this);
+        //  Register the Sprite3D Game Object
+        pluginManager.registerGameObject('sprite3D', this.sprite3DFactory, this.sprite3DCreator);
+    },
+
+    /**
+     * Creates a new Sprite3D Game Object and adds it to the Scene.
+     *
+     * @method Phaser.GameObjects.GameObjectFactory#sprite3D
+     * @since 3.0.0
+     * 
+     * @param {number} x - The horizontal position of this Game Object.
+     * @param {number} y - The vertical position of this Game Object.
+     * @param {number} z - The z position of this Game Object.
+     * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+     * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
+     *
+     * @return {Phaser.GameObjects.Sprite3D} The Game Object that was created.
+     */
+    sprite3DFactory: function (x, y, z, key, frame)
+    {
+        var sprite = new Sprite3D(this.scene, x, y, z, key, frame);
+
+        this.displayList.add(sprite.gameObject);
+        this.updateList.add(sprite.gameObject);
+
+        return sprite;
+    },
+
+    /**
+     * Creates a new Sprite3D Game Object and returns it.
+     *
+     * @method Phaser.GameObjects.GameObjectCreator#sprite3D
+     * @since 3.0.0
+     * 
+     * @param {object} config - The configuration object this Game Object will use to create itself.
+     * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
+     *
+     * @return {Phaser.GameObjects.Sprite3D} The Game Object that was created.
+     */
+    sprite3DCreator: function (config, addToScene)
+    {
+        if (config === undefined) { config = {}; }
+
+        var key = GetAdvancedValue(config, 'key', null);
+        var frame = GetAdvancedValue(config, 'frame', null);
+    
+        var sprite = new Sprite3D(this.scene, 0, 0, key, frame);
+    
+        if (addToScene !== undefined)
+        {
+            config.add = addToScene;
+        }
+    
+        BuildGameObject(this.scene, sprite, config);
+    
+        //  Sprite specific config options:
+    
+        BuildGameObjectAnimation(sprite, config);
+    
+        return sprite;
     },
 
     /**
@@ -75,7 +140,7 @@ var CameraManager = new Class({
      * It is responsible for creating local systems, properties and listening for Scene events.
      * Do not invoke it directly.
      *
-     * @method Phaser.Cameras.Sprite3D.CameraManager#start
+     * @method Camera3DPlugin#start
      * @private
      * @since 3.5.0
      */
@@ -90,7 +155,7 @@ var CameraManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Cameras.Sprite3D.CameraManager#add
+     * @method Camera3DPlugin#add
      * @since 3.0.0
      *
      * @param {number} [fieldOfView=80] - [description]
@@ -107,7 +172,7 @@ var CameraManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Cameras.Sprite3D.CameraManager#addOrthographicCamera
+     * @method Camera3DPlugin#addOrthographicCamera
      * @since 3.0.0
      *
      * @param {number} width - [description]
@@ -132,7 +197,7 @@ var CameraManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Cameras.Sprite3D.CameraManager#addPerspectiveCamera
+     * @method Camera3DPlugin#addPerspectiveCamera
      * @since 3.0.0
      *
      * @param {number} [fieldOfView=80] - [description]
@@ -159,7 +224,7 @@ var CameraManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Cameras.Sprite3D.CameraManager#getCamera
+     * @method Camera3DPlugin#getCamera
      * @since 3.0.0
      *
      * @param {string} name - [description]
@@ -182,7 +247,7 @@ var CameraManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Cameras.Sprite3D.CameraManager#removeCamera
+     * @method Camera3DPlugin#removeCamera
      * @since 3.0.0
      *
      * @param {(Phaser.Cameras.Sprite3D.OrthographicCamera|Phaser.Cameras.Sprite3D.PerspectiveCamera)} camera - [description]
@@ -200,7 +265,7 @@ var CameraManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Cameras.Sprite3D.CameraManager#removeAll
+     * @method Camera3DPlugin#removeAll
      * @since 3.0.0
      *
      * @return {(Phaser.Cameras.Sprite3D.OrthographicCamera|Phaser.Cameras.Sprite3D.PerspectiveCamera)} [description]
@@ -220,7 +285,7 @@ var CameraManager = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Cameras.Sprite3D.CameraManager#update
+     * @method Camera3DPlugin#update
      * @since 3.0.0
      *
      * @param {number} timestep - [description]
@@ -238,7 +303,7 @@ var CameraManager = new Class({
      * The Scene that owns this plugin is shutting down.
      * We need to kill and reset all internal properties as well as stop listening to Scene events.
      *
-     * @method Phaser.Cameras.Sprite3D.CameraManager#shutdown
+     * @method Camera3DPlugin#shutdown
      * @private
      * @since 3.0.0
      */
@@ -256,7 +321,7 @@ var CameraManager = new Class({
      * The Scene that owns this plugin is being destroyed.
      * We need to shutdown and then kill off all external references.
      *
-     * @method Phaser.Cameras.Sprite3D.CameraManager#destroy
+     * @method Camera3DPlugin#destroy
      * @private
      * @since 3.0.0
      */
@@ -264,14 +329,12 @@ var CameraManager = new Class({
     {
         this.shutdown();
 
-        this.scene.sys.events.off('start', this.start, this);
-
+        this.pluginManager = null;
+        this.game = null;
         this.scene = null;
         this.systems = null;
     }
 
 });
 
-PluginCache.register('CameraManager3D', CameraManager, 'cameras3d');
-
-module.exports = CameraManager;
+module.exports = Camera3DPlugin;

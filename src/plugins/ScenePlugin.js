@@ -32,26 +32,7 @@ var ScenePlugin = new Class({
     {
         BasePlugin.call(this, pluginManager);
 
-        /**
-         * A reference to the Scene that has installed this plugin.
-         * This property is only set when the plugin is instantiated and added to the Scene, not before.
-         *
-         * @name Phaser.Plugins.ScenePlugin#scene
-         * @type {?Phaser.Scene}
-         * @protected
-         * @since 3.8.0
-         */
         this.scene = scene;
-
-        /**
-         * A reference to the Scene Systems of the Scene that has installed this plugin.
-         * This property is only set when the plugin is instantiated and added to the Scene, not before.
-         *
-         * @name Phaser.Plugins.ScenePlugin#systems
-         * @type {?Phaser.Scenes.Systems}
-         * @protected
-         * @since 3.8.0
-         */
         this.systems = scene.sys;
 
         scene.sys.events.once('boot', this.boot, this);

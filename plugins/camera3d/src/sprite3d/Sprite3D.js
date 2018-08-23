@@ -4,11 +4,11 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Class = require('../../utils/Class');
-var GameObject = require('../GameObject');
-var Sprite = require('../sprite/Sprite');
-var Vector2 = require('../../math/Vector2');
-var Vector4 = require('../../math/Vector4');
+var Class = require('../../../../src/utils/Class');
+var GameObject = require('../../../../src/gameobjects/GameObject');
+var Sprite = require('../../../../src/gameobjects/sprite/Sprite');
+var Vector2 = require('../../../../src/math/Vector2');
+var Vector4 = require('../../../../src/math/Vector4');
 
 /**
  * @classdesc

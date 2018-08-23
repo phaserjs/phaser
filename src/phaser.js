@@ -48,6 +48,16 @@ var Phaser = {
 
 };
 
+//  Merge in the optional plugins
+
+if (typeof PLUGIN_CAMERA3D)
+{
+    Phaser.Cameras.Sprite3D = require('../plugins/camera3d/src');
+    Phaser.GameObjects.Sprite3D = require('../plugins/camera3d/src/sprite3d/Sprite3D');
+    Phaser.GameObjects.Factories.Sprite3D = require('../plugins/camera3d/src/sprite3d/Sprite3DFactory');
+    Phaser.GameObjects.Creators.Sprite3D = require('../plugins/camera3d/src/sprite3d/Sprite3DCreator');
+}
+
 //   Merge in the consts
 
 Phaser = Extend(false, Phaser, CONST);

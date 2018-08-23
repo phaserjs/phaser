@@ -86,4 +86,9 @@ var DefaultPlugins = {
 
 };
 
+if (typeof PLUGIN_CAMERA3D)
+{
+    DefaultPlugins.DefaultScene.push('CameraManager3D');
+}
+
 module.exports = DefaultPlugins;
