@@ -46,15 +46,6 @@ var ForwardDiffuseLightPipeline = new Class({
          * @since 3.11.0
          */
         this.defaultNormalMap;
-
-        /**
-         * Collection of batch information
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batches
-         * @type {array}
-         * @since 3.1.0
-         */
-        this.batches = [];
     },
 
     /**
@@ -92,89 +83,12 @@ var ForwardDiffuseLightPipeline = new Class({
 
         this.mvpUpdate();
 
-        if (this.batches.length === 0)
-        {
-            this.pushBatch();
-        }
-
         renderer.setInt1(program, 'uNormSampler', 1);
         renderer.setFloat2(program, 'uResolution', this.width, this.height);
 
         if (gameObject)
         {
             this.setNormalMap(gameObject);
-        }
-
-        return this;
-    },
-
-    /**
-     * Creates a new batch object and pushes it to a batch array.
-     * The batch object contains information relevant to the current 
-     * vertex batch like the offset in the vertex buffer, vertex count and 
-     * the textures used by that batch.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#pushBatch
-     * @since 3.1.0
-     */
-    pushBatch: function ()
-    {
-        var batch = {
-            first: this.vertexCount,
-            texture: null,
-            textures: []
-        };
-
-        this.batches.push(batch);
-    },
-
-    /**
-     * Assigns a texture to the current batch. If a texture is already set it creates
-     * a new batch object.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#setTexture2D
-     * @since 3.1.0
-     *
-     * @param {WebGLTexture} texture - WebGLTexture that will be assigned to the current batch.
-     * @param {integer} textureUnit - Texture unit to which the texture needs to be bound.
-     *
-     * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} This pipeline instance.
-     */
-    setTexture2D: function (texture, unit)
-    {
-        if (!texture)
-        {
-            return this;
-        }
-
-        var batches = this.batches;
-
-        if (batches.length === 0)
-        {
-            this.pushBatch();
-        }
-
-        var batch = batches[batches.length - 1];
-
-        if (unit > 0)
-        {
-            if (batch.textures[unit - 1] &&
-                batch.textures[unit - 1] !== texture)
-            {
-                this.pushBatch();
-            }
-
-            batches[batches.length - 1].textures[unit - 1] = texture;
-        }
-        else
-        {
-            if (batch.texture !== null &&
-                batch.texture !== texture)
-            {
-                this.pushBatch();
-            }
-
-            batches[batches.length - 1].texture = texture;
         }
 
         return this;
@@ -246,106 +160,6 @@ var ForwardDiffuseLightPipeline = new Class({
     },
 
     /**
-     * Binds, uploads resources and processes all batches generating draw calls.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#flush
-     * @since 3.1.0
-     *
-     * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} This pipeline instance.
-     */
-    flush: function ()
-    {
-        if (this.flushLocked)
-        {
-            return this;
-        }
-
-        this.flushLocked = true;
-
-        var gl = this.gl;
-        var renderer = this.renderer;
-        var vertexCount = this.vertexCount;
-        var topology = this.topology;
-        var vertexSize = this.vertexSize;
-        var batches = this.batches;
-        var batchCount = batches.length;
-        var batchVertexCount = 0;
-        var batch = null;
-        var batchNext;
-        var textureIndex;
-        var nTexture;
-
-        if (batchCount === 0 || vertexCount === 0)
-        {
-            this.flushLocked = false;
-            return this;
-        }
-
-        gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
-
-        for (var index = 0; index < batches.length - 1; ++index)
-        {
-            batch = batches[index];
-            batchNext = batches[index + 1];
-
-            if (batch.textures.length > 0)
-            {
-                for (textureIndex = 0; textureIndex < batch.textures.length; ++textureIndex)
-                {
-                    nTexture = batch.textures[textureIndex];
-
-                    if (nTexture)
-                    {
-                        renderer.setTexture2D(nTexture, 1 + textureIndex);
-                    }
-                }
-
-                gl.activeTexture(gl.TEXTURE0);
-            }
-
-            batchVertexCount = batchNext.first - batch.first;
-
-            if (batch.texture === null || batchVertexCount <= 0) { continue; }
-
-            renderer.setTexture2D(batch.texture, 0);
-            gl.drawArrays(topology, batch.first, batchVertexCount);
-        }
-
-        // Left over data
-        batch = batches[batches.length - 1];
-
-        if (batch.textures.length > 0)
-        {
-            for (textureIndex = 0; textureIndex < batch.textures.length; ++textureIndex)
-            {
-                nTexture = batch.textures[textureIndex];
-
-                if (nTexture)
-                {
-                    renderer.setTexture2D(nTexture, 1 + textureIndex);
-                }
-            }
-
-            gl.activeTexture(gl.TEXTURE0);
-        }
-
-        batchVertexCount = vertexCount - batch.first;
-
-        if (batch.texture && batchVertexCount > 0)
-        {
-            renderer.setTexture2D(batch.texture, 0);
-            gl.drawArrays(topology, batch.first, batchVertexCount);
-        }
-
-        this.vertexCount = 0;
-        batches.length = 0;
-        this.pushBatch();
-        this.flushLocked = false;
-
-        return this;
-    },
-
-    /**
      * Generic function for batching a textured quad
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTexture
@@ -408,7 +222,11 @@ var ForwardDiffuseLightPipeline = new Class({
 
         var normalTexture;
 
-        if (gameObject.texture)
+        if (gameObject.displayTexture)
+        {
+            normalTexture = gameObject.displayTexture.dataSource[gameObject.displayFrame.sourceIndex];
+        }
+        else if (gameObject.texture)
         {
             normalTexture = gameObject.texture.dataSource[gameObject.frame.sourceIndex];
         }
@@ -419,7 +237,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
         if (!normalTexture)
         {
-            normalTexture = this.defaultNormalMap;
+            console.warn('Normal map missing or invalid');
+            return;
         }
 
         this.setTexture2D(normalTexture.glTexture, 1);
@@ -428,11 +247,54 @@ var ForwardDiffuseLightPipeline = new Class({
         var spriteMatrix = this._tempMatrix2;
         var calcMatrix = this._tempMatrix3;
 
+        var u0 = (frameX / textureWidth) + uOffset;
+        var v0 = (frameY / textureHeight) + vOffset;
+        var u1 = (frameX + frameWidth) / textureWidth + uOffset;
+        var v1 = (frameY + frameHeight) / textureHeight + vOffset;
+
         var width = srcWidth;
         var height = srcHeight;
 
+        // var x = -displayOriginX + frameX;
+        // var y = -displayOriginY + frameY;
+
         var x = -displayOriginX;
         var y = -displayOriginY;
+
+        if (gameObject.isCropped)
+        {
+            var crop = gameObject._crop;
+
+            width = crop.width;
+            height = crop.height;
+
+            srcWidth = crop.width;
+            srcHeight = crop.height;
+
+            frameX = crop.x;
+            frameY = crop.y;
+
+            var ox = frameX;
+            var oy = frameY;
+
+            if (flipX)
+            {
+                ox = (frameWidth - crop.x - crop.width);
+            }
+    
+            if (flipY && !texture.isRenderTexture)
+            {
+                oy = (frameHeight - crop.y - crop.height);
+            }
+
+            u0 = (ox / textureWidth) + uOffset;
+            v0 = (oy / textureHeight) + vOffset;
+            u1 = (ox + crop.width) / textureWidth + uOffset;
+            v1 = (oy + crop.height) / textureHeight + vOffset;
+
+            x = -displayOriginX + frameX;
+            y = -displayOriginY + frameY;
+        }
 
         //  Invert the flipY if this is a RenderTexture
         flipY = flipY ^ (texture.isRenderTexture ? 1 : 0);
@@ -449,11 +311,12 @@ var ForwardDiffuseLightPipeline = new Class({
             y += srcHeight;
         }
 
-        if (camera.roundPixels)
-        {
-            x |= 0;
-            y |= 0;
-        }
+        //  Do we need this? (doubt it)
+        // if (camera.roundPixels)
+        // {
+        //     x |= 0;
+        //     y |= 0;
+        // }
 
         var xw = x + width;
         var yh = y + height;
@@ -483,17 +346,17 @@ var ForwardDiffuseLightPipeline = new Class({
             camMatrix.multiply(spriteMatrix, calcMatrix);
         }
 
-        var tx0 = x * calcMatrix.a + y * calcMatrix.c + calcMatrix.e;
-        var ty0 = x * calcMatrix.b + y * calcMatrix.d + calcMatrix.f;
+        var tx0 = calcMatrix.getX(x, y);
+        var ty0 = calcMatrix.getY(x, y);
 
-        var tx1 = x * calcMatrix.a + yh * calcMatrix.c + calcMatrix.e;
-        var ty1 = x * calcMatrix.b + yh * calcMatrix.d + calcMatrix.f;
+        var tx1 = calcMatrix.getX(x, yh);
+        var ty1 = calcMatrix.getY(x, yh);
 
-        var tx2 = xw * calcMatrix.a + yh * calcMatrix.c + calcMatrix.e;
-        var ty2 = xw * calcMatrix.b + yh * calcMatrix.d + calcMatrix.f;
+        var tx2 = calcMatrix.getX(xw, yh);
+        var ty2 = calcMatrix.getY(xw, yh);
 
-        var tx3 = xw * calcMatrix.a + y * calcMatrix.c + calcMatrix.e;
-        var ty3 = xw * calcMatrix.b + y * calcMatrix.d + calcMatrix.f;
+        var tx3 = calcMatrix.getX(xw, y);
+        var ty3 = calcMatrix.getY(xw, y);
 
         if (camera.roundPixels)
         {
@@ -510,14 +373,9 @@ var ForwardDiffuseLightPipeline = new Class({
             ty3 |= 0;
         }
 
-        var u0 = (frameX / textureWidth) + uOffset;
-        var v0 = (frameY / textureHeight) + vOffset;
-        var u1 = (frameX + frameWidth) / textureWidth + uOffset;
-        var v1 = (frameY + frameHeight) / textureHeight + vOffset;
-
         this.setTexture2D(texture, 0);
 
-        this.batchVertices(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect);
+        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect);
     },
 
     /**
