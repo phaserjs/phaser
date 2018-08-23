@@ -38,7 +38,7 @@ Then rebuild Phaser via webpack. The plugin will now be included by default and 
 
 ## Using the Plugin
 
-Here is a basic example of using the plugin. You can find many more in the Phaser 3 Examples repo in the `cameras/3D Camera` folder.
+Here is a basic example of using the plugin. You can find many more in the Phaser 3 Examples repo in the [cameras/3D Camera](https://github.com/photonstorm/phaser3-examples/tree/master/public/src/camera/3D%20camera) folder.
 
 ```
 var config = {
@@ -77,8 +77,6 @@ function create ()
 function update ()
 {
     camera.transformChildren(transform);
-
-    updateCamControls();
 }
 ```
 
