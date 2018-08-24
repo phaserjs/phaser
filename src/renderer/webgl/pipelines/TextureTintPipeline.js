@@ -219,7 +219,7 @@ var TextureTintPipeline = new Class({
          * @private
          * @since 3.12.0
          */
-        this.currentFrame = null;
+        this.currentFrame = { u0: 0, v0: 0, u1: 1, v1: 1 };
 
         /**
          * Internal path quad cache.
