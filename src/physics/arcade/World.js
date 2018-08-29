@@ -27,6 +27,7 @@ var SeparateY = require('./SeparateY');
 var Set = require('../../structs/Set');
 var StaticBody = require('./StaticBody');
 var TileIntersectsBody = require('./tilemap/TileIntersectsBody');
+var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 var Vector2 = require('../../math/Vector2');
 var Wrap = require('../../math/Wrap');
 
@@ -477,6 +478,26 @@ var World = new Class({
          * @since 3.0.0
          */
         this.treeMinMax = { minX: 0, minY: 0, maxX: 0, maxY: 0 };
+
+        /**
+         * A temporary Transform Matrix used by bodies for calculations without them needing their own local copy.
+         *
+         * @name Phaser.Physics.Arcade.World#_tempMatrix
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @private
+         * @since 3.12.0
+         */
+        this._tempMatrix = new TransformMatrix();
+
+        /**
+         * A temporary Transform Matrix used by bodies for calculations without them needing their own local copy.
+         *
+         * @name Phaser.Physics.Arcade.World#_tempMatrix2
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @private
+         * @since 3.12.0
+         */
+        this._tempMatrix2 = new TransformMatrix();
 
         if (this.drawDebug)
         {
