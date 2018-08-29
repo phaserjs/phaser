@@ -1457,9 +1457,15 @@ var World = new Class({
             {
                 this.emit('overlap', body1.gameObject, body2.gameObject, body1, body2);
             }
-            else if (body1.onCollide || body2.onCollide)
+            else
             {
-                this.emit('collide', body1.gameObject, body2.gameObject, body1, body2);
+                body1.postUpdate();
+                body2.postUpdate();
+
+                if (body1.onCollide || body2.onCollide)
+                {
+                    this.emit('collide', body1.gameObject, body2.gameObject, body1, body2);
+                }
             }
         }
 
