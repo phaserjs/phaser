@@ -336,6 +336,16 @@ var InputManager = new Class({
          */
         this._tempMatrix = new TransformMatrix();
 
+        /**
+         * A re-cycled matrix used in hit test calculations.
+         *
+         * @name Phaser.Input.InputManager#_tempMatrix2
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @private
+         * @since 3.12.0
+         */
+        this._tempMatrix2 = new TransformMatrix();
+
         game.events.once('boot', this.boot, this);
     },
 
@@ -1136,6 +1146,7 @@ var InputManager = new Class({
         var point = { x: 0, y: 0 };
 
         var matrix = this._tempMatrix;
+        var parentMatrix = this._tempMatrix2;
 
         for (var i = 0; i < gameObjects.length; i++)
         {
@@ -1153,9 +1164,9 @@ var InputManager = new Class({
 
             if (gameObject.parentContainer)
             {
-                gameObject.getWorldTransformMatrix(matrix);
+                gameObject.getWorldTransformMatrix(matrix, parentMatrix);
 
-                TransformXY(px, py, matrix.tx, matrix.ty, matrix.rotation, matrix.scaleX, matrix.scaleY, point);
+                matrix.applyInverse(px, py, point);
             }
             else
             {
