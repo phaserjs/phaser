@@ -1050,14 +1050,15 @@ var InputManager = new Class({
      * @since 3.10.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to test.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera which is being tested against.
      *
      * @return {boolean} `true` if the Game Object should be considered for input, otherwise `false`.
      */
-    inputCandidate: function (gameObject)
+    inputCandidate: function (gameObject, camera)
     {
         var input = gameObject.input;
 
-        if (!input || !input.enabled || !gameObject.willRender())
+        if (!input || !input.enabled || !gameObject.willRender(camera))
         {
             return false;
         }
@@ -1069,7 +1070,7 @@ var InputManager = new Class({
         {
             do
             {
-                if (!parent.visible)
+                if (!parent.willRender(camera))
                 {
                     visible = false;
                     break;
@@ -1140,7 +1141,9 @@ var InputManager = new Class({
         {
             var gameObject = gameObjects[i];
 
-            if (!this.inputCandidate(gameObject))
+            //  Checks if the Game Object can receive input (isn't being ignored by the camera, invisible, etc)
+            //  and also checks all of its parents, if any
+            if (!this.inputCandidate(gameObject, camera))
             {
                 continue;
             }
