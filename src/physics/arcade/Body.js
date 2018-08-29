@@ -10,7 +10,6 @@ var CONST = require('./const');
 var RadToDeg = require('../../math/RadToDeg');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var RectangleContains = require('../../geom/rectangle/Contains');
-var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 var Vector2 = require('../../math/Vector2');
 
 /**
@@ -761,8 +760,6 @@ var Body = new Class({
          * @since 3.0.0
          */
         this._bounds = new Rectangle();
-
-        this._tempMatrix = new TransformMatrix();
     },
 
     /**
@@ -781,7 +778,7 @@ var Body = new Class({
 
         if (sprite.parentContainer)
         {
-            var matrix = sprite.getWorldTransformMatrix(this._tempMatrix);
+            var matrix = sprite.getWorldTransformMatrix(this.world._tempMatrix, this.world._tempMatrix2);
 
             transform.x = matrix.tx;
             transform.y = matrix.ty;
