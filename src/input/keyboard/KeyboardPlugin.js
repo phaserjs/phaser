@@ -344,8 +344,11 @@ var KeyboardPlugin = new Class({
 
             for (var i = 0; i < keys.length; i++)
             {
-                var current_key = keys[i].trim();
-                if (current_key) output[current_key] = this.addKey(current_key);
+                var currentKey = keys[i].trim();
+                if (currentKey) 
+                {
+                    output[currentKey] = this.addKey(currentKey);
+                }
             }
         }
         else
