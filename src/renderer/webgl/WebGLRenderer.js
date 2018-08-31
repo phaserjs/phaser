@@ -849,7 +849,11 @@ var WebGLRenderer = new Class({
             this.flush();
 
             // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/scissor
-            gl.scissor(x, (this.drawingBufferHeight - y - h), w, h);
+
+            if (w > 0 && h > 0)
+            {
+                gl.scissor(x, (this.drawingBufferHeight - y - h), w, h);
+            }
         }
     },
 
@@ -1536,6 +1540,8 @@ var WebGLRenderer = new Class({
 
         if (camera.renderToTexture)
         {
+            this.flush();
+
             this.pushScissor(cx, cy, cw, -ch);
 
             this.setFramebuffer(camera.framebuffer);
@@ -1595,6 +1601,7 @@ var WebGLRenderer = new Class({
 
         if (camera.renderToTexture)
         {
+            // this.flush();
             TextureTintPipeline.flush();
 
             this.setFramebuffer(null);
@@ -1603,9 +1610,9 @@ var WebGLRenderer = new Class({
 
             var getTint = Utils.getTintAppendFloatAlpha;
 
-            var p = (camera.pipeline) ? camera.pipeline : TextureTintPipeline;
-        
-            p.batchTexture(
+            var pipeline = (camera.pipeline) ? camera.pipeline : TextureTintPipeline;
+       
+            pipeline.batchTexture(
                 camera,
                 camera.glTexture,
                 camera.width, camera.height,
@@ -1626,6 +1633,8 @@ var WebGLRenderer = new Class({
                 this.defaultCamera,
                 null
             );
+
+            // this.setPipeline(TextureTintPipeline);
 
             //  Force clear the current texture so that items next in the batch (like Graphics) don't try and use it
             this.setBlankTexture(true);
