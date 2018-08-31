@@ -1530,14 +1530,14 @@ var WebGLRenderer = new Class({
         var cw = camera._cw;
         var ch = camera._ch;
 
-        this.pushScissor(cx, cy, cw, ch);
-
         var TextureTintPipeline = this.pipelines.TextureTintPipeline;
 
         var color = camera.backgroundColor;
 
         if (camera.renderToTexture)
         {
+            this.pushScissor(cx, cy, cw, -ch);
+
             this.setFramebuffer(camera.framebuffer);
 
             var gl = this.gl;
@@ -1546,12 +1546,12 @@ var WebGLRenderer = new Class({
     
             gl.clear(gl.COLOR_BUFFER_BIT);
 
-            TextureTintPipeline.projOrtho(0, camera.width, 0, camera.height, -1000, 1000);
+            TextureTintPipeline.projOrtho(cx, cw + cx, cy, ch + cy, -1000, 1000);
 
             if (color.alphaGL > 0)
             {
                 TextureTintPipeline.drawFillRect(
-                    cx, cy, cw, ch,
+                    0, 0, cw + cx, ch + cy,
                     Utils.getTintFromFloats(color.redGL, color.greenGL, color.blueGL, 1),
                     color.alphaGL
                 );
@@ -1559,11 +1559,17 @@ var WebGLRenderer = new Class({
         }
         else if (color.alphaGL > 0)
         {
+            this.pushScissor(cx, cy, cw, ch);
+
             TextureTintPipeline.drawFillRect(
-                cx, cy, cw, ch,
+                0, 0, cw + cx, ch + cy,
                 Utils.getTintFromFloats(color.redGL, color.greenGL, color.blueGL, 1),
                 color.alphaGL
             );
+        }
+        else
+        {
+            this.pushScissor(cx, cy, cw, ch);
         }
     },
 
