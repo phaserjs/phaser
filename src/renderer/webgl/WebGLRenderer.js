@@ -618,6 +618,11 @@ var WebGLRenderer = new Class({
             this.canvas.style.width = (this.width / resolution) + 'px';
             this.canvas.style.height = (this.height / resolution) + 'px';
         }
+        else
+        {
+            this.canvas.style.width = this.width + 'px';
+            this.canvas.style.height = this.height + 'px';
+        }
 
         gl.viewport(0, 0, this.width, this.height);
 
