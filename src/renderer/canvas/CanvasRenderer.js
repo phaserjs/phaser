@@ -258,7 +258,7 @@ var CanvasRenderer = new Class({
             this.gameCanvas.style.width = (this.width / resolution) + 'px';
             this.gameCanvas.style.height = (this.height / resolution) + 'px';
         }
-        else 
+        else
         {
             this.gameCanvas.style.width = this.width + 'px';
             this.gameCanvas.style.height = this.height + 'px';
