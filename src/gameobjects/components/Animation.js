@@ -509,6 +509,7 @@ var Animation = new Class({
 
         this.forward = true;
         this._reverse = false;
+
         return this._startAnimation(key, startFrame);
     },
 
@@ -537,6 +538,7 @@ var Animation = new Class({
 
         this.forward = false;
         this._reverse = true;
+
         return this._startAnimation(key, startFrame);
     },
 

@@ -202,6 +202,7 @@ You can find the source for Camera 3D in the new `plugins/camera3d` folder, alon
 * The Input Manager has gained a new private property `_tempMatrix2`. This is used internally in the hitTest checks to avoid constant matrix creation.
 * The Transform Matrix has a new method `applyInverse` which will take an x/y position and inverse translate it through the current matrix.
 * Using `keyboard.addKeys("W, A, S, D")` would fail because of the spacing between the characters. `addKeys` will now trim the input allowing you to space characters out if you prefer (thanks @dhruvyad)
+* Calling `setTimeScale` on the Sprite's Animation component will now set the time scale value and keep it set until you change it again. Previously it would be reset to 1 when a new animation was loaded into the component, but this no longer happens - once the time scale is set it remains in effect, regardless of which animations are played on the Sprite.
 
 ### Game Config Resolution Specific Bug Fixes
 
