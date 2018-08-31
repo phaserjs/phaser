@@ -1086,6 +1086,10 @@ var WebGLRenderer = new Class({
                 width = framebuffer.renderTexture.width;
                 height = framebuffer.renderTexture.height;
             }
+            else
+            {
+                this.flush();
+            }
 
             gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
 
@@ -1704,16 +1708,19 @@ var WebGLRenderer = new Class({
                 this.setBlendMode(child.blendMode);
             }
 
-            if (child.mask)
+            var mask = child.mask;
+
+            if (mask)
             {
-                child.mask.preRenderWebGL(this, child, camera);
+                mask.preRenderWebGL(this, child, camera);
+
+                child.renderWebGL(this, child, interpolationPercentage, camera);
+
+                mask.postRenderWebGL(this, child);
             }
-
-            child.renderWebGL(this, child, interpolationPercentage, camera);
-
-            if (child.mask)
+            else
             {
-                child.mask.postRenderWebGL(this, child);
+                child.renderWebGL(this, child, interpolationPercentage, camera);
             }
         }
 
