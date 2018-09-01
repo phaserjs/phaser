@@ -583,6 +583,12 @@ var Animation = new Class({
             //  Yoyo? (happens before repeat)
             if (component._yoyo)
             {
+                if (component._reverse !== false)
+                {
+                    this.completeAnimation(component);
+                    return;
+                }
+                
                 component.forward = false;
                 this._updateAndGetNextTick(component, frame.prevFrame);
             }
@@ -643,6 +649,12 @@ var Animation = new Class({
 
             if (component._yoyo)
             {
+                if (component._reverse !== true)
+                {
+                    this.completeAnimation(component);
+                    return;
+                }
+                
                 component.forward = true;
                 this._updateAndGetNextTick(component, frame.nextFrame);
             }
