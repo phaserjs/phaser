@@ -427,12 +427,14 @@ var Transform = {
      * @since 3.4.0
      *
      * @param {Phaser.GameObjects.Components.TransformMatrix} [tempMatrix] - The matrix to populate with the values from this Game Object.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - A temporary matrix to hold parent values during the calculations.
      *
      * @return {Phaser.GameObjects.Components.TransformMatrix} The populated Transform Matrix.
      */
-    getWorldTransformMatrix: function (tempMatrix)
+    getWorldTransformMatrix: function (tempMatrix, parentMatrix)
     {
         if (tempMatrix === undefined) { tempMatrix = new TransformMatrix(); }
+        if (parentMatrix === undefined) { parentMatrix = new TransformMatrix(); }
 
         var parent = this.parentContainer;
 
@@ -441,30 +443,16 @@ var Transform = {
             return this.getLocalTransformMatrix(tempMatrix);
         }
 
-        var parents = [];
-        
+        tempMatrix.applyITRS(this.x, this.y, this._rotation, this._scaleX, this._scaleY);
+
         while (parent)
         {
-            parents.unshift(parent);
+            parentMatrix.applyITRS(parent.x, parent.y, parent._rotation, parent._scaleX, parent._scaleY);
+
+            parentMatrix.multiply(tempMatrix, tempMatrix);
+
             parent = parent.parentContainer;
         }
-
-        tempMatrix.loadIdentity();
-
-        var length = parents.length;
-        
-        for (var i = 0; i < length; ++i)
-        {
-            parent = parents[i];
-
-            tempMatrix.translate(parent.x, parent.y);
-            tempMatrix.rotate(parent.rotation);
-            tempMatrix.scale(parent.scaleX, parent.scaleY);
-        }
-
-        tempMatrix.translate(this.x, this.y);
-        tempMatrix.rotate(this._rotation);
-        tempMatrix.scale(this._scaleX, this._scaleY);
 
         return tempMatrix;
     }

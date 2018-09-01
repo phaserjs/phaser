@@ -733,9 +733,6 @@ var TextureTintPipeline = new Class({
         var width = srcWidth;
         var height = srcHeight;
 
-        // var x = -displayOriginX + frameX;
-        // var y = -displayOriginY + frameY;
-
         var x = -displayOriginX;
         var y = -displayOriginY;
 
@@ -788,13 +785,6 @@ var TextureTintPipeline = new Class({
             height *= -1;
             y += srcHeight;
         }
-
-        //  Do we need this? (doubt it)
-        // if (camera.roundPixels)
-        // {
-        //     x |= 0;
-        //     y |= 0;
-        // }
 
         var xw = x + width;
         var yh = y + height;

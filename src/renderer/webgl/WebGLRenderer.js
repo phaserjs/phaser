@@ -849,7 +849,11 @@ var WebGLRenderer = new Class({
             this.flush();
 
             // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/scissor
-            gl.scissor(x, (this.drawingBufferHeight - y - h), w, h);
+
+            if (w > 0 && h > 0)
+            {
+                gl.scissor(x, (this.drawingBufferHeight - y - h), w, h);
+            }
         }
     },
 
@@ -1085,6 +1089,10 @@ var WebGLRenderer = new Class({
             {
                 width = framebuffer.renderTexture.width;
                 height = framebuffer.renderTexture.height;
+            }
+            else
+            {
+                this.flush();
             }
 
             gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
@@ -1526,14 +1534,16 @@ var WebGLRenderer = new Class({
         var cw = camera._cw;
         var ch = camera._ch;
 
-        this.pushScissor(cx, cy, cw, ch);
-
         var TextureTintPipeline = this.pipelines.TextureTintPipeline;
 
         var color = camera.backgroundColor;
 
         if (camera.renderToTexture)
         {
+            this.flush();
+
+            this.pushScissor(cx, cy, cw, -ch);
+
             this.setFramebuffer(camera.framebuffer);
 
             var gl = this.gl;
@@ -1542,12 +1552,12 @@ var WebGLRenderer = new Class({
     
             gl.clear(gl.COLOR_BUFFER_BIT);
 
-            TextureTintPipeline.projOrtho(0, camera.width, 0, camera.height, -1000, 1000);
+            TextureTintPipeline.projOrtho(cx, cw + cx, cy, ch + cy, -1000, 1000);
 
             if (color.alphaGL > 0)
             {
                 TextureTintPipeline.drawFillRect(
-                    cx, cy, cw, ch,
+                    0, 0, cw + cx, ch + cy,
                     Utils.getTintFromFloats(color.redGL, color.greenGL, color.blueGL, 1),
                     color.alphaGL
                 );
@@ -1555,11 +1565,17 @@ var WebGLRenderer = new Class({
         }
         else if (color.alphaGL > 0)
         {
+            this.pushScissor(cx, cy, cw, ch);
+
             TextureTintPipeline.drawFillRect(
-                cx, cy, cw, ch,
+                0, 0, cw + cx, ch + cy,
                 Utils.getTintFromFloats(color.redGL, color.greenGL, color.blueGL, 1),
                 color.alphaGL
             );
+        }
+        else
+        {
+            this.pushScissor(cx, cy, cw, ch);
         }
     },
 
@@ -1585,6 +1601,7 @@ var WebGLRenderer = new Class({
 
         if (camera.renderToTexture)
         {
+            // this.flush();
             TextureTintPipeline.flush();
 
             this.setFramebuffer(null);
@@ -1593,9 +1610,9 @@ var WebGLRenderer = new Class({
 
             var getTint = Utils.getTintAppendFloatAlpha;
 
-            var p = (camera.pipeline) ? camera.pipeline : TextureTintPipeline;
-        
-            p.batchTexture(
+            var pipeline = (camera.pipeline) ? camera.pipeline : TextureTintPipeline;
+       
+            pipeline.batchTexture(
                 camera,
                 camera.glTexture,
                 camera.width, camera.height,
@@ -1616,6 +1633,8 @@ var WebGLRenderer = new Class({
                 this.defaultCamera,
                 null
             );
+
+            // this.setPipeline(TextureTintPipeline);
 
             //  Force clear the current texture so that items next in the batch (like Graphics) don't try and use it
             this.setBlankTexture(true);
@@ -1704,16 +1723,19 @@ var WebGLRenderer = new Class({
                 this.setBlendMode(child.blendMode);
             }
 
-            if (child.mask)
+            var mask = child.mask;
+
+            if (mask)
             {
-                child.mask.preRenderWebGL(this, child, camera);
+                mask.preRenderWebGL(this, child, camera);
+
+                child.renderWebGL(this, child, interpolationPercentage, camera);
+
+                mask.postRenderWebGL(this, child);
             }
-
-            child.renderWebGL(this, child, interpolationPercentage, camera);
-
-            if (child.mask)
+            else
             {
-                child.mask.postRenderWebGL(this, child);
+                child.renderWebGL(this, child, interpolationPercentage, camera);
             }
         }
 

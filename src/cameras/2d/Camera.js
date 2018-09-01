@@ -261,6 +261,8 @@ var Camera = new Class({
     /**
      * Sets the Camera to render to a texture instead of to the main display.
      * 
+     * Make sure that you resize the camera first if you're going to use this feature.
+     * 
      * This is an experimental feature and should be expected to change in the future.
      *
      * @method Phaser.Cameras.Scene2D.Camera#setRenderToTexture
