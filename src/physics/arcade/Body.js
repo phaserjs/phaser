@@ -1076,7 +1076,7 @@ var Body = new Class({
      *
      * @param {integer} [width] - The width of the Body in pixels. Cannot be zero. If not given, and the parent Game Object has a frame, it will use the frame width.
      * @param {integer} [height] - The height of the Body in pixels. Cannot be zero. If not given, and the parent Game Object has a frame, it will use the frame height.
-     * @param {boolean} [center=true] - Modify the Body's `offset`, placing the Body's center on its Game Object's center.
+     * @param {boolean} [center=true] - Modify the Body's `offset`, placing the Body's center on its Game Object's center. Only works if the Game Object has the `getCenter` method.
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
