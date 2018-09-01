@@ -6,6 +6,7 @@
 
 var Class = require('../../utils/Class');
 var Contains = require('./Contains');
+var GetPoints = require('./GetPoints');
 
 /**
  * @classdesc
@@ -171,6 +172,11 @@ var Polygon = new Class({
         this.area = -sum * 0.5;
 
         return this.area;
+    },
+
+    getPoints: function (quantity, step, output)
+    {
+        return GetPoints(this, quantity, step, output);
     }
 
 });
