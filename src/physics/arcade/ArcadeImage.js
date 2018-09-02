@@ -80,6 +80,16 @@ var ArcadeImage = new Class({
     function ArcadeImage (scene, x, y, texture, frame)
     {
         Image.call(this, scene, x, y, texture, frame);
+
+        /**
+         * This Game Object's Physics Body.
+         *
+         * @name Phaser.Physics.Arcade.Image#body
+         * @type {?(Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody)}
+         * @default null
+         * @since 3.0.0
+         */
+        this.body = null;
     }
 
 });
