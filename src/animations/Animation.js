@@ -583,8 +583,7 @@ var Animation = new Class({
             //  Yoyo? (happens before repeat)
             if (component._yoyo)
             {
-                component.forward = false;
-                this._updateAndGetNextTick(component, frame.prevFrame);
+                this._handleYoyoFrame(component, false);
             }
             else if (component.repeatCounter > 0)
             {
@@ -608,6 +607,37 @@ var Animation = new Class({
         {
             this._updateAndGetNextTick(component, frame.nextFrame);
         }
+    },
+
+    /**
+     * Handle the yoyo functionality in nextFrame and previousFrame methods.
+     *
+     * @method Phaser.Animations.Animation#_handleYoyoFrame
+     * @since 3.12.0
+     *
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component to advance.
+     * @param {bool} isReverse - Is animation in reverse mode? (Default: false)
+     */
+    _handleYoyoFrame: function (component, isReverse)
+    {
+        if (!isReverse) { isReverse = false; }
+
+        if (component._reverse === !isReverse && component.repeatCounter > 0)
+        {
+            component.forward = isReverse;
+            this.repeatAnimation(component);
+            return;
+        }
+
+        if (component._reverse !== isReverse && component.repeatCounter === 0)
+        {
+            this.completeAnimation(component);
+            return;
+        }
+        
+        component.forward = isReverse;
+        var frame = isReverse ? component.currentFrame.nextFrame : component.currentFrame.prevFrame;
+        this._updateAndGetNextTick(component, frame);
     },
 
     /**
@@ -643,15 +673,14 @@ var Animation = new Class({
 
             if (component._yoyo)
             {
-                component.forward = true;
-                this._updateAndGetNextTick(component, frame.nextFrame);
+                this._handleYoyoFrame(component, true);
             }
             else if (component.repeatCounter > 0)
             {
                 if (component._reverse && !component.forward)
                 {
                     component.currentFrame = this.getLastFrame();
-                    this._updateAndGetNextTick(component, component.currentFrame);
+                    this.repeatAnimation(component);
                 }
                 else
                 {
