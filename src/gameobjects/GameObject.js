@@ -5,7 +5,7 @@
  */
 
 var Class = require('../utils/Class');
-var Components = require('./components');
+var ComponentsToJSON = require('./components/ToJSON');
 var DataManager = require('../data/DataManager');
 var EventEmitter = require('eventemitter3');
 
@@ -440,7 +440,7 @@ var GameObject = new Class({
      */
     toJSON: function ()
     {
-        return Components.ToJSON(this);
+        return ComponentsToJSON(this);
     },
 
     /**
