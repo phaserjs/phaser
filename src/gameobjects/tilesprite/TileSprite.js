@@ -389,12 +389,12 @@ var TileSprite = new Class({
     {
         if (x !== undefined)
         {
-            this.tilePositionX = x;
+            this.tileScaleX = x;
         }
 
         if (y !== undefined)
         {
-            this.tilePositionY = y;
+            this.tileScaleY = y;
         }
 
         return this;
