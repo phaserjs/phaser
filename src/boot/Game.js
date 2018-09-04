@@ -34,7 +34,7 @@ if (typeof EXPERIMENTAL)
 
 if (typeof PLUGIN_FBINSTANT)
 {
-    var FacebookInstantGamesPlugin = require('../fbinstant/FacebookInstantGamesPlugin');
+    var FacebookInstantGamesPlugin = require('../../plugins/fbinstant/src/FacebookInstantGamesPlugin');
 }
 
 /**

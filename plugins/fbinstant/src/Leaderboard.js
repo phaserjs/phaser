@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Class = require('../utils/Class');
+var Class = require('../../../src/utils/Class');
 var EventEmitter = require('eventemitter3');
 var LeaderboardScore = require('./LeaderboardScore');
 

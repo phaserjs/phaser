@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GetFastValue = require('../utils/object/GetFastValue');
+var GetFastValue = require('../../../src/utils/object/GetFastValue');
 
 var Purchase = function (data)
 {
