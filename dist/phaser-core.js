@@ -76,7 +76,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1018);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1020);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -460,87 +460,6 @@ module.exports = GetValue;
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var Class = __webpack_require__(0);
-
-/**
- * @classdesc
- * Defines a Point in 2D space, with an x and y component.
- *
- * @class Point
- * @memberOf Phaser.Geom
- * @constructor
- * @since 3.0.0
- *
- * @param {number} [x=0] - The x coordinate of this Point.
- * @param {number} [y=x] - The y coordinate of this Point.
- */
-var Point = new Class({
-
-    initialize:
-
-    function Point (x, y)
-    {
-        if (x === undefined) { x = 0; }
-        if (y === undefined) { y = x; }
-
-        /**
-         * The x coordinate of this Point.
-         *
-         * @name Phaser.Geom.Point#x
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.x = x;
-
-        /**
-         * The y coordinate of this Point.
-         *
-         * @name Phaser.Geom.Point#y
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.y = y;
-    },
-
-    /**
-     * Set the x and y coordinates of the point to the given values.
-     *
-     * @method Phaser.Geom.Point#setTo
-     * @since 3.0.0
-     *
-     * @param {number} [x=0] - The x coordinate of this Point.
-     * @param {number} [y=x] - The y coordinate of this Point.
-     *
-     * @return {Phaser.Geom.Point} This Point object.
-     */
-    setTo: function (x, y)
-    {
-        if (x === undefined) { x = 0; }
-        if (y === undefined) { y = x; }
-
-        this.x = x;
-        this.y = y;
-
-        return this;
-    }
-
-});
-
-module.exports = Point;
-
-
-/***/ }),
-/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -1124,6 +1043,87 @@ module.exports = Vector2;
 
 
 /***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+
+/**
+ * @classdesc
+ * Defines a Point in 2D space, with an x and y component.
+ *
+ * @class Point
+ * @memberOf Phaser.Geom
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [x=0] - The x coordinate of this Point.
+ * @param {number} [y=x] - The y coordinate of this Point.
+ */
+var Point = new Class({
+
+    initialize:
+
+    function Point (x, y)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = x; }
+
+        /**
+         * The x coordinate of this Point.
+         *
+         * @name Phaser.Geom.Point#x
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.x = x;
+
+        /**
+         * The y coordinate of this Point.
+         *
+         * @name Phaser.Geom.Point#y
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.y = y;
+    },
+
+    /**
+     * Set the x and y coordinates of the point to the given values.
+     *
+     * @method Phaser.Geom.Point#setTo
+     * @since 3.0.0
+     *
+     * @param {number} [x=0] - The x coordinate of this Point.
+     * @param {number} [y=x] - The y coordinate of this Point.
+     *
+     * @return {Phaser.Geom.Point} This Point object.
+     */
+    setTo: function (x, y)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = x; }
+
+        this.x = x;
+        this.y = y;
+
+        return this;
+    }
+
+});
+
+module.exports = Point;
+
+
+/***/ }),
 /* 6 */
 /***/ (function(module, exports) {
 
@@ -1589,6 +1589,227 @@ if (true) {
 
 /***/ }),
 /* 9 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+//  Contains the plugins that Phaser uses globally and locally.
+//  These are the source objects, not instantiated.
+var corePlugins = {};
+
+//  Contains the plugins that the dev has loaded into their game
+//  These are the source objects, not instantiated.
+var customPlugins = {};
+
+/**
+ * @typedef {object} CorePluginContainer
+ *
+ * @property {string} key - The unique name of this plugin in the core plugin cache.
+ * @property {function} plugin - The plugin to be stored. Should be the source object, not instantiated.
+ * @property {string} [mapping] - If this plugin is to be injected into the Scene Systems, this is the property key map used.
+ * @property {boolean} [custom=false] - Core Scene plugin or a Custom Scene plugin?
+ */
+
+/**
+ * @typedef {object} CustomPluginContainer
+ *
+ * @property {string} key - The unique name of this plugin in the custom plugin cache.
+ * @property {function} plugin - The plugin to be stored. Should be the source object, not instantiated.
+ */
+
+var PluginCache = {};
+
+/**
+ * Static method called directly by the Core internal Plugins.
+ * Key is a reference used to get the plugin from the plugins object (i.e. InputPlugin)
+ * Plugin is the object to instantiate to create the plugin
+ * Mapping is what the plugin is injected into the Scene.Systems as (i.e. input)
+ *
+ * @method Phaser.Plugins.PluginCache.register
+ * @since 3.8.0
+ * 
+ * @param {string} key - A reference used to get this plugin from the plugin cache.
+ * @param {function} plugin - The plugin to be stored. Should be the core object, not instantiated.
+ * @param {string} mapping - If this plugin is to be injected into the Scene Systems, this is the property key map used.
+ * @param {boolean} [custom=false] - Core Scene plugin or a Custom Scene plugin?
+ */
+PluginCache.register = function (key, plugin, mapping, custom)
+{
+    if (custom === undefined) { custom = false; }
+
+    corePlugins[key] = { plugin: plugin, mapping: mapping, custom: custom };
+};
+
+/**
+ * Stores a custom plugin in the global plugin cache.
+ * The key must be unique, within the scope of the cache.
+ *
+ * @method Phaser.Plugins.PluginCache.registerCustom
+ * @since 3.8.0
+ * 
+ * @param {string} key - A reference used to get this plugin from the plugin cache.
+ * @param {function} plugin - The plugin to be stored. Should be the core object, not instantiated.
+ * @param {string} mapping - If this plugin is to be injected into the Scene Systems, this is the property key map used.
+ * @param {?any} data - A value to be passed to the plugin's `init` method.
+ */
+PluginCache.registerCustom = function (key, plugin, mapping, data)
+{
+    customPlugins[key] = { plugin: plugin, mapping: mapping, data: data };
+};
+
+/**
+ * Checks if the given key is already being used in the core plugin cache.
+ *
+ * @method Phaser.Plugins.PluginCache.hasCore
+ * @since 3.8.0
+ * 
+ * @param {string} key - The key to check for.
+ *
+ * @return {boolean} `true` if the key is already in use in the core cache, otherwise `false`.
+ */
+PluginCache.hasCore = function (key)
+{
+    return corePlugins.hasOwnProperty(key);
+};
+
+/**
+ * Checks if the given key is already being used in the custom plugin cache.
+ *
+ * @method Phaser.Plugins.PluginCache.hasCustom
+ * @since 3.8.0
+ * 
+ * @param {string} key - The key to check for.
+ *
+ * @return {boolean} `true` if the key is already in use in the custom cache, otherwise `false`.
+ */
+PluginCache.hasCustom = function (key)
+{
+    return customPlugins.hasOwnProperty(key);
+};
+
+/**
+ * Returns the core plugin object from the cache based on the given key.
+ *
+ * @method Phaser.Plugins.PluginCache.getCore
+ * @since 3.8.0
+ * 
+ * @param {string} key - The key of the core plugin to get.
+ *
+ * @return {CorePluginContainer} The core plugin object.
+ */
+PluginCache.getCore = function (key)
+{
+    return corePlugins[key];
+};
+
+/**
+ * Returns the custom plugin object from the cache based on the given key.
+ *
+ * @method Phaser.Plugins.PluginCache.getCustom
+ * @since 3.8.0
+ * 
+ * @param {string} key - The key of the custom plugin to get.
+ *
+ * @return {CustomPluginContainer} The custom plugin object.
+ */
+PluginCache.getCustom = function (key)
+{
+    return customPlugins[key];
+};
+
+/**
+ * Returns an object from the custom cache based on the given key that can be instantiated.
+ *
+ * @method Phaser.Plugins.PluginCache.getCustomClass
+ * @since 3.8.0
+ * 
+ * @param {string} key - The key of the custom plugin to get.
+ *
+ * @return {function} The custom plugin object.
+ */
+PluginCache.getCustomClass = function (key)
+{
+    return (customPlugins.hasOwnProperty(key)) ? customPlugins[key].plugin : null;
+};
+
+/**
+ * Removes a core plugin based on the given key.
+ *
+ * @method Phaser.Plugins.PluginCache.remove
+ * @since 3.8.0
+ * 
+ * @param {string} key - The key of the core plugin to remove.
+ */
+PluginCache.remove = function (key)
+{
+    if (corePlugins.hasOwnProperty(key))
+    {
+        delete corePlugins[key];
+    }
+};
+
+/**
+ * Removes a custom plugin based on the given key.
+ *
+ * @method Phaser.Plugins.PluginCache.removeCustom
+ * @since 3.8.0
+ * 
+ * @param {string} key - The key of the custom plugin to remove.
+ */
+PluginCache.removeCustom = function (key)
+{
+    if (customPlugins.hasOwnProperty(key))
+    {
+        delete customPlugins[key];
+    }
+};
+
+/**
+ * Removes all Core Plugins.
+ * 
+ * This includes all of the internal system plugins that Phaser needs, like the Input Plugin and Loader Plugin.
+ * So be sure you only call this if you do not wish to run Phaser again.
+ *
+ * @method Phaser.Plugins.PluginCache.destroyCorePlugins
+ * @since 3.12.0
+ */
+PluginCache.destroyCorePlugins = function ()
+{
+    for (var key in corePlugins)
+    {
+        if (corePlugins.hasOwnProperty(key))
+        {
+            delete corePlugins[key];
+        }
+    }
+};
+
+/**
+ * Removes all Custom Plugins.
+ *
+ * @method Phaser.Plugins.PluginCache.destroyCustomPlugins
+ * @since 3.12.0
+ */
+PluginCache.destroyCustomPlugins = function ()
+{
+    for (var key in customPlugins)
+    {
+        if (customPlugins.hasOwnProperty(key))
+        {
+            delete customPlugins[key];
+        }
+    }
+};
+
+module.exports = PluginCache;
+
+
+/***/ }),
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -1600,9 +1821,9 @@ if (true) {
 var Class = __webpack_require__(0);
 var Contains = __webpack_require__(32);
 var GetPoint = __webpack_require__(135);
-var GetPoints = __webpack_require__(294);
-var Line = __webpack_require__(96);
-var Random = __webpack_require__(157);
+var GetPoints = __webpack_require__(301);
+var Line = __webpack_require__(64);
+var Random = __webpack_require__(158);
 
 /**
  * @classdesc
@@ -2079,227 +2300,6 @@ module.exports = Rectangle;
 
 
 /***/ }),
-/* 10 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-//  Contains the plugins that Phaser uses globally and locally.
-//  These are the source objects, not instantiated.
-var corePlugins = {};
-
-//  Contains the plugins that the dev has loaded into their game
-//  These are the source objects, not instantiated.
-var customPlugins = {};
-
-/**
- * @typedef {object} CorePluginContainer
- *
- * @property {string} key - The unique name of this plugin in the core plugin cache.
- * @property {function} plugin - The plugin to be stored. Should be the source object, not instantiated.
- * @property {string} [mapping] - If this plugin is to be injected into the Scene Systems, this is the property key map used.
- * @property {boolean} [custom=false] - Core Scene plugin or a Custom Scene plugin?
- */
-
-/**
- * @typedef {object} CustomPluginContainer
- *
- * @property {string} key - The unique name of this plugin in the custom plugin cache.
- * @property {function} plugin - The plugin to be stored. Should be the source object, not instantiated.
- */
-
-var PluginCache = {};
-
-/**
- * Static method called directly by the Core internal Plugins.
- * Key is a reference used to get the plugin from the plugins object (i.e. InputPlugin)
- * Plugin is the object to instantiate to create the plugin
- * Mapping is what the plugin is injected into the Scene.Systems as (i.e. input)
- *
- * @method Phaser.Plugins.PluginCache.register
- * @since 3.8.0
- * 
- * @param {string} key - A reference used to get this plugin from the plugin cache.
- * @param {function} plugin - The plugin to be stored. Should be the core object, not instantiated.
- * @param {string} mapping - If this plugin is to be injected into the Scene Systems, this is the property key map used.
- * @param {boolean} [custom=false] - Core Scene plugin or a Custom Scene plugin?
- */
-PluginCache.register = function (key, plugin, mapping, custom)
-{
-    if (custom === undefined) { custom = false; }
-
-    corePlugins[key] = { plugin: plugin, mapping: mapping, custom: custom };
-};
-
-/**
- * Stores a custom plugin in the global plugin cache.
- * The key must be unique, within the scope of the cache.
- *
- * @method Phaser.Plugins.PluginCache.registerCustom
- * @since 3.8.0
- * 
- * @param {string} key - A reference used to get this plugin from the plugin cache.
- * @param {function} plugin - The plugin to be stored. Should be the core object, not instantiated.
- * @param {string} mapping - If this plugin is to be injected into the Scene Systems, this is the property key map used.
- * @param {?any} data - A value to be passed to the plugin's `init` method.
- */
-PluginCache.registerCustom = function (key, plugin, mapping, data)
-{
-    customPlugins[key] = { plugin: plugin, mapping: mapping, data: data };
-};
-
-/**
- * Checks if the given key is already being used in the core plugin cache.
- *
- * @method Phaser.Plugins.PluginCache.hasCore
- * @since 3.8.0
- * 
- * @param {string} key - The key to check for.
- *
- * @return {boolean} `true` if the key is already in use in the core cache, otherwise `false`.
- */
-PluginCache.hasCore = function (key)
-{
-    return corePlugins.hasOwnProperty(key);
-};
-
-/**
- * Checks if the given key is already being used in the custom plugin cache.
- *
- * @method Phaser.Plugins.PluginCache.hasCustom
- * @since 3.8.0
- * 
- * @param {string} key - The key to check for.
- *
- * @return {boolean} `true` if the key is already in use in the custom cache, otherwise `false`.
- */
-PluginCache.hasCustom = function (key)
-{
-    return customPlugins.hasOwnProperty(key);
-};
-
-/**
- * Returns the core plugin object from the cache based on the given key.
- *
- * @method Phaser.Plugins.PluginCache.getCore
- * @since 3.8.0
- * 
- * @param {string} key - The key of the core plugin to get.
- *
- * @return {CorePluginContainer} The core plugin object.
- */
-PluginCache.getCore = function (key)
-{
-    return corePlugins[key];
-};
-
-/**
- * Returns the custom plugin object from the cache based on the given key.
- *
- * @method Phaser.Plugins.PluginCache.getCustom
- * @since 3.8.0
- * 
- * @param {string} key - The key of the custom plugin to get.
- *
- * @return {CustomPluginContainer} The custom plugin object.
- */
-PluginCache.getCustom = function (key)
-{
-    return customPlugins[key];
-};
-
-/**
- * Returns an object from the custom cache based on the given key that can be instantiated.
- *
- * @method Phaser.Plugins.PluginCache.getCustomClass
- * @since 3.8.0
- * 
- * @param {string} key - The key of the custom plugin to get.
- *
- * @return {function} The custom plugin object.
- */
-PluginCache.getCustomClass = function (key)
-{
-    return (customPlugins.hasOwnProperty(key)) ? customPlugins[key].plugin : null;
-};
-
-/**
- * Removes a core plugin based on the given key.
- *
- * @method Phaser.Plugins.PluginCache.remove
- * @since 3.8.0
- * 
- * @param {string} key - The key of the core plugin to remove.
- */
-PluginCache.remove = function (key)
-{
-    if (corePlugins.hasOwnProperty(key))
-    {
-        delete corePlugins[key];
-    }
-};
-
-/**
- * Removes a custom plugin based on the given key.
- *
- * @method Phaser.Plugins.PluginCache.removeCustom
- * @since 3.8.0
- * 
- * @param {string} key - The key of the custom plugin to remove.
- */
-PluginCache.removeCustom = function (key)
-{
-    if (customPlugins.hasOwnProperty(key))
-    {
-        delete customPlugins[key];
-    }
-};
-
-/**
- * Removes all Core Plugins.
- * 
- * This includes all of the internal system plugins that Phaser needs, like the Input Plugin and Loader Plugin.
- * So be sure you only call this if you do not wish to run Phaser again.
- *
- * @method Phaser.Plugins.PluginCache.destroyCorePlugins
- * @since 3.12.0
- */
-PluginCache.destroyCorePlugins = function ()
-{
-    for (var key in corePlugins)
-    {
-        if (corePlugins.hasOwnProperty(key))
-        {
-            delete corePlugins[key];
-        }
-    }
-};
-
-/**
- * Removes all Custom Plugins.
- *
- * @method Phaser.Plugins.PluginCache.destroyCustomPlugins
- * @since 3.12.0
- */
-PluginCache.destroyCustomPlugins = function ()
-{
-    for (var key in customPlugins)
-    {
-        if (customPlugins.hasOwnProperty(key))
-        {
-            delete customPlugins[key];
-        }
-    }
-};
-
-module.exports = PluginCache;
-
-
-/***/ }),
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2309,7 +2309,7 @@ module.exports = PluginCache;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var MATH = __webpack_require__(15);
+var MATH = __webpack_require__(14);
 var GetValue = __webpack_require__(3);
 
 //  Allowed types:
@@ -2396,7 +2396,7 @@ module.exports = GetAdvancedValue;
  */
 
 var Class = __webpack_require__(0);
-var PluginCache = __webpack_require__(10);
+var PluginCache = __webpack_require__(9);
 
 /**
  * @classdesc
@@ -2582,49 +2582,8 @@ module.exports = GameObjectFactory;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-/**
- * @namespace Phaser.GameObjects.Components
- */
-
-module.exports = {
-
-    Alpha: __webpack_require__(583),
-    Animation: __webpack_require__(302),
-    BlendMode: __webpack_require__(582),
-    ComputedSize: __webpack_require__(581),
-    Crop: __webpack_require__(580),
-    Depth: __webpack_require__(579),
-    Flip: __webpack_require__(578),
-    GetBounds: __webpack_require__(577),
-    Mask: __webpack_require__(576),
-    Origin: __webpack_require__(575),
-    Pipeline: __webpack_require__(291),
-    ScaleMode: __webpack_require__(574),
-    ScrollFactor: __webpack_require__(573),
-    Size: __webpack_require__(572),
-    Texture: __webpack_require__(571),
-    TextureCrop: __webpack_require__(570),
-    Tint: __webpack_require__(569),
-    ToJSON: __webpack_require__(568),
-    Transform: __webpack_require__(567),
-    TransformMatrix: __webpack_require__(27),
-    Visible: __webpack_require__(566)
-
-};
-
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
 var Class = __webpack_require__(0);
-var PluginCache = __webpack_require__(10);
+var PluginCache = __webpack_require__(9);
 
 /**
  * @classdesc
@@ -2773,7 +2732,7 @@ module.exports = GameObjectCreator;
 
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -2782,7 +2741,7 @@ module.exports = GameObjectCreator;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var RND = __webpack_require__(297);
+var RND = __webpack_require__(304);
 
 var MATH_CONST = {
 
@@ -2846,7 +2805,7 @@ module.exports = MATH_CONST;
 
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -2945,7 +2904,7 @@ module.exports = Extend;
 
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports) {
 
 /**
@@ -3097,6 +3056,47 @@ module.exports = FILE_CONST;
 
 
 /***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * @namespace Phaser.GameObjects.Components
+ */
+
+module.exports = {
+
+    Alpha: __webpack_require__(226),
+    Animation: __webpack_require__(309),
+    BlendMode: __webpack_require__(225),
+    ComputedSize: __webpack_require__(575),
+    Crop: __webpack_require__(574),
+    Depth: __webpack_require__(224),
+    Flip: __webpack_require__(573),
+    GetBounds: __webpack_require__(572),
+    Mask: __webpack_require__(223),
+    Origin: __webpack_require__(571),
+    Pipeline: __webpack_require__(134),
+    ScaleMode: __webpack_require__(570),
+    ScrollFactor: __webpack_require__(220),
+    Size: __webpack_require__(569),
+    Texture: __webpack_require__(568),
+    TextureCrop: __webpack_require__(567),
+    Tint: __webpack_require__(566),
+    ToJSON: __webpack_require__(219),
+    Transform: __webpack_require__(218),
+    TransformMatrix: __webpack_require__(27),
+    Visible: __webpack_require__(215)
+
+};
+
+
+/***/ }),
 /* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3107,11 +3107,11 @@ module.exports = FILE_CONST;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(17);
+var CONST = __webpack_require__(16);
 var GetFastValue = __webpack_require__(1);
-var GetURL = __webpack_require__(109);
-var MergeXHRSettings = __webpack_require__(108);
-var XHRLoader = __webpack_require__(173);
+var GetURL = __webpack_require__(110);
+var MergeXHRSettings = __webpack_require__(109);
+var XHRLoader = __webpack_require__(174);
 var XHRSettings = __webpack_require__(73);
 
 /**
@@ -3869,8 +3869,8 @@ module.exports = {
  */
 
 var Class = __webpack_require__(0);
-var Components = __webpack_require__(13);
-var DataManager = __webpack_require__(80);
+var ComponentsToJSON = __webpack_require__(219);
+var DataManager = __webpack_require__(81);
 var EventEmitter = __webpack_require__(8);
 
 /**
@@ -4304,7 +4304,7 @@ var GameObject = new Class({
      */
     toJSON: function ()
     {
-        return Components.ToJSON(this);
+        return ComponentsToJSON(this);
     },
 
     /**
@@ -4736,7 +4736,7 @@ var CONST = {
      * @type {string}
      * @since 3.0.0
      */
-    VERSION: '3.12.0-beta3',
+    VERSION: '3.12.0',
 
     BlendModes: __webpack_require__(41),
 
@@ -5014,6 +5014,7 @@ module.exports = BuildGameObject;
  */
 
 var Class = __webpack_require__(0);
+var Vector2 = __webpack_require__(4);
 
 /**
  * @classdesc
@@ -5428,12 +5429,12 @@ var TransformMatrix = new Class({
 
         var destinationMatrix = (out === undefined) ? this : out;
 
-        destinationMatrix.a = sourceA * localA + sourceB * localC;
-        destinationMatrix.b = sourceA * localB + sourceB * localD;
-        destinationMatrix.c = sourceC * localA + sourceD * localC;
-        destinationMatrix.d = sourceC * localB + sourceD * localD;
-        destinationMatrix.e = sourceE * localA + sourceF * localC + localE;
-        destinationMatrix.f = sourceE * localB + sourceF * localD + localF;
+        destinationMatrix.a = (sourceA * localA) + (sourceB * localC);
+        destinationMatrix.b = (sourceA * localB) + (sourceB * localD);
+        destinationMatrix.c = (sourceC * localA) + (sourceD * localC);
+        destinationMatrix.d = (sourceC * localB) + (sourceD * localD);
+        destinationMatrix.e = (sourceE * localA) + (sourceF * localC) + localE;
+        destinationMatrix.f = (sourceE * localB) + (sourceF * localD) + localF;
 
         return destinationMatrix;
     },
@@ -5812,6 +5813,42 @@ var TransformMatrix = new Class({
     },
 
     /**
+     * Takes the `x` and `y` values and returns a new position in the `output` vector that is the inverse of
+     * the current matrix with its transformation applied.
+     * 
+     * Can be used to translate points from world to local space.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#applyInverse
+     * @since 3.12.0
+     *
+     * @param {number} x - The x position to translate.
+     * @param {number} y - The y position to translate.
+     * @param {Phaser.Math.Vector2} [output] - A Vector2, or point-like object, to store the results in.
+     *
+     * @return {Phaser.Math.Vector2} The coordinates, inverse-transformed through this matrix.
+     */
+    applyInverse: function (x, y, output)
+    {
+        if (output === undefined) { output = new Vector2(); }
+
+        var matrix = this.matrix;
+
+        var a = matrix[0];
+        var b = matrix[1];
+        var c = matrix[2];
+        var d = matrix[3];
+        var tx = matrix[4];
+        var ty = matrix[5];
+
+        var id = 1 / ((a * d) + (c * -b));
+
+        output.x = (d * id * x) + (-c * id * y) + (((ty * c) - (tx * d)) * id);
+        output.y = (a * id * y) + (-b * id * x) + (((-ty * a) + (tx * b)) * id);
+
+        return output;
+    },
+
+    /**
      * Returns the X component of this matrix multiplied by the given values.
      * This is the same as `x * a + y * c + e`.
      *
@@ -5889,7 +5926,7 @@ module.exports = TransformMatrix;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(17);
+var CONST = __webpack_require__(16);
 var File = __webpack_require__(18);
 var FileTypesManager = __webpack_require__(6);
 var GetFastValue = __webpack_require__(1);
@@ -6179,7 +6216,7 @@ module.exports = SafeRange;
 
 var Class = __webpack_require__(0);
 var GetColor = __webpack_require__(154);
-var GetColor32 = __webpack_require__(285);
+var GetColor32 = __webpack_require__(293);
 
 /**
  * @classdesc
@@ -7006,7 +7043,7 @@ module.exports = MultiFile;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(17);
+var CONST = __webpack_require__(16);
 var File = __webpack_require__(18);
 var FileTypesManager = __webpack_require__(6);
 var GetFastValue = __webpack_require__(1);
@@ -7301,7 +7338,7 @@ module.exports = ImageFile;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CONST = __webpack_require__(15);
+var CONST = __webpack_require__(14);
 
 /**
  * Convert the given angle from degrees, to the equivalent angle in radians.
@@ -7517,9 +7554,9 @@ module.exports = {
  */
 
 var Class = __webpack_require__(0);
-var Components = __webpack_require__(13);
+var Components = __webpack_require__(17);
 var GameObject = __webpack_require__(21);
-var SpriteRender = __webpack_require__(435);
+var SpriteRender = __webpack_require__(444);
 
 /**
  * @classdesc
@@ -7673,17 +7710,7 @@ module.exports = Sprite;
 
 
 /***/ }),
-/* 45 */,
-/* 46 */,
-/* 47 */,
-/* 48 */,
-/* 49 */,
-/* 50 */,
-/* 51 */,
-/* 52 */,
-/* 53 */,
-/* 54 */,
-/* 55 */
+/* 45 */
 /***/ (function(module, exports) {
 
 /**
@@ -7693,38 +7720,34 @@ module.exports = Sprite;
  */
 
 /**
- * Check to see if the Ellipse contains the given x / y coordinates.
+ * Calculate the length of the given line.
  *
- * @function Phaser.Geom.Ellipse.Contains
+ * @function Phaser.Geom.Line.Length
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to check.
- * @param {number} x - The x coordinate to check within the ellipse.
- * @param {number} y - The y coordinate to check within the ellipse.
+ * @param {Phaser.Geom.Line} line - The line to calculate the length of.
  *
- * @return {boolean} True if the coordinates are within the ellipse, otherwise false.
+ * @return {number} The length of the line.
  */
-var Contains = function (ellipse, x, y)
+var Length = function (line)
 {
-    if (ellipse.width <= 0 || ellipse.height <= 0)
-    {
-        return false;
-    }
-
-    //  Normalize the coords to an ellipse with center 0,0 and a radius of 0.5
-    var normx = ((x - ellipse.x) / ellipse.width);
-    var normy = ((y - ellipse.y) / ellipse.height);
-
-    normx *= normx;
-    normy *= normy;
-
-    return (normx + normy < 0.25);
+    return Math.sqrt((line.x2 - line.x1) * (line.x2 - line.x1) + (line.y2 - line.y1) * (line.y2 - line.y1));
 };
 
-module.exports = Contains;
+module.exports = Length;
 
 
 /***/ }),
+/* 46 */,
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */,
+/* 51 */,
+/* 52 */,
+/* 53 */,
+/* 54 */,
+/* 55 */,
 /* 56 */
 /***/ (function(module, exports) {
 
@@ -8314,7 +8337,7 @@ module.exports = GetBoolean;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var EaseMap = __webpack_require__(125);
+var EaseMap = __webpack_require__(124);
 
 /**
  * [description]
@@ -8376,6 +8399,331 @@ module.exports = GetEaseFunction;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var Class = __webpack_require__(0);
+var GetPoint = __webpack_require__(300);
+var GetPoints = __webpack_require__(160);
+var Random = __webpack_require__(159);
+var Vector2 = __webpack_require__(4);
+
+/**
+ * @classdesc
+ * Defines a Line segment, a part of a line between two endpoints.
+ *
+ * @class Line
+ * @memberOf Phaser.Geom
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [x1=0] - The x coordinate of the lines starting point.
+ * @param {number} [y1=0] - The y coordinate of the lines starting point.
+ * @param {number} [x2=0] - The x coordinate of the lines ending point.
+ * @param {number} [y2=0] - The y coordinate of the lines ending point.
+ */
+var Line = new Class({
+
+    initialize:
+
+    function Line (x1, y1, x2, y2)
+    {
+        if (x1 === undefined) { x1 = 0; }
+        if (y1 === undefined) { y1 = 0; }
+        if (x2 === undefined) { x2 = 0; }
+        if (y2 === undefined) { y2 = 0; }
+
+        /**
+         * The x coordinate of the lines starting point.
+         *
+         * @name Phaser.Geom.Line#x1
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.x1 = x1;
+
+        /**
+         * The y coordinate of the lines starting point.
+         *
+         * @name Phaser.Geom.Line#y1
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.y1 = y1;
+
+        /**
+         * The x coordinate of the lines ending point.
+         *
+         * @name Phaser.Geom.Line#x2
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.x2 = x2;
+
+        /**
+         * The y coordinate of the lines ending point.
+         *
+         * @name Phaser.Geom.Line#y2
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.y2 = y2;
+    },
+
+    /**
+     * Get a point on a line that's a given percentage along its length.
+     *
+     * @method Phaser.Geom.Line#getPoint
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Point} O - [output,$return]
+     *
+     * @param {number} position - A value between 0 and 1, where 0 is the start, 0.5 is the middle and 1 is the end of the line.
+     * @param {(Phaser.Geom.Point|object)} [output] - An optional point, or point-like object, to store the coordinates of the point on the line.
+     *
+     * @return {(Phaser.Geom.Point|object)} A Point, or point-like object, containing the coordinates of the point on the line.
+     */
+    getPoint: function (position, output)
+    {
+        return GetPoint(this, position, output);
+    },
+
+    /**
+     * Get a number of points along a line's length.
+     *
+     * Provide a `quantity` to get an exact number of points along the line.
+     *
+     * Provide a `stepRate` to ensure a specific distance between each point on the line. Set `quantity` to `0` when
+     * providing a `stepRate`.
+     *
+     * @method Phaser.Geom.Line#getPoints
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Point} O - [output,$return]
+     *
+     * @param {integer} quantity - The number of points to place on the line. Set to `0` to use `stepRate` instead.
+     * @param {integer} [stepRate] - The distance between each point on the line. When set, `quantity` is implied and should be set to `0`.
+     * @param {(array|Phaser.Geom.Point[])} [output] - An optional array of Points, or point-like objects, to store the coordinates of the points on the line.
+     *
+     * @return {(array|Phaser.Geom.Point[])} An array of Points, or point-like objects, containing the coordinates of the points on the line.
+     */
+    getPoints: function (quantity, stepRate, output)
+    {
+        return GetPoints(this, quantity, stepRate, output);
+    },
+
+    /**
+     * Get a random Point on the Line.
+     *
+     * @method Phaser.Geom.Line#getRandomPoint
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Point} O - [point,$return]
+     *
+     * @param {(Phaser.Geom.Point|object)} [point] - An instance of a Point to be modified.
+     *
+     * @return {Phaser.Geom.Point} A random Point on the Line.
+     */
+    getRandomPoint: function (point)
+    {
+        return Random(this, point);
+    },
+
+    /**
+     * Set new coordinates for the line endpoints.
+     *
+     * @method Phaser.Geom.Line#setTo
+     * @since 3.0.0
+     *
+     * @param {number} [x1=0] - The x coordinate of the lines starting point.
+     * @param {number} [y1=0] - The y coordinate of the lines starting point.
+     * @param {number} [x2=0] - The x coordinate of the lines ending point.
+     * @param {number} [y2=0] - The y coordinate of the lines ending point.
+     *
+     * @return {Phaser.Geom.Line} This Line object.
+     */
+    setTo: function (x1, y1, x2, y2)
+    {
+        if (x1 === undefined) { x1 = 0; }
+        if (y1 === undefined) { y1 = 0; }
+        if (x2 === undefined) { x2 = 0; }
+        if (y2 === undefined) { y2 = 0; }
+
+        this.x1 = x1;
+        this.y1 = y1;
+
+        this.x2 = x2;
+        this.y2 = y2;
+
+        return this;
+    },
+
+    /**
+     * Returns a Vector2 object that corresponds to the start of this Line.
+     *
+     * @method Phaser.Geom.Line#getPointA
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [vec2,$return]
+     *
+     * @param {Phaser.Math.Vector2} [vec2] - A Vector2 object to set the results in. If `undefined` a new Vector2 will be created.
+     *
+     * @return {Phaser.Math.Vector2} A Vector2 object that corresponds to the start of this Line.
+     */
+    getPointA: function (vec2)
+    {
+        if (vec2 === undefined) { vec2 = new Vector2(); }
+
+        vec2.set(this.x1, this.y1);
+
+        return vec2;
+    },
+
+    /**
+     * Returns a Vector2 object that corresponds to the end of this Line.
+     *
+     * @method Phaser.Geom.Line#getPointB
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Math.Vector2} O - [vec2,$return]
+     *
+     * @param {Phaser.Math.Vector2} [vec2] - A Vector2 object to set the results in. If `undefined` a new Vector2 will be created.
+     *
+     * @return {Phaser.Math.Vector2} A Vector2 object that corresponds to the end of this Line.
+     */
+    getPointB: function (vec2)
+    {
+        if (vec2 === undefined) { vec2 = new Vector2(); }
+
+        vec2.set(this.x2, this.y2);
+
+        return vec2;
+    },
+
+    /**
+     * The left position of the Line.
+     *
+     * @name Phaser.Geom.Line#left
+     * @type {number}
+     * @since 3.0.0
+     */
+    left: {
+
+        get: function ()
+        {
+            return Math.min(this.x1, this.x2);
+        },
+
+        set: function (value)
+        {
+            if (this.x1 <= this.x2)
+            {
+                this.x1 = value;
+            }
+            else
+            {
+                this.x2 = value;
+            }
+        }
+
+    },
+
+    /**
+     * The right position of the Line.
+     *
+     * @name Phaser.Geom.Line#right
+     * @type {number}
+     * @since 3.0.0
+     */
+    right: {
+
+        get: function ()
+        {
+            return Math.max(this.x1, this.x2);
+        },
+
+        set: function (value)
+        {
+            if (this.x1 > this.x2)
+            {
+                this.x1 = value;
+            }
+            else
+            {
+                this.x2 = value;
+            }
+        }
+
+    },
+
+    /**
+     * The top position of the Line.
+     *
+     * @name Phaser.Geom.Line#top
+     * @type {number}
+     * @since 3.0.0
+     */
+    top: {
+
+        get: function ()
+        {
+            return Math.min(this.y1, this.y2);
+        },
+
+        set: function (value)
+        {
+            if (this.y1 <= this.y2)
+            {
+                this.y1 = value;
+            }
+            else
+            {
+                this.y2 = value;
+            }
+        }
+
+    },
+
+    /**
+     * The bottom position of the Line.
+     *
+     * @name Phaser.Geom.Line#bottom
+     * @type {number}
+     * @since 3.0.0
+     */
+    bottom: {
+
+        get: function ()
+        {
+            return Math.max(this.y1, this.y2);
+        },
+
+        set: function (value)
+        {
+            if (this.y1 > this.y2)
+            {
+                this.y1 = value;
+            }
+            else
+            {
+                this.y2 = value;
+            }
+        }
+
+    }
+
+});
+
+module.exports = Line;
+
+
+/***/ }),
+/* 65 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
 var Clamp = __webpack_require__(19);
 
 /**
@@ -8401,9 +8749,9 @@ module.exports = FromPercent;
 
 
 /***/ }),
-/* 65 */,
 /* 66 */,
-/* 67 */
+/* 67 */,
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -8414,9 +8762,9 @@ module.exports = FromPercent;
 
 var Class = __webpack_require__(0);
 var Contains = __webpack_require__(60);
-var GetPoint = __webpack_require__(233);
-var GetPoints = __webpack_require__(232);
-var Line = __webpack_require__(96);
+var GetPoint = __webpack_require__(239);
+var GetPoints = __webpack_require__(238);
+var Line = __webpack_require__(64);
 var Random = __webpack_require__(156);
 
 /**
@@ -8838,7 +9186,7 @@ module.exports = Triangle;
 
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -8848,9 +9196,9 @@ module.exports = Triangle;
  */
 
 var Class = __webpack_require__(0);
-var Components = __webpack_require__(13);
+var Components = __webpack_require__(17);
 var GameObject = __webpack_require__(21);
-var ImageRender = __webpack_require__(432);
+var ImageRender = __webpack_require__(441);
 
 /**
  * @classdesc
@@ -8941,34 +9289,6 @@ module.exports = Image;
 
 
 /***/ }),
-/* 69 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Calculate the length of the given line.
- *
- * @function Phaser.Geom.Line.Length
- * @since 3.0.0
- *
- * @param {Phaser.Geom.Line} line - The line to calculate the length of.
- *
- * @return {number} The length of the line.
- */
-var Length = function (line)
-{
-    return Math.sqrt((line.x2 - line.x1) * (line.x2 - line.x1) + (line.y2 - line.y1) * (line.y2 - line.y1));
-};
-
-module.exports = Length;
-
-
-/***/ }),
 /* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8978,17 +9298,17 @@ module.exports = Length;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Defaults = __webpack_require__(100);
+var Defaults = __webpack_require__(101);
 var GetAdvancedValue = __webpack_require__(11);
 var GetBoolean = __webpack_require__(62);
 var GetEaseFunction = __webpack_require__(63);
 var GetNewValue = __webpack_require__(71);
-var GetProps = __webpack_require__(167);
-var GetTargets = __webpack_require__(102);
+var GetProps = __webpack_require__(168);
+var GetTargets = __webpack_require__(103);
 var GetValue = __webpack_require__(3);
-var GetValueOp = __webpack_require__(101);
-var Tween = __webpack_require__(99);
-var TweenData = __webpack_require__(98);
+var GetValueOp = __webpack_require__(102);
+var Tween = __webpack_require__(100);
+var TweenData = __webpack_require__(99);
 
 /**
  * [description]
@@ -9351,6 +9671,48 @@ module.exports = InputPluginCache;
 
 /***/ }),
 /* 75 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Check to see if the Ellipse contains the given x / y coordinates.
+ *
+ * @function Phaser.Geom.Ellipse.Contains
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to check.
+ * @param {number} x - The x coordinate to check within the ellipse.
+ * @param {number} y - The y coordinate to check within the ellipse.
+ *
+ * @return {boolean} True if the coordinates are within the ellipse, otherwise false.
+ */
+var Contains = function (ellipse, x, y)
+{
+    if (ellipse.width <= 0 || ellipse.height <= 0)
+    {
+        return false;
+    }
+
+    //  Normalize the coords to an ellipse with center 0,0 and a radius of 0.5
+    var normx = ((x - ellipse.x) / ellipse.width);
+    var normy = ((y - ellipse.y) / ellipse.height);
+
+    normx *= normx;
+    normy *= normy;
+
+    return (normx + normy < 0.25);
+};
+
+module.exports = Contains;
+
+
+/***/ }),
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -9361,8 +9723,8 @@ module.exports = InputPluginCache;
 
 // Based on the routine from {@link http://jsfiddle.net/MrPolywhirl/NH42z/}.
 
-var CheckMatrix = __webpack_require__(119);
-var TransposeMatrix = __webpack_require__(186);
+var CheckMatrix = __webpack_require__(118);
+var TransposeMatrix = __webpack_require__(184);
 
 /**
  * [description]
@@ -9416,7 +9778,7 @@ module.exports = RotateMatrix;
 
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -9428,7 +9790,7 @@ module.exports = RotateMatrix;
 
 var Class = __webpack_require__(0);
 var EventEmitter = __webpack_require__(8);
-var Extend = __webpack_require__(16);
+var Extend = __webpack_require__(15);
 var NOOP = __webpack_require__(2);
 
 /**
@@ -9914,7 +10276,7 @@ module.exports = BaseSound;
 
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -10581,7 +10943,7 @@ module.exports = BaseSoundManager;
 
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports) {
 
 /**
@@ -10704,7 +11066,7 @@ module.exports = CONST;
 
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -10814,7 +11176,7 @@ module.exports = init();
 
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -11439,8 +11801,8 @@ module.exports = DataManager;
 
 
 /***/ }),
-/* 81 */,
-/* 82 */
+/* 82 */,
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -11878,7 +12240,7 @@ module.exports = Set;
 
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -11998,7 +12360,7 @@ else {}
 })();
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports) {
 
 /**
@@ -12028,8 +12390,8 @@ module.exports = IsSizePowerOfTwo;
 
 
 /***/ }),
-/* 85 */,
-/* 86 */
+/* 86 */,
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -12039,13 +12401,13 @@ module.exports = IsSizePowerOfTwo;
  */
 
 var Class = __webpack_require__(0);
-var Components = __webpack_require__(13);
+var Components = __webpack_require__(17);
 var DegToRad = __webpack_require__(39);
 var EventEmitter = __webpack_require__(8);
-var Rectangle = __webpack_require__(9);
+var Rectangle = __webpack_require__(10);
 var TransformMatrix = __webpack_require__(27);
 var ValueToColor = __webpack_require__(132);
-var Vector2 = __webpack_require__(5);
+var Vector2 = __webpack_require__(4);
 
 /**
  * @typedef {object} JSONCameraBounds
@@ -12213,7 +12575,6 @@ var BaseCamera = new Class({
          * @type {boolean}
          * @default true
          * @since 3.10.0
-        this.visible = true;
          */
 
         /**
@@ -12465,7 +12826,6 @@ var BaseCamera = new Class({
          * @type {number}
          * @default 1
          * @since 3.11.0
-        this.alpha = 1;
          */
 
         /**
@@ -12561,14 +12921,6 @@ var BaseCamera = new Class({
      * @param {number} [value=1] - The Camera alpha value.
      *
      * @return {this} This Camera instance.
-    setAlpha: function (value)
-    {
-        if (value === undefined) { value = 1; }
-
-        this.alpha = value;
-
-        return this;
-    },
      */
 
     /**
@@ -12812,7 +13164,7 @@ var BaseCamera = new Class({
         var mve = cameraMatrix[4];
         var mvf = cameraMatrix[5];
 
-        /* First Invert Matrix */
+        //  Invert Matrix
         var determinant = (mva * mvd) - (mvb * mvc);
 
         if (!determinant)
@@ -12836,18 +13188,18 @@ var BaseCamera = new Class({
         var s = Math.sin(this.rotation);
 
         var zoom = this.zoom;
+        var res = this.resolution;
 
         var scrollX = this.scrollX;
         var scrollY = this.scrollY;
 
-        var res = this.resolution;
+        //  Works for zoom of 1 with any resolution, but resolution > 1 and zoom !== 1 breaks
+        var sx = x + ((scrollX * c - scrollY * s) * zoom);
+        var sy = y + ((scrollX * s + scrollY * c) * zoom);
 
-        var sx = x * res + ((scrollX * c - scrollY * s) * zoom);
-        var sy = y * res + ((scrollX * s + scrollY * c) * zoom);
-
-        /* Apply transform to point */
-        output.x = (sx * ima + sy * imc + ime);
-        output.y = (sx * imb + sy * imd + imf);
+        //  Apply transform to point
+        output.x = (sx * ima + sy * imc + ime) * res;
+        output.y = (sx * imb + sy * imd + imf) * res;
 
         return output;
     },
@@ -13383,12 +13735,6 @@ var BaseCamera = new Class({
      * @param {boolean} value - The visible state of the Camera.
      *
      * @return {this} This Camera instance.
-    setVisible: function (value)
-    {
-        this.visible = value;
-
-        return this;
-    },
      */
 
     /**
@@ -13840,7 +14186,7 @@ module.exports = BaseCamera;
 
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -13851,9 +14197,9 @@ module.exports = BaseCamera;
 
 var Class = __webpack_require__(0);
 var Contains = __webpack_require__(33);
-var GetPoint = __webpack_require__(298);
-var GetPoints = __webpack_require__(296);
-var Random = __webpack_require__(160);
+var GetPoint = __webpack_require__(305);
+var GetPoints = __webpack_require__(303);
+var Random = __webpack_require__(161);
 
 /**
  * @classdesc
@@ -14203,11 +14549,379 @@ module.exports = Circle;
 
 
 /***/ }),
-/* 88 */,
 /* 89 */,
 /* 90 */,
 /* 91 */,
-/* 92 */
+/* 92 */,
+/* 93 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Class = __webpack_require__(0);
+var Contains = __webpack_require__(75);
+var GetPoint = __webpack_require__(252);
+var GetPoints = __webpack_require__(251);
+var Random = __webpack_require__(157);
+
+/**
+ * @classdesc
+ * An Ellipse object.
+ *
+ * This is a geometry object, containing numerical values and related methods to inspect and modify them.
+ * It is not a Game Object, in that you cannot add it to the display list, and it has no texture.
+ * To render an Ellipse you should look at the capabilities of the Graphics class.
+ *
+ * @class Ellipse
+ * @memberOf Phaser.Geom
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {number} [x=0] - The x position of the center of the ellipse.
+ * @param {number} [y=0] - The y position of the center of the ellipse.
+ * @param {number} [width=0] - The width of the ellipse.
+ * @param {number} [height=0] - The height of the ellipse.
+ */
+var Ellipse = new Class({
+
+    initialize:
+
+    function Ellipse (x, y, width, height)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = 0; }
+        if (height === undefined) { height = 0; }
+
+        /**
+         * The x position of the center of the ellipse.
+         *
+         * @name Phaser.Geom.Ellipse#x
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.x = x;
+
+        /**
+         * The y position of the center of the ellipse.
+         *
+         * @name Phaser.Geom.Ellipse#y
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.y = y;
+
+        /**
+         * The width of the ellipse.
+         *
+         * @name Phaser.Geom.Ellipse#width
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.width = width;
+
+        /**
+         * The height of the ellipse.
+         *
+         * @name Phaser.Geom.Ellipse#height
+         * @type {number}
+         * @default 0
+         * @since 3.0.0
+         */
+        this.height = height;
+    },
+
+    /**
+     * Check to see if the Ellipse contains the given x / y coordinates.
+     *
+     * @method Phaser.Geom.Ellipse#contains
+     * @since 3.0.0
+     *
+     * @param {number} x - The x coordinate to check within the ellipse.
+     * @param {number} y - The y coordinate to check within the ellipse.
+     *
+     * @return {boolean} True if the coordinates are within the ellipse, otherwise false.
+     */
+    contains: function (x, y)
+    {
+        return Contains(this, x, y);
+    },
+
+    /**
+     * Returns a Point object containing the coordinates of a point on the circumference of the Ellipse
+     * based on the given angle normalized to the range 0 to 1. I.e. a value of 0.5 will give the point
+     * at 180 degrees around the circle.
+     *
+     * @method Phaser.Geom.Ellipse#getPoint
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Point} O - [out,$return]
+     *
+     * @param {number} position - A value between 0 and 1, where 0 equals 0 degrees, 0.5 equals 180 degrees and 1 equals 360 around the ellipse.
+     * @param {(Phaser.Geom.Point|object)} [out] - An object to store the return values in. If not given a Point object will be created.
+     *
+     * @return {(Phaser.Geom.Point|object)} A Point, or point-like object, containing the coordinates of the point around the ellipse.
+     */
+    getPoint: function (position, point)
+    {
+        return GetPoint(this, position, point);
+    },
+
+    /**
+     * Returns an array of Point objects containing the coordinates of the points around the circumference of the Ellipse,
+     * based on the given quantity or stepRate values.
+     *
+     * @method Phaser.Geom.Ellipse#getPoints
+     * @since 3.0.0
+     *
+     * @param {integer} quantity - The amount of points to return. If a falsey value the quantity will be derived from the `stepRate` instead.
+     * @param {number} [stepRate] - Sets the quantity by getting the circumference of the ellipse and dividing it by the stepRate.
+     * @param {array} [output] - An array to insert the points in to. If not provided a new array will be created.
+     *
+     * @return {Phaser.Geom.Point[]} An array of Point objects pertaining to the points around the circumference of the ellipse.
+     */
+    getPoints: function (quantity, stepRate, output)
+    {
+        return GetPoints(this, quantity, stepRate, output);
+    },
+
+    /**
+     * Returns a uniformly distributed random point from anywhere within the given Ellipse.
+     *
+     * @method Phaser.Geom.Ellipse#getRandomPoint
+     * @since 3.0.0
+     *
+     * @generic {Phaser.Geom.Point} O - [point,$return]
+     *
+     * @param {(Phaser.Geom.Point|object)} [point] - A Point or point-like object to set the random `x` and `y` values in.
+     *
+     * @return {(Phaser.Geom.Point|object)} A Point object with the random values set in the `x` and `y` properties.
+     */
+    getRandomPoint: function (point)
+    {
+        return Random(this, point);
+    },
+
+    /**
+     * Sets the x, y, width and height of this ellipse.
+     *
+     * @method Phaser.Geom.Ellipse#setTo
+     * @since 3.0.0
+     *
+     * @param {number} x - The x position of the center of the ellipse.
+     * @param {number} y - The y position of the center of the ellipse.
+     * @param {number} width - The width of the ellipse.
+     * @param {number} height - The height of the ellipse.
+     *
+     * @return {Phaser.Geom.Ellipse} This Ellipse object.
+     */
+    setTo: function (x, y, width, height)
+    {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+
+        return this;
+    },
+
+    /**
+     * Sets this Ellipse to be empty with a width and height of zero.
+     * Does not change its position.
+     *
+     * @method Phaser.Geom.Ellipse#setEmpty
+     * @since 3.0.0
+     *
+     * @return {Phaser.Geom.Ellipse} This Ellipse object.
+     */
+    setEmpty: function ()
+    {
+        this.width = 0;
+        this.height = 0;
+
+        return this;
+    },
+
+    /**
+     * Sets the position of this Ellipse.
+     *
+     * @method Phaser.Geom.Ellipse#setPosition
+     * @since 3.0.0
+     *
+     * @param {number} x - The x position of the center of the ellipse.
+     * @param {number} y - The y position of the center of the ellipse.
+     *
+     * @return {Phaser.Geom.Ellipse} This Ellipse object.
+     */
+    setPosition: function (x, y)
+    {
+        if (y === undefined) { y = x; }
+
+        this.x = x;
+        this.y = y;
+
+        return this;
+    },
+
+    /**
+     * Sets the size of this Ellipse.
+     * Does not change its position.
+     *
+     * @method Phaser.Geom.Ellipse#setSize
+     * @since 3.0.0
+     *
+     * @param {number} width - The width of the ellipse.
+     * @param {number} [height=width] - The height of the ellipse.
+     *
+     * @return {Phaser.Geom.Ellipse} This Ellipse object.
+     */
+    setSize: function (width, height)
+    {
+        if (height === undefined) { height = width; }
+
+        this.width = width;
+        this.height = height;
+
+        return this;
+    },
+
+    /**
+     * Checks to see if the Ellipse is empty: has a width or height equal to zero.
+     *
+     * @method Phaser.Geom.Ellipse#isEmpty
+     * @since 3.0.0
+     *
+     * @return {boolean} True if the Ellipse is empty, otherwise false.
+     */
+    isEmpty: function ()
+    {
+        return (this.width <= 0 || this.height <= 0);
+    },
+
+    /**
+     * Returns the minor radius of the ellipse. Also known as the Semi Minor Axis.
+     *
+     * @method Phaser.Geom.Ellipse#getMinorRadius
+     * @since 3.0.0
+     *
+     * @return {number} The minor radius.
+     */
+    getMinorRadius: function ()
+    {
+        return Math.min(this.width, this.height) / 2;
+    },
+
+    /**
+     * Returns the major radius of the ellipse. Also known as the Semi Major Axis.
+     *
+     * @method Phaser.Geom.Ellipse#getMajorRadius
+     * @since 3.0.0
+     *
+     * @return {number} The major radius.
+     */
+    getMajorRadius: function ()
+    {
+        return Math.max(this.width, this.height) / 2;
+    },
+
+    /**
+     * The left position of the Ellipse.
+     *
+     * @name Phaser.Geom.Ellipse#left
+     * @type {number}
+     * @since 3.0.0
+     */
+    left: {
+
+        get: function ()
+        {
+            return this.x - (this.width / 2);
+        },
+
+        set: function (value)
+        {
+            this.x = value + (this.width / 2);
+        }
+
+    },
+
+    /**
+     * The right position of the Ellipse.
+     *
+     * @name Phaser.Geom.Ellipse#right
+     * @type {number}
+     * @since 3.0.0
+     */
+    right: {
+
+        get: function ()
+        {
+            return this.x + (this.width / 2);
+        },
+
+        set: function (value)
+        {
+            this.x = value - (this.width / 2);
+        }
+
+    },
+
+    /**
+     * The top position of the Ellipse.
+     *
+     * @name Phaser.Geom.Ellipse#top
+     * @type {number}
+     * @since 3.0.0
+     */
+    top: {
+
+        get: function ()
+        {
+            return this.y - (this.height / 2);
+        },
+
+        set: function (value)
+        {
+            this.y = value + (this.height / 2);
+        }
+
+    },
+
+    /**
+     * The bottom position of the Ellipse.
+     *
+     * @name Phaser.Geom.Ellipse#bottom
+     * @type {number}
+     * @since 3.0.0
+     */
+    bottom: {
+
+        get: function ()
+        {
+            return this.y + (this.height / 2);
+        },
+
+        set: function (value)
+        {
+            this.y = value - (this.height / 2);
+        }
+
+    }
+
+});
+
+module.exports = Ellipse;
+
+
+/***/ }),
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -14219,7 +14933,7 @@ module.exports = Circle;
 var ArrayUtils = __webpack_require__(149);
 var Class = __webpack_require__(0);
 var NOOP = __webpack_require__(2);
-var StableSort = __webpack_require__(83);
+var StableSort = __webpack_require__(84);
 
 /**
  * @callback EachListCallback
@@ -15026,7 +15740,7 @@ module.exports = List;
 
 
 /***/ }),
-/* 93 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -15037,7 +15751,7 @@ module.exports = List;
 
 var Class = __webpack_require__(0);
 var Clamp = __webpack_require__(19);
-var Extend = __webpack_require__(16);
+var Extend = __webpack_require__(15);
 
 /**
  * @classdesc
@@ -15840,7 +16554,7 @@ module.exports = Frame;
 
 
 /***/ }),
-/* 94 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -15882,7 +16596,7 @@ module.exports = Merge;
 
 
 /***/ }),
-/* 95 */
+/* 97 */
 /***/ (function(module, exports) {
 
 /**
@@ -15920,332 +16634,7 @@ module.exports = Shuffle;
 
 
 /***/ }),
-/* 96 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var Class = __webpack_require__(0);
-var GetPoint = __webpack_require__(293);
-var GetPoints = __webpack_require__(159);
-var Random = __webpack_require__(158);
-var Vector2 = __webpack_require__(5);
-
-/**
- * @classdesc
- * Defines a Line segment, a part of a line between two endpoints.
- *
- * @class Line
- * @memberOf Phaser.Geom
- * @constructor
- * @since 3.0.0
- *
- * @param {number} [x1=0] - The x coordinate of the lines starting point.
- * @param {number} [y1=0] - The y coordinate of the lines starting point.
- * @param {number} [x2=0] - The x coordinate of the lines ending point.
- * @param {number} [y2=0] - The y coordinate of the lines ending point.
- */
-var Line = new Class({
-
-    initialize:
-
-    function Line (x1, y1, x2, y2)
-    {
-        if (x1 === undefined) { x1 = 0; }
-        if (y1 === undefined) { y1 = 0; }
-        if (x2 === undefined) { x2 = 0; }
-        if (y2 === undefined) { y2 = 0; }
-
-        /**
-         * The x coordinate of the lines starting point.
-         *
-         * @name Phaser.Geom.Line#x1
-         * @type {number}
-         * @since 3.0.0
-         */
-        this.x1 = x1;
-
-        /**
-         * The y coordinate of the lines starting point.
-         *
-         * @name Phaser.Geom.Line#y1
-         * @type {number}
-         * @since 3.0.0
-         */
-        this.y1 = y1;
-
-        /**
-         * The x coordinate of the lines ending point.
-         *
-         * @name Phaser.Geom.Line#x2
-         * @type {number}
-         * @since 3.0.0
-         */
-        this.x2 = x2;
-
-        /**
-         * The y coordinate of the lines ending point.
-         *
-         * @name Phaser.Geom.Line#y2
-         * @type {number}
-         * @since 3.0.0
-         */
-        this.y2 = y2;
-    },
-
-    /**
-     * Get a point on a line that's a given percentage along its length.
-     *
-     * @method Phaser.Geom.Line#getPoint
-     * @since 3.0.0
-     *
-     * @generic {Phaser.Geom.Point} O - [output,$return]
-     *
-     * @param {number} position - A value between 0 and 1, where 0 is the start, 0.5 is the middle and 1 is the end of the line.
-     * @param {(Phaser.Geom.Point|object)} [output] - An optional point, or point-like object, to store the coordinates of the point on the line.
-     *
-     * @return {(Phaser.Geom.Point|object)} A Point, or point-like object, containing the coordinates of the point on the line.
-     */
-    getPoint: function (position, output)
-    {
-        return GetPoint(this, position, output);
-    },
-
-    /**
-     * Get a number of points along a line's length.
-     *
-     * Provide a `quantity` to get an exact number of points along the line.
-     *
-     * Provide a `stepRate` to ensure a specific distance between each point on the line. Set `quantity` to `0` when
-     * providing a `stepRate`.
-     *
-     * @method Phaser.Geom.Line#getPoints
-     * @since 3.0.0
-     *
-     * @generic {Phaser.Geom.Point} O - [output,$return]
-     *
-     * @param {integer} quantity - The number of points to place on the line. Set to `0` to use `stepRate` instead.
-     * @param {integer} [stepRate] - The distance between each point on the line. When set, `quantity` is implied and should be set to `0`.
-     * @param {(array|Phaser.Geom.Point[])} [output] - An optional array of Points, or point-like objects, to store the coordinates of the points on the line.
-     *
-     * @return {(array|Phaser.Geom.Point[])} An array of Points, or point-like objects, containing the coordinates of the points on the line.
-     */
-    getPoints: function (quantity, stepRate, output)
-    {
-        return GetPoints(this, quantity, stepRate, output);
-    },
-
-    /**
-     * Get a random Point on the Line.
-     *
-     * @method Phaser.Geom.Line#getRandomPoint
-     * @since 3.0.0
-     *
-     * @generic {Phaser.Geom.Point} O - [point,$return]
-     *
-     * @param {(Phaser.Geom.Point|object)} [point] - An instance of a Point to be modified.
-     *
-     * @return {Phaser.Geom.Point} A random Point on the Line.
-     */
-    getRandomPoint: function (point)
-    {
-        return Random(this, point);
-    },
-
-    /**
-     * Set new coordinates for the line endpoints.
-     *
-     * @method Phaser.Geom.Line#setTo
-     * @since 3.0.0
-     *
-     * @param {number} [x1=0] - The x coordinate of the lines starting point.
-     * @param {number} [y1=0] - The y coordinate of the lines starting point.
-     * @param {number} [x2=0] - The x coordinate of the lines ending point.
-     * @param {number} [y2=0] - The y coordinate of the lines ending point.
-     *
-     * @return {Phaser.Geom.Line} This Line object.
-     */
-    setTo: function (x1, y1, x2, y2)
-    {
-        if (x1 === undefined) { x1 = 0; }
-        if (y1 === undefined) { y1 = 0; }
-        if (x2 === undefined) { x2 = 0; }
-        if (y2 === undefined) { y2 = 0; }
-
-        this.x1 = x1;
-        this.y1 = y1;
-
-        this.x2 = x2;
-        this.y2 = y2;
-
-        return this;
-    },
-
-    /**
-     * Returns a Vector2 object that corresponds to the start of this Line.
-     *
-     * @method Phaser.Geom.Line#getPointA
-     * @since 3.0.0
-     *
-     * @generic {Phaser.Math.Vector2} O - [vec2,$return]
-     *
-     * @param {Phaser.Math.Vector2} [vec2] - A Vector2 object to set the results in. If `undefined` a new Vector2 will be created.
-     *
-     * @return {Phaser.Math.Vector2} A Vector2 object that corresponds to the start of this Line.
-     */
-    getPointA: function (vec2)
-    {
-        if (vec2 === undefined) { vec2 = new Vector2(); }
-
-        vec2.set(this.x1, this.y1);
-
-        return vec2;
-    },
-
-    /**
-     * Returns a Vector2 object that corresponds to the end of this Line.
-     *
-     * @method Phaser.Geom.Line#getPointB
-     * @since 3.0.0
-     *
-     * @generic {Phaser.Math.Vector2} O - [vec2,$return]
-     *
-     * @param {Phaser.Math.Vector2} [vec2] - A Vector2 object to set the results in. If `undefined` a new Vector2 will be created.
-     *
-     * @return {Phaser.Math.Vector2} A Vector2 object that corresponds to the end of this Line.
-     */
-    getPointB: function (vec2)
-    {
-        if (vec2 === undefined) { vec2 = new Vector2(); }
-
-        vec2.set(this.x2, this.y2);
-
-        return vec2;
-    },
-
-    /**
-     * The left position of the Line.
-     *
-     * @name Phaser.Geom.Line#left
-     * @type {number}
-     * @since 3.0.0
-     */
-    left: {
-
-        get: function ()
-        {
-            return Math.min(this.x1, this.x2);
-        },
-
-        set: function (value)
-        {
-            if (this.x1 <= this.x2)
-            {
-                this.x1 = value;
-            }
-            else
-            {
-                this.x2 = value;
-            }
-        }
-
-    },
-
-    /**
-     * The right position of the Line.
-     *
-     * @name Phaser.Geom.Line#right
-     * @type {number}
-     * @since 3.0.0
-     */
-    right: {
-
-        get: function ()
-        {
-            return Math.max(this.x1, this.x2);
-        },
-
-        set: function (value)
-        {
-            if (this.x1 > this.x2)
-            {
-                this.x1 = value;
-            }
-            else
-            {
-                this.x2 = value;
-            }
-        }
-
-    },
-
-    /**
-     * The top position of the Line.
-     *
-     * @name Phaser.Geom.Line#top
-     * @type {number}
-     * @since 3.0.0
-     */
-    top: {
-
-        get: function ()
-        {
-            return Math.min(this.y1, this.y2);
-        },
-
-        set: function (value)
-        {
-            if (this.y1 <= this.y2)
-            {
-                this.y1 = value;
-            }
-            else
-            {
-                this.y2 = value;
-            }
-        }
-
-    },
-
-    /**
-     * The bottom position of the Line.
-     *
-     * @name Phaser.Geom.Line#bottom
-     * @type {number}
-     * @since 3.0.0
-     */
-    bottom: {
-
-        get: function ()
-        {
-            return Math.max(this.y1, this.y2);
-        },
-
-        set: function (value)
-        {
-            if (this.y1 > this.y2)
-            {
-                this.y1 = value;
-            }
-            else
-            {
-                this.y2 = value;
-            }
-        }
-
-    }
-
-});
-
-module.exports = Line;
-
-
-/***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports) {
 
 /**
@@ -16273,7 +16662,7 @@ module.exports = Perimeter;
 
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports) {
 
 /**
@@ -16426,7 +16815,7 @@ module.exports = TweenData;
 
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -16436,7 +16825,7 @@ module.exports = TweenData;
  */
 
 var Class = __webpack_require__(0);
-var GameObjectCreator = __webpack_require__(14);
+var GameObjectCreator = __webpack_require__(13);
 var GameObjectFactory = __webpack_require__(12);
 var TWEEN_CONST = __webpack_require__(61);
 
@@ -17821,7 +18210,7 @@ module.exports = Tween;
 
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports) {
 
 /**
@@ -17864,7 +18253,7 @@ module.exports = TWEEN_DEFAULTS;
 
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ (function(module, exports) {
 
 /**
@@ -18037,7 +18426,7 @@ module.exports = GetValueOp;
 
 
 /***/ }),
-/* 102 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -18084,12 +18473,12 @@ module.exports = GetTargets;
 
 
 /***/ }),
-/* 103 */,
 /* 104 */,
 /* 105 */,
 /* 106 */,
 /* 107 */,
-/* 108 */
+/* 108 */,
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -18098,7 +18487,7 @@ module.exports = GetTargets;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Extend = __webpack_require__(16);
+var Extend = __webpack_require__(15);
 var XHRSettings = __webpack_require__(73);
 
 /**
@@ -18137,7 +18526,7 @@ module.exports = MergeXHRSettings;
 
 
 /***/ }),
-/* 109 */
+/* 110 */
 /***/ (function(module, exports) {
 
 /**
@@ -18178,7 +18567,7 @@ module.exports = GetURL;
 
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ (function(module, exports) {
 
 /**
@@ -18655,7 +19044,7 @@ module.exports = KeyCodes;
 
 
 /***/ }),
-/* 111 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -18667,14 +19056,14 @@ module.exports = KeyCodes;
 var AddToDOM = __webpack_require__(130);
 var CanvasPool = __webpack_require__(22);
 var Class = __webpack_require__(0);
-var Components = __webpack_require__(13);
+var Components = __webpack_require__(17);
 var CONST = __webpack_require__(23);
 var GameObject = __webpack_require__(21);
-var GetTextSize = __webpack_require__(420);
+var GetTextSize = __webpack_require__(429);
 var GetValue = __webpack_require__(3);
-var RemoveFromDOM = __webpack_require__(261);
-var TextRender = __webpack_require__(419);
-var TextStyle = __webpack_require__(416);
+var RemoveFromDOM = __webpack_require__(269);
+var TextRender = __webpack_require__(428);
+var TextStyle = __webpack_require__(425);
 
 /**
  * @classdesc
@@ -19881,419 +20270,9 @@ module.exports = Text;
 
 
 /***/ }),
-/* 112 */,
 /* 113 */,
-/* 114 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var Point = __webpack_require__(4);
-
-/**
- * Returns a Point object containing the coordinates of a point on the circumference of the Ellipse based on the given angle.
- *
- * @function Phaser.Geom.Ellipse.CircumferencePoint
- * @since 3.0.0
- *
- * @generic {Phaser.Geom.Point} O - [out,$return]
- *
- * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to get the circumference point on.
- * @param {number} angle - The angle from the center of the Ellipse to the circumference to return the point from. Given in radians.
- * @param {(Phaser.Geom.Point|object)} [out] - A Point, or point-like object, to store the results in. If not given a Point will be created.
- *
- * @return {(Phaser.Geom.Point|object)} A Point object where the `x` and `y` properties are the point on the circumference.
- */
-var CircumferencePoint = function (ellipse, angle, out)
-{
-    if (out === undefined) { out = new Point(); }
-
-    var halfWidth = ellipse.width / 2;
-    var halfHeight = ellipse.height / 2;
-
-    out.x = ellipse.x + halfWidth * Math.cos(angle);
-    out.y = ellipse.y + halfHeight * Math.sin(angle);
-
-    return out;
-};
-
-module.exports = CircumferencePoint;
-
-
-/***/ }),
+/* 114 */,
 /* 115 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var Class = __webpack_require__(0);
-var Contains = __webpack_require__(55);
-var GetPoint = __webpack_require__(183);
-var GetPoints = __webpack_require__(182);
-var Random = __webpack_require__(134);
-
-/**
- * @classdesc
- * An Ellipse object.
- *
- * This is a geometry object, containing numerical values and related methods to inspect and modify them.
- * It is not a Game Object, in that you cannot add it to the display list, and it has no texture.
- * To render an Ellipse you should look at the capabilities of the Graphics class.
- *
- * @class Ellipse
- * @memberOf Phaser.Geom
- * @constructor
- * @since 3.0.0
- *
- * @param {number} [x=0] - The x position of the center of the ellipse.
- * @param {number} [y=0] - The y position of the center of the ellipse.
- * @param {number} [width=0] - The width of the ellipse.
- * @param {number} [height=0] - The height of the ellipse.
- */
-var Ellipse = new Class({
-
-    initialize:
-
-    function Ellipse (x, y, width, height)
-    {
-        if (x === undefined) { x = 0; }
-        if (y === undefined) { y = 0; }
-        if (width === undefined) { width = 0; }
-        if (height === undefined) { height = 0; }
-
-        /**
-         * The x position of the center of the ellipse.
-         *
-         * @name Phaser.Geom.Ellipse#x
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.x = x;
-
-        /**
-         * The y position of the center of the ellipse.
-         *
-         * @name Phaser.Geom.Ellipse#y
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.y = y;
-
-        /**
-         * The width of the ellipse.
-         *
-         * @name Phaser.Geom.Ellipse#width
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.width = width;
-
-        /**
-         * The height of the ellipse.
-         *
-         * @name Phaser.Geom.Ellipse#height
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.height = height;
-    },
-
-    /**
-     * Check to see if the Ellipse contains the given x / y coordinates.
-     *
-     * @method Phaser.Geom.Ellipse#contains
-     * @since 3.0.0
-     *
-     * @param {number} x - The x coordinate to check within the ellipse.
-     * @param {number} y - The y coordinate to check within the ellipse.
-     *
-     * @return {boolean} True if the coordinates are within the ellipse, otherwise false.
-     */
-    contains: function (x, y)
-    {
-        return Contains(this, x, y);
-    },
-
-    /**
-     * Returns a Point object containing the coordinates of a point on the circumference of the Ellipse
-     * based on the given angle normalized to the range 0 to 1. I.e. a value of 0.5 will give the point
-     * at 180 degrees around the circle.
-     *
-     * @method Phaser.Geom.Ellipse#getPoint
-     * @since 3.0.0
-     *
-     * @generic {Phaser.Geom.Point} O - [out,$return]
-     *
-     * @param {number} position - A value between 0 and 1, where 0 equals 0 degrees, 0.5 equals 180 degrees and 1 equals 360 around the ellipse.
-     * @param {(Phaser.Geom.Point|object)} [out] - An object to store the return values in. If not given a Point object will be created.
-     *
-     * @return {(Phaser.Geom.Point|object)} A Point, or point-like object, containing the coordinates of the point around the ellipse.
-     */
-    getPoint: function (position, point)
-    {
-        return GetPoint(this, position, point);
-    },
-
-    /**
-     * Returns an array of Point objects containing the coordinates of the points around the circumference of the Ellipse,
-     * based on the given quantity or stepRate values.
-     *
-     * @method Phaser.Geom.Ellipse#getPoints
-     * @since 3.0.0
-     *
-     * @param {integer} quantity - The amount of points to return. If a falsey value the quantity will be derived from the `stepRate` instead.
-     * @param {number} [stepRate] - Sets the quantity by getting the circumference of the ellipse and dividing it by the stepRate.
-     * @param {array} [output] - An array to insert the points in to. If not provided a new array will be created.
-     *
-     * @return {Phaser.Geom.Point[]} An array of Point objects pertaining to the points around the circumference of the ellipse.
-     */
-    getPoints: function (quantity, stepRate, output)
-    {
-        return GetPoints(this, quantity, stepRate, output);
-    },
-
-    /**
-     * Returns a uniformly distributed random point from anywhere within the given Ellipse.
-     *
-     * @method Phaser.Geom.Ellipse#getRandomPoint
-     * @since 3.0.0
-     *
-     * @generic {Phaser.Geom.Point} O - [point,$return]
-     *
-     * @param {(Phaser.Geom.Point|object)} [point] - A Point or point-like object to set the random `x` and `y` values in.
-     *
-     * @return {(Phaser.Geom.Point|object)} A Point object with the random values set in the `x` and `y` properties.
-     */
-    getRandomPoint: function (point)
-    {
-        return Random(this, point);
-    },
-
-    /**
-     * Sets the x, y, width and height of this ellipse.
-     *
-     * @method Phaser.Geom.Ellipse#setTo
-     * @since 3.0.0
-     *
-     * @param {number} x - The x position of the center of the ellipse.
-     * @param {number} y - The y position of the center of the ellipse.
-     * @param {number} width - The width of the ellipse.
-     * @param {number} height - The height of the ellipse.
-     *
-     * @return {Phaser.Geom.Ellipse} This Ellipse object.
-     */
-    setTo: function (x, y, width, height)
-    {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-
-        return this;
-    },
-
-    /**
-     * Sets this Ellipse to be empty with a width and height of zero.
-     * Does not change its position.
-     *
-     * @method Phaser.Geom.Ellipse#setEmpty
-     * @since 3.0.0
-     *
-     * @return {Phaser.Geom.Ellipse} This Ellipse object.
-     */
-    setEmpty: function ()
-    {
-        this.width = 0;
-        this.height = 0;
-
-        return this;
-    },
-
-    /**
-     * Sets the position of this Ellipse.
-     *
-     * @method Phaser.Geom.Ellipse#setPosition
-     * @since 3.0.0
-     *
-     * @param {number} x - The x position of the center of the ellipse.
-     * @param {number} y - The y position of the center of the ellipse.
-     *
-     * @return {Phaser.Geom.Ellipse} This Ellipse object.
-     */
-    setPosition: function (x, y)
-    {
-        if (y === undefined) { y = x; }
-
-        this.x = x;
-        this.y = y;
-
-        return this;
-    },
-
-    /**
-     * Sets the size of this Ellipse.
-     * Does not change its position.
-     *
-     * @method Phaser.Geom.Ellipse#setSize
-     * @since 3.0.0
-     *
-     * @param {number} width - The width of the ellipse.
-     * @param {number} [height=width] - The height of the ellipse.
-     *
-     * @return {Phaser.Geom.Ellipse} This Ellipse object.
-     */
-    setSize: function (width, height)
-    {
-        if (height === undefined) { height = width; }
-
-        this.width = width;
-        this.height = height;
-
-        return this;
-    },
-
-    /**
-     * Checks to see if the Ellipse is empty: has a width or height equal to zero.
-     *
-     * @method Phaser.Geom.Ellipse#isEmpty
-     * @since 3.0.0
-     *
-     * @return {boolean} True if the Ellipse is empty, otherwise false.
-     */
-    isEmpty: function ()
-    {
-        return (this.width <= 0 || this.height <= 0);
-    },
-
-    /**
-     * Returns the minor radius of the ellipse. Also known as the Semi Minor Axis.
-     *
-     * @method Phaser.Geom.Ellipse#getMinorRadius
-     * @since 3.0.0
-     *
-     * @return {number} The minor radius.
-     */
-    getMinorRadius: function ()
-    {
-        return Math.min(this.width, this.height) / 2;
-    },
-
-    /**
-     * Returns the major radius of the ellipse. Also known as the Semi Major Axis.
-     *
-     * @method Phaser.Geom.Ellipse#getMajorRadius
-     * @since 3.0.0
-     *
-     * @return {number} The major radius.
-     */
-    getMajorRadius: function ()
-    {
-        return Math.max(this.width, this.height) / 2;
-    },
-
-    /**
-     * The left position of the Ellipse.
-     *
-     * @name Phaser.Geom.Ellipse#left
-     * @type {number}
-     * @since 3.0.0
-     */
-    left: {
-
-        get: function ()
-        {
-            return this.x - (this.width / 2);
-        },
-
-        set: function (value)
-        {
-            this.x = value + (this.width / 2);
-        }
-
-    },
-
-    /**
-     * The right position of the Ellipse.
-     *
-     * @name Phaser.Geom.Ellipse#right
-     * @type {number}
-     * @since 3.0.0
-     */
-    right: {
-
-        get: function ()
-        {
-            return this.x + (this.width / 2);
-        },
-
-        set: function (value)
-        {
-            this.x = value - (this.width / 2);
-        }
-
-    },
-
-    /**
-     * The top position of the Ellipse.
-     *
-     * @name Phaser.Geom.Ellipse#top
-     * @type {number}
-     * @since 3.0.0
-     */
-    top: {
-
-        get: function ()
-        {
-            return this.y - (this.height / 2);
-        },
-
-        set: function (value)
-        {
-            this.y = value + (this.height / 2);
-        }
-
-    },
-
-    /**
-     * The bottom position of the Ellipse.
-     *
-     * @name Phaser.Geom.Ellipse#bottom
-     * @type {number}
-     * @since 3.0.0
-     */
-    bottom: {
-
-        get: function ()
-        {
-            return this.y + (this.height / 2);
-        },
-
-        set: function (value)
-        {
-            this.y = value - (this.height / 2);
-        }
-
-    }
-
-});
-
-module.exports = Ellipse;
-
-
-/***/ }),
-/* 116 */
 /***/ (function(module, exports) {
 
 /**
@@ -20336,7 +20315,7 @@ module.exports = {
 
 
 /***/ }),
-/* 117 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -20345,16 +20324,24 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseCamera = __webpack_require__(86);
+var BaseCamera = __webpack_require__(87);
 var Class = __webpack_require__(0);
-var Commands = __webpack_require__(116);
-var Components = __webpack_require__(13);
-var Ellipse = __webpack_require__(244);
+var Commands = __webpack_require__(115);
+var ComponentsAlpha = __webpack_require__(226);
+var ComponentsBlendMode = __webpack_require__(225);
+var ComponentsDepth = __webpack_require__(224);
+var ComponentsMask = __webpack_require__(223);
+var ComponentsPipeline = __webpack_require__(134);
+var ComponentsTransform = __webpack_require__(218);
+var ComponentsVisible = __webpack_require__(215);
+var ComponentsScrollFactor = __webpack_require__(220);
+
+var Ellipse = __webpack_require__(93);
 var GameObject = __webpack_require__(21);
 var GetFastValue = __webpack_require__(1);
 var GetValue = __webpack_require__(3);
-var MATH_CONST = __webpack_require__(15);
-var Render = __webpack_require__(437);
+var MATH_CONST = __webpack_require__(14);
+var Render = __webpack_require__(446);
 
 /**
  * Graphics line style (or stroke style) settings.
@@ -20458,14 +20445,14 @@ var Graphics = new Class({
     Extends: GameObject,
 
     Mixins: [
-        Components.Alpha,
-        Components.BlendMode,
-        Components.Depth,
-        Components.Mask,
-        Components.Pipeline,
-        Components.Transform,
-        Components.Visible,
-        Components.ScrollFactor,
+        ComponentsAlpha,
+        ComponentsBlendMode,
+        ComponentsDepth,
+        ComponentsMask,
+        ComponentsPipeline,
+        ComponentsTransform,
+        ComponentsVisible,
+        ComponentsScrollFactor,
         Render
     ],
 
@@ -21862,7 +21849,7 @@ module.exports = Graphics;
 
 
 /***/ }),
-/* 118 */
+/* 117 */
 /***/ (function(module, exports) {
 
 /**
@@ -21946,7 +21933,7 @@ module.exports = SetTransform;
 
 
 /***/ }),
-/* 119 */
+/* 118 */
 /***/ (function(module, exports) {
 
 /**
@@ -22004,7 +21991,7 @@ module.exports = CheckMatrix;
 
 
 /***/ }),
-/* 120 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -22014,8 +22001,8 @@ module.exports = CheckMatrix;
  */
 
 var Class = __webpack_require__(0);
-var Frame = __webpack_require__(93);
-var TextureSource = __webpack_require__(188);
+var Frame = __webpack_require__(95);
+var TextureSource = __webpack_require__(186);
 
 var TEXTURE_MISSING_ERROR = 'Texture.frame missing: ';
 
@@ -22476,7 +22463,7 @@ module.exports = Texture;
 
 
 /***/ }),
-/* 121 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -22486,12 +22473,12 @@ module.exports = Texture;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(78);
-var DefaultPlugins = __webpack_require__(122);
+var CONST = __webpack_require__(79);
+var DefaultPlugins = __webpack_require__(121);
 var GetPhysicsPlugins = __webpack_require__(491);
 var GetScenePlugins = __webpack_require__(490);
 var NOOP = __webpack_require__(2);
-var Settings = __webpack_require__(197);
+var Settings = __webpack_require__(195);
 
 /**
  * @classdesc
@@ -23153,7 +23140,7 @@ module.exports = Systems;
 
 
 /***/ }),
-/* 122 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -23253,7 +23240,7 @@ module.exports = DefaultPlugins;
 
 
 /***/ }),
-/* 123 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -23263,7 +23250,7 @@ module.exports = DefaultPlugins;
  */
 
 var OS = __webpack_require__(57);
-var Browser = __webpack_require__(79);
+var Browser = __webpack_require__(80);
 var CanvasPool = __webpack_require__(22);
 
 /**
@@ -23450,7 +23437,7 @@ module.exports = init();
 
 
 /***/ }),
-/* 124 */
+/* 123 */
 /***/ (function(module, exports) {
 
 /**
@@ -23480,7 +23467,7 @@ module.exports = Linear;
 
 
 /***/ }),
-/* 125 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -23489,18 +23476,18 @@ module.exports = Linear;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Back = __webpack_require__(280);
-var Bounce = __webpack_require__(279);
-var Circular = __webpack_require__(278);
-var Cubic = __webpack_require__(277);
-var Elastic = __webpack_require__(276);
-var Expo = __webpack_require__(275);
-var Linear = __webpack_require__(274);
-var Quadratic = __webpack_require__(273);
-var Quartic = __webpack_require__(272);
-var Quintic = __webpack_require__(271);
-var Sine = __webpack_require__(270);
-var Stepped = __webpack_require__(269);
+var Back = __webpack_require__(288);
+var Bounce = __webpack_require__(287);
+var Circular = __webpack_require__(286);
+var Cubic = __webpack_require__(285);
+var Elastic = __webpack_require__(284);
+var Expo = __webpack_require__(283);
+var Linear = __webpack_require__(282);
+var Quadratic = __webpack_require__(281);
+var Quartic = __webpack_require__(280);
+var Quintic = __webpack_require__(279);
+var Sine = __webpack_require__(278);
+var Stepped = __webpack_require__(277);
 
 //  EaseMap
 module.exports = {
@@ -23561,7 +23548,7 @@ module.exports = {
 
 
 /***/ }),
-/* 126 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -23931,7 +23918,49 @@ module.exports = Map;
 
 
 /***/ }),
-/* 127 */,
+/* 126 */,
+/* 127 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Point = __webpack_require__(5);
+
+/**
+ * Returns a Point object containing the coordinates of a point on the circumference of the Ellipse based on the given angle.
+ *
+ * @function Phaser.Geom.Ellipse.CircumferencePoint
+ * @since 3.0.0
+ *
+ * @generic {Phaser.Geom.Point} O - [out,$return]
+ *
+ * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to get the circumference point on.
+ * @param {number} angle - The angle from the center of the Ellipse to the circumference to return the point from. Given in radians.
+ * @param {(Phaser.Geom.Point|object)} [out] - A Point, or point-like object, to store the results in. If not given a Point will be created.
+ *
+ * @return {(Phaser.Geom.Point|object)} A Point object where the `x` and `y` properties are the point on the circumference.
+ */
+var CircumferencePoint = function (ellipse, angle, out)
+{
+    if (out === undefined) { out = new Point(); }
+
+    var halfWidth = ellipse.width / 2;
+    var halfHeight = ellipse.height / 2;
+
+    out.x = ellipse.x + halfWidth * Math.cos(angle);
+    out.y = ellipse.y + halfHeight * Math.sin(angle);
+
+    return out;
+};
+
+module.exports = CircumferencePoint;
+
+
+/***/ }),
 /* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23943,7 +23972,7 @@ module.exports = Map;
  */
 
 var Class = __webpack_require__(0);
-var Earcut = __webpack_require__(253);
+var Earcut = __webpack_require__(261);
 var GetFastValue = __webpack_require__(1);
 var ModelViewProjection = __webpack_require__(495);
 var ShaderSourceFS = __webpack_require__(494);
@@ -24156,7 +24185,7 @@ var TextureTintPipeline = new Class({
          * @private
          * @since 3.12.0
          */
-        this.currentFrame = null;
+        this.currentFrame = { u0: 0, v0: 0, u1: 1, v1: 1 };
 
         /**
          * Internal path quad cache.
@@ -24670,9 +24699,6 @@ var TextureTintPipeline = new Class({
         var width = srcWidth;
         var height = srcHeight;
 
-        // var x = -displayOriginX + frameX;
-        // var y = -displayOriginY + frameY;
-
         var x = -displayOriginX;
         var y = -displayOriginY;
 
@@ -24725,13 +24751,6 @@ var TextureTintPipeline = new Class({
             height *= -1;
             y += srcHeight;
         }
-
-        //  Do we need this? (doubt it)
-        // if (camera.roundPixels)
-        // {
-        //     x |= 0;
-        //     y |= 0;
-        // }
 
         var xw = x + width;
         var yh = y + height;
@@ -26153,10 +26172,10 @@ module.exports = Smoothing();
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var HexStringToColor = __webpack_require__(286);
-var IntegerToColor = __webpack_require__(284);
-var ObjectToColor = __webpack_require__(282);
-var RGBStringToColor = __webpack_require__(281);
+var HexStringToColor = __webpack_require__(294);
+var IntegerToColor = __webpack_require__(292);
+var ObjectToColor = __webpack_require__(290);
+var RGBStringToColor = __webpack_require__(289);
 
 /**
  * Converts the given source color value into an instance of a Color class.
@@ -26277,7 +26296,7 @@ module.exports = Pad;
 
 /***/ }),
 /* 134 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
@@ -26285,35 +26304,121 @@ module.exports = Pad;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Point = __webpack_require__(4);
-
 /**
- * Returns a uniformly distributed random point from anywhere within the given Ellipse.
+ * Provides methods used for setting the WebGL rendering pipeline of a Game Object.
  *
- * @function Phaser.Geom.Ellipse.Random
+ * @name Phaser.GameObjects.Components.Pipeline
+ * @webglOnly
  * @since 3.0.0
- *
- * @generic {Phaser.Geom.Point} O - [out,$return]
- *
- * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to get a random point from.
- * @param {(Phaser.Geom.Point|object)} [out] - A Point or point-like object to set the random `x` and `y` values in.
- *
- * @return {(Phaser.Geom.Point|object)} A Point object with the random values set in the `x` and `y` properties.
  */
-var Random = function (ellipse, out)
-{
-    if (out === undefined) { out = new Point(); }
 
-    var p = Math.random() * Math.PI * 2;
-    var s = Math.sqrt(Math.random());
+var Pipeline = {
 
-    out.x = ellipse.x + ((s * Math.cos(p)) * ellipse.width / 2);
-    out.y = ellipse.y + ((s * Math.sin(p)) * ellipse.height / 2);
+    /**
+     * The initial WebGL pipeline of this Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Pipeline#defaultPipeline
+     * @type {Phaser.Renderer.WebGL.WebGLPipeline}
+     * @default null
+     * @webglOnly
+     * @since 3.0.0
+     */
+    defaultPipeline: null,
 
-    return out;
+    /**
+     * The current WebGL pipeline of this Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Pipeline#pipeline
+     * @type {Phaser.Renderer.WebGL.WebGLPipeline}
+     * @default null
+     * @webglOnly
+     * @since 3.0.0
+     */
+    pipeline: null,
+
+    /**
+     * Sets the initial WebGL Pipeline of this Game Object.
+     * This should only be called during the instantiation of the Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Pipeline#initPipeline
+     * @webglOnly
+     * @since 3.0.0
+     *
+     * @param {string} pipelineName - The name of the pipeline to set on this Game Object.
+     *
+     * @return {boolean} `true` if the pipeline was set successfully, otherwise `false`.
+     */
+    initPipeline: function (pipelineName)
+    {
+        var renderer = this.scene.sys.game.renderer;
+
+        if (renderer && renderer.gl && renderer.hasPipeline(pipelineName))
+        {
+            this.defaultPipeline = renderer.getPipeline(pipelineName);
+            this.pipeline = this.defaultPipeline;
+
+            return true;
+        }
+
+        return false;
+    },
+
+    /**
+     * Sets the active WebGL Pipeline of this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Pipeline#setPipeline
+     * @webglOnly
+     * @since 3.0.0
+     *
+     * @param {string} pipelineName - The name of the pipeline to set on this Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setPipeline: function (pipelineName)
+    {
+        var renderer = this.scene.sys.game.renderer;
+
+        if (renderer && renderer.gl && renderer.hasPipeline(pipelineName))
+        {
+            this.pipeline = renderer.getPipeline(pipelineName);
+        }
+
+        return this;
+    },
+
+    /**
+     * Resets the WebGL Pipeline of this Game Object back to the default it was created with.
+     *
+     * @method Phaser.GameObjects.Components.Pipeline#resetPipeline
+     * @webglOnly
+     * @since 3.0.0
+     *
+     * @return {boolean} `true` if the pipeline was set successfully, otherwise `false`.
+     */
+    resetPipeline: function ()
+    {
+        this.pipeline = this.defaultPipeline;
+
+        return (this.pipeline !== null);
+    },
+
+    /**
+     * Gets the name of the WebGL Pipeline this Game Object is currently using.
+     *
+     * @method Phaser.GameObjects.Components.Pipeline#getPipelineName
+     * @webglOnly
+     * @since 3.0.0
+     *
+     * @return {string} The string-based name of the pipeline being used by this Game Object.
+     */
+    getPipelineName: function ()
+    {
+        return this.pipeline.name;
+    }
+
 };
 
-module.exports = Random;
+module.exports = Pipeline;
 
 
 /***/ }),
@@ -26326,8 +26431,8 @@ module.exports = Random;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Perimeter = __webpack_require__(97);
-var Point = __webpack_require__(4);
+var Perimeter = __webpack_require__(98);
+var Point = __webpack_require__(5);
 
 /**
  * Position is a value between 0 and 1 where 0 = the top-left of the rectangle and 0.5 = the bottom right.
@@ -26403,7 +26508,7 @@ module.exports = GetPoint;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Point = __webpack_require__(4);
+var Point = __webpack_require__(5);
 
 /**
  * Returns a Point object containing the coordinates of a point on the circumference of the Circle based on the given angle.
@@ -26449,12 +26554,12 @@ module.exports = CircumferencePoint;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(17);
+var CONST = __webpack_require__(16);
 var File = __webpack_require__(18);
 var FileTypesManager = __webpack_require__(6);
 var GetFastValue = __webpack_require__(1);
 var IsPlainObject = __webpack_require__(7);
-var ParseXML = __webpack_require__(262);
+var ParseXML = __webpack_require__(270);
 
 /**
  * @typedef {object} Phaser.Loader.FileTypes.XMLFileConfig
@@ -26738,7 +26843,7 @@ module.exports = {
     CountAllMatching: __webpack_require__(466),
     Each: __webpack_require__(465),
     EachInRange: __webpack_require__(464),
-    FindClosestInSorted: __webpack_require__(215),
+    FindClosestInSorted: __webpack_require__(213),
     GetAll: __webpack_require__(463),
     GetFirst: __webpack_require__(462),
     GetRandom: __webpack_require__(148),
@@ -26747,21 +26852,21 @@ module.exports = {
     MoveUp: __webpack_require__(459),
     NumberArray: __webpack_require__(458),
     NumberArrayStep: __webpack_require__(457),
-    QuickSelect: __webpack_require__(185),
-    Range: __webpack_require__(248),
-    Remove: __webpack_require__(200),
+    QuickSelect: __webpack_require__(183),
+    Range: __webpack_require__(256),
+    Remove: __webpack_require__(198),
     RemoveAt: __webpack_require__(456),
     RemoveBetween: __webpack_require__(455),
     RemoveRandomElement: __webpack_require__(454),
     Replace: __webpack_require__(453),
-    RotateLeft: __webpack_require__(290),
-    RotateRight: __webpack_require__(289),
+    RotateLeft: __webpack_require__(298),
+    RotateRight: __webpack_require__(297),
     SafeRange: __webpack_require__(30),
     SendToBack: __webpack_require__(452),
     SetAll: __webpack_require__(451),
-    Shuffle: __webpack_require__(95),
+    Shuffle: __webpack_require__(97),
     SpliceOne: __webpack_require__(56),
-    StableSort: __webpack_require__(83),
+    StableSort: __webpack_require__(84),
     Swap: __webpack_require__(450)
 
 };
@@ -27259,7 +27364,7 @@ module.exports = Between;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CONST = __webpack_require__(15);
+var CONST = __webpack_require__(14);
 
 /**
  * Convert the given angle in radians, to the equivalent angle in degrees.
@@ -27403,7 +27508,7 @@ module.exports = SmoothStep;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Point = __webpack_require__(4);
+var Point = __webpack_require__(5);
 
 /**
  * [description]
@@ -27459,7 +27564,48 @@ module.exports = Random;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Point = __webpack_require__(4);
+var Point = __webpack_require__(5);
+
+/**
+ * Returns a uniformly distributed random point from anywhere within the given Ellipse.
+ *
+ * @function Phaser.Geom.Ellipse.Random
+ * @since 3.0.0
+ *
+ * @generic {Phaser.Geom.Point} O - [out,$return]
+ *
+ * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to get a random point from.
+ * @param {(Phaser.Geom.Point|object)} [out] - A Point or point-like object to set the random `x` and `y` values in.
+ *
+ * @return {(Phaser.Geom.Point|object)} A Point object with the random values set in the `x` and `y` properties.
+ */
+var Random = function (ellipse, out)
+{
+    if (out === undefined) { out = new Point(); }
+
+    var p = Math.random() * Math.PI * 2;
+    var s = Math.sqrt(Math.random());
+
+    out.x = ellipse.x + ((s * Math.cos(p)) * ellipse.width / 2);
+    out.y = ellipse.y + ((s * Math.sin(p)) * ellipse.height / 2);
+
+    return out;
+};
+
+module.exports = Random;
+
+
+/***/ }),
+/* 158 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Point = __webpack_require__(5);
 
 /**
  * [description]
@@ -27488,7 +27634,7 @@ module.exports = Random;
 
 
 /***/ }),
-/* 158 */
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -27497,7 +27643,7 @@ module.exports = Random;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Point = __webpack_require__(4);
+var Point = __webpack_require__(5);
 
 /**
  * Returns a random point on a given Line.
@@ -27528,7 +27674,7 @@ module.exports = Random;
 
 
 /***/ }),
-/* 159 */
+/* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -27537,8 +27683,8 @@ module.exports = Random;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Length = __webpack_require__(69);
-var Point = __webpack_require__(4);
+var Length = __webpack_require__(45);
+var Point = __webpack_require__(5);
 
 /**
  * Get a number of points along a line's length.
@@ -27593,7 +27739,7 @@ module.exports = GetPoints;
 
 
 /***/ }),
-/* 160 */
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -27602,7 +27748,7 @@ module.exports = GetPoints;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Point = __webpack_require__(4);
+var Point = __webpack_require__(5);
 
 /**
  * Returns a uniformly distributed random point from anywhere within the given Circle.
@@ -27637,8 +27783,8 @@ module.exports = Random;
 
 
 /***/ }),
-/* 161 */,
-/* 162 */
+/* 162 */,
+/* 163 */
 /***/ (function(module, exports) {
 
 var g;
@@ -27664,7 +27810,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 163 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -28533,7 +28679,7 @@ module.exports = Timeline;
 
 
 /***/ }),
-/* 164 */
+/* 165 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -28543,15 +28689,15 @@ module.exports = Timeline;
  */
 
 var Clone = __webpack_require__(34);
-var Defaults = __webpack_require__(100);
+var Defaults = __webpack_require__(101);
 var GetAdvancedValue = __webpack_require__(11);
 var GetBoolean = __webpack_require__(62);
 var GetEaseFunction = __webpack_require__(63);
 var GetNewValue = __webpack_require__(71);
-var GetTargets = __webpack_require__(102);
-var GetTweens = __webpack_require__(166);
+var GetTargets = __webpack_require__(103);
+var GetTweens = __webpack_require__(167);
 var GetValue = __webpack_require__(3);
-var Timeline = __webpack_require__(163);
+var Timeline = __webpack_require__(164);
 var TweenBuilder = __webpack_require__(70);
 
 /**
@@ -28685,7 +28831,7 @@ module.exports = TimelineBuilder;
 
 
 /***/ }),
-/* 165 */
+/* 166 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -28694,15 +28840,15 @@ module.exports = TimelineBuilder;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Defaults = __webpack_require__(100);
+var Defaults = __webpack_require__(101);
 var GetAdvancedValue = __webpack_require__(11);
 var GetBoolean = __webpack_require__(62);
 var GetEaseFunction = __webpack_require__(63);
 var GetNewValue = __webpack_require__(71);
 var GetValue = __webpack_require__(3);
-var GetValueOp = __webpack_require__(101);
-var Tween = __webpack_require__(99);
-var TweenData = __webpack_require__(98);
+var GetValueOp = __webpack_require__(102);
+var Tween = __webpack_require__(100);
+var TweenData = __webpack_require__(99);
 
 /**
  * [description]
@@ -28813,7 +28959,7 @@ module.exports = NumberTweenBuilder;
 
 
 /***/ }),
-/* 166 */
+/* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -28859,7 +29005,7 @@ module.exports = GetTweens;
 
 
 /***/ }),
-/* 167 */
+/* 168 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -28868,7 +29014,7 @@ module.exports = GetTweens;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var RESERVED = __webpack_require__(304);
+var RESERVED = __webpack_require__(311);
 
 /**
  * [description]
@@ -28917,7 +29063,7 @@ module.exports = GetProps;
 
 
 /***/ }),
-/* 168 */
+/* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29234,7 +29380,7 @@ module.exports = TimerEvent;
 
 
 /***/ }),
-/* 169 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29415,8 +29561,8 @@ module.exports = BasePlugin;
 
 
 /***/ }),
-/* 170 */,
-/* 171 */
+/* 171 */,
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29428,7 +29574,7 @@ module.exports = BasePlugin;
 var Class = __webpack_require__(0);
 var File = __webpack_require__(18);
 var GetFastValue = __webpack_require__(1);
-var GetURL = __webpack_require__(109);
+var GetURL = __webpack_require__(110);
 var IsPlainObject = __webpack_require__(7);
 
 /**
@@ -29612,7 +29758,7 @@ module.exports = HTML5AudioFile;
 
 
 /***/ }),
-/* 172 */
+/* 173 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29626,7 +29772,7 @@ var CONST = __webpack_require__(23);
 var File = __webpack_require__(18);
 var FileTypesManager = __webpack_require__(6);
 var GetFastValue = __webpack_require__(1);
-var HTML5AudioFile = __webpack_require__(171);
+var HTML5AudioFile = __webpack_require__(172);
 var IsPlainObject = __webpack_require__(7);
 
 /**
@@ -29892,7 +30038,7 @@ module.exports = AudioFile;
 
 
 /***/ }),
-/* 173 */
+/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29901,7 +30047,7 @@ module.exports = AudioFile;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var MergeXHRSettings = __webpack_require__(108);
+var MergeXHRSettings = __webpack_require__(109);
 
 /**
  * Creates a new XMLHttpRequest (xhr) object based on the given File and XHRSettings
@@ -29960,7 +30106,7 @@ module.exports = XHRLoader;
 
 
 /***/ }),
-/* 174 */
+/* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -29971,8 +30117,8 @@ module.exports = XHRLoader;
 
 var Class = __webpack_require__(0);
 var GetFastValue = __webpack_require__(1);
-var ProcessKeyCombo = __webpack_require__(377);
-var ResetKeyCombo = __webpack_require__(375);
+var ProcessKeyCombo = __webpack_require__(384);
+var ResetKeyCombo = __webpack_require__(382);
 
 /**
  * @callback KeyboardKeydownCallback
@@ -30265,7 +30411,7 @@ module.exports = KeyCombo;
 
 
 /***/ }),
-/* 175 */
+/* 176 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -30499,7 +30645,7 @@ module.exports = Key;
 
 
 /***/ }),
-/* 176 */
+/* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -30508,11 +30654,11 @@ module.exports = Key;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Axis = __webpack_require__(178);
-var Button = __webpack_require__(177);
+var Axis = __webpack_require__(179);
+var Button = __webpack_require__(178);
 var Class = __webpack_require__(0);
 var EventEmitter = __webpack_require__(8);
-var Vector2 = __webpack_require__(5);
+var Vector2 = __webpack_require__(4);
 
 /**
  * @classdesc
@@ -31257,7 +31403,7 @@ module.exports = Gamepad;
 
 
 /***/ }),
-/* 177 */
+/* 178 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -31398,7 +31544,7 @@ module.exports = Button;
 
 
 /***/ }),
-/* 178 */
+/* 179 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -31523,7 +31669,7 @@ module.exports = Axis;
 
 
 /***/ }),
-/* 179 */
+/* 180 */
 /***/ (function(module, exports) {
 
 /**
@@ -31619,7 +31765,7 @@ module.exports = CreateInteractiveObject;
 
 
 /***/ }),
-/* 180 */
+/* 181 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -31628,8 +31774,8 @@ module.exports = CreateInteractiveObject;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Commands = __webpack_require__(116);
-var SetTransform = __webpack_require__(118);
+var Commands = __webpack_require__(115);
+var SetTransform = __webpack_require__(117);
 
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
@@ -31867,136 +32013,7 @@ module.exports = GraphicsCanvasRenderer;
 
 
 /***/ }),
-/* 181 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Returns the circumference of the given Ellipse.
- *
- * @function Phaser.Geom.Ellipse.Circumference
- * @since 3.0.0
- *
- * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to get the circumference of.
- *
- * @return {number} The circumference of th Ellipse.
- */
-var Circumference = function (ellipse)
-{
-    var rx = ellipse.width / 2;
-    var ry = ellipse.height / 2;
-    var h = Math.pow((rx - ry), 2) / Math.pow((rx + ry), 2);
-
-    return (Math.PI * (rx + ry)) * (1 + ((3 * h) / (10 + Math.sqrt(4 - (3 * h)))));
-};
-
-module.exports = Circumference;
-
-
-/***/ }),
 /* 182 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var Circumference = __webpack_require__(181);
-var CircumferencePoint = __webpack_require__(114);
-var FromPercent = __webpack_require__(64);
-var MATH_CONST = __webpack_require__(15);
-
-/**
- * Returns an array of Point objects containing the coordinates of the points around the circumference of the Ellipse,
- * based on the given quantity or stepRate values.
- *
- * @function Phaser.Geom.Ellipse.GetPoints
- * @since 3.0.0
- *
- * @generic {Phaser.Geom.Point[]} O - [out,$return]
- *
- * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to get the points from.
- * @param {integer} quantity - The amount of points to return. If a falsey value the quantity will be derived from the `stepRate` instead.
- * @param {number} [stepRate] - Sets the quantity by getting the circumference of the ellipse and dividing it by the stepRate.
- * @param {(array|Phaser.Geom.Point[])} [out] - An array to insert the points in to. If not provided a new array will be created.
- *
- * @return {(array|Phaser.Geom.Point[])} An array of Point objects pertaining to the points around the circumference of the ellipse.
- */
-var GetPoints = function (ellipse, quantity, stepRate, out)
-{
-    if (out === undefined) { out = []; }
-
-    //  If quantity is a falsey value (false, null, 0, undefined, etc) then we calculate it based on the stepRate instead.
-    if (!quantity)
-    {
-        quantity = Circumference(ellipse) / stepRate;
-    }
-
-    for (var i = 0; i < quantity; i++)
-    {
-        var angle = FromPercent(i / quantity, 0, MATH_CONST.PI2);
-
-        out.push(CircumferencePoint(ellipse, angle));
-    }
-
-    return out;
-};
-
-module.exports = GetPoints;
-
-
-/***/ }),
-/* 183 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var CircumferencePoint = __webpack_require__(114);
-var FromPercent = __webpack_require__(64);
-var MATH_CONST = __webpack_require__(15);
-var Point = __webpack_require__(4);
-
-/**
- * Returns a Point object containing the coordinates of a point on the circumference of the Ellipse
- * based on the given angle normalized to the range 0 to 1. I.e. a value of 0.5 will give the point
- * at 180 degrees around the circle.
- *
- * @function Phaser.Geom.Ellipse.GetPoint
- * @since 3.0.0
- *
- * @generic {Phaser.Geom.Point} O - [out,$return]
- *
- * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to get the circumference point on.
- * @param {number} position - A value between 0 and 1, where 0 equals 0 degrees, 0.5 equals 180 degrees and 1 equals 360 around the ellipse.
- * @param {(Phaser.Geom.Point|object)} [out] - An object to store the return values in. If not given a Point object will be created.
- *
- * @return {(Phaser.Geom.Point|object)} A Point, or point-like object, containing the coordinates of the point around the ellipse.
- */
-var GetPoint = function (ellipse, position, out)
-{
-    if (out === undefined) { out = new Point(); }
-
-    var angle = FromPercent(position, 0, MATH_CONST.PI2);
-
-    return CircumferencePoint(ellipse, angle, out);
-};
-
-module.exports = GetPoint;
-
-
-/***/ }),
-/* 184 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -32085,7 +32102,7 @@ module.exports = BuildGameObjectAnimation;
 
 
 /***/ }),
-/* 185 */
+/* 183 */
 /***/ (function(module, exports) {
 
 /**
@@ -32203,7 +32220,7 @@ module.exports = QuickSelect;
 
 
 /***/ }),
-/* 186 */
+/* 184 */
 /***/ (function(module, exports) {
 
 /**
@@ -32249,7 +32266,7 @@ module.exports = TransposeMatrix;
 
 
 /***/ }),
-/* 187 */
+/* 185 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -32277,7 +32294,7 @@ module.exports = {
 
 
 /***/ }),
-/* 188 */
+/* 186 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -32288,7 +32305,7 @@ module.exports = {
 
 var CanvasPool = __webpack_require__(22);
 var Class = __webpack_require__(0);
-var IsSizePowerOfTwo = __webpack_require__(84);
+var IsSizePowerOfTwo = __webpack_require__(85);
 var ScaleModes = __webpack_require__(59);
 
 /**
@@ -32551,7 +32568,7 @@ module.exports = TextureSource;
 
 
 /***/ }),
-/* 189 */
+/* 187 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -32566,10 +32583,10 @@ var Class = __webpack_require__(0);
 var Color = __webpack_require__(31);
 var CONST = __webpack_require__(23);
 var EventEmitter = __webpack_require__(8);
-var GenerateTexture = __webpack_require__(268);
+var GenerateTexture = __webpack_require__(276);
 var GetValue = __webpack_require__(3);
-var Parser = __webpack_require__(187);
-var Texture = __webpack_require__(120);
+var Parser = __webpack_require__(185);
+var Texture = __webpack_require__(119);
 
 /**
  * @callback EachTextureCallback
@@ -33664,7 +33681,7 @@ module.exports = TextureManager;
 
 
 /***/ }),
-/* 190 */
+/* 188 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -33674,7 +33691,7 @@ module.exports = TextureManager;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseSound = __webpack_require__(76);
+var BaseSound = __webpack_require__(77);
 var Class = __webpack_require__(0);
 
 /**
@@ -34631,7 +34648,7 @@ module.exports = WebAudioSound;
 
 
 /***/ }),
-/* 191 */
+/* 189 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -34641,9 +34658,9 @@ module.exports = WebAudioSound;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseSoundManager = __webpack_require__(77);
+var BaseSoundManager = __webpack_require__(78);
 var Class = __webpack_require__(0);
-var WebAudioSound = __webpack_require__(190);
+var WebAudioSound = __webpack_require__(188);
 
 /**
  * @classdesc
@@ -34958,7 +34975,7 @@ module.exports = WebAudioSoundManager;
 
 
 /***/ }),
-/* 192 */
+/* 190 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -34968,10 +34985,10 @@ module.exports = WebAudioSoundManager;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseSound = __webpack_require__(76);
+var BaseSound = __webpack_require__(77);
 var Class = __webpack_require__(0);
 var EventEmitter = __webpack_require__(8);
-var Extend = __webpack_require__(16);
+var Extend = __webpack_require__(15);
 
 /**
  * @classdesc
@@ -35085,7 +35102,7 @@ module.exports = NoAudioSound;
 
 
 /***/ }),
-/* 193 */
+/* 191 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -35095,10 +35112,10 @@ module.exports = NoAudioSound;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseSoundManager = __webpack_require__(77);
+var BaseSoundManager = __webpack_require__(78);
 var Class = __webpack_require__(0);
 var EventEmitter = __webpack_require__(8);
-var NoAudioSound = __webpack_require__(192);
+var NoAudioSound = __webpack_require__(190);
 var NOOP = __webpack_require__(2);
 
 /**
@@ -35203,7 +35220,7 @@ module.exports = NoAudioSoundManager;
 
 
 /***/ }),
-/* 194 */
+/* 192 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -35213,7 +35230,7 @@ module.exports = NoAudioSoundManager;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseSound = __webpack_require__(76);
+var BaseSound = __webpack_require__(77);
 var Class = __webpack_require__(0);
 
 /**
@@ -36185,7 +36202,7 @@ module.exports = HTML5AudioSound;
 
 
 /***/ }),
-/* 195 */
+/* 193 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -36195,9 +36212,9 @@ module.exports = HTML5AudioSound;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseSoundManager = __webpack_require__(77);
+var BaseSoundManager = __webpack_require__(78);
 var Class = __webpack_require__(0);
-var HTML5AudioSound = __webpack_require__(194);
+var HTML5AudioSound = __webpack_require__(192);
 
 /**
  * HTML5 Audio implementation of the Sound Manager.
@@ -36652,7 +36669,7 @@ module.exports = HTML5AudioSoundManager;
 
 
 /***/ }),
-/* 196 */
+/* 194 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -36662,9 +36679,9 @@ module.exports = HTML5AudioSoundManager;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var HTML5AudioSoundManager = __webpack_require__(195);
-var NoAudioSoundManager = __webpack_require__(193);
-var WebAudioSoundManager = __webpack_require__(191);
+var HTML5AudioSoundManager = __webpack_require__(193);
+var NoAudioSoundManager = __webpack_require__(191);
+var WebAudioSoundManager = __webpack_require__(189);
 
 /**
  * Creates a Web Audio, HTML5 Audio or No Audio Sound Manager based on config and device settings.
@@ -36702,7 +36719,7 @@ module.exports = SoundManagerCreator;
 
 
 /***/ }),
-/* 197 */
+/* 195 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -36711,9 +36728,9 @@ module.exports = SoundManagerCreator;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CONST = __webpack_require__(78);
+var CONST = __webpack_require__(79);
 var GetValue = __webpack_require__(3);
-var Merge = __webpack_require__(94);
+var Merge = __webpack_require__(96);
 var InjectionMap = __webpack_require__(489);
 
 /**
@@ -36834,7 +36851,7 @@ module.exports = Settings;
 
 
 /***/ }),
-/* 198 */
+/* 196 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -36844,7 +36861,7 @@ module.exports = Settings;
  */
 
 var Class = __webpack_require__(0);
-var Systems = __webpack_require__(121);
+var Systems = __webpack_require__(120);
 
 /**
  * @classdesc
@@ -37113,7 +37130,7 @@ module.exports = Scene;
 
 
 /***/ }),
-/* 199 */
+/* 197 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -37123,11 +37140,11 @@ module.exports = Scene;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(78);
+var CONST = __webpack_require__(79);
 var GetValue = __webpack_require__(3);
 var NOOP = __webpack_require__(2);
-var Scene = __webpack_require__(198);
-var Systems = __webpack_require__(121);
+var Scene = __webpack_require__(196);
+var Systems = __webpack_require__(120);
 
 /**
  * @classdesc
@@ -38685,7 +38702,7 @@ module.exports = SceneManager;
 
 
 /***/ }),
-/* 200 */
+/* 198 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -38776,7 +38793,7 @@ module.exports = Remove;
 
 
 /***/ }),
-/* 201 */
+/* 199 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -38788,11 +38805,11 @@ module.exports = Remove;
 var Class = __webpack_require__(0);
 var EventEmitter = __webpack_require__(8);
 var FileTypesManager = __webpack_require__(6);
-var GameObjectCreator = __webpack_require__(14);
+var GameObjectCreator = __webpack_require__(13);
 var GameObjectFactory = __webpack_require__(12);
 var GetFastValue = __webpack_require__(1);
-var PluginCache = __webpack_require__(10);
-var Remove = __webpack_require__(200);
+var PluginCache = __webpack_require__(9);
+var Remove = __webpack_require__(198);
 
 /**
  * @typedef {object} GlobalPlugin
@@ -39631,7 +39648,7 @@ module.exports = PluginManager;
 
 
 /***/ }),
-/* 202 */
+/* 200 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -39872,7 +39889,7 @@ module.exports = TouchManager;
 
 
 /***/ }),
-/* 203 */
+/* 201 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -39882,8 +39899,8 @@ module.exports = TouchManager;
  */
 
 var Class = __webpack_require__(0);
-var SmoothStepInterpolation = __webpack_require__(252);
-var Vector2 = __webpack_require__(5);
+var SmoothStepInterpolation = __webpack_require__(260);
+var Vector2 = __webpack_require__(4);
 
 
 /**
@@ -40655,7 +40672,7 @@ module.exports = Pointer;
 
 
 /***/ }),
-/* 204 */
+/* 202 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40665,7 +40682,7 @@ module.exports = Pointer;
  */
 
 var Class = __webpack_require__(0);
-var Features = __webpack_require__(123);
+var Features = __webpack_require__(122);
 
 //  https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent
 //  https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
@@ -41010,7 +41027,7 @@ module.exports = MouseManager;
 
 
 /***/ }),
-/* 205 */
+/* 203 */
 /***/ (function(module, exports) {
 
 /**
@@ -41090,7 +41107,7 @@ module.exports = INPUT_CONST;
 
 
 /***/ }),
-/* 206 */
+/* 204 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -41100,14 +41117,14 @@ module.exports = INPUT_CONST;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(205);
+var CONST = __webpack_require__(203);
 var EventEmitter = __webpack_require__(8);
-var Mouse = __webpack_require__(204);
-var Pointer = __webpack_require__(203);
-var Rectangle = __webpack_require__(9);
-var Touch = __webpack_require__(202);
+var Mouse = __webpack_require__(202);
+var Pointer = __webpack_require__(201);
+var Rectangle = __webpack_require__(10);
+var Touch = __webpack_require__(200);
 var TransformMatrix = __webpack_require__(27);
-var TransformXY = __webpack_require__(251);
+var TransformXY = __webpack_require__(259);
 
 /**
  * @classdesc
@@ -41430,6 +41447,16 @@ var InputManager = new Class({
          * @since 3.4.0
          */
         this._tempMatrix = new TransformMatrix();
+
+        /**
+         * A re-cycled matrix used in hit test calculations.
+         *
+         * @name Phaser.Input.InputManager#_tempMatrix2
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @private
+         * @since 3.12.0
+         */
+        this._tempMatrix2 = new TransformMatrix();
 
         game.events.once('boot', this.boot, this);
     },
@@ -42145,14 +42172,15 @@ var InputManager = new Class({
      * @since 3.10.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to test.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera which is being tested against.
      *
      * @return {boolean} `true` if the Game Object should be considered for input, otherwise `false`.
      */
-    inputCandidate: function (gameObject)
+    inputCandidate: function (gameObject, camera)
     {
         var input = gameObject.input;
 
-        if (!input || !input.enabled || !gameObject.willRender())
+        if (!input || !input.enabled || !gameObject.willRender(camera))
         {
             return false;
         }
@@ -42164,7 +42192,7 @@ var InputManager = new Class({
         {
             do
             {
-                if (!parent.visible)
+                if (!parent.willRender(camera))
                 {
                     visible = false;
                     break;
@@ -42204,10 +42232,6 @@ var InputManager = new Class({
 
         var tempPoint = this._tempPoint;
 
-        var cx = camera._cx;
-        var cy = camera._cy;
-        var cw = camera._cw;
-        var ch = camera._ch;
         var csx = camera.scrollX;
         var csy = camera.scrollY;
 
@@ -42216,9 +42240,10 @@ var InputManager = new Class({
         var x = pointer.x;
         var y = pointer.y;
 
-        if (!(x >= cx && y >= cy && x <= cx + cw && y <= cy + ch))
+        if (camera.resolution !== 1)
         {
-            return output;
+            x += camera._x;
+            y += camera._y;
         }
 
         //  Stores the world point inside of tempPoint
@@ -42230,12 +42255,15 @@ var InputManager = new Class({
         var point = { x: 0, y: 0 };
 
         var matrix = this._tempMatrix;
+        var parentMatrix = this._tempMatrix2;
 
         for (var i = 0; i < gameObjects.length; i++)
         {
             var gameObject = gameObjects[i];
 
-            if (!this.inputCandidate(gameObject))
+            //  Checks if the Game Object can receive input (isn't being ignored by the camera, invisible, etc)
+            //  and also checks all of its parents, if any
+            if (!this.inputCandidate(gameObject, camera))
             {
                 continue;
             }
@@ -42245,15 +42273,15 @@ var InputManager = new Class({
 
             if (gameObject.parentContainer)
             {
-                gameObject.getWorldTransformMatrix(matrix);
+                gameObject.getWorldTransformMatrix(matrix, parentMatrix);
 
-                TransformXY(px, py, matrix.tx, matrix.ty, matrix.rotation, matrix.scaleX, matrix.scaleY, point);
+                matrix.applyInverse(px, py, point);
             }
             else
             {
                 TransformXY(px, py, gameObject.x, gameObject.y, gameObject.rotation, gameObject.scaleX, gameObject.scaleY, point);
             }
-
+    
             if (this.pointWithinHitArea(gameObject, point.x, point.y))
             {
                 output.push(gameObject);
@@ -42477,7 +42505,7 @@ module.exports = InputManager;
 
 
 /***/ }),
-/* 207 */
+/* 205 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -42591,7 +42619,7 @@ module.exports = init();
 
 
 /***/ }),
-/* 208 */
+/* 206 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -42626,19 +42654,19 @@ module.exports = init();
 module.exports = {
 
     os: __webpack_require__(57),
-    browser: __webpack_require__(79),
-    features: __webpack_require__(123),
+    browser: __webpack_require__(80),
+    features: __webpack_require__(122),
     input: __webpack_require__(503),
     audio: __webpack_require__(502),
     video: __webpack_require__(501),
     fullscreen: __webpack_require__(500),
-    canvasFeatures: __webpack_require__(207)
+    canvasFeatures: __webpack_require__(205)
 
 };
 
 
 /***/ }),
-/* 209 */
+/* 207 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -42663,7 +42691,7 @@ module.exports = {
 
 
 /***/ }),
-/* 210 */
+/* 208 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -42672,16 +42700,16 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseCamera = __webpack_require__(86);
+var BaseCamera = __webpack_require__(87);
 var CanvasPool = __webpack_require__(22);
 var CenterOn = __webpack_require__(153);
 var Clamp = __webpack_require__(19);
 var Class = __webpack_require__(0);
-var Components = __webpack_require__(13);
-var Effects = __webpack_require__(209);
-var Linear = __webpack_require__(124);
-var Rectangle = __webpack_require__(9);
-var Vector2 = __webpack_require__(5);
+var Components = __webpack_require__(17);
+var Effects = __webpack_require__(207);
+var Linear = __webpack_require__(123);
+var Rectangle = __webpack_require__(10);
+var Vector2 = __webpack_require__(4);
 
 /**
  * @classdesc
@@ -42862,6 +42890,8 @@ var Camera = new Class({
 
         /**
          * Is this Camera rendering directly or to a texture?
+         * 
+         * Warning: This is an experimental feature.
          *
          * @name Phaser.Cameras.Scene2D.Camera#renderToTexture
          * @type {boolean}
@@ -42874,6 +42904,8 @@ var Camera = new Class({
         /**
          * The HTML Canvas Element that the Camera is drawing to if rendering to a texture.
          * This is only populated if Phaser is running with the Canvas Renderer.
+         * 
+         * Warning: This is an experimental feature.
          *
          * @name Phaser.Cameras.Scene2D.Camera#canvas
          * @type {HTMLCanvasElement}
@@ -42884,6 +42916,8 @@ var Camera = new Class({
 
         /**
          * A reference to the Rendering Context belonging to the Canvas Element this Camera is rendering to a texture.
+         * 
+         * Warning: This is an experimental feature.
          *
          * @name Phaser.Cameras.Scene2D.Camera#context
          * @type {CanvasRenderingContext2D}
@@ -42895,6 +42929,8 @@ var Camera = new Class({
         /**
          * A reference to the GL Frame Buffer this Camera ia drawing to if rendering to a texture.
          * This is only set if Phaser is running with the WebGL Renderer.
+         * 
+         * Warning: This is an experimental feature.
          *
          * @name Phaser.Cameras.Scene2D.Camera#framebuffer
          * @type {?WebGLFramebuffer}
@@ -42906,6 +42942,8 @@ var Camera = new Class({
         /**
          * A reference to the GL Frame Buffer this Camera is drawing to if rendering to a texture.
          * This is only set if Phaser is running with the WebGL Renderer.
+         * 
+         * Warning: This is an experimental feature.
          *
          * @name Phaser.Cameras.Scene2D.Camera#framebuffer
          * @type {?WebGLFramebuffer}
@@ -42917,6 +42955,8 @@ var Camera = new Class({
         /**
          * A reference to the GL Frame Buffer this Render Texture is drawing to.
          * This is only set if Phaser is running with the WebGL Renderer.
+         * 
+         * Warning: This is an experimental feature.
          *
          * @name Phaser.Cameras.Scene2D.Camera#pipeline
          * @type {any}
@@ -42928,6 +42968,8 @@ var Camera = new Class({
 
     /**
      * Sets the Camera to render to a texture instead of to the main display.
+     * 
+     * Make sure that you resize the camera first if you're going to use this feature.
      * 
      * This is an experimental feature and should be expected to change in the future.
      *
@@ -43501,7 +43543,7 @@ module.exports = Camera;
 
 
 /***/ }),
-/* 211 */
+/* 209 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -43510,7 +43552,7 @@ module.exports = Camera;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseCache = __webpack_require__(212);
+var BaseCache = __webpack_require__(210);
 var Class = __webpack_require__(0);
 
 /**
@@ -43724,7 +43766,7 @@ module.exports = CacheManager;
 
 
 /***/ }),
-/* 212 */
+/* 210 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -43734,7 +43776,7 @@ module.exports = CacheManager;
  */
 
 var Class = __webpack_require__(0);
-var CustomMap = __webpack_require__(126);
+var CustomMap = __webpack_require__(125);
 var EventEmitter = __webpack_require__(8);
 
 /**
@@ -43918,7 +43960,7 @@ module.exports = BaseCache;
 
 
 /***/ }),
-/* 213 */
+/* 211 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -43927,9 +43969,9 @@ module.exports = BaseCache;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Animation = __webpack_require__(216);
+var Animation = __webpack_require__(214);
 var Class = __webpack_require__(0);
-var CustomMap = __webpack_require__(126);
+var CustomMap = __webpack_require__(125);
 var EventEmitter = __webpack_require__(8);
 var GetValue = __webpack_require__(3);
 var Pad = __webpack_require__(133);
@@ -44545,7 +44587,7 @@ module.exports = AnimationManager;
 
 
 /***/ }),
-/* 214 */
+/* 212 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44728,7 +44770,7 @@ module.exports = AnimationFrame;
 
 
 /***/ }),
-/* 215 */
+/* 213 */
 /***/ (function(module, exports) {
 
 /**
@@ -44809,7 +44851,7 @@ module.exports = FindClosestInSorted;
 
 
 /***/ }),
-/* 216 */
+/* 214 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44820,8 +44862,8 @@ module.exports = FindClosestInSorted;
 
 var Clamp = __webpack_require__(19);
 var Class = __webpack_require__(0);
-var FindClosestInSorted = __webpack_require__(215);
-var Frame = __webpack_require__(214);
+var FindClosestInSorted = __webpack_require__(213);
+var Frame = __webpack_require__(212);
 var GetValue = __webpack_require__(3);
 
 /**
@@ -45343,7 +45385,6 @@ var Animation = new Class({
             component.msPerFrame = this.msPerFrame;
             component.skipMissedFrames = this.skipMissedFrames;
 
-            component._timeScale = 1;
             component._delay = this.delay;
             component._repeat = this.repeat;
             component._repeatDelay = this.repeatDelay;
@@ -45398,8 +45439,7 @@ var Animation = new Class({
             //  Yoyo? (happens before repeat)
             if (component._yoyo)
             {
-                component.forward = false;
-                this._updateAndGetNextTick(component, frame.prevFrame);
+                this._handleYoyoFrame(component, false);
             }
             else if (component.repeatCounter > 0)
             {
@@ -45423,6 +45463,37 @@ var Animation = new Class({
         {
             this._updateAndGetNextTick(component, frame.nextFrame);
         }
+    },
+
+    /**
+     * Handle the yoyo functionality in nextFrame and previousFrame methods.
+     *
+     * @method Phaser.Animations.Animation#_handleYoyoFrame
+     * @since 3.12.0
+     *
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component to advance.
+     * @param {bool} isReverse - Is animation in reverse mode? (Default: false)
+     */
+    _handleYoyoFrame: function (component, isReverse)
+    {
+        if (!isReverse) { isReverse = false; }
+
+        if (component._reverse === !isReverse && component.repeatCounter > 0)
+        {
+            component.forward = isReverse;
+            this.repeatAnimation(component);
+            return;
+        }
+
+        if (component._reverse !== isReverse && component.repeatCounter === 0)
+        {
+            this.completeAnimation(component);
+            return;
+        }
+        
+        component.forward = isReverse;
+        var frame = isReverse ? component.currentFrame.nextFrame : component.currentFrame.prevFrame;
+        this._updateAndGetNextTick(component, frame);
     },
 
     /**
@@ -45458,15 +45529,14 @@ var Animation = new Class({
 
             if (component._yoyo)
             {
-                component.forward = true;
-                this._updateAndGetNextTick(component, frame.nextFrame);
+                this._handleYoyoFrame(component, true);
             }
             else if (component.repeatCounter > 0)
             {
                 if (component._reverse && !component.forward)
                 {
                     component.currentFrame = this.getLastFrame();
-                    this._updateAndGetNextTick(component, component.currentFrame);
+                    this.repeatAnimation(component);
                 }
                 else
                 {
@@ -45739,7 +45809,96 @@ module.exports = Animation;
 
 
 /***/ }),
-/* 217 */
+/* 215 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+//  bitmask flag for GameObject.renderMask
+var _FLAG = 1; // 0001
+
+/**
+ * Provides methods used for setting the visibility of a Game Object.
+ * Should be applied as a mixin and not used directly.
+ * 
+ * @name Phaser.GameObjects.Components.Visible
+ * @since 3.0.0
+ */
+
+var Visible = {
+
+    /**
+     * Private internal value. Holds the visible value.
+     * 
+     * @name Phaser.GameObjects.Components.Visible#_visible
+     * @type {boolean}
+     * @private
+     * @default true
+     * @since 3.0.0
+     */
+    _visible: true,
+
+    /**
+     * The visible state of the Game Object.
+     * 
+     * An invisible Game Object will skip rendering, but will still process update logic.
+     * 
+     * @name Phaser.GameObjects.Components.Visible#visible
+     * @type {boolean}
+     * @since 3.0.0
+     */
+    visible: {
+
+        get: function ()
+        {
+            return this._visible;
+        },
+
+        set: function (value)
+        {
+            if (value)
+            {
+                this._visible = true;
+                this.renderFlags |= _FLAG;
+            }
+            else
+            {
+                this._visible = false;
+                this.renderFlags &= ~_FLAG;
+            }
+        }
+
+    },
+
+    /**
+     * Sets the visibility of this Game Object.
+     * 
+     * An invisible Game Object will skip rendering, but will still process update logic.
+     *
+     * @method Phaser.GameObjects.Components.Visible#setVisible
+     * @since 3.0.0
+     *
+     * @param {boolean} value - The visible state of the Game Object.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setVisible: function (value)
+    {
+        this.visible = value;
+
+        return this;
+    }
+};
+
+module.exports = Visible;
+
+
+/***/ }),
+/* 216 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -45771,7 +45930,7 @@ module.exports = WrapDegrees;
 
 
 /***/ }),
-/* 218 */
+/* 217 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -45803,7 +45962,669 @@ module.exports = Wrap;
 
 
 /***/ }),
+/* 218 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var MATH_CONST = __webpack_require__(14);
+var TransformMatrix = __webpack_require__(27);
+var WrapAngle = __webpack_require__(217);
+var WrapAngleDegrees = __webpack_require__(216);
+
+//  global bitmask flag for GameObject.renderMask (used by Scale)
+var _FLAG = 4; // 0100
+
+/**
+ * Provides methods used for getting and setting the position, scale and rotation of a Game Object.
+ *
+ * @name Phaser.GameObjects.Components.Transform
+ * @since 3.0.0
+ */
+
+var Transform = {
+
+    /**
+     * Private internal value. Holds the horizontal scale value.
+     * 
+     * @name Phaser.GameObjects.Components.Transform#_scaleX
+     * @type {number}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
+    _scaleX: 1,
+
+    /**
+     * Private internal value. Holds the vertical scale value.
+     * 
+     * @name Phaser.GameObjects.Components.Transform#_scaleY
+     * @type {number}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
+    _scaleY: 1,
+
+    /**
+     * Private internal value. Holds the rotation value in radians.
+     * 
+     * @name Phaser.GameObjects.Components.Transform#_rotation
+     * @type {number}
+     * @private
+     * @default 0
+     * @since 3.0.0
+     */
+    _rotation: 0,
+
+    /**
+     * The x position of this Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Transform#x
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    x: 0,
+
+    /**
+     * The y position of this Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Transform#y
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    y: 0,
+
+    /**
+     * The z position of this Game Object.
+     * Note: Do not use this value to set the z-index, instead see the `depth` property.
+     *
+     * @name Phaser.GameObjects.Components.Transform#z
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    z: 0,
+
+    /**
+     * The w position of this Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Transform#w
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+    w: 0,
+
+    /**
+     * The horizontal scale of this Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Transform#scaleX
+     * @type {number}
+     * @default 1
+     * @since 3.0.0
+     */
+    scaleX: {
+
+        get: function ()
+        {
+            return this._scaleX;
+        },
+
+        set: function (value)
+        {
+            this._scaleX = value;
+
+            if (this._scaleX === 0)
+            {
+                this.renderFlags &= ~_FLAG;
+            }
+            else
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    },
+
+    /**
+     * The vertical scale of this Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Transform#scaleY
+     * @type {number}
+     * @default 1
+     * @since 3.0.0
+     */
+    scaleY: {
+
+        get: function ()
+        {
+            return this._scaleY;
+        },
+
+        set: function (value)
+        {
+            this._scaleY = value;
+
+            if (this._scaleY === 0)
+            {
+                this.renderFlags &= ~_FLAG;
+            }
+            else
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    },
+
+    /**
+     * The angle of this Game Object as expressed in degrees.
+     *
+     * Where 0 is to the right, 90 is down, 180 is left.
+     *
+     * If you prefer to work in radians, see the `rotation` property instead.
+     *
+     * @name Phaser.GameObjects.Components.Transform#angle
+     * @type {integer}
+     * @default 0
+     * @since 3.0.0
+     */
+    angle: {
+
+        get: function ()
+        {
+            return WrapAngleDegrees(this._rotation * MATH_CONST.RAD_TO_DEG);
+        },
+
+        set: function (value)
+        {
+            //  value is in degrees
+            this.rotation = WrapAngleDegrees(value) * MATH_CONST.DEG_TO_RAD;
+        }
+    },
+
+    /**
+     * The angle of this Game Object in radians.
+     *
+     * If you prefer to work in degrees, see the `angle` property instead.
+     *
+     * @name Phaser.GameObjects.Components.Transform#rotation
+     * @type {number}
+     * @default 1
+     * @since 3.0.0
+     */
+    rotation: {
+
+        get: function ()
+        {
+            return this._rotation;
+        },
+
+        set: function (value)
+        {
+            //  value is in radians
+            this._rotation = WrapAngle(value);
+        }
+    },
+
+    /**
+     * Sets the position of this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Transform#setPosition
+     * @since 3.0.0
+     *
+     * @param {number} [x=0] - The x position of this Game Object.
+     * @param {number} [y=x] - The y position of this Game Object. If not set it will use the `x` value.
+     * @param {number} [z=0] - The z position of this Game Object.
+     * @param {number} [w=0] - The w position of this Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setPosition: function (x, y, z, w)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = x; }
+        if (z === undefined) { z = 0; }
+        if (w === undefined) { w = 0; }
+
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
+
+        return this;
+    },
+
+    /**
+     * Sets the position of this Game Object to be a random position within the confines of
+     * the given area.
+     * 
+     * If no area is specified a random position between 0 x 0 and the game width x height is used instead.
+     *
+     * The position does not factor in the size of this Game Object, meaning that only the origin is
+     * guaranteed to be within the area.
+     *
+     * @method Phaser.GameObjects.Components.Transform#setRandomPosition
+     * @since 3.8.0
+     *
+     * @param {number} [x=0] - The x position of the top-left of the random area.
+     * @param {number} [y=0] - The y position of the top-left of the random area.
+     * @param {number} [width] - The width of the random area.
+     * @param {number} [height] - The height of the random area.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setRandomPosition: function (x, y, width, height)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = this.scene.sys.game.config.width; }
+        if (height === undefined) { height = this.scene.sys.game.config.height; }
+
+        this.x = x + (Math.random() * width);
+        this.y = y + (Math.random() * height);
+
+        return this;
+    },
+
+    /**
+     * Sets the rotation of this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Transform#setRotation
+     * @since 3.0.0
+     *
+     * @param {number} [radians=0] - The rotation of this Game Object, in radians.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setRotation: function (radians)
+    {
+        if (radians === undefined) { radians = 0; }
+
+        this.rotation = radians;
+
+        return this;
+    },
+
+    /**
+     * Sets the angle of this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Transform#setAngle
+     * @since 3.0.0
+     *
+     * @param {number} [degrees=0] - The rotation of this Game Object, in degrees.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setAngle: function (degrees)
+    {
+        if (degrees === undefined) { degrees = 0; }
+
+        this.angle = degrees;
+
+        return this;
+    },
+
+    /**
+     * Sets the scale of this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Transform#setScale
+     * @since 3.0.0
+     *
+     * @param {number} x - The horizontal scale of this Game Object.
+     * @param {number} [y=x] - The vertical scale of this Game Object. If not set it will use the `x` value.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setScale: function (x, y)
+    {
+        if (x === undefined) { x = 1; }
+        if (y === undefined) { y = x; }
+
+        this.scaleX = x;
+        this.scaleY = y;
+
+        return this;
+    },
+
+    /**
+     * Sets the x position of this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Transform#setX
+     * @since 3.0.0
+     *
+     * @param {number} [value=0] - The x position of this Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setX: function (value)
+    {
+        if (value === undefined) { value = 0; }
+
+        this.x = value;
+
+        return this;
+    },
+
+    /**
+     * Sets the y position of this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Transform#setY
+     * @since 3.0.0
+     *
+     * @param {number} [value=0] - The y position of this Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setY: function (value)
+    {
+        if (value === undefined) { value = 0; }
+
+        this.y = value;
+
+        return this;
+    },
+
+    /**
+     * Sets the z position of this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Transform#setZ
+     * @since 3.0.0
+     *
+     * @param {number} [value=0] - The z position of this Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setZ: function (value)
+    {
+        if (value === undefined) { value = 0; }
+
+        this.z = value;
+
+        return this;
+    },
+
+    /**
+     * Sets the w position of this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Transform#setW
+     * @since 3.0.0
+     *
+     * @param {number} [value=0] - The w position of this Game Object.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setW: function (value)
+    {
+        if (value === undefined) { value = 0; }
+
+        this.w = value;
+
+        return this;
+    },
+
+    /**
+     * Gets the local transform matrix for this Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Transform#getLocalTransformMatrix
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [tempMatrix] - The matrix to populate with the values from this Game Object.
+     *
+     * @return {Phaser.GameObjects.Components.TransformMatrix} The populated Transform Matrix.
+     */
+    getLocalTransformMatrix: function (tempMatrix)
+    {
+        if (tempMatrix === undefined) { tempMatrix = new TransformMatrix(); }
+
+        return tempMatrix.applyITRS(this.x, this.y, this._rotation, this._scaleX, this._scaleY);
+    },
+
+    /**
+     * Gets the world transform matrix for this Game Object, factoring in any parent Containers.
+     *
+     * @method Phaser.GameObjects.Components.Transform#getWorldTransformMatrix
+     * @since 3.4.0
+     *
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [tempMatrix] - The matrix to populate with the values from this Game Object.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - A temporary matrix to hold parent values during the calculations.
+     *
+     * @return {Phaser.GameObjects.Components.TransformMatrix} The populated Transform Matrix.
+     */
+    getWorldTransformMatrix: function (tempMatrix, parentMatrix)
+    {
+        if (tempMatrix === undefined) { tempMatrix = new TransformMatrix(); }
+        if (parentMatrix === undefined) { parentMatrix = new TransformMatrix(); }
+
+        var parent = this.parentContainer;
+
+        if (!parent)
+        {
+            return this.getLocalTransformMatrix(tempMatrix);
+        }
+
+        tempMatrix.applyITRS(this.x, this.y, this._rotation, this._scaleX, this._scaleY);
+
+        while (parent)
+        {
+            parentMatrix.applyITRS(parent.x, parent.y, parent._rotation, parent._scaleX, parent._scaleY);
+
+            parentMatrix.multiply(tempMatrix, tempMatrix);
+
+            parent = parent.parentContainer;
+        }
+
+        return tempMatrix;
+    }
+
+};
+
+module.exports = Transform;
+
+
+/***/ }),
 /* 219 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * @typedef {object} JSONGameObject
+ *
+ * @property {string} name - The name of this Game Object.
+ * @property {string} type - A textual representation of this Game Object, i.e. `sprite`.
+ * @property {number} x - The x position of this Game Object.
+ * @property {number} y - The y position of this Game Object.
+ * @property {object} scale - The scale of this Game Object
+ * @property {number} scale.x - The horizontal scale of this Game Object.
+ * @property {number} scale.y - The vertical scale of this Game Object.
+ * @property {object} origin - The origin of this Game Object.
+ * @property {number} origin.x - The horizontal origin of this Game Object.
+ * @property {number} origin.y - The vertical origin of this Game Object.
+ * @property {boolean} flipX - The horizontally flipped state of the Game Object.
+ * @property {boolean} flipY - The vertically flipped state of the Game Object.
+ * @property {number} rotation - The angle of this Game Object in radians.
+ * @property {number} alpha - The alpha value of the Game Object.
+ * @property {boolean} visible - The visible state of the Game Object.
+ * @property {integer} scaleMode - The Scale Mode being used by this Game Object.
+ * @property {(integer|string)} blendMode - Sets the Blend Mode being used by this Game Object.
+ * @property {string} textureKey - The texture key of this Game Object.
+ * @property {string} frameKey - The frame key of this Game Object.
+ * @property {object} data - The data of this Game Object.
+ */
+
+/**
+ * Build a JSON representation of the given Game Object.
+ *
+ * This is typically extended further by Game Object specific implementations.
+ *
+ * @method Phaser.GameObjects.Components.ToJSON
+ * @since 3.0.0
+ *
+ * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to export as JSON.
+ *
+ * @return {JSONGameObject} A JSON representation of the Game Object.
+ */
+var ToJSON = function (gameObject)
+{
+    var out = {
+        name: gameObject.name,
+        type: gameObject.type,
+        x: gameObject.x,
+        y: gameObject.y,
+        depth: gameObject.depth,
+        scale: {
+            x: gameObject.scaleX,
+            y: gameObject.scaleY
+        },
+        origin: {
+            x: gameObject.originX,
+            y: gameObject.originY
+        },
+        flipX: gameObject.flipX,
+        flipY: gameObject.flipY,
+        rotation: gameObject.rotation,
+        alpha: gameObject.alpha,
+        visible: gameObject.visible,
+        scaleMode: gameObject.scaleMode,
+        blendMode: gameObject.blendMode,
+        textureKey: '',
+        frameKey: '',
+        data: {}
+    };
+
+    if (gameObject.texture)
+    {
+        out.textureKey = gameObject.texture.key;
+        out.frameKey = gameObject.frame.name;
+    }
+
+    return out;
+};
+
+module.exports = ToJSON;
+
+
+/***/ }),
+/* 220 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Provides methods used for getting and setting the Scroll Factor of a Game Object.
+ *
+ * @name Phaser.GameObjects.Components.ScrollFactor
+ * @since 3.0.0
+ */
+
+var ScrollFactor = {
+
+    /**
+     * The horizontal scroll factor of this Game Object.
+     *
+     * The scroll factor controls the influence of the movement of a Camera upon this Game Object.
+     *
+     * When a camera scrolls it will change the location at which this Game Object is rendered on-screen.
+     * It does not change the Game Objects actual position values.
+     *
+     * A value of 1 means it will move exactly in sync with a camera.
+     * A value of 0 means it will not move at all, even if the camera moves.
+     * Other values control the degree to which the camera movement is mapped to this Game Object.
+     * 
+     * Please be aware that scroll factor values other than 1 are not taken in to consideration when
+     * calculating physics collisions. Bodies always collide based on their world position, but changing
+     * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
+     * them from physics bodies if not accounted for in your code.
+     *
+     * @name Phaser.GameObjects.Components.ScrollFactor#scrollFactorX
+     * @type {number}
+     * @default 1
+     * @since 3.0.0
+     */
+    scrollFactorX: 1,
+
+    /**
+     * The vertical scroll factor of this Game Object.
+     *
+     * The scroll factor controls the influence of the movement of a Camera upon this Game Object.
+     *
+     * When a camera scrolls it will change the location at which this Game Object is rendered on-screen.
+     * It does not change the Game Objects actual position values.
+     *
+     * A value of 1 means it will move exactly in sync with a camera.
+     * A value of 0 means it will not move at all, even if the camera moves.
+     * Other values control the degree to which the camera movement is mapped to this Game Object.
+     * 
+     * Please be aware that scroll factor values other than 1 are not taken in to consideration when
+     * calculating physics collisions. Bodies always collide based on their world position, but changing
+     * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
+     * them from physics bodies if not accounted for in your code.
+     *
+     * @name Phaser.GameObjects.Components.ScrollFactor#scrollFactorY
+     * @type {number}
+     * @default 1
+     * @since 3.0.0
+     */
+    scrollFactorY: 1,
+
+    /**
+     * Sets the scroll factor of this Game Object.
+     *
+     * The scroll factor controls the influence of the movement of a Camera upon this Game Object.
+     *
+     * When a camera scrolls it will change the location at which this Game Object is rendered on-screen.
+     * It does not change the Game Objects actual position values.
+     *
+     * A value of 1 means it will move exactly in sync with a camera.
+     * A value of 0 means it will not move at all, even if the camera moves.
+     * Other values control the degree to which the camera movement is mapped to this Game Object.
+     * 
+     * Please be aware that scroll factor values other than 1 are not taken in to consideration when
+     * calculating physics collisions. Bodies always collide based on their world position, but changing
+     * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
+     * them from physics bodies if not accounted for in your code.
+     *
+     * @method Phaser.GameObjects.Components.ScrollFactor#setScrollFactor
+     * @since 3.0.0
+     *
+     * @param {number} x - The horizontal scroll factor of this Game Object.
+     * @param {number} [y=x] - The vertical scroll factor of this Game Object. If not set it will use the `x` value.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setScrollFactor: function (x, y)
+    {
+        if (y === undefined) { y = x; }
+
+        this.scrollFactorX = x;
+        this.scrollFactorY = y;
+
+        return this;
+    }
+
+};
+
+module.exports = ScrollFactor;
+
+
+/***/ }),
+/* 221 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -45961,7 +46782,7 @@ module.exports = GeometryMask;
 
 
 /***/ }),
-/* 220 */
+/* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -46204,13 +47025,7 @@ module.exports = BitmapMask;
 
 
 /***/ }),
-/* 221 */,
-/* 222 */,
-/* 223 */,
-/* 224 */,
-/* 225 */,
-/* 226 */,
-/* 227 */
+/* 223 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -46219,7 +47034,668 @@ module.exports = BitmapMask;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var quickselect = __webpack_require__(185);
+var BitmapMask = __webpack_require__(222);
+var GeometryMask = __webpack_require__(221);
+
+/**
+ * Provides methods used for getting and setting the mask of a Game Object.
+ *
+ * @name Phaser.GameObjects.Components.Mask
+ * @since 3.0.0
+ */
+
+var Mask = {
+
+    /**
+     * The Mask this Game Object is using during render.
+     *
+     * @name Phaser.GameObjects.Components.Mask#mask
+     * @type {Phaser.Display.Masks.BitmapMask|Phaser.Display.Masks.GeometryMask}
+     * @since 3.0.0
+     */
+    mask: null,
+
+    /**
+     * Sets the mask that this Game Object will use to render with.
+     *
+     * The mask must have been previously created and can be either a GeometryMask or a BitmapMask.
+     * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+     *
+     * If a mask is already set on this Game Object it will be immediately replaced.
+     * 
+     * Masks are positioned in global space and are not relative to the Game Object to which they
+     * are applied. The reason for this is that multiple Game Objects can all share the same mask.
+     * 
+     * Masks have no impact on physics or input detection. They are purely a rendering component
+     * that allows you to limit what is visible during the render pass.
+     *
+     * @method Phaser.GameObjects.Components.Mask#setMask
+     * @since 3.6.2
+     *
+     * @param {Phaser.Display.Masks.BitmapMask|Phaser.Display.Masks.GeometryMask} mask - The mask this Game Object will use when rendering.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setMask: function (mask)
+    {
+        this.mask = mask;
+
+        return this;
+    },
+
+    /**
+     * Clears the mask that this Game Object was using.
+     *
+     * @method Phaser.GameObjects.Components.Mask#clearMask
+     * @since 3.6.2
+     *
+     * @param {boolean} [destroyMask=false] - Destroy the mask before clearing it?
+     *
+     * @return {this} This Game Object instance.
+     */
+    clearMask: function (destroyMask)
+    {
+        if (destroyMask === undefined) { destroyMask = false; }
+
+        if (destroyMask && this.mask)
+        {
+            this.mask.destroy();
+        }
+
+        this.mask = null;
+
+        return this;
+    },
+
+    /**
+     * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+     * including this one.
+     *
+     * To create the mask you need to pass in a reference to a renderable Game Object.
+     * A renderable Game Object is one that uses a texture to render with, such as an
+     * Image, Sprite, Render Texture or BitmapText.
+     *
+     * If you do not provide a renderable object, and this Game Object has a texture,
+     * it will use itself as the object. This means you can call this method to create
+     * a Bitmap Mask from any renderable Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Mask#createBitmapMask
+     * @since 3.6.2
+     * 
+     * @param {Phaser.GameObjects.GameObject} [renderable] - A renderable Game Object that uses a texture, such as a Sprite.
+     *
+     * @return {Phaser.Display.Masks.BitmapMask} This Bitmap Mask that was created.
+     */
+    createBitmapMask: function (renderable)
+    {
+        if (renderable === undefined && this.texture)
+        {
+            // eslint-disable-next-line consistent-this
+            renderable = this;
+        }
+
+        return new BitmapMask(this.scene, renderable);
+    },
+
+    /**
+     * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+     * including this one.
+     *
+     * To create the mask you need to pass in a reference to a Graphics Game Object.
+     *
+     * If you do not provide a graphics object, and this Game Object is an instance
+     * of a Graphics object, then it will use itself to create the mask.
+     * 
+     * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Mask#createGeometryMask
+     * @since 3.6.2
+     * 
+     * @param {Phaser.GameObjects.Graphics} [graphics] - A Graphics Game Object. The geometry within it will be used as the mask.
+     *
+     * @return {Phaser.Display.Masks.GeometryMask} This Geometry Mask that was created.
+     */
+    createGeometryMask: function (graphics)
+    {
+        if (graphics === undefined && this.type === 'Graphics')
+        {
+            // eslint-disable-next-line consistent-this
+            graphics = this;
+        }
+
+        return new GeometryMask(this.scene, graphics);
+    }
+
+};
+
+module.exports = Mask;
+
+
+/***/ }),
+/* 224 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Provides methods used for setting the depth of a Game Object.
+ * Should be applied as a mixin and not used directly.
+ * 
+ * @name Phaser.GameObjects.Components.Depth
+ * @since 3.0.0
+ */
+
+var Depth = {
+
+    /**
+     * Private internal value. Holds the depth of the Game Object.
+     * 
+     * @name Phaser.GameObjects.Components.Depth#_depth
+     * @type {integer}
+     * @private
+     * @default 0
+     * @since 3.0.0
+     */
+    _depth: 0,
+
+    /**
+     * The depth of this Game Object within the Scene.
+     * 
+     * The depth is also known as the 'z-index' in some environments, and allows you to change the rendering order
+     * of Game Objects, without actually moving their position in the display list.
+     *
+     * The depth starts from zero (the default value) and increases from that point. A Game Object with a higher depth
+     * value will always render in front of one with a lower value.
+     *
+     * Setting the depth will queue a depth sort event within the Scene.
+     * 
+     * @name Phaser.GameObjects.Components.Depth#depth
+     * @type {number}
+     * @since 3.0.0
+     */
+    depth: {
+
+        get: function ()
+        {
+            return this._depth;
+        },
+
+        set: function (value)
+        {
+            this.scene.sys.queueDepthSort();
+            this._depth = value;
+        }
+
+    },
+
+    /**
+     * The depth of this Game Object within the Scene.
+     * 
+     * The depth is also known as the 'z-index' in some environments, and allows you to change the rendering order
+     * of Game Objects, without actually moving their position in the display list.
+     *
+     * The depth starts from zero (the default value) and increases from that point. A Game Object with a higher depth
+     * value will always render in front of one with a lower value.
+     *
+     * Setting the depth will queue a depth sort event within the Scene.
+     * 
+     * @method Phaser.GameObjects.Components.Depth#setDepth
+     * @since 3.0.0
+     *
+     * @param {integer} value - The depth of this Game Object.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setDepth: function (value)
+    {
+        if (value === undefined) { value = 0; }
+
+        this.depth = value;
+
+        return this;
+    }
+
+};
+
+module.exports = Depth;
+
+
+/***/ }),
+/* 225 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var BlendModes = __webpack_require__(41);
+
+/**
+ * Provides methods used for setting the blend mode of a Game Object.
+ * Should be applied as a mixin and not used directly.
+ *
+ * @name Phaser.GameObjects.Components.BlendMode
+ * @since 3.0.0
+ */
+
+var BlendMode = {
+
+    /**
+     * Private internal value. Holds the current blend mode.
+     * 
+     * @name Phaser.GameObjects.Components.BlendMode#_blendMode
+     * @type {integer}
+     * @private
+     * @default 0
+     * @since 3.0.0
+     */
+    _blendMode: BlendModes.NORMAL,
+
+    /**
+     * Sets the Blend Mode being used by this Game Object.
+     *
+     * This can be a const, such as `Phaser.BlendModes.SCREEN`, or an integer, such as 4 (for Overlay)
+     *
+     * Under WebGL only the following Blend Modes are available:
+     *
+     * * ADD
+     * * MULTIPLY
+     * * SCREEN
+     *
+     * Canvas has more available depending on browser support.
+     *
+     * You can also create your own custom Blend Modes in WebGL.
+     *
+     * Blend modes have different effects under Canvas and WebGL, and from browser to browser, depending
+     * on support. Blend Modes also cause a WebGL batch flush should it encounter a new blend mode. For these
+     * reasons try to be careful about the construction of your Scene and the frequency of which blend modes
+     * are used.
+     *
+     * @name Phaser.GameObjects.Components.BlendMode#blendMode
+     * @type {(Phaser.BlendModes|string)}
+     * @since 3.0.0
+     */
+    blendMode: {
+
+        get: function ()
+        {
+            return this._blendMode;
+        },
+
+        set: function (value)
+        {
+            if (typeof value === 'string')
+            {
+                value = BlendModes[value];
+            }
+
+            value |= 0;
+
+            if (value >= -1)
+            {
+                this._blendMode = value;
+            }
+        }
+
+    },
+
+    /**
+     * Sets the Blend Mode being used by this Game Object.
+     *
+     * This can be a const, such as `Phaser.BlendModes.SCREEN`, or an integer, such as 4 (for Overlay)
+     *
+     * Under WebGL only the following Blend Modes are available:
+     *
+     * * ADD
+     * * MULTIPLY
+     * * SCREEN
+     *
+     * Canvas has more available depending on browser support.
+     *
+     * You can also create your own custom Blend Modes in WebGL.
+     *
+     * Blend modes have different effects under Canvas and WebGL, and from browser to browser, depending
+     * on support. Blend Modes also cause a WebGL batch flush should it encounter a new blend mode. For these
+     * reasons try to be careful about the construction of your Scene and the frequency of which blend modes
+     * are used.
+     *
+     * @method Phaser.GameObjects.Components.BlendMode#setBlendMode
+     * @since 3.0.0
+     *
+     * @param {(string|Phaser.BlendModes)} value - The BlendMode value. Either a string or a CONST.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setBlendMode: function (value)
+    {
+        this.blendMode = value;
+
+        return this;
+    }
+
+};
+
+module.exports = BlendMode;
+
+
+/***/ }),
+/* 226 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Clamp = __webpack_require__(19);
+
+//  bitmask flag for GameObject.renderMask
+var _FLAG = 2; // 0010
+
+/**
+ * Provides methods used for setting the alpha properties of a Game Object.
+ * Should be applied as a mixin and not used directly.
+ *
+ * @name Phaser.GameObjects.Components.Alpha
+ * @since 3.0.0
+ */
+
+var Alpha = {
+
+    /**
+     * Private internal value. Holds the global alpha value.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#_alpha
+     * @type {number}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
+    _alpha: 1,
+
+    /**
+     * Private internal value. Holds the top-left alpha value.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#_alphaTL
+     * @type {number}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
+    _alphaTL: 1,
+
+    /**
+     * Private internal value. Holds the top-right alpha value.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#_alphaTR
+     * @type {number}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
+    _alphaTR: 1,
+
+    /**
+     * Private internal value. Holds the bottom-left alpha value.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#_alphaBL
+     * @type {number}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
+    _alphaBL: 1,
+
+    /**
+     * Private internal value. Holds the bottom-right alpha value.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#_alphaBR
+     * @type {number}
+     * @private
+     * @default 1
+     * @since 3.0.0
+     */
+    _alphaBR: 1,
+
+    /**
+     * Clears all alpha values associated with this Game Object.
+     *
+     * Immediately sets the alpha levels back to 1 (fully opaque).
+     *
+     * @method Phaser.GameObjects.Components.Alpha#clearAlpha
+     * @since 3.0.0
+     *
+     * @return {this} This Game Object instance.
+     */
+    clearAlpha: function ()
+    {
+        return this.setAlpha(1);
+    },
+
+    /**
+     * Set the Alpha level of this Game Object. The alpha controls the opacity of the Game Object as it renders.
+     * Alpha values are provided as a float between 0, fully transparent, and 1, fully opaque.
+     *
+     * If your game is running under WebGL you can optionally specify four different alpha values, each of which
+     * correspond to the four corners of the Game Object. Under Canvas only the `topLeft` value given is used.
+     *
+     * @method Phaser.GameObjects.Components.Alpha#setAlpha
+     * @since 3.0.0
+     *
+     * @param {number} [topLeft=1] - The alpha value used for the top-left of the Game Object. If this is the only value given it's applied across the whole Game Object.
+     * @param {number} [topRight] - The alpha value used for the top-right of the Game Object. WebGL only.
+     * @param {number} [bottomLeft] - The alpha value used for the bottom-left of the Game Object. WebGL only.
+     * @param {number} [bottomRight] - The alpha value used for the bottom-right of the Game Object. WebGL only.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setAlpha: function (topLeft, topRight, bottomLeft, bottomRight)
+    {
+        if (topLeft === undefined) { topLeft = 1; }
+
+        //  Treat as if there is only one alpha value for the whole Game Object
+        if (topRight === undefined)
+        {
+            this.alpha = topLeft;
+        }
+        else
+        {
+            this._alphaTL = Clamp(topLeft, 0, 1);
+            this._alphaTR = Clamp(topRight, 0, 1);
+            this._alphaBL = Clamp(bottomLeft, 0, 1);
+            this._alphaBR = Clamp(bottomRight, 0, 1);
+        }
+
+        return this;
+    },
+
+    /**
+     * The alpha value of the Game Object.
+     *
+     * This is a global value, impacting the entire Game Object, not just a region of it.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#alpha
+     * @type {number}
+     * @since 3.0.0
+     */
+    alpha: {
+
+        get: function ()
+        {
+            return this._alpha;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            this._alpha = v;
+            this._alphaTL = v;
+            this._alphaTR = v;
+            this._alphaBL = v;
+            this._alphaBR = v;
+
+            if (v === 0)
+            {
+                this.renderFlags &= ~_FLAG;
+            }
+            else
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    },
+
+    /**
+     * The alpha value starting from the top-left of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#alphaTopLeft
+     * @type {number}
+     * @webglOnly
+     * @since 3.0.0
+     */
+    alphaTopLeft: {
+
+        get: function ()
+        {
+            return this._alphaTL;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            this._alphaTL = v;
+
+            if (v !== 0)
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    },
+
+    /**
+     * The alpha value starting from the top-right of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#alphaTopRight
+     * @type {number}
+     * @webglOnly
+     * @since 3.0.0
+     */
+    alphaTopRight: {
+
+        get: function ()
+        {
+            return this._alphaTR;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            this._alphaTR = v;
+
+            if (v !== 0)
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    },
+
+    /**
+     * The alpha value starting from the bottom-left of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#alphaBottomLeft
+     * @type {number}
+     * @webglOnly
+     * @since 3.0.0
+     */
+    alphaBottomLeft: {
+
+        get: function ()
+        {
+            return this._alphaBL;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            this._alphaBL = v;
+
+            if (v !== 0)
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    },
+
+    /**
+     * The alpha value starting from the bottom-right of the Game Object.
+     * This value is interpolated from the corner to the center of the Game Object.
+     *
+     * @name Phaser.GameObjects.Components.Alpha#alphaBottomRight
+     * @type {number}
+     * @webglOnly
+     * @since 3.0.0
+     */
+    alphaBottomRight: {
+
+        get: function ()
+        {
+            return this._alphaBR;
+        },
+
+        set: function (value)
+        {
+            var v = Clamp(value, 0, 1);
+
+            this._alphaBR = v;
+
+            if (v !== 0)
+            {
+                this.renderFlags |= _FLAG;
+            }
+        }
+
+    }
+
+};
+
+module.exports = Alpha;
+
+
+/***/ }),
+/* 227 */,
+/* 228 */,
+/* 229 */,
+/* 230 */,
+/* 231 */,
+/* 232 */,
+/* 233 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var quickselect = __webpack_require__(183);
 
 /**
  * @classdesc
@@ -46818,7 +48294,7 @@ function multiSelect (arr, left, right, n, compare)
 module.exports = rbush;
 
 /***/ }),
-/* 228 */
+/* 234 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -47034,8 +48510,8 @@ module.exports = ProcessQueue;
 
 
 /***/ }),
-/* 229 */,
-/* 230 */
+/* 235 */,
+/* 236 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -47045,7 +48521,7 @@ module.exports = ProcessQueue;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(17);
+var CONST = __webpack_require__(16);
 var File = __webpack_require__(18);
 var FileTypesManager = __webpack_require__(6);
 var GetFastValue = __webpack_require__(1);
@@ -47219,8 +48695,8 @@ module.exports = TextFile;
 
 
 /***/ }),
-/* 231 */,
-/* 232 */
+/* 237 */,
+/* 238 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -47229,8 +48705,8 @@ module.exports = TextFile;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Length = __webpack_require__(69);
-var Point = __webpack_require__(4);
+var Length = __webpack_require__(45);
+var Point = __webpack_require__(5);
 
 /**
  * [description]
@@ -47313,7 +48789,7 @@ module.exports = GetPoints;
 
 
 /***/ }),
-/* 233 */
+/* 239 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -47322,8 +48798,8 @@ module.exports = GetPoints;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Point = __webpack_require__(4);
-var Length = __webpack_require__(69);
+var Point = __webpack_require__(5);
+var Length = __webpack_require__(45);
 
 //  Position is a value between 0 and 1
 /**
@@ -47401,16 +48877,16 @@ module.exports = GetPoint;
 
 
 /***/ }),
-/* 234 */,
-/* 235 */,
-/* 236 */,
-/* 237 */,
-/* 238 */,
-/* 239 */,
 /* 240 */,
 /* 241 */,
 /* 242 */,
-/* 243 */
+/* 243 */,
+/* 244 */,
+/* 245 */,
+/* 246 */,
+/* 247 */,
+/* 248 */,
+/* 249 */
 /***/ (function(module, exports) {
 
 /**
@@ -47439,7 +48915,39 @@ module.exports = FloatBetween;
 
 
 /***/ }),
-/* 244 */
+/* 250 */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Returns the circumference of the given Ellipse.
+ *
+ * @function Phaser.Geom.Ellipse.Circumference
+ * @since 3.0.0
+ *
+ * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to get the circumference of.
+ *
+ * @return {number} The circumference of th Ellipse.
+ */
+var Circumference = function (ellipse)
+{
+    var rx = ellipse.width / 2;
+    var ry = ellipse.height / 2;
+    var h = Math.pow((rx - ry), 2) / Math.pow((rx + ry), 2);
+
+    return (Math.PI * (rx + ry)) * (1 + ((3 * h) / (10 + Math.sqrt(4 - (3 * h)))));
+};
+
+module.exports = Circumference;
+
+
+/***/ }),
+/* 251 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -47448,32 +48956,98 @@ module.exports = FloatBetween;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Ellipse = __webpack_require__(115);
+var Circumference = __webpack_require__(250);
+var CircumferencePoint = __webpack_require__(127);
+var FromPercent = __webpack_require__(65);
+var MATH_CONST = __webpack_require__(14);
 
-Ellipse.Area = __webpack_require__(446);
-Ellipse.Circumference = __webpack_require__(181);
-Ellipse.CircumferencePoint = __webpack_require__(114);
-Ellipse.Clone = __webpack_require__(445);
-Ellipse.Contains = __webpack_require__(55);
-Ellipse.ContainsPoint = __webpack_require__(444);
-Ellipse.ContainsRect = __webpack_require__(443);
-Ellipse.CopyFrom = __webpack_require__(442);
-Ellipse.Equals = __webpack_require__(441);
-Ellipse.GetBounds = __webpack_require__(440);
-Ellipse.GetPoint = __webpack_require__(183);
-Ellipse.GetPoints = __webpack_require__(182);
-Ellipse.Offset = __webpack_require__(439);
-Ellipse.OffsetPoint = __webpack_require__(438);
-Ellipse.Random = __webpack_require__(134);
+/**
+ * Returns an array of Point objects containing the coordinates of the points around the circumference of the Ellipse,
+ * based on the given quantity or stepRate values.
+ *
+ * @function Phaser.Geom.Ellipse.GetPoints
+ * @since 3.0.0
+ *
+ * @generic {Phaser.Geom.Point[]} O - [out,$return]
+ *
+ * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to get the points from.
+ * @param {integer} quantity - The amount of points to return. If a falsey value the quantity will be derived from the `stepRate` instead.
+ * @param {number} [stepRate] - Sets the quantity by getting the circumference of the ellipse and dividing it by the stepRate.
+ * @param {(array|Phaser.Geom.Point[])} [out] - An array to insert the points in to. If not provided a new array will be created.
+ *
+ * @return {(array|Phaser.Geom.Point[])} An array of Point objects pertaining to the points around the circumference of the ellipse.
+ */
+var GetPoints = function (ellipse, quantity, stepRate, out)
+{
+    if (out === undefined) { out = []; }
 
-module.exports = Ellipse;
+    //  If quantity is a falsey value (false, null, 0, undefined, etc) then we calculate it based on the stepRate instead.
+    if (!quantity)
+    {
+        quantity = Circumference(ellipse) / stepRate;
+    }
+
+    for (var i = 0; i < quantity; i++)
+    {
+        var angle = FromPercent(i / quantity, 0, MATH_CONST.PI2);
+
+        out.push(CircumferencePoint(ellipse, angle));
+    }
+
+    return out;
+};
+
+module.exports = GetPoints;
 
 
 /***/ }),
-/* 245 */,
-/* 246 */,
-/* 247 */,
-/* 248 */
+/* 252 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var CircumferencePoint = __webpack_require__(127);
+var FromPercent = __webpack_require__(65);
+var MATH_CONST = __webpack_require__(14);
+var Point = __webpack_require__(5);
+
+/**
+ * Returns a Point object containing the coordinates of a point on the circumference of the Ellipse
+ * based on the given angle normalized to the range 0 to 1. I.e. a value of 0.5 will give the point
+ * at 180 degrees around the circle.
+ *
+ * @function Phaser.Geom.Ellipse.GetPoint
+ * @since 3.0.0
+ *
+ * @generic {Phaser.Geom.Point} O - [out,$return]
+ *
+ * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to get the circumference point on.
+ * @param {number} position - A value between 0 and 1, where 0 equals 0 degrees, 0.5 equals 180 degrees and 1 equals 360 around the ellipse.
+ * @param {(Phaser.Geom.Point|object)} [out] - An object to store the return values in. If not given a Point object will be created.
+ *
+ * @return {(Phaser.Geom.Point|object)} A Point, or point-like object, containing the coordinates of the point around the ellipse.
+ */
+var GetPoint = function (ellipse, position, out)
+{
+    if (out === undefined) { out = new Point(); }
+
+    var angle = FromPercent(position, 0, MATH_CONST.PI2);
+
+    return CircumferencePoint(ellipse, angle, out);
+};
+
+module.exports = GetPoint;
+
+
+/***/ }),
+/* 253 */,
+/* 254 */,
+/* 255 */,
+/* 256 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -47483,7 +49057,7 @@ module.exports = Ellipse;
  */
 
 var GetValue = __webpack_require__(3);
-var Shuffle = __webpack_require__(95);
+var Shuffle = __webpack_require__(97);
 
 var BuildChunk = function (a, b, qty)
 {
@@ -47613,7 +49187,7 @@ module.exports = Range;
 
 
 /***/ }),
-/* 249 */
+/* 257 */
 /***/ (function(module, exports) {
 
 /**
@@ -47642,7 +49216,7 @@ module.exports = RoundAwayFromZero;
 
 
 /***/ }),
-/* 250 */
+/* 258 */
 /***/ (function(module, exports) {
 
 /**
@@ -47679,7 +49253,7 @@ module.exports = UppercaseFirst;
 
 
 /***/ }),
-/* 251 */
+/* 259 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -47688,7 +49262,7 @@ module.exports = UppercaseFirst;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Vector2 = __webpack_require__(5);
+var Vector2 = __webpack_require__(4);
 
 /**
  * Takes the `x` and `y` coordinates and transforms them into the same space as
@@ -47712,31 +49286,20 @@ var TransformXY = function (x, y, positionX, positionY, rotation, scaleX, scaleY
 {
     if (output === undefined) { output = new Vector2(); }
 
-    //  ITRS
+    var radianSin = Math.sin(rotation);
+    var radianCos = Math.cos(rotation);
 
-    var sr = Math.sin(-rotation);
-    var cr = Math.cos(-rotation);
-
-    var a = cr * scaleX;
-    var b = -sr * scaleX;
-    var c = sr * scaleY;
-    var d = cr * scaleY;
+    // Rotate and Scale
+    var a = radianCos * scaleX;
+    var b = radianSin * scaleX;
+    var c = -radianSin * scaleY;
+    var d = radianCos * scaleY;
 
     //  Invert
+    var id = 1 / ((a * d) + (c * -b));
 
-    var n = a * d - b * c;
-
-    var m0 = d / n;
-    var m1 = -b / n;
-    var m2 = -c / n;
-    var m3 = a / n;
-    var m4 = (c * positionY - d * positionX) / n;
-    var m5 = -(a * positionY - b * positionX) / n;
-
-    //  Transform
-
-    output.x = x * m0 + y * m2 + m4;
-    output.y = x * m1 + y * m3 + m5;
+    output.x = (d * id * x) + (-c * id * y) + (((positionY * c) - (positionX * d)) * id);
+    output.y = (a * id * y) + (-b * id * x) + (((-positionY * a) + (positionX * b)) * id);
 
     return output;
 };
@@ -47745,7 +49308,7 @@ module.exports = TransformXY;
 
 
 /***/ }),
-/* 252 */
+/* 260 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -47778,7 +49341,7 @@ module.exports = SmoothStepInterpolation;
 
 
 /***/ }),
-/* 253 */
+/* 261 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -48453,7 +50016,7 @@ earcut.flatten = function (data) {
 };
 
 /***/ }),
-/* 254 */
+/* 262 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -48615,26 +50178,28 @@ var BitmapMaskPipeline = new Class({
      */
     beginMask: function (mask, maskedObject, camera)
     {
-        var bitmapMask = mask.bitmapMask;
         var renderer = this.renderer;
         var gl = this.gl;
-        var visible = bitmapMask.visible;
+
+        //  The renderable Game Object that is being used for the bitmap mask
+        var bitmapMask = mask.bitmapMask;
 
         if (bitmapMask && gl)
         {
+            renderer.flush();
+
             // First we clear the mask framebuffer
             renderer.setFramebuffer(mask.maskFramebuffer);
             gl.clearColor(0, 0, 0, 0);
             gl.clear(gl.COLOR_BUFFER_BIT);
 
             // We render our mask source
-            bitmapMask.visible = true;
-            bitmapMask.renderWebGL(renderer, bitmapMask, 0.0, camera);
-            bitmapMask.visible = visible;
+            bitmapMask.renderWebGL(renderer, bitmapMask, 0, camera);
             renderer.flush();
 
             // Bind and clear our main source (masked object)
             renderer.setFramebuffer(mask.mainFramebuffer);
+
             gl.clearColor(0, 0, 0, 0);
             gl.clear(gl.COLOR_BUFFER_BIT);
         }
@@ -48653,11 +50218,13 @@ var BitmapMaskPipeline = new Class({
      */
     endMask: function (mask)
     {
-        var bitmapMask = mask.bitmapMask;
         var renderer = this.renderer;
         var gl = this.gl;
 
-        if (bitmapMask)
+        //  The renderable Game Object that is being used for the bitmap mask
+        var bitmapMask = mask.bitmapMask;
+
+        if (bitmapMask && gl)
         {
             // Return to default framebuffer
             renderer.setFramebuffer(null);
@@ -48680,7 +50247,7 @@ module.exports = BitmapMaskPipeline;
 
 
 /***/ }),
-/* 255 */
+/* 263 */
 /***/ (function(module, exports) {
 
 /**
@@ -48749,7 +50316,7 @@ module.exports = WebGLSnapshot;
 
 
 /***/ }),
-/* 256 */
+/* 264 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -48759,17 +50326,17 @@ module.exports = WebGLSnapshot;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BaseCamera = __webpack_require__(86);
+var BaseCamera = __webpack_require__(87);
 var Class = __webpack_require__(0);
 var CONST = __webpack_require__(23);
-var IsSizePowerOfTwo = __webpack_require__(84);
+var IsSizePowerOfTwo = __webpack_require__(85);
 var SpliceOne = __webpack_require__(56);
 var TransformMatrix = __webpack_require__(27);
 var Utils = __webpack_require__(20);
-var WebGLSnapshot = __webpack_require__(255);
+var WebGLSnapshot = __webpack_require__(263);
 
 // Default Pipelines
-var BitmapMaskPipeline = __webpack_require__(254);
+var BitmapMaskPipeline = __webpack_require__(262);
 var ForwardDiffuseLightPipeline = __webpack_require__(150);
 var TextureTintPipeline = __webpack_require__(128);
 
@@ -49603,7 +51170,11 @@ var WebGLRenderer = new Class({
             this.flush();
 
             // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/scissor
-            gl.scissor(x, (this.drawingBufferHeight - y - h), w, h);
+
+            if (w > 0 && h > 0)
+            {
+                gl.scissor(x, (this.drawingBufferHeight - y - h), w, h);
+            }
         }
     },
 
@@ -49839,6 +51410,10 @@ var WebGLRenderer = new Class({
             {
                 width = framebuffer.renderTexture.width;
                 height = framebuffer.renderTexture.height;
+            }
+            else
+            {
+                this.flush();
             }
 
             gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
@@ -50280,14 +51855,16 @@ var WebGLRenderer = new Class({
         var cw = camera._cw;
         var ch = camera._ch;
 
-        this.pushScissor(cx, cy, cw, ch);
-
         var TextureTintPipeline = this.pipelines.TextureTintPipeline;
 
         var color = camera.backgroundColor;
 
         if (camera.renderToTexture)
         {
+            this.flush();
+
+            this.pushScissor(cx, cy, cw, -ch);
+
             this.setFramebuffer(camera.framebuffer);
 
             var gl = this.gl;
@@ -50296,12 +51873,12 @@ var WebGLRenderer = new Class({
     
             gl.clear(gl.COLOR_BUFFER_BIT);
 
-            TextureTintPipeline.projOrtho(0, camera.width, 0, camera.height, -1000, 1000);
+            TextureTintPipeline.projOrtho(cx, cw + cx, cy, ch + cy, -1000, 1000);
 
             if (color.alphaGL > 0)
             {
                 TextureTintPipeline.drawFillRect(
-                    cx, cy, cw, ch,
+                    0, 0, cw + cx, ch + cy,
                     Utils.getTintFromFloats(color.redGL, color.greenGL, color.blueGL, 1),
                     color.alphaGL
                 );
@@ -50309,11 +51886,17 @@ var WebGLRenderer = new Class({
         }
         else if (color.alphaGL > 0)
         {
+            this.pushScissor(cx, cy, cw, ch);
+
             TextureTintPipeline.drawFillRect(
-                cx, cy, cw, ch,
+                0, 0, cw + cx, ch + cy,
                 Utils.getTintFromFloats(color.redGL, color.greenGL, color.blueGL, 1),
                 color.alphaGL
             );
+        }
+        else
+        {
+            this.pushScissor(cx, cy, cw, ch);
         }
     },
 
@@ -50339,6 +51922,7 @@ var WebGLRenderer = new Class({
 
         if (camera.renderToTexture)
         {
+            // this.flush();
             TextureTintPipeline.flush();
 
             this.setFramebuffer(null);
@@ -50347,9 +51931,9 @@ var WebGLRenderer = new Class({
 
             var getTint = Utils.getTintAppendFloatAlpha;
 
-            var p = (camera.pipeline) ? camera.pipeline : TextureTintPipeline;
-        
-            p.batchTexture(
+            var pipeline = (camera.pipeline) ? camera.pipeline : TextureTintPipeline;
+       
+            pipeline.batchTexture(
                 camera,
                 camera.glTexture,
                 camera.width, camera.height,
@@ -50370,6 +51954,8 @@ var WebGLRenderer = new Class({
                 this.defaultCamera,
                 null
             );
+
+            // this.setPipeline(TextureTintPipeline);
 
             //  Force clear the current texture so that items next in the batch (like Graphics) don't try and use it
             this.setBlankTexture(true);
@@ -50458,16 +52044,19 @@ var WebGLRenderer = new Class({
                 this.setBlendMode(child.blendMode);
             }
 
-            if (child.mask)
+            var mask = child.mask;
+
+            if (mask)
             {
-                child.mask.preRenderWebGL(this, child, camera);
+                mask.preRenderWebGL(this, child, camera);
+
+                child.renderWebGL(this, child, interpolationPercentage, camera);
+
+                mask.postRenderWebGL(this, child);
             }
-
-            child.renderWebGL(this, child, interpolationPercentage, camera);
-
-            if (child.mask)
+            else
             {
-                child.mask.postRenderWebGL(this, child);
+                child.renderWebGL(this, child, interpolationPercentage, camera);
             }
         }
 
@@ -50904,7 +52493,7 @@ module.exports = WebGLRenderer;
 
 
 /***/ }),
-/* 257 */
+/* 265 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -50914,7 +52503,7 @@ module.exports = WebGLRenderer;
  */
 
 var modes = __webpack_require__(41);
-var CanvasFeatures = __webpack_require__(207);
+var CanvasFeatures = __webpack_require__(205);
 
 /**
  * [description]
@@ -50955,7 +52544,7 @@ module.exports = GetBlendModes;
 
 
 /***/ }),
-/* 258 */
+/* 266 */
 /***/ (function(module, exports) {
 
 /**
@@ -50994,7 +52583,7 @@ module.exports = CanvasSnapshot;
 
 
 /***/ }),
-/* 259 */
+/* 267 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -51004,10 +52593,10 @@ module.exports = CanvasSnapshot;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CanvasSnapshot = __webpack_require__(258);
+var CanvasSnapshot = __webpack_require__(266);
 var Class = __webpack_require__(0);
 var CONST = __webpack_require__(23);
-var GetBlendModes = __webpack_require__(257);
+var GetBlendModes = __webpack_require__(265);
 var ScaleModes = __webpack_require__(59);
 var Smoothing = __webpack_require__(131);
 var TransformMatrix = __webpack_require__(27);
@@ -51648,7 +53237,7 @@ module.exports = CanvasRenderer;
 
 
 /***/ }),
-/* 260 */
+/* 268 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -51845,7 +53434,7 @@ module.exports = RequestAnimationFrame;
 
 
 /***/ }),
-/* 261 */
+/* 269 */
 /***/ (function(module, exports) {
 
 /**
@@ -51874,7 +53463,7 @@ module.exports = RemoveFromDOM;
 
 
 /***/ }),
-/* 262 */
+/* 270 */
 /***/ (function(module, exports) {
 
 /**
@@ -51931,7 +53520,7 @@ module.exports = ParseXML;
 
 
 /***/ }),
-/* 263 */
+/* 271 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -51994,7 +53583,7 @@ module.exports = DOMContentLoaded;
 
 
 /***/ }),
-/* 264 */
+/* 272 */
 /***/ (function(module, exports) {
 
 /**
@@ -52057,9 +53646,9 @@ module.exports = CanvasInterpolation;
 
 
 /***/ }),
-/* 265 */,
-/* 266 */,
-/* 267 */
+/* 273 */,
+/* 274 */,
+/* 275 */
 /***/ (function(module, exports) {
 
 /**
@@ -52097,7 +53686,7 @@ module.exports = {
 
 
 /***/ }),
-/* 268 */
+/* 276 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52106,7 +53695,7 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Arne16 = __webpack_require__(267);
+var Arne16 = __webpack_require__(275);
 var CanvasPool = __webpack_require__(22);
 var GetValue = __webpack_require__(3);
 
@@ -52212,7 +53801,7 @@ module.exports = GenerateTexture;
 
 
 /***/ }),
-/* 269 */
+/* 277 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52229,7 +53818,7 @@ module.exports = __webpack_require__(526);
 
 
 /***/ }),
-/* 270 */
+/* 278 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52252,7 +53841,7 @@ module.exports = {
 
 
 /***/ }),
-/* 271 */
+/* 279 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52275,7 +53864,7 @@ module.exports = {
 
 
 /***/ }),
-/* 272 */
+/* 280 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52298,7 +53887,7 @@ module.exports = {
 
 
 /***/ }),
-/* 273 */
+/* 281 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52321,7 +53910,7 @@ module.exports = {
 
 
 /***/ }),
-/* 274 */
+/* 282 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52338,7 +53927,7 @@ module.exports = __webpack_require__(539);
 
 
 /***/ }),
-/* 275 */
+/* 283 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52361,7 +53950,7 @@ module.exports = {
 
 
 /***/ }),
-/* 276 */
+/* 284 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52384,7 +53973,7 @@ module.exports = {
 
 
 /***/ }),
-/* 277 */
+/* 285 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52407,7 +53996,7 @@ module.exports = {
 
 
 /***/ }),
-/* 278 */
+/* 286 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52430,7 +54019,7 @@ module.exports = {
 
 
 /***/ }),
-/* 279 */
+/* 287 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52453,7 +54042,7 @@ module.exports = {
 
 
 /***/ }),
-/* 280 */
+/* 288 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52476,7 +54065,7 @@ module.exports = {
 
 
 /***/ }),
-/* 281 */
+/* 289 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52522,7 +54111,7 @@ module.exports = RGBStringToColor;
 
 
 /***/ }),
-/* 282 */
+/* 290 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52552,7 +54141,7 @@ module.exports = ObjectToColor;
 
 
 /***/ }),
-/* 283 */
+/* 291 */
 /***/ (function(module, exports) {
 
 /**
@@ -52600,7 +54189,7 @@ module.exports = IntegerToRGB;
 
 
 /***/ }),
-/* 284 */
+/* 292 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52610,7 +54199,7 @@ module.exports = IntegerToRGB;
  */
 
 var Color = __webpack_require__(31);
-var IntegerToRGB = __webpack_require__(283);
+var IntegerToRGB = __webpack_require__(291);
 
 /**
  * Converts the given color value into an instance of a Color object.
@@ -52633,7 +54222,7 @@ module.exports = IntegerToColor;
 
 
 /***/ }),
-/* 285 */
+/* 293 */
 /***/ (function(module, exports) {
 
 /**
@@ -52664,7 +54253,7 @@ module.exports = GetColor32;
 
 
 /***/ }),
-/* 286 */
+/* 294 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52717,9 +54306,9 @@ module.exports = HexStringToColor;
 
 
 /***/ }),
-/* 287 */,
-/* 288 */,
-/* 289 */
+/* 295 */,
+/* 296 */,
+/* 297 */
 /***/ (function(module, exports) {
 
 /**
@@ -52759,7 +54348,7 @@ module.exports = RotateRight;
 
 
 /***/ }),
-/* 290 */
+/* 298 */
 /***/ (function(module, exports) {
 
 /**
@@ -52799,134 +54388,7 @@ module.exports = RotateLeft;
 
 
 /***/ }),
-/* 291 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Provides methods used for setting the WebGL rendering pipeline of a Game Object.
- *
- * @name Phaser.GameObjects.Components.Pipeline
- * @webglOnly
- * @since 3.0.0
- */
-
-var Pipeline = {
-
-    /**
-     * The initial WebGL pipeline of this Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Pipeline#defaultPipeline
-     * @type {Phaser.Renderer.WebGL.WebGLPipeline}
-     * @default null
-     * @webglOnly
-     * @since 3.0.0
-     */
-    defaultPipeline: null,
-
-    /**
-     * The current WebGL pipeline of this Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Pipeline#pipeline
-     * @type {Phaser.Renderer.WebGL.WebGLPipeline}
-     * @default null
-     * @webglOnly
-     * @since 3.0.0
-     */
-    pipeline: null,
-
-    /**
-     * Sets the initial WebGL Pipeline of this Game Object.
-     * This should only be called during the instantiation of the Game Object.
-     *
-     * @method Phaser.GameObjects.Components.Pipeline#initPipeline
-     * @webglOnly
-     * @since 3.0.0
-     *
-     * @param {string} pipelineName - The name of the pipeline to set on this Game Object.
-     *
-     * @return {boolean} `true` if the pipeline was set successfully, otherwise `false`.
-     */
-    initPipeline: function (pipelineName)
-    {
-        var renderer = this.scene.sys.game.renderer;
-
-        if (renderer && renderer.gl && renderer.hasPipeline(pipelineName))
-        {
-            this.defaultPipeline = renderer.getPipeline(pipelineName);
-            this.pipeline = this.defaultPipeline;
-
-            return true;
-        }
-
-        return false;
-    },
-
-    /**
-     * Sets the active WebGL Pipeline of this Game Object.
-     *
-     * @method Phaser.GameObjects.Components.Pipeline#setPipeline
-     * @webglOnly
-     * @since 3.0.0
-     *
-     * @param {string} pipelineName - The name of the pipeline to set on this Game Object.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setPipeline: function (pipelineName)
-    {
-        var renderer = this.scene.sys.game.renderer;
-
-        if (renderer && renderer.gl && renderer.hasPipeline(pipelineName))
-        {
-            this.pipeline = renderer.getPipeline(pipelineName);
-        }
-
-        return this;
-    },
-
-    /**
-     * Resets the WebGL Pipeline of this Game Object back to the default it was created with.
-     *
-     * @method Phaser.GameObjects.Components.Pipeline#resetPipeline
-     * @webglOnly
-     * @since 3.0.0
-     *
-     * @return {boolean} `true` if the pipeline was set successfully, otherwise `false`.
-     */
-    resetPipeline: function ()
-    {
-        this.pipeline = this.defaultPipeline;
-
-        return (this.pipeline !== null);
-    },
-
-    /**
-     * Gets the name of the WebGL Pipeline this Game Object is currently using.
-     *
-     * @method Phaser.GameObjects.Components.Pipeline#getPipelineName
-     * @webglOnly
-     * @since 3.0.0
-     *
-     * @return {string} The string-based name of the pipeline being used by this Game Object.
-     */
-    getPipelineName: function ()
-    {
-        return this.pipeline.name;
-    }
-
-};
-
-module.exports = Pipeline;
-
-
-/***/ }),
-/* 292 */
+/* 299 */
 /***/ (function(module, exports) {
 
 /**
@@ -52966,7 +54428,7 @@ module.exports = RotateAround;
 
 
 /***/ }),
-/* 293 */
+/* 300 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -52975,7 +54437,7 @@ module.exports = RotateAround;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Point = __webpack_require__(4);
+var Point = __webpack_require__(5);
 
 /**
  * Get a point on a line that's a given percentage along its length.
@@ -53005,7 +54467,7 @@ module.exports = GetPoint;
 
 
 /***/ }),
-/* 294 */
+/* 301 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -53015,7 +54477,7 @@ module.exports = GetPoint;
  */
 
 var GetPoint = __webpack_require__(135);
-var Perimeter = __webpack_require__(97);
+var Perimeter = __webpack_require__(98);
 
 //  Return an array of points from the perimeter of the rectangle
 //  each spaced out based on the quantity or step required
@@ -53059,7 +54521,7 @@ module.exports = GetPoints;
 
 
 /***/ }),
-/* 295 */
+/* 302 */
 /***/ (function(module, exports) {
 
 /**
@@ -53087,7 +54549,7 @@ module.exports = Circumference;
 
 
 /***/ }),
-/* 296 */
+/* 303 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -53096,10 +54558,10 @@ module.exports = Circumference;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Circumference = __webpack_require__(295);
+var Circumference = __webpack_require__(302);
 var CircumferencePoint = __webpack_require__(136);
-var FromPercent = __webpack_require__(64);
-var MATH_CONST = __webpack_require__(15);
+var FromPercent = __webpack_require__(65);
+var MATH_CONST = __webpack_require__(14);
 
 /**
  * Returns an array of Point objects containing the coordinates of the points around the circumference of the Circle,
@@ -53139,7 +54601,7 @@ module.exports = GetPoints;
 
 
 /***/ }),
-/* 297 */
+/* 304 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -53638,7 +55100,7 @@ module.exports = RandomDataGenerator;
 
 
 /***/ }),
-/* 298 */
+/* 305 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -53648,9 +55110,9 @@ module.exports = RandomDataGenerator;
  */
 
 var CircumferencePoint = __webpack_require__(136);
-var FromPercent = __webpack_require__(64);
-var MATH_CONST = __webpack_require__(15);
-var Point = __webpack_require__(4);
+var FromPercent = __webpack_require__(65);
+var MATH_CONST = __webpack_require__(14);
+var Point = __webpack_require__(5);
 
 /**
  * Returns a Point object containing the coordinates of a point on the circumference of the Circle
@@ -53681,10 +55143,10 @@ module.exports = GetPoint;
 
 
 /***/ }),
-/* 299 */,
-/* 300 */,
-/* 301 */,
-/* 302 */
+/* 306 */,
+/* 307 */,
+/* 308 */,
+/* 309 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -54198,6 +55660,7 @@ var Animation = new Class({
 
         this.forward = true;
         this._reverse = false;
+
         return this._startAnimation(key, startFrame);
     },
 
@@ -54226,6 +55689,7 @@ var Animation = new Class({
 
         this.forward = false;
         this._reverse = true;
+
         return this._startAnimation(key, startFrame);
     },
 
@@ -54732,7 +56196,7 @@ module.exports = Animation;
 
 
 /***/ }),
-/* 303 */
+/* 310 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -54742,9 +56206,9 @@ module.exports = Animation;
  */
 
 var Class = __webpack_require__(0);
-var NumberTweenBuilder = __webpack_require__(165);
-var PluginCache = __webpack_require__(10);
-var TimelineBuilder = __webpack_require__(164);
+var NumberTweenBuilder = __webpack_require__(166);
+var PluginCache = __webpack_require__(9);
+var TimelineBuilder = __webpack_require__(165);
 var TWEEN_CONST = __webpack_require__(61);
 var TweenBuilder = __webpack_require__(70);
 
@@ -55413,7 +56877,7 @@ module.exports = TweenManager;
 
 
 /***/ }),
-/* 304 */
+/* 311 */
 /***/ (function(module, exports) {
 
 /**
@@ -55485,7 +56949,7 @@ module.exports = [
 
 
 /***/ }),
-/* 305 */
+/* 312 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -55503,19 +56967,19 @@ module.exports = {
     GetBoolean: __webpack_require__(62),
     GetEaseFunction: __webpack_require__(63),
     GetNewValue: __webpack_require__(71),
-    GetProps: __webpack_require__(167),
-    GetTargets: __webpack_require__(102),
-    GetTweens: __webpack_require__(166),
-    GetValueOp: __webpack_require__(101),
-    NumberTweenBuilder: __webpack_require__(165),
-    TimelineBuilder: __webpack_require__(164),
+    GetProps: __webpack_require__(168),
+    GetTargets: __webpack_require__(103),
+    GetTweens: __webpack_require__(167),
+    GetValueOp: __webpack_require__(102),
+    NumberTweenBuilder: __webpack_require__(166),
+    TimelineBuilder: __webpack_require__(165),
     TweenBuilder: __webpack_require__(70)
 
 };
 
 
 /***/ }),
-/* 306 */
+/* 313 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -55525,7 +56989,7 @@ module.exports = {
  */
 
 var CONST = __webpack_require__(61);
-var Extend = __webpack_require__(16);
+var Extend = __webpack_require__(15);
 
 /**
  * @namespace Phaser.Tweens
@@ -55533,12 +56997,12 @@ var Extend = __webpack_require__(16);
 
 var Tweens = {
 
-    Builders: __webpack_require__(305),
+    Builders: __webpack_require__(312),
 
-    TweenManager: __webpack_require__(303),
-    Tween: __webpack_require__(99),
-    TweenData: __webpack_require__(98),
-    Timeline: __webpack_require__(163)
+    TweenManager: __webpack_require__(310),
+    Tween: __webpack_require__(100),
+    TweenData: __webpack_require__(99),
+    Timeline: __webpack_require__(164)
 
 };
 
@@ -55549,7 +57013,7 @@ module.exports = Tweens;
 
 
 /***/ }),
-/* 307 */
+/* 314 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -55559,8 +57023,8 @@ module.exports = Tweens;
  */
 
 var Class = __webpack_require__(0);
-var PluginCache = __webpack_require__(10);
-var TimerEvent = __webpack_require__(168);
+var PluginCache = __webpack_require__(9);
+var TimerEvent = __webpack_require__(169);
 
 /**
  * @classdesc
@@ -55943,7 +57407,7 @@ module.exports = Clock;
 
 
 /***/ }),
-/* 308 */
+/* 315 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -55958,20 +57422,13 @@ module.exports = Clock;
 
 module.exports = {
 
-    Clock: __webpack_require__(307),
-    TimerEvent: __webpack_require__(168)
+    Clock: __webpack_require__(314),
+    TimerEvent: __webpack_require__(169)
 
 };
 
 
 /***/ }),
-/* 309 */,
-/* 310 */,
-/* 311 */,
-/* 312 */,
-/* 313 */,
-/* 314 */,
-/* 315 */,
 /* 316 */,
 /* 317 */,
 /* 318 */,
@@ -55979,7 +57436,14 @@ module.exports = {
 /* 320 */,
 /* 321 */,
 /* 322 */,
-/* 323 */
+/* 323 */,
+/* 324 */,
+/* 325 */,
+/* 326 */,
+/* 327 */,
+/* 328 */,
+/* 329 */,
+/* 330 */
 /***/ (function(module, exports) {
 
 /**
@@ -56019,7 +57483,7 @@ module.exports = CONST;
 
 
 /***/ }),
-/* 324 */
+/* 331 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -56028,8 +57492,8 @@ module.exports = CONST;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Extend = __webpack_require__(16);
-var FilterMode = __webpack_require__(323);
+var Extend = __webpack_require__(15);
+var FilterMode = __webpack_require__(330);
 
 /**
  * @namespace Phaser.Textures
@@ -56052,11 +57516,11 @@ var FilterMode = __webpack_require__(323);
 var Textures = {
 
     FilterMode: FilterMode,
-    Frame: __webpack_require__(93),
-    Parsers: __webpack_require__(187),
-    Texture: __webpack_require__(120),
-    TextureManager: __webpack_require__(189),
-    TextureSource: __webpack_require__(188)
+    Frame: __webpack_require__(95),
+    Parsers: __webpack_require__(185),
+    Texture: __webpack_require__(119),
+    TextureManager: __webpack_require__(187),
+    TextureSource: __webpack_require__(186)
 
 };
 
@@ -56066,7 +57530,7 @@ module.exports = Textures;
 
 
 /***/ }),
-/* 325 */
+/* 332 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -56081,17 +57545,17 @@ module.exports = Textures;
 
 module.exports = {
 
-    List: __webpack_require__(92),
-    Map: __webpack_require__(126),
-    ProcessQueue: __webpack_require__(228),
-    RTree: __webpack_require__(227),
-    Set: __webpack_require__(82)
+    List: __webpack_require__(94),
+    Map: __webpack_require__(125),
+    ProcessQueue: __webpack_require__(234),
+    RTree: __webpack_require__(233),
+    Set: __webpack_require__(83)
 
 };
 
 
 /***/ }),
-/* 326 */
+/* 333 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -56132,25 +57596,25 @@ module.exports = {
 
 module.exports = {
 
-    SoundManagerCreator: __webpack_require__(196),
+    SoundManagerCreator: __webpack_require__(194),
 
-    BaseSound: __webpack_require__(76),
-    BaseSoundManager: __webpack_require__(77),
+    BaseSound: __webpack_require__(77),
+    BaseSoundManager: __webpack_require__(78),
 
-    WebAudioSound: __webpack_require__(190),
-    WebAudioSoundManager: __webpack_require__(191),
+    WebAudioSound: __webpack_require__(188),
+    WebAudioSoundManager: __webpack_require__(189),
 
-    HTML5AudioSound: __webpack_require__(194),
-    HTML5AudioSoundManager: __webpack_require__(195),
+    HTML5AudioSound: __webpack_require__(192),
+    HTML5AudioSoundManager: __webpack_require__(193),
 
-    NoAudioSound: __webpack_require__(192),
-    NoAudioSoundManager: __webpack_require__(193)
+    NoAudioSound: __webpack_require__(190),
+    NoAudioSoundManager: __webpack_require__(191)
 
 };
 
 
 /***/ }),
-/* 327 */
+/* 334 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -56162,7 +57626,7 @@ module.exports = {
 var Clamp = __webpack_require__(19);
 var Class = __webpack_require__(0);
 var GetFastValue = __webpack_require__(1);
-var PluginCache = __webpack_require__(10);
+var PluginCache = __webpack_require__(9);
 
 /**
  * @classdesc
@@ -57134,7 +58598,7 @@ module.exports = ScenePlugin;
 
 
 /***/ }),
-/* 328 */
+/* 335 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -57143,8 +58607,8 @@ module.exports = ScenePlugin;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CONST = __webpack_require__(78);
-var Extend = __webpack_require__(16);
+var CONST = __webpack_require__(79);
+var Extend = __webpack_require__(15);
 
 /**
  * @namespace Phaser.Scenes
@@ -57152,10 +58616,10 @@ var Extend = __webpack_require__(16);
 
 var Scene = {
 
-    SceneManager: __webpack_require__(199),
-    ScenePlugin: __webpack_require__(327),
-    Settings: __webpack_require__(197),
-    Systems: __webpack_require__(121)
+    SceneManager: __webpack_require__(197),
+    ScenePlugin: __webpack_require__(334),
+    Settings: __webpack_require__(195),
+    Systems: __webpack_require__(120)
 
 };
 
@@ -57166,7 +58630,7 @@ module.exports = Scene;
 
 
 /***/ }),
-/* 329 */
+/* 336 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -57175,7 +58639,7 @@ module.exports = Scene;
 * @license      {@link https://github.com/photonstorm/phaser3-plugin-template/blob/master/LICENSE|MIT License}
 */
 
-var BasePlugin = __webpack_require__(169);
+var BasePlugin = __webpack_require__(170);
 var Class = __webpack_require__(0);
 
 /**
@@ -57254,7 +58718,7 @@ module.exports = ScenePlugin;
 
 
 /***/ }),
-/* 330 */
+/* 337 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -57269,23 +58733,16 @@ module.exports = ScenePlugin;
 
 module.exports = {
 
-    BasePlugin: __webpack_require__(169),
-    DefaultPlugins: __webpack_require__(122),
-    PluginCache: __webpack_require__(10),
-    PluginManager: __webpack_require__(201),
-    ScenePlugin: __webpack_require__(329)
+    BasePlugin: __webpack_require__(170),
+    DefaultPlugins: __webpack_require__(121),
+    PluginCache: __webpack_require__(9),
+    PluginManager: __webpack_require__(199),
+    ScenePlugin: __webpack_require__(336)
 
 };
 
 
 /***/ }),
-/* 331 */,
-/* 332 */,
-/* 333 */,
-/* 334 */,
-/* 335 */,
-/* 336 */,
-/* 337 */,
 /* 338 */,
 /* 339 */,
 /* 340 */,
@@ -57306,7 +58763,14 @@ module.exports = {
 /* 355 */,
 /* 356 */,
 /* 357 */,
-/* 358 */
+/* 358 */,
+/* 359 */,
+/* 360 */,
+/* 361 */,
+/* 362 */,
+/* 363 */,
+/* 364 */,
+/* 365 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -57316,12 +58780,12 @@ module.exports = {
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(17);
-var CustomSet = __webpack_require__(82);
+var CONST = __webpack_require__(16);
+var CustomSet = __webpack_require__(83);
 var EventEmitter = __webpack_require__(8);
 var FileTypesManager = __webpack_require__(6);
 var GetFastValue = __webpack_require__(1);
-var PluginCache = __webpack_require__(10);
+var PluginCache = __webpack_require__(9);
 var XHRSettings = __webpack_require__(73);
 
 /**
@@ -58398,7 +59862,7 @@ module.exports = LoaderPlugin;
 
 
 /***/ }),
-/* 359 */
+/* 366 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58600,7 +60064,7 @@ module.exports = SpriteSheetFile;
 
 
 /***/ }),
-/* 360 */
+/* 367 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58610,7 +60074,7 @@ module.exports = SpriteSheetFile;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(17);
+var CONST = __webpack_require__(16);
 var File = __webpack_require__(18);
 var FileTypesManager = __webpack_require__(6);
 var GetFastValue = __webpack_require__(1);
@@ -58780,7 +60244,7 @@ module.exports = ScriptFile;
 
 
 /***/ }),
-/* 361 */
+/* 368 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -58790,7 +60254,7 @@ module.exports = ScriptFile;
  */
 
 var Class = __webpack_require__(0);
-var CONST = __webpack_require__(17);
+var CONST = __webpack_require__(16);
 var File = __webpack_require__(18);
 var FileTypesManager = __webpack_require__(6);
 var GetFastValue = __webpack_require__(1);
@@ -58996,7 +60460,7 @@ module.exports = PluginFile;
 
 
 /***/ }),
-/* 362 */
+/* 369 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -59332,7 +60796,7 @@ module.exports = MultiAtlasFile;
 
 
 /***/ }),
-/* 363 */
+/* 370 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -59341,7 +60805,7 @@ module.exports = MultiAtlasFile;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var AudioFile = __webpack_require__(172);
+var AudioFile = __webpack_require__(173);
 var Class = __webpack_require__(0);
 var FileTypesManager = __webpack_require__(6);
 var GetFastValue = __webpack_require__(1);
@@ -59633,7 +61097,7 @@ FileTypesManager.register('audioSprite', function (key, jsonURL, audioURL, audio
 
 
 /***/ }),
-/* 364 */
+/* 371 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -59895,7 +61359,7 @@ module.exports = AtlasJSONFile;
 
 
 /***/ }),
-/* 365 */
+/* 372 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60097,7 +61561,7 @@ module.exports = AnimationJSONFile;
 
 
 /***/ }),
-/* 366 */
+/* 373 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60113,14 +61577,14 @@ module.exports = AnimationJSONFile;
 /* eslint-disable */
 module.exports = {
 
-    TouchManager: __webpack_require__(202)
+    TouchManager: __webpack_require__(200)
        
 };
 /* eslint-enable */
 
 
 /***/ }),
-/* 367 */
+/* 374 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60136,14 +61600,14 @@ module.exports = {
 /* eslint-disable */
 module.exports = {
 
-    MouseManager: __webpack_require__(204)
+    MouseManager: __webpack_require__(202)
        
 };
 /* eslint-enable */
 
 
 /***/ }),
-/* 368 */
+/* 375 */
 /***/ (function(module, exports) {
 
 /**
@@ -60175,7 +61639,7 @@ module.exports = UpDuration;
 
 
 /***/ }),
-/* 369 */
+/* 376 */
 /***/ (function(module, exports) {
 
 /**
@@ -60207,7 +61671,7 @@ module.exports = DownDuration;
 
 
 /***/ }),
-/* 370 */
+/* 377 */
 /***/ (function(module, exports) {
 
 /**
@@ -60249,7 +61713,7 @@ module.exports = JustUp;
 
 
 /***/ }),
-/* 371 */
+/* 378 */
 /***/ (function(module, exports) {
 
 /**
@@ -60291,7 +61755,7 @@ module.exports = JustDown;
 
 
 /***/ }),
-/* 372 */
+/* 379 */
 /***/ (function(module, exports) {
 
 /**
@@ -60343,7 +61807,7 @@ module.exports = ProcessKeyUp;
 
 
 /***/ }),
-/* 373 */
+/* 380 */
 /***/ (function(module, exports) {
 
 /**
@@ -60402,7 +61866,7 @@ module.exports = ProcessKeyDown;
 
 
 /***/ }),
-/* 374 */
+/* 381 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60411,7 +61875,7 @@ module.exports = ProcessKeyDown;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var KeyCodes = __webpack_require__(110);
+var KeyCodes = __webpack_require__(111);
 
 var KeyMap = {};
 
@@ -60424,7 +61888,7 @@ module.exports = KeyMap;
 
 
 /***/ }),
-/* 375 */
+/* 382 */
 /***/ (function(module, exports) {
 
 /**
@@ -60459,7 +61923,7 @@ module.exports = ResetKeyCombo;
 
 
 /***/ }),
-/* 376 */
+/* 383 */
 /***/ (function(module, exports) {
 
 /**
@@ -60501,7 +61965,7 @@ module.exports = AdvanceKeyCombo;
 
 
 /***/ }),
-/* 377 */
+/* 384 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60510,7 +61974,7 @@ module.exports = AdvanceKeyCombo;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var AdvanceKeyCombo = __webpack_require__(376);
+var AdvanceKeyCombo = __webpack_require__(383);
 
 /**
  * Used internally by the KeyCombo class.
@@ -60582,7 +62046,7 @@ module.exports = ProcessKeyCombo;
 
 
 /***/ }),
-/* 378 */
+/* 385 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -60595,12 +62059,12 @@ var Class = __webpack_require__(0);
 var EventEmitter = __webpack_require__(8);
 var GetValue = __webpack_require__(3);
 var InputPluginCache = __webpack_require__(74);
-var Key = __webpack_require__(175);
-var KeyCodes = __webpack_require__(110);
-var KeyCombo = __webpack_require__(174);
-var KeyMap = __webpack_require__(374);
-var ProcessKeyDown = __webpack_require__(373);
-var ProcessKeyUp = __webpack_require__(372);
+var Key = __webpack_require__(176);
+var KeyCodes = __webpack_require__(111);
+var KeyCombo = __webpack_require__(175);
+var KeyMap = __webpack_require__(381);
+var ProcessKeyDown = __webpack_require__(380);
+var ProcessKeyUp = __webpack_require__(379);
 var SnapFloor = __webpack_require__(144);
 
 /**
@@ -60863,7 +62327,8 @@ var KeyboardPlugin = new Class({
 
     /**
      * @typedef {object} CursorKeys
-     *
+     * @memberOf Phaser.Input.Keyboard
+     * 
      * @property {Phaser.Input.Keyboard.Key} [up] - A Key object mapping to the UP arrow key.
      * @property {Phaser.Input.Keyboard.Key} [down] - A Key object mapping to the DOWN arrow key.
      * @property {Phaser.Input.Keyboard.Key} [left] - A Key object mapping to the LEFT arrow key.
@@ -60930,7 +62395,11 @@ var KeyboardPlugin = new Class({
 
             for (var i = 0; i < keys.length; i++)
             {
-                output[keys[i]] = this.addKey(keys[i]);
+                var currentKey = keys[i].trim();
+                if (currentKey)
+                {
+                    output[currentKey] = this.addKey(currentKey);
+                }
             }
         }
         else
@@ -61216,7 +62685,7 @@ module.exports = KeyboardPlugin;
 
 
 /***/ }),
-/* 379 */
+/* 386 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -61231,23 +62700,23 @@ module.exports = KeyboardPlugin;
 
 module.exports = {
 
-    KeyboardPlugin: __webpack_require__(378),
+    KeyboardPlugin: __webpack_require__(385),
 
-    Key: __webpack_require__(175),
-    KeyCodes: __webpack_require__(110),
+    Key: __webpack_require__(176),
+    KeyCodes: __webpack_require__(111),
 
-    KeyCombo: __webpack_require__(174),
+    KeyCombo: __webpack_require__(175),
 
-    JustDown: __webpack_require__(371),
-    JustUp: __webpack_require__(370),
-    DownDuration: __webpack_require__(369),
-    UpDuration: __webpack_require__(368)
+    JustDown: __webpack_require__(378),
+    JustUp: __webpack_require__(377),
+    DownDuration: __webpack_require__(376),
+    UpDuration: __webpack_require__(375)
     
 };
 
 
 /***/ }),
-/* 380 */
+/* 387 */
 /***/ (function(module, exports) {
 
 /**
@@ -61283,7 +62752,7 @@ module.exports = CreatePixelPerfectHandler;
 
 
 /***/ }),
-/* 381 */
+/* 388 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -61292,22 +62761,22 @@ module.exports = CreatePixelPerfectHandler;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Circle = __webpack_require__(87);
+var Circle = __webpack_require__(88);
 var CircleContains = __webpack_require__(33);
 var Class = __webpack_require__(0);
-var CreateInteractiveObject = __webpack_require__(179);
-var CreatePixelPerfectHandler = __webpack_require__(380);
+var CreateInteractiveObject = __webpack_require__(180);
+var CreatePixelPerfectHandler = __webpack_require__(387);
 var DistanceBetween = __webpack_require__(58);
-var Ellipse = __webpack_require__(115);
-var EllipseContains = __webpack_require__(55);
+var Ellipse = __webpack_require__(93);
+var EllipseContains = __webpack_require__(75);
 var EventEmitter = __webpack_require__(8);
 var GetFastValue = __webpack_require__(1);
 var InputPluginCache = __webpack_require__(74);
 var IsPlainObject = __webpack_require__(7);
-var PluginCache = __webpack_require__(10);
-var Rectangle = __webpack_require__(9);
+var PluginCache = __webpack_require__(9);
+var Rectangle = __webpack_require__(10);
 var RectangleContains = __webpack_require__(32);
-var Triangle = __webpack_require__(67);
+var Triangle = __webpack_require__(68);
 var TriangleContains = __webpack_require__(60);
 
 /**
@@ -63650,7 +65119,7 @@ module.exports = InputPlugin;
 
 
 /***/ }),
-/* 382 */
+/* 389 */
 /***/ (function(module, exports) {
 
 /**
@@ -63701,7 +65170,7 @@ module.exports = {
 
 
 /***/ }),
-/* 383 */
+/* 390 */
 /***/ (function(module, exports) {
 
 /**
@@ -63740,7 +65209,7 @@ module.exports = {
 
 
 /***/ }),
-/* 384 */
+/* 391 */
 /***/ (function(module, exports) {
 
 /**
@@ -63790,7 +65259,7 @@ module.exports = {
 
 
 /***/ }),
-/* 385 */
+/* 392 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63805,15 +65274,15 @@ module.exports = {
 
 module.exports = {
 
-    DUALSHOCK_4: __webpack_require__(384),
-    SNES_USB: __webpack_require__(383),
-    XBOX_360: __webpack_require__(382)
+    DUALSHOCK_4: __webpack_require__(391),
+    SNES_USB: __webpack_require__(390),
+    XBOX_360: __webpack_require__(389)
 
 };
 
 
 /***/ }),
-/* 386 */
+/* 393 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -63824,7 +65293,7 @@ module.exports = {
 
 var Class = __webpack_require__(0);
 var EventEmitter = __webpack_require__(8);
-var Gamepad = __webpack_require__(176);
+var Gamepad = __webpack_require__(177);
 var GetValue = __webpack_require__(3);
 var InputPluginCache = __webpack_require__(74);
 
@@ -64456,7 +65925,7 @@ module.exports = GamepadPlugin;
 
 
 /***/ }),
-/* 387 */
+/* 394 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64471,17 +65940,17 @@ module.exports = GamepadPlugin;
 
 module.exports = {
 
-    Axis: __webpack_require__(178),
-    Button: __webpack_require__(177),
-    Gamepad: __webpack_require__(176),
-    GamepadPlugin: __webpack_require__(386),
+    Axis: __webpack_require__(179),
+    Button: __webpack_require__(178),
+    Gamepad: __webpack_require__(177),
+    GamepadPlugin: __webpack_require__(393),
     
-    Configs: __webpack_require__(385)
+    Configs: __webpack_require__(392)
 };
 
 
 /***/ }),
-/* 388 */
+/* 395 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64490,8 +65959,8 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CONST = __webpack_require__(205);
-var Extend = __webpack_require__(16);
+var CONST = __webpack_require__(203);
+var Extend = __webpack_require__(15);
 
 /**
  * @namespace Phaser.Input
@@ -64499,15 +65968,15 @@ var Extend = __webpack_require__(16);
 
 var Input = {
 
-    CreateInteractiveObject: __webpack_require__(179),
-    Gamepad: __webpack_require__(387),
-    InputManager: __webpack_require__(206),
-    InputPlugin: __webpack_require__(381),
+    CreateInteractiveObject: __webpack_require__(180),
+    Gamepad: __webpack_require__(394),
+    InputManager: __webpack_require__(204),
+    InputPlugin: __webpack_require__(388),
     InputPluginCache: __webpack_require__(74),
-    Keyboard: __webpack_require__(379),
-    Mouse: __webpack_require__(367),
-    Pointer: __webpack_require__(203),
-    Touch: __webpack_require__(366)
+    Keyboard: __webpack_require__(386),
+    Mouse: __webpack_require__(374),
+    Pointer: __webpack_require__(201),
+    Touch: __webpack_require__(373)
 
 };
 
@@ -64518,13 +65987,6 @@ module.exports = Input;
 
 
 /***/ }),
-/* 389 */,
-/* 390 */,
-/* 391 */,
-/* 392 */,
-/* 393 */,
-/* 394 */,
-/* 395 */,
 /* 396 */,
 /* 397 */,
 /* 398 */,
@@ -64535,7 +65997,16 @@ module.exports = Input;
 /* 403 */,
 /* 404 */,
 /* 405 */,
-/* 406 */
+/* 406 */,
+/* 407 */,
+/* 408 */,
+/* 409 */,
+/* 410 */,
+/* 411 */,
+/* 412 */,
+/* 413 */,
+/* 414 */,
+/* 415 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64545,9 +66016,9 @@ module.exports = Input;
  */
 
 var BuildGameObject = __webpack_require__(25);
-var GameObjectCreator = __webpack_require__(14);
+var GameObjectCreator = __webpack_require__(13);
 var GetAdvancedValue = __webpack_require__(11);
-var Text = __webpack_require__(111);
+var Text = __webpack_require__(112);
 
 /**
  * Creates a new Text Game Object and returns it.
@@ -64622,7 +66093,7 @@ GameObjectCreator.register('text', function (config, addToScene)
 
 
 /***/ }),
-/* 407 */
+/* 416 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64632,8 +66103,8 @@ GameObjectCreator.register('text', function (config, addToScene)
  */
 
 var BuildGameObject = __webpack_require__(25);
-var BuildGameObjectAnimation = __webpack_require__(184);
-var GameObjectCreator = __webpack_require__(14);
+var BuildGameObjectAnimation = __webpack_require__(182);
+var GameObjectCreator = __webpack_require__(13);
 var GetAdvancedValue = __webpack_require__(11);
 var Sprite = __webpack_require__(44);
 
@@ -64683,7 +66154,7 @@ GameObjectCreator.register('sprite', function (config, addToScene)
 
 
 /***/ }),
-/* 408 */
+/* 417 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64693,9 +66164,9 @@ GameObjectCreator.register('sprite', function (config, addToScene)
  */
 
 var BuildGameObject = __webpack_require__(25);
-var GameObjectCreator = __webpack_require__(14);
+var GameObjectCreator = __webpack_require__(13);
 var GetAdvancedValue = __webpack_require__(11);
-var Image = __webpack_require__(68);
+var Image = __webpack_require__(69);
 
 /**
  * Creates a new Image Game Object and returns it.
@@ -64733,7 +66204,7 @@ GameObjectCreator.register('image', function (config, addToScene)
 
 
 /***/ }),
-/* 409 */
+/* 418 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64742,8 +66213,8 @@ GameObjectCreator.register('image', function (config, addToScene)
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObjectCreator = __webpack_require__(14);
-var Graphics = __webpack_require__(117);
+var GameObjectCreator = __webpack_require__(13);
+var Graphics = __webpack_require__(116);
 
 /**
  * Creates a new Graphics Game Object and returns it.
@@ -64781,7 +66252,7 @@ GameObjectCreator.register('graphics', function (config, addToScene)
 
 
 /***/ }),
-/* 410 */
+/* 419 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64790,7 +66261,7 @@ GameObjectCreator.register('graphics', function (config, addToScene)
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Text = __webpack_require__(111);
+var Text = __webpack_require__(112);
 var GameObjectFactory = __webpack_require__(12);
 
 /**
@@ -64823,7 +66294,7 @@ GameObjectFactory.register('text', function (x, y, text, style)
 
 
 /***/ }),
-/* 411 */
+/* 420 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64870,7 +66341,7 @@ GameObjectFactory.register('sprite', function (x, y, key, frame)
 
 
 /***/ }),
-/* 412 */
+/* 421 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64879,7 +66350,7 @@ GameObjectFactory.register('sprite', function (x, y, key, frame)
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Image = __webpack_require__(68);
+var Image = __webpack_require__(69);
 var GameObjectFactory = __webpack_require__(12);
 
 /**
@@ -64912,7 +66383,7 @@ GameObjectFactory.register('image', function (x, y, key, frame)
 
 
 /***/ }),
-/* 413 */
+/* 422 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -64921,7 +66392,7 @@ GameObjectFactory.register('image', function (x, y, key, frame)
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Graphics = __webpack_require__(117);
+var Graphics = __webpack_require__(116);
 var GameObjectFactory = __webpack_require__(12);
 
 /**
@@ -64951,8 +66422,8 @@ GameObjectFactory.register('graphics', function (config)
 
 
 /***/ }),
-/* 414 */,
-/* 415 */
+/* 423 */,
+/* 424 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -65087,7 +66558,7 @@ module.exports = MeasureText;
 
 
 /***/ }),
-/* 416 */
+/* 425 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -65099,7 +66570,7 @@ module.exports = MeasureText;
 var Class = __webpack_require__(0);
 var GetAdvancedValue = __webpack_require__(11);
 var GetValue = __webpack_require__(3);
-var MeasureText = __webpack_require__(415);
+var MeasureText = __webpack_require__(424);
 
 //  Key: [ Object Key, Default Value ]
 
@@ -66108,7 +67579,7 @@ module.exports = TextStyle;
 
 
 /***/ }),
-/* 417 */
+/* 426 */
 /***/ (function(module, exports) {
 
 /**
@@ -66144,7 +67615,7 @@ module.exports = TextCanvasRenderer;
 
 
 /***/ }),
-/* 418 */
+/* 427 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -66209,7 +67680,7 @@ module.exports = TextWebGLRenderer;
 
 
 /***/ }),
-/* 419 */
+/* 428 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -66223,12 +67694,12 @@ var renderCanvas = __webpack_require__(2);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(418);
+    renderWebGL = __webpack_require__(427);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(417);
+    renderCanvas = __webpack_require__(426);
 }
 
 module.exports = {
@@ -66240,7 +67711,7 @@ module.exports = {
 
 
 /***/ }),
-/* 420 */
+/* 429 */
 /***/ (function(module, exports) {
 
 /**
@@ -66327,16 +67798,16 @@ module.exports = GetTextSize;
 
 
 /***/ }),
-/* 421 */,
-/* 422 */,
-/* 423 */,
-/* 424 */,
-/* 425 */,
-/* 426 */,
-/* 427 */,
-/* 428 */,
-/* 429 */,
-/* 430 */
+/* 430 */,
+/* 431 */,
+/* 432 */,
+/* 433 */,
+/* 434 */,
+/* 435 */,
+/* 436 */,
+/* 437 */,
+/* 438 */,
+/* 439 */
 /***/ (function(module, exports) {
 
 /**
@@ -66369,7 +67840,7 @@ module.exports = ImageCanvasRenderer;
 
 
 /***/ }),
-/* 431 */
+/* 440 */
 /***/ (function(module, exports) {
 
 /**
@@ -66402,7 +67873,7 @@ module.exports = ImageWebGLRenderer;
 
 
 /***/ }),
-/* 432 */
+/* 441 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -66416,12 +67887,12 @@ var renderCanvas = __webpack_require__(2);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(431);
+    renderWebGL = __webpack_require__(440);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(430);
+    renderCanvas = __webpack_require__(439);
 }
 
 module.exports = {
@@ -66433,7 +67904,7 @@ module.exports = {
 
 
 /***/ }),
-/* 433 */
+/* 442 */
 /***/ (function(module, exports) {
 
 /**
@@ -66466,7 +67937,7 @@ module.exports = SpriteCanvasRenderer;
 
 
 /***/ }),
-/* 434 */
+/* 443 */
 /***/ (function(module, exports) {
 
 /**
@@ -66499,7 +67970,7 @@ module.exports = SpriteWebGLRenderer;
 
 
 /***/ }),
-/* 435 */
+/* 444 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -66513,12 +67984,12 @@ var renderCanvas = __webpack_require__(2);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(434);
+    renderWebGL = __webpack_require__(443);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(433);
+    renderCanvas = __webpack_require__(442);
 }
 
 module.exports = {
@@ -66530,7 +68001,7 @@ module.exports = {
 
 
 /***/ }),
-/* 436 */
+/* 445 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -66539,7 +68010,7 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Commands = __webpack_require__(116);
+var Commands = __webpack_require__(115);
 var Utils = __webpack_require__(20);
 
 //  TODO: Remove the use of this
@@ -66884,7 +68355,7 @@ module.exports = GraphicsWebGLRenderer;
 
 
 /***/ }),
-/* 437 */
+/* 446 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -66898,15 +68369,15 @@ var renderCanvas = __webpack_require__(2);
 
 if (true)
 {
-    renderWebGL = __webpack_require__(436);
+    renderWebGL = __webpack_require__(445);
 
     //  Needed for Graphics.generateTexture
-    renderCanvas = __webpack_require__(180);
+    renderCanvas = __webpack_require__(181);
 }
 
 if (true)
 {
-    renderCanvas = __webpack_require__(180);
+    renderCanvas = __webpack_require__(181);
 }
 
 module.exports = {
@@ -66915,313 +68386,6 @@ module.exports = {
     renderCanvas: renderCanvas
 
 };
-
-
-/***/ }),
-/* 438 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Offsets the Ellipse by the values given in the `x` and `y` properties of the Point object.
- *
- * @function Phaser.Geom.Ellipse.OffsetPoint
- * @since 3.0.0
- *
- * @generic {Phaser.Geom.Ellipse} O - [ellipse,$return]
- *
- * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to be offset (translated.)
- * @param {(Phaser.Geom.Point|object)} point - The Point object containing the values to offset the Ellipse by.
- *
- * @return {Phaser.Geom.Ellipse} The Ellipse that was offset.
- */
-var OffsetPoint = function (ellipse, point)
-{
-    ellipse.x += point.x;
-    ellipse.y += point.y;
-
-    return ellipse;
-};
-
-module.exports = OffsetPoint;
-
-
-/***/ }),
-/* 439 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Offsets the Ellipse by the values given.
- *
- * @function Phaser.Geom.Ellipse.Offset
- * @since 3.0.0
- *
- * @generic {Phaser.Geom.Ellipse} O - [ellipse,$return]
- *
- * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to be offset (translated.)
- * @param {number} x - The amount to horizontally offset the Ellipse by.
- * @param {number} y - The amount to vertically offset the Ellipse by.
- *
- * @return {Phaser.Geom.Ellipse} The Ellipse that was offset.
- */
-var Offset = function (ellipse, x, y)
-{
-    ellipse.x += x;
-    ellipse.y += y;
-
-    return ellipse;
-};
-
-module.exports = Offset;
-
-
-/***/ }),
-/* 440 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var Rectangle = __webpack_require__(9);
-
-/**
- * Returns the bounds of the Ellipse object.
- *
- * @function Phaser.Geom.Ellipse.GetBounds
- * @since 3.0.0
- *
- * @generic {Phaser.Geom.Rectangle} O - [out,$return]
- *
- * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to get the bounds from.
- * @param {(Phaser.Geom.Rectangle|object)} [out] - A Rectangle, or rectangle-like object, to store the ellipse bounds in. If not given a new Rectangle will be created.
- *
- * @return {(Phaser.Geom.Rectangle|object)} The Rectangle object containing the Ellipse bounds.
- */
-var GetBounds = function (ellipse, out)
-{
-    if (out === undefined) { out = new Rectangle(); }
-
-    out.x = ellipse.left;
-    out.y = ellipse.top;
-    out.width = ellipse.width;
-    out.height = ellipse.height;
-
-    return out;
-};
-
-module.exports = GetBounds;
-
-
-/***/ }),
-/* 441 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Compares the `x`, `y`, `width` and `height` properties of the two given Ellipses.
- * Returns `true` if they all match, otherwise returns `false`.
- *
- * @function Phaser.Geom.Ellipse.Equals
- * @since 3.0.0
- *
- * @param {Phaser.Geom.Ellipse} ellipse - The first Ellipse to compare.
- * @param {Phaser.Geom.Ellipse} toCompare - The second Ellipse to compare.
- *
- * @return {boolean} `true` if the two Ellipse equal each other, otherwise `false`.
- */
-var Equals = function (ellipse, toCompare)
-{
-    return (
-        ellipse.x === toCompare.x &&
-        ellipse.y === toCompare.y &&
-        ellipse.width === toCompare.width &&
-        ellipse.height === toCompare.height
-    );
-};
-
-module.exports = Equals;
-
-
-/***/ }),
-/* 442 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Copies the `x`, `y`, `width` and `height` properties from the `source` Ellipse
- * into the given `dest` Ellipse, then returns the `dest` Ellipse.
- *
- * @function Phaser.Geom.Ellipse.CopyFrom
- * @since 3.0.0
- *
- * @generic {Phaser.Geom.Ellipse} O - [dest,$return]
- *
- * @param {Phaser.Geom.Ellipse} source - The source Ellipse to copy the values from.
- * @param {Phaser.Geom.Ellipse} dest - The destination Ellipse to copy the values to.
- *
- * @return {Phaser.Geom.Ellipse} The destination Ellipse.
- */
-var CopyFrom = function (source, dest)
-{
-    return dest.setTo(source.x, source.y, source.width, source.height);
-};
-
-module.exports = CopyFrom;
-
-
-/***/ }),
-/* 443 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var Contains = __webpack_require__(55);
-
-/**
- * Check to see if the Ellipse contains all four points of the given Rectangle object.
- *
- * @function Phaser.Geom.Ellipse.ContainsRect
- * @since 3.0.0
- *
- * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to check.
- * @param {(Phaser.Geom.Rectangle|object)} rect - The Rectangle object to check if it's within the Ellipse or not.
- *
- * @return {boolean} True if all of the Rectangle coordinates are within the ellipse, otherwise false.
- */
-var ContainsRect = function (ellipse, rect)
-{
-    return (
-        Contains(ellipse, rect.x, rect.y) &&
-        Contains(ellipse, rect.right, rect.y) &&
-        Contains(ellipse, rect.x, rect.bottom) &&
-        Contains(ellipse, rect.right, rect.bottom)
-    );
-};
-
-module.exports = ContainsRect;
-
-
-/***/ }),
-/* 444 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var Contains = __webpack_require__(55);
-
-/**
- * Check to see if the Ellipse contains the given Point object.
- *
- * @function Phaser.Geom.Ellipse.ContainsPoint
- * @since 3.0.0
- *
- * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to check.
- * @param {(Phaser.Geom.Point|object)} point - The Point object to check if it's within the Circle or not.
- *
- * @return {boolean} True if the Point coordinates are within the circle, otherwise false.
- */
-var ContainsPoint = function (ellipse, point)
-{
-    return Contains(ellipse, point.x, point.y);
-};
-
-module.exports = ContainsPoint;
-
-
-/***/ }),
-/* 445 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var Ellipse = __webpack_require__(115);
-
-/**
- * Creates a new Ellipse instance based on the values contained in the given source.
- *
- * @function Phaser.Geom.Ellipse.Clone
- * @since 3.0.0
- *
- * @param {Phaser.Geom.Ellipse} source - The Ellipse to be cloned. Can be an instance of an Ellipse or a ellipse-like object, with x, y, width and height properties.
- *
- * @return {Phaser.Geom.Ellipse} A clone of the source Ellipse.
- */
-var Clone = function (source)
-{
-    return new Ellipse(source.x, source.y, source.width, source.height);
-};
-
-module.exports = Clone;
-
-
-/***/ }),
-/* 446 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Calculates the area of the Ellipse.
- *
- * @function Phaser.Geom.Ellipse.Area
- * @since 3.0.0
- *
- * @param {Phaser.Geom.Ellipse} ellipse - The Ellipse to get the area of.
- *
- * @return {number} The area of the Ellipse.
- */
-var Area = function (ellipse)
-{
-    if (ellipse.isEmpty())
-    {
-        return 0;
-    }
-
-    //  units squared
-    return (ellipse.getMajorRadius() * ellipse.getMinorRadius() * Math.PI);
-};
-
-module.exports = Area;
 
 
 /***/ }),
@@ -67237,7 +68401,7 @@ module.exports = Area;
  */
 
 var Class = __webpack_require__(0);
-var PluginCache = __webpack_require__(10);
+var PluginCache = __webpack_require__(9);
 
 /**
  * @classdesc
@@ -67886,7 +69050,7 @@ module.exports = RemoveAt;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var RoundAwayFromZero = __webpack_require__(249);
+var RoundAwayFromZero = __webpack_require__(257);
 
 /**
  * Create an array of numbers (positive and/or negative) progressing from `start`
@@ -68710,7 +69874,7 @@ module.exports = Add;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var RotateMatrix = __webpack_require__(75);
+var RotateMatrix = __webpack_require__(76);
 
 /**
  * [description]
@@ -68740,7 +69904,7 @@ module.exports = RotateRight;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var RotateMatrix = __webpack_require__(75);
+var RotateMatrix = __webpack_require__(76);
 
 /**
  * [description]
@@ -68770,7 +69934,7 @@ module.exports = RotateLeft;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var RotateMatrix = __webpack_require__(75);
+var RotateMatrix = __webpack_require__(76);
 
 /**
  * [description]
@@ -68862,7 +70026,7 @@ module.exports = ReverseColumns;
  */
 
 var Pad = __webpack_require__(133);
-var CheckMatrix = __webpack_require__(119);
+var CheckMatrix = __webpack_require__(118);
 
 //  Generates a string (which you can pass to console.log) from the given
 //  Array Matrix.
@@ -68948,15 +70112,15 @@ module.exports = MatrixToString;
 
 module.exports = {
 
-    CheckMatrix: __webpack_require__(119),
+    CheckMatrix: __webpack_require__(118),
     MatrixToString: __webpack_require__(475),
     ReverseColumns: __webpack_require__(474),
     ReverseRows: __webpack_require__(473),
     Rotate180: __webpack_require__(472),
     RotateLeft: __webpack_require__(471),
-    RotateMatrix: __webpack_require__(75),
+    RotateMatrix: __webpack_require__(76),
     RotateRight: __webpack_require__(470),
-    TransposeMatrix: __webpack_require__(186)
+    TransposeMatrix: __webpack_require__(184)
 
 };
 
@@ -68972,9 +70136,9 @@ module.exports = {
  */
 
 var Class = __webpack_require__(0);
-var List = __webpack_require__(92);
-var PluginCache = __webpack_require__(10);
-var StableSort = __webpack_require__(83);
+var List = __webpack_require__(94);
+var PluginCache = __webpack_require__(9);
+var StableSort = __webpack_require__(84);
 
 /**
  * @classdesc
@@ -69350,7 +70514,7 @@ module.exports = VisibilityHandler;
 var Class = __webpack_require__(0);
 var GetValue = __webpack_require__(3);
 var NOOP = __webpack_require__(2);
-var RequestAnimationFrame = __webpack_require__(260);
+var RequestAnimationFrame = __webpack_require__(268);
 
 //  Frame Rate config
 //      fps: {
@@ -70854,8 +72018,8 @@ module.exports = AtlasXML;
  */
 
 var Class = __webpack_require__(0);
-var IsSizePowerOfTwo = __webpack_require__(84);
-var Texture = __webpack_require__(120);
+var IsSizePowerOfTwo = __webpack_require__(85);
+var Texture = __webpack_require__(119);
 
 /**
  * @classdesc
@@ -71170,7 +72334,7 @@ module.exports = GetScenePlugins;
  */
 
 var GetFastValue = __webpack_require__(1);
-var UppercaseFirst = __webpack_require__(250);
+var UppercaseFirst = __webpack_require__(258);
 
 /**
  * Builds an array of which physics plugins should be activated for the given Scene.
@@ -71407,13 +72571,14 @@ module.exports = [
     '',
     '    if (outTintEffect == 0.0)',
     '    {',
-    '        //  Multiply tint',
+    '        //  Multiply texture tint',
     '        color = texture * texel;',
     '    }',
     '    else if (outTintEffect == 1.0)',
     '    {',
-    '        //  Solid texture-based tint',
-    '        color.rgb = mix(texture.rgb, outTint.rgb, texture.a);',
+    '        //  Solid color + texture alpha',
+    '        color.rgb = mix(texture.rgb, outTint.rgb * outTint.a, texture.a);',
+    '        color.a = texture.a * texel.a;',
     '    }',
     '    else if (outTintEffect == 2.0)',
     '    {',
@@ -72141,10 +73306,10 @@ module.exports = [
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CanvasInterpolation = __webpack_require__(264);
+var CanvasInterpolation = __webpack_require__(272);
 var CanvasPool = __webpack_require__(22);
 var CONST = __webpack_require__(23);
-var Features = __webpack_require__(123);
+var Features = __webpack_require__(122);
 
 /**
  * Called automatically by Phaser.Game and responsible for creating the renderer it will use.
@@ -72227,8 +73392,8 @@ var CreateRenderer = function (game)
 
     if (true)
     {
-        CanvasRenderer = __webpack_require__(259);
-        WebGLRenderer = __webpack_require__(256);
+        CanvasRenderer = __webpack_require__(267);
+        WebGLRenderer = __webpack_require__(264);
 
         //  Let the config pick the renderer type, as both are included
         if (config.renderType === CONST.WEBGL)
@@ -72448,7 +73613,7 @@ module.exports = init();
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Browser = __webpack_require__(79);
+var Browser = __webpack_require__(80);
 
 /**
  * Determines the audio playback capabilities of the device running this Phaser Game instance.
@@ -72574,7 +73739,7 @@ module.exports = init();
  */
 
 var OS = __webpack_require__(57);
-var Browser = __webpack_require__(79);
+var Browser = __webpack_require__(80);
 
 /**
  * Determines the input support of the browser running this Phaser Game instance.
@@ -72654,13 +73819,13 @@ module.exports = init();
 
 var Class = __webpack_require__(0);
 var CONST = __webpack_require__(23);
-var Device = __webpack_require__(208);
+var Device = __webpack_require__(206);
 var GetFastValue = __webpack_require__(1);
 var GetValue = __webpack_require__(3);
 var IsPlainObject = __webpack_require__(7);
-var MATH = __webpack_require__(15);
+var MATH = __webpack_require__(14);
 var NOOP = __webpack_require__(2);
-var DefaultPlugins = __webpack_require__(122);
+var DefaultPlugins = __webpack_require__(121);
 var ValueToColor = __webpack_require__(132);
 
 /**
@@ -72734,7 +73899,7 @@ var ValueToColor = __webpack_require__(132);
  *
  * @property {boolean} [antialias=true] - [description]
  * @property {boolean} [pixelArt=false] - [description]
- * @property {boolean} [autoResize=false] - [description]
+ * @property {boolean} [autoResize=true] - Automatically resize the Game Canvas if you resize the renderer.
  * @property {boolean} [roundPixels=false] - [description]
  * @property {boolean} [transparent=false] - [description]
  * @property {boolean} [clearBeforeRender=true] - [description]
@@ -73099,9 +74264,9 @@ var Config = new Class({
         var renderConfig = GetValue(config, 'render', config);
 
         /**
-         * @const {boolean} Phaser.Boot.Config#autoResize - [description]
+         * @const {boolean} Phaser.Boot.Config#autoResize - Automatically resize the Game Canvas if you resize the renderer.
          */
-        this.autoResize = GetValue(renderConfig, 'autoResize', false);
+        this.autoResize = GetValue(renderConfig, 'autoResize', true);
 
         /**
          * @const {boolean} Phaser.Boot.Config#antialias - [description]
@@ -73351,23 +74516,23 @@ module.exports = Config;
  */
 
 var AddToDOM = __webpack_require__(130);
-var AnimationManager = __webpack_require__(213);
-var CacheManager = __webpack_require__(211);
+var AnimationManager = __webpack_require__(211);
+var CacheManager = __webpack_require__(209);
 var CanvasPool = __webpack_require__(22);
 var Class = __webpack_require__(0);
 var Config = __webpack_require__(504);
 var CreateRenderer = __webpack_require__(499);
-var DataManager = __webpack_require__(80);
+var DataManager = __webpack_require__(81);
 var DebugHeader = __webpack_require__(492);
-var Device = __webpack_require__(208);
-var DOMContentLoaded = __webpack_require__(263);
+var Device = __webpack_require__(206);
+var DOMContentLoaded = __webpack_require__(271);
 var EventEmitter = __webpack_require__(8);
-var InputManager = __webpack_require__(206);
-var PluginCache = __webpack_require__(10);
-var PluginManager = __webpack_require__(201);
-var SceneManager = __webpack_require__(199);
-var SoundManagerCreator = __webpack_require__(196);
-var TextureManager = __webpack_require__(189);
+var InputManager = __webpack_require__(204);
+var PluginCache = __webpack_require__(9);
+var PluginManager = __webpack_require__(199);
+var SceneManager = __webpack_require__(197);
+var SoundManagerCreator = __webpack_require__(194);
+var TextureManager = __webpack_require__(187);
 var TimeStep = __webpack_require__(479);
 var VisibilityHandler = __webpack_require__(478);
 
@@ -74102,7 +75267,7 @@ module.exports = Game;
 
 var Class = __webpack_require__(0);
 var EE = __webpack_require__(8);
-var PluginCache = __webpack_require__(10);
+var PluginCache = __webpack_require__(9);
 
 /**
  * @classdesc
@@ -74497,8 +75662,8 @@ process.umask = function() { return 0; };
 
 module.exports = {
 
-    BitmapMask: __webpack_require__(220),
-    GeometryMask: __webpack_require__(219)
+    BitmapMask: __webpack_require__(222),
+    GeometryMask: __webpack_require__(221)
 
 };
 
@@ -74518,8 +75683,8 @@ module.exports = {
  */
 
 var Class = __webpack_require__(0);
-var DataManager = __webpack_require__(80);
-var PluginCache = __webpack_require__(10);
+var DataManager = __webpack_require__(81);
+var PluginCache = __webpack_require__(9);
 
 /**
  * @classdesc
@@ -74649,7 +75814,7 @@ module.exports = DataManagerPlugin;
 
 module.exports = {
 
-    DataManager: __webpack_require__(80),
+    DataManager: __webpack_require__(81),
     DataManagerPlugin: __webpack_require__(514)
 
 };
@@ -74672,10 +75837,10 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Camera = __webpack_require__(210);
+var Camera = __webpack_require__(208);
 var Class = __webpack_require__(0);
 var GetFastValue = __webpack_require__(1);
-var PluginCache = __webpack_require__(10);
+var PluginCache = __webpack_require__(9);
 var RectangleContains = __webpack_require__(32);
 
 /**
@@ -75394,7 +76559,7 @@ module.exports = CameraManager;
 
 var Clamp = __webpack_require__(19);
 var Class = __webpack_require__(0);
-var EaseMap = __webpack_require__(125);
+var EaseMap = __webpack_require__(124);
 
 /**
  * @classdesc
@@ -75711,7 +76876,7 @@ module.exports = Zoom;
 
 var Clamp = __webpack_require__(19);
 var Class = __webpack_require__(0);
-var Vector2 = __webpack_require__(5);
+var Vector2 = __webpack_require__(4);
 
 /**
  * @classdesc
@@ -77212,8 +78377,8 @@ module.exports = In;
 
 var Clamp = __webpack_require__(19);
 var Class = __webpack_require__(0);
-var Vector2 = __webpack_require__(5);
-var EaseMap = __webpack_require__(125);
+var Vector2 = __webpack_require__(4);
+var EaseMap = __webpack_require__(124);
 
 /**
  * @classdesc
@@ -78376,9 +79541,9 @@ module.exports = Fade;
 
 module.exports = {
 
-    Camera: __webpack_require__(210),
+    Camera: __webpack_require__(208),
     CameraManager: __webpack_require__(523),
-    Effects: __webpack_require__(209)
+    Effects: __webpack_require__(207)
 
 };
 
@@ -78399,8 +79564,8 @@ module.exports = {
 
 module.exports = {
 
-    BaseCache: __webpack_require__(212),
-    CacheManager: __webpack_require__(211)
+    BaseCache: __webpack_require__(210),
+    CacheManager: __webpack_require__(209)
 
 };
 
@@ -78421,9 +79586,9 @@ module.exports = {
 
 module.exports = {
 
-    Animation: __webpack_require__(216),
-    AnimationFrame: __webpack_require__(214),
-    AnimationManager: __webpack_require__(213)
+    Animation: __webpack_require__(214),
+    AnimationFrame: __webpack_require__(212),
+    AnimationManager: __webpack_require__(211)
 
 };
 
@@ -78432,662 +79597,6 @@ module.exports = {
 /* 564 */,
 /* 565 */,
 /* 566 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-//  bitmask flag for GameObject.renderMask
-var _FLAG = 1; // 0001
-
-/**
- * Provides methods used for setting the visibility of a Game Object.
- * Should be applied as a mixin and not used directly.
- * 
- * @name Phaser.GameObjects.Components.Visible
- * @since 3.0.0
- */
-
-var Visible = {
-
-    /**
-     * Private internal value. Holds the visible value.
-     * 
-     * @name Phaser.GameObjects.Components.Visible#_visible
-     * @type {boolean}
-     * @private
-     * @default true
-     * @since 3.0.0
-     */
-    _visible: true,
-
-    /**
-     * The visible state of the Game Object.
-     * 
-     * An invisible Game Object will skip rendering, but will still process update logic.
-     * 
-     * @name Phaser.GameObjects.Components.Visible#visible
-     * @type {boolean}
-     * @since 3.0.0
-     */
-    visible: {
-
-        get: function ()
-        {
-            return this._visible;
-        },
-
-        set: function (value)
-        {
-            if (value)
-            {
-                this._visible = true;
-                this.renderFlags |= _FLAG;
-            }
-            else
-            {
-                this._visible = false;
-                this.renderFlags &= ~_FLAG;
-            }
-        }
-
-    },
-
-    /**
-     * Sets the visibility of this Game Object.
-     * 
-     * An invisible Game Object will skip rendering, but will still process update logic.
-     *
-     * @method Phaser.GameObjects.Components.Visible#setVisible
-     * @since 3.0.0
-     *
-     * @param {boolean} value - The visible state of the Game Object.
-     * 
-     * @return {this} This Game Object instance.
-     */
-    setVisible: function (value)
-    {
-        this.visible = value;
-
-        return this;
-    }
-};
-
-module.exports = Visible;
-
-
-/***/ }),
-/* 567 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var MATH_CONST = __webpack_require__(15);
-var TransformMatrix = __webpack_require__(27);
-var WrapAngle = __webpack_require__(218);
-var WrapAngleDegrees = __webpack_require__(217);
-
-//  global bitmask flag for GameObject.renderMask (used by Scale)
-var _FLAG = 4; // 0100
-
-/**
- * Provides methods used for getting and setting the position, scale and rotation of a Game Object.
- *
- * @name Phaser.GameObjects.Components.Transform
- * @since 3.0.0
- */
-
-var Transform = {
-
-    /**
-     * Private internal value. Holds the horizontal scale value.
-     * 
-     * @name Phaser.GameObjects.Components.Transform#_scaleX
-     * @type {number}
-     * @private
-     * @default 1
-     * @since 3.0.0
-     */
-    _scaleX: 1,
-
-    /**
-     * Private internal value. Holds the vertical scale value.
-     * 
-     * @name Phaser.GameObjects.Components.Transform#_scaleY
-     * @type {number}
-     * @private
-     * @default 1
-     * @since 3.0.0
-     */
-    _scaleY: 1,
-
-    /**
-     * Private internal value. Holds the rotation value in radians.
-     * 
-     * @name Phaser.GameObjects.Components.Transform#_rotation
-     * @type {number}
-     * @private
-     * @default 0
-     * @since 3.0.0
-     */
-    _rotation: 0,
-
-    /**
-     * The x position of this Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Transform#x
-     * @type {number}
-     * @default 0
-     * @since 3.0.0
-     */
-    x: 0,
-
-    /**
-     * The y position of this Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Transform#y
-     * @type {number}
-     * @default 0
-     * @since 3.0.0
-     */
-    y: 0,
-
-    /**
-     * The z position of this Game Object.
-     * Note: Do not use this value to set the z-index, instead see the `depth` property.
-     *
-     * @name Phaser.GameObjects.Components.Transform#z
-     * @type {number}
-     * @default 0
-     * @since 3.0.0
-     */
-    z: 0,
-
-    /**
-     * The w position of this Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Transform#w
-     * @type {number}
-     * @default 0
-     * @since 3.0.0
-     */
-    w: 0,
-
-    /**
-     * The horizontal scale of this Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Transform#scaleX
-     * @type {number}
-     * @default 1
-     * @since 3.0.0
-     */
-    scaleX: {
-
-        get: function ()
-        {
-            return this._scaleX;
-        },
-
-        set: function (value)
-        {
-            this._scaleX = value;
-
-            if (this._scaleX === 0)
-            {
-                this.renderFlags &= ~_FLAG;
-            }
-            else
-            {
-                this.renderFlags |= _FLAG;
-            }
-        }
-
-    },
-
-    /**
-     * The vertical scale of this Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Transform#scaleY
-     * @type {number}
-     * @default 1
-     * @since 3.0.0
-     */
-    scaleY: {
-
-        get: function ()
-        {
-            return this._scaleY;
-        },
-
-        set: function (value)
-        {
-            this._scaleY = value;
-
-            if (this._scaleY === 0)
-            {
-                this.renderFlags &= ~_FLAG;
-            }
-            else
-            {
-                this.renderFlags |= _FLAG;
-            }
-        }
-
-    },
-
-    /**
-     * The angle of this Game Object as expressed in degrees.
-     *
-     * Where 0 is to the right, 90 is down, 180 is left.
-     *
-     * If you prefer to work in radians, see the `rotation` property instead.
-     *
-     * @name Phaser.GameObjects.Components.Transform#angle
-     * @type {integer}
-     * @default 0
-     * @since 3.0.0
-     */
-    angle: {
-
-        get: function ()
-        {
-            return WrapAngleDegrees(this._rotation * MATH_CONST.RAD_TO_DEG);
-        },
-
-        set: function (value)
-        {
-            //  value is in degrees
-            this.rotation = WrapAngleDegrees(value) * MATH_CONST.DEG_TO_RAD;
-        }
-    },
-
-    /**
-     * The angle of this Game Object in radians.
-     *
-     * If you prefer to work in degrees, see the `angle` property instead.
-     *
-     * @name Phaser.GameObjects.Components.Transform#rotation
-     * @type {number}
-     * @default 1
-     * @since 3.0.0
-     */
-    rotation: {
-
-        get: function ()
-        {
-            return this._rotation;
-        },
-
-        set: function (value)
-        {
-            //  value is in radians
-            this._rotation = WrapAngle(value);
-        }
-    },
-
-    /**
-     * Sets the position of this Game Object.
-     *
-     * @method Phaser.GameObjects.Components.Transform#setPosition
-     * @since 3.0.0
-     *
-     * @param {number} [x=0] - The x position of this Game Object.
-     * @param {number} [y=x] - The y position of this Game Object. If not set it will use the `x` value.
-     * @param {number} [z=0] - The z position of this Game Object.
-     * @param {number} [w=0] - The w position of this Game Object.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setPosition: function (x, y, z, w)
-    {
-        if (x === undefined) { x = 0; }
-        if (y === undefined) { y = x; }
-        if (z === undefined) { z = 0; }
-        if (w === undefined) { w = 0; }
-
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.w = w;
-
-        return this;
-    },
-
-    /**
-     * Sets the position of this Game Object to be a random position within the confines of
-     * the given area.
-     * 
-     * If no area is specified a random position between 0 x 0 and the game width x height is used instead.
-     *
-     * The position does not factor in the size of this Game Object, meaning that only the origin is
-     * guaranteed to be within the area.
-     *
-     * @method Phaser.GameObjects.Components.Transform#setRandomPosition
-     * @since 3.8.0
-     *
-     * @param {number} [x=0] - The x position of the top-left of the random area.
-     * @param {number} [y=0] - The y position of the top-left of the random area.
-     * @param {number} [width] - The width of the random area.
-     * @param {number} [height] - The height of the random area.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setRandomPosition: function (x, y, width, height)
-    {
-        if (x === undefined) { x = 0; }
-        if (y === undefined) { y = 0; }
-        if (width === undefined) { width = this.scene.sys.game.config.width; }
-        if (height === undefined) { height = this.scene.sys.game.config.height; }
-
-        this.x = x + (Math.random() * width);
-        this.y = y + (Math.random() * height);
-
-        return this;
-    },
-
-    /**
-     * Sets the rotation of this Game Object.
-     *
-     * @method Phaser.GameObjects.Components.Transform#setRotation
-     * @since 3.0.0
-     *
-     * @param {number} [radians=0] - The rotation of this Game Object, in radians.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setRotation: function (radians)
-    {
-        if (radians === undefined) { radians = 0; }
-
-        this.rotation = radians;
-
-        return this;
-    },
-
-    /**
-     * Sets the angle of this Game Object.
-     *
-     * @method Phaser.GameObjects.Components.Transform#setAngle
-     * @since 3.0.0
-     *
-     * @param {number} [degrees=0] - The rotation of this Game Object, in degrees.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setAngle: function (degrees)
-    {
-        if (degrees === undefined) { degrees = 0; }
-
-        this.angle = degrees;
-
-        return this;
-    },
-
-    /**
-     * Sets the scale of this Game Object.
-     *
-     * @method Phaser.GameObjects.Components.Transform#setScale
-     * @since 3.0.0
-     *
-     * @param {number} x - The horizontal scale of this Game Object.
-     * @param {number} [y=x] - The vertical scale of this Game Object. If not set it will use the `x` value.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setScale: function (x, y)
-    {
-        if (x === undefined) { x = 1; }
-        if (y === undefined) { y = x; }
-
-        this.scaleX = x;
-        this.scaleY = y;
-
-        return this;
-    },
-
-    /**
-     * Sets the x position of this Game Object.
-     *
-     * @method Phaser.GameObjects.Components.Transform#setX
-     * @since 3.0.0
-     *
-     * @param {number} [value=0] - The x position of this Game Object.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setX: function (value)
-    {
-        if (value === undefined) { value = 0; }
-
-        this.x = value;
-
-        return this;
-    },
-
-    /**
-     * Sets the y position of this Game Object.
-     *
-     * @method Phaser.GameObjects.Components.Transform#setY
-     * @since 3.0.0
-     *
-     * @param {number} [value=0] - The y position of this Game Object.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setY: function (value)
-    {
-        if (value === undefined) { value = 0; }
-
-        this.y = value;
-
-        return this;
-    },
-
-    /**
-     * Sets the z position of this Game Object.
-     *
-     * @method Phaser.GameObjects.Components.Transform#setZ
-     * @since 3.0.0
-     *
-     * @param {number} [value=0] - The z position of this Game Object.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setZ: function (value)
-    {
-        if (value === undefined) { value = 0; }
-
-        this.z = value;
-
-        return this;
-    },
-
-    /**
-     * Sets the w position of this Game Object.
-     *
-     * @method Phaser.GameObjects.Components.Transform#setW
-     * @since 3.0.0
-     *
-     * @param {number} [value=0] - The w position of this Game Object.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setW: function (value)
-    {
-        if (value === undefined) { value = 0; }
-
-        this.w = value;
-
-        return this;
-    },
-
-    /**
-     * Gets the local transform matrix for this Game Object.
-     *
-     * @method Phaser.GameObjects.Components.Transform#getLocalTransformMatrix
-     * @since 3.4.0
-     *
-     * @param {Phaser.GameObjects.Components.TransformMatrix} [tempMatrix] - The matrix to populate with the values from this Game Object.
-     *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} The populated Transform Matrix.
-     */
-    getLocalTransformMatrix: function (tempMatrix)
-    {
-        if (tempMatrix === undefined) { tempMatrix = new TransformMatrix(); }
-
-        return tempMatrix.applyITRS(this.x, this.y, this._rotation, this._scaleX, this._scaleY);
-    },
-
-    /**
-     * Gets the world transform matrix for this Game Object, factoring in any parent Containers.
-     *
-     * @method Phaser.GameObjects.Components.Transform#getWorldTransformMatrix
-     * @since 3.4.0
-     *
-     * @param {Phaser.GameObjects.Components.TransformMatrix} [tempMatrix] - The matrix to populate with the values from this Game Object.
-     *
-     * @return {Phaser.GameObjects.Components.TransformMatrix} The populated Transform Matrix.
-     */
-    getWorldTransformMatrix: function (tempMatrix)
-    {
-        if (tempMatrix === undefined) { tempMatrix = new TransformMatrix(); }
-
-        var parent = this.parentContainer;
-
-        if (!parent)
-        {
-            return this.getLocalTransformMatrix(tempMatrix);
-        }
-
-        var parents = [];
-        
-        while (parent)
-        {
-            parents.unshift(parent);
-            parent = parent.parentContainer;
-        }
-
-        tempMatrix.loadIdentity();
-
-        var length = parents.length;
-        
-        for (var i = 0; i < length; ++i)
-        {
-            parent = parents[i];
-
-            tempMatrix.translate(parent.x, parent.y);
-            tempMatrix.rotate(parent.rotation);
-            tempMatrix.scale(parent.scaleX, parent.scaleY);
-        }
-
-        tempMatrix.translate(this.x, this.y);
-        tempMatrix.rotate(this._rotation);
-        tempMatrix.scale(this._scaleX, this._scaleY);
-
-        return tempMatrix;
-    }
-
-};
-
-module.exports = Transform;
-
-
-/***/ }),
-/* 568 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * @typedef {object} JSONGameObject
- *
- * @property {string} name - The name of this Game Object.
- * @property {string} type - A textual representation of this Game Object, i.e. `sprite`.
- * @property {number} x - The x position of this Game Object.
- * @property {number} y - The y position of this Game Object.
- * @property {object} scale - The scale of this Game Object
- * @property {number} scale.x - The horizontal scale of this Game Object.
- * @property {number} scale.y - The vertical scale of this Game Object.
- * @property {object} origin - The origin of this Game Object.
- * @property {number} origin.x - The horizontal origin of this Game Object.
- * @property {number} origin.y - The vertical origin of this Game Object.
- * @property {boolean} flipX - The horizontally flipped state of the Game Object.
- * @property {boolean} flipY - The vertically flipped state of the Game Object.
- * @property {number} rotation - The angle of this Game Object in radians.
- * @property {number} alpha - The alpha value of the Game Object.
- * @property {boolean} visible - The visible state of the Game Object.
- * @property {integer} scaleMode - The Scale Mode being used by this Game Object.
- * @property {(integer|string)} blendMode - Sets the Blend Mode being used by this Game Object.
- * @property {string} textureKey - The texture key of this Game Object.
- * @property {string} frameKey - The frame key of this Game Object.
- * @property {object} data - The data of this Game Object.
- */
-
-/**
- * Build a JSON representation of the given Game Object.
- *
- * This is typically extended further by Game Object specific implementations.
- *
- * @method Phaser.GameObjects.Components.ToJSON
- * @since 3.0.0
- *
- * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to export as JSON.
- *
- * @return {JSONGameObject} A JSON representation of the Game Object.
- */
-var ToJSON = function (gameObject)
-{
-    var out = {
-        name: gameObject.name,
-        type: gameObject.type,
-        x: gameObject.x,
-        y: gameObject.y,
-        depth: gameObject.depth,
-        scale: {
-            x: gameObject.scaleX,
-            y: gameObject.scaleY
-        },
-        origin: {
-            x: gameObject.originX,
-            y: gameObject.originY
-        },
-        flipX: gameObject.flipX,
-        flipY: gameObject.flipY,
-        rotation: gameObject.rotation,
-        alpha: gameObject.alpha,
-        visible: gameObject.visible,
-        scaleMode: gameObject.scaleMode,
-        blendMode: gameObject.blendMode,
-        textureKey: '',
-        frameKey: '',
-        data: {}
-    };
-
-    if (gameObject.texture)
-    {
-        out.textureKey = gameObject.texture.key;
-        out.frameKey = gameObject.frame.name;
-    }
-
-    return out;
-};
-
-module.exports = ToJSON;
-
-
-/***/ }),
-/* 569 */
 /***/ (function(module, exports) {
 
 /**
@@ -79426,7 +79935,7 @@ module.exports = Tint;
 
 
 /***/ }),
-/* 570 */
+/* 567 */
 /***/ (function(module, exports) {
 
 /**
@@ -79634,7 +80143,7 @@ module.exports = TextureCrop;
 
 
 /***/ }),
-/* 571 */
+/* 568 */
 /***/ (function(module, exports) {
 
 /**
@@ -79764,7 +80273,7 @@ module.exports = Texture;
 
 
 /***/ }),
-/* 572 */
+/* 569 */
 /***/ (function(module, exports) {
 
 /**
@@ -79951,114 +80460,7 @@ module.exports = Size;
 
 
 /***/ }),
-/* 573 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Provides methods used for getting and setting the Scroll Factor of a Game Object.
- *
- * @name Phaser.GameObjects.Components.ScrollFactor
- * @since 3.0.0
- */
-
-var ScrollFactor = {
-
-    /**
-     * The horizontal scroll factor of this Game Object.
-     *
-     * The scroll factor controls the influence of the movement of a Camera upon this Game Object.
-     *
-     * When a camera scrolls it will change the location at which this Game Object is rendered on-screen.
-     * It does not change the Game Objects actual position values.
-     *
-     * A value of 1 means it will move exactly in sync with a camera.
-     * A value of 0 means it will not move at all, even if the camera moves.
-     * Other values control the degree to which the camera movement is mapped to this Game Object.
-     * 
-     * Please be aware that scroll factor values other than 1 are not taken in to consideration when
-     * calculating physics collisions. Bodies always collide based on their world position, but changing
-     * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
-     * them from physics bodies if not accounted for in your code.
-     *
-     * @name Phaser.GameObjects.Components.ScrollFactor#scrollFactorX
-     * @type {number}
-     * @default 1
-     * @since 3.0.0
-     */
-    scrollFactorX: 1,
-
-    /**
-     * The vertical scroll factor of this Game Object.
-     *
-     * The scroll factor controls the influence of the movement of a Camera upon this Game Object.
-     *
-     * When a camera scrolls it will change the location at which this Game Object is rendered on-screen.
-     * It does not change the Game Objects actual position values.
-     *
-     * A value of 1 means it will move exactly in sync with a camera.
-     * A value of 0 means it will not move at all, even if the camera moves.
-     * Other values control the degree to which the camera movement is mapped to this Game Object.
-     * 
-     * Please be aware that scroll factor values other than 1 are not taken in to consideration when
-     * calculating physics collisions. Bodies always collide based on their world position, but changing
-     * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
-     * them from physics bodies if not accounted for in your code.
-     *
-     * @name Phaser.GameObjects.Components.ScrollFactor#scrollFactorY
-     * @type {number}
-     * @default 1
-     * @since 3.0.0
-     */
-    scrollFactorY: 1,
-
-    /**
-     * Sets the scroll factor of this Game Object.
-     *
-     * The scroll factor controls the influence of the movement of a Camera upon this Game Object.
-     *
-     * When a camera scrolls it will change the location at which this Game Object is rendered on-screen.
-     * It does not change the Game Objects actual position values.
-     *
-     * A value of 1 means it will move exactly in sync with a camera.
-     * A value of 0 means it will not move at all, even if the camera moves.
-     * Other values control the degree to which the camera movement is mapped to this Game Object.
-     * 
-     * Please be aware that scroll factor values other than 1 are not taken in to consideration when
-     * calculating physics collisions. Bodies always collide based on their world position, but changing
-     * the scroll factor is a visual adjustment to where the textures are rendered, which can offset
-     * them from physics bodies if not accounted for in your code.
-     *
-     * @method Phaser.GameObjects.Components.ScrollFactor#setScrollFactor
-     * @since 3.0.0
-     *
-     * @param {number} x - The horizontal scroll factor of this Game Object.
-     * @param {number} [y=x] - The vertical scroll factor of this Game Object. If not set it will use the `x` value.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setScrollFactor: function (x, y)
-    {
-        if (y === undefined) { y = x; }
-
-        this.scrollFactorX = x;
-        this.scrollFactorY = y;
-
-        return this;
-    }
-
-};
-
-module.exports = ScrollFactor;
-
-
-/***/ }),
-/* 574 */
+/* 570 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -80129,7 +80531,7 @@ module.exports = ScaleMode;
 
 
 /***/ }),
-/* 575 */
+/* 571 */
 /***/ (function(module, exports) {
 
 /**
@@ -80332,7 +80734,7 @@ module.exports = Origin;
 
 
 /***/ }),
-/* 576 */
+/* 572 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -80341,156 +80743,9 @@ module.exports = Origin;
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BitmapMask = __webpack_require__(220);
-var GeometryMask = __webpack_require__(219);
-
-/**
- * Provides methods used for getting and setting the mask of a Game Object.
- *
- * @name Phaser.GameObjects.Components.Mask
- * @since 3.0.0
- */
-
-var Mask = {
-
-    /**
-     * The Mask this Game Object is using during render.
-     *
-     * @name Phaser.GameObjects.Components.Mask#mask
-     * @type {Phaser.Display.Masks.BitmapMask|Phaser.Display.Masks.GeometryMask}
-     * @since 3.0.0
-     */
-    mask: null,
-
-    /**
-     * Sets the mask that this Game Object will use to render with.
-     *
-     * The mask must have been previously created and can be either a GeometryMask or a BitmapMask.
-     * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
-     *
-     * If a mask is already set on this Game Object it will be immediately replaced.
-     * 
-     * Masks are positioned in global space and are not relative to the Game Object to which they
-     * are applied. The reason for this is that multiple Game Objects can all share the same mask.
-     * 
-     * Masks have no impact on physics or input detection. They are purely a rendering component
-     * that allows you to limit what is visible during the render pass.
-     *
-     * @method Phaser.GameObjects.Components.Mask#setMask
-     * @since 3.6.2
-     *
-     * @param {Phaser.Display.Masks.BitmapMask|Phaser.Display.Masks.GeometryMask} mask - The mask this Game Object will use when rendering.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setMask: function (mask)
-    {
-        this.mask = mask;
-
-        return this;
-    },
-
-    /**
-     * Clears the mask that this Game Object was using.
-     *
-     * @method Phaser.GameObjects.Components.Mask#clearMask
-     * @since 3.6.2
-     *
-     * @param {boolean} [destroyMask=false] - Destroy the mask before clearing it?
-     *
-     * @return {this} This Game Object instance.
-     */
-    clearMask: function (destroyMask)
-    {
-        if (destroyMask === undefined) { destroyMask = false; }
-
-        if (destroyMask && this.mask)
-        {
-            this.mask.destroy();
-        }
-
-        this.mask = null;
-
-        return this;
-    },
-
-    /**
-     * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
-     * including this one.
-     *
-     * To create the mask you need to pass in a reference to a renderable Game Object.
-     * A renderable Game Object is one that uses a texture to render with, such as an
-     * Image, Sprite, Render Texture or BitmapText.
-     *
-     * If you do not provide a renderable object, and this Game Object has a texture,
-     * it will use itself as the object. This means you can call this method to create
-     * a Bitmap Mask from any renderable Game Object.
-     *
-     * @method Phaser.GameObjects.Components.Mask#createBitmapMask
-     * @since 3.6.2
-     * 
-     * @param {Phaser.GameObjects.GameObject} [renderable] - A renderable Game Object that uses a texture, such as a Sprite.
-     *
-     * @return {Phaser.Display.Masks.BitmapMask} This Bitmap Mask that was created.
-     */
-    createBitmapMask: function (renderable)
-    {
-        if (renderable === undefined && this.texture)
-        {
-            // eslint-disable-next-line consistent-this
-            renderable = this;
-        }
-
-        return new BitmapMask(this.scene, renderable);
-    },
-
-    /**
-     * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
-     * including this one.
-     *
-     * To create the mask you need to pass in a reference to a Graphics Game Object.
-     *
-     * If you do not provide a graphics object, and this Game Object is an instance
-     * of a Graphics object, then it will use itself to create the mask.
-     * 
-     * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
-     *
-     * @method Phaser.GameObjects.Components.Mask#createGeometryMask
-     * @since 3.6.2
-     * 
-     * @param {Phaser.GameObjects.Graphics} [graphics] - A Graphics Game Object. The geometry within it will be used as the mask.
-     *
-     * @return {Phaser.Display.Masks.GeometryMask} This Geometry Mask that was created.
-     */
-    createGeometryMask: function (graphics)
-    {
-        if (graphics === undefined && this.type === 'Graphics')
-        {
-            // eslint-disable-next-line consistent-this
-            graphics = this;
-        }
-
-        return new GeometryMask(this.scene, graphics);
-    }
-
-};
-
-module.exports = Mask;
-
-
-/***/ }),
-/* 577 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var Rectangle = __webpack_require__(9);
-var RotateAround = __webpack_require__(292);
-var Vector2 = __webpack_require__(5);
+var Rectangle = __webpack_require__(10);
+var RotateAround = __webpack_require__(299);
+var Vector2 = __webpack_require__(4);
 
 /**
  * Provides methods used for obtaining the bounds of a Game Object.
@@ -80761,7 +81016,7 @@ module.exports = GetBounds;
 
 
 /***/ }),
-/* 578 */
+/* 573 */
 /***/ (function(module, exports) {
 
 /**
@@ -80909,100 +81164,7 @@ module.exports = Flip;
 
 
 /***/ }),
-/* 579 */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Provides methods used for setting the depth of a Game Object.
- * Should be applied as a mixin and not used directly.
- * 
- * @name Phaser.GameObjects.Components.Depth
- * @since 3.0.0
- */
-
-var Depth = {
-
-    /**
-     * Private internal value. Holds the depth of the Game Object.
-     * 
-     * @name Phaser.GameObjects.Components.Depth#_depth
-     * @type {integer}
-     * @private
-     * @default 0
-     * @since 3.0.0
-     */
-    _depth: 0,
-
-    /**
-     * The depth of this Game Object within the Scene.
-     * 
-     * The depth is also known as the 'z-index' in some environments, and allows you to change the rendering order
-     * of Game Objects, without actually moving their position in the display list.
-     *
-     * The depth starts from zero (the default value) and increases from that point. A Game Object with a higher depth
-     * value will always render in front of one with a lower value.
-     *
-     * Setting the depth will queue a depth sort event within the Scene.
-     * 
-     * @name Phaser.GameObjects.Components.Depth#depth
-     * @type {number}
-     * @since 3.0.0
-     */
-    depth: {
-
-        get: function ()
-        {
-            return this._depth;
-        },
-
-        set: function (value)
-        {
-            this.scene.sys.queueDepthSort();
-            this._depth = value;
-        }
-
-    },
-
-    /**
-     * The depth of this Game Object within the Scene.
-     * 
-     * The depth is also known as the 'z-index' in some environments, and allows you to change the rendering order
-     * of Game Objects, without actually moving their position in the display list.
-     *
-     * The depth starts from zero (the default value) and increases from that point. A Game Object with a higher depth
-     * value will always render in front of one with a lower value.
-     *
-     * Setting the depth will queue a depth sort event within the Scene.
-     * 
-     * @method Phaser.GameObjects.Components.Depth#setDepth
-     * @since 3.0.0
-     *
-     * @param {integer} value - The depth of this Game Object.
-     * 
-     * @return {this} This Game Object instance.
-     */
-    setDepth: function (value)
-    {
-        if (value === undefined) { value = 0; }
-
-        this.depth = value;
-
-        return this;
-    }
-
-};
-
-module.exports = Depth;
-
-
-/***/ }),
-/* 580 */
+/* 574 */
 /***/ (function(module, exports) {
 
 /**
@@ -81127,7 +81289,7 @@ module.exports = Crop;
 
 
 /***/ }),
-/* 581 */
+/* 575 */
 /***/ (function(module, exports) {
 
 /**
@@ -81276,434 +81438,19 @@ module.exports = ComputedSize;
 
 
 /***/ }),
-/* 582 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var BlendModes = __webpack_require__(41);
-
-/**
- * Provides methods used for setting the blend mode of a Game Object.
- * Should be applied as a mixin and not used directly.
- *
- * @name Phaser.GameObjects.Components.BlendMode
- * @since 3.0.0
- */
-
-var BlendMode = {
-
-    /**
-     * Private internal value. Holds the current blend mode.
-     * 
-     * @name Phaser.GameObjects.Components.BlendMode#_blendMode
-     * @type {integer}
-     * @private
-     * @default 0
-     * @since 3.0.0
-     */
-    _blendMode: BlendModes.NORMAL,
-
-    /**
-     * Sets the Blend Mode being used by this Game Object.
-     *
-     * This can be a const, such as `Phaser.BlendModes.SCREEN`, or an integer, such as 4 (for Overlay)
-     *
-     * Under WebGL only the following Blend Modes are available:
-     *
-     * * ADD
-     * * MULTIPLY
-     * * SCREEN
-     *
-     * Canvas has more available depending on browser support.
-     *
-     * You can also create your own custom Blend Modes in WebGL.
-     *
-     * Blend modes have different effects under Canvas and WebGL, and from browser to browser, depending
-     * on support. Blend Modes also cause a WebGL batch flush should it encounter a new blend mode. For these
-     * reasons try to be careful about the construction of your Scene and the frequency of which blend modes
-     * are used.
-     *
-     * @name Phaser.GameObjects.Components.BlendMode#blendMode
-     * @type {(Phaser.BlendModes|string)}
-     * @since 3.0.0
-     */
-    blendMode: {
-
-        get: function ()
-        {
-            return this._blendMode;
-        },
-
-        set: function (value)
-        {
-            if (typeof value === 'string')
-            {
-                value = BlendModes[value];
-            }
-
-            value |= 0;
-
-            if (value >= -1)
-            {
-                this._blendMode = value;
-            }
-        }
-
-    },
-
-    /**
-     * Sets the Blend Mode being used by this Game Object.
-     *
-     * This can be a const, such as `Phaser.BlendModes.SCREEN`, or an integer, such as 4 (for Overlay)
-     *
-     * Under WebGL only the following Blend Modes are available:
-     *
-     * * ADD
-     * * MULTIPLY
-     * * SCREEN
-     *
-     * Canvas has more available depending on browser support.
-     *
-     * You can also create your own custom Blend Modes in WebGL.
-     *
-     * Blend modes have different effects under Canvas and WebGL, and from browser to browser, depending
-     * on support. Blend Modes also cause a WebGL batch flush should it encounter a new blend mode. For these
-     * reasons try to be careful about the construction of your Scene and the frequency of which blend modes
-     * are used.
-     *
-     * @method Phaser.GameObjects.Components.BlendMode#setBlendMode
-     * @since 3.0.0
-     *
-     * @param {(string|Phaser.BlendModes)} value - The BlendMode value. Either a string or a CONST.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setBlendMode: function (value)
-    {
-        this.blendMode = value;
-
-        return this;
-    }
-
-};
-
-module.exports = BlendMode;
-
-
-/***/ }),
-/* 583 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var Clamp = __webpack_require__(19);
-
-//  bitmask flag for GameObject.renderMask
-var _FLAG = 2; // 0010
-
-/**
- * Provides methods used for setting the alpha properties of a Game Object.
- * Should be applied as a mixin and not used directly.
- *
- * @name Phaser.GameObjects.Components.Alpha
- * @since 3.0.0
- */
-
-var Alpha = {
-
-    /**
-     * Private internal value. Holds the global alpha value.
-     *
-     * @name Phaser.GameObjects.Components.Alpha#_alpha
-     * @type {number}
-     * @private
-     * @default 1
-     * @since 3.0.0
-     */
-    _alpha: 1,
-
-    /**
-     * Private internal value. Holds the top-left alpha value.
-     *
-     * @name Phaser.GameObjects.Components.Alpha#_alphaTL
-     * @type {number}
-     * @private
-     * @default 1
-     * @since 3.0.0
-     */
-    _alphaTL: 1,
-
-    /**
-     * Private internal value. Holds the top-right alpha value.
-     *
-     * @name Phaser.GameObjects.Components.Alpha#_alphaTR
-     * @type {number}
-     * @private
-     * @default 1
-     * @since 3.0.0
-     */
-    _alphaTR: 1,
-
-    /**
-     * Private internal value. Holds the bottom-left alpha value.
-     *
-     * @name Phaser.GameObjects.Components.Alpha#_alphaBL
-     * @type {number}
-     * @private
-     * @default 1
-     * @since 3.0.0
-     */
-    _alphaBL: 1,
-
-    /**
-     * Private internal value. Holds the bottom-right alpha value.
-     *
-     * @name Phaser.GameObjects.Components.Alpha#_alphaBR
-     * @type {number}
-     * @private
-     * @default 1
-     * @since 3.0.0
-     */
-    _alphaBR: 1,
-
-    /**
-     * Clears all alpha values associated with this Game Object.
-     *
-     * Immediately sets the alpha levels back to 1 (fully opaque).
-     *
-     * @method Phaser.GameObjects.Components.Alpha#clearAlpha
-     * @since 3.0.0
-     *
-     * @return {this} This Game Object instance.
-     */
-    clearAlpha: function ()
-    {
-        return this.setAlpha(1);
-    },
-
-    /**
-     * Set the Alpha level of this Game Object. The alpha controls the opacity of the Game Object as it renders.
-     * Alpha values are provided as a float between 0, fully transparent, and 1, fully opaque.
-     *
-     * If your game is running under WebGL you can optionally specify four different alpha values, each of which
-     * correspond to the four corners of the Game Object. Under Canvas only the `topLeft` value given is used.
-     *
-     * @method Phaser.GameObjects.Components.Alpha#setAlpha
-     * @since 3.0.0
-     *
-     * @param {number} [topLeft=1] - The alpha value used for the top-left of the Game Object. If this is the only value given it's applied across the whole Game Object.
-     * @param {number} [topRight] - The alpha value used for the top-right of the Game Object. WebGL only.
-     * @param {number} [bottomLeft] - The alpha value used for the bottom-left of the Game Object. WebGL only.
-     * @param {number} [bottomRight] - The alpha value used for the bottom-right of the Game Object. WebGL only.
-     *
-     * @return {this} This Game Object instance.
-     */
-    setAlpha: function (topLeft, topRight, bottomLeft, bottomRight)
-    {
-        if (topLeft === undefined) { topLeft = 1; }
-
-        //  Treat as if there is only one alpha value for the whole Game Object
-        if (topRight === undefined)
-        {
-            this.alpha = topLeft;
-        }
-        else
-        {
-            this._alphaTL = Clamp(topLeft, 0, 1);
-            this._alphaTR = Clamp(topRight, 0, 1);
-            this._alphaBL = Clamp(bottomLeft, 0, 1);
-            this._alphaBR = Clamp(bottomRight, 0, 1);
-        }
-
-        return this;
-    },
-
-    /**
-     * The alpha value of the Game Object.
-     *
-     * This is a global value, impacting the entire Game Object, not just a region of it.
-     *
-     * @name Phaser.GameObjects.Components.Alpha#alpha
-     * @type {number}
-     * @since 3.0.0
-     */
-    alpha: {
-
-        get: function ()
-        {
-            return this._alpha;
-        },
-
-        set: function (value)
-        {
-            var v = Clamp(value, 0, 1);
-
-            this._alpha = v;
-            this._alphaTL = v;
-            this._alphaTR = v;
-            this._alphaBL = v;
-            this._alphaBR = v;
-
-            if (v === 0)
-            {
-                this.renderFlags &= ~_FLAG;
-            }
-            else
-            {
-                this.renderFlags |= _FLAG;
-            }
-        }
-
-    },
-
-    /**
-     * The alpha value starting from the top-left of the Game Object.
-     * This value is interpolated from the corner to the center of the Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Alpha#alphaTopLeft
-     * @type {number}
-     * @webglOnly
-     * @since 3.0.0
-     */
-    alphaTopLeft: {
-
-        get: function ()
-        {
-            return this._alphaTL;
-        },
-
-        set: function (value)
-        {
-            var v = Clamp(value, 0, 1);
-
-            this._alphaTL = v;
-
-            if (v !== 0)
-            {
-                this.renderFlags |= _FLAG;
-            }
-        }
-
-    },
-
-    /**
-     * The alpha value starting from the top-right of the Game Object.
-     * This value is interpolated from the corner to the center of the Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Alpha#alphaTopRight
-     * @type {number}
-     * @webglOnly
-     * @since 3.0.0
-     */
-    alphaTopRight: {
-
-        get: function ()
-        {
-            return this._alphaTR;
-        },
-
-        set: function (value)
-        {
-            var v = Clamp(value, 0, 1);
-
-            this._alphaTR = v;
-
-            if (v !== 0)
-            {
-                this.renderFlags |= _FLAG;
-            }
-        }
-
-    },
-
-    /**
-     * The alpha value starting from the bottom-left of the Game Object.
-     * This value is interpolated from the corner to the center of the Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Alpha#alphaBottomLeft
-     * @type {number}
-     * @webglOnly
-     * @since 3.0.0
-     */
-    alphaBottomLeft: {
-
-        get: function ()
-        {
-            return this._alphaBL;
-        },
-
-        set: function (value)
-        {
-            var v = Clamp(value, 0, 1);
-
-            this._alphaBL = v;
-
-            if (v !== 0)
-            {
-                this.renderFlags |= _FLAG;
-            }
-        }
-
-    },
-
-    /**
-     * The alpha value starting from the bottom-right of the Game Object.
-     * This value is interpolated from the corner to the center of the Game Object.
-     *
-     * @name Phaser.GameObjects.Components.Alpha#alphaBottomRight
-     * @type {number}
-     * @webglOnly
-     * @since 3.0.0
-     */
-    alphaBottomRight: {
-
-        get: function ()
-        {
-            return this._alphaBR;
-        },
-
-        set: function (value)
-        {
-            var v = Clamp(value, 0, 1);
-
-            this._alphaBR = v;
-
-            if (v !== 0)
-            {
-                this.renderFlags |= _FLAG;
-            }
-        }
-
-    }
-
-};
-
-module.exports = Alpha;
-
-
-/***/ }),
+/* 576 */,
+/* 577 */,
+/* 578 */,
+/* 579 */,
+/* 580 */,
+/* 581 */,
+/* 582 */,
+/* 583 */,
 /* 584 */,
 /* 585 */,
 /* 586 */,
 /* 587 */,
-/* 588 */,
-/* 589 */,
-/* 590 */,
-/* 591 */,
-/* 592 */,
-/* 593 */,
-/* 594 */,
-/* 595 */,
-/* 596 */
+/* 588 */
 /***/ (function(module, exports) {
 
 /**
@@ -81756,7 +81503,7 @@ if (typeof window.Uint32Array !== 'function' && typeof window.Uint32Array !== 'o
 
 
 /***/ }),
-/* 597 */
+/* 589 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {// References:
@@ -81826,10 +81573,10 @@ if (!global.cancelAnimationFrame) {
     };
 }
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(162)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(163)))
 
 /***/ }),
-/* 598 */
+/* 590 */
 /***/ (function(module, exports) {
 
 /**
@@ -81866,7 +81613,7 @@ if (!global.cancelAnimationFrame) {
 
 
 /***/ }),
-/* 599 */
+/* 591 */
 /***/ (function(module, exports) {
 
 // ES6 Math.trunc - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/trunc
@@ -81878,7 +81625,7 @@ if (!Math.trunc) {
 
 
 /***/ }),
-/* 600 */
+/* 592 */
 /***/ (function(module, exports) {
 
 /**
@@ -81893,7 +81640,7 @@ if (!window.console)
 
 
 /***/ }),
-/* 601 */
+/* 593 */
 /***/ (function(module, exports) {
 
 /* Copyright 2013 Chris Wilson
@@ -82080,7 +81827,7 @@ BiquadFilterNode.type and OscillatorNode.type.
 
 
 /***/ }),
-/* 602 */
+/* 594 */
 /***/ (function(module, exports) {
 
 /**
@@ -82096,7 +81843,7 @@ if (!Array.isArray)
 
 
 /***/ }),
-/* 603 */
+/* 595 */
 /***/ (function(module, exports) {
 
 /**
@@ -82136,20 +81883,28 @@ if (!Array.prototype.forEach)
 
 
 /***/ }),
-/* 604 */
+/* 596 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(603);
-__webpack_require__(602);
-__webpack_require__(601);
-__webpack_require__(600);
-__webpack_require__(599);
-__webpack_require__(598);
-__webpack_require__(597);
-__webpack_require__(596);
+__webpack_require__(595);
+__webpack_require__(594);
+__webpack_require__(593);
+__webpack_require__(592);
+__webpack_require__(591);
+__webpack_require__(590);
+__webpack_require__(589);
+__webpack_require__(588);
 
 
 /***/ }),
+/* 597 */,
+/* 598 */,
+/* 599 */,
+/* 600 */,
+/* 601 */,
+/* 602 */,
+/* 603 */,
+/* 604 */,
 /* 605 */,
 /* 606 */,
 /* 607 */,
@@ -82201,15 +81956,7 @@ __webpack_require__(596);
 /* 653 */,
 /* 654 */,
 /* 655 */,
-/* 656 */,
-/* 657 */,
-/* 658 */,
-/* 659 */,
-/* 660 */,
-/* 661 */,
-/* 662 */,
-/* 663 */,
-/* 664 */
+/* 656 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -82224,7 +81971,7 @@ __webpack_require__(596);
 
 module.exports = {
 
-    BitmapMaskPipeline: __webpack_require__(254),
+    BitmapMaskPipeline: __webpack_require__(262),
     ForwardDiffuseLightPipeline: __webpack_require__(150),
     TextureTintPipeline: __webpack_require__(128)
 
@@ -82232,7 +81979,7 @@ module.exports = {
 
 
 /***/ }),
-/* 665 */
+/* 657 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -82249,8 +81996,8 @@ module.exports = {
 
     Utils: __webpack_require__(20),
     WebGLPipeline: __webpack_require__(129),
-    WebGLRenderer: __webpack_require__(256),
-    Pipelines: __webpack_require__(664),
+    WebGLRenderer: __webpack_require__(264),
+    Pipelines: __webpack_require__(656),
 
     // Constants
     BYTE: 0,
@@ -82263,7 +82010,7 @@ module.exports = {
 
 
 /***/ }),
-/* 666 */
+/* 658 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -82284,14 +82031,14 @@ module.exports = {
 
 module.exports = {
 
-    Canvas: __webpack_require__(258),
-    WebGL: __webpack_require__(255)
+    Canvas: __webpack_require__(266),
+    WebGL: __webpack_require__(263)
 
 };
 
 
 /***/ }),
-/* 667 */
+/* 659 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -82306,15 +82053,15 @@ module.exports = {
 
 module.exports = {
 
-    CanvasRenderer: __webpack_require__(259),
-    GetBlendModes: __webpack_require__(257),
-    SetTransform: __webpack_require__(118)
+    CanvasRenderer: __webpack_require__(267),
+    GetBlendModes: __webpack_require__(265),
+    SetTransform: __webpack_require__(117)
 
 };
 
 
 /***/ }),
-/* 668 */
+/* 660 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -82340,14 +82087,22 @@ module.exports = {
 
 module.exports = {
 
-    Canvas: __webpack_require__(667),
-    Snapshot: __webpack_require__(666),
-    WebGL: __webpack_require__(665)
+    Canvas: __webpack_require__(659),
+    Snapshot: __webpack_require__(658),
+    WebGL: __webpack_require__(657)
 
 };
 
 
 /***/ }),
+/* 661 */,
+/* 662 */,
+/* 663 */,
+/* 664 */,
+/* 665 */,
+/* 666 */,
+/* 667 */,
+/* 668 */,
 /* 669 */,
 /* 670 */,
 /* 671 */,
@@ -82697,7 +82452,9 @@ module.exports = {
 /* 1015 */,
 /* 1016 */,
 /* 1017 */,
-/* 1018 */
+/* 1018 */,
+/* 1019 */,
+/* 1020 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/**
@@ -82706,10 +82463,10 @@ module.exports = {
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-__webpack_require__(604);
+__webpack_require__(596);
 
 var CONST = __webpack_require__(23);
-var Extend = __webpack_require__(16);
+var Extend = __webpack_require__(15);
 
 /**
  * @namespace Phaser
@@ -82727,72 +82484,72 @@ var Phaser = {
     Game: __webpack_require__(505),
     GameObjects: {
         DisplayList: __webpack_require__(477),
-        GameObjectCreator: __webpack_require__(14),
+        GameObjectCreator: __webpack_require__(13),
         GameObjectFactory: __webpack_require__(12),
         UpdateList: __webpack_require__(449),
-        Components: __webpack_require__(13),
+        Components: __webpack_require__(17),
         BuildGameObject: __webpack_require__(25),
-        BuildGameObjectAnimation: __webpack_require__(184),
+        BuildGameObjectAnimation: __webpack_require__(182),
         GameObject: __webpack_require__(21),
-        Graphics: __webpack_require__(117),
-        Image: __webpack_require__(68),
+        Graphics: __webpack_require__(116),
+        Image: __webpack_require__(69),
         Sprite: __webpack_require__(44),
-        Text: __webpack_require__(111),
+        Text: __webpack_require__(112),
         Factories: {
-            Graphics: __webpack_require__(413),
-            Image: __webpack_require__(412),
-            Sprite: __webpack_require__(411),
-            Text: __webpack_require__(410)
+            Graphics: __webpack_require__(422),
+            Image: __webpack_require__(421),
+            Sprite: __webpack_require__(420),
+            Text: __webpack_require__(419)
         },
         Creators: {
-            Graphics: __webpack_require__(409),
-            Image: __webpack_require__(408),
-            Sprite: __webpack_require__(407),
-            Text: __webpack_require__(406)
+            Graphics: __webpack_require__(418),
+            Image: __webpack_require__(417),
+            Sprite: __webpack_require__(416),
+            Text: __webpack_require__(415)
         }
     },
-    Input: __webpack_require__(388),
+    Input: __webpack_require__(395),
     Loader: {
         FileTypes: {
-            AnimationJSONFile: __webpack_require__(365),
-            AtlasJSONFile: __webpack_require__(364),
-            AudioFile: __webpack_require__(172),
-            AudioSpriteFile: __webpack_require__(363),
-            HTML5AudioFile: __webpack_require__(171),
+            AnimationJSONFile: __webpack_require__(372),
+            AtlasJSONFile: __webpack_require__(371),
+            AudioFile: __webpack_require__(173),
+            AudioSpriteFile: __webpack_require__(370),
+            HTML5AudioFile: __webpack_require__(172),
             ImageFile: __webpack_require__(38),
             JSONFile: __webpack_require__(29),
-            MultiAtlasFile: __webpack_require__(362),
-            PluginFile: __webpack_require__(361),
-            ScriptFile: __webpack_require__(360),
-            SpriteSheetFile: __webpack_require__(359),
-            TextFile: __webpack_require__(230),
+            MultiAtlasFile: __webpack_require__(369),
+            PluginFile: __webpack_require__(368),
+            ScriptFile: __webpack_require__(367),
+            SpriteSheetFile: __webpack_require__(366),
+            TextFile: __webpack_require__(236),
             XMLFile: __webpack_require__(143)
         },
         File: __webpack_require__(18),
         FileTypesManager: __webpack_require__(6),
-        GetURL: __webpack_require__(109),
-        LoaderPlugin: __webpack_require__(358),
-        MergeXHRSettings: __webpack_require__(108),
+        GetURL: __webpack_require__(110),
+        LoaderPlugin: __webpack_require__(365),
+        MergeXHRSettings: __webpack_require__(109),
         MultiFile: __webpack_require__(37),
-        XHRLoader: __webpack_require__(173),
+        XHRLoader: __webpack_require__(174),
         XHRSettings: __webpack_require__(73)
     },
     Math: {
         Between: __webpack_require__(151),
         DegToRad: __webpack_require__(39),
-        FloatBetween: __webpack_require__(243),
+        FloatBetween: __webpack_require__(249),
         RadToDeg: __webpack_require__(152),
-        Vector2: __webpack_require__(5)
+        Vector2: __webpack_require__(4)
     },
-    Plugins: __webpack_require__(330),
-    Renderer: __webpack_require__(668),
-    Scene: __webpack_require__(198),
-    Scenes: __webpack_require__(328),
-    Sound: __webpack_require__(326),
-    Structs: __webpack_require__(325),
-    Textures: __webpack_require__(324),
-    Time: __webpack_require__(308),
-    Tweens: __webpack_require__(306)
+    Plugins: __webpack_require__(337),
+    Renderer: __webpack_require__(660),
+    Scene: __webpack_require__(196),
+    Scenes: __webpack_require__(335),
+    Sound: __webpack_require__(333),
+    Structs: __webpack_require__(332),
+    Textures: __webpack_require__(331),
+    Time: __webpack_require__(315),
+    Tweens: __webpack_require__(313)
 };
 
 //   Merge in the consts
@@ -82811,7 +82568,7 @@ global.Phaser = Phaser;
  *  -- Dick Brandon
  */
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(162)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(163)))
 
 /***/ })
 /******/ ]);
