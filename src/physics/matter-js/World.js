@@ -728,7 +728,7 @@ var World = new Class({
         {
             if (!bodies[i].render.visible)
             {
-                return;
+                continue;
             }
 
             // Handle drawing both single bodies and compound bodies. If compound, draw both the
