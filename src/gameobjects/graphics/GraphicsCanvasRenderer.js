@@ -45,7 +45,10 @@ var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, c
     var green = 0;
     var blue = 0;
 
-    ctx.fillStyle = '#fff';
+    ctx.save();
+
+    //  Reset any currently active paths
+    ctx.beginPath();
 
     for (var index = 0; index < commandBufferLength; ++index)
     {
