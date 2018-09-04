@@ -10,6 +10,7 @@
 
 * TileSprite.setTileScale would set the tile position by mistake, instead of the scale. Using the properties directly worked, but the method was incorrect (thanks @alexeymolchan)
 * Calling `Text.setStyle` would make the Text vanish if you didn't provide a `resolution` property in the style configuration object. Calling `setStyle` now only changes the properties given in the object, leaving any previously changed properties as-is. Fix #4011 (thanks @okcompewter)
+* In Matter.js if a body had its debug `render.visible` property set to `false` it wouldn't then render any other debug body beyond it. Now it will just skip bodies with hidden debug graphics (thanks @jf908)
 
 ### Examples, Documentation and TypeScript
 
