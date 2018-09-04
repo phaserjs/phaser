@@ -215,7 +215,7 @@ Setting the `resolution` property in the Game Config to a value other than 1 wou
 * The Camera Fade Effect would display the fade fill rectangle at the wrong size. Camera fades now respect the resolution.
 * The Camera Flash Effect would display the fade fill rectangle at the wrong size. Camera flashes now respect the resolution.
 * The Camera Shake Effect would shake the Camera using the wrong width values. Camera Shakes now respect the resolution.
-* Input calculations would not factor in the Game Resolution correctly. If a Camera viewport was not at 0x0 or not the full size, or the Camera was rotated or zoomed, the input areas would be wrong if `resolution` was > 1. These are now factored in correctly and changing the resolution no longer breaks input. Fix #3606 (thanks @Secretmapper)
+* Input calculations would not factor in the Game Resolution correctly. If a Camera viewport was not at 0x0 or not the full size, or the Camera was rotated or zoomed, the input areas would be wrong if `resolution` was > 1. These are now factored in correctly and changing the resolution no longer breaks input. Fix #3606 (thanks @Secretmapper @thanh-taro)
 
 ### Bug Fixes
 
