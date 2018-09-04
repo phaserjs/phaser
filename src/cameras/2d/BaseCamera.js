@@ -778,7 +778,7 @@ var BaseCamera = new Class({
         var mve = cameraMatrix[4];
         var mvf = cameraMatrix[5];
 
-        /* First Invert Matrix */
+        //  Invert Matrix
         var determinant = (mva * mvd) - (mvb * mvc);
 
         if (!determinant)
@@ -806,14 +806,14 @@ var BaseCamera = new Class({
         var scrollX = this.scrollX;
         var scrollY = this.scrollY;
 
+        var sx = x + ((scrollX * c - scrollY * s) * zoom);
+        var sy = y + ((scrollX * s + scrollY * c) * zoom);
+
+        //  Apply transform to point
         var res = this.resolution;
 
-        var sx = x * res + ((scrollX * c - scrollY * s) * zoom);
-        var sy = y * res + ((scrollX * s + scrollY * c) * zoom);
-
-        /* Apply transform to point */
-        output.x = (sx * ima + sy * imc + ime);
-        output.y = (sx * imb + sy * imd + imf);
+        output.x = (sx * ima + sy * imc + ime) * res;
+        output.y = (sx * imb + sy * imd + imf) * res;
 
         return output;
     },

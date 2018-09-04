@@ -1172,7 +1172,7 @@ var InputManager = new Class({
             {
                 TransformXY(px, py, gameObject.x, gameObject.y, gameObject.rotation, gameObject.scaleX, gameObject.scaleY, point);
             }
-
+    
             if (this.pointWithinHitArea(gameObject, point.x, point.y))
             {
                 output.push(gameObject);
