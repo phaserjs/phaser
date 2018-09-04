@@ -1665,6 +1665,10 @@ var World = new Class({
             this.emit('collide', body1.gameObject, body2.gameObject, body1, body2);
         }
 
+        //  sync changes back to the bodies
+        body1.postUpdate();
+        body2.postUpdate();
+
         return true;
     },
 

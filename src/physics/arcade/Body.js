@@ -920,8 +920,8 @@ var Body = new Class({
             }
         }
 
-        this._dx = this.deltaX();
-        this._dy = this.deltaY();
+        this._dx = this.position.x - this.prev.x;
+        this._dy = this.position.y - this.prev.y;
     },
 
     /**
@@ -934,8 +934,8 @@ var Body = new Class({
      */
     postUpdate: function ()
     {
-        this._dx = this.deltaX();
-        this._dy = this.deltaY();
+        this._dx = this.position.x - this.prev.x;
+        this._dy = this.position.y - this.prev.y;
 
         if (this.moves)
         {
@@ -1327,7 +1327,7 @@ var Body = new Class({
      */
     deltaX: function ()
     {
-        return this.position.x - this.prev.x;
+        return this._dx;
     },
 
     /**
@@ -1341,7 +1341,7 @@ var Body = new Class({
      */
     deltaY: function ()
     {
-        return this.position.y - this.prev.y;
+        return this._dy;
     },
 
     /**
