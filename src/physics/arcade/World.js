@@ -2212,6 +2212,9 @@ var World = new Class({
                 {
                     sprite.emit('collide', body.gameObject, tile, body, null);
                 }
+
+                //  sync changes back to the body
+                body.postUpdate();
             }
         }
     },
