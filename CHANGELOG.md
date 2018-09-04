@@ -1,6 +1,6 @@
 # Change Log
 
-## Version 3.12.0 - Silica - in development
+## Version 3.12.0 - Silica - 4th September 2018
 
 ### FlatTintPipeline Updates
 

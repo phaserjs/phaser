@@ -194,6 +194,8 @@ var Camera = new Class({
 
         /**
          * Is this Camera rendering directly or to a texture?
+         * 
+         * Warning: This is an experimental feature.
          *
          * @name Phaser.Cameras.Scene2D.Camera#renderToTexture
          * @type {boolean}
@@ -206,6 +208,8 @@ var Camera = new Class({
         /**
          * The HTML Canvas Element that the Camera is drawing to if rendering to a texture.
          * This is only populated if Phaser is running with the Canvas Renderer.
+         * 
+         * Warning: This is an experimental feature.
          *
          * @name Phaser.Cameras.Scene2D.Camera#canvas
          * @type {HTMLCanvasElement}
@@ -216,6 +220,8 @@ var Camera = new Class({
 
         /**
          * A reference to the Rendering Context belonging to the Canvas Element this Camera is rendering to a texture.
+         * 
+         * Warning: This is an experimental feature.
          *
          * @name Phaser.Cameras.Scene2D.Camera#context
          * @type {CanvasRenderingContext2D}
@@ -227,6 +233,8 @@ var Camera = new Class({
         /**
          * A reference to the GL Frame Buffer this Camera ia drawing to if rendering to a texture.
          * This is only set if Phaser is running with the WebGL Renderer.
+         * 
+         * Warning: This is an experimental feature.
          *
          * @name Phaser.Cameras.Scene2D.Camera#framebuffer
          * @type {?WebGLFramebuffer}
@@ -238,6 +246,8 @@ var Camera = new Class({
         /**
          * A reference to the GL Frame Buffer this Camera is drawing to if rendering to a texture.
          * This is only set if Phaser is running with the WebGL Renderer.
+         * 
+         * Warning: This is an experimental feature.
          *
          * @name Phaser.Cameras.Scene2D.Camera#framebuffer
          * @type {?WebGLFramebuffer}
@@ -249,6 +259,8 @@ var Camera = new Class({
         /**
          * A reference to the GL Frame Buffer this Render Texture is drawing to.
          * This is only set if Phaser is running with the WebGL Renderer.
+         * 
+         * Warning: This is an experimental feature.
          *
          * @name Phaser.Cameras.Scene2D.Camera#pipeline
          * @type {any}
