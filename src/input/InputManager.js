@@ -1120,10 +1120,6 @@ var InputManager = new Class({
 
         var tempPoint = this._tempPoint;
 
-        var cx = camera._cx;
-        var cy = camera._cy;
-        var cw = camera._cw;
-        var ch = camera._ch;
         var csx = camera.scrollX;
         var csy = camera.scrollY;
 
@@ -1132,9 +1128,10 @@ var InputManager = new Class({
         var x = pointer.x;
         var y = pointer.y;
 
-        if (!(x >= cx && y >= cy && x <= cx + cw && y <= cy + ch))
+        if (camera.resolution !== 1)
         {
-            return output;
+            x += camera._x;
+            y += camera._y;
         }
 
         //  Stores the world point inside of tempPoint
