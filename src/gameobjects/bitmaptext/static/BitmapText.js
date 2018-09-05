@@ -211,7 +211,7 @@ var BitmapText = new Class({
         this.setTexture(entry.texture, entry.frame);
         this.setPosition(x, y);
         this.setOrigin(0, 0);
-        this.initPipeline('TextureTintPipeline');
+        this.initPipeline();
 
         this.setText(text);
     },

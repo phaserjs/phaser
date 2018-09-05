@@ -146,7 +146,7 @@ var Graphics = new Class({
         GameObject.call(this, scene, 'Graphics');
 
         this.setPosition(x, y);
-        this.initPipeline('TextureTintPipeline');
+        this.initPipeline();
 
         /**
          * The horizontal display origin of the Graphics.

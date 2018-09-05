@@ -86,7 +86,7 @@ var Blitter = new Class({
 
         this.setTexture(texture, frame);
         this.setPosition(x, y);
-        this.initPipeline('TextureTintPipeline');
+        this.initPipeline();
 
         /**
          * The children of this Blitter.

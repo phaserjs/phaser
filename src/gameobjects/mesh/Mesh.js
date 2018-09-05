@@ -158,7 +158,7 @@ var Mesh = new Class({
         this.setPosition(x, y);
         this.setSizeToFrame();
         this.setOrigin();
-        this.initPipeline('TextureTintPipeline');
+        this.initPipeline();
     }
 
 });

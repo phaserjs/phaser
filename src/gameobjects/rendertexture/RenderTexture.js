@@ -214,7 +214,7 @@ var RenderTexture = new Class({
         this.setPosition(x, y);
         this.setSize(width, height);
         this.setOrigin(0, 0);
-        this.initPipeline('TextureTintPipeline');
+        this.initPipeline();
     },
 
     /**
