@@ -5,6 +5,7 @@
  */
 
 var Arc = require('./Arc');
+var Polygon = require('./Polygon');
 var Rectangle = require('./Rectangle');
 var Triangle = require('./Triangle');
 var GameObjectFactory = require('../GameObjectFactory');
@@ -42,6 +43,11 @@ GameObjectFactory.register('arc', function (x, y, radius, fillColor, fillAlpha, 
 GameObjectFactory.register('circle', function (x, y, radius, fillColor, fillAlpha)
 {
     return this.displayList.add(new Arc(this.scene, x, y, radius, fillColor, fillAlpha));
+});
+
+GameObjectFactory.register('polygon', function (x, y, points, fillColor, fillAlpha)
+{
+    return this.displayList.add(new Polygon(this.scene, x, y, points, fillColor, fillAlpha));
 });
 
 //  When registering a factory Rectangle 'this' refers to the GameObjectFactory context.
