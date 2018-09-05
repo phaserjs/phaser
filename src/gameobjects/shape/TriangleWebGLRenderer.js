@@ -42,17 +42,11 @@ var TriangleWebGLRenderer = function (renderer, src, interpolationPercentage, ca
         //  Undo the camera scroll
         shapeMatrix.e = src.x;
         shapeMatrix.f = src.y;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        // camMatrix.multiply(shapeMatrix);
     }
     else
     {
         shapeMatrix.e -= camera.scrollX * src.scrollFactorX;
         shapeMatrix.f -= camera.scrollY * src.scrollFactorY;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        // camMatrix.multiply(shapeMatrix);
     }
 
     var alpha = camera.alpha * src.alpha;

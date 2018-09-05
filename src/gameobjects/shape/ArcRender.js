@@ -14,7 +14,7 @@ if (typeof WEBGL_RENDERER)
 
 if (typeof CANVAS_RENDERER)
 {
-    // renderCanvas = require('./RectangleCanvasRenderer');
+    renderCanvas = require('./ArcCanvasRenderer');
 }
 
 module.exports = {

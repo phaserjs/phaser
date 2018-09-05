@@ -13,8 +13,8 @@ var Rectangle = require('./Rectangle');
  *
  * Note: This method will only be available if the Zone Game Object has been built into Phaser.
  *
- * @method Phaser.GameObjects.GameObjectCreator#zone
- * @since 3.0.0
+ * @method Phaser.GameObjects.GameObjectCreator#rectangle
+ * @since 3.13.0
  *
  * @param {object} config - The configuration object this Game Object will use to create itself.
  *
