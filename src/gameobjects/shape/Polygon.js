@@ -10,6 +10,7 @@ var Earcut = require('../../geom/polygon/Earcut');
 var GetAABB = require('../../geom/polygon/GetAABB');
 var GeomPolygon = require('../../geom/polygon/Polygon');
 var Shape = require('./Shape');
+var Smooth = require('../../geom/polygon/Smooth');
 
 /**
  * @classdesc
@@ -57,6 +58,18 @@ var Polygon = new Class({
         this.updateData();
     },
 
+    smooth: function (iterations)
+    {
+        if (iterations === undefined) { iterations = 1; }
+
+        for (var i = 0; i < iterations; i++)
+        {
+            Smooth(this.data);
+        }
+
+        return this.updateData();
+    },
+
     updateData: function ()
     {
         var path = [];
@@ -67,35 +80,10 @@ var Polygon = new Class({
             path.push(points[i].x, points[i].y);
         }
 
-        // path = this.smooth(path);
-
         this.pathIndexes = Earcut(path);
         this.pathData = path;
 
         return this;
-    },
-
-    smooth: function (path)
-    {
-        var n = path.length,
-            result = [],
-            i = 0,
-            resultIndex = 0,
-            p0x, p0y, p1x, p1y;
-    
-        for (i; i<n-2; i+=2) {
-            p0x = path[i];
-            p0y = path[i+1];
-            p1x = path[i+2];
-            p1y = path[i+3];
-    
-            result[resultIndex++] = 0.75 * p0x + 0.25 * p1x;
-            result[resultIndex++] = 0.75 * p0y + 0.25 * p1y;
-            result[resultIndex++] = 0.25 * p0x + 0.75 * p1x;
-            result[resultIndex++] = 0.25 * p0y + 0.75 * p1y;
-        }
-    
-        return result;
     }
 
 });
