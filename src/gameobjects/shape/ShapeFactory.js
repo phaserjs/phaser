@@ -5,6 +5,7 @@
  */
 
 var Arc = require('./Arc');
+var Ellipse = require('./Ellipse');
 var Polygon = require('./Polygon');
 var Rectangle = require('./Rectangle');
 var Triangle = require('./Triangle');
@@ -50,10 +51,8 @@ GameObjectFactory.register('polygon', function (x, y, points, fillColor, fillAlp
     return this.displayList.add(new Polygon(this.scene, x, y, points, fillColor, fillAlpha));
 });
 
-//  When registering a factory Rectangle 'this' refers to the GameObjectFactory context.
-//
-//  There are several properties available to use:
-//
-//  this.scene - a reference to the Scene that owns the GameObjectFactory
-//  this.displayList - a reference to the Display List the Scene owns
-//  this.updateList - a reference to the Update List the Scene owns
+GameObjectFactory.register('ellipse', function (x, y, width, height, fillColor, fillAlpha, smoothness)
+{
+    return this.displayList.add(new Ellipse(this.scene, x, y, width, height, fillColor, fillAlpha, smoothness));
+});
+
