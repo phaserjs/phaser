@@ -5,10 +5,10 @@
  */
 
 var EllipseRender = require('./EllipseRender');
-var Class = require('../../utils/Class');
-var Earcut = require('../../geom/polygon/Earcut');
-var GeomEllipse = require('../../geom/ellipse/Ellipse');
-var Shape = require('./Shape');
+var Class = require('../../../utils/Class');
+var Earcut = require('../../../geom/polygon/Earcut');
+var GeomEllipse = require('../../../geom/ellipse/Ellipse');
+var Shape = require('../Shape');
 
 /**
  * @classdesc

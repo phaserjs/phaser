@@ -39,7 +39,11 @@ var GameObjects = {
     //  Shapes
 
     Shape: require('./shape/Shape'),
-    Rectangle: require('./shape/Rectangle'),
+    Arc: require('./shape/arc/Arc'),
+    Ellipse: require('./shape/ellipse/Ellipse'),
+    Polygon: require('./shape/polygon/Polygon'),
+    Rectangle: require('./shape/rectangle/Rectangle'),
+    Triangle: require('./shape/triangle/Triangle'),
 
     //  Game Object Factories
 

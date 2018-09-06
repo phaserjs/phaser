@@ -4,12 +4,12 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Arc = require('./Arc');
-var Ellipse = require('./Ellipse');
-var Polygon = require('./Polygon');
-var Rectangle = require('./Rectangle');
-var Triangle = require('./Triangle');
+var Arc = require('./arc/Arc');
+var Ellipse = require('./ellipse/Ellipse');
 var GameObjectFactory = require('../GameObjectFactory');
+var Polygon = require('./polygon/Polygon');
+var Rectangle = require('./rectangle/Rectangle');
+var Triangle = require('./triangle/Triangle');
 
 /**
  * Creates a new Image Game Object and adds it to the Scene.

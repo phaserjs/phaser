@@ -4,15 +4,15 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Class = require('../../utils/Class');
-var Shape = require('./Shape');
-var GeomTriangle = require('../../geom/triangle/Triangle');
-var TriangleRender = require('./TriangleRender');
+var Class = require('../../../utils/Class');
+var GeomRectangle = require('../../../geom/rectangle/Rectangle');
+var Shape = require('../Shape');
+var RectangleRender = require('./RectangleRender');
 
 /**
  * @classdesc
  *
- * @class Triangle
+ * @class Rectangle
  * @extends Phaser.GameObjects.Shape
  * @memberOf Phaser.GameObjects
  * @constructor
@@ -22,22 +22,19 @@ var TriangleRender = require('./TriangleRender');
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
  */
-var Triangle = new Class({
+var Rectangle = new Class({
 
     Extends: Shape,
 
     Mixins: [
-        TriangleRender
+        RectangleRender
     ],
 
     initialize:
 
-    function Triangle (scene, x, y, x1, y1, x2, y2, x3, y3, fillColor, fillAlpha)
+    function Rectangle (scene, x, y, width, height, fillColor, fillAlpha)
     {
-        Shape.call(this, scene, 'Triangle', new GeomTriangle(x1, y1, x2, y2, x3, y3));
-
-        var width = this.data.right - this.data.left;
-        var height = this.data.bottom - this.data.top;
+        Shape.call(this, scene, 'Rectangle', new GeomRectangle(x, y, width, height));
 
         this.setPosition(x, y);
         this.setSize(width, height);
@@ -52,4 +49,4 @@ var Triangle = new Class({
 
 });
 
-module.exports = Triangle;
+module.exports = Rectangle;

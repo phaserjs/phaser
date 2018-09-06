@@ -5,12 +5,12 @@
  */
 
 var ArcRender = require('./ArcRender');
-var Class = require('../../utils/Class');
-var DegToRad = require('../../math/DegToRad');
-var Earcut = require('../../geom/polygon/Earcut');
-var GeomCircle = require('../../geom/circle/Circle');
-var Shape = require('./Shape');
-var MATH_CONST = require('../../math/const');
+var Class = require('../../../utils/Class');
+var DegToRad = require('../../../math/DegToRad');
+var Earcut = require('../../../geom/polygon/Earcut');
+var GeomCircle = require('../../../geom/circle/Circle');
+var Shape = require('../Shape');
+var MATH_CONST = require('../../../math/const');
 
 /**
  * @classdesc

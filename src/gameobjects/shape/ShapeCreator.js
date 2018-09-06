@@ -6,7 +6,7 @@
 
 var GameObjectCreator = require('../GameObjectCreator');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
-var Rectangle = require('./Rectangle');
+var Rectangle = require('./rectangle/Rectangle');
 
 /**
  * Creates a new Zone Game Object and returns it.

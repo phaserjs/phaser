@@ -4,17 +4,17 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var renderWebGL = require('../../utils/NOOP');
-var renderCanvas = require('../../utils/NOOP');
+var renderWebGL = require('../../../utils/NOOP');
+var renderCanvas = require('../../../utils/NOOP');
 
 if (typeof WEBGL_RENDERER)
 {
-    renderWebGL = require('./EllipseWebGLRenderer');
+    renderWebGL = require('./TriangleWebGLRenderer');
 }
 
 if (typeof CANVAS_RENDERER)
 {
-    renderCanvas = require('./EllipseCanvasRenderer');
+    renderCanvas = require('./TriangleCanvasRenderer');
 }
 
 module.exports = {
