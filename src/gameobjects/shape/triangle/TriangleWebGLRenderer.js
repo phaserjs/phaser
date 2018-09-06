@@ -27,6 +27,7 @@ var TriangleWebGLRenderer = function (renderer, src, interpolationPercentage, ca
 
     var camMatrix = pipeline._tempMatrix1;
     var shapeMatrix = pipeline._tempMatrix2;
+    var calcMatrix = pipeline._tempMatrix3;
 
     renderer.setPipeline(pipeline);
 
@@ -49,33 +50,80 @@ var TriangleWebGLRenderer = function (renderer, src, interpolationPercentage, ca
         shapeMatrix.f -= camera.scrollY * src.scrollFactorY;
     }
 
+    camMatrix.multiply(shapeMatrix, calcMatrix);
+
+    var dx = src._displayOriginX;
+    var dy = src._displayOriginY;
     var alpha = camera.alpha * src.alpha;
 
-    var fillTint = pipeline.fillTint;
-    var fillTintColor = Utils.getTintAppendFloatAlphaAndSwap(src.fillColor, src.fillAlpha * alpha);
+    if (src.isFilled)
+    {
+        var fillTint = pipeline.fillTint;
+        var fillTintColor = Utils.getTintAppendFloatAlphaAndSwap(src.fillColor, src.fillAlpha * alpha);
 
-    fillTint.TL = fillTintColor;
-    fillTint.TR = fillTintColor;
-    fillTint.BL = fillTintColor;
-    fillTint.BR = fillTintColor;
+        fillTint.TL = fillTintColor;
+        fillTint.TR = fillTintColor;
+        fillTint.BL = fillTintColor;
+        fillTint.BR = fillTintColor;
 
-    var x1 = src.data.x1 - src._displayOriginX;
-    var y1 = src.data.y1 - src._displayOriginY;
-    var x2 = src.data.x2 - src._displayOriginX;
-    var y2 = src.data.y2 - src._displayOriginY;
-    var x3 = src.data.x3 - src._displayOriginX;
-    var y3 = src.data.y3 - src._displayOriginY;
+        var x1 = src.data.x1 - dx;
+        var y1 = src.data.y1 - dy;
+        var x2 = src.data.x2 - dx;
+        var y2 = src.data.y2 - dy;
+        var x3 = src.data.x3 - dx;
+        var y3 = src.data.y3 - dy;
 
-    pipeline.batchFillTriangle(
-        x1,
-        y1,
-        x2,
-        y2,
-        x3,
-        y3,
-        shapeMatrix,
-        camMatrix
-    );
+        pipeline.batchFillTriangle(
+            x1,
+            y1,
+            x2,
+            y2,
+            x3,
+            y3,
+            shapeMatrix,
+            camMatrix
+        );
+    }
+
+    if (src.isStroked)
+    {
+        var strokeTint = pipeline.strokeTint;
+        var strokeTintColor = Utils.getTintAppendFloatAlphaAndSwap(src.strokeColor, src.strokeAlpha * alpha);
+    
+        strokeTint.TL = strokeTintColor;
+        strokeTint.TR = strokeTintColor;
+        strokeTint.BL = strokeTintColor;
+        strokeTint.BR = strokeTintColor;
+
+        var path = src.pathData;
+        var pathLength = path.length - 1;
+        var lineWidth = src.lineWidth;
+        var halfLineWidth = lineWidth / 2;
+
+        var px1 = path[0] - dx;
+        var py1 = path[1] - dy;
+
+        for (var i = 2; i < pathLength; i += 2)
+        {
+            var px2 = path[i] - dx;
+            var py2 = path[i + 1] - dy;
+
+            pipeline.batchLine(
+                px1,
+                py1,
+                px2,
+                py2,
+                halfLineWidth,
+                halfLineWidth,
+                lineWidth,
+                i - 2,
+                (i === pathLength - 1)
+            );
+
+            px1 = px2;
+            py1 = py2;
+        }
+    }
 };
 
 module.exports = TriangleWebGLRenderer;

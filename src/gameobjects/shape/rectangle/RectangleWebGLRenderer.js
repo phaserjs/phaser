@@ -27,6 +27,7 @@ var RectangleWebGLRenderer = function (renderer, src, interpolationPercentage, c
 
     var camMatrix = pipeline._tempMatrix1;
     var shapeMatrix = pipeline._tempMatrix2;
+    var calcMatrix = pipeline._tempMatrix3;
 
     renderer.setPipeline(pipeline);
 
@@ -42,40 +43,76 @@ var RectangleWebGLRenderer = function (renderer, src, interpolationPercentage, c
         //  Undo the camera scroll
         shapeMatrix.e = src.x;
         shapeMatrix.f = src.y;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        // camMatrix.multiply(shapeMatrix);
     }
     else
     {
         shapeMatrix.e -= camera.scrollX * src.scrollFactorX;
         shapeMatrix.f -= camera.scrollY * src.scrollFactorY;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        // camMatrix.multiply(shapeMatrix);
     }
 
+    camMatrix.multiply(shapeMatrix, calcMatrix);
+
+    var dx = src._displayOriginX;
+    var dy = src._displayOriginY;
     var alpha = camera.alpha * src.alpha;
 
-    var fillTint = pipeline.fillTint;
-    var fillTintColor = Utils.getTintAppendFloatAlphaAndSwap(src.fillColor, src.fillAlpha * alpha);
+    if (src.isFilled)
+    {
+        var fillTint = pipeline.fillTint;
+        var fillTintColor = Utils.getTintAppendFloatAlphaAndSwap(src.fillColor, src.fillAlpha * alpha);
+    
+        fillTint.TL = fillTintColor;
+        fillTint.TR = fillTintColor;
+        fillTint.BL = fillTintColor;
+        fillTint.BR = fillTintColor;
+   
+        pipeline.batchFillRect(
+            -dx,
+            -dy,
+            src.width,
+            src.height
+        );
+    }
 
-    fillTint.TL = fillTintColor;
-    fillTint.TR = fillTintColor;
-    fillTint.BL = fillTintColor;
-    fillTint.BR = fillTintColor;
+    if (src.isStroked)
+    {
+        var strokeTint = pipeline.strokeTint;
+        var strokeTintColor = Utils.getTintAppendFloatAlphaAndSwap(src.strokeColor, src.strokeAlpha * alpha);
+    
+        strokeTint.TL = strokeTintColor;
+        strokeTint.TR = strokeTintColor;
+        strokeTint.BL = strokeTintColor;
+        strokeTint.BR = strokeTintColor;
 
-    var x = -src._displayOriginX;
-    var y = -src._displayOriginY;
+        var path = src.pathData;
+        var pathLength = path.length - 1;
+        var lineWidth = src.lineWidth;
+        var halfLineWidth = lineWidth / 2;
 
-    pipeline.batchFillRect(
-        x,
-        y,
-        src.width,
-        src.height,
-        shapeMatrix,
-        camMatrix
-    );
+        var px1 = path[0] - dx;
+        var py1 = path[1] - dy;
+
+        for (var i = 2; i < pathLength; i += 2)
+        {
+            var px2 = path[i] - dx;
+            var py2 = path[i + 1] - dy;
+
+            pipeline.batchLine(
+                px1,
+                py1,
+                px2,
+                py2,
+                halfLineWidth,
+                halfLineWidth,
+                lineWidth,
+                i - 2,
+                (i === pathLength - 1)
+            );
+
+            px1 = px2;
+            py1 = py2;
+        }
+    }
 };
 
 module.exports = RectangleWebGLRenderer;
