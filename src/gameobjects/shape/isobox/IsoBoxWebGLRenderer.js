@@ -52,14 +52,15 @@ var IsoBoxWebGLRenderer = function (renderer, src, interpolationPercentage, came
 
     camMatrix.multiply(shapeMatrix, calcMatrix);
 
-    // var i;
-    // var dx = src._displayOriginX;
-    // var dy = src._displayOriginY;
-
     var size = src.width;
     var height = src.height;
 
     var alpha = camera.alpha * src.alpha;
+
+    if (!src.isFilled)
+    {
+        return;
+    }
 
     //  Top Face
 
