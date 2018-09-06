@@ -7,6 +7,7 @@
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
+var Line = require('../../geom/line/Line');
 
 /**
  * @classdesc
@@ -66,11 +67,20 @@ var Shape = new Class({
 
         this.data = data;
 
+        this.pathData = [];
+        this.pathIndexes = [];
+
         this.fillColor = 0xffffff;
         this.fillAlpha = 1;
 
+        this.lineWidth = 1;
+        this.strokeColor = 0xffffff;
+        this.strokeAlpha = 1;
+
+        this.isFilled = false;
         this.isStroked = false;
-        this.isFilled = true;
+
+        this._tempLine = new Line();
 
         this.initPipeline();
     },
