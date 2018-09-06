@@ -57,12 +57,18 @@ var GameObjects = {
         Particles: require('./particles/ParticleManagerFactory'),
         PathFollower: require('./pathfollower/PathFollowerFactory'),
         RenderTexture: require('./rendertexture/RenderTextureFactory'),
-        Shape: require('./shape/ShapeFactory'),
         Sprite: require('./sprite/SpriteFactory'),
         StaticBitmapText: require('./bitmaptext/static/BitmapTextFactory'),
         Text: require('./text/static/TextFactory'),
         TileSprite: require('./tilesprite/TileSpriteFactory'),
-        Zone: require('./zone/ZoneFactory')
+        Zone: require('./zone/ZoneFactory'),
+
+        //  Shapes
+        Arc: require('./shape/arc/ArcFactory'),
+        Ellipse: require('./shape/ellipse/EllipseFactory'),
+        Polygon: require('./shape/polygon/PolygonFactory'),
+        Rectangle: require('./shape/rectangle/RectangleFactory'),
+        Triangle: require('./shape/triangle/TriangleFactory')
     },
 
     Creators: {
@@ -74,7 +80,6 @@ var GameObjects = {
         Image: require('./image/ImageCreator'),
         Particles: require('./particles/ParticleManagerCreator'),
         RenderTexture: require('./rendertexture/RenderTextureCreator'),
-        Shape: require('./shape/ShapeCreator'),
         Sprite: require('./sprite/SpriteCreator'),
         StaticBitmapText: require('./bitmaptext/static/BitmapTextCreator'),
         Text: require('./text/static/TextCreator'),
