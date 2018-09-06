@@ -53,6 +53,17 @@ var IsoBox = new Class({
         this.setSize(size, height);
 
         this.updateDisplayOrigin();
+    },
+
+    setFillStyle: function (fillTop, fillLeft, fillRight)
+    {
+        this.fillTop = fillTop;
+        this.fillLeft = fillLeft;
+        this.fillRight = fillRight;
+
+        this.isFilled = true;
+
+        return this;
     }
 
 });
