@@ -37,24 +37,22 @@ var Polygon = new Class({
 
     function Polygon (scene, x, y, points, fillColor, fillAlpha)
     {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+
         Shape.call(this, scene, 'Polygon', new GeomPolygon(points));
-
-        this.pathData = [];
-        this.pathIndexes = [];
-
-        this.setPosition(x, y);
 
         var bounds = GetAABB(this.data);
 
+        this.setPosition(x, y);
         this.setSize(bounds.width, bounds.height);
-
-        this.updateDisplayOrigin();
 
         if (fillColor !== undefined)
         {
             this.setFillStyle(fillColor, fillAlpha);
         }
 
+        this.updateDisplayOrigin();
         this.updateData();
     },
 
@@ -79,6 +77,8 @@ var Polygon = new Class({
         {
             path.push(points[i].x, points[i].y);
         }
+
+        path.push(points[0].x, points[0].y);
 
         this.pathIndexes = Earcut(path);
         this.pathData = path;

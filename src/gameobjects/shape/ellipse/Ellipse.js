@@ -33,27 +33,27 @@ var Ellipse = new Class({
 
     initialize:
 
-    function Ellipse (scene, x, y, width, height, fillColor, fillAlpha, smoothness)
+    function Ellipse (scene, x, y, width, height, fillColor, fillAlpha)
     {
-        if (smoothness === undefined) { smoothness = 32; }
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = 128; }
+        if (height === undefined) { height = 128; }
 
-        Shape.call(this, scene, 'Ellipse', new GeomEllipse(0, 0, width, height));
+        Shape.call(this, scene, 'Ellipse', new GeomEllipse(width / 2, height / 2, width, height));
 
-        this.pathData = [];
-        this.pathIndexes = [];
-        this.smoothness = smoothness;
+        //  The number of points used to draw the ellipse. Higher values create smoother renders at the cost of more triangles being drawn.
+        this.smoothness = 64;
 
         this.setPosition(x, y);
-
         this.setSize(width, height);
-
-        this.updateDisplayOrigin();
 
         if (fillColor !== undefined)
         {
             this.setFillStyle(fillColor, fillAlpha);
         }
 
+        this.updateDisplayOrigin();
         this.updateData();
     },
 

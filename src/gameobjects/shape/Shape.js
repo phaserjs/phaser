@@ -67,6 +67,7 @@ var Shape = new Class({
 
         this.data = data;
 
+        //  Holds earcut polygon fill data
         this.pathData = [];
         this.pathIndexes = [];
 

@@ -43,47 +43,91 @@ var EllipseWebGLRenderer = function (renderer, src, interpolationPercentage, cam
         //  Undo the camera scroll
         shapeMatrix.e = src.x;
         shapeMatrix.f = src.y;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(shapeMatrix, calcMatrix);
     }
     else
     {
         shapeMatrix.e -= camera.scrollX * src.scrollFactorX;
         shapeMatrix.f -= camera.scrollY * src.scrollFactorY;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(shapeMatrix, calcMatrix);
     }
 
-    var fillTintColor = Utils.getTintAppendFloatAlphaAndSwap(src.fillColor, src.fillAlpha * (camera.alpha * src.alpha));
+    camMatrix.multiply(shapeMatrix, calcMatrix);
 
-    var pathData = src.pathData;
-    var pathIndexes = src.pathIndexes;
+    var i;
+    var dx = src._displayOriginX;
+    var dy = src._displayOriginY;
+    var alpha = camera.alpha * src.alpha;
 
-    for (var i = 0; i < pathIndexes.length; i += 3)
+    var path = src.pathData;
+
+    if (src.isFilled)
     {
-        var p0 = pathIndexes[i] * 2;
-        var p1 = pathIndexes[i + 1] * 2;
-        var p2 = pathIndexes[i + 2] * 2;
+        var fillTintColor = Utils.getTintAppendFloatAlphaAndSwap(src.fillColor, src.fillAlpha * alpha);
 
-        var x0 = pathData[p0 + 0];
-        var y0 = pathData[p0 + 1];
-        var x1 = pathData[p1 + 0];
-        var y1 = pathData[p1 + 1];
-        var x2 = pathData[p2 + 0];
-        var y2 = pathData[p2 + 1];
-
-        var tx0 = calcMatrix.getX(x0, y0);
-        var ty0 = calcMatrix.getY(x0, y0);
-
-        var tx1 = calcMatrix.getX(x1, y1);
-        var ty1 = calcMatrix.getY(x1, y1);
-
-        var tx2 = calcMatrix.getX(x2, y2);
-        var ty2 = calcMatrix.getY(x2, y2);
+        var pathIndexes = src.pathIndexes;
     
-        pipeline.batchTri(tx0, ty0, tx1, ty1, tx2, ty2, 0, 0, 1, 1, fillTintColor, fillTintColor, fillTintColor, pipeline.tintEffect);
+        for (i = 0; i < pathIndexes.length; i += 3)
+        {
+            var p0 = pathIndexes[i] * 2;
+            var p1 = pathIndexes[i + 1] * 2;
+            var p2 = pathIndexes[i + 2] * 2;
+    
+            var x0 = path[p0 + 0] - dx;
+            var y0 = path[p0 + 1] - dy;
+            var x1 = path[p1 + 0] - dx;
+            var y1 = path[p1 + 1] - dy;
+            var x2 = path[p2 + 0] - dx;
+            var y2 = path[p2 + 1] - dy;
+    
+            var tx0 = calcMatrix.getX(x0, y0);
+            var ty0 = calcMatrix.getY(x0, y0);
+    
+            var tx1 = calcMatrix.getX(x1, y1);
+            var ty1 = calcMatrix.getY(x1, y1);
+    
+            var tx2 = calcMatrix.getX(x2, y2);
+            var ty2 = calcMatrix.getY(x2, y2);
+        
+            pipeline.batchTri(tx0, ty0, tx1, ty1, tx2, ty2, 0, 0, 1, 1, fillTintColor, fillTintColor, fillTintColor, pipeline.tintEffect);
+        }
+    }
+
+    if (src.isStroked)
+    {
+        var strokeTint = pipeline.strokeTint;
+        var strokeTintColor = Utils.getTintAppendFloatAlphaAndSwap(src.strokeColor, src.strokeAlpha * alpha);
+    
+        strokeTint.TL = strokeTintColor;
+        strokeTint.TR = strokeTintColor;
+        strokeTint.BL = strokeTintColor;
+        strokeTint.BR = strokeTintColor;
+
+        var pathLength = path.length - 1;
+        var lineWidth = src.lineWidth;
+        var halfLineWidth = lineWidth / 2;
+
+        var px1 = path[0] - dx;
+        var py1 = path[1] - dy;
+
+        for (i = 2; i < pathLength; i += 2)
+        {
+            var px2 = path[i] - dx;
+            var py2 = path[i + 1] - dy;
+
+            pipeline.batchLine(
+                px1,
+                py1,
+                px2,
+                py2,
+                halfLineWidth,
+                halfLineWidth,
+                lineWidth,
+                i - 2,
+                (i === pathLength - 1)
+            );
+
+            px1 = px2;
+            py1 = py2;
+        }
     }
 };
 

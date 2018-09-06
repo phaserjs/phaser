@@ -75,7 +75,7 @@ var Rectangle = new Class({
 
         path.push(line.x2, line.y2);
 
-        this.pathData = path;
+        this.lineData = path;
 
         return this;
     }

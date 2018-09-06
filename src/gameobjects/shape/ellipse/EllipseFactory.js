@@ -19,13 +19,12 @@ var GameObjectFactory = require('../../GameObjectFactory');
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
  * @param {number} [width=128] - The width of the ellipse. An ellipse with equal width and height renders as a circle.
  * @param {number} [height=128] - The height of the ellipse. An ellipse with equal width and height renders as a circle.
- * @param {number} [fillColor=0xffffff] - The color the ellipse will be filled with, i.e. 0xff0000 for red.
- * @param {number} [fillAlpha=1] - The alpha the ellipse will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
- * @param {number} [smoothness=32] - The number of points used to draw the ellipse. Higher values create smoother renders at the cost of more triangles being drawn.
+ * @param {number} [fillColor] - The color the ellipse will be filled with, i.e. 0xff0000 for red.
+ * @param {number} [fillAlpha] - The alpha the ellipse will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
  *
  * @return {Phaser.GameObjects.Ellipse} The Game Object that was created.
  */
-GameObjectFactory.register('ellipse', function (x, y, width, height, fillColor, fillAlpha, smoothness)
+GameObjectFactory.register('ellipse', function (x, y, width, height, fillColor, fillAlpha)
 {
-    return this.displayList.add(new Ellipse(this.scene, x, y, width, height, fillColor, fillAlpha, smoothness));
+    return this.displayList.add(new Ellipse(this.scene, x, y, width, height, fillColor, fillAlpha));
 });

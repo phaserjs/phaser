@@ -35,16 +35,16 @@ var Arc = new Class({
 
     initialize:
 
-    function Arc (scene, x, y, radius, fillColor, fillAlpha, startAngle, endAngle, anticlockwise)
+    function Arc (scene, x, y, radius, startAngle, endAngle, anticlockwise, fillColor, fillAlpha)
     {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (radius === undefined) { radius = 128; }
         if (startAngle === undefined) { startAngle = 0; }
         if (endAngle === undefined) { endAngle = 360; }
         if (anticlockwise === undefined) { anticlockwise = false; }
 
-        Shape.call(this, scene, 'Arc', new GeomCircle(x, y, radius));
-
-        this.pathData = [];
-        this.pathIndexes = [];
+        Shape.call(this, scene, 'Arc', new GeomCircle(0, 0, radius));
 
         this.startAngle = DegToRad(startAngle);
         this.endAngle = DegToRad(endAngle);
@@ -54,13 +54,12 @@ var Arc = new Class({
         this.setPosition(x, y);
         this.setSize(this.data.radius, this.data.radius);
 
-        this.updateDisplayOrigin();
-
         if (fillColor !== undefined)
         {
             this.setFillStyle(fillColor, fillAlpha);
         }
 
+        this.updateDisplayOrigin();
         this.updateData();
     },
 
@@ -102,13 +101,13 @@ var Arc = new Class({
         var step = this.iterations;
         var iteration = step;
 
-        var x = 0;
-        var y = 0;
-
         var radius = this.data.radius;
         var startAngle = this.startAngle;
         var endAngle = this.endAngle;
         var anticlockwise = this.anticlockwise;
+
+        var x = radius / 2;
+        var y = radius / 2;
 
         endAngle -= startAngle;
 
@@ -140,16 +139,16 @@ var Arc = new Class({
         {
             ta = endAngle * iteration + startAngle;
 
-            path.push(x + Math.cos(ta) * radius);
-            path.push(y + Math.sin(ta) * radius);
+            path.push(x + Math.cos(ta) * radius, y + Math.sin(ta) * radius);
 
             iteration += step;
         }
 
         ta = endAngle + startAngle;
 
-        path.push(x + Math.cos(ta) * radius);
-        path.push(y + Math.sin(ta) * radius);
+        path.push(x + Math.cos(ta) * radius, y + Math.sin(ta) * radius);
+
+        path.push(x + Math.cos(startAngle) * radius, y + Math.sin(startAngle) * radius);
 
         this.pathIndexes = Earcut(path);
         this.pathData = path;
