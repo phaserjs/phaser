@@ -44,6 +44,7 @@ var GameObjects = {
     IsoBox: require('./shape/isobox/IsoBox'),
     Polygon: require('./shape/polygon/Polygon'),
     Rectangle: require('./shape/rectangle/Rectangle'),
+    Star: require('./shape/star/Star'),
     Triangle: require('./shape/triangle/Triangle'),
 
     //  Game Object Factories
@@ -70,6 +71,7 @@ var GameObjects = {
         IsoBox: require('./shape/isobox/IsoBoxFactory'),
         Polygon: require('./shape/polygon/PolygonFactory'),
         Rectangle: require('./shape/rectangle/RectangleFactory'),
+        Star: require('./shape/star/StarFactory'),
         Triangle: require('./shape/triangle/TriangleFactory')
     },
 
