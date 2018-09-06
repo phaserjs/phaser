@@ -13,6 +13,7 @@ var Svg = {};
 module.exports = Svg;
 
 var Bounds = require('../geometry/Bounds');
+var Common = require('../core/Common');
 
 (function() {
 
@@ -21,12 +22,17 @@ var Bounds = require('../geometry/Bounds');
      * If the input path forms a concave shape, you must decompose the result into convex parts before use.
      * See `Bodies.fromVertices` which provides support for this.
      * Note that this function is not guaranteed to support complex paths (such as those with holes).
+     * You must load the `pathseg.js` polyfill on newer browsers.
      * @method pathToVertices
      * @param {SVGPathElement} path
      * @param {Number} [sampleLength=15]
      * @return {Vector[]} points
      */
     Svg.pathToVertices = function(path, sampleLength) {
+        if (typeof window !== 'undefined' && !('SVGPathSeg' in window)) {
+            Common.warn('Svg.pathToVertices: SVGPathSeg not defined, a polyfill is required.');
+        }
+
         // https://github.com/wout/svg.topoly.js/blob/master/svg.topoly.js
         var i, il, total, point, segment, segments, 
             segmentsQueue, lastSegment, 
@@ -97,7 +103,7 @@ var Bounds = require('../geometry/Bounds');
         };
 
         // ensure path is absolute
-        _svgPathToAbsolute(path);
+        Svg._svgPathToAbsolute(path);
 
         // get total length
         total = path.getTotalLength();
@@ -149,7 +155,7 @@ var Bounds = require('../geometry/Bounds');
         return points;
     };
 
-    var _svgPathToAbsolute = function(path) {
+    Svg._svgPathToAbsolute = function(path) {
         // http://phrogz.net/convert-svg-path-to-all-absolute-commands
         // Copyright (c) Gavin Kistner
         // http://phrogz.net/js/_ReuseLicense.txt

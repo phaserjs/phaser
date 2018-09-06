@@ -4,10 +4,10 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var BuildGameObject = require('../BuildGameObject');
-var BuildGameObjectAnimation = require('../BuildGameObjectAnimation');
-var GameObjectCreator = require('../GameObjectCreator');
-var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
+var BuildGameObject = require('../../../../src/gameobjects/BuildGameObject');
+var BuildGameObjectAnimation = require('../../../../src/gameobjects/BuildGameObjectAnimation');
+var GameObjectCreator = require('../../../../src/gameobjects/GameObjectCreator');
+var GetAdvancedValue = require('../../../../src/utils/object/GetAdvancedValue');
 var Sprite3D = require('./Sprite3D');
 
 /**

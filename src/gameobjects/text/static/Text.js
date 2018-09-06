@@ -91,7 +91,7 @@ var Text = new Class({
 
         this.setPosition(x, y);
         this.setOrigin(0, 0);
-        this.initPipeline('TextureTintPipeline');
+        this.initPipeline();
 
         /**
          * The canvas element that the text is rendered to.

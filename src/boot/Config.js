@@ -6,6 +6,7 @@
 
 var Class = require('../utils/Class');
 var CONST = require('../const');
+var Device = require('../device');
 var GetFastValue = require('../utils/object/GetFastValue');
 var GetValue = require('../utils/object/GetValue');
 var IsPlainObject = require('../utils/object/IsPlainObject');
@@ -85,7 +86,7 @@ var ValueToColor = require('../display/color/ValueToColor');
  *
  * @property {boolean} [antialias=true] - [description]
  * @property {boolean} [pixelArt=false] - [description]
- * @property {boolean} [autoResize=false] - [description]
+ * @property {boolean} [autoResize=true] - Automatically resize the Game Canvas if you resize the renderer.
  * @property {boolean} [roundPixels=false] - [description]
  * @property {boolean} [transparent=false] - [description]
  * @property {boolean} [clearBeforeRender=true] - [description]
@@ -367,7 +368,7 @@ var Config = new Class({
         /**
          * @const {boolean} Phaser.Boot.Config#inputTouch - [description]
          */
-        this.inputTouch = GetValue(config, 'input.touch', true);
+        this.inputTouch = GetValue(config, 'input.touch', Device.input.touch);
 
         /**
          * @const {?*} Phaser.Boot.Config#inputTouchEventTarget - [description]
@@ -450,9 +451,9 @@ var Config = new Class({
         var renderConfig = GetValue(config, 'render', config);
 
         /**
-         * @const {boolean} Phaser.Boot.Config#autoResize - [description]
+         * @const {boolean} Phaser.Boot.Config#autoResize - Automatically resize the Game Canvas if you resize the renderer.
          */
-        this.autoResize = GetValue(renderConfig, 'autoResize', false);
+        this.autoResize = GetValue(renderConfig, 'autoResize', true);
 
         /**
          * @const {boolean} Phaser.Boot.Config#antialias - [description]

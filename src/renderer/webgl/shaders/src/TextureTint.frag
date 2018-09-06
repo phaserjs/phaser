@@ -22,7 +22,8 @@ void main()
     else if (outTintEffect == 1.0)
     {
         //  Solid color + texture alpha
-        color.rgb = mix(texture.rgb, outTint.rgb, texture.a);
+        color.rgb = mix(texture.rgb, outTint.rgb * outTint.a, texture.a);
+        color.a = texture.a * texel.a;
     }
     else if (outTintEffect == 2.0)
     {

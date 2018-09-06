@@ -7,8 +7,16 @@
 var BaseCamera = require('../../cameras/2d/BaseCamera.js');
 var Class = require('../../utils/Class');
 var Commands = require('./Commands');
-var Components = require('../components');
-var Ellipse = require('../../geom/ellipse/');
+var ComponentsAlpha = require('../components/Alpha');
+var ComponentsBlendMode = require('../components/BlendMode');
+var ComponentsDepth = require('../components/Depth');
+var ComponentsMask = require('../components/Mask');
+var ComponentsPipeline = require('../components/Pipeline');
+var ComponentsTransform = require('../components/Transform');
+var ComponentsVisible = require('../components/Visible');
+var ComponentsScrollFactor = require('../components/ScrollFactor');
+
+var Ellipse = require('../../geom/ellipse/Ellipse');
 var GameObject = require('../GameObject');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
@@ -117,14 +125,14 @@ var Graphics = new Class({
     Extends: GameObject,
 
     Mixins: [
-        Components.Alpha,
-        Components.BlendMode,
-        Components.Depth,
-        Components.Mask,
-        Components.Pipeline,
-        Components.Transform,
-        Components.Visible,
-        Components.ScrollFactor,
+        ComponentsAlpha,
+        ComponentsBlendMode,
+        ComponentsDepth,
+        ComponentsMask,
+        ComponentsPipeline,
+        ComponentsTransform,
+        ComponentsVisible,
+        ComponentsScrollFactor,
         Render
     ],
 
@@ -138,7 +146,7 @@ var Graphics = new Class({
         GameObject.call(this, scene, 'Graphics');
 
         this.setPosition(x, y);
-        this.initPipeline('TextureTintPipeline');
+        this.initPipeline();
 
         /**
          * The horizontal display origin of the Graphics.
@@ -1212,9 +1220,13 @@ var Graphics = new Class({
      * Draw an arc.
      *
      * This method can be used to create circles, or parts of circles.
+     * 
+     * Make sure you call `beginPath` before starting the arc unless you wish for the arc to automatically
+     * close when filled or stroked.
      *
-     * Use the optional `overshoot` argument to allow the arc to extend beyond 360 degrees. This is useful if you're drawing
-     * an arc with an especially thick line, as it will allow the arc to fully join-up. Try small values at first, i.e. 0.01.
+     * Use the optional `overshoot` argument increase the number of iterations that take place when
+     * the arc is rendered in WebGL. This is useful if you're drawing an arc with an especially thick line,
+     * as it will allow the arc to fully join-up. Try small values at first, i.e. 0.01.
      *
      * Call {@link Phaser.GameObjects.Graphics#fillPath} or {@link Phaser.GameObjects.Graphics#strokePath} after calling
      * this method to draw the arc.
@@ -1228,7 +1240,7 @@ var Graphics = new Class({
      * @param {number} startAngle - The starting angle, in radians.
      * @param {number} endAngle - The ending angle, in radians.
      * @param {boolean} [anticlockwise=false] - Whether the drawing should be anticlockwise or clockwise.
-     * @param {number} [overshoot=0] - This value allows you to overshoot the endAngle by this amount. Useful if the arc has a thick stroke and needs to overshoot to join-up cleanly.
+     * @param {number} [overshoot=0] - This value allows you to increase the segment iterations in WebGL rendering. Useful if the arc has a thick stroke and needs to overshoot to join-up cleanly. Use small numbers such as 0.01 to start with and increase as needed.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -1237,38 +1249,9 @@ var Graphics = new Class({
         if (anticlockwise === undefined) { anticlockwise = false; }
         if (overshoot === undefined) { overshoot = 0; }
 
-        var PI2 = Math.PI * 2;
-
-        if (anticlockwise)
-        {
-            if (endAngle < -PI2)
-            {
-                endAngle = -PI2 - overshoot;
-            }
-            else if (endAngle >= 0)
-            {
-                endAngle = -PI2 + endAngle % PI2 - overshoot;
-            }
-        }
-        else
-        {
-            endAngle -= startAngle;
-            endAngle += overshoot;
-
-            if (endAngle > PI2 + overshoot)
-            {
-                endAngle = PI2 + overshoot;
-
-            }
-            else if (endAngle < -overshoot)
-            {
-                endAngle = PI2 + endAngle % PI2 - overshoot;
-            }
-        }
-
         this.commandBuffer.push(
             Commands.ARC,
-            x, y, radius, startAngle, endAngle, anticlockwise
+            x, y, radius, startAngle, endAngle, anticlockwise, overshoot
         );
 
         return this;
@@ -1302,40 +1285,11 @@ var Graphics = new Class({
         if (anticlockwise === undefined) { anticlockwise = false; }
         if (overshoot === undefined) { overshoot = 0; }
 
-        var PI2 = Math.PI * 2;
-
-        if (anticlockwise)
-        {
-            if (endAngle < -PI2)
-            {
-                endAngle = -PI2 - overshoot;
-            }
-            else if (endAngle >= 0)
-            {
-                endAngle = -PI2 + endAngle % PI2 - overshoot;
-            }
-        }
-        else
-        {
-            endAngle -= startAngle;
-            endAngle += overshoot;
-
-            if (endAngle > PI2 + overshoot)
-            {
-                endAngle = PI2 + overshoot;
-
-            }
-            else if (endAngle <= -overshoot)
-            {
-                endAngle = PI2 + endAngle % PI2 - overshoot;
-            }
-        }
-
         this.commandBuffer.push(Commands.BEGIN_PATH);
 
         this.commandBuffer.push(Commands.MOVE_TO, x, y);
 
-        this.commandBuffer.push(Commands.ARC, x, y, radius, startAngle, endAngle, anticlockwise);
+        this.commandBuffer.push(Commands.ARC, x, y, radius, startAngle, endAngle, anticlockwise, overshoot);
 
         this.commandBuffer.push(Commands.CLOSE_PATH);
 

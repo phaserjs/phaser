@@ -11,5 +11,9 @@ Polygon.Contains = require('./Contains');
 Polygon.ContainsPoint = require('./ContainsPoint');
 Polygon.GetAABB = require('./GetAABB');
 Polygon.GetNumberArray = require('./GetNumberArray');
+Polygon.GetPoints = require('./GetPoints');
+Polygon.Perimeter = require('./Perimeter');
+Polygon.Reverse = require('./Reverse');
+Polygon.Smooth = require('./Smooth');
 
 module.exports = Polygon;

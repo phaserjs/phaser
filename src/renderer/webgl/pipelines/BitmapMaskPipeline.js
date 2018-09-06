@@ -157,26 +157,28 @@ var BitmapMaskPipeline = new Class({
      */
     beginMask: function (mask, maskedObject, camera)
     {
-        var bitmapMask = mask.bitmapMask;
         var renderer = this.renderer;
         var gl = this.gl;
-        var visible = bitmapMask.visible;
+
+        //  The renderable Game Object that is being used for the bitmap mask
+        var bitmapMask = mask.bitmapMask;
 
         if (bitmapMask && gl)
         {
+            renderer.flush();
+
             // First we clear the mask framebuffer
             renderer.setFramebuffer(mask.maskFramebuffer);
             gl.clearColor(0, 0, 0, 0);
             gl.clear(gl.COLOR_BUFFER_BIT);
 
             // We render our mask source
-            bitmapMask.visible = true;
-            bitmapMask.renderWebGL(renderer, bitmapMask, 0.0, camera);
-            bitmapMask.visible = visible;
+            bitmapMask.renderWebGL(renderer, bitmapMask, 0, camera);
             renderer.flush();
 
             // Bind and clear our main source (masked object)
             renderer.setFramebuffer(mask.mainFramebuffer);
+
             gl.clearColor(0, 0, 0, 0);
             gl.clear(gl.COLOR_BUFFER_BIT);
         }
@@ -195,11 +197,13 @@ var BitmapMaskPipeline = new Class({
      */
     endMask: function (mask)
     {
-        var bitmapMask = mask.bitmapMask;
         var renderer = this.renderer;
         var gl = this.gl;
 
-        if (bitmapMask)
+        //  The renderable Game Object that is being used for the bitmap mask
+        var bitmapMask = mask.bitmapMask;
+
+        if (bitmapMask && gl)
         {
             // Return to default framebuffer
             renderer.setFramebuffer(null);

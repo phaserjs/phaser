@@ -10,7 +10,6 @@ var CONST = require('./const');
 var RadToDeg = require('../../math/RadToDeg');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var RectangleContains = require('../../geom/rectangle/Contains');
-var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 var Vector2 = require('../../math/Vector2');
 
 /**
@@ -761,8 +760,6 @@ var Body = new Class({
          * @since 3.0.0
          */
         this._bounds = new Rectangle();
-
-        this._tempMatrix = new TransformMatrix();
     },
 
     /**
@@ -781,7 +778,7 @@ var Body = new Class({
 
         if (sprite.parentContainer)
         {
-            var matrix = sprite.getWorldTransformMatrix(this._tempMatrix);
+            var matrix = sprite.getWorldTransformMatrix(this.world._tempMatrix, this.world._tempMatrix2);
 
             transform.x = matrix.tx;
             transform.y = matrix.ty;
@@ -923,8 +920,8 @@ var Body = new Class({
             }
         }
 
-        this._dx = this.deltaX();
-        this._dy = this.deltaY();
+        this._dx = this.position.x - this.prev.x;
+        this._dy = this.position.y - this.prev.y;
     },
 
     /**
@@ -937,8 +934,8 @@ var Body = new Class({
      */
     postUpdate: function ()
     {
-        this._dx = this.deltaX();
-        this._dy = this.deltaY();
+        this._dx = this.position.x - this.prev.x;
+        this._dy = this.position.y - this.prev.y;
 
         if (this.moves)
         {
@@ -1079,7 +1076,7 @@ var Body = new Class({
      *
      * @param {integer} [width] - The width of the Body in pixels. Cannot be zero. If not given, and the parent Game Object has a frame, it will use the frame width.
      * @param {integer} [height] - The height of the Body in pixels. Cannot be zero. If not given, and the parent Game Object has a frame, it will use the frame height.
-     * @param {boolean} [center=true] - Modify the Body's `offset`, placing the Body's center on its Game Object's center.
+     * @param {boolean} [center=true] - Modify the Body's `offset`, placing the Body's center on its Game Object's center. Only works if the Game Object has the `getCenter` method.
      *
      * @return {Phaser.Physics.Arcade.Body} This Body object.
      */
@@ -1330,7 +1327,7 @@ var Body = new Class({
      */
     deltaX: function ()
     {
-        return this.position.x - this.prev.x;
+        return this._dx;
     },
 
     /**
@@ -1344,7 +1341,7 @@ var Body = new Class({
      */
     deltaY: function ()
     {
-        return this.position.y - this.prev.y;
+        return this._dy;
     },
 
     /**

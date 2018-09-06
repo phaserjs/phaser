@@ -219,7 +219,7 @@ var TextureTintPipeline = new Class({
          * @private
          * @since 3.12.0
          */
-        this.currentFrame = null;
+        this.currentFrame = { u0: 0, v0: 0, u1: 1, v1: 1 };
 
         /**
          * Internal path quad cache.
@@ -733,9 +733,6 @@ var TextureTintPipeline = new Class({
         var width = srcWidth;
         var height = srcHeight;
 
-        // var x = -displayOriginX + frameX;
-        // var y = -displayOriginY + frameY;
-
         var x = -displayOriginX;
         var y = -displayOriginY;
 
@@ -788,13 +785,6 @@ var TextureTintPipeline = new Class({
             height *= -1;
             y += srcHeight;
         }
-
-        //  Do we need this? (doubt it)
-        // if (camera.roundPixels)
-        // {
-        //     x |= 0;
-        //     y |= 0;
-        // }
 
         var xw = x + width;
         var yh = y + height;

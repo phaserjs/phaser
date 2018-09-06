@@ -27,6 +27,7 @@ var SeparateY = require('./SeparateY');
 var Set = require('../../structs/Set');
 var StaticBody = require('./StaticBody');
 var TileIntersectsBody = require('./tilemap/TileIntersectsBody');
+var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 var Vector2 = require('../../math/Vector2');
 var Wrap = require('../../math/Wrap');
 
@@ -478,6 +479,26 @@ var World = new Class({
          */
         this.treeMinMax = { minX: 0, minY: 0, maxX: 0, maxY: 0 };
 
+        /**
+         * A temporary Transform Matrix used by bodies for calculations without them needing their own local copy.
+         *
+         * @name Phaser.Physics.Arcade.World#_tempMatrix
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @private
+         * @since 3.12.0
+         */
+        this._tempMatrix = new TransformMatrix();
+
+        /**
+         * A temporary Transform Matrix used by bodies for calculations without them needing their own local copy.
+         *
+         * @name Phaser.Physics.Arcade.World#_tempMatrix2
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @private
+         * @since 3.12.0
+         */
+        this._tempMatrix2 = new TransformMatrix();
+
         if (this.drawDebug)
         {
             this.createDebugGraphic();
@@ -673,13 +694,13 @@ var World = new Class({
                     }
                     else
                     {
-                        this.disableBody(child);
+                        this.disableBody(child.body);
                     }
                 }
             }
             else
             {
-                this.disableBody(entry);
+                this.disableBody(entry.body);
             }
         }
     },
@@ -1436,9 +1457,15 @@ var World = new Class({
             {
                 this.emit('overlap', body1.gameObject, body2.gameObject, body1, body2);
             }
-            else if (body1.onCollide || body2.onCollide)
+            else
             {
-                this.emit('collide', body1.gameObject, body2.gameObject, body1, body2);
+                body1.postUpdate();
+                body2.postUpdate();
+
+                if (body1.onCollide || body2.onCollide)
+                {
+                    this.emit('collide', body1.gameObject, body2.gameObject, body1, body2);
+                }
             }
         }
 
@@ -1637,6 +1664,10 @@ var World = new Class({
         {
             this.emit('collide', body1.gameObject, body2.gameObject, body1, body2);
         }
+
+        //  sync changes back to the bodies
+        body1.postUpdate();
+        body2.postUpdate();
 
         return true;
     },
@@ -2185,6 +2216,9 @@ var World = new Class({
                 {
                     sprite.emit('collide', body.gameObject, tile, body, null);
                 }
+
+                //  sync changes back to the body
+                body.postUpdate();
             }
         }
     },

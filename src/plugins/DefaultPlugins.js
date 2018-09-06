@@ -27,7 +27,6 @@ var DefaultPlugins = {
         'game',
         'anims',
         'cache',
-        'facebook',
         'plugins',
         'registry',
         'sound',
@@ -75,7 +74,6 @@ var DefaultPlugins = {
      */
     DefaultScene: [
 
-        'CameraManager3D',
         'Clock',
         'DataManagerPlugin',
         'InputPlugin',
@@ -86,5 +84,15 @@ var DefaultPlugins = {
     ]
 
 };
+
+if (typeof PLUGIN_CAMERA3D)
+{
+    DefaultPlugins.DefaultScene.push('CameraManager3D');
+}
+
+if (typeof PLUGIN_FBINSTANT)
+{
+    DefaultPlugins.Global.push('facebook');
+}
 
 module.exports = DefaultPlugins;

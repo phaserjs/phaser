@@ -667,6 +667,16 @@ var StaticBody = new Class({
     },
 
     /**
+     * NOOP
+     *
+     * @method Phaser.Physics.Arcade.StaticBody#postUpdate
+     * @since 3.12.0
+     */
+    postUpdate: function ()
+    {
+    },
+
+    /**
      * [description]
      *
      * @method Phaser.Physics.Arcade.StaticBody#deltaAbsX

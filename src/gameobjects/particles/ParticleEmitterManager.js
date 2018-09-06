@@ -112,7 +112,7 @@ var ParticleEmitterManager = new Class({
 
         this.setTexture(texture, frame);
 
-        this.initPipeline('TextureTintPipeline');
+        this.initPipeline();
 
         /**
          * A list of Emitters being managed by this Emitter Manager.

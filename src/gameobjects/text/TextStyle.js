@@ -322,7 +322,7 @@ var TextStyle = new Class({
         this._font;
 
         //  Set to defaults + user style
-        this.setStyle(style, false);
+        this.setStyle(style, false, true);
 
         var metrics = GetValue(style, 'metrics', false);
 
@@ -359,12 +359,14 @@ var TextStyle = new Class({
      *
      * @param {object} style - The style settings to set.
      * @param {boolean} [updateText=true] - Whether to update the text immediately.
+     * @param {boolean} [setDefaults=false] - Use the default values is not set, or the local values.
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setStyle: function (style, updateText)
+    setStyle: function (style, updateText, setDefaults)
     {
         if (updateText === undefined) { updateText = true; }
+        if (setDefaults === undefined) { setDefaults = false; }
 
         //  Avoid type mutation
         if (style && style.hasOwnProperty('fontSize') && typeof style.fontSize === 'number')
@@ -374,14 +376,16 @@ var TextStyle = new Class({
 
         for (var key in propertyMap)
         {
+            var value = (setDefaults) ? propertyMap[key][1] : this[key];
+
             if (key === 'wordWrapCallback' || key === 'wordWrapCallbackScope')
             {
                 // Callback & scope should be set without processing the values
-                this[key] = GetValue(style, propertyMap[key][0], propertyMap[key][1]);
+                this[key] = GetValue(style, propertyMap[key][0], value);
             }
             else
             {
-                this[key] = GetAdvancedValue(style, propertyMap[key][0], propertyMap[key][1]);
+                this[key] = GetAdvancedValue(style, propertyMap[key][0], value);
             }
         }
 

@@ -204,7 +204,7 @@ var TileSprite = new Class({
         this.setPosition(x, y);
         this.setSize(width, height);
         this.setOriginFromFrame();
-        this.initPipeline('TextureTintPipeline');
+        this.initPipeline();
 
         /**
          * The next power of two value from the width of the Fill Pattern frame.
@@ -389,12 +389,12 @@ var TileSprite = new Class({
     {
         if (x !== undefined)
         {
-            this.tilePositionX = x;
+            this.tileScaleX = x;
         }
 
         if (y !== undefined)
         {
-            this.tilePositionY = y;
+            this.tileScaleY = y;
         }
 
         return this;

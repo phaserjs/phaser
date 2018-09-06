@@ -924,19 +924,28 @@ var TextureManager = new Class({
     {
         var textureFrame = this.getFrame(key, frame);
 
-        if (textureFrame && x >= 0 && x < textureFrame.cutWidth && y >= 0 && y < textureFrame.cutHeight)
+        if (textureFrame)
         {
-            x += textureFrame.cutX;
-            y += textureFrame.cutY;
+            //  Adjust for trim (if not trimmed x and y are just zero)
+            x -= textureFrame.x;
+            y -= textureFrame.y;
 
-            var ctx = this._tempContext;
+            var data = textureFrame.data.cut;
 
-            ctx.clearRect(0, 0, 1, 1);
-            ctx.drawImage(textureFrame.source.image, x, y, 1, 1, 0, 0, 1, 1);
+            x += data.x;
+            y += data.y;
 
-            var rgb = ctx.getImageData(0, 0, 1, 1);
+            if (x >= data.x && x < data.r && y >= data.y && y < data.b)
+            {
+                var ctx = this._tempContext;
 
-            return new Color(rgb.data[0], rgb.data[1], rgb.data[2], rgb.data[3]);
+                ctx.clearRect(0, 0, 1, 1);
+                ctx.drawImage(textureFrame.source.image, x, y, 1, 1, 0, 0, 1, 1);
+
+                var rgb = ctx.getImageData(0, 0, 1, 1);
+
+                return new Color(rgb.data[0], rgb.data[1], rgb.data[2], rgb.data[3]);
+            }
         }
 
         return null;
@@ -961,19 +970,28 @@ var TextureManager = new Class({
     {
         var textureFrame = this.getFrame(key, frame);
 
-        if (textureFrame && x >= 0 && x < textureFrame.cutWidth && y >= 0 && y < textureFrame.cutHeight)
+        if (textureFrame)
         {
-            x += textureFrame.cutX;
-            y += textureFrame.cutY;
+            //  Adjust for trim (if not trimmed x and y are just zero)
+            x -= textureFrame.x;
+            y -= textureFrame.y;
 
-            var ctx = this._tempContext;
+            var data = textureFrame.data.cut;
 
-            ctx.clearRect(0, 0, 1, 1);
-            ctx.drawImage(textureFrame.source.image, x, y, 1, 1, 0, 0, 1, 1);
+            x += data.x;
+            y += data.y;
 
-            var rgb = ctx.getImageData(0, 0, 1, 1);
+            if (x >= data.x && x < data.r && y >= data.y && y < data.b)
+            {
+                var ctx = this._tempContext;
 
-            return rgb.data[3];
+                ctx.clearRect(0, 0, 1, 1);
+                ctx.drawImage(textureFrame.source.image, x, y, 1, 1, 0, 0, 1, 1);
+    
+                var rgb = ctx.getImageData(0, 0, 1, 1);
+    
+                return rgb.data[3];
+            }
         }
 
         return null;

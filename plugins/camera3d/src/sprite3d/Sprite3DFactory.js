@@ -5,7 +5,7 @@
  */
 
 var Sprite3D = require('./Sprite3D');
-var GameObjectFactory = require('../GameObjectFactory');
+var GameObjectFactory = require('../../../../src/gameobjects/GameObjectFactory');
 
 /**
  * Creates a new Sprite3D Game Object and adds it to the Scene.

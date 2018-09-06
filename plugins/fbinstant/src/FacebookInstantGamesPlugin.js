@@ -7,8 +7,8 @@
  */
 
 var AdInstance = require('./AdInstance');
-var Class = require('../utils/Class');
-var DataManager = require('../data/DataManager');
+var Class = require('../../../src/utils/Class');
+var DataManager = require('../../../src/data/DataManager');
 var EventEmitter = require('eventemitter3');
 var Leaderboard = require('./Leaderboard');
 var Product = require('./Product');

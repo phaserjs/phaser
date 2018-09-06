@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
+var Vector2 = require('../../math/Vector2');
 
 /**
  * @classdesc
@@ -419,12 +420,12 @@ var TransformMatrix = new Class({
 
         var destinationMatrix = (out === undefined) ? this : out;
 
-        destinationMatrix.a = sourceA * localA + sourceB * localC;
-        destinationMatrix.b = sourceA * localB + sourceB * localD;
-        destinationMatrix.c = sourceC * localA + sourceD * localC;
-        destinationMatrix.d = sourceC * localB + sourceD * localD;
-        destinationMatrix.e = sourceE * localA + sourceF * localC + localE;
-        destinationMatrix.f = sourceE * localB + sourceF * localD + localF;
+        destinationMatrix.a = (sourceA * localA) + (sourceB * localC);
+        destinationMatrix.b = (sourceA * localB) + (sourceB * localD);
+        destinationMatrix.c = (sourceC * localA) + (sourceD * localC);
+        destinationMatrix.d = (sourceC * localB) + (sourceD * localD);
+        destinationMatrix.e = (sourceE * localA) + (sourceF * localC) + localE;
+        destinationMatrix.f = (sourceE * localB) + (sourceF * localD) + localF;
 
         return destinationMatrix;
     },
@@ -800,6 +801,42 @@ var TransformMatrix = new Class({
         matrix[3] = radianCos * scaleY;
 
         return this;
+    },
+
+    /**
+     * Takes the `x` and `y` values and returns a new position in the `output` vector that is the inverse of
+     * the current matrix with its transformation applied.
+     * 
+     * Can be used to translate points from world to local space.
+     *
+     * @method Phaser.GameObjects.Components.TransformMatrix#applyInverse
+     * @since 3.12.0
+     *
+     * @param {number} x - The x position to translate.
+     * @param {number} y - The y position to translate.
+     * @param {Phaser.Math.Vector2} [output] - A Vector2, or point-like object, to store the results in.
+     *
+     * @return {Phaser.Math.Vector2} The coordinates, inverse-transformed through this matrix.
+     */
+    applyInverse: function (x, y, output)
+    {
+        if (output === undefined) { output = new Vector2(); }
+
+        var matrix = this.matrix;
+
+        var a = matrix[0];
+        var b = matrix[1];
+        var c = matrix[2];
+        var d = matrix[3];
+        var tx = matrix[4];
+        var ty = matrix[5];
+
+        var id = 1 / ((a * d) + (c * -b));
+
+        output.x = (d * id * x) + (-c * id * y) + (((ty * c) - (tx * d)) * id);
+        output.y = (a * id * y) + (-b * id * x) + (((-ty * a) + (tx * b)) * id);
+
+        return output;
     },
 
     /**

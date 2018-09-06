@@ -179,7 +179,6 @@ var BaseCamera = new Class({
          * @type {boolean}
          * @default true
          * @since 3.10.0
-        this.visible = true;
          */
 
         /**
@@ -431,7 +430,6 @@ var BaseCamera = new Class({
          * @type {number}
          * @default 1
          * @since 3.11.0
-        this.alpha = 1;
          */
 
         /**
@@ -527,14 +525,6 @@ var BaseCamera = new Class({
      * @param {number} [value=1] - The Camera alpha value.
      *
      * @return {this} This Camera instance.
-    setAlpha: function (value)
-    {
-        if (value === undefined) { value = 1; }
-
-        this.alpha = value;
-
-        return this;
-    },
      */
 
     /**
@@ -778,7 +768,7 @@ var BaseCamera = new Class({
         var mve = cameraMatrix[4];
         var mvf = cameraMatrix[5];
 
-        /* First Invert Matrix */
+        //  Invert Matrix
         var determinant = (mva * mvd) - (mvb * mvc);
 
         if (!determinant)
@@ -802,18 +792,18 @@ var BaseCamera = new Class({
         var s = Math.sin(this.rotation);
 
         var zoom = this.zoom;
+        var res = this.resolution;
 
         var scrollX = this.scrollX;
         var scrollY = this.scrollY;
 
-        var res = this.resolution;
+        //  Works for zoom of 1 with any resolution, but resolution > 1 and zoom !== 1 breaks
+        var sx = x + ((scrollX * c - scrollY * s) * zoom);
+        var sy = y + ((scrollX * s + scrollY * c) * zoom);
 
-        var sx = x * res + ((scrollX * c - scrollY * s) * zoom);
-        var sy = y * res + ((scrollX * s + scrollY * c) * zoom);
-
-        /* Apply transform to point */
-        output.x = (sx * ima + sy * imc + ime);
-        output.y = (sx * imb + sy * imd + imf);
+        //  Apply transform to point
+        output.x = (sx * ima + sy * imc + ime) * res;
+        output.y = (sx * imb + sy * imd + imf) * res;
 
         return output;
     },
@@ -1349,12 +1339,6 @@ var BaseCamera = new Class({
      * @param {boolean} value - The visible state of the Camera.
      *
      * @return {this} This Camera instance.
-    setVisible: function (value)
-    {
-        this.visible = value;
-
-        return this;
-    },
      */
 
     /**

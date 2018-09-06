@@ -336,6 +336,16 @@ var InputManager = new Class({
          */
         this._tempMatrix = new TransformMatrix();
 
+        /**
+         * A re-cycled matrix used in hit test calculations.
+         *
+         * @name Phaser.Input.InputManager#_tempMatrix2
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @private
+         * @since 3.12.0
+         */
+        this._tempMatrix2 = new TransformMatrix();
+
         game.events.once('boot', this.boot, this);
     },
 
@@ -1050,14 +1060,15 @@ var InputManager = new Class({
      * @since 3.10.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to test.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera which is being tested against.
      *
      * @return {boolean} `true` if the Game Object should be considered for input, otherwise `false`.
      */
-    inputCandidate: function (gameObject)
+    inputCandidate: function (gameObject, camera)
     {
         var input = gameObject.input;
 
-        if (!input || !input.enabled || !gameObject.willRender())
+        if (!input || !input.enabled || !gameObject.willRender(camera))
         {
             return false;
         }
@@ -1069,7 +1080,7 @@ var InputManager = new Class({
         {
             do
             {
-                if (!parent.visible)
+                if (!parent.willRender(camera))
                 {
                     visible = false;
                     break;
@@ -1109,10 +1120,6 @@ var InputManager = new Class({
 
         var tempPoint = this._tempPoint;
 
-        var cx = camera._cx;
-        var cy = camera._cy;
-        var cw = camera._cw;
-        var ch = camera._ch;
         var csx = camera.scrollX;
         var csy = camera.scrollY;
 
@@ -1121,9 +1128,10 @@ var InputManager = new Class({
         var x = pointer.x;
         var y = pointer.y;
 
-        if (!(x >= cx && y >= cy && x <= cx + cw && y <= cy + ch))
+        if (camera.resolution !== 1)
         {
-            return output;
+            x += camera._x;
+            y += camera._y;
         }
 
         //  Stores the world point inside of tempPoint
@@ -1135,12 +1143,15 @@ var InputManager = new Class({
         var point = { x: 0, y: 0 };
 
         var matrix = this._tempMatrix;
+        var parentMatrix = this._tempMatrix2;
 
         for (var i = 0; i < gameObjects.length; i++)
         {
             var gameObject = gameObjects[i];
 
-            if (!this.inputCandidate(gameObject))
+            //  Checks if the Game Object can receive input (isn't being ignored by the camera, invisible, etc)
+            //  and also checks all of its parents, if any
+            if (!this.inputCandidate(gameObject, camera))
             {
                 continue;
             }
@@ -1150,15 +1161,15 @@ var InputManager = new Class({
 
             if (gameObject.parentContainer)
             {
-                gameObject.getWorldTransformMatrix(matrix);
+                gameObject.getWorldTransformMatrix(matrix, parentMatrix);
 
-                TransformXY(px, py, matrix.tx, matrix.ty, matrix.rotation, matrix.scaleX, matrix.scaleY, point);
+                matrix.applyInverse(px, py, point);
             }
             else
             {
                 TransformXY(px, py, gameObject.x, gameObject.y, gameObject.rotation, gameObject.scaleX, gameObject.scaleY, point);
             }
-
+    
             if (this.pointWithinHitArea(gameObject, point.x, point.y))
             {
                 output.push(gameObject);
