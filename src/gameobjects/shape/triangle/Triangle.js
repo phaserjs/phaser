@@ -34,6 +34,15 @@ var Triangle = new Class({
 
     function Triangle (scene, x, y, x1, y1, x2, y2, x3, y3, fillColor, fillAlpha)
     {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (x1 === undefined) { x1 = 0; }
+        if (y1 === undefined) { y1 = 128; }
+        if (x2 === undefined) { x2 = 64; }
+        if (y2 === undefined) { y2 = 0; }
+        if (x3 === undefined) { x3 = 128; }
+        if (y3 === undefined) { y3 = 128; }
+
         Shape.call(this, scene, 'Triangle', new GeomTriangle(x1, y1, x2, y2, x3, y3));
 
         var width = this.data.right - this.data.left;
@@ -42,12 +51,36 @@ var Triangle = new Class({
         this.setPosition(x, y);
         this.setSize(width, height);
 
-        this.updateDisplayOrigin();
-
         if (fillColor !== undefined)
         {
             this.setFillStyle(fillColor, fillAlpha);
         }
+
+        this.updateDisplayOrigin();
+        this.updateData();
+    },
+
+    updateData: function ()
+    {
+        var path = [];
+        var rect = this.data;
+        var line = this._tempLine;
+
+        rect.getLineA(line);
+
+        path.push(line.x1, line.y1, line.x2, line.y2);
+
+        rect.getLineB(line);
+
+        path.push(line.x2, line.y2);
+
+        rect.getLineC(line);
+
+        path.push(line.x2, line.y2);
+
+        this.pathData = path;
+
+        return this;
     }
 
 });

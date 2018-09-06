@@ -34,17 +34,50 @@ var Rectangle = new Class({
 
     function Rectangle (scene, x, y, width, height, fillColor, fillAlpha)
     {
-        Shape.call(this, scene, 'Rectangle', new GeomRectangle(x, y, width, height));
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = 128; }
+        if (height === undefined) { height = 128; }
+
+        Shape.call(this, scene, 'Rectangle', new GeomRectangle(0, 0, width, height));
 
         this.setPosition(x, y);
         this.setSize(width, height);
-
-        this.updateDisplayOrigin();
 
         if (fillColor !== undefined)
         {
             this.setFillStyle(fillColor, fillAlpha);
         }
+
+        this.updateDisplayOrigin();
+        this.updateData();
+    },
+
+    updateData: function ()
+    {
+        var path = [];
+        var rect = this.data;
+        var line = this._tempLine;
+
+        rect.getLineA(line);
+
+        path.push(line.x1, line.y1, line.x2, line.y2);
+
+        rect.getLineB(line);
+
+        path.push(line.x2, line.y2);
+
+        rect.getLineC(line);
+
+        path.push(line.x2, line.y2);
+
+        rect.getLineD(line);
+
+        path.push(line.x2, line.y2);
+
+        this.pathData = path;
+
+        return this;
     }
 
 });
