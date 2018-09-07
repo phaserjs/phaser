@@ -61,12 +61,12 @@ var Ellipse = new Class({
 
         get: function ()
         {
-            return this.__smoothness;
+            return this._smoothness;
         },
 
         set: function (value)
         {
-            this.__smoothness = value;
+            this._smoothness = value;
 
             this.updateData();
         }
