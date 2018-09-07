@@ -1002,8 +1002,11 @@ var TextureTintPipeline = new Class({
 
         var calcMatrix = this._tempMatrix3;
 
-        //  Multiply and store result in calcMatrix
-        parentMatrix.multiply(currentMatrix, calcMatrix);
+        //  Multiply and store result in calcMatrix, only if the parentMatrix is set, otherwise we'll use whatever values are already in the calcMatrix
+        if (parentMatrix)
+        {
+            parentMatrix.multiply(currentMatrix, calcMatrix);
+        }
         
         var tx0 = calcMatrix.getX(x0, y0);
         var ty0 = calcMatrix.getY(x0, y0);
@@ -1086,8 +1089,11 @@ var TextureTintPipeline = new Class({
 
         var calcMatrix = this._tempMatrix3;
 
-        //  Multiply and store result in calcMatrix
-        parentMatrix.multiply(currentMatrix, calcMatrix);
+        //  Multiply and store result in calcMatrix, only if the parentMatrix is set, otherwise we'll use whatever values are already in the calcMatrix
+        if (parentMatrix)
+        {
+            parentMatrix.multiply(currentMatrix, calcMatrix);
+        }
 
         var length = path.length;
         var polygonCache = this.polygonCache;

@@ -11,17 +11,17 @@ var Utils = require('../../../renderer/webgl/Utils');
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
  * This method should not be called directly. It is a utility function of the Render module.
  *
- * @method Phaser.GameObjects.IsoBox#renderWebGL
+ * @method Phaser.GameObjects.IsoTriangle#renderWebGL
  * @since 3.13.0
  * @private
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
- * @param {Phaser.GameObjects.IsoBox} src - The Game Object being rendered in this call.
+ * @param {Phaser.GameObjects.IsoTriangle} src - The Game Object being rendered in this call.
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var IsoBoxWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
+var IsoTriangleWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
     var pipeline = this.pipeline;
 
@@ -58,6 +58,8 @@ var IsoBoxWebGLRenderer = function (renderer, src, interpolationPercentage, came
     var sizeA = size / 2;
     var sizeB = size / src.projection;
 
+    var reversed = src.isReversed;
+
     var alpha = camera.alpha * src.alpha;
 
     if (!src.isFilled)
@@ -76,12 +78,9 @@ var IsoBoxWebGLRenderer = function (renderer, src, interpolationPercentage, came
     var x2;
     var y2;
 
-    var x3;
-    var y3;
-
     //  Top Face
 
-    if (src.showTop)
+    if (src.showTop && reversed)
     {
         tint = Utils.getTintAppendFloatAlphaAndSwap(src.fillTop, alpha);
 
@@ -94,8 +93,8 @@ var IsoBoxWebGLRenderer = function (renderer, src, interpolationPercentage, came
         x2 = calcMatrix.getX(sizeA, -height);
         y2 = calcMatrix.getY(sizeA, -height);
     
-        x3 = calcMatrix.getX(0, sizeB - height);
-        y3 = calcMatrix.getY(0, sizeB - height);
+        var x3 = calcMatrix.getX(0, sizeB - height);
+        var y3 = calcMatrix.getY(0, sizeB - height);
     
         pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 2);
     }
@@ -106,19 +105,30 @@ var IsoBoxWebGLRenderer = function (renderer, src, interpolationPercentage, came
     {
         tint = Utils.getTintAppendFloatAlphaAndSwap(src.fillLeft, alpha);
 
-        x0 = calcMatrix.getX(-sizeA, 0);
-        y0 = calcMatrix.getY(-sizeA, 0);
+        if (reversed)
+        {
+            x0 = calcMatrix.getX(-sizeA, -height);
+            y0 = calcMatrix.getY(-sizeA, -height);
+        
+            x1 = calcMatrix.getX(0, sizeB);
+            y1 = calcMatrix.getY(0, sizeB);
+        
+            x2 = calcMatrix.getX(0, sizeB - height);
+            y2 = calcMatrix.getY(0, sizeB - height);
+        }
+        else
+        {
+            x0 = calcMatrix.getX(-sizeA, 0);
+            y0 = calcMatrix.getY(-sizeA, 0);
+        
+            x1 = calcMatrix.getX(0, sizeB);
+            y1 = calcMatrix.getY(0, sizeB);
+        
+            x2 = calcMatrix.getX(0, sizeB - height);
+            y2 = calcMatrix.getY(0, sizeB - height);
+        }
     
-        x1 = calcMatrix.getX(0, sizeB);
-        y1 = calcMatrix.getY(0, sizeB);
-    
-        x2 = calcMatrix.getX(0, sizeB - height);
-        y2 = calcMatrix.getY(0, sizeB - height);
-    
-        x3 = calcMatrix.getX(-sizeA, -height);
-        y3 = calcMatrix.getY(-sizeA, -height);
-    
-        pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 2);
+        pipeline.batchTri(x0, y0, x1, y1, x2, y2, 0, 0, 1, 1, tint, tint, tint, 2);
     }
 
     //  Right Face
@@ -127,20 +137,31 @@ var IsoBoxWebGLRenderer = function (renderer, src, interpolationPercentage, came
     {
         tint = Utils.getTintAppendFloatAlphaAndSwap(src.fillRight, alpha);
 
-        x0 = calcMatrix.getX(sizeA, 0);
-        y0 = calcMatrix.getY(sizeA, 0);
+        if (reversed)
+        {
+            x0 = calcMatrix.getX(sizeA, -height);
+            y0 = calcMatrix.getY(sizeA, -height);
+        
+            x1 = calcMatrix.getX(0, sizeB);
+            y1 = calcMatrix.getY(0, sizeB);
+        
+            x2 = calcMatrix.getX(0, sizeB - height);
+            y2 = calcMatrix.getY(0, sizeB - height);
+        }
+        else
+        {
+            x0 = calcMatrix.getX(sizeA, 0);
+            y0 = calcMatrix.getY(sizeA, 0);
+        
+            x1 = calcMatrix.getX(0, sizeB);
+            y1 = calcMatrix.getY(0, sizeB);
+        
+            x2 = calcMatrix.getX(0, sizeB - height);
+            y2 = calcMatrix.getY(0, sizeB - height);
+        }
     
-        x1 = calcMatrix.getX(0, sizeB);
-        y1 = calcMatrix.getY(0, sizeB);
-    
-        x2 = calcMatrix.getX(0, sizeB - height);
-        y2 = calcMatrix.getY(0, sizeB - height);
-    
-        x3 = calcMatrix.getX(sizeA, -height);
-        y3 = calcMatrix.getY(sizeA, -height);
-    
-        pipeline.batchQuad(x0, y0, x1, y1, x2, y2, x3, y3, 0, 0, 1, 1, tint, tint, tint, tint, 2);
+        pipeline.batchTri(x0, y0, x1, y1, x2, y2, 0, 0, 1, 1, tint, tint, tint, 2);
     }
 };
 
-module.exports = IsoBoxWebGLRenderer;
+module.exports = IsoTriangleWebGLRenderer;

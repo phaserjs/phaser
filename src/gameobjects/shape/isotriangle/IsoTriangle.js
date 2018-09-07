@@ -4,14 +4,14 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var IsoBoxRender = require('./IsoBoxRender');
+var IsoTriangleRender = require('./IsoTriangleRender');
 var Class = require('../../../utils/Class');
 var Shape = require('../Shape');
 
 /**
  * @classdesc
  *
- * @class IsoBox
+ * @class IsoTriangle
  * @extends Phaser.GameObjects.Shape
  * @memberOf Phaser.GameObjects
  * @constructor
@@ -21,27 +21,28 @@ var Shape = require('../Shape');
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
  */
-var IsoBox = new Class({
+var IsoTriangle = new Class({
 
     Extends: Shape,
 
     Mixins: [
-        IsoBoxRender
+        IsoTriangleRender
     ],
 
     initialize:
 
-    function IsoBox (scene, x, y, size, height, fillTop, fillLeft, fillRight)
+    function IsoTriangle (scene, x, y, size, height, reversed, fillTop, fillLeft, fillRight)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
         if (size === undefined) { size = 48; }
         if (height === undefined) { height = 32; }
+        if (reversed === undefined) { reversed = false; }
         if (fillTop === undefined) { fillTop = 0xeeeeee; }
         if (fillLeft === undefined) { fillLeft = 0x999999; }
         if (fillRight === undefined) { fillRight = 0xcccccc; }
 
-        Shape.call(this, scene, 'IsoBox', null);
+        Shape.call(this, scene, 'IsoTriangle', null);
 
         this.projection = 4;
 
@@ -53,6 +54,7 @@ var IsoBox = new Class({
         this.showLeft = true;
         this.showRight = true;
 
+        this.isReversed = reversed;
         this.isFilled = true;
 
         this.setPosition(x, y);
@@ -64,6 +66,13 @@ var IsoBox = new Class({
     setProjection: function (value)
     {
         this.projection = value;
+
+        return this;
+    },
+
+    setReversed: function (reversed)
+    {
+        this.isReversed = reversed;
 
         return this;
     },
@@ -94,4 +103,4 @@ var IsoBox = new Class({
 
 });
 
-module.exports = IsoBox;
+module.exports = IsoTriangle;
