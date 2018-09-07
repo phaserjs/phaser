@@ -47,12 +47,29 @@ var IsoBox = new Class({
         this.fillLeft = fillLeft;
         this.fillRight = fillRight;
 
+        this.showTop = true;
+        this.showLeft = true;
+        this.showRight = true;
+
         this.isFilled = true;
 
         this.setPosition(x, y);
         this.setSize(size, height);
 
         this.updateDisplayOrigin();
+    },
+
+    setFaces: function (showTop, showLeft, showRight)
+    {
+        if (showTop === undefined) { showTop = true; }
+        if (showLeft === undefined) { showLeft = true; }
+        if (showRight === undefined) { showRight = true; }
+
+        this.showTop = showTop;
+        this.showLeft = showLeft;
+        this.showRight = showRight;
+
+        return this;
     },
 
     setFillStyle: function (fillTop, fillLeft, fillRight)
