@@ -40,6 +40,7 @@ var GameObjects = {
 
     Shape: require('./shape/Shape'),
     Arc: require('./shape/arc/Arc'),
+    Curve: require('./shape/curve/Curve'),
     Ellipse: require('./shape/ellipse/Ellipse'),
     IsoBox: require('./shape/isobox/IsoBox'),
     IsoTriangle: require('./shape/isotriangle/IsoTriangle'),
@@ -69,6 +70,7 @@ var GameObjects = {
 
         //  Shapes
         Arc: require('./shape/arc/ArcFactory'),
+        Curve: require('./shape/curve/CurveFactory'),
         Ellipse: require('./shape/ellipse/EllipseFactory'),
         IsoBox: require('./shape/isobox/IsoBoxFactory'),
         IsoTriangle: require('./shape/isotriangle/IsoTriangleFactory'),
