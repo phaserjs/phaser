@@ -42,9 +42,9 @@ var Star = new Class({
 
         Shape.call(this, scene, 'Star', null);
 
-        this.points = points;
-        this.innerRadius = innerRadius;
-        this.outerRadius = outerRadius;
+        this._points = points;
+        this._innerRadius = innerRadius;
+        this._outerRadius = outerRadius;
 
         this.setPosition(x, y);
         this.setSize(outerRadius * 2, outerRadius * 2);
@@ -58,13 +58,82 @@ var Star = new Class({
         this.updateData();
     },
 
+    setPoints: function (value)
+    {
+        this._points = value;
+
+        return this.updateData();
+    },
+
+    setInnerRadius: function (value)
+    {
+        this._innerRadius = value;
+
+        return this.updateData();
+    },
+
+    setOuterRadius: function (value)
+    {
+        this._outerRadius = value;
+
+        return this.updateData();
+    },
+
+    points: {
+
+        get: function ()
+        {
+            return this._points;
+        },
+
+        set: function (value)
+        {
+            this._points = value;
+
+            this.updateData();
+        }
+
+    },
+
+    innerRadius: {
+
+        get: function ()
+        {
+            return this._innerRadius;
+        },
+
+        set: function (value)
+        {
+            this._innerRadius = value;
+
+            this.updateData();
+        }
+
+    },
+
+    outerRadius: {
+
+        get: function ()
+        {
+            return this._outerRadius;
+        },
+
+        set: function (value)
+        {
+            this._outerRadius = value;
+
+            this.updateData();
+        }
+
+    },
+
     updateData: function ()
     {
         var path = [];
 
-        var points = this.points;
-        var innerRadius = this.innerRadius;
-        var outerRadius = this.outerRadius;
+        var points = this._points;
+        var innerRadius = this._innerRadius;
+        var outerRadius = this._outerRadius;
 
         var rot = Math.PI / 2 * 3;
         var step = Math.PI / points;

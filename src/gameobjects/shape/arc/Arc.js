@@ -9,8 +9,8 @@ var Class = require('../../../utils/Class');
 var DegToRad = require('../../../math/DegToRad');
 var Earcut = require('../../../geom/polygon/Earcut');
 var GeomCircle = require('../../../geom/circle/Circle');
-var Shape = require('../Shape');
 var MATH_CONST = require('../../../math/const');
+var Shape = require('../Shape');
 
 /**
  * @classdesc
@@ -46,10 +46,10 @@ var Arc = new Class({
 
         Shape.call(this, scene, 'Arc', new GeomCircle(0, 0, radius));
 
-        this.startAngle = DegToRad(startAngle);
-        this.endAngle = DegToRad(endAngle);
-        this.anticlockwise = anticlockwise;
-        this.iterations = 0.01;
+        this._startAngle = startAngle;
+        this._endAngle = endAngle;
+        this._anticlockwise = anticlockwise;
+        this._iterations = 0.01;
 
         this.setPosition(x, y);
         this.setSize(this.data.radius, this.data.radius);
@@ -63,22 +63,109 @@ var Arc = new Class({
         this.updateData();
     },
 
-    setSmoothing: function (value)
+    iterations: {
+
+        get: function ()
+        {
+            return this._iterations;
+        },
+
+        set: function (value)
+        {
+            this._iterations = value;
+
+            this.updateData();
+        }
+
+    },
+
+    radius: {
+
+        get: function ()
+        {
+            return this.data.radius;
+        },
+
+        set: function (value)
+        {
+            this.data.radius = value;
+
+            this.updateData();
+        }
+
+    },
+
+    startAngle: {
+
+        get: function ()
+        {
+            return this._startAngle;
+        },
+
+        set: function (value)
+        {
+            this._startAngle = value;
+
+            this.updateData();
+        }
+
+    },
+
+    endAngle: {
+
+        get: function ()
+        {
+            return this._endAngle;
+        },
+
+        set: function (value)
+        {
+            this._endAngle = value;
+
+            this.updateData();
+        }
+
+    },
+
+    anticlockwise: {
+
+        get: function ()
+        {
+            return this._anticlockwise;
+        },
+
+        set: function (value)
+        {
+            this._anticlockwise = value;
+
+            this.updateData();
+        }
+
+    },
+
+    setRadius: function (value)
+    {
+        this.radius = value;
+
+        return this;
+    },
+
+    setIterations: function (value)
     {
         if (value === undefined) { value = 0.01; }
 
         this.iterations = value;
 
-        return this.updateData();
+        return this;
     },
 
     setStartAngle: function (angle, anticlockwise)
     {
-        this.startAngle = DegToRad(angle);
+        this._startAngle = angle;
 
         if (anticlockwise !== undefined)
         {
-            this.anticlockwise = anticlockwise;
+            this._anticlockwise = anticlockwise;
         }
 
         return this.updateData();
@@ -86,11 +173,11 @@ var Arc = new Class({
 
     setEndAngle: function (angle, anticlockwise)
     {
-        this.endAngle = DegToRad(angle);
+        this._endAngle = angle;
 
         if (anticlockwise !== undefined)
         {
-            this.anticlockwise = anticlockwise;
+            this._anticlockwise = anticlockwise;
         }
 
         return this.updateData();
@@ -98,13 +185,13 @@ var Arc = new Class({
 
     updateData: function ()
     {
-        var step = this.iterations;
+        var step = this._iterations;
         var iteration = step;
 
         var radius = this.data.radius;
-        var startAngle = this.startAngle;
-        var endAngle = this.endAngle;
-        var anticlockwise = this.anticlockwise;
+        var startAngle = DegToRad(this._startAngle);
+        var endAngle = DegToRad(this._endAngle);
+        var anticlockwise = this._anticlockwise;
 
         var x = radius / 2;
         var y = radius / 2;

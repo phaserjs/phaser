@@ -60,6 +60,28 @@ var Triangle = new Class({
         this.updateData();
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.Geom.Triangle#setTo
+     * @since 3.13.0
+     *
+     * @param {number} [x1=0] - [description]
+     * @param {number} [y1=0] - [description]
+     * @param {number} [x2=0] - [description]
+     * @param {number} [y2=0] - [description]
+     * @param {number} [x3=0] - [description]
+     * @param {number} [y3=0] - [description]
+     *
+     * @return {Phaser.Geom.Triangle} This Triangle object.
+     */
+    setTo: function (x1, y1, x2, y2, x3, y3)
+    {
+        this.data.setTo(x1, y1, x2, y2, x3, y3);
+
+        return this.updateData();
+    },
+
     updateData: function ()
     {
         var path = [];

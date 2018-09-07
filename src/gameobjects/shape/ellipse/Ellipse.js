@@ -43,7 +43,7 @@ var Ellipse = new Class({
         Shape.call(this, scene, 'Ellipse', new GeomEllipse(width / 2, height / 2, width, height));
 
         //  The number of points used to draw the ellipse. Higher values create smoother renders at the cost of more triangles being drawn.
-        this.smoothness = 64;
+        this._smoothness = 64;
 
         this.setPosition(x, y);
         this.setSize(width, height);
@@ -57,10 +57,33 @@ var Ellipse = new Class({
         this.updateData();
     },
 
+    smoothness: {
+
+        get: function ()
+        {
+            return this.__smoothness;
+        },
+
+        set: function (value)
+        {
+            this.__smoothness = value;
+
+            this.updateData();
+        }
+
+    },
+
+    setSmoothness: function (value)
+    {
+        this._smoothness = value;
+
+        return this.updateData();
+    },
+
     updateData: function ()
     {
         var path = [];
-        var points = this.data.getPoints(this.smoothness);
+        var points = this.data.getPoints(this._smoothness);
 
         for (var i = 0; i < points.length; i++)
         {
