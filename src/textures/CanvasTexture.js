@@ -5,6 +5,7 @@
  */
 
 var Class = require('../utils/Class');
+var Color = require('../display/color/Color');
 var IsSizePowerOfTwo = require('../math/pow2/IsSizePowerOfTwo');
 var Texture = require('./Texture');
 
@@ -34,7 +35,7 @@ var Texture = require('./Texture');
  * @constructor
  * @since 3.7.0
  *
- * @param {Phaser.Textures.TextureManager} manager - A reference to the Texture Manager this Texture belongs to.
+ * @param {Phaser.Textures.CanvasTexture} manager - A reference to the Texture Manager this Texture belongs to.
  * @param {string} key - The unique string-based key of this Texture.
  * @param {HTMLCanvasElement} source - The canvas element that is used as the base of this texture.
  * @param {integer} width - The width of the canvas.
@@ -55,7 +56,7 @@ var CanvasTexture = new Class({
         /**
          * A reference to the Texture Source of this Canvas.
          *
-         * @name Phaser.Textures.TextureManager#_source
+         * @name Phaser.Textures.CanvasTexturer#_source
          * @type {Phaser.Textures.TextureSource}
          * @private
          * @since 3.7.0
@@ -65,7 +66,7 @@ var CanvasTexture = new Class({
         /**
          * The source Canvas Element.
          *
-         * @name Phaser.Textures.TextureManager#canvas
+         * @name Phaser.Textures.CanvasTexture#canvas
          * @readOnly
          * @type {HTMLCanvasElement}
          * @since 3.7.0
@@ -75,7 +76,7 @@ var CanvasTexture = new Class({
         /**
          * The 2D Canvas Rendering Context.
          *
-         * @name Phaser.Textures.TextureManager#canvas
+         * @name Phaser.Textures.CanvasTexture#canvas
          * @readOnly
          * @type {CanvasRenderingContext2D}
          * @since 3.7.0
@@ -86,7 +87,7 @@ var CanvasTexture = new Class({
          * The width of the Canvas.
          * This property is read-only, if you wish to change use `setSize`.
          *
-         * @name Phaser.Textures.TextureManager#width
+         * @name Phaser.Textures.CanvasTexture#width
          * @readOnly
          * @type {integer}
          * @since 3.7.0
@@ -97,12 +98,144 @@ var CanvasTexture = new Class({
          * The height of the Canvas.
          * This property is read-only, if you wish to change use `setSize`.
          *
-         * @name Phaser.Textures.TextureManager#height
+         * @name Phaser.Textures.CanvasTexture#height
          * @readOnly
          * @type {integer}
          * @since 3.7.0
          */
         this.height = height;
+
+        /**
+         * The context image data.
+         * Use the `update` method to populate this when the canvas changes.
+         *
+         * @name Phaser.Textures.CanvasTexture#imageData
+         * @type {ImageData}
+         * @since 3.13.0
+         */
+        this.imageData = this.context.getImageData(0, 0, width, height);
+
+        /**
+         * A Uint8ClampedArray view into the `buffer`.
+         * Use the `update` method to populate this when the canvas changes.
+         * Note that this is unavailable in some browsers, such as Epic Browser, due to their security restrictions.
+         *
+         * @name Phaser.Textures.CanvasTexture#imageData
+         * @type {Uint8ClampedArray}
+         * @since 3.13.0
+         */
+        this.data = null;
+
+        if (this.imageData)
+        {
+            this.data = this.imageData.data;
+        }
+
+        /**
+         * An Uint32Array view into the `buffer`.
+         *
+         * @name Phaser.Textures.CanvasTexture#pixels
+         * @type {Uint32Array}
+         * @since 3.13.0
+         */
+        this.pixels = null;
+
+        /**
+         * An ArrayBuffer the same size as the context ImageData.
+         *
+         * @name Phaser.Textures.CanvasTexture#buffer
+         * @type {ArrayBuffer}
+         * @since 3.13.0
+         */
+        this.buffer;
+
+        if (this.data)
+        {
+            if (this.imageData.data.buffer)
+            {
+                this.buffer = this.imageData.data.buffer;
+                this.pixels = new Uint32Array(this.buffer);
+            }
+            else
+            if (window.ArrayBuffer)
+            {
+                this.buffer = new ArrayBuffer(this.imageData.data.length);
+                this.pixels = new Uint32Array(this.buffer);
+            }
+            else
+            {
+                this.pixels = this.imageData.data;
+            }
+        }
+    },
+
+    /**
+     * This re-creates the `imageData` from the current context.
+     * It then re-builds the ArrayBuffer, the `data` Uint8ClampedArray reference and the `pixels` Int32Array.
+     *
+     * Warning: This is a very expensive operation, so use it sparingly.
+     *
+     * @method Phaser.Textures.CanvasTexture#update
+     * @since 3.13.0
+     *
+     * @return {Phaser.Textures.CanvasTexture} This CanvasTexture.
+    */
+    update: function ()
+    {
+        this.imageData = this.context.getImageData(0, 0, this.context.width, this.context.height);
+
+        this.data = this.imageData.data;
+
+        if (this.imageData.data.buffer)
+        {
+            this.buffer = this.imageData.data.buffer;
+            this.pixels = new Uint32Array(this.buffer);
+        }
+        else if (window.ArrayBuffer)
+        {
+            this.buffer = new ArrayBuffer(this.imageData.data.length);
+            this.pixels = new Uint32Array(this.buffer);
+        }
+        else
+        {
+            this.pixels = this.imageData.data;
+        }
+
+        return this;
+    },
+
+    /**
+     * Get the color of a specific pixel in the context into a color object.
+     * 
+     * If you have drawn anything to the CanvasTexture since it was created you must call CanvasTexture.update to refresh the array buffer,
+     * otherwise this may return out of date color values, or worse - throw a run-time error as it tries to access an array element that doesn't exist.
+     *
+     * @method Phaser.Textures.CanvasTexture#getPixel
+     * @since 3.13.0
+     * 
+     * @param {integer} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this CanvasTexture and be an integer, not a float.
+     * @param {integer} y - The y coordinate of the pixel to be set. Must lay within the dimensions of this CanvasTexture and be an integer, not a float.
+     * @param {object} [out] - An object into which 4 properties will be created: r, g, b and a. If not provided a new object will be created.
+     * 
+     * @return {object} An object with the red, green, blue and alpha values set in the r, g, b and a properties.
+     */
+    getPixel: function (x, y, out)
+    {
+        if (!out)
+        {
+            out = new Color();
+        }
+
+        var index = ~~(x + (y * this.width));
+
+        index *= 4;
+
+        out.r = this.data[index];
+        out.g = this.data[++index];
+        out.b = this.data[++index];
+        out.a = this.data[++index];
+
+        return out;
     },
 
     /**
