@@ -33,7 +33,7 @@ var Vec2 = require('../math/Vector2');
  * @since 3.12.0
  *
  * @param {Phaser.Game} game - A reference to the Phaser.Game instance.
- * @param {ScaleManagerConfig} config
+ * @param {any} config
  */
 var ScaleManager = new Class({
 

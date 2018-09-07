@@ -114,16 +114,6 @@ var Scene = new Class({
         this.cameras;
 
         /**
-         * A scene level 3D Camera System.
-         * This property will only be available if defined in the Scene Injection Map.
-         *
-         * @name Phaser.Scene#cameras3d
-         * @type {Phaser.Cameras.Sprite3D.CameraManager}
-         * @since 3.0.0
-         */
-        this.cameras3d;
-
-        /**
          * A scene level Game Object Factory.
          * This property will only be available if defined in the Scene Injection Map.
          *

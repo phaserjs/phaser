@@ -131,7 +131,7 @@ var Curve = new Class({
         //  So you can chain graphics calls
         return graphics.strokePoints(this.getPoints(pointsTotal));
     },
-
+    
     /**
      * Returns a Rectangle where the position and dimensions match the bounds of this Curve.
      *
