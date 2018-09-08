@@ -182,7 +182,7 @@ var CanvasTexture = new Class({
     */
     update: function ()
     {
-        this.imageData = this.context.getImageData(0, 0, this.context.width, this.context.height);
+        this.imageData = this.context.getImageData(0, 0, this.width, this.height);
 
         this.data = this.imageData.data;
 
@@ -204,6 +204,13 @@ var CanvasTexture = new Class({
         return this;
     },
 
+    draw: function (x, y, source)
+    {
+        this.context.drawImage(source, x, y);
+
+        return this.update();
+    },
+
     /**
      * Get the color of a specific pixel in the context into a color object.
      * 
@@ -213,11 +220,11 @@ var CanvasTexture = new Class({
      * @method Phaser.Textures.CanvasTexture#getPixel
      * @since 3.13.0
      * 
-     * @param {integer} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this CanvasTexture and be an integer, not a float.
-     * @param {integer} y - The y coordinate of the pixel to be set. Must lay within the dimensions of this CanvasTexture and be an integer, not a float.
-     * @param {object} [out] - An object into which 4 properties will be created: r, g, b and a. If not provided a new object will be created.
+     * @param {integer} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {integer} y - The y coordinate of the pixel to be set. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {Phaser.Display.Color} [out] - An object into which 4 properties will be set: r, g, b and a. If not provided a Color object will be created.
      * 
-     * @return {object} An object with the red, green, blue and alpha values set in the r, g, b and a properties.
+     * @return {Phaser.Display.Color} An object with the red, green, blue and alpha values set in the r, g, b and a properties.
      */
     getPixel: function (x, y, out)
     {
