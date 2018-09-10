@@ -85,7 +85,7 @@ var CanvasTexture = new Class({
 
         /**
          * The width of the Canvas.
-         * This property is read-only, if you wish to change use `setSize`.
+         * This property is read-only, if you wish to change it use the `setSize` method.
          *
          * @name Phaser.Textures.CanvasTexture#width
          * @readOnly
@@ -96,7 +96,7 @@ var CanvasTexture = new Class({
 
         /**
          * The height of the Canvas.
-         * This property is read-only, if you wish to change use `setSize`.
+         * This property is read-only, if you wish to change it use the `setSize` method.
          *
          * @name Phaser.Textures.CanvasTexture#height
          * @readOnly
@@ -120,7 +120,7 @@ var CanvasTexture = new Class({
          * Use the `update` method to populate this when the canvas changes.
          * Note that this is unavailable in some browsers, such as Epic Browser, due to their security restrictions.
          *
-         * @name Phaser.Textures.CanvasTexture#imageData
+         * @name Phaser.Textures.CanvasTexture#data
          * @type {Uint8ClampedArray}
          * @since 3.13.0
          */
@@ -156,8 +156,7 @@ var CanvasTexture = new Class({
                 this.buffer = this.imageData.data.buffer;
                 this.pixels = new Uint32Array(this.buffer);
             }
-            else
-            if (window.ArrayBuffer)
+            else if (window.ArrayBuffer)
             {
                 this.buffer = new ArrayBuffer(this.imageData.data.length);
                 this.pixels = new Uint32Array(this.buffer);
@@ -179,7 +178,7 @@ var CanvasTexture = new Class({
      * @since 3.13.0
      *
      * @return {Phaser.Textures.CanvasTexture} This CanvasTexture.
-    */
+     */
     update: function ()
     {
         this.imageData = this.context.getImageData(0, 0, this.width, this.height);
@@ -204,6 +203,19 @@ var CanvasTexture = new Class({
         return this;
     },
 
+    /**
+     * Draws the given Image or Canvas element to this CanvasTexture, then updates the internal
+     * ImageData buffer and arrays.
+     *
+     * @method Phaser.Textures.CanvasTexture#draw
+     * @since 3.13.0
+     * 
+     * @param {integer} x - The x coordinate to draw the source at.
+     * @param {integer} y - The y coordinate to draw the source at.
+     * @param {(HTMLImageElement|HTMLCanvasElement)} source - The element to draw to this canvas.
+     * 
+     * @return {Phaser.Textures.CanvasTexture} This CanvasTexture.
+     */
     draw: function (x, y, source)
     {
         this.context.drawImage(source, x, y);
@@ -212,9 +224,9 @@ var CanvasTexture = new Class({
     },
 
     /**
-     * Get the color of a specific pixel in the context into a color object.
+     * Get the color of a specific pixel from this texture and store it in a Color object.
      * 
-     * If you have drawn anything to the CanvasTexture since it was created you must call CanvasTexture.update to refresh the array buffer,
+     * If you have drawn anything to this CanvasTexture since it was created you must call `CanvasTexture.update` to refresh the array buffer,
      * otherwise this may return out of date color values, or worse - throw a run-time error as it tries to access an array element that doesn't exist.
      *
      * @method Phaser.Textures.CanvasTexture#getPixel
@@ -237,12 +249,12 @@ var CanvasTexture = new Class({
 
         index *= 4;
 
-        out.r = this.data[index];
-        out.g = this.data[++index];
-        out.b = this.data[++index];
-        out.a = this.data[++index];
+        var r = this.data[index];
+        var g = this.data[++index];
+        var b = this.data[++index];
+        var a = this.data[++index];
 
-        return out;
+        return out.setTo(r, g, b, a);
     },
 
     /**
@@ -300,7 +312,7 @@ var CanvasTexture = new Class({
     {
         this.context.clearRect(0, 0, this.width, this.height);
 
-        return this;
+        return this.update();
     },
 
     /**
