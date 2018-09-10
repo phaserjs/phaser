@@ -16,6 +16,13 @@
 * `Color.lighten` is a new method that will lighten the color based on the amount given. This is a chainable version of adjusting the value property directly.
 * `Color.darken` is a new method that will darken the color based on the amount given. This is a chainable version of adjusting the value property directly.
 * `Color.brighten` is a new method that will brighten the color based on the amount given.
+* The `CanvasTexture` class has a new property `imageData` which contains the ImageData of the texture.
+* The `CanvasTexture` class has a new property `data` which is a Uint8ClampedArray view into the `buffer`.
+* The `CanvasTexture` class has a new property `pixels` which is a Uint32Array view into the `buffer`.
+* The `CanvasTexture` class has a new property `buffer` which is an ArrayBuffer the same size as the context ImageData.
+* The `CanvasTexture` class has a new method `update` which refreshes the ImageData and ArrayBuffer based on the texture contents.
+* The `CanvasTexture` class has a new method `draw` which draws the given Image or Canvas element to the CanvasTexture, then updates the internal ImageData buffer and arrays.
+* The `CanvasTexture` class has a new method `getPixel` which will get the color of a specific pixel from the Canvas Texture and store it in the returned Color object. It uses the ArrayBuffer to do this, which is extremely fast, allowing for quick iteration across the canvas data.
 
 ## Updates
 
