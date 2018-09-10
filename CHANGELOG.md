@@ -4,10 +4,26 @@
 
 ## New Features
 
+* The `Color` object has a new property `h` which represents the hue of the color. You can tween or adjust this property in real-time and it will automatically update the internal RGB values with it.
+* The `Color` object has a new property `s` which represents the saturation of the color. You can tween or adjust this property in real-time and it will automatically update the internal RGB values with it.
+* The `Color` object has a new property `v` which represents the lightness value of the color. You can tween or adjust this property in real-time and it will automatically update the internal RGB values with it.
+* `Color.setFromHSV` is a new method that will set the color values based on the HSV values given.
+* `Color.gray` is a new method that will set the color to be a shade of gray based on the amount given.
+* `Color.random` is a new method that will set the color to be a random hue based on the min and max values given.
+* `Color.randomGray` is a new method that will set the color to be a random grayscale based on the min and max values given.
+* `Color.saturate` is a new method that will saturate the color based on the amount given. This is a chainable version of adjusting the saturation property directly.
+* `Color.desaturate` is a new method that will desaturate the color based on the amount given. This is a chainable version of adjusting the saturation property directly.
+* `Color.lighten` is a new method that will lighten the color based on the amount given. This is a chainable version of adjusting the value property directly.
+* `Color.darken` is a new method that will darken the color based on the amount given. This is a chainable version of adjusting the value property directly.
+* `Color.brighten` is a new method that will brighten the color based on the amount given.
+
 ## Updates
 
 * The Graphics Canvas Renderer will now automatically call `beginPath` on the target context before processing the command stack. This has the effect of clearing off any sub-paths that may have persisted on the stack from previous Graphics objects or frames. This makes it more in-line with WebGL re: expectations when calling `Graphics.clear`.
 * `initPipeline` now defaults to the Texture Tint Pipeline if nothing else is specified. This allowed me to remove explicit strings from 11 different Game Objects, saving some bytes in the process.
+* The `RGBToHSV` function can now take an optional `out` argument, which is either a `HSVColorObject` or a `Color` object, and the results will be set into that object instead of creating a new one.
+* The `HSVToRGB` function can now take an optional `out` argument, which is either a `HSVColorObject` or a `Color` object, and the results will be set into that object instead of creating a new one.
+* `Color.setTo` has a new argument `updateHSV` which allows you to control if the internal HSV values are updated during the same call or not.
 
 ## Bug Fixes
 
