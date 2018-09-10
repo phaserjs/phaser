@@ -121,6 +121,13 @@ var Shape = new Class({
         }
 
         return this;
+    },
+
+    setClosePath: function (value)
+    {
+        this.closePath = value;
+
+        return this;
     }
 
 });

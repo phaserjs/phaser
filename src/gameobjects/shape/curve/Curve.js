@@ -80,13 +80,6 @@ var Curve = new Class({
         return this.updateData();
     },
 
-    setClosePath: function (value)
-    {
-        this.closePath = value;
-
-        return this;
-    },
-
     updateData: function ()
     {
         var bounds = this._curveBounds;
