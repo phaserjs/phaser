@@ -546,7 +546,7 @@ var WebGLPipeline = new Class({
     /**
      * Set a uniform value of the current pipeline program.
      *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat1
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat1v
      * @since 3.2.0
      *
      * @param {string} name - [description]
@@ -564,7 +564,7 @@ var WebGLPipeline = new Class({
     /**
      * Set a uniform value of the current pipeline program.
      *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat2
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat2v
      * @since 3.2.0
      *
      * @param {string} name - [description]
@@ -582,7 +582,7 @@ var WebGLPipeline = new Class({
     /**
      * Set a uniform value of the current pipeline program.
      *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat3
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat3v
      * @since 3.2.0
      *
      * @param {string} name - [description]
@@ -600,7 +600,7 @@ var WebGLPipeline = new Class({
     /**
      * Set a uniform value of the current pipeline program.
      *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat4
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat4v
      * @since 3.2.0
      *
      * @param {string} name - Name of the uniform

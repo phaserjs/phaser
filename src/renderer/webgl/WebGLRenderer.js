@@ -1869,90 +1869,6 @@ var WebGLRenderer = new Class({
      *
      * @param {WebGLProgram} program - [description]
      * @param {string} name - [description]
-     * @param {array} arr - [description]
-     *
-     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
-     */
-    setFloat1v: function (program, name, arr)
-    {
-        this.setProgram(program);
-
-        this.gl.uniform1fv(this.gl.getUniformLocation(program, name), new Float32Array(arr));
-
-        return this;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat2
-     * @since 3.0.0
-     *
-     * @param {WebGLProgram} program - [description]
-     * @param {string} name - [description]
-     * @param {array} arr - [description]
-     *
-     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
-     */
-    setFloat2v: function (program, name, arr)
-    {
-        this.setProgram(program);
-
-        this.gl.uniform2fv(this.gl.getUniformLocation(program, name), new Float32Array(arr));
-
-        return this;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat3
-     * @since 3.0.0
-     *
-     * @param {WebGLProgram} program - [description]
-     * @param {string} name - [description]
-     * @param {array} arr - [description]
-     *
-     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
-     */
-    setFloat3v: function (program, name, arr)
-    {
-        this.setProgram(program);
-
-        this.gl.uniform3fv(this.gl.getUniformLocation(program, name), new Float32Array(arr));
-
-        return this;
-    },
-
-    /**
-     * Sets uniform of a WebGLProgram
-     *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat4
-     * @since 3.0.0
-     *
-     * @param {WebGLProgram} program - Target program
-     * @param {string} name - Name of the uniform
-     * @param {array} arr - [description]
-     *
-     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
-     */
-    setFloat4v: function (program, name, arr)
-    {
-        this.setProgram(program);
-
-        this.gl.uniform4fv(this.gl.getUniformLocation(program, name), new Float32Array(arr));
-
-        return this;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat1
-     * @since 3.0.0
-     *
-     * @param {WebGLProgram} program - [description]
-     * @param {string} name - [description]
      * @param {number} x - [description]
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
@@ -2031,6 +1947,91 @@ var WebGLRenderer = new Class({
         this.setProgram(program);
 
         this.gl.uniform4f(this.gl.getUniformLocation(program, name), x, y, z, w);
+
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat1v
+     * @since 3.0.0
+     *
+     * @param {WebGLProgram} program - [description]
+     * @param {string} name - [description]
+     * @param {array} arr - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     */
+    setFloat1v: function (program, name, arr)
+    {
+        this.setProgram(program);
+
+        this.gl.uniform1fv(this.gl.getUniformLocation(program, name), new Float32Array(arr));
+
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat2v
+     * @since 3.0.0
+     *
+     * @param {WebGLProgram} program - [description]
+     * @param {string} name - [description]
+     * @param {array} arr - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     */
+    setFloat2v: function (program, name, arr)
+    {
+        this.setProgram(program);
+
+        this.gl.uniform2fv(this.gl.getUniformLocation(program, name), new Float32Array(arr));
+
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat3v
+     * @since 3.0.0
+     *
+     * @param {WebGLProgram} program - [description]
+     * @param {string} name - [description]
+     * @param {array} arr - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     */
+    setFloat3v: function (program, name, arr)
+    {
+        this.setProgram(program);
+
+        this.gl.uniform3fv(this.gl.getUniformLocation(program, name), new Float32Array(arr));
+
+        return this;
+    },
+
+    /**
+     * Sets uniform of a WebGLProgram
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat4v
+     * @since 3.0.0
+     *
+     * @param {WebGLProgram} program - Target program
+     * @param {string} name - Name of the uniform
+     * @param {array} arr - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     */
+
+    setFloat4v: function (program, name, arr)
+    {
+        this.setProgram(program);
+
+        this.gl.uniform4fv(this.gl.getUniformLocation(program, name), new Float32Array(arr));
 
         return this;
     },
