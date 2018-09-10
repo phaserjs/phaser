@@ -18,8 +18,8 @@ var GameObjectFactory = require('../../GameObjectFactory');
  * @param {number} [x=0] - The horizontal position of this Game Object in the world.
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
  * @param {number} [radius=128] - The radius of the arc.
- * @param {number} [startAngle=0] - The start angle of the arc, in degrees.
- * @param {number} [endAngle=360] - The end angle of the arc, in degrees.
+ * @param {integer} [startAngle=0] - The start angle of the arc, in degrees.
+ * @param {integer} [endAngle=360] - The end angle of the arc, in degrees.
  * @param {boolean} [anticlockwise=false] - The winding order of the start and end angles.
  * @param {number} [fillColor] - The color the arc will be filled with, i.e. 0xff0000 for red.
  * @param {number} [fillAlpha] - The alpha the arc will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
@@ -44,8 +44,8 @@ GameObjectFactory.register('arc', function (x, y, radius, startAngle, endAngle, 
  * @param {number} [x=0] - The horizontal position of this Game Object in the world.
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
  * @param {number} [radius=128] - The radius of the circle.
- * @param {number} [fillColor=0xffffff] - The color the circle will be filled with, i.e. 0xff0000 for red.
- * @param {number} [fillAlpha=1] - The alpha the circle will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
+ * @param {number} [fillColor] - The color the circle will be filled with, i.e. 0xff0000 for red.
+ * @param {number} [fillAlpha] - The alpha the circle will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
  *
  * @return {Phaser.GameObjects.Arc} The Game Object that was created.
  */

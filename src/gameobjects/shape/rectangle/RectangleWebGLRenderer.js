@@ -4,6 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var StrokePathWebGL = require('../StrokePathWebGL');
 var Utils = require('../../../renderer/webgl/Utils');
 
 /**
@@ -76,42 +77,7 @@ var RectangleWebGLRenderer = function (renderer, src, interpolationPercentage, c
 
     if (src.isStroked)
     {
-        var strokeTint = pipeline.strokeTint;
-        var strokeTintColor = Utils.getTintAppendFloatAlphaAndSwap(src.strokeColor, src.strokeAlpha * alpha);
-    
-        strokeTint.TL = strokeTintColor;
-        strokeTint.TR = strokeTintColor;
-        strokeTint.BL = strokeTintColor;
-        strokeTint.BR = strokeTintColor;
-
-        var path = src.pathData;
-        var pathLength = path.length - 1;
-        var lineWidth = src.lineWidth;
-        var halfLineWidth = lineWidth / 2;
-
-        var px1 = path[0] - dx;
-        var py1 = path[1] - dy;
-
-        for (var i = 2; i < pathLength; i += 2)
-        {
-            var px2 = path[i] - dx;
-            var py2 = path[i + 1] - dy;
-
-            pipeline.batchLine(
-                px1,
-                py1,
-                px2,
-                py2,
-                halfLineWidth,
-                halfLineWidth,
-                lineWidth,
-                i - 2,
-                (i === pathLength - 1)
-            );
-
-            px1 = px2;
-            py1 = py2;
-        }
+        StrokePathWebGL(pipeline, src, alpha, dx, dy);
     }
 };
 

@@ -79,6 +79,8 @@ var Shape = new Class({
         this.isFilled = false;
         this.isStroked = false;
 
+        this.closePath = true;
+
         this._tempLine = new Line();
 
         this.initPipeline();
