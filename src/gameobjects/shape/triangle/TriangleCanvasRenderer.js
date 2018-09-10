@@ -4,6 +4,10 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var FillStyleCanvas = require('../FillStyleCanvas');
+var LineStyleCanvas = require('../LineStyleCanvas');
+var SetTransform = require('../../../renderer/canvas/utils/SetTransform');
+
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -21,6 +25,42 @@
  */
 var TriangleCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
+    var ctx = renderer.currentContext;
+
+    if (SetTransform(renderer, ctx, src, camera, parentMatrix))
+    {
+        var dx = src._displayOriginX;
+        var dy = src._displayOriginY;
+
+        var x1 = src.data.x1 - dx;
+        var y1 = src.data.y1 - dy;
+        var x2 = src.data.x2 - dx;
+        var y2 = src.data.y2 - dy;
+        var x3 = src.data.x3 - dx;
+        var y3 = src.data.y3 - dy;
+
+        ctx.beginPath();
+
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.lineTo(x3, y3);
+
+        ctx.closePath();
+
+        if (src.isFilled)
+        {
+            FillStyleCanvas(ctx, src);
+
+            ctx.fill();
+        }
+
+        if (src.isStroked)
+        {
+            LineStyleCanvas(ctx, src);
+
+            ctx.stroke();
+        }
+    }
 };
 
 module.exports = TriangleCanvasRenderer;
