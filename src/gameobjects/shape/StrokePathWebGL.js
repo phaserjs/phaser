@@ -16,8 +16,8 @@ var Utils = require('../../renderer/webgl/Utils');
  * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipeline - The WebGL Pipeline used to render this Shape.
  * @param {Phaser.GameObjects.Shape} src - The Game Object shape being rendered in this call.
  * @param {number} alpha - The base alpha value.
- * @param {number} dx - The sourcce displayOriginX.
- * @param {number} dy - The sourcce displayOriginY.
+ * @param {number} dx - The source displayOriginX.
+ * @param {number} dy - The source displayOriginY.
  */
 var StrokePathWebGL = function (pipeline, src, alpha, dx, dy)
 {

@@ -17,8 +17,8 @@ var Utils = require('../../renderer/webgl/Utils');
  * @param {Phaser.GameObjects.Components.TransformMatrix} calcMatrix - The transform matrix used to get the position values.
  * @param {Phaser.GameObjects.Shape} src - The Game Object shape being rendered in this call.
  * @param {number} alpha - The base alpha value.
- * @param {number} dx - The sourcce displayOriginX.
- * @param {number} dy - The sourcce displayOriginY.
+ * @param {number} dx - The source displayOriginX.
+ * @param {number} dy - The source displayOriginY.
  */
 var FillPathWebGL = function (pipeline, calcMatrix, src, alpha, dx, dy)
 {
