@@ -100,7 +100,7 @@ var Triangle = new Class({
 
         path.push(line.x2, line.y2);
 
-        this.lineData = path;
+        this.pathData = path;
 
         return this;
     }
