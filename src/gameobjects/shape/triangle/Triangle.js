@@ -19,8 +19,16 @@ var TriangleRender = require('./TriangleRender');
  * @since 3.13.0
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
- * @param {number} x - The horizontal position of this Game Object in the world.
- * @param {number} y - The vertical position of this Game Object in the world.
+ * @param {number} [x=0] - The horizontal position of this Game Object in the world.
+ * @param {number} [y=0] - The vertical position of this Game Object in the world.
+ * @param {number} [x1=0] - The horizontal position of the first point in the triangle.
+ * @param {number} [y1=128] - The vertical position of the first point in the triangle.
+ * @param {number} [x2=64] - The horizontal position of the second point in the triangle.
+ * @param {number} [y2=0] - The vertical position of the second point in the triangle.
+ * @param {number} [x3=128] - The horizontal position of the third point in the triangle.
+ * @param {number} [y3=128] - The vertical position of the third point in the triangle.
+ * @param {number} [fillColor] - The color the triangle will be filled with, i.e. 0xff0000 for red.
+ * @param {number} [fillAlpha] - The alpha the triangle will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
  */
 var Triangle = new Class({
 
@@ -61,19 +69,19 @@ var Triangle = new Class({
     },
 
     /**
-     * [description]
+     * Sets the data for the lines that make up this Triangle shape.
      *
-     * @method Phaser.Geom.Triangle#setTo
+     * @method Phaser.GameObjects.Triangle#setTo
      * @since 3.13.0
      *
-     * @param {number} [x1=0] - [description]
-     * @param {number} [y1=0] - [description]
-     * @param {number} [x2=0] - [description]
-     * @param {number} [y2=0] - [description]
-     * @param {number} [x3=0] - [description]
-     * @param {number} [y3=0] - [description]
+     * @param {number} [x1=0] - The horizontal position of the first point in the triangle.
+     * @param {number} [y1=0] - The vertical position of the first point in the triangle.
+     * @param {number} [x2=0] - The horizontal position of the second point in the triangle.
+     * @param {number} [y2=0] - The vertical position of the second point in the triangle.
+     * @param {number} [x3=0] - The horizontal position of the third point in the triangle.
+     * @param {number} [y3=0] - The vertical position of the third point in the triangle.
      *
-     * @return {Phaser.Geom.Triangle} This Triangle object.
+     * @return {this} This Game Object instance.
      */
     setTo: function (x1, y1, x2, y2, x3, y3)
     {
@@ -82,6 +90,15 @@ var Triangle = new Class({
         return this.updateData();
     },
 
+    /**
+     * Internal method that updates the data and path values.
+     *
+     * @method Phaser.GameObjects.Triangle#updateData
+     * @private
+     * @since 3.13.0
+     *
+     * @return {this} This Game Object instance.
+     */
     updateData: function ()
     {
         var path = [];

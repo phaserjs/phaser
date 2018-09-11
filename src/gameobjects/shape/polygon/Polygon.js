@@ -22,8 +22,11 @@ var Smooth = require('../../../geom/polygon/Smooth');
  * @since 3.13.0
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
- * @param {number} x - The horizontal position of this Game Object in the world.
- * @param {number} y - The vertical position of this Game Object in the world.
+ * @param {number} [x=0] - The horizontal position of this Game Object in the world.
+ * @param {number} [y=0] - The vertical position of this Game Object in the world.
+ * @param {any} [points] - The points that make up the polygon.
+ * @param {number} [fillColor] - The color the polygon will be filled with, i.e. 0xff0000 for red.
+ * @param {number} [fillAlpha] - The alpha the polygon will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
  */
 var Polygon = new Class({
 
@@ -56,6 +59,18 @@ var Polygon = new Class({
         this.updateData();
     },
 
+    /**
+     * Smooths the polygon over the number of iterations specified.
+     * The base polygon data will be updated and replaced with the smoothed values.
+     * This call can be chained.
+     *
+     * @method Phaser.GameObjects.Polygon#smooth
+     * @since 3.13.0
+     * 
+     * @param {integer} [iterations=1] - The number of times to apply the polygon smoothing.
+     *
+     * @return {this} This Game Object instance.
+     */
     smooth: function (iterations)
     {
         if (iterations === undefined) { iterations = 1; }
@@ -68,6 +83,15 @@ var Polygon = new Class({
         return this.updateData();
     },
 
+    /**
+     * Internal method that updates the data and path values.
+     *
+     * @method Phaser.GameObjects.Polygon#updateData
+     * @private
+     * @since 3.13.0
+     *
+     * @return {this} This Game Object instance.
+     */
     updateData: function ()
     {
         var path = [];

@@ -25,8 +25,8 @@ var Polygon = require('./Polygon');
  * @param {number} [x=0] - The horizontal position of this Game Object in the world.
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
  * @param {any} [points] - The points that make up the polygon.
- * @param {number} [fillColor=0xffffff] - The color the polygon will be filled with, i.e. 0xff0000 for red.
- * @param {number} [fillAlpha=1] - The alpha the polygon will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
+ * @param {number} [fillColor] - The color the polygon will be filled with, i.e. 0xff0000 for red.
+ * @param {number} [fillAlpha] - The alpha the polygon will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
  *
  * @return {Phaser.GameObjects.Polygon} The Game Object that was created.
  */

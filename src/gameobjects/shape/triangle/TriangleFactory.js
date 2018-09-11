@@ -18,11 +18,11 @@ var Triangle = require('./Triangle');
  * @param {number} [x=0] - The horizontal position of this Game Object in the world.
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
  * @param {number} [x1=0] - The horizontal position of the first point in the triangle.
- * @param {number} [y1=128] - The horizontal position of the first point in the triangle.
+ * @param {number} [y1=128] - The vertical position of the first point in the triangle.
  * @param {number} [x2=64] - The horizontal position of the second point in the triangle.
- * @param {number} [y2=0] - The horizontal position of the second point in the triangle.
+ * @param {number} [y2=0] - The vertical position of the second point in the triangle.
  * @param {number} [x3=128] - The horizontal position of the third point in the triangle.
- * @param {number} [y3=128] - The horizontal position of the third point in the triangle.
+ * @param {number} [y3=128] - The vertical position of the third point in the triangle.
  * @param {number} [fillColor] - The color the triangle will be filled with, i.e. 0xff0000 for red.
  * @param {number} [fillAlpha] - The alpha the triangle will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
  *

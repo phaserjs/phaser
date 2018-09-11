@@ -17,12 +17,12 @@ var Line = require('./Line');
  *
  * @param {number} [x=0] - The horizontal position of this Game Object in the world.
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
- * @param {number} [x1=0] - The horizontal position of the first point in the triangle.
- * @param {number} [y1=0] - The horizontal position of the first point in the triangle.
- * @param {number} [x2=128] - The horizontal position of the second point in the triangle.
- * @param {number} [y2=0] - The horizontal position of the second point in the triangle.
- * @param {number} [strokeColor] - The color the triangle will be stroked with, i.e. 0xff0000 for red.
- * @param {number} [strokeAlpha] - The alpha the triangle will be stroked with. You can also set the alpha of the overall Shape using its `alpha` property.
+ * @param {number} [x1=0] - The horizontal position of the start of the line.
+ * @param {number} [y1=0] - The vertical position of the start of the line.
+ * @param {number} [x2=128] - The horizontal position of the end of the line.
+ * @param {number} [y2=0] - The vertical position of the end of the line.
+ * @param {number} [strokeColor] - The color the line will be drawn in, i.e. 0xff0000 for red.
+ * @param {number} [strokeAlpha] - The alpha the line will be drawn in. You can also set the alpha of the overall Shape using its `alpha` property.
  *
  * @return {Phaser.GameObjects.Line} The Game Object that was created.
  */

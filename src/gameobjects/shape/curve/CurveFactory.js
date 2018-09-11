@@ -17,9 +17,9 @@ var Curve = require('./Curve');
  *
  * @param {number} [x=0] - The horizontal position of this Game Object in the world.
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
- * @param {any} [curve] - The Curve object to use to create the Shape.
- * @param {number} [fillColor=0xffffff] - The color the curve will be filled with, i.e. 0xff0000 for red.
- * @param {number} [fillAlpha=1] - The alpha the curve will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
+ * @param {Phaser.Curves.Curve} [curve] - The Curve object to use to create the Shape.
+ * @param {number} [fillColor] - The color the curve will be filled with, i.e. 0xff0000 for red.
+ * @param {number} [fillAlpha] - The alpha the curve will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
  *
  * @return {Phaser.GameObjects.Curve} The Game Object that was created.
  */

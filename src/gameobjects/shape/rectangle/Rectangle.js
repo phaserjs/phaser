@@ -21,6 +21,10 @@ var RectangleRender = require('./RectangleRender');
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
+ * @param {number} [width=128] - The width of the rectangle.
+ * @param {number} [height=128] - The height of the rectangle.
+ * @param {number} [fillColor] - The color the rectangle will be filled with, i.e. 0xff0000 for red.
+ * @param {number} [fillAlpha] - The alpha the rectangle will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
  */
 var Rectangle = new Class({
 
@@ -53,6 +57,15 @@ var Rectangle = new Class({
         this.updateData();
     },
 
+    /**
+     * Internal method that updates the data and path values.
+     *
+     * @method Phaser.GameObjects.Rectangle#updateData
+     * @private
+     * @since 3.13.0
+     *
+     * @return {this} This Game Object instance.
+     */
     updateData: function ()
     {
         var path = [];

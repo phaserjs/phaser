@@ -19,8 +19,13 @@ var Shape = require('../Shape');
  * @since 3.13.0
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
- * @param {number} x - The horizontal position of this Game Object in the world.
- * @param {number} y - The vertical position of this Game Object in the world.
+ * @param {number} [x=0] - The horizontal position of this Game Object in the world.
+ * @param {number} [y=0] - The vertical position of this Game Object in the world.
+ * @param {number} [points=5] - The number of points on the star.
+ * @param {number} [innerRadius=32] - The inner radius of the star.
+ * @param {number} [outerRadius=64] - The outer radius of the star.
+ * @param {number} [fillColor] - The color the star will be filled with, i.e. 0xff0000 for red.
+ * @param {number} [fillAlpha] - The alpha the star will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
  */
 var Star = new Class({
 
@@ -42,8 +47,37 @@ var Star = new Class({
 
         Shape.call(this, scene, 'Star', null);
 
+        /**
+         * Private internal value.
+         * The number of points in the star.
+         *
+         * @name Phaser.GameObjects.Star#_points
+         * @type {integer}
+         * @private
+         * @since 3.13.0
+         */
         this._points = points;
+
+        /**
+         * Private internal value.
+         * The inner radius of the star.
+         *
+         * @name Phaser.GameObjects.Star#_innerRadius
+         * @type {number}
+         * @private
+         * @since 3.13.0
+         */
         this._innerRadius = innerRadius;
+
+        /**
+         * Private internal value.
+         * The outer radius of the star.
+         *
+         * @name Phaser.GameObjects.Star#_outerRadius
+         * @type {number}
+         * @private
+         * @since 3.13.0
+         */
         this._outerRadius = outerRadius;
 
         this.setPosition(x, y);
@@ -58,6 +92,17 @@ var Star = new Class({
         this.updateData();
     },
 
+    /**
+     * Sets the number of points that make up the Star shape.
+     * This call can be chained.
+     *
+     * @method Phaser.GameObjects.Star#setPoints
+     * @since 3.13.0
+     * 
+     * @param {integer} value - The amount of points the Star will have.
+     *
+     * @return {this} This Game Object instance.
+     */
     setPoints: function (value)
     {
         this._points = value;
@@ -65,6 +110,17 @@ var Star = new Class({
         return this.updateData();
     },
 
+    /**
+     * Sets the inner radius of the Star shape.
+     * This call can be chained.
+     *
+     * @method Phaser.GameObjects.Star#setInnerRadius
+     * @since 3.13.0
+     * 
+     * @param {number} value - The amount to set the inner radius to.
+     *
+     * @return {this} This Game Object instance.
+     */
     setInnerRadius: function (value)
     {
         this._innerRadius = value;
@@ -72,6 +128,17 @@ var Star = new Class({
         return this.updateData();
     },
 
+    /**
+     * Sets the outer radius of the Star shape.
+     * This call can be chained.
+     *
+     * @method Phaser.GameObjects.Star#setOuterRadius
+     * @since 3.13.0
+     * 
+     * @param {number} value - The amount to set the outer radius to.
+     *
+     * @return {this} This Game Object instance.
+     */
     setOuterRadius: function (value)
     {
         this._outerRadius = value;
@@ -79,6 +146,14 @@ var Star = new Class({
         return this.updateData();
     },
 
+    /**
+     * The number of points that make up the Star shape.
+     *
+     * @name Phaser.GameObjects.Star#points
+     * @type {integer}
+     * @default 5
+     * @since 3.13.0
+     */
     points: {
 
         get: function ()
@@ -95,6 +170,14 @@ var Star = new Class({
 
     },
 
+    /**
+     * The inner radius of the Star shape.
+     *
+     * @name Phaser.GameObjects.Star#innerRadius
+     * @type {number}
+     * @default 32
+     * @since 3.13.0
+     */
     innerRadius: {
 
         get: function ()
@@ -111,6 +194,14 @@ var Star = new Class({
 
     },
 
+    /**
+     * The outer radius of the Star shape.
+     *
+     * @name Phaser.GameObjects.Star#outerRadius
+     * @type {number}
+     * @default 64
+     * @since 3.13.0
+     */
     outerRadius: {
 
         get: function ()
@@ -127,6 +218,15 @@ var Star = new Class({
 
     },
 
+    /**
+     * Internal method that updates the data and path values.
+     *
+     * @method Phaser.GameObjects.Star#updateData
+     * @private
+     * @since 3.13.0
+     *
+     * @return {this} This Game Object instance.
+     */
     updateData: function ()
     {
         var path = [];
