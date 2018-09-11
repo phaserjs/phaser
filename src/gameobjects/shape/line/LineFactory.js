@@ -21,12 +21,12 @@ var Line = require('./Line');
  * @param {number} [y1=0] - The horizontal position of the first point in the triangle.
  * @param {number} [x2=128] - The horizontal position of the second point in the triangle.
  * @param {number} [y2=0] - The horizontal position of the second point in the triangle.
- * @param {number} [fillColor] - The color the triangle will be filled with, i.e. 0xff0000 for red.
- * @param {number} [fillAlpha] - The alpha the triangle will be filled with. You can also set the alpha of the overall Shape using its `alpha` property.
+ * @param {number} [strokeColor] - The color the triangle will be stroked with, i.e. 0xff0000 for red.
+ * @param {number} [strokeAlpha] - The alpha the triangle will be stroked with. You can also set the alpha of the overall Shape using its `alpha` property.
  *
  * @return {Phaser.GameObjects.Line} The Game Object that was created.
  */
-GameObjectFactory.register('line', function (x, y, x1, y1, x2, y2, fillColor, fillAlpha)
+GameObjectFactory.register('line', function (x, y, x1, y1, x2, y2, strokeColor, strokeAlpha)
 {
-    return this.displayList.add(new Line(this.scene, x, y, x1, y1, x2, y2, fillColor, fillAlpha));
+    return this.displayList.add(new Line(this.scene, x, y, x1, y1, x2, y2, strokeColor, strokeAlpha));
 });

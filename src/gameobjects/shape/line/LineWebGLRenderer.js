@@ -53,10 +53,10 @@ var LineWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     var dy = src._displayOriginY;
     var alpha = camera.alpha * src.alpha;
 
-    if (src.isFilled)
+    if (src.isStroked)
     {
         var strokeTint = pipeline.strokeTint;
-        var color = Utils.getTintAppendFloatAlphaAndSwap(src.fillColor, src.fillAlpha * alpha);
+        var color = Utils.getTintAppendFloatAlphaAndSwap(src.strokeColor, src.strokeAlpha * alpha);
 
         strokeTint.TL = color;
         strokeTint.TR = color;

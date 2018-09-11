@@ -32,7 +32,7 @@ var Line = new Class({
 
     initialize:
 
-    function Line (scene, x, y, x1, y1, x2, y2, fillColor, fillAlpha)
+    function Line (scene, x, y, x1, y1, x2, y2, strokeColor, strokeAlpha)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -52,9 +52,9 @@ var Line = new Class({
         this.setPosition(x, y);
         this.setSize(width, height);
 
-        if (fillColor !== undefined)
+        if (strokeColor !== undefined)
         {
-            this.setFillStyle(fillColor, fillAlpha);
+            this.setStrokeStyle(1, strokeColor, strokeAlpha);
         }
 
         this.updateDisplayOrigin();
@@ -66,6 +66,8 @@ var Line = new Class({
 
         this._startWidth = startWidth;
         this._endWidth = endWidth;
+
+        this.lineWidth = startWidth;
 
         return this;
     },
