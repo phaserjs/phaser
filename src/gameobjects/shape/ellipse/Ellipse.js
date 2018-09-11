@@ -90,6 +90,8 @@ var Ellipse = new Class({
             path.push(points[i].x, points[i].y);
         }
 
+        path.push(points[0].x, points[0].y);
+
         this.pathIndexes = Earcut(path);
         this.pathData = path;
 
