@@ -4,6 +4,9 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var FillStyleCanvas = require('../FillStyleCanvas');
+var SetTransform = require('../../../renderer/canvas/utils/SetTransform');
+
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -21,6 +24,82 @@
  */
 var IsoTriangleCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
+    var ctx = renderer.currentContext;
+
+    if (SetTransform(renderer, ctx, src, camera, parentMatrix) && src.isFilled)
+    {
+        var size = src.width;
+        var height = src.height;
+    
+        var sizeA = size / 2;
+        var sizeB = size / src.projection;
+
+        var reversed = src.isReversed;
+
+        //  Top Face
+
+        if (src.showTop && reversed)
+        {
+            FillStyleCanvas(ctx, src, src.fillTop);
+
+            ctx.beginPath();
+
+            ctx.moveTo(-sizeA, -height);
+            ctx.lineTo(0, -sizeB - height);
+            ctx.lineTo(sizeA, -height);
+            ctx.lineTo(0, sizeB - height);
+
+            ctx.fill();
+        }
+
+        //  Left Face
+
+        if (src.showLeft)
+        {
+            FillStyleCanvas(ctx, src, src.fillLeft);
+
+            ctx.beginPath();
+
+            if (reversed)
+            {
+                ctx.moveTo(-sizeA, -height);
+                ctx.lineTo(0, sizeB);
+                ctx.lineTo(0, sizeB - height);
+            }
+            else
+            {
+                ctx.moveTo(-sizeA, 0);
+                ctx.lineTo(0, sizeB);
+                ctx.lineTo(0, sizeB - height);
+            }
+
+            ctx.fill();
+        }
+
+        //  Right Face
+
+        if (src.showRight)
+        {
+            FillStyleCanvas(ctx, src, src.fillRight);
+
+            ctx.beginPath();
+
+            if (reversed)
+            {
+                ctx.moveTo(sizeA, -height);
+                ctx.lineTo(0, sizeB);
+                ctx.lineTo(0, sizeB - height);
+            }
+            else
+            {
+                ctx.moveTo(sizeA, 0);
+                ctx.lineTo(0, sizeB);
+                ctx.lineTo(0, sizeB - height);
+            }
+
+            ctx.fill();
+        }
+    }
 };
 
 module.exports = IsoTriangleCanvasRenderer;

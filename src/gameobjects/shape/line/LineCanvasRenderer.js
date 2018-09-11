@@ -4,6 +4,9 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var LineStyleCanvas = require('../LineStyleCanvas');
+var SetTransform = require('../../../renderer/canvas/utils/SetTransform');
+
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -21,6 +24,25 @@
  */
 var LineCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
+    var ctx = renderer.currentContext;
+
+    if (SetTransform(renderer, ctx, src, camera, parentMatrix))
+    {
+        var dx = src._displayOriginX;
+        var dy = src._displayOriginY;
+
+        if (src.isStroked)
+        {
+            LineStyleCanvas(ctx, src);
+
+            ctx.beginPath();
+
+            ctx.moveTo(src.data.x1 - dx, src.data.y1 - dy);
+            ctx.lineTo(src.data.x2 - dx, src.data.y2 - dy);
+    
+            ctx.stroke();
+        }
+    }
 };
 
 module.exports = LineCanvasRenderer;

@@ -14,9 +14,9 @@
  * @param {CanvasRenderingContext2D} ctx - The context to set the fill style on.
  * @param {Phaser.GameObjects.Shape} src - The Game Object to set the fill style from.
  */
-var FillStyleCanvas = function (ctx, src)
+var FillStyleCanvas = function (ctx, src, altColor)
 {
-    var fillColor = src.fillColor;
+    var fillColor = (altColor) ? altColor : src.fillColor;
     var fillAlpha = src.fillAlpha;
 
     var red = ((fillColor & 0xFF0000) >>> 16);
