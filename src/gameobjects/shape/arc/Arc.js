@@ -94,7 +94,7 @@ var Arc = new Class({
         this._iterations = 0.01;
 
         this.setPosition(x, y);
-        this.setSize(this.data.radius, this.data.radius);
+        this.setSize(this.geom.radius, this.geom.radius);
 
         if (fillColor !== undefined)
         {
@@ -142,12 +142,12 @@ var Arc = new Class({
 
         get: function ()
         {
-            return this.data.radius;
+            return this.geom.radius;
         },
 
         set: function (value)
         {
-            this.data.radius = value;
+            this.geom.radius = value;
 
             this.updateData();
         }
@@ -323,7 +323,7 @@ var Arc = new Class({
         var step = this._iterations;
         var iteration = step;
 
-        var radius = this.data.radius;
+        var radius = this.geom.radius;
         var startAngle = DegToRad(this._startAngle);
         var endAngle = DegToRad(this._endAngle);
         var anticlockwise = this._anticlockwise;

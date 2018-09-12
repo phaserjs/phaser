@@ -72,7 +72,7 @@ var Shape = new Class({
          * @readonly
          * @since 3.13.0
          */
-        this.data = data;
+        this.geom = data;
 
         /**
          * Holds the polygon path data for filled rendering.
@@ -272,6 +272,21 @@ var Shape = new Class({
         this.closePath = value;
 
         return this;
+    },
+
+    /**
+     * Internal destroy handler, called as part of the destroy process.
+     *
+     * @method Phaser.GameObjects.Shape#preDestroy
+     * @protected
+     * @since 3.13.0
+     */
+    preDestroy: function ()
+    {
+        this.geom = null;
+        this._tempLine = null;
+        this.pathData = [];
+        this.pathIndexes = [];
     }
 
 });

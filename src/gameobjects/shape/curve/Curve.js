@@ -136,13 +136,13 @@ var Curve = new Class({
         var smoothness = this._smoothness;
 
         //  Update the bounds in case the underlying data has changed
-        this.data.getBounds(bounds, smoothness);
+        this.geom.getBounds(bounds, smoothness);
 
         this.setSize(bounds.width, bounds.height);
         this.updateDisplayOrigin();
 
         var path = [];
-        var points = this.data.getPoints(smoothness);
+        var points = this.geom.getPoints(smoothness);
 
         for (var i = 0; i < points.length; i++)
         {

@@ -53,8 +53,8 @@ var Triangle = new Class({
 
         Shape.call(this, scene, 'Triangle', new GeomTriangle(x1, y1, x2, y2, x3, y3));
 
-        var width = this.data.right - this.data.left;
-        var height = this.data.bottom - this.data.top;
+        var width = this.geom.right - this.geom.left;
+        var height = this.geom.bottom - this.geom.top;
 
         this.setPosition(x, y);
         this.setSize(width, height);
@@ -85,7 +85,7 @@ var Triangle = new Class({
      */
     setTo: function (x1, y1, x2, y2, x3, y3)
     {
-        this.data.setTo(x1, y1, x2, y2, x3, y3);
+        this.geom.setTo(x1, y1, x2, y2, x3, y3);
 
         return this.updateData();
     },
@@ -102,7 +102,7 @@ var Triangle = new Class({
     updateData: function ()
     {
         var path = [];
-        var rect = this.data;
+        var rect = this.geom;
         var line = this._tempLine;
 
         rect.getLineA(line);

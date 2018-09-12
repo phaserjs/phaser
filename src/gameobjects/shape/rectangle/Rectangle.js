@@ -69,7 +69,7 @@ var Rectangle = new Class({
     updateData: function ()
     {
         var path = [];
-        var rect = this.data;
+        var rect = this.geom;
         var line = this._tempLine;
 
         rect.getLineA(line);

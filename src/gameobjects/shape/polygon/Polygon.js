@@ -45,7 +45,7 @@ var Polygon = new Class({
 
         Shape.call(this, scene, 'Polygon', new GeomPolygon(points));
 
-        var bounds = GetAABB(this.data);
+        var bounds = GetAABB(this.geom);
 
         this.setPosition(x, y);
         this.setSize(bounds.width, bounds.height);
@@ -77,7 +77,7 @@ var Polygon = new Class({
 
         for (var i = 0; i < iterations; i++)
         {
-            Smooth(this.data);
+            Smooth(this.geom);
         }
 
         return this.updateData();
@@ -95,7 +95,7 @@ var Polygon = new Class({
     updateData: function ()
     {
         var path = [];
-        var points = this.data.points;
+        var points = this.geom.points;
 
         for (var i = 0; i < points.length; i++)
         {

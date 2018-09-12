@@ -49,8 +49,8 @@ var Line = new Class({
 
         Shape.call(this, scene, 'Line', new GeomLine(x1, y1, x2, y2));
 
-        var width = this.data.right - this.data.left;
-        var height = this.data.bottom - this.data.top;
+        var width = this.geom.right - this.geom.left;
+        var height = this.geom.bottom - this.geom.top;
 
         /**
          * Private internal value. Holds the start width of the line.
@@ -126,7 +126,7 @@ var Line = new Class({
      */
     setTo: function (x1, y1, x2, y2)
     {
-        this.data.setTo(x1, y1, x2, y2);
+        this.geom.setTo(x1, y1, x2, y2);
 
         return this;
     }

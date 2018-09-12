@@ -108,7 +108,7 @@ var Ellipse = new Class({
      */
     setSize: function (width, height)
     {
-        this.data.setSize(width, height);
+        this.geom.setSize(width, height);
 
         return this.updateData();
     },
@@ -144,7 +144,7 @@ var Ellipse = new Class({
     updateData: function ()
     {
         var path = [];
-        var points = this.data.getPoints(this._smoothness);
+        var points = this.geom.getPoints(this._smoothness);
 
         for (var i = 0; i < points.length; i++)
         {
