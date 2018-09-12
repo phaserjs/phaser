@@ -184,6 +184,20 @@ var Text = new Class({
         this.height = 1;
 
         /**
+         * The line spacing value.
+         * This value is added to the font height to calculate the overall line height.
+         * Only has an effect if this Text object contains multiple lines of text.
+         * 
+         * If you update this property directly, instead of using the `setLineSpacing` method, then
+         * be sure to call `updateText` after, or you won't see the change reflected in the Text object.
+         *
+         * @name Phaser.GameObjects.Text#lineSpacing
+         * @type {number}
+         * @since 3.13.0
+         */
+        this.lineSpacing = 0;
+
+        /**
          * Whether the text or its settings have changed and need updating.
          *
          * @name Phaser.GameObjects.Text#dirty
@@ -236,7 +250,7 @@ var Text = new Class({
 
         if (style && style.lineSpacing)
         {
-            this._lineSpacing = style.lineSpacing;
+            this.lineSpacing = style.lineSpacing;
         }
 
         this.setText(text);
@@ -903,6 +917,26 @@ var Text = new Class({
     setResolution: function (value)
     {
         return this.style.setResolution(value);
+    },
+
+    /**
+     * Sets the line spacing value.
+     *
+     * This value is _added_ to the height of the font when calculating the overall line height.
+     * This only has an effect if this Text object consists of multiple lines of text.
+     *
+     * @method Phaser.GameObjects.Text#setLineSpacing
+     * @since 3.13.0
+     *
+     * @param {number} value - The amount to add to the font height to achieve the overall line height.
+     *
+     * @return {Phaser.GameObjects.Text} This Text object.
+     */
+    setLineSpacing: function (value)
+    {
+        this.lineSpacing = value;
+
+        return this.updateText();
     },
 
     /**
