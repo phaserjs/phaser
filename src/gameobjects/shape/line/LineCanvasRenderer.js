@@ -37,8 +37,8 @@ var LineCanvasRenderer = function (renderer, src, interpolationPercentage, camer
 
             ctx.beginPath();
 
-            ctx.moveTo(src.data.x1 - dx, src.data.y1 - dy);
-            ctx.lineTo(src.data.x2 - dx, src.data.y2 - dy);
+            ctx.moveTo(src.geom.x1 - dx, src.geom.y1 - dy);
+            ctx.lineTo(src.geom.x2 - dx, src.geom.y2 - dy);
     
             ctx.stroke();
         }

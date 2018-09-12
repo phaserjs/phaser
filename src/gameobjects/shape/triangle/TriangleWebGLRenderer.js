@@ -67,12 +67,12 @@ var TriangleWebGLRenderer = function (renderer, src, interpolationPercentage, ca
         fillTint.BL = fillTintColor;
         fillTint.BR = fillTintColor;
 
-        var x1 = src.data.x1 - dx;
-        var y1 = src.data.y1 - dy;
-        var x2 = src.data.x2 - dx;
-        var y2 = src.data.y2 - dy;
-        var x3 = src.data.x3 - dx;
-        var y3 = src.data.y3 - dy;
+        var x1 = src.geom.x1 - dx;
+        var y1 = src.geom.y1 - dy;
+        var x2 = src.geom.x2 - dx;
+        var y2 = src.geom.y2 - dy;
+        var x3 = src.geom.x3 - dx;
+        var y3 = src.geom.y3 - dy;
 
         pipeline.batchFillTriangle(
             x1,

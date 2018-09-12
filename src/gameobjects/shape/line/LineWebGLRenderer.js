@@ -67,10 +67,10 @@ var LineWebGLRenderer = function (renderer, src, interpolationPercentage, camera
         var endWidth = src._endWidth;
 
         pipeline.batchLine(
-            src.data.x1 - dx,
-            src.data.y1 - dy,
-            src.data.x2 - dx,
-            src.data.y2 - dy,
+            src.geom.x1 - dx,
+            src.geom.y1 - dy,
+            src.geom.x2 - dx,
+            src.geom.y2 - dy,
             startWidth,
             endWidth,
             1,
