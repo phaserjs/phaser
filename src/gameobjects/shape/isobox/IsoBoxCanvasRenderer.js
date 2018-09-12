@@ -47,7 +47,7 @@ var IsoBoxCanvasRenderer = function (renderer, src, interpolationPercentage, cam
             ctx.lineTo(sizeA, -height);
             ctx.lineTo(sizeA, -1);
             ctx.lineTo(0, sizeB - 1);
-            ctx.lineTo(-sizeA, -1);				
+            ctx.lineTo(-sizeA, -1);
             ctx.lineTo(-sizeA, -height);
 
             ctx.fill();
