@@ -1844,7 +1844,7 @@ var WebGLRenderer = new Class({
      * @param {integer} texture - [description]
      * @param {integer} filter - [description]
      *
-     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     * @return {this} This WebGL Renderer instance.
      */
     setTextureFilter: function (texture, filter)
     {
@@ -1867,11 +1867,11 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat1
      * @since 3.0.0
      *
-     * @param {WebGLProgram} program - [description]
-     * @param {string} name - [description]
+     * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
+     * @param {string} name - The name of the uniform to look-up and modify.
      * @param {number} x - [description]
      *
-     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     * @return {this} This WebGL Renderer instance.
      */
     setFloat1: function (program, name, x)
     {
@@ -1888,12 +1888,12 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat2
      * @since 3.0.0
      *
-     * @param {WebGLProgram} program - [description]
-     * @param {string} name - [description]
+     * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
+     * @param {string} name - The name of the uniform to look-up and modify.
      * @param {number} x - [description]
      * @param {number} y - [description]
      *
-     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     * @return {this} This WebGL Renderer instance.
      */
     setFloat2: function (program, name, x, y)
     {
@@ -1910,13 +1910,13 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat3
      * @since 3.0.0
      *
-     * @param {WebGLProgram} program - [description]
-     * @param {string} name - [description]
+     * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
+     * @param {string} name - The name of the uniform to look-up and modify.
      * @param {number} x - [description]
      * @param {number} y - [description]
      * @param {number} z - [description]
      *
-     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     * @return {this} This WebGL Renderer instance.
      */
     setFloat3: function (program, name, x, y, z)
     {
@@ -1933,14 +1933,14 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat4
      * @since 3.0.0
      *
-     * @param {WebGLProgram} program - Target program
-     * @param {string} name - Name of the uniform
+     * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
+     * @param {string} name - The name of the uniform to look-up and modify.
      * @param {number} x - X component
      * @param {number} y - Y component
      * @param {number} z - Z component
      * @param {number} w - W component
      *
-     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     * @return {this} This WebGL Renderer instance.
      */
     setFloat4: function (program, name, x, y, z, w)
     {
@@ -1952,16 +1952,16 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Sets the value of a uniform variable in the given WebGLProgram.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat1v
-     * @since 3.0.0
+     * @since 3.13.0
      *
-     * @param {WebGLProgram} program - [description]
-     * @param {string} name - [description]
-     * @param {array} arr - [description]
+     * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
+     * @param {string} name - The name of the uniform to look-up and modify.
+     * @param {array} arr - The new value to be used for the uniform variable.
      *
-     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     * @return {this} This WebGL Renderer instance.
      */
     setFloat1v: function (program, name, arr)
     {
@@ -1973,16 +1973,16 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Sets the value of a uniform variable in the given WebGLProgram.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat2v
-     * @since 3.0.0
+     * @since 3.13.0
      *
-     * @param {WebGLProgram} program - [description]
-     * @param {string} name - [description]
-     * @param {array} arr - [description]
+     * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
+     * @param {string} name - The name of the uniform to look-up and modify.
+     * @param {array} arr - The new value to be used for the uniform variable.
      *
-     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     * @return {this} This WebGL Renderer instance.
      */
     setFloat2v: function (program, name, arr)
     {
@@ -1994,16 +1994,16 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Sets the value of a uniform variable in the given WebGLProgram.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat3v
-     * @since 3.0.0
+     * @since 3.13.0
      *
-     * @param {WebGLProgram} program - [description]
-     * @param {string} name - [description]
-     * @param {array} arr - [description]
+     * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
+     * @param {string} name - The name of the uniform to look-up and modify.
+     * @param {array} arr - The new value to be used for the uniform variable.
      *
-     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     * @return {this} This WebGL Renderer instance.
      */
     setFloat3v: function (program, name, arr)
     {
@@ -2015,16 +2015,16 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Sets uniform of a WebGLProgram
+     * Sets the value of a uniform variable in the given WebGLProgram.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat4v
-     * @since 3.0.0
+     * @since 3.13.0
      *
-     * @param {WebGLProgram} program - Target program
-     * @param {string} name - Name of the uniform
-     * @param {array} arr - [description]
+     * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
+     * @param {string} name - The name of the uniform to look-up and modify.
+     * @param {array} arr - The new value to be used for the uniform variable.
      *
-     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     * @return {this} This WebGL Renderer instance.
      */
 
     setFloat4v: function (program, name, arr)
@@ -2037,16 +2037,16 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Sets the value of a uniform variable in the given WebGLProgram.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setInt1
      * @since 3.0.0
      *
-     * @param {WebGLProgram} program - [description]
-     * @param {string} name - [description]
+     * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
+     * @param {string} name - The name of the uniform to look-up and modify.
      * @param {integer} x - [description]
      *
-     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     * @return {this} This WebGL Renderer instance.
      */
     setInt1: function (program, name, x)
     {
@@ -2058,17 +2058,17 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Sets the value of a uniform variable in the given WebGLProgram.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setInt2
      * @since 3.0.0
      *
-     * @param {WebGLProgram} program - [description]
-     * @param {string} name - [description]
+     * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
+     * @param {string} name - The name of the uniform to look-up and modify.
      * @param {integer} x - [description]
      * @param {integer} y - [description]
      *
-     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     * @return {this} This WebGL Renderer instance.
      */
     setInt2: function (program, name, x, y)
     {
@@ -2080,18 +2080,18 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Sets the value of a uniform variable in the given WebGLProgram.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setInt3
      * @since 3.0.0
      *
-     * @param {WebGLProgram} program - [description]
-     * @param {string} name - [description]
+     * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
+     * @param {string} name - The name of the uniform to look-up and modify.
      * @param {integer} x - [description]
      * @param {integer} y - [description]
      * @param {integer} z - [description]
      *
-     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     * @return {this} This WebGL Renderer instance.
      */
     setInt3: function (program, name, x, y, z)
     {
@@ -2103,19 +2103,19 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Sets uniform of a WebGLProgram
+     * Sets the value of a uniform variable in the given WebGLProgram.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setInt4
      * @since 3.0.0
      *
-     * @param {WebGLProgram} program - Target Program
-     * @param {string} name - Name of the uniform
+     * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
+     * @param {string} name - The name of the uniform to look-up and modify.
      * @param {integer} x - X component
      * @param {integer} y - Y component
      * @param {integer} z - Z component
      * @param {integer} w - W component
      *
-     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     * @return {this} This WebGL Renderer instance.
      */
     setInt4: function (program, name, x, y, z, w)
     {
@@ -2132,12 +2132,12 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setMatrix2
      * @since 3.0.0
      *
-     * @param {WebGLProgram} program - [description]
-     * @param {string} name - [description]
+     * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
+     * @param {string} name - The name of the uniform to look-up and modify.
      * @param {boolean} transpose - [description]
      * @param {Float32Array} matrix - [description]
      *
-     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     * @return {this} This WebGL Renderer instance.
      */
     setMatrix2: function (program, name, transpose, matrix)
     {
@@ -2154,12 +2154,12 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setMatrix3
      * @since 3.0.0
      *
-     * @param {WebGLProgram} program - [description]
-     * @param {string} name - [description]
+     * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
+     * @param {string} name - The name of the uniform to look-up and modify.
      * @param {boolean} transpose - [description]
      * @param {Float32Array} matrix - [description]
      *
-     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     * @return {this} This WebGL Renderer instance.
      */
     setMatrix3: function (program, name, transpose, matrix)
     {
@@ -2176,12 +2176,12 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setMatrix4
      * @since 3.0.0
      *
-     * @param {WebGLProgram} program - Target program
-     * @param {string} name - Name of the uniform
+     * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
+     * @param {string} name - The name of the uniform to look-up and modify.
      * @param {boolean} transpose - Is the matrix transposed
      * @param {Float32Array} matrix - Matrix data
      *
-     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     * @return {this} This WebGL Renderer instance.
      */
     setMatrix4: function (program, name, transpose, matrix)
     {
@@ -2213,7 +2213,7 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#getMaxTextureSize
      * @since 3.8.0
      *
-     * @return {integer} ...
+     * @return {integer} The maximum supported texture size.
      */
     getMaxTextureSize: function ()
     {
