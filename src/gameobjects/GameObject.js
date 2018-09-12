@@ -561,6 +561,8 @@ var GameObject = new Class({
         //  Tell the Scene to re-sort the children
         sys.queueDepthSort();
 
+        sys.events.off('shutdown', this.destroy, this);
+
         this.active = false;
         this.visible = false;
 
