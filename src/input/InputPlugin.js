@@ -201,6 +201,33 @@ var InputPlugin = new Class({
          */
         this._pollTimer = 0;
 
+        var _eventData = { cancelled: false };
+
+        /**
+         * Internal event propagation callback container.
+         *
+         * @name Phaser.Input.InputPlugin#_eventContainer
+         * @type {object}
+         * @private
+         * @since 3.13.0
+         */
+        this._eventContainer = {
+            stopPropagation: function ()
+            {
+                _eventData.cancelled = true;
+            }
+        };
+
+        /**
+         * Internal event propagation data object.
+         *
+         * @name Phaser.Input.InputPlugin#_eventData
+         * @type {object}
+         * @private
+         * @since 3.13.0
+         */
+        this._eventData = _eventData;
+
         /**
          * The distance, in pixels, a pointer has to move while being held down, before it thinks it is being dragged.
          *
@@ -727,12 +754,15 @@ var InputPlugin = new Class({
      */
     processDownEvents: function (pointer)
     {
+        var total = 0;
         var currentlyOver = this._temp;
 
-        //  Contains ALL Game Objects currently over in the array
-        this.emit('pointerdown', pointer, currentlyOver);
+        var _eventData = this._eventData;
+        var _eventContainer = this._eventContainer;
 
-        var total = 0;
+        _eventData.cancelled = false;
+
+        var aborted = false;
 
         //  Go through all objects the pointer was over and fire their events / callbacks
         for (var i = 0; i < currentlyOver.length; i++)
@@ -746,9 +776,27 @@ var InputPlugin = new Class({
 
             total++;
 
-            gameObject.emit('pointerdown', pointer, gameObject.input.localX, gameObject.input.localY, pointer.camera);
+            gameObject.emit('pointerdown', pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
 
-            this.emit('gameobjectdown', pointer, gameObject);
+            if (_eventData.cancelled)
+            {
+                aborted = true;
+                break;
+            }
+
+            this.emit('gameobjectdown', pointer, gameObject, _eventContainer);
+
+            if (_eventData.cancelled)
+            {
+                aborted = true;
+                break;
+            }
+        }
+
+        //  Contains ALL Game Objects currently over in the array
+        if (!aborted)
+        {
+            this.emit('pointerdown', pointer, currentlyOver);
         }
 
         return total;
@@ -1035,11 +1083,15 @@ var InputPlugin = new Class({
      */
     processMoveEvents: function (pointer)
     {
+        var total = 0;
         var currentlyOver = this._temp;
 
-        this.emit('pointermove', pointer, currentlyOver);
+        var _eventData = this._eventData;
+        var _eventContainer = this._eventContainer;
 
-        var total = 0;
+        _eventData.cancelled = false;
+
+        var aborted = false;
 
         //  Go through all objects the pointer was over and fire their events / callbacks
         for (var i = 0; i < currentlyOver.length; i++)
@@ -1053,14 +1105,31 @@ var InputPlugin = new Class({
 
             total++;
 
-            gameObject.emit('pointermove', pointer, gameObject.input.localX, gameObject.input.localY);
+            gameObject.emit('pointermove', pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
 
-            this.emit('gameobjectmove', pointer, gameObject);
+            if (_eventData.cancelled)
+            {
+                aborted = true;
+                break;
+            }
+
+            this.emit('gameobjectmove', pointer, gameObject, _eventContainer);
+
+            if (_eventData.cancelled)
+            {
+                aborted = true;
+                break;
+            }
 
             if (this.topOnly)
             {
                 break;
             }
+        }
+
+        if (!aborted)
+        {
+            this.emit('pointermove', pointer, currentlyOver);
         }
 
         return total;
@@ -1131,11 +1200,16 @@ var InputPlugin = new Class({
 
         var totalInteracted = 0;
 
+        var _eventData = this._eventData;
+        var _eventContainer = this._eventContainer;
+
+        _eventData.cancelled = false;
+
+        var aborted = false;
+
         if (total > 0)
         {
             this.sortGameObjects(justOut);
-
-            this.emit('pointerout', pointer, justOut);
 
             //  Call onOut for everything in the justOut array
             for (i = 0; i < total; i++)
@@ -1147,24 +1221,43 @@ var InputPlugin = new Class({
                     continue;
                 }
 
-                this.emit('gameobjectout', pointer, gameObject);
-
-                gameObject.emit('pointerout', pointer);
+                gameObject.emit('pointerout', pointer, _eventContainer);
 
                 manager.resetCursor(gameObject.input);
 
                 totalInteracted++;
+
+                if (_eventData.cancelled)
+                {
+                    aborted = true;
+                    break;
+                }
+
+                this.emit('gameobjectout', pointer, gameObject, _eventContainer);
+
+                if (_eventData.cancelled)
+                {
+                    aborted = true;
+                    break;
+                }
+            }
+
+            if (!aborted)
+            {
+                this.emit('pointerout', pointer, justOut);
             }
         }
 
         //  Process the Just Over objects
         total = justOver.length;
 
+        _eventData.cancelled = false;
+
+        aborted = false;
+
         if (total > 0)
         {
             this.sortGameObjects(justOver);
-
-            this.emit('pointerover', pointer, justOver);
 
             //  Call onOver for everything in the justOver array
             for (i = 0; i < total; i++)
@@ -1176,13 +1269,30 @@ var InputPlugin = new Class({
                     continue;
                 }
 
-                this.emit('gameobjectover', pointer, gameObject);
-
-                gameObject.emit('pointerover', pointer, gameObject.input.localX, gameObject.input.localY);
+                gameObject.emit('pointerover', pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
 
                 manager.setCursor(gameObject.input);
 
                 totalInteracted++;
+
+                if (_eventData.cancelled)
+                {
+                    aborted = true;
+                    break;
+                }
+
+                this.emit('gameobjectover', pointer, gameObject, _eventContainer);
+
+                if (_eventData.cancelled)
+                {
+                    aborted = true;
+                    break;
+                }
+            }
+
+            if (!aborted)
+            {
+                this.emit('pointerover', pointer, justOver);
             }
         }
 
@@ -1210,8 +1320,12 @@ var InputPlugin = new Class({
     {
         var currentlyOver = this._temp;
 
-        //  Contains ALL Game Objects currently up in the array
-        this.emit('pointerup', pointer, currentlyOver);
+        var _eventData = this._eventData;
+        var _eventContainer = this._eventContainer;
+
+        _eventData.cancelled = false;
+
+        var aborted = false;
 
         //  Go through all objects the pointer was over and fire their events / callbacks
         for (var i = 0; i < currentlyOver.length; i++)
@@ -1225,9 +1339,27 @@ var InputPlugin = new Class({
 
             //  pointerupoutside
 
-            gameObject.emit('pointerup', pointer, gameObject.input.localX, gameObject.input.localY);
+            gameObject.emit('pointerup', pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
 
-            this.emit('gameobjectup', pointer, gameObject);
+            if (_eventData.cancelled)
+            {
+                aborted = true;
+                break;
+            }
+
+            this.emit('gameobjectup', pointer, gameObject, _eventContainer);
+
+            if (_eventData.cancelled)
+            {
+                aborted = true;
+                break;
+            }
+        }
+
+        if (!aborted)
+        {
+            //  Contains ALL Game Objects currently up in the array
+            this.emit('pointerup', pointer, currentlyOver);
         }
 
         return currentlyOver.length;

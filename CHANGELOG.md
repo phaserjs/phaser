@@ -2,6 +2,32 @@
 
 ## Version 3.13.0 - Yuuki - in development
 
+## Pointer and Input Event Updates
+
+The specificity if the input events has been changed to allow you more control over event handling. Previously, the InputPlugin would emit the global `pointerdown` event first, and then the Game Object itself would emit the `pointerdown` event and finally the InputPlugin would emit the `gameobjectdown` event.
+
+The order has now changed. The Game Object will dispatch its `pointerdown` event first. The InputPlugin will then dispatch `gameobjectdown` and finally the less specific of them all, `pointerdown` will be dispatched.
+
+New in 3.13 is the ability to cancel this at any stage. All events are now sent an event object which you can call `event.stopPropagation()` on. This will immediately stop any further listeners from being invoked. If you call `stopPropagation()` after the first Game Object `pointerdown` event, then no more Game Object's will receive their callbacks and the InputPlugin will not dispatch either of its events.
+
+This change has been introduced for `pointerdown`, `pointerup`, `pointermove`, `pointerover` and `pointerout`. No other data is included in the `event` object in this release.
+
+* The Game Object `pointerdown` callback signature has changed. It used to send `pointer, x, y, camera` to the listener. It now sends `pointer, x, y, event` to the listener. If you still need the `camera` property you can get it from `pointer.camera`.
+* The Game Object `gameobjectdown` callback signature has a new argument. It now sends `event` as the 3rd argument.
+* The `pointerdown` event, as dispatched by the InputPlugin, is now sent _after_ the Game Object specific events (`GameObject.pointerdown` and `gameobjectdown`). This gives you the chance to cancel the event before the global listener receives it.
+* The Game Object `pointerup` callback signature has a new argument. It now sends the `event` as the 4th argument.
+* The Game Object `gameobjectup` callback signature has a new argument. It now sends `event` as the 3rd argument.
+* The `pointerup` event, as dispatched by the InputPlugin, is now sent _after_ the Game Object specific events (`GameObject.pointerup` and `gameobjectup`). This gives you the chance to cancel the event before the global listener receives it.
+* The Game Object `pointermove` callback signature has a new argument. It now sends the `event` as the 4th argument.
+* The Game Object `gameobjectmove` callback signature has a new argument. It now sends `event` as the 3rd argument.
+* The `pointermove` event, as dispatched by the InputPlugin, is now sent _after_ the Game Object specific events (`GameObject.pointermove` and `gameobjectmove`). This gives you the chance to cancel the event before the global listener receives it.
+* The Game Object `pointerover` callback signature has a new argument. It now sends the `event` as the 4th argument.
+* The Game Object `gameobjectover` callback signature has a new argument. It now sends `event` as the 3rd argument.
+* The `pointerover` event, as dispatched by the InputPlugin, is now sent _after_ the Game Object specific events (`GameObject.pointerover` and `gameobjectover`). This gives you the chance to cancel the event before the global listener receives it.
+* The Game Object `pointerout` callback signature has a new argument. It now sends the `event` as the 2nd argument.
+* The Game Object `gameobjectout` callback signature has a new argument. It now sends `event` as the 3rd argument.
+* The `pointerout` event, as dispatched by the InputPlugin, is now sent _after_ the Game Object specific events (`GameObject.pointerout` and `gameobjectout`). This gives you the chance to cancel the event before the global listener receives it.
+
 ## New Features
 
 * The `Color` object has a new property `h` which represents the hue of the color. You can tween or adjust this property in real-time and it will automatically update the internal RGB values with it.
