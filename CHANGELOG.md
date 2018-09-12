@@ -53,7 +53,7 @@ This change has been introduced for `pointerdown`, `pointerup`, `pointermove`, `
 * The WebGLPipeline and WebGLRenderer have new a method `setFloat2v` which allows you to set a `uniform2fv` uniform value (thanks @Mattykins)
 * The WebGLPipeline and WebGLRenderer have new a method `setFloat3v` which allows you to set a `uniform3fv` uniform value (thanks @Mattykins)
 * The WebGLPipeline and WebGLRenderer have new a method `setFloat4v` which allows you to set a `uniform4fv` uniform value (thanks @Mattykins)
-* `Text.setLineSpacing` is a new method that allows you to easily set the line spacing value of a Text object in a chainable call.
+* `Text.setLineSpacing` is a new method that allows you to easily set the line spacing value of a Text object in a chainable call (thanks @RafelSanso)
 
 ## Updates
 
