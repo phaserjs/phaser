@@ -275,6 +275,7 @@ var TweenManager = new Class({
 
         var list = this._destroy;
         var active = this._active;
+        var pending = this._pending;
         var i;
         var tween;
 
@@ -286,7 +287,18 @@ var TweenManager = new Class({
             //  Remove from the 'active' array
             var idx = active.indexOf(tween);
 
-            if (idx !== -1)
+            if (idx === -1)
+            {
+                //  Not in the active array, is it in pending instead?
+                idx = pending.indexOf(tween);
+
+                if (idx > -1)
+                {
+                    tween.state = TWEEN_CONST.REMOVED;
+                    pending.splice(idx, 1);
+                }
+            }
+            else
             {
                 tween.state = TWEEN_CONST.REMOVED;
                 active.splice(idx, 1);
