@@ -95,6 +95,25 @@ var Ellipse = new Class({
     },
 
     /**
+     * Sets the size of the ellipse by changing the underlying geometry data, rather than scaling the object.
+     * This call can be chained.
+     *
+     * @method Phaser.GameObjects.Ellipse#setSize
+     * @since 3.13.0
+     * 
+     * @param {number} width - The width of the ellipse.
+     * @param {number} height - The height of the ellipse.
+     *
+     * @return {this} This Game Object instance.
+     */
+    setSize: function (width, height)
+    {
+        this.data.setSize(width, height);
+
+        return this.updateData();
+    },
+
+    /**
      * Sets the smoothness of the ellipse. The number of points used when rendering it.
      * Increase this value for a smoother ellipse, at the cost of more polygons being rendered.
      * This call can be chained.
