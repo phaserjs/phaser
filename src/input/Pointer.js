@@ -5,9 +5,9 @@
  */
 
 var Class = require('../utils/Class');
+var Distance = require('../math/distance/DistanceBetween');
 var SmoothStepInterpolation = require('../math/interpolation/SmoothStepInterpolation');
 var Vector2 = require('../math/Vector2');
-
 
 /**
  * @classdesc
@@ -660,6 +660,20 @@ var Pointer = new Class({
     forwardButtonDown: function ()
     {
         return (this.buttons & 16);
+    },
+
+    /**
+     * Returns the distance between the Pointer's current position and where it was
+     * first pressed down (the `downX` and `downY` properties)
+     *
+     * @method Phaser.Input.Pointer#getDistance
+     * @since 3.13.0
+     *
+     * @return {number} The distance the Pointer has moved since being pressed down.
+     */
+    getDistance: function ()
+    {
+        return Distance(this.downX, this.downY, this.x, this.y);
     },
 
     /**
