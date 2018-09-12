@@ -40,7 +40,7 @@ var TextureTintPipeline = require('./pipelines/TextureTintPipeline');
  * any context change that happens for WebGL rendering inside of Phaser. This means
  * if raw webgl functions are called outside the WebGLRenderer of the Phaser WebGL
  * rendering ecosystem they might pollute the current WebGLRenderingContext state producing
- * unexpected behavior. It's recommended that WebGL interaction is done through 
+ * unexpected behavior. It's recommended that WebGL interaction is done through
  * WebGLRenderer and/or WebGLPipeline.
  *
  * @class WebGLRenderer
@@ -535,13 +535,13 @@ var WebGLRenderer = new Class({
         this.compression.ETC1 = gl.getExtension(extString + 'etc1') || gl.getExtension(wkExtString + 'etc1');
         this.compression.PVRTC = gl.getExtension(extString + 'pvrtc') || gl.getExtension(wkExtString + 'pvrtc');
         this.compression.S3TC = gl.getExtension(extString + 's3tc') || gl.getExtension(wkExtString + 's3tc');
-        
+
         this.supportedExtensions = exts;
 
         // Setup initial WebGL state
         gl.disable(gl.DEPTH_TEST);
         gl.disable(gl.CULL_FACE);
-        
+
         // gl.disable(gl.SCISSOR_TEST);
 
         gl.enable(gl.BLEND);
@@ -626,7 +626,7 @@ var WebGLRenderer = new Class({
         {
             pipelines[pipelineName].resize(width, height, resolution);
         }
-        
+
         this.drawingBufferHeight = gl.drawingBufferHeight;
 
         this.defaultCamera.setSize(width, height);
@@ -817,7 +817,7 @@ var WebGLRenderer = new Class({
         var scissorStack = this.scissorStack;
 
         var scissor = [ x, y, w, h ];
-        
+
         scissorStack.push(scissor);
 
         this.setScissor(x, y, w, h);
@@ -868,7 +868,7 @@ var WebGLRenderer = new Class({
         var scissorStack = this.scissorStack;
 
         var scissor = scissorStack.pop();
-       
+
         this.setScissor(scissor[0], scissor[1], scissor[2], scissor[3]);
 
         this.currentScissor = scissor;
@@ -1015,7 +1015,7 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setBlankTexture
      * @private
      * @since 3.12.0
-     * 
+     *
      * @param {boolean} [force=false] - Force a blank texture set, regardless of what's already bound?
      *
      * @return {Phaser.Renderer.WebGL.WebGLRenderer} This WebGL Renderer.
@@ -1031,7 +1031,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Binds a texture at a texture unit. If a texture is already 
+     * Binds a texture at a texture unit. If a texture is already
      * bound to that unit it will force a flush on the current pipeline.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setTexture2D
@@ -1300,7 +1300,7 @@ var WebGLRenderer = new Class({
      *
      * @param {integer} width - Width in pixels of the framebuffer
      * @param {integer} height - Height in pixels of the framebuffer
-     * @param {WebGLTexture} renderTexture - The color texture to where the color pixels are written 
+     * @param {WebGLTexture} renderTexture - The color texture to where the color pixels are written
      * @param {boolean} addDepthStencilBuffer - Indicates if the current framebuffer support depth and stencil buffers
      *
      * @return {WebGLFramebuffer} Raw WebGLFramebuffer
@@ -1547,9 +1547,9 @@ var WebGLRenderer = new Class({
             this.setFramebuffer(camera.framebuffer);
 
             var gl = this.gl;
-        
+
             gl.clearColor(0, 0, 0, 0);
-    
+
             gl.clear(gl.COLOR_BUFFER_BIT);
 
             TextureTintPipeline.projOrtho(cx, cw + cx, cy, ch + cy, -1000, 1000);
@@ -1611,7 +1611,7 @@ var WebGLRenderer = new Class({
             var getTint = Utils.getTintAppendFloatAlpha;
 
             var pipeline = (camera.pipeline) ? camera.pipeline : TextureTintPipeline;
-       
+
             pipeline.batchTexture(
                 camera,
                 camera.glTexture,
@@ -1947,6 +1947,91 @@ var WebGLRenderer = new Class({
         this.setProgram(program);
 
         this.gl.uniform4f(this.gl.getUniformLocation(program, name), x, y, z, w);
+
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat1v
+     * @since 3.0.0
+     *
+     * @param {WebGLProgram} program - [description]
+     * @param {string} name - [description]
+     * @param {array} arr - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     */
+    setFloat1v: function (program, name, arr)
+    {
+        this.setProgram(program);
+
+        this.gl.uniform1fv(this.gl.getUniformLocation(program, name), new Float32Array(arr));
+
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat2v
+     * @since 3.0.0
+     *
+     * @param {WebGLProgram} program - [description]
+     * @param {string} name - [description]
+     * @param {array} arr - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     */
+    setFloat2v: function (program, name, arr)
+    {
+        this.setProgram(program);
+
+        this.gl.uniform2fv(this.gl.getUniformLocation(program, name), new Float32Array(arr));
+
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat3v
+     * @since 3.0.0
+     *
+     * @param {WebGLProgram} program - [description]
+     * @param {string} name - [description]
+     * @param {array} arr - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     */
+    setFloat3v: function (program, name, arr)
+    {
+        this.setProgram(program);
+
+        this.gl.uniform3fv(this.gl.getUniformLocation(program, name), new Float32Array(arr));
+
+        return this;
+    },
+
+    /**
+     * Sets uniform of a WebGLProgram
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#setFloat4v
+     * @since 3.0.0
+     *
+     * @param {WebGLProgram} program - Target program
+     * @param {string} name - Name of the uniform
+     * @param {array} arr - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     */
+
+    setFloat4v: function (program, name, arr)
+    {
+        this.setProgram(program);
+
+        this.gl.uniform4fv(this.gl.getUniformLocation(program, name), new Float32Array(arr));
 
         return this;
     },

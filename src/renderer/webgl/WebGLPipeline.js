@@ -10,12 +10,12 @@ var Utils = require('./Utils');
 
 /**
  * @classdesc
- * WebGLPipeline is a class that describes the way elements will be rendererd 
- * in WebGL, specially focused on batching vertices (batching is not provided). 
- * Pipelines are mostly used for describing 2D rendering passes but it's 
- * flexible enough to be used for any type of rendering including 3D. 
+ * WebGLPipeline is a class that describes the way elements will be rendererd
+ * in WebGL, specially focused on batching vertices (batching is not provided).
+ * Pipelines are mostly used for describing 2D rendering passes but it's
+ * flexible enough to be used for any type of rendering including 3D.
  * Internally WebGLPipeline will handle things like compiling shaders,
- * creating vertex buffers, assigning primitive topology and binding 
+ * creating vertex buffers, assigning primitive topology and binding
  * vertex attributes.
  *
  * The config properties are:
@@ -30,7 +30,7 @@ var Utils = require('./Utils');
  * - vertexSize: The size of a single vertex in bytes.
  * - vertices: An optional buffer of vertices
  * - attributes: An array describing the vertex attributes
- *  
+ *
  * The vertex attributes properties are:
  * - name : String - Name of the attribute in the vertex shader
  * - size : integer - How many components describe the attribute. For ex: vec3 = size of 3, float = size of 1
@@ -240,7 +240,7 @@ var WebGLPipeline = new Class({
 
     /**
      * Called when the Game has fully booted and the Renderer has finished setting up.
-     * 
+     *
      * By this stage all Game level systems are now in place and you can perform any final
      * tasks that the pipeline may need that relied on game systems such as the Texture Manager.
      *
@@ -539,6 +539,78 @@ var WebGLPipeline = new Class({
     setFloat4: function (name, x, y, z, w)
     {
         this.renderer.setFloat4(this.program, name, x, y, z, w);
+
+        return this;
+    },
+
+    /**
+     * Set a uniform value of the current pipeline program.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat1v
+     * @since 3.2.0
+     *
+     * @param {string} name - [description]
+     * @param {array} arr - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
+     */
+    setFloat1v: function (name, arr)
+    {
+        this.renderer.setFloat1v(this.program, name, arr);
+
+        return this;
+    },
+
+    /**
+     * Set a uniform value of the current pipeline program.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat2v
+     * @since 3.2.0
+     *
+     * @param {string} name - [description]
+     * @param {array} arr - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
+     */
+    setFloat2v: function (name, arr)
+    {
+        this.renderer.setFloat2v(this.program, name, arr);
+
+        return this;
+    },
+
+    /**
+     * Set a uniform value of the current pipeline program.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat3v
+     * @since 3.2.0
+     *
+     * @param {string} name - [description]
+     * @param {array} arr - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
+     */
+    setFloat3v: function (name, arr)
+    {
+        this.renderer.setFloat3v(this.program, name, arr);
+
+        return this;
+    },
+
+    /**
+     * Set a uniform value of the current pipeline program.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat4v
+     * @since 3.2.0
+     *
+     * @param {string} name - Name of the uniform
+     * @param {array} arr - [description]
+     *
+     * @return {Phaser.Renderer.WebGL.WebGLPipeline} [description]
+     */
+    setFloat4v: function (name, arr)
+    {
+        this.renderer.setFloat4v(this.program, name, arr);
 
         return this;
     },
