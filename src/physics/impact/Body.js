@@ -368,7 +368,7 @@ var Body = new Class({
      * @method Phaser.Physics.Impact.Body#update
      * @since 3.0.0
      *
-     * @param {number} delta - [description]
+     * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
     update: function (delta)
     {

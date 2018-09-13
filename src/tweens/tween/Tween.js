@@ -916,7 +916,7 @@ var Tween = new Class({
      * @since 3.0.0
      *
      * @param {number} timestamp - [description]
-     * @param {number} delta - [description]
+     * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      *
      * @return {boolean} Returns `true` if this Tween has finished and should be removed from the Tween Manager, otherwise returns `false`.
      */
