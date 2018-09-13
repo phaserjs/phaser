@@ -199,7 +199,14 @@ var DisplayList = new Class({
      */
     shutdown: function ()
     {
-        this.removeAll();
+        var i = this.list.length;
+
+        while (i--)
+        {
+            this.list[i].destroy(true);
+        }
+
+        this.list.length = 0;
 
         this.systems.events.off('shutdown', this.shutdown, this);
     },
