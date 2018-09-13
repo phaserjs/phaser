@@ -339,6 +339,9 @@ var MouseManager = new Class({
     destroy: function ()
     {
         this.stopListeners();
+		
+		this.enabled = false;
+		this.capture = false;
 
         this.target = null;
         this.manager = null;
