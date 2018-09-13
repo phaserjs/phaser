@@ -1959,7 +1959,7 @@ var WebGLRenderer = new Class({
      *
      * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {array} arr - The new value to be used for the uniform variable.
+     * @param {Float32Array} arr - The new value to be used for the uniform variable.
      *
      * @return {this} This WebGL Renderer instance.
      */
@@ -1967,7 +1967,7 @@ var WebGLRenderer = new Class({
     {
         this.setProgram(program);
 
-        this.gl.uniform1fv(this.gl.getUniformLocation(program, name), new Float32Array(arr));
+        this.gl.uniform1fv(this.gl.getUniformLocation(program, name), arr);
 
         return this;
     },
@@ -1980,7 +1980,7 @@ var WebGLRenderer = new Class({
      *
      * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {array} arr - The new value to be used for the uniform variable.
+     * @param {Float32Array} arr - The new value to be used for the uniform variable.
      *
      * @return {this} This WebGL Renderer instance.
      */
@@ -1988,7 +1988,7 @@ var WebGLRenderer = new Class({
     {
         this.setProgram(program);
 
-        this.gl.uniform2fv(this.gl.getUniformLocation(program, name), new Float32Array(arr));
+        this.gl.uniform2fv(this.gl.getUniformLocation(program, name), arr);
 
         return this;
     },
@@ -2001,7 +2001,7 @@ var WebGLRenderer = new Class({
      *
      * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {array} arr - The new value to be used for the uniform variable.
+     * @param {Float32Array} arr - The new value to be used for the uniform variable.
      *
      * @return {this} This WebGL Renderer instance.
      */
@@ -2009,7 +2009,7 @@ var WebGLRenderer = new Class({
     {
         this.setProgram(program);
 
-        this.gl.uniform3fv(this.gl.getUniformLocation(program, name), new Float32Array(arr));
+        this.gl.uniform3fv(this.gl.getUniformLocation(program, name), arr);
 
         return this;
     },
@@ -2022,7 +2022,7 @@ var WebGLRenderer = new Class({
      *
      * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {array} arr - The new value to be used for the uniform variable.
+     * @param {Float32Array} arr - The new value to be used for the uniform variable.
      *
      * @return {this} This WebGL Renderer instance.
      */
@@ -2031,7 +2031,7 @@ var WebGLRenderer = new Class({
     {
         this.setProgram(program);
 
-        this.gl.uniform4fv(this.gl.getUniformLocation(program, name), new Float32Array(arr));
+        this.gl.uniform4fv(this.gl.getUniformLocation(program, name), arr);
 
         return this;
     },

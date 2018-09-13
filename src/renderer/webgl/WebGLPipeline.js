@@ -551,7 +551,7 @@ var WebGLPipeline = new Class({
      * @since 3.13.0
      *
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {array} arr - The new value to be used for the uniform variable.
+     * @param {Float32Array} arr - The new value to be used for the uniform variable.
      *
      * @return {this} This WebGLPipeline instance.
      */
@@ -569,7 +569,7 @@ var WebGLPipeline = new Class({
      * @since 3.13.0
      *
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {array} arr - The new value to be used for the uniform variable.
+     * @param {Float32Array} arr - The new value to be used for the uniform variable.
      *
      * @return {this} This WebGLPipeline instance.
      */
@@ -587,7 +587,7 @@ var WebGLPipeline = new Class({
      * @since 3.13.0
      *
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {array} arr - The new value to be used for the uniform variable.
+     * @param {Float32Array} arr - The new value to be used for the uniform variable.
      *
      * @return {this} This WebGLPipeline instance.
      */
@@ -605,7 +605,7 @@ var WebGLPipeline = new Class({
      * @since 3.13.0
      *
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {array} arr - The new value to be used for the uniform variable.
+     * @param {Float32Array} arr - The new value to be used for the uniform variable.
      *
      * @return {this} This WebGLPipeline instance.
      */
