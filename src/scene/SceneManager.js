@@ -1102,6 +1102,13 @@ var SceneManager = new Class({
 
         if (scene)
         {
+            //  If the Scene is already running (perhaps they called start from a launched sub-Scene?)
+            //  then we close it down before starting it again.
+            if (scene.sys.isActive())
+            {
+                scene.sys.shutdown();
+            }
+
             scene.sys.start(data);
 
             var loader;
