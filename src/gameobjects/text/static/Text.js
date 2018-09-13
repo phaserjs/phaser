@@ -232,15 +232,6 @@ var Text = new Class({
         //  Set the resolution
         this.frame.source.resolution = this.style.resolution;
 
-        if (this.renderer && this.renderer.gl)
-        {
-            //  Clear the default 1x1 glTexture, as we override it later
-
-            this.renderer.deleteTexture(this.frame.source.glTexture);
-
-            this.frame.source.glTexture = null;
-        }
-
         this.initRTL();
 
         if (style && style.padding)
@@ -1157,6 +1148,7 @@ var Text = new Class({
         if (this.renderer.gl)
         {
             this.frame.source.glTexture = this.renderer.canvasToTexture(canvas, this.frame.source.glTexture);
+
             this.frame.glTexture = this.frame.source.glTexture;
         }
 
