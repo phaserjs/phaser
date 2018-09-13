@@ -1256,10 +1256,10 @@ var WebGLRenderer = new Class({
      */
     createTexture2D: function (mipLevel, minFilter, magFilter, wrapT, wrapS, format, pixels, width, height, pma)
     {
+        pma = (pma === undefined || pma === null) ? true : pma;
+
         var gl = this.gl;
         var texture = gl.createTexture();
-
-        pma = (pma === undefined || pma === null) ? true : pma;
 
         this.setTexture2D(texture, 0);
 
@@ -1795,44 +1795,33 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Creates a WebGL Texture based on the given canvas element.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#canvasToTexture
      * @since 3.0.0
      *
-     * @param {HTMLCanvasElement} srcCanvas - [description]
-     * @param {WebGLTexture} [dstTexture] - [description]
+     * @param {HTMLCanvasElement} srcCanvas - The Canvas element that will be used to populate the texture.
+     * @param {WebGLTexture} [dstTexture] - Is this going to replace an existing texture? If so, pass it here.
      *
-     * @return {WebGLTexture} [description]
+     * @return {WebGLTexture} The newly created WebGL Texture.
      */
     canvasToTexture: function (srcCanvas, dstTexture)
     {
         var gl = this.gl;
 
-        if (!dstTexture)
+        if (dstTexture)
         {
-            var wrapping = gl.CLAMP_TO_EDGE;
-
-            if (IsSizePowerOfTwo(srcCanvas.width, srcCanvas.height))
-            {
-                wrapping = gl.REPEAT;
-            }
-
-            dstTexture = this.createTexture2D(0, gl.NEAREST, gl.NEAREST, wrapping, wrapping, gl.RGBA, srcCanvas, srcCanvas.width, srcCanvas.height, true);
-        }
-        else
-        {
-            this.setTexture2D(dstTexture, 0);
-
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, srcCanvas);
-
-            dstTexture.width = srcCanvas.width;
-            dstTexture.height = srcCanvas.height;
-
-            this.setTexture2D(null, 0);
+            this.deleteTexture(dstTexture);
         }
 
-        return dstTexture;
+        var wrapping = gl.CLAMP_TO_EDGE;
+
+        if (IsSizePowerOfTwo(srcCanvas.width, srcCanvas.height))
+        {
+            wrapping = gl.REPEAT;
+        }
+
+        return this.createTexture2D(0, gl.NEAREST, gl.NEAREST, wrapping, wrapping, gl.RGBA, srcCanvas, srcCanvas.width, srcCanvas.height, true);
     },
 
     /**
