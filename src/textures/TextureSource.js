@@ -234,7 +234,7 @@ var TextureSource = new Class({
     {
         if (this.renderer.gl && this.isCanvas)
         {
-            this.renderer.canvasToTexture(this.image, this.glTexture);
+            this.glTexture = this.renderer.canvasToTexture(this.image, this.glTexture);
         }
     },
 
