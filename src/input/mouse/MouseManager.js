@@ -340,6 +340,9 @@ var MouseManager = new Class({
     {
         this.stopListeners();
 
+		this.enabled = false;
+		this.capture = false;
+		
         this.target = null;
         this.manager = null;
     }
