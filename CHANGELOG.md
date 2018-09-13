@@ -28,6 +28,15 @@ This change has been introduced for `pointerdown`, `pointerup`, `pointermove`, `
 * The Game Object `gameobjectout` callback signature has a new argument. It now sends `event` as the 3rd argument.
 * The `pointerout` event, as dispatched by the InputPlugin, is now sent _after_ the Game Object specific events (`GameObject.pointerout` and `gameobjectout`). This gives you the chance to cancel the event before the global listener receives it.
 
+## Game Object List Updates
+
+When Sprite's are created they are added to two lists within the Scene - the Display List and the Update List. Under 3.12 when a Scene was shut down it would emit a `shutdown` event, which Sprites listened out for. When they received it, they would destroy themselves.
+
+After [profiling and testing](https://github.com/photonstorm/phaser/issues/4028) this process has changed slightly. Game Object's no longer listen for the Scene `shutdown` event. Instead, the Display List and Update List will iterate their children and call `destroy` on them in turn. If being destroyed by a Scene in this way, the child will skip several expensive operations in its destroy function. More importantly, in busy Scenes you no longer need thousands of event listeners registered. The result is that changing Scene is now up to 100% faster than before. You need not change your code to benefit from this, however, if you were relying on custom Game Objects listening for the Scene `shutdown` event natively, then this is no longer the case and you'll have to manually add that listener to your classes.
+
+* The UpdateList will now clear out its internal `_list`, `_pendingRemoval` and `_pendingInsertion` lists on shutdown. Before, it would only clear `_list`.
+* `GameObject.destroy` has a new optional boolean argument `fromScene`, which controls how the destroy process flows.
+
 ## New Features
 
 * The `Color` object has a new property `h` which represents the hue of the color. You can tween or adjust this property in real-time and it will automatically update the internal RGB values with it.
