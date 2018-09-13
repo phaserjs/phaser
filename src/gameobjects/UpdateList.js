@@ -254,7 +254,26 @@ var UpdateList = new Class({
      */
     shutdown: function ()
     {
-        this.removeAll();
+        var i = this._list.length;
+
+        while (i--)
+        {
+            this._list[i].destroy(true);
+        }
+
+        i = this._pendingRemoval.length;
+
+        while (i--)
+        {
+            this.this._pendingRemoval[i].destroy(true);
+        }
+
+        i = this._pendingInsertion.length;
+
+        while (i--)
+        {
+            this.this._pendingInsertion[i].destroy(true);
+        }
 
         this._list.length = 0;
         this._pendingRemoval.length = 0;
