@@ -1568,7 +1568,7 @@ var WebGLRenderer = new Class({
             this.pushScissor(cx, cy, cw, ch);
 
             TextureTintPipeline.drawFillRect(
-                0, 0, cw + cx, ch + cy,
+                cx, cy, cw , ch,
                 Utils.getTintFromFloats(color.redGL, color.greenGL, color.blueGL, 1),
                 color.alphaGL
             );
