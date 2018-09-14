@@ -37,6 +37,26 @@ After [profiling and testing](https://github.com/photonstorm/phaser/issues/4028)
 * The UpdateList will now clear out its internal `_list`, `_pendingRemoval` and `_pendingInsertion` lists on shutdown. Before, it would only clear `_list`.
 * `GameObject.destroy` has a new optional boolean argument `fromScene`, which controls how the destroy process flows.
 
+## Camera Render to Texture
+
+In 3.12 a new Camera method called `setRenderToTexture` was introduced. However, it had known issues so was placed under the experimental flag and you were advised not to use it unless in testing.
+
+Thanks to several fixes in this release the experimental flag has been dropped and it's now safe to try using this new feature in production.
+
+The method sets the Camera to render to a texture instead of to the main canvas. The Camera will redirect all Game Objects it's asked to render to this texture. During the render sequence, the texture itself will then be rendered to the main canvas.
+
+Doing this gives you the ability to modify the texture before this happens, allowing for special effects such as Camera specific shaders, or post-processing on the texture.
+
+* `Camera.setRenderToTexture` is a new method that enables the Camera to render to a target texture instead of the main canvas, allowing for application of special effects at run-time.
+* `Camera.clearRenderToTexture` is a new method that stops a Camera from rendering to a texture and frees-up all associated resources.
+* `Camera.setPipeline` allows you to change the WebGL pipeline being used if the Camera is rendering to a texture, effectively swapping the active shader. Call with no arguments to clear the pipeline.
+* `Camera.renderToTexture` is a boolean property that controls where the Camera renders. It can be toggled on the fly.
+* `Camera.canvas` is a Canvas Element that the Camera will render to if running under the Canvas Renderer and rendering to a texture.
+* `Camera.context` is a Rendering Context that the Camera will render to if running under the Canvas Renderer and rendering to a texture.
+* `Camera.glTexture` is a WebGL Texture that the Camera will render to if running under the WebGL Renderer and rendering to a texture.
+* `Camera.framebuffer` is a WebGL Frame Buffer that the Camera will render to if running under the WebGL Renderer and rendering to a texture.
+* `Camera.pipeline` is the Pipeline that the Camera will render with if running under the WebGL Renderer and rendering to a texture with a pipeline set.
+
 ## New Features
 
 * The `Color` object has a new property `h` which represents the hue of the color. You can tween or adjust this property in real-time and it will automatically update the internal RGB values with it.
@@ -85,6 +105,7 @@ After [profiling and testing](https://github.com/photonstorm/phaser/issues/4028)
 * The Camera background for mini-Cameras (those positioned deep inside another Camera) would be offset incorrectly in WebGL, causing the background fills to be displaced (thanks @aaronfc)
 * The WebGL Renderer now always enables the `SCISSOR_TEST`, this allows Game Objects that use the scissor (such as custom objects, or Bitmap Text) to render properly again.
 * The Cameras `setScene` method, which is called automatically when a new Camera is created, will now call `updateSystem` which correctly increases the custom viewport counter. This fixes an issue with mini-cams inside of larger cameras not clipping their contents properly. If a Camera is moved to another Scene it also now correctly shrinks the total custom viewport counter.
+* Due to the two fixes above another bug was fixed: The ability for you to swap between Cameras with and without `setRenderToTexture` enabled with custom shaders. Previously if you used this with a custom shader then only the first Camera using the shader would render, the rest would appear black. Now, all Cameras using the custom shader work correctly. As a result all of the 'experimental' Camera rendering properties from 3.12 have been moved to stable.
 
 ### Examples, Documentation and TypeScript
 
