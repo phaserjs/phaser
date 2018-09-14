@@ -483,6 +483,19 @@ var Systems = new Class({
     },
 
     /**
+     * Is this Scene paused?
+     *
+     * @method Phaser.Scenes.Systems#isPaused
+     * @since 3.13.0
+     *
+     * @return {boolean} `true` if this Scene is paused, otherwise `false`.
+     */
+    isPaused: function ()
+    {
+        return (this.settings.status === CONST.PAUSED);
+    },
+
+    /**
      * Is this Scene currently transitioning out to, or in from another Scene?
      *
      * @method Phaser.Scenes.Systems#isTransitioning
