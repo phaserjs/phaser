@@ -944,13 +944,14 @@ var Camera = new Class({
      */
     destroy: function ()
     {
-        BaseCamera.prototype.destroy.call(this);
-
         this.clearRenderToTexture();
-    
+
         this.resetFX();
 
+        BaseCamera.prototype.destroy.call(this);
+
         this._follow = null;
+
         this.deadzone = null;
     }
 
