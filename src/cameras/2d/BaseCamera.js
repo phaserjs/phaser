@@ -1199,6 +1199,11 @@ var BaseCamera = new Class({
      */
     setScene: function (scene)
     {
+        if (this.scene && this._customViewport)
+        {
+            this.sceneManager.customViewports--;
+        }
+
         this.scene = scene;
 
         this.config = scene.sys.game.config;
@@ -1212,6 +1217,8 @@ var BaseCamera = new Class({
         this._cy = this._y * res;
         this._cw = this._width * res;
         this._ch = this._height * res;
+
+        this.updateSystem();
 
         return this;
     },
