@@ -35,7 +35,7 @@ var Systems = new Class({
     function Systems (scene, config)
     {
         /**
-         * [description]
+         * A reference to the Scene that these Systems belong to.
          *
          * @name Phaser.Scenes.Systems#scene
          * @type {Phaser.Scene}
@@ -44,7 +44,7 @@ var Systems = new Class({
         this.scene = scene;
 
         /**
-         * [description]
+         * A reference to the Phaser Game instance.
          *
          * @name Phaser.Scenes.Systems#game
          * @type {Phaser.Game}
@@ -55,7 +55,7 @@ var Systems = new Class({
         if (typeof PLUGIN_FBINSTANT)
         {
             /**
-             * [description]
+             * The FaceBook Instant Games Plugin.
              *
              * @name Phaser.Scenes.Systems#facebook
              * @type {any}
@@ -65,7 +65,7 @@ var Systems = new Class({
         }
 
         /**
-         * [description]
+         * The Scene Configuration object, as passed in when creating the Scene.
          *
          * @name Phaser.Scenes.Systems#config
          * @type {(string|Phaser.Scenes.Settings.Config)}
@@ -74,7 +74,7 @@ var Systems = new Class({
         this.config = config;
 
         /**
-         * [description]
+         * The Scene Settings. This is the parsed output based on the Scene configuration.
          *
          * @name Phaser.Scenes.Systems#settings
          * @type {Phaser.Scenes.Settings.Object}
@@ -92,7 +92,7 @@ var Systems = new Class({
         this.canvas;
 
         /**
-         * [description]
+         * A reference to the Canvas Rendering Context being used by the renderer.
          *
          * @name Phaser.Scenes.Systems#context
          * @type {CanvasRenderingContext2D}
@@ -103,7 +103,9 @@ var Systems = new Class({
         //  Global Systems - these are single-instance global managers that belong to Game
 
         /**
-         * [description]
+         * A reference to the global Animations Manager.
+         * 
+         * In the default set-up you can access this from within a Scene via the `this.anims` property.
          *
          * @name Phaser.Scenes.Systems#anims
          * @type {Phaser.Animations.AnimationManager}
@@ -112,7 +114,10 @@ var Systems = new Class({
         this.anims;
 
         /**
-         * [description]
+         * A reference to the global Cache. The Cache stores all files bought in to Phaser via
+         * the Loader, with the exception of images. Images are stored in the Texture Manager.
+         * 
+         * In the default set-up you can access this from within a Scene via the `this.cache` property.
          *
          * @name Phaser.Scenes.Systems#cache
          * @type {Phaser.Cache.CacheManager}
@@ -121,7 +126,9 @@ var Systems = new Class({
         this.cache;
 
         /**
-         * [description]
+         * A reference to the global Plugins Manager.
+         * 
+         * In the default set-up you can access this from within a Scene via the `this.plugins` property.
          *
          * @name Phaser.Scenes.Systems#plugins
          * @type {Phaser.Plugins.PluginManager}
@@ -130,7 +137,10 @@ var Systems = new Class({
         this.plugins;
 
         /**
-         * [description]
+         * A reference to the global registry. This is a game-wide instance of the Data Manager, allowing
+         * you to exchange data between Scenes via a universal and shared point.
+         * 
+         * In the default set-up you can access this from within a Scene via the `this.registry` property.
          *
          * @name Phaser.Scenes.Systems#registry
          * @type {Phaser.Data.DataManager}
@@ -139,7 +149,9 @@ var Systems = new Class({
         this.registry;
 
         /**
-         * [description]
+         * A reference to the global Sound Manager.
+         * 
+         * In the default set-up you can access this from within a Scene via the `this.sound` property.
          *
          * @name Phaser.Scenes.Systems#sound
          * @type {Phaser.Sound.BaseSoundManager}
@@ -148,7 +160,9 @@ var Systems = new Class({
         this.sound;
 
         /**
-         * [description]
+         * A reference to the global Texture Manager.
+         * 
+         * In the default set-up you can access this from within a Scene via the `this.textures` property.
          *
          * @name Phaser.Scenes.Systems#textures
          * @type {Phaser.Textures.TextureManager}
@@ -159,7 +173,11 @@ var Systems = new Class({
         //  Core Plugins - these are non-optional Scene plugins, needed by lots of the other systems
 
         /**
-         * [description]
+         * A reference to the Scene's Game Object Factory.
+         * 
+         * Use this to quickly and easily create new Game Object's.
+         * 
+         * In the default set-up you can access this from within a Scene via the `this.add` property.
          *
          * @name Phaser.Scenes.Systems#add
          * @type {Phaser.GameObjects.GameObjectFactory}
@@ -168,7 +186,11 @@ var Systems = new Class({
         this.add;
 
         /**
-         * [description]
+         * A reference to the Scene's Camera Manager.
+         * 
+         * Use this to manipulate and create Cameras for this specific Scene.
+         * 
+         * In the default set-up you can access this from within a Scene via the `this.cameras` property.
          *
          * @name Phaser.Scenes.Systems#cameras
          * @type {Phaser.Cameras.Scene2D.CameraManager}
@@ -177,7 +199,11 @@ var Systems = new Class({
         this.cameras;
 
         /**
-         * [description]
+         * A reference to the Scene's Display List.
+         * 
+         * Use this to organize the children contained in the display list.
+         * 
+         * In the default set-up you can access this from within a Scene via the `this.children` property.
          *
          * @name Phaser.Scenes.Systems#displayList
          * @type {Phaser.GameObjects.DisplayList}
@@ -186,7 +212,11 @@ var Systems = new Class({
         this.displayList;
 
         /**
-         * [description]
+         * A reference to the Scene's Event Manager.
+         * 
+         * Use this to listen for Scene specific events, such as `pause` and `shutdown`.
+         * 
+         * In the default set-up you can access this from within a Scene via the `this.events` property.
          *
          * @name Phaser.Scenes.Systems#events
          * @type {Phaser.Events.EventEmitter}
@@ -195,7 +225,13 @@ var Systems = new Class({
         this.events;
 
         /**
-         * [description]
+         * A reference to the Scene's Game Object Creator.
+         * 
+         * Use this to quickly and easily create new Game Object's. The difference between this and the
+         * Game Object Factory, is that the Creator just creates and returns Game Object instances, it
+         * doesn't then add them to the Display List or Update List.
+         * 
+         * In the default set-up you can access this from within a Scene via the `this.make` property.
          *
          * @name Phaser.Scenes.Systems#make
          * @type {Phaser.GameObjects.GameObjectCreator}
@@ -204,7 +240,12 @@ var Systems = new Class({
         this.make;
 
         /**
-         * [description]
+         * A reference to the Scene Manager Plugin.
+         * 
+         * Use this to manipulate both this and other Scene's in your game, for example to launch a parallel Scene,
+         * or pause or resume a Scene, or switch from this Scene to another.
+         * 
+         * In the default set-up you can access this from within a Scene via the `this.scene` property.
          *
          * @name Phaser.Scenes.Systems#scenePlugin
          * @type {Phaser.Scenes.ScenePlugin}
@@ -213,7 +254,14 @@ var Systems = new Class({
         this.scenePlugin;
 
         /**
-         * [description]
+         * A reference to the Scene's Update List.
+         * 
+         * Use this to organize the children contained in the update list.
+         * 
+         * The Update List is responsible for managing children that need their `preUpdate` methods called,
+         * in order to process so internal components, such as Sprites with Animations.
+         * 
+         * In the default set-up there is no reference to this from within the Scene itself.
          *
          * @name Phaser.Scenes.Systems#updateList
          * @type {Phaser.GameObjects.UpdateList}
@@ -310,13 +358,13 @@ var Systems = new Class({
     },
 
     /**
-     * Called automatically by the Scene Manager. Instructs the Scene to render itself via
-     * its Camera Manager to the renderer given.
+     * Called automatically by the Scene Manager.
+     * Instructs the Scene to render itself via its Camera Manager to the renderer given.
      *
      * @method Phaser.Scenes.Systems#render
      * @since 3.0.0
      *
-     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - [description]
+     * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The renderer that invoked the render call.
      */
     render: function (renderer)
     {
@@ -462,7 +510,7 @@ var Systems = new Class({
      * @method Phaser.Scenes.Systems#isSleeping
      * @since 3.0.0
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if this Scene is asleep, otherwise `false`.
      */
     isSleeping: function ()
     {
@@ -475,7 +523,7 @@ var Systems = new Class({
      * @method Phaser.Scenes.Systems#isActive
      * @since 3.0.0
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if this Scene is active, otherwise `false`.
      */
     isActive: function ()
     {
@@ -540,7 +588,7 @@ var Systems = new Class({
      * @method Phaser.Scenes.Systems#isVisible
      * @since 3.0.0
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if this Scene is visible, otherwise `false`.
      */
     isVisible: function ()
     {
@@ -554,7 +602,7 @@ var Systems = new Class({
      * @method Phaser.Scenes.Systems#setVisible
      * @since 3.0.0
      *
-     * @param {boolean} value - [description]
+     * @param {boolean} value - `true` to render this Scene, otherwise `false`.
      *
      * @return {Phaser.Scenes.Systems} This Systems object.
      */
