@@ -595,6 +595,8 @@ var InputPlugin = new Class({
         input.hitAreaCallback = undefined;
         input.callbackContext = undefined;
 
+        this.manager.resetCursor(input);
+
         gameObject.input = null;
 
         //  Clear from _draggable, _drag and _over
