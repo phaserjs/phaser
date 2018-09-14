@@ -291,7 +291,16 @@ var Camera = new Class({
      * on the texture.
      * 
      * If running under Canvas the Camera will render to its `canvas` property.
+     * 
      * If running under WebGL the Camera will create a frame buffer, which is stored in its `framebuffer` and `glTexture` properties.
+     * 
+     * If you set a camera to render to a texture then it will emit 2 events during the render loop:
+     * 
+     * First, it will emit the event `prerender`. This happens right before any Game Object's are drawn to the Camera texture.
+     * 
+     * Then, it will emit the event `postrender`. This happens after all Game Object's have been drawn, but right before the
+     * Camera texture is rendered to the main game canvas. It's the final point at which you can manipulate the texture before
+     * it appears in-game.
      * 
      * You should not enable this unless you plan on actually using the texture it creates
      * somehow, otherwise you're just doubling the work required to render your game.

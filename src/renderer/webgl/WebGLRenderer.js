@@ -1569,6 +1569,8 @@ var WebGLRenderer = new Class({
                     color.alphaGL
                 );
             }
+            
+            camera.emit('prerender', camera);
         }
         else if (color.alphaGL > 0)
         {
@@ -1608,10 +1610,11 @@ var WebGLRenderer = new Class({
 
         if (camera.renderToTexture)
         {
-            // this.flush();
             TextureTintPipeline.flush();
 
             this.setFramebuffer(null);
+
+            camera.emit('postrender', camera);
 
             TextureTintPipeline.projOrtho(0, TextureTintPipeline.width, TextureTintPipeline.height, 0, -1000.0, 1000.0);
 
@@ -1640,8 +1643,6 @@ var WebGLRenderer = new Class({
                 this.defaultCamera,
                 null
             );
-
-            // this.setPipeline(TextureTintPipeline);
 
             //  Force clear the current texture so that items next in the batch (like Graphics) don't try and use it
             this.setBlankTexture(true);

@@ -401,7 +401,8 @@ var CanvasRenderer = new Class({
         var cw = camera._cw;
         var ch = camera._ch;
 
-        var ctx = scene.sys.context;
+        var ctx = (camera.renderToTexture) ? camera.context : scene.sys.context;
+
         var scissor = (cx !== 0 || cy !== 0 || cw !== ctx.canvas.width || ch !== ctx.canvas.height);
 
         this.currentContext = ctx;
@@ -426,6 +427,11 @@ var CanvasRenderer = new Class({
             ctx.beginPath();
             ctx.rect(cx, cy, cw, ch);
             ctx.clip();
+        }
+
+        if (camera.renderToTexture)
+        {
+            camera.emit('prerender', camera);
         }
 
         camera.matrix.copyToContext(ctx);
@@ -465,6 +471,13 @@ var CanvasRenderer = new Class({
         if (scissor)
         {
             ctx.restore();
+        }
+
+        if (camera.renderToTexture)
+        {
+            camera.emit('postrender', camera);
+
+            scene.sys.context.drawImage(camera.canvas, cx, cy);
         }
     },
 
