@@ -867,9 +867,16 @@ var WebGLRenderer = new Class({
     {
         var scissorStack = this.scissorStack;
 
-        var scissor = scissorStack.pop();
+        //  Remove the current scissor
+        scissorStack.pop();
 
-        this.setScissor(scissor[0], scissor[1], scissor[2], scissor[3]);
+        //  Reset the previous scissor
+        var scissor = scissorStack[scissorStack.length - 1];
+
+        if (scissor)
+        {
+            this.setScissor(scissor[0], scissor[1], scissor[2], scissor[3]);
+        }
 
         this.currentScissor = scissor;
     },
@@ -1557,7 +1564,7 @@ var WebGLRenderer = new Class({
             if (color.alphaGL > 0)
             {
                 TextureTintPipeline.drawFillRect(
-                    0, 0, cw + cx, ch + cy,
+                    cx, cy, cw + cx, ch + cy,
                     Utils.getTintFromFloats(color.redGL, color.greenGL, color.blueGL, 1),
                     color.alphaGL
                 );
@@ -1661,6 +1668,8 @@ var WebGLRenderer = new Class({
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
         }
 
+        gl.enable(gl.SCISSOR_TEST);
+
         for (var key in pipelines)
         {
             pipelines[key].onPreRender();
@@ -1674,8 +1683,6 @@ var WebGLRenderer = new Class({
 
         if (this.game.scene.customViewports)
         {
-            gl.enable(gl.SCISSOR_TEST);
-
             gl.scissor(0, (this.drawingBufferHeight - this.height), this.width, this.height);
         }
 
