@@ -55,7 +55,25 @@ var Render = require('./BitmapTextRender');
 
 /**
  * @classdesc
- * [description]
+ * BitmapText objects work by taking a texture file and an XML or JSON file that describes the font structure.
+ * 
+ * During rendering for each letter of the text is rendered to the display, proportionally spaced out and aligned to
+ * match the font structure.
+ *
+ * BitmapText objects are less flexible than Text objects, in that they have less features such as shadows, fills and the ability
+ * to use Web Fonts, however you trade this flexibility for rendering speed. You can also create visually compelling BitmapTexts by
+ * processing the font texture in an image editor, applying fills and any other effects required.
+ *
+ * To create multi-line text insert \r, \n or \r\n escape codes into the text string.
+ *
+ * To create a BitmapText data files you need a 3rd party app such as:
+ *
+ * BMFont (Windows, free): http://www.angelcode.com/products/bmfont/
+ * Glyph Designer (OS X, commercial): http://www.71squared.com/en/glyphdesigner
+ * Littera (Web-based, free): http://kvazars.com/littera/
+ *
+ * For most use cases it is recommended to use XML. If you wish to use JSON, the formatting should be equal to the result of
+ * converting a valid XML file through the popular X2JS library. An online tool for conversion can be found here: http://codebeautify.org/xmltojson
  *
  * @class BitmapText
  * @extends Phaser.GameObjects.GameObject

@@ -11,6 +11,18 @@ var GameObjectFactory = require('../../GameObjectFactory');
  * Creates a new Arc Shape Game Object and adds it to the Scene.
  *
  * Note: This method will only be available if the Arc Game Object has been built into Phaser.
+ * 
+ * The Arc Shape is a Game Object that can be added to a Scene, Group or Container. You can
+ * treat it like any other Game Object in your game, such as tweening it, scaling it, or enabling
+ * it for input or physics. It provides a quick and easy way for you to render this shape in your
+ * game without using a texture, while still taking advantage of being fully batched in WebGL.
+ * 
+ * This shape supports both fill and stroke colors.
+ * 
+ * When it renders it displays an arc shape. You can control the start and end angles of the arc,
+ * as well as if the angles are winding clockwise or anti-clockwise. With the default settings
+ * it renders as a complete circle. By changing the angles you can create other arc shapes,
+ * such as half-circles.
  *
  * @method Phaser.GameObjects.GameObjectFactory#arc
  * @since 3.13.0

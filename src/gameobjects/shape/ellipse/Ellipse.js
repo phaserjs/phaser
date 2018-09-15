@@ -12,6 +12,21 @@ var Shape = require('../Shape');
 
 /**
  * @classdesc
+ * The Ellipse Shape is a Game Object that can be added to a Scene, Group or Container. You can
+ * treat it like any other Game Object in your game, such as tweening it, scaling it, or enabling
+ * it for input or physics. It provides a quick and easy way for you to render this shape in your
+ * game without using a texture, while still taking advantage of being fully batched in WebGL.
+ * 
+ * This shape supports both fill and stroke colors.
+ * 
+ * When it renders it displays an ellipse shape. You can control the width and height of the ellipse.
+ * If the width and height match it will render as a circle. If the width is less than the height,
+ * it will look more like an egg shape.
+ * 
+ * The Ellipse shape also has a `smoothness` property and corresponding `setSmoothness` method.
+ * This allows you to control how smooth the shape renders in WebGL, by controlling the number of iterations
+ * that take place during construction. Increase and decrease the default value for smoother, or more
+ * jagged, shapes.
  *
  * @class Ellipse
  * @extends Phaser.GameObjects.Shape
