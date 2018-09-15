@@ -10,6 +10,19 @@ var Shape = require('../Shape');
 
 /**
  * @classdesc
+ * The IsoBox Shape is a Game Object that can be added to a Scene, Group or Container. You can
+ * treat it like any other Game Object in your game, such as tweening it, scaling it, or enabling
+ * it for input or physics. It provides a quick and easy way for you to render this shape in your
+ * game without using a texture, while still taking advantage of being fully batched in WebGL.
+ * 
+ * This shape supports only fill colors and cannot be stroked.
+ * 
+ * An IsoBox is an 'isometric' rectangle. Each face of it has a different fill color. You can set
+ * the color of the top, left and right faces of the rectangle respectively. You can also choose
+ * which of the faces are rendered via the `showTop`, `showLeft` and `showRight` properties.
+ * 
+ * You cannot view an IsoBox from under-neath, however you can change the 'angle' by setting
+ * the `projection` property.
  *
  * @class IsoBox
  * @extends Phaser.GameObjects.Shape

@@ -11,7 +11,8 @@ var Line = require('../../geom/line/Line');
 
 /**
  * @classdesc
- * A Shape Game Object.
+ * The Shape Game Object is a base class for the various different shapes, such as the Arc, Star or Polygon.
+ * You cannot add a Shape directly to your Scene, it is meant as a base for your own custom Shape classes.
  *
  * @class Shape
  * @extends Phaser.GameObjects.GameObject

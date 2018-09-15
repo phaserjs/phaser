@@ -11,6 +11,21 @@ var Grid = require('./Grid');
  * Creates a new Grid Shape Game Object and adds it to the Scene.
  *
  * Note: This method will only be available if the Grid Game Object has been built into Phaser.
+ * 
+ * The Grid Shape is a Game Object that can be added to a Scene, Group or Container. You can
+ * treat it like any other Game Object in your game, such as tweening it, scaling it, or enabling
+ * it for input or physics. It provides a quick and easy way for you to render this shape in your
+ * game without using a texture, while still taking advantage of being fully batched in WebGL.
+ * 
+ * This shape supports only fill colors and cannot be stroked.
+ * 
+ * A Grid Shape allows you to display a grid in your game, where you can control the size of the
+ * grid as well as the width and height of the grid cells. You can set a fill color for each grid
+ * cell as well as an alternate fill color. When the alternate fill color is set then the grid
+ * cells will alternate the fill colors as they render, creating a chess-board effect. You can
+ * also optionally have an outline fill color. If set, this draws lines between the grid cells
+ * in the given color. If you specify an outline color with an alpha of zero, then it will draw
+ * the cells spaced out, but without the lines between them.
  *
  * @method Phaser.GameObjects.GameObjectFactory#grid
  * @since 3.13.0
