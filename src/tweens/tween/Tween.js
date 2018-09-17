@@ -417,6 +417,7 @@ var Tween = new Class({
         else
         {
             this.stop();
+            this.parent.makeActive(this);
             this.play();
         }
     },
