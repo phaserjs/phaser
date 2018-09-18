@@ -73,7 +73,9 @@ var Ellipse = new Class({
         this._smoothness = 64;
 
         this.setPosition(x, y);
-        this.setSize(width, height);
+
+        this.width = width;
+        this.height = height;
 
         if (fillColor !== undefined)
         {
