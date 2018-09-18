@@ -172,7 +172,7 @@ var TileSprite = new Class({
          * @private
          * @since 3.12.0
          */
-        this.displayTexture = null;
+        this.displayTexture = scene.sys.textures.get(textureKey);
 
         /**
          * The Frame the TileSprite is using as its fill pattern.
@@ -182,7 +182,7 @@ var TileSprite = new Class({
          * @private
          * @since 3.12.0
          */
-        this.displayFrame = null;
+        this.displayFrame = this.displayTexture.get(frameKey);
 
         /**
          * The internal crop data object, as used by `setCrop` and passed to the `Frame.setCropUVs` method.
@@ -194,17 +194,23 @@ var TileSprite = new Class({
          */
         this._crop = this.resetCropObject();
 
-        //  Create a Texture for this object
+        /**
+         * The Texture this Game Object is using to render with.
+         *
+         * @name Phaser.GameObjects.TileSprite#texture
+         * @type {Phaser.Textures.Texture|Phaser.Textures.CanvasTexture}
+         * @since 3.0.0
+         */
         this.texture = scene.sys.textures.addCanvas(null, this.canvas, true);
 
-        //  Get the frame
+        /**
+         * The Texture Frame this Game Object is using to render with.
+         *
+         * @name Phaser.GameObjects.TileSprite#frame
+         * @type {Phaser.Textures.Frame}
+         * @since 3.0.0
+         */
         this.frame = this.texture.get();
-
-        this.setTexture(textureKey, frameKey);
-        this.setPosition(x, y);
-        this.setSize(width, height);
-        this.setOriginFromFrame();
-        this.initPipeline();
 
         /**
          * The next power of two value from the width of the Fill Pattern frame.
@@ -253,10 +259,11 @@ var TileSprite = new Class({
          */
         this.fillPattern = null;
 
-        //  Update the fill pattern
-        this.dirty = true;
-
-        this.updateTileTexture();
+        this.setFrame(frameKey);
+        this.setPosition(x, y);
+        this.setSize(width, height);
+        this.setOriginFromFrame();
+        this.initPipeline();
 
         if (scene.sys.game.config.renderType === CONST.WEBGL)
         {
@@ -342,6 +349,8 @@ var TileSprite = new Class({
                 this.updateDisplayOrigin();
             }
         }
+
+        this.dirty = true;
 
         this.updateTileTexture();
 
