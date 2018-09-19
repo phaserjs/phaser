@@ -931,7 +931,7 @@ var FacebookInstantGamesPlugin = new Class({
      * @method Phaser.Boot.FacebookInstantGamesPlugin#saveStats
      * @since 3.13.0
      * 
-     * @param {any} data - An object containing a set of key-value pairs that should be persisted to cloud storage as stats. Note that only numerical values are stored.
+     * @param {object} data - An object containing a set of key-value pairs that should be persisted to cloud storage as stats. Note that only numerical values are stored.
      * 
      * @return {this} This Facebook Instant Games Plugin instance.
      */
@@ -992,7 +992,7 @@ var FacebookInstantGamesPlugin = new Class({
      * @method Phaser.Boot.FacebookInstantGamesPlugin#incStats
      * @since 3.13.0
      * 
-     * @param {any} data - An object containing a set of key-value pairs indicating how much to increment each stat in cloud storage. Note that only numerical values are processed.
+     * @param {object} data - An object containing a set of key-value pairs indicating how much to increment each stat in cloud storage. Note that only numerical values are processed.
      * 
      * @return {this} This Facebook Instant Games Plugin instance.
      */
@@ -1027,6 +1027,20 @@ var FacebookInstantGamesPlugin = new Class({
         return this;
     },
 
+    /**
+     * Sets the data associated with the individual gameplay session for the current context.
+     * 
+     * This function should be called whenever the game would like to update the current session data.
+     * 
+     * This session data may be used to populate a variety of payloads, such as game play webhooks.
+     *
+     * @method Phaser.Boot.FacebookInstantGamesPlugin#saveSession
+     * @since 3.13.0
+     * 
+     * @param {object} data - An arbitrary data object, which must be less than or equal to 1000 characters when stringified.
+     * 
+     * @return {this} This Facebook Instant Games Plugin instance.
+     */
     saveSession: function (data)
     {
         if (!this.checkAPI('setSessionData'))
@@ -1048,26 +1062,125 @@ var FacebookInstantGamesPlugin = new Class({
         return this;
     },
 
+    /**
+     * This invokes a dialog to let the user share specified content, either as a message in Messenger or as a post on the user's timeline.
+     * 
+     * A blob of data can be attached to the share which every game session launched from the share will be able to access via the `this.entryPointData` property.
+     * 
+     * This data must be less than or equal to 1000 characters when stringified.
+     * 
+     * When this method is called you should consider your game paused. Listen out for the `resume` event from this plugin to know when the dialog has been closed.
+     * 
+     * The user may choose to cancel the share action and close the dialog. The resulting `resume` event will be dispatched regardless if the user actually shared the content or not.
+     *
+     * @method Phaser.Boot.FacebookInstantGamesPlugin#openShare
+     * @since 3.13.0
+     * 
+     * @param {string} text - A text message to be shared.
+     * @param {string} key - The key of the texture to use as the share image.
+     * @param {string} [frame] - The frame of the texture to use as the share image. Set to `null` if you don't require a frame, but do need to set session data.
+     * @param {object} [sessionData] - A blob of data to attach to the share.
+     * 
+     * @return {this} This Facebook Instant Games Plugin instance.
+     */
     openShare: function (text, key, frame, sessionData)
     {
         return this._share('SHARE', text, key, frame, sessionData);
     },
 
+    /**
+     * This invokes a dialog to let the user invite a friend to play this game, either as a message in Messenger or as a post on the user's timeline.
+     * 
+     * A blob of data can be attached to the share which every game session launched from the share will be able to access via the `this.entryPointData` property.
+     * 
+     * This data must be less than or equal to 1000 characters when stringified.
+     * 
+     * When this method is called you should consider your game paused. Listen out for the `resume` event from this plugin to know when the dialog has been closed.
+     * 
+     * The user may choose to cancel the share action and close the dialog. The resulting `resume` event will be dispatched regardless if the user actually shared the content or not.
+     *
+     * @method Phaser.Boot.FacebookInstantGamesPlugin#openInvite
+     * @since 3.13.0
+     * 
+     * @param {string} text - A text message to be shared.
+     * @param {string} key - The key of the texture to use as the share image.
+     * @param {string} [frame] - The frame of the texture to use as the share image. Set to `null` if you don't require a frame, but do need to set session data.
+     * @param {object} [sessionData] - A blob of data to attach to the share.
+     * 
+     * @return {this} This Facebook Instant Games Plugin instance.
+     */
     openInvite: function (text, key, frame, sessionData)
     {
         return this._share('INVITE', text, key, frame, sessionData);
     },
 
+    /**
+     * This invokes a dialog to let the user share specified content, either as a message in Messenger or as a post on the user's timeline.
+     * 
+     * A blob of data can be attached to the share which every game session launched from the share will be able to access via the `this.entryPointData` property.
+     * 
+     * This data must be less than or equal to 1000 characters when stringified.
+     * 
+     * When this method is called you should consider your game paused. Listen out for the `resume` event from this plugin to know when the dialog has been closed.
+     * 
+     * The user may choose to cancel the share action and close the dialog. The resulting `resume` event will be dispatched regardless if the user actually shared the content or not.
+     *
+     * @method Phaser.Boot.FacebookInstantGamesPlugin#openRequest
+     * @since 3.13.0
+     * 
+     * @param {string} text - A text message to be shared.
+     * @param {string} key - The key of the texture to use as the share image.
+     * @param {string} [frame] - The frame of the texture to use as the share image. Set to `null` if you don't require a frame, but do need to set session data.
+     * @param {object} [sessionData] - A blob of data to attach to the share.
+     * 
+     * @return {this} This Facebook Instant Games Plugin instance.
+     */
     openRequest: function (text, key, frame, sessionData)
     {
         return this._share('REQUEST', text, key, frame, sessionData);
     },
 
+    /**
+     * This invokes a dialog to let the user share specified content, either as a message in Messenger or as a post on the user's timeline.
+     * 
+     * A blob of data can be attached to the share which every game session launched from the share will be able to access via the `this.entryPointData` property.
+     * 
+     * This data must be less than or equal to 1000 characters when stringified.
+     * 
+     * When this method is called you should consider your game paused. Listen out for the `resume` event from this plugin to know when the dialog has been closed.
+     * 
+     * The user may choose to cancel the share action and close the dialog. The resulting `resume` event will be dispatched regardless if the user actually shared the content or not.
+     *
+     * @method Phaser.Boot.FacebookInstantGamesPlugin#openChallenge
+     * @since 3.13.0
+     * 
+     * @param {string} text - A text message to be shared.
+     * @param {string} key - The key of the texture to use as the share image.
+     * @param {string} [frame] - The frame of the texture to use as the share image. Set to `null` if you don't require a frame, but do need to set session data.
+     * @param {object} [sessionData] - A blob of data to attach to the share.
+     * 
+     * @return {this} This Facebook Instant Games Plugin instance.
+     */
     openChallenge: function (text, key, frame, sessionData)
     {
         return this._share('CHALLENGE', text, key, frame, sessionData);
     },
 
+    /**
+     * Internal share handler.
+     *
+     * @method Phaser.Boot.FacebookInstantGamesPlugin#_share
+     * @private
+     * @since 3.13.0
+     * 
+     * @param {string} intent - ("INVITE" | "REQUEST" | "CHALLENGE" | "SHARE") Indicates the intent of the share.
+     * @param {string} text - A text message to be shared.
+     * @param {string} key - The key of the texture to use as the share image.
+     * @param {string} [frame] - The frame of the texture to use as the share image. Set to `null` if you don't require a frame, but do need to set session data.
+     * @param {object} [sessionData] - A blob of data to attach to the share.
+     * 
+     * @return {this} This Facebook Instant Games Plugin instance.
+     */
     _share: function (intent, text, key, frame, sessionData)
     {
         if (!this.checkAPI('shareAsync'))
@@ -1082,19 +1195,17 @@ var FacebookInstantGamesPlugin = new Class({
             var imageData = this.game.textures.getBase64(key, frame);
         }
 
+        // intent ("INVITE" | "REQUEST" | "CHALLENGE" | "SHARE") Indicates the intent of the share.
+        // image string A base64 encoded image to be shared.
+        // text string A text message to be shared.
+        // data Object? A blob of data to attach to the share. All game sessions launched from the share will be able to access this blob through FBInstant.getEntryPointData().
+
         var payload = {
             intent: intent,
             image: imageData,
             text: text,
             data: sessionData
         };
-
-        // console.log(payload);
-
-        // intent ("INVITE" | "REQUEST" | "CHALLENGE" | "SHARE") Indicates the intent of the share.
-        // image string A base64 encoded image to be shared.
-        // text string A text message to be shared.
-        // data Object? A blob of data to attach to the share. All game sessions launched from the share will be able to access this blob through FBInstant.getEntryPointData().
 
         var _this = this;
 
@@ -1106,6 +1217,20 @@ var FacebookInstantGamesPlugin = new Class({
         return this;
     },
 
+    /**
+     * This function determines whether the number of participants in the current game context is between a given minimum and maximum, inclusive.
+     * If one of the bounds is null only the other bound will be checked against.
+     * It will always return the original result for the first call made in a context in a given game play session.
+     * Subsequent calls, regardless of arguments, will return the answer to the original query until a context change occurs and the query result is reset.
+     *
+     * @method Phaser.Boot.FacebookInstantGamesPlugin#isSizeBetween
+     * @since 3.13.0
+     * 
+     * @param {integer} [min] - The minimum bound of the context size query.
+     * @param {integer} [max] - The maximum bound of the context size query.
+     * 
+     * @return {object} The Context Size Response object in the format: `{answer: boolean, minSize: number?, maxSize: number?}`.
+     */
     isSizeBetween: function (min, max)
     {
         if (!this.checkAPI('contextIsSizeBetween'))
@@ -1116,6 +1241,19 @@ var FacebookInstantGamesPlugin = new Class({
         return FBInstant.context.isSizeBetween(min, max);
     },
 
+    /**
+     * Request a switch into a specific context. If the player does not have permission to enter that context,
+     * or if the player does not provide permission for the game to enter that context, this will emit a `switchfail` event.
+     * 
+     * Otherwise, the plugin will emit the `switch` event when the game has switched into the specified context.
+     *
+     * @method Phaser.Boot.FacebookInstantGamesPlugin#switchContext
+     * @since 3.13.0
+     * 
+     * @param {string} contextID - The ID of the desired context.
+     * 
+     * @return {this} This Facebook Instant Games Plugin instance.
+     */
     switchContext: function (contextID)
     {
         if (!this.checkAPI('contextSwitchAsync'))
@@ -1130,13 +1268,30 @@ var FacebookInstantGamesPlugin = new Class({
             FBInstant.context.switchAsync(contextID).then(function ()
             {
                 _this.contextID = FBInstant.context.getID();
+
                 _this.emit('switch', _this.contextID);
+
+            }).catch(function (e)
+            {
+                _this.emit('switchfail', e);
             });
         }
 
         return this;
     },
 
+    /**
+     * Opens a context selection dialog for the player. If the player selects an available context,
+     * the client will attempt to switch into that context, and emit th `choose` event if successful.
+     * Otherwise, if the player exits the menu or the client fails to switch into the new context, the `choosefail` event will be emitted.
+     *
+     * @method Phaser.Boot.FacebookInstantGamesPlugin#chooseContext
+     * @since 3.13.0
+     * 
+     * @param {string} contextID - The ID of the desired context.
+     * 
+     * @return {this} This Facebook Instant Games Plugin instance.
+     */
     chooseContext: function (options)
     {
         if (!this.checkAPI('contextChoseAsync'))
@@ -1150,6 +1305,10 @@ var FacebookInstantGamesPlugin = new Class({
         {
             _this.contextID = FBInstant.context.getID();
             _this.emit('choose', _this.contextID);
+
+        }).catch(function (e)
+        {
+            _this.emit('choosefail', e);
         });
 
         return this;

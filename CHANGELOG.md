@@ -115,7 +115,7 @@ Doing this gives you the ability to modify the texture before this happens, allo
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@johanlindfors @Arthur3DLHC 
+@johanlindfors @Arthur3DLHC @JamesSkemp
 
 ## Version 3.12.0 - Silica - 4th September 2018
 
