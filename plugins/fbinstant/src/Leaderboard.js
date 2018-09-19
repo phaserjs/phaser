@@ -12,10 +12,10 @@ var LeaderboardScore = require('./LeaderboardScore');
  * @classdesc
  * [description]
  *
- * @class FacebookInstantGamesPlugin
- * @memberOf Phaser
+ * @class Leaderboard
+ * @memberOf Phaser.Boot.FacebookInstantGamesPlugin
  * @constructor
- * @since 3.12.0
+ * @since 3.13.0
  */
 var Leaderboard = new Class({
 
@@ -27,14 +27,25 @@ var Leaderboard = new Class({
     {
         EventEmitter.call(this);
 
+        /**
+         * A reference to the Facebook Instant Games Plugin.
+         *
+         * @name Phaser.Boot.FacebookInstantGamesPlugin#plugin
+         * @type {Phaser.Boot.FacebookInstantGamesPlugin}
+         * @since 3.13.0
+         */
         this.plugin = plugin;
+
         this.ref = data;
 
         this.name = data.getName();
+
         this.contextID = data.getContextID();
+
         this.entryCount = 0;
 
         this.playerScore = null;
+
         this.scores = [];
 
         this.getEntryCount();
