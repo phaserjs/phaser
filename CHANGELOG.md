@@ -1,6 +1,58 @@
 # Change Log
 
-## Version 3.13.0 - Yuuki - in development
+## Version 3.13.0 - Yuuki - 20th September 2018
+
+## Facebook Instant Games Plugin
+
+Phaser 3.13 introduces the new Facebook Instant Games Plugin. The plugin provides a seamless bridge between Phaser and version 6.2 of the Facebook Instant Games SDK. Every single SDK function is available via the plugin and we will keep track of the official SDK to make sure they stay in sync.
+
+The plugin offers the following features:
+
+* Easy integration with the Phaser Loader so load events update the Facebook progress circle.
+* Events for every plugin method, allowing the async calls of the SDK to be correctly inserted into the Phaser game flow. When SDK calls resolve they will surface naturally as a Phaser event and you'll know you can safely act upon them without potentially doing something mid-way through the game step.
+* All Plugin methods check if the call is part of the supported APIs available in the SDK, without needing to launch an async request first.
+* Instant access to platform, player and locale data.
+* Easily load player photos directly into the Texture Manager, ready for use with a Game Object.
+* Subscribe to game bots.
+* The plugin has a built-in Data Manager which makes dealing with data stored on Facebook seamless. Just create whatever data properties you need and they are automatically synced.
+* Support for FB stats, to retrieve, store and increment stats into cloud storage.
+* Save Session data with built-in session length validation.
+* Easy context switching, to swap between game instances and session data retrieval.
+* Easily open a Facebook share, invite, request or game challenge window and populate the text and image content using any image stored in the Texture cache.
+* Full Leaderboard support. Retrieve, scan and update leaderboard entries, as well as player matching.
+* Support for in-app purchases, with product catalogs, the ability to handle purchases, get past purchases and consume previously unlocked purchases.
+* Easily preload a set of interstitial ads, in both banner and video form, then display the ad at any point in your game, with in-built tracking of ads displayed and inventory available.
+* Plus other features, such as logging to FB Analytics, creating short cuts, switching games, etc.
+
+The plugin is fully documented and official tutorials and project templates will follow shortly.
+
+## New Shape Game Objects
+
+Phaser 3.13 has a new Game Object called `Shape`, which by itself isn't much use because it's a base class. However, extending that class are 11 different types of Shape (with more to come) and you can use it to create your own custom Shapes as well. Shapes are added to the display list in the exact same way as any other Game Object. For example:
+
+```
+this.add.rectangle(400, 300, 500, 120, 0x00ff00);
+```
+
+Here we're creating a new Rectangle shape. It's positioned at 400 x 300 in the Scene and has a size of 500 x 120 pixels. The final value is the fill color.
+
+The thing to remember is that you can treat this Shape just like you'd treat any other Game Object. You can scale it, rotate it, alpha it, blend mode it, change its origin, give it a Camera scroll factor, put it inside a Container or Group, give it input abilities or even give it a physics body. It is, to all intents and purposes, a normal Game Object. The only difference is that when rendering it uses its own special bit of display code.
+
+The shapes available are as follows:
+
+* `GameObject.Arc` - The arc allows you to draw either a circle, or part of a circle. You can set the start and end angle, if the rotation is clockwise or not, and even set the number of iterations the arc will use during rendering.
+* `GameObject.Curve` - The Curve Shape can take any Phaser Curve object, such as a Spline or Bezier Curve, and add it to the display list.
+* `GameObject.Ellipse` - An ellipse shape, which is essentially a circle with a differing width and height. It can be filled or stroked (or both!) and as with the arc you can set the 'smoothness' of it, allowing you to decrease the number of points used when creating its polygon data.
+* `GameObject.Grid` - The Grid Shape object allows you to generate them. You can set the width and height of the grid itself, as well as for the grid cells. The grid can either have a single color, or alternating cell colors and even have outline spacing between the cells, or not.
+* `GameObject.Line` - Create a Line Shape drawn between any two points, with a color and thickness. In WebGL you can also specify a different thickness for the start and end of the line.
+* `GameObject.Polygon` - A Polygon is effectively a list of points that is drawn between. The points can be provided in a number of different ways (as Vec2 objects, as an array, etc) and then you can either fill or stroke the resulting shape, or both.
+* `GameObject.Rectangle` - Simple, but powerful and endlessly useful. Set a width and height and it'll display a Rectangle, with control over the size, fill color and stroke color.
+* `GameObject.Star` - The Star shape does as its name suggests: it displays a star. You can control the number of points in the star as well as the inner and outer radius of it.
+* `GameObject.Triangle` - A Triangular shape with full control over the points used to make it and its fill and stroke colors. Internally it uses the `batchFillTriangle` method in WebGL, making it actually faster to draw than a Quad! Use them happily for bullets or abstract space ships, or anything else you feel like.
+* `GameObject.IsoTriangle` - This draws an isometric triangle, like a pyramid. You can control the colors of each face, if the pyramid is upside down or not and the width and height of it.
+* `GameObject.IsoBox` - This draws an isometric box. You can set the colors for each face of the box, as well as the projection angle and also which of the 3 faces are drawn.
+
+All of the Shape objects render in both Canvas and WebGL and are available via the Game Object Factory.
 
 ## Pointer and Input Event Updates
 
