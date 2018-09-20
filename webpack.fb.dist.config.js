@@ -10,15 +10,16 @@ module.exports = {
     context: `${__dirname}/src/`,
 
     entry: {
-        camera3d: './FacebookInstantGamesPlugin.js',
-        'camera3d.min': './FacebookInstantGamesPlugin.js'
+        'phaser-facebook-instant-games': './phaser-facebook-instant-games.js',
+        'phaser-facebook-instant-games.min': './phaser-facebook-instant-games.js'
     },
 
     output: {
         path: `${__dirname}/dist/`,
         filename: '[name].js',
-        library: 'FacebookInstantGamesPlugin',
-        libraryTarget: 'var'
+        library: 'Phaser',
+        libraryTarget: 'umd',
+        umdNamedDefine: true
     },
 
     performance: { hints: false },
@@ -42,6 +43,12 @@ module.exports = {
     },
 
     plugins: [
-        new CleanWebpackPlugin([ 'dist' ])
+        new webpack.DefinePlugin({
+            "typeof CANVAS_RENDERER": JSON.stringify(true),
+            "typeof WEBGL_RENDERER": JSON.stringify(true),
+            "typeof EXPERIMENTAL": JSON.stringify(false),
+            "typeof PLUGIN_CAMERA3D": JSON.stringify(false),
+            "typeof PLUGIN_FBINSTANT": JSON.stringify(true)
+        })
     ]
 };

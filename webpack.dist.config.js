@@ -14,8 +14,8 @@ module.exports = {
         'phaser.min': './phaser.js',
         'phaser-arcade-physics': './phaser-arcade-physics.js',
         'phaser-arcade-physics.min': './phaser-arcade-physics.js',
-        'phaser-core': './phaser-core.js',
-        'phaser-core.min': './phaser-core.js'
+        'phaser-facebook-instant-games': './phaser-facebook-instant-games.js',
+        'phaser-facebook-instant-games.min': './phaser-facebook-instant-games.js'
     },
 
     output: {
@@ -51,8 +51,7 @@ module.exports = {
             "typeof CANVAS_RENDERER": JSON.stringify(true),
             "typeof WEBGL_RENDERER": JSON.stringify(true),
             "typeof EXPERIMENTAL": JSON.stringify(false),
-            "typeof PLUGIN_CAMERA3D": JSON.stringify(false),
-            "typeof PLUGIN_FBINSTANT": JSON.stringify(false)
+            "typeof PLUGIN_CAMERA3D": JSON.stringify(false)
         }),
 
         new CleanWebpackPlugin([ 'dist' ])
