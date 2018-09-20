@@ -312,7 +312,7 @@ You can then run `webpack` to create a development build in the `build` folder w
 
 ## Version 3.13.0 - Yuuki - 20th September 2018
 
-## Facebook Instant Games Plugin
+### Facebook Instant Games Plugin
 
 Phaser 3.13 introduces the new Facebook Instant Games Plugin. The plugin provides a seamless bridge between Phaser and version 6.2 of the Facebook Instant Games SDK. Every single SDK function is available via the plugin and we will keep track of the official SDK to make sure they stay in sync.
 
@@ -336,7 +336,7 @@ The plugin offers the following features:
 
 The plugin is fully documented and official tutorials and project templates will follow shortly.
 
-## New Shape Game Objects
+### New Shape Game Objects
 
 Phaser 3.13 has a new Game Object called `Shape`, which by itself isn't much use because it's a base class. However, extending that class are 11 different types of Shape (with more to come) and you can use it to create your own custom Shapes as well. Shapes are added to the display list in the exact same way as any other Game Object. For example:
 
@@ -364,7 +364,7 @@ The shapes available are as follows:
 
 All of the Shape objects render in both Canvas and WebGL and are available via the Game Object Factory.
 
-## Pointer and Input Event Updates
+### Pointer and Input Event Updates
 
 The specificity if the input events has been changed to allow you more control over event handling. Previously, the InputPlugin would emit the global `pointerdown` event first, and then the Game Object itself would emit the `pointerdown` event and finally the InputPlugin would emit the `gameobjectdown` event.
 
@@ -390,7 +390,7 @@ This change has been introduced for `pointerdown`, `pointerup`, `pointermove`, `
 * The Game Object `gameobjectout` callback signature has a new argument. It now sends `event` as the 3rd argument.
 * The `pointerout` event, as dispatched by the InputPlugin, is now sent _after_ the Game Object specific events (`GameObject.pointerout` and `gameobjectout`). This gives you the chance to cancel the event before the global listener receives it.
 
-## Game Object List Updates
+### Game Object List Updates
 
 When Sprite's are created they are added to two lists within the Scene - the Display List and the Update List. Under 3.12 when a Scene was shut down it would emit a `shutdown` event, which Sprites listened out for. When they received it, they would destroy themselves.
 
@@ -399,7 +399,7 @@ After [profiling and testing](https://github.com/photonstorm/phaser/issues/4028)
 * The UpdateList will now clear out its internal `_list`, `_pendingRemoval` and `_pendingInsertion` lists on shutdown. Before, it would only clear `_list`.
 * `GameObject.destroy` has a new optional boolean argument `fromScene`, which controls how the destroy process flows.
 
-## Camera Render to Texture
+### Camera Render to Texture
 
 In 3.12 a new Camera method called `setRenderToTexture` was introduced. However, it had known issues so was placed under the experimental flag and you were advised not to use it unless in testing.
 
@@ -420,7 +420,7 @@ Doing this gives you the ability to modify the texture before this happens, allo
 * `Camera.pipeline` is the Pipeline that the Camera will render with if running under the WebGL Renderer and rendering to a texture with a pipeline set.
 * If you set a Camera to render to a texture then it will emit 2 events during the render loop. First, it will emit the event `prerender`. This happens right before any Game Object's are drawn to the Camera texture. Then, it will emit the event `postrender`. This happens after all Game Object's have been drawn, but right before the Camera texture is rendered to the main game canvas. It's the final point at which you can manipulate the texture before it appears in-game.
 
-## New Features
+### New Features
 
 * The `Color` object has a new property `h` which represents the hue of the color. You can tween or adjust this property in real-time and it will automatically update the internal RGB values with it.
 * The `Color` object has a new property `s` which represents the saturation of the color. You can tween or adjust this property in real-time and it will automatically update the internal RGB values with it.
@@ -447,7 +447,7 @@ Doing this gives you the ability to modify the texture before this happens, allo
 * The WebGLPipeline and WebGLRenderer have new a method `setFloat4v` which allows you to set a `uniform4fv` uniform value (thanks @Mattykins)
 * `Text.setLineSpacing` is a new method that allows you to easily set the line spacing value of a Text object in a chainable call (thanks @RafelSanso)
 
-## Updates
+### Updates
 
 * The Graphics Canvas Renderer will now automatically call `beginPath` on the target context before processing the command stack. This has the effect of clearing off any sub-paths that may have persisted on the stack from previous Graphics objects or frames. This makes it more in-line with WebGL re: expectations when calling `Graphics.clear`.
 * `initPipeline` now defaults to the Texture Tint Pipeline if nothing else is specified. This allowed me to remove explicit strings from 11 different Game Objects, saving some bytes in the process.
@@ -457,7 +457,7 @@ Doing this gives you the ability to modify the texture before this happens, allo
 * The `Text._lineSpacing` property has been renamed to `lineSpacing` and made public, not private. You still set it in the same way, by passing a `lineSpacing` property to the Text configuration object, but internally it's now clearer.
 * If a Scene is already active (i.e. running) and you call `start` on it (such as from another Scene) then it will shutdown the Scene first, before starting it again.
 
-## Bug Fixes
+### Bug Fixes
 
 * TileSprite.setTileScale would set the tile position by mistake, instead of the scale. Using the properties directly worked, but the method was incorrect (thanks @alexeymolchan)
 * Calling `Text.setStyle` would make the Text vanish if you didn't provide a `resolution` property in the style configuration object. Calling `setStyle` now only changes the properties given in the object, leaving any previously changed properties as-is. Fix #4011 (thanks @okcompewter)
