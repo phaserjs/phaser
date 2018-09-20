@@ -1,14 +1,12 @@
 let fs = require('fs-extra');
 
-// let dest = '../phaser3-examples/public/build/dev.js';
-// let destMap = '../phaser3-examples/public/build/phaser.js.map';
-
 let source = './build/phaser-facebook-instant-games.js';
 let sourceMap = './build/phaser-facebook-instant-games.js.map';
-let dest = '../fbtest1/lib/dev.js';
-let destMap = '../fbtest1/lib/phaser.js.map';
+let destFolder = '../fbtest1/lib/';
+let dest = '../fbtest1/lib/phaser-facebook-instant-games.js';
+let destMap = '../fbtest1/lib/phaser-facebook-instant-games.js.map';
 
-if (fs.existsSync(dest))
+if (fs.existsSync(destFolder))
 {
     fs.copy(sourceMap, destMap, function (err) {
 
@@ -29,8 +27,4 @@ if (fs.existsSync(dest))
         console.log('Build copied to ' + dest);
 
     });
-}
-else
-{
-    // console.log('Copy-to-Examples failed: Phaser 3 Examples not present at ../phaser3-examples');
 }

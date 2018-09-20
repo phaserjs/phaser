@@ -2,7 +2,6 @@
 
 const webpack = require('webpack');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
     mode: 'production',
@@ -10,8 +9,8 @@ module.exports = {
     context: `${__dirname}/src/`,
 
     entry: {
-        'phaser-facebook-instant-games': './phaser-facebook-instant-games.js',
-        'phaser-facebook-instant-games.min': './phaser-facebook-instant-games.js'
+        'phaser-facebook-instant-games': './phaser.js',
+        'phaser-facebook-instant-games.min': './phaser.js'
     },
 
     output: {
