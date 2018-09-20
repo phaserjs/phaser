@@ -161,10 +161,10 @@ var ValueToColor = require('../display/color/ValueToColor');
 /**
  * @typedef {object} PluginObject
  *
- * @property {PluginObjectItem[]} [global=null] - [description]
- * @property {PluginObjectItem[]} [scene=null] - [description]
- * @property {string[]} [default=[]] - [description]
- * @property {*} [defaultMerge={}] - [description]
+ * @property {?PluginObjectItem[]} [global] - [description]
+ * @property {?PluginObjectItem[]} [scene] - [description]
+ * @property {string[]} [default] - [description]
+ * @property {*} [defaultMerge] - [description]
  */
 
 /**
