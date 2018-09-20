@@ -57,11 +57,6 @@ if (typeof PLUGIN_CAMERA3D)
     Phaser.GameObjects.Creators.Sprite3D = require('../plugins/camera3d/src/sprite3d/Sprite3DCreator');
 }
 
-if (typeof PLUGIN_FBINSTANT)
-{
-    Phaser.FBInstant = require('../plugins/fbinstant/src/FacebookInstantGamesPlugin');
-}
-
 //   Merge in the consts
 
 Phaser = Extend(false, Phaser, CONST);

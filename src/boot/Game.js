@@ -25,16 +25,10 @@ var TextureManager = require('../textures/TextureManager');
 var TimeStep = require('./TimeStep');
 var VisibilityHandler = require('./VisibilityHandler');
 
-
 if (typeof EXPERIMENTAL)
 {
     var CreateDOMContainer = require('./CreateDOMContainer');
     var ScaleManager = require('./ScaleManager');
-}
-
-if (typeof PLUGIN_FBINSTANT)
-{
-    var FacebookInstantGamesPlugin = require('../../plugins/fbinstant/src/FacebookInstantGamesPlugin');
 }
 
 /**
@@ -275,18 +269,6 @@ var Game = new Class({
          * @since 3.0.0
          */
         this.plugins = new PluginManager(this, this.config);
-
-        if (typeof PLUGIN_FBINSTANT)
-        {
-            /**
-             * An instance of the Facebook Instant Games Manager.
-             *
-             * @name Phaser.Game#facebook
-             * @type {any}
-             * @since 3.12.0
-             */
-            this.facebook = new FacebookInstantGamesPlugin(this);
-        }
 
         /**
          * Is this Game pending destruction at the start of the next frame?
