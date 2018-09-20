@@ -9,8 +9,7 @@ module.exports = {
     context: `${__dirname}/src/`,
 
     entry: {
-        phaser: './phaser.js',
-        'phaser-core': './phaser-core.js'
+        phaser: './phaser.js'
     },
 
     output: {
