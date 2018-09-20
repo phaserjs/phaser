@@ -17,7 +17,19 @@ var Purchase = require('./Purchase');
 /**
  * @classdesc
  * The Facebook Instant Games Plugin for Phaser 3 provides a seamless bridge between Phaser
- * and the Facebook Instant Games API version 6.2. You will find that every API method has a mapping in this plugin.
+ * and the Facebook Instant Games API version 6.2.
+ * 
+ * You can access this plugin via the `facebook` property in a Scene, i.e:
+ * 
+ * ```javascript
+ * this.facebook.getPlatform();
+ * ```
+ * 
+ * If this is unavailable please check to make sure you're using a build of Phaser that has
+ * this plugin within it. You can quickly check this by looking at the dev tools console
+ * header - the Phaser version number will have `-FB` after it if this plugin is loaded.
+ * 
+ * You will find that every Instant Games API method has a mapping in this plugin.
  * For a full list please consult either the plugin documentation, or the 6.2 SDK documentation
  * at https://developers.facebook.com/docs/games/instant-games/sdk/fbinstant6.2
  * 
