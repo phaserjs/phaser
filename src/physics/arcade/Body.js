@@ -423,7 +423,7 @@ var Body = new Class({
         /**
          * The Body's maximum speed.
          * 
-         * This limits Body's scalar value of speed. Always positive value.
+         * This limits Body's scalar value of speed. Always has positive value.
          * 
          * Negative value means that there is no limitation on speed.
          * 
@@ -1533,7 +1533,7 @@ var Body = new Class({
     },
 
     /**
-     * Sets the Body's maximum speed(Scalar value).
+     * Sets the maximum scalar value of Body's velocity.
      * 
      * @method Phaser.Physics.Arcade.Body#setMaxSpeed
      * @since 3.13.0
