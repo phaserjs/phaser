@@ -427,7 +427,9 @@ var Body = new Class({
          * 
          * Negative value means that there is no limitation on speed.
          * 
-         *  
+         * @name Phaser.Physics.Arcade.Body#maxSpeed
+         * @type {number}
+         * @since 3.13.0 
          */
         this.maxSpeed = -1;
 
