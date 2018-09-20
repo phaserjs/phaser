@@ -28,6 +28,10 @@ var Purchase = require('./Purchase');
  * If this is unavailable please check to make sure you're using a build of Phaser that has
  * this plugin within it. You can quickly check this by looking at the dev tools console
  * header - the Phaser version number will have `-FB` after it if this plugin is loaded.
+ *
+ * If you are building your own version of Phaser then use this Webpack DefinePlugin flag:
+ * 
+ * `"typeof PLUGIN_FBINSTANT": JSON.stringify(true)`
  * 
  * You will find that every Instant Games API method has a mapping in this plugin.
  * For a full list please consult either the plugin documentation, or the 6.2 SDK documentation
@@ -683,7 +687,7 @@ var FacebookInstantGamesPlugin = new Class({
     
             scene.load.image(key, this.playerPhotoURL);
     
-            scene.load.on('complete', function ()
+            scene.load.once('filecomplete_image_' + key, function ()
             {
                 this.emit('photocomplete', key);
 
