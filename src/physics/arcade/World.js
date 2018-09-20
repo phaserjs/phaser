@@ -1270,6 +1270,8 @@ var World = new Class({
         var maxY = body.maxVelocity.y;
 
         var speed = body.speed;
+        var maxSpeed = body.maxSpeed;
+        var newSpeed = 0;
         var allowDrag = body.allowDrag;
         var useDamping = body.useDamping;
 
@@ -1354,7 +1356,16 @@ var World = new Class({
         velocityX = Clamp(velocityX, -maxX, maxX);
         velocityY = Clamp(velocityY, -maxY, maxY);
 
-        body.velocity.set(velocityX, velocityY);
+        newSpeed = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
+        if(maxSpeed >= 0 && FuzzyGreaterThan(newSpeed, maxSpeed, 0.001))
+        {
+            body.velocity.set(velocityX / newSpeed * maxSpeed, velocityY / newSpeed * maxSpeed);
+        }
+        else
+        {
+            body.velocity.set(velocityX, velocityY);
+        }
+        
     },
 
     /**
