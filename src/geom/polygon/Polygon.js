@@ -51,15 +51,15 @@ var Polygon = new Class({
     },
 
     /**
-     * [description]
+     * Check to see if the Polygon contains the given x / y coordinates.
      *
      * @method Phaser.Geom.Polygon#contains
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
+     * @param {number} x - The x coordinate to check within the polygon.
+     * @param {number} y - The y coordinate to check within the polygon.
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if the coordinates are within the polygon, otherwise `false`.
      */
     contains: function (x, y)
     {
@@ -141,7 +141,7 @@ var Polygon = new Class({
      * @method Phaser.Geom.Polygon#calculateArea
      * @since 3.0.0
      *
-     * @return {number} [description]
+     * @return {number} The area of the polygon.
      */
     calculateArea: function ()
     {

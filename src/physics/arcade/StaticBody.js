@@ -454,13 +454,13 @@ var StaticBody = new Class({
     },
 
     /**
-     * [description]
+     * Sets the offset of the body.
      *
      * @method Phaser.Physics.Arcade.StaticBody#setOffset
      * @since 3.4.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
+     * @param {number} x - The horizontal offset of the Body from the Game Object's center.
+     * @param {number} y - The vertical offset of the Body from the Game Object's center.
      *
      * @return {Phaser.Physics.Arcade.StaticBody} This Static Body object.
      */
@@ -651,7 +651,7 @@ var StaticBody = new Class({
     },
 
     /**
-     * [description]
+     * Checks to see if a given x,y coordinate is colliding with this Static Body.
      *
      * @method Phaser.Physics.Arcade.StaticBody#hitTest
      * @since 3.0.0

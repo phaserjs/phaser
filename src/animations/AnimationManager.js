@@ -187,7 +187,7 @@ var AnimationManager = new Class({
      * @since 3.0.0
      *
      * @param {(string|JSONAnimationManager|JSONAnimation)} data - [description]
-     * @param {boolean} [clearCurrentAnimations=false] - [description]
+     * @param {boolean} [clearCurrentAnimations=false] - If set to `true`, the current animations will be removed (`anims.clear()`). If set to `false` (default), the animations in `data` will be added.
      *
      * @return {Phaser.Animations.Animation[]} An array containing all of the Animation objects that were created as a result of this call.
      */

@@ -275,7 +275,7 @@ var Config = new Class({
         }
 
         /**
-         * @const {number} Phaser.Boot.Config#renderType - [description]
+         * @const {number} Phaser.Boot.Config#renderType - Force Phaser to use a specific renderer. Can be `CONST.CANVAS`, `CONST.WEBGL`, `CONST.HEADLESS` or `CONST.AUTO` (default)
          */
         this.renderType = GetValue(config, 'type', CONST.AUTO);
 

@@ -8,6 +8,21 @@
 
 ### Bug Fixes
 
+### Examples, Documentation and TypeScript
+
+My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
+
+@shaneMLK
+Arian Fornaris
+cyantree
+DannyT
+Elliott Wallace
+Lee
+Nathaniel Foldan
+Peter Pedersen
+Stephen Hamilton
+STuFF
+
 
 ## Version 3.13.0 - Yuuki - 20th September 2018
 
