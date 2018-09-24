@@ -429,8 +429,7 @@ var Body = new Class({
 
         /**
          * The Body's absolute maximum velocity, in pixels per second.
-         *
-         * This limits the Body's actual rate of movement but not its `velocity` values (which can still exceed `maxVelocity`).
+         * The horizontal and vertical components are applied separately.
          *
          * @name Phaser.Physics.Arcade.Body#maxVelocity
          * @type {Phaser.Math.Vector2}
