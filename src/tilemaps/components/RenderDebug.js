@@ -44,6 +44,8 @@ var RenderDebug = function (graphics, styleConfig, layer)
 
     var tiles = GetTilesWithin(0, 0, layer.width, layer.height, null, layer);
 
+    graphics.translate(layer.tilemapLayer.x, layer.tilemapLayer.y);
+
     for (var i = 0; i < tiles.length; i++)
     {
         var tile = tiles[i];
@@ -54,6 +56,7 @@ var RenderDebug = function (graphics, styleConfig, layer)
         var y = tile.pixelY;
 
         var color = tile.collides ? collidingTileColor : tileColor;
+
         if (color !== null)
         {
             graphics.fillStyle(color.color, color.alpha / 255);
@@ -69,6 +72,7 @@ var RenderDebug = function (graphics, styleConfig, layer)
         if (faceColor !== null)
         {
             graphics.lineStyle(1, faceColor.color, faceColor.alpha / 255);
+
             if (tile.faceTop) { graphics.lineBetween(x, y, x + tw, y); }
             if (tile.faceRight) { graphics.lineBetween(x + tw, y, x + tw, y + th); }
             if (tile.faceBottom) { graphics.lineBetween(x, y + th, x + tw, y + th); }
