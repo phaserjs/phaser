@@ -261,7 +261,7 @@ var TextureTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#onBind
      * @since 3.0.0
      *
-     * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} This pipeline instance.
+     * @return {this} This WebGLPipeline instance.
      */
     onBind: function ()
     {
@@ -282,7 +282,7 @@ var TextureTintPipeline = new Class({
      * @param {number} height - The new height.
      * @param {number} resolution - The resolution.
      *
-     * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} This pipeline instance.
+     * @return {this} This WebGLPipeline instance.
      */
     resize: function (width, height, resolution)
     {
@@ -318,7 +318,7 @@ var TextureTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#flush
      * @since 3.0.0
      *
-     * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} This pipeline instance.
+     * @return {this} This WebGLPipeline instance.
      */
     flush: function ()
     {
