@@ -186,7 +186,7 @@ var Tileset = new Class({
          * @type {object}
          * @since 3.14.0
         */
-       this.tileIndexMap = null;
+        this.tileIndexMap = null;
     },
 
     /**
