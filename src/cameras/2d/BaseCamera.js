@@ -802,8 +802,8 @@ var BaseCamera = new Class({
         var sy = y + ((scrollX * s + scrollY * c) * zoom);
 
         //  Apply transform to point
-        output.x = (sx * ima + sy * imc + ime) * res;
-        output.y = (sx * imb + sy * imd + imf) * res;
+        output.x = (sx * ima + sy * imc) * res + ime;
+        output.y = (sx * imb + sy * imd) * res + imf;
 
         return output;
     },
