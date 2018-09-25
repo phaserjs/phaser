@@ -7,6 +7,7 @@
 ### Updates
 
 * The Loader has been updated to handle the impact of you destroying the game instance while still processing files. It will no longer throw cache and texture related errors. Fix #4049 (thanks @pantoninho)
+* `TileSet.getTileData()` has been updated so it will return tile data from either Tiled 1.1.x or the new Tiled 1.2.x JSON structure. Fix #3998 (thanks @martin-pabst @halgorithm)
 
 ### Bug Fixes
 
