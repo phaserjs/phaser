@@ -5,7 +5,7 @@
  */
 
 /**
- * [description]
+ * A component to manipulate gravity for Matter.js bodies.
  *
  * @name Phaser.Physics.Matter.Components.Gravity
  * @since 3.0.0
@@ -13,12 +13,12 @@
 var Gravity = {
 
     /**
-     * [description]
+     * Ignore gravity.
      *
      * @method Phaser.Physics.Matter.Components.Gravity#setIgnoreGravity
      * @since 3.0.0
      *
-     * @param {boolean} value - [description]
+     * @param {boolean} value - Flag toignore gravity.
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
