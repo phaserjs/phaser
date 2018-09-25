@@ -6,6 +6,8 @@
 
 ### Updates
 
+* The Loader has been updated to handle the impact of you destroying the game instance while still processing files. It will no longer throw cache and texture related errors. Fix #4049 (thanks @pantoninho)
+
 ### Bug Fixes
 
 * GameObjects added to and removed from Containers no longer listen for the `shutdown` event at all (thanks Vitali)
