@@ -10,6 +10,7 @@
 
 * GameObjects added to and removed from Containers no longer listen for the `shutdown` event at all (thanks Vitali)
 * Sprites now have `preDestroy` method, which is called automatically by `destroy`. The method destroys the Animation component, unregistering the `remove` event in the process and freeing-up resources. Fix #4051 (thanks @Aveyder)
+* `Tilemap.setBaseTileSize` now sets the size into the LayerData `baseTileWidth` and `baseTileHeight` properties accordingly. Fix #4057 (thanks @imilo)
 
 ### Examples, Documentation and TypeScript
 

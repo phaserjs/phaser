@@ -1994,8 +1994,8 @@ var Tilemap = new Class({
         // Update the base tile size on all layers & tiles
         for (var i = 0; i < this.layers.length; i++)
         {
-            this.layers[i].baseWidth = tileWidth;
-            this.layers[i].baseHeight = tileHeight;
+            this.layers[i].baseTileWidth = tileWidth;
+            this.layers[i].baseTileHeight = tileHeight;
 
             var mapData = this.layers[i].data;
             var mapWidth = this.layers[i].width;
