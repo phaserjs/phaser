@@ -572,7 +572,7 @@ var Body = new Class({
 
         /**
          * A flag disabling the default horizontal separation of colliding bodies.
-         * Pass your own `processHandler` to the collider.
+         * Pass your own `collideCallback` to the collider.
          *
          * @name Phaser.Physics.Arcade.Body#customSeparateX
          * @type {boolean}
@@ -583,7 +583,7 @@ var Body = new Class({
 
         /**
          * A flag disabling the default vertical separation of colliding bodies.
-         * Pass your own `processHandler` to the collider.
+         * Pass your own `collideCallback` to the collider.
          *
          * @name Phaser.Physics.Arcade.Body#customSeparateY
          * @type {boolean}
