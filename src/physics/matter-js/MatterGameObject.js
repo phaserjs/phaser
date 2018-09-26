@@ -44,6 +44,7 @@ var MatterGameObject = function (world, gameObject, options)
 
     //  Temp body pos to avoid body null checks
     gameObject.body = {
+        temp: true,
         position: {
             x: x,
             y: y
