@@ -536,7 +536,7 @@ var StaticTilemapLayer = new Class({
 
         if (!texCoords)
         {
-            return;
+            return vOffset;
         }
 
         var u0 = texCoords.x / width;

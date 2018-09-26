@@ -31,12 +31,14 @@
 * The `Shape.Line` object was missing a `lineWidth` property unless you called the `setLineWidth` method, causing the line to not render in Canvas only. Fix #4068 (thanks @netgfx)
 * All parts of Matter Body now have the `gameObject` property set correctly. Previously only the first part of the Body did.
 * When using `MatterGameObject` and `fromVerts` as the shape type it wouldn't pass the values to `Bodies.fromVertices` because of a previous conditional. It now passes them over correctly and the body is only set if the result is valid.
+* The Static Tilemap Layer would stop drawing all tiles from that point on, if it encountered a tile which had invalid texture coordinates (such as a tile from another tileset). It now skips invalid tiles properly again. Fix #4002 (thanks @jdotrjs)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
 @shaneMLK
+@wemyss
 Arian Fornaris
 cyantree
 DannyT
@@ -46,7 +48,6 @@ Nathaniel Foldan
 Peter Pedersen
 Stephen Hamilton
 STuFF
-
 
 ## Version 3.13.0 - Yuuki - 20th September 2018
 
