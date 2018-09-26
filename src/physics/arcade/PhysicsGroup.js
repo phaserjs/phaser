@@ -25,6 +25,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @property {number} [bounceY=0] - Sets {@link Phaser.Physics.Arcade.Body#bounce bounce.y}.
  * @property {number} [dragX=0] - Sets {@link Phaser.Physics.Arcade.Body#drag drag.x}.
  * @property {number} [dragY=0] - Sets {@link Phaser.Physics.Arcade.Body#drag drag.y}.
+ * @property {boolean} [enable=true] - Sets {@link Phaser.Physics.Arcade.Body#enable enable}.
  * @property {number} [gravityX=0] - Sets {@link Phaser.Physics.Arcade.Body#gravity gravity.x}.
  * @property {number} [gravityY=0] - Sets {@link Phaser.Physics.Arcade.Body#gravity gravity.y}.
  * @property {number} [frictionX=0] - Sets {@link Phaser.Physics.Arcade.Body#friction friction.x}.
@@ -51,6 +52,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @property {number} setBounceY - [description]
  * @property {number} setDragX - [description]
  * @property {number} setDragY - [description]
+ * @property {boolean} setEnable - [description]
  * @property {number} setGravityX - [description]
  * @property {number} setGravityY - [description]
  * @property {number} setFrictionX - [description]
@@ -163,6 +165,7 @@ var PhysicsGroup = new Class({
             setBounceY: GetFastValue(config, 'bounceY', 0),
             setDragX: GetFastValue(config, 'dragX', 0),
             setDragY: GetFastValue(config, 'dragY', 0),
+            setEnable: GetFastValue(config, 'enable', true),
             setGravityX: GetFastValue(config, 'gravityX', 0),
             setGravityY: GetFastValue(config, 'gravityY', 0),
             setFrictionX: GetFastValue(config, 'frictionX', 0),
