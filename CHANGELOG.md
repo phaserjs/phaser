@@ -4,12 +4,21 @@
 
 ### New Features
 
+* `bodyDebugFillColor` is a new Matter Physics debug option that allows you to set a color used when drawing filled bodies to the debug Graphic.
+* `debugWireframes` is a new Matter Physics debug option that allows you to control if the wireframes of the bodies are used when drawing to the debug Graphic. The default is `true`. If enabled bodies are not filled.
+* `debugShowInternalEdges` is a new Matter Physics debug option that allows you to set if the internal edges of a body are rendered to the debug Graphic.
+* `debugShowConvexHulls` is a new Matter Physics debug option that allows you to control if the convex hull of a body is drawn to the debug Graphic. The default is `false`.
+* `debugConvexHullColor` is a new Matter Physics debug option that lets you set the color of the convex hull, if being drawn to the debug Graphic.
+* `debugShowSleeping` is a new Matter Physics debug option that lets you draw sleeping bodies at 50% opacity.
+
 ### Updates
 
 * The Loader has been updated to handle the impact of you destroying the game instance while still processing files. It will no longer throw cache and texture related errors. Fix #4049 (thanks @pantoninho)
 * `TileSet.getTileData()` has been updated so it will return tile data from either Tiled 1.1.x or the new Tiled 1.2.x JSON structure. Fix #3998 (thanks @martin-pabst @halgorithm)
 * `Polygon.setTo` can now take a string of space separated numbers when creating the polygon data, i.e.: `'40 0 40 20 100 20 100 80 40 80 40 100 0 50'`. This update also impacts the Polygon Shape object, which can now also take this format as well.
 * The `poly-decomp` library, as used by Matter.js, has been updated to 0.3.0.
+* `Matter.verts`, available via `this.matter.verts` from within a Scene, is a quick way of accessing the Matter Vertices functions.
+* You can now specify the vertices for a Matter `fromVerts` body as a string.
 
 ### Bug Fixes
 
@@ -20,6 +29,8 @@
 * `UpdateList.shutdown` wasn't correctly iterating over the pending lists (thanks @felipeprov)
 * Input detection was known to be broken when the game resolution was !== 1 and the Camera zoom level was !== 1. Fix #4010 (thanks @s-s)
 * The `Shape.Line` object was missing a `lineWidth` property unless you called the `setLineWidth` method, causing the line to not render in Canvas only. Fix #4068 (thanks @netgfx)
+* All parts of Matter Body now have the `gameObject` property set correctly. Previously only the first part of the Body did.
+* When using `MatterGameObject` and `fromVerts` as the shape type it wouldn't pass the values to `Bodies.fromVertices` because of a previous conditional. It now passes them over correctly and the body is only set if the result is valid.
 
 ### Examples, Documentation and TypeScript
 
