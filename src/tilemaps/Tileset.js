@@ -223,17 +223,7 @@ var Tileset = new Class({
     {
         if (!this.containsTileIndex(tileIndex)) { return null; }
 
-        if (!this.tileIndexMap)
-        {
-            this.tileIndexMap = {};
-
-            for (var i = 0; i < this.tileData.length; i++)
-            {
-                this.tileIndexMap[this.tileData[i]['id']] = this.tileData[i];
-            }
-        }
-        
-        return this.tileIndexMap[tileIndex - this.firstgid];
+        return this.tileData[tileIndex - this.firstgid];
     },
 
     /**

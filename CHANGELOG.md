@@ -11,11 +11,11 @@
 * `debugConvexHullColor` is a new Matter Physics debug option that lets you set the color of the convex hull, if being drawn to the debug Graphic.
 * `debugShowSleeping` is a new Matter Physics debug option that lets you draw sleeping bodies at 50% opacity.
 * Static Tilemap Layers now support tile rotation and flipping. Previously this was a feature only for Dynamic Tilemap Layers, but now both have it. Close #4037 (thanks @thisredone)
+* `ParseTilesets` has been rewritten so it will convert the new data structures of Tiled 1.2 into the format expected by Phaser, allowing you to use either Tiled 1.2.x or Tiled 1.1 JSON exports. Fix #3998 (thanks @martin-pabst @halgorithm)
 
 ### Updates
 
 * The Loader has been updated to handle the impact of you destroying the game instance while still processing files. It will no longer throw cache and texture related errors. Fix #4049 (thanks @pantoninho)
-* `TileSet.getTileData()` has been updated so it will return tile data from either Tiled 1.1.x or the new Tiled 1.2.x JSON structure. Fix #3998 (thanks @martin-pabst @halgorithm)
 * `Polygon.setTo` can now take a string of space separated numbers when creating the polygon data, i.e.: `'40 0 40 20 100 20 100 80 40 80 40 100 0 50'`. This update also impacts the Polygon Shape object, which can now also take this format as well.
 * The `poly-decomp` library, as used by Matter.js, has been updated to 0.3.0.
 * `Matter.verts`, available via `this.matter.verts` from within a Scene, is a quick way of accessing the Matter Vertices functions.
