@@ -10,6 +10,7 @@ var CONST = require('../../const');
 var GameObject = require('../../gameobjects/GameObject');
 var StaticTilemapLayerRender = require('./StaticTilemapLayerRender');
 var TilemapComponents = require('../components');
+var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 var Utils = require('../../renderer/webgl/Utils');
 
 /**
@@ -301,6 +302,16 @@ var StaticTilemapLayer = new Class({
          */
         this._renderOrder = 0;
 
+        /**
+         * A temporary Transform Matrix, re-used internally during batching.
+         *
+         * @name Phaser.Tilemaps.StaticTilemapLayer#_tempMatrix
+         * @private
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.14.0
+         */
+        this._tempMatrix = new TransformMatrix();
+
         this.setAlpha(this.layer.alpha);
         this.setPosition(x, y);
         this.setOrigin();
@@ -527,11 +538,6 @@ var StaticTilemapLayer = new Class({
      */
     batchTile: function (vOffset, tile, tileset, width, height, camera)
     {
-        var tx = tile.pixelX;
-        var ty = tile.pixelY;
-        var txw = tx + tile.width;
-        var tyh = ty + tile.height;
-
         var texCoords = tileset.getTileTextureCoordinates(tile.index);
 
         if (!texCoords)
@@ -544,16 +550,47 @@ var StaticTilemapLayer = new Class({
         var u1 = (texCoords.x + tile.width) / width;
         var v1 = (texCoords.y + tile.height) / height;
 
+        var matrix = this._tempMatrix;
+
+        var tileWidth = tile.width;
+        var tileHeight = tile.height;
+
+        var halfTileWidth = tileWidth / 2;
+        var halfTileHeight = tileHeight / 2;
+
+        var x = -halfTileWidth;
+        var y = -halfTileHeight;
+
+        if (tile.flipX)
+        {
+            tileWidth *= -1;
+            x += tile.width;
+        }
+
+        if (tile.flipY)
+        {
+            tileHeight *= -1;
+            y += tile.height;
+        }
+
+        var xw = x + tileWidth;
+        var yh = y + tileHeight;
+
+        matrix.applyITRS(halfTileWidth + tile.pixelX, halfTileHeight + tile.pixelY, tile.rotation, 1, 1);
+
         var tint = Utils.getTintAppendFloatAlpha(0xffffff, camera.alpha * this.alpha * tile.alpha);
 
-        var tx0 = tx;
-        var ty0 = ty;
-        var tx1 = tx;
-        var ty1 = tyh;
-        var tx2 = txw;
-        var ty2 = tyh;
-        var tx3 = txw;
-        var ty3 = ty;
+        var tx0 = matrix.getX(x, y);
+        var ty0 = matrix.getY(x, y);
+
+        var tx1 = matrix.getX(x, yh);
+        var ty1 = matrix.getY(x, yh);
+
+        var tx2 = matrix.getX(xw, yh);
+        var ty2 = matrix.getY(xw, yh);
+
+        var tx3 = matrix.getX(xw, y);
+        var ty3 = matrix.getY(xw, y);
 
         if (camera.roundPixels)
         {

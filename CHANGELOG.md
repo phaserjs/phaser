@@ -10,6 +10,7 @@
 * `debugShowConvexHulls` is a new Matter Physics debug option that allows you to control if the convex hull of a body is drawn to the debug Graphic. The default is `false`.
 * `debugConvexHullColor` is a new Matter Physics debug option that lets you set the color of the convex hull, if being drawn to the debug Graphic.
 * `debugShowSleeping` is a new Matter Physics debug option that lets you draw sleeping bodies at 50% opacity.
+* Static Tilemap Layers now support tile rotation and flipping. Previously this was a feature only for Dynamic Tilemap Layers, but now both have it. Close #4037 (thanks @thisredone)
 
 ### Updates
 
