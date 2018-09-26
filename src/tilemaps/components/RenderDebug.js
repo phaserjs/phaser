@@ -7,6 +7,10 @@
 var GetTilesWithin = require('./GetTilesWithin');
 var Color = require('../../display/color');
 
+var defaultTileColor = new Color(105, 210, 231, 150);
+var defaultCollidingTileColor = new Color(243, 134, 48, 200);
+var defaultFaceColor = new Color(40, 39, 37, 150);
+
 /**
  * Draws a debug representation of the layer to the given Graphics. This is helpful when you want to
  * get a quick idea of which of your tiles are colliding and which have interesting faces. The tiles
@@ -32,19 +36,14 @@ var RenderDebug = function (graphics, styleConfig, layer)
     if (styleConfig === undefined) { styleConfig = {}; }
 
     // Default colors without needlessly creating Color objects
-    var tileColor = styleConfig.tileColor !== undefined
-        ? styleConfig.tileColor
-        : new Color(105, 210, 231, 150);
-    var collidingTileColor = styleConfig.collidingTileColor !== undefined
-        ? styleConfig.collidingTileColor
-        : new Color(243, 134, 48, 200);
-    var faceColor = styleConfig.faceColor !== undefined
-        ? styleConfig.faceColor
-        : new Color(40, 39, 37, 150);
+    var tileColor = (styleConfig.tileColor !== undefined) ? styleConfig.tileColor : defaultTileColor;
+    var collidingTileColor = (styleConfig.collidingTileColor !== undefined) ? styleConfig.collidingTileColor : defaultCollidingTileColor;
+    var faceColor = (styleConfig.faceColor !== undefined) ? styleConfig.faceColor : defaultFaceColor;
 
     var tiles = GetTilesWithin(0, 0, layer.width, layer.height, null, layer);
 
     graphics.translate(layer.tilemapLayer.x, layer.tilemapLayer.y);
+    graphics.scale(layer.tilemapLayer.scaleX, layer.tilemapLayer.scaleY);
 
     for (var i = 0; i < tiles.length; i++)
     {
