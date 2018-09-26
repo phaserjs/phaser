@@ -9,6 +9,7 @@
 * The Loader has been updated to handle the impact of you destroying the game instance while still processing files. It will no longer throw cache and texture related errors. Fix #4049 (thanks @pantoninho)
 * `TileSet.getTileData()` has been updated so it will return tile data from either Tiled 1.1.x or the new Tiled 1.2.x JSON structure. Fix #3998 (thanks @martin-pabst @halgorithm)
 * `Polygon.setTo` can now take a string of space separated numbers when creating the polygon data, i.e.: `'40 0 40 20 100 20 100 80 40 80 40 100 0 50'`. This update also impacts the Polygon Shape object, which can now also take this format as well.
+* The `poly-decomp` library, as used by Matter.js, has been updated to 0.3.0.
 
 ### Bug Fixes
 
