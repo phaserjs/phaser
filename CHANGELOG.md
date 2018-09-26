@@ -20,6 +20,7 @@
 * The `poly-decomp` library, as used by Matter.js, has been updated to 0.3.0.
 * `Matter.verts`, available via `this.matter.verts` from within a Scene, is a quick way of accessing the Matter Vertices functions.
 * You can now specify the vertices for a Matter `fromVerts` body as a string.
+* `TextureTintPipeline.batchTexture` has a new optional argument `skipFlip` which allows you to control the internal render texture flip Y check.
 
 ### Bug Fixes
 
@@ -34,6 +35,7 @@
 * All parts of Matter Body now have the `gameObject` property set correctly. Previously only the first part of the Body did.
 * When using `MatterGameObject` and `fromVerts` as the shape type it wouldn't pass the values to `Bodies.fromVertices` because of a previous conditional. It now passes them over correctly and the body is only set if the result is valid.
 * The Static Tilemap Layer would stop drawing all tiles from that point on, if it encountered a tile which had invalid texture coordinates (such as a tile from another tileset). It now skips invalid tiles properly again. Fix #4002 (thanks @jdotrjs)
+* If you used a RenderTexture as a tileset then Dynamic Tilemap Layers would render the tiles inversed on the y-axis in WebGL. Fix #4017 (thanks @s-s)
 
 ### Examples, Documentation and TypeScript
 
