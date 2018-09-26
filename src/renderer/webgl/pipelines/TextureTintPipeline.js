@@ -701,6 +701,7 @@ var TextureTintPipeline = new Class({
      * @param {number} vOffset - Vertical offset on texture coordinate.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - Current used camera.
      * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - Parent container.
+     * @param {boolean} [skipFlip=false] - Skip the renderTexture check.
      */
     batchTexture: function (
         gameObject,
@@ -717,7 +718,8 @@ var TextureTintPipeline = new Class({
         tintTL, tintTR, tintBL, tintBR, tintEffect,
         uOffset, vOffset,
         camera,
-        parentTransformMatrix)
+        parentTransformMatrix,
+        skipFlip)
     {
         this.renderer.setPipeline(this, gameObject);
 
@@ -772,7 +774,7 @@ var TextureTintPipeline = new Class({
         }
 
         //  Invert the flipY if this is a RenderTexture
-        flipY = flipY ^ (texture.isRenderTexture ? 1 : 0);
+        flipY = flipY ^ (!skipFlip && texture.isRenderTexture ? 1 : 0);
 
         if (flipX)
         {
