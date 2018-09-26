@@ -71,6 +71,7 @@ var Polygon = new Class({
      *
      * The points can be set from a variety of formats:
      *
+     * - A string containing paired values separated by a single space: `'40 0 40 20 100 20 100 80 40 80 40 100 0 50'`
      * - An array of Point objects: `[new Phaser.Point(x1, y1), ...]`
      * - An array of objects with public x/y properties: `[obj1, obj2, ...]`
      * - An array of paired numbers that represent point coordinates: `[x1,y1, x2,y2, ...]`
@@ -90,6 +91,11 @@ var Polygon = new Class({
         this.area = 0;
         this.points = [];
 
+        if (typeof points === 'string')
+        {
+            points = points.split(' ');
+        }
+
         if (!Array.isArray(points))
         {
             return this;
@@ -103,10 +109,10 @@ var Polygon = new Class({
         {
             p = { x: 0, y: 0 };
 
-            if (typeof points[i] === 'number')
+            if (typeof points[i] === 'number' || typeof points[i] === 'string')
             {
-                p.x = points[i];
-                p.y = points[i + 1];
+                p.x = parseFloat(points[i]);
+                p.y = parseFloat(points[i + 1]);
                 i++;
             }
             else if (Array.isArray(points[i]))
