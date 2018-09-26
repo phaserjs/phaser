@@ -86,7 +86,8 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPer
             tint, tint, tint, tint, false,
             0, 0,
             camera,
-            null
+            null,
+            true
         );
     }
 };
