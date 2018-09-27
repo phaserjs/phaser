@@ -718,13 +718,10 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#createStaticLayer
      * @since 3.0.0
      *
-     * @param {(integer|string)} layerID - The layer array index value, or if a string is given, the
-     * layer name from Tiled.
-     * @param {Phaser.Tilemaps.Tileset} tileset - The tileset the new layer will use.
-     * @param {number} x - The x position to place the layer in the world. If not specified, it will
-     * default to the layer offset from Tiled or 0.
-     * @param {number} y - The y position to place the layer in the world. If not specified, it will
-     * default to the layer offset from Tiled or 0.
+     * @param {(integer|string)} layerID - The layer array index value, or if a string is given, the layer name from Tiled.
+     * @param {(string|string[]|Phaser.Tilemaps.Tileset|Phaser.Tilemaps.Tileset[])} tileset - The tileset, or an array of tilesets, used to render this layer. Can be a string or a Tileset object.
+     * @param {number} x - The x position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
+     * @param {number} y - The y position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
      *
      * @return {?Phaser.Tilemaps.StaticTilemapLayer} Returns the new layer was created, or null if it failed.
      */
@@ -748,17 +745,6 @@ var Tilemap = new Class({
         }
 
         this.currentLayerIndex = index;
-
-        // Make sure that all the LayerData and the tiles have the correct tile size. They usually
-        // are, but wouldn't match if you try to load a 2x or 4x res tileset when the map was made
-        // with a 1x res tileset.
-
-        /*
-        if (layerData.tileWidth !== tileset.tileWidth || layerData.tileHeight !== tileset.tileHeight)
-        {
-            this.setLayerTileSize(tileset.tileWidth, tileset.tileHeight, index);
-        }
-        */
 
         //  Default the x/y position to match Tiled layer offset, if it exists.
         if (x === undefined && this.layers[index].x) { x = this.layers[index].x; }
@@ -1303,6 +1289,23 @@ var Tilemap = new Class({
         if (layer === null) { return null; }
 
         return TilemapComponents.GetTilesWithinWorldXY(worldX, worldY, width, height, filteringOptions, camera, layer);
+    },
+
+    /**
+     * Gets the Tileset that has the given `name`, or null if an invalid `name` is given.
+     *
+     * @method Phaser.Tilemaps.Tilemap#getTileset
+     * @since 3.14.0
+     *
+     * @param {string} name - The name of the Tileset to get.
+     *
+     * @return {?Phaser.Tilemaps.Tileset} The Tileset, or `null` if no matching named tileset was found.
+     */
+    getTileset: function (name)
+    {
+        var index = this.getIndex(this.tilesets, name);
+
+        return (index !== null) ? this.tilesets[index] : null;
     },
 
     /**
