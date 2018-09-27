@@ -357,7 +357,6 @@ var StaticTilemapLayer = new Class({
         this.setOrigin();
         this.setSize(this.layer.tileWidth * this.layer.width, this.layer.tileHeight * this.layer.height);
 
-        this.updateIndexMap();
         this.updateVBOData();
 
         this.initPipeline('TextureTintPipeline');
@@ -382,6 +381,7 @@ var StaticTilemapLayer = new Class({
      */
     setTilesets: function (tilesets)
     {
+        var gidMap = [];
         var setList = [];
         var map = this.tilemap;
 
@@ -392,54 +392,28 @@ var StaticTilemapLayer = new Class({
 
         for (var i = 0; i < tilesets.length; i++)
         {
-            var key = tilesets[i];
+            var tileset = tilesets[i];
 
-            if (typeof key === 'string')
+            if (typeof tileset === 'string')
             {
-                var tileset = map.getTileset(key);
-
-                if (tileset)
-                {
-                    setList.push(tileset);
-                }
+                tileset = map.getTileset(tileset);
             }
-            else
+
+            if (tileset)
             {
-                setList.push(key);
+                setList.push(tileset);
+
+                var s = tileset.firstgid;
+
+                for (var t = 0; t < tileset.total; t++)
+                {
+                    gidMap[s + t] = tileset;
+                }
             }
         }
 
-        this.tileset = setList;
-    },
-
-    /**
-     * Parses the tilesets that this Layer uses and constructs the
-     * tileset index map used during Canvas rendering.
-     *
-     * @method Phaser.Tilemaps.StaticTilemapLayer#updateIndexMap
-     * @private
-     * @since 3.14.0
-     *
-     * @return {this} This Tilemap Layer object.
-     */
-    updateIndexMap: function ()
-    {
-        var gidMap = [];
-
-        this.tileset.forEach(function (singleSet)
-        {
-            var s = singleSet.firstgid;
-
-            for (var i = 0; i < singleSet.total; i++)
-            {
-                gidMap[s + i] = singleSet;
-            }
-    
-        });
-
         this.gidMap = gidMap;
-
-        return this;
+        this.tileset = setList;
     },
 
     /**
