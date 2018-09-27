@@ -319,7 +319,7 @@ var Tilemap = new Class({
 
         if (!this.scene.sys.textures.exists(key))
         {
-            console.warn('Invalid image key given for tileset: "' + key + '"');
+            console.warn('Invalid Tileset Image: ' + key);
             return null;
         }
 
@@ -329,16 +329,19 @@ var Tilemap = new Class({
 
         if (index === null && this.format === Formats.TILED_JSON)
         {
-            console.warn('No data found in the JSON tilemap from Tiled matching the tileset name: "' + tilesetName + '"');
+            console.warn('No data found for Tileset: ' + tilesetName);
             return null;
         }
 
-        if (this.tilesets[index])
+        var tileset = this.tilesets[index];
+
+        if (tileset)
         {
-            this.tilesets[index].setTileSize(tileWidth, tileHeight);
-            this.tilesets[index].setSpacing(tileMargin, tileSpacing);
-            this.tilesets[index].setImage(texture);
-            return this.tilesets[index];
+            tileset.setTileSize(tileWidth, tileHeight);
+            tileset.setSpacing(tileMargin, tileSpacing);
+            tileset.setImage(texture);
+
+            return tileset;
         }
 
         if (tileWidth === undefined) { tileWidth = this.tileWidth; }
@@ -347,8 +350,10 @@ var Tilemap = new Class({
         if (tileSpacing === undefined) { tileSpacing = 0; }
         if (gid === undefined) { gid = 0; }
 
-        var tileset = new Tileset(tilesetName, gid, tileWidth, tileHeight, tileMargin, tileSpacing);
+        tileset = new Tileset(tilesetName, gid, tileWidth, tileHeight, tileMargin, tileSpacing);
+
         tileset.setImage(texture);
+
         this.tilesets.push(tileset);
 
         return tileset;
@@ -729,30 +734,33 @@ var Tilemap = new Class({
 
         if (index === null)
         {
-            console.warn('Cannot create tilemap layer, invalid layer ID given: ' + layerID);
+            console.warn('Invalid Tilemap Layer ID: ' + layerID);
             return null;
         }
 
         var layerData = this.layers[index];
 
-        // Check for an associated static or dynamic tilemap layer
+        //  Check for an associated static or dynamic tilemap layer
         if (layerData.tilemapLayer)
         {
-            console.warn('Cannot create static tilemap layer since a static or dynamic tilemap layer exists for layer ID:' + layerID);
+            console.warn('Tilemap Layer ID already exists:' + layerID);
             return null;
         }
 
         this.currentLayerIndex = index;
 
-        // Make sure that all the LayerData & the tiles have the correct tile size. They usually
+        // Make sure that all the LayerData and the tiles have the correct tile size. They usually
         // are, but wouldn't match if you try to load a 2x or 4x res tileset when the map was made
         // with a 1x res tileset.
+
+        /*
         if (layerData.tileWidth !== tileset.tileWidth || layerData.tileHeight !== tileset.tileHeight)
         {
             this.setLayerTileSize(tileset.tileWidth, tileset.tileHeight, index);
         }
+        */
 
-        // Default the x/y position to match Tiled layer offset, if it exists.
+        //  Default the x/y position to match Tiled layer offset, if it exists.
         if (x === undefined && this.layers[index].x) { x = this.layers[index].x; }
         if (y === undefined && this.layers[index].y) { y = this.layers[index].y; }
 
