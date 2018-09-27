@@ -74,11 +74,20 @@ Arian Fornaris
 cyantree
 DannyT
 Elliott Wallace
+felixnemis
+griga
+Hsaka
+icbat
 Lee
 Nathaniel Foldan
 Peter Pedersen
+rootasjey
+Sam Frantz
+snowbillr
 Stephen Hamilton
 STuFF
+TadejZupancic
+
 
 ## Version 3.13.0 - Yuuki - 20th September 2018
 

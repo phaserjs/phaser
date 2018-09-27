@@ -181,9 +181,9 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {CanvasRenderingContext2D} [context] - Provide your own Canvas Context for Phaser to use, instead of creating one.
  * @property {object} [scene=null] - [description]
  * @property {string[]} [seed] - [description]
- * @property {string} [title=''] - [description]
- * @property {string} [url='http://phaser.io'] - [description]
- * @property {string} [version=''] - [description]
+ * @property {string} [title=''] - The title of the game.
+ * @property {string} [url='http://phaser.io'] - The url of the game.
+ * @property {string} [version=''] - The version of the game.
  * @property {boolean} [autoFocus=true] - Automatically call window.focus() when the game boots.
  * @property {(boolean|InputConfig)} [input] - [description]
  * @property {boolean} [disableContextMenu=false] - [description]
@@ -307,17 +307,17 @@ var Config = new Class({
         MATH.RND.init(this.seed);
 
         /**
-         * @const {string} Phaser.Boot.Config#gameTitle - [description]
+         * @const {string} Phaser.Boot.Config#gameTitle - The title of the game.
          */
         this.gameTitle = GetValue(config, 'title', '');
 
         /**
-         * @const {string} Phaser.Boot.Config#gameURL - [description]
+         * @const {string} Phaser.Boot.Config#gameURL - The URL of the game.
          */
         this.gameURL = GetValue(config, 'url', 'https://phaser.io');
 
         /**
-         * @const {string} Phaser.Boot.Config#gameVersion - [description]
+         * @const {string} Phaser.Boot.Config#gameVersion - The version of the game.
          */
         this.gameVersion = GetValue(config, 'version', '');
 
@@ -396,7 +396,7 @@ var Config = new Class({
         this.inputGamepadEventTarget = GetValue(config, 'input.gamepad.target', window);
 
         /**
-         * @const {boolean} Phaser.Boot.Config#disableContextMenu - [description]
+         * @const {boolean} Phaser.Boot.Config#disableContextMenu - Set to `true` to disable context menu. Default value is `false`.
          */
         this.disableContextMenu = GetValue(config, 'disableContextMenu', false);
 
@@ -466,7 +466,7 @@ var Config = new Class({
         this.roundPixels = GetValue(renderConfig, 'roundPixels', false);
 
         /**
-         * @const {boolean} Phaser.Boot.Config#pixelArt - [description]
+         * @const {boolean} Phaser.Boot.Config#pixelArt - Prevent pixel art from becoming blurred when scaled. It will remain crisp (tells the WebGL renderer to automatically create textures using a linear filter mode).
          */
         this.pixelArt = GetValue(renderConfig, 'pixelArt', false);
 
@@ -566,7 +566,7 @@ var Config = new Class({
         this.loaderPath = GetValue(config, 'loader.path', '');
 
         /**
-         * @const {integer} Phaser.Boot.Config#loaderMaxParallelDownloads - [description]
+         * @const {integer} Phaser.Boot.Config#loaderMaxParallelDownloads - Maximum parallel downloads allowed for resources (Default to 32).
          */
         this.loaderMaxParallelDownloads = GetValue(config, 'loader.maxParallelDownloads', 32);
 

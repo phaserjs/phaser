@@ -558,9 +558,9 @@ var Path = new Class({
      * @method Phaser.Curves.Path#getPoints
      * @since 3.0.0
      *
-     * @param {integer} [divisions=12] - Get random point on path.
+     * @param {integer} [divisions=12] - The number of points to divide the path in to.
      *
-     * @return {Phaser.Math.Vector2[]} [description]
+     * @return {Phaser.Math.Vector2[]} An array of Vector2 objects that containing the points along the Path.
      */
     getPoints: function (divisions)
     {
