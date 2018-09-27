@@ -50,6 +50,7 @@
 * `TextureTintPipeline.batchTexture` has a new optional argument `skipFlip` which allows you to control the internal render texture flip Y check.
 * The Device.OS check for `node` will now do a `typeof` first to avoid issues with rollup packaged builds needing to shim the variable out. Fix #4058 (thanks @hollowdoor)
 * Arcade Physics Bodies will now sync the display origin of the parent Game Object to the body properties as part of the `updateBounds` call. This means if you change the origin of an AP enabled Game Object, after creation of the body, it will be reflected in the body position. This may or may not be a breaking change for your game. Previously it was expected that the origin should always be 0.5 and you adjust the body using `setOffset`, but this change makes a bit more sense logically. If you find that your bodies are offset after upgrading to this version then this is likely why. Close #4052 (thanks @SolarOmni)
+* The `Texture.getFramesFromTextureSource` method has a new boolean argument `includeBase`, which defaults to `false` and allows you to set if the base frame should be returned into the array or not.
 
 ### Bug Fixes
 
@@ -60,6 +61,8 @@
 * The `Shape.Line` object was missing a `lineWidth` property unless you called the `setLineWidth` method, causing the line to not render in Canvas only. Fix #4068 (thanks @netgfx)
 * All parts of Matter Body now have the `gameObject` property set correctly. Previously only the first part of the Body did.
 * When using `MatterGameObject` and `fromVerts` as the shape type it wouldn't pass the values to `Bodies.fromVertices` because of a previous conditional. It now passes them over correctly and the body is only set if the result is valid.
+* The `Texture.getFramesFromTextureSource` method was returning an array of Frame names by mistake, instead of Frame references. It now returns the Frames themselves.
+* When using `CanvasTexture.refresh` or `Graphics.generateTexture` it would throw WebGL warnings like 'bindTexture: Attempt to bind a deleted texture'. This was due to the Frames losing sync with the glTexture reference used by their TextureSource. Fix #4050 (thanks @kanthi0802)
 
 ### Examples, Documentation and TypeScript
 
