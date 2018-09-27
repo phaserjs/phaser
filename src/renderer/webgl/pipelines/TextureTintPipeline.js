@@ -376,8 +376,8 @@ var TextureTintPipeline = new Class({
         var v1 = frame.v1;
         var frameX = frame.x;
         var frameY = frame.y;
-        var frameWidth = frame.width;
-        var frameHeight = frame.height;
+        var frameWidth = frame.cutWidth;
+        var frameHeight = frame.cutHeight;
 
         var x = -sprite.displayOriginX + frameX;
         var y = -sprite.displayOriginY + frameY;

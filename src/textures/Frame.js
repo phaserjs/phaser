@@ -502,6 +502,9 @@ var Frame = new Class({
             //  Need to check for intersection between the cut area and the crop area
             //  If there is none, we set UV to be empty, otherwise set it to be the intersection area
 
+            width = Clamp(width, 0, cw - x);
+            height = Clamp(height, 0, ch - y);
+    
             var cropRight = x + width;
             var cropBottom = y + height;
 

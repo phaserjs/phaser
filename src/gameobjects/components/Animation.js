@@ -968,6 +968,11 @@ var Animation = new Class({
         gameObject.texture = animationFrame.frame.texture;
         gameObject.frame = animationFrame.frame;
 
+        if (gameObject.isCropped)
+        {
+            gameObject.frame.updateCropUVs(gameObject._crop, gameObject.flipX, gameObject.flipY);
+        }
+
         gameObject.setSizeToFrame();
 
         if (animationFrame.frame.customPivot)
