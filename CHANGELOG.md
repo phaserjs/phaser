@@ -2,6 +2,28 @@
 
 ## Version 3.14.0 - Tachikoma - in development
 
+### Tilemap New Features, Updates and Fixes
+
+* `StaticTilemapLayer` now supports rendering multiple tilesets per layer in both Canvas and WebGL. To use multiple tilesets pass in an array of Tileset objects to the `createStaticLayer` method.
+* `ParseTilesets` has been rewritten so it will convert the new data structures of Tiled 1.2 into the format expected by Phaser, allowing you to use either Tiled 1.2.x or Tiled 1.1 JSON exports. Fix #3998 (thanks @martin-pabst @halgorithm)
+* `Tilemap.setBaseTileSize` now sets the size into the LayerData `baseTileWidth` and `baseTileHeight` properties accordingly. Fix #4057 (thanks @imilo)
+* Calling `Tilemap.renderDebug` ignored the layer world position when drawing to the Graphics object. It will now translate to the layer position before drawing. Fix #4061 (thanks @Zax37)
+* Calling `Tilemap.renderDebug` ignored the layer scale when drawing to the Graphics object. It will now scale the layer before drawing. Fix #4026 (thanks @JasonHK)
+* The Static Tilemap Layer would stop drawing all tiles from that point on, if it encountered a tile which had invalid texture coordinates (such as a tile from another tileset). It now skips invalid tiles properly again. Fix #4002 (thanks @jdotrjs)
+* If you used a RenderTexture as a tileset then Dynamic Tilemap Layers would render the tiles inversed on the y-axis in WebGL. Fix #4017 (thanks @s-s)
+* If you used a scaled Dynamic Tilemap Layer and rotated or flipped tiles, the tiles that were rotated or flipped would be positioned incorrectly in WebGL. Fix #3778 (thanks @nkholski)
+* `StaticTilemapLayer.tileset` is now an array of Tileset objects, where-as before it was a single reference.
+* `StaticTilemapLayer.vertexBuffer` is now an array of WebGLBuffer objects, where-as before it was a single instance.
+* `StaticTilemapLayer.bufferData` is now an array of ArrayBuffer objects, where-as before it was a single instance.
+* `StaticTilemapLayer.vertexViewF32` is now an array of Float3Array objects, where-as before it was a single instance.
+* `StaticTilemapLayer.vertexViewU32` is now an array of Uint32Array objects, where-as before it was a single instance.
+* `StaticTilemapLayer.dirty` is now an array of booleans, where-as before it was a single boolean.
+* `StaticTilemapLayer.vertextCount` is now an array of integers, where-as before it was a single integer.
+* `StaticTilemapLayer.updateIndexMap()` is a new private method that creates the internal tileset map for the Canvas renderer.
+* `StaticTilemapLayer.updateVBOData()` is a new private method that creates the internal VBO data arrays for the WebGL renderer.
+* The `StaticTilemapLayer.upload()` method has a new parameter `tilesetIndex` which controls which tileset to prepare the VBO data for.
+* The `StaticTilemapLayer.batchTile()` method has a new parameter `tilesetIndex` which controls which tileset to batch the tile for.
+
 ### New Features
 
 * `bodyDebugFillColor` is a new Matter Physics debug option that allows you to set a color used when drawing filled bodies to the debug Graphic.
@@ -11,7 +33,6 @@
 * `debugConvexHullColor` is a new Matter Physics debug option that lets you set the color of the convex hull, if being drawn to the debug Graphic.
 * `debugShowSleeping` is a new Matter Physics debug option that lets you draw sleeping bodies at 50% opacity.
 * Static Tilemap Layers now support tile rotation and flipping. Previously this was a feature only for Dynamic Tilemap Layers, but now both have it. Close #4037 (thanks @thisredone)
-* `ParseTilesets` has been rewritten so it will convert the new data structures of Tiled 1.2 into the format expected by Phaser, allowing you to use either Tiled 1.2.x or Tiled 1.1 JSON exports. Fix #3998 (thanks @martin-pabst @halgorithm)
 
 ### Updates
 
@@ -28,17 +49,11 @@
 
 * GameObjects added to and removed from Containers no longer listen for the `shutdown` event at all (thanks Vitali)
 * Sprites now have `preDestroy` method, which is called automatically by `destroy`. The method destroys the Animation component, unregistering the `remove` event in the process and freeing-up resources. Fix #4051 (thanks @Aveyder)
-* `Tilemap.setBaseTileSize` now sets the size into the LayerData `baseTileWidth` and `baseTileHeight` properties accordingly. Fix #4057 (thanks @imilo)
-* Calling `Tilemap.renderDebug` ignored the layer world position when drawing to the Graphics object. It will now translate to the layer position before drawing. Fix #4061 (thanks @Zax37)
-* Calling `Tilemap.renderDebug` ignored the layer scale when drawing to the Graphics object. It will now scale the layer before drawing. Fix #4026 (thanks @JasonHK)
 * `UpdateList.shutdown` wasn't correctly iterating over the pending lists (thanks @felipeprov)
 * Input detection was known to be broken when the game resolution was !== 1 and the Camera zoom level was !== 1. Fix #4010 (thanks @s-s)
 * The `Shape.Line` object was missing a `lineWidth` property unless you called the `setLineWidth` method, causing the line to not render in Canvas only. Fix #4068 (thanks @netgfx)
 * All parts of Matter Body now have the `gameObject` property set correctly. Previously only the first part of the Body did.
 * When using `MatterGameObject` and `fromVerts` as the shape type it wouldn't pass the values to `Bodies.fromVertices` because of a previous conditional. It now passes them over correctly and the body is only set if the result is valid.
-* The Static Tilemap Layer would stop drawing all tiles from that point on, if it encountered a tile which had invalid texture coordinates (such as a tile from another tileset). It now skips invalid tiles properly again. Fix #4002 (thanks @jdotrjs)
-* If you used a RenderTexture as a tileset then Dynamic Tilemap Layers would render the tiles inversed on the y-axis in WebGL. Fix #4017 (thanks @s-s)
-* If you used a scaled Dynamic Tilemap Layer and rotated or flipped tiles, the tiles that were rotated or flipped would be positioned incorrectly in WebGL. Fix #3778 (thanks @nkholski)
 
 ### Examples, Documentation and TypeScript
 
