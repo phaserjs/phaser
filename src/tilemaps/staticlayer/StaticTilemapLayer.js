@@ -45,7 +45,7 @@ var Utils = require('../../renderer/webgl/Utils');
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs.
  * @param {Phaser.Tilemaps.Tilemap} tilemap - The Tilemap this layer is a part of.
  * @param {integer} layerIndex - The index of the LayerData associated with this layer.
- * @param {(Phaser.Tilemaps.Tileset|Phaser.Tilemaps.Tileset[])} tileset - The tileset, or an array of tilesets, used to render this layer.
+ * @param {(string|string[]|Phaser.Tilemaps.Tileset|Phaser.Tilemaps.Tileset[])} tileset - The tileset, or an array of tilesets, used to render this layer. Can be a string or a Tileset object.
  * @param {number} [x=0] - The world x position where the top left of this layer will be placed.
  * @param {number} [y=0] - The world y position where the top left of this layer will be placed.
  */
@@ -122,10 +122,10 @@ var StaticTilemapLayer = new Class({
          * As of Phaser 3.14 this property is now an array of Tileset objects, previously it was a single reference.
          *
          * @name Phaser.Tilemaps.StaticTilemapLayer#tileset
-         * @type {(Phaser.Tilemaps.Tileset)}
+         * @type {Phaser.Tilemaps.Tileset[]}
          * @since 3.0.0
          */
-        this.tileset = (Array.isArray(tileset)) ? tileset : [ tileset ];
+        this.tileset = [];
 
         /**
          * Used internally by the Canvas renderer.
@@ -351,6 +351,7 @@ var StaticTilemapLayer = new Class({
          */
         this.gidMap = [];
 
+        this.setTilesets(tileset);
         this.setAlpha(this.layer.alpha);
         this.setPosition(x, y);
         this.setOrigin();
@@ -368,6 +369,47 @@ var StaticTilemapLayer = new Class({
                 this.updateVBOData();
             }, this);
         }
+    },
+
+    /**
+     * Populates the internal `tileset` array with the Tileset references this Layer requires for rendering.
+     *
+     * @method Phaser.Tilemaps.StaticTilemapLayer#setTilesets
+     * @private
+     * @since 3.14.0
+     * 
+     * @param {(string|string[]|Phaser.Tilemaps.Tileset|Phaser.Tilemaps.Tileset[])} tileset - The tileset, or an array of tilesets, used to render this layer. Can be a string or a Tileset object.
+     */
+    setTilesets: function (tilesets)
+    {
+        var setList = [];
+        var map = this.tilemap;
+
+        if (!Array.isArray(tilesets))
+        {
+            tilesets = [ tilesets ];
+        }
+
+        for (var i = 0; i < tilesets.length; i++)
+        {
+            var key = tilesets[i];
+
+            if (typeof key === 'string')
+            {
+                var tileset = map.getTileset(key);
+
+                if (tileset)
+                {
+                    setList.push(tileset);
+                }
+            }
+            else
+            {
+                setList.push(key);
+            }
+        }
+
+        this.tileset = setList;
     },
 
     /**
