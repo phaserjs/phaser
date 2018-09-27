@@ -240,7 +240,7 @@ var StaticTilemapLayer = new Class({
         /**
          * An array of vertex buffer objects, used by the WebGL renderer.
          * 
-         * As of Phaser 3.14 this property is now an array, previously it was a single instance.
+         * As of Phaser 3.14 this property is now an array, where each element maps to a Tileset instance. Previously it was a single instance.
          * 
          * @name Phaser.Tilemaps.StaticTilemapLayer#vertexBuffer
          * @type {WebGLBuffer[]}
@@ -252,7 +252,7 @@ var StaticTilemapLayer = new Class({
         /**
          * An array of ArrayBuffer objects, used by the WebGL renderer.
          * 
-         * As of Phaser 3.14 this property is now an array, previously it was a single instance.
+         * As of Phaser 3.14 this property is now an array, where each element maps to a Tileset instance. Previously it was a single instance.
          * 
          * @name Phaser.Tilemaps.StaticTilemapLayer#bufferData
          * @type {ArrayBuffer[]}
@@ -264,7 +264,7 @@ var StaticTilemapLayer = new Class({
         /**
          * An array of Float32 Array objects, used by the WebGL renderer.
          * 
-         * As of Phaser 3.14 this property is now an array, previously it was a single instance.
+         * As of Phaser 3.14 this property is now an array, where each element maps to a Tileset instance. Previously it was a single instance.
          * 
          * @name Phaser.Tilemaps.StaticTilemapLayer#vertexViewF32
          * @type {Float32Array[]}
@@ -276,7 +276,7 @@ var StaticTilemapLayer = new Class({
         /**
          * An array of Uint32 Array objects, used by the WebGL renderer.
          * 
-         * As of Phaser 3.14 this property is now an array, previously it was a single instance.
+         * As of Phaser 3.14 this property is now an array, where each element maps to a Tileset instance. Previously it was a single instance.
          * 
          * @name Phaser.Tilemaps.StaticTilemapLayer#vertexViewU32
          * @type {Uint32Array[]}
@@ -288,7 +288,7 @@ var StaticTilemapLayer = new Class({
         /**
          * An array of booleans, used by the WebGL renderer.
          * 
-         * As of Phaser 3.14 this property is now an array, previously it was a single boolean.
+         * As of Phaser 3.14 this property is now an array, where each element maps to a Tileset instance. Previously it was a single boolean.
          * 
          * @name Phaser.Tilemaps.StaticTilemapLayer#dirty
          * @type {boolean[]}
@@ -300,7 +300,7 @@ var StaticTilemapLayer = new Class({
         /**
          * An array of integers, used by the WebGL renderer.
          * 
-         * As of Phaser 3.14 this property is now an array, previously it was a single integer.
+         * As of Phaser 3.14 this property is now an array, where each element maps to a Tileset instance. Previously it was a single integer.
          * 
          * @name Phaser.Tilemaps.StaticTilemapLayer#vertexCount
          * @type {integer[]}
@@ -372,9 +372,10 @@ var StaticTilemapLayer = new Class({
 
     /**
      * Parses the tilesets that this Layer uses and constructs the
-     * tile index map used during rendering.
+     * tileset index map used during Canvas rendering.
      *
      * @method Phaser.Tilemaps.StaticTilemapLayer#updateIndexMap
+     * @private
      * @since 3.14.0
      *
      * @return {this} This Tilemap Layer object.
@@ -403,6 +404,7 @@ var StaticTilemapLayer = new Class({
      * Prepares the VBO data arrays for population by the `upload` method.
      *
      * @method Phaser.Tilemaps.StaticTilemapLayer#updateVBOData
+     * @private
      * @since 3.14.0
      *
      * @return {this} This Tilemap Layer object.
@@ -1476,9 +1478,21 @@ var StaticTilemapLayer = new Class({
 
         this.tilemap = undefined;
         this.layer = undefined;
-        this.tileset = undefined;
         this.culledTiles.length = 0;
         this.cullCallback = null;
+
+        for (var i = 0; i < this.tileset.length; i++)
+        {
+            this.dirty[i] = true;
+            this.vertexCount[i] = 0;
+            this.vertexBuffer[i] = null;
+            this.bufferData[i] = null;
+            this.vertexViewF32[i] = null;
+            this.vertexViewU32[i] = null;
+        }
+
+        this.gidMap = [];
+        this.tileset = [];
 
         GameObject.prototype.destroy.call(this);
     }
