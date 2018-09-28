@@ -8,6 +8,7 @@
 * `Tilemap.createStaticLayer` now supports passing either a Tileset reference, or a string, or an array of them as the 2nd argument. If strings, the string should be the Tileset name (usually defined in Tiled).
 * `Tilemap.createDynamicLayer` now supports passing either a Tileset reference, or a string, or an array of them as the 2nd argument. If strings, the string should be the Tileset name (usually defined in Tiled).
 * `Tilemap.createBlankDynamicLayer` now supports passing either a Tileset reference, or a string, or an array of them as the 2nd argument. If strings, the string should be the Tileset name (usually defined in Tiled).
+* Static Tilemap Layers now support tile rotation and flipping. Previously this was a feature only for Dynamic Tilemap Layers, but now both have it. Close #4037 (thanks @thisredone)
 * `Tilemap.getTileset` is a new method that will return a Tileset based on its name.
 * `ParseTilesets` has been rewritten so it will convert the new data structures of Tiled 1.2 into the format expected by Phaser, allowing you to use either Tiled 1.2.x or Tiled 1.1 JSON exports. Fix #3998 (thanks @martin-pabst @halgorithm)
 * `Tilemap.setBaseTileSize` now sets the size into the LayerData `baseTileWidth` and `baseTileHeight` properties accordingly. Fix #4057 (thanks @imilo)
@@ -38,7 +39,7 @@
 * `debugShowConvexHulls` is a new Matter Physics debug option that allows you to control if the convex hull of a body is drawn to the debug Graphic. The default is `false`.
 * `debugConvexHullColor` is a new Matter Physics debug option that lets you set the color of the convex hull, if being drawn to the debug Graphic.
 * `debugShowSleeping` is a new Matter Physics debug option that lets you draw sleeping bodies at 50% opacity.
-* Static Tilemap Layers now support tile rotation and flipping. Previously this was a feature only for Dynamic Tilemap Layers, but now both have it. Close #4037 (thanks @thisredone)
+* `Curves.Ellipse.angle` is a new getter / setter that handles the rotation of the curve in degrees instead of radians.
 
 ### Updates
 
@@ -53,6 +54,7 @@
 * The `Texture.getFramesFromTextureSource` method has a new boolean argument `includeBase`, which defaults to `false` and allows you to set if the base frame should be returned into the array or not.
 * There is a new Animation Event that is dispatched when an animation restarts. Listen for it via `Sprite.on('animationrestart')`.
 * All of the Animation Events now pass the Game Object as the final argument, this includes `animationstart`, `animationrestart`, `animationrepeat`, `animationupdate` and `animationcomplete`.
+* `Curves.Ellipse.rotation` is a getter / setter that holds the rotation of the curve. Previously it expected the value in degrees and when getting it returned the value in radians. It now expects the value in radians and returns radians to keep it logical.
 
 ### Bug Fixes
 
@@ -90,6 +92,7 @@ snowbillr
 Stephen Hamilton
 STuFF
 TadejZupancic
+ajmetal
 
 
 ## Version 3.13.0 - Yuuki - 20th September 2018
