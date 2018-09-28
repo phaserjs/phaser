@@ -288,7 +288,11 @@ var RenderTexture = new Class({
 
     /**
      * Resizes the Render Texture to the new dimensions given.
+     * 
+     * If Render Texture was created from specific frame, only the size of the frame will be changed. The size of the source
+     * texture will not change.
      *
+     * If Render Texture was not created from specific frame, the following will happen:
      * In WebGL it will destroy and then re-create the frame buffer being used by the Render Texture.
      * In Canvas it will resize the underlying canvas element.
      * Both approaches will erase everything currently drawn to the Render Texture.
@@ -435,6 +439,10 @@ var RenderTexture = new Class({
      *
      * @param {number} rgb - The color to fill the Render Texture with.
      * @param {number} [alpha=1] - The alpha value used by the fill.
+     * @param {number} [x=0] - The left coordinate of the fill rectangle.
+     * @param {number} [y=0] - The top coordinate of the fill rectangle.
+     * @param {number} [width=this.frame.cutWidth] - The width of the fill rectangle.
+     * @param {number} [height=this.frame.cutHeight] - The height of the fill rectangle.
      *
      * @return {this} This Render Texture instance.
      */
