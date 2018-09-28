@@ -16,6 +16,8 @@ var RenderTexture = require('./RenderTexture');
  * @property {number} [y=0] - The y coordinate of the RenderTexture's position.
  * @property {number} [width=32] - The width of the RenderTexture.
  * @property {number} [height=32] - The height of the RenderTexture.
+ * @property {string} [key] - The texture key to make the RenderTexture from.
+ * @property {string} [frame] - the frame to make the RenderTexture from.
  */
 
 /**
@@ -39,8 +41,10 @@ GameObjectCreator.register('renderTexture', function (config, addToScene)
     var y = GetAdvancedValue(config, 'y', 0);
     var width = GetAdvancedValue(config, 'width', 32);
     var height = GetAdvancedValue(config, 'height', 32);
+    var key = GetAdvancedValue(config, 'key', undefined);
+    var frame = GetAdvancedValue(config, 'frame', undefined);
 
-    var renderTexture = new RenderTexture(this.scene, x, y, width, height);
+    var renderTexture = new RenderTexture(this.scene, x, y, width, height, key, frame);
 
     if (addToScene !== undefined)
     {
