@@ -25,10 +25,10 @@ var GetTilesWithin = require('./GetTilesWithin');
  * @private
  * @since 3.0.0
  *
- * @param {integer} [tileX=0] - [description]
- * @param {integer} [tileY=0] - [description]
- * @param {integer} [width=max width based on tileX] - [description]
- * @param {integer} [height=max height based on tileY] - [description]
+ * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
+ * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
+ * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
+ * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
  * @param {object[]} [weightedIndexes] - An array of objects to randomly draw from during
  * randomization. They should be in the form: { index: 0, weight: 4 } or
  * { index: [0, 1], weight: 4 } if you wish to draw from multiple tile indexes.

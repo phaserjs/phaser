@@ -19,21 +19,21 @@ var Tileset = require('./Tileset');
 /**
  * @callback TilemapFilterCallback
  *
- * @param {Phaser.GameObjects.GameObject} value - [description]
- * @param {number} index - [description]
- * @param {Phaser.GameObjects.GameObject[]} array - [description]
+ * @param {Phaser.GameObjects.GameObject} value - An object found in the filtered area.
+ * @param {number} index - The index of the object within the array.
+ * @param {Phaser.GameObjects.GameObject[]} array - An array of all the objects found.
  *
- * @return {Phaser.GameObjects.GameObject} [description]
+ * @return {Phaser.GameObjects.GameObject} The object.
  */
 
 /**
  * @callback TilemapFindCallback
  *
- * @param {Phaser.GameObjects.GameObject} value - [description]
- * @param {number} index - [description]
- * @param {Phaser.GameObjects.GameObject[]} array - [description]
+ * @param {Phaser.GameObjects.GameObject} value - An object found.
+ * @param {number} index - The index of the object within the array.
+ * @param {Phaser.GameObjects.GameObject[]} array - An array of all the objects found.
  *
- * @return {boolean} [description]
+ * @return {boolean} `true` if the callback should be invoked, otherwise `false`.
  */
 
 /**
@@ -405,11 +405,23 @@ var Tilemap = new Class({
     },
 
     /**
-     * See component documentation. If no layer specified, the map's current layer is used. This
-     * cannot be applied to StaticTilemapLayers.
+     * Copies the tiles in the source rectangular area to a new destination (all specified in tile
+     * coordinates) within the layer. This copies all tile properties & recalculates collision
+     * information in the destination region.
+     * 
+     * If no layer specified, the map's current layer is used. This cannot be applied to StaticTilemapLayers.
      *
      * @method Phaser.Tilemaps.Tilemap#copy
      * @since 3.0.0
+     * 
+     * @param {integer} srcTileX - The x coordinate of the area to copy from, in tiles, not pixels.
+     * @param {integer} srcTileY - The y coordinate of the area to copy from, in tiles, not pixels.
+     * @param {integer} width - The width of the area to copy, in tiles, not pixels.
+     * @param {integer} height - The height of the area to copy, in tiles, not pixels.
+     * @param {integer} destTileX - The x coordinate of the area to copy to, in tiles, not pixels.
+     * @param {integer} destTileY - The y coordinate of the area to copy to, in tiles, not pixels.
+     * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
+     * @param {Phaser.Tilemaps.LayerData} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tilemap} Returns this, or null if the layer given was invalid.
      */
@@ -2027,11 +2039,11 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#shuffle
      * @since 3.0.0
      *
-     * @param {integer} [tileX=0] - [description]
-     * @param {integer} [tileY=0] - [description]
-     * @param {integer} [width=max width based on tileX] - [description]
-     * @param {integer} [height=max height based on tileY] - [description]
-     * @param {Phaser.Tilemaps.LayerData} [layer] - [description]
+     * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
+     * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {Phaser.Tilemaps.LayerData} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tilemap} Return this Tilemap object, or null if the layer given was invalid.
      */
@@ -2062,11 +2074,11 @@ var Tilemap = new Class({
      *
      * @param {integer} tileA - First tile index.
      * @param {integer} tileB - Second tile index.
-     * @param {integer} [tileX=0] - [description]
-     * @param {integer} [tileY=0] - [description]
-     * @param {integer} [width=max width based on tileX] - [description]
-     * @param {integer} [height=max height based on tileY] - [description]
-     * @param {Phaser.Tilemaps.LayerData} [layer] - [description]
+     * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
+     * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {Phaser.Tilemaps.LayerData} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tilemap} Return this Tilemap object, or null if the layer given was invalid.
      */
@@ -2180,14 +2192,14 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#weightedRandomize
      * @since 3.0.0
      *
-     * @param {integer} [tileX=0] - [description]
-     * @param {integer} [tileY=0] - [description]
-     * @param {integer} [width=max width based on tileX] - [description]
-     * @param {integer} [height=max height based on tileY] - [description]
+     * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
+     * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
      * @param {object[]} [weightedIndexes] - An array of objects to randomly draw from during
      * randomization. They should be in the form: { index: 0, weight: 4 } or
      * { index: [0, 1], weight: 4 } if you wish to draw from multiple tile indexes.
-     * @param {Phaser.Tilemaps.LayerData} [layer] - [description]
+     * @param {Phaser.Tilemaps.LayerData} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tilemap} Return this Tilemap object, or null if the layer given was invalid.
      */

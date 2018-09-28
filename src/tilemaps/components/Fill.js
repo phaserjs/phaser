@@ -17,21 +17,20 @@ var SetTileCollision = require('./SetTileCollision');
  * @private
  * @since 3.0.0
  *
- * @param {integer} index - [description]
- * @param {integer} [tileX=0] - [description]
- * @param {integer} [tileY=0] - [description]
- * @param {integer} [width=max width based on tileX] - [description]
- * @param {integer} [height=max height based on tileY] - [description]
- * @param {boolean} [recalculateFaces=true] - [description]
- * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
+ * @param {integer} index - The tile index to fill the area with.
+ * @param {integer} tileX - The left most tile index (in tile coordinates) to use as the origin of the area.
+ * @param {integer} tileY - The top most tile index (in tile coordinates) to use as the origin of the area.
+ * @param {integer} width - How many tiles wide from the `tileX` index the area will be.
+ * @param {integer} height - How many tiles tall from the `tileY` index the area will be.
+ * @param {boolean} recalculateFaces - `true` if the faces data should be recalculated.
+ * @param {Phaser.Tilemaps.LayerData} layer - The tile layer to use. If not given the current layer is used.
  */
 var Fill = function (index, tileX, tileY, width, height, recalculateFaces, layer)
 {
-    if (recalculateFaces === undefined) { recalculateFaces = true; }
-
     var doesIndexCollide = (layer.collideIndexes.indexOf(index) !== -1);
 
     var tiles = GetTilesWithin(tileX, tileY, width, height, null, layer);
+
     for (var i = 0; i < tiles.length; i++)
     {
         tiles[i].index = index;

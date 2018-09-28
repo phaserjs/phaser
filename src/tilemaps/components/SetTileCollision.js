@@ -12,8 +12,8 @@
  * @private
  * @since 3.0.0
  *
- * @param {Phaser.Tilemaps.Tile} tile - [description]
- * @param {boolean} [collides=true] - [description]
+ * @param {Phaser.Tilemaps.Tile} tile - The Tile to set the collision on.
+ * @param {boolean} [collides=true] - Should the tile index collide or not?
  */
 var SetTileCollision = function (tile, collides)
 {
