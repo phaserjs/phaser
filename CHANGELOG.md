@@ -93,7 +93,9 @@ Stephen Hamilton
 STuFF
 TadejZupancic
 ajmetal
-
+henriacle
+@rgk
+@samme
 
 ## Version 3.13.0 - Yuuki - 20th September 2018
 

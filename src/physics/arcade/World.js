@@ -1752,7 +1752,7 @@ var World = new Class({
      * @param {ArcadeColliderType} [object2] - [description]
      * @param {ArcadePhysicsCallback} [overlapCallback] - [description]
      * @param {ArcadePhysicsCallback} [processCallback] - [description]
-     * @param {*} [callbackContext] - [description]
+     * @param {*} [callbackContext] - The context of where you want the callbacks to point to, e.g: `this`.
      *
      * @return {boolean} True if at least one Game Object overlaps another.
      */
