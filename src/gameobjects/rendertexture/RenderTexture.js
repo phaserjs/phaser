@@ -48,6 +48,8 @@ var UUID = require('../../utils/string/UUID');
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
  * @param {integer} [width=32] - The width of the Render Texture.
  * @param {integer} [height=32] - The height of the Render Texture.
+ * @property {string} [key] - The texture key to make the RenderTexture from.
+ * @property {string} [frame] - the frame to make the RenderTexture from.
  */
 var RenderTexture = new Class({
 
@@ -74,7 +76,7 @@ var RenderTexture = new Class({
 
     initialize:
 
-    function RenderTexture (scene, x, y, width, height)
+    function RenderTexture (scene, x, y, width, height, key, frame)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -129,16 +131,7 @@ var RenderTexture = new Class({
          * @type {HTMLCanvasElement}
          * @since 3.2.0
          */
-        this.canvas = CanvasPool.create2D(this, width, height);
-
-        /**
-         * A reference to the Rendering Context belonging to the Canvas Element this Render Texture is drawing to.
-         *
-         * @name Phaser.GameObjects.RenderTexture#context
-         * @type {CanvasRenderingContext2D}
-         * @since 3.2.0
-         */
-        this.context = this.canvas.getContext('2d');
+        this.canvas = null;
 
         /**
          * A reference to the GL Frame Buffer this Render Texture is drawing to.
@@ -149,6 +142,15 @@ var RenderTexture = new Class({
          * @since 3.2.0
          */
         this.framebuffer = null;
+
+        /**
+         * Is this Render Texture dirty or not? If not it won't spend time clearing or filling itself.
+         *
+         * @name Phaser.GameObjects.RenderTexture#dirty
+         * @type {boolean}
+         * @since 3.12.0
+         */
+        this.dirty = false;
 
         /**
          * The internal crop data object, as used by `setCrop` and passed to the `Frame.setCropUVs` method.
@@ -167,7 +169,7 @@ var RenderTexture = new Class({
          * @type {Phaser.Textures.Texture}
          * @since 3.12.0
          */
-        this.texture = scene.sys.textures.addCanvas(UUID(), this.canvas);
+        this.texture = null;
 
         /**
          * The Frame corresponding to this Render Texture.
@@ -176,8 +178,8 @@ var RenderTexture = new Class({
          * @type {Phaser.Textures.Frame}
          * @since 3.12.0
          */
-        this.frame = this.texture.get();
-        
+        this.frame = null;
+
         /**
          * Internal saved texture flag.
          *
@@ -187,6 +189,42 @@ var RenderTexture = new Class({
          * @since 3.12.0
          */
         this._saved = false;
+
+        if (key === undefined)
+        {
+            this.canvas = CanvasPool.create2D(this, width, height);
+
+            //  Create a new Texture for this Text object
+            this.texture = scene.sys.textures.addCanvas(UUID(), this.canvas);
+            
+            //  Get the frame
+            this.frame = this.texture.get();
+        }
+        else
+        {
+            this.texture = scene.sys.textures.get(key);
+            
+            //  Get the frame
+            if (frame === undefined) { frame = '__BASE'; }
+            this.frame = this.texture.get(frame);
+
+            this.canvas = this.frame.source.image;
+            this._saved = true;
+
+            this.dirty = true;
+
+            this.width = this.frame.cutWidth;
+            this.height = this.frame.cutHeight;
+        }
+
+        /**
+         * A reference to the Rendering Context belonging to the Canvas Element this Render Texture is drawing to.
+         *
+         * @name Phaser.GameObjects.RenderTexture#context
+         * @type {CanvasRenderingContext2D}
+         * @since 3.2.0
+         */
+        this.context = this.canvas.getContext('2d');
 
         /**
          * An internal Camera that can be used to move around the Render Texture.
@@ -198,15 +236,6 @@ var RenderTexture = new Class({
          * @since 3.12.0
          */
         this.camera = new Camera(0, 0, width, height);
-
-        /**
-         * Is this Render Texture dirty or not? If not it won't spend time clearing or filling itself.
-         *
-         * @name Phaser.GameObjects.RenderTexture#dirty
-         * @type {boolean}
-         * @since 3.12.0
-         */
-        this.dirty = false;
 
         /**
          * A reference to the WebGL Rendering Context.
@@ -236,7 +265,7 @@ var RenderTexture = new Class({
         this.camera.setScene(scene);
 
         this.setPosition(x, y);
-        this.setSize(width, height);
+        if (key === undefined) { this.setSize(width, height); }
         this.setOrigin(0, 0);
         this.initPipeline();
     },
@@ -280,31 +309,45 @@ var RenderTexture = new Class({
 
         if (width !== this.width || height !== this.height)
         {
-            this.canvas.width = width;
-            this.canvas.height = height;
-
-            if (this.gl)
+            
+            if (this.frame.name === '__BASE') // resize the texture
             {
-                var gl = this.gl;
 
-                this.renderer.deleteTexture(this.frame.source.glTexture);
-                this.renderer.deleteFramebuffer(this.framebuffer);
+                this.canvas.width = width;
+                this.canvas.height = height;
 
-                this.frame.source.glTexture = this.renderer.createTexture2D(0, gl.NEAREST, gl.NEAREST, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, null, width, height, false);
-                this.framebuffer = this.renderer.createFramebuffer(width, height, this.frame.source.glTexture, false);
+                if (this.gl)
+                {
+                    var gl = this.gl;
 
-                this.frame.glTexture = this.frame.source.glTexture;
+                    this.renderer.deleteTexture(this.frame.source.glTexture);
+                    this.renderer.deleteFramebuffer(this.framebuffer);
+
+                    this.frame.source.glTexture = this.renderer.createTexture2D(0, gl.NEAREST, gl.NEAREST, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE, gl.RGBA, null, width, height, false);
+                    this.framebuffer = this.renderer.createFramebuffer(width, height, this.frame.source.glTexture, false);
+
+                    this.frame.glTexture = this.frame.source.glTexture;
+                }
+
+                this.frame.source.width = width;
+                this.frame.source.height = height;
+
+                this.camera.setSize(width, height);
+
+                this.frame.setSize(width, height);
+
+                this.width = width;
+                this.height = height;
+
             }
+        }
+        else // resize the frame
+        {
+            var baseFrame = this.texture.getSourceImage();
+            if (this.frame.cutX + width > baseFrame.width) { width = baseFrame.width - this.frame.cutX; }
+            if (this.frame.cutY + height > baseFrame.height) { height = baseFrame.height - this.frame.cutY; }
 
-            this.frame.source.width = width;
-            this.frame.source.height = height;
-
-            this.camera.setSize(width, height);
-
-            this.frame.setSize(width, height);
-
-            this.width = width;
-            this.height = height;
+            this.frame.setSize(width, height, this.frame.cutX, this.frame.cutY);
         }
 
         return this;
@@ -395,9 +438,13 @@ var RenderTexture = new Class({
      *
      * @return {this} This Render Texture instance.
      */
-    fill: function (rgb, alpha)
+    fill: function (rgb, alpha, x, y, width, height)
     {
         if (alpha === undefined) { alpha = 1; }
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = this.frame.cutWidth; }
+        if (height === undefined) { height = this.frame.cutHeight; }
 
         var ur = ((rgb >> 16)|0) & 0xff;
         var ug = ((rgb >> 8)|0) & 0xff;
@@ -409,16 +456,26 @@ var RenderTexture = new Class({
 
             var gl = this.gl;
     
+            if (width !== this.frame.source.width || height !== this.frame.source.height)
+            {
+                gl.scissor(x + this.frame.cutX, y + this.frame.cutY, width, height);
+            }
+
             gl.clearColor(ur / 255.0, ug / 255.0, ub / 255.0, alpha);
     
             gl.clear(gl.COLOR_BUFFER_BIT);
+
+            if (width !== this.frame.source.width || height !== this.frame.source.height)
+            {
+                gl.scissor(0, 0, this.frame.source.width, this.frame.source.height);
+            }
     
             this.renderer.setFramebuffer(null);
         }
         else
         {
-            this.context.fillStyle = 'rgb(' + ur + ',' + ug + ',' + ub + ')';
-            this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            this.context.fillStyle = 'rgba(' + ur + ',' + ug + ',' + ub + ',' + alpha + ')';
+            this.context.fillRect(x + this.frame.cutX, y + this.frame.cutY, width, height);
         }
 
         return this;
@@ -442,8 +499,13 @@ var RenderTexture = new Class({
 
                 var gl = this.gl;
         
+                if (this.frame.cutWidth !== this.canvas.width || this.frame.cutHeight !== this.canvas.height)
+                {
+                    gl.scissor(this.frame.cutX, this.frame.cutY, this.frame.cutWidth, this.frame.cutHeight);
+                }
+
                 gl.clearColor(0, 0, 0, 0);
-        
+
                 gl.clear(gl.COLOR_BUFFER_BIT);
         
                 this.renderer.setFramebuffer(null);
@@ -454,7 +516,7 @@ var RenderTexture = new Class({
 
                 ctx.save();
                 ctx.setTransform(1, 0, 0, 1, 0, 0);
-                ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                ctx.clearRect(this.frame.cutX, this.frame.cutY, this.frame.cutWidth, this.frame.cutHeight);
                 ctx.restore();
             }
 
@@ -544,9 +606,9 @@ var RenderTexture = new Class({
 
             var pipeline = this.pipeline;
     
-            pipeline.projOrtho(0, this.width, 0, this.height, -1000.0, 1000.0);
+            pipeline.projOrtho(0, this.texture.width, 0, this.texture.height, -1000.0, 1000.0);
 
-            this.batchList(entries, x, y, alpha, tint);
+            this.batchList(entries, x + this.frame.cutX, y + this.frame.cutY, alpha, tint);
 
             pipeline.flush();
 
@@ -558,7 +620,7 @@ var RenderTexture = new Class({
         {
             this.renderer.setContext(this.context);
 
-            this.batchList(entries, x, y, alpha, tint);
+            this.batchList(entries, x + this.frame.cutX, y + this.frame.cutY, alpha, tint);
 
             this.renderer.setContext();
         }
@@ -626,9 +688,9 @@ var RenderTexture = new Class({
     
                 var pipeline = this.pipeline;
         
-                pipeline.projOrtho(0, this.width, 0, this.height, -1000.0, 1000.0);
+                pipeline.projOrtho(0, this.texture.width, 0, this.texture.height, -1000.0, 1000.0);
         
-                pipeline.batchTextureFrame(textureFrame, x, y, tint, alpha, this.camera.matrix, null);
+                pipeline.batchTextureFrame(textureFrame, x + this.frame.cutX, y + this.frame.cutY, tint, alpha, this.camera.matrix, null);
             
                 pipeline.flush();
         
@@ -638,7 +700,7 @@ var RenderTexture = new Class({
             }
             else
             {
-                this.batchTextureFrame(textureFrame, x, y, alpha, tint);
+                this.batchTextureFrame(textureFrame, x + this.frame.cutX, y + this.frame.cutY, alpha, tint);
             }
 
             this.dirty = true;
