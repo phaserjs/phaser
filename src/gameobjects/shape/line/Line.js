@@ -65,6 +65,16 @@ var Line = new Class({
         var height = this.geom.bottom - this.geom.top;
 
         /**
+         * The width (or thickness) of the line.
+         * See the setLineWidth method for extra details on changing this on WebGL.
+         *
+         * @name Phaser.GameObjects.Line#lineWidth
+         * @type {number}
+         * @since 3.13.0
+         */
+        this.lineWidth = 1;
+
+        /**
          * Private internal value. Holds the start width of the line.
          *
          * @name Phaser.GameObjects.Line#_startWidth

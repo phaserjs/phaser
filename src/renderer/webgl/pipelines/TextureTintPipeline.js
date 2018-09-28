@@ -261,7 +261,7 @@ var TextureTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#onBind
      * @since 3.0.0
      *
-     * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} This pipeline instance.
+     * @return {this} This WebGLPipeline instance.
      */
     onBind: function ()
     {
@@ -282,7 +282,7 @@ var TextureTintPipeline = new Class({
      * @param {number} height - The new height.
      * @param {number} resolution - The resolution.
      *
-     * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} This pipeline instance.
+     * @return {this} This WebGLPipeline instance.
      */
     resize: function (width, height, resolution)
     {
@@ -318,7 +318,7 @@ var TextureTintPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#flush
      * @since 3.0.0
      *
-     * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} This pipeline instance.
+     * @return {this} This WebGLPipeline instance.
      */
     flush: function ()
     {
@@ -376,8 +376,8 @@ var TextureTintPipeline = new Class({
         var v1 = frame.v1;
         var frameX = frame.x;
         var frameY = frame.y;
-        var frameWidth = frame.width;
-        var frameHeight = frame.height;
+        var frameWidth = frame.cutWidth;
+        var frameHeight = frame.cutHeight;
 
         var x = -sprite.displayOriginX + frameX;
         var y = -sprite.displayOriginY + frameY;
@@ -701,6 +701,7 @@ var TextureTintPipeline = new Class({
      * @param {number} vOffset - Vertical offset on texture coordinate.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - Current used camera.
      * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - Parent container.
+     * @param {boolean} [skipFlip=false] - Skip the renderTexture check.
      */
     batchTexture: function (
         gameObject,
@@ -717,7 +718,8 @@ var TextureTintPipeline = new Class({
         tintTL, tintTR, tintBL, tintBR, tintEffect,
         uOffset, vOffset,
         camera,
-        parentTransformMatrix)
+        parentTransformMatrix,
+        skipFlip)
     {
         this.renderer.setPipeline(this, gameObject);
 
@@ -772,7 +774,7 @@ var TextureTintPipeline = new Class({
         }
 
         //  Invert the flipY if this is a RenderTexture
-        flipY = flipY ^ (texture.isRenderTexture ? 1 : 0);
+        flipY = flipY ^ (!skipFlip && texture.isRenderTexture ? 1 : 0);
 
         if (flipX)
         {

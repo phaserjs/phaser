@@ -319,7 +319,7 @@ var Tilemap = new Class({
 
         if (!this.scene.sys.textures.exists(key))
         {
-            console.warn('Invalid image key given for tileset: "' + key + '"');
+            console.warn('Invalid Tileset Image: ' + key);
             return null;
         }
 
@@ -329,16 +329,19 @@ var Tilemap = new Class({
 
         if (index === null && this.format === Formats.TILED_JSON)
         {
-            console.warn('No data found in the JSON tilemap from Tiled matching the tileset name: "' + tilesetName + '"');
+            console.warn('No data found for Tileset: ' + tilesetName);
             return null;
         }
 
-        if (this.tilesets[index])
+        var tileset = this.tilesets[index];
+
+        if (tileset)
         {
-            this.tilesets[index].setTileSize(tileWidth, tileHeight);
-            this.tilesets[index].setSpacing(tileMargin, tileSpacing);
-            this.tilesets[index].setImage(texture);
-            return this.tilesets[index];
+            tileset.setTileSize(tileWidth, tileHeight);
+            tileset.setSpacing(tileMargin, tileSpacing);
+            tileset.setImage(texture);
+
+            return tileset;
         }
 
         if (tileWidth === undefined) { tileWidth = this.tileWidth; }
@@ -347,8 +350,10 @@ var Tilemap = new Class({
         if (tileSpacing === undefined) { tileSpacing = 0; }
         if (gid === undefined) { gid = 0; }
 
-        var tileset = new Tileset(tilesetName, gid, tileWidth, tileHeight, tileMargin, tileSpacing);
+        tileset = new Tileset(tilesetName, gid, tileWidth, tileHeight, tileMargin, tileSpacing);
+
         tileset.setImage(texture);
+
         this.tilesets.push(tileset);
 
         return tileset;
@@ -428,24 +433,20 @@ var Tilemap = new Class({
     },
 
     /**
-     * Creates a new and empty DynamicTilemapLayer. The currently selected layer in the map is set
-     * to this new layer.
+     * Creates a new and empty DynamicTilemapLayer. The currently selected layer in the map is set to this new layer.
      *
      * @method Phaser.Tilemaps.Tilemap#createBlankDynamicLayer
      * @since 3.0.0
      *
      * @param {string} name - The name of this layer. Must be unique within the map.
-     * @param {Phaser.Tilemaps.Tileset} tileset - The tileset the new layer will use.
+     * @param {(string|string[]|Phaser.Tilemaps.Tileset|Phaser.Tilemaps.Tileset[])} tileset - The tileset, or an array of tilesets, used to render this layer. Can be a string or a Tileset object.
      * @param {number} [x=0] - The world x position where the top left of this layer will be placed.
      * @param {number} [y=0] - The world y position where the top left of this layer will be placed.
-     * @param {integer} [width] - The width of the layer in tiles. If not specified, it will default
-     * to the map's width.
-     * @param {integer} [height] - The height of the layer in tiles. If not specified, it will default
-     * to the map's height.
-     * @param {integer} [tileWidth] - The width of the tiles the layer uses for calculations. If not
-     * specified, it will default to the map's tileWidth.
-     * @param {integer} [tileHeight] - The height of the tiles the layer uses for calculations. If not
-     * specified, it will default to the map's tileHeight.
+     * @param {integer} [width] - The width of the layer in tiles. If not specified, it will default to the map's width.
+     * @param {integer} [height] - The height of the layer in tiles. If not specified, it will default to the map's height.
+     * @param {integer} [tileWidth] - The width of the tiles the layer uses for calculations. If not specified, it will default to the map's tileWidth.
+     * @param {integer} [tileHeight] - The height of the tiles the layer uses for calculations. If not specified, it will default to the map's tileHeight.
+     * 
      * @return {?Phaser.Tilemaps.DynamicTilemapLayer} Returns the new layer was created, or null if it failed.
      */
     createBlankDynamicLayer: function (name, tileset, x, y, width, height, tileWidth, tileHeight)
@@ -461,7 +462,7 @@ var Tilemap = new Class({
 
         if (index !== null)
         {
-            console.warn('Cannot create blank layer: layer with matching name already exists ' + name);
+            console.warn('Invalid Tilemap Layer ID: ' + name);
             return null;
         }
 
@@ -488,6 +489,7 @@ var Tilemap = new Class({
         }
 
         this.layers.push(layerData);
+
         this.currentLayerIndex = this.layers.length - 1;
 
         var dynamicLayer = new DynamicTilemapLayer(this.scene, this, this.currentLayerIndex, tileset, x, y);
@@ -513,13 +515,10 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#createDynamicLayer
      * @since 3.0.0
      *
-     * @param {(integer|string)} layerID - The layer array index value, or if a string is given, the
-     * layer name from Tiled.
-     * @param {Phaser.Tilemaps.Tileset} tileset - The tileset the new layer will use.
-     * @param {number} x - The x position to place the layer in the world. If not specified, it will
-     * default to the layer offset from Tiled or 0.
-     * @param {number} y - The y position to place the layer in the world. If not specified, it will
-     * default to the layer offset from Tiled or 0.
+     * @param {(integer|string)} layerID - The layer array index value, or if a string is given, the layer name from Tiled.
+     * @param {(string|string[]|Phaser.Tilemaps.Tileset|Phaser.Tilemaps.Tileset[])} tileset - The tileset, or an array of tilesets, used to render this layer. Can be a string or a Tileset object.
+     * @param {number} x - The x position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
+     * @param {number} y - The y position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
      *
      * @return {?Phaser.Tilemaps.DynamicTilemapLayer} Returns the new layer was created, or null if it failed.
      */
@@ -529,7 +528,7 @@ var Tilemap = new Class({
 
         if (index === null)
         {
-            console.warn('Cannot create Tilemap Layer, invalid ID: ' + layerID);
+            console.warn('Invalid Tilemap Layer ID: ' + layerID);
             return null;
         }
 
@@ -538,21 +537,13 @@ var Tilemap = new Class({
         // Check for an associated static or dynamic tilemap layer
         if (layerData.tilemapLayer)
         {
-            console.warn('Cannot create Tilemap Layer. ID: ' + layerID + ' already in use');
+            console.warn('Tilemap Layer ID already exists:' + layerID);
             return null;
         }
 
         this.currentLayerIndex = index;
 
-        // Make sure that all the LayerData & the tiles have the correct tile size. They usually
-        // are, but wouldn't match if you try to load a 2x or 4x res tileset when the map was made
-        // with a 1x res tileset.
-        if (layerData.tileWidth !== tileset.tileWidth || layerData.tileHeight !== tileset.tileHeight)
-        {
-            this.setLayerTileSize(tileset.tileWidth, tileset.tileHeight, index);
-        }
-
-        // Default the x/y position to match Tiled layer offset, if it exists.
+        //  Default the x/y position to match Tiled layer offset, if it exists.
         if (x === undefined && this.layers[index].x) { x = this.layers[index].x; }
         if (y === undefined && this.layers[index].y) { y = this.layers[index].y; }
 
@@ -713,13 +704,10 @@ var Tilemap = new Class({
      * @method Phaser.Tilemaps.Tilemap#createStaticLayer
      * @since 3.0.0
      *
-     * @param {(integer|string)} layerID - The layer array index value, or if a string is given, the
-     * layer name from Tiled.
-     * @param {Phaser.Tilemaps.Tileset} tileset - The tileset the new layer will use.
-     * @param {number} x - The x position to place the layer in the world. If not specified, it will
-     * default to the layer offset from Tiled or 0.
-     * @param {number} y - The y position to place the layer in the world. If not specified, it will
-     * default to the layer offset from Tiled or 0.
+     * @param {(integer|string)} layerID - The layer array index value, or if a string is given, the layer name from Tiled.
+     * @param {(string|string[]|Phaser.Tilemaps.Tileset|Phaser.Tilemaps.Tileset[])} tileset - The tileset, or an array of tilesets, used to render this layer. Can be a string or a Tileset object.
+     * @param {number} x - The x position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
+     * @param {number} y - The y position to place the layer in the world. If not specified, it will default to the layer offset from Tiled or 0.
      *
      * @return {?Phaser.Tilemaps.StaticTilemapLayer} Returns the new layer was created, or null if it failed.
      */
@@ -729,30 +717,22 @@ var Tilemap = new Class({
 
         if (index === null)
         {
-            console.warn('Cannot create tilemap layer, invalid layer ID given: ' + layerID);
+            console.warn('Invalid Tilemap Layer ID: ' + layerID);
             return null;
         }
 
         var layerData = this.layers[index];
 
-        // Check for an associated static or dynamic tilemap layer
+        //  Check for an associated static or dynamic tilemap layer
         if (layerData.tilemapLayer)
         {
-            console.warn('Cannot create static tilemap layer since a static or dynamic tilemap layer exists for layer ID:' + layerID);
+            console.warn('Tilemap Layer ID already exists:' + layerID);
             return null;
         }
 
         this.currentLayerIndex = index;
 
-        // Make sure that all the LayerData & the tiles have the correct tile size. They usually
-        // are, but wouldn't match if you try to load a 2x or 4x res tileset when the map was made
-        // with a 1x res tileset.
-        if (layerData.tileWidth !== tileset.tileWidth || layerData.tileHeight !== tileset.tileHeight)
-        {
-            this.setLayerTileSize(tileset.tileWidth, tileset.tileHeight, index);
-        }
-
-        // Default the x/y position to match Tiled layer offset, if it exists.
+        //  Default the x/y position to match Tiled layer offset, if it exists.
         if (x === undefined && this.layers[index].x) { x = this.layers[index].x; }
         if (y === undefined && this.layers[index].y) { y = this.layers[index].y; }
 
@@ -1295,6 +1275,23 @@ var Tilemap = new Class({
         if (layer === null) { return null; }
 
         return TilemapComponents.GetTilesWithinWorldXY(worldX, worldY, width, height, filteringOptions, camera, layer);
+    },
+
+    /**
+     * Gets the Tileset that has the given `name`, or null if an invalid `name` is given.
+     *
+     * @method Phaser.Tilemaps.Tilemap#getTileset
+     * @since 3.14.0
+     *
+     * @param {string} name - The name of the Tileset to get.
+     *
+     * @return {?Phaser.Tilemaps.Tileset} The Tileset, or `null` if no matching named tileset was found.
+     */
+    getTileset: function (name)
+    {
+        var index = this.getIndex(this.tilesets, name);
+
+        return (index !== null) ? this.tilesets[index] : null;
     },
 
     /**
@@ -1994,8 +1991,8 @@ var Tilemap = new Class({
         // Update the base tile size on all layers & tiles
         for (var i = 0; i < this.layers.length; i++)
         {
-            this.layers[i].baseWidth = tileWidth;
-            this.layers[i].baseHeight = tileHeight;
+            this.layers[i].baseTileWidth = tileWidth;
+            this.layers[i].baseTileHeight = tileHeight;
 
             var mapData = this.layers[i].data;
             var mapWidth = this.layers[i].width;

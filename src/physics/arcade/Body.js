@@ -809,6 +809,8 @@ var Body = new Class({
             transform.rotation = RadToDeg(matrix.rotation);
             transform.scaleX = matrix.scaleX;
             transform.scaleY = matrix.scaleY;
+            transform.displayOriginX = sprite.displayOriginX;
+            transform.displayOriginY = sprite.displayOriginY;
         }
         else
         {
@@ -817,6 +819,8 @@ var Body = new Class({
             transform.rotation = sprite.angle;
             transform.scaleX = sprite.scaleX;
             transform.scaleY = sprite.scaleY;
+            transform.displayOriginX = sprite.displayOriginX;
+            transform.displayOriginY = sprite.displayOriginY;
         }
 
         var recalc = false;
@@ -1405,6 +1409,7 @@ var Body = new Class({
     drawDebug: function (graphic)
     {
         var pos = this.position;
+
         var x = pos.x + this.halfWidth;
         var y = pos.y + this.halfHeight;
 

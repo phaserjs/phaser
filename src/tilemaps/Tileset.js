@@ -359,7 +359,7 @@ var Tileset = new Class({
 
         if (rowCount % 1 !== 0 || colCount % 1 !== 0)
         {
-            console.warn('Tileset ' + this.name + ' image tile area is not an even multiple of tile size');
+            console.warn('Image tile area not tile size multiple in: ' + this.name);
         }
 
         // In Tiled a tileset image that is not an even multiple of the tile dimensions is truncated

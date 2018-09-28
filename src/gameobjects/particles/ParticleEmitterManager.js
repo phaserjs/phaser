@@ -185,7 +185,16 @@ var ParticleEmitterManager = new Class({
     {
         this.frame = this.texture.get(frame);
 
-        this.frameNames = this.texture.getFramesFromTextureSource(this.frame.sourceIndex);
+        var frames = this.texture.getFramesFromTextureSource(this.frame.sourceIndex);
+
+        var names = [];
+
+        frames.forEach(function (sourceFrame)
+        {
+            names.push(sourceFrame.name);
+        });
+
+        this.frameNames = names;
 
         this.defaultFrame = this.frame;
 

@@ -38,27 +38,78 @@ var ParseTilesets = function (json)
         {
             var newSet = new Tileset(set.name, set.firstgid, set.tilewidth, set.tileheight, set.margin, set.spacing);
 
-            // Properties stored per-tile in object with string indexes starting at "0"
-            if (set.tileproperties)
+            if (json.version > 1)
             {
-                newSet.tileProperties = set.tileproperties;
-            }
+                // Tiled 1.2+
 
-            // Object & terrain shapes stored per-tile in object with string indexes starting at "0"
-            if (set.tiles)
-            {
-                newSet.tileData = set.tiles;
-
-                // Parse the objects into Phaser format to match handling of other Tiled objects
-                for (stringID in newSet.tileData)
+                if (Array.isArray(set.tiles))
                 {
-                    var objectGroup = newSet.tileData[stringID].objectgroup;
-                    if (objectGroup && objectGroup.objects)
+                    var tiles = {};
+                    var props = {};
+
+                    for (var t = 0; t < set.tiles.length; t++)
                     {
-                        var parsedObjects = objectGroup.objects.map(
-                            function (obj) { return ParseObject(obj); }
-                        );
-                        newSet.tileData[stringID].objectgroup.objects = parsedObjects;
+                        var tile = set.tiles[t];
+
+                        //  Convert tileproperties
+                        if (tile.properties)
+                        {
+                            var newPropData = {};
+
+                            tile.properties.forEach(function (propData)
+                            {
+                                newPropData[propData['name']] = propData['value'];
+                            });
+
+                            props[tile.id] = newPropData;
+                        }
+
+                        //  Convert objectgroup
+                        if (tile.objectgroup)
+                        {
+                            tiles[tile.id] = { objectgroup: tile.objectgroup };
+
+                            if (tile.objectgroup.objects)
+                            {
+                                var parsedObjects2 = tile.objectgroup.objects.map(
+                                    function (obj) { return ParseObject(obj); }
+                                );
+
+                                tiles[tile.id].objectgroup.objects = parsedObjects2;
+                            }
+                        }
+                    }
+
+                    newSet.tileData = tiles;
+                    newSet.tileProperties = props;
+                }
+            }
+            else
+            {
+                // Tiled 1
+
+                // Properties stored per-tile in object with string indexes starting at "0"
+                if (set.tileproperties)
+                {
+                    newSet.tileProperties = set.tileproperties;
+                }
+
+                // Object & terrain shapes stored per-tile in object with string indexes starting at "0"
+                if (set.tiles)
+                {
+                    newSet.tileData = set.tiles;
+
+                    // Parse the objects into Phaser format to match handling of other Tiled objects
+                    for (stringID in newSet.tileData)
+                    {
+                        var objectGroup = newSet.tileData[stringID].objectgroup;
+                        if (objectGroup && objectGroup.objects)
+                        {
+                            var parsedObjects1 = objectGroup.objects.map(
+                                function (obj) { return ParseObject(obj); }
+                            );
+                            newSet.tileData[stringID].objectgroup.objects = parsedObjects1;
+                        }
                     }
                 }
             }

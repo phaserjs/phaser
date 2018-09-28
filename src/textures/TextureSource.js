@@ -235,6 +235,17 @@ var TextureSource = new Class({
         if (this.renderer.gl && this.isCanvas)
         {
             this.glTexture = this.renderer.canvasToTexture(this.image, this.glTexture);
+
+            //  Update all the Frames using this TextureSource
+
+            var index = this.texture.getTextureSourceIndex(this);
+            
+            var frames = this.texture.getFramesFromTextureSource(index, true);
+
+            for (var i = 0; i < frames.length; i++)
+            {
+                frames[i].glTexture = this.glTexture;
+            }
         }
     },
 

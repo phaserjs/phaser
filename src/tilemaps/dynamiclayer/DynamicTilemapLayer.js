@@ -12,13 +12,14 @@ var TilemapComponents = require('../components');
 
 /**
  * @classdesc
- * A DynamicTilemapLayer is a game object that renders LayerData from a Tilemap. A
- * DynamicTilemapLayer can only render tiles from a single tileset.
+ * A Dynamic Tilemap Layer is a Game Object that renders LayerData from a Tilemap when used in combination
+ * with one, or more, Tilesets.
  *
- * A DynamicTilemapLayer trades some speed for being able to apply powerful effects. Unlike a
- * StaticTilemapLayer, you can apply per-tile effects like tint or alpha, and you can change the
- * tiles in a DynamicTilemapLayer. Use this over a StaticTilemapLayer when you need those
- * features.
+ * A Dynamic Tilemap Layer trades some speed for being able to apply powerful effects. Unlike a
+ * Static Tilemap Layer, you can apply per-tile effects like tint or alpha, and you can change the
+ * tiles in a DynamicTilemapLayer.
+ * 
+ * Use this over a Static Tilemap Layer when you need those features.
  *
  * @class DynamicTilemapLayer
  * @extends Phaser.GameObjects.GameObject
@@ -39,10 +40,10 @@ var TilemapComponents = require('../components');
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  *
- * @param {Phaser.Scene} scene - [description]
+ * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs.
  * @param {Phaser.Tilemaps.Tilemap} tilemap - The Tilemap this layer is a part of.
  * @param {integer} layerIndex - The index of the LayerData associated with this layer.
- * @param {Phaser.Tilemaps.Tileset} tileset - The tileset used to render the tiles in this layer.
+ * @param {(string|string[]|Phaser.Tilemaps.Tileset|Phaser.Tilemaps.Tileset[])} tileset - The tileset, or an array of tilesets, used to render this layer. Can be a string or a Tileset object.
  * @param {number} [x=0] - The world x position where the top left of this layer will be placed.
  * @param {number} [y=0] - The world y position where the top left of this layer will be placed.
  */
@@ -110,16 +111,19 @@ var DynamicTilemapLayer = new Class({
          */
         this.layer = tilemap.layers[layerIndex];
 
-        this.layer.tilemapLayer = this; // Link the LayerData with this static tilemap layer
+        // Link the LayerData with this static tilemap layer
+        this.layer.tilemapLayer = this;
 
         /**
-         * The Tileset associated with this layer. A tilemap layer can only render from one Tileset.
+         * The Tileset/s associated with this layer.
+         * 
+         * As of Phaser 3.14 this property is now an array of Tileset objects, previously it was a single reference.
          *
          * @name Phaser.Tilemaps.DynamicTilemapLayer#tileset
-         * @type {Phaser.Tilemaps.Tileset}
+         * @type {Phaser.Tilemaps.Tileset[]}
          * @since 3.0.0
          */
-        this.tileset = tileset;
+        this.tileset = [];
 
         /**
          * Used internally with the canvas render. This holds the tiles that are visible within the
@@ -230,12 +234,68 @@ var DynamicTilemapLayer = new Class({
          */
         this._renderOrder = 0;
 
+        /**
+         * An array holding the mapping between the tile indexes and the tileset they belong to.
+         *
+         * @name Phaser.Tilemaps.DynamicTilemapLayer#gidMap
+         * @type {Phaser.Tilemaps.Tileset[]}
+         * @since 3.14.0
+         */
+        this.gidMap = [];
+
+        this.setTilesets(tileset);
         this.setAlpha(this.layer.alpha);
         this.setPosition(x, y);
         this.setOrigin();
         this.setSize(this.layer.tileWidth * this.layer.width, this.layer.tileHeight * this.layer.height);
 
         this.initPipeline('TextureTintPipeline');
+    },
+
+    /**
+     * Populates the internal `tileset` array with the Tileset references this Layer requires for rendering.
+     *
+     * @method Phaser.Tilemaps.DynamicTilemapLayer#setTilesets
+     * @private
+     * @since 3.14.0
+     * 
+     * @param {(string|string[]|Phaser.Tilemaps.Tileset|Phaser.Tilemaps.Tileset[])} tileset - The tileset, or an array of tilesets, used to render this layer. Can be a string or a Tileset object.
+     */
+    setTilesets: function (tilesets)
+    {
+        var gidMap = [];
+        var setList = [];
+        var map = this.tilemap;
+
+        if (!Array.isArray(tilesets))
+        {
+            tilesets = [ tilesets ];
+        }
+
+        for (var i = 0; i < tilesets.length; i++)
+        {
+            var tileset = tilesets[i];
+
+            if (typeof tileset === 'string')
+            {
+                tileset = map.getTileset(tileset);
+            }
+
+            if (tileset)
+            {
+                setList.push(tileset);
+
+                var s = tileset.firstgid;
+
+                for (var t = 0; t < tileset.total; t++)
+                {
+                    gidMap[s + t] = tileset;
+                }
+            }
+        }
+
+        this.gidMap = gidMap;
+        this.tileset = setList;
     },
 
     /**
@@ -404,9 +464,11 @@ var DynamicTilemapLayer = new Class({
 
         this.tilemap = undefined;
         this.layer = undefined;
-        this.tileset = undefined;
         this.culledTiles.length = 0;
         this.cullCallback = null;
+
+        this.gidMap = [];
+        this.tileset = [];
 
         GameObject.prototype.destroy.call(this);
     },

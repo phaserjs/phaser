@@ -265,14 +265,14 @@ var UpdateList = new Class({
 
         while (i--)
         {
-            this.this._pendingRemoval[i].destroy(true);
+            this._pendingRemoval[i].destroy(true);
         }
 
         i = this._pendingInsertion.length;
 
         while (i--)
         {
-            this.this._pendingInsertion[i].destroy(true);
+            this._pendingInsertion[i].destroy(true);
         }
 
         this._list.length = 0;

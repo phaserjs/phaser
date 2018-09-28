@@ -15,7 +15,7 @@ var _FLAG = 4; // 0100
 //  Transform Component
 
 /**
- * [description]
+ * Provides methods used for getting and setting the position, scale and rotation of a Game Object.
  *
  * @name Phaser.Physics.Matter.Components.Transform
  * @since 3.0.0
@@ -23,7 +23,7 @@ var _FLAG = 4; // 0100
 var Transform = {
 
     /**
-     * [description]
+     * The x position of this Game Object.
      *
      * @name Phaser.Physics.Matter.Components.Transform#x
      * @type {number}
@@ -46,7 +46,7 @@ var Transform = {
     },
 
     /**
-     * [description]
+     * The y position of this Game Object.
      *
      * @name Phaser.Physics.Matter.Components.Transform#y
      * @type {number}
@@ -69,7 +69,7 @@ var Transform = {
     },
 
     /**
-     * [description]
+     * The horizontal scale of this Game Object.
      *
      * @name Phaser.Physics.Matter.Components.Transform#scaleX
      * @type {number}
@@ -106,7 +106,7 @@ var Transform = {
     },
 
     /**
-     * [description]
+     * The vertical scale of this Game Object.
      *
      * @name Phaser.Physics.Matter.Components.Transform#scaleY
      * @type {number}
@@ -266,14 +266,14 @@ var Transform = {
     },
 
     /**
-     * [description]
+     * Sets the scale of this Game Object.
      *
      * @method Phaser.Physics.Matter.Components.Transform#setScale
      * @since 3.0.0
      *
-     * @param {number} [x=1] - [description]
-     * @param {number} [y=x] - [description]
-     * @param {Phaser.Math.Vector2} [point] - [description]
+     * @param {number} [x=1] - The horizontal scale of this Game Object.
+     * @param {number} [y=x] - The vertical scale of this Game Object. If not set it will use the x value.
+     * @param {Phaser.Math.Vector2} [point] - The point (Vector2) from which scaling will occur.
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */

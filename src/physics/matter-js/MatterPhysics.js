@@ -15,6 +15,7 @@ var Merge = require('../../utils/object/Merge');
 var Plugin = require('./lib/core/Plugin');
 var PluginCache = require('../../plugins/PluginCache');
 var World = require('./World');
+var Vertices = require('./lib/geometry/Vertices');
 
 /**
  * @classdesc
@@ -77,6 +78,17 @@ var MatterPhysics = new Class({
          * @since 3.0.0
          */
         this.add;
+
+        /**
+         * A reference to the `Matter.Vertices` module which contains methods for creating and manipulating sets of vertices.
+         * A set of vertices is an array of `Matter.Vector` with additional indexing properties inserted by `Vertices.create`.
+         * A `Matter.Body` maintains a set of vertices to represent the shape of the object (its convex hull).
+         *
+         * @name Phaser.Physics.Matter.MatterPhysics#verts
+         * @type {MatterJS.Vertices}
+         * @since 3.14.0
+         */
+        this.verts = Vertices;
 
         //  Matter plugins
 

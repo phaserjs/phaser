@@ -16,8 +16,8 @@ var WorldToTileY = require('./WorldToTileY');
  * @private
  * @since 3.0.0
  *
- * @param {number} worldX - [description]
- * @param {number} worldY - [description]
+ * @param {number} worldX - The X coordinate of the world position.
+ * @param {number} worldY - The Y coordinate of the world position.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * 

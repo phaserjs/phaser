@@ -134,7 +134,7 @@ function init ()
         OS.cordova = true;
     }
 
-    if (process && process.versions && process.versions.node)
+    if (typeof process !== 'undefined' && process.versions && process.versions.node)
     {
         OS.node = true;
     }

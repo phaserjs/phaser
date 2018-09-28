@@ -1817,11 +1817,6 @@ var WebGLRenderer = new Class({
     {
         var gl = this.gl;
 
-        if (dstTexture)
-        {
-            this.deleteTexture(dstTexture);
-        }
-
         var wrapping = gl.CLAMP_TO_EDGE;
 
         if (IsSizePowerOfTwo(srcCanvas.width, srcCanvas.height))
@@ -1829,7 +1824,14 @@ var WebGLRenderer = new Class({
             wrapping = gl.REPEAT;
         }
 
-        return this.createTexture2D(0, gl.NEAREST, gl.NEAREST, wrapping, wrapping, gl.RGBA, srcCanvas, srcCanvas.width, srcCanvas.height, true);
+        var newTexture = this.createTexture2D(0, gl.NEAREST, gl.NEAREST, wrapping, wrapping, gl.RGBA, srcCanvas, srcCanvas.width, srcCanvas.height, true);
+
+        if (newTexture && dstTexture)
+        {
+            this.deleteTexture(dstTexture);
+        }
+
+        return newTexture;
     },
 
     /**

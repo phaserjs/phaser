@@ -8,36 +8,59 @@ var Class = require('../../utils/Class');
 
 /**
  * This event is dispatched when an animation starts playing.
+ * 
+ * Listen for it on the Game Object: `sprite.on('animationstart', listener)`
  *
  * @event Phaser.GameObjects.Components.Animation#onStartEvent
  * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
  * @param {Phaser.Animations.AnimationFrame} frame - Reference to the current Animation Frame.
+ * @param {Phaser.GameObjects.Sprite} gameObject - Reference to the Game Object on which the event occurred.
+ */
+
+/**
+ * This event is dispatched when an animation restarts.
+ * 
+ * Listen for it on the Game Object: `sprite.on('animationrestart', listener)`
+ *
+ * @event Phaser.GameObjects.Components.Animation#onRestartEvent
+ * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
+ * @param {Phaser.Animations.AnimationFrame} frame - Reference to the current Animation Frame.
+ * @param {Phaser.GameObjects.Sprite} gameObject - Reference to the Game Object on which the event occurred.
  */
 
 /**
  * This event is dispatched when an animation repeats.
+ * 
+ * Listen for it on the Game Object: `sprite.on('animationrepeat', listener)`
  *
  * @event Phaser.GameObjects.Components.Animation#onRepeatEvent
  * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
  * @param {Phaser.Animations.AnimationFrame} frame - Reference to the current Animation Frame.
  * @param {integer} repeatCount - The number of times this animation has repeated.
+ * @param {Phaser.GameObjects.Sprite} gameObject - Reference to the Game Object on which the event occurred.
  */
 
 /**
  * This event is dispatched when an animation updates. This happens when the animation frame changes,
  * based on the animation frame rate and other factors like timeScale and delay.
+ * 
+ * Listen for it on the Game Object: `sprite.on('animationupdate', listener)`
  *
  * @event Phaser.GameObjects.Components.Animation#onUpdateEvent
  * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
  * @param {Phaser.Animations.AnimationFrame} frame - Reference to the current Animation Frame.
+ * @param {Phaser.GameObjects.Sprite} gameObject - Reference to the Game Object on which the event occurred.
  */
 
 /**
  * This event is dispatched when an animation completes playing, either naturally or via Animation.stop.
+ * 
+ * Listen for it on the Game Object: `sprite.on('animationcomplete', listener)`
  *
  * @event Phaser.GameObjects.Components.Animation#onCompleteEvent
  * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
  * @param {Phaser.Animations.AnimationFrame} frame - Reference to the current Animation Frame.
+ * @param {Phaser.GameObjects.Sprite} gameObject - Reference to the Game Object on which the event occurred.
  */
 
 /**
@@ -575,7 +598,7 @@ var Animation = new Class({
             gameObject.visible = true;
         }
 
-        gameObject.emit('animationstart', this.currentAnim, this.currentFrame);
+        gameObject.emit('animationstart', this.currentAnim, this.currentFrame, gameObject);
 
         return gameObject;
     },
@@ -740,6 +763,7 @@ var Animation = new Class({
      * Restarts the current animation from its beginning, optionally including its delay value.
      *
      * @method Phaser.GameObjects.Components.Animation#restart
+     * @fires Phaser.GameObjects.Components.Animation#onRestartEvent
      * @since 3.0.0
      *
      * @param {boolean} [includeDelay=false] - Whether to include the delay value of the animation when restarting.
@@ -759,6 +783,10 @@ var Animation = new Class({
 
         //  Set frame
         this.updateFrame(this.currentAnim.frames[0]);
+
+        var gameObject = this.parent;
+
+        gameObject.emit('animationrestart', this.currentAnim, this.currentFrame, gameObject);
 
         return this.parent;
     },
@@ -780,7 +808,7 @@ var Animation = new Class({
 
         var gameObject = this.parent;
 
-        gameObject.emit('animationcomplete', this.currentAnim, this.currentFrame);
+        gameObject.emit('animationcomplete', this.currentAnim, this.currentFrame, gameObject);
 
         return gameObject;
     },
@@ -940,6 +968,11 @@ var Animation = new Class({
         gameObject.texture = animationFrame.frame.texture;
         gameObject.frame = animationFrame.frame;
 
+        if (gameObject.isCropped)
+        {
+            gameObject.frame.updateCropUVs(gameObject._crop, gameObject.flipX, gameObject.flipY);
+        }
+
         gameObject.setSizeToFrame();
 
         if (animationFrame.frame.customPivot)
@@ -977,7 +1010,7 @@ var Animation = new Class({
 
             var anim = this.currentAnim;
 
-            gameObject.emit('animationupdate', anim, animationFrame);
+            gameObject.emit('animationupdate', anim, animationFrame, gameObject);
 
             if (this._pendingStop === 3 && this._pendingStopValue === animationFrame)
             {
