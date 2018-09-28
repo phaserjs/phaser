@@ -74,16 +74,30 @@
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
+31826615
+@16patsle
+@bobonthenet
+@bobonthenet
+@rgk
+@samme
 @shaneMLK
 @wemyss
+ajmetal
+andiCR
 Arian Fornaris
+bsparks
+Carl
 cyantree
 DannyT
 Elliott Wallace
 felixnemis
 griga
+Hardylr
+henriacle
 Hsaka
 icbat
+Kanthi
+Kyle
 Lee
 Nathaniel Foldan
 Peter Pedersen
@@ -93,23 +107,6 @@ snowbillr
 Stephen Hamilton
 STuFF
 TadejZupancic
-
-ajmetal
-henriacle
-@rgk
-@samme
-Carl
-@16patsle
-Kyle
-Hardylr
-andiCR
-@bobonthenet
-Kanthi
-31826615
-bsparks
-@bobonthenet
-
-
 
 ## Version 3.13.0 - Yuuki - 20th September 2018
 
