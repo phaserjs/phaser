@@ -142,7 +142,7 @@ var Transform = {
     },
 
     /**
-     * [description]
+     * Use `angle` to set or get rotation of the physics body associated to this GameObject. Unlike rotation, when using set the value can be in degrees, which will be converted to radians internally.
      *
      * @name Phaser.Physics.Matter.Components.Transform#angle
      * @type {number}
@@ -163,7 +163,7 @@ var Transform = {
     },
 
     /**
-     * [description]
+     * Use `rotation` to set or get the rotation of the physics body associated with this GameObject. The value when set must be in radians.
      *
      * @name Phaser.Physics.Matter.Components.Transform#rotation
      * @type {number}
@@ -186,15 +186,15 @@ var Transform = {
     },
 
     /**
-     * [description]
+     * Sets the position of the physics body along x and y axes. Both the parameters to this function are optional and if not passed any they default to 0.
      *
      * @method Phaser.Physics.Matter.Components.Transform#setPosition
      * @since 3.0.0
      *
-     * @param {number} [x=0] - [description]
-     * @param {number} [y=x] - [description]
+     * @param {number} [x=0] - The horizontal position of the body.
+     * @param {number} [y=x] - The vertical position of the body.
      *
-     * @return{Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setPosition: function (x, y)
     {
@@ -216,7 +216,7 @@ var Transform = {
      *
      * @param {number} [radians=0] - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setRotation: function (radians)
     {
@@ -235,7 +235,7 @@ var Transform = {
      * @method Phaser.Physics.Matter.Components.Transform#setFixedRotation
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setFixedRotation: function ()
     {
@@ -252,7 +252,7 @@ var Transform = {
      *
      * @param {number} [degrees=0] - [description]
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setAngle: function (degrees)
     {
@@ -275,7 +275,7 @@ var Transform = {
      * @param {number} [y=x] - The vertical scale of this Game Object. If not set it will use the x value.
      * @param {Phaser.Math.Vector2} [point] - The point (Vector2) from which scaling will occur.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setScale: function (x, y, point)
     {

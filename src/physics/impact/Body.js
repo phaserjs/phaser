@@ -481,15 +481,15 @@ var Body = new Class({
     },
 
     /**
-     * [description]
+     * Reset the size and position of the physics body.
      *
      * @method Phaser.Physics.Impact.Body#resetSize
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} height - [description]
+     * @param {number} x - The x coordinate to position the body.
+     * @param {number} y - The y coordinate to position the body.
+     * @param {number} width - The width of the body.
+     * @param {number} height - The height of the body.
      *
      * @return {Phaser.Physics.Impact.Body} This Body object.
      */

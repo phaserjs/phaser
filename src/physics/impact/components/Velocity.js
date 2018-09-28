@@ -5,7 +5,8 @@
  */
 
 /**
- * [description]
+ * The Impact Velocity component.
+ * Should be applied as a mixin.
  *
  * @name Phaser.Physics.Impact.Components.Velocity
  * @since 3.0.0
@@ -13,14 +14,14 @@
 var Velocity = {
 
     /**
-     * [description]
+     * Sets the horizontal velocity of the physics body.
      *
      * @method Phaser.Physics.Impact.Components.Velocity#setVelocityX
      * @since 3.0.0
      *
-     * @param {number} x - [description]
+     * @param {number} x - The horizontal velocity value.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setVelocityX: function (x)
     {
@@ -30,14 +31,14 @@ var Velocity = {
     },
 
     /**
-     * [description]
+     * Sets the vertical velocity of the physics body.
      *
      * @method Phaser.Physics.Impact.Components.Velocity#setVelocityY
      * @since 3.0.0
      *
-     * @param {number} y - [description]
+     * @param {number} y - The vertical velocity value.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setVelocityY: function (y)
     {
@@ -47,15 +48,15 @@ var Velocity = {
     },
 
     /**
-     * [description]
+     * Sets the horizontal and vertical velocities of the physics body.
      *
      * @method Phaser.Physics.Impact.Components.Velocity#setVelocity
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} [y=x] - [description]
+     * @param {number} x - The horizontal velocity value.
+     * @param {number} [y=x] - The vertical velocity value. If not given, defaults to the horizontal value.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setVelocity: function (x, y)
     {
@@ -68,15 +69,15 @@ var Velocity = {
     },
 
     /**
-     * [description]
+     * Sets the maximum velocity this body can travel at.
      *
      * @method Phaser.Physics.Impact.Components.Velocity#setMaxVelocity
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} [y=x] - [description]
+     * @param {number} x - The maximum allowed horizontal velocity.
+     * @param {number} [y=x] - The maximum allowed vertical velocity. If not given, defaults to the horizontal value.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setMaxVelocity: function (x, y)
     {
