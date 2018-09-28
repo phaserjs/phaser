@@ -12,7 +12,11 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
  * @classdesc
- * [description]
+ * An Arcade Physics Static Group object.
+ *
+ * All Game Objects created by this Group will automatically be given static Arcade Physics bodies.
+ *
+ * Its dynamic counterpart is {@link Phaser.Physics.Arcade.Group}.
  *
  * @class StaticGroup
  * @extends Phaser.GameObjects.Group
@@ -20,10 +24,10 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Physics.Arcade.World} world - [description]
- * @param {Phaser.Scene} scene - [description]
- * @param {array} children - [description]
- * @param {GroupConfig} config - [description]
+ * @param {Phaser.Physics.Arcade.World} world - The physics simulation.
+ * @param {Phaser.Scene} scene - The scene this group belongs to.
+ * @param {(Phaser.GameObjects.GameObject[]|GroupConfig|GroupCreateConfig)} [children] - Game Objects to add to this group; or the `config` argument.
+ * @param {GroupConfig|GroupCreateConfig} [config] - Settings for this group.
  */
 var StaticPhysicsGroup = new Class({
 
@@ -69,7 +73,7 @@ var StaticPhysicsGroup = new Class({
         }
 
         /**
-         * [description]
+         * The physics simulation.
          *
          * @name Phaser.Physics.Arcade.StaticGroup#world
          * @type {Phaser.Physics.Arcade.World}
@@ -78,10 +82,11 @@ var StaticPhysicsGroup = new Class({
         this.world = world;
 
         /**
-         * [description]
+         * The scene this group belongs to.
          *
          * @name Phaser.Physics.Arcade.StaticGroup#physicsType
          * @type {integer}
+         * @default STATIC_BODY
          * @since 3.0.0
          */
         this.physicsType = CONST.STATIC_BODY;
@@ -90,12 +95,14 @@ var StaticPhysicsGroup = new Class({
     },
 
     /**
-     * [description]
+     * Adds a static physics body to the new group member (if it lacks one) and adds it to the simulation.
      *
      * @method Phaser.Physics.Arcade.StaticGroup#createCallbackHandler
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} child - [description]
+     * @param {Phaser.GameObjects.GameObject} child - The new group member.
+     *
+     * @see Phaser.Physics.Arcade.World#enableBody
      */
     createCallbackHandler: function (child)
     {
@@ -106,12 +113,14 @@ var StaticPhysicsGroup = new Class({
     },
 
     /**
-     * [description]
+     * Disables the group member's physics body, removing it from the simulation.
      *
      * @method Phaser.Physics.Arcade.StaticGroup#removeCallbackHandler
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} child - [description]
+     * @param {Phaser.GameObjects.GameObject} child - The group member being removed.
+     *
+     * @see Phaser.Physics.Arcade.World#disableBody
      */
     removeCallbackHandler: function (child)
     {
@@ -122,12 +131,14 @@ var StaticPhysicsGroup = new Class({
     },
 
     /**
-     * [description]
+     * Refreshes the group.
      *
      * @method Phaser.Physics.Arcade.StaticGroup#createMultipleCallbackHandler
      * @since 3.0.0
      *
-     * @param {object} entries - [description]
+     * @param {Phaser.GameObjects.GameObject[]} entries - The newly created group members.
+     *
+     * @see Phaser.Physics.Arcade.StaticGroup#refresh
      */
     createMultipleCallbackHandler: function ()
     {
@@ -135,12 +146,15 @@ var StaticPhysicsGroup = new Class({
     },
 
     /**
-     * [description]
+     * Resets each Body to the position of its parent Game Object.
+     * Body sizes aren't changed (use {@link Phaser.Physics.Arcade.Components.Enable#refreshBody} for that).
      *
      * @method Phaser.Physics.Arcade.StaticGroup#refresh
      * @since 3.0.0
      *
-     * @return {Phaser.Physics.Arcade.StaticGroup} [description]
+     * @return {Phaser.Physics.Arcade.StaticGroup} This group.
+     *
+     * @see Phaser.Physics.Arcade.StaticBody#reset
      */
     refresh: function ()
     {

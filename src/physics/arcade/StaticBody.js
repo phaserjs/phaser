@@ -12,7 +12,14 @@ var Vector2 = require('../../math/Vector2');
 
 /**
  * @classdesc
- * [description]
+ * A Static Arcade Physics Body.
+ *
+ * A Static Body never moves, and isn't automatically synchronized with its parent Game Object.
+ * That means if you make any change to the parent's origin, position, or scale after creating or adding the body, you'll need to update the Body manually.
+ *
+ * A Static Body can collide with other Bodies, but is never moved by collisions.
+ *
+ * Its dynamic counterpart is {@link Phaser.Physics.Arcade.Body}.
  *
  * @class StaticBody
  * @memberOf Phaser.Physics.Arcade
@@ -165,6 +172,7 @@ var StaticBody = new Class({
          *
          * @name Phaser.Physics.Arcade.StaticBody#velocity
          * @type {Phaser.Math.Vector2}
+         * @readOnly
          * @since 3.0.0
          */
         this.velocity = Vector2.ZERO;
@@ -174,6 +182,7 @@ var StaticBody = new Class({
          *
          * @name Phaser.Physics.Arcade.StaticBody#allowGravity
          * @type {boolean}
+         * @readOnly
          * @default false
          * @since 3.0.0
          */
@@ -184,6 +193,7 @@ var StaticBody = new Class({
          *
          * @name Phaser.Physics.Arcade.StaticBody#gravity
          * @type {Phaser.Math.Vector2}
+         * @readOnly
          * @since 3.0.0
          */
         this.gravity = Vector2.ZERO;
@@ -193,6 +203,7 @@ var StaticBody = new Class({
          *
          * @name Phaser.Physics.Arcade.StaticBody#bounce
          * @type {Phaser.Math.Vector2}
+         * @readOnly
          * @since 3.0.0
          */
         this.bounce = Vector2.ZERO;
@@ -401,6 +412,8 @@ var StaticBody = new Class({
      * @param {boolean} [update=true] - Reposition and resize this Body to match the new Game Object?
      *
      * @return {Phaser.Physics.Arcade.StaticBody} This Static Body object.
+     *
+     * @see Phaser.Physics.Arcade.StaticBody#updateFromGameObject
      */
     setGameObject: function (gameObject, update)
     {
@@ -593,7 +606,8 @@ var StaticBody = new Class({
     },
 
     /**
-     * Resets this StaticBody to the given coordinates. Does not reposition its parent Game Object
+     * Updates this Static Body's position based on the current Game Object it is bound to.
+     * Similar to `updateFromGameObject`, but doesn't modify the Body's dimensions.
      *
      * @method Phaser.Physics.Arcade.StaticBody#reset
      * @since 3.0.0
@@ -721,7 +735,7 @@ var StaticBody = new Class({
      * @method Phaser.Physics.Arcade.StaticBody#deltaY
      * @since 3.0.0
      *
-     * @return {number} [description]
+     * @return {number} 0
      */
     deltaY: function ()
     {
@@ -734,7 +748,7 @@ var StaticBody = new Class({
      * @method Phaser.Physics.Arcade.StaticBody#deltaZ
      * @since 3.0.0
      *
-     * @return {number} [description]
+     * @return {number} 0
      */
     deltaZ: function ()
     {
@@ -742,7 +756,7 @@ var StaticBody = new Class({
     },
 
     /**
-     * Disables the StaticBody and marks it to be destroyed.
+     * Disables this Body and marks it for destruction during the next step.
      *
      * @method Phaser.Physics.Arcade.StaticBody#destroy
      * @since 3.0.0
