@@ -55,6 +55,7 @@
 * There is a new Animation Event that is dispatched when an animation restarts. Listen for it via `Sprite.on('animationrestart')`.
 * All of the Animation Events now pass the Game Object as the final argument, this includes `animationstart`, `animationrestart`, `animationrepeat`, `animationupdate` and `animationcomplete`.
 * `Curves.Ellipse.rotation` is a getter / setter that holds the rotation of the curve. Previously it expected the value in degrees and when getting it returned the value in radians. It now expects the value in radians and returns radians to keep it logical.
+* `Set.size` will now only set the new size if the value is smaller than the current size, truncating the Set in the process. Values larger than the current size are ignored.
 
 ### Bug Fixes
 
@@ -104,6 +105,7 @@ Hardylr
 andiCR
 @bobonthenet
 Kanthi
+31826615
 
 
 
