@@ -19,11 +19,14 @@ var Class = require('../utils/Class');
 /**
  * @classdesc
  * The keys of a Map can be arbitrary values.
+ * 
+ * ```javascript
  * var map = new Map([
  *    [ 1, 'one' ],
  *    [ 2, 'two' ],
  *    [ 3, 'three' ]
  * ]);
+ * ```
  *
  * @class Map
  * @memberOf Phaser.Structs
@@ -34,7 +37,7 @@ var Class = require('../utils/Class');
  * @generic V
  * @genericUse {V[]} - [elements]
  *
- * @param {Array.<*>} elements - [description]
+ * @param {Array.<*>} elements - An optional array of key-value pairs to populate this Map with.
  */
 var Map = new Class({
 
@@ -43,7 +46,7 @@ var Map = new Class({
     function Map (elements)
     {
         /**
-         * [description]
+         * The entries in this Map.
          *
          * @genericUse {Object.<string, V>} - [$type]
          *
@@ -55,7 +58,7 @@ var Map = new Class({
         this.entries = {};
 
         /**
-         * [description]
+         * The number of key / value pairs in this Map.
          *
          * @name Phaser.Structs.Map#size
          * @type {number}
@@ -74,7 +77,7 @@ var Map = new Class({
     },
 
     /**
-     * [description]
+     * Adds an element with a specified `key` and `value` to this Map.
      *
      * @method Phaser.Structs.Map#set
      * @since 3.0.0
@@ -83,8 +86,8 @@ var Map = new Class({
      * @genericUse {V} - [value]
      * @genericUse {Phaser.Structs.Map.<K, V>} - [$return]
      *
-     * @param {string} key - [description]
-     * @param {*} value - [description]
+     * @param {string} key - The key of the element to be added to this Map.
+     * @param {*} value - The value of the element to be added to this Map.
      *
      * @return {Phaser.Structs.Map} This Map object.
      */
@@ -100,7 +103,7 @@ var Map = new Class({
     },
 
     /**
-     * [description]
+     * Returns the value associated to the `key`, or `undefined` if there is none.
      *
      * @method Phaser.Structs.Map#get
      * @since 3.0.0
@@ -108,9 +111,9 @@ var Map = new Class({
      * @genericUse {K} - [key]
      * @genericUse {V} - [$return]
      *
-     * @param {string} key - [description]
+     * @param {string} key - The key of the element to return from the `Map` object.
      *
-     * @return {*} [description]
+     * @return {*} The element associated with the specified key or `undefined` if the key can't be found in this Map object.
      */
     get: function (key)
     {
@@ -121,14 +124,14 @@ var Map = new Class({
     },
 
     /**
-     * [description]
+     * Returns an `Array` of all the values stored in this Map.
      *
      * @method Phaser.Structs.Map#getArray
      * @since 3.0.0
      *
      * @genericUse {V[]} - [$return]
      *
-     * @return {Array.<*>} [description]
+     * @return {Array.<*>} An array of the values stored in this Map.
      */
     getArray: function ()
     {
@@ -144,16 +147,16 @@ var Map = new Class({
     },
 
     /**
-     * [description]
+     * Returns a boolean indicating whether an element with the specified key exists or not.
      *
      * @method Phaser.Structs.Map#has
      * @since 3.0.0
      *
      * @genericUse {K} - [key]
      *
-     * @param {string} key - [description]
+     * @param {string} key - The key of the element to test for presence of in this Map.
      *
-     * @return {boolean} [description]
+     * @return {boolean} Returns `true` if an element with the specified key exists in this Map, otherwise `false`.
      */
     has: function (key)
     {
@@ -161,7 +164,7 @@ var Map = new Class({
     },
 
     /**
-     * [description]
+     * Delete the specified element from this Map.
      *
      * @method Phaser.Structs.Map#delete
      * @since 3.0.0
@@ -169,7 +172,7 @@ var Map = new Class({
      * @genericUse {K} - [key]
      * @genericUse {Phaser.Structs.Map.<K, V>} - [$return]
      *
-     * @param {string} key - [description]
+     * @param {string} key - The key of the element to delete from this Map.
      *
      * @return {Phaser.Structs.Map} This Map object.
      */
@@ -185,7 +188,7 @@ var Map = new Class({
     },
 
     /**
-     * [description]
+     * Delete all entries from this Map.
      *
      * @method Phaser.Structs.Map#clear
      * @since 3.0.0
@@ -208,14 +211,14 @@ var Map = new Class({
     },
 
     /**
-     * [description]
+     * Returns all entries keys in this Map.
      *
      * @method Phaser.Structs.Map#keys
      * @since 3.0.0
      *
      * @genericUse {K[]} - [$return]
      *
-     * @return {string[]} [description]
+     * @return {string[]} Array containing entries' keys.
      */
     keys: function ()
     {
@@ -223,14 +226,14 @@ var Map = new Class({
     },
 
     /**
-     * [description]
+     * Returns an `Array` of all entries.
      *
      * @method Phaser.Structs.Map#values
      * @since 3.0.0
      *
      * @genericUse {V[]} - [$return]
      *
-     * @return {Array.<*>} [description]
+     * @return {Array.<*>} An `Array` of entries.
      */
     values: function ()
     {
@@ -246,7 +249,7 @@ var Map = new Class({
     },
 
     /**
-     * [description]
+     * Dumps the contents of this Map to the console via `console.group`.
      *
      * @method Phaser.Structs.Map#dump
      * @since 3.0.0
@@ -268,7 +271,7 @@ var Map = new Class({
     },
 
     /**
-     * [description]
+     * Passes all entries in this Map to the given callback.
      *
      * @method Phaser.Structs.Map#each
      * @since 3.0.0
@@ -276,7 +279,7 @@ var Map = new Class({
      * @genericUse {EachMapCallback.<V>} - [callback]
      * @genericUse {Phaser.Structs.Map.<K, V>} - [$return]
      *
-     * @param {EachMapCallback} callback - [description]
+     * @param {EachMapCallback} callback - The callback which will receive the keys and entries held in this Map.
      *
      * @return {Phaser.Structs.Map} This Map object.
      */
@@ -296,16 +299,16 @@ var Map = new Class({
     },
 
     /**
-     * [description]
+     * Returns `true` if the value exists within this Map. Otherwise, returns `false`.
      *
      * @method Phaser.Structs.Map#contains
      * @since 3.0.0
      *
      * @genericUse {V} - [value]
      *
-     * @param {*} value - [description]
+     * @param {*} value - The value to search for.
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if the value is found, otherwise `false`.
      */
     contains: function (value)
     {
@@ -323,17 +326,16 @@ var Map = new Class({
     },
 
     /**
-     * Merges all new keys from the given Map into this one
-     * If it encounters a key that already exists it will be skipped
-     * unless override = true.
+     * Merges all new keys from the given Map into this one.
+     * If it encounters a key that already exists it will be skipped unless override is set to `true`.
      *
      * @method Phaser.Structs.Map#merge
      * @since 3.0.0
      *
      * @genericUse {Phaser.Structs.Map.<K, V>} - [map,$return]
      *
-     * @param {Phaser.Structs.Map} map - [description]
-     * @param {boolean} [override=false] - [description]
+     * @param {Phaser.Structs.Map} map - The Map to merge in to this Map.
+     * @param {boolean} [override=false] - Set to `true` to replace values in this Map with those from the source map, or `false` to skip them.
      *
      * @return {Phaser.Structs.Map} This Map object.
      */

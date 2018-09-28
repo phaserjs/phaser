@@ -226,10 +226,7 @@ var Zone = new Class({
      */
     setRectangleDropZone: function (width, height)
     {
-        var x = -(width / 2);
-        var y = -(height / 2);
-
-        return this.setDropZone(new Rectangle(x, y, width, height), RectangleContains);
+        return this.setDropZone(new Rectangle(0, 0, width, height), RectangleContains);
     },
 
     /**
@@ -249,8 +246,7 @@ var Zone = new Class({
         {
             this.setRectangleDropZone(this.width, this.height);
         }
-        else
-        if (!this.input)
+        else if (!this.input)
         {
             this.setInteractive(shape, callback, true);
         }

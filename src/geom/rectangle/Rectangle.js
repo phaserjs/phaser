@@ -205,13 +205,13 @@ var Rectangle = new Class({
     },
 
     /**
-     * [description]
+     * Sets the width and height of the Rectangle.
      *
      * @method Phaser.Geom.Rectangle#setSize
      * @since 3.0.0
      *
-     * @param {number} width - [description]
-     * @param {number} [height=width] - [description]
+     * @param {number} width - The width to set the Rectangle to.
+     * @param {number} [height=width] - The height to set the Rectangle to.
      *
      * @return {Phaser.Geom.Rectangle} This Rectangle object.
      */
@@ -226,12 +226,12 @@ var Rectangle = new Class({
     },
 
     /**
-     * [description]
+     * Determines if the Rectangle is empty. A Rectangle is empty if its width or height is less than or equal to 0.
      *
      * @method Phaser.Geom.Rectangle#isEmpty
      * @since 3.0.0
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if the Rectangle is empty. A Rectangle object is empty if its width or height is less than or equal to 0.
      */
     isEmpty: function ()
     {
@@ -323,7 +323,8 @@ var Rectangle = new Class({
     },
 
     /**
-     * [description]
+     * The x coordinate of the left of the Rectangle.
+     * Changing the left property of a Rectangle object has no effect on the y and height properties. However it does affect the width property, whereas changing the x value does not affect the width property.
      *
      * @name Phaser.Geom.Rectangle#left
      * @type {number}
@@ -353,7 +354,8 @@ var Rectangle = new Class({
     },
 
     /**
-     * [description]
+     * The sum of the x and width properties.
+     * Changing the right property of a Rectangle object has no effect on the x, y and height properties, however it does affect the width property.
      *
      * @name Phaser.Geom.Rectangle#right
      * @type {number}
@@ -381,7 +383,8 @@ var Rectangle = new Class({
     },
 
     /**
-     * [description]
+     * The y coordinate of the top of the Rectangle. Changing the top property of a Rectangle object has no effect on the x and width properties.
+     * However it does affect the height property, whereas changing the y value does not affect the height property.
      *
      * @name Phaser.Geom.Rectangle#top
      * @type {number}
@@ -411,7 +414,8 @@ var Rectangle = new Class({
     },
 
     /**
-     * [description]
+     * The sum of the y and height properties.
+     * Changing the bottom property of a Rectangle object has no effect on the x, y and width properties, but does change the height property.
      *
      * @name Phaser.Geom.Rectangle#bottom
      * @type {number}
@@ -439,7 +443,7 @@ var Rectangle = new Class({
     },
 
     /**
-     * [description]
+     * The x coordinate of the center of the Rectangle.
      *
      * @name Phaser.Geom.Rectangle#centerX
      * @type {number}
@@ -460,7 +464,7 @@ var Rectangle = new Class({
     },
 
     /**
-     * [description]
+     * The y coordinate of the center of the Rectangle.
      *
      * @name Phaser.Geom.Rectangle#centerY
      * @type {number}

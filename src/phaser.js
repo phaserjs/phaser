@@ -59,7 +59,7 @@ if (typeof PLUGIN_CAMERA3D)
 
 if (typeof PLUGIN_FBINSTANT)
 {
-    Phaser.FBInstant = require('../plugins/fbinstant/src/FacebookInstantGamesPlugin');
+    Phaser.FacebookInstantGamesPlugin = require('../plugins/fbinstant/src/FacebookInstantGamesPlugin');
 }
 
 //   Merge in the consts

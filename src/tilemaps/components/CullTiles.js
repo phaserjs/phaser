@@ -16,7 +16,7 @@ var SnapCeil = require('../../math/snap/SnapCeil');
  *
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to run the cull check against.
- * @param {array} [outputArray] - [description]
+ * @param {array} [outputArray] - An optional array to store the Tile objects within.
  *
  * @return {Phaser.Tilemaps.Tile[]} An array of Tile objects.
  */

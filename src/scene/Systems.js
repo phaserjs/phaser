@@ -55,7 +55,7 @@ var Systems = new Class({
         if (typeof PLUGIN_FBINSTANT)
         {
             /**
-             * The FaceBook Instant Games Plugin.
+             * The Facebook Instant Games Plugin.
              *
              * @name Phaser.Scenes.Systems#facebook
              * @type {any}

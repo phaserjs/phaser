@@ -5,7 +5,8 @@
  */
 
 /**
- * [description]
+ * The Impact Debug component.
+ * Should be applied as a mixin.
  *
  * @name Phaser.Physics.Impact.Components.Debug
  * @since 3.0.0

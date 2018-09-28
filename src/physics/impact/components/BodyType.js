@@ -7,7 +7,8 @@
 var TYPE = require('../TYPE');
 
 /**
- * [description]
+ * The Impact Body Type component.
+ * Should be applied as a mixin.
  *
  * @name Phaser.Physics.Impact.Components.BodyType
  * @since 3.0.0

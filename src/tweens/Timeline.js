@@ -243,12 +243,13 @@ var Timeline = new Class({
     },
 
     /**
-     * [description]
+     * Sets the value of the time scale applied to this Timeline. A value of 1 runs in real-time. A value of 0.5 runs 50% slower, and so on.
+     * Value isn't used when calculating total duration of the tween, it's a run-time delta adjustment only.
      *
      * @method Phaser.Tweens.Timeline#setTimeScale
      * @since 3.0.0
      *
-     * @param {number} value - [description]
+     * @param {number} value - The time scale value to set.
      *
      * @return {Phaser.Tweens.Timeline} This Timeline object.
      */
@@ -260,12 +261,12 @@ var Timeline = new Class({
     },
 
     /**
-     * [description]
+     * Gets the value of the time scale applied to this Timeline. A value of 1 runs in real-time. A value of 0.5 runs 50% slower, and so on. 
      *
      * @method Phaser.Tweens.Timeline#getTimeScale
      * @since 3.0.0
      *
-     * @return {number} [description]
+     * @return {number} The value of the time scale applied to this Tween.
      */
     getTimeScale: function ()
     {
@@ -273,12 +274,12 @@ var Timeline = new Class({
     },
 
     /**
-     * [description]
+     * Check whether or not the Timeline is playing.
      *
      * @method Phaser.Tweens.Timeline#isPlaying
      * @since 3.0.0
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if this Timeline is active, otherwise `false`.
      */
     isPlaying: function ()
     {
@@ -523,7 +524,7 @@ var Timeline = new Class({
     },
 
     /**
-     * [description]
+     * Sets a callback for the Tween Manager.
      *
      * @method Phaser.Tweens.Timeline#setCallback
      * @since 3.0.0
@@ -843,7 +844,7 @@ var Timeline = new Class({
     },
 
     /**
-     * [description]
+     * Stops all the Tweens in the Timeline immediately, whatever stage of progress they are at and flags them for removal by the TweenManager.
      *
      * @method Phaser.Tweens.Timeline#destroy
      * @since 3.0.0

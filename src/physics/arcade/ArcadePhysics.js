@@ -15,18 +15,19 @@ var PluginCache = require('../../plugins/PluginCache');
 var Vector2 = require('../../math/Vector2');
 var World = require('./World');
 
-//  All methods in this class are available under `this.physics` in a Scene.
-
 /**
  * @classdesc
- * [description]
+ * The Arcade Physics Plugin belongs to a Scene and sets up and manages the Scene's physics simulation.
+ * It also holds some useful methods for moving and rotating Arcade Physics Bodies.
+ *
+ * You can access it from within a Scene using `this.physics`.
  *
  * @class ArcadePhysics
  * @memberOf Phaser.Physics.Arcade
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - [description]
+ * @param {Phaser.Scene} scene - The Scene that this Plugin belongs to.
  */
 var ArcadePhysics = new Class({
 
@@ -35,7 +36,7 @@ var ArcadePhysics = new Class({
     function ArcadePhysics (scene)
     {
         /**
-         * [description]
+         * The Scene that this Plugin belongs to.
          *
          * @name Phaser.Physics.Arcade.ArcadePhysics#scene
          * @type {Phaser.Scene}
@@ -44,7 +45,7 @@ var ArcadePhysics = new Class({
         this.scene = scene;
 
         /**
-         * [description]
+         * The Scene's Systems.
          *
          * @name Phaser.Physics.Arcade.ArcadePhysics#systems
          * @type {Phaser.Scenes.Systems}
@@ -53,7 +54,7 @@ var ArcadePhysics = new Class({
         this.systems = scene.sys;
 
         /**
-         * [description]
+         * A configuration object. Union of the `physics.arcade.*` properties of the GameConfig and SceneConfig objects.
          *
          * @name Phaser.Physics.Arcade.ArcadePhysics#config
          * @type {object}
@@ -62,7 +63,7 @@ var ArcadePhysics = new Class({
         this.config = this.getConfig();
 
         /**
-         * [description]
+         * The physics simulation.
          *
          * @name Phaser.Physics.Arcade.ArcadePhysics#world
          * @type {Phaser.Physics.Arcade.World}
@@ -71,7 +72,7 @@ var ArcadePhysics = new Class({
         this.world;
 
         /**
-         * [description]
+         * An object holding the Arcade Physics factory methods.
          *
          * @name Phaser.Physics.Arcade.ArcadePhysics#add
          * @type {Phaser.Physics.Arcade.Factory}
@@ -124,12 +125,12 @@ var ArcadePhysics = new Class({
     },
 
     /**
-     * [description]
+     * Creates the physics configuration for the current Scene.
      *
      * @method Phaser.Physics.Arcade.ArcadePhysics#getConfig
      * @since 3.0.0
      *
-     * @return {object} [description]
+     * @return {object} The physics configuration.
      */
     getConfig: function ()
     {
@@ -145,31 +146,20 @@ var ArcadePhysics = new Class({
     },
 
     /**
-     * Checks for overlaps between two Game Objects. The objects can be any Game Object that have an Arcade Physics Body.
-     *
-     * Unlike {@link #collide} the objects are NOT automatically separated or have any physics applied, they merely test for overlap results.
-     *
-     * Both the first and second parameter can be arrays of objects, of differing types.
-     * If two arrays are passed, the contents of the first parameter will be tested against all contents of the 2nd parameter.
-     *
-     * ##### Tilemaps
-     *
-     * Any overlapping tiles, including blank/null tiles, will give a positive result. Tiles marked via {@link Phaser.Tilemap#setCollision} (and similar methods) have no special status, and callbacks added via {@link Phaser.Tilemap#setTileIndexCallback} or {@link Phaser.Tilemap#setTileLocationCallback} are not invoked. So calling this method without any callbacks isn't very useful.
-     *
-     * If you're interested only in whether an object overlaps a certain tile or class of tiles, filter the tiles with `processCallback` and then use the result returned by this method. Blank/null tiles can be excluded by their {@link Phaser.Tile#index index} (-1).
-     *
-     * If you want to take action on certain overlaps, examine the tiles in `collideCallback` and then handle as you like.
+     * Tests if Game Objects overlap. See {@link Phaser.Physics.Arcade.World#overlap}
      *
      * @method Phaser.Physics.Arcade.ArcadePhysics#overlap
      * @since 3.0.0
      *
-     * @param {(Phaser.GameObjects.GameObject|array)} object1 - The first object or array of objects to check. Can be any Game Object that has an Arcade Physics Body.
-     * @param {(Phaser.GameObjects.GameObject|array)} object2 - The second object or array of objects to check. Can be any Game Object that has an Arcade Physics Body.
-     * @param {ArcadePhysicsCallback} [overlapCallback=null] - An optional callback function that is called if the objects overlap. The two objects will be passed to this function in the same order in which you specified them, unless you are checking Group vs. Sprite, in which case Sprite will always be the first parameter.
-     * @param {ArcadePhysicsCallback} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they overlap. If this is set then `overlapCallback` will only be called if this callback returns `true`.
+     * @param {ArcadeColliderType} object1 - The first object or array of objects to check.
+     * @param {ArcadeColliderType} [object2] - The second object or array of objects to check, or `undefined`.
+     * @param {ArcadePhysicsCallback} [collideCallback] - An optional callback function that is called if the objects collide.
+     * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they overlap. If this is set then `collideCallback` will only be called if this callback returns `true`.
      * @param {*} [callbackContext] - The context in which to run the callbacks.
      *
-     * @return {boolean} True if an overlap occurred otherwise false.
+     * @return {boolean} True if at least one Game Object overlaps another.
+     *
+     * @see Phaser.Physics.Arcade.World#overlap
      */
     overlap: function (object1, object2, overlapCallback, processCallback, callbackContext)
     {
@@ -181,18 +171,20 @@ var ArcadePhysics = new Class({
     },
 
     /**
-     * [description]
+     * Tests if Game Objects overlap and separates them (if possible). See {@link Phaser.Physics.Arcade.World#collide}.
      *
      * @method Phaser.Physics.Arcade.ArcadePhysics#collide
      * @since 3.0.0
      *
-     * @param {(Phaser.GameObjects.GameObject|array)} object1 - The first object or array of objects to check. Can be any Game Object that has an Arcade Physics Body.
-     * @param {(Phaser.GameObjects.GameObject|array)} object2 - The second object or array of objects to check. Can be any Game Object that has an Arcade Physics Body.
-     * @param {ArcadePhysicsCallback} [collideCallback=null] - An optional callback function that is called if the objects collide. The two objects will be passed to this function in the same order in which you specified them, unless you are checking Group vs. Sprite, in which case Sprite will always be the first parameter.
-     * @param {ArcadePhysicsCallback} [processCallback=null] - A callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
+     * @param {ArcadeColliderType} object1 - The first object or array of objects to check.
+     * @param {ArcadeColliderType} [object2] - The second object or array of objects to check, or `undefined`.
+     * @param {ArcadePhysicsCallback} [collideCallback] - An optional callback function that is called if the objects collide.
+     * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
      * @param {*} [callbackContext] - The context in which to run the callbacks.
      *
-     * @return {boolean} True if a collision occurred otherwise false.
+     * @return {boolean} True if any overlapping Game Objects were separated, otherwise false.
+     *
+     * @see Phaser.Physics.Arcade.World#collide
      */
     collide: function (object1, object2, collideCallback, processCallback, callbackContext)
     {
@@ -204,12 +196,12 @@ var ArcadePhysics = new Class({
     },
 
     /**
-     * [description]
+     * Pauses the simulation.
      *
      * @method Phaser.Physics.Arcade.ArcadePhysics#pause
      * @since 3.0.0
      *
-     * @return {Phaser.Physics.Arcade.World} [description]
+     * @return {Phaser.Physics.Arcade.World} The simulation.
      */
     pause: function ()
     {
@@ -217,12 +209,12 @@ var ArcadePhysics = new Class({
     },
 
     /**
-     * [description]
+     * Resumes the simulation (if paused).
      *
      * @method Phaser.Physics.Arcade.ArcadePhysics#resume
      * @since 3.0.0
      *
-     * @return {Phaser.Physics.Arcade.World} [description]
+     * @return {Phaser.Physics.Arcade.World} The simulation.
      */
     resume: function ()
     {

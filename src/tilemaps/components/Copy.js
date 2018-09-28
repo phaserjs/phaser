@@ -16,13 +16,13 @@ var CalculateFacesWithin = require('./CalculateFacesWithin');
  * @private
  * @since 3.0.0
  *
- * @param {integer} srcTileX - [description]
- * @param {integer} srcTileY - [description]
- * @param {integer} width - [description]
- * @param {integer} height - [description]
- * @param {integer} destTileX - [description]
- * @param {integer} destTileY - [description]
- * @param {boolean} [recalculateFaces=true] - [description]
+ * @param {integer} srcTileX - The x coordinate of the area to copy from, in tiles, not pixels.
+ * @param {integer} srcTileY - The y coordinate of the area to copy from, in tiles, not pixels.
+ * @param {integer} width - The width of the area to copy, in tiles, not pixels.
+ * @param {integer} height - The height of the area to copy, in tiles, not pixels.
+ * @param {integer} destTileX - The x coordinate of the area to copy to, in tiles, not pixels.
+ * @param {integer} destTileY - The y coordinate of the area to copy to, in tiles, not pixels.
+ * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  */
 var Copy = function (srcTileX, srcTileY, width, height, destTileX, destTileY, recalculateFaces, layer)

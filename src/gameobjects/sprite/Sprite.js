@@ -153,6 +153,20 @@ var Sprite = new Class({
         //  Extra Sprite data is added here
 
         return data;
+    },
+
+    /**
+     * Handles the pre-destroy step for the Sprite, which removes the Animation component.
+     *
+     * @method Phaser.GameObjects.Sprite#preDestroy
+     * @private
+     * @since 3.14.0
+     */
+    preDestroy: function ()
+    {
+        this.anims.destroy();
+
+        this.anims = undefined;
     }
 
 });

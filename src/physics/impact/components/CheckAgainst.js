@@ -7,7 +7,8 @@
 var TYPE = require('../TYPE');
 
 /**
- * [description]
+ * The Impact Check Against component.
+ * Should be applied as a mixin.
  *
  * @name Phaser.Physics.Impact.Components.CheckAgainst
  * @since 3.0.0

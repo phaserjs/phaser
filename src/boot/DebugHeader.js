@@ -101,9 +101,11 @@ var DebugHeader = function (game)
             }
         }
 
+        var fb = (typeof PLUGIN_FBINSTANT) ? '-FB' : '';
+
         if (!config.hidePhaser)
         {
-            c = c.concat('Phaser v' + CONST.VERSION + ' (' + renderType + ' | ' + audioType + ')');
+            c = c.concat('Phaser v' + CONST.VERSION + fb + ' (' + renderType + ' | ' + audioType + ')');
         }
 
         c = c.concat(' %c ' + config.gameURL);

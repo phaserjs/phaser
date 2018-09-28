@@ -72,7 +72,7 @@ var ForwardDiffuseLightPipeline = new Class({
      * 
      * @param {Phaser.GameObjects.GameObject} [gameObject] - The Game Object that invoked this pipeline, if any.
      *
-     * @return {Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline} [description]
+     * @return {this} This WebGLPipeline instance.
      */
     onBind: function (gameObject)
     {
@@ -103,7 +103,7 @@ var ForwardDiffuseLightPipeline = new Class({
      * @param {Phaser.Scene} scene - [description]
      * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
      *
-     * @return {Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline} [description]
+     * @return {this} This WebGLPipeline instance.
      */
     onRender: function (scene, camera)
     {

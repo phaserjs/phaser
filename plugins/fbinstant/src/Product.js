@@ -7,14 +7,16 @@
 var GetFastValue = require('../../../src/utils/object/GetFastValue');
 
 /**
- * @classdesc
- * [description]
+ * @typedef {object} Product
  *
- * @class FacebookInstantGamesPlugin
- * @memberOf Phaser
- * @constructor
- * @since 3.12.0
+ * @property {string} [title] - The title of the product.
+ * @property {string} [productID] - The product's game-specified identifier.
+ * @property {string} [description] - The product description.
+ * @property {string} [imageURI] - A link to the product's associated image.
+ * @property {string} [price] - The price of the product.
+ * @property {string} [priceCurrencyCode] - The currency code for the product.
  */
+
 var Product = function (data)
 {
     return {

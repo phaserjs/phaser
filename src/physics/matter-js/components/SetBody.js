@@ -8,6 +8,7 @@ var Bodies = require('../lib/factory/Bodies');
 var Body = require('../lib/body/Body');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var PhysicsEditorParser = require('../PhysicsEditorParser');
+var Vertices = require('../lib/geometry/Vertices');
 
 /**
  * [description]
@@ -111,7 +112,11 @@ var SetBody = {
         }
 
         this.body = body;
-        this.body.gameObject = this;
+
+        for (var i = 0; i < body.parts.length; i++)
+        {
+            body.parts[i].gameObject = this;
+        }
 
         var _this = this;
 
@@ -186,26 +191,39 @@ var SetBody = {
 
             case 'polygon':
                 var sides = GetFastValue(config, 'sides', 5);
-                var pradius = GetFastValue(config, 'radius', Math.max(bodyWidth, bodyHeight) / 2);
-                body = Bodies.polygon(bodyX, bodyY, sides, pradius, options);
+                var pRadius = GetFastValue(config, 'radius', Math.max(bodyWidth, bodyHeight) / 2);
+                body = Bodies.polygon(bodyX, bodyY, sides, pRadius, options);
                 break;
 
             case 'fromVertices':
             case 'fromVerts':
-                var verts = GetFastValue(config, 'verts', []);
 
-                if (this.body)
+                var verts = GetFastValue(config, 'verts', null);
+
+                if (verts)
                 {
-                    Body.setVertices(this.body, verts);
-                    body = this.body;
+                    //  Has the verts array come from Vertices.fromPath, or is it raw?
+                    if (typeof verts === 'string')
+                    {
+                        verts = Vertices.fromPath(verts);
+                    }
+
+                    if (this.body && !this.body.hasOwnProperty('temp'))
+                    {
+                        Body.setVertices(this.body, verts);
+
+                        body = this.body;
+                    }
+                    else
+                    {
+                        var flagInternal = GetFastValue(config, 'flagInternal', false);
+                        var removeCollinear = GetFastValue(config, 'removeCollinear', 0.01);
+                        var minimumArea = GetFastValue(config, 'minimumArea', 10);
+    
+                        body = Bodies.fromVertices(bodyX, bodyY, verts, options, flagInternal, removeCollinear, minimumArea);
+                    }
                 }
-                else
-                {
-                    var flagInternal = GetFastValue(config, 'flagInternal', false);
-                    var removeCollinear = GetFastValue(config, 'removeCollinear', 0.01);
-                    var minimumArea = GetFastValue(config, 'minimumArea', 10);
-                    body = Bodies.fromVertices(bodyX, bodyY, verts, options, flagInternal, removeCollinear, minimumArea);
-                }
+
                 break;
 
             case 'fromPhysicsEditor':
@@ -213,7 +231,10 @@ var SetBody = {
                 break;
         }
 
-        this.setExistingBody(body, config.addToWorld);
+        if (body)
+        {
+            this.setExistingBody(body, config.addToWorld);
+        }
 
         return this;
     }

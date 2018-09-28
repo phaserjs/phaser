@@ -8,17 +8,18 @@
 //  Neither rect should have negative widths or heights
 
 /**
- * [description]
+ * Merges the source rectangle into the target rectangle and returns the target.
+ * Neither rectangle should have a negative width or height.
  *
  * @function Phaser.Geom.Rectangle.MergeRect
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Rectangle} O - [target,$return]
  *
- * @param {Phaser.Geom.Rectangle} target - [description]
- * @param {Phaser.Geom.Rectangle} source - [description]
+ * @param {Phaser.Geom.Rectangle} target - Target rectangle. Will be modified to include source rectangle.
+ * @param {Phaser.Geom.Rectangle} source - Rectangle that will be merged into target rectangle.
  *
- * @return {Phaser.Geom.Rectangle} [description]
+ * @return {Phaser.Geom.Rectangle} Modified target rectangle that contains source rectangle.
  */
 var MergeRect = function (target, source)
 {

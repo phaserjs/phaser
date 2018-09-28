@@ -5,7 +5,7 @@
  */
 
 /**
- * [description]
+ * Provides methods used for setting the acceleration properties of an Arcade Body.
  *
  * @name Phaser.Physics.Arcade.Components.Acceleration
  * @since 3.0.0
@@ -13,7 +13,7 @@
 var Acceleration = {
 
     /**
-     * [description]
+     * Sets the body's horizontal and vertical acceleration. If the vertical acceleration value is not provided, the vertical acceleration is set to the same value as the horizontal acceleration.
      *
      * @method Phaser.Physics.Arcade.Components.Acceleration#setAcceleration
      * @since 3.0.0
@@ -31,7 +31,7 @@ var Acceleration = {
     },
 
     /**
-     * [description]
+     * Sets the body's horizontal acceleration.
      *
      * @method Phaser.Physics.Arcade.Components.Acceleration#setAccelerationX
      * @since 3.0.0
@@ -48,7 +48,7 @@ var Acceleration = {
     },
 
     /**
-     * [description]
+     * Sets the body's vertical acceleration.
      *
      * @method Phaser.Physics.Arcade.Components.Acceleration#setAccelerationY
      * @since 3.0.0

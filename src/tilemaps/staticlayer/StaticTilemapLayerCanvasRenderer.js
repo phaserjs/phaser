@@ -60,13 +60,14 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, src, interpolationPer
         camMatrix.multiply(layerMatrix, calcMatrix);
     }
 
-    var tileset = src.tileset;
     var ctx = renderer.currentContext;
-    var image = tileset.image.getSourceImage();
+    var gidMap = src.gidMap;
 
     ctx.save();
 
     calcMatrix.copyToContext(ctx);
+
+    var alpha = camera.alpha * src.alpha;
 
     ctx.globalAlpha = camera.alpha * src.alpha;
 
@@ -74,17 +75,46 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, src, interpolationPer
     {
         var tile = renderTiles[i];
 
+        var tileset = gidMap[tile.index];
+
+        if (!tileset)
+        {
+            continue;
+        }
+
+        var image = tileset.image.getSourceImage();
         var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
 
         if (tileTexCoords)
         {
+            var halfWidth = tile.width / 2;
+            var halfHeight = tile.height / 2;
+    
+            ctx.save();
+
+            ctx.translate(tile.pixelX + halfWidth, tile.pixelY + halfHeight);
+
+            if (tile.rotation !== 0)
+            {
+                ctx.rotate(tile.rotation);
+            }
+    
+            if (tile.flipX || tile.flipY)
+            {
+                ctx.scale((tile.flipX) ? -1 : 1, (tile.flipY) ? -1 : 1);
+            }
+
+            ctx.globalAlpha = alpha * tile.alpha;
+    
             ctx.drawImage(
                 image,
                 tileTexCoords.x, tileTexCoords.y,
                 tile.width, tile.height,
-                tile.pixelX, tile.pixelY,
+                -halfWidth, -halfHeight,
                 tile.width, tile.height
             );
+    
+            ctx.restore();
         }
     }
 

@@ -25,7 +25,6 @@ var TextureManager = require('../textures/TextureManager');
 var TimeStep = require('./TimeStep');
 var VisibilityHandler = require('./VisibilityHandler');
 
-
 if (typeof EXPERIMENTAL)
 {
     var CreateDOMContainer = require('./CreateDOMContainer');
@@ -279,11 +278,14 @@ var Game = new Class({
         if (typeof PLUGIN_FBINSTANT)
         {
             /**
-             * An instance of the Facebook Instant Games Manager.
+             * An instance of the Facebook Instant Games Plugin.
+             * 
+             * This will only be available if the plugin has been built into Phaser,
+             * or you're using the special Facebook Instant Games custom build.
              *
              * @name Phaser.Game#facebook
-             * @type {any}
-             * @since 3.12.0
+             * @type {Phaser.FacebookInstantGamesPlugin}
+             * @since 3.13.0
              */
             this.facebook = new FacebookInstantGamesPlugin(this);
         }

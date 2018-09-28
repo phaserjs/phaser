@@ -376,10 +376,6 @@ var Container = new Class({
 
             gameObject.parentContainer = this;
         }
-
-        //  Game Objects automatically listen to the Scene shutdown event, but
-        //  we don't need this if they're in a Container
-        this._sysEvents.off('shutdown', gameObject.destroy, gameObject);
     },
 
     /**
@@ -398,8 +394,6 @@ var Container = new Class({
         if (this.exclusive)
         {
             gameObject.parentContainer = null;
-
-            this._sysEvents.once('shutdown', gameObject.destroy, gameObject);
         }
     },
 
