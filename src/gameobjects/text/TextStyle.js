@@ -520,20 +520,27 @@ var TextStyle = new Class({
      */
     setFont: function (font)
     {
-        if (typeof font === 'string')
+        var fontFamily = font;
+        var fontSize = '';
+        var fontStyle = '';
+
+        if (typeof font !== 'string')
         {
-            this.fontFamily = font;
-            this.fontSize = '';
-            this.fontStyle = '';
-        }
-        else
-        {
-            this.fontFamily = GetValue(font, 'fontFamily', 'Courier');
-            this.fontSize = GetValue(font, 'fontSize', '16px');
-            this.fontStyle = GetValue(font, 'fontStyle', '');
+            fontFamily = GetValue(font, 'fontFamily', 'Courier');
+            fontSize = GetValue(font, 'fontSize', '16px');
+            fontStyle = GetValue(font, 'fontStyle', '');
         }
 
-        return this.update(true);
+        if (fontFamily !== this.fontFamily || fontSize !== this.fontSize || fontStyle !== this.fontStyle)
+        {
+            this.fontFamily = fontFamily;
+            this.fontSize = fontSize;
+            this.fontStyle = fontStyle;
+    
+            this.update(true);
+        }
+
+        return this.parent;
     },
 
     /**
@@ -548,9 +555,14 @@ var TextStyle = new Class({
      */
     setFontFamily: function (family)
     {
-        this.fontFamily = family;
+        if (this.fontFamily !== family)
+        {
+            this.fontFamily = family;
 
-        return this.update(true);
+            this.update(true);
+        }
+
+        return this.parent;
     },
 
     /**
@@ -565,9 +577,14 @@ var TextStyle = new Class({
      */
     setFontStyle: function (style)
     {
-        this.fontStyle = style;
+        if (this.fontStyle !== style)
+        {
+            this.fontStyle = style;
 
-        return this.update(true);
+            this.update(true);
+        }
+
+        return this.parent;
     },
 
     /**
@@ -587,9 +604,14 @@ var TextStyle = new Class({
             size = size.toString() + 'px';
         }
 
-        this.fontSize = size;
+        if (this.fontSize !== size)
+        {
+            this.fontSize = size;
 
-        return this.update(true);
+            this.update(true);
+        }
+
+        return this.parent;
     },
 
     /**
@@ -727,24 +749,31 @@ var TextStyle = new Class({
      */
     setStroke: function (color, thickness)
     {
-        if (color === undefined)
+        if (thickness === undefined) { thickness = this.strokeThickness; }
+
+        if (color === undefined && this.strokeThickness !== 0)
         {
             //  Reset the stroke to zero (disabling it)
             this.strokeThickness = 0;
-        }
-        else
-        {
-            if (thickness === undefined) { thickness = this.strokeThickness; }
 
+            this.update(true);
+        }
+        else if (this.stroke !== color || this.strokeThickness !== thickness)
+        {
             this.stroke = color;
             this.strokeThickness = thickness;
+
+            this.update(true);
         }
 
-        return this.update(true);
+        return this.parent;
     },
 
     /**
      * Set the shadow settings.
+     * 
+     * Calling this method always re-measures the parent Text object,
+     * so only call it when you actually change the shadow settings.
      *
      * @method Phaser.GameObjects.Text.TextStyle#setShadow
      * @since 3.0.0
