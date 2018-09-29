@@ -56,6 +56,8 @@
 * All of the Animation Events now pass the Game Object as the final argument, this includes `animationstart`, `animationrestart`, `animationrepeat`, `animationupdate` and `animationcomplete`.
 * `Curves.Ellipse.rotation` is a getter / setter that holds the rotation of the curve. Previously it expected the value in degrees and when getting it returned the value in radians. It now expects the value in radians and returns radians to keep it logical.
 * `Set.size` will now only set the new size if the value is smaller than the current size, truncating the Set in the process. Values larger than the current size are ignored.
+* Arcade Physics `shutdown` will check to see if the world instance still exists and only try removing it if so. This prevents errors when stopping a world and then destroying it at a later date.
+* `Text.setFont`, `Text.setFontFamily`, `Text.setFontStyle` and `Text.setStroke` will no longer re-measure the parent Text object if their values have not changed.
 
 ### Bug Fixes
 
