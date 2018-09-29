@@ -52,7 +52,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @property {number} setBounceY - As {@link Phaser.Physics.Arcade.Body#setBounceY}.
  * @property {number} setDragX - As {@link Phaser.Physics.Arcade.Body#setDragX}.
  * @property {number} setDragY - As {@link Phaser.Physics.Arcade.Body#setDragY}.
- * @property {boolean} setEnable - [description]
+ * @property {boolean} setEnable - As {@link Phaser.Physics.Arcade.Body#setEnable}.
  * @property {number} setGravityX - As {@link Phaser.Physics.Arcade.Body#setGravityX}.
  * @property {number} setGravityY - As {@link Phaser.Physics.Arcade.Body#setGravityY}.
  * @property {number} setFrictionX - As {@link Phaser.Physics.Arcade.Body#setFrictionX}.
