@@ -5,7 +5,8 @@
  */
 
 /**
- * [description]
+ * The Impact Body Scale component.
+ * Should be applied as a mixin.
  *
  * @name Phaser.Physics.Impact.Components.BodyScale
  * @since 3.0.0
@@ -13,15 +14,15 @@
 var BodyScale = {
 
     /**
-     * [description]
+     * Sets the size of the physics body.
      *
      * @method Phaser.Physics.Impact.Components.BodyScale#setBodySize
      * @since 3.0.0
      *
-     * @param {number} width - [description]
-     * @param {number} [height=width] - [description]
+     * @param {number} width - The width of the body in pixels.
+     * @param {number} [height=width] - The height of the body in pixels.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setBodySize: function (width, height)
     {
@@ -34,15 +35,15 @@ var BodyScale = {
     },
 
     /**
-     * [description]
+     * Sets the scale of the physics body.
      *
      * @method Phaser.Physics.Impact.Components.BodyScale#setBodyScale
      * @since 3.0.0
      *
-     * @param {number} scaleX - [description]
-     * @param {number} [scaleY] - [description]
+     * @param {number} scaleX - The horizontal scale of the body.
+     * @param {number} [scaleY] - The vertical scale of the body. If not given, will use the horizontal scale value.
      *
-     * @return {Phaser.GameObjects.GameObject} This Game Object.
+     * @return {this} This Game Object.
      */
     setBodyScale: function (scaleX, scaleY)
     {

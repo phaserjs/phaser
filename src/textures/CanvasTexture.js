@@ -56,7 +56,7 @@ var CanvasTexture = new Class({
         /**
          * A reference to the Texture Source of this Canvas.
          *
-         * @name Phaser.Textures.CanvasTexturer#_source
+         * @name Phaser.Textures.CanvasTexture#_source
          * @type {Phaser.Textures.TextureSource}
          * @private
          * @since 3.7.0
@@ -76,7 +76,7 @@ var CanvasTexture = new Class({
         /**
          * The 2D Canvas Rendering Context.
          *
-         * @name Phaser.Textures.CanvasTexture#canvas
+         * @name Phaser.Textures.CanvasTexture#context
          * @readOnly
          * @type {CanvasRenderingContext2D}
          * @since 3.7.0

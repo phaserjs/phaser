@@ -7,7 +7,7 @@
 var Point = require('./Point');
 
 /**
- * [description]
+ * Interpolate two given Point objects, based on `t` value. Return result either as new Point if `out` parameter is omitted or load result into Point passed as `out` parameter and return it. For `out` parameter you can also use any object with public x/y properties.
  *
  * @function Phaser.Geom.Point.Interpolate
  * @since 3.0.0

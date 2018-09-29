@@ -11,19 +11,19 @@ var Perimeter = require('./Perimeter');
 //  each spaced out based on the quantity or step required
 
 /**
- * [description]
+ * Return an array of points from the perimeter of the rectangle, each spaced out based on the quantity or step required.
  *
  * @function Phaser.Geom.Rectangle.GetPoints
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Point[]} O - [out,$return]
  *
- * @param {Phaser.Geom.Rectangle} rectangle - [description]
+ * @param {Phaser.Geom.Rectangle} rectangle - The Rectangle object to get the points from.
  * @param {number} step - [description]
  * @param {integer} quantity - [description]
- * @param {(array|Phaser.Geom.Point[])} [out] - [description]
+ * @param {(array|Phaser.Geom.Point[])} [out] - An optional array to store the points in.
  *
- * @return {(array|Phaser.Geom.Point[])} [description]
+ * @return {(array|Phaser.Geom.Point[])} An array of Points from the perimeter of the rectangle.
  */
 var GetPoints = function (rectangle, quantity, stepRate, out)
 {

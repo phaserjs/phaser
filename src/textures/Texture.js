@@ -246,16 +246,19 @@ var Texture = new Class({
      * @since 3.0.0
      *
      * @param {integer} sourceIndex - The index of the TextureSource to get the Frames from.
+     * @param {boolean} [includeBase=false] - Include the `__BASE` Frame in the output array?
      *
      * @return {Phaser.Textures.Frame[]} An array of Texture Frames.
      */
-    getFramesFromTextureSource: function (sourceIndex)
+    getFramesFromTextureSource: function (sourceIndex, includeBase)
     {
+        if (includeBase === undefined) { includeBase = false; }
+
         var out = [];
 
         for (var frameName in this.frames)
         {
-            if (frameName === '__BASE')
+            if (frameName === '__BASE' && !includeBase)
             {
                 continue;
             }
@@ -264,7 +267,7 @@ var Texture = new Class({
 
             if (frame.sourceIndex === sourceIndex)
             {
-                out.push(frame.name);
+                out.push(frame);
             }
         }
 

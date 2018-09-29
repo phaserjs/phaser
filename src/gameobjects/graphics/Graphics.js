@@ -1493,9 +1493,9 @@ var Graphics = new Class({
             // var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix, renderTargetCtx, allowClip)
             this.renderCanvas(renderer, this, 0, Graphics.TargetCamera, null, ctx, false);
 
-            if (renderer.gl && texture)
+            if (texture)
             {
-                texture.source[0].glTexture = renderer.canvasToTexture(ctx.canvas, texture.source[0].glTexture);
+                texture.refresh();
             }
         }
 

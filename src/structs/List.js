@@ -673,7 +673,7 @@ var List = new Class({
     },
 
     /**
-     * [description]
+     * Destroys this List.
      *
      * @method Phaser.Structs.List#destroy
      * @since 3.0.0

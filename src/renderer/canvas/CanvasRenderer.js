@@ -549,8 +549,8 @@ var CanvasRenderer = new Class({
 
         var frameX = cd.x;
         var frameY = cd.y;
-        var frameWidth = frame.width;
-        var frameHeight = frame.height;
+        var frameWidth = frame.cutWidth;
+        var frameHeight = frame.cutHeight;
         var res = frame.source.resolution;
 
         var x = -sprite.displayOriginX + frame.x;

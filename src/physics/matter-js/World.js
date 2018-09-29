@@ -28,7 +28,7 @@ var Vector = require('./lib/geometry/Vector');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - [description]
+ * @param {Phaser.Scene} scene - The Scene to which this Matter World instance belongs.
  * @param {object} config - [description]
  */
 var World = new Class({
@@ -42,7 +42,7 @@ var World = new Class({
         EventEmitter.call(this);
 
         /**
-         * [description]
+         * The Scene to which this Matter World instance belongs.
          *
          * @name Phaser.Physics.Matter.World#scene
          * @type {Phaser.Scene}
@@ -51,7 +51,7 @@ var World = new Class({
         this.scene = scene;
 
         /**
-         * [description]
+         * An instance of the MatterJS Engine.
          *
          * @name Phaser.Physics.Matter.World#engine
          * @type {MatterJS.Engine}
@@ -109,7 +109,7 @@ var World = new Class({
         }
 
         /**
-         * [description]
+         * A flag that toggles if the world is enabled or not.
          *
          * @name Phaser.Physics.Matter.World#enabled
          * @type {boolean}
@@ -175,7 +175,7 @@ var World = new Class({
         this.autoUpdate = GetValue(config, 'autoUpdate', true);
 
         /**
-         * [description]
+         * A flag that controls if the debug graphics will be drawn to or not.
          *
          * @name Phaser.Physics.Matter.World#drawDebug
          * @type {boolean}
@@ -185,7 +185,7 @@ var World = new Class({
         this.drawDebug = GetValue(config, 'debug', false);
 
         /**
-         * [description]
+         * An instance of the Graphics object the debug bodies are drawn to, if enabled.
          *
          * @name Phaser.Physics.Matter.World#debugGraphic
          * @type {Phaser.GameObjects.Graphics}
@@ -194,7 +194,7 @@ var World = new Class({
         this.debugGraphic;
 
         /**
-         * [description]
+         * The default configuration values.
          *
          * @name Phaser.Physics.Matter.World#defaults
          * @type {object}
@@ -444,18 +444,18 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Creates a rectangle Matter body and adds it to the world.
      *
      * @method Phaser.Physics.Matter.World#create
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} height - [description]
-     * @param {object} options - [description]
+     * @param {number} x - The horizontal position of the body in the world.
+     * @param {number} y - The vertical position of the body in the world.
+     * @param {number} width - The width of the body.
+     * @param {number} height - The height of the body.
+     * @param {object} options - Optional Matter configuration object.
      *
-     * @return {MatterJS.Body} [description]
+     * @return {MatterJS.Body} The Matter.js body that was created.
      */
     create: function (x, y, width, height, options)
     {

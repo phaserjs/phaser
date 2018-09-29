@@ -19,10 +19,10 @@ var WorldToTileY = require('./WorldToTileY');
  * @since 3.0.0
  *
  * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
- * @param {integer} worldX - [description]
- * @param {integer} worldY - [description]
- * @param {boolean} [recalculateFaces=true] - [description]
- * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+ * @param {number} worldX - The x coordinate, in pixels.
+ * @param {number} worldY - The y coordinate, in pixels.
+ * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
+ * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
  * @return {Phaser.Tilemaps.Tile} The Tile object that was created or added to this map.

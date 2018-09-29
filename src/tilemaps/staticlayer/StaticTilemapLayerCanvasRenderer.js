@@ -60,9 +60,8 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, src, interpolationPer
         camMatrix.multiply(layerMatrix, calcMatrix);
     }
 
-    var tileset = src.tileset;
     var ctx = renderer.currentContext;
-    var image = tileset.image.getSourceImage();
+    var gidMap = src.gidMap;
 
     ctx.save();
 
@@ -76,6 +75,14 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, src, interpolationPer
     {
         var tile = renderTiles[i];
 
+        var tileset = gidMap[tile.index];
+
+        if (!tileset)
+        {
+            continue;
+        }
+
+        var image = tileset.image.getSourceImage();
         var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
 
         if (tileTexCoords)

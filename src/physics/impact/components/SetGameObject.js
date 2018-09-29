@@ -5,7 +5,8 @@
  */
 
 /**
- * [description]
+ * The Impact Set Game Object component.
+ * Should be applied as a mixin.
  *
  * @name Phaser.Physics.Impact.Components.SetGameObject
  * @since 3.0.0

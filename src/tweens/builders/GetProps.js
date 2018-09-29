@@ -12,9 +12,9 @@ var RESERVED = require('../tween/ReservedProps');
  * @function Phaser.Tweens.Builders.GetProps
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {object} config - The configuration object of the tween to get the target(s) from.
  *
- * @return {array} [description]
+ * @return {array} An array of all the targets the tween is operating on.
  */
 var GetProps = function (config)
 {

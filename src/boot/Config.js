@@ -24,76 +24,76 @@ var ValueToColor = require('../display/color/ValueToColor');
 /**
  * @callback BootCallback
  *
- * @param {Phaser.Game} game - [description]
+ * @param {Phaser.Game} game - The game.
  */
 
 /**
  * @typedef {object} InputConfig
  *
- * @property {(boolean|KeyboardInputConfig)} [keyboard=true] - [description]
- * @property {(boolean|MouseInputConfig)} [mouse=true] - [description]
- * @property {(boolean|TouchInputConfig)} [touch=true] - [description]
- * @property {(boolean|GamepadInputConfig)} [gamepad=false] - [description]
- * @property {integer} [activePointers=1] - [description]
+ * @property {(boolean|KeyboardInputConfig)} [keyboard=true] - Keyboard input configuration. `true` uses the default configuration and `false` disables keyboard input.
+ * @property {(boolean|MouseInputConfig)} [mouse=true] - Mouse input configuration. `true` uses the default configuration and `false` disables mouse input.
+ * @property {(boolean|TouchInputConfig)} [touch=true] - Touch input configuration. `true` uses the default configuration and `false` disables touch input.
+ * @property {(boolean|GamepadInputConfig)} [gamepad=false] - Gamepad input configuration. `true` enables gamepad input.
+ * @property {integer} [activePointers=1] - The maximum number of touch pointers. See {@link Phaser.Input.InputManager#pointers}.
  */
 
 /**
  * @typedef {object} MouseInputConfig
  *
- * @property {*} [target=null] - [description]
- * @property {boolean} [capture=true] - [description]
+ * @property {*} [target=null] - Where the Mouse Manager listens for mouse input events. The default is the game canvas.
+ * @property {boolean} [capture=true] - Whether mouse input events have preventDefault() called on them.
  */
 
 /**
  * @typedef {object} KeyboardInputConfig
  *
- * @property {*} [target=window] - [description]
+ * @property {*} [target=window] - Where the Keyboard Manager listens for keyboard input events.
  */
 
 /**
  * @typedef {object} TouchInputConfig
  *
- * @property {*} [target=null] - [description]
- * @property {boolean} [capture=true] - [description]
+ * @property {*} [target=null] - Where the Touch Manager listens for touch input events. The default is the game canvas.
+ * @property {boolean} [capture=true] - Whether touch input events have preventDefault() called on them.
  */
 
 /**
  * @typedef {object} GamepadInputConfig
  *
- * @property {*} [target=window] - [description]
+ * @property {*} [target=window] - Where the Gamepad Manager listens for gamepad input events.
  */
 
 /**
  * @typedef {object} BannerConfig
  *
- * @property {boolean} [hidePhaser=false] - [description]
- * @property {string} [text='#ffffff'] - [description]
- * @property {string[]} [background] - [description]
+ * @property {boolean} [hidePhaser=false] - Omit Phaser's name and version from the banner.
+ * @property {string} [text='#ffffff'] - The color of the banner text.
+ * @property {string[]} [background] - The background colors of the banner.
  */
 
 /**
  * @typedef {object} FPSConfig
  *
- * @property {integer} [min=10] - [description]
- * @property {integer} [target=60] - [description]
- * @property {boolean} [forceSetTimeOut=false] - [description]
- * @property {integer} [deltaHistory=10] - [description]
+ * @property {integer} [min=10] - The minimum acceptable rendering rate, in frames per second.
+ * @property {integer} [target=60] - The optimum rendering rate, in frames per second.
+ * @property {boolean} [forceSetTimeOut=false] - Use setTimeout instead of requestAnimationFrame to run the game loop.
+ * @property {integer} [deltaHistory=10] - Calculate the average frame delta from this many consecutive frame intervals.
  * @property {integer} [panicMax=120] - [description]
  */
 
 /**
  * @typedef {object} RenderConfig
  *
- * @property {boolean} [antialias=true] - [description]
- * @property {boolean} [pixelArt=false] - [description]
+ * @property {boolean} [antialias=true] - When set to `true`, WebGL uses linear interpolation to draw scaled or rotated textures, giving a smooth appearance. When set to `false`, WebGL uses nearest-neighbor interpolation, giving a crisper appearance. `false` also disables antialiasing of the game canvas itself, if the browser supports it, when the game canvas is scaled.
+ * @property {boolean} [pixelArt=false] - Sets `antialias` and `roundPixels` to true. This is the best setting for pixel-art games.
  * @property {boolean} [autoResize=true] - Automatically resize the Game Canvas if you resize the renderer.
- * @property {boolean} [roundPixels=false] - [description]
- * @property {boolean} [transparent=false] - [description]
- * @property {boolean} [clearBeforeRender=true] - [description]
- * @property {boolean} [premultipliedAlpha=true] - [description]
- * @property {boolean} [preserveDrawingBuffer=false] - [description]
- * @property {boolean} [failIfMajorPerformanceCaveat=false] - [description]
- * @property {string} [powerPreference='default'] - "high-performance", "low-power" or "default"
+ * @property {boolean} [roundPixels=false] - Draw texture-based Game Objects at only whole-integer positions. Game Objects without textures, like Graphics, ignore this property.
+ * @property {boolean} [transparent=false] - Whether the game canvas will be transparent.
+ * @property {boolean} [clearBeforeRender=true] - Whether the game canvas will be cleared between each rendering frame.
+ * @property {boolean} [premultipliedAlpha=true] - In WebGL mode, the drawing buffer contains colors with pre-multiplied alpha.
+ * @property {boolean} [preserveDrawingBuffer=false] - In WebGL mode, the drawing buffer won't be cleared automatically each frame.
+ * @property {boolean} [failIfMajorPerformanceCaveat=false] - Let the browser abort creating a WebGL context if it judges performance would be unacceptable.
+ * @property {string} [powerPreference='default'] - "high-performance", "low-power" or "default". A hint to the browser on how much device power the game might use.
  * @property {integer} [batchSize=2000] - The default WebGL batch size.
  */
 
@@ -104,8 +104,8 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {(integer|string)} [height=768] - The base height of your game.
  * @property {integer} [zoom=1] - The zoom value of the game canvas.
  * @property {number} [resolution=1] - The rendering resolution of the canvas.
- * @property {any} [parent] - The parent DOM element.
- * @property {integer} [mode=0] - The scale mode to apply to the canvas.
+ * @property {(HTMLElement|string)} [parent] - The DOM element that will contain the game canvas, or its `id`. If null (the default) or if the named element doesn't exist, the game canvas is inserted directly into the document body.
+ * @property {integer} [mode=0] - The scale mode to apply to the canvas. SHOW_ALL, EXACT_FIT, USER_SCALE, or RESIZE.
  * @property {integer} [minWidth] - The minimum width the canvas can be scaled down to.
  * @property {integer} [minHeight] - The minimum height the canvas can be scaled down to.
  * @property {integer} [maxWidth] - The maximum width the canvas can be scaled up to.
@@ -115,22 +115,22 @@ var ValueToColor = require('../display/color/ValueToColor');
 /**
  * @typedef {object} CallbacksConfig
  *
- * @property {BootCallback} [preBoot=NOOP] - [description]
- * @property {BootCallback} [postBoot=NOOP] - [description]
+ * @property {BootCallback} [preBoot=NOOP] - A function to run at the start of the boot sequence.
+ * @property {BootCallback} [postBoot=NOOP] - A function to run at the end of the boot sequence. At this point, all the game systems have started and plugins have been loaded.
  */
 
 /**
  * @typedef {object} LoaderConfig
  *
- * @property {string} [baseURL] - [description]
- * @property {string} [path] - [description]
- * @property {integer} [maxParallelDownloads=32] - [description]
- * @property {(string|undefined)} [crossOrigin=undefined] - [description]
- * @property {string} [responseType] - [description]
- * @property {boolean} [async=true] - [description]
- * @property {string} [user] - [description]
- * @property {string} [password] - [description]
- * @property {integer} [timeout=0] - [description]
+ * @property {string} [baseURL] - An URL used to resolve paths given to the loader. Example: 'http://labs.phaser.io/assets/'.
+ * @property {string} [path] - An URL path used to resolve relative paths given to the loader. Example: 'images/sprites/'.
+ * @property {integer} [maxParallelDownloads=32] - The maximum number of resources the loader will start loading at once.
+ * @property {(string|undefined)} [crossOrigin=undefined] - 'anonymous', 'use-credentials', or `undefined`. If you're not making cross-origin requests, leave this as `undefined`. See {@link https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_settings_attributes}.
+ * @property {string} [responseType] - The response type of the XHR request, e.g. `blob`, `text`, etc.
+ * @property {boolean} [async=true] - Should the XHR request use async or not?
+ * @property {string} [user] - Optional username for the XHR request.
+ * @property {string} [password] - Optional password for the XHR request.
+ * @property {integer} [timeout=0] - Optional XHR timeout value, in ms.
  */
 
 /**
@@ -143,65 +143,81 @@ var ValueToColor = require('../display/color/ValueToColor');
 /**
  * @typedef {object} ImagesConfig
  *
- * @property {string} [default] - [description]
- * @property {string} [missing] - [description]
+ * @property {string} [default] - URL to use for the 'default' texture.
+ * @property {string} [missing] - URL to use for the 'missing' texture.
  */
+
+/**
+  * @typedef {object} PhysicsConfig
+  *
+  * @property {string} [default] - The default physics system. It will be started for each scene. Phaser provides 'arcade', 'impact', and 'matter'.
+  * @property {ArcadeWorldConfig} [arcade] - Arcade Physics configuration.
+  * @property {Phaser.Physics.Impact.WorldConfig} [impact] - Impact Physics configuration.
+  * @property {object} [matter] - Matter Physics configuration.
+  */
 
 /**
  * @typedef {object} PluginObjectItem
  *
- * @property {string} [key] - [description]
- * @property {*} [plugin] - [description]
- * @property {boolean} [start] - [description]
- * @property {string} [systemKey] - [description]
- * @property {string} [sceneKey] - [description]
- * @property {*} [data] - [description]
+ * @property {string} [key] - A key to identify the plugin in the Plugin Manager.
+ * @property {*} [plugin] - The plugin itself. Usually a class/constructor.
+ * @property {boolean} [start] - Whether the plugin should be started automatically.
+ * @property {string} [systemKey] - For a scene plugin, add the plugin to the scene's systems object under this key (`this.sys.KEY`, from the scene).
+ * @property {string} [sceneKey] - For a scene plugin, add the plugin to the scene object under this key (`this.KEY`, from the scene).
+ * @property {*} [data] - Arbitrary data passed to the plugin's init() method.
+ *
+ * @example
+ * // Global plugin
+ * { key: 'BankPlugin', plugin: BankPluginV3, start: true, data: { gold: 5000 } }
+ * @example
+ * // Scene plugin
+ * { key: 'WireFramePlugin', plugin: WireFramePlugin, systemKey: 'wireFramePlugin', sceneKey: 'wireframe' }
  */
 
 /**
  * @typedef {object} PluginObject
  *
- * @property {?PluginObjectItem[]} [global] - [description]
- * @property {?PluginObjectItem[]} [scene] - [description]
- * @property {string[]} [default] - [description]
- * @property {*} [defaultMerge] - [description]
+ * @property {?PluginObjectItem[]} [global] - Global plugins to install.
+ * @property {?PluginObjectItem[]} [scene] - Scene plugins to install.
+ * @property {string[]} [default] - The default set of scene plugins (names).
+ * @property {string[]} [defaultMerge] - Plugins to *add* to the default set of scene plugins.
  */
 
 /**
  * @typedef {object} GameConfig
  *
- * @property {(integer|string)} [width=1024] - [description]
- * @property {(integer|string)} [height=768] - [description]
- * @property {number} [zoom=1] - [description]
- * @property {number} [resolution=1] - [description]
- * @property {number} [type=CONST.AUTO] - [description]
- * @property {*} [parent=null] - [description]
+ * @property {(integer|string)} [width=1024] - The width of the game, in game pixels.
+ * @property {(integer|string)} [height=768] - The height of the game, in game pixels.
+ * @property {number} [zoom=1] - Simple scale applied to the game canvas. 2 is double size, 0.5 is half size, etc.
+ * @property {number} [resolution=1] - The size of each game pixel, in canvas pixels. Values larger than 1 are "high" resolution.
+ * @property {number} [type=CONST.AUTO] - Which renderer to use. Phaser.AUTO, Phaser.CANVAS, Phaser.HEADLESS, or Phaser.WEBGL. AUTO picks WEBGL if available, otherwise CANVAS.
+ * @property {(HTMLElement|string)} [parent=null] - The DOM element that will contain the game canvas, or its `id`. If null (the default) or if the named element doesn't exist, the game canvas is inserted directly into the document body.
  * @property {HTMLCanvasElement} [canvas=null] - Provide your own Canvas element for Phaser to use instead of creating one.
- * @property {string} [canvasStyle=null] - [description]
+ * @property {string} [canvasStyle=null] - CSS styles to apply to the game canvas instead of Phaser's default styles.
  * @property {CanvasRenderingContext2D} [context] - Provide your own Canvas Context for Phaser to use, instead of creating one.
- * @property {object} [scene=null] - [description]
- * @property {string[]} [seed] - [description]
- * @property {string} [title=''] - [description]
- * @property {string} [url='http://phaser.io'] - [description]
- * @property {string} [version=''] - [description]
- * @property {boolean} [autoFocus=true] - Automatically call window.focus() when the game boots.
- * @property {(boolean|InputConfig)} [input] - [description]
- * @property {boolean} [disableContextMenu=false] - [description]
- * @property {(boolean|BannerConfig)} [banner=false] - [description]
+ * @property {object} [scene=null] - A scene or scenes to add to the game. If several are given, the first is started; the remainder are started only if they have { active: true }.
+ * @property {string[]} [seed] - Seed for the random number generator.
+ * @property {string} [title=''] - The title of the game. Shown in the browser console.
+ * @property {string} [url='http://phaser.io'] - The URL of the game. Shown in the browser console.
+ * @property {string} [version=''] - The version of the game. Shown in the browser console.
+ * @property {boolean} [autoFocus=true] - Automatically call window.focus() when the game boots. Usually necessary to capture input events if the game is in a separate frame.
+ * @property {(boolean|InputConfig)} [input] - Input configuration, or `false` to disable all game input.
+ * @property {boolean} [disableContextMenu=false] - Disable the browser's default 'contextmenu' event (usually triggered by a right-button mouse click).
+ * @property {(boolean|BannerConfig)} [banner=false] - Configuration for the banner printed in the browser console when the game starts.
  * @property {DOMContainerConfig} [dom] - The DOM Container configuration object.
- * @property {FPSConfig} [fps] - [description]
- * @property {RenderConfig} [render] - [description]
- * @property {(string|number)} [backgroundColor=0x000000] - [description]
- * @property {CallbacksConfig} [callbacks] - [description]
- * @property {LoaderConfig} [loader] - [description]
- * @property {ImagesConfig} [images] - [description]
- * @property {object} [physics] - [description]
- * @property {PluginObject|PluginObjectItem[]} [plugins] - [description]
+ * @property {FPSConfig} [fps] - Game loop configuration.
+ * @property {RenderConfig} [render] - Game renderer configuration.
+ * @property {(string|number)} [backgroundColor=0x000000] - The background color of the game canvas. The default is black.
+ * @property {CallbacksConfig} [callbacks] - Optional callbacks to run before or after game boot.
+ * @property {LoaderConfig} [loader] - Loader configuration.
+ * @property {ImagesConfig} [images] - Images configuration.
+ * @property {object} [physics] - Physics configuration.
+ * @property {PluginObject|PluginObjectItem[]} [plugins] - Plugins to install.
  */
 
 /**
  * @classdesc
- * [description]
+ * The active game configuration settings, parsed from a {@link GameConfig} object.
  *
  * @class Config
  * @memberOf Phaser.Boot
@@ -209,6 +225,8 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @since 3.0.0
  *
  * @param {GameConfig} [GameConfig] - The configuration object for your Phaser Game instance.
+ *
+ * @see Phaser.Game#config
  */
 var Config = new Class({
 
@@ -307,17 +325,17 @@ var Config = new Class({
         MATH.RND.init(this.seed);
 
         /**
-         * @const {string} Phaser.Boot.Config#gameTitle - [description]
+         * @const {string} Phaser.Boot.Config#gameTitle - The title of the game.
          */
         this.gameTitle = GetValue(config, 'title', '');
 
         /**
-         * @const {string} Phaser.Boot.Config#gameURL - [description]
+         * @const {string} Phaser.Boot.Config#gameURL - The URL of the game.
          */
         this.gameURL = GetValue(config, 'url', 'https://phaser.io');
 
         /**
-         * @const {string} Phaser.Boot.Config#gameVersion - [description]
+         * @const {string} Phaser.Boot.Config#gameVersion - The version of the game.
          */
         this.gameVersion = GetValue(config, 'version', '');
 
@@ -396,7 +414,7 @@ var Config = new Class({
         this.inputGamepadEventTarget = GetValue(config, 'input.gamepad.target', window);
 
         /**
-         * @const {boolean} Phaser.Boot.Config#disableContextMenu - [description]
+         * @const {boolean} Phaser.Boot.Config#disableContextMenu - Set to `true` to disable context menu. Default value is `false`.
          */
         this.disableContextMenu = GetValue(config, 'disableContextMenu', false);
 
@@ -466,7 +484,7 @@ var Config = new Class({
         this.roundPixels = GetValue(renderConfig, 'roundPixels', false);
 
         /**
-         * @const {boolean} Phaser.Boot.Config#pixelArt - [description]
+         * @const {boolean} Phaser.Boot.Config#pixelArt - Prevent pixel art from becoming blurred when scaled. It will remain crisp (tells the WebGL renderer to automatically create textures using a linear filter mode).
          */
         this.pixelArt = GetValue(renderConfig, 'pixelArt', false);
 
@@ -566,7 +584,7 @@ var Config = new Class({
         this.loaderPath = GetValue(config, 'loader.path', '');
 
         /**
-         * @const {integer} Phaser.Boot.Config#loaderMaxParallelDownloads - [description]
+         * @const {integer} Phaser.Boot.Config#loaderMaxParallelDownloads - Maximum parallel downloads allowed for resources (Default to 32).
          */
         this.loaderMaxParallelDownloads = GetValue(config, 'loader.maxParallelDownloads', 32);
 
@@ -614,9 +632,9 @@ var Config = new Class({
          *        { key: 'WireFramePlugin', plugin: WireFramePlugin, systemKey: 'wireFramePlugin', sceneKey: 'wireframe' }
          *    ],
          *    default: [], OR
-         *    defaultMerge: {
+         *    defaultMerge: [
          *        'ModPlayer'
-         *    }
+         *    ]
          * }
          */
 

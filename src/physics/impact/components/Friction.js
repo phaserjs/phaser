@@ -5,7 +5,8 @@
  */
 
 /**
- * [description]
+ * The Impact Friction component.
+ * Should be applied as a mixin.
  *
  * @name Phaser.Physics.Impact.Components.Friction
  * @since 3.0.0

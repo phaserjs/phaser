@@ -14,11 +14,11 @@ var IsInLayerBounds = require('./IsInLayerBounds');
  * @private
  * @since 3.0.0
  *
- * @param {integer} tileX - [description]
- * @param {integer} tileY - [description]
+ * @param {integer} tileX - X position to get the tile from (given in tile units, not pixels).
+ * @param {integer} tileY - Y position to get the tile from (given in tile units, not pixels).
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * 
- * @return {boolean}
+ * @return {?boolean} Returns a boolean, or null if the layer given was invalid.
  */
 var HasTileAt = function (tileX, tileY, layer)
 {
