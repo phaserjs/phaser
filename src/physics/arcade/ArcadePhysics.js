@@ -460,6 +460,12 @@ var ArcadePhysics = new Class({
      */
     shutdown: function ()
     {
+        if (!this.world)
+        {
+            //  Already destroyed
+            return;
+        }
+
         var eventEmitter = this.systems.events;
 
         eventEmitter.off('update', this.world.update, this.world);
