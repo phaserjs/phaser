@@ -564,6 +564,8 @@ var WebGLRenderer = new Class({
 
         this.resize(this.width, this.height);
 
+        console.log(this.config);
+
         this.game.events.once('texturesready', this.boot, this);
 
         return this;
@@ -630,6 +632,8 @@ var WebGLRenderer = new Class({
         this.drawingBufferHeight = gl.drawingBufferHeight;
 
         this.defaultCamera.setSize(width, height);
+
+        gl.scissor(0, (this.drawingBufferHeight - this.height), this.width, this.height);
 
         return this;
     },
@@ -856,6 +860,7 @@ var WebGLRenderer = new Class({
             if (width > 0 && height > 0)
             {
                 gl.scissor(x, (this.drawingBufferHeight - y - height), width, height);
+
             }
         }
     },
@@ -1564,19 +1569,18 @@ var WebGLRenderer = new Class({
             
             camera.emit('prerender', camera);
         }
-        else if (color.alphaGL > 0)
-        {
-            this.pushScissor(cx, cy, cw, ch);
-
-            TextureTintPipeline.drawFillRect(
-                cx, cy, cw , ch,
-                Utils.getTintFromFloats(color.redGL, color.greenGL, color.blueGL, 1),
-                color.alphaGL
-            );
-        }
         else
         {
             this.pushScissor(cx, cy, cw, ch);
+
+            if (color.alphaGL > 0)
+            {
+                TextureTintPipeline.drawFillRect(
+                    cx, cy, cw , ch,
+                    Utils.getTintFromFloats(color.redGL, color.greenGL, color.blueGL, 1),
+                    color.alphaGL
+                );
+            }
         }
     },
 
