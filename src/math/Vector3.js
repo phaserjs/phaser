@@ -107,13 +107,13 @@ var Vector3 = new Class({
     },
 
     /**
-     * [description]
+     * Calculate the cross (vector) product of two given Vectors.
      *
      * @method Phaser.Math.Vector3#crossVectors
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector3} a - [description]
-     * @param {Phaser.Math.Vector3} b - [description]
+     * @param {Phaser.Math.Vector3} a - The first Vector to multiply.
+     * @param {Phaser.Math.Vector3} b - The second Vector to multiply.
      *
      * @return {Phaser.Math.Vector3} This Vector3.
      */
@@ -433,7 +433,7 @@ var Vector3 = new Class({
      *
      * @param {Phaser.Math.Vector3} v - The Vector3 to dot product with this Vector3.
      *
-     * @return {number} [description]
+     * @return {number} The dot product of this Vector and `v`.
      */
     dot: function (v)
     {
@@ -441,12 +441,12 @@ var Vector3 = new Class({
     },
 
     /**
-     * [description]
+     * Calculate the cross (vector) product of this Vector (which will be modified) and the given Vector.
      *
      * @method Phaser.Math.Vector3#cross
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector3} v - [description]
+     * @param {Phaser.Math.Vector3} v - The Vector to cross product with.
      *
      * @return {Phaser.Math.Vector3} This Vector3.
      */

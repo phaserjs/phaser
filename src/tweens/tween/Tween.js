@@ -327,12 +327,12 @@ var Tween = new Class({
     },
 
     /**
-     * [description]
+     * Checks if the Tween is currently active.
      *
      * @method Phaser.Tweens.Tween#isPlaying
      * @since 3.0.0
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if the Tween is active, otherwise `false`.
      */
     isPlaying: function ()
     {
@@ -340,12 +340,12 @@ var Tween = new Class({
     },
 
     /**
-     * [description]
+     * Checks if the Tween is currently paused.
      *
      * @method Phaser.Tweens.Tween#isPaused
      * @since 3.0.0
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if the Tween is paused, otherwise `false`.
      */
     isPaused: function ()
     {
@@ -723,7 +723,7 @@ var Tween = new Class({
     },
 
     /**
-     * [description]
+     * Resumes the playback of a previously paused Tween.
      *
      * @method Phaser.Tweens.Tween#resume
      * @since 3.0.0

@@ -8,19 +8,19 @@ var Length = require('../line/Length');
 var Point = require('../point/Point');
 
 /**
- * [description]
+ * Returns an array of evenly spaced points on the perimeter of a Triangle.
  *
  * @function Phaser.Geom.Triangle.GetPoints
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Point} O - [out,$return]
  *
- * @param {Phaser.Geom.Triangle} triangle - [description]
- * @param {integer} quantity - [description]
- * @param {number} stepRate - [description]
- * @param {(array|Phaser.Geom.Point[])} [out] - [description]
+ * @param {Phaser.Geom.Triangle} triangle - The Triangle to get the points from.
+ * @param {integer} quantity - The number of evenly spaced points to return. Set to 0 to return an arbitrary number of points based on the `stepRate`.
+ * @param {number} stepRate - If `quantity` is 0, the distance between each returned point.
+ * @param {(array|Phaser.Geom.Point[])} [out] - An array to which the points should be appended.
  *
- * @return {(array|Phaser.Geom.Point[])} [description]
+ * @return {(array|Phaser.Geom.Point[])} The modified `out` array, or a new array if none was provided.
  */
 var GetPoints = function (triangle, quantity, stepRate, out)
 {

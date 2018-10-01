@@ -5,18 +5,18 @@
  */
 
 /**
- * [description]
+ * Merges a Rectangle with a point by repositioning and/or resizing it so that the point is on or within its bounds.
  *
  * @function Phaser.Geom.Rectangle.MergeXY
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Rectangle} O - [target,$return]
  *
- * @param {Phaser.Geom.Rectangle} target - [description]
- * @param {number} x - [description]
- * @param {number} y - [description]
+ * @param {Phaser.Geom.Rectangle} target - The Rectangle which should be merged and modified.
+ * @param {number} x - The X coordinate of the point which should be merged.
+ * @param {number} y - The Y coordinate of the point which should be merged.
  *
- * @return {Phaser.Geom.Rectangle} [description]
+ * @return {Phaser.Geom.Rectangle} The modified `target` Rectangle.
  */
 var MergeXY = function (target, x, y)
 {

@@ -8,16 +8,16 @@
 //  Adapted from http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html by Jonas Raoni Soares Silva
 
 /**
- * [description]
+ * Checks if a point is within the bounds of a Polygon.
  *
  * @function Phaser.Geom.Polygon.Contains
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Polygon} polygon - [description]
- * @param {number} x - [description]
- * @param {number} y - [description]
+ * @param {Phaser.Geom.Polygon} polygon - The Polygon to check against.
+ * @param {number} x - The X coordinate of the point to check.
+ * @param {number} y - The Y coordinate of the point to check.
  *
- * @return {boolean} [description]
+ * @return {boolean} `true` if the point is within the bounds of the Polygon, otherwise `false`.
  */
 var Contains = function (polygon, x, y)
 {

@@ -7,17 +7,17 @@
 var Point = require('../point/Point');
 
 /**
- * [description]
+ * Returns a random point within a Rectangle.
  *
  * @function Phaser.Geom.Rectangle.Random
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Point} O - [out,$return]
  *
- * @param {Phaser.Geom.Rectangle} rect - [description]
- * @param {Phaser.Geom.Point} out - [description]
+ * @param {Phaser.Geom.Rectangle} rect - The Rectangle to return a point from.
+ * @param {Phaser.Geom.Point} out - The object to update with the point's coordinates.
  *
- * @return {Phaser.Geom.Point} [description]
+ * @return {Phaser.Geom.Point} The modified `out` object, or a new Point if none was provided.
  */
 var Random = function (rect, out)
 {

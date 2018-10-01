@@ -13,13 +13,13 @@ var StableSort = require('../utils/array/StableSort');
  * @callback EachListCallback
  * @generic I - [item]
  *
- * @param {*} item - [description]
+ * @param {*} item - The item which is currently being processed.
  * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
  */
 
 /**
  * @classdesc
- * [description]
+ * List is a generic implementation of an ordered list which contains utility methods for retrieving, manipulating, and iterating items.
  *
  * @class List
  * @memberOf Phaser.Structs
@@ -28,7 +28,7 @@ var StableSort = require('../utils/array/StableSort');
  *
  * @generic T
  *
- * @param {*} parent - [description]
+ * @param {*} parent - The parent of this list.
  */
 var List = new Class({
 
@@ -58,7 +58,9 @@ var List = new Class({
         this.list = [];
 
         /**
-         * [description]
+         * The index of the current element.
+         * 
+         * This is used internally when iterating through the list with the {@link #first}, {@link #last}, {@link #get}, and {@link #previous} properties.
          *
          * @name Phaser.Structs.List#position
          * @type {integer}
@@ -96,17 +98,17 @@ var List = new Class({
     },
 
     /**
-     * [description]
+     * Adds the given item to the end of the list. Each item must be unique.
      *
      * @method Phaser.Structs.List#add
      * @since 3.0.0
      *
      * @genericUse {T} - [child,$return]
      *
-     * @param {*|Array.<*>} child - [description]
+     * @param {*|Array.<*>} child - The item, or array of items, to add to the list.
      * @param {boolean} [skipCallback=false] - Skip calling the List.addCallback if this child is added successfully.
      *
-     * @return {*} [description]
+     * @return {*} The list's underlying array.
      */
     add: function (child, skipCallback)
     {
@@ -121,18 +123,18 @@ var List = new Class({
     },
 
     /**
-     * [description]
+     * Adds an item to list, starting at a specified index. Each item must be unique within the list.
      *
      * @method Phaser.Structs.List#addAt
      * @since 3.0.0
      *
      * @genericUse {T} - [child,$return]
      *
-     * @param {*} child - [description]
-     * @param {integer} [index=0] - [description]
+     * @param {*} child - The item, or array of items, to add to the list.
+     * @param {integer} [index=0] - The index in the list at which the element(s) will be inserted.
      * @param {boolean} [skipCallback=false] - Skip calling the List.addCallback if this child is added successfully.
      *
-     * @return {*} [description]
+     * @return {*} The List's underlying array.
      */
     addAt: function (child, index, skipCallback)
     {
@@ -147,16 +149,16 @@ var List = new Class({
     },
 
     /**
-     * [description]
+     * Retrieves the item at a given position inside the List.
      *
      * @method Phaser.Structs.List#getAt
      * @since 3.0.0
      *
      * @genericUse {T} - [$return]
      *
-     * @param {integer} index - [description]
+     * @param {integer} index - The index of the item.
      *
-     * @return {*} [description]
+     * @return {*} The retrieved item, or `undefined` if it's outside the List's bounds.
      */
     getAt: function (index)
     {
@@ -164,16 +166,16 @@ var List = new Class({
     },
 
     /**
-     * [description]
+     * Locates an item within the List and returns its index.
      *
      * @method Phaser.Structs.List#getIndex
      * @since 3.0.0
      *
      * @genericUse {T} - [child]
      *
-     * @param {*} child - [description]
+     * @param {*} child - The item to locate.
      *
-     * @return {integer} [description]
+     * @return {integer} The index of the item within the List, or -1 if it's not in the List.
      */
     getIndex: function (child)
     {
@@ -193,7 +195,7 @@ var List = new Class({
      *
      * @param {string} property - The property to lexically sort by.
      *
-     * @return {Array.<*>} [description]
+     * @return {Phaser.Structs.List} This List object.
      */
     sort: function (property)
     {
@@ -208,7 +210,7 @@ var List = new Class({
     },
 
     /**
-     * [description]
+     * Internal handler for the {@link #sort} method which compares two items.
      *
      * @method Phaser.Structs.List#sortHandler
      * @private
@@ -216,10 +218,10 @@ var List = new Class({
      *
      * @genericUse {T} - [childA,childB]
      *
-     * @param {*} childA - [description]
-     * @param {*} childB - [description]
+     * @param {*} childA - The first item to compare.
+     * @param {*} childB - The second item to compare.
      *
-     * @return {integer} [description]
+     * @return {integer} The result of the comparison, which will be negative if the first item is smaller then second, positive if the first item is larger than the second, or 0 if they're equal.
      */
     sortHandler: function (childA, childB)
     {
@@ -264,7 +266,7 @@ var List = new Class({
     },
 
     /**
-     * [description]
+     * Returns the first element in a given part of the List which matches a specific criterion.
      *
      * @method Phaser.Structs.List#getFirst
      * @since 3.0.0
@@ -272,12 +274,12 @@ var List = new Class({
      * @genericUse {T} - [value]
      * @genericUse {T | null} - [$return]
      *
-     * @param {string} property - [description]
-     * @param {*} value - [description]
-     * @param {number} [startIndex=0] - [description]
-     * @param {number} [endIndex] - [description]
+     * @param {string} property - The name of the property to test or a falsey value to have no criterion.
+     * @param {*} value - The value to test the `property` against, or `undefined` to allow any value and only check for existence.
+     * @param {number} [startIndex=0] - The position in the List to start the search at.
+     * @param {number} [endIndex] - The position in the List to optionally stop the search at. It won't be checked.
      *
-     * @return {?*} [description]
+     * @return {?*} The first item which matches the given criterion, or `null` if no such item exists.
      */
     getFirst: function (property, value, startIndex, endIndex)
     {
@@ -310,7 +312,7 @@ var List = new Class({
      * @param {integer} [startIndex] - The first child index to start the search from.
      * @param {integer} [endIndex] - The last child index to search up until.
      *
-     * @return {Array.<*>} [description]
+     * @return {Array.<*>} All items of the List which match the given criterion, if any.
      */
     getAll: function (property, value, startIndex, endIndex)
     {
@@ -318,17 +320,17 @@ var List = new Class({
     },
 
     /**
-     * [description]
+     * Returns the total number of items in the List which have a property matching the given value.
      *
      * @method Phaser.Structs.List#count
      * @since 3.0.0
      *
      * @genericUse {T} - [value]
      *
-     * @param {string} property - [description]
-     * @param {*} value - [description]
+     * @param {string} property - The property to test on each item.
+     * @param {*} value - The value to test the property against.
      *
-     * @return {integer} [description]
+     * @return {integer} The total number of matching elements.
      */
     count: function (property, value)
     {
@@ -336,15 +338,15 @@ var List = new Class({
     },
 
     /**
-     * [description]
+     * Swaps the positions of two items in the list.
      *
      * @method Phaser.Structs.List#swap
      * @since 3.0.0
      *
      * @genericUse {T} - [child1,child2]
      *
-     * @param {*} child1 - [description]
-     * @param {*} child2 - [description]
+     * @param {*} child1 - The first item to swap.
+     * @param {*} child2 - The second item to swap.
      */
     swap: function (child1, child2)
     {
@@ -352,17 +354,17 @@ var List = new Class({
     },
 
     /**
-     * [description]
+     * Moves an item in the List to a new position.
      *
      * @method Phaser.Structs.List#moveTo
      * @since 3.0.0
      *
      * @genericUse {T} - [child,$return]
      *
-     * @param {*} child - [description]
-     * @param {integer} index - [description]
+     * @param {*} child - The item to move.
+     * @param {integer} index - Moves an item in the List to a new position.
      *
-     * @return {*} [description]
+     * @return {*} The item that was moved.
      */
     moveTo: function (child, index)
     {
@@ -370,17 +372,17 @@ var List = new Class({
     },
 
     /**
-     * [description]
+     * Removes one or many items from the List.
      *
      * @method Phaser.Structs.List#remove
      * @since 3.0.0
      *
      * @genericUse {T} - [child,$return]
      *
-     * @param {*} child - [description]
+     * @param {*} child - The item, or array of items, to remove.
      * @param {boolean} [skipCallback=false] - Skip calling the List.removeCallback.
      *
-     * @return {*} [description]
+     * @return {*} The item, or array of items, which were successfully removed from the List.
      */
     remove: function (child, skipCallback)
     {
@@ -395,17 +397,17 @@ var List = new Class({
     },
 
     /**
-     * [description]
+     * Removes the item at the given position in the List.
      *
      * @method Phaser.Structs.List#removeAt
      * @since 3.0.0
      *
      * @genericUse {T} - [$return]
      *
-     * @param {integer} index - [description]
+     * @param {integer} index - The position to remove the item from.
      * @param {boolean} [skipCallback=false] - Skip calling the List.removeCallback.
      *
-     * @return {*} [description]
+     * @return {*} The item that was removed.
      */
     removeAt: function (index, skipCallback)
     {
@@ -420,18 +422,18 @@ var List = new Class({
     },
 
     /**
-     * [description]
+     * Removes the items within the given range in the List.
      *
      * @method Phaser.Structs.List#removeBetween
      * @since 3.0.0
      *
      * @genericUse {T[]} - [$return]
      *
-     * @param {integer} [startIndex=0] - [description]
-     * @param {integer} [endIndex] - [description]
+     * @param {integer} [startIndex=0] - The index to start removing from.
+     * @param {integer} [endIndex] - The position to stop removing at. The item at this position won't be removed.
      * @param {boolean} [skipCallback=false] - Skip calling the List.removeCallback.
      *
-     * @return {Array.<*>} [description]
+     * @return {Array.<*>} An array of the items which were removed.[description]
      */
     removeBetween: function (startIndex, endIndex, skipCallback)
     {
@@ -477,9 +479,9 @@ var List = new Class({
      *
      * @genericUse {T} - [child,$return]
      *
-     * @param {*} child - [description]
+     * @param {*} child - The item to bring to the top of the List.
      *
-     * @return {*} [description]
+     * @return {*} The item which was moved.
      */
     bringToTop: function (child)
     {
@@ -494,9 +496,9 @@ var List = new Class({
      *
      * @genericUse {T} - [child,$return]
      *
-     * @param {*} child - [description]
+     * @param {*} child - The item to send to the back of the list.
      *
-     * @return {*} [description]
+     * @return {*} The item which was moved.
      */
     sendToBack: function (child)
     {
@@ -511,9 +513,9 @@ var List = new Class({
      *
      * @genericUse {T} - [child,$return]
      *
-     * @param {*} child - [description]
+     * @param {*} child - The item to move up.
      *
-     * @return {*} [description]
+     * @return {*} The item which was moved.
      */
     moveUp: function (child)
     {
@@ -530,9 +532,9 @@ var List = new Class({
      *
      * @genericUse {T} - [child,$return]
      *
-     * @param {*} child - [description]
+     * @param {*} child - The item to move down.
      *
-     * @return {*} [description]
+     * @return {*} The item which was moved.
      */
     moveDown: function (child)
     {
@@ -559,7 +561,7 @@ var List = new Class({
     },
 
     /**
-     * [description]
+     * Shuffles the items in the list.
      *
      * @method Phaser.Structs.List#shuffle
      * @since 3.0.0
@@ -594,16 +596,16 @@ var List = new Class({
     },
 
     /**
-     * [description]
+     * Checks if an item exists within the List.
      *
      * @method Phaser.Structs.List#exists
      * @since 3.0.0
      *
      * @genericUse {T} - [child]
      *
-     * @param {*} child - [description]
+     * @param {*} child - The item to check for the existence of.
      *
-     * @return {boolean} True if the item is found in the list, otherwise false.
+     * @return {boolean} `true` if the item is found in the list, otherwise `false`.
      */
     exists: function (child)
     {
@@ -618,8 +620,8 @@ var List = new Class({
      *
      * @genericUse {T} - [value]
      *
-     * @param {string} property - [description]
-     * @param {*} value - [description]
+     * @param {string} property - The name of the property to set.
+     * @param {*} value - The value to set the property to.
      * @param {integer} [startIndex] - The first child index to start the search from.
      * @param {integer} [endIndex] - The last child index to search up until.
      */
@@ -660,7 +662,7 @@ var List = new Class({
     },
 
     /**
-     * [description]
+     * Clears the List and recreates its internal array.
      *
      * @method Phaser.Structs.List#shutdown
      * @since 3.0.0
@@ -688,7 +690,7 @@ var List = new Class({
     },
 
     /**
-     * [description]
+     * The number of items inside the List.
      *
      * @name Phaser.Structs.List#length
      * @type {integer}
@@ -705,7 +707,7 @@ var List = new Class({
     },
 
     /**
-     * [description]
+     * The first item in the List or `null` for an empty List.
      *
      * @name Phaser.Structs.List#first
      * @type {integer}
@@ -731,7 +733,7 @@ var List = new Class({
     },
 
     /**
-     * [description]
+     * The last item in the List, or `null` for an empty List.
      *
      * @name Phaser.Structs.List#last
      * @type {integer}
@@ -757,7 +759,9 @@ var List = new Class({
     },
 
     /**
-     * [description]
+     * The next item in the List, or `null` if the entire List has been traversed.
+     * 
+     * This property can be read successively after reading {@link #first} or manually setting the {@link #position} to iterate the List.
      *
      * @name Phaser.Structs.List#next
      * @type {integer}
@@ -783,7 +787,9 @@ var List = new Class({
     },
 
     /**
-     * [description]
+     * The previous item in the List, or `null` if the entire List has been traversed.
+     * 
+     * This property can be read successively after reading {@link #last} or manually setting the {@link #position} to iterate the List backwards.
      *
      * @name Phaser.Structs.List#previous
      * @type {integer}

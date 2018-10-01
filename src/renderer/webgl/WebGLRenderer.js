@@ -22,15 +22,15 @@ var TextureTintPipeline = require('./pipelines/TextureTintPipeline');
 /**
  * @callback WebGLContextCallback
  *
- * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - [description]
+ * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGL Renderer which owns the context.
  */
 
 /**
  * @typedef {object} SnapshotState
  *
- * @property {SnapshotCallback} callback - [description]
- * @property {string} type - [description]
- * @property {number} encoder - [description]
+ * @property {SnapshotCallback} callback - The function to call after the snapshot is taken.
+ * @property {string} type - The type of the image to create.
+ * @property {number} encoder - The image quality, between 0 and 1, for image formats which use lossy compression (such as `image/jpeg`).
  */
 
 /**
@@ -48,7 +48,7 @@ var TextureTintPipeline = require('./pipelines/TextureTintPipeline');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Game} game - [description]
+ * @param {Phaser.Game} game - The Game instance which owns this WebGL Renderer.
  */
 var WebGLRenderer = new Class({
 
@@ -73,7 +73,7 @@ var WebGLRenderer = new Class({
         };
 
         /**
-         * [description]
+         * The local configuration settings of this WebGL Renderer.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#config
          * @type {RendererConfig}
@@ -93,7 +93,7 @@ var WebGLRenderer = new Class({
         };
 
         /**
-         * [description]
+         * The Game instance which owns this WebGL Renderer.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#game
          * @type {Phaser.Game}
@@ -102,7 +102,7 @@ var WebGLRenderer = new Class({
         this.game = game;
 
         /**
-         * [description]
+         * A constant which allows the renderer to be easily identified as a WebGL Renderer.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#type
          * @type {integer}
@@ -111,7 +111,7 @@ var WebGLRenderer = new Class({
         this.type = CONST.WEBGL;
 
         /**
-         * [description]
+         * The width of a rendered frame.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#width
          * @type {number}
@@ -120,7 +120,7 @@ var WebGLRenderer = new Class({
         this.width = game.config.width;
 
         /**
-         * [description]
+         * The height of a rendered frame.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#height
          * @type {number}
@@ -129,7 +129,7 @@ var WebGLRenderer = new Class({
         this.height = game.config.height;
 
         /**
-         * [description]
+         * The canvas which this WebGL Renderer draws to.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#canvas
          * @type {HTMLCanvasElement}
@@ -138,7 +138,7 @@ var WebGLRenderer = new Class({
         this.canvas = game.canvas;
 
         /**
-         * [description]
+         * An array of functions to invoke if the WebGL context is lost.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#lostContextCallbacks
          * @type {WebGLContextCallback[]}
@@ -147,7 +147,7 @@ var WebGLRenderer = new Class({
         this.lostContextCallbacks = [];
 
         /**
-         * [description]
+         * An array of functions to invoke if the WebGL context is restored.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#restoredContextCallbacks
          * @type {WebGLContextCallback[]}
@@ -156,7 +156,9 @@ var WebGLRenderer = new Class({
         this.restoredContextCallbacks = [];
 
         /**
-         * [description]
+         * An array of blend modes supported by the WebGL Renderer.
+         * 
+         * This array includes the default blend modes as well as any custom blend modes added through {@link #addBlendMode}.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#blendModes
          * @type {array}
@@ -176,7 +178,7 @@ var WebGLRenderer = new Class({
         this.nativeTextures = [];
 
         /**
-         * [description]
+         * Set to `true` if the WebGL context of the renderer is lost.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#contextLost
          * @type {boolean}
@@ -196,7 +198,9 @@ var WebGLRenderer = new Class({
         this.pipelines = null;
 
         /**
-         * [description]
+         * Details about the currently scheduled snapshot.
+         * 
+         * If a non-null `callback` is set in this object, a snapshot of the canvas will be taken after the current frame is fully rendered.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#snapshotState
          * @type {SnapshotState}
@@ -344,7 +348,7 @@ var WebGLRenderer = new Class({
         // These are initialized post context creation
 
         /**
-         * [description]
+         * The underlying WebGL context of the renderer.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#gl
          * @type {WebGLRenderingContext}
@@ -469,7 +473,7 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#init
      * @since 3.0.0
      *
-     * @param {object} config - [description]
+     * @param {object} config - The configuration object for the renderer.
      *
      * @return {this} This WebGLRenderer instance.
      */
@@ -695,7 +699,7 @@ var WebGLRenderer = new Class({
      * @method Phaser.Renderer.WebGL.WebGLRenderer#getExtension
      * @since 3.0.0
      *
-     * @param {string} extensionName - [description]
+     * @param {string} extensionName - The name of the extension to load.
      *
      * @return {object} WebGL extension if the extension is supported
      */
@@ -959,15 +963,15 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Creates a new custom blend mode for the renderer.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#addBlendMode
      * @since 3.0.0
      *
-     * @param {function} func - [description]
-     * @param {function} equation - [description]
+     * @param {function} func - An array containing the WebGL functions to use for the source and the destination blending factors, respectively. See the possible constants for {@link WebGLRenderingContext#blendFunc()}.
+     * @param {function} equation - The equation to use for combining the RGB and alpha components of a new pixel with a rendered one. See the possible constants for {@link WebGLRenderingContext#blendEquation()}.
      *
-     * @return {integer} [description]
+     * @return {integer} The index of the new blend mode, used for referencing it in the future.
      */
     addBlendMode: function (func, equation)
     {
@@ -1779,16 +1783,16 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Schedules a snapshot to be taken after the current frame is rendered.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#snapshot
      * @since 3.0.0
      *
-     * @param {SnapshotCallback} callback - [description]
-     * @param {string} type - [description]
-     * @param {number} encoderOptions - [description]
+     * @param {SnapshotCallback} callback - Function to invoke after the snapshot is created.
+     * @param {string} type - The format of the image to create, usually `image/png`.
+     * @param {number} encoderOptions - The image quality, between 0 and 1, to use for image formats with lossy compression (such as `image/jpeg`).
      *
-     * @return {Phaser.Renderer.WebGL.WebGLRenderer} [description]
+     * @return {Phaser.Renderer.WebGL.WebGLRenderer} This WebGL Renderer.
      */
     snapshot: function (callback, type, encoderOptions)
     {
@@ -1832,13 +1836,13 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Sets the minification and magnification filter for a texture.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setTextureFilter
      * @since 3.0.0
      *
-     * @param {integer} texture - [description]
-     * @param {integer} filter - [description]
+     * @param {integer} texture - The texture to set the filter for.
+     * @param {integer} filter - The filter to set. 0 for linear filtering, 1 for nearest neighbor (blocky) filtering.
      *
      * @return {this} This WebGL Renderer instance.
      */

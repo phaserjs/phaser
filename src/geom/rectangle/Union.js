@@ -7,18 +7,18 @@
 var Rectangle = require('./Rectangle');
 
 /**
- * [description]
+ * Creates a new Rectangle or repositions and/or resizes an existing Rectangle so that it encompasses the two given Rectangles, i.e. calculates their union.
  *
  * @function Phaser.Geom.Rectangle.Union
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Rectangle} O - [out,$return]
  *
- * @param {Phaser.Geom.Rectangle} rectA - [description]
- * @param {Phaser.Geom.Rectangle} rectB - [description]
- * @param {Phaser.Geom.Rectangle} [out] - [description]
+ * @param {Phaser.Geom.Rectangle} rectA - The first Rectangle to use.
+ * @param {Phaser.Geom.Rectangle} rectB - The second Rectangle to use.
+ * @param {Phaser.Geom.Rectangle} [out] - The Rectangle to store the union in.
  *
- * @return {Phaser.Geom.Rectangle} [description]
+ * @return {Phaser.Geom.Rectangle} The modified `out` Rectangle, or a new Rectangle if none was provided.
  */
 var Union = function (rectA, rectB, out)
 {

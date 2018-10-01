@@ -1814,7 +1814,7 @@ var World = new Class({
      * @param {ArcadePhysicsCallback} collideCallback - [description]
      * @param {ArcadePhysicsCallback} processCallback - [description]
      * @param {*} callbackContext - [description]
-     * @param {boolean} overlapOnly - [description]
+     * @param {boolean} overlapOnly - Whether this is a collision or overlap check.
      *
      * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
      */
@@ -1884,7 +1884,7 @@ var World = new Class({
      * @param {ArcadePhysicsCallback} collideCallback - [description]
      * @param {ArcadePhysicsCallback} processCallback - [description]
      * @param {*} callbackContext - [description]
-     * @param {boolean} overlapOnly - [description]
+     * @param {boolean} overlapOnly - Whether this is a collision or overlap check.
      *
      * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
      */
@@ -1962,7 +1962,7 @@ var World = new Class({
      * @param {ArcadePhysicsCallback} collideCallback - [description]
      * @param {ArcadePhysicsCallback} processCallback - [description]
      * @param {*} callbackContext - [description]
-     * @param {boolean} overlapOnly - [description]
+     * @param {boolean} overlapOnly - Whether this is a collision or overlap check.
      *
      * @return {boolean} [description]
      */
@@ -1997,7 +1997,7 @@ var World = new Class({
      * @param {ArcadePhysicsCallback} collideCallback - [description]
      * @param {ArcadePhysicsCallback} processCallback - [description]
      * @param {*} callbackContext - [description]
-     * @param {boolean} overlapOnly - [description]
+     * @param {boolean} overlapOnly - Whether this is a collision or overlap check.
      *
      * @return {boolean} [description]
      */
@@ -2090,7 +2090,7 @@ var World = new Class({
      * @param {ArcadePhysicsCallback} collideCallback - [description]
      * @param {ArcadePhysicsCallback} processCallback - [description]
      * @param {*} callbackContext - [description]
-     * @param {boolean} overlapOnly - [description]
+     * @param {boolean} overlapOnly - Whether this is a collision or overlap check.
      *
      * @return {boolean} [description]
      */
@@ -2132,7 +2132,7 @@ var World = new Class({
      * @param {ArcadePhysicsCallback} collideCallback - [description]
      * @param {ArcadePhysicsCallback} processCallback - [description]
      * @param {*} callbackContext - [description]
-     * @param {boolean} overlapOnly - [description]
+     * @param {boolean} overlapOnly - Whether this is a collision or overlap check.
      *
      * @return {boolean} [description]
      */
@@ -2234,7 +2234,7 @@ var World = new Class({
      * @param {ArcadePhysicsCallback} collideCallback - [description]
      * @param {ArcadePhysicsCallback} processCallback - [description]
      * @param {*} callbackContext - [description]
-     * @param {boolean} overlapOnly - [description]
+     * @param {boolean} overlapOnly - Whether this is a collision or overlap check.
      *
      * @return {boolean} [description]
      */

@@ -4,21 +4,18 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-//  Merges the target Rectangle with a list of points.
-//  The points is an array of objects with public x/y properties.
-
 /**
- * [description]
+ * Merges a Rectangle with a list of points by repositioning and/or resizing it such that all points are located on or within its bounds.
  *
  * @function Phaser.Geom.Rectangle.MergePoints
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Rectangle} O - [target,$return]
  *
- * @param {Phaser.Geom.Rectangle} target - [description]
- * @param {Phaser.Geom.Point[]} points - [description]
+ * @param {Phaser.Geom.Rectangle} target - The Rectangle which should be merged.
+ * @param {Phaser.Geom.Point[]} points - An array of Points (or any object with public `x` and `y` properties) which should be merged with the Rectangle.
  *
- * @return {Phaser.Geom.Rectangle} [description]
+ * @return {Phaser.Geom.Rectangle} The modified Rectangle.
  */
 var MergePoints = function (target, points)
 {
