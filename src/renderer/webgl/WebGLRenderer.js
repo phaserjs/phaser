@@ -1470,6 +1470,12 @@ var WebGLRenderer = new Class({
 
         this.gl.deleteTexture(texture);
 
+        if (this.currentTextures[0] === texture)
+        {
+            //  texture we just deleted is in use, so bind a blank texture
+            this.setBlankTexture(true);
+        }
+
         return this;
     },
 
