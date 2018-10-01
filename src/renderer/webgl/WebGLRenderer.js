@@ -568,8 +568,6 @@ var WebGLRenderer = new Class({
 
         this.resize(this.width, this.height);
 
-        console.log(this.config);
-
         this.game.events.once('texturesready', this.boot, this);
 
         return this;

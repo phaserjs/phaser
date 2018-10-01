@@ -172,6 +172,8 @@ var MouseManager = new Class({
      *
      * @param {MouseEvent} event - The native event from the browser.
      */
+
+    /*
     pointerLockChange: function (event)
     {
         var element = this.target;
@@ -180,6 +182,7 @@ var MouseManager = new Class({
 
         this.manager.queue.push(event);
     },
+    */
 
     /**
      * If the browser supports pointer lock, this will request that the pointer lock is released. If
@@ -206,6 +209,8 @@ var MouseManager = new Class({
      *
      * @param {MouseEvent} event - The native DOM Mouse Move Event.
      */
+
+    /*
     onMouseMove: function (event)
     {
         if (event.defaultPrevented || !this.enabled || !this.manager)
@@ -221,6 +226,7 @@ var MouseManager = new Class({
             event.preventDefault();
         }
     },
+    */
 
     /**
      * The Mouse Down Event Handler.
@@ -230,6 +236,8 @@ var MouseManager = new Class({
      *
      * @param {MouseEvent} event - The native DOM Mouse Down Event.
      */
+
+    /*
     onMouseDown: function (event)
     {
         if (event.defaultPrevented || !this.enabled)
@@ -245,6 +253,7 @@ var MouseManager = new Class({
             event.preventDefault();
         }
     },
+    */
 
     /**
      * The Mouse Up Event Handler.
@@ -254,6 +263,8 @@ var MouseManager = new Class({
      *
      * @param {MouseEvent} event - The native DOM Mouse Up Event.
      */
+
+    /*
     onMouseUp: function (event)
     {
         if (event.defaultPrevented || !this.enabled)
@@ -269,6 +280,7 @@ var MouseManager = new Class({
             event.preventDefault();
         }
     },
+    */
 
     /**
      * Starts the Mouse Event listeners running.
@@ -279,31 +291,84 @@ var MouseManager = new Class({
      */
     startListeners: function ()
     {
-        var target = this.target;
+        var _this = this;
 
+        var onMouseMove = function (event)
+        {
+            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            {
+                // Do nothing if event already handled
+                return;
+            }
+    
+            _this.manager.queueMouseMove(event);
+    
+            if (_this.capture)
+            {
+                event.preventDefault();
+            }
+        };
+
+        var onMouseDown = function (event)
+        {
+            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            {
+                // Do nothing if event already handled
+                return;
+            }
+    
+            _this.manager.queueMouseDown(event);
+    
+            if (_this.capture)
+            {
+                event.preventDefault();
+            }
+        };
+
+        var onMouseUp = function (event)
+        {
+            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            {
+                // Do nothing if event already handled
+                return;
+            }
+    
+            _this.manager.queueMouseUp(event);
+    
+            if (_this.capture)
+            {
+                event.preventDefault();
+            }
+        };
+
+        this.onMouseMove = onMouseMove;
+        this.onMouseDown = onMouseDown;
+        this.onMouseUp = onMouseUp;
+
+        var target = this.target;
         var passive = { passive: true };
         var nonPassive = { passive: false };
 
-        if (this.capture)
-        {
-            target.addEventListener('mousemove', this.onMouseMove.bind(this), nonPassive);
-            target.addEventListener('mousedown', this.onMouseDown.bind(this), nonPassive);
-            target.addEventListener('mouseup', this.onMouseUp.bind(this), nonPassive);
-        }
-        else
-        {
-            target.addEventListener('mousemove', this.onMouseMove.bind(this), passive);
-            target.addEventListener('mousedown', this.onMouseDown.bind(this), passive);
-            target.addEventListener('mouseup', this.onMouseUp.bind(this), passive);
-        }
+        target.addEventListener('mousemove', onMouseMove, (this.capture) ? nonPassive : passive);
+        target.addEventListener('mousedown', onMouseDown, (this.capture) ? nonPassive : passive);
+        target.addEventListener('mouseup', onMouseUp, (this.capture) ? nonPassive : passive);
 
         if (Features.pointerLock)
         {
-            this.pointerLockChange = this.pointerLockChange.bind(this);
+            var onPointerLockChange = function (event)
+            {
+                var element = _this.target;
 
-            document.addEventListener('pointerlockchange', this.pointerLockChange, true);
-            document.addEventListener('mozpointerlockchange', this.pointerLockChange, true);
-            document.addEventListener('webkitpointerlockchange', this.pointerLockChange, true);
+                _this.locked = (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) ? true : false;
+        
+                _this.manager.queue.push(event);
+            };
+
+            this.pointerLockChange = onPointerLockChange;
+
+            document.addEventListener('pointerlockchange', onPointerLockChange, true);
+            document.addEventListener('mozpointerlockchange', onPointerLockChange, true);
+            document.addEventListener('webkitpointerlockchange', onPointerLockChange, true);
         }
     },
 
