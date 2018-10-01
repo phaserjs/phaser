@@ -7,7 +7,7 @@
 var Random = require('../geom/rectangle/Random');
 
 /**
- * [description]
+ * Takes an array of Game Objects and positions them at random locations within the Ellipse.
  *
  * @function Phaser.Actions.RandomRectangle
  * @since 3.0.0
@@ -15,7 +15,7 @@ var Random = require('../geom/rectangle/Random');
  * @generic {Phaser.GameObjects.GameObject[]} G - [items,$return]
  *
  * @param {(array|Phaser.GameObjects.GameObject[])} items - An array of Game Objects. The contents of this array are updated by this Action.
- * @param {Phaser.Geom.Rectangle} rect - [description]
+ * @param {Phaser.Geom.Rectangle} rect - The Rectangle to position the Game Objects within.
  *
  * @return {(array|Phaser.GameObjects.GameObject[])} The array of Game Objects that was passed to this Action.
  */

@@ -4,11 +4,12 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-// var GetPointsOnLine = require('../geom/line/GetPointsOnLine');
 var BresenhamPoints = require('../geom/line/BresenhamPoints');
 
 /**
- * [description]
+ * Takes an array of Game Objects and positions them on evenly spaced points around the edges of a Triangle.
+ * 
+ * If you wish to pass a `Phaser.GameObjects.Triangle` Shape to this function, you should pass its `geom` property.
  *
  * @function Phaser.Actions.PlaceOnTriangle
  * @since 3.0.0
@@ -16,8 +17,8 @@ var BresenhamPoints = require('../geom/line/BresenhamPoints');
  * @generic {Phaser.GameObjects.GameObject[]} G - [items,$return]
  *
  * @param {(array|Phaser.GameObjects.GameObject[])} items - An array of Game Objects. The contents of this array are updated by this Action.
- * @param {Phaser.Geom.Triangle} triangle - [description]
- * @param {number} [stepRate=1] - [description]
+ * @param {Phaser.Geom.Triangle} triangle - The Triangle to position the Game Objects on.
+ * @param {number} [stepRate=1] - An optional step rate, to increase or decrease the packing of the Game Objects on the lines.
  *
  * @return {(array|Phaser.GameObjects.GameObject[])} The array of Game Objects that was passed to this Action.
  */
