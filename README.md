@@ -102,13 +102,13 @@ npm install phaser
 [Phaser is on jsDelivr](https://www.jsdelivr.com/projects/phaser) which is a "super-fast CDN for developers". Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.13/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.14/dist/phaser.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.13/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.14/dist/phaser.min.js"></script>
 ```
 
 ### API Documentation
@@ -174,13 +174,13 @@ The plugin offers the following features:
 A special build of Phaser with the Facebook Instant Games Plugin ready-enabled is [available on jsDelivr](https://www.jsdelivr.com/projects/phaser). Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.13/dist/phaser-facebook-instant-games.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.14/dist/phaser-facebook-instant-games.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.13/dist/phaser-facebook-instant-games.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.14/dist/phaser-facebook-instant-games.min.js"></script>
 ```
 
 The build files are in the git repository in the `dist` folder, and you can also include the plugin in custom builds.
