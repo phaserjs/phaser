@@ -1,6 +1,6 @@
 # Change Log
 
-## Version 3.14.0 - Tachikoma - in development
+## Version 3.14.0 - Tachikoma - 1st October 2018
 
 ### Tilemap New Features, Updates and Fixes
 
@@ -84,41 +84,11 @@ Also, thanks to the following for helping with the Phaser 3 Examples and TypeScr
 
 ### Phaser Doc Jam
 
-31826615
-@16patsle
-@bobonthenet
-@bobonthenet
-@rgk
-@samme
-@shaneMLK
-@wemyss
-ajmetal
-andiCR
-Arian Fornaris
-bsparks
-Carl
-cyantree
-DannyT
-Elliott Wallace
-felixnemis
-griga
-Hardylr
-henriacle
-Hsaka
-icbat
-Kanthi
-Kyle
-Lee
-Nathaniel Foldan
-Peter Pedersen
-rootasjey
-Sam Frantz
-SBCGames
-snowbillr
-Stephen Hamilton
-STuFF
-TadejZupancic
-telinc1
+The [Phaser Doc Jam](http://docjam.phaser.io) is an on-going effort to ensure that the Phaser 3 API has 100% documentation coverage. Thanks to the monumental effort of myself and the following people we're now really close to that goal! My thanks to:
+
+31826615 - @16patsle - @bobonthenet - @rgk - @samme - @shaneMLK - @wemyss - ajmetal - andiCR - Arian Fornaris - bsparks - Carl - cyantree - DannyT - Elliott Wallace - felixnemis - griga - Hardylr - henriacle - Hsaka - icbat - Kanthi - Kyle - Lee - Nathaniel Foldan - Peter Pedersen - rootasjey - Sam Frantz - SBCGames - snowbillr - Stephen Hamilton - STuFF - TadejZupancic - telinc1
+
+If you'd like to help finish off the last parts of documentation then take a look at the [Doc Jam site](http://docjam.phaser.io).
 
 ## Version 3.13.0 - Yuuki - 20th September 2018
 
