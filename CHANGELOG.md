@@ -1,5 +1,29 @@
 # Change Log
 
+## Version 3.15.0 - Batou - in development
+
+### New Features
+
+### Updates
+
+### Bug Fixes
+
+### Examples and TypeScript
+
+Thanks to the following for helping with the Phaser 3 Examples and TypeScript definitions, either by reporting errors, or even better, fixing them:
+
+
+
+### Phaser Doc Jam
+
+The [Phaser Doc Jam](http://docjam.phaser.io) is an on-going effort to ensure that the Phaser 3 API has 100% documentation coverage. Thanks to the monumental effort of myself and the following people we're now really close to that goal! My thanks to:
+
+---
+
+If you'd like to help finish off the last parts of documentation then take a look at the [Doc Jam site](http://docjam.phaser.io).
+
+
+
 ## Version 3.14.0 - Tachikoma - 1st October 2018
 
 ### Tilemap New Features, Updates and Fixes
