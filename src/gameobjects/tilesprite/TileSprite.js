@@ -64,8 +64,8 @@ var _FLAG = 8; // 1000
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
- * @param {number} width - The width of the Game Object.
- * @param {number} height - The height of the Game Object.
+ * @param {integer} width - The width of the Game Object. If zero it will use the size of the texture frame.
+ * @param {integer} height - The height of the Game Object. If zero it will use the size of the texture frame.
  * @param {string} textureKey - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {(string|integer)} [frameKey] - An optional frame from the Texture this Game Object is rendering with.
  */
@@ -96,12 +96,23 @@ var TileSprite = new Class({
 
     function TileSprite (scene, x, y, width, height, textureKey, frameKey)
     {
-        width = Math.floor(width);
-        height = Math.floor(height);
-
         var renderer = scene.sys.game.renderer;
 
         GameObject.call(this, scene, 'TileSprite');
+
+        var displayTexture = scene.sys.textures.get(textureKey);
+        var displayFrame = displayTexture.get(frameKey);
+
+        if (!width || !height)
+        {
+            width = displayFrame.width;
+            height = displayFrame.height;
+        }
+        else
+        {
+            width = Math.floor(width);
+            height = Math.floor(height);
+        }
 
         /**
          * Internal tile position vector.
@@ -172,7 +183,7 @@ var TileSprite = new Class({
          * @private
          * @since 3.12.0
          */
-        this.displayTexture = scene.sys.textures.get(textureKey);
+        this.displayTexture = displayTexture;
 
         /**
          * The Frame the TileSprite is using as its fill pattern.
@@ -182,7 +193,7 @@ var TileSprite = new Class({
          * @private
          * @since 3.12.0
          */
-        this.displayFrame = this.displayTexture.get(frameKey);
+        this.displayFrame = displayFrame;
 
         /**
          * The internal crop data object, as used by `setCrop` and passed to the `Frame.setCropUVs` method.
@@ -219,7 +230,7 @@ var TileSprite = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.potWidth = GetPowerOfTwo(this.displayFrame.width);
+        this.potWidth = GetPowerOfTwo(displayFrame.width);
 
         /**
          * The next power of two value from the height of the Fill Pattern frame.
@@ -228,7 +239,7 @@ var TileSprite = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.potHeight = GetPowerOfTwo(this.displayFrame.height);
+        this.potHeight = GetPowerOfTwo(displayFrame.height);
 
         /**
          * The Canvas that the TileSprites texture is rendered to.

@@ -17,8 +17,8 @@ var GameObjectFactory = require('../GameObjectFactory');
  *
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
- * @param {number} width - The width of the Game Object.
- * @param {number} height - The height of the Game Object.
+ * @param {integer} width - The width of the Game Object. If zero it will use the size of the texture frame.
+ * @param {integer} height - The height of the Game Object. If zero it will use the size of the texture frame.
  * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
  *
