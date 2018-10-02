@@ -6,7 +6,6 @@
 
 var Class = require('../../utils/Class');
 var Light = require('./Light');
-var LightPipeline = require('../../renderer/webgl/pipelines/ForwardDiffuseLightPipeline');
 var Utils = require('../../renderer/webgl/Utils');
 
 /**
@@ -84,6 +83,17 @@ var LightsManager = new Class({
          * @since 3.0.0
          */
         this.active = false;
+
+        /**
+         * The maximum number of lights that a single Camera and the lights shader can process.
+         * Change this via the `maxLights` property in your game config, as it cannot be changed at runtime.
+         *
+         * @name Phaser.GameObjects.LightsManager#maxLights
+         * @type {integer}
+         * @readOnly
+         * @since 3.15.0
+         */
+        this.maxLights = -1;
     },
 
     /**
@@ -96,6 +106,11 @@ var LightsManager = new Class({
      */
     enable: function ()
     {
+        if (this.maxLights === -1)
+        {
+            this.maxLights = this.scene.sys.game.renderer.config.maxLights;
+        }
+
         this.active = true;
 
         return this;
@@ -142,14 +157,13 @@ var LightsManager = new Class({
 
         culledLights.length = 0;
 
-        for (var index = 0; index < length && culledLights.length < LightPipeline.LIGHT_COUNT; ++index)
+        for (var index = 0; index < length && culledLights.length < this.maxLights; index++)
         {
             var light = lights[index];
 
             cameraMatrix.transformPoint(light.x, light.y, point);
 
-            // We'll just use bounding spheres to test
-            // if lights should be rendered
+            //  We'll just use bounding spheres to test if lights should be rendered
             var dx = cameraCenterX - (point.x - (camera.scrollX * light.scrollFactorX * camera.zoom));
             var dy = cameraCenterY - (viewportHeight - (point.y - (camera.scrollY * light.scrollFactorY) * camera.zoom));
             var distance = Math.sqrt(dx * dx + dy * dy);

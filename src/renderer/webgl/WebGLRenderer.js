@@ -89,7 +89,8 @@ var WebGLRenderer = new Class({
             roundPixels: gameConfig.roundPixels,
             maxTextures: gameConfig.maxTextures,
             maxTextureSize: gameConfig.maxTextureSize,
-            batchSize: gameConfig.batchSize
+            batchSize: gameConfig.batchSize,
+            maxLights: gameConfig.maxLights
         };
 
         /**
@@ -562,7 +563,7 @@ var WebGLRenderer = new Class({
 
         this.addPipeline('TextureTintPipeline', new TextureTintPipeline({ game: this.game, renderer: this }));
         this.addPipeline('BitmapMaskPipeline', new BitmapMaskPipeline({ game: this.game, renderer: this }));
-        this.addPipeline('Light2D', new ForwardDiffuseLightPipeline({ game: this.game, renderer: this }));
+        this.addPipeline('Light2D', new ForwardDiffuseLightPipeline({ game: this.game, renderer: this, maxLights: config.maxLights }));
 
         this.setBlendMode(CONST.BlendModes.NORMAL);
 

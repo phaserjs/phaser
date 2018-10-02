@@ -95,6 +95,7 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {boolean} [failIfMajorPerformanceCaveat=false] - Let the browser abort creating a WebGL context if it judges performance would be unacceptable.
  * @property {string} [powerPreference='default'] - "high-performance", "low-power" or "default". A hint to the browser on how much device power the game might use.
  * @property {integer} [batchSize=2000] - The default WebGL batch size.
+ * @property {integer} [maxLights=10] - The maximum number of lights allowed to be visible within range of a single Camera in the LightManager.
  */
 
 /**
@@ -528,6 +529,11 @@ var Config = new Class({
          * @const {integer} Phaser.Boot.Config#batchSize - The default WebGL Batch size.
          */
         this.batchSize = GetValue(renderConfig, 'batchSize', 2000);
+
+        /**
+         * @const {integer} Phaser.Boot.Config#maxLights - The maximum number of lights allowed to be visible within range of a single Camera in the LightManager.
+         */
+        this.maxLights = GetValue(renderConfig, 'maxLights', 10);
 
         var bgc = GetValue(config, 'backgroundColor', 0);
 

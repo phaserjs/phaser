@@ -33,6 +33,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
     function ForwardDiffuseLightPipeline (config)
     {
+        LIGHT_COUNT = config.maxLights;
+
         config.fragShader = ShaderSourceFS.replace('%LIGHT_COUNT%', LIGHT_COUNT.toString());
 
         TextureTintPipeline.call(this, config);
