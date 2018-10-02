@@ -10,6 +10,7 @@ var Components = require('../components');
 var CONST = require('../../const');
 var GameObject = require('../GameObject');
 var GetPowerOfTwo = require('../../math/pow2/GetPowerOfTwo');
+var Smoothing = require('../../display/canvas/Smoothing');
 var TileSpriteRender = require('./TileSpriteRender');
 var Vector2 = require('../../math/Vector2');
 
@@ -503,6 +504,11 @@ var TileSprite = new Class({
         }
 
         var ctx = this.context;
+
+        if (!this.scene.sys.game.config.antialias)
+        {
+            Smoothing.disable(ctx);
+        }
 
         var scaleX = this._tileScale.x;
         var scaleY = this._tileScale.y;
