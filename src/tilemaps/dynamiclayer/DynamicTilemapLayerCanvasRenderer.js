@@ -39,6 +39,11 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPe
 
     camMatrix.copyFrom(camera.matrix);
 
+    var ctx = renderer.currentContext;
+    var gidMap = src.gidMap;
+
+    ctx.save();
+
     if (parentMatrix)
     {
         //  Multiply the camera by the parent matrix
@@ -50,22 +55,16 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPe
 
         //  Multiply by the Sprite matrix, store result in calcMatrix
         camMatrix.multiply(layerMatrix, calcMatrix);
+
+        calcMatrix.copyToContext(ctx);
     }
     else
     {
         layerMatrix.e -= camera.scrollX * src.scrollFactorX;
         layerMatrix.f -= camera.scrollY * src.scrollFactorY;
 
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(layerMatrix, calcMatrix);
+        layerMatrix.copyToContext(ctx);
     }
-
-    var ctx = renderer.currentContext;
-    var gidMap = src.gidMap;
-
-    ctx.save();
-
-    calcMatrix.copyToContext(ctx);
 
     var alpha = camera.alpha * src.alpha;
 
