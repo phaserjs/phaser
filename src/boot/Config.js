@@ -248,12 +248,12 @@ var Config = new Class({
         var defaultBannerTextColor = '#ffffff';
 
         /**
-         * @const {(integer|string)} Phaser.Boot.Config#width - [description]
+         * @const {(integer)} Phaser.Boot.Config#width - [description]
          */
         this.width = GetValue(config, 'width', 1024);
 
         /**
-         * @const {(integer|string)} Phaser.Boot.Config#height - [description]
+         * @const {(integer)} Phaser.Boot.Config#height - [description]
          */
         this.height = GetValue(config, 'height', 768);
 
