@@ -257,10 +257,10 @@ var ScenePlugin = new Class({
      * The target Scene will emit the event `transitioninit` when that Scene's `init` method is called.
      * It will then emit the event `transitionstart` when its `create` method is called.
      * If the Scene was sleeping and has been woken up, it will emit the event `transitionwake` instead of these two,
-     * as the Scenes `init` and `create` methods are not invoked when a sleep wakes up.
+     * as the Scenes `init` and `create` methods are not invoked when a Scene wakes up.
      * 
      * When the duration of the transition has elapsed it will emit the event `transitioncomplete`.
-     * These events are all cleared of listeners when the Scene shuts down, but not if it is sent to sleep.
+     * These events are cleared of all listeners when the Scene shuts down, but not if it is sent to sleep.
      *
      * It's important to understand that the duration of the transition begins the moment you call this method.
      * If the Scene you are transitioning to includes delayed processes, such as waiting for files to load, the
