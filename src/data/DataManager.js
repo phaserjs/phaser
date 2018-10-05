@@ -84,6 +84,9 @@ var DataManager = new Class({
          * ```
          *
          * Doing so will emit a `setdata` event from the parent of this Data Manager.
+         * 
+         * Do not modify this object directly. Adding properties directly to this object will not
+         * emit any events. Always use `DataManager.set` to create new items the first time around.
          *
          * @name Phaser.Data.DataManager#values
          * @type {Object.<string, *>}
