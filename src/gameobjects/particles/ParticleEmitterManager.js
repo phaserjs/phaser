@@ -447,6 +447,18 @@ var ParticleEmitterManager = new Class({
      */
     setScrollFactor: function ()
     {
+    },
+
+    /**
+     * A NOOP method so you can pass an EmitterManager to a Container.
+     * Calling this method will do nothing. It is intentionally empty.
+     *
+     * @method Phaser.GameObjects.Particles.ParticleEmitterManager#setBlendMode
+     * @private
+     * @since 3.15.0
+     */
+    setBlendMode: function ()
+    {
     }
 
 });
