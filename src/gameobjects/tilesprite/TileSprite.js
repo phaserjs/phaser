@@ -271,9 +271,9 @@ var TileSprite = new Class({
          */
         this.fillPattern = null;
 
-        this.setFrame(frameKey);
         this.setPosition(x, y);
         this.setSize(width, height);
+        this.setFrame(frameKey);
         this.setOriginFromFrame();
         this.initPipeline();
 
@@ -317,23 +317,15 @@ var TileSprite = new Class({
      *
      * It can be either a string or an index.
      *
-     * Calling `setFrame` will modify the `width` and `height` properties of your Game Object.
-     * It will also change the `origin` if the Frame has a custom pivot point, as exported from packages like Texture Packer.
-     *
      * @method Phaser.GameObjects.TileSprite#setFrame
      * @since 3.0.0
      *
      * @param {(string|integer)} frame - The name or index of the frame within the Texture.
-     * @param {boolean} [updateSize=true] - Should this call adjust the size of the Game Object?
-     * @param {boolean} [updateOrigin=true] - Should this call adjust the origin of the Game Object?
      *
      * @return {this} This Game Object instance.
      */
-    setFrame: function (frame, updateSize, updateOrigin)
+    setFrame: function (frame)
     {
-        if (updateSize === undefined) { updateSize = true; }
-        if (updateOrigin === undefined) { updateOrigin = true; }
-
         this.displayFrame = this.displayTexture.get(frame);
 
         if (!this.displayFrame.cutWidth || !this.displayFrame.cutHeight)
@@ -343,23 +335,6 @@ var TileSprite = new Class({
         else
         {
             this.renderFlags |= _FLAG;
-        }
-
-        if (this._sizeComponent && updateSize)
-        {
-            this.setSizeToFrame();
-        }
-
-        if (this._originComponent && updateOrigin)
-        {
-            if (this.displayFrame.customPivot)
-            {
-                this.setOrigin(this.displayFrame.pivotX, this.displayFrame.pivotY);
-            }
-            else
-            {
-                this.updateDisplayOrigin();
-            }
         }
 
         this.dirty = true;
