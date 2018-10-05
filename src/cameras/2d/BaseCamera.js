@@ -1441,10 +1441,13 @@ var BaseCamera = new Class({
      */
 
     /**
-     * Destroys this Camera instance. You rarely need to call this directly.
-     *
-     * Called by the Camera Manager. If you wish to destroy a Camera please use `CameraManager.remove` as
-     * cameras are stored in a pool, ready for recycling later, and calling this directly will prevent that.
+     * Destroys this Camera instance and its internal properties and references.
+     * Once destroyed you cannot use this Camera again, even if re-added to a Camera Manager.
+     * 
+     * This method is called automatically by `CameraManager.remove` if that methods `runDestroy` argument is `true`, which is the default.
+     * 
+     * Unless you have a specific reason otherwise, always use `CameraManager.remove` and allow it to handle the camera destruction,
+     * rather than calling this method directly.
      *
      * @method Phaser.Cameras.Scene2D.BaseCamera#destroy
      * @fires CameraDestroyEvent

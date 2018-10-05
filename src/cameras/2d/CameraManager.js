@@ -531,18 +531,22 @@ var CameraManager = new Class({
      * If found in the Camera Manager it will be immediately removed from the local cameras array.
      * If also currently the 'main' camera, 'main' will be reset to be camera 0.
      * 
-     * The removed Camera is not destroyed. If you also wish to destroy the Camera, you should call
-     * `Camera.destroy` on it, so that it clears all references to the Camera Manager.
+     * The removed Cameras are automatically destroyed if the `runDestroy` argument is `true`, which is the default.
+     * If you wish to re-use the cameras then set this to `false`, but know that they will retain their references
+     * and internal data until destroyed or re-added to a Camera Manager.
      *
      * @method Phaser.Cameras.Scene2D.CameraManager#remove
      * @since 3.0.0
      *
      * @param {(Phaser.Cameras.Scene2D.Camera|Phaser.Cameras.Scene2D.Camera[])} camera - The Camera, or an array of Cameras, to be removed from this Camera Manager.
+     * @param {boolean} [runDestroy=true] - Automatically call `Camera.destroy` on each Camera removed from this Camera Manager.
      * 
      * @return {integer} The total number of Cameras removed.
      */
-    remove: function (camera)
+    remove: function (camera, runDestroy)
     {
+        if (runDestroy === undefined) { runDestroy = true; }
+
         if (!Array.isArray(camera))
         {
             camera = [ camera ];
@@ -557,12 +561,18 @@ var CameraManager = new Class({
 
             if (index !== -1)
             {
+                if (runDestroy)
+                {
+                    cameras[index].destroy();
+                }
+
                 cameras.splice(index, 1);
+
                 total++;
             }
         }
 
-        if (!this.main)
+        if (!this.main && cameras[0])
         {
             this.main = cameras[0];
         }
