@@ -1356,17 +1356,10 @@ var World = new Class({
         velocityX = Clamp(velocityX, -maxX, maxX);
         velocityY = Clamp(velocityY, -maxY, maxY);
 
-        if(maxSpeed >= 0)
-        {
-            newSpeed = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
-            if(FuzzyGreaterThan(newSpeed, maxSpeed, 0.001))
-            {
-                velocityX = velocityX / newSpeed * maxSpeed;
-                velocityY = velocityY / newSpeed * maxSpeed;
-            }
-        }
-        
         body.velocity.set(velocityX, velocityY);
+        if(maxSpeed >= 0 && body.velocity.length() > maxSpeed){
+            body.velocity.normalize().scale(maxSpeed);
+        }
     },
 
     /**
