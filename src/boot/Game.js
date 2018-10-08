@@ -226,19 +226,16 @@ var Game = new Class({
          */
         this.device = Device;
 
-        if (typeof EXPERIMENTAL)
-        {
-            /**
-             * An instance of the Scale Manager.
-             *
-             * The Scale Manager is a global system responsible for handling game scaling events.
-             *
-             * @name Phaser.Game#scaleManager
-             * @type {Phaser.Boot.ScaleManager}
-             * @since 3.12.0
-             */
-            this.scaleManager = new ScaleManager(this, this.config);
-        }
+        /**
+         * An instance of the Scale Manager.
+         *
+         * The Scale Manager is a global system responsible for handling game scaling events.
+         *
+         * @name Phaser.Game#scaleManager
+         * @type {Phaser.Boot.ScaleManager}
+         * @since 3.15.0
+         */
+        this.scaleManager = new ScaleManager(this, this.config);
 
         /**
          * An instance of the base Sound Manager.
@@ -715,7 +712,7 @@ var Game = new Class({
      * Then resizes the Renderer and Input Manager scale.
      *
      * @method Phaser.Game#resize
-     * @fires Phaser.Game#reiszeEvent
+     * @fires Phaser.Game#resizeEvent
      * @since 3.2.0
      *
      * @param {number} width - The new width of the game.
