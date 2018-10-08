@@ -4,8 +4,11 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var CONST = require('./const');
 var Class = require('../utils/Class');
+var Clamp = require('../math/Clamp');
 var Rectangle = require('../geom/rectangle/Rectangle');
+var SameDimensions = require('../geom/rectangle/SameDimensions');
 var Vec2 = require('../math/Vector2');
 
 /*
@@ -84,7 +87,8 @@ var ScaleManager = new Class({
 
         this._createdFullScreenTarget = null;
 
-        this.screenOrientation = this.dom.getScreenOrientation();
+        this.screenOrientation = 'portrait-primary';
+        // this.screenOrientation = this.dom.getScreenOrientation();
 
         this.scaleFactor = new Vec2(1, 1);
 
@@ -156,6 +160,8 @@ var ScaleManager = new Class({
         this._lastReportedGameSize = new Rectangle();
 
         this._booted = false;
+
+        game.events.once('boot', this.boot, this);
     },
 
     boot: function ()
@@ -240,7 +246,7 @@ var ScaleManager = new Class({
             document.addEventListener('MSFullscreenError', this._fullScreenError, false);
         }
 
-        this.game.events.on('resume', this._gameResumed, this);
+        this.game.events.on('resume', this.gameResumed, this);
 
         // Initialize core bounds
 
@@ -260,6 +266,863 @@ var ScaleManager = new Class({
             this.scaleMode = this._pendingScaleMode;
             this._pendingScaleMode = null;
         }
+
+        game.events.on('prestep', this.step, this);
+    },
+
+    setupScale: function (width, height)
+    {
+        var target;
+        var rect = new Rectangle();
+
+        var parent = this.config.parent;
+
+        if (parent !== '')
+        {
+            if (typeof parent === 'string')
+            {
+                //  Hopefully an element ID
+                target = document.getElementById(parent);
+            }
+            else if (parent && parent.nodeType === 1)
+            {
+                //  Quick test for a HTMLelement
+                target = parent;
+            }
+        }
+
+        //  Fallback, covers an invalid ID and a non HTMLelement object
+        if (!target)
+        {
+            //  Use the full window
+            this.parentNode = null;
+            this.parentIsWindow = true;
+
+            rect.width = this.dom.visualBounds.width;
+            rect.height = this.dom.visualBounds.height;
+
+            this.offset.set(0, 0);
+        }
+        else
+        {
+            this.parentNode = target;
+            this.parentIsWindow = false;
+
+            this.getParentBounds(this._parentBounds, this.parentNode);
+
+            rect.width = this._parentBounds.width;
+            rect.height = this._parentBounds.height;
+
+            this.offset.set(this._parentBounds.x, this._parentBounds.y);
+        }
+
+        var newWidth = 0;
+        var newHeight = 0;
+
+        if (typeof width === 'number')
+        {
+            newWidth = width;
+        }
+        else
+        {
+            //  Percentage based
+            this.parentScaleFactor.x = parseInt(width, 10) / 100;
+
+            newWidth = rect.width * this.parentScaleFactor.x;
+        }
+
+        if (typeof height === 'number')
+        {
+            newHeight = height;
+        }
+        else
+        {
+            //  Percentage based
+            this.parentScaleFactor.y = parseInt(height, 10) / 100;
+
+            newHeight = rect.height * this.parentScaleFactor.y;
+        }
+
+        newWidth = Math.floor(newWidth);
+        newHeight = Math.floor(newHeight);
+
+        this._gameSize.setTo(0, 0, newWidth, newHeight);
+
+        this.updateDimensions(newWidth, newHeight, false);
+    },
+
+    gameResumed: function ()
+    {
+        this.queueUpdate(true);
+    },
+
+    setGameSize: function (width, height)
+    {
+        this._gameSize.setTo(0, 0, width, height);
+
+        if (this.currentScaleMode !== CONST.RESIZE)
+        {
+            this.updateDimensions(width, height, true);
+        }
+
+        this.queueUpdate(true);
+    },
+
+    setUserScale: function (hScale, vScale, hTrim, vTrim, queueUpdate, force)
+    {
+        if (hTrim === undefined) { hTrim = 0; }
+        if (vTrim === undefined) { vTrim = 0; }
+        if (queueUpdate === undefined) { queueUpdate = true; }
+        if (force === undefined) { force = true; }
+
+        this._userScaleFactor.setTo(hScale, vScale);
+        this._userScaleTrim.setTo(hTrim, vTrim);
+
+        if (queueUpdate)
+        {
+            this.queueUpdate(force);
+        }
+    },
+
+    setResizeCallback: function (callback, context)
+    {
+        this.onResize = callback;
+        this.onResizeContext = context;
+    },
+
+    signalSizeChange: function ()
+    {
+        if (!SameDimensions(this, this._lastReportedCanvasSize) || !SameDimensions(this.game, this._lastReportedGameSize))
+        {
+            var width = this.width;
+            var height = this.height;
+
+            this._lastReportedCanvasSize.setTo(0, 0, width, height);
+            this._lastReportedGameSize.setTo(0, 0, this.game.config.width, this.game.config.height);
+
+            // this.onSizeChange.dispatch(this, width, height);
+
+            //  Per StateManager#onResizeCallback, it only occurs when in RESIZE mode.
+            if (this.currentScaleMode === CONST.RESIZE)
+            {
+                this.game.resize(width, height);
+            }
+        }
+    },
+
+    setMinMax: function (minWidth, minHeight, maxWidth, maxHeight)
+    {
+        this.minWidth = minWidth;
+        this.minHeight = minHeight;
+
+        if (maxWidth)
+        {
+            this.maxWidth = maxWidth;
+        }
+
+        if (maxHeight)
+        {
+            this.maxHeight = maxHeight;
+        }
+    },
+
+    step: function (time)
+    {
+        if (time < (this._lastUpdate + this._updateThrottle))
+        {
+            return;
+        }
+
+        var prevThrottle = this._updateThrottle;
+        this._updateThrottleReset = (prevThrottle >= 400) ? 0 : 100;
+
+        // this.dom.getOffset(this.game.canvas, this.offset);
+
+        var prevWidth = this._parentBounds.width;
+        var prevHeight = this._parentBounds.height;
+
+        var bounds = this.getParentBounds(this._parentBounds);
+
+        var boundsChanged = (bounds.width !== prevWidth || bounds.height !== prevHeight);
+
+        //  Always invalidate on a newly detected orientation change
+        var orientationChanged = this.updateOrientationState();
+
+        if (boundsChanged || orientationChanged)
+        {
+            if (this.onResize)
+            {
+                this.onResize.call(this.onResizeContext, this, bounds);
+            }
+
+            this.updateLayout();
+
+            this.signalSizeChange();
+        }
+
+        //  Next throttle, eg. 25, 50, 100, 200...
+        var throttle = this._updateThrottle * 2;
+
+        //  Don't let an update be too eager about resetting the throttle.
+        if (this._updateThrottle < prevThrottle)
+        {
+            throttle = Math.min(prevThrottle, this._updateThrottleReset);
+        }
+
+        this._updateThrottle = Clamp(throttle, 25, this.trackParentInterval);
+
+        this._lastUpdate = time;
+    },
+
+    updateDimensions: function (width, height, resize)
+    {
+        this.width = width * this.parentScaleFactor.x;
+        this.height = height * this.parentScaleFactor.y;
+
+        this.config.width = this.width;
+        this.config.height = this.height;
+
+        this.sourceAspectRatio = this.width / this.height;
+
+        this.updateScalingAndBounds();
+
+        if (resize)
+        {
+            this.game.resize(this.width, this.height);
+        }
+    },
+
+    updateScalingAndBounds: function ()
+    {
+        var config = this.config;
+
+        this.scaleFactor.x = this.config.width / this.width;
+        this.scaleFactor.y = this.config.height / this.height;
+
+        this.scaleFactorInversed.x = this.width / this.config.width;
+        this.scaleFactorInversed.y = this.height / this.config.height;
+
+        this.aspectRatio = this.width / this.height;
+
+        //  This can be invoked in boot pre-canvas
+        if (this.game.canvas)
+        {
+            // this.dom.getOffset(this.game.canvas, this.offset);
+        }
+
+        this.bounds.setTo(this.offset.x, this.offset.y, this.width, this.height);
+
+        //  Can be invoked in boot pre-input
+        if (this.game.input && this.game.input.scale)
+        {
+            // this.game.input.scale.setTo(this.scaleFactor.x, this.scaleFactor.y);
+        }
+    },
+
+    forceLandscape: function ()
+    {
+        this.forceLandscape = true;
+        this.forcePortrait = false;
+
+        this.queueUpdate(true);
+    },
+
+    forcePortrait: function ()
+    {
+        this.forceLandscape = false;
+        this.forcePortrait = true;
+
+        this.queueUpdate(true);
+
+    },
+
+    classifyOrientation: function (orientation)
+    {
+        if (orientation === 'portrait-primary' || orientation === 'portrait-secondary')
+        {
+            return 'portrait';
+        }
+        else if (orientation === 'landscape-primary' || orientation === 'landscape-secondary')
+        {
+            return 'landscape';
+        }
+        else
+        {
+            return null;
+        }
+    },
+
+    updateOrientationState: function ()
+    {
+        var previousOrientation = this.screenOrientation;
+        var previouslyIncorrect = this.incorrectOrientation;
+
+        // this.screenOrientation = this.dom.getScreenOrientation(this.compatibility.orientationFallback);
+
+        this.incorrectOrientation = (this.forceLandscape && !this.isLandscape) || (this.forcePortrait && !this.isPortrait);
+
+        var changed = (previousOrientation !== this.screenOrientation);
+        var correctnessChanged = (previouslyIncorrect !== this.incorrectOrientation);
+
+        if (correctnessChanged)
+        {
+            if (this.incorrectOrientation)
+            {
+                // this.enterIncorrectOrientation.dispatch();
+            }
+            else
+            {
+                // this.leaveIncorrectOrientation.dispatch();
+            }
+        }
+
+        if (changed || correctnessChanged)
+        {
+            // this.onOrientationChange.dispatch(this, previousOrientation, previouslyIncorrect);
+        }
+
+        return (changed || correctnessChanged);
+    },
+
+    orientationChange: function (event)
+    {
+        this.event = event;
+
+        this.queueUpdate(true);
+    },
+
+    windowResize: function (event)
+    {
+        this.event = event;
+
+        this.queueUpdate(true);
+    },
+
+    scrollTop: function ()
+    {
+        var scrollTo = this.compatibility.scrollTo;
+
+        if (scrollTo)
+        {
+            window.scrollTo(scrollTo.x, scrollTo.y);
+        }
+    },
+
+    refresh: function ()
+    {
+        this.scrollTop();
+
+        this.queueUpdate(true);
+    },
+
+    updateLayout: function ()
+    {
+        var scaleMode = this.currentScaleMode;
+
+        if (scaleMode === CONST.RESIZE)
+        {
+            this.reflowGame();
+            return;
+        }
+
+        this.scrollTop();
+
+        if (this.compatibility.forceMinimumDocumentHeight)
+        {
+            // (This came from older code, by why is it here?)
+            // Set minimum height of content to new window height
+            document.documentElement.style.minHeight = window.innerHeight + 'px';
+        }
+
+        if (this.incorrectOrientation)
+        {
+            this.setMaximum();
+        }
+        else if (scaleMode === CONST.EXACT_FIT)
+        {
+            this.setExactFit();
+        }
+        else if (scaleMode === CONST.SHOW_ALL)
+        {
+            if (!this.isFullScreen && this.boundingParent && this.compatibility.canExpandParent)
+            {
+                //  Try to expand parent out, but choosing maximizing dimensions.
+                //  Then select minimize dimensions which should then honor parent maximum bound applications.
+                this.setShowAll(true);
+                this.resetCanvas();
+                this.setShowAll();
+            }
+            else
+            {
+                this.setShowAll();
+            }
+        }
+        else if (scaleMode === CONST.NO_SCALE)
+        {
+            this.width = this.config.width;
+            this.height = this.config.height;
+        }
+        else if (scaleMode === CONST.USER_SCALE)
+        {
+            this.width = (this.config.width * this._userScaleFactor.x) - this._userScaleTrim.x;
+            this.height = (this.config.height * this._userScaleFactor.y) - this._userScaleTrim.y;
+        }
+
+        if (!this.compatibility.canExpandParent && (scaleMode === CONST.SHOW_ALL || scaleMode === CONST.USER_SCALE))
+        {
+            var bounds = this.getParentBounds(this._tempBounds);
+
+            this.width = Math.min(this.width, bounds.width);
+            this.height = Math.min(this.height, bounds.height);
+        }
+
+        //  Always truncate / force to integer
+        this.width = this.width | 0;
+        this.height = this.height | 0;
+
+        this.reflowCanvas();
+    },
+
+    getParentBounds: function (bounds, parentNode)
+    {
+        if (bounds === undefined) { bounds = new Rectangle(); }
+        if (parentNode === undefined) { parentNode = this.boundingParent; }
+
+        var visualBounds = this.dom.visualBounds;
+        var layoutBounds = this.dom.layoutBounds;
+
+        if (!parentNode)
+        {
+            bounds.setTo(0, 0, visualBounds.width, visualBounds.height);
+        }
+        else
+        {
+            //  Ref. http://msdn.microsoft.com/en-us/library/hh781509(v=vs.85).aspx for getBoundingClientRect
+            var clientRect = parentNode.getBoundingClientRect();
+            var parentRect = (parentNode.offsetParent) ? parentNode.offsetParent.getBoundingClientRect() : parentNode.getBoundingClientRect();
+
+            bounds.setTo(clientRect.left - parentRect.left, clientRect.top - parentRect.top, clientRect.width, clientRect.height);
+
+            var wc = this.windowConstraints;
+            var windowBounds;
+
+            if (wc.right)
+            {
+                windowBounds = (wc.right === 'layout') ? layoutBounds : visualBounds;
+                bounds.right = Math.min(bounds.right, windowBounds.width);
+            }
+
+            if (wc.bottom)
+            {
+                windowBounds = (wc.bottom === 'layout') ? layoutBounds : visualBounds;
+                bounds.bottom = Math.min(bounds.bottom, windowBounds.height);
+            }
+        }
+
+        bounds.setTo(
+            Math.round(bounds.x), Math.round(bounds.y),
+            Math.round(bounds.width), Math.round(bounds.height));
+
+        return bounds;
+    },
+
+    align: function (horizontal, vertical)
+    {
+        if (horizontal !== null)
+        {
+            this.pageAlignHorizontally = horizontal;
+        }
+
+        if (vertical !== null)
+        {
+            this.pageAlignVertically = vertical;
+        }
+    },
+
+    alignCanvas: function (horizontal, vertical)
+    {
+        var parentBounds = this.getParentBounds(this._tempBounds);
+        var canvas = this.game.canvas;
+        var margin = this.margin;
+
+        var canvasBounds;
+        var currentEdge;
+        var targetEdge;
+        var offset;
+
+        if (horizontal)
+        {
+            margin.left = margin.right = 0;
+
+            canvasBounds = canvas.getBoundingClientRect();
+
+            if (this.width < parentBounds.width && !this.incorrectOrientation)
+            {
+                currentEdge = canvasBounds.left - parentBounds.x;
+                targetEdge = (parentBounds.width / 2) - (this.width / 2);
+
+                targetEdge = Math.max(targetEdge, 0);
+
+                offset = targetEdge - currentEdge;
+
+                margin.left = Math.round(offset);
+            }
+
+            canvas.style.marginLeft = margin.left + 'px';
+
+            if (margin.left !== 0)
+            {
+                margin.right = -(parentBounds.width - canvasBounds.width - margin.left);
+                canvas.style.marginRight = margin.right + 'px';
+            }
+        }
+
+        if (vertical)
+        {
+            margin.top = margin.bottom = 0;
+
+            canvasBounds = canvas.getBoundingClientRect();
+
+            if (this.height < parentBounds.height && !this.incorrectOrientation)
+            {
+                currentEdge = canvasBounds.top - parentBounds.y;
+                targetEdge = (parentBounds.height / 2) - (this.height / 2);
+
+                targetEdge = Math.max(targetEdge, 0);
+
+                offset = targetEdge - currentEdge;
+
+                margin.top = Math.round(offset);
+            }
+
+            canvas.style.marginTop = margin.top + 'px';
+
+            if (margin.top !== 0)
+            {
+                margin.bottom = -(parentBounds.height - canvasBounds.height - margin.top);
+                canvas.style.marginBottom = margin.bottom + 'px';
+            }
+        }
+
+        // margin.x = margin.left;
+        // margin.y = margin.top;
+    },
+
+    reflowGame: function ()
+    {
+        this.resetCanvas('', '');
+
+        var bounds = this.getParentBounds(this._tempBounds);
+
+        this.updateDimensions(bounds.width, bounds.height, true);
+    },
+
+    reflowCanvas: function ()
+    {
+        if (!this.incorrectOrientation)
+        {
+            this.width = Clamp(this.width, this.minWidth || 0, this.maxWidth || this.width);
+            this.height = Clamp(this.height, this.minHeight || 0, this.maxHeight || this.height);
+        }
+
+        this.resetCanvas();
+
+        if (!this.compatibility.noMargins)
+        {
+            if (this.isFullScreen && this._createdFullScreenTarget)
+            {
+                this.alignCanvas(true, true);
+            }
+            else
+            {
+                this.alignCanvas(this.pageAlignHorizontally, this.pageAlignVertically);
+            }
+        }
+
+        this.updateScalingAndBounds();
+    },
+
+    resetCanvas: function (cssWidth, cssHeight)
+    {
+        if (cssWidth === undefined) { cssWidth = this.width + 'px'; }
+        if (cssHeight === undefined) { cssHeight = this.height + 'px'; }
+
+        var canvas = this.game.canvas;
+
+        if (!this.compatibility.noMargins)
+        {
+            canvas.style.marginLeft = '';
+            canvas.style.marginTop = '';
+            canvas.style.marginRight = '';
+            canvas.style.marginBottom = '';
+        }
+
+        canvas.style.width = cssWidth;
+        canvas.style.height = cssHeight;
+    },
+
+    queueUpdate: function (force)
+    {
+        if (force)
+        {
+            this._parentBounds.width = 0;
+            this._parentBounds.height = 0;
+        }
+
+        this._updateThrottle = this._updateThrottleReset;
+    },
+
+    setMaximum: function ()
+    {
+        this.width = this.dom.visualBounds.width;
+        this.height = this.dom.visualBounds.height;
+    },
+
+    setShowAll: function (expanding)
+    {
+        var bounds = this.getParentBounds(this._tempBounds);
+
+        var width = bounds.width;
+        var height = bounds.height;
+
+        var multiplier;
+
+        if (expanding)
+        {
+            multiplier = Math.max((height / this.game.height), (width / this.game.width));
+        }
+        else
+        {
+            multiplier = Math.min((height / this.game.height), (width / this.game.width));
+        }
+
+        this.width = Math.round(this.game.width * multiplier);
+        this.height = Math.round(this.game.height * multiplier);
+    },
+
+    setExactFit: function ()
+    {
+        var bounds = this.getParentBounds(this._tempBounds);
+
+        this.width = bounds.width;
+        this.height = bounds.height;
+
+        if (this.isFullScreen)
+        {
+            //  Max/min not honored fullscreen
+            return;
+        }
+
+        if (this.maxWidth)
+        {
+            this.width = Math.min(this.width, this.maxWidth);
+        }
+
+        if (this.maxHeight)
+        {
+            this.height = Math.min(this.height, this.maxHeight);
+        }
+    },
+
+    createFullScreenTarget: function ()
+    {
+        var fsTarget = document.createElement('div');
+
+        fsTarget.style.margin = '0';
+        fsTarget.style.padding = '0';
+        fsTarget.style.background = '#000';
+
+        return fsTarget;
+    },
+
+    startFullScreen: function (antialias, allowTrampoline)
+    {
+        if (this.isFullScreen)
+        {
+            return false;
+        }
+
+        if (!this.compatibility.supportsFullScreen)
+        {
+            // Error is called in timeout to emulate the real fullscreenerror event better
+            var _this = this;
+
+            setTimeout(function ()
+            {
+                _this.fullScreenError();
+            }, 10);
+
+            return;
+        }
+
+        if (this.compatibility.clickTrampoline === 'when-not-mouse')
+        {
+            var input = this.game.input;
+
+            /*
+            if (input.activePointer &&
+                input.activePointer !== input.mousePointer &&
+                (allowTrampoline || allowTrampoline !== false))
+            {
+                input.activePointer.addClickTrampoline('startFullScreen', this.startFullScreen, this, [ antialias, false ]);
+                return;
+            }
+            */
+        }
+
+        /*
+        if (antialias !== undefined && this.game.renderType === CONST.CANVAS)
+        {
+            this.game.stage.smoothed = antialias;
+        }
+        */
+
+        var fsTarget = this.fullScreenTarget;
+
+        if (!fsTarget)
+        {
+            this.cleanupCreatedTarget();
+
+            this._createdFullScreenTarget = this.createFullScreenTarget();
+
+            fsTarget = this._createdFullScreenTarget;
+        }
+
+        var initData = { targetElement: fsTarget };
+
+        this.hasPhaserSetFullScreen = true;
+
+        // this.onFullScreenInit.dispatch(this, initData);
+
+        if (this._createdFullScreenTarget)
+        {
+            //  Move the Display canvas inside of the target and add the target to the DOM
+            //  (the target has to be added for the Fullscreen API to work)
+            var canvas = this.game.canvas;
+            var parent = canvas.parentNode;
+
+            parent.insertBefore(fsTarget, canvas);
+
+            fsTarget.appendChild(canvas);
+        }
+
+        if (this.game.device.fullscreen.keyboard)
+        {
+            fsTarget[this.game.device.fullscreen.request](Element.ALLOW_KEYBOARD_INPUT);
+        }
+        else
+        {
+            fsTarget[this.game.device.fullscreen.request]();
+        }
+
+        return true;
+    },
+
+    stopFullScreen: function ()
+    {
+        if (!this.isFullScreen || !this.compatibility.supportsFullScreen)
+        {
+            return false;
+        }
+
+        this.hasPhaserSetFullScreen = false;
+
+        document[this.game.device.fullscreen.cancel]();
+
+        return true;
+    },
+
+    cleanupCreatedTarget: function ()
+    {
+        var fsTarget = this._createdFullScreenTarget;
+
+        if (fsTarget && fsTarget.parentNode)
+        {
+            //  Make sure to cleanup synthetic target for sure;
+            //  swap the canvas back to the parent.
+            var parent = fsTarget.parentNode;
+
+            parent.insertBefore(this.game.canvas, fsTarget);
+
+            parent.removeChild(fsTarget);
+        }
+
+        this._createdFullScreenTarget = null;
+    },
+
+    prepScreenMode: function (enteringFullscreen)
+    {
+        var createdTarget = !!this._createdFullScreenTarget;
+        var fsTarget = this._createdFullScreenTarget || this.fullScreenTarget;
+
+        if (enteringFullscreen)
+        {
+            if (createdTarget || this.fullScreenScaleMode === Phaser.ScaleManager.EXACT_FIT)
+            {
+                //  Resize target, as long as it's not the canvas
+                if (fsTarget !== this.game.canvas)
+                {
+                    this._fullScreenRestore = {
+                        targetWidth: fsTarget.style.width,
+                        targetHeight: fsTarget.style.height
+                    };
+
+                    fsTarget.style.width = '100%';
+                    fsTarget.style.height = '100%';
+                }
+            }
+        }
+        else
+        {
+            //  Have restore information
+            if (this._fullScreenRestore)
+            {
+                fsTarget.style.width = this._fullScreenRestore.targetWidth;
+                fsTarget.style.height = this._fullScreenRestore.targetHeight;
+
+                this._fullScreenRestore = null;
+            }
+
+            //  Always reset to game size
+            this.updateDimensions(this._gameSize.width, this._gameSize.height, true);
+
+            this.resetCanvas();
+        }
+    },
+
+    fullScreenChange: function (event)
+    {
+        this.event = event;
+
+        if (this.isFullScreen)
+        {
+            this.prepScreenMode(true);
+
+            this.updateLayout();
+            this.queueUpdate(true);
+        }
+        else
+        {
+            this.prepScreenMode(false);
+
+            this.cleanupCreatedTarget();
+
+            this.updateLayout();
+            this.queueUpdate(true);
+        }
+
+        // this.onFullScreenChange.dispatch(this, this.width, this.height);
+    },
+
+    fullScreenError: function (event)
+    {
+        this.event = event;
+
+        this.cleanupCreatedTarget();
+
+        console.warn('ScaleManager: requestFullscreen call or browser failed');
+
+        // this.onFullScreenError.dispatch(this);
     },
 
     /*
@@ -294,11 +1157,6 @@ var ScaleManager = new Class({
     };
     */
 
-    resizeHandler: function ()
-    {
-
-    },
-
     /*
     resize: function ()
     {
@@ -316,6 +1174,7 @@ var ScaleManager = new Class({
     },
     */
 
+    /*
     getInnerHeight: function ()
     {
         //  Based on code by @tylerjpeterson
@@ -351,16 +1210,207 @@ var ScaleManager = new Class({
             return size.w;
         }
     },
+    */
 
     /**
      * Destroys the ScaleManager.
      *
      * @method Phaser.Boot.ScaleManager#destroy
-     * @since 3.12.0
+     * @since 3.15.0
      */
     destroy: function ()
     {
+        this.game.events.off('resume', this.gameResumed, this);
+
+        window.removeEventListener('orientationchange', this._orientationChange, false);
+        window.removeEventListener('resize', this._windowResize, false);
+
+        if (this.compatibility.supportsFullScreen)
+        {
+            var vendors = [ 'webkit', 'moz', '' ];
+
+            vendors.forEach(function (prefix)
+            {
+                document.removeEventListener(prefix + 'fullscreenchange', this._fullScreenChange, false);
+                document.removeEventListener(prefix + 'fullscreenerror', this._fullScreenError, false);
+            });
+
+            //  MS Specific
+            document.removeEventListener('MSFullscreenChange', this._fullScreenChange, false);
+            document.removeEventListener('MSFullscreenError', this._fullScreenError, false);
+        }
+
         this.game = null;
+    },
+
+    boundingParent: {
+        
+        get: function ()
+        {
+            if (this.parentIsWindow || (this.isFullScreen && this.hasPhaserSetFullScreen && !this._createdFullScreenTarget))
+            {
+                return null;
+            }
+    
+            var parentNode = this.game.canvas && this.game.canvas.parentNode;
+    
+            return parentNode || null;
+        }
+    },
+
+    scaleMode: {
+
+        get: function ()
+        {
+            return this._scaleMode;
+        },
+    
+        set: function (value)
+        {
+            if (value !== this._scaleMode)
+            {
+                if (!this.isFullScreen)
+                {
+                    this.updateDimensions(this._gameSize.width, this._gameSize.height, true);
+                    this.queueUpdate(true);
+                }
+    
+                this._scaleMode = value;
+            }
+    
+            return this._scaleMode;
+        }
+    
+    },
+    
+    fullScreenScaleMode: {
+
+        get: function ()
+        {
+            return this._fullScreenScaleMode;
+        },
+    
+        set: function (value)
+        {
+            if (value !== this._fullScreenScaleMode)
+            {
+                // If in fullscreen then need a wee bit more work
+                if (this.isFullScreen)
+                {
+                    this.prepScreenMode(false);
+
+                    this._fullScreenScaleMode = value;
+
+                    this.prepScreenMode(true);
+    
+                    this.queueUpdate(true);
+                }
+                else
+                {
+                    this._fullScreenScaleMode = value;
+                }
+            }
+    
+            return this._fullScreenScaleMode;
+        }
+    
+    },
+
+    currentScaleMode: {
+
+        get: function ()
+        {
+            return (this.isFullScreen) ? this._fullScreenScaleMode : this._scaleMode;
+        }
+    
+    },
+
+    pageAlignHorizontally: {
+
+        get: function ()
+        {
+            return this._pageAlignHorizontally;
+        },
+    
+        set: function (value)
+        {
+    
+            if (value !== this._pageAlignHorizontally)
+            {
+                this._pageAlignHorizontally = value;
+
+                this.queueUpdate(true);
+            }
+    
+        }
+    
+    },
+
+    pageAlignVertically: {
+
+        get: function ()
+        {
+            return this._pageAlignVertically;
+        },
+    
+        set: function (value)
+        {
+            if (value !== this._pageAlignVertically)
+            {
+                this._pageAlignVertically = value;
+                this.queueUpdate(true);
+            }
+    
+        }
+    
+    },
+
+    isFullScreen: {
+
+        get: function ()
+        {
+            return !!(document.fullscreenElement ||
+                document.webkitFullscreenElement ||
+                document.mozFullScreenElement ||
+                document.msFullscreenElement);
+        }
+    
+    },
+
+    isPortrait: {
+
+        get: function ()
+        {
+            return (this.classifyOrientation(this.screenOrientation) === 'portrait');
+        }
+    
+    },
+
+    isLandscape: {
+
+        get: function ()
+        {
+            return (this.classifyOrientation(this.screenOrientation) === 'landscape');
+        }
+    
+    },
+
+    isGamePortrait: {
+
+        get: function ()
+        {
+            return (this.height > this.width);
+        }
+    
+    },
+
+    isGameLandscape: {
+
+        get: function ()
+        {
+            return (this.width > this.height);
+        }
+    
     }
 
 });
