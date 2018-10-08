@@ -5,6 +5,7 @@
  */
 
 var Class = require('../utils/Class');
+var Rectangle = require('../geom/rectangle/Rectangle');
 var Vec2 = require('../math/Vector2');
 
 /*
@@ -30,7 +31,7 @@ var Vec2 = require('../math/Vector2');
  * @class ScaleManager
  * @memberOf Phaser.Boot
  * @constructor
- * @since 3.12.0
+ * @since 3.15.0
  *
  * @param {Phaser.Game} game - A reference to the Phaser.Game instance.
  * @param {any} config
@@ -47,148 +48,221 @@ var ScaleManager = new Class({
          * @name Phaser.Boot.ScaleManager#game
          * @type {Phaser.Game}
          * @readOnly
-         * @since 3.12.0
+         * @since 3.15.0
          */
         this.game = game;
 
         this.config = config;
 
-        /**
-         * Target width (in pixels) of the Display canvas.
-         * @property {number} width
-         * @readonly
-         */
         this.width = 0;
 
-        /**
-         * Target height (in pixels) of the Display canvas.
-         * @property {number} height
-         * @readonly
-         */
         this.height = 0;
 
-        this.zoom = 0;
-
-        this.resolution = 1;
-
-        this.parent = null;
-
-        this.scaleMode = 0;
-
-        /**
-         * Minimum width the canvas should be scaled to (in pixels).
-         * Change with {@link #setMinMax}.
-         * @property {?number} minWidth
-         * @readonly
-         * @protected
-         */
         this.minWidth = null;
 
-        /**
-         * Minimum height the canvas should be scaled to (in pixels).
-         * Change with {@link #setMinMax}.
-         * @property {?number} minHeight
-         * @readonly
-         * @protected
-         */
-        this.minHeight = null;
-
-        /**
-         * Maximum width the canvas should be scaled to (in pixels).
-         * If null it will scale to whatever width the browser can handle.
-         * Change with {@link #setMinMax}.
-         * @property {?number} maxWidth
-         * @readonly
-         * @protected
-         */
         this.maxWidth = null;
 
-        /**
-         * Maximum height the canvas should be scaled to (in pixels).
-         * If null it will scale to whatever height the browser can handle.
-         * Change with {@link #setMinMax}.
-         * @property {?number} maxHeight
-         * @readonly
-         * @protected
-         */
+        this.minHeight = null;
+
         this.maxHeight = null;
 
-        /**
-         * The _current_ scale factor based on the game dimensions vs. the scaled dimensions.
-         * @property {Phaser.Point} scaleFactor
-         * @readonly
-         */
+        this.offset = new Vec2();
+
+        this.forceLandscape = false;
+
+        this.forcePortrait = false;
+
+        this.incorrectOrientation = false;
+
+        this._pageAlignHorizontally = false;
+
+        this._pageAlignVertically = false;
+
+        this.hasPhaserSetFullScreen = false;
+
+        this.fullScreenTarget = null;
+
+        this._createdFullScreenTarget = null;
+
+        this.screenOrientation = this.dom.getScreenOrientation();
+
         this.scaleFactor = new Vec2(1, 1);
 
-        /**
-         * The _current_ inversed scale factor. The displayed dimensions divided by the game dimensions.
-         * @property {Phaser.Point} scaleFactorInversed
-         * @readonly
-         * @protected
-         */
         this.scaleFactorInversed = new Vec2(1, 1);
 
-        /**
-         * The aspect ratio of the scaled Display canvas.
-         * @property {number} aspectRatio
-         * @readonly
-         */
+        this.margin = { left: 0, top: 0, right: 0, bottom: 0, x: 0, y: 0 };
+
+        this.bounds = new Rectangle();
+
         this.aspectRatio = 0;
 
-        /**
-         * The aspect ratio of the original game dimensions.
-         * @property {number} sourceAspectRatio
-         * @readonly
-         */
         this.sourceAspectRatio = 0;
 
-        /**
-         * True if the the browser window (instead of the display canvas's DOM parent) should be used as the bounding parent.
-         *
-         * This is set automatically based on the `parent` argument passed to {@link Phaser.Game}.
-         *
-         * The {@link #parentNode} property is generally ignored while this is in effect.
-         *
-         * @property {boolean} parentIsWindow
-         */
+        this.event = null;
+
+        this.windowConstraints = {
+            right: 'layout',
+            bottom: ''
+        };
+
+        this.compatibility = {
+            supportsFullScreen: false,
+            orientationFallback: null,
+            noMargins: false,
+            scrollTo: null,
+            forceMinimumDocumentHeight: false,
+            canExpandParent: true,
+            clickTrampoline: ''
+        };
+
+        this._scaleMode = Phaser.ScaleManager.NO_SCALE;
+
+        this._fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
+
         this.parentIsWindow = false;
 
-        /**
-         * The _original_ DOM element for the parent of the Display canvas.
-         * This may be different in fullscreen - see {@link #createFullScreenTarget}.
-         *
-         * This is set automatically based on the `parent` argument passed to {@link Phaser.Game}.
-         *
-         * This should only be changed after moving the Game canvas to a different DOM parent.
-         *
-         * @property {?DOMElement} parentNode
-         */
         this.parentNode = null;
 
-        /**
-         * The scale of the game in relation to its parent container.
-         * @property {Phaser.Point} parentScaleFactor
-         * @readonly
-         */
         this.parentScaleFactor = new Vec2(1, 1);
 
-        this._lastParentWidth = 0;
+        this.trackParentInterval = 2000;
 
-        this._lastParentHeight = 0;
+        this.onResize = null;
 
-        this._innerHeight = 0;
+        this.onResizeContext = null;
 
-        this.init();
+        this._pendingScaleMode = null;
+
+        this._fullScreenRestore = null;
+
+        this._gameSize = new Rectangle();
+
+        this._userScaleFactor = new Vec2(1, 1);
+
+        this._userScaleTrim = new Vec2(0, 0);
+
+        this._lastUpdate = 0;
+
+        this._updateThrottle = 0;
+
+        this._updateThrottleReset = 100;
+
+        this._parentBounds = new Rectangle();
+
+        this._tempBounds = new Rectangle();
+
+        this._lastReportedCanvasSize = new Rectangle();
+
+        this._lastReportedGameSize = new Rectangle();
+
+        this._booted = false;
     },
 
-    init: function ()
+    boot: function ()
     {
-        this._innerHeight = this.getInnerHeight();
-
+        // this._innerHeight = this.getInnerHeight();
         // var gameWidth = this.config.width;
         // var gameHeight = this.config.height;
+
+        // Configure device-dependent compatibility
+
+        var game = this.game;
+        var device = game.device;
+        var os = game.device.os;
+        var compat = this.compatibility;
+
+        compat.supportsFullScreen = device.fullscreen.available && !os.cocoonJS;
+
+        //  We can't do anything about the status bars in iPads, web apps or desktops
+        if (!os.iPad && !os.webApp && !os.desktop)
+        {
+            if (os.android && !device.browser.chrome)
+            {
+                compat.scrollTo = new Vec2(0, 1);
+            }
+            else
+            {
+                compat.scrollTo = new Vec2(0, 0);
+            }
+        }
+
+        if (os.desktop)
+        {
+            compat.orientationFallback = 'screen';
+            compat.clickTrampoline = 'when-not-mouse';
+        }
+        else
+        {
+            compat.orientationFallback = '';
+            compat.clickTrampoline = '';
+        }
+
+        // Configure event listeners
+
+        var _this = this;
+
+        this._orientationChange = function (event)
+        {
+            return _this.orientationChange(event);
+        };
+
+        this._windowResize = function (event)
+        {
+            return _this.windowResize(event);
+        };
+
+        // This does not appear to be on the standards track
+        window.addEventListener('orientationchange', this._orientationChange, false);
+        window.addEventListener('resize', this._windowResize, false);
+
+        if (this.compatibility.supportsFullScreen)
+        {
+            this._fullScreenChange = function (event)
+            {
+                return _this.fullScreenChange(event);
+            };
+
+            this._fullScreenError = function (event)
+            {
+                return _this.fullScreenError(event);
+            };
+
+            var vendors = [ 'webkit', 'moz', '' ];
+
+            vendors.forEach(function (prefix)
+            {
+                document.addEventListener(prefix + 'fullscreenchange', this._fullScreenChange, false);
+                document.addEventListener(prefix + 'fullscreenerror', this._fullScreenError, false);
+            });
+
+            //  MS Specific
+            document.addEventListener('MSFullscreenChange', this._fullScreenChange, false);
+            document.addEventListener('MSFullscreenError', this._fullScreenError, false);
+        }
+
+        this.game.events.on('resume', this._gameResumed, this);
+
+        // Initialize core bounds
+
+        // this.dom.getOffset(this.game.canvas, this.offset);
+
+        this.bounds.setTo(this.offset.x, this.offset.y, this.width, this.height);
+
+        this.setGameSize(this.game.width, this.game.height);
+
+        //  Don't use updateOrientationState so events are not fired
+        // this.screenOrientation = this.dom.getScreenOrientation(this.compatibility.orientationFallback);
+
+        this._booted = true;
+
+        if (this._pendingScaleMode !== null)
+        {
+            this.scaleMode = this._pendingScaleMode;
+            this._pendingScaleMode = null;
+        }
     },
 
+    /*
     centerDisplay: function ()
     {
         var height = this.height;
@@ -202,6 +276,7 @@ var ScaleManager = new Class({
         this.canvas.style.width = gameWidth + 'px';
         this.canvas.style.height = gameHeight + 'px';
     },
+    */
 
     /*
     iOS10 Resize hack. Thanks, Apple.
