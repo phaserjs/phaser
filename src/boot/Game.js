@@ -19,6 +19,7 @@ var EventEmitter = require('eventemitter3');
 var InputManager = require('../input/InputManager');
 var PluginCache = require('../plugins/PluginCache');
 var PluginManager = require('../plugins/PluginManager');
+var ScaleManager = require('../dom/ScaleManager');
 var SceneManager = require('../scene/SceneManager');
 var SoundManagerCreator = require('../sound/SoundManagerCreator');
 var TextureManager = require('../textures/TextureManager');
@@ -28,7 +29,6 @@ var VisibilityHandler = require('./VisibilityHandler');
 if (typeof EXPERIMENTAL)
 {
     var CreateDOMContainer = require('./CreateDOMContainer');
-    var ScaleManager = require('./ScaleManager');
 }
 
 if (typeof PLUGIN_FBINSTANT)
