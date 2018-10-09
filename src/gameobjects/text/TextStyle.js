@@ -396,7 +396,7 @@ var TextStyle = new Class({
         {
             this.setFont(font, false);
         }
-		this._font = [ this.fontStyle, this.fontSize, this.fontFamily ].join(' ').trim();
+        this._font = [ this.fontStyle, this.fontSize, this.fontFamily ].join(' ').trim();
 
         //  Allow for 'fill' to be used in place of 'color'
         var fill = GetValue(style, 'fill', null);
