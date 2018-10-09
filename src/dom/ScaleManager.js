@@ -4,12 +4,16 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CONST = require('./const');
-var Class = require('../utils/Class');
 var Clamp = require('../math/Clamp');
+var Class = require('../utils/Class');
+var CONST = require('./const');
+var GetOffset = require('./GetOffset');
+var GetScreenOrientation = require('./GetScreenOrientation');
+var LayoutBounds = require('./LayoutBounds');
 var Rectangle = require('../geom/rectangle/Rectangle');
 var SameDimensions = require('../geom/rectangle/SameDimensions');
 var Vec2 = require('../math/Vector2');
+var VisualBounds = require('./VisualBounds');
 
 /**
  * @classdesc
@@ -71,8 +75,7 @@ var ScaleManager = new Class({
 
         this._createdFullScreenTarget = null;
 
-        this.screenOrientation = 'portrait-primary';
-        // this.screenOrientation = this.dom.getScreenOrientation();
+        this.screenOrientation;
 
         this.scaleFactor = new Vec2(1, 1);
 
@@ -119,7 +122,7 @@ var ScaleManager = new Class({
 
         this.onResizeContext = null;
 
-        this._pendingScaleMode = null;
+        this._pendingScaleMode = game.config.scaleMode;
 
         this._fullScreenRestore = null;
 
@@ -150,10 +153,6 @@ var ScaleManager = new Class({
 
     boot: function ()
     {
-        // this._innerHeight = this.getInnerHeight();
-        // var gameWidth = this.config.width;
-        // var gameHeight = this.config.height;
-
         // Configure device-dependent compatibility
 
         var game = this.game;
@@ -187,7 +186,7 @@ var ScaleManager = new Class({
             compat.clickTrampoline = '';
         }
 
-        // Configure event listeners
+        //  Configure event listeners
 
         var _this = this;
 
@@ -201,11 +200,10 @@ var ScaleManager = new Class({
             return _this.windowResize(event);
         };
 
-        // This does not appear to be on the standards track
         window.addEventListener('orientationchange', this._orientationChange, false);
         window.addEventListener('resize', this._windowResize, false);
 
-        if (this.compatibility.supportsFullScreen)
+        if (compat.supportsFullScreen)
         {
             this._fullScreenChange = function (event)
             {
@@ -230,28 +228,39 @@ var ScaleManager = new Class({
             document.addEventListener('MSFullscreenError', this._fullScreenError, false);
         }
 
-        this.game.events.on('resume', this.gameResumed, this);
+        game.events.on('resume', this.gameResumed, this);
 
         // Initialize core bounds
 
-        // this.dom.getOffset(this.game.canvas, this.offset);
+        //  Set-up the Bounds
+        var isDesktop = os.desktop && (document.documentElement.clientWidth <= window.innerWidth) && (document.documentElement.clientHeight <= window.innerHeight);
+
+        VisualBounds.init(isDesktop);
+        LayoutBounds.init(isDesktop);
+
+        GetOffset(game.canvas, this.offset);
 
         this.bounds.setTo(this.offset.x, this.offset.y, this.width, this.height);
 
-        this.setGameSize(this.game.width, this.game.height);
+        console.log(this.offset.x, this.offset.y, this.width, this.height);
+
+        this.setGameSize(game.config.width, game.config.height);
 
         //  Don't use updateOrientationState so events are not fired
-        // this.screenOrientation = this.dom.getScreenOrientation(this.compatibility.orientationFallback);
+        this.screenOrientation = GetScreenOrientation(compat.orientationFallback);
 
         this._booted = true;
 
         if (this._pendingScaleMode !== null)
         {
             this.scaleMode = this._pendingScaleMode;
+
             this._pendingScaleMode = null;
         }
 
         game.events.on('prestep', this.step, this);
+
+        this.setupScale(game.config.width, game.config.height);
     },
 
     setupScale: function (width, height)
@@ -270,20 +279,20 @@ var ScaleManager = new Class({
             }
             else if (parent && parent.nodeType === 1)
             {
-                //  Quick test for a HTMLelement
+                //  Quick test for a HTMLElement
                 target = parent;
             }
         }
 
-        //  Fallback, covers an invalid ID and a non HTMLelement object
+        //  Fallback, covers an invalid ID and a non HTMLElement object
         if (!target)
         {
             //  Use the full window
             this.parentNode = null;
             this.parentIsWindow = true;
 
-            rect.width = this.dom.visualBounds.width;
-            rect.height = this.dom.visualBounds.height;
+            rect.width = VisualBounds.width;
+            rect.height = VisualBounds.height;
 
             this.offset.set(0, 0);
         }
@@ -333,6 +342,8 @@ var ScaleManager = new Class({
         this._gameSize.setTo(0, 0, newWidth, newHeight);
 
         this.updateDimensions(newWidth, newHeight, false);
+
+        console.log('setupscale', this._parentBounds);
     },
 
     gameResumed: function ()
@@ -418,9 +429,10 @@ var ScaleManager = new Class({
         }
 
         var prevThrottle = this._updateThrottle;
+
         this._updateThrottleReset = (prevThrottle >= 400) ? 0 : 100;
 
-        // this.dom.getOffset(this.game.canvas, this.offset);
+        GetOffset(this.game.canvas, this.offset);
 
         var prevWidth = this._parentBounds.width;
         var prevHeight = this._parentBounds.height;
@@ -478,28 +490,29 @@ var ScaleManager = new Class({
 
     updateScalingAndBounds: function ()
     {
+        var game = this.game;
         var config = this.config;
 
-        this.scaleFactor.x = this.config.width / this.width;
-        this.scaleFactor.y = this.config.height / this.height;
+        this.scaleFactor.x = config.width / this.width;
+        this.scaleFactor.y = config.height / this.height;
 
-        this.scaleFactorInversed.x = this.width / this.config.width;
-        this.scaleFactorInversed.y = this.height / this.config.height;
+        this.scaleFactorInversed.x = this.width / config.width;
+        this.scaleFactorInversed.y = this.height / config.height;
 
         this.aspectRatio = this.width / this.height;
 
         //  This can be invoked in boot pre-canvas
-        if (this.game.canvas)
+        if (game.canvas)
         {
-            // this.dom.getOffset(this.game.canvas, this.offset);
+            GetOffset(game.canvas, this.offset);
         }
 
         this.bounds.setTo(this.offset.x, this.offset.y, this.width, this.height);
 
         //  Can be invoked in boot pre-input
-        if (this.game.input && this.game.input.scale)
+        if (game.input && game.input.scale)
         {
-            // this.game.input.scale.setTo(this.scaleFactor.x, this.scaleFactor.y);
+            // game.input.scale.setTo(this.scaleFactor.x, this.scaleFactor.y);
         }
     },
 
@@ -541,7 +554,7 @@ var ScaleManager = new Class({
         var previousOrientation = this.screenOrientation;
         var previouslyIncorrect = this.incorrectOrientation;
 
-        // this.screenOrientation = this.dom.getScreenOrientation(this.compatibility.orientationFallback);
+        this.screenOrientation = GetScreenOrientation(this.compatibility.orientationFallback);
 
         this.incorrectOrientation = (this.forceLandscape && !this.isLandscape) || (this.forcePortrait && !this.isPortrait);
 
@@ -672,8 +685,8 @@ var ScaleManager = new Class({
         if (bounds === undefined) { bounds = new Rectangle(); }
         if (parentNode === undefined) { parentNode = this.boundingParent; }
 
-        var visualBounds = this.dom.visualBounds;
-        var layoutBounds = this.dom.layoutBounds;
+        var visualBounds = VisualBounds;
+        var layoutBounds = LayoutBounds;
 
         if (!parentNode)
         {
@@ -858,8 +871,8 @@ var ScaleManager = new Class({
 
     setMaximum: function ()
     {
-        this.width = this.dom.visualBounds.width;
-        this.height = this.dom.visualBounds.height;
+        this.width = VisualBounds.width;
+        this.height = VisualBounds.height;
     },
 
     setShowAll: function (expanding)
