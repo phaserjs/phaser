@@ -519,7 +519,7 @@ var TextStyle = new Class({
     setFont: function (font, updateText)
     {
         if (updateText === undefined) { updateText = true; }
-        
+
         var fontFamily = font;
         var fontSize = '';
         var fontStyle = '';
@@ -544,7 +544,7 @@ var TextStyle = new Class({
             this.fontFamily = fontFamily;
             this.fontSize = fontSize;
             this.fontStyle = fontStyle;
-            
+
             if (updateText)
             {
                 this.update(true);
