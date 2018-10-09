@@ -392,16 +392,11 @@ var TextStyle = new Class({
         //  Allow for 'font' override
         var font = GetValue(style, 'font', null);
 
-        if (font === null)
+        if (font !== null)
         {
-            this._font = [ this.fontStyle, this.fontSize, this.fontFamily ].join(' ').trim();
-        }
-        else
-        {
-            this._font = font;
-            
             this.setFont(font, false);
         }
+		this._font = [ this.fontStyle, this.fontSize, this.fontFamily ].join(' ').trim();
 
         //  Allow for 'fill' to be used in place of 'color'
         var fill = GetValue(style, 'fill', null);
@@ -539,12 +534,9 @@ var TextStyle = new Class({
         {
             var fontSplit = font.split(' ');
             var i = 0;
-            if (fontSplit.length > 2)
-            {
-                this.fontStyle = fontSplit[i++];
-            }
-            this.fontSize = fontSplit[i++] || this.fontSize;
-            this.fontFamily = fontSplit[i++] || this.fontFamily;
+            this.fontStyle = fontSplit.length > 2 ? fontSplit[i++] : '';
+            this.fontSize = fontSplit[i++] || '16px';
+            this.fontFamily = fontSplit[i++] || 'Courier';
         }
 
         if (fontFamily !== this.fontFamily || fontSize !== this.fontSize || fontStyle !== this.fontStyle)
