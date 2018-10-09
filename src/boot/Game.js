@@ -66,7 +66,7 @@ var Game = new Class({
          *
          * @name Phaser.Game#config
          * @type {Phaser.Boot.Config}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.config = new Config(config);
@@ -126,7 +126,7 @@ var Game = new Class({
          *
          * @name Phaser.Game#isBooted
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.isBooted = false;
@@ -136,7 +136,7 @@ var Game = new Class({
          *
          * @name Phaser.Game#isRunning
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.isRunning = false;
@@ -324,7 +324,7 @@ var Game = new Class({
          *
          * @name Phaser.Game#hasFocus
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @since 3.9.0
          */
         this.hasFocus = false;
@@ -335,7 +335,7 @@ var Game = new Class({
          *
          * @name Phaser.Game#isOver
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @since 3.10.0
          */
         this.isOver = true;

@@ -262,7 +262,7 @@ var World = new Class({
          * This property is read-only. Use the `setFPS` method to modify it at run-time.
          *
          * @name Phaser.Physics.Arcade.World#fps
-         * @readOnly
+         * @readonly
          * @type {number}
          * @default 60
          * @since 3.10.0
@@ -303,7 +303,7 @@ var World = new Class({
          * The number of steps that took place in the last frame.
          *
          * @name Phaser.Physics.Arcade.World#stepsLastFrame
-         * @readOnly
+         * @readonly
          * @type {number}
          * @since 3.10.0
          */

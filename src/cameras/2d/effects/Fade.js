@@ -37,7 +37,7 @@ var Fade = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Fade#camera
          * @type {Phaser.Cameras.Scene2D.Camera}
-         * @readOnly
+         * @readonly
          * @since 3.5.0
          */
         this.camera = camera;
@@ -47,7 +47,7 @@ var Fade = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Fade#isRunning
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @default false
          * @since 3.5.0
          */
@@ -61,7 +61,7 @@ var Fade = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Fade#isComplete
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @default false
          * @since 3.5.0
          */
@@ -73,7 +73,7 @@ var Fade = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Fade#direction
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @since 3.5.0
          */
         this.direction = true;
@@ -83,7 +83,7 @@ var Fade = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Fade#duration
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @default 0
          * @since 3.5.0
          */

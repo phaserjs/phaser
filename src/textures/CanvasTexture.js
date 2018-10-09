@@ -67,7 +67,7 @@ var CanvasTexture = new Class({
          * The source Canvas Element.
          *
          * @name Phaser.Textures.CanvasTexture#canvas
-         * @readOnly
+         * @readonly
          * @type {HTMLCanvasElement}
          * @since 3.7.0
          */
@@ -77,7 +77,7 @@ var CanvasTexture = new Class({
          * The 2D Canvas Rendering Context.
          *
          * @name Phaser.Textures.CanvasTexture#context
-         * @readOnly
+         * @readonly
          * @type {CanvasRenderingContext2D}
          * @since 3.7.0
          */
@@ -88,7 +88,7 @@ var CanvasTexture = new Class({
          * This property is read-only, if you wish to change it use the `setSize` method.
          *
          * @name Phaser.Textures.CanvasTexture#width
-         * @readOnly
+         * @readonly
          * @type {integer}
          * @since 3.7.0
          */
@@ -99,7 +99,7 @@ var CanvasTexture = new Class({
          * This property is read-only, if you wish to change it use the `setSize` method.
          *
          * @name Phaser.Textures.CanvasTexture#height
-         * @readOnly
+         * @readonly
          * @type {integer}
          * @since 3.7.0
          */

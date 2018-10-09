@@ -266,7 +266,7 @@ var KeyCombo = new Class({
      *
      * @name Phaser.Input.Keyboard.KeyCombo#progress
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     progress: {

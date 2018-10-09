@@ -720,7 +720,7 @@ var Tile = new Class({
      *
      * @name Phaser.Tilemaps.Tile#canCollide
      * @type {boolean}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     canCollide: {
@@ -735,7 +735,7 @@ var Tile = new Class({
      *
      * @name Phaser.Tilemaps.Tile#collides
      * @type {boolean}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     collides: {
@@ -750,7 +750,7 @@ var Tile = new Class({
      *
      * @name Phaser.Tilemaps.Tile#hasInterestingFace
      * @type {boolean}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     hasInterestingFace: {
@@ -766,7 +766,7 @@ var Tile = new Class({
      *
      * @name Phaser.Tilemaps.Tile#tileset
      * @type {?Phaser.Tilemaps.Tileset}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     tileset: {
@@ -784,7 +784,7 @@ var Tile = new Class({
      *
      * @name Phaser.Tilemaps.Tile#tilemapLayer
      * @type {?Phaser.Tilemaps.StaticTilemapLayer|Phaser.Tilemaps.DynamicTilemapLayer}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     tilemapLayer: {
@@ -800,7 +800,7 @@ var Tile = new Class({
      *
      * @name Phaser.Tilemaps.Tile#tilemap
      * @type {?Phaser.Tilemaps.Tilemap}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     tilemap: {

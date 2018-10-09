@@ -725,7 +725,7 @@ var Frame = new Class({
      *
      * @name Phaser.Textures.Frame#realWidth
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     realWidth: {
@@ -743,7 +743,7 @@ var Frame = new Class({
      *
      * @name Phaser.Textures.Frame#realHeight
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     realHeight: {
@@ -760,7 +760,7 @@ var Frame = new Class({
      *
      * @name Phaser.Textures.Frame#radius
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     radius: {
@@ -777,7 +777,7 @@ var Frame = new Class({
      *
      * @name Phaser.Textures.Frame#trimmed
      * @type {boolean}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     trimmed: {
@@ -794,7 +794,7 @@ var Frame = new Class({
      *
      * @name Phaser.Textures.Frame#canvasData
      * @type {object}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     canvasData: {

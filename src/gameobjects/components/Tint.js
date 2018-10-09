@@ -316,7 +316,7 @@ var Tint = {
      * @name Phaser.GameObjects.Components.Tint#isTinted
      * @type {boolean}
      * @webglOnly
-     * @readOnly
+     * @readonly
      * @since 3.11.0
      */
     isTinted: {

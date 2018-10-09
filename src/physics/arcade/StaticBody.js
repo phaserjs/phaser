@@ -172,7 +172,7 @@ var StaticBody = new Class({
          *
          * @name Phaser.Physics.Arcade.StaticBody#velocity
          * @type {Phaser.Math.Vector2}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.velocity = Vector2.ZERO;
@@ -182,7 +182,7 @@ var StaticBody = new Class({
          *
          * @name Phaser.Physics.Arcade.StaticBody#allowGravity
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @default false
          * @since 3.0.0
          */
@@ -193,7 +193,7 @@ var StaticBody = new Class({
          *
          * @name Phaser.Physics.Arcade.StaticBody#gravity
          * @type {Phaser.Math.Vector2}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.gravity = Vector2.ZERO;
@@ -203,7 +203,7 @@ var StaticBody = new Class({
          *
          * @name Phaser.Physics.Arcade.StaticBody#bounce
          * @type {Phaser.Math.Vector2}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.bounce = Vector2.ZERO;
@@ -878,7 +878,7 @@ var StaticBody = new Class({
      *
      * @name Phaser.Physics.Arcade.StaticBody#left
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     left: {
@@ -895,7 +895,7 @@ var StaticBody = new Class({
      *
      * @name Phaser.Physics.Arcade.StaticBody#right
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     right: {
@@ -912,7 +912,7 @@ var StaticBody = new Class({
      *
      * @name Phaser.Physics.Arcade.StaticBody#top
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     top: {
@@ -929,7 +929,7 @@ var StaticBody = new Class({
      *
      * @name Phaser.Physics.Arcade.StaticBody#bottom
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     bottom: {

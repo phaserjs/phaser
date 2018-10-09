@@ -522,7 +522,7 @@ var Color = new Class({
      *
      * @name Phaser.Display.Color#color
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     color: {
@@ -539,7 +539,7 @@ var Color = new Class({
      *
      * @name Phaser.Display.Color#color32
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     color32: {
@@ -556,7 +556,7 @@ var Color = new Class({
      *
      * @name Phaser.Display.Color#rgba
      * @type {string}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     rgba: {

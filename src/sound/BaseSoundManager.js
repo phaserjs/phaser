@@ -59,7 +59,7 @@ var BaseSoundManager = new Class({
          *
          * @name Phaser.Sound.BaseSoundManager#game
          * @type {Phaser.Game}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.game = game;
@@ -69,7 +69,7 @@ var BaseSoundManager = new Class({
          *
          * @name Phaser.Sound.BaseSoundManager#jsonCache
          * @type {Phaser.Cache.BaseCache}
-         * @readOnly
+         * @readonly
          * @since 3.7.0
          */
         this.jsonCache = game.cache.json;
@@ -145,7 +145,7 @@ var BaseSoundManager = new Class({
          *
          * @name Phaser.Sound.BaseSoundManager#locked
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.locked = this.locked || false;

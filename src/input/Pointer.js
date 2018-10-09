@@ -52,7 +52,7 @@ var Pointer = new Class({
          *
          * @name Phaser.Input.Pointer#id
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.id = id;

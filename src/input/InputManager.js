@@ -48,7 +48,7 @@ var InputManager = new Class({
          *
          * @name Phaser.Input.InputManager#game
          * @type {Phaser.Game}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.game = game;
@@ -214,7 +214,7 @@ var InputManager = new Class({
          *
          * @name Phaser.Input.InputManager#pointersTotal
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.10.0
          */
         this.pointersTotal = config.inputActivePointers;

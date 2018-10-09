@@ -11,28 +11,12 @@ var Rectangle = require('../geom/rectangle/Rectangle');
 var SameDimensions = require('../geom/rectangle/SameDimensions');
 var Vec2 = require('../math/Vector2');
 
-/*
-    Use `scaleMode` SHOW_ALL.
-    Use `scaleMode` EXACT_FIT.
-    Use `scaleMode` USER_SCALE. Examine `parentBounds` in the {@link #setResizeCallback resize callback} and call {@link #setUserScale} if necessary.
-    Use `scaleMode` RESIZE. Examine the game or canvas size from the {@link #onSizeChange} signal **or** the {@link Phaser.State#resize} callback and reposition game objects if necessary.
-
-    Canvas width / height in the element
-    Canvas CSS width / height in the style
-
-    Detect orientation
-    Lock orientation (Android only?)
-    Full-screen support
-
-    Scale Mode - 
-*/
-
 /**
  * @classdesc
  * [description]
  *
  * @class ScaleManager
- * @memberOf Phaser.Boot
+ * @memberOf Phaser.DOM
  * @constructor
  * @since 3.15.0
  *
@@ -48,9 +32,9 @@ var ScaleManager = new Class({
         /**
          * A reference to the Phaser.Game instance.
          *
-         * @name Phaser.Boot.ScaleManager#game
+         * @name Phaser.DOM.ScaleManager#game
          * @type {Phaser.Game}
-         * @readOnly
+         * @readonly
          * @since 3.15.0
          */
         this.game = game;
@@ -1215,7 +1199,7 @@ var ScaleManager = new Class({
     /**
      * Destroys the ScaleManager.
      *
-     * @method Phaser.Boot.ScaleManager#destroy
+     * @method Phaser.DOM.ScaleManager#destroy
      * @since 3.15.0
      */
     destroy: function ()

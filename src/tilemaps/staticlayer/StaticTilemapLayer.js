@@ -80,7 +80,7 @@ var StaticTilemapLayer = new Class({
          *
          * @name Phaser.Tilemaps.StaticTilemapLayer#isTilemap
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.isTilemap = true;
@@ -161,7 +161,7 @@ var StaticTilemapLayer = new Class({
          *
          * @name Phaser.Tilemaps.StaticTilemapLayer#tilesDrawn
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.12.0
          */
         this.tilesDrawn = 0;
@@ -173,7 +173,7 @@ var StaticTilemapLayer = new Class({
          *
          * @name Phaser.Tilemaps.StaticTilemapLayer#tilesTotal
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.12.0
          */
         this.tilesTotal = this.layer.width * this.layer.height;

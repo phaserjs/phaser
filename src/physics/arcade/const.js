@@ -16,7 +16,7 @@ var CONST = {
      * Dynamic Body.
      *
      * @name Phaser.Physics.Arcade.DYNAMIC_BODY
-     * @readOnly
+     * @readonly
      * @type {number}
      * @since 3.0.0
      *
@@ -29,7 +29,7 @@ var CONST = {
      * Static Body.
      *
      * @name Phaser.Physics.Arcade.STATIC_BODY
-     * @readOnly
+     * @readonly
      * @type {number}
      * @since 3.0.0
      *
@@ -42,7 +42,7 @@ var CONST = {
      * [description]
      *
      * @name Phaser.Physics.Arcade.GROUP
-     * @readOnly
+     * @readonly
      * @type {number}
      * @since 3.0.0
      */
@@ -52,7 +52,7 @@ var CONST = {
      * [description]
      *
      * @name Phaser.Physics.Arcade.TILEMAPLAYER
-     * @readOnly
+     * @readonly
      * @type {number}
      * @since 3.0.0
      */
@@ -62,7 +62,7 @@ var CONST = {
      * Facing no direction (initial value).
      *
      * @name Phaser.Physics.Arcade.FACING_NONE
-     * @readOnly
+     * @readonly
      * @type {number}
      * @since 3.0.0
      *
@@ -74,7 +74,7 @@ var CONST = {
      * Facing up.
      *
      * @name Phaser.Physics.Arcade.FACING_UP
-     * @readOnly
+     * @readonly
      * @type {number}
      * @since 3.0.0
      *
@@ -86,7 +86,7 @@ var CONST = {
      * Facing down.
      *
      * @name Phaser.Physics.Arcade.FACING_DOWN
-     * @readOnly
+     * @readonly
      * @type {number}
      * @since 3.0.0
      *
@@ -98,7 +98,7 @@ var CONST = {
      * Facing left.
      *
      * @name Phaser.Physics.Arcade.FACING_LEFT
-     * @readOnly
+     * @readonly
      * @type {number}
      * @since 3.0.0
      *
@@ -110,7 +110,7 @@ var CONST = {
      * Facing right.
      *
      * @name Phaser.Physics.Arcade.FACING_RIGHT
-     * @readOnly
+     * @readonly
      * @type {number}
      * @since 3.0.0
      *

@@ -63,7 +63,7 @@ var Tileset = new Class({
          *
          * @name Phaser.Tilemaps.Tileset#tileWidth
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.tileWidth = tileWidth;
@@ -73,7 +73,7 @@ var Tileset = new Class({
          *
          * @name Phaser.Tilemaps.Tileset#tileHeight
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.tileHeight = tileHeight;
@@ -83,7 +83,7 @@ var Tileset = new Class({
          *
          * @name Phaser.Tilemaps.Tileset#tileMargin
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.tileMargin = tileMargin;
@@ -93,7 +93,7 @@ var Tileset = new Class({
          *
          * @name Phaser.Tilemaps.Tileset#tileSpacing
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.tileSpacing = tileSpacing;
@@ -123,7 +123,7 @@ var Tileset = new Class({
          *
          * @name Phaser.Tilemaps.Tileset#image
          * @type {?Phaser.Textures.Texture}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.image = null;
@@ -133,7 +133,7 @@ var Tileset = new Class({
          *
          * @name Phaser.Tilemaps.Tileset#glTexture
          * @type {?WebGLTexture}
-         * @readOnly
+         * @readonly
          * @since 3.11.0
          */
         this.glTexture = null;
@@ -143,7 +143,7 @@ var Tileset = new Class({
          *
          * @name Phaser.Tilemaps.Tileset#rows
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.rows = 0;
@@ -153,7 +153,7 @@ var Tileset = new Class({
          *
          * @name Phaser.Tilemaps.Tileset#columns
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.columns = 0;
@@ -163,7 +163,7 @@ var Tileset = new Class({
          *
          * @name Phaser.Tilemaps.Tileset#total
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.total = 0;
@@ -174,7 +174,7 @@ var Tileset = new Class({
          *
          * @name Phaser.Tilemaps.Tileset#texCoordinates
          * @type {object[]}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
         */
         this.texCoordinates = [];

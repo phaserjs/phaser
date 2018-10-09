@@ -210,7 +210,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#originX
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     originX: {
@@ -228,7 +228,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#originY
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     originY: {
@@ -246,7 +246,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#displayOriginX
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     displayOriginX: {
@@ -264,7 +264,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#displayOriginY
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     displayOriginY: {
@@ -1084,7 +1084,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#length
      * @type {integer}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     length: {
@@ -1103,7 +1103,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#first
      * @type {?Phaser.GameObjects.GameObject}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     first: {
@@ -1131,7 +1131,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#last
      * @type {?Phaser.GameObjects.GameObject}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     last: {
@@ -1159,7 +1159,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#next
      * @type {?Phaser.GameObjects.GameObject}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     next: {
@@ -1187,7 +1187,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#previous
      * @type {?Phaser.GameObjects.GameObject}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     previous: {

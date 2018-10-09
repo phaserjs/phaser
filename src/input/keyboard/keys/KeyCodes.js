@@ -10,7 +10,7 @@
  * @name Phaser.Input.Keyboard.KeyCodes
  * @enum {integer}
  * @memberOf Phaser.Input.Keyboard
- * @readOnly
+ * @readonly
  * @since 3.0.0
  */
 

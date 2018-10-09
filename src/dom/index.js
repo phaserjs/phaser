@@ -14,6 +14,7 @@ module.exports = {
     DOMContentLoaded: require('./DOMContentLoaded'),
     ParseXML: require('./ParseXML'),
     RemoveFromDOM: require('./RemoveFromDOM'),
-    RequestAnimationFrame: require('./RequestAnimationFrame')
+    RequestAnimationFrame: require('./RequestAnimationFrame'),
+    ScaleManager: require('./ScaleManager')
 
 };

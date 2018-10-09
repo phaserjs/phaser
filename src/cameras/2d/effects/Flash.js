@@ -37,7 +37,7 @@ var Flash = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Flash#camera
          * @type {Phaser.Cameras.Scene2D.Camera}
-         * @readOnly
+         * @readonly
          * @since 3.5.0
          */
         this.camera = camera;
@@ -47,7 +47,7 @@ var Flash = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Flash#isRunning
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @default false
          * @since 3.5.0
          */
@@ -58,7 +58,7 @@ var Flash = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Flash#duration
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @default 0
          * @since 3.5.0
          */

@@ -78,7 +78,7 @@ var DynamicTilemapLayer = new Class({
          *
          * @name Phaser.Tilemaps.DynamicTilemapLayer#isTilemap
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.isTilemap = true;
@@ -153,7 +153,7 @@ var DynamicTilemapLayer = new Class({
          *
          * @name Phaser.Tilemaps.DynamicTilemapLayer#tilesDrawn
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.11.0
          */
         this.tilesDrawn = 0;
@@ -163,7 +163,7 @@ var DynamicTilemapLayer = new Class({
          *
          * @name Phaser.Tilemaps.DynamicTilemapLayer#tilesTotal
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.11.0
          */
         this.tilesTotal = this.layer.width * this.layer.height;

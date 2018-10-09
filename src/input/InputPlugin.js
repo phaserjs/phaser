@@ -2242,7 +2242,7 @@ var InputPlugin = new Class({
      *
      * @name Phaser.Input.InputPlugin#x
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     x: {
@@ -2260,7 +2260,7 @@ var InputPlugin = new Class({
      *
      * @name Phaser.Input.InputPlugin#y
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     y: {
@@ -2279,7 +2279,7 @@ var InputPlugin = new Class({
      *
      * @name Phaser.Input.InputPlugin#mousePointer
      * @type {Phaser.Input.Pointer}
-     * @readOnly
+     * @readonly
      * @since 3.10.0
      */
     mousePointer: {
@@ -2296,7 +2296,7 @@ var InputPlugin = new Class({
      *
      * @name Phaser.Input.InputPlugin#activePointer
      * @type {Phaser.Input.Pointer}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     activePointer: {
@@ -2314,7 +2314,7 @@ var InputPlugin = new Class({
      *
      * @name Phaser.Input.InputPlugin#pointer1
      * @type {Phaser.Input.Pointer}
-     * @readOnly
+     * @readonly
      * @since 3.10.0
      */
     pointer1: {
@@ -2332,7 +2332,7 @@ var InputPlugin = new Class({
      *
      * @name Phaser.Input.InputPlugin#pointer2
      * @type {Phaser.Input.Pointer}
-     * @readOnly
+     * @readonly
      * @since 3.10.0
      */
     pointer2: {
@@ -2350,7 +2350,7 @@ var InputPlugin = new Class({
      *
      * @name Phaser.Input.InputPlugin#pointer3
      * @type {Phaser.Input.Pointer}
-     * @readOnly
+     * @readonly
      * @since 3.10.0
      */
     pointer3: {
@@ -2368,7 +2368,7 @@ var InputPlugin = new Class({
      *
      * @name Phaser.Input.InputPlugin#pointer4
      * @type {Phaser.Input.Pointer}
-     * @readOnly
+     * @readonly
      * @since 3.10.0
      */
     pointer4: {
@@ -2386,7 +2386,7 @@ var InputPlugin = new Class({
      *
      * @name Phaser.Input.InputPlugin#pointer5
      * @type {Phaser.Input.Pointer}
-     * @readOnly
+     * @readonly
      * @since 3.10.0
      */
     pointer5: {
@@ -2404,7 +2404,7 @@ var InputPlugin = new Class({
      *
      * @name Phaser.Input.InputPlugin#pointer6
      * @type {Phaser.Input.Pointer}
-     * @readOnly
+     * @readonly
      * @since 3.10.0
      */
     pointer6: {
@@ -2422,7 +2422,7 @@ var InputPlugin = new Class({
      *
      * @name Phaser.Input.InputPlugin#pointer7
      * @type {Phaser.Input.Pointer}
-     * @readOnly
+     * @readonly
      * @since 3.10.0
      */
     pointer7: {
@@ -2440,7 +2440,7 @@ var InputPlugin = new Class({
      *
      * @name Phaser.Input.InputPlugin#pointer8
      * @type {Phaser.Input.Pointer}
-     * @readOnly
+     * @readonly
      * @since 3.10.0
      */
     pointer8: {
@@ -2458,7 +2458,7 @@ var InputPlugin = new Class({
      *
      * @name Phaser.Input.InputPlugin#pointer9
      * @type {Phaser.Input.Pointer}
-     * @readOnly
+     * @readonly
      * @since 3.10.0
      */
     pointer9: {
@@ -2476,7 +2476,7 @@ var InputPlugin = new Class({
      *
      * @name Phaser.Input.InputPlugin#pointer10
      * @type {Phaser.Input.Pointer}
-     * @readOnly
+     * @readonly
      * @since 3.10.0
      */
     pointer10: {

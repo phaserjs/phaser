@@ -299,7 +299,7 @@ var Body = new Class({
          *
          * @name Phaser.Physics.Arcade.Body#newVelocity
          * @type {Phaser.Math.Vector2}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.newVelocity = new Vector2();
@@ -717,7 +717,7 @@ var Body = new Class({
          *
          * @name Phaser.Physics.Arcade.Body#physicsType
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.physicsType = CONST.DYNAMIC_BODY;
@@ -2002,7 +2002,7 @@ var Body = new Class({
      *
      * @name Phaser.Physics.Arcade.Body#left
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     left: {
@@ -2019,7 +2019,7 @@ var Body = new Class({
      *
      * @name Phaser.Physics.Arcade.Body#right
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     right: {
@@ -2036,7 +2036,7 @@ var Body = new Class({
      *
      * @name Phaser.Physics.Arcade.Body#top
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     top: {
@@ -2053,7 +2053,7 @@ var Body = new Class({
      *
      * @name Phaser.Physics.Arcade.Body#bottom
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     bottom: {

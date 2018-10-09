@@ -308,7 +308,7 @@ var UpdateList = new Class({
      *
      * @name Phaser.GameObjects.UpdateList#length
      * @type {integer}
-     * @readOnly
+     * @readonly
      * @since 3.10.0
      */
     length: {

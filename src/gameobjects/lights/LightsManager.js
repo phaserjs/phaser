@@ -90,7 +90,7 @@ var LightsManager = new Class({
          *
          * @name Phaser.GameObjects.LightsManager#maxLights
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.15.0
          */
         this.maxLights = -1;

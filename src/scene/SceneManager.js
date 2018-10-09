@@ -106,7 +106,7 @@ var SceneManager = new Class({
          * @name Phaser.Scenes.SceneManager#isProcessing
          * @type {boolean}
          * @default false
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.isProcessing = false;
@@ -117,7 +117,7 @@ var SceneManager = new Class({
          * @name Phaser.Scenes.SceneManager#isBooted
          * @type {boolean}
          * @default false
-         * @readOnly
+         * @readonly
          * @since 3.4.0
          */
         this.isBooted = false;

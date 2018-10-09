@@ -242,7 +242,7 @@ var TransformMatrix = new Class({
      *
      * @name Phaser.GameObjects.Components.TransformMatrix#rotation
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     rotation: {
@@ -259,7 +259,7 @@ var TransformMatrix = new Class({
      *
      * @name Phaser.GameObjects.Components.TransformMatrix#scaleX
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     scaleX: {
@@ -276,7 +276,7 @@ var TransformMatrix = new Class({
      *
      * @name Phaser.GameObjects.Components.TransformMatrix#scaleY
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     scaleY: {

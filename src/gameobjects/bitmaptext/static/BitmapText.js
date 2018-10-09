@@ -137,7 +137,7 @@ var BitmapText = new Class({
          *
          * @name Phaser.GameObjects.BitmapText#font
          * @type {string}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.font = font;
@@ -149,7 +149,7 @@ var BitmapText = new Class({
          *
          * @name Phaser.GameObjects.BitmapText#fontData
          * @type {BitmapFontData}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.fontData = entry.data;
@@ -550,7 +550,7 @@ var BitmapText = new Class({
      *
      * @name Phaser.GameObjects.BitmapText#width
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     width: {
@@ -569,7 +569,7 @@ var BitmapText = new Class({
      *
      * @name Phaser.GameObjects.BitmapText#height
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     height: {

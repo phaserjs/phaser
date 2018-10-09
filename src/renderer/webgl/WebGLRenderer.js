@@ -406,7 +406,7 @@ var WebGLRenderer = new Class({
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#drawingBufferHeight
          * @type {number}
-         * @readOnly
+         * @readonly
          * @since 3.11.0
          */
         this.drawingBufferHeight = 0;
@@ -417,7 +417,7 @@ var WebGLRenderer = new Class({
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#blankTexture
          * @type {WebGLTexture}
-         * @readOnly
+         * @readonly
          * @since 3.12.0
          */
         this.blankTexture = null;

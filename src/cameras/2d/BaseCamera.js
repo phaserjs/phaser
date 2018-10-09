@@ -123,7 +123,7 @@ var BaseCamera = new Class({
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#config
          * @type {object}
-         * @readOnly
+         * @readonly
          * @since 3.12.0
          */
         this.config;
@@ -134,7 +134,7 @@ var BaseCamera = new Class({
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#id
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.11.0
          */
         this.id = 0;
@@ -154,7 +154,7 @@ var BaseCamera = new Class({
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#resolution
          * @type {number}
-         * @readOnly
+         * @readonly
          * @since 3.12.0
          */
         this.resolution = 1;
@@ -201,7 +201,7 @@ var BaseCamera = new Class({
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#worldView
          * @type {Phaser.Geom.Rectangle}
-         * @readOnly
+         * @readonly
          * @since 3.11.0
          */
         this.worldView = new Rectangle();
@@ -464,7 +464,7 @@ var BaseCamera = new Class({
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#midPoint
          * @type {Phaser.Math.Vector2}
-         * @readOnly
+         * @readonly
          * @since 3.11.0
          */
         this.midPoint = new Vector2(width / 2, height / 2);
@@ -1704,7 +1704,7 @@ var BaseCamera = new Class({
      *
      * @name Phaser.Cameras.Scene2D.BaseCamera#centerX
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.10.0
      */
     centerX: {
@@ -1721,7 +1721,7 @@ var BaseCamera = new Class({
      *
      * @name Phaser.Cameras.Scene2D.BaseCamera#centerY
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.10.0
      */
     centerY: {
@@ -1744,7 +1744,7 @@ var BaseCamera = new Class({
      *
      * @name Phaser.Cameras.Scene2D.BaseCamera#displayWidth
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.11.0
      */
     displayWidth: {
@@ -1767,7 +1767,7 @@ var BaseCamera = new Class({
      *
      * @name Phaser.Cameras.Scene2D.BaseCamera#displayHeight
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.11.0
      */
     displayHeight: {
