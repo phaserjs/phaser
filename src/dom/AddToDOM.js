@@ -32,7 +32,7 @@ var AddToDOM = function (element, parent, overflowHidden)
         }
         else if (typeof parent === 'object' && parent.nodeType === 1)
         {
-            //  Quick test for a HTMLelement
+            //  Quick test for a HTMLElement
             target = parent;
         }
     }
@@ -41,7 +41,7 @@ var AddToDOM = function (element, parent, overflowHidden)
         return element;
     }
 
-    //  Fallback, covers an invalid ID and a non HTMLelement object
+    //  Fallback, covers an invalid ID and a non HTMLElement object
     if (!target)
     {
         target = document.body;
