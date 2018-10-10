@@ -375,6 +375,8 @@ var Game = new Class({
 
         this.config.preBoot(this);
 
+        this.scale.preBoot();
+
         CreateRenderer(this);
 
         if (typeof EXPERIMENTAL)
@@ -383,6 +385,8 @@ var Game = new Class({
         }
 
         DebugHeader(this);
+
+        console.log('Canvas added to DOM');
 
         AddToDOM(this.canvas, this.config.parent);
 
