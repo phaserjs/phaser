@@ -17,7 +17,7 @@
 module.exports = {
 
     /**
-     * A scale mode that stretches content to fill all available space - see {@link Phaser.ScaleManager#scaleMode scaleMode}.
+     * A scale mode that stretches content to fill all available space within the parent node, or window if no parent - see {@link Phaser.ScaleManager#scaleMode scaleMode}.
      * 
      * @name Phaser.ScaleManager.EXACT_FIT
      * @since 3.15.0
@@ -41,7 +41,7 @@ module.exports = {
     SHOW_ALL: 2,
 
     /**
-     * A scale mode that causes the Game size to change - see {@link Phaser.ScaleManager#scaleMode scaleMode}.
+     * A scale mode that causes the game size to change as the browser window changes size - see {@link Phaser.ScaleManager#scaleMode scaleMode}.
      * 
      * @name Phaser.ScaleManager.RESIZE
      * @since 3.15.0
