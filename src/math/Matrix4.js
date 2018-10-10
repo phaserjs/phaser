@@ -16,7 +16,7 @@ var EPSILON = 0.000001;
  * A four-dimensional matrix.
  *
  * @class Matrix4
- * @memberOf Phaser.Math
+ * @memberof Phaser.Math
  * @constructor
  * @since 3.0.0
  *

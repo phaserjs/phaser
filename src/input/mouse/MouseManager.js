@@ -19,7 +19,7 @@ var Features = require('../../device/Features');
  * You do not need to create this class directly, the Input Manager will create an instance of it automatically.
  *
  * @class MouseManager
- * @memberOf Phaser.Input.Mouse
+ * @memberof Phaser.Input.Mouse
  * @constructor
  * @since 3.0.0
  *

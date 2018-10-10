@@ -70,7 +70,7 @@ var Class = require('../../utils/Class');
  * This controller lives as an instance within a Game Object, accessible as `sprite.anims`.
  *
  * @class Animation
- * @memberOf Phaser.GameObjects.Components
+ * @memberof Phaser.GameObjects.Components
  * @constructor
  * @since 3.0.0
  *

@@ -31,7 +31,7 @@ var WebGLPipeline = require('../WebGLPipeline');
  *
  * @class TextureTintPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
- * @memberOf Phaser.Renderer.WebGL.Pipelines
+ * @memberof Phaser.Renderer.WebGL.Pipelines
  * @constructor
  * @since 3.0.0
  *

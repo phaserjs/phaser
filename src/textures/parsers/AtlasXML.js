@@ -8,7 +8,7 @@
  * Parses an XML Texture Atlas object and adds all the Frames into a Texture.
  *
  * @function Phaser.Textures.Parsers.AtlasXML
- * @memberOf Phaser.Textures.Parsers
+ * @memberof Phaser.Textures.Parsers
  * @private
  * @since 3.7.0
  *

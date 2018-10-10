@@ -14,7 +14,7 @@ var PluginCache = require('../plugins/PluginCache');
  * A proxy class to the Global Scene Manager.
  *
  * @class ScenePlugin
- * @memberOf Phaser.Scenes
+ * @memberof Phaser.Scenes
  * @constructor
  * @since 3.0.0
  *

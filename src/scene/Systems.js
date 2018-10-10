@@ -21,7 +21,7 @@ var Settings = require('./Settings');
  * handling the update step and renderer. It also contains references to global systems belonging to Game.
  *
  * @class Systems
- * @memberOf Phaser.Scenes
+ * @memberof Phaser.Scenes
  * @constructor
  * @since 3.0.0
  *

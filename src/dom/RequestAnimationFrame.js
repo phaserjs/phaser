@@ -13,7 +13,7 @@ var NOOP = require('../utils/NOOP');
  * This is invoked automatically by the Phaser.Game instance.
  *
  * @class RequestAnimationFrame
- * @memberOf Phaser.DOM
+ * @memberof Phaser.DOM
  * @constructor
  * @since 3.0.0
  */

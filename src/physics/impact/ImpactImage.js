@@ -19,7 +19,7 @@ var Image = require('../../gameobjects/image/Image');
  *
  * @class ImpactImage
  * @extends Phaser.GameObjects.Image
- * @memberOf Phaser.Physics.Impact
+ * @memberof Phaser.Physics.Impact
  * @constructor
  * @since 3.0.0
  *

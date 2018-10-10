@@ -41,7 +41,7 @@ var UpdateMotion = require('./UpdateMotion');
  * This re-creates the properties you'd get on an Entity and the math needed to update them.
  *
  * @class Body
- * @memberOf Phaser.Physics.Impact
+ * @memberof Phaser.Physics.Impact
  * @constructor
  * @since 3.0.0
  *

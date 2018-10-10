@@ -63,7 +63,7 @@ var RectangleContains = require('../../geom/rectangle/Contains');
  * A Camera also has built-in special effects including Fade, Flash, Camera Shake, Pan and Zoom.
  *
  * @class CameraManager
- * @memberOf Phaser.Cameras.Scene2D
+ * @memberof Phaser.Cameras.Scene2D
  * @constructor
  * @since 3.0.0
  *

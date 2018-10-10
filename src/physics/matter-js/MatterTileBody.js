@@ -26,7 +26,7 @@ var Vertices = require('./lib/geometry/Vertices');
  * Phaser.Physics.Matter.TileBody#setFromTileCollision for more information.
  *
  * @class TileBody
- * @memberOf Phaser.Physics.Matter
+ * @memberof Phaser.Physics.Matter
  * @constructor
  * @since 3.0.0
  *

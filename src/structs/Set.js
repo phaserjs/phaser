@@ -21,7 +21,7 @@ var Class = require('../utils/Class');
  * A Set is a collection of unique elements.
  *
  * @class Set
- * @memberOf Phaser.Structs
+ * @memberof Phaser.Structs
  * @constructor
  * @since 3.0.0
  *

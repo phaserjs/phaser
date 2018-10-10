@@ -12,7 +12,7 @@ var Components = require('./components');
  * [description]
  *
  * @class ImpactBody
- * @memberOf Phaser.Physics.Impact
+ * @memberof Phaser.Physics.Impact
  * @constructor
  * @since 3.0.0
  *

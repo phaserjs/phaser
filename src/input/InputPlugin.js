@@ -49,7 +49,7 @@ var TriangleContains = require('../geom/triangle/Contains');
  *
  * @class InputPlugin
  * @extends Phaser.Events.EventEmitter
- * @memberOf Phaser.Input
+ * @memberof Phaser.Input
  * @constructor
  * @since 3.0.0
  *

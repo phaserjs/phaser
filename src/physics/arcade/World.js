@@ -157,7 +157,7 @@ var Wrap = require('../../math/Wrap');
  *
  * @class World
  * @extends Phaser.Events.EventEmitter
- * @memberOf Phaser.Physics.Arcade
+ * @memberof Phaser.Physics.Arcade
  * @constructor
  * @since 3.0.0
  *

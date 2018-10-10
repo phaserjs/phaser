@@ -19,7 +19,7 @@ var PointerConstraint = require('./PointerConstraint');
  * [description]
  *
  * @class Factory
- * @memberOf Phaser.Physics.Matter
+ * @memberof Phaser.Physics.Matter
  * @constructor
  * @since 3.0.0
  *

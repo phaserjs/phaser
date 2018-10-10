@@ -25,7 +25,7 @@ var Utils = require('../../renderer/webgl/Utils');
  *
  * @class StaticTilemapLayer
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.Tilemaps
+ * @memberof Phaser.Tilemaps
  * @constructor
  * @since 3.0.0
  *

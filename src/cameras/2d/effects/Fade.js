@@ -20,7 +20,7 @@ var Class = require('../../../utils/Class');
  * which is invoked each frame for the duration of the effect, if required.
  *
  * @class Fade
- * @memberOf Phaser.Cameras.Scene2D.Effects
+ * @memberof Phaser.Cameras.Scene2D.Effects
  * @constructor
  * @since 3.5.0
  *

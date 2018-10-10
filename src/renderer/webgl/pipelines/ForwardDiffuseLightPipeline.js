@@ -19,7 +19,7 @@ var LIGHT_COUNT = 10;
  *
  * @class ForwardDiffuseLightPipeline
  * @extends Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline
- * @memberOf Phaser.Renderer.WebGL.Pipelines
+ * @memberof Phaser.Renderer.WebGL.Pipelines
  * @constructor
  * @since 3.0.0
  *

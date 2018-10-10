@@ -16,7 +16,7 @@ var Line = require('../../geom/line/Line');
  *
  * @class Shape
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.13.0
  *

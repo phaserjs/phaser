@@ -27,7 +27,7 @@ var GridRender = require('./GridRender');
  *
  * @class Grid
  * @extends Phaser.GameObjects.Shape
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.13.0
  *

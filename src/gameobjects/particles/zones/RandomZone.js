@@ -31,7 +31,7 @@ var Vector2 = require('../../../math/Vector2');
  * A zone that places particles randomly within a shape's area.
  *
  * @class RandomZone
- * @memberOf Phaser.GameObjects.Particles.Zones
+ * @memberof Phaser.GameObjects.Particles.Zones
  * @constructor
  * @since 3.0.0
  *

@@ -59,7 +59,7 @@ var Render = require('./DynamicBitmapTextRender');
  *
  * @class DynamicBitmapText
  * @extends Phaser.GameObjects.BitmapText
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *

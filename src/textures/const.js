@@ -9,7 +9,7 @@
  *
  * @name Phaser.Textures.FilterMode
  * @enum {integer}
- * @memberOf Phaser.Textures
+ * @memberof Phaser.Textures
  * @readonly
  * @since 3.0.0
  */

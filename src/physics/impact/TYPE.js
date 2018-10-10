@@ -15,7 +15,7 @@
  *
  * @name Phaser.Physics.Impact.TYPE
  * @enum {integer}
- * @memberOf Phaser.Physics.Impact
+ * @memberof Phaser.Physics.Impact
  * @readonly
  * @since 3.0.0
  */

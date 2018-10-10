@@ -17,7 +17,7 @@ var EventEmitter = require('eventemitter3');
  * Keys are string-based.
  *
  * @class BaseCache
- * @memberOf Phaser.Cache
+ * @memberof Phaser.Cache
  * @constructor
  * @since 3.0.0
  */

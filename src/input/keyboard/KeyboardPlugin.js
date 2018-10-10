@@ -51,7 +51,7 @@ var SnapFloor = require('../../math/snap/SnapFloor');
  *
  * @class KeyboardPlugin
  * @extends Phaser.Events.EventEmitter
- * @memberOf Phaser.Input.Keyboard
+ * @memberof Phaser.Input.Keyboard
  * @constructor
  * @since 3.10.0
  *
@@ -276,7 +276,7 @@ var KeyboardPlugin = new Class({
 
     /**
      * @typedef {object} CursorKeys
-     * @memberOf Phaser.Input.Keyboard
+     * @memberof Phaser.Input.Keyboard
      * 
      * @property {Phaser.Input.Keyboard.Key} [up] - A Key object mapping to the UP arrow key.
      * @property {Phaser.Input.Keyboard.Key} [down] - A Key object mapping to the DOWN arrow key.

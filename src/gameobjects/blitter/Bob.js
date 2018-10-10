@@ -23,7 +23,7 @@ var Class = require('../../utils/Class');
  * handled via the Blitter parent.
  *
  * @class Bob
- * @memberOf Phaser.GameObjects.Blitter
+ * @memberof Phaser.GameObjects.Blitter
  * @constructor
  * @since 3.0.0
  *

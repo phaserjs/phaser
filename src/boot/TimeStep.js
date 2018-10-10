@@ -33,7 +33,7 @@ var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
  * [description]
  *
  * @class TimeStep
- * @memberOf Phaser.Boot
+ * @memberof Phaser.Boot
  * @constructor
  * @since 3.0.0
  *

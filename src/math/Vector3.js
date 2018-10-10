@@ -16,7 +16,7 @@ var Class = require('../utils/Class');
  * A three-component vector.
  *
  * @class Vector3
- * @memberOf Phaser.Math
+ * @memberof Phaser.Math
  * @constructor
  * @since 3.0.0
  *

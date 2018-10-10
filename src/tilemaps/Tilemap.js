@@ -55,7 +55,7 @@ var Tileset = require('./Tileset');
  * it.
  *
  * @class Tilemap
- * @memberOf Phaser.Tilemaps
+ * @memberof Phaser.Tilemaps
  * @constructor
  * @since 3.0.0
  *

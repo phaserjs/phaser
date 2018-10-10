@@ -22,7 +22,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * [description]
  *
  * @class GravityWell
- * @memberOf Phaser.GameObjects.Particles
+ * @memberof Phaser.GameObjects.Particles
  * @constructor
  * @since 3.0.0
  *

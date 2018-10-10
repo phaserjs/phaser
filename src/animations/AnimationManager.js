@@ -30,7 +30,7 @@ var Pad = require('../utils/string/Pad');
  *
  * @class AnimationManager
  * @extends Phaser.Events.EventEmitter
- * @memberOf Phaser.Animations
+ * @memberof Phaser.Animations
  * @constructor
  * @since 3.0.0
  *

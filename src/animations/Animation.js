@@ -64,7 +64,7 @@ var GetValue = require('../utils/object/GetValue');
  * So multiple Game Objects can have playheads all pointing to this one Animation instance.
  *
  * @class Animation
- * @memberOf Phaser.Animations
+ * @memberof Phaser.Animations
  * @constructor
  * @since 3.0.0
  *

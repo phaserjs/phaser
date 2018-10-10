@@ -101,7 +101,7 @@ var Sprite = require('../sprite/Sprite');
  * Groups themselves aren't displayable, and can't be positioned, rotated, scaled, or hidden.
  *
  * @class Group
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  * @param {Phaser.Scene} scene - The scene this group belongs to.

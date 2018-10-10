@@ -12,7 +12,7 @@ var Vector2 = require('../../math/Vector2');
  * [description]
  *
  * @class MoveTo
- * @memberOf Phaser.Curves
+ * @memberof Phaser.Curves
  * @constructor
  * @since 3.0.0
  *

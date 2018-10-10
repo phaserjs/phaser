@@ -16,7 +16,7 @@ var Class = require('../utils/Class');
  * Defaults to the identity matrix when instantiated.
  *
  * @class Matrix3
- * @memberOf Phaser.Math
+ * @memberof Phaser.Math
  * @constructor
  * @since 3.0.0
  *

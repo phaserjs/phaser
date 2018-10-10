@@ -15,7 +15,7 @@ var Class = require('../../utils/Class');
  * The Geometry Mask's location matches the location of its Graphics object, not the location of the masked objects. Moving or transforming the underlying Graphics object will change the mask (and affect the visibility of any masked objects), whereas moving or transforming a masked object will not affect the mask. You can think of the Geometry Mask (or rather, of the its Graphics object) as an invisible curtain placed in front of all masked objects which has its own visual properties and, naturally, respects the camera's visual properties, but isn't affected by and doesn't follow the masked objects by itself.
  *
  * @class GeometryMask
- * @memberOf Phaser.Display.Masks
+ * @memberof Phaser.Display.Masks
  * @constructor
  * @since 3.0.0
  *

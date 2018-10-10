@@ -30,7 +30,7 @@ var Shape = require('../Shape');
  *
  * @class Ellipse
  * @extends Phaser.GameObjects.Shape
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.13.0
  *

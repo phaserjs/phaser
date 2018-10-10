@@ -11,7 +11,7 @@ var Class = require('../../utils/Class');
  * [description]
  *
  * @class Collider
- * @memberOf Phaser.Physics.Arcade
+ * @memberof Phaser.Physics.Arcade
  * @constructor
  * @since 3.0.0
  *

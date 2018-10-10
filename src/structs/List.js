@@ -22,7 +22,7 @@ var StableSort = require('../utils/array/StableSort');
  * List is a generic implementation of an ordered list which contains utility methods for retrieving, manipulating, and iterating items.
  *
  * @class List
- * @memberOf Phaser.Structs
+ * @memberof Phaser.Structs
  * @constructor
  * @since 3.0.0
  *

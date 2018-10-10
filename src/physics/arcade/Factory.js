@@ -17,7 +17,7 @@ var StaticPhysicsGroup = require('./StaticPhysicsGroup');
  * Objects that are created by this Factory are automatically added to the physics world.
  *
  * @class Factory
- * @memberOf Phaser.Physics.Arcade
+ * @memberof Phaser.Physics.Arcade
  * @constructor
  * @since 3.0.0
  *

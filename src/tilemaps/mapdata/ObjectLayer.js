@@ -17,7 +17,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  *  - "draworder" is ignored.
  *
  * @class ObjectLayer
- * @memberOf Phaser.Tilemaps
+ * @memberof Phaser.Tilemaps
  * @constructor
  * @since 3.0.0
  *

@@ -53,7 +53,7 @@ var ResetKeyCombo = require('./ResetKeyCombo');
  * ```
  *
  * @class KeyCombo
- * @memberOf Phaser.Input.Keyboard
+ * @memberof Phaser.Input.Keyboard
  * @constructor
  * @since 3.0.0
  *

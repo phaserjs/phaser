@@ -29,7 +29,7 @@ var Class = require('../utils/Class');
  * ```
  *
  * @class Map
- * @memberOf Phaser.Structs
+ * @memberof Phaser.Structs
  * @constructor
  * @since 3.0.0
  *

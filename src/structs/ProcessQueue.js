@@ -11,7 +11,7 @@ var Class = require('../utils/Class');
  * [description]
  *
  * @class ProcessQueue
- * @memberOf Phaser.Structs
+ * @memberof Phaser.Structs
  * @constructor
  * @since 3.0.0
  *

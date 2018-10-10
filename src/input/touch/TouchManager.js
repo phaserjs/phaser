@@ -19,7 +19,7 @@ var Class = require('../../utils/Class');
  * You do not need to create this class directly, the Input Manager will create an instance of it automatically.
  *
  * @class TouchManager
- * @memberOf Phaser.Input.Touch
+ * @memberof Phaser.Input.Touch
  * @constructor
  * @since 3.0.0
  *

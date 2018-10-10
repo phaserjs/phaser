@@ -23,7 +23,7 @@ var World = require('./World');
  * You can access it from within a Scene using `this.physics`.
  *
  * @class ArcadePhysics
- * @memberOf Phaser.Physics.Arcade
+ * @memberof Phaser.Physics.Arcade
  * @constructor
  * @since 3.0.0
  *

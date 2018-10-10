@@ -22,7 +22,7 @@ var Sprite = require('../../gameobjects/sprite/Sprite');
  *
  * @class Sprite
  * @extends Phaser.GameObjects.Sprite
- * @memberOf Phaser.Physics.Arcade
+ * @memberof Phaser.Physics.Arcade
  * @constructor
  * @since 3.0.0
  *

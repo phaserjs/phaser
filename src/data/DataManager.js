@@ -22,7 +22,7 @@ var Class = require('../utils/Class');
  * or have a property called `events` that is an instance of it.
  *
  * @class DataManager
- * @memberOf Phaser.Data
+ * @memberof Phaser.Data
  * @constructor
  * @since 3.0.0
  *

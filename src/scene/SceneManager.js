@@ -20,7 +20,7 @@ var Systems = require('./Systems');
  *
  *
  * @class SceneManager
- * @memberOf Phaser.Scenes
+ * @memberof Phaser.Scenes
  * @constructor
  * @since 3.0.0
  *

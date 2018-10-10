@@ -14,7 +14,7 @@ var TWEEN_CONST = require('./const');
  * [description]
  *
  * @class Tween
- * @memberOf Phaser.Tweens
+ * @memberof Phaser.Tweens
  * @constructor
  * @since 3.0.0
  *

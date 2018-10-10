@@ -12,7 +12,7 @@ var Class = require('../utils/Class');
  * each tile.
  *
  * @class Tileset
- * @memberOf Phaser.Tilemaps
+ * @memberof Phaser.Tilemaps
  * @constructor
  * @since 3.0.0
  *

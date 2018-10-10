@@ -23,7 +23,7 @@ var TEXTURE_MISSING_ERROR = 'Texture.frame missing: ';
  * Sprites and other Game Objects get the texture data they need from the TextureManager.
  *
  * @class Texture
- * @memberOf Phaser.Textures
+ * @memberof Phaser.Textures
  * @constructor
  * @since 3.0.0
  *

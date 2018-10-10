@@ -39,7 +39,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  *
  * @class SVGFile
  * @extends Phaser.Loader.File
- * @memberOf Phaser.Loader.FileTypes
+ * @memberof Phaser.Loader.FileTypes
  * @constructor
  * @since 3.0.0
  *

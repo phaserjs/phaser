@@ -18,7 +18,7 @@ var Random = require('./Random');
  * specify the second point, and the last two arguments specify the third point.
  *
  * @class Triangle
- * @memberOf Phaser.Geom
+ * @memberof Phaser.Geom
  * @constructor
  * @since 3.0.0
  *

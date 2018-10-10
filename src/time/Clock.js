@@ -13,7 +13,7 @@ var TimerEvent = require('./TimerEvent');
  * [description]
  *
  * @class Clock
- * @memberOf Phaser.Time
+ * @memberof Phaser.Time
  * @constructor
  * @since 3.0.0
  *

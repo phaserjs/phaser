@@ -33,7 +33,7 @@ var GetValue = require('../../utils/object/GetValue');
  * [description]
  *
  * @class FixedKeyControl
- * @memberOf Phaser.Cameras.Controls
+ * @memberof Phaser.Cameras.Controls
  * @constructor
  * @since 3.0.0
  *

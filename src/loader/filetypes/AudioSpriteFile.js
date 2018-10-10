@@ -33,7 +33,7 @@ var MultiFile = require('../MultiFile.js');
  *
  * @class AudioSpriteFile
  * @extends Phaser.Loader.MultiFile
- * @memberOf Phaser.Loader.FileTypes
+ * @memberof Phaser.Loader.FileTypes
  * @constructor
  * @since 3.7.0
  *

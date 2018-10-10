@@ -20,7 +20,7 @@ var Vertices = require('./lib/geometry/Vertices');
  * [description]
  *
  * @class PointerConstraint
- * @memberOf Phaser.Physics.Matter
+ * @memberof Phaser.Physics.Matter
  * @constructor
  * @since 3.0.0
  *

@@ -67,7 +67,7 @@ var Vector2 = require('../../math/Vector2');
  * to when they were added to the Camera class.
  *
  * @class BaseCamera
- * @memberOf Phaser.Cameras.Scene2D
+ * @memberof Phaser.Cameras.Scene2D
  * @constructor
  * @since 3.12.0
  * 

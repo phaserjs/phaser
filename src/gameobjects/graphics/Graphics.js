@@ -104,7 +104,7 @@ var Render = require('./GraphicsRender');
  *
  * @class Graphics
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *

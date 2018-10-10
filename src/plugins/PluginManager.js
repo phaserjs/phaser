@@ -57,7 +57,7 @@ var Remove = require('../utils/array/Remove');
  * For information on creating your own plugin please see the Phaser 3 Plugin Template.
  *
  * @class PluginManager
- * @memberOf Phaser.Plugins
+ * @memberof Phaser.Plugins
  * @constructor
  * @since 3.0.0
  *

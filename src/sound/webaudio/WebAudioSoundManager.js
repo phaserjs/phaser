@@ -15,7 +15,7 @@ var WebAudioSound = require('./WebAudioSound');
  *
  * @class WebAudioSoundManager
  * @extends Phaser.Sound.BaseSoundManager
- * @memberOf Phaser.Sound
+ * @memberof Phaser.Sound
  * @constructor
  * @since 3.0.0
  *

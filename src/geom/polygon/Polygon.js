@@ -13,7 +13,7 @@ var GetPoints = require('./GetPoints');
  * [description]
  *
  * @class Polygon
- * @memberOf Phaser.Geom
+ * @memberof Phaser.Geom
  * @constructor
  * @since 3.0.0
  *

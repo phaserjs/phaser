@@ -13,7 +13,7 @@ var Extend = require('../utils/object/Extend');
  * A Frame is a section of a Texture.
  *
  * @class Frame
- * @memberOf Phaser.Textures
+ * @memberof Phaser.Textures
  * @constructor
  * @since 3.0.0
  *

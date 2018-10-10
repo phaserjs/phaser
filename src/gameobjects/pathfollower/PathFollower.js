@@ -41,7 +41,7 @@ var Vector2 = require('../../math/Vector2');
  *
  * @class PathFollower
  * @extends Phaser.GameObjects.Sprite
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *

@@ -33,7 +33,7 @@ var Texture = require('./Texture');
  *
  * @class TextureManager
  * @extends Phaser.Events.EventEmitter
- * @memberOf Phaser.Textures
+ * @memberof Phaser.Textures
  * @constructor
  * @since 3.0.0
  *

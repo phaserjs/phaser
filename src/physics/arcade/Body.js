@@ -38,7 +38,7 @@ var Vector2 = require('../../math/Vector2');
  * Its static counterpart is {@link Phaser.Physics.Arcade.StaticBody}.
  *
  * @class Body
- * @memberOf Phaser.Physics.Arcade
+ * @memberof Phaser.Physics.Arcade
  * @constructor
  * @since 3.0.0
  *

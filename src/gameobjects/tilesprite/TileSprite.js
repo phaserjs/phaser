@@ -42,7 +42,7 @@ var _FLAG = 8; // 1000
  *
  * @class TileSprite
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *

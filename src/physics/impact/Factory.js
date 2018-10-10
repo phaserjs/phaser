@@ -15,7 +15,7 @@ var ImpactSprite = require('./ImpactSprite');
  * Objects that are created by this Factory are automatically added to the physics world.
  *
  * @class Factory
- * @memberOf Phaser.Physics.Impact
+ * @memberof Phaser.Physics.Impact
  * @constructor
  * @since 3.0.0
  *

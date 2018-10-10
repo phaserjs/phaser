@@ -12,7 +12,7 @@ var Systems = require('./Systems');
  * [description]
  *
  * @class Scene
- * @memberOf Phaser
+ * @memberof Phaser
  * @constructor
  * @since 3.0.0
  *

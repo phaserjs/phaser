@@ -95,7 +95,7 @@ var Wrap = require('../../math/Wrap');
  * Facilitates changing Particle properties as they are emitted and throughout their lifetime.
  *
  * @class EmitterOp
- * @memberOf Phaser.GameObjects.Particles
+ * @memberof Phaser.GameObjects.Particles
  * @constructor
  * @since 3.0.0
  *

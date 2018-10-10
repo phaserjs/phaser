@@ -32,7 +32,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  *
  * @class HTMLTextureFile
  * @extends Phaser.Loader.File
- * @memberOf Phaser.Loader.FileTypes
+ * @memberof Phaser.Loader.FileTypes
  * @constructor
  * @since 3.12.0
  *

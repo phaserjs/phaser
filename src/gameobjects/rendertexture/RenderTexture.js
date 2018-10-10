@@ -24,7 +24,7 @@ var UUID = require('../../utils/string/UUID');
  *
  * @class RenderTexture
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.2.0
  *

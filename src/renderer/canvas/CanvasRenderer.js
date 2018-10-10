@@ -18,7 +18,7 @@ var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
  * [description]
  *
  * @class CanvasRenderer
- * @memberOf Phaser.Renderer.Canvas
+ * @memberof Phaser.Renderer.Canvas
  * @constructor
  * @since 3.0.0
  *

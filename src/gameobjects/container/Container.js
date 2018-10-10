@@ -53,7 +53,7 @@ var Vector2 = require('../../math/Vector2');
  *
  * @class Container
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.4.0
  *

@@ -20,7 +20,7 @@ var VisualBounds = require('./VisualBounds');
  * [description]
  *
  * @class ScaleManager
- * @memberOf Phaser.DOM
+ * @memberof Phaser.DOM
  * @constructor
  * @since 3.15.0
  *

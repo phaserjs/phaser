@@ -13,7 +13,7 @@ var Class = require('../utils/Class');
  * Image Collections are normally created automatically when Tiled data is loaded.
  *
  * @class ImageCollection
- * @memberOf Phaser.Tilemaps
+ * @memberof Phaser.Tilemaps
  * @constructor
  * @since 3.0.0
  * 

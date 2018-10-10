@@ -36,7 +36,7 @@ var XMLFile = require('./XMLFile.js');
  *
  * @class BitmapFontFile
  * @extends Phaser.Loader.MultiFile
- * @memberOf Phaser.Loader.FileTypes
+ * @memberof Phaser.Loader.FileTypes
  * @constructor
  * @since 3.0.0
  *

@@ -47,7 +47,7 @@ if (typeof PLUGIN_FBINSTANT)
  * made available to you via the Phaser.Scene Systems class instead.
  *
  * @class Game
- * @memberOf Phaser
+ * @memberof Phaser
  * @constructor
  * @since 3.0.0
  *

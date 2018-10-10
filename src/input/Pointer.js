@@ -25,7 +25,7 @@ var Vector2 = require('../math/Vector2');
  * callbacks.
  *
  * @class Pointer
- * @memberOf Phaser.Input
+ * @memberof Phaser.Input
  * @constructor
  * @since 3.0.0
  *

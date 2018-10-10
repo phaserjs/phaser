@@ -21,7 +21,7 @@ var Vector2 = require('../../../math/Vector2');
  * which is invoked each frame for the duration of the effect if required.
  *
  * @class Shake
- * @memberOf Phaser.Cameras.Scene2D.Effects
+ * @memberof Phaser.Cameras.Scene2D.Effects
  * @constructor
  * @since 3.5.0
  *

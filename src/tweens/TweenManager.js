@@ -16,7 +16,7 @@ var TweenBuilder = require('./builders/TweenBuilder');
  * [description]
  *
  * @class TweenManager
- * @memberOf Phaser.Tweens
+ * @memberof Phaser.Tweens
  * @constructor
  * @since 3.0.0
  *

@@ -9,7 +9,7 @@
  * 
  * @name Phaser.ScaleManager
  * @enum {integer}
- * @memberOf Phaser
+ * @memberof Phaser
  * @readonly
  * @since 3.15.0
  */

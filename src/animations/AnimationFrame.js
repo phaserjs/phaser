@@ -25,7 +25,7 @@ var Class = require('../utils/Class');
  * AnimationFrames are generated automatically by the Animation class.
  *
  * @class AnimationFrame
- * @memberOf Phaser.Animations
+ * @memberof Phaser.Animations
  * @constructor
  * @since 3.0.0
  *

@@ -17,7 +17,7 @@ var ScaleModes = require('../renderer/ScaleModes');
  * A Texture can contain multiple Texture Sources, which only happens when a multi-atlas is loaded.
  *
  * @class TextureSource
- * @memberOf Phaser.Textures
+ * @memberof Phaser.Textures
  * @constructor
  * @since 3.0.0
  *

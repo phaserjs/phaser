@@ -18,7 +18,7 @@ var Render = require('./ParticleManagerRender');
  *
  * @class ParticleEmitterManager
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects.Particles
+ * @memberof Phaser.GameObjects.Particles
  * @constructor
  * @since 3.0.0
  *

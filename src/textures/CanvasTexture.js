@@ -31,7 +31,7 @@ var Texture = require('./Texture');
  *
  * @class CanvasTexture
  * @extends Phaser.Textures.Texture
- * @memberOf Phaser.Textures
+ * @memberof Phaser.Textures
  * @constructor
  * @since 3.7.0
  *

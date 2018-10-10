@@ -41,7 +41,7 @@ var GetValue = require('../../utils/object/GetValue');
  * [description]
  *
  * @class SmoothedKeyControl
- * @memberOf Phaser.Cameras.Controls
+ * @memberof Phaser.Cameras.Controls
  * @constructor
  * @since 3.0.0
  *

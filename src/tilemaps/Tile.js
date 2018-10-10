@@ -15,7 +15,7 @@ var Rectangle = require('../geom/rectangle');
  * scale or layer position.
  *
  * @class Tile
- * @memberOf Phaser.Tilemaps
+ * @memberof Phaser.Tilemaps
  * @constructor
  * @since 3.0.0
  *

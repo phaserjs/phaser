@@ -41,7 +41,7 @@ var XHRSettings = require('./XHRSettings');
  *
  * @class LoaderPlugin
  * @extends Phaser.Events.EventEmitter
- * @memberOf Phaser.Loader
+ * @memberof Phaser.Loader
  * @constructor
  * @since 3.0.0
  *

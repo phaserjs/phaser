@@ -24,7 +24,7 @@ var Vector = require('./lib/geometry/Vector');
  *
  * @class World
  * @extends Phaser.Events.EventEmitter
- * @memberOf Phaser.Physics.Matter
+ * @memberof Phaser.Physics.Matter
  * @constructor
  * @since 3.0.0
  *

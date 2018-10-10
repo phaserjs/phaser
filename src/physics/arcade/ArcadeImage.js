@@ -19,7 +19,7 @@ var Image = require('../../gameobjects/image/Image');
  *
  * @class Image
  * @extends Phaser.GameObjects.Image
- * @memberOf Phaser.Physics.Arcade
+ * @memberof Phaser.Physics.Arcade
  * @constructor
  * @since 3.0.0
  *

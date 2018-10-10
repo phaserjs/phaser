@@ -38,7 +38,7 @@ var NOOP = require('../utils/NOOP');
  *
  * @class BaseSoundManager
  * @extends Phaser.Events.EventEmitter
- * @memberOf Phaser.Sound
+ * @memberof Phaser.Sound
  * @constructor
  * @since 3.0.0
  *

@@ -23,7 +23,7 @@ var Class = require('../utils/Class');
  * A two-component vector.
  *
  * @class Vector2
- * @memberOf Phaser.Math
+ * @memberof Phaser.Math
  * @constructor
  * @since 3.0.0
  *

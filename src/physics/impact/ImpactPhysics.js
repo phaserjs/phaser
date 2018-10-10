@@ -16,7 +16,7 @@ var World = require('./World');
  * [description]
  *
  * @class ImpactPhysics
- * @memberOf Phaser.Physics.Impact
+ * @memberof Phaser.Physics.Impact
  * @constructor
  * @since 3.0.0
  *

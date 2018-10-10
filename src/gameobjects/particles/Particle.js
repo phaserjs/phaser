@@ -14,7 +14,7 @@ var DistanceBetween = require('../../math/distance/DistanceBetween');
  * It uses its own lightweight physics system, and can interact only with its Emitter's bounds and zones.
  *
  * @class Particle
- * @memberOf Phaser.GameObjects.Particles
+ * @memberof Phaser.GameObjects.Particles
  * @constructor
  * @since 3.0.0
  *

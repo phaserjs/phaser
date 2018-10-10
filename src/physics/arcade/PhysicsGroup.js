@@ -74,7 +74,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  *
  * @class Group
  * @extends Phaser.GameObjects.Group
- * @memberOf Phaser.Physics.Arcade
+ * @memberof Phaser.Physics.Arcade
  * @constructor
  * @since 3.0.0
  *

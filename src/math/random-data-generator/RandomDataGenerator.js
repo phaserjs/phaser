@@ -20,7 +20,7 @@ var Class = require('../../utils/Class');
  * If no seed is given it will use a 'random' one based on Date.now.
  *
  * @class RandomDataGenerator
- * @memberOf Phaser.Math
+ * @memberof Phaser.Math
  * @constructor
  * @since 3.0.0
  *

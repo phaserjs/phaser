@@ -16,7 +16,7 @@ var EventEmitter = require('eventemitter3');
  * Instead, use them as the base for your own custom classes.
  *
  * @class GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @extends Phaser.Events.EventEmitter
  * @constructor
  * @since 3.0.0
@@ -585,7 +585,7 @@ var GameObject = new Class({
  * The bitmask that `GameObject.renderFlags` is compared against to determine if the Game Object will render or not.
  *
  * @constant {integer} RENDER_MASK
- * @memberOf Phaser.GameObjects.GameObject
+ * @memberof Phaser.GameObjects.GameObject
  * @default
  */
 GameObject.RENDER_MASK = 15;

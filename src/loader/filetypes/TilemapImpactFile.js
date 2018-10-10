@@ -28,7 +28,7 @@ var TILEMAP_FORMATS = require('../../tilemaps/Formats');
  *
  * @class TilemapImpactFile
  * @extends Phaser.Loader.File
- * @memberOf Phaser.Loader.FileTypes
+ * @memberof Phaser.Loader.FileTypes
  * @constructor
  * @since 3.7.0
  *

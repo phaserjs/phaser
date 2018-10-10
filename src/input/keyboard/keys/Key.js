@@ -12,7 +12,7 @@ var Class = require('../../../utils/Class');
  * keycode must be an integer
  *
  * @class Key
- * @memberOf Phaser.Input.Keyboard
+ * @memberof Phaser.Input.Keyboard
  * @constructor
  * @since 3.0.0
  *

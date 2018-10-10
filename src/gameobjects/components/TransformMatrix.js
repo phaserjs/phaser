@@ -20,7 +20,7 @@ var Vector2 = require('../../math/Vector2');
  * ```
  *
  * @class TransformMatrix
- * @memberOf Phaser.GameObjects.Components
+ * @memberof Phaser.GameObjects.Components
  * @constructor
  * @since 3.0.0
  *

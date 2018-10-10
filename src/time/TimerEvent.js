@@ -26,7 +26,7 @@ var GetFastValue = require('../utils/object/GetFastValue');
  * [description]
  *
  * @class TimerEvent
- * @memberOf Phaser.Time
+ * @memberof Phaser.Time
  * @constructor
  * @since 3.0.0
  *

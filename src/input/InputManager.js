@@ -29,7 +29,7 @@ var TransformXY = require('../math/TransformXY');
  * for dealing with all input events for a Scene.
  *
  * @class InputManager
- * @memberOf Phaser.Input
+ * @memberof Phaser.Input
  * @constructor
  * @since 3.0.0
  *

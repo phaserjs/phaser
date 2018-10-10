@@ -11,7 +11,7 @@ var Class = require('../../utils/Class');
  * [description]
  *
  * @class BitmapMask
- * @memberOf Phaser.Display.Masks
+ * @memberof Phaser.Display.Masks
  * @constructor
  * @since 3.0.0
  *

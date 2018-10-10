@@ -21,7 +21,7 @@ var Utils = require('../../renderer/webgl/Utils');
  * Affects the rendering of Game Objects using the `Light2D` pipeline.
  *
  * @class LightsManager
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  */

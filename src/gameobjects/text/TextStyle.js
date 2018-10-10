@@ -66,7 +66,7 @@ var propertyMap = {
  * Style settings for a Text object.
  *
  * @class TextStyle
- * @memberOf Phaser.GameObjects.Text
+ * @memberof Phaser.GameObjects.Text
  * @constructor
  * @since 3.0.0
  *

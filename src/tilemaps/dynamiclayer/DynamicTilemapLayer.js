@@ -23,7 +23,7 @@ var TilemapComponents = require('../components');
  *
  * @class DynamicTilemapLayer
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.Tilemaps
+ * @memberof Phaser.Tilemaps
  * @constructor
  * @since 3.0.0
  *
