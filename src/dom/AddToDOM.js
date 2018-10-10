@@ -6,7 +6,7 @@
 
 /**
  * Adds the given element to the DOM. If a parent is provided the element is added as a child of the parent, providing it was able to access it.
- * If no parent was given or falls back to using `document.body`.
+ * If no parent was given it falls back to using `document.body`.
  *
  * @function Phaser.DOM.AddToDOM
  * @since 3.0.0
