@@ -367,7 +367,7 @@ var Game = new Class({
     {
         if (!PluginCache.hasCore('EventEmitter'))
         {
-            console.warn('Core Phaser Plugins missing. Cannot start.');
+            console.warn('Aborting. Core Plugins missing.');
             return;
         }
 
