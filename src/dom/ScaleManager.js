@@ -153,6 +153,8 @@ var ScaleManager = new Class({
 
     boot: function ()
     {
+        console.log('SM boot');
+
         // Configure device-dependent compatibility
 
         var game = this.game;
@@ -228,6 +230,23 @@ var ScaleManager = new Class({
             document.addEventListener('MSFullscreenError', this._fullScreenError, false);
         }
 
+        this.setupScale(game.config.width, game.config.height);
+
+        //  Same as calling setGameSize:
+        this._gameSize.setTo(0, 0, game.config.width, game.config.height);
+
+        game.events.once('ready', this.start, this);
+    },
+
+    //  Called once added to the DOM, not before
+    start: function ()
+    {
+        console.log('SM.start', this.width, this.height);
+
+        var game = this.game;
+        var os = game.device.os;
+        var compat = this.compatibility;
+
         game.events.on('resume', this.gameResumed, this);
 
         // Initialize core bounds
@@ -242,10 +261,6 @@ var ScaleManager = new Class({
 
         this.bounds.setTo(this.offset.x, this.offset.y, this.width, this.height);
 
-        console.log(this.offset.x, this.offset.y, this.width, this.height);
-
-        this.setGameSize(game.config.width, game.config.height);
-
         //  Don't use updateOrientationState so events are not fired
         this.screenOrientation = GetScreenOrientation(compat.orientationFallback);
 
@@ -258,9 +273,11 @@ var ScaleManager = new Class({
             this._pendingScaleMode = null;
         }
 
-        game.events.on('prestep', this.step, this);
+        this.updateLayout();
 
-        this.setupScale(game.config.width, game.config.height);
+        this.signalSizeChange();
+
+        // game.events.on('prestep', this.step, this);
     },
 
     setupScale: function (width, height)
@@ -343,16 +360,16 @@ var ScaleManager = new Class({
 
         this.updateDimensions(newWidth, newHeight, false);
 
-        console.log('setupscale', this._parentBounds);
-    },
-
-    gameResumed: function ()
-    {
-        this.queueUpdate(true);
+        console.log('setupScale', this._gameSize);
+        console.log('pn', this.parentNode);
+        console.log('pw', this.parentIsWindow);
+        console.log('pb', this._parentBounds);
     },
 
     setGameSize: function (width, height)
     {
+        console.log('setGameSize', width, height);
+
         this._gameSize.setTo(0, 0, width, height);
 
         if (this.currentScaleMode !== CONST.RESIZE)
@@ -377,6 +394,11 @@ var ScaleManager = new Class({
         {
             this.queueUpdate(force);
         }
+    },
+
+    gameResumed: function ()
+    {
+        this.queueUpdate(true);
     },
 
     setResizeCallback: function (callback, context)
@@ -682,6 +704,8 @@ var ScaleManager = new Class({
 
     getParentBounds: function (bounds, parentNode)
     {
+        console.log('getParentBounds');
+
         if (bounds === undefined) { bounds = new Rectangle(); }
         if (parentNode === undefined) { parentNode = this.boundingParent; }
 
@@ -691,6 +715,7 @@ var ScaleManager = new Class({
         if (!parentNode)
         {
             bounds.setTo(0, 0, visualBounds.width, visualBounds.height);
+            console.log('b1');
         }
         else
         {
@@ -714,11 +739,15 @@ var ScaleManager = new Class({
                 windowBounds = (wc.bottom === 'layout') ? layoutBounds : visualBounds;
                 bounds.bottom = Math.min(bounds.bottom, windowBounds.height);
             }
+
+            console.log('b2');
         }
 
         bounds.setTo(
             Math.round(bounds.x), Math.round(bounds.y),
             Math.round(bounds.width), Math.round(bounds.height));
+
+        console.log(bounds);
 
         return bounds;
     },
