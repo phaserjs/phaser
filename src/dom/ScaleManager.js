@@ -101,7 +101,6 @@ var ScaleManager = new Class({
             orientationFallback: null,
             noMargins: false,
             scrollTo: null,
-            forceMinimumDocumentHeight: false,
             canExpandParent: true,
             clickTrampoline: ''
         };
@@ -136,7 +135,7 @@ var ScaleManager = new Class({
 
         this._updateThrottle = 0;
 
-        this._updateThrottleReset = 100;
+        this._updateThrottleReset = 1000;
 
         this._parentBounds = new Rectangle();
 
@@ -147,13 +146,11 @@ var ScaleManager = new Class({
         this._lastReportedGameSize = new Rectangle();
 
         this._booted = false;
-
-        game.events.once('boot', this.boot, this);
     },
 
-    boot: function ()
+    preBoot: function ()
     {
-        console.log('SM boot');
+        console.log('%c preBoot ', 'background: #000; color: #ffff00');
 
         // Configure device-dependent compatibility
 
@@ -230,32 +227,31 @@ var ScaleManager = new Class({
             document.addEventListener('MSFullscreenError', this._fullScreenError, false);
         }
 
+        //  Set-up the Bounds
+        var isDesktop = os.desktop && (document.documentElement.clientWidth <= window.innerWidth) && (document.documentElement.clientHeight <= window.innerHeight);
+
+        console.log('isDesktop', isDesktop, os.desktop);
+
+        VisualBounds.init(isDesktop);
+        LayoutBounds.init(isDesktop);
+
         this.setupScale(game.config.width, game.config.height);
 
         //  Same as calling setGameSize:
         this._gameSize.setTo(0, 0, game.config.width, game.config.height);
 
-        game.events.once('ready', this.start, this);
+        game.events.once('boot', this.boot, this);
     },
 
     //  Called once added to the DOM, not before
-    start: function ()
+    boot: function ()
     {
-        console.log('SM.start', this.width, this.height);
+        console.log('%c boot ', 'background: #000; color: #ffff00', this.width, this.height);
 
         var game = this.game;
-        var os = game.device.os;
         var compat = this.compatibility;
 
-        game.events.on('resume', this.gameResumed, this);
-
         // Initialize core bounds
-
-        //  Set-up the Bounds
-        var isDesktop = os.desktop && (document.documentElement.clientWidth <= window.innerWidth) && (document.documentElement.clientHeight <= window.innerHeight);
-
-        VisualBounds.init(isDesktop);
-        LayoutBounds.init(isDesktop);
 
         GetOffset(game.canvas, this.offset);
 
@@ -277,11 +273,17 @@ var ScaleManager = new Class({
 
         this.signalSizeChange();
 
-        // game.events.on('prestep', this.step, this);
+        //  Make sure to sync the parent bounds to the current local rect, or we'll expand forever
+        this.getParentBounds(this._parentBounds);
+
+        game.events.on('resume', this.gameResumed, this);
+        game.events.on('prestep', this.step, this);
     },
 
     setupScale: function (width, height)
     {
+        console.log('%c setupScale ', 'background: #000; color: #ffff00', width, height);
+
         var target;
         var rect = new Rectangle();
 
@@ -310,6 +312,8 @@ var ScaleManager = new Class({
 
             rect.width = VisualBounds.width;
             rect.height = VisualBounds.height;
+
+            console.log('parentIsWindow', VisualBounds.width, VisualBounds.height);
 
             this.offset.set(0, 0);
         }
@@ -360,15 +364,15 @@ var ScaleManager = new Class({
 
         this.updateDimensions(newWidth, newHeight, false);
 
-        console.log('setupScale', this._gameSize);
         console.log('pn', this.parentNode);
         console.log('pw', this.parentIsWindow);
         console.log('pb', this._parentBounds);
+        console.log('new size', newWidth, newHeight);
     },
 
     setGameSize: function (width, height)
     {
-        console.log('setGameSize', width, height);
+        console.log('%c setGameSize ', 'background: #000; color: #ffff00', width, height);
 
         this._gameSize.setTo(0, 0, width, height);
 
@@ -468,6 +472,8 @@ var ScaleManager = new Class({
 
         if (boundsChanged || orientationChanged)
         {
+            console.log('%c   bc    ', 'background: #000; color: #ffff00', boundsChanged, bounds.width, prevWidth, bounds.height, prevHeight);
+
             if (this.onResize)
             {
                 this.onResize.call(this.onResizeContext, this, bounds);
@@ -476,6 +482,11 @@ var ScaleManager = new Class({
             this.updateLayout();
 
             this.signalSizeChange();
+
+            //  Make sure to sync the parent bounds to the current local rect, or we'll expand forever
+            this.getParentBounds(this._parentBounds);
+
+            console.log('%c   new bounds    ', 'background: #000; color: #ffff00', this._parentBounds.width, this._parentBounds.height);
         }
 
         //  Next throttle, eg. 25, 50, 100, 200...
@@ -646,13 +657,6 @@ var ScaleManager = new Class({
 
         this.scrollTop();
 
-        if (this.compatibility.forceMinimumDocumentHeight)
-        {
-            // (This came from older code, by why is it here?)
-            // Set minimum height of content to new window height
-            document.documentElement.style.minHeight = window.innerHeight + 'px';
-        }
-
         if (this.incorrectOrientation)
         {
             this.setMaximum();
@@ -704,7 +708,7 @@ var ScaleManager = new Class({
 
     getParentBounds: function (bounds, parentNode)
     {
-        console.log('getParentBounds');
+        // console.log('%c getParentBounds ', 'background: #000; color: #ff00ff');
 
         if (bounds === undefined) { bounds = new Rectangle(); }
         if (parentNode === undefined) { parentNode = this.boundingParent; }
@@ -715,7 +719,7 @@ var ScaleManager = new Class({
         if (!parentNode)
         {
             bounds.setTo(0, 0, visualBounds.width, visualBounds.height);
-            console.log('b1');
+            // console.log('b1', bounds);
         }
         else
         {
@@ -739,15 +743,15 @@ var ScaleManager = new Class({
                 windowBounds = (wc.bottom === 'layout') ? layoutBounds : visualBounds;
                 bounds.bottom = Math.min(bounds.bottom, windowBounds.height);
             }
-
-            console.log('b2');
         }
 
-        bounds.setTo(
-            Math.round(bounds.x), Math.round(bounds.y),
-            Math.round(bounds.width), Math.round(bounds.height));
+        bounds.setTo(Math.round(bounds.x), Math.round(bounds.y), Math.round(bounds.width), Math.round(bounds.height));
 
-        console.log(bounds);
+        // console.log(parentNode.offsetParent);
+        // console.log(clientRect);
+        // console.log(parentRect);
+        // console.log(clientRect.left - parentRect.left, clientRect.top - parentRect.top, clientRect.width, clientRect.height);
+        // console.log('gpb', bounds);
 
         return bounds;
     },
@@ -893,6 +897,7 @@ var ScaleManager = new Class({
         {
             this._parentBounds.width = 0;
             this._parentBounds.height = 0;
+            this._lastUpdate = 0;
         }
 
         this._updateThrottle = this._updateThrottleReset;
@@ -1200,7 +1205,6 @@ var ScaleManager = new Class({
     },
     */
 
-    /*
     getInnerHeight: function ()
     {
         //  Based on code by @tylerjpeterson
@@ -1236,7 +1240,6 @@ var ScaleManager = new Class({
             return size.w;
         }
     },
-    */
 
     /**
      * Destroys the ScaleManager.
