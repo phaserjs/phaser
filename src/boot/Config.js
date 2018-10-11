@@ -273,9 +273,34 @@ var Config = new Class({
         this.parent = GetValue(config, 'parent', null);
 
         /**
-         * @const {?*} Phaser.Boot.Config#scaleMode - [description]
+         * @const {integer} Phaser.Boot.Config#scaleMode - [description]
          */
         this.scaleMode = GetValue(config, 'scaleMode', 0);
+
+        /**
+         * @const {boolean} Phaser.Boot.Config#expandParent - [description]
+         */
+        this.expandParent = GetValue(config, 'expandParent', false);
+
+        /**
+         * @const {integer} Phaser.Boot.Config#minWidth - [description]
+         */
+        this.minWidth = GetValue(config, 'minWidth', 0);
+
+        /**
+         * @const {integer} Phaser.Boot.Config#maxWidth - [description]
+         */
+        this.maxWidth = GetValue(config, 'maxWidth', 0);
+
+        /**
+         * @const {integer} Phaser.Boot.Config#minHeight - [description]
+         */
+        this.minHeight = GetValue(config, 'minHeight', 0);
+
+        /**
+         * @const {integer} Phaser.Boot.Config#maxHeight - [description]
+         */
+        this.maxHeight = GetValue(config, 'maxHeight', 0);
 
         //  Scale Manager - Anything set in here over-rides anything set above
 
@@ -289,8 +314,11 @@ var Config = new Class({
             this.resolution = GetValue(scaleConfig, 'resolution', this.resolution);
             this.parent = GetValue(scaleConfig, 'parent', this.parent);
             this.scaleMode = GetValue(scaleConfig, 'mode', this.scaleMode);
-
-            //  TODO: Add in min / max sizes
+            this.expandParent = GetValue(scaleConfig, 'mode', this.expandParent);
+            this.minWidth = GetValue(scaleConfig, 'min.width', this.minWidth);
+            this.maxWidth = GetValue(scaleConfig, 'max.width', this.maxWidth);
+            this.minHeight = GetValue(scaleConfig, 'min.height', this.minHeight);
+            this.maxHeight = GetValue(scaleConfig, 'max.height', this.maxHeight);
         }
 
         /**
