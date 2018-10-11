@@ -26,8 +26,6 @@ var CONST = {
 
     ScaleModes: require('./renderer/ScaleModes'),
 
-    ScaleManager: require('./dom/const'),
-
     /**
      * AUTO Detect Renderer.
      * 
