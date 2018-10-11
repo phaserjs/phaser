@@ -4,11 +4,14 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var Extend = require('../utils/object/Extend');
+var ScaleModes = require('./const');
+
 /**
  * @namespace Phaser.DOM
  */
 
-module.exports = {
+var Dom = {
 
     AddToDOM: require('./AddToDOM'),
     Calibrate: require('./Calibrate'),
@@ -25,6 +28,12 @@ module.exports = {
     RemoveFromDOM: require('./RemoveFromDOM'),
     RequestAnimationFrame: require('./RequestAnimationFrame'),
     ScaleManager: require('./ScaleManager'),
-    VisualBounds: require('./VisualBounds')
+    VisualBounds: require('./VisualBounds'),
+
+    ScaleModes: ScaleModes
 
 };
+
+Dom = Extend(false, Dom, ScaleModes);
+
+module.exports = Dom;

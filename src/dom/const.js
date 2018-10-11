@@ -7,7 +7,7 @@
 /**
  * Phaser ScaleManager Modes.
  * 
- * @name Phaser.ScaleManager
+ * @name Phaser.DOM.ScaleModes
  * @enum {integer}
  * @memberof Phaser
  * @readonly
@@ -17,58 +17,35 @@
 module.exports = {
 
     /**
-     * A scale mode that stretches content to fill all available space within the parent node, or window if no parent - see {@link Phaser.ScaleManager#scaleMode scaleMode}.
      * 
-     * @name Phaser.ScaleManager.EXACT_FIT
+     * 
+     * @name Phaser.DOM.EXACT
      * @since 3.15.0
      */
-    EXACT_FIT: 0,
+    EXACT: 0,
 
     /**
-     * A scale mode that prevents any scaling - see {@link Phaser.ScaleManager#scaleMode scaleMode}.
      * 
-     * @name Phaser.ScaleManager.NO_SCALE
+     * 
+     * @name Phaser.DOM.FILL
      * @since 3.15.0
      */
-    NO_SCALE: 1,
+    FILL: 1,
 
     /**
-     * A scale mode that shows the entire game while maintaining proportions - see {@link Phaser.ScaleManager#scaleMode scaleMode}.
      * 
-     * @name Phaser.ScaleManager.SHOW_ALL
+     * 
+     * @name Phaser.DOM.CONTAIN
      * @since 3.15.0
      */
-    SHOW_ALL: 2,
+    CONTAIN: 2,
 
     /**
-     * A scale mode that causes the game size to change as the browser window changes size - see {@link Phaser.ScaleManager#scaleMode scaleMode}.
      * 
-     * @name Phaser.ScaleManager.RESIZE
-     * @since 3.15.0
-     */
-    RESIZE: 3,
-
-    /**
-     * A scale mode that allows a custom scale factor - see {@link Phaser.ScaleManager#scaleMode scaleMode}.
      * 
-     * @name Phaser.ScaleManager.USER_SCALE
+     * @name Phaser.DOM.RESIZE
      * @since 3.15.0
      */
-    USER_SCALE: 4,
-
-    /**
-     * Names of the scale modes, indexed by value.
-     *
-     * @name Phaser.ScaleManager.MODES
-     * @since 3.15.0
-     * @type {string[]}
-     */
-    MODES: [
-        'EXACT_FIT',
-        'NO_SCALE',
-        'SHOW_ALL',
-        'RESIZE',
-        'USER_SCALE'
-    ]
+    RESIZE: 3
 
 };
