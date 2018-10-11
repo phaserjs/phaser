@@ -112,22 +112,22 @@ var WebGLRenderer = new Class({
         this.type = CONST.WEBGL;
 
         /**
-         * The width of a rendered frame.
+         * The width of the canvas being rendered to.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#width
-         * @type {number}
+         * @type {integer}
          * @since 3.0.0
          */
-        this.width = game.config.width;
+        this.width = game.scale.canvasWidth;
 
         /**
-         * The height of a rendered frame.
+         * The height of the canvas being rendered to.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#height
-         * @type {number}
+         * @type {integer}
          * @since 3.0.0
          */
-        this.height = game.config.height;
+        this.height = game.scale.canvasHeight;
 
         /**
          * The canvas which this WebGL Renderer draws to.
@@ -567,7 +567,24 @@ var WebGLRenderer = new Class({
 
         this.setBlendMode(CONST.BlendModes.NORMAL);
 
-        this.resize(this.width, this.height);
+        var width = this.width;
+        var height = this.height;
+
+        gl.viewport(0, 0, width, height);
+
+        var pipelines = this.pipelines;
+
+        //  Update all registered pipelines
+        for (var pipelineName in pipelines)
+        {
+            pipelines[pipelineName].resize(width, height, this.game.scale.resolution);
+        }
+
+        this.drawingBufferHeight = gl.drawingBufferHeight;
+
+        this.defaultCamera.setSize(width, height);
+
+        gl.scissor(0, (this.drawingBufferHeight - height), width, height);
 
         this.game.events.once('texturesready', this.boot, this);
 
@@ -596,7 +613,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Resizes the internal canvas and drawing buffer.
+     * Resizes the drawing buffer.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#resize
      * @since 3.0.0
@@ -610,19 +627,10 @@ var WebGLRenderer = new Class({
     {
         var gl = this.gl;
         var pipelines = this.pipelines;
-        var resolution = this.config.resolution;
+        var resolution = this.game.scale.resolution;
 
         this.width = Math.floor(width * resolution);
         this.height = Math.floor(height * resolution);
-
-        this.canvas.width = this.width;
-        this.canvas.height = this.height;
-
-        if (this.config.autoResize)
-        {
-            this.canvas.style.width = (this.width / resolution) + 'px';
-            this.canvas.style.height = (this.height / resolution) + 'px';
-        }
 
         gl.viewport(0, 0, this.width, this.height);
 
