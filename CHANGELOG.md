@@ -6,6 +6,8 @@
 
 * You can now set the `maxLights` value in the Game Config, which controls the total number of lights the Light2D shader can render in a single pass. The default is 10. Be careful about pushing this too far. More lights = less performance. Close #4081 (thanks @FrancescoNegri)
 * `Rectangle.SameDimensions` determines if the two objects (either Rectangles or Rectangle-like) have the same width and height values under strict equality.
+* An ArcadePhysics Group can now pass `{ enable: false }`` in its config to disable all the member bodies (thanks @samme)
+* `Body.setEnable` is a new chainable method that allows you to toggle the enable state of an Arcade Physics Body (thanks @samme)
 
 ### Updates
 
@@ -24,6 +26,7 @@
 * If you set `pixelArt` to true in your game config (or `antialias` to false) then TileSprites will now respect this when using the Canvas Renderer and disable smoothing on the internal fill canvas.
 * TileSprites that were set to be interactive before they had rendered once wouldn't receive a valid input hit area, causing input to fail. They now define their size immediately, allowing them to be made interactive without having rendered. Fix #4085 (thanks @DotTheGreat)
 * The Particle Emitter Manager has been given a NOOP method called `setBlendMode` to stop warnings from being thrown if you added an emitter to a Container in the Canvas renderer. Fix #4083 (thanks @maximtsai)
+* The `game.context` property would be incorrectly set to `null` after the WebGLRenderer instance was created (thanks @samme)
 
 ### Examples and TypeScript
 
