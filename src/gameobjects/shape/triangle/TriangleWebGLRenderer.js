@@ -74,6 +74,8 @@ var TriangleWebGLRenderer = function (renderer, src, interpolationPercentage, ca
         var x3 = src.geom.x3 - dx;
         var y3 = src.geom.y3 - dy;
 
+        pipeline.setTexture2D();
+
         pipeline.batchFillTriangle(
             x1,
             y1,

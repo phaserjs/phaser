@@ -133,6 +133,8 @@ var GridWebGLRenderer = function (renderer, src, interpolationPercentage, camera
                 cw = (x < gridWidth - 1) ? cellWidthA : cellWidthB;
                 ch = (y < gridHeight - 1) ? cellHeightA : cellHeightB;
 
+                pipeline.setTexture2D();
+
                 pipeline.batchFillRect(
                     x * cellWidth,
                     y * cellHeight,
@@ -173,6 +175,8 @@ var GridWebGLRenderer = function (renderer, src, interpolationPercentage, camera
                 cw = (x < gridWidth - 1) ? cellWidthA : cellWidthB;
                 ch = (y < gridHeight - 1) ? cellHeightA : cellHeightB;
 
+                pipeline.setTexture2D();
+
                 pipeline.batchFillRect(
                     x * cellWidth,
                     y * cellHeight,
@@ -197,12 +201,16 @@ var GridWebGLRenderer = function (renderer, src, interpolationPercentage, camera
         {
             var x1 = x * cellWidth;
 
+            pipeline.setTexture2D();
+
             pipeline.batchLine(x1, 0, x1, height, 1, 1, 1, 0, false);
         }
 
         for (y = 1; y < gridHeight; y++)
         {
             var y1 = y * cellHeight;
+
+            pipeline.setTexture2D();
 
             pipeline.batchLine(0, y1, width, y1, 1, 1, 1, 0, false);
         }

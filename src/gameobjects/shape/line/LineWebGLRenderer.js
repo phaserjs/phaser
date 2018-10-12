@@ -66,6 +66,8 @@ var LineWebGLRenderer = function (renderer, src, interpolationPercentage, camera
         var startWidth = src._startWidth;
         var endWidth = src._endWidth;
 
+        pipeline.setTexture2D();
+
         pipeline.batchLine(
             src.geom.x1 - dx,
             src.geom.y1 - dy,
