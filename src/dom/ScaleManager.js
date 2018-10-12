@@ -343,7 +343,7 @@ var ScaleManager = new Class({
         }
     },
 
-    step: function (time, delta)
+    step: function ()
     {
         //  canvas.clientWidth and clientHeight = canvas size when scaled with 100% object-fit, ignoring borders, margin, etc
     },

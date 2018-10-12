@@ -71,7 +71,7 @@ function init ()
     {
         OS.windows = true;
     }
-    else if (/Mac OS/.test(ua) && !/like Mac OS/.test(ua))
+    else if (/Mac OS/.test(ua) && !(/like Mac OS/.test(ua)))
     {
         OS.macOS = true;
     }
