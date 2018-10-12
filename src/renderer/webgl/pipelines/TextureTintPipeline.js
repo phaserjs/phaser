@@ -122,6 +122,15 @@ var TextureTintPipeline = new Class({
         this.maxQuads = rendererConfig.batchSize;
 
         /**
+         * Collection of batch information
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batches
+         * @type {array}
+         * @since 3.1.0
+         */
+        this.batches = [];
+
+        /**
          * A temporary Transform Matrix, re-used internally during batching.
          *
          * @name Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#_tempMatrix1
@@ -269,6 +278,11 @@ var TextureTintPipeline = new Class({
 
         this.mvpUpdate();
 
+        if (this.batches.length === 0)
+        {
+            this.pushBatch();
+        }
+
         return this;
     },
 
@@ -307,9 +321,63 @@ var TextureTintPipeline = new Class({
      */
     setTexture2D: function (texture, unit)
     {
-        this.renderer.setTexture2D(texture, unit);
+        if (!texture)
+        {
+            texture = this.renderer.blankTexture.glTexture;
+            unit = 0;
+        }
+
+        var batches = this.batches;
+
+        if (batches.length === 0)
+        {
+            this.pushBatch();
+        }
+
+        var batch = batches[batches.length - 1];
+
+        if (unit > 0)
+        {
+            if (batch.textures[unit - 1] &&
+                batch.textures[unit - 1] !== texture)
+            {
+                this.pushBatch();
+            }
+
+            batches[batches.length - 1].textures[unit - 1] = texture;
+        }
+        else
+        {
+            if (batch.texture !== null &&
+                batch.texture !== texture)
+            {
+                this.pushBatch();
+            }
+
+            batches[batches.length - 1].texture = texture;
+        }
 
         return this;
+    },
+
+    /**
+     * Creates a new batch object and pushes it to a batch array.
+     * The batch object contains information relevant to the current 
+     * vertex batch like the offset in the vertex buffer, vertex count and 
+     * the textures used by that batch.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#pushBatch
+     * @since 3.1.0
+     */
+    pushBatch: function ()
+    {
+        var batch = {
+            first: this.vertexCount,
+            texture: null,
+            textures: []
+        };
+
+        this.batches.push(batch);
     },
 
     /**
@@ -322,7 +390,10 @@ var TextureTintPipeline = new Class({
      */
     flush: function ()
     {
-        if (this.flushLocked) { return this; }
+        if (this.flushLocked)
+        {
+            return this;
+        }
 
         this.flushLocked = true;
 
@@ -332,18 +403,88 @@ var TextureTintPipeline = new Class({
         var vertexSize = this.vertexSize;
         var renderer = this.renderer;
 
-        if (vertexCount === 0)
+        var batches = this.batches;
+        var batchCount = batches.length;
+        var batchVertexCount = 0;
+        var batch = null;
+        var batchNext;
+        var textureIndex;
+        var nTexture;
+
+        if (batchCount === 0 || vertexCount === 0)
         {
             this.flushLocked = false;
-            return;
+
+            return this;
         }
 
-        renderer.setBlankTexture();
-
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
-        gl.drawArrays(topology, 0, vertexCount);
+
+        for (var index = 0; index < batches.length - 1; index++)
+        {
+            batch = batches[index];
+            batchNext = batches[index + 1];
+
+            if (batch.textures.length > 0)
+            {
+                for (textureIndex = 0; textureIndex < batch.textures.length; ++textureIndex)
+                {
+                    nTexture = batch.textures[textureIndex];
+
+                    if (nTexture)
+                    {
+                        renderer.setTexture2D(nTexture, 1 + textureIndex);
+                    }
+                }
+
+                gl.activeTexture(gl.TEXTURE0);
+            }
+
+            batchVertexCount = batchNext.first - batch.first;
+
+            if (batch.texture === null || batchVertexCount <= 0)
+            {
+                continue;
+            }
+
+            renderer.setTexture2D(batch.texture, 0);
+
+            gl.drawArrays(topology, batch.first, batchVertexCount);
+        }
+
+        // Left over data
+        batch = batches[batches.length - 1];
+
+        if (batch.textures.length > 0)
+        {
+            for (textureIndex = 0; textureIndex < batch.textures.length; ++textureIndex)
+            {
+                nTexture = batch.textures[textureIndex];
+
+                if (nTexture)
+                {
+                    renderer.setTexture2D(nTexture, 1 + textureIndex);
+                }
+            }
+
+            gl.activeTexture(gl.TEXTURE0);
+        }
+
+        batchVertexCount = vertexCount - batch.first;
+
+        if (batch.texture && batchVertexCount > 0)
+        {
+            renderer.setTexture2D(batch.texture, 0);
+
+            gl.drawArrays(topology, batch.first, batchVertexCount);
+        }
 
         this.vertexCount = 0;
+
+        batches.length = 0;
+
+        this.pushBatch();
+
         this.flushLocked = false;
 
         return this;
