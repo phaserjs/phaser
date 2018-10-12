@@ -145,13 +145,19 @@ var ScaleManager = new Class({
 
     setScaleMode: function (scaleMode)
     {
+        this.scaleMode = scaleMode;
+
+        if (scaleMode === CONST.EXACT)
+        {
+            return;
+        }
+
         var canvas = this.game.canvas;
         var gameStyle = canvas.style;
 
         var parent = this.parent;
         var parentStyle = parent.style;
 
-        this.scaleMode = scaleMode;
 
         switch (scaleMode)
         {
