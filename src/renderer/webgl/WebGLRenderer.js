@@ -1824,28 +1824,40 @@ var WebGLRenderer = new Class({
      *
      * @param {HTMLCanvasElement} srcCanvas - The Canvas element that will be used to populate the texture.
      * @param {WebGLTexture} [dstTexture] - Is this going to replace an existing texture? If so, pass it here.
+     * @param {boolean} [noRepeat=false] - Should this canvas never be allowed to set REPEAT? (such as for Text objects)
      *
      * @return {WebGLTexture} The newly created WebGL Texture.
      */
-    canvasToTexture: function (srcCanvas, dstTexture)
+    canvasToTexture: function (srcCanvas, dstTexture, noRepeat)
     {
+        if (noRepeat === undefined) { noRepeat = false; }
+
         var gl = this.gl;
 
-        var wrapping = gl.CLAMP_TO_EDGE;
-
-        if (IsSizePowerOfTwo(srcCanvas.width, srcCanvas.height))
+        if (!dstTexture)
         {
-            wrapping = gl.REPEAT;
+            var wrapping = gl.CLAMP_TO_EDGE;
+
+            if (!noRepeat && IsSizePowerOfTwo(srcCanvas.width, srcCanvas.height))
+            {
+                wrapping = gl.REPEAT;
+            }
+
+            dstTexture = this.createTexture2D(0, gl.NEAREST, gl.NEAREST, wrapping, wrapping, gl.RGBA, srcCanvas, srcCanvas.width, srcCanvas.height, true);
+        }
+        else
+        {
+            this.setTexture2D(dstTexture, 0);
+
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, srcCanvas);
+
+            dstTexture.width = srcCanvas.width;
+            dstTexture.height = srcCanvas.height;
+
+            this.setTexture2D(null, 0);
         }
 
-        var newTexture = this.createTexture2D(0, gl.NEAREST, gl.NEAREST, wrapping, wrapping, gl.RGBA, srcCanvas, srcCanvas.width, srcCanvas.height, true);
-
-        if (newTexture && dstTexture)
-        {
-            this.deleteTexture(dstTexture);
-        }
-
-        return newTexture;
+        return dstTexture;
     },
 
     /**

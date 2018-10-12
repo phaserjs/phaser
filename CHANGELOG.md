@@ -15,7 +15,8 @@
 * `TileSprite.setFrame` has had both the `updateSize` and `updateOrigin` arguments removed as they didn't do anything for TileSprites and were misleading.
 * `CameraManager.remove` has a new argument `runDestroy` which, if set, will automatically call `Camera.destroy` on the Cameras removed from the Camera Manager. You should nearly always allow this to happen (thanks jamespierce)
 * Device.OS has been restructured to allow fake UAs from Chrome dev tools to register iOS devices.
-* Texture batching during the batch flush has been implemented in the TextureTintPipeline which resolves the issues of very low frame rates, especially on iOS devices, when using non-batched textures such as those used by Text or TileSprites. Fix #4110 #4086 (thanks @ivan @sachinhosmani   @maximtsai @alexeymolchan)
+* Texture batching during the batch flush has been implemented in the TextureTintPipeline which resolves the issues of very low frame rates, especially on iOS devices, when using non-batched textures such as those used by Text or TileSprites. Fix #4110 #4086 (thanks @ivanpopelyshev @sachinhosmani   @maximtsai @alexeymolchan)
+* The WebGLRenderer method `canvasToTexture` has a new optional argument `noRepeat` which will stop it from using `gl.REPEAT` entirely. This is now used by the Text object to avoid it potentially switching between a REPEAT and CLAMP texture, causing texture black-outs (thanks @ivanpopelyshev)
 
 ### Bug Fixes
 
@@ -23,7 +24,6 @@
 * If you set `pixelArt` to true in your game config (or `antialias` to false) then TileSprites will now respect this when using the Canvas Renderer and disable smoothing on the internal fill canvas.
 * TileSprites that were set to be interactive before they had rendered once wouldn't receive a valid input hit area, causing input to fail. They now define their size immediately, allowing them to be made interactive without having rendered. Fix #4085 (thanks @DotTheGreat)
 * The Particle Emitter Manager has been given a NOOP method called `setBlendMode` to stop warnings from being thrown if you added an emitter to a Container in the Canvas renderer. Fix #4083 (thanks @maximtsai)
-* 
 
 ### Examples and TypeScript
 

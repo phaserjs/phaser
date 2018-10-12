@@ -238,6 +238,7 @@ var TextureSource = new Class({
 
             //  Update all the Frames using this TextureSource
 
+            /*
             var index = this.texture.getTextureSourceIndex(this);
             
             var frames = this.texture.getFramesFromTextureSource(index, true);
@@ -246,6 +247,7 @@ var TextureSource = new Class({
             {
                 frames[i].glTexture = this.glTexture;
             }
+            */
         }
     },
 
