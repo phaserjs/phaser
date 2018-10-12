@@ -1956,6 +1956,25 @@ var Body = new Class({
     },
 
     /**
+     * Sets the Body's `enable` property.
+     *
+     * @method Phaser.Physics.Arcade.Body#setEnable
+     * @since 3.14.0
+     *
+     * @param {boolean} [value=true] - The value to assign to `enable`.
+     *
+     * @return {Phaser.Physics.Arcade.Body} This Body object.
+     */
+    setEnable: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.enable = value;
+
+        return this;
+    },
+
+    /**
      * The Body's horizontal position (left edge).
      *
      * @name Phaser.Physics.Arcade.Body#x
