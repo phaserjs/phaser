@@ -1959,7 +1959,7 @@ var Body = new Class({
      * Sets the Body's `enable` property.
      *
      * @method Phaser.Physics.Arcade.Body#setEnable
-     * @since 3.14.0
+     * @since 3.15.0
      *
      * @param {boolean} [value=true] - The value to assign to `enable`.
      *
