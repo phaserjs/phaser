@@ -386,7 +386,7 @@ var Game = new Class({
 
         DebugHeader(this);
 
-        console.log('Canvas added to DOM');
+        // console.log('Canvas added to DOM');
 
         AddToDOM(this.canvas, this.config.parent);
 

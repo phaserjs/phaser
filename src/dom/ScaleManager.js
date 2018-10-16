@@ -85,7 +85,7 @@ var ScaleManager = new Class({
     preBoot: function ()
     {
         //  Parse the config to get the scaling values we need
-        console.log('preBoot');
+        // console.log('preBoot');
 
         this.setParent(this.game.config.parent);
 
@@ -96,7 +96,7 @@ var ScaleManager = new Class({
 
     boot: function ()
     {
-        console.log('boot');
+        // console.log('boot');
 
         this.setScaleMode(this.scaleMode);
 
@@ -137,7 +137,7 @@ var ScaleManager = new Class({
 
         this.scaleMode = scaleMode;
 
-        console.log(config);
+        // console.log(config);
 
         this.minSize.set(config.minWidth, config.minHeight);
         this.maxSize.set(config.maxWidth, config.maxHeight);
