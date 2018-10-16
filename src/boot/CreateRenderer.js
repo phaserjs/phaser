@@ -58,12 +58,12 @@ var CreateRenderer = function (game)
     {
         game.canvas = config.canvas;
 
-        game.canvas.width = game.scale.canvasWidth;
-        game.canvas.height = game.scale.canvasHeight;
+        game.canvas.width = game.config.width;
+        game.canvas.height = game.config.height;
     }
     else
     {
-        game.canvas = CanvasPool.create(game, game.scale.canvasWidth, game.scale.canvasHeight, config.renderType);
+        game.canvas = CanvasPool.create(game, config.width * config.resolution, config.height * config.resolution, config.renderType);
     }
 
     //  Does the game config provide some canvas css styles to use?
@@ -77,6 +77,10 @@ var CreateRenderer = function (game)
     {
         CanvasInterpolation.setCrisp(game.canvas);
     }
+
+    //  Zoomed?
+    game.canvas.style.width = (config.width * config.zoom).toString() + 'px';
+    game.canvas.style.height = (config.height * config.zoom).toString() + 'px';
 
     if (config.renderType === CONST.HEADLESS)
     {

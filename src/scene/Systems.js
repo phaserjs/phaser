@@ -149,17 +149,6 @@ var Systems = new Class({
         this.registry;
 
         /**
-         * A reference to the global Scale Manager.
-         * 
-         * In the default set-up you can access this from within a Scene via the `this.scale` property.
-         *
-         * @name Phaser.Scenes.Systems#scale
-         * @type {Phaser.DOM.ScaleManager}
-         * @since 3.15.0
-         */
-        this.scale;
-
-        /**
          * A reference to the global Sound Manager.
          * 
          * In the default set-up you can access this from within a Scene via the `this.sound` property.

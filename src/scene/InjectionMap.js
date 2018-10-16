@@ -22,7 +22,6 @@ var InjectionMap = {
     cache: 'cache',
     plugins: 'plugins',
     registry: 'registry',
-    scale: 'scale',
     sound: 'sound',
     textures: 'textures',
 
