@@ -314,7 +314,7 @@ You can then run `webpack` to create a development build in the `build` folder w
 
 # Change Log
 
-## Version 3.15.0 - Batou - 16th October 2018
+## Version 3.15.1 - Batou - 16th October 2018
 
 Note: We are releasing this version ahead of schedule in order to make some very important iOS performance and input related fixes available. It does not contain the new Scale Manager or Spine support, both of which have been moved to 3.16 as they require a few more weeks of development.
 

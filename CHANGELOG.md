@@ -1,5 +1,31 @@
 # Change Log
 
+## Version 3.16.0 - Ishikawa - in development
+
+### New Features
+
+### Updates
+
+### Bug Fixes
+
+### Examples and TypeScript
+
+Thanks to the following for helping with the Phaser 3 Examples and TypeScript definitions, either by reporting errors, or even better, fixing them:
+
+@guilhermehto
+
+### Phaser Doc Jam
+
+The [Phaser Doc Jam](http://docjam.phaser.io) is an on-going effort to ensure that the Phaser 3 API has 100% documentation coverage. Thanks to the monumental effort of myself and the following people we're now really close to that goal! My thanks to:
+
+-
+
+If you'd like to help finish off the last parts of documentation then take a look at the [Doc Jam site](http://docjam.phaser.io).
+
+## Version 3.15.1 - Batou - 16th October 2018
+
+* Re-enabled Input Manager resizing, which had been left disabled by mistake.
+
 ## Version 3.15.0 - Batou - 16th October 2018
 
 Note: We are releasing this version ahead of schedule in order to make some very important iOS performance and input related fixes available. It does not contain the new Scale Manager or Spine support, both of which have been moved to 3.16 as they require a few more weeks of development.
