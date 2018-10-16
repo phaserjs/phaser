@@ -285,14 +285,16 @@ var Pointer = new Class({
         this.wasTouch = false;
 
         /**
-         * Did this Pointer get cancelled by a touchcancel event?
+         * Did this Pointer get canceled by a touchcancel event?
+         * 
+         * Note: "canceled" is the American-English spelling of "cancelled". Please don't submit PRs correcting it!
          *
-         * @name Phaser.Input.Pointer#wasCancelled
+         * @name Phaser.Input.Pointer#wasCanceled
          * @type {boolean}
          * @default false
          * @since 3.15.0
          */
-        this.wasCancelled = false;
+        this.wasCanceled = false;
 
         /**
          * If the mouse is locked, the horizontal relative movement of the Pointer in pixels since last frame.
@@ -534,7 +536,7 @@ var Pointer = new Class({
         this.dirty = true;
 
         this.wasTouch = true;
-        this.wasCancelled = false;
+        this.wasCanceled = false;
     },
 
     /**
@@ -591,7 +593,7 @@ var Pointer = new Class({
         this.dirty = true;
 
         this.wasTouch = true;
-        this.wasCancelled = false;
+        this.wasCanceled = false;
         
         this.active = false;
     },
@@ -619,7 +621,7 @@ var Pointer = new Class({
         this.dirty = true;
 
         this.wasTouch = true;
-        this.wasCancelled = true;
+        this.wasCanceled = true;
         
         this.active = false;
     },
