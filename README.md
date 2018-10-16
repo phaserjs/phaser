@@ -157,7 +157,7 @@ Also, please subscribe to the [Phaser World](https://phaser.io/community/newslet
 
 ### Facebook Instant Games
 
-Phaser 3.13 introduces the new [Facebook Instant Games](https://developers.facebook.com/docs/games/instant-games) Plugin. The plugin provides a seamless bridge between Phaser and version 6.2 of the Facebook Instant Games SDK. Every single SDK function is available via the plugin and we will keep track of the official SDK to make sure they stay in sync.
+Phaser 3.13 introduced the new [Facebook Instant Games](https://developers.facebook.com/docs/games/instant-games) Plugin. The plugin provides a seamless bridge between Phaser and version 6.2 of the Facebook Instant Games SDK. Every single SDK function is available via the plugin and we will keep track of the official SDK to make sure they stay in sync.
 
 The plugin offers the following features:
 
@@ -194,30 +194,6 @@ The build files are in the git repository in the `dist` folder, and you can also
 ### Source Code Examples
 
 During our development of Phaser 3, we created hundreds of examples with the full source code and assets ready available. Until these examples are fully integrated into the Phaser website, you can browse them on [Phaser 3 Labs](https://labs.phaser.io), or clone the [examples repo][examples]. We are constantly adding to and refining these examples.
-
-### Facebook Instant Games
-
-Phaser 3.13 introduced the new Facebook Instant Games Plugin. The plugin provides a seamless bridge between Phaser and version 6.2 of the Facebook Instant Games SDK. Every single SDK function is available via the plugin and we will keep track of the official SDK to make sure they stay in sync.
-
-The plugin offers the following features:
-
-* Easy integration with the Phaser Loader so load events update the Facebook progress circle.
-* Events for every plugin method, allowing the async calls of the SDK to be correctly inserted into the Phaser game flow. When SDK calls resolve they will surface naturally as a Phaser event and you'll know you can safely act upon them without potentially doing something mid-way through the game step.
-* All Plugin methods check if the call is part of the supported APIs available in the SDK, without needing to launch an async request first.
-* Instant access to platform, player and locale data.
-* Easily load player photos directly into the Texture Manager, ready for use with a Game Object.
-* Subscribe to game bots.
-* The plugin has a built-in Data Manager which makes dealing with data stored on Facebook seamless. Just create whatever data properties you need and they are automatically synced.
-* Support for FB stats, to retrieve, store and increment stats into cloud storage.
-* Save Session data with built-in session length validation.
-* Easy context switching, to swap between game instances and session data retrieval.
-* Easily open a Facebook share, invite, request or game challenge window and populate the text and image content using any image stored in the Texture cache.
-* Full Leaderboard support. Retrieve, scan and update leaderboard entries, as well as player matching.
-* Support for in-app purchases, with product catalogs, the ability to handle purchases, get past purchases and consume previously unlocked purchases.
-* Easily preload a set of interstitial ads, in both banner and video form, then display the ad at any point in your game, with in-built tracking of ads displayed and inventory available.
-* Plus other features, such as logging to FB Analytics, creating short cuts, switching games, etc.
-
-The plugin is fully documented and official tutorials and project templates will follow shortly.
 
 ### Create Your First Phaser 3 Example
 
