@@ -8,6 +8,8 @@
 
 ### Bug Fixes
 
+* The `loadPlayerPhoto` function in the Instant Games plugin now listens for the updated Loader event correctly, causing the `photocomplete` event to fire properly.
+
 ### Examples and TypeScript
 
 Thanks to the following for helping with the Phaser 3 Examples and TypeScript definitions, either by reporting errors, or even better, fixing them:

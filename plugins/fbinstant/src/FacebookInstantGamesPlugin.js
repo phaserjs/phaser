@@ -687,7 +687,7 @@ var FacebookInstantGamesPlugin = new Class({
     
             scene.load.image(key, this.playerPhotoURL);
     
-            scene.load.once('filecomplete_image_' + key, function ()
+            scene.load.once('filecomplete-image-' + key, function ()
             {
                 this.emit('photocomplete', key);
 
