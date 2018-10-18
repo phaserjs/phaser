@@ -245,6 +245,10 @@ var CanvasRenderer = new Class({
      */
     resize: function (width, height)
     {
+        this.width = width;
+        this.height = height;
+
+        /*
         var resolution = this.config.resolution;
 
         this.width = width * resolution;
@@ -258,6 +262,7 @@ var CanvasRenderer = new Class({
             this.gameCanvas.style.width = (this.width / resolution) + 'px';
             this.gameCanvas.style.height = (this.height / resolution) + 'px';
         }
+        */
 
         //  Resizing a canvas will reset imageSmoothingEnabled (and probably other properties)
         if (this.scaleMode === ScaleModes.NEAREST)

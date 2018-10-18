@@ -19,6 +19,7 @@ var EventEmitter = require('eventemitter3');
 var InputManager = require('../input/InputManager');
 var PluginCache = require('../plugins/PluginCache');
 var PluginManager = require('../plugins/PluginManager');
+var ScaleManager = require('../dom/ScaleManager');
 var SceneManager = require('../scene/SceneManager');
 var SoundManagerCreator = require('../sound/SoundManagerCreator');
 var TextureManager = require('../textures/TextureManager');
@@ -28,6 +29,7 @@ var VisibilityHandler = require('./VisibilityHandler');
 if (typeof EXPERIMENTAL)
 {
     var CreateDOMContainer = require('./CreateDOMContainer');
+    var SpinePlugin = require('../../plugins/spine/src/SpinePlugin');
 }
 
 if (typeof PLUGIN_FBINSTANT)
@@ -226,6 +228,17 @@ var Game = new Class({
         this.device = Device;
 
         /**
+         * An instance of the Scale Manager.
+         *
+         * The Scale Manager is a global system responsible for handling game scaling events.
+         *
+         * @name Phaser.Game#scale
+         * @type {Phaser.Boot.ScaleManager}
+         * @since 3.15.0
+         */
+        this.scale = new ScaleManager(this, this.config);
+
+        /**
          * An instance of the base Sound Manager.
          *
          * The Sound Manager is a global system responsible for the playback and updating of all audio in your game.
@@ -363,6 +376,8 @@ var Game = new Class({
 
         this.config.preBoot(this);
 
+        this.scale.preBoot();
+
         CreateRenderer(this);
 
         if (typeof EXPERIMENTAL)
@@ -373,6 +388,12 @@ var Game = new Class({
         DebugHeader(this);
 
         AddToDOM(this.canvas, this.config.parent);
+
+        if (typeof EXPERIMENTAL)
+        {
+            //  v8
+            new SpinePlugin(this.plugins);
+        }
 
         this.events.emit('boot');
 

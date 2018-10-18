@@ -397,6 +397,7 @@ var InputManager = new Class({
      */
     resize: function ()
     {
+        /*
         this.updateBounds();
 
         //  Game config size
@@ -410,6 +411,7 @@ var InputManager = new Class({
         //  Scale factor
         this.scale.x = gw / bw;
         this.scale.y = gh / bh;
+        */
     },
 
     /**
