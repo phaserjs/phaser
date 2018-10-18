@@ -807,7 +807,7 @@ var LoaderPlugin = new Class({
     /**
      * This event is fired when the a file errors during load.
      * 
-     * @event Phaser.Loader.LoaderPlugin#loadErrorEvent
+     * @event Phaser.Loader.LoaderPlugin#loaderrorEvent
      * @param {Phaser.Loader.File} file - The file that has failed to load.
      */
 
@@ -819,7 +819,7 @@ var LoaderPlugin = new Class({
      *
      * @method Phaser.Loader.LoaderPlugin#nextFile
      * @fires Phaser.Loader.LoaderPlugin#loadEvent
-     * @fires Phaser.Loader.LoaderPlugin#loadErrorEvent
+     * @fires Phaser.Loader.LoaderPlugin#loaderrorEvent
      * @since 3.0.0
      *
      * @param {Phaser.Loader.File} file - The File that just finished loading, or errored during load.
@@ -853,7 +853,7 @@ var LoaderPlugin = new Class({
 
             this._deleteQueue.set(file);
 
-            this.emit('loadError', file);
+            this.emit('loaderror', file);
 
             this.fileProcessComplete(file);
         }
