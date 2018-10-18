@@ -644,7 +644,7 @@ var Body = new Class({
 
         /**
          * Whether this Body is checked for collisions and for which directions.
-         * You can set `checkCollision.none = false` to disable collision checks.
+         * You can set `checkCollision.none = true` to disable collision checks.
          *
          * @name Phaser.Physics.Arcade.Body#checkCollision
          * @type {ArcadeBodyCollision}
