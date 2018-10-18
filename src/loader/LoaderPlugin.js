@@ -853,7 +853,7 @@ var LoaderPlugin = new Class({
 
             this._deleteQueue.set(file);
 
-            this.emit('loaderror', file);
+            this.emit('loadError', file);
 
             this.fileProcessComplete(file);
         }
