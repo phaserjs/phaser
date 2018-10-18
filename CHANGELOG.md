@@ -6,6 +6,8 @@
 
 ### Updates
 
+* The Mouse Manager class has been updated to remove some commented out code and refine the `startListeners` method.
+
 ### Bug Fixes
 
 * The `loadPlayerPhoto` function in the Instant Games plugin now listens for the updated Loader event correctly, causing the `photocomplete` event to fire properly.

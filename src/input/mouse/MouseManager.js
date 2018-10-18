@@ -6,6 +6,7 @@
 
 var Class = require('../../utils/Class');
 var Features = require('../../device/Features');
+var NOOP = require('../../utils/Class');
 
 //  https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent
 //  https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
@@ -81,6 +82,50 @@ var MouseManager = new Class({
          */
         this.locked = false;
 
+        /**
+         * The Mouse Move Event handler.
+         * This function is sent the native DOM MouseEvent.
+         * Initially empty and bound in the `startListeners` method.
+         *
+         * @name Phaser.Input.Mouse.MouseManager#onMouseMove
+         * @type {function}
+         * @since 3.10.0
+         */
+        this.onMouseMove = NOOP;
+
+        /**
+         * The Mouse Down Event handler.
+         * This function is sent the native DOM MouseEvent.
+         * Initially empty and bound in the `startListeners` method.
+         *
+         * @name Phaser.Input.Mouse.MouseManager#onMouseDown
+         * @type {function}
+         * @since 3.10.0
+         */
+        this.onMouseDown = NOOP;
+
+        /**
+         * The Mouse Up Event handler.
+         * This function is sent the native DOM MouseEvent.
+         * Initially empty and bound in the `startListeners` method.
+         *
+         * @name Phaser.Input.Mouse.MouseManager#onMouseUp
+         * @type {function}
+         * @since 3.10.0
+         */
+        this.onMouseUp = NOOP;
+
+        /**
+         * Internal pointerLockChange handler.
+         * This function is sent the native DOM MouseEvent.
+         * Initially empty and bound in the `startListeners` method.
+         *
+         * @name Phaser.Input.Mouse.MouseManager#pointerLockChange
+         * @type {function}
+         * @since 3.0.0
+         */
+        this.pointerLockChange = NOOP;
+
         inputManager.events.once('boot', this.boot, this);
     },
 
@@ -109,7 +154,7 @@ var MouseManager = new Class({
             this.disableContextMenu();
         }
 
-        if (this.enabled)
+        if (this.enabled && this.target)
         {
             this.startListeners();
         }
@@ -159,30 +204,12 @@ var MouseManager = new Class({
         if (Features.pointerLock)
         {
             var element = this.target;
+
             element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+
             element.requestPointerLock();
         }
     },
-
-    /**
-     * Internal pointerLockChange handler.
-     *
-     * @method Phaser.Input.Mouse.MouseManager#pointerLockChange
-     * @since 3.0.0
-     *
-     * @param {MouseEvent} event - The native event from the browser.
-     */
-
-    /*
-    pointerLockChange: function (event)
-    {
-        var element = this.target;
-
-        this.locked = (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) ? true : false;
-
-        this.manager.queue.push(event);
-    },
-    */
 
     /**
      * If the browser supports pointer lock, this will request that the pointer lock is released. If
@@ -202,87 +229,6 @@ var MouseManager = new Class({
     },
 
     /**
-     * The Mouse Move Event Handler.
-     *
-     * @method Phaser.Input.Mouse.MouseManager#onMouseMove
-     * @since 3.10.0
-     *
-     * @param {MouseEvent} event - The native DOM Mouse Move Event.
-     */
-
-    /*
-    onMouseMove: function (event)
-    {
-        if (event.defaultPrevented || !this.enabled || !this.manager)
-        {
-            // Do nothing if event already handled
-            return;
-        }
-
-        this.manager.queueMouseMove(event);
-
-        if (this.capture)
-        {
-            event.preventDefault();
-        }
-    },
-    */
-
-    /**
-     * The Mouse Down Event Handler.
-     *
-     * @method Phaser.Input.Mouse.MouseManager#onMouseDown
-     * @since 3.10.0
-     *
-     * @param {MouseEvent} event - The native DOM Mouse Down Event.
-     */
-
-    /*
-    onMouseDown: function (event)
-    {
-        if (event.defaultPrevented || !this.enabled)
-        {
-            // Do nothing if event already handled
-            return;
-        }
-
-        this.manager.queueMouseDown(event);
-
-        if (this.capture)
-        {
-            event.preventDefault();
-        }
-    },
-    */
-
-    /**
-     * The Mouse Up Event Handler.
-     *
-     * @method Phaser.Input.Mouse.MouseManager#onMouseUp
-     * @since 3.10.0
-     *
-     * @param {MouseEvent} event - The native DOM Mouse Up Event.
-     */
-
-    /*
-    onMouseUp: function (event)
-    {
-        if (event.defaultPrevented || !this.enabled)
-        {
-            // Do nothing if event already handled
-            return;
-        }
-
-        this.manager.queueMouseUp(event);
-
-        if (this.capture)
-        {
-            event.preventDefault();
-        }
-    },
-    */
-
-    /**
      * Starts the Mouse Event listeners running.
      * This is called automatically and does not need to be manually invoked.
      *
@@ -293,7 +239,7 @@ var MouseManager = new Class({
     {
         var _this = this;
 
-        var onMouseMove = function (event)
+        this.onMouseMove = function (event)
         {
             if (event.defaultPrevented || !_this.enabled || !_this.manager)
             {
@@ -309,7 +255,7 @@ var MouseManager = new Class({
             }
         };
 
-        var onMouseDown = function (event)
+        this.onMouseDown = function (event)
         {
             if (event.defaultPrevented || !_this.enabled || !_this.manager)
             {
@@ -325,7 +271,7 @@ var MouseManager = new Class({
             }
         };
 
-        var onMouseUp = function (event)
+        this.onMouseUp = function (event)
         {
             if (event.defaultPrevented || !_this.enabled || !_this.manager)
             {
@@ -341,21 +287,32 @@ var MouseManager = new Class({
             }
         };
 
-        this.onMouseMove = onMouseMove;
-        this.onMouseDown = onMouseDown;
-        this.onMouseUp = onMouseUp;
-
         var target = this.target;
+
+        if (!target)
+        {
+            return;
+        }
+
         var passive = { passive: true };
         var nonPassive = { passive: false };
 
-        target.addEventListener('mousemove', onMouseMove, (this.capture) ? nonPassive : passive);
-        target.addEventListener('mousedown', onMouseDown, (this.capture) ? nonPassive : passive);
-        target.addEventListener('mouseup', onMouseUp, (this.capture) ? nonPassive : passive);
+        if (this.capture)
+        {
+            target.addEventListener('mousemove', this.onMouseMove, nonPassive);
+            target.addEventListener('mousedown', this.onMouseDown, nonPassive);
+            target.addEventListener('mouseup', this.onMouseUp, nonPassive);
+        }
+        else
+        {
+            target.addEventListener('mousemove', this.onMouseMove, passive);
+            target.addEventListener('mousedown', this.onMouseDown, passive);
+            target.addEventListener('mouseup', this.onMouseUp, passive);
+        }
 
         if (Features.pointerLock)
         {
-            var onPointerLockChange = function (event)
+            this.pointerLockChange = function (event)
             {
                 var element = _this.target;
 
@@ -364,12 +321,12 @@ var MouseManager = new Class({
                 _this.manager.queue.push(event);
             };
 
-            this.pointerLockChange = onPointerLockChange;
-
-            document.addEventListener('pointerlockchange', onPointerLockChange, true);
-            document.addEventListener('mozpointerlockchange', onPointerLockChange, true);
-            document.addEventListener('webkitpointerlockchange', onPointerLockChange, true);
+            document.addEventListener('pointerlockchange', this.pointerLockChange, true);
+            document.addEventListener('mozpointerlockchange', this.pointerLockChange, true);
+            document.addEventListener('webkitpointerlockchange', this.pointerLockChange, true);
         }
+
+        this.enabled = true;
     },
 
     /**
@@ -406,6 +363,7 @@ var MouseManager = new Class({
         this.stopListeners();
 
         this.target = null;
+        this.enabled = false;
         this.manager = null;
     }
 
