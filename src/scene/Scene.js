@@ -9,7 +9,7 @@ var Systems = require('./Systems');
 
 /**
  * @classdesc
- * [description]
+ * A base Phaser.Scene class which you could extend for your own use.
  *
  * @class Scene
  * @memberof Phaser

@@ -433,7 +433,7 @@ var List = new Class({
      * @param {integer} [endIndex] - The position to stop removing at. The item at this position won't be removed.
      * @param {boolean} [skipCallback=false] - Skip calling the List.removeCallback.
      *
-     * @return {Array.<*>} An array of the items which were removed.[description]
+     * @return {Array.<*>} An array of the items which were removed.
      */
     removeBetween: function (startIndex, endIndex, skipCallback)
     {

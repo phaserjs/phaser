@@ -63,7 +63,7 @@ var BuildChunk = function (a, b, qty)
  * @param {array} b - The second array of range elements.
  * @param {object} [options] - A range configuration object. Can contain: repeat, random, randomB, yoyo, max, qty.
  *
- * @return {array} [description]
+ * @return {array} An array of arranged elements.
  */
 var Range = function (a, b, options)
 {
