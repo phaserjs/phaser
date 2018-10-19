@@ -396,6 +396,7 @@ var TextStyle = new Class({
         {
             this.setFont(font, false);
         }
+
         this._font = [ this.fontStyle, this.fontSize, this.fontFamily ].join(' ').trim();
 
         //  Allow for 'fill' to be used in place of 'color'
@@ -533,8 +534,10 @@ var TextStyle = new Class({
         else
         {
             var fontSplit = font.split(' ');
+
             var i = 0;
-            this.fontStyle = fontSplit.length > 2 ? fontSplit[i++] : '';
+
+            this.fontStyle = (fontSplit.length > 2) ? fontSplit[i++] : '';
             this.fontSize = fontSplit[i++] || '16px';
             this.fontFamily = fontSplit[i++] || 'Courier';
         }
