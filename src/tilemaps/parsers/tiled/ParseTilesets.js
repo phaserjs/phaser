@@ -80,11 +80,14 @@ var ParseTilesets = function (json)
                         }
 
                         // Copy animation data
-                        if(tile.animation) {
-                            if(tiles.hasOwnProperty(tile.id)){
+                        if (tile.animation)
+                        {
+                            if (tiles.hasOwnProperty(tile.id))
+                            {
                                 tiles[tile.id].animation = tile.animation;
                             }
-                            else {
+                            else
+                            {
                                 tiles[tile.id] = { animation: tile.animation };
                             }
                         }
