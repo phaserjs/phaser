@@ -11,6 +11,7 @@
 ### Bug Fixes
 
 * The `loadPlayerPhoto` function in the Instant Games plugin now listens for the updated Loader event correctly, causing the `photocomplete` event to fire properly.
+* The Rectangle Shape object wouldn't render if it didn't have a stroke, or any other objects on the display list (thanks mliko)
 
 ### Examples and TypeScript
 
