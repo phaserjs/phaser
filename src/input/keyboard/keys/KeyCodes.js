@@ -477,6 +477,11 @@ var KeyCodes = {
     COLON: 58,
 
     /**
+     * @name Phaser.Input.Keyboard.KeyCodes.COMMA_FIREFOX_WINDOWS
+     */
+    COMMA_FIREFOX_WINDOWS: 60,
+
+    /**
      * @name Phaser.Input.Keyboard.KeyCodes.COMMA_FIREFOX
      */
     COMMA_FIREFOX: 62,
