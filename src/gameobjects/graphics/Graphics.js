@@ -1013,7 +1013,7 @@ var Graphics = new Class({
      * @param {number} x - The x coordinate to draw the line to.
      * @param {number} y - The y coordinate to draw the line to.
      * @param {number} width - The width of the stroke.
-     * @param {number} rgb - [description]
+     * @param {number} rgb - The color of the stroke.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -1036,7 +1036,7 @@ var Graphics = new Class({
      * @param {number} x - The x coordinate to move to.
      * @param {number} y - The y coordinate to move to.
      * @param {number} width - The new stroke width.
-     * @param {number} rgb - [description]
+     * @param {number} rgb - The new stroke color.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */

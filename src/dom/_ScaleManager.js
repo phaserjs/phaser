@@ -17,7 +17,7 @@ var VisualBounds = require('./VisualBounds');
 
 /**
  * @classdesc
- * [description]
+ * TODO
  *
  * @class ScaleManager
  * @memberof Phaser.DOM

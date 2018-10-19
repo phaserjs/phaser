@@ -12,7 +12,7 @@ var Rectangle = require('../geom/rectangle/Rectangle');
 
 /**
  * @classdesc
- * [description]
+ * TODO
  *
  * @class ScaleManager
  * @memberof Phaser.DOM
