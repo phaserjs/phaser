@@ -7,14 +7,14 @@
 var RotateMatrix = require('./RotateMatrix');
 
 /**
- * [description]
+ * Rotates the array matrix 180 degrees.
  *
  * @function Phaser.Utils.Array.Matrix.Rotate180
  * @since 3.0.0
  *
- * @param {array} matrix - [description]
+ * @param {array} matrix - The array to rotate.
  *
- * @return {array} [description]
+ * @return {array} The rotated matrix array. The source matrix should be discard for the returned matrix.
  */
 var Rotate180 = function (matrix)
 {

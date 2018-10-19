@@ -4,11 +4,10 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-// Transposes the elements of the given matrix (array of arrays).
-// The transpose of a matrix is a new matrix whose rows are the columns of the original.
-
 /**
- * [description]
+ * Transposes the elements of the given matrix (array of arrays).
+ *
+ * The transpose of a matrix is a new matrix whose rows are the columns of the original.
  *
  * @function Phaser.Utils.Array.Matrix.TransposeMatrix
  * @since 3.0.0
