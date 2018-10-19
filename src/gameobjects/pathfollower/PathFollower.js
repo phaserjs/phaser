@@ -82,16 +82,6 @@ var PathFollower = new Class({
         this.rotateToPath = false;
 
         /**
-         * [description]
-         *
-         * @name Phaser.GameObjects.PathFollower#pathRotationVerticalAdjust
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.pathRotationVerticalAdjust = false;
-
-        /**
          * If the PathFollower is rotating to match the Path (@see Phaser.GameObjects.PathFollower#rotateToPath)
          * this value is added to the rotation value. This allows you to rotate objects to a path but control
          * the angle of the rotation as well.
@@ -194,19 +184,16 @@ var PathFollower = new Class({
      *
      * @param {boolean} value - Whether the PathFollower should automatically rotate to point in the direction of the Path.
      * @param {number} [offset=0] - Rotation offset in degrees.
-     * @param {boolean} [verticalAdjust=false] - [description]
      *
      * @return {Phaser.GameObjects.PathFollower} This Game Object.
      */
-    setRotateToPath: function (value, offset, verticalAdjust)
+    setRotateToPath: function (value, offset)
     {
         if (offset === undefined) { offset = 0; }
-        if (verticalAdjust === undefined) { verticalAdjust = false; }
 
         this.rotateToPath = value;
 
         this.pathRotationOffset = offset;
-        this.pathRotationVerticalAdjust = verticalAdjust;
 
         return this;
     },
@@ -266,7 +253,6 @@ var PathFollower = new Class({
 
         this.rotateToPath = GetBoolean(config, 'rotateToPath', false);
         this.pathRotationOffset = GetValue(config, 'rotationOffset', 0);
-        this.pathRotationVerticalAdjust = GetBoolean(config, 'verticalAdjust', false);
 
         this.pathTween = this.scene.sys.tweens.addCounter(config);
 
@@ -421,11 +407,6 @@ var PathFollower = new Class({
             if (this.rotateToPath)
             {
                 this.rotation = Math.atan2(speedY, speedX) + DegToRad(this.pathRotationOffset);
-
-                if (this.pathRotationVerticalAdjust)
-                {
-                    this.flipY = (this.rotation !== 0 && tweenData.state === TWEEN_CONST.PLAYING_BACKWARD);
-                }
             }
         }
     }
