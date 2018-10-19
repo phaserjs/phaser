@@ -530,7 +530,7 @@ var Timeline = new Class({
      * @since 3.0.0
      *
      * @param {string} type - [description]
-     * @param {function} callback - [description]
+     * @param {function} callback - Timeline allows multiple tweens to be linked together to create a streaming sequence.
      * @param {array} [params] - [description]
      * @param {object} [scope] - [description]
      *

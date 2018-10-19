@@ -1089,10 +1089,10 @@ var StaticTilemapLayer = new Class({
      * @method Phaser.Tilemaps.StaticTilemapLayer#getTilesWithinWorldXY
      * @since 3.0.0
      *
-     * @param {number} worldX - [description]
-     * @param {number} worldY - [description]
-     * @param {number} width - [description]
-     * @param {number} height - [description]
+     * @param {number} worldX - The leftmost tile index (in tile coordinates) to use as the origin of the area to filter.
+     * @param {number} worldY - The topmost tile index (in tile coordinates) to use as the origin of the area to filter.
+     * @param {number} width - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} height - How many tiles highfrom the `tileY` index the area will be.
      * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
      * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
      * -1 for an index.

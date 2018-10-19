@@ -14,7 +14,7 @@
  * @param {string} [type='image/png'] - [description]
  * @param {number} [encoderOptions=0.92] - [description]
  *
- * @return {HTMLImageElement} [description]
+ * @return {HTMLImageElement} Returns an image of the type specified.
  */
 var CanvasSnapshot = function (canvas, type, encoderOptions)
 {

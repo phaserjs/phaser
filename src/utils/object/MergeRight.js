@@ -14,10 +14,10 @@ var Clone = require('./Clone');
  * @function Phaser.Utils.Objects.MergeRight
  * @since 3.0.0
  *
- * @param {object} obj1 - [description]
- * @param {object} obj2 - [description]
+ * @param {object} obj1 - The first object to merge.
+ * @param {object} obj2 - The second object to merge. Keys from this object which also exist in `obj1` will be copied to `obj1`.
  *
- * @return {object} [description]
+ * @return {object} The merged object. `obj1` and `obj2` are not modified.
  */
 var MergeRight = function (obj1, obj2)
 {

@@ -1999,7 +1999,7 @@ var World = new Class({
      * @param {*} callbackContext - [description]
      * @param {boolean} overlapOnly - Whether this is a collision or overlap check.
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if the Sprite collided with the given Group, otherwise `false`.
      */
     collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext, overlapOnly)
     {

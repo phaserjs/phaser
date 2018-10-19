@@ -19,9 +19,9 @@ var Smoothing = function ()
      * @function Phaser.Display.Canvas.Smoothing.getPrefix
      * @since 3.0.0
      *
-     * @param {(CanvasRenderingContext2D|WebGLRenderingContext)} context - [description]
+     * @param {(CanvasRenderingContext2D|WebGLRenderingContext)} context - The canvas context to check.
      *
-     * @return {string} [description]
+     * @return {string} The name of the property on the context which controls image smoothing (either `imageSmoothingEnabled` or a vendor-prefixed version thereof), or `null` if not supported.
      */
     var getPrefix = function (context)
     {
@@ -50,9 +50,9 @@ var Smoothing = function ()
      * @function Phaser.Display.Canvas.Smoothing.enable
      * @since 3.0.0
      *
-     * @param {(CanvasRenderingContext2D|WebGLRenderingContext)} context - [description]
+     * @param {(CanvasRenderingContext2D|WebGLRenderingContext)} context - The context on which to enable smoothing.
      *
-     * @return {(CanvasRenderingContext2D|WebGLRenderingContext)} [description]
+     * @return {(CanvasRenderingContext2D|WebGLRenderingContext)} The provided context.
      */
     var enable = function (context)
     {
@@ -79,9 +79,9 @@ var Smoothing = function ()
      * @function Phaser.Display.Canvas.Smoothing.disable
      * @since 3.0.0
      *
-     * @param {(CanvasRenderingContext2D|WebGLRenderingContext)} context - [description]
+     * @param {(CanvasRenderingContext2D|WebGLRenderingContext)} context - The context on which to disable smoothing.
      *
-     * @return {(CanvasRenderingContext2D|WebGLRenderingContext)} [description]
+     * @return {(CanvasRenderingContext2D|WebGLRenderingContext)} The provided context.
      */
     var disable = function (context)
     {
@@ -105,9 +105,9 @@ var Smoothing = function ()
      * @function Phaser.Display.Canvas.Smoothing.isEnabled
      * @since 3.0.0
      *
-     * @param {(CanvasRenderingContext2D|WebGLRenderingContext)} context - [description]
+     * @param {(CanvasRenderingContext2D|WebGLRenderingContext)} context - The context to check.
      *
-     * @return {?boolean} [description]
+     * @return {?boolean} `true` if smoothing is enabled on the context, otherwise `false`. `null` if not supported.
      */
     var isEnabled = function (context)
     {

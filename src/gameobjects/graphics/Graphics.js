@@ -1005,14 +1005,14 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Draw a line from the current drawing position to the given position with a specific width and color.
      *
      * @method Phaser.GameObjects.Graphics#lineFxTo
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
+     * @param {number} x - The x coordinate to draw the line to.
+     * @param {number} y - The y coordinate to draw the line to.
+     * @param {number} width - The width of the stroke.
      * @param {number} rgb - [description]
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
@@ -1028,14 +1028,14 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Move the current drawing position to the given position and change the pen width and color.
      *
      * @method Phaser.GameObjects.Graphics#moveFxTo
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
+     * @param {number} x - The x coordinate to move to.
+     * @param {number} y - The y coordinate to move to.
+     * @param {number} width - The new stroke width.
      * @param {number} rgb - [description]
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.

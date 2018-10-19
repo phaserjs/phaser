@@ -18,10 +18,10 @@
  * @function Phaser.Geom.Intersects.LineToRectangle
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Line} line - [description]
- * @param {(Phaser.Geom.Rectangle|object)} rect - [description]
+ * @param {Phaser.Geom.Line} line - The Line to check for intersection.
+ * @param {(Phaser.Geom.Rectangle|object)} rect - The Rectangle to check for intersection.
  *
- * @return {boolean} [description]
+ * @return {boolean} `true` if the Line and the Rectangle intersect, `false` otherwise.
  */
 var LineToRectangle = function (line, rect)
 {

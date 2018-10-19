@@ -32,12 +32,12 @@ var Velocity = {
     },
 
     /**
-     * [description]
+     * Sets the horizontal velocity of the physics body.
      *
      * @method Phaser.Physics.Matter.Components.Velocity#setVelocityX
      * @since 3.0.0
      *
-     * @param {number} x - [description]
+     * @param {number} x - The horizontal velocity value.
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
@@ -51,12 +51,12 @@ var Velocity = {
     },
 
     /**
-     * [description]
+     * Sets vertical velocity of the physics body.
      *
      * @method Phaser.Physics.Matter.Components.Velocity#setVelocityY
      * @since 3.0.0
      *
-     * @param {number} y - [description]
+     * @param {number} y - The vertical velocity value.
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
@@ -70,13 +70,13 @@ var Velocity = {
     },
 
     /**
-     * [description]
+     * Sets both the horizontal and vertical velocity of the physics body.
      *
      * @method Phaser.Physics.Matter.Components.Velocity#setVelocity
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} [y=x] - [description]
+     * @param {number} x - The horizontal velocity value.
+     * @param {number} [y=x] - The vertical velocity value, it can be either positive or negative. If not given, it will be the same as the `x` value.
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */

@@ -504,12 +504,12 @@ var Body = new Class({
     },
 
     /**
-     * [description]
+     * Export this body object to JSON.
      *
      * @method Phaser.Physics.Impact.Body#toJSON
      * @since 3.0.0
      *
-     * @return {JSONImpactBody} [description]
+     * @return {JSONImpactBody} JSON representation of this body object.
      */
     toJSON: function ()
     {

@@ -517,9 +517,9 @@ var TweenManager = new Class({
      * @method Phaser.Tweens.TweenManager#isTweening
      * @since 3.0.0
      *
-     * @param {object} target - [description]
+     * @param {object} target - target Phaser.Tweens.Tween object
      *
-     * @return {boolean} [description]
+     * @return {boolean} returns if target tween object is active or not
      */
     isTweening: function (target)
     {

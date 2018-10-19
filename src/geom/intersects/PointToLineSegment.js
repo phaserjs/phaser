@@ -7,15 +7,15 @@
 var PointToLine = require('./PointToLine');
 
 /**
- * [description]
+ * Checks if a Point is located on the given line segment.
  *
  * @function Phaser.Geom.Intersects.PointToLineSegment
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Point} point - [description]
- * @param {Phaser.Geom.Line} line - [description]
+ * @param {Phaser.Geom.Point} point - The Point to check for intersection.
+ * @param {Phaser.Geom.Line} line - The line segment to check for intersection.
  *
- * @return {boolean} [description]
+ * @return {boolean} `true` if the Point is on the given line segment, otherwise `false`.
  */
 var PointToLineSegment = function (point, line)
 {

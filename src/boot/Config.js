@@ -578,7 +578,7 @@ var Config = new Class({
         //  Callbacks
 
         /**
-         * @const {BootCallback} Phaser.Boot.Config#preBoot - [description]
+         * @const {BootCallback} Phaser.Boot.Config#preBoot - Called before Phaser boots. Useful for initializing anything not related to Phaser that Phaser may require while booting.
          */
         this.preBoot = GetValue(config, 'callbacks.preBoot', NOOP);
 

@@ -26,8 +26,8 @@ var Vector2 = require('../../math/Vector2');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Physics.Arcade.World} world - [description]
- * @param {Phaser.GameObjects.GameObject} gameObject - [description]
+ * @param {Phaser.Physics.Arcade.World} world - The Arcade Physics simulation this Static Body belongs to.
+ * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object this Static Body belongs to.
  */
 var StaticBody = new Class({
 
@@ -39,7 +39,7 @@ var StaticBody = new Class({
         var height = (gameObject.height) ? gameObject.height : 64;
 
         /**
-         * [description]
+         * The Arcade Physics simulation this Static Body belongs to.
          *
          * @name Phaser.Physics.Arcade.StaticBody#world
          * @type {Phaser.Physics.Arcade.World}
@@ -48,7 +48,7 @@ var StaticBody = new Class({
         this.world = world;
 
         /**
-         * [description]
+         * The Game Object this Static Body belongs to.
          *
          * @name Phaser.Physics.Arcade.StaticBody#gameObject
          * @type {Phaser.GameObjects.GameObject}
@@ -57,7 +57,7 @@ var StaticBody = new Class({
         this.gameObject = gameObject;
 
         /**
-         * [description]
+         * Whether the Static Body's boundary is drawn to the debug display.
          *
          * @name Phaser.Physics.Arcade.StaticBody#debugShowBody
          * @type {boolean}
@@ -66,7 +66,7 @@ var StaticBody = new Class({
         this.debugShowBody = world.defaults.debugShowStaticBody;
 
         /**
-         * [description]
+         * The color of this Static Body on the debug display.
          *
          * @name Phaser.Physics.Arcade.StaticBody#debugBodyColor
          * @type {integer}
@@ -75,7 +75,7 @@ var StaticBody = new Class({
         this.debugBodyColor = world.defaults.staticBodyDebugColor;
 
         /**
-         * [description]
+         * Whether this Static Body is updated by the physics simulation.
          *
          * @name Phaser.Physics.Arcade.StaticBody#enable
          * @type {boolean}
@@ -85,7 +85,7 @@ var StaticBody = new Class({
         this.enable = true;
 
         /**
-         * [description]
+         * Whether this Static Body's boundary is circular (`true`) or rectangular (`false`).
          *
          * @name Phaser.Physics.Arcade.StaticBody#isCircle
          * @type {boolean}
@@ -95,7 +95,8 @@ var StaticBody = new Class({
         this.isCircle = false;
 
         /**
-         * [description]
+         * If this Static Body is circular, this is the unscaled radius of the Static Body's boundary, as set by {@link #setCircle}, in source pixels.
+         * The true radius is equal to `halfWidth`.
          *
          * @name Phaser.Physics.Arcade.StaticBody#radius
          * @type {number}
@@ -105,7 +106,9 @@ var StaticBody = new Class({
         this.radius = 0;
 
         /**
-         * [description]
+         * The offset of this Static Body's actual position from any updated position.
+         *
+         * Unlike a dynamic Body, a Static Body does not follow its Game Object. As such, this offset is only applied when resizing the Static Body.
          *
          * @name Phaser.Physics.Arcade.StaticBody#offset
          * @type {Phaser.Math.Vector2}
@@ -114,7 +117,7 @@ var StaticBody = new Class({
         this.offset = new Vector2();
 
         /**
-         * [description]
+         * The position of this Static Body within the simulation.
          *
          * @name Phaser.Physics.Arcade.StaticBody#position
          * @type {Phaser.Math.Vector2}
@@ -123,7 +126,8 @@ var StaticBody = new Class({
         this.position = new Vector2(gameObject.x - gameObject.displayOriginX, gameObject.y - gameObject.displayOriginY);
 
         /**
-         * [description]
+         * The width of the Static Body's boundary, in pixels.
+         * If the Static Body is circular, this is also the Static Body's diameter.
          *
          * @name Phaser.Physics.Arcade.StaticBody#width
          * @type {number}
@@ -132,7 +136,8 @@ var StaticBody = new Class({
         this.width = width;
 
         /**
-         * [description]
+         * The height of the Static Body's boundary, in pixels.
+         * If the Static Body is circular, this is also the Static Body's diameter.
          *
          * @name Phaser.Physics.Arcade.StaticBody#height
          * @type {number}
@@ -141,7 +146,8 @@ var StaticBody = new Class({
         this.height = height;
 
         /**
-         * [description]
+         * Half the Static Body's width, in pixels.
+         * If the Static Body is circular, this is also the Static Body's radius.
          *
          * @name Phaser.Physics.Arcade.StaticBody#halfWidth
          * @type {number}
@@ -150,7 +156,8 @@ var StaticBody = new Class({
         this.halfWidth = Math.abs(this.width / 2);
 
         /**
-         * [description]
+         * Half the Static Body's height, in pixels.
+         * If the Static Body is circular, this is also the Static Body's radius.
          *
          * @name Phaser.Physics.Arcade.StaticBody#halfHeight
          * @type {number}
@@ -159,7 +166,8 @@ var StaticBody = new Class({
         this.halfHeight = Math.abs(this.height / 2);
 
         /**
-         * [description]
+         * The center of the Static Body's boundary.
+         * This is the midpoint of its `position` (top-left corner) and its bottom-right corner.
          *
          * @name Phaser.Physics.Arcade.StaticBody#center
          * @type {Phaser.Math.Vector2}
@@ -168,7 +176,7 @@ var StaticBody = new Class({
         this.center = new Vector2(gameObject.x + this.halfWidth, gameObject.y + this.halfHeight);
 
         /**
-         * [description]
+         * A constant zero velocity used by the Arcade Physics simulation for calculations.
          *
          * @name Phaser.Physics.Arcade.StaticBody#velocity
          * @type {Phaser.Math.Vector2}
@@ -178,7 +186,7 @@ var StaticBody = new Class({
         this.velocity = Vector2.ZERO;
 
         /**
-         * [description]
+         * A constant `false` value expected by the Arcade Physics simulation.
          *
          * @name Phaser.Physics.Arcade.StaticBody#allowGravity
          * @type {boolean}
@@ -722,7 +730,7 @@ var StaticBody = new Class({
      * @method Phaser.Physics.Arcade.StaticBody#deltaX
      * @since 3.0.0
      *
-     * @return {number} Always zero for a Static Body.
+     * @return {number} The change in this StaticBody's velocity from the previous step. Always zero.
      */
     deltaX: function ()
     {
@@ -735,7 +743,7 @@ var StaticBody = new Class({
      * @method Phaser.Physics.Arcade.StaticBody#deltaY
      * @since 3.0.0
      *
-     * @return {number} 0
+     * @return {number} The change in this StaticBody's velocity from the previous step. Always zero.
      */
     deltaY: function ()
     {
@@ -748,7 +756,7 @@ var StaticBody = new Class({
      * @method Phaser.Physics.Arcade.StaticBody#deltaZ
      * @since 3.0.0
      *
-     * @return {number} 0
+     * @return {number} The change in this StaticBody's rotation from the previous step. Always zero.
      */
     deltaZ: function ()
     {

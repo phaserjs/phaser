@@ -33,7 +33,7 @@ var Mass = {
     },
 
     /**
-     * [description]
+     * Sets density of the body.
      *
      * @method Phaser.Physics.Matter.Components.Mass#setDensity
      * @since 3.0.0

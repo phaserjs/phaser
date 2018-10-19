@@ -15,7 +15,7 @@ var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 
 /**
  * @classdesc
- * [description]
+ * The Canvas Renderer is responsible for managing 2D canvas rendering contexts, including the one used by the Game's canvas. It tracks the internal state of a given context and can renderer textured Game Objects to it, taking into account alpha, blending, and scaling.
  *
  * @class CanvasRenderer
  * @memberof Phaser.Renderer.Canvas
@@ -40,7 +40,7 @@ var CanvasRenderer = new Class({
         this.game = game;
 
         /**
-         * [description]
+         * A constant which allows the renderer to be easily identified as a Canvas Renderer.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#type
          * @type {integer}
@@ -49,7 +49,7 @@ var CanvasRenderer = new Class({
         this.type = CONST.CANVAS;
 
         /**
-         * [description]
+         * The total number of Game Objects which were rendered in a frame.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#drawCount
          * @type {number}
@@ -59,7 +59,7 @@ var CanvasRenderer = new Class({
         this.drawCount = 0;
 
         /**
-         * [description]
+         * The width of the canvas being rendered to.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#width
          * @type {number}
@@ -68,7 +68,7 @@ var CanvasRenderer = new Class({
         this.width = game.config.width;
 
         /**
-         * [description]
+         * The height of the canvas being rendered to.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#height
          * @type {number}
@@ -77,7 +77,7 @@ var CanvasRenderer = new Class({
         this.height = game.config.height;
 
         /**
-         * [description]
+         * The local configuration settings of the CanvasRenderer.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#config
          * @type {RendererConfig}
@@ -93,7 +93,7 @@ var CanvasRenderer = new Class({
         };
 
         /**
-         * [description]
+         * The scale mode which should be used by the CanvasRenderer.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#scaleMode
          * @type {integer}
@@ -102,7 +102,7 @@ var CanvasRenderer = new Class({
         this.scaleMode = (game.config.antialias) ? ScaleModes.LINEAR : ScaleModes.NEAREST;
 
         /**
-         * [description]
+         * The canvas element which the Game uses.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#gameCanvas
          * @type {HTMLCanvasElement}
@@ -111,7 +111,7 @@ var CanvasRenderer = new Class({
         this.gameCanvas = game.canvas;
 
         /**
-         * [description]
+         * The canvas context used to render all Cameras in all Scenes during the game loop.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#gameContext
          * @type {CanvasRenderingContext2D}
@@ -120,7 +120,7 @@ var CanvasRenderer = new Class({
         this.gameContext = (this.game.config.context) ? this.game.config.context : this.gameCanvas.getContext('2d');
 
         /**
-         * [description]
+         * The canvas context currently used by the CanvasRenderer for all rendering operations.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#currentContext
          * @type {CanvasRenderingContext2D}
@@ -129,7 +129,9 @@ var CanvasRenderer = new Class({
         this.currentContext = this.gameContext;
 
         /**
-         * [description]
+         * The blend modes supported by the Canvas Renderer.
+         *
+         * This object maps the {@link Phaser.BlendModes} to canvas compositing operations.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#blendModes
          * @type {array}
@@ -141,7 +143,7 @@ var CanvasRenderer = new Class({
         // image-rendering: pixelated;
 
         /**
-         * [description]
+         * The scale mode currently in use by the Canvas Renderer.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#currentScaleMode
          * @type {number}
@@ -151,7 +153,7 @@ var CanvasRenderer = new Class({
         this.currentScaleMode = 0;
 
         /**
-         * [description]
+         * If a snapshot is scheduled, the function to call after it is taken.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#snapshotCallback
          * @type {?SnapshotCallback}
@@ -161,7 +163,7 @@ var CanvasRenderer = new Class({
         this.snapshotCallback = null;
 
         /**
-         * [description]
+         * The type of the image to create when taking the snapshot, usually `image/png`.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#snapshotType
          * @type {?string}
@@ -171,7 +173,7 @@ var CanvasRenderer = new Class({
         this.snapshotType = null;
 
         /**
-         * [description]
+         * The image quality of the snapshot which will be taken, between 0 and 1, for image formats which use lossy compression (such as `image/jpeg`).
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#snapshotEncoder
          * @type {?number}
@@ -224,7 +226,7 @@ var CanvasRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Prepares the game canvas for rendering.
      *
      * @method Phaser.Renderer.Canvas.CanvasRenderer#init
      * @since 3.0.0
@@ -240,8 +242,8 @@ var CanvasRenderer = new Class({
      * @method Phaser.Renderer.Canvas.CanvasRenderer#resize
      * @since 3.0.0
      *
-     * @param {integer} width - [description]
-     * @param {integer} height - [description]
+     * @param {integer} width - The new width of the canvas.
+     * @param {integer} height - The new height of the canvas.
      */
     resize: function (width, height)
     {
@@ -272,31 +274,31 @@ var CanvasRenderer = new Class({
     },
 
     /**
-     * [description]
+     * A NOOP method for handling lost context. Intentionally empty.
      *
      * @method Phaser.Renderer.Canvas.CanvasRenderer#onContextLost
      * @since 3.0.0
      *
-     * @param {function} callback - [description]
+     * @param {function} callback - Ignored parameter.
      */
     onContextLost: function ()
     {
     },
 
     /**
-     * [description]
+     * A NOOP method for handling restored context. Intentionally empty.
      *
      * @method Phaser.Renderer.Canvas.CanvasRenderer#onContextRestored
      * @since 3.0.0
      *
-     * @param {function} callback - [description]
+     * @param {function} callback - Ignored parameter.
      */
     onContextRestored: function ()
     {
     },
 
     /**
-     * [description]
+     * Resets the transformation matrix of the current context to the identity matrix, thus resetting any transformation.
      *
      * @method Phaser.Renderer.Canvas.CanvasRenderer#resetTransform
      * @since 3.0.0
@@ -307,14 +309,14 @@ var CanvasRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Sets the blend mode (compositing operation) of the current context.
      *
      * @method Phaser.Renderer.Canvas.CanvasRenderer#setBlendMode
      * @since 3.0.0
      *
-     * @param {number} blendMode - [description]
+     * @param {number} blendMode - The new blend mode which should be used.
      *
-     * @return {this} [description]
+     * @return {this} This CanvasRenderer object.
      */
     setBlendMode: function (blendMode)
     {
@@ -341,14 +343,14 @@ var CanvasRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Sets the global alpha of the current context.
      *
      * @method Phaser.Renderer.Canvas.CanvasRenderer#setAlpha
      * @since 3.0.0
      *
-     * @param {number} alpha - [description]
+     * @param {number} alpha - The new alpha to use, where 0 is fully transparent and 1 is fully opaque.
      *
-     * @return {this} [description]
+     * @return {this} This CanvasRenderer object.
      */
     setAlpha: function (alpha)
     {
@@ -391,10 +393,10 @@ var CanvasRenderer = new Class({
      * @method Phaser.Renderer.Canvas.CanvasRenderer#render
      * @since 3.0.0
      *
-     * @param {Phaser.Scene} scene - [description]
-     * @param {Phaser.GameObjects.DisplayList} children - [description]
-     * @param {number} interpolationPercentage - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.Scene} scene - The Scene to render.
+     * @param {Phaser.GameObjects.DisplayList} children - The Game Objects within the Scene to be rendered.
+     * @param {number} interpolationPercentage - The interpolation percentage to apply. Currently unused.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Scene Camera to render with.
      */
     render: function (scene, children, interpolationPercentage, camera)
     {
@@ -487,7 +489,9 @@ var CanvasRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Restores the game context's global settings and takes a snapshot if one is scheduled.
+     *
+     * The post-render step happens after all Cameras in all Scenes have been rendered.
      *
      * @method Phaser.Renderer.Canvas.CanvasRenderer#postRender
      * @since 3.0.0
@@ -507,14 +511,14 @@ var CanvasRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Schedules a snapshot to be taken after the current frame is rendered.
      *
      * @method Phaser.Renderer.Canvas.CanvasRenderer#snapshot
      * @since 3.0.0
      *
-     * @param {SnapshotCallback} callback - [description]
-     * @param {string} type - [description]
-     * @param {number} encoderOptions - [description]
+     * @param {SnapshotCallback} callback - Function to invoke after the snapshot is created.
+     * @param {string} type - The format of the image to create, usually `image/png`.
+     * @param {number} encoderOptions - The image quality, between 0 and 1, to use for image formats with lossy compression (such as `image/jpeg`).
      */
     snapshot: function (callback, type, encoderOptions)
     {
@@ -648,7 +652,7 @@ var CanvasRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Destroys all object references in the Canvas Renderer.
      *
      * @method Phaser.Renderer.Canvas.CanvasRenderer#destroy
      * @since 3.0.0

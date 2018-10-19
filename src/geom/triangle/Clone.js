@@ -7,14 +7,14 @@
 var Triangle = require('./Triangle');
 
 /**
- * [description]
+ * Clones a Triangle object.
  *
  * @function Phaser.Geom.Triangle.Clone
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Triangle} source - [description]
+ * @param {Phaser.Geom.Triangle} source - The Triangle to clone.
  *
- * @return {Phaser.Geom.Triangle} [description]
+ * @return {Phaser.Geom.Triangle} A new Triangle identical to the given one but separate from it.
  */
 var Clone = function (source)
 {
