@@ -117,26 +117,32 @@ var SpriteSheetFromAtlas = function (texture, frame, config)
             {
                 var destX = (leftRow) ? leftPad : 0;
                 var destY = (topRow) ? topPad : 0;
-                var destWidth = frameWidth;
-                var destHeight = frameHeight;
+
+                var trimWidth = 0;
+                var trimHeight = 0;
 
                 if (leftRow)
                 {
-                    destWidth = leftWidth;
+                    trimWidth += (frameWidth - leftWidth);
                 }
-                else if (rightRow)
+
+                if (rightRow)
                 {
-                    destWidth = rightWidth;
+                    trimWidth += (frameWidth - rightWidth);
                 }
 
                 if (topRow)
                 {
-                    destHeight = topHeight;
+                    trimHeight += (frameHeight - topHeight);
                 }
-                else if (bottomRow)
+
+                if (bottomRow)
                 {
-                    destHeight = bottomHeight;
+                    trimHeight += (frameHeight - bottomHeight);
                 }
+
+                var destWidth = frameWidth - trimWidth;
+                var destHeight = frameHeight - trimHeight;
 
                 sheetFrame.cutWidth = destWidth;
                 sheetFrame.cutHeight = destHeight;
@@ -152,7 +158,7 @@ var SpriteSheetFromAtlas = function (texture, frame, config)
             }
             else if (rightRow)
             {
-                frameX += rightRow;
+                frameX += rightWidth;
             }
             else
             {
