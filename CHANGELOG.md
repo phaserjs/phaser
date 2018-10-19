@@ -7,17 +7,20 @@
 ### Updates
 
 * The Mouse Manager class has been updated to remove some commented out code and refine the `startListeners` method.
+* The following Key Codes have been added, which include some missing alphabet letters in Persian and Arabic: `SEMICOLON_FIREFOX`, `COLON`, `COMMA_FIREFOX_WINDOWS`, `COMMA_FIREFOX`, `BRACKET_RIGHT_FIREFOX` and `BRACKET_LEFT_FIREFOX` (thanks @wmateam)
+* You can now modify `this.physics.world.debugGraphic.defaultStrokeWidth` to set the stroke width of any debug drawn body, previously it was always 1 (thanks @samme)
 
 ### Bug Fixes
 
 * The `loadPlayerPhoto` function in the Instant Games plugin now listens for the updated Loader event correctly, causing the `photocomplete` event to fire properly.
 * The Rectangle Shape object wouldn't render if it didn't have a stroke, or any other objects on the display list (thanks mliko)
+* When using a font string instead of setting `fontFamily`, `fontSize` and `fontStyle` in either `Text.setStyle` or `setFont`, the style properties wouldn't get set. This isn't a problem while creating the text object, only if modifying it later (thanks @DotTheGreat)
 
 ### Examples and TypeScript
 
 Thanks to the following for helping with the Phaser 3 Examples and TypeScript definitions, either by reporting errors, or even better, fixing them:
 
-@guilhermehto
+@guilhermehto @samvieten @darkwebdev
 
 ### Phaser Doc Jam
 
