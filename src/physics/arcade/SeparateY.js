@@ -21,7 +21,7 @@ var GetOverlapY = require('./GetOverlapY');
  * @param {boolean} overlapOnly - If `true`, the bodies will only have their overlap data set and no separation will take place.
  * @param {number} bias - A value to add to the delta value during overlap checking. Used to prevent sprite tunneling.
  *
- * @return {boolean} `true` if the two bodies overlap vertically, `false` otherwise.
+ * @return {boolean} `true` if the two bodies overlap vertically, otherwise `false`.
  */
 var SeparateY = function (body1, body2, overlapOnly, bias)
 {

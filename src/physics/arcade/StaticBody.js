@@ -751,7 +751,7 @@ var StaticBody = new Class({
     },
 
     /**
-     * [description]
+     * The change in this StaticBody's rotation from the previous step. Always zero.
      *
      * @method Phaser.Physics.Arcade.StaticBody#deltaZ
      * @since 3.0.0

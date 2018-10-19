@@ -7,7 +7,8 @@
 var CONST = require('./const');
 
 /**
- * Calculates and returns the horizontal overlap between two arcade physics bodies and set their properties accordingly,including:`touching.left`,`touching.right`,`touching.none` and `overlapX'.
+ * Calculates and returns the horizontal overlap between two arcade physics bodies and sets their properties
+ * accordingly, including: `touching.left`, `touching.right`, `touching.none` and `overlapX'.
  *
  * @function Phaser.Physics.Arcade.GetOverlapX
  * @since 3.0.0
@@ -17,7 +18,7 @@ var CONST = require('./const');
  * @param {boolean} overlapOnly - Is this an overlap only check, or part of separation?
  * @param {number} bias - A value added to the delta values during collision checks. Increase it to prevent sprite tunneling(sprites passing through another instead of colliding).
  *
- * @return {number} [description]
+ * @return {number} The amount of overlap.
  */
 var GetOverlapX = function (body1, body2, overlapOnly, bias)
 {

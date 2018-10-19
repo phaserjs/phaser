@@ -5,7 +5,7 @@
  */
 
 /**
- * [description]
+ * Provides methods used for setting the mass properties of an Arcade Physics Body.
  *
  * @name Phaser.Physics.Arcade.Components.Mass
  * @since 3.0.0

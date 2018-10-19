@@ -8,7 +8,8 @@ var Class = require('../../utils/Class');
 
 /**
  * @classdesc
- * The Collider class checks for collision between objects every frame
+ * An Arcade Physics Collider will automatically check for collision, or overlaps, between two objects
+ * every step. If a collision, or overlap, occurs it will invoke the given callbacks.
  *
  * @class Collider
  * @memberof Phaser.Physics.Arcade
@@ -16,7 +17,7 @@ var Class = require('../../utils/Class');
  * @since 3.0.0
  *
  * @param {Phaser.Physics.Arcade.World} world - The Arcade physics World that will manage the collisions.
- * @param {boolean} overlapOnly - Wether to check for collisions or overlap.
+ * @param {boolean} overlapOnly - Whether to check for collisions or overlap.
  * @param {ArcadeColliderType} object1 - The first object to check for collision.
  * @param {ArcadeColliderType} object2 - The second object to check for collision.
  * @param {ArcadePhysicsCallback} collideCallback - The callback to invoke when the two objects collide.
@@ -48,7 +49,7 @@ var Collider = new Class({
         this.name = '';
 
         /**
-         * Wether the collider is active.
+         * Whether the collider is active.
          *
          * @name Phaser.Physics.Arcade.Collider#active
          * @type {boolean}
@@ -58,7 +59,7 @@ var Collider = new Class({
         this.active = true;
 
         /**
-         * Wether to check for collisions or overlaps.
+         * Whether to check for collisions or overlaps.
          *
          * @name Phaser.Physics.Arcade.Collider#overlapOnly
          * @type {boolean}
@@ -113,14 +114,16 @@ var Collider = new Class({
     },
 
     /**
-     * A name for the Collider ( currently unused internally by phaser ).
+     * A name for the Collider.
+     * 
+     * Phaser does not use this value, it's for your own reference.
      *
      * @method Phaser.Physics.Arcade.Collider#setName
      * @since 3.1.0
      *
      * @param {string} name - The name to assign to the Collider.
      *
-     * @return {Phaser.Physics.Arcade.Collider} [description]
+     * @return {Phaser.Physics.Arcade.Collider} This Collider instance.
      */
     setName: function (name)
     {
