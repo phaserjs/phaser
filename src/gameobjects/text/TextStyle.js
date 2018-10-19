@@ -392,14 +392,11 @@ var TextStyle = new Class({
         //  Allow for 'font' override
         var font = GetValue(style, 'font', null);
 
-        if (font === null)
+        if (font !== null)
         {
-            this._font = [ this.fontStyle, this.fontSize, this.fontFamily ].join(' ').trim();
+            this.setFont(font, false);
         }
-        else
-        {
-            this._font = font;
-        }
+        this._font = [ this.fontStyle, this.fontSize, this.fontFamily ].join(' ').trim();
 
         //  Allow for 'fill' to be used in place of 'color'
         var fill = GetValue(style, 'fill', null);
@@ -515,11 +512,14 @@ var TextStyle = new Class({
      * @since 3.0.0
      *
      * @param {(string|object)} font - The font family or font settings to set.
+     * @param {boolean} [updateText=true] - Whether to update the text immediately.
      *
      * @return {Phaser.GameObjects.Text} The parent Text object.
      */
-    setFont: function (font)
+    setFont: function (font, updateText)
     {
+        if (updateText === undefined) { updateText = true; }
+
         var fontFamily = font;
         var fontSize = '';
         var fontStyle = '';
@@ -530,14 +530,25 @@ var TextStyle = new Class({
             fontSize = GetValue(font, 'fontSize', '16px');
             fontStyle = GetValue(font, 'fontStyle', '');
         }
+        else
+        {
+            var fontSplit = font.split(' ');
+            var i = 0;
+            this.fontStyle = fontSplit.length > 2 ? fontSplit[i++] : '';
+            this.fontSize = fontSplit[i++] || '16px';
+            this.fontFamily = fontSplit[i++] || 'Courier';
+        }
 
         if (fontFamily !== this.fontFamily || fontSize !== this.fontSize || fontStyle !== this.fontStyle)
         {
             this.fontFamily = fontFamily;
             this.fontSize = fontSize;
             this.fontStyle = fontStyle;
-    
-            this.update(true);
+
+            if (updateText)
+            {
+                this.update(true);
+            }
         }
 
         return this.parent;

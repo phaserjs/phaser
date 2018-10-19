@@ -644,7 +644,7 @@ var Body = new Class({
 
         /**
          * Whether this Body is checked for collisions and for which directions.
-         * You can set `checkCollision.none = false` to disable collision checks.
+         * You can set `checkCollision.none = true` to disable collision checks.
          *
          * @name Phaser.Physics.Arcade.Body#checkCollision
          * @type {ArcadeBodyCollision}
@@ -1415,7 +1415,7 @@ var Body = new Class({
 
         if (this.debugShowBody)
         {
-            graphic.lineStyle(1, this.debugBodyColor);
+            graphic.lineStyle(graphic.defaultStrokeWidth, this.debugBodyColor);
 
             if (this.isCircle)
             {
@@ -1429,7 +1429,7 @@ var Body = new Class({
 
         if (this.debugShowVelocity)
         {
-            graphic.lineStyle(1, this.world.defaults.velocityDebugColor, 1);
+            graphic.lineStyle(graphic.defaultStrokeWidth, this.world.defaults.velocityDebugColor, 1);
             graphic.lineBetween(x, y, x + this.velocity.x / 2, y + this.velocity.y / 2);
         }
     },
