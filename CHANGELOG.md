@@ -21,6 +21,8 @@
 * If you created an Arcade Physics Group without passing a configuration object, and passing an array of non-standard children, it would throw a classType runtime error. It now creates a default config object correctly (thanks @pierpo)
 * The `Camera.cull` method has been restructured so it now calculates if a Game Object is correctly in view or not, before culling it. Although not used internally, if you need to cull objects for a camera, you can now safely use this method. Fix #4092 (thanks @Cirras)
 * The Tiled Parser would ignore animated tile data if it was in the new Tiled 1.2 format. This is now accounted for, as well as 1.0 (thanks @nkholski)
+* `Array.Matrix.ReverseRows` was actually reversing the columns, but now reverses the rows.
+* `Array.Matrix.ReverseColumns` was actually reversing the rows, but now reverses the columns.
 
 ### Examples and TypeScript
 
