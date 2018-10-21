@@ -12,11 +12,11 @@
  * @function Phaser.Geom.Triangle.Contains
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Triangle} triangle - [description]
- * @param {number} x - [description]
- * @param {number} y - [description]
+ * @param {Phaser.Geom.Triangle} triangle - The Triangle to check.
+ * @param {number} x - The x coordinate to check within the Triangle.
+ * @param {number} y - The y coordinate to check within the Triangle.
  *
- * @return {boolean} [description]
+ * @return {boolean} True if the coordinates are within the triangle, otherwise false
  */
 var Contains = function (triangle, x, y)
 {
