@@ -18,11 +18,11 @@ module.exports = {
      * @since 3.0.0
      * 
      * @param {number} r - Red component in a range from 0.0 to 1.0 
-     * @param {number} g - [description]
-     * @param {number} b - [description]
+     * @param {number} g - Greeb component in a range from 0.0 to 1.0 
+     * @param {number} b - Blue component in a range from 0.0 to 1.0 
      * @param {number} a - Alpha component in a range from 0.0 to 1.0
      * 
-     * @return {number} [description]
+     * @return {number} Packed RGBA as Uint32
      */
     getTintFromFloats: function (r, g, b, a)
     {
