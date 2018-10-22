@@ -28,6 +28,20 @@ var ValueToColor = require('../display/color/ValueToColor');
  */
 
 /**
+ * Config object containing various sound settings.
+ *
+ * @typedef {object} SoundConfig
+ *
+ * @property {boolean} [mute=false] - Boolean indicating whether the sound should be muted or not.
+ * @property {number} [volume=1] - A value between 0 (silence) and 1 (full volume).
+ * @property {number} [rate=1] - Defines the speed at which the sound should be played.
+ * @property {number} [detune=0] - Represents detuning of sound in [cents](https://en.wikipedia.org/wiki/Cent_%28music%29).
+ * @property {number} [seek=0] - Position of playback for this sound, in seconds.
+ * @property {boolean} [loop=false] - Whether or not the sound or current sound marker should loop.
+ * @property {number} [delay=0] - Time, in seconds, that should elapse before the sound actually starts its playback.
+ */
+
+ /**
  * @typedef {object} InputConfig
  *
  * @property {(boolean|KeyboardInputConfig)} [keyboard=true] - Keyboard input configuration. `true` uses the default configuration and `false` disables keyboard input.
@@ -74,11 +88,11 @@ var ValueToColor = require('../display/color/ValueToColor');
 /**
  * @typedef {object} FPSConfig
  *
- * @property {integer} [min=10] - The minimum acceptable rendering rate, in frames per second.
+ * @property {integer} [min=5] - The minimum acceptable rendering rate, in frames per second.
  * @property {integer} [target=60] - The optimum rendering rate, in frames per second.
  * @property {boolean} [forceSetTimeOut=false] - Use setTimeout instead of requestAnimationFrame to run the game loop.
  * @property {integer} [deltaHistory=10] - Calculate the average frame delta from this many consecutive frame intervals.
- * @property {integer} [panicMax=120] - [description]
+ * @property {integer} [panicMax=120] - The amount of frames the time step counts before we trust the delta values again.
  */
 
 /**
@@ -91,7 +105,6 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {boolean} [transparent=false] - Whether the game canvas will be transparent.
  * @property {boolean} [clearBeforeRender=true] - Whether the game canvas will be cleared between each rendering frame.
  * @property {boolean} [premultipliedAlpha=true] - In WebGL mode, the drawing buffer contains colors with pre-multiplied alpha.
- * @property {boolean} [preserveDrawingBuffer=false] - In WebGL mode, the drawing buffer won't be cleared automatically each frame.
  * @property {boolean} [failIfMajorPerformanceCaveat=false] - Let the browser abort creating a WebGL context if it judges performance would be unacceptable.
  * @property {string} [powerPreference='default'] - "high-performance", "low-power" or "default". A hint to the browser on how much device power the game might use.
  * @property {integer} [batchSize=2000] - The default WebGL batch size.
@@ -123,14 +136,14 @@ var ValueToColor = require('../display/color/ValueToColor');
 /**
  * @typedef {object} LoaderConfig
  *
- * @property {string} [baseURL] - An URL used to resolve paths given to the loader. Example: 'http://labs.phaser.io/assets/'.
- * @property {string} [path] - An URL path used to resolve relative paths given to the loader. Example: 'images/sprites/'.
+ * @property {string} [baseURL] - A URL used to resolve paths given to the loader. Example: 'http://labs.phaser.io/assets/'.
+ * @property {string} [path] - A URL path used to resolve relative paths given to the loader. Example: 'images/sprites/'.
  * @property {integer} [maxParallelDownloads=32] - The maximum number of resources the loader will start loading at once.
  * @property {(string|undefined)} [crossOrigin=undefined] - 'anonymous', 'use-credentials', or `undefined`. If you're not making cross-origin requests, leave this as `undefined`. See {@link https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_settings_attributes}.
  * @property {string} [responseType] - The response type of the XHR request, e.g. `blob`, `text`, etc.
  * @property {boolean} [async=true] - Should the XHR request use async or not?
- * @property {string} [user] - Optional username for the XHR request.
- * @property {string} [password] - Optional password for the XHR request.
+ * @property {string} [user] - Optional username for all XHR requests.
+ * @property {string} [password] - Optional password for all XHR requests.
  * @property {integer} [timeout=0] - Optional XHR timeout value, in ms.
  */
 
@@ -248,57 +261,57 @@ var Config = new Class({
         var defaultBannerTextColor = '#ffffff';
 
         /**
-         * @const {(integer|string)} Phaser.Boot.Config#width - [description]
+         * @const {(integer|string)} Phaser.Boot.Config#width - The width of the underlying canvas, in pixels.
          */
         this.width = GetValue(config, 'width', 1024);
 
         /**
-         * @const {(integer|string)} Phaser.Boot.Config#height - [description]
+         * @const {(integer|string)} Phaser.Boot.Config#height - The height of the underlying canvas, in pixels.
          */
         this.height = GetValue(config, 'height', 768);
 
         /**
-         * @const {number} Phaser.Boot.Config#zoom - [description]
+         * @const {number} Phaser.Boot.Config#zoom - The zoom factor, as used by the Scale Manager.
          */
         this.zoom = GetValue(config, 'zoom', 1);
 
         /**
-         * @const {number} Phaser.Boot.Config#resolution - [description]
+         * @const {number} Phaser.Boot.Config#resolution - The canvas device pixel resolution.
          */
         this.resolution = GetValue(config, 'resolution', 1);
 
         /**
-         * @const {?*} Phaser.Boot.Config#parent - [description]
+         * @const {?*} Phaser.Boot.Config#parent - A parent DOM element into which the canvas created by the renderer will be injected.
          */
         this.parent = GetValue(config, 'parent', null);
 
         /**
-         * @const {integer} Phaser.Boot.Config#scaleMode - [description]
+         * @const {integer} Phaser.Boot.Config#scaleMode - The scale mode as used by the Scale Manager. The default is zero, which is no scaling.
          */
         this.scaleMode = GetValue(config, 'scaleMode', 0);
 
         /**
-         * @const {boolean} Phaser.Boot.Config#expandParent - [description]
+         * @const {boolean} Phaser.Boot.Config#expandParent - Is the Scale Manager allowed to adjust the size of the parent container?
          */
         this.expandParent = GetValue(config, 'expandParent', false);
 
         /**
-         * @const {integer} Phaser.Boot.Config#minWidth - [description]
+         * @const {integer} Phaser.Boot.Config#minWidth - The minimum width, in pixels, the canvas will scale down to. A value of zero means no minimum.
          */
         this.minWidth = GetValue(config, 'minWidth', 0);
 
         /**
-         * @const {integer} Phaser.Boot.Config#maxWidth - [description]
+         * @const {integer} Phaser.Boot.Config#maxWidth - The maximum width, in pixels, the canvas will scale up to. A value of zero means no maximum.
          */
         this.maxWidth = GetValue(config, 'maxWidth', 0);
 
         /**
-         * @const {integer} Phaser.Boot.Config#minHeight - [description]
+         * @const {integer} Phaser.Boot.Config#minHeight - The minimum height, in pixels, the canvas will scale down to. A value of zero means no minimum.
          */
         this.minHeight = GetValue(config, 'minHeight', 0);
 
         /**
-         * @const {integer} Phaser.Boot.Config#maxHeight - [description]
+         * @const {integer} Phaser.Boot.Config#maxHeight - The maximum height, in pixels, the canvas will scale up to. A value of zero means no maximum.
          */
         this.maxHeight = GetValue(config, 'maxHeight', 0);
 
@@ -337,17 +350,17 @@ var Config = new Class({
         this.context = GetValue(config, 'context', null);
 
         /**
-         * @const {?string} Phaser.Boot.Config#canvasStyle - [description]
+         * @const {?string} Phaser.Boot.Config#canvasStyle - Optional CSS attributes to be set on the canvas object created by the renderer.
          */
         this.canvasStyle = GetValue(config, 'canvasStyle', null);
 
         /**
-         * @const {?object} Phaser.Boot.Config#sceneConfig - [description]
+         * @const {?object} Phaser.Boot.Config#sceneConfig - The default Scene configuration object.
          */
         this.sceneConfig = GetValue(config, 'scene', null);
 
         /**
-         * @const {string[]} Phaser.Boot.Config#seed - [description]
+         * @const {string[]} Phaser.Boot.Config#seed - A seed which the Random Data Generator will use. If not given, a dynamic seed based on the time is used.
          */
         this.seed = GetValue(config, 'seed', [ (Date.now() * Math.random()).toString() ]);
 
@@ -369,108 +382,108 @@ var Config = new Class({
         this.gameVersion = GetValue(config, 'version', '');
 
         /**
-         * @const {boolean} Phaser.Boot.Config#autoFocus - [description]
+         * @const {boolean} Phaser.Boot.Config#autoFocus - If `true` the window will automatically be given focus immediately and on any future mousedown event.
          */
         this.autoFocus = GetValue(config, 'autoFocus', true);
 
         //  DOM Element Container
 
         /**
-         * @const {?boolean} Phaser.Boot.Config#domCreateContainer - [description]
+         * @const {?boolean} Phaser.Boot.Config#domCreateContainer - EXPERIMENTAL: Do not currently use.
          */
         this.domCreateContainer = GetValue(config, 'dom.createContainer', false);
 
         /**
-         * @const {?boolean} Phaser.Boot.Config#domBehindCanvas - [description]
+         * @const {?boolean} Phaser.Boot.Config#domBehindCanvas - EXPERIMENTAL: Do not currently use.
          */
         this.domBehindCanvas = GetValue(config, 'dom.behindCanvas', false);
 
         //  Input
 
         /**
-         * @const {boolean} Phaser.Boot.Config#inputKeyboard - [description]
+         * @const {boolean} Phaser.Boot.Config#inputKeyboard - Enable the Keyboard Plugin. This can be disabled in games that don't need keyboard input.
          */
         this.inputKeyboard = GetValue(config, 'input.keyboard', true);
 
         /**
-         * @const {*} Phaser.Boot.Config#inputKeyboardEventTarget - [description]
+         * @const {*} Phaser.Boot.Config#inputKeyboardEventTarget - The DOM Target to listen for keyboard events on. Defaults to `window` if not specified.
          */
         this.inputKeyboardEventTarget = GetValue(config, 'input.keyboard.target', window);
 
         /**
-         * @const {(boolean|object)} Phaser.Boot.Config#inputMouse - [description]
+         * @const {(boolean|object)} Phaser.Boot.Config#inputMouse - Enable the Mouse Plugin. This can be disabled in games that don't need mouse input.
          */
         this.inputMouse = GetValue(config, 'input.mouse', true);
 
         /**
-         * @const {?*} Phaser.Boot.Config#inputMouseEventTarget - [description]
+         * @const {?*} Phaser.Boot.Config#inputMouseEventTarget - The DOM Target to listen for mouse events on. Defaults to the game canvas if not specified.
          */
         this.inputMouseEventTarget = GetValue(config, 'input.mouse.target', null);
 
         /**
-         * @const {boolean} Phaser.Boot.Config#inputMouseCapture - [description]
+         * @const {boolean} Phaser.Boot.Config#inputMouseCapture - Should mouse events be captured? I.e. have prevent default called on them.
          */
         this.inputMouseCapture = GetValue(config, 'input.mouse.capture', true);
 
         /**
-         * @const {boolean} Phaser.Boot.Config#inputTouch - [description]
+         * @const {boolean} Phaser.Boot.Config#inputTouch - Enable the Touch Plugin. This can be disabled in games that don't need touch input.
          */
         this.inputTouch = GetValue(config, 'input.touch', Device.input.touch);
 
         /**
-         * @const {?*} Phaser.Boot.Config#inputTouchEventTarget - [description]
+         * @const {?*} Phaser.Boot.Config#inputTouchEventTarget - The DOM Target to listen for touch events on. Defaults to the game canvas if not specified.
          */
         this.inputTouchEventTarget = GetValue(config, 'input.touch.target', null);
 
         /**
-         * @const {boolean} Phaser.Boot.Config#inputTouchCapture - [description]
+         * @const {boolean} Phaser.Boot.Config#inputTouchCapture - Should touch events be captured? I.e. have prevent default called on them.
          */
         this.inputTouchCapture = GetValue(config, 'input.touch.capture', true);
 
         /**
-         * @const {integer} Phaser.Boot.Config#inputActivePointers - [description]
+         * @const {integer} Phaser.Boot.Config#inputActivePointers - The number of Pointer objects created by default. In a mouse-only, or non-multi touch game, you can leave this as 1.
          */
         this.inputActivePointers = GetValue(config, 'input.activePointers', 1);
 
         /**
-         * @const {boolean} Phaser.Boot.Config#inputGamepad - [description]
+         * @const {boolean} Phaser.Boot.Config#inputGamepad - Enable the Gamepad Plugin. This can be disabled in games that don't need gamepad input.
          */
         this.inputGamepad = GetValue(config, 'input.gamepad', false);
 
         /**
-         * @const {*} Phaser.Boot.Config#inputGamepadEventTarget - [description]
+         * @const {*} Phaser.Boot.Config#inputGamepadEventTarget - The DOM Target to listen for gamepad events on. Defaults to `window` if not specified.
          */
         this.inputGamepadEventTarget = GetValue(config, 'input.gamepad.target', window);
 
         /**
-         * @const {boolean} Phaser.Boot.Config#disableContextMenu - Set to `true` to disable context menu. Default value is `false`.
+         * @const {boolean} Phaser.Boot.Config#disableContextMenu - Set to `true` to disable the right-click context menu.
          */
         this.disableContextMenu = GetValue(config, 'disableContextMenu', false);
 
         /**
-         * @const {any} Phaser.Boot.Config#audio - [description]
+         * @const {SoundConfig} Phaser.Boot.Config#audio - The Audio Configuration object.
          */
         this.audio = GetValue(config, 'audio');
 
         //  If you do: { banner: false } it won't display any banner at all
 
         /**
-         * @const {boolean} Phaser.Boot.Config#hideBanner - [description]
+         * @const {boolean} Phaser.Boot.Config#hideBanner - Don't write the banner line to the console.log.
          */
         this.hideBanner = (GetValue(config, 'banner', null) === false);
 
         /**
-         * @const {boolean} Phaser.Boot.Config#hidePhaser - [description]
+         * @const {boolean} Phaser.Boot.Config#hidePhaser - Omit Phaser's name and version from the banner.
          */
         this.hidePhaser = GetValue(config, 'banner.hidePhaser', false);
 
         /**
-         * @const {string} Phaser.Boot.Config#bannerTextColor - [description]
+         * @const {string} Phaser.Boot.Config#bannerTextColor - The color of the banner text.
          */
         this.bannerTextColor = GetValue(config, 'banner.text', defaultBannerTextColor);
 
         /**
-         * @const {string[]} Phaser.Boot.Config#bannerBackgroundColor - [description]
+         * @const {string[]} Phaser.Boot.Config#bannerBackgroundColor - The background colors of the banner.
          */
         this.bannerBackgroundColor = GetValue(config, 'banner.background', defaultBannerColor);
 
@@ -479,16 +492,8 @@ var Config = new Class({
             this.hideBanner = true;
         }
 
-        //  Frame Rate config
-        //      fps: {
-        //          min: 10,
-        //          target: 60,
-        //          forceSetTimeOut: false,
-        //          deltaHistory: 10
-        //     }
-
         /**
-         * @const {?FPSConfig} Phaser.Boot.Config#fps - [description]
+         * @const {?FPSConfig} Phaser.Boot.Config#fps - The Frame Rate Configuration object, as parsed by the Timestep class.
          */
         this.fps = GetValue(config, 'fps', null);
 
@@ -503,12 +508,12 @@ var Config = new Class({
         this.autoResize = GetValue(renderConfig, 'autoResize', true);
 
         /**
-         * @const {boolean} Phaser.Boot.Config#antialias - [description]
+         * @const {boolean} Phaser.Boot.Config#antialias - When set to `true`, WebGL uses linear interpolation to draw scaled or rotated textures, giving a smooth appearance. When set to `false`, WebGL uses nearest-neighbor interpolation, giving a crisper appearance. `false` also disables antialiasing of the game canvas itself, if the browser supports it, when the game canvas is scaled.
          */
         this.antialias = GetValue(renderConfig, 'antialias', true);
 
         /**
-         * @const {boolean} Phaser.Boot.Config#roundPixels - [description]
+         * @const {boolean} Phaser.Boot.Config#roundPixels - Draw texture-based Game Objects at only whole-integer positions. Game Objects without textures, like Graphics, ignore this property.
          */
         this.roundPixels = GetValue(renderConfig, 'roundPixels', false);
 
@@ -524,32 +529,27 @@ var Config = new Class({
         }
 
         /**
-         * @const {boolean} Phaser.Boot.Config#transparent - [description]
+         * @const {boolean} Phaser.Boot.Config#transparent - Whether the game canvas will have a transparent background.
          */
         this.transparent = GetValue(renderConfig, 'transparent', false);
 
         /**
-         * @const {boolean} Phaser.Boot.Config#clearBeforeRender - [description]
+         * @const {boolean} Phaser.Boot.Config#clearBeforeRender - Whether the game canvas will be cleared between each rendering frame. You can disable this if you have a full-screen background image or game object.
          */
         this.clearBeforeRender = GetValue(renderConfig, 'clearBeforeRender', true);
 
         /**
-         * @const {boolean} Phaser.Boot.Config#premultipliedAlpha - [description]
+         * @const {boolean} Phaser.Boot.Config#premultipliedAlpha - In WebGL mode, sets the drawing buffer to contain colors with pre-multiplied alpha.
          */
         this.premultipliedAlpha = GetValue(renderConfig, 'premultipliedAlpha', true);
 
         /**
-         * @const {boolean} Phaser.Boot.Config#preserveDrawingBuffer - [description]
-         */
-        this.preserveDrawingBuffer = GetValue(renderConfig, 'preserveDrawingBuffer', false);
-
-        /**
-         * @const {boolean} Phaser.Boot.Config#failIfMajorPerformanceCaveat - [description]
+         * @const {boolean} Phaser.Boot.Config#failIfMajorPerformanceCaveat - Let the browser abort creating a WebGL context if it judges performance would be unacceptable.
          */
         this.failIfMajorPerformanceCaveat = GetValue(renderConfig, 'failIfMajorPerformanceCaveat', false);
 
         /**
-         * @const {string} Phaser.Boot.Config#powerPreference - [description]
+         * @const {string} Phaser.Boot.Config#powerPreference - "high-performance", "low-power" or "default". A hint to the browser on how much device power the game might use.
          */
         this.powerPreference = GetValue(renderConfig, 'powerPreference', 'default');
 
@@ -566,7 +566,7 @@ var Config = new Class({
         var bgc = GetValue(config, 'backgroundColor', 0);
 
         /**
-         * @const {Phaser.Display.Color} Phaser.Boot.Config#backgroundColor - [description]
+         * @const {Phaser.Display.Color} Phaser.Boot.Config#backgroundColor - The background color of the game canvas. The default is black.
          */
         this.backgroundColor = ValueToColor(bgc);
 
@@ -575,45 +575,33 @@ var Config = new Class({
             this.backgroundColor.alpha = 0;
         }
 
-        //  Callbacks
-
         /**
          * @const {BootCallback} Phaser.Boot.Config#preBoot - Called before Phaser boots. Useful for initializing anything not related to Phaser that Phaser may require while booting.
          */
         this.preBoot = GetValue(config, 'callbacks.preBoot', NOOP);
 
         /**
-         * @const {BootCallback} Phaser.Boot.Config#postBoot - [description]
+         * @const {BootCallback} Phaser.Boot.Config#postBoot - A function to run at the end of the boot sequence. At this point, all the game systems have started and plugins have been loaded.
          */
         this.postBoot = GetValue(config, 'callbacks.postBoot', NOOP);
 
-        //  Physics
-        //  physics: {
-        //      system: 'impact',
-        //      setBounds: true,
-        //      gravity: 0,
-        //      cellSize: 64
-        //  }
-
         /**
-         * @const {object} Phaser.Boot.Config#physics - [description]
+         * @const {PhysicsConfig} Phaser.Boot.Config#physics - The Physics Configuration object.
          */
         this.physics = GetValue(config, 'physics', {});
 
         /**
-         * @const {boolean} Phaser.Boot.Config#defaultPhysicsSystem - [description]
+         * @const {(boolean|string)} Phaser.Boot.Config#defaultPhysicsSystem - The default physics system. It will be started for each scene. Either 'arcade', 'impact' or 'matter'.
          */
         this.defaultPhysicsSystem = GetValue(this.physics, 'default', false);
 
-        //  Loader Defaults
-
         /**
-         * @const {string} Phaser.Boot.Config#loaderBaseURL - [description]
+         * @const {string} Phaser.Boot.Config#loaderBaseURL - A URL used to resolve paths given to the loader. Example: 'http://labs.phaser.io/assets/'.
          */
         this.loaderBaseURL = GetValue(config, 'loader.baseURL', '');
 
         /**
-         * @const {string} Phaser.Boot.Config#loaderPath - [description]
+         * @const {string} Phaser.Boot.Config#loaderPath - A URL path used to resolve relative paths given to the loader. Example: 'images/sprites/'.
          */
         this.loaderPath = GetValue(config, 'loader.path', '');
 
@@ -623,36 +611,34 @@ var Config = new Class({
         this.loaderMaxParallelDownloads = GetValue(config, 'loader.maxParallelDownloads', 32);
 
         /**
-         * @const {(string|undefined)} Phaser.Boot.Config#loaderCrossOrigin - [description]
+         * @const {(string|undefined)} Phaser.Boot.Config#loaderCrossOrigin - 'anonymous', 'use-credentials', or `undefined`. If you're not making cross-origin requests, leave this as `undefined`. See {@link https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_settings_attributes}.
          */
         this.loaderCrossOrigin = GetValue(config, 'loader.crossOrigin', undefined);
 
         /**
-         * @const {string} Phaser.Boot.Config#loaderResponseType - [description]
+         * @const {string} Phaser.Boot.Config#loaderResponseType - The response type of the XHR request, e.g. `blob`, `text`, etc.
          */
         this.loaderResponseType = GetValue(config, 'loader.responseType', '');
 
         /**
-         * @const {boolean} Phaser.Boot.Config#loaderAsync - [description]
+         * @const {boolean} Phaser.Boot.Config#loaderAsync - Should the XHR request use async or not?
          */
         this.loaderAsync = GetValue(config, 'loader.async', true);
 
         /**
-         * @const {string} Phaser.Boot.Config#loaderUser - [description]
+         * @const {string} Phaser.Boot.Config#loaderUser - Optional username for all XHR requests.
          */
         this.loaderUser = GetValue(config, 'loader.user', '');
 
         /**
-         * @const {string} Phaser.Boot.Config#loaderPassword - [description]
+         * @const {string} Phaser.Boot.Config#loaderPassword - Optional password for all XHR requests.
          */
         this.loaderPassword = GetValue(config, 'loader.password', '');
 
         /**
-         * @const {integer} Phaser.Boot.Config#loaderTimeout - [description]
+         * @const {integer} Phaser.Boot.Config#loaderTimeout - Optional XHR timeout value, in ms.
          */
         this.loaderTimeout = GetValue(config, 'loader.timeout', 0);
-
-        //  Plugins
 
         /*
          * Allows `plugins` property to either be an array, in which case it just replaces
@@ -673,12 +659,12 @@ var Config = new Class({
          */
 
         /**
-         * @const {any} Phaser.Boot.Config#installGlobalPlugins - [description]
+         * @const {any} Phaser.Boot.Config#installGlobalPlugins - An array of global plugins to be installed.
          */
         this.installGlobalPlugins = [];
 
         /**
-         * @const {any} Phaser.Boot.Config#installScenePlugins - [description]
+         * @const {any} Phaser.Boot.Config#installScenePlugins - An array of Scene level plugins to be installed.
          */
         this.installScenePlugins = [];
 
@@ -717,12 +703,12 @@ var Config = new Class({
         var pngPrefix = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAg';
 
         /**
-         * @const {string} Phaser.Boot.Config#defaultImage - [description]
+         * @const {string} Phaser.Boot.Config#defaultImage - A base64 encoded PNG that will be used as the default blank texture.
          */
         this.defaultImage = GetValue(config, 'images.default', pngPrefix + 'AQMAAABJtOi3AAAAA1BMVEX///+nxBvIAAAAAXRSTlMAQObYZgAAABVJREFUeF7NwIEAAAAAgKD9qdeocAMAoAABm3DkcAAAAABJRU5ErkJggg==');
 
         /**
-         * @const {string} Phaser.Boot.Config#missingImage - [description]
+         * @const {string} Phaser.Boot.Config#missingImage - A base64 encoded PNG that will be used as the default texture when a texture is assigned that is missing or not loaded.
          */
         this.missingImage = GetValue(config, 'images.missing', pngPrefix + 'CAIAAAD8GO2jAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJ9JREFUeNq01ssOwyAMRFG46v//Mt1ESmgh+DFmE2GPOBARKb2NVjo+17PXLD8a1+pl5+A+wSgFygymWYHBb0FtsKhJDdZlncG2IzJ4ayoMDv20wTmSMzClEgbWYNTAkQ0Z+OJ+A/eWnAaR9+oxCF4Os0H8htsMUp+pwcgBBiMNnAwF8GqIgL2hAzaGFFgZauDPKABmowZ4GL369/0rwACp2yA/ttmvsQAAAABJRU5ErkJggg==');
 
