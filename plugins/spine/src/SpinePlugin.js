@@ -6,7 +6,9 @@
 
 var Class = require('../../../src/utils/Class');
 var BasePlugin = require('../../../src/plugins/BasePlugin');
-var Spine = require('./spine-canvas');
+var SpineCanvas = require('SpineCanvas');
+
+// var SpineGL = require('SpineGL');
 
 /**
  * @classdesc
@@ -26,14 +28,20 @@ var SpinePlugin = new Class({
 
     function SpinePlugin (pluginManager)
     {
-        // console.log('SpinePlugin enabled');
+        console.log('SpinePlugin enabled');
 
         BasePlugin.call(this, pluginManager);
 
-        // this.skeletonRenderer = new Spine.canvas.SkeletonRenderer(this.game.context);
+        // console.log(SpineCanvas.canvas);
+        // console.log(SpineGL.webgl);
+
+        this.skeletonRenderer = new SpineCanvas.canvas.SkeletonRenderer(this.game.context);
+
+        this.textureManager = this.game.textures;
+        this.textCache = this.game.cache.text;
+        this.jsonCache = this.game.cache.json;
 
         // console.log(this.skeletonRenderer);
-
         // pluginManager.registerGameObject('sprite3D', this.sprite3DFactory, this.sprite3DCreator);
     },
 
@@ -59,6 +67,48 @@ var SpinePlugin = new Class({
         // this.updateList.add(sprite.gameObject);
 
         // return sprite;
+    },
+
+    createSkeleton: function (textureKey, atlasKey, jsonKey)
+    {
+        var canvasTexture = new SpineCanvas.canvas.CanvasTexture(this.textureManager.get(textureKey).getSourceImage());
+
+        var atlas = new SpineCanvas.TextureAtlas(this.textCache.get(atlasKey), function () { return canvasTexture; });
+
+        var atlasLoader = new SpineCanvas.AtlasAttachmentLoader(atlas);
+        
+        var skeletonJson = new SpineCanvas.SkeletonJson(atlasLoader);
+
+        var skeletonData = skeletonJson.readSkeletonData(this.jsonCache.get(jsonKey));
+
+        var skeleton = new SpineCanvas.Skeleton(skeletonData);
+
+        skeleton.flipY = true;
+        skeleton.setToSetupPose();
+        skeleton.updateWorldTransform();
+
+        skeleton.setSkinByName('default');
+    
+        return skeleton;
+    },
+
+    getBounds: function (skeleton)
+    {
+        var offset = new SpineCanvas.Vector2();
+        var size = new SpineCanvas.Vector2();
+
+        skeleton.getBounds(offset, size, []);
+
+        return { offset: offset, size: size };
+    },
+
+    createAnimationState: function (skeleton, animationName)
+    {
+        var state = new SpineCanvas.AnimationState(new SpineCanvas.AnimationStateData(skeleton.data));
+
+        state.setAnimation(0, animationName, true);
+
+        return state;
     },
 
     /**

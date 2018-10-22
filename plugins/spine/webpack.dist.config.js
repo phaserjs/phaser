@@ -1,16 +1,18 @@
 'use strict';
 
 const webpack = require('webpack');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const exec = require('child_process').exec;
 
 module.exports = {
-    mode: 'development',
+    mode: 'production',
 
     context: `${__dirname}/src/`,
 
     entry: {
-        'SpinePlugin': './SpinePlugin.js'
+        'SpinePlugin': './SpinePlugin.js',
+        'SpinePlugin.min': './SpinePlugin.js'
     },
 
     output: {
@@ -54,6 +56,24 @@ module.exports = {
         },
     },
 
+    optimization: {
+        minimizer: [
+            new UglifyJSPlugin({
+                include: /\.min\.js$/,
+                parallel: true,
+                sourceMap: false,
+                uglifyOptions: {
+                    compress: true,
+                    ie8: false,
+                    ecma: 5,
+                    output: {comments: false},
+                    warnings: false
+                },
+                warningsFilter: () => false
+            })
+        ]
+    },
+
     plugins: [
         new CleanWebpackPlugin([ 'dist' ]),
         {
@@ -66,7 +86,5 @@ module.exports = {
                 });
             }
         }
-    ],
-
-    devtool: 'source-map'
+    ]
 };
