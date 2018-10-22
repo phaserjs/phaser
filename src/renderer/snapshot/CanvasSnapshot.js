@@ -5,14 +5,14 @@
  */
 
 /**
- * [description]
+ * Takes a snapshot of the current frame displayed by a 2D canvas.
  *
  * @function Phaser.Renderer.Snapshot.Canvas
  * @since 3.0.0
  *
- * @param {HTMLCanvasElement} canvas - [description]
- * @param {string} [type='image/png'] - [description]
- * @param {number} [encoderOptions=0.92] - [description]
+ * @param {HTMLCanvasElement} canvas - The canvas to take a snapshot of.
+ * @param {string} [type='image/png'] - The format of the returned image.
+ * @param {number} [encoderOptions=0.92] - The image quality, between 0 and 1, for image formats which use lossy compression (such as `image/jpeg`).
  *
  * @return {HTMLImageElement} Returns an image of the type specified.
  */

@@ -50,7 +50,7 @@ var Image = require('../../gameobjects/image/Image');
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  *
- * @param {Phaser.Physics.Impact.World} world - [description]
+ * @param {Phaser.Physics.Impact.World} world - The physics world of the Impact physics system.
  * @param {number} x - The horizontal position of this Game Object in the world.
  * @param {number} y - The vertical position of this Game Object in the world.
  * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
@@ -82,7 +82,7 @@ var ImpactImage = new Class({
         Image.call(this, world.scene, x, y, texture, frame);
 
         /**
-         * [description]
+         * The Physics Body linked to an ImpactImage.
          *
          * @name Phaser.Physics.Impact.ImpactImage#body
          * @type {Phaser.Physics.Impact.Body}
@@ -94,7 +94,7 @@ var ImpactImage = new Class({
         this.body.gameObject = this;
 
         /**
-         * [description]
+         * The size of the physics Body.
          *
          * @name Phaser.Physics.Impact.ImpactImage#size
          * @type {{x: number, y: number}}
@@ -103,7 +103,7 @@ var ImpactImage = new Class({
         this.size = this.body.size;
 
         /**
-         * [description]
+         * The X and Y offset of the Body from the left and top of the Image.
          *
          * @name Phaser.Physics.Impact.ImpactImage#offset
          * @type {{x: number, y: number}}
@@ -112,7 +112,7 @@ var ImpactImage = new Class({
         this.offset = this.body.offset;
 
         /**
-         * [description]
+         * The velocity, or rate of change the Body's position. Measured in pixels per second.
          *
          * @name Phaser.Physics.Impact.ImpactImage#vel
          * @type {{x: number, y: number}}
@@ -121,7 +121,7 @@ var ImpactImage = new Class({
         this.vel = this.body.vel;
 
         /**
-         * [description]
+         * The acceleration is the rate of change of the velocity. Measured in pixels per second squared.
          *
          * @name Phaser.Physics.Impact.ImpactImage#accel
          * @type {{x: number, y: number}}
@@ -130,7 +130,7 @@ var ImpactImage = new Class({
         this.accel = this.body.accel;
 
         /**
-         * [description]
+         * Friction between colliding bodies.
          *
          * @name Phaser.Physics.Impact.ImpactImage#friction
          * @type {{x: number, y: number}}
@@ -139,7 +139,7 @@ var ImpactImage = new Class({
         this.friction = this.body.friction;
 
         /**
-         * [description]
+         * The maximum velocity of the body.
          *
          * @name Phaser.Physics.Impact.ImpactImage#maxVel
          * @type {{x: number, y: number}}

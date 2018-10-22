@@ -35,7 +35,7 @@ var WebGLPipeline = require('../WebGLPipeline');
  * @constructor
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {object} config - The configuration options for this Texture Tint Pipeline, as described above.
  */
 var TextureTintPipeline = new Class({
 

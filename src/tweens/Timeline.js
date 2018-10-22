@@ -11,7 +11,9 @@ var TWEEN_CONST = require('./tween/const');
 
 /**
  * @classdesc
- * [description]
+ * A Timeline combines multiple Tweens into one. Its overall behavior is otherwise similar to a single Tween.
+ *
+ * The Timeline updates all of its Tweens simultaneously. Its methods allow you to easily build a sequence of Tweens (each one starting after the previous one) or run multiple Tweens at once during given parts of the Timeline.
  *
  * @class Timeline
  * @memberof Phaser.Tweens
@@ -19,7 +21,7 @@ var TWEEN_CONST = require('./tween/const');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Tweens.TweenManager} manager - [description]
+ * @param {Phaser.Tweens.TweenManager} manager - The Tween Manager which owns this Timeline.
  */
 var Timeline = new Class({
 
@@ -32,7 +34,7 @@ var Timeline = new Class({
         EventEmitter.call(this);
 
         /**
-         * [description]
+         * The Tween Manager which owns this Timeline.
          *
          * @name Phaser.Tweens.Timeline#manager
          * @type {Phaser.Tweens.TweenManager}
@@ -41,7 +43,7 @@ var Timeline = new Class({
         this.manager = manager;
 
         /**
-         * [description]
+         * A constant value which allows this Timeline to be easily identified as one.
          *
          * @name Phaser.Tweens.Timeline#isTimeline
          * @type {boolean}
@@ -390,7 +392,7 @@ var Timeline = new Class({
      * @since 3.0.0
      *
      * @param {string} value - [description]
-     * @param {number} base - [description]
+     * @param {number} base - The value to use as the offset.
      *
      * @return {number} [description]
      */
@@ -524,15 +526,15 @@ var Timeline = new Class({
     },
 
     /**
-     * Sets a callback for the Tween Manager.
+     * Sets a callback for the Timeline.
      *
      * @method Phaser.Tweens.Timeline#setCallback
      * @since 3.0.0
      *
-     * @param {string} type - [description]
+     * @param {string} type - The internal type of callback to set.
      * @param {function} callback - Timeline allows multiple tweens to be linked together to create a streaming sequence.
-     * @param {array} [params] - [description]
-     * @param {object} [scope] - [description]
+     * @param {array} [params] - The parameters to pass to the callback.
+     * @param {object} [scope] - The context scope of the callback.
      *
      * @return {Phaser.Tweens.Timeline} This Timeline object.
      */
