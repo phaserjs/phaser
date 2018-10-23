@@ -29,7 +29,6 @@ var VisibilityHandler = require('./VisibilityHandler');
 if (typeof EXPERIMENTAL)
 {
     var CreateDOMContainer = require('./CreateDOMContainer');
-    var SpinePlugin = require('../../plugins/spine/src/SpinePlugin');
 }
 
 if (typeof PLUGIN_FBINSTANT)
@@ -388,12 +387,6 @@ var Game = new Class({
         DebugHeader(this);
 
         AddToDOM(this.canvas, this.config.parent);
-
-        if (typeof EXPERIMENTAL)
-        {
-            //  v8
-            new SpinePlugin(this.plugins);
-        }
 
         this.events.emit('boot');
 
