@@ -13,6 +13,8 @@
 * `ProcessQueue.destroy` now sets the internal `toProcess` counter to zero.
 * The `PathFollower.pathRotationVerticalAdjust` property has been removed. It was supposed to flipY a follower when it reversed path direction, but after some testing it appears it has never worked and it's easier to do this using events, so the property and associated config value are removed. The `verticalAdjust` argument from the `setRotateToPath` method has been removed as well.
 * The config value `preserveDrawingBuffer` has been removed as it has never been used by the WebGL Renderer.
+* `PluginManager.install` returns `null` if the plugin failed to install in all cases.
+* `PluginFile` will now install the plugin into the _current_ Scene as long as the `start` or `mapping` arguments are provided.
 
 ### Bug Fixes
 
@@ -26,6 +28,7 @@
 * The Tiled Parser would ignore animated tile data if it was in the new Tiled 1.2 format. This is now accounted for, as well as 1.0 (thanks @nkholski)
 * `Array.Matrix.ReverseRows` was actually reversing the columns, but now reverses the rows.
 * `Array.Matrix.ReverseColumns` was actually reversing the rows, but now reverses the columns.
+* UnityAtlas now sets the correct file type key if using a config file object.
 
 ### Examples and TypeScript
 
