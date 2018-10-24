@@ -6,10 +6,12 @@
 
 var Class = require('../../../src/utils/Class');
 var ScenePlugin = require('../../../src/plugins/ScenePlugin');
-var Skeleton = require('./Skeleton');
 var SpineFile = require('./SpineFile');
 var SpineCanvas = require('SpineCanvas');
 var SpineWebGL = require('SpineGL');
+var SpineGameObject = require('./gameobject/SpineGameObject');
+
+var runtime;
 
 /**
  * @classdesc
@@ -31,6 +33,8 @@ var SpinePlugin = new Class({
 
     function SpinePlugin (scene, pluginManager)
     {
+        console.log('SpinePlugin created');
+
         ScenePlugin.call(this, scene, pluginManager);
 
         var game = pluginManager.game;
@@ -49,9 +53,20 @@ var SpinePlugin = new Class({
         pluginManager.registerFileType('spine', this.spineFileCallback, scene);
 
         //  Register our game object
-        pluginManager.registerGameObject('spine', this.spineFactory);
 
-        // this.runtime = (game.config.renderType) ? SpineCanvas : SpineWebGL;
+        runtime = (game.config.renderType) ? SpineCanvas : SpineWebGL;
+
+        pluginManager.registerGameObject('spine', this.createSpineFactory(this));
+    },
+
+    boot: function ()
+    {
+        this.skeletonRenderer = new SpineCanvas.canvas.SkeletonRenderer(this.game.context);
+    },
+
+    getRuntime: function ()
+    {
+        return runtime;
     },
 
     spineFileCallback: function (key, jsonURL, atlasURL, jsonXhrSettings, atlasXhrSettings)
@@ -90,23 +105,19 @@ var SpinePlugin = new Class({
      *
      * @return {Phaser.GameObjects.Spine} The Game Object that was created.
      */
-    spineFactory: function (x, y, key,)
+    createSpineFactory: function (plugin)
     {
-        // var sprite = new Sprite3D(this.scene, x, y, z, key, frame);
+        var callback = function (x, y, key, animationName, loop)
+        {
+            var spineGO = new SpineGameObject(this.scene, plugin, x, y, key, animationName, loop);
 
-        // this.displayList.add(sprite.gameObject);
-        // this.updateList.add(sprite.gameObject);
+            this.displayList.add(spineGO);
+            this.updateList.add(spineGO);
+        
+            return spineGO;
+        };
 
-        // return sprite;
-    },
-
-    boot: function ()
-    {
-        this.canvas = this.game.canvas;
-
-        this.context = this.game.context;
-
-        this.skeletonRenderer = new SpineCanvas.canvas.SkeletonRenderer(this.context);
+        return callback;
     },
 
     createSkeleton: function (key)
@@ -133,16 +144,8 @@ var SpinePlugin = new Class({
         var skeletonData = skeletonJson.readSkeletonData(this.json.get(key));
 
         var skeleton = new SpineCanvas.Skeleton(skeletonData);
-
-        skeleton.flipY = true;
-
-        skeleton.setToSetupPose();
-
-        skeleton.updateWorldTransform();
-
-        skeleton.setSkinByName('default');
     
-        return skeleton;
+        return { skeletonData: skeletonData, skeleton: skeleton };
     },
 
     getBounds: function (skeleton)
@@ -155,13 +158,13 @@ var SpinePlugin = new Class({
         return { offset: offset, size: size };
     },
 
-    createAnimationState: function (skeleton, animationName)
+    createAnimationState: function (skeleton)
     {
-        var state = new SpineCanvas.AnimationState(new SpineCanvas.AnimationStateData(skeleton.data));
+        var stateData = new SpineCanvas.AnimationStateData(skeleton.data);
 
-        state.setAnimation(0, animationName, true);
+        var state = new SpineCanvas.AnimationState(stateData);
 
-        return state;
+        return { stateData: stateData, state: state };
     },
 
     /**
