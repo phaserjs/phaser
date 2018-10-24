@@ -11,6 +11,7 @@ var GetFastValue = require('../utils/object/GetFastValue');
 var GetValue = require('../utils/object/GetValue');
 var IsPlainObject = require('../utils/object/IsPlainObject');
 var MATH = require('../math/const');
+var RND = require('../math/random-data-generator/RandomDataGenerator');
 var NOOP = require('../utils/NOOP');
 var DefaultPlugins = require('../plugins/DefaultPlugins');
 var ValueToColor = require('../display/color/ValueToColor');
@@ -41,7 +42,7 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {number} [delay=0] - Time, in seconds, that should elapse before the sound actually starts its playback.
  */
 
- /**
+/**
  * @typedef {object} InputConfig
  *
  * @property {(boolean|KeyboardInputConfig)} [keyboard=true] - Keyboard input configuration. `true` uses the default configuration and `false` disables keyboard input.
@@ -363,6 +364,8 @@ var Config = new Class({
          * @const {string[]} Phaser.Boot.Config#seed - A seed which the Random Data Generator will use. If not given, a dynamic seed based on the time is used.
          */
         this.seed = GetValue(config, 'seed', [ (Date.now() * Math.random()).toString() ]);
+
+        MATH.RND = new RND();
 
         MATH.RND.init(this.seed);
 
