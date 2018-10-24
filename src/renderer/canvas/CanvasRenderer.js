@@ -373,6 +373,10 @@ var CanvasRenderer = new Class({
         var width = this.width;
         var height = this.height;
 
+        ctx.globalAlpha = 1;
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+
         if (config.clearBeforeRender)
         {
             ctx.clearRect(0, 0, width, height);
@@ -383,6 +387,8 @@ var CanvasRenderer = new Class({
             ctx.fillStyle = config.backgroundColor.rgba;
             ctx.fillRect(0, 0, width, height);
         }
+
+        ctx.save();
 
         this.drawCount = 0;
     },
@@ -414,8 +420,6 @@ var CanvasRenderer = new Class({
 
         this.currentContext = ctx;
 
-        //  If the alpha or blend mode didn't change since the last render, then don't set them again (saves 2 ops)
-
         if (!camera.transparent)
         {
             ctx.fillStyle = camera.backgroundColor.rgba;
@@ -428,9 +432,10 @@ var CanvasRenderer = new Class({
 
         this.drawCount += list.length;
 
+        ctx.save();
+
         if (scissor)
         {
-            ctx.save();
             ctx.beginPath();
             ctx.rect(cx, cy, cw, ch);
             ctx.clip();
@@ -474,11 +479,7 @@ var CanvasRenderer = new Class({
 
         camera.dirty = false;
 
-        //  Reset the camera scissor
-        if (scissor)
-        {
-            ctx.restore();
-        }
+        ctx.restore();
 
         if (camera.renderToTexture)
         {
@@ -500,8 +501,7 @@ var CanvasRenderer = new Class({
     {
         var ctx = this.gameContext;
 
-        ctx.globalAlpha = 1;
-        ctx.globalCompositeOperation = 'source-over';
+        ctx.restore();
 
         if (this.snapshotCallback)
         {
