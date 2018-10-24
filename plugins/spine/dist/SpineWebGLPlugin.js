@@ -2,11 +2,11 @@
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define("SpineCanvasPlugin", [], factory);
+		define("SpineWebGLPlugin", [], factory);
 	else if(typeof exports === 'object')
-		exports["SpineCanvasPlugin"] = factory();
+		exports["SpineWebGLPlugin"] = factory();
 	else
-		root["SpineCanvasPlugin"] = factory();
+		root["SpineWebGLPlugin"] = factory();
 })(window, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -91,7 +91,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./SpineCanvasPlugin.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./SpineWebGLPlugin.js");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -5944,6 +5944,1415 @@ module.exports = Clamp;
 
 /***/ }),
 
+/***/ "../../../src/math/Matrix4.js":
+/*!**********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Matrix4.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+//  Adapted from [gl-matrix](https://github.com/toji/gl-matrix) by toji
+//  and [vecmath](https://github.com/mattdesl/vecmath) by mattdesl
+
+var Class = __webpack_require__(/*! ../utils/Class */ "../../../src/utils/Class.js");
+
+var EPSILON = 0.000001;
+
+/**
+ * @classdesc
+ * A four-dimensional matrix.
+ *
+ * @class Matrix4
+ * @memberof Phaser.Math
+ * @constructor
+ * @since 3.0.0
+ *
+ * @param {Phaser.Math.Matrix4} [m] - Optional Matrix4 to copy values from.
+ */
+var Matrix4 = new Class({
+
+    initialize:
+
+    function Matrix4 (m)
+    {
+        /**
+         * The matrix values.
+         *
+         * @name Phaser.Math.Matrix4#val
+         * @type {Float32Array}
+         * @since 3.0.0
+         */
+        this.val = new Float32Array(16);
+
+        if (m)
+        {
+            //  Assume Matrix4 with val:
+            this.copy(m);
+        }
+        else
+        {
+            //  Default to identity
+            this.identity();
+        }
+    },
+
+    /**
+     * Make a clone of this Matrix4.
+     *
+     * @method Phaser.Math.Matrix4#clone
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Matrix4} A clone of this Matrix4.
+     */
+    clone: function ()
+    {
+        return new Matrix4(this);
+    },
+
+    //  TODO - Should work with basic values
+
+    /**
+     * This method is an alias for `Matrix4.copy`.
+     *
+     * @method Phaser.Math.Matrix4#set
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Matrix4} src - The Matrix to set the values of this Matrix's from.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    set: function (src)
+    {
+        return this.copy(src);
+    },
+
+    /**
+     * Copy the values of a given Matrix into this Matrix.
+     *
+     * @method Phaser.Math.Matrix4#copy
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Matrix4} src - The Matrix to copy the values from.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    copy: function (src)
+    {
+        var out = this.val;
+        var a = src.val;
+
+        out[0] = a[0];
+        out[1] = a[1];
+        out[2] = a[2];
+        out[3] = a[3];
+        out[4] = a[4];
+        out[5] = a[5];
+        out[6] = a[6];
+        out[7] = a[7];
+        out[8] = a[8];
+        out[9] = a[9];
+        out[10] = a[10];
+        out[11] = a[11];
+        out[12] = a[12];
+        out[13] = a[13];
+        out[14] = a[14];
+        out[15] = a[15];
+
+        return this;
+    },
+
+    /**
+     * Set the values of this Matrix from the given array.
+     *
+     * @method Phaser.Math.Matrix4#fromArray
+     * @since 3.0.0
+     *
+     * @param {array} a - The array to copy the values from.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    fromArray: function (a)
+    {
+        var out = this.val;
+
+        out[0] = a[0];
+        out[1] = a[1];
+        out[2] = a[2];
+        out[3] = a[3];
+        out[4] = a[4];
+        out[5] = a[5];
+        out[6] = a[6];
+        out[7] = a[7];
+        out[8] = a[8];
+        out[9] = a[9];
+        out[10] = a[10];
+        out[11] = a[11];
+        out[12] = a[12];
+        out[13] = a[13];
+        out[14] = a[14];
+        out[15] = a[15];
+
+        return this;
+    },
+
+    /**
+     * Reset this Matrix.
+     *
+     * Sets all values to `0`.
+     *
+     * @method Phaser.Math.Matrix4#zero
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    zero: function ()
+    {
+        var out = this.val;
+
+        out[0] = 0;
+        out[1] = 0;
+        out[2] = 0;
+        out[3] = 0;
+        out[4] = 0;
+        out[5] = 0;
+        out[6] = 0;
+        out[7] = 0;
+        out[8] = 0;
+        out[9] = 0;
+        out[10] = 0;
+        out[11] = 0;
+        out[12] = 0;
+        out[13] = 0;
+        out[14] = 0;
+        out[15] = 0;
+
+        return this;
+    },
+
+    /**
+     * Set the `x`, `y` and `z` values of this Matrix.
+     *
+     * @method Phaser.Math.Matrix4#xyz
+     * @since 3.0.0
+     *
+     * @param {number} x - The x value.
+     * @param {number} y - The y value.
+     * @param {number} z - The z value.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    xyz: function (x, y, z)
+    {
+        this.identity();
+
+        var out = this.val;
+
+        out[12] = x;
+        out[13] = y;
+        out[14] = z;
+
+        return this;
+    },
+
+    /**
+     * Set the scaling values of this Matrix.
+     *
+     * @method Phaser.Math.Matrix4#scaling
+     * @since 3.0.0
+     *
+     * @param {number} x - The x scaling value.
+     * @param {number} y - The y scaling value.
+     * @param {number} z - The z scaling value.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    scaling: function (x, y, z)
+    {
+        this.zero();
+
+        var out = this.val;
+
+        out[0] = x;
+        out[5] = y;
+        out[10] = z;
+        out[15] = 1;
+
+        return this;
+    },
+
+    /**
+     * Reset this Matrix to an identity (default) matrix.
+     *
+     * @method Phaser.Math.Matrix4#identity
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    identity: function ()
+    {
+        var out = this.val;
+
+        out[0] = 1;
+        out[1] = 0;
+        out[2] = 0;
+        out[3] = 0;
+        out[4] = 0;
+        out[5] = 1;
+        out[6] = 0;
+        out[7] = 0;
+        out[8] = 0;
+        out[9] = 0;
+        out[10] = 1;
+        out[11] = 0;
+        out[12] = 0;
+        out[13] = 0;
+        out[14] = 0;
+        out[15] = 1;
+
+        return this;
+    },
+
+    /**
+     * Transpose this Matrix.
+     *
+     * @method Phaser.Math.Matrix4#transpose
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    transpose: function ()
+    {
+        var a = this.val;
+
+        var a01 = a[1];
+        var a02 = a[2];
+        var a03 = a[3];
+        var a12 = a[6];
+        var a13 = a[7];
+        var a23 = a[11];
+
+        a[1] = a[4];
+        a[2] = a[8];
+        a[3] = a[12];
+        a[4] = a01;
+        a[6] = a[9];
+        a[7] = a[13];
+        a[8] = a02;
+        a[9] = a12;
+        a[11] = a[14];
+        a[12] = a03;
+        a[13] = a13;
+        a[14] = a23;
+
+        return this;
+    },
+
+    /**
+     * Invert this Matrix.
+     *
+     * @method Phaser.Math.Matrix4#invert
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    invert: function ()
+    {
+        var a = this.val;
+
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a03 = a[3];
+
+        var a10 = a[4];
+        var a11 = a[5];
+        var a12 = a[6];
+        var a13 = a[7];
+
+        var a20 = a[8];
+        var a21 = a[9];
+        var a22 = a[10];
+        var a23 = a[11];
+
+        var a30 = a[12];
+        var a31 = a[13];
+        var a32 = a[14];
+        var a33 = a[15];
+
+        var b00 = a00 * a11 - a01 * a10;
+        var b01 = a00 * a12 - a02 * a10;
+        var b02 = a00 * a13 - a03 * a10;
+        var b03 = a01 * a12 - a02 * a11;
+
+        var b04 = a01 * a13 - a03 * a11;
+        var b05 = a02 * a13 - a03 * a12;
+        var b06 = a20 * a31 - a21 * a30;
+        var b07 = a20 * a32 - a22 * a30;
+
+        var b08 = a20 * a33 - a23 * a30;
+        var b09 = a21 * a32 - a22 * a31;
+        var b10 = a21 * a33 - a23 * a31;
+        var b11 = a22 * a33 - a23 * a32;
+
+        // Calculate the determinant
+        var det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+
+        if (!det)
+        {
+            return null;
+        }
+
+        det = 1 / det;
+
+        a[0] = (a11 * b11 - a12 * b10 + a13 * b09) * det;
+        a[1] = (a02 * b10 - a01 * b11 - a03 * b09) * det;
+        a[2] = (a31 * b05 - a32 * b04 + a33 * b03) * det;
+        a[3] = (a22 * b04 - a21 * b05 - a23 * b03) * det;
+        a[4] = (a12 * b08 - a10 * b11 - a13 * b07) * det;
+        a[5] = (a00 * b11 - a02 * b08 + a03 * b07) * det;
+        a[6] = (a32 * b02 - a30 * b05 - a33 * b01) * det;
+        a[7] = (a20 * b05 - a22 * b02 + a23 * b01) * det;
+        a[8] = (a10 * b10 - a11 * b08 + a13 * b06) * det;
+        a[9] = (a01 * b08 - a00 * b10 - a03 * b06) * det;
+        a[10] = (a30 * b04 - a31 * b02 + a33 * b00) * det;
+        a[11] = (a21 * b02 - a20 * b04 - a23 * b00) * det;
+        a[12] = (a11 * b07 - a10 * b09 - a12 * b06) * det;
+        a[13] = (a00 * b09 - a01 * b07 + a02 * b06) * det;
+        a[14] = (a31 * b01 - a30 * b03 - a32 * b00) * det;
+        a[15] = (a20 * b03 - a21 * b01 + a22 * b00) * det;
+
+        return this;
+    },
+
+    /**
+     * Calculate the adjoint, or adjugate, of this Matrix.
+     *
+     * @method Phaser.Math.Matrix4#adjoint
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    adjoint: function ()
+    {
+        var a = this.val;
+
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a03 = a[3];
+
+        var a10 = a[4];
+        var a11 = a[5];
+        var a12 = a[6];
+        var a13 = a[7];
+
+        var a20 = a[8];
+        var a21 = a[9];
+        var a22 = a[10];
+        var a23 = a[11];
+
+        var a30 = a[12];
+        var a31 = a[13];
+        var a32 = a[14];
+        var a33 = a[15];
+
+        a[0] = (a11 * (a22 * a33 - a23 * a32) - a21 * (a12 * a33 - a13 * a32) + a31 * (a12 * a23 - a13 * a22));
+        a[1] = -(a01 * (a22 * a33 - a23 * a32) - a21 * (a02 * a33 - a03 * a32) + a31 * (a02 * a23 - a03 * a22));
+        a[2] = (a01 * (a12 * a33 - a13 * a32) - a11 * (a02 * a33 - a03 * a32) + a31 * (a02 * a13 - a03 * a12));
+        a[3] = -(a01 * (a12 * a23 - a13 * a22) - a11 * (a02 * a23 - a03 * a22) + a21 * (a02 * a13 - a03 * a12));
+        a[4] = -(a10 * (a22 * a33 - a23 * a32) - a20 * (a12 * a33 - a13 * a32) + a30 * (a12 * a23 - a13 * a22));
+        a[5] = (a00 * (a22 * a33 - a23 * a32) - a20 * (a02 * a33 - a03 * a32) + a30 * (a02 * a23 - a03 * a22));
+        a[6] = -(a00 * (a12 * a33 - a13 * a32) - a10 * (a02 * a33 - a03 * a32) + a30 * (a02 * a13 - a03 * a12));
+        a[7] = (a00 * (a12 * a23 - a13 * a22) - a10 * (a02 * a23 - a03 * a22) + a20 * (a02 * a13 - a03 * a12));
+        a[8] = (a10 * (a21 * a33 - a23 * a31) - a20 * (a11 * a33 - a13 * a31) + a30 * (a11 * a23 - a13 * a21));
+        a[9] = -(a00 * (a21 * a33 - a23 * a31) - a20 * (a01 * a33 - a03 * a31) + a30 * (a01 * a23 - a03 * a21));
+        a[10] = (a00 * (a11 * a33 - a13 * a31) - a10 * (a01 * a33 - a03 * a31) + a30 * (a01 * a13 - a03 * a11));
+        a[11] = -(a00 * (a11 * a23 - a13 * a21) - a10 * (a01 * a23 - a03 * a21) + a20 * (a01 * a13 - a03 * a11));
+        a[12] = -(a10 * (a21 * a32 - a22 * a31) - a20 * (a11 * a32 - a12 * a31) + a30 * (a11 * a22 - a12 * a21));
+        a[13] = (a00 * (a21 * a32 - a22 * a31) - a20 * (a01 * a32 - a02 * a31) + a30 * (a01 * a22 - a02 * a21));
+        a[14] = -(a00 * (a11 * a32 - a12 * a31) - a10 * (a01 * a32 - a02 * a31) + a30 * (a01 * a12 - a02 * a11));
+        a[15] = (a00 * (a11 * a22 - a12 * a21) - a10 * (a01 * a22 - a02 * a21) + a20 * (a01 * a12 - a02 * a11));
+
+        return this;
+    },
+
+    /**
+     * Calculate the determinant of this Matrix.
+     *
+     * @method Phaser.Math.Matrix4#determinant
+     * @since 3.0.0
+     *
+     * @return {number} The determinant of this Matrix.
+     */
+    determinant: function ()
+    {
+        var a = this.val;
+
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a03 = a[3];
+
+        var a10 = a[4];
+        var a11 = a[5];
+        var a12 = a[6];
+        var a13 = a[7];
+
+        var a20 = a[8];
+        var a21 = a[9];
+        var a22 = a[10];
+        var a23 = a[11];
+
+        var a30 = a[12];
+        var a31 = a[13];
+        var a32 = a[14];
+        var a33 = a[15];
+
+        var b00 = a00 * a11 - a01 * a10;
+        var b01 = a00 * a12 - a02 * a10;
+        var b02 = a00 * a13 - a03 * a10;
+        var b03 = a01 * a12 - a02 * a11;
+        var b04 = a01 * a13 - a03 * a11;
+        var b05 = a02 * a13 - a03 * a12;
+        var b06 = a20 * a31 - a21 * a30;
+        var b07 = a20 * a32 - a22 * a30;
+        var b08 = a20 * a33 - a23 * a30;
+        var b09 = a21 * a32 - a22 * a31;
+        var b10 = a21 * a33 - a23 * a31;
+        var b11 = a22 * a33 - a23 * a32;
+
+        // Calculate the determinant
+        return b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+    },
+
+    /**
+     * Multiply this Matrix by the given Matrix.
+     *
+     * @method Phaser.Math.Matrix4#multiply
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Matrix4} src - The Matrix to multiply this Matrix by.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    multiply: function (src)
+    {
+        var a = this.val;
+
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a03 = a[3];
+
+        var a10 = a[4];
+        var a11 = a[5];
+        var a12 = a[6];
+        var a13 = a[7];
+
+        var a20 = a[8];
+        var a21 = a[9];
+        var a22 = a[10];
+        var a23 = a[11];
+
+        var a30 = a[12];
+        var a31 = a[13];
+        var a32 = a[14];
+        var a33 = a[15];
+
+        var b = src.val;
+
+        // Cache only the current line of the second matrix
+        var b0 = b[0];
+        var b1 = b[1];
+        var b2 = b[2];
+        var b3 = b[3];
+
+        a[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
+        a[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
+        a[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
+        a[3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+
+        b0 = b[4];
+        b1 = b[5];
+        b2 = b[6];
+        b3 = b[7];
+
+        a[4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
+        a[5] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
+        a[6] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
+        a[7] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+
+        b0 = b[8];
+        b1 = b[9];
+        b2 = b[10];
+        b3 = b[11];
+
+        a[8] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
+        a[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
+        a[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
+        a[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+
+        b0 = b[12];
+        b1 = b[13];
+        b2 = b[14];
+        b3 = b[15];
+
+        a[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
+        a[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
+        a[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
+        a[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+
+        return this;
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.Math.Matrix4#multiplyLocal
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Matrix4} src - [description]
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    multiplyLocal: function (src)
+    {
+        var a = [];
+        var m1 = this.val;
+        var m2 = src.val;
+
+        a[0] = m1[0] * m2[0] + m1[1] * m2[4] + m1[2] * m2[8] + m1[3] * m2[12];
+        a[1] = m1[0] * m2[1] + m1[1] * m2[5] + m1[2] * m2[9] + m1[3] * m2[13];
+        a[2] = m1[0] * m2[2] + m1[1] * m2[6] + m1[2] * m2[10] + m1[3] * m2[14];
+        a[3] = m1[0] * m2[3] + m1[1] * m2[7] + m1[2] * m2[11] + m1[3] * m2[15];
+
+        a[4] = m1[4] * m2[0] + m1[5] * m2[4] + m1[6] * m2[8] + m1[7] * m2[12];
+        a[5] = m1[4] * m2[1] + m1[5] * m2[5] + m1[6] * m2[9] + m1[7] * m2[13];
+        a[6] = m1[4] * m2[2] + m1[5] * m2[6] + m1[6] * m2[10] + m1[7] * m2[14];
+        a[7] = m1[4] * m2[3] + m1[5] * m2[7] + m1[6] * m2[11] + m1[7] * m2[15];
+
+        a[8] = m1[8] * m2[0] + m1[9] * m2[4] + m1[10] * m2[8] + m1[11] * m2[12];
+        a[9] = m1[8] * m2[1] + m1[9] * m2[5] + m1[10] * m2[9] + m1[11] * m2[13];
+        a[10] = m1[8] * m2[2] + m1[9] * m2[6] + m1[10] * m2[10] + m1[11] * m2[14];
+        a[11] = m1[8] * m2[3] + m1[9] * m2[7] + m1[10] * m2[11] + m1[11] * m2[15];
+
+        a[12] = m1[12] * m2[0] + m1[13] * m2[4] + m1[14] * m2[8] + m1[15] * m2[12];
+        a[13] = m1[12] * m2[1] + m1[13] * m2[5] + m1[14] * m2[9] + m1[15] * m2[13];
+        a[14] = m1[12] * m2[2] + m1[13] * m2[6] + m1[14] * m2[10] + m1[15] * m2[14];
+        a[15] = m1[12] * m2[3] + m1[13] * m2[7] + m1[14] * m2[11] + m1[15] * m2[15];
+
+        return this.fromArray(a);
+    },
+
+    /**
+     * Translate this Matrix using the given Vector.
+     *
+     * @method Phaser.Math.Matrix4#translate
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Vector3|Phaser.Math.Vector4)} v - The Vector to translate this Matrix with.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    translate: function (v)
+    {
+        var x = v.x;
+        var y = v.y;
+        var z = v.z;
+        var a = this.val;
+
+        a[12] = a[0] * x + a[4] * y + a[8] * z + a[12];
+        a[13] = a[1] * x + a[5] * y + a[9] * z + a[13];
+        a[14] = a[2] * x + a[6] * y + a[10] * z + a[14];
+        a[15] = a[3] * x + a[7] * y + a[11] * z + a[15];
+
+        return this;
+    },
+
+    /**
+     * Apply a scale transformation to this Matrix.
+     *
+     * Uses the `x`, `y` and `z` components of the given Vector to scale the Matrix.
+     *
+     * @method Phaser.Math.Matrix4#scale
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Vector3|Phaser.Math.Vector4)} v - The Vector to scale this Matrix with.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    scale: function (v)
+    {
+        var x = v.x;
+        var y = v.y;
+        var z = v.z;
+        var a = this.val;
+
+        a[0] = a[0] * x;
+        a[1] = a[1] * x;
+        a[2] = a[2] * x;
+        a[3] = a[3] * x;
+
+        a[4] = a[4] * y;
+        a[5] = a[5] * y;
+        a[6] = a[6] * y;
+        a[7] = a[7] * y;
+
+        a[8] = a[8] * z;
+        a[9] = a[9] * z;
+        a[10] = a[10] * z;
+        a[11] = a[11] * z;
+
+        return this;
+    },
+
+    /**
+     * Derive a rotation matrix around the given axis.
+     *
+     * @method Phaser.Math.Matrix4#makeRotationAxis
+     * @since 3.0.0
+     *
+     * @param {(Phaser.Math.Vector3|Phaser.Math.Vector4)} axis - The rotation axis.
+     * @param {number} angle - The rotation angle in radians.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    makeRotationAxis: function (axis, angle)
+    {
+        // Based on http://www.gamedev.net/reference/articles/article1199.asp
+
+        var c = Math.cos(angle);
+        var s = Math.sin(angle);
+        var t = 1 - c;
+        var x = axis.x;
+        var y = axis.y;
+        var z = axis.z;
+        var tx = t * x;
+        var ty = t * y;
+
+        this.fromArray([
+            tx * x + c, tx * y - s * z, tx * z + s * y, 0,
+            tx * y + s * z, ty * y + c, ty * z - s * x, 0,
+            tx * z - s * y, ty * z + s * x, t * z * z + c, 0,
+            0, 0, 0, 1
+        ]);
+
+        return this;
+    },
+
+    /**
+     * Apply a rotation transformation to this Matrix.
+     *
+     * @method Phaser.Math.Matrix4#rotate
+     * @since 3.0.0
+     *
+     * @param {number} rad - The angle in radians to rotate by.
+     * @param {Phaser.Math.Vector3} axis - The axis to rotate upon.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    rotate: function (rad, axis)
+    {
+        var a = this.val;
+        var x = axis.x;
+        var y = axis.y;
+        var z = axis.z;
+        var len = Math.sqrt(x * x + y * y + z * z);
+
+        if (Math.abs(len) < EPSILON)
+        {
+            return null;
+        }
+
+        len = 1 / len;
+        x *= len;
+        y *= len;
+        z *= len;
+
+        var s = Math.sin(rad);
+        var c = Math.cos(rad);
+        var t = 1 - c;
+
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a03 = a[3];
+
+        var a10 = a[4];
+        var a11 = a[5];
+        var a12 = a[6];
+        var a13 = a[7];
+
+        var a20 = a[8];
+        var a21 = a[9];
+        var a22 = a[10];
+        var a23 = a[11];
+
+        // Construct the elements of the rotation matrix
+        var b00 = x * x * t + c;
+        var b01 = y * x * t + z * s;
+        var b02 = z * x * t - y * s;
+
+        var b10 = x * y * t - z * s;
+        var b11 = y * y * t + c;
+        var b12 = z * y * t + x * s;
+
+        var b20 = x * z * t + y * s;
+        var b21 = y * z * t - x * s;
+        var b22 = z * z * t + c;
+
+        // Perform rotation-specific matrix multiplication
+        a[0] = a00 * b00 + a10 * b01 + a20 * b02;
+        a[1] = a01 * b00 + a11 * b01 + a21 * b02;
+        a[2] = a02 * b00 + a12 * b01 + a22 * b02;
+        a[3] = a03 * b00 + a13 * b01 + a23 * b02;
+        a[4] = a00 * b10 + a10 * b11 + a20 * b12;
+        a[5] = a01 * b10 + a11 * b11 + a21 * b12;
+        a[6] = a02 * b10 + a12 * b11 + a22 * b12;
+        a[7] = a03 * b10 + a13 * b11 + a23 * b12;
+        a[8] = a00 * b20 + a10 * b21 + a20 * b22;
+        a[9] = a01 * b20 + a11 * b21 + a21 * b22;
+        a[10] = a02 * b20 + a12 * b21 + a22 * b22;
+        a[11] = a03 * b20 + a13 * b21 + a23 * b22;
+
+        return this;
+    },
+
+    /**
+     * Rotate this matrix on its X axis.
+     *
+     * @method Phaser.Math.Matrix4#rotateX
+     * @since 3.0.0
+     *
+     * @param {number} rad - The angle in radians to rotate by.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    rotateX: function (rad)
+    {
+        var a = this.val;
+        var s = Math.sin(rad);
+        var c = Math.cos(rad);
+
+        var a10 = a[4];
+        var a11 = a[5];
+        var a12 = a[6];
+        var a13 = a[7];
+
+        var a20 = a[8];
+        var a21 = a[9];
+        var a22 = a[10];
+        var a23 = a[11];
+
+        // Perform axis-specific matrix multiplication
+        a[4] = a10 * c + a20 * s;
+        a[5] = a11 * c + a21 * s;
+        a[6] = a12 * c + a22 * s;
+        a[7] = a13 * c + a23 * s;
+        a[8] = a20 * c - a10 * s;
+        a[9] = a21 * c - a11 * s;
+        a[10] = a22 * c - a12 * s;
+        a[11] = a23 * c - a13 * s;
+
+        return this;
+    },
+
+    /**
+     * Rotate this matrix on its Y axis.
+     *
+     * @method Phaser.Math.Matrix4#rotateY
+     * @since 3.0.0
+     *
+     * @param {number} rad - The angle to rotate by, in radians.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    rotateY: function (rad)
+    {
+        var a = this.val;
+        var s = Math.sin(rad);
+        var c = Math.cos(rad);
+
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a03 = a[3];
+
+        var a20 = a[8];
+        var a21 = a[9];
+        var a22 = a[10];
+        var a23 = a[11];
+
+        // Perform axis-specific matrix multiplication
+        a[0] = a00 * c - a20 * s;
+        a[1] = a01 * c - a21 * s;
+        a[2] = a02 * c - a22 * s;
+        a[3] = a03 * c - a23 * s;
+        a[8] = a00 * s + a20 * c;
+        a[9] = a01 * s + a21 * c;
+        a[10] = a02 * s + a22 * c;
+        a[11] = a03 * s + a23 * c;
+
+        return this;
+    },
+
+    /**
+     * Rotate this matrix on its Z axis.
+     *
+     * @method Phaser.Math.Matrix4#rotateZ
+     * @since 3.0.0
+     *
+     * @param {number} rad - The angle to rotate by, in radians.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    rotateZ: function (rad)
+    {
+        var a = this.val;
+        var s = Math.sin(rad);
+        var c = Math.cos(rad);
+
+        var a00 = a[0];
+        var a01 = a[1];
+        var a02 = a[2];
+        var a03 = a[3];
+
+        var a10 = a[4];
+        var a11 = a[5];
+        var a12 = a[6];
+        var a13 = a[7];
+
+        // Perform axis-specific matrix multiplication
+        a[0] = a00 * c + a10 * s;
+        a[1] = a01 * c + a11 * s;
+        a[2] = a02 * c + a12 * s;
+        a[3] = a03 * c + a13 * s;
+        a[4] = a10 * c - a00 * s;
+        a[5] = a11 * c - a01 * s;
+        a[6] = a12 * c - a02 * s;
+        a[7] = a13 * c - a03 * s;
+
+        return this;
+    },
+
+    /**
+     * Set the values of this Matrix from the given rotation Quaternion and translation Vector.
+     *
+     * @method Phaser.Math.Matrix4#fromRotationTranslation
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Quaternion} q - The Quaternion to set rotation from.
+     * @param {Phaser.Math.Vector3} v - The Vector to set translation from.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    fromRotationTranslation: function (q, v)
+    {
+        // Quaternion math
+        var out = this.val;
+
+        var x = q.x;
+        var y = q.y;
+        var z = q.z;
+        var w = q.w;
+
+        var x2 = x + x;
+        var y2 = y + y;
+        var z2 = z + z;
+
+        var xx = x * x2;
+        var xy = x * y2;
+        var xz = x * z2;
+
+        var yy = y * y2;
+        var yz = y * z2;
+        var zz = z * z2;
+
+        var wx = w * x2;
+        var wy = w * y2;
+        var wz = w * z2;
+
+        out[0] = 1 - (yy + zz);
+        out[1] = xy + wz;
+        out[2] = xz - wy;
+        out[3] = 0;
+
+        out[4] = xy - wz;
+        out[5] = 1 - (xx + zz);
+        out[6] = yz + wx;
+        out[7] = 0;
+
+        out[8] = xz + wy;
+        out[9] = yz - wx;
+        out[10] = 1 - (xx + yy);
+        out[11] = 0;
+
+        out[12] = v.x;
+        out[13] = v.y;
+        out[14] = v.z;
+        out[15] = 1;
+
+        return this;
+    },
+
+    /**
+     * Set the values of this Matrix from the given Quaternion.
+     *
+     * @method Phaser.Math.Matrix4#fromQuat
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Quaternion} q - The Quaternion to set the values of this Matrix from.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    fromQuat: function (q)
+    {
+        var out = this.val;
+
+        var x = q.x;
+        var y = q.y;
+        var z = q.z;
+        var w = q.w;
+
+        var x2 = x + x;
+        var y2 = y + y;
+        var z2 = z + z;
+
+        var xx = x * x2;
+        var xy = x * y2;
+        var xz = x * z2;
+
+        var yy = y * y2;
+        var yz = y * z2;
+        var zz = z * z2;
+
+        var wx = w * x2;
+        var wy = w * y2;
+        var wz = w * z2;
+
+        out[0] = 1 - (yy + zz);
+        out[1] = xy + wz;
+        out[2] = xz - wy;
+        out[3] = 0;
+
+        out[4] = xy - wz;
+        out[5] = 1 - (xx + zz);
+        out[6] = yz + wx;
+        out[7] = 0;
+
+        out[8] = xz + wy;
+        out[9] = yz - wx;
+        out[10] = 1 - (xx + yy);
+        out[11] = 0;
+
+        out[12] = 0;
+        out[13] = 0;
+        out[14] = 0;
+        out[15] = 1;
+
+        return this;
+    },
+
+    /**
+     * Generate a frustum matrix with the given bounds.
+     *
+     * @method Phaser.Math.Matrix4#frustum
+     * @since 3.0.0
+     *
+     * @param {number} left - The left bound of the frustum.
+     * @param {number} right - The right bound of the frustum.
+     * @param {number} bottom - The bottom bound of the frustum.
+     * @param {number} top - The top bound of the frustum.
+     * @param {number} near - The near bound of the frustum.
+     * @param {number} far - The far bound of the frustum.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    frustum: function (left, right, bottom, top, near, far)
+    {
+        var out = this.val;
+
+        var rl = 1 / (right - left);
+        var tb = 1 / (top - bottom);
+        var nf = 1 / (near - far);
+
+        out[0] = (near * 2) * rl;
+        out[1] = 0;
+        out[2] = 0;
+        out[3] = 0;
+
+        out[4] = 0;
+        out[5] = (near * 2) * tb;
+        out[6] = 0;
+        out[7] = 0;
+
+        out[8] = (right + left) * rl;
+        out[9] = (top + bottom) * tb;
+        out[10] = (far + near) * nf;
+        out[11] = -1;
+
+        out[12] = 0;
+        out[13] = 0;
+        out[14] = (far * near * 2) * nf;
+        out[15] = 0;
+
+        return this;
+    },
+
+    /**
+     * Generate a perspective projection matrix with the given bounds.
+     *
+     * @method Phaser.Math.Matrix4#perspective
+     * @since 3.0.0
+     *
+     * @param {number} fovy - Vertical field of view in radians
+     * @param {number} aspect - Aspect ratio. Typically viewport width  /height.
+     * @param {number} near - Near bound of the frustum.
+     * @param {number} far - Far bound of the frustum.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    perspective: function (fovy, aspect, near, far)
+    {
+        var out = this.val;
+        var f = 1.0 / Math.tan(fovy / 2);
+        var nf = 1 / (near - far);
+
+        out[0] = f / aspect;
+        out[1] = 0;
+        out[2] = 0;
+        out[3] = 0;
+
+        out[4] = 0;
+        out[5] = f;
+        out[6] = 0;
+        out[7] = 0;
+
+        out[8] = 0;
+        out[9] = 0;
+        out[10] = (far + near) * nf;
+        out[11] = -1;
+
+        out[12] = 0;
+        out[13] = 0;
+        out[14] = (2 * far * near) * nf;
+        out[15] = 0;
+
+        return this;
+    },
+
+    /**
+     * Generate a perspective projection matrix with the given bounds.
+     *
+     * @method Phaser.Math.Matrix4#perspectiveLH
+     * @since 3.0.0
+     *
+     * @param {number} width - The width of the frustum.
+     * @param {number} height - The height of the frustum.
+     * @param {number} near - Near bound of the frustum.
+     * @param {number} far - Far bound of the frustum.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    perspectiveLH: function (width, height, near, far)
+    {
+        var out = this.val;
+
+        out[0] = (2 * near) / width;
+        out[1] = 0;
+        out[2] = 0;
+        out[3] = 0;
+
+        out[4] = 0;
+        out[5] = (2 * near) / height;
+        out[6] = 0;
+        out[7] = 0;
+
+        out[8] = 0;
+        out[9] = 0;
+        out[10] = -far / (near - far);
+        out[11] = 1;
+
+        out[12] = 0;
+        out[13] = 0;
+        out[14] = (near * far) / (near - far);
+        out[15] = 0;
+
+        return this;
+    },
+
+    /**
+     * Generate an orthogonal projection matrix with the given bounds.
+     *
+     * @method Phaser.Math.Matrix4#ortho
+     * @since 3.0.0
+     *
+     * @param {number} left - The left bound of the frustum.
+     * @param {number} right - The right bound of the frustum.
+     * @param {number} bottom - The bottom bound of the frustum.
+     * @param {number} top - The top bound of the frustum.
+     * @param {number} near - The near bound of the frustum.
+     * @param {number} far - The far bound of the frustum.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    ortho: function (left, right, bottom, top, near, far)
+    {
+        var out = this.val;
+        var lr = left - right;
+        var bt = bottom - top;
+        var nf = near - far;
+
+        //  Avoid division by zero
+        lr = (lr === 0) ? lr : 1 / lr;
+        bt = (bt === 0) ? bt : 1 / bt;
+        nf = (nf === 0) ? nf : 1 / nf;
+
+        out[0] = -2 * lr;
+        out[1] = 0;
+        out[2] = 0;
+        out[3] = 0;
+
+        out[4] = 0;
+        out[5] = -2 * bt;
+        out[6] = 0;
+        out[7] = 0;
+
+        out[8] = 0;
+        out[9] = 0;
+        out[10] = 2 * nf;
+        out[11] = 0;
+
+        out[12] = (left + right) * lr;
+        out[13] = (top + bottom) * bt;
+        out[14] = (far + near) * nf;
+        out[15] = 1;
+
+        return this;
+    },
+
+    /**
+     * Generate a look-at matrix with the given eye position, focal point, and up axis.
+     *
+     * @method Phaser.Math.Matrix4#lookAt
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Vector3} eye - Position of the viewer
+     * @param {Phaser.Math.Vector3} center - Point the viewer is looking at
+     * @param {Phaser.Math.Vector3} up - vec3 pointing up.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    lookAt: function (eye, center, up)
+    {
+        var out = this.val;
+
+        var eyex = eye.x;
+        var eyey = eye.y;
+        var eyez = eye.z;
+
+        var upx = up.x;
+        var upy = up.y;
+        var upz = up.z;
+
+        var centerx = center.x;
+        var centery = center.y;
+        var centerz = center.z;
+
+        if (Math.abs(eyex - centerx) < EPSILON &&
+            Math.abs(eyey - centery) < EPSILON &&
+            Math.abs(eyez - centerz) < EPSILON)
+        {
+            return this.identity();
+        }
+
+        var z0 = eyex - centerx;
+        var z1 = eyey - centery;
+        var z2 = eyez - centerz;
+
+        var len = 1 / Math.sqrt(z0 * z0 + z1 * z1 + z2 * z2);
+
+        z0 *= len;
+        z1 *= len;
+        z2 *= len;
+
+        var x0 = upy * z2 - upz * z1;
+        var x1 = upz * z0 - upx * z2;
+        var x2 = upx * z1 - upy * z0;
+
+        len = Math.sqrt(x0 * x0 + x1 * x1 + x2 * x2);
+
+        if (!len)
+        {
+            x0 = 0;
+            x1 = 0;
+            x2 = 0;
+        }
+        else
+        {
+            len = 1 / len;
+            x0 *= len;
+            x1 *= len;
+            x2 *= len;
+        }
+
+        var y0 = z1 * x2 - z2 * x1;
+        var y1 = z2 * x0 - z0 * x2;
+        var y2 = z0 * x1 - z1 * x0;
+
+        len = Math.sqrt(y0 * y0 + y1 * y1 + y2 * y2);
+
+        if (!len)
+        {
+            y0 = 0;
+            y1 = 0;
+            y2 = 0;
+        }
+        else
+        {
+            len = 1 / len;
+            y0 *= len;
+            y1 *= len;
+            y2 *= len;
+        }
+
+        out[0] = x0;
+        out[1] = y0;
+        out[2] = z0;
+        out[3] = 0;
+
+        out[4] = x1;
+        out[5] = y1;
+        out[6] = z1;
+        out[7] = 0;
+
+        out[8] = x2;
+        out[9] = y2;
+        out[10] = z2;
+        out[11] = 0;
+
+        out[12] = -(x0 * eyex + x1 * eyey + x2 * eyez);
+        out[13] = -(y0 * eyex + y1 * eyey + y2 * eyez);
+        out[14] = -(z0 * eyex + z1 * eyey + z2 * eyez);
+        out[15] = 1;
+
+        return this;
+    },
+
+    /**
+     * Set the values of this matrix from the given `yaw`, `pitch` and `roll` values.
+     *
+     * @method Phaser.Math.Matrix4#yawPitchRoll
+     * @since 3.0.0
+     *
+     * @param {number} yaw - [description]
+     * @param {number} pitch - [description]
+     * @param {number} roll - [description]
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    yawPitchRoll: function (yaw, pitch, roll)
+    {
+        this.zero();
+        _tempMat1.zero();
+        _tempMat2.zero();
+
+        var m0 = this.val;
+        var m1 = _tempMat1.val;
+        var m2 = _tempMat2.val;
+
+        //  Rotate Z
+        var s = Math.sin(roll);
+        var c = Math.cos(roll);
+
+        m0[10] = 1;
+        m0[15] = 1;
+        m0[0] = c;
+        m0[1] = s;
+        m0[4] = -s;
+        m0[5] = c;
+
+        //  Rotate X
+        s = Math.sin(pitch);
+        c = Math.cos(pitch);
+
+        m1[0] = 1;
+        m1[15] = 1;
+        m1[5] = c;
+        m1[10] = c;
+        m1[9] = -s;
+        m1[6] = s;
+
+        //  Rotate Y
+        s = Math.sin(yaw);
+        c = Math.cos(yaw);
+
+        m2[5] = 1;
+        m2[15] = 1;
+        m2[0] = c;
+        m2[2] = -s;
+        m2[8] = s;
+        m2[10] = c;
+
+        this.multiplyLocal(_tempMat1);
+        this.multiplyLocal(_tempMat2);
+
+        return this;
+    },
+
+    /**
+     * Generate a world matrix from the given rotation, position, scale, view matrix and projection matrix.
+     *
+     * @method Phaser.Math.Matrix4#setWorldMatrix
+     * @since 3.0.0
+     *
+     * @param {Phaser.Math.Vector3} rotation - The rotation of the world matrix.
+     * @param {Phaser.Math.Vector3} position - The position of the world matrix.
+     * @param {Phaser.Math.Vector3} scale - The scale of the world matrix.
+     * @param {Phaser.Math.Matrix4} [viewMatrix] - The view matrix.
+     * @param {Phaser.Math.Matrix4} [projectionMatrix] - The projection matrix.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    setWorldMatrix: function (rotation, position, scale, viewMatrix, projectionMatrix)
+    {
+        this.yawPitchRoll(rotation.y, rotation.x, rotation.z);
+
+        _tempMat1.scaling(scale.x, scale.y, scale.z);
+        _tempMat2.xyz(position.x, position.y, position.z);
+
+        this.multiplyLocal(_tempMat1);
+        this.multiplyLocal(_tempMat2);
+
+        if (viewMatrix !== undefined)
+        {
+            this.multiplyLocal(viewMatrix);
+        }
+
+        if (projectionMatrix !== undefined)
+        {
+            this.multiplyLocal(projectionMatrix);
+        }
+
+        return this;
+    }
+
+});
+
+var _tempMat1 = new Matrix4();
+var _tempMat2 = new Matrix4();
+
+module.exports = Matrix4;
+
+
+/***/ }),
+
 /***/ "../../../src/math/Vector2.js":
 /*!**********************************************!*\
   !*** D:/wamp/www/phaser/src/math/Vector2.js ***!
@@ -7155,96 +8564,6 @@ module.exports = {
 
 /***/ }),
 
-/***/ "../../../src/renderer/canvas/utils/SetTransform.js":
-/*!********************************************************************!*\
-  !*** D:/wamp/www/phaser/src/renderer/canvas/utils/SetTransform.js ***!
-  \********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-/**
- * Takes a reference to the Canvas Renderer, a Canvas Rendering Context, a Game Object, a Camera and a parent matrix
- * and then performs the following steps:
- * 
- * 1) Checks the alpha of the source combined with the Camera alpha. If 0 or less it aborts.
- * 2) Takes the Camera and Game Object matrix and multiplies them, combined with the parent matrix if given.
- * 3) Sets the blend mode of the context to be that used by the Game Object.
- * 4) Sets the alpha value of the context to be that used by the Game Object combined with the Camera.
- * 5) Saves the context state.
- * 6) Sets the final matrix values into the context via setTransform.
- * 
- * This function is only meant to be used internally. Most of the Canvas Renderer classes use it.
- *
- * @function Phaser.Renderer.Canvas.SetTransform
- * @since 3.12.0
- *
- * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
- * @param {CanvasRenderingContext2D} ctx - The canvas context to set the transform on.
- * @param {Phaser.GameObjects.GameObject} src - The Game Object being rendered. Can be any type that extends the base class.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
- * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - A parent transform matrix to apply to the Game Object before rendering.
- * 
- * @return {boolean} `true` if the Game Object context was set, otherwise `false`.
- */
-var SetTransform = function (renderer, ctx, src, camera, parentMatrix)
-{
-    var alpha = camera.alpha * src.alpha;
-
-    if (alpha <= 0)
-    {
-        //  Nothing to see, so don't waste time calculating stuff
-        return false;
-    }
-
-    var camMatrix = renderer._tempMatrix1.copyFromArray(camera.matrix.matrix);
-    var gameObjectMatrix = renderer._tempMatrix2.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
-    var calcMatrix = renderer._tempMatrix3;
-
-    if (parentMatrix)
-    {
-        //  Multiply the camera by the parent matrix
-        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
-
-        //  Undo the camera scroll
-        gameObjectMatrix.e = src.x;
-        gameObjectMatrix.f = src.y;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(gameObjectMatrix, calcMatrix);
-    }
-    else
-    {
-        gameObjectMatrix.e -= camera.scrollX * src.scrollFactorX;
-        gameObjectMatrix.f -= camera.scrollY * src.scrollFactorY;
-
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(gameObjectMatrix, calcMatrix);
-    }
-
-    //  Blend Mode
-    ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
-
-    //  Alpha
-    ctx.globalAlpha = alpha;
-
-    ctx.save();
-
-    calcMatrix.setToContext(ctx);
-
-    return true;
-};
-
-module.exports = SetTransform;
-
-
-/***/ }),
-
 /***/ "../../../src/utils/Class.js":
 /*!*********************************************!*\
   !*** D:/wamp/www/phaser/src/utils/Class.js ***!
@@ -7964,116 +9283,6 @@ module.exports = SpinePlugin;
 
 /***/ }),
 
-/***/ "./SpineCanvasPlugin.js":
-/*!******************************!*\
-  !*** ./SpineCanvasPlugin.js ***!
-  \******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var Class = __webpack_require__(/*! ../../../src/utils/Class */ "../../../src/utils/Class.js");
-var BaseSpinePlugin = __webpack_require__(/*! ./BaseSpinePlugin */ "./BaseSpinePlugin.js");
-var SpineCanvas = __webpack_require__(/*! SpineCanvas */ "./runtimes/spine-canvas.js");
-
-var runtime;
-
-/**
- * @classdesc
- * TODO
- *
- * @class SpinePlugin
- * @extends Phaser.Plugins.ScenePlugin
- * @constructor
- * @since 3.16.0
- *
- * @param {Phaser.Scene} scene - A reference to the Scene that has installed this plugin.
- * @param {Phaser.Plugins.PluginManager} pluginManager - A reference to the Phaser Plugin Manager.
- */
-var SpineCanvasPlugin = new Class({
-
-    Extends: BaseSpinePlugin,
-
-    initialize:
-
-    function SpineCanvasPlugin (scene, pluginManager)
-    {
-        console.log('SpineCanvasPlugin created');
-
-        BaseSpinePlugin.call(this, scene, pluginManager);
-
-        runtime = SpineCanvas;
-    },
-
-    boot: function ()
-    {
-        this.skeletonRenderer = new SpineCanvas.canvas.SkeletonRenderer(this.game.context);
-    },
-
-    getRuntime: function ()
-    {
-        return runtime;
-    },
-
-    createSkeleton: function (key)
-    {
-        var atlasData = this.cache.get(key);
-
-        if (!atlasData)
-        {
-            console.warn('No skeleton data for: ' + key);
-            return;
-        }
-
-        var textures = this.textures;
-
-        var atlas = new SpineCanvas.TextureAtlas(atlasData, function (path)
-        {
-            return new SpineCanvas.canvas.CanvasTexture(textures.get(path).getSourceImage());
-        });
-
-        var atlasLoader = new SpineCanvas.AtlasAttachmentLoader(atlas);
-        
-        var skeletonJson = new SpineCanvas.SkeletonJson(atlasLoader);
-
-        var skeletonData = skeletonJson.readSkeletonData(this.json.get(key));
-
-        var skeleton = new SpineCanvas.Skeleton(skeletonData);
-    
-        return { skeletonData: skeletonData, skeleton: skeleton };
-    },
-
-    getBounds: function (skeleton)
-    {
-        var offset = new SpineCanvas.Vector2();
-        var size = new SpineCanvas.Vector2();
-
-        skeleton.getBounds(offset, size, []);
-
-        return { offset: offset, size: size };
-    },
-
-    createAnimationState: function (skeleton)
-    {
-        var stateData = new SpineCanvas.AnimationStateData(skeleton.data);
-
-        var state = new SpineCanvas.AnimationState(stateData);
-
-        return { stateData: stateData, state: state };
-    }
-
-});
-
-module.exports = SpineCanvasPlugin;
-
-
-/***/ }),
-
 /***/ "./SpineFile.js":
 /*!**********************!*\
   !*** ./SpineFile.js ***!
@@ -8410,6 +9619,139 @@ module.exports = SpineFile;
 
 /***/ }),
 
+/***/ "./SpineWebGLPlugin.js":
+/*!*****************************!*\
+  !*** ./SpineWebGLPlugin.js ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var Class = __webpack_require__(/*! ../../../src/utils/Class */ "../../../src/utils/Class.js");
+var BaseSpinePlugin = __webpack_require__(/*! ./BaseSpinePlugin */ "./BaseSpinePlugin.js");
+var SpineWebGL = __webpack_require__(/*! SpineWebGL */ "./runtimes/spine-webgl.js");
+
+var runtime;
+
+/**
+ * @classdesc
+ * Just the WebGL Runtime.
+ *
+ * @class SpinePlugin
+ * @extends Phaser.Plugins.ScenePlugin
+ * @constructor
+ * @since 3.16.0
+ *
+ * @param {Phaser.Scene} scene - A reference to the Scene that has installed this plugin.
+ * @param {Phaser.Plugins.PluginManager} pluginManager - A reference to the Phaser Plugin Manager.
+ */
+var SpineWebGLPlugin = new Class({
+
+    Extends: BaseSpinePlugin,
+
+    initialize:
+
+    function SpineWebGLPlugin (scene, pluginManager)
+    {
+        console.log('SpineWebGLPlugin created');
+
+        BaseSpinePlugin.call(this, scene, pluginManager);
+
+        runtime = SpineWebGL;
+    },
+
+    boot: function ()
+    {
+        var gl = this.game.renderer.gl;
+
+        this.gl = gl;
+
+        this.mvp = new SpineWebGL.webgl.Matrix4();
+
+        //  Create a simple shader, mesh, model-view-projection matrix and SkeletonRenderer.
+        this.shader = SpineWebGL.webgl.Shader.newTwoColoredTextured(gl);
+        this.batcher = new SpineWebGL.webgl.PolygonBatcher(gl);
+        this.mvp.ortho2d(0, 0, this.game.renderer.width - 1, this.game.renderer.height - 1);
+
+        this.skeletonRenderer = new SpineWebGL.webgl.SkeletonRenderer(gl);
+
+        this.shapes = new SpineWebGL.webgl.ShapeRenderer(gl);
+
+        // debugRenderer = new spine.webgl.SkeletonDebugRenderer(gl);
+        // debugRenderer.drawRegionAttachments = true;
+        // debugRenderer.drawBoundingBoxes = true;
+        // debugRenderer.drawMeshHull = true;
+        // debugRenderer.drawMeshTriangles = true;
+        // debugRenderer.drawPaths = true;
+        // debugShader = spine.webgl.Shader.newColored(gl);
+    },
+
+    getRuntime: function ()
+    {
+        return runtime;
+    },
+
+    createSkeleton: function (key)
+    {
+        var atlasData = this.cache.get(key);
+
+        if (!atlasData)
+        {
+            console.warn('No skeleton data for: ' + key);
+            return;
+        }
+
+        var textures = this.textures;
+
+        var gl = this.game.renderer.gl;
+
+        var atlas = new SpineWebGL.TextureAtlas(atlasData, function (path)
+        {
+            return new SpineWebGL.webgl.GLTexture(gl, textures.get(path).getSourceImage());
+        });
+
+        var atlasLoader = new SpineWebGL.AtlasAttachmentLoader(atlas);
+        
+        var skeletonJson = new SpineWebGL.SkeletonJson(atlasLoader);
+
+        var skeletonData = skeletonJson.readSkeletonData(this.json.get(key));
+
+        var skeleton = new SpineWebGL.Skeleton(skeletonData);
+    
+        return { skeletonData: skeletonData, skeleton: skeleton };
+    },
+
+    getBounds: function (skeleton)
+    {
+        var offset = new SpineWebGL.Vector2();
+        var size = new SpineWebGL.Vector2();
+
+        skeleton.getBounds(offset, size, []);
+
+        return { offset: offset, size: size };
+    },
+
+    createAnimationState: function (skeleton)
+    {
+        var stateData = new SpineWebGL.AnimationStateData(skeleton.data);
+
+        var state = new SpineWebGL.AnimationState(stateData);
+
+        return { stateData: stateData, state: state };
+    }
+
+});
+
+module.exports = SpineWebGLPlugin;
+
+
+/***/ }),
+
 /***/ "./gameobject/SpineGameObject.js":
 /*!***************************************!*\
   !*** ./gameobject/SpineGameObject.js ***!
@@ -8432,6 +9774,7 @@ var ComponentsTransform = __webpack_require__(/*! ../../../../src/gameobjects/co
 var ComponentsVisible = __webpack_require__(/*! ../../../../src/gameobjects/components/Visible */ "../../../src/gameobjects/components/Visible.js");
 var GameObject = __webpack_require__(/*! ../../../../src/gameobjects/GameObject */ "../../../src/gameobjects/GameObject.js");
 var SpineGameObjectRender = __webpack_require__(/*! ./SpineGameObjectRender */ "./gameobject/SpineGameObjectRender.js");
+var Matrix4 = __webpack_require__(/*! ../../../../src/math/Matrix4 */ "../../../src/math/Matrix4.js");
 
 /**
  * @classdesc
@@ -8466,6 +9809,8 @@ var SpineGameObject = new Class({
 
         this.runtime = plugin.getRuntime();
 
+        this.mvp = new Matrix4();
+
         GameObject.call(this, scene, 'Spine');
 
         var data = this.plugin.createSkeleton(key);
@@ -8474,7 +9819,7 @@ var SpineGameObject = new Class({
 
         var skeleton = data.skeleton;
 
-        skeleton.flipY = true;
+        skeleton.flipY = (scene.sys.game.config.renderType === 1);
 
         skeleton.setToSetupPose();
 
@@ -8634,72 +9979,6 @@ module.exports = SpineGameObject;
 
 /***/ }),
 
-/***/ "./gameobject/SpineGameObjectCanvasRenderer.js":
-/*!*****************************************************!*\
-  !*** ./gameobject/SpineGameObjectCanvasRenderer.js ***!
-  \*****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
- * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
- */
-
-var SetTransform = __webpack_require__(/*! ../../../../src/renderer/canvas/utils/SetTransform */ "../../../src/renderer/canvas/utils/SetTransform.js");
-
-/**
- * Renders this Game Object with the Canvas Renderer to the given Camera.
- * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
- * This method should not be called directly. It is a utility function of the Render module.
- *
- * @method Phaser.GameObjects.SpineGameObject#renderCanvas
- * @since 3.16.0
- * @private
- *
- * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
- * @param {Phaser.GameObjects.SpineGameObject} src - The Game Object being rendered in this call.
- * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
- * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
- * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
- */
-var SpineGameObjectCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
-{
-    var context = renderer.currentContext;
-
-    if (!SetTransform(renderer, context, src, camera, parentMatrix))
-    {
-        return;
-    }
-
-    src.plugin.skeletonRenderer.ctx = context;
-
-    context.save();
-
-    src.skeleton.updateWorldTransform();
-
-    src.plugin.skeletonRenderer.draw(src.skeleton);
-
-    if (src.renderDebug)
-    {
-        context.strokeStyle = '#00ff00';
-        context.beginPath();
-        context.moveTo(-1000, 0);
-        context.lineTo(1000, 0);
-        context.moveTo(0, -1000);
-        context.lineTo(0, 1000);
-        context.stroke();
-    }
-
-    context.restore();
-};
-
-module.exports = SpineGameObjectCanvasRenderer;
-
-
-/***/ }),
-
 /***/ "./gameobject/SpineGameObjectRender.js":
 /*!*********************************************!*\
   !*** ./gameobject/SpineGameObjectRender.js ***!
@@ -8716,13 +9995,13 @@ module.exports = SpineGameObjectCanvasRenderer;
 var renderWebGL = __webpack_require__(/*! ../../../../src/utils/NOOP */ "../../../src/utils/NOOP.js");
 var renderCanvas = __webpack_require__(/*! ../../../../src/utils/NOOP */ "../../../src/utils/NOOP.js");
 
-if (false)
-{}
-
 if (true)
 {
-    renderCanvas = __webpack_require__(/*! ./SpineGameObjectCanvasRenderer */ "./gameobject/SpineGameObjectCanvasRenderer.js");
+    renderWebGL = __webpack_require__(/*! ./SpineGameObjectWebGLRenderer */ "./gameobject/SpineGameObjectWebGLRenderer.js");
 }
+
+if (false)
+{}
 
 module.exports = {
 
@@ -8734,10 +10013,173 @@ module.exports = {
 
 /***/ }),
 
-/***/ "./runtimes/spine-canvas.js":
-/*!**********************************!*\
-  !*** ./runtimes/spine-canvas.js ***!
-  \**********************************/
+/***/ "./gameobject/SpineGameObjectWebGLRenderer.js":
+/*!****************************************************!*\
+  !*** ./gameobject/SpineGameObjectWebGLRenderer.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Renders this Game Object with the Canvas Renderer to the given Camera.
+ * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
+ * This method should not be called directly. It is a utility function of the Render module.
+ *
+ * @method Phaser.GameObjects.SpineGameObject#renderCanvas
+ * @since 3.16.0
+ * @private
+ *
+ * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
+ * @param {Phaser.GameObjects.SpineGameObject} src - The Game Object being rendered in this call.
+ * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
+ * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
+ */
+var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
+{
+    var plugin = src.plugin;
+    var mvp = plugin.mvp;
+    var shader = plugin.shader;
+    var batcher = plugin.batcher;
+    var runtime = src.runtime;
+    var skeletonRenderer = plugin.skeletonRenderer;
+
+    // spriteMatrix.applyITRS(sprite.x, sprite.y, sprite.rotation, sprite.scaleX, sprite.scaleY);
+
+    src.mvp.identity();
+
+    src.mvp.ortho(0, 0 + 800, 0, 0 + 600, 0, 1);
+
+    src.mvp.translate({ x: src.x, y: 600 - src.y, z: 0 });
+
+    src.mvp.rotateX(src.rotation);
+
+    src.mvp.scale({ x: src.scaleX, y: src.scaleY, z: 1 });
+
+    // mvp.translate(-src.x, src.y, 0);
+    // mvp.ortho2d(-250, 0, 800, 600);
+
+    // var camMatrix = renderer._tempMatrix1;
+    // var spriteMatrix = renderer._tempMatrix2;
+    // var calcMatrix = renderer._tempMatrix3;
+
+    // spriteMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
+
+    // mvp.values[0] = spriteMatrix[0];
+    // mvp.values[1] = spriteMatrix[1];
+    // mvp.values[2] = spriteMatrix[2];
+    // mvp.values[4] = spriteMatrix[3];
+    // mvp.values[5] = spriteMatrix[4];
+    // mvp.values[6] = spriteMatrix[5];
+    // mvp.values[8] = spriteMatrix[6];
+    // mvp.values[9] = spriteMatrix[7];
+    // mvp.values[10] = spriteMatrix[8];
+
+    //  Const = Array Index = Identity
+    // M00 = 0 = 1
+    // M01 = 4 = 0
+    // M02 = 8 = 0
+    // M03 = 12 = 0
+    // M10 = 1 = 0
+    // M11 = 5 = 1
+    // M12 = 9 = 0
+    // M13 = 13 = 0
+    // M20 = 2 = 0
+    // M21 = 6 = 0
+    // M22 = 10 = 1
+    // M23 = 14 = 0
+    // M30 = 3 = 0
+    // M31 = 7 = 0
+    // M32 = 11 = 0
+    // M33 = 15 = 1
+
+    mvp.values[0] = src.mvp.val[0];
+    mvp.values[1] = src.mvp.val[1];
+    mvp.values[2] = src.mvp.val[2];
+    mvp.values[3] = src.mvp.val[3];
+    mvp.values[4] = src.mvp.val[4];
+    mvp.values[5] = src.mvp.val[5];
+    mvp.values[6] = src.mvp.val[6];
+    mvp.values[7] = src.mvp.val[7];
+    mvp.values[8] = src.mvp.val[8];
+    mvp.values[9] = src.mvp.val[9];
+    mvp.values[10] = src.mvp.val[10];
+    mvp.values[11] = src.mvp.val[11];
+    mvp.values[12] = src.mvp.val[12];
+    mvp.values[13] = src.mvp.val[13];
+    mvp.values[14] = src.mvp.val[14];
+    mvp.values[15] = src.mvp.val[15];
+
+    //  Array Order - Index
+    // M00 = 0
+    // M10 = 1
+    // M20 = 2
+    // M30 = 3
+    // M01 = 4
+    // M11 = 5
+    // M21 = 6
+    // M31 = 7
+    // M02 = 8
+    // M12 = 9
+    // M22 = 10
+    // M32 = 11
+    // M03 = 12
+    // M13 = 13
+    // M23 = 14
+    // M33 = 15
+
+
+    // mvp.ortho(-250, -250 + 1600, 0, 0 + 1200, 0, 1);
+
+    src.skeleton.updateWorldTransform();
+
+    //  Bind the shader and set the texture and model-view-projection matrix.
+
+    shader.bind();
+    shader.setUniformi(runtime.webgl.Shader.SAMPLER, 0);
+    shader.setUniform4x4f(runtime.webgl.Shader.MVP_MATRIX, mvp.values);
+
+    //  Start the batch and tell the SkeletonRenderer to render the active skeleton.
+    batcher.begin(shader);
+
+    plugin.skeletonRenderer.vertexEffect = null;
+
+    skeletonRenderer.premultipliedAlpha = true;
+
+    skeletonRenderer.draw(batcher, src.skeleton);
+
+    batcher.end();
+
+    shader.unbind();
+
+    /*
+    if (debug) {
+        debugShader.bind();
+        debugShader.setUniform4x4f(spine.webgl.Shader.MVP_MATRIX, mvp.values);
+        debugRenderer.premultipliedAlpha = premultipliedAlpha;
+        shapes.begin(debugShader);
+        debugRenderer.draw(shapes, skeleton);
+        shapes.end();
+        debugShader.unbind();
+    }
+    */
+};
+
+module.exports = SpineGameObjectWebGLRenderer;
+
+
+/***/ }),
+
+/***/ "./runtimes/spine-webgl.js":
+/*!*********************************!*\
+  !*** ./runtimes/spine-webgl.js ***!
+  \*********************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -15339,271 +16781,2596 @@ var spine;
 })(spine || (spine = {}));
 var spine;
 (function (spine) {
-	var canvas;
-	(function (canvas) {
+	var webgl;
+	(function (webgl) {
 		var AssetManager = (function (_super) {
 			__extends(AssetManager, _super);
-			function AssetManager(pathPrefix) {
+			function AssetManager(context, pathPrefix) {
 				if (pathPrefix === void 0) { pathPrefix = ""; }
-				return _super.call(this, function (image) { return new spine.canvas.CanvasTexture(image); }, pathPrefix) || this;
+				return _super.call(this, function (image) {
+					return new spine.webgl.GLTexture(context, image);
+				}, pathPrefix) || this;
 			}
 			return AssetManager;
 		}(spine.AssetManager));
-		canvas.AssetManager = AssetManager;
-	})(canvas = spine.canvas || (spine.canvas = {}));
+		webgl.AssetManager = AssetManager;
+	})(webgl = spine.webgl || (spine.webgl = {}));
 })(spine || (spine = {}));
 var spine;
 (function (spine) {
-	var canvas;
-	(function (canvas) {
-		var CanvasTexture = (function (_super) {
-			__extends(CanvasTexture, _super);
-			function CanvasTexture(image) {
-				return _super.call(this, image) || this;
+	var webgl;
+	(function (webgl) {
+		var OrthoCamera = (function () {
+			function OrthoCamera(viewportWidth, viewportHeight) {
+				this.position = new webgl.Vector3(0, 0, 0);
+				this.direction = new webgl.Vector3(0, 0, -1);
+				this.up = new webgl.Vector3(0, 1, 0);
+				this.near = 0;
+				this.far = 100;
+				this.zoom = 1;
+				this.viewportWidth = 0;
+				this.viewportHeight = 0;
+				this.projectionView = new webgl.Matrix4();
+				this.inverseProjectionView = new webgl.Matrix4();
+				this.projection = new webgl.Matrix4();
+				this.view = new webgl.Matrix4();
+				this.tmp = new webgl.Vector3();
+				this.viewportWidth = viewportWidth;
+				this.viewportHeight = viewportHeight;
+				this.update();
 			}
-			CanvasTexture.prototype.setFilters = function (minFilter, magFilter) { };
-			CanvasTexture.prototype.setWraps = function (uWrap, vWrap) { };
-			CanvasTexture.prototype.dispose = function () { };
-			return CanvasTexture;
-		}(spine.Texture));
-		canvas.CanvasTexture = CanvasTexture;
-	})(canvas = spine.canvas || (spine.canvas = {}));
-})(spine || (spine = {}));
-var spine;
-(function (spine) {
-	var canvas;
-	(function (canvas) {
-		var SkeletonRenderer = (function () {
-			function SkeletonRenderer(context) {
-				this.triangleRendering = false;
-				this.debugRendering = false;
-				this.vertices = spine.Utils.newFloatArray(8 * 1024);
-				this.tempColor = new spine.Color();
-				this.ctx = context;
-			}
-			SkeletonRenderer.prototype.draw = function (skeleton) {
-				if (this.triangleRendering)
-					this.drawTriangles(skeleton);
-				else
-					this.drawImages(skeleton);
+			OrthoCamera.prototype.update = function () {
+				var projection = this.projection;
+				var view = this.view;
+				var projectionView = this.projectionView;
+				var inverseProjectionView = this.inverseProjectionView;
+				var zoom = this.zoom, viewportWidth = this.viewportWidth, viewportHeight = this.viewportHeight;
+				projection.ortho(zoom * (-viewportWidth / 2), zoom * (viewportWidth / 2), zoom * (-viewportHeight / 2), zoom * (viewportHeight / 2), this.near, this.far);
+				view.lookAt(this.position, this.direction, this.up);
+				projectionView.set(projection.values);
+				projectionView.multiply(view);
+				inverseProjectionView.set(projectionView.values).invert();
 			};
-			SkeletonRenderer.prototype.drawImages = function (skeleton) {
-				var ctx = this.ctx;
-				var drawOrder = skeleton.drawOrder;
-				if (this.debugRendering)
-					ctx.strokeStyle = "green";
-				ctx.save();
-				for (var i = 0, n = drawOrder.length; i < n; i++) {
-					var slot = drawOrder[i];
-					var attachment = slot.getAttachment();
-					var regionAttachment = null;
-					var region = null;
-					var image = null;
-					if (attachment instanceof spine.RegionAttachment) {
-						regionAttachment = attachment;
-						region = regionAttachment.region;
-						image = region.texture.getImage();
-					}
-					else
-						continue;
-					var skeleton_1 = slot.bone.skeleton;
-					var skeletonColor = skeleton_1.color;
-					var slotColor = slot.color;
-					var regionColor = regionAttachment.color;
-					var alpha = skeletonColor.a * slotColor.a * regionColor.a;
-					var color = this.tempColor;
-					color.set(skeletonColor.r * slotColor.r * regionColor.r, skeletonColor.g * slotColor.g * regionColor.g, skeletonColor.b * slotColor.b * regionColor.b, alpha);
-					var att = attachment;
-					var bone = slot.bone;
-					var w = region.width;
-					var h = region.height;
-					ctx.save();
-					ctx.transform(bone.a, bone.c, bone.b, bone.d, bone.worldX, bone.worldY);
-					ctx.translate(attachment.offset[0], attachment.offset[1]);
-					ctx.rotate(attachment.rotation * Math.PI / 180);
-					var atlasScale = att.width / w;
-					ctx.scale(atlasScale * attachment.scaleX, atlasScale * attachment.scaleY);
-					ctx.translate(w / 2, h / 2);
-					if (attachment.region.rotate) {
-						var t = w;
-						w = h;
-						h = t;
-						ctx.rotate(-Math.PI / 2);
-					}
-					ctx.scale(1, -1);
-					ctx.translate(-w / 2, -h / 2);
-					if (color.r != 1 || color.g != 1 || color.b != 1 || color.a != 1) {
-						ctx.globalAlpha = color.a;
-					}
-					ctx.drawImage(image, region.x, region.y, w, h, 0, 0, w, h);
-					if (this.debugRendering)
-						ctx.strokeRect(0, 0, w, h);
-					ctx.restore();
+			OrthoCamera.prototype.screenToWorld = function (screenCoords, screenWidth, screenHeight) {
+				var x = screenCoords.x, y = screenHeight - screenCoords.y - 1;
+				var tmp = this.tmp;
+				tmp.x = (2 * x) / screenWidth - 1;
+				tmp.y = (2 * y) / screenHeight - 1;
+				tmp.z = (2 * screenCoords.z) - 1;
+				tmp.project(this.inverseProjectionView);
+				screenCoords.set(tmp.x, tmp.y, tmp.z);
+				return screenCoords;
+			};
+			OrthoCamera.prototype.setViewport = function (viewportWidth, viewportHeight) {
+				this.viewportWidth = viewportWidth;
+				this.viewportHeight = viewportHeight;
+			};
+			return OrthoCamera;
+		}());
+		webgl.OrthoCamera = OrthoCamera;
+	})(webgl = spine.webgl || (spine.webgl = {}));
+})(spine || (spine = {}));
+var spine;
+(function (spine) {
+	var webgl;
+	(function (webgl) {
+		var GLTexture = (function (_super) {
+			__extends(GLTexture, _super);
+			function GLTexture(context, image, useMipMaps) {
+				if (useMipMaps === void 0) { useMipMaps = false; }
+				var _this = _super.call(this, image) || this;
+				_this.texture = null;
+				_this.boundUnit = 0;
+				_this.useMipMaps = false;
+				_this.context = context instanceof webgl.ManagedWebGLRenderingContext ? context : new webgl.ManagedWebGLRenderingContext(context);
+				_this.useMipMaps = useMipMaps;
+				_this.restore();
+				_this.context.addRestorable(_this);
+				return _this;
+			}
+			GLTexture.prototype.setFilters = function (minFilter, magFilter) {
+				var gl = this.context.gl;
+				this.bind();
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, minFilter);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, magFilter);
+			};
+			GLTexture.prototype.setWraps = function (uWrap, vWrap) {
+				var gl = this.context.gl;
+				this.bind();
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, uWrap);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, vWrap);
+			};
+			GLTexture.prototype.update = function (useMipMaps) {
+				var gl = this.context.gl;
+				if (!this.texture) {
+					this.texture = this.context.gl.createTexture();
 				}
-				ctx.restore();
+				this.bind();
+				gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this._image);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, useMipMaps ? gl.LINEAR_MIPMAP_LINEAR : gl.LINEAR);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+				if (useMipMaps)
+					gl.generateMipmap(gl.TEXTURE_2D);
 			};
-			SkeletonRenderer.prototype.drawTriangles = function (skeleton) {
-				var blendMode = null;
-				var vertices = this.vertices;
-				var triangles = null;
-				var drawOrder = skeleton.drawOrder;
-				for (var i = 0, n = drawOrder.length; i < n; i++) {
-					var slot = drawOrder[i];
-					var attachment = slot.getAttachment();
-					var texture = null;
-					var region = null;
-					if (attachment instanceof spine.RegionAttachment) {
-						var regionAttachment = attachment;
-						vertices = this.computeRegionVertices(slot, regionAttachment, false);
-						triangles = SkeletonRenderer.QUAD_TRIANGLES;
-						region = regionAttachment.region;
-						texture = region.texture.getImage();
+			GLTexture.prototype.restore = function () {
+				this.texture = null;
+				this.update(this.useMipMaps);
+			};
+			GLTexture.prototype.bind = function (unit) {
+				if (unit === void 0) { unit = 0; }
+				var gl = this.context.gl;
+				this.boundUnit = unit;
+				gl.activeTexture(gl.TEXTURE0 + unit);
+				gl.bindTexture(gl.TEXTURE_2D, this.texture);
+			};
+			GLTexture.prototype.unbind = function () {
+				var gl = this.context.gl;
+				gl.activeTexture(gl.TEXTURE0 + this.boundUnit);
+				gl.bindTexture(gl.TEXTURE_2D, null);
+			};
+			GLTexture.prototype.dispose = function () {
+				this.context.removeRestorable(this);
+				var gl = this.context.gl;
+				gl.deleteTexture(this.texture);
+			};
+			return GLTexture;
+		}(spine.Texture));
+		webgl.GLTexture = GLTexture;
+	})(webgl = spine.webgl || (spine.webgl = {}));
+})(spine || (spine = {}));
+var spine;
+(function (spine) {
+	var webgl;
+	(function (webgl) {
+		var Input = (function () {
+			function Input(element) {
+				this.lastX = 0;
+				this.lastY = 0;
+				this.buttonDown = false;
+				this.currTouch = null;
+				this.touchesPool = new spine.Pool(function () {
+					return new spine.webgl.Touch(0, 0, 0);
+				});
+				this.listeners = new Array();
+				this.element = element;
+				this.setupCallbacks(element);
+			}
+			Input.prototype.setupCallbacks = function (element) {
+				var _this = this;
+				element.addEventListener("mousedown", function (ev) {
+					if (ev instanceof MouseEvent) {
+						var rect = element.getBoundingClientRect();
+						var x = ev.clientX - rect.left;
+						var y = ev.clientY - rect.top;
+						var listeners = _this.listeners;
+						for (var i = 0; i < listeners.length; i++) {
+							listeners[i].down(x, y);
+						}
+						_this.lastX = x;
+						_this.lastY = y;
+						_this.buttonDown = true;
 					}
-					else if (attachment instanceof spine.MeshAttachment) {
-						var mesh = attachment;
-						vertices = this.computeMeshVertices(slot, mesh, false);
-						triangles = mesh.triangles;
-						texture = mesh.region.renderObject.texture.getImage();
+				}, true);
+				element.addEventListener("mousemove", function (ev) {
+					if (ev instanceof MouseEvent) {
+						var rect = element.getBoundingClientRect();
+						var x = ev.clientX - rect.left;
+						var y = ev.clientY - rect.top;
+						var listeners = _this.listeners;
+						for (var i = 0; i < listeners.length; i++) {
+							if (_this.buttonDown) {
+								listeners[i].dragged(x, y);
+							}
+							else {
+								listeners[i].moved(x, y);
+							}
+						}
+						_this.lastX = x;
+						_this.lastY = y;
 					}
+				}, true);
+				element.addEventListener("mouseup", function (ev) {
+					if (ev instanceof MouseEvent) {
+						var rect = element.getBoundingClientRect();
+						var x = ev.clientX - rect.left;
+						var y = ev.clientY - rect.top;
+						var listeners = _this.listeners;
+						for (var i = 0; i < listeners.length; i++) {
+							listeners[i].up(x, y);
+						}
+						_this.lastX = x;
+						_this.lastY = y;
+						_this.buttonDown = false;
+					}
+				}, true);
+				element.addEventListener("touchstart", function (ev) {
+					if (_this.currTouch != null)
+						return;
+					var touches = ev.changedTouches;
+					for (var i = 0; i < touches.length; i++) {
+						var touch = touches[i];
+						var rect = element.getBoundingClientRect();
+						var x = touch.clientX - rect.left;
+						var y = touch.clientY - rect.top;
+						_this.currTouch = _this.touchesPool.obtain();
+						_this.currTouch.identifier = touch.identifier;
+						_this.currTouch.x = x;
+						_this.currTouch.y = y;
+						break;
+					}
+					var listeners = _this.listeners;
+					for (var i_8 = 0; i_8 < listeners.length; i_8++) {
+						listeners[i_8].down(_this.currTouch.x, _this.currTouch.y);
+					}
+					console.log("Start " + _this.currTouch.x + ", " + _this.currTouch.y);
+					_this.lastX = _this.currTouch.x;
+					_this.lastY = _this.currTouch.y;
+					_this.buttonDown = true;
+					ev.preventDefault();
+				}, false);
+				element.addEventListener("touchend", function (ev) {
+					var touches = ev.changedTouches;
+					for (var i = 0; i < touches.length; i++) {
+						var touch = touches[i];
+						if (_this.currTouch.identifier === touch.identifier) {
+							var rect = element.getBoundingClientRect();
+							var x = _this.currTouch.x = touch.clientX - rect.left;
+							var y = _this.currTouch.y = touch.clientY - rect.top;
+							_this.touchesPool.free(_this.currTouch);
+							var listeners = _this.listeners;
+							for (var i_9 = 0; i_9 < listeners.length; i_9++) {
+								listeners[i_9].up(x, y);
+							}
+							console.log("End " + x + ", " + y);
+							_this.lastX = x;
+							_this.lastY = y;
+							_this.buttonDown = false;
+							_this.currTouch = null;
+							break;
+						}
+					}
+					ev.preventDefault();
+				}, false);
+				element.addEventListener("touchcancel", function (ev) {
+					var touches = ev.changedTouches;
+					for (var i = 0; i < touches.length; i++) {
+						var touch = touches[i];
+						if (_this.currTouch.identifier === touch.identifier) {
+							var rect = element.getBoundingClientRect();
+							var x = _this.currTouch.x = touch.clientX - rect.left;
+							var y = _this.currTouch.y = touch.clientY - rect.top;
+							_this.touchesPool.free(_this.currTouch);
+							var listeners = _this.listeners;
+							for (var i_10 = 0; i_10 < listeners.length; i_10++) {
+								listeners[i_10].up(x, y);
+							}
+							console.log("End " + x + ", " + y);
+							_this.lastX = x;
+							_this.lastY = y;
+							_this.buttonDown = false;
+							_this.currTouch = null;
+							break;
+						}
+					}
+					ev.preventDefault();
+				}, false);
+				element.addEventListener("touchmove", function (ev) {
+					if (_this.currTouch == null)
+						return;
+					var touches = ev.changedTouches;
+					for (var i = 0; i < touches.length; i++) {
+						var touch = touches[i];
+						if (_this.currTouch.identifier === touch.identifier) {
+							var rect = element.getBoundingClientRect();
+							var x = touch.clientX - rect.left;
+							var y = touch.clientY - rect.top;
+							var listeners = _this.listeners;
+							for (var i_11 = 0; i_11 < listeners.length; i_11++) {
+								listeners[i_11].dragged(x, y);
+							}
+							console.log("Drag " + x + ", " + y);
+							_this.lastX = _this.currTouch.x = x;
+							_this.lastY = _this.currTouch.y = y;
+							break;
+						}
+					}
+					ev.preventDefault();
+				}, false);
+			};
+			Input.prototype.addListener = function (listener) {
+				this.listeners.push(listener);
+			};
+			Input.prototype.removeListener = function (listener) {
+				var idx = this.listeners.indexOf(listener);
+				if (idx > -1) {
+					this.listeners.splice(idx, 1);
+				}
+			};
+			return Input;
+		}());
+		webgl.Input = Input;
+		var Touch = (function () {
+			function Touch(identifier, x, y) {
+				this.identifier = identifier;
+				this.x = x;
+				this.y = y;
+			}
+			return Touch;
+		}());
+		webgl.Touch = Touch;
+	})(webgl = spine.webgl || (spine.webgl = {}));
+})(spine || (spine = {}));
+var spine;
+(function (spine) {
+	var webgl;
+	(function (webgl) {
+		var LoadingScreen = (function () {
+			function LoadingScreen(renderer) {
+				this.logo = null;
+				this.spinner = null;
+				this.angle = 0;
+				this.fadeOut = 0;
+				this.timeKeeper = new spine.TimeKeeper();
+				this.backgroundColor = new spine.Color(0.135, 0.135, 0.135, 1);
+				this.tempColor = new spine.Color();
+				this.firstDraw = 0;
+				this.renderer = renderer;
+				this.timeKeeper.maxDelta = 9;
+				if (LoadingScreen.logoImg === null) {
+					var isSafari = navigator.userAgent.indexOf("Safari") > -1;
+					LoadingScreen.logoImg = new Image();
+					LoadingScreen.logoImg.src = LoadingScreen.SPINE_LOGO_DATA;
+					if (!isSafari)
+						LoadingScreen.logoImg.crossOrigin = "anonymous";
+					LoadingScreen.logoImg.onload = function (ev) {
+						LoadingScreen.loaded++;
+					};
+					LoadingScreen.spinnerImg = new Image();
+					LoadingScreen.spinnerImg.src = LoadingScreen.SPINNER_DATA;
+					if (!isSafari)
+						LoadingScreen.spinnerImg.crossOrigin = "anonymous";
+					LoadingScreen.spinnerImg.onload = function (ev) {
+						LoadingScreen.loaded++;
+					};
+				}
+			}
+			LoadingScreen.prototype.draw = function (complete) {
+				if (complete === void 0) { complete = false; }
+				if (complete && this.fadeOut > LoadingScreen.FADE_SECONDS)
+					return;
+				this.timeKeeper.update();
+				var a = Math.abs(Math.sin(this.timeKeeper.totalTime + 0.75));
+				this.angle -= this.timeKeeper.delta * 360 * (1 + 1.5 * Math.pow(a, 5));
+				var renderer = this.renderer;
+				var canvas = renderer.canvas;
+				var gl = renderer.context.gl;
+				var oldX = renderer.camera.position.x, oldY = renderer.camera.position.y;
+				renderer.camera.position.set(canvas.width / 2, canvas.height / 2, 0);
+				renderer.camera.viewportWidth = canvas.width;
+				renderer.camera.viewportHeight = canvas.height;
+				renderer.resize(webgl.ResizeMode.Stretch);
+				if (!complete) {
+					gl.clearColor(this.backgroundColor.r, this.backgroundColor.g, this.backgroundColor.b, this.backgroundColor.a);
+					gl.clear(gl.COLOR_BUFFER_BIT);
+					this.tempColor.a = 1;
+				}
+				else {
+					this.fadeOut += this.timeKeeper.delta * (this.timeKeeper.totalTime < 1 ? 2 : 1);
+					if (this.fadeOut > LoadingScreen.FADE_SECONDS) {
+						renderer.camera.position.set(oldX, oldY, 0);
+						return;
+					}
+					a = 1 - this.fadeOut / LoadingScreen.FADE_SECONDS;
+					this.tempColor.setFromColor(this.backgroundColor);
+					this.tempColor.a = 1 - (a - 1) * (a - 1);
+					renderer.begin();
+					renderer.quad(true, 0, 0, canvas.width, 0, canvas.width, canvas.height, 0, canvas.height, this.tempColor, this.tempColor, this.tempColor, this.tempColor);
+					renderer.end();
+				}
+				this.tempColor.set(1, 1, 1, this.tempColor.a);
+				if (LoadingScreen.loaded != 2)
+					return;
+				if (this.logo === null) {
+					this.logo = new webgl.GLTexture(renderer.context, LoadingScreen.logoImg);
+					this.spinner = new webgl.GLTexture(renderer.context, LoadingScreen.spinnerImg);
+				}
+				this.logo.update(false);
+				this.spinner.update(false);
+				var logoWidth = this.logo.getImage().width;
+				var logoHeight = this.logo.getImage().height;
+				var spinnerWidth = this.spinner.getImage().width;
+				var spinnerHeight = this.spinner.getImage().height;
+				renderer.batcher.setBlendMode(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+				renderer.begin();
+				renderer.drawTexture(this.logo, (canvas.width - logoWidth) / 2, (canvas.height - logoHeight) / 2, logoWidth, logoHeight, this.tempColor);
+				renderer.drawTextureRotated(this.spinner, (canvas.width - spinnerWidth) / 2, (canvas.height - spinnerHeight) / 2, spinnerWidth, spinnerHeight, spinnerWidth / 2, spinnerHeight / 2, this.angle, this.tempColor);
+				renderer.end();
+				renderer.camera.position.set(oldX, oldY, 0);
+			};
+			LoadingScreen.FADE_SECONDS = 1;
+			LoadingScreen.loaded = 0;
+			LoadingScreen.spinnerImg = null;
+			LoadingScreen.logoImg = null;
+			LoadingScreen.SPINNER_DATA = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAAChCAMAAAB3TUS6AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAYNQTFRFAAAA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AA/0AAkTDRyAAAAIB0Uk5TAAABAgMEBQYHCAkKCwwODxAREhMUFRYXGBkaHB0eICEiIyQlJicoKSorLC0uLzAxMjM0Nzg5Ojs8PT4/QEFDRUlKS0xNTk9QUlRWWFlbXF1eYWJjZmhscHF0d3h5e3x+f4CIiYuMj5GSlJWXm56io6arr7rAxcjO0dXe6Onr8fmb5sOOAAADuElEQVQYGe3B+3vTVBwH4M/3nCRt13br2Lozhug2q25gYQubcxqVKYoMCYoKjEsUdSpeiBc0Kl7yp9t2za39pely7PF5zvuiQKc+/e2f8K+f9g2oyQ77Ag4VGX+HketQ0XYYe0JQ0CdhogwF+WFiBgr6JkxUoKCDMMGgoP0w9gdUtB3GfoCKVsPYAVQ0H8YuQUWVMHYGKuJhrAklPQkjJpT0bdj3O9S0FfZ9ADXxP8MjVSiqFfa8B2VVV8+df14QtB4iwn+BpuZEgyM38WMQHDYhnbkgukrIh5ygZ48glyn6KshlL+jbhVRcxCzk0ApiC5CI5kVsgTAy9jiI/WxBGmqIFBMjqwYphwRZaiLNwsjqQdoVSFISGRwjM4OMFUjBRcYCYWT0XZD2SwUS0LzIKCGH2SDja0LxKiJjCrm0gowVFI6aIs1CTouPg5QvUTgSKXMMuVUeBSmEopFITBPGwO8HCYbCTYtImTAWejuI3CMUjmZFT5NjbM/9GvQcMkhADdFRIxxD7aug4wGDFGSVTcLx0MzutQ2CpmmapmmapmmapmmapmmaphWBmGFV6rNNcaLC0GUuv3LROftUo8wJk0a10207sVED6IIf+9673LIwQeW2PaCEJX/A+xYmhTbtQUu46g96SJgQZg9Zwxf+EAMTwuwhm3jkD7EwIdweBn+YhQlh9pA2HvpDTEwIs4es4GN/CMekNOxBJ9D2B10nTAyfW7fT1hjYgZ/xYIUwUcycaiwuv2h3tOcZADr7ud/12c0ru2cWSwQ1UAcixIgImqZpmqZpmqZpmqZpmqZp2v8HMSIcF186t8oghbnlOJt1wnHwl7yOGxwSlHacrjWG8dVuej03OApn7jhHtiyMiZa9yD6haLYTebWOsbDXvQRHwchJWSTkV/rQS+EoWttJaTHkJe56KXcJRZt20jY48nnBy9hE4WjLSbvAkIfwMm5zFG/KyWgRRke3vYwGZDjpZHCMruJltCAFrTtpVYxu1ktzCHKwbSdlGqOreynXGGQpOylljI5uebFbBuSZc2IbhBxmvcj9GiSiZ52+HQO5nPb6TkIqajs9L5eQk7jnddxZgGT0jNOxYSI36+Kdj9oG5OPV6QpB6yJuGAYnqIrecLveYlDUKffIOtREl90+BiWV3cgMlNR0I09DSS030oaSttzILpT0phu5BBWRmyAoiLkJgoIMN8GgoJKb4FBQzU0YUFDdTRhQUNVNcCjIdBMEBdE7buQ8lFRz+97lUFN5fe+qu//aMkeB/gU2ae9y2HgbngAAAABJRU5ErkJggg==";
+			LoadingScreen.SPINE_LOGO_DATA = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFIAAAAZCAYAAACis3k0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAtNJREFUaN7tmT2I1EAUxwN+oWgRT0HFKo0WCkJ6ObmAWFwZbCxsXGysLNJaiCyIoDaSwk4ETzvhmnBaCRbBWoQ01ho4PwotjP8cE337mMy8TLK757mBH3fLTWbe/PbN53neNniqZW8FvAVvQAqugwvgDDgO9niLRyTyJagM/ACPF6bsIl9ZRDac/Cc6tLn5xQdRQ496QlKPLxD5QCDxO9jtGM8QfYoIgUlgCipGCRJL5VvlyOdCU09iEXkCfLSIfCrs7Fab6nOsiafu06iDwES9w/uU1QnDC+ekkVS9vEaDsgVeB0d+z1VDtOGxRaYPboP3Gokb4GgXkZp4chZPJKgvZ3U0XkriK/TIt9YUDllFgTAjGwoaoHqfBhMI58yD4BQ4V6/aHYdfxToftvw9F2SiVroawU2/Cv5C4Thv0KB9S5nxlOd4STxjwUjzSdYlgrYijw2BsEfgsaFcM09lhiys94xXQQwugcvgJrgFLjrEE7WUiTuWCQzt/ZXN7FfqGwuGClyVy2xZAFmfDQvNtwFFSspMDGsD+UTWqu1KoVmVooFEJgKRXw0if85RpISEzwsjzeqWzkjkC4PIJ3MUmQgITAHlQwTFhnZhELkEntfZRwR+AvfAgXmJHOqU02XligWT8ppg67NXbdCXeq7afUQ6L8C2DalEZNt2YyQ94Qy8/ekjMpBMbfyl5iTjG7YAI8cNecROAb4kJmTjaXAF3AGvwQewOiuRxEtlSaT4j2h2lMsUueQEoMlIKpTvAmKhxPMtC876jEX6rE8l8TNx/KVbn6xlWU9NWcSDUsO4NGWpQOTZFpHPOooMXcswmW2XFk3ixb2v0Nq+XVKP00QNaffBLyWwBI/AkTlfMYZDXMf12kc6yjwEjoFdO/5me5oi/6tnyhlZX6OtgmX1c2Uh0k3khmbB2b9TRfpd/jfTUeRDJvHdYg5wE7kPXAN3wQ1weDvH+xufEgpi5qIl3QAAAABJRU5ErkJggg==";
+			return LoadingScreen;
+		}());
+		webgl.LoadingScreen = LoadingScreen;
+	})(webgl = spine.webgl || (spine.webgl = {}));
+})(spine || (spine = {}));
+var spine;
+(function (spine) {
+	var webgl;
+	(function (webgl) {
+		webgl.M00 = 0;
+		webgl.M01 = 4;
+		webgl.M02 = 8;
+		webgl.M03 = 12;
+		webgl.M10 = 1;
+		webgl.M11 = 5;
+		webgl.M12 = 9;
+		webgl.M13 = 13;
+		webgl.M20 = 2;
+		webgl.M21 = 6;
+		webgl.M22 = 10;
+		webgl.M23 = 14;
+		webgl.M30 = 3;
+		webgl.M31 = 7;
+		webgl.M32 = 11;
+		webgl.M33 = 15;
+		var Matrix4 = (function () {
+			function Matrix4() {
+				this.temp = new Float32Array(16);
+				this.values = new Float32Array(16);
+				var v = this.values;
+				v[webgl.M00] = 1;
+				v[webgl.M11] = 1;
+				v[webgl.M22] = 1;
+				v[webgl.M33] = 1;
+			}
+			Matrix4.prototype.set = function (values) {
+				this.values.set(values);
+				return this;
+			};
+			Matrix4.prototype.transpose = function () {
+				var t = this.temp;
+				var v = this.values;
+				t[webgl.M00] = v[webgl.M00];
+				t[webgl.M01] = v[webgl.M10];
+				t[webgl.M02] = v[webgl.M20];
+				t[webgl.M03] = v[webgl.M30];
+				t[webgl.M10] = v[webgl.M01];
+				t[webgl.M11] = v[webgl.M11];
+				t[webgl.M12] = v[webgl.M21];
+				t[webgl.M13] = v[webgl.M31];
+				t[webgl.M20] = v[webgl.M02];
+				t[webgl.M21] = v[webgl.M12];
+				t[webgl.M22] = v[webgl.M22];
+				t[webgl.M23] = v[webgl.M32];
+				t[webgl.M30] = v[webgl.M03];
+				t[webgl.M31] = v[webgl.M13];
+				t[webgl.M32] = v[webgl.M23];
+				t[webgl.M33] = v[webgl.M33];
+				return this.set(t);
+			};
+			Matrix4.prototype.identity = function () {
+				var v = this.values;
+				v[webgl.M00] = 1;
+				v[webgl.M01] = 0;
+				v[webgl.M02] = 0;
+				v[webgl.M03] = 0;
+				v[webgl.M10] = 0;
+				v[webgl.M11] = 1;
+				v[webgl.M12] = 0;
+				v[webgl.M13] = 0;
+				v[webgl.M20] = 0;
+				v[webgl.M21] = 0;
+				v[webgl.M22] = 1;
+				v[webgl.M23] = 0;
+				v[webgl.M30] = 0;
+				v[webgl.M31] = 0;
+				v[webgl.M32] = 0;
+				v[webgl.M33] = 1;
+				return this;
+			};
+			Matrix4.prototype.invert = function () {
+				var v = this.values;
+				var t = this.temp;
+				var l_det = v[webgl.M30] * v[webgl.M21] * v[webgl.M12] * v[webgl.M03] - v[webgl.M20] * v[webgl.M31] * v[webgl.M12] * v[webgl.M03] - v[webgl.M30] * v[webgl.M11] * v[webgl.M22] * v[webgl.M03]
+					+ v[webgl.M10] * v[webgl.M31] * v[webgl.M22] * v[webgl.M03] + v[webgl.M20] * v[webgl.M11] * v[webgl.M32] * v[webgl.M03] - v[webgl.M10] * v[webgl.M21] * v[webgl.M32] * v[webgl.M03]
+					- v[webgl.M30] * v[webgl.M21] * v[webgl.M02] * v[webgl.M13] + v[webgl.M20] * v[webgl.M31] * v[webgl.M02] * v[webgl.M13] + v[webgl.M30] * v[webgl.M01] * v[webgl.M22] * v[webgl.M13]
+					- v[webgl.M00] * v[webgl.M31] * v[webgl.M22] * v[webgl.M13] - v[webgl.M20] * v[webgl.M01] * v[webgl.M32] * v[webgl.M13] + v[webgl.M00] * v[webgl.M21] * v[webgl.M32] * v[webgl.M13]
+					+ v[webgl.M30] * v[webgl.M11] * v[webgl.M02] * v[webgl.M23] - v[webgl.M10] * v[webgl.M31] * v[webgl.M02] * v[webgl.M23] - v[webgl.M30] * v[webgl.M01] * v[webgl.M12] * v[webgl.M23]
+					+ v[webgl.M00] * v[webgl.M31] * v[webgl.M12] * v[webgl.M23] + v[webgl.M10] * v[webgl.M01] * v[webgl.M32] * v[webgl.M23] - v[webgl.M00] * v[webgl.M11] * v[webgl.M32] * v[webgl.M23]
+					- v[webgl.M20] * v[webgl.M11] * v[webgl.M02] * v[webgl.M33] + v[webgl.M10] * v[webgl.M21] * v[webgl.M02] * v[webgl.M33] + v[webgl.M20] * v[webgl.M01] * v[webgl.M12] * v[webgl.M33]
+					- v[webgl.M00] * v[webgl.M21] * v[webgl.M12] * v[webgl.M33] - v[webgl.M10] * v[webgl.M01] * v[webgl.M22] * v[webgl.M33] + v[webgl.M00] * v[webgl.M11] * v[webgl.M22] * v[webgl.M33];
+				if (l_det == 0)
+					throw new Error("non-invertible matrix");
+				var inv_det = 1.0 / l_det;
+				t[webgl.M00] = v[webgl.M12] * v[webgl.M23] * v[webgl.M31] - v[webgl.M13] * v[webgl.M22] * v[webgl.M31] + v[webgl.M13] * v[webgl.M21] * v[webgl.M32]
+					- v[webgl.M11] * v[webgl.M23] * v[webgl.M32] - v[webgl.M12] * v[webgl.M21] * v[webgl.M33] + v[webgl.M11] * v[webgl.M22] * v[webgl.M33];
+				t[webgl.M01] = v[webgl.M03] * v[webgl.M22] * v[webgl.M31] - v[webgl.M02] * v[webgl.M23] * v[webgl.M31] - v[webgl.M03] * v[webgl.M21] * v[webgl.M32]
+					+ v[webgl.M01] * v[webgl.M23] * v[webgl.M32] + v[webgl.M02] * v[webgl.M21] * v[webgl.M33] - v[webgl.M01] * v[webgl.M22] * v[webgl.M33];
+				t[webgl.M02] = v[webgl.M02] * v[webgl.M13] * v[webgl.M31] - v[webgl.M03] * v[webgl.M12] * v[webgl.M31] + v[webgl.M03] * v[webgl.M11] * v[webgl.M32]
+					- v[webgl.M01] * v[webgl.M13] * v[webgl.M32] - v[webgl.M02] * v[webgl.M11] * v[webgl.M33] + v[webgl.M01] * v[webgl.M12] * v[webgl.M33];
+				t[webgl.M03] = v[webgl.M03] * v[webgl.M12] * v[webgl.M21] - v[webgl.M02] * v[webgl.M13] * v[webgl.M21] - v[webgl.M03] * v[webgl.M11] * v[webgl.M22]
+					+ v[webgl.M01] * v[webgl.M13] * v[webgl.M22] + v[webgl.M02] * v[webgl.M11] * v[webgl.M23] - v[webgl.M01] * v[webgl.M12] * v[webgl.M23];
+				t[webgl.M10] = v[webgl.M13] * v[webgl.M22] * v[webgl.M30] - v[webgl.M12] * v[webgl.M23] * v[webgl.M30] - v[webgl.M13] * v[webgl.M20] * v[webgl.M32]
+					+ v[webgl.M10] * v[webgl.M23] * v[webgl.M32] + v[webgl.M12] * v[webgl.M20] * v[webgl.M33] - v[webgl.M10] * v[webgl.M22] * v[webgl.M33];
+				t[webgl.M11] = v[webgl.M02] * v[webgl.M23] * v[webgl.M30] - v[webgl.M03] * v[webgl.M22] * v[webgl.M30] + v[webgl.M03] * v[webgl.M20] * v[webgl.M32]
+					- v[webgl.M00] * v[webgl.M23] * v[webgl.M32] - v[webgl.M02] * v[webgl.M20] * v[webgl.M33] + v[webgl.M00] * v[webgl.M22] * v[webgl.M33];
+				t[webgl.M12] = v[webgl.M03] * v[webgl.M12] * v[webgl.M30] - v[webgl.M02] * v[webgl.M13] * v[webgl.M30] - v[webgl.M03] * v[webgl.M10] * v[webgl.M32]
+					+ v[webgl.M00] * v[webgl.M13] * v[webgl.M32] + v[webgl.M02] * v[webgl.M10] * v[webgl.M33] - v[webgl.M00] * v[webgl.M12] * v[webgl.M33];
+				t[webgl.M13] = v[webgl.M02] * v[webgl.M13] * v[webgl.M20] - v[webgl.M03] * v[webgl.M12] * v[webgl.M20] + v[webgl.M03] * v[webgl.M10] * v[webgl.M22]
+					- v[webgl.M00] * v[webgl.M13] * v[webgl.M22] - v[webgl.M02] * v[webgl.M10] * v[webgl.M23] + v[webgl.M00] * v[webgl.M12] * v[webgl.M23];
+				t[webgl.M20] = v[webgl.M11] * v[webgl.M23] * v[webgl.M30] - v[webgl.M13] * v[webgl.M21] * v[webgl.M30] + v[webgl.M13] * v[webgl.M20] * v[webgl.M31]
+					- v[webgl.M10] * v[webgl.M23] * v[webgl.M31] - v[webgl.M11] * v[webgl.M20] * v[webgl.M33] + v[webgl.M10] * v[webgl.M21] * v[webgl.M33];
+				t[webgl.M21] = v[webgl.M03] * v[webgl.M21] * v[webgl.M30] - v[webgl.M01] * v[webgl.M23] * v[webgl.M30] - v[webgl.M03] * v[webgl.M20] * v[webgl.M31]
+					+ v[webgl.M00] * v[webgl.M23] * v[webgl.M31] + v[webgl.M01] * v[webgl.M20] * v[webgl.M33] - v[webgl.M00] * v[webgl.M21] * v[webgl.M33];
+				t[webgl.M22] = v[webgl.M01] * v[webgl.M13] * v[webgl.M30] - v[webgl.M03] * v[webgl.M11] * v[webgl.M30] + v[webgl.M03] * v[webgl.M10] * v[webgl.M31]
+					- v[webgl.M00] * v[webgl.M13] * v[webgl.M31] - v[webgl.M01] * v[webgl.M10] * v[webgl.M33] + v[webgl.M00] * v[webgl.M11] * v[webgl.M33];
+				t[webgl.M23] = v[webgl.M03] * v[webgl.M11] * v[webgl.M20] - v[webgl.M01] * v[webgl.M13] * v[webgl.M20] - v[webgl.M03] * v[webgl.M10] * v[webgl.M21]
+					+ v[webgl.M00] * v[webgl.M13] * v[webgl.M21] + v[webgl.M01] * v[webgl.M10] * v[webgl.M23] - v[webgl.M00] * v[webgl.M11] * v[webgl.M23];
+				t[webgl.M30] = v[webgl.M12] * v[webgl.M21] * v[webgl.M30] - v[webgl.M11] * v[webgl.M22] * v[webgl.M30] - v[webgl.M12] * v[webgl.M20] * v[webgl.M31]
+					+ v[webgl.M10] * v[webgl.M22] * v[webgl.M31] + v[webgl.M11] * v[webgl.M20] * v[webgl.M32] - v[webgl.M10] * v[webgl.M21] * v[webgl.M32];
+				t[webgl.M31] = v[webgl.M01] * v[webgl.M22] * v[webgl.M30] - v[webgl.M02] * v[webgl.M21] * v[webgl.M30] + v[webgl.M02] * v[webgl.M20] * v[webgl.M31]
+					- v[webgl.M00] * v[webgl.M22] * v[webgl.M31] - v[webgl.M01] * v[webgl.M20] * v[webgl.M32] + v[webgl.M00] * v[webgl.M21] * v[webgl.M32];
+				t[webgl.M32] = v[webgl.M02] * v[webgl.M11] * v[webgl.M30] - v[webgl.M01] * v[webgl.M12] * v[webgl.M30] - v[webgl.M02] * v[webgl.M10] * v[webgl.M31]
+					+ v[webgl.M00] * v[webgl.M12] * v[webgl.M31] + v[webgl.M01] * v[webgl.M10] * v[webgl.M32] - v[webgl.M00] * v[webgl.M11] * v[webgl.M32];
+				t[webgl.M33] = v[webgl.M01] * v[webgl.M12] * v[webgl.M20] - v[webgl.M02] * v[webgl.M11] * v[webgl.M20] + v[webgl.M02] * v[webgl.M10] * v[webgl.M21]
+					- v[webgl.M00] * v[webgl.M12] * v[webgl.M21] - v[webgl.M01] * v[webgl.M10] * v[webgl.M22] + v[webgl.M00] * v[webgl.M11] * v[webgl.M22];
+				v[webgl.M00] = t[webgl.M00] * inv_det;
+				v[webgl.M01] = t[webgl.M01] * inv_det;
+				v[webgl.M02] = t[webgl.M02] * inv_det;
+				v[webgl.M03] = t[webgl.M03] * inv_det;
+				v[webgl.M10] = t[webgl.M10] * inv_det;
+				v[webgl.M11] = t[webgl.M11] * inv_det;
+				v[webgl.M12] = t[webgl.M12] * inv_det;
+				v[webgl.M13] = t[webgl.M13] * inv_det;
+				v[webgl.M20] = t[webgl.M20] * inv_det;
+				v[webgl.M21] = t[webgl.M21] * inv_det;
+				v[webgl.M22] = t[webgl.M22] * inv_det;
+				v[webgl.M23] = t[webgl.M23] * inv_det;
+				v[webgl.M30] = t[webgl.M30] * inv_det;
+				v[webgl.M31] = t[webgl.M31] * inv_det;
+				v[webgl.M32] = t[webgl.M32] * inv_det;
+				v[webgl.M33] = t[webgl.M33] * inv_det;
+				return this;
+			};
+			Matrix4.prototype.determinant = function () {
+				var v = this.values;
+				return v[webgl.M30] * v[webgl.M21] * v[webgl.M12] * v[webgl.M03] - v[webgl.M20] * v[webgl.M31] * v[webgl.M12] * v[webgl.M03] - v[webgl.M30] * v[webgl.M11] * v[webgl.M22] * v[webgl.M03]
+					+ v[webgl.M10] * v[webgl.M31] * v[webgl.M22] * v[webgl.M03] + v[webgl.M20] * v[webgl.M11] * v[webgl.M32] * v[webgl.M03] - v[webgl.M10] * v[webgl.M21] * v[webgl.M32] * v[webgl.M03]
+					- v[webgl.M30] * v[webgl.M21] * v[webgl.M02] * v[webgl.M13] + v[webgl.M20] * v[webgl.M31] * v[webgl.M02] * v[webgl.M13] + v[webgl.M30] * v[webgl.M01] * v[webgl.M22] * v[webgl.M13]
+					- v[webgl.M00] * v[webgl.M31] * v[webgl.M22] * v[webgl.M13] - v[webgl.M20] * v[webgl.M01] * v[webgl.M32] * v[webgl.M13] + v[webgl.M00] * v[webgl.M21] * v[webgl.M32] * v[webgl.M13]
+					+ v[webgl.M30] * v[webgl.M11] * v[webgl.M02] * v[webgl.M23] - v[webgl.M10] * v[webgl.M31] * v[webgl.M02] * v[webgl.M23] - v[webgl.M30] * v[webgl.M01] * v[webgl.M12] * v[webgl.M23]
+					+ v[webgl.M00] * v[webgl.M31] * v[webgl.M12] * v[webgl.M23] + v[webgl.M10] * v[webgl.M01] * v[webgl.M32] * v[webgl.M23] - v[webgl.M00] * v[webgl.M11] * v[webgl.M32] * v[webgl.M23]
+					- v[webgl.M20] * v[webgl.M11] * v[webgl.M02] * v[webgl.M33] + v[webgl.M10] * v[webgl.M21] * v[webgl.M02] * v[webgl.M33] + v[webgl.M20] * v[webgl.M01] * v[webgl.M12] * v[webgl.M33]
+					- v[webgl.M00] * v[webgl.M21] * v[webgl.M12] * v[webgl.M33] - v[webgl.M10] * v[webgl.M01] * v[webgl.M22] * v[webgl.M33] + v[webgl.M00] * v[webgl.M11] * v[webgl.M22] * v[webgl.M33];
+			};
+			Matrix4.prototype.translate = function (x, y, z) {
+				var v = this.values;
+				v[webgl.M03] += x;
+				v[webgl.M13] += y;
+				v[webgl.M23] += z;
+				return this;
+			};
+			Matrix4.prototype.copy = function () {
+				return new Matrix4().set(this.values);
+			};
+			Matrix4.prototype.projection = function (near, far, fovy, aspectRatio) {
+				this.identity();
+				var l_fd = (1.0 / Math.tan((fovy * (Math.PI / 180)) / 2.0));
+				var l_a1 = (far + near) / (near - far);
+				var l_a2 = (2 * far * near) / (near - far);
+				var v = this.values;
+				v[webgl.M00] = l_fd / aspectRatio;
+				v[webgl.M10] = 0;
+				v[webgl.M20] = 0;
+				v[webgl.M30] = 0;
+				v[webgl.M01] = 0;
+				v[webgl.M11] = l_fd;
+				v[webgl.M21] = 0;
+				v[webgl.M31] = 0;
+				v[webgl.M02] = 0;
+				v[webgl.M12] = 0;
+				v[webgl.M22] = l_a1;
+				v[webgl.M32] = -1;
+				v[webgl.M03] = 0;
+				v[webgl.M13] = 0;
+				v[webgl.M23] = l_a2;
+				v[webgl.M33] = 0;
+				return this;
+			};
+			Matrix4.prototype.ortho2d = function (x, y, width, height) {
+				return this.ortho(x, x + width, y, y + height, 0, 1);
+			};
+			Matrix4.prototype.ortho = function (left, right, bottom, top, near, far) {
+				this.identity();
+				var x_orth = 2 / (right - left);
+				var y_orth = 2 / (top - bottom);
+				var z_orth = -2 / (far - near);
+				var tx = -(right + left) / (right - left);
+				var ty = -(top + bottom) / (top - bottom);
+				var tz = -(far + near) / (far - near);
+				var v = this.values;
+				v[webgl.M00] = x_orth;
+				v[webgl.M10] = 0;
+				v[webgl.M20] = 0;
+				v[webgl.M30] = 0;
+				v[webgl.M01] = 0;
+				v[webgl.M11] = y_orth;
+				v[webgl.M21] = 0;
+				v[webgl.M31] = 0;
+				v[webgl.M02] = 0;
+				v[webgl.M12] = 0;
+				v[webgl.M22] = z_orth;
+				v[webgl.M32] = 0;
+				v[webgl.M03] = tx;
+				v[webgl.M13] = ty;
+				v[webgl.M23] = tz;
+				v[webgl.M33] = 1;
+				return this;
+			};
+			Matrix4.prototype.multiply = function (matrix) {
+				var t = this.temp;
+				var v = this.values;
+				var m = matrix.values;
+				t[webgl.M00] = v[webgl.M00] * m[webgl.M00] + v[webgl.M01] * m[webgl.M10] + v[webgl.M02] * m[webgl.M20] + v[webgl.M03] * m[webgl.M30];
+				t[webgl.M01] = v[webgl.M00] * m[webgl.M01] + v[webgl.M01] * m[webgl.M11] + v[webgl.M02] * m[webgl.M21] + v[webgl.M03] * m[webgl.M31];
+				t[webgl.M02] = v[webgl.M00] * m[webgl.M02] + v[webgl.M01] * m[webgl.M12] + v[webgl.M02] * m[webgl.M22] + v[webgl.M03] * m[webgl.M32];
+				t[webgl.M03] = v[webgl.M00] * m[webgl.M03] + v[webgl.M01] * m[webgl.M13] + v[webgl.M02] * m[webgl.M23] + v[webgl.M03] * m[webgl.M33];
+				t[webgl.M10] = v[webgl.M10] * m[webgl.M00] + v[webgl.M11] * m[webgl.M10] + v[webgl.M12] * m[webgl.M20] + v[webgl.M13] * m[webgl.M30];
+				t[webgl.M11] = v[webgl.M10] * m[webgl.M01] + v[webgl.M11] * m[webgl.M11] + v[webgl.M12] * m[webgl.M21] + v[webgl.M13] * m[webgl.M31];
+				t[webgl.M12] = v[webgl.M10] * m[webgl.M02] + v[webgl.M11] * m[webgl.M12] + v[webgl.M12] * m[webgl.M22] + v[webgl.M13] * m[webgl.M32];
+				t[webgl.M13] = v[webgl.M10] * m[webgl.M03] + v[webgl.M11] * m[webgl.M13] + v[webgl.M12] * m[webgl.M23] + v[webgl.M13] * m[webgl.M33];
+				t[webgl.M20] = v[webgl.M20] * m[webgl.M00] + v[webgl.M21] * m[webgl.M10] + v[webgl.M22] * m[webgl.M20] + v[webgl.M23] * m[webgl.M30];
+				t[webgl.M21] = v[webgl.M20] * m[webgl.M01] + v[webgl.M21] * m[webgl.M11] + v[webgl.M22] * m[webgl.M21] + v[webgl.M23] * m[webgl.M31];
+				t[webgl.M22] = v[webgl.M20] * m[webgl.M02] + v[webgl.M21] * m[webgl.M12] + v[webgl.M22] * m[webgl.M22] + v[webgl.M23] * m[webgl.M32];
+				t[webgl.M23] = v[webgl.M20] * m[webgl.M03] + v[webgl.M21] * m[webgl.M13] + v[webgl.M22] * m[webgl.M23] + v[webgl.M23] * m[webgl.M33];
+				t[webgl.M30] = v[webgl.M30] * m[webgl.M00] + v[webgl.M31] * m[webgl.M10] + v[webgl.M32] * m[webgl.M20] + v[webgl.M33] * m[webgl.M30];
+				t[webgl.M31] = v[webgl.M30] * m[webgl.M01] + v[webgl.M31] * m[webgl.M11] + v[webgl.M32] * m[webgl.M21] + v[webgl.M33] * m[webgl.M31];
+				t[webgl.M32] = v[webgl.M30] * m[webgl.M02] + v[webgl.M31] * m[webgl.M12] + v[webgl.M32] * m[webgl.M22] + v[webgl.M33] * m[webgl.M32];
+				t[webgl.M33] = v[webgl.M30] * m[webgl.M03] + v[webgl.M31] * m[webgl.M13] + v[webgl.M32] * m[webgl.M23] + v[webgl.M33] * m[webgl.M33];
+				return this.set(this.temp);
+			};
+			Matrix4.prototype.multiplyLeft = function (matrix) {
+				var t = this.temp;
+				var v = this.values;
+				var m = matrix.values;
+				t[webgl.M00] = m[webgl.M00] * v[webgl.M00] + m[webgl.M01] * v[webgl.M10] + m[webgl.M02] * v[webgl.M20] + m[webgl.M03] * v[webgl.M30];
+				t[webgl.M01] = m[webgl.M00] * v[webgl.M01] + m[webgl.M01] * v[webgl.M11] + m[webgl.M02] * v[webgl.M21] + m[webgl.M03] * v[webgl.M31];
+				t[webgl.M02] = m[webgl.M00] * v[webgl.M02] + m[webgl.M01] * v[webgl.M12] + m[webgl.M02] * v[webgl.M22] + m[webgl.M03] * v[webgl.M32];
+				t[webgl.M03] = m[webgl.M00] * v[webgl.M03] + m[webgl.M01] * v[webgl.M13] + m[webgl.M02] * v[webgl.M23] + m[webgl.M03] * v[webgl.M33];
+				t[webgl.M10] = m[webgl.M10] * v[webgl.M00] + m[webgl.M11] * v[webgl.M10] + m[webgl.M12] * v[webgl.M20] + m[webgl.M13] * v[webgl.M30];
+				t[webgl.M11] = m[webgl.M10] * v[webgl.M01] + m[webgl.M11] * v[webgl.M11] + m[webgl.M12] * v[webgl.M21] + m[webgl.M13] * v[webgl.M31];
+				t[webgl.M12] = m[webgl.M10] * v[webgl.M02] + m[webgl.M11] * v[webgl.M12] + m[webgl.M12] * v[webgl.M22] + m[webgl.M13] * v[webgl.M32];
+				t[webgl.M13] = m[webgl.M10] * v[webgl.M03] + m[webgl.M11] * v[webgl.M13] + m[webgl.M12] * v[webgl.M23] + m[webgl.M13] * v[webgl.M33];
+				t[webgl.M20] = m[webgl.M20] * v[webgl.M00] + m[webgl.M21] * v[webgl.M10] + m[webgl.M22] * v[webgl.M20] + m[webgl.M23] * v[webgl.M30];
+				t[webgl.M21] = m[webgl.M20] * v[webgl.M01] + m[webgl.M21] * v[webgl.M11] + m[webgl.M22] * v[webgl.M21] + m[webgl.M23] * v[webgl.M31];
+				t[webgl.M22] = m[webgl.M20] * v[webgl.M02] + m[webgl.M21] * v[webgl.M12] + m[webgl.M22] * v[webgl.M22] + m[webgl.M23] * v[webgl.M32];
+				t[webgl.M23] = m[webgl.M20] * v[webgl.M03] + m[webgl.M21] * v[webgl.M13] + m[webgl.M22] * v[webgl.M23] + m[webgl.M23] * v[webgl.M33];
+				t[webgl.M30] = m[webgl.M30] * v[webgl.M00] + m[webgl.M31] * v[webgl.M10] + m[webgl.M32] * v[webgl.M20] + m[webgl.M33] * v[webgl.M30];
+				t[webgl.M31] = m[webgl.M30] * v[webgl.M01] + m[webgl.M31] * v[webgl.M11] + m[webgl.M32] * v[webgl.M21] + m[webgl.M33] * v[webgl.M31];
+				t[webgl.M32] = m[webgl.M30] * v[webgl.M02] + m[webgl.M31] * v[webgl.M12] + m[webgl.M32] * v[webgl.M22] + m[webgl.M33] * v[webgl.M32];
+				t[webgl.M33] = m[webgl.M30] * v[webgl.M03] + m[webgl.M31] * v[webgl.M13] + m[webgl.M32] * v[webgl.M23] + m[webgl.M33] * v[webgl.M33];
+				return this.set(this.temp);
+			};
+			Matrix4.prototype.lookAt = function (position, direction, up) {
+				Matrix4.initTemps();
+				var xAxis = Matrix4.xAxis, yAxis = Matrix4.yAxis, zAxis = Matrix4.zAxis;
+				zAxis.setFrom(direction).normalize();
+				xAxis.setFrom(direction).normalize();
+				xAxis.cross(up).normalize();
+				yAxis.setFrom(xAxis).cross(zAxis).normalize();
+				this.identity();
+				var val = this.values;
+				val[webgl.M00] = xAxis.x;
+				val[webgl.M01] = xAxis.y;
+				val[webgl.M02] = xAxis.z;
+				val[webgl.M10] = yAxis.x;
+				val[webgl.M11] = yAxis.y;
+				val[webgl.M12] = yAxis.z;
+				val[webgl.M20] = -zAxis.x;
+				val[webgl.M21] = -zAxis.y;
+				val[webgl.M22] = -zAxis.z;
+				Matrix4.tmpMatrix.identity();
+				Matrix4.tmpMatrix.values[webgl.M03] = -position.x;
+				Matrix4.tmpMatrix.values[webgl.M13] = -position.y;
+				Matrix4.tmpMatrix.values[webgl.M23] = -position.z;
+				this.multiply(Matrix4.tmpMatrix);
+				return this;
+			};
+			Matrix4.initTemps = function () {
+				if (Matrix4.xAxis === null)
+					Matrix4.xAxis = new webgl.Vector3();
+				if (Matrix4.yAxis === null)
+					Matrix4.yAxis = new webgl.Vector3();
+				if (Matrix4.zAxis === null)
+					Matrix4.zAxis = new webgl.Vector3();
+			};
+			Matrix4.xAxis = null;
+			Matrix4.yAxis = null;
+			Matrix4.zAxis = null;
+			Matrix4.tmpMatrix = new Matrix4();
+			return Matrix4;
+		}());
+		webgl.Matrix4 = Matrix4;
+	})(webgl = spine.webgl || (spine.webgl = {}));
+})(spine || (spine = {}));
+var spine;
+(function (spine) {
+	var webgl;
+	(function (webgl) {
+		var Mesh = (function () {
+			function Mesh(context, attributes, maxVertices, maxIndices) {
+				this.attributes = attributes;
+				this.verticesLength = 0;
+				this.dirtyVertices = false;
+				this.indicesLength = 0;
+				this.dirtyIndices = false;
+				this.elementsPerVertex = 0;
+				this.context = context instanceof webgl.ManagedWebGLRenderingContext ? context : new webgl.ManagedWebGLRenderingContext(context);
+				this.elementsPerVertex = 0;
+				for (var i = 0; i < attributes.length; i++) {
+					this.elementsPerVertex += attributes[i].numElements;
+				}
+				this.vertices = new Float32Array(maxVertices * this.elementsPerVertex);
+				this.indices = new Uint16Array(maxIndices);
+				this.context.addRestorable(this);
+			}
+			Mesh.prototype.getAttributes = function () { return this.attributes; };
+			Mesh.prototype.maxVertices = function () { return this.vertices.length / this.elementsPerVertex; };
+			Mesh.prototype.numVertices = function () { return this.verticesLength / this.elementsPerVertex; };
+			Mesh.prototype.setVerticesLength = function (length) {
+				this.dirtyVertices = true;
+				this.verticesLength = length;
+			};
+			Mesh.prototype.getVertices = function () { return this.vertices; };
+			Mesh.prototype.maxIndices = function () { return this.indices.length; };
+			Mesh.prototype.numIndices = function () { return this.indicesLength; };
+			Mesh.prototype.setIndicesLength = function (length) {
+				this.dirtyIndices = true;
+				this.indicesLength = length;
+			};
+			Mesh.prototype.getIndices = function () { return this.indices; };
+			;
+			Mesh.prototype.getVertexSizeInFloats = function () {
+				var size = 0;
+				for (var i = 0; i < this.attributes.length; i++) {
+					var attribute = this.attributes[i];
+					size += attribute.numElements;
+				}
+				return size;
+			};
+			Mesh.prototype.setVertices = function (vertices) {
+				this.dirtyVertices = true;
+				if (vertices.length > this.vertices.length)
+					throw Error("Mesh can't store more than " + this.maxVertices() + " vertices");
+				this.vertices.set(vertices, 0);
+				this.verticesLength = vertices.length;
+			};
+			Mesh.prototype.setIndices = function (indices) {
+				this.dirtyIndices = true;
+				if (indices.length > this.indices.length)
+					throw Error("Mesh can't store more than " + this.maxIndices() + " indices");
+				this.indices.set(indices, 0);
+				this.indicesLength = indices.length;
+			};
+			Mesh.prototype.draw = function (shader, primitiveType) {
+				this.drawWithOffset(shader, primitiveType, 0, this.indicesLength > 0 ? this.indicesLength : this.verticesLength / this.elementsPerVertex);
+			};
+			Mesh.prototype.drawWithOffset = function (shader, primitiveType, offset, count) {
+				var gl = this.context.gl;
+				if (this.dirtyVertices || this.dirtyIndices)
+					this.update();
+				this.bind(shader);
+				if (this.indicesLength > 0) {
+					gl.drawElements(primitiveType, count, gl.UNSIGNED_SHORT, offset * 2);
+				}
+				else {
+					gl.drawArrays(primitiveType, offset, count);
+				}
+				this.unbind(shader);
+			};
+			Mesh.prototype.bind = function (shader) {
+				var gl = this.context.gl;
+				gl.bindBuffer(gl.ARRAY_BUFFER, this.verticesBuffer);
+				var offset = 0;
+				for (var i = 0; i < this.attributes.length; i++) {
+					var attrib = this.attributes[i];
+					var location_1 = shader.getAttributeLocation(attrib.name);
+					gl.enableVertexAttribArray(location_1);
+					gl.vertexAttribPointer(location_1, attrib.numElements, gl.FLOAT, false, this.elementsPerVertex * 4, offset * 4);
+					offset += attrib.numElements;
+				}
+				if (this.indicesLength > 0)
+					gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indicesBuffer);
+			};
+			Mesh.prototype.unbind = function (shader) {
+				var gl = this.context.gl;
+				for (var i = 0; i < this.attributes.length; i++) {
+					var attrib = this.attributes[i];
+					var location_2 = shader.getAttributeLocation(attrib.name);
+					gl.disableVertexAttribArray(location_2);
+				}
+				gl.bindBuffer(gl.ARRAY_BUFFER, null);
+				if (this.indicesLength > 0)
+					gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+			};
+			Mesh.prototype.update = function () {
+				var gl = this.context.gl;
+				if (this.dirtyVertices) {
+					if (!this.verticesBuffer) {
+						this.verticesBuffer = gl.createBuffer();
+					}
+					gl.bindBuffer(gl.ARRAY_BUFFER, this.verticesBuffer);
+					gl.bufferData(gl.ARRAY_BUFFER, this.vertices.subarray(0, this.verticesLength), gl.DYNAMIC_DRAW);
+					this.dirtyVertices = false;
+				}
+				if (this.dirtyIndices) {
+					if (!this.indicesBuffer) {
+						this.indicesBuffer = gl.createBuffer();
+					}
+					gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indicesBuffer);
+					gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices.subarray(0, this.indicesLength), gl.DYNAMIC_DRAW);
+					this.dirtyIndices = false;
+				}
+			};
+			Mesh.prototype.restore = function () {
+				this.verticesBuffer = null;
+				this.indicesBuffer = null;
+				this.update();
+			};
+			Mesh.prototype.dispose = function () {
+				this.context.removeRestorable(this);
+				var gl = this.context.gl;
+				gl.deleteBuffer(this.verticesBuffer);
+				gl.deleteBuffer(this.indicesBuffer);
+			};
+			return Mesh;
+		}());
+		webgl.Mesh = Mesh;
+		var VertexAttribute = (function () {
+			function VertexAttribute(name, type, numElements) {
+				this.name = name;
+				this.type = type;
+				this.numElements = numElements;
+			}
+			return VertexAttribute;
+		}());
+		webgl.VertexAttribute = VertexAttribute;
+		var Position2Attribute = (function (_super) {
+			__extends(Position2Attribute, _super);
+			function Position2Attribute() {
+				return _super.call(this, webgl.Shader.POSITION, VertexAttributeType.Float, 2) || this;
+			}
+			return Position2Attribute;
+		}(VertexAttribute));
+		webgl.Position2Attribute = Position2Attribute;
+		var Position3Attribute = (function (_super) {
+			__extends(Position3Attribute, _super);
+			function Position3Attribute() {
+				return _super.call(this, webgl.Shader.POSITION, VertexAttributeType.Float, 3) || this;
+			}
+			return Position3Attribute;
+		}(VertexAttribute));
+		webgl.Position3Attribute = Position3Attribute;
+		var TexCoordAttribute = (function (_super) {
+			__extends(TexCoordAttribute, _super);
+			function TexCoordAttribute(unit) {
+				if (unit === void 0) { unit = 0; }
+				return _super.call(this, webgl.Shader.TEXCOORDS + (unit == 0 ? "" : unit), VertexAttributeType.Float, 2) || this;
+			}
+			return TexCoordAttribute;
+		}(VertexAttribute));
+		webgl.TexCoordAttribute = TexCoordAttribute;
+		var ColorAttribute = (function (_super) {
+			__extends(ColorAttribute, _super);
+			function ColorAttribute() {
+				return _super.call(this, webgl.Shader.COLOR, VertexAttributeType.Float, 4) || this;
+			}
+			return ColorAttribute;
+		}(VertexAttribute));
+		webgl.ColorAttribute = ColorAttribute;
+		var Color2Attribute = (function (_super) {
+			__extends(Color2Attribute, _super);
+			function Color2Attribute() {
+				return _super.call(this, webgl.Shader.COLOR2, VertexAttributeType.Float, 4) || this;
+			}
+			return Color2Attribute;
+		}(VertexAttribute));
+		webgl.Color2Attribute = Color2Attribute;
+		var VertexAttributeType;
+		(function (VertexAttributeType) {
+			VertexAttributeType[VertexAttributeType["Float"] = 0] = "Float";
+		})(VertexAttributeType = webgl.VertexAttributeType || (webgl.VertexAttributeType = {}));
+	})(webgl = spine.webgl || (spine.webgl = {}));
+})(spine || (spine = {}));
+var spine;
+(function (spine) {
+	var webgl;
+	(function (webgl) {
+		var PolygonBatcher = (function () {
+			function PolygonBatcher(context, twoColorTint, maxVertices) {
+				if (twoColorTint === void 0) { twoColorTint = true; }
+				if (maxVertices === void 0) { maxVertices = 10920; }
+				this.isDrawing = false;
+				this.shader = null;
+				this.lastTexture = null;
+				this.verticesLength = 0;
+				this.indicesLength = 0;
+				if (maxVertices > 10920)
+					throw new Error("Can't have more than 10920 triangles per batch: " + maxVertices);
+				this.context = context instanceof webgl.ManagedWebGLRenderingContext ? context : new webgl.ManagedWebGLRenderingContext(context);
+				var attributes = twoColorTint ?
+					[new webgl.Position2Attribute(), new webgl.ColorAttribute(), new webgl.TexCoordAttribute(), new webgl.Color2Attribute()] :
+					[new webgl.Position2Attribute(), new webgl.ColorAttribute(), new webgl.TexCoordAttribute()];
+				this.mesh = new webgl.Mesh(context, attributes, maxVertices, maxVertices * 3);
+				this.srcBlend = this.context.gl.SRC_ALPHA;
+				this.dstBlend = this.context.gl.ONE_MINUS_SRC_ALPHA;
+			}
+			PolygonBatcher.prototype.begin = function (shader) {
+				var gl = this.context.gl;
+				if (this.isDrawing)
+					throw new Error("PolygonBatch is already drawing. Call PolygonBatch.end() before calling PolygonBatch.begin()");
+				this.drawCalls = 0;
+				this.shader = shader;
+				this.lastTexture = null;
+				this.isDrawing = true;
+				gl.enable(gl.BLEND);
+				gl.blendFunc(this.srcBlend, this.dstBlend);
+			};
+			PolygonBatcher.prototype.setBlendMode = function (srcBlend, dstBlend) {
+				var gl = this.context.gl;
+				this.srcBlend = srcBlend;
+				this.dstBlend = dstBlend;
+				if (this.isDrawing) {
+					this.flush();
+					gl.blendFunc(this.srcBlend, this.dstBlend);
+				}
+			};
+			PolygonBatcher.prototype.draw = function (texture, vertices, indices) {
+				if (texture != this.lastTexture) {
+					this.flush();
+					this.lastTexture = texture;
+				}
+				else if (this.verticesLength + vertices.length > this.mesh.getVertices().length ||
+					this.indicesLength + indices.length > this.mesh.getIndices().length) {
+					this.flush();
+				}
+				var indexStart = this.mesh.numVertices();
+				this.mesh.getVertices().set(vertices, this.verticesLength);
+				this.verticesLength += vertices.length;
+				this.mesh.setVerticesLength(this.verticesLength);
+				var indicesArray = this.mesh.getIndices();
+				for (var i = this.indicesLength, j = 0; j < indices.length; i++, j++)
+					indicesArray[i] = indices[j] + indexStart;
+				this.indicesLength += indices.length;
+				this.mesh.setIndicesLength(this.indicesLength);
+			};
+			PolygonBatcher.prototype.flush = function () {
+				var gl = this.context.gl;
+				if (this.verticesLength == 0)
+					return;
+				this.lastTexture.bind();
+				this.mesh.draw(this.shader, gl.TRIANGLES);
+				this.verticesLength = 0;
+				this.indicesLength = 0;
+				this.mesh.setVerticesLength(0);
+				this.mesh.setIndicesLength(0);
+				this.drawCalls++;
+			};
+			PolygonBatcher.prototype.end = function () {
+				var gl = this.context.gl;
+				if (!this.isDrawing)
+					throw new Error("PolygonBatch is not drawing. Call PolygonBatch.begin() before calling PolygonBatch.end()");
+				if (this.verticesLength > 0 || this.indicesLength > 0)
+					this.flush();
+				this.shader = null;
+				this.lastTexture = null;
+				this.isDrawing = false;
+				gl.disable(gl.BLEND);
+			};
+			PolygonBatcher.prototype.getDrawCalls = function () { return this.drawCalls; };
+			PolygonBatcher.prototype.dispose = function () {
+				this.mesh.dispose();
+			};
+			return PolygonBatcher;
+		}());
+		webgl.PolygonBatcher = PolygonBatcher;
+	})(webgl = spine.webgl || (spine.webgl = {}));
+})(spine || (spine = {}));
+var spine;
+(function (spine) {
+	var webgl;
+	(function (webgl) {
+		var SceneRenderer = (function () {
+			function SceneRenderer(canvas, context, twoColorTint) {
+				if (twoColorTint === void 0) { twoColorTint = true; }
+				this.twoColorTint = false;
+				this.activeRenderer = null;
+				this.QUAD = [
+					0, 0, 1, 1, 1, 1, 0, 0,
+					0, 0, 1, 1, 1, 1, 0, 0,
+					0, 0, 1, 1, 1, 1, 0, 0,
+					0, 0, 1, 1, 1, 1, 0, 0,
+				];
+				this.QUAD_TRIANGLES = [0, 1, 2, 2, 3, 0];
+				this.WHITE = new spine.Color(1, 1, 1, 1);
+				this.canvas = canvas;
+				this.context = context instanceof webgl.ManagedWebGLRenderingContext ? context : new webgl.ManagedWebGLRenderingContext(context);
+				this.twoColorTint = twoColorTint;
+				this.camera = new webgl.OrthoCamera(canvas.width, canvas.height);
+				this.batcherShader = twoColorTint ? webgl.Shader.newTwoColoredTextured(this.context) : webgl.Shader.newColoredTextured(this.context);
+				this.batcher = new webgl.PolygonBatcher(this.context, twoColorTint);
+				this.shapesShader = webgl.Shader.newColored(this.context);
+				this.shapes = new webgl.ShapeRenderer(this.context);
+				this.skeletonRenderer = new webgl.SkeletonRenderer(this.context, twoColorTint);
+				this.skeletonDebugRenderer = new webgl.SkeletonDebugRenderer(this.context);
+			}
+			SceneRenderer.prototype.begin = function () {
+				this.camera.update();
+				this.enableRenderer(this.batcher);
+			};
+			SceneRenderer.prototype.drawSkeleton = function (skeleton, premultipliedAlpha, slotRangeStart, slotRangeEnd) {
+				if (premultipliedAlpha === void 0) { premultipliedAlpha = false; }
+				if (slotRangeStart === void 0) { slotRangeStart = -1; }
+				if (slotRangeEnd === void 0) { slotRangeEnd = -1; }
+				this.enableRenderer(this.batcher);
+				this.skeletonRenderer.premultipliedAlpha = premultipliedAlpha;
+				this.skeletonRenderer.draw(this.batcher, skeleton, slotRangeStart, slotRangeEnd);
+			};
+			SceneRenderer.prototype.drawSkeletonDebug = function (skeleton, premultipliedAlpha, ignoredBones) {
+				if (premultipliedAlpha === void 0) { premultipliedAlpha = false; }
+				if (ignoredBones === void 0) { ignoredBones = null; }
+				this.enableRenderer(this.shapes);
+				this.skeletonDebugRenderer.premultipliedAlpha = premultipliedAlpha;
+				this.skeletonDebugRenderer.draw(this.shapes, skeleton, ignoredBones);
+			};
+			SceneRenderer.prototype.drawTexture = function (texture, x, y, width, height, color) {
+				if (color === void 0) { color = null; }
+				this.enableRenderer(this.batcher);
+				if (color === null)
+					color = this.WHITE;
+				var quad = this.QUAD;
+				var i = 0;
+				quad[i++] = x;
+				quad[i++] = y;
+				quad[i++] = color.r;
+				quad[i++] = color.g;
+				quad[i++] = color.b;
+				quad[i++] = color.a;
+				quad[i++] = 0;
+				quad[i++] = 1;
+				if (this.twoColorTint) {
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+				}
+				quad[i++] = x + width;
+				quad[i++] = y;
+				quad[i++] = color.r;
+				quad[i++] = color.g;
+				quad[i++] = color.b;
+				quad[i++] = color.a;
+				quad[i++] = 1;
+				quad[i++] = 1;
+				if (this.twoColorTint) {
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+				}
+				quad[i++] = x + width;
+				quad[i++] = y + height;
+				quad[i++] = color.r;
+				quad[i++] = color.g;
+				quad[i++] = color.b;
+				quad[i++] = color.a;
+				quad[i++] = 1;
+				quad[i++] = 0;
+				if (this.twoColorTint) {
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+				}
+				quad[i++] = x;
+				quad[i++] = y + height;
+				quad[i++] = color.r;
+				quad[i++] = color.g;
+				quad[i++] = color.b;
+				quad[i++] = color.a;
+				quad[i++] = 0;
+				quad[i++] = 0;
+				if (this.twoColorTint) {
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+				}
+				this.batcher.draw(texture, quad, this.QUAD_TRIANGLES);
+			};
+			SceneRenderer.prototype.drawTextureUV = function (texture, x, y, width, height, u, v, u2, v2, color) {
+				if (color === void 0) { color = null; }
+				this.enableRenderer(this.batcher);
+				if (color === null)
+					color = this.WHITE;
+				var quad = this.QUAD;
+				var i = 0;
+				quad[i++] = x;
+				quad[i++] = y;
+				quad[i++] = color.r;
+				quad[i++] = color.g;
+				quad[i++] = color.b;
+				quad[i++] = color.a;
+				quad[i++] = u;
+				quad[i++] = v;
+				if (this.twoColorTint) {
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+				}
+				quad[i++] = x + width;
+				quad[i++] = y;
+				quad[i++] = color.r;
+				quad[i++] = color.g;
+				quad[i++] = color.b;
+				quad[i++] = color.a;
+				quad[i++] = u2;
+				quad[i++] = v;
+				if (this.twoColorTint) {
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+				}
+				quad[i++] = x + width;
+				quad[i++] = y + height;
+				quad[i++] = color.r;
+				quad[i++] = color.g;
+				quad[i++] = color.b;
+				quad[i++] = color.a;
+				quad[i++] = u2;
+				quad[i++] = v2;
+				if (this.twoColorTint) {
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+				}
+				quad[i++] = x;
+				quad[i++] = y + height;
+				quad[i++] = color.r;
+				quad[i++] = color.g;
+				quad[i++] = color.b;
+				quad[i++] = color.a;
+				quad[i++] = u;
+				quad[i++] = v2;
+				if (this.twoColorTint) {
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+				}
+				this.batcher.draw(texture, quad, this.QUAD_TRIANGLES);
+			};
+			SceneRenderer.prototype.drawTextureRotated = function (texture, x, y, width, height, pivotX, pivotY, angle, color, premultipliedAlpha) {
+				if (color === void 0) { color = null; }
+				if (premultipliedAlpha === void 0) { premultipliedAlpha = false; }
+				this.enableRenderer(this.batcher);
+				if (color === null)
+					color = this.WHITE;
+				var quad = this.QUAD;
+				var worldOriginX = x + pivotX;
+				var worldOriginY = y + pivotY;
+				var fx = -pivotX;
+				var fy = -pivotY;
+				var fx2 = width - pivotX;
+				var fy2 = height - pivotY;
+				var p1x = fx;
+				var p1y = fy;
+				var p2x = fx;
+				var p2y = fy2;
+				var p3x = fx2;
+				var p3y = fy2;
+				var p4x = fx2;
+				var p4y = fy;
+				var x1 = 0;
+				var y1 = 0;
+				var x2 = 0;
+				var y2 = 0;
+				var x3 = 0;
+				var y3 = 0;
+				var x4 = 0;
+				var y4 = 0;
+				if (angle != 0) {
+					var cos = spine.MathUtils.cosDeg(angle);
+					var sin = spine.MathUtils.sinDeg(angle);
+					x1 = cos * p1x - sin * p1y;
+					y1 = sin * p1x + cos * p1y;
+					x4 = cos * p2x - sin * p2y;
+					y4 = sin * p2x + cos * p2y;
+					x3 = cos * p3x - sin * p3y;
+					y3 = sin * p3x + cos * p3y;
+					x2 = x3 + (x1 - x4);
+					y2 = y3 + (y1 - y4);
+				}
+				else {
+					x1 = p1x;
+					y1 = p1y;
+					x4 = p2x;
+					y4 = p2y;
+					x3 = p3x;
+					y3 = p3y;
+					x2 = p4x;
+					y2 = p4y;
+				}
+				x1 += worldOriginX;
+				y1 += worldOriginY;
+				x2 += worldOriginX;
+				y2 += worldOriginY;
+				x3 += worldOriginX;
+				y3 += worldOriginY;
+				x4 += worldOriginX;
+				y4 += worldOriginY;
+				var i = 0;
+				quad[i++] = x1;
+				quad[i++] = y1;
+				quad[i++] = color.r;
+				quad[i++] = color.g;
+				quad[i++] = color.b;
+				quad[i++] = color.a;
+				quad[i++] = 0;
+				quad[i++] = 1;
+				if (this.twoColorTint) {
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+				}
+				quad[i++] = x2;
+				quad[i++] = y2;
+				quad[i++] = color.r;
+				quad[i++] = color.g;
+				quad[i++] = color.b;
+				quad[i++] = color.a;
+				quad[i++] = 1;
+				quad[i++] = 1;
+				if (this.twoColorTint) {
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+				}
+				quad[i++] = x3;
+				quad[i++] = y3;
+				quad[i++] = color.r;
+				quad[i++] = color.g;
+				quad[i++] = color.b;
+				quad[i++] = color.a;
+				quad[i++] = 1;
+				quad[i++] = 0;
+				if (this.twoColorTint) {
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+				}
+				quad[i++] = x4;
+				quad[i++] = y4;
+				quad[i++] = color.r;
+				quad[i++] = color.g;
+				quad[i++] = color.b;
+				quad[i++] = color.a;
+				quad[i++] = 0;
+				quad[i++] = 0;
+				if (this.twoColorTint) {
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+				}
+				this.batcher.draw(texture, quad, this.QUAD_TRIANGLES);
+			};
+			SceneRenderer.prototype.drawRegion = function (region, x, y, width, height, color, premultipliedAlpha) {
+				if (color === void 0) { color = null; }
+				if (premultipliedAlpha === void 0) { premultipliedAlpha = false; }
+				this.enableRenderer(this.batcher);
+				if (color === null)
+					color = this.WHITE;
+				var quad = this.QUAD;
+				var i = 0;
+				quad[i++] = x;
+				quad[i++] = y;
+				quad[i++] = color.r;
+				quad[i++] = color.g;
+				quad[i++] = color.b;
+				quad[i++] = color.a;
+				quad[i++] = region.u;
+				quad[i++] = region.v2;
+				if (this.twoColorTint) {
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+				}
+				quad[i++] = x + width;
+				quad[i++] = y;
+				quad[i++] = color.r;
+				quad[i++] = color.g;
+				quad[i++] = color.b;
+				quad[i++] = color.a;
+				quad[i++] = region.u2;
+				quad[i++] = region.v2;
+				if (this.twoColorTint) {
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+				}
+				quad[i++] = x + width;
+				quad[i++] = y + height;
+				quad[i++] = color.r;
+				quad[i++] = color.g;
+				quad[i++] = color.b;
+				quad[i++] = color.a;
+				quad[i++] = region.u2;
+				quad[i++] = region.v;
+				if (this.twoColorTint) {
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+				}
+				quad[i++] = x;
+				quad[i++] = y + height;
+				quad[i++] = color.r;
+				quad[i++] = color.g;
+				quad[i++] = color.b;
+				quad[i++] = color.a;
+				quad[i++] = region.u;
+				quad[i++] = region.v;
+				if (this.twoColorTint) {
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+					quad[i++] = 0;
+				}
+				this.batcher.draw(region.texture, quad, this.QUAD_TRIANGLES);
+			};
+			SceneRenderer.prototype.line = function (x, y, x2, y2, color, color2) {
+				if (color === void 0) { color = null; }
+				if (color2 === void 0) { color2 = null; }
+				this.enableRenderer(this.shapes);
+				this.shapes.line(x, y, x2, y2, color);
+			};
+			SceneRenderer.prototype.triangle = function (filled, x, y, x2, y2, x3, y3, color, color2, color3) {
+				if (color === void 0) { color = null; }
+				if (color2 === void 0) { color2 = null; }
+				if (color3 === void 0) { color3 = null; }
+				this.enableRenderer(this.shapes);
+				this.shapes.triangle(filled, x, y, x2, y2, x3, y3, color, color2, color3);
+			};
+			SceneRenderer.prototype.quad = function (filled, x, y, x2, y2, x3, y3, x4, y4, color, color2, color3, color4) {
+				if (color === void 0) { color = null; }
+				if (color2 === void 0) { color2 = null; }
+				if (color3 === void 0) { color3 = null; }
+				if (color4 === void 0) { color4 = null; }
+				this.enableRenderer(this.shapes);
+				this.shapes.quad(filled, x, y, x2, y2, x3, y3, x4, y4, color, color2, color3, color4);
+			};
+			SceneRenderer.prototype.rect = function (filled, x, y, width, height, color) {
+				if (color === void 0) { color = null; }
+				this.enableRenderer(this.shapes);
+				this.shapes.rect(filled, x, y, width, height, color);
+			};
+			SceneRenderer.prototype.rectLine = function (filled, x1, y1, x2, y2, width, color) {
+				if (color === void 0) { color = null; }
+				this.enableRenderer(this.shapes);
+				this.shapes.rectLine(filled, x1, y1, x2, y2, width, color);
+			};
+			SceneRenderer.prototype.polygon = function (polygonVertices, offset, count, color) {
+				if (color === void 0) { color = null; }
+				this.enableRenderer(this.shapes);
+				this.shapes.polygon(polygonVertices, offset, count, color);
+			};
+			SceneRenderer.prototype.circle = function (filled, x, y, radius, color, segments) {
+				if (color === void 0) { color = null; }
+				if (segments === void 0) { segments = 0; }
+				this.enableRenderer(this.shapes);
+				this.shapes.circle(filled, x, y, radius, color, segments);
+			};
+			SceneRenderer.prototype.curve = function (x1, y1, cx1, cy1, cx2, cy2, x2, y2, segments, color) {
+				if (color === void 0) { color = null; }
+				this.enableRenderer(this.shapes);
+				this.shapes.curve(x1, y1, cx1, cy1, cx2, cy2, x2, y2, segments, color);
+			};
+			SceneRenderer.prototype.end = function () {
+				if (this.activeRenderer === this.batcher)
+					this.batcher.end();
+				else if (this.activeRenderer === this.shapes)
+					this.shapes.end();
+				this.activeRenderer = null;
+			};
+			SceneRenderer.prototype.resize = function (resizeMode) {
+				var canvas = this.canvas;
+				var w = canvas.clientWidth;
+				var h = canvas.clientHeight;
+				if (canvas.width != w || canvas.height != h) {
+					canvas.width = w;
+					canvas.height = h;
+				}
+				this.context.gl.viewport(0, 0, canvas.width, canvas.height);
+				if (resizeMode === ResizeMode.Stretch) {
+				}
+				else if (resizeMode === ResizeMode.Expand) {
+					this.camera.setViewport(w, h);
+				}
+				else if (resizeMode === ResizeMode.Fit) {
+					var sourceWidth = canvas.width, sourceHeight = canvas.height;
+					var targetWidth = this.camera.viewportWidth, targetHeight = this.camera.viewportHeight;
+					var targetRatio = targetHeight / targetWidth;
+					var sourceRatio = sourceHeight / sourceWidth;
+					var scale = targetRatio < sourceRatio ? targetWidth / sourceWidth : targetHeight / sourceHeight;
+					this.camera.viewportWidth = sourceWidth * scale;
+					this.camera.viewportHeight = sourceHeight * scale;
+				}
+				this.camera.update();
+			};
+			SceneRenderer.prototype.enableRenderer = function (renderer) {
+				if (this.activeRenderer === renderer)
+					return;
+				this.end();
+				if (renderer instanceof webgl.PolygonBatcher) {
+					this.batcherShader.bind();
+					this.batcherShader.setUniform4x4f(webgl.Shader.MVP_MATRIX, this.camera.projectionView.values);
+					this.batcherShader.setUniformi("u_texture", 0);
+					this.batcher.begin(this.batcherShader);
+					this.activeRenderer = this.batcher;
+				}
+				else if (renderer instanceof webgl.ShapeRenderer) {
+					this.shapesShader.bind();
+					this.shapesShader.setUniform4x4f(webgl.Shader.MVP_MATRIX, this.camera.projectionView.values);
+					this.shapes.begin(this.shapesShader);
+					this.activeRenderer = this.shapes;
+				}
+				else {
+					this.activeRenderer = this.skeletonDebugRenderer;
+				}
+			};
+			SceneRenderer.prototype.dispose = function () {
+				this.batcher.dispose();
+				this.batcherShader.dispose();
+				this.shapes.dispose();
+				this.shapesShader.dispose();
+				this.skeletonDebugRenderer.dispose();
+			};
+			return SceneRenderer;
+		}());
+		webgl.SceneRenderer = SceneRenderer;
+		var ResizeMode;
+		(function (ResizeMode) {
+			ResizeMode[ResizeMode["Stretch"] = 0] = "Stretch";
+			ResizeMode[ResizeMode["Expand"] = 1] = "Expand";
+			ResizeMode[ResizeMode["Fit"] = 2] = "Fit";
+		})(ResizeMode = webgl.ResizeMode || (webgl.ResizeMode = {}));
+	})(webgl = spine.webgl || (spine.webgl = {}));
+})(spine || (spine = {}));
+var spine;
+(function (spine) {
+	var webgl;
+	(function (webgl) {
+		var Shader = (function () {
+			function Shader(context, vertexShader, fragmentShader) {
+				this.vertexShader = vertexShader;
+				this.fragmentShader = fragmentShader;
+				this.vs = null;
+				this.fs = null;
+				this.program = null;
+				this.tmp2x2 = new Float32Array(2 * 2);
+				this.tmp3x3 = new Float32Array(3 * 3);
+				this.tmp4x4 = new Float32Array(4 * 4);
+				this.vsSource = vertexShader;
+				this.fsSource = fragmentShader;
+				this.context = context instanceof webgl.ManagedWebGLRenderingContext ? context : new webgl.ManagedWebGLRenderingContext(context);
+				this.context.addRestorable(this);
+				this.compile();
+			}
+			Shader.prototype.getProgram = function () { return this.program; };
+			Shader.prototype.getVertexShader = function () { return this.vertexShader; };
+			Shader.prototype.getFragmentShader = function () { return this.fragmentShader; };
+			Shader.prototype.getVertexShaderSource = function () { return this.vsSource; };
+			Shader.prototype.getFragmentSource = function () { return this.fsSource; };
+			Shader.prototype.compile = function () {
+				var gl = this.context.gl;
+				try {
+					this.vs = this.compileShader(gl.VERTEX_SHADER, this.vertexShader);
+					this.fs = this.compileShader(gl.FRAGMENT_SHADER, this.fragmentShader);
+					this.program = this.compileProgram(this.vs, this.fs);
+				}
+				catch (e) {
+					this.dispose();
+					throw e;
+				}
+			};
+			Shader.prototype.compileShader = function (type, source) {
+				var gl = this.context.gl;
+				var shader = gl.createShader(type);
+				gl.shaderSource(shader, source);
+				gl.compileShader(shader);
+				if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+					var error = "Couldn't compile shader: " + gl.getShaderInfoLog(shader);
+					gl.deleteShader(shader);
+					if (!gl.isContextLost())
+						throw new Error(error);
+				}
+				return shader;
+			};
+			Shader.prototype.compileProgram = function (vs, fs) {
+				var gl = this.context.gl;
+				var program = gl.createProgram();
+				gl.attachShader(program, vs);
+				gl.attachShader(program, fs);
+				gl.linkProgram(program);
+				if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+					var error = "Couldn't compile shader program: " + gl.getProgramInfoLog(program);
+					gl.deleteProgram(program);
+					if (!gl.isContextLost())
+						throw new Error(error);
+				}
+				return program;
+			};
+			Shader.prototype.restore = function () {
+				this.compile();
+			};
+			Shader.prototype.bind = function () {
+				this.context.gl.useProgram(this.program);
+			};
+			Shader.prototype.unbind = function () {
+				this.context.gl.useProgram(null);
+			};
+			Shader.prototype.setUniformi = function (uniform, value) {
+				this.context.gl.uniform1i(this.getUniformLocation(uniform), value);
+			};
+			Shader.prototype.setUniformf = function (uniform, value) {
+				this.context.gl.uniform1f(this.getUniformLocation(uniform), value);
+			};
+			Shader.prototype.setUniform2f = function (uniform, value, value2) {
+				this.context.gl.uniform2f(this.getUniformLocation(uniform), value, value2);
+			};
+			Shader.prototype.setUniform3f = function (uniform, value, value2, value3) {
+				this.context.gl.uniform3f(this.getUniformLocation(uniform), value, value2, value3);
+			};
+			Shader.prototype.setUniform4f = function (uniform, value, value2, value3, value4) {
+				this.context.gl.uniform4f(this.getUniformLocation(uniform), value, value2, value3, value4);
+			};
+			Shader.prototype.setUniform2x2f = function (uniform, value) {
+				var gl = this.context.gl;
+				this.tmp2x2.set(value);
+				gl.uniformMatrix2fv(this.getUniformLocation(uniform), false, this.tmp2x2);
+			};
+			Shader.prototype.setUniform3x3f = function (uniform, value) {
+				var gl = this.context.gl;
+				this.tmp3x3.set(value);
+				gl.uniformMatrix3fv(this.getUniformLocation(uniform), false, this.tmp3x3);
+			};
+			Shader.prototype.setUniform4x4f = function (uniform, value) {
+				var gl = this.context.gl;
+				this.tmp4x4.set(value);
+				gl.uniformMatrix4fv(this.getUniformLocation(uniform), false, this.tmp4x4);
+			};
+			Shader.prototype.getUniformLocation = function (uniform) {
+				var gl = this.context.gl;
+				var location = gl.getUniformLocation(this.program, uniform);
+				if (!location && !gl.isContextLost())
+					throw new Error("Couldn't find location for uniform " + uniform);
+				return location;
+			};
+			Shader.prototype.getAttributeLocation = function (attribute) {
+				var gl = this.context.gl;
+				var location = gl.getAttribLocation(this.program, attribute);
+				if (location == -1 && !gl.isContextLost())
+					throw new Error("Couldn't find location for attribute " + attribute);
+				return location;
+			};
+			Shader.prototype.dispose = function () {
+				this.context.removeRestorable(this);
+				var gl = this.context.gl;
+				if (this.vs) {
+					gl.deleteShader(this.vs);
+					this.vs = null;
+				}
+				if (this.fs) {
+					gl.deleteShader(this.fs);
+					this.fs = null;
+				}
+				if (this.program) {
+					gl.deleteProgram(this.program);
+					this.program = null;
+				}
+			};
+			Shader.newColoredTextured = function (context) {
+				var vs = "\n\t\t\t\tattribute vec4 " + Shader.POSITION + ";\n\t\t\t\tattribute vec4 " + Shader.COLOR + ";\n\t\t\t\tattribute vec2 " + Shader.TEXCOORDS + ";\n\t\t\t\tuniform mat4 " + Shader.MVP_MATRIX + ";\n\t\t\t\tvarying vec4 v_color;\n\t\t\t\tvarying vec2 v_texCoords;\n\n\t\t\t\tvoid main () {\n\t\t\t\t\tv_color = " + Shader.COLOR + ";\n\t\t\t\t\tv_texCoords = " + Shader.TEXCOORDS + ";\n\t\t\t\t\tgl_Position = " + Shader.MVP_MATRIX + " * " + Shader.POSITION + ";\n\t\t\t\t}\n\t\t\t";
+				var fs = "\n\t\t\t\t#ifdef GL_ES\n\t\t\t\t\t#define LOWP lowp\n\t\t\t\t\tprecision mediump float;\n\t\t\t\t#else\n\t\t\t\t\t#define LOWP\n\t\t\t\t#endif\n\t\t\t\tvarying LOWP vec4 v_color;\n\t\t\t\tvarying vec2 v_texCoords;\n\t\t\t\tuniform sampler2D u_texture;\n\n\t\t\t\tvoid main () {\n\t\t\t\t\tgl_FragColor = v_color * texture2D(u_texture, v_texCoords);\n\t\t\t\t}\n\t\t\t";
+				return new Shader(context, vs, fs);
+			};
+			Shader.newTwoColoredTextured = function (context) {
+				var vs = "\n\t\t\t\tattribute vec4 " + Shader.POSITION + ";\n\t\t\t\tattribute vec4 " + Shader.COLOR + ";\n\t\t\t\tattribute vec4 " + Shader.COLOR2 + ";\n\t\t\t\tattribute vec2 " + Shader.TEXCOORDS + ";\n\t\t\t\tuniform mat4 " + Shader.MVP_MATRIX + ";\n\t\t\t\tvarying vec4 v_light;\n\t\t\t\tvarying vec4 v_dark;\n\t\t\t\tvarying vec2 v_texCoords;\n\n\t\t\t\tvoid main () {\n\t\t\t\t\tv_light = " + Shader.COLOR + ";\n\t\t\t\t\tv_dark = " + Shader.COLOR2 + ";\n\t\t\t\t\tv_texCoords = " + Shader.TEXCOORDS + ";\n\t\t\t\t\tgl_Position = " + Shader.MVP_MATRIX + " * " + Shader.POSITION + ";\n\t\t\t\t}\n\t\t\t";
+				var fs = "\n\t\t\t\t#ifdef GL_ES\n\t\t\t\t\t#define LOWP lowp\n\t\t\t\t\tprecision mediump float;\n\t\t\t\t#else\n\t\t\t\t\t#define LOWP\n\t\t\t\t#endif\n\t\t\t\tvarying LOWP vec4 v_light;\n\t\t\t\tvarying LOWP vec4 v_dark;\n\t\t\t\tvarying vec2 v_texCoords;\n\t\t\t\tuniform sampler2D u_texture;\n\n\t\t\t\tvoid main () {\n\t\t\t\t\tvec4 texColor = texture2D(u_texture, v_texCoords);\n\t\t\t\t\tgl_FragColor.a = texColor.a * v_light.a;\n\t\t\t\t\tgl_FragColor.rgb = ((texColor.a - 1.0) * v_dark.a + 1.0 - texColor.rgb) * v_dark.rgb + texColor.rgb * v_light.rgb;\n\t\t\t\t}\n\t\t\t";
+				return new Shader(context, vs, fs);
+			};
+			Shader.newColored = function (context) {
+				var vs = "\n\t\t\t\tattribute vec4 " + Shader.POSITION + ";\n\t\t\t\tattribute vec4 " + Shader.COLOR + ";\n\t\t\t\tuniform mat4 " + Shader.MVP_MATRIX + ";\n\t\t\t\tvarying vec4 v_color;\n\n\t\t\t\tvoid main () {\n\t\t\t\t\tv_color = " + Shader.COLOR + ";\n\t\t\t\t\tgl_Position = " + Shader.MVP_MATRIX + " * " + Shader.POSITION + ";\n\t\t\t\t}\n\t\t\t";
+				var fs = "\n\t\t\t\t#ifdef GL_ES\n\t\t\t\t\t#define LOWP lowp\n\t\t\t\t\tprecision mediump float;\n\t\t\t\t#else\n\t\t\t\t\t#define LOWP\n\t\t\t\t#endif\n\t\t\t\tvarying LOWP vec4 v_color;\n\n\t\t\t\tvoid main () {\n\t\t\t\t\tgl_FragColor = v_color;\n\t\t\t\t}\n\t\t\t";
+				return new Shader(context, vs, fs);
+			};
+			Shader.MVP_MATRIX = "u_projTrans";
+			Shader.POSITION = "a_position";
+			Shader.COLOR = "a_color";
+			Shader.COLOR2 = "a_color2";
+			Shader.TEXCOORDS = "a_texCoords";
+			Shader.SAMPLER = "u_texture";
+			return Shader;
+		}());
+		webgl.Shader = Shader;
+	})(webgl = spine.webgl || (spine.webgl = {}));
+})(spine || (spine = {}));
+var spine;
+(function (spine) {
+	var webgl;
+	(function (webgl) {
+		var ShapeRenderer = (function () {
+			function ShapeRenderer(context, maxVertices) {
+				if (maxVertices === void 0) { maxVertices = 10920; }
+				this.isDrawing = false;
+				this.shapeType = ShapeType.Filled;
+				this.color = new spine.Color(1, 1, 1, 1);
+				this.vertexIndex = 0;
+				this.tmp = new spine.Vector2();
+				if (maxVertices > 10920)
+					throw new Error("Can't have more than 10920 triangles per batch: " + maxVertices);
+				this.context = context instanceof webgl.ManagedWebGLRenderingContext ? context : new webgl.ManagedWebGLRenderingContext(context);
+				this.mesh = new webgl.Mesh(context, [new webgl.Position2Attribute(), new webgl.ColorAttribute()], maxVertices, 0);
+				this.srcBlend = this.context.gl.SRC_ALPHA;
+				this.dstBlend = this.context.gl.ONE_MINUS_SRC_ALPHA;
+			}
+			ShapeRenderer.prototype.begin = function (shader) {
+				if (this.isDrawing)
+					throw new Error("ShapeRenderer.begin() has already been called");
+				this.shader = shader;
+				this.vertexIndex = 0;
+				this.isDrawing = true;
+				var gl = this.context.gl;
+				gl.enable(gl.BLEND);
+				gl.blendFunc(this.srcBlend, this.dstBlend);
+			};
+			ShapeRenderer.prototype.setBlendMode = function (srcBlend, dstBlend) {
+				var gl = this.context.gl;
+				this.srcBlend = srcBlend;
+				this.dstBlend = dstBlend;
+				if (this.isDrawing) {
+					this.flush();
+					gl.blendFunc(this.srcBlend, this.dstBlend);
+				}
+			};
+			ShapeRenderer.prototype.setColor = function (color) {
+				this.color.setFromColor(color);
+			};
+			ShapeRenderer.prototype.setColorWith = function (r, g, b, a) {
+				this.color.set(r, g, b, a);
+			};
+			ShapeRenderer.prototype.point = function (x, y, color) {
+				if (color === void 0) { color = null; }
+				this.check(ShapeType.Point, 1);
+				if (color === null)
+					color = this.color;
+				this.vertex(x, y, color);
+			};
+			ShapeRenderer.prototype.line = function (x, y, x2, y2, color) {
+				if (color === void 0) { color = null; }
+				this.check(ShapeType.Line, 2);
+				var vertices = this.mesh.getVertices();
+				var idx = this.vertexIndex;
+				if (color === null)
+					color = this.color;
+				this.vertex(x, y, color);
+				this.vertex(x2, y2, color);
+			};
+			ShapeRenderer.prototype.triangle = function (filled, x, y, x2, y2, x3, y3, color, color2, color3) {
+				if (color === void 0) { color = null; }
+				if (color2 === void 0) { color2 = null; }
+				if (color3 === void 0) { color3 = null; }
+				this.check(filled ? ShapeType.Filled : ShapeType.Line, 3);
+				var vertices = this.mesh.getVertices();
+				var idx = this.vertexIndex;
+				if (color === null)
+					color = this.color;
+				if (color2 === null)
+					color2 = this.color;
+				if (color3 === null)
+					color3 = this.color;
+				if (filled) {
+					this.vertex(x, y, color);
+					this.vertex(x2, y2, color2);
+					this.vertex(x3, y3, color3);
+				}
+				else {
+					this.vertex(x, y, color);
+					this.vertex(x2, y2, color2);
+					this.vertex(x2, y2, color);
+					this.vertex(x3, y3, color2);
+					this.vertex(x3, y3, color);
+					this.vertex(x, y, color2);
+				}
+			};
+			ShapeRenderer.prototype.quad = function (filled, x, y, x2, y2, x3, y3, x4, y4, color, color2, color3, color4) {
+				if (color === void 0) { color = null; }
+				if (color2 === void 0) { color2 = null; }
+				if (color3 === void 0) { color3 = null; }
+				if (color4 === void 0) { color4 = null; }
+				this.check(filled ? ShapeType.Filled : ShapeType.Line, 3);
+				var vertices = this.mesh.getVertices();
+				var idx = this.vertexIndex;
+				if (color === null)
+					color = this.color;
+				if (color2 === null)
+					color2 = this.color;
+				if (color3 === null)
+					color3 = this.color;
+				if (color4 === null)
+					color4 = this.color;
+				if (filled) {
+					this.vertex(x, y, color);
+					this.vertex(x2, y2, color2);
+					this.vertex(x3, y3, color3);
+					this.vertex(x3, y3, color3);
+					this.vertex(x4, y4, color4);
+					this.vertex(x, y, color);
+				}
+				else {
+					this.vertex(x, y, color);
+					this.vertex(x2, y2, color2);
+					this.vertex(x2, y2, color2);
+					this.vertex(x3, y3, color3);
+					this.vertex(x3, y3, color3);
+					this.vertex(x4, y4, color4);
+					this.vertex(x4, y4, color4);
+					this.vertex(x, y, color);
+				}
+			};
+			ShapeRenderer.prototype.rect = function (filled, x, y, width, height, color) {
+				if (color === void 0) { color = null; }
+				this.quad(filled, x, y, x + width, y, x + width, y + height, x, y + height, color, color, color, color);
+			};
+			ShapeRenderer.prototype.rectLine = function (filled, x1, y1, x2, y2, width, color) {
+				if (color === void 0) { color = null; }
+				this.check(filled ? ShapeType.Filled : ShapeType.Line, 8);
+				if (color === null)
+					color = this.color;
+				var t = this.tmp.set(y2 - y1, x1 - x2);
+				t.normalize();
+				width *= 0.5;
+				var tx = t.x * width;
+				var ty = t.y * width;
+				if (!filled) {
+					this.vertex(x1 + tx, y1 + ty, color);
+					this.vertex(x1 - tx, y1 - ty, color);
+					this.vertex(x2 + tx, y2 + ty, color);
+					this.vertex(x2 - tx, y2 - ty, color);
+					this.vertex(x2 + tx, y2 + ty, color);
+					this.vertex(x1 + tx, y1 + ty, color);
+					this.vertex(x2 - tx, y2 - ty, color);
+					this.vertex(x1 - tx, y1 - ty, color);
+				}
+				else {
+					this.vertex(x1 + tx, y1 + ty, color);
+					this.vertex(x1 - tx, y1 - ty, color);
+					this.vertex(x2 + tx, y2 + ty, color);
+					this.vertex(x2 - tx, y2 - ty, color);
+					this.vertex(x2 + tx, y2 + ty, color);
+					this.vertex(x1 - tx, y1 - ty, color);
+				}
+			};
+			ShapeRenderer.prototype.x = function (x, y, size) {
+				this.line(x - size, y - size, x + size, y + size);
+				this.line(x - size, y + size, x + size, y - size);
+			};
+			ShapeRenderer.prototype.polygon = function (polygonVertices, offset, count, color) {
+				if (color === void 0) { color = null; }
+				if (count < 3)
+					throw new Error("Polygon must contain at least 3 vertices");
+				this.check(ShapeType.Line, count * 2);
+				if (color === null)
+					color = this.color;
+				var vertices = this.mesh.getVertices();
+				var idx = this.vertexIndex;
+				offset <<= 1;
+				count <<= 1;
+				var firstX = polygonVertices[offset];
+				var firstY = polygonVertices[offset + 1];
+				var last = offset + count;
+				for (var i = offset, n = offset + count - 2; i < n; i += 2) {
+					var x1 = polygonVertices[i];
+					var y1 = polygonVertices[i + 1];
+					var x2 = 0;
+					var y2 = 0;
+					if (i + 2 >= last) {
+						x2 = firstX;
+						y2 = firstY;
+					}
+					else {
+						x2 = polygonVertices[i + 2];
+						y2 = polygonVertices[i + 3];
+					}
+					this.vertex(x1, y1, color);
+					this.vertex(x2, y2, color);
+				}
+			};
+			ShapeRenderer.prototype.circle = function (filled, x, y, radius, color, segments) {
+				if (color === void 0) { color = null; }
+				if (segments === void 0) { segments = 0; }
+				if (segments === 0)
+					segments = Math.max(1, (6 * spine.MathUtils.cbrt(radius)) | 0);
+				if (segments <= 0)
+					throw new Error("segments must be > 0.");
+				if (color === null)
+					color = this.color;
+				var angle = 2 * spine.MathUtils.PI / segments;
+				var cos = Math.cos(angle);
+				var sin = Math.sin(angle);
+				var cx = radius, cy = 0;
+				if (!filled) {
+					this.check(ShapeType.Line, segments * 2 + 2);
+					for (var i = 0; i < segments; i++) {
+						this.vertex(x + cx, y + cy, color);
+						var temp_1 = cx;
+						cx = cos * cx - sin * cy;
+						cy = sin * temp_1 + cos * cy;
+						this.vertex(x + cx, y + cy, color);
+					}
+					this.vertex(x + cx, y + cy, color);
+				}
+				else {
+					this.check(ShapeType.Filled, segments * 3 + 3);
+					segments--;
+					for (var i = 0; i < segments; i++) {
+						this.vertex(x, y, color);
+						this.vertex(x + cx, y + cy, color);
+						var temp_2 = cx;
+						cx = cos * cx - sin * cy;
+						cy = sin * temp_2 + cos * cy;
+						this.vertex(x + cx, y + cy, color);
+					}
+					this.vertex(x, y, color);
+					this.vertex(x + cx, y + cy, color);
+				}
+				var temp = cx;
+				cx = radius;
+				cy = 0;
+				this.vertex(x + cx, y + cy, color);
+			};
+			ShapeRenderer.prototype.curve = function (x1, y1, cx1, cy1, cx2, cy2, x2, y2, segments, color) {
+				if (color === void 0) { color = null; }
+				this.check(ShapeType.Line, segments * 2 + 2);
+				if (color === null)
+					color = this.color;
+				var subdiv_step = 1 / segments;
+				var subdiv_step2 = subdiv_step * subdiv_step;
+				var subdiv_step3 = subdiv_step * subdiv_step * subdiv_step;
+				var pre1 = 3 * subdiv_step;
+				var pre2 = 3 * subdiv_step2;
+				var pre4 = 6 * subdiv_step2;
+				var pre5 = 6 * subdiv_step3;
+				var tmp1x = x1 - cx1 * 2 + cx2;
+				var tmp1y = y1 - cy1 * 2 + cy2;
+				var tmp2x = (cx1 - cx2) * 3 - x1 + x2;
+				var tmp2y = (cy1 - cy2) * 3 - y1 + y2;
+				var fx = x1;
+				var fy = y1;
+				var dfx = (cx1 - x1) * pre1 + tmp1x * pre2 + tmp2x * subdiv_step3;
+				var dfy = (cy1 - y1) * pre1 + tmp1y * pre2 + tmp2y * subdiv_step3;
+				var ddfx = tmp1x * pre4 + tmp2x * pre5;
+				var ddfy = tmp1y * pre4 + tmp2y * pre5;
+				var dddfx = tmp2x * pre5;
+				var dddfy = tmp2y * pre5;
+				while (segments-- > 0) {
+					this.vertex(fx, fy, color);
+					fx += dfx;
+					fy += dfy;
+					dfx += ddfx;
+					dfy += ddfy;
+					ddfx += dddfx;
+					ddfy += dddfy;
+					this.vertex(fx, fy, color);
+				}
+				this.vertex(fx, fy, color);
+				this.vertex(x2, y2, color);
+			};
+			ShapeRenderer.prototype.vertex = function (x, y, color) {
+				var idx = this.vertexIndex;
+				var vertices = this.mesh.getVertices();
+				vertices[idx++] = x;
+				vertices[idx++] = y;
+				vertices[idx++] = color.r;
+				vertices[idx++] = color.g;
+				vertices[idx++] = color.b;
+				vertices[idx++] = color.a;
+				this.vertexIndex = idx;
+			};
+			ShapeRenderer.prototype.end = function () {
+				if (!this.isDrawing)
+					throw new Error("ShapeRenderer.begin() has not been called");
+				this.flush();
+				this.context.gl.disable(this.context.gl.BLEND);
+				this.isDrawing = false;
+			};
+			ShapeRenderer.prototype.flush = function () {
+				if (this.vertexIndex == 0)
+					return;
+				this.mesh.setVerticesLength(this.vertexIndex);
+				this.mesh.draw(this.shader, this.shapeType);
+				this.vertexIndex = 0;
+			};
+			ShapeRenderer.prototype.check = function (shapeType, numVertices) {
+				if (!this.isDrawing)
+					throw new Error("ShapeRenderer.begin() has not been called");
+				if (this.shapeType == shapeType) {
+					if (this.mesh.maxVertices() - this.mesh.numVertices() < numVertices)
+						this.flush();
 					else
-						continue;
-					if (texture != null) {
-						var slotBlendMode = slot.data.blendMode;
-						if (slotBlendMode != blendMode) {
-							blendMode = slotBlendMode;
+						return;
+				}
+				else {
+					this.flush();
+					this.shapeType = shapeType;
+				}
+			};
+			ShapeRenderer.prototype.dispose = function () {
+				this.mesh.dispose();
+			};
+			return ShapeRenderer;
+		}());
+		webgl.ShapeRenderer = ShapeRenderer;
+		var ShapeType;
+		(function (ShapeType) {
+			ShapeType[ShapeType["Point"] = 0] = "Point";
+			ShapeType[ShapeType["Line"] = 1] = "Line";
+			ShapeType[ShapeType["Filled"] = 4] = "Filled";
+		})(ShapeType = webgl.ShapeType || (webgl.ShapeType = {}));
+	})(webgl = spine.webgl || (spine.webgl = {}));
+})(spine || (spine = {}));
+var spine;
+(function (spine) {
+	var webgl;
+	(function (webgl) {
+		var SkeletonDebugRenderer = (function () {
+			function SkeletonDebugRenderer(context) {
+				this.boneLineColor = new spine.Color(1, 0, 0, 1);
+				this.boneOriginColor = new spine.Color(0, 1, 0, 1);
+				this.attachmentLineColor = new spine.Color(0, 0, 1, 0.5);
+				this.triangleLineColor = new spine.Color(1, 0.64, 0, 0.5);
+				this.pathColor = new spine.Color().setFromString("FF7F00");
+				this.clipColor = new spine.Color(0.8, 0, 0, 2);
+				this.aabbColor = new spine.Color(0, 1, 0, 0.5);
+				this.drawBones = true;
+				this.drawRegionAttachments = true;
+				this.drawBoundingBoxes = true;
+				this.drawMeshHull = true;
+				this.drawMeshTriangles = true;
+				this.drawPaths = true;
+				this.drawSkeletonXY = false;
+				this.drawClipping = true;
+				this.premultipliedAlpha = false;
+				this.scale = 1;
+				this.boneWidth = 2;
+				this.bounds = new spine.SkeletonBounds();
+				this.temp = new Array();
+				this.vertices = spine.Utils.newFloatArray(2 * 1024);
+				this.context = context instanceof webgl.ManagedWebGLRenderingContext ? context : new webgl.ManagedWebGLRenderingContext(context);
+			}
+			SkeletonDebugRenderer.prototype.draw = function (shapes, skeleton, ignoredBones) {
+				if (ignoredBones === void 0) { ignoredBones = null; }
+				var skeletonX = skeleton.x;
+				var skeletonY = skeleton.y;
+				var gl = this.context.gl;
+				var srcFunc = this.premultipliedAlpha ? gl.ONE : gl.SRC_ALPHA;
+				shapes.setBlendMode(srcFunc, gl.ONE_MINUS_SRC_ALPHA);
+				var bones = skeleton.bones;
+				if (this.drawBones) {
+					shapes.setColor(this.boneLineColor);
+					for (var i = 0, n = bones.length; i < n; i++) {
+						var bone = bones[i];
+						if (ignoredBones && ignoredBones.indexOf(bone.data.name) > -1)
+							continue;
+						if (bone.parent == null)
+							continue;
+						var x = skeletonX + bone.data.length * bone.a + bone.worldX;
+						var y = skeletonY + bone.data.length * bone.c + bone.worldY;
+						shapes.rectLine(true, skeletonX + bone.worldX, skeletonY + bone.worldY, x, y, this.boneWidth * this.scale);
+					}
+					if (this.drawSkeletonXY)
+						shapes.x(skeletonX, skeletonY, 4 * this.scale);
+				}
+				if (this.drawRegionAttachments) {
+					shapes.setColor(this.attachmentLineColor);
+					var slots = skeleton.slots;
+					for (var i = 0, n = slots.length; i < n; i++) {
+						var slot = slots[i];
+						var attachment = slot.getAttachment();
+						if (attachment instanceof spine.RegionAttachment) {
+							var regionAttachment = attachment;
+							var vertices = this.vertices;
+							regionAttachment.computeWorldVertices(slot.bone, vertices, 0, 2);
+							shapes.line(vertices[0], vertices[1], vertices[2], vertices[3]);
+							shapes.line(vertices[2], vertices[3], vertices[4], vertices[5]);
+							shapes.line(vertices[4], vertices[5], vertices[6], vertices[7]);
+							shapes.line(vertices[6], vertices[7], vertices[0], vertices[1]);
 						}
-						var skeleton_2 = slot.bone.skeleton;
-						var skeletonColor = skeleton_2.color;
-						var slotColor = slot.color;
-						var attachmentColor = attachment.color;
-						var alpha = skeletonColor.a * slotColor.a * attachmentColor.a;
-						var color = this.tempColor;
-						color.set(skeletonColor.r * slotColor.r * attachmentColor.r, skeletonColor.g * slotColor.g * attachmentColor.g, skeletonColor.b * slotColor.b * attachmentColor.b, alpha);
-						var ctx = this.ctx;
-						if (color.r != 1 || color.g != 1 || color.b != 1 || color.a != 1) {
-							ctx.globalAlpha = color.a;
+					}
+				}
+				if (this.drawMeshHull || this.drawMeshTriangles) {
+					var slots = skeleton.slots;
+					for (var i = 0, n = slots.length; i < n; i++) {
+						var slot = slots[i];
+						var attachment = slot.getAttachment();
+						if (!(attachment instanceof spine.MeshAttachment))
+							continue;
+						var mesh = attachment;
+						var vertices = this.vertices;
+						mesh.computeWorldVertices(slot, 0, mesh.worldVerticesLength, vertices, 0, 2);
+						var triangles = mesh.triangles;
+						var hullLength = mesh.hullLength;
+						if (this.drawMeshTriangles) {
+							shapes.setColor(this.triangleLineColor);
+							for (var ii = 0, nn = triangles.length; ii < nn; ii += 3) {
+								var v1 = triangles[ii] * 2, v2 = triangles[ii + 1] * 2, v3 = triangles[ii + 2] * 2;
+								shapes.triangle(false, vertices[v1], vertices[v1 + 1], vertices[v2], vertices[v2 + 1], vertices[v3], vertices[v3 + 1]);
+							}
 						}
-						for (var j = 0; j < triangles.length; j += 3) {
-							var t1 = triangles[j] * 8, t2 = triangles[j + 1] * 8, t3 = triangles[j + 2] * 8;
-							var x0 = vertices[t1], y0 = vertices[t1 + 1], u0 = vertices[t1 + 6], v0 = vertices[t1 + 7];
-							var x1 = vertices[t2], y1 = vertices[t2 + 1], u1 = vertices[t2 + 6], v1 = vertices[t2 + 7];
-							var x2 = vertices[t3], y2 = vertices[t3 + 1], u2 = vertices[t3 + 6], v2 = vertices[t3 + 7];
-							this.drawTriangle(texture, x0, y0, u0, v0, x1, y1, u1, v1, x2, y2, u2, v2);
-							if (this.debugRendering) {
-								ctx.strokeStyle = "green";
-								ctx.beginPath();
-								ctx.moveTo(x0, y0);
-								ctx.lineTo(x1, y1);
-								ctx.lineTo(x2, y2);
-								ctx.lineTo(x0, y0);
-								ctx.stroke();
+						if (this.drawMeshHull && hullLength > 0) {
+							shapes.setColor(this.attachmentLineColor);
+							hullLength = (hullLength >> 1) * 2;
+							var lastX = vertices[hullLength - 2], lastY = vertices[hullLength - 1];
+							for (var ii = 0, nn = hullLength; ii < nn; ii += 2) {
+								var x = vertices[ii], y = vertices[ii + 1];
+								shapes.line(x, y, lastX, lastY);
+								lastX = x;
+								lastY = y;
 							}
 						}
 					}
 				}
-				this.ctx.globalAlpha = 1;
-			};
-			SkeletonRenderer.prototype.drawTriangle = function (img, x0, y0, u0, v0, x1, y1, u1, v1, x2, y2, u2, v2) {
-				var ctx = this.ctx;
-				u0 *= img.width;
-				v0 *= img.height;
-				u1 *= img.width;
-				v1 *= img.height;
-				u2 *= img.width;
-				v2 *= img.height;
-				ctx.beginPath();
-				ctx.moveTo(x0, y0);
-				ctx.lineTo(x1, y1);
-				ctx.lineTo(x2, y2);
-				ctx.closePath();
-				x1 -= x0;
-				y1 -= y0;
-				x2 -= x0;
-				y2 -= y0;
-				u1 -= u0;
-				v1 -= v0;
-				u2 -= u0;
-				v2 -= v0;
-				var det = 1 / (u1 * v2 - u2 * v1), a = (v2 * x1 - v1 * x2) * det, b = (v2 * y1 - v1 * y2) * det, c = (u1 * x2 - u2 * x1) * det, d = (u1 * y2 - u2 * y1) * det, e = x0 - a * u0 - c * v0, f = y0 - b * u0 - d * v0;
-				ctx.save();
-				ctx.transform(a, b, c, d, e, f);
-				ctx.clip();
-				ctx.drawImage(img, 0, 0);
-				ctx.restore();
-			};
-			SkeletonRenderer.prototype.computeRegionVertices = function (slot, region, pma) {
-				var skeleton = slot.bone.skeleton;
-				var skeletonColor = skeleton.color;
-				var slotColor = slot.color;
-				var regionColor = region.color;
-				var alpha = skeletonColor.a * slotColor.a * regionColor.a;
-				var multiplier = pma ? alpha : 1;
-				var color = this.tempColor;
-				color.set(skeletonColor.r * slotColor.r * regionColor.r * multiplier, skeletonColor.g * slotColor.g * regionColor.g * multiplier, skeletonColor.b * slotColor.b * regionColor.b * multiplier, alpha);
-				region.computeWorldVertices(slot.bone, this.vertices, 0, SkeletonRenderer.VERTEX_SIZE);
-				var vertices = this.vertices;
-				var uvs = region.uvs;
-				vertices[spine.RegionAttachment.C1R] = color.r;
-				vertices[spine.RegionAttachment.C1G] = color.g;
-				vertices[spine.RegionAttachment.C1B] = color.b;
-				vertices[spine.RegionAttachment.C1A] = color.a;
-				vertices[spine.RegionAttachment.U1] = uvs[0];
-				vertices[spine.RegionAttachment.V1] = uvs[1];
-				vertices[spine.RegionAttachment.C2R] = color.r;
-				vertices[spine.RegionAttachment.C2G] = color.g;
-				vertices[spine.RegionAttachment.C2B] = color.b;
-				vertices[spine.RegionAttachment.C2A] = color.a;
-				vertices[spine.RegionAttachment.U2] = uvs[2];
-				vertices[spine.RegionAttachment.V2] = uvs[3];
-				vertices[spine.RegionAttachment.C3R] = color.r;
-				vertices[spine.RegionAttachment.C3G] = color.g;
-				vertices[spine.RegionAttachment.C3B] = color.b;
-				vertices[spine.RegionAttachment.C3A] = color.a;
-				vertices[spine.RegionAttachment.U3] = uvs[4];
-				vertices[spine.RegionAttachment.V3] = uvs[5];
-				vertices[spine.RegionAttachment.C4R] = color.r;
-				vertices[spine.RegionAttachment.C4G] = color.g;
-				vertices[spine.RegionAttachment.C4B] = color.b;
-				vertices[spine.RegionAttachment.C4A] = color.a;
-				vertices[spine.RegionAttachment.U4] = uvs[6];
-				vertices[spine.RegionAttachment.V4] = uvs[7];
-				return vertices;
-			};
-			SkeletonRenderer.prototype.computeMeshVertices = function (slot, mesh, pma) {
-				var skeleton = slot.bone.skeleton;
-				var skeletonColor = skeleton.color;
-				var slotColor = slot.color;
-				var regionColor = mesh.color;
-				var alpha = skeletonColor.a * slotColor.a * regionColor.a;
-				var multiplier = pma ? alpha : 1;
-				var color = this.tempColor;
-				color.set(skeletonColor.r * slotColor.r * regionColor.r * multiplier, skeletonColor.g * slotColor.g * regionColor.g * multiplier, skeletonColor.b * slotColor.b * regionColor.b * multiplier, alpha);
-				var numVertices = mesh.worldVerticesLength / 2;
-				if (this.vertices.length < mesh.worldVerticesLength) {
-					this.vertices = spine.Utils.newFloatArray(mesh.worldVerticesLength);
+				if (this.drawBoundingBoxes) {
+					var bounds = this.bounds;
+					bounds.update(skeleton, true);
+					shapes.setColor(this.aabbColor);
+					shapes.rect(false, bounds.minX, bounds.minY, bounds.getWidth(), bounds.getHeight());
+					var polygons = bounds.polygons;
+					var boxes = bounds.boundingBoxes;
+					for (var i = 0, n = polygons.length; i < n; i++) {
+						var polygon = polygons[i];
+						shapes.setColor(boxes[i].color);
+						shapes.polygon(polygon, 0, polygon.length);
+					}
 				}
-				var vertices = this.vertices;
-				mesh.computeWorldVertices(slot, 0, mesh.worldVerticesLength, vertices, 0, SkeletonRenderer.VERTEX_SIZE);
-				var uvs = mesh.uvs;
-				for (var i = 0, n = numVertices, u = 0, v = 2; i < n; i++) {
-					vertices[v++] = color.r;
-					vertices[v++] = color.g;
-					vertices[v++] = color.b;
-					vertices[v++] = color.a;
-					vertices[v++] = uvs[u++];
-					vertices[v++] = uvs[u++];
-					v += 2;
+				if (this.drawPaths) {
+					var slots = skeleton.slots;
+					for (var i = 0, n = slots.length; i < n; i++) {
+						var slot = slots[i];
+						var attachment = slot.getAttachment();
+						if (!(attachment instanceof spine.PathAttachment))
+							continue;
+						var path = attachment;
+						var nn = path.worldVerticesLength;
+						var world = this.temp = spine.Utils.setArraySize(this.temp, nn, 0);
+						path.computeWorldVertices(slot, 0, nn, world, 0, 2);
+						var color = this.pathColor;
+						var x1 = world[2], y1 = world[3], x2 = 0, y2 = 0;
+						if (path.closed) {
+							shapes.setColor(color);
+							var cx1 = world[0], cy1 = world[1], cx2 = world[nn - 2], cy2 = world[nn - 1];
+							x2 = world[nn - 4];
+							y2 = world[nn - 3];
+							shapes.curve(x1, y1, cx1, cy1, cx2, cy2, x2, y2, 32);
+							shapes.setColor(SkeletonDebugRenderer.LIGHT_GRAY);
+							shapes.line(x1, y1, cx1, cy1);
+							shapes.line(x2, y2, cx2, cy2);
+						}
+						nn -= 4;
+						for (var ii = 4; ii < nn; ii += 6) {
+							var cx1 = world[ii], cy1 = world[ii + 1], cx2 = world[ii + 2], cy2 = world[ii + 3];
+							x2 = world[ii + 4];
+							y2 = world[ii + 5];
+							shapes.setColor(color);
+							shapes.curve(x1, y1, cx1, cy1, cx2, cy2, x2, y2, 32);
+							shapes.setColor(SkeletonDebugRenderer.LIGHT_GRAY);
+							shapes.line(x1, y1, cx1, cy1);
+							shapes.line(x2, y2, cx2, cy2);
+							x1 = x2;
+							y1 = y2;
+						}
+					}
 				}
-				return vertices;
+				if (this.drawBones) {
+					shapes.setColor(this.boneOriginColor);
+					for (var i = 0, n = bones.length; i < n; i++) {
+						var bone = bones[i];
+						if (ignoredBones && ignoredBones.indexOf(bone.data.name) > -1)
+							continue;
+						shapes.circle(true, skeletonX + bone.worldX, skeletonY + bone.worldY, 3 * this.scale, SkeletonDebugRenderer.GREEN, 8);
+					}
+				}
+				if (this.drawClipping) {
+					var slots = skeleton.slots;
+					shapes.setColor(this.clipColor);
+					for (var i = 0, n = slots.length; i < n; i++) {
+						var slot = slots[i];
+						var attachment = slot.getAttachment();
+						if (!(attachment instanceof spine.ClippingAttachment))
+							continue;
+						var clip = attachment;
+						var nn = clip.worldVerticesLength;
+						var world = this.temp = spine.Utils.setArraySize(this.temp, nn, 0);
+						clip.computeWorldVertices(slot, 0, nn, world, 0, 2);
+						for (var i_12 = 0, n_2 = world.length; i_12 < n_2; i_12 += 2) {
+							var x = world[i_12];
+							var y = world[i_12 + 1];
+							var x2 = world[(i_12 + 2) % world.length];
+							var y2 = world[(i_12 + 3) % world.length];
+							shapes.line(x, y, x2, y2);
+						}
+					}
+				}
+			};
+			SkeletonDebugRenderer.prototype.dispose = function () {
+			};
+			SkeletonDebugRenderer.LIGHT_GRAY = new spine.Color(192 / 255, 192 / 255, 192 / 255, 1);
+			SkeletonDebugRenderer.GREEN = new spine.Color(0, 1, 0, 1);
+			return SkeletonDebugRenderer;
+		}());
+		webgl.SkeletonDebugRenderer = SkeletonDebugRenderer;
+	})(webgl = spine.webgl || (spine.webgl = {}));
+})(spine || (spine = {}));
+var spine;
+(function (spine) {
+	var webgl;
+	(function (webgl) {
+		var Renderable = (function () {
+			function Renderable(vertices, numVertices, numFloats) {
+				this.vertices = vertices;
+				this.numVertices = numVertices;
+				this.numFloats = numFloats;
+			}
+			return Renderable;
+		}());
+		;
+		var SkeletonRenderer = (function () {
+			function SkeletonRenderer(context, twoColorTint) {
+				if (twoColorTint === void 0) { twoColorTint = true; }
+				this.premultipliedAlpha = false;
+				this.vertexEffect = null;
+				this.tempColor = new spine.Color();
+				this.tempColor2 = new spine.Color();
+				this.vertexSize = 2 + 2 + 4;
+				this.twoColorTint = false;
+				this.renderable = new Renderable(null, 0, 0);
+				this.clipper = new spine.SkeletonClipping();
+				this.temp = new spine.Vector2();
+				this.temp2 = new spine.Vector2();
+				this.temp3 = new spine.Color();
+				this.temp4 = new spine.Color();
+				this.twoColorTint = twoColorTint;
+				if (twoColorTint)
+					this.vertexSize += 4;
+				this.vertices = spine.Utils.newFloatArray(this.vertexSize * 1024);
+			}
+			SkeletonRenderer.prototype.draw = function (batcher, skeleton, slotRangeStart, slotRangeEnd) {
+				if (slotRangeStart === void 0) { slotRangeStart = -1; }
+				if (slotRangeEnd === void 0) { slotRangeEnd = -1; }
+				var clipper = this.clipper;
+				var premultipliedAlpha = this.premultipliedAlpha;
+				var twoColorTint = this.twoColorTint;
+				var blendMode = null;
+				var tempPos = this.temp;
+				var tempUv = this.temp2;
+				var tempLight = this.temp3;
+				var tempDark = this.temp4;
+				var renderable = this.renderable;
+				var uvs = null;
+				var triangles = null;
+				var drawOrder = skeleton.drawOrder;
+				var attachmentColor = null;
+				var skeletonColor = skeleton.color;
+				var vertexSize = twoColorTint ? 12 : 8;
+				var inRange = false;
+				if (slotRangeStart == -1)
+					inRange = true;
+				for (var i = 0, n = drawOrder.length; i < n; i++) {
+					var clippedVertexSize = clipper.isClipping() ? 2 : vertexSize;
+					var slot = drawOrder[i];
+					if (slotRangeStart >= 0 && slotRangeStart == slot.data.index) {
+						inRange = true;
+					}
+					if (!inRange) {
+						clipper.clipEndWithSlot(slot);
+						continue;
+					}
+					if (slotRangeEnd >= 0 && slotRangeEnd == slot.data.index) {
+						inRange = false;
+					}
+					var attachment = slot.getAttachment();
+					var texture = null;
+					if (attachment instanceof spine.RegionAttachment) {
+						var region = attachment;
+						renderable.vertices = this.vertices;
+						renderable.numVertices = 4;
+						renderable.numFloats = clippedVertexSize << 2;
+						region.computeWorldVertices(slot.bone, renderable.vertices, 0, clippedVertexSize);
+						triangles = SkeletonRenderer.QUAD_TRIANGLES;
+						uvs = region.uvs;
+						texture = region.region.renderObject.texture;
+						attachmentColor = region.color;
+					}
+					else if (attachment instanceof spine.MeshAttachment) {
+						var mesh = attachment;
+						renderable.vertices = this.vertices;
+						renderable.numVertices = (mesh.worldVerticesLength >> 1);
+						renderable.numFloats = renderable.numVertices * clippedVertexSize;
+						if (renderable.numFloats > renderable.vertices.length) {
+							renderable.vertices = this.vertices = spine.Utils.newFloatArray(renderable.numFloats);
+						}
+						mesh.computeWorldVertices(slot, 0, mesh.worldVerticesLength, renderable.vertices, 0, clippedVertexSize);
+						triangles = mesh.triangles;
+						texture = mesh.region.renderObject.texture;
+						uvs = mesh.uvs;
+						attachmentColor = mesh.color;
+					}
+					else if (attachment instanceof spine.ClippingAttachment) {
+						var clip = (attachment);
+						clipper.clipStart(slot, clip);
+						continue;
+					}
+					else
+						continue;
+					if (texture != null) {
+						var slotColor = slot.color;
+						var finalColor = this.tempColor;
+						finalColor.r = skeletonColor.r * slotColor.r * attachmentColor.r;
+						finalColor.g = skeletonColor.g * slotColor.g * attachmentColor.g;
+						finalColor.b = skeletonColor.b * slotColor.b * attachmentColor.b;
+						finalColor.a = skeletonColor.a * slotColor.a * attachmentColor.a;
+						if (premultipliedAlpha) {
+							finalColor.r *= finalColor.a;
+							finalColor.g *= finalColor.a;
+							finalColor.b *= finalColor.a;
+						}
+						var darkColor = this.tempColor2;
+						if (slot.darkColor == null)
+							darkColor.set(0, 0, 0, 1.0);
+						else {
+							if (premultipliedAlpha) {
+								darkColor.r = slot.darkColor.r * finalColor.a;
+								darkColor.g = slot.darkColor.g * finalColor.a;
+								darkColor.b = slot.darkColor.b * finalColor.a;
+							}
+							else {
+								darkColor.setFromColor(slot.darkColor);
+							}
+							darkColor.a = premultipliedAlpha ? 1.0 : 0.0;
+						}
+						var slotBlendMode = slot.data.blendMode;
+						if (slotBlendMode != blendMode) {
+							blendMode = slotBlendMode;
+							batcher.setBlendMode(webgl.WebGLBlendModeConverter.getSourceGLBlendMode(blendMode, premultipliedAlpha), webgl.WebGLBlendModeConverter.getDestGLBlendMode(blendMode));
+						}
+						if (clipper.isClipping()) {
+							clipper.clipTriangles(renderable.vertices, renderable.numFloats, triangles, triangles.length, uvs, finalColor, darkColor, twoColorTint);
+							var clippedVertices = new Float32Array(clipper.clippedVertices);
+							var clippedTriangles = clipper.clippedTriangles;
+							if (this.vertexEffect != null) {
+								var vertexEffect = this.vertexEffect;
+								var verts = clippedVertices;
+								if (!twoColorTint) {
+									for (var v = 0, n_3 = clippedVertices.length; v < n_3; v += vertexSize) {
+										tempPos.x = verts[v];
+										tempPos.y = verts[v + 1];
+										tempLight.set(verts[v + 2], verts[v + 3], verts[v + 4], verts[v + 5]);
+										tempUv.x = verts[v + 6];
+										tempUv.y = verts[v + 7];
+										tempDark.set(0, 0, 0, 0);
+										vertexEffect.transform(tempPos, tempUv, tempLight, tempDark);
+										verts[v] = tempPos.x;
+										verts[v + 1] = tempPos.y;
+										verts[v + 2] = tempLight.r;
+										verts[v + 3] = tempLight.g;
+										verts[v + 4] = tempLight.b;
+										verts[v + 5] = tempLight.a;
+										verts[v + 6] = tempUv.x;
+										verts[v + 7] = tempUv.y;
+									}
+								}
+								else {
+									for (var v = 0, n_4 = clippedVertices.length; v < n_4; v += vertexSize) {
+										tempPos.x = verts[v];
+										tempPos.y = verts[v + 1];
+										tempLight.set(verts[v + 2], verts[v + 3], verts[v + 4], verts[v + 5]);
+										tempUv.x = verts[v + 6];
+										tempUv.y = verts[v + 7];
+										tempDark.set(verts[v + 8], verts[v + 9], verts[v + 10], verts[v + 11]);
+										vertexEffect.transform(tempPos, tempUv, tempLight, tempDark);
+										verts[v] = tempPos.x;
+										verts[v + 1] = tempPos.y;
+										verts[v + 2] = tempLight.r;
+										verts[v + 3] = tempLight.g;
+										verts[v + 4] = tempLight.b;
+										verts[v + 5] = tempLight.a;
+										verts[v + 6] = tempUv.x;
+										verts[v + 7] = tempUv.y;
+										verts[v + 8] = tempDark.r;
+										verts[v + 9] = tempDark.g;
+										verts[v + 10] = tempDark.b;
+										verts[v + 11] = tempDark.a;
+									}
+								}
+							}
+							batcher.draw(texture, clippedVertices, clippedTriangles);
+						}
+						else {
+							var verts = renderable.vertices;
+							if (this.vertexEffect != null) {
+								var vertexEffect = this.vertexEffect;
+								if (!twoColorTint) {
+									for (var v = 0, u = 0, n_5 = renderable.numFloats; v < n_5; v += vertexSize, u += 2) {
+										tempPos.x = verts[v];
+										tempPos.y = verts[v + 1];
+										tempUv.x = uvs[u];
+										tempUv.y = uvs[u + 1];
+										tempLight.setFromColor(finalColor);
+										tempDark.set(0, 0, 0, 0);
+										vertexEffect.transform(tempPos, tempUv, tempLight, tempDark);
+										verts[v] = tempPos.x;
+										verts[v + 1] = tempPos.y;
+										verts[v + 2] = tempLight.r;
+										verts[v + 3] = tempLight.g;
+										verts[v + 4] = tempLight.b;
+										verts[v + 5] = tempLight.a;
+										verts[v + 6] = tempUv.x;
+										verts[v + 7] = tempUv.y;
+									}
+								}
+								else {
+									for (var v = 0, u = 0, n_6 = renderable.numFloats; v < n_6; v += vertexSize, u += 2) {
+										tempPos.x = verts[v];
+										tempPos.y = verts[v + 1];
+										tempUv.x = uvs[u];
+										tempUv.y = uvs[u + 1];
+										tempLight.setFromColor(finalColor);
+										tempDark.setFromColor(darkColor);
+										vertexEffect.transform(tempPos, tempUv, tempLight, tempDark);
+										verts[v] = tempPos.x;
+										verts[v + 1] = tempPos.y;
+										verts[v + 2] = tempLight.r;
+										verts[v + 3] = tempLight.g;
+										verts[v + 4] = tempLight.b;
+										verts[v + 5] = tempLight.a;
+										verts[v + 6] = tempUv.x;
+										verts[v + 7] = tempUv.y;
+										verts[v + 8] = tempDark.r;
+										verts[v + 9] = tempDark.g;
+										verts[v + 10] = tempDark.b;
+										verts[v + 11] = tempDark.a;
+									}
+								}
+							}
+							else {
+								if (!twoColorTint) {
+									for (var v = 2, u = 0, n_7 = renderable.numFloats; v < n_7; v += vertexSize, u += 2) {
+										verts[v] = finalColor.r;
+										verts[v + 1] = finalColor.g;
+										verts[v + 2] = finalColor.b;
+										verts[v + 3] = finalColor.a;
+										verts[v + 4] = uvs[u];
+										verts[v + 5] = uvs[u + 1];
+									}
+								}
+								else {
+									for (var v = 2, u = 0, n_8 = renderable.numFloats; v < n_8; v += vertexSize, u += 2) {
+										verts[v] = finalColor.r;
+										verts[v + 1] = finalColor.g;
+										verts[v + 2] = finalColor.b;
+										verts[v + 3] = finalColor.a;
+										verts[v + 4] = uvs[u];
+										verts[v + 5] = uvs[u + 1];
+										verts[v + 6] = darkColor.r;
+										verts[v + 7] = darkColor.g;
+										verts[v + 8] = darkColor.b;
+										verts[v + 9] = darkColor.a;
+									}
+								}
+							}
+							var view = renderable.vertices.subarray(0, renderable.numFloats);
+							batcher.draw(texture, view, triangles);
+						}
+					}
+					clipper.clipEndWithSlot(slot);
+				}
+				clipper.clipEnd();
 			};
 			SkeletonRenderer.QUAD_TRIANGLES = [0, 1, 2, 2, 3, 0];
-			SkeletonRenderer.VERTEX_SIZE = 2 + 2 + 4;
 			return SkeletonRenderer;
 		}());
-		canvas.SkeletonRenderer = SkeletonRenderer;
-	})(canvas = spine.canvas || (spine.canvas = {}));
+		webgl.SkeletonRenderer = SkeletonRenderer;
+	})(webgl = spine.webgl || (spine.webgl = {}));
 })(spine || (spine = {}));
-//# sourceMappingURL=spine-canvas.js.map
+var spine;
+(function (spine) {
+	var webgl;
+	(function (webgl) {
+		var Vector3 = (function () {
+			function Vector3(x, y, z) {
+				if (x === void 0) { x = 0; }
+				if (y === void 0) { y = 0; }
+				if (z === void 0) { z = 0; }
+				this.x = 0;
+				this.y = 0;
+				this.z = 0;
+				this.x = x;
+				this.y = y;
+				this.z = z;
+			}
+			Vector3.prototype.setFrom = function (v) {
+				this.x = v.x;
+				this.y = v.y;
+				this.z = v.z;
+				return this;
+			};
+			Vector3.prototype.set = function (x, y, z) {
+				this.x = x;
+				this.y = y;
+				this.z = z;
+				return this;
+			};
+			Vector3.prototype.add = function (v) {
+				this.x += v.x;
+				this.y += v.y;
+				this.z += v.z;
+				return this;
+			};
+			Vector3.prototype.sub = function (v) {
+				this.x -= v.x;
+				this.y -= v.y;
+				this.z -= v.z;
+				return this;
+			};
+			Vector3.prototype.scale = function (s) {
+				this.x *= s;
+				this.y *= s;
+				this.z *= s;
+				return this;
+			};
+			Vector3.prototype.normalize = function () {
+				var len = this.length();
+				if (len == 0)
+					return this;
+				len = 1 / len;
+				this.x *= len;
+				this.y *= len;
+				this.z *= len;
+				return this;
+			};
+			Vector3.prototype.cross = function (v) {
+				return this.set(this.y * v.z - this.z * v.y, this.z * v.x - this.x * v.z, this.x * v.y - this.y * v.x);
+			};
+			Vector3.prototype.multiply = function (matrix) {
+				var l_mat = matrix.values;
+				return this.set(this.x * l_mat[webgl.M00] + this.y * l_mat[webgl.M01] + this.z * l_mat[webgl.M02] + l_mat[webgl.M03], this.x * l_mat[webgl.M10] + this.y * l_mat[webgl.M11] + this.z * l_mat[webgl.M12] + l_mat[webgl.M13], this.x * l_mat[webgl.M20] + this.y * l_mat[webgl.M21] + this.z * l_mat[webgl.M22] + l_mat[webgl.M23]);
+			};
+			Vector3.prototype.project = function (matrix) {
+				var l_mat = matrix.values;
+				var l_w = 1 / (this.x * l_mat[webgl.M30] + this.y * l_mat[webgl.M31] + this.z * l_mat[webgl.M32] + l_mat[webgl.M33]);
+				return this.set((this.x * l_mat[webgl.M00] + this.y * l_mat[webgl.M01] + this.z * l_mat[webgl.M02] + l_mat[webgl.M03]) * l_w, (this.x * l_mat[webgl.M10] + this.y * l_mat[webgl.M11] + this.z * l_mat[webgl.M12] + l_mat[webgl.M13]) * l_w, (this.x * l_mat[webgl.M20] + this.y * l_mat[webgl.M21] + this.z * l_mat[webgl.M22] + l_mat[webgl.M23]) * l_w);
+			};
+			Vector3.prototype.dot = function (v) {
+				return this.x * v.x + this.y * v.y + this.z * v.z;
+			};
+			Vector3.prototype.length = function () {
+				return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+			};
+			Vector3.prototype.distance = function (v) {
+				var a = v.x - this.x;
+				var b = v.y - this.y;
+				var c = v.z - this.z;
+				return Math.sqrt(a * a + b * b + c * c);
+			};
+			return Vector3;
+		}());
+		webgl.Vector3 = Vector3;
+	})(webgl = spine.webgl || (spine.webgl = {}));
+})(spine || (spine = {}));
+var spine;
+(function (spine) {
+	var webgl;
+	(function (webgl) {
+		var ManagedWebGLRenderingContext = (function () {
+			function ManagedWebGLRenderingContext(canvasOrContext, contextConfig) {
+				if (contextConfig === void 0) { contextConfig = { alpha: "true" }; }
+				var _this = this;
+				this.restorables = new Array();
+				if (canvasOrContext instanceof HTMLCanvasElement) {
+					var canvas = canvasOrContext;
+					this.gl = (canvas.getContext("webgl", contextConfig) || canvas.getContext("experimental-webgl", contextConfig));
+					this.canvas = canvas;
+					canvas.addEventListener("webglcontextlost", function (e) {
+						var event = e;
+						if (e) {
+							e.preventDefault();
+						}
+					});
+					canvas.addEventListener("webglcontextrestored", function (e) {
+						for (var i = 0, n = _this.restorables.length; i < n; i++) {
+							_this.restorables[i].restore();
+						}
+					});
+				}
+				else {
+					this.gl = canvasOrContext;
+					this.canvas = this.gl.canvas;
+				}
+			}
+			ManagedWebGLRenderingContext.prototype.addRestorable = function (restorable) {
+				this.restorables.push(restorable);
+			};
+			ManagedWebGLRenderingContext.prototype.removeRestorable = function (restorable) {
+				var index = this.restorables.indexOf(restorable);
+				if (index > -1)
+					this.restorables.splice(index, 1);
+			};
+			return ManagedWebGLRenderingContext;
+		}());
+		webgl.ManagedWebGLRenderingContext = ManagedWebGLRenderingContext;
+		var WebGLBlendModeConverter = (function () {
+			function WebGLBlendModeConverter() {
+			}
+			WebGLBlendModeConverter.getDestGLBlendMode = function (blendMode) {
+				switch (blendMode) {
+					case spine.BlendMode.Normal: return WebGLBlendModeConverter.ONE_MINUS_SRC_ALPHA;
+					case spine.BlendMode.Additive: return WebGLBlendModeConverter.ONE;
+					case spine.BlendMode.Multiply: return WebGLBlendModeConverter.ONE_MINUS_SRC_ALPHA;
+					case spine.BlendMode.Screen: return WebGLBlendModeConverter.ONE_MINUS_SRC_ALPHA;
+					default: throw new Error("Unknown blend mode: " + blendMode);
+				}
+			};
+			WebGLBlendModeConverter.getSourceGLBlendMode = function (blendMode, premultipliedAlpha) {
+				if (premultipliedAlpha === void 0) { premultipliedAlpha = false; }
+				switch (blendMode) {
+					case spine.BlendMode.Normal: return premultipliedAlpha ? WebGLBlendModeConverter.ONE : WebGLBlendModeConverter.SRC_ALPHA;
+					case spine.BlendMode.Additive: return premultipliedAlpha ? WebGLBlendModeConverter.ONE : WebGLBlendModeConverter.SRC_ALPHA;
+					case spine.BlendMode.Multiply: return WebGLBlendModeConverter.DST_COLOR;
+					case spine.BlendMode.Screen: return WebGLBlendModeConverter.ONE;
+					default: throw new Error("Unknown blend mode: " + blendMode);
+				}
+			};
+			WebGLBlendModeConverter.ZERO = 0;
+			WebGLBlendModeConverter.ONE = 1;
+			WebGLBlendModeConverter.SRC_COLOR = 0x0300;
+			WebGLBlendModeConverter.ONE_MINUS_SRC_COLOR = 0x0301;
+			WebGLBlendModeConverter.SRC_ALPHA = 0x0302;
+			WebGLBlendModeConverter.ONE_MINUS_SRC_ALPHA = 0x0303;
+			WebGLBlendModeConverter.DST_ALPHA = 0x0304;
+			WebGLBlendModeConverter.ONE_MINUS_DST_ALPHA = 0x0305;
+			WebGLBlendModeConverter.DST_COLOR = 0x0306;
+			return WebGLBlendModeConverter;
+		}());
+		webgl.WebGLBlendModeConverter = WebGLBlendModeConverter;
+	})(webgl = spine.webgl || (spine.webgl = {}));
+})(spine || (spine = {}));
+//# sourceMappingURL=spine-webgl.js.map
 
 /*** EXPORTS FROM exports-loader ***/
 module.exports = spine;
@@ -15613,4 +19380,4 @@ module.exports = spine;
 
 /******/ });
 });
-//# sourceMappingURL=SpineCanvasPlugin.js.map
+//# sourceMappingURL=SpineWebGLPlugin.js.map
