@@ -31,19 +31,19 @@ module.exports = {
     module: {
         rules: [
             {
-                test: require.resolve('./src/spine-canvas.js'),
+                test: require.resolve('./src/runtimes/spine-canvas.js'),
                 use: 'imports-loader?this=>window'
             },
             {
-                test: require.resolve('./src/spine-canvas.js'),
+                test: require.resolve('./src/runtimes/spine-canvas.js'),
                 use: 'exports-loader?spine'
             },
             {
-                test: require.resolve('./src/spine-webgl.js'),
+                test: require.resolve('./src/runtimes/spine-webgl.js'),
                 use: 'imports-loader?this=>window'
             },
             {
-                test: require.resolve('./src/spine-webgl.js'),
+                test: require.resolve('./src/runtimes/spine-webgl.js'),
                 use: 'exports-loader?spine'
             }
         ]
@@ -51,8 +51,8 @@ module.exports = {
 
     resolve: {
         alias: {
-            'SpineCanvas': './spine-canvas.js',
-            'SpineGL': './spine-webgl.js'
+            'SpineCanvas': './runtimes/spine-canvas.js',
+            'SpineGL': './runtimes/spine-webgl.js'
         },
     },
 
