@@ -30,6 +30,7 @@
 * `Array.Matrix.ReverseRows` was actually reversing the columns, but now reverses the rows.
 * `Array.Matrix.ReverseColumns` was actually reversing the rows, but now reverses the columns.
 * UnityAtlas now sets the correct file type key if using a config file object.
+* Starting with version 3.13 in the Canvas Renderer, it was possible for long-running scripts to start to get bogged-down in `fillRect` calls if the game had a background color set. The context is now saved properly to avoid this. Fix #4056 (thanks @Aveyder)
 
 ### Examples and TypeScript
 
