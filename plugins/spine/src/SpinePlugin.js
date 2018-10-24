@@ -13,7 +13,7 @@ var runtime;
 
 /**
  * @classdesc
- * TODO
+ * Both Canvas and WebGL Runtimes together in a single plugin.
  *
  * @class SpinePlugin
  * @extends Phaser.Plugins.ScenePlugin

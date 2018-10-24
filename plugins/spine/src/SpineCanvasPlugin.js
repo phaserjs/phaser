@@ -12,7 +12,7 @@ var runtime;
 
 /**
  * @classdesc
- * TODO
+ * Just the Canvas Runtime.
  *
  * @class SpinePlugin
  * @extends Phaser.Plugins.ScenePlugin
