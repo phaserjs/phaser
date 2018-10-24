@@ -7,7 +7,6 @@
 var Class = require('../../../src/utils/Class');
 var BaseSpinePlugin = require('./BaseSpinePlugin');
 var SpineCanvas = require('SpineCanvas');
-var SpineWebGL = require('SpineWebGL');
 
 var runtime;
 
@@ -31,18 +30,16 @@ var SpineCanvasPlugin = new Class({
 
     function SpineCanvasPlugin (scene, pluginManager)
     {
-        console.log('SpinePlugin created');
+        console.log('SpineCanvasPlugin created');
 
         BaseSpinePlugin.call(this, scene, pluginManager);
 
-        var game = pluginManager.game;
-
-        runtime = (game.config.renderType === 1) ? SpineCanvas : SpineWebGL;
+        runtime = SpineCanvas;
     },
 
     boot: function ()
     {
-        this.skeletonRenderer = (this.game.config.renderType === 1) ? SpineCanvas.canvas.SkeletonRenderer(this.game.context) : SpineWebGL;
+        this.skeletonRenderer = new SpineCanvas.canvas.SkeletonRenderer(this.game.context);
     },
 
     getRuntime: function ()
@@ -62,35 +59,26 @@ var SpineCanvasPlugin = new Class({
 
         var textures = this.textures;
 
-        var useWebGL = this.game.config.renderType;
-
-        var atlas = new runtime.TextureAtlas(atlasData, function (path)
+        var atlas = new SpineCanvas.TextureAtlas(atlasData, function (path)
         {
-            if (useWebGL)
-            {
-                // return new SpineCanvas.canvas.CanvasTexture(textures.get(path).getSourceImage());
-            }
-            else
-            {
-                return new SpineCanvas.canvas.CanvasTexture(textures.get(path).getSourceImage());
-            }
+            return new SpineCanvas.canvas.CanvasTexture(textures.get(path).getSourceImage());
         });
 
-        var atlasLoader = new runtime.AtlasAttachmentLoader(atlas);
+        var atlasLoader = new SpineCanvas.AtlasAttachmentLoader(atlas);
         
-        var skeletonJson = new runtime.SkeletonJson(atlasLoader);
+        var skeletonJson = new SpineCanvas.SkeletonJson(atlasLoader);
 
         var skeletonData = skeletonJson.readSkeletonData(this.json.get(key));
 
-        var skeleton = new runtime.Skeleton(skeletonData);
+        var skeleton = new SpineCanvas.Skeleton(skeletonData);
     
         return { skeletonData: skeletonData, skeleton: skeleton };
     },
 
     getBounds: function (skeleton)
     {
-        var offset = new runtime.Vector2();
-        var size = new runtime.Vector2();
+        var offset = new SpineCanvas.Vector2();
+        var size = new SpineCanvas.Vector2();
 
         skeleton.getBounds(offset, size, []);
 
@@ -99,9 +87,9 @@ var SpineCanvasPlugin = new Class({
 
     createAnimationState: function (skeleton)
     {
-        var stateData = new runtime.AnimationStateData(skeleton.data);
+        var stateData = new SpineCanvas.AnimationStateData(skeleton.data);
 
-        var state = new runtime.AnimationState(stateData);
+        var state = new SpineCanvas.AnimationState(stateData);
 
         return { stateData: stateData, state: state };
     }

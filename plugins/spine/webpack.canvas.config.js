@@ -10,13 +10,13 @@ module.exports = {
     context: `${__dirname}/src/`,
 
     entry: {
-        'SpinePlugin': './SpinePlugin.js'
+        'SpineCanvasPlugin': './SpineCanvasPlugin.js'
     },
 
     output: {
         path: `${__dirname}/dist/`,
         filename: '[name].js',
-        library: 'SpinePlugin',
+        library: 'SpineCanvasPlugin',
         libraryTarget: 'umd',
         sourceMapFilename: '[file].map',
         devtoolModuleFilenameTemplate: 'webpack:///[resource-path]', // string
