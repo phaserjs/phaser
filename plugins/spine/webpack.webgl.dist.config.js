@@ -11,14 +11,14 @@ module.exports = {
     context: `${__dirname}/src/`,
 
     entry: {
-        'SpinePlugin': './SpinePlugin.js',
-        'SpinePlugin.min': './SpinePlugin.js'
+        'SpineWebGLPlugin': './SpineWebGLPlugin.js',
+        'SpineWebGLPlugin.min': './SpineWebGLPlugin.js'
     },
 
     output: {
         path: `${__dirname}/dist/`,
         filename: '[name].js',
-        library: 'SpinePlugin',
+        library: 'SpineWebGLPlugin',
         libraryTarget: 'umd',
         sourceMapFilename: '[file].map',
         devtoolModuleFilenameTemplate: 'webpack:///[resource-path]', // string
@@ -52,7 +52,7 @@ module.exports = {
     resolve: {
         alias: {
             'SpineCanvas': './runtimes/spine-canvas.js',
-            'SpineGL': './runtimes/spine-webgl.js'
+            'SpineWebGL': './runtimes/spine-webgl.js'
         },
     },
 
@@ -75,6 +75,10 @@ module.exports = {
     },
 
     plugins: [
+        new webpack.DefinePlugin({
+            "typeof CANVAS_RENDERER": JSON.stringify(false),
+            "typeof WEBGL_RENDERER": JSON.stringify(true)
+        }),
         new CleanWebpackPlugin([ 'dist' ]),
         {
             apply: (compiler) => {

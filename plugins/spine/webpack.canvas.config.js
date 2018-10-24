@@ -50,7 +50,7 @@ module.exports = {
     resolve: {
         alias: {
             'SpineCanvas': './runtimes/spine-canvas.js',
-            'SpineGL': './runtimes/spine-webgl.js'
+            'SpineWebGL': './runtimes/spine-webgl.js'
         },
     },
 

@@ -1,22 +1,24 @@
 'use strict';
 
 const webpack = require('webpack');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const exec = require('child_process').exec;
 
 module.exports = {
-    mode: 'development',
+    mode: 'production',
 
     context: `${__dirname}/src/`,
 
     entry: {
-        'SpineWebGLPlugin': './SpineWebGLPlugin.js'
+        'SpineCanvasPlugin': './SpineCanvasPlugin.js',
+        'SpineCanvasPlugin.min': './SpineCanvasPlugin.js'
     },
 
     output: {
         path: `${__dirname}/dist/`,
         filename: '[name].js',
-        library: 'SpineWebGLPlugin',
+        library: 'SpineCanvasPlugin',
         libraryTarget: 'umd',
         sourceMapFilename: '[file].map',
         devtoolModuleFilenameTemplate: 'webpack:///[resource-path]', // string
@@ -54,10 +56,28 @@ module.exports = {
         },
     },
 
+    optimization: {
+        minimizer: [
+            new UglifyJSPlugin({
+                include: /\.min\.js$/,
+                parallel: true,
+                sourceMap: false,
+                uglifyOptions: {
+                    compress: true,
+                    ie8: false,
+                    ecma: 5,
+                    output: {comments: false},
+                    warnings: false
+                },
+                warningsFilter: () => false
+            })
+        ]
+    },
+
     plugins: [
         new webpack.DefinePlugin({
-            "typeof CANVAS_RENDERER": JSON.stringify(false),
-            "typeof WEBGL_RENDERER": JSON.stringify(true)
+            "typeof CANVAS_RENDERER": JSON.stringify(true),
+            "typeof WEBGL_RENDERER": JSON.stringify(false)
         }),
         new CleanWebpackPlugin([ 'dist' ]),
         {
@@ -70,7 +90,5 @@ module.exports = {
                 });
             }
         }
-    ],
-
-    devtool: 'source-map'
+    ]
 };
