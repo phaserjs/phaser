@@ -13,6 +13,7 @@ var ComponentsTransform = require('../../../../src/gameobjects/components/Transf
 var ComponentsVisible = require('../../../../src/gameobjects/components/Visible');
 var GameObject = require('../../../../src/gameobjects/GameObject');
 var SpineGameObjectRender = require('./SpineGameObjectRender');
+var Matrix4 = require('../../../../src/math/Matrix4');
 
 /**
  * @classdesc
@@ -47,6 +48,8 @@ var SpineGameObject = new Class({
 
         this.runtime = plugin.getRuntime();
 
+        this.mvp = new Matrix4();
+
         GameObject.call(this, scene, 'Spine');
 
         var data = this.plugin.createSkeleton(key);
@@ -55,7 +58,7 @@ var SpineGameObject = new Class({
 
         var skeleton = data.skeleton;
 
-        skeleton.flipY = true;
+        skeleton.flipY = (scene.sys.game.config.renderType === 1);
 
         skeleton.setToSetupPose();
 
