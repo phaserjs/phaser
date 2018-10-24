@@ -401,7 +401,7 @@ var Body = new Class({
          * @type {boolean}
          * @default false
          * @since 3.0.0
-         * @see Phaser.Physics.Arcade.World#event:worldbounds
+         * @see Phaser.Physics.Arcade.World#worldboundsEvent
          */
         this.onWorldBounds = false;
 
@@ -412,7 +412,7 @@ var Body = new Class({
          * @type {boolean}
          * @default false
          * @since 3.0.0
-         * @see Phaser.Physics.Arcade.World#event:collide
+         * @see Phaser.Physics.Arcade.World#collideEvent
          */
         this.onCollide = false;
 
@@ -423,7 +423,7 @@ var Body = new Class({
          * @type {boolean}
          * @default false
          * @since 3.0.0
-         * @see Phaser.Physics.Arcade.World#event:overlap
+         * @see Phaser.Physics.Arcade.World#overlapEvent
          */
         this.onOverlap = false;
 
