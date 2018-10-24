@@ -21,99 +21,58 @@
  */
 var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
+    var pipeline = renderer.currentPipeline;
+
+    renderer.flush();
+
+    renderer.currentProgram = null;
+    renderer.currentVertexBuffer = null;
+
+    var mvp = src.mvp;
     var plugin = src.plugin;
-    var mvp = plugin.mvp;
     var shader = plugin.shader;
     var batcher = plugin.batcher;
     var runtime = src.runtime;
     var skeletonRenderer = plugin.skeletonRenderer;
 
-    // spriteMatrix.applyITRS(sprite.x, sprite.y, sprite.rotation, sprite.scaleX, sprite.scaleY);
+    mvp.ortho(0, renderer.width, 0, renderer.height, 0, 1);
 
-    src.mvp.identity();
+    // var originX = camera.width * camera.originX;
+    // var originY = camera.height * camera.originY;
+    // mvp.translateXYZ(((camera.x - originX) - camera.scrollX) + src.x, renderer.height - (((camera.y + originY) - camera.scrollY) + src.y), 0);
+    // mvp.rotateZ(-(camera.rotation + src.rotation));
+    // mvp.scaleXYZ(camera.zoom * src.scaleX, camera.zoom * src.scaleY, 1);
 
-    src.mvp.ortho(0, 0 + 800, 0, 0 + 600, 0, 1);
+    mvp.translateXYZ(src.x, renderer.height - src.y, 0);
+    mvp.rotateZ(-src.rotation);
+    mvp.scaleXYZ(src.scaleX, src.scaleY, 1);
 
-    src.mvp.translate({ x: src.x, y: 600 - src.y, z: 0 });
+    // spriteMatrix.e -= camera.scrollX * sprite.scrollFactorX;
+    // spriteMatrix.f -= camera.scrollY * sprite.scrollFactorY;
 
-    src.mvp.rotateX(src.rotation);
+    // 12,13 = tx/ty
+    // 0,5 = scale x/y
 
-    src.mvp.scale({ x: src.scaleX, y: src.scaleY, z: 1 });
+    // var localA = mvp.val[0];
+    // var localB = mvp.val[1];
+    // var localC = mvp.val[2];
+    // var localD = mvp.val[3];
+    // var localE = mvp.val[4];
+    // var localF = mvp.val[5];
 
-    // mvp.translate(-src.x, src.y, 0);
-    // mvp.ortho2d(-250, 0, 800, 600);
+    // var sourceA = camMatrix.matrix[0];
+    // var sourceB = camMatrix.matrix[1];
+    // var sourceC = camMatrix.matrix[2];
+    // var sourceD = camMatrix.matrix[3];
+    // var sourceE = camMatrix.matrix[4];
+    // var sourceF = camMatrix.matrix[5];
 
-    // var camMatrix = renderer._tempMatrix1;
-    // var spriteMatrix = renderer._tempMatrix2;
-    // var calcMatrix = renderer._tempMatrix3;
-
-    // spriteMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
-
-    // mvp.values[0] = spriteMatrix[0];
-    // mvp.values[1] = spriteMatrix[1];
-    // mvp.values[2] = spriteMatrix[2];
-    // mvp.values[4] = spriteMatrix[3];
-    // mvp.values[5] = spriteMatrix[4];
-    // mvp.values[6] = spriteMatrix[5];
-    // mvp.values[8] = spriteMatrix[6];
-    // mvp.values[9] = spriteMatrix[7];
-    // mvp.values[10] = spriteMatrix[8];
-
-    //  Const = Array Index = Identity
-    // M00 = 0 = 1
-    // M01 = 4 = 0
-    // M02 = 8 = 0
-    // M03 = 12 = 0
-    // M10 = 1 = 0
-    // M11 = 5 = 1
-    // M12 = 9 = 0
-    // M13 = 13 = 0
-    // M20 = 2 = 0
-    // M21 = 6 = 0
-    // M22 = 10 = 1
-    // M23 = 14 = 0
-    // M30 = 3 = 0
-    // M31 = 7 = 0
-    // M32 = 11 = 0
-    // M33 = 15 = 1
-
-    mvp.values[0] = src.mvp.val[0];
-    mvp.values[1] = src.mvp.val[1];
-    mvp.values[2] = src.mvp.val[2];
-    mvp.values[3] = src.mvp.val[3];
-    mvp.values[4] = src.mvp.val[4];
-    mvp.values[5] = src.mvp.val[5];
-    mvp.values[6] = src.mvp.val[6];
-    mvp.values[7] = src.mvp.val[7];
-    mvp.values[8] = src.mvp.val[8];
-    mvp.values[9] = src.mvp.val[9];
-    mvp.values[10] = src.mvp.val[10];
-    mvp.values[11] = src.mvp.val[11];
-    mvp.values[12] = src.mvp.val[12];
-    mvp.values[13] = src.mvp.val[13];
-    mvp.values[14] = src.mvp.val[14];
-    mvp.values[15] = src.mvp.val[15];
-
-    //  Array Order - Index
-    // M00 = 0
-    // M10 = 1
-    // M20 = 2
-    // M30 = 3
-    // M01 = 4
-    // M11 = 5
-    // M21 = 6
-    // M31 = 7
-    // M02 = 8
-    // M12 = 9
-    // M22 = 10
-    // M32 = 11
-    // M03 = 12
-    // M13 = 13
-    // M23 = 14
-    // M33 = 15
-
-
-    // mvp.ortho(-250, -250 + 1600, 0, 0 + 1200, 0, 1);
+    // mvp.val[0] = (sourceA * localA) + (sourceB * localC);
+    // mvp.val[1] = (sourceA * localB) + (sourceB * localD);
+    // mvp.val[2] = (sourceC * localA) + (sourceD * localC);
+    // mvp.val[3] = (sourceC * localB) + (sourceD * localD);
+    // mvp.val[4] = (sourceE * localA) + (sourceF * localC) + localE;
+    // mvp.val[5] = (sourceE * localB) + (sourceF * localD) + localF;
 
     src.skeleton.updateWorldTransform();
 
@@ -121,14 +80,14 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
 
     shader.bind();
     shader.setUniformi(runtime.webgl.Shader.SAMPLER, 0);
-    shader.setUniform4x4f(runtime.webgl.Shader.MVP_MATRIX, mvp.values);
+    shader.setUniform4x4f(runtime.webgl.Shader.MVP_MATRIX, mvp.val);
 
     //  Start the batch and tell the SkeletonRenderer to render the active skeleton.
     batcher.begin(shader);
 
     plugin.skeletonRenderer.vertexEffect = null;
 
-    skeletonRenderer.premultipliedAlpha = true;
+    skeletonRenderer.premultipliedAlpha = false;
 
     skeletonRenderer.draw(batcher, src.skeleton);
 
@@ -147,6 +106,11 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
         debugShader.unbind();
     }
     */
+
+    renderer.currentPipeline = pipeline;
+    renderer.currentPipeline.bind();
+    renderer.currentPipeline.onBind();
+    renderer.setBlankTexture(true);
 };
 
 module.exports = SpineGameObjectWebGLRenderer;
