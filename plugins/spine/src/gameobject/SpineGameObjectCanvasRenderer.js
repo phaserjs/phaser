@@ -30,15 +30,19 @@ var SpineGameObjectCanvasRenderer = function (renderer, src, interpolationPercen
         return;
     }
 
-    src.plugin.skeletonRenderer.ctx = context;
+    var plugin = src.plugin;
+    var skeleton = src.skeleton;
+    var skeletonRenderer = plugin.skeletonRenderer;
+
+    skeletonRenderer.ctx = context;
 
     context.save();
 
-    src.skeleton.updateWorldTransform();
+    // src.skeleton.updateWorldTransform();
 
-    src.plugin.skeletonRenderer.draw(src.skeleton);
+    skeletonRenderer.draw(skeleton);
 
-    if (src.renderDebug)
+    if (plugin.drawDebug || src.drawDebug)
     {
         context.strokeStyle = '#00ff00';
         context.beginPath();
