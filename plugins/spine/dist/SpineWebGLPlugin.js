@@ -97,9 +97,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ ({
 
 /***/ "../../../node_modules/eventemitter3/index.js":
-/*!*******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/node_modules/eventemitter3/index.js ***!
-  \*******************************************************************************/
+/*!**************************************************************!*\
+  !*** D:/wamp/www/phaser/node_modules/eventemitter3/index.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -445,9 +445,9 @@ if (true) {
 /***/ }),
 
 /***/ "../../../src/data/DataManager.js":
-/*!*******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/data/DataManager.js ***!
-  \*******************************************************************/
+/*!**************************************************!*\
+  !*** D:/wamp/www/phaser/src/data/DataManager.js ***!
+  \**************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1078,9 +1078,9 @@ module.exports = DataManager;
 /***/ }),
 
 /***/ "../../../src/gameobjects/GameObject.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/GameObject.js ***!
-  \*************************************************************************/
+/*!********************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/GameObject.js ***!
+  \********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1682,9 +1682,9 @@ module.exports = GameObject;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Alpha.js":
-/*!*******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Alpha.js ***!
-  \*******************************************************************************/
+/*!**************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/components/Alpha.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1982,9 +1982,9 @@ module.exports = Alpha;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/BlendMode.js":
-/*!***********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/BlendMode.js ***!
-  \***********************************************************************************/
+/*!******************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/components/BlendMode.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2107,9 +2107,9 @@ module.exports = BlendMode;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Depth.js":
-/*!*******************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Depth.js ***!
-  \*******************************************************************************/
+/*!**************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/components/Depth.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -2204,10 +2204,163 @@ module.exports = Depth;
 
 /***/ }),
 
+/***/ "../../../src/gameobjects/components/Flip.js":
+/*!*************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/components/Flip.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+/**
+ * Provides methods used for visually flipping a Game Object.
+ * Should be applied as a mixin and not used directly.
+ * 
+ * @name Phaser.GameObjects.Components.Flip
+ * @since 3.0.0
+ */
+
+var Flip = {
+
+    /**
+     * The horizontally flipped state of the Game Object.
+     * A Game Object that is flipped horizontally will render inversed on the horizontal axis.
+     * Flipping always takes place from the middle of the texture and does not impact the scale value.
+     * 
+     * @name Phaser.GameObjects.Components.Flip#flipX
+     * @type {boolean}
+     * @default false
+     * @since 3.0.0
+     */
+    flipX: false,
+
+    /**
+     * The vertically flipped state of the Game Object.
+     * A Game Object that is flipped vertically will render inversed on the vertical axis (i.e. upside down)
+     * Flipping always takes place from the middle of the texture and does not impact the scale value.
+     * 
+     * @name Phaser.GameObjects.Components.Flip#flipY
+     * @type {boolean}
+     * @default false
+     * @since 3.0.0
+     */
+    flipY: false,
+
+    /**
+     * Toggles the horizontal flipped state of this Game Object.
+     * 
+     * @method Phaser.GameObjects.Components.Flip#toggleFlipX
+     * @since 3.0.0
+     * 
+     * @return {this} This Game Object instance.
+     */
+    toggleFlipX: function ()
+    {
+        this.flipX = !this.flipX;
+
+        return this;
+    },
+
+    /**
+     * Toggles the vertical flipped state of this Game Object.
+     * 
+     * @method Phaser.GameObjects.Components.Flip#toggleFlipY
+     * @since 3.0.0
+     * 
+     * @return {this} This Game Object instance.
+     */
+    toggleFlipY: function ()
+    {
+        this.flipY = !this.flipY;
+
+        return this;
+    },
+
+    /**
+     * Sets the horizontal flipped state of this Game Object.
+     * 
+     * @method Phaser.GameObjects.Components.Flip#setFlipX
+     * @since 3.0.0
+     *
+     * @param {boolean} value - The flipped state. `false` for no flip, or `true` to be flipped.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setFlipX: function (value)
+    {
+        this.flipX = value;
+
+        return this;
+    },
+
+    /**
+     * Sets the vertical flipped state of this Game Object.
+     * 
+     * @method Phaser.GameObjects.Components.Flip#setFlipY
+     * @since 3.0.0
+     *
+     * @param {boolean} value - The flipped state. `false` for no flip, or `true` to be flipped.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setFlipY: function (value)
+    {
+        this.flipY = value;
+
+        return this;
+    },
+
+    /**
+     * Sets the horizontal and vertical flipped state of this Game Object.
+     * 
+     * @method Phaser.GameObjects.Components.Flip#setFlip
+     * @since 3.0.0
+     *
+     * @param {boolean} x - The horizontal flipped state. `false` for no flip, or `true` to be flipped.
+     * @param {boolean} y - The horizontal flipped state. `false` for no flip, or `true` to be flipped.
+     * 
+     * @return {this} This Game Object instance.
+     */
+    setFlip: function (x, y)
+    {
+        this.flipX = x;
+        this.flipY = y;
+
+        return this;
+    },
+
+    /**
+     * Resets the horizontal and vertical flipped state of this Game Object back to their default un-flipped state.
+     * 
+     * @method Phaser.GameObjects.Components.Flip#resetFlip
+     * @since 3.0.0
+     *
+     * @return {this} This Game Object instance.
+     */
+    resetFlip: function ()
+    {
+        this.flipX = false;
+        this.flipY = false;
+
+        return this;
+    }
+
+};
+
+module.exports = Flip;
+
+
+/***/ }),
+
 /***/ "../../../src/gameobjects/components/ScrollFactor.js":
-/*!**************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/ScrollFactor.js ***!
-  \**************************************************************************************/
+/*!*********************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/components/ScrollFactor.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -2317,9 +2470,9 @@ module.exports = ScrollFactor;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/ToJSON.js":
-/*!********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/ToJSON.js ***!
-  \********************************************************************************/
+/*!***************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/components/ToJSON.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -2409,9 +2562,9 @@ module.exports = ToJSON;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Transform.js":
-/*!***********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Transform.js ***!
-  \***********************************************************************************/
+/*!******************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/components/Transform.js ***!
+  \******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2882,9 +3035,9 @@ module.exports = Transform;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/TransformMatrix.js":
-/*!*****************************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/TransformMatrix.js ***!
-  \*****************************************************************************************/
+/*!************************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/components/TransformMatrix.js ***!
+  \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3798,9 +3951,9 @@ module.exports = TransformMatrix;
 /***/ }),
 
 /***/ "../../../src/gameobjects/components/Visible.js":
-/*!*********************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/gameobjects/components/Visible.js ***!
-  \*********************************************************************************/
+/*!****************************************************************!*\
+  !*** D:/wamp/www/phaser/src/gameobjects/components/Visible.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -3892,9 +4045,9 @@ module.exports = Visible;
 /***/ }),
 
 /***/ "../../../src/loader/File.js":
-/*!**************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/File.js ***!
-  \**************************************************************/
+/*!*********************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/File.js ***!
+  \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4494,9 +4647,9 @@ module.exports = File;
 /***/ }),
 
 /***/ "../../../src/loader/FileTypesManager.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/FileTypesManager.js ***!
-  \**************************************************************************/
+/*!*********************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/FileTypesManager.js ***!
+  \*********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -4564,9 +4717,9 @@ module.exports = FileTypesManager;
 /***/ }),
 
 /***/ "../../../src/loader/GetURL.js":
-/*!****************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/GetURL.js ***!
-  \****************************************************************/
+/*!***********************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/GetURL.js ***!
+  \***********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -4610,9 +4763,9 @@ module.exports = GetURL;
 /***/ }),
 
 /***/ "../../../src/loader/MergeXHRSettings.js":
-/*!**************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/MergeXHRSettings.js ***!
-  \**************************************************************************/
+/*!*********************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/MergeXHRSettings.js ***!
+  \*********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4663,9 +4816,9 @@ module.exports = MergeXHRSettings;
 /***/ }),
 
 /***/ "../../../src/loader/MultiFile.js":
-/*!*******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/MultiFile.js ***!
-  \*******************************************************************/
+/*!**************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/MultiFile.js ***!
+  \**************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4862,9 +5015,9 @@ module.exports = MultiFile;
 /***/ }),
 
 /***/ "../../../src/loader/XHRLoader.js":
-/*!*******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/XHRLoader.js ***!
-  \*******************************************************************/
+/*!**************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/XHRLoader.js ***!
+  \**************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4935,9 +5088,9 @@ module.exports = XHRLoader;
 /***/ }),
 
 /***/ "../../../src/loader/XHRSettings.js":
-/*!*********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/XHRSettings.js ***!
-  \*********************************************************************/
+/*!****************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/XHRSettings.js ***!
+  \****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -5018,9 +5171,9 @@ module.exports = XHRSettings;
 /***/ }),
 
 /***/ "../../../src/loader/const.js":
-/*!***************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/const.js ***!
-  \***************************************************************/
+/*!**********************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/const.js ***!
+  \**********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -5175,9 +5328,9 @@ module.exports = FILE_CONST;
 /***/ }),
 
 /***/ "../../../src/loader/filetypes/ImageFile.js":
-/*!*****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/filetypes/ImageFile.js ***!
-  \*****************************************************************************/
+/*!************************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/filetypes/ImageFile.js ***!
+  \************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5476,9 +5629,9 @@ module.exports = ImageFile;
 /***/ }),
 
 /***/ "../../../src/loader/filetypes/JSONFile.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/filetypes/JSONFile.js ***!
-  \****************************************************************************/
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/filetypes/JSONFile.js ***!
+  \***********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5721,9 +5874,9 @@ module.exports = JSONFile;
 /***/ }),
 
 /***/ "../../../src/loader/filetypes/TextFile.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/loader/filetypes/TextFile.js ***!
-  \****************************************************************************/
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/loader/filetypes/TextFile.js ***!
+  \***********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5910,9 +6063,9 @@ module.exports = TextFile;
 /***/ }),
 
 /***/ "../../../src/math/Clamp.js":
-/*!*************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Clamp.js ***!
-  \*************************************************************/
+/*!********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Clamp.js ***!
+  \********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -5945,9 +6098,9 @@ module.exports = Clamp;
 /***/ }),
 
 /***/ "../../../src/math/Matrix4.js":
-/*!***************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Matrix4.js ***!
-  \***************************************************************/
+/*!**********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Matrix4.js ***!
+  \**********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7412,9 +7565,9 @@ module.exports = Matrix4;
 /***/ }),
 
 /***/ "../../../src/math/Vector2.js":
-/*!***************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Vector2.js ***!
-  \***************************************************************/
+/*!**********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Vector2.js ***!
+  \**********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8001,9 +8154,9 @@ module.exports = Vector2;
 /***/ }),
 
 /***/ "../../../src/math/Wrap.js":
-/*!************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/Wrap.js ***!
-  \************************************************************/
+/*!*******************************************!*\
+  !*** D:/wamp/www/phaser/src/math/Wrap.js ***!
+  \*******************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -8038,9 +8191,9 @@ module.exports = Wrap;
 /***/ }),
 
 /***/ "../../../src/math/angle/Wrap.js":
-/*!******************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/Wrap.js ***!
-  \******************************************************************/
+/*!*************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/angle/Wrap.js ***!
+  \*************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8075,9 +8228,9 @@ module.exports = Wrap;
 /***/ }),
 
 /***/ "../../../src/math/angle/WrapDegrees.js":
-/*!*************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/angle/WrapDegrees.js ***!
-  \*************************************************************************/
+/*!********************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/angle/WrapDegrees.js ***!
+  \********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8112,9 +8265,9 @@ module.exports = WrapDegrees;
 /***/ }),
 
 /***/ "../../../src/math/const.js":
-/*!*************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/math/const.js ***!
-  \*************************************************************/
+/*!********************************************!*\
+  !*** D:/wamp/www/phaser/src/math/const.js ***!
+  \********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -8188,9 +8341,9 @@ module.exports = MATH_CONST;
 /***/ }),
 
 /***/ "../../../src/plugins/BasePlugin.js":
-/*!*********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/plugins/BasePlugin.js ***!
-  \*********************************************************************/
+/*!****************************************************!*\
+  !*** D:/wamp/www/phaser/src/plugins/BasePlugin.js ***!
+  \****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8374,9 +8527,9 @@ module.exports = BasePlugin;
 /***/ }),
 
 /***/ "../../../src/plugins/ScenePlugin.js":
-/*!**********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/plugins/ScenePlugin.js ***!
-  \**********************************************************************/
+/*!*****************************************************!*\
+  !*** D:/wamp/www/phaser/src/plugins/ScenePlugin.js ***!
+  \*****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8467,9 +8620,9 @@ module.exports = ScenePlugin;
 /***/ }),
 
 /***/ "../../../src/renderer/BlendModes.js":
-/*!**********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/renderer/BlendModes.js ***!
-  \**********************************************************************/
+/*!*****************************************************!*\
+  !*** D:/wamp/www/phaser/src/renderer/BlendModes.js ***!
+  \*****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -8623,9 +8776,9 @@ module.exports = {
 /***/ }),
 
 /***/ "../../../src/utils/Class.js":
-/*!**************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/Class.js ***!
-  \**************************************************************/
+/*!*********************************************!*\
+  !*** D:/wamp/www/phaser/src/utils/Class.js ***!
+  \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -8866,9 +9019,9 @@ module.exports = Class;
 /***/ }),
 
 /***/ "../../../src/utils/NOOP.js":
-/*!*************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/NOOP.js ***!
-  \*************************************************************/
+/*!********************************************!*\
+  !*** D:/wamp/www/phaser/src/utils/NOOP.js ***!
+  \********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -8898,9 +9051,9 @@ module.exports = NOOP;
 /***/ }),
 
 /***/ "../../../src/utils/object/Extend.js":
-/*!**********************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/Extend.js ***!
-  \**********************************************************************/
+/*!*****************************************************!*\
+  !*** D:/wamp/www/phaser/src/utils/object/Extend.js ***!
+  \*****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9002,9 +9155,9 @@ module.exports = Extend;
 /***/ }),
 
 /***/ "../../../src/utils/object/GetFastValue.js":
-/*!****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/GetFastValue.js ***!
-  \****************************************************************************/
+/*!***********************************************************!*\
+  !*** D:/wamp/www/phaser/src/utils/object/GetFastValue.js ***!
+  \***********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -9050,9 +9203,9 @@ module.exports = GetFastValue;
 /***/ }),
 
 /***/ "../../../src/utils/object/GetValue.js":
-/*!************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/GetValue.js ***!
-  \************************************************************************/
+/*!*******************************************************!*\
+  !*** D:/wamp/www/phaser/src/utils/object/GetValue.js ***!
+  \*******************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -9126,9 +9279,9 @@ module.exports = GetValue;
 /***/ }),
 
 /***/ "../../../src/utils/object/IsPlainObject.js":
-/*!*****************************************************************************!*\
-  !*** /Users/rich/Documents/GitHub/phaser/src/utils/object/IsPlainObject.js ***!
-  \*****************************************************************************/
+/*!************************************************************!*\
+  !*** D:/wamp/www/phaser/src/utils/object/IsPlainObject.js ***!
+  \************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -9693,6 +9846,7 @@ module.exports = SpineFile;
 var Class = __webpack_require__(/*! ../../../src/utils/Class */ "../../../src/utils/Class.js");
 var BaseSpinePlugin = __webpack_require__(/*! ./BaseSpinePlugin */ "./BaseSpinePlugin.js");
 var SpineWebGL = __webpack_require__(/*! SpineWebGL */ "./runtimes/spine-webgl.js");
+var Matrix4 = __webpack_require__(/*! ../../../src/math/Matrix4 */ "../../../src/math/Matrix4.js");
 
 var runtime;
 
@@ -9729,24 +9883,31 @@ var SpineWebGLPlugin = new Class({
 
         this.gl = gl;
 
-        this.mvp = new SpineWebGL.webgl.Matrix4();
+        this.mvp = new Matrix4();
 
         //  Create a simple shader, mesh, model-view-projection matrix and SkeletonRenderer.
         this.shader = SpineWebGL.webgl.Shader.newTwoColoredTextured(gl);
         this.batcher = new SpineWebGL.webgl.PolygonBatcher(gl);
-        this.mvp.ortho2d(0, 0, this.game.renderer.width - 1, this.game.renderer.height - 1);
 
         this.skeletonRenderer = new SpineWebGL.webgl.SkeletonRenderer(gl);
+        this.skeletonRenderer.premultipliedAlpha = true;
 
         this.shapes = new SpineWebGL.webgl.ShapeRenderer(gl);
 
-        // debugRenderer = new spine.webgl.SkeletonDebugRenderer(gl);
-        // debugRenderer.drawRegionAttachments = true;
-        // debugRenderer.drawBoundingBoxes = true;
-        // debugRenderer.drawMeshHull = true;
-        // debugRenderer.drawMeshTriangles = true;
-        // debugRenderer.drawPaths = true;
-        // debugShader = spine.webgl.Shader.newColored(gl);
+        var debugRenderer = new SpineWebGL.webgl.SkeletonDebugRenderer(gl);
+
+        debugRenderer.premultipliedAlpha = true;
+        debugRenderer.drawRegionAttachments = true;
+        debugRenderer.drawBoundingBoxes = true;
+        debugRenderer.drawMeshHull = true;
+        debugRenderer.drawMeshTriangles = true;
+        debugRenderer.drawPaths = true;
+
+        this.drawDebug = false;
+
+        this.debugShader = SpineWebGL.webgl.Shader.newColored(gl);
+
+        this.debugRenderer = debugRenderer;
     },
 
     getRuntime: function ()
@@ -9827,12 +9988,12 @@ var Class = __webpack_require__(/*! ../../../../src/utils/Class */ "../../../src
 var ComponentsAlpha = __webpack_require__(/*! ../../../../src/gameobjects/components/Alpha */ "../../../src/gameobjects/components/Alpha.js");
 var ComponentsBlendMode = __webpack_require__(/*! ../../../../src/gameobjects/components/BlendMode */ "../../../src/gameobjects/components/BlendMode.js");
 var ComponentsDepth = __webpack_require__(/*! ../../../../src/gameobjects/components/Depth */ "../../../src/gameobjects/components/Depth.js");
+var ComponentsFlip = __webpack_require__(/*! ../../../../src/gameobjects/components/Flip */ "../../../src/gameobjects/components/Flip.js");
 var ComponentsScrollFactor = __webpack_require__(/*! ../../../../src/gameobjects/components/ScrollFactor */ "../../../src/gameobjects/components/ScrollFactor.js");
 var ComponentsTransform = __webpack_require__(/*! ../../../../src/gameobjects/components/Transform */ "../../../src/gameobjects/components/Transform.js");
 var ComponentsVisible = __webpack_require__(/*! ../../../../src/gameobjects/components/Visible */ "../../../src/gameobjects/components/Visible.js");
 var GameObject = __webpack_require__(/*! ../../../../src/gameobjects/GameObject */ "../../../src/gameobjects/GameObject.js");
 var SpineGameObjectRender = __webpack_require__(/*! ./SpineGameObjectRender */ "./gameobject/SpineGameObjectRender.js");
-var Matrix4 = __webpack_require__(/*! ../../../../src/math/Matrix4 */ "../../../src/math/Matrix4.js");
 
 /**
  * @classdesc
@@ -9853,6 +10014,7 @@ var SpineGameObject = new Class({
         ComponentsAlpha,
         ComponentsBlendMode,
         ComponentsDepth,
+        ComponentsFlip,
         ComponentsScrollFactor,
         ComponentsTransform,
         ComponentsVisible,
@@ -9867,9 +10029,9 @@ var SpineGameObject = new Class({
 
         this.runtime = plugin.getRuntime();
 
-        this.mvp = new Matrix4();
-
         GameObject.call(this, scene, 'Spine');
+
+        this.drawDebug = false;
 
         var data = this.plugin.createSkeleton(key);
 
@@ -9931,13 +10093,35 @@ var SpineGameObject = new Class({
 
     // http://esotericsoftware.com/spine-runtimes-guide
 
+    getAnimationList: function ()
+    {
+        var output = [];
+
+        var skeletonData = this.skeletonData;
+
+        if (skeletonData)
+        {
+            for (var i = 0; i < skeletonData.animations.length; i++)
+            {
+                output.push(skeletonData.animations[i].name);
+            }
+        }
+
+        return output;
+    },
+
+    play: function (animationName, loop)
+    {
+        if (loop === undefined)
+        {
+            loop = false;
+        }
+
+        return this.setAnimation(0, animationName, loop);
+    },
+
     setAnimation: function (trackIndex, animationName, loop)
     {
-        // if (loop === undefined)
-        // {
-        //     loop = false;
-        // }
-
         this.state.setAnimation(trackIndex, animationName, loop);
 
         return this;
@@ -9969,6 +10153,13 @@ var SpineGameObject = new Class({
         return this;
     },
 
+    setSkinByName: function (skinName)
+    {
+        this.skeleton.setSkinByName(skinName);
+
+        return this;
+    },
+
     setSkin: function (newSkin)
     {
         var skeleton = this.skeleton;
@@ -9994,20 +10185,40 @@ var SpineGameObject = new Class({
         return this.skeleton.findBone(boneName);
     },
 
+    findBoneIndex: function (boneName)
+    {
+        return this.skeleton.findBoneIndex(boneName);
+    },
+
+    findSlot: function (slotName)
+    {
+        return this.skeleton.findSlot(slotName);
+    },
+
+    findSlotIndex: function (slotName)
+    {
+        return this.skeleton.findSlotIndex(slotName);
+    },
+
     getBounds: function ()
     {
         return this.plugin.getBounds(this.skeleton);
-
-        // this.skeleton.getBounds(this.offset, this.size, []);
     },
 
     preUpdate: function (time, delta)
     {
+        var skeleton = this.skeleton;
+
+        skeleton.flipX = this.flipX;
+        skeleton.flipY = this.flipY;
+
         this.state.update(delta / 1000);
 
-        this.state.apply(this.skeleton);
+        this.state.apply(skeleton);
 
-        this.emit('spine.update', this.skeleton);
+        this.emit('spine.update', skeleton);
+
+        skeleton.updateWorldTransform();
     },
 
     /**
@@ -10103,94 +10314,75 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
 {
     var pipeline = renderer.currentPipeline;
 
-    renderer.flush();
+    renderer.clearPipeline();
 
-    renderer.currentProgram = null;
-    renderer.currentVertexBuffer = null;
+    var camMatrix = renderer._tempMatrix1;
+    var spriteMatrix = renderer._tempMatrix2;
+    var calcMatrix = renderer._tempMatrix3;
 
-    var mvp = src.mvp;
+    spriteMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
+
+    camMatrix.copyFrom(camera.matrix);
+
+    spriteMatrix.e -= camera.scrollX * src.scrollFactorX;
+    spriteMatrix.f -= camera.scrollY * src.scrollFactorY;
+
+    //  Multiply by the Sprite matrix, store result in calcMatrix
+    camMatrix.multiply(spriteMatrix, calcMatrix);
+
     var plugin = src.plugin;
+    var mvp = plugin.mvp;
+
     var shader = plugin.shader;
     var batcher = plugin.batcher;
     var runtime = src.runtime;
+    var skeleton = src.skeleton;
     var skeletonRenderer = plugin.skeletonRenderer;
+
+    // skeleton.flipX = src.flipX;
+    // skeleton.flipY = src.flipY;
 
     mvp.ortho(0, renderer.width, 0, renderer.height, 0, 1);
 
-    // var originX = camera.width * camera.originX;
-    // var originY = camera.height * camera.originY;
-    // mvp.translateXYZ(((camera.x - originX) - camera.scrollX) + src.x, renderer.height - (((camera.y + originY) - camera.scrollY) + src.y), 0);
-    // mvp.rotateZ(-(camera.rotation + src.rotation));
-    // mvp.scaleXYZ(camera.zoom * src.scaleX, camera.zoom * src.scaleY, 1);
+    var data = calcMatrix.decomposeMatrix();
 
-    mvp.translateXYZ(src.x, renderer.height - src.y, 0);
-    mvp.rotateZ(-src.rotation);
-    mvp.scaleXYZ(src.scaleX, src.scaleY, 1);
+    mvp.translateXYZ(data.translateX, renderer.height - data.translateY, 0);
+    mvp.rotateZ(data.rotation * -1);
+    mvp.scaleXYZ(data.scaleX, data.scaleY, 1);
 
-    // spriteMatrix.e -= camera.scrollX * sprite.scrollFactorX;
-    // spriteMatrix.f -= camera.scrollY * sprite.scrollFactorY;
-
-    // 12,13 = tx/ty
-    // 0,5 = scale x/y
-
-    // var localA = mvp.val[0];
-    // var localB = mvp.val[1];
-    // var localC = mvp.val[2];
-    // var localD = mvp.val[3];
-    // var localE = mvp.val[4];
-    // var localF = mvp.val[5];
-
-    // var sourceA = camMatrix.matrix[0];
-    // var sourceB = camMatrix.matrix[1];
-    // var sourceC = camMatrix.matrix[2];
-    // var sourceD = camMatrix.matrix[3];
-    // var sourceE = camMatrix.matrix[4];
-    // var sourceF = camMatrix.matrix[5];
-
-    // mvp.val[0] = (sourceA * localA) + (sourceB * localC);
-    // mvp.val[1] = (sourceA * localB) + (sourceB * localD);
-    // mvp.val[2] = (sourceC * localA) + (sourceD * localC);
-    // mvp.val[3] = (sourceC * localB) + (sourceD * localD);
-    // mvp.val[4] = (sourceE * localA) + (sourceF * localC) + localE;
-    // mvp.val[5] = (sourceE * localB) + (sourceF * localD) + localF;
-
-    src.skeleton.updateWorldTransform();
-
-    //  Bind the shader and set the texture and model-view-projection matrix.
+    // skeleton.updateWorldTransform();
 
     shader.bind();
     shader.setUniformi(runtime.webgl.Shader.SAMPLER, 0);
     shader.setUniform4x4f(runtime.webgl.Shader.MVP_MATRIX, mvp.val);
 
-    //  Start the batch and tell the SkeletonRenderer to render the active skeleton.
     batcher.begin(shader);
 
-    plugin.skeletonRenderer.vertexEffect = null;
-
-    skeletonRenderer.premultipliedAlpha = false;
-
-    skeletonRenderer.draw(batcher, src.skeleton);
+    skeletonRenderer.draw(batcher, skeleton);
 
     batcher.end();
 
     shader.unbind();
 
-    /*
-    if (debug) {
+    if (plugin.drawDebug || src.drawDebug)
+    {
+        var debugShader = plugin.debugShader;
+        var debugRenderer = plugin.debugRenderer;
+        var shapes = plugin.shapes;
+
         debugShader.bind();
-        debugShader.setUniform4x4f(spine.webgl.Shader.MVP_MATRIX, mvp.values);
-        debugRenderer.premultipliedAlpha = premultipliedAlpha;
+        debugShader.setUniform4x4f(runtime.webgl.Shader.MVP_MATRIX, mvp.val);
+
         shapes.begin(debugShader);
+
         debugRenderer.draw(shapes, skeleton);
+
         shapes.end();
+
         debugShader.unbind();
     }
-    */
 
-    renderer.currentPipeline = pipeline;
-    renderer.currentPipeline.bind();
-    renderer.currentPipeline.onBind();
-    renderer.setBlankTexture(true);
+    renderer.rebindPipeline(pipeline);
 };
 
 module.exports = SpineGameObjectWebGLRenderer;
