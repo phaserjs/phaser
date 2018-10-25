@@ -4,6 +4,8 @@
 
 ### New Features
 
+* The data object being sent to the Dynamic Bitmap Text callback now has a new property `parent`, which is a reference to the Bitmap Text instance that owns the data object (thanks ornyth)
+
 ### Updates
 
 * The Mouse Manager class has been updated to remove some commented out code and refine the `startListeners` method.
