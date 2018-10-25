@@ -23,58 +23,41 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
 {
     var pipeline = renderer.currentPipeline;
 
-    renderer.flush();
+    renderer.clearPipeline();
 
-    renderer.currentProgram = null;
-    renderer.currentVertexBuffer = null;
+    var camMatrix = renderer._tempMatrix1;
+    var spriteMatrix = renderer._tempMatrix2;
+    var calcMatrix = renderer._tempMatrix3;
 
-    var mvp = src.mvp;
+    spriteMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
+
+    camMatrix.copyFrom(camera.matrix);
+
+    spriteMatrix.e -= camera.scrollX * src.scrollFactorX;
+    spriteMatrix.f -= camera.scrollY * src.scrollFactorY;
+
+    //  Multiply by the Sprite matrix, store result in calcMatrix
+    camMatrix.multiply(spriteMatrix, calcMatrix);
+
     var plugin = src.plugin;
+    var mvp = plugin.mvp;
+
     var shader = plugin.shader;
     var batcher = plugin.batcher;
     var runtime = src.runtime;
+    var skeleton = src.skeleton;
+
     var skeletonRenderer = plugin.skeletonRenderer;
 
     mvp.ortho(0, renderer.width, 0, renderer.height, 0, 1);
 
-    // var originX = camera.width * camera.originX;
-    // var originY = camera.height * camera.originY;
-    // mvp.translateXYZ(((camera.x - originX) - camera.scrollX) + src.x, renderer.height - (((camera.y + originY) - camera.scrollY) + src.y), 0);
-    // mvp.rotateZ(-(camera.rotation + src.rotation));
-    // mvp.scaleXYZ(camera.zoom * src.scaleX, camera.zoom * src.scaleY, 1);
+    var data = calcMatrix.decomposeMatrix();
 
-    mvp.translateXYZ(src.x, renderer.height - src.y, 0);
-    mvp.rotateZ(-src.rotation);
-    mvp.scaleXYZ(src.scaleX, src.scaleY, 1);
+    mvp.translateXYZ(data.translateX, renderer.height - data.translateY, 0);
+    mvp.rotateZ(data.rotation * -1);
+    mvp.scaleXYZ(data.scaleX, data.scaleY, 1);
 
-    // spriteMatrix.e -= camera.scrollX * sprite.scrollFactorX;
-    // spriteMatrix.f -= camera.scrollY * sprite.scrollFactorY;
-
-    // 12,13 = tx/ty
-    // 0,5 = scale x/y
-
-    // var localA = mvp.val[0];
-    // var localB = mvp.val[1];
-    // var localC = mvp.val[2];
-    // var localD = mvp.val[3];
-    // var localE = mvp.val[4];
-    // var localF = mvp.val[5];
-
-    // var sourceA = camMatrix.matrix[0];
-    // var sourceB = camMatrix.matrix[1];
-    // var sourceC = camMatrix.matrix[2];
-    // var sourceD = camMatrix.matrix[3];
-    // var sourceE = camMatrix.matrix[4];
-    // var sourceF = camMatrix.matrix[5];
-
-    // mvp.val[0] = (sourceA * localA) + (sourceB * localC);
-    // mvp.val[1] = (sourceA * localB) + (sourceB * localD);
-    // mvp.val[2] = (sourceC * localA) + (sourceD * localC);
-    // mvp.val[3] = (sourceC * localB) + (sourceD * localD);
-    // mvp.val[4] = (sourceE * localA) + (sourceF * localC) + localE;
-    // mvp.val[5] = (sourceE * localB) + (sourceF * localD) + localF;
-
-    src.skeleton.updateWorldTransform();
+    skeleton.updateWorldTransform();
 
     //  Bind the shader and set the texture and model-view-projection matrix.
 
@@ -85,32 +68,33 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     //  Start the batch and tell the SkeletonRenderer to render the active skeleton.
     batcher.begin(shader);
 
-    plugin.skeletonRenderer.vertexEffect = null;
+    // plugin.skeletonRenderer.vertexEffect = null;
 
-    skeletonRenderer.premultipliedAlpha = false;
-
-    skeletonRenderer.draw(batcher, src.skeleton);
+    skeletonRenderer.draw(batcher, skeleton);
 
     batcher.end();
 
     shader.unbind();
 
-    /*
-    if (debug) {
+    if (plugin.drawDebug || src.drawDebug)
+    {
+        var debugShader = plugin.debugShader;
+        var debugRenderer = plugin.debugRenderer;
+        var shapes = plugin.shapes;
+
         debugShader.bind();
-        debugShader.setUniform4x4f(spine.webgl.Shader.MVP_MATRIX, mvp.values);
-        debugRenderer.premultipliedAlpha = premultipliedAlpha;
+        debugShader.setUniform4x4f(runtime.webgl.Shader.MVP_MATRIX, mvp.val);
+
         shapes.begin(debugShader);
+
         debugRenderer.draw(shapes, skeleton);
+
         shapes.end();
+
         debugShader.unbind();
     }
-    */
 
-    renderer.currentPipeline = pipeline;
-    renderer.currentPipeline.bind();
-    renderer.currentPipeline.onBind();
-    renderer.setBlankTexture(true);
+    renderer.rebindPipeline(pipeline);
 };
 
 module.exports = SpineGameObjectWebGLRenderer;
