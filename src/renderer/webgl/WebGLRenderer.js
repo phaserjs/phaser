@@ -927,6 +927,46 @@ var WebGLRenderer = new Class({
     },
 
     /**
+     * Rebinds the given pipeline instance to the renderer and then sets the blank texture as default.
+     * Doesn't flush the old pipeline first.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#rebindPipeline
+     * @since 3.16.0
+     * 
+     * @param {Phaser.Renderer.WebGL.WebGLPipeline} pipelineInstance - The pipeline instance to be activated.
+     */
+    rebindPipeline: function (pipelineInstance)
+    {
+        this.currentPipeline = pipelineInstance;
+
+        this.currentPipeline.bind();
+
+        this.currentPipeline.onBind();
+
+        this.setBlankTexture(true);
+
+        this.setBlendMode(0, true);
+    },
+
+    /**
+     * Flushes the current WebGLPipeline being used and then clears it, along with the
+     * the current shader program and vertex buffer. Then resets the blend mode to NORMAL.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#clearPipeline
+     * @since 3.16.0
+     */
+    clearPipeline: function ()
+    {
+        this.flush();
+
+        this.currentPipeline = null;
+        this.currentProgram = null;
+        this.currentVertexBuffer = null;
+
+        this.setBlendMode(0, true);
+    },
+
+    /**
      * Sets the blend mode to the value given.
      *
      * If the current blend mode is different from the one given, the pipeline is flushed and the new
@@ -936,15 +976,18 @@ var WebGLRenderer = new Class({
      * @since 3.0.0
      *
      * @param {integer} blendModeId - The blend mode to be set. Can be a `BlendModes` const or an integer value.
+     * @param {boolean} [force=false] - Force the blend mode to be set, regardless of the currently set blend mode.
      *
      * @return {boolean} `true` if the blend mode was changed as a result of this call, forcing a flush, otherwise `false`.
      */
-    setBlendMode: function (blendModeId)
+    setBlendMode: function (blendModeId, force)
     {
+        if (force === undefined) { force = false; }
+
         var gl = this.gl;
         var blendMode = this.blendModes[blendModeId];
 
-        if (blendModeId !== CONST.BlendModes.SKIP_CHECK && this.currentBlendMode !== blendModeId)
+        if (force || (blendModeId !== CONST.BlendModes.SKIP_CHECK && this.currentBlendMode !== blendModeId))
         {
             this.flush();
 
