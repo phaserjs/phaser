@@ -7,6 +7,7 @@
 var Class = require('../../../src/utils/Class');
 var BaseSpinePlugin = require('./BaseSpinePlugin');
 var SpineWebGL = require('SpineWebGL');
+var Matrix4 = require('../../../src/math/Matrix4');
 
 var runtime;
 
@@ -43,24 +44,31 @@ var SpineWebGLPlugin = new Class({
 
         this.gl = gl;
 
-        this.mvp = new SpineWebGL.webgl.Matrix4();
+        this.mvp = new Matrix4();
 
         //  Create a simple shader, mesh, model-view-projection matrix and SkeletonRenderer.
         this.shader = SpineWebGL.webgl.Shader.newTwoColoredTextured(gl);
         this.batcher = new SpineWebGL.webgl.PolygonBatcher(gl);
-        this.mvp.ortho2d(0, 0, this.game.renderer.width - 1, this.game.renderer.height - 1);
 
         this.skeletonRenderer = new SpineWebGL.webgl.SkeletonRenderer(gl);
+        this.skeletonRenderer.premultipliedAlpha = true;
 
         this.shapes = new SpineWebGL.webgl.ShapeRenderer(gl);
 
-        // debugRenderer = new spine.webgl.SkeletonDebugRenderer(gl);
-        // debugRenderer.drawRegionAttachments = true;
-        // debugRenderer.drawBoundingBoxes = true;
-        // debugRenderer.drawMeshHull = true;
-        // debugRenderer.drawMeshTriangles = true;
-        // debugRenderer.drawPaths = true;
-        // debugShader = spine.webgl.Shader.newColored(gl);
+        var debugRenderer = new SpineWebGL.webgl.SkeletonDebugRenderer(gl);
+
+        debugRenderer.premultipliedAlpha = true;
+        debugRenderer.drawRegionAttachments = true;
+        debugRenderer.drawBoundingBoxes = true;
+        debugRenderer.drawMeshHull = true;
+        debugRenderer.drawMeshTriangles = true;
+        debugRenderer.drawPaths = true;
+
+        this.drawDebug = false;
+
+        this.debugShader = SpineWebGL.webgl.Shader.newColored(gl);
+
+        this.debugRenderer = debugRenderer;
     },
 
     getRuntime: function ()
