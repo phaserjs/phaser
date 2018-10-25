@@ -46,8 +46,10 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     var batcher = plugin.batcher;
     var runtime = src.runtime;
     var skeleton = src.skeleton;
-
     var skeletonRenderer = plugin.skeletonRenderer;
+
+    // skeleton.flipX = src.flipX;
+    // skeleton.flipY = src.flipY;
 
     mvp.ortho(0, renderer.width, 0, renderer.height, 0, 1);
 
@@ -57,18 +59,13 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     mvp.rotateZ(data.rotation * -1);
     mvp.scaleXYZ(data.scaleX, data.scaleY, 1);
 
-    skeleton.updateWorldTransform();
-
-    //  Bind the shader and set the texture and model-view-projection matrix.
+    // skeleton.updateWorldTransform();
 
     shader.bind();
     shader.setUniformi(runtime.webgl.Shader.SAMPLER, 0);
     shader.setUniform4x4f(runtime.webgl.Shader.MVP_MATRIX, mvp.val);
 
-    //  Start the batch and tell the SkeletonRenderer to render the active skeleton.
     batcher.begin(shader);
-
-    // plugin.skeletonRenderer.vertexEffect = null;
 
     skeletonRenderer.draw(batcher, skeleton);
 
