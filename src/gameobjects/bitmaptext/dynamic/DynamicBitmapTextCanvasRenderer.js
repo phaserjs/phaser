@@ -36,6 +36,7 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
     var textureFrame = src.frame;
 
     var displayCallback = src.displayCallback;
+    var callbackData = src.callbackData;
 
     var cameraScrollX = camera.scrollX * src.scrollFactorX;
     var cameraScrollY = camera.scrollY * src.scrollFactorY;
@@ -61,7 +62,6 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
     var lastGlyph = null;
     var lastCharCode = 0;
 
-    // var ctx = renderer.currentContext;
     var image = src.frame.source.image;
 
     var textureX = textureFrame.cutX;
@@ -121,7 +121,15 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
 
         if (displayCallback)
         {
-            var output = displayCallback({ tint: { topLeft: 0, topRight: 0, bottomLeft: 0, bottomRight: 0 }, index: index, charCode: charCode, x: x, y: y, scale: scale, rotation: 0, data: glyph.data });
+            callbackData.index = index;
+            callbackData.charCode = charCode;
+            callbackData.x = x;
+            callbackData.y = y;
+            callbackData.scale = scale;
+            callbackData.rotation = rotation;
+            callbackData.data = glyph.data;
+
+            var output = displayCallback(callbackData);
 
             x = output.x;
             y = output.y;

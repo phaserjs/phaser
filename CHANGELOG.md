@@ -18,6 +18,7 @@
 * `PluginManager.install` returns `null` if the plugin failed to install in all cases.
 * `PluginFile` will now install the plugin into the _current_ Scene as long as the `start` or `mapping` arguments are provided.
 * MATH_CONST no longer requires or sets the Random Data Generator, this is now done in the Game Config, allowing you to require the math constants without pulling in a whole copy of the RNG with it.
+* The Dynamic Bitmap Text Canvas Renderer was creating a new data object every frame for the callback. It now uses the `callbackData` object instead, like the WebGL renderer does.
 
 ### Bug Fixes
 
