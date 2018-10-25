@@ -8,6 +8,7 @@ var Class = require('../../../../src/utils/Class');
 var ComponentsAlpha = require('../../../../src/gameobjects/components/Alpha');
 var ComponentsBlendMode = require('../../../../src/gameobjects/components/BlendMode');
 var ComponentsDepth = require('../../../../src/gameobjects/components/Depth');
+var ComponentsFlip = require('../../../../src/gameobjects/components/Flip');
 var ComponentsScrollFactor = require('../../../../src/gameobjects/components/ScrollFactor');
 var ComponentsTransform = require('../../../../src/gameobjects/components/Transform');
 var ComponentsVisible = require('../../../../src/gameobjects/components/Visible');
@@ -33,6 +34,7 @@ var SpineGameObject = new Class({
         ComponentsAlpha,
         ComponentsBlendMode,
         ComponentsDepth,
+        ComponentsFlip,
         ComponentsScrollFactor,
         ComponentsTransform,
         ComponentsVisible,
@@ -111,13 +113,35 @@ var SpineGameObject = new Class({
 
     // http://esotericsoftware.com/spine-runtimes-guide
 
+    getAnimationList: function ()
+    {
+        var output = [];
+
+        var skeletonData = this.skeletonData;
+
+        if (skeletonData)
+        {
+            for (var i = 0; i < skeletonData.animations.length; i++)
+            {
+                output.push(skeletonData.animations[i].name);
+            }
+        }
+
+        return output;
+    },
+
+    play: function (animationName, loop)
+    {
+        if (loop === undefined)
+        {
+            loop = false;
+        }
+
+        return this.setAnimation(0, animationName, loop);
+    },
+
     setAnimation: function (trackIndex, animationName, loop)
     {
-        // if (loop === undefined)
-        // {
-        //     loop = false;
-        // }
-
         this.state.setAnimation(trackIndex, animationName, loop);
 
         return this;
@@ -149,6 +173,13 @@ var SpineGameObject = new Class({
         return this;
     },
 
+    setSkinByName: function (skinName)
+    {
+        this.skeleton.setSkinByName(skinName);
+
+        return this;
+    },
+
     setSkin: function (newSkin)
     {
         var skeleton = this.skeleton;
@@ -174,20 +205,40 @@ var SpineGameObject = new Class({
         return this.skeleton.findBone(boneName);
     },
 
+    findBoneIndex: function (boneName)
+    {
+        return this.skeleton.findBoneIndex(boneName);
+    },
+
+    findSlot: function (slotName)
+    {
+        return this.skeleton.findSlot(slotName);
+    },
+
+    findSlotIndex: function (slotName)
+    {
+        return this.skeleton.findSlotIndex(slotName);
+    },
+
     getBounds: function ()
     {
         return this.plugin.getBounds(this.skeleton);
-
-        // this.skeleton.getBounds(this.offset, this.size, []);
     },
 
     preUpdate: function (time, delta)
     {
+        var skeleton = this.skeleton;
+
+        skeleton.flipX = this.flipX;
+        skeleton.flipY = this.flipY;
+
         this.state.update(delta / 1000);
 
-        this.state.apply(this.skeleton);
+        this.state.apply(skeleton);
 
-        this.emit('spine.update', this.skeleton);
+        this.emit('spine.update', skeleton);
+
+        skeleton.updateWorldTransform();
     },
 
     /**
