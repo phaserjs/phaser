@@ -47,7 +47,7 @@ var SpineCanvasPlugin = new Class({
         return runtime;
     },
 
-    createSkeleton: function (key)
+    createSkeleton: function (key, child)
     {
         var atlasData = this.cache.get(key);
 
@@ -68,7 +68,14 @@ var SpineCanvasPlugin = new Class({
         
         var skeletonJson = new SpineCanvas.SkeletonJson(atlasLoader);
 
-        var skeletonData = skeletonJson.readSkeletonData(this.json.get(key));
+        var data = this.json.get(key);
+
+        if (child)
+        {
+            data = data[child];
+        }
+
+        var skeletonData = skeletonJson.readSkeletonData(data);
 
         var skeleton = new SpineCanvas.Skeleton(skeletonData);
     

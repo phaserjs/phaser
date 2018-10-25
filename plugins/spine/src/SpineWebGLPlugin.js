@@ -76,7 +76,7 @@ var SpineWebGLPlugin = new Class({
         return runtime;
     },
 
-    createSkeleton: function (key)
+    createSkeleton: function (key, child)
     {
         var atlasData = this.cache.get(key);
 
@@ -99,7 +99,14 @@ var SpineWebGLPlugin = new Class({
         
         var skeletonJson = new SpineWebGL.SkeletonJson(atlasLoader);
 
-        var skeletonData = skeletonJson.readSkeletonData(this.json.get(key));
+        var data = this.json.get(key);
+
+        if (child)
+        {
+            data = data[child];
+        }
+
+        var skeletonData = skeletonJson.readSkeletonData(data);
 
         var skeleton = new SpineWebGL.Skeleton(skeletonData);
     
