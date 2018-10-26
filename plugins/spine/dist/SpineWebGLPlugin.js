@@ -3770,7 +3770,11 @@ var TransformMatrix = new Class({
     },
 
     /**
-     * Decompose this Matrix into its translation, scale and rotation values.
+     * Decompose this Matrix into its translation, scale and rotation values using QR decomposition.
+     * 
+     * The result must be applied in the following order to reproduce the current matrix:
+     * 
+     * translate -> rotate -> scale
      *
      * @method Phaser.GameObjects.Components.TransformMatrix#decomposeMatrix
      * @since 3.0.0
@@ -3793,21 +3797,33 @@ var TransformMatrix = new Class({
         var c = matrix[2];
         var d = matrix[3];
 
-        var a2 = a * a;
-        var b2 = b * b;
-        var c2 = c * c;
-        var d2 = d * d;
-
-        var sx = Math.sqrt(a2 + c2);
-        var sy = Math.sqrt(b2 + d2);
+        var determ = a * d - b * c;
 
         decomposedMatrix.translateX = matrix[4];
         decomposedMatrix.translateY = matrix[5];
 
-        decomposedMatrix.scaleX = sx;
-        decomposedMatrix.scaleY = sy;
+        if (a || b)
+        {
+            var r = Math.sqrt(a * a + b * b);
 
-        decomposedMatrix.rotation = Math.acos(a / sx) * (Math.atan(-c / a) < 0 ? -1 : 1);
+            decomposedMatrix.rotation = (b > 0) ? Math.acos(a / r) : -Math.acos(a / r);
+            decomposedMatrix.scaleX = r;
+            decomposedMatrix.scaleY = determ / r;
+        }
+        else if (c || d)
+        {
+            var s = Math.sqrt(c * c + d * d);
+
+            decomposedMatrix.rotation = Math.PI * 0.5 - (d > 0 ? Math.acos(-c / s) : -Math.acos(c / s));
+            decomposedMatrix.scaleX = determ / s;
+            decomposedMatrix.scaleY = s;
+        }
+        else
+        {
+            decomposedMatrix.rotation = 0;
+            decomposedMatrix.scaleX = 0;
+            decomposedMatrix.scaleY = 0;
+        }
 
         return decomposedMatrix;
     },
@@ -8190,6 +8206,51 @@ module.exports = Wrap;
 
 /***/ }),
 
+/***/ "../../../src/math/angle/CounterClockwise.js":
+/*!*************************************************************!*\
+  !*** D:/wamp/www/phaser/src/math/angle/CounterClockwise.js ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * @author       Richard Davey <rich@photonstorm.com>
+ * @copyright    2018 Photon Storm Ltd.
+ * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
+ */
+
+var CONST = __webpack_require__(/*! ../const */ "../../../src/math/const.js");
+
+/**
+ * Takes an angle in Phasers default clockwise format and converts it so that
+ * 0 is North, 90 is West, 180 is South and 270 is East,
+ * therefore running counter-clockwise instead of clockwise.
+ * 
+ * You can pass in the angle from a Game Object using:
+ * 
+ * ```javascript
+ * var converted = CounterClockwise(gameobject.rotation);
+ * ```
+ * 
+ * All values for this function are in radians.
+ *
+ * @function Phaser.Math.Angle.CounterClockwise
+ * @since 3.16.0
+ *
+ * @param {number} angle - The angle to convert, in radians.
+ *
+ * @return {number} The converted angle, in radians.
+ */
+var CounterClockwise = function (angle)
+{
+    return Math.abs((((angle + CONST.TAU) % CONST.PI2) - CONST.PI2) % CONST.PI2);
+};
+
+module.exports = CounterClockwise;
+
+
+/***/ }),
+
 /***/ "../../../src/math/angle/Wrap.js":
 /*!*************************************************!*\
   !*** D:/wamp/www/phaser/src/math/angle/Wrap.js ***!
@@ -9357,6 +9418,8 @@ var ScenePlugin = __webpack_require__(/*! ../../../src/plugins/ScenePlugin */ ".
 var SpineFile = __webpack_require__(/*! ./SpineFile */ "./SpineFile.js");
 var SpineGameObject = __webpack_require__(/*! ./gameobject/SpineGameObject */ "./gameobject/SpineGameObject.js");
 
+var runtime;
+
 /**
  * @classdesc
  * TODO
@@ -9375,16 +9438,13 @@ var SpinePlugin = new Class({
 
     initialize:
 
-    function SpinePlugin (scene, pluginManager)
+    function SpinePlugin (scene, pluginManager, SpineRuntime)
     {
         console.log('BaseSpinePlugin created');
 
         ScenePlugin.call(this, scene, pluginManager);
 
         var game = pluginManager.game;
-
-        this.canvas = game.canvas;
-        this.context = game.context;
 
         //  Create a custom cache to store the spine data (.atlas files)
         this.cache = game.cache.addCustom('spine');
@@ -9393,11 +9453,17 @@ var SpinePlugin = new Class({
 
         this.textures = game.textures;
 
+        this.skeletonRenderer;
+
+        this.drawDebug = false;
+
         //  Register our file type
         pluginManager.registerFileType('spine', this.spineFileCallback, scene);
 
         //  Register our game object
         pluginManager.registerGameObject('spine', this.createSpineFactory(this));
+
+        runtime = SpineRuntime;
     },
 
     spineFileCallback: function (key, jsonURL, atlasURL, jsonXhrSettings, atlasXhrSettings)
@@ -9449,6 +9515,47 @@ var SpinePlugin = new Class({
         };
 
         return callback;
+    },
+
+    getRuntime: function ()
+    {
+        return runtime;
+    },
+
+    createSkeleton: function (key, skeletonJSON)
+    {
+        var atlas = this.getAtlas(key);
+
+        var atlasLoader = new runtime.AtlasAttachmentLoader(atlas);
+        
+        var skeletonJson = new runtime.SkeletonJson(atlasLoader);
+
+        var data = (skeletonJSON) ? skeletonJSON : this.json.get(key);
+
+        var skeletonData = skeletonJson.readSkeletonData(data);
+
+        var skeleton = new runtime.Skeleton(skeletonData);
+    
+        return { skeletonData: skeletonData, skeleton: skeleton };
+    },
+
+    getBounds: function (skeleton)
+    {
+        var offset = new runtime.Vector2();
+        var size = new runtime.Vector2();
+
+        skeleton.getBounds(offset, size, []);
+
+        return { offset: offset, size: size };
+    },
+
+    createAnimationState: function (skeleton)
+    {
+        var stateData = new runtime.AnimationStateData(skeleton.data);
+
+        var state = new runtime.AnimationState(stateData);
+
+        return { stateData: stateData, state: state };
     },
 
     /**
@@ -9848,8 +9955,6 @@ var BaseSpinePlugin = __webpack_require__(/*! ./BaseSpinePlugin */ "./BaseSpineP
 var SpineWebGL = __webpack_require__(/*! SpineWebGL */ "./runtimes/spine-webgl.js");
 var Matrix4 = __webpack_require__(/*! ../../../src/math/Matrix4 */ "../../../src/math/Matrix4.js");
 
-var runtime;
-
 /**
  * @classdesc
  * Just the WebGL Runtime.
@@ -9872,9 +9977,14 @@ var SpineWebGLPlugin = new Class({
     {
         console.log('SpineWebGLPlugin created');
 
-        BaseSpinePlugin.call(this, scene, pluginManager);
+        BaseSpinePlugin.call(this, scene, pluginManager, SpineWebGL);
 
-        runtime = SpineWebGL;
+        this.gl;
+        this.mvp;
+        this.shader;
+        this.batcher;
+        this.debugRenderer;
+        this.debugShader;
     },
 
     boot: function ()
@@ -9894,34 +10004,18 @@ var SpineWebGLPlugin = new Class({
 
         this.shapes = new SpineWebGL.webgl.ShapeRenderer(gl);
 
-        var debugRenderer = new SpineWebGL.webgl.SkeletonDebugRenderer(gl);
-
-        debugRenderer.premultipliedAlpha = true;
-        debugRenderer.drawRegionAttachments = true;
-        debugRenderer.drawBoundingBoxes = true;
-        debugRenderer.drawMeshHull = true;
-        debugRenderer.drawMeshTriangles = true;
-        debugRenderer.drawPaths = true;
-
-        this.drawDebug = false;
+        this.debugRenderer = new SpineWebGL.webgl.SkeletonDebugRenderer(gl);
 
         this.debugShader = SpineWebGL.webgl.Shader.newColored(gl);
-
-        this.debugRenderer = debugRenderer;
     },
 
-    getRuntime: function ()
-    {
-        return runtime;
-    },
-
-    createSkeleton: function (key)
+    getAtlas: function (key)
     {
         var atlasData = this.cache.get(key);
 
         if (!atlasData)
         {
-            console.warn('No skeleton data for: ' + key);
+            console.warn('No atlas data for: ' + key);
             return;
         }
 
@@ -9934,34 +10028,7 @@ var SpineWebGLPlugin = new Class({
             return new SpineWebGL.webgl.GLTexture(gl, textures.get(path).getSourceImage());
         });
 
-        var atlasLoader = new SpineWebGL.AtlasAttachmentLoader(atlas);
-        
-        var skeletonJson = new SpineWebGL.SkeletonJson(atlasLoader);
-
-        var skeletonData = skeletonJson.readSkeletonData(this.json.get(key));
-
-        var skeleton = new SpineWebGL.Skeleton(skeletonData);
-    
-        return { skeletonData: skeletonData, skeleton: skeleton };
-    },
-
-    getBounds: function (skeleton)
-    {
-        var offset = new SpineWebGL.Vector2();
-        var size = new SpineWebGL.Vector2();
-
-        skeleton.getBounds(offset, size, []);
-
-        return { offset: offset, size: size };
-    },
-
-    createAnimationState: function (skeleton)
-    {
-        var stateData = new SpineWebGL.AnimationStateData(skeleton.data);
-
-        var state = new SpineWebGL.AnimationState(stateData);
-
-        return { stateData: stateData, state: state };
+        return atlas;
     }
 
 });
@@ -10025,21 +10092,44 @@ var SpineGameObject = new Class({
 
     function SpineGameObject (scene, plugin, x, y, key, animationName, loop)
     {
+        GameObject.call(this, scene, 'Spine');
+
         this.plugin = plugin;
 
         this.runtime = plugin.getRuntime();
 
-        GameObject.call(this, scene, 'Spine');
+        this.skeleton = null;
+        this.skeletonData = null;
+
+        this.state = null;
+        this.stateData = null;
 
         this.drawDebug = false;
 
-        var data = this.plugin.createSkeleton(key);
+        this.timeScale = 1;
+
+        this.setPosition(x, y);
+
+        if (key)
+        {
+            this.setSkeleton(key, animationName, loop);
+        }
+    },
+
+    setSkeletonFromJSON: function (atlasDataKey, skeletonJSON, animationName, loop)
+    {
+        return this.setSkeleton(atlasDataKey, skeletonJSON, animationName, loop);
+    },
+
+    setSkeleton: function (atlasDataKey, animationName, loop, skeletonJSON)
+    {
+        var data = this.plugin.createSkeleton(atlasDataKey, skeletonJSON);
 
         this.skeletonData = data.skeletonData;
 
         var skeleton = data.skeleton;
 
-        skeleton.flipY = (scene.sys.game.config.renderType === 1);
+        skeleton.flipY = (this.scene.sys.game.config.renderType === 1);
 
         skeleton.setToSetupPose();
 
@@ -10052,6 +10142,12 @@ var SpineGameObject = new Class({
         //  AnimationState
         data = this.plugin.createAnimationState(skeleton);
 
+        if (this.state)
+        {
+            this.state.clearListeners();
+            this.state.clearListenerNotifications();
+        }
+
         this.state = data.state;
 
         this.stateData = data.stateData;
@@ -10062,33 +10158,31 @@ var SpineGameObject = new Class({
             event: function (trackIndex, event)
             {
                 //  Event on a Track
-                _this.emit('spine.event', trackIndex, event);
+                _this.emit('spine.event', _this, trackIndex, event);
             },
             complete: function (trackIndex, loopCount)
             {
                 //  Animation on Track x completed, loop count
-                _this.emit('spine.complete', trackIndex, loopCount);
+                _this.emit('spine.complete', _this, trackIndex, loopCount);
             },
             start: function (trackIndex)
             {
                 //  Animation on Track x started
-                _this.emit('spine.start', trackIndex);
+                _this.emit('spine.start', _this, trackIndex);
             },
             end: function (trackIndex)
             {
                 //  Animation on Track x ended
-                _this.emit('spine.end', trackIndex);
+                _this.emit('spine.end', _this, trackIndex);
             }
         });
-
-        this.renderDebug = false;
 
         if (animationName)
         {
             this.setAnimation(0, animationName, loop);
         }
 
-        this.setPosition(x, y);
+        return this;
     },
 
     // http://esotericsoftware.com/spine-runtimes-guide
@@ -10212,7 +10306,7 @@ var SpineGameObject = new Class({
         skeleton.flipX = this.flipX;
         skeleton.flipY = this.flipY;
 
-        this.state.update(delta / 1000);
+        this.state.update((delta / 1000) * this.timeScale);
 
         this.state.apply(skeleton);
 
@@ -10230,13 +10324,18 @@ var SpineGameObject = new Class({
      */
     preDestroy: function ()
     {
-        this.state.clearListeners();
-        this.state.clearListenerNotifications();
+        if (this.state)
+        {
+            this.state.clearListeners();
+            this.state.clearListenerNotifications();
+        }
 
         this.plugin = null;
         this.runtime = null;
+
         this.skeleton = null;
         this.skeletonData = null;
+
         this.state = null;
         this.stateData = null;
     }
@@ -10287,13 +10386,15 @@ module.exports = {
   !*** ./gameobject/SpineGameObjectWebGLRenderer.js ***!
   \****************************************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @copyright    2018 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
+
+var CounterClockwise = __webpack_require__(/*! ../../../../src/math/angle/CounterClockwise */ "../../../src/math/angle/CounterClockwise.js");
 
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
@@ -10313,23 +10414,6 @@ module.exports = {
 var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
     var pipeline = renderer.currentPipeline;
-
-    renderer.clearPipeline();
-
-    var camMatrix = renderer._tempMatrix1;
-    var spriteMatrix = renderer._tempMatrix2;
-    var calcMatrix = renderer._tempMatrix3;
-
-    spriteMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
-
-    camMatrix.copyFrom(camera.matrix);
-
-    spriteMatrix.e -= camera.scrollX * src.scrollFactorX;
-    spriteMatrix.f -= camera.scrollY * src.scrollFactorY;
-
-    //  Multiply by the Sprite matrix, store result in calcMatrix
-    camMatrix.multiply(spriteMatrix, calcMatrix);
-
     var plugin = src.plugin;
     var mvp = plugin.mvp;
 
@@ -10339,24 +10423,63 @@ var SpineGameObjectWebGLRenderer = function (renderer, src, interpolationPercent
     var skeleton = src.skeleton;
     var skeletonRenderer = plugin.skeletonRenderer;
 
-    // skeleton.flipX = src.flipX;
-    // skeleton.flipY = src.flipY;
+    if (!skeleton)
+    {
+        return;
+    }
 
-    mvp.ortho(0, renderer.width, 0, renderer.height, 0, 1);
+    renderer.clearPipeline();
+
+    var camMatrix = renderer._tempMatrix1;
+    var spriteMatrix = renderer._tempMatrix2;
+    var calcMatrix = renderer._tempMatrix3;
+
+    //  - 90 degrees to account for the difference in Spine vs. Phaser rotation
+    spriteMatrix.applyITRS(src.x, src.y, src.rotation - 1.5707963267948966, src.scaleX, src.scaleY);
+
+    camMatrix.copyFrom(camera.matrix);
+
+    if (parentMatrix)
+    {
+        //  Multiply the camera by the parent matrix
+        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
+
+        //  Undo the camera scroll
+        spriteMatrix.e = src.x;
+        spriteMatrix.f = src.y;
+
+        //  Multiply by the Sprite matrix, store result in calcMatrix
+        camMatrix.multiply(spriteMatrix, calcMatrix);
+    }
+    else
+    {
+        spriteMatrix.e -= camera.scrollX * src.scrollFactorX;
+        spriteMatrix.f -= camera.scrollY * src.scrollFactorY;
+
+        //  Multiply by the Sprite matrix, store result in calcMatrix
+        camMatrix.multiply(spriteMatrix, calcMatrix);
+    }
+
+    var width = renderer.width;
+    var height = renderer.height;
 
     var data = calcMatrix.decomposeMatrix();
 
-    mvp.translateXYZ(data.translateX, renderer.height - data.translateY, 0);
-    mvp.rotateZ(data.rotation * -1);
+    mvp.ortho(0, width, 0, height, 0, 1);
+    mvp.translateXYZ(data.translateX, height - data.translateY, 0);
+    mvp.rotateZ(CounterClockwise(data.rotation));
     mvp.scaleXYZ(data.scaleX, data.scaleY, 1);
 
-    // skeleton.updateWorldTransform();
-
+    //  For a Stage 1 release we'll handle it like this:
     shader.bind();
     shader.setUniformi(runtime.webgl.Shader.SAMPLER, 0);
     shader.setUniform4x4f(runtime.webgl.Shader.MVP_MATRIX, mvp.val);
 
+    //  For Stage 2, we'll move to using a custom pipeline, so Spine objects are batched
+
     batcher.begin(shader);
+
+    skeletonRenderer.premultipliedAlpha = true;
 
     skeletonRenderer.draw(batcher, skeleton);
 
