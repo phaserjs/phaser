@@ -45,21 +45,44 @@ var SpineGameObject = new Class({
 
     function SpineGameObject (scene, plugin, x, y, key, animationName, loop)
     {
+        GameObject.call(this, scene, 'Spine');
+
         this.plugin = plugin;
 
         this.runtime = plugin.getRuntime();
 
-        GameObject.call(this, scene, 'Spine');
+        this.skeleton = null;
+        this.skeletonData = null;
+
+        this.state = null;
+        this.stateData = null;
 
         this.drawDebug = false;
 
-        var data = this.plugin.createSkeleton(key);
+        this.timeScale = 1;
+
+        this.setPosition(x, y);
+
+        if (key)
+        {
+            this.setSkeleton(key, animationName, loop);
+        }
+    },
+
+    setSkeletonFromJSON: function (atlasDataKey, skeletonJSON, animationName, loop)
+    {
+        return this.setSkeleton(atlasDataKey, skeletonJSON, animationName, loop);
+    },
+
+    setSkeleton: function (atlasDataKey, animationName, loop, skeletonJSON)
+    {
+        var data = this.plugin.createSkeleton(atlasDataKey, skeletonJSON);
 
         this.skeletonData = data.skeletonData;
 
         var skeleton = data.skeleton;
 
-        skeleton.flipY = (scene.sys.game.config.renderType === 1);
+        skeleton.flipY = (this.scene.sys.game.config.renderType === 1);
 
         skeleton.setToSetupPose();
 
@@ -72,6 +95,12 @@ var SpineGameObject = new Class({
         //  AnimationState
         data = this.plugin.createAnimationState(skeleton);
 
+        if (this.state)
+        {
+            this.state.clearListeners();
+            this.state.clearListenerNotifications();
+        }
+
         this.state = data.state;
 
         this.stateData = data.stateData;
@@ -82,33 +111,31 @@ var SpineGameObject = new Class({
             event: function (trackIndex, event)
             {
                 //  Event on a Track
-                _this.emit('spine.event', trackIndex, event);
+                _this.emit('spine.event', _this, trackIndex, event);
             },
             complete: function (trackIndex, loopCount)
             {
                 //  Animation on Track x completed, loop count
-                _this.emit('spine.complete', trackIndex, loopCount);
+                _this.emit('spine.complete', _this, trackIndex, loopCount);
             },
             start: function (trackIndex)
             {
                 //  Animation on Track x started
-                _this.emit('spine.start', trackIndex);
+                _this.emit('spine.start', _this, trackIndex);
             },
             end: function (trackIndex)
             {
                 //  Animation on Track x ended
-                _this.emit('spine.end', trackIndex);
+                _this.emit('spine.end', _this, trackIndex);
             }
         });
-
-        this.renderDebug = false;
 
         if (animationName)
         {
             this.setAnimation(0, animationName, loop);
         }
 
-        this.setPosition(x, y);
+        return this;
     },
 
     // http://esotericsoftware.com/spine-runtimes-guide
@@ -232,7 +259,7 @@ var SpineGameObject = new Class({
         skeleton.flipX = this.flipX;
         skeleton.flipY = this.flipY;
 
-        this.state.update(delta / 1000);
+        this.state.update((delta / 1000) * this.timeScale);
 
         this.state.apply(skeleton);
 
@@ -250,13 +277,18 @@ var SpineGameObject = new Class({
      */
     preDestroy: function ()
     {
-        this.state.clearListeners();
-        this.state.clearListenerNotifications();
+        if (this.state)
+        {
+            this.state.clearListeners();
+            this.state.clearListenerNotifications();
+        }
 
         this.plugin = null;
         this.runtime = null;
+
         this.skeleton = null;
         this.skeletonData = null;
+
         this.state = null;
         this.stateData = null;
     }
