@@ -8,8 +8,6 @@ var Class = require('../../../src/utils/Class');
 var BaseSpinePlugin = require('./BaseSpinePlugin');
 var SpineCanvas = require('SpineCanvas');
 
-var runtime;
-
 /**
  * @classdesc
  * Just the Canvas Runtime.
@@ -32,9 +30,7 @@ var SpineCanvasPlugin = new Class({
     {
         console.log('SpineCanvasPlugin created');
 
-        BaseSpinePlugin.call(this, scene, pluginManager);
-
-        runtime = SpineCanvas;
+        BaseSpinePlugin.call(this, scene, pluginManager, SpineCanvas);
     },
 
     boot: function ()
@@ -42,18 +38,13 @@ var SpineCanvasPlugin = new Class({
         this.skeletonRenderer = new SpineCanvas.canvas.SkeletonRenderer(this.game.context);
     },
 
-    getRuntime: function ()
-    {
-        return runtime;
-    },
-
-    createSkeleton: function (key, child)
+    getAtlas: function (key)
     {
         var atlasData = this.cache.get(key);
 
         if (!atlasData)
         {
-            console.warn('No skeleton data for: ' + key);
+            console.warn('No atlas data for: ' + key);
             return;
         }
 
@@ -64,41 +55,7 @@ var SpineCanvasPlugin = new Class({
             return new SpineCanvas.canvas.CanvasTexture(textures.get(path).getSourceImage());
         });
 
-        var atlasLoader = new SpineCanvas.AtlasAttachmentLoader(atlas);
-        
-        var skeletonJson = new SpineCanvas.SkeletonJson(atlasLoader);
-
-        var data = this.json.get(key);
-
-        if (child)
-        {
-            data = data[child];
-        }
-
-        var skeletonData = skeletonJson.readSkeletonData(data);
-
-        var skeleton = new SpineCanvas.Skeleton(skeletonData);
-    
-        return { skeletonData: skeletonData, skeleton: skeleton };
-    },
-
-    getBounds: function (skeleton)
-    {
-        var offset = new SpineCanvas.Vector2();
-        var size = new SpineCanvas.Vector2();
-
-        skeleton.getBounds(offset, size, []);
-
-        return { offset: offset, size: size };
-    },
-
-    createAnimationState: function (skeleton)
-    {
-        var stateData = new SpineCanvas.AnimationStateData(skeleton.data);
-
-        var state = new SpineCanvas.AnimationState(stateData);
-
-        return { stateData: stateData, state: state };
+        return atlas;
     }
 
 });

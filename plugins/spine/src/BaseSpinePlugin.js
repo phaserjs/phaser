@@ -9,6 +9,8 @@ var ScenePlugin = require('../../../src/plugins/ScenePlugin');
 var SpineFile = require('./SpineFile');
 var SpineGameObject = require('./gameobject/SpineGameObject');
 
+var runtime;
+
 /**
  * @classdesc
  * TODO
@@ -27,16 +29,13 @@ var SpinePlugin = new Class({
 
     initialize:
 
-    function SpinePlugin (scene, pluginManager)
+    function SpinePlugin (scene, pluginManager, SpineRuntime)
     {
         console.log('BaseSpinePlugin created');
 
         ScenePlugin.call(this, scene, pluginManager);
 
         var game = pluginManager.game;
-
-        this.canvas = game.canvas;
-        this.context = game.context;
 
         //  Create a custom cache to store the spine data (.atlas files)
         this.cache = game.cache.addCustom('spine');
@@ -45,11 +44,17 @@ var SpinePlugin = new Class({
 
         this.textures = game.textures;
 
+        this.skeletonRenderer;
+
+        this.drawDebug = false;
+
         //  Register our file type
         pluginManager.registerFileType('spine', this.spineFileCallback, scene);
 
         //  Register our game object
         pluginManager.registerGameObject('spine', this.createSpineFactory(this));
+
+        runtime = SpineRuntime;
     },
 
     spineFileCallback: function (key, jsonURL, atlasURL, jsonXhrSettings, atlasXhrSettings)
@@ -101,6 +106,47 @@ var SpinePlugin = new Class({
         };
 
         return callback;
+    },
+
+    getRuntime: function ()
+    {
+        return runtime;
+    },
+
+    createSkeleton: function (key, skeletonJSON)
+    {
+        var atlas = this.getAtlas(key);
+
+        var atlasLoader = new runtime.AtlasAttachmentLoader(atlas);
+        
+        var skeletonJson = new runtime.SkeletonJson(atlasLoader);
+
+        var data = (skeletonJSON) ? skeletonJSON : this.json.get(key);
+
+        var skeletonData = skeletonJson.readSkeletonData(data);
+
+        var skeleton = new runtime.Skeleton(skeletonData);
+    
+        return { skeletonData: skeletonData, skeleton: skeleton };
+    },
+
+    getBounds: function (skeleton)
+    {
+        var offset = new runtime.Vector2();
+        var size = new runtime.Vector2();
+
+        skeleton.getBounds(offset, size, []);
+
+        return { offset: offset, size: size };
+    },
+
+    createAnimationState: function (skeleton)
+    {
+        var stateData = new runtime.AnimationStateData(skeleton.data);
+
+        var state = new runtime.AnimationState(stateData);
+
+        return { stateData: stateData, state: state };
     },
 
     /**
