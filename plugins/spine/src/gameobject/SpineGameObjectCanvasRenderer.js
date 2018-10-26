@@ -25,20 +25,18 @@ var SpineGameObjectCanvasRenderer = function (renderer, src, interpolationPercen
 {
     var context = renderer.currentContext;
 
-    if (!SetTransform(renderer, context, src, camera, parentMatrix))
-    {
-        return;
-    }
-
     var plugin = src.plugin;
     var skeleton = src.skeleton;
     var skeletonRenderer = plugin.skeletonRenderer;
 
+    if (!skeleton || !SetTransform(renderer, context, src, camera, parentMatrix))
+    {
+        return;
+    }
+
     skeletonRenderer.ctx = context;
 
     context.save();
-
-    // src.skeleton.updateWorldTransform();
 
     skeletonRenderer.draw(skeleton);
 
