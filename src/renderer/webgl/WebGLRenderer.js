@@ -546,8 +546,6 @@ var WebGLRenderer = new Class({
         gl.disable(gl.DEPTH_TEST);
         gl.disable(gl.CULL_FACE);
 
-        // gl.disable(gl.SCISSOR_TEST);
-
         gl.enable(gl.BLEND);
         gl.clearColor(clearColor.redGL, clearColor.greenGL, clearColor.blueGL, 1.0);
 
@@ -927,8 +925,18 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Rebinds the given pipeline instance to the renderer and then sets the blank texture as default.
-     * Doesn't flush the old pipeline first.
+     * Use this to reset the gl context to the state that Phaser requires to continue rendering.
+     * Calling this will:
+     * 
+     * * Disable `DEPTH_TEST`, `CULL_FACE` and `STENCIL_TEST`.
+     * * Clear the depth buffer and stencil buffers.
+     * * Reset the viewport size.
+     * * Reset the blend mode.
+     * * Bind a blank texture as the active texture on texture unit zero.
+     * * Rebinds the given pipeline instance.
+     * 
+     * You should call this having previously called `clearPipeline` and then wishing to return
+     * control to Phaser again.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#rebindPipeline
      * @since 3.16.0
@@ -937,20 +945,34 @@ var WebGLRenderer = new Class({
      */
     rebindPipeline: function (pipelineInstance)
     {
-        this.currentPipeline = pipelineInstance;
+        var gl = this.gl;
 
-        this.currentPipeline.bind();
+        gl.disable(gl.DEPTH_TEST);
+        gl.disable(gl.CULL_FACE);
+        gl.disable(gl.STENCIL_TEST);
+    
+        gl.clear(gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
 
-        this.currentPipeline.onBind();
-
-        this.setBlankTexture(true);
+        gl.viewport(0, 0, this.width, this.height);
 
         this.setBlendMode(0, true);
+
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, this.blankTexture.glTexture);
+
+        this.currentActiveTextureUnit = 0;
+        this.currentTextures[0] = this.blankTexture.glTexture;
+
+        this.currentPipeline = pipelineInstance;
+        this.currentPipeline.bind();
+        this.currentPipeline.onBind();
     },
 
     /**
      * Flushes the current WebGLPipeline being used and then clears it, along with the
      * the current shader program and vertex buffer. Then resets the blend mode to NORMAL.
+     * Call this before jumping to your own gl context handler, and then call `rebindPipeline` when
+     * you wish to return control to Phaser again.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#clearPipeline
      * @since 3.16.0
@@ -962,6 +984,7 @@ var WebGLRenderer = new Class({
         this.currentPipeline = null;
         this.currentProgram = null;
         this.currentVertexBuffer = null;
+        this.currentIndexBuffer = null;
 
         this.setBlendMode(0, true);
     },
