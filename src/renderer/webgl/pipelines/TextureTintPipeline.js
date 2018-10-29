@@ -420,7 +420,7 @@ var TextureTintPipeline = new Class({
 
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
 
-        for (var index = 0; index < batches.length - 1; index++)
+        for (var index = 0; index < batchCount - 1; index++)
         {
             batch = batches[index];
             batchNext = batches[index + 1];
@@ -453,7 +453,7 @@ var TextureTintPipeline = new Class({
         }
 
         // Left over data
-        batch = batches[batches.length - 1];
+        batch = batches[batchCount - 1];
 
         if (batch.textures.length > 0)
         {
