@@ -22,6 +22,8 @@
 * MATH_CONST no longer requires or sets the Random Data Generator, this is now done in the Game Config, allowing you to require the math constants without pulling in a whole copy of the RNG with it.
 * The Dynamic Bitmap Text Canvas Renderer was creating a new data object every frame for the callback. It now uses the `callbackData` object instead, like the WebGL renderer does.
 * `WebGLRenderer.setBlendMode` has a new optional argument `force`, which will force the given blend mode to be set, regardless of the current settings.
+* The method `DisplayList.sortGameObjects` has been removed. It has thrown a runtime error since v3.3.0! which no-one even spotted, a good indication of how little the method is used. The display list is automatically sorted anyway, so if you need to sort a small section of it, just use the standard JavaScript Array sort method (thanks ornyth)
+* The method `DisplayList.getTopGameObject` has been removed. It has thrown a runtime error since v3.3.0! which no-one even spotted, a good indication of how little the method is used (thanks ornyth)
 
 ### Bug Fixes
 
