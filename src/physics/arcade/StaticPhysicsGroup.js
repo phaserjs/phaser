@@ -86,7 +86,7 @@ var StaticPhysicsGroup = new Class({
          *
          * @name Phaser.Physics.Arcade.StaticGroup#physicsType
          * @type {integer}
-         * @default STATIC_BODY
+         * @default Phaser.Physics.Arcade.STATIC_BODY
          * @since 3.0.0
          */
         this.physicsType = CONST.STATIC_BODY;

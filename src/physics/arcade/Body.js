@@ -623,7 +623,7 @@ var Body = new Class({
         this.overlapR = 0;
 
         /**
-         * Whether this Body is overlapped with another and both have zero velocity.
+         * Whether this Body is overlapped with another and both are not moving.
          *
          * @name Phaser.Physics.Arcade.Body#embedded
          * @type {boolean}
@@ -718,6 +718,7 @@ var Body = new Class({
          * @name Phaser.Physics.Arcade.Body#physicsType
          * @type {integer}
          * @readonly
+         * @default Phaser.Physics.Arcade.DYNAMIC_BODY
          * @since 3.0.0
          */
         this.physicsType = CONST.DYNAMIC_BODY;
@@ -787,7 +788,8 @@ var Body = new Class({
     },
 
     /**
-     * Updates this Body's transform, dimensions, and position from its Game Object.
+     * Updates the Body's `transform`, `width`, `height`, and `center` from its Game Object.
+     * The Body's `position` isn't changed.
      *
      * @method Phaser.Physics.Arcade.Body#updateBounds
      * @since 3.0.0
@@ -874,7 +876,7 @@ var Body = new Class({
      * @fires Phaser.Physics.Arcade.World#worldbounds
      * @since 3.0.0
      *
-     * @param {number} delta - The delta time, in ms, elapsed since the last frame.
+     * @param {number} delta - The delta time, in seconds, elapsed since the last frame.
      */
     update: function (delta)
     {

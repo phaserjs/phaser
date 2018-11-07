@@ -58,7 +58,7 @@ var Factory = new Class({
     },
 
     /**
-     * Create a new Arcade Physics Collider object.
+     * Creates a new Arcade Physics Collider object.
      *
      * @method Phaser.Physics.Arcade.Factory#collider
      * @since 3.0.0
@@ -77,7 +77,7 @@ var Factory = new Class({
     },
 
     /**
-     * Create a new Arcade Physics Collider Overlap object.
+     * Creates a new Arcade Physics Collider Overlap object.
      *
      * @method Phaser.Physics.Arcade.Factory#overlap
      * @since 3.0.0
