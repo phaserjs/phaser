@@ -43,6 +43,7 @@
 * Starting with version 3.13 in the Canvas Renderer, it was possible for long-running scripts to start to get bogged-down in `fillRect` calls if the game had a background color set. The context is now saved properly to avoid this. Fix #4056 (thanks @Aveyder)
 * Render Textures created larger than the size of the default canvas would be automatically clipped when drawn to in WebGL. They now reset the gl scissor and drawing height property in order to draw to their full size, regardless of the canvas size. Fix #4139 (thanks @chaoyang805 @iamchristopher)
 * The `cameraFilter` property of a Game Object will now allow full bitmasks to be set (a value of -1), instead of just those > 0 (thanks @stuartkeith)
+* When using a Particle Emitter, the array of dead particles (`this.dead`) wasn't being filled correctly. Dead particles are now moved to it as they should be (thanks @Waclaw-I)
 
 ### Examples and TypeScript
 
