@@ -531,8 +531,9 @@ var GameObject = new Class({
      * Game Object Pool instead of destroying it, as destroyed objects cannot be resurrected.
      *
      * @method Phaser.GameObjects.GameObject#destroy
+     * @fires Phaser.GameObjects.GameObject#destroyEvent
      * @since 3.0.0
-     * 
+     *
      * @param {boolean} [fromScene=false] - Is this Game Object being destroyed as the result of a Scene shutdown?
      */
     destroy: function (fromScene)
@@ -607,3 +608,8 @@ var GameObject = new Class({
 GameObject.RENDER_MASK = 15;
 
 module.exports = GameObject;
+
+/**
+ * The Game Object will be destroyed.
+ * @event Phaser.GameObjects.GameObject#destroyEvent
+ */
