@@ -305,7 +305,7 @@ Read our [comprehensive guide](https://phaser.io/phaser3/devlog/127) on creating
 
 ### Building from Source
 
-If you wish to build Phaser 3 from source, ensure you have the required packages by cloning the repository and then running `npm install`.
+If you wish to build Phaser 3 from source, ensure you have the required packages by cloning the repository and then running `npm install` on your source directory.
 
 You can then run `webpack` to create a development build in the `build` folder which includes source maps for local testing. You can also `npm run dist` to create a minified packaged build in the `dist` folder. For a list of all commands available use `npm run help`.
 
