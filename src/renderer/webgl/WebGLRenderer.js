@@ -1162,11 +1162,14 @@ var WebGLRenderer = new Class({
      * @since 3.0.0
      *
      * @param {WebGLFramebuffer} framebuffer - The framebuffer that needs to be bound.
+     * @param {boolean} [updateScissor=false] - If a framebuffer is given, set the gl scissor to match the frame buffer size? Or, if `null` given, pop the scissor from the stack.
      *
      * @return {this} This WebGLRenderer instance.
      */
-    setFramebuffer: function (framebuffer)
+    setFramebuffer: function (framebuffer, updateScissor)
     {
+        if (updateScissor === undefined) { updateScissor = false; }
+
         var gl = this.gl;
 
         var width = this.width;
@@ -1187,6 +1190,22 @@ var WebGLRenderer = new Class({
             gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
 
             gl.viewport(0, 0, width, height);
+
+            if (updateScissor)
+            {
+                if (framebuffer)
+                {
+                    this.drawingBufferHeight = height;
+
+                    this.pushScissor(0, 0, width, height);
+                }
+                else
+                {
+                    this.drawingBufferHeight = this.height;
+
+                    this.popScissor();
+                }
+            }
 
             this.currentFramebuffer = framebuffer;
         }

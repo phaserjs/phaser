@@ -25,6 +25,7 @@
 * `WebGLRenderer.setBlendMode` has a new optional argument `force`, which will force the given blend mode to be set, regardless of the current settings.
 * The method `DisplayList.sortGameObjects` has been removed. It has thrown a runtime error since v3.3.0! which no-one even spotted, a good indication of how little the method is used. The display list is automatically sorted anyway, so if you need to sort a small section of it, just use the standard JavaScript Array sort method (thanks ornyth)
 * The method `DisplayList.getTopGameObject` has been removed. It has thrown a runtime error since v3.3.0! which no-one even spotted, a good indication of how little the method is used (thanks ornyth)
+* `WebGLRenderer.setFramebuffer` has a new optional boolean argument `updateScissor`, which will reset the scissor to match the framebuffer size, or clear it.
 
 ### Bug Fixes
 
@@ -40,6 +41,7 @@
 * `Array.Matrix.ReverseColumns` was actually reversing the rows, but now reverses the columns.
 * UnityAtlas now sets the correct file type key if using a config file object.
 * Starting with version 3.13 in the Canvas Renderer, it was possible for long-running scripts to start to get bogged-down in `fillRect` calls if the game had a background color set. The context is now saved properly to avoid this. Fix #4056 (thanks @Aveyder)
+* Render Textures created larger than the size of the default canvas would be automatically clipped when drawn to in WebGL. They now reset the gl scissor and drawing height property in order to draw to their full size, regardless of the canvas size. Fix #4139 (thanks @chaoyang805 @iamchristopher)
 
 ### Examples and TypeScript
 
