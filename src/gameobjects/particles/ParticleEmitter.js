@@ -2111,7 +2111,7 @@ var ParticleEmitter = new Class({
                 }
             }
 
-            this.dead.concat(rip);
+            this.dead = this.dead.concat(rip);
 
             StableSort.inplace(particles, this.indexSortCallback);
         }
