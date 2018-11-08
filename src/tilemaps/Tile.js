@@ -761,8 +761,9 @@ var Tile = new Class({
     },
 
     /**
-     * The tileset that contains this Tile. This will only return null if accessed from a LayerData
-     * instance before the tile is placed within a StaticTilemapLayer or DynamicTilemapLayer.
+     * The tileset that contains this Tile. This is null if accessed from a LayerData instance
+     * before the tile is placed in a StaticTilemapLayer or DynamicTilemapLayer, or if the tile has
+     * an index that doesn't correspond to any of the map's tilesets.
      *
      * @name Phaser.Tilemaps.Tile#tileset
      * @type {?Phaser.Tilemaps.Tileset}
@@ -773,7 +774,12 @@ var Tile = new Class({
         get: function ()
         {
             var tilemapLayer = this.tilemapLayer;
-            return tilemapLayer ? tilemapLayer.tileset : null;
+            if (!tilemapLayer) return null;
+
+            var tileset = tilemapLayer.gidMap[this.index];
+            if (!tileset) return null;
+
+            return tileset;
         }
     },
 
