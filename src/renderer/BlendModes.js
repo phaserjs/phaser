@@ -140,6 +140,13 @@ module.exports = {
      * 
      * @name Phaser.BlendModes.LUMINOSITY
      */
-    LUMINOSITY: 16
+    LUMINOSITY: 16,
+
+    /**
+     * Alpha erase blend mode.
+     * 
+     * @name Phaser.BlendModes.ERASE
+     */
+    ERASE: 17
 
 };
