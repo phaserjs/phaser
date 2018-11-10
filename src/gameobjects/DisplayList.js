@@ -138,46 +138,8 @@ var DisplayList = new Class({
     },
 
     /**
-     * Given an array of Game Objects, sort the array and return it, so that
-     * the objects are in index order with the lowest at the bottom.
-     *
-     * @method Phaser.GameObjects.DisplayList#sortGameObjects
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.GameObject[]} gameObjects - The array of Game Objects to sort.
-     *
-     * @return {array} The sorted array of Game Objects.
-     */
-    sortGameObjects: function (gameObjects)
-    {
-        if (gameObjects === undefined) { gameObjects = this.list; }
-
-        this.scene.sys.depthSort();
-
-        return gameObjects.sort(this.sortIndexHandler.bind(this));
-    },
-
-    /**
-     * Get the top-most Game Object in the given array of Game Objects, after sorting it.
-     *
-     * Note that the given array is sorted in place, even though it isn't returned directly it will still be updated.
-     *
-     * @method Phaser.GameObjects.DisplayList#getTopGameObject
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.GameObject[]} gameObjects - The array of Game Objects.
-     *
-     * @return {Phaser.GameObjects.GameObject} The top-most Game Object in the array of Game Objects.
-     */
-    getTopGameObject: function (gameObjects)
-    {
-        this.sortGameObjects(gameObjects);
-
-        return gameObjects[gameObjects.length - 1];
-    },
-
-    /**
-     * All members of the group.
+     * Returns an array which contains all objects currently on the Display List.
+     * This is a reference to the main list array, not a copy of it, so be careful not to modify it.
      *
      * @method Phaser.GameObjects.DisplayList#getChildren
      * @since 3.12.0

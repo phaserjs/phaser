@@ -123,8 +123,7 @@ var RenderTexture = new Class({
         this.globalAlpha = 1;
 
         /**
-         * The HTML Canvas Element that the Render Texture is drawing to.
-         * This is only populated if Phaser is running with the Canvas Renderer.
+         * The HTML Canvas Element that the Render Texture is drawing to when using the Canvas Renderer.
          *
          * @name Phaser.GameObjects.RenderTexture#canvas
          * @type {HTMLCanvasElement}
@@ -416,7 +415,7 @@ var RenderTexture = new Class({
 
         if (this.gl)
         {
-            this.renderer.setFramebuffer(this.framebuffer);
+            this.renderer.setFramebuffer(this.framebuffer, true);
 
             var gl = this.gl;
     
@@ -424,7 +423,7 @@ var RenderTexture = new Class({
     
             gl.clear(gl.COLOR_BUFFER_BIT);
     
-            this.renderer.setFramebuffer(null);
+            this.renderer.setFramebuffer(null, true);
         }
         else
         {
@@ -449,7 +448,7 @@ var RenderTexture = new Class({
         {
             if (this.gl)
             {
-                this.renderer.setFramebuffer(this.framebuffer);
+                this.renderer.setFramebuffer(this.framebuffer, true);
 
                 var gl = this.gl;
         
@@ -457,7 +456,7 @@ var RenderTexture = new Class({
         
                 gl.clear(gl.COLOR_BUFFER_BIT);
         
-                this.renderer.setFramebuffer(null);
+                this.renderer.setFramebuffer(null, true);
             }
             else
             {
@@ -615,7 +614,7 @@ var RenderTexture = new Class({
 
         if (gl)
         {
-            this.renderer.setFramebuffer(this.framebuffer);
+            this.renderer.setFramebuffer(this.framebuffer, true);
 
             var pipeline = this.pipeline;
     
@@ -625,7 +624,7 @@ var RenderTexture = new Class({
 
             pipeline.flush();
 
-            this.renderer.setFramebuffer(null);
+            this.renderer.setFramebuffer(null, true);
 
             pipeline.projOrtho(0, pipeline.width, pipeline.height, 0, -1000.0, 1000.0);
         }
@@ -697,8 +696,8 @@ var RenderTexture = new Class({
 
             if (gl)
             {
-                this.renderer.setFramebuffer(this.framebuffer);
-    
+                this.renderer.setFramebuffer(this.framebuffer, true);
+
                 var pipeline = this.pipeline;
         
                 pipeline.projOrtho(0, this.width, 0, this.height, -1000.0, 1000.0);
@@ -707,7 +706,7 @@ var RenderTexture = new Class({
             
                 pipeline.flush();
         
-                this.renderer.setFramebuffer(null);
+                this.renderer.setFramebuffer(null, true);
         
                 pipeline.projOrtho(0, pipeline.width, pipeline.height, 0, -1000.0, 1000.0);
             }
