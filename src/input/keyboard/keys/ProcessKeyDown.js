@@ -20,11 +20,6 @@ var ProcessKeyDown = function (key, event)
 {
     key.originalEvent = event;
 
-    if (key.preventDefault)
-    {
-        event.preventDefault();
-    }
-
     if (!key.enabled)
     {
         return;

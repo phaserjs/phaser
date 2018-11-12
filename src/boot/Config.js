@@ -56,13 +56,14 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @typedef {object} MouseInputConfig
  *
  * @property {*} [target=null] - Where the Mouse Manager listens for mouse input events. The default is the game canvas.
- * @property {boolean} [capture=true] - Whether mouse input events have preventDefault() called on them.
+ * @property {boolean} [capture=true] - Whether mouse input events have `preventDefault` called on them.
  */
 
 /**
  * @typedef {object} KeyboardInputConfig
  *
  * @property {*} [target=window] - Where the Keyboard Manager listens for keyboard input events.
+ * @property {boolean} [capture=true] - Whether keyboard input events have `preventDefault` called on them automatically.
  */
 
 /**
@@ -412,6 +413,11 @@ var Config = new Class({
          * @const {*} Phaser.Boot.Config#inputKeyboardEventTarget - The DOM Target to listen for keyboard events on. Defaults to `window` if not specified.
          */
         this.inputKeyboardEventTarget = GetValue(config, 'input.keyboard.target', window);
+
+        /**
+         * @const {boolean} Phaser.Boot.Config#inputKeyboardCapture - Should `preventDefault` be called automatically on every key press (true), or let each Key object set it (false)
+         */
+        this.inputKeyboardCapture = GetValue(config, 'input.keyboard.capture', true);
 
         /**
          * @const {(boolean|object)} Phaser.Boot.Config#inputMouse - Enable the Mouse Plugin. This can be disabled in games that don't need mouse input.

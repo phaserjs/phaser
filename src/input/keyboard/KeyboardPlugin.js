@@ -163,6 +163,23 @@ var KeyboardPlugin = new Class({
          */
         this.time = 0;
 
+        /**
+         * A flag that controls if all keys pressed have `preventDefault` called on them or not.
+         * 
+         * By default this is `true`.
+         * 
+         * You can set this flag to stop any key from triggering the default browser action, or if you need
+         * more specific control, you can create Key objects and set the flag on each of those instead.
+         * 
+         * This flag can be set in the Game Config by setting the `input.keyboard.capture` boolean, or you
+         * can set it in the Scene Config, in which case the Scene Config setting overrides the Game Config one.
+         *
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#preventDefault
+         * @type {boolean}
+         * @since 3.16.0
+         */
+        this.preventDefault = true;
+
         sceneInputPlugin.pluginEvents.once('boot', this.boot, this);
         sceneInputPlugin.pluginEvents.on('start', this.start, this);
     },
@@ -182,6 +199,7 @@ var KeyboardPlugin = new Class({
 
         this.enabled = GetValue(settings, 'keyboard', config.inputKeyboard);
         this.target = GetValue(settings, 'keyboard.target', config.inputKeyboardEventTarget);
+        this.preventDefault = GetValue(settings, 'keyboard.capture', config.inputKeyboardCapture);
 
         this.sceneInputPlugin.pluginEvents.once('destroy', this.destroy, this);
     },
@@ -242,11 +260,10 @@ var KeyboardPlugin = new Class({
 
             var key = _this.keys[event.keyCode];
 
-            if (key && key.preventDefault)
+            if (_this.preventDefault || key && key.preventDefault)
             {
                 event.preventDefault();
             }
-
         };
 
         this.onKeyHandler = handler;
