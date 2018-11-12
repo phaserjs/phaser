@@ -8,8 +8,9 @@
 * The WebGL Renderer has a new method `clearPipeline`, which will clear down the current pipeline and reset the blend mode, ready for the context to be passed to a 3rd party library.
 * The WebGL Renderer has a new method `rebindPipeline`, which will rebind the given pipeline instance, reset the blank texture and reset the blend mode. Which is useful for recovering from 3rd party libs that have modified the gl context.
 * Game Objects have a new property called `state`. Use this to track the state of a Game Object during its lifetime. For example, it could move from a state of 'moving', to 'attacking', to 'dead'. Phaser itself will never set this property, although plugins are allowed to.
-* The Keyboard Plugin will now call `preventDefault` on all key presses by default, stopping the keyboard event from hitting the browser. Previously, you had to create ` Key` object to enable this. You can control this at runtime by toggling the `KeyboardPlugin.preventDefault` boolean, or the config settings:
+* The Keyboard Plugin will now call `preventDefault` on all non-modified key presses by default, stopping the keyboard event from hitting the browser. Previously, you had to create ` Key` object to enable this. You can control this at runtime by toggling the `KeyboardPlugin.preventDefault` boolean, or the config settings:
 * There is a new Game Config setting `input.keyboard.capture` which allows you to set if the Keyboard Plugin will capture all key events or not. You can also set this in a Scene Config, in which case it will override the Game Config setting.
+* The Key object has a new boolean `metaKey` which indicates if the Meta Key was held down when the Key was pressed. On a Mac the Meta Key is Command. On a Windows keyboard, it's the Windows key.
 
 ### Updates
 
