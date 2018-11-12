@@ -113,6 +113,17 @@ var Key = new Class({
         this.shiftKey = false;
 
         /**
+         * The down state of the Meta key, if pressed at the same time as this key.
+         * On a Mac the Meta Key is the Command key. On Windows keyboards, it's the Windows key.
+         *
+         * @name Phaser.Input.Keyboard.Key#metaKey
+         * @type {boolean}
+         * @default false
+         * @since 3.16.0
+         */
+        this.metaKey = false;
+
+        /**
          * The location of the modifier key. 0 for standard (or unknown), 1 for left, 2 for right, 3 for numpad.
          *
          * @name Phaser.Input.Keyboard.Key#location
@@ -212,6 +223,7 @@ var Key = new Class({
         this.altKey = false;
         this.ctrlKey = false;
         this.shiftKey = false;
+        this.metaKey = false;
         this.timeDown = 0;
         this.duration = 0;
         this.timeUp = 0;

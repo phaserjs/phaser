@@ -28,6 +28,7 @@ var ProcessKeyDown = function (key, event)
     key.altKey = event.altKey;
     key.ctrlKey = event.ctrlKey;
     key.shiftKey = event.shiftKey;
+    key.metaKey = event.metaKey;
     key.location = event.location;
 
     if (key.isDown === false)
