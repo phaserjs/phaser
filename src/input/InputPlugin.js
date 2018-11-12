@@ -1704,20 +1704,20 @@ var InputPlugin = new Class({
             var width = 0;
             var height = 0;
 
-            if (frame)
-            {
-                width = frame.realWidth;
-                height = frame.realHeight;
-            }
-            else if (gameObject.width)
+            if (gameObject.width)
             {
                 width = gameObject.width;
                 height = gameObject.height;
             }
+            else if (frame)
+            {
+                width = frame.realWidth;
+                height = frame.realHeight;
+            }
 
             if (gameObject.type === 'Container' && (width === 0 || height === 0))
             {
-                console.warn('Container.setInteractive() must specify a Shape or call setSize() first');
+                console.warn('Container.setInteractive must specify a Shape or call setSize() first');
                 continue;
             }
 
