@@ -164,9 +164,14 @@ var KeyboardPlugin = new Class({
         this.time = 0;
 
         /**
-         * A flag that controls if all keys pressed have `preventDefault` called on them or not.
+         * A flag that controls if all non-modified keys pressed have `preventDefault` called on them or not.
          * 
          * By default this is `true`.
+         * 
+         * A non-modified key is one that doesn't have a modifier key held down with it. The modifier keys are
+         * shift, control, alt and the meta key (Command on a Mac, the Windows Key on Windows).
+         * Therefore, if the user presses shift + r, it won't prevent this combination, because of the modifier.
+         * However, if the user presses just the r key on its own, it will have its event prevented.
          * 
          * You can set this flag to stop any key from triggering the default browser action, or if you need
          * more specific control, you can create Key objects and set the flag on each of those instead.
@@ -260,7 +265,9 @@ var KeyboardPlugin = new Class({
 
             var key = _this.keys[event.keyCode];
 
-            if (_this.preventDefault || key && key.preventDefault)
+            var modified = (event.altKey || event.ctrlKey || event.shiftKey || event.metaKey);
+
+            if (_this.preventDefault && !modified || key && key.preventDefault)
             {
                 event.preventDefault();
             }

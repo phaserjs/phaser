@@ -415,7 +415,7 @@ var Config = new Class({
         this.inputKeyboardEventTarget = GetValue(config, 'input.keyboard.target', window);
 
         /**
-         * @const {boolean} Phaser.Boot.Config#inputKeyboardCapture - Should `preventDefault` be called automatically on every key press (true), or let each Key object set it (false)
+         * @const {boolean} Phaser.Boot.Config#inputKeyboardCapture - Should `preventDefault` be called automatically on every key non-modified press (true), or let each Key object set it (false)
          */
         this.inputKeyboardCapture = GetValue(config, 'input.keyboard.capture', true);
 
