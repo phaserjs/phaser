@@ -139,7 +139,9 @@ var Leaderboard = new Class({
      * 
      * The data is requested in an async call, so the result isn't available immediately.
      * 
-     * When the call completes this Leaderboard will emit the `setscore` event along with the score, any extra data and the name of the Leaderboard.
+     * When the call completes this Leaderboard will emit the `setscore` event along with the LeaderboardScore object and the name of the Leaderboard.
+     * 
+     * If the save fails the event will send `null` as the score value.
      *
      * @method Phaser.FacebookInstantGamesPlugin.Leaderboard#setScore
      * @since 3.13.0
@@ -157,7 +159,18 @@ var Leaderboard = new Class({
 
         this.ref.setScoreAsync(score, data).then(function (entry)
         {
-            _this.emit('setscore', entry.getScore(), entry.getExtraData(), _this.name);
+            if (entry)
+            {
+                var score = LeaderboardScore(entry);
+
+                _this.playerScore = score;
+    
+                _this.emit('setscore', score, _this.name);
+            }
+            else
+            {
+                _this.emit('setscore', null, _this.name);
+            }
 
         }).catch(function (e)
         {
@@ -173,6 +186,8 @@ var Leaderboard = new Class({
      * The data is requested in an async call, so the result isn't available immediately.
      * 
      * When the call completes this Leaderboard will emit the `getplayerscore` event along with the score and the name of the Leaderboard.
+     * 
+     * If the player has not yet saved a score, the event will send `null` as the score value, and `playerScore` will be set to `null` as well.
      *
      * @method Phaser.FacebookInstantGamesPlugin.Leaderboard#getPlayerScore
      * @since 3.13.0
@@ -185,11 +200,18 @@ var Leaderboard = new Class({
 
         this.ref.getPlayerEntryAsync().then(function (entry)
         {
-            var score = LeaderboardScore(entry);
+            if (entry)
+            {
+                var score = LeaderboardScore(entry);
 
-            _this.playerScore = score;
-
-            _this.emit('getplayerscore', score, _this.name);
+                _this.playerScore = score;
+    
+                _this.emit('getplayerscore', score, _this.name);
+            }
+            else
+            {
+                _this.emit('getplayerscore', null, _this.name);
+            }
 
         }).catch(function (e)
         {
