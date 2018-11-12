@@ -4,10 +4,12 @@
 
 ### Facebook Instant Games Updates and Fixes
 
+* Added the `Leaderboard.getConnectedScores` method, to get a list of scores from player connected entries.
 * The `loadPlayerPhoto` function in the Instant Games plugin now listens for the updated Loader event correctly, causing the `photocomplete` event to fire properly.
 * `Leaderboard.setScore` now emits the LeaderboardScore object with the `setscore` event, as the documentation said it did.
 * `Leaderboard.getPlayerScore` now only populates the `playerScore` property if the entry isn't `null`.
 * If the `setScore` or `getPlayerScore` calls fail, it will return `null` as the score instance, instead of causing a run-time error.
+* You can now pass an object or a string to `setScore` and objects will be automatically stringified.
 
 ### New Features
 
