@@ -32,36 +32,47 @@ var Vector2 = require('../../math/Vector2');
 var Wrap = require('../../math/Wrap');
 
 /**
- * @event Phaser.Physics.Arcade.World#pause
+ * The physics simulation paused.
+ * @event Phaser.Physics.Arcade.World#pauseEvent
  */
 
 /**
- * @event Phaser.Physics.Arcade.World#resume
+ * The physics simulation resumed (from a paused state).
+ * @event Phaser.Physics.Arcade.World#resumeEvent
  */
 
 /**
- * @event Phaser.Physics.Arcade.World#collide
+ * Two Game Objects collided.
+ * This event is emitted only if at least one body has `onCollide` enabled.
+ * @event Phaser.Physics.Arcade.World#collideEvent
  * @param {Phaser.GameObjects.GameObject} gameObject1
  * @param {Phaser.GameObjects.GameObject} gameObject2
  * @param {Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody} body1
  * @param {Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody} body2
+ * @see Phaser.Physics.Arcade.Body#onCollide
  */
 
 /**
- * @event Phaser.Physics.Arcade.World#overlap
+ * Two Game Objects overlapped.
+ * This event is emitted only if at least one body has `onOverlap` enabled.
+ * @event Phaser.Physics.Arcade.World#overlapEvent
  * @param {Phaser.GameObjects.GameObject} gameObject1
  * @param {Phaser.GameObjects.GameObject} gameObject2
  * @param {Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody} body1
  * @param {Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody} body2
+ * @see Phaser.Physics.Arcade.Body#onOverlap
  */
 
 /**
- * @event Phaser.Physics.Arcade.World#worldbounds
+ * A Body contacted the world boundary.
+ * This event is emitted only if the body has `onWorldBounds` enabled.
+ * @event Phaser.Physics.Arcade.World#worldboundsEvent
  * @param {Phaser.Physics.Arcade.Body} body
  * @param {boolean} up
  * @param {boolean} down
  * @param {boolean} left
  * @param {boolean} right
+ * @see Phaser.Physics.Arcade.Body#onWorldBounds
  */
 
 /**
@@ -853,7 +864,7 @@ var World = new Class({
      * checks.
      *
      * @method Phaser.Physics.Arcade.World#pause
-     * @fires Phaser.Physics.Arcade.World#pause
+     * @fires Phaser.Physics.Arcade.World#pauseEvent
      * @since 3.0.0
      *
      * @return {Phaser.Physics.Arcade.World} This World object.
@@ -871,7 +882,7 @@ var World = new Class({
      * Resumes the simulation, if paused.
      *
      * @method Phaser.Physics.Arcade.World#resume
-     * @fires Phaser.Physics.Arcade.World#resume
+     * @fires Phaser.Physics.Arcade.World#resumeEvent
      * @since 3.0.0
      *
      * @return {Phaser.Physics.Arcade.World} This World object.
@@ -1361,8 +1372,8 @@ var World = new Class({
      * Separates two Bodies.
      *
      * @method Phaser.Physics.Arcade.World#separate
-     * @fires Phaser.Physics.Arcade.World#collide
-     * @fires Phaser.Physics.Arcade.World#overlap
+     * @fires Phaser.Physics.Arcade.World#collideEvent
+     * @fires Phaser.Physics.Arcade.World#overlapEvent
      * @since 3.0.0
      *
      * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to be separated.
@@ -1476,8 +1487,8 @@ var World = new Class({
      * Separates two Bodies, when both are circular.
      *
      * @method Phaser.Physics.Arcade.World#separateCircle
-     * @fires Phaser.Physics.Arcade.World#collide
-     * @fires Phaser.Physics.Arcade.World#overlap
+     * @fires Phaser.Physics.Arcade.World#collideEvent
+     * @fires Phaser.Physics.Arcade.World#overlapEvent
      * @since 3.0.0
      *
      * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to be separated.
@@ -2132,8 +2143,10 @@ var World = new Class({
      * Please use Phaser.Physics.Arcade.World#collide instead.
      *
      * @method Phaser.Physics.Arcade.World#collideSpriteVsTilemapLayer
-     * @fires Phaser.Physics.Arcade.World#collide
-     * @fires Phaser.Physics.Arcade.World#overlap
+     * @fires Phaser.GameObjects.GameObject#collideEvent
+     * @fires Phaser.GameObjects.GameObject#overlapEvent
+     * @fires Phaser.Physics.Arcade.World#collideEvent
+     * @fires Phaser.Physics.Arcade.World#overlapEvent
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} sprite - The first object to check for collision.
@@ -2363,3 +2376,23 @@ var World = new Class({
 });
 
 module.exports = World;
+
+/**
+ * A physics-enabled Game Object collided with a Tile.
+ * This event is emitted only if the Game Object's body has `onCollide` enabled.
+ * @event Phaser.GameObjects.GameObject#collideEvent
+ * @param {Phaser.GameObjects.GameObject} gameObject
+ * @param {Phaser.Tilemaps.Tile} tile
+ * @param {Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody} body
+ * @see Phaser.Physics.Arcade.Body#onCollide
+ */
+
+/**
+ * A physics-enabled Game Object overlapped with a Tile.
+ * This event is emitted only if the Game Object's body has `onOverlap` enabled.
+ * @event Phaser.GameObjects.GameObject#overlapEvent
+ * @param {Phaser.GameObjects.GameObject} gameObject
+ * @param {Phaser.Tilemaps.Tile} tile
+ * @param {Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody} body
+ * @see Phaser.Physics.Arcade.Body#onOverlap
+ */

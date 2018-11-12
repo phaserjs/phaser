@@ -505,7 +505,7 @@ var WebGLRenderer = new Class({
         //  Set it back into the Game, so developers can access it from there too
         this.game.context = gl;
 
-        for (var i = 0; i <= 16; i++)
+        for (var i = 0; i <= 17; i++)
         {
             this.blendModes.push({ func: [ gl.ONE, gl.ONE_MINUS_SRC_ALPHA ], equation: gl.FUNC_ADD });
         }
@@ -513,6 +513,7 @@ var WebGLRenderer = new Class({
         this.blendModes[1].func = [ gl.ONE, gl.DST_ALPHA ];
         this.blendModes[2].func = [ gl.DST_COLOR, gl.ONE_MINUS_SRC_ALPHA ];
         this.blendModes[3].func = [ gl.ONE, gl.ONE_MINUS_SRC_COLOR ];
+        this.blendModes[17].func = [ gl.ZERO, gl.ONE_MINUS_SRC_ALPHA ];
 
         this.glFormats[0] = gl.BYTE;
         this.glFormats[1] = gl.SHORT;
@@ -1092,7 +1093,7 @@ var WebGLRenderer = new Class({
      */
     removeBlendMode: function (index)
     {
-        if (index > 16 && this.blendModes[index])
+        if (index > 17 && this.blendModes[index])
         {
             this.blendModes.splice(index, 1);
         }
