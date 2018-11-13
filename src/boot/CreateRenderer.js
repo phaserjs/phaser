@@ -72,6 +72,12 @@ var CreateRenderer = function (game)
         game.canvas.style = config.canvasStyle;
     }
 
+    //  Background color
+    if (!config.transparent)
+    {
+        game.canvas.style.backgroundColor = config.backgroundColor.rgba;
+    }
+
     //  Pixel Art mode?
     if (!config.antialias)
     {
