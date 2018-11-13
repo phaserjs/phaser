@@ -11,21 +11,24 @@
 * If the `setScore` or `getPlayerScore` calls fail, it will return `null` as the score instance, instead of causing a run-time error.
 * You can now pass an object or a string to `setScore` and objects will be automatically stringified.
 
+### Input Updates and Fixes
+
+* The Keyboard Plugin will now call `preventDefault` on all non-modified key presses by default, stopping the keyboard event from hitting the browser. Previously, you had to create `Key` objects to enable this. You can control this at runtime by toggling the `KeyboardPlugin.preventDefault` boolean, or the following config settings:
+* There is a new Game and Scene Config setting `input.keyboard.capture` which allows you to set if the Keyboard Plugin will capture all non-modified key events or not. You can also set this in a Scene Config, in which case it will override the Game Config value.
+* The Key object has a new boolean `metaKey` which indicates if the Meta Key was held down when the Key was pressed. On a Mac the Meta Key is Command. On a Windows keyboard, it's the Windows key.
+* The Mouse Manager class has been updated to remove some commented out code and refine the `startListeners` method.
+* The following Key Codes have been added, which include some missing alphabet letters in Persian and Arabic: `SEMICOLON_FIREFOX`, `COLON`, `COMMA_FIREFOX_WINDOWS`, `COMMA_FIREFOX`, `BRACKET_RIGHT_FIREFOX` and `BRACKET_LEFT_FIREFOX` (thanks @wmateam)
+* When enabling a Game Object for input it will now use the `width` and `height` properties of the Game Object first, falling back to the frame size if not found. This stops a bug when enabling BitmapText objects for input and it using the font texture as the hit area size, rather than the text itself.
+
 ### New Features
 
 * The data object being sent to the Dynamic Bitmap Text callback now has a new property `parent`, which is a reference to the Bitmap Text instance that owns the data object (thanks ornyth)
 * The WebGL Renderer has a new method `clearPipeline`, which will clear down the current pipeline and reset the blend mode, ready for the context to be passed to a 3rd party library.
 * The WebGL Renderer has a new method `rebindPipeline`, which will rebind the given pipeline instance, reset the blank texture and reset the blend mode. Which is useful for recovering from 3rd party libs that have modified the gl context.
 * Game Objects have a new property called `state`. Use this to track the state of a Game Object during its lifetime. For example, it could move from a state of 'moving', to 'attacking', to 'dead'. Phaser itself will never set this property, although plugins are allowed to.
-* The Keyboard Plugin will now call `preventDefault` on all non-modified key presses by default, stopping the keyboard event from hitting the browser. Previously, you had to create `Key` objects to enable this. You can control this at runtime by toggling the `KeyboardPlugin.preventDefault` boolean, or the following config settings:
-* There is a new Game and Scene Config setting `input.keyboard.capture` which allows you to set if the Keyboard Plugin will capture all non-modified key events or not. You can also set this in a Scene Config, in which case it will override the Game Config value.
-* The Key object has a new boolean `metaKey` which indicates if the Meta Key was held down when the Key was pressed. On a Mac the Meta Key is Command. On a Windows keyboard, it's the Windows key.
 
 ### Updates
 
-* The Mouse Manager class has been updated to remove some commented out code and refine the `startListeners` method.
-* The following Key Codes have been added, which include some missing alphabet letters in Persian and Arabic: `SEMICOLON_FIREFOX`, `COLON`, `COMMA_FIREFOX_WINDOWS`, `COMMA_FIREFOX`, `BRACKET_RIGHT_FIREFOX` and `BRACKET_LEFT_FIREFOX` (thanks @wmateam)
-* When enabling a Game Object for input it will now use the `width` and `height` properties of the Game Object first, falling back to the frame size if not found. This stops a bug when enabling BitmapText objects for input and it using the font texture as the hit area size, rather than the text itself.
 * You can now modify `this.physics.world.debugGraphic.defaultStrokeWidth` to set the stroke width of any debug drawn body, previously it was always 1 (thanks @samme)
 * `TextStyle.setFont` has a new optional argument `updateText` which will sets if the text should be automatically updated or not (thanks @DotTheGreat)
 * `ProcessQueue.destroy` now sets the internal `toProcess` counter to zero.
