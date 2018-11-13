@@ -38,6 +38,7 @@
 * `BlendModes.LIGHTER` is a new Canvas-only blend mode, that allows you to use the `lighter` composite operation when rendering Game Objects.
 * `BlendModes.COPY` is a new Canvas-only blend mode, that allows you to use the `copy` composite operation when rendering Game Objects.
 * `BlendModes.XOR` is a new Canvas-only blend mode, that allows you to use the `xor` composite operation when rendering Game Objects.
+* `RenderTexture.erase` is a new method that will take an object, or array of objects, and draw them to the Render Texture using an ERASE blend mode, resulting in them being removed from the Render Texture. This is really handy for making a bitmap masked texture in Canvas or WebGL (without using an actual mask), or for 'cutting away' part of a texture.
 
 ### Updates
 
