@@ -62,8 +62,8 @@ var WebGLRenderer = new Class({
         var gameConfig = game.config;
 
         var contextCreationConfig = {
-            alpha: gameConfig.transparent,
-            depth: false, // enable when 3D is added in the future
+            alpha: true,
+            depth: false,
             antialias: gameConfig.antialias,
             premultipliedAlpha: gameConfig.premultipliedAlpha,
             stencil: true,
@@ -505,7 +505,7 @@ var WebGLRenderer = new Class({
         //  Set it back into the Game, so developers can access it from there too
         this.game.context = gl;
 
-        for (var i = 0; i <= 17; i++)
+        for (var i = 0; i <= 27; i++)
         {
             this.blendModes.push({ func: [ gl.ONE, gl.ONE_MINUS_SRC_ALPHA ], equation: gl.FUNC_ADD });
         }
@@ -520,76 +520,7 @@ var WebGLRenderer = new Class({
         this.blendModes[3].func = [ gl.ONE, gl.ONE_MINUS_SRC_COLOR ];
 
         //  ERASE
-        this.blendModes[17].func = [ gl.ZERO, gl.ONE_MINUS_SRC_ALPHA ];
-
-        //  This is like an inversed erase! alpha areas go black
-        // this.blendModes[17].func = [ gl.ONE_MINUS_SRC_ALPHA, gl.SRC_ALPHA, gl.ONE, gl.ONE ];
-
-        //  src RGB
-        //  dst RGB
-        //  src Alpha
-        //  dst Alpha
-
-        // gl.ZERO,
-        // gl.ONE,
-        // gl.SRC_COLOR,
-        // gl.ONE_MINUS_SRC_COLOR,
-        // gl.DST_COLOR,
-        // gl.ONE_MINUS_DST_COLOR,
-        // gl.SRC_ALPHA,
-        // gl.ONE_MINUS_SRC_ALPHA,
-        // gl.DST_ALPHA,
-        // gl.ONE_MINUS_DST_ALPHA,
-        // gl.CONSTANT_COLOR,
-        // gl.ONE_MINUS_CONSTANT_COLOR,
-        // gl.CONSTANT_ALPHA,
-        // gl.ONE_MINUS_CONSTANT_ALPHA,
-        // gl.SRC_ALPHA_SATURATE
-
-        //  BLACK (with ADD)
-
-        // this.blendModes[17].func = [
-        //     gl.ZERO,
-        //     gl.ONE_MINUS_SRC_ALPHA,
-        //     gl.ONE,
-        //     gl.ONE
-        // ];
-
-        // this.blendModes[17].func = [
-        //     gl.ONE,
-        //     gl.ZERO,
-        //     gl.ONE,
-        //     gl.ZERO
-        // ];
-
-
-        // this.blendModes[17].equation = gl.FUNC_ADD;
-        // this.blendModes[17].equation = gl.FUNC_SUBTRACT;
-        this.blendModes[17].equation = gl.FUNC_REVERSE_SUBTRACT;
-
-        //  0, 1, 2, 3
-        // blendFuncSeparate(this._srcRGB, this._dstRGB, this._srcAlpha, this._dstAlpha);
-
-
-        // this._srcRGB = this.gl.SRC_ALPHA;
-        // this._dstRGB = this.gl.ONE;
-        // this._srcAlpha = this.gl.ONE;
-        // this._dstAlpha = this.gl.ONE;
-        // this._modeRGB = this.gl.FUNC_ADD;
-        // this._modeAlpha = this.gl.FUNC_ADD;
-
-
-
-
-        // this._srcRGB = this.gl.SRC_ALPHA;
-        // this._dstRGB = this.gl.ONE_MINUS_SRC_ALPHA;
-        // this._srcAlpha = this.gl.ONE;
-        // this._dstAlpha = this.gl.ONE;
-        // this._modeRGB = this.gl.FUNC_REVERSE_SUBTRACT;
-        // this._modeAlpha = this.gl.FUNC_REVERSE_SUBTRACT;
-
-        // gl.blendEquationSeparate(this._modeRGB, this._modeAlpha);
-        // gl.blendFuncSeparate(this._srcRGB, this._dstRGB, this._srcAlpha, this._dstAlpha);
+        this.blendModes[17] = { func: [ gl.ZERO, gl.ONE_MINUS_SRC_ALPHA ], equation: gl.FUNC_REVERSE_SUBTRACT };
 
         this.glFormats[0] = gl.BYTE;
         this.glFormats[1] = gl.SHORT;
@@ -619,12 +550,13 @@ var WebGLRenderer = new Class({
 
         this.supportedExtensions = exts;
 
-        // Setup initial WebGL state
+        //  Setup initial WebGL state
         gl.disable(gl.DEPTH_TEST);
         gl.disable(gl.CULL_FACE);
 
         gl.enable(gl.BLEND);
-        gl.clearColor(clearColor.redGL, clearColor.greenGL, clearColor.blueGL, 1.0);
+
+        // gl.clearColor(clearColor.redGL, clearColor.greenGL, clearColor.blueGL, 1);
 
         // Initialize all textures to null
         for (var index = 0; index < this.currentTextures.length; ++index)
@@ -1834,12 +1766,10 @@ var WebGLRenderer = new Class({
         if (this.contextLost) { return; }
 
         var gl = this.gl;
-        var color = this.config.backgroundColor;
         var pipelines = this.pipelines;
 
         if (this.config.clearBeforeRender)
         {
-            gl.clearColor(color.redGL, color.greenGL, color.blueGL, color.alphaGL);
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
         }
 
