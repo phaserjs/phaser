@@ -314,7 +314,7 @@ var CanvasRenderer = new Class({
      * @method Phaser.Renderer.Canvas.CanvasRenderer#setBlendMode
      * @since 3.0.0
      *
-     * @param {number} blendMode - The new blend mode which should be used.
+     * @param {string} blendMode - The new blend mode which should be used.
      *
      * @return {this} This CanvasRenderer object.
      */
@@ -380,12 +380,6 @@ var CanvasRenderer = new Class({
         if (config.clearBeforeRender)
         {
             ctx.clearRect(0, 0, width, height);
-        }
-
-        if (!config.transparent)
-        {
-            ctx.fillStyle = config.backgroundColor.rgba;
-            ctx.fillRect(0, 0, width, height);
         }
 
         ctx.save();
