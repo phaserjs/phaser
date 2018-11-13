@@ -510,10 +510,86 @@ var WebGLRenderer = new Class({
             this.blendModes.push({ func: [ gl.ONE, gl.ONE_MINUS_SRC_ALPHA ], equation: gl.FUNC_ADD });
         }
 
+        //  ADD
         this.blendModes[1].func = [ gl.ONE, gl.DST_ALPHA ];
+
+        //  MULTIPLY
         this.blendModes[2].func = [ gl.DST_COLOR, gl.ONE_MINUS_SRC_ALPHA ];
+
+        //  SCREEN
         this.blendModes[3].func = [ gl.ONE, gl.ONE_MINUS_SRC_COLOR ];
+
+        //  ERASE
         this.blendModes[17].func = [ gl.ZERO, gl.ONE_MINUS_SRC_ALPHA ];
+
+        //  This is like an inversed erase! alpha areas go black
+        // this.blendModes[17].func = [ gl.ONE_MINUS_SRC_ALPHA, gl.SRC_ALPHA, gl.ONE, gl.ONE ];
+
+        //  src RGB
+        //  dst RGB
+        //  src Alpha
+        //  dst Alpha
+
+        // gl.ZERO,
+        // gl.ONE,
+        // gl.SRC_COLOR,
+        // gl.ONE_MINUS_SRC_COLOR,
+        // gl.DST_COLOR,
+        // gl.ONE_MINUS_DST_COLOR,
+        // gl.SRC_ALPHA,
+        // gl.ONE_MINUS_SRC_ALPHA,
+        // gl.DST_ALPHA,
+        // gl.ONE_MINUS_DST_ALPHA,
+        // gl.CONSTANT_COLOR,
+        // gl.ONE_MINUS_CONSTANT_COLOR,
+        // gl.CONSTANT_ALPHA,
+        // gl.ONE_MINUS_CONSTANT_ALPHA,
+        // gl.SRC_ALPHA_SATURATE
+
+        //  BLACK (with ADD)
+
+        // this.blendModes[17].func = [
+        //     gl.ZERO,
+        //     gl.ONE_MINUS_SRC_ALPHA,
+        //     gl.ONE,
+        //     gl.ONE
+        // ];
+
+        // this.blendModes[17].func = [
+        //     gl.ONE,
+        //     gl.ZERO,
+        //     gl.ONE,
+        //     gl.ZERO
+        // ];
+
+
+        // this.blendModes[17].equation = gl.FUNC_ADD;
+        // this.blendModes[17].equation = gl.FUNC_SUBTRACT;
+        this.blendModes[17].equation = gl.FUNC_REVERSE_SUBTRACT;
+
+        //  0, 1, 2, 3
+        // blendFuncSeparate(this._srcRGB, this._dstRGB, this._srcAlpha, this._dstAlpha);
+
+
+        // this._srcRGB = this.gl.SRC_ALPHA;
+        // this._dstRGB = this.gl.ONE;
+        // this._srcAlpha = this.gl.ONE;
+        // this._dstAlpha = this.gl.ONE;
+        // this._modeRGB = this.gl.FUNC_ADD;
+        // this._modeAlpha = this.gl.FUNC_ADD;
+
+
+
+
+        // this._srcRGB = this.gl.SRC_ALPHA;
+        // this._dstRGB = this.gl.ONE_MINUS_SRC_ALPHA;
+        // this._srcAlpha = this.gl.ONE;
+        // this._dstAlpha = this.gl.ONE;
+        // this._modeRGB = this.gl.FUNC_REVERSE_SUBTRACT;
+        // this._modeAlpha = this.gl.FUNC_REVERSE_SUBTRACT;
+
+        // gl.blendEquationSeparate(this._modeRGB, this._modeAlpha);
+        // gl.blendFuncSeparate(this._srcRGB, this._dstRGB, this._srcAlpha, this._dstAlpha);
 
         this.glFormats[0] = gl.BYTE;
         this.glFormats[1] = gl.SHORT;
@@ -1016,7 +1092,7 @@ var WebGLRenderer = new Class({
             this.flush();
 
             gl.enable(gl.BLEND);
-            gl.blendEquation(blendMode.equation);
+            gl.blendEquation(blendMode.equation, blendMode.equation);
 
             if (blendMode.func.length > 2)
             {

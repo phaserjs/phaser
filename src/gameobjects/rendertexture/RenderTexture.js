@@ -853,11 +853,23 @@ var RenderTexture = new Class({
         var prevX = gameObject.x;
         var prevY = gameObject.y;
 
+        if (this._eraseMode)
+        {
+            var blendMode = gameObject.blendMode;
+
+            gameObject.blendMode = BlendModes.ERASE;
+        }
+
         gameObject.setPosition(x, y);
 
         gameObject.renderCanvas(this.renderer, gameObject, 0, this.camera, null);
 
         gameObject.setPosition(prevX, prevY);
+
+        if (this._eraseMode)
+        {
+            gameObject.blendMode = blendMode;
+        }
     },
 
     /**
@@ -905,19 +917,19 @@ var RenderTexture = new Class({
 
         if (this.gl)
         {
-            if (this._eraseMode)
-            {
-                var blendMode = this.renderer.currentBlendMode;
+            // if (this._eraseMode)
+            // {
+            //     var blendMode = this.renderer.currentBlendMode;
 
-                this.renderer.setBlendMode(BlendModes.ERASE);
-            }
+            //     this.renderer.setBlendMode(BlendModes.ERASE);
+            // }
             
             this.pipeline.batchTextureFrame(textureFrame, x, y, tint, alpha, this.camera.matrix, null);
 
-            if (this._eraseMode)
-            {
-                this.renderer.setBlendMode(blendMode);
-            }
+            // if (this._eraseMode)
+            // {
+            //     this.renderer.setBlendMode(blendMode);
+            // }
         }
         else
         {
