@@ -917,19 +917,7 @@ var RenderTexture = new Class({
 
         if (this.gl)
         {
-            // if (this._eraseMode)
-            // {
-            //     var blendMode = this.renderer.currentBlendMode;
-
-            //     this.renderer.setBlendMode(BlendModes.ERASE);
-            // }
-            
             this.pipeline.batchTextureFrame(textureFrame, x, y, tint, alpha, this.camera.matrix, null);
-
-            // if (this._eraseMode)
-            // {
-            //     this.renderer.setBlendMode(blendMode);
-            // }
         }
         else
         {
