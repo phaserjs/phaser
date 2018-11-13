@@ -41,6 +41,10 @@ var SnapFloor = require('../../math/snap/SnapFloor');
  * ```javascript
  * var spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
  * ```
+ * 
+ * If you have multiple parallel Scenes, each trying to get keyboard input, be sure to disable capture on them to stop them from
+ * stealing input from another Scene in the list. You can do this with `this.input.keyboard.enabled = false` within the
+ * Scene to stop all input, or `this.input.keyboard.preventDefault = false` to stop a Scene halting input on another Scene.
  *
  * _Note_: Many keyboards are unable to process certain combinations of keys due to hardware limitations known as ghosting.
  * See http://www.html5gamedevs.com/topic/4876-impossible-to-use-more-than-2-keyboard-input-buttons-at-the-same-time/ for more details.
