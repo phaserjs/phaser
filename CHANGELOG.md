@@ -57,6 +57,8 @@
 * The method `DisplayList.sortGameObjects` has been removed. It has thrown a runtime error since v3.3.0! which no-one even spotted, a good indication of how little the method is used. The display list is automatically sorted anyway, so if you need to sort a small section of it, just use the standard JavaScript Array sort method (thanks ornyth)
 * The method `DisplayList.getTopGameObject` has been removed. It has thrown a runtime error since v3.3.0! which no-one even spotted, a good indication of how little the method is used (thanks ornyth)
 * `WebGLRenderer.setFramebuffer` has a new optional boolean argument `updateScissor`, which will reset the scissor to match the framebuffer size, or clear it.
+* `WebAudioSoundManager.onFocus` will not try to resume the Audio Context if it's still locked.
+* `WebAudioSoundManager.onBlur` will not try to suspend the Audio Context if it's still locked.
 
 ### Bug Fixes
 
