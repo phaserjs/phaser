@@ -37,6 +37,7 @@ var BlendMode = {
      * * ADD
      * * MULTIPLY
      * * SCREEN
+     * * ERASE
      *
      * Canvas has more available depending on browser support.
      *

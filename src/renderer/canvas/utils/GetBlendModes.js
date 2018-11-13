@@ -38,6 +38,7 @@ var GetBlendModes = function ()
     output[modes.SATURATION] = (useNew) ? 'saturation' : so;
     output[modes.COLOR] = (useNew) ? 'color' : so;
     output[modes.LUMINOSITY] = (useNew) ? 'luminosity' : so;
+    output[modes.ERASE] = 'destination-out';
 
     return output;
 };
