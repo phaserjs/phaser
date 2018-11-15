@@ -335,7 +335,14 @@ var Tile = new Class({
      */
     getCollisionGroup: function ()
     {
-        return this.tileset ? this.tileset.getTileCollisionGroup(this.index) : null;
+        if (!this.tileset) { return null; }
+        
+        var collisionGroupArray = [];
+        for (var tilesetIndex = 0; tilesetIndex < this.tileset.length; tilesetIndex++)
+        {
+            collisionGroupArray.push(this.tileset[tilesetIndex].getTileCollisionGroup(this.index));
+        }
+        return collisionGroupArray;
     },
 
     /**

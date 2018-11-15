@@ -36,11 +36,20 @@ var SetCollisionFromCollisionGroup = function (collides, recalculateFaces, layer
 
             var collisionGroup = tile.getCollisionGroup();
 
-            // It's possible in Tiled to have a collision group without any shapes, e.g. create a
-            // shape and then delete the shape.
-            if (collisionGroup && collisionGroup.objects && collisionGroup.objects.length > 0)
+            if (collisionGroup && collisionGroup.length > 0)
             {
-                SetTileCollision(tile, collides);
+
+                for (var collisionGroupIndex = 0; collisionGroupIndex < collisionGroup.length; collisionGroupIndex++)
+                // collisionGroup.forEach(function (_collisionGroup)
+                {
+                    // It's possible in Tiled to have a collision group without any shapes, e.g. create a
+                    // shape and then delete the shape.
+                    if (collisionGroup[collisionGroupIndex] && collisionGroup[collisionGroupIndex].objects && collisionGroup[collisionGroupIndex].objects.length > 0)
+                    {
+                        SetTileCollision(tile, collides);
+                    }
+                }
+
             }
         }
     }
