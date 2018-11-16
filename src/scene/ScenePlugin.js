@@ -443,7 +443,7 @@ var ScenePlugin = new Class({
      * @param {string} key - The Scene key.
      * @param {(Phaser.Scene|Phaser.Scenes.Settings.Config|function)} sceneConfig - The config for the Scene.
      * @param {boolean} autoStart - Whether to start the Scene after it's added.
-     * @param {object} [data] - The Scene data.
+     * @param {object} [data] - Optional data object. This will be set as Scene.settings.data and passed to `Scene.init`.
      *
      * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
      */
