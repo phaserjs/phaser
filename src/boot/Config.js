@@ -358,6 +358,11 @@ var Config = new Class({
         this.canvasStyle = GetValue(config, 'canvasStyle', null);
 
         /**
+         * @const {boolean} Phaser.Boot.Config#customEnvironment - Is Phaser running under a custom (non-native web) environment? If so, set this to `true` to skip internal Feature detection. If `true` the `renderType` cannot be left as `AUTO`.
+         */
+        this.customEnvironment = GetValue(config, 'customEnvironment', false);
+
+        /**
          * @const {?object} Phaser.Boot.Config#sceneConfig - The default Scene configuration object.
          */
         this.sceneConfig = GetValue(config, 'scene', null);

@@ -40,6 +40,7 @@
 * `BlendModes.COPY` is a new Canvas-only blend mode, that allows you to use the `copy` composite operation when rendering Game Objects.
 * `BlendModes.XOR` is a new Canvas-only blend mode, that allows you to use the `xor` composite operation when rendering Game Objects.
 * `RenderTexture.erase` is a new method that will take an object, or array of objects, and draw them to the Render Texture using an ERASE blend mode, resulting in them being removed from the Render Texture. This is really handy for making a bitmap masked texture in Canvas or WebGL (without using an actual mask), or for 'cutting away' part of a texture.
+* There is a new boolean Game Config property called `customEnvironment`. If set to `true` it will skip the internal Feature checks when working out which type of renderer to create, allowing you to run Phaser under non-native web environments. If using this value, you _must_ set an explicit `renderType` of either CANVAS or WEBGL. It cannot be left as AUTO. Fix #4166 (thanks @jcyuan)
 
 ### Updates
 

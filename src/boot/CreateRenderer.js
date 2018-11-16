@@ -26,7 +26,7 @@ var CreateRenderer = function (game)
     //  Game either requested Canvas,
     //  or requested AUTO or WEBGL but the browser doesn't support it, so fall back to Canvas
 
-    if (config.renderType !== CONST.HEADLESS)
+    if ((config.customEnvironment || config.canvas) && config.renderType !== CONST.HEADLESS)
     {
         if (config.renderType === CONST.CANVAS || (config.renderType !== CONST.CANVAS && !Features.webGL))
         {
@@ -45,6 +45,11 @@ var CreateRenderer = function (game)
             //  Game requested WebGL and browser says it supports it
             config.renderType = CONST.WEBGL;
         }
+    }
+
+    if (config.customEnvironment && config.renderType === CONST.AUTO)
+    {
+        throw new Error('Must set renderType in custom environment');
     }
 
     //  Pixel Art mode?
