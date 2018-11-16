@@ -179,7 +179,7 @@ var Set = new Class({
      * @genericUse {Phaser.Structs.Set.<T>} - [$return]
      *
      * @param {EachSetCallback} callback - The callback to be invoked and passed each value this Set contains.
-     * @param {*} callbackScope - The scope of the callback.
+     * @param {*} [callbackScope] - The scope of the callback.
      *
      * @return {Phaser.Structs.Set} This Set object.
      */
@@ -224,7 +224,7 @@ var Set = new Class({
      * @genericUse {Phaser.Structs.Set.<T>} - [$return]
      *
      * @param {EachSetCallback} callback - The callback to be invoked and passed each value this Set contains.
-     * @param {*} callbackScope - The scope of the callback.
+     * @param {*} [callbackScope] - The scope of the callback.
      *
      * @return {Phaser.Structs.Set} This Set object.
      */
