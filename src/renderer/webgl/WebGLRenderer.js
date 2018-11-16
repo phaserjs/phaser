@@ -1024,7 +1024,7 @@ var WebGLRenderer = new Class({
             this.flush();
 
             gl.enable(gl.BLEND);
-            gl.blendEquation(blendMode.equation, blendMode.equation);
+            gl.blendEquation(blendMode.equation);
 
             if (blendMode.func.length > 2)
             {
