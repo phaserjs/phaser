@@ -60,6 +60,7 @@
 * `WebGLRenderer.setFramebuffer` has a new optional boolean argument `updateScissor`, which will reset the scissor to match the framebuffer size, or clear it.
 * `WebAudioSoundManager.onFocus` will not try to resume the Audio Context if it's still locked.
 * `WebAudioSoundManager.onBlur` will not try to suspend the Audio Context if it's still locked.
+* When using `ScenePlugin.add`, to add a new Scene to the Scene Manager, it didn't allow you to include the optional Scene data object. You can now pass this in the call (thanks @kainage)
 
 ### Bug Fixes
 
@@ -82,7 +83,7 @@
 
 Thanks to the following for helping with the Phaser 3 Examples and TypeScript definitions, either by reporting errors, or even better, fixing them:
 
-@guilhermehto @samvieten @darkwebdev
+@guilhermehto @samvieten @darkwebdev @RoryO
 
 ### Phaser Doc Jam
 
