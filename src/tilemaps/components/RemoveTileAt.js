@@ -30,7 +30,7 @@ var RemoveTileAt = function (tileX, tileY, replaceWithNull, recalculateFaces, la
     if (recalculateFaces === undefined) { recalculateFaces = true; }
     if (!IsInLayerBounds(tileX, tileY, layer)) { return null; }
 
-    var tile = layer.data[tileY][tileX];
+    var tile = layer.data[tileY][tileX] || null;
     if (tile === null)
     {
         return null;
