@@ -121,6 +121,25 @@ var Pointer = new Class({
         this.prevPosition = new Vector2();
 
         /**
+         * The smoothing factor to apply to the Pointer position.
+         * 
+         * Due to their nature, pointer positions are inherently noisy. While this is fine for lots of games, if you need cleaner positions
+         * then you can set this value to apply an automatic smoothing to the positions as they are recorded.
+         * 
+         * The default value of zero means 'no smoothing'.
+         * Set to a small value, such as 0.2, to apply an average level of smoothing between positions.
+         * Values above 1 will introduce excess jitter into the positions.
+         * 
+         * Positions are only smoothed when the pointer moves. Up and Down positions are always precise.
+         *
+         * @name Phaser.Input.Pointer#smoothFactor
+         * @type {number}
+         * @default 0
+         * @since 3.16.0
+         */
+        this.smoothFactor = 0;
+
+        /**
          * The x position of this Pointer, translated into the coordinate space of the most recent Camera it interacted with.
          *
          * @name Phaser.Input.Pointer#worldX
@@ -403,7 +422,7 @@ var Pointer = new Class({
         this.event = event;
 
         //  Sets the local x/y properties
-        this.manager.transformPointer(this, event.pageX, event.pageY);
+        this.manager.transformPointer(this, event.pageX, event.pageY, false);
 
         //  0: Main button pressed, usually the left button or the un-initialized state
         if (event.button === 0)
@@ -442,7 +461,7 @@ var Pointer = new Class({
         this.event = event;
 
         //  Sets the local x/y properties
-        this.manager.transformPointer(this, event.pageX, event.pageY);
+        this.manager.transformPointer(this, event.pageX, event.pageY, false);
 
         //  0: Main button pressed, usually the left button or the un-initialized state
         if (event.button === 0)
@@ -481,7 +500,7 @@ var Pointer = new Class({
         this.event = event;
 
         //  Sets the local x/y properties
-        this.manager.transformPointer(this, event.pageX, event.pageY);
+        this.manager.transformPointer(this, event.pageX, event.pageY, true);
 
         if (this.manager.mouse.locked)
         {
@@ -523,7 +542,7 @@ var Pointer = new Class({
         this.event = event;
 
         //  Sets the local x/y properties
-        this.manager.transformPointer(this, event.pageX, event.pageY);
+        this.manager.transformPointer(this, event.pageX, event.pageY, false);
 
         this.primaryDown = true;
         this.downX = this.x;
@@ -554,7 +573,7 @@ var Pointer = new Class({
         this.event = event;
 
         //  Sets the local x/y properties
-        this.manager.transformPointer(this, event.pageX, event.pageY);
+        this.manager.transformPointer(this, event.pageX, event.pageY, true);
 
         this.justMoved = true;
 
@@ -580,7 +599,7 @@ var Pointer = new Class({
         this.event = event;
 
         //  Sets the local x/y properties
-        this.manager.transformPointer(this, event.pageX, event.pageY);
+        this.manager.transformPointer(this, event.pageX, event.pageY, false);
 
         this.primaryDown = false;
         this.upX = this.x;
