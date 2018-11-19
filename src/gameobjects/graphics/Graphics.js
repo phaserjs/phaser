@@ -524,6 +524,26 @@ var Graphics = new Class({
     },
 
     /**
+     * Stroke the current path.
+     * 
+     * This is an alias for `Graphics.strokePath` and does the same thing.
+     * It was added to match calls found in the Canvas API.
+     *
+     * @method Phaser.GameObjects.Graphics#stroke
+     * @since 3.16.0
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
+    stroke: function ()
+    {
+        this.commandBuffer.push(
+            Commands.STROKE_PATH
+        );
+
+        return this;
+    },
+
+    /**
      * Fill the given circle.
      *
      * @method Phaser.GameObjects.Graphics#fillCircleShape

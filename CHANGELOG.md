@@ -63,6 +63,8 @@
 * `WebAudioSoundManager.onFocus` will not try to resume the Audio Context if it's still locked.
 * `WebAudioSoundManager.onBlur` will not try to suspend the Audio Context if it's still locked.
 * When using `ScenePlugin.add`, to add a new Scene to the Scene Manager, it didn't allow you to include the optional Scene data object. You can now pass this in the call (thanks @kainage)
+* `Graphics.stroke` is a new alias for the `strokePath` method, to keep the calls consistent with the Canvas Rendering Context API.
+* `Graphics.fill` is a new alias for the `fillPath` method, to keep the calls consistent with the Canvas Rendering Context API.
 
 ### Bug Fixes
 
