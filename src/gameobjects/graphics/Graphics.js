@@ -507,6 +507,26 @@ var Graphics = new Class({
     },
 
     /**
+     * Fill the current path.
+     * 
+     * This is an alias for `Graphics.fillPath` and does the same thing.
+     * It was added to match the CanvasRenderingContext 2D API.
+     *
+     * @method Phaser.GameObjects.Graphics#fill
+     * @since 3.16.0
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
+    fill: function ()
+    {
+        this.commandBuffer.push(
+            Commands.FILL_PATH
+        );
+
+        return this;
+    },
+
+    /**
      * Stroke the current path.
      *
      * @method Phaser.GameObjects.Graphics#strokePath
@@ -527,7 +547,7 @@ var Graphics = new Class({
      * Stroke the current path.
      * 
      * This is an alias for `Graphics.strokePath` and does the same thing.
-     * It was added to match calls found in the Canvas API.
+     * It was added to match the CanvasRenderingContext 2D API.
      *
      * @method Phaser.GameObjects.Graphics#stroke
      * @since 3.16.0
