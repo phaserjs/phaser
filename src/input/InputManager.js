@@ -63,10 +63,10 @@ var InputManager = new Class({
         this.canvas;
 
         /**
-         * The Input Configuration object, as set in the Game Config.
+         * The Game Configuration object, as set during the game boot.
          *
          * @name Phaser.Input.InputManager#config
-         * @type {object}
+         * @type {Phaser.Boot.Config}
          * @since 3.0.0
          */
         this.config = config;
@@ -226,7 +226,11 @@ var InputManager = new Class({
 
         for (var i = 0; i <= this.pointersTotal; i++)
         {
-            this.pointers.push(new Pointer(this, i));
+            var pointer = new Pointer(this, i);
+
+            pointer.smoothFactor = config.inputSmoothFactor;
+
+            this.pointers.push(pointer);
         }
 
         /**
@@ -767,6 +771,8 @@ var InputManager = new Class({
             var id = this.pointers.length;
 
             var pointer = new Pointer(this, id);
+
+            pointer.smoothFactor = this.config.inputSmoothFactor;
 
             this.pointers.push(pointer);
 
@@ -1310,15 +1316,35 @@ var InputManager = new Class({
      * @param {Phaser.Input.Pointer} pointer - The Pointer to transform the values for.
      * @param {number} pageX - The Page X value.
      * @param {number} pageY - The Page Y value.
+     * @param {boolean} wasMove - Are we transforming the Pointer from a move event, or an up / down event?
      */
-    transformPointer: function (pointer, pageX, pageY)
+    transformPointer: function (pointer, pageX, pageY, wasMove)
     {
-        //  Store the previous position
-        pointer.prevPosition.x = pointer.x;
-        pointer.prevPosition.y = pointer.y;
+        var p0 = pointer.position;
+        var p1 = pointer.prevPosition;
 
-        pointer.x = (pageX - this.bounds.left) * this.scale.x;
-        pointer.y = (pageY - this.bounds.top) * this.scale.y;
+        //  Store previous position
+        p1.x = p0.x;
+        p1.y = p0.y;
+
+        //  Translate coordinates
+        var x = (pageX - this.bounds.left) * this.scale.x;
+        var y = (pageY - this.bounds.top) * this.scale.y;
+
+        var a = pointer.smoothFactor;
+
+        if (!wasMove || a === 0)
+        {
+            //  Set immediately
+            p0.x = x;
+            p0.y = y;
+        }
+        else
+        {
+            //  Apply smoothing
+            p0.x = x * a + p1.x * (1 - a);
+            p0.y = y * a + p1.y * (1 - a);
+        }
     },
 
     /**
