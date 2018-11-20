@@ -771,16 +771,24 @@ var Tile = new Class({
      * @since 3.0.0
      */
     tileset: {
+
         get: function ()
         {
-            var tilemapLayer = this.tilemapLayer;
-            if (!tilemapLayer) return null;
+            var tilemapLayer = this.layer.tilemapLayer;
 
-            var tileset = tilemapLayer.gidMap[this.index];
-            if (!tileset) return null;
+            if (tilemapLayer)
+            {
+                var tileset = tilemapLayer.gidMap[this.index];
 
-            return tileset;
+                if (tileset)
+                {
+                    return tileset;
+                }
+            }
+
+            return null;
         }
+
     },
 
     /**
