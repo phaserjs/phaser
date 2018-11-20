@@ -89,6 +89,7 @@
 * Static Circular Arcade Physics Bodies now render as circles in the debug display, instead of showing their rectangle bounds (thanks @maikthomas)
 * Changing the mute flag on an `HTML5AudioSound` instance, via the `mute` setter, now works, as it does via the Sound Manager (thanks @Waclaw-I @neon-dev)
 * Changing the volume on an `HTML5AudioSound` instance, via the `volume` setter, now works, as it does via the Sound Manager (thanks @Waclaw-I)
+* The Dynamic Tilemap Layer WebGL renderer was drawing tiles at the incorrect position if the layer was scaled. Fix #4104 (thanks @the-realest-stu)
 
 ### Examples and TypeScript
 
