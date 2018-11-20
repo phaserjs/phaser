@@ -1208,6 +1208,10 @@ var Tween = new Class({
                     tweenData.state = TWEEN_CONST.COMPLETE;
                     break;
                 }
+                
+                if (!tweenData.elapsed && tweenData.current) {
+                    tweenData.elapsed = tweenData.duration * tweenData.current;
+                }
 
                 var elapsed = tweenData.elapsed;
                 var duration = tweenData.duration;
@@ -1319,7 +1323,7 @@ var Tween = new Class({
 
                     tweenData.end = tweenData.getEndValue(tweenData.target, tweenData.key, tweenData.start);
 
-                    tweenData.current = tweenData.start;
+                    tweenData.current = tweenData.current || tweenData.start;
 
                     tweenData.target[tweenData.key] = tweenData.start;
 

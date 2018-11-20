@@ -45,6 +45,7 @@ var NumberTweenBuilder = function (parent, config, defaults)
 
     var from = GetValue(config, 'from', 0);
     var to = GetValue(config, 'to', 1);
+    var current = GetValue(config, 'startAt', from);
 
     var targets = [ { value: from } ];
 
@@ -78,7 +79,7 @@ var NumberTweenBuilder = function (parent, config, defaults)
     );
 
     tweenData.start = from;
-    tweenData.current = from;
+    tweenData.current = current;
     tweenData.to = to;
 
     data.push(tweenData);
