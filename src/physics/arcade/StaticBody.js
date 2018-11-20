@@ -794,6 +794,7 @@ var StaticBody = new Class({
         if (this.debugShowBody)
         {
             graphic.lineStyle(1, this.debugBodyColor, 1);
+
             if (this.isCircle)
             {
                 graphic.strokeCircle(x, y, this.width / 2);
