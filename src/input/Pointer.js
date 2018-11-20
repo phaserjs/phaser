@@ -121,6 +121,32 @@ var Pointer = new Class({
         this.prevPosition = new Vector2();
 
         /**
+         * The current velocity of the Pointer, based on its previous and current position.
+         * 
+         * This is updated whenever the Pointer moves, regardless of the state of any Pointer buttons.
+         * 
+         * If you are finding the velocity value too erratic, then consider enabling the `Pointer.smoothFactor`.
+         *
+         * @name Phaser.Input.Pointer#velocity
+         * @type {Phaser.Math.Vector2}
+         * @since 3.16.0
+         */
+        this.velocity = new Vector2();
+
+        /**
+         * The current angle the Pointer is moving, in radians, based on its previous and current position.
+         * 
+         * This is updated whenever the Pointer moves, regardless of the state of any Pointer buttons.
+         * 
+         * If you are finding the angle value too erratic, then consider enabling the `Pointer.smoothFactor`.
+         *
+         * @name Phaser.Input.Pointer#angle
+         * @type {number}
+         * @since 3.16.0
+         */
+        this.angle = new Vector2();
+
+        /**
          * The smoothing factor to apply to the Pointer position.
          * 
          * Due to their nature, pointer positions are inherently noisy. While this is fine for lots of games, if you need cleaner positions
@@ -501,6 +527,16 @@ var Pointer = new Class({
 
         //  Sets the local x/y properties
         this.manager.transformPointer(this, event.pageX, event.pageY, true);
+
+        var x1 = this.position.x;
+        var y1 = this.position.y;
+
+        var x2 = this.prevPosition.x;
+        var y2 = this.prevPosition.y;
+
+        this.velocity.x = x1 - x2;
+        this.velocity.y = y1 - y2;
+        this.angle = Math.atan2(y2 - y1, x2 - x1);
 
         if (this.manager.mouse.locked)
         {

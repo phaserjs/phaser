@@ -24,6 +24,8 @@
 * `Pointer.smoothFactor` is a float-value that allows you to automatically apply smoothing to the Pointer position as it moves. This is ideal when you want something smoothly tracking a pointer in a game, or are need a smooth drawing motion for an art package. The default value is zero, meaning disabled. Set to a small number, such as 0.2, to enable.
 * `Config.inputSmoothFactor` is a new property that allows you to set the smoothing factor for all Pointers the game creators. The default value is zero, which is disabled. Set in the game config as `input: { smoothFactor: value }`.
 * `InputManager.transformPointer` has a new boolean argument `wasMove`, which controls if the pointer is being transformed after a move or up/down event.
+* `Pointer.velocity` is a new Vector2 that contains the velocity of the Pointer, based on the previous and current position. This is updated whenever the Pointer moves, regardless of button states. If you find the velocity is too erratic, consider enabling the `smoothFactor`.
+* `Pointer.angle` is a new property that contains the angle of the Pointer, in radians, based on the previous and current position. This is updated whenever the Pointer moves, regardless of button states. If you find the angle is too erratic, consider enabling the `smoothFactor`.
 
 ### New Features
 
