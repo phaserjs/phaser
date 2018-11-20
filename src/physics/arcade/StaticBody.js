@@ -788,10 +788,21 @@ var StaticBody = new Class({
     {
         var pos = this.position;
 
+        var x = pos.x + this.halfWidth;
+        var y = pos.y + this.halfHeight;
+
         if (this.debugShowBody)
         {
             graphic.lineStyle(1, this.debugBodyColor, 1);
-            graphic.strokeRect(pos.x, pos.y, this.width, this.height);
+            if (this.isCircle)
+            {
+                graphic.strokeCircle(x, y, this.width / 2);
+            }
+            else
+            {
+                graphic.strokeRect(pos.x, pos.y, this.width, this.height);
+            }
+
         }
     },
 
