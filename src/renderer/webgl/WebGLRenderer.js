@@ -62,7 +62,7 @@ var WebGLRenderer = new Class({
         var gameConfig = game.config;
 
         var contextCreationConfig = {
-            alpha: true,
+            alpha: gameConfig.transparent,
             depth: false,
             antialias: gameConfig.antialias,
             premultipliedAlpha: gameConfig.premultipliedAlpha,
@@ -556,7 +556,7 @@ var WebGLRenderer = new Class({
 
         gl.enable(gl.BLEND);
 
-        // gl.clearColor(clearColor.redGL, clearColor.greenGL, clearColor.blueGL, 1);
+        gl.clearColor(clearColor.redGL, clearColor.greenGL, clearColor.blueGL, 1);
 
         // Initialize all textures to null
         for (var index = 0; index < this.currentTextures.length; ++index)

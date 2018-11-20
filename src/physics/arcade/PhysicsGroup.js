@@ -127,7 +127,7 @@ var PhysicsGroup = new Class({
             config = {
                 createCallback: this.createCallbackHandler,
                 removeCallback: this.removeCallbackHandler
-            }
+            };
         }
 
         /**

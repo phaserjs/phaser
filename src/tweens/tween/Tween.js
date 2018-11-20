@@ -1209,7 +1209,8 @@ var Tween = new Class({
                     break;
                 }
                 
-                if (!tweenData.elapsed && tweenData.current) {
+                if (!tweenData.elapsed && tweenData.current)
+                {
                     tweenData.elapsed = tweenData.duration * tweenData.current;
                 }
 
