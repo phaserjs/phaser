@@ -219,10 +219,12 @@ var StaticBody = new Class({
         //  If true this Body will dispatch events
 
         /**
-         * Whether the simulation emits a `worldbounds` event when this StaticBody collides with the world boundary (and `collideWorldBounds` is also true).
+         * Whether the simulation emits a `worldbounds` event when this StaticBody collides with the world boundary.
+         * Always false for a Static Body. (Static Bodies never collide with the world boundary and never trigger a `worldbounds` event.)
          *
          * @name Phaser.Physics.Arcade.StaticBody#onWorldBounds
          * @type {boolean}
+         * @readonly
          * @default false
          * @since 3.0.0
          */
@@ -269,7 +271,7 @@ var StaticBody = new Class({
         this.immovable = true;
 
         /**
-         * A flag disabling the default horizontal separation of colliding bodies. Pass your own `processHandler` to the collider.
+         * A flag disabling the default horizontal separation of colliding bodies. Pass your own `collideHandler` to the collider.
          *
          * @name Phaser.Physics.Arcade.StaticBody#customSeparateX
          * @type {boolean}
@@ -279,7 +281,7 @@ var StaticBody = new Class({
         this.customSeparateX = false;
 
         /**
-         * A flag disabling the default vertical separation of colliding bodies. Pass your own `processHandler` to the collider.
+         * A flag disabling the default vertical separation of colliding bodies. Pass your own `collideHandler` to the collider.
          *
          * @name Phaser.Physics.Arcade.StaticBody#customSeparateY
          * @type {boolean}
@@ -319,7 +321,7 @@ var StaticBody = new Class({
         this.overlapR = 0;
 
         /**
-         * Whether this StaticBody is overlapped with another and both have zero velocity.
+         * Whether this StaticBody has ever overlapped with another while both were not moving.
          *
          * @name Phaser.Physics.Arcade.StaticBody#embedded
          * @type {boolean}
@@ -330,9 +332,11 @@ var StaticBody = new Class({
 
         /**
          * Whether this StaticBody interacts with the world boundary.
+         * Always false for a Static Body. (Static Bodies never collide with the world boundary.)
          *
          * @name Phaser.Physics.Arcade.StaticBody#collideWorldBounds
          * @type {boolean}
+         * @readonly
          * @default false
          * @since 3.0.0
          */
@@ -348,7 +352,7 @@ var StaticBody = new Class({
         this.checkCollision = { none: false, up: true, down: true, left: true, right: true };
 
         /**
-         * Whether this StaticBody is colliding with another and in which direction.
+         * Whether this StaticBody has ever collided with another body and in which direction.
          *
          * @name Phaser.Physics.Arcade.StaticBody#touching
          * @type {ArcadeBodyCollision}
@@ -357,7 +361,7 @@ var StaticBody = new Class({
         this.touching = { none: true, up: false, down: false, left: false, right: false };
 
         /**
-         * Whether this StaticBody was colliding with another during the last step, and in which direction.
+         * Whether this StaticBody was colliding with another body during the last step or any previous step, and in which direction.
          *
          * @name Phaser.Physics.Arcade.StaticBody#wasTouching
          * @type {ArcadeBodyCollision}
@@ -366,7 +370,7 @@ var StaticBody = new Class({
         this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
 
         /**
-         * Whether this StaticBody is colliding with a tile or the world boundary.
+         * Whether this StaticBody has ever collided with a tile or the world boundary.
          *
          * @name Phaser.Physics.Arcade.StaticBody#blocked
          * @type {ArcadeBodyCollision}
@@ -379,6 +383,7 @@ var StaticBody = new Class({
          *
          * @name Phaser.Physics.Arcade.StaticBody#physicsType
          * @type {integer}
+         * @default Phaser.Physics.Arcade.STATIC_BODY
          * @since 3.0.0
          */
         this.physicsType = CONST.STATIC_BODY;

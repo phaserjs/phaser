@@ -1701,7 +1701,7 @@ var BaseCamera = new Class({
     },
 
     /**
-     * The x position of the center of the Camera's viewport, relative to the top-left of the game canvas.
+     * The horizontal position of the center of the Camera's viewport, relative to the left of the game canvas.
      *
      * @name Phaser.Cameras.Scene2D.BaseCamera#centerX
      * @type {number}
@@ -1718,7 +1718,7 @@ var BaseCamera = new Class({
     },
 
     /**
-     * The y position of the center of the Camera's viewport, relative to the top-left of the game canvas.
+     * The vertical position of the center of the Camera's viewport, relative to the top of the game canvas.
      *
      * @name Phaser.Cameras.Scene2D.BaseCamera#centerY
      * @type {number}

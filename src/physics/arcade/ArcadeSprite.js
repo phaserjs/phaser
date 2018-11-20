@@ -10,15 +10,11 @@ var Sprite = require('../../gameobjects/sprite/Sprite');
 
 /**
  * @classdesc
- * An Arcade Physics Sprite Game Object.
+ * An Arcade Physics Sprite is a Sprite with an Arcade Physics body and related components.
+ * The body can be dynamic or static.
  *
- * A Sprite Game Object is used for the display of both static and animated images in your game.
- * Sprites can have input events and physics bodies. They can also be tweened, tinted, scrolled
- * and animated.
- *
- * The main difference between a Sprite and an Image Game Object is that you cannot animate Images.
- * As such, Sprites take a fraction longer to process and have a larger API footprint due to the Animation
- * Component. If you do not require animation then you can safely use Images to replace Sprites in all cases.
+ * The main difference between an Arcade Sprite and an Arcade Image is that you cannot animate an Arcade Image.
+ * If you do not require animation then you can safely use Arcade Images instead of Arcade Sprites.
  *
  * @class Sprite
  * @extends Phaser.GameObjects.Sprite

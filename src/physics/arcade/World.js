@@ -1057,12 +1057,12 @@ var World = new Class({
     },
 
     /**
-     * Advances the simulation by one step.
+     * Advances the simulation by a time increment.
      *
      * @method Phaser.Physics.Arcade.World#step
      * @since 3.10.0
      *
-     * @param {number} delta - The delta time amount, in ms, by which to advance the simulation.
+     * @param {number} delta - The delta time amount, in seconds, by which to advance the simulation.
      */
     step: function (delta)
     {
@@ -1201,7 +1201,7 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Physics.Arcade.Body} body - The Body to be updated.
-     * @param {number} delta - The delta value to be used in the motion calculations.
+     * @param {number} delta - The delta value to be used in the motion calculations, in seconds.
      */
     updateMotion: function (body, delta)
     {
@@ -1220,7 +1220,7 @@ var World = new Class({
      * @since 3.10.0
      *
      * @param {Phaser.Physics.Arcade.Body} body - The Body to compute the velocity for.
-     * @param {number} delta - The delta value to be used in the calculation.
+     * @param {number} delta - The delta value to be used in the calculation, in seconds.
      */
     computeAngularVelocity: function (body, delta)
     {
@@ -1266,7 +1266,7 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Physics.Arcade.Body} body - The Body to compute the velocity for.
-     * @param {number} delta - The delta value to be used in the calculation.
+     * @param {number} delta - The delta value to be used in the calculation, in seconds.
      */
     computeVelocity: function (body, delta)
     {
