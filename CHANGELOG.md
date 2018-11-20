@@ -90,6 +90,10 @@
 * Changing the mute flag on an `HTML5AudioSound` instance, via the `mute` setter, now works, as it does via the Sound Manager (thanks @Waclaw-I @neon-dev)
 * Changing the volume on an `HTML5AudioSound` instance, via the `volume` setter, now works, as it does via the Sound Manager (thanks @Waclaw-I)
 * The Dynamic Tilemap Layer WebGL renderer was drawing tiles at the incorrect position if the layer was scaled. Fix #4104 (thanks @the-realest-stu)
+* `Tile.tileset` now returns the specific Tileset associated with the tile, rather than an array of them. Fix #4095 (thanks @quadrupleslap)
+* `Tile.getCollisionGroup` wouldn't return the correct Group after the change to support multiple Tilesets. It now returns the group properly (thanks @jbpuryear)
+* `Tile.getTileData` wouldn't return the correct data after the change to support multiple Tilesets. It now returns the tile data properly (thanks @jbpuryear)
+* The `GetTileAt` and `RemoveTileAt` components would error with "Cannot read property 'index' of undefined" if the tile was undefined rather than null. It now handles both cases (thanks @WaSa42)
 
 ### Examples and TypeScript
 

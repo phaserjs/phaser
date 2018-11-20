@@ -976,10 +976,8 @@ var DynamicTilemapLayer = new Class({
      * @since 3.0.0
      *
      * @param {(integer|array)} indexes - Either a single tile index, or an array of tile indexes.
-     * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear
-     * collision.
-     * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the
-     * update.
+     * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
+     * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the update.
      *
      * @return {Phaser.Tilemaps.DynamicTilemapLayer} This Tilemap Layer object.
      */
@@ -1001,10 +999,8 @@ var DynamicTilemapLayer = new Class({
      *
      * @param {integer} start - The first index of the tile to be set for collision.
      * @param {integer} stop - The last index of the tile to be set for collision.
-     * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear
-     * collision.
-     * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the
-     * update.
+     * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
+     * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the update.
      *
      * @return {Phaser.Tilemaps.DynamicTilemapLayer} This Tilemap Layer object.
      */
@@ -1027,12 +1023,9 @@ var DynamicTilemapLayer = new Class({
      * @method Phaser.Tilemaps.DynamicTilemapLayer#setCollisionByProperty
      * @since 3.0.0
      *
-     * @param {object} properties - An object with tile properties and corresponding values that should
-     * be checked.
-     * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear
-     * collision.
-     * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the
-     * update.
+     * @param {object} properties - An object with tile properties and corresponding values that should be checked.
+     * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
+     * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the update.
      *
      * @return {Phaser.Tilemaps.DynamicTilemapLayer} This Tilemap Layer object.
      */
@@ -1052,10 +1045,8 @@ var DynamicTilemapLayer = new Class({
      * @since 3.0.0
      *
      * @param {integer[]} indexes - An array of the tile indexes to not be counted for collision.
-     * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear
-     * collision.
-     * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the
-     * update.
+     * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
+     * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the update.
      *
      * @return {Phaser.Tilemaps.DynamicTilemapLayer} This Tilemap Layer object.
      */
@@ -1075,10 +1066,8 @@ var DynamicTilemapLayer = new Class({
      * @method Phaser.Tilemaps.DynamicTilemapLayer#setCollisionFromCollisionGroup
      * @since 3.0.0
      *
-     * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear
-     * collision.
-     * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the
-     * update.
+     * @param {boolean} [collides=true] - If true it will enable collision. If false it will clear collision.
+     * @param {boolean} [recalculateFaces=true] - Whether or not to recalculate the tile faces after the update.
      *
      * @return {Phaser.Tilemaps.DynamicTilemapLayer} This Tilemap Layer object.
      */
@@ -1098,8 +1087,7 @@ var DynamicTilemapLayer = new Class({
      * @method Phaser.Tilemaps.DynamicTilemapLayer#setTileIndexCallback
      * @since 3.0.0
      *
-     * @param {(integer|array)} indexes - Either a single tile index, or an array of tile indexes to have a
-     * collision callback set for.
+     * @param {(integer|array)} indexes - Either a single tile index, or an array of tile indexes to have a collision callback set for.
      * @param {function} callback - The callback that will be invoked when the tile is collided with.
      * @param {object} callbackContext - The context under which the callback is called.
      *
