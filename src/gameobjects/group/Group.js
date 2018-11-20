@@ -28,7 +28,7 @@ var Sprite = require('../sprite/Sprite');
 /**
  * @typedef {object} GroupConfig
  *
- * @property {?object} [classType=Sprite] - Sets {@link Phaser.GameObjects.Group#classType}.
+ * @property {?GroupClassTypeConstructor} [classType=Sprite] - Sets {@link Phaser.GameObjects.Group#classType}.
  * @property {?boolean} [active=true] - Sets {@link Phaser.GameObjects.Group#active}.
  * @property {?number} [maxSize=-1] - Sets {@link Phaser.GameObjects.Group#maxSize}.
  * @property {?string} [defaultKey=null] - Sets {@link Phaser.GameObjects.Group#defaultKey}.
@@ -52,7 +52,7 @@ var Sprite = require('../sprite/Sprite');
  *
  * `key` is required. {@link Phaser.GameObjects.Group#defaultKey} is not used.
  *
- * @property {?object} [classType] - The class of each new Game Object.
+ * @property {?GroupClassTypeConstructor} [classType] - The class of each new Game Object.
  * @property {string} [key] - The texture key of each new Game Object.
  * @property {?(string|integer)} [frame=null] - The texture frame of each new Game Object.
  * @property {?boolean} [visible=true] - The visible state of each new Game Object.
@@ -91,6 +91,18 @@ var Sprite = require('../sprite/Sprite');
  * @see Phaser.Actions.SetXY
  * @see Phaser.GameObjects.Group#createFromConfig
  * @see Phaser.Utils.Array.Range
+ */
+
+/**
+ * A constructor function (class) that can be assigned to `classType`.
+ * @callback GroupClassTypeConstructor
+ * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
+ * @param {number} x - The horizontal position of this Game Object in the world.
+ * @param {number} y - The vertical position of this Game Object in the world.
+ * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+ * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
+ *
+ * @see Phaser.GameObjects.Group#classType
  */
 
 /**
@@ -185,7 +197,7 @@ var Group = new Class({
          * The class to create new group members from.
          *
          * @name Phaser.GameObjects.Group#classType
-         * @type {object}
+         * @type {GroupClassTypeConstructor}
          * @since 3.0.0
          * @default Phaser.GameObjects.Sprite
          */

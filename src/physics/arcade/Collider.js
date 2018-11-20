@@ -40,7 +40,7 @@ var Collider = new Class({
         this.world = world;
 
         /**
-         * The name of the collider (unused by phaser).
+         * The name of the collider (unused by Phaser).
          *
          * @name Phaser.Physics.Arcade.Collider#name
          * @type {string}
