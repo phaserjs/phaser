@@ -68,6 +68,7 @@
 * When using `ScenePlugin.add`, to add a new Scene to the Scene Manager, it didn't allow you to include the optional Scene data object. You can now pass this in the call (thanks @kainage)
 * `Graphics.stroke` is a new alias for the `strokePath` method, to keep the calls consistent with the Canvas Rendering Context API.
 * `Graphics.fill` is a new alias for the `fillPath` method, to keep the calls consistent with the Canvas Rendering Context API.
+* Circular Arcade Physics Bodies now render as circles in the debug display, instead of showing their rectangle bounds (thanks @maikthomas)
 
 ### Bug Fixes
 
@@ -85,6 +86,7 @@
 * Render Textures created larger than the size of the default canvas would be automatically clipped when drawn to in WebGL. They now reset the gl scissor and drawing height property in order to draw to their full size, regardless of the canvas size. Fix #4139 (thanks @chaoyang805 @iamchristopher)
 * The `cameraFilter` property of a Game Object will now allow full bitmasks to be set (a value of -1), instead of just those > 0 (thanks @stuartkeith)
 * When using a Particle Emitter, the array of dead particles (`this.dead`) wasn't being filled correctly. Dead particles are now moved to it as they should be (thanks @Waclaw-I)
+* The `PathFollower.startFollow` method now properly uses the `startAt` argument to the method, so you can start a follower off at any point along the path. Fix #3688 (thanks @DannyT @diteix)
 
 ### Examples and TypeScript
 
