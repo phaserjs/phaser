@@ -87,7 +87,6 @@
 * Starting with version 3.13 in the Canvas Renderer, it was possible for long-running scripts to start to get bogged-down in `fillRect` calls if the game had a background color set. The context is now saved properly to avoid this. Fix #4056 (thanks @Aveyder)
 * Render Textures created larger than the size of the default canvas would be automatically clipped when drawn to in WebGL. They now reset the gl scissor and drawing height property in order to draw to their full size, regardless of the canvas size. Fix #4139 (thanks @chaoyang805 @iamchristopher)
 * The `cameraFilter` property of a Game Object will now allow full bitmasks to be set (a value of -1), instead of just those > 0 (thanks @stuartkeith)
-* When using a Particle Emitter, the array of dead particles (`this.dead`) wasn't being filled correctly. Dead particles are now moved to it as they should be (thanks @Waclaw-I)
 * The `PathFollower.startFollow` method now properly uses the `startAt` argument to the method, so you can start a follower off at any point along the path. Fix #3688 (thanks @DannyT @diteix)
 * Static Circular Arcade Physics Bodies now render as circles in the debug display, instead of showing their rectangle bounds (thanks @maikthomas)
 * Changing the mute flag on an `HTML5AudioSound` instance, via the `mute` setter, now works, as it does via the Sound Manager (thanks @Waclaw-I @neon-dev)
@@ -98,6 +97,12 @@
 * `Tile.getTileData` wouldn't return the correct data after the change to support multiple Tilesets. It now returns the tile data properly (thanks @jbpuryear)
 * The `GetTileAt` and `RemoveTileAt` components would error with "Cannot read property 'index' of undefined" if the tile was undefined rather than null. It now handles both cases (thanks @WaSa42)
 * Changing `TileSprite.width` or `TileSprite.height` will now flag the texture as dirty and call `updateDisplayOrigin`, allowing you to resize TileSprites dynamically in both Canvas and WebGL.
+* `RandomDataGenerator.shuffle` has been fixed to use the proper modifier in the calculation, allowing for a more even distribution (thanks wayfinder)
+* The Particle Emitter was not recycling dead particles correctly, so it was creating new objects every time it emitted (the old particles were then left to the browsers gc to clear up). This has now been recoded, so the emitter will properly keep track of dead particles and re-use them (thanks @Waclaw-I for the initial PR)
+* `ParticleEmitter.indexSortCallback` has been removed as it's no longer required.
+* `Particle.index` has been removed, as it's no longer required. Particles don't need to keep track of their index any more.
+* The Particle Emitter no longer needs to call the StableSort.inplace during its preUpdate, saving cpu.
+* `Particle.resetPosition` is a new method that is called when a particle dies, preparing it ready for firing again in the future.
 
 ### Examples and TypeScript
 
