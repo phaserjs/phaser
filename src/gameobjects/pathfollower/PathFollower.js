@@ -246,7 +246,6 @@ var PathFollower = new Class({
         //  Override in case they've been specified in the config
         config.from = 0;
         config.to = 1;
-        config.startAt = startAt;
 
         //  Can also read extra values out of the config:
 
@@ -254,6 +253,22 @@ var PathFollower = new Class({
 
         this.rotateToPath = GetBoolean(config, 'rotateToPath', false);
         this.pathRotationOffset = GetValue(config, 'rotationOffset', 0);
+
+        //  This works, but it's not an ideal way of doing it as the follower jumps position
+        var seek = GetValue(config, 'startAt', startAt);
+
+        if (seek)
+        {
+            config.onStart = function (tween)
+            {
+                var tweenData = tween.data[0];
+                tweenData.progress = seek;
+                tweenData.elapsed = tweenData.duration * seek;
+                var v = tweenData.ease(tweenData.progress);
+                tweenData.current = tweenData.start + ((tweenData.end - tweenData.start) * v);
+                tweenData.target[tweenData.key] = tweenData.current;
+            };
+        }
 
         this.pathTween = this.scene.sys.tweens.addCounter(config);
 
