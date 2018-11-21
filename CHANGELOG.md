@@ -33,6 +33,7 @@
 * The WebGL Renderer has a new method `clearPipeline`, which will clear down the current pipeline and reset the blend mode, ready for the context to be passed to a 3rd party library.
 * The WebGL Renderer has a new method `rebindPipeline`, which will rebind the given pipeline instance, reset the blank texture and reset the blend mode. Which is useful for recovering from 3rd party libs that have modified the gl context.
 * Game Objects have a new property called `state`. Use this to track the state of a Game Object during its lifetime. For example, it could move from a state of 'moving', to 'attacking', to 'dead'. Phaser itself will never set this property, although plugins are allowed to.
+* Game Objects have a new method called `setState` which will set the state property in a chainable call.
 * `BlendModes.ERASE` is a new blend mode that will erase the object being drawn. When used in conjunction with a Render Texture it allows for effects that let you erase parts of the texture, in either Canvas or WebGL. When used with a transparent game canvas, it allows you to erase parts of the canvas, showing the web page background through.
 * `BlendModes.SOURCE_IN` is a new Canvas-only blend mode, that allows you to use the `source-in` composite operation when rendering Game Objects.
 * `BlendModes.SOURCE_OUT` is a new Canvas-only blend mode, that allows you to use the `source-out` composite operation when rendering Game Objects.
