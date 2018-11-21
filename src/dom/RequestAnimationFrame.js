@@ -82,6 +82,16 @@ var RequestAnimationFrame = new Class({
          */
         this.lastTime = 0;
 
+        /**
+         * The target rate in [ms].
+         *
+         * @name Phaser.DOM.RequestAnimationFrame#target
+         * @type {number}
+         * @default 0
+         * @since 3.16.0
+         */
+        this.target = 0;
+
         var _this = this;
 
         /**
@@ -116,7 +126,7 @@ var RequestAnimationFrame = new Class({
         {
             var d = Date.now();
 
-            var delay = Math.max(16 + _this.lastTime - d, 0);
+            var delay = Math.min(Math.max(_this.target * 2 + _this.tick - d, 0),_this.target);
 
             _this.lastTime = _this.tick;
 
@@ -136,8 +146,9 @@ var RequestAnimationFrame = new Class({
      *
      * @param {FrameRequestCallback} callback - The callback to invoke each step.
      * @param {boolean} forceSetTimeOut - Should it use SetTimeout, even if RAF is available?
+     * @param {number} target - The target rate in [ms].
      */
-    start: function (callback, forceSetTimeOut)
+    start: function (callback, forceSetTimeOut, target)
     {
         if (this.isRunning)
         {
@@ -145,6 +156,8 @@ var RequestAnimationFrame = new Class({
         }
 
         this.callback = callback;
+
+        this.target = target;
 
         this.isSetTimeOut = forceSetTimeOut;
 
