@@ -48,16 +48,6 @@ var Particle = new Class({
         this.frame = null;
 
         /**
-         * The position of this Particle within its Emitter's particle pool.
-         *
-         * @name Phaser.GameObjects.Particles.Particle#index
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.index = 0;
-
-        /**
          * The x coordinate of this Particle.
          *
          * @name Phaser.GameObjects.Particles.Particle#x
@@ -277,6 +267,18 @@ var Particle = new Class({
     },
 
     /**
+     * Resets the position of this particle back to zero.
+     *
+     * @method Phaser.GameObjects.Particles.Particle#resetPosition
+     * @since 3.16.0
+     */
+    resetPosition: function ()
+    {
+        this.x = 0;
+        this.y = 0;
+    },
+
+    /**
      * Starts this Particle from the given coordinates.
      *
      * @method Phaser.GameObjects.Particles.Particle#fire
@@ -382,8 +384,6 @@ var Particle = new Class({
         this.alpha = emitter.alpha.onEmit(this, 'alpha');
 
         this.tint = emitter.tint.onEmit(this, 'tint');
-
-        this.index = emitter.alive.length;
     },
 
     /**
