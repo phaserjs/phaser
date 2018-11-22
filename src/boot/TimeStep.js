@@ -33,7 +33,7 @@ var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
  * [description]
  *
  * @class TimeStep
- * @memberOf Phaser.Boot
+ * @memberof Phaser.Boot
  * @constructor
  * @since 3.0.0
  *
@@ -51,7 +51,7 @@ var TimeStep = new Class({
          *
          * @name Phaser.Boot.TimeStep#game
          * @type {Phaser.Game}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.game = game;
@@ -61,7 +61,7 @@ var TimeStep = new Class({
          *
          * @name Phaser.Boot.TimeStep#raf
          * @type {Phaser.DOM.RequestAnimationFrame}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.raf = new RequestAnimationFrame();
@@ -71,7 +71,7 @@ var TimeStep = new Class({
          *
          * @name Phaser.Boot.TimeStep#started
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @default false
          * @since 3.0.0
          */
@@ -85,7 +85,7 @@ var TimeStep = new Class({
          *
          * @name Phaser.Boot.TimeStep#running
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @default false
          * @since 3.0.0
          */
@@ -142,7 +142,7 @@ var TimeStep = new Class({
          *
          * @name Phaser.Boot.TimeStep#actualFps
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @default 60
          * @since 3.0.0
          */
@@ -153,7 +153,7 @@ var TimeStep = new Class({
          *
          * @name Phaser.Boot.TimeStep#nextFpsUpdate
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @default 0
          * @since 3.0.0
          */
@@ -164,7 +164,7 @@ var TimeStep = new Class({
          *
          * @name Phaser.Boot.TimeStep#framesThisSecond
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @default 0
          * @since 3.0.0
          */
@@ -186,7 +186,7 @@ var TimeStep = new Class({
          *
          * @name Phaser.Boot.TimeStep#forceSetTimeOut
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @default false
          * @since 3.0.0
          */
@@ -227,7 +227,7 @@ var TimeStep = new Class({
          *
          * @name Phaser.Boot.TimeStep#frame
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @default 0
          * @since 3.0.0
          */
@@ -238,7 +238,7 @@ var TimeStep = new Class({
          *
          * @name Phaser.Boot.TimeStep#inFocus
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @default true
          * @since 3.0.0
          */

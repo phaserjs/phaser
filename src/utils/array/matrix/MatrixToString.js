@@ -7,9 +7,6 @@
 var Pad = require('../../string/Pad');
 var CheckMatrix = require('./CheckMatrix');
 
-//  Generates a string (which you can pass to console.log) from the given
-//  Array Matrix.
-
 /**
  * Generates a string (which you can pass to console.log) from the given Array Matrix.
  *

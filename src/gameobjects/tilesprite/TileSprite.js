@@ -42,7 +42,7 @@ var _FLAG = 8; // 1000
  *
  * @class TileSprite
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
@@ -470,6 +470,9 @@ var TileSprite = new Class({
             canvas.height = this.height;
 
             this.frame.setSize(this.width, this.height);
+            this.updateDisplayOrigin();
+
+            this.dirty = true;
         }
 
         if (!this.dirty || this.renderer && this.renderer.gl)

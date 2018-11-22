@@ -25,6 +25,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @property {number} [bounceY=0] - Sets {@link Phaser.Physics.Arcade.Body#bounce bounce.y}.
  * @property {number} [dragX=0] - Sets {@link Phaser.Physics.Arcade.Body#drag drag.x}.
  * @property {number} [dragY=0] - Sets {@link Phaser.Physics.Arcade.Body#drag drag.y}.
+ * @property {boolean} [enable=true] - Sets {@link Phaser.Physics.Arcade.Body#enable enable}.
  * @property {number} [gravityX=0] - Sets {@link Phaser.Physics.Arcade.Body#gravity gravity.x}.
  * @property {number} [gravityY=0] - Sets {@link Phaser.Physics.Arcade.Body#gravity gravity.y}.
  * @property {number} [frictionX=0] - Sets {@link Phaser.Physics.Arcade.Body#friction friction.x}.
@@ -51,6 +52,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @property {number} setBounceY - As {@link Phaser.Physics.Arcade.Body#setBounceY}.
  * @property {number} setDragX - As {@link Phaser.Physics.Arcade.Body#setDragX}.
  * @property {number} setDragY - As {@link Phaser.Physics.Arcade.Body#setDragY}.
+ * @property {boolean} setEnable - As {@link Phaser.Physics.Arcade.Body#setEnable}.
  * @property {number} setGravityX - As {@link Phaser.Physics.Arcade.Body#setGravityX}.
  * @property {number} setGravityY - As {@link Phaser.Physics.Arcade.Body#setGravityY}.
  * @property {number} setFrictionX - As {@link Phaser.Physics.Arcade.Body#setFrictionX}.
@@ -74,7 +76,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  *
  * @class Group
  * @extends Phaser.GameObjects.Group
- * @memberOf Phaser.Physics.Arcade
+ * @memberof Phaser.Physics.Arcade
  * @constructor
  * @since 3.0.0
  *
@@ -119,6 +121,14 @@ var PhysicsGroup = new Class({
                 singleConfig.removeCallback = this.removeCallbackHandler;
             });
         }
+        else
+        {
+            // config is not defined and children is not a plain object nor an array of plain objects
+            config = {
+                createCallback: this.createCallbackHandler,
+                removeCallback: this.removeCallbackHandler
+            };
+        }
 
         /**
          * The physics simulation.
@@ -144,7 +154,7 @@ var PhysicsGroup = new Class({
          *
          * @name Phaser.Physics.Arcade.Group#physicsType
          * @type {integer}
-         * @default DYNAMIC_BODY
+         * @default Phaser.Physics.Arcade.DYNAMIC_BODY
          * @since 3.0.0
          */
         this.physicsType = CONST.DYNAMIC_BODY;
@@ -167,6 +177,7 @@ var PhysicsGroup = new Class({
             setBounceY: GetFastValue(config, 'bounceY', 0),
             setDragX: GetFastValue(config, 'dragX', 0),
             setDragY: GetFastValue(config, 'dragY', 0),
+            setEnable: GetFastValue(config, 'enable', true),
             setGravityX: GetFastValue(config, 'gravityX', 0),
             setGravityY: GetFastValue(config, 'gravityY', 0),
             setFrictionX: GetFastValue(config, 'frictionX', 0),

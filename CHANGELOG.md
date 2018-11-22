@@ -1,11 +1,140 @@
 # Change Log
 
-## Version 3.15.0 - Batou - in development
+## Version 3.16.0 - Ishikawa - in development
+
+### Facebook Instant Games Updates and Fixes
+
+* Added the `Leaderboard.getConnectedScores` method, to get a list of scores from player connected entries.
+* The `loadPlayerPhoto` function in the Instant Games plugin now listens for the updated Loader event correctly, causing the `photocomplete` event to fire properly.
+* `Leaderboard.setScore` now emits the LeaderboardScore object with the `setscore` event, as the documentation said it did.
+* `Leaderboard.getPlayerScore` now only populates the `playerScore` property if the entry isn't `null`.
+* If the `setScore` or `getPlayerScore` calls fail, it will return `null` as the score instance, instead of causing a run-time error.
+* You can now pass an object or a string to `setScore` and objects will be automatically stringified.
+
+### Input Updates and Fixes
+
+* The Keyboard Plugin will now call `preventDefault` on all non-modified alphanumeric key presses by default, stopping the keyboard event from hitting the browser. Previously, you had to create `Key` objects to enable this. You can control this at runtime by toggling the `KeyboardPlugin.preventDefault` boolean, or the following config setting.
+* There is a new Game and Scene Config setting `input.keyboard.capture` which is an array of KeyCodes that the Keyboard Plugin will capture all non-modified key events on. By default it is populated with the space key, cursors, 0 - 9 and A - Z. You can also set this in a Scene Config, in which case it will override the Game Config value.
+* If you have multiple parallel Scenes, each trying to get keyboard input, be sure to disable capture on them to stop them from stealing input from another Scene in the list. You can do this with `this.input.keyboard.enabled = false` within the Scene to stop all input, or `this.input.keyboard.preventDefault = false` to stop a Scene halting input on another Scene.
+* The Keyboard Plugin has a new property called `captures` which is an array of keycodes, as populated by the Game Config. Any key code in the array will have `preventDefault` called on it if pressed. Modify this by changing the game config, or altering the array contents at run-time.
+* The Key object has a new boolean `metaKey` which indicates if the Meta Key was held down when the Key was pressed. On a Mac the Meta Key is Command. On a Windows keyboard, it's the Windows key.
+* The Mouse Manager class has been updated to remove some commented out code and refine the `startListeners` method.
+* The following Key Codes have been added, which include some missing alphabet letters in Persian and Arabic: `SEMICOLON_FIREFOX`, `COLON`, `COMMA_FIREFOX_WINDOWS`, `COMMA_FIREFOX`, `BRACKET_RIGHT_FIREFOX` and `BRACKET_LEFT_FIREFOX` (thanks @wmateam)
+* When enabling a Game Object for input it will now use the `width` and `height` properties of the Game Object first, falling back to the frame size if not found. This stops a bug when enabling BitmapText objects for input and it using the font texture as the hit area size, rather than the text itself.
+* `Pointer.smoothFactor` is a float-value that allows you to automatically apply smoothing to the Pointer position as it moves. This is ideal when you want something smoothly tracking a pointer in a game, or are need a smooth drawing motion for an art package. The default value is zero, meaning disabled. Set to a small number, such as 0.2, to enable.
+* `Config.inputSmoothFactor` is a new property that allows you to set the smoothing factor for all Pointers the game creators. The default value is zero, which is disabled. Set in the game config as `input: { smoothFactor: value }`.
+* `InputManager.transformPointer` has a new boolean argument `wasMove`, which controls if the pointer is being transformed after a move or up/down event.
+* `Pointer.velocity` is a new Vector2 that contains the velocity of the Pointer, based on the previous and current position. This is updated whenever the Pointer moves, regardless of button states. If you find the velocity is too erratic, consider enabling the `smoothFactor`.
+* `Pointer.angle` is a new property that contains the angle of the Pointer, in radians, based on the previous and current position. This is updated whenever the Pointer moves, regardless of button states. If you find the angle is too erratic, consider enabling the `smoothFactor`.
+
+### New Features
+
+* The data object being sent to the Dynamic Bitmap Text callback now has a new property `parent`, which is a reference to the Bitmap Text instance that owns the data object (thanks ornyth)
+* The WebGL Renderer has a new method `clearPipeline`, which will clear down the current pipeline and reset the blend mode, ready for the context to be passed to a 3rd party library.
+* The WebGL Renderer has a new method `rebindPipeline`, which will rebind the given pipeline instance, reset the blank texture and reset the blend mode. Which is useful for recovering from 3rd party libs that have modified the gl context.
+* Game Objects have a new property called `state`. Use this to track the state of a Game Object during its lifetime. For example, it could move from a state of 'moving', to 'attacking', to 'dead'. Phaser itself will never set this property, although plugins are allowed to.
+* Game Objects have a new method called `setState` which will set the state property in a chainable call.
+* `BlendModes.ERASE` is a new blend mode that will erase the object being drawn. When used in conjunction with a Render Texture it allows for effects that let you erase parts of the texture, in either Canvas or WebGL. When used with a transparent game canvas, it allows you to erase parts of the canvas, showing the web page background through.
+* `BlendModes.SOURCE_IN` is a new Canvas-only blend mode, that allows you to use the `source-in` composite operation when rendering Game Objects.
+* `BlendModes.SOURCE_OUT` is a new Canvas-only blend mode, that allows you to use the `source-out` composite operation when rendering Game Objects.
+* `BlendModes.SOURCE_ATOP` is a new Canvas-only blend mode, that allows you to use the `source-atop` composite operation when rendering Game Objects.
+* `BlendModes.DESTINATION_OVER` is a new Canvas-only blend mode, that allows you to use the `destination-over` composite operation when rendering Game Objects.
+* `BlendModes.DESTINATION_IN` is a new Canvas-only blend mode, that allows you to use the `destination-in` composite operation when rendering Game Objects.
+* `BlendModes.DESTINATION_OUT` is a new Canvas-only blend mode, that allows you to use the `destination-out` composite operation when rendering Game Objects.
+* `BlendModes.DESTINATION_ATOP` is a new Canvas-only blend mode, that allows you to use the `destination-atop` composite operation when rendering Game Objects.
+* `BlendModes.LIGHTER` is a new Canvas-only blend mode, that allows you to use the `lighter` composite operation when rendering Game Objects.
+* `BlendModes.COPY` is a new Canvas-only blend mode, that allows you to use the `copy` composite operation when rendering Game Objects.
+* `BlendModes.XOR` is a new Canvas-only blend mode, that allows you to use the `xor` composite operation when rendering Game Objects.
+* `RenderTexture.erase` is a new method that will take an object, or array of objects, and draw them to the Render Texture using an ERASE blend mode, resulting in them being removed from the Render Texture. This is really handy for making a bitmap masked texture in Canvas or WebGL (without using an actual mask), or for 'cutting away' part of a texture.
+* There is a new boolean Game Config property called `customEnvironment`. If set to `true` it will skip the internal Feature checks when working out which type of renderer to create, allowing you to run Phaser under non-native web environments. If using this value, you _must_ set an explicit `renderType` of either CANVAS or WEBGL. It cannot be left as AUTO. Fix #4166 (thanks @jcyuan)
+* `Animation.nextFrame` will advance an animation to the next frame in the sequence instantly, regardless of the animation time or state. You can call this on a Sprite: `sprite.anims.nextFrame()` (thanks rgk25)
+* `Animation.previousFrame` will set an animation to the previous frame in the sequence instantly, regardless of the animation time or state. You can call this on a Sprite: `sprite.anims.previousFrame()` (thanks rgk25)
+
+### Updates
+
+* The `backgroundColor` property of the Game Config is now used to set the CSS backgroundColor property of the game Canvas element. This avoids a `fillRect` call in Canvas mode and allows for 'punch through' effects to be created. If `transparent` is true, the CSS property is not set and no background color is drawn in either WebGL or Canvas, allowing the canvas to be fully transparent.
+* You can now modify `this.physics.world.debugGraphic.defaultStrokeWidth` to set the stroke width of any debug drawn body, previously it was always 1 (thanks @samme)
+* `TextStyle.setFont` has a new optional argument `updateText` which will sets if the text should be automatically updated or not (thanks @DotTheGreat)
+* `ProcessQueue.destroy` now sets the internal `toProcess` counter to zero.
+* The `PathFollower.pathRotationVerticalAdjust` property has been removed. It was supposed to flipY a follower when it reversed path direction, but after some testing it appears it has never worked and it's easier to do this using events, so the property and associated config value are removed. The `verticalAdjust` argument from the `setRotateToPath` method has been removed as well.
+* The config value `preserveDrawingBuffer` has been removed as it has never been used by the WebGL Renderer.
+* `PluginManager.install` returns `null` if the plugin failed to install in all cases.
+* `PluginFile` will now install the plugin into the _current_ Scene as long as the `start` or `mapping` arguments are provided.
+* MATH_CONST no longer requires or sets the Random Data Generator, this is now done in the Game Config, allowing you to require the math constants without pulling in a whole copy of the RNG with it.
+* The Dynamic Bitmap Text Canvas Renderer was creating a new data object every frame for the callback. It now uses the `callbackData` object instead, like the WebGL renderer does.
+* `WebGLRenderer.setBlendMode` has a new optional argument `force`, which will force the given blend mode to be set, regardless of the current settings.
+* The method `DisplayList.sortGameObjects` has been removed. It has thrown a runtime error since v3.3.0! which no-one even spotted, a good indication of how little the method is used. The display list is automatically sorted anyway, so if you need to sort a small section of it, just use the standard JavaScript Array sort method (thanks ornyth)
+* The method `DisplayList.getTopGameObject` has been removed. It has thrown a runtime error since v3.3.0! which no-one even spotted, a good indication of how little the method is used (thanks ornyth)
+* `WebGLRenderer.setFramebuffer` has a new optional boolean argument `updateScissor`, which will reset the scissor to match the framebuffer size, or clear it.
+* `WebAudioSoundManager.onFocus` will not try to resume the Audio Context if it's still locked.
+* `WebAudioSoundManager.onBlur` will not try to suspend the Audio Context if it's still locked.
+* When using `ScenePlugin.add`, to add a new Scene to the Scene Manager, it didn't allow you to include the optional Scene data object. You can now pass this in the call (thanks @kainage)
+* `Graphics.stroke` is a new alias for the `strokePath` method, to keep the calls consistent with the Canvas Rendering Context API.
+* `Graphics.fill` is a new alias for the `fillPath` method, to keep the calls consistent with the Canvas Rendering Context API.
+
+### Bug Fixes
+
+* The Rectangle Shape object wouldn't render if it didn't have a stroke, or any other objects on the display list (thanks mliko)
+* When using a font string instead of setting `fontFamily`, `fontSize` and `fontStyle` in either `Text.setStyle` or `setFont`, the style properties wouldn't get set. This isn't a problem while creating the text object, only if modifying it later (thanks @DotTheGreat)
+* Disabling camera bounds and then moving the camera to an area in a Tilemap that did not have any tile information would throw an `Uncaught Reference error` as it tried to access tiles that did not exist (thanks @Siyalatas)
+* Fixed an issue where Sprite Sheets being extracted from a texture atlas would fail if the sheet was either just a single column or single row of sprites. Fix #4096 (thanks @Cirras)
+* If you created an Arcade Physics Group without passing a configuration object, and passing an array of non-standard children, it would throw a classType runtime error. It now creates a default config object correctly (thanks @pierpo)
+* The `Camera.cull` method has been restructured so it now calculates if a Game Object is correctly in view or not, before culling it. Although not used internally, if you need to cull objects for a camera, you can now safely use this method. Fix #4092 (thanks @Cirras)
+* The Tiled Parser would ignore animated tile data if it was in the new Tiled 1.2 format. This is now accounted for, as well as 1.0 (thanks @nkholski)
+* `Array.Matrix.ReverseRows` was actually reversing the columns, but now reverses the rows.
+* `Array.Matrix.ReverseColumns` was actually reversing the rows, but now reverses the columns.
+* UnityAtlas now sets the correct file type key if using a config file object.
+* Starting with version 3.13 in the Canvas Renderer, it was possible for long-running scripts to start to get bogged-down in `fillRect` calls if the game had a background color set. The context is now saved properly to avoid this. Fix #4056 (thanks @Aveyder)
+* Render Textures created larger than the size of the default canvas would be automatically clipped when drawn to in WebGL. They now reset the gl scissor and drawing height property in order to draw to their full size, regardless of the canvas size. Fix #4139 (thanks @chaoyang805 @iamchristopher)
+* The `cameraFilter` property of a Game Object will now allow full bitmasks to be set (a value of -1), instead of just those > 0 (thanks @stuartkeith)
+* The `PathFollower.startFollow` method now properly uses the `startAt` argument to the method, so you can start a follower off at any point along the path. Fix #3688 (thanks @DannyT @diteix)
+* Static Circular Arcade Physics Bodies now render as circles in the debug display, instead of showing their rectangle bounds (thanks @maikthomas)
+* Changing the mute flag on an `HTML5AudioSound` instance, via the `mute` setter, now works, as it does via the Sound Manager (thanks @Waclaw-I @neon-dev)
+* Changing the volume on an `HTML5AudioSound` instance, via the `volume` setter, now works, as it does via the Sound Manager (thanks @Waclaw-I)
+* The Dynamic Tilemap Layer WebGL renderer was drawing tiles at the incorrect position if the layer was scaled. Fix #4104 (thanks @the-realest-stu)
+* `Tile.tileset` now returns the specific Tileset associated with the tile, rather than an array of them. Fix #4095 (thanks @quadrupleslap)
+* `Tile.getCollisionGroup` wouldn't return the correct Group after the change to support multiple Tilesets. It now returns the group properly (thanks @jbpuryear)
+* `Tile.getTileData` wouldn't return the correct data after the change to support multiple Tilesets. It now returns the tile data properly (thanks @jbpuryear)
+* The `GetTileAt` and `RemoveTileAt` components would error with "Cannot read property 'index' of undefined" if the tile was undefined rather than null. It now handles both cases (thanks @WaSa42)
+* Changing `TileSprite.width` or `TileSprite.height` will now flag the texture as dirty and call `updateDisplayOrigin`, allowing you to resize TileSprites dynamically in both Canvas and WebGL.
+* `RandomDataGenerator.shuffle` has been fixed to use the proper modifier in the calculation, allowing for a more even distribution (thanks wayfinder)
+* The Particle Emitter was not recycling dead particles correctly, so it was creating new objects every time it emitted (the old particles were then left to the browsers gc to clear up). This has now been recoded, so the emitter will properly keep track of dead particles and re-use them (thanks @Waclaw-I for the initial PR)
+* `ParticleEmitter.indexSortCallback` has been removed as it's no longer required.
+* `Particle.index` has been removed, as it's no longer required. Particles don't need to keep track of their index any more.
+* The Particle Emitter no longer needs to call the StableSort.inplace during its preUpdate, saving cpu.
+* `Particle.resetPosition` is a new method that is called when a particle dies, preparing it ready for firing again in the future.
+
+### Examples and TypeScript
+
+Thanks to the following for helping with the Phaser 3 Examples and TypeScript definitions, either by reporting errors, or even better, fixing them:
+
+@guilhermehto @samvieten @darkwebdev @RoryO
+
+### Phaser Doc Jam
+
+The [Phaser Doc Jam](http://docjam.phaser.io) is an on-going effort to ensure that the Phaser 3 API has 100% documentation coverage. Thanks to the monumental effort of myself and the following people we're now really close to that goal! My thanks to:
+
+16patsle - @icbat - @gurungrahul2 - @samme - @telinc1 - anandu pavanan - blackhawx - candelibas - Diego Romero - Elliott Wallace - eric - Georges Gabereau - Haobo Zhang - henriacle - madclaws - marc136 - Mihail Ilinov - naum303 - NicolasRoehm - rejacobson - Robert Kowalski - rootasjey - scottwestover - stetso - therealsamf - Tigran - willblackmore - zenwaichi
+
+If you'd like to help finish off the last parts of documentation then take a look at the [Doc Jam site](http://docjam.phaser.io).
+
+## Version 3.15.1 - Batou - 16th October 2018
+
+* Re-enabled Input Manager resizing, which had been left disabled by mistake.
+
+## Version 3.15.0 - Batou - 16th October 2018
+
+Note: We are releasing this version ahead of schedule in order to make some very important iOS performance and input related fixes available. It does not contain the new Scale Manager or Spine support, both of which have been moved to 3.16 as they require a few more weeks of development.
 
 ### New Features
 
 * You can now set the `maxLights` value in the Game Config, which controls the total number of lights the Light2D shader can render in a single pass. The default is 10. Be careful about pushing this too far. More lights = less performance. Close #4081 (thanks @FrancescoNegri)
 * `Rectangle.SameDimensions` determines if the two objects (either Rectangles or Rectangle-like) have the same width and height values under strict equality.
+* An ArcadePhysics Group can now pass `{ enable: false }`` in its config to disable all the member bodies (thanks @samme)
+* `Body.setEnable` is a new chainable method that allows you to toggle the enable state of an Arcade Physics Body (thanks @samme)
+* `KeyboardPlugin.resetKeys` is a new method that will reset the state of any Key object created by a Scene's Keyboard Plugin.
+* `Pointer.wasCanceled` is a new boolean property that allows you to tell if a Pointer was cleared due to a `touchcancel` event. This flag is reset during the next `touchstart` event for the Pointer.
+* `Pointer.touchcancel` is a new internal method specifically for handling touch cancel events. It has the same result as `touchend` without setting any of the up properties, to avoid triggering up event handlers. It will also set the `wasCanceled` property to `true`.
 
 ### Updates
 
@@ -14,6 +143,12 @@
 * If you pass zero as the width or height when creating a TileSprite it will now use the dimensions of the texture frame as the size of the TileSprite. Fix #4073 (thanks @jcyuan)
 * `TileSprite.setFrame` has had both the `updateSize` and `updateOrigin` arguments removed as they didn't do anything for TileSprites and were misleading.
 * `CameraManager.remove` has a new argument `runDestroy` which, if set, will automatically call `Camera.destroy` on the Cameras removed from the Camera Manager. You should nearly always allow this to happen (thanks jamespierce)
+* Device.OS has been restructured to allow fake UAs from Chrome dev tools to register iOS devices.
+* Texture batching during the batch flush has been implemented in the TextureTintPipeline which resolves the issues of very low frame rates, especially on iOS devices, when using non-batched textures such as those used by Text or TileSprites. Fix #4110 #4086 (thanks @ivanpopelyshev @sachinhosmani   @maximtsai @alexeymolchan)
+* The WebGLRenderer method `canvasToTexture` has a new optional argument `noRepeat` which will stop it from using `gl.REPEAT` entirely. This is now used by the Text object to avoid it potentially switching between a REPEAT and CLAMP texture, causing texture black-outs (thanks @ivanpopelyshev)
+* `KeyboardPlugin.resetKeys` is now called automatically as part of the Keyboard Plugin `shutdown` method. This means, when the plugin shuts down, such as when stopping a Scene, it will reset the state of any key held in the plugin. It will also clear the queue of any pending events.
+* The `Touch Manager` has been rewritten to use declared functions for all touch event handlers, rather than bound functions. This means they will now clear properly when the TouchManager is shut down.
+* There is a new Input constant `TOUCH_CANCEL` which represents canceled touch events.
 
 ### Bug Fixes
 
@@ -21,22 +156,8 @@
 * If you set `pixelArt` to true in your game config (or `antialias` to false) then TileSprites will now respect this when using the Canvas Renderer and disable smoothing on the internal fill canvas.
 * TileSprites that were set to be interactive before they had rendered once wouldn't receive a valid input hit area, causing input to fail. They now define their size immediately, allowing them to be made interactive without having rendered. Fix #4085 (thanks @DotTheGreat)
 * The Particle Emitter Manager has been given a NOOP method called `setBlendMode` to stop warnings from being thrown if you added an emitter to a Container in the Canvas renderer. Fix #4083 (thanks @maximtsai)
-
-### Examples and TypeScript
-
-Thanks to the following for helping with the Phaser 3 Examples and TypeScript definitions, either by reporting errors, or even better, fixing them:
-
-
-
-### Phaser Doc Jam
-
-The [Phaser Doc Jam](http://docjam.phaser.io) is an on-going effort to ensure that the Phaser 3 API has 100% documentation coverage. Thanks to the monumental effort of myself and the following people we're now really close to that goal! My thanks to:
-
----
-
-If you'd like to help finish off the last parts of documentation then take a look at the [Doc Jam site](http://docjam.phaser.io).
-
-
+* The `game.context` property would be incorrectly set to `null` after the WebGLRenderer instance was created (thanks @samme)
+* The Touch Manager, Input Manager and Pointer classes all now handle the `touchcancel` event, such as triggered on iOS when activating an out of browser UI gesture, or in Facebook Instant Games when displaying an overlay ad. This should prevent issues with touch input becoming locked on iOS specifically. Fix #3756 (thanks @sftsk @sachinhosmani @kooappsdevs)
 
 ## Version 3.14.0 - Tachikoma - 1st October 2018
 

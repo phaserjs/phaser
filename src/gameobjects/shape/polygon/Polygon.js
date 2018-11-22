@@ -35,7 +35,7 @@ var Smooth = require('../../../geom/polygon/Smooth');
  *
  * @class Polygon
  * @extends Phaser.GameObjects.Shape
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.13.0
  *

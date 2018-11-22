@@ -37,7 +37,7 @@ var Class = require('../../../utils/Class');
  * object as long as it includes a `contains` method for which the Particles can be tested against.
  *
  * @class DeathZone
- * @memberOf Phaser.GameObjects.Particles.Zones
+ * @memberof Phaser.GameObjects.Particles.Zones
  * @constructor
  * @since 3.0.0
  *

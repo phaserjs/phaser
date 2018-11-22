@@ -12,7 +12,7 @@ var DefaultDefs = require('./DefaultDefs');
  * [description]
  *
  * @class CollisionMap
- * @memberOf Phaser.Physics.Impact
+ * @memberof Phaser.Physics.Impact
  * @constructor
  * @since 3.0.0
  *

@@ -78,6 +78,19 @@ var ParseTilesets = function (json)
                                 tiles[tile.id].objectgroup.objects = parsedObjects2;
                             }
                         }
+
+                        // Copy animation data
+                        if (tile.animation)
+                        {
+                            if (tiles.hasOwnProperty(tile.id))
+                            {
+                                tiles[tile.id].animation = tile.animation;
+                            }
+                            else
+                            {
+                                tiles[tile.id] = { animation: tile.animation };
+                            }
+                        }
                     }
 
                     newSet.tileData = tiles;

@@ -14,7 +14,7 @@ var Class = require('../utils/Class');
  * You shouldn't create an instance of a MultiFile directly, but should extend it with your own class, setting a custom type and processing methods.
  *
  * @class MultiFile
- * @memberOf Phaser.Loader
+ * @memberof Phaser.Loader
  * @constructor
  * @since 3.7.0
  *

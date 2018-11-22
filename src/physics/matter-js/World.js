@@ -24,7 +24,7 @@ var Vector = require('./lib/geometry/Vector');
  *
  * @class World
  * @extends Phaser.Events.EventEmitter
- * @memberOf Phaser.Physics.Matter
+ * @memberof Phaser.Physics.Matter
  * @constructor
  * @since 3.0.0
  *
@@ -1074,7 +1074,8 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Will remove all Matter physics event listeners and clear the matter physics world,
+     * engine and any debug graphics, if any.
      *
      * @method Phaser.Physics.Matter.World#shutdown
      * @since 3.0.0
@@ -1096,7 +1097,10 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Will remove all Matter physics event listeners and clear the matter physics world,
+     * engine and any debug graphics, if any.
+     *
+     * After destroying the world it cannot be re-used again.
      *
      * @method Phaser.Physics.Matter.World#destroy
      * @since 3.0.0

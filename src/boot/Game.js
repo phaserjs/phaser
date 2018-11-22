@@ -47,7 +47,7 @@ if (typeof PLUGIN_FBINSTANT)
  * made available to you via the Phaser.Scene Systems class instead.
  *
  * @class Game
- * @memberOf Phaser
+ * @memberof Phaser
  * @constructor
  * @since 3.0.0
  *
@@ -66,7 +66,7 @@ var Game = new Class({
          *
          * @name Phaser.Game#config
          * @type {Phaser.Boot.Config}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.config = new Config(config);
@@ -126,7 +126,7 @@ var Game = new Class({
          *
          * @name Phaser.Game#isBooted
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.isBooted = false;
@@ -136,7 +136,7 @@ var Game = new Class({
          *
          * @name Phaser.Game#isRunning
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.isRunning = false;
@@ -231,11 +231,11 @@ var Game = new Class({
          *
          * The Scale Manager is a global system responsible for handling game scaling events.
          *
-         * @name Phaser.Game#scaleManager
+         * @name Phaser.Game#scale
          * @type {Phaser.Boot.ScaleManager}
          * @since 3.15.0
          */
-        this.scaleManager = new ScaleManager(this, this.config);
+        this.scale = new ScaleManager(this, this.config);
 
         /**
          * An instance of the base Sound Manager.
@@ -324,7 +324,7 @@ var Game = new Class({
          *
          * @name Phaser.Game#hasFocus
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @since 3.9.0
          */
         this.hasFocus = false;
@@ -335,7 +335,7 @@ var Game = new Class({
          *
          * @name Phaser.Game#isOver
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @since 3.10.0
          */
         this.isOver = true;
@@ -367,13 +367,15 @@ var Game = new Class({
     {
         if (!PluginCache.hasCore('EventEmitter'))
         {
-            console.warn('Core Phaser Plugins missing. Cannot start.');
+            console.warn('Aborting. Core Plugins missing.');
             return;
         }
 
         this.isBooted = true;
 
         this.config.preBoot(this);
+
+        this.scale.preBoot();
 
         CreateRenderer(this);
 
@@ -817,5 +819,9 @@ var Game = new Class({
     }
 
 });
+
+/**
+ * "Computers are good at following instructions, but not at reading your mind." - Donald Knuth
+ */
 
 module.exports = Game;

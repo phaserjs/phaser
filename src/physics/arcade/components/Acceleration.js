@@ -5,7 +5,7 @@
  */
 
 /**
- * Provides methods used for setting the acceleration properties of an Arcade Body.
+ * Provides methods used for setting the acceleration properties of an Arcade Physics Body.
  *
  * @name Phaser.Physics.Arcade.Components.Acceleration
  * @since 3.0.0

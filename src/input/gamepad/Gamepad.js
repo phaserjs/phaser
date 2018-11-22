@@ -18,7 +18,7 @@ var Vector2 = require('../../math/Vector2');
  *
  * @class Gamepad
  * @extends Phaser.Events.EventEmitter
- * @memberOf Phaser.Input.Gamepad
+ * @memberof Phaser.Input.Gamepad
  * @constructor
  * @since 3.0.0
  *

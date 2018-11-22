@@ -38,6 +38,17 @@ var GetBlendModes = function ()
     output[modes.SATURATION] = (useNew) ? 'saturation' : so;
     output[modes.COLOR] = (useNew) ? 'color' : so;
     output[modes.LUMINOSITY] = (useNew) ? 'luminosity' : so;
+    output[modes.ERASE] = 'destination-out';
+    output[modes.SOURCE_IN] = 'source-in';
+    output[modes.SOURCE_OUT] = 'source-out';
+    output[modes.SOURCE_ATOP] = 'source-atop';
+    output[modes.DESTINATION_OVER] = 'destination-over';
+    output[modes.DESTINATION_IN] = 'destination-in';
+    output[modes.DESTINATION_OUT] = 'destination-out';
+    output[modes.DESTINATION_ATOP] = 'destination-atop';
+    output[modes.LIGHTER] = 'lighter';
+    output[modes.COPY] = 'copy';
+    output[modes.XOR] = 'xor';
 
     return output;
 };

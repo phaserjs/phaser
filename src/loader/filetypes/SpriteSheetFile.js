@@ -29,7 +29,7 @@ var ImageFile = require('./ImageFile.js');
  *
  * @class SpriteSheetFile
  * @extends Phaser.Loader.File
- * @memberOf Phaser.Loader.FileTypes
+ * @memberof Phaser.Loader.FileTypes
  * @constructor
  * @since 3.0.0
  *

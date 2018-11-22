@@ -17,7 +17,7 @@ var Vector4 = require('../../math/Vector4');
  *
  * @class DOMElement
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.12.0
  *

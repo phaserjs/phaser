@@ -28,7 +28,7 @@ var Shape = require('../Shape');
  *
  * @class Star
  * @extends Phaser.GameObjects.Shape
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.13.0
  *

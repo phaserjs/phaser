@@ -16,23 +16,21 @@ var CONST = {
      * Phaser Release Version
      * 
      * @name Phaser.VERSION
-     * @readOnly
+     * @readonly
      * @type {string}
      * @since 3.0.0
      */
-    VERSION: '3.15.0 Beta 1',
+    VERSION: '3.16.0 Beta 2',
 
     BlendModes: require('./renderer/BlendModes'),
 
     ScaleModes: require('./renderer/ScaleModes'),
 
-    ScaleManager: require('./dom/const'),
-
     /**
      * AUTO Detect Renderer.
      * 
      * @name Phaser.AUTO
-     * @readOnly
+     * @readonly
      * @type {integer}
      * @since 3.0.0
      */
@@ -42,7 +40,7 @@ var CONST = {
      * Canvas Renderer.
      * 
      * @name Phaser.CANVAS
-     * @readOnly
+     * @readonly
      * @type {integer}
      * @since 3.0.0
      */
@@ -52,7 +50,7 @@ var CONST = {
      * WebGL Renderer.
      * 
      * @name Phaser.WEBGL
-     * @readOnly
+     * @readonly
      * @type {integer}
      * @since 3.0.0
      */
@@ -62,7 +60,7 @@ var CONST = {
      * Headless Renderer.
      * 
      * @name Phaser.HEADLESS
-     * @readOnly
+     * @readonly
      * @type {integer}
      * @since 3.0.0
      */
@@ -73,7 +71,7 @@ var CONST = {
      * to help you remember what the value is doing in your code.
      * 
      * @name Phaser.FOREVER
-     * @readOnly
+     * @readonly
      * @type {integer}
      * @since 3.0.0
      */
@@ -83,7 +81,7 @@ var CONST = {
      * Direction constant.
      * 
      * @name Phaser.NONE
-     * @readOnly
+     * @readonly
      * @type {integer}
      * @since 3.0.0
      */
@@ -93,7 +91,7 @@ var CONST = {
      * Direction constant.
      * 
      * @name Phaser.UP
-     * @readOnly
+     * @readonly
      * @type {integer}
      * @since 3.0.0
      */
@@ -103,7 +101,7 @@ var CONST = {
      * Direction constant.
      * 
      * @name Phaser.DOWN
-     * @readOnly
+     * @readonly
      * @type {integer}
      * @since 3.0.0
      */
@@ -113,7 +111,7 @@ var CONST = {
      * Direction constant.
      * 
      * @name Phaser.LEFT
-     * @readOnly
+     * @readonly
      * @type {integer}
      * @since 3.0.0
      */
@@ -123,7 +121,7 @@ var CONST = {
      * Direction constant.
      * 
      * @name Phaser.RIGHT
-     * @readOnly
+     * @readonly
      * @type {integer}
      * @since 3.0.0
      */

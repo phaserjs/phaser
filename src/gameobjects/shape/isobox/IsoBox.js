@@ -26,7 +26,7 @@ var Shape = require('../Shape');
  *
  * @class IsoBox
  * @extends Phaser.GameObjects.Shape
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.13.0
  *

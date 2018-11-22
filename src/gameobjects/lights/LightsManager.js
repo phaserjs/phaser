@@ -21,7 +21,7 @@ var Utils = require('../../renderer/webgl/Utils');
  * Affects the rendering of Game Objects using the `Light2D` pipeline.
  *
  * @class LightsManager
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  */
@@ -90,7 +90,7 @@ var LightsManager = new Class({
          *
          * @name Phaser.GameObjects.LightsManager#maxLights
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.15.0
          */
         this.maxLights = -1;

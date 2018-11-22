@@ -23,7 +23,7 @@ var EaseMap = require('../../../math/easing/EaseMap');
  * which is invoked each frame for the duration of the effect if required.
  *
  * @class Pan
- * @memberOf Phaser.Cameras.Scene2D.Effects
+ * @memberof Phaser.Cameras.Scene2D.Effects
  * @constructor
  * @since 3.11.0
  *
@@ -40,7 +40,7 @@ var Pan = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Pan#camera
          * @type {Phaser.Cameras.Scene2D.Camera}
-         * @readOnly
+         * @readonly
          * @since 3.11.0
          */
         this.camera = camera;
@@ -50,7 +50,7 @@ var Pan = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Pan#isRunning
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @default false
          * @since 3.11.0
          */
@@ -61,7 +61,7 @@ var Pan = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Pan#duration
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @default 0
          * @since 3.11.0
          */

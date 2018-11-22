@@ -31,7 +31,7 @@ var TILEMAP_FORMATS = require('../../tilemaps/Formats');
  *
  * @class TilemapCSVFile
  * @extends Phaser.Loader.File
- * @memberOf Phaser.Loader.FileTypes
+ * @memberof Phaser.Loader.FileTypes
  * @constructor
  * @since 3.0.0
  *

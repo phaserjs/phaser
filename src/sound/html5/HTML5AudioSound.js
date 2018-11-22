@@ -14,7 +14,7 @@ var Class = require('../../utils/Class');
  *
  * @class HTML5AudioSound
  * @extends Phaser.Sound.BaseSound
- * @memberOf Phaser.Sound
+ * @memberof Phaser.Sound
  * @constructor
  * @since 3.0.0
  *
@@ -635,6 +635,8 @@ var HTML5AudioSound = new Class({
                 return;
             }
 
+            this.updateMute();
+
             this.emit('mute', this, value);
         }
     },
@@ -686,6 +688,8 @@ var HTML5AudioSound = new Class({
             {
                 return;
             }
+
+            this.updateVolume();
 
             this.emit('volume', this, value);
         }

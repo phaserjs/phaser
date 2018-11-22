@@ -24,7 +24,7 @@ var TriangleRender = require('./TriangleRender');
  *
  * @class Triangle
  * @extends Phaser.GameObjects.Shape
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.13.0
  *

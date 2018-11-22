@@ -29,7 +29,7 @@ var RectangleContains = require('../../geom/rectangle/Contains');
  *
  * @class Zone
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *

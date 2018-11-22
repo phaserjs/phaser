@@ -17,7 +17,7 @@ var StaticPhysicsGroup = require('./StaticPhysicsGroup');
  * Objects that are created by this Factory are automatically added to the physics world.
  *
  * @class Factory
- * @memberOf Phaser.Physics.Arcade
+ * @memberof Phaser.Physics.Arcade
  * @constructor
  * @since 3.0.0
  *
@@ -58,7 +58,7 @@ var Factory = new Class({
     },
 
     /**
-     * Create a new Arcade Physics Collider object.
+     * Creates a new Arcade Physics Collider object.
      *
      * @method Phaser.Physics.Arcade.Factory#collider
      * @since 3.0.0
@@ -77,7 +77,7 @@ var Factory = new Class({
     },
 
     /**
-     * Create a new Arcade Physics Collider Overlap object.
+     * Creates a new Arcade Physics Collider Overlap object.
      *
      * @method Phaser.Physics.Arcade.Factory#overlap
      * @since 3.0.0

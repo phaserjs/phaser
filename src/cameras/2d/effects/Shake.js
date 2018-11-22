@@ -21,7 +21,7 @@ var Vector2 = require('../../../math/Vector2');
  * which is invoked each frame for the duration of the effect if required.
  *
  * @class Shake
- * @memberOf Phaser.Cameras.Scene2D.Effects
+ * @memberof Phaser.Cameras.Scene2D.Effects
  * @constructor
  * @since 3.5.0
  *
@@ -38,7 +38,7 @@ var Shake = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Shake#camera
          * @type {Phaser.Cameras.Scene2D.Camera}
-         * @readOnly
+         * @readonly
          * @since 3.5.0
          */
         this.camera = camera;
@@ -48,7 +48,7 @@ var Shake = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Shake#isRunning
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @default false
          * @since 3.5.0
          */
@@ -59,7 +59,7 @@ var Shake = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Shake#duration
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @default 0
          * @since 3.5.0
          */

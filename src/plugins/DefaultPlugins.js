@@ -29,6 +29,7 @@ var DefaultPlugins = {
         'cache',
         'plugins',
         'registry',
+        'scale',
         'sound',
         'textures'
 

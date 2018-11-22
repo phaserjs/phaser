@@ -39,7 +39,7 @@ var Vector2 = require('../../math/Vector2');
  * A Camera also has built-in special effects including Fade, Flash and Camera Shake.
  *
  * @class Camera
- * @memberOf Phaser.Cameras.Scene2D
+ * @memberof Phaser.Cameras.Scene2D
  * @constructor
  * @since 3.0.0
  * 

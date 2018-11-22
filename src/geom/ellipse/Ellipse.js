@@ -19,7 +19,7 @@ var Random = require('./Random');
  * To render an Ellipse you should look at the capabilities of the Graphics class.
  *
  * @class Ellipse
- * @memberOf Phaser.Geom
+ * @memberof Phaser.Geom
  * @constructor
  * @since 3.0.0
  *

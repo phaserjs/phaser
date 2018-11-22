@@ -13,7 +13,7 @@ var PluginCache = require('../plugins/PluginCache');
  * EventEmitter is a Scene Systems plugin compatible version of eventemitter3.
  *
  * @class EventEmitter
- * @memberOf Phaser.Events
+ * @memberof Phaser.Events
  * @constructor
  * @since 3.0.0
  */

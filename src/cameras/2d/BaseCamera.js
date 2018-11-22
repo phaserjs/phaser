@@ -67,7 +67,7 @@ var Vector2 = require('../../math/Vector2');
  * to when they were added to the Camera class.
  *
  * @class BaseCamera
- * @memberOf Phaser.Cameras.Scene2D
+ * @memberof Phaser.Cameras.Scene2D
  * @constructor
  * @since 3.12.0
  * 
@@ -123,7 +123,7 @@ var BaseCamera = new Class({
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#config
          * @type {object}
-         * @readOnly
+         * @readonly
          * @since 3.12.0
          */
         this.config;
@@ -134,7 +134,7 @@ var BaseCamera = new Class({
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#id
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.11.0
          */
         this.id = 0;
@@ -154,7 +154,7 @@ var BaseCamera = new Class({
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#resolution
          * @type {number}
-         * @readOnly
+         * @readonly
          * @since 3.12.0
          */
         this.resolution = 1;
@@ -201,7 +201,7 @@ var BaseCamera = new Class({
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#worldView
          * @type {Phaser.Geom.Rectangle}
-         * @readOnly
+         * @readonly
          * @since 3.11.0
          */
         this.worldView = new Rectangle();
@@ -464,7 +464,7 @@ var BaseCamera = new Class({
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#midPoint
          * @type {Phaser.Math.Vector2}
-         * @readOnly
+         * @readonly
          * @since 3.11.0
          */
         this.midPoint = new Vector2(width / 2, height / 2);
@@ -727,11 +727,12 @@ var BaseCamera = new Class({
             var ty = (objectX * mvb + objectY * mvd + mvf);
             var tw = ((objectX + objectW) * mva + (objectY + objectH) * mvc + mve);
             var th = ((objectX + objectW) * mvb + (objectY + objectH) * mvd + mvf);
-            var cullW = cameraW + objectW;
-            var cullH = cameraH + objectH;
+            var cullTop = this.y;
+            var cullBottom = cullTop + cameraH;
+            var cullLeft = this.x;
+            var cullRight = cullLeft + cameraW;
 
-            if (tx > -objectW && ty > -objectH && tx < cullW && ty < cullH &&
-                tw > -objectW && th > -objectH && tw < cullW && th < cullH)
+            if ((tw > cullLeft && tx < cullRight) && (th > cullTop && ty < cullBottom))
             {
                 culledObjects.push(object);
             }
@@ -1700,11 +1701,11 @@ var BaseCamera = new Class({
     },
 
     /**
-     * The x position of the center of the Camera's viewport, relative to the top-left of the game canvas.
+     * The horizontal position of the center of the Camera's viewport, relative to the left of the game canvas.
      *
      * @name Phaser.Cameras.Scene2D.BaseCamera#centerX
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.10.0
      */
     centerX: {
@@ -1717,11 +1718,11 @@ var BaseCamera = new Class({
     },
 
     /**
-     * The y position of the center of the Camera's viewport, relative to the top-left of the game canvas.
+     * The vertical position of the center of the Camera's viewport, relative to the top of the game canvas.
      *
      * @name Phaser.Cameras.Scene2D.BaseCamera#centerY
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.10.0
      */
     centerY: {
@@ -1744,7 +1745,7 @@ var BaseCamera = new Class({
      *
      * @name Phaser.Cameras.Scene2D.BaseCamera#displayWidth
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.11.0
      */
     displayWidth: {
@@ -1767,7 +1768,7 @@ var BaseCamera = new Class({
      *
      * @name Phaser.Cameras.Scene2D.BaseCamera#displayHeight
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.11.0
      */
     displayHeight: {

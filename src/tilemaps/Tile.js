@@ -15,7 +15,7 @@ var Rectangle = require('../geom/rectangle');
  * scale or layer position.
  *
  * @class Tile
- * @memberOf Phaser.Tilemaps
+ * @memberof Phaser.Tilemaps
  * @constructor
  * @since 3.0.0
  *
@@ -720,7 +720,7 @@ var Tile = new Class({
      *
      * @name Phaser.Tilemaps.Tile#canCollide
      * @type {boolean}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     canCollide: {
@@ -735,7 +735,7 @@ var Tile = new Class({
      *
      * @name Phaser.Tilemaps.Tile#collides
      * @type {boolean}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     collides: {
@@ -750,7 +750,7 @@ var Tile = new Class({
      *
      * @name Phaser.Tilemaps.Tile#hasInterestingFace
      * @type {boolean}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     hasInterestingFace: {
@@ -761,20 +761,34 @@ var Tile = new Class({
     },
 
     /**
-     * The tileset that contains this Tile. This will only return null if accessed from a LayerData
-     * instance before the tile is placed within a StaticTilemapLayer or DynamicTilemapLayer.
+     * The tileset that contains this Tile. This is null if accessed from a LayerData instance
+     * before the tile is placed in a StaticTilemapLayer or DynamicTilemapLayer, or if the tile has
+     * an index that doesn't correspond to any of the map's tilesets.
      *
      * @name Phaser.Tilemaps.Tile#tileset
      * @type {?Phaser.Tilemaps.Tileset}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     tileset: {
+
         get: function ()
         {
-            var tilemapLayer = this.tilemapLayer;
-            return tilemapLayer ? tilemapLayer.tileset : null;
+            var tilemapLayer = this.layer.tilemapLayer;
+
+            if (tilemapLayer)
+            {
+                var tileset = tilemapLayer.gidMap[this.index];
+
+                if (tileset)
+                {
+                    return tileset;
+                }
+            }
+
+            return null;
         }
+
     },
 
     /**
@@ -784,7 +798,7 @@ var Tile = new Class({
      *
      * @name Phaser.Tilemaps.Tile#tilemapLayer
      * @type {?Phaser.Tilemaps.StaticTilemapLayer|Phaser.Tilemaps.DynamicTilemapLayer}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     tilemapLayer: {
@@ -800,7 +814,7 @@ var Tile = new Class({
      *
      * @name Phaser.Tilemaps.Tile#tilemap
      * @type {?Phaser.Tilemaps.Tilemap}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     tilemap: {

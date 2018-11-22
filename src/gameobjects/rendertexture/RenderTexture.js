@@ -4,6 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var BlendModes = require('../../renderer/BlendModes');
 var Camera = require('../../cameras/2d/BaseCamera');
 var CanvasPool = require('../../display/canvas/CanvasPool');
 var Class = require('../../utils/Class');
@@ -24,7 +25,7 @@ var UUID = require('../../utils/string/UUID');
  *
  * @class RenderTexture
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.2.0
  *
@@ -122,8 +123,7 @@ var RenderTexture = new Class({
         this.globalAlpha = 1;
 
         /**
-         * The HTML Canvas Element that the Render Texture is drawing to.
-         * This is only populated if Phaser is running with the Canvas Renderer.
+         * The HTML Canvas Element that the Render Texture is drawing to when using the Canvas Renderer.
          *
          * @name Phaser.GameObjects.RenderTexture#canvas
          * @type {HTMLCanvasElement}
@@ -187,6 +187,16 @@ var RenderTexture = new Class({
          * @since 3.12.0
          */
         this._saved = false;
+
+        /**
+         * Internal erase mode flag.
+         *
+         * @name Phaser.GameObjects.RenderTexture#_eraseMode
+         * @type {boolean}
+         * @private
+         * @since 3.16.0
+         */
+        this._eraseMode = false;
 
         /**
          * An internal Camera that can be used to move around the Render Texture.
@@ -405,7 +415,7 @@ var RenderTexture = new Class({
 
         if (this.gl)
         {
-            this.renderer.setFramebuffer(this.framebuffer);
+            this.renderer.setFramebuffer(this.framebuffer, true);
 
             var gl = this.gl;
     
@@ -413,7 +423,7 @@ var RenderTexture = new Class({
     
             gl.clear(gl.COLOR_BUFFER_BIT);
     
-            this.renderer.setFramebuffer(null);
+            this.renderer.setFramebuffer(null, true);
         }
         else
         {
@@ -438,7 +448,7 @@ var RenderTexture = new Class({
         {
             if (this.gl)
             {
-                this.renderer.setFramebuffer(this.framebuffer);
+                this.renderer.setFramebuffer(this.framebuffer, true);
 
                 var gl = this.gl;
         
@@ -446,7 +456,7 @@ var RenderTexture = new Class({
         
                 gl.clear(gl.COLOR_BUFFER_BIT);
         
-                this.renderer.setFramebuffer(null);
+                this.renderer.setFramebuffer(null, true);
             }
             else
             {
@@ -460,6 +470,70 @@ var RenderTexture = new Class({
 
             this.dirty = false;
         }
+
+        return this;
+    },
+
+    /**
+     * Draws the given object, or an array of objects, to this Render Texture using a blend mode of ERASE.
+     * This has the effect of erasing any filled pixels in the objects from this Render Texture.
+     * 
+     * It can accept any of the following:
+     * 
+     * * Any renderable Game Object, such as a Sprite, Text, Graphics or TileSprite.
+     * * Dynamic and Static Tilemap Layers.
+     * * A Group. The contents of which will be iterated and drawn in turn.
+     * * A Container. The contents of which will be iterated fully, and drawn in turn.
+     * * A Scene's Display List. Pass in `Scene.children` to draw the whole list.
+     * * Another Render Texture.
+     * * A Texture Frame instance.
+     * * A string. This is used to look-up a texture from the Texture Manager.
+     * 
+     * Note: You cannot erase a Render Texture from itself.
+     * 
+     * If passing in a Group or Container it will only draw children that return `true`
+     * when their `willRender()` method is called. I.e. a Container with 10 children,
+     * 5 of which have `visible=false` will only draw the 5 visible ones.
+     * 
+     * If passing in an array of Game Objects it will draw them all, regardless if
+     * they pass a `willRender` check or not.
+     * 
+     * You can pass in a string in which case it will look for a texture in the Texture
+     * Manager matching that string, and draw the base frame.
+     * 
+     * You can pass in the `x` and `y` coordinates to draw the objects at. The use of
+     * the coordinates differ based on what objects are being drawn. If the object is
+     * a Group, Container or Display List, the coordinates are _added_ to the positions
+     * of the children. For all other types of object, the coordinates are exact.
+     * 
+     * Calling this method causes the WebGL batch to flush, so it can write the texture
+     * data to the framebuffer being used internally. The batch is flushed at the end,
+     * after the entries have been iterated. So if you've a bunch of objects to draw,
+     * try and pass them in an array in one single call, rather than making lots of
+     * separate calls.
+     *
+     * @method Phaser.GameObjects.RenderTexture#erase
+     * @since 3.16.0
+     *
+     * @param {any} entries - Any renderable Game Object, or Group, Container, Display List, other Render Texture, Texture Frame or an array of any of these.
+     * @param {number} [x] - The x position to draw the Frame at, or the offset applied to the object.
+     * @param {number} [y] - The y position to draw the Frame at, or the offset applied to the object.
+     *
+     * @return {this} This Render Texture instance.
+     */
+    erase: function (entries, x, y)
+    {
+        this._eraseMode = true;
+
+        var blendMode = this.renderer.currentBlendMode;
+
+        this.renderer.setBlendMode(BlendModes.ERASE);
+
+        this.draw(entries, x, y, 1, 16777215);
+
+        this.renderer.setBlendMode(blendMode);
+
+        this._eraseMode = false;
 
         return this;
     },
@@ -540,7 +614,7 @@ var RenderTexture = new Class({
 
         if (gl)
         {
-            this.renderer.setFramebuffer(this.framebuffer);
+            this.renderer.setFramebuffer(this.framebuffer, true);
 
             var pipeline = this.pipeline;
     
@@ -550,7 +624,7 @@ var RenderTexture = new Class({
 
             pipeline.flush();
 
-            this.renderer.setFramebuffer(null);
+            this.renderer.setFramebuffer(null, true);
 
             pipeline.projOrtho(0, pipeline.width, pipeline.height, 0, -1000.0, 1000.0);
         }
@@ -622,8 +696,8 @@ var RenderTexture = new Class({
 
             if (gl)
             {
-                this.renderer.setFramebuffer(this.framebuffer);
-    
+                this.renderer.setFramebuffer(this.framebuffer, true);
+
                 var pipeline = this.pipeline;
         
                 pipeline.projOrtho(0, this.width, 0, this.height, -1000.0, 1000.0);
@@ -632,7 +706,7 @@ var RenderTexture = new Class({
             
                 pipeline.flush();
         
-                this.renderer.setFramebuffer(null);
+                this.renderer.setFramebuffer(null, true);
         
                 pipeline.projOrtho(0, pipeline.width, pipeline.height, 0, -1000.0, 1000.0);
             }
@@ -748,7 +822,10 @@ var RenderTexture = new Class({
         var prevX = gameObject.x;
         var prevY = gameObject.y;
 
-        this.renderer.setBlendMode(gameObject.blendMode);
+        if (!this._eraseMode)
+        {
+            this.renderer.setBlendMode(gameObject.blendMode);
+        }
 
         gameObject.setPosition(x, y);
 
@@ -776,11 +853,23 @@ var RenderTexture = new Class({
         var prevX = gameObject.x;
         var prevY = gameObject.y;
 
+        if (this._eraseMode)
+        {
+            var blendMode = gameObject.blendMode;
+
+            gameObject.blendMode = BlendModes.ERASE;
+        }
+
         gameObject.setPosition(x, y);
 
         gameObject.renderCanvas(this.renderer, gameObject, 0, this.camera, null);
 
         gameObject.setPosition(prevX, prevY);
+
+        if (this._eraseMode)
+        {
+            gameObject.blendMode = blendMode;
+        }
     },
 
     /**

@@ -70,7 +70,7 @@ var Class = require('../../utils/Class');
  * This controller lives as an instance within a Game Object, accessible as `sprite.anims`.
  *
  * @class Animation
- * @memberOf Phaser.GameObjects.Components
+ * @memberof Phaser.GameObjects.Components
  * @constructor
  * @since 3.0.0
  *
@@ -494,7 +494,7 @@ var Animation = new Class({
      * `true` if the current animation is paused, otherwise `false`.
      *
      * @name Phaser.GameObjects.Components.Animation#isPaused
-     * @readOnly
+     * @readonly
      * @type {boolean}
      * @since 3.4.0
      */
@@ -1017,6 +1017,50 @@ var Animation = new Class({
                 this.currentAnim.completeAnimation(this);
             }
         }
+    },
+
+    /**
+     * Advances the animation to the next frame, regardless of the time or animation state.
+     * If the animation is set to repeat, or yoyo, this will still take effect.
+     * 
+     * Calling this does not change the direction of the animation. I.e. if it was currently
+     * playing in reverse, calling this method doesn't then change the direction to forwards.
+     *
+     * @method Phaser.GameObjects.Components.Animation#nextFrame
+     * @since 3.16.0
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object this Animation Component belongs to.
+     */
+    nextFrame: function ()
+    {
+        if (this.currentAnim)
+        {
+            this.currentAnim.nextFrame(this);
+        }
+
+        return this.parent;
+    },
+
+    /**
+     * Advances the animation to the previous frame, regardless of the time or animation state.
+     * If the animation is set to repeat, or yoyo, this will still take effect.
+     * 
+     * Calling this does not change the direction of the animation. I.e. if it was currently
+     * playing in forwards, calling this method doesn't then change the direction to backwards.
+     *
+     * @method Phaser.GameObjects.Components.Animation#previousFrame
+     * @since 3.16.0
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object this Animation Component belongs to.
+     */
+    previousFrame: function ()
+    {
+        if (this.currentAnim)
+        {
+            this.currentAnim.previousFrame(this);
+        }
+
+        return this.parent;
     },
 
     /**

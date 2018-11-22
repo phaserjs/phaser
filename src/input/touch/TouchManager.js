@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
+var NOOP = require('../../utils/NOOP');
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Touch_events
 // https://patrickhlauke.github.io/touch/tests/results/
@@ -19,7 +20,7 @@ var Class = require('../../utils/Class');
  * You do not need to create this class directly, the Input Manager will create an instance of it automatically.
  *
  * @class TouchManager
- * @memberOf Phaser.Input.Touch
+ * @memberof Phaser.Input.Touch
  * @constructor
  * @since 3.0.0
  *
@@ -71,6 +72,46 @@ var TouchManager = new Class({
          */
         this.target;
 
+        /**
+         * The Touch Start event handler function.
+         * Initially empty and bound in the `startListeners` method.
+         *
+         * @name Phaser.Input.Touch.TouchManager#onTouchStart
+         * @type {function}
+         * @since 3.0.0
+         */
+        this.onTouchStart = NOOP;
+
+        /**
+         * The Touch Move event handler function.
+         * Initially empty and bound in the `startListeners` method.
+         *
+         * @name Phaser.Input.Touch.TouchManager#onTouchMove
+         * @type {function}
+         * @since 3.0.0
+         */
+        this.onTouchMove = NOOP;
+
+        /**
+         * The Touch End event handler function.
+         * Initially empty and bound in the `startListeners` method.
+         *
+         * @name Phaser.Input.Touch.TouchManager#onTouchEnd
+         * @type {function}
+         * @since 3.0.0
+         */
+        this.onTouchEnd = NOOP;
+
+        /**
+         * The Touch Cancel event handler function.
+         * Initially empty and bound in the `startListeners` method.
+         *
+         * @name Phaser.Input.Touch.TouchManager#onTouchCancel
+         * @type {function}
+         * @since 3.15.0
+         */
+        this.onTouchCancel = NOOP;
+
         inputManager.events.once('boot', this.boot, this);
     },
 
@@ -94,110 +135,115 @@ var TouchManager = new Class({
             this.target = this.manager.game.canvas;
         }
 
-        if (this.enabled)
+        if (this.enabled && this.target)
         {
             this.startListeners();
         }
     },
 
     /**
-     * The Touch Start Event Handler.
-     *
-     * @method Phaser.Input.Touch.TouchManager#onTouchStart
-     * @since 3.10.0
-     *
-     * @param {TouchEvent} event - The native DOM Touch Start Event.
-     */
-    onTouchStart: function (event)
-    {
-        if (event.defaultPrevented || !this.enabled || !this.manager)
-        {
-            // Do nothing if event already handled
-            return;
-        }
-
-        this.manager.queueTouchStart(event);
-
-        if (this.capture)
-        {
-            event.preventDefault();
-        }
-    },
-
-    /**
-     * The Touch Move Event Handler.
-     *
-     * @method Phaser.Input.Touch.TouchManager#onTouchMove
-     * @since 3.10.0
-     *
-     * @param {TouchEvent} event - The native DOM Touch Move Event.
-     */
-    onTouchMove: function (event)
-    {
-        if (event.defaultPrevented || !this.enabled || !this.manager)
-        {
-            // Do nothing if event already handled
-            return;
-        }
-
-        this.manager.queueTouchMove(event);
-
-        if (this.capture)
-        {
-            event.preventDefault();
-        }
-    },
-
-    /**
-     * The Touch End Event Handler.
-     *
-     * @method Phaser.Input.Touch.TouchManager#onTouchEnd
-     * @since 3.10.0
-     *
-     * @param {TouchEvent} event - The native DOM Touch End Event.
-     */
-    onTouchEnd: function (event)
-    {
-        if (event.defaultPrevented || !this.enabled || !this.manager)
-        {
-            // Do nothing if event already handled
-            return;
-        }
-
-        this.manager.queueTouchEnd(event);
-
-        if (this.capture)
-        {
-            event.preventDefault();
-        }
-    },
-
-    /**
-     * Starts the Touch Event listeners running.
-     * This is called automatically and does not need to be manually invoked.
+     * Starts the Touch Event listeners running as long as an input target is set.
+     * 
+     * This method is called automatically if Touch Input is enabled in the game config,
+     * which it is by default. However, you can call it manually should you need to
+     * delay input capturing until later in the game.
      *
      * @method Phaser.Input.Touch.TouchManager#startListeners
      * @since 3.0.0
      */
     startListeners: function ()
     {
+        var _this = this;
+
+        this.onTouchStart = function (event)
+        {
+            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            {
+                //  Do nothing if event already handled
+                return;
+            }
+    
+            _this.manager.queueTouchStart(event);
+    
+            if (_this.capture)
+            {
+                event.preventDefault();
+            }
+        };
+
+        this.onTouchMove = function (event)
+        {
+            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            {
+                //  Do nothing if event already handled
+                return;
+            }
+    
+            _this.manager.queueTouchMove(event);
+    
+            if (_this.capture)
+            {
+                event.preventDefault();
+            }
+        };
+
+        this.onTouchEnd = function (event)
+        {
+            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            {
+                //  Do nothing if event already handled
+                return;
+            }
+    
+            _this.manager.queueTouchEnd(event);
+    
+            if (_this.capture)
+            {
+                event.preventDefault();
+            }
+        };
+
+        this.onTouchCancel = function (event)
+        {
+            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            {
+                //  Do nothing if event already handled
+                return;
+            }
+    
+            _this.manager.queueTouchCancel(event);
+    
+            if (_this.capture)
+            {
+                event.preventDefault();
+            }
+        };
+
         var target = this.target;
+
+        if (!target)
+        {
+            return;
+        }
 
         var passive = { passive: true };
         var nonPassive = { passive: false };
 
         if (this.capture)
         {
-            target.addEventListener('touchstart', this.onTouchStart.bind(this), nonPassive);
-            target.addEventListener('touchmove', this.onTouchMove.bind(this), nonPassive);
-            target.addEventListener('touchend', this.onTouchEnd.bind(this), nonPassive);
+            target.addEventListener('touchstart', this.onTouchStart, nonPassive);
+            target.addEventListener('touchmove', this.onTouchMove, nonPassive);
+            target.addEventListener('touchend', this.onTouchEnd, nonPassive);
+            target.addEventListener('touchcancel', this.onTouchCancel, nonPassive);
         }
         else
         {
-            target.addEventListener('touchstart', this.onTouchStart.bind(this), passive);
-            target.addEventListener('touchmove', this.onTouchMove.bind(this), passive);
-            target.addEventListener('touchend', this.onTouchEnd.bind(this), passive);
+            target.addEventListener('touchstart', this.onTouchStart, passive);
+            target.addEventListener('touchmove', this.onTouchMove, passive);
+            target.addEventListener('touchend', this.onTouchEnd, passive);
         }
+
+        this.enabled = true;
     },
 
     /**
@@ -214,6 +260,7 @@ var TouchManager = new Class({
         target.removeEventListener('touchstart', this.onTouchStart);
         target.removeEventListener('touchmove', this.onTouchMove);
         target.removeEventListener('touchend', this.onTouchEnd);
+        target.removeEventListener('touchcancel', this.onTouchCancel);
     },
 
     /**
@@ -227,6 +274,7 @@ var TouchManager = new Class({
         this.stopListeners();
 
         this.target = null;
+        this.enabled = false;
         this.manager = null;
     }
 

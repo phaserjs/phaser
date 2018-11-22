@@ -16,7 +16,7 @@ var PluginCache = require('../plugins/PluginCache');
  *
  * @class DataManagerPlugin
  * @extends Phaser.Data.DataManager
- * @memberOf Phaser.Data
+ * @memberof Phaser.Data
  * @constructor
  * @since 3.0.0
  *

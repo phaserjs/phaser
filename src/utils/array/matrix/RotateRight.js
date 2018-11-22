@@ -7,14 +7,14 @@
 var RotateMatrix = require('./RotateMatrix');
 
 /**
- * [description]
+ * Rotates the array matrix to the left (or -90 degrees)
  *
  * @function Phaser.Utils.Array.Matrix.RotateRight
  * @since 3.0.0
  *
- * @param {array} matrix - [description]
+ * @param {array} matrix - The array to rotate.
  *
- * @return {array} [description]
+ * @return {array} The rotated matrix array. The source matrix should be discard for the returned matrix.
  */
 var RotateRight = function (matrix)
 {

@@ -16,7 +16,7 @@ var Class = require('../utils/Class');
  * instances, one per type of file. You can also add your own custom caches.
  *
  * @class CacheManager
- * @memberOf Phaser.Cache
+ * @memberof Phaser.Cache
  * @constructor
  * @since 3.0.0
  *

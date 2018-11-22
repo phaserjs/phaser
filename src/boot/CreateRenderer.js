@@ -26,7 +26,7 @@ var CreateRenderer = function (game)
     //  Game either requested Canvas,
     //  or requested AUTO or WEBGL but the browser doesn't support it, so fall back to Canvas
 
-    if (config.renderType !== CONST.HEADLESS)
+    if ((config.customEnvironment || config.canvas) && config.renderType !== CONST.HEADLESS)
     {
         if (config.renderType === CONST.CANVAS || (config.renderType !== CONST.CANVAS && !Features.webGL))
         {
@@ -47,6 +47,11 @@ var CreateRenderer = function (game)
         }
     }
 
+    if (config.customEnvironment && config.renderType === CONST.AUTO)
+    {
+        throw new Error('Must set renderType in custom environment');
+    }
+
     //  Pixel Art mode?
     if (!config.antialias)
     {
@@ -57,10 +62,13 @@ var CreateRenderer = function (game)
     if (config.canvas)
     {
         game.canvas = config.canvas;
+
+        game.canvas.width = game.scale.canvasWidth;
+        game.canvas.height = game.scale.canvasHeight;
     }
     else
     {
-        game.canvas = CanvasPool.create(game, config.width * config.resolution, config.height * config.resolution, config.renderType);
+        game.canvas = CanvasPool.create(game, game.scale.canvasWidth, game.scale.canvasHeight, config.renderType);
     }
 
     //  Does the game config provide some canvas css styles to use?
@@ -69,15 +77,17 @@ var CreateRenderer = function (game)
         game.canvas.style = config.canvasStyle;
     }
 
+    //  Background color
+    if (!config.transparent)
+    {
+        game.canvas.style.backgroundColor = config.backgroundColor.rgba;
+    }
+
     //  Pixel Art mode?
     if (!config.antialias)
     {
         CanvasInterpolation.setCrisp(game.canvas);
     }
-
-    //  Zoomed?
-    game.canvas.style.width = (config.width * config.zoom).toString() + 'px';
-    game.canvas.style.height = (config.height * config.zoom).toString() + 'px';
 
     if (config.renderType === CONST.HEADLESS)
     {
@@ -97,9 +107,6 @@ var CreateRenderer = function (game)
         if (config.renderType === CONST.WEBGL)
         {
             game.renderer = new WebGLRenderer(game);
-
-            //  The WebGL Renderer sets this value during its init, not on construction
-            game.context = null;
         }
         else
         {
@@ -116,9 +123,6 @@ var CreateRenderer = function (game)
         config.renderType = CONST.WEBGL;
 
         game.renderer = new WebGLRenderer(game);
-
-        //  The WebGL Renderer sets this value during its init, not on construction
-        game.context = null;
     }
 
     if (!typeof WEBGL_RENDERER && typeof CANVAS_RENDERER)

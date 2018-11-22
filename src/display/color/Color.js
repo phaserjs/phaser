@@ -15,7 +15,7 @@ var RGBToHSV = require('./RGBToHSV');
  * The Color class holds a single color value and allows for easy modification and reading of it.
  *
  * @class Color
- * @memberOf Phaser.Display
+ * @memberof Phaser.Display
  * @constructor
  * @since 3.0.0
  *
@@ -522,7 +522,7 @@ var Color = new Class({
      *
      * @name Phaser.Display.Color#color
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     color: {
@@ -539,7 +539,7 @@ var Color = new Class({
      *
      * @name Phaser.Display.Color#color32
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     color32: {
@@ -556,7 +556,7 @@ var Color = new Class({
      *
      * @name Phaser.Display.Color#rgba
      * @type {string}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     rgba: {

@@ -33,7 +33,7 @@ var Mass = {
     },
 
     /**
-     * [description]
+     * Sets density of the body.
      *
      * @method Phaser.Physics.Matter.Components.Mass#setDensity
      * @since 3.0.0
@@ -53,7 +53,7 @@ var Mass = {
      * The body's center of mass.
      *
      * @name Phaser.Physics.Matter.Components.Mass#centerOfMass
-     * @readOnly
+     * @readonly
      * @since 3.10.0
      *
      * @return {Phaser.Math.Vector2} The center of mass.

@@ -26,7 +26,7 @@ var LineRender = require('./LineRender');
  *
  * @class Line
  * @extends Phaser.GameObjects.Shape
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.13.0
  *

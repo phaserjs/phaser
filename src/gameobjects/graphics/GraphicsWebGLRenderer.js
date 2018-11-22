@@ -104,6 +104,8 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
 
     var getTint = Utils.getTintAppendFloatAlphaAndSwap;
 
+    var currentTexture = renderer.blankTexture.glTexture;
+
     for (var cmdIndex = 0; cmdIndex < commands.length; cmdIndex++)
     {
         cmd = commands[cmdIndex];
@@ -130,6 +132,8 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
             case Commands.FILL_PATH:
                 for (pathIndex = 0; pathIndex < path.length; pathIndex++)
                 {
+                    pipeline.setTexture2D(currentTexture);
+
                     pipeline.batchFillPath(
                         path[pathIndex].points,
                         currentMatrix,
@@ -141,6 +145,8 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
             case Commands.STROKE_PATH:
                 for (pathIndex = 0; pathIndex < path.length; pathIndex++)
                 {
+                    pipeline.setTexture2D(currentTexture);
+
                     pipeline.batchStrokePath(
                         path[pathIndex].points,
                         lineWidth,
@@ -248,6 +254,7 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
                 break;
 
             case Commands.FILL_RECT:
+                pipeline.setTexture2D(currentTexture);
                 pipeline.batchFillRect(
                     commands[++cmdIndex],
                     commands[++cmdIndex],
@@ -259,6 +266,7 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
                 break;
 
             case Commands.FILL_TRIANGLE:
+                pipeline.setTexture2D(currentTexture);
                 pipeline.batchFillTriangle(
                     commands[++cmdIndex],
                     commands[++cmdIndex],
@@ -272,6 +280,7 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
                 break;
 
             case Commands.STROKE_TRIANGLE:
+                pipeline.setTexture2D(currentTexture);
                 pipeline.batchStrokeTriangle(
                     commands[++cmdIndex],
                     commands[++cmdIndex],
@@ -331,16 +340,18 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
                 var mode = commands[++cmdIndex];
 
                 pipeline.currentFrame = frame;
-                renderer.setTexture2D(frame.glTexture, 0);
+                pipeline.setTexture2D(frame.glTexture, 0);
                 pipeline.tintEffect = mode;
+
+                currentTexture = frame.glTexture;
+
                 break;
 
             case Commands.CLEAR_TEXTURE:
                 pipeline.currentFrame = renderer.blankTexture;
-                renderer.setTexture2D(renderer.blankTexture.glTexture, 0);
                 pipeline.tintEffect = 2;
+                currentTexture = renderer.blankTexture.glTexture;
                 break;
-
         }
     }
 };

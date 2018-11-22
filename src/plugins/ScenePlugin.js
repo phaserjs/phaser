@@ -14,7 +14,7 @@ var Class = require('../utils/Class');
  * It can map itself to a Scene property, or into the Scene Systems, or both.
  *
  * @class ScenePlugin
- * @memberOf Phaser.Plugins
+ * @memberof Phaser.Plugins
  * @extends Phaser.Plugins.BasePlugin
  * @constructor
  * @since 3.8.0

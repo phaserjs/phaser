@@ -61,6 +61,15 @@ var INPUT_CONST = {
     TOUCH_END: 5,
 
     /**
+     * A touch pointer has been been cancelled by the browser.
+     * 
+     * @name Phaser.Input.TOUCH_CANCEL
+     * @type {integer}
+     * @since 3.15.0
+     */
+    TOUCH_CANCEL: 7,
+
+    /**
      * The pointer lock has changed.
      * 
      * @name Phaser.Input.POINTER_LOCK_CHANGE

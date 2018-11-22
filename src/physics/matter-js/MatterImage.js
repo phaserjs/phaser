@@ -23,7 +23,7 @@ var Vector2 = require('../../math/Vector2');
  *
  * @class Image
  * @extends Phaser.GameObjects.Image
- * @memberOf Phaser.Physics.Matter
+ * @memberof Phaser.Physics.Matter
  * @constructor
  * @since 3.0.0
  *

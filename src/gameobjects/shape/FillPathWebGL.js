@@ -49,6 +49,8 @@ var FillPathWebGL = function (pipeline, calcMatrix, src, alpha, dx, dy)
         var tx2 = calcMatrix.getX(x2, y2);
         var ty2 = calcMatrix.getY(x2, y2);
     
+        pipeline.setTexture2D();
+
         pipeline.batchTri(tx0, ty0, tx1, ty1, tx2, ty2, 0, 0, 1, 1, fillTintColor, fillTintColor, fillTintColor, pipeline.tintEffect);
     }
 };

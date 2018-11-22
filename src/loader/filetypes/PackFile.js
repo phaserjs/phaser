@@ -29,7 +29,7 @@ var JSONFile = require('./JSONFile.js');
  *
  * @class PackFile
  * @extends Phaser.Loader.File
- * @memberOf Phaser.Loader.FileTypes
+ * @memberof Phaser.Loader.FileTypes
  * @constructor
  * @since 3.7.0
  *

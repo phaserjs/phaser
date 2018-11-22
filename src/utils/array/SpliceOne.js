@@ -11,10 +11,10 @@
  * @function Phaser.Utils.Array.SpliceOne
  * @since 3.0.0
  *
- * @param {array} array - [description]
- * @param {integer} index - [description]
+ * @param {array} array - The array to splice from.
+ * @param {integer} index - The index of the item which should be spliced.
  *
- * @return {*} [description]
+ * @return {*} The item which was spliced (removed).
  */
 var SpliceOne = function (array, index)
 {

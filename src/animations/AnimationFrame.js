@@ -25,7 +25,7 @@ var Class = require('../utils/Class');
  * AnimationFrames are generated automatically by the Animation class.
  *
  * @class AnimationFrame
- * @memberOf Phaser.Animations
+ * @memberof Phaser.Animations
  * @constructor
  * @since 3.0.0
  *
@@ -82,7 +82,7 @@ var AnimationFrame = new Class({
          * @name Phaser.Animations.AnimationFrame#isFirst
          * @type {boolean}
          * @default false
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.isFirst = false;
@@ -93,7 +93,7 @@ var AnimationFrame = new Class({
          * @name Phaser.Animations.AnimationFrame#isLast
          * @type {boolean}
          * @default false
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.isLast = false;
@@ -104,7 +104,7 @@ var AnimationFrame = new Class({
          * @name Phaser.Animations.AnimationFrame#prevFrame
          * @type {?Phaser.Animations.AnimationFrame}
          * @default null
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.prevFrame = null;
@@ -115,7 +115,7 @@ var AnimationFrame = new Class({
          * @name Phaser.Animations.AnimationFrame#nextFrame
          * @type {?Phaser.Animations.AnimationFrame}
          * @default null
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.nextFrame = null;
@@ -138,7 +138,7 @@ var AnimationFrame = new Class({
          * @name Phaser.Animations.AnimationFrame#progress
          * @type {number}
          * @default 0
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.progress = 0;

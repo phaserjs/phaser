@@ -12,7 +12,7 @@ var Class = require('../utils/Class');
  * It can listen for Game events and respond to them.
  *
  * @class BasePlugin
- * @memberOf Phaser.Plugins
+ * @memberof Phaser.Plugins
  * @constructor
  * @since 3.8.0
  *

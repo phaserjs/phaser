@@ -47,6 +47,8 @@ var StrokePathWebGL = function (pipeline, src, alpha, dx, dy)
         var px2 = path[i] - dx;
         var py2 = path[i + 1] - dy;
 
+        pipeline.setTexture2D();
+
         pipeline.batchLine(
             px1,
             py1,

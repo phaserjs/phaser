@@ -29,7 +29,7 @@ var TransformXY = require('../math/TransformXY');
  * for dealing with all input events for a Scene.
  *
  * @class InputManager
- * @memberOf Phaser.Input
+ * @memberof Phaser.Input
  * @constructor
  * @since 3.0.0
  *
@@ -48,7 +48,7 @@ var InputManager = new Class({
          *
          * @name Phaser.Input.InputManager#game
          * @type {Phaser.Game}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.game = game;
@@ -63,10 +63,10 @@ var InputManager = new Class({
         this.canvas;
 
         /**
-         * The Input Configuration object, as set in the Game Config.
+         * The Game Configuration object, as set during the game boot.
          *
          * @name Phaser.Input.InputManager#config
-         * @type {object}
+         * @type {Phaser.Boot.Config}
          * @since 3.0.0
          */
         this.config = config;
@@ -214,7 +214,7 @@ var InputManager = new Class({
          *
          * @name Phaser.Input.InputManager#pointersTotal
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.10.0
          */
         this.pointersTotal = config.inputActivePointers;
@@ -226,7 +226,11 @@ var InputManager = new Class({
 
         for (var i = 0; i <= this.pointersTotal; i++)
         {
-            this.pointers.push(new Pointer(this, i));
+            var pointer = new Pointer(this, i);
+
+            pointer.smoothFactor = config.inputSmoothFactor;
+
+            this.pointers.push(pointer);
         }
 
         /**
@@ -397,6 +401,7 @@ var InputManager = new Class({
      */
     resize: function ()
     {
+        /*
         this.updateBounds();
 
         //  Game config size
@@ -410,6 +415,7 @@ var InputManager = new Class({
         //  Scale factor
         this.scale.x = gw / bw;
         this.scale.y = gh / bh;
+        */
     },
 
     /**
@@ -489,6 +495,10 @@ var InputManager = new Class({
 
                 case CONST.TOUCH_END:
                     this.stopPointer(event, time);
+                    break;
+
+                case CONST.TOUCH_CANCEL:
+                    this.cancelPointer(event, time);
                     break;
 
                 case CONST.POINTER_LOCK_CHANGE:
@@ -697,6 +707,37 @@ var InputManager = new Class({
     },
 
     /**
+     * Called by the main update loop when a Touch Cancel Event is received.
+     *
+     * @method Phaser.Input.InputManager#cancelPointer
+     * @private
+     * @since 3.15.0
+     *
+     * @param {TouchEvent} event - The native DOM event to be processed.
+     * @param {number} time - The time stamp value of this game step.
+     */
+    cancelPointer: function (event, time)
+    {
+        var pointers = this.pointers;
+
+        for (var c = 0; c < event.changedTouches.length; c++)
+        {
+            var changedTouch = event.changedTouches[c];
+
+            for (var i = 1; i < this.pointersTotal; i++)
+            {
+                var pointer = pointers[i];
+
+                if (pointer.active && pointer.identifier === changedTouch.identifier)
+                {
+                    pointer.touchend(changedTouch, time);
+                    break;
+                }
+            }
+        }
+    },
+
+    /**
      * Adds new Pointer objects to the Input Manager.
      *
      * By default Phaser creates 2 pointer objects: `mousePointer` and `pointer1`.
@@ -730,6 +771,8 @@ var InputManager = new Class({
             var id = this.pointers.length;
 
             var pointer = new Pointer(this, id);
+
+            pointer.smoothFactor = this.config.inputSmoothFactor;
 
             this.pointers.push(pointer);
 
@@ -837,6 +880,21 @@ var InputManager = new Class({
 
             this._hasUpCallback = this.processDomCallbacks(callbacks.upOnce, callbacks.up, event);
         }
+    },
+
+    /**
+     * Queues a touch cancel event, as passed in by the TouchManager.
+     * Also dispatches any DOM callbacks for this event.
+     *
+     * @method Phaser.Input.InputManager#queueTouchCancel
+     * @private
+     * @since 3.15.0
+     *
+     * @param {TouchEvent} event - The native DOM Touch event.
+     */
+    queueTouchCancel: function (event)
+    {
+        this.queue.push(CONST.TOUCH_CANCEL, event);
     },
 
     /**
@@ -1258,15 +1316,35 @@ var InputManager = new Class({
      * @param {Phaser.Input.Pointer} pointer - The Pointer to transform the values for.
      * @param {number} pageX - The Page X value.
      * @param {number} pageY - The Page Y value.
+     * @param {boolean} wasMove - Are we transforming the Pointer from a move event, or an up / down event?
      */
-    transformPointer: function (pointer, pageX, pageY)
+    transformPointer: function (pointer, pageX, pageY, wasMove)
     {
-        //  Store the previous position
-        pointer.prevPosition.x = pointer.x;
-        pointer.prevPosition.y = pointer.y;
+        var p0 = pointer.position;
+        var p1 = pointer.prevPosition;
 
-        pointer.x = (pageX - this.bounds.left) * this.scale.x;
-        pointer.y = (pageY - this.bounds.top) * this.scale.y;
+        //  Store previous position
+        p1.x = p0.x;
+        p1.y = p0.y;
+
+        //  Translate coordinates
+        var x = (pageX - this.bounds.left) * this.scale.x;
+        var y = (pageY - this.bounds.top) * this.scale.y;
+
+        var a = pointer.smoothFactor;
+
+        if (!wasMove || a === 0)
+        {
+            //  Set immediately
+            p0.x = x;
+            p0.y = y;
+        }
+        else
+        {
+            //  Apply smoothing
+            p0.x = x * a + p1.x * (1 - a);
+            p0.y = y * a + p1.y * (1 - a);
+        }
     },
 
     /**

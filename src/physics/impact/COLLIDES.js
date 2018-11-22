@@ -15,8 +15,8 @@
  *
  * @name Phaser.Physics.Impact.COLLIDES
  * @enum {integer}
- * @memberOf Phaser.Physics.Impact
- * @readOnly
+ * @memberof Phaser.Physics.Impact
+ * @readonly
  * @since 3.0.0
  */
 module.exports = {

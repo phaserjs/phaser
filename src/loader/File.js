@@ -31,7 +31,7 @@ var XHRSettings = require('./XHRSettings');
  * You shouldn't create an instance of a File directly, but should extend it with your own class, setting a custom type and processing methods.
  *
  * @class File
- * @memberOf Phaser.Loader
+ * @memberof Phaser.Loader
  * @constructor
  * @since 3.0.0
  *

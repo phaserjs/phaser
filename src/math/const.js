@@ -4,8 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var RND = require('./random-data-generator/RandomDataGenerator');
-
 var MATH_CONST = {
 
     /**
@@ -60,7 +58,7 @@ var MATH_CONST = {
      * @type {Phaser.Math.RandomDataGenerator}
      * @since 3.0.0
      */
-    RND: new RND()
+    RND: null
 
 };
 

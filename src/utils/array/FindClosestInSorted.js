@@ -5,7 +5,10 @@
  */
 
 /**
- * [description]
+ * Searches a pre-sorted array for the closet value to the given number.
+ *
+ * If the `key` argument is given it will assume the array contains objects that all have the required `key` property name,
+ * and will check for the closest value of those to the given number.
  *
  * @function Phaser.Utils.Array.FindClosestInSorted
  * @since 3.0.0
@@ -14,7 +17,7 @@
  * @param {array} array - The array to search, which must be sorted.
  * @param {string} [key] - An optional property key. If specified the array elements property will be checked against value.
  *
- * @return {number|object} The nearest value found in the array, or if a `key` was given, the nearest object with the matching property value.
+ * @return {(number|any)} The nearest value found in the array, or if a `key` was given, the nearest object with the matching property value.
  */
 var FindClosestInSorted = function (value, array, key)
 {

@@ -8,7 +8,7 @@
  * Adds an Image Element to a Texture.
  *
  * @function Phaser.Textures.Parsers.Image
- * @memberOf Phaser.Textures.Parsers
+ * @memberof Phaser.Textures.Parsers
  * @private
  * @since 3.0.0
  *

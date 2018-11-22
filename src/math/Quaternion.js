@@ -28,7 +28,7 @@ var tmpMat3 = new Matrix3();
  * A quaternion.
  *
  * @class Quaternion
- * @memberOf Phaser.Math
+ * @memberof Phaser.Math
  * @constructor
  * @since 3.0.0
  *

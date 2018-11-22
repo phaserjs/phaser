@@ -23,7 +23,7 @@ var Class = require('../utils/Class');
  * A two-component vector.
  *
  * @class Vector2
- * @memberOf Phaser.Math
+ * @memberof Phaser.Math
  * @constructor
  * @since 3.0.0
  *
@@ -463,14 +463,14 @@ var Vector2 = new Class({
     },
 
     /**
-     * [description]
+     * Calculate the cross product of this Vector and the given Vector.
      *
      * @method Phaser.Math.Vector2#cross
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} src - [description]
+     * @param {Phaser.Math.Vector2} src - The Vector2 to cross with this Vector2.
      *
-     * @return {number} [description]
+     * @return {number} The cross product of this Vector and the given Vector.
      */
     cross: function (src)
     {

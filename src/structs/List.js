@@ -22,7 +22,7 @@ var StableSort = require('../utils/array/StableSort');
  * List is a generic implementation of an ordered list which contains utility methods for retrieving, manipulating, and iterating items.
  *
  * @class List
- * @memberOf Phaser.Structs
+ * @memberof Phaser.Structs
  * @constructor
  * @since 3.0.0
  *
@@ -433,7 +433,7 @@ var List = new Class({
      * @param {integer} [endIndex] - The position to stop removing at. The item at this position won't be removed.
      * @param {boolean} [skipCallback=false] - Skip calling the List.removeCallback.
      *
-     * @return {Array.<*>} An array of the items which were removed.[description]
+     * @return {Array.<*>} An array of the items which were removed.
      */
     removeBetween: function (startIndex, endIndex, skipCallback)
     {
@@ -694,7 +694,7 @@ var List = new Class({
      *
      * @name Phaser.Structs.List#length
      * @type {integer}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     length: {
@@ -711,7 +711,7 @@ var List = new Class({
      *
      * @name Phaser.Structs.List#first
      * @type {integer}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     first: {
@@ -737,7 +737,7 @@ var List = new Class({
      *
      * @name Phaser.Structs.List#last
      * @type {integer}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     last: {
@@ -765,7 +765,7 @@ var List = new Class({
      *
      * @name Phaser.Structs.List#next
      * @type {integer}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     next: {
@@ -793,7 +793,7 @@ var List = new Class({
      *
      * @name Phaser.Structs.List#previous
      * @type {integer}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     previous: {

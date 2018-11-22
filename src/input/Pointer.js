@@ -25,7 +25,7 @@ var Vector2 = require('../math/Vector2');
  * callbacks.
  *
  * @class Pointer
- * @memberOf Phaser.Input
+ * @memberof Phaser.Input
  * @constructor
  * @since 3.0.0
  *
@@ -52,7 +52,7 @@ var Pointer = new Class({
          *
          * @name Phaser.Input.Pointer#id
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.id = id;
@@ -119,6 +119,51 @@ var Pointer = new Class({
          * @since 3.11.0
          */
         this.prevPosition = new Vector2();
+
+        /**
+         * The current velocity of the Pointer, based on its previous and current position.
+         * 
+         * This is updated whenever the Pointer moves, regardless of the state of any Pointer buttons.
+         * 
+         * If you are finding the velocity value too erratic, then consider enabling the `Pointer.smoothFactor`.
+         *
+         * @name Phaser.Input.Pointer#velocity
+         * @type {Phaser.Math.Vector2}
+         * @since 3.16.0
+         */
+        this.velocity = new Vector2();
+
+        /**
+         * The current angle the Pointer is moving, in radians, based on its previous and current position.
+         * 
+         * This is updated whenever the Pointer moves, regardless of the state of any Pointer buttons.
+         * 
+         * If you are finding the angle value too erratic, then consider enabling the `Pointer.smoothFactor`.
+         *
+         * @name Phaser.Input.Pointer#angle
+         * @type {number}
+         * @since 3.16.0
+         */
+        this.angle = new Vector2();
+
+        /**
+         * The smoothing factor to apply to the Pointer position.
+         * 
+         * Due to their nature, pointer positions are inherently noisy. While this is fine for lots of games, if you need cleaner positions
+         * then you can set this value to apply an automatic smoothing to the positions as they are recorded.
+         * 
+         * The default value of zero means 'no smoothing'.
+         * Set to a small value, such as 0.2, to apply an average level of smoothing between positions.
+         * Values above 1 will introduce excess jitter into the positions.
+         * 
+         * Positions are only smoothed when the pointer moves. Up and Down positions are always precise.
+         *
+         * @name Phaser.Input.Pointer#smoothFactor
+         * @type {number}
+         * @default 0
+         * @since 3.16.0
+         */
+        this.smoothFactor = 0;
 
         /**
          * The x position of this Pointer, translated into the coordinate space of the most recent Camera it interacted with.
@@ -285,6 +330,18 @@ var Pointer = new Class({
         this.wasTouch = false;
 
         /**
+         * Did this Pointer get canceled by a touchcancel event?
+         * 
+         * Note: "canceled" is the American-English spelling of "cancelled". Please don't submit PRs correcting it!
+         *
+         * @name Phaser.Input.Pointer#wasCanceled
+         * @type {boolean}
+         * @default false
+         * @since 3.15.0
+         */
+        this.wasCanceled = false;
+
+        /**
          * If the mouse is locked, the horizontal relative movement of the Pointer in pixels since last frame.
          *
          * @name Phaser.Input.Pointer#movementX
@@ -391,7 +448,7 @@ var Pointer = new Class({
         this.event = event;
 
         //  Sets the local x/y properties
-        this.manager.transformPointer(this, event.pageX, event.pageY);
+        this.manager.transformPointer(this, event.pageX, event.pageY, false);
 
         //  0: Main button pressed, usually the left button or the un-initialized state
         if (event.button === 0)
@@ -430,7 +487,7 @@ var Pointer = new Class({
         this.event = event;
 
         //  Sets the local x/y properties
-        this.manager.transformPointer(this, event.pageX, event.pageY);
+        this.manager.transformPointer(this, event.pageX, event.pageY, false);
 
         //  0: Main button pressed, usually the left button or the un-initialized state
         if (event.button === 0)
@@ -469,7 +526,17 @@ var Pointer = new Class({
         this.event = event;
 
         //  Sets the local x/y properties
-        this.manager.transformPointer(this, event.pageX, event.pageY);
+        this.manager.transformPointer(this, event.pageX, event.pageY, true);
+
+        var x1 = this.position.x;
+        var y1 = this.position.y;
+
+        var x2 = this.prevPosition.x;
+        var y2 = this.prevPosition.y;
+
+        this.velocity.x = x1 - x2;
+        this.velocity.y = y1 - y2;
+        this.angle = Math.atan2(y2 - y1, x2 - x1);
 
         if (this.manager.mouse.locked)
         {
@@ -511,7 +578,7 @@ var Pointer = new Class({
         this.event = event;
 
         //  Sets the local x/y properties
-        this.manager.transformPointer(this, event.pageX, event.pageY);
+        this.manager.transformPointer(this, event.pageX, event.pageY, false);
 
         this.primaryDown = true;
         this.downX = this.x;
@@ -524,6 +591,7 @@ var Pointer = new Class({
         this.dirty = true;
 
         this.wasTouch = true;
+        this.wasCanceled = false;
     },
 
     /**
@@ -541,7 +609,7 @@ var Pointer = new Class({
         this.event = event;
 
         //  Sets the local x/y properties
-        this.manager.transformPointer(this, event.pageX, event.pageY);
+        this.manager.transformPointer(this, event.pageX, event.pageY, true);
 
         this.justMoved = true;
 
@@ -567,7 +635,7 @@ var Pointer = new Class({
         this.event = event;
 
         //  Sets the local x/y properties
-        this.manager.transformPointer(this, event.pageX, event.pageY);
+        this.manager.transformPointer(this, event.pageX, event.pageY, false);
 
         this.primaryDown = false;
         this.upX = this.x;
@@ -580,6 +648,35 @@ var Pointer = new Class({
         this.dirty = true;
 
         this.wasTouch = true;
+        this.wasCanceled = false;
+        
+        this.active = false;
+    },
+
+    /**
+     * Internal method to handle a Touch Cancel Event.
+     *
+     * @method Phaser.Input.Pointer#touchcancel
+     * @private
+     * @since 3.15.0
+     *
+     * @param {TouchEvent} event - The Touch Event to process.
+     */
+    touchcancel: function (event)
+    {
+        this.buttons = 0;
+
+        this.event = event;
+
+        this.primaryDown = false;
+
+        this.justUp = false;
+        this.isDown = false;
+
+        this.dirty = true;
+
+        this.wasTouch = true;
+        this.wasCanceled = true;
         
         this.active = false;
     },

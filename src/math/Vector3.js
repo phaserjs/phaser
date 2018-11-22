@@ -16,7 +16,7 @@ var Class = require('../utils/Class');
  * A three-component vector.
  *
  * @class Vector3
- * @memberOf Phaser.Math
+ * @memberof Phaser.Math
  * @constructor
  * @since 3.0.0
  *
@@ -543,7 +543,7 @@ var Vector3 = new Class({
     },
 
     /**
-     * [description]
+     * Transforms the coordinates of this Vector3 with the given Matrix4.
      *
      * @method Phaser.Math.Vector3#transformCoordinates
      * @since 3.0.0

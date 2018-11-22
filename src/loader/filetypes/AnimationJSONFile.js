@@ -18,7 +18,7 @@ var JSONFile = require('./JSONFile.js');
  *
  * @class AnimationJSONFile
  * @extends Phaser.Loader.File
- * @memberOf Phaser.Loader.FileTypes
+ * @memberof Phaser.Loader.FileTypes
  * @constructor
  * @since 3.0.0
  *

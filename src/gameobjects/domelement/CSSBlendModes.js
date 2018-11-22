@@ -9,8 +9,8 @@
  * 
  * @name Phaser.CSSBlendModes
  * @enum {string}
- * @memberOf Phaser
- * @readOnly
+ * @memberof Phaser
+ * @readonly
  * @since 3.12.0
  */
 
