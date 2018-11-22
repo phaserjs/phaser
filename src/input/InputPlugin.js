@@ -548,14 +548,14 @@ var InputPlugin = new Class({
                 total += this.processDownEvents(pointer);
             }
 
-            if (pointer.justUp)
-            {
-                total += this.processUpEvents(pointer);
-            }
-
             if (pointer.justMoved)
             {
                 total += this.processMoveEvents(pointer);
+            }
+
+            if (pointer.justUp)
+            {
+                total += this.processUpEvents(pointer);
             }
 
             if (total > 0 && manager.globalTopOnly)

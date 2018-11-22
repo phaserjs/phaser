@@ -389,6 +389,10 @@ var Pointer = new Class({
          * @since 3.10.0
          */
         this.active = (id === 0) ? true : false;
+
+        this.deltaTime = 0;
+        this.prevDeltaTime = Date.now();
+        this.speed = 0;
     },
 
     /**
@@ -416,7 +420,7 @@ var Pointer = new Class({
      * @private
      * @since 3.0.0
      */
-    reset: function ()
+    reset: function (now)
     {
         this.dirty = false;
 
@@ -426,6 +430,40 @@ var Pointer = new Class({
 
         this.movementX = 0;
         this.movementY = 0;
+
+        this.deltaTime = now;
+
+        // this.velocity.x = 0;
+        // this.velocity.y = 0;
+    },
+
+    updateMotion: function ()
+    {
+        var x1 = this.position.x;
+        var y1 = this.position.y;
+
+        var x2 = this.prevPosition.x;
+        var y2 = this.prevPosition.y;
+
+        var deltaX = x1 - x2;
+        var deltaY = y1 - y2;
+
+        this.velocity.x = deltaX / this.deltaTime || 0;
+        this.velocity.y = deltaY / this.deltaTime || 0;
+        this.speed = (Math.abs(this.velocity.x) > Math.abs(this.velocity.y)) ? this.velocity.x : this.velocity.y;
+
+        /*
+        this.velocity.x = x1 - x2;
+        this.velocity.y = y1 - y2;
+
+        this.angle = Math.atan2(y2 - y1, x2 - x1);
+        */
+
+        //  Store previous position
+        this.prevPosition.x = this.position.x;
+        this.prevPosition.y = this.position.y;
+
+        this.prevDeltaTime = this.deltaTime;
     },
 
     /**
@@ -527,16 +565,6 @@ var Pointer = new Class({
 
         //  Sets the local x/y properties
         this.manager.transformPointer(this, event.pageX, event.pageY, true);
-
-        var x1 = this.position.x;
-        var y1 = this.position.y;
-
-        var x2 = this.prevPosition.x;
-        var y2 = this.prevPosition.y;
-
-        this.velocity.x = x1 - x2;
-        this.velocity.y = y1 - y2;
-        this.angle = Math.atan2(y2 - y1, x2 - x1);
 
         if (this.manager.mouse.locked)
         {

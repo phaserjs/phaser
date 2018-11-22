@@ -340,6 +340,8 @@ var Game = new Class({
          */
         this.isOver = true;
 
+        this.frame = 0;
+
         //  Wait for the DOM Ready event, then call boot.
         DOMContentLoaded(this.boot.bind(this));
     },
@@ -574,6 +576,8 @@ var Game = new Class({
         //  The final event before the step repeats. Your last chance to do anything to the canvas before it all starts again.
 
         eventEmitter.emit('postrender', renderer, time, delta);
+
+        this.frame++;
     },
 
     /**

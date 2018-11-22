@@ -427,7 +427,7 @@ var InputManager = new Class({
      *
      * @param {number} time - The time stamp value of this game step.
      */
-    update: function (time)
+    update: function (time, delta)
     {
         var i;
 
@@ -443,68 +443,78 @@ var InputManager = new Class({
 
         var pointers = this.pointers;
 
+        this.mouse.pre();
+
         for (i = 0; i < this.pointersTotal; i++)
         {
-            pointers[i].reset();
+            pointers[i].reset(delta);
         }
 
-        if (!this.enabled || len === 0)
+        // if (!this.enabled || len === 0)
+        // {
+        //     return;
+        // }
+
+        if (this.enabled && len > 0)
         {
-            return;
-        }
+            this.dirty = true;
 
-        this.dirty = true;
-
-        this.updateBounds();
-
-        this.scale.x = this.game.config.width / this.bounds.width;
-        this.scale.y = this.game.config.height / this.bounds.height;
-
-        //  Clears the queue array, and also means we don't work on array data that could potentially
-        //  be modified during the processing phase
-        var queue = this.queue.splice(0, len);
-        var mouse = this.mousePointer;
-
-        //  Process the event queue, dispatching all of the events that have stored up
-        for (i = 0; i < len; i += 2)
-        {
-            var type = queue[i];
-            var event = queue[i + 1];
-
-            switch (type)
+            this.updateBounds();
+    
+            this.scale.x = this.game.config.width / this.bounds.width;
+            this.scale.y = this.game.config.height / this.bounds.height;
+    
+            //  Clears the queue array, and also means we don't work on array data that could potentially
+            //  be modified during the processing phase
+            var queue = this.queue.splice(0, len);
+            var mouse = this.mousePointer;
+    
+            //  Process the event queue, dispatching all of the events that have stored up
+            for (i = 0; i < len; i += 2)
             {
-                case CONST.MOUSE_DOWN:
-                    mouse.down(event, time);
-                    break;
-
-                case CONST.MOUSE_MOVE:
-                    mouse.move(event, time);
-                    break;
-
-                case CONST.MOUSE_UP:
-                    mouse.up(event, time);
-                    break;
-
-                case CONST.TOUCH_START:
-                    this.startPointer(event, time);
-                    break;
-
-                case CONST.TOUCH_MOVE:
-                    this.updatePointer(event, time);
-                    break;
-
-                case CONST.TOUCH_END:
-                    this.stopPointer(event, time);
-                    break;
-
-                case CONST.TOUCH_CANCEL:
-                    this.cancelPointer(event, time);
-                    break;
-
-                case CONST.POINTER_LOCK_CHANGE:
-                    this.events.emit('pointerlockchange', event, this.mouse.locked);
-                    break;
+                var type = queue[i];
+                var event = queue[i + 1];
+    
+                switch (type)
+                {
+                    case CONST.MOUSE_DOWN:
+                        mouse.down(event, time);
+                        break;
+    
+                    case CONST.MOUSE_MOVE:
+                        mouse.move(event, time);
+                        break;
+    
+                    case CONST.MOUSE_UP:
+                        mouse.up(event, time);
+                        break;
+    
+                    case CONST.TOUCH_START:
+                        this.startPointer(event, time);
+                        break;
+    
+                    case CONST.TOUCH_MOVE:
+                        this.updatePointer(event, time);
+                        break;
+    
+                    case CONST.TOUCH_END:
+                        this.stopPointer(event, time);
+                        break;
+    
+                    case CONST.TOUCH_CANCEL:
+                        this.cancelPointer(event, time);
+                        break;
+    
+                    case CONST.POINTER_LOCK_CHANGE:
+                        this.events.emit('pointerlockchange', event, this.mouse.locked);
+                        break;
+                }
             }
+        }
+
+        for (i = 0; i < this.pointersTotal; i++)
+        {
+            pointers[i].updateMotion();
         }
     },
 
@@ -525,6 +535,8 @@ var InputManager = new Class({
         {
             this.canvas.style.cursor = this.defaultCursor;
         }
+
+        this.mouse.post();
     },
 
     /**
@@ -1322,10 +1334,6 @@ var InputManager = new Class({
     {
         var p0 = pointer.position;
         var p1 = pointer.prevPosition;
-
-        //  Store previous position
-        p1.x = p0.x;
-        p1.y = p0.y;
 
         //  Translate coordinates
         var x = (pageX - this.bounds.left) * this.scale.x;
