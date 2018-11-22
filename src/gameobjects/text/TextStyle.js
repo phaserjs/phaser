@@ -537,9 +537,9 @@ var TextStyle = new Class({
 
             var i = 0;
 
-            this.fontStyle = (fontSplit.length > 2) ? fontSplit[i++] : '';
-            this.fontSize = fontSplit[i++] || '16px';
-            this.fontFamily = fontSplit[i++] || 'Courier';
+            fontStyle = (fontSplit.length > 2) ? fontSplit[i++] : '';
+            fontSize = fontSplit[i++] || '16px';
+            fontFamily = fontSplit[i++] || 'Courier';
         }
 
         if (fontFamily !== this.fontFamily || fontSize !== this.fontSize || fontStyle !== this.fontStyle)
