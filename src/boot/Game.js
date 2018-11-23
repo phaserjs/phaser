@@ -340,8 +340,6 @@ var Game = new Class({
          */
         this.isOver = true;
 
-        this.frame = 0;
-
         //  Wait for the DOM Ready event, then call boot.
         DOMContentLoaded(this.boot.bind(this));
     },
@@ -576,8 +574,6 @@ var Game = new Class({
         //  The final event before the step repeats. Your last chance to do anything to the canvas before it all starts again.
 
         eventEmitter.emit('postrender', renderer, time, delta);
-
-        this.frame++;
     },
 
     /**
@@ -745,6 +741,34 @@ var Game = new Class({
         this.scene.resize(width, height);
 
         this.events.emit('resize', width, height);
+    },
+
+    /**
+     * Returns the current game frame.
+     * When the game starts running, the frame is incremented every time Request Animation Frame, or Set Timeout, fires.
+     *
+     * @method Phaser.Game#getFrame
+     * @since 3.16.0
+     * 
+     * @return {number} The current game frame.
+     */
+    getFrame: function ()
+    {
+        return this.loop.frame;
+    },
+
+    /**
+     * Returns the current game timestamp.
+     * When the game starts running, the frame is incremented every time Request Animation Frame, or Set Timeout, fires.
+     *
+     * @method Phaser.Game#getTime
+     * @since 3.16.0
+     * 
+     * @return {number} The current game timestamp.
+     */
+    getTime: function ()
+    {
+        return this.loop.frame.time;
     },
 
     /**
