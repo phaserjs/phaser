@@ -72,15 +72,6 @@ var WebGLPipeline = new Class({
         this.game = config.game;
 
         /**
-         * The canvas which this WebGL Pipeline renders to.
-         *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#view
-         * @type {HTMLCanvasElement}
-         * @since 3.0.0
-         */
-        this.view = config.game.canvas;
-
-        /**
          * Used to store the current game resolution
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#resolution
