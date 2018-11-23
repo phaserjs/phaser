@@ -7,6 +7,7 @@
 var Class = require('../../utils/Class');
 var Features = require('../../device/Features');
 var NOOP = require('../../utils/Class');
+var Vector2 = require('../../math/Vector2');
 
 //  https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent
 //  https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
@@ -126,6 +127,10 @@ var MouseManager = new Class({
          */
         this.pointerLockChange = NOOP;
 
+        //  Testing ...
+        this.prevPosition = new Vector2();
+        this.position = new Vector2();
+
         inputManager.events.once('boot', this.boot, this);
     },
 
@@ -239,6 +244,21 @@ var MouseManager = new Class({
     {
         var _this = this;
 
+        /*
+        var storeDelta = function (event)
+        {
+            var x1 = _this.position.x;
+            var y1 = _this.position.y;
+
+            var x2 = _this.prevPosition.x;
+            var y2 = _this.prevPosition.y;
+
+            event._deltaX = x1 - x2;
+            event._deltaY = y1 - y2;
+            event._angle = Math.atan2(y2 - y1, x2 - x1);
+        };
+        */
+
         this.onMouseMove = function (event)
         {
             if (event.defaultPrevented || !_this.enabled || !_this.manager)
@@ -246,7 +266,9 @@ var MouseManager = new Class({
                 // Do nothing if event already handled
                 return;
             }
-    
+
+            // storeDelta(event);
+
             _this.manager.queueMouseMove(event);
     
             if (_this.capture)
@@ -263,6 +285,8 @@ var MouseManager = new Class({
                 return;
             }
     
+            // storeDelta(event);
+
             _this.manager.queueMouseDown(event);
     
             if (_this.capture)
@@ -279,6 +303,8 @@ var MouseManager = new Class({
                 return;
             }
     
+            // storeDelta(event);
+
             _this.manager.queueMouseUp(event);
     
             if (_this.capture)
