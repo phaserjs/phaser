@@ -171,10 +171,26 @@ var Pointer = new Class({
          *
          * @name Phaser.Input.Pointer#smoothFactor
          * @type {number}
-         * @default 1
+         * @default 0
          * @since 3.16.0
          */
         this.smoothFactor = 0;
+
+        /**
+         * The factor applied to the motion smoothing each frame.
+         * 
+         * This value is passed to the Smooth Step Interpolation that is used to calculate the velocity
+         * and angle of the Pointer. It's applied every frame, until the midPoint reaches the current
+         * position of the Pointer. 0.2 provides a good average but can be increased if you need a
+         * quicker update and are working in a high performance environment. Never set this value to
+         * zero.
+         *
+         * @name Phaser.Input.Pointer#motionFactor
+         * @type {number}
+         * @default 0.2
+         * @since 3.16.0
+         */
+        this.motionFactor = 0.2;
 
         /**
          * The x position of this Pointer, translated into the coordinate space of the most recent Camera it interacted with.
@@ -468,8 +484,8 @@ var Pointer = new Class({
         var cy = this.position.y;
 
         //  Moving towards our goal ...
-        var vx = SmoothStepInterpolation(0.2, px, cx);
-        var vy = SmoothStepInterpolation(0.2, py, cy);
+        var vx = SmoothStepInterpolation(this.motionFactor, px, cx);
+        var vy = SmoothStepInterpolation(this.motionFactor, py, cy);
 
         if (FuzzyEqual(vx, cx, 0.1))
         {
