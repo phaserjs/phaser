@@ -158,6 +158,10 @@ var Pointer = new Class({
          */
         this.angle = new Vector2();
 
+        this.distance = 0;
+
+
+
         /**
          * The smoothing factor to apply to the Pointer position.
          * 
@@ -477,15 +481,12 @@ var Pointer = new Class({
      */
     updateMotion: function ()
     {
-        var px = this.midPoint.x;
-        var py = this.midPoint.y;
-
         var cx = this.position.x;
         var cy = this.position.y;
 
         //  Moving towards our goal ...
-        var vx = SmoothStepInterpolation(this.motionFactor, px, cx);
-        var vy = SmoothStepInterpolation(this.motionFactor, py, cy);
+        var vx = SmoothStepInterpolation(this.motionFactor, this.midPoint.x, cx);
+        var vy = SmoothStepInterpolation(this.motionFactor, this.midPoint.y, cy);
 
         if (FuzzyEqual(vx, cx, 0.1))
         {
@@ -499,9 +500,14 @@ var Pointer = new Class({
 
         this.midPoint.set(vx, vy);
 
-        this.velocity.set(cx - vx, cy - vy);
+        var dx = cx - vx;
+        var dy = cy - vy;
 
-        this.angle = Math.atan2(cy - vy, cx - vx);
+        this.velocity.set(dx, dy);
+
+        this.angle = Math.atan2(dy, dx);
+
+        this.distance = Math.sqrt(dx * dx + dy * dy);
     },
 
     /**
