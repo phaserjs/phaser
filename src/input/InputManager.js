@@ -1330,10 +1330,6 @@ var InputManager = new Class({
      */
     transformPointer: function (pointer, pageX, pageY, wasMove)
     {
-        pointer.x = (pageX - this.bounds.left) * this.scale.x;
-        pointer.y = (pageY - this.bounds.top) * this.scale.y;
-
-        /*
         var p0 = pointer.position;
         var p1 = pointer.prevPosition;
 
@@ -1359,7 +1355,6 @@ var InputManager = new Class({
             p0.x = x * a + p1.x * (1 - a);
             p0.y = y * a + p1.y * (1 - a);
         }
-        */
     },
 
     /**
