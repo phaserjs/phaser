@@ -406,7 +406,7 @@ var InputPlugin = new Class({
     preUpdate: function ()
     {
         //  Registered input plugins listen for this
-        this.pluginEvents.emit('preUpdate');
+        this.pluginEvents.emit('preupdate');
 
         var removeList = this._pendingRemoval;
         var insertList = this._pendingInsertion;

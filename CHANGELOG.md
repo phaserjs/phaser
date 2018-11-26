@@ -26,6 +26,7 @@
 * `InputManager.transformPointer` has a new boolean argument `wasMove`, which controls if the pointer is being transformed after a move or up/down event.
 * `Pointer.velocity` is a new Vector2 that contains the velocity of the Pointer, based on the previous and current position. This is updated whenever the Pointer moves, regardless of button states. If you find the velocity is too erratic, consider enabling the `smoothFactor`.
 * `Pointer.angle` is a new property that contains the angle of the Pointer, in radians, based on the previous and current position. This is updated whenever the Pointer moves, regardless of button states. If you find the angle is too erratic, consider enabling the `smoothFactor`.
+* The Input Plugin was emitting a `preUpdate` event, with the capital U, instead of `preupdate`. This has now been corrected. Fix #4185 (thanks @gadelan)
 
 ### New Features
 
