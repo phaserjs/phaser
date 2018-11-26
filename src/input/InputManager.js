@@ -445,7 +445,7 @@ var InputManager = new Class({
 
         for (i = 0; i < this.pointersTotal; i++)
         {
-            pointers[i].reset();
+            pointers[i].reset(time);
         }
 
         if (!this.enabled || len === 0)
