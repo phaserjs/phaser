@@ -901,6 +901,54 @@ var Pointer = new Class({
 
     /**
      * If the Pointer has a button pressed down at the time this method is called, it will return the
+     * horizontal distance between the Pointer's `downX` and `downY` values and the current position.
+     * 
+     * If no button is held down, it will return the last recorded horizontal distance, based on where
+     * the Pointer was when the button was released.
+     *
+     * @method Phaser.Input.Pointer#getDistanceX
+     * @since 3.16.0
+     *
+     * @return {number} The horizontal distance the Pointer moved.
+     */
+    getDistanceX: function ()
+    {
+        if (this.isDown)
+        {
+            return Math.abs(this.downX - this.x);
+        }
+        else
+        {
+            return Math.abs(this.downX - this.upX);
+        }
+    },
+
+    /**
+     * If the Pointer has a button pressed down at the time this method is called, it will return the
+     * vertical distance between the Pointer's `downX` and `downY` values and the current position.
+     * 
+     * If no button is held down, it will return the last recorded vertical distance, based on where
+     * the Pointer was when the button was released.
+     *
+     * @method Phaser.Input.Pointer#getDistanceY
+     * @since 3.16.0
+     *
+     * @return {number} The vertical distance the Pointer moved.
+     */
+    getDistanceY: function ()
+    {
+        if (this.isDown)
+        {
+            return Math.abs(this.downY - this.y);
+        }
+        else
+        {
+            return Math.abs(this.downY - this.upY);
+        }
+    },
+
+    /**
+     * If the Pointer has a button pressed down at the time this method is called, it will return the
      * duration since the Pointer's was pressed down.
      * 
      * If no button is held down, it will return the last recorded duration, based on the time
@@ -936,7 +984,7 @@ var Pointer = new Class({
      * @method Phaser.Input.Pointer#getAngle
      * @since 3.16.0
      *
-     * @return {number} The angle between the Pointer's 'up' and 'down' coordinates.
+     * @return {number} The angle between the Pointer's coordinates in radians.
      */
     getAngle: function ()
     {
