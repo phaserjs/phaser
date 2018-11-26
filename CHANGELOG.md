@@ -59,6 +59,7 @@
 * There is a new boolean Game Config property called `customEnvironment`. If set to `true` it will skip the internal Feature checks when working out which type of renderer to create, allowing you to run Phaser under non-native web environments. If using this value, you _must_ set an explicit `renderType` of either CANVAS or WEBGL. It cannot be left as AUTO. Fix #4166 (thanks @jcyuan)
 * `Animation.nextFrame` will advance an animation to the next frame in the sequence instantly, regardless of the animation time or state. You can call this on a Sprite: `sprite.anims.nextFrame()` (thanks rgk25)
 * `Animation.previousFrame` will set an animation to the previous frame in the sequence instantly, regardless of the animation time or state. You can call this on a Sprite: `sprite.anims.previousFrame()` (thanks rgk25)
+* `Geom.Intersects.PointToLine` has a new optional argument `lineThickness` (which defaults to 1). This allows you to determine if the point intersects a line of a given thickness, where the line-ends are circular (not square).
 
 ### Updates
 
