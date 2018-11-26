@@ -11,7 +11,7 @@
 * If the `setScore` or `getPlayerScore` calls fail, it will return `null` as the score instance, instead of causing a run-time error.
 * You can now pass an object or a string to `setScore` and objects will be automatically stringified.
 
-### Input Updates and Fixes
+### Input - New Features, Updates and Fixes
 
 * The Keyboard Plugin will now call `preventDefault` on all non-modified alphanumeric key presses by default, stopping the keyboard event from hitting the browser. Previously, you had to create `Key` objects to enable this. You can control this at runtime by toggling the `KeyboardPlugin.preventDefault` boolean, or the `keyboard.capture` config setting.
 * There is a new Game and Scene Config setting `input.keyboard.capture` which is an array of KeyCodes that the Keyboard Plugin will capture all non-modified key events on. By default it is populated with the space key, cursors, 0 - 9 and A - Z. You can also set this in a Scene Config, in which case it will override the Game Config value.
@@ -29,6 +29,7 @@
 * `Pointer.distance` is a new property that contains the distance of the Pointer, in radians, based on the current and previous positions. The distance is smoothed out each frame, according to the `Pointer.motionFactor` property. This is done for more accurate gesture recognition. The distance is updated based on Pointer movement, it doesn't require a button to be pressed first.
 * `Pointer.motionFactor` is a new property that controls how much smoothing to apply to the Pointer positions each frame. This value is passed to the Smooth Step Interpolation that is used to calculate the velocity, angle and distance of the Pointer. It's applied every frame, until the midPoint reaches the current position of the Pointer. The default value is 0.2.
 * The Input Plugin was emitting a `preUpdate` event, with the capital U, instead of `preupdate`. This has now been corrected. Fix #4185 (thanks @gadelan)
+* `Pointer.updateMotion` is a new method that is called automatically, each step, by the Input Manager. It's responsible for calculating the Pointer velocity, angle and distance properties.
 
 ### New Features
 
