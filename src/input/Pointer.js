@@ -4,6 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var Angle = require('../math/angle/Between');
 var Class = require('../utils/Class');
 var Distance = require('../math/distance/DistanceBetween');
 var FuzzyEqual = require('../math/fuzzy/Equal');
@@ -449,7 +450,14 @@ var Pointer = new Class({
          */
         this.active = (id === 0) ? true : false;
 
-        this.history = [];
+        /**
+         * Time when this Pointer was most recently updated by the Game step.
+         *
+         * @name Phaser.Input.Pointer#time
+         * @type {number}
+         * @since 3.16.0
+         */
+        this.time = 0;
     },
 
     /**
@@ -477,13 +485,15 @@ var Pointer = new Class({
      * @private
      * @since 3.0.0
      */
-    reset: function ()
+    reset: function (time)
     {
         this.dirty = false;
 
         this.justDown = false;
         this.justUp = false;
         this.justMoved = false;
+
+        this.time = time;
 
         this.movementX = 0;
         this.movementY = 0;
@@ -863,17 +873,81 @@ var Pointer = new Class({
     },
 
     /**
-     * Returns the distance between the Pointer's current position and where it was
-     * first pressed down (the `downX` and `downY` properties)
+     * If the Pointer has a button pressed down at the time this method is called, it will return the
+     * distance between the Pointer's `downX` and `downY` values and the current position.
+     * 
+     * If no button is held down, it will return the last recorded distance, based on where
+     * the Pointer was when the button was released.
+     * 
+     * If you wish to get the distance being travelled currently, based on the velocity of the Pointer,
+     * then see the `Pointer.distance` property.
      *
      * @method Phaser.Input.Pointer#getDistance
      * @since 3.13.0
      *
-     * @return {number} The distance the Pointer has moved since being pressed down.
+     * @return {number} The distance the Pointer moved.
      */
     getDistance: function ()
     {
-        return Distance(this.downX, this.downY, this.x, this.y);
+        if (this.isDown)
+        {
+            return Distance(this.downX, this.downY, this.x, this.y);
+        }
+        else
+        {
+            return Distance(this.downX, this.downY, this.upX, this.upY);
+        }
+    },
+
+    /**
+     * If the Pointer has a button pressed down at the time this method is called, it will return the
+     * duration since the Pointer's was pressed down.
+     * 
+     * If no button is held down, it will return the last recorded duration, based on the time
+     * the Pointer button was released.
+     *
+     * @method Phaser.Input.Pointer#getDuration
+     * @since 3.16.0
+     *
+     * @return {number} The duration the Pointer was held down for in milliseconds.
+     */
+    getDuration: function ()
+    {
+        if (this.isDown)
+        {
+            return (this.time - this.downTime);
+        }
+        else
+        {
+            return (this.upTime - this.downTime);
+        }
+    },
+
+    /**
+     * If the Pointer has a button pressed down at the time this method is called, it will return the
+     * angle between the Pointer's `downX` and `downY` values and the current position.
+     * 
+     * If no button is held down, it will return the last recorded angle, based on where
+     * the Pointer was when the button was released.
+     * 
+     * If you wish to get the current angle, based on the velocity of the Pointer, then
+     * see the `Pointer.angle` property.
+     *
+     * @method Phaser.Input.Pointer#getAngle
+     * @since 3.16.0
+     *
+     * @return {number} The angle between the Pointer's 'up' and 'down' coordinates.
+     */
+    getAngle: function ()
+    {
+        if (this.isDown)
+        {
+            return Angle(this.x, this.y, this.downX, this.downY);
+        }
+        else
+        {
+            return Angle(this.upX, this.upY, this.downX, this.downY);
+        }
     },
 
     /**
