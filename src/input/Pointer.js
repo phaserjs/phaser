@@ -104,6 +104,7 @@ var Pointer = new Class({
          *
          * @name Phaser.Input.Pointer#position
          * @type {Phaser.Math.Vector2}
+         * @readonly
          * @since 3.0.0
          */
         this.position = new Vector2();
@@ -113,11 +114,11 @@ var Pointer = new Class({
          * 
          * The old x and y values are stored in here during the InputManager.transformPointer call.
          * 
-         * You can use it to track how fast the pointer is moving, or to smoothly interpolate between the old and current position.
-         * See the `Pointer.getInterpolatedPosition` method to assist in this.
+         * Use the properties `velocity`, `angle` and `distance` to create your own gesture recognition.
          *
          * @name Phaser.Input.Pointer#prevPosition
          * @type {Phaser.Math.Vector2}
+         * @readonly
          * @since 3.11.0
          */
         this.prevPosition = new Vector2();
@@ -130,17 +131,19 @@ var Pointer = new Class({
          * @private
          * @since 3.16.0
          */
-        this.midPoint = new Vector2();
+        this.midPoint = new Vector2(-1, -1);
 
         /**
-         * The current velocity of the Pointer, based on its previous and current position.
+         * The current velocity of the Pointer, based on its current and previous positions.
          * 
-         * This is updated whenever the Pointer moves, regardless of the state of any Pointer buttons.
+         * This value is smoothed out each frame, according to the `motionFactor` property.
          * 
-         * If you are finding the velocity value too erratic, then consider enabling the `Pointer.smoothFactor`.
+         * This property is updated whenever the Pointer moves, regardless of any button states. In other words,
+         * it changes based on movement alone - a button doesn't have to be pressed first.
          *
          * @name Phaser.Input.Pointer#velocity
          * @type {Phaser.Math.Vector2}
+         * @readonly
          * @since 3.16.0
          */
         this.velocity = new Vector2();
@@ -148,19 +151,33 @@ var Pointer = new Class({
         /**
          * The current angle the Pointer is moving, in radians, based on its previous and current position.
          * 
-         * This is updated whenever the Pointer moves, regardless of the state of any Pointer buttons.
-         * 
-         * If you are finding the angle value too erratic, then consider enabling the `Pointer.smoothFactor`.
+         * This property is updated whenever the Pointer moves, regardless of any button states. In other words,
+         * it changes based on movement alone - a button doesn't have to be pressed first.
          *
          * @name Phaser.Input.Pointer#angle
          * @type {number}
+         * @readonly
          * @since 3.16.0
          */
         this.angle = new Vector2();
 
+        /**
+         * The distance the Pointer has moved, based on its previous and current position.
+         * 
+         * This value is smoothed out each frame, according to the `motionFactor` property.
+         * 
+         * This property is updated whenever the Pointer moves, regardless of any button states. In other words,
+         * it changes based on movement alone - a button doesn't have to be pressed first.
+         * 
+         * If you need the total distance travelled since the primary buttons was pressed down,
+         * then use the `Pointer.getDistance` method.
+         *
+         * @name Phaser.Input.Pointer#distance
+         * @type {number}
+         * @readonly
+         * @since 3.16.0
+         */
         this.distance = 0;
-
-
 
         /**
          * The smoothing factor to apply to the Pointer position.
@@ -169,9 +186,11 @@ var Pointer = new Class({
          * then you can set this value to apply an automatic smoothing to the positions as they are recorded.
          * 
          * The default value of zero means 'no smoothing'.
-         * Set to a small value, such as 0.2, to apply an average level of smoothing between positions.
+         * Set to a small value, such as 0.2, to apply an average level of smoothing between positions. You can do this by changing this
+         * value directly, or by setting the `input.smoothFactor` property in the Game Config.
          * 
-         * Positions are only smoothed when the pointer moves. Up and Down positions are always precise.
+         * Positions are only smoothed when the pointer moves. If the primary button on this Pointer enters an Up or Down state, then the position
+         * is always precise, and not smoothed.
          *
          * @name Phaser.Input.Pointer#smoothFactor
          * @type {number}
@@ -183,8 +202,8 @@ var Pointer = new Class({
         /**
          * The factor applied to the motion smoothing each frame.
          * 
-         * This value is passed to the Smooth Step Interpolation that is used to calculate the velocity
-         * and angle of the Pointer. It's applied every frame, until the midPoint reaches the current
+         * This value is passed to the Smooth Step Interpolation that is used to calculate the velocity,
+         * angle and distance of the Pointer. It's applied every frame, until the midPoint reaches the current
          * position of the Pointer. 0.2 provides a good average but can be increased if you need a
          * quicker update and are working in a high performance environment. Never set this value to
          * zero.
@@ -484,9 +503,18 @@ var Pointer = new Class({
         var cx = this.position.x;
         var cy = this.position.y;
 
+        var mx = this.midPoint.x;
+        var my = this.midPoint.y;
+
+        if (cx === mx && cy === my)
+        {
+            //  Nothing to do here
+            return;
+        }
+
         //  Moving towards our goal ...
-        var vx = SmoothStepInterpolation(this.motionFactor, this.midPoint.x, cx);
-        var vy = SmoothStepInterpolation(this.motionFactor, this.midPoint.y, cy);
+        var vx = SmoothStepInterpolation(this.motionFactor, mx, cx);
+        var vy = SmoothStepInterpolation(this.motionFactor, my, cy);
 
         if (FuzzyEqual(vx, cx, 0.1))
         {
