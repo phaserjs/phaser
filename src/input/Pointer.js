@@ -6,7 +6,6 @@
 
 var Class = require('../utils/Class');
 var Distance = require('../math/distance/DistanceBetween');
-var Linear = require('../math/Linear');
 var FuzzyEqual = require('../math/fuzzy/Equal');
 var SmoothStepInterpolation = require('../math/interpolation/SmoothStepInterpolation');
 var Vector2 = require('../math/Vector2');
