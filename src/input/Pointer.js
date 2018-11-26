@@ -151,6 +151,8 @@ var Pointer = new Class({
         /**
          * The current angle the Pointer is moving, in radians, based on its previous and current position.
          * 
+         * The angle is based on the old position facing to the current position.
+         * 
          * This property is updated whenever the Pointer moves, regardless of any button states. In other words,
          * it changes based on movement alone - a button doesn't have to be pressed first.
          *
@@ -159,7 +161,7 @@ var Pointer = new Class({
          * @readonly
          * @since 3.16.0
          */
-        this.angle = new Vector2();
+        this.angle = 0;
 
         /**
          * The distance the Pointer has moved, based on its previous and current position.
@@ -542,7 +544,7 @@ var Pointer = new Class({
 
         this.velocity.set(dx, dy);
 
-        this.angle = Math.atan2(dy, dx);
+        this.angle = Angle(vx, vy, cx, cy);
 
         this.distance = Math.sqrt(dx * dx + dy * dy);
     },
@@ -978,6 +980,8 @@ var Pointer = new Class({
      * If no button is held down, it will return the last recorded angle, based on where
      * the Pointer was when the button was released.
      * 
+     * The angle is based on the old position facing to the current position.
+     * 
      * If you wish to get the current angle, based on the velocity of the Pointer, then
      * see the `Pointer.angle` property.
      *
@@ -990,11 +994,11 @@ var Pointer = new Class({
     {
         if (this.isDown)
         {
-            return Angle(this.x, this.y, this.downX, this.downY);
+            return Angle(this.downX, this.downY, this.x, this.y);
         }
         else
         {
-            return Angle(this.upX, this.upY, this.downX, this.downY);
+            return Angle(this.downX, this.downY, this.upX, this.upY);
         }
     },
 
