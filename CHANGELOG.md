@@ -60,6 +60,8 @@
 * `Animation.nextFrame` will advance an animation to the next frame in the sequence instantly, regardless of the animation time or state. You can call this on a Sprite: `sprite.anims.nextFrame()` (thanks rgk25)
 * `Animation.previousFrame` will set an animation to the previous frame in the sequence instantly, regardless of the animation time or state. You can call this on a Sprite: `sprite.anims.previousFrame()` (thanks rgk25)
 * `Geom.Intersects.PointToLine` has a new optional argument `lineThickness` (which defaults to 1). This allows you to determine if the point intersects a line of a given thickness, where the line-ends are circular (not square).
+* `Geom.Line.GetNearestPoint` is a new static method that will return the nearest point on a line to the given point.
+* `Geom.Line.GetShortestDistance` is a new static method that will return the shortest distance from a line to the given point.
 
 ### Updates
 
