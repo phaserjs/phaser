@@ -62,6 +62,7 @@
 * `Geom.Intersects.PointToLine` has a new optional argument `lineThickness` (which defaults to 1). This allows you to determine if the point intersects a line of a given thickness, where the line-ends are circular (not square).
 * `Geom.Line.GetNearestPoint` is a new static method that will return the nearest point on a line to the given point.
 * `Geom.Line.GetShortestDistance` is a new static method that will return the shortest distance from a line to the given point.
+* `Camera.getBounds` is a new method that will return a rectangle containing the bounds of the camera.
 
 ### Updates
 

@@ -1079,12 +1079,14 @@ var BaseCamera = new Class({
      * @param {integer} y - The top-left y coordinate of the bounds.
      * @param {integer} width - The width of the bounds, in pixels.
      * @param {integer} height - The height of the bounds, in pixels.
-     * @param {boolean} [centerOn] - If `true` the Camera will automatically be centered on the new bounds.
+     * @param {boolean} [centerOn=false] - If `true` the Camera will automatically be centered on the new bounds.
      *
      * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
      */
     setBounds: function (x, y, width, height, centerOn)
     {
+        if (centerOn === undefined) { centerOn = false; }
+
         this._bounds.setTo(x, y, width, height);
 
         this.dirty = true;
@@ -1101,6 +1103,31 @@ var BaseCamera = new Class({
         }
 
         return this;
+    },
+
+    /**
+     * Returns a rectangle containing the bounds of the Camera.
+     * 
+     * If the Camera does not have any bounds the rectangle will be empty.
+     * 
+     * The rectangle is a copy of the bounds, so is safe to modify.
+     *
+     * @method Phaser.Cameras.Scene2D.BaseCamera#getBounds
+     * @since 3.16.0
+     *
+     * @param {Phaser.Geom.Rectangle} [out] - An optional Rectangle to store the bounds in. If not given, a new Rectangle will be created.
+     *
+     * @return {Phaser.Geom.Rectangle} A rectangle containing the bounds of this Camera.
+     */
+    getBounds: function (out)
+    {
+        if (out === undefined) { out = new Rectangle(); }
+
+        var source = this._bounds;
+
+        out.setTo(source.x, source.y, source.width, source.height);
+
+        return out;
     },
 
     /**
