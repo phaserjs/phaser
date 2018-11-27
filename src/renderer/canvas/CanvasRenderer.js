@@ -410,7 +410,15 @@ var CanvasRenderer = new Class({
 
         var ctx = (camera.renderToTexture) ? camera.context : scene.sys.context;
 
-        var scissor = (cx !== 0 || cy !== 0 || cw !== ctx.canvas.width || ch !== ctx.canvas.height);
+        //  Save context pre-clip
+        ctx.save();
+
+        if (this.game.scene.customViewports)
+        {
+            ctx.beginPath();
+            ctx.rect(cx, cy, cw, ch);
+            ctx.clip();
+        }
 
         this.currentContext = ctx;
 
@@ -425,15 +433,6 @@ var CanvasRenderer = new Class({
         ctx.globalCompositeOperation = 'source-over';
 
         this.drawCount += list.length;
-
-        ctx.save();
-
-        if (scissor)
-        {
-            ctx.beginPath();
-            ctx.rect(cx, cy, cw, ch);
-            ctx.clip();
-        }
 
         if (camera.renderToTexture)
         {
@@ -473,6 +472,7 @@ var CanvasRenderer = new Class({
 
         camera.dirty = false;
 
+        //  Restore pre-clip context
         ctx.restore();
 
         if (camera.renderToTexture)

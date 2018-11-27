@@ -72,7 +72,6 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
 
     if (src.cropWidth > 0 && src.cropHeight > 0)
     {
-        ctx.save();
         ctx.beginPath();
         ctx.rect(0, 0, src.cropWidth, src.cropHeight);
         ctx.clip();
@@ -167,11 +166,7 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
         lastCharCode = charCode;
     }
 
-    if (src.cropWidth > 0 && src.cropHeight > 0)
-    {
-        ctx.restore();
-    }
-
+    //  Restore the context saved in SetTransform
     ctx.restore();
 };
 
