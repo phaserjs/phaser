@@ -45,7 +45,7 @@ var PointToLine = function (point, line, lineThickness)
     if (r < 0)
     {
         //  Outside line1
-        return (Math.sqrt(((x1 - px) * (x1 - px) ) + ( (y1 - py) * (y1 - py))) <= lineThickness);
+        return (Math.sqrt(((x1 - px) * (x1 - px)) + ((y1 - py) * (y1 - py))) <= lineThickness);
     }
     else if ((r >= 0) && (r <= 1))
     {
