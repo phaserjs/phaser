@@ -117,6 +117,28 @@ var MouseManager = new Class({
         this.onMouseUp = NOOP;
 
         /**
+         * The Mouse Over Event handler.
+         * This function is sent the native DOM MouseEvent.
+         * Initially empty and bound in the `startListeners` method.
+         *
+         * @name Phaser.Input.Mouse.MouseManager#onMouseOver
+         * @type {function}
+         * @since 3.16.0
+         */
+        this.onMouseOver = NOOP;
+
+        /**
+         * The Mouse Out Event handler.
+         * This function is sent the native DOM MouseEvent.
+         * Initially empty and bound in the `startListeners` method.
+         *
+         * @name Phaser.Input.Mouse.MouseManager#onMouseOut
+         * @type {function}
+         * @since 3.16.0
+         */
+        this.onMouseOut = NOOP;
+
+        /**
          * Internal pointerLockChange handler.
          * This function is sent the native DOM MouseEvent.
          * Initially empty and bound in the `startListeners` method.
@@ -126,10 +148,6 @@ var MouseManager = new Class({
          * @since 3.0.0
          */
         this.pointerLockChange = NOOP;
-
-        //  Testing ...
-        this.prevPosition = new Vector2();
-        this.position = new Vector2();
 
         inputManager.events.once('boot', this.boot, this);
     },
@@ -243,6 +261,7 @@ var MouseManager = new Class({
     startListeners: function ()
     {
         var _this = this;
+        var autoFocus = (window && window.focus && this.manager.game.config.autoFocus);
 
         this.onMouseMove = function (event)
         {
@@ -262,6 +281,11 @@ var MouseManager = new Class({
 
         this.onMouseDown = function (event)
         {
+            if (autoFocus)
+            {
+                window.focus();
+            }
+
             if (event.defaultPrevented || !_this.enabled || !_this.manager)
             {
                 // Do nothing if event already handled
@@ -292,6 +316,28 @@ var MouseManager = new Class({
             }
         };
 
+        this.onMouseOver = function (event)
+        {
+            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            {
+                // Do nothing if event already handled
+                return;
+            }
+    
+            _this.manager.setCanvasOver(event);
+        };
+
+        this.onMouseOut = function (event)
+        {
+            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            {
+                // Do nothing if event already handled
+                return;
+            }
+    
+            _this.manager.setCanvasOut(event);
+        };
+
         var target = this.target;
 
         if (!target)
@@ -302,17 +348,15 @@ var MouseManager = new Class({
         var passive = { passive: true };
         var nonPassive = { passive: false };
 
-        if (this.capture)
+        target.addEventListener('mousemove', this.onMouseMove, (this.capture) ? nonPassive : passive);
+        target.addEventListener('mousedown', this.onMouseDown, (this.capture) ? nonPassive : passive);
+        target.addEventListener('mouseup', this.onMouseUp, (this.capture) ? nonPassive : passive);
+        target.addEventListener('mouseover', this.onMouseOver, (this.capture) ? nonPassive : passive);
+        target.addEventListener('mouseout', this.onMouseOut, (this.capture) ? nonPassive : passive);
+
+        if (window)
         {
-            target.addEventListener('mousemove', this.onMouseMove, nonPassive);
-            target.addEventListener('mousedown', this.onMouseDown, nonPassive);
-            target.addEventListener('mouseup', this.onMouseUp, nonPassive);
-        }
-        else
-        {
-            target.addEventListener('mousemove', this.onMouseMove, passive);
-            target.addEventListener('mousedown', this.onMouseDown, passive);
-            target.addEventListener('mouseup', this.onMouseUp, passive);
+            window.addEventListener('mouseup', this.onMouseUp, nonPassive);
         }
 
         if (Features.pointerLock)
@@ -348,6 +392,13 @@ var MouseManager = new Class({
         target.removeEventListener('mousemove', this.onMouseMove);
         target.removeEventListener('mousedown', this.onMouseDown);
         target.removeEventListener('mouseup', this.onMouseUp);
+        target.removeEventListener('mouseover', this.onMouseOver);
+        target.removeEventListener('mouseout', this.onMouseOut);
+
+        if (window)
+        {
+            window.removeEventListener('mouseup', this.onMouseUp);
+        }
 
         if (Features.pointerLock)
         {
