@@ -78,7 +78,6 @@
 
 ### Updates
 
-* The `backgroundColor` property of the Game Config is now used to set the CSS backgroundColor property of the game Canvas element. This avoids a `fillRect` call in Canvas mode and allows for 'punch through' effects to be created. If `transparent` is true, the CSS property is not set and no background color is drawn in either WebGL or Canvas, allowing the canvas to be fully transparent.
 * You can now modify `this.physics.world.debugGraphic.defaultStrokeWidth` to set the stroke width of any debug drawn body, previously it was always 1 (thanks @samme)
 * `TextStyle.setFont` has a new optional argument `updateText` which will sets if the text should be automatically updated or not (thanks @DotTheGreat)
 * `ProcessQueue.destroy` now sets the internal `toProcess` counter to zero.
