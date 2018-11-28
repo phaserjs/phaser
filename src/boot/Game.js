@@ -329,17 +329,6 @@ var Game = new Class({
          */
         this.hasFocus = false;
 
-        /**
-         * Is the mouse pointer currently over the game canvas or not?
-         * This is modified by the VisibilityHandler.
-         *
-         * @name Phaser.Game#isOver
-         * @type {boolean}
-         * @readonly
-         * @since 3.10.0
-         */
-        this.isOver = true;
-
         //  Wait for the DOM Ready event, then call boot.
         DOMContentLoaded(this.boot.bind(this));
     },
