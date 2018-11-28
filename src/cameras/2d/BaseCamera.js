@@ -590,6 +590,60 @@ var BaseCamera = new Class({
     },
 
     /**
+     * Moves the Camera horizontally so that it is centered on the given x coordinate, bounds allowing.
+     * Calling this does not change the scrollY value.
+     *
+     * @method Phaser.Cameras.Scene2D.BaseCamera#centerOnX
+     * @since 3.16.0
+     *
+     * @param {number} x - The horizontal coordinate to center on.
+     *
+     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     */
+    centerOnX: function (x)
+    {
+        var originX = this.width * 0.5;
+
+        this.midPoint.x = x;
+
+        this.scrollX = x - originX;
+
+        if (this.useBounds)
+        {
+            this.scrollX = this.clampX(this.scrollX);
+        }
+
+        return this;
+    },
+
+    /**
+     * Moves the Camera vertically so that it is centered on the given y coordinate, bounds allowing.
+     * Calling this does not change the scrollX value.
+     *
+     * @method Phaser.Cameras.Scene2D.BaseCamera#centerOnY
+     * @since 3.16.0
+     *
+     * @param {number} y - The vertical coordinate to center on.
+     *
+     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     */
+    centerOnY: function (y)
+    {
+        var originY = this.height * 0.5;
+
+        this.midPoint.y = y;
+
+        this.scrollY = y - originY;
+
+        if (this.useBounds)
+        {
+            this.scrollY = this.clampY(this.scrollY);
+        }
+
+        return this;
+    },
+
+    /**
      * Moves the Camera so that it is centered on the given coordinates, bounds allowing.
      *
      * @method Phaser.Cameras.Scene2D.BaseCamera#centerOn
@@ -602,19 +656,8 @@ var BaseCamera = new Class({
      */
     centerOn: function (x, y)
     {
-        var originX = this.width * 0.5;
-        var originY = this.height * 0.5;
-
-        this.midPoint.set(x, y);
-
-        this.scrollX = x - originX;
-        this.scrollY = y - originY;
-
-        if (this.useBounds)
-        {
-            this.scrollX = this.clampX(this.scrollX);
-            this.scrollY = this.clampY(this.scrollY);
-        }
+        this.centerOnX(x);
+        this.centerOnY(y);
 
         return this;
     },

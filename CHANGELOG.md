@@ -73,6 +73,8 @@
 * `Geom.Line.GetNearestPoint` is a new static method that will return the nearest point on a line to the given point.
 * `Geom.Line.GetShortestDistance` is a new static method that will return the shortest distance from a line to the given point.
 * `Camera.getBounds` is a new method that will return a rectangle containing the bounds of the camera.
+* `Camera.centerOnX` will move the camera horizontally to be centered on the given coordinate, without changing its vertical placement.
+* `Camera.centerOnY` will move the camera vertically to be centered on the given coordinate, without changing its horizontally placement.
 
 ### Updates
 
