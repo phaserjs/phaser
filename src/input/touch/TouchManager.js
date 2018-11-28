@@ -112,6 +112,26 @@ var TouchManager = new Class({
          */
         this.onTouchCancel = NOOP;
 
+        /**
+         * The Touch Over event handler function.
+         * Initially empty and bound in the `startListeners` method.
+         *
+         * @name Phaser.Input.Touch.TouchManager#onTouchOver
+         * @type {function}
+         * @since 3.16.0
+         */
+        this.onTouchOver = NOOP;
+
+        /**
+         * The Touch Out event handler function.
+         * Initially empty and bound in the `startListeners` method.
+         *
+         * @name Phaser.Input.Touch.TouchManager#onTouchOut
+         * @type {function}
+         * @since 3.16.0
+         */
+        this.onTouchOut = NOOP;
+
         inputManager.events.once('boot', this.boot, this);
     },
 
@@ -219,6 +239,28 @@ var TouchManager = new Class({
             }
         };
 
+        this.onTouchOver = function (event)
+        {
+            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            {
+                // Do nothing if event already handled
+                return;
+            }
+    
+            _this.manager.setCanvasOver(event);
+        };
+
+        this.onTouchOut = function (event)
+        {
+            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            {
+                // Do nothing if event already handled
+                return;
+            }
+    
+            _this.manager.setCanvasOut(event);
+        };
+
         var target = this.target;
 
         if (!target)
@@ -229,18 +271,16 @@ var TouchManager = new Class({
         var passive = { passive: true };
         var nonPassive = { passive: false };
 
-        if (this.capture)
+        target.addEventListener('touchstart', this.onTouchStart, (this.capture) ? nonPassive : passive);
+        target.addEventListener('touchmove', this.onTouchMove, (this.capture) ? nonPassive : passive);
+        target.addEventListener('touchend', this.onTouchEnd, (this.capture) ? nonPassive : passive);
+        target.addEventListener('touchcancel', this.onTouchCancel, (this.capture) ? nonPassive : passive);
+        target.addEventListener('touchover', this.onTouchOver, (this.capture) ? nonPassive : passive);
+        target.addEventListener('touchout', this.onTouchOut, (this.capture) ? nonPassive : passive);
+
+        if (window)
         {
-            target.addEventListener('touchstart', this.onTouchStart, nonPassive);
-            target.addEventListener('touchmove', this.onTouchMove, nonPassive);
-            target.addEventListener('touchend', this.onTouchEnd, nonPassive);
-            target.addEventListener('touchcancel', this.onTouchCancel, nonPassive);
-        }
-        else
-        {
-            target.addEventListener('touchstart', this.onTouchStart, passive);
-            target.addEventListener('touchmove', this.onTouchMove, passive);
-            target.addEventListener('touchend', this.onTouchEnd, passive);
+            window.addEventListener('touchend', this.onTouchEnd, nonPassive);
         }
 
         this.enabled = true;
@@ -261,6 +301,13 @@ var TouchManager = new Class({
         target.removeEventListener('touchmove', this.onTouchMove);
         target.removeEventListener('touchend', this.onTouchEnd);
         target.removeEventListener('touchcancel', this.onTouchCancel);
+        target.removeEventListener('touchover', this.onTouchOver);
+        target.removeEventListener('touchout', this.onTouchOut);
+
+        if (window)
+        {
+            window.removeEventListener('touchend', this.onTouchEnd);
+        }
     },
 
     /**
