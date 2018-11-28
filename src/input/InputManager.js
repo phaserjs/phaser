@@ -111,6 +111,27 @@ var InputManager = new Class({
         this.domCallbacks = { up: [], down: [], move: [], upOnce: [], downOnce: [], moveOnce: [] };
 
         /**
+         * Are any mouse or touch pointers currently over the game canvas?
+         * This is updated automatically by the canvas over and out handlers.
+         *
+         * @name Phaser.Input.InputManager#isOver
+         * @type {boolean}
+         * @readonly
+         * @since 3.16.0
+         */
+        this.isOver = true;
+
+        /**
+         * isOver state change property.
+         *
+         * @name Phaser.Input.InputManager#_emitIsOverEvent
+         * @type {boolean}
+         * @private
+         * @since 3.16.0
+         */
+        this._emitIsOverEvent = false;
+
+        /**
          * Are there any up callbacks defined?
          *
          * @name Phaser.Input.InputManager#_hasUpCallback
@@ -419,6 +440,38 @@ var InputManager = new Class({
     },
 
     /**
+     * Internal canvas state change, called automatically by the Mouse Manager.
+     *
+     * @method Phaser.Input.InputManager#setCanvasOver
+     * @private
+     * @since 3.16.0
+     *
+     * @param {number} event - The DOM Event.
+     */
+    setCanvasOver: function (event)
+    {
+        this.isOver = true;
+
+        this._emitIsOverEvent = event;
+    },
+
+    /**
+     * Internal canvas state change, called automatically by the Mouse Manager.
+     *
+     * @method Phaser.Input.InputManager#setCanvasOut
+     * @private
+     * @since 3.16.0
+     *
+     * @param {number} event - The DOM Event.
+     */
+    setCanvasOut: function (event)
+    {
+        this.isOver = false;
+
+        this._emitIsOverEvent = event;
+    },
+
+    /**
      * Internal update loop, called automatically by the Game Step.
      *
      * @method Phaser.Input.InputManager#update
@@ -535,6 +588,9 @@ var InputManager = new Class({
         {
             this.canvas.style.cursor = this.defaultCursor;
         }
+
+        //  Reset the isOver event
+        this._emitIsOverEvent = null;
     },
 
     /**
