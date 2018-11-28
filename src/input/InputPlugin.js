@@ -476,14 +476,21 @@ var InputPlugin = new Class({
             return;
         }
 
-        this.pluginEvents.emit('update', time, delta);
-
         var manager = this.manager;
+
+        this.pluginEvents.emit('update', time, delta);
 
         //  Another Scene above this one has already consumed the input events, or we're in transition
         if (manager.globalTopOnly && manager.ignoreEvents)
         {
             return;
+        }
+
+        if (manager._emitIsOverEvent)
+        {
+            var event = (manager.isOver) ? 'gameover' : 'gameout';
+
+            this.emit(event, time, manager._emitIsOverEvent);
         }
 
         var runUpdate = (manager.dirty || this.pollRate === 0);
@@ -2293,6 +2300,23 @@ var InputPlugin = new Class({
         get: function ()
         {
             return this.manager.activePointer.y;
+        }
+
+    },
+
+    /**
+     * Are any mouse or touch pointers currently over the game canvas?
+     *
+     * @name Phaser.Input.InputPlugin#isOver
+     * @type {boolean}
+     * @readonly
+     * @since 3.16.0
+     */
+    isOver: {
+
+        get: function ()
+        {
+            return this.manager.isOver;
         }
 
     },
