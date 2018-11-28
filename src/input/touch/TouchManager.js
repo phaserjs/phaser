@@ -174,9 +174,15 @@ var TouchManager = new Class({
     startListeners: function ()
     {
         var _this = this;
+        var autoFocus = (window && window.focus && this.manager.game.config.autoFocus);
 
         this.onTouchStart = function (event)
         {
+            if (autoFocus)
+            {
+                window.focus();
+            }
+
             if (event.defaultPrevented || !_this.enabled || !_this.manager)
             {
                 //  Do nothing if event already handled
