@@ -7,7 +7,6 @@
 var Class = require('../../utils/Class');
 var Features = require('../../device/Features');
 var NOOP = require('../../utils/Class');
-var Vector2 = require('../../math/Vector2');
 
 //  https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent
 //  https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
@@ -261,6 +260,7 @@ var MouseManager = new Class({
     startListeners: function ()
     {
         var _this = this;
+        var canvas = this.manager.canvas;
         var autoFocus = (window && window.focus && this.manager.game.config.autoFocus);
 
         this.onMouseMove = function (event)
@@ -294,7 +294,7 @@ var MouseManager = new Class({
     
             _this.manager.queueMouseDown(event);
     
-            if (_this.capture)
+            if (_this.capture && event.target === canvas)
             {
                 event.preventDefault();
             }
@@ -310,7 +310,7 @@ var MouseManager = new Class({
     
             _this.manager.queueMouseUp(event);
     
-            if (_this.capture)
+            if (_this.capture && event.target === canvas)
             {
                 event.preventDefault();
             }
@@ -356,6 +356,7 @@ var MouseManager = new Class({
 
         if (window)
         {
+            window.addEventListener('mousedown', this.onMouseDown, nonPassive);
             window.addEventListener('mouseup', this.onMouseUp, nonPassive);
         }
 
@@ -397,6 +398,7 @@ var MouseManager = new Class({
 
         if (window)
         {
+            window.removeEventListener('mousedown', this.onMouseDown);
             window.removeEventListener('mouseup', this.onMouseUp);
         }
 
