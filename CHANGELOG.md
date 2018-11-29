@@ -135,6 +135,7 @@
 * The Particle Emitter no longer needs to call the StableSort.inplace during its preUpdate, saving cpu.
 * `Particle.resetPosition` is a new method that is called when a particle dies, preparing it ready for firing again in the future.
 * The Canvas `SetTransform` method would save the context state, but it wasn't restored at the end in the following Game Objects: Dynamic Bitmap Text, Graphics, Arc, Curve, Ellipse, Grid, IsoBox, IsoTriangle, Line, Polygon, Rectangle, Star and Triangle. These now all restore the context, meaning if you're using non-canvas sized cameras in Canvas mode, it will now render beyond just the first custom camera.
+* `Utils.Array.MoveUp` wouldn't let you move an array element to the top-most index in the array. This also impacted `Container.moveUp`.
 
 ### Examples and TypeScript
 
