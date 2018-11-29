@@ -758,6 +758,7 @@ var InputPlugin = new Class({
      * @fires Phaser.GameObjects.GameObject#pointerdownEvent
      * @fires Phaser.Input.InputPlugin#gameobjectdownEvent
      * @fires Phaser.Input.InputPlugin#pointerdownEvent
+     * @fires Phaser.Input.InputPlugin#pointerdownoutsideEvent
      * @since 3.0.0
      *
      * @param {Phaser.Input.Pointer} pointer - The Pointer being tested.
@@ -805,10 +806,13 @@ var InputPlugin = new Class({
             }
         }
 
-        //  Contains ALL Game Objects currently over in the array
+        //  If they released outside the canvas, but pressed down inside it, we'll still dispatch the event.
         if (!aborted)
         {
-            this.emit('pointerdown', pointer, currentlyOver);
+            var type = (pointer.downElement === this.manager.game.canvas) ? 'pointerdown' : 'pointerdownoutside';
+
+            //  Contains ALL Game Objects currently up in the array
+            this.emit(type, pointer, currentlyOver);
         }
 
         return total;
@@ -1344,6 +1348,7 @@ var InputPlugin = new Class({
      * @private
      * @fires Phaser.GameObjects.GameObject#pointerupEvent
      * @fires Phaser.Input.InputPlugin#gameobjectupEvent
+     * @fires Phaser.Input.InputPlugin#gameobjectupoutsideEvent
      * @since 3.0.0
      *
      * @param {Phaser.Input.Pointer} pointer - The pointer to check for events against.
@@ -1371,8 +1376,6 @@ var InputPlugin = new Class({
                 continue;
             }
 
-            //  pointerupoutside
-
             gameObject.emit('pointerup', pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
 
             if (_eventData.cancelled)
@@ -1390,10 +1393,13 @@ var InputPlugin = new Class({
             }
         }
 
+        //  If they released outside the canvas, but pressed down inside it, we'll still dispatch the event.
         if (!aborted)
         {
+            var type = (pointer.upElement === this.manager.game.canvas) ? 'pointerup' : 'pointerupoutside';
+
             //  Contains ALL Game Objects currently up in the array
-            this.emit('pointerup', pointer, currentlyOver);
+            this.emit(type, pointer, currentlyOver);
         }
 
         return currentlyOver.length;
@@ -2697,6 +2703,16 @@ module.exports = InputPlugin;
  *
  * A Pointer was released, after being pressed down.
  * @event Phaser.Input.InputPlugin#pointerupEvent
+ * @param {Phaser.Input.Pointer} pointer - The Pointer.
+ * @param {Phaser.GameObjects.GameObject[]} currentlyOver - All the Game Objects currently under the Pointer.
+ * 
+ * A Pointer was pressed down outside of the game canvas.
+ * @event Phaser.Input.InputPlugin#pointerdownoutsideEvent
+ * @param {Phaser.Input.Pointer} pointer - The Pointer.
+ * @param {Phaser.GameObjects.GameObject[]} currentlyOver - All the Game Objects currently under the Pointer.
+ * 
+ * A Pointer was released outside of the game canvas.
+ * @event Phaser.Input.InputPlugin#pointerupoutsideEvent
  * @param {Phaser.Input.Pointer} pointer - The Pointer.
  * @param {Phaser.GameObjects.GameObject[]} currentlyOver - All the Game Objects currently under the Pointer.
  */
