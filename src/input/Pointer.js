@@ -69,6 +69,26 @@ var Pointer = new Class({
         this.event;
 
         /**
+         * The DOM element the Pointer was pressed down on, taken from the DOM event.
+         *
+         * @name Phaser.Input.Pointer#downElement
+         * @type {any}
+         * @readonly
+         * @since 3.16.0
+         */
+        this.downElement;
+
+        /**
+         * The DOM element the Pointer was released on, taken from the DOM event.
+         *
+         * @name Phaser.Input.Pointer#upElement
+         * @type {any}
+         * @readonly
+         * @since 3.16.0
+         */
+        this.upElement;
+
+        /**
          * The camera the Pointer interacted with during its last update.
          * 
          * A Pointer can only ever interact with one camera at once, which will be the top-most camera
@@ -568,6 +588,8 @@ var Pointer = new Class({
 
         this.event = event;
 
+        this.upElement = event.target;
+
         //  Sets the local x/y properties
         this.manager.transformPointer(this, event.pageX, event.pageY, false);
 
@@ -606,6 +628,8 @@ var Pointer = new Class({
         }
 
         this.event = event;
+
+        this.downElement = event.target;
 
         //  Sets the local x/y properties
         this.manager.transformPointer(this, event.pageX, event.pageY, false);
@@ -690,6 +714,8 @@ var Pointer = new Class({
 
         this.event = event;
 
+        this.downElement = event.target;
+
         //  Sets the local x/y properties
         this.manager.transformPointer(this, event.pageX, event.pageY, false);
 
@@ -748,6 +774,8 @@ var Pointer = new Class({
         this.buttons = 0;
 
         this.event = event;
+
+        this.upElement = event.target;
 
         //  Sets the local x/y properties
         this.manager.transformPointer(this, event.pageX, event.pageY, false);
