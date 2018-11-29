@@ -174,6 +174,7 @@ var TouchManager = new Class({
     startListeners: function ()
     {
         var _this = this;
+        var canvas = this.manager.canvas;
         var autoFocus = (window && window.focus && this.manager.game.config.autoFocus);
 
         this.onTouchStart = function (event)
@@ -191,7 +192,7 @@ var TouchManager = new Class({
     
             _this.manager.queueTouchStart(event);
     
-            if (_this.capture)
+            if (_this.capture && event.target === canvas)
             {
                 event.preventDefault();
             }
@@ -223,7 +224,7 @@ var TouchManager = new Class({
     
             _this.manager.queueTouchEnd(event);
     
-            if (_this.capture)
+            if (_this.capture && event.target === canvas)
             {
                 event.preventDefault();
             }
@@ -286,6 +287,7 @@ var TouchManager = new Class({
 
         if (window)
         {
+            window.addEventListener('touchstart', this.onTouchStart, nonPassive);
             window.addEventListener('touchend', this.onTouchEnd, nonPassive);
         }
 
@@ -312,6 +314,7 @@ var TouchManager = new Class({
 
         if (window)
         {
+            window.removeEventListener('touchstart', this.onTouchStart);
             window.removeEventListener('touchend', this.onTouchEnd);
         }
     },
