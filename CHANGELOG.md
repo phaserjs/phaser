@@ -46,9 +46,14 @@
 * The Game used to emit a `mouseout` event when the mouse left the game canvas. This is no longer emitted by the Game itself and can instead be listened for using the new Input Plugin event `gameout`.
 * If the `window` object exists (which it will in normal browser environments) new `mouseup` and `touchend` event listeners are bound to it and trigger the normal `mouseup` or `touchend` events within the internal input system. This means if you will now get a `pointerup` event from the Input Plugin even if the pointer is released outside of the game canvas. Pointers will also no longer think they are still 'down' if released outside the canvas and then moved inside again in their new state.
 * The window will now have focus called on it by the Touch Manager, as well as the Mouse Manager, is the `autoFocus` game config property is enabled.
+* The Input Plugin has a new event you can listen to: `pointerdownoutside`, which is triggered whenever the mouse or a pointer is pressed down while outside of the Game canvas. Listen to it with  `this.input.on('pointerdownoutside')` from within a Scene.
+* The Input Plugin has a new event you can listen to: `pointerupoutside`, which is triggered whenever the mouse or a pointer is released while outside of the Game canvas. Listen to it with  `this.input.on('pointerupoutside')` from within a Scene.
+* `Pointer.downElement` is a new property that holds the target of the DOM Event that triggered when the Pointer was pressed down. If this is within the game, this will be the game canvas element.
+* `Pointer.upElement` is a new property that holds the target of the DOM Event that triggered when the Pointer was released. If this is within the game, this will be the game canvas element.
 
 ### New Features
 
+* You can now load external Scene files using the new `load.sceneFile` method. This allows you to dynamically load a Scene into the Scene Manager of your game, and swap to it at will. Please see the documentation and examples for further details.
 * The data object being sent to the Dynamic Bitmap Text callback now has a new property `parent`, which is a reference to the Bitmap Text instance that owns the data object (thanks ornyth)
 * The WebGL Renderer has a new method `clearPipeline`, which will clear down the current pipeline and reset the blend mode, ready for the context to be passed to a 3rd party library.
 * The WebGL Renderer has a new method `rebindPipeline`, which will rebind the given pipeline instance, reset the blank texture and reset the blend mode. Which is useful for recovering from 3rd party libs that have modified the gl context.
@@ -96,6 +101,7 @@
 * When using `ScenePlugin.add`, to add a new Scene to the Scene Manager, it didn't allow you to include the optional Scene data object. You can now pass this in the call (thanks @kainage)
 * `Graphics.stroke` is a new alias for the `strokePath` method, to keep the calls consistent with the Canvas Rendering Context API.
 * `Graphics.fill` is a new alias for the `fillPath` method, to keep the calls consistent with the Canvas Rendering Context API.
+* `LoaderPlugin.sceneManager` is a new property that is a reference to the global Scene Manager, useful for Plugins.
 
 ### Bug Fixes
 
