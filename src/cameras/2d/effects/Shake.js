@@ -270,8 +270,8 @@ var Shake = new Class({
 
             if (this.camera.roundPixels)
             {
-                this._offsetX |= 0;
-                this._offsetY |= 0;
+                this._offsetX = Math.round(this._offsetX);
+                this._offsetY = Math.round(this._offsetY);
             }
         }
         else

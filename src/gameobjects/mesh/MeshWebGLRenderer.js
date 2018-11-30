@@ -92,8 +92,8 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
 
         if (camera.roundPixels)
         {
-            tx |= 0;
-            ty |= 0;
+            tx = Math.round(tx);
+            ty = Math.round(ty);
         }
 
         vertexViewF32[++vertexOffset] = tx;

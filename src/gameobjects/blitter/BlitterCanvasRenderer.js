@@ -78,8 +78,8 @@ var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, ca
         {
             if (roundPixels)
             {
-                dx |= 0;
-                dy |= 0;
+                dx = Math.round(dx);
+                dy = Math.round(dy);
             }
 
             ctx.drawImage(

@@ -144,8 +144,8 @@ var DynamicBitmapTextCanvasRenderer = function (renderer, src, interpolationPerc
 
         if (camera.roundPixels)
         {
-            x |= 0;
-            y |= 0;
+            x = Math.round(x);
+            y = Math.round(y);
         }
 
         ctx.save();
