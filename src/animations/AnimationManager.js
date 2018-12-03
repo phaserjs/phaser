@@ -421,7 +421,7 @@ var AnimationManager = new Class({
      * @param {string} key - The key of the animation to load.
      * @param {(string|integer)} [startFrame] - The name of a start frame to set on the loaded animation.
      *
-     * @return {Phaser.GameObjects.GameObject} [description]
+     * @return {Phaser.GameObjects.GameObject} The Game Object with the animation loaded into it.
      */
     load: function (child, key, startFrame)
     {
@@ -576,7 +576,7 @@ var AnimationManager = new Class({
     },
 
     /**
-     * [description]
+     * Get the animation data as javascript object by giving key, or get the data of all animations as array of objects, if key wasn't provided.
      *
      * @method Phaser.Animations.AnimationManager#toJSON
      * @since 3.0.0
@@ -608,7 +608,8 @@ var AnimationManager = new Class({
     },
 
     /**
-     * [description]
+     * Destroy this Animation Manager and clean up animation definitions and references to other objects.
+     * This method should not be called directly. It will be called automatically as a response to a `destroy` event from the Phaser.Game instance.
      *
      * @method Phaser.Animations.AnimationManager#destroy
      * @since 3.0.0

@@ -8,12 +8,14 @@ var modes = require('../../BlendModes');
 var CanvasFeatures = require('../../../device/CanvasFeatures');
 
 /**
- * [description]
+ * Returns an array which maps the default blend modes to supported Canvas blend modes.
+ *
+ * If the browser doesn't support a blend mode, it will default to the normal `source-over` blend mode.
  *
  * @function Phaser.Renderer.Canvas.GetBlendModes
  * @since 3.0.0
  *
- * @return {array} [description]
+ * @return {array} Which Canvas blend mode corresponds to which default Phaser blend mode.
  */
 var GetBlendModes = function ()
 {

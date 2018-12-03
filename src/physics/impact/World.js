@@ -81,7 +81,7 @@ var TYPE = require('./TYPE');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - [description]
+ * @param {Phaser.Scene} scene - The Scene to which this Impact World instance belongs.
  * @param {Phaser.Physics.Impact.WorldConfig} config - [description]
  */
 var World = new Class({

@@ -297,12 +297,12 @@ var Tween = new Class({
     },
 
     /**
-     * [description]
+     * Set the scale the time applied to this Tween. A value of 1 runs in real-time. A value of 0.5 runs 50% slower, and so on.
      *
      * @method Phaser.Tweens.Tween#setTimeScale
      * @since 3.0.0
      *
-     * @param {number} value - [description]
+     * @param {number} value - The scale factor for timescale.
      *
      * @return {Phaser.Tweens.Tween} This Tween object.
      */
@@ -314,12 +314,12 @@ var Tween = new Class({
     },
 
     /**
-     * [description]
+     * Returns the scale of the time applied to this Tween.
      *
      * @method Phaser.Tweens.Tween#getTimeScale
      * @since 3.0.0
      *
-     * @return {number} [description]
+     * @return {number} The timescale of this tween (between 0 and 1)
      */
     getTimeScale: function ()
     {
@@ -353,7 +353,7 @@ var Tween = new Class({
     },
 
     /**
-     * [description]
+     * See if this Tween is currently acting upon the given target.
      *
      * @method Phaser.Tweens.Tween#hasTarget
      * @since 3.0.0
@@ -915,7 +915,7 @@ var Tween = new Class({
      * @method Phaser.Tweens.Tween#update
      * @since 3.0.0
      *
-     * @param {number} timestamp - [description]
+     * @param {number} timestamp - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
      * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      *
      * @return {boolean} Returns `true` if this Tween has finished and should be removed from the Tween Manager, otherwise returns `false`.

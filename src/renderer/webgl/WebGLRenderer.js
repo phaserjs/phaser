@@ -2187,8 +2187,8 @@ var WebGLRenderer = new Class({
      *
      * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {integer} x - [description]
-     * @param {integer} y - [description]
+     * @param {integer} x - The new X component
+     * @param {integer} y - The new Y component
      *
      * @return {this} This WebGL Renderer instance.
      */
@@ -2209,9 +2209,9 @@ var WebGLRenderer = new Class({
      *
      * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {integer} x - [description]
-     * @param {integer} y - [description]
-     * @param {integer} z - [description]
+     * @param {integer} x - The new X component
+     * @param {integer} y - The new Y component
+     * @param {integer} z - The new Z component
      *
      * @return {this} This WebGL Renderer instance.
      */
@@ -2249,15 +2249,15 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Sets the value of a 2x2 matrix uniform variable in the given WebGLProgram.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#setMatrix2
      * @since 3.0.0
      *
      * @param {WebGLProgram} program - The target WebGLProgram from which the uniform location will be looked-up.
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {boolean} transpose - [description]
-     * @param {Float32Array} matrix - [description]
+     * @param {boolean} transpose - The value indicating whether to transpose the matrix. Must be false.
+     * @param {Float32Array} matrix - The new matrix value.
      *
      * @return {this} This WebGL Renderer instance.
      */
@@ -2343,7 +2343,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * [description]
+     * Destroy this WebGLRenderer, cleaning up all related resources such as pipelines, native textures, etc.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#destroy
      * @since 3.0.0

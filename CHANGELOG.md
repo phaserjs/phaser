@@ -146,11 +146,9 @@ Thanks to the following for helping with the Phaser 3 Examples and TypeScript de
 
 ### Phaser Doc Jam
 
-The [Phaser Doc Jam](http://docjam.phaser.io) is an on-going effort to ensure that the Phaser 3 API has 100% documentation coverage. Thanks to the monumental effort of myself and the following people we're now really close to that goal! My thanks to:
+The Phaser Doc Jam was a community-backed effort to try and get the Phaser 3 API documentation to 100% coverage. The Doc Jam is now over and I offer my thanks to the following who helped with docs in this release:
 
-16patsle - @icbat - @gurungrahul2 - @samme - @telinc1 - anandu pavanan - blackhawx - candelibas - Diego Romero - Elliott Wallace - eric - Georges Gabereau - Haobo Zhang - henriacle - madclaws - marc136 - Mihail Ilinov - naum303 - NicolasRoehm - rejacobson - Robert Kowalski - rootasjey - scottwestover - stetso - therealsamf - Tigran - willblackmore - zenwaichi
-
-If you'd like to help finish off the last parts of documentation then take a look at the [Doc Jam site](http://docjam.phaser.io).
+16patsle - @gurungrahul2 - @icbat - @samme - @telinc1 - anandu pavanan - blackhawx - candelibas - Diego Romero - doronlinder - Elliott Wallace - eric - Georges Gabereau - Haobo Zhang - henriacle - jak6jak - Jake Jensen - James Van Roose - JamesSkemp - joelahoover - Joey - madclaws - marc136 - Mihail Ilinov - naum303 - NicolasRoehm - nuane - rejacobson - Robert Kowalski - rodri042 - rootasjey - sawamara - scottwestover - sir13tommy - stetso - therealsamf - Tigran - willblackmore - zenwaichi
 
 ## Version 3.15.1 - Batou - 16th October 2018
 
