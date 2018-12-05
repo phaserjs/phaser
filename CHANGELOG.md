@@ -11,13 +11,42 @@
 * If the `setScore` or `getPlayerScore` calls fail, it will return `null` as the score instance, instead of causing a run-time error.
 * You can now pass an object or a string to `setScore` and objects will be automatically stringified.
 
-### Input - New Features, Updates and Fixes
+### Keyboard Input - New Features, Updates and Fixes
 
-* The Keyboard Plugin will now call `preventDefault` on all non-modified alphanumeric key presses by default, stopping the keyboard event from hitting the browser. Previously, you had to create `Key` objects to enable this. You can control this at runtime by toggling the `KeyboardPlugin.preventDefault` boolean, or the `keyboard.capture` config setting.
-* There is a new Game and Scene Config setting `input.keyboard.capture` which is an array of KeyCodes that the Keyboard Plugin will capture all non-modified key events on. By default it is populated with the space key, cursors, 0 - 9 and A - Z. You can also set this in a Scene Config, in which case it will override the Game Config value.
-* If you have multiple parallel Scenes, each trying to get keyboard input, be sure to disable capture on them to stop them from stealing input from another Scene in the list. You can do this with `this.input.keyboard.enabled = false` within the Scene to stop all input, or `this.input.keyboard.preventDefault = false` to stop a Scene halting input on another Scene.
-* The Keyboard Plugin has a new property called `captures` which is an array of keycodes, as populated by the Game Config. Any key code in the array will have `preventDefault` called on it if pressed. Modify this by changing the game config, or altering the array contents at run-time.
-* The Key object has a new boolean `metaKey` which indicates if the Meta Key was held down when the Key was pressed. On a Mac the Meta Key is Command. On a Windows keyboard, it's the Windows key.
+The specificity of the Keyboard events has been changed to allow you more control over event handling. Previously, the Keyboard Plugin would emit the global `keydown_CODE` event first (where CODE was a keycode string, like `keydown_A`), then it would emit the global `keydown` event. In previous versions, `Key` objects, created via `this.input.keyboard.addKey()`, didn't emit events.
+
+The `Key` class now extends EventEmitter and emits two new events directly: `down` and `up`. This means you can listen for an event from a Key you've created, i.e.: `yourKey.on('up', handler)`.
+
+The order has also now changed. If it exists, the Key object will dispatch its `down` event first. Then the Keyboard Plugin will dispatch `keydown_CODE` and finally the less specific of them all, `keydown` will be dispatched.
+
+You also now have the ability to cancel this at any stage. All events handlers are sent an event object which you can call `event.stopPropagation()` on. This will immediately stop any further listeners from being invoked. Therefore, if you call `stopPropagation()` after `Key.on`, then the Keyboard Plugin will not emit either the `keydown_CODE` or `keydown` global events. You can also call `stopPropagation()` during the `keydown_CODE` handler, to stop it getting to the global `keydown` event. As `keydown` is last, calling it has no effect there. This also works for `keyup` events.
+
+* There is a new class called `KeyboardManager`. This class is created by the global Input Manager, if keyboard access has been enabled in the Game config. It's responsible for handling all browser keyboard events. Previously, the `KeyboardPlugin` did this. Which meant that every Scene that had its own Keyboard Plugin was binding more native keyboard events. This was causing problems with parallel Scenes when needing to capture keys. the `KeyboardPlugin` class still exists, and is still the main point of interface when you call `this.input.keyboard` in a Scene, but DOM event handling responsibility has been taken away from it. This means there's no only 
+one set of bindings ever created, which makes things a lot cleaner.
+* There is a new Game and Scene Config setting `input.keyboard.capture` which is an array of KeyCodes that the Keyboard Plugin will capture all non-modified key events on. By default it is empty. You can populate it in the config, or use the new capture methods.
+* The Keyboard Manager will now call `preventDefault` only on non-modified key presses, stopping the keyboard event from hitting the browser. Previously, capturing the R key, for example, would block a CTRL+R page reload, but it now ignores it because of the key modifier.
+* `Key.emitOnRepeat` is a new boolean property that controls if the Key will continuously emit a `down` event while being held down (true), or emit the event just once, on first press, and then skip future events (false).
+* `Key.setEmitOnRepeat` is a new chainable method for setting the `emitOnRepeat` property.
+* The keyboard event flow has changed.
+* The `Key` class now extends EventEmitter and emits two events directly: `down` and `up`. This means you can listen for an event from a Key you've created, i.e.: `yourKey.on('up', handler)`.
+* `Key.onDown` is a new method that handles the Key being pressed down, including down repeats.
+* `Key.onUp` is a new method that handles the Key being released.
+* `Key.destroy` is a new method that handles Key instance destruction. It is called automatically in `KeyboardPlugin.destroy`.
+* The `Key.preventDefault` property has been removed. This is now handled by the global keyboard capture methods.
+* `Key.metaKey` is a new boolean property which indicates if the Meta Key was held down when the Key was pressed. On a Mac the Meta Key is Command. On a Windows keyboard, it's the Windows key.
+* `InputManager.keyboard` is a new property that instantiates the global Keyboard Manager, if enabled in the game config.
+* The `KeyboardPlugin.addKey` method has a new boolean property `enableCapture` which automatically prevents default on the Key being created.
+* The `KeyboardPlugin.addKeys` method has a new boolean property `enableCapture` which automatically prevents default on Keys being created.
+* `Phaser.Input.Keyboard.ProcessKeyDown` has been removed as it's no longer required, `Key.onDown` handles it instead.
+* `Phaser.Input.Keyboard.ProcessKeyUp` has been removed as it's no longer required, `Key.onUp` handles it instead.
+* The Keyboard Manager has a property called `captures` which is an array of keycodes, as populated by the Game Config. Any key code in the array will have `preventDefault` called on it if pressed.
+* `KeyboardPlugin.manager` is a new property that references the Keyboard Manager and is used internally.
+* `KeyboardPlugin.target` has been removed as it's no longer used by the class.
+* `KeyboardPlugin.queue` has been removed as it's no longer used by the class.
+* `KeyboardPlugin.onKeyHandler` has been removed as it's no longer used by the class.
+
+### Mouse and Touch Input - New Features, Updates and Fixes
+
 * The Mouse Manager class has been updated to remove some commented out code and refine the `startListeners` method.
 * The following Key Codes have been added, which include some missing alphabet letters in Persian and Arabic: `SEMICOLON_FIREFOX`, `COLON`, `COMMA_FIREFOX_WINDOWS`, `COMMA_FIREFOX`, `BRACKET_RIGHT_FIREFOX` and `BRACKET_LEFT_FIREFOX` (thanks @wmateam)
 * When enabling a Game Object for input it will now use the `width` and `height` properties of the Game Object first, falling back to the frame size if not found. This stops a bug when enabling BitmapText objects for input and it using the font texture as the hit area size, rather than the text itself.
