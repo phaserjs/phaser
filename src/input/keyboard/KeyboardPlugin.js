@@ -12,8 +12,6 @@ var Key = require('./keys/Key');
 var KeyCodes = require('./keys/KeyCodes');
 var KeyCombo = require('./combo/KeyCombo');
 var KeyMap = require('./keys/KeyMap');
-var ProcessKeyDown = require('./keys/ProcessKeyDown');
-var ProcessKeyUp = require('./keys/ProcessKeyUp');
 var SnapFloor = require('../../math/snap/SnapFloor');
 
 /**
@@ -99,7 +97,16 @@ var KeyboardPlugin = new Class({
         this.sceneInputPlugin = sceneInputPlugin;
 
         /**
-         * A boolean that controls if the Keyboard Plugin is enabled or not.
+         * A reference to the global Keyboard Manager.
+         *
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#manager
+         * @type {Phaser.Input.InputPlugin}
+         * @since 3.16.0
+         */
+        this.manager = sceneInputPlugin.manager.keyboard;
+
+        /**
+         * A boolean that controls if this Keyboard Plugin is enabled or not.
          * Can be toggled on the fly.
          *
          * @name Phaser.Input.Keyboard.KeyboardPlugin#enabled
@@ -108,16 +115,6 @@ var KeyboardPlugin = new Class({
          * @since 3.10.0
          */
         this.enabled = true;
-
-        /**
-         * The Keyboard Event target, as defined in the Scene or Game Config.
-         * Typically the browser window, but can be any interactive DOM element.
-         *
-         * @name Phaser.Input.Keyboard.KeyboardPlugin#target
-         * @type {any}
-         * @since 3.10.0
-         */
-        this.target;
 
         /**
          * An array of Key objects to process.
@@ -138,26 +135,6 @@ var KeyboardPlugin = new Class({
         this.combos = [];
 
         /**
-         * An internal event queue.
-         *
-         * @name Phaser.Input.Keyboard.KeyboardPlugin#queue
-         * @type {KeyboardEvent[]}
-         * @private
-         * @since 3.10.0
-         */
-        this.queue = [];
-
-        /**
-         * Internal event handler.
-         *
-         * @name Phaser.Input.Keyboard.KeyboardPlugin#onKeyHandler
-         * @type {function}
-         * @private
-         * @since 3.10.0
-         */
-        this.onKeyHandler;
-
-        /**
          * Internal time value.
          *
          * @name Phaser.Input.Keyboard.KeyboardPlugin#time
@@ -166,54 +143,6 @@ var KeyboardPlugin = new Class({
          * @since 3.11.0
          */
         this.time = 0;
-
-        /**
-         * A flag that controls if the non-modified keys, matching those stored in the `captures` array,
-         * have `preventDefault` called on them or not. By default this is `true`.
-         * 
-         * A non-modified key is one that doesn't have a modifier key held down with it. The modifier keys are
-         * shift, control, alt and the meta key (Command on a Mac, the Windows Key on Windows).
-         * Therefore, if the user presses shift + r, it won't prevent this combination, because of the modifier.
-         * However, if the user presses just the r key on its own, it will have its event prevented.
-         * 
-         * You can set this flag to stop any capture key from triggering the default browser action, or if you need
-         * more specific control, you can create Key objects and set the flag on each of those instead.
-         * 
-         * This flag can be set in the Game Config by setting the `input.keyboard.capture` to a `false` boolean, or you
-         * can set it in the Scene Config, in which case the Scene Config setting overrides the Game Config one.
-         *
-         * @name Phaser.Input.Keyboard.KeyboardPlugin#preventDefault
-         * @type {boolean}
-         * @since 3.16.0
-         */
-        this.preventDefault = true;
-
-        /**
-         * An array of Key Code values that will automatically have `preventDefault` called on them,
-         * as long as the `KeyboardPlugin.preventDefault` boolean is set to `true`.
-         * 
-         * By default the array contains: The Space Key, the Cursor Keys, 0 to 9 and A to Z.
-         * 
-         * The key must be non-modified when pressed in order to be captured.
-         * 
-         * A non-modified key is one that doesn't have a modifier key held down with it. The modifier keys are
-         * shift, control, alt and the meta key (Command on a Mac, the Windows Key on Windows).
-         * Therefore, if the user presses shift + r, it won't prevent this combination, because of the modifier.
-         * However, if the user presses just the r key on its own, it will have its event prevented.
-         * 
-         * If you wish to stop capturing the keys, for example switching out to a DOM based element, then
-         * you can toggle the `KeyboardPlugin.preventDefault` boolean at run-time.
-         * 
-         * If you need more specific control, you can create Key objects and set the flag on each of those instead.
-         * 
-         * This array can be populated via the Game Config by setting the `input.keyboard.capture` array, or you
-         * can set it in the Scene Config, in which case the Scene Config array overrides the Game Config one.
-         *
-         * @name Phaser.Input.Keyboard.KeyboardPlugin#captures
-         * @type {integer[]}
-         * @since 3.16.0
-         */
-        this.captures = [];
 
         sceneInputPlugin.pluginEvents.once('boot', this.boot, this);
         sceneInputPlugin.pluginEvents.on('start', this.start, this);
@@ -230,12 +159,15 @@ var KeyboardPlugin = new Class({
     boot: function ()
     {
         var settings = this.settings.input;
-        var config = this.scene.sys.game.config;
 
-        this.enabled = GetValue(settings, 'keyboard', config.inputKeyboard);
-        this.target = GetValue(settings, 'keyboard.target', config.inputKeyboardEventTarget);
-        this.captures = GetValue(settings, 'keyboard.capture', config.inputKeyboardCapture);
-        this.preventDefault = this.captures.length > 0;
+        this.enabled = GetValue(settings, 'keyboard', true);
+
+        var captures = GetValue(settings, 'keyboard.capture', null);
+
+        if (captures)
+        {
+            this.addCaptures(captures);
+        }
 
         this.sceneInputPlugin.pluginEvents.once('destroy', this.destroy, this);
     },
@@ -251,10 +183,7 @@ var KeyboardPlugin = new Class({
      */
     start: function ()
     {
-        if (this.enabled)
-        {
-            this.startListeners();
-        }
+        this.startListeners();
 
         this.sceneInputPlugin.pluginEvents.once('shutdown', this.shutdown, this);
     },
@@ -282,34 +211,6 @@ var KeyboardPlugin = new Class({
      */
     startListeners: function ()
     {
-        var _this = this;
-
-        var handler = function (event)
-        {
-            if (event.defaultPrevented || !_this.isActive())
-            {
-                // Do nothing if event already handled
-                return;
-            }
-
-            _this.queue.push(event);
-
-            var key = _this.keys[event.keyCode];
-
-            var modified = (event.altKey || event.ctrlKey || event.shiftKey || event.metaKey);
-
-            if ((_this.preventDefault && !modified && _this.captures.indexOf(event.keyCode) > -1) || (key && key.preventDefault))
-            {
-                event.preventDefault();
-            }
-        };
-
-        this.onKeyHandler = handler;
-
-        this.target.addEventListener('keydown', handler, false);
-        this.target.addEventListener('keyup', handler, false);
-
-        //  Finally, listen for an update event from the Input Plugin
         this.sceneInputPlugin.pluginEvents.on('update', this.update, this);
     },
 
@@ -323,10 +224,157 @@ var KeyboardPlugin = new Class({
      */
     stopListeners: function ()
     {
-        this.target.removeEventListener('keydown', this.onKeyHandler);
-        this.target.removeEventListener('keyup', this.onKeyHandler);
-
         this.sceneInputPlugin.pluginEvents.off('update', this.update);
+    },
+
+    /**
+     * By default when a key is pressed Phaser will not stop the event from propagating up to the browser.
+     * There are some keys this can be annoying for, like the arrow keys or space bar, which make the browser window scroll.
+     *
+     * This `addCapture` method enables consuming keyboard events for specific keys, so they don't bubble up the browser
+     * and cause the default behaviors.
+     * 
+     * Please note that keyboard captures are global. This means that if you call this method from within a Scene, to say prevent
+     * the SPACE BAR from triggering a page scroll, then it will prevent it for any Scene in your game, not just the calling one.
+     * 
+     * You can pass a single key code value:
+     * 
+     * ```javascript
+     * this.input.keyboard.addCapture(62);
+     * ```
+     * 
+     * An array of key codes:
+     * 
+     * ```javascript
+     * this.input.keyboard.addCapture([ 62, 63, 64 ]);
+     * ```
+     * 
+     * Or, a comma-delimited string:
+     * 
+     * ```javascript
+     * this.input.keyboard.addCapture('W,S,A,D');
+     * ```
+     * 
+     * To use non-alpha numeric keys, use a string, such as 'UP', 'SPACE' or 'LEFT'.
+     * 
+     * You can also provide an array mixing both strings and key code integers.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#addCapture
+     * @since 3.16.0
+     * 
+     * @param {(string|integer|integer[]|any[])} keycode - The Key Codes to enable event capture for.
+     *
+     * @return {Phaser.Input.Keyboard.KeyboardPlugin} This KeyboardPlugin object.
+     */
+    addCapture: function (keycode)
+    {
+        this.manager.addCapture(keycode);
+
+        return this;
+    },
+
+    /**
+     * Removes an existing key capture.
+     * 
+     * Please note that keyboard captures are global. This means that if you call this method from within a Scene, to remove
+     * the capture of a key, then it will remove it for any Scene in your game, not just the calling one.
+     * 
+     * You can pass a single key code value:
+     * 
+     * ```javascript
+     * this.input.keyboard.removeCapture(62);
+     * ```
+     * 
+     * An array of key codes:
+     * 
+     * ```javascript
+     * this.input.keyboard.removeCapture([ 62, 63, 64 ]);
+     * ```
+     * 
+     * Or, a comma-delimited string:
+     * 
+     * ```javascript
+     * this.input.keyboard.removeCapture('W,S,A,D');
+     * ```
+     * 
+     * To use non-alpha numeric keys, use a string, such as 'UP', 'SPACE' or 'LEFT'.
+     * 
+     * You can also provide an array mixing both strings and key code integers.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#removeCapture
+     * @since 3.16.0
+     * 
+     * @param {(string|integer|integer[]|any[])} keycode - The Key Codes to disable event capture for.
+     *
+     * @return {Phaser.Input.Keyboard.KeyboardPlugin} This KeyboardPlugin object.
+     */
+    removeCapture: function (keycode)
+    {
+        this.manager.removeCapture(keycode);
+
+        return this;
+    },
+
+    /**
+     * Returns an array that contains all of the keyboard captures currently enabled.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#getCaptures
+     * @since 3.16.0
+     * 
+     * @return {integer[]} An array of all the currently capturing key codes.
+     */
+    getCaptures: function ()
+    {
+        return this.manager.captures;
+    },
+
+    /**
+     * Allows Phaser to prevent any key captures you may have defined from bubbling up the browser.
+     * You can use this to re-enable event capturing if you had paused it via `disableGlobalCapture`.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#enableGlobalCapture
+     * @since 3.16.0
+     *
+     * @return {Phaser.Input.Keyboard.KeyboardPlugin} This KeyboardPlugin object.
+     */
+    enableGlobalCapture: function ()
+    {
+        this.manager.preventDefault = true;
+
+        return this;
+    },
+
+    /**
+     * Disables Phaser from preventing any key captures you may have defined, without actually removing them.
+     * You can use this to temporarily disable event capturing if, for example, you swap to a DOM element.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#disableGlobalCapture
+     * @since 3.16.0
+     *
+     * @return {Phaser.Input.Keyboard.KeyboardPlugin} This KeyboardPlugin object.
+     */
+    disableGlobalCapture: function ()
+    {
+        this.manager.preventDefault = false;
+
+        return this;
+    },
+
+    /**
+     * Removes all keyboard captures.
+     * 
+     * Note that this is a global change. It will clear all event captures across your game, not just for this specific Scene.
+     *
+     * @method Phaser.Input.Keyboard.KeyboardPlugin#clearCaptures
+     * @since 3.16.0
+     *
+     * @return {Phaser.Input.Keyboard.KeyboardPlugin} This KeyboardPlugin object.
+     */
+    clearCaptures: function ()
+    {
+        this.manager.clearCaptures();
+
+        return this;
     },
 
     /**
@@ -386,11 +434,14 @@ var KeyboardPlugin = new Class({
      * @since 3.10.0
      *
      * @param {(object|string)} keys - An object containing Key Codes, or a comma-separated string.
+     * @param {boolean} [enableCapture=true] - Automatically call `preventDefault` on the native DOM browser event for the key codes being added.
      *
      * @return {object} An object containing Key objects mapped to the input properties.
      */
-    addKeys: function (keys)
+    addKeys: function (keys, enableCapture)
     {
+        if (enableCapture === undefined) { enableCapture = true; }
+
         var output = {};
 
         if (typeof keys === 'string')
@@ -429,11 +480,14 @@ var KeyboardPlugin = new Class({
      * @since 3.10.0
      *
      * @param {(Phaser.Input.Keyboard.Key|string|integer)} key - Either a Key object, a string, such as `A` or `SPACE`, or a key code value.
+     * @param {boolean} [enableCapture=true] - Automatically call `preventDefault` on the native DOM browser event for the key codes being added.
      *
      * @return {Phaser.Input.Keyboard.Key} The newly created Key object, or a reference to it if it already existed in the keys array.
      */
-    addKey: function (key)
+    addKey: function (key, enableCapture)
     {
+        if (enableCapture === undefined) { enableCapture = true; }
+
         var keys = this.keys;
 
         if (key instanceof Key)
@@ -449,6 +503,11 @@ var KeyboardPlugin = new Class({
                 keys[key.keyCode] = key;
             }
 
+            if (enableCapture)
+            {
+                this.addCapture(key.keyCode);
+            }
+
             return key;
         }
 
@@ -460,6 +519,11 @@ var KeyboardPlugin = new Class({
         if (!keys[key])
         {
             keys[key] = new Key(key);
+
+            if (enableCapture)
+            {
+                this.addCapture(key);
+            }
         }
 
         return keys[key];
@@ -474,6 +538,8 @@ var KeyboardPlugin = new Class({
      * @since 3.10.0
      *
      * @param {(Phaser.Input.Keyboard.Key|string|integer)} key - Either a Key object, a string, such as `A` or `SPACE`, or a key code value.
+     *
+     * @return {Phaser.Input.Keyboard.KeyboardPlugin} This KeyboardPlugin object.
      */
     removeKey: function (key)
     {
@@ -497,6 +563,8 @@ var KeyboardPlugin = new Class({
         {
             keys[key] = undefined;
         }
+
+        return this;
     },
 
     /**
@@ -589,16 +657,13 @@ var KeyboardPlugin = new Class({
     {
         this.time = time;
 
-        var len = this.queue.length;
+        var queue = this.manager.queue;
+        var len = queue.length;
 
-        if (!this.enabled || len === 0)
+        if (!this.isActive() || len === 0)
         {
             return;
         }
-
-        //  Clears the queue array, and also means we don't work on array data that could potentially
-        //  be modified during the processing phase
-        var queue = this.queue.splice(0, len);
 
         var keys = this.keys;
 
@@ -607,32 +672,55 @@ var KeyboardPlugin = new Class({
         {
             var event = queue[i];
             var code = event.keyCode;
+            var key = keys[code];
+            var repeat = false;
+
+            //  Override the default function (it's too late for the browser to use it anyway, so we may as well)
+            event.stopPropagation = function ()
+            {
+                event.cancelled = true;
+            };
 
             if (event.type === 'keydown')
             {
-                if (KeyMap[code] && (keys[code] === undefined || keys[code].isDown === false))
+                //  Key specific callback first
+                if (key)
                 {
-                    //  Will emit a keyboard or keyup event
-                    this.emit(event.type, event);
+                    repeat = key.isDown;
 
-                    this.emit('keydown_' + KeyMap[code], event);
+                    key.onDown(event);
                 }
 
-                if (keys[code])
+                if (!event.cancelled && KeyMap[code] && (!key || !repeat))
                 {
-                    ProcessKeyDown(keys[code], event);
+                    //  keydown_code event
+                    this.emit('keydown_' + KeyMap[code], event);
+
+                    if (!event.cancelled)
+                    {
+                        //  keydown event
+                        this.emit(event.type, event);
+                    }
                 }
             }
             else
             {
-                //  Will emit a keyboard or keyup event
-                this.emit(event.type, event);
-
-                this.emit('keyup_' + KeyMap[code], event);
-
-                if (keys[code])
+                //  Key specific callback first
+                if (key)
                 {
-                    ProcessKeyUp(keys[code], event);
+                    key.onUp(event);
+                }
+
+                if (!event.cancelled && KeyMap[code])
+                {
+                    //  keyup_code event
+                    this.emit('keyup_' + KeyMap[code], event);
+
+                    if (!event.cancelled)
+                    {
+                        //  keyup event
+                        this.emit(event.type, event);
+                    }
                 }
             }
         }
@@ -648,6 +736,8 @@ var KeyboardPlugin = new Class({
      *
      * @method Phaser.Input.Keyboard.KeyboardPlugin#resetKeys
      * @since 3.15.0
+     *
+     * @return {Phaser.Input.Keyboard.KeyboardPlugin} This KeyboardPlugin object.
      */
     resetKeys: function ()
     {
@@ -698,6 +788,17 @@ var KeyboardPlugin = new Class({
     {
         this.shutdown();
 
+        var keys = this.keys;
+
+        for (var i = 0; i < keys.length; i++)
+        {
+            //  Because it's a sparsely populated array
+            if (keys[i])
+            {
+                keys[i].destroy();
+            }
+        }
+
         this.keys = [];
         this.combos = [];
         this.queue = [];
@@ -705,7 +806,7 @@ var KeyboardPlugin = new Class({
         this.scene = null;
         this.settings = null;
         this.sceneInputPlugin = null;
-        this.target = null;
+        this.manager = null;
     }
 
 });
