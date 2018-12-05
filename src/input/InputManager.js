@@ -7,6 +7,7 @@
 var Class = require('../utils/Class');
 var CONST = require('./const');
 var EventEmitter = require('eventemitter3');
+var Keyboard = require('./mouse/KeyboardManager');
 var Mouse = require('./mouse/MouseManager');
 var Pointer = require('./Pointer');
 var Rectangle = require('../geom/rectangle/Rectangle');
@@ -195,6 +196,15 @@ var InputManager = new Class({
          * @since 3.10.0
          */
         this.defaultCursor = '';
+
+        /**
+         * A reference to the Keyboard Manager class, if enabled via the `input.keyboard` Game Config property.
+         *
+         * @name Phaser.Input.InputManager#keyboard
+         * @type {?Phaser.Input.Keyboard.KeyboardManager}
+         * @since 3.16.0
+         */
+        this.keyboard = (config.inputKeyboard) ? new Keyboard(this) : null;
 
         /**
          * A reference to the Mouse Manager class, if enabled via the `input.mouse` Game Config property.
@@ -1506,6 +1516,11 @@ var InputManager = new Class({
     destroy: function ()
     {
         this.events.removeAllListeners();
+
+        if (this.keyboard)
+        {
+            this.keyboard.destroy();
+        }
 
         if (this.mouse)
         {

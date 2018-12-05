@@ -577,7 +577,7 @@ var KeyboardPlugin = new Class({
     },
 
     /**
-     * Internal update handler called by the Input Manager, which is in turn invoked by the Game step.
+     * Internal update handler called by the Input Plugin, which is in turn invoked by the Game step.
      *
      * @method Phaser.Input.Keyboard.KeyboardPlugin#update
      * @private

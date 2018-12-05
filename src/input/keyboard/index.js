@@ -10,6 +10,7 @@
 
 module.exports = {
 
+    KeyboardManager: require('./KeyboardManager'),
     KeyboardPlugin: require('./KeyboardPlugin'),
 
     Key: require('./keys/Key'),
