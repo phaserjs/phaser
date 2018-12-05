@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../../utils/Class');
+var EventEmitter = require('eventemitter3');
 
 /**
  * @classdesc
@@ -12,6 +13,7 @@ var Class = require('../../../utils/Class');
  * keycode must be an integer
  *
  * @class Key
+ * @extends Phaser.Events.EventEmitter
  * @memberof Phaser.Input.Keyboard
  * @constructor
  * @since 3.0.0
@@ -20,10 +22,14 @@ var Class = require('../../../utils/Class');
  */
 var Key = new Class({
 
+    Extends: EventEmitter,
+
     initialize:
 
     function Key (keyCode)
     {
+        EventEmitter.call(this);
+
         /**
          * The keycode of this key.
          *
@@ -41,16 +47,6 @@ var Key = new Class({
          * @since 3.0.0
          */
         this.originalEvent = undefined;
-
-        /**
-         * Should this Key prevent event propagation?
-         *
-         * @name Phaser.Input.Keyboard.Key#preventDefault
-         * @type {boolean}
-         * @default true
-         * @since 3.0.0
-         */
-        this.preventDefault = true;
 
         /**
          * Can this Key be processed?
@@ -164,6 +160,19 @@ var Key = new Class({
         this.timeUp = 0;
 
         /**
+         * When a key is held down should it continuously fire the `down` event each time it repeats?
+         * 
+         * By default it will emit the `down` event just once, but if you wish to receive the event
+         * for each repeat as well, enable this property.
+         *
+         * @name Phaser.Input.Keyboard.Key#emitOnRepeat
+         * @type {boolean}
+         * @default false
+         * @since 3.16.0
+         */
+        this.emitOnRepeat = false;
+
+        /**
          * If a key is held down this holds down the number of times the key has 'repeated'.
          *
          * @name Phaser.Input.Keyboard.Key#repeats
@@ -207,9 +216,101 @@ var Key = new Class({
     },
 
     /**
+     * Controls if this Key will continuously emit a `down` event while being held down (true),
+     * or emit the event just once, on first press, and then skip future events (false).
+     *
+     * @method Phaser.Input.Keyboard.Key#setEmitOnRepeat
+     * @since 3.16.0
+     * 
+     * @param {boolean} value - Emit `down` events on repeated key down actions, or just once?
+     * 
+     * @return {Phaser.Input.Keyboard.Key} This Key instance.
+     */
+    setEmitOnRepeat: function (value)
+    {
+        this.emitOnRepeat = value;
+
+        return this;
+    },
+
+    /**
+     * Processes the Key Down action for this Key.
+     * Called automatically by the Keyboard Plugin.
+     *
+     * @method Phaser.Input.Keyboard.Key#onDown
+     * @since 3.16.0
+     * 
+     * @param {KeyboardEvent} event - The native DOM Keyboard event.
+     */
+    onDown: function (event)
+    {
+        this.originalEvent = event;
+
+        if (!this.enabled)
+        {
+            return;
+        }
+
+        this.altKey = event.altKey;
+        this.ctrlKey = event.ctrlKey;
+        this.shiftKey = event.shiftKey;
+        this.metaKey = event.metaKey;
+        this.location = event.location;
+    
+        this.repeats++;
+
+        if (!this.isDown)
+        {
+            this.isDown = true;
+            this.isUp = false;
+            this.timeDown = event.timeStamp;
+            this.duration = 0;
+            this._justDown = true;
+            this._justUp = false;
+
+            this.emit('down', this, event);
+        }
+        else if (this.emitOnRepeat)
+        {
+            this.emit('down', this, event);
+        }
+    },
+
+    /**
+     * Processes the Key Up action for this Key.
+     * Called automatically by the Keyboard Plugin.
+     *
+     * @method Phaser.Input.Keyboard.Key#onUp
+     * @since 3.16.0
+     * 
+     * @param {KeyboardEvent} event - The native DOM Keyboard event.
+     */
+    onUp: function (event)
+    {
+        this.originalEvent = event;
+
+        if (!this.enabled)
+        {
+            return;
+        }
+    
+        this.isDown = false;
+        this.isUp = true;
+        this.timeUp = event.timeStamp;
+        this.duration = this.timeUp - this.timeDown;
+        this.repeats = 0;
+    
+        this._justDown = false;
+        this._justUp = true;
+        this._tick = -1;
+        
+        this.emit('up', this, event);
+    },
+
+    /**
      * Resets this Key object back to its default un-pressed state.
      *
-     * @method Phaser.Input.Keyboard.Key.reset
+     * @method Phaser.Input.Keyboard.Key#reset
      * @since 3.6.0
      * 
      * @return {Phaser.Input.Keyboard.Key} This Key instance.
@@ -233,6 +334,19 @@ var Key = new Class({
         this._tick = -1;
 
         return this;
+    },
+
+    /**
+     * Removes any bound event handlers and removes local references.
+     *
+     * @method Phaser.Input.Keyboard.Key#destroy
+     * @since 3.16.0
+     */
+    destroy: function ()
+    {
+        this.removeAllListeners();
+
+        this.originalEvent = null;
     }
 
 });
