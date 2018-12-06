@@ -14,6 +14,8 @@ var Class = require('../../utils/Class');
  * 
  * You can also listen for a specific animation by appending a hyphen and its key to the event name. For example,
  * if you have an animation called `explode`, you can listen for `sprite.on('animationstart-explode', listener)`.
+ * 
+ * You can also listen for the `start` event from the Animation itself: `animation.on('start', listener)`.
  *
  * @event Phaser.GameObjects.Components.Animation#onStartEvent
  * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
@@ -28,6 +30,8 @@ var Class = require('../../utils/Class');
  * 
  * You can also listen for a specific animation by appending a hyphen and its key to the event name. For example,
  * if you have an animation called `explode`, you can listen for `sprite.on('animationrestart-explode', listener)`.
+ * 
+ * You can also listen for the `restart` event from the Animation itself: `animation.on('restart', listener)`.
  *
  * @event Phaser.GameObjects.Components.Animation#onRestartEvent
  * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
@@ -42,6 +46,8 @@ var Class = require('../../utils/Class');
  * 
  * You can also listen for a specific animation by appending a hyphen and its key to the event name. For example,
  * if you have an animation called `explode`, you can listen for `sprite.on('animationrepeat-explode', listener)`.
+ * 
+ * You can also listen for the `repeat` event from the Animation itself: `animation.on('repeat', listener)`.
  *
  * @event Phaser.GameObjects.Components.Animation#onRepeatEvent
  * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
@@ -72,6 +78,8 @@ var Class = require('../../utils/Class');
  * 
  * You can also listen for a specific animation by appending a hyphen and its key to the event name. For example,
  * if you have an animation called `explode`, you can listen for `sprite.on('animationcomplete-explode', listener)`.
+ * 
+ * You can also listen for the `complete` event from the Animation itself: `animation.on('complete', listener)`.
  *
  * @event Phaser.GameObjects.Components.Animation#onCompleteEvent
  * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
