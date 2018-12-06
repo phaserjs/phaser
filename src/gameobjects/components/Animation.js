@@ -376,9 +376,12 @@ var Animation = new Class({
     /**
      * Sets an animation to be played immediately after the current one completes.
      * 
-     * The current animation must enter a 'completed' state for this to happen, i.e. finish all of its repeats, delays, etc.
+     * The current animation must enter a 'completed' state for this to happen, i.e. finish all of its repeats, delays, etc, or have the `stop` method called directly on it.
      * 
      * An animation set to repeat forever will never enter a completed state.
+     * 
+     * You can chain a new animation at any point, including before the current one starts playing, during it, or when it ends (via its `animationcomplete` callback).
+     * Chained animations are specific to a Game Object, meaning different Game Objects can have different chained animations without impacting the global animation they're playing.
      * 
      * Call this method with no arguments to reset the chained animation.
      *
