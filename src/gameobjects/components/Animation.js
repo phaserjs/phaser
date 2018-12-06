@@ -46,8 +46,6 @@ var Class = require('../../utils/Class');
  * 
  * You can also listen for a specific animation by appending a hyphen and its key to the event name. For example,
  * if you have an animation called `explode`, you can listen for `sprite.on('animationrepeat-explode', listener)`.
- * 
- * You can also listen for the `repeat` event from the Animation itself: `animation.on('repeat', listener)`.
  *
  * @event Phaser.GameObjects.Components.Animation#onRepeatEvent
  * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
@@ -902,7 +900,7 @@ var Animation = new Class({
         var anim = this.currentAnim;
         var frame = this.currentFrame;
 
-        anim.on('complete', anim, frame);
+        anim.emit('complete', anim, frame);
 
         gameObject.emit('animationcomplete-' + anim.key, anim, frame, gameObject);
 
