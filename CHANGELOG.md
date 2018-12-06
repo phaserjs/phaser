@@ -137,6 +137,14 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `Camera.centerOnX` will move the camera horizontally to be centered on the given coordinate, without changing its vertical placement.
 * `Camera.centerOnY` will move the camera vertically to be centered on the given coordinate, without changing its horizontally placement.
 * `AnimationManager.exists` is a new method that will check to see if an Animation using the given key already exists or not and returns a boolean.
+* `animationstart-key` is a new Animation key specific event emitted by a Game Object. For example, if you had an animation with a key of 'explode' you can now listen for `animationstart-explode`.
+* `animationrestart-key` is a new Animation key specific event emitted by a Game Object. For example, if you had an animation with a key of 'explode' you can now listen for `animationrestart-explode`.
+* `animationcomplete-key` is a new Animation key specific event emitted by a Game Object. For example, if you had an animation with a key of 'explode' you can now listen for `animationcomplete-explode`.
+* `animationupdate-key` is a new Animation key specific event emitted by a Game Object. For example, if you had an animation with a key of 'explode' you can now listen for `animationupdate-explode`.
+* The Animation class now extends the Event Emitter and dispatches events itself. This allows you to listen for events from a specific Animation, rather than via a Game Object. This is handy, for example, if you had an explosion animation that you wanted to trigger a sound effect when it started. You can now listen for the events from the Animation object directly.
+* The Animation class now emits the `start` event when played (either forward, or in reverse) by any Game Object.
+* The Animation class now emits the `restart` event when it restarts playing on any Game Object.
+* The Animation class now emits the `complete` event when it finishes playing on any Game Object.
 
 ### Updates
 
@@ -160,9 +168,11 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `Graphics.fill` is a new alias for the `fillPath` method, to keep the calls consistent with the Canvas Rendering Context API.
 * `LoaderPlugin.sceneManager` is a new property that is a reference to the global Scene Manager, useful for Plugins.
 * Whenever `Camera.roundPixels` was enabled it would use a bitwise operation to truncate the float (`x |= 0`) - this has been replaced across all files that used it, with a call to `Math.round` instead. This gives far better results when zooming cameras both in and out of a Scene, stopping thin gaps appearing between closely packed Game Objects.
-* `AnimationManager.create` will now return a boolean `false` is the given key is invalid (i.e. undefined or falsey).
+* `AnimationManager.create` will now return a boolean `false` if the given key is invalid (i.e. undefined or falsey).
 * `AnimationManager.create` will no longer raise a console warning if the animation key is already in use. Instead, it will return the animation belonging to that key. A brand new animation will only be created if the key isn't already in use. When this happens, the `add` event is emitted by the Animation Manager. If no event is emitted, the animation already existed.
 * `ArcadePhysics.Body.destroy` will now only add itself to the World `pendingDestroy` list if the world property exists. This prevents `Cannot read property 'pendingDestroy' of undefined` errors if you try to delete a physics body in a callback and then immediately change Scene (which tells the physics work to also delete all bodies)
+* The Animation Component `restart` method has had is sole `key` argument removed. Previously, you had to pass in the key of the animation you wished to reverse, but now you can just call the method directly, and as long as there is an animation playing, it will automatically start playing in reverse, without the nee for a key (the way it should have been originally)
+* `Animation.play` and `playReverse` will now accept either a string-based key of the animation to play (like before), or you can pass in an Animation instance, and it will play that animation.
 
 ### Bug Fixes
 
