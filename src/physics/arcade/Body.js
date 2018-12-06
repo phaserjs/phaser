@@ -1397,7 +1397,10 @@ var Body = new Class({
     {
         this.enable = false;
 
-        this.world.pendingDestroy.set(this);
+        if (this.world)
+        {
+            this.world.pendingDestroy.set(this);
+        }
     },
 
     /**
