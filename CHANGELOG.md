@@ -136,6 +136,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `Camera.getBounds` is a new method that will return a rectangle containing the bounds of the camera.
 * `Camera.centerOnX` will move the camera horizontally to be centered on the given coordinate, without changing its vertical placement.
 * `Camera.centerOnY` will move the camera vertically to be centered on the given coordinate, without changing its horizontally placement.
+* `AnimationManager.exists` is a new method that will check to see if an Animation using the given key already exists or not and returns a boolean.
 
 ### Updates
 
@@ -159,6 +160,9 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `Graphics.fill` is a new alias for the `fillPath` method, to keep the calls consistent with the Canvas Rendering Context API.
 * `LoaderPlugin.sceneManager` is a new property that is a reference to the global Scene Manager, useful for Plugins.
 * Whenever `Camera.roundPixels` was enabled it would use a bitwise operation to truncate the float (`x |= 0`) - this has been replaced across all files that used it, with a call to `Math.round` instead. This gives far better results when zooming cameras both in and out of a Scene, stopping thin gaps appearing between closely packed Game Objects.
+* `AnimationManager.create` will now return a boolean `false` is the given key is invalid (i.e. undefined or falsey).
+* `AnimationManager.create` will no longer raise a console warning if the animation key is already in use. Instead, it will return the animation belonging to that key. A brand new animation will only be created if the key isn't already in use. When this happens, the `add` event is emitted by the Animation Manager. If no event is emitted, the animation already existed.
+* `ArcadePhysics.Body.destroy` will now only add itself to the World `pendingDestroy` list if the world property exists. This prevents `Cannot read property 'pendingDestroy' of undefined` errors if you try to delete a physics body in a callback and then immediately change Scene (which tells the physics work to also delete all bodies)
 
 ### Bug Fixes
 
