@@ -803,9 +803,14 @@ var Animation = new Class({
 
                 component.pendingRepeat = false;
 
-                component.parent.emit('animationrepeat-' + component.currentAnim.key, this, component.currentFrame, component.repeatCounter, component.parent);
+                var frame = component.currentFrame;
+                var parent = component.parent;
 
-                component.parent.emit('animationrepeat', this, component.currentFrame, component.repeatCounter, component.parent);
+                this.emit('repeat', this, frame);
+
+                parent.emit('animationrepeat-' + this.key, this, frame, component.repeatCounter, parent);
+
+                parent.emit('animationrepeat', this, frame, component.repeatCounter, parent);
             }
         }
     },
