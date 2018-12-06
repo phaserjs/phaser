@@ -6,6 +6,7 @@
 
 var Clamp = require('../math/Clamp');
 var Class = require('../utils/Class');
+var EventEmitter = require('eventemitter3');
 var FindClosestInSorted = require('../utils/array/FindClosestInSorted');
 var Frame = require('./AnimationFrame');
 var GetValue = require('../utils/object/GetValue');
@@ -65,6 +66,7 @@ var GetValue = require('../utils/object/GetValue');
  *
  * @class Animation
  * @memberof Phaser.Animations
+ * @extends Phaser.Events.EventEmitter
  * @constructor
  * @since 3.0.0
  *
@@ -74,10 +76,14 @@ var GetValue = require('../utils/object/GetValue');
  */
 var Animation = new Class({
 
+    Extends: EventEmitter,
+
     initialize:
 
     function Animation (manager, key, config)
     {
+        EventEmitter.call(this);
+
         /**
          * A reference to the global Animation Manager
          *
@@ -797,6 +803,8 @@ var Animation = new Class({
 
                 component.pendingRepeat = false;
 
+                component.parent.emit('animationrepeat-' + component.currentAnim.key, this, component.currentFrame, component.repeatCounter, component.parent);
+
                 component.parent.emit('animationrepeat', this, component.currentFrame, component.repeatCounter, component.parent);
             }
         }
@@ -939,6 +947,8 @@ var Animation = new Class({
      */
     destroy: function ()
     {
+        this.removeAllListeners();
+
         this.manager.off('pauseall', this.pause, this);
         this.manager.off('resumeall', this.resume, this);
 
