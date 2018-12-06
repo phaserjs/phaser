@@ -157,6 +157,16 @@ var Animation = new Class({
         this.currentFrame = null;
 
         /**
+         * The key of the next Animation to be loaded into this Animation Controller when the current animation completes.
+         *
+         * @name Phaser.GameObjects.Components.Animation#nextAnim
+         * @type {?string}
+         * @default null
+         * @since 3.16.0
+         */
+        this.nextAnim = null;
+
+        /**
          * Time scale factor.
          *
          * @name Phaser.GameObjects.Components.Animation#_timeScale
@@ -361,6 +371,34 @@ var Animation = new Class({
          * @since 3.4.0
          */
         this._pendingStopValue;
+    },
+
+    /**
+     * Sets an animation to be played immediately after the current one completes.
+     * 
+     * The current animation must enter a 'completed' state for this to happen, i.e. finish all of its repeats, delays, etc.
+     * 
+     * An animation set to repeat forever will never enter a completed state.
+     * 
+     * Call this method with no arguments to reset the chained animation.
+     *
+     * @method Phaser.GameObjects.Components.Animation#chain
+     * @since 3.16.0
+     *
+     * @param {(string|Phaser.Animations.Animation)} [key] - The string-based key of the animation to play next, as defined previously in the Animation Manager. Or an Animation instance.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    chain: function (key)
+    {
+        if (key instanceof BaseAnimation)
+        {
+            key = key.key;
+        }
+
+        this.nextAnim = key;
+
+        return this.parent;
     },
 
     /**
@@ -842,6 +880,8 @@ var Animation = new Class({
 
     /**
      * Immediately stops the current animation from playing and dispatches the `animationcomplete` event.
+     * 
+     * If there is another animation queued (via the `chain` method) then it will start playing immediately.
      *
      * @method Phaser.GameObjects.Components.Animation#stop
      * @fires Phaser.GameObjects.Components.Animation#onCompleteEvent
@@ -864,6 +904,15 @@ var Animation = new Class({
         gameObject.emit('animationcomplete-' + anim.key, anim, frame, gameObject);
 
         gameObject.emit('animationcomplete', anim, frame, gameObject);
+
+        if (this.nextAnim)
+        {
+            var key = this.nextAnim;
+
+            this.nextAnim = null;
+
+            this.play(key);
+        }
 
         return gameObject;
     },
