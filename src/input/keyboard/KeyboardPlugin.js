@@ -675,11 +675,30 @@ var KeyboardPlugin = new Class({
             var key = keys[code];
             var repeat = false;
 
-            //  Override the default function (it's too late for the browser to use it anyway, so we may as well)
-            event.stopPropagation = function ()
+            //  Override the default functions (it's too late for the browser to use them anyway, so we may as well)
+            if (event.cancelled === undefined)
             {
-                event.cancelled = true;
-            };
+                //  Event allowed to flow across all handlers in this Scene, and any other Scene in the Scene list
+                event.cancelled = 0;
+
+                //  Won't reach any more local (Scene level) handlers
+                event.stopImmediatePropagation = function ()
+                {
+                    event.cancelled = 1;
+                };
+    
+                //  Won't reach any more handlers in any Scene further down the Scene list
+                event.stopPropagation = function ()
+                {
+                    event.cancelled = -1;
+                };
+            }
+
+            if (event.cancelled === -1)
+            {
+                //  This event has been stopped from broadcasting to any other Scene, so abort.
+                continue;
+            }
 
             if (event.type === 'keydown')
             {
@@ -722,6 +741,12 @@ var KeyboardPlugin = new Class({
                         this.emit(event.type, event);
                     }
                 }
+            }
+
+            //  Reset the cancel state for other Scenes to use
+            if (event.cancelled === 1)
+            {
+                event.cancelled = 0;
             }
         }
     },
