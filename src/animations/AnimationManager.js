@@ -155,7 +155,34 @@ var AnimationManager = new Class({
     },
 
     /**
+     * Checks to see if the given key is already in use within the Animation Manager or not.
+     * 
+     * Animations are global. Keys created in one scene can be used from any other Scene in your game. They are not Scene specific.
+     *
+     * @method Phaser.Animations.AnimationManager#exists
+     * @since 3.16.0
+     *
+     * @param {string} key - The key of the Animation to check.
+     *
+     * @return {boolean} `true` if the Animation already exists in the Animation Manager, or `false` if the key is available.
+     */
+    exists: function (key)
+    {
+        return this.anims.has(key);
+    },
+
+    /**
      * Creates a new Animation and adds it to the Animation Manager.
+     * 
+     * Animations are global. Once created, you can use them in any Scene in your game. They are not Scene specific.
+     * 
+     * If an invalid key is given this method will return `false`.
+     * 
+     * If you pass the key of an animation that already exists in the Animation Manager, that animation will be returned.
+     * 
+     * A brand new animation is only created if the key is valid and not already in use.
+     * 
+     * If you wish to re-use an existing key, call `AnimationManager.remove` first, then this method.
      *
      * @method Phaser.Animations.AnimationManager#create
      * @fires AddAnimationEvent
@@ -163,23 +190,27 @@ var AnimationManager = new Class({
      *
      * @param {AnimationConfig} config - The configuration settings for the Animation.
      *
-     * @return {Phaser.Animations.Animation} The Animation that was created.
+     * @return {(Phaser.Animations.Animation|false)} The Animation that was created, or `false` is the key is already in use.
      */
     create: function (config)
     {
         var key = config.key;
 
-        if (!key || this.anims.has(key))
+        var anim = false;
+
+        if (key)
         {
-            console.warn('Invalid Animation Key, or Key already in use: ' + key);
-            return;
+            anim = this.get(key);
+
+            if (!anim)
+            {
+                anim = new Animation(this, key, config);
+
+                this.anims.set(key, anim);
+        
+                this.emit('add', key, anim);
+            }
         }
-
-        var anim = new Animation(this, key, config);
-
-        this.anims.set(key, anim);
-
-        this.emit('add', key, anim);
 
         return anim;
     },
