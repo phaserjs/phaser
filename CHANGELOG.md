@@ -11,15 +11,42 @@
 * If the `setScore` or `getPlayerScore` calls fail, it will return `null` as the score instance, instead of causing a run-time error.
 * You can now pass an object or a string to `setScore` and objects will be automatically stringified.
 
-### Keyboard Input - New Features, Updates and Fixes
+### Keyboard Input - New Features
 
 The specificity of the Keyboard events has been changed to allow you more control over event handling. Previously, the Keyboard Plugin would emit the global `keydown_CODE` event first (where CODE was a keycode string, like `keydown_A`), then it would emit the global `keydown` event. In previous versions, `Key` objects, created via `this.input.keyboard.addKey()`, didn't emit events.
 
 The `Key` class now extends EventEmitter and emits two new events directly: `down` and `up`. This means you can listen for an event from a Key you've created, i.e.: `yourKey.on('up', handler)`.
 
-The order has also now changed. If it exists, the Key object will dispatch its `down` event first. Then the Keyboard Plugin will dispatch `keydown_CODE` and finally the less specific of them all, `keydown` will be dispatched.
+The order has also now changed. If it exists, the Key object will dispatch its `down` event first. Then the Keyboard Plugin will dispatch `keydown_CODE` and finally the least specific of them all, `keydown` will be dispatched.
 
-You also now have the ability to cancel this at any stage. All events handlers are sent an event object which you can call `event.stopPropagation()` on. This will immediately stop any further listeners from being invoked. Therefore, if you call `stopPropagation()` after `Key.on`, then the Keyboard Plugin will not emit either the `keydown_CODE` or `keydown` global events. You can also call `stopPropagation()` during the `keydown_CODE` handler, to stop it getting to the global `keydown` event. As `keydown` is last, calling it has no effect there. This also works for `keyup` events.
+You also now have the ability to cancel this at any stage either on a local or global level. All events handlers are sent an event object which you can call `event.stopImmediatePropagation()` on. This will immediately stop any further listeners from being invoked in the current Scene. Therefore, if you call `stopImmediatePropagation()` in the `Key.on` handler, then the Keyboard Plugin will not emit either the `keydown_CODE` or `keydown` global events. You can also call `stopImmediatePropagation()` during the `keydown_CODE` handler, to stop it reaching the global `keydown` handler. As `keydown` is last, calling it there has no effect. 
+
+There is also the `stopPropagation()` function. This works in the same way as `stopImmediatePropagation` but instead of being local, it works across all of the Scenes in your game. For example, if you had 3 active Scenes (A, B and C, with A at the top of the Scene list), all listening for the same key, calling `stopPropagation()` in Scene A would stop the event from reaching any handlers in Scenes B or C. Remember that events flow down the Scene list from top to bottom. So, the top-most rendering Scene in the Scene list has priority over any Scene below it.
+
+All the above also works for `keyup` events.
+
+#### Keyboard Captures
+
+Key capturing is the way in which you stop a keyboard DOM event from activating anything else in the browser by calling `preventDefault` on it. For example, in tall web pages, pressing the SPACE BAR causes the page to scroll down. Obviously, if this is also the fire or jump button in your game, you don't want this to happen. So the key needs to be 'captured' to prevent it. Equally, you may wish to also capture the arrow keys, for similar reasons. Key capturing is done on a global level. If you set-up the capture of a key in one Scene, it will be captured globally across the whole game.
+
+In 3.16 you now do this using the new `KeyboardPlugin.addCapture` method. This takes keycodes as its argument. You can either pass in a single key code (i.e. 32 for the Space Bar), an array of key codes, or a comma-delimited string - in which case the string is parsed and each code it can work out is captured.
+
+To remove a capture you can use the `KeyboardPlugin.removeCapture` method, which takes the same style arguments as adding captures. To clear all captures call `KeyboardPlugin.clearCaptures`. Again, remember that these actions are global.
+
+You can also temporarily enable and disable capturing using `KeyboardPlugin.enableGlobalCapture` and `KeyboardPlugin.disableGlobalCapture`. This means if you set-up a bunch of key captures, but then need to disable them all for a while (perhaps you swap focus to a DOM text field), you can call `disableGlobalCapture` to do this, and when finished in the DOM you can enable captures again with `enableGlobalCapture`, without having to clear and re-create them all.
+
+Default captures can be defined in the Game Config in the `input.keyboard.captures` object. The captures are actually stored in the `KeyboardManager` class. The `KeyboardPlugin` is just a proxy to methods in the Keyboard Manager, but is how you should interface with it.
+
+* `KeyboardPlugin.addCapture` is a new method that allows you to define a set of keycodes to have the default browser behaviors disabled on.
+* `KeyboardPlugin.removeCapture` is a new method that removes specific previously set key captures.
+* `KeyboardPlugin.clearCaptures` is a new method that removes all key captures.
+* `KeyboardPlugin.getCaptures` is a new method that returns an array of all current key captures.
+* `KeyboardPlugin.enableGlobalCapture` is a new method that enables any key captures that have been created.
+* `KeyboardPlugin.disableGlobalCapture` is a new method that disables any key captures that have been created, without removing them from the captures list.
+* `KeyboardPlugin.addKey` has a new boolean argument `enableCapture`, which is true by default, that will add a key capture for the Key being created.
+* `KeyboardPlugin.addKeys` has a new boolean argument `enableCapture`, which is true by default, that will add a key capture for any Key created by the method.
+
+#### Other Keyboard Updates and Fixes
 
 * There is a new class called `KeyboardManager`. This class is created by the global Input Manager, if keyboard access has been enabled in the Game config. It's responsible for handling all browser keyboard events. Previously, the `KeyboardPlugin` did this. Which meant that every Scene that had its own Keyboard Plugin was binding more native keyboard events. This was causing problems with parallel Scenes when needing to capture keys. the `KeyboardPlugin` class still exists, and is still the main point of interface when you call `this.input.keyboard` in a Scene, but DOM event handling responsibility has been taken away from it. This means there's no only 
 one set of bindings ever created, which makes things a lot cleaner.
@@ -29,6 +56,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `Key.setEmitOnRepeat` is a new chainable method for setting the `emitOnRepeat` property.
 * The keyboard event flow has changed.
 * The `Key` class now extends EventEmitter and emits two events directly: `down` and `up`. This means you can listen for an event from a Key you've created, i.e.: `yourKey.on('up', handler)`.
+* The following Key Codes have been added, which include some missing alphabet letters in Persian and Arabic: `SEMICOLON_FIREFOX`, `COLON`, `COMMA_FIREFOX_WINDOWS`, `COMMA_FIREFOX`, `BRACKET_RIGHT_FIREFOX` and `BRACKET_LEFT_FIREFOX` (thanks @wmateam)
 * `Key.onDown` is a new method that handles the Key being pressed down, including down repeats.
 * `Key.onUp` is a new method that handles the Key being released.
 * `Key.destroy` is a new method that handles Key instance destruction. It is called automatically in `KeyboardPlugin.destroy`.
@@ -48,7 +76,6 @@ one set of bindings ever created, which makes things a lot cleaner.
 ### Mouse and Touch Input - New Features, Updates and Fixes
 
 * The Mouse Manager class has been updated to remove some commented out code and refine the `startListeners` method.
-* The following Key Codes have been added, which include some missing alphabet letters in Persian and Arabic: `SEMICOLON_FIREFOX`, `COLON`, `COMMA_FIREFOX_WINDOWS`, `COMMA_FIREFOX`, `BRACKET_RIGHT_FIREFOX` and `BRACKET_LEFT_FIREFOX` (thanks @wmateam)
 * When enabling a Game Object for input it will now use the `width` and `height` properties of the Game Object first, falling back to the frame size if not found. This stops a bug when enabling BitmapText objects for input and it using the font texture as the hit area size, rather than the text itself.
 * `Pointer.smoothFactor` is a float-value that allows you to automatically apply smoothing to the Pointer position as it moves. This is ideal when you want something smoothly tracking a pointer in a game, or are need a smooth drawing motion for an art package. The default value is zero, meaning disabled. Set to a small number, such as 0.2, to enable.
 * `Config.inputSmoothFactor` is a new property that allows you to set the smoothing factor for all Pointers the game creators. The default value is zero, which is disabled. Set in the game config as `input: { smoothFactor: value }`.
