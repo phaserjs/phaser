@@ -1057,8 +1057,6 @@ var Animation = new Class({
 
             var anim = this.currentAnim;
 
-            anim.emit('update', anim, animationFrame);
-
             gameObject.emit('animationupdate-' + anim.key, anim, animationFrame, gameObject);
 
             gameObject.emit('animationupdate', anim, animationFrame, gameObject);
