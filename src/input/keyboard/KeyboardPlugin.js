@@ -435,12 +435,14 @@ var KeyboardPlugin = new Class({
      *
      * @param {(object|string)} keys - An object containing Key Codes, or a comma-separated string.
      * @param {boolean} [enableCapture=true] - Automatically call `preventDefault` on the native DOM browser event for the key codes being added.
+     * @param {boolean} [emitOnRepeat=false] - Controls if the Key will continuously emit a 'down' event while being held down (true), or emit the event just once (false, the default).
      *
      * @return {object} An object containing Key objects mapped to the input properties.
      */
-    addKeys: function (keys, enableCapture)
+    addKeys: function (keys, enableCapture, emitOnRepeat)
     {
         if (enableCapture === undefined) { enableCapture = true; }
+        if (emitOnRepeat === undefined) { emitOnRepeat = false; }
 
         var output = {};
 
@@ -454,7 +456,7 @@ var KeyboardPlugin = new Class({
 
                 if (currentKey)
                 {
-                    output[currentKey] = this.addKey(currentKey);
+                    output[currentKey] = this.addKey(currentKey, enableCapture, emitOnRepeat);
                 }
             }
         }
@@ -462,7 +464,7 @@ var KeyboardPlugin = new Class({
         {
             for (var key in keys)
             {
-                output[key] = this.addKey(keys[key]);
+                output[key] = this.addKey(keys[key], enableCapture, emitOnRepeat);
             }
         }
 
@@ -481,12 +483,14 @@ var KeyboardPlugin = new Class({
      *
      * @param {(Phaser.Input.Keyboard.Key|string|integer)} key - Either a Key object, a string, such as `A` or `SPACE`, or a key code value.
      * @param {boolean} [enableCapture=true] - Automatically call `preventDefault` on the native DOM browser event for the key codes being added.
+     * @param {boolean} [emitOnRepeat=false] - Controls if the Key will continuously emit a 'down' event while being held down (true), or emit the event just once (false, the default).
      *
      * @return {Phaser.Input.Keyboard.Key} The newly created Key object, or a reference to it if it already existed in the keys array.
      */
-    addKey: function (key, enableCapture)
+    addKey: function (key, enableCapture, emitOnRepeat)
     {
         if (enableCapture === undefined) { enableCapture = true; }
+        if (emitOnRepeat === undefined) { emitOnRepeat = false; }
 
         var keys = this.keys;
 
@@ -508,6 +512,8 @@ var KeyboardPlugin = new Class({
                 this.addCapture(key.keyCode);
             }
 
+            key.setEmitOnRepeat(emitOnRepeat);
+
             return key;
         }
 
@@ -524,6 +530,8 @@ var KeyboardPlugin = new Class({
             {
                 this.addCapture(key);
             }
+
+            keys[key].setEmitOnRepeat(emitOnRepeat);
         }
 
         return keys[key];
