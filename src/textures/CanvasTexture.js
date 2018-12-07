@@ -301,16 +301,27 @@ var CanvasTexture = new Class({
     },
 
     /**
-     * Clears this Canvas Texture, resetting it back to transparent.
+     * Clears the given region of this Canvas Texture, resetting it back to transparent.
+     * If no region is given, the whole Canvas Texture is cleared.
      *
      * @method Phaser.Textures.CanvasTexture#clear
      * @since 3.7.0
+     * 
+     * @param {integer} [x=0] - The x coordinate of the top-left of the region to clear.
+     * @param {integer} [y=0] - The y coordinate of the top-left of the region to clear.
+     * @param {integer} [width] - The width of the region.
+     * @param {integer} [height] - The height of the region.
      *
      * @return {Phaser.Textures.CanvasTexture} The Canvas Texture.
      */
-    clear: function ()
+    clear: function (x, y, width, height)
     {
-        this.context.clearRect(0, 0, this.width, this.height);
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = this.width; }
+        if (height === undefined) { height = this.height; }
+
+        this.context.clearRect(x, y, width, height);
 
         return this.update();
     },
