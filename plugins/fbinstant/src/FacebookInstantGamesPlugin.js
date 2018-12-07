@@ -1912,15 +1912,18 @@ var FacebookInstantGamesPlugin = new Class({
         for (i = 0; i < placementID.length; i++)
         {
             var id = placementID[i];
+            var data;
 
-            FBInstant.getInterstitialAdAsync(id).then(function (data)
+            FBInstant.getInterstitialAdAsync(id).then(function (interstitial)
             {
-                var ad = AdInstance(data, true);
-    
-                _this.ads.push(ad);
-    
-                return ad.loadAsync();
-    
+                data = interstitial;
+
+                return interstitial.loadAsync();
+
+            }).then(function ()
+            {
+                _this.ads.push(AdInstance(id, data, false));
+
             }).catch(function (e)
             {
                 console.warn(e);
@@ -1976,15 +1979,18 @@ var FacebookInstantGamesPlugin = new Class({
         for (i = 0; i < placementID.length; i++)
         {
             var id = placementID[i];
+            var data;
 
-            FBInstant.getRewardedVideoAsync(id).then(function (data)
+            FBInstant.getRewardedVideoAsync(id).then(function (reward)
             {
-                var ad = AdInstance(data, true);
-    
-                _this.ads.push(ad);
-    
-                return ad.loadAsync();
-    
+                data = reward;
+
+                return reward.loadAsync();
+
+            }).then(function ()
+            {
+                _this.ads.push(AdInstance(id, data, true));
+
             }).catch(function (e)
             {
                 console.warn(e);

@@ -10,6 +10,8 @@
 * `Leaderboard.getPlayerScore` now only populates the `playerScore` property if the entry isn't `null`.
 * If the `setScore` or `getPlayerScore` calls fail, it will return `null` as the score instance, instead of causing a run-time error.
 * You can now pass an object or a string to `setScore` and objects will be automatically stringified.
+* The `preloadAds` method will now only create an AdInstance object if the interstitial `loadSync` promise resolves.
+* The `preloadVideoAds` method will now only create an AdInstance object if the interstitial `loadSync` promise resolves.
 
 ### Keyboard Input - New Features
 
