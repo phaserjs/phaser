@@ -54,7 +54,8 @@ one set of bindings ever created, which makes things a lot cleaner.
 * The Keyboard Manager will now call `preventDefault` only on non-modified key presses, stopping the keyboard event from hitting the browser. Previously, capturing the R key, for example, would block a CTRL+R page reload, but it now ignores it because of the key modifier.
 * `Key.emitOnRepeat` is a new boolean property that controls if the Key will continuously emit a `down` event while being held down (true), or emit the event just once, on first press, and then skip future events (false).
 * `Key.setEmitOnRepeat` is a new chainable method for setting the `emitOnRepeat` property.
-* The keyboard event flow has changed.
+* The `KeyboardPlugin.addKeys` method has a new optional boolean `emitOnRepeat` which sets that property on all Key objects it creates as part of the call. It defaults to `false`.
+* The `KeyboardPlugin.addKey` method has a new optional boolean `emitOnRepeat` which sets that property on the Key object it creates. It defaults to `false`.
 * The `Key` class now extends EventEmitter and emits two events directly: `down` and `up`. This means you can listen for an event from a Key you've created, i.e.: `yourKey.on('up', handler)`.
 * The following Key Codes have been added, which include some missing alphabet letters in Persian and Arabic: `SEMICOLON_FIREFOX`, `COLON`, `COMMA_FIREFOX_WINDOWS`, `COMMA_FIREFOX`, `BRACKET_RIGHT_FIREFOX` and `BRACKET_LEFT_FIREFOX` (thanks @wmateam)
 * `Key.onDown` is a new method that handles the Key being pressed down, including down repeats.
@@ -174,6 +175,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `ArcadePhysics.Body.destroy` will now only add itself to the World `pendingDestroy` list if the world property exists. This prevents `Cannot read property 'pendingDestroy' of undefined` errors if you try to delete a physics body in a callback and then immediately change Scene (which tells the physics work to also delete all bodies)
 * The Animation Component `restart` method has had is sole `key` argument removed. Previously, you had to pass in the key of the animation you wished to reverse, but now you can just call the method directly, and as long as there is an animation playing, it will automatically start playing in reverse, without the nee for a key (the way it should have been originally)
 * `Animation.play` and `playReverse` will now accept either a string-based key of the animation to play (like before), or you can pass in an Animation instance, and it will play that animation.
+* `CanvasTexture.clear` now has 4 new optional arguments: `x, y, width, height` which allow you to define the region of the texture to be cleared. If not provided it will clear the whole texture, which is the same behavior as before.
 
 ### Bug Fixes
 
