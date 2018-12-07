@@ -10,6 +10,13 @@
 * `Leaderboard.getPlayerScore` now only populates the `playerScore` property if the entry isn't `null`.
 * If the `setScore` or `getPlayerScore` calls fail, it will return `null` as the score instance, instead of causing a run-time error.
 * You can now pass an object or a string to `setScore` and objects will be automatically stringified.
+* The `preloadAds` method will now only create an AdInstance object if the interstitial `loadSync` promise resolves.
+* The `preloadVideoAds` method will now only create an AdInstance object if the interstitial `loadSync` promise resolves.
+* The `preloadAds` method will now emit the `adsnofill` event, if there are no ads in the inventory to load.
+* The `preloadVideoAds` method will now emit the `adsnofill` event, if there are no ads in the inventory to load.
+* The `showAd` method will now emit the `adsnotloaded` event, if there are no ads loaded matching the given Placement ID.
+* The `showVideo` method will now emit the `adsnotloaded` event, if there are no ads loaded matching the given Placement ID.
+* Showing an ad will emit the `adfinished` event when the ad is closed, previously this event was called `showad` but the new name better reflects what has happened.
 
 ### Keyboard Input - New Features
 
