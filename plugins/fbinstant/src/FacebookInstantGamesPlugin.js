@@ -1871,6 +1871,8 @@ var FacebookInstantGamesPlugin = new Class({
      * 
      * If the instance is created successfully then the ad is preloaded ready for display in-game via the method `showAd()`.
      * 
+     * If the ad loads it will emit the `adloaded` event, passing the AdInstance as the only parameter.
+     * 
      * If the ad cannot be displayed because there was no inventory to fill it, it will emit the `adsnofill` event.
      *
      * @method Phaser.FacebookInstantGamesPlugin#preloadAds
@@ -1924,17 +1926,21 @@ var FacebookInstantGamesPlugin = new Class({
 
             }).then(function ()
             {
-                _this.ads.push(AdInstance(id, data, false));
+                var ad = AdInstance(id, data, false);
+
+                _this.ads.push(ad);
+
+                _this.emit('adloaded', ad);
 
             }).catch(function (e)
             {
                 if (e.code === 'ADS_NO_FILL')
                 {
-                    _this.emit('adsnofill');
+                    _this.emit('adsnofill', id);
                 }
                 else if (e.code === 'ADS_FREQUENT_LOAD')
                 {
-                    _this.emit('adsfrequentload');
+                    _this.emit('adsfrequentload', id);
                 }
                 else
                 {
@@ -1947,9 +1953,11 @@ var FacebookInstantGamesPlugin = new Class({
     },
 
     /**
-     * Attempt to create an instance of an interstitial video ad.
+     * Attempt to create an instance of an rewarded video ad.
      * 
      * If the instance is created successfully then the ad is preloaded ready for display in-game via the method `showVideo()`.
+     * 
+     * If the ad loads it will emit the `adloaded` event, passing the AdInstance as the only parameter.
      * 
      * If the ad cannot be displayed because there was no inventory to fill it, it will emit the `adsnofill` event.
      *
@@ -2004,17 +2012,21 @@ var FacebookInstantGamesPlugin = new Class({
 
             }).then(function ()
             {
-                _this.ads.push(AdInstance(id, data, true));
+                var ad = AdInstance(id, data, true);
+
+                _this.ads.push(ad);
+
+                _this.emit('adloaded', ad);
 
             }).catch(function (e)
             {
                 if (e.code === 'ADS_NO_FILL')
                 {
-                    _this.emit('adsnofill');
+                    _this.emit('adsnofill', id);
                 }
                 else if (e.code === 'ADS_FREQUENT_LOAD')
                 {
-                    _this.emit('adsfrequentload');
+                    _this.emit('adsfrequentload', id);
                 }
                 else
                 {
@@ -2029,7 +2041,7 @@ var FacebookInstantGamesPlugin = new Class({
     /**
      * Displays a previously loaded interstitial ad.
      * 
-     * If the ad is successfully displayed this plugin will emit the `showad` event, with the AdInstance object as its parameter.
+     * If the ad is successfully displayed this plugin will emit the `adfinished` event, with the AdInstance object as its parameter.
      * 
      * If the ad cannot be displayed, it will emit the `adsnotloaded` event.
      *
@@ -2054,18 +2066,20 @@ var FacebookInstantGamesPlugin = new Class({
                 {
                     ad.shown = true;
 
-                    _this.emit('showad', ad);
+                    _this.emit('adfinished', ad);
 
                 }).catch(function (e)
                 {
                     if (e.code === 'ADS_NOT_LOADED')
                     {
-                        _this.emit('adsnotloaded');
+                        _this.emit('adsnotloaded', ad);
                     }
-                    else
+                    else if (e.code === 'RATE_LIMITED')
                     {
-                        console.warn(e);
+                        _this.emit('adratelimited', ad);
                     }
+                    
+                    _this.emit('adshowerror', e, ad);
                 });
             }
         }
@@ -2076,7 +2090,7 @@ var FacebookInstantGamesPlugin = new Class({
     /**
      * Displays a previously loaded interstitial video ad.
      * 
-     * If the ad is successfully displayed this plugin will emit the `showad` event, with the AdInstance object as its parameter.
+     * If the ad is successfully displayed this plugin will emit the `adfinished` event, with the AdInstance object as its parameter.
      * 
      * If the ad cannot be displayed, it will emit the `adsnotloaded` event.
      *
@@ -2101,18 +2115,20 @@ var FacebookInstantGamesPlugin = new Class({
                 {
                     ad.shown = true;
 
-                    _this.emit('showad', ad);
+                    _this.emit('adfinished', ad);
 
                 }).catch(function (e)
                 {
                     if (e.code === 'ADS_NOT_LOADED')
                     {
-                        _this.emit('adsnotloaded');
+                        _this.emit('adsnotloaded', ad);
                     }
-                    else
+                    else if (e.code === 'RATE_LIMITED')
                     {
-                        console.warn(e);
+                        _this.emit('adratelimited', ad);
                     }
+                    
+                    _this.emit('adshowerror', e, ad);
                 });
             }
         }

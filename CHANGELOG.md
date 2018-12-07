@@ -16,6 +16,7 @@
 * The `preloadVideoAds` method will now emit the `adsnofill` event, if there are no ads in the inventory to load.
 * The `showAd` method will now emit the `adsnotloaded` event, if there are no ads loaded matching the given Placement ID.
 * The `showVideo` method will now emit the `adsnotloaded` event, if there are no ads loaded matching the given Placement ID.
+* Showing an ad will emit the `adfinished` event when the ad is closed, previously this event was called `showad` but the new name better reflects what has happened.
 
 ### Keyboard Input - New Features
 
