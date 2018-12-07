@@ -1870,6 +1870,8 @@ var FacebookInstantGamesPlugin = new Class({
      * Attempt to create an instance of an interstitial ad.
      * 
      * If the instance is created successfully then the ad is preloaded ready for display in-game via the method `showAd()`.
+     * 
+     * If the ad cannot be displayed because there was no inventory to fill it, it will emit the `adsnofill` event.
      *
      * @method Phaser.FacebookInstantGamesPlugin#preloadAds
      * @since 3.13.0
@@ -1926,7 +1928,18 @@ var FacebookInstantGamesPlugin = new Class({
 
             }).catch(function (e)
             {
-                console.warn(e);
+                if (e.code === 'ADS_NO_FILL')
+                {
+                    _this.emit('adsnofill');
+                }
+                else if (e.code === 'ADS_FREQUENT_LOAD')
+                {
+                    _this.emit('adsfrequentload');
+                }
+                else
+                {
+                    console.warn(e);
+                }
             });
         }
 
@@ -1937,6 +1950,8 @@ var FacebookInstantGamesPlugin = new Class({
      * Attempt to create an instance of an interstitial video ad.
      * 
      * If the instance is created successfully then the ad is preloaded ready for display in-game via the method `showVideo()`.
+     * 
+     * If the ad cannot be displayed because there was no inventory to fill it, it will emit the `adsnofill` event.
      *
      * @method Phaser.FacebookInstantGamesPlugin#preloadVideoAds
      * @since 3.13.0
@@ -1993,7 +2008,18 @@ var FacebookInstantGamesPlugin = new Class({
 
             }).catch(function (e)
             {
-                console.warn(e);
+                if (e.code === 'ADS_NO_FILL')
+                {
+                    _this.emit('adsnofill');
+                }
+                else if (e.code === 'ADS_FREQUENT_LOAD')
+                {
+                    _this.emit('adsfrequentload');
+                }
+                else
+                {
+                    console.warn(e);
+                }
             });
         }
 
@@ -2005,7 +2031,7 @@ var FacebookInstantGamesPlugin = new Class({
      * 
      * If the ad is successfully displayed this plugin will emit the `showad` event, with the AdInstance object as its parameter.
      * 
-     * If the ad cannot be displayed because there was no inventory to fill it, it will emit the `adsnofill` event.
+     * If the ad cannot be displayed, it will emit the `adsnotloaded` event.
      *
      * @method Phaser.FacebookInstantGamesPlugin#showAd
      * @since 3.13.0
@@ -2032,9 +2058,9 @@ var FacebookInstantGamesPlugin = new Class({
 
                 }).catch(function (e)
                 {
-                    if (e.code === 'ADS_NO_FILL')
+                    if (e.code === 'ADS_NOT_LOADED')
                     {
-                        _this.emit('adsnofill');
+                        _this.emit('adsnotloaded');
                     }
                     else
                     {
@@ -2052,7 +2078,7 @@ var FacebookInstantGamesPlugin = new Class({
      * 
      * If the ad is successfully displayed this plugin will emit the `showad` event, with the AdInstance object as its parameter.
      * 
-     * If the ad cannot be displayed because there was no inventory to fill it, it will emit the `adsnofill` event.
+     * If the ad cannot be displayed, it will emit the `adsnotloaded` event.
      *
      * @method Phaser.FacebookInstantGamesPlugin#showVideo
      * @since 3.13.0
@@ -2079,9 +2105,9 @@ var FacebookInstantGamesPlugin = new Class({
 
                 }).catch(function (e)
                 {
-                    if (e.code === 'ADS_NO_FILL')
+                    if (e.code === 'ADS_NOT_LOADED')
                     {
-                        _this.emit('adsnofill');
+                        _this.emit('adsnotloaded');
                     }
                     else
                     {
