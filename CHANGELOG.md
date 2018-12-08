@@ -154,6 +154,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * The Animation class now emits the `restart` event when it restarts playing on any Game Object.
 * The Animation class now emits the `complete` event when it finishes playing on any Game Object.
 * The Animation Component has a new method called `chain` which allows you to line-up another animation to start playing as soon as the current one stops, no matter how it stops (either by reaching its natural end, or directly by having stop called on it). You can chain a new animation at any point, including before the current one starts playing, during it, or when it ends (via its `animationcomplete` callback). Chained animations are specific to a Game Object, meaning different Game Objects can have different chained animations without impacting the global animation they're playing.
+* `CanvasTexture.drawFrame` is a new method that allows you to draw a texture frame to the CanvasTexture based on the texture key and frame given.
 
 ### Updates
 

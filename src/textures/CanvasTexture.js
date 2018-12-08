@@ -224,6 +224,45 @@ var CanvasTexture = new Class({
     },
 
     /**
+     * Draws the given texture frame to this CanvasTexture, then updates the internal
+     * ImageData buffer and arrays.
+     *
+     * @method Phaser.Textures.CanvasTexture#drawFrame
+     * @since 3.16.0
+     * 
+     * @param {string} key - The unique string-based key of the Texture.
+     * @param {(string|integer)} [frame] - The string-based name, or integer based index, of the Frame to get from the Texture.
+     * @param {integer} [x=0] - The x coordinate to draw the source at.
+     * @param {integer} [y=0] - The y coordinate to draw the source at.
+     * 
+     * @return {Phaser.Textures.CanvasTexture} This CanvasTexture.
+     */
+    drawFrame: function (key, frame, x, y)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+
+        var frame = this.manager.getFrame(key, frame);
+
+        if (frame)
+        {
+            var cd = frame.canvasData;
+
+            var frameWidth = frame.cutWidth;
+            var frameHeight = frame.cutHeight;
+            var res = frame.source.resolution;
+
+            this.context.drawImage(frame.source.image, cd.x, cd.y, frameWidth, frameHeight, x, y, frameWidth / res, frameHeight / res);
+
+            return this.update();
+        }
+        else
+        {
+            return this;
+        }
+    },
+
+    /**
      * Get the color of a specific pixel from this texture and store it in a Color object.
      * 
      * If you have drawn anything to this CanvasTexture since it was created you must call `CanvasTexture.update` to refresh the array buffer,
