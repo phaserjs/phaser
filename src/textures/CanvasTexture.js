@@ -242,17 +242,25 @@ var CanvasTexture = new Class({
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
 
-        var frame = this.manager.getFrame(key, frame);
+        var textureFrame = this.manager.getFrame(key, frame);
 
-        if (frame)
+        if (textureFrame)
         {
-            var cd = frame.canvasData;
+            var cd = textureFrame.canvasData;
 
-            var frameWidth = frame.cutWidth;
-            var frameHeight = frame.cutHeight;
-            var res = frame.source.resolution;
+            var width = textureFrame.cutWidth;
+            var height = textureFrame.cutHeight;
+            var res = textureFrame.source.resolution;
 
-            this.context.drawImage(frame.source.image, cd.x, cd.y, frameWidth, frameHeight, x, y, frameWidth / res, frameHeight / res);
+            this.context.drawImage(
+                textureFrame.source.image,
+                cd.x, cd.y,
+                width,
+                height,
+                x, y,
+                width / res,
+                height / res
+            );
 
             return this.update();
         }
