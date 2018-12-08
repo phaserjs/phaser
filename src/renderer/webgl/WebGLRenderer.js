@@ -839,9 +839,9 @@ var WebGLRenderer = new Class({
 
         scissorStack.push(scissor);
 
-        this.setScissor(x, y, width, height);
-
         this.currentScissor = scissor;
+
+        this.setScissor(x, y, width, height);
 
         return scissor;
     },
@@ -877,7 +877,6 @@ var WebGLRenderer = new Class({
             if (width > 0 && height > 0)
             {
                 gl.scissor(x, (this.drawingBufferHeight - y - height), width, height);
-
             }
         }
     },
