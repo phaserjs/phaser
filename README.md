@@ -157,7 +157,7 @@ Also, please subscribe to the [Phaser World](https://phaser.io/community/newslet
 
 ### Facebook Instant Games
 
-Phaser 3.13 introduced the new [Facebook Instant Games](https://developers.facebook.com/docs/games/instant-games) Plugin. The plugin provides a seamless bridge between Phaser and version 6.2 of the Facebook Instant Games SDK. Every single SDK function is available via the plugin and we will keep track of the official SDK to make sure they stay in sync.
+Phaser 3.13 introduced the new [Facebook Instant Games](http://phaser.io/news/2018/10/facebook-instant-games-phaser-tutorial) Plugin. The plugin provides a seamless bridge between Phaser and version 6.2 of the Facebook Instant Games SDK. Every single SDK function is available via the plugin and we will keep track of the official SDK to make sure they stay in sync.
 
 The plugin offers the following features:
 
@@ -176,6 +176,12 @@ The plugin offers the following features:
 * Support for in-app purchases, with product catalogs, the ability to handle purchases, get past purchases and consume previously unlocked purchases.
 * Easily preload a set of interstitial ads, in both banner and video form, then display the ad at any point in your game, with in-built tracking of ads displayed and inventory available.
 * Plus other features, such as logging to FB Analytics, creating short cuts, switching games, etc.
+
+We've 3 tutorials related to Facebook Instant Games and Phaser:
+
+* [Getting Started with Facebook Instant Games](http://phaser.io/news/2018/10/facebook-instant-games-phaser-tutorial)
+* [Facebook Instant Games Leaderboards Tutorial](http://phaser.io/news/2018/11/facebook-instant-games-leaderboards-tutorial)
+* [Displaying Ads in your Instant Games](http://phaser.io/news/2018/12/facebook-instant-games-ads-tutorial)
 
 A special build of Phaser with the Facebook Instant Games Plugin ready-enabled is [available on jsDelivr](https://www.jsdelivr.com/projects/phaser). Include the following in your html:
 
@@ -382,8 +388,8 @@ All rights reserved.
 
 "Above all, video games are meant to be just one thing: fun. Fun for everyone." - Satoru Iwata
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.11/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.11/phaser.min.js
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.15.1/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.15.1/phaser.min.js
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-ghwin]: github-windows://openRepo/https://github.com/photonstorm/phaser
@@ -392,4 +398,4 @@ All rights reserved.
 [issues]: https://github.com/photonstorm/phaser/issues
 [examples]: https://github.com/photonstorm/phaser3-examples
 [contribute]: https://github.com/photonstorm/phaser/blob/master/.github/CONTRIBUTING.md
-[forum]: http://www.html5gamedevs.com/forum/33-phaser-3/
+[forum]: https://phaser.discourse.group/
