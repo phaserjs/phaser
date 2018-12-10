@@ -58,7 +58,7 @@ var Systems = new Class({
              * The Facebook Instant Games Plugin.
              *
              * @name Phaser.Scenes.Systems#facebook
-             * @type {any}
+             * @type {Phaser.FacebookInstantGamesPlugin}
              * @since 3.12.0
              */
             this.facebook;
