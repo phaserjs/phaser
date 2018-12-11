@@ -1140,13 +1140,18 @@ var WebGLRenderer = new Class({
      *
      * @return {this} This WebGLRenderer instance.
      */
-    setTexture2D: function (texture, textureUnit)
+    setTexture2D: function (texture, textureUnit, flush)
     {
+        if (flush === undefined) { flush = true; }
+
         var gl = this.gl;
 
         if (texture !== this.currentTextures[textureUnit])
         {
-            this.flush();
+            if (flush)
+            {
+                this.flush();
+            }
 
             if (this.currentActiveTextureUnit !== textureUnit)
             {
