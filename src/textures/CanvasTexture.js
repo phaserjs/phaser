@@ -5,6 +5,7 @@
  */
 
 var Class = require('../utils/Class');
+var Clamp = require('../math/Clamp');
 var Color = require('../display/color/Color');
 var IsSizePowerOfTwo = require('../math/pow2/IsSizePowerOfTwo');
 var Texture = require('./Texture');
@@ -279,9 +280,9 @@ var CanvasTexture = new Class({
      * @method Phaser.Textures.CanvasTexture#getPixel
      * @since 3.13.0
      * 
-     * @param {integer} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this CanvasTexture and be an integer.
-     * @param {integer} y - The y coordinate of the pixel to be set. Must lay within the dimensions of this CanvasTexture and be an integer.
-     * @param {Phaser.Display.Color} [out] - An object into which 4 properties will be set: r, g, b and a. If not provided a Color object will be created.
+     * @param {integer} x - The x coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {integer} y - The y coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {Phaser.Display.Color} [out] - A Color object to store the pixel values in. If not provided a new Color object will be created.
      * 
      * @return {Phaser.Display.Color} An object with the red, green, blue and alpha values set in the r, g, b and a properties.
      */
@@ -292,16 +293,104 @@ var CanvasTexture = new Class({
             out = new Color();
         }
 
-        var index = ~~(x + (y * this.width));
+        var index = this.getIndex(x, y);
 
-        index *= 4;
+        if (index > -1)
+        {
+            var data = this.data;
 
-        var r = this.data[index];
-        var g = this.data[++index];
-        var b = this.data[++index];
-        var a = this.data[++index];
+            var r = data[index + 0];
+            var g = data[index + 1];
+            var b = data[index + 2];
+            var a = data[index + 3];
 
-        return out.setTo(r, g, b, a);
+            out.setTo(r, g, b, a);
+        }
+
+        return out;
+    },
+
+    /**
+     * Returns an array containing all of the pixels in the given region.
+     *
+     * If the requested region extends outside the bounds of this CanvasTexture,
+     * the region is truncated to fit.
+     * 
+     * If you have drawn anything to this CanvasTexture since it was created you must call `CanvasTexture.update` to refresh the array buffer,
+     * otherwise this may return out of date color values, or worse - throw a run-time error as it tries to access an array element that doesn't exist.
+     *
+     * @method Phaser.Textures.CanvasTexture#getPixels
+     * @since 3.16.0
+     * 
+     * @param {integer} x - The x coordinate of the top-left of the region. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {integer} y - The y coordinate of the top-left of the region. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {integer} width - The width of the region to get. Must be an integer.
+     * @param {integer} [height] - The height of the region to get. Must be an integer. If not given will be set to the `width`.
+     * 
+     * @return {any[]} An array of Pixel objects.
+     */
+    getPixels: function (x, y, width, height)
+    {
+        if (height === undefined) { height = width; }
+
+        x = Math.abs(Math.round(x));
+        y = Math.abs(Math.round(y));
+
+        var left = Clamp(x, 0, this.width);
+        var right = Clamp(x + width, 0, this.width);
+        var top = Clamp(y, 0, this.height);
+        var bottom = Clamp(y + height, 0, this.height);
+
+        var pixel = new Color();
+
+        var out = [];
+
+        for (var py = top; py < bottom; py++)
+        {
+            var row = [];
+
+            for (var px = left; px < right; px++)
+            {
+                var pixel = this.getPixel(px, py, pixel);
+
+                row.push({ x: px, y: py, color: pixel.color, alpha: pixel.alpha });
+            }
+
+            out.push(row);
+        }
+
+        return out;
+    },
+
+    /**
+     * Returns the Image Data index for the given pixel in this CanvasTexture.
+     *
+     * The index can be used to read directly from the `this.data` array.
+     *
+     * The index points to the red value in the array. The subsequent 3 indexes
+     * point to green, blue and alpha respectively.
+     *
+     * @method Phaser.Textures.CanvasTexture#getIndex
+     * @since 3.16.0
+     * 
+     * @param {integer} x - The x coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {integer} y - The y coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * 
+     * @return {integer} 
+     */
+    getIndex: function (x, y)
+    {
+        x = Math.abs(Math.round(x));
+        y = Math.abs(Math.round(y));
+
+        if (x < this.width && y < this.height)
+        {
+            return (x + y * this.width) * 4;
+        }
+        else
+        {
+            return -1;
+        }
     },
 
     /**
