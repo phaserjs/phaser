@@ -272,6 +272,47 @@ var CanvasTexture = new Class({
     },
 
     /**
+     * Sets a pixel in the CanvasTexture to the given color and alpha values.
+     *
+     * This is an expensive operation to run in large quantities, so use sparingly.
+     *
+     * @method Phaser.Textures.CanvasTexture#setPixel
+     * @since 3.16.0
+     * 
+     * @param {integer} x - The x coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {integer} y - The y coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {integer} red - The red color value. A number between 0 and 255.
+     * @param {integer} green - The green color value. A number between 0 and 255.
+     * @param {integer} blue - The blue color value. A number between 0 and 255.
+     * @param {integer} [alpha=255] - The alpha value. A number between 0 and 255.
+     * 
+     * @return {this} This CanvasTexture.
+     */
+    setPixel: function (x, y, red, green, blue, alpha)
+    {
+        if (alpha === undefined) { alpha = 255; }
+
+        x = Math.abs(Math.floor(x));
+        y = Math.abs(Math.floor(y));
+
+        var index = this.getIndex(x, y);
+
+        if (index > -1)
+        {
+            var imageData = this.context.getImageData(x, y, 1, 1);
+
+            imageData.data[0] = red;
+            imageData.data[1] = green;
+            imageData.data[2] = blue;
+            imageData.data[3] = alpha;
+
+            this.context.putImageData(imageData, x, y);
+        }
+
+        return this;
+    },
+
+    /**
      * Get the color of a specific pixel from this texture and store it in a Color object.
      * 
      * If you have drawn anything to this CanvasTexture since it was created you must call `CanvasTexture.update` to refresh the array buffer,
