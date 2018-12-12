@@ -633,13 +633,11 @@ var TextureTintPipeline = new Class({
             ty3 = Math.round(ty3);
         }
 
-        //  Adds texture to batch (if not present)
         this.setTexture2D(texture, 0);
 
         var tintEffect = (sprite._isTinted && sprite.tintFill);
 
-        //  Flushes batch if full, which can take the texture batch with it
-        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect);
+        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, 0);
     },
 
     /**
@@ -679,10 +677,12 @@ var TextureTintPipeline = new Class({
      * @param {number} tintBL - The bottom-left tint color value.
      * @param {number} tintBR - The bottom-right tint color value.
      * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
+     * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch if a flush occurs.
+     * @param {integer} [unit=0] - Texture unit to which the texture needs to be bound.
      * 
      * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
      */
-    batchQuad: function (x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect)
+    batchQuad: function (x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, unit)
     {
         var hasFlushed = false;
 
@@ -691,6 +691,8 @@ var TextureTintPipeline = new Class({
             this.flush();
 
             hasFlushed = true;
+
+            this.setTexture2D(texture, unit);
         }
 
         var vertexViewF32 = this.vertexViewF32;
@@ -777,16 +779,20 @@ var TextureTintPipeline = new Class({
      * @param {number} tintTR - The top-right tint color value.
      * @param {number} tintBL - The bottom-left tint color value.
      * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
+     * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch if a flush occurs.
+     * @param {integer} [unit=0] - Texture unit to which the texture needs to be bound.
      * 
      * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
      */
-    batchTri: function (x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintEffect)
+    batchTri: function (x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintEffect, texture, unit)
     {
         var hasFlushed = false;
 
         if (this.vertexCount + 3 > this.vertexCapacity)
         {
             this.flush();
+
+            this.setTexture2D(texture, unit);
 
             hasFlushed = true;
         }
@@ -1002,7 +1008,7 @@ var TextureTintPipeline = new Class({
 
         this.setTexture2D(texture, 0);
 
-        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect);
+        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, 0);
     },
 
     /**
@@ -1060,7 +1066,7 @@ var TextureTintPipeline = new Class({
 
         tint = Utils.getTintAppendFloatAlpha(tint, alpha);
 
-        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, 0);
+        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, 0, frame.glTexture, 0);
     },
 
     /**
