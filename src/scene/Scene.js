@@ -243,7 +243,8 @@ var Scene = new Class({
          */
         this.matter;
 
-        if(typeof PLUGIN_FBINSTANT){
+        if (typeof PLUGIN_FBINSTANT)
+        {
             /**
              * A scene level Facebook Instant Games Plugin.
              * This property will only be available if defined in the Scene Injection Map, the plugin is installed and configured.
