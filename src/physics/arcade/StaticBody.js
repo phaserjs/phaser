@@ -619,14 +619,14 @@ var StaticBody = new Class({
     },
 
     /**
-     * Updates this Static Body's position based on the current Game Object it is bound to.
+     * Resets this Body to the given coordinates. Also positions its parent Game Object to the same coordinates.
      * Similar to `updateFromGameObject`, but doesn't modify the Body's dimensions.
      *
      * @method Phaser.Physics.Arcade.StaticBody#reset
      * @since 3.0.0
      *
-     * @param {number} x - The x coordinate to reset the body to.
-     * @param {number} y - The y coordinate to reset the body to.
+     * @param {number} [x] - The x coordinate to reset the body to. If not given will use the parent Game Object's coordinate.
+     * @param {number} [y] - The y coordinate to reset the body to. If not given will use the parent Game Object's coordinate.
      */
     reset: function (x, y)
     {
@@ -637,6 +637,8 @@ var StaticBody = new Class({
 
         this.world.staticTree.remove(this);
 
+        gameObject.setPosition(x, y);
+        
         gameObject.getTopLeft(this.position);
 
         this.updateCenter();

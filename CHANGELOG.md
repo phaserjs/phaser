@@ -231,6 +231,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * The Texture Tint Pipeline had a logic error that would cause every 2001st quad to either be invisible, or pick-up the texture of the 2000th quad by mistake. The `batchQuad` and `batchTri` methods how handle re-assigning the batch texture if they cause a batch flush as part of their process.
 * Rotating Sprites that used a Normal Map wouldn't rotate the normal map with it, causing the lighting effects to become irregular. The normal map vectors are now rotated correctly (thanks @sercant for the PR and @fazzamatazz and @ysraelJMM for the report)
 * Changing `scaleX` or `scaleY` on a `MatterImage` or `MatterSprite` would cause the body scale to become distorted as the setters didn't use the correct factor when resetting the initial scale. Fix #4206 (thanks @YannCaron)
+* `StaticBody.reset` in Arcade Physics would ignore the `x` and `y` values given to it. If given, they're now used to reset the parent Game Object before the body is updated. Fix #4224 (thanks @samme)
 
 ### Examples and TypeScript
 
