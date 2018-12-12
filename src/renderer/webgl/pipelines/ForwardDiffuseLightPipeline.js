@@ -50,7 +50,12 @@ var ForwardDiffuseLightPipeline = new Class({
         this.defaultNormalMap;
 
         /**
-         * Inverse rotation matrix for normal map rotation fixing.
+         * Inverse rotation matrix for normal map rotations.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#inverseRotationMatrix
+         * @type {Float32Array}
+         * @private
+         * @since 3.16.0
          */
         this.inverseRotationMatrix = new Float32Array([
             1, 0, 0,
@@ -425,11 +430,16 @@ var ForwardDiffuseLightPipeline = new Class({
     /**
      * Rotates the normal map vectors inversely by the given angle.
      * Only works in 2D space.
-     * @param {number} rotation rotation in angles
+     * 
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#setNormalMapRotation
+     * @since 3.16.0
+     * 
+     * @param {number} rotation - The angle of rotation in radians.
      */
     setNormalMapRotation: function (rotation)
     {
         var inverseRotationMatrix = this.inverseRotationMatrix;
+
         if (rotation)
         {
             var rot = -rotation;
@@ -458,7 +468,6 @@ var ForwardDiffuseLightPipeline = new Class({
      * @param {Phaser.GameObjects.Sprite} sprite - The texture-based Game Object to add to the batch.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use for the rendering transform.
      * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - The transform matrix of the parent container, if set.
-     *
      */
     batchSprite: function (sprite, camera, parentTransformMatrix)
     {
