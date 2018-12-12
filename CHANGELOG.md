@@ -157,6 +157,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `CanvasTexture.drawFrame` is a new method that allows you to draw a texture frame to the CanvasTexture based on the texture key and frame given.
 * `CanvasTexture.getIndex` is a new method that will take an x/y coordinate and return the Image Data index offset used to retrieve the pixel values.
 * `CanvasTexture.getPixels` is a new method that will take a region as an x/y and width/height and return all of the pixels in that region from the CanvasTexture.
+* `CanvasTexture.setPixel` is a new method that sets the given pixel in the CanvasTexture to the color and alpha values provided.
 
 ### Updates
 
