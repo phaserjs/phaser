@@ -48,6 +48,15 @@ var ForwardDiffuseLightPipeline = new Class({
          * @since 3.11.0
          */
         this.defaultNormalMap;
+
+        /**
+         * Inverse rotation matrix for normal map rotation fixing.
+         */
+        this.inverseRotationMatrix = new Float32Array([
+            1, 0, 0,
+            0, 1, 0,
+            0, 0, 1
+        ]);
     },
 
     /**
@@ -244,6 +253,7 @@ var ForwardDiffuseLightPipeline = new Class({
         }
 
         this.setTexture2D(normalTexture.glTexture, 1);
+        this.setNormalMapRotation(rotation);
 
         var camMatrix = this._tempMatrix1;
         var spriteMatrix = this._tempMatrix2;
@@ -413,6 +423,33 @@ var ForwardDiffuseLightPipeline = new Class({
     },
 
     /**
+     * Rotates the normal map vectors inversely by the given angle.
+     * Only works in 2D space.
+     * @param {number} rotation rotation in angles
+     */
+    setNormalMapRotation: function (rotation)
+    {
+        var inverseRotationMatrix = this.inverseRotationMatrix;
+        if (rotation)
+        {
+            var rot = -rotation;
+            var c = Math.cos(rot);
+            var s = Math.sin(rot);
+
+            inverseRotationMatrix[1] = s;
+            inverseRotationMatrix[3] = -s;
+            inverseRotationMatrix[0] = inverseRotationMatrix[4] = c;
+        }
+        else
+        {
+            inverseRotationMatrix[0] = inverseRotationMatrix[4] = 1;
+            inverseRotationMatrix[1] = inverseRotationMatrix[3] = 0;
+        }
+
+        this.renderer.setMatrix3(this.program, 'uInverseRotationMatrix', false, inverseRotationMatrix);
+    },
+
+    /**
      * Takes a Sprite Game Object, or any object that extends it, which has a normal texture and adds it to the batch.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchSprite
@@ -437,6 +474,7 @@ var ForwardDiffuseLightPipeline = new Class({
             this.renderer.setPipeline(this);
 
             this.setTexture2D(normalTexture.glTexture, 1);
+            this.setNormalMapRotation(sprite.rotation);
 
             TextureTintPipeline.prototype.batchSprite.call(this, sprite, camera, parentTransformMatrix);
         }
