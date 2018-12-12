@@ -1137,6 +1137,7 @@ var WebGLRenderer = new Class({
      *
      * @param {WebGLTexture} texture - The WebGL texture that needs to be bound.
      * @param {integer} textureUnit - The texture unit to which the texture will be bound.
+     * @param {boolean} [flush=true] - Will the current pipeline be flushed if this is a new texture, or not?
      *
      * @return {this} This WebGLRenderer instance.
      */
