@@ -31,15 +31,13 @@ var ValueToColor = require('../display/color/ValueToColor');
 /**
  * Config object containing various sound settings.
  *
- * @typedef {object} SoundConfig
+ * @typedef {object} AudioConfig
  *
- * @property {boolean} [mute=false] - Boolean indicating whether the sound should be muted or not.
- * @property {number} [volume=1] - A value between 0 (silence) and 1 (full volume).
- * @property {number} [rate=1] - Defines the speed at which the sound should be played.
- * @property {number} [detune=0] - Represents detuning of sound in [cents](https://en.wikipedia.org/wiki/Cent_%28music%29).
- * @property {number} [seek=0] - Position of playback for this sound, in seconds.
- * @property {boolean} [loop=false] - Whether or not the sound or current sound marker should loop.
- * @property {number} [delay=0] - Time, in seconds, that should elapse before the sound actually starts its playback.
+ * @property {boolean} [disableWebAudio=false] - Use HTML5 Audio instead of Web Audio.
+ * @property {AudioContext} [context] - An existing Web Audio context.
+ * @property {boolean} [noAudio=false] - Disable all audio output.
+ *
+ * @see Phaser.Sound.SoundManagerCreator
  */
 
 /**
@@ -481,7 +479,7 @@ var Config = new Class({
         this.disableContextMenu = GetValue(config, 'disableContextMenu', false);
 
         /**
-         * @const {SoundConfig} Phaser.Boot.Config#audio - The Audio Configuration object.
+         * @const {AudioConfig} Phaser.Boot.Config#audio - The Audio Configuration object.
          */
         this.audio = GetValue(config, 'audio');
 
