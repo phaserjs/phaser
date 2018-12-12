@@ -237,13 +237,17 @@ one set of bindings ever created, which makes things a lot cleaner.
 
 Thanks to the following for helping with the Phaser 3 Examples and TypeScript definitions, either by reporting errors, or even better, fixing them:
 
-@guilhermehto @samvieten @darkwebdev @RoryO @snowbillr @slothyrulez @bryanwood @jestarray @matosummer @tfelix 
+@guilhermehto @samvieten @darkwebdev @RoryO @snowbillr @slothyrulez
 
 ### Phaser Doc Jam
 
 The Phaser Doc Jam was a community-backed effort to try and get the Phaser 3 API documentation to 100% coverage. The Doc Jam is now over and I offer my thanks to the following who helped with docs in this release:
 
 16patsle - @gurungrahul2 - @icbat - @samme - @telinc1 - anandu pavanan - blackhawx - candelibas - Diego Romero - doronlinder - Elliott Wallace - eric - Georges Gabereau - Haobo Zhang - henriacle - jak6jak - Jake Jensen - James Van Roose - JamesSkemp - joelahoover - Joey - madclaws - marc136 - Mihail Ilinov - naum303 - NicolasRoehm - nuane - rejacobson - Robert Kowalski - rodri042 - rootasjey - sawamara - scottwestover - sir13tommy - stetso - therealsamf - Tigran - willblackmore - zenwaichi
+
+Also, the following helped with the docs outside of the Doc Jam:
+
+@bryanwood @jestarray @matosummer @tfelix @imilo
 
 ## Version 3.15.1 - Batou - 16th October 2018
 
