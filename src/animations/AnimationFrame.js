@@ -19,8 +19,7 @@ var Class = require('../utils/Class');
  * A single frame in an Animation sequence.
  *
  * An AnimationFrame consists of a reference to the Texture it uses for rendering, references to other
- * frames in the animation, and index data. It also has the ability to fire its own `onUpdate` callback
- * and modify the animation timing.
+ * frames in the animation, and index data. It also has the ability to modify the animation timing.
  *
  * AnimationFrames are generated automatically by the Animation class.
  *
