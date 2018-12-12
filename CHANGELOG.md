@@ -187,6 +187,10 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `Animation.play` and `playReverse` will now accept either a string-based key of the animation to play (like before), or you can pass in an Animation instance, and it will play that animation.
 * `CanvasTexture.clear` now has 4 new optional arguments: `x, y, width, height` which allow you to define the region of the texture to be cleared. If not provided it will clear the whole texture, which is the same behavior as before.
 * EarCut, the polygon triangulation library used by the Graphics and WebGL classes, has been upgraded from 2.1.1 to 2.1.4. 2.1.2 fixed a few race conditions where bad input would cause an error. 2.1.3 improved performance for bigger inputs (5-12%) and 2.1.4 fixed a race condition that could lead to a freeze on degenerate input.
+* `TextureTintPipeline.batchQuad` and `batchTri` have two new optional arguments `texture` and `unit` which are used to re-set the batch texture should the method cause a batch flush.
+* `TextureTintPipeline.requireTextureBatch` is a new internal method that helps speed-up the creation of texture batches. It is used in conjunction with `setTexture2D` and `pushBatch`.
+* `TextureTintPipeline.flush` and `TextureTintPipeline.pushBatch` have been optimized to handle zero based texture units as priority. They've also been refactored to avoid creation of empty texture batches.
+* The `WebGLRenderer.setTexture2D` method has a new optional argument `flush` which controls if the pipeline is flushed if the given texture is new, or not. This is used internally to skip flushing during an existing flush.
 
 ### Bug Fixes
 
@@ -221,6 +225,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `Particle.resetPosition` is a new method that is called when a particle dies, preparing it ready for firing again in the future.
 * The Canvas `SetTransform` method would save the context state, but it wasn't restored at the end in the following Game Objects: Dynamic Bitmap Text, Graphics, Arc, Curve, Ellipse, Grid, IsoBox, IsoTriangle, Line, Polygon, Rectangle, Star and Triangle. These now all restore the context, meaning if you're using non-canvas sized cameras in Canvas mode, it will now render beyond just the first custom camera.
 * `Utils.Array.MoveUp` wouldn't let you move an array element to the top-most index in the array. This also impacted `Container.moveUp`.
+* The Texture Tint Pipeline had a logic error that would cause every 2001st quad to either be invisible, or pick-up the texture of the 2000th quad by mistake. The `batchQuad` and `batchTri` methods how handle re-assigning the batch texture if they cause a batch flush as part of their process.
 
 ### Examples and TypeScript
 
