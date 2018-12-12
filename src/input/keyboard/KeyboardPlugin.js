@@ -718,10 +718,13 @@ var KeyboardPlugin = new Class({
                     key.onDown(event);
                 }
 
-                if (!event.cancelled && KeyMap[code] && (!key || !repeat))
+                if (!event.cancelled && (!key || !repeat))
                 {
                     //  keydown_code event
-                    this.emit('keydown_' + KeyMap[code], event);
+                    if (KeyMap[code])
+                    {
+                        this.emit('keydown_' + KeyMap[code], event);
+                    }
 
                     if (!event.cancelled)
                     {
@@ -738,10 +741,13 @@ var KeyboardPlugin = new Class({
                     key.onUp(event);
                 }
 
-                if (!event.cancelled && KeyMap[code])
+                if (!event.cancelled)
                 {
                     //  keyup_code event
-                    this.emit('keyup_' + KeyMap[code], event);
+                    if (KeyMap[code])
+                    {
+                        this.emit('keyup_' + KeyMap[code], event);
+                    }
 
                     if (!event.cancelled)
                     {

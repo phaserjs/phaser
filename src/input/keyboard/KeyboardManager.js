@@ -188,7 +188,7 @@ var KeyboardManager = new Class({
                 // Do nothing if event already handled
                 return;
             }
-   
+
             _this.queue.push(event);
     
             var modified = (event.altKey || event.ctrlKey || event.shiftKey || event.metaKey);

@@ -33,6 +33,8 @@ There is also the `stopPropagation()` function. This works in the same way as `s
 
 All the above also works for `keyup` events.
 
+New in 3.16 is the ability to receive a global `keydown` or `keyup` event from any key on the keyboard. Previously, it would only emit the event if it came from one of the keys listed in the KeyCodes file. Now, those global events will fire for any key, regardless of location.
+
 #### Keyboard Captures
 
 Key capturing is the way in which you stop a keyboard DOM event from activating anything else in the browser by calling `preventDefault` on it. For example, in tall web pages, pressing the SPACE BAR causes the page to scroll down. Obviously, if this is also the fire or jump button in your game, you don't want this to happen. So the key needs to be 'captured' to prevent it. Equally, you may wish to also capture the arrow keys, for similar reasons. Key capturing is done on a global level. If you set-up the capture of a key in one Scene, it will be captured globally across the whole game.
