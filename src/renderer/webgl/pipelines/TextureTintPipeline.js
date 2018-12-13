@@ -1089,6 +1089,8 @@ var TextureTintPipeline = new Class({
         var xw = x + width;
         var yh = y + height;
 
+        this.setTexture2D();
+
         var tint = Utils.getTintAppendFloatAlphaAndSwap(color, alpha);
 
         this.batchQuad(x, y, x, yh, xw, yh, xw, y, 0, 0, 1, 1, tint, tint, tint, tint, 2);
