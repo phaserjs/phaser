@@ -710,7 +710,9 @@ var Tile = new Class({
         // bottom left, while the Phaser renderer assumes the origin is the top left. The y
         // coordinate needs to be adjusted by the difference.
         this.pixelX = this.x * this.baseWidth;
-        this.pixelY = this.y * this.baseHeight - (this.height - this.baseHeight);
+        this.pixelY = this.y * this.baseHeight;
+
+        // this.pixelY = this.y * this.baseHeight - (this.height - this.baseHeight);
 
         return this;
     },
