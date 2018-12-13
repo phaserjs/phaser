@@ -416,10 +416,6 @@ var StaticTilemapLayer = new Class({
         this.tileset = setList;
     },
 
-    calculateSize: function ()
-    {
-    },
-
     /**
      * Prepares the VBO data arrays for population by the `upload` method.
      *
@@ -635,13 +631,13 @@ var StaticTilemapLayer = new Class({
         if (tile.flipX)
         {
             tileWidth *= -1;
-            x += tile.width;
+            x += tileset.tileWidth;
         }
 
         if (tile.flipY)
         {
             tileHeight *= -1;
-            y += tile.height;
+            y += tileset.tileHeight;
         }
 
         var xw = x + tileWidth;
