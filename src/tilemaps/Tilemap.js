@@ -1968,9 +1968,9 @@ var Tilemap = new Class({
             var mapWidth = this.layers[i].width;
             var mapHeight = this.layers[i].height;
 
-            for (var row = 0; row < mapHeight; ++row)
+            for (var row = 0; row < mapHeight; row++)
             {
-                for (var col = 0; col < mapWidth; ++col)
+                for (var col = 0; col < mapWidth; col++)
                 {
                     var tile = mapData[row][col];
 
@@ -2014,13 +2014,16 @@ var Tilemap = new Class({
         var mapWidth = layer.width;
         var mapHeight = layer.height;
 
-        for (var row = 0; row < mapHeight; ++row)
+        for (var row = 0; row < mapHeight; row++)
         {
-            for (var col = 0; col < mapWidth; ++col)
+            for (var col = 0; col < mapWidth; col++)
             {
                 var tile = mapData[row][col];
 
-                if (tile !== null) { tile.setSize(tileWidth, tileHeight); }
+                if (tile !== null)
+                {
+                    tile.setSize(tileWidth, tileHeight);
+                }
             }
         }
 
