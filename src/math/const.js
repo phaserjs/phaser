@@ -53,6 +53,7 @@ var MATH_CONST = {
 
     /**
      * An instance of the Random Number Generator.
+     * This is not set until the Game boots.
      * 
      * @name Phaser.Math.RND
      * @type {Phaser.Math.RandomDataGenerator}

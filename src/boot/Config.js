@@ -10,8 +10,7 @@ var Device = require('../device');
 var GetFastValue = require('../utils/object/GetFastValue');
 var GetValue = require('../utils/object/GetValue');
 var IsPlainObject = require('../utils/object/IsPlainObject');
-var MATH = require('../math/const');
-var RND = require('../math/random-data-generator/RandomDataGenerator');
+var PhaserMath = require('../math/');
 var NOOP = require('../utils/NOOP');
 var DefaultPlugins = require('../plugins/DefaultPlugins');
 var ValueToColor = require('../display/color/ValueToColor');
@@ -370,9 +369,7 @@ var Config = new Class({
          */
         this.seed = GetValue(config, 'seed', [ (Date.now() * Math.random()).toString() ]);
 
-        MATH.RND = new RND();
-
-        MATH.RND.init(this.seed);
+        PhaserMath.RND = new PhaserMath.RandomDataGenerator(this.seed);
 
         /**
          * @const {string} Phaser.Boot.Config#gameTitle - The title of the game.
