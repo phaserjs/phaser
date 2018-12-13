@@ -65,7 +65,6 @@ var LoaderPlugin = new Class({
          *
          * @name Phaser.Loader.LoaderPlugin#scene
          * @type {Phaser.Scene}
-         * @protected
          * @since 3.0.0
          */
         this.scene = scene;
@@ -75,7 +74,6 @@ var LoaderPlugin = new Class({
          *
          * @name Phaser.Loader.LoaderPlugin#systems
          * @type {Phaser.Scenes.Systems}
-         * @protected
          * @since 3.0.0
          */
         this.systems = scene.sys;
@@ -85,7 +83,6 @@ var LoaderPlugin = new Class({
          *
          * @name Phaser.Loader.LoaderPlugin#cacheManager
          * @type {Phaser.Cache.CacheManager}
-         * @protected
          * @since 3.7.0
          */
         this.cacheManager = scene.sys.cache;
@@ -95,7 +92,6 @@ var LoaderPlugin = new Class({
          *
          * @name Phaser.Loader.LoaderPlugin#textureManager
          * @type {Phaser.Textures.TextureManager}
-         * @protected
          * @since 3.7.0
          */
         this.textureManager = scene.sys.textures;
