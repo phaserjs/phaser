@@ -313,6 +313,54 @@ var CanvasTexture = new Class({
     },
 
     /**
+     * Puts the ImageData into the context of this CanvasTexture at the given coordinates.
+     *
+     * @method Phaser.Textures.CanvasTexture#putData
+     * @since 3.16.0
+     * 
+     * @param {ImageData} imageData - The ImageData to put at the given location.
+     * @param {integer} x - The x coordinate to put the imageData. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {integer} y - The y coordinate to put the imageData. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * 
+     * @return {this} This CanvasTexture.
+     */
+    putData: function (imageData, x, y)
+    {
+        x = Math.abs(Math.floor(x));
+        y = Math.abs(Math.floor(y));
+
+        this.context.putImageData(imageData, x, y);
+
+        return this;
+    },
+
+    /**
+     * Gets an ImageData region from this CanvasTexture from the position and size specified.
+     * You can write this back using `CanvasTexture.putData`, or manipulate it.
+     *
+     * @method Phaser.Textures.CanvasTexture#getData
+     * @since 3.16.0
+     * 
+     * @param {integer} x - The x coordinate of the top-left of the area to get the ImageData from. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {integer} y - The y coordinate of the top-left of the area to get the ImageData from. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {integer} width - The width of the region to get. Must be an integer.
+     * @param {integer} height - The height of the region to get. Must be an integer.
+     * 
+     * @return {ImageData} The ImageData extracted from this CanvasTexture.
+     */
+    getData: function (x, y, width, height)
+    {
+        x = Clamp(Math.floor(x), 0, this.width - 1);
+        y = Clamp(Math.floor(y), 0, this.height - 1);
+        width = Clamp(width, 1, this.width - x);
+        height = Clamp(height, 1, this.height - y);
+
+        var imageData = this.context.getImageData(x, y, width, height);
+
+        return imageData;
+    },
+
+    /**
      * Get the color of a specific pixel from this texture and store it in a Color object.
      * 
      * If you have drawn anything to this CanvasTexture since it was created you must call `CanvasTexture.update` to refresh the array buffer,
