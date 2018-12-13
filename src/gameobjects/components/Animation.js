@@ -882,6 +882,8 @@ var Animation = new Class({
     /**
      * Immediately stops the current animation from playing and dispatches the `animationcomplete` event.
      * 
+     * If no animation is set, no event will be dispatched.
+     * 
      * If there is another animation queued (via the `chain` method) then it will start playing immediately.
      *
      * @method Phaser.GameObjects.Components.Animation#stop
@@ -900,11 +902,14 @@ var Animation = new Class({
         var anim = this.currentAnim;
         var frame = this.currentFrame;
 
-        anim.emit('complete', anim, frame);
+        if (anim)
+        {
+            anim.emit('complete', anim, frame);
 
-        gameObject.emit('animationcomplete-' + anim.key, anim, frame, gameObject);
-
-        gameObject.emit('animationcomplete', anim, frame, gameObject);
+            gameObject.emit('animationcomplete-' + anim.key, anim, frame, gameObject);
+    
+            gameObject.emit('animationcomplete', anim, frame, gameObject);
+        }
 
         if (this.nextAnim)
         {
