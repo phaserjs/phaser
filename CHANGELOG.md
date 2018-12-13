@@ -161,6 +161,8 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `CanvasTexture.getIndex` is a new method that will take an x/y coordinate and return the Image Data index offset used to retrieve the pixel values.
 * `CanvasTexture.getPixels` is a new method that will take a region as an x/y and width/height and return all of the pixels in that region from the CanvasTexture.
 * `CanvasTexture.setPixel` is a new method that sets the given pixel in the CanvasTexture to the color and alpha values provided.
+* `CanvasTexture.getData` is a new method that will extract an ImageData block from the CanvasTexture from the region given.
+* `CanvasTexture.putData` is a new method that will put an ImageData block at the given coordinates in a CanvasTexture.
 
 ### Updates
 
