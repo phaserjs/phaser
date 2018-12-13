@@ -355,7 +355,7 @@ var StaticTilemapLayer = new Class({
         this.setAlpha(this.layer.alpha);
         this.setPosition(x, y);
         this.setOrigin();
-        this.setSize(this.layer.tileWidth * this.layer.width, this.layer.tileHeight * this.layer.height);
+        this.setSize(tileset.tileWidth * this.layer.width, tileset.tileHeight * this.layer.height);
 
         this.updateVBOData();
 
@@ -596,8 +596,8 @@ var StaticTilemapLayer = new Class({
      * @param {integer} vOffset - The vertex offset.
      * @param {any} tile - The tile being rendered.
      * @param {any} tileset - The tileset being used for rendering.
-     * @param {integer} width - The width of the layer.
-     * @param {integer} height - The height of the layer.
+     * @param {integer} width - The width of the tileset image in pixels.
+     * @param {integer} height - The height of the tileset image in pixels.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera the layer is being rendered with.
      * @param {integer} tilesetIndex - The tileset index.
      *
@@ -612,18 +612,18 @@ var StaticTilemapLayer = new Class({
             return vOffset;
         }
 
-        var u0 = texCoords.x / width;
-        var v0 = texCoords.y / height;
-        var u1 = (texCoords.x + tile.width) / width;
-        var v1 = (texCoords.y + tile.height) / height;
-
-        var matrix = this._tempMatrix;
-
-        var tileWidth = tile.width;
-        var tileHeight = tile.height;
+        var tileWidth = tileset.tileWidth;
+        var tileHeight = tileset.tileHeight;
 
         var halfTileWidth = tileWidth / 2;
         var halfTileHeight = tileHeight / 2;
+
+        var u0 = texCoords.x / width;
+        var v0 = texCoords.y / height;
+        var u1 = (texCoords.x + tileWidth) / width;
+        var v1 = (texCoords.y + tileHeight) / height;
+
+        var matrix = this._tempMatrix;
 
         var x = -halfTileWidth;
         var y = -halfTileHeight;
