@@ -197,6 +197,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `TextureTintPipeline.requireTextureBatch` is a new internal method that helps speed-up the creation of texture batches. It is used in conjunction with `setTexture2D` and `pushBatch`.
 * `TextureTintPipeline.flush` and `TextureTintPipeline.pushBatch` have been optimized to handle zero based texture units as priority. They've also been refactored to avoid creation of empty texture batches.
 * The `WebGLRenderer.setTexture2D` method has a new optional argument `flush` which controls if the pipeline is flushed if the given texture is new, or not. This is used internally to skip flushing during an existing flush.
+* The Tilemap Layer `width` and `height` properties are now based on the tilemap tile sizes multiplied by the layer dimensions. This corrects an issue with layer sizes being wrong if you called `setBaseTileSize` on a Map.
 
 ### Bug Fixes
 
@@ -236,6 +237,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * Rotating Sprites that used a Normal Map wouldn't rotate the normal map with it, causing the lighting effects to become irregular. The normal map vectors are now rotated correctly (thanks @sercant for the PR and @fazzamatazz and @ysraelJMM for the report)
 * Changing `scaleX` or `scaleY` on a `MatterImage` or `MatterSprite` would cause the body scale to become distorted as the setters didn't use the correct factor when resetting the initial scale. Fix #4206 (thanks @YannCaron)
 * `StaticBody.reset` in Arcade Physics would ignore the `x` and `y` values given to it. If given, they're now used to reset the parent Game Object before the body is updated. Fix #4224 (thanks @samme)
+* Static Tilemap Layers wouldn't render correctly if the layer used a tileset with a different size to the base map data (set via `setBaseTileSize`). They now render correctly in WebGL and Canvas, regardless of the base tile size.
 
 ### Examples and TypeScript
 

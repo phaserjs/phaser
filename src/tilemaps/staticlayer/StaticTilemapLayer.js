@@ -355,7 +355,7 @@ var StaticTilemapLayer = new Class({
         this.setAlpha(this.layer.alpha);
         this.setPosition(x, y);
         this.setOrigin();
-        this.setSize(tileset.tileWidth * this.layer.width, tileset.tileHeight * this.layer.height);
+        this.setSize(tilemap.tileWidth * this.layer.width, tilemap.tileHeight * this.layer.height);
 
         this.updateVBOData();
 
@@ -414,6 +414,10 @@ var StaticTilemapLayer = new Class({
 
         this.gidMap = gidMap;
         this.tileset = setList;
+    },
+
+    calculateSize: function ()
+    {
     },
 
     /**
