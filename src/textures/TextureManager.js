@@ -320,7 +320,7 @@ var TextureManager = new Class({
      *
      * @param {string} key - The unique string-based key of the Texture.
      * @param {HTMLImageElement} source - The source Image element.
-     * @param {HTMLImageElement} [dataSource] - An optional data Image element.
+     * @param {HTMLImageElement|HTMLCanvasElement} [dataSource] - An optional data Image element.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
@@ -479,7 +479,7 @@ var TextureManager = new Class({
      * @param {string} key - The unique string-based key of the Texture.
      * @param {HTMLImageElement} source - The source Image element.
      * @param {object} data - The Texture Atlas data.
-     * @param {HTMLImageElement} [dataSource] - An optional data Image element.
+     * @param {HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[]} [dataSource] - An optional data Image element.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
@@ -507,7 +507,7 @@ var TextureManager = new Class({
      * @param {string} key - The unique string-based key of the Texture.
      * @param {(HTMLImageElement|HTMLImageElement[])} source - The source Image element/s.
      * @param {(object|object[])} data - The Texture Atlas data/s.
-     * @param {HTMLImageElement} [dataSource] - An optional data Image element.
+     * @param {HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[]} [dataSource] - An optional data Image element.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
@@ -559,7 +559,7 @@ var TextureManager = new Class({
      * @param {string} key - The unique string-based key of the Texture.
      * @param {HTMLImageElement} source - The source Image element.
      * @param {object} data - The Texture Atlas data.
-     * @param {HTMLImageElement} [dataSource] - An optional data Image element.
+     * @param {HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[]} [dataSource] - An optional data Image element.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
@@ -604,7 +604,7 @@ var TextureManager = new Class({
      * @param {string} key - The unique string-based key of the Texture.
      * @param {HTMLImageElement} source - The source Image element.
      * @param {object} data - The Texture Atlas XML data.
-     * @param {HTMLImageElement} [dataSource] - An optional data Image element.
+     * @param {HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[]} [dataSource] - An optional data Image element.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
@@ -639,7 +639,7 @@ var TextureManager = new Class({
      * @param {string} key - The unique string-based key of the Texture.
      * @param {HTMLImageElement} source - The source Image element.
      * @param {object} data - The Texture Atlas data.
-     * @param {HTMLImageElement} [dataSource] - An optional data Image element.
+     * @param {HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[]} [dataSource] - An optional data Image element.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
