@@ -16,6 +16,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @extends GroupConfig
  *
  * @property {boolean} [collideWorldBounds=false] - Sets {@link Phaser.Physics.Arcade.Body#collideWorldBounds}.
+ * @property {Phaser.Geom.Rectangle} [customBoundsRectangle=null] - Sets {@link Phaser.Physics.Arcade.Body#customBoundsRectangle}.
  * @property {number} [accelerationX=0] - Sets {@link Phaser.Physics.Arcade.Body#acceleration acceleration.x}.
  * @property {number} [accelerationY=0] - Sets {@link Phaser.Physics.Arcade.Body#acceleration acceleration.y}.
  * @property {boolean} [allowDrag=true] - Sets {@link Phaser.Physics.Arcade.Body#allowDrag}.
@@ -43,6 +44,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @typedef {object} PhysicsGroupDefaults
  *
  * @property {boolean} setCollideWorldBounds - As {@link Phaser.Physics.Arcade.Body#setCollideWorldBounds}.
+ * @property {Phaser.Geom.Rectangle} setBoundsRectangle - As {@link Phaser.Physics.Arcade.Body#setBoundsRectangle}.
  * @property {number} setAccelerationX - As {@link Phaser.Physics.Arcade.Body#setAccelerationX}.
  * @property {number} setAccelerationY - As {@link Phaser.Physics.Arcade.Body#setAccelerationY}.
  * @property {boolean} setAllowDrag - As {@link Phaser.Physics.Arcade.Body#setAllowDrag}.
@@ -168,6 +170,7 @@ var PhysicsGroup = new Class({
          */
         this.defaults = {
             setCollideWorldBounds: GetFastValue(config, 'collideWorldBounds', false),
+            setBoundsRectangle: GetFastValue(config, 'customBoundsRectangle', null),
             setAccelerationX: GetFastValue(config, 'accelerationX', 0),
             setAccelerationY: GetFastValue(config, 'accelerationY', 0),
             setAllowDrag: GetFastValue(config, 'allowDrag', true),
