@@ -1221,7 +1221,7 @@ var Tween = new Class({
                 }
 
                 var forward = (tweenData.state === TWEEN_CONST.PLAYING_FORWARD);
-                var progress = elapsed / duration;
+                var progress = (elapsed / duration) || 1;
 
                 var v;
 
