@@ -9,13 +9,33 @@
 
 (function() {
 
-// A stable array sort, because `Array#sort()` is not guaranteed stable.
-// This is an implementation of merge sort, without recursion.
-
+ /**
+ * A stable array sort, because `Array#sort()` is not guaranteed stable.
+ * This is an implementation of merge sort, without recursion.
+ *
+ * @function Phaser.Utils.Array.StableSort
+ * @since 3.0.0
+ *
+ * @param {array} arr - The input array to be sorted.
+ * @param {function} comp - The comparison handler.
+ *
+ * @return {array} The sorted result.
+ */
 var stable = function(arr, comp) {
     return exec(arr.slice(), comp);
 };
 
+ /**
+ * Sort the input array and simply copy it back if the result isn't in the original array, which happens on an odd number of passes.
+ *
+ * @function Phaser.Utils.Array.StableSort.inplace
+ * @since 3.0.0
+ *
+ * @param {array} arr - The input array.
+ * @param {function} comp - The comparison handler.
+ *
+ * @return {array} The sorted array.
+ */
 stable.inplace = function(arr, comp) {
     var result = exec(arr, comp);
 
