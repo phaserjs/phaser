@@ -199,6 +199,9 @@ one set of bindings ever created, which makes things a lot cleaner.
 * The `WebGLRenderer.setTexture2D` method has a new optional argument `flush` which controls if the pipeline is flushed if the given texture is new, or not. This is used internally to skip flushing during an existing flush.
 * The Tilemap Layer `width` and `height` properties are now based on the tilemap tile sizes multiplied by the layer dimensions. This corrects an issue with layer sizes being wrong if you called `setBaseTileSize` on a Map.
 * The WebGLRenderer will now clear the framebuffer at the start of every render.
+* `WebGLRenderer.setScissor` now has a new optional argument `drawingBufferHeight` which allows you to specify the drawing buffer height, rather than use the renderers default value.
+* `WebGLRenderer.pushScissor` now has a new optional argument `drawingBufferHeight` which allows you to specify the drawing buffer height, rather than use the renderers default value.
+* `WebGLRenderer.preRender` now calls `gl.clearColor` in order to restore the background clear color in case something, like a Render Texture, has changed it.
 
 ### Bug Fixes
 
@@ -244,6 +247,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `RenderTexture.fill` in WebGL would use `gl.clear` and a clear color to try and fill the Render Texture. This only worked for full-canvas sized RenderTextures that didn't have a camera zoom applied. It has now been swapped to use the `drawFillRect` method of the Texture Tint Pipeline, allowing it to work properly regardless of camera zoom or size.
 * `Container.getFirst` was using an incorrect Array Utils function `GetFirstElement`, when it should have been using `GetFirst`. It now uses the correct function. Fix #4244 (thanks @miran248)
 * `List.getFirst` was using an incorrect Array Utils function `GetFirstElement`, when it should have been using `GetFirst`. It now uses the correct function. Fix #4244 (thanks @miran248)
+* Fixed an issue where changing the viewport or size of a Camera belonging to a RenderTexture, it wouldn't impact the rendering and objects will still render outside of the viewport range. It's now converted to a proper gl scissor rect by the renderer, meaning you can limit the area rendered to by adjusting the internal Render Texture cameras viewport. Fix #4243 (thanks @hackhat)
 
 ### Examples and TypeScript
 
