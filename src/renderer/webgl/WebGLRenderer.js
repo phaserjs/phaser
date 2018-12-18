@@ -1781,6 +1781,10 @@ var WebGLRenderer = new Class({
 
         if (this.config.clearBeforeRender)
         {
+            var clearColor = this.config.backgroundColor;
+
+            gl.clearColor(clearColor.redGL, clearColor.greenGL, clearColor.blueGL, 1);
+
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
         }
 
