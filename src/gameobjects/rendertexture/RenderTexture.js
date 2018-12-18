@@ -409,9 +409,9 @@ var RenderTexture = new Class({
     {
         if (alpha === undefined) { alpha = 1; }
 
-        var ur = ((rgb >> 16)|0) & 0xff;
-        var ug = ((rgb >> 8)|0) & 0xff;
-        var ub = (rgb|0) & 0xff;
+        var r = ((rgb >> 16) | 0) & 0xff;
+        var g = ((rgb >> 8) | 0) & 0xff;
+        var b = (rgb | 0) & 0xff;
 
         if (this.gl)
         {
@@ -419,7 +419,7 @@ var RenderTexture = new Class({
 
             var gl = this.gl;
     
-            gl.clearColor(ur / 255.0, ug / 255.0, ub / 255.0, alpha);
+            gl.clearColor(r / 255, g / 255, b / 255, alpha);
     
             gl.clear(gl.COLOR_BUFFER_BIT);
     
@@ -427,7 +427,7 @@ var RenderTexture = new Class({
         }
         else
         {
-            this.context.fillStyle = 'rgb(' + ur + ',' + ug + ',' + ub + ')';
+            this.context.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
             this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
         }
 
