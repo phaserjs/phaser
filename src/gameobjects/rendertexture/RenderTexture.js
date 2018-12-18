@@ -615,7 +615,7 @@ var RenderTexture = new Class({
 
         var gl = this.gl;
 
-        this.camera.preRender(1, 1, 1);
+        this.camera.preRender(1, 1);
 
         if (gl)
         {
