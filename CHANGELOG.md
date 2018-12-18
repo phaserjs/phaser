@@ -240,8 +240,10 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `StaticBody.reset` in Arcade Physics would ignore the `x` and `y` values given to it. If given, they're now used to reset the parent Game Object before the body is updated. Fix #4224 (thanks @samme)
 * Static Tilemap Layers wouldn't render correctly if the layer used a tileset with a different size to the base map data (set via `setBaseTileSize`). They now render correctly in WebGL and Canvas, regardless of the base tile size.
 * When using `RenderTexture.fill`, the `alpha` argument would be ignored in Canvas mode. It's now used when filling the RenderTexture.
-* Fixed an issue in `WebGLRenderer.setScissor` where it was possible to try and compare the scissor size to a non-current scissor, if called outside of the render loop (i.e. from `RenderTexture.fill`)
+* Fixed an issue in `WebGLRenderer.setScissor` where it was possible to try and compare the scissor size to a non-current scissor, if called outside of the render loop (i.e. from `RenderTexture.fill`) (thanks @hackhat)
 * `RenderTexture.fill` in WebGL would use `gl.clear` and a clear color to try and fill the Render Texture. This only worked for full-canvas sized RenderTextures that didn't have a camera zoom applied. It has now been swapped to use the `drawFillRect` method of the Texture Tint Pipeline, allowing it to work properly regardless of camera zoom or size.
+* `Container.getFirst` was using an incorrect Array Utils function `GetFirstElement`, when it should have been using `GetFirst`. It now uses the correct function. Fix #4244 (thanks @miran248)
+* `List.getFirst` was using an incorrect Array Utils function `GetFirstElement`, when it should have been using `GetFirst`. It now uses the correct function. Fix #4244 (thanks @miran248)
 
 ### Examples and TypeScript
 
