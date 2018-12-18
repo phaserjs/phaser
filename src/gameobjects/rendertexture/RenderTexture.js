@@ -414,7 +414,9 @@ var RenderTexture = new Class({
         var g = ((rgb >> 8) | 0) & 0xff;
         var b = (rgb | 0) & 0xff;
 
-        if (this.gl)
+        var gl = this.gl;
+
+        if (gl)
         {
             var renderer = this.renderer;
 
@@ -451,17 +453,18 @@ var RenderTexture = new Class({
     {
         if (this.dirty)
         {
-            if (this.gl)
-            {
-                this.renderer.setFramebuffer(this.framebuffer, true);
+            var gl = this.gl;
 
-                var gl = this.gl;
-        
+            if (gl)
+            {
+                var renderer = this.renderer;
+
+                renderer.setFramebuffer(this.framebuffer, true);
+   
                 gl.clearColor(0, 0, 0, 0);
-        
                 gl.clear(gl.COLOR_BUFFER_BIT);
-        
-                this.renderer.setFramebuffer(null, true);
+
+                renderer.setFramebuffer(null, true);
             }
             else
             {
@@ -619,7 +622,14 @@ var RenderTexture = new Class({
 
         if (gl)
         {
-            this.renderer.setFramebuffer(this.framebuffer, true);
+            var cx = this.camera._cx;
+            var cy = this.camera._cy;
+            var cw = this.camera._cw;
+            var ch = this.camera._ch;
+
+            this.renderer.setFramebuffer(this.framebuffer, false);
+
+            this.renderer.pushScissor(cx, cy, cw, ch, ch);
 
             var pipeline = this.pipeline;
     
@@ -629,7 +639,9 @@ var RenderTexture = new Class({
 
             pipeline.flush();
 
-            this.renderer.setFramebuffer(null, true);
+            this.renderer.setFramebuffer(null, false);
+
+            this.renderer.popScissor();
 
             pipeline.projOrtho(0, pipeline.width, pipeline.height, 0, -1000.0, 1000.0);
         }
@@ -697,12 +709,19 @@ var RenderTexture = new Class({
 
         if (textureFrame)
         {
-            this.camera.preRender(1, 1, 1);
+            this.camera.preRender(1, 1);
 
             if (gl)
             {
-                this.renderer.setFramebuffer(this.framebuffer, true);
-
+                var cx = this.camera._cx;
+                var cy = this.camera._cy;
+                var cw = this.camera._cw;
+                var ch = this.camera._ch;
+    
+                this.renderer.setFramebuffer(this.framebuffer, false);
+    
+                this.renderer.pushScissor(cx, cy, cw, ch, ch);
+    
                 var pipeline = this.pipeline;
         
                 pipeline.projOrtho(0, this.width, 0, this.height, -1000.0, 1000.0);
@@ -711,8 +730,10 @@ var RenderTexture = new Class({
             
                 pipeline.flush();
         
-                this.renderer.setFramebuffer(null, true);
-        
+                this.renderer.setFramebuffer(null, false);
+
+                this.renderer.popScissor();
+            
                 pipeline.projOrtho(0, pipeline.width, pipeline.height, 0, -1000.0, 1000.0);
             }
             else
