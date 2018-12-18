@@ -610,7 +610,7 @@ var Container = new Class({
      */
     getFirst: function (property, value, startIndex, endIndex)
     {
-        return ArrayUtils.GetFirstElement(this.list, property, value, startIndex, endIndex);
+        return ArrayUtils.GetFirst(this.list, property, value, startIndex, endIndex);
     },
 
     /**
