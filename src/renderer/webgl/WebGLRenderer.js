@@ -1776,6 +1776,9 @@ var WebGLRenderer = new Class({
         var gl = this.gl;
         var pipelines = this.pipelines;
 
+        //  Make sure we are bound to the main frame buffer
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
         if (this.config.clearBeforeRender)
         {
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
