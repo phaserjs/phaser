@@ -863,21 +863,24 @@ var WebGLRenderer = new Class({
 
         var current = this.currentScissor;
 
-        var cx = current[0];
-        var cy = current[1];
-        var cw = current[2];
-        var ch = current[3];
+        var setScissor = (width > 0 && height > 0);
 
-        if (cx !== x || cy !== y || cw !== width || ch !== height)
+        if (current && setScissor)
         {
+            var cx = current[0];
+            var cy = current[1];
+            var cw = current[2];
+            var ch = current[3];
+
+            setScissor = (cx !== x || cy !== y || cw !== width || ch !== height);
+        }
+
+        if (setScissor)
+        {
+            this.flush();
+
             // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/scissor
-
-            if (width > 0 && height > 0)
-            {
-                this.flush();
-
-                gl.scissor(x, (this.drawingBufferHeight - y - height), width, height);
-            }
+            gl.scissor(x, (this.drawingBufferHeight - y - height), width, height);
         }
     },
 
