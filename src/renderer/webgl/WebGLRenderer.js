@@ -616,6 +616,14 @@ var WebGLRenderer = new Class({
         this.pipelines.TextureTintPipeline.currentFrame = blank;
 
         this.blankTexture = blank;
+
+        var gl = this.gl;
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+        gl.enable(gl.SCISSOR_TEST);
+
+        this.setPipeline(this.pipelines.TextureTintPipeline);
     },
 
     /**
