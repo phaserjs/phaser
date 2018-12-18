@@ -595,6 +595,25 @@ var CanvasTexture = new Class({
         }
 
         return this;
+    },
+
+    /**
+     * Destroys this Texture and releases references to its sources and frames.
+     *
+     * @method Phaser.Textures.CanvasTexture#destroy
+     * @since 3.16.0
+     */
+    destroy: function ()
+    {
+        Texture.prototype.destroy.call(this);
+
+        this._source = null;
+        this.canvas = null;
+        this.context = null;
+        this.imageData = null;
+        this.data = null;
+        this.pixels = null;
+        this.buffer = null;
     }
 
 });

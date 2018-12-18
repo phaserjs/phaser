@@ -248,6 +248,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `Container.getFirst` was using an incorrect Array Utils function `GetFirstElement`, when it should have been using `GetFirst`. It now uses the correct function. Fix #4244 (thanks @miran248)
 * `List.getFirst` was using an incorrect Array Utils function `GetFirstElement`, when it should have been using `GetFirst`. It now uses the correct function. Fix #4244 (thanks @miran248)
 * Fixed an issue where changing the viewport or size of a Camera belonging to a RenderTexture, it wouldn't impact the rendering and objects will still render outside of the viewport range. It's now converted to a proper gl scissor rect by the renderer, meaning you can limit the area rendered to by adjusting the internal Render Texture cameras viewport. Fix #4243 (thanks @hackhat)
+* `CanvasTexture.destroy` is a new method that specifically handles the destruction of the CanvasTexture and all of its associated typed arrays. This prevents a memory leak when creating and destroying lots of RenderTextures (which are CanvasTexture backed). Fix #4239 (thanks @sjb933)
 
 ### Examples and TypeScript
 

@@ -980,6 +980,12 @@ var RenderTexture = new Class({
             }
 
             this.texture.destroy();
+            this.camera.destroy();
+
+            this.canvas = null;
+            this.context = null;
+            this.framebuffer = null;
+            this.texture = null;
         }
     }
 
