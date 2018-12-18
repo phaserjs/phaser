@@ -13,6 +13,7 @@ var CONST = require('../../const');
 var Frame = require('../../textures/Frame');
 var GameObject = require('../GameObject');
 var Render = require('./RenderTextureRender');
+var Utils = require('../../renderer/webgl/Utils');
 var UUID = require('../../utils/string/UUID');
 
 /**
@@ -415,15 +416,19 @@ var RenderTexture = new Class({
 
         if (this.gl)
         {
-            this.renderer.setFramebuffer(this.framebuffer, true);
+            var renderer = this.renderer;
 
-            var gl = this.gl;
-    
-            gl.clearColor(r / 255, g / 255, b / 255, alpha);
-    
-            gl.clear(gl.COLOR_BUFFER_BIT);
-    
-            this.renderer.setFramebuffer(null, true);
+            var bounds = this.getBounds();
+
+            renderer.setFramebuffer(this.framebuffer, true);
+
+            renderer.pipelines.TextureTintPipeline.drawFillRect(
+                bounds.x, bounds.y, bounds.right, bounds.bottom,
+                Utils.getTintFromFloats(r / 255, g / 255, b / 255, 1),
+                alpha
+            );
+
+            renderer.setFramebuffer(null, true);
         }
         else
         {
