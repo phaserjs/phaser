@@ -141,9 +141,9 @@ var EventEmitter = new Class({
  * @since 3.0.0
  *
  * @param {(string|symbol)} event - The event name.
- * @param {function} fn - Only remove the listeners that match this function.
- * @param {*} context - Only remove the listeners that have this context.
- * @param {boolean} once - Only remove one-time listeners.
+ * @param {function} [fn] - Only remove the listeners that match this function.
+ * @param {*} [context] - Only remove the listeners that have this context.
+ * @param {boolean} [once] - Only remove one-time listeners.
  *
  * @return {Phaser.Events.EventEmitter} `this`.
  */
@@ -155,9 +155,9 @@ var EventEmitter = new Class({
  * @since 3.0.0
  *
  * @param {(string|symbol)} event - The event name.
- * @param {function} fn - Only remove the listeners that match this function.
- * @param {*} context - Only remove the listeners that have this context.
- * @param {boolean} once - Only remove one-time listeners.
+ * @param {function} [fn] - Only remove the listeners that match this function.
+ * @param {*} [context] - Only remove the listeners that have this context.
+ * @param {boolean} [once] - Only remove one-time listeners.
  *
  * @return {Phaser.Events.EventEmitter} `this`.
  */
