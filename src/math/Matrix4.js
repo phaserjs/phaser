@@ -623,6 +623,30 @@ var Matrix4 = new Class({
     },
 
     /**
+     * Translate this Matrix using the given values.
+     *
+     * @method Phaser.Math.Matrix4#translateXYZ
+     * @since 3.16.0
+     *
+     * @param {number} x - The x component.
+     * @param {number} y - The y component.
+     * @param {number} z - The z component.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    translateXYZ: function (x, y, z)
+    {
+        var a = this.val;
+
+        a[12] = a[0] * x + a[4] * y + a[8] * z + a[12];
+        a[13] = a[1] * x + a[5] * y + a[9] * z + a[13];
+        a[14] = a[2] * x + a[6] * y + a[10] * z + a[14];
+        a[15] = a[3] * x + a[7] * y + a[11] * z + a[15];
+
+        return this;
+    },
+
+    /**
      * Apply a scale transformation to this Matrix.
      *
      * Uses the `x`, `y` and `z` components of the given Vector to scale the Matrix.
@@ -639,6 +663,40 @@ var Matrix4 = new Class({
         var x = v.x;
         var y = v.y;
         var z = v.z;
+        var a = this.val;
+
+        a[0] = a[0] * x;
+        a[1] = a[1] * x;
+        a[2] = a[2] * x;
+        a[3] = a[3] * x;
+
+        a[4] = a[4] * y;
+        a[5] = a[5] * y;
+        a[6] = a[6] * y;
+        a[7] = a[7] * y;
+
+        a[8] = a[8] * z;
+        a[9] = a[9] * z;
+        a[10] = a[10] * z;
+        a[11] = a[11] * z;
+
+        return this;
+    },
+
+    /**
+     * Apply a scale transformation to this Matrix.
+     *
+     * @method Phaser.Math.Matrix4#scaleXYZ
+     * @since 3.16.0
+     *
+     * @param {number} x - The x component.
+     * @param {number} y - The y component.
+     * @param {number} z - The z component.
+     *
+     * @return {Phaser.Math.Matrix4} This Matrix4.
+     */
+    scaleXYZ: function (x, y, z)
+    {
         var a = this.val;
 
         a[0] = a[0] * x;

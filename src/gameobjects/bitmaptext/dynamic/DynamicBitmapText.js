@@ -11,7 +11,8 @@ var Render = require('./DynamicBitmapTextRender');
 /**
  * @typedef {object} DisplayCallbackConfig
  * 
- * @property {{topLeft:number, topRight:number, bottomLeft:number, bottomRight:number}} tint - The tint of the character being rendered.
+ * @property {Phaser.GameObjects.DynamicBitmapText} parent - The Dynamic Bitmap Text object that owns this character being rendered.
+ * @property {{topLeft:number, topRight:number, bottomLeft:number, bottomRight:number}} tint - The tint of the character being rendered. Always zero in Canvas.
  * @property {number} index - The index of the character being rendered.
  * @property {number} charCode - The character code of the character being rendered.
  * @property {number} x - The x position of the character being rendered.
@@ -149,6 +150,7 @@ var DynamicBitmapText = new Class({
          * @since 3.11.0
          */
         this.callbackData = {
+            parent: this,
             color: 0,
             tint: {
                 topLeft: 0,

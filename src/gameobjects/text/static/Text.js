@@ -721,18 +721,23 @@ var Text = new Class({
     },
 
     /**
-     * Set the text fill color.
+     * Set the fill style to be used by the Text object.
+     *
+     * This can be any valid CanvasRenderingContext2D fillStyle value, such as
+     * a color (in hex, rgb, rgba, hsl or named values), a gradient or a pattern.
+     *
+     * See the [MDN fillStyle docs](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillStyle) for more details.
      *
      * @method Phaser.GameObjects.Text#setFill
      * @since 3.0.0
      *
-     * @param {string} color - The text fill color.
+     * @param {(string|any)} color - The text fill style. Can be any valid CanvasRenderingContext `fillStyle` value.
      *
      * @return {Phaser.GameObjects.Text} This Text object.
      */
-    setFill: function (color)
+    setFill: function (fillStyle)
     {
-        return this.style.setFill(color);
+        return this.style.setFill(fillStyle);
     },
 
     /**

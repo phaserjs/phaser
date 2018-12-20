@@ -6,6 +6,7 @@
 
 var Clamp = require('../math/Clamp');
 var Class = require('../utils/Class');
+var EventEmitter = require('eventemitter3');
 var FindClosestInSorted = require('../utils/array/FindClosestInSorted');
 var Frame = require('./AnimationFrame');
 var GetValue = require('../utils/object/GetValue');
@@ -65,6 +66,7 @@ var GetValue = require('../utils/object/GetValue');
  *
  * @class Animation
  * @memberof Phaser.Animations
+ * @extends Phaser.Events.EventEmitter
  * @constructor
  * @since 3.0.0
  *
@@ -74,10 +76,14 @@ var GetValue = require('../utils/object/GetValue');
  */
 var Animation = new Class({
 
+    Extends: EventEmitter,
+
     initialize:
 
     function Animation (manager, key, config)
     {
+        EventEmitter.call(this);
+
         /**
          * A reference to the global Animation Manager
          *
@@ -797,13 +803,20 @@ var Animation = new Class({
 
                 component.pendingRepeat = false;
 
-                component.parent.emit('animationrepeat', this, component.currentFrame, component.repeatCounter, component.parent);
+                var frame = component.currentFrame;
+                var parent = component.parent;
+
+                this.emit('repeat', this, frame);
+
+                parent.emit('animationrepeat-' + this.key, this, frame, component.repeatCounter, parent);
+
+                parent.emit('animationrepeat', this, frame, component.repeatCounter, parent);
             }
         }
     },
 
     /**
-     * [description]
+     * Sets the texture frame the animation uses for rendering.
      *
      * @method Phaser.Animations.Animation#setFrame
      * @since 3.0.0
@@ -824,7 +837,7 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Converts the animation data to JSON.
      *
      * @method Phaser.Animations.Animation#toJSON
      * @since 3.0.0
@@ -939,6 +952,8 @@ var Animation = new Class({
      */
     destroy: function ()
     {
+        this.removeAllListeners();
+
         this.manager.off('pauseall', this.pause, this);
         this.manager.off('resumeall', this.resume, this);
 

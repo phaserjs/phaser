@@ -4,6 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var BlendModes = require('../../renderer/BlendModes');
 var Camera = require('../../cameras/2d/BaseCamera');
 var CanvasPool = require('../../display/canvas/CanvasPool');
 var Class = require('../../utils/Class');
@@ -12,6 +13,7 @@ var CONST = require('../../const');
 var Frame = require('../../textures/Frame');
 var GameObject = require('../GameObject');
 var Render = require('./RenderTextureRender');
+var Utils = require('../../renderer/webgl/Utils');
 var UUID = require('../../utils/string/UUID');
 
 /**
@@ -122,8 +124,7 @@ var RenderTexture = new Class({
         this.globalAlpha = 1;
 
         /**
-         * The HTML Canvas Element that the Render Texture is drawing to.
-         * This is only populated if Phaser is running with the Canvas Renderer.
+         * The HTML Canvas Element that the Render Texture is drawing to when using the Canvas Renderer.
          *
          * @name Phaser.GameObjects.RenderTexture#canvas
          * @type {HTMLCanvasElement}
@@ -187,6 +188,16 @@ var RenderTexture = new Class({
          * @since 3.12.0
          */
         this._saved = false;
+
+        /**
+         * Internal erase mode flag.
+         *
+         * @name Phaser.GameObjects.RenderTexture#_eraseMode
+         * @type {boolean}
+         * @private
+         * @since 3.16.0
+         */
+        this._eraseMode = false;
 
         /**
          * An internal Camera that can be used to move around the Render Texture.
@@ -399,25 +410,31 @@ var RenderTexture = new Class({
     {
         if (alpha === undefined) { alpha = 1; }
 
-        var ur = ((rgb >> 16)|0) & 0xff;
-        var ug = ((rgb >> 8)|0) & 0xff;
-        var ub = (rgb|0) & 0xff;
+        var r = ((rgb >> 16) | 0) & 0xff;
+        var g = ((rgb >> 8) | 0) & 0xff;
+        var b = (rgb | 0) & 0xff;
 
-        if (this.gl)
+        var gl = this.gl;
+
+        if (gl)
         {
-            this.renderer.setFramebuffer(this.framebuffer);
+            var renderer = this.renderer;
 
-            var gl = this.gl;
-    
-            gl.clearColor(ur / 255.0, ug / 255.0, ub / 255.0, alpha);
-    
-            gl.clear(gl.COLOR_BUFFER_BIT);
-    
-            this.renderer.setFramebuffer(null);
+            var bounds = this.getBounds();
+
+            renderer.setFramebuffer(this.framebuffer, true);
+
+            renderer.pipelines.TextureTintPipeline.drawFillRect(
+                bounds.x, bounds.y, bounds.right, bounds.bottom,
+                Utils.getTintFromFloats(r / 255, g / 255, b / 255, 1),
+                alpha
+            );
+
+            renderer.setFramebuffer(null, true);
         }
         else
         {
-            this.context.fillStyle = 'rgb(' + ur + ',' + ug + ',' + ub + ')';
+            this.context.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
             this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
         }
 
@@ -436,17 +453,18 @@ var RenderTexture = new Class({
     {
         if (this.dirty)
         {
-            if (this.gl)
-            {
-                this.renderer.setFramebuffer(this.framebuffer);
+            var gl = this.gl;
 
-                var gl = this.gl;
-        
+            if (gl)
+            {
+                var renderer = this.renderer;
+
+                renderer.setFramebuffer(this.framebuffer, true);
+   
                 gl.clearColor(0, 0, 0, 0);
-        
                 gl.clear(gl.COLOR_BUFFER_BIT);
-        
-                this.renderer.setFramebuffer(null);
+
+                renderer.setFramebuffer(null, true);
             }
             else
             {
@@ -460,6 +478,70 @@ var RenderTexture = new Class({
 
             this.dirty = false;
         }
+
+        return this;
+    },
+
+    /**
+     * Draws the given object, or an array of objects, to this Render Texture using a blend mode of ERASE.
+     * This has the effect of erasing any filled pixels in the objects from this Render Texture.
+     * 
+     * It can accept any of the following:
+     * 
+     * * Any renderable Game Object, such as a Sprite, Text, Graphics or TileSprite.
+     * * Dynamic and Static Tilemap Layers.
+     * * A Group. The contents of which will be iterated and drawn in turn.
+     * * A Container. The contents of which will be iterated fully, and drawn in turn.
+     * * A Scene's Display List. Pass in `Scene.children` to draw the whole list.
+     * * Another Render Texture.
+     * * A Texture Frame instance.
+     * * A string. This is used to look-up a texture from the Texture Manager.
+     * 
+     * Note: You cannot erase a Render Texture from itself.
+     * 
+     * If passing in a Group or Container it will only draw children that return `true`
+     * when their `willRender()` method is called. I.e. a Container with 10 children,
+     * 5 of which have `visible=false` will only draw the 5 visible ones.
+     * 
+     * If passing in an array of Game Objects it will draw them all, regardless if
+     * they pass a `willRender` check or not.
+     * 
+     * You can pass in a string in which case it will look for a texture in the Texture
+     * Manager matching that string, and draw the base frame.
+     * 
+     * You can pass in the `x` and `y` coordinates to draw the objects at. The use of
+     * the coordinates differ based on what objects are being drawn. If the object is
+     * a Group, Container or Display List, the coordinates are _added_ to the positions
+     * of the children. For all other types of object, the coordinates are exact.
+     * 
+     * Calling this method causes the WebGL batch to flush, so it can write the texture
+     * data to the framebuffer being used internally. The batch is flushed at the end,
+     * after the entries have been iterated. So if you've a bunch of objects to draw,
+     * try and pass them in an array in one single call, rather than making lots of
+     * separate calls.
+     *
+     * @method Phaser.GameObjects.RenderTexture#erase
+     * @since 3.16.0
+     *
+     * @param {any} entries - Any renderable Game Object, or Group, Container, Display List, other Render Texture, Texture Frame or an array of any of these.
+     * @param {number} [x] - The x position to draw the Frame at, or the offset applied to the object.
+     * @param {number} [y] - The y position to draw the Frame at, or the offset applied to the object.
+     *
+     * @return {this} This Render Texture instance.
+     */
+    erase: function (entries, x, y)
+    {
+        this._eraseMode = true;
+
+        var blendMode = this.renderer.currentBlendMode;
+
+        this.renderer.setBlendMode(BlendModes.ERASE);
+
+        this.draw(entries, x, y, 1, 16777215);
+
+        this.renderer.setBlendMode(blendMode);
+
+        this._eraseMode = false;
 
         return this;
     },
@@ -536,11 +618,18 @@ var RenderTexture = new Class({
 
         var gl = this.gl;
 
-        this.camera.preRender(1, 1, 1);
+        this.camera.preRender(1, 1);
 
         if (gl)
         {
-            this.renderer.setFramebuffer(this.framebuffer);
+            var cx = this.camera._cx;
+            var cy = this.camera._cy;
+            var cw = this.camera._cw;
+            var ch = this.camera._ch;
+
+            this.renderer.setFramebuffer(this.framebuffer, false);
+
+            this.renderer.pushScissor(cx, cy, cw, ch, ch);
 
             var pipeline = this.pipeline;
     
@@ -550,7 +639,9 @@ var RenderTexture = new Class({
 
             pipeline.flush();
 
-            this.renderer.setFramebuffer(null);
+            this.renderer.setFramebuffer(null, false);
+
+            this.renderer.popScissor();
 
             pipeline.projOrtho(0, pipeline.width, pipeline.height, 0, -1000.0, 1000.0);
         }
@@ -618,11 +709,18 @@ var RenderTexture = new Class({
 
         if (textureFrame)
         {
-            this.camera.preRender(1, 1, 1);
+            this.camera.preRender(1, 1);
 
             if (gl)
             {
-                this.renderer.setFramebuffer(this.framebuffer);
+                var cx = this.camera._cx;
+                var cy = this.camera._cy;
+                var cw = this.camera._cw;
+                var ch = this.camera._ch;
+    
+                this.renderer.setFramebuffer(this.framebuffer, false);
+    
+                this.renderer.pushScissor(cx, cy, cw, ch, ch);
     
                 var pipeline = this.pipeline;
         
@@ -632,8 +730,10 @@ var RenderTexture = new Class({
             
                 pipeline.flush();
         
-                this.renderer.setFramebuffer(null);
-        
+                this.renderer.setFramebuffer(null, false);
+
+                this.renderer.popScissor();
+            
                 pipeline.projOrtho(0, pipeline.width, pipeline.height, 0, -1000.0, 1000.0);
             }
             else
@@ -748,7 +848,10 @@ var RenderTexture = new Class({
         var prevX = gameObject.x;
         var prevY = gameObject.y;
 
-        this.renderer.setBlendMode(gameObject.blendMode);
+        if (!this._eraseMode)
+        {
+            this.renderer.setBlendMode(gameObject.blendMode);
+        }
 
         gameObject.setPosition(x, y);
 
@@ -776,11 +879,23 @@ var RenderTexture = new Class({
         var prevX = gameObject.x;
         var prevY = gameObject.y;
 
+        if (this._eraseMode)
+        {
+            var blendMode = gameObject.blendMode;
+
+            gameObject.blendMode = BlendModes.ERASE;
+        }
+
         gameObject.setPosition(x, y);
 
         gameObject.renderCanvas(this.renderer, gameObject, 0, this.camera, null);
 
         gameObject.setPosition(prevX, prevY);
+
+        if (this._eraseMode)
+        {
+            gameObject.blendMode = blendMode;
+        }
     },
 
     /**
@@ -865,6 +980,12 @@ var RenderTexture = new Class({
             }
 
             this.texture.destroy();
+            this.camera.destroy();
+
+            this.canvas = null;
+            this.context = null;
+            this.framebuffer = null;
+            this.texture = null;
         }
     }
 

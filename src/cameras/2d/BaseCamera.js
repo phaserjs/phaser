@@ -568,7 +568,7 @@ var BaseCamera = new Class({
      * @param {number} y - The vertical coordinate to center on.
      * @param {Phaser.Math.Vector2} [out] - A Vec2 to store the values in. If not given a new Vec2 is created.
      *
-     * @return {Phaser.Math.Vector2} The scroll coordinates stored in the `x` abd `y` properties.
+     * @return {Phaser.Math.Vector2} The scroll coordinates stored in the `x` and `y` properties.
      */
     getScroll: function (x, y, out)
     {
@@ -590,6 +590,60 @@ var BaseCamera = new Class({
     },
 
     /**
+     * Moves the Camera horizontally so that it is centered on the given x coordinate, bounds allowing.
+     * Calling this does not change the scrollY value.
+     *
+     * @method Phaser.Cameras.Scene2D.BaseCamera#centerOnX
+     * @since 3.16.0
+     *
+     * @param {number} x - The horizontal coordinate to center on.
+     *
+     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     */
+    centerOnX: function (x)
+    {
+        var originX = this.width * 0.5;
+
+        this.midPoint.x = x;
+
+        this.scrollX = x - originX;
+
+        if (this.useBounds)
+        {
+            this.scrollX = this.clampX(this.scrollX);
+        }
+
+        return this;
+    },
+
+    /**
+     * Moves the Camera vertically so that it is centered on the given y coordinate, bounds allowing.
+     * Calling this does not change the scrollX value.
+     *
+     * @method Phaser.Cameras.Scene2D.BaseCamera#centerOnY
+     * @since 3.16.0
+     *
+     * @param {number} y - The vertical coordinate to center on.
+     *
+     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     */
+    centerOnY: function (y)
+    {
+        var originY = this.height * 0.5;
+
+        this.midPoint.y = y;
+
+        this.scrollY = y - originY;
+
+        if (this.useBounds)
+        {
+            this.scrollY = this.clampY(this.scrollY);
+        }
+
+        return this;
+    },
+
+    /**
      * Moves the Camera so that it is centered on the given coordinates, bounds allowing.
      *
      * @method Phaser.Cameras.Scene2D.BaseCamera#centerOn
@@ -602,19 +656,8 @@ var BaseCamera = new Class({
      */
     centerOn: function (x, y)
     {
-        var originX = this.width * 0.5;
-        var originY = this.height * 0.5;
-
-        this.midPoint.set(x, y);
-
-        this.scrollX = x - originX;
-        this.scrollY = y - originY;
-
-        if (this.useBounds)
-        {
-            this.scrollX = this.clampX(this.scrollX);
-            this.scrollY = this.clampY(this.scrollY);
-        }
+        this.centerOnX(x);
+        this.centerOnY(y);
 
         return this;
     },
@@ -727,11 +770,12 @@ var BaseCamera = new Class({
             var ty = (objectX * mvb + objectY * mvd + mvf);
             var tw = ((objectX + objectW) * mva + (objectY + objectH) * mvc + mve);
             var th = ((objectX + objectW) * mvb + (objectY + objectH) * mvd + mvf);
-            var cullW = cameraW + objectW;
-            var cullH = cameraH + objectH;
+            var cullTop = this.y;
+            var cullBottom = cullTop + cameraH;
+            var cullLeft = this.x;
+            var cullRight = cullLeft + cameraW;
 
-            if (tx > -objectW && ty > -objectH && tx < cullW && ty < cullH &&
-                tw > -objectW && th > -objectH && tw < cullW && th < cullH)
+            if ((tw > cullLeft && tx < cullRight) && (th > cullTop && ty < cullBottom))
             {
                 culledObjects.push(object);
             }
@@ -1078,12 +1122,14 @@ var BaseCamera = new Class({
      * @param {integer} y - The top-left y coordinate of the bounds.
      * @param {integer} width - The width of the bounds, in pixels.
      * @param {integer} height - The height of the bounds, in pixels.
-     * @param {boolean} [centerOn] - If `true` the Camera will automatically be centered on the new bounds.
+     * @param {boolean} [centerOn=false] - If `true` the Camera will automatically be centered on the new bounds.
      *
      * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
      */
     setBounds: function (x, y, width, height, centerOn)
     {
+        if (centerOn === undefined) { centerOn = false; }
+
         this._bounds.setTo(x, y, width, height);
 
         this.dirty = true;
@@ -1100,6 +1146,31 @@ var BaseCamera = new Class({
         }
 
         return this;
+    },
+
+    /**
+     * Returns a rectangle containing the bounds of the Camera.
+     * 
+     * If the Camera does not have any bounds the rectangle will be empty.
+     * 
+     * The rectangle is a copy of the bounds, so is safe to modify.
+     *
+     * @method Phaser.Cameras.Scene2D.BaseCamera#getBounds
+     * @since 3.16.0
+     *
+     * @param {Phaser.Geom.Rectangle} [out] - An optional Rectangle to store the bounds in. If not given, a new Rectangle will be created.
+     *
+     * @return {Phaser.Geom.Rectangle} A rectangle containing the bounds of this Camera.
+     */
+    getBounds: function (out)
+    {
+        if (out === undefined) { out = new Rectangle(); }
+
+        var source = this._bounds;
+
+        out.setTo(source.x, source.y, source.width, source.height);
+
+        return out;
     },
 
     /**
@@ -1700,7 +1771,7 @@ var BaseCamera = new Class({
     },
 
     /**
-     * The x position of the center of the Camera's viewport, relative to the top-left of the game canvas.
+     * The horizontal position of the center of the Camera's viewport, relative to the left of the game canvas.
      *
      * @name Phaser.Cameras.Scene2D.BaseCamera#centerX
      * @type {number}
@@ -1717,7 +1788,7 @@ var BaseCamera = new Class({
     },
 
     /**
-     * The y position of the center of the Camera's viewport, relative to the top-left of the game canvas.
+     * The vertical position of the center of the Camera's viewport, relative to the top of the game canvas.
      *
      * @name Phaser.Cameras.Scene2D.BaseCamera#centerY
      * @type {number}

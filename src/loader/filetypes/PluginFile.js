@@ -122,7 +122,14 @@ var PluginFile = new Class({
 
             document.head.appendChild(this.data);
 
-            pluginManager.install(this.key, window[this.key], start, mapping);
+            var plugin = pluginManager.install(this.key, window[this.key], start, mapping);
+
+            if (start || mapping)
+            {
+                //  Install into the current Scene Systems and Scene
+                this.loader.systems[mapping] = plugin;
+                this.loader.scene[mapping] = plugin;
+            }
         }
 
         this.onProcessComplete();
@@ -183,7 +190,7 @@ var PluginFile = new Class({
  *
  * @param {(string|Phaser.Loader.FileTypes.PluginFileConfig|Phaser.Loader.FileTypes.PluginFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {(string|function)} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js". Or, a plugin function.
- * @param {boolean} [start] - The plugin mapping configuration object.
+ * @param {boolean} [start] - Automatically start the plugin after loading?
  * @param {string} [mapping] - If this plugin is to be injected into the Scene, this is the property key used.
  * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *

@@ -9,15 +9,15 @@ var Vector2 = require('../../math/Vector2');
 
 /**
  * @classdesc
- * [description]
+ * A MoveTo Curve is a very simple curve consisting of only a single point. Its intended use is to move the ending point in a Path.
  *
  * @class MoveTo
  * @memberof Phaser.Curves
  * @constructor
  * @since 3.0.0
  *
- * @param {number} [x] - [description]
- * @param {number} [y] - [description]
+ * @param {number} [x] - `x` pixel coordinate.
+ * @param {number} [y] - `y` pixel coordinate.
  */
 var MoveTo = new Class({
 
@@ -28,7 +28,7 @@ var MoveTo = new Class({
         //  Skip length calcs in paths
 
         /**
-         * [description]
+         * Denotes that this Curve does not influence the bounds, points, and drawing of its parent Path. Must be `false` or some methods in the parent Path will throw errors.
          *
          * @name Phaser.Curves.MoveTo#active
          * @type {boolean}
@@ -38,7 +38,7 @@ var MoveTo = new Class({
         this.active = false;
 
         /**
-         * [description]
+         * The lone point which this curve consists of.
          *
          * @name Phaser.Curves.MoveTo#p0
          * @type {Phaser.Math.Vector2}
@@ -68,17 +68,17 @@ var MoveTo = new Class({
     },
 
     /**
-     * [description]
+     * Retrieves the point at given position in the curve. This will always return this curve's only point.
      *
      * @method Phaser.Curves.MoveTo#getPointAt
      * @since 3.0.0
      *
      * @generic {Phaser.Math.Vector2} O - [out,$return]
      *
-     * @param {number} u - [description]
-     * @param {Phaser.Math.Vector2} [out] - [description]
+     * @param {number} u - The position in the path to retrieve, between 0 and 1. Not used.
+     * @param {Phaser.Math.Vector2} [out] - An optional vector in which to store the point.
      *
-     * @return {Phaser.Math.Vector2} [description]
+     * @return {Phaser.Math.Vector2} The modified `out` vector, or a new `Vector2` if none was provided.
      */
     getPointAt: function (u, out)
     {
@@ -112,12 +112,12 @@ var MoveTo = new Class({
     },
 
     /**
-     * [description]
+     * Converts this curve into a JSON-serializable object.
      *
      * @method Phaser.Curves.MoveTo#toJSON
      * @since 3.0.0
      *
-     * @return {JSONCurve} [description]
+     * @return {JSONCurve} A primitive object with the curve's type and only point.
      */
     toJSON: function ()
     {

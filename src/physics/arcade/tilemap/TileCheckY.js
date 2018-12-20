@@ -8,15 +8,16 @@ var ProcessTileSeparationY = require('./ProcessTileSeparationY');
 
 /**
  * Check the body against the given tile on the Y axis.
+ * Used internally by the SeparateTile function.
  *
  * @function Phaser.Physics.Arcade.Tilemap.TileCheckY
  * @since 3.0.0
  *
  * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
  * @param {Phaser.Tilemaps.Tile} tile - The tile to check.
- * @param {number} tileTop - [description]
- * @param {number} tileBottom - [description]
- * @param {number} tileBias - [description]
+ * @param {number} tileTop - The top position of the tile within the tile world.
+ * @param {number} tileBottom - The bottom position of the tile within the tile world.
+ * @param {number} tileBias - The tile bias value. Populated by the `World.TILE_BIAS` constant.
  *
  * @return {number} The amount of separation that occurred.
  */

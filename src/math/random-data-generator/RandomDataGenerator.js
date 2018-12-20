@@ -478,7 +478,7 @@ var RandomDataGenerator = new Class({
 
         for (var i = len; i > 0; i--)
         {
-            var randomIndex = Math.floor(this.frac() * (len + 1));
+            var randomIndex = Math.floor(this.frac() * (i + 1));
             var itemAtIndex = array[randomIndex];
 
             array[randomIndex] = array[i];

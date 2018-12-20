@@ -635,6 +635,8 @@ var HTML5AudioSound = new Class({
                 return;
             }
 
+            this.updateMute();
+
             this.emit('mute', this, value);
         }
     },
@@ -686,6 +688,8 @@ var HTML5AudioSound = new Class({
             {
                 return;
             }
+
+            this.updateVolume();
 
             this.emit('volume', this, value);
         }

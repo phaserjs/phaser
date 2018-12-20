@@ -23,10 +23,13 @@ var CreateRenderer = function (game)
 {
     var config = game.config;
 
-    //  Game either requested Canvas,
-    //  or requested AUTO or WEBGL but the browser doesn't support it, so fall back to Canvas
+    if ((config.customEnvironment || config.canvas) && config.renderType === CONST.AUTO)
+    {
+        throw new Error('Must set explicit renderType in custom environment');
+    }
 
-    if (config.renderType !== CONST.HEADLESS)
+    //  Not a custom environment, didn't provide their own canvas and not headless, so determine the renderer:
+    if (!config.customEnvironment && !config.canvas && config.renderType !== CONST.HEADLESS)
     {
         if (config.renderType === CONST.CANVAS || (config.renderType !== CONST.CANVAS && !Features.webGL))
         {
@@ -58,12 +61,12 @@ var CreateRenderer = function (game)
     {
         game.canvas = config.canvas;
 
-        game.canvas.width = game.config.width;
-        game.canvas.height = game.config.height;
+        game.canvas.width = game.scale.canvasWidth;
+        game.canvas.height = game.scale.canvasHeight;
     }
     else
     {
-        game.canvas = CanvasPool.create(game, config.width * config.resolution, config.height * config.resolution, config.renderType);
+        game.canvas = CanvasPool.create(game, game.scale.canvasWidth, game.scale.canvasHeight, config.renderType);
     }
 
     //  Does the game config provide some canvas css styles to use?
@@ -77,10 +80,6 @@ var CreateRenderer = function (game)
     {
         CanvasInterpolation.setCrisp(game.canvas);
     }
-
-    //  Zoomed?
-    game.canvas.style.width = (config.width * config.zoom).toString() + 'px';
-    game.canvas.style.height = (config.height * config.zoom).toString() + 'px';
 
     if (config.renderType === CONST.HEADLESS)
     {

@@ -19,6 +19,7 @@ var EventEmitter = require('eventemitter3');
 var InputManager = require('../input/InputManager');
 var PluginCache = require('../plugins/PluginCache');
 var PluginManager = require('../plugins/PluginManager');
+var ScaleManager = require('../dom/ScaleManager');
 var SceneManager = require('../scene/SceneManager');
 var SoundManagerCreator = require('../sound/SoundManagerCreator');
 var TextureManager = require('../textures/TextureManager');
@@ -226,6 +227,17 @@ var Game = new Class({
         this.device = Device;
 
         /**
+         * An instance of the Scale Manager.
+         *
+         * The Scale Manager is a global system responsible for handling game scaling events.
+         *
+         * @name Phaser.Game#scale
+         * @type {Phaser.Boot.ScaleManager}
+         * @since 3.15.0
+         */
+        this.scale = new ScaleManager(this, this.config);
+
+        /**
          * An instance of the base Sound Manager.
          *
          * The Sound Manager is a global system responsible for the playback and updating of all audio in your game.
@@ -317,17 +329,6 @@ var Game = new Class({
          */
         this.hasFocus = false;
 
-        /**
-         * Is the mouse pointer currently over the game canvas or not?
-         * This is modified by the VisibilityHandler.
-         *
-         * @name Phaser.Game#isOver
-         * @type {boolean}
-         * @readonly
-         * @since 3.10.0
-         */
-        this.isOver = true;
-
         //  Wait for the DOM Ready event, then call boot.
         DOMContentLoaded(this.boot.bind(this));
     },
@@ -362,6 +363,8 @@ var Game = new Class({
         this.isBooted = true;
 
         this.config.preBoot(this);
+
+        this.scale.preBoot();
 
         CreateRenderer(this);
 
@@ -730,6 +733,34 @@ var Game = new Class({
     },
 
     /**
+     * Returns the current game frame.
+     * When the game starts running, the frame is incremented every time Request Animation Frame, or Set Timeout, fires.
+     *
+     * @method Phaser.Game#getFrame
+     * @since 3.16.0
+     * 
+     * @return {number} The current game frame.
+     */
+    getFrame: function ()
+    {
+        return this.loop.frame;
+    },
+
+    /**
+     * Returns the current game timestamp.
+     * When the game starts running, the frame is incremented every time Request Animation Frame, or Set Timeout, fires.
+     *
+     * @method Phaser.Game#getTime
+     * @since 3.16.0
+     * 
+     * @return {number} The current game timestamp.
+     */
+    getTime: function ()
+    {
+        return this.loop.frame.time;
+    },
+
+    /**
      * Game Destroy event.
      * 
      * Listen for it using the event type `destroy`.
@@ -805,5 +836,9 @@ var Game = new Class({
     }
 
 });
+
+/**
+ * "Computers are good at following instructions, but not at reading your mind." - Donald Knuth
+ */
 
 module.exports = Game;

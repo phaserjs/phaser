@@ -7,6 +7,7 @@
 var Class = require('../utils/Class');
 var CONST = require('./const');
 var EventEmitter = require('eventemitter3');
+var Keyboard = require('./keyboard/KeyboardManager');
 var Mouse = require('./mouse/MouseManager');
 var Pointer = require('./Pointer');
 var Rectangle = require('../geom/rectangle/Rectangle');
@@ -63,10 +64,10 @@ var InputManager = new Class({
         this.canvas;
 
         /**
-         * The Input Configuration object, as set in the Game Config.
+         * The Game Configuration object, as set during the game boot.
          *
          * @name Phaser.Input.InputManager#config
-         * @type {object}
+         * @type {Phaser.Boot.Config}
          * @since 3.0.0
          */
         this.config = config;
@@ -109,6 +110,27 @@ var InputManager = new Class({
          * @since 3.10.0
          */
         this.domCallbacks = { up: [], down: [], move: [], upOnce: [], downOnce: [], moveOnce: [] };
+
+        /**
+         * Are any mouse or touch pointers currently over the game canvas?
+         * This is updated automatically by the canvas over and out handlers.
+         *
+         * @name Phaser.Input.InputManager#isOver
+         * @type {boolean}
+         * @readonly
+         * @since 3.16.0
+         */
+        this.isOver = true;
+
+        /**
+         * isOver state change property.
+         *
+         * @name Phaser.Input.InputManager#_emitIsOverEvent
+         * @type {boolean}
+         * @private
+         * @since 3.16.0
+         */
+        this._emitIsOverEvent = false;
 
         /**
          * Are there any up callbacks defined?
@@ -176,6 +198,15 @@ var InputManager = new Class({
         this.defaultCursor = '';
 
         /**
+         * A reference to the Keyboard Manager class, if enabled via the `input.keyboard` Game Config property.
+         *
+         * @name Phaser.Input.InputManager#keyboard
+         * @type {?Phaser.Input.Keyboard.KeyboardManager}
+         * @since 3.16.0
+         */
+        this.keyboard = (config.inputKeyboard) ? new Keyboard(this) : null;
+
+        /**
          * A reference to the Mouse Manager class, if enabled via the `input.mouse` Game Config property.
          *
          * @name Phaser.Input.InputManager#mouse
@@ -226,7 +257,11 @@ var InputManager = new Class({
 
         for (var i = 0; i <= this.pointersTotal; i++)
         {
-            this.pointers.push(new Pointer(this, i));
+            var pointer = new Pointer(this, i);
+
+            pointer.smoothFactor = config.inputSmoothFactor;
+
+            this.pointers.push(pointer);
         }
 
         /**
@@ -413,6 +448,38 @@ var InputManager = new Class({
     },
 
     /**
+     * Internal canvas state change, called automatically by the Mouse Manager.
+     *
+     * @method Phaser.Input.InputManager#setCanvasOver
+     * @private
+     * @since 3.16.0
+     *
+     * @param {number} event - The DOM Event.
+     */
+    setCanvasOver: function (event)
+    {
+        this.isOver = true;
+
+        this._emitIsOverEvent = event;
+    },
+
+    /**
+     * Internal canvas state change, called automatically by the Mouse Manager.
+     *
+     * @method Phaser.Input.InputManager#setCanvasOut
+     * @private
+     * @since 3.16.0
+     *
+     * @param {number} event - The DOM Event.
+     */
+    setCanvasOut: function (event)
+    {
+        this.isOver = false;
+
+        this._emitIsOverEvent = event;
+    },
+
+    /**
      * Internal update loop, called automatically by the Game Step.
      *
      * @method Phaser.Input.InputManager#update
@@ -439,11 +506,16 @@ var InputManager = new Class({
 
         for (i = 0; i < this.pointersTotal; i++)
         {
-            pointers[i].reset();
+            pointers[i].reset(time);
         }
 
         if (!this.enabled || len === 0)
         {
+            for (i = 0; i < this.pointersTotal; i++)
+            {
+                pointers[i].updateMotion();
+            }
+
             return;
         }
 
@@ -500,6 +572,11 @@ var InputManager = new Class({
                     break;
             }
         }
+
+        for (i = 0; i < this.pointersTotal; i++)
+        {
+            pointers[i].updateMotion();
+        }
     },
 
     /**
@@ -519,6 +596,9 @@ var InputManager = new Class({
         {
             this.canvas.style.cursor = this.defaultCursor;
         }
+
+        //  Reset the isOver event
+        this._emitIsOverEvent = null;
     },
 
     /**
@@ -765,6 +845,8 @@ var InputManager = new Class({
             var id = this.pointers.length;
 
             var pointer = new Pointer(this, id);
+
+            pointer.smoothFactor = this.config.inputSmoothFactor;
 
             this.pointers.push(pointer);
 
@@ -1308,15 +1390,35 @@ var InputManager = new Class({
      * @param {Phaser.Input.Pointer} pointer - The Pointer to transform the values for.
      * @param {number} pageX - The Page X value.
      * @param {number} pageY - The Page Y value.
+     * @param {boolean} wasMove - Are we transforming the Pointer from a move event, or an up / down event?
      */
-    transformPointer: function (pointer, pageX, pageY)
+    transformPointer: function (pointer, pageX, pageY, wasMove)
     {
-        //  Store the previous position
-        pointer.prevPosition.x = pointer.x;
-        pointer.prevPosition.y = pointer.y;
+        var p0 = pointer.position;
+        var p1 = pointer.prevPosition;
 
-        pointer.x = (pageX - this.bounds.left) * this.scale.x;
-        pointer.y = (pageY - this.bounds.top) * this.scale.y;
+        //  Store previous position
+        p1.x = p0.x;
+        p1.y = p0.y;
+
+        //  Translate coordinates
+        var x = (pageX - this.bounds.left) * this.scale.x;
+        var y = (pageY - this.bounds.top) * this.scale.y;
+
+        var a = pointer.smoothFactor;
+
+        if (!wasMove || a === 0)
+        {
+            //  Set immediately
+            p0.x = x;
+            p0.y = y;
+        }
+        else
+        {
+            //  Apply smoothing
+            p0.x = x * a + p1.x * (1 - a);
+            p0.y = y * a + p1.y * (1 - a);
+        }
     },
 
     /**
@@ -1412,6 +1514,11 @@ var InputManager = new Class({
     destroy: function ()
     {
         this.events.removeAllListeners();
+
+        if (this.keyboard)
+        {
+            this.keyboard.destroy();
+        }
 
         if (this.mouse)
         {

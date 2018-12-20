@@ -16,7 +16,7 @@ var IsPlainObject = require('./IsPlainObject');
  * @function Phaser.Utils.Objects.Extend
  * @since 3.0.0
  *
- * @return {object} [description]
+ * @return {object} The extended object.
  */
 var Extend = function ()
 {

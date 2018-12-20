@@ -445,13 +445,11 @@ var TimeStep = new Class({
      *
      * @method Phaser.Boot.TimeStep#step
      * @since 3.0.0
-     *
+     * 
      * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
      */
     step: function (time)
     {
-        this.frame++;
-
         var before = time - this.lastTime;
 
         if (before < 0)
@@ -561,6 +559,8 @@ var TimeStep = new Class({
 
         //  Shift time value over
         this.lastTime = time;
+
+        this.frame++;
     },
 
     /**
@@ -607,7 +607,7 @@ var TimeStep = new Class({
         }
         else if (seamless)
         {
-            this.startTime += -this.lastTime + (this.lastTime = window.performance.now());
+            this.startTime += -this.lastTime + (this.lastTime + window.performance.now());
         }
 
         this.raf.start(this.step.bind(this), this.useRAF);

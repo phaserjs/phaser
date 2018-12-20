@@ -86,6 +86,9 @@ var IsoBoxCanvasRenderer = function (renderer, src, interpolationPercentage, cam
 
             ctx.fill();
         }
+
+        //  Restore the context saved in SetTransform
+        ctx.restore();
     }
 };
 

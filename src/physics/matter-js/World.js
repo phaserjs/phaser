@@ -399,7 +399,7 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Sets the world's gravity and gravity scale to 0.
      *
      * @method Phaser.Physics.Matter.World#disableGravity
      * @since 3.0.0
@@ -416,13 +416,13 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Sets the world's gravity
      *
      * @method Phaser.Physics.Matter.World#setGravity
      * @since 3.0.0
      *
-     * @param {number} [x=0] - [description]
-     * @param {number} [y=1] - [description]
+     * @param {number} [x=0] - The world gravity x component.
+     * @param {number} [y=1] - The world gravity y component.
      * @param {number} [scale] - [description]
      *
      * @return {Phaser.Physics.Matter.World} This Matter World object.
@@ -467,7 +467,7 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Adds an object to the world.
      *
      * @method Phaser.Physics.Matter.World#add
      * @since 3.0.0
@@ -592,7 +592,7 @@ var World = new Class({
      * @method Phaser.Physics.Matter.World#nextCategory
      * @since 3.0.0
      *
-     * @return {number} [description]
+     * @return {number} Returns the next unique category bitfield.
      */
     nextCategory: function ()
     {
@@ -1074,7 +1074,8 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Will remove all Matter physics event listeners and clear the matter physics world,
+     * engine and any debug graphics, if any.
      *
      * @method Phaser.Physics.Matter.World#shutdown
      * @since 3.0.0
@@ -1096,7 +1097,10 @@ var World = new Class({
     },
 
     /**
-     * [description]
+     * Will remove all Matter physics event listeners and clear the matter physics world,
+     * engine and any debug graphics, if any.
+     *
+     * After destroying the world it cannot be re-used again.
      *
      * @method Phaser.Physics.Matter.World#destroy
      * @since 3.0.0

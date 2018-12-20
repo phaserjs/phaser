@@ -5,16 +5,16 @@
  */
 
 /**
- * [description]
+ * Reverses the order of the points of a Polygon.
  *
  * @function Phaser.Geom.Polygon.Reverse
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Polygon} O - [polygon,$return]
  *
- * @param {Phaser.Geom.Polygon} polygon - [description]
+ * @param {Phaser.Geom.Polygon} polygon - The Polygon to modify.
  *
- * @return {Phaser.Geom.Polygon} [description]
+ * @return {Phaser.Geom.Polygon} The modified Polygon.
  */
 var Reverse = function (polygon)
 {

@@ -10,14 +10,26 @@ var GetPoints = require('./GetPoints');
 
 /**
  * @classdesc
- * [description]
+ * A Polygon object
+ *
+
+ * The polygon is a closed shape consists of a series of connected straight lines defined by list of ordered points.
+ * Several formats are supported to define the list of points, check the setTo method for details. 
+ * This is a geometry object allowing you to define and inspect the shape.
+ * It is not a Game Object, in that you cannot add it to the display list, and it has no texture.
+ * To render a Polygon you should look at the capabilities of the Graphics class.
  *
  * @class Polygon
  * @memberof Phaser.Geom
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Point[]} [points] - [description]
+ * @param {Phaser.Geom.Point[]} [points] - List of points defining the perimeter of this Polygon. Several formats are supported: 
+ * - A string containing paired x y values separated by a single space: `'40 0 40 20 100 20 100 80 40 80 40 100 0 50'`
+ * - An array of Point objects: `[new Phaser.Point(x1, y1), ...]`
+ * - An array of objects with public x y properties: `[obj1, obj2, ...]`
+ * - An array of paired numbers that represent point coordinates: `[x1,y1, x2,y2, ...]`
+ * - An array of arrays with two elements representing x/y coordinates: `[[x1, y1], [x2, y2], ...]`
  */
 var Polygon = new Class({
 
@@ -82,7 +94,7 @@ var Polygon = new Class({
      * @method Phaser.Geom.Polygon#setTo
      * @since 3.0.0
      *
-     * @param {array} points - [description]
+     * @param {array} points - Points defining the perimeter of this polygon. Please check function description above for the different supported formats.
      *
      * @return {Phaser.Geom.Polygon} This Polygon object.
      */

@@ -32,36 +32,47 @@ var Vector2 = require('../../math/Vector2');
 var Wrap = require('../../math/Wrap');
 
 /**
- * @event Phaser.Physics.Arcade.World#pause
+ * The physics simulation paused.
+ * @event Phaser.Physics.Arcade.World#pauseEvent
  */
 
 /**
- * @event Phaser.Physics.Arcade.World#resume
+ * The physics simulation resumed (from a paused state).
+ * @event Phaser.Physics.Arcade.World#resumeEvent
  */
 
 /**
- * @event Phaser.Physics.Arcade.World#collide
+ * Two Game Objects collided.
+ * This event is emitted only if at least one body has `onCollide` enabled.
+ * @event Phaser.Physics.Arcade.World#collideEvent
  * @param {Phaser.GameObjects.GameObject} gameObject1
  * @param {Phaser.GameObjects.GameObject} gameObject2
  * @param {Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody} body1
  * @param {Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody} body2
+ * @see Phaser.Physics.Arcade.Body#onCollide
  */
 
 /**
- * @event Phaser.Physics.Arcade.World#overlap
+ * Two Game Objects overlapped.
+ * This event is emitted only if at least one body has `onOverlap` enabled.
+ * @event Phaser.Physics.Arcade.World#overlapEvent
  * @param {Phaser.GameObjects.GameObject} gameObject1
  * @param {Phaser.GameObjects.GameObject} gameObject2
  * @param {Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody} body1
  * @param {Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody} body2
+ * @see Phaser.Physics.Arcade.Body#onOverlap
  */
 
 /**
- * @event Phaser.Physics.Arcade.World#worldbounds
+ * A Body contacted the world boundary.
+ * This event is emitted only if the body has `onWorldBounds` enabled.
+ * @event Phaser.Physics.Arcade.World#worldboundsEvent
  * @param {Phaser.Physics.Arcade.Body} body
  * @param {boolean} up
  * @param {boolean} down
  * @param {boolean} left
  * @param {boolean} right
+ * @see Phaser.Physics.Arcade.Body#onWorldBounds
  */
 
 /**
@@ -99,30 +110,30 @@ var Wrap = require('../../math/Wrap');
 /**
  * @typedef {object} CheckCollisionObject
  *
- * @property {boolean} up - [description]
- * @property {boolean} down - [description]
- * @property {boolean} left - [description]
- * @property {boolean} right - [description]
+ * @property {boolean} up - Will bodies collide with the top side of the world bounds?
+ * @property {boolean} down - Will bodies collide with the bottom side of the world bounds?
+ * @property {boolean} left - Will bodies collide with the left side of the world bounds?
+ * @property {boolean} right - Will bodies collide with the right side of the world bounds?
  */
 
 /**
  * @typedef {object} ArcadeWorldDefaults
  *
- * @property {boolean} debugShowBody - [description]
- * @property {boolean} debugShowStaticBody - [description]
- * @property {boolean} debugShowVelocity - [description]
- * @property {number} bodyDebugColor - [description]
- * @property {number} staticBodyDebugColor - [description]
- * @property {number} velocityDebugColor - [description]
+ * @property {boolean} debugShowBody - Set to `true` to render dynamic body outlines to the debug display.
+ * @property {boolean} debugShowStaticBody - Set to `true` to render static body outlines to the debug display.
+ * @property {boolean} debugShowVelocity - Set to `true` to render body velocity markers to the debug display.
+ * @property {number} bodyDebugColor - The color of dynamic body outlines when rendered to the debug display.
+ * @property {number} staticBodyDebugColor - The color of static body outlines when rendered to the debug display.
+ * @property {number} velocityDebugColor - The color of the velocity markers when rendered to the debug display.
  */
 
 /**
  * @typedef {object} ArcadeWorldTreeMinMax
  *
- * @property {number} minX - [description]
- * @property {number} minY - [description]
- * @property {number} maxX - [description]
- * @property {number} maxY - [description]
+ * @property {number} minX - The minimum x value used in RTree searches.
+ * @property {number} minY - The minimum y value used in RTree searches.
+ * @property {number} maxX - The maximum x value used in RTree searches.
+ * @property {number} maxY - The maximum y value used in RTree searches.
  */
 
 /**
@@ -853,7 +864,7 @@ var World = new Class({
      * checks.
      *
      * @method Phaser.Physics.Arcade.World#pause
-     * @fires Phaser.Physics.Arcade.World#pause
+     * @fires Phaser.Physics.Arcade.World#pauseEvent
      * @since 3.0.0
      *
      * @return {Phaser.Physics.Arcade.World} This World object.
@@ -871,7 +882,7 @@ var World = new Class({
      * Resumes the simulation, if paused.
      *
      * @method Phaser.Physics.Arcade.World#resume
-     * @fires Phaser.Physics.Arcade.World#resume
+     * @fires Phaser.Physics.Arcade.World#resumeEvent
      * @since 3.0.0
      *
      * @return {Phaser.Physics.Arcade.World} This World object.
@@ -1046,12 +1057,12 @@ var World = new Class({
     },
 
     /**
-     * Advances the simulation by one step.
+     * Advances the simulation by a time increment.
      *
      * @method Phaser.Physics.Arcade.World#step
      * @since 3.10.0
      *
-     * @param {number} delta - The delta time amount, in ms, by which to advance the simulation.
+     * @param {number} delta - The delta time amount, in seconds, by which to advance the simulation.
      */
     step: function (delta)
     {
@@ -1190,7 +1201,7 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Physics.Arcade.Body} body - The Body to be updated.
-     * @param {number} delta - The delta value to be used in the motion calculations.
+     * @param {number} delta - The delta value to be used in the motion calculations, in seconds.
      */
     updateMotion: function (body, delta)
     {
@@ -1209,7 +1220,7 @@ var World = new Class({
      * @since 3.10.0
      *
      * @param {Phaser.Physics.Arcade.Body} body - The Body to compute the velocity for.
-     * @param {number} delta - The delta value to be used in the calculation.
+     * @param {number} delta - The delta value to be used in the calculation, in seconds.
      */
     computeAngularVelocity: function (body, delta)
     {
@@ -1255,7 +1266,7 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Physics.Arcade.Body} body - The Body to compute the velocity for.
-     * @param {number} delta - The delta value to be used in the calculation.
+     * @param {number} delta - The delta value to be used in the calculation, in seconds.
      */
     computeVelocity: function (body, delta)
     {
@@ -1361,8 +1372,8 @@ var World = new Class({
      * Separates two Bodies.
      *
      * @method Phaser.Physics.Arcade.World#separate
-     * @fires Phaser.Physics.Arcade.World#collide
-     * @fires Phaser.Physics.Arcade.World#overlap
+     * @fires Phaser.Physics.Arcade.World#collideEvent
+     * @fires Phaser.Physics.Arcade.World#overlapEvent
      * @since 3.0.0
      *
      * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to be separated.
@@ -1476,8 +1487,8 @@ var World = new Class({
      * Separates two Bodies, when both are circular.
      *
      * @method Phaser.Physics.Arcade.World#separateCircle
-     * @fires Phaser.Physics.Arcade.World#collide
-     * @fires Phaser.Physics.Arcade.World#overlap
+     * @fires Phaser.Physics.Arcade.World#collideEvent
+     * @fires Phaser.Physics.Arcade.World#overlapEvent
      * @since 3.0.0
      *
      * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to be separated.
@@ -1790,9 +1801,9 @@ var World = new Class({
      * @param {ArcadeColliderType} [object2] - The second object or array of objects to check, or `undefined`.
      * @param {ArcadePhysicsCallback} [collideCallback] - An optional callback function that is called if the objects collide.
      * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
-     * @param {*} [callbackContext] - The context in which to run the callbacks.
+     * @param {any} [callbackContext] - The context in which to run the callbacks.
      *
-     * @return {boolean} True if any overlapping Game Objects were separated, otherwise false.
+     * @return {boolean} `true` if any overlapping Game Objects were separated, otherwise `false`.
      */
     collide: function (object1, object2, collideCallback, processCallback, callbackContext)
     {
@@ -1804,16 +1815,17 @@ var World = new Class({
     },
 
     /**
-     * Helper for Phaser.Physics.Arcade.World#collide.
+     * Internal helper function. Please use Phaser.Physics.Arcade.World#collide instead.
      *
      * @method Phaser.Physics.Arcade.World#collideObjects
+     * @private
      * @since 3.0.0
      *
-     * @param {ArcadeColliderType} object1 - [description]
-     * @param {ArcadeColliderType} [object2] - [description]
-     * @param {ArcadePhysicsCallback} collideCallback - [description]
-     * @param {ArcadePhysicsCallback} processCallback - [description]
-     * @param {*} callbackContext - [description]
+     * @param {ArcadeColliderType} object1 - The first object to check for collision.
+     * @param {ArcadeColliderType} object2 - The second object to check for collision.
+     * @param {ArcadePhysicsCallback} collideCallback - The callback to invoke when the two objects collide.
+     * @param {ArcadePhysicsCallback} processCallback - The callback to invoke when the two objects collide. Must return a boolean.
+     * @param {any} callbackContext - The scope in which to call the callbacks.
      * @param {boolean} overlapOnly - Whether this is a collision or overlap check.
      *
      * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
@@ -1874,16 +1886,17 @@ var World = new Class({
     },
 
     /**
-     * Helper for Phaser.Physics.Arcade.World#collide and Phaser.Physics.Arcade.World#overlap.
+     * Internal helper function. Please use Phaser.Physics.Arcade.World#collide and Phaser.Physics.Arcade.World#overlap instead.
      *
      * @method Phaser.Physics.Arcade.World#collideHandler
+     * @private
      * @since 3.0.0
      *
-     * @param {ArcadeColliderType} object1 - [description]
-     * @param {ArcadeColliderType} [object2] - [description]
-     * @param {ArcadePhysicsCallback} collideCallback - [description]
-     * @param {ArcadePhysicsCallback} processCallback - [description]
-     * @param {*} callbackContext - [description]
+     * @param {ArcadeColliderType} object1 - The first object or array of objects to check.
+     * @param {ArcadeColliderType} object2 - The second object or array of objects to check, or `undefined`.
+     * @param {ArcadePhysicsCallback} collideCallback - An optional callback function that is called if the objects collide.
+     * @param {ArcadePhysicsCallback} processCallback - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
+     * @param {any} callbackContext - The context in which to run the callbacks.
      * @param {boolean} overlapOnly - Whether this is a collision or overlap check.
      *
      * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
@@ -1952,19 +1965,21 @@ var World = new Class({
     },
 
     /**
-     * Handler for Sprite vs. Sprite collisions.
+     * Internal handler for Sprite vs. Sprite collisions.
+     * Please use Phaser.Physics.Arcade.World#collide instead.
      *
      * @method Phaser.Physics.Arcade.World#collideSpriteVsSprite
+     * @private
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} sprite1 - [description]
-     * @param {Phaser.GameObjects.GameObject} sprite2 - [description]
-     * @param {ArcadePhysicsCallback} collideCallback - [description]
-     * @param {ArcadePhysicsCallback} processCallback - [description]
-     * @param {*} callbackContext - [description]
+     * @param {Phaser.GameObjects.GameObject} sprite1 - The first object to check for collision.
+     * @param {Phaser.GameObjects.GameObject} sprite2 - The second object to check for collision.
+     * @param {ArcadePhysicsCallback} [collideCallback] - An optional callback function that is called if the objects collide.
+     * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
+     * @param {any} [callbackContext] - The context in which to run the callbacks.
      * @param {boolean} overlapOnly - Whether this is a collision or overlap check.
      *
-     * @return {boolean} [description]
+     * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
      */
     collideSpriteVsSprite: function (sprite1, sprite2, collideCallback, processCallback, callbackContext, overlapOnly)
     {
@@ -1987,19 +2002,21 @@ var World = new Class({
     },
 
     /**
-     * Handler for Sprite vs. Group collisions.
+     * Internal handler for Sprite vs. Group collisions.
+     * Please use Phaser.Physics.Arcade.World#collide instead.
      *
      * @method Phaser.Physics.Arcade.World#collideSpriteVsGroup
+     * @private
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} sprite - [description]
-     * @param {Phaser.GameObjects.Group} group - [description]
-     * @param {ArcadePhysicsCallback} collideCallback - [description]
-     * @param {ArcadePhysicsCallback} processCallback - [description]
-     * @param {*} callbackContext - [description]
+     * @param {Phaser.GameObjects.GameObject} sprite - The first object to check for collision.
+     * @param {Phaser.GameObjects.Group} group - The second object to check for collision.
+     * @param {ArcadePhysicsCallback} collideCallback - The callback to invoke when the two objects collide.
+     * @param {ArcadePhysicsCallback} processCallback - The callback to invoke when the two objects collide. Must return a boolean.
+     * @param {any} callbackContext - The scope in which to call the callbacks.
      * @param {boolean} overlapOnly - Whether this is a collision or overlap check.
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if the Sprite collided with the given Group, otherwise `false`.
      */
     collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext, overlapOnly)
     {
@@ -2080,19 +2097,21 @@ var World = new Class({
     },
 
     /**
-     * Helper for Group vs. Tilemap collisions.
+     * Internal handler for Group vs. Tilemap collisions.
+     * Please use Phaser.Physics.Arcade.World#collide instead.
      *
      * @method Phaser.Physics.Arcade.World#collideGroupVsTilemapLayer
+     * @private
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Group} group - [description]
-     * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer - [description]
-     * @param {ArcadePhysicsCallback} collideCallback - [description]
-     * @param {ArcadePhysicsCallback} processCallback - [description]
-     * @param {*} callbackContext - [description]
+     * @param {Phaser.GameObjects.Group} group - The first object to check for collision.
+     * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer - The second object to check for collision.
+     * @param {ArcadePhysicsCallback} [collideCallback] - An optional callback function that is called if the objects collide.
+     * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
+     * @param {any} [callbackContext] - The context in which to run the callbacks.
      * @param {boolean} overlapOnly - Whether this is a collision or overlap check.
      *
-     * @return {boolean} [description]
+     * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
      */
     collideGroupVsTilemapLayer: function (group, tilemapLayer, collideCallback, processCallback, callbackContext, overlapOnly)
     {
@@ -2120,21 +2139,24 @@ var World = new Class({
     },
 
     /**
-     * Helper for Sprite vs. Tilemap collisions.
+     * Internal handler for Sprite vs. Tilemap collisions.
+     * Please use Phaser.Physics.Arcade.World#collide instead.
      *
      * @method Phaser.Physics.Arcade.World#collideSpriteVsTilemapLayer
-     * @fires Phaser.Physics.Arcade.World#collide
-     * @fires Phaser.Physics.Arcade.World#overlap
+     * @fires Phaser.GameObjects.GameObject#collideEvent
+     * @fires Phaser.GameObjects.GameObject#overlapEvent
+     * @fires Phaser.Physics.Arcade.World#collideEvent
+     * @fires Phaser.Physics.Arcade.World#overlapEvent
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} sprite - [description]
-     * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer - [description]
-     * @param {ArcadePhysicsCallback} collideCallback - [description]
-     * @param {ArcadePhysicsCallback} processCallback - [description]
-     * @param {*} callbackContext - [description]
+     * @param {Phaser.GameObjects.GameObject} sprite - The first object to check for collision.
+     * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer - The second object to check for collision.
+     * @param {ArcadePhysicsCallback} [collideCallback] - An optional callback function that is called if the objects collide.
+     * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
+     * @param {any} [callbackContext] - The context in which to run the callbacks.
      * @param {boolean} overlapOnly - Whether this is a collision or overlap check.
      *
-     * @return {boolean} [description]
+     * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
      */
     collideSpriteVsTilemapLayer: function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext, overlapOnly)
     {
@@ -2224,19 +2246,21 @@ var World = new Class({
     },
 
     /**
-     * Helper for Group vs. Group collisions.
+     * Internal helper for Group vs. Group collisions.
+     * Please use Phaser.Physics.Arcade.World#collide instead.
      *
      * @method Phaser.Physics.Arcade.World#collideGroupVsGroup
+     * @private
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Group} group1 - [description]
-     * @param {Phaser.GameObjects.Group} group2 - [description]
-     * @param {ArcadePhysicsCallback} collideCallback - [description]
-     * @param {ArcadePhysicsCallback} processCallback - [description]
-     * @param {*} callbackContext - [description]
+     * @param {Phaser.GameObjects.Group} group1 - The first object to check for collision.
+     * @param {Phaser.GameObjects.Group} group2 - The second object to check for collision.
+     * @param {ArcadePhysicsCallback} [collideCallback] - An optional callback function that is called if the objects collide.
+     * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
+     * @param {any} [callbackContext] - The context in which to run the callbacks.
      * @param {boolean} overlapOnly - Whether this is a collision or overlap check.
      *
-     * @return {boolean} [description]
+     * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
      */
     collideGroupVsGroup: function (group1, group2, collideCallback, processCallback, callbackContext, overlapOnly)
     {
@@ -2352,3 +2376,23 @@ var World = new Class({
 });
 
 module.exports = World;
+
+/**
+ * A physics-enabled Game Object collided with a Tile.
+ * This event is emitted only if the Game Object's body has `onCollide` enabled.
+ * @event Phaser.GameObjects.GameObject#collideEvent
+ * @param {Phaser.GameObjects.GameObject} gameObject
+ * @param {Phaser.Tilemaps.Tile} tile
+ * @param {Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody} body
+ * @see Phaser.Physics.Arcade.Body#onCollide
+ */
+
+/**
+ * A physics-enabled Game Object overlapped with a Tile.
+ * This event is emitted only if the Game Object's body has `onOverlap` enabled.
+ * @event Phaser.GameObjects.GameObject#overlapEvent
+ * @param {Phaser.GameObjects.GameObject} gameObject
+ * @param {Phaser.Tilemaps.Tile} tile
+ * @param {Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody} body
+ * @see Phaser.Physics.Arcade.Body#onOverlap
+ */

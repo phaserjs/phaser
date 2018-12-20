@@ -59,6 +59,9 @@ var RectangleCanvasRenderer = function (renderer, src, interpolationPercentage, 
 
             ctx.stroke();
         }
+
+        //  Restore the context saved in SetTransform
+        ctx.restore();
     }
 };
 

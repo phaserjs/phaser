@@ -73,6 +73,9 @@ var CurveCanvasRenderer = function (renderer, src, interpolationPercentage, came
 
             ctx.stroke();
         }
+
+        //  Restore the context saved in SetTransform
+        ctx.restore();
     }
 };
 

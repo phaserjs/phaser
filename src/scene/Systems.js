@@ -58,7 +58,7 @@ var Systems = new Class({
              * The Facebook Instant Games Plugin.
              *
              * @name Phaser.Scenes.Systems#facebook
-             * @type {any}
+             * @type {Phaser.FacebookInstantGamesPlugin}
              * @since 3.12.0
              */
             this.facebook;
@@ -147,6 +147,17 @@ var Systems = new Class({
          * @since 3.0.0
          */
         this.registry;
+
+        /**
+         * A reference to the global Scale Manager.
+         * 
+         * In the default set-up you can access this from within a Scene via the `this.scale` property.
+         *
+         * @name Phaser.Scenes.Systems#scale
+         * @type {Phaser.DOM.ScaleManager}
+         * @since 3.15.0
+         */
+        this.scale;
 
         /**
          * A reference to the global Sound Manager.

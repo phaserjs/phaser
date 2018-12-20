@@ -109,26 +109,6 @@ var VisibilityHandler = function (game)
     if (window.focus && game.config.autoFocus)
     {
         window.focus();
-
-        game.canvas.addEventListener('mousedown', function ()
-        {
-            window.focus();
-        }, { passive: true });
-    }
-
-    if (game.canvas)
-    {
-        game.canvas.onmouseout = function ()
-        {
-            game.isOver = false;
-            eventEmitter.emit('mouseout');
-        };
-
-        game.canvas.onmouseover = function ()
-        {
-            game.isOver = true;
-            eventEmitter.emit('mouseover');
-        };
     }
 };
 

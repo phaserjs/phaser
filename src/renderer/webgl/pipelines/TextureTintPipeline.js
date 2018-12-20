@@ -35,7 +35,7 @@ var WebGLPipeline = require('../WebGLPipeline');
  * @constructor
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {object} config - The configuration options for this Texture Tint Pipeline, as described above.
  */
 var TextureTintPipeline = new Class({
 
@@ -278,11 +278,6 @@ var TextureTintPipeline = new Class({
 
         this.mvpUpdate();
 
-        if (this.batches.length === 0)
-        {
-            this.pushBatch();
-        }
-
         return this;
     },
 
@@ -308,56 +303,54 @@ var TextureTintPipeline = new Class({
     },
 
     /**
-     * Assigns a texture to the current batch. If a texture is already set it creates
-     * a new batch object.
+     * Assigns a texture to the current batch. If a different texture is already set it creates a new batch object.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#setTexture2D
      * @since 3.1.0
      *
-     * @param {WebGLTexture} texture - WebGLTexture that will be assigned to the current batch.
-     * @param {integer} textureUnit - Texture unit to which the texture needs to be bound.
+     * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch. If not given uses blankTexture.
+     * @param {integer} [unit=0] - Texture unit to which the texture needs to be bound.
      *
      * @return {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} This pipeline instance.
      */
     setTexture2D: function (texture, unit)
     {
-        if (!texture)
+        if (texture === undefined) { texture = this.renderer.blankTexture.glTexture; }
+        if (unit === undefined) { unit = 0; }
+
+        if (this.requireTextureBatch(texture, unit))
         {
-            texture = this.renderer.blankTexture.glTexture;
-            unit = 0;
-        }
-
-        var batches = this.batches;
-
-        if (batches.length === 0)
-        {
-            this.pushBatch();
-        }
-
-        var batch = batches[batches.length - 1];
-
-        if (unit > 0)
-        {
-            if (batch.textures[unit - 1] &&
-                batch.textures[unit - 1] !== texture)
-            {
-                this.pushBatch();
-            }
-
-            batches[batches.length - 1].textures[unit - 1] = texture;
-        }
-        else
-        {
-            if (batch.texture !== null &&
-                batch.texture !== texture)
-            {
-                this.pushBatch();
-            }
-
-            batches[batches.length - 1].texture = texture;
+            this.pushBatch(texture, unit);
         }
 
         return this;
+    },
+
+    /**
+     * Checks if the current batch has the same texture and texture unit, or if we need to create a new batch.
+     *
+     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#requireTextureBatch
+     * @since 3.16.0
+     *
+     * @param {WebGLTexture} texture - WebGLTexture that will be assigned to the current batch. If not given uses blankTexture.
+     * @param {integer} unit - Texture unit to which the texture needs to be bound.
+     *
+     * @return {boolean} `true` if the pipeline needs to create a new batch, otherwise `false`.
+     */
+    requireTextureBatch: function (texture, unit)
+    {
+        var batches = this.batches;
+        var batchLength = batches.length;
+
+        if (batchLength > 0)
+        {
+            //  If Texture Unit specified, we get the texture from the textures array, otherwise we use the texture property
+            var currentTexture = (unit > 0) ? batches[batchLength - 1].textures[unit - 1] : batches[batchLength - 1].texture;
+
+            return !(currentTexture === texture);
+        }
+
+        return true;
     },
 
     /**
@@ -368,16 +361,32 @@ var TextureTintPipeline = new Class({
      *
      * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#pushBatch
      * @since 3.1.0
+     * 
+     * @param {WebGLTexture} texture - Optional WebGLTexture that will be assigned to the created batch.
+     * @param {integer} unit - Texture unit to which the texture needs to be bound.
      */
-    pushBatch: function ()
+    pushBatch: function (texture, unit)
     {
-        var batch = {
-            first: this.vertexCount,
-            texture: null,
-            textures: []
-        };
+        if (unit === 0)
+        {
+            this.batches.push({
+                first: this.vertexCount,
+                texture: texture,
+                textures: []
+            });
+        }
+        else
+        {
+            var textures = [];
 
-        this.batches.push(batch);
+            textures[unit - 1] = texture;
+
+            this.batches.push({
+                first: this.vertexCount,
+                texture: null,
+                textures: textures
+            });
+        }
     },
 
     /**
@@ -420,11 +429,14 @@ var TextureTintPipeline = new Class({
 
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
 
-        for (var index = 0; index < batches.length - 1; index++)
+        //  Process the TEXTURE BATCHES
+
+        for (var index = 0; index < batchCount - 1; index++)
         {
             batch = batches[index];
             batchNext = batches[index + 1];
 
+            //  Multi-texture check (for non-zero texture units)
             if (batch.textures.length > 0)
             {
                 for (textureIndex = 0; textureIndex < batch.textures.length; ++textureIndex)
@@ -433,7 +445,7 @@ var TextureTintPipeline = new Class({
 
                     if (nTexture)
                     {
-                        renderer.setTexture2D(nTexture, 1 + textureIndex);
+                        renderer.setTexture2D(nTexture, 1 + textureIndex, false);
                     }
                 }
 
@@ -442,18 +454,21 @@ var TextureTintPipeline = new Class({
 
             batchVertexCount = batchNext.first - batch.first;
 
+            //  Bail out if texture property is null (i.e. if a texture unit > 0)
             if (batch.texture === null || batchVertexCount <= 0)
             {
                 continue;
             }
 
-            renderer.setTexture2D(batch.texture, 0);
+            renderer.setTexture2D(batch.texture, 0, false);
 
             gl.drawArrays(topology, batch.first, batchVertexCount);
         }
 
         // Left over data
-        batch = batches[batches.length - 1];
+        batch = batches[batchCount - 1];
+
+        //  Multi-texture check (for non-zero texture units)
 
         if (batch.textures.length > 0)
         {
@@ -463,7 +478,7 @@ var TextureTintPipeline = new Class({
 
                 if (nTexture)
                 {
-                    renderer.setTexture2D(nTexture, 1 + textureIndex);
+                    renderer.setTexture2D(nTexture, 1 + textureIndex, false);
                 }
             }
 
@@ -474,7 +489,7 @@ var TextureTintPipeline = new Class({
 
         if (batch.texture && batchVertexCount > 0)
         {
-            renderer.setTexture2D(batch.texture, 0);
+            renderer.setTexture2D(batch.texture, 0, false);
 
             gl.drawArrays(topology, batch.first, batchVertexCount);
         }
@@ -482,8 +497,6 @@ var TextureTintPipeline = new Class({
         this.vertexCount = 0;
 
         batches.length = 0;
-
-        this.pushBatch();
 
         this.flushLocked = false;
 
@@ -502,6 +515,7 @@ var TextureTintPipeline = new Class({
      */
     batchSprite: function (sprite, camera, parentTransformMatrix)
     {
+        //  Will cause a flush if there are batchSize entries already
         this.renderer.setPipeline(this);
 
         var camMatrix = this._tempMatrix1;
@@ -606,24 +620,24 @@ var TextureTintPipeline = new Class({
 
         if (camera.roundPixels)
         {
-            tx0 |= 0;
-            ty0 |= 0;
+            tx0 = Math.round(tx0);
+            ty0 = Math.round(ty0);
 
-            tx1 |= 0;
-            ty1 |= 0;
+            tx1 = Math.round(tx1);
+            ty1 = Math.round(ty1);
 
-            tx2 |= 0;
-            ty2 |= 0;
+            tx2 = Math.round(tx2);
+            ty2 = Math.round(ty2);
 
-            tx3 |= 0;
-            ty3 |= 0;
+            tx3 = Math.round(tx3);
+            ty3 = Math.round(ty3);
         }
 
         this.setTexture2D(texture, 0);
 
         var tintEffect = (sprite._isTinted && sprite.tintFill);
 
-        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect);
+        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, 0);
     },
 
     /**
@@ -663,10 +677,12 @@ var TextureTintPipeline = new Class({
      * @param {number} tintBL - The bottom-left tint color value.
      * @param {number} tintBR - The bottom-right tint color value.
      * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
+     * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch if a flush occurs.
+     * @param {integer} [unit=0] - Texture unit to which the texture needs to be bound.
      * 
      * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
      */
-    batchQuad: function (x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect)
+    batchQuad: function (x0, y0, x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, unit)
     {
         var hasFlushed = false;
 
@@ -675,6 +691,8 @@ var TextureTintPipeline = new Class({
             this.flush();
 
             hasFlushed = true;
+
+            this.setTexture2D(texture, unit);
         }
 
         var vertexViewF32 = this.vertexViewF32;
@@ -761,16 +779,20 @@ var TextureTintPipeline = new Class({
      * @param {number} tintTR - The top-right tint color value.
      * @param {number} tintBL - The bottom-left tint color value.
      * @param {(number|boolean)} tintEffect - The tint effect for the shader to use.
+     * @param {WebGLTexture} [texture] - WebGLTexture that will be assigned to the current batch if a flush occurs.
+     * @param {integer} [unit=0] - Texture unit to which the texture needs to be bound.
      * 
      * @return {boolean} `true` if this method caused the batch to flush, otherwise `false`.
      */
-    batchTri: function (x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintEffect)
+    batchTri: function (x1, y1, x2, y2, x3, y3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintEffect, texture, unit)
     {
         var hasFlushed = false;
 
         if (this.vertexCount + 3 > this.vertexCapacity)
         {
             this.flush();
+
+            this.setTexture2D(texture, unit);
 
             hasFlushed = true;
         }
@@ -971,22 +993,22 @@ var TextureTintPipeline = new Class({
 
         if (camera.roundPixels)
         {
-            tx0 |= 0;
-            ty0 |= 0;
+            tx0 = Math.round(tx0);
+            ty0 = Math.round(ty0);
 
-            tx1 |= 0;
-            ty1 |= 0;
+            tx1 = Math.round(tx1);
+            ty1 = Math.round(ty1);
 
-            tx2 |= 0;
-            ty2 |= 0;
+            tx2 = Math.round(tx2);
+            ty2 = Math.round(ty2);
 
-            tx3 |= 0;
-            ty3 |= 0;
+            tx3 = Math.round(tx3);
+            ty3 = Math.round(ty3);
         }
 
         this.setTexture2D(texture, 0);
 
-        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect);
+        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, 0);
     },
 
     /**
@@ -1044,7 +1066,7 @@ var TextureTintPipeline = new Class({
 
         tint = Utils.getTintAppendFloatAlpha(tint, alpha);
 
-        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, 0);
+        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, 0, frame.glTexture, 0);
     },
 
     /**
@@ -1066,6 +1088,8 @@ var TextureTintPipeline = new Class({
     {
         var xw = x + width;
         var yh = y + height;
+
+        this.setTexture2D();
 
         var tint = Utils.getTintAppendFloatAlphaAndSwap(color, alpha);
 

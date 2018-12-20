@@ -5,14 +5,14 @@
  */
 
 /**
- * [description]
+ * Calculates the square of magnitude of given point.(Can be used for fast magnitude calculation of point)
  *
  * @function Phaser.Geom.Point.GetMagnitudeSq
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Point} point - [description]
+ * @param {Phaser.Geom.Point} point - Returns square of the magnitude/length of given point.
  *
- * @return {number} [description]
+ * @return {number} Returns square of the magnitude of given point.
  */
 var GetMagnitudeSq = function (point)
 {

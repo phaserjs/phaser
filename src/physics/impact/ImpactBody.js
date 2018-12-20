@@ -30,9 +30,9 @@ var Components = require('./components');
  * @extends Phaser.Physics.Impact.Components.Velocity
  *
  * @param {Phaser.Physics.Impact.World} world - [description]
- * @param {number} x - [description]
- * @param {number} y - [description]
- * @param {number} width - [description]
+ * @param {number} x - x - The horizontal position of this physics body in the world.
+ * @param {number} y - y - The vertical position of this physics body in the world.
+ * @param {number} width - The width of the physics body in the world.
  * @param {number} height - [description]
  */
 var ImpactBody = new Class({

@@ -56,6 +56,22 @@ var GameObject = new Class({
         this.type = type;
 
         /**
+         * The current state of this Game Object.
+         * 
+         * Phaser itself will never modify this value, although plugins may do so.
+         * 
+         * Use this property to track the state of a Game Object during its lifetime. For example, it could move from
+         * a state of 'moving', to 'attacking', to 'dead'. The state value should be an integer (ideally mapped to a constant
+         * in your game code), or a string. These are recommended to keep it light and simple, with fast comparisons.
+         * If you need to store complex data about your Game Object, look at using the Data Component instead.
+         *
+         * @name Phaser.GameObjects.GameObject#state
+         * @type {{integer|string}}
+         * @since 3.16.0
+         */
+        this.state = 0;
+
+        /**
          * The parent Container of this Game Object, if it has one.
          *
          * @name Phaser.GameObjects.GameObject#parentContainer
@@ -207,6 +223,30 @@ var GameObject = new Class({
     setName: function (value)
     {
         this.name = value;
+
+        return this;
+    },
+
+    /**
+     * Sets the current state of this Game Object.
+     * 
+     * Phaser itself will never modify the State of a Game Object, although plugins may do so.
+     * 
+     * For example, a Game Object could change from a state of 'moving', to 'attacking', to 'dead'.
+     * The state value should typically be an integer (ideally mapped to a constant
+     * in your game code), but could also be a string. It is recommended to keep it light and simple.
+     * If you need to store complex data about your Game Object, look at using the Data Component instead.
+     *
+     * @method Phaser.GameObjects.GameObject#setState
+     * @since 3.16.0
+     *
+     * @param {(integer|string)} value - The state of the Game Object.
+     *
+     * @return {this} This GameObject.
+     */
+    setState: function (value)
+    {
+        this.state = value;
 
         return this;
     },
@@ -454,7 +494,7 @@ var GameObject = new Class({
      */
     willRender: function (camera)
     {
-        return !(GameObject.RENDER_MASK !== this.renderFlags || (this.cameraFilter > 0 && (this.cameraFilter & camera.id)));
+        return !(GameObject.RENDER_MASK !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id)));
     },
 
     /**
@@ -515,8 +555,9 @@ var GameObject = new Class({
      * Game Object Pool instead of destroying it, as destroyed objects cannot be resurrected.
      *
      * @method Phaser.GameObjects.GameObject#destroy
+     * @fires Phaser.GameObjects.GameObject#destroyEvent
      * @since 3.0.0
-     * 
+     *
      * @param {boolean} [fromScene=false] - Is this Game Object being destroyed as the result of a Scene shutdown?
      */
     destroy: function (fromScene)
@@ -591,3 +632,8 @@ var GameObject = new Class({
 GameObject.RENDER_MASK = 15;
 
 module.exports = GameObject;
+
+/**
+ * The Game Object will be destroyed.
+ * @event Phaser.GameObjects.GameObject#destroyEvent
+ */

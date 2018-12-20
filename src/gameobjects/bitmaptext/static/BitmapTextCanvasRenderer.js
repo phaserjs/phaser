@@ -148,8 +148,8 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
 
         if (roundPixels)
         {
-            x |= 0;
-            y |= 0;
+            x = Math.round(x);
+            y = Math.round(y);
         }
 
         ctx.save();

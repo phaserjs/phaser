@@ -121,6 +121,14 @@ var PhysicsGroup = new Class({
                 singleConfig.removeCallback = this.removeCallbackHandler;
             });
         }
+        else
+        {
+            // config is not defined and children is not a plain object nor an array of plain objects
+            config = {
+                createCallback: this.createCallbackHandler,
+                removeCallback: this.removeCallbackHandler
+            };
+        }
 
         /**
          * The physics simulation.
@@ -146,7 +154,7 @@ var PhysicsGroup = new Class({
          *
          * @name Phaser.Physics.Arcade.Group#physicsType
          * @type {integer}
-         * @default DYNAMIC_BODY
+         * @default Phaser.Physics.Arcade.DYNAMIC_BODY
          * @since 3.0.0
          */
         this.physicsType = CONST.DYNAMIC_BODY;

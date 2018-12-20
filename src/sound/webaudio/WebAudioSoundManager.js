@@ -144,13 +144,13 @@ var WebAudioSoundManager = new Class({
     {
         var _this = this;
 
-        var unlock = function ()
+        var unlockHandler = function unlockHandler ()
         {
             _this.context.resume().then(function ()
             {
-                document.body.removeEventListener('touchstart', unlock);
-                document.body.removeEventListener('touchend', unlock);
-                document.body.removeEventListener('click', unlock);
+                document.body.removeEventListener('touchstart', unlockHandler);
+                document.body.removeEventListener('touchend', unlockHandler);
+                document.body.removeEventListener('click', unlockHandler);
 
                 _this.unlocked = true;
             });
@@ -158,9 +158,9 @@ var WebAudioSoundManager = new Class({
 
         if (document.body)
         {
-            document.body.addEventListener('touchstart', unlock, false);
-            document.body.addEventListener('touchend', unlock, false);
-            document.body.addEventListener('click', unlock, false);
+            document.body.addEventListener('touchstart', unlockHandler, false);
+            document.body.addEventListener('touchend', unlockHandler, false);
+            document.body.addEventListener('click', unlockHandler, false);
         }
     },
 
@@ -174,7 +174,10 @@ var WebAudioSoundManager = new Class({
      */
     onBlur: function ()
     {
-        this.context.suspend();
+        if (!this.locked)
+        {
+            this.context.suspend();
+        }
     },
 
     /**
@@ -187,7 +190,10 @@ var WebAudioSoundManager = new Class({
      */
     onFocus: function ()
     {
-        this.context.resume();
+        if (!this.locked)
+        {
+            this.context.resume();
+        }
     },
 
     /**
