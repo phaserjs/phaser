@@ -78,6 +78,7 @@ var Map = new Class({
 
     /**
      * Adds an element with a specified `key` and `value` to this Map.
+     * If the `key` already exists, the value will be replaced.
      *
      * @method Phaser.Structs.Map#set
      * @since 3.0.0
@@ -95,9 +96,10 @@ var Map = new Class({
     {
         if (!this.has(key))
         {
-            this.entries[key] = value;
             this.size++;
         }
+
+        this.entries[key] = value;
 
         return this;
     },
