@@ -275,15 +275,11 @@ var Common = require('../core/Common');
      * @param {number} qualityMax
      */
     Vertices.chamfer = function(vertices, radius, quality, qualityMin, qualityMax) {
-
         if (typeof radius === 'number') {
             radius = [radius];
         } else {
             radius = radius || [8];
         }
-
-        if (!radius.length)
-            radius = [radius];
 
         // quality defaults to -1, which is auto
         quality = (typeof quality !== 'undefined') ? quality : -1;

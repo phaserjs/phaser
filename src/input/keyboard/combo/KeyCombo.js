@@ -35,11 +35,11 @@ var ResetKeyCombo = require('./ResetKeyCombo');
  * An array of either integers (key codes) or strings, or a mixture of both
  * An array of objects (such as Key objects) with a public 'keyCode' property
  *
- * For example, to listen for the Konami code (up, up, up, down, down, down, left, left, left, right, right, right)
+ * For example, to listen for the Konami code (up, up, down, down, left, right, left, right, b, a, enter)
  * you could pass the following array of key codes:
  *
  * ```javascript
- * this.input.keyboard.createCombo([ 38, 38, 38, 40, 40, 40, 37, 37, 37, 39, 39, 39 ], { resetOnMatch: true });
+ * this.input.keyboard.createCombo([ 38, 38, 40, 40, 37, 39, 37, 39, 66, 65, 13 ], { resetOnMatch: true });
  *
  * this.input.keyboard.on('keycombomatch', function (event) {
  *     console.log('Konami Code entered!');
@@ -53,7 +53,7 @@ var ResetKeyCombo = require('./ResetKeyCombo');
  * ```
  *
  * @class KeyCombo
- * @memberOf Phaser.Input.Keyboard
+ * @memberof Phaser.Input.Keyboard
  * @constructor
  * @since 3.0.0
  *
@@ -266,7 +266,7 @@ var KeyCombo = new Class({
      *
      * @name Phaser.Input.Keyboard.KeyCombo#progress
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     progress: {

@@ -41,7 +41,7 @@ var XHRSettings = require('./XHRSettings');
  *
  * @class LoaderPlugin
  * @extends Phaser.Events.EventEmitter
- * @memberOf Phaser.Loader
+ * @memberof Phaser.Loader
  * @constructor
  * @since 3.0.0
  *
@@ -65,7 +65,6 @@ var LoaderPlugin = new Class({
          *
          * @name Phaser.Loader.LoaderPlugin#scene
          * @type {Phaser.Scene}
-         * @protected
          * @since 3.0.0
          */
         this.scene = scene;
@@ -75,7 +74,6 @@ var LoaderPlugin = new Class({
          *
          * @name Phaser.Loader.LoaderPlugin#systems
          * @type {Phaser.Scenes.Systems}
-         * @protected
          * @since 3.0.0
          */
         this.systems = scene.sys;
@@ -85,7 +83,6 @@ var LoaderPlugin = new Class({
          *
          * @name Phaser.Loader.LoaderPlugin#cacheManager
          * @type {Phaser.Cache.CacheManager}
-         * @protected
          * @since 3.7.0
          */
         this.cacheManager = scene.sys.cache;
@@ -95,10 +92,19 @@ var LoaderPlugin = new Class({
          *
          * @name Phaser.Loader.LoaderPlugin#textureManager
          * @type {Phaser.Textures.TextureManager}
-         * @protected
          * @since 3.7.0
          */
         this.textureManager = scene.sys.textures;
+
+        /**
+         * A reference to the global Scene Manager.
+         *
+         * @name Phaser.Loader.LoaderPlugin#sceneManager
+         * @type {Phaser.Scenes.SceneManager}
+         * @protected
+         * @since 3.16.0
+         */
+        this.sceneManager = scene.sys.game.scene;
 
         //  Inject the available filetypes into the Loader
         FileTypesManager.install(this);
@@ -300,7 +306,7 @@ var LoaderPlugin = new Class({
          *
          * @name Phaser.Loader.LoaderPlugin#state
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.state = CONST.LOADER_IDLE;
@@ -827,6 +833,12 @@ var LoaderPlugin = new Class({
      */
     nextFile: function (file, success)
     {
+        //  Has the game been destroyed during load? If so, bail out now.
+        if (!this.inflight)
+        {
+            return;
+        }
+
         this.inflight.delete(file);
 
         this.updateProgress();
@@ -867,6 +879,12 @@ var LoaderPlugin = new Class({
      */
     fileProcessComplete: function (file)
     {
+        //  Has the game been destroyed during load? If so, bail out now.
+        if (!this.scene || !this.systems || !this.systems.game || this.systems.game.pendingDestroy)
+        {
+            return;
+        }
+
         //  This file has failed, so move it to the failed Set
         if (file.state === CONST.FILE_ERRORED)
         {
@@ -1077,6 +1095,7 @@ var LoaderPlugin = new Class({
         this.systems = null;
         this.textureManager = null;
         this.cacheManager = null;
+        this.sceneManager = null;
     }
 
 });

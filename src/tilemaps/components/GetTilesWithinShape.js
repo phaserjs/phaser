@@ -31,13 +31,10 @@ var TriangleToRectangle = function (triangle, rect)
  *
  * @param {(Phaser.Geom.Circle|Phaser.Geom.Line|Phaser.Geom.Rectangle|Phaser.Geom.Triangle)} shape - A shape in world (pixel) coordinates
  * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
- * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
- * -1 for an index.
- * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on
- * at least one side.
- * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
- * have at least one interesting face.
- * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+ * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have -1 for an index.
+ * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on at least one side.
+ * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that have at least one interesting face.
+ * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
  * @return {Phaser.Tilemaps.Tile[]} Array of Tile objects.

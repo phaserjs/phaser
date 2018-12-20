@@ -20,15 +20,17 @@ function hasGetters (def)
 }
 
 /**
- * [description]
+ * Returns `getStart` and `getEnd` functions for a Tween's Data based on a target property and end value.
+ *
+ * If the end value is a number, it will be treated as an absolute value and the property will be tweened to it. A string can be provided to specify a relative end value which consists of an operation (`+=` to add to the current value, `-=` to subtract from the current value, `*=` to multiply the current value, or `/=` to divide the current value) followed by its operand. A function can be provided to allow greater control over the end value; it will receive the target object being tweened, the name of the property being tweened, and the current value of the property as its arguments. If both the starting and the ending values need to be controlled, an object with `getStart` and `getEnd` callbacks, which will receive the same arguments, can be provided instead. If an object with a `value` property is provided, the property will be used as the effective value under the same rules described here.
  *
  * @function Phaser.Tweens.Builders.GetValueOp
  * @since 3.0.0
  *
- * @param {string} key - [description]
- * @param {*} propertyValue - [description]
+ * @param {string} key - The name of the property to modify.
+ * @param {*} propertyValue - The ending value of the property, as described above.
  *
- * @return {function} [description]
+ * @return {function} An array of two functions, `getStart` and `getEnd`, which return the starting and the ending value of the property based on the provided value.
  */
 var GetValueOp = function (key, propertyValue)
 {

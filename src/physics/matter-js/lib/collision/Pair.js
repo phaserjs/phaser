@@ -32,7 +32,6 @@ module.exports = Pair;
             isSensor: bodyA.isSensor || bodyB.isSensor,
             timeCreated: timestamp,
             timeUpdated: timestamp,
-
             collision: null,
             inverseMass: 0,
             friction: 0,
@@ -54,22 +53,9 @@ module.exports = Pair;
      * @param {number} timestamp
      */
     Pair.update = function(pair, collision, timestamp) {
-        // var contacts = pair.contacts,
-        //     supports = collision.supports,
-        //     activeContacts = pair.activeContacts,
-        //     parentA = collision.parentA,
-        //     parentB = collision.parentB;
-        
         pair.collision = collision;
-        // pair.inverseMass = parentA.inverseMass + parentB.inverseMass;
-        // pair.friction = Math.min(parentA.friction, parentB.friction);
-        // pair.frictionStatic = Math.max(parentA.frictionStatic, parentB.frictionStatic);
-        // pair.restitution = Math.max(parentA.restitution, parentB.restitution);
-        // pair.slop = Math.max(parentA.slop, parentB.slop);
-        // activeContacts.length = 0;
-        
-        if (collision.collided) {
 
+        if (collision.collided) {
             var supports = collision.supports,
                 activeContacts = pair.activeContacts,
                 parentA = collision.parentA,
@@ -85,8 +71,8 @@ module.exports = Pair;
                 activeContacts[i] = supports[i].contact;
             }
 
+            // optimise array size
             var supportCount = supports.length;
-
             if (supportCount < activeContacts.length) {
                 activeContacts.length = supportCount;
             }

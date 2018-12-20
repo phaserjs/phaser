@@ -12,8 +12,8 @@
  * @private
  * @since 3.0.0
  *
- * @param {integer} tileX - [description]
- * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+ * @param {integer} tileX - The x coordinate, in tiles, not pixels.
+ * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * 
  * @return {number}

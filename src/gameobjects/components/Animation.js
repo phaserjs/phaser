@@ -4,40 +4,85 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var BaseAnimation = require('../../animations/Animation');
 var Class = require('../../utils/Class');
 
 /**
  * This event is dispatched when an animation starts playing.
+ * 
+ * Listen for it on the Game Object: `sprite.on('animationstart', listener)`
+ * 
+ * You can also listen for a specific animation by appending a hyphen and its key to the event name. For example,
+ * if you have an animation called `explode`, you can listen for `sprite.on('animationstart-explode', listener)`.
+ * 
+ * You can also listen for the `start` event from the Animation itself: `animation.on('start', listener)`.
  *
  * @event Phaser.GameObjects.Components.Animation#onStartEvent
  * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
  * @param {Phaser.Animations.AnimationFrame} frame - Reference to the current Animation Frame.
+ * @param {Phaser.GameObjects.Sprite} gameObject - Reference to the Game Object on which the event occurred.
+ */
+
+/**
+ * This event is dispatched when an animation restarts.
+ * 
+ * Listen for it on the Game Object: `sprite.on('animationrestart', listener)`
+ * 
+ * You can also listen for a specific animation by appending a hyphen and its key to the event name. For example,
+ * if you have an animation called `explode`, you can listen for `sprite.on('animationrestart-explode', listener)`.
+ * 
+ * You can also listen for the `restart` event from the Animation itself: `animation.on('restart', listener)`.
+ *
+ * @event Phaser.GameObjects.Components.Animation#onRestartEvent
+ * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
+ * @param {Phaser.Animations.AnimationFrame} frame - Reference to the current Animation Frame.
+ * @param {Phaser.GameObjects.Sprite} gameObject - Reference to the Game Object on which the event occurred.
  */
 
 /**
  * This event is dispatched when an animation repeats.
+ * 
+ * Listen for it on the Game Object: `sprite.on('animationrepeat', listener)`
+ * 
+ * You can also listen for a specific animation by appending a hyphen and its key to the event name. For example,
+ * if you have an animation called `explode`, you can listen for `sprite.on('animationrepeat-explode', listener)`.
  *
  * @event Phaser.GameObjects.Components.Animation#onRepeatEvent
  * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
  * @param {Phaser.Animations.AnimationFrame} frame - Reference to the current Animation Frame.
  * @param {integer} repeatCount - The number of times this animation has repeated.
+ * @param {Phaser.GameObjects.Sprite} gameObject - Reference to the Game Object on which the event occurred.
  */
 
 /**
  * This event is dispatched when an animation updates. This happens when the animation frame changes,
  * based on the animation frame rate and other factors like timeScale and delay.
+ * 
+ * Listen for it on the Game Object: `sprite.on('animationupdate', listener)`
+ * 
+ * You can also listen for a specific animation by appending a hyphen and its key to the event name. For example,
+ * if you have an animation called `explode`, you can listen for `sprite.on('animationupdate-explode', listener)`.
  *
  * @event Phaser.GameObjects.Components.Animation#onUpdateEvent
  * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
  * @param {Phaser.Animations.AnimationFrame} frame - Reference to the current Animation Frame.
+ * @param {Phaser.GameObjects.Sprite} gameObject - Reference to the Game Object on which the event occurred.
  */
 
 /**
  * This event is dispatched when an animation completes playing, either naturally or via Animation.stop.
+ * 
+ * Listen for it on the Game Object: `sprite.on('animationcomplete', listener)`
+ * 
+ * You can also listen for a specific animation by appending a hyphen and its key to the event name. For example,
+ * if you have an animation called `explode`, you can listen for `sprite.on('animationcomplete-explode', listener)`.
+ * 
+ * You can also listen for the `complete` event from the Animation itself: `animation.on('complete', listener)`.
  *
  * @event Phaser.GameObjects.Components.Animation#onCompleteEvent
  * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
  * @param {Phaser.Animations.AnimationFrame} frame - Reference to the current Animation Frame.
+ * @param {Phaser.GameObjects.Sprite} gameObject - Reference to the Game Object on which the event occurred.
  */
 
 /**
@@ -47,7 +92,7 @@ var Class = require('../../utils/Class');
  * This controller lives as an instance within a Game Object, accessible as `sprite.anims`.
  *
  * @class Animation
- * @memberOf Phaser.GameObjects.Components
+ * @memberof Phaser.GameObjects.Components
  * @constructor
  * @since 3.0.0
  *
@@ -108,6 +153,16 @@ var Animation = new Class({
          * @since 3.0.0
          */
         this.currentFrame = null;
+
+        /**
+         * The key of the next Animation to be loaded into this Animation Controller when the current animation completes.
+         *
+         * @name Phaser.GameObjects.Components.Animation#nextAnim
+         * @type {?string}
+         * @default null
+         * @since 3.16.0
+         */
+        this.nextAnim = null;
 
         /**
          * Time scale factor.
@@ -208,7 +263,7 @@ var Animation = new Class({
         this._yoyo = false;
 
         /**
-         * Will the playhead move forwards (`true`) or in reverse (`false`)
+         * Will the playhead move forwards (`true`) or in reverse (`false`).
          *
          * @name Phaser.GameObjects.Components.Animation#forward
          * @type {boolean}
@@ -216,6 +271,17 @@ var Animation = new Class({
          * @since 3.0.0
          */
         this.forward = true;
+
+        /**
+         * An Internal trigger that's play the animation in reverse mode ('true') or not ('false'),
+         * needed because forward can be changed by yoyo feature.
+         *
+         * @name Phaser.GameObjects.Components.Animation#forward
+         * @type {boolean}
+         * @default false
+         * @since 3.12.0
+         */
+        this._reverse = false;
 
         /**
          * Internal time overflow accumulator.
@@ -303,6 +369,37 @@ var Animation = new Class({
          * @since 3.4.0
          */
         this._pendingStopValue;
+    },
+
+    /**
+     * Sets an animation to be played immediately after the current one completes.
+     * 
+     * The current animation must enter a 'completed' state for this to happen, i.e. finish all of its repeats, delays, etc, or have the `stop` method called directly on it.
+     * 
+     * An animation set to repeat forever will never enter a completed state.
+     * 
+     * You can chain a new animation at any point, including before the current one starts playing, during it, or when it ends (via its `animationcomplete` callback).
+     * Chained animations are specific to a Game Object, meaning different Game Objects can have different chained animations without impacting the global animation they're playing.
+     * 
+     * Call this method with no arguments to reset the chained animation.
+     *
+     * @method Phaser.GameObjects.Components.Animation#chain
+     * @since 3.16.0
+     *
+     * @param {(string|Phaser.Animations.Animation)} [key] - The string-based key of the animation to play next, as defined previously in the Animation Manager. Or an Animation instance.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    chain: function (key)
+    {
+        if (key instanceof BaseAnimation)
+        {
+            key = key.key;
+        }
+
+        this.nextAnim = key;
+
+        return this.parent;
     },
 
     /**
@@ -460,7 +557,7 @@ var Animation = new Class({
      * `true` if the current animation is paused, otherwise `false`.
      *
      * @name Phaser.GameObjects.Components.Animation#isPaused
-     * @readOnly
+     * @readonly
      * @type {boolean}
      * @since 3.4.0
      */
@@ -474,13 +571,15 @@ var Animation = new Class({
     },
 
     /**
-     * Plays an Animation on the Game Object that owns this Animation Component.
+     * Plays an Animation on a Game Object that has the Animation component, such as a Sprite.
+     * 
+     * Animations are stored in the global Animation Manager and are referenced by a unique string-based key.
      *
      * @method Phaser.GameObjects.Components.Animation#play
      * @fires Phaser.GameObjects.Components.Animation#onStartEvent
      * @since 3.0.0
      *
-     * @param {string} key - The string-based key of the animation to play, as defined previously in the Animation Manager.
+     * @param {(string|Phaser.Animations.Animation)} key - The string-based key of the animation to play, as defined previously in the Animation Manager. Or an Animation instance.
      * @param {boolean} [ignoreIfPlaying=false] - If an animation is already playing then ignore this call.
      * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
      *
@@ -491,11 +590,70 @@ var Animation = new Class({
         if (ignoreIfPlaying === undefined) { ignoreIfPlaying = false; }
         if (startFrame === undefined) { startFrame = 0; }
 
+        if (key instanceof BaseAnimation)
+        {
+            key = key.key;
+        }
+
         if (ignoreIfPlaying && this.isPlaying && this.currentAnim.key === key)
         {
             return this.parent;
         }
 
+        this.forward = true;
+        this._reverse = false;
+
+        return this._startAnimation(key, startFrame);
+    },
+
+    /**
+     * Plays an Animation (in reverse mode) on the Game Object that owns this Animation Component.
+     *
+     * @method Phaser.GameObjects.Components.Animation#playReverse
+     * @fires Phaser.GameObjects.Components.Animation#onStartEvent
+     * @since 3.12.0
+     *
+     * @param {(string|Phaser.Animations.Animation)} key - The string-based key of the animation to play, as defined previously in the Animation Manager. Or an Animation instance.
+     * @param {boolean} [ignoreIfPlaying=false] - If an animation is already playing then ignore this call.
+     * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    playReverse: function (key, ignoreIfPlaying, startFrame)
+    {
+        if (ignoreIfPlaying === undefined) { ignoreIfPlaying = false; }
+        if (startFrame === undefined) { startFrame = 0; }
+
+        if (key instanceof BaseAnimation)
+        {
+            key = key.key;
+        }
+
+        if (ignoreIfPlaying && this.isPlaying && this.currentAnim.key === key)
+        {
+            return this.parent;
+        }
+
+        this.forward = false;
+        this._reverse = true;
+
+        return this._startAnimation(key, startFrame);
+    },
+
+    /**
+     * Load an Animation and fires 'onStartEvent' event, extracted from 'play' method.
+     *
+     * @method Phaser.GameObjects.Components.Animation#_startAnimation
+     * @fires Phaser.GameObjects.Components.Animation#onStartEvent
+     * @since 3.12.0
+     *
+     * @param {string} key - The string-based key of the animation to play, as defined previously in the Animation Manager.
+     * @param {integer} [startFrame=0] - Optionally start the animation playing from this frame index.
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    _startAnimation: function (key, startFrame)
+    {
         this.load(key, startFrame);
 
         var anim = this.currentAnim;
@@ -506,7 +664,6 @@ var Animation = new Class({
 
         anim.getFirstTick(this);
 
-        this.forward = true;
         this.isPlaying = true;
         this.pendingRepeat = false;
 
@@ -515,9 +672,35 @@ var Animation = new Class({
             gameObject.visible = true;
         }
 
-        gameObject.emit('animationstart', this.currentAnim, this.currentFrame);
+        var frame = this.currentFrame;
+
+        anim.emit('start', anim, frame);
+
+        gameObject.emit('animationstart-' + key, anim, frame, gameObject);
+
+        gameObject.emit('animationstart', anim, frame, gameObject);
 
         return gameObject;
+    },
+
+    /**
+     * Reverse the Animation that is already playing on the Game Object.
+     *
+     * @method Phaser.GameObjects.Components.Animation#reverse
+     * @since 3.12.0
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
+     */
+    reverse: function ()
+    {
+        if (this.isPlaying)
+        {
+            this._reverse = !this._reverse;
+
+            this.forward = !this.forward;
+        }
+
+        return this.parent;
     },
 
     /**
@@ -661,6 +844,7 @@ var Animation = new Class({
      * Restarts the current animation from its beginning, optionally including its delay value.
      *
      * @method Phaser.GameObjects.Components.Animation#restart
+     * @fires Phaser.GameObjects.Components.Animation#onRestartEvent
      * @since 3.0.0
      *
      * @param {boolean} [includeDelay=false] - Whether to include the delay value of the animation when restarting.
@@ -671,7 +855,9 @@ var Animation = new Class({
     {
         if (includeDelay === undefined) { includeDelay = false; }
 
-        this.currentAnim.getFirstTick(this, includeDelay);
+        var anim = this.currentAnim;
+
+        anim.getFirstTick(this, includeDelay);
 
         this.forward = true;
         this.isPlaying = true;
@@ -679,13 +865,26 @@ var Animation = new Class({
         this._paused = false;
 
         //  Set frame
-        this.updateFrame(this.currentAnim.frames[0]);
+        this.updateFrame(anim.frames[0]);
+
+        var gameObject = this.parent;
+        var frame = this.currentFrame;
+
+        anim.emit('restart', anim, frame);
+
+        gameObject.emit('animationrestart-' + anim.key, anim, frame, gameObject);
+
+        gameObject.emit('animationrestart', anim, frame, gameObject);
 
         return this.parent;
     },
 
     /**
      * Immediately stops the current animation from playing and dispatches the `animationcomplete` event.
+     * 
+     * If no animation is set, no event will be dispatched.
+     * 
+     * If there is another animation queued (via the `chain` method) then it will start playing immediately.
      *
      * @method Phaser.GameObjects.Components.Animation#stop
      * @fires Phaser.GameObjects.Components.Animation#onCompleteEvent
@@ -700,8 +899,26 @@ var Animation = new Class({
         this.isPlaying = false;
 
         var gameObject = this.parent;
+        var anim = this.currentAnim;
+        var frame = this.currentFrame;
 
-        gameObject.emit('animationcomplete', this.currentAnim, this.currentFrame);
+        if (anim)
+        {
+            anim.emit('complete', anim, frame);
+
+            gameObject.emit('animationcomplete-' + anim.key, anim, frame, gameObject);
+    
+            gameObject.emit('animationcomplete', anim, frame, gameObject);
+        }
+
+        if (this.nextAnim)
+        {
+            var key = this.nextAnim;
+
+            this.nextAnim = null;
+
+            this.play(key);
+        }
 
         return gameObject;
     },
@@ -749,7 +966,7 @@ var Animation = new Class({
      * @fires Phaser.GameObjects.Components.Animation#onCompleteEvent
      * @since 3.4.0
      *
-     * @param {Phaser.Animations.AnimationFrame} delay - The frame to check before stopping this animation.
+     * @param {Phaser.Animations.AnimationFrame} frame - The frame to check before stopping this animation.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that owns this Animation Component.
      */
@@ -861,6 +1078,11 @@ var Animation = new Class({
         gameObject.texture = animationFrame.frame.texture;
         gameObject.frame = animationFrame.frame;
 
+        if (gameObject.isCropped)
+        {
+            gameObject.frame.updateCropUVs(gameObject._crop, gameObject.flipX, gameObject.flipY);
+        }
+
         gameObject.setSizeToFrame();
 
         if (animationFrame.frame.customPivot)
@@ -898,13 +1120,59 @@ var Animation = new Class({
 
             var anim = this.currentAnim;
 
-            gameObject.emit('animationupdate', anim, animationFrame);
+            gameObject.emit('animationupdate-' + anim.key, anim, animationFrame, gameObject);
+
+            gameObject.emit('animationupdate', anim, animationFrame, gameObject);
 
             if (this._pendingStop === 3 && this._pendingStopValue === animationFrame)
             {
                 this.currentAnim.completeAnimation(this);
             }
         }
+    },
+
+    /**
+     * Advances the animation to the next frame, regardless of the time or animation state.
+     * If the animation is set to repeat, or yoyo, this will still take effect.
+     * 
+     * Calling this does not change the direction of the animation. I.e. if it was currently
+     * playing in reverse, calling this method doesn't then change the direction to forwards.
+     *
+     * @method Phaser.GameObjects.Components.Animation#nextFrame
+     * @since 3.16.0
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object this Animation Component belongs to.
+     */
+    nextFrame: function ()
+    {
+        if (this.currentAnim)
+        {
+            this.currentAnim.nextFrame(this);
+        }
+
+        return this.parent;
+    },
+
+    /**
+     * Advances the animation to the previous frame, regardless of the time or animation state.
+     * If the animation is set to repeat, or yoyo, this will still take effect.
+     * 
+     * Calling this does not change the direction of the animation. I.e. if it was currently
+     * playing in forwards, calling this method doesn't then change the direction to backwards.
+     *
+     * @method Phaser.GameObjects.Components.Animation#previousFrame
+     * @since 3.16.0
+     *
+     * @return {Phaser.GameObjects.GameObject} The Game Object this Animation Component belongs to.
+     */
+    previousFrame: function ()
+    {
+        if (this.currentAnim)
+        {
+            this.currentAnim.previousFrame(this);
+        }
+
+        return this.parent;
     },
 
     /**

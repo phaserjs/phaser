@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = require('../../gameobjects/GameObject');
+var Utils = require('../../renderer/webgl/Utils');
 
 /**
  * Renders this Game Object with the WebGL Renderer to the given Camera.
@@ -22,14 +22,90 @@ var GameObject = require('../../gameobjects/GameObject');
  */
 var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPercentage, camera)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)))
+    src.cull(camera);
+
+    var renderTiles = src.culledTiles;
+    var tileCount = renderTiles.length;
+    var alpha = camera.alpha * src.alpha;
+
+    if (tileCount === 0 || alpha <= 0)
     {
         return;
     }
 
-    src.cull(camera);
+    var gidMap = src.gidMap;
+    var pipeline = src.pipeline;
 
-    this.pipeline.batchDynamicTilemapLayer(src, camera);
+    var getTint = Utils.getTintAppendFloatAlpha;
+
+    var scrollFactorX = src.scrollFactorX;
+    var scrollFactorY = src.scrollFactorY;
+
+    var x = src.x;
+    var y = src.y;
+
+    var sx = src.scaleX;
+    var sy = src.scaleY;
+
+    var tilesets = src.tileset;
+
+    //  Loop through each tileset in this layer, drawing just the tiles that are in that set each time
+    //  Doing it this way around allows us to batch tiles using the same tileset
+    for (var c = 0; c < tilesets.length; c++)
+    {
+        var currentSet = tilesets[c];
+        var texture = currentSet.glTexture;
+
+        for (var i = 0; i < tileCount; i++)
+        {
+            var tile = renderTiles[i];
+
+            var tileset = gidMap[tile.index];
+
+            if (tileset !== currentSet)
+            {
+                //  Skip tiles that aren't in this set
+                continue;
+            }
+       
+            var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
+
+            if (tileTexCoords === null)
+            {
+                continue;
+            }
+
+            var frameWidth = tile.width;
+            var frameHeight = tile.height;
+
+            var frameX = tileTexCoords.x;
+            var frameY = tileTexCoords.y;
+
+            var tw = tile.width * 0.5;
+            var th = tile.height * 0.5;
+
+            var tint = getTint(tile.tint, alpha * tile.alpha);
+
+            pipeline.batchTexture(
+                src,
+                texture,
+                texture.width, texture.height,
+                x + ((tw + tile.pixelX) * sx), y + ((th + tile.pixelY) * sy),
+                tile.width, tile.height,
+                sx, sy,
+                tile.rotation,
+                tile.flipX, tile.flipY,
+                scrollFactorX, scrollFactorY,
+                tw, th,
+                frameX, frameY, frameWidth, frameHeight,
+                tint, tint, tint, tint, false,
+                0, 0,
+                camera,
+                null,
+                true
+            );
+        }
+    }
 };
 
 module.exports = DynamicTilemapLayerWebGLRenderer;

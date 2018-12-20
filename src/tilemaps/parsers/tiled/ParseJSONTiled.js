@@ -33,7 +33,7 @@ var GetFastValue = require('../../../utils/object/GetFastValue');
  * consumption. However if your map is small or you need to update the tiles dynamically, then leave
  * the default value set.
  *
- * @return {?Phaser.Tilemaps.MapData} [description]
+ * @return {?Phaser.Tilemaps.MapData} The created MapData object, or `null` if the data can't be parsed.
  */
 var ParseJSONTiled = function (name, json, insertNull)
 {
@@ -54,7 +54,8 @@ var ParseJSONTiled = function (name, json, insertNull)
         format: Formats.TILED_JSON,
         version: json.version,
         properties: json.properties,
-        infinite: GetFastValue(json, 'infinite', false)
+        renderOrder: json.renderorder,
+        infinite: json.infinite
     });
 
     mapData.layers = ParseTileLayers(json, insertNull);

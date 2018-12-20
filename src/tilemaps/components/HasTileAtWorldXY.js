@@ -16,12 +16,12 @@ var WorldToTileY = require('./WorldToTileY');
  * @private
  * @since 3.0.0
  *
- * @param {number} worldX - [description]
- * @param {number} worldY - [description]
- * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+ * @param {number} worldX - The X coordinate of the world position.
+ * @param {number} worldY - The Y coordinate of the world position.
+ * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when factoring in which tiles to return.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * 
- * @return {boolean}
+ * @return {?boolean} Returns a boolean, or null if the layer given was invalid.
  */
 var HasTileAtWorldXY = function (worldX, worldY, camera, layer)
 {

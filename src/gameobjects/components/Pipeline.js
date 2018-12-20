@@ -44,12 +44,14 @@ var Pipeline = {
      * @webglOnly
      * @since 3.0.0
      *
-     * @param {string} pipelineName - The name of the pipeline to set on this Game Object.
+     * @param {string} [pipelineName=TextureTintPipeline] - The name of the pipeline to set on this Game Object. Defaults to the Texture Tint Pipeline.
      *
      * @return {boolean} `true` if the pipeline was set successfully, otherwise `false`.
      */
     initPipeline: function (pipelineName)
     {
+        if (pipelineName === undefined) { pipelineName = 'TextureTintPipeline'; }
+
         var renderer = this.scene.sys.game.renderer;
 
         if (renderer && renderer.gl && renderer.hasPipeline(pipelineName))
@@ -72,7 +74,7 @@ var Pipeline = {
      *
      * @param {string} pipelineName - The name of the pipeline to set on this Game Object.
      *
-     * @return {boolean} `true` if the pipeline was set successfully, otherwise `false`.
+     * @return {this} This Game Object instance.
      */
     setPipeline: function (pipelineName)
     {
@@ -81,11 +83,9 @@ var Pipeline = {
         if (renderer && renderer.gl && renderer.hasPipeline(pipelineName))
         {
             this.pipeline = renderer.getPipeline(pipelineName);
-
-            return true;
         }
 
-        return false;
+        return this;
     },
 
     /**

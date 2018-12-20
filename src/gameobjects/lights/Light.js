@@ -18,7 +18,7 @@ var Utils = require('../../renderer/webgl/Utils');
  * They can also simply be used to represent a point light for your own purposes.
  *
  * @class Light
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *

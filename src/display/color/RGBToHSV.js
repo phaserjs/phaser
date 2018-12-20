@@ -5,11 +5,11 @@
  */
 
 /**
- * @typedef {object} HSLColorObject
+ * @typedef {object} HSVColorObject
  *
  * @property {number} h - The hue color value. A number between 0 and 1
  * @property {number} s - The saturation color value. A number between 0 and 1
- * @property {number} l - The lightness color value. A number between 0 and 1
+ * @property {number} v - The lightness color value. A number between 0 and 1
  */
 
 /**
@@ -24,11 +24,14 @@
  * @param {integer} r - The red color value. A number between 0 and 255.
  * @param {integer} g - The green color value. A number between 0 and 255.
  * @param {integer} b - The blue color value. A number between 0 and 255.
+ * @param {(HSVColorObject|Phaser.Display.Color)} [out] - An object to store the color values in. If not given an HSV Color Object will be created.
  *
- * @return {HSLColorObject} An object with the properties `h`, `s` and `v`.
+ * @return {(HSVColorObject|Phaser.Display.Color)} An object with the properties `h`, `s` and `v` set.
  */
-var RGBToHSV = function (r, g, b)
+var RGBToHSV = function (r, g, b, out)
 {
+    if (out === undefined) { out = { h: 0, s: 0, v: 0 }; }
+
     r /= 255;
     g /= 255;
     b /= 255;
@@ -60,7 +63,20 @@ var RGBToHSV = function (r, g, b)
         h /= 6;
     }
 
-    return { h: h, s: s, v: v };
+    if (out.hasOwnProperty('_h'))
+    {
+        out._h = h;
+        out._s = s;
+        out._v = v;
+    }
+    else
+    {
+        out.h = h;
+        out.s = s;
+        out.v = v;
+    }
+
+    return out;
 };
 
 module.exports = RGBToHSV;

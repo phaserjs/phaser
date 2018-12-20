@@ -12,7 +12,7 @@ var Class = require('../../utils/Class');
  * Button objects are created automatically by the Gamepad as they are needed.
  *
  * @class Button
- * @memberOf Phaser.Input.Gamepad
+ * @memberof Phaser.Input.Gamepad
  * @constructor
  * @since 3.0.0
  *

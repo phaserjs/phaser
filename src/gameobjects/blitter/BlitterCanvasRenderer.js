@@ -4,8 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = require('../GameObject');
-
 /**
  * Renders this Game Object with the Canvas Renderer to the given Camera.
  * The object will not render if any of its renderFlags are set or it is being actively filtered out by the Camera.
@@ -25,14 +23,12 @@ var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, ca
 {
     var list = src.getRenderList();
 
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)) || list.length === 0)
+    if (list.length === 0)
     {
         return;
     }
 
-    var ctx = renderer.gameContext;
-
-    //  Alpha
+    var ctx = renderer.currentContext;
 
     var alpha = camera.alpha * src.alpha;
 
@@ -41,26 +37,21 @@ var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, ca
         //  Nothing to see, so abort early
         return;
     }
-    else if (renderer.currentAlpha !== alpha)
-    {
-        renderer.currentAlpha = alpha;
-        ctx.globalAlpha = alpha;
-    }
 
     //  Blend Mode
-
-    renderer.setBlendMode(src.blendMode);
+    ctx.globalCompositeOperation = renderer.blendModes[src.blendMode];
 
     var cameraScrollX = src.x - camera.scrollX * src.scrollFactorX;
     var cameraScrollY = src.y - camera.scrollY * src.scrollFactorY;
 
     ctx.save();
 
-    if (parentMatrix !== undefined)
+    if (parentMatrix)
     {
-        var matrix = parentMatrix.matrix;
-        ctx.transform(matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]);
+        parentMatrix.copyToContext(ctx);
     }
+
+    var roundPixels = camera.roundPixels;
 
     //  Render bobs
     for (var i = 0; i < list.length; i++)
@@ -80,34 +71,47 @@ var BlitterCanvasRenderer = function (renderer, src, interpolationPercentage, ca
         {
             continue;
         }
-        else if (renderer.currentAlpha !== bobAlpha)
-        {
-            renderer.currentAlpha = bobAlpha;
-            ctx.globalAlpha = bobAlpha;
-        }
+
+        ctx.globalAlpha = bobAlpha;
     
         if (!flip)
         {
-            renderer.blitImage(dx + bob.x + cameraScrollX, dy + bob.y + cameraScrollY, bob.frame);
+            if (roundPixels)
+            {
+                dx = Math.round(dx);
+                dy = Math.round(dy);
+            }
+
+            ctx.drawImage(
+                frame.source.image,
+                cd.x,
+                cd.y,
+                cd.width,
+                cd.height,
+                dx + bob.x + cameraScrollX,
+                dy + bob.y + cameraScrollY,
+                cd.width,
+                cd.height
+            );
         }
         else
         {
             if (bob.flipX)
             {
                 fx = -1;
-                dx -= cd.dWidth;
+                dx -= cd.width;
             }
 
             if (bob.flipY)
             {
                 fy = -1;
-                dy -= cd.dHeight;
+                dy -= cd.height;
             }
 
             ctx.save();
             ctx.translate(bob.x + cameraScrollX, bob.y + cameraScrollY);
             ctx.scale(fx, fy);
-            ctx.drawImage(frame.source.image, cd.sx, cd.sy, cd.sWidth, cd.sHeight, dx, dy, cd.dWidth, cd.dHeight);
+            ctx.drawImage(frame.source.image, cd.x, cd.y, cd.width, cd.height, dx, dy, cd.width, cd.height);
             ctx.restore();
         }
     }

@@ -14,7 +14,7 @@ var Class = require('../../utils/Class');
  *
  * @class WebAudioSound
  * @extends Phaser.Sound.BaseSound
- * @memberOf Phaser.Sound
+ * @memberof Phaser.Sound
  * @constructor
  * @since 3.0.0
  *

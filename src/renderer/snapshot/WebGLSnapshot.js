@@ -5,16 +5,16 @@
  */
 
 /**
- * [description]
+ * Takes a snapshot of the current frame displayed by a WebGL canvas.
  *
  * @function Phaser.Renderer.Snapshot.WebGL
  * @since 3.0.0
  *
- * @param {HTMLCanvasElement} sourceCanvas - [description]
- * @param {string} [type='image/png'] - [description]
- * @param {number} [encoderOptions=0.92] - [description]
+ * @param {HTMLCanvasElement} sourceCanvas - The canvas to take a snapshot of.
+ * @param {string} [type='image/png'] - The format of the returned image.
+ * @param {number} [encoderOptions=0.92] - The image quality, between 0 and 1, for image formats which use lossy compression (such as `image/jpeg`).
  *
- * @return {HTMLImageElement} [description]
+ * @return {HTMLImageElement} A new image which contains a snapshot of the canvas's contents.
  */
 var WebGLSnapshot = function (sourceCanvas, type, encoderOptions)
 {

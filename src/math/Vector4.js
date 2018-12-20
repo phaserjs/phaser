@@ -16,7 +16,7 @@ var Class = require('../utils/Class');
  * A four-component vector.
  *
  * @class Vector4
- * @memberOf Phaser.Math
+ * @memberof Phaser.Math
  * @constructor
  * @since 3.0.0
  *
@@ -128,9 +128,9 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#equals
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector4} v - [description]
+     * @param {Phaser.Math.Vector4} v - The vector to check equality with.
      *
-     * @return {boolean} [description]
+     * @return {boolean} A boolean indicating whether the two Vectors are equal or not.
      */
     equals: function (v)
     {
@@ -392,7 +392,7 @@ var Vector4 = new Class({
      * @method Phaser.Math.Vector4#distance
      * @since 3.0.0
      *
-     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4)} v - [description]
+     * @param {(Phaser.Math.Vector2|Phaser.Math.Vector3|Phaser.Math.Vector4)} v - The Vector to calculate the distance to.
      *
      * @return {number} The distance from this Vector to the given Vector.
      */

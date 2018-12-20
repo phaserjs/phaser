@@ -15,7 +15,7 @@ var Vector2 = require('../../math/Vector2');
  * Defines a Line segment, a part of a line between two endpoints.
  *
  * @class Line
- * @memberOf Phaser.Geom
+ * @memberof Phaser.Geom
  * @constructor
  * @since 3.0.0
  *

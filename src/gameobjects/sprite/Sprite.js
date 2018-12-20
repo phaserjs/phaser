@@ -23,7 +23,7 @@ var SpriteRender = require('./SpriteRender');
  *
  * @class Sprite
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
@@ -38,7 +38,7 @@ var SpriteRender = require('./SpriteRender');
  * @extends Phaser.GameObjects.Components.ScaleMode
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Size
- * @extends Phaser.GameObjects.Components.Texture
+ * @extends Phaser.GameObjects.Components.TextureCrop
  * @extends Phaser.GameObjects.Components.Tint
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
@@ -65,7 +65,7 @@ var Sprite = new Class({
         Components.ScaleMode,
         Components.ScrollFactor,
         Components.Size,
-        Components.Texture,
+        Components.TextureCrop,
         Components.Tint,
         Components.Transform,
         Components.Visible,
@@ -77,6 +77,16 @@ var Sprite = new Class({
     function Sprite (scene, x, y, texture, frame)
     {
         GameObject.call(this, scene, 'Sprite');
+
+        /**
+         * The internal crop data object, as used by `setCrop` and passed to the `Frame.setCropUVs` method.
+         *
+         * @name Phaser.GameObjects.Sprite#_crop
+         * @type {object}
+         * @private
+         * @since 3.11.0
+         */
+        this._crop = this.resetCropObject();
 
         /**
          * The Animation Controller of this Sprite.
@@ -91,7 +101,7 @@ var Sprite = new Class({
         this.setPosition(x, y);
         this.setSizeToFrame();
         this.setOriginFromFrame();
-        this.initPipeline('TextureTintPipeline');
+        this.initPipeline();
     },
 
     /**
@@ -143,6 +153,20 @@ var Sprite = new Class({
         //  Extra Sprite data is added here
 
         return data;
+    },
+
+    /**
+     * Handles the pre-destroy step for the Sprite, which removes the Animation component.
+     *
+     * @method Phaser.GameObjects.Sprite#preDestroy
+     * @private
+     * @since 3.14.0
+     */
+    preDestroy: function ()
+    {
+        this.anims.destroy();
+
+        this.anims = undefined;
     }
 
 });

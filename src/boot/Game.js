@@ -17,12 +17,24 @@ var Device = require('../device');
 var DOMContentLoaded = require('../dom/DOMContentLoaded');
 var EventEmitter = require('eventemitter3');
 var InputManager = require('../input/InputManager');
+var PluginCache = require('../plugins/PluginCache');
 var PluginManager = require('../plugins/PluginManager');
+var ScaleManager = require('../dom/ScaleManager');
 var SceneManager = require('../scene/SceneManager');
 var SoundManagerCreator = require('../sound/SoundManagerCreator');
 var TextureManager = require('../textures/TextureManager');
 var TimeStep = require('./TimeStep');
 var VisibilityHandler = require('./VisibilityHandler');
+
+if (typeof EXPERIMENTAL)
+{
+    var CreateDOMContainer = require('./CreateDOMContainer');
+}
+
+if (typeof PLUGIN_FBINSTANT)
+{
+    var FacebookInstantGamesPlugin = require('../../plugins/fbinstant/src/FacebookInstantGamesPlugin');
+}
 
 /**
  * @classdesc
@@ -35,7 +47,7 @@ var VisibilityHandler = require('./VisibilityHandler');
  * made available to you via the Phaser.Scene Systems class instead.
  *
  * @class Game
- * @memberOf Phaser
+ * @memberof Phaser
  * @constructor
  * @since 3.0.0
  *
@@ -54,7 +66,7 @@ var Game = new Class({
          *
          * @name Phaser.Game#config
          * @type {Phaser.Boot.Config}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.config = new Config(config);
@@ -67,6 +79,23 @@ var Game = new Class({
          * @since 3.0.0
          */
         this.renderer = null;
+
+        if (typeof EXPERIMENTAL)
+        {
+            /**
+             * A reference to an HTML Div Element used as a DOM Element Container.
+             * 
+             * Only set if `createDOMContainer` is `true` in the game config (by default it is `false`) and
+             * if you provide a parent element to insert the Phaser Game inside.
+             *
+             * See the DOM Element Game Object for more details.
+             *
+             * @name Phaser.Game#domContainer
+             * @type {HTMLDivElement}
+             * @since 3.12.0
+             */
+            this.domContainer = null;
+        }
 
         /**
          * A reference to the HTML Canvas Element that Phaser uses to render the game.
@@ -97,7 +126,7 @@ var Game = new Class({
          *
          * @name Phaser.Game#isBooted
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.isBooted = false;
@@ -107,7 +136,7 @@ var Game = new Class({
          *
          * @name Phaser.Game#isRunning
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.isRunning = false;
@@ -198,6 +227,17 @@ var Game = new Class({
         this.device = Device;
 
         /**
+         * An instance of the Scale Manager.
+         *
+         * The Scale Manager is a global system responsible for handling game scaling events.
+         *
+         * @name Phaser.Game#scale
+         * @type {Phaser.Boot.ScaleManager}
+         * @since 3.15.0
+         */
+        this.scale = new ScaleManager(this, this.config);
+
+        /**
          * An instance of the base Sound Manager.
          *
          * The Sound Manager is a global system responsible for the playback and updating of all audio in your game.
@@ -232,6 +272,21 @@ var Game = new Class({
          */
         this.plugins = new PluginManager(this, this.config);
 
+        if (typeof PLUGIN_FBINSTANT)
+        {
+            /**
+             * An instance of the Facebook Instant Games Plugin.
+             * 
+             * This will only be available if the plugin has been built into Phaser,
+             * or you're using the special Facebook Instant Games custom build.
+             *
+             * @name Phaser.Game#facebook
+             * @type {Phaser.FacebookInstantGamesPlugin}
+             * @since 3.13.0
+             */
+            this.facebook = new FacebookInstantGamesPlugin(this);
+        }
+
         /**
          * Is this Game pending destruction at the start of the next frame?
          *
@@ -253,26 +308,26 @@ var Game = new Class({
         this.removeCanvas = false;
 
         /**
+         * Remove everything when the game is destroyed.
+         * You cannot create a new Phaser instance on the same web page after doing this.
+         *
+         * @name Phaser.Game#noReturn
+         * @type {boolean}
+         * @private
+         * @since 3.12.0
+         */
+        this.noReturn = false;
+
+        /**
          * Does the window the game is running in currently have focus or not?
          * This is modified by the VisibilityHandler.
          *
          * @name Phaser.Game#hasFocus
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @since 3.9.0
          */
         this.hasFocus = false;
-
-        /**
-         * Is the mouse pointer currently over the game canvas or not?
-         * This is modified by the VisibilityHandler.
-         *
-         * @name Phaser.Game#isOver
-         * @type {boolean}
-         * @readOnly
-         * @since 3.10.0
-         */
-        this.isOver = true;
 
         //  Wait for the DOM Ready event, then call boot.
         DOMContentLoaded(this.boot.bind(this));
@@ -299,11 +354,24 @@ var Game = new Class({
      */
     boot: function ()
     {
+        if (!PluginCache.hasCore('EventEmitter'))
+        {
+            console.warn('Aborting. Core Plugins missing.');
+            return;
+        }
+
         this.isBooted = true;
 
         this.config.preBoot(this);
 
+        this.scale.preBoot();
+
         CreateRenderer(this);
+
+        if (typeof EXPERIMENTAL)
+        {
+            CreateDOMContainer(this);
+        }
 
         DebugHeader(this);
 
@@ -311,8 +379,26 @@ var Game = new Class({
 
         this.events.emit('boot');
 
-        //  The Texture Manager has to wait on a couple of non-blocking events before it's fully ready, so it will emit this event
-        this.events.once('ready', this.start, this);
+        //  The Texture Manager has to wait on a couple of non-blocking events before it's fully ready.
+        //  So it will emit this internal event when done:
+        this.events.once('texturesready', this.texturesReady, this);
+    },
+
+    /**
+     * Called automatically when the Texture Manager has finished setting up and preparing the
+     * default textures.
+     *
+     * @method Phaser.Game#texturesReady
+     * @private
+     * @fires Phaser.Game#ready
+     * @since 3.12.0
+     */
+    texturesReady: function ()
+    {
+        //  Start all the other systems
+        this.events.emit('ready');
+
+        this.start();
     },
 
     /**
@@ -351,40 +437,48 @@ var Game = new Class({
 
     /**
      * Game Pre-Step event.
+     * 
+     * Listen for it using the event type `prestep`.
      *
      * This event is dispatched before the main Step starts.
      * By this point none of the Scene updates have happened.
      * Hook into it from plugins or systems that need to update before the Scene Manager does.
      *
      * @event Phaser.Game#prestepEvent
-     * @param {number} time - [description]
-     * @param {number} delta - [description]
+     * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
+     * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
 
     /**
      * Game Step event.
+     * 
+     * Listen for it using the event type `step`.
      *
      * This event is dispatched after Pre-Step and before the Scene Manager steps.
      * Hook into it from plugins or systems that need to update before the Scene Manager does, but after core Systems.
      *
      * @event Phaser.Game#stepEvent
-     * @param {number} time - [description]
-     * @param {number} delta - [description]
+     * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
+     * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
 
     /**
      * Game Post-Step event.
+     * 
+     * Listen for it using the event type `poststep`.
      *
      * This event is dispatched after the Scene Manager has updated.
      * Hook into it from plugins or systems that need to do things before the render starts.
      *
      * @event Phaser.Game#poststepEvent
-     * @param {number} time - [description]
-     * @param {number} delta - [description]
+     * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
+     * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
 
     /**
      * Game Pre-Render event.
+     * 
+     * Listen for it using the event type `prerender`.
      *
      * This event is dispatched immediately before any of the Scenes have started to render.
      * The renderer will already have been initialized this frame, clearing itself and preparing to receive
@@ -396,6 +490,8 @@ var Game = new Class({
 
     /**
      * Game Post-Render event.
+     * 
+     * Listen for it using the event type `postrender`.
      *
      * This event is dispatched right at the end of the render process.
      * Every Scene will have rendered and drawn to the canvas.
@@ -420,8 +516,8 @@ var Game = new Class({
      * @fires Phaser.Game#postrenderEvent
      * @since 3.0.0
      *
-     * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
-     * @param {number} delta - The delta time, in ms, elapsed since the last frame.
+     * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
+     * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
     step: function (time, delta)
     {
@@ -484,8 +580,8 @@ var Game = new Class({
      * @fires Phaser.Game#postrenderEvent
      * @since 3.2.0
      *
-     * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
-     * @param {number} delta - The delta time elapsed since the last frame.
+     * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
+     * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
     headlessStep: function (time, delta)
     {
@@ -512,6 +608,8 @@ var Game = new Class({
 
     /**
      * Game Pause event.
+     * 
+     * Listen for it using the event type `pause`.
      *
      * This event is dispatched when the game loop enters a paused state, usually as a result of the Visibility Handler.
      *
@@ -536,6 +634,8 @@ var Game = new Class({
 
     /**
      * Game Resume event.
+     * 
+     * Listen for it using the event type `resume`.
      *
      * This event is dispatched when the game loop leaves a paused state and resumes running.
      *
@@ -590,6 +690,8 @@ var Game = new Class({
 
     /**
      * Game Resize event.
+     * 
+     * Listen for it using the event type `resize`.
      *
      * @event Phaser.Game#resizeEvent
      * @param {number} width - The new width of the Game.
@@ -601,6 +703,7 @@ var Game = new Class({
      * Then resizes the Renderer and Input Manager scale.
      *
      * @method Phaser.Game#resize
+     * @fires Phaser.Game#resizeEvent
      * @since 3.2.0
      *
      * @param {number} width - The new width of the game.
@@ -610,6 +713,15 @@ var Game = new Class({
     {
         this.config.width = width;
         this.config.height = height;
+
+        if (typeof EXPERIMENTAL)
+        {
+            if (this.domContainer)
+            {
+                this.domContainer.style.width = width + 'px';
+                this.domContainer.style.height = height + 'px';
+            }
+        }
 
         this.renderer.resize(width, height);
 
@@ -621,19 +733,63 @@ var Game = new Class({
     },
 
     /**
+     * Returns the current game frame.
+     * When the game starts running, the frame is incremented every time Request Animation Frame, or Set Timeout, fires.
+     *
+     * @method Phaser.Game#getFrame
+     * @since 3.16.0
+     * 
+     * @return {number} The current game frame.
+     */
+    getFrame: function ()
+    {
+        return this.loop.frame;
+    },
+
+    /**
+     * Returns the current game timestamp.
+     * When the game starts running, the frame is incremented every time Request Animation Frame, or Set Timeout, fires.
+     *
+     * @method Phaser.Game#getTime
+     * @since 3.16.0
+     * 
+     * @return {number} The current game timestamp.
+     */
+    getTime: function ()
+    {
+        return this.loop.frame.time;
+    },
+
+    /**
+     * Game Destroy event.
+     * 
+     * Listen for it using the event type `destroy`.
+     *
+     * @event Phaser.Game#destroyEvent
+     */
+
+    /**
      * Flags this Game instance as needing to be destroyed on the next frame.
      * It will wait until the current frame has completed and then call `runDestroy` internally.
+     * 
+     * If you **do not** need to run Phaser again on the same web page you can set the `noReturn` argument to `true` and it will free-up
+     * memory being held by the core Phaser plugins. If you do need to create another game instance on the same page, leave this as `false`.
      *
      * @method Phaser.Game#destroy
+     * @fires Phaser.Game#destroyEvent
      * @since 3.0.0
      *
      * @param {boolean} removeCanvas - Set to `true` if you would like the parent canvas element removed from the DOM, or `false` to leave it in place.
+     * @param {boolean} [noReturn=false] - If `true` all the core Phaser plugins are destroyed. You cannot create another instance of Phaser on the same web page if you do this.
      */
-    destroy: function (removeCanvas)
+    destroy: function (removeCanvas, noReturn)
     {
+        if (noReturn === undefined) { noReturn = false; }
+        
         this.pendingDestroy = true;
 
         this.removeCanvas = removeCanvas;
+        this.noReturn = noReturn;
     },
 
     /**
@@ -666,11 +822,23 @@ var Game = new Class({
             }
         }
 
-        this.loop.destroy();
+        if (typeof EXPERIMENTAL)
+        {
+            if (this.domContainer)
+            {
+                this.domContainer.parentNode.removeChild(this.domContainer);
+            }
+        }
 
+        this.loop.destroy();
+        
         this.pendingDestroy = false;
     }
 
 });
+
+/**
+ * "Computers are good at following instructions, but not at reading your mind." - Donald Knuth
+ */
 
 module.exports = Game;

@@ -7,7 +7,7 @@
 var Body = require('../lib/body/Body');
 
 /**
- * [description]
+ * A component to apply force to Matter.js bodies.
  *
  * @name Phaser.Physics.Matter.Components.Force
  * @since 3.0.0
@@ -15,13 +15,14 @@ var Body = require('../lib/body/Body');
 var Force = {
 
     //  force = vec2 / point
+
     /**
-     * [description]
+     * Applies a force to a body.
      *
      * @method Phaser.Physics.Matter.Components.Force#applyForce
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} force - [description]
+     * @param {Phaser.Math.Vector2} force - A Vector that specifies the force to apply.
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
@@ -35,13 +36,13 @@ var Force = {
     },
 
     /**
-     * [description]
+     * Applies a force to a body from a given position.
      *
      * @method Phaser.Physics.Matter.Components.Force#applyForceFrom
      * @since 3.0.0
      *
-     * @param {Phaser.Math.Vector2} position - [description]
-     * @param {Phaser.Math.Vector2} force - [description]
+     * @param {Phaser.Math.Vector2} position - The position in which the force comes from.
+     * @param {Phaser.Math.Vector2} force - A Vector that specifies the force to apply.
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
@@ -53,12 +54,12 @@ var Force = {
     },
 
     /**
-     * [description]
+     * Apply thrust to the forward position of the body.
      *
      * @method Phaser.Physics.Matter.Components.Force#thrust
      * @since 3.0.0
      *
-     * @param {number} speed - [description]
+     * @param {number} speed - A speed value to be applied to a directional force.
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
@@ -74,12 +75,12 @@ var Force = {
     },
 
     /**
-     * [description]
+     * Apply thrust to the left position of the body.
      *
      * @method Phaser.Physics.Matter.Components.Force#thrustLeft
      * @since 3.0.0
      *
-     * @param {number} speed - [description]
+     * @param {number} speed - A speed value to be applied to a directional force.
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
@@ -95,12 +96,12 @@ var Force = {
     },
 
     /**
-     * [description]
+     * Apply thrust to the right position of the body.
      *
      * @method Phaser.Physics.Matter.Components.Force#thrustRight
      * @since 3.0.0
      *
-     * @param {number} speed - [description]
+     * @param {number} speed - A speed value to be applied to a directional force.
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */
@@ -116,12 +117,12 @@ var Force = {
     },
 
     /**
-     * [description]
+     * Apply thrust to the back position of the body.
      *
      * @method Phaser.Physics.Matter.Components.Force#thrustBack
      * @since 3.0.0
      *
-     * @param {number} speed - [description]
+     * @param {number} speed - A speed value to be applied to a directional force.
      *
      * @return {Phaser.GameObjects.GameObject} This Game Object.
      */

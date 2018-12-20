@@ -17,7 +17,7 @@ var PluginCache = require('../plugins/PluginCache');
  * methods into the class.
  *
  * @class GameObjectCreator
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *

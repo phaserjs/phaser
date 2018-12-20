@@ -21,8 +21,8 @@ var GetValue = require('../utils/object/GetValue');
  * @property {array} [data=[]] - [description]
  * @property {HTMLCanvasElement} [canvas=null] - [description]
  * @property {Palette} [palette=Arne16] - [description]
- * @property {number} [pixelWidth=1] - [description]
- * @property {number} [pixelHeight=1] - [description]
+ * @property {number} [pixelWidth=1] - The width of each 'pixel' in the generated texture.
+ * @property {number} [pixelHeight=1] - The height of each 'pixel' in the generated texture.
  * @property {boolean} [resizeCanvas=true] - [description]
  * @property {boolean} [clearCanvas=true] - [description]
  * @property {GenerateTextureRendererCallback} [preRender] - [description]

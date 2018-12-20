@@ -9,10 +9,10 @@ var Systems = require('./Systems');
 
 /**
  * @classdesc
- * [description]
+ * A base Phaser.Scene class which you could extend for your own use.
  *
  * @class Scene
- * @memberOf Phaser
+ * @memberof Phaser
  * @constructor
  * @since 3.0.0
  *
@@ -112,16 +112,6 @@ var Scene = new Class({
          * @since 3.0.0
          */
         this.cameras;
-
-        /**
-         * A scene level 3D Camera System.
-         * This property will only be available if defined in the Scene Injection Map.
-         *
-         * @name Phaser.Scene#cameras3d
-         * @type {Phaser.Cameras.Sprite3D.CameraManager}
-         * @since 3.0.0
-         */
-        this.cameras3d;
 
         /**
          * A scene level Game Object Factory.
@@ -252,6 +242,19 @@ var Scene = new Class({
          * @since 3.0.0
          */
         this.matter;
+
+        if (typeof PLUGIN_FBINSTANT)
+        {
+            /**
+             * A scene level Facebook Instant Games Plugin.
+             * This property will only be available if defined in the Scene Injection Map, the plugin is installed and configured.
+             *
+             * @name Phaser.Scene#facebook
+             * @type {Phaser.FacebookInstantGamesPlugin}
+             * @since 3.12.0
+             */
+            this.facebook;
+        }
     },
 
     /**
@@ -261,8 +264,8 @@ var Scene = new Class({
      * @override
      * @since 3.0.0
      *
-     * @param {number} time - [description]
-     * @param {number} delta - [description]
+     * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
+     * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
     update: function ()
     {

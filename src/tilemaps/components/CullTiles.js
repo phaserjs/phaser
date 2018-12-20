@@ -4,9 +4,11 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var SnapFloor = require('../../math/snap/SnapFloor');
+var SnapCeil = require('../../math/snap/SnapCeil');
+
 /**
- * Returns the tiles in the given layer that are within the camera's viewport. This is used
- * internally.
+ * Returns the tiles in the given layer that are within the camera's viewport. This is used internally.
  *
  * @function Phaser.Tilemaps.Components.CullTiles
  * @private
@@ -14,111 +16,134 @@
  *
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to run the cull check against.
- * @param {array} [outputArray] - [description]
+ * @param {array} [outputArray] - An optional array to store the Tile objects within.
  *
  * @return {Phaser.Tilemaps.Tile[]} An array of Tile objects.
  */
-var CullTiles = function (layer, camera, outputArray)
+var CullTiles = function (layer, camera, outputArray, renderOrder)
 {
     if (outputArray === undefined) { outputArray = []; }
+    if (renderOrder === undefined) { renderOrder = 0; }
 
     outputArray.length = 0;
-    
-    var zoom = camera.zoom;
-    var originX = camera.width / 2;
-    var originY = camera.height / 2;
 
-    camera.matrix.loadIdentity();
-    camera.matrix.translate(camera.x + originX, camera.y + originY);
-    camera.matrix.rotate(camera.rotation);
-    camera.matrix.scale(zoom, zoom);
-    camera.matrix.translate(-originX, -originY);
-    camera.matrix.invert();
-
-    camera.shakeEffect.preRender();
-
+    var tilemap = layer.tilemapLayer.tilemap;
     var tilemapLayer = layer.tilemapLayer;
-    var tileW = layer.tileWidth;
-    var tileH = layer.tileHeight;
-    var cullX = ((camera.scrollX * tilemapLayer.scrollFactorX) - tileW);
-    var cullY = ((camera.scrollY * tilemapLayer.scrollFactorY) - tileH);
-    var cullW = (cullX + (camera.width + tileW * 2));
-    var cullH = (cullY + (camera.height + tileH * 2));
+
     var mapData = layer.data;
     var mapWidth = layer.width;
     var mapHeight = layer.height;
-    var cameraMatrix = camera.matrix.matrix;
-    var a = cameraMatrix[0];
-    var b = cameraMatrix[1];
-    var c = cameraMatrix[2];
-    var d = cameraMatrix[3];
-    var e = cameraMatrix[4];
-    var f = cameraMatrix[5];
-    var tCullX = cullX * a + cullY * c + e;
-    var tCullY = cullX * b + cullY * d + f;
-    var tCullW = cullW * a + cullH * c + e;
-    var tCullH = cullW * b + cullH * d + f;
 
-    for (var y = 0; y < mapHeight; ++y)
+    //  We need to use the tile sizes defined for the map as a whole, not the layer,
+    //  in order to calculate the bounds correctly. As different sized tiles may be
+    //  placed on the grid and we cannot trust layer.baseTileWidth to give us the true size.
+    var tileW = Math.floor(tilemap.tileWidth * tilemapLayer.scaleX);
+    var tileH = Math.floor(tilemap.tileHeight * tilemapLayer.scaleY);
+
+    var drawLeft = 0;
+    var drawRight = mapWidth;
+    var drawTop = 0;
+    var drawBottom = mapHeight;
+
+    if (!tilemapLayer.skipCull && tilemapLayer.scrollFactorX === 1 && tilemapLayer.scrollFactorY === 1)
     {
-        for (var x = 0; x < mapWidth; ++x)
+        //  Camera world view bounds, snapped for scaled tile size
+        //  Cull Padding values are given in tiles, not pixels
+
+        var boundsLeft = SnapFloor(camera.worldView.x - tilemapLayer.x, tileW, 0, true) - tilemapLayer.cullPaddingX;
+        var boundsRight = SnapCeil(camera.worldView.right - tilemapLayer.x, tileW, 0, true) + tilemapLayer.cullPaddingX;
+        var boundsTop = SnapFloor(camera.worldView.y - tilemapLayer.y, tileH, 0, true) - tilemapLayer.cullPaddingY;
+        var boundsBottom = SnapCeil(camera.worldView.bottom - tilemapLayer.y, tileH, 0, true) + tilemapLayer.cullPaddingY;
+
+        drawLeft = Math.max(0, boundsLeft);
+        drawRight = Math.min(mapWidth, boundsRight);
+        drawTop = Math.max(0, boundsTop);
+        drawBottom = Math.min(mapHeight, boundsBottom);
+    }
+
+    var x;
+    var y;
+    var tile;
+
+    if (renderOrder === 0)
+    {
+        //  right-down
+
+        for (y = drawTop; y < drawBottom; y++)
         {
-            var tile = mapData[y][x];
-
-            if (tile === null || tile.index === -1)
+            for (x = drawLeft; mapData[y] && x < drawRight; x++)
             {
-                continue;
+                tile = mapData[y][x];
+
+                if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                {
+                    continue;
+                }
+
+                outputArray.push(tile);
             }
+        }
+    }
+    else if (renderOrder === 1)
+    {
+        //  left-down
 
-            var tilePixelX = (tile.pixelX + tilemapLayer.x);
-            var tilePixelY = (tile.pixelY + tilemapLayer.y);
-            var tileX = (tilePixelX * a + tilePixelY * c + e);
-            var tileY = (tilePixelX * b + tilePixelY * d + f);
-
-            if (tile.visible &&
-                tileX >= tCullX &&
-                tileY >= tCullY &&
-                tileX + tileW <= tCullW &&
-                tileY + tileH <= tCullH
-            )
+        for (y = drawTop; y < drawBottom; y++)
+        {
+            for (x = drawRight; mapData[y] && x >= drawLeft; x--)
             {
+                tile = mapData[y][x];
+
+                if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                {
+                    continue;
+                }
+
+                outputArray.push(tile);
+            }
+        }
+    }
+    else if (renderOrder === 2)
+    {
+        //  right-up
+
+        for (y = drawBottom; y >= drawTop; y--)
+        {
+            for (x = drawLeft; mapData[y] && x < drawRight; x++)
+            {
+                tile = mapData[y][x];
+
+                if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                {
+                    continue;
+                }
+
+                outputArray.push(tile);
+            }
+        }
+    }
+    else if (renderOrder === 3)
+    {
+        //  left-up
+
+        for (y = drawBottom; y >= drawTop; y--)
+        {
+            for (x = drawRight; mapData[y] && x >= drawLeft; x--)
+            {
+                tile = mapData[y][x];
+
+                if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
+                {
+                    continue;
+                }
+
                 outputArray.push(tile);
             }
         }
     }
 
-    /* var tilemapLayer = layer.tilemapLayer;
-    var mapData = layer.data;
-    var mapWidth = layer.width;
-    var mapHeight = layer.height;
-    var left = (camera.scrollX * camera.zoom * tilemapLayer.scrollFactorX) - tilemapLayer.x;
-    var top = (camera.scrollY * camera.zoom * tilemapLayer.scrollFactorY) - tilemapLayer.y;
-    var sx = tilemapLayer.scaleX;
-    var sy = tilemapLayer.scaleY;
-    var tileWidth = layer.tileWidth * sx;
-    var tileHeight = layer.tileHeight * sy;
-
-    for (var row = 0; row < mapHeight; ++row)
-    {
-        for (var col = 0; col < mapWidth; ++col)
-        {
-            var tile = mapData[row][col];
-
-            if (tile === null || tile.index === -1) { continue; }
-
-            var tileX = tile.pixelX * sx - left;
-            var tileY = tile.pixelY * sy - top;
-            var cullW = camera.width + tileWidth;
-            var cullH = camera.height + tileHeight;
-
-            if (tile.visible &&
-                tileX > -tileWidth && tileY > -tileHeight &&
-                tileX < cullW && tileY < cullH)
-            {
-                outputArray.push(tile);
-            }
-        }
-    } */
+    tilemapLayer.tilesDrawn = outputArray.length;
+    tilemapLayer.tilesTotal = mapWidth * mapHeight;
 
     return outputArray;
 };

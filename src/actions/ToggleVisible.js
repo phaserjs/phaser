@@ -5,7 +5,8 @@
  */
 
 /**
- * [description]
+ * Takes an array of Game Objects and toggles the visibility of each one.
+ * Those previously `visible = false` will become `visible = true`, and vice versa.
  *
  * @function Phaser.Actions.ToggleVisible
  * @since 3.0.0

@@ -20,7 +20,7 @@ var Systems = require('./Systems');
  *
  *
  * @class SceneManager
- * @memberOf Phaser.Scenes
+ * @memberof Phaser.Scenes
  * @constructor
  * @since 3.0.0
  *
@@ -106,7 +106,7 @@ var SceneManager = new Class({
          * @name Phaser.Scenes.SceneManager#isProcessing
          * @type {boolean}
          * @default false
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.isProcessing = false;
@@ -117,10 +117,21 @@ var SceneManager = new Class({
          * @name Phaser.Scenes.SceneManager#isBooted
          * @type {boolean}
          * @default false
-         * @readOnly
+         * @readonly
          * @since 3.4.0
          */
         this.isBooted = false;
+
+        /**
+         * Do any of the Cameras in any of the Scenes require a custom viewport?
+         * If not we can skip scissor tests.
+         *
+         * @name Phaser.Scenes.SceneManager#customViewports
+         * @type {number}
+         * @default 0
+         * @since 3.12.0
+         */
+        this.customViewports = 0;
 
         if (sceneConfig)
         {
@@ -377,7 +388,7 @@ var SceneManager = new Class({
      * The Scene is removed from the local scenes array, it's key is cleared from the keys
      * cache and Scene.Systems.destroy is then called on it.
      *
-     * If the SceneManager is processing the Scenes when this method is called it wil
+     * If the SceneManager is processing the Scenes when this method is called it will
      * queue the operation for the next update sequence.
      *
      * @method Phaser.Scenes.SceneManager#remove
@@ -1091,29 +1102,40 @@ var SceneManager = new Class({
 
         if (scene)
         {
-            scene.sys.start(data);
-
-            var loader;
-
-            if (scene.sys.load)
+            //  If the Scene is already running (perhaps they called start from a launched sub-Scene?)
+            //  then we close it down before starting it again.
+            if (scene.sys.isActive() || scene.sys.isPaused())
             {
-                loader = scene.sys.load;
+                scene.sys.shutdown();
+
+                scene.sys.start(data);
             }
-
-            //  Files payload?
-            if (loader && scene.sys.settings.hasOwnProperty('pack'))
+            else
             {
-                loader.reset();
+                scene.sys.start(data);
 
-                if (loader.addPack({ payload: scene.sys.settings.pack }))
+                var loader;
+    
+                if (scene.sys.load)
                 {
-                    scene.sys.settings.status = CONST.LOADING;
-
-                    loader.once('complete', this.payloadComplete, this);
-
-                    loader.start();
-
-                    return this;
+                    loader = scene.sys.load;
+                }
+    
+                //  Files payload?
+                if (loader && scene.sys.settings.hasOwnProperty('pack'))
+                {
+                    loader.reset();
+    
+                    if (loader.addPack({ payload: scene.sys.settings.pack }))
+                    {
+                        scene.sys.settings.status = CONST.LOADING;
+    
+                        loader.once('complete', this.payloadComplete, this);
+    
+                        loader.start();
+    
+                        return this;
+                    }
                 }
             }
 
@@ -1532,7 +1554,7 @@ var SceneManager = new Class({
      */
     destroy: function ()
     {
-        for (var i = this.scenes.length - 1; i >= 0; i--)
+        for (var i = 0; i < this.scenes.length; i++)
         {
             var sys = this.scenes[i].sys;
 

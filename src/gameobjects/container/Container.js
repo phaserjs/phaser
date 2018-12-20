@@ -6,6 +6,7 @@
  */
 
 var ArrayUtils = require('../../utils/array');
+var BlendModes = require('../../renderer/BlendModes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
@@ -52,7 +53,7 @@ var Vector2 = require('../../math/Vector2');
  *
  * @class Container
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.4.0
  *
@@ -195,6 +196,8 @@ var Container = new Class({
 
         this.clearAlpha();
 
+        this.setBlendMode(BlendModes.SKIP_CHECK);
+
         if (children)
         {
             this.add(children);
@@ -207,7 +210,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#originX
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     originX: {
@@ -225,7 +228,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#originY
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     originY: {
@@ -243,7 +246,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#displayOriginX
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     displayOriginX: {
@@ -261,7 +264,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#displayOriginY
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     displayOriginY: {
@@ -373,10 +376,6 @@ var Container = new Class({
 
             gameObject.parentContainer = this;
         }
-
-        //  Game Objects automatically listen to the Scene shutdown event, but
-        //  we don't need this if they're in a Container
-        this._sysEvents.off('shutdown', gameObject.destroy, gameObject);
     },
 
     /**
@@ -395,8 +394,6 @@ var Container = new Class({
         if (this.exclusive)
         {
             gameObject.parentContainer = null;
-
-            this._sysEvents.once('shutdown', gameObject.destroy, gameObject);
         }
     },
 
@@ -435,6 +432,7 @@ var Container = new Class({
 
     /**
      * Returns the world transform matrix as used for Bounds checks.
+     * 
      * The returned matrix is temporal and shouldn't be stored.
      *
      * @method Phaser.GameObjects.Container#getBoundsTransformMatrix
@@ -444,7 +442,7 @@ var Container = new Class({
      */
     getBoundsTransformMatrix: function ()
     {
-        return this.getWorldTransformMatrix(this.tempTransformMatrix);
+        return this.getWorldTransformMatrix(this.tempTransformMatrix, this.localTransform);
     },
 
     /**
@@ -612,7 +610,7 @@ var Container = new Class({
      */
     getFirst: function (property, value, startIndex, endIndex)
     {
-        return ArrayUtils.GetFirstElement(this.list, property, value, startIndex, endIndex);
+        return ArrayUtils.GetFirst(this.list, property, value, startIndex, endIndex);
     },
 
     /**
@@ -1086,7 +1084,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#length
      * @type {integer}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     length: {
@@ -1105,7 +1103,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#first
      * @type {?Phaser.GameObjects.GameObject}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     first: {
@@ -1133,7 +1131,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#last
      * @type {?Phaser.GameObjects.GameObject}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     last: {
@@ -1161,7 +1159,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#next
      * @type {?Phaser.GameObjects.GameObject}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     next: {
@@ -1189,7 +1187,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#previous
      * @type {?Phaser.GameObjects.GameObject}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     previous: {

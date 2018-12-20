@@ -21,7 +21,7 @@ var Vector2 = require('../../../math/Vector2');
  * which is invoked each frame for the duration of the effect if required.
  *
  * @class Shake
- * @memberOf Phaser.Cameras.Scene2D.Effects
+ * @memberof Phaser.Cameras.Scene2D.Effects
  * @constructor
  * @since 3.5.0
  *
@@ -38,7 +38,7 @@ var Shake = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Shake#camera
          * @type {Phaser.Cameras.Scene2D.Camera}
-         * @readOnly
+         * @readonly
          * @since 3.5.0
          */
         this.camera = camera;
@@ -48,7 +48,7 @@ var Shake = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Shake#isRunning
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @default false
          * @since 3.5.0
          */
@@ -59,7 +59,7 @@ var Shake = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Shake#duration
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @default 0
          * @since 3.5.0
          */
@@ -261,8 +261,8 @@ var Shake = new Class({
         if (this._elapsed < this.duration)
         {
             var intensity = this.intensity;
-            var width = this.camera.width;
-            var height = this.camera.height;
+            var width = this.camera._cw;
+            var height = this.camera._ch;
             var zoom = this.camera.zoom;
 
             this._offsetX = (Math.random() * intensity.x * width * 2 - intensity.x * width) * zoom;
@@ -270,8 +270,8 @@ var Shake = new Class({
 
             if (this.camera.roundPixels)
             {
-                this._offsetX |= 0;
-                this._offsetY |= 0;
+                this._offsetX = Math.round(this._offsetX);
+                this._offsetY = Math.round(this._offsetY);
             }
         }
         else

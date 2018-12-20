@@ -7,18 +7,15 @@
 var Pad = require('../../string/Pad');
 var CheckMatrix = require('./CheckMatrix');
 
-//  Generates a string (which you can pass to console.log) from the given
-//  Array Matrix.
-
 /**
- * [description]
+ * Generates a string (which you can pass to console.log) from the given Array Matrix.
  *
  * @function Phaser.Utils.Array.Matrix.MatrixToString
  * @since 3.0.0
  *
- * @param {array} matrix - [description]
+ * @param {array} matrix - A 2-dimensional array.
  *
- * @return {string} [description]
+ * @return {string} A string representing the matrix.
  */
 var MatrixToString = function (matrix)
 {

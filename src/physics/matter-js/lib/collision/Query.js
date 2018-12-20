@@ -19,6 +19,38 @@ var Vertices = require('../geometry/Vertices');
 (function() {
 
     /**
+     * Returns a list of collisions between `body` and `bodies`.
+     * @method collides
+     * @param {body} body
+     * @param {body[]} bodies
+     * @return {object[]} Collisions
+     */
+    Query.collides = function(body, bodies) {
+        var collisions = [];
+
+        for (var i = 0; i < bodies.length; i++) {
+            var bodyA = bodies[i];
+            
+            if (Bounds.overlaps(bodyA.bounds, body.bounds)) {
+                for (var j = bodyA.parts.length === 1 ? 0 : 1; j < bodyA.parts.length; j++) {
+                    var part = bodyA.parts[j];
+
+                    if (Bounds.overlaps(part.bounds, body.bounds)) {
+                        var collision = SAT.collides(part, body);
+
+                        if (collision.collided) {
+                            collisions.push(collision);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return collisions;
+    };
+
+    /**
      * Casts a ray segment against a set of bodies and returns all collisions, ray width is optional. Intersection points are not provided.
      * @method ray
      * @param {body[]} bodies
@@ -35,25 +67,11 @@ var Vertices = require('../geometry/Vertices');
             rayX = (endPoint.x + startPoint.x) * 0.5,
             rayY = (endPoint.y + startPoint.y) * 0.5,
             ray = Bodies.rectangle(rayX, rayY, rayLength, rayWidth, { angle: rayAngle }),
-            collisions = [];
+            collisions = Query.collides(ray, bodies);
 
-        for (var i = 0; i < bodies.length; i++) {
-            var bodyA = bodies[i];
-            
-            if (Bounds.overlaps(bodyA.bounds, ray.bounds)) {
-                for (var j = bodyA.parts.length === 1 ? 0 : 1; j < bodyA.parts.length; j++) {
-                    var part = bodyA.parts[j];
-
-                    if (Bounds.overlaps(part.bounds, ray.bounds)) {
-                        var collision = SAT.collides(part, ray);
-                        if (collision.collided) {
-                            collision.body = collision.bodyA = collision.bodyB = bodyA;
-                            collisions.push(collision);
-                            break;
-                        }
-                    }
-                }
-            }
+        for (var i = 0; i < collisions.length; i += 1) {
+            var collision = collisions[i];
+            collision.body = collision.bodyB = collision.bodyA;            
         }
 
         return collisions;

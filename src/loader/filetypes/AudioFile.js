@@ -31,7 +31,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  *
  * @class AudioFile
  * @extends Phaser.Loader.File
- * @memberOf Phaser.Loader.FileTypes
+ * @memberof Phaser.Loader.FileTypes
  * @constructor
  * @since 3.0.0
  *
@@ -97,7 +97,7 @@ var AudioFile = new Class({
             function (e)
             {
                 // eslint-disable-next-line no-console
-                console.error('Error decoding audio: ' + this.key + ' - ', e.message);
+                console.error('Error decoding audio: ' + this.key + ' - ', e ? e.message : null);
 
                 _this.onProcessError();
             }

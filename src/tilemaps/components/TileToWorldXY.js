@@ -17,10 +17,10 @@ var Vector2 = require('../../math/Vector2');
  * @private
  * @since 3.0.0
  *
- * @param {integer} tileX - [description]
- * @param {integer} tileY - [description]
- * @param {Phaser.Math.Vector2} [point] - [description]
- * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+ * @param {integer} tileX - The x coordinate, in tiles, not pixels.
+ * @param {integer} tileY - The y coordinate, in tiles, not pixels.
+ * @param {Phaser.Math.Vector2} [point] - A Vector2 to store the coordinates in. If not given a new Vector2 is created.
+ * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * 
  * @return {Phaser.Math.Vector2} The XY location in world coordinates.

@@ -9,7 +9,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var Vector2 = require('../../math/Vector2');
 
 /**
- * [description]
+ * Internal function to check if the object has a getter or setter.
  *
  * @function hasGetterOrSetter
  * @private
@@ -29,11 +29,11 @@ function hasGetterOrSetter (def)
  * @function Phaser.Physics.Matter.MatterGameObject
  * @since 3.3.0
  *
- * @param {Phaser.Physics.Matter.World} world - [description]
- * @param {Phaser.GameObjects.GameObject} gameObject - [description]
- * @param {object} options - [description]
+ * @param {Phaser.Physics.Matter.World} world - The Matter world to add the body to.
+ * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that will have the Matter body applied to it.
+ * @param {object} options - Matter options config object.
  *
- * @return {Phaser.GameObjects.GameObject} [description]
+ * @return {Phaser.GameObjects.GameObject} The Game Object that was created with the Matter body.
  */
 var MatterGameObject = function (world, gameObject, options)
 {
@@ -44,6 +44,7 @@ var MatterGameObject = function (world, gameObject, options)
 
     //  Temp body pos to avoid body null checks
     gameObject.body = {
+        temp: true,
         position: {
             x: x,
             y: y

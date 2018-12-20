@@ -10,8 +10,8 @@
 
 module.exports = {
 
-    Interpolation: require('./CanvasInterpolation'),
-    Pool: require('./CanvasPool'),
+    CanvasInterpolation: require('./CanvasInterpolation'),
+    CanvasPool: require('./CanvasPool'),
     Smoothing: require('./Smoothing'),
     TouchAction: require('./TouchAction'),
     UserSelect: require('./UserSelect')

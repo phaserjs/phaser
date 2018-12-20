@@ -11,7 +11,6 @@
 module.exports = {
 
     BitmapMaskPipeline: require('./BitmapMaskPipeline'),
-    FlatTintPipeline: require('./FlatTintPipeline'),
     ForwardDiffuseLightPipeline: require('./ForwardDiffuseLightPipeline'),
     TextureTintPipeline: require('./TextureTintPipeline')
 

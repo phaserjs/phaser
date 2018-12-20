@@ -8,18 +8,13 @@ var Class = require('../../utils/Class');
 var DegToRad = require('../../math/DegToRad');
 var DistanceBetween = require('../../math/distance/DistanceBetween');
 
-var GetColor = function (value)
-{
-    return (value >> 16) + (value & 0xff00) + ((value & 0xff) << 16);
-};
-
 /**
  * @classdesc
  * A Particle is a simple Game Object controlled by a Particle Emitter and Manager, and rendered by the Manager.
  * It uses its own lightweight physics system, and can interact only with its Emitter's bounds and zones.
  *
  * @class Particle
- * @memberOf Phaser.GameObjects.Particles
+ * @memberof Phaser.GameObjects.Particles
  * @constructor
  * @since 3.0.0
  *
@@ -51,16 +46,6 @@ var Particle = new Class({
          * @since 3.0.0
          */
         this.frame = null;
-
-        /**
-         * The position of this Particle within its Emitter's particle pool.
-         *
-         * @name Phaser.GameObjects.Particles.Particle#index
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.index = 0;
 
         /**
          * The x coordinate of this Particle.
@@ -213,15 +198,6 @@ var Particle = new Class({
         this.tint = 0xffffff;
 
         /**
-         * The full color of this Particle, computed from its alpha and tint.
-         *
-         * @name Phaser.GameObjects.Particles.Particle#color
-         * @type {integer}
-         * @since 3.0.0
-         */
-        this.color = 16777215;
-
-        /**
          * The lifespan of this Particle in ms.
          *
          * @name Phaser.GameObjects.Particles.Particle#life
@@ -288,6 +264,18 @@ var Particle = new Class({
     isAlive: function ()
     {
         return (this.lifeCurrent > 0);
+    },
+
+    /**
+     * Resets the position of this particle back to zero.
+     *
+     * @method Phaser.GameObjects.Particles.Particle#resetPosition
+     * @since 3.16.0
+     */
+    resetPosition: function ()
+    {
+        this.x = 0;
+        this.y = 0;
     },
 
     /**
@@ -396,12 +384,6 @@ var Particle = new Class({
         this.alpha = emitter.alpha.onEmit(this, 'alpha');
 
         this.tint = emitter.tint.onEmit(this, 'tint');
-
-        var ua = ((this.alpha * 255) | 0) & 0xFF;
-
-        this.color = ((ua << 24) | GetColor(this.tint)) >>> 0;
-
-        this.index = emitter.alive.length;
     },
 
     /**
@@ -570,10 +552,6 @@ var Particle = new Class({
         this.alpha = emitter.alpha.onUpdate(this, 'alpha', t, this.alpha);
 
         this.tint = emitter.tint.onUpdate(this, 'tint', t, this.tint);
-
-        var ua = ((this.alpha * 255) | 0) & 0xFF;
-
-        this.color = ((ua << 24) | GetColor(this.tint)) >>> 0;
 
         this.lifeCurrent -= delta;
 

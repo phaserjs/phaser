@@ -32,7 +32,7 @@ var PluginCache = require('../../plugins/PluginCache');
  *
  * @class LightsPlugin
  * @extends Phaser.GameObjects.LightsManager
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *

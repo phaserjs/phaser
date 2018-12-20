@@ -20,9 +20,9 @@ var SetTileCollision = require('./SetTileCollision');
  * @since 3.0.0
  *
  * @param {(integer|Phaser.Tilemaps.Tile)} tile - The index of this tile to set or a Tile object.
- * @param {integer} tileX - [description]
- * @param {integer} tileY - [description]
- * @param {boolean} [recalculateFaces=true] - [description]
+ * @param {integer} tileX - The x coordinate, in tiles, not pixels.
+ * @param {integer} tileY - The y coordinate, in tiles, not pixels.
+ * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  *
  * @return {Phaser.Tilemaps.Tile} The Tile object that was created or added to this map.

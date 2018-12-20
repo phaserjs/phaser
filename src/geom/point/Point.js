@@ -11,7 +11,7 @@ var Class = require('../../utils/Class');
  * Defines a Point in 2D space, with an x and y component.
  *
  * @class Point
- * @memberOf Phaser.Geom
+ * @memberof Phaser.Geom
  * @constructor
  * @since 3.0.0
  *

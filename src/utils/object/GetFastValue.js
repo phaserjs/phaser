@@ -7,7 +7,7 @@
 /**
  * Finds the key within the top level of the {@link source} object, or returns {@link defaultValue}
  *
- * @function Phaser.Utils.Object.GetFastValue
+ * @function Phaser.Utils.Objects.GetFastValue
  * @since 3.0.0
  *
  * @param {object} source - The object to search

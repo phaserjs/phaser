@@ -8,6 +8,7 @@ var Actions = require('../../actions/');
 var Class = require('../../utils/Class');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
+var IsPlainObject = require('../../utils/object/IsPlainObject');
 var Range = require('../../utils/array/Range');
 var Set = require('../../structs/Set');
 var Sprite = require('../sprite/Sprite');
@@ -27,7 +28,7 @@ var Sprite = require('../sprite/Sprite');
 /**
  * @typedef {object} GroupConfig
  *
- * @property {?object} [classType=Sprite] - Sets {@link Phaser.GameObjects.Group#classType}.
+ * @property {?GroupClassTypeConstructor} [classType=Sprite] - Sets {@link Phaser.GameObjects.Group#classType}.
  * @property {?boolean} [active=true] - Sets {@link Phaser.GameObjects.Group#active}.
  * @property {?number} [maxSize=-1] - Sets {@link Phaser.GameObjects.Group#maxSize}.
  * @property {?string} [defaultKey=null] - Sets {@link Phaser.GameObjects.Group#defaultKey}.
@@ -51,7 +52,7 @@ var Sprite = require('../sprite/Sprite');
  *
  * `key` is required. {@link Phaser.GameObjects.Group#defaultKey} is not used.
  *
- * @property {?object} [classType] - The class of each new Game Object.
+ * @property {?GroupClassTypeConstructor} [classType] - The class of each new Game Object.
  * @property {string} [key] - The texture key of each new Game Object.
  * @property {?(string|integer)} [frame=null] - The texture frame of each new Game Object.
  * @property {?boolean} [visible=true] - The visible state of each new Game Object.
@@ -93,6 +94,18 @@ var Sprite = require('../sprite/Sprite');
  */
 
 /**
+ * A constructor function (class) that can be assigned to `classType`.
+ * @callback GroupClassTypeConstructor
+ * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
+ * @param {number} x - The horizontal position of this Game Object in the world.
+ * @param {number} y - The vertical position of this Game Object in the world.
+ * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+ * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
+ *
+ * @see Phaser.GameObjects.Group#classType
+ */
+
+/**
  * @classdesc A Group is a way for you to create, manipulate, or recycle similar Game Objects.
  *
  * Group membership is non-exclusive. A Game Object can belong to several groups, one group, or none.
@@ -100,11 +113,11 @@ var Sprite = require('../sprite/Sprite');
  * Groups themselves aren't displayable, and can't be positioned, rotated, scaled, or hidden.
  *
  * @class Group
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  * @param {Phaser.Scene} scene - The scene this group belongs to.
- * @param {(Phaser.GameObjects.GameObject[]|GroupConfig)} [children] - Game objects to add to this group; or the `config` argument.
+ * @param {(Phaser.GameObjects.GameObject[]|GroupConfig|GroupCreateConfig)} [children] - Game Objects to add to this group; or the `config` argument.
  * @param {GroupConfig|GroupCreateConfig} [config] - Settings for this group. If `key` is set, Phaser.GameObjects.Group#createMultiple is also called with these settings.
  *
  * @see Phaser.Physics.Arcade.Group
@@ -116,8 +129,38 @@ var Group = new Class({
 
     function Group (scene, children, config)
     {
-        if (config === undefined && !Array.isArray(children) && typeof children === 'object')
+        //  They can pass in any of the following as the first argument:
+
+        //  1) A single child
+        //  2) An array of children
+        //  3) A config object
+        //  4) An array of config objects
+
+        //  Or they can pass in a child, or array of children AND a config object
+
+        if (config)
         {
+            //  config has been set, are the children an array?
+
+            if (children && !Array.isArray(children))
+            {
+                children = [ children ];
+            }
+        }
+        else if (Array.isArray(children))
+        {
+            //  No config, so let's check the children argument
+
+            if (IsPlainObject(children[0]))
+            {
+                //  It's an array of plain config objects
+                config = children;
+                children = null;
+            }
+        }
+        else if (IsPlainObject(children))
+        {
+            //  Children isn't an array. Is it a config object though?
             config = children;
             children = null;
         }
@@ -154,7 +197,7 @@ var Group = new Class({
          * The class to create new group members from.
          *
          * @name Phaser.GameObjects.Group#classType
-         * @type {object}
+         * @type {GroupClassTypeConstructor}
          * @since 3.0.0
          * @default Phaser.GameObjects.Sprite
          */
@@ -320,18 +363,16 @@ var Group = new Class({
             config = [ config ];
         }
 
-        if (config[0].key === undefined)
-        {
-            return [];
-        }
-
         var output = [];
 
-        for (var i = 0; i < config.length; i++)
+        if (config[0].key)
         {
-            var entries = this.createFromConfig(config[i]);
-
-            output = output.concat(entries);
+            for (var i = 0; i < config.length; i++)
+            {
+                var entries = this.createFromConfig(config[i]);
+    
+                output = output.concat(entries);
+            }
         }
 
         return output;

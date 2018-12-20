@@ -27,7 +27,7 @@ var Vector2 = require('../../math/Vector2');
  *
  * @class Sprite
  * @extends Phaser.GameObjects.Sprite
- * @memberOf Phaser.Physics.Matter
+ * @memberof Phaser.Physics.Matter
  * @constructor
  * @since 3.0.0
  *

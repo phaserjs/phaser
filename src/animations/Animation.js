@@ -6,6 +6,7 @@
 
 var Clamp = require('../math/Clamp');
 var Class = require('../utils/Class');
+var EventEmitter = require('eventemitter3');
 var FindClosestInSorted = require('../utils/array/FindClosestInSorted');
 var Frame = require('./AnimationFrame');
 var GetValue = require('../utils/object/GetValue');
@@ -64,7 +65,8 @@ var GetValue = require('../utils/object/GetValue');
  * So multiple Game Objects can have playheads all pointing to this one Animation instance.
  *
  * @class Animation
- * @memberOf Phaser.Animations
+ * @memberof Phaser.Animations
+ * @extends Phaser.Events.EventEmitter
  * @constructor
  * @since 3.0.0
  *
@@ -74,10 +76,14 @@ var GetValue = require('../utils/object/GetValue');
  */
 var Animation = new Class({
 
+    Extends: EventEmitter,
+
     initialize:
 
     function Animation (manager, key, config)
     {
+        EventEmitter.call(this);
+
         /**
          * A reference to the global Animation Manager
          *
@@ -529,14 +535,20 @@ var Animation = new Class({
             component.msPerFrame = this.msPerFrame;
             component.skipMissedFrames = this.skipMissedFrames;
 
-            component._timeScale = 1;
             component._delay = this.delay;
             component._repeat = this.repeat;
             component._repeatDelay = this.repeatDelay;
             component._yoyo = this.yoyo;
         }
 
-        component.updateFrame(this.frames[startFrame]);
+        var frame = this.frames[startFrame];
+
+        if (startFrame === 0 && !component.forward)
+        {
+            frame = this.getLastFrame();
+        }
+
+        component.updateFrame(frame);
     },
 
     /**
@@ -577,17 +589,20 @@ var Animation = new Class({
             //  Yoyo? (happens before repeat)
             if (component._yoyo)
             {
-                component.forward = false;
-
-                component.updateFrame(frame.prevFrame);
-
-                //  Delay for the current frame
-                this.getNextTick(component);
+                this.handleYoyoFrame(component, false);
             }
             else if (component.repeatCounter > 0)
             {
                 //  Repeat (happens before complete)
-                this.repeatAnimation(component);
+
+                if (component._reverse && component.forward)
+                {
+                    component.forward = false;
+                }
+                else
+                {
+                    this.repeatAnimation(component);
+                }
             }
             else
             {
@@ -596,10 +611,58 @@ var Animation = new Class({
         }
         else
         {
-            component.updateFrame(frame.nextFrame);
-
-            this.getNextTick(component);
+            this.updateAndGetNextTick(component, frame.nextFrame);
         }
+    },
+
+    /**
+     * Handle the yoyo functionality in nextFrame and previousFrame methods.
+     *
+     * @method Phaser.Animations.Animation#handleYoyoFrame
+     * @private
+     * @since 3.12.0
+     *
+     * @param {Phaser.GameObjects.Components.Animation} component - The Animation Component to advance.
+     * @param {boolean} isReverse - Is animation in reverse mode? (Default: false)
+     */
+    handleYoyoFrame: function (component, isReverse)
+    {
+        if (!isReverse) { isReverse = false; }
+
+        if (component._reverse === !isReverse && component.repeatCounter > 0)
+        {
+            component.forward = isReverse;
+
+            this.repeatAnimation(component);
+
+            return;
+        }
+
+        if (component._reverse !== isReverse && component.repeatCounter === 0)
+        {
+            this.completeAnimation(component);
+
+            return;
+        }
+        
+        component.forward = isReverse;
+
+        var frame = (isReverse) ? component.currentFrame.nextFrame : component.currentFrame.prevFrame;
+
+        this.updateAndGetNextTick(component, frame);
+    },
+
+    /**
+     * Returns the animation last frame.
+     *
+     * @method Phaser.Animations.Animation#getLastFrame
+     * @since 3.12.0
+     *
+     * @return {Phaser.Animations.AnimationFrame} component - The Animation Last Frame.
+     */
+    getLastFrame: function ()
+    {
+        return this.frames[this.frames.length - 1];
     },
 
     /**
@@ -620,10 +683,23 @@ var Animation = new Class({
         {
             //  We're at the start of the animation
 
-            if (component.repeatCounter > 0)
+            if (component._yoyo)
             {
-                //  Repeat (happens before complete)
-                this.repeatAnimation(component);
+                this.handleYoyoFrame(component, true);
+            }
+            else if (component.repeatCounter > 0)
+            {
+                if (component._reverse && !component.forward)
+                {
+                    component.currentFrame = this.getLastFrame();
+                    this.repeatAnimation(component);
+                }
+                else
+                {
+                    //  Repeat (happens before complete)
+                    component.forward = true;
+                    this.repeatAnimation(component);
+                }
             }
             else
             {
@@ -632,10 +708,24 @@ var Animation = new Class({
         }
         else
         {
-            component.updateFrame(frame.prevFrame);
-
-            this.getNextTick(component);
+            this.updateAndGetNextTick(component, frame.prevFrame);
         }
+    },
+
+    /**
+     * Update Frame and Wait next tick.
+     *
+     * @method Phaser.Animations.Animation#updateAndGetNextTick
+     * @private
+     * @since 3.12.0
+     *
+     * @param {Phaser.Animations.AnimationFrame} frame - An Animation frame.
+     */
+    updateAndGetNextTick: function (component, frame)
+    {
+        component.updateFrame(frame);
+
+        this.getNextTick(component);
     },
 
     /**
@@ -705,9 +795,7 @@ var Animation = new Class({
         {
             component.repeatCounter--;
 
-            component.forward = true;
-
-            component.updateFrame(component.currentFrame.nextFrame);
+            component.updateFrame(component.currentFrame[(component.forward) ? 'nextFrame' : 'prevFrame']);
 
             if (component.isPlaying)
             {
@@ -715,13 +803,20 @@ var Animation = new Class({
 
                 component.pendingRepeat = false;
 
-                component.parent.emit('animationrepeat', this, component.currentFrame, component.repeatCounter);
+                var frame = component.currentFrame;
+                var parent = component.parent;
+
+                this.emit('repeat', this, frame);
+
+                parent.emit('animationrepeat-' + this.key, this, frame, component.repeatCounter, parent);
+
+                parent.emit('animationrepeat', this, frame, component.repeatCounter, parent);
             }
         }
     },
 
     /**
-     * [description]
+     * Sets the texture frame the animation uses for rendering.
      *
      * @method Phaser.Animations.Animation#setFrame
      * @since 3.0.0
@@ -742,7 +837,7 @@ var Animation = new Class({
     },
 
     /**
-     * [description]
+     * Converts the animation data to JSON.
      *
      * @method Phaser.Animations.Animation#toJSON
      * @since 3.0.0
@@ -857,6 +952,8 @@ var Animation = new Class({
      */
     destroy: function ()
     {
+        this.removeAllListeners();
+
         this.manager.off('pauseall', this.pause, this);
         this.manager.off('resumeall', this.resume, this);
 

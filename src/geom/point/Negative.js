@@ -7,17 +7,17 @@
 var Point = require('./Point');
 
 /**
- * [description]
+ * Inverts a Point's coordinates.
  *
  * @function Phaser.Geom.Point.Negative
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Point} O - [out,$return]
  *
- * @param {Phaser.Geom.Point} point - [description]
- * @param {Phaser.Geom.Point} [out] - [description]
+ * @param {Phaser.Geom.Point} point - The Point to invert.
+ * @param {Phaser.Geom.Point} [out] - The Point to return the inverted coordinates in.
  *
- * @return {Phaser.Geom.Point} [description]
+ * @return {Phaser.Geom.Point} The modified `out` Point, or a new Point if none was provided.
  */
 var Negative = function (point, out)
 {

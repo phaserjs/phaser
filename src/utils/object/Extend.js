@@ -13,10 +13,10 @@ var IsPlainObject = require('./IsPlainObject');
 /**
  * This is a slightly modified version of http://api.jquery.com/jQuery.extend/
  *
- * @function Phaser.Utils.Object.Extend
+ * @function Phaser.Utils.Objects.Extend
  * @since 3.0.0
  *
- * @return {object} [description]
+ * @return {object} The extended object.
  */
 var Extend = function ()
 {

@@ -7,7 +7,7 @@
 var MathRotateAroundDistance = require('../math/RotateAroundDistance');
 
 /**
- * [description]
+ * Rotates an array of Game Objects around a point by the given angle and distance.
  *
  * @function Phaser.Actions.RotateAroundDistance
  * @since 3.0.0

@@ -12,10 +12,9 @@
  * @private
  * @since 3.0.0
  *
- * @param {number} worldX - [description]
- * @param {boolean} [snapToFloor=true] - Whether or not to round the tile coordinate down to the
- * nearest integer.
- * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+ * @param {number} worldX - The x coordinate to be converted, in pixels, not tiles.
+ * @param {boolean} [snapToFloor=true] - Whether or not to round the tile coordinate down to the nearest integer.
+ * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * 
  * @return {number} The X location in tile units.

@@ -54,7 +54,7 @@ var InputPluginCache = require('../InputPluginCache');
  *
  * @class GamepadPlugin
  * @extends Phaser.Events.EventEmitter
- * @memberOf Phaser.Input.Gamepad
+ * @memberof Phaser.Input.Gamepad
  * @constructor
  * @since 3.10.0
  *

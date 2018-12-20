@@ -7,7 +7,7 @@
 /**
  * @callback CallCallback
  *
- * @param {Phaser.GameObjects.GameObject} item - [description]
+ * @param {Phaser.GameObjects.GameObject} item - The Game Object to run the callback on.
  */
 
 /**

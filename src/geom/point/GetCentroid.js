@@ -7,7 +7,8 @@
 var Point = require('./Point');
 
 /**
- * [description]
+ * Get the centroid or geometric center of a plane figure (the arithmetic mean position of all the points in the figure).
+ * Informally, it is the point at which a cutout of the shape could be perfectly balanced on the tip of a pin.
  *
  * @function Phaser.Geom.Point.GetCentroid
  * @since 3.0.0

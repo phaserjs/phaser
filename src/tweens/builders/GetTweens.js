@@ -7,7 +7,7 @@
 var GetValue = require('../../utils/object/GetValue');
 
 /**
- * [description]
+ * Returns an array of all tweens in the given config
  *
  * @function Phaser.Tweens.Builders.GetTweens
  * @since 3.0.0

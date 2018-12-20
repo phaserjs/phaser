@@ -22,7 +22,7 @@ var Class = require('../utils/Class');
  * or have a property called `events` that is an instance of it.
  *
  * @class DataManager
- * @memberOf Phaser.Data
+ * @memberof Phaser.Data
  * @constructor
  * @since 3.0.0
  *
@@ -84,6 +84,9 @@ var DataManager = new Class({
          * ```
          *
          * Doing so will emit a `setdata` event from the parent of this Data Manager.
+         * 
+         * Do not modify this object directly. Adding properties directly to this object will not
+         * emit any events. Always use `DataManager.set` to create new items the first time around.
          *
          * @name Phaser.Data.DataManager#values
          * @type {Object.<string, *>}
@@ -306,6 +309,8 @@ var DataManager = new Class({
             Object.defineProperty(this.values, key, {
 
                 enumerable: true,
+                
+                configurable: true,
 
                 get: function ()
                 {
@@ -316,10 +321,11 @@ var DataManager = new Class({
                 {
                     if (!_this._frozen)
                     {
+                        var previousValue = list[key];
                         list[key] = value;
 
-                        events.emit('changedata', parent, key, value);
-                        events.emit('changedata_' + key, parent, value);
+                        events.emit('changedata', parent, key, value, previousValue);
+                        events.emit('changedata_' + key, parent, value, previousValue);
                     }
                 }
 

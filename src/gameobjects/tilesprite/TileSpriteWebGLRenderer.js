@@ -4,7 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var GameObject = require('../GameObject');
 var Utils = require('../../renderer/webgl/Utils');
 
 /**
@@ -24,19 +23,14 @@ var Utils = require('../../renderer/webgl/Utils');
  */
 var TileSpriteWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    if (GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter > 0 && (src.cameraFilter & camera.id)))
-    {
-        return;
-    }
-
-    src.updateTileTexture();
+    src.updateCanvas();
 
     var getTint = Utils.getTintAppendFloatAlpha;
 
     this.pipeline.batchTexture(
         src,
-        src.tileTexture,
-        src.frame.width * src.tileScaleX, src.frame.height * src.tileScaleY,
+        src.fillPattern,
+        src.displayFrame.width * src.tileScaleX, src.displayFrame.height * src.tileScaleY,
         src.x, src.y,
         src.width, src.height,
         src.scaleX, src.scaleY,
@@ -49,8 +43,9 @@ var TileSpriteWebGLRenderer = function (renderer, src, interpolationPercentage, 
         getTint(src._tintTR, camera.alpha * src._alphaTR),
         getTint(src._tintBL, camera.alpha * src._alphaBL),
         getTint(src._tintBR, camera.alpha * src._alphaBR),
-        (src.tilePositionX % src.frame.width) / src.frame.width,
-        (src.tilePositionY % src.frame.height) / src.frame.height,
+        (src._isTinted && src.tintFill),
+        (src.tilePositionX % src.displayFrame.width) / src.displayFrame.width,
+        (src.tilePositionY % src.displayFrame.height) / src.displayFrame.height,
         camera,
         parentMatrix
     );

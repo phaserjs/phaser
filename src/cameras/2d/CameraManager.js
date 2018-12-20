@@ -63,7 +63,7 @@ var RectangleContains = require('../../geom/rectangle/Contains');
  * A Camera also has built-in special effects including Fade, Flash, Camera Shake, Pan and Zoom.
  *
  * @class CameraManager
- * @memberOf Phaser.Cameras.Scene2D
+ * @memberof Phaser.Cameras.Scene2D
  * @constructor
  * @since 3.0.0
  *
@@ -188,7 +188,20 @@ var CameraManager = new Class({
     {
         if (!this.main)
         {
-            this.boot();
+            var sys = this.systems;
+
+            if (sys.settings.cameras)
+            {
+                //  We have cameras to create
+                this.fromJSON(sys.settings.cameras);
+            }
+            else
+            {
+                //  Make one
+                this.add();
+            }
+    
+            this.main = this.cameras[0];
         }
 
         var eventEmitter = this.systems.events;
@@ -209,7 +222,7 @@ var CameraManager = new Class({
      * By default Cameras are transparent and will render anything that they can see based on their `scrollX`
      * and `scrollY` values. Game Objects can be set to be ignored by a Camera by using the `Camera.ignore` method.
      * 
-     * The Camera will have its `roundPixels` propery set to whatever `CameraManager.roundPixels` is. You can change
+     * The Camera will have its `roundPixels` property set to whatever `CameraManager.roundPixels` is. You can change
      * it after creation if required.
      * 
      * See the Camera class documentation for more details.
@@ -258,7 +271,7 @@ var CameraManager = new Class({
      * 
      * The Camera should either be a `Phaser.Cameras.Scene2D.Camera` instance, or a class that extends from it.
      * 
-     * The Camera will have its `roundPixels` propery set to whatever `CameraManager.roundPixels` is. You can change
+     * The Camera will have its `roundPixels` property set to whatever `CameraManager.roundPixels` is. You can change
      * it after addition if required.
      * 
      * The Camera will be assigned an ID, which is used for Game Object exclusion and then added to the
@@ -518,18 +531,22 @@ var CameraManager = new Class({
      * If found in the Camera Manager it will be immediately removed from the local cameras array.
      * If also currently the 'main' camera, 'main' will be reset to be camera 0.
      * 
-     * The removed Camera is not destroyed. If you also wish to destroy the Camera, you should call
-     * `Camera.destroy` on it, so that it clears all references to the Camera Manager.
+     * The removed Cameras are automatically destroyed if the `runDestroy` argument is `true`, which is the default.
+     * If you wish to re-use the cameras then set this to `false`, but know that they will retain their references
+     * and internal data until destroyed or re-added to a Camera Manager.
      *
      * @method Phaser.Cameras.Scene2D.CameraManager#remove
      * @since 3.0.0
      *
      * @param {(Phaser.Cameras.Scene2D.Camera|Phaser.Cameras.Scene2D.Camera[])} camera - The Camera, or an array of Cameras, to be removed from this Camera Manager.
+     * @param {boolean} [runDestroy=true] - Automatically call `Camera.destroy` on each Camera removed from this Camera Manager.
      * 
      * @return {integer} The total number of Cameras removed.
      */
-    remove: function (camera)
+    remove: function (camera, runDestroy)
     {
+        if (runDestroy === undefined) { runDestroy = true; }
+
         if (!Array.isArray(camera))
         {
             camera = [ camera ];
@@ -544,12 +561,18 @@ var CameraManager = new Class({
 
             if (index !== -1)
             {
+                if (runDestroy)
+                {
+                    cameras[index].destroy();
+                }
+
                 cameras.splice(index, 1);
+
                 total++;
             }
         }
 
-        if (!this.main)
+        if (!this.main && cameras[0])
         {
             this.main = cameras[0];
         }

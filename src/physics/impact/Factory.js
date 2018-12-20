@@ -15,11 +15,11 @@ var ImpactSprite = require('./ImpactSprite');
  * Objects that are created by this Factory are automatically added to the physics world.
  *
  * @class Factory
- * @memberOf Phaser.Physics.Impact
+ * @memberof Phaser.Physics.Impact
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Physics.Impact.World} world - [description]
+ * @param {Phaser.Physics.Impact.World} world - A reference to the Impact Physics world.
  */
 var Factory = new Class({
 
@@ -28,7 +28,7 @@ var Factory = new Class({
     function Factory (world)
     {
         /**
-         * [description]
+         * A reference to the Impact Physics world.
          *
          * @name Phaser.Physics.Impact.Factory#world
          * @type {Phaser.Physics.Impact.World}
@@ -47,15 +47,15 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * Creates a new ImpactBody object and adds it to the physics simulation.
      *
      * @method Phaser.Physics.Impact.Factory#body
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} height - [description]
+     * @param {number} x - The horizontal position of the body in the physics world.
+     * @param {number} y - The vertical position of the body in the physics world.
+     * @param {number} width - The width of the body.
+     * @param {number} height - The height of the body.
      *
      * @return {Phaser.Physics.Impact.ImpactBody} The ImpactBody object that was created.
      */
@@ -70,7 +70,7 @@ var Factory = new Class({
      * @method Phaser.Physics.Impact.Factory#existing
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} gameObject - [description]
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to receive the physics body.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object.
      */
@@ -90,7 +90,7 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * Creates a new ImpactImage object and adds it to the physics world.
      *
      * @method Phaser.Physics.Impact.Factory#image
      * @since 3.0.0
@@ -112,7 +112,7 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * Creates a new ImpactSprite object and adds it to the physics world.
      *
      * @method Phaser.Physics.Impact.Factory#sprite
      * @since 3.0.0

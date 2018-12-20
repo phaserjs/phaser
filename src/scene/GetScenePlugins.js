@@ -12,9 +12,9 @@ var GetFastValue = require('../utils/object/GetFastValue');
  * @function Phaser.Scenes.GetScenePlugins
  * @since 3.0.0
  *
- * @param {Phaser.Scenes.Systems} sys - [description]
+ * @param {Phaser.Scenes.Systems} sys - The Scene Systems object to check for plugins.
  *
- * @return {array} [description]
+ * @return {array} An array of all plugins which should be activated, either the default ones or the ones configured in the Scene Systems object.
  */
 var GetScenePlugins = function (sys)
 {

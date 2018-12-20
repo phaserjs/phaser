@@ -16,7 +16,7 @@ var PluginCache = require('../plugins/PluginCache');
  * Some or all of these Game Objects may also be part of the Scene's [Display List]{@link Phaser.GameObjects.DisplayList}, for Rendering.
  *
  * @class UpdateList
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
@@ -254,7 +254,26 @@ var UpdateList = new Class({
      */
     shutdown: function ()
     {
-        this.removeAll();
+        var i = this._list.length;
+
+        while (i--)
+        {
+            this._list[i].destroy(true);
+        }
+
+        i = this._pendingRemoval.length;
+
+        while (i--)
+        {
+            this._pendingRemoval[i].destroy(true);
+        }
+
+        i = this._pendingInsertion.length;
+
+        while (i--)
+        {
+            this._pendingInsertion[i].destroy(true);
+        }
 
         this._list.length = 0;
         this._pendingRemoval.length = 0;
@@ -289,7 +308,7 @@ var UpdateList = new Class({
      *
      * @name Phaser.GameObjects.UpdateList#length
      * @type {integer}
-     * @readOnly
+     * @readonly
      * @since 3.10.0
      */
     length: {

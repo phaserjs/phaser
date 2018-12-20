@@ -20,7 +20,7 @@ var Class = require('../../../utils/Class');
  * which is invoked each frame for the duration of the effect, if required.
  *
  * @class Fade
- * @memberOf Phaser.Cameras.Scene2D.Effects
+ * @memberof Phaser.Cameras.Scene2D.Effects
  * @constructor
  * @since 3.5.0
  *
@@ -37,7 +37,7 @@ var Fade = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Fade#camera
          * @type {Phaser.Cameras.Scene2D.Camera}
-         * @readOnly
+         * @readonly
          * @since 3.5.0
          */
         this.camera = camera;
@@ -47,7 +47,7 @@ var Fade = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Fade#isRunning
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @default false
          * @since 3.5.0
          */
@@ -61,7 +61,7 @@ var Fade = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Fade#isComplete
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @default false
          * @since 3.5.0
          */
@@ -73,7 +73,7 @@ var Fade = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Fade#direction
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @since 3.5.0
          */
         this.direction = true;
@@ -83,7 +83,7 @@ var Fade = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Fade#duration
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @default 0
          * @since 3.5.0
          */
@@ -337,7 +337,7 @@ var Fade = new Class({
         var camera = this.camera;
 
         ctx.fillStyle = 'rgba(' + this.red + ',' + this.green + ',' + this.blue + ',' + this.alpha + ')';
-        ctx.fillRect(camera.x, camera.y, camera.width, camera.height);
+        ctx.fillRect(camera._cx, camera._cy, camera._cw, camera._ch);
 
         return true;
     },
@@ -348,7 +348,7 @@ var Fade = new Class({
      * @method Phaser.Cameras.Scene2D.Effects.Fade#postRenderWebGL
      * @since 3.5.0
      *
-     * @param {Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline} pipeline - The WebGL Pipeline to render to.
+     * @param {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} pipeline - The WebGL Pipeline to render to.
      * @param {function} getTintFunction - A function that will return the gl safe tint colors.
      *
      * @return {boolean} `true` if the effect drew to the renderer, otherwise `false`.
@@ -365,13 +365,10 @@ var Fade = new Class({
         var blue = this.blue / 255;
         var green = this.green / 255;
 
-        pipeline.batchFillRect(
-            0, 0, 1, 1, 0,
-            camera.x, camera.y, camera.width, camera.height,
+        pipeline.drawFillRect(
+            camera._cx, camera._cy, camera._cw, camera._ch,
             getTintFunction(red, green, blue, 1),
-            this.alpha,
-            1, 0, 0, 1, 0, 0,
-            [ 1, 0, 0, 1, 0, 0 ]
+            this.alpha
         );
 
         return true;

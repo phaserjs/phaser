@@ -71,7 +71,7 @@ function init ()
     {
         OS.windows = true;
     }
-    else if (/Mac OS/.test(ua))
+    else if (/Mac OS/.test(ua) && !(/like Mac OS/.test(ua)))
     {
         OS.macOS = true;
     }
@@ -86,8 +86,13 @@ function init ()
     else if (/iP[ao]d|iPhone/i.test(ua))
     {
         OS.iOS = true;
+
         (navigator.appVersion).match(/OS (\d+)/);
+
         OS.iOSVersion = parseInt(RegExp.$1, 10);
+
+        OS.iPhone = ua.toLowerCase().indexOf('iphone') !== -1;
+        OS.iPad = ua.toLowerCase().indexOf('ipad') !== -1;
     }
     else if (/Kindle/.test(ua) || (/\bKF[A-Z][A-Z]+/).test(ua) || (/Silk.*Mobile Safari/).test(ua))
     {
@@ -134,7 +139,7 @@ function init ()
         OS.cordova = true;
     }
 
-    if (process && process.versions && process.versions.node)
+    if (typeof process !== 'undefined' && process.versions && process.versions.node)
     {
         OS.node = true;
     }
@@ -169,9 +174,6 @@ function init ()
     {
         OS.crosswalk = true;
     }
-
-    OS.iPhone = ua.toLowerCase().indexOf('iphone') !== -1;
-    OS.iPad = ua.toLowerCase().indexOf('ipad') !== -1;
 
     OS.pixelRatio = window['devicePixelRatio'] || 1;
 

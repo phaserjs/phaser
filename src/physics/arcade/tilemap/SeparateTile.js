@@ -14,14 +14,14 @@ var TileIntersectsBody = require('./TileIntersectsBody');
  * @function Phaser.Physics.Arcade.Tilemap.SeparateTile
  * @since 3.0.0
  *
- * @param {number} i - [description]
+ * @param {number} i - The index of the tile within the map data.
  * @param {Phaser.Physics.Arcade.Body} body - The Body object to separate.
  * @param {Phaser.Tilemaps.Tile} tile - The tile to collide against.
- * @param {Phaser.Geom.Rectangle} tileWorldRect - [description]
+ * @param {Phaser.Geom.Rectangle} tileWorldRect - A rectangle-like object defining the dimensions of the tile.
  * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer - The tilemapLayer to collide against.
- * @param {number} tileBias - [description]
+ * @param {number} tileBias - The tile bias value. Populated by the `World.TILE_BIAS` constant.
  *
- * @return {boolean} Returns true if the body was separated, otherwise false.
+ * @return {boolean} `true` if the body was separated, otherwise `false`.
  */
 var SeparateTile = function (i, body, tile, tileWorldRect, tilemapLayer, tileBias)
 {

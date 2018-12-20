@@ -19,7 +19,7 @@ var Random = require('./Random');
  * To render a Circle you should look at the capabilities of the Graphics class.
  *
  * @class Circle
- * @memberOf Phaser.Geom
+ * @memberof Phaser.Geom
  * @constructor
  * @since 3.0.0
  *

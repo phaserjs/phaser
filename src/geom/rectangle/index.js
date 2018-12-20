@@ -28,6 +28,7 @@ Rectangle.GetPoint = require('./GetPoint');
 Rectangle.GetPoints = require('./GetPoints');
 Rectangle.GetSize = require('./GetSize');
 Rectangle.Inflate = require('./Inflate');
+Rectangle.Intersection = require('./Intersection');
 Rectangle.MarchingAnts = require('./MarchingAnts');
 Rectangle.MergePoints = require('./MergePoints');
 Rectangle.MergeRect = require('./MergeRect');
@@ -39,6 +40,7 @@ Rectangle.Perimeter = require('./Perimeter');
 Rectangle.PerimeterPoint = require('./PerimeterPoint');
 Rectangle.Random = require('./Random');
 Rectangle.RandomOutside = require('./RandomOutside');
+Rectangle.SameDimensions = require('./SameDimensions');
 Rectangle.Scale = require('./Scale');
 Rectangle.Union = require('./Union');
 

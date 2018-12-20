@@ -28,31 +28,20 @@ var TransformXY = function (x, y, positionX, positionY, rotation, scaleX, scaleY
 {
     if (output === undefined) { output = new Vector2(); }
 
-    //  ITRS
+    var radianSin = Math.sin(rotation);
+    var radianCos = Math.cos(rotation);
 
-    var sr = Math.sin(-rotation);
-    var cr = Math.cos(-rotation);
-
-    var a = cr * scaleX;
-    var b = -sr * scaleX;
-    var c = sr * scaleY;
-    var d = cr * scaleY;
+    // Rotate and Scale
+    var a = radianCos * scaleX;
+    var b = radianSin * scaleX;
+    var c = -radianSin * scaleY;
+    var d = radianCos * scaleY;
 
     //  Invert
+    var id = 1 / ((a * d) + (c * -b));
 
-    var n = a * d - b * c;
-
-    var m0 = d / n;
-    var m1 = -b / n;
-    var m2 = -c / n;
-    var m3 = a / n;
-    var m4 = (c * positionY - d * positionX) / n;
-    var m5 = -(a * positionY - b * positionX) / n;
-
-    //  Transform
-
-    output.x = x * m0 + y * m2 + m4;
-    output.y = x * m1 + y * m3 + m5;
+    output.x = (d * id * x) + (-c * id * y) + (((positionY * c) - (positionX * d)) * id);
+    output.y = (a * id * y) + (-b * id * x) + (((-positionY * a) + (positionX * b)) * id);
 
     return output;
 };

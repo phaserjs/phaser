@@ -15,7 +15,8 @@ var COLLIDES = require('../COLLIDES');
  */
 
 /**
- * [description]
+ * The Impact Collides component.
+ * Should be applied as a mixin.
  *
  * @name Phaser.Physics.Impact.Components.Collides
  * @since 3.0.0

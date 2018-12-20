@@ -37,7 +37,7 @@ var List = require('../../structs/List');
  *
  * @class Blitter
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
@@ -86,7 +86,7 @@ var Blitter = new Class({
 
         this.setTexture(texture, frame);
         this.setPosition(x, y);
-        this.initPipeline('TextureTintPipeline');
+        this.initPipeline();
 
         /**
          * The children of this Blitter.

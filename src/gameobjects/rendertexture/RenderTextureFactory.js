@@ -11,6 +11,10 @@ var RenderTexture = require('./RenderTexture');
  * Creates a new Render Texture Game Object and adds it to the Scene.
  *
  * Note: This method will only be available if the Render Texture Game Object has been built into Phaser.
+ * 
+ * A Render Texture is a special texture that allows any number of Game Objects to be drawn to it. You can take many complex objects and
+ * draw them all to this one texture, which can they be used as the texture for other Game Object's. It's a way to generate dynamic
+ * textures at run-time that are WebGL friendly and don't invoke expensive GPU uploads.
  *
  * @method Phaser.GameObjects.GameObjectFactory#renderTexture
  * @since 3.2.0

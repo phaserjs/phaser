@@ -7,13 +7,15 @@
 var Class = require('../../utils/Class');
 var GetColor = require('./GetColor');
 var GetColor32 = require('./GetColor32');
+var HSVToRGB = require('./HSVToRGB');
+var RGBToHSV = require('./RGBToHSV');
 
 /**
  * @classdesc
  * The Color class holds a single color value and allows for easy modification and reading of it.
  *
  * @class Color
- * @memberOf Phaser.Display
+ * @memberof Phaser.Display
  * @constructor
  * @since 3.0.0
  *
@@ -78,6 +80,52 @@ var Color = new Class({
         this.a = 255;
 
         /**
+         * The hue color value. A number between 0 and 1.
+         * This is the base color.
+         *
+         * @name Phaser.Display.Color#_h
+         * @type {number}
+         * @default 0
+         * @private
+         * @since 3.13.0
+         */
+        this._h = 0;
+
+        /**
+         * The saturation color value. A number between 0 and 1.
+         * This controls how much of the hue will be in the final color, where 1 is fully saturated and 0 will give you white.
+         *
+         * @name Phaser.Display.Color#_s
+         * @type {number}
+         * @default 0
+         * @private
+         * @since 3.13.0
+         */
+        this._s = 0;
+
+        /**
+         * The lightness color value. A number between 0 and 1.
+         * This controls how dark the color is. Where 1 is as bright as possible and 0 is black.
+         *
+         * @name Phaser.Display.Color#_v
+         * @type {number}
+         * @default 0
+         * @private
+         * @since 3.13.0
+         */
+        this._v = 0;
+
+        /**
+         * Is this color update locked?
+         *
+         * @name Phaser.Display.Color#_locked
+         * @type {boolean}
+         * @private
+         * @since 3.13.0
+         */
+        this._locked = false;
+
+        /**
          * An array containing the calculated color values for WebGL use.
          *
          * @name Phaser.Display.Color#gl
@@ -132,12 +180,16 @@ var Color = new Class({
      */
     transparent: function ()
     {
+        this._locked = true;
+
         this.red = 0;
         this.green = 0;
         this.blue = 0;
         this.alpha = 0;
 
-        return this.update();
+        this._locked = false;
+
+        return this.update(true);
     },
 
     /**
@@ -150,19 +202,25 @@ var Color = new Class({
      * @param {integer} green - The green color value. A number between 0 and 255.
      * @param {integer} blue - The blue color value. A number between 0 and 255.
      * @param {integer} [alpha=255] - The alpha value. A number between 0 and 255.
+     * @param {boolean} [updateHSV=true] - Update the HSV values after setting the RGB values?
      *
      * @return {Phaser.Display.Color} This Color object.
      */
-    setTo: function (red, green, blue, alpha)
+    setTo: function (red, green, blue, alpha, updateHSV)
     {
         if (alpha === undefined) { alpha = 255; }
+        if (updateHSV === undefined) { updateHSV = true; }
+
+        this._locked = true;
 
         this.red = red;
         this.green = green;
         this.blue = blue;
         this.alpha = alpha;
 
-        return this.update();
+        this._locked = false;
+
+        return this.update(updateHSV);
     },
 
     /**
@@ -182,12 +240,16 @@ var Color = new Class({
     {
         if (alpha === undefined) { alpha = 1; }
 
+        this._locked = true;
+
         this.redGL = red;
         this.greenGL = green;
         this.blueGL = blue;
         this.alphaGL = alpha;
 
-        return this.update();
+        this._locked = false;
+
+        return this.update(true);
     },
 
     /**
@@ -202,6 +264,8 @@ var Color = new Class({
      */
     setFromRGB: function (color)
     {
+        this._locked = true;
+
         this.red = color.r;
         this.green = color.g;
         this.blue = color.b;
@@ -211,22 +275,79 @@ var Color = new Class({
             this.alpha = color.a;
         }
 
-        return this.update();
+        this._locked = false;
+
+        return this.update(true);
+    },
+
+    /**
+     * Sets the color based on the hue, saturation and lightness values given.
+     *
+     * @method Phaser.Display.Color#setFromHSV
+     * @since 3.13.0
+     *
+     * @param {number} h - The hue, in the range 0 - 1. This is the base color.
+     * @param {number} s - The saturation, in the range 0 - 1. This controls how much of the hue will be in the final color, where 1 is fully saturated and 0 will give you white.
+     * @param {number} v - The value, in the range 0 - 1. This controls how dark the color is. Where 1 is as bright as possible and 0 is black.
+     *
+     * @return {Phaser.Display.Color} This Color object.
+     */
+    setFromHSV: function (h, s, v)
+    {
+        return HSVToRGB(h, s, v, this);
     },
 
     /**
      * Updates the internal cache values.
      *
      * @method Phaser.Display.Color#update
+     * @private
      * @since 3.0.0
      *
      * @return {Phaser.Display.Color} This Color object.
      */
-    update: function ()
+    update: function (updateHSV)
     {
-        this._color = GetColor(this.r, this.g, this.b);
-        this._color32 = GetColor32(this.r, this.g, this.b, this.a);
-        this._rgba = 'rgba(' + this.r + ',' + this.g + ',' + this.b + ',' + (this.a / 255) + ')';
+        if (updateHSV === undefined) { updateHSV = false; }
+
+        if (this._locked)
+        {
+            return this;
+        }
+
+        var r = this.r;
+        var g = this.g;
+        var b = this.b;
+        var a = this.a;
+
+        this._color = GetColor(r, g, b);
+        this._color32 = GetColor32(r, g, b, a);
+        this._rgba = 'rgba(' + r + ',' + g + ',' + b + ',' + (a / 255) + ')';
+
+        if (updateHSV)
+        {
+            RGBToHSV(r, g, b, this);
+        }
+
+        return this;
+    },
+
+    /**
+     * Updates the internal hsv cache values.
+     *
+     * @method Phaser.Display.Color#updateHSV
+     * @private
+     * @since 3.13.0
+     *
+     * @return {Phaser.Display.Color} This Color object.
+     */
+    updateHSV: function ()
+    {
+        var r = this.r;
+        var g = this.g;
+        var b = this.b;
+
+        RGBToHSV(r, g, b, this);
 
         return this;
     },
@@ -245,11 +366,163 @@ var Color = new Class({
     },
 
     /**
+     * Sets this Color object to be grayscaled based on the shade value given.
+     *
+     * @method Phaser.Display.Color#gray
+     * @since 3.13.0
+     * 
+     * @param {integer} shade - A value between 0 and 255.
+     *
+     * @return {Phaser.Display.Color} This Color object.
+     */
+    gray: function (shade)
+    {
+        return this.setTo(shade, shade, shade);
+    },
+
+    /**
+     * Sets this Color object to be a random color between the `min` and `max` values given.
+     *
+     * @method Phaser.Display.Color#random
+     * @since 3.13.0
+     * 
+     * @param {integer} [min=0] - The minimum random color value. Between 0 and 255.
+     * @param {integer} [max=255] - The maximum random color value. Between 0 and 255.
+     *
+     * @return {Phaser.Display.Color} This Color object.
+     */
+    random: function (min, max)
+    {
+        if (min === undefined) { min = 0; }
+        if (max === undefined) { max = 255; }
+
+        var r = Math.floor(min + Math.random() * (max - min));
+        var g = Math.floor(min + Math.random() * (max - min));
+        var b = Math.floor(min + Math.random() * (max - min));
+
+        return this.setTo(r, g, b);
+    },
+
+    /**
+     * Sets this Color object to be a random grayscale color between the `min` and `max` values given.
+     *
+     * @method Phaser.Display.Color#randomGray
+     * @since 3.13.0
+     * 
+     * @param {integer} [min=0] - The minimum random color value. Between 0 and 255.
+     * @param {integer} [max=255] - The maximum random color value. Between 0 and 255.
+     *
+     * @return {Phaser.Display.Color} This Color object.
+     */
+    randomGray: function (min, max)
+    {
+        if (min === undefined) { min = 0; }
+        if (max === undefined) { max = 255; }
+
+        var s = Math.floor(min + Math.random() * (max - min));
+
+        return this.setTo(s, s, s);
+    },
+
+    /**
+     * Increase the saturation of this Color by the percentage amount given.
+     * The saturation is the amount of the base color in the hue.
+     *
+     * @method Phaser.Display.Color#saturate
+     * @since 3.13.0
+     * 
+     * @param {integer} amount - The percentage amount to change this color by. A value between 0 and 100.
+     *
+     * @return {Phaser.Display.Color} This Color object.
+     */
+    saturate: function (amount)
+    {
+        this.s += amount / 100;
+
+        return this;
+    },
+
+    /**
+     * Decrease the saturation of this Color by the percentage amount given.
+     * The saturation is the amount of the base color in the hue.
+     *
+     * @method Phaser.Display.Color#desaturate
+     * @since 3.13.0
+     * 
+     * @param {integer} amount - The percentage amount to change this color by. A value between 0 and 100.
+     *
+     * @return {Phaser.Display.Color} This Color object.
+     */
+    desaturate: function (amount)
+    {
+        this.s -= amount / 100;
+
+        return this;
+    },
+
+    /**
+     * Increase the lightness of this Color by the percentage amount given.
+     *
+     * @method Phaser.Display.Color#lighten
+     * @since 3.13.0
+     * 
+     * @param {integer} amount - The percentage amount to change this color by. A value between 0 and 100.
+     *
+     * @return {Phaser.Display.Color} This Color object.
+     */
+    lighten: function (amount)
+    {
+        this.v += amount / 100;
+
+        return this;
+    },
+
+    /**
+     * Decrease the lightness of this Color by the percentage amount given.
+     *
+     * @method Phaser.Display.Color#darken
+     * @since 3.13.0
+     * 
+     * @param {integer} amount - The percentage amount to change this color by. A value between 0 and 100.
+     *
+     * @return {Phaser.Display.Color} This Color object.
+     */
+    darken: function (amount)
+    {
+        this.v -= amount / 100;
+
+        return this;
+    },
+
+    /**
+     * Brighten this Color by the percentage amount given.
+     *
+     * @method Phaser.Display.Color#brighten
+     * @since 3.13.0
+     * 
+     * @param {integer} amount - The percentage amount to change this color by. A value between 0 and 100.
+     *
+     * @return {Phaser.Display.Color} This Color object.
+     */
+    brighten: function (amount)
+    {
+        var r = this.r;
+        var g = this.g;
+        var b = this.b;
+
+        r = Math.max(0, Math.min(255, r - Math.round(255 * - (amount / 100))));
+        g = Math.max(0, Math.min(255, g - Math.round(255 * - (amount / 100))));
+        b = Math.max(0, Math.min(255, b - Math.round(255 * - (amount / 100))));
+
+        return this.setTo(r, g, b);
+    },
+
+    /**
      * The color of this Color component, not including the alpha channel.
      *
      * @name Phaser.Display.Color#color
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     color: {
@@ -266,7 +539,7 @@ var Color = new Class({
      *
      * @name Phaser.Display.Color#color32
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     color32: {
@@ -283,7 +556,7 @@ var Color = new Class({
      *
      * @name Phaser.Display.Color#rgba
      * @type {string}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     rgba: {
@@ -315,7 +588,7 @@ var Color = new Class({
 
             this.r = Math.floor(this.gl[0] * 255);
 
-            this.update();
+            this.update(true);
         }
 
     },
@@ -340,7 +613,7 @@ var Color = new Class({
 
             this.g = Math.floor(this.gl[1] * 255);
 
-            this.update();
+            this.update(true);
         }
 
     },
@@ -365,7 +638,7 @@ var Color = new Class({
 
             this.b = Math.floor(this.gl[2] * 255);
 
-            this.update();
+            this.update(true);
         }
 
     },
@@ -417,7 +690,7 @@ var Color = new Class({
 
             this.gl[0] = value / 255;
 
-            this.update();
+            this.update(true);
         }
 
     },
@@ -444,7 +717,7 @@ var Color = new Class({
 
             this.gl[1] = value / 255;
 
-            this.update();
+            this.update(true);
         }
 
     },
@@ -471,7 +744,7 @@ var Color = new Class({
 
             this.gl[2] = value / 255;
 
-            this.update();
+            this.update(true);
         }
 
     },
@@ -499,6 +772,78 @@ var Color = new Class({
             this.gl[3] = value / 255;
 
             this.update();
+        }
+
+    },
+
+    /**
+     * The hue color value. A number between 0 and 1.
+     * This is the base color.
+     *
+     * @name Phaser.Display.Color#h
+     * @type {number}
+     * @since 3.13.0
+     */
+    h: {
+
+        get: function ()
+        {
+            return this._h;
+        },
+
+        set: function (value)
+        {
+            this._h = value;
+
+            HSVToRGB(value, this._s, this._v, this);
+        }
+
+    },
+
+    /**
+     * The saturation color value. A number between 0 and 1.
+     * This controls how much of the hue will be in the final color, where 1 is fully saturated and 0 will give you white.
+     *
+     * @name Phaser.Display.Color#s
+     * @type {number}
+     * @since 3.13.0
+     */
+    s: {
+
+        get: function ()
+        {
+            return this._s;
+        },
+
+        set: function (value)
+        {
+            this._s = value;
+
+            HSVToRGB(this._h, value, this._v, this);
+        }
+
+    },
+
+    /**
+     * The lightness color value. A number between 0 and 1.
+     * This controls how dark the color is. Where 1 is as bright as possible and 0 is black.
+     *
+     * @name Phaser.Display.Color#v
+     * @type {number}
+     * @since 3.13.0
+     */
+    v: {
+
+        get: function ()
+        {
+            return this._v;
+        },
+
+        set: function (value)
+        {
+            this._v = value;
+
+            HSVToRGB(this._h, this._s, value, this);
         }
 
     }

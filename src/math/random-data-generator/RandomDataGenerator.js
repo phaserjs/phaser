@@ -8,14 +8,23 @@ var Class = require('../../utils/Class');
 
 /**
  * @classdesc
- * A seeded random data generator.
+ * A seeded Random Data Generator.
+ * 
+ * Access via `Phaser.Math.RND` which is an instance of this class pre-defined
+ * by Phaser. Or, create your own instance to use as you require.
+ * 
+ * The `Math.RND` generator is seeded by the Game Config property value `seed`.
+ * If no such config property exists, a random number is used.
+ * 
+ * If you create your own instance of this class you should provide a seed for it.
+ * If no seed is given it will use a 'random' one based on Date.now.
  *
  * @class RandomDataGenerator
- * @memberOf Phaser.Math
+ * @memberof Phaser.Math
  * @constructor
  * @since 3.0.0
  *
- * @param {string[]} [seeds] - The seeds.
+ * @param {(string|string[])} [seeds] - The seeds to use for the random number generator.
  */
 var RandomDataGenerator = new Class({
 
@@ -23,6 +32,8 @@ var RandomDataGenerator = new Class({
 
     function RandomDataGenerator (seeds)
     {
+        if (seeds === undefined) { seeds = [ (Date.now() * Math.random()).toString() ]; }
+
         /**
          * Internal var.
          *
@@ -467,7 +478,7 @@ var RandomDataGenerator = new Class({
 
         for (var i = len; i > 0; i--)
         {
-            var randomIndex = Math.floor(this.frac() * (len + 1));
+            var randomIndex = Math.floor(this.frac() * (i + 1));
             var itemAtIndex = array[randomIndex];
 
             array[randomIndex] = array[i];

@@ -15,18 +15,15 @@ var MeshRender = require('./MeshRender');
  *
  * @class Mesh
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @webglOnly
  * @since 3.0.0
  *
- * @extends Phaser.GameObjects.Components.Alpha
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
- * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.ScaleMode
  * @extends Phaser.GameObjects.Components.Size
@@ -50,13 +47,10 @@ var Mesh = new Class({
     Extends: GameObject,
 
     Mixins: [
-        Components.Alpha,
         Components.BlendMode,
         Components.Depth,
-        Components.Flip,
         Components.GetBounds,
         Components.Mask,
-        Components.Origin,
         Components.Pipeline,
         Components.ScaleMode,
         Components.Size,
@@ -72,12 +66,6 @@ var Mesh = new Class({
     function Mesh (scene, x, y, vertices, uv, colors, alphas, texture, frame)
     {
         GameObject.call(this, scene, 'Mesh');
-
-        this.setTexture(texture, frame);
-        this.setPosition(x, y);
-        this.setSizeToFrame();
-        this.setOrigin();
-        this.initPipeline('TextureTintPipeline');
 
         if (vertices.length !== uv.length)
         {
@@ -149,6 +137,21 @@ var Mesh = new Class({
          * @since 3.0.0
          */
         this.alphas = new Float32Array(alphas);
+
+        /**
+         * Fill or additive mode used when blending the color values?
+         * 
+         * @name Phaser.GameObjects.Mesh#tintFill
+         * @type {boolean}
+         * @default false
+         * @since 3.11.0
+         */
+        this.tintFill = false;
+
+        this.setTexture(texture, frame);
+        this.setPosition(x, y);
+        this.setSizeToFrame();
+        this.initPipeline();
     }
 
 });

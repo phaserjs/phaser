@@ -16,7 +16,7 @@ var CONST = {
      * Scene state.
      * 
      * @name Phaser.Scenes.PENDING
-     * @readOnly
+     * @readonly
      * @type {integer}
      * @since 3.0.0
      */
@@ -26,7 +26,7 @@ var CONST = {
      * Scene state.
      * 
      * @name Phaser.Scenes.INIT
-     * @readOnly
+     * @readonly
      * @type {integer}
      * @since 3.0.0
      */
@@ -36,7 +36,7 @@ var CONST = {
      * Scene state.
      * 
      * @name Phaser.Scenes.START
-     * @readOnly
+     * @readonly
      * @type {integer}
      * @since 3.0.0
      */
@@ -46,7 +46,7 @@ var CONST = {
      * Scene state.
      * 
      * @name Phaser.Scenes.LOADING
-     * @readOnly
+     * @readonly
      * @type {integer}
      * @since 3.0.0
      */
@@ -56,7 +56,7 @@ var CONST = {
      * Scene state.
      * 
      * @name Phaser.Scenes.CREATING
-     * @readOnly
+     * @readonly
      * @type {integer}
      * @since 3.0.0
      */
@@ -66,7 +66,7 @@ var CONST = {
      * Scene state.
      * 
      * @name Phaser.Scenes.RUNNING
-     * @readOnly
+     * @readonly
      * @type {integer}
      * @since 3.0.0
      */
@@ -76,7 +76,7 @@ var CONST = {
      * Scene state.
      * 
      * @name Phaser.Scenes.PAUSED
-     * @readOnly
+     * @readonly
      * @type {integer}
      * @since 3.0.0
      */
@@ -86,7 +86,7 @@ var CONST = {
      * Scene state.
      * 
      * @name Phaser.Scenes.SLEEPING
-     * @readOnly
+     * @readonly
      * @type {integer}
      * @since 3.0.0
      */
@@ -96,7 +96,7 @@ var CONST = {
      * Scene state.
      * 
      * @name Phaser.Scenes.SHUTDOWN
-     * @readOnly
+     * @readonly
      * @type {integer}
      * @since 3.0.0
      */
@@ -106,7 +106,7 @@ var CONST = {
      * Scene state.
      * 
      * @name Phaser.Scenes.DESTROYED
-     * @readOnly
+     * @readonly
      * @type {integer}
      * @since 3.0.0
      */

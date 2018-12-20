@@ -12,7 +12,7 @@
  *
  * @param {number} v - The value to be tweened.
  * @param {number} [amplitude=0.1] - The amplitude of the elastic ease.
- * @param {number} [period=0.1] - [description]
+ * @param {number} [period=0.1] - Sets how tight the sine-wave is, where smaller values are tighter waves, which result in more cycles.
  *
  * @return {number} The tweened value.
  */

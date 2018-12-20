@@ -16,7 +16,7 @@ var NOOP = require('../utils/NOOP');
  *
  * @class BaseSound
  * @extends Phaser.Events.EventEmitter
- * @memberOf Phaser.Sound
+ * @memberof Phaser.Sound
  * @constructor
  * @since 3.0.0
  *
@@ -49,7 +49,7 @@ var BaseSound = new Class({
          *
          * @name Phaser.Sound.BaseSound#key
          * @type {string}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.key = key;
@@ -60,7 +60,7 @@ var BaseSound = new Class({
          * @name Phaser.Sound.BaseSound#isPlaying
          * @type {boolean}
          * @default false
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.isPlaying = false;
@@ -71,7 +71,7 @@ var BaseSound = new Class({
          * @name Phaser.Sound.BaseSound#isPaused
          * @type {boolean}
          * @default false
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.isPaused = false;
@@ -84,7 +84,7 @@ var BaseSound = new Class({
          * @name Phaser.Sound.BaseSound#totalRate
          * @type {number}
          * @default 1
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.totalRate = 1;
@@ -95,7 +95,7 @@ var BaseSound = new Class({
          *
          * @name Phaser.Sound.BaseSound#duration
          * @type {number}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.duration = this.duration || 0;
@@ -105,7 +105,7 @@ var BaseSound = new Class({
          *
          * @name Phaser.Sound.BaseSound#totalDuration
          * @type {number}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.totalDuration = this.totalDuration || 0;
@@ -150,7 +150,7 @@ var BaseSound = new Class({
          * @name Phaser.Sound.BaseSound#markers
          * @type {Object.<string, SoundMarker>}
          * @default {}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.markers = {};
@@ -162,7 +162,7 @@ var BaseSound = new Class({
          * @name Phaser.Sound.BaseSound#currentMarker
          * @type {SoundMarker}
          * @default null
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.currentMarker = null;

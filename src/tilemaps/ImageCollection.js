@@ -13,7 +13,7 @@ var Class = require('../utils/Class');
  * Image Collections are normally created automatically when Tiled data is loaded.
  *
  * @class ImageCollection
- * @memberOf Phaser.Tilemaps
+ * @memberof Phaser.Tilemaps
  * @constructor
  * @since 3.0.0
  * 
@@ -60,7 +60,7 @@ var ImageCollection = new Class({
          * 
          * @name Phaser.Tilemaps.ImageCollection#imageWidth
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.imageWidth = width | 0;
@@ -70,7 +70,7 @@ var ImageCollection = new Class({
          * 
          * @name Phaser.Tilemaps.ImageCollection#imageHeight
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.imageHeight = height | 0;
@@ -81,7 +81,7 @@ var ImageCollection = new Class({
          * 
          * @name Phaser.Tilemaps.ImageCollection#imageMarge
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.imageMargin = margin | 0;
@@ -92,7 +92,7 @@ var ImageCollection = new Class({
          * 
          * @name Phaser.Tilemaps.ImageCollection#imageSpacing
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.imageSpacing = spacing | 0;
@@ -111,7 +111,7 @@ var ImageCollection = new Class({
          * 
          * @name Phaser.Tilemaps.ImageCollection#images
          * @type {array}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.images = [];
@@ -121,7 +121,7 @@ var ImageCollection = new Class({
          * 
          * @name Phaser.Tilemaps.ImageCollection#total
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.total = 0;

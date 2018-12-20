@@ -77,7 +77,7 @@ var Bounds = require('../geometry/Bounds');
         Events.on(engine, 'beforeUpdate', function() {
             var allBodies = Composite.allBodies(engine.world);
             MouseConstraint.update(mouseConstraint, allBodies);
-            _triggerEvents(mouseConstraint);
+            MouseConstraint._triggerEvents(mouseConstraint);
         });
 
         return mouseConstraint;
@@ -136,7 +136,7 @@ var Bounds = require('../geometry/Bounds');
      * @private
      * @param {mouse} mouseConstraint
      */
-    var _triggerEvents = function(mouseConstraint) {
+    MouseConstraint._triggerEvents = function(mouseConstraint) {
         var mouse = mouseConstraint.mouse,
             mouseEvents = mouse.sourceEvents;
 

@@ -29,7 +29,7 @@ var RectangleContains = require('../../geom/rectangle/Contains');
  *
  * @class Zone
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
@@ -100,6 +100,8 @@ var Zone = new Class({
          * @since 3.0.0
          */
         this.blendMode = BlendModes.NORMAL;
+
+        this.updateDisplayOrigin();
     },
 
     /**
@@ -224,10 +226,7 @@ var Zone = new Class({
      */
     setRectangleDropZone: function (width, height)
     {
-        var x = -(width / 2);
-        var y = -(height / 2);
-
-        return this.setDropZone(new Rectangle(x, y, width, height), RectangleContains);
+        return this.setDropZone(new Rectangle(0, 0, width, height), RectangleContains);
     },
 
     /**
@@ -247,8 +246,7 @@ var Zone = new Class({
         {
             this.setRectangleDropZone(this.width, this.height);
         }
-        else
-        if (!this.input)
+        else if (!this.input)
         {
             this.setInteractive(shape, callback, true);
         }
@@ -256,6 +254,18 @@ var Zone = new Class({
         return this;
     },
 
+    /**
+     * A NOOP method so you can pass a Zone to a Container.
+     * Calling this method will do nothing. It is intentionally empty.
+     *
+     * @method Phaser.GameObjects.Zone#setAlpha
+     * @private
+     * @since 3.11.0
+     */
+    setAlpha: function ()
+    {
+    },
+    
     /**
      * A Zone does not render.
      *

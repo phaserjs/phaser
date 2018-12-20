@@ -14,7 +14,7 @@ var HTML5AudioSound = require('./HTML5AudioSound');
  *
  * @class HTML5AudioSoundManager
  * @extends Phaser.Sound.BaseSoundManager
- * @memberOf Phaser.Sound
+ * @memberof Phaser.Sound
  * @constructor
  * @since 3.0.0
  *

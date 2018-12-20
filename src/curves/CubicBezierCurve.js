@@ -13,11 +13,11 @@ var Vector2 = require('../math/Vector2');
 
 /**
  * @classdesc
- * [description]
+ * A higher-order Bézier curve constructed of four points.
  *
  * @class CubicBezier
  * @extends Phaser.Curves.Curve
- * @memberOf Phaser.Curves
+ * @memberof Phaser.Curves
  * @constructor
  * @since 3.0.0
  *
@@ -45,7 +45,7 @@ var CubicBezierCurve = new Class({
         }
 
         /**
-         * [description]
+         * The start point of this curve.
          *
          * @name Phaser.Curves.CubicBezier#p0
          * @type {Phaser.Math.Vector2}
@@ -54,7 +54,7 @@ var CubicBezierCurve = new Class({
         this.p0 = p0;
 
         /**
-         * [description]
+         * The first control point of this curve.
          *
          * @name Phaser.Curves.CubicBezier#p1
          * @type {Phaser.Math.Vector2}
@@ -63,7 +63,7 @@ var CubicBezierCurve = new Class({
         this.p1 = p1;
 
         /**
-         * [description]
+         * The second control point of this curve.
          *
          * @name Phaser.Curves.CubicBezier#p2
          * @type {Phaser.Math.Vector2}
@@ -72,7 +72,7 @@ var CubicBezierCurve = new Class({
         this.p2 = p2;
 
         /**
-         * [description]
+         * The end point of this curve.
          *
          * @name Phaser.Curves.CubicBezier#p3
          * @type {Phaser.Math.Vector2}
@@ -101,7 +101,7 @@ var CubicBezierCurve = new Class({
     },
 
     /**
-     * [description]
+     * Returns the resolution of this curve.
      *
      * @method Phaser.Curves.CubicBezier#getResolution
      * @since 3.0.0
@@ -141,17 +141,17 @@ var CubicBezierCurve = new Class({
     },
 
     /**
-     * [description]
+     * Draws this curve to the specified graphics object.
      *
      * @method Phaser.Curves.CubicBezier#draw
      * @since 3.0.0
      *
      * @generic {Phaser.GameObjects.Graphics} G - [graphics,$return]
      *
-     * @param {Phaser.GameObjects.Graphics} graphics - [description]
-     * @param {integer} [pointsTotal=32] - [description]
+     * @param {Phaser.GameObjects.Graphics} graphics - The graphics object this curve should be drawn to.
+     * @param {integer} [pointsTotal=32] - The number of intermediary points that make up this curve. A higher number of points will result in a smoother curve.
      *
-     * @return {Phaser.GameObjects.Graphics} [description]
+     * @return {Phaser.GameObjects.Graphics} The graphics object this curve was drawn to. Useful for method chaining.
      */
     draw: function (graphics, pointsTotal)
     {
@@ -174,7 +174,7 @@ var CubicBezierCurve = new Class({
     },
 
     /**
-     * [description]
+     * Returns a JSON object that describes this curve.
      *
      * @method Phaser.Curves.CubicBezier#toJSON
      * @since 3.0.0
@@ -197,14 +197,14 @@ var CubicBezierCurve = new Class({
 });
 
 /**
- * [description]
+ * Generates a curve from a JSON object.
  *
  * @function Phaser.Curves.CubicBezier.fromJSON
  * @since 3.0.0
  *
  * @param {JSONCurve} data - The JSON object containing this curve data.
  *
- * @return {Phaser.Curves.CubicBezier} [description]
+ * @return {Phaser.Curves.CubicBezier} The curve generated from the JSON object.
  */
 CubicBezierCurve.fromJSON = function (data)
 {

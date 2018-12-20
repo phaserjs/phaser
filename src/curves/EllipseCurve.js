@@ -17,47 +17,49 @@ var Vector2 = require('../math/Vector2');
  * @typedef {object} JSONEllipseCurve
  *
  * @property {string} type - The of the curve.
- * @property {number} x - [description]
- * @property {number} y - [description]
+ * @property {number} x - The x coordinate of the ellipse.
+ * @property {number} y - The y coordinate of the ellipse.
  * @property {number} xRadius - The horizontal radius of ellipse.
  * @property {number} yRadius - The vertical radius of ellipse.
- * @property {integer} startAngle - The start angle of ellipse.
- * @property {integer} endAngle - The end angle of ellipse.
- * @property {boolean} clockwise - The clockwise of ellipse.
- * @property {integer} rotation - The rotation of ellipse.
+ * @property {integer} startAngle - The start angle of the ellipse, in degrees.
+ * @property {integer} endAngle - The end angle of the ellipse, in degrees.
+ * @property {boolean} clockwise - Sets if the the ellipse rotation is clockwise (true) or anti-clockwise (false)
+ * @property {integer} rotation - The rotation of ellipse, in degrees.
  */
 
 /**
  * @typedef {object} EllipseCurveConfig
  *
- * @property {number} [x=0] - [description]
- * @property {number} [y=0] - [description]
- * @property {number} [xRadius=0] - [description]
- * @property {number} [yRadius=0] - [description]
- * @property {integer} [startAngle=0] - [description]
- * @property {integer} [endAngle=360] - [description]
- * @property {boolean} [clockwise=false] - [description]
- * @property {integer} [rotation=0] - [description]
+ * @property {number} [x=0] - The x coordinate of the ellipse.
+ * @property {number} [y=0] - The y coordinate of the ellipse.
+ * @property {number} [xRadius=0] - The horizontal radius of the ellipse.
+ * @property {number} [yRadius=0] - The vertical radius of the ellipse.
+ * @property {integer} [startAngle=0] - The start angle of the ellipse, in degrees.
+ * @property {integer} [endAngle=360] - The end angle of the ellipse, in degrees.
+ * @property {boolean} [clockwise=false] - Sets if the the ellipse rotation is clockwise (true) or anti-clockwise (false)
+ * @property {integer} [rotation=0] - The rotation of the ellipse, in degrees.
   */
 
 /**
  * @classdesc
- * [description]
+ * An Elliptical Curve derived from the Base Curve class.
+ * 
+ * See https://en.wikipedia.org/wiki/Elliptic_curve for more details.
  *
  * @class Ellipse
  * @extends Phaser.Curves.Curve
- * @memberOf Phaser.Curves
+ * @memberof Phaser.Curves
  * @constructor
  * @since 3.0.0
  *
- * @param {(number|EllipseCurveConfig)} [x=0] - [description]
- * @param {number} [y=0] - [description]
- * @param {number} [xRadius=0] - [description]
- * @param {number} [yRadius=0] - [description]
- * @param {integer} [startAngle=0] - [description]
- * @param {integer} [endAngle=360] - [description]
- * @param {boolean} [clockwise=false] - [description]
- * @param {integer} [rotation=0] - [description]
+ * @param {(number|EllipseCurveConfig)} [x=0] - The x coordinate of the ellipse, or an Ellipse Curve configuration object.
+ * @param {number} [y=0] - The y coordinate of the ellipse.
+ * @param {number} [xRadius=0] - The horizontal radius of ellipse.
+ * @param {number} [yRadius=0] - The vertical radius of ellipse.
+ * @param {integer} [startAngle=0] - The start angle of the ellipse, in degrees.
+ * @param {integer} [endAngle=360] - The end angle of the ellipse, in degrees.
+ * @param {boolean} [clockwise=false] - Sets if the the ellipse rotation is clockwise (true) or anti-clockwise (false)
+ * @param {integer} [rotation=0] - The rotation of the ellipse, in degrees.
  */
 var EllipseCurve = new Class({
 
@@ -94,7 +96,7 @@ var EllipseCurve = new Class({
         //  Center point
 
         /**
-         * [description]
+         * The center point of the ellipse. Used for calculating rotation.
          *
          * @name Phaser.Curves.Ellipse#p0
          * @type {Phaser.Math.Vector2}
@@ -103,7 +105,7 @@ var EllipseCurve = new Class({
         this.p0 = new Vector2(x, y);
 
         /**
-         * [description]
+         * The horizontal radius of the ellipse.
          *
          * @name Phaser.Curves.Ellipse#_xRadius
          * @type {number}
@@ -113,7 +115,7 @@ var EllipseCurve = new Class({
         this._xRadius = xRadius;
 
         /**
-         * [description]
+         * The vertical radius of the ellipse.
          *
          * @name Phaser.Curves.Ellipse#_yRadius
          * @type {number}
@@ -125,7 +127,7 @@ var EllipseCurve = new Class({
         //  Radians
 
         /**
-         * [description]
+         * The starting angle of the ellipse in radians.
          *
          * @name Phaser.Curves.Ellipse#_startAngle
          * @type {number}
@@ -135,7 +137,7 @@ var EllipseCurve = new Class({
         this._startAngle = DegToRad(startAngle);
 
         /**
-         * [description]
+         * The end angle of the ellipse in radians.
          *
          * @name Phaser.Curves.Ellipse#_endAngle
          * @type {number}
@@ -412,7 +414,7 @@ var EllipseCurve = new Class({
     },
 
     /**
-     * [description]
+     * The x coordinate of the center of the ellipse.
      *
      * @name Phaser.Curves.Ellipse#x
      * @type {number}
@@ -433,7 +435,7 @@ var EllipseCurve = new Class({
     },
 
     /**
-     * [description]
+     * The y coordinate of the center of the ellipse.
      *
      * @name Phaser.Curves.Ellipse#y
      * @type {number}
@@ -454,7 +456,7 @@ var EllipseCurve = new Class({
     },
 
     /**
-     * [description]
+     * The horizontal radius of the ellipse.
      *
      * @name Phaser.Curves.Ellipse#xRadius
      * @type {number}
@@ -475,7 +477,7 @@ var EllipseCurve = new Class({
     },
 
     /**
-     * [description]
+     * The vertical radius of the ellipse.
      *
      * @name Phaser.Curves.Ellipse#yRadius
      * @type {number}
@@ -496,7 +498,7 @@ var EllipseCurve = new Class({
     },
 
     /**
-     * [description]
+     * The start angle of the ellipse in degrees.
      *
      * @name Phaser.Curves.Ellipse#startAngle
      * @type {number}
@@ -517,7 +519,7 @@ var EllipseCurve = new Class({
     },
 
     /**
-     * [description]
+     * The end angle of the ellipse in degrees.
      *
      * @name Phaser.Curves.Ellipse#endAngle
      * @type {number}
@@ -538,7 +540,7 @@ var EllipseCurve = new Class({
     },
 
     /**
-     * [description]
+     * `true` if the ellipse rotation is clockwise or `false` if anti-clockwise.
      *
      * @name Phaser.Curves.Ellipse#clockwise
      * @type {boolean}
@@ -559,7 +561,28 @@ var EllipseCurve = new Class({
     },
 
     /**
-     * [description]
+     * The rotation of the ellipse, relative to the center, in degrees.
+     *
+     * @name Phaser.Curves.Ellipse#angle
+     * @type {number}
+     * @since 3.14.0
+     */
+    angle: {
+
+        get: function ()
+        {
+            return RadToDeg(this._rotation);
+        },
+
+        set: function (value)
+        {
+            this._rotation = DegToRad(value);
+        }
+
+    },
+
+    /**
+     * The rotation of the ellipse, relative to the center, in radians.
      *
      * @name Phaser.Curves.Ellipse#rotation
      * @type {number}
@@ -574,13 +597,13 @@ var EllipseCurve = new Class({
 
         set: function (value)
         {
-            this._rotation = DegToRad(value);
+            this._rotation = value;
         }
 
     },
 
     /**
-     * [description]
+     * JSON serialization of the curve.
      *
      * @method Phaser.Curves.Ellipse#toJSON
      * @since 3.0.0
@@ -605,14 +628,14 @@ var EllipseCurve = new Class({
 });
 
 /**
- * [description]
+ * Creates a curve from the provided Ellipse Curve Configuration object.
  *
  * @function Phaser.Curves.Ellipse.fromJSON
  * @since 3.0.0
  *
  * @param {JSONEllipseCurve} data - The JSON object containing this curve data.
  *
- * @return {Phaser.Curves.Ellipse} [description]
+ * @return {Phaser.Curves.Ellipse} The ellipse curve constructed from the configuration object.
  */
 EllipseCurve.fromJSON = function (data)
 {
