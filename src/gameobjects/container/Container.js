@@ -601,8 +601,8 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#getFirst
      * @since 3.4.0
      *
-     * @param {string} [property] - The property to test on each Game Object in the Container.
-     * @param {*} [value] - The value to test the property against. Must pass a strict (`===`) comparison check.
+     * @param {string} property - The property to test on each Game Object in the Container.
+     * @param {*} value - The value to test the property against. Must pass a strict (`===`) comparison check.
      * @param {integer} [startIndex=0] - An optional start index to search from.
      * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
      *
@@ -610,7 +610,7 @@ var Container = new Class({
      */
     getFirst: function (property, value, startIndex, endIndex)
     {
-        return ArrayUtils.GetFirstElement(this.list, property, value, startIndex, endIndex);
+        return ArrayUtils.GetFirst(this.list, property, value, startIndex, endIndex);
     },
 
     /**
