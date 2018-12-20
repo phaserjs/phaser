@@ -271,7 +271,6 @@ var List = new Class({
      * @method Phaser.Structs.List#getFirst
      * @since 3.0.0
      *
-     * @genericUse {T} - [value]
      * @genericUse {T | null} - [$return]
      *
      * @param {string} property - The name of the property to test or a falsey value to have no criterion.
@@ -283,7 +282,7 @@ var List = new Class({
      */
     getFirst: function (property, value, startIndex, endIndex)
     {
-        return ArrayUtils.GetFirstElement(this.list, property, value, startIndex, endIndex);
+        return ArrayUtils.GetFirst(this.list, property, value, startIndex, endIndex);
     },
 
     /**
