@@ -379,14 +379,11 @@ var Size = new Class({
      */
     fitTo: function (width, height)
     {
-        //  Get the aspect ratios in case we need to expand or shrink to fit
         var newRatio = (height === 0) ? 1 : width / height;
 
         var newWidth = width;
         var newHeight = height;
 
-        //  Get the larger aspect ratio of the two.
-        //  If aspect ratio is 1 then no adjustment needed
         if (this.ratioH > newRatio)
         {
             newHeight = width / this.ratioH;
@@ -418,7 +415,6 @@ var Size = new Class({
      */
     envelope: function (width, height)
     {
-        //  Get the aspect ratio in case we need to expand or shrink to fit
         var newRatio = (height === 0) ? 1 : width / height;
 
         var newWidth = width;
@@ -427,12 +423,10 @@ var Size = new Class({
         if (this.ratioH > newRatio)
         {
             newWidth = height * this.ratioH;
-            // target.setSize(source.height * ratio, source.height);
         }
         else if (this.ratioH < newRatio)
         {
             newHeight = width / this.ratioH;
-            // target.setSize(source.width, source.width / ratio);
         }
 
         this._width = newWidth;
