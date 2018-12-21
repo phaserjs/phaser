@@ -915,7 +915,7 @@ var TextureManager = new Class({
      * @param {integer} x - The x coordinate of the pixel within the Texture.
      * @param {integer} y - The y coordinate of the pixel within the Texture.
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(string|integer)} frame - The string or index of the Frame.
+     * @param {(string|integer)} [frame] - The string or index of the Frame.
      *
      * @return {?Phaser.Display.Color} A Color object populated with the color values of the requested pixel,
      * or `null` if the coordinates were out of bounds.
@@ -962,7 +962,7 @@ var TextureManager = new Class({
      * @param {integer} x - The x coordinate of the pixel within the Texture.
      * @param {integer} y - The y coordinate of the pixel within the Texture.
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(string|integer)} frame - The string or index of the Frame.
+     * @param {(string|integer)} [frame] - The string or index of the Frame.
      *
      * @return {integer} A value between 0 and 255, or `null` if the coordinates were out of bounds.
      */
@@ -1006,7 +1006,7 @@ var TextureManager = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object the texture would be set on.
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {(string|integer)} frame - The string or index of the Frame.
+     * @param {(string|integer)} [frame] - The string or index of the Frame.
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object the texture was set on.
      */
