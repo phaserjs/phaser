@@ -355,7 +355,7 @@ var StaticTilemapLayer = new Class({
         this.setAlpha(this.layer.alpha);
         this.setPosition(x, y);
         this.setOrigin();
-        this.setSize(this.layer.tileWidth * this.layer.width, this.layer.tileHeight * this.layer.height);
+        this.setSize(tilemap.tileWidth * this.layer.width, tilemap.tileHeight * this.layer.height);
 
         this.updateVBOData();
 
@@ -596,8 +596,8 @@ var StaticTilemapLayer = new Class({
      * @param {integer} vOffset - The vertex offset.
      * @param {any} tile - The tile being rendered.
      * @param {any} tileset - The tileset being used for rendering.
-     * @param {integer} width - The width of the layer.
-     * @param {integer} height - The height of the layer.
+     * @param {integer} width - The width of the tileset image in pixels.
+     * @param {integer} height - The height of the tileset image in pixels.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera the layer is being rendered with.
      * @param {integer} tilesetIndex - The tileset index.
      *
@@ -612,18 +612,18 @@ var StaticTilemapLayer = new Class({
             return vOffset;
         }
 
-        var u0 = texCoords.x / width;
-        var v0 = texCoords.y / height;
-        var u1 = (texCoords.x + tile.width) / width;
-        var v1 = (texCoords.y + tile.height) / height;
-
-        var matrix = this._tempMatrix;
-
-        var tileWidth = tile.width;
-        var tileHeight = tile.height;
+        var tileWidth = tileset.tileWidth;
+        var tileHeight = tileset.tileHeight;
 
         var halfTileWidth = tileWidth / 2;
         var halfTileHeight = tileHeight / 2;
+
+        var u0 = texCoords.x / width;
+        var v0 = texCoords.y / height;
+        var u1 = (texCoords.x + tileWidth) / width;
+        var v1 = (texCoords.y + tileHeight) / height;
+
+        var matrix = this._tempMatrix;
 
         var x = -halfTileWidth;
         var y = -halfTileHeight;
@@ -631,13 +631,13 @@ var StaticTilemapLayer = new Class({
         if (tile.flipX)
         {
             tileWidth *= -1;
-            x += tile.width;
+            x += tileset.tileWidth;
         }
 
         if (tile.flipY)
         {
             tileHeight *= -1;
-            y += tile.height;
+            y += tileset.tileHeight;
         }
 
         var xw = x + tileWidth;
@@ -661,17 +661,17 @@ var StaticTilemapLayer = new Class({
 
         if (camera.roundPixels)
         {
-            tx0 |= 0;
-            ty0 |= 0;
+            tx0 = Math.round(tx0);
+            ty0 = Math.round(ty0);
 
-            tx1 |= 0;
-            ty1 |= 0;
+            tx1 = Math.round(tx1);
+            ty1 = Math.round(ty1);
 
-            tx2 |= 0;
-            ty2 |= 0;
+            tx2 = Math.round(tx2);
+            ty2 = Math.round(ty2);
 
-            tx3 |= 0;
-            ty3 |= 0;
+            tx3 = Math.round(tx3);
+            ty3 = Math.round(ty3);
         }
 
         var vertexViewF32 = this.vertexViewF32[tilesetIndex];

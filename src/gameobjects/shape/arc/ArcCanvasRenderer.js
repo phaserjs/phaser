@@ -61,6 +61,9 @@ var ArcCanvasRenderer = function (renderer, src, interpolationPercentage, camera
 
             ctx.stroke();
         }
+
+        //  Restore the context saved in SetTransform
+        ctx.restore();
     }
 };
 

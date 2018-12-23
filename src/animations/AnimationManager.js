@@ -155,7 +155,34 @@ var AnimationManager = new Class({
     },
 
     /**
+     * Checks to see if the given key is already in use within the Animation Manager or not.
+     * 
+     * Animations are global. Keys created in one scene can be used from any other Scene in your game. They are not Scene specific.
+     *
+     * @method Phaser.Animations.AnimationManager#exists
+     * @since 3.16.0
+     *
+     * @param {string} key - The key of the Animation to check.
+     *
+     * @return {boolean} `true` if the Animation already exists in the Animation Manager, or `false` if the key is available.
+     */
+    exists: function (key)
+    {
+        return this.anims.has(key);
+    },
+
+    /**
      * Creates a new Animation and adds it to the Animation Manager.
+     * 
+     * Animations are global. Once created, you can use them in any Scene in your game. They are not Scene specific.
+     * 
+     * If an invalid key is given this method will return `false`.
+     * 
+     * If you pass the key of an animation that already exists in the Animation Manager, that animation will be returned.
+     * 
+     * A brand new animation is only created if the key is valid and not already in use.
+     * 
+     * If you wish to re-use an existing key, call `AnimationManager.remove` first, then this method.
      *
      * @method Phaser.Animations.AnimationManager#create
      * @fires AddAnimationEvent
@@ -163,23 +190,27 @@ var AnimationManager = new Class({
      *
      * @param {AnimationConfig} config - The configuration settings for the Animation.
      *
-     * @return {Phaser.Animations.Animation} The Animation that was created.
+     * @return {(Phaser.Animations.Animation|false)} The Animation that was created, or `false` is the key is already in use.
      */
     create: function (config)
     {
         var key = config.key;
 
-        if (!key || this.anims.has(key))
+        var anim = false;
+
+        if (key)
         {
-            console.warn('Invalid Animation Key, or Key already in use: ' + key);
-            return;
+            anim = this.get(key);
+
+            if (!anim)
+            {
+                anim = new Animation(this, key, config);
+
+                this.anims.set(key, anim);
+        
+                this.emit('add', key, anim);
+            }
         }
-
-        var anim = new Animation(this, key, config);
-
-        this.anims.set(key, anim);
-
-        this.emit('add', key, anim);
 
         return anim;
     },
@@ -421,7 +452,7 @@ var AnimationManager = new Class({
      * @param {string} key - The key of the animation to load.
      * @param {(string|integer)} [startFrame] - The name of a start frame to set on the loaded animation.
      *
-     * @return {Phaser.GameObjects.GameObject} [description]
+     * @return {Phaser.GameObjects.GameObject} The Game Object with the animation loaded into it.
      */
     load: function (child, key, startFrame)
     {
@@ -576,7 +607,7 @@ var AnimationManager = new Class({
     },
 
     /**
-     * [description]
+     * Get the animation data as javascript object by giving key, or get the data of all animations as array of objects, if key wasn't provided.
      *
      * @method Phaser.Animations.AnimationManager#toJSON
      * @since 3.0.0
@@ -608,7 +639,8 @@ var AnimationManager = new Class({
     },
 
     /**
-     * [description]
+     * Destroy this Animation Manager and clean up animation definitions and references to other objects.
+     * This method should not be called directly. It will be called automatically as a response to a `destroy` event from the Phaser.Game instance.
      *
      * @method Phaser.Animations.AnimationManager#destroy
      * @since 3.0.0

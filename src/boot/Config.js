@@ -10,8 +10,7 @@ var Device = require('../device');
 var GetFastValue = require('../utils/object/GetFastValue');
 var GetValue = require('../utils/object/GetValue');
 var IsPlainObject = require('../utils/object/IsPlainObject');
-var MATH = require('../math/const');
-var RND = require('../math/random-data-generator/RandomDataGenerator');
+var PhaserMath = require('../math/');
 var NOOP = require('../utils/NOOP');
 var DefaultPlugins = require('../plugins/DefaultPlugins');
 var ValueToColor = require('../display/color/ValueToColor');
@@ -31,15 +30,13 @@ var ValueToColor = require('../display/color/ValueToColor');
 /**
  * Config object containing various sound settings.
  *
- * @typedef {object} SoundConfig
+ * @typedef {object} AudioConfig
  *
- * @property {boolean} [mute=false] - Boolean indicating whether the sound should be muted or not.
- * @property {number} [volume=1] - A value between 0 (silence) and 1 (full volume).
- * @property {number} [rate=1] - Defines the speed at which the sound should be played.
- * @property {number} [detune=0] - Represents detuning of sound in [cents](https://en.wikipedia.org/wiki/Cent_%28music%29).
- * @property {number} [seek=0] - Position of playback for this sound, in seconds.
- * @property {boolean} [loop=false] - Whether or not the sound or current sound marker should loop.
- * @property {number} [delay=0] - Time, in seconds, that should elapse before the sound actually starts its playback.
+ * @property {boolean} [disableWebAudio=false] - Use HTML5 Audio instead of Web Audio.
+ * @property {AudioContext} [context] - An existing Web Audio context.
+ * @property {boolean} [noAudio=false] - Disable all audio output.
+ *
+ * @see Phaser.Sound.SoundManagerCreator
  */
 
 /**
@@ -50,19 +47,21 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {(boolean|TouchInputConfig)} [touch=true] - Touch input configuration. `true` uses the default configuration and `false` disables touch input.
  * @property {(boolean|GamepadInputConfig)} [gamepad=false] - Gamepad input configuration. `true` enables gamepad input.
  * @property {integer} [activePointers=1] - The maximum number of touch pointers. See {@link Phaser.Input.InputManager#pointers}.
+ * @property {number} [smoothFactor=0] - The smoothing factor to apply during Pointer movement. See {@link Phaser.Input.Pointer#smoothFactor}.
  */
 
 /**
  * @typedef {object} MouseInputConfig
  *
  * @property {*} [target=null] - Where the Mouse Manager listens for mouse input events. The default is the game canvas.
- * @property {boolean} [capture=true] - Whether mouse input events have preventDefault() called on them.
+ * @property {boolean} [capture=true] - Whether mouse input events have `preventDefault` called on them.
  */
 
 /**
  * @typedef {object} KeyboardInputConfig
  *
  * @property {*} [target=window] - Where the Keyboard Manager listens for keyboard input events.
+ * @property {?integer} [capture] - `preventDefault` will be called on every non-modified key which has a key code in this array. By default it is empty.
  */
 
 /**
@@ -179,6 +178,7 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {boolean} [start] - Whether the plugin should be started automatically.
  * @property {string} [systemKey] - For a scene plugin, add the plugin to the scene's systems object under this key (`this.sys.KEY`, from the scene).
  * @property {string} [sceneKey] - For a scene plugin, add the plugin to the scene object under this key (`this.KEY`, from the scene).
+ * @property {string} [mapping] - If this plugin is to be injected into the Scene Systems, this is the property key map used.
  * @property {*} [data] - Arbitrary data passed to the plugin's init() method.
  *
  * @example
@@ -356,6 +356,11 @@ var Config = new Class({
         this.canvasStyle = GetValue(config, 'canvasStyle', null);
 
         /**
+         * @const {boolean} Phaser.Boot.Config#customEnvironment - Is Phaser running under a custom (non-native web) environment? If so, set this to `true` to skip internal Feature detection. If `true` the `renderType` cannot be left as `AUTO`.
+         */
+        this.customEnvironment = GetValue(config, 'customEnvironment', false);
+
+        /**
          * @const {?object} Phaser.Boot.Config#sceneConfig - The default Scene configuration object.
          */
         this.sceneConfig = GetValue(config, 'scene', null);
@@ -365,9 +370,7 @@ var Config = new Class({
          */
         this.seed = GetValue(config, 'seed', [ (Date.now() * Math.random()).toString() ]);
 
-        MATH.RND = new RND();
-
-        MATH.RND.init(this.seed);
+        PhaserMath.RND = new PhaserMath.RandomDataGenerator(this.seed);
 
         /**
          * @const {string} Phaser.Boot.Config#gameTitle - The title of the game.
@@ -414,6 +417,11 @@ var Config = new Class({
         this.inputKeyboardEventTarget = GetValue(config, 'input.keyboard.target', window);
 
         /**
+         * @const {?integer[]} Phaser.Boot.Config#inputKeyboardCapture - `preventDefault` will be called on every non-modified key which has a key code in this array. By default, it is empty.
+         */
+        this.inputKeyboardCapture = GetValue(config, 'input.keyboard.capture', []);
+
+        /**
          * @const {(boolean|object)} Phaser.Boot.Config#inputMouse - Enable the Mouse Plugin. This can be disabled in games that don't need mouse input.
          */
         this.inputMouse = GetValue(config, 'input.mouse', true);
@@ -449,6 +457,11 @@ var Config = new Class({
         this.inputActivePointers = GetValue(config, 'input.activePointers', 1);
 
         /**
+         * @const {integer} Phaser.Boot.Config#inputSmoothFactor - The smoothing factor to apply during Pointer movement. See {@link Phaser.Input.Pointer#smoothFactor}.
+         */
+        this.inputSmoothFactor = GetValue(config, 'input.smoothFactor', 0);
+
+        /**
          * @const {boolean} Phaser.Boot.Config#inputGamepad - Enable the Gamepad Plugin. This can be disabled in games that don't need gamepad input.
          */
         this.inputGamepad = GetValue(config, 'input.gamepad', false);
@@ -464,7 +477,7 @@ var Config = new Class({
         this.disableContextMenu = GetValue(config, 'disableContextMenu', false);
 
         /**
-         * @const {SoundConfig} Phaser.Boot.Config#audio - The Audio Configuration object.
+         * @const {AudioConfig} Phaser.Boot.Config#audio - The Audio Configuration object.
          */
         this.audio = GetValue(config, 'audio');
 
@@ -569,7 +582,7 @@ var Config = new Class({
         var bgc = GetValue(config, 'backgroundColor', 0);
 
         /**
-         * @const {Phaser.Display.Color} Phaser.Boot.Config#backgroundColor - The background color of the game canvas. The default is black.
+         * @const {Phaser.Display.Color} Phaser.Boot.Config#backgroundColor - The background color of the game canvas. The default is black. This value is ignored if `transparent` is set to `true`.
          */
         this.backgroundColor = ValueToColor(bgc);
 

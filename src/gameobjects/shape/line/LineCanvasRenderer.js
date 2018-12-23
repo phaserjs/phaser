@@ -42,6 +42,9 @@ var LineCanvasRenderer = function (renderer, src, interpolationPercentage, camer
     
             ctx.stroke();
         }
+
+        //  Restore the context saved in SetTransform
+        ctx.restore();
     }
 };
 

@@ -7,8 +7,10 @@
 var Class = require('../utils/Class');
 var CONST = require('./const');
 var NOOP = require('../utils/NOOP');
-var Vec2 = require('../math/Vector2');
 var Rectangle = require('../geom/rectangle/Rectangle');
+var Size = require('../structs/Size');
+var SnapFloor = require('../math/snap/SnapFloor');
+var Vec2 = require('../math/Vector2');
 
 /**
  * @classdesc
@@ -41,19 +43,25 @@ var ScaleManager = new Class({
         this.scaleMode = 0;
 
         //  The base game size, as requested in the game config
-        this.width = 0;
-        this.height = 0;
+        this.gameSize = new Size();
 
         //  The canvas size, which is the base game size * zoom * resolution
-        this.canvasWidth = 0;
-        this.canvasHeight = 0;
+        this.canvasSize = new Size();
+
+        // this.width = 0;
+        // this.height = 0;
+
+        // this.canvasWidth = 0;
+        // this.canvasHeight = 0;
 
         this.resolution = 1;
         this.zoom = 1;
 
         //  The actual displayed canvas size (after refactoring in CSS depending on the scale mode, parent, etc)
-        this.displayWidth = 0;
-        this.displayHeight = 0;
+        this.displaySize = new Size();
+
+        // this.displayWidth = 0;
+        // this.displayHeight = 0;
 
         //  The scale factor between the base game size and the displayed size
         this.scale = new Vec2(1);
@@ -70,6 +78,8 @@ var ScaleManager = new Class({
         this.canExpandParent = false;
 
         this.allowFullScreen = false;
+
+        this.snap = new Vec2(1, 1);
 
         this.listeners = {
 

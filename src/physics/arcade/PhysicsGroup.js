@@ -127,7 +127,7 @@ var PhysicsGroup = new Class({
             config = {
                 createCallback: this.createCallbackHandler,
                 removeCallback: this.removeCallbackHandler
-            }
+            };
         }
 
         /**
@@ -154,7 +154,7 @@ var PhysicsGroup = new Class({
          *
          * @name Phaser.Physics.Arcade.Group#physicsType
          * @type {integer}
-         * @default DYNAMIC_BODY
+         * @default Phaser.Physics.Arcade.DYNAMIC_BODY
          * @since 3.0.0
          */
         this.physicsType = CONST.DYNAMIC_BODY;

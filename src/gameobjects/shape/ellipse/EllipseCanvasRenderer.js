@@ -70,6 +70,9 @@ var EllipseCanvasRenderer = function (renderer, src, interpolationPercentage, ca
 
             ctx.stroke();
         }
+
+        //  Restore the context saved in SetTransform
+        ctx.restore();
     }
 };
 

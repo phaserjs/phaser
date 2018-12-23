@@ -6,22 +6,22 @@
 
 var GetAspectRatio = require('./GetAspectRatio');
 
-//  Fits the target rectangle into the source rectangle.
-//  Preserves aspect ratio.
-//  Scales and centers the target rectangle to the source rectangle
-
 /**
- * [description]
+ * Adjusts the target rectangle, changing its width, height and position,
+ * so that it fits inside the area of the source rectangle, while maintaining its original
+ * aspect ratio.
+ * 
+ * Unlike the `FitOutside` function, there may be some space inside the source area not covered.
  *
  * @function Phaser.Geom.Rectangle.FitInside
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Rectangle} O - [target,$return]
  *
- * @param {Phaser.Geom.Rectangle} target - [description]
- * @param {Phaser.Geom.Rectangle} source - [description]
+ * @param {Phaser.Geom.Rectangle} target - The target rectangle to adjust.
+ * @param {Phaser.Geom.Rectangle} source - The source rectangle to envlope the target in.
  *
- * @return {Phaser.Geom.Rectangle} [description]
+ * @return {Phaser.Geom.Rectangle} The modified target rectangle instance.
  */
 var FitInside = function (target, source)
 {

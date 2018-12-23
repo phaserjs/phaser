@@ -19,8 +19,8 @@ var Perimeter = require('./Perimeter');
  * @generic {Phaser.Geom.Point[]} O - [out,$return]
  *
  * @param {Phaser.Geom.Rectangle} rectangle - The Rectangle object to get the points from.
- * @param {number} step - [description]
- * @param {integer} quantity - [description]
+ * @param {number} step - Step between points. Used to calculate the number of points to return when quantity is falsy. Ignored if quantity is positive.
+ * @param {integer} quantity - The number of evenly spaced points from the rectangles perimeter to return. If falsy, step param will be used to calculate the number of points.
  * @param {(array|Phaser.Geom.Point[])} [out] - An optional array to store the points in.
  *
  * @return {(array|Phaser.Geom.Point[])} An array of Points from the perimeter of the rectangle.

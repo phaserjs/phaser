@@ -2012,13 +2012,9 @@ var ParticleEmitter = new Class({
 
         for (var i = 0; i < count; i++)
         {
-            var particle;
+            var particle = dead.pop();
 
-            if (dead.length > 0)
-            {
-                particle = dead.pop();
-            }
-            else
+            if (!particle)
             {
                 particle = new this.particleClass(this);
             }
@@ -2073,47 +2069,49 @@ var ParticleEmitter = new Class({
         var processors = this.manager.getProcessors();
 
         var particles = this.alive;
+        var dead = this.dead;
+
+        var i = 0;
+        var rip = [];
         var length = particles.length;
 
-        for (var index = 0; index < length; index++)
+        for (i = 0; i < length; i++)
         {
-            var particle = particles[index];
+            var particle = particles[i];
 
-            //  update returns `true` if the particle is now dead (lifeStep < 0)
+            //  update returns `true` if the particle is now dead (lifeCurrent <= 0)
             if (particle.update(delta, step, processors))
             {
-                //  Moves the dead particle to the end of the particles array (ready for splicing out later)
-                var last = particles[length - 1];
-
-                particles[length - 1] = particle;
-                particles[index] = last;
-
-                index -= 1;
-                length -= 1;
+                rip.push({ index: i, particle: particle });
             }
         }
 
         //  Move dead particles to the dead array
-        var deadLength = particles.length - length;
+        length = rip.length;
 
-        if (deadLength > 0)
+        if (length > 0)
         {
-            var rip = particles.splice(particles.length - deadLength, deadLength);
-
             var deathCallback = this.deathCallback;
             var deathCallbackScope = this.deathCallbackScope;
 
-            if (deathCallback)
+            for (i = length - 1; i >= 0; i--)
             {
-                for (var i = 0; i < rip.length; i++)
+                var entry = rip[i];
+
+                //  Remove from particles array
+                particles.splice(entry.index, 1);
+
+                //  Add to dead array
+                dead.push(entry.particle);
+
+                //  Callback
+                if (deathCallback)
                 {
-                    deathCallback.call(deathCallbackScope, rip[i]);
+                    deathCallback.call(deathCallbackScope, entry.particle);
                 }
+
+                entry.particle.resetPosition();
             }
-
-            this.dead = this.dead.concat(rip);
-
-            StableSort.inplace(particles, this.indexSortCallback);
         }
 
         if (!this.on)
@@ -2153,22 +2151,6 @@ var ParticleEmitter = new Class({
     depthSortCallback: function (a, b)
     {
         return a.y - b.y;
-    },
-
-    /**
-     * Calculates the difference of two particles, for sorting them by index.
-     *
-     * @method Phaser.GameObjects.Particles.ParticleEmitter#indexSortCallback
-     * @since 3.0.0
-     *
-     * @param {object} a - The first particle.
-     * @param {object} b - The second particle.
-     *
-     * @return {integer} The difference of a and b's `index` properties.
-     */
-    indexSortCallback: function (a, b)
-    {
-        return a.index - b.index;
     }
 
 });

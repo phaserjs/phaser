@@ -99,6 +99,9 @@ var IsoTriangleCanvasRenderer = function (renderer, src, interpolationPercentage
 
             ctx.fill();
         }
+
+        //  Restore the context saved in SetTransform
+        ctx.restore();
     }
 };
 

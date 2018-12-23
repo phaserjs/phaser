@@ -60,6 +60,9 @@ var TriangleCanvasRenderer = function (renderer, src, interpolationPercentage, c
 
             ctx.stroke();
         }
+
+        //  Restore the context saved in SetTransform
+        ctx.restore();
     }
 };
 

@@ -61,8 +61,8 @@ var GameObject = new Class({
          * Phaser itself will never modify this value, although plugins may do so.
          * 
          * Use this property to track the state of a Game Object during its lifetime. For example, it could move from
-         * a state of 'moving', to 'attacking', to 'dead'. The state value should typically be an integer (ideally mapped to a constant
-         * in your game code), but could also be a string, or any other data-type. It is recommended to keep it light and simple.
+         * a state of 'moving', to 'attacking', to 'dead'. The state value should be an integer (ideally mapped to a constant
+         * in your game code), or a string. These are recommended to keep it light and simple, with fast comparisons.
          * If you need to store complex data about your Game Object, look at using the Data Component instead.
          *
          * @name Phaser.GameObjects.GameObject#state
@@ -223,6 +223,30 @@ var GameObject = new Class({
     setName: function (value)
     {
         this.name = value;
+
+        return this;
+    },
+
+    /**
+     * Sets the current state of this Game Object.
+     * 
+     * Phaser itself will never modify the State of a Game Object, although plugins may do so.
+     * 
+     * For example, a Game Object could change from a state of 'moving', to 'attacking', to 'dead'.
+     * The state value should typically be an integer (ideally mapped to a constant
+     * in your game code), but could also be a string. It is recommended to keep it light and simple.
+     * If you need to store complex data about your Game Object, look at using the Data Component instead.
+     *
+     * @method Phaser.GameObjects.GameObject#setState
+     * @since 3.16.0
+     *
+     * @param {(integer|string)} value - The state of the Game Object.
+     *
+     * @return {this} This GameObject.
+     */
+    setState: function (value)
+    {
+        this.state = value;
 
         return this;
     },

@@ -90,7 +90,7 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPer
                 src,
                 texture,
                 texture.width, texture.height,
-                (tw + x + tile.pixelX) * sx, (th + y + tile.pixelY) * sy,
+                x + ((tw + tile.pixelX) * sx), y + ((th + tile.pixelY) * sy),
                 tile.width, tile.height,
                 sx, sy,
                 tile.rotation,

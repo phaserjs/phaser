@@ -329,17 +329,6 @@ var Game = new Class({
          */
         this.hasFocus = false;
 
-        /**
-         * Is the mouse pointer currently over the game canvas or not?
-         * This is modified by the VisibilityHandler.
-         *
-         * @name Phaser.Game#isOver
-         * @type {boolean}
-         * @readonly
-         * @since 3.10.0
-         */
-        this.isOver = true;
-
         //  Wait for the DOM Ready event, then call boot.
         DOMContentLoaded(this.boot.bind(this));
     },
@@ -741,6 +730,34 @@ var Game = new Class({
         this.scene.resize(width, height);
 
         this.events.emit('resize', width, height);
+    },
+
+    /**
+     * Returns the current game frame.
+     * When the game starts running, the frame is incremented every time Request Animation Frame, or Set Timeout, fires.
+     *
+     * @method Phaser.Game#getFrame
+     * @since 3.16.0
+     * 
+     * @return {number} The current game frame.
+     */
+    getFrame: function ()
+    {
+        return this.loop.frame;
+    },
+
+    /**
+     * Returns the current game timestamp.
+     * When the game starts running, the frame is incremented every time Request Animation Frame, or Set Timeout, fires.
+     *
+     * @method Phaser.Game#getTime
+     * @since 3.16.0
+     * 
+     * @return {number} The current game timestamp.
+     */
+    getTime: function ()
+    {
+        return this.loop.frame.time;
     },
 
     /**

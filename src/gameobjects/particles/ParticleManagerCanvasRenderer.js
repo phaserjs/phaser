@@ -99,8 +99,8 @@ var ParticleManagerCanvasRenderer = function (renderer, emitterManager, interpol
 
             if (roundPixels)
             {
-                x |= 0;
-                y |= 0;
+                x = Math.round(x);
+                y = Math.round(y);
             }
 
             ctx.drawImage(frame.source.image, cd.x, cd.y, cd.width, cd.height, x, y, cd.width, cd.height);

@@ -13,11 +13,11 @@
  * @property {boolean} video - Is this a video ad?
  */
 
-var AdInstance = function (instance, video)
+var AdInstance = function (placementID, instance, video)
 {
     return {
         instance: instance,
-        placementID: instance.getPlacementID(),
+        placementID: placementID,
         shown: false,
         video: video
     };

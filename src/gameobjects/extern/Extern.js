@@ -61,14 +61,16 @@ var Extern = new Class({
         GameObject.call(this, scene, 'Extern');
     },
 
-    preUpdate: function (time, delta)
+    preUpdate: function ()
     {
         //  override this!
+        //  Arguments: time, delta
     },
 
-    render: function (renderer, camera, calcMatrix)
+    render: function ()
     {
         //  override this!
+        //  Arguments: renderer, camera, calcMatrix
     }
      
 });

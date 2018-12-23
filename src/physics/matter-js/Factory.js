@@ -163,9 +163,9 @@ var Factory = new Class({
      * @param {number} y - The Y coordinate of the center of the Body.
      * @param {array} vertexSets - [description]
      * @param {object} options - [description]
-     * @param {boolean} flagInternal - [description]
-     * @param {boolean} removeCollinear - [description]
-     * @param {number} minimumArea - [description]
+     * @param {boolean} flagInternal - Flag internal edges (coincident part edges)
+     * @param {boolean} removeCollinear - Whether Matter.js will discard collinear edges (to improve performance).
+     * @param {number} minimumArea - During decomposition discard parts that have an area less than this
      *
      * @return {MatterJS.Body} A Matter JS Body.
      */
@@ -261,7 +261,7 @@ var Factory = new Class({
      * @param {number} rows - The number of rows in the pyramid.
      * @param {number} columnGap - The distance between each column.
      * @param {number} rowGap - The distance between each row.
-     * @param {function} callback - [description]
+     * @param {function} callback - The callback function to be invoked.
      *
      * @return {MatterJS.Composite} A Matter JS Composite pyramid.
      */
@@ -372,7 +372,7 @@ var Factory = new Class({
      * @param {number} columnGap - The distance between each column.
      * @param {number} rowGap - The distance between each row.
      * @param {boolean} crossBrace - [description]
-     * @param {number} particleRadius - [description]
+     * @param {number} particleRadius - The radius of this circlular composite.
      * @param {object} particleOptions - [description]
      * @param {object} constraintOptions - [description]
      *
@@ -412,10 +412,10 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#spring
      * @since 3.0.0
      *
-     * @param {MatterJS.Body} bodyA - [description]
-     * @param {MatterJS.Body} bodyB - [description]
-     * @param {number} length - [description]
-     * @param {number} [stiffness=1] - [description]
+     * @param {MatterJS.Body} bodyA - The first possible `Body` that this constraint is attached to.
+     * @param {MatterJS.Body} bodyB - The second possible `Body` that this constraint is attached to.
+     * @param {number} length - A Number that specifies the target resting length of the constraint. It is calculated automatically in `Constraint.create` from initial positions of the `constraint.bodyA` and `constraint.bodyB`
+     * @param {number} [stiffness=1] - A Number that specifies the stiffness of the constraint, i.e. the rate at which it returns to its resting `constraint.length`. A value of `1` means the constraint should be very stiff. A value of `0.2` means the constraint acts as a soft spring.
      * @param {object} [options={}] - [description]
      *
      * @return {MatterJS.Constraint} A Matter JS Constraint.

@@ -23,6 +23,7 @@ var Vector2 = require('../../math/Vector2');
  * @property {boolean} [positionOnPath=false] - Whether to position the PathFollower on the Path using its path offset.
  * @property {boolean} [rotateToPath=false] - Should the PathFollower automatically rotate to point in the direction of the Path?
  * @property {number} [rotationOffset=0] - If the PathFollower is rotating to match the Path, this value is added to the rotation value. This allows you to rotate objects to a path but control the angle of the rotation as well.
+ * @property {number} [startAt=0] - Current start position of the path follow, between 0 and 1.
  */
 
 /**
@@ -252,6 +253,22 @@ var PathFollower = new Class({
 
         this.rotateToPath = GetBoolean(config, 'rotateToPath', false);
         this.pathRotationOffset = GetValue(config, 'rotationOffset', 0);
+
+        //  This works, but it's not an ideal way of doing it as the follower jumps position
+        var seek = GetValue(config, 'startAt', startAt);
+
+        if (seek)
+        {
+            config.onStart = function (tween)
+            {
+                var tweenData = tween.data[0];
+                tweenData.progress = seek;
+                tweenData.elapsed = tweenData.duration * seek;
+                var v = tweenData.ease(tweenData.progress);
+                tweenData.current = tweenData.start + ((tweenData.end - tweenData.start) * v);
+                tweenData.target[tweenData.key] = tweenData.current;
+            };
+        }
 
         this.pathTween = this.scene.sys.tweens.addCounter(config);
 

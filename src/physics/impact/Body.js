@@ -22,11 +22,11 @@ var UpdateMotion = require('./UpdateMotion');
  *
  * @property {string} name - [description]
  * @property {object} size - [description]
- * @property {object} pos - [description]
- * @property {object} vel - [description]
- * @property {object} accel - [description]
- * @property {object} friction - [description]
- * @property {object} maxVel - [description]
+ * @property {object} pos - The entity's position in the game world.
+ * @property {object} vel - Current velocity in pixels per second.
+ * @property {object} accel - Current acceleration to be added to the entity's velocity per second. E.g. an entity with a `vel.x` of 0 and `accel.x` of 10 will have a `vel.x` of 100 ten seconds later.
+ * @property {object} friction - Deceleration to be subtracted from the entity's velocity per second. Only applies if `accel` is 0.
+ * @property {object} maxVel - The maximum velocity a body can move.
  * @property {number} gravityFactor - [description]
  * @property {number} bounciness - [description]
  * @property {number} minBounceVelocity - [description]
@@ -461,7 +461,7 @@ var Body = new Class({
     },
 
     /**
-     * [description]
+     * Determines whether the body collides with the `other` one or not.
      *
      * @method Phaser.Physics.Impact.Body#touches
      * @since 3.0.0

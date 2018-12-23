@@ -210,7 +210,7 @@ var ScenePlugin = new Class({
      *
      * @method Phaser.Scenes.ScenePlugin#restart
      * @since 3.4.0
-     * 
+     *
      * @param {object} [data] - The Scene data.
      *
      * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
@@ -227,7 +227,7 @@ var ScenePlugin = new Class({
 
     /**
      * @typedef {object} Phaser.Scenes.ScenePlugin.SceneTransitionConfig
-     * 
+     *
      * @property {string} target - The Scene key to transition to.
      * @property {integer} [duration=1000] - The duration, in ms, for the transition to last.
      * @property {boolean} [sleep=false] - Will the Scene responsible for the transition be sent to sleep on completion (`true`), or stopped? (`false`)
@@ -241,24 +241,24 @@ var ScenePlugin = new Class({
 
     /**
      * This will start a transition from the current Scene to the target Scene given.
-     * 
+     *
      * The transition will last for the duration specified in milliseconds.
-     * 
+     *
      * You can have the target Scene moved above or below this one in the display list.
-     * 
+     *
      * You can specify an update callback. This callback will be invoked _every frame_ for the duration
      * of the transition.
      *
      * This Scene can either be sent to sleep at the end of the transition, or stopped. The default is to stop.
-     * 
+     *
      * There are also 5 transition related events: This scene will emit the event `transitionto` when
      * the transition begins, which is typically the frame after calling this method.
-     * 
+     *
      * The target Scene will emit the event `transitioninit` when that Scene's `init` method is called.
      * It will then emit the event `transitionstart` when its `create` method is called.
      * If the Scene was sleeping and has been woken up, it will emit the event `transitionwake` instead of these two,
      * as the Scenes `init` and `create` methods are not invoked when a Scene wakes up.
-     * 
+     *
      * When the duration of the transition has elapsed it will emit the event `transitioncomplete`.
      * These events are cleared of all listeners when the Scene shuts down, but not if it is sent to sleep.
      *
@@ -268,7 +268,7 @@ var ScenePlugin = new Class({
      * this Scenes update loop to stop, then the transition will also pause for that duration. There are
      * checks in place to prevent you accidentally stopping a transitioning Scene but if you've got code to
      * override this understand that until the target Scene completes it might never be unlocked for input events.
-     * 
+     *
      * @method Phaser.Scenes.ScenePlugin#transition
      * @since 3.5.0
      *
@@ -443,12 +443,13 @@ var ScenePlugin = new Class({
      * @param {string} key - The Scene key.
      * @param {(Phaser.Scene|Phaser.Scenes.Settings.Config|function)} sceneConfig - The config for the Scene.
      * @param {boolean} autoStart - Whether to start the Scene after it's added.
+     * @param {object} [data] - Optional data object. This will be set as Scene.settings.data and passed to `Scene.init`.
      *
      * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
      */
-    add: function (key, sceneConfig, autoStart)
+    add: function (key, sceneConfig, autoStart, data)
     {
-        this.manager.add(key, sceneConfig, autoStart);
+        this.manager.add(key, sceneConfig, autoStart, data);
 
         return this;
     },
@@ -476,7 +477,7 @@ var ScenePlugin = new Class({
 
     /**
      * Runs the given Scene, but does not change the state of this Scene.
-     * 
+     *
      * If the given Scene is paused, it will resume it. If sleeping, it will wake it.
      * If not running at all, it will be started.
      *
