@@ -711,7 +711,7 @@ var List = new Class({
      *
      * @name Phaser.Structs.List#first
      * @genericUse {T} - [$type]
-     * @type {*} The first item in the List or `null` for an empty List.
+     * @type {*}
      * @readonly
      * @since 3.0.0
      */
@@ -738,7 +738,7 @@ var List = new Class({
      *
      * @name Phaser.Structs.List#last
      * @genericUse {T} - [$type]
-     * @type {*} The last item in the List, or `null` for an empty List.
+     * @type {*}
      * @readonly
      * @since 3.0.0
      */
@@ -767,7 +767,7 @@ var List = new Class({
      *
      * @name Phaser.Structs.List#next
      * @genericUse {T} - [$type]
-     * @type {*} The next item in the List, or `null` if the entire List has been traversed.
+     * @type {*}
      * @readonly
      * @since 3.0.0
      */
@@ -796,7 +796,7 @@ var List = new Class({
      *
      * @name Phaser.Structs.List#previous
      * @genericUse {T} - [$type]
-     * @type {*} The previous item in the List, or `null` if the entire List has been traversed.
+     * @type {*}
      * @readonly
      * @since 3.0.0
      */
