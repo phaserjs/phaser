@@ -248,7 +248,7 @@ var Leaderboard = new Class({
 
         var _this = this;
 
-        this.ref.getEntriesAsync().then(function (entries)
+        this.ref.getEntriesAsync(count, offset).then(function (entries)
         {
             _this.scores = [];
 
