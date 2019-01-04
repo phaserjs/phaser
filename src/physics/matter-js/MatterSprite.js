@@ -89,7 +89,7 @@ var MatterSprite = new Class({
 
     function MatterSprite (world, x, y, texture, frame, options)
     {
-        GameObject.call(this, world.scene, 'Image');
+        GameObject.call(this, world.scene, 'Sprite');
 
         this.anims = new AnimationComponent(this);
 
