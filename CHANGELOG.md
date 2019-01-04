@@ -19,6 +19,7 @@
 * Showing an ad will emit the `adfinished` event when the ad is closed, previously this event was called `showad` but the new name better reflects what has happened.
 * The Facebook Plugin is now available in the `Phaser.Scene` class template under the `facebook` property (thanks @bryanwood)
 * Fixed the `Leaderboard.getScores` method to now take the arguments into account. Fix #4271 (thanks @Oramy)
+* Fixed an API validation error in the `chooseContext` method. Fix #4248 (thanks @yadurajiv)
 
 ### Keyboard Input - New Features
 

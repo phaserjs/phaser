@@ -1322,7 +1322,7 @@ var FacebookInstantGamesPlugin = new Class({
      */
     chooseContext: function (options)
     {
-        if (!this.checkAPI('contextChoseAsync'))
+        if (!this.checkAPI('contextChooseAsync'))
         {
             return this;
         }
