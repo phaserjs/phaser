@@ -10,10 +10,9 @@ var NOOP = require('../utils/NOOP');
 var StableSort = require('../utils/array/StableSort');
 
 /**
- * @callback EachListCallback
- * @generic I - [item]
+ * @callback EachListCallback<I>
  *
- * @param {*} item - The item which is currently being processed.
+ * @param {I} item - The item which is currently being processed.
  * @param {...*} [args] - Additional arguments that will be passed to the callback, after the child.
  */
 
@@ -271,7 +270,6 @@ var List = new Class({
      * @method Phaser.Structs.List#getFirst
      * @since 3.0.0
      *
-     * @genericUse {T} - [value]
      * @genericUse {T | null} - [$return]
      *
      * @param {string} property - The name of the property to test or a falsey value to have no criterion.

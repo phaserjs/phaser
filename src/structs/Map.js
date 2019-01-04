@@ -7,11 +7,10 @@
 var Class = require('../utils/Class');
 
 /**
- * @callback EachMapCallback
- * @generic E - [entry]
+ * @callback EachMapCallback<E>
  *
  * @param {string} key - The key of the Map entry.
- * @param {*} entry - The value of the Map entry.
+ * @param {E} entry - The value of the Map entry.
  *
  * @return {?boolean} The callback result.
  */
