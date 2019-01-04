@@ -325,6 +325,16 @@ var InputPlugin = new Class({
         this._drag = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: [], 10: [] };
 
         /**
+         * A array containing the dragStates, for this Scene, index by the Pointer ID.
+         *
+         * @name Phaser.Input.InputPlugin#_dragState
+         * @type {integer[]}
+         * @private
+         * @since 3.16.0
+         */
+        this._dragState = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
+
+        /**
          * A list of all Interactive Objects currently considered as being 'over' by any pointer, indexed by pointer ID.
          *
          * @name Phaser.Input.InputPlugin#_over
@@ -819,6 +829,53 @@ var InputPlugin = new Class({
     },
 
     /**
+     * Returns the drag state of the given Pointer for this Input Plugin.
+     * 
+     * The state will be one of the following:
+     * 
+     * 0 = Not dragging anything
+     * 1 = Primary button down and objects below, so collect a draglist
+     * 2 = Pointer being checked if meets drag criteria
+     * 3 = Pointer meets criteria, notify the draglist
+     * 4 = Pointer actively dragging the draglist and has moved
+     * 5 = Pointer actively dragging but has been released, notify draglist
+     *
+     * @method Phaser.Input.InputPlugin#getDragState
+     * @since 3.16.0
+     *
+     * @param {Phaser.Input.Pointer} pointer - The Pointer to get the drag state for.
+     *
+     * @return {integer} The drag state of the given Pointer.
+     */
+    getDragState: function (pointer)
+    {
+        return this._dragState[pointer.id];
+    },
+
+    /**
+     * Sets the drag state of the given Pointer for this Input Plugin.
+     * 
+     * The state must be one of the following values:
+     * 
+     * 0 = Not dragging anything
+     * 1 = Primary button down and objects below, so collect a draglist
+     * 2 = Pointer being checked if meets drag criteria
+     * 3 = Pointer meets criteria, notify the draglist
+     * 4 = Pointer actively dragging the draglist and has moved
+     * 5 = Pointer actively dragging but has been released, notify draglist
+     *
+     * @method Phaser.Input.InputPlugin#setDragState
+     * @since 3.16.0
+     *
+     * @param {Phaser.Input.Pointer} pointer - The Pointer to set the drag state for.
+     * @param {integer} state - The drag state value. An integer between 0 and 5.
+     */
+    setDragState: function (pointer, state)
+    {
+        this._dragState[pointer.id] = state;
+    },
+
+    /**
      * An internal method that handles the Pointer drag events.
      *
      * @method Phaser.Input.InputPlugin#processDragEvents
@@ -865,19 +922,19 @@ var InputPlugin = new Class({
         //  4 = Pointer actively dragging the draglist and has moved
         //  5 = Pointer actively dragging but has been released, notify draglist
 
-        if (pointer.dragState === 0 && pointer.primaryDown && pointer.justDown && currentlyOver.length > 0)
+        if (this.getDragState(pointer) === 0 && pointer.primaryDown && pointer.justDown && currentlyOver.length > 0)
         {
-            pointer.dragState = 1;
+            this.setDragState(pointer, 1);
         }
-        else if (pointer.dragState > 0 && !pointer.primaryDown && pointer.justUp)
+        else if (this.getDragState(pointer) > 0 && !pointer.primaryDown && pointer.justUp)
         {
-            pointer.dragState = 5;
+            this.setDragState(pointer, 5);
         }
 
         //  Process the various drag states
 
         //  1 = Primary button down and objects below, so collect a draglist
-        if (pointer.dragState === 1)
+        if (this.getDragState(pointer) === 1)
         {
             //  Get draggable objects, sort them, pick the top (or all) and store them somewhere
             var draglist = [];
@@ -894,7 +951,7 @@ var InputPlugin = new Class({
 
             if (draglist.length === 0)
             {
-                pointer.dragState = 0;
+                this.setDragState(pointer, 0);
 
                 return 0;
             }
@@ -914,35 +971,35 @@ var InputPlugin = new Class({
             if (this.dragDistanceThreshold === 0 && this.dragTimeThreshold === 0)
             {
                 //  No drag criteria, so snap immediately to mode 3
-                pointer.dragState = 3;
+                this.setDragState(pointer, 3);
             }
             else
             {
                 //  Check the distance / time
-                pointer.dragState = 2;
+                this.setDragState(pointer, 2);
             }
         }
 
         //  2 = Pointer being checked if meets drag criteria
-        if (pointer.dragState === 2)
+        if (this.getDragState(pointer) === 2)
         {
             //  Has it moved far enough to be considered a drag?
             if (this.dragDistanceThreshold > 0 && DistanceBetween(pointer.x, pointer.y, pointer.downX, pointer.downY) >= this.dragDistanceThreshold)
             {
                 //  Alrighty, we've got a drag going on ...
-                pointer.dragState = 3;
+                this.setDragState(pointer, 3);
             }
 
             //  Held down long enough to be considered a drag?
             if (this.dragTimeThreshold > 0 && (time >= pointer.downTime + this.dragTimeThreshold))
             {
                 //  Alrighty, we've got a drag going on ...
-                pointer.dragState = 3;
+                this.setDragState(pointer, 3);
             }
         }
 
         //  3 = Pointer meets criteria and is freshly down, notify the draglist
-        if (pointer.dragState === 3)
+        if (this.getDragState(pointer) === 3)
         {
             list = this._drag[pointer.id];
 
@@ -965,13 +1022,13 @@ var InputPlugin = new Class({
                 this.emit('dragstart', pointer, gameObject);
             }
 
-            pointer.dragState = 4;
+            this.setDragState(pointer, 4);
 
             return list.length;
         }
 
         //  4 = Pointer actively dragging the draglist and has moved
-        if (pointer.dragState === 4 && pointer.justMoved && !pointer.justUp)
+        if (this.getDragState(pointer) === 4 && pointer.justMoved && !pointer.justUp)
         {
             var dropZones = this._tempZones;
 
@@ -1054,7 +1111,7 @@ var InputPlugin = new Class({
         }
 
         //  5 = Pointer was actively dragging but has been released, notify draglist
-        if (pointer.dragState === 5)
+        if (this.getDragState(pointer) === 5)
         {
             list = this._drag[pointer.id];
 
@@ -1092,7 +1149,7 @@ var InputPlugin = new Class({
                 }
             }
 
-            pointer.dragState = 0;
+            this.setDragState(pointer, 0);
 
             list.splice(0);
         }
@@ -2228,6 +2285,7 @@ var InputPlugin = new Class({
         this._draggable.length = 0;
         this._pendingRemoval.length = 0;
         this._pendingInsertion.length = 0;
+        this._dragState.length = 0;
 
         for (var i = 0; i < 10; i++)
         {

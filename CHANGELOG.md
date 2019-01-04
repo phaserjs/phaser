@@ -119,6 +119,10 @@ one set of bindings ever created, which makes things a lot cleaner.
 * The Input Plugin has a new event you can listen to: `pointerupoutside`, which is triggered whenever the mouse or a pointer is released while outside of the Game canvas. Listen to it with `this.input.on('pointerupoutside')` from within a Scene.
 * `Pointer.downElement` is a new property that holds the target of the DOM Event that triggered when the Pointer was pressed down. If this is within the game, this will be the game canvas element.
 * `Pointer.upElement` is a new property that holds the target of the DOM Event that triggered when the Pointer was released. If this is within the game, this will be the game canvas element.
+* The `Pointer.dragState` property has been removed. This is no longer used internally as it has to be tracked per Scene, not on a global level.
+* `InputPlugin.setDragState` is a new internal method that sets the drag state for the given Pointer.
+* `InputPlugin.getDragState` is a new internal method that gets the drag state for the given Pointer.
+* Draggable Game Objects would not work if you had multiple Scenes running in parallel, with draggable objects in both of them. Only the top-most Scene would work fully. Items in the bottom Scene would never finish their drag cycle, causing them to get stuck. Fix #4249 (thanks @probt)
 
 ### New Features
 
