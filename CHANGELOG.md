@@ -18,6 +18,7 @@
 * The `showVideo` method will now emit the `adsnotloaded` event, if there are no ads loaded matching the given Placement ID.
 * Showing an ad will emit the `adfinished` event when the ad is closed, previously this event was called `showad` but the new name better reflects what has happened.
 * The Facebook Plugin is now available in the `Phaser.Scene` class template under the `facebook` property (thanks @bryanwood)
+* Fixed the `Leaderboard.getScores` method to now take the arguments into account. Fix #4271 (thanks @Oramy)
 
 ### Keyboard Input - New Features
 
@@ -262,11 +263,11 @@ Thanks to the following for helping with the Phaser 3 Examples and TypeScript de
 
 The Phaser Doc Jam was a community-backed effort to try and get the Phaser 3 API documentation to 100% coverage. The Doc Jam is now over and I offer my thanks to the following who helped with docs in this release:
 
-16patsle - @gurungrahul2 - @icbat - @samme - @telinc1 - anandu pavanan - blackhawx - candelibas - Diego Romero - doronlinder - Elliott Wallace - eric - Georges Gabereau - Haobo Zhang - henriacle - jak6jak - Jake Jensen - James Van Roose - JamesSkemp - joelahoover - Joey - madclaws - marc136 - Mihail Ilinov - naum303 - NicolasRoehm - nuane - rejacobson - Robert Kowalski - rodri042 - rootasjey - sawamara - scottwestover - sir13tommy - stetso - therealsamf - Tigran - willblackmore - zenwaichi
+@16patsle - @gurungrahul2 - @icbat - @samme - @telinc1 - anandu pavanan - blackhawx - candelibas - Diego Romero - doronlinder - Elliott Wallace - eric - Georges Gabereau - Haobo Zhang - henriacle - jak6jak - Jake Jensen - James Van Roose - JamesSkemp - joelahoover - Joey - madclaws - marc136 - Mihail Ilinov - naum303 - NicolasRoehm - nuane - rejacobson - Robert Kowalski - rodri042 - rootasjey - sawamara - scottwestover - sir13tommy - stetso - therealsamf - Tigran - willblackmore - zenwaichi
 
 Also, the following helped with the docs outside of the Doc Jam:
 
-@bryanwood @jestarray @matosummer @tfelix @imilo
+@bryanwood @jestarray @matosummer @tfelix @imilo @BigZaphod @OmarShehata @16patsle @jcyuan
 
 ## Version 3.15.1 - Batou - 16th October 2018
 
@@ -280,7 +281,7 @@ Note: We are releasing this version ahead of schedule in order to make some very
 
 * You can now set the `maxLights` value in the Game Config, which controls the total number of lights the Light2D shader can render in a single pass. The default is 10. Be careful about pushing this too far. More lights = less performance. Close #4081 (thanks @FrancescoNegri)
 * `Rectangle.SameDimensions` determines if the two objects (either Rectangles or Rectangle-like) have the same width and height values under strict equality.
-* An ArcadePhysics Group can now pass `{ enable: false }`` in its config to disable all the member bodies (thanks @samme)
+* An ArcadePhysics Group can now pass `{ enable: false }` in its config to disable all the member bodies (thanks @samme)
 * `Body.setEnable` is a new chainable method that allows you to toggle the enable state of an Arcade Physics Body (thanks @samme)
 * `KeyboardPlugin.resetKeys` is a new method that will reset the state of any Key object created by a Scene's Keyboard Plugin.
 * `Pointer.wasCanceled` is a new boolean property that allows you to tell if a Pointer was cleared due to a `touchcancel` event. This flag is reset during the next `touchstart` event for the Pointer.

@@ -567,6 +567,8 @@ var Vector2 = new Class({
 
 /**
  * A static zero Vector2 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
  *
  * @constant
  * @name Phaser.Math.Vector2.ZERO
