@@ -338,20 +338,6 @@ var Pointer = new Class({
         this.primaryDown = false;
 
         /**
-         * The Drag State of the Pointer:
-         *
-         * 0 = Not dragging anything
-         * 1 = Being checked if dragging
-         * 2 = Dragging something
-         *
-         * @name Phaser.Input.Pointer#dragState
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.dragState = 0;
-
-        /**
          * Is _any_ button on this pointer considered as being down?
          *
          * @name Phaser.Input.Pointer#isDown
