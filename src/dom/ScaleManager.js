@@ -9,7 +9,6 @@ var CONST = require('./const');
 var NOOP = require('../utils/NOOP');
 var Rectangle = require('../geom/rectangle/Rectangle');
 var Size = require('../structs/Size');
-var SnapFloor = require('../math/snap/SnapFloor');
 var Vec2 = require('../math/Vector2');
 
 /**
@@ -329,7 +328,7 @@ var ScaleManager = new Class({
         var axis = Math.abs(window.orientation);
 
         var size = { w: 0, h: 0 };
-        
+
         var ruler = document.createElement('div');
 
         ruler.setAttribute('style', 'position: fixed; height: 100vh; width: 0; top: 0');
