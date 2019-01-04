@@ -66,7 +66,7 @@ var GameObject = new Class({
          * If you need to store complex data about your Game Object, look at using the Data Component instead.
          *
          * @name Phaser.GameObjects.GameObject#state
-         * @type {{integer|string}}
+         * @type {(integer|string)}
          * @since 3.16.0
          */
         this.state = 0;
