@@ -472,7 +472,7 @@ var Color = new Class({
      */
     lighten: function (amount)
     {
-        this.v += amount / 100;
+        this._v += amount / 100;
 
         return this;
     },
@@ -489,7 +489,7 @@ var Color = new Class({
      */
     darken: function (amount)
     {
-        this.v -= amount / 100;
+        this._v -= amount / 100;
 
         return this;
     },
