@@ -332,7 +332,7 @@ var InputPlugin = new Class({
          * @private
          * @since 3.16.0
          */
-        this._dragState = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
+        this._dragState = [];
 
         /**
          * A list of all Interactive Objects currently considered as being 'over' by any pointer, indexed by pointer ID.
@@ -400,6 +400,9 @@ var InputPlugin = new Class({
         eventEmitter.once('shutdown', this.shutdown, this);
 
         this.enabled = true;
+
+        //  Populate the pointer drag states
+        this._dragState = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
 
         //  Registered input plugins listen for this
         this.pluginEvents.emit('start');
