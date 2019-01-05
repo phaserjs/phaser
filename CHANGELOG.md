@@ -169,6 +169,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `CanvasTexture.setPixel` is a new method that sets the given pixel in the CanvasTexture to the color and alpha values provided.
 * `CanvasTexture.getData` is a new method that will extract an ImageData block from the CanvasTexture from the region given.
 * `CanvasTexture.putData` is a new method that will put an ImageData block at the given coordinates in a CanvasTexture.
+* `Line.Extend` is a new static function that allows you extend the start and/or end points of a Line by the given amounts.
 
 ### Updates
 
