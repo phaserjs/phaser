@@ -83,7 +83,9 @@ var RequestAnimationFrame = new Class({
         this.lastTime = 0;
 
         /**
-         * The target rate in [ms].
+         * The target frame rate in [ms].
+         * This is only used when SetTimeout is used.
+         * Has no effect when RAF is used.
          *
          * @name Phaser.DOM.RequestAnimationFrame#target
          * @type {number}
@@ -126,7 +128,7 @@ var RequestAnimationFrame = new Class({
         {
             var d = Date.now();
 
-            var delay = Math.min(Math.max(_this.target * 2 + _this.tick - d, 0),_this.target);
+            var delay = Math.min(Math.max(_this.target * 2 + _this.tick - d, 0), _this.target);
 
             _this.lastTime = _this.tick;
 
