@@ -622,7 +622,7 @@ var Camera = new Class({
      * @param {number} y - The destination y coordinate to scroll the center of the Camera viewport to.
      * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
      * @param {(string|function)} [ease='Linear'] - The ease to use for the pan. Can be any of the Phaser Easing constants or a custom function.
-     * @param {boolean} [force=false] - Force the shake effect to start immediately, even if already running.
+     * @param {boolean} [force=false] - Force the pan effect to start immediately, even if already running.
      * @param {CameraPanCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
      * It is sent four arguments: A reference to the camera, a progress amount between 0 and 1 indicating how complete the effect is,
      * the current camera scroll x coordinate and the current camera scroll y coordinate.
@@ -644,7 +644,7 @@ var Camera = new Class({
      * @param {number} zoom - The target Camera zoom value.
      * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
      * @param {(string|function)} [ease='Linear'] - The ease to use for the pan. Can be any of the Phaser Easing constants or a custom function.
-     * @param {boolean} [force=false] - Force the shake effect to start immediately, even if already running.
+     * @param {boolean} [force=false] - Force the pan effect to start immediately, even if already running.
      * @param {CameraPanCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
      * It is sent four arguments: A reference to the camera, a progress amount between 0 and 1 indicating how complete the effect is,
      * the current camera scroll x coordinate and the current camera scroll y coordinate.
