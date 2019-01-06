@@ -122,7 +122,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * The `Pointer.dragState` property has been removed. This is no longer used internally as it has to be tracked per Scene, not on a global level.
 * `InputPlugin.setDragState` is a new internal method that sets the drag state for the given Pointer.
 * `InputPlugin.getDragState` is a new internal method that gets the drag state for the given Pointer.
-* Draggable Game Objects would not work if you had multiple Scenes running in parallel, with draggable objects in both of them. Only the top-most Scene would work fully. Items in the bottom Scene would never finish their drag cycle, causing them to get stuck. Fix #4249 (thanks @probt)
+* Draggable Game Objects would not work if you had multiple Scenes running in parallel, with draggable objects in both of them. Only the top-most Scene would work fully. Items in the bottom Scene would never finish their drag cycle, causing them to get stuck. Fix #4249 #4278 (thanks @probt @iArePJ)
 
 ### New Features
 
@@ -275,7 +275,7 @@ The Phaser Doc Jam was a community-backed effort to try and get the Phaser 3 API
 
 Also, the following helped with the docs outside of the Doc Jam:
 
-@bryanwood @jestarray @matosummer @tfelix @imilo @BigZaphod @OmarShehata @16patsle @jcyuan
+@bryanwood @jestarray @matosummer @tfelix @imilo @BigZaphod @OmarShehata @16patsle @jcyuan @iam13islucky
 
 ## Version 3.15.1 - Batou - 16th October 2018
 
