@@ -414,7 +414,7 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {integer} [width=256]- The width of the Canvas element.
+     * @param {integer} [width=256] - The width of the Canvas element.
      * @param {integer} [height=256] - The height of the Canvas element.
      *
      * @return {?Phaser.Textures.CanvasTexture} The Canvas Texture that was created, or `null` if the key is already in use.
