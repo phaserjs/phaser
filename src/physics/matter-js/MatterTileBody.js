@@ -220,12 +220,14 @@ var MatterTileBody = new Class({
                 // matter expects points to be relative to the center of mass. This only applies to
                 // convex shapes. When a concave shape is decomposed, multiple parts are created and
                 // the individual parts are positioned relative to (ox, oy).
-                if (Vertices.isConvex(points))
-                {
-                    var center = Vertices.centre(vertices);
-                    ox += center.x;
-                    oy += center.y;
-                }
+                //
+                //  Update: 8th January 2019 - the latest version of Matter needs the Vertices adjusted,
+                //  regardless if convex or concave.
+
+                var center = Vertices.centre(vertices);
+
+                ox += center.x;
+                oy += center.y;
 
                 body = Bodies.fromVertices(ox, oy, vertices, options);
             }
