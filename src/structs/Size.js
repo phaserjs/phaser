@@ -169,8 +169,6 @@ var Size = new Class({
     /**
      * Set the maximum width and height values this Size component will allow.
      * 
-     * If enabled, the properties will be clamped to the min-max range, including when locked to their aspect ratios.
-     * 
      * Setting this will automatically adjust both the `width` and `height` properties to ensure they are within range.
      *
      * @method Phaser.Structs.Size#setMax
@@ -193,127 +191,22 @@ var Size = new Class({
     },
 
     /**
-     * Sets a new width for this Size component.
+     * Sets the width and height of this Size component based on the aspect mode.
      * 
-     * The new width is clamped to the min-max range automatically.
+     * If the aspect mode is 'none' then calling this method will change the aspect ratio, otherwise the current
+     * aspect ratio is honored across all other aspect modes.
      * 
-     * Additionally, if the aspect ratio is locked, the height will also be adjusted based on the new width.
-     *
-     * @method Phaser.Structs.Size#updateWidth
-     * @since 3.16.0
+     * If minimum and/or maximum dimensions have been specified, the values given to this method will be clamped into
+     * that range prior to adjustment, but may still exceed them depending on the aspect mode.
      * 
-     * @param {number} width - The new width of the Size component.
-     *
-     * @return {this} This Size component instance.
-     */
-    updateWidth: function (width)
-    {
-        console.log(width);
-
-        width = Clamp(width, this._minWidth, this._maxWidth);
-
-
-        //  Potential new height
-        var height = width * (1 / this.aspectRatio);
-
-        switch (this.aspectMode)
-        {
-            case 0:
-                //  No scaling
-                this._width = width;
-                break;
-
-            case 1:
-                //  Width controls Height
-                this._width = width;
-                this._height = height;
-                break;
-
-            case 2:
-                //  Height controls Width
-                // this._width = Clamp(height, this._minHeight, this._maxHeight) * this.aspectRatio;
-                break;
-
-            case 3:
-                //  Fit in Parent
-                this._width = width;
-                this.fitTo();
-                break;
-
-            case 4:
-                //  Envelope Parent
-                this._width = width;
-                this.envelope();
-                break;
-        }
-
-        return this;
-    },
-
-    /**
-     * Sets a new height for this Size component.
-     * 
-     * The new height is clamped to the min-max range automatically.
-     * 
-     * Additionally, if the aspect ratio is locked, the width will also be adjusted based on the new height.
-     *
-     * @method Phaser.Structs.Size#updateHeight
-     * @since 3.16.0
-     * 
-     * @param {number} height - The new height of the Size component.
-     *
-     * @return {this} This Size component instance.
-     */
-    updateHeight: function (height)
-    {
-        height = Clamp(height, this._minHeight, this._maxHeight);
-
-        //  Potential new width
-        var width = height * this.aspectRatio;
-
-        switch (this.aspectMode)
-        {
-            case 0:
-                //  No scaling
-                this._height = height;
-                break;
-
-            case 1:
-                //  Width controls Height
-                // this._width = width;
-                // this._height = Clamp(width, this._minWidth, this._maxWidth) * (1 / this.aspectRatio);
-                break;
-
-            case 2:
-                //  Height controls Width
-                this._width = width;
-                this._height = height;
-                break;
-
-            case 3:
-                //  Fit in Parent
-                this._height = height;
-                this.fitTo();
-                break;
-
-            case 4:
-                //  Envelope Parent
-                this._height = height;
-                this.envelope();
-                break;
-        }
-
-        return this;
-    },
-
-    /**
-     * Set the width and height of this Size component, adjusting for the aspect ratio, if locked.
+     * If this Size component has a parent set, and the aspect mode is `fit` or `envelope`, then the given sizes will
+     * be clamped to the range specified by the parent.
      *
      * @method Phaser.Structs.Size#setSize
      * @since 3.16.0
      *
-     * @param {number} [width=0] - The width of the Size component.
-     * @param {number} [height=width] - The height of the Size component. If not given, it will use the `width`.
+     * @param {number} [width=0] - The new width of the Size component.
+     * @param {number} [height=width] - The new height of the Size component. If not given, it will use the `width`.
      *
      * @return {this} This Size component instance.
      */
@@ -321,34 +214,77 @@ var Size = new Class({
     {
         if (width === undefined) { width = 0; }
         if (height === undefined) { height = width; }
+    
+        width = Clamp(width, this._minWidth, this._maxWidth);
+        height = Clamp(height, this._minHeight, this._maxHeight);
 
-        this.updateWidth(width);
+        switch (this.aspectMode)
+        {
+            case 0:
+                this._width = width;
+                this._height = height;
+                this.aspectRatio = (height === 0) ? 1 : width / height;
+                break;
 
-        return this.updateHeight(height);
+            case 1:
+                this.updateWidth(width);
+                break;
+
+            case 2:
+                this.updateHeight(height);
+                break;
+
+            case 3:
+                this.fitTo(width, height);
+                break;
+
+            case 4:
+                this.envelope(width, height);
+                break;
+        }
+
+        return this;
     },
 
     /**
      * The current `width` and `height` are adjusted to fit inside the given dimensions, while keeping the aspect ratio.
      * 
-     * There may be some space inside the parent area which is not covered if its aspect ratio differs.
+     * There may be some space inside the target area which is not covered if its aspect ratio differs.
+     * 
+     * If this Size component has a parent set, then the width and height passed to this method will be clamped so
+     * it cannot exceed that of the parent.
      *
      * @method Phaser.Structs.Size#fitTo
      * @since 3.16.0
      *
-     * @param {number} [width] - The new width of the Size component. If not given, and a parent has been set, it will use the parent width.
-     * @param {number} [height] - The new height of the Size component. If not given, and a parent has been set, it will use the parent height.
+     * @param {number} [width=0] - The new width of the Size component.
+     * @param {number} [height] - The new height of the Size component. If not given, it will use the width value.
      *
      * @return {this} This Size component instance.
      */
     fitTo: function (width, height)
     {
-        if (width === undefined && this._parent) { width = this._parent.width; }
-        if (height === undefined && this._parent) { height = this._parent.height; }
+        if (width === undefined) { width = 0; }
+        if (height === undefined) { height = width; }
 
+        var parent = this._parent;
+
+        if (parent)
+        {
+            if (width > parent.width)
+            {
+                width = parent.width;
+            }
+
+            if (height > parent.height)
+            {
+                height = parent.height;
+            }
+        }
+
+        var newWidth = width;
+        var newHeight = height;
         var newRatio = (height === 0) ? 1 : width / height;
-
-        var newWidth = Math.min(width, this._width);
-        var newHeight = Math.min(height, this._height);
 
         if (this.aspectRatio > newRatio)
         {
@@ -368,25 +304,42 @@ var Size = new Class({
     /**
      * The current `width` and `height` are adjusted to fit inside the given dimensions, while keeping the aspect ratio.
      * 
-     * The size may extend further out than the parent if the aspect ratios differ.
+     * The size may extend further out than the target area if the aspect ratios differ.
+     * 
+     * If this Size component has a parent set, then the values are clamped so that it never exceeds the parent
+     * on the longest axis.
      *
      * @method Phaser.Structs.Size#fitTo
      * @since 3.16.0
      *
-     * @param {number} [width] - The new width of the Size component. If not given, and a parent has been set, it will use the parent width.
-     * @param {number} [height] - The new height of the Size component. If not given, and a parent has been set, it will use the parent height.
+     * @param {number} [width=0] - The new width of the Size component.
+     * @param {number} [height] - The new height of the Size component. If not given, it will use the width value.
      *
      * @return {this} This Size component instance.
      */
     envelope: function (width, height)
     {
-        if (width === undefined && this._parent) { width = this._parent.width; }
-        if (height === undefined && this._parent) { height = this._parent.height; }
+        if (width === undefined) { width = 0; }
+        if (height === undefined) { height = width; }
 
+        var parent = this._parent;
+
+        if (parent)
+        {
+            if (width > parent.width)
+            {
+                width = parent.width;
+            }
+
+            if (height > parent.height)
+            {
+                height = parent.height;
+            }
+        }
+
+        var newWidth = width;
+        var newHeight = height;
         var newRatio = (height === 0) ? 1 : width / height;
-
-        var newWidth = Math.min(width, this._width);
-        var newHeight = Math.min(height, this._height);
 
         if (this.aspectRatio > newRatio)
         {
@@ -406,35 +359,35 @@ var Size = new Class({
     /**
      * Sets the width of this Size component.
      * 
-     * If the aspect ratio is locked, changing the width will also automatically update the height.
+     * Depending on the aspect mode, changing the width may also update the height and aspect ratio.
      *
      * @method Phaser.Structs.Size#setWidth
      * @since 3.16.0
      *
-     * @param {number} width - The width of the Size component.
+     * @param {number} width - The new width of the Size component.
      *
      * @return {this} This Size component instance.
      */
     setWidth: function (value)
     {
-        return this.updateWidth(value);
+        return this.setSize(value, this._height);
     },
 
     /**
      * Sets the height of this Size component.
      * 
-     * If the aspect ratio is locked, changing the height will also automatically update the width.
+     * Depending on the aspect mode, changing the height may also update the width and aspect ratio.
      *
      * @method Phaser.Structs.Size#setHeight
      * @since 3.16.0
      *
-     * @param {number} height - The height of the Size component.
+     * @param {number} height - The new height of the Size component.
      *
      * @return {this} This Size component instance.
      */
     setHeight: function (value)
     {
-        return this.updateHeight(value);
+        return this.setSize(this._width, value);
     },
 
     /**
@@ -473,7 +426,7 @@ var Size = new Class({
 
         set: function (value)
         {
-            this.updateWidth(value);
+            this.setSize(value, this._height);
         }
 
     },
@@ -501,7 +454,7 @@ var Size = new Class({
 
         set: function (value)
         {
-            this.updateHeight(value);
+            this.setSize(this._width, value);
         }
 
     }
