@@ -222,6 +222,28 @@ var World = new Class({
         this.pendingDestroy = new Set();
 
         /**
+         * Dynamic Bodies that need a second `update` call to resynchronize their Game Objects.
+         * This set is filled only when the `_late` flag is on, and is processed and cleared during `postUpdate`.
+         *
+         * @name Phaser.Physics.Arcade.World#late
+         * @type {Phaser.Structs.Set.<Phaser.Physics.Arcade.Body>}
+         * @private
+         * @since 3.16.0
+         */
+        this.late = new Set();
+
+        /**
+         * A flag allowing the `late` set to be filled, as appropriate.
+         * This is on (true) only between `update` and `postUpdate` and false at other times.
+         *
+         * @name Phaser.Physics.Arcade.World#_late
+         * @type {boolean}
+         * @private
+         * @since 3.16.0
+         */
+        this._late = false;
+
+        /**
          * This simulation's collision processors.
          *
          * @name Phaser.Physics.Arcade.World#colliders
@@ -755,6 +777,7 @@ var World = new Class({
         {
             this.tree.remove(body);
             this.bodies.delete(body);
+            this.late.delete(body);
         }
         else if (body.physicsType === CONST.STATIC_BODY)
         {
@@ -1043,6 +1066,7 @@ var World = new Class({
         var msPerFrame = this._frameTimeMS * this.timeScale;
 
         this._elapsed += delta;
+        this._late = false;
 
         while (this._elapsed >= msPerFrame)
         {
@@ -1054,6 +1078,7 @@ var World = new Class({
         }
 
         this.stepsLastFrame = stepsThisFrame;
+        this._late = true;
     },
 
     /**
@@ -1124,14 +1149,37 @@ var World = new Class({
     postUpdate: function ()
     {
         var i;
+        var bodies;
         var body;
+        var len;
 
         var dynamic = this.bodies;
         var staticBodies = this.staticBodies;
         var pending = this.pendingDestroy;
+        var late = this.late;
 
-        var bodies = dynamic.entries;
-        var len = bodies.length;
+        if (late.size > 0)
+        {
+            bodies = late.entries;
+            len = bodies.length;
+
+            for (i = 0; i < len; i++)
+            {
+                body = bodies[i];
+
+                if (body.enable)
+                {
+                    body.postUpdate();
+                }
+            }
+
+            late.clear();
+        }
+
+        this._late = false;
+
+        bodies = dynamic.entries;
+        len = bodies.length;
 
         if (this.drawDebug)
         {
@@ -1179,6 +1227,7 @@ var World = new Class({
                 {
                     dynamicTree.remove(body);
                     dynamic.delete(body);
+                    late.delete(body);
                 }
                 else if (body.physicsType === CONST.STATIC_BODY)
                 {
@@ -1470,8 +1519,11 @@ var World = new Class({
             }
             else
             {
-                body1.postUpdate();
-                body2.postUpdate();
+                if (this._late)
+                {
+                    this.late.set(body1);
+                    this.late.set(body2);
+                }
 
                 if (body1.onCollide || body2.onCollide)
                 {
@@ -2355,6 +2407,7 @@ var World = new Class({
         this.staticTree.clear();
         this.bodies.clear();
         this.staticBodies.clear();
+        this.late.clear();
         this.colliders.destroy();
 
         this.removeAllListeners();
