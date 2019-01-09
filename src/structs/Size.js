@@ -6,6 +6,8 @@
 
 var Clamp = require('../math/Clamp');
 var Class = require('../utils/Class');
+var SnapFloor = require('../math/snap/SnapFloor');
+var Vector2 = require('../math/Vector2');
 
 /**
  * @classdesc
@@ -135,6 +137,20 @@ var Size = new Class({
          * @since 3.16.0
          */
         this.maxHeight = Number.MAX_VALUE;
+
+        /**
+         * A Vector2 containing the horizontal and vertical snap values, which the width and height are snapped to during resizing.
+         * 
+         * By default this is disabled.
+         * 
+         * This property is read-only. To change it see the `setSnap` method.
+         *
+         * @name Phaser.Structs.Size#snapTo
+         * @type {Phaser.Math.Vector2}
+         * @readonly
+         * @since 3.16.0
+         */
+        this.snapTo = new Vector2();
     },
 
     /**
@@ -164,6 +180,36 @@ var Size = new Class({
         if (value === undefined) { value = 0; }
 
         this.aspectMode = value;
+
+        return this.setSize(this._width, this._height);
+    },
+
+    /**
+     * By setting a Snap To value when this Size component is modified its dimensions will automatically
+     * by snapped to the nearest grid slice, using floor. For example, if you have snap value of 16,
+     * and the width changes to 68, then it will snap down to 64 (the closest multiple of 16 when floored)
+     * 
+     * Note that snapping takes place before adjustments by the parent, or the min / max settings. If these
+     * values are not multiples of the given snap values, then this can result in un-snapped dimensions.
+     * 
+     * Call this method with no arguments to reset the snap values.
+     * 
+     * Calling this method automatically recalculates the `width` and the `height`, if required.
+     * 
+     * @method Phaser.Structs.Size#setSnap
+     * @since 3.16.0
+     *
+     * @param {number} [snapWidth=0] - The amount to snap the width to. If you don't want to snap the width, pass a value of zero.
+     * @param {number} [snapHeight=snapWidth] - The amount to snap the height to. If not provided it will use the `snapWidth` value. If you don't want to snap the height, pass a value of zero.
+     *
+     * @return {this} This Size component instance.
+     */
+    setSnap: function (snapWidth, snapHeight)
+    {
+        if (snapWidth === undefined) { snapWidth = 0; }
+        if (snapHeight === undefined) { snapHeight = snapWidth; }
+
+        this.snapTo.set(snapWidth, snapHeight);
 
         return this.setSize(this._width, this._height);
     },
@@ -258,7 +304,10 @@ var Size = new Class({
      * Sets the width and height of this Size component based on the aspect mode.
      * 
      * If the aspect mode is 'none' then calling this method will change the aspect ratio, otherwise the current
-     * aspect ratio is honored across all other aspect modes.
+     * aspect ratio is honored across all other modes.
+     * 
+     * If snapTo values have been set then the given width and height are snapped first, prior to any further
+     * adjustment via min/max values, or a parent.
      * 
      * If minimum and/or maximum dimensions have been specified, the values given to this method will be clamped into
      * that range prior to adjustment, but may still exceed them depending on the aspect mode.
@@ -279,50 +328,153 @@ var Size = new Class({
         if (width === undefined) { width = 0; }
         if (height === undefined) { height = width; }
     
-        width = Clamp(width, this.minWidth, this.maxWidth);
-        height = Clamp(height, this.minHeight, this.maxHeight);
-
-        var parent = this._parent;
-
-        if (parent)
-        {
-            if (width > parent.width)
-            {
-                width = parent.width;
-            }
-
-            if (height > parent.height)
-            {
-                height = parent.height;
-            }
-        }
-
         switch (this.aspectMode)
         {
             case Size.NONE:
-                this._width = width;
-                this._height = height;
-                this.aspectRatio = (height === 0) ? 1 : width / height;
+                this._width = this.getNewWidth(SnapFloor(width, this.snapTo.x));
+                this._height = this.getNewHeight(SnapFloor(height, this.snapTo.y));
+                this.aspectRatio = (this._height === 0) ? 1 : this._width / this._height;
                 break;
 
             case Size.WIDTH_CONTROLS_HEIGHT:
-                this._width = width;
-                this._height = width * (1 / this.aspectRatio);
+                this._width = this.getNewWidth(SnapFloor(width, this.snapTo.x));
+                this._height = this.getNewHeight(this._width * (1 / this.aspectRatio), false);
                 break;
 
             case Size.HEIGHT_CONTROLS_WIDTH:
-                this._height = height;
-                this._width = height * this.aspectRatio;
+                this._height = this.getNewHeight(SnapFloor(height, this.snapTo.y));
+                this._width = this.getNewWidth(this._height * this.aspectRatio, false);
                 break;
 
             case Size.FIT:
-                this.fitTo(width, height);
+                this.constrain(width, height, true);
                 break;
 
             case Size.ENVELOPE:
-                this.envelope(width, height);
+                this.constrain(width, height, false);
                 break;
         }
+
+        return this;
+    },
+
+    /**
+     * Takes a new width and passes it through the min/max clamp and then checks it doesn't exceed the parent width.
+     *
+     * @method Phaser.Structs.Size#getNewWidth
+     * @since 3.16.0
+     *
+     * @param {number} value - The value to clamp and check.
+     * @param {boolean} [checkParent=true] - Check the given value against the parent, if set.
+     *
+     * @return {number} The modified width value.
+     */
+    getNewWidth: function (value, checkParent)
+    {
+        if (checkParent === undefined) { checkParent = true; }
+        
+        value = Clamp(value, this.minWidth, this.maxWidth);
+
+        if (checkParent && this._parent && value > this._parent.width)
+        {
+            value = this._parent.width;
+        }
+
+        return value;
+    },
+
+    /**
+     * Takes a new height and passes it through the min/max clamp and then checks it doesn't exceed the parent height.
+     *
+     * @method Phaser.Structs.Size#getNewHeight
+     * @since 3.16.0
+     *
+     * @param {number} value - The value to clamp and check.
+     * @param {boolean} [checkParent=true] - Check the given value against the parent, if set.
+     *
+     * @return {number} The modified height value.
+     */
+    getNewHeight: function (value, checkParent)
+    {
+        if (checkParent === undefined) { checkParent = true; }
+
+        value = Clamp(value, this.minHeight, this.maxHeight);
+
+        if (checkParent && this._parent && value > this._parent.height)
+        {
+            value = this._parent.height;
+        }
+
+        return value;
+    },
+
+    /**
+     * The current `width` and `height` are adjusted to fit inside the given dimensions, while keeping the aspect ratio.
+     * 
+     * If `fit` is true there may be some space inside the target area which is not covered if its aspect ratio differs.
+     * If `fit` is false the size may extend further out than the target area if the aspect ratios differ.
+     * 
+     * If this Size component has a parent set, then the width and height passed to this method will be clamped so
+     * it cannot exceed that of the parent.
+     *
+     * @method Phaser.Structs.Size#constrain
+     * @since 3.16.0
+     *
+     * @param {number} [width=0] - The new width of the Size component.
+     * @param {number} [height] - The new height of the Size component. If not given, it will use the width value.
+     * @param {boolean} [fit=true] - Perform a `fit` (true) constraint, or an `envelope` (false) constraint.
+     *
+     * @return {this} This Size component instance.
+     */
+    constrain: function (width, height, fit)
+    {
+        if (width === undefined) { width = 0; }
+        if (height === undefined) { height = width; }
+        if (fit === undefined) { fit = true; }
+
+        width = this.getNewWidth(width);
+        height = this.getNewHeight(height);
+
+        var snap = this.snapTo;
+        var newRatio = (height === 0) ? 1 : width / height;
+
+        if ((fit && this.aspectRatio > newRatio) || (!fit && this.aspectRatio < newRatio))
+        {
+            //  We need to change the height to fit the width
+            // height = width / this.aspectRatio;
+
+            width = SnapFloor(width, snap.x);
+
+            height = width / this.aspectRatio;
+
+            if (snap.y > 0)
+            {
+                height = SnapFloor(height, snap.y);
+
+                //  Reduce the width accordingly
+                width = height * this.aspectRatio;
+            }
+        }
+        else if ((fit && this.aspectRatio < newRatio) || (!fit && this.aspectRatio > newRatio))
+        {
+            //  We need to change the width to fit the height
+            // width = height * this.aspectRatio;
+
+            height = SnapFloor(height, snap.y);
+
+            width = height * this.aspectRatio;
+
+            if (snap.x > 0)
+            {
+                width = SnapFloor(width, snap.x);
+
+                //  Reduce the height accordingly
+                height = width * (1 / this.aspectRatio);
+            }
+        }
+
+        this._width = width;
+        this._height = height;
 
         return this;
     },
@@ -345,41 +497,7 @@ var Size = new Class({
      */
     fitTo: function (width, height)
     {
-        if (width === undefined) { width = 0; }
-        if (height === undefined) { height = width; }
-
-        var parent = this._parent;
-
-        if (parent)
-        {
-            if (width > parent.width)
-            {
-                width = parent.width;
-            }
-
-            if (height > parent.height)
-            {
-                height = parent.height;
-            }
-        }
-
-        var newWidth = width;
-        var newHeight = height;
-        var newRatio = (height === 0) ? 1 : width / height;
-
-        if (this.aspectRatio > newRatio)
-        {
-            newHeight = width / this.aspectRatio;
-        }
-        else if (this.aspectRatio < newRatio)
-        {
-            newWidth = height * this.aspectRatio;
-        }
-
-        this._width = newWidth;
-        this._height = newHeight;
-
-        return this;
+        return this.constrain(width, height, true);
     },
 
     /**
@@ -400,41 +518,7 @@ var Size = new Class({
      */
     envelope: function (width, height)
     {
-        if (width === undefined) { width = 0; }
-        if (height === undefined) { height = width; }
-
-        var parent = this._parent;
-
-        if (parent)
-        {
-            if (width > parent.width)
-            {
-                width = parent.width;
-            }
-
-            if (height > parent.height)
-            {
-                height = parent.height;
-            }
-        }
-
-        var newWidth = width;
-        var newHeight = height;
-        var newRatio = (height === 0) ? 1 : width / height;
-
-        if (this.aspectRatio > newRatio)
-        {
-            newWidth = height * this.aspectRatio;
-        }
-        else if (this.aspectRatio < newRatio)
-        {
-            newHeight = width / this.aspectRatio;
-        }
-
-        this._width = newWidth;
-        this._height = newHeight;
-
-        return this;
+        return this.constrain(width, height, false);
     },
 
     /**
@@ -482,6 +566,22 @@ var Size = new Class({
     toString: function ()
     {
         return '[{ Size (width=' + this._width + ' height=' + this._height + ' aspectRatio=' + this.aspectRatio + ' aspectMode=' + this.aspectMode + ') }]';
+    },
+
+    /**
+     * Destroys this Size component.
+     * 
+     * This clears the local properties and any parent object, if set.
+     * 
+     * A destroyed Size component cannot be re-used.
+     *
+     * @method Phaser.Structs.Size#destroy
+     * @since 3.16.0
+     */
+    destroy: function ()
+    {
+        this._parent = null;
+        this.snapTo = null;
     },
 
     /**
@@ -546,6 +646,7 @@ var Size = new Class({
  * Do not make the size fit the aspect ratio. Change the ratio when the size changes.
  * 
  * @name Phaser.Structs.Size.NONE
+ * @constant
  * @type {integer}
  * @since 3.16.0
  */
@@ -555,6 +656,7 @@ Size.NONE = 0;
  * The height is automatically adjusted based on the width.
  * 
  * @name Phaser.Structs.Size.WIDTH_CONTROLS_HEIGHT
+ * @constant
  * @type {integer}
  * @since 3.16.0
  */
@@ -564,6 +666,7 @@ Size.WIDTH_CONTROLS_HEIGHT = 1;
  * The width is automatically adjusted based on the height.
  * 
  * @name Phaser.Structs.Size.HEIGHT_CONTROLS_WIDTH
+ * @constant
  * @type {integer}
  * @since 3.16.0
  */
@@ -573,6 +676,7 @@ Size.HEIGHT_CONTROLS_WIDTH = 2;
  * The width and height are automatically adjusted to fit inside the given target area, while keeping the aspect ratio. Depending on the aspect ratio there may be some space inside the area which is not covered.
  * 
  * @name Phaser.Structs.Size.FIT
+ * @constant
  * @type {integer}
  * @since 3.16.0
  */
@@ -582,6 +686,7 @@ Size.FIT = 3;
  * The width and height are automatically adjusted to make the size cover the entire target area while keeping the aspect ratio. This may extend further out than the target size.
  * 
  * @name Phaser.Structs.Size.ENVELOPE
+ * @constant
  * @type {integer}
  * @since 3.16.0
  */
