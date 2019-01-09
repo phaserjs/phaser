@@ -17,35 +17,51 @@
 module.exports = {
 
     /**
+     * No scaling happens at all. The canvas is the size given in the game config and Phaser doesn't change it.
      * 
-     * 
-     * @name Phaser.DOM.EXACT
-     * @since 3.15.0
+     * @name Phaser.DOM.NONE
+     * @since 3.16.0
      */
-    EXACT: 0,
+    NONE: 0,
 
     /**
      * 
      * 
-     * @name Phaser.DOM.FILL
+     * @name Phaser.DOM.WIDTH_CONTROLS_HEIGHT
      * @since 3.15.0
      */
-    FILL: 1,
+    WIDTH_CONTROLS_HEIGHT: 1,
 
     /**
      * 
      * 
-     * @name Phaser.DOM.CONTAIN
+     * @name Phaser.DOM.HEIGHT_CONTROLS_WIDTH
      * @since 3.15.0
      */
-    CONTAIN: 2,
+    HEIGHT_CONTROLS_WIDTH: 2,
 
     /**
      * 
+     * 
+     * @name Phaser.DOM.FIT
+     * @since 3.15.0
+     */
+    FIT: 3,
+
+    /**
+     * 
+     * 
+     * @name Phaser.DOM.ENVELOPE
+     * @since 3.15.0
+     */
+    ENVELOPE: 4,
+
+    /**
+     * Canvas is resized to fit all available parent space, regardless of aspect ratio.
      * 
      * @name Phaser.DOM.RESIZE
      * @since 3.15.0
      */
-    RESIZE: 3
+    RESIZE: 5
 
 };
