@@ -294,7 +294,7 @@ var Config = new Class({
         /**
          * @const {boolean} Phaser.Boot.Config#expandParent - Is the Scale Manager allowed to adjust the size of the parent container?
          */
-        this.expandParent = GetValue(config, 'expandParent', false);
+        this.expandParent = GetValue(config, 'expandParent', true);
 
         /**
          * @const {integer} Phaser.Boot.Config#minWidth - The minimum width, in pixels, the canvas will scale down to. A value of zero means no minimum.
@@ -328,7 +328,7 @@ var Config = new Class({
             this.resolution = GetValue(scaleConfig, 'resolution', this.resolution);
             this.parent = GetValue(scaleConfig, 'parent', this.parent);
             this.scaleMode = GetValue(scaleConfig, 'mode', this.scaleMode);
-            this.expandParent = GetValue(scaleConfig, 'mode', this.expandParent);
+            this.expandParent = GetValue(scaleConfig, 'expandParent', this.expandParent);
             this.minWidth = GetValue(scaleConfig, 'min.width', this.minWidth);
             this.maxWidth = GetValue(scaleConfig, 'max.width', this.maxWidth);
             this.minHeight = GetValue(scaleConfig, 'min.height', this.minHeight);
