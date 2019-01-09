@@ -24,7 +24,7 @@ var Vector2 = require('../math/Vector2');
  *
  * @param {number} [width=0] - The width of the Size component.
  * @param {number} [height=width] - The height of the Size component. If not given, it will use the `width`.
- * @param {integer} [aspectMode=1] - The aspect mode of the Size component. Defaults to 1, where the width controls the height.
+ * @param {integer} [aspectMode=0] - The aspect mode of the Size component. Defaults to 0, no mode.
  * @param {any} [parent=null] - The parent of this Size component. Can be any object with public `width` and `height` properties. Dimensions are clamped to keep them within the parent bounds where possible.
  */
 var Size = new Class({
@@ -35,7 +35,7 @@ var Size = new Class({
     {
         if (width === undefined) { width = 0; }
         if (height === undefined) { height = width; }
-        if (aspectMode === undefined) { aspectMode = 1; }
+        if (aspectMode === undefined) { aspectMode = 0; }
         if (parent === undefined) { parent = null; }
 
         /**
