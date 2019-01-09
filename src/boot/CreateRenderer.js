@@ -61,12 +61,12 @@ var CreateRenderer = function (game)
     {
         game.canvas = config.canvas;
 
-        game.canvas.width = game.scale.canvasWidth;
-        game.canvas.height = game.scale.canvasHeight;
+        game.canvas.width = game.scale.canvasSize.width;
+        game.canvas.height = game.scale.canvasSize.height;
     }
     else
     {
-        game.canvas = CanvasPool.create(game, game.scale.canvasWidth, game.scale.canvasHeight, config.renderType);
+        game.canvas = CanvasPool.create(game, game.scale.canvasSize.width, game.scale.canvasSize.height, config.renderType);
     }
 
     //  Does the game config provide some canvas css styles to use?
