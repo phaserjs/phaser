@@ -572,7 +572,7 @@ var Vector2 = new Class({
  *
  * @constant
  * @name Phaser.Math.Vector2.ZERO
- * @type {Vector2}
+ * @type {Phaser.Math.Vector2}
  * @since 3.1.0
  */
 Vector2.ZERO = new Vector2();
