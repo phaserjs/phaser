@@ -6,7 +6,9 @@
 
 var Class = require('../utils/Class');
 var NOOP = require('../utils/NOOP');
+var Rectangle = require('../geom/rectangle/Rectangle');
 var Size = require('../structs/Size');
+var Vector2 = require('../math/Vector2');
 
 /**
  * @classdesc
@@ -36,7 +38,17 @@ var ScaleManager = new Class({
          */
         this.game = game;
 
-        this.scaleMode = 0;
+        //  Reference to the canvas being scaled
+        this.canvas;
+
+        /**
+         * The DOM bounds of the canvas element.
+         *
+         * @name Phaser.Input.InputManager#canvasBounds
+         * @type {Phaser.Geom.Rectangle}
+         * @since 3.16.0
+         */
+        this.canvasBounds = new Rectangle();
 
         //  The parent object, often a div, or the browser window
         this.parent;
@@ -46,11 +58,16 @@ var ScaleManager = new Class({
         //  The parent Size object.
         this.parentSize = new Size();
 
-        //  The un-modified game size, as requested in the game config.
+        //  The un-modified game size, as requested in the game config (the raw width / height) as used for world bounds, cameras, etc
         this.gameSize = new Size();
 
-        //  The canvas size, which is the game size * zoom * resolution, with the scale mode applied and factoring in the parent.
-        this.canvasSize = new Size();
+        //  The modified game size, which is the gameSize * resolution, used to set the canvas width/height (but not the CSS style)
+        this.baseSize = new Size();
+
+        //  The size used for the canvas style, factoring in the scale mode, parent and other values
+        this.displaySize = new Size();
+
+        this.scaleMode = 0;
 
         //  The canvas resolution
         this.resolution = 1;
@@ -58,9 +75,14 @@ var ScaleManager = new Class({
         //  The canvas zoom factor
         this.zoom = 1;
 
+        this.autoRound = false;
+
         this.trackParent = false;
 
         this.allowFullScreen = false;
+
+        //  The scale between the baseSize and the canvasBounds
+        this.displayScale = new Vector2(1, 1);
 
         this.listeners = {
 
@@ -79,11 +101,74 @@ var ScaleManager = new Class({
         //  Parse the config to get the scaling values we need
         console.log('preBoot');
 
-        this.setParent(this.game.config.parent, this.game.config.expandParent);
-
         this.parseConfig(this.game.config);
 
         this.game.events.once('boot', this.boot, this);
+    },
+
+    //  Fires BEFORE the canvas has been created
+    parseConfig: function (config)
+    {
+        console.log('parseConfig');
+
+        this.setParent(config.parent, config.expandParent);
+
+        var width = config.width;
+        var height = config.height;
+        var resolution = config.resolution;
+        var scaleMode = config.scaleMode;
+        var zoom = config.zoom;
+        var autoRound = config.autoRound;
+
+        //  If width = '100%', or similar value
+        if (typeof width === 'string')
+        {
+            var parentScaleX = parseInt(width, 10) / 100;
+
+            width = Math.floor(this.parentSize.width * parentScaleX);
+        }
+
+        //  If height = '100%', or similar value
+        if (typeof height === 'string')
+        {
+            var parentScaleY = parseInt(height, 10) / 100;
+
+            height = Math.floor(this.parentSize.height * parentScaleY);
+        }
+
+        this.resolution = resolution;
+
+        this.zoom = zoom;
+
+        this.scaleMode = scaleMode;
+
+        this.autoRound = autoRound;
+
+        //  The un-modified game size, as requested in the game config (the raw width / height) as used for world bounds, etc
+        this.gameSize.setSize(width, height);
+
+        //  The modified game size, which is the w/h * resolution
+        this.baseSize.setSize(width * resolution, height * resolution);
+
+        if (autoRound)
+        {
+            this.baseSize.width = Math.floor(this.baseSize.width);
+            this.baseSize.height = Math.floor(this.baseSize.height);
+        }
+
+        if (config.minWidth > 0)
+        {
+            this.displaySize.setMin(config.minWidth * zoom, config.minHeight * zoom);
+        }
+
+        if (config.maxWidth > 0)
+        {
+            this.displaySize.setMax(config.maxWidth * zoom, config.maxHeight * zoom);
+        }
+
+        //  The size used for the canvas style, factoring in the scale mode and parent and zoom value
+        //  We just use the w/h here as this is what sets the aspect ratio (which doesn't then change)
+        this.displaySize.setSize(width, height);
     },
 
     setParent: function (parent, canExpandParent)
@@ -138,76 +223,17 @@ var ScaleManager = new Class({
 
         console.log('dom', DOMRect.width, DOMRect.height);
 
-        this.parentSize.setSize(DOMRect.width, DOMRect.height);
+        var resolution = this.resolution;
+
+        this.parentSize.setSize(DOMRect.width * resolution, DOMRect.height * resolution);
     },
 
-    parseConfig: function (config)
-    {
-        console.log('parseConfig');
-
-        var width = config.width;
-        var height = config.height;
-        var resolution = config.resolution;
-        var scaleMode = config.scaleMode;
-        var zoom = config.zoom;
-
-        //  If width = '100%', or similar value
-        if (typeof width === 'string')
-        {
-            var parentScaleX = parseInt(width, 10) / 100;
-
-            width = this.parentSize.width * parentScaleX;
-        }
-
-        //  If height = '100%', or similar value
-        if (typeof height === 'string')
-        {
-            var parentScaleY = parseInt(height, 10) / 100;
-
-            height = this.parentSize.height * parentScaleY;
-        }
-
-        this.resolution = resolution;
-
-        this.zoom = zoom;
-
-        this.scaleMode = scaleMode;
-
-        //  The un-modified game size, as requested in the game config.
-        this.gameSize.setSize(width * resolution, height * resolution);
-
-        // this.gameSize.setSize((width * zoom) * resolution, (height * zoom) * resolution);
-
-        // if (scaleMode < 5)
-        // {
-        //     this.canvasSize.setAspectMode(scaleMode);
-        // }
-
-        if (config.minWidth > 0)
-        {
-            this.canvasSize.setMin(config.minWidth * zoom, config.minHeight * zoom);
-        }
-
-        if (config.maxWidth > 0)
-        {
-            this.canvasSize.setMax(config.maxWidth * zoom, config.maxHeight * zoom);
-        }
-
-        // console.log('set canvas size', width, height);
-
-        this.canvasSize.setSize(width * zoom, height * zoom);
-
-        // this.canvasSize.setSize((width * zoom) * resolution, (height * zoom) * resolution);
-
-        // console.log(this.canvasSize.toString());
-    },
-
-    //  Fires AFTER the canvas has been added to the DOM
+    //  Fires AFTER the canvas has been created and added to the DOM
     boot: function ()
     {
         console.log('boot');
 
-        // this.setScaleMode(this.scaleMode);
+        this.canvas = this.game.canvas;
 
         var DOMRect = this.parent.getBoundingClientRect();
 
@@ -222,14 +248,12 @@ var ScaleManager = new Class({
 
         if (this.scaleMode < 5)
         {
-            this.canvasSize.setAspectMode(this.scaleMode);
+            this.displaySize.setAspectMode(this.scaleMode);
         }
 
         if (this.scaleMode > 0)
         {
-            console.log('set parent');
-            this.canvasSize.setParent(this.parentSize);
-            console.log(this.canvasSize.toString());
+            this.displaySize.setParent(this.parentSize);
         }
 
         this.updateScale();
@@ -239,36 +263,87 @@ var ScaleManager = new Class({
         this.startListeners();
     },
 
-    setScaleMode: function ()
-    {
-    },
-
     updateScale: function ()
     {
         console.log('updateScale');
 
         this.getParentBounds();
 
-        if (this.scaleMode > 0)
+        var style = this.canvas.style;
+
+        var width = this.gameSize.width;
+        var height = this.gameSize.height;
+
+        var styleWidth;
+        var styleHeight;
+
+        var zoom = this.zoom;
+        var autoRound = this.autoRound;
+        var resolution = this.resolution;
+
+        if (this.scaleMode === 0)
         {
-            var style = this.game.canvas.style;
+            //  No scale
+            this.displaySize.setSize((width * zoom) * resolution, (height * zoom) * resolution);
 
-            this.canvasSize.setSize(this.parentSize.width, this.parentSize.height);
-    
-            // var sx = (this.canvasSize.width / this.gameSize.width) / this.resolution;
-            // var sy = (this.canvasSize.height / this.gameSize.height) / this.resolution;
+            styleWidth = this.displaySize.width / resolution;
+            styleHeight = this.displaySize.height / resolution;
 
-            // style.transformOrigin = '0 0';
-            // style.transform = 'scale(' + sx + ',' + sy + ')';
+            if (autoRound)
+            {
+                styleWidth = Math.floor(styleWidth);
+                styleHeight = Math.floor(styleHeight);
+            }
 
-            style.width = this.canvasSize.width + 'px';
-            style.height = this.canvasSize.height + 'px';
-
-            // style.width = this.canvasSize.width / this.resolution + 'px';
-            // style.height = this.canvasSize.height / this.resolution + 'px';
-
-            console.log(this.canvasSize.toString());
+            style.width = styleWidth + 'px';
+            style.height = styleHeight + 'px';
         }
+        else if (this.scaleMode === 5)
+        {
+            //  Resize to match parent
+        }
+        else
+        {
+            //  All other scale modes
+            this.displaySize.setSize(this.parentSize.width, this.parentSize.height);
+
+            styleWidth = this.displaySize.width / resolution;
+            styleHeight = this.displaySize.height / resolution;
+
+            if (autoRound)
+            {
+                styleWidth = Math.floor(styleWidth);
+                styleHeight = Math.floor(styleHeight);
+            }
+
+            style.width = styleWidth + 'px';
+            style.height = styleHeight + 'px';
+        }
+
+        this.updateBounds();
+
+        // this.game.resize();
+    },
+
+    /**
+     * Updates the Input Manager bounds rectangle to match the bounding client rectangle of the
+     * canvas element being used to track input events.
+     *
+     * @method Phaser.DOM.ScaleManager#updateBounds
+     * @since 3.16.0
+     */
+    updateBounds: function ()
+    {
+        var bounds = this.canvasBounds;
+
+        var clientRect = this.canvas.getBoundingClientRect();
+
+        bounds.x = clientRect.left + window.pageXOffset - document.documentElement.clientLeft;
+        bounds.y = clientRect.top + window.pageYOffset - document.documentElement.clientTop;
+        bounds.width = clientRect.width;
+        bounds.height = clientRect.height;
+
+        this.displayScale.set(this.baseSize.width / bounds.width, this.baseSize.height / bounds.height);
     },
 
     startListeners: function ()
