@@ -59,22 +59,31 @@ var CanvasRenderer = new Class({
         this.drawCount = 0;
 
         /**
+         * The core Scale Manager.
+         *
+         * @name Phaser.Renderer.Canvas.CanvasRenderer#scaleManager
+         * @type {Phaser.DOM.ScaleManager}
+         * @since 3.16.0
+         */
+        this.scaleManager = game.scale;
+
+        /**
          * The width of the canvas being rendered to.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#width
-         * @type {number}
+         * @type {integer}
          * @since 3.0.0
          */
-        this.width = game.config.width;
+        this.width = this.scaleManager.baseSize.width;
 
         /**
          * The height of the canvas being rendered to.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#height
-         * @type {number}
+         * @type {integer}
          * @since 3.0.0
          */
-        this.height = game.config.height;
+        this.height = this.scaleManager.baseSize.height;
 
         /**
          * The local configuration settings of the CanvasRenderer.
@@ -87,7 +96,6 @@ var CanvasRenderer = new Class({
             clearBeforeRender: game.config.clearBeforeRender,
             backgroundColor: game.config.backgroundColor,
             resolution: game.config.resolution,
-            autoResize: game.config.autoResize,
             antialias: game.config.antialias,
             roundPixels: game.config.roundPixels
         };
@@ -233,7 +241,7 @@ var CanvasRenderer = new Class({
      */
     init: function ()
     {
-        this.resize(this.width, this.height);
+        this.resize();
     },
 
     /**
@@ -242,29 +250,18 @@ var CanvasRenderer = new Class({
      * @method Phaser.Renderer.Canvas.CanvasRenderer#resize
      * @since 3.0.0
      *
-     * @param {integer} width - The new width of the canvas.
-     * @param {integer} height - The new height of the canvas.
+     * @param {number} [width] - The new width of the renderer. If not specified it uses the base size from the Scale Manager.
+     * @param {number} [height] - The new height of the renderer. If not specified it uses the base size from the Scale Manager.
+     * @param {number} [resolution] - The new resolution of the renderer. If not specified it uses the resolution from the Scale Manager.
      */
-    resize: function (width, height)
+    resize: function (width, height, resolution)
     {
+        if (width === undefined) { width = this.scaleManager.baseSize.width; }
+        if (height === undefined) { height = this.scaleManager.baseSize.height; }
+        if (resolution === undefined) { resolution = this.scaleManager.resolution; }
+
         this.width = width;
         this.height = height;
-
-        /*
-        var resolution = this.config.resolution;
-
-        this.width = width * resolution;
-        this.height = height * resolution;
-
-        this.gameCanvas.width = this.width;
-        this.gameCanvas.height = this.height;
-
-        if (this.config.autoResize)
-        {
-            this.gameCanvas.style.width = (this.width / resolution) + 'px';
-            this.gameCanvas.style.height = (this.height / resolution) + 'px';
-        }
-        */
 
         //  Resizing a canvas will reset imageSmoothingEnabled (and probably other properties)
         if (this.scaleMode === ScaleModes.NEAREST)
