@@ -709,8 +709,20 @@ var Game = new Class({
      * @param {number} width - The new width of the game.
      * @param {number} height - The new height of the game.
      */
-    resize: function (width, height)
+    resize: function ()
     {
+        var width = this.scaleManager.baseSize.width;
+        var height = this.scaleManager.baseSize.height;
+
+        this.renderer.resize();
+
+        // this.input.resize();
+
+        this.scene.resize(width, height);
+
+        this.events.emit('resize', width, height);
+
+        /*
         this.config.width = width;
         this.config.height = height;
 
@@ -730,6 +742,7 @@ var Game = new Class({
         this.scene.resize(width, height);
 
         this.events.emit('resize', width, height);
+        */
     },
 
     /**
