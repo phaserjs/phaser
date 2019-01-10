@@ -84,7 +84,6 @@ var WebGLRenderer = new Class({
             backgroundColor: gameConfig.backgroundColor,
             contextCreation: contextCreationConfig,
             resolution: gameConfig.resolution,
-            autoResize: gameConfig.autoResize,
             roundPixels: gameConfig.roundPixels,
             maxTextures: gameConfig.maxTextures,
             maxTextureSize: gameConfig.maxTextureSize,
@@ -111,13 +110,22 @@ var WebGLRenderer = new Class({
         this.type = CONST.WEBGL;
 
         /**
+         * The core Scale Manager.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#scaleManager
+         * @type {Phaser.DOM.ScaleManager}
+         * @since 3.16.0
+         */
+        this.scaleManager = game.scale;
+
+        /**
          * The width of the canvas being rendered to.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#width
          * @type {integer}
          * @since 3.0.0
          */
-        this.width = game.scale.gameSize.width;
+        this.width = this.scaleManager.baseSize.width;
 
         /**
          * The height of the canvas being rendered to.
@@ -126,7 +134,7 @@ var WebGLRenderer = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.height = game.scale.gameSize.height;
+        this.height = this.scaleManager.baseSize.height;
 
         /**
          * The canvas which this WebGL Renderer draws to.
@@ -421,6 +429,13 @@ var WebGLRenderer = new Class({
          */
         this.blankTexture = null;
 
+        /**
+         * A default Camera used in calls when no other camera has been provided.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#defaultCamera
+         * @type {Phaser.Cameras.Scene2D.BaseCamera}
+         * @since 3.12.0
+         */
         this.defaultCamera = new BaseCamera(0, 0, 0, 0);
 
         /**
@@ -467,8 +482,7 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Creates a new WebGLRenderingContext and initializes all internal
-     * state.
+     * Creates a new WebGLRenderingContext and initializes all internal state.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#init
      * @since 3.0.0
@@ -573,24 +587,7 @@ var WebGLRenderer = new Class({
 
         this.setBlendMode(CONST.BlendModes.NORMAL);
 
-        var width = this.width;
-        var height = this.height;
-
-        gl.viewport(0, 0, width, height);
-
-        var pipelines = this.pipelines;
-
-        //  Update all registered pipelines
-        for (var pipelineName in pipelines)
-        {
-            pipelines[pipelineName].resize(width, height, this.game.scale.resolution);
-        }
-
-        this.drawingBufferHeight = gl.drawingBufferHeight;
-
-        this.defaultCamera.setSize(width, height);
-
-        gl.scissor(0, (this.drawingBufferHeight - height), width, height);
+        this.resize();
 
         this.game.events.once('texturesready', this.boot, this);
 
@@ -627,26 +624,30 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Resizes the drawing buffer.
+     * Resizes the drawing buffer to match that required by the Scale Manager.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#resize
      * @since 3.0.0
      *
-     * @param {number} width - The width of the renderer.
-     * @param {number} height - The height of the renderer.
+     * @param {number} [width] - The new width of the renderer. If not specified it uses the base size from the Scale Manager.
+     * @param {number} [height] - The new height of the renderer. If not specified it uses the base size from the Scale Manager.
+     * @param {number} [resolution] - The new resolution of the renderer. If not specified it uses the resolution from the Scale Manager.
      *
      * @return {this} This WebGLRenderer instance.
      */
-    resize: function (width, height)
+    resize: function (width, height, resolution)
     {
+        if (width === undefined) { width = this.scaleManager.baseSize.width; }
+        if (height === undefined) { height = this.scaleManager.baseSize.height; }
+        if (resolution === undefined) { resolution = this.scaleManager.resolution; }
+
         var gl = this.gl;
         var pipelines = this.pipelines;
-        var resolution = this.game.scale.resolution;
 
-        this.width = Math.floor(width * resolution);
-        this.height = Math.floor(height * resolution);
+        this.width = width;
+        this.height = height;
 
-        gl.viewport(0, 0, this.width, this.height);
+        gl.viewport(0, 0, width, height);
 
         //  Update all registered pipelines
         for (var pipelineName in pipelines)
@@ -656,9 +657,9 @@ var WebGLRenderer = new Class({
 
         this.drawingBufferHeight = gl.drawingBufferHeight;
 
-        this.defaultCamera.setSize(width, height);
+        gl.scissor(0, (gl.drawingBufferHeight - height), width, height);
 
-        gl.scissor(0, (this.drawingBufferHeight - this.height), this.width, this.height);
+        this.defaultCamera.setSize(width, height);
 
         return this;
     },
