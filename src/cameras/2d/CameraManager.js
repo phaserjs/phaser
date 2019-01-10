@@ -599,7 +599,7 @@ var CameraManager = new Class({
         var scene = this.scene;
         var cameras = this.cameras;
         var baseScale = this.baseScale;
-        var resolution = renderer.config.resolution;
+        var resolution = this.systems.game.scale.resolution;
 
         for (var i = 0; i < this.cameras.length; i++)
         {
