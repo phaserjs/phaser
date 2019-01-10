@@ -664,10 +664,9 @@ var Camera = new Class({
      * @protected
      * @since 3.0.0
      *
-     * @param {number} baseScale - The base scale, as set in the Camera Manager.
-     * @param {number} resolution - The game resolution.
+     * @param {number} resolution - The game resolution, as set in the Scale Manager.
      */
-    preRender: function (baseScale, resolution)
+    preRender: function (resolution)
     {
         var width = this.width;
         var height = this.height;
@@ -675,7 +674,7 @@ var Camera = new Class({
         var halfWidth = width * 0.5;
         var halfHeight = height * 0.5;
 
-        var zoom = this.zoom * baseScale;
+        var zoom = this.zoom * resolution;
         var matrix = this.matrix;
 
         var originX = width * this.originX;
@@ -762,7 +761,7 @@ var Camera = new Class({
         matrix.translate(this.x + originX, this.y + originY);
         matrix.rotate(this.rotation);
         matrix.scale(zoom, zoom);
-        matrix.translate(-originX, -originY);
+        matrix.translate(-(originX / resolution), -(originY / resolution));
 
         this.shakeEffect.preRender();
     },
