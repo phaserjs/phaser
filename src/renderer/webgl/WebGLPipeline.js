@@ -305,6 +305,8 @@ var WebGLPipeline = new Class({
      */
     resize: function (width, height, resolution)
     {
+        this.resolution = resolution;
+
         this.width = width * resolution;
         this.height = height * resolution;
 
