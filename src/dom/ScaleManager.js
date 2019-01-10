@@ -174,7 +174,9 @@ var ScaleManager = new Class({
         this.scaleMode = scaleMode;
 
         //  The un-modified game size, as requested in the game config.
-        this.gameSize.setSize(width, height);
+        this.gameSize.setSize(width * resolution, height * resolution);
+
+        // this.gameSize.setSize((width * zoom) * resolution, (height * zoom) * resolution);
 
         // if (scaleMode < 5)
         // {
@@ -191,11 +193,13 @@ var ScaleManager = new Class({
             this.canvasSize.setMax(config.maxWidth * zoom, config.maxHeight * zoom);
         }
 
-        console.log('set canvas size', width, height);
+        // console.log('set canvas size', width, height);
 
-        this.canvasSize.setSize((width * zoom) * resolution, (height * zoom) * resolution);
+        this.canvasSize.setSize(width * zoom, height * zoom);
 
-        console.log(this.canvasSize.toString());
+        // this.canvasSize.setSize((width * zoom) * resolution, (height * zoom) * resolution);
+
+        // console.log(this.canvasSize.toString());
     },
 
     //  Fires AFTER the canvas has been added to the DOM
@@ -251,8 +255,17 @@ var ScaleManager = new Class({
 
             this.canvasSize.setSize(this.parentSize.width, this.parentSize.height);
     
+            // var sx = (this.canvasSize.width / this.gameSize.width) / this.resolution;
+            // var sy = (this.canvasSize.height / this.gameSize.height) / this.resolution;
+
+            // style.transformOrigin = '0 0';
+            // style.transform = 'scale(' + sx + ',' + sy + ')';
+
             style.width = this.canvasSize.width + 'px';
             style.height = this.canvasSize.height + 'px';
+
+            // style.width = this.canvasSize.width / this.resolution + 'px';
+            // style.height = this.canvasSize.height / this.resolution + 'px';
 
             console.log(this.canvasSize.toString());
         }
