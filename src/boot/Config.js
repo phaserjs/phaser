@@ -100,7 +100,6 @@ var ValueToColor = require('../display/color/ValueToColor');
  *
  * @property {boolean} [antialias=true] - When set to `true`, WebGL uses linear interpolation to draw scaled or rotated textures, giving a smooth appearance. When set to `false`, WebGL uses nearest-neighbor interpolation, giving a crisper appearance. `false` also disables antialiasing of the game canvas itself, if the browser supports it, when the game canvas is scaled.
  * @property {boolean} [pixelArt=false] - Sets `antialias` and `roundPixels` to true. This is the best setting for pixel-art games.
- * @property {boolean} [autoResize=true] - Automatically resize the Game Canvas if you resize the renderer.
  * @property {boolean} [roundPixels=false] - Draw texture-based Game Objects at only whole-integer positions. Game Objects without textures, like Graphics, ignore this property.
  * @property {boolean} [transparent=false] - Whether the game canvas will be transparent.
  * @property {boolean} [clearBeforeRender=true] - Whether the game canvas will be cleared between each rendering frame.
@@ -124,6 +123,7 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {integer} [minHeight] - The minimum height the canvas can be scaled down to.
  * @property {integer} [maxWidth] - The maximum width the canvas can be scaled up to.
  * @property {integer} [maxHeight] - The maximum height the canvas can be scaled up to.
+ * @property {boolean} [autoRound=false] - Automatically round the display and style sizes of the canvas. This can help with performance in lower-powered devices.
  */
 
 /**
@@ -297,6 +297,11 @@ var Config = new Class({
         this.expandParent = GetValue(config, 'expandParent', true);
 
         /**
+         * @const {integer} Phaser.Boot.Config#autoRound - Automatically round the display and style sizes of the canvas. This can help with performance in lower-powered devices.
+         */
+        this.autoRound = GetValue(config, 'autoRound', false);
+
+        /**
          * @const {integer} Phaser.Boot.Config#minWidth - The minimum width, in pixels, the canvas will scale down to. A value of zero means no minimum.
          */
         this.minWidth = GetValue(config, 'minWidth', 0);
@@ -329,6 +334,7 @@ var Config = new Class({
             this.parent = GetValue(scaleConfig, 'parent', this.parent);
             this.scaleMode = GetValue(scaleConfig, 'mode', this.scaleMode);
             this.expandParent = GetValue(scaleConfig, 'expandParent', this.expandParent);
+            this.autoRound = GetValue(scaleConfig, 'autoRound', this.autoRound);
             this.minWidth = GetValue(scaleConfig, 'min.width', this.minWidth);
             this.maxWidth = GetValue(scaleConfig, 'max.width', this.maxWidth);
             this.minHeight = GetValue(scaleConfig, 'min.height', this.minHeight);
@@ -519,11 +525,6 @@ var Config = new Class({
         var renderConfig = GetValue(config, 'render', config);
 
         /**
-         * @const {boolean} Phaser.Boot.Config#autoResize - Automatically resize the Game Canvas if you resize the renderer.
-         */
-        this.autoResize = GetValue(renderConfig, 'autoResize', true);
-
-        /**
          * @const {boolean} Phaser.Boot.Config#antialias - When set to `true`, WebGL uses linear interpolation to draw scaled or rotated textures, giving a smooth appearance. When set to `false`, WebGL uses nearest-neighbor interpolation, giving a crisper appearance. `false` also disables antialiasing of the game canvas itself, if the browser supports it, when the game canvas is scaled.
          */
         this.antialias = GetValue(renderConfig, 'antialias', true);
@@ -536,7 +537,7 @@ var Config = new Class({
         /**
          * @const {boolean} Phaser.Boot.Config#pixelArt - Prevent pixel art from becoming blurred when scaled. It will remain crisp (tells the WebGL renderer to automatically create textures using a linear filter mode).
          */
-        this.pixelArt = GetValue(renderConfig, 'pixelArt', false);
+        this.pixelArt = GetValue(renderConfig, 'pixelArt', this.zoom > 1);
 
         if (this.pixelArt)
         {
