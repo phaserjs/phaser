@@ -117,7 +117,7 @@ var WebGLRenderer = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.width = game.scale.canvasSize.width;
+        this.width = game.scale.gameSize.width;
 
         /**
          * The height of the canvas being rendered to.
@@ -126,7 +126,7 @@ var WebGLRenderer = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.height = game.scale.canvasSize.height;
+        this.height = game.scale.gameSize.height;
 
         /**
          * The canvas which this WebGL Renderer draws to.
