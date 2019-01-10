@@ -134,15 +134,6 @@ var CameraManager = new Class({
          */
         this.main;
 
-        /**
-         * This scale affects all cameras. It's used by the Scale Manager.
-         *
-         * @name Phaser.Cameras.Scene2D.CameraManager#baseScale
-         * @type {number}
-         * @since 3.0.0
-         */
-        this.baseScale = 1;
-
         scene.sys.events.once('boot', this.boot, this);
         scene.sys.events.on('start', this.start, this);
     },
@@ -598,7 +589,6 @@ var CameraManager = new Class({
     {
         var scene = this.scene;
         var cameras = this.cameras;
-        var baseScale = this.baseScale;
         var resolution = this.systems.game.scale.resolution;
 
         for (var i = 0; i < this.cameras.length; i++)
@@ -607,7 +597,7 @@ var CameraManager = new Class({
 
             if (camera.visible && camera.alpha > 0)
             {
-                camera.preRender(baseScale, resolution);
+                camera.preRender(resolution);
 
                 renderer.render(scene, children, interpolation, camera);
             }
