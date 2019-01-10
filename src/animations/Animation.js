@@ -808,6 +808,8 @@ var Animation = new Class({
 
                 this.emit('repeat', this, frame);
 
+                component.currentAnim.emit('animationrepeat-' + this.key, this, frame, component.repeatCounter, parent);
+
                 parent.emit('animationrepeat-' + this.key, this, frame, component.repeatCounter, parent);
 
                 parent.emit('animationrepeat', this, frame, component.repeatCounter, parent);

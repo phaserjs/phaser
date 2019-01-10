@@ -676,6 +676,8 @@ var Animation = new Class({
 
         anim.emit('start', anim, frame);
 
+        anim.emit('animationstart-' + key, anim, frame, gameObject);
+
         gameObject.emit('animationstart-' + key, anim, frame, gameObject);
 
         gameObject.emit('animationstart', anim, frame, gameObject);
@@ -872,6 +874,8 @@ var Animation = new Class({
 
         anim.emit('restart', anim, frame);
 
+        anim.emit('animationrestart-' + anim.key, anim, frame, gameObject);
+
         gameObject.emit('animationrestart-' + anim.key, anim, frame, gameObject);
 
         gameObject.emit('animationrestart', anim, frame, gameObject);
@@ -905,6 +909,8 @@ var Animation = new Class({
         if (anim)
         {
             anim.emit('complete', anim, frame);
+
+            anim.emit('animationcomplete-' + anim.key, anim, frame, gameObject);
 
             gameObject.emit('animationcomplete-' + anim.key, anim, frame, gameObject);
     
@@ -1119,6 +1125,8 @@ var Animation = new Class({
             }
 
             var anim = this.currentAnim;
+
+            anim.emit('animationupdate-' + anim.key, anim, animationFrame, gameObject);
 
             gameObject.emit('animationupdate-' + anim.key, anim, animationFrame, gameObject);
 
