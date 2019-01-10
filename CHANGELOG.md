@@ -124,6 +124,16 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `InputPlugin.getDragState` is a new internal method that gets the drag state for the given Pointer.
 * Draggable Game Objects would not work if you had multiple Scenes running in parallel, with draggable objects in both of them. Only the top-most Scene would work fully. Items in the bottom Scene would never finish their drag cycle, causing them to get stuck. Fix #4249 #4278 (thanks @probt @iArePJ)
 
+### Changes as a result of the new Scale Manager
+
+* If you set the Game Config property `zoom` to be > 1 then it will automatically enable `pixelArt` mode, unless you set it to `false` in the config.
+* There is a new property in the Game Config called `autoRound`, which controls if the canvas size and style sizes are passed through Math.floor or not. On some devices this can help with performance and anti-aliasing. The default is `false` (turned off).
+* The Game Config property `autoResize` has been removed as it's now redundant.
+* The WebGL and Canvas Renderers no longer change the Canvas size in their `resize` methods. They just update internal properties.
+* The WebGL and Canvas Renderers now read the `width`, `height` and `resolution` values from the Scale Manager, not the Game Config.
+* `CameraManager.baseScale` property has been removed as it's no longer used anywhere.
+* The BaseCamera and Camera `preRender` methods now only take a resolution argument and use it internally for their transforms.
+
 ### New Features
 
 * You can now load external Scene files using the new `load.sceneFile` method. This allows you to dynamically load a Scene into the Scene Manager of your game, and swap to it at will. Please see the documentation and examples for further details.
