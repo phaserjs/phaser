@@ -118,12 +118,14 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {integer} [zoom=1] - The zoom value of the game canvas.
  * @property {number} [resolution=1] - The rendering resolution of the canvas.
  * @property {(HTMLElement|string)} [parent] - The DOM element that will contain the game canvas, or its `id`. If null (the default) or if the named element doesn't exist, the game canvas is inserted directly into the document body.
- * @property {integer} [mode=0] - The scale mode to apply to the canvas. SHOW_ALL, EXACT_FIT, USER_SCALE, or RESIZE.
+ * @property {integer} [mode=0] - The scale mode.
  * @property {integer} [minWidth] - The minimum width the canvas can be scaled down to.
  * @property {integer} [minHeight] - The minimum height the canvas can be scaled down to.
  * @property {integer} [maxWidth] - The maximum width the canvas can be scaled up to.
  * @property {integer} [maxHeight] - The maximum height the canvas can be scaled up to.
  * @property {boolean} [autoRound=false] - Automatically round the display and style sizes of the canvas. This can help with performance in lower-powered devices.
+ * @property {integer} [autoCenter=0] - Automatically center the canvas within the parent? 0 = No centering. 1 = Center both horizontally and vertically. 2 = Center horizontally. 3 = Center vertically.
+ * @property {integer} [resizeInterval=500] - How many ms should elapse before checking if the browser size has changed?
  */
 
 /**
@@ -302,6 +304,16 @@ var Config = new Class({
         this.autoRound = GetValue(config, 'autoRound', false);
 
         /**
+         * @const {integer} Phaser.Boot.Config#autoCenter - Automatically center the canvas within the parent? 0 = No centering. 1 = Center both horizontally and vertically. 2 = Center horizontally. 3 = Center vertically.
+         */
+        this.autoCenter = GetValue(config, 'autoCenter', 0);
+
+        /**
+         * @const {integer} Phaser.Boot.Config#resizeInterval - How many ms should elapse before checking if the browser size has changed?
+         */
+        this.resizeInterval = GetValue(config, 'autoRound', 500);
+
+        /**
          * @const {integer} Phaser.Boot.Config#minWidth - The minimum width, in pixels, the canvas will scale down to. A value of zero means no minimum.
          */
         this.minWidth = GetValue(config, 'minWidth', 0);
@@ -335,6 +347,8 @@ var Config = new Class({
             this.scaleMode = GetValue(scaleConfig, 'mode', this.scaleMode);
             this.expandParent = GetValue(scaleConfig, 'expandParent', this.expandParent);
             this.autoRound = GetValue(scaleConfig, 'autoRound', this.autoRound);
+            this.autoCenter = GetValue(scaleConfig, 'autoCenter', this.autoCenter);
+            this.resizeInterval = GetValue(scaleConfig, 'resizeInterval', this.resizeInterval);
             this.minWidth = GetValue(scaleConfig, 'min.width', this.minWidth);
             this.maxWidth = GetValue(scaleConfig, 'max.width', this.maxWidth);
             this.minHeight = GetValue(scaleConfig, 'min.height', this.minHeight);
