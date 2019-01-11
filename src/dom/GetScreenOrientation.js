@@ -4,6 +4,8 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var CONST = require('./const');
+
 var GetScreenOrientation = function (width, height)
 {
     var screen = window.screen;
@@ -19,32 +21,29 @@ var GetScreenOrientation = function (width, height)
         //  moz / ms-orientation are strings
         return orientation;
     }
-
-    var PORTRAIT = 'portrait-primary';
-    var LANDSCAPE = 'landscape-primary';
-    
+   
     if (screen)
     {
-        return (screen.height > screen.width) ? PORTRAIT : LANDSCAPE;
+        return (screen.height > screen.width) ? CONST.PORTRAIT : CONST.LANDSCAPE;
     }
     else if (typeof window.orientation === 'number')
     {
         //  This may change by device based on "natural" orientation.
-        return (window.orientation === 0 || window.orientation === 180) ? PORTRAIT : LANDSCAPE;
+        return (window.orientation === 0 || window.orientation === 180) ? CONST.PORTRAIT : CONST.LANDSCAPE;
     }
     else if (window.matchMedia)
     {
         if (window.matchMedia('(orientation: portrait)').matches)
         {
-            return PORTRAIT;
+            return CONST.PORTRAIT;
         }
         else if (window.matchMedia('(orientation: landscape)').matches)
         {
-            return LANDSCAPE;
+            return CONST.LANDSCAPE;
         }
     }
     
-    return (height > width) ? PORTRAIT : LANDSCAPE;
+    return (height > width) ? CONST.PORTRAIT : CONST.LANDSCAPE;
 };
 
 module.exports = GetScreenOrientation;
