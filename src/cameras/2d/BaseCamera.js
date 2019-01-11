@@ -119,14 +119,13 @@ var BaseCamera = new Class({
         this.sceneManager;
 
         /**
-         * A reference to the Game Config.
+         * A reference to the Game Scale Manager.
          *
-         * @name Phaser.Cameras.Scene2D.BaseCamera#config
-         * @type {object}
-         * @readonly
-         * @since 3.12.0
+         * @name Phaser.Cameras.Scene2D.BaseCamera#scaleManager
+         * @type {Phaser.DOM.ScaleManager}
+         * @since 3.16.0
          */
-        this.config;
+        this.scaleManager;
 
         /**
          * The Camera ID. Assigned by the Camera Manager and used to handle camera exclusion.
@@ -1276,10 +1275,10 @@ var BaseCamera = new Class({
 
         this.scene = scene;
 
-        this.config = scene.sys.game.config;
         this.sceneManager = scene.sys.game.scene;
+        this.scaleManager = scene.sys.scale;
 
-        var res = this.config.resolution;
+        var res = this.scaleManager.resolution;
 
         this.resolution = res;
 
@@ -1479,12 +1478,12 @@ var BaseCamera = new Class({
      */
     updateSystem: function ()
     {
-        if (!this.config)
+        if (!this.scaleManager)
         {
             return;
         }
 
-        var custom = (this._x !== 0 || this._y !== 0 || this.config.width !== this._width || this.config.height !== this._height);
+        var custom = (this._x !== 0 || this._y !== 0 || this.scaleManager.width !== this._width || this.scaleManager.height !== this._height);
 
         var sceneManager = this.sceneManager;
 
@@ -1542,7 +1541,7 @@ var BaseCamera = new Class({
         this._bounds = null;
 
         this.scene = null;
-        this.config = null;
+        this.scaleManager = null;
         this.sceneManager = null;
     },
 
