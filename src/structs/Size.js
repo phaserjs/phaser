@@ -377,7 +377,7 @@ var Size = new Class({
 
         if (checkParent && this._parent && value > this._parent.width)
         {
-            value = this._parent.width;
+            value = Math.max(this.minWidth, this._parent.width);
         }
 
         return value;
@@ -402,7 +402,7 @@ var Size = new Class({
 
         if (checkParent && this._parent && value > this._parent.height)
         {
-            value = this._parent.height;
+            value = Math.max(this.minHeight, this._parent.height);
         }
 
         return value;
