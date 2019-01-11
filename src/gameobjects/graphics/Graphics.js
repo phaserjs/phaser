@@ -1486,8 +1486,8 @@ var Graphics = new Class({
         var sys = this.scene.sys;
         var renderer = sys.game.renderer;
 
-        if (width === undefined) { width = sys.game.config.width; }
-        if (height === undefined) { height = sys.game.config.height; }
+        if (width === undefined) { width = sys.scale.width; }
+        if (height === undefined) { height = sys.scale.height; }
 
         Graphics.TargetCamera.setScene(this.scene);
         Graphics.TargetCamera.setViewport(0, 0, width, height);

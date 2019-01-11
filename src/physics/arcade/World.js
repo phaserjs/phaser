@@ -249,8 +249,8 @@ var World = new Class({
         this.bounds = new Rectangle(
             GetValue(config, 'x', 0),
             GetValue(config, 'y', 0),
-            GetValue(config, 'width', scene.sys.game.config.width),
-            GetValue(config, 'height', scene.sys.game.config.height)
+            GetValue(config, 'width', scene.sys.scale.width),
+            GetValue(config, 'height', scene.sys.scale.height)
         );
 
         /**

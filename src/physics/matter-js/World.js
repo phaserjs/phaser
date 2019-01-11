@@ -96,8 +96,8 @@ var World = new Class({
             {
                 var x = GetFastValue(boundsConfig, 'x', 0);
                 var y = GetFastValue(boundsConfig, 'y', 0);
-                var width = GetFastValue(boundsConfig, 'width', scene.sys.game.config.width);
-                var height = GetFastValue(boundsConfig, 'height', scene.sys.game.config.height);
+                var width = GetFastValue(boundsConfig, 'width', scene.sys.scale.width);
+                var height = GetFastValue(boundsConfig, 'height', scene.sys.scale.height);
                 var thickness = GetFastValue(boundsConfig, 'thickness', 64);
                 var left = GetFastValue(boundsConfig, 'left', true);
                 var right = GetFastValue(boundsConfig, 'right', true);
@@ -319,8 +319,8 @@ var World = new Class({
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
-        if (width === undefined) { width = this.scene.sys.game.config.width; }
-        if (height === undefined) { height = this.scene.sys.game.config.height; }
+        if (width === undefined) { width = this.scene.sys.scale.width; }
+        if (height === undefined) { height = this.scene.sys.scale.height; }
         if (thickness === undefined) { thickness = 128; }
         if (left === undefined) { left = true; }
         if (right === undefined) { right = true; }
