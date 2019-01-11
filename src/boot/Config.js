@@ -311,7 +311,7 @@ var Config = new Class({
         /**
          * @const {integer} Phaser.Boot.Config#resizeInterval - How many ms should elapse before checking if the browser size has changed?
          */
-        this.resizeInterval = GetValue(config, 'autoRound', 500);
+        this.resizeInterval = GetValue(config, 'autoRound', 2000);
 
         /**
          * @const {integer} Phaser.Boot.Config#minWidth - The minimum width, in pixels, the canvas will scale down to. A value of zero means no minimum.
