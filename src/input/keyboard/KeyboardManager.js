@@ -72,7 +72,7 @@ var KeyboardManager = new Class({
          * An array of Key Code values that will automatically have `preventDefault` called on them,
          * as long as the `KeyboardManager.preventDefault` boolean is set to `true`.
          * 
-         * By default the array contains: The Space Key, the Cursor Keys, 0 to 9 and A to Z.
+         * By default the array is empty.
          * 
          * The key must be non-modified when pressed in order to be captured.
          * 
@@ -206,7 +206,7 @@ var KeyboardManager = new Class({
                 // Do nothing if event already handled
                 return;
             }
-    
+
             _this.queue.push(event);
     
             var modified = (event.altKey || event.ctrlKey || event.shiftKey || event.metaKey);
