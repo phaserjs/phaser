@@ -4,7 +4,11 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var CONST = require('./const');
 var Class = require('../utils/Class');
+var EventEmitter = require('eventemitter3');
+var GetInnerHeight = require('./GetInnerHeight');
+var GetScreenOrientation = require('./GetScreenOrientation');
 var NOOP = require('../utils/NOOP');
 var Rectangle = require('../geom/rectangle/Rectangle');
 var Size = require('../structs/Size');
@@ -16,18 +20,23 @@ var Vector2 = require('../math/Vector2');
  *
  * @class ScaleManager
  * @memberof Phaser.DOM
+ * @extends Phaser.Events.EventEmitter
  * @constructor
- * @since 3.15.0
+ * @since 3.16.0
  *
  * @param {Phaser.Game} game - A reference to the Phaser.Game instance.
  * @param {any} config
  */
 var ScaleManager = new Class({
 
+    Extends: EventEmitter,
+
     initialize:
 
     function ScaleManager (game)
     {
+        EventEmitter.call(this);
+
         /**
          * A reference to the Phaser.Game instance.
          *
@@ -67,7 +76,7 @@ var ScaleManager = new Class({
         //  The size used for the canvas style, factoring in the scale mode, parent and other values
         this.displaySize = new Size();
 
-        this.scaleMode = 0;
+        this.scaleMode = CONST.NONE;
 
         //  The canvas resolution
         this.resolution = 1;
@@ -75,14 +84,30 @@ var ScaleManager = new Class({
         //  The canvas zoom factor
         this.zoom = 1;
 
+        //  The scale between the baseSize and the canvasBounds
+        this.displayScale = new Vector2(1, 1);
+
+        //  Automatically floor the canvas sizes
         this.autoRound = false;
+
+        //  Automatically center the canvas within the parent? 0 = No centering. 1 = Center both horizontally and vertically. 2 = Center horizontally. 3 = Center vertically.
+        this.autoCenter = CONST.NO_CENTER;
+
+        //  The device orientation (if available)
+        this.orientation = CONST.LANDSCAPE;
 
         this.trackParent = false;
 
         this.allowFullScreen = false;
 
-        //  The scale between the baseSize and the canvasBounds
-        this.displayScale = new Vector2(1, 1);
+        this.dirty = false;
+
+        //  How many ms should elapse before checking if the browser size has changed?
+        this.resizeInterval = 500;
+
+        this._lastCheck = 0;
+
+        this._checkOrientation = false;
 
         this.listeners = {
 
@@ -95,23 +120,43 @@ var ScaleManager = new Class({
     },
 
     //  Called BEFORE the Canvas object is created and added to the DOM
-    //  So if we need to do anything re: scaling to a parent, we ought to do it after this happens.
+    //  So if we need to do anything re: scaling to a parent, we should do it in `boot` and not here.
     preBoot: function ()
     {
         //  Parse the config to get the scaling values we need
-        console.log('preBoot');
-
         this.parseConfig(this.game.config);
 
         this.game.events.once('boot', this.boot, this);
     },
 
-    //  Fires BEFORE the canvas has been created
+    //  Fires AFTER the canvas has been created and added to the DOM
+    boot: function ()
+    {
+        this.canvas = this.game.canvas;
+
+        this.getParentBounds();
+
+        if (this.scaleMode < 5)
+        {
+            this.displaySize.setAspectMode(this.scaleMode);
+        }
+
+        if (this.scaleMode > 0)
+        {
+            this.displaySize.setParent(this.parentSize);
+        }
+
+        this.game.events.on('prestep', this.step, this);
+
+        this.startListeners();
+
+        this.refresh();
+    },
+
     parseConfig: function (config)
     {
-        console.log('parseConfig');
-
-        this.setParent(config.parent, config.expandParent);
+        this.getParent(config);
+        this.getParentBounds();
 
         var width = config.width;
         var height = config.height;
@@ -126,6 +171,8 @@ var ScaleManager = new Class({
             var parentScaleX = parseInt(width, 10) / 100;
 
             width = Math.floor(this.parentSize.width * parentScaleX);
+
+            console.log('100% w', parentScaleX, width, this.parentSize.toString());
         }
 
         //  If height = '100%', or similar value
@@ -143,6 +190,16 @@ var ScaleManager = new Class({
         this.scaleMode = scaleMode;
 
         this.autoRound = autoRound;
+
+        this.autoCenter = config.autoCenter;
+
+        this.resizeInterval = config.resizeInterval;
+
+        if (autoRound)
+        {
+            width = Math.floor(width);
+            height = Math.floor(height);
+        }
 
         //  The un-modified game size, as requested in the game config (the raw width / height) as used for world bounds, etc
         this.gameSize.setSize(width, height);
@@ -169,11 +226,14 @@ var ScaleManager = new Class({
         //  The size used for the canvas style, factoring in the scale mode and parent and zoom value
         //  We just use the w/h here as this is what sets the aspect ratio (which doesn't then change)
         this.displaySize.setSize(width, height);
+
+        this.orientation = GetScreenOrientation(width, height);
     },
 
-    setParent: function (parent, canExpandParent)
+    getParent: function (config)
     {
-        console.log('setParent');
+        var parent = config.parent;
+        var canExpandParent = config.expandParent;
 
         var target;
 
@@ -217,58 +277,98 @@ var ScaleManager = new Class({
         }
     },
 
+    //  Return `true` if the parent bounds have changed size, otherwise returns false.
     getParentBounds: function ()
     {
         var DOMRect = this.parent.getBoundingClientRect();
 
-        console.log('dom', DOMRect.width, DOMRect.height);
+        if (this.parentIsWindow && this.game.device.os.iOS)
+        {
+            DOMRect.height = GetInnerHeight(true);
+        }
+
+        var parentSize = this.parentSize;
 
         var resolution = this.resolution;
+        var newWidth = DOMRect.width * resolution;
+        var newHeight = DOMRect.height * resolution;
 
-        this.parentSize.setSize(DOMRect.width * resolution, DOMRect.height * resolution);
+        if (parentSize.width !== newWidth || parentSize.height !== newHeight)
+        {
+            this.parentSize.setSize(newWidth, newHeight);
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     },
 
-    //  Fires AFTER the canvas has been created and added to the DOM
-    boot: function ()
+    //  https://developer.mozilla.org/en-US/docs/Web/API/Screen/lockOrientation
+    //  'portrait-primary', 'landscape-primary', 'landscape', 'portrait', etc.
+    lockOrientation: function (orientation)
     {
-        console.log('boot');
+        var lock = screen.lockOrientation || screen.mozLockOrientation || screen.msLockOrientation;
 
-        this.canvas = this.game.canvas;
-
-        var DOMRect = this.parent.getBoundingClientRect();
-
-        if (this.parentIsWindow)
+        if (lock)
         {
-            DOMRect.height = this.getInnerHeight();
+            return lock(orientation);
         }
 
-        console.log('dom', DOMRect.width, DOMRect.height);
+        return false;
+    },
 
-        this.parentSize.setSize(DOMRect.width, DOMRect.height);
-
-        if (this.scaleMode < 5)
+    //  Directly resize the game.
+    resize: function (width, height)
+    {
+        if (this.autoRound)
         {
-            this.displaySize.setAspectMode(this.scaleMode);
+            width = Math.floor(width);
+            height = Math.floor(height);
         }
 
-        if (this.scaleMode > 0)
-        {
-            this.displaySize.setParent(this.parentSize);
-        }
+        this.gameSize.setSize(width, height);
 
+        this.baseSize.setSize(width * this.resolution, height * this.resolution);
+
+        this.refresh();
+    },
+
+    /**
+     * Game Resize event.
+     * 
+     * Listen for it using the event type `resize`.
+     *
+     * @event Phaser.Game#resizeEvent
+     * @param {number} width - The new width of the Game.
+     * @param {number} height - The new height of the Game.
+     */
+
+    refresh: function ()
+    {
         this.updateScale();
+        this.updateBounds();
 
-        this.game.events.on('prestep', this.step, this);
+        if (this._checkOrientation)
+        {
+            this._checkOrientation = false;
 
-        this.startListeners();
+            var newOrientation = GetScreenOrientation(this.width, this.height);
+
+            if (newOrientation !== this.orientation)
+            {
+                this.orientation = newOrientation;
+    
+                this.emit('orientationchange', newOrientation);
+            }
+        }
+
+        this.emit('resize', this.gameSize, this.baseSize, this.displaySize, this.resolution);
     },
 
     updateScale: function ()
     {
-        console.log('updateScale');
-
-        this.getParentBounds();
-
         var style = this.canvas.style;
 
         var width = this.gameSize.width;
@@ -301,6 +401,23 @@ var ScaleManager = new Class({
         else if (this.scaleMode === 5)
         {
             //  Resize to match parent
+            this.gameSize.setSize(this.parentSize.width, this.parentSize.height);
+
+            this.baseSize.setSize(this.parentSize.width * resolution, this.parentSize.height * resolution);
+
+            this.displaySize.setSize(this.parentSize.width, this.parentSize.height);
+
+            styleWidth = this.displaySize.width / resolution;
+            styleHeight = this.displaySize.height / resolution;
+
+            if (autoRound)
+            {
+                styleWidth = Math.floor(styleWidth);
+                styleHeight = Math.floor(styleHeight);
+            }
+
+            this.canvas.width = styleWidth;
+            this.canvas.height = styleHeight;
         }
         else
         {
@@ -320,9 +437,22 @@ var ScaleManager = new Class({
             style.height = styleHeight + 'px';
         }
 
-        this.updateBounds();
+        var offsetX = Math.floor((this.parentSize.width - styleWidth) / 2);
+        var offsetY = Math.floor((this.parentSize.height - styleHeight) / 2);
 
-        // this.game.resize();
+        if (this.autoCenter === 1)
+        {
+            style.marginLeft = offsetX + 'px';
+            style.marginTop = offsetY + 'px';
+        }
+        else if (this.autoCenter === 2)
+        {
+            style.marginLeft = offsetX + 'px';
+        }
+        else if (this.autoCenter === 3)
+        {
+            style.marginTop = offsetY + 'px';
+        }
     },
 
     /**
@@ -335,7 +465,6 @@ var ScaleManager = new Class({
     updateBounds: function ()
     {
         var bounds = this.canvasBounds;
-
         var clientRect = this.canvas.getBoundingClientRect();
 
         bounds.x = clientRect.left + window.pageXOffset - document.documentElement.clientLeft;
@@ -346,22 +475,55 @@ var ScaleManager = new Class({
         this.displayScale.set(this.baseSize.width / bounds.width, this.baseSize.height / bounds.height);
     },
 
+    /**
+     * Transforms the pageX value into the scaled coordinate space of the Input Manager.
+     *
+     * @method Phaser.Input.InputManager#transformX
+     * @since 3.0.0
+     *
+     * @param {number} pageX - The DOM pageX value.
+     *
+     * @return {number} The translated value.
+     */
+    transformX: function (pageX)
+    {
+        return (pageX - this.canvasBounds.left) * this.displayScale.x;
+    },
+
+    /**
+     * Transforms the pageY value into the scaled coordinate space of the Input Manager.
+     *
+     * @method Phaser.Input.InputManager#transformY
+     * @since 3.0.0
+     *
+     * @param {number} pageY - The DOM pageY value.
+     *
+     * @return {number} The translated value.
+     */
+    transformY: function (pageY)
+    {
+        return (pageY - this.canvasBounds.top) * this.displayScale.y;
+    },
+
     startListeners: function ()
     {
         var _this = this;
         var listeners = this.listeners;
 
-        listeners.orientationChange = function (event)
+        listeners.orientationChange = function ()
         {
-            return _this.onOrientationChange(event);
+            _this._checkOrientation = true;
+            _this.dirty = true;
         };
 
-        listeners.windowResize = function (event)
+        listeners.windowResize = function ()
         {
-            return _this.onWindowResize(event);
+            _this.dirty = true;
         };
 
+        //  Only dispatched on mobile devices
         window.addEventListener('orientationchange', listeners.orientationChange, false);
+
         window.addEventListener('resize', listeners.windowResize, false);
 
         if (this.allowFullScreen)
@@ -398,13 +560,21 @@ var ScaleManager = new Class({
     {
     },
 
-    onOrientationChange: function ()
+    step: function (time, delta)
     {
-    },
+        this._lastCheck += delta;
 
-    onWindowResize: function ()
-    {
-        this.updateScale();
+        if (this.dirty || this._lastCheck > this.resizeInterval)
+        {
+            //  Returns true if the parent bounds have changed size
+            if (this.getParentBounds())
+            {
+                this.refresh();
+            }
+
+            this.dirty = false;
+            this._lastCheck = 0;
+        }
     },
 
     stopListeners: function ()
@@ -427,48 +597,74 @@ var ScaleManager = new Class({
         document.removeEventListener('MSFullscreenError', listeners.fullScreenError, false);
     },
 
-    getInnerHeight: function ()
-    {
-        //  Based on code by @tylerjpeterson
-
-        if (!this.game.device.os.iOS)
-        {
-            return window.innerHeight;
-        }
-
-        var axis = Math.abs(window.orientation);
-
-        var size = { w: 0, h: 0 };
-        
-        var ruler = document.createElement('div');
-
-        ruler.setAttribute('style', 'position: fixed; height: 100vh; width: 0; top: 0');
-
-        document.documentElement.appendChild(ruler);
-
-        size.w = (axis === 90) ? ruler.offsetHeight : window.innerWidth;
-        size.h = (axis === 90) ? window.innerWidth : ruler.offsetHeight;
-
-        document.documentElement.removeChild(ruler);
-
-        ruler = null;
-
-        if (Math.abs(window.orientation) !== 90)
-        {
-            return size.h;
-        }
-        else
-        {
-            return size.w;
-        }
-    },
-
-    step: function ()
-    {
-    },
-
     destroy: function ()
     {
+        this.removeAllListeners();
+
+        this.stopListeners();
+    },
+
+    isFullScreen: {
+
+        get: function ()
+        {
+            return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+        }
+    
+    },
+
+    width: {
+
+        get: function ()
+        {
+            return this.gameSize.width;
+        }
+    
+    },
+
+    height: {
+
+        get: function ()
+        {
+            return this.gameSize.height;
+        }
+    
+    },
+
+    isPortrait: {
+
+        get: function ()
+        {
+            return (this.orientation === CONST.PORTRAIT);
+        }
+    
+    },
+
+    isLandscape: {
+
+        get: function ()
+        {
+            return (this.orientation === CONST.LANDSCAPE);
+        }
+    
+    },
+
+    isGamePortrait: {
+
+        get: function ()
+        {
+            return (this.height > this.width);
+        }
+    
+    },
+
+    isGameLandscape: {
+
+        get: function ()
+        {
+            return (this.width > this.height);
+        }
+    
     }
 
 });
