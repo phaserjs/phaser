@@ -59,22 +59,13 @@ var CanvasRenderer = new Class({
         this.drawCount = 0;
 
         /**
-         * The core Scale Manager.
-         *
-         * @name Phaser.Renderer.Canvas.CanvasRenderer#scaleManager
-         * @type {Phaser.DOM.ScaleManager}
-         * @since 3.16.0
-         */
-        this.scaleManager = game.scale;
-
-        /**
          * The width of the canvas being rendered to.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#width
          * @type {integer}
          * @since 3.0.0
          */
-        this.width = this.scaleManager.baseSize.width;
+        this.width = 0;
 
         /**
          * The height of the canvas being rendered to.
@@ -83,7 +74,7 @@ var CanvasRenderer = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.height = this.scaleManager.baseSize.height;
+        this.height = 0;
 
         /**
          * The local configuration settings of the CanvasRenderer.
@@ -241,7 +232,31 @@ var CanvasRenderer = new Class({
      */
     init: function ()
     {
-        this.resize();
+        this.game.scale.on('resize', this.onResize, this);
+
+        var baseSize = this.game.scale.baseSize;
+
+        this.resize(baseSize.width, baseSize.height);
+    },
+
+    /**
+     * The event handler that manages the `resize` event dispatched by the Scale Manager.
+     *
+     * @method Phaser.Renderer.Canvas.CanvasRenderer#onResize
+     * @since 3.16.0
+     *
+     * @param {Phaser.Structs.Size} gameSize - The default Game Size object. This is the un-modified game dimensions.
+     * @param {Phaser.Structs.Size} baseSize - The base Size object. The game dimensions multiplied by the resolution. The canvas width / height values match this.
+     * @param {Phaser.Structs.Size} displaySize - The display Size object. The size of the canvas style width / height attributes.
+     * @param {number} [resolution] - The Scale Manager resolution setting.
+     */
+    onResize: function (gameSize, baseSize)
+    {
+        //  Has the underlying canvas size changed?
+        if (baseSize.width !== this.width || baseSize.height !== this.height)
+        {
+            this.resize(baseSize.width, baseSize.height);
+        }
     },
 
     /**
@@ -250,16 +265,11 @@ var CanvasRenderer = new Class({
      * @method Phaser.Renderer.Canvas.CanvasRenderer#resize
      * @since 3.0.0
      *
-     * @param {number} [width] - The new width of the renderer. If not specified it uses the base size from the Scale Manager.
-     * @param {number} [height] - The new height of the renderer. If not specified it uses the base size from the Scale Manager.
-     * @param {number} [resolution] - The new resolution of the renderer. If not specified it uses the resolution from the Scale Manager.
+     * @param {number} [width] - The new width of the renderer.
+     * @param {number} [height] - The new height of the renderer.
      */
-    resize: function (width, height, resolution)
+    resize: function (width, height)
     {
-        if (width === undefined) { width = this.scaleManager.baseSize.width; }
-        if (height === undefined) { height = this.scaleManager.baseSize.height; }
-        if (resolution === undefined) { resolution = this.scaleManager.resolution; }
-
         this.width = width;
         this.height = height;
 

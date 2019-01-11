@@ -87,7 +87,7 @@ var WebGLPipeline = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.resolution = config.game.config.resolution;
+        this.resolution = 1;
 
         /**
          * Width of the current viewport
@@ -96,7 +96,7 @@ var WebGLPipeline = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.width = config.game.config.width * this.resolution;
+        this.width = 0;
 
         /**
          * Height of the current viewport
@@ -105,7 +105,7 @@ var WebGLPipeline = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.height = config.game.config.height * this.resolution;
+        this.height = 0;
 
         /**
          * The WebGL context this WebGL Pipeline uses.
@@ -305,10 +305,9 @@ var WebGLPipeline = new Class({
      */
     resize: function (width, height, resolution)
     {
-        this.resolution = resolution;
-
         this.width = width * resolution;
         this.height = height * resolution;
+        this.resolution = resolution;
 
         return this;
     },
