@@ -335,6 +335,18 @@ var ScaleManager = new Class({
         this.refresh();
     },
 
+    setZoom: function (value)
+    {
+        if (value !== this.zoom)
+        {
+            this.zoom = value;
+
+            this.refresh();
+        }
+
+        return this;
+    },
+
     /**
      * Game Resize event.
      * 
