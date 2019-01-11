@@ -55,6 +55,16 @@ var InputManager = new Class({
         this.game = game;
 
         /**
+         * A reference to the global Game Scale Manager.
+         * Used for all bounds checks and pointer scaling.
+         *
+         * @name Phaser.Input.InputManager#scaleManager
+         * @type {Phaser.DOM.ScaleManager}
+         * @since 3.16.0
+         */
+        this.scaleManager;
+
+        /**
          * The Canvas that is used for all DOM event input listeners.
          *
          * @name Phaser.Input.InputManager#canvas
@@ -299,15 +309,6 @@ var InputManager = new Class({
         this.dirty = false;
 
         /**
-         * The Scale factor being applied to input coordinates.
-         *
-         * @name Phaser.Input.InputManager#scale
-         * @type { { x:number, y:number } }
-         * @since 3.0.0
-         */
-        this.scale = { x: 1, y: 1 };
-
-        /**
          * If the top-most Scene in the Scene List receives an input it will stop input from
          * propagating any lower down the scene list, i.e. if you have a UI Scene at the top
          * and click something on it, that click will not then be passed down to any other
@@ -396,55 +397,13 @@ var InputManager = new Class({
     {
         this.canvas = this.game.canvas;
 
-        this.updateBounds();
+        this.scaleManager = this.game.scale;
 
         this.events.emit('boot');
 
         this.game.events.on('prestep', this.update, this);
         this.game.events.on('poststep', this.postUpdate, this);
         this.game.events.once('destroy', this.destroy, this);
-    },
-
-    /**
-     * Updates the Input Manager bounds rectangle to match the bounding client rectangle of the
-     * canvas element being used to track input events.
-     *
-     * @method Phaser.Input.InputManager#updateBounds
-     * @since 3.0.0
-     */
-    updateBounds: function ()
-    {
-        var bounds = this.bounds;
-
-        var clientRect = this.canvas.getBoundingClientRect();
-
-        bounds.x = clientRect.left + window.pageXOffset - document.documentElement.clientLeft;
-        bounds.y = clientRect.top + window.pageYOffset - document.documentElement.clientTop;
-        bounds.width = clientRect.width;
-        bounds.height = clientRect.height;
-    },
-
-    /**
-     * Resizes the Input Manager internal values, including the bounds and scale factor.
-     *
-     * @method Phaser.Input.InputManager#resize
-     * @since 3.2.0
-     */
-    resize: function ()
-    {
-        this.updateBounds();
-
-        //  Game config size
-        var gw = this.game.config.width;
-        var gh = this.game.config.height;
-
-        //  Actual canvas size
-        var bw = this.bounds.width;
-        var bh = this.bounds.height;
-
-        //  Scale factor
-        this.scale.x = gw / bw;
-        this.scale.y = gh / bh;
     },
 
     /**
@@ -520,11 +479,6 @@ var InputManager = new Class({
         }
 
         this.dirty = true;
-
-        this.updateBounds();
-
-        this.scale.x = this.game.config.width / this.bounds.width;
-        this.scale.y = this.game.config.height / this.bounds.height;
 
         //  Clears the queue array, and also means we don't work on array data that could potentially
         //  be modified during the processing phase
@@ -1412,8 +1366,8 @@ var InputManager = new Class({
         p1.y = p0.y;
 
         //  Translate coordinates
-        var x = (pageX - this.bounds.left) * this.scale.x;
-        var y = (pageY - this.bounds.top) * this.scale.y;
+        var x = this.scaleManager.transformX(pageX);
+        var y = this.scaleManager.transformY(pageY);
 
         var a = pointer.smoothFactor;
 
@@ -1429,88 +1383,6 @@ var InputManager = new Class({
             p0.x = x * a + p1.x * (1 - a);
             p0.y = y * a + p1.y * (1 - a);
         }
-    },
-
-    /**
-     * Transforms the pageX value into the scaled coordinate space of the Input Manager.
-     *
-     * @method Phaser.Input.InputManager#transformX
-     * @since 3.0.0
-     *
-     * @param {number} pageX - The DOM pageX value.
-     *
-     * @return {number} The translated value.
-     */
-    transformX: function (pageX)
-    {
-        return (pageX - this.bounds.left) * this.scale.x;
-    },
-
-    /**
-     * Transforms the pageY value into the scaled coordinate space of the Input Manager.
-     *
-     * @method Phaser.Input.InputManager#transformY
-     * @since 3.0.0
-     *
-     * @param {number} pageY - The DOM pageY value.
-     *
-     * @return {number} The translated value.
-     */
-    transformY: function (pageY)
-    {
-        return (pageY - this.bounds.top) * this.scale.y;
-    },
-
-    /**
-     * Returns the left offset of the Input bounds.
-     *
-     * @method Phaser.Input.InputManager#getOffsetX
-     * @since 3.0.0
-     *
-     * @return {number} The left bounds value.
-     */
-    getOffsetX: function ()
-    {
-        return this.bounds.left;
-    },
-
-    /**
-     * Returns the top offset of the Input bounds.
-     *
-     * @method Phaser.Input.InputManager#getOffsetY
-     * @since 3.0.0
-     *
-     * @return {number} The top bounds value.
-     */
-    getOffsetY: function ()
-    {
-        return this.bounds.top;
-    },
-
-    /**
-     * Returns the horizontal Input Scale value.
-     *
-     * @method Phaser.Input.InputManager#getScaleX
-     * @since 3.0.0
-     *
-     * @return {number} The horizontal scale factor of the input.
-     */
-    getScaleX: function ()
-    {
-        return this.game.config.width / this.bounds.width;
-    },
-
-    /**
-     * Returns the vertical Input Scale value.
-     *
-     * @method Phaser.Input.InputManager#getScaleY
-     * @since 3.0.0
-     *
-     * @return {number} The vertical scale factor of the input.
-     */
-    getScaleY: function ()
-    {
-        return this.game.config.height / this.bounds.height;
     },
 
     /**
