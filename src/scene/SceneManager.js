@@ -561,26 +561,6 @@ var SceneManager = new Class({
     },
 
     /**
-     * Informs the Scenes of the Game being resized.
-     *
-     * @method Phaser.Scenes.SceneManager#resize
-     * @since 3.2.0
-     *
-     * @param {number} width - The new width of the game.
-     * @param {number} height - The new height of the game.
-     */
-    resize: function (width, height)
-    {
-        //  Loop through the scenes in forward order
-        for (var i = 0; i < this.scenes.length; i++)
-        {
-            var sys = this.scenes[i].sys;
-
-            sys.resize(width, height);
-        }
-    },
-
-    /**
      * Renders the Scenes.
      *
      * @method Phaser.Scenes.SceneManager#render
