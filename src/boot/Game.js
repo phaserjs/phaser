@@ -689,63 +689,6 @@ var Game = new Class({
     },
 
     /**
-     * Game Resize event.
-     * 
-     * Listen for it using the event type `resize`.
-     *
-     * @event Phaser.Game#resizeEvent
-     * @param {number} width - The new width of the Game.
-     * @param {number} height - The new height of the Game.
-     */
-
-    /**
-     * Updates the Game Config with the new width and height values given.
-     * Then resizes the Renderer and Input Manager scale.
-     *
-     * @method Phaser.Game#resize
-     * @fires Phaser.Game#resizeEvent
-     * @since 3.2.0
-     *
-     * @param {number} width - The new width of the game.
-     * @param {number} height - The new height of the game.
-     */
-    resize: function ()
-    {
-        var width = this.scaleManager.baseSize.width;
-        var height = this.scaleManager.baseSize.height;
-
-        this.renderer.resize();
-
-        // this.input.resize();
-
-        this.scene.resize(width, height);
-
-        this.events.emit('resize', width, height);
-
-        /*
-        this.config.width = width;
-        this.config.height = height;
-
-        if (typeof EXPERIMENTAL)
-        {
-            if (this.domContainer)
-            {
-                this.domContainer.style.width = width + 'px';
-                this.domContainer.style.height = height + 'px';
-            }
-        }
-
-        this.renderer.resize(width, height);
-
-        this.input.resize();
-
-        this.scene.resize(width, height);
-
-        this.events.emit('resize', width, height);
-        */
-    },
-
-    /**
      * Returns the current game frame.
      * When the game starts running, the frame is incremented every time Request Animation Frame, or Set Timeout, fires.
      *
