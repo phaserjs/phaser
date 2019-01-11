@@ -4,12 +4,10 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var VisualBounds = require('./VisualBounds');
-
-var GetScreenOrientation = function (primaryFallback)
+var GetScreenOrientation = function (width, height)
 {
     var screen = window.screen;
-    var orientation = screen.orientation || screen.mozOrientation || screen.msOrientation;
+    var orientation = (screen) ? screen.orientation || screen.mozOrientation || screen.msOrientation : false;
 
     if (orientation && typeof orientation.type === 'string')
     {
@@ -25,15 +23,11 @@ var GetScreenOrientation = function (primaryFallback)
     var PORTRAIT = 'portrait-primary';
     var LANDSCAPE = 'landscape-primary';
     
-    if (primaryFallback === 'screen')
+    if (screen)
     {
         return (screen.height > screen.width) ? PORTRAIT : LANDSCAPE;
     }
-    else if (primaryFallback === 'viewport')
-    {
-        return (VisualBounds.height > VisualBounds.width) ? PORTRAIT : LANDSCAPE;
-    }
-    else if (primaryFallback === 'window.orientation' && typeof window.orientation === 'number')
+    else if (typeof window.orientation === 'number')
     {
         //  This may change by device based on "natural" orientation.
         return (window.orientation === 0 || window.orientation === 180) ? PORTRAIT : LANDSCAPE;
@@ -49,8 +43,8 @@ var GetScreenOrientation = function (primaryFallback)
             return LANDSCAPE;
         }
     }
-
-    return (VisualBounds.height > VisualBounds.width) ? PORTRAIT : LANDSCAPE;
+    
+    return (height > width) ? PORTRAIT : LANDSCAPE;
 };
 
 module.exports = GetScreenOrientation;
