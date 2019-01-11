@@ -401,11 +401,13 @@ var ScaleManager = new Class({
         else if (this.scaleMode === 5)
         {
             //  Resize to match parent
-            this.gameSize.setSize(this.parentSize.width, this.parentSize.height);
 
-            this.baseSize.setSize(this.parentSize.width * resolution, this.parentSize.height * resolution);
-
+            //  This will constrain using min/max
             this.displaySize.setSize(this.parentSize.width, this.parentSize.height);
+
+            this.gameSize.setSize(this.displaySize.width, this.displaySize.height);
+
+            this.baseSize.setSize(this.displaySize.width * resolution, this.displaySize.height * resolution);
 
             styleWidth = this.displaySize.width / resolution;
             styleHeight = this.displaySize.height / resolution;
