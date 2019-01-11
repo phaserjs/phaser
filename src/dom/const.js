@@ -62,6 +62,38 @@ module.exports = {
      * @name Phaser.DOM.RESIZE
      * @since 3.15.0
      */
-    RESIZE: 5
+    RESIZE: 5,
+
+    /**
+     * Canvas is not centered within the parent.
+     * 
+     * @name Phaser.DOM.NO_CENTER
+     * @since 3.15.0
+     */
+    NO_CENTER: 0,
+
+    /**
+     * Canvas is not centered within the parent.
+     * 
+     * @name Phaser.DOM.CENTER_BOTH
+     * @since 3.15.0
+     */
+    CENTER_BOTH: 1,
+
+    /**
+     * Canvas is not centered within the parent.
+     * 
+     * @name Phaser.DOM.CENTER_HORIZONTALLY
+     * @since 3.15.0
+     */
+    CENTER_HORIZONTALLY: 2,
+
+    /**
+     * Canvas is not centered within the parent.
+     * 
+     * @name Phaser.DOM.CENTER_VERTICALLY
+     * @since 3.15.0
+     */
+    CENTER_VERTICALLY: 3
 
 };
