@@ -51,10 +51,10 @@ module.exports = {
     /**
      * 
      * 
-     * @name Phaser.DOM.ENVELOPE
+     * @name Phaser.DOM.ENVELOP
      * @since 3.16.0
      */
-    ENVELOPE: 4,
+    ENVELOP: 4,
 
     /**
      * Canvas is resized to fit all available parent space, regardless of aspect ratio.

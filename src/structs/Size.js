@@ -164,7 +164,7 @@ var Size = new Class({
      * 1) WIDTH_CONTROLS_HEIGHT = The height is automatically adjusted based on the width.
      * 2) HEIGHT_CONTROLS_WIDTH = The width is automatically adjusted based on the height.
      * 3) FIT = The width and height are automatically adjusted to fit inside the given target area, while keeping the aspect ratio. Depending on the aspect ratio there may be some space inside the area which is not covered.
-     * 4) ENVELOPE = The width and height are automatically adjusted to make the size cover the entire target area while keeping the aspect ratio. This may extend further out than the target size.
+     * 4) ENVELOP = The width and height are automatically adjusted to make the size cover the entire target area while keeping the aspect ratio. This may extend further out than the target size.
      * 
      * Calling this method automatically recalculates the `width` and the `height`, if required.
      * 
@@ -226,7 +226,7 @@ var Size = new Class({
      * WIDTH_CONTROLS_HEIGHT - The parent clamps just the width.
      * HEIGHT_CONTROLS_WIDTH - The parent clamps just the height.
      * FIT - The parent clamps whichever axis is required to ensure the size fits within it.
-     * ENVELOPE - The parent is used to ensure the size fully envelopes the parent.
+     * ENVELOP - The parent is used to ensure the size fully envelopes the parent.
      * 
      * Calling this method automatically calls `setSize`.
      *
@@ -350,7 +350,7 @@ var Size = new Class({
                 this.constrain(width, height, true);
                 break;
 
-            case Size.ENVELOPE:
+            case Size.ENVELOP:
                 this.constrain(width, height, false);
                 break;
         }
@@ -685,11 +685,11 @@ Size.FIT = 3;
 /**
  * The width and height are automatically adjusted to make the size cover the entire target area while keeping the aspect ratio. This may extend further out than the target size.
  * 
- * @name Phaser.Structs.Size.ENVELOPE
+ * @name Phaser.Structs.Size.ENVELOP
  * @constant
  * @type {integer}
  * @since 3.16.0
  */
-Size.ENVELOPE = 4;
+Size.ENVELOP = 4;
 
 module.exports = Size;
