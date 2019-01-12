@@ -118,6 +118,7 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {integer} [zoom=1] - The zoom value of the game canvas.
  * @property {number} [resolution=1] - The rendering resolution of the canvas.
  * @property {(HTMLElement|string)} [parent] - The DOM element that will contain the game canvas, or its `id`. If null (the default) or if the named element doesn't exist, the game canvas is inserted directly into the document body.
+ * @property {boolean} [expandParent=true] - Is the Scale Manager allowed to adjust the CSS height property of the parent to be 100%?
  * @property {integer} [mode=0] - The scale mode.
  * @property {integer} [minWidth] - The minimum width the canvas can be scaled down to.
  * @property {integer} [minHeight] - The minimum height the canvas can be scaled down to.
@@ -294,7 +295,7 @@ var Config = new Class({
         this.scaleMode = GetValue(config, 'scaleMode', 0);
 
         /**
-         * @const {boolean} Phaser.Boot.Config#expandParent - Is the Scale Manager allowed to adjust the size of the parent container?
+         * @const {boolean} Phaser.Boot.Config#expandParent - Is the Scale Manager allowed to adjust the CSS height property of the parent to be 100%?
          */
         this.expandParent = GetValue(config, 'expandParent', true);
 
