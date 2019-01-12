@@ -288,6 +288,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `CanvasTexture.destroy` is a new method that specifically handles the destruction of the CanvasTexture and all of its associated typed arrays. This prevents a memory leak when creating and destroying lots of RenderTextures (which are CanvasTexture backed). Fix #4239 (thanks @sjb933)
 * The Alpha, Flip and Origin components have been removed from the Mesh Game Object (and by extension, Quad as well) as they are not used in the renderer and should be manipulated via the Mesh properties. Fix #4188 (thanks @enriqueto)
 * The `processDomCallbacks` method in the Input Manager wasn't correctly clearing the `once` arrays. Responsibility for this has now been passed to the queue methods `queueTouchStart`, `queueTouchMove`, `queueTouchEnd`, `queueMouseDown`, `queueMouseMove` and `queueMouseUp`. Fix #4257 (thanks @iArePJ)
+* The fontFamily in the Text object is now quoted when synced to the Canvas context, this fixes an issue where you couldn't use web fonts that had numbers in the name, such as "Press Start 2P" (thanks @BeFiveINFO)
 
 ### Examples and TypeScript
 
