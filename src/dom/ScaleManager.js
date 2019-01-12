@@ -171,8 +171,6 @@ var ScaleManager = new Class({
             var parentScaleX = parseInt(width, 10) / 100;
 
             width = Math.floor(this.parentSize.width * parentScaleX);
-
-            console.log('100% w', parentScaleX, width, this.parentSize.toString());
         }
 
         //  If height = '100%', or similar value
@@ -264,15 +262,15 @@ var ScaleManager = new Class({
             this.parentIsWindow = false;
         }
 
-        var parentStyle = this.parent.style;
-
         if (canExpandParent)
         {
-            parentStyle.height = '100%';
-
             if (this.parentIsWindow)
             {
                 document.getElementsByTagName('html')[0].style.height = '100%';
+            }
+            else
+            {
+                this.parent.style.height = '100%';
             }
         }
     },
@@ -466,6 +464,12 @@ var ScaleManager = new Class({
         else if (this.autoCenter === 3)
         {
             style.marginTop = offsetY + 'px';
+        }
+
+        //  Update the parentSize incase the canvas/style change modified it
+        if (!this.parentIsWindow)
+        {
+            this.getParentBounds();
         }
     },
 
