@@ -17,6 +17,9 @@ var Vector2 = require('../math/Vector2');
 /**
  * @classdesc
  * TODO
+ * 
+ * 1) autoCenter when canvas is BIGGER than the viewport should be negative, i.e. when mode is envelop.
+ * 2) If initial canvas size > parent size, it gets an inversed aspect ratio
  *
  * @class ScaleManager
  * @memberof Phaser.DOM
