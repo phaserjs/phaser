@@ -289,6 +289,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * The Alpha, Flip and Origin components have been removed from the Mesh Game Object (and by extension, Quad as well) as they are not used in the renderer and should be manipulated via the Mesh properties. Fix #4188 (thanks @enriqueto)
 * The `processDomCallbacks` method in the Input Manager wasn't correctly clearing the `once` arrays. Responsibility for this has now been passed to the queue methods `queueTouchStart`, `queueTouchMove`, `queueTouchEnd`, `queueMouseDown`, `queueMouseMove` and `queueMouseUp`. Fix #4257 (thanks @iArePJ)
 * The fontFamily in the Text object is now quoted when synced to the Canvas context, this fixes an issue where you couldn't use web fonts that had numbers in the name, such as "Press Start 2P" (thanks @BeFiveINFO)
+* The `Phaser.Animations` namespace was incorrectly exposed in the Phaser entrypoints as `Animation` (note the lack of plural). This means that if you are creating any custom classes that extend Animation objects using the Phaser namespace, then please update them from `Phaser.Animation.X` to `Phaser.Animations.X`, i.e. `Phaser.Animation.AnimationFrame` to `Phaser.Animations.AnimationFrame`. This doesn't impact you if you created animations by creating them via the Animation Manager.
 
 ### Examples and TypeScript
 
