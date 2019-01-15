@@ -15,7 +15,7 @@ var Extend = require('./utils/object/Extend');
 
 var Phaser = {
 
-    Animation: require('./animations'),
+    Animations: require('./animations'),
     Cache: require('./cache'),
     Cameras: { Scene2D: require('./cameras/2d') },
     Class: require('./utils/Class'),
