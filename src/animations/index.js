@@ -12,6 +12,7 @@ module.exports = {
 
     Animation: require('./Animation'),
     AnimationFrame: require('./AnimationFrame'),
-    AnimationManager: require('./AnimationManager')
+    AnimationManager: require('./AnimationManager'),
+    Events: require('./events')
 
 };

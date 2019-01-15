@@ -6,84 +6,7 @@
 
 var BaseAnimation = require('../../animations/Animation');
 var Class = require('../../utils/Class');
-
-/**
- * This event is dispatched when an animation starts playing.
- * 
- * Listen for it on the Game Object: `sprite.on('animationstart', listener)`
- * 
- * You can also listen for a specific animation by appending a hyphen and its key to the event name. For example,
- * if you have an animation called `explode`, you can listen for `sprite.on('animationstart-explode', listener)`.
- * 
- * You can also listen for the `start` event from the Animation itself: `animation.on('start', listener)`.
- *
- * @event Phaser.GameObjects.Components.Animation#onStartEvent
- * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
- * @param {Phaser.Animations.AnimationFrame} frame - Reference to the current Animation Frame.
- * @param {Phaser.GameObjects.Sprite} gameObject - Reference to the Game Object on which the event occurred.
- */
-
-/**
- * This event is dispatched when an animation restarts.
- * 
- * Listen for it on the Game Object: `sprite.on('animationrestart', listener)`
- * 
- * You can also listen for a specific animation by appending a hyphen and its key to the event name. For example,
- * if you have an animation called `explode`, you can listen for `sprite.on('animationrestart-explode', listener)`.
- * 
- * You can also listen for the `restart` event from the Animation itself: `animation.on('restart', listener)`.
- *
- * @event Phaser.GameObjects.Components.Animation#onRestartEvent
- * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
- * @param {Phaser.Animations.AnimationFrame} frame - Reference to the current Animation Frame.
- * @param {Phaser.GameObjects.Sprite} gameObject - Reference to the Game Object on which the event occurred.
- */
-
-/**
- * This event is dispatched when an animation repeats.
- * 
- * Listen for it on the Game Object: `sprite.on('animationrepeat', listener)`
- * 
- * You can also listen for a specific animation by appending a hyphen and its key to the event name. For example,
- * if you have an animation called `explode`, you can listen for `sprite.on('animationrepeat-explode', listener)`.
- *
- * @event Phaser.GameObjects.Components.Animation#onRepeatEvent
- * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
- * @param {Phaser.Animations.AnimationFrame} frame - Reference to the current Animation Frame.
- * @param {integer} repeatCount - The number of times this animation has repeated.
- * @param {Phaser.GameObjects.Sprite} gameObject - Reference to the Game Object on which the event occurred.
- */
-
-/**
- * This event is dispatched when an animation updates. This happens when the animation frame changes,
- * based on the animation frame rate and other factors like timeScale and delay.
- * 
- * Listen for it on the Game Object: `sprite.on('animationupdate', listener)`
- * 
- * You can also listen for a specific animation by appending a hyphen and its key to the event name. For example,
- * if you have an animation called `explode`, you can listen for `sprite.on('animationupdate-explode', listener)`.
- *
- * @event Phaser.GameObjects.Components.Animation#onUpdateEvent
- * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
- * @param {Phaser.Animations.AnimationFrame} frame - Reference to the current Animation Frame.
- * @param {Phaser.GameObjects.Sprite} gameObject - Reference to the Game Object on which the event occurred.
- */
-
-/**
- * This event is dispatched when an animation completes playing, either naturally or via Animation.stop.
- * 
- * Listen for it on the Game Object: `sprite.on('animationcomplete', listener)`
- * 
- * You can also listen for a specific animation by appending a hyphen and its key to the event name. For example,
- * if you have an animation called `explode`, you can listen for `sprite.on('animationcomplete-explode', listener)`.
- * 
- * You can also listen for the `complete` event from the Animation itself: `animation.on('complete', listener)`.
- *
- * @event Phaser.GameObjects.Components.Animation#onCompleteEvent
- * @param {Phaser.Animations.Animation} animation - Reference to the currently playing animation.
- * @param {Phaser.Animations.AnimationFrame} frame - Reference to the current Animation Frame.
- * @param {Phaser.GameObjects.Sprite} gameObject - Reference to the Game Object on which the event occurred.
- */
+var Events = require('../../animations/events');
 
 /**
  * @classdesc
@@ -644,7 +567,9 @@ var Animation = new Class({
      * Load an Animation and fires 'onStartEvent' event, extracted from 'play' method.
      *
      * @method Phaser.GameObjects.Components.Animation#_startAnimation
-     * @fires Phaser.GameObjects.Components.Animation#onStartEvent
+     * @fires Phaser.Animations.Events#START_ANIMATION_EVENT
+     * @fires Phaser.Animations.Events#SPRITE_START_ANIMATION_EVENT
+     * @fires Phaser.Animations.Events#SPRITE_START_KEY_ANIMATION_EVENT
      * @since 3.12.0
      *
      * @param {string} key - The string-based key of the animation to play, as defined previously in the Animation Manager.
@@ -674,11 +599,11 @@ var Animation = new Class({
 
         var frame = this.currentFrame;
 
-        anim.emit('start', anim, frame);
+        anim.emit(Events.ANIMATION_START, anim, frame, gameObject);
 
-        gameObject.emit('animationstart-' + key, anim, frame, gameObject);
+        gameObject.emit(Events.SPRITE_ANIMATION_KEY_START + key, anim, frame, gameObject);
 
-        gameObject.emit('animationstart', anim, frame, gameObject);
+        gameObject.emit(Events.SPRITE_ANIMATION_START, anim, frame, gameObject);
 
         return gameObject;
     },
@@ -844,7 +769,9 @@ var Animation = new Class({
      * Restarts the current animation from its beginning, optionally including its delay value.
      *
      * @method Phaser.GameObjects.Components.Animation#restart
-     * @fires Phaser.GameObjects.Components.Animation#onRestartEvent
+     * @fires Phaser.Animations.Events#RESTART_ANIMATION_EVENT
+     * @fires Phaser.Animations.Events#SPRITE_RESTART_ANIMATION_EVENT
+     * @fires Phaser.Animations.Events#SPRITE_RESTART_KEY_ANIMATION_EVENT
      * @since 3.0.0
      *
      * @param {boolean} [includeDelay=false] - Whether to include the delay value of the animation when restarting.
@@ -870,11 +797,11 @@ var Animation = new Class({
         var gameObject = this.parent;
         var frame = this.currentFrame;
 
-        anim.emit('restart', anim, frame);
+        anim.emit(Events.ANIMATION_RESTART, anim, frame, gameObject);
 
-        gameObject.emit('animationrestart-' + anim.key, anim, frame, gameObject);
+        gameObject.emit(Events.SPRITE_ANIMATION_KEY_RESTART + anim.key, anim, frame, gameObject);
 
-        gameObject.emit('animationrestart', anim, frame, gameObject);
+        gameObject.emit(Events.SPRITE_ANIMATION_RESTART, anim, frame, gameObject);
 
         return this.parent;
     },
@@ -904,11 +831,11 @@ var Animation = new Class({
 
         if (anim)
         {
-            anim.emit('complete', anim, frame);
+            anim.emit(Events.ANIMATION_COMPLETE, anim, frame, gameObject);
 
-            gameObject.emit('animationcomplete-' + anim.key, anim, frame, gameObject);
+            gameObject.emit(Events.SPRITE_ANIMATION_KEY_COMPLETE + anim.key, anim, frame, gameObject);
     
-            gameObject.emit('animationcomplete', anim, frame, gameObject);
+            gameObject.emit(Events.SPRITE_ANIMATION_COMPLETE, anim, frame, gameObject);
         }
 
         if (this.nextAnim)
@@ -1101,7 +1028,8 @@ var Animation = new Class({
      * Internal frame change handler.
      *
      * @method Phaser.GameObjects.Components.Animation#updateFrame
-     * @fires Phaser.GameObjects.Components.Animation#onUpdateEvent
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_UPDATE_EVENT
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_UPDATE_EVENT
      * @private
      * @since 3.0.0
      *
@@ -1120,9 +1048,9 @@ var Animation = new Class({
 
             var anim = this.currentAnim;
 
-            gameObject.emit('animationupdate-' + anim.key, anim, animationFrame, gameObject);
+            gameObject.emit(Events.SPRITE_ANIMATION_KEY_UPDATE + anim.key, anim, animationFrame, gameObject);
 
-            gameObject.emit('animationupdate', anim, animationFrame, gameObject);
+            gameObject.emit(Events.SPRITE_ANIMATION_UPDATE, anim, animationFrame, gameObject);
 
             if (this._pendingStop === 3 && this._pendingStopValue === animationFrame)
             {

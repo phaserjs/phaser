@@ -7,52 +7,10 @@
 var Clamp = require('../math/Clamp');
 var Class = require('../utils/Class');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
 var FindClosestInSorted = require('../utils/array/FindClosestInSorted');
 var Frame = require('./AnimationFrame');
 var GetValue = require('../utils/object/GetValue');
-
-/**
- * @typedef {object} JSONAnimation
- *
- * @property {string} key - The key that the animation will be associated with. i.e. sprite.animations.play(key)
- * @property {string} type - A frame based animation (as opposed to a bone based animation)
- * @property {JSONAnimationFrame[]} frames - [description]
- * @property {integer} frameRate - The frame rate of playback in frames per second (default 24 if duration is null)
- * @property {integer} duration - How long the animation should play for in milliseconds. If not given its derived from frameRate.
- * @property {boolean} skipMissedFrames - Skip frames if the time lags, or always advanced anyway?
- * @property {integer} delay - Delay before starting playback. Value given in milliseconds.
- * @property {integer} repeat - Number of times to repeat the animation (-1 for infinity)
- * @property {integer} repeatDelay - Delay before the animation repeats. Value given in milliseconds.
- * @property {boolean} yoyo - Should the animation yoyo? (reverse back down to the start) before repeating?
- * @property {boolean} showOnStart - Should sprite.visible = true when the animation starts to play?
- * @property {boolean} hideOnComplete - Should sprite.visible = false when the animation finishes?
- */
-
-/**
- * @typedef {object} AnimationFrameConfig
- *
- * @property {string} key - The key that the animation will be associated with. i.e. sprite.animations.play(key)
- * @property {(string|number)} frame - [description]
- * @property {number} [duration=0] - [description]
- * @property {boolean} [visible] - [description]
- */
-
-/**
- * @typedef {object} AnimationConfig
- *
- * @property {string} [key] - The key that the animation will be associated with. i.e. sprite.animations.play(key)
- * @property {AnimationFrameConfig[]} [frames] - An object containing data used to generate the frames for the animation
- * @property {string} [defaultTextureKey=null] - The key of the texture all frames of the animation will use. Can be overridden on a per frame basis.
- * @property {integer} [frameRate] - The frame rate of playback in frames per second (default 24 if duration is null)
- * @property {integer} [duration] - How long the animation should play for in milliseconds. If not given its derived from frameRate.
- * @property {boolean} [skipMissedFrames=true] - Skip frames if the time lags, or always advanced anyway?
- * @property {integer} [delay=0] - Delay before starting playback. Value given in milliseconds.
- * @property {integer} [repeat=0] - Number of times to repeat the animation (-1 for infinity)
- * @property {integer} [repeatDelay=0] - Delay before the animation repeats. Value given in milliseconds.
- * @property {boolean} [yoyo=false] - Should the animation yoyo? (reverse back down to the start) before repeating?
- * @property {boolean} [showOnStart=false] - Should sprite.visible = true when the animation starts to play?
- * @property {boolean} [hideOnComplete=false] - Should sprite.visible = false when the animation finishes?
- */
 
 /**
  * @classdesc
@@ -72,7 +30,7 @@ var GetValue = require('../utils/object/GetValue');
  *
  * @param {Phaser.Animations.AnimationManager} manager - [description]
  * @param {string} key - [description]
- * @param {AnimationConfig} config - [description]
+ * @param {Phaser.Animations.Animation.Config} config - [description]
  */
 var Animation = new Class({
 
@@ -266,7 +224,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#addFrame
      * @since 3.0.0
      *
-     * @param {(string|AnimationFrameConfig[])} config - [description]
+     * @param {(string|Phaser.Animations.AnimationFrame.Config[])} config - [description]
      *
      * @return {Phaser.Animations.Animation} This Animation object.
      */
@@ -282,7 +240,7 @@ var Animation = new Class({
      * @since 3.0.0
      *
      * @param {integer} index - [description]
-     * @param {(string|AnimationFrameConfig[])} config - [description]
+     * @param {(string|Phaser.Animations.AnimationFrame.Config[])} config - [description]
      *
      * @return {Phaser.Animations.Animation} This Animation object.
      */
@@ -395,7 +353,7 @@ var Animation = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Textures.TextureManager} textureManager - [description]
-     * @param {(string|AnimationFrameConfig[])} frames - [description]
+     * @param {(string|Phaser.Animations.AnimationFrame.Config[])} frames - [description]
      * @param {string} [defaultTextureKey] - [description]
      *
      * @return {Phaser.Animations.AnimationFrame[]} [description]
@@ -774,6 +732,9 @@ var Animation = new Class({
      * [description]
      *
      * @method Phaser.Animations.Animation#repeatAnimation
+     * @fires Phaser.Animations.Events#ANIMATION_REPEAT
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_REPEAT
+     * @fires Phaser.Animations.Events#SPRITE_ANIMATION_KEY_REPEAT
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Components.Animation} component - [description]
@@ -806,11 +767,11 @@ var Animation = new Class({
                 var frame = component.currentFrame;
                 var parent = component.parent;
 
-                this.emit('repeat', this, frame);
+                this.emit(Events.ANIMATION_REPEAT, this, frame);
 
-                parent.emit('animationrepeat-' + this.key, this, frame, component.repeatCounter, parent);
+                parent.emit(Events.SPRITE_ANIMATION_KEY_REPEAT + this.key, this, frame, component.repeatCounter, parent);
 
-                parent.emit('animationrepeat', this, frame, component.repeatCounter, parent);
+                parent.emit(Events.SPRITE_ANIMATION_REPEAT, this, frame, component.repeatCounter, parent);
             }
         }
     },

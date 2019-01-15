@@ -8,6 +8,7 @@ var Animation = require('./Animation');
 var Class = require('../utils/Class');
 var CustomMap = require('../structs/Map');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
 var GetValue = require('../utils/object/GetValue');
 var Pad = require('../utils/string/Pad');
 
@@ -129,7 +130,7 @@ var AnimationManager = new Class({
      * Adds an existing Animation to the Animation Manager.
      *
      * @method Phaser.Animations.AnimationManager#add
-     * @fires AddAnimationEvent
+     * @fires Phaser.Animations.Events#ADD_ANIMATION
      * @since 3.0.0
      *
      * @param {string} key - The key under which the Animation should be added. The Animation will be updated with it. Must be unique.
@@ -141,7 +142,8 @@ var AnimationManager = new Class({
     {
         if (this.anims.has(key))
         {
-            console.warn('Animation with key', key, 'already exists');
+            console.warn('Animation key exists: ' + key);
+
             return;
         }
 
@@ -149,7 +151,7 @@ var AnimationManager = new Class({
 
         this.anims.set(key, animation);
 
-        this.emit('add', key, animation);
+        this.emit(Events.ADD_ANIMATION, key, animation);
 
         return this;
     },
@@ -185,7 +187,7 @@ var AnimationManager = new Class({
      * If you wish to re-use an existing key, call `AnimationManager.remove` first, then this method.
      *
      * @method Phaser.Animations.AnimationManager#create
-     * @fires AddAnimationEvent
+     * @fires Phaser.Animations.Events#ADD_ANIMATION
      * @since 3.0.0
      *
      * @param {AnimationConfig} config - The configuration settings for the Animation.
@@ -208,7 +210,7 @@ var AnimationManager = new Class({
 
                 this.anims.set(key, anim);
         
-                this.emit('add', key, anim);
+                this.emit(Events.ADD_ANIMATION, key, anim);
             }
         }
 
@@ -470,7 +472,7 @@ var AnimationManager = new Class({
      * Pause all animations.
      *
      * @method Phaser.Animations.AnimationManager#pauseAll
-     * @fires PauseAllAnimationEvent
+     * @fires Phaser.Animations.Events#PAUSE_ALL
      * @since 3.0.0
      *
      * @return {Phaser.Animations.AnimationManager} This Animation Manager.
@@ -481,7 +483,7 @@ var AnimationManager = new Class({
         {
             this.paused = true;
 
-            this.emit('pauseall');
+            this.emit(Events.PAUSE_ALL);
         }
 
         return this;
@@ -524,7 +526,7 @@ var AnimationManager = new Class({
      * Remove an animation.
      *
      * @method Phaser.Animations.AnimationManager#remove
-     * @fires RemoveAnimationEvent
+     * @fires Phaser.Animations.Events#REMOVE_ANIMATION
      * @since 3.0.0
      *
      * @param {string} key - The key of the animation to remove.
@@ -537,7 +539,7 @@ var AnimationManager = new Class({
 
         if (anim)
         {
-            this.emit('remove', key, anim);
+            this.emit(Events.REMOVE_ANIMATION, key, anim);
 
             this.anims.delete(key);
         }
@@ -549,7 +551,7 @@ var AnimationManager = new Class({
      * Resume all paused animations.
      *
      * @method Phaser.Animations.AnimationManager#resumeAll
-     * @fires ResumeAllAnimationEvent
+     * @fires Phaser.Animations.Events#RESUME_ALL
      * @since 3.0.0
      *
      * @return {Phaser.Animations.AnimationManager} This Animation Manager.
@@ -560,7 +562,7 @@ var AnimationManager = new Class({
         {
             this.paused = false;
 
-            this.emit('resumeall');
+            this.emit(Events.RESUME_ALL);
         }
 
         return this;
