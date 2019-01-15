@@ -9,6 +9,6 @@
  * 
  * This event is dispatched when the Game loop enters a paused state, usually as a result of the Visibility Handler.
  *
- * @event Phaser.Game.Events#PAUSE
+ * @event Phaser.Core.Events#PAUSE
  */
 module.exports = 'pause';

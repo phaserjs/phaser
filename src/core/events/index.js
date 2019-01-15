@@ -5,19 +5,24 @@
  */
 
 /**
- * @namespace Phaser.Game.Events
+ * @namespace Phaser.Core.Events
  */
 
 module.exports = {
 
+    BLUR: require('./BLUR_EVENT'),
     BOOT: require('./BOOT_EVENT'),
     DESTROY: require('./DESTROY_EVENT'),
+    FOCUS: require('./FOCUS_EVENT'),
+    HIDDEN: require('./HIDDEN_EVENT'),
     PAUSE: require('./PAUSE_EVENT'),
     POST_RENDER: require('./POST_RENDER_EVENT'),
     POST_STEP: require('./POST_STEP_EVENT'),
     PRE_RENDER: require('./PRE_RENDER_EVENT'),
     PRE_STEP: require('./PRE_STEP_EVENT'),
     RESUME: require('./RESUME_EVENT'),
-    STEP: require('./STEP_EVENT')
+    STEP: require('./STEP_EVENT'),
+    TEXTURES_READY: require('./TEXTURES_READY_EVENT'),
+    VISIBLE: require('./VISIBLE_EVENT')
 
 };

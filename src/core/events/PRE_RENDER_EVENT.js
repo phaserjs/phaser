@@ -5,15 +5,14 @@
  */
 
 /**
- * The Game Post-Render Event.
+ * The Game Pre-Render Event.
  * 
- * This event is dispatched right at the end of the render process.
+ * This event is dispatched immediately before any of the Scenes have started to render.
  * 
- * Every Scene will have rendered and been drawn to the canvas by the time this event is fired.
- * Use it for any last minute post-processing before the next game step begins.
+ * The renderer will already have been initialized this frame, clearing itself and preparing to receive the Scenes for rendering, but it won't have actually drawn anything yet.
  *
- * @event Phaser.Game.Events#POST_RENDER
+ * @event Phaser.Core.Events#PRE_RENDER
  * 
  * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - A reference to the current renderer being used by the Game instance.
  */
-module.exports = 'postrender';
+module.exports = 'prerender';

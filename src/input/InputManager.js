@@ -77,7 +77,7 @@ var InputManager = new Class({
          * The Game Configuration object, as set during the game boot.
          *
          * @name Phaser.Input.InputManager#config
-         * @type {Phaser.Boot.Config}
+         * @type {Phaser.Core.Config}
          * @since 3.0.0
          */
         this.config = config;

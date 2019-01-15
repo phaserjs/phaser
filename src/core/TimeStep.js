@@ -33,7 +33,7 @@ var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
  * [description]
  *
  * @class TimeStep
- * @memberof Phaser.Boot
+ * @memberof Phaser.Core
  * @constructor
  * @since 3.0.0
  *
@@ -49,7 +49,7 @@ var TimeStep = new Class({
         /**
          * A reference to the Phaser.Game instance.
          *
-         * @name Phaser.Boot.TimeStep#game
+         * @name Phaser.Core.TimeStep#game
          * @type {Phaser.Game}
          * @readonly
          * @since 3.0.0
@@ -59,7 +59,7 @@ var TimeStep = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Boot.TimeStep#raf
+         * @name Phaser.Core.TimeStep#raf
          * @type {Phaser.DOM.RequestAnimationFrame}
          * @readonly
          * @since 3.0.0
@@ -69,7 +69,7 @@ var TimeStep = new Class({
         /**
          * A flag that is set once the TimeStep has started running and toggled when it stops.
          *
-         * @name Phaser.Boot.TimeStep#started
+         * @name Phaser.Core.TimeStep#started
          * @type {boolean}
          * @readonly
          * @default false
@@ -83,7 +83,7 @@ var TimeStep = new Class({
          * the TimeStep is sent to sleep, where-as `started` remains `true`, only changing if
          * the TimeStep is actually stopped, not just paused.
          *
-         * @name Phaser.Boot.TimeStep#running
+         * @name Phaser.Core.TimeStep#running
          * @type {boolean}
          * @readonly
          * @default false
@@ -94,7 +94,7 @@ var TimeStep = new Class({
         /**
          * The minimum fps rate you want the Time Step to run at.
          *
-         * @name Phaser.Boot.TimeStep#minFps
+         * @name Phaser.Core.TimeStep#minFps
          * @type {integer}
          * @default 5
          * @since 3.0.0
@@ -108,7 +108,7 @@ var TimeStep = new Class({
          * the control of Phaser. Instead, it allows you to determine performance issues and if the Time Step
          * is spiraling out of control.
          *
-         * @name Phaser.Boot.TimeStep#targetFps
+         * @name Phaser.Core.TimeStep#targetFps
          * @type {integer}
          * @default 60
          * @since 3.0.0
@@ -119,7 +119,7 @@ var TimeStep = new Class({
          * The minFps value in ms.
          * Defaults to 200ms between frames (i.e. super slow!)
          *
-         * @name Phaser.Boot.TimeStep#_min
+         * @name Phaser.Core.TimeStep#_min
          * @type {number}
          * @private
          * @since 3.0.0
@@ -130,7 +130,7 @@ var TimeStep = new Class({
          * The targetFps value in ms.
          * Defaults to 16.66ms between frames (i.e. normal)
          *
-         * @name Phaser.Boot.TimeStep#_target
+         * @name Phaser.Core.TimeStep#_target
          * @type {number}
          * @private
          * @since 3.0.0
@@ -140,7 +140,7 @@ var TimeStep = new Class({
         /**
          * An exponential moving average of the frames per second.
          *
-         * @name Phaser.Boot.TimeStep#actualFps
+         * @name Phaser.Core.TimeStep#actualFps
          * @type {integer}
          * @readonly
          * @default 60
@@ -151,7 +151,7 @@ var TimeStep = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Boot.TimeStep#nextFpsUpdate
+         * @name Phaser.Core.TimeStep#nextFpsUpdate
          * @type {integer}
          * @readonly
          * @default 0
@@ -162,7 +162,7 @@ var TimeStep = new Class({
         /**
          * The number of frames processed this second.
          *
-         * @name Phaser.Boot.TimeStep#framesThisSecond
+         * @name Phaser.Core.TimeStep#framesThisSecond
          * @type {integer}
          * @readonly
          * @default 0
@@ -173,7 +173,7 @@ var TimeStep = new Class({
         /**
          * A callback to be invoked each time the Time Step steps.
          *
-         * @name Phaser.Boot.TimeStep#callback
+         * @name Phaser.Core.TimeStep#callback
          * @type {TimeStepCallback}
          * @default NOOP
          * @since 3.0.0
@@ -184,7 +184,7 @@ var TimeStep = new Class({
          * You can force the Time Step to use Set Timeout instead of Request Animation Frame by setting
          * the `forceSetTimeOut` property to `true` in the Game Configuration object. It cannot be changed at run-time.
          *
-         * @name Phaser.Boot.TimeStep#forceSetTimeOut
+         * @name Phaser.Core.TimeStep#forceSetTimeOut
          * @type {boolean}
          * @readonly
          * @default false
@@ -195,7 +195,7 @@ var TimeStep = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Boot.TimeStep#time
+         * @name Phaser.Core.TimeStep#time
          * @type {integer}
          * @default 0
          * @since 3.0.0
@@ -205,7 +205,7 @@ var TimeStep = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Boot.TimeStep#startTime
+         * @name Phaser.Core.TimeStep#startTime
          * @type {integer}
          * @default 0
          * @since 3.0.0
@@ -215,7 +215,7 @@ var TimeStep = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Boot.TimeStep#lastTime
+         * @name Phaser.Core.TimeStep#lastTime
          * @type {integer}
          * @default 0
          * @since 3.0.0
@@ -225,7 +225,7 @@ var TimeStep = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Boot.TimeStep#frame
+         * @name Phaser.Core.TimeStep#frame
          * @type {integer}
          * @readonly
          * @default 0
@@ -236,7 +236,7 @@ var TimeStep = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Boot.TimeStep#inFocus
+         * @name Phaser.Core.TimeStep#inFocus
          * @type {boolean}
          * @readonly
          * @default true
@@ -247,7 +247,7 @@ var TimeStep = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Boot.TimeStep#_pauseTime
+         * @name Phaser.Core.TimeStep#_pauseTime
          * @type {integer}
          * @private
          * @default 0
@@ -258,7 +258,7 @@ var TimeStep = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Boot.TimeStep#_coolDown
+         * @name Phaser.Core.TimeStep#_coolDown
          * @type {integer}
          * @private
          * @default 0
@@ -269,7 +269,7 @@ var TimeStep = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Boot.TimeStep#delta
+         * @name Phaser.Core.TimeStep#delta
          * @type {integer}
          * @default 0
          * @since 3.0.0
@@ -279,7 +279,7 @@ var TimeStep = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Boot.TimeStep#deltaIndex
+         * @name Phaser.Core.TimeStep#deltaIndex
          * @type {integer}
          * @default 0
          * @since 3.0.0
@@ -289,7 +289,7 @@ var TimeStep = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Boot.TimeStep#deltaHistory
+         * @name Phaser.Core.TimeStep#deltaHistory
          * @type {integer[]}
          * @since 3.0.0
          */
@@ -298,7 +298,7 @@ var TimeStep = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Boot.TimeStep#deltaSmoothingMax
+         * @name Phaser.Core.TimeStep#deltaSmoothingMax
          * @type {integer}
          * @default 10
          * @since 3.0.0
@@ -308,7 +308,7 @@ var TimeStep = new Class({
         /**
          * [description]
          *
-         * @name Phaser.Boot.TimeStep#panicMax
+         * @name Phaser.Core.TimeStep#panicMax
          * @type {integer}
          * @default 120
          * @since 3.0.0
@@ -320,7 +320,7 @@ var TimeStep = new Class({
          * Unlike with `delta` no smoothing, capping, or averaging is applied to this value.
          * So please be careful when using this value in calculations.
          *
-         * @name Phaser.Boot.TimeStep#rawDelta
+         * @name Phaser.Core.TimeStep#rawDelta
          * @type {number}
          * @default 0
          * @since 3.0.0
@@ -331,7 +331,7 @@ var TimeStep = new Class({
     /**
      * Called when the DOM window.onBlur event triggers.
      *
-     * @method Phaser.Boot.TimeStep#blur
+     * @method Phaser.Core.TimeStep#blur
      * @since 3.0.0
      */
     blur: function ()
@@ -342,7 +342,7 @@ var TimeStep = new Class({
     /**
      * Called when the DOM window.onFocus event triggers.
      *
-     * @method Phaser.Boot.TimeStep#focus
+     * @method Phaser.Core.TimeStep#focus
      * @since 3.0.0
      */
     focus: function ()
@@ -355,7 +355,7 @@ var TimeStep = new Class({
     /**
      * Called when the visibility API says the game is 'hidden' (tab switch out of view, etc)
      *
-     * @method Phaser.Boot.TimeStep#pause
+     * @method Phaser.Core.TimeStep#pause
      * @since 3.0.0
      */
     pause: function ()
@@ -366,7 +366,7 @@ var TimeStep = new Class({
     /**
      * Called when the visibility API says the game is 'visible' again (tab switch back into view, etc)
      *
-     * @method Phaser.Boot.TimeStep#resume
+     * @method Phaser.Core.TimeStep#resume
      * @since 3.0.0
      */
     resume: function ()
@@ -379,7 +379,7 @@ var TimeStep = new Class({
     /**
      * [description]
      *
-     * @method Phaser.Boot.TimeStep#resetDelta
+     * @method Phaser.Core.TimeStep#resetDelta
      * @since 3.0.0
      */
     resetDelta: function ()
@@ -409,7 +409,7 @@ var TimeStep = new Class({
      * Starts the Time Step running, if it is not already doing so.
      * Called automatically by the Game Boot process.
      *
-     * @method Phaser.Boot.TimeStep#start
+     * @method Phaser.Core.TimeStep#start
      * @since 3.0.0
      *
      * @param {TimeStepCallback} callback - The callback to be invoked each time the Time Step steps.
@@ -443,7 +443,7 @@ var TimeStep = new Class({
      * or by Set Timeout. It is responsible for calculating the delta values, frame totals, cool down history and more.
      * You generally should never call this method directly.
      *
-     * @method Phaser.Boot.TimeStep#step
+     * @method Phaser.Core.TimeStep#step
      * @since 3.0.0
      * 
      * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
@@ -566,7 +566,7 @@ var TimeStep = new Class({
     /**
      * Manually calls TimeStep.step, passing in the performance.now value to it.
      *
-     * @method Phaser.Boot.TimeStep#tick
+     * @method Phaser.Core.TimeStep#tick
      * @since 3.0.0
      */
     tick: function ()
@@ -577,7 +577,7 @@ var TimeStep = new Class({
     /**
      * Sends the TimeStep to sleep, stopping Request Animation Frame (or SetTimeout) and toggling the `running` flag to false.
      *
-     * @method Phaser.Boot.TimeStep#sleep
+     * @method Phaser.Core.TimeStep#sleep
      * @since 3.0.0
      */
     sleep: function ()
@@ -594,7 +594,7 @@ var TimeStep = new Class({
      * Wakes-up the TimeStep, restarting Request Animation Frame (or SetTimeout) and toggling the `running` flag to true.
      * The `seamless` argument controls if the wake-up should adjust the start time or not.
      *
-     * @method Phaser.Boot.TimeStep#wake
+     * @method Phaser.Core.TimeStep#wake
      * @since 3.0.0
      *
      * @param {boolean} [seamless=false] - Adjust the startTime based on the lastTime values.
@@ -620,10 +620,10 @@ var TimeStep = new Class({
     /**
      * Stops the TimeStep running.
      *
-     * @method Phaser.Boot.TimeStep#stop
+     * @method Phaser.Core.TimeStep#stop
      * @since 3.0.0
      *
-     * @return {Phaser.Boot.TimeStep} The TimeStep object.
+     * @return {Phaser.Core.TimeStep} The TimeStep object.
      */
     stop: function ()
     {
@@ -639,7 +639,7 @@ var TimeStep = new Class({
      * Destroys the TimeStep. This will stop Request Animation Frame, stop the step, clear the callbacks and null
      * any objects.
      *
-     * @method Phaser.Boot.TimeStep#destroy
+     * @method Phaser.Core.TimeStep#destroy
      * @since 3.0.0
      */
     destroy: function ()

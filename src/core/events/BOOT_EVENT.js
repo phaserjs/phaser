@@ -10,6 +10,6 @@
  * This event is dispatched when the Phaser Game instance has finished booting, but before it is ready to start running.
  * The global systems use this event to know when to set themselves up, dispatching their own `ready` events as required.
  *
- * @event Phaser.Game.Events#BOOT
+ * @event Phaser.Core.Events#BOOT
  */
 module.exports = 'boot';

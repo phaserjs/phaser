@@ -5,13 +5,12 @@
  */
 
 /**
- * @namespace Phaser.Cache
+ * @namespace Phaser.Cache.Events
  */
 
 module.exports = {
 
-    BaseCache: require('./BaseCache'),
-    CacheManager: require('./CacheManager'),
-    Events: require('./events')
+    ADD: require('./ADD_EVENT'),
+    REMOVE: require('./REMOVE_EVENT')
 
 };

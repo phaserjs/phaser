@@ -5,14 +5,14 @@
  */
 
 /**
- * The Game Post-Step Event.
+ * The Game Step Event.
  * 
- * This event is dispatched after the Scene Manager has updated.
- * Hook into it from plugins or systems that need to do things before the render starts.
+ * This event is dispatched after the Game Pre-Step and before the Scene Manager steps.
+ * Hook into it from plugins or systems that need to update before the Scene Manager does, but after the core Systems have.
  *
- * @event Phaser.Game.Events#POST_STEP
+ * @event Phaser.Core.Events#STEP
  * 
  * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
  * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
  */
-module.exports = 'poststep';
+module.exports = 'step';

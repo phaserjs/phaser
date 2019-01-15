@@ -11,6 +11,6 @@
  * Lots of internal systems listen to this event in order to clear themselves out.
  * Custom plugins and game code should also do the same.
  *
- * @event Phaser.Game.Events#DESTROY
+ * @event Phaser.Core.Events#DESTROY
  */
 module.exports = 'destroy';

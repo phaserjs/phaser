@@ -18,11 +18,12 @@ var Phaser = {
     Animations: require('./animations'),
     Cache: require('./cache'),
     Cameras: { Scene2D: require('./cameras/2d') },
+    Core: require('./core'),
     Class: require('./utils/Class'),
     Data: require('./data'),
     Display: { Masks: require('./display/mask') },
     Events: require('./events'),
-    Game: require('./boot/Game'),
+    Game: require('./core/Game'),
     GameObjects: {
         DisplayList: require('./gameobjects/DisplayList'),
         GameObjectCreator: require('./gameobjects/GameObjectCreator'),

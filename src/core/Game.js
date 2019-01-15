@@ -50,6 +50,10 @@ if (typeof PLUGIN_FBINSTANT)
  * @class Game
  * @memberof Phaser
  * @constructor
+ * @fires Phaser.Core.Events#BLUR
+ * @fires Phaser.Core.Events#FOCUS
+ * @fires Phaser.Core.Events#HIDDEN
+ * @fires Phaser.Core.Events#VISIBLE
  * @since 3.0.0
  *
  * @param {GameConfig} [GameConfig] - The configuration object for your Phaser Game instance.
@@ -66,7 +70,7 @@ var Game = new Class({
          * The values stored within this object are read-only and should not be changed at run-time.
          *
          * @name Phaser.Game#config
-         * @type {Phaser.Boot.Config}
+         * @type {Phaser.Core.Config}
          * @readonly
          * @since 3.0.0
          */
@@ -233,7 +237,7 @@ var Game = new Class({
          * The Scale Manager is a global system responsible for handling game scaling events.
          *
          * @name Phaser.Game#scale
-         * @type {Phaser.Boot.ScaleManager}
+         * @type {Phaser.Core.ScaleManager}
          * @since 3.15.0
          */
         this.scale = new ScaleManager(this, this.config);
@@ -256,7 +260,7 @@ var Game = new Class({
          * them and calculating delta values. It then automatically calls the game step.
          *
          * @name Phaser.Game#loop
-         * @type {Phaser.Boot.TimeStep}
+         * @type {Phaser.Core.TimeStep}
          * @since 3.0.0
          */
         this.loop = new TimeStep(this, this.config.fps);
@@ -341,7 +345,8 @@ var Game = new Class({
      *
      * @method Phaser.Game#boot
      * @protected
-     * @fires Phaser.Game#boot
+     * @fires Phaser.Core.Events#BOOT
+     * @fires Phaser.Core.Events#TEXTURES_READY
      * @since 3.0.0
      */
     boot: function ()
@@ -369,11 +374,11 @@ var Game = new Class({
 
         AddToDOM(this.canvas, this.config.parent);
 
-        this.events.emit('boot');
+        this.events.emit(Events.BOOT);
 
         //  The Texture Manager has to wait on a couple of non-blocking events before it's fully ready.
         //  So it will emit this internal event when done:
-        this.events.once('texturesready', this.texturesReady, this);
+        this.events.once(Events.TEXTURES_READY, this.texturesReady, this);
     },
 
     /**
@@ -436,11 +441,11 @@ var Game = new Class({
      * It will then render each Scene in turn, via the Renderer. This process emits `prerender` and `postrender` events.
      *
      * @method Phaser.Game#step
-     * @fires Phaser.Game.Events#PRE_STEP_EVENT
-     * @fires Phaser.Game.Events#STEP_EVENT
-     * @fires Phaser.Game.Events#POST_STEP_EVENT
-     * @fires Phaser.Game.Events#PRE_RENDER_EVENT
-     * @fires Phaser.Game.Events#POST_RENDER_EVENT
+     * @fires Phaser.Core.Events#PRE_STEP_EVENT
+     * @fires Phaser.Core.Events#STEP_EVENT
+     * @fires Phaser.Core.Events#POST_STEP_EVENT
+     * @fires Phaser.Core.Events#PRE_RENDER_EVENT
+     * @fires Phaser.Core.Events#POST_RENDER_EVENT
      * @since 3.0.0
      *
      * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
@@ -539,7 +544,7 @@ var Game = new Class({
      *
      * @method Phaser.Game#onHidden
      * @protected
-     * @fires Phaser.Game.Events#PAUSE
+     * @fires Phaser.Core.Events#PAUSE
      * @since 3.0.0
      */
     onHidden: function ()
@@ -555,7 +560,7 @@ var Game = new Class({
      *
      * @method Phaser.Game#onVisible
      * @protected
-     * @fires Phaser.Game.Events#RESUME
+     * @fires Phaser.Core.Events#RESUME
      * @since 3.0.0
      */
     onVisible: function ()
@@ -631,7 +636,7 @@ var Game = new Class({
      * memory being held by the core Phaser plugins. If you do need to create another game instance on the same page, leave this as `false`.
      *
      * @method Phaser.Game#destroy
-     * @fires Phaser.Game.Events#DESTROY
+     * @fires Phaser.Core.Events#DESTROY
      * @since 3.0.0
      *
      * @param {boolean} removeCanvas - Set to `true` if you would like the parent canvas element removed from the DOM, or `false` to leave it in place.

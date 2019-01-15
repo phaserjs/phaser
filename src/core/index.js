@@ -5,7 +5,7 @@
  */
 
 /**
- * @namespace Phaser.Boot
+ * @namespace Phaser.Core
  */
 
 module.exports = {
@@ -13,7 +13,7 @@ module.exports = {
     Config: require('./Config'),
     CreateRenderer: require('./CreateRenderer'),
     DebugHeader: require('./DebugHeader'),
-    PluginManager: require('./PluginManager'),
+    Events: require('./events'),
     TimeStep: require('./TimeStep'),
     VisibilityHandler: require('./VisibilityHandler')
 

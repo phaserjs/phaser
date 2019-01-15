@@ -4,48 +4,18 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-/**
- * Visibility Handler hidden event.
- *
- * The document in which the Game is embedded has entered a hidden state.
- *
- * @event Phaser.Boot.VisibilityHandler#hidden
- */
-
-/**
- * Visibility Handler visible event.
- *
- * The document in which the Game is embedded has entered a visible state.
- *
- * @event Phaser.Boot.VisibilityHandler#visible
- */
-
-/**
- * Visibility Handler blur event.
- *
- * The window in which the Game is embedded has entered a blurred state.
- *
- * @event Phaser.Boot.VisibilityHandler#blur
- */
-
-/**
- * Visibility Handler focus event.
- *
- * The window in which the Game is embedded has entered a focused state.
- *
- * @event Phaser.Boot.VisibilityHandler#focus
- */
+var Events = require('./events');
 
 /**
  * The Visibility Handler is responsible for listening out for document level visibility change events.
  * This includes `visibilitychange` if the browser supports it, and blur and focus events. It then uses
  * the provided Event Emitter and fires the related events.
  *
- * @function Phaser.Boot.VisibilityHandler
- * @fires Phaser.Boot.VisibilityHandler#hidden
- * @fires Phaser.Boot.VisibilityHandler#visible
- * @fires Phaser.Boot.VisibilityHandler#blur
- * @fires Phaser.Boot.VisibilityHandler#focus
+ * @function Phaser.Core.VisibilityHandler
+ * @fires Phaser.Core.Events#BLUR
+ * @fires Phaser.Core.Events#FOCUS
+ * @fires Phaser.Core.Events#HIDDEN
+ * @fires Phaser.Core.Events#VISIBLE
  * @since 3.0.0
  *
  * @param {Phaser.Game} game - The Game instance this Visibility Handler is working on.
@@ -82,11 +52,11 @@ var VisibilityHandler = function (game)
     {
         if (document.hidden || event.type === 'pause')
         {
-            eventEmitter.emit('hidden');
+            eventEmitter.emit(Events.HIDDEN);
         }
         else
         {
-            eventEmitter.emit('visible');
+            eventEmitter.emit(Events.VISIBLE);
         }
     };
 
@@ -97,12 +67,12 @@ var VisibilityHandler = function (game)
 
     window.onblur = function ()
     {
-        eventEmitter.emit('blur');
+        eventEmitter.emit(Events.BLUR);
     };
 
     window.onfocus = function ()
     {
-        eventEmitter.emit('focus');
+        eventEmitter.emit(Events.FOCUS);
     };
 
     //  Automatically give the window focus unless config says otherwise

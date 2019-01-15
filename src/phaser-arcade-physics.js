@@ -19,6 +19,7 @@ var Phaser = {
     Animations: require('./animations'),
     Cache: require('./cache'),
     Cameras: require('./cameras'),
+    Core: require('./core'),
     Class: require('./utils/Class'),
     Create: require('./create'),
     Curves: require('./curves'),
