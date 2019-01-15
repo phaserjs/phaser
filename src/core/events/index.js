@@ -20,6 +20,7 @@ module.exports = {
     POST_STEP: require('./POST_STEP_EVENT'),
     PRE_RENDER: require('./PRE_RENDER_EVENT'),
     PRE_STEP: require('./PRE_STEP_EVENT'),
+    READY: require('./READY_EVENT'),
     RESUME: require('./RESUME_EVENT'),
     STEP: require('./STEP_EVENT'),
     TEXTURES_READY: require('./TEXTURES_READY_EVENT'),

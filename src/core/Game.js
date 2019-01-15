@@ -393,7 +393,7 @@ var Game = new Class({
     texturesReady: function ()
     {
         //  Start all the other systems
-        this.events.emit('ready');
+        this.events.emit(Events.READY);
 
         this.start();
     },
