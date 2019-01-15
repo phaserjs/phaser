@@ -8,6 +8,7 @@ var Class = require('../../utils/Class');
 var Components = require('../../gameobjects/components');
 var DegToRad = require('../../math/DegToRad');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 var ValueToColor = require('../../display/color/ValueToColor');
@@ -1503,13 +1504,6 @@ var BaseCamera = new Class({
     },
 
     /**
-     * This event is fired when a camera is destroyed by the Camera Manager.
-     *
-     * @event CameraDestroyEvent
-     * @param {Phaser.Cameras.Scene2D.BaseCamera} camera - The camera that was destroyed.
-     */
-
-    /**
      * Destroys this Camera instance and its internal properties and references.
      * Once destroyed you cannot use this Camera again, even if re-added to a Camera Manager.
      * 
@@ -1519,12 +1513,12 @@ var BaseCamera = new Class({
      * rather than calling this method directly.
      *
      * @method Phaser.Cameras.Scene2D.BaseCamera#destroy
-     * @fires CameraDestroyEvent
+     * @fires Phaser.Cameras.Scene2D.Events#DESTROY
      * @since 3.0.0
      */
     destroy: function ()
     {
-        this.emit('cameradestroy', this);
+        this.emit(Events.DESTROY, this);
 
         this.removeAllListeners();
 

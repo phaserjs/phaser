@@ -6,8 +6,9 @@
 
 var Clamp = require('../../../math/Clamp');
 var Class = require('../../../utils/Class');
-var Vector2 = require('../../../math/Vector2');
 var EaseMap = require('../../../math/easing/EaseMap');
+var Events = require('../events');
+var Vector2 = require('../../../math/Vector2');
 
 /**
  * @classdesc
@@ -154,31 +155,12 @@ var Pan = new Class({
     },
 
     /**
-     * This event is fired when the pan effect begins to run on a camera.
-     *
-     * @event CameraPanStartEvent
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.Pan} effect - A reference to the effect instance.
-     * @param {integer} duration - The duration of the effect.
-     * @param {number} x - The destination scroll x coordinate.
-     * @param {number} y - The destination scroll y coordinate.
-     */
-
-    /**
-     * This event is fired when the pan effect completes.
-     *
-     * @event CameraPanCompleteEvent
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.Pan} effect - A reference to the effect instance.
-     */
-
-    /**
      * This effect will scroll the Camera so that the center of its viewport finishes at the given destination,
      * over the duration and with the ease specified.
      *
      * @method Phaser.Cameras.Scene2D.Effects.Pan#start
-     * @fires CameraPanStartEvent
-     * @fires CameraPanCompleteEvent
+     * @fires Phaser.Cameras.Scene2D.Events#PAN_START
+     * @fires Phaser.Cameras.Scene2D.Events#PAN_COMPLETE
      * @since 3.11.0
      *
      * @param {number} x - The destination x coordinate to scroll the center of the Camera viewport to.
@@ -236,7 +218,7 @@ var Pan = new Class({
         this._onUpdate = callback;
         this._onUpdateScope = context;
 
-        this.camera.emit('camerapanstart', this.camera, this, duration, x, y);
+        this.camera.emit(Events.PAN_START, this.camera, this, duration, x, y);
 
         return cam;
     },
@@ -298,6 +280,7 @@ var Pan = new Class({
      * Called internally when the effect completes.
      *
      * @method Phaser.Cameras.Scene2D.Effects.Pan#effectComplete
+     * @fires Phaser.Cameras.Scene2D.Events#PAN_COMPLETE
      * @since 3.11.0
      */
     effectComplete: function ()
@@ -307,7 +290,7 @@ var Pan = new Class({
 
         this.isRunning = false;
 
-        this.camera.emit('camerapancomplete', this.camera, this);
+        this.camera.emit(Events.PAN_COMPLETE, this.camera, this);
     },
 
     /**

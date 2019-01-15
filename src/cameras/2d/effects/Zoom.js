@@ -7,6 +7,7 @@
 var Clamp = require('../../../math/Clamp');
 var Class = require('../../../utils/Class');
 var EaseMap = require('../../../math/easing/EaseMap');
+var Events = require('../events');
 
 /**
  * @classdesc
@@ -139,29 +140,11 @@ var Zoom = new Class({
     },
 
     /**
-     * This event is fired when the Zoom effect begins to run on a camera.
-     *
-     * @event CameraZoomStartEvent
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.Zoom} effect - A reference to the effect instance.
-     * @param {integer} duration - The duration of the effect.
-     * @param {number} zoom - The destination zoom value.
-     */
-
-    /**
-     * This event is fired when the Zoom effect completes.
-     *
-     * @event CameraZoomCompleteEvent
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.Zoom} effect - A reference to the effect instance.
-     */
-
-    /**
      * This effect will zoom the Camera to the given scale, over the duration and with the ease specified.
      *
      * @method Phaser.Cameras.Scene2D.Effects.Zoom#start
-     * @fires CameraZoomStartEvent
-     * @fires CameraZoomCompleteEvent
+     * @fires Phaser.Cameras.Scene2D.Events#ZOOM_START
+     * @fires Phaser.Cameras.Scene2D.Events#ZOOM_COMPLETE
      * @since 3.11.0
      *
      * @param {number} zoom - The target Camera zoom value.
@@ -215,7 +198,7 @@ var Zoom = new Class({
         this._onUpdate = callback;
         this._onUpdateScope = context;
 
-        this.camera.emit('camerazoomstart', this.camera, this, duration, zoom);
+        this.camera.emit(Events.ZOOM_START, this.camera, this, duration, zoom);
 
         return cam;
     },
@@ -266,6 +249,7 @@ var Zoom = new Class({
      * Called internally when the effect completes.
      *
      * @method Phaser.Cameras.Scene2D.Effects.Zoom#effectComplete
+     * @fires Phaser.Cameras.Scene2D.Events#ZOOM_COMPLETE
      * @since 3.11.0
      */
     effectComplete: function ()
@@ -275,7 +259,7 @@ var Zoom = new Class({
 
         this.isRunning = false;
 
-        this.camera.emit('camerazoomcomplete', this.camera, this);
+        this.camera.emit(Events.ZOOM_COMPLETE, this.camera, this);
     },
 
     /**

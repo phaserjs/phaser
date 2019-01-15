@@ -12,6 +12,7 @@ module.exports = {
 
     Camera: require('./Camera'),
     CameraManager: require('./CameraManager'),
-    Effects: require('./effects')
+    Effects: require('./effects'),
+    Events: require('./events')
 
 };
