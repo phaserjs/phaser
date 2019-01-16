@@ -12,6 +12,7 @@ var CreatePixelPerfectHandler = require('./CreatePixelPerfectHandler');
 var DistanceBetween = require('../math/distance/DistanceBetween');
 var Ellipse = require('../geom/ellipse/Ellipse');
 var EllipseContains = require('../geom/ellipse/Contains');
+var Events = require('./events');
 var EventEmitter = require('eventemitter3');
 var GetFastValue = require('../utils/object/GetFastValue');
 var InputPluginCache = require('./InputPluginCache');
@@ -207,7 +208,7 @@ var InputPlugin = new Class({
          * Internal event propagation callback container.
          *
          * @name Phaser.Input.InputPlugin#_eventContainer
-         * @type {object}
+         * @type {Phaser.Input.EventData}
          * @private
          * @since 3.13.0
          */
@@ -363,6 +364,7 @@ var InputPlugin = new Class({
      * Do not invoke it directly.
      *
      * @method Phaser.Input.InputPlugin#boot
+     * @fires Phaser.Input.Events#BOOT
      * @private
      * @since 3.5.1
      */
@@ -375,7 +377,7 @@ var InputPlugin = new Class({
         this.systems.events.once('destroy', this.destroy, this);
 
         //  Registered input plugins listen for this
-        this.pluginEvents.emit('boot');
+        this.pluginEvents.emit(Events.BOOT);
     },
 
     /**
@@ -384,6 +386,7 @@ var InputPlugin = new Class({
      * Do not invoke it directly.
      *
      * @method Phaser.Input.InputPlugin#start
+     * @fires Phaser.Input.Events#START
      * @private
      * @since 3.5.0
      */
@@ -405,7 +408,7 @@ var InputPlugin = new Class({
         this._dragState = [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
 
         //  Registered input plugins listen for this
-        this.pluginEvents.emit('start');
+        this.pluginEvents.emit(Events.START);
     },
 
     /**
@@ -413,13 +416,14 @@ var InputPlugin = new Class({
      * deleting old Game Objects.
      *
      * @method Phaser.Input.InputPlugin#preUpdate
+     * @fires Phaser.Input.Events#PRE_UPDATE
      * @private
      * @since 3.0.0
      */
     preUpdate: function ()
     {
         //  Registered input plugins listen for this
-        this.pluginEvents.emit('preupdate');
+        this.pluginEvents.emit(Events.PRE_UPDATE);
 
         var removeList = this._pendingRemoval;
         var insertList = this._pendingInsertion;
@@ -476,6 +480,9 @@ var InputPlugin = new Class({
      * Called automatically by the Scene Systems step.
      *
      * @method Phaser.Input.InputPlugin#update
+     * @fires Phaser.Input.Events#GAME_OUT
+     * @fires Phaser.Input.Events#GAME_OVER
+     * @fires Phaser.Input.Events#UPDATE
      * @private
      * @since 3.0.0
      *
@@ -491,7 +498,7 @@ var InputPlugin = new Class({
 
         var manager = this.manager;
 
-        this.pluginEvents.emit('update', time, delta);
+        this.pluginEvents.emit(Events.UPDATE, time, delta);
 
         //  Another Scene above this one has already consumed the input events, or we're in transition
         if (manager.globalTopOnly && manager.ignoreEvents)
@@ -501,7 +508,7 @@ var InputPlugin = new Class({
 
         if (manager._emitIsOverEvent)
         {
-            var event = (manager.isOver) ? 'gameover' : 'gameout';
+            var event = (manager.isOver) ? Events.GAME_OVER : Events.GAME_OUT;
 
             this.emit(event, time, manager._emitIsOverEvent);
         }
@@ -768,10 +775,10 @@ var InputPlugin = new Class({
      *
      * @method Phaser.Input.InputPlugin#processDownEvents
      * @private
-     * @fires Phaser.GameObjects.GameObject#pointerdownEvent
-     * @fires Phaser.Input.InputPlugin#gameobjectdownEvent
-     * @fires Phaser.Input.InputPlugin#pointerdownEvent
-     * @fires Phaser.Input.InputPlugin#pointerdownoutsideEvent
+     * @fires Phaser.Input.Events#GAMEOBJECT_POINTER_DOWN
+     * @fires Phaser.Input.Events#GAMEOBJECT_DOWN
+     * @fires Phaser.Input.Events#POINTER_DOWN
+     * @fires Phaser.Input.Events#POINTER_DOWN_OUTSIDE
      * @since 3.0.0
      *
      * @param {Phaser.Input.Pointer} pointer - The Pointer being tested.
@@ -802,7 +809,7 @@ var InputPlugin = new Class({
 
             total++;
 
-            gameObject.emit('pointerdown', pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
+            gameObject.emit(Events.GAMEOBJECT_POINTER_DOWN, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
 
             if (_eventData.cancelled)
             {
@@ -810,7 +817,7 @@ var InputPlugin = new Class({
                 break;
             }
 
-            this.emit('gameobjectdown', pointer, gameObject, _eventContainer);
+            this.emit(Events.GAMEOBJECT_DOWN, pointer, gameObject, _eventContainer);
 
             if (_eventData.cancelled)
             {
@@ -822,10 +829,14 @@ var InputPlugin = new Class({
         //  If they released outside the canvas, but pressed down inside it, we'll still dispatch the event.
         if (!aborted)
         {
-            var type = (pointer.downElement === this.manager.game.canvas) ? 'pointerdown' : 'pointerdownoutside';
-
-            //  Contains ALL Game Objects currently up in the array
-            this.emit(type, pointer, currentlyOver);
+            if (pointer.downElement === this.manager.game.canvas)
+            {
+                this.emit(Events.POINTER_DOWN, pointer, currentlyOver);
+            }
+            else
+            {
+                this.emit(Events.POINTER_DOWN_OUTSIDE, pointer);
+            }
         }
 
         return total;
@@ -1164,9 +1175,10 @@ var InputPlugin = new Class({
      * An internal method that handles the Pointer movement event.
      *
      * @method Phaser.Input.InputPlugin#processMoveEvents
+     * @fires Phaser.Input.Events#GAMEOBJECT_POINTER_MOVE
+     * @fires Phaser.Input.Events#GAMEOBJECT_MOVE
+     * @fires Phaser.Input.Events#POINTER_MOVE
      * @private
-     * @fires Phaser.GameObjects.GameObject#pointermoveEvent
-     * @fires Phaser.Input.InputPlugin#gameobjectmoveEvent
      * @since 3.0.0
      *
      * @param {Phaser.Input.Pointer} pointer - The pointer to check for events against.
@@ -1197,7 +1209,7 @@ var InputPlugin = new Class({
 
             total++;
 
-            gameObject.emit('pointermove', pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
+            gameObject.emit(Events.GAMEOBJECT_POINTER_MOVE, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
 
             if (_eventData.cancelled)
             {
@@ -1205,7 +1217,7 @@ var InputPlugin = new Class({
                 break;
             }
 
-            this.emit('gameobjectmove', pointer, gameObject, _eventContainer);
+            this.emit(Events.GAMEOBJECT_MOVE, pointer, gameObject, _eventContainer);
 
             if (_eventData.cancelled)
             {
@@ -1221,7 +1233,7 @@ var InputPlugin = new Class({
 
         if (!aborted)
         {
-            this.emit('pointermove', pointer, currentlyOver);
+            this.emit(Events.POINTER_MOVE, pointer, currentlyOver);
         }
 
         return total;
@@ -1406,9 +1418,10 @@ var InputPlugin = new Class({
      *
      * @method Phaser.Input.InputPlugin#processUpEvents
      * @private
-     * @fires Phaser.GameObjects.GameObject#pointerupEvent
-     * @fires Phaser.Input.InputPlugin#gameobjectupEvent
-     * @fires Phaser.Input.InputPlugin#gameobjectupoutsideEvent
+     * @fires Phaser.Input.Events#GAMEOBJECT_POINTER_UP
+     * @fires Phaser.Input.Events#GAMEOBJECT_UP
+     * @fires Phaser.Input.Events#POINTER_UP
+     * @fires Phaser.Input.Events#POINTER_UP_OUTSIDE
      * @since 3.0.0
      *
      * @param {Phaser.Input.Pointer} pointer - The pointer to check for events against.
@@ -1436,7 +1449,7 @@ var InputPlugin = new Class({
                 continue;
             }
 
-            gameObject.emit('pointerup', pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
+            gameObject.emit(Events.GAMEOBJECT_POINTER_UP, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
 
             if (_eventData.cancelled)
             {
@@ -1444,7 +1457,7 @@ var InputPlugin = new Class({
                 break;
             }
 
-            this.emit('gameobjectup', pointer, gameObject, _eventContainer);
+            this.emit(Events.GAMEOBJECT_UP, pointer, gameObject, _eventContainer);
 
             if (_eventData.cancelled)
             {
@@ -1456,10 +1469,14 @@ var InputPlugin = new Class({
         //  If they released outside the canvas, but pressed down inside it, we'll still dispatch the event.
         if (!aborted)
         {
-            var type = (pointer.upElement === this.manager.game.canvas) ? 'pointerup' : 'pointerupoutside';
-
-            //  Contains ALL Game Objects currently up in the array
-            this.emit(type, pointer, currentlyOver);
+            if (pointer.upElement === this.manager.game.canvas)
+            {
+                this.emit(Events.POINTER_UP, pointer, currentlyOver);
+            }
+            else
+            {
+                this.emit(Events.POINTER_UP_OUTSIDE, pointer);
+            }
         }
 
         return currentlyOver.length;
@@ -2275,13 +2292,14 @@ var InputPlugin = new Class({
      * We need to kill and reset all internal properties as well as stop listening to Scene events.
      *
      * @method Phaser.Input.InputPlugin#shutdown
+     * @fires Phaser.Input.Events#SHUTDOWN
      * @private
      * @since 3.0.0
      */
     shutdown: function ()
     {
         //  Registered input plugins listen for this
-        this.pluginEvents.emit('shutdown');
+        this.pluginEvents.emit(Events.SHUTDOWN);
 
         this._temp.length = 0;
         this._list.length = 0;
@@ -2314,6 +2332,7 @@ var InputPlugin = new Class({
      * We need to shutdown and then kill off all external references.
      *
      * @method Phaser.Input.InputPlugin#destroy
+     * @fires Phaser.Input.Events#DESTROY
      * @private
      * @since 3.0.0
      */
@@ -2322,7 +2341,7 @@ var InputPlugin = new Class({
         this.shutdown();
 
         //  Registered input plugins listen for this
-        this.pluginEvents.emit('destroy');
+        this.pluginEvents.emit(Events.DESTROY);
 
         this.pluginEvents.removeAllListeners();
 

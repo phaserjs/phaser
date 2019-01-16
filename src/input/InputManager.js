@@ -133,10 +133,10 @@ var InputManager = new Class({
         this.isOver = true;
 
         /**
-         * isOver state change property.
+         * The DOM Event that was fired when the canvas dispatched an over or out event.
          *
          * @name Phaser.Input.InputManager#_emitIsOverEvent
-         * @type {boolean}
+         * @type {(MouseEvent|TouchEvent)}
          * @private
          * @since 3.16.0
          */
@@ -413,7 +413,7 @@ var InputManager = new Class({
      * @private
      * @since 3.16.0
      *
-     * @param {number} event - The DOM Event.
+     * @param {(MouseEvent|TouchEvent)} event - The DOM Event.
      */
     setCanvasOver: function (event)
     {
@@ -429,7 +429,7 @@ var InputManager = new Class({
      * @private
      * @since 3.16.0
      *
-     * @param {number} event - The DOM Event.
+     * @param {(MouseEvent|TouchEvent)} event - The DOM Event.
      */
     setCanvasOut: function (event)
     {

@@ -14,6 +14,7 @@ var Extend = require('../utils/object/Extend');
 var Input = {
 
     CreateInteractiveObject: require('./CreateInteractiveObject'),
+    Events: require('./events'),
     Gamepad: require('./gamepad'),
     InputManager: require('./InputManager'),
     InputPlugin: require('./InputPlugin'),
