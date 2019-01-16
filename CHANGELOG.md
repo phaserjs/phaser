@@ -295,6 +295,8 @@ one set of bindings ever created, which makes things a lot cleaner.
 * The `Phaser.Boot` namespace has been renamed to `Phaser.Core`. As a result, the `boot` folder has been renamed to `core`. This  impacts the `TimeStep` class and `VisibilityHandler` function, which have been moved to be under the new namespace.
 * The `Phaser.Animations` namespace was incorrectly exposed in the Phaser entrypoints as `Animation` (note the lack of plural). This means that if you are creating any custom classes that extend Animation objects using the Phaser namespace, then please update them from `Phaser.Animation.X` to `Phaser.Animations.X`, i.e. `Phaser.Animation.AnimationFrame` to `Phaser.Animations.AnimationFrame`. This doesn't impact you if you created animations by creating them via the Animation Manager.
 
+* The keyed Data Manager change data event string has changed from `changedata_` to `changedata-` to keep it consistent with other keyed events.
+
 ### Examples and TypeScript
 
 Thanks to the following for helping with the Phaser 3 Examples and TypeScript definitions, either by reporting errors, or even better, fixing them:

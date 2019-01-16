@@ -11,7 +11,7 @@
  * 
  * Listen for it on the Sprite using `sprite.on('animationrepeat', listener)`
  * 
- * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_REPEAT_KEY_ANIMATION_EVENT` event.
+ * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_ANIMATION_KEY_REPEAT` event.
  *
  * @event Phaser.Animations.Events#SPRITE_ANIMATION_REPEAT
  * 

@@ -12,7 +12,7 @@
  * 
  * Listen for it on the Sprite using `sprite.on('animationupdate', listener)`
  * 
- * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_ANIMATION_KEY_UPDATE_EVENT` event.
+ * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_ANIMATION_KEY_UPDATE` event.
  *
  * @event Phaser.Animations.Events#SPRITE_ANIMATION_UPDATE
  * 

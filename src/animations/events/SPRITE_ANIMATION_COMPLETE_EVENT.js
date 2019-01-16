@@ -11,7 +11,7 @@
  * 
  * Listen for it on the Sprite using `sprite.on('animationcomplete', listener)`
  * 
- * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_ANIMATION_KEY_COMPLETE_EVENT` event.
+ * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_ANIMATION_KEY_COMPLETE` event.
  *
  * @event Phaser.Animations.Events#SPRITE_ANIMATION_COMPLETE
  * 

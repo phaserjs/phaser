@@ -11,7 +11,7 @@
  * 
  * Listen for it on the Sprite using `sprite.on('animationrestart', listener)`
  * 
- * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_RESTART_KEY_ANIMATION_EVENT`.
+ * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_ANIMATION_KEY_RESTART` event.
  *
  * @event Phaser.Animations.Events#SPRITE_ANIMATION_RESTART
  * 
