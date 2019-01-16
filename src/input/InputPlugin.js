@@ -894,20 +894,21 @@ var InputPlugin = new Class({
      *
      * @method Phaser.Input.InputPlugin#processDragEvents
      * @private
-     * @fires Phaser.GameObjects.GameObject#dragendEvent
-     * @fires Phaser.GameObjects.GameObject#dragenterEvent
-     * @fires Phaser.GameObjects.GameObject#dragEvent
-     * @fires Phaser.GameObjects.GameObject#dragleaveEvent
-     * @fires Phaser.GameObjects.GameObject#dragoverEvent
-     * @fires Phaser.GameObjects.GameObject#dragstartEvent
-     * @fires Phaser.GameObjects.GameObject#dropEvent
-     * @fires Phaser.Input.InputPlugin#dragendEvent
-     * @fires Phaser.Input.InputPlugin#dragenterEvent
-     * @fires Phaser.Input.InputPlugin#dragEvent
-     * @fires Phaser.Input.InputPlugin#dragleaveEvent
-     * @fires Phaser.Input.InputPlugin#dragoverEvent
-     * @fires Phaser.Input.InputPlugin#dragstartEvent
-     * @fires Phaser.Input.InputPlugin#dropEvent
+     * @fires Phaser.Input.Events#DRAG_END
+     * @fires Phaser.Input.Events#DRAG_ENTER
+     * @fires Phaser.Input.Events#DRAG
+     * @fires Phaser.Input.Events#DRAG_LEAVE
+     * @fires Phaser.Input.Events#DRAG_OVER
+     * @fires Phaser.Input.Events#DRAG_START
+     * @fires Phaser.Input.Events#DROP
+     * @fires Phaser.Input.Events#GAMEOBJECT_DOWN
+     * @fires Phaser.Input.Events#GAMEOBJECT_DRAG_END
+     * @fires Phaser.Input.Events#GAMEOBJECT_DRAG_ENTER
+     * @fires Phaser.Input.Events#GAMEOBJECT_DRAG
+     * @fires Phaser.Input.Events#GAMEOBJECT_DRAG_LEAVE
+     * @fires Phaser.Input.Events#GAMEOBJECT_DRAG_OVER
+     * @fires Phaser.Input.Events#GAMEOBJECT_DRAG_START
+     * @fires Phaser.Input.Events#GAMEOBJECT_DROP
      * @since 3.0.0
      *
      * @param {Phaser.Input.Pointer} pointer - The Pointer to check against the Game Objects.
@@ -1031,9 +1032,9 @@ var InputPlugin = new Class({
                 input.dragStartX = gameObject.x;
                 input.dragStartY = gameObject.y;
 
-                gameObject.emit('dragstart', pointer, input.dragX, input.dragY);
+                gameObject.emit(Events.GAMEOBJECT_DRAG_START, pointer, input.dragX, input.dragY);
 
-                this.emit('dragstart', pointer, gameObject);
+                this.emit(Events.DRAG_START, pointer, gameObject);
             }
 
             this.setDragState(pointer, 4);
@@ -1063,29 +1064,29 @@ var InputPlugin = new Class({
                     if (index === 0)
                     {
                         //  We're still over it, and it's still the top of the display list, phew ...
-                        gameObject.emit('dragover', pointer, input.target);
+                        gameObject.emit(Events.GAMEOBJECT_DRAG_OVER, pointer, input.target);
 
-                        this.emit('dragover', pointer, gameObject, input.target);
+                        this.emit(Events.DRAG_OVER, pointer, gameObject, input.target);
                     }
                     else if (index > 0)
                     {
                         //  Still over it but it's no longer top of the display list (targets must always be at the top)
-                        gameObject.emit('dragleave', pointer, input.target);
+                        gameObject.emit(Events.GAMEOBJECT_DRAG_LEAVE, pointer, input.target);
 
-                        this.emit('dragleave', pointer, gameObject, input.target);
+                        this.emit(Events.DRAG_LEAVE, pointer, gameObject, input.target);
 
                         input.target = dropZones[0];
 
-                        gameObject.emit('dragenter', pointer, input.target);
+                        gameObject.emit(Events.GAMEOBJECT_DRAG_ENTER, pointer, input.target);
 
-                        this.emit('dragenter', pointer, gameObject, input.target);
+                        this.emit(Events.DRAG_ENTER, pointer, gameObject, input.target);
                     }
                     else
                     {
                         //  Nope, we've moved on (or the target has!), leave the old target
-                        gameObject.emit('dragleave', pointer, input.target);
+                        gameObject.emit(Events.GAMEOBJECT_DRAG_LEAVE, pointer, input.target);
 
-                        this.emit('dragleave', pointer, gameObject, input.target);
+                        this.emit(Events.DRAG_LEAVE, pointer, gameObject, input.target);
 
                         //  Anything new to replace it?
                         //  Yup!
@@ -1093,9 +1094,9 @@ var InputPlugin = new Class({
                         {
                             input.target = dropZones[0];
 
-                            gameObject.emit('dragenter', pointer, input.target);
+                            gameObject.emit(Events.GAMEOBJECT_DRAG_ENTER, pointer, input.target);
 
-                            this.emit('dragenter', pointer, gameObject, input.target);
+                            this.emit(Events.DRAG_ENTER, pointer, gameObject, input.target);
                         }
                         else
                         {
@@ -1108,17 +1109,17 @@ var InputPlugin = new Class({
                 {
                     input.target = dropZones[0];
 
-                    gameObject.emit('dragenter', pointer, input.target);
+                    gameObject.emit(Events.GAMEOBJECT_DRAG_ENTER, pointer, input.target);
 
-                    this.emit('dragenter', pointer, gameObject, input.target);
+                    this.emit(Events.DRAG_ENTER, pointer, gameObject, input.target);
                 }
 
                 var dragX = pointer.x - gameObject.input.dragX;
                 var dragY = pointer.y - gameObject.input.dragY;
 
-                gameObject.emit('drag', pointer, dragX, dragY);
+                gameObject.emit(Events.GAMEOBJECT_DRAG, pointer, dragX, dragY);
 
-                this.emit('drag', pointer, gameObject, dragX, dragY);
+                this.emit(Events.DRAG, pointer, gameObject, dragX, dragY);
             }
 
             return list.length;
@@ -1146,9 +1147,9 @@ var InputPlugin = new Class({
 
                     if (input.target)
                     {
-                        gameObject.emit('drop', pointer, input.target);
+                        gameObject.emit(Events.GAMEOBJECT_DROP, pointer, input.target);
 
-                        this.emit('drop', pointer, gameObject, input.target);
+                        this.emit(Events.DROP, pointer, gameObject, input.target);
 
                         input.target = null;
 
@@ -1157,9 +1158,9 @@ var InputPlugin = new Class({
 
                     //  And finally the dragend event
 
-                    gameObject.emit('dragend', pointer, input.dragX, input.dragY, dropped);
+                    gameObject.emit(Events.GAMEOBJECT_DRAG_END, pointer, input.dragX, input.dragY, dropped);
 
-                    this.emit('dragend', pointer, gameObject, dropped);
+                    this.emit(Events.DRAG_END, pointer, gameObject, dropped);
                 }
             }
 
@@ -1244,10 +1245,12 @@ var InputPlugin = new Class({
      *
      * @method Phaser.Input.InputPlugin#processOverOutEvents
      * @private
-     * @fires Phaser.GameObjects.GameObject#pointeroutEvent
-     * @fires Phaser.GameObjects.GameObject#pointeroverEvent
-     * @fires Phaser.Input.InputPlugin#gameobjectoutEvent
-     * @fires Phaser.Input.InputPlugin#gameobjectoverEvent
+     * @fires Phaser.Input.Events#GAMEOBJECT_POINTER_OVER
+     * @fires Phaser.Input.Events#GAMEOBJECT_OVER
+     * @fires Phaser.Input.Events#POINTER_OVER
+     * @fires Phaser.Input.Events#GAMEOBJECT_POINTER_OUT
+     * @fires Phaser.Input.Events#GAMEOBJECT_OUT
+     * @fires Phaser.Input.Events#POINTER_OUT
      * @since 3.0.0
      *
      * @param {Phaser.Input.Pointer} pointer - The pointer to check for events against.
@@ -1329,7 +1332,7 @@ var InputPlugin = new Class({
                     continue;
                 }
 
-                gameObject.emit('pointerout', pointer, _eventContainer);
+                gameObject.emit(Events.GAMEOBJECT_POINTER_OUT, pointer, _eventContainer);
 
                 manager.resetCursor(gameObject.input);
 
@@ -1341,7 +1344,7 @@ var InputPlugin = new Class({
                     break;
                 }
 
-                this.emit('gameobjectout', pointer, gameObject, _eventContainer);
+                this.emit(Events.GAMEOBJECT_OUT, pointer, gameObject, _eventContainer);
 
                 if (_eventData.cancelled)
                 {
@@ -1352,7 +1355,7 @@ var InputPlugin = new Class({
 
             if (!aborted)
             {
-                this.emit('pointerout', pointer, justOut);
+                this.emit(Events.POINTER_OUT, pointer, justOut);
             }
         }
 
@@ -1377,7 +1380,7 @@ var InputPlugin = new Class({
                     continue;
                 }
 
-                gameObject.emit('pointerover', pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
+                gameObject.emit(Events.GAMEOBJECT_POINTER_OVER, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
 
                 manager.setCursor(gameObject.input);
 
@@ -1389,7 +1392,7 @@ var InputPlugin = new Class({
                     break;
                 }
 
-                this.emit('gameobjectover', pointer, gameObject, _eventContainer);
+                this.emit(Events.GAMEOBJECT_OVER, pointer, gameObject, _eventContainer);
 
                 if (_eventData.cancelled)
                 {
@@ -1400,7 +1403,7 @@ var InputPlugin = new Class({
 
             if (!aborted)
             {
-                this.emit('pointerover', pointer, justOver);
+                this.emit(Events.POINTER_OVER, pointer, justOver);
             }
         }
 
