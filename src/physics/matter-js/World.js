@@ -10,6 +10,7 @@ var Common = require('./lib/core/Common');
 var Composite = require('./lib/body/Composite');
 var Engine = require('./lib/core/Engine');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
 var MatterBody = require('./lib/body/Body');
@@ -238,12 +239,12 @@ var World = new Class({
 
         MatterEvents.on(engine, 'beforeUpdate', function (event)
         {
-            _this.emit('beforeupdate', event);
+            _this.emit(Events.BEFORE_UPDATE, event);
         });
 
         MatterEvents.on(engine, 'afterUpdate', function (event)
         {
-            _this.emit('afterupdate', event);
+            _this.emit(Events.AFTER_UPDATE, event);
         });
 
         MatterEvents.on(engine, 'collisionStart', function (event)
@@ -258,7 +259,7 @@ var World = new Class({
                 bodyB = pairs[0].bodyB;
             }
 
-            _this.emit('collisionstart', event, bodyA, bodyB);
+            _this.emit(Events.COLLISION_START, event, bodyA, bodyB);
         });
 
         MatterEvents.on(engine, 'collisionActive', function (event)
@@ -273,7 +274,7 @@ var World = new Class({
                 bodyB = pairs[0].bodyB;
             }
 
-            _this.emit('collisionactive', event, bodyA, bodyB);
+            _this.emit(Events.COLLISION_ACTIVE, event, bodyA, bodyB);
         });
 
         MatterEvents.on(engine, 'collisionEnd', function (event)
@@ -288,7 +289,7 @@ var World = new Class({
                 bodyB = pairs[0].bodyB;
             }
 
-            _this.emit('collisionend', event, bodyA, bodyB);
+            _this.emit(Events.COLLISION_END, event, bodyA, bodyB);
         });
     },
 
@@ -603,6 +604,7 @@ var World = new Class({
      * [description]
      *
      * @method Phaser.Physics.Matter.World#pause
+     * @fires Phaser.Physics.Matter.Events#PAUSE
      * @since 3.0.0
      *
      * @return {Phaser.Physics.Matter.World} This Matter World object.
@@ -611,7 +613,7 @@ var World = new Class({
     {
         this.enabled = false;
 
-        this.emit('pause');
+        this.emit(Events.PAUSE);
 
         return this;
     },
@@ -620,6 +622,7 @@ var World = new Class({
      * [description]
      *
      * @method Phaser.Physics.Matter.World#resume
+     * @fires Phaser.Physics.Matter.Events#RESUME
      * @since 3.0.0
      *
      * @return {Phaser.Physics.Matter.World} This Matter World object.
@@ -628,7 +631,7 @@ var World = new Class({
     {
         this.enabled = true;
 
-        this.emit('resume');
+        this.emit(Events.RESUME);
 
         return this;
     },
