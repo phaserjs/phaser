@@ -7,6 +7,7 @@
 var Class = require('../utils/Class');
 var CONST = require('./const');
 var DefaultPlugins = require('../plugins/DefaultPlugins');
+var Events = require('./events');
 var GetPhysicsPlugins = require('./GetPhysicsPlugins');
 var GetScenePlugins = require('./GetScenePlugins');
 var NOOP = require('../utils/NOOP');
@@ -301,6 +302,7 @@ var Systems = new Class({
      *
      * @method Phaser.Scenes.Systems#init
      * @protected
+     * @fires Phaser.Scenes.Events#BOOT
      * @since 3.0.0
      *
      * @param {Phaser.Game} game - A reference to the Phaser Game instance.
@@ -323,7 +325,7 @@ var Systems = new Class({
 
         pluginManager.addToScene(this, DefaultPlugins.Global, [ DefaultPlugins.CoreScene, GetScenePlugins(this), GetPhysicsPlugins(this) ]);
 
-        this.events.emit('boot', this);
+        this.events.emit(Events.BOOT, this);
 
         this.settings.isBooted = true;
     },
@@ -352,6 +354,9 @@ var Systems = new Class({
      * Frame or Set Timeout call to the main Game instance.
      *
      * @method Phaser.Scenes.Systems#step
+     * @fires Phaser.Scenes.Events#PRE_UPDATE
+     * @fires Phaser.Scenes.Events#_UPDATE
+     * @fires Phaser.Scenes.Events#POST_UPDATE
      * @since 3.0.0
      *
      * @param {number} time - The time value from the most recent Game step. Typically a high-resolution timer value, or Date.now().
@@ -359,13 +364,13 @@ var Systems = new Class({
      */
     step: function (time, delta)
     {
-        this.events.emit('preupdate', time, delta);
+        this.events.emit(Events.PRE_UPDATE, time, delta);
 
-        this.events.emit('update', time, delta);
+        this.events.emit(Events.UPDATE, time, delta);
 
         this.sceneUpdate.call(this.scene, time, delta);
 
-        this.events.emit('postupdate', time, delta);
+        this.events.emit(Events.POST_UPDATE, time, delta);
     },
 
     /**
@@ -373,6 +378,7 @@ var Systems = new Class({
      * Instructs the Scene to render itself via its Camera Manager to the renderer given.
      *
      * @method Phaser.Scenes.Systems#render
+     * @fires Phaser.Scenes.Events#RENDER
      * @since 3.0.0
      *
      * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The renderer that invoked the render call.
@@ -385,7 +391,7 @@ var Systems = new Class({
 
         this.cameras.render(renderer, displayList);
 
-        this.events.emit('render', renderer);
+        this.events.emit(Events.RENDER, renderer);
     },
 
     /**
@@ -415,6 +421,7 @@ var Systems = new Class({
      * A paused Scene still renders, it just doesn't run ANY of its update handlers or systems.
      *
      * @method Phaser.Scenes.Systems#pause
+     * @fires Phaser.Scenes.Events#PAUSE
      * @since 3.0.0
      * 
      * @param {object} [data] - A data object that will be passed in the 'pause' event.
@@ -429,7 +436,7 @@ var Systems = new Class({
 
             this.settings.active = false;
 
-            this.events.emit('pause', this, data);
+            this.events.emit(Events.PAUSE, this, data);
         }
 
         return this;
@@ -439,6 +446,7 @@ var Systems = new Class({
      * Resume this Scene from a paused state.
      *
      * @method Phaser.Scenes.Systems#resume
+     * @fires Phaser.Scenes.Events#RESUME
      * @since 3.0.0
      *
      * @param {object} [data] - A data object that will be passed in the 'resume' event.
@@ -453,7 +461,7 @@ var Systems = new Class({
 
             this.settings.active = true;
 
-            this.events.emit('resume', this, data);
+            this.events.emit(Events.RESUME, this, data);
         }
 
         return this;
@@ -468,6 +476,7 @@ var Systems = new Class({
      * from other Scenes may still invoke changes within it, so be careful what is left active.
      *
      * @method Phaser.Scenes.Systems#sleep
+     * @fires Phaser.Scenes.Events#SLEEP
      * @since 3.0.0
      * 
      * @param {object} [data] - A data object that will be passed in the 'sleep' event.
@@ -481,7 +490,7 @@ var Systems = new Class({
         this.settings.active = false;
         this.settings.visible = false;
 
-        this.events.emit('sleep', this, data);
+        this.events.emit(Events.SLEEP, this, data);
 
         return this;
     },
@@ -490,6 +499,7 @@ var Systems = new Class({
      * Wake-up this Scene if it was previously asleep.
      *
      * @method Phaser.Scenes.Systems#wake
+     * @fires Phaser.Scenes.Events#WAKE
      * @since 3.0.0
      *
      * @param {object} [data] - A data object that will be passed in the 'wake' event.
@@ -505,7 +515,7 @@ var Systems = new Class({
         settings.active = true;
         settings.visible = true;
 
-        this.events.emit('wake', this, data);
+        this.events.emit(Events.WAKE, this, data);
 
         if (settings.isTransition)
         {
@@ -654,6 +664,8 @@ var Systems = new Class({
      * Called automatically by the SceneManager.
      *
      * @method Phaser.Scenes.Systems#start
+     * @fires Phaser.Scenes.Events#START
+     * @fires Phaser.Scenes.Events#READY
      * @since 3.0.0
      *
      * @param {object} data - Optional data object that may have been passed to this Scene from another.
@@ -671,10 +683,10 @@ var Systems = new Class({
         this.settings.visible = true;
 
         //  For plugins to listen out for
-        this.events.emit('start', this);
+        this.events.emit(Events.START, this);
 
         //  For user-land code to listen out for
-        this.events.emit('ready', this, data);
+        this.events.emit(Events.READY, this, data);
     },
 
     /**
@@ -685,6 +697,7 @@ var Systems = new Class({
      * to free-up resources.
      *
      * @method Phaser.Scenes.Systems#shutdown
+     * @fires Phaser.Scenes.Events#SHUTDOWN
      * @since 3.0.0
      * 
      * @param {object} [data] - A data object that will be passed in the 'shutdown' event.
@@ -701,7 +714,7 @@ var Systems = new Class({
         this.settings.active = false;
         this.settings.visible = false;
 
-        this.events.emit('shutdown', this, data);
+        this.events.emit(Events.SHUTDOWN, this, data);
     },
 
     /**
@@ -711,6 +724,7 @@ var Systems = new Class({
      *
      * @method Phaser.Scenes.Systems#destroy
      * @private
+     * @fires Phaser.Scenes.Events#DESTROY
      * @since 3.0.0
      */
     destroy: function ()
@@ -720,7 +734,7 @@ var Systems = new Class({
         this.settings.active = false;
         this.settings.visible = false;
 
-        this.events.emit('destroy', this);
+        this.events.emit(Events.DESTROY, this);
 
         this.events.removeAllListeners();
 

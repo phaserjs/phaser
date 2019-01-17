@@ -13,6 +13,7 @@ var Extend = require('../utils/object/Extend');
 
 var Scene = {
 
+    Events: require('./events'),
     SceneManager: require('./SceneManager'),
     ScenePlugin: require('./ScenePlugin'),
     Settings: require('./Settings'),
