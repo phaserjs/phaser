@@ -6,6 +6,7 @@
  */
 
 var CanvasSnapshot = require('../snapshot/CanvasSnapshot');
+var CameraEvents = require('../../cameras/2d/events');
 var Class = require('../../utils/Class');
 var CONST = require('../../const');
 var GetBlendModes = require('./utils/GetBlendModes');
@@ -449,7 +450,7 @@ var CanvasRenderer = new Class({
 
         if (camera.renderToTexture)
         {
-            camera.emit('prerender', camera);
+            camera.emit(CameraEvents.PRE_RENDER, camera);
         }
 
         camera.matrix.copyToContext(ctx);
@@ -490,7 +491,7 @@ var CanvasRenderer = new Class({
 
         if (camera.renderToTexture)
         {
-            camera.emit('postrender', camera);
+            camera.emit(CameraEvents.POST_RENDER, camera);
 
             scene.sys.context.drawImage(camera.canvas, cx, cy);
         }

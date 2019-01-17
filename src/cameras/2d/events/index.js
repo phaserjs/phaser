@@ -15,6 +15,8 @@ module.exports = {
     FLASH_START: require('./FLASH_START_EVENT'),
     PAN_COMPLETE: require('./PAN_COMPLETE_EVENT'),
     PAN_START: require('./PAN_START_EVENT'),
+    POST_RENDER: require('./POST_RENDER_EVENT'),
+    PRE_RENDER: require('./PRE_RENDER_EVENT'),
     SHAKE_COMPLETE: require('./SHAKE_COMPLETE_EVENT'),
     SHAKE_START: require('./SHAKE_START_EVENT'),
     ZOOM_COMPLETE: require('./ZOOM_COMPLETE_EVENT'),

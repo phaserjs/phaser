@@ -6,6 +6,7 @@
  */
 
 var BaseCamera = require('../../cameras/2d/BaseCamera');
+var CameraEvents = require('../../cameras/2d/events');
 var Class = require('../../utils/Class');
 var CONST = require('../../const');
 var IsSizePowerOfTwo = require('../../math/pow2/IsSizePowerOfTwo');
@@ -1712,7 +1713,7 @@ var WebGLRenderer = new Class({
                 );
             }
             
-            camera.emit('prerender', camera);
+            camera.emit(CameraEvents.PRE_RENDER, camera);
         }
         else
         {
@@ -1755,7 +1756,7 @@ var WebGLRenderer = new Class({
 
             this.setFramebuffer(null);
 
-            camera.emit('postrender', camera);
+            camera.emit(CameraEvents.POST_RENDER, camera);
 
             TextureTintPipeline.projOrtho(0, TextureTintPipeline.width, TextureTintPipeline.height, 0, -1000.0, 1000.0);
 
