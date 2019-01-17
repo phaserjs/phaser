@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../../utils/Class');
+var Events = require('../events');
 var GetFastValue = require('../../../utils/object/GetFastValue');
 var ProcessKeyCombo = require('./ProcessKeyCombo');
 var ResetKeyCombo = require('./ResetKeyCombo');
@@ -235,7 +236,7 @@ var KeyCombo = new Class({
 
             if (matched)
             {
-                _this.manager.emit('keycombomatch', _this, event);
+                _this.manager.emit(Events.COMBO_MATCH, _this, event);
 
                 if (_this.resetOnMatch)
                 {
@@ -254,6 +255,7 @@ var KeyCombo = new Class({
          * @name Phaser.Input.Keyboard.KeyCombo#onKeyDown
          * @private
          * @type {KeyboardKeydownCallback}
+         * @fires Phaser.Input.Keyboard.Events#COMBO_MATCH
          * @since 3.0.0
          */
         this.onKeyDown = onKeyDownHandler;

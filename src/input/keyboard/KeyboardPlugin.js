@@ -6,6 +6,7 @@
 
 var Class = require('../../utils/Class');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
 var GetValue = require('../../utils/object/GetValue');
 var InputPluginCache = require('../InputPluginCache');
 var Key = require('./keys/Key');
@@ -720,16 +721,14 @@ var KeyboardPlugin = new Class({
 
                 if (!event.cancelled && (!key || !repeat))
                 {
-                    //  keydown_code event
                     if (KeyMap[code])
                     {
-                        this.emit('keydown_' + KeyMap[code], event);
+                        this.emit(Events.KEY_DOWN + KeyMap[code], event);
                     }
 
                     if (!event.cancelled)
                     {
-                        //  keydown event
-                        this.emit(event.type, event);
+                        this.emit(Events.ANY_KEY_DOWN, event);
                     }
                 }
             }
@@ -743,16 +742,14 @@ var KeyboardPlugin = new Class({
 
                 if (!event.cancelled)
                 {
-                    //  keyup_code event
                     if (KeyMap[code])
                     {
-                        this.emit('keyup_' + KeyMap[code], event);
+                        this.emit(Events.KEY_UP + KeyMap[code], event);
                     }
 
                     if (!event.cancelled)
                     {
-                        //  keyup event
-                        this.emit(event.type, event);
+                        this.emit(Events.ANY_KEY_UP, event);
                     }
                 }
             }

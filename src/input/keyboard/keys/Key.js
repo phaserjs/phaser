@@ -6,6 +6,7 @@
 
 var Class = require('../../../utils/Class');
 var EventEmitter = require('eventemitter3');
+var Events = require('../events');
 
 /**
  * @classdesc
@@ -238,6 +239,7 @@ var Key = new Class({
      * Called automatically by the Keyboard Plugin.
      *
      * @method Phaser.Input.Keyboard.Key#onDown
+     * @fires Phaser.Input.Keyboard.Events#DOWN
      * @since 3.16.0
      * 
      * @param {KeyboardEvent} event - The native DOM Keyboard event.
@@ -268,11 +270,11 @@ var Key = new Class({
             this._justDown = true;
             this._justUp = false;
 
-            this.emit('down', this, event);
+            this.emit(Events.DOWN, this, event);
         }
         else if (this.emitOnRepeat)
         {
-            this.emit('down', this, event);
+            this.emit(Events.DOWN, this, event);
         }
     },
 
@@ -281,6 +283,7 @@ var Key = new Class({
      * Called automatically by the Keyboard Plugin.
      *
      * @method Phaser.Input.Keyboard.Key#onUp
+     * @fires Phaser.Input.Keyboard.Events#UP
      * @since 3.16.0
      * 
      * @param {KeyboardEvent} event - The native DOM Keyboard event.
@@ -304,7 +307,7 @@ var Key = new Class({
         this._justUp = true;
         this._tick = -1;
         
-        this.emit('up', this, event);
+        this.emit(Events.UP, this, event);
     },
 
     /**

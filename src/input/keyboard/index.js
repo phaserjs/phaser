@@ -10,6 +10,8 @@
 
 module.exports = {
 
+    Events: require('./events');
+
     KeyboardManager: require('./KeyboardManager'),
     KeyboardPlugin: require('./KeyboardPlugin'),
 
