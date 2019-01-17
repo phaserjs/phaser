@@ -14,6 +14,7 @@ var Extend = require('../utils/object/Extend');
 var Tweens = {
 
     Builders: require('./builders'),
+    Events: require('./events'),
 
     TweenManager: require('./TweenManager'),
     Tween: require('./tween/Tween'),
