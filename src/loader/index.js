@@ -13,6 +13,8 @@ var Extend = require('../utils/object/Extend');
 
 var Loader = {
 
+    Events: require('./events'),
+
     FileTypes: require('./filetypes'),
 
     File: require('./File'),

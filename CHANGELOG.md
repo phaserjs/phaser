@@ -297,7 +297,8 @@ one set of bindings ever created, which makes things a lot cleaner.
 * The keyed Data Manager change data event string has changed from `changedata_` to `changedata-` to keep it consistent with other keyed events.
 * The Keyboard Plugin `keydown` dynamic event string has changed from `keydown_` to `keydown-` to keep it consistent with other keyed events. Note the change from `_` to `-`.
 * The Keyboard Plugin `keyup` dynamic event string has changed from `keyup_` to `keyup-` to keep it consistent with other keyed events. Note the change from `_` to `-`.
-* The `texturesready` event emitted by the Texture Manager has changed to be just `ready`.
+* The `texturesready` event emitted by the Texture Manager has been renamed to `ready`.
+* The `loadcomplete` event emitted by the Loader Plugin has been renamed to `postprocess` to be reflect what it's used for.
 
 ### Examples and TypeScript
 

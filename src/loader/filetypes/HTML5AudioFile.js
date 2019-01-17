@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
+var Events = require('../events');
 var File = require('../File');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetURL = require('../GetURL');
@@ -104,6 +105,7 @@ var HTML5AudioFile = new Class({
      * Called during the file load progress. Is sent a DOM ProgressEvent.
      *
      * @method Phaser.Loader.FileTypes.HTML5AudioFile#onProgress
+     * @fires Phaser.Loader.Events#FILE_PROGRESS
      * @since 3.0.0
      */
     onProgress: function (event)
@@ -117,7 +119,7 @@ var HTML5AudioFile = new Class({
 
         this.percentComplete = Math.min((this.filesLoaded / this.filesTotal), 1);
 
-        this.loader.emit('fileprogress', this, this.percentComplete);
+        this.loader.emit(Events.FILE_PROGRESS, this, this.percentComplete);
 
         if (this.filesLoaded === this.filesTotal)
         {
