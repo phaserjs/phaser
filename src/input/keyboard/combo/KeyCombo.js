@@ -56,6 +56,7 @@ var ResetKeyCombo = require('./ResetKeyCombo');
  * @class KeyCombo
  * @memberof Phaser.Input.Keyboard
  * @constructor
+ * @listens Phaser.Input.Keyboard.Events#ANY_KEY_DOWN
  * @since 3.0.0
  *
  * @param {Phaser.Input.Keyboard.KeyboardPlugin} keyboardPlugin - A reference to the Keyboard Plugin.
@@ -260,7 +261,7 @@ var KeyCombo = new Class({
          */
         this.onKeyDown = onKeyDownHandler;
 
-        this.manager.on('keydown', onKeyDownHandler);
+        this.manager.on(Events.ANY_KEY_DOWN, onKeyDownHandler);
     },
 
     /**

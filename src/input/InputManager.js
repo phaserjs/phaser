@@ -8,6 +8,7 @@ var Class = require('../utils/Class');
 var CONST = require('./const');
 var EventEmitter = require('eventemitter3');
 var Events = require('./events');
+var GameEvents = require('../core/events');
 var Keyboard = require('./keyboard/KeyboardManager');
 var Mouse = require('./mouse/MouseManager');
 var Pointer = require('./Pointer');
@@ -383,7 +384,7 @@ var InputManager = new Class({
          */
         this._tempMatrix2 = new TransformMatrix();
 
-        game.events.once('boot', this.boot, this);
+        game.events.once(GameEvents.BOOT, this.boot, this);
     },
 
     /**
@@ -403,9 +404,9 @@ var InputManager = new Class({
 
         this.events.emit(Events.MANAGER_BOOT);
 
-        this.game.events.on('prestep', this.update, this);
-        this.game.events.on('poststep', this.postUpdate, this);
-        this.game.events.once('destroy', this.destroy, this);
+        this.game.events.on(GameEvents.PRE_STEP, this.update, this);
+        this.game.events.on(GameEvents.POST_STEP, this.postUpdate, this);
+        this.game.events.once(GameEvents.DESTROY, this.destroy, this);
     },
 
     /**

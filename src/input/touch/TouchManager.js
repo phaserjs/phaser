@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
+var InputEvents = require('../events');
 var NOOP = require('../../utils/NOOP');
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Touch_events
@@ -132,7 +133,7 @@ var TouchManager = new Class({
          */
         this.onTouchOut = NOOP;
 
-        inputManager.events.once('boot', this.boot, this);
+        inputManager.events.once(InputEvents.MANAGER_BOOT, this.boot, this);
     },
 
     /**

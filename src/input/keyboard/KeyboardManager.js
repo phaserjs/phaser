@@ -6,6 +6,8 @@
 
 var ArrayRemove = require('../../utils/array/Remove');
 var Class = require('../../utils/Class');
+var GameEvents = require('../../core/events');
+var InputEvents = require('..//events');
 var KeyCodes = require('../../input/keyboard/keys/KeyCodes');
 var NOOP = require('../../utils/Class');
 
@@ -138,7 +140,7 @@ var KeyboardManager = new Class({
          */
         this.onKeyUp = NOOP;
 
-        inputManager.events.once('boot', this.boot, this);
+        inputManager.events.once(InputEvents.MANAGER_BOOT, this.boot, this);
     },
 
     /**
@@ -167,7 +169,7 @@ var KeyboardManager = new Class({
             this.startListeners();
         }
 
-        this.manager.game.events.on('poststep', this.postUpdate, this);
+        this.manager.game.events.on(GameEvents.POST_STEP, this.postUpdate, this);
     },
 
     /**
