@@ -11,6 +11,7 @@ var Collider = require('./Collider');
 var CONST = require('./const');
 var DistanceBetween = require('../../math/distance/DistanceBetween');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
 var FuzzyEqual = require('../../math/fuzzy/Equal');
 var FuzzyGreaterThan = require('../../math/fuzzy/GreaterThan');
 var FuzzyLessThan = require('../../math/fuzzy/LessThan');
@@ -30,50 +31,6 @@ var TileIntersectsBody = require('./tilemap/TileIntersectsBody');
 var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 var Vector2 = require('../../math/Vector2');
 var Wrap = require('../../math/Wrap');
-
-/**
- * The physics simulation paused.
- * @event Phaser.Physics.Arcade.World#pauseEvent
- */
-
-/**
- * The physics simulation resumed (from a paused state).
- * @event Phaser.Physics.Arcade.World#resumeEvent
- */
-
-/**
- * Two Game Objects collided.
- * This event is emitted only if at least one body has `onCollide` enabled.
- * @event Phaser.Physics.Arcade.World#collideEvent
- * @param {Phaser.GameObjects.GameObject} gameObject1
- * @param {Phaser.GameObjects.GameObject} gameObject2
- * @param {Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody} body1
- * @param {Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody} body2
- * @see Phaser.Physics.Arcade.Body#onCollide
- */
-
-/**
- * Two Game Objects overlapped.
- * This event is emitted only if at least one body has `onOverlap` enabled.
- * @event Phaser.Physics.Arcade.World#overlapEvent
- * @param {Phaser.GameObjects.GameObject} gameObject1
- * @param {Phaser.GameObjects.GameObject} gameObject2
- * @param {Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody} body1
- * @param {Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody} body2
- * @see Phaser.Physics.Arcade.Body#onOverlap
- */
-
-/**
- * A Body contacted the world boundary.
- * This event is emitted only if the body has `onWorldBounds` enabled.
- * @event Phaser.Physics.Arcade.World#worldboundsEvent
- * @param {Phaser.Physics.Arcade.Body} body
- * @param {boolean} up
- * @param {boolean} down
- * @param {boolean} left
- * @param {boolean} right
- * @see Phaser.Physics.Arcade.Body#onWorldBounds
- */
 
 /**
  * @typedef {object} ArcadeWorldConfig
@@ -864,7 +821,7 @@ var World = new Class({
      * checks.
      *
      * @method Phaser.Physics.Arcade.World#pause
-     * @fires Phaser.Physics.Arcade.World#pauseEvent
+     * @fires Phaser.Physics.Arcade.Events#PAUSE
      * @since 3.0.0
      *
      * @return {Phaser.Physics.Arcade.World} This World object.
@@ -873,7 +830,7 @@ var World = new Class({
     {
         this.isPaused = true;
 
-        this.emit('pause');
+        this.emit(Events.PAUSE);
 
         return this;
     },
@@ -882,7 +839,7 @@ var World = new Class({
      * Resumes the simulation, if paused.
      *
      * @method Phaser.Physics.Arcade.World#resume
-     * @fires Phaser.Physics.Arcade.World#resumeEvent
+     * @fires Phaser.Physics.Arcade.Events#RESUME
      * @since 3.0.0
      *
      * @return {Phaser.Physics.Arcade.World} This World object.
@@ -891,7 +848,7 @@ var World = new Class({
     {
         this.isPaused = false;
 
-        this.emit('resume');
+        this.emit(Events.RESUME);
 
         return this;
     },
@@ -1372,8 +1329,8 @@ var World = new Class({
      * Separates two Bodies.
      *
      * @method Phaser.Physics.Arcade.World#separate
-     * @fires Phaser.Physics.Arcade.World#collideEvent
-     * @fires Phaser.Physics.Arcade.World#overlapEvent
+     * @fires Phaser.Physics.Arcade.Events#COLLIDE
+     * @fires Phaser.Physics.Arcade.Events#OVERLAP
      * @since 3.0.0
      *
      * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to be separated.
@@ -1466,7 +1423,7 @@ var World = new Class({
         {
             if (overlapOnly && (body1.onOverlap || body2.onOverlap))
             {
-                this.emit('overlap', body1.gameObject, body2.gameObject, body1, body2);
+                this.emit(Events.OVERLAP, body1.gameObject, body2.gameObject, body1, body2);
             }
             else
             {
@@ -1475,7 +1432,7 @@ var World = new Class({
 
                 if (body1.onCollide || body2.onCollide)
                 {
-                    this.emit('collide', body1.gameObject, body2.gameObject, body1, body2);
+                    this.emit(Events.COLLIDE, body1.gameObject, body2.gameObject, body1, body2);
                 }
             }
         }
@@ -1487,8 +1444,8 @@ var World = new Class({
      * Separates two Bodies, when both are circular.
      *
      * @method Phaser.Physics.Arcade.World#separateCircle
-     * @fires Phaser.Physics.Arcade.World#collideEvent
-     * @fires Phaser.Physics.Arcade.World#overlapEvent
+     * @fires Phaser.Physics.Arcade.Events#COLLIDE
+     * @fires Phaser.Physics.Arcade.Events#OVERLAP
      * @since 3.0.0
      *
      * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to be separated.
@@ -1561,7 +1518,7 @@ var World = new Class({
         {
             if (overlap !== 0 && (body1.onOverlap || body2.onOverlap))
             {
-                this.emit('overlap', body1.gameObject, body2.gameObject, body1, body2);
+                this.emit(Events.OVERLAP, body1.gameObject, body2.gameObject, body1, body2);
             }
 
             //  return true if there was some overlap, otherwise false
@@ -1673,7 +1630,7 @@ var World = new Class({
 
         if (body1.onCollide || body2.onCollide)
         {
-            this.emit('collide', body1.gameObject, body2.gameObject, body1, body2);
+            this.emit(Events.COLLIDE, body1.gameObject, body2.gameObject, body1, body2);
         }
 
         //  sync changes back to the bodies
@@ -2143,10 +2100,8 @@ var World = new Class({
      * Please use Phaser.Physics.Arcade.World#collide instead.
      *
      * @method Phaser.Physics.Arcade.World#collideSpriteVsTilemapLayer
-     * @fires Phaser.GameObjects.GameObject#collideEvent
-     * @fires Phaser.GameObjects.GameObject#overlapEvent
-     * @fires Phaser.Physics.Arcade.World#collideEvent
-     * @fires Phaser.Physics.Arcade.World#overlapEvent
+     * @fires Phaser.Physics.Arcade.Events#TILE_COLLIDE
+     * @fires Phaser.Physics.Arcade.Events#TILE_OVERLAP
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} sprite - The first object to check for collision.
@@ -2232,11 +2187,11 @@ var World = new Class({
 
                 if (overlapOnly && body.onOverlap)
                 {
-                    sprite.emit('overlap', body.gameObject, tile, body, null);
+                    this.emit(Events.TILE_OVERLAP, body.gameObject, tile, body);
                 }
                 else if (body.onCollide)
                 {
-                    sprite.emit('collide', body.gameObject, tile, body, null);
+                    this.emit(Events.TILE_COLLIDE, body.gameObject, tile, body);
                 }
 
                 //  sync changes back to the body
@@ -2376,23 +2331,3 @@ var World = new Class({
 });
 
 module.exports = World;
-
-/**
- * A physics-enabled Game Object collided with a Tile.
- * This event is emitted only if the Game Object's body has `onCollide` enabled.
- * @event Phaser.GameObjects.GameObject#collideEvent
- * @param {Phaser.GameObjects.GameObject} gameObject
- * @param {Phaser.Tilemaps.Tile} tile
- * @param {Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody} body
- * @see Phaser.Physics.Arcade.Body#onCollide
- */
-
-/**
- * A physics-enabled Game Object overlapped with a Tile.
- * This event is emitted only if the Game Object's body has `onOverlap` enabled.
- * @event Phaser.GameObjects.GameObject#overlapEvent
- * @param {Phaser.GameObjects.GameObject} gameObject
- * @param {Phaser.Tilemaps.Tile} tile
- * @param {Phaser.Physics.Arcade.Body|Phaser.Physics.Arcade.StaticBody} body
- * @see Phaser.Physics.Arcade.Body#onOverlap
- */

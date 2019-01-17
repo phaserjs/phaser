@@ -299,6 +299,8 @@ one set of bindings ever created, which makes things a lot cleaner.
 * The Keyboard Plugin `keyup` dynamic event string has changed from `keyup_` to `keyup-` to keep it consistent with other keyed events. Note the change from `_` to `-`.
 * The `texturesready` event emitted by the Texture Manager has been renamed to `ready`.
 * The `loadcomplete` event emitted by the Loader Plugin has been renamed to `postprocess` to be reflect what it's used for.
+* Game Objects used to emit a `collide` event if they had an Arcade Physics Body with `onCollide` set, that collided with a Tile. This has changed. The event has been renamed to `tilecollide`. You should now listen for this event from the Arcade Physics World itself: `this.physics.world.on('tilecollide')`. The Game Object will not emit the event any more.
+* Game Objects used to emit a `overlap` event if they had an Arcade Physics Body with `onOverlap` set, that overlapped with a Tile. This has changed. The event has been renamed to `tileoverlap`. You should now listen for this event from the Arcade Physics World itself: `this.physics.world.on('tileoverlap')`. The Game Object will not emit the event any more.
 
 ### Examples and TypeScript
 
