@@ -7,7 +7,7 @@
 /**
  * [description]
  *
- * @function Phaser.Physics.Impact.SeperateY
+ * @function Phaser.Physics.Impact.SeparateY
  * @since 3.0.0
  *
  * @param {Phaser.Physics.Impact.World} world - [description]
@@ -15,7 +15,7 @@
  * @param {Phaser.Physics.Impact.Body} bottom - [description]
  * @param {Phaser.Physics.Impact.Body} [weak] - [description]
  */
-var SeperateY = function (world, top, bottom, weak)
+var SeparateY = function (world, top, bottom, weak)
 {
     var nudge = (top.pos.y + top.size.y - bottom.pos.y);
     var nudgeX;
@@ -76,4 +76,4 @@ var SeperateY = function (world, top, bottom, weak)
     }
 };
 
-module.exports = SeperateY;
+module.exports = SeparateY;
