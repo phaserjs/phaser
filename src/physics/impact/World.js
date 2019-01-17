@@ -9,6 +9,7 @@ var Class = require('../../utils/Class');
 var COLLIDES = require('./COLLIDES');
 var CollisionMap = require('./CollisionMap');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var HasValue = require('../../utils/object/HasValue');
 var Set = require('../../structs/Set');
@@ -556,6 +557,7 @@ var World = new Class({
      * [description]
      *
      * @method Phaser.Physics.Impact.World#pause
+     * @fires Phaser.Physics.Impact.Events#PAUSE
      * @since 3.0.0
      *
      * @return {Phaser.Physics.Impact.World} This World object.
@@ -564,7 +566,7 @@ var World = new Class({
     {
         this.enabled = false;
 
-        this.emit('pause');
+        this.emit(Events.PAUSE);
 
         return this;
     },
@@ -573,6 +575,7 @@ var World = new Class({
      * [description]
      *
      * @method Phaser.Physics.Impact.World#resume
+     * @fires Phaser.Physics.Impact.Events#RESUME
      * @since 3.0.0
      *
      * @return {Phaser.Physics.Impact.World} This World object.
@@ -581,7 +584,7 @@ var World = new Class({
     {
         this.enabled = true;
 
-        this.emit('resume');
+        this.emit(Events.RESUME);
 
         return this;
     },

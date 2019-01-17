@@ -5,6 +5,7 @@
  */
 
 var COLLIDES = require('./COLLIDES');
+var Events = require('./events');
 var SeperateX = require('./SeperateX');
 var SeperateY = require('./SeperateY');
 
@@ -12,6 +13,7 @@ var SeperateY = require('./SeperateY');
  * Impact Physics Solver
  *
  * @function Phaser.Physics.Impact.Solver
+ * @fires Phaser.Physics.Impact.Events#COLLIDE
  * @since 3.0.0
  *
  * @param {Phaser.Physics.Impact.World} world - The Impact simulation to run the solver in.
@@ -45,7 +47,7 @@ var Solver = function (world, bodyA, bodyB)
         bodyA.collideWith(bodyB, 'y');
         bodyB.collideWith(bodyA, 'y');
 
-        world.emit('collide', bodyA, bodyB, 'y');
+        world.emit(Events.COLLIDE, bodyA, bodyB, 'y');
     }
     else if (bodyA.last.y + bodyA.size.y > bodyB.last.y && bodyA.last.y < bodyB.last.y + bodyB.size.y)
     {
@@ -61,7 +63,7 @@ var Solver = function (world, bodyA, bodyB)
         bodyA.collideWith(bodyB, 'x');
         bodyB.collideWith(bodyA, 'x');
 
-        world.emit('collide', bodyA, bodyB, 'x');
+        world.emit(Events.COLLIDE, bodyA, bodyB, 'x');
     }
 };
 

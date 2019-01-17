@@ -22,6 +22,7 @@
 module.exports = {
 
     Body: require('./Body'),
+    Events: require('./events'),
     COLLIDES: require('./COLLIDES'),
     CollisionMap: require('./CollisionMap'),
     Factory: require('./Factory'),
