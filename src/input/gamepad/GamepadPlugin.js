@@ -6,6 +6,7 @@
 
 var Class = require('../../utils/Class');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
 var Gamepad = require('./Gamepad');
 var GetValue = require('../../utils/object/GetValue');
 var InputPluginCache = require('../InputPluginCache');
@@ -445,6 +446,8 @@ var GamepadPlugin = new Class({
      *
      * @method Phaser.Input.Gamepad.GamepadPlugin#update
      * @private
+     * @fires Phaser.Input.Gamepad.Events#CONNECTED
+     * @fires Phaser.Input.Gamepad.Events#DISCONNECTED
      * @since 3.10.0
      */
     update: function ()
@@ -473,11 +476,11 @@ var GamepadPlugin = new Class({
 
             if (event.type === 'gamepadconnected')
             {
-                this.emit('connected', pad, event);
+                this.emit(Events.CONNECTED, pad, event);
             }
             else if (event.type === 'gamepaddisconnected')
             {
-                this.emit('disconnected', pad, event);
+                this.emit(Events.DISCONNECTED, pad, event);
             }
         }
     },
