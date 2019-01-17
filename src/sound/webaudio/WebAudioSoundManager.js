@@ -7,6 +7,7 @@
 
 var BaseSoundManager = require('../BaseSoundManager');
 var Class = require('../../utils/Class');
+var Events = require('../events');
 var WebAudioSound = require('./WebAudioSound');
 
 /**
@@ -231,16 +232,10 @@ var WebAudioSoundManager = new Class({
     },
 
     /**
-     * @event Phaser.Sound.WebAudioSoundManager#muteEvent
-     * @param {Phaser.Sound.WebAudioSoundManager} soundManager - Reference to the sound manager that emitted event.
-     * @param {boolean} value - An updated value of Phaser.Sound.WebAudioSoundManager#mute property.
-     */
-
-    /**
      * Sets the muted state of all this Sound Manager.
      *
      * @method Phaser.Sound.WebAudioSoundManager#setMute
-     * @fires Phaser.Sound.WebAudioSoundManager#muteEvent
+     * @fires Phaser.Sound.Events#GLOBAL_MUTE
      * @since 3.3.0
      *
      * @param {boolean} value - `true` to mute all sounds, `false` to unmute them.
@@ -257,7 +252,7 @@ var WebAudioSoundManager = new Class({
     /**
      * @name Phaser.Sound.WebAudioSoundManager#mute
      * @type {boolean}
-     * @fires Phaser.Sound.WebAudioSoundManager#MuteEvent
+     * @fires Phaser.Sound.Events#GLOBAL_MUTE
      * @since 3.0.0
      */
     mute: {
@@ -271,22 +266,16 @@ var WebAudioSoundManager = new Class({
         {
             this.masterMuteNode.gain.setValueAtTime(value ? 0 : 1, 0);
 
-            this.emit('mute', this, value);
+            this.emit(Events.GLOBAL_MUTE, this, value);
         }
 
     },
 
     /**
-     * @event Phaser.Sound.WebAudioSoundManager#VolumeEvent
-     * @param {Phaser.Sound.WebAudioSoundManager} soundManager - Reference to the sound manager that emitted event.
-     * @param {number} value - An updated value of Phaser.Sound.WebAudioSoundManager#volume property.
-     */
-
-    /**
      * Sets the volume of this Sound Manager.
      *
      * @method Phaser.Sound.WebAudioSoundManager#setVolume
-     * @fires Phaser.Sound.WebAudioSoundManager#VolumeEvent
+     * @fires Phaser.Sound.Events#GLOBAL_VOLUME
      * @since 3.3.0
      *
      * @param {number} value - The global volume of this Sound Manager.
@@ -303,7 +292,7 @@ var WebAudioSoundManager = new Class({
     /**
      * @name Phaser.Sound.WebAudioSoundManager#volume
      * @type {number}
-     * @fires Phaser.Sound.WebAudioSoundManager#VolumeEvent
+     * @fires Phaser.Sound.Events#GLOBAL_VOLUME
      * @since 3.0.0
      */
     volume: {
@@ -317,7 +306,7 @@ var WebAudioSoundManager = new Class({
         {
             this.masterVolumeNode.gain.setValueAtTime(value, 0);
 
-            this.emit('volume', this, value);
+            this.emit(Events.GLOBAL_VOLUME, this, value);
         }
 
     }

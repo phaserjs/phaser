@@ -7,6 +7,7 @@
 
 var BaseSound = require('../BaseSound');
 var Class = require('../../utils/Class');
+var Events = require('../events');
 
 /**
  * @classdesc
@@ -95,17 +96,12 @@ var HTML5AudioSound = new Class({
     },
 
     /**
-     * @event Phaser.Sound.HTML5AudioSound#playEvent
-     * @param {Phaser.Sound.HTML5AudioSound} sound - Reference to the sound that emitted event.
-     */
-
-    /**
      * Play this sound, or a marked section of it.
      * It always plays the sound from the start. If you want to start playback from a specific time
      * you can set 'seek' setting of the config object, provided to this call, to that value.
      *
      * @method Phaser.Sound.HTML5AudioSound#play
-     * @fires Phaser.Sound.HTML5AudioSound#playEvent
+     * @fires Phaser.Sound.Events#PLAY
      * @since 3.0.0
      *
      * @param {string} [markerName=''] - If you want to play a marker then provide the marker name here, otherwise omit it to play the full sound.
@@ -131,21 +127,16 @@ var HTML5AudioSound = new Class({
             return false;
         }
 
-        this.emit('play', this);
+        this.emit(Events.PLAY, this);
 
         return true;
     },
 
     /**
-     * @event Phaser.Sound.HTML5AudioSound#pauseEvent
-     * @param {Phaser.Sound.HTML5AudioSound} sound - Reference to the sound that emitted event.
-     */
-
-    /**
      * Pauses the sound.
      *
      * @method Phaser.Sound.HTML5AudioSound#pause
-     * @fires Phaser.Sound.HTML5AudioSound#pauseEvent
+     * @fires Phaser.Sound.Events#PAUSE
      * @since 3.0.0
      *
      * @return {boolean} Whether the sound was paused successfully.
@@ -172,21 +163,16 @@ var HTML5AudioSound = new Class({
 
         this.stopAndReleaseAudioTag();
 
-        this.emit('pause', this);
+        this.emit(Events.PAUSE, this);
 
         return true;
     },
 
     /**
-     * @event Phaser.Sound.HTML5AudioSound#resumeEvent
-     * @param {Phaser.Sound.HTML5AudioSound} sound - Reference to the sound that emitted event.
-     */
-
-    /**
      * Resumes the sound.
      *
      * @method Phaser.Sound.HTML5AudioSound#resume
-     * @fires Phaser.Sound.HTML5AudioSound#resumeEvent
+     * @fires Phaser.Sound.Events#RESUME
      * @since 3.0.0
      *
      * @return {boolean} Whether the sound was resumed successfully.
@@ -214,21 +200,16 @@ var HTML5AudioSound = new Class({
             return false;
         }
 
-        this.emit('resume', this);
+        this.emit(Events.RESUME, this);
 
         return true;
     },
 
     /**
-     * @event Phaser.Sound.HTML5AudioSound#stopEvent
-     * @param {Phaser.Sound.HTML5AudioSound} sound - Reference to the sound that emitted event.
-     */
-
-    /**
      * Stop playing this sound.
      *
      * @method Phaser.Sound.HTML5AudioSound#stop
-     * @fires Phaser.Sound.HTML5AudioSound#stopEvent
+     * @fires Phaser.Sound.Events#STOP
      * @since 3.0.0
      *
      * @return {boolean} Whether the sound was stopped successfully.
@@ -248,7 +229,7 @@ var HTML5AudioSound = new Class({
         //  \/\/\/ isPlaying = false, isPaused = false \/\/\/
         this.stopAndReleaseAudioTag();
 
-        this.emit('stop', this);
+        this.emit(Events.STOP, this);
 
         return true;
     },
@@ -458,21 +439,11 @@ var HTML5AudioSound = new Class({
     },
 
     /**
-     * @event Phaser.Sound.HTML5AudioSound#loopedEvent
-     * @param {Phaser.Sound.HTML5AudioSound} sound - Reference to the sound that emitted event.
-     */
-
-    /**
-     * @event Phaser.Sound.HTML5AudioSound#endedEvent
-     * @param {Phaser.Sound.HTML5AudioSound} sound - Reference to the sound that emitted event.
-     */
-
-    /**
      * Update method called automatically by sound manager on every game step.
      *
      * @method Phaser.Sound.HTML5AudioSound#update
-     * @fires Phaser.Sound.HTML5AudioSound#loopedEvent
-     * @fires Phaser.Sound.HTML5AudioSound#endedEvent
+     * @fires Phaser.Sound.Events#COMPLETE
+     * @fires Phaser.Sound.Events#LOOPED
      * @protected
      * @since 3.0.0
      *
@@ -521,7 +492,7 @@ var HTML5AudioSound = new Class({
 
             if (currentTime < this.previousTime)
             {
-                this.emit('looped', this);
+                this.emit(Events.LOOPED, this);
             }
         }
         else if (currentTime >= endTime)
@@ -530,7 +501,7 @@ var HTML5AudioSound = new Class({
 
             this.stopAndReleaseAudioTag();
 
-            this.emit('ended', this);
+            this.emit(Events.COMPLETE, this);
 
             return;
         }
@@ -605,18 +576,13 @@ var HTML5AudioSound = new Class({
     },
 
     /**
-     * @event Phaser.Sound.HTML5AudioSound#muteEvent
-     * @param {Phaser.Sound.HTML5AudioSound} sound - Reference to the sound that emitted event.
-     * @param {boolean} value - An updated value of Phaser.Sound.HTML5AudioSound#mute property.
-     */
-
-    /**
      * Boolean indicating whether the sound is muted or not.
      * Gets or sets the muted state of this sound.
      * 
      * @name Phaser.Sound.HTML5AudioSound#mute
      * @type {boolean}
      * @default false
+     * @fires Phaser.Sound.Events#MUTE
      * @since 3.0.0
      */
     mute: {
@@ -637,7 +603,7 @@ var HTML5AudioSound = new Class({
 
             this.updateMute();
 
-            this.emit('mute', this, value);
+            this.emit(Events.MUTE, this, value);
         }
     },
 
@@ -645,7 +611,7 @@ var HTML5AudioSound = new Class({
      * Sets the muted state of this Sound.
      *
      * @method Phaser.Sound.HTML5AudioSound#setMute
-     * @fires Phaser.Sound.HTML5AudioSound#muteEvent
+     * @fires Phaser.Sound.Events#MUTE
      * @since 3.4.0
      *
      * @param {boolean} value - `true` to mute this sound, `false` to unmute it.
@@ -660,17 +626,12 @@ var HTML5AudioSound = new Class({
     },
 
     /**
-     * @event Phaser.Sound.HTML5AudioSound#volumeEvent
-     * @param {Phaser.Sound.HTML5AudioSound} sound - Reference to the sound that emitted event.
-     * @param {number} value - An updated value of Phaser.Sound.HTML5AudioSound#volume property.
-     */
-
-    /**
      * Gets or sets the volume of this sound, a value between 0 (silence) and 1 (full volume).
      * 
      * @name Phaser.Sound.HTML5AudioSound#volume
      * @type {number}
      * @default 1
+     * @fires Phaser.Sound.Events#VOLUME
      * @since 3.0.0
      */
     volume: {
@@ -691,7 +652,7 @@ var HTML5AudioSound = new Class({
 
             this.updateVolume();
 
-            this.emit('volume', this, value);
+            this.emit(Events.VOLUME, this, value);
         }
     },
 
@@ -699,7 +660,7 @@ var HTML5AudioSound = new Class({
      * Sets the volume of this Sound.
      *
      * @method Phaser.Sound.HTML5AudioSound#setVolume
-     * @fires Phaser.Sound.HTML5AudioSound#volumeEvent
+     * @fires Phaser.Sound.Events#VOLUME
      * @since 3.4.0
      *
      * @param {number} value - The volume of the sound.
@@ -714,12 +675,6 @@ var HTML5AudioSound = new Class({
     },
 
     /**
-     * @event Phaser.Sound.HTML5AudioSound#rateEvent
-     * @param {Phaser.Sound.HTML5AudioSound} sound - Reference to the sound that emitted the event.
-     * @param {number} value - An updated value of Phaser.Sound.HTML5AudioSound#rate property.
-     */
-
-    /**
      * Rate at which this Sound will be played.
      * Value of 1.0 plays the audio at full speed, 0.5 plays the audio at half speed
      * and 2.0 doubles the audios playback speed.
@@ -727,6 +682,7 @@ var HTML5AudioSound = new Class({
      * @name Phaser.Sound.HTML5AudioSound#rate
      * @type {number}
      * @default 1
+     * @fires Phaser.Sound.Events#RATE
      * @since 3.0.0
      */
     rate: {
@@ -740,7 +696,7 @@ var HTML5AudioSound = new Class({
         {
             this.currentConfig.rate = value;
 
-            if (this.manager.isLocked(this, 'rate', value))
+            if (this.manager.isLocked(this, Events.RATE, value))
             {
                 return;
             }
@@ -748,7 +704,7 @@ var HTML5AudioSound = new Class({
             {
                 this.calculateRate();
 
-                this.emit('rate', this, value);
+                this.emit(Events.RATE, this, value);
             }
         }
 
@@ -761,7 +717,7 @@ var HTML5AudioSound = new Class({
      * and 2.0 doubles the audios playback speed.
      *
      * @method Phaser.Sound.HTML5AudioSound#setRate
-     * @fires Phaser.Sound.HTML5AudioSound#rateEvent
+     * @fires Phaser.Sound.Events#RATE
      * @since 3.3.0
      *
      * @param {number} value - The playback rate at of this Sound.
@@ -776,18 +732,13 @@ var HTML5AudioSound = new Class({
     },
 
     /**
-     * @event Phaser.Sound.HTML5AudioSound#detuneEvent
-     * @param {Phaser.Sound.HTML5AudioSound} sound - Reference to the Sound that emitted event.
-     * @param {number} value - An updated value of Phaser.Sound.HTML5AudioSound#detune property.
-     */
-
-    /**
      * The detune value of this Sound, given in [cents](https://en.wikipedia.org/wiki/Cent_%28music%29).
      * The range of the value is -1200 to 1200, but we recommend setting it to [50](https://en.wikipedia.org/wiki/50_Cent).
      *
      * @name Phaser.Sound.HTML5AudioSound#detune
      * @type {number}
      * @default 0
+     * @fires Phaser.Sound.Events#DETUNE
      * @since 3.0.0
      */
     detune: {
@@ -801,7 +752,7 @@ var HTML5AudioSound = new Class({
         {
             this.currentConfig.detune = value;
 
-            if (this.manager.isLocked(this, 'detune', value))
+            if (this.manager.isLocked(this, Events.DETUNE, value))
             {
                 return;
             }
@@ -809,7 +760,7 @@ var HTML5AudioSound = new Class({
             {
                 this.calculateRate();
 
-                this.emit('detune', this, value);
+                this.emit(Events.DETUNE, this, value);
             }
         }
 
@@ -820,7 +771,7 @@ var HTML5AudioSound = new Class({
      * The range of the value is -1200 to 1200, but we recommend setting it to [50](https://en.wikipedia.org/wiki/50_Cent).
      *
      * @method Phaser.Sound.HTML5AudioSound#setDetune
-     * @fires Phaser.Sound.HTML5AudioSound#detuneEvent
+     * @fires Phaser.Sound.Events#DETUNE
      * @since 3.3.0
      *
      * @param {number} value - The range of the value is -1200 to 1200, but we recommend setting it to [50](https://en.wikipedia.org/wiki/50_Cent).
@@ -835,12 +786,6 @@ var HTML5AudioSound = new Class({
     },
 
     /**
-     * @event Phaser.Sound.HTML5AudioSound#seekEvent
-     * @param {Phaser.Sound.HTML5AudioSound} sound - Reference to the sound that emitted event.
-     * @param {number} value - An updated value of Phaser.Sound.HTML5AudioSound#seek property.
-     */
-
-    /**
      * Property representing the position of playback for this sound, in seconds.
      * Setting it to a specific value moves current playback to that position.
      * The value given is clamped to the range 0 to current marker duration.
@@ -848,6 +793,7 @@ var HTML5AudioSound = new Class({
      * 
      * @name Phaser.Sound.HTML5AudioSound#seek
      * @type {number}
+     * @fires Phaser.Sound.Events#SEEK
      * @since 3.0.0
      */
     seek: {
@@ -894,7 +840,7 @@ var HTML5AudioSound = new Class({
                     this.currentConfig.seek = value;
                 }
 
-                this.emit('seek', this, value);
+                this.emit(Events.SEEK, this, value);
             }
         }
     },
@@ -903,7 +849,7 @@ var HTML5AudioSound = new Class({
      * Seeks to a specific point in this sound.
      *
      * @method Phaser.Sound.HTML5AudioSound#setSeek
-     * @fires Phaser.Sound.HTML5AudioSound#seekEvent
+     * @fires Phaser.Sound.Events#SEEK
      * @since 3.4.0
      *
      * @param {number} value - The point in the sound to seek to.
@@ -918,17 +864,12 @@ var HTML5AudioSound = new Class({
     },
 
     /**
-     * @event Phaser.Sound.HTML5AudioSound#loopEvent
-     * @param {Phaser.Sound.HTML5AudioSound} sound - Reference to the sound that emitted event.
-     * @param {boolean} value - An updated value of Phaser.Sound.HTML5AudioSound#loop property.
-     */
-
-    /**
      * Flag indicating whether or not the sound or current sound marker will loop.
      * 
      * @name Phaser.Sound.HTML5AudioSound#loop
      * @type {boolean}
      * @default false
+     * @fires Phaser.Sound.Events#LOOP
      * @since 3.0.0
      */
     loop: {
@@ -952,7 +893,7 @@ var HTML5AudioSound = new Class({
                 this.audio.loop = value;
             }
 
-            this.emit('loop', this, value);
+            this.emit(Events.LOOP, this, value);
         }
 
     },
@@ -961,7 +902,7 @@ var HTML5AudioSound = new Class({
      * Sets the loop state of this Sound.
      *
      * @method Phaser.Sound.HTML5AudioSound#setLoop
-     * @fires Phaser.Sound.HTML5AudioSound#loopEvent
+     * @fires Phaser.Sound.Events#LOOP
      * @since 3.4.0
      *
      * @param {boolean} value - `true` to loop this sound, `false` to not loop it.

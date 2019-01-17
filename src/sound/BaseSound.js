@@ -7,6 +7,7 @@
 
 var Class = require('../utils/Class');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
 var Extend = require('../utils/object/Extend');
 var NOOP = require('../utils/NOOP');
 
@@ -465,6 +466,7 @@ var BaseSound = new Class({
      * Destroys this sound and all associated events and marks it for removal from the sound manager.
      *
      * @method Phaser.Sound.BaseSound#destroy
+     * @fires Phaser.Sound.Events#DESTROY
      * @since 3.0.0
      */
     destroy: function ()
@@ -474,7 +476,7 @@ var BaseSound = new Class({
             return;
         }
 
-        this.emit('destroy', this);
+        this.emit(Events.DESTROY, this);
         this.pendingRemove = true;
         this.manager = null;
         this.key = '';

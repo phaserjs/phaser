@@ -38,6 +38,8 @@ module.exports = {
 
     SoundManagerCreator: require('./SoundManagerCreator'),
 
+    Events: require('./events'),
+
     BaseSound: require('./BaseSound'),
     BaseSoundManager: require('./BaseSoundManager'),
 

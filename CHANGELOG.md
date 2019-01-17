@@ -303,6 +303,8 @@ one set of bindings ever created, which makes things a lot cleaner.
 * Game Objects used to emit a `overlap` event if they had an Arcade Physics Body with `onOverlap` set, that overlapped with a Tile. This has changed. The event has been renamed to `tileoverlap`. You should now listen for this event from the Arcade Physics World itself: `this.physics.world.on('tileoverlap')`. The Game Object will not emit the event any more.
 * The function `Phaser.Physics.Impact.SeperateX` has been renamed to `SeparateX` to correct the spelling mistake.
 * The function `Phaser.Physics.Impact.SeperateY` has been renamed to `SeparateY` to correct the spelling mistake.
+* The `ended` event in `WebAudioSound` has been renamed to `complete` to make it more consistent with the rest of the API.
+* The `ended` event in `HTML5AudioSound` has been renamed to `complete` to make it more consistent with the rest of the API.
 
 ### Examples and TypeScript
 
