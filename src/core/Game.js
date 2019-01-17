@@ -23,6 +23,7 @@ var PluginManager = require('../plugins/PluginManager');
 var ScaleManager = require('../dom/ScaleManager');
 var SceneManager = require('../scene/SceneManager');
 var SoundManagerCreator = require('../sound/SoundManagerCreator');
+var TextureEvents = require('../textures/events');
 var TextureManager = require('../textures/TextureManager');
 var TimeStep = require('./TimeStep');
 var VisibilityHandler = require('./VisibilityHandler');
@@ -346,7 +347,7 @@ var Game = new Class({
      * @method Phaser.Game#boot
      * @protected
      * @fires Phaser.Core.Events#BOOT
-     * @fires Phaser.Core.Events#TEXTURES_READY
+     * @listens Phaser.Textures.Events#READY
      * @since 3.0.0
      */
     boot: function ()
@@ -378,7 +379,7 @@ var Game = new Class({
 
         //  The Texture Manager has to wait on a couple of non-blocking events before it's fully ready.
         //  So it will emit this internal event when done:
-        this.events.once(Events.TEXTURES_READY, this.texturesReady, this);
+        this.events.once(TextureEvents.READY, this.texturesReady, this);
     },
 
     /**

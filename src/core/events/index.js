@@ -23,7 +23,6 @@ module.exports = {
     READY: require('./READY_EVENT'),
     RESUME: require('./RESUME_EVENT'),
     STEP: require('./STEP_EVENT'),
-    TEXTURES_READY: require('./TEXTURES_READY_EVENT'),
     VISIBLE: require('./VISIBLE_EVENT')
 
 };

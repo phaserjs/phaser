@@ -10,6 +10,8 @@ var Class = require('../utils/Class');
 var Color = require('../display/color/Color');
 var CONST = require('../const');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
+var GameEvents = require('../core/events');
 var GenerateTexture = require('../create/GenerateTexture');
 var GetValue = require('../utils/object/GetValue');
 var Parser = require('./parsers');
@@ -109,7 +111,7 @@ var TextureManager = new Class({
          */
         this._pending = 0;
 
-        game.events.once('boot', this.boot, this);
+        game.events.once(GameEvents.BOOT, this.boot, this);
     },
 
     /**
@@ -129,7 +131,7 @@ var TextureManager = new Class({
         this.addBase64('__DEFAULT', this.game.config.defaultImage);
         this.addBase64('__MISSING', this.game.config.missingImage);
 
-        this.game.events.once('destroy', this.destroy, this);
+        this.game.events.once(GameEvents.DESTROY, this.destroy, this);
     },
 
     /**
@@ -148,7 +150,7 @@ var TextureManager = new Class({
             this.off('onload');
             this.off('onerror');
 
-            this.game.events.emit('texturesready');
+            this.game.events.emit(GameEvents.TEXTURES_READY);
         }
     },
 
@@ -186,6 +188,7 @@ var TextureManager = new Class({
      * step when clearing down to avoid this.
      *
      * @method Phaser.Textures.TextureManager#remove
+     * @fires Phaser.Textures.Events#REMOVE
      * @since 3.7.0
      *
      * @param {(string|Phaser.Textures.Texture)} key - The key of the Texture to remove, or a reference to it.
@@ -214,7 +217,7 @@ var TextureManager = new Class({
 
             key.destroy();
 
-            this.emit('removetexture', key.key);
+            this.emit(Events.REMOVE, key.key);
         }
 
         return this;
@@ -224,6 +227,9 @@ var TextureManager = new Class({
      * Adds a new Texture to the Texture Manager created from the given Base64 encoded data.
      *
      * @method Phaser.Textures.TextureManager#addBase64
+     * @fires Phaser.Textures.Events#ADD
+     * @fires Phaser.Textures.Events#ERROR
+     * @fires Phaser.Textures.Events#LOAD
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
@@ -241,7 +247,7 @@ var TextureManager = new Class({
 
             image.onerror = function ()
             {
-                _this.emit('onerror', key);
+                _this.emit(Events.ERROR, key);
             };
 
             image.onload = function ()
@@ -250,9 +256,9 @@ var TextureManager = new Class({
 
                 Parser.Image(texture, 0);
 
-                _this.emit('addtexture', key, texture);
+                _this.emit(Events.ADD, key, texture);
 
-                _this.emit('onload', key, texture);
+                _this.emit(Events.LOAD, key, texture);
             };
 
             image.src = data;
@@ -316,6 +322,7 @@ var TextureManager = new Class({
      * Adds a new Texture to the Texture Manager created from the given Image element.
      *
      * @method Phaser.Textures.TextureManager#addImage
+     * @fires Phaser.Textures.Events#ADD
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
@@ -339,7 +346,7 @@ var TextureManager = new Class({
                 texture.setDataSource(dataSource);
             }
 
-            this.emit('addtexture', key, texture);
+            this.emit(Events.ADD, key, texture);
         }
         
         return texture;
@@ -350,6 +357,7 @@ var TextureManager = new Class({
      * This allows you to then use the Render Texture as a normal texture for texture based Game Objects like Sprites.
      *
      * @method Phaser.Textures.TextureManager#addRenderTexture
+     * @fires Phaser.Textures.Events#ADD
      * @since 3.12.0
      *
      * @param {string} key - The unique string-based key of the Texture.
@@ -367,7 +375,7 @@ var TextureManager = new Class({
 
             texture.add('__BASE', 0, 0, 0, renderTexture.width, renderTexture.height);
 
-            this.emit('addtexture', key, texture);
+            this.emit(Events.ADD, key, texture);
         }
         
         return texture;
@@ -439,6 +447,7 @@ var TextureManager = new Class({
      * and adds it to this Texture Manager, unless `skipCache` is true.
      *
      * @method Phaser.Textures.TextureManager#addCanvas
+     * @fires Phaser.Textures.Events#ADD
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
@@ -463,7 +472,7 @@ var TextureManager = new Class({
 
             this.list[key] = texture;
 
-            this.emit('addtexture', key, texture);
+            this.emit(Events.ADD, key, texture);
         }
 
         return texture;
@@ -502,6 +511,7 @@ var TextureManager = new Class({
      * This is known as a JSON Array in software such as Texture Packer.
      *
      * @method Phaser.Textures.TextureManager#addAtlasJSONArray
+     * @fires Phaser.Textures.Events#ADD
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
@@ -542,7 +552,7 @@ var TextureManager = new Class({
                 texture.setDataSource(dataSource);
             }
 
-            this.emit('addtexture', key, texture);
+            this.emit(Events.ADD, key, texture);
         }
 
         return texture;
@@ -554,6 +564,7 @@ var TextureManager = new Class({
      * This is known as a JSON Hash in software such as Texture Packer.
      *
      * @method Phaser.Textures.TextureManager#addAtlasJSONHash
+     * @fires Phaser.Textures.Events#ADD
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
@@ -588,7 +599,7 @@ var TextureManager = new Class({
                 texture.setDataSource(dataSource);
             }
 
-            this.emit('addtexture', key, texture);
+            this.emit(Events.ADD, key, texture);
         }
 
         return texture;
@@ -599,6 +610,7 @@ var TextureManager = new Class({
      * in the XML format.
      *
      * @method Phaser.Textures.TextureManager#addAtlasXML
+     * @fires Phaser.Textures.Events#ADD
      * @since 3.7.0
      *
      * @param {string} key - The unique string-based key of the Texture.
@@ -623,7 +635,7 @@ var TextureManager = new Class({
                 texture.setDataSource(dataSource);
             }
 
-            this.emit('addtexture', key, texture);
+            this.emit(Events.ADD, key, texture);
         }
 
         return texture;
@@ -634,6 +646,7 @@ var TextureManager = new Class({
      * The data must be in the form of a Unity YAML file.
      *
      * @method Phaser.Textures.TextureManager#addUnityAtlas
+     * @fires Phaser.Textures.Events#ADD
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
@@ -658,7 +671,7 @@ var TextureManager = new Class({
                 texture.setDataSource(dataSource);
             }
 
-            this.emit('addtexture', key, texture);
+            this.emit(Events.ADD, key, texture);
         }
 
         return texture;
@@ -682,6 +695,7 @@ var TextureManager = new Class({
      * same size and cannot be trimmed or rotated.
      *
      * @method Phaser.Textures.TextureManager#addSpriteSheet
+     * @fires Phaser.Textures.Events#ADD
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
@@ -703,7 +717,7 @@ var TextureManager = new Class({
 
             Parser.SpriteSheet(texture, 0, 0, 0, width, height, config);
 
-            this.emit('addtexture', key, texture);
+            this.emit(Events.ADD, key, texture);
         }
 
         return texture;
@@ -729,6 +743,7 @@ var TextureManager = new Class({
      * same size and cannot be trimmed or rotated.
      *
      * @method Phaser.Textures.TextureManager#addSpriteSheetFromAtlas
+     * @fires Phaser.Textures.Events#ADD
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
@@ -768,7 +783,7 @@ var TextureManager = new Class({
                 Parser.SpriteSheet(texture, 0, sheet.cutX, sheet.cutY, sheet.cutWidth, sheet.cutHeight, config);
             }
 
-            this.emit('addtexture', key, texture);
+            this.emit(Events.ADD, key, texture);
 
             return texture;
         }

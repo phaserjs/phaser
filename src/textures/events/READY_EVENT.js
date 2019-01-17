@@ -5,12 +5,12 @@
  */
 
 /**
- * The Game Boot Texture Manager is Ready Event.
+ * This internal event signifies that the Texture Manager is now ready and the Game can continue booting.
  * 
  * When a Phaser Game instance is booting for the first time, the Texture Manager has to wait on a couple of non-blocking
  * async events before it's fully ready to carry on. When those complete the Texture Manager emits this event via the Game
  * instance, which tells the Game to carry on booting.
  *
- * @event Phaser.Core.Events#TEXTURES_READY
+ * @event Phaser.Textures.Events#READY
  */
-module.exports = 'texturesready';
+module.exports = 'ready';

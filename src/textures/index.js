@@ -27,6 +27,7 @@ var FilterMode = require('./const');
 
 var Textures = {
 
+    Events: require('./events'),
     FilterMode: FilterMode,
     Frame: require('./Frame'),
     Parsers: require('./parsers'),
