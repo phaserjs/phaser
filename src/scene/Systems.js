@@ -519,7 +519,7 @@ var Systems = new Class({
 
         if (settings.isTransition)
         {
-            this.events.emit('transitionwake', settings.transitionFrom, settings.transitionDuration);
+            this.events.emit(Events.TRANSITION_WAKE, settings.transitionFrom, settings.transitionDuration);
         }
 
         return this;

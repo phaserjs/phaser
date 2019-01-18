@@ -5,14 +5,11 @@
  */
 
 /**
- * The Scene Transition Complete Event.
+ * The Scene Transition Out Event.
  * 
- * This event is dispatched by the Target Scene of a transition.
+ * This event is dispatched by a Scene when it initiates a transition to another Scene.
  * 
- * It happens when the transition process has completed. This occurs when the duration timer equals or exceeds the duration
- * of the transition.
- * 
- * Listen to it from a Scene using `this.scene.events.on('transitioncomplete', listener)`.
+ * Listen to it from a Scene using `this.scene.events.on('transitionout', listener)`.
  * 
  * The Scene Transition event flow is as follows:
  * 
@@ -22,8 +19,9 @@
  * 3b) [TRANSITION_WAKE]{Phaser.Scenes.Events#TRANSITION_WAKE} - the Target Scene will emit this event if it was asleep and has been woken-up to be transitioned to.
  * 4) [TRANSITION_COMPLETE]{Phaser.Scenes.Events#TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
  * 
- * @event Phaser.Scenes.Events#TRANSITION_COMPLETE
+ * @event Phaser.Scenes.Events#TRANSITION_OUT
  * 
- * @param {Phaser.Scene} scene -The Scene on which the transitioned completed.
+ * @param {Phaser.Scene} target - A reference to the Scene that is being transitioned to.
+ * @param {number} duration - The duration of the transition in ms.
  */
-module.exports = 'transitioncomplete';
+module.exports = 'transitionout';

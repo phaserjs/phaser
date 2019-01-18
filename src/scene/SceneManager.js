@@ -6,6 +6,7 @@
 
 var Class = require('../utils/Class');
 var CONST = require('./const');
+var Events = require('./events');
 var GetValue = require('../utils/object/GetValue');
 var NOOP = require('../utils/NOOP');
 var Scene = require('./Scene');
@@ -439,6 +440,7 @@ var SceneManager = new Class({
      *
      * @method Phaser.Scenes.SceneManager#bootScene
      * @private
+     * @fires Phaser.Scenes.Events#TRANSITION_INIT
      * @since 3.0.0
      *
      * @param {Phaser.Scene} scene - The Scene to boot.
@@ -456,7 +458,7 @@ var SceneManager = new Class({
 
             if (settings.isTransition)
             {
-                sys.events.emit('transitioninit', settings.transitionFrom, settings.transitionDuration);
+                sys.events.emit(Events.TRANSITION_INIT, settings.transitionFrom, settings.transitionDuration);
             }
         }
 
@@ -589,6 +591,7 @@ var SceneManager = new Class({
      *
      * @method Phaser.Scenes.SceneManager#create
      * @private
+     * @fires Phaser.Scenes.Events#TRANSITION_INIT
      * @since 3.0.0
      *
      * @param {Phaser.Scene} scene - The Scene to create.
@@ -607,7 +610,7 @@ var SceneManager = new Class({
 
         if (settings.isTransition)
         {
-            sys.events.emit('transitionstart', settings.transitionFrom, settings.transitionDuration);
+            sys.events.emit(Events.TRANSITION_START, settings.transitionFrom, settings.transitionDuration);
         }
 
         //  If the Scene has an update function we'll set it now, otherwise it'll remain as NOOP

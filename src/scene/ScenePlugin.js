@@ -6,6 +6,7 @@
 
 var Clamp = require('../math/Clamp');
 var Class = require('../utils/Class');
+var Events = require('./events');
 var GetFastValue = require('../utils/object/GetFastValue');
 var PluginCache = require('../plugins/PluginCache');
 
@@ -251,7 +252,7 @@ var ScenePlugin = new Class({
      *
      * This Scene can either be sent to sleep at the end of the transition, or stopped. The default is to stop.
      *
-     * There are also 5 transition related events: This scene will emit the event `transitionto` when
+     * There are also 5 transition related events: This scene will emit the event `transitionout` when
      * the transition begins, which is typically the frame after calling this method.
      *
      * The target Scene will emit the event `transitioninit` when that Scene's `init` method is called.
@@ -270,6 +271,7 @@ var ScenePlugin = new Class({
      * override this understand that until the target Scene completes it might never be unlocked for input events.
      *
      * @method Phaser.Scenes.ScenePlugin#transition
+     * @fires Phaser.Scenes.Events#TRANSITION_OUT
      * @since 3.5.0
      *
      * @param {Phaser.Scenes.ScenePlugin.SceneTransitionConfig} config - The transition configuration object.
@@ -334,7 +336,7 @@ var ScenePlugin = new Class({
             this.manager.start(key, GetFastValue(config, 'data'));
         }
 
-        this.systems.events.emit('transitionout', target, duration);
+        this.systems.events.emit(Events.TRANSITION_OUT, target, duration);
 
         this.systems.events.on('update', this.step, this);
 
@@ -396,6 +398,7 @@ var ScenePlugin = new Class({
      *
      * @method Phaser.Scenes.ScenePlugin#transitionComplete
      * @private
+     * @fires Phaser.Scenes.Events#TRANSITION_COMPLETE
      * @since 3.5.0
      */
     transitionComplete: function ()
@@ -407,7 +410,7 @@ var ScenePlugin = new Class({
         this.systems.events.off('update', this.step, this);
 
         //  Notify target scene
-        targetSys.events.emit('transitioncomplete', this.scene);
+        targetSys.events.emit(Events.TRANSITION_COMPLETE, this.scene);
 
         //  Clear target scene settings
         targetSettings.isTransition = false;
