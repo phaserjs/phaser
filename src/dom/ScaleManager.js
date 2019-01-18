@@ -348,16 +348,6 @@ var ScaleManager = new Class({
         return this;
     },
 
-    /**
-     * Game Resize event.
-     * 
-     * Listen for it using the event type `resize`.
-     *
-     * @event Phaser.Game#resizeEvent
-     * @param {number} width - The new width of the Game.
-     * @param {number} height - The new height of the Game.
-     */
-
     refresh: function ()
     {
         this.updateScale();

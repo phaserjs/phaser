@@ -16,7 +16,7 @@
  * 
  * A Pointer can only drag a single Game Object at once.
  * 
- * To listen for this event from a _specific_ Game Object, use the [GAMEOBJECT_DRAG_OVER event]{Phaser.Input.Events#GAMEOBJECT_DRAG_OVER} instead.
+ * To listen for this event from a _specific_ Game Object, use the [GAMEOBJECT_DRAG_OVER]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_DRAG_OVER} event instead.
  *
  * @event Phaser.Input.Events#DRAG_OVER
  * 

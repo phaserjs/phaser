@@ -11,9 +11,9 @@
  * 
  * Listen to this event from within a Scene using: `this.input.keyboard.on('keyup', listener)`.
  * 
- * You can also listen for a specific key being released. See [Keyboard.Events.KEY_UP]{Phaser.Input.Keyboard.Events#KEY_UP} for details.
+ * You can also listen for a specific key being released. See [Keyboard.Events.KEY_UP]{@linkcode Phaser.Input.Keyboard.Events#event:KEY_UP} for details.
  * 
- * Finally, you can create Key objects, which you can also listen for events from. See [Keyboard.Events.UP]{Phaser.Input.Keyboard.Events#UP} for details.
+ * Finally, you can create Key objects, which you can also listen for events from. See [Keyboard.Events.UP]{@linkcode Phaser.Input.Keyboard.Events#event:UP} for details.
  *
  * @event Phaser.Input.Keyboard.Events#ANY_KEY_UP
  * 

@@ -11,7 +11,7 @@
  * 
  * Listen to this event from within a Scene using: `this.input.gamepad.on('up', listener)`.
  * 
- * You can also listen for an UP event from a Gamepad instance. See [GAMEPAD_BUTTON_UP]{Phaser.Input.Gamepad.Events#GAMEPAD_BUTTON_UP} for details.
+ * You can also listen for an UP event from a Gamepad instance. See the [GAMEPAD_BUTTON_UP]{@linkcode Phaser.Input.Gamepad.Events#event:GAMEPAD_BUTTON_UP} event for details.
  *
  * @event Phaser.Input.Gamepad.Events#BUTTON_UP
  * 

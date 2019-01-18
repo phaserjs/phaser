@@ -13,9 +13,9 @@
  * 
  * The event hierarchy is as follows:
  * 
- * 1) GAMEOBJECT_POINTER_MOVE
- * 2) GAMEOBJECT_MOVE
- * 3) POINTER_MOVE
+ * 1. [GAMEOBJECT_POINTER_MOVE]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_POINTER_MOVE}
+ * 2. [GAMEOBJECT_MOVE]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_MOVE}
+ * 3. [POINTER_MOVE]{@linkcode Phaser.Input.Events#event:POINTER_MOVE}
  * 
  * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
  * the propagation of this event.

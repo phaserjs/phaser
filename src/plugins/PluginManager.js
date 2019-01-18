@@ -34,8 +34,8 @@ var Remove = require('../utils/array/Remove');
  *
  * There are two types of plugin:
  *
- * 1) A Global Plugin
- * 2) A Scene Plugin
+ * 1. A Global Plugin
+ * 2. A Scene Plugin
  *
  * A Global Plugin is a plugin that lives within the Plugin Manager rather than a Scene. You can get
  * access to it by calling `PluginManager.get` and providing a key. Any Scene that requests a plugin in
@@ -49,9 +49,9 @@ var Remove = require('../utils/array/Remove');
  *
  * You can add a plugin to Phaser in three different ways:
  *
- * 1) Preload it
- * 2) Include it in your source code and install it via the Game Config
- * 3) Include it in your source code and install it within a Scene
+ * 1. Preload it
+ * 2. Include it in your source code and install it via the Game Config
+ * 3. Include it in your source code and install it within a Scene
  *
  * For examples of all of these approaches please see the Phaser 3 Examples Repo `plugins` folder.
  *

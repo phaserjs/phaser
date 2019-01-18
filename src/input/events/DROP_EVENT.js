@@ -11,7 +11,7 @@
  * 
  * Listen to this event from within a Scene using: `this.input.on('drop', listener)`.
  * 
- * To listen for this event from a _specific_ Game Object, use the [GAMEOBJECT_DROP event]{Phaser.Input.Events#GAMEOBJECT_DROP} instead.
+ * To listen for this event from a _specific_ Game Object, use the [GAMEOBJECT_DROP]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_DROP} event instead.
  *
  * @event Phaser.Input.Events#DROP
  * 

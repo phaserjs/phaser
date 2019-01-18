@@ -11,7 +11,7 @@
  * 
  * Listen to this event from within a Scene using: `this.input.gamepad.on('down', listener)`.
  * 
- * You can also listen for a DOWN event from a Gamepad instance. See [GAMEPAD_BUTTON_DOWN]{Phaser.Input.Gamepad.Events#GAMEPAD_BUTTON_DOWN} for details.
+ * You can also listen for a DOWN event from a Gamepad instance. See the [GAMEPAD_BUTTON_DOWN]{@linkcode Phaser.Input.Gamepad.Events#event:GAMEPAD_BUTTON_DOWN} event for details.
  *
  * @event Phaser.Input.Gamepad.Events#BUTTON_DOWN
  * 

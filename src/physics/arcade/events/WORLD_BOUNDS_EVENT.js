@@ -8,7 +8,7 @@
  * The Arcade Physics World Bounds Event.
  * 
  * This event is dispatched by an Arcade Physics World instance if a body makes contact with the world bounds _and_
- * it has its [onWorldBounds]{Phaser.Physics.Arcade.Body#onWorldBounds} property set to `true`.
+ * it has its [onWorldBounds]{@link Phaser.Physics.Arcade.Body#onWorldBounds} property set to `true`.
  * 
  * It provides an alternative means to handling collide events rather than using the callback approach.
  * 

@@ -7,7 +7,7 @@
 /**
  * The Key Combo Match Event.
  * 
- * This event is dispatched by the Keyboard Plugin when a [Key Combo]{Phaser.Input.Keyboard.KeyCombo} is matched.
+ * This event is dispatched by the Keyboard Plugin when a [Key Combo]{@link Phaser.Input.Keyboard.KeyCombo} is matched.
  * 
  * Listen for this event from the Key Plugin after a combo has been created:
  * 

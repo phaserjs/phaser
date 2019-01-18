@@ -12,15 +12,15 @@
  * Listen to this event from within a Scene using: `this.input.on('gameobjectout', listener)`.
  * 
  * To receive this event, the Game Objects must have been set as interactive.
- * See [GameObject.setInteractive]{Phaser.GameObjects.GameObject#setInteractive} for more details.
+ * See [GameObject.setInteractive]{@link Phaser.GameObjects.GameObject#setInteractive} for more details.
  * 
- * To listen for this event from a _specific_ Game Object, use the [GAMEOBJECT_POINTER_OUT event]{Phaser.Input.Events#GAMEOBJECT_POINTER_OUT} instead.
+ * To listen for this event from a _specific_ Game Object, use the [GAMEOBJECT_POINTER_OUT]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_POINTER_OUT} event instead.
  * 
  * The event hierarchy is as follows:
  * 
- * 1) GAMEOBJECT_POINTER_OUT
- * 2) GAMEOBJECT_OUT
- * 3) POINTER_OUT
+ * 1. [GAMEOBJECT_POINTER_OUT]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_POINTER_OUT}
+ * 2. [GAMEOBJECT_OUT]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_OUT}
+ * 3. [POINTER_OUT]{@linkcode Phaser.Input.Events#event:POINTER_OUT}
  * 
  * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
  * the propagation of this event.

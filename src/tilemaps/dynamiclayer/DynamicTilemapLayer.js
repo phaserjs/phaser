@@ -199,9 +199,9 @@ var DynamicTilemapLayer = new Class({
          *
          * It will be sent 3 arguments:
          *
-         * 1) The Phaser.Tilemaps.LayerData object for this Layer
-         * 2) The Camera that is culling the layer. You can check its `dirty` property to see if it has changed since the last cull.
-         * 3) A reference to the `culledTiles` array, which should be used to store the tiles you want rendered.
+         * 1. The Phaser.Tilemaps.LayerData object for this Layer
+         * 2. The Camera that is culling the layer. You can check its `dirty` property to see if it has changed since the last cull.
+         * 3. A reference to the `culledTiles` array, which should be used to store the tiles you want rendered.
          *
          * See the `TilemapComponents.CullTiles` source code for details on implementing your own culling system.
          *

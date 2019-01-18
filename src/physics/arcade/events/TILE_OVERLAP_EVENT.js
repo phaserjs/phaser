@@ -8,7 +8,7 @@
  * The Arcade Physics Tile Overlap Event.
  * 
  * This event is dispatched by an Arcade Physics World instance if a body overlaps with a Tile _and_
- * has its [onOverlap]{Phaser.Physics.Arcade.Body#onOverlap} property set to `true`.
+ * has its [onOverlap]{@link Phaser.Physics.Arcade.Body#onOverlap} property set to `true`.
  * 
  * It provides an alternative means to handling overlap events rather than using the callback approach.
  * 

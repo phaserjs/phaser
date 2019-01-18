@@ -8,7 +8,7 @@
  * The Arcade Physics World Overlap Event.
  * 
  * This event is dispatched by an Arcade Physics World instance if two bodies overlap _and_ at least
- * one of them has their [onOverlap]{Phaser.Physics.Arcade.Body#onOverlap} property set to `true`.
+ * one of them has their [onOverlap]{@link Phaser.Physics.Arcade.Body#onOverlap} property set to `true`.
  * 
  * It provides an alternative means to handling overlap events rather than using the callback approach.
  * 

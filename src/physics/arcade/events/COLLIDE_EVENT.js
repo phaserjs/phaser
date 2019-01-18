@@ -8,7 +8,7 @@
  * The Arcade Physics World Collide Event.
  * 
  * This event is dispatched by an Arcade Physics World instance if two bodies collide _and_ at least
- * one of them has their [onCollide]{Phaser.Physics.Arcade.Body#onCollide} property set to `true`.
+ * one of them has their [onCollide]{@link Phaser.Physics.Arcade.Body#onCollide} property set to `true`.
  * 
  * It provides an alternative means to handling collide events rather than using the callback approach.
  * 

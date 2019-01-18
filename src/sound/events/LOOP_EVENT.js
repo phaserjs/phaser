@@ -17,7 +17,7 @@
  * music.setLoop(true);
  * ```
  * 
- * This is not to be confused with the [LOOPED]{Phaser.Sound.Events#LOOPED} event, which emits each time a Sound loops during playback.
+ * This is not to be confused with the [LOOPED]{@linkcode Phaser.Sound.Events#event:LOOPED} event, which emits each time a Sound loops during playback.
  *
  * @event Phaser.Sound.Events#LOOP
  * 

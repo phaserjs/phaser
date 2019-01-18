@@ -11,11 +11,11 @@
  * 
  * The event flow for a single step of a Scene is as follows:
  * 
- * 1) [PRE_UPDATE]{Phaser.Scenes.Events#PRE_UPDATE}
- * 2) [UPDATE]{Phaser.Scenes.Events#UPDATE}
- * 3) The Scene.update method is called, if it exists
- * 4) [POST_UPDATE]{Phaser.Scenes.Events#POST_UPDATE}
- * 5) [RENDER]{Phaser.Scenes.Events#RENDER}
+ * 1. [PRE_UPDATE]{@linkcode Phaser.Scenes.Events#event:PRE_UPDATE}
+ * 2. [UPDATE]{@linkcode Phaser.Scenes.Events#event:UPDATE}
+ * 3. The `Scene.update` method is called, if it exists
+ * 4. [POST_UPDATE]{@linkcode Phaser.Scenes.Events#event:POST_UPDATE}
+ * 5. [RENDER]{@linkcode Phaser.Scenes.Events#event:RENDER}
  * 
  * Listen to it from a Scene using `this.scene.events.on('preupdate', listener)`.
  * 

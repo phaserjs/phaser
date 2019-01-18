@@ -13,13 +13,13 @@
  * Note that the scope of the listener is automatically set to be the Game Object instance itself.
  * 
  * To receive this event, the Game Object must have been set as interactive.
- * See [GameObject.setInteractive]{Phaser.GameObjects.GameObject#setInteractive} for more details.
+ * See [GameObject.setInteractive]{@link Phaser.GameObjects.GameObject#setInteractive} for more details.
  * 
  * The event hierarchy is as follows:
  * 
- * 1) GAMEOBJECT_POINTER_DOWN
- * 2) GAMEOBJECT_DOWN
- * 3) POINTER_DOWN or POINTER_DOWN_OUTSIDE
+ * 1. [GAMEOBJECT_POINTER_DOWN]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_POINTER_DOWN}
+ * 2. [GAMEOBJECT_DOWN]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_DOWN}
+ * 3. [POINTER_DOWN]{@linkcode Phaser.Input.Events#event:POINTER_DOWN} or [POINTER_DOWN_OUTSIDE]{@linkcode Phaser.Input.Events#event:POINTER_DOWN_OUTSIDE}
  * 
  * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
  * the propagation of this event.

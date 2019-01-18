@@ -13,9 +13,9 @@
  * 
  * The event hierarchy is as follows:
  * 
- * 1) GAMEOBJECT_POINTER_DOWN
- * 2) GAMEOBJECT_DOWN
- * 3) POINTER_DOWN or POINTER_DOWN_OUTSIDE
+ * 1. [GAMEOBJECT_POINTER_DOWN]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_POINTER_DOWN}
+ * 2. [GAMEOBJECT_DOWN]{@linkcode Phaser.Input.Events#event:GAMEOBJECT_DOWN}
+ * 3. [POINTER_DOWN]{@linkcode Phaser.Input.Events#event:POINTER_DOWN} or [POINTER_DOWN_OUTSIDE]{@linkcode Phaser.Input.Events#event:POINTER_DOWN_OUTSIDE}
  * 
  * With the top event being dispatched first and then flowing down the list. Note that higher-up event handlers can stop
  * the propagation of this event.

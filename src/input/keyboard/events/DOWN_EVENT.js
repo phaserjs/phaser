@@ -7,7 +7,7 @@
 /**
  * The Key Down Event.
  * 
- * This event is dispatched by a [Key]{Phaser.Input.Keyboard.Key} object when it is pressed.
+ * This event is dispatched by a [Key]{@link Phaser.Input.Keyboard.Key} object when it is pressed.
  * 
  * Listen for this event from the Key object instance directly:
  * 
@@ -17,7 +17,7 @@
  * spaceBar.on('down', listener)
  * ```
  * 
- * You can also create a generic 'global' listener. See [Keyboard.Events.ANY_KEY_DOWN]{Phaser.Input.Keyboard.Events#ANY_KEY_DOWN} for details.
+ * You can also create a generic 'global' listener. See [Keyboard.Events.ANY_KEY_DOWN]{@linkcode Phaser.Input.Keyboard.Events#event:ANY_KEY_DOWN} for details.
  *
  * @event Phaser.Input.Keyboard.Events#DOWN
  * 

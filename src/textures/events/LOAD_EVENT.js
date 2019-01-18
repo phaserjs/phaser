@@ -12,7 +12,7 @@
  * 
  * Listen to this event from within a Scene using: `this.textures.on('onload', listener)`.
  * 
- * This event is dispatched after the [ADD event]{Phaser.Textures.Events#ADD}.
+ * This event is dispatched after the [ADD]{@linkcode Phaser.Textures.Events#event:ADD} event.
  *
  * @event Phaser.Textures.Events#LOAD
  * 

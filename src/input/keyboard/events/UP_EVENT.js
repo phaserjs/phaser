@@ -7,7 +7,7 @@
 /**
  * The Key Up Event.
  * 
- * This event is dispatched by a [Key]{Phaser.Input.Keyboard.Key} object when it is released.
+ * This event is dispatched by a [Key]{@link Phaser.Input.Keyboard.Key} object when it is released.
  * 
  * Listen for this event from the Key object instance directly:
  * 
@@ -17,7 +17,7 @@
  * spaceBar.on('up', listener)
  * ```
  * 
- * You can also create a generic 'global' listener. See [Keyboard.Events.ANY_KEY_UP]{Phaser.Input.Keyboard.Events#ANY_KEY_UP} for details.
+ * You can also create a generic 'global' listener. See [Keyboard.Events.ANY_KEY_UP]{@linkcode Phaser.Input.Keyboard.Events#event:ANY_KEY_UP} for details.
  *
  * @event Phaser.Input.Keyboard.Events#UP
  * 

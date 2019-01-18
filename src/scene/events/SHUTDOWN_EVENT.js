@@ -13,7 +13,7 @@
  * 
  * You should free-up any resources that may be in use by your Scene in this event handler, on the understanding
  * that the Scene may, at any time, become active again. A shutdown Scene is not 'destroyed', it's simply not
- * currently active. Use the [DESTROY]{Phaser.Scenes.Events#DESTROY} event to completely clear resources.
+ * currently active. Use the [DESTROY]{@linkcode Phaser.Scenes.Events#event:DESTROY} event to completely clear resources.
  * 
  * @event Phaser.Scenes.Events#SHUTDOWN
  * 

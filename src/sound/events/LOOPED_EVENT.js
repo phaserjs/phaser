@@ -18,7 +18,7 @@
  * music.play();
  * ```
  * 
- * This is not to be confused with the [LOOP]{Phaser.Sound.Events#LOOP} event, which only emits when the loop state of a Sound is changed.
+ * This is not to be confused with the [LOOP]{@linkcode Phaser.Sound.Events#event:LOOP} event, which only emits when the loop state of a Sound is changed.
  *
  * @event Phaser.Sound.Events#LOOPED
  * 

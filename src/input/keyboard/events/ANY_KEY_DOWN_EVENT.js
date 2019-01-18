@@ -11,12 +11,12 @@
  * 
  * Listen to this event from within a Scene using: `this.input.keyboard.on('keydown', listener)`.
  * 
- * You can also listen for a specific key being pressed. See [Keyboard.Events.KEY_DOWN]{Phaser.Input.Keyboard.Events#KEY_DOWN} for details.
+ * You can also listen for a specific key being pressed. See [Keyboard.Events.KEY_DOWN]{@linkcode Phaser.Input.Keyboard.Events#event:KEY_DOWN} for details.
  * 
- * Finally, you can create Key objects, which you can also listen for events from. See [Keyboard.Events.DOWN]{Phaser.Input.Keyboard.Events#DOWN} for details.
+ * Finally, you can create Key objects, which you can also listen for events from. See [Keyboard.Events.DOWN]{@linkcode Phaser.Input.Keyboard.Events#event:DOWN} for details.
  * 
  * _Note_: Many keyboards are unable to process certain combinations of keys due to hardware limitations known as ghosting.
- * See http://www.html5gamedevs.com/topic/4876-impossible-to-use-more-than-2-keyboard-input-buttons-at-the-same-time/ for more details.
+ * Read [this article on ghosting]{@link http://www.html5gamedevs.com/topic/4876-impossible-to-use-more-than-2-keyboard-input-buttons-at-the-same-time/} for details.
  *
  * Also, please be aware that some browser extensions can disable or override Phaser keyboard handling.
  * For example, the Chrome extension vimium is known to disable Phaser from using the D key, while EverNote disables the backtick key.

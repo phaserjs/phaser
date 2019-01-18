@@ -13,7 +13,7 @@
  * Note that the scope of the listener is automatically set to be the Game Object instance itself.
  * 
  * To receive this event, the Game Object must have been set as interactive and enabled for drag.
- * See [GameObject.setInteractive]{Phaser.GameObjects.GameObject#setInteractive} for more details.
+ * See [GameObject.setInteractive]{@link Phaser.GameObjects.GameObject#setInteractive} for more details.
  *
  * @event Phaser.Input.Events#GAMEOBJECT_DROP
  * 

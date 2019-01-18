@@ -160,11 +160,11 @@ var Size = new Class({
      * 
      * It can be a number from 0 to 4, or a Size constant:
      * 
-     * 0) NONE = Do not make the size fit the aspect ratio. Change the ratio when the size changes.
-     * 1) WIDTH_CONTROLS_HEIGHT = The height is automatically adjusted based on the width.
-     * 2) HEIGHT_CONTROLS_WIDTH = The width is automatically adjusted based on the height.
-     * 3) FIT = The width and height are automatically adjusted to fit inside the given target area, while keeping the aspect ratio. Depending on the aspect ratio there may be some space inside the area which is not covered.
-     * 4) ENVELOP = The width and height are automatically adjusted to make the size cover the entire target area while keeping the aspect ratio. This may extend further out than the target size.
+     * 0. NONE = Do not make the size fit the aspect ratio. Change the ratio when the size changes.
+     * 1. WIDTH_CONTROLS_HEIGHT = The height is automatically adjusted based on the width.
+     * 2. HEIGHT_CONTROLS_WIDTH = The width is automatically adjusted based on the height.
+     * 3. FIT = The width and height are automatically adjusted to fit inside the given target area, while keeping the aspect ratio. Depending on the aspect ratio there may be some space inside the area which is not covered.
+     * 4. ENVELOP = The width and height are automatically adjusted to make the size cover the entire target area while keeping the aspect ratio. This may extend further out than the target size.
      * 
      * Calling this method automatically recalculates the `width` and the `height`, if required.
      * 

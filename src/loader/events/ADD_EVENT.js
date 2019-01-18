@@ -16,7 +16,7 @@
  * @event Phaser.Loader.Events#ADD
  * 
  * @param {string} key - The unique key of the file that was added to the Loader.
- * @param {string} type - The [file type]{Phaser.Loader.File#type} string of the file that was added to the Loader, i.e. `image`.
+ * @param {string} type - The [file type]{@link Phaser.Loader.File#type} string of the file that was added to the Loader, i.e. `image`.
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader Plugin that dispatched this event.
  * @param {Phaser.Loader.File} file - A reference to the File which was added to the Loader.
  */

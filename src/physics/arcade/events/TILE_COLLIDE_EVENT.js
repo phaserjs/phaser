@@ -8,7 +8,7 @@
  * The Arcade Physics Tile Collide Event.
  * 
  * This event is dispatched by an Arcade Physics World instance if a body collides with a Tile _and_
- * has its [onCollide]{Phaser.Physics.Arcade.Body#onCollide} property set to `true`.
+ * has its [onCollide]{@link Phaser.Physics.Arcade.Body#onCollide} property set to `true`.
  * 
  * It provides an alternative means to handling collide events rather than using the callback approach.
  * 

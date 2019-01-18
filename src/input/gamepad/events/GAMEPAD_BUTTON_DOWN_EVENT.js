@@ -14,7 +14,7 @@
  * 
  * Note that you will not receive any Gamepad button events until the browser considers the Gamepad as being 'connected'.
  * 
- * You can also listen for a DOWN event from the Gamepad Plugin. See [BUTTON_DOWN]{Phaser.Input.Gamepad.Events#BUTTON_DOWN} for details.
+ * You can also listen for a DOWN event from the Gamepad Plugin. See the [BUTTON_DOWN]{@linkcode Phaser.Input.Gamepad.Events#event:BUTTON_DOWN} event for details.
  *
  * @event Phaser.Input.Gamepad.Events#GAMEPAD_BUTTON_DOWN
  * 
