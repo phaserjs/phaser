@@ -1470,9 +1470,12 @@ var World = new Class({
 
         if (result)
         {
-            if (overlapOnly && (body1.onOverlap || body2.onOverlap))
+            if (overlapOnly)
             {
-                this.emit(Events.OVERLAP, body1.gameObject, body2.gameObject, body1, body2);
+                if (body1.onOverlap || body2.onOverlap)
+                {
+                    this.emit(Events.OVERLAP, body1.gameObject, body2.gameObject, body1, body2);
+                }
             }
             else
             {
