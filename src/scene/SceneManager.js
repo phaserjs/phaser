@@ -603,11 +603,11 @@ var SceneManager = new Class({
             settings.status = CONST.CREATING;
 
             scene.create.call(scene, settings.data);
+        }
 
-            if (settings.isTransition)
-            {
-                sys.events.emit('transitionstart', settings.transitionFrom, settings.transitionDuration);
-            }
+        if (settings.isTransition)
+        {
+            sys.events.emit('transitionstart', settings.transitionFrom, settings.transitionDuration);
         }
 
         //  If the Scene has an update function we'll set it now, otherwise it'll remain as NOOP

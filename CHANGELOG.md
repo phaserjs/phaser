@@ -239,6 +239,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `Map.set` will now update an existing value if you provide it with a key that already exists within the Map. Previously, if you tried to set the value of a key that existed it would be skipped.
 * `MatterSprite` would set its `type` property to be `Image`. It now sets it to be `Sprite` as it should do.
 * `Matter.TileBody.setFromTileCollision` no longer checks if the shape is concave or convex before modifying the vertices, as the update to the Matter.js lib in 3.12 stopped this from working with Tiled collision shapes.
+* The Scene `transitionstart` event is now dispatched by the Target Scene of a transition, regardless if the Scene has a `create` method or not. Previously, it was only dispatched if the Scene had a create method.
 
 ### Bug Fixes
 
