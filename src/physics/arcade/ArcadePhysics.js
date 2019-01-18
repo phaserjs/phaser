@@ -12,6 +12,7 @@ var Factory = require('./Factory');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Merge = require('../../utils/object/Merge');
 var PluginCache = require('../../plugins/PluginCache');
+var SceneEvents = require('../../scene/events');
 var Vector2 = require('../../math/Vector2');
 var World = require('./World');
 
@@ -80,8 +81,8 @@ var ArcadePhysics = new Class({
          */
         this.add;
 
-        scene.sys.events.once('boot', this.boot, this);
-        scene.sys.events.on('start', this.start, this);
+        scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
+        scene.sys.events.on(SceneEvents.START, this.start, this);
     },
 
     /**
@@ -97,7 +98,7 @@ var ArcadePhysics = new Class({
         this.world = new World(this.scene, this.config);
         this.add = new Factory(this.world);
 
-        this.systems.events.once('destroy', this.destroy, this);
+        this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
     },
 
     /**
@@ -119,9 +120,9 @@ var ArcadePhysics = new Class({
 
         var eventEmitter = this.systems.events;
 
-        eventEmitter.on('update', this.world.update, this.world);
-        eventEmitter.on('postupdate', this.world.postUpdate, this.world);
-        eventEmitter.once('shutdown', this.shutdown, this);
+        eventEmitter.on(SceneEvents.UPDATE, this.world.update, this.world);
+        eventEmitter.on(SceneEvents.POST_UPDATE, this.world.postUpdate, this.world);
+        eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -468,9 +469,9 @@ var ArcadePhysics = new Class({
 
         var eventEmitter = this.systems.events;
 
-        eventEmitter.off('update', this.world.update, this.world);
-        eventEmitter.off('postupdate', this.world.postUpdate, this.world);
-        eventEmitter.off('shutdown', this.shutdown, this);
+        eventEmitter.off(SceneEvents.UPDATE, this.world.update, this.world);
+        eventEmitter.off(SceneEvents.POST_UPDATE, this.world.postUpdate, this.world);
+        eventEmitter.off(SceneEvents.SHUTDOWN, this.shutdown, this);
 
         this.add.destroy();
         this.world.destroy();
@@ -490,7 +491,7 @@ var ArcadePhysics = new Class({
     {
         this.shutdown();
 
-        this.scene.sys.events.off('start', this.start, this);
+        this.scene.sys.events.off(SceneEvents.START, this.start, this);
 
         this.scene = null;
         this.systems = null;

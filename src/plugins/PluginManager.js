@@ -5,6 +5,7 @@
  */
 
 var Class = require('../utils/Class');
+var GameEvents = require('../core/events');
 var EventEmitter = require('eventemitter3');
 var FileTypesManager = require('../loader/FileTypesManager');
 var GameObjectCreator = require('../gameobjects/GameObjectCreator');
@@ -127,7 +128,7 @@ var PluginManager = new Class({
         }
         else
         {
-            game.events.once('boot', this.boot, this);
+            game.events.once(GameEvents.BOOT, this.boot, this);
         }
     },
 
@@ -198,7 +199,7 @@ var PluginManager = new Class({
         this._pendingGlobal = [];
         this._pendingScene = [];
 
-        this.game.events.once('destroy', this.destroy, this);
+        this.game.events.once(GameEvents.DESTROY, this.destroy, this);
     },
 
     /**

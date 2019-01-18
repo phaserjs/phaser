@@ -214,8 +214,8 @@ var Animation = new Class({
          */
         this.paused = false;
 
-        this.manager.on('pauseall', this.pause, this);
-        this.manager.on('resumeall', this.resume, this);
+        this.manager.on(Events.PAUSE_ALL, this.pause, this);
+        this.manager.on(Events.RESUME_ALL, this.resume, this);
     },
 
     /**
@@ -915,8 +915,8 @@ var Animation = new Class({
     {
         this.removeAllListeners();
 
-        this.manager.off('pauseall', this.pause, this);
-        this.manager.off('resumeall', this.resume, this);
+        this.manager.off(Events.PAUSE_ALL, this.pause, this);
+        this.manager.off(Events.RESUME_ALL, this.resume, this);
 
         this.manager.remove(this.key);
 

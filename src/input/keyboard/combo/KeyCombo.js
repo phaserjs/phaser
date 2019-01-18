@@ -261,7 +261,7 @@ var KeyCombo = new Class({
          */
         this.onKeyDown = onKeyDownHandler;
 
-        this.manager.on(Events.ANY_KEY_DOWN, onKeyDownHandler);
+        this.manager.on(Events.ANY_KEY_DOWN, this.onKeyDown);
     },
 
     /**
@@ -292,7 +292,7 @@ var KeyCombo = new Class({
         this.enabled = false;
         this.keyCodes = [];
 
-        this.manager.off('keydown', this.onKeyDown);
+        this.manager.off(Events.ANY_KEY_DOWN, this.onKeyDown);
 
         this.manager = null;
     }

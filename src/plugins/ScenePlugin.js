@@ -6,6 +6,7 @@
 
 var BasePlugin = require('./BasePlugin');
 var Class = require('../utils/Class');
+var SceneEvents = require('../scene/events');
 
 /**
  * @classdesc
@@ -35,7 +36,7 @@ var ScenePlugin = new Class({
         this.scene = scene;
         this.systems = scene.sys;
 
-        scene.sys.events.once('boot', this.boot, this);
+        scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
     },
 
     /**

@@ -45,7 +45,7 @@ var Animation = new Class({
          */
         this.animationManager = parent.scene.sys.anims;
 
-        this.animationManager.once('remove', this.remove, this);
+        this.animationManager.once(Events.REMOVE_ANIMATION, this.remove, this);
 
         /**
          * Is an animation currently playing or not?
@@ -1147,7 +1147,7 @@ var Animation = new Class({
      */
     destroy: function ()
     {
-        this.animationManager.off('remove', this.remove, this);
+        this.animationManager.off(Events.REMOVE_ANIMATION, this.remove, this);
 
         this.animationManager = null;
         this.parent = null;

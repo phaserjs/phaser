@@ -12,6 +12,7 @@ var Events = require('./events');
 var FileTypesManager = require('./FileTypesManager');
 var GetFastValue = require('../utils/object/GetFastValue');
 var PluginCache = require('../plugins/PluginCache');
+var SceneEvents = require('../scene/events');
 var XHRSettings = require('./XHRSettings');
 
 /**
@@ -312,8 +313,8 @@ var LoaderPlugin = new Class({
          */
         this.state = CONST.LOADER_IDLE;
 
-        scene.sys.events.once('boot', this.boot, this);
-        scene.sys.events.on('start', this.pluginStart, this);
+        scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
+        scene.sys.events.on(SceneEvents.START, this.pluginStart, this);
     },
 
     /**
@@ -326,7 +327,7 @@ var LoaderPlugin = new Class({
      */
     boot: function ()
     {
-        this.systems.events.once('destroy', this.destroy, this);
+        this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
     },
 
     /**
@@ -340,7 +341,7 @@ var LoaderPlugin = new Class({
      */
     pluginStart: function ()
     {
-        this.systems.events.once('shutdown', this.shutdown, this);
+        this.systems.events.once(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -705,7 +706,7 @@ var LoaderPlugin = new Class({
 
             this.checkLoadQueue();
 
-            this.systems.events.on('update', this.update, this);
+            this.systems.events.on(SceneEvents.UPDATE, this.update, this);
         }
     },
 
@@ -906,7 +907,7 @@ var LoaderPlugin = new Class({
 
         this.state = CONST.LOADER_COMPLETE;
 
-        this.systems.events.off('update', this.update, this);
+        this.systems.events.off(SceneEvents.UPDATE, this.update, this);
 
         //  Call 'destroy' on each file ready for deletion
         this._deleteQueue.iterateLocal('destroy');
@@ -1021,8 +1022,8 @@ var LoaderPlugin = new Class({
 
         this.state = CONST.LOADER_SHUTDOWN;
 
-        this.systems.events.off('update', this.update, this);
-        this.systems.events.off('shutdown', this.shutdown, this);
+        this.systems.events.off(SceneEvents.UPDATE, this.update, this);
+        this.systems.events.off(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -1039,8 +1040,8 @@ var LoaderPlugin = new Class({
 
         this.state = CONST.LOADER_DESTROYED;
 
-        this.systems.events.off('update', this.update, this);
-        this.systems.events.off('start', this.pluginStart, this);
+        this.systems.events.off(SceneEvents.UPDATE, this.update, this);
+        this.systems.events.off(SceneEvents.START, this.pluginStart, this);
 
         this.list = null;
         this.inflight = null;

@@ -20,6 +20,7 @@ var IsPlainObject = require('../utils/object/IsPlainObject');
 var PluginCache = require('../plugins/PluginCache');
 var Rectangle = require('../geom/rectangle/Rectangle');
 var RectangleContains = require('../geom/rectangle/Contains');
+var SceneEvents = require('../scene/events');
 var Triangle = require('../geom/triangle/Triangle');
 var TriangleContains = require('../geom/triangle/Contains');
 
@@ -355,8 +356,8 @@ var InputPlugin = new Class({
          */
         this._validTypes = [ 'onDown', 'onUp', 'onOver', 'onOut', 'onMove', 'onDragStart', 'onDrag', 'onDragEnd', 'onDragEnter', 'onDragLeave', 'onDragOver', 'onDrop' ];
 
-        scene.sys.events.once('boot', this.boot, this);
-        scene.sys.events.on('start', this.start, this);
+        scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
+        scene.sys.events.on(SceneEvents.START, this.start, this);
     },
 
     /**
@@ -374,7 +375,7 @@ var InputPlugin = new Class({
 
         this.displayList = this.systems.displayList;
 
-        this.systems.events.once('destroy', this.destroy, this);
+        this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
 
         //  Registered input plugins listen for this
         this.pluginEvents.emit(Events.BOOT);
@@ -394,13 +395,13 @@ var InputPlugin = new Class({
     {
         var eventEmitter = this.systems.events;
 
-        eventEmitter.on('transitionstart', this.transitionIn, this);
-        eventEmitter.on('transitionout', this.transitionOut, this);
-        eventEmitter.on('transitioncomplete', this.transitionComplete, this);
-        eventEmitter.on('preupdate', this.preUpdate, this);
-        eventEmitter.on('update', this.update, this);
+        eventEmitter.on(SceneEvents.TRANSITION_START, this.transitionIn, this);
+        eventEmitter.on(SceneEvents.TRANSITION_OUT, this.transitionOut, this);
+        eventEmitter.on(SceneEvents.TRANSITION_COMPLETE, this.transitionComplete, this);
+        eventEmitter.on(SceneEvents.PRE_UPDATE, this.preUpdate, this);
+        eventEmitter.on(SceneEvents.UPDATE, this.update, this);
 
-        eventEmitter.once('shutdown', this.shutdown, this);
+        eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
 
         this.enabled = true;
 
@@ -2321,13 +2322,13 @@ var InputPlugin = new Class({
 
         var eventEmitter = this.systems.events;
 
-        eventEmitter.off('transitionstart', this.transitionIn, this);
-        eventEmitter.off('transitionout', this.transitionOut, this);
-        eventEmitter.off('transitioncomplete', this.transitionComplete, this);
+        eventEmitter.off(SceneEvents.TRANSITION_START, this.transitionIn, this);
+        eventEmitter.off(SceneEvents.TRANSITION_OUT, this.transitionOut, this);
+        eventEmitter.off(SceneEvents.TRANSITION_COMPLETE, this.transitionComplete, this);
 
-        eventEmitter.off('preupdate', this.preUpdate, this);
-        eventEmitter.off('update', this.update, this);
-        eventEmitter.off('shutdown', this.shutdown, this);
+        eventEmitter.off(SceneEvents.PRE_UPDATE, this.preUpdate, this);
+        eventEmitter.off(SceneEvents.UPDATE, this.update, this);
+        eventEmitter.off(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -2348,7 +2349,7 @@ var InputPlugin = new Class({
 
         this.pluginEvents.removeAllListeners();
 
-        this.scene.sys.events.off('start', this.start, this);
+        this.scene.sys.events.off(SceneEvents.START, this.start, this);
 
         this.scene = null;
         this.cameras = null;

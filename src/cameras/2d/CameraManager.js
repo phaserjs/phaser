@@ -9,6 +9,7 @@ var Class = require('../../utils/Class');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var PluginCache = require('../../plugins/PluginCache');
 var RectangleContains = require('../../geom/rectangle/Contains');
+var SceneEvents = require('../../scene/events');
 
 /**
  * @typedef {object} InputJSONCameraObject
@@ -134,8 +135,8 @@ var CameraManager = new Class({
          */
         this.main;
 
-        scene.sys.events.once('boot', this.boot, this);
-        scene.sys.events.on('start', this.start, this);
+        scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
+        scene.sys.events.on(SceneEvents.START, this.start, this);
     },
 
     /**
@@ -144,6 +145,7 @@ var CameraManager = new Class({
      *
      * @method Phaser.Cameras.Scene2D.CameraManager#boot
      * @private
+     * @listens Phaser.Scenes.Events#DESTROY
      * @since 3.5.1
      */
     boot: function ()
@@ -163,7 +165,7 @@ var CameraManager = new Class({
 
         this.main = this.cameras[0];
 
-        this.systems.events.once('destroy', this.destroy, this);
+        this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
     },
 
     /**
@@ -173,6 +175,8 @@ var CameraManager = new Class({
      *
      * @method Phaser.Cameras.Scene2D.CameraManager#start
      * @private
+     * @listens Phaser.Scenes.Events#UPDATE
+     * @listens Phaser.Scenes.Events#SHUTDOWN
      * @since 3.5.0
      */
     start: function ()
@@ -197,8 +201,8 @@ var CameraManager = new Class({
 
         var eventEmitter = this.systems.events;
 
-        eventEmitter.on('update', this.update, this);
-        eventEmitter.once('shutdown', this.shutdown, this);
+        eventEmitter.on(SceneEvents.UPDATE, this.update, this);
+        eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -685,8 +689,8 @@ var CameraManager = new Class({
 
         var eventEmitter = this.systems.events;
 
-        eventEmitter.off('update', this.update, this);
-        eventEmitter.off('shutdown', this.shutdown, this);
+        eventEmitter.off(SceneEvents.UPDATE, this.update, this);
+        eventEmitter.off(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -701,7 +705,7 @@ var CameraManager = new Class({
     {
         this.shutdown();
 
-        this.scene.sys.events.off('start', this.start, this);
+        this.scene.sys.events.off(SceneEvents.START, this.start, this);
 
         this.scene = null;
         this.systems = null;

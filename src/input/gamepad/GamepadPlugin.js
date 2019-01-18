@@ -10,6 +10,7 @@ var Events = require('./events');
 var Gamepad = require('./Gamepad');
 var GetValue = require('../../utils/object/GetValue');
 var InputPluginCache = require('../InputPluginCache');
+var InputEvents = require('../events');
 
 /**
  * @typedef {object} Pad
@@ -189,8 +190,8 @@ var GamepadPlugin = new Class({
          */
         this._pad4;
 
-        sceneInputPlugin.pluginEvents.once('boot', this.boot, this);
-        sceneInputPlugin.pluginEvents.on('start', this.start, this);
+        sceneInputPlugin.pluginEvents.once(InputEvents.BOOT, this.boot, this);
+        sceneInputPlugin.pluginEvents.on(InputEvents.START, this.start, this);
     },
 
     /**
@@ -210,7 +211,7 @@ var GamepadPlugin = new Class({
         this.enabled = GetValue(settings, 'gamepad', config.inputGamepad) && game.device.input.gamepads;
         this.target = GetValue(settings, 'gamepad.target', config.inputGamepadEventTarget);
 
-        this.sceneInputPlugin.pluginEvents.once('destroy', this.destroy, this);
+        this.sceneInputPlugin.pluginEvents.once(InputEvents.DESTROY, this.destroy, this);
     },
 
     /**
@@ -229,7 +230,7 @@ var GamepadPlugin = new Class({
             this.startListeners();
         }
 
-        this.sceneInputPlugin.pluginEvents.once('shutdown', this.shutdown, this);
+        this.sceneInputPlugin.pluginEvents.once(InputEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -283,7 +284,7 @@ var GamepadPlugin = new Class({
         //  until more browsers support this
 
         //  Finally, listen for an update event from the Input Plugin
-        this.sceneInputPlugin.pluginEvents.on('update', this.update, this);
+        this.sceneInputPlugin.pluginEvents.on(InputEvents.UPDATE, this.update, this);
     },
 
     /**
@@ -299,7 +300,7 @@ var GamepadPlugin = new Class({
         this.target.removeEventListener('gamepadconnected', this.onGamepadHandler);
         this.target.removeEventListener('gamepaddisconnected', this.onGamepadHandler);
 
-        this.sceneInputPlugin.pluginEvents.off('update', this.update);
+        this.sceneInputPlugin.pluginEvents.off(InputEvents.UPDATE, this.update);
     },
 
     /**

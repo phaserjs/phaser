@@ -6,6 +6,7 @@
 
 var Class = require('../utils/Class');
 var PluginCache = require('../plugins/PluginCache');
+var SceneEvents = require('../scene/events');
 
 /**
  * @classdesc
@@ -69,8 +70,8 @@ var GameObjectCreator = new Class({
          */
         this.updateList;
 
-        scene.sys.events.once('boot', this.boot, this);
-        scene.sys.events.on('start', this.start, this);
+        scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
+        scene.sys.events.on(SceneEvents.START, this.start, this);
     },
 
     /**
@@ -86,7 +87,7 @@ var GameObjectCreator = new Class({
         this.displayList = this.systems.displayList;
         this.updateList = this.systems.updateList;
 
-        this.systems.events.once('destroy', this.destroy, this);
+        this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
     },
 
     /**
@@ -100,7 +101,7 @@ var GameObjectCreator = new Class({
      */
     start: function ()
     {
-        this.systems.events.once('shutdown', this.shutdown, this);
+        this.systems.events.once(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -113,7 +114,7 @@ var GameObjectCreator = new Class({
      */
     shutdown: function ()
     {
-        this.systems.events.off('shutdown', this.shutdown, this);
+        this.systems.events.off(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -128,7 +129,7 @@ var GameObjectCreator = new Class({
     {
         this.shutdown();
 
-        this.scene.sys.events.off('start', this.start, this);
+        this.scene.sys.events.off(SceneEvents.START, this.start, this);
 
         this.scene = null;
         this.systems = null;

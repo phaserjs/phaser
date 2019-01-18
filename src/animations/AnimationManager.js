@@ -9,6 +9,7 @@ var Class = require('../utils/Class');
 var CustomMap = require('../structs/Map');
 var EventEmitter = require('eventemitter3');
 var Events = require('./events');
+var GameEvents = require('../core/events');
 var GetValue = require('../utils/object/GetValue');
 var Pad = require('../utils/string/Pad');
 
@@ -110,20 +111,21 @@ var AnimationManager = new Class({
          */
         this.name = 'AnimationManager';
 
-        game.events.once('boot', this.boot, this);
+        game.events.once(GameEvents.BOOT, this.boot, this);
     },
 
     /**
      * Registers event listeners after the Game boots.
      *
      * @method Phaser.Animations.AnimationManager#boot
+     * @listens Phaser.Core.Events#DESTROY
      * @since 3.0.0
      */
     boot: function ()
     {
         this.textureManager = this.game.textures;
 
-        this.game.events.once('destroy', this.destroy, this);
+        this.game.events.once(GameEvents.DESTROY, this.destroy, this);
     },
 
     /**

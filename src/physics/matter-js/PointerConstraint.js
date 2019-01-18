@@ -9,7 +9,9 @@ var Class = require('../../utils/Class');
 var Composite = require('./lib/body/Composite');
 var Constraint = require('./lib/constraint/Constraint');
 var Detector = require('./lib/collision/Detector');
+var Events = require('./events');
 var GetFastValue = require('../../utils/object/GetFastValue');
+var InputEvents = require('../../input/events');
 var Merge = require('../../utils/object/Merge');
 var Sleeping = require('./lib/core/Sleeping');
 var Vector2 = require('../../math/Vector2');
@@ -128,11 +130,10 @@ var PointerConstraint = new Class({
          */
         this.constraint = Constraint.create(Merge(options, defaults));
 
-        this.world.on('beforeupdate', this.update, this);
+        this.world.on(Events.BEFORE_UPDATE, this.update, this);
 
-        scene.sys.input.on('pointerdown', this.onDown, this);
-
-        scene.sys.input.on('pointerup', this.onUp, this);
+        scene.sys.input.on(InputEvents.POINTER_DOWN, this.onDown, this);
+        scene.sys.input.on(InputEvents.POINTER_UP, this.onUp, this);
     },
 
     /**
@@ -273,11 +274,10 @@ var PointerConstraint = new Class({
 
         this.constraint = null;
 
-        this.world.off('beforeupdate', this.update);
+        this.world.off(Events.BEFORE_UPDATE, this.update);
 
-        this.scene.sys.input.off('pointerdown', this.onDown, this);
-
-        this.scene.sys.input.off('pointerup', this.onUp, this);
+        this.scene.sys.input.off(InputEvents.POINTER_DOWN, this.onDown, this);
+        this.scene.sys.input.off(InputEvents.POINTER_UP, this.onUp, this);
     }
 
 });

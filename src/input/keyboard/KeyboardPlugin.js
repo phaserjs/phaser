@@ -8,6 +8,7 @@ var Class = require('../../utils/Class');
 var EventEmitter = require('eventemitter3');
 var Events = require('./events');
 var GetValue = require('../../utils/object/GetValue');
+var InputEvents = require('../events');
 var InputPluginCache = require('../InputPluginCache');
 var Key = require('./keys/Key');
 var KeyCodes = require('./keys/KeyCodes');
@@ -145,8 +146,8 @@ var KeyboardPlugin = new Class({
          */
         this.time = 0;
 
-        sceneInputPlugin.pluginEvents.once('boot', this.boot, this);
-        sceneInputPlugin.pluginEvents.on('start', this.start, this);
+        sceneInputPlugin.pluginEvents.once(InputEvents.BOOT, this.boot, this);
+        sceneInputPlugin.pluginEvents.on(InputEvents.START, this.start, this);
     },
 
     /**
@@ -170,7 +171,7 @@ var KeyboardPlugin = new Class({
             this.addCaptures(captures);
         }
 
-        this.sceneInputPlugin.pluginEvents.once('destroy', this.destroy, this);
+        this.sceneInputPlugin.pluginEvents.once(InputEvents.DESTROY, this.destroy, this);
     },
 
     /**
@@ -186,7 +187,7 @@ var KeyboardPlugin = new Class({
     {
         this.startListeners();
 
-        this.sceneInputPlugin.pluginEvents.once('shutdown', this.shutdown, this);
+        this.sceneInputPlugin.pluginEvents.once(InputEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -212,7 +213,7 @@ var KeyboardPlugin = new Class({
      */
     startListeners: function ()
     {
-        this.sceneInputPlugin.pluginEvents.on('update', this.update, this);
+        this.sceneInputPlugin.pluginEvents.on(InputEvents.UPDATE, this.update, this);
     },
 
     /**
@@ -225,7 +226,7 @@ var KeyboardPlugin = new Class({
      */
     stopListeners: function ()
     {
-        this.sceneInputPlugin.pluginEvents.off('update', this.update);
+        this.sceneInputPlugin.pluginEvents.off(InputEvents.UPDATE, this.update);
     },
 
     /**

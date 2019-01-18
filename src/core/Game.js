@@ -352,6 +352,8 @@ var Game = new Class({
      */
     boot: function ()
     {
+        console.log('g boot');
+
         if (!PluginCache.hasCore('EventEmitter'))
         {
             console.warn('Aborting. Core Plugins missing.');
@@ -375,11 +377,11 @@ var Game = new Class({
 
         AddToDOM(this.canvas, this.config.parent);
 
-        this.events.emit(Events.BOOT);
-
         //  The Texture Manager has to wait on a couple of non-blocking events before it's fully ready.
         //  So it will emit this internal event when done:
-        this.events.once(TextureEvents.READY, this.texturesReady, this);
+        this.textures.once(TextureEvents.READY, this.texturesReady, this);
+
+        this.events.emit(Events.BOOT);
     },
 
     /**
@@ -427,10 +429,10 @@ var Game = new Class({
 
         var eventEmitter = this.events;
 
-        eventEmitter.on('hidden', this.onHidden, this);
-        eventEmitter.on('visible', this.onVisible, this);
-        eventEmitter.on('blur', this.onBlur, this);
-        eventEmitter.on('focus', this.onFocus, this);
+        eventEmitter.on(Events.HIDDEN, this.onHidden, this);
+        eventEmitter.on(Events.VISIBLE, this.onVisible, this);
+        eventEmitter.on(Events.BLUR, this.onBlur, this);
+        eventEmitter.on(Events.FOCUS, this.onFocus, this);
     },
 
     /**

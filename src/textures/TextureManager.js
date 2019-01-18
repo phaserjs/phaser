@@ -125,8 +125,8 @@ var TextureManager = new Class({
     {
         this._pending = 2;
 
-        this.on('onload', this.updatePending, this);
-        this.on('onerror', this.updatePending, this);
+        this.on(Events.LOAD, this.updatePending, this);
+        this.on(Events.ERROR, this.updatePending, this);
 
         this.addBase64('__DEFAULT', this.game.config.defaultImage);
         this.addBase64('__MISSING', this.game.config.missingImage);
@@ -147,10 +147,10 @@ var TextureManager = new Class({
 
         if (this._pending === 0)
         {
-            this.off('onload');
-            this.off('onerror');
+            this.off(Events.LOAD);
+            this.off(Events.ERROR);
 
-            this.game.events.emit(GameEvents.TEXTURES_READY);
+            this.emit(Events.READY);
         }
     },
 

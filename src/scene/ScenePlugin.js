@@ -152,8 +152,8 @@ var ScenePlugin = new Class({
          */
         this._willRemove = false;
 
-        scene.sys.events.once('boot', this.boot, this);
-        scene.sys.events.on('start', this.pluginStart, this);
+        scene.sys.events.once(Events.BOOT, this.boot, this);
+        scene.sys.events.on(Events.START, this.pluginStart, this);
     },
 
     /**
@@ -166,7 +166,7 @@ var ScenePlugin = new Class({
      */
     boot: function ()
     {
-        this.systems.events.once('destroy', this.destroy, this);
+        this.systems.events.once(Events.DESTROY, this.destroy, this);
     },
 
     /**
@@ -182,7 +182,7 @@ var ScenePlugin = new Class({
     {
         this._target = null;
 
-        this.systems.events.once('shutdown', this.shutdown, this);
+        this.systems.events.once(Events.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -338,7 +338,7 @@ var ScenePlugin = new Class({
 
         this.systems.events.emit(Events.TRANSITION_OUT, target, duration);
 
-        this.systems.events.on('update', this.step, this);
+        this.systems.events.on(Events.UPDATE, this.step, this);
 
         return true;
     },
@@ -407,7 +407,7 @@ var ScenePlugin = new Class({
         var targetSettings = this._target.sys.settings;
 
         //  Stop the step
-        this.systems.events.off('update', this.step, this);
+        this.systems.events.off(Events.UPDATE, this.step, this);
 
         //  Notify target scene
         targetSys.events.emit(Events.TRANSITION_COMPLETE, this.scene);
@@ -950,9 +950,9 @@ var ScenePlugin = new Class({
     {
         var eventEmitter = this.systems.events;
 
-        eventEmitter.off('shutdown', this.shutdown, this);
-        eventEmitter.off('postupdate', this.step, this);
-        eventEmitter.off('transitionout');
+        eventEmitter.off(Events.SHUTDOWN, this.shutdown, this);
+        eventEmitter.off(Events.POST_UPDATE, this.step, this);
+        eventEmitter.off(Events.TRANSITION_OUT);
     },
 
     /**
@@ -967,7 +967,7 @@ var ScenePlugin = new Class({
     {
         this.shutdown();
 
-        this.scene.sys.events.off('start', this.start, this);
+        this.scene.sys.events.off(Events.START, this.start, this);
 
         this.scene = null;
         this.systems = null;

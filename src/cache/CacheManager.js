@@ -6,6 +6,7 @@
 
 var BaseCache = require('./BaseCache');
 var Class = require('../utils/Class');
+var GameEvents = require('../core/events');
 
 /**
  * @classdesc
@@ -149,7 +150,7 @@ var CacheManager = new Class({
          */
         this.custom = {};
 
-        this.game.events.once('destroy', this.destroy, this);
+        this.game.events.once(GameEvents.DESTROY, this.destroy, this);
     },
 
     /**

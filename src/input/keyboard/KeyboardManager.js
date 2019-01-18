@@ -422,7 +422,7 @@ var KeyboardManager = new Class({
 
         this.queue = [];
 
-        this.manager.game.events.off('poststep', this.postUpdate, this);
+        this.manager.game.events.off(GameEvents.POST_RENDER, this.postUpdate, this);
 
         this.target = null;
         this.enabled = false;

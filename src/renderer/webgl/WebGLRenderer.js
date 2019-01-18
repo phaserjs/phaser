@@ -11,6 +11,7 @@ var Class = require('../../utils/Class');
 var CONST = require('../../const');
 var IsSizePowerOfTwo = require('../../math/pow2/IsSizePowerOfTwo');
 var SpliceOne = require('../../utils/array/SpliceOne');
+var TextureEvents = require('../../textures/events');
 var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 var Utils = require('./Utils');
 var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
@@ -488,13 +489,14 @@ var WebGLRenderer = new Class({
     init: function (config)
     {
         var gl;
+        var game = this.game;
         var canvas = this.canvas;
         var clearColor = config.backgroundColor;
 
         //  Did they provide their own context?
-        if (this.game.config.context)
+        if (game.config.context)
         {
-            gl = this.game.config.context;
+            gl = game.config.context;
         }
         else
         {
@@ -511,7 +513,7 @@ var WebGLRenderer = new Class({
         this.gl = gl;
 
         //  Set it back into the Game, so developers can access it from there too
-        this.game.context = gl;
+        game.context = gl;
 
         for (var i = 0; i <= 27; i++)
         {
@@ -575,13 +577,13 @@ var WebGLRenderer = new Class({
         // Clear previous pipelines and reload default ones
         this.pipelines = {};
 
-        this.addPipeline('TextureTintPipeline', new TextureTintPipeline({ game: this.game, renderer: this }));
-        this.addPipeline('BitmapMaskPipeline', new BitmapMaskPipeline({ game: this.game, renderer: this }));
-        this.addPipeline('Light2D', new ForwardDiffuseLightPipeline({ game: this.game, renderer: this, maxLights: config.maxLights }));
+        this.addPipeline('TextureTintPipeline', new TextureTintPipeline({ game: game, renderer: this }));
+        this.addPipeline('BitmapMaskPipeline', new BitmapMaskPipeline({ game: game, renderer: this }));
+        this.addPipeline('Light2D', new ForwardDiffuseLightPipeline({ game: game, renderer: this, maxLights: config.maxLights }));
 
         this.setBlendMode(CONST.BlendModes.NORMAL);
 
-        this.game.events.once('texturesready', this.boot, this);
+        game.textures.once(TextureEvents.READY, this.boot, this);
 
         return this;
     },

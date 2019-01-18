@@ -704,10 +704,10 @@ var Systems = new Class({
      */
     shutdown: function (data)
     {
-        this.events.off('transitioninit');
-        this.events.off('transitionstart');
-        this.events.off('transitioncomplete');
-        this.events.off('transitionout');
+        this.events.off(Events.TRANSITION_INIT);
+        this.events.off(Events.TRANSITION_START);
+        this.events.off(Events.TRANSITION_COMPLETE);
+        this.events.off(Events.TRANSITION_OUT);
 
         this.settings.status = CONST.SHUTDOWN;
 

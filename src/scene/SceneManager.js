@@ -7,7 +7,9 @@
 var Class = require('../utils/Class');
 var CONST = require('./const');
 var Events = require('./events');
+var GameEvents = require('../core/events');
 var GetValue = require('../utils/object/GetValue');
+var LoaderEvents = require('../loader/events');
 var NOOP = require('../utils/NOOP');
 var Scene = require('./Scene');
 var Systems = require('./Systems');
@@ -153,7 +155,7 @@ var SceneManager = new Class({
             }
         }
 
-        game.events.once('ready', this.bootQueue, this);
+        game.events.once(GameEvents.READY, this.bootQueue, this);
     },
 
     /**
@@ -485,7 +487,7 @@ var SceneManager = new Class({
                 settings.status = CONST.LOADING;
 
                 //  Start the loader going as we have something in the queue
-                loader.once('complete', this.loadComplete, this);
+                loader.once(LoaderEvents.COMPLETE, this.loadComplete, this);
 
                 loader.start();
             }
@@ -1113,7 +1115,7 @@ var SceneManager = new Class({
                     {
                         scene.sys.settings.status = CONST.LOADING;
     
-                        loader.once('complete', this.payloadComplete, this);
+                        loader.once(LoaderEvents.COMPLETE, this.payloadComplete, this);
     
                         loader.start();
     
