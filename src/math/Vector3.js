@@ -705,6 +705,105 @@ var Vector3 = new Class({
 
 });
 
+/**
+ * A static zero Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.ZERO
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.ZERO = new Vector3();
+
+/**
+ * A static right Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.RIGHT
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.RIGHT = new Vector3(1,0,0);
+
+/**
+ * A static left Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.LEFT
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.LEFT = new Vector3(-1,0,0);
+
+/**
+ * A static up Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.UP
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.UP = new Vector3(0,-1,0);
+
+/**
+ * A static down Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.DOWN
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.DOWN = new Vector3(0,1,0);
+
+/**
+ * A static forward Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.FORWARD
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.FORWARD = new Vector3(0,0,1);
+
+/**
+ * A static back Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.BACK
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.BACK = new Vector3(0,0,-1);
+
+/**
+ * A static one Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.ONE
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.ONE = new Vector3(1,1,1);
+
+
+
+
 /*
 Vector3.Zero = function ()
 {
