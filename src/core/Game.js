@@ -352,8 +352,6 @@ var Game = new Class({
      */
     boot: function ()
     {
-        console.log('g boot');
-
         if (!PluginCache.hasCore('EventEmitter'))
         {
             console.warn('Aborting. Core Plugins missing.');
