@@ -587,7 +587,7 @@ Vector2.ZERO = new Vector2();
  * @type {Phaser.Math.Vector2}
  * @since 3.16.0
  */
-Vector2.RIGHT = new Vector2(1,0);
+Vector2.RIGHT = new Vector2(1, 0);
 
 /**
  * A static left Vector2 for use by reference.
@@ -599,7 +599,7 @@ Vector2.RIGHT = new Vector2(1,0);
  * @type {Phaser.Math.Vector2}
  * @since 3.16.0
  */
-Vector2.LEFT = new Vector2(-1,0);
+Vector2.LEFT = new Vector2(-1, 0);
 
 /**
  * A static up Vector2 for use by reference.
@@ -611,7 +611,7 @@ Vector2.LEFT = new Vector2(-1,0);
  * @type {Phaser.Math.Vector2}
  * @since 3.16.0
  */
-Vector2.UP = new Vector2(0,-1);
+Vector2.UP = new Vector2(0, -1);
 
 /**
  * A static down Vector2 for use by reference.
@@ -623,7 +623,7 @@ Vector2.UP = new Vector2(0,-1);
  * @type {Phaser.Math.Vector2}
  * @since 3.16.0
  */
-Vector2.DOWN = new Vector2(0,1);
+Vector2.DOWN = new Vector2(0, 1);
 
 /**
  * A static one Vector2 for use by reference.
@@ -635,6 +635,6 @@ Vector2.DOWN = new Vector2(0,1);
  * @type {Phaser.Math.Vector2}
  * @since 3.16.0
  */
-Vector2.ONE = new Vector2(1,1);
+Vector2.ONE = new Vector2(1, 1);
 
 module.exports = Vector2;
