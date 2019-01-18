@@ -486,6 +486,8 @@ var Camera = new Class({
      * Fades the Camera in from the given color over the duration specified.
      *
      * @method Phaser.Cameras.Scene2D.Camera#fadeIn
+     * @fires Phaser.Cameras.Scene2D.Events#FADE_IN_START
+     * @fires Phaser.Cameras.Scene2D.Events#FADE_IN_COMPLETE
      * @since 3.3.0
      *
      * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
@@ -508,6 +510,8 @@ var Camera = new Class({
      * This is an alias for Camera.fade that forces the fade to start, regardless of existing fades.
      *
      * @method Phaser.Cameras.Scene2D.Camera#fadeOut
+     * @fires Phaser.Cameras.Scene2D.Events#FADE_OUT_START
+     * @fires Phaser.Cameras.Scene2D.Events#FADE_OUT_COMPLETE
      * @since 3.3.0
      *
      * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
@@ -529,6 +533,8 @@ var Camera = new Class({
      * Fades the Camera from the given color to transparent over the duration specified.
      *
      * @method Phaser.Cameras.Scene2D.Camera#fadeFrom
+     * @fires Phaser.Cameras.Scene2D.Events#FADE_IN_START
+     * @fires Phaser.Cameras.Scene2D.Events#FADE_IN_COMPLETE
      * @since 3.5.0
      *
      * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
@@ -551,6 +557,8 @@ var Camera = new Class({
      * Fades the Camera from transparent to the given color over the duration specified.
      *
      * @method Phaser.Cameras.Scene2D.Camera#fade
+     * @fires Phaser.Cameras.Scene2D.Events#FADE_OUT_START
+     * @fires Phaser.Cameras.Scene2D.Events#FADE_OUT_COMPLETE
      * @since 3.0.0
      *
      * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
@@ -573,6 +581,8 @@ var Camera = new Class({
      * Flashes the Camera by setting it to the given color immediately and then fading it away again quickly over the duration specified.
      *
      * @method Phaser.Cameras.Scene2D.Camera#flash
+     * @fires Phaser.Cameras.Scene2D.Events#FLASH_START
+     * @fires Phaser.Cameras.Scene2D.Events#FLASH_COMPLETE
      * @since 3.0.0
      *
      * @param {integer} [duration=250] - The duration of the effect in milliseconds.
@@ -595,6 +605,8 @@ var Camera = new Class({
      * Shakes the Camera by the given intensity over the duration specified.
      *
      * @method Phaser.Cameras.Scene2D.Camera#shake
+     * @fires Phaser.Cameras.Scene2D.Events#SHAKE_START
+     * @fires Phaser.Cameras.Scene2D.Events#SHAKE_COMPLETE
      * @since 3.0.0
      *
      * @param {integer} [duration=100] - The duration of the effect in milliseconds.
@@ -616,6 +628,8 @@ var Camera = new Class({
      * over the duration and with the ease specified.
      *
      * @method Phaser.Cameras.Scene2D.Camera#pan
+     * @fires Phaser.Cameras.Scene2D.Events#PAN_START
+     * @fires Phaser.Cameras.Scene2D.Events#PAN_COMPLETE
      * @since 3.11.0
      *
      * @param {number} x - The destination x coordinate to scroll the center of the Camera viewport to.
@@ -639,6 +653,8 @@ var Camera = new Class({
      * This effect will zoom the Camera to the given scale, over the duration and with the ease specified.
      *
      * @method Phaser.Cameras.Scene2D.Camera#zoomTo
+     * @fires Phaser.Cameras.Scene2D.Events#ZOOM_START
+     * @fires Phaser.Cameras.Scene2D.Events#ZOOM_COMPLETE
      * @since 3.11.0
      *
      * @param {number} zoom - The target Camera zoom value.

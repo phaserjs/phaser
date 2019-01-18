@@ -9,6 +9,7 @@ var ArrayUtils = require('../../utils/array');
 var BlendModes = require('../../renderer/BlendModes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
+var Events = require('../events');
 var GameObject = require('../GameObject');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var Render = require('./ContainerRender');
@@ -363,7 +364,7 @@ var Container = new Class({
      */
     addHandler: function (gameObject)
     {
-        gameObject.once('destroy', this.remove, this);
+        gameObject.once(Events.DESTROY, this.remove, this);
 
         if (this.exclusive)
         {
@@ -389,7 +390,7 @@ var Container = new Class({
      */
     removeHandler: function (gameObject)
     {
-        gameObject.off('destroy', this.remove);
+        gameObject.off(Events.DESTROY, this.remove);
 
         if (this.exclusive)
         {

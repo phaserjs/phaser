@@ -6,6 +6,7 @@
 
 var Actions = require('../../actions/');
 var Class = require('../../utils/Class');
+var Events = require('../events');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
@@ -572,7 +573,7 @@ var Group = new Class({
             }
         }
 
-        child.on('destroy', this.remove, this);
+        child.on(Events.DESTROY, this.remove, this);
 
         return this;
     },
@@ -636,7 +637,7 @@ var Group = new Class({
             this.removeCallback.call(this, child);
         }
 
-        child.off('destroy', this.remove, this);
+        child.off(Events.DESTROY, this.remove, this);
 
         if (destroyChild)
         {
@@ -679,7 +680,7 @@ var Group = new Class({
         {
             var gameObject = children.entries[i];
 
-            gameObject.off('destroy', this.remove, this);
+            gameObject.off(Events.DESTROY, this.remove, this);
 
             if (destroyChild)
             {
@@ -1211,7 +1212,7 @@ var Group = new Class({
                 var gameObject = children.entries[i];
 
                 //  Remove the event hook first or it'll go all recursive hell on us
-                gameObject.off('destroy', this.remove, this);
+                gameObject.off(Events.DESTROY, this.remove, this);
 
                 gameObject.destroy();
             }

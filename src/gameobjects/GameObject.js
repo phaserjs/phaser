@@ -8,6 +8,7 @@ var Class = require('../utils/Class');
 var ComponentsToJSON = require('./components/ToJSON');
 var DataManager = require('../data/DataManager');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
 
 /**
  * @classdesc
@@ -303,7 +304,7 @@ var GameObject = new Class({
      * When the value is first set, a `setdata` event is emitted from this Game Object.
      *
      * If the key already exists, a `changedata` event is emitted instead, along an event named after the key.
-     * For example, if you updated an existing key called `PlayerLives` then it would emit the event `changedata_PlayerLives`.
+     * For example, if you updated an existing key called `PlayerLives` then it would emit the event `changedata-PlayerLives`.
      * These events will be emitted regardless if you use this method to set the value, or the direct `values` setter.
      *
      * Please note that the data keys are case-sensitive and must be valid JavaScript Object property strings.
@@ -555,7 +556,7 @@ var GameObject = new Class({
      * Game Object Pool instead of destroying it, as destroyed objects cannot be resurrected.
      *
      * @method Phaser.GameObjects.GameObject#destroy
-     * @fires Phaser.GameObjects.GameObject#destroyEvent
+     * @fires Phaser.GameObjects.Events#DESTROY
      * @since 3.0.0
      *
      * @param {boolean} [fromScene=false] - Is this Game Object being destroyed as the result of a Scene shutdown?
@@ -575,7 +576,7 @@ var GameObject = new Class({
             this.preDestroy.call(this);
         }
 
-        this.emit('destroy', this);
+        this.emit(Events.DESTROY, this);
 
         var sys = this.scene.sys;
 
@@ -632,8 +633,3 @@ var GameObject = new Class({
 GameObject.RENDER_MASK = 15;
 
 module.exports = GameObject;
-
-/**
- * The Game Object will be destroyed.
- * @event Phaser.GameObjects.GameObject#destroyEvent
- */

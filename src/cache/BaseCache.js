@@ -119,17 +119,6 @@ var BaseCache = new Class({
     },
 
     /**
-     * Cache remove event.
-     *
-     * This event is fired by the Cache each time an object is removed from it.
-     *
-     * @event Phaser.Cache.BaseCache#removeEvent
-     * @param {Phaser.Cache.BaseCache} cache - The BaseCache from which the object was removed.
-     * @param {string} key - The key of the object removed from the cache.
-     * @param {*} object - The object that was removed from the cache.
-     */
-
-    /**
      * Removes and item from this cache based on the given key.
      *
      * If an entry matching the key is found it is removed from the cache and a `remove` event emitted.

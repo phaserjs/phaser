@@ -10,6 +10,8 @@
 
 var GameObjects = {
 
+    Events: require('./events'),
+
     DisplayList: require('./DisplayList'),
     GameObjectCreator: require('./GameObjectCreator'),
     GameObjectFactory: require('./GameObjectFactory'),

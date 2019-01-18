@@ -6,6 +6,7 @@
 
 var Clamp = require('../../../math/Clamp');
 var Class = require('../../../utils/Class');
+var Events = require('../events');
 
 /**
  * @classdesc
@@ -182,53 +183,11 @@ var Fade = new Class({
     },
 
     /**
-     * This event is fired when the fade in effect begins to run on a camera.
-     *
-     * @event CameraFadeInStartEvent
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.Fade} effect - A reference to the effect instance.
-     * @param {integer} duration - The duration of the effect.
-     * @param {integer} red - The red color channel value.
-     * @param {integer} green - The green color channel value.
-     * @param {integer} blue - The blue color channel value.
-     */
-
-    /**
-     * This event is fired when the fade out effect begins to run on a camera.
-     *
-     * @event CameraFadeOutStartEvent
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.Fade} effect - A reference to the effect instance.
-     * @param {integer} duration - The duration of the effect.
-     * @param {integer} red - The red color channel value.
-     * @param {integer} green - The green color channel value.
-     * @param {integer} blue - The blue color channel value.
-     */
-
-    /**
-     * This event is fired when the fade in effect completes.
-     *
-     * @event CameraFadeInCompleteEvent
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.Fade} effect - A reference to the effect instance.
-     */
-
-    /**
-     * This event is fired when the fade out effect completes.
-     *
-     * @event CameraFadeOutCompleteEvent
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.Fade} effect - A reference to the effect instance.
-     */
-
-    /**
      * Fades the Camera to or from the given color over the duration specified.
      *
      * @method Phaser.Cameras.Scene2D.Effects.Fade#start
-     * @fires CameraFadeInStartEvent
-     * @fires CameraFadeInCompleteEvent
-     * @fires CameraFadeOutStartEvent
-     * @fires CameraFadeOutCompleteEvent
+     * @fires Phaser.Cameras.Scene2D.Events#FADE_IN_START
+     * @fires Phaser.Cameras.Scene2D.Events#FADE_OUT_START
      * @since 3.5.0
      *
      * @param {boolean} [direction=true] - The direction of the fade. `true` = fade out (transparent to color), `false` = fade in (color to transparent)
@@ -275,7 +234,7 @@ var Fade = new Class({
         this._onUpdate = callback;
         this._onUpdateScope = context;
 
-        var eventName = (direction) ? 'camerafadeoutstart' : 'camerafadeinstart';
+        var eventName = (direction) ? Events.FADE_OUT_START : Events.FADE_IN_START;
 
         this.camera.emit(eventName, this.camera, this, duration, red, green, blue);
 
@@ -378,6 +337,8 @@ var Fade = new Class({
      * Called internally when the effect completes.
      *
      * @method Phaser.Cameras.Scene2D.Effects.Fade#effectComplete
+     * @fires Phaser.Cameras.Scene2D.Events#FADE_IN_COMPLETE
+     * @fires Phaser.Cameras.Scene2D.Events#FADE_OUT_COMPLETE
      * @since 3.5.0
      */
     effectComplete: function ()
@@ -388,7 +349,7 @@ var Fade = new Class({
         this.isRunning = false;
         this.isComplete = true;
 
-        var eventName = (this.direction) ? 'camerafadeoutcomplete' : 'camerafadeincomplete';
+        var eventName = (this.direction) ? Events.FADE_OUT_COMPLETE : Events.FADE_IN_COMPLETE;
 
         this.camera.emit(eventName, this.camera, this);
     },

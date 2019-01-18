@@ -11,6 +11,10 @@
 module.exports = {
 
     DESTROY: require('./DESTROY_EVENT'),
+    FADE_IN_COMPLETE: require('./FADE_IN_COMPLETE_EVENT'),
+    FADE_IN_START: require('./FADE_IN_START_EVENT'),
+    FADE_OUT_COMPLETE: require('./FADE_OUT_COMPLETE_EVENT'),
+    FADE_OUT_START: require('./FADE_OUT_START_EVENT'),
     FLASH_COMPLETE: require('./FLASH_COMPLETE_EVENT'),
     FLASH_START: require('./FLASH_START_EVENT'),
     PAN_COMPLETE: require('./PAN_COMPLETE_EVENT'),
