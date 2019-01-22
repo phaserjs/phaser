@@ -569,6 +569,26 @@ var Size = new Class({
     },
 
     /**
+     * Copies the aspect mode, aspect ratio, width and height from this Size component
+     * to the given Size component. Note that the parent, if set, is not copied across.
+     *
+     * @method Phaser.Structs.Size#copy
+     * @since 3.16.0
+     * 
+     * @param {Phaser.Structs.Size} destination - The Size component to copy the values to.
+     *
+     * @return {Phaser.Structs.Size} The updated destination Size component.
+     */
+    copy: function (destination)
+    {
+        destination.setAspectMode(this.aspectMode);
+
+        destination.aspectRatio = this.aspectRatio;
+
+        return destination.setSize(this.width, this.height);
+    },
+
+    /**
      * Destroys this Size component.
      * 
      * This clears the local properties and any parent object, if set.
