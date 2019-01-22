@@ -27,6 +27,21 @@ var TextStyle = require('../TextStyle');
  * Because it uses the Canvas API you can take advantage of all the features this offers, such as
  * applying gradient fills to the text, or strokes, shadows and more. You can also use custom fonts
  * loaded externally, such as Google or TypeKit Web fonts.
+ * 
+ * **Important:** If the font you wish to use has a space or digit in its name, such as
+ * 'Press Start 2P' or 'Roboto Condensed', then you _must_ put the font name in quotes, either
+ * when creating the Text object, or when setting the font via `setFont` or `setFontFamily`. I.e.:
+ * 
+ * ```javascript
+ * this.add.text(0, 0, 'Hello World', { fontFamily: '"Roboto Condensed"' });
+ * ```
+ * 
+ * Equally, if you wish to provide a list of fallback fonts, then you should ensure they are all
+ * quoted properly, too:
+ * 
+ * ```javascript
+ * this.add.text(0, 0, 'Hello World', { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif' });
+ * ```
  *
  * You can only display fonts that are currently loaded and available to the browser: therefore fonts must
  * be pre-loaded. Phaser does not do ths for you, so you will require the use of a 3rd party font loader,
@@ -629,6 +644,20 @@ var Text = new Class({
      *
      * If an object is given, the `fontFamily`, `fontSize` and `fontStyle`
      * properties of that object are set.
+     * 
+     * **Important:** If the font you wish to use has a space or digit in its name, such as
+     * 'Press Start 2P' or 'Roboto Condensed', then you _must_ put the font name in quotes:
+     * 
+     * ```javascript
+     * Text.setFont('"Roboto Condensed"');
+     * ```
+     * 
+     * Equally, if you wish to provide a list of fallback fonts, then you should ensure they are all
+     * quoted properly, too:
+     * 
+     * ```javascript
+     * Text.setFont('Verdana, "Times New Roman", Tahoma, serif');
+     * ```
      *
      * @method Phaser.GameObjects.Text#setFont
      * @since 3.0.0
@@ -644,6 +673,20 @@ var Text = new Class({
 
     /**
      * Set the font family.
+     * 
+     * **Important:** If the font you wish to use has a space or digit in its name, such as
+     * 'Press Start 2P' or 'Roboto Condensed', then you _must_ put the font name in quotes:
+     * 
+     * ```javascript
+     * Text.setFont('"Roboto Condensed"');
+     * ```
+     * 
+     * Equally, if you wish to provide a list of fallback fonts, then you should ensure they are all
+     * quoted properly, too:
+     * 
+     * ```javascript
+     * Text.setFont('Verdana, "Times New Roman", Tahoma, serif');
+     * ```
      *
      * @method Phaser.GameObjects.Text#setFontFamily
      * @since 3.0.0
