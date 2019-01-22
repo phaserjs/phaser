@@ -772,12 +772,8 @@ var Camera = new Class({
             displayHeight
         );
 
-        matrix.loadIdentity();
-        matrix.scale(resolution, resolution);
-        matrix.translate(this.x + originX, this.y + originY);
-        matrix.rotate(this.rotation);
-        matrix.scale(zoom, zoom);
-        matrix.translate(-(originX / resolution), -(originY / resolution));
+        matrix.applyITRS(this.x + originX, this.y + originY, this.rotation, zoom, zoom);
+        matrix.translate(-originX, -originY);
 
         this.shakeEffect.preRender();
     },
