@@ -58,17 +58,20 @@ var CreateRenderer = function (game)
 
     var baseSize = game.scale.baseSize;
 
+    var width = baseSize.width;
+    var height = baseSize.height;
+
     //  Does the game config provide its own canvas element to use?
     if (config.canvas)
     {
         game.canvas = config.canvas;
 
-        game.canvas.width = baseSize.width;
-        game.canvas.height = baseSize.height;
+        game.canvas.width = width;
+        game.canvas.height = height;
     }
     else
     {
-        game.canvas = CanvasPool.create(game, baseSize.width, baseSize.height, config.renderType);
+        game.canvas = CanvasPool.create(game, width, height, config.renderType);
     }
 
     //  Does the game config provide some canvas css styles to use?
