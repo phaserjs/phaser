@@ -152,11 +152,6 @@ var ScaleManager = new Class({
         this.startListeners();
 
         this.refresh();
-
-        console.log('boot');
-        console.log(this.gameSize.toString());
-        console.log(this.baseSize.toString());
-        console.log(this.displaySize.toString());
     },
 
     parseConfig: function (config)
@@ -187,7 +182,10 @@ var ScaleManager = new Class({
             height = Math.floor(this.parentSize.height * parentScaleY);
         }
 
-        this.resolution = resolution;
+        //  This is fixed at 1 on purpose.
+        //  Changing it will break all user input.
+        //  Wait for another release to solve this issue.
+        this.resolution = 1;
 
         this.zoom = zoom;
 
@@ -385,7 +383,7 @@ var ScaleManager = new Class({
 
         var zoom = this.zoom;
         var autoRound = this.autoRound;
-        var resolution = this.resolution;
+        var resolution = 1;
 
         if (this.scaleMode === 0)
         {
@@ -517,6 +515,16 @@ var ScaleManager = new Class({
     transformY: function (pageY)
     {
         return (pageY - this.canvasBounds.top) * this.displayScale.y;
+    },
+
+    setFullScreen: function ()
+    {
+        if (this.isFullScreen || !this.game.device.fullscreen.available)
+        {
+            return false;
+        }
+
+
     },
 
     startListeners: function ()
