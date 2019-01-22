@@ -405,7 +405,7 @@ var TileSprite = new Class({
      */
     updateTileTexture: function ()
     {
-        if (!this.dirty)
+        if (!this.dirty || !this.renderer)
         {
             return;
         }
@@ -420,7 +420,7 @@ var TileSprite = new Class({
         var fw = this.potWidth;
         var fh = this.potHeight;
 
-        if (!this.renderer || !this.renderer.gl)
+        if (!this.renderer.gl)
         {
             fw = frame.cutWidth;
             fh = frame.cutHeight;
@@ -439,7 +439,7 @@ var TileSprite = new Class({
             fw, fh
         );
 
-        if (this.renderer && this.renderer.gl)
+        if (this.renderer.gl)
         {
             this.fillPattern = this.renderer.canvasToTexture(canvas, this.fillPattern);
         }
