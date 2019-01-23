@@ -399,7 +399,15 @@ var InputPlugin = new Class({
         eventEmitter.on(SceneEvents.TRANSITION_OUT, this.transitionOut, this);
         eventEmitter.on(SceneEvents.TRANSITION_COMPLETE, this.transitionComplete, this);
         eventEmitter.on(SceneEvents.PRE_UPDATE, this.preUpdate, this);
-        eventEmitter.on(SceneEvents.UPDATE, this.update, this);
+
+        if (this.manager.useQueue)
+        {
+            eventEmitter.on(SceneEvents.UPDATE, this.update, this);
+        }
+        else
+        {
+            this.manager.events.on(Events.MANAGER_PROCESS, this.update, this);
+        }
 
         eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
 
@@ -535,8 +543,9 @@ var InputPlugin = new Class({
         }
 
         var pointers = this.manager.pointers;
+        var pointersTotal = this.manager.pointersTotal;
 
-        for (var i = 0; i < this.manager.pointersTotal; i++)
+        for (var i = 0; i < pointersTotal; i++)
         {
             var pointer = pointers[i];
 
@@ -565,8 +574,11 @@ var InputPlugin = new Class({
 
             var total = this.processDragEvents(pointer, time);
 
-            //  TODO: Enable for touch
-            if (!pointer.wasTouch)
+            //  TODO: Enable for touch - the method needs recoding to take ALL pointers at once
+            //  and process them all together, in the same batch, otherwise the justOut and stillOver
+            //  arrays will get corrupted in multi-touch enabled games. For now, we'll enable it for
+            //  single touch games (which is probably the majority anyway).
+            if (pointersTotal < 3 || !pointer.wasTouch)
             {
                 total += this.processOverOutEvents(pointer);
             }
@@ -2085,6 +2097,10 @@ var InputPlugin = new Class({
     },
 
     /**
+     * **Note:** As of Phaser 3.16 this method is no longer required _unless_ you have set `input.queue = true`
+     * in your game config, to force it to use the legacy event queue system. This method is deprecated and
+     * will be removed in a future version.
+     * 
      * Adds a callback to be invoked whenever the native DOM `mouseup` or `touchend` events are received.
      * By setting the `isOnce` argument you can control if the callback is called once,
      * or every time the DOM event occurs.
@@ -2107,6 +2123,7 @@ var InputPlugin = new Class({
      * solve.
      *
      * @method Phaser.Input.InputPlugin#addUpCallback
+     * @deprecated
      * @since 3.10.0
      *
      * @param {function} callback - The callback to be invoked on this DOM event.
@@ -2122,6 +2139,10 @@ var InputPlugin = new Class({
     },
 
     /**
+     * **Note:** As of Phaser 3.16 this method is no longer required _unless_ you have set `input.queue = true`
+     * in your game config, to force it to use the legacy event queue system. This method is deprecated and
+     * will be removed in a future version.
+     * 
      * Adds a callback to be invoked whenever the native DOM `mousedown` or `touchstart` events are received.
      * By setting the `isOnce` argument you can control if the callback is called once,
      * or every time the DOM event occurs.
@@ -2144,6 +2165,7 @@ var InputPlugin = new Class({
      * solve.
      *
      * @method Phaser.Input.InputPlugin#addDownCallback
+     * @deprecated
      * @since 3.10.0
      *
      * @param {function} callback - The callback to be invoked on this dom event.
@@ -2159,6 +2181,10 @@ var InputPlugin = new Class({
     },
 
     /**
+     * **Note:** As of Phaser 3.16 this method is no longer required _unless_ you have set `input.queue = true`
+     * in your game config, to force it to use the legacy event queue system. This method is deprecated and
+     * will be removed in a future version.
+     * 
      * Adds a callback to be invoked whenever the native DOM `mousemove` or `touchmove` events are received.
      * By setting the `isOnce` argument you can control if the callback is called once,
      * or every time the DOM event occurs.
@@ -2181,6 +2207,7 @@ var InputPlugin = new Class({
      * solve.
      *
      * @method Phaser.Input.InputPlugin#addMoveCallback
+     * @deprecated
      * @since 3.10.0
      *
      * @param {function} callback - The callback to be invoked on this dom event.
@@ -2327,7 +2354,16 @@ var InputPlugin = new Class({
         eventEmitter.off(SceneEvents.TRANSITION_COMPLETE, this.transitionComplete, this);
 
         eventEmitter.off(SceneEvents.PRE_UPDATE, this.preUpdate, this);
-        eventEmitter.off(SceneEvents.UPDATE, this.update, this);
+
+        if (this.manager.useQueue)
+        {
+            eventEmitter.off(SceneEvents.UPDATE, this.update, this);
+        }
+        else
+        {
+            this.manager.events.off(Events.MANAGER_PROCESS, this.update, this);
+        }
+
         eventEmitter.off(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 

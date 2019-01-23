@@ -7,7 +7,7 @@
 var ArrayRemove = require('../../utils/array/Remove');
 var Class = require('../../utils/Class');
 var GameEvents = require('../../core/events');
-var InputEvents = require('..//events');
+var InputEvents = require('../events');
 var KeyCodes = require('../../input/keyboard/keys/KeyCodes');
 var NOOP = require('../../utils/Class');
 
@@ -192,6 +192,11 @@ var KeyboardManager = new Class({
             }
 
             _this.queue.push(event);
+
+            if (!_this.manager.useQueue)
+            {
+                _this.manager.events.emit(InputEvents.MANAGER_PROCESS);
+            }
     
             var modified = (event.altKey || event.ctrlKey || event.shiftKey || event.metaKey);
 
@@ -210,6 +215,11 @@ var KeyboardManager = new Class({
             }
 
             _this.queue.push(event);
+
+            if (!_this.manager.useQueue)
+            {
+                _this.manager.events.emit(InputEvents.MANAGER_PROCESS);
+            }
     
             var modified = (event.altKey || event.ctrlKey || event.shiftKey || event.metaKey);
 
