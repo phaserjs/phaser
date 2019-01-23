@@ -566,7 +566,7 @@ var WebGLRenderer = new Class({
 
         gl.enable(gl.BLEND);
 
-        gl.clearColor(clearColor.redGL, clearColor.greenGL, clearColor.blueGL, 1);
+        gl.clearColor(clearColor.redGL, clearColor.greenGL, clearColor.blueGL, clearColor.alphaGL);
 
         // Initialize all textures to null
         for (var index = 0; index < this.currentTextures.length; ++index)
@@ -1813,7 +1813,7 @@ var WebGLRenderer = new Class({
         {
             var clearColor = this.config.backgroundColor;
 
-            gl.clearColor(clearColor.redGL, clearColor.greenGL, clearColor.blueGL, 1);
+            gl.clearColor(clearColor.redGL, clearColor.greenGL, clearColor.blueGL, clearColor.alphaGL);
 
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
         }
