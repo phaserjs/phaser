@@ -172,7 +172,7 @@ var MapData = new Class({
          * An array with all the layers configured to the MapData.
          * 
          * @name Phaser.Tilemaps.MapData#layers
-         * @type {Array.<LayerData|ObjectLayer>}
+         * @type {(LayerData[]|ObjectLayer)}
          * @since 3.0.0
          */
         this.layers = GetFastValue(config, 'layers', []);
