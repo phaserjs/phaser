@@ -649,7 +649,7 @@ var Pointer = new Class({
      */
     move: function (event, time)
     {
-        if (event.buttons)
+        if ('buttons' in event)
         {
             this.buttons = event.buttons;
         }
