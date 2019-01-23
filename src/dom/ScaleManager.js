@@ -19,7 +19,11 @@ var Vector2 = require('../math/Vector2');
 /**
  * @classdesc
  * 
- * TODO
+ * TODO:
+ * 
+ * 1) Full Screen Input coordinates are wrong (div insert perhaps?).
+ * 2) Check zero parent config set-up.
+ * 3) Consider moving displaySize to the Scene, so each Scene could have a different scale mode.
  *
  * @class ScaleManager
  * @memberof Phaser.DOM
@@ -826,10 +830,8 @@ var ScaleManager = new Class({
 
         if (!fullscreen.active)
         {
-            //  Does it NEED to be parent with 100%?
-
-            //  Edge needs a div insert, other browsers can use Canvas as the target
-            var fsTarget = this.parent;
+            //  TODO: Edge needs a div insert, other browsers can use Canvas as the target.
+            var fsTarget = this.canvas;
 
             if (fullscreen.keyboard)
             {
