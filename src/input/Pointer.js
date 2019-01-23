@@ -567,7 +567,7 @@ var Pointer = new Class({
      */
     up: function (event, time)
     {
-        if (event.buttons)
+        if (event.hasOwnProperty('buttons'))
         {
             this.buttons = event.buttons;
         }
@@ -608,7 +608,7 @@ var Pointer = new Class({
      */
     down: function (event, time)
     {
-        if (event.buttons)
+        if (event.hasOwnProperty('buttons'))
         {
             this.buttons = event.buttons;
         }

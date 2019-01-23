@@ -359,6 +359,8 @@ one set of bindings ever created, which makes things a lot cleaner.
 * Arcade Physics now manages when `postUpdate` should be applied better, stopping it from gaining a zero delta during a further check in the same frame. This fixes various issues, including the mass collision test demo. Fix #4154 (thanks @samme)
 * Arcade Physics could trigger a `collide` event on a Body even if it performing an overlap check, if the `onCollide` property was true (thanks @samme)
 * TileSprites no longer cause a crash when using the Headless mode renderer. Fix #4297 (thanks @clesquir)
+* The WebGLRenderer will now apply a transparent background if `transparent = true` in the game config (thanks @gomachan7)
+* `Pointer.up` and `Pointer.down` now use a `hasOwnProperty` check for the existance of the buttons property on the event, causing it to be set even if equal to zero, which it is when there are no buttons down (thanks @SonnyCampbell)
 
 ### Examples and TypeScript
 
