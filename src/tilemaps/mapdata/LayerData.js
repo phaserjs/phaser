@@ -29,7 +29,7 @@ var LayerData = new Class({
         if (config === undefined) { config = {}; }
 
         /**
-         * The name of the layer(specified in Tiled)
+         * The name of the layer, if specified in Tiled.
          *
          * @name Phaser.Tilemaps.LayerData#name
          * @type {string}
@@ -56,7 +56,7 @@ var LayerData = new Class({
         this.y = GetFastValue(config, 'y', 0);
 
         /**
-         * The width in tile units of the layer.
+         * The width in tile of the layer.
          *
          * @name Phaser.Tilemaps.LayerData#width
          * @type {number}
@@ -65,7 +65,7 @@ var LayerData = new Class({
         this.width = GetFastValue(config, 'width', 0);
 
         /**
-         * The height in tiles units of the layer.
+         * The height in tiles of the layer.
          *
          * @name Phaser.Tilemaps.LayerData#height
          * @type {number}
