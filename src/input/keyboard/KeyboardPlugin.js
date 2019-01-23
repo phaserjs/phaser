@@ -33,7 +33,7 @@ var SnapFloor = require('../../math/snap/SnapFloor');
  * Or, to listen for a specific key:
  * 
  * ```javascript
- * this.input.keyboard.on('keydown_A', callback, context);
+ * this.input.keyboard.on('keydown-A', callback, context);
  * ```
  *
  * You can also create Key objects, which you can then poll in your game loop:
