@@ -99,7 +99,8 @@ var ScaleManager = new Class({
 
         this.trackParent = false;
 
-        this.allowFullScreen = false;
+        //  A reference to Device.Fullscreen
+        this.fullscreen;
 
         this.dirty = false;
 
@@ -134,6 +135,8 @@ var ScaleManager = new Class({
     boot: function ()
     {
         this.canvas = this.game.canvas;
+
+        this.fullscreen = this.game.device.fullscreen;
 
         this.getParentBounds();
 
@@ -517,14 +520,55 @@ var ScaleManager = new Class({
         return (pageY - this.canvasBounds.top) * this.displayScale.y;
     },
 
-    setFullScreen: function ()
+    stopFullscreen: function ()
     {
-        if (this.isFullScreen || !this.game.device.fullscreen.available)
+        var fullscreen = this.fullscreen;
+
+        if (!fullscreen.available)
         {
+            this.emit('fullscreenunsupported');
+
             return false;
         }
 
+        if (fullscreen.active)
+        {
+            document[fullscreen.cancel]();
+        }
+    },
 
+    // { navigationUI: "show" }
+    //  https://developer.mozilla.org/en-US/docs/Web/API/FullscreenOptions
+    //  The FullscreenOptions dictionary is used to provide configuration options when 
+    startFullscreen: function (fullscreenOptions)
+    {
+        if (fullscreenOptions === undefined) { fullscreenOptions = { navigationUI: 'hide' }; }
+
+        var fullscreen = this.fullscreen;
+
+        if (!fullscreen.available)
+        {
+            this.emit('fullscreenunsupported');
+
+            return false;
+        }
+
+        if (!fullscreen.active)
+        {
+            //  Does it NEED to be parent with 100%?
+            var fsTarget = this.canvas;
+
+            if (fullscreen.keyboard)
+            {
+                fsTarget[fullscreen.request](Element.ALLOW_KEYBOARD_INPUT);
+            }
+            else
+            {
+                fsTarget[fullscreen.request](fullscreenOptions);
+            }
+
+            this.refresh();
+        }
     },
 
     startListeners: function ()
@@ -576,10 +620,13 @@ var ScaleManager = new Class({
 
     onFullScreenChange: function ()
     {
+        console.log('fs change');
+        console.log(this.fullscreen.active);
     },
 
     onFullScreenError: function ()
     {
+        console.log('fs error');
     },
 
     step: function (time, delta)
@@ -635,7 +682,7 @@ var ScaleManager = new Class({
 
         get: function ()
         {
-            return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+            return this.fullscreen.active;
         }
     
     },
