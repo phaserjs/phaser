@@ -556,7 +556,9 @@ var ScaleManager = new Class({
         if (!fullscreen.active)
         {
             //  Does it NEED to be parent with 100%?
-            var fsTarget = this.canvas;
+
+            //  Edge needs a div insert, other browsers can use Canvas as the target
+            var fsTarget = this.parent;
 
             if (fullscreen.keyboard)
             {
@@ -568,6 +570,18 @@ var ScaleManager = new Class({
             }
 
             this.refresh();
+        }
+    },
+
+    toggleFullscreen: function (fullscreenOptions)
+    {
+        if (this.fullscreen.active)
+        {
+            this.stopFullscreen();
+        }
+        else
+        {
+            this.startFullscreen(fullscreenOptions);
         }
     },
 
@@ -678,7 +692,7 @@ var ScaleManager = new Class({
         this.stopListeners();
     },
 
-    isFullScreen: {
+    isFullscreen: {
 
         get: function ()
         {
