@@ -12,7 +12,6 @@ var GameEvents = require('../core/events');
 var Keyboard = require('./keyboard/KeyboardManager');
 var Mouse = require('./mouse/MouseManager');
 var Pointer = require('./Pointer');
-var Rectangle = require('../geom/rectangle/Rectangle');
 var Touch = require('./touch/TouchManager');
 var TransformMatrix = require('../gameobjects/components/TransformMatrix');
 var TransformXY = require('../math/TransformXY');
@@ -109,6 +108,7 @@ var InputManager = new Class({
          * @name Phaser.Input.InputManager#queue
          * @type {array}
          * @default []
+         * @deprecated
          * @since 3.0.0
          */
         this.queue = [];
@@ -119,6 +119,7 @@ var InputManager = new Class({
          * @name Phaser.Input.InputManager#domCallbacks
          * @private
          * @type {object}
+         * @deprecated
          * @since 3.10.0
          */
         this.domCallbacks = { up: [], down: [], move: [], upOnce: [], downOnce: [], moveOnce: [] };
@@ -150,6 +151,7 @@ var InputManager = new Class({
          * @name Phaser.Input.InputManager#_hasUpCallback
          * @private
          * @type {boolean}
+         * @deprecated
          * @since 3.10.0
          */
         this._hasUpCallback = false;
@@ -160,6 +162,7 @@ var InputManager = new Class({
          * @name Phaser.Input.InputManager#_hasDownCallback
          * @private
          * @type {boolean}
+         * @deprecated
          * @since 3.10.0
          */
         this._hasDownCallback = false;
@@ -170,6 +173,7 @@ var InputManager = new Class({
          * @name Phaser.Input.InputManager#_hasMoveCallback
          * @private
          * @type {boolean}
+         * @deprecated
          * @since 3.10.0
          */
         this._hasMoveCallback = false;
@@ -335,19 +339,28 @@ var InputManager = new Class({
         this.ignoreEvents = false;
 
         /**
-         * The bounds of the Input Manager, used for pointer hit test calculations.
+         * Use the internal event queue or not?
+         * 
+         * Set this via the Game Config with the `inputQueue` property.
+         * 
+         * Phaser 3.15.1 and earlier used a event queue by default.
+         * 
+         * This was changed in version 3.16 to use an immediate-mode system.
+         * The previous queue based version remains and is left under this flag for backwards
+         * compatibility. This flag, along with the legacy system, will be removed in a future version.
          *
-         * @name Phaser.Input.InputManager#bounds
-         * @type {Phaser.Geom.Rectangle}
-         * @since 3.0.0
+         * @name Phaser.Input.InputManager#useQueue
+         * @type {boolean}
+         * @default false
+         * @since 3.16.0
          */
-        this.bounds = new Rectangle();
+        this.useQueue = config.inputQueue;
 
         /**
          * A re-cycled point-like object to store hit test values in.
          *
          * @name Phaser.Input.InputManager#_tempPoint
-         * @type {{x:number,y:number}}
+         * @type {{x:number, y:number}}
          * @private
          * @since 3.0.0
          */
@@ -404,8 +417,13 @@ var InputManager = new Class({
 
         this.events.emit(Events.MANAGER_BOOT);
 
-        this.game.events.on(GameEvents.PRE_STEP, this.update, this);
+        if (this.useQueue)
+        {
+            this.game.events.on(GameEvents.PRE_STEP, this.legacyUpdate, this);
+        }
+
         this.game.events.on(GameEvents.POST_STEP, this.postUpdate, this);
+
         this.game.events.once(GameEvents.DESTROY, this.destroy, this);
     },
 
@@ -442,7 +460,7 @@ var InputManager = new Class({
     },
 
     /**
-     * Internal update loop, called automatically by the Game Step.
+     * Internal update method, called automatically when a DOM input event is received.
      *
      * @method Phaser.Input.InputManager#update
      * @private
@@ -452,6 +470,36 @@ var InputManager = new Class({
      * @param {number} time - The time stamp value of this game step.
      */
     update: function (time)
+    {
+        var i;
+
+        this._setCursor = 0;
+
+        this.events.emit(Events.MANAGER_UPDATE);
+
+        this.ignoreEvents = false;
+
+        this.dirty = true;
+
+        var pointers = this.pointers;
+
+        for (i = 0; i < this.pointersTotal; i++)
+        {
+            pointers[i].reset(time);
+        }
+    },
+
+    /**
+     * Internal update loop, called automatically by the Game Step when using the legacy event queue.
+     *
+     * @method Phaser.Input.InputManager#legacyUpdate
+     * @private
+     * @fires Phaser.Input.Events#MANAGER_UPDATE
+     * @since 3.16.0
+     *
+     * @param {number} time - The time stamp value of this game step.
+     */
+    legacyUpdate: function (time)
     {
         var i;
 
@@ -557,6 +605,8 @@ var InputManager = new Class({
 
         //  Reset the isOver event
         this._emitIsOverEvent = null;
+
+        this.dirty = false;
     },
 
     /**
@@ -648,10 +698,13 @@ var InputManager = new Class({
      *
      * @param {TouchEvent} event - The native DOM event to be processed.
      * @param {number} time - The time stamp value of this game step.
+     * 
+     * @return {Phaser.Input.Pointer[]} An array containing all the Pointer instances that were modified by this event.
      */
     startPointer: function (event, time)
     {
         var pointers = this.pointers;
+        var changed = [];
 
         for (var c = 0; c < event.changedTouches.length; c++)
         {
@@ -664,11 +717,17 @@ var InputManager = new Class({
                 if (!pointer.active)
                 {
                     pointer.touchstart(changedTouch, time);
+
                     this.activePointer = pointer;
+
+                    changed.push(pointer);
+
                     break;
                 }
             }
         }
+
+        return changed;
     },
 
     /**
@@ -680,10 +739,13 @@ var InputManager = new Class({
      *
      * @param {TouchEvent} event - The native DOM event to be processed.
      * @param {number} time - The time stamp value of this game step.
+     * 
+     * @return {Phaser.Input.Pointer[]} An array containing all the Pointer instances that were modified by this event.
      */
     updatePointer: function (event, time)
     {
         var pointers = this.pointers;
+        var changed = [];
 
         for (var c = 0; c < event.changedTouches.length; c++)
         {
@@ -696,11 +758,17 @@ var InputManager = new Class({
                 if (pointer.active && pointer.identifier === changedTouch.identifier)
                 {
                     pointer.touchmove(changedTouch, time);
+
                     this.activePointer = pointer;
+
+                    changed.push(pointer);
+
                     break;
                 }
             }
         }
+
+        return changed;
     },
 
     //  For touch end its a list of the touch points that have been removed from the surface
@@ -716,10 +784,13 @@ var InputManager = new Class({
      *
      * @param {TouchEvent} event - The native DOM event to be processed.
      * @param {number} time - The time stamp value of this game step.
+     * 
+     * @return {Phaser.Input.Pointer[]} An array containing all the Pointer instances that were modified by this event.
      */
     stopPointer: function (event, time)
     {
         var pointers = this.pointers;
+        var changed = [];
 
         for (var c = 0; c < event.changedTouches.length; c++)
         {
@@ -732,10 +803,15 @@ var InputManager = new Class({
                 if (pointer.active && pointer.identifier === changedTouch.identifier)
                 {
                     pointer.touchend(changedTouch, time);
+
+                    changed.push(pointer);
+
                     break;
                 }
             }
         }
+
+        return changed;
     },
 
     /**
@@ -747,10 +823,13 @@ var InputManager = new Class({
      *
      * @param {TouchEvent} event - The native DOM event to be processed.
      * @param {number} time - The time stamp value of this game step.
+     * 
+     * @return {Phaser.Input.Pointer[]} An array containing all the Pointer instances that were modified by this event.
      */
     cancelPointer: function (event, time)
     {
         var pointers = this.pointers;
+        var changed = [];
 
         for (var c = 0; c < event.changedTouches.length; c++)
         {
@@ -763,10 +842,15 @@ var InputManager = new Class({
                 if (pointer.active && pointer.identifier === changedTouch.identifier)
                 {
                     pointer.touchend(changedTouch, time);
+
+                    changed.push(pointer);
+
                     break;
                 }
             }
         }
+
+        return changed;
     },
 
     /**
@@ -821,6 +905,7 @@ var InputManager = new Class({
      *
      * @method Phaser.Input.InputManager#processDomCallbacks
      * @private
+     * @deprecated
      * @since 3.10.0
      *
      * @param {array} once - The isOnce callbacks to invoke.
@@ -858,15 +943,31 @@ var InputManager = new Class({
      */
     queueTouchStart: function (event)
     {
-        this.queue.push(CONST.TOUCH_START, event);
-
-        if (this._hasDownCallback)
+        if (this.useQueue)
         {
-            var callbacks = this.domCallbacks;
+            this.queue.push(CONST.TOUCH_START, event);
 
-            this._hasDownCallback = this.processDomCallbacks(callbacks.downOnce, callbacks.down, event);
+            if (this._hasDownCallback)
+            {
+                var callbacks = this.domCallbacks;
+    
+                this._hasDownCallback = this.processDomCallbacks(callbacks.downOnce, callbacks.down, event);
+    
+                callbacks.downOnce = [];
+            }
+        }
+        else if (this.enabled)
+        {
+            this.update(event.timeStamp);
 
-            callbacks.downOnce = [];
+            var changed = this.startPointer(event, event.timeStamp);
+
+            changed.forEach(function (pointer)
+            {
+                pointer.updateMotion();
+            });
+
+            this.events.emit(Events.MANAGER_PROCESS, event.timeStamp, this.game.loop.delta);
         }
     },
 
@@ -882,15 +983,31 @@ var InputManager = new Class({
      */
     queueTouchMove: function (event)
     {
-        this.queue.push(CONST.TOUCH_MOVE, event);
-
-        if (this._hasMoveCallback)
+        if (this.useQueue)
         {
-            var callbacks = this.domCallbacks;
+            this.queue.push(CONST.TOUCH_MOVE, event);
 
-            this._hasMoveCallback = this.processDomCallbacks(callbacks.moveOnce, callbacks.move, event);
+            if (this._hasMoveCallback)
+            {
+                var callbacks = this.domCallbacks;
+    
+                this._hasMoveCallback = this.processDomCallbacks(callbacks.moveOnce, callbacks.move, event);
+    
+                callbacks.moveOnce = [];
+            }
+        }
+        else if (this.enabled)
+        {
+            this.update(event.timeStamp);
 
-            callbacks.moveOnce = [];
+            var changed = this.updatePointer(event, event.timeStamp);
+
+            changed.forEach(function (pointer)
+            {
+                pointer.updateMotion();
+            });
+
+            this.events.emit(Events.MANAGER_PROCESS, event.timeStamp, this.game.loop.delta);
         }
     },
 
@@ -906,15 +1023,31 @@ var InputManager = new Class({
      */
     queueTouchEnd: function (event)
     {
-        this.queue.push(CONST.TOUCH_END, event);
-
-        if (this._hasUpCallback)
+        if (this.useQueue)
         {
-            var callbacks = this.domCallbacks;
+            this.queue.push(CONST.TOUCH_END, event);
 
-            this._hasUpCallback = this.processDomCallbacks(callbacks.upOnce, callbacks.up, event);
+            if (this._hasUpCallback)
+            {
+                var callbacks = this.domCallbacks;
+    
+                this._hasUpCallback = this.processDomCallbacks(callbacks.upOnce, callbacks.up, event);
+    
+                callbacks.upOnce = [];
+            }
+        }
+        else if (this.enabled)
+        {
+            this.update(event.timeStamp);
 
-            callbacks.upOnce = [];
+            var changed = this.stopPointer(event, event.timeStamp);
+
+            changed.forEach(function (pointer)
+            {
+                pointer.updateMotion();
+            });
+
+            this.events.emit(Events.MANAGER_PROCESS, event.timeStamp, this.game.loop.delta);
         }
     },
 
@@ -930,7 +1063,23 @@ var InputManager = new Class({
      */
     queueTouchCancel: function (event)
     {
-        this.queue.push(CONST.TOUCH_CANCEL, event);
+        if (this.useQueue)
+        {
+            this.queue.push(CONST.TOUCH_CANCEL, event);
+        }
+        else if (this.enabled)
+        {
+            this.update(event.timeStamp);
+
+            var changed = this.cancelPointer(event, event.timeStamp);
+
+            changed.forEach(function (pointer)
+            {
+                pointer.updateMotion();
+            });
+
+            this.events.emit(Events.MANAGER_PROCESS, event.timeStamp, this.game.loop.delta);
+        }
     },
 
     /**
@@ -945,15 +1094,28 @@ var InputManager = new Class({
      */
     queueMouseDown: function (event)
     {
-        this.queue.push(CONST.MOUSE_DOWN, event);
-
-        if (this._hasDownCallback)
+        if (this.useQueue)
         {
-            var callbacks = this.domCallbacks;
+            this.queue.push(CONST.MOUSE_DOWN, event);
 
-            this._hasDownCallback = this.processDomCallbacks(callbacks.downOnce, callbacks.down, event);
+            if (this._hasDownCallback)
+            {
+                var callbacks = this.domCallbacks;
 
-            callbacks.downOnce = [];
+                this._hasDownCallback = this.processDomCallbacks(callbacks.downOnce, callbacks.down, event);
+
+                callbacks.downOnce = [];
+            }
+        }
+        else if (this.enabled)
+        {
+            this.update(event.timeStamp);
+
+            this.mousePointer.down(event, event.timeStamp);
+
+            this.mousePointer.updateMotion();
+
+            this.events.emit(Events.MANAGER_PROCESS, event.timeStamp, this.game.loop.delta);
         }
     },
 
@@ -969,15 +1131,28 @@ var InputManager = new Class({
      */
     queueMouseMove: function (event)
     {
-        this.queue.push(CONST.MOUSE_MOVE, event);
-
-        if (this._hasMoveCallback)
+        if (this.useQueue)
         {
-            var callbacks = this.domCallbacks;
+            this.queue.push(CONST.MOUSE_MOVE, event);
 
-            this._hasMoveCallback = this.processDomCallbacks(callbacks.moveOnce, callbacks.move, event);
+            if (this._hasMoveCallback)
+            {
+                var callbacks = this.domCallbacks;
+    
+                this._hasMoveCallback = this.processDomCallbacks(callbacks.moveOnce, callbacks.move, event);
+    
+                callbacks.moveOnce = [];
+            }
+        }
+        else if (this.enabled)
+        {
+            this.update(event.timeStamp);
 
-            callbacks.moveOnce = [];
+            this.mousePointer.move(event, event.timeStamp);
+
+            this.mousePointer.updateMotion();
+
+            this.events.emit(Events.MANAGER_PROCESS, event.timeStamp, this.game.loop.delta);
         }
     },
 
@@ -993,19 +1168,36 @@ var InputManager = new Class({
      */
     queueMouseUp: function (event)
     {
-        this.queue.push(CONST.MOUSE_UP, event);
-
-        if (this._hasUpCallback)
+        if (this.useQueue)
         {
-            var callbacks = this.domCallbacks;
+            this.queue.push(CONST.MOUSE_UP, event);
 
-            this._hasUpCallback = this.processDomCallbacks(callbacks.upOnce, callbacks.up, event);
+            if (this._hasUpCallback)
+            {
+                var callbacks = this.domCallbacks;
+    
+                this._hasUpCallback = this.processDomCallbacks(callbacks.upOnce, callbacks.up, event);
+    
+                callbacks.upOnce = [];
+            }
+        }
+        else if (this.enabled)
+        {
+            this.update(event.timeStamp);
 
-            callbacks.upOnce = [];
+            this.mousePointer.up(event, event.timeStamp);
+
+            this.mousePointer.updateMotion();
+
+            this.events.emit(Events.MANAGER_PROCESS, event.timeStamp, this.game.loop.delta);
         }
     },
 
     /**
+     * **Note:** As of Phaser 3.16 this method is no longer required _unless_ you have set `input.queue = true`
+     * in your game config, to force it to use the legacy event queue system. This method is deprecated and
+     * will be removed in a future version.
+     * 
      * Adds a callback to be invoked whenever the native DOM `mouseup` or `touchend` events are received.
      * By setting the `isOnce` argument you can control if the callback is called once,
      * or every time the DOM event occurs.
@@ -1028,6 +1220,7 @@ var InputManager = new Class({
      * solve.
      *
      * @method Phaser.Input.InputManager#addUpCallback
+     * @deprecated
      * @since 3.10.0
      *
      * @param {function} callback - The callback to be invoked on this dom event.
@@ -1054,6 +1247,10 @@ var InputManager = new Class({
     },
 
     /**
+     * **Note:** As of Phaser 3.16 this method is no longer required _unless_ you have set `input.queue = true`
+     * in your game config, to force it to use the legacy event queue system. This method is deprecated and
+     * will be removed in a future version.
+     * 
      * Adds a callback to be invoked whenever the native DOM `mousedown` or `touchstart` events are received.
      * By setting the `isOnce` argument you can control if the callback is called once,
      * or every time the DOM event occurs.
@@ -1076,6 +1273,7 @@ var InputManager = new Class({
      * solve.
      *
      * @method Phaser.Input.InputManager#addDownCallback
+     * @deprecated
      * @since 3.10.0
      *
      * @param {function} callback - The callback to be invoked on this dom event.
@@ -1102,6 +1300,10 @@ var InputManager = new Class({
     },
 
     /**
+     * **Note:** As of Phaser 3.16 this method is no longer required _unless_ you have set `input.queue = true`
+     * in your game config, to force it to use the legacy event queue system. This method is deprecated and
+     * will be removed in a future version.
+     * 
      * Adds a callback to be invoked whenever the native DOM `mousemove` or `touchmove` events are received.
      * By setting the `isOnce` argument you can control if the callback is called once,
      * or every time the DOM event occurs.
@@ -1124,6 +1326,7 @@ var InputManager = new Class({
      * solve.
      *
      * @method Phaser.Input.InputManager#addMoveCallback
+     * @deprecated
      * @since 3.10.0
      *
      * @param {function} callback - The callback to be invoked on this dom event.
