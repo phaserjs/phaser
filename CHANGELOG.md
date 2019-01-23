@@ -21,6 +21,42 @@
 * Fixed the `Leaderboard.getScores` method to now take the arguments into account. Fix #4271 (thanks @Oramy)
 * Fixed an API validation error in the `chooseContext` method. Fix #4248 (thanks @yadurajiv)
 
+### Important Changes to the Input System
+
+In Phaser 3.15 and earlier the Input system worked using an event queue. All native DOM input events, such as from the Mouse, Touch or Keyboard, were picked up by event handlers and stored in a queue within the Input Manager. This queue was then processed during the next game step, all the events were dealt with and then it was cleared, ready to receive more events. As they were processed, the internal Phaser events such as `pointerdown` or `keyup` were dispatched to your game code.
+
+This worked fine in that you were able to guarantee _exactly_ when the events would arrive, because it was always at the same time in the game step. However, it had the side effect of you not being able to do things like open external browser windows, or go into Full Screen mode, during your event handlers - because they weren't "real" events, so didn't pass the browser security checks. To this end, methods like `addUpCallback` were added to try and provide this support (although it was never possible for keyboard events).
+
+In 3.16 this has changed. The DOM Events now trigger the respective internal events immediately, in the same invocation. So if you click on the canvas, the `pointerdown` event you receive in your game is still part of the 'native' event handler, so you're now free to do things like go into full screen mode, or open external windows, without any browser warnings or work-arounds.
+
+It does, however, mean that the point at which these handlers are called is no longer always consistent, and is no longer bound to the speed of the Request Animation Frame update. We've tested as much as possible, and so far, things carry on working as before. We've noticed a slight increase in responsiveness, due to the removal of the fractional delay in processing the events, which feels good. However, if for whatever reason this change has broken your game then you're able to easily switch back to the previous version. In your Game Config, create an `input` object and give it the property `queue: true`. This will tell Phaser to use the legacy event queue system.
+
+Please note that we _will_ remove this legacy system in the near future. So, please try and adapt your games to use the new system. If you've found an edge-case where something breaks because of it, please report it so we can look into it.
+
+As a result of this change, the following are now deprecated:
+
+* `InputPlugin.addUpCallback` method.
+* `InputPlugin.addDownCallback` method.
+* `InputPlugin.addMoveCallback` method.
+* `InputManager.queue` property.
+* `InputManager.domCallbacks` property.
+* `InputManager._hasUpCallback` property.
+* `InputManager._hasDownCallback` property.
+* `InputManager._hasMoveCallback` property.
+* `InputManager.processDomCallbacks` method.
+* `InputManager.addUpCallback` method.
+* `InputManager.addDownCallback` method.
+* `InputManager.addMoveCallback` method.
+
+### keydown and keyup changes
+
+Due to unification across the event system, the `keydown_` and `keyup_` dynamic event strings have changed.
+
+* In all cases the `keydown_KEY` event name has changed to `keydown-KEY`. Note the change from an underscore to a hyphen.
+* In all cases the `keyup_KEY` event name has changed to `keyup-KEY`. Note the change from an underscore to a hyphen.
+
+You should update your game code accordingly.
+
 ### Keyboard Input - New Features
 
 The specificity of the Keyboard events has been changed to allow you more control over event handling. Previously, the Keyboard Plugin would emit the global `keydown_CODE` event first (where CODE was a keycode string, like `keydown_A`), then it would emit the global `keydown` event. In previous versions, `Key` objects, created via `this.input.keyboard.addKey()`, didn't emit events.
@@ -126,7 +162,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 
 ### Changes as a result of the new Scale Manager
 
-* If you set the Game Config property `zoom` to be > 1 then it will automatically enable `pixelArt` mode, unless you set it to `false` in the config.
+* If you set the Game Config property `zoom` to be > 1 then it will automatically enable `pixelArt` mode, unless you set `pixelArt: false` in the config.
 * There is a new property in the Game Config called `autoRound`, which controls if the canvas size and style sizes are passed through Math.floor or not. On some devices this can help with performance and anti-aliasing. The default is `false` (turned off).
 * The Game Config property `autoResize` has been removed as it's now redundant.
 * The WebGL and Canvas Renderers no longer change the Canvas size in their `resize` methods. They just update internal properties.
@@ -138,6 +174,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * The `InputManager.transformY` method has been removed. This is now available in the ScaleManager.
 * The `InputManager.scale` property has been removed. This is now available in the ScaleManager under `displayScale`.
 * The `InputManager.resize` method has been removed as this process is now handled by the ScaleManager.
+* The `InputManager.bounds` property has been removed as this process is now handled by the ScaleManager.
 * The `InputManager.updateBounds` method has been removed as this process is now handled by the ScaleManager.
 * The `InputManager.getOffsetX` method has been removed as it's no longer required.
 * The `InputManager.getOffsetY` method has been removed as it's no longer required.
@@ -150,6 +187,22 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `BaseCamera.scaleManager` is a new property that references the Scale Manager and is used internally for size checks.
 * The `Game.resize` method has been removed as it's no longer required. You should now call `ScaleManager.resize` instead.
 * The Game will no longer dispatch the `resize` event. You should now listen for this event from the Scale Manager instead.
+
+### Important Namespace Changes
+
+* The `Phaser.Boot` namespace has been renamed to `Phaser.Core`. As a result, the `boot` folder has been renamed to `core`. This  impacts the `TimeStep` class and `VisibilityHandler` function, which have been moved to be under the new namespace.
+* The `Phaser.Animations` namespace was incorrectly exposed in the Phaser entrypoints as `Animation` (note the lack of plural). This means that if you are creating any custom classes that extend Animation objects using the Phaser namespace, then please update them from `Phaser.Animation` to `Phaser.Animations`, i.e. `Phaser.Animation.AnimationFrame` to `Phaser.Animations.AnimationFrame`. This doesn't impact you if you created animations directly via the Animation Manager.
+* The keyed Data Manager change data event string has changed from `changedata_` to `changedata-` to keep it consistent with other keyed events. Note the change from `_` to `-`.
+* The Keyboard Plugin `keydown` dynamic event string has changed from `keydown_` to `keydown-` to keep it consistent with other keyed events. Note the change from `_` to `-`.
+* The Keyboard Plugin `keyup` dynamic event string has changed from `keyup_` to `keyup-` to keep it consistent with other keyed events. Note the change from `_` to `-`.
+* The `texturesready` event emitted by the Texture Manager has been renamed to `ready`.
+* The `loadcomplete` event emitted by the Loader Plugin has been renamed to `postprocess` to be reflect what it's used for.
+* Game Objects used to emit a `collide` event if they had an Arcade Physics Body with `onCollide` set, that collided with a Tile. This has changed. The event has been renamed to `tilecollide` and you should now listen for this event from the Arcade Physics World itself: `this.physics.world.on('tilecollide')`. Game Objects no longer emit this event.
+* Game Objects used to emit an `overlap` event if they had an Arcade Physics Body with `onOverlap` set, that overlapped with a Tile. This has changed. The event has been renamed to `tileoverlap` and you should now listen for this event from the Arcade Physics World itself: `this.physics.world.on('tileoverlap')`. Game Objects no longer emit this event.
+* The function `Phaser.Physics.Impact.SeperateX` has been renamed to `SeparateX` to correct the spelling mistake.
+* The function `Phaser.Physics.Impact.SeperateY` has been renamed to `SeparateY` to correct the spelling mistake.
+* The `ended` event in `WebAudioSound` has been renamed to `complete` to make it more consistent with the rest of the API.
+* The `ended` event in `HTML5AudioSound` has been renamed to `complete` to make it more consistent with the rest of the API.
 
 ### New Features
 
@@ -305,21 +358,6 @@ one set of bindings ever created, which makes things a lot cleaner.
 * Arcade Physics now manages when `postUpdate` should be applied better, stopping it from gaining a zero delta during a further check in the same frame. This fixes various issues, including the mass collision test demo. Fix #4154 (thanks @samme)
 * Arcade Physics could trigger a `collide` event on a Body even if it performing an overlap check, if the `onCollide` property was true (thanks @samme)
 
-### Important Namespace Changes
-
-* The `Phaser.Boot` namespace has been renamed to `Phaser.Core`. As a result, the `boot` folder has been renamed to `core`. This  impacts the `TimeStep` class and `VisibilityHandler` function, which have been moved to be under the new namespace.
-* The `Phaser.Animations` namespace was incorrectly exposed in the Phaser entrypoints as `Animation` (note the lack of plural). This means that if you are creating any custom classes that extend Animation objects using the Phaser namespace, then please update them from `Phaser.Animation` to `Phaser.Animations`, i.e. `Phaser.Animation.AnimationFrame` to `Phaser.Animations.AnimationFrame`. This doesn't impact you if you created animations directly via the Animation Manager.
-* The keyed Data Manager change data event string has changed from `changedata_` to `changedata-` to keep it consistent with other keyed events. Note the change from `_` to `-`.
-* The Keyboard Plugin `keydown` dynamic event string has changed from `keydown_` to `keydown-` to keep it consistent with other keyed events. Note the change from `_` to `-`.
-* The Keyboard Plugin `keyup` dynamic event string has changed from `keyup_` to `keyup-` to keep it consistent with other keyed events. Note the change from `_` to `-`.
-* The `texturesready` event emitted by the Texture Manager has been renamed to `ready`.
-* The `loadcomplete` event emitted by the Loader Plugin has been renamed to `postprocess` to be reflect what it's used for.
-* Game Objects used to emit a `collide` event if they had an Arcade Physics Body with `onCollide` set, that collided with a Tile. This has changed. The event has been renamed to `tilecollide` and you should now listen for this event from the Arcade Physics World itself: `this.physics.world.on('tilecollide')`. Game Objects no longer emit this event.
-* Game Objects used to emit an `overlap` event if they had an Arcade Physics Body with `onOverlap` set, that overlapped with a Tile. This has changed. The event has been renamed to `tileoverlap` and you should now listen for this event from the Arcade Physics World itself: `this.physics.world.on('tileoverlap')`. Game Objects no longer emit this event.
-* The function `Phaser.Physics.Impact.SeperateX` has been renamed to `SeparateX` to correct the spelling mistake.
-* The function `Phaser.Physics.Impact.SeperateY` has been renamed to `SeparateY` to correct the spelling mistake.
-* The `ended` event in `WebAudioSound` has been renamed to `complete` to make it more consistent with the rest of the API.
-* The `ended` event in `HTML5AudioSound` has been renamed to `complete` to make it more consistent with the rest of the API.
 
 ### Examples and TypeScript
 
