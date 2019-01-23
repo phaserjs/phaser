@@ -263,6 +263,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `Vector3.FORWARD` is a new constant that can be used in Vector comparison operations (thanks @Aedalus)
 * `Vector3.BACK` is a new constant that can be used in Vector comparison operations (thanks @Aedalus)
 * `Vector3.ONE` is a new constant that can be used in Vector comparison operations (thanks @Aedalus)
+* Geometery Mask has a new property called `invertAlpha` in WebGL, which works in the same way as the flag on the Bitmap Mask and allows you to invert the function of the stencil buffer, i.e. non-drawn shapes become invisible, and drawn shapes visible (thanks @tfelix)
 
 ### Updates
 
@@ -357,7 +358,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * The `processDomCallbacks` method in the Input Manager wasn't correctly clearing the `once` arrays. Responsibility for this has now been passed to the queue methods `queueTouchStart`, `queueTouchMove`, `queueTouchEnd`, `queueMouseDown`, `queueMouseMove` and `queueMouseUp`. Fix #4257 (thanks @iArePJ)
 * Arcade Physics now manages when `postUpdate` should be applied better, stopping it from gaining a zero delta during a further check in the same frame. This fixes various issues, including the mass collision test demo. Fix #4154 (thanks @samme)
 * Arcade Physics could trigger a `collide` event on a Body even if it performing an overlap check, if the `onCollide` property was true (thanks @samme)
-
+* TileSprites no longer cause a crash when using the Headless mode renderer. Fix #4297 (thanks @clesquir)
 
 ### Examples and TypeScript
 
