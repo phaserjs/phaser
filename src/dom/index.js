@@ -14,21 +14,12 @@ var ScaleModes = require('./const');
 var Dom = {
 
     AddToDOM: require('./AddToDOM'),
-    Calibrate: require('./Calibrate'),
-    ClientHeight: require('./ClientHeight'),
-    ClientWidth: require('./ClientWidth'),
-    DocumentBounds: require('./DocumentBounds'),
     DOMContentLoaded: require('./DOMContentLoaded'),
-    GetAspectRatio: require('./GetAspectRatio'),
-    GetBounds: require('./GetBounds'),
-    GetOffset: require('./GetOffset'),
     GetScreenOrientation: require('./GetScreenOrientation'),
-    InLayoutViewport: require('./InLayoutViewport'),
     ParseXML: require('./ParseXML'),
     RemoveFromDOM: require('./RemoveFromDOM'),
     RequestAnimationFrame: require('./RequestAnimationFrame'),
     ScaleManager: require('./ScaleManager'),
-    VisualBounds: require('./VisualBounds'),
 
     ScaleModes: ScaleModes
 
