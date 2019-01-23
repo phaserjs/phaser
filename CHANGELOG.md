@@ -313,6 +313,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `MatterSprite` would set its `type` property to be `Image`. It now sets it to be `Sprite` as it should do.
 * `Matter.TileBody.setFromTileCollision` no longer checks if the shape is concave or convex before modifying the vertices, as the update to the Matter.js lib in 3.12 stopped this from working with Tiled collision shapes.
 * The Scene `transitionstart` event is now dispatched by the Target Scene of a transition, regardless if the Scene has a `create` method or not. Previously, it was only dispatched if the Scene had a create method.
+* The Loader will now allow an XHR status of 0 as success too. Normally only status 200 would be accepted as success, but 0 is returned when a file is loaded from the local filesystem (file://). This happens, for example, when opening the index.html of a game in a browser directly, or when using Cordova on iOS. Fix #3464 (thanks @Ithamar)
 
 ### Bug Fixes
 
