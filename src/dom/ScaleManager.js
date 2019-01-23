@@ -7,6 +7,8 @@
 var CONST = require('./const');
 var Class = require('../utils/Class');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
+var GameEvents = require('../core/events');
 var GetInnerHeight = require('./GetInnerHeight');
 var GetScreenOrientation = require('./GetScreenOrientation');
 var NOOP = require('../utils/NOOP');
@@ -26,7 +28,6 @@ var Vector2 = require('../math/Vector2');
  * @since 3.16.0
  *
  * @param {Phaser.Game} game - A reference to the Phaser.Game instance.
- * @param {any} config
  */
 var ScaleManager = new Class({
 
@@ -48,69 +49,226 @@ var ScaleManager = new Class({
          */
         this.game = game;
 
-        //  Reference to the canvas being scaled
+        /**
+         * A reference to the HTML Canvas Element that Phaser uses to render the game.
+         *
+         * @name Phaser.DOM.ScaleManager#canvas
+         * @type {HTMLCanvasElement}
+         * @since 3.16.0
+         */
         this.canvas;
 
         /**
          * The DOM bounds of the canvas element.
          *
-         * @name Phaser.Input.InputManager#canvasBounds
+         * @name Phaser.DOM.ScaleManager#canvasBounds
          * @type {Phaser.Geom.Rectangle}
          * @since 3.16.0
          */
         this.canvasBounds = new Rectangle();
 
-        //  The parent object, often a div, or the browser window
-        this.parent;
+        /**
+         * The parent object of the Canvas. Often a div, or the browser window, or nothing in non-browser environments.
+         * 
+         * This is set in the Game Config as the `parent` property. If undefined (or just not present), it will default
+         * to use the document body. If specifically set to `null` Phaser will ignore all parent operations.
+         *
+         * @name Phaser.DOM.ScaleManager#parent
+         * @type {?any}
+         * @since 3.16.0
+         */
+        this.parent = null;
 
-        this.parentIsWindow;
+        /**
+         * Is the parent element the browser window?
+         *
+         * @name Phaser.DOM.ScaleManager#parentIsWindow
+         * @type {boolean}
+         * @since 3.16.0
+         */
+        this.parentIsWindow = false;
 
-        //  The parent Size object.
+        /**
+         * The Parent Size component.
+         *
+         * @name Phaser.DOM.ScaleManager#parentSize
+         * @type {Phaser.Structs.Size}
+         * @since 3.16.0
+         */
         this.parentSize = new Size();
 
-        //  The un-modified game size, as requested in the game config (the raw width / height) as used for world bounds, cameras, etc
+        /**
+         * The Game Size component.
+         * 
+         * The un-modified game size, as requested in the game config (the raw width / height),
+         * as used for world bounds, cameras, etc
+         *
+         * @name Phaser.DOM.ScaleManager#gameSize
+         * @type {Phaser.Structs.Size}
+         * @since 3.16.0
+         */
         this.gameSize = new Size();
 
-        //  The modified game size, which is the gameSize * resolution, used to set the canvas width/height (but not the CSS style)
+        /**
+         * The Base Size component.
+         * 
+         * The modified game size, which is the gameSize * resolution, used to set the canvas width and height
+         * (but not the CSS style)
+         *
+         * @name Phaser.DOM.ScaleManager#baseSize
+         * @type {Phaser.Structs.Size}
+         * @since 3.16.0
+         */
         this.baseSize = new Size();
 
-        //  The size used for the canvas style, factoring in the scale mode, parent and other values
+        /**
+         * The Display Size component.
+         * 
+         * The size used for the canvas style, factoring in the scale mode, parent and other values.
+         *
+         * @name Phaser.DOM.ScaleManager#displaySize
+         * @type {Phaser.Structs.Size}
+         * @since 3.16.0
+         */
         this.displaySize = new Size();
 
+        /**
+         * The game scale mode.
+         *
+         * @name Phaser.DOM.ScaleManager#scaleMode
+         * @type {integer}
+         * @since 3.16.0
+         */
         this.scaleMode = CONST.NONE;
 
-        //  The canvas resolution
+        /**
+         * The canvas resolution.
+         * 
+         * This is hard-coded to a value of 1 in the 3.16 release of Phaser and will be enabled at a later date.
+         *
+         * @name Phaser.DOM.ScaleManager#resolution
+         * @type {number}
+         * @since 3.16.0
+         */
         this.resolution = 1;
 
-        //  The canvas zoom factor
+        /**
+         * The game zoom factor.
+         * 
+         * This allows you to set a base size that is a multiple of your game size, before any scaling takes place.
+         *
+         * @name Phaser.DOM.ScaleManager#zoom
+         * @type {number}
+         * @since 3.16.0
+         */
         this.zoom = 1;
 
-        //  The scale between the baseSize and the canvasBounds
+        /**
+         * The scale factor between the baseSize and the canvasBounds.
+         *
+         * @name Phaser.DOM.ScaleManager#displayScale
+         * @type {Phaser.Math.Vector2}
+         * @since 3.16.0
+         */
         this.displayScale = new Vector2(1, 1);
 
-        //  Automatically floor the canvas sizes
+        /**
+         * If set, the canvas sizes will be automatically passed through Math.floor.
+         * This results in rounded pixel display values, which is important for performance on legacy
+         * and low powered devices, but at the cost of not achieving a 'perfect' fit in some browser windows.
+         *
+         * @name Phaser.DOM.ScaleManager#autoRound
+         * @type {boolean}
+         * @since 3.16.0
+         */
         this.autoRound = false;
 
-        //  Automatically center the canvas within the parent? 0 = No centering. 1 = Center both horizontally and vertically. 2 = Center horizontally. 3 = Center vertically.
+        /**
+         * Automatically center the canvas within the parent?
+         * 
+         * 0 = No centering.
+         * 1 = Center both horizontally and vertically.
+         * 2 = Center horizontally.
+         * 3 = Center vertically.
+         *
+         * @name Phaser.DOM.ScaleManager#autoCenter
+         * @type {integer}
+         * @since 3.16.0
+         */
         this.autoCenter = CONST.NO_CENTER;
 
-        //  The device orientation (if available)
+        /**
+         * The current device orientation.
+         * 
+         * Orientation events are dispatched via the Device Orientation API and typically only on mobile browsers.
+         *
+         * @name Phaser.DOM.ScaleManager#orientation
+         * @type {string}
+         * @since 3.16.0
+         */
         this.orientation = CONST.LANDSCAPE;
 
-        this.trackParent = false;
-
-        //  A reference to Device.Fullscreen
+        /**
+         * A reference to the Device.Fullscreen object.
+         *
+         * @name Phaser.DOM.ScaleManager#fullscreen
+         * @type {Phaser.Device.Fullscreen}
+         * @since 3.16.0
+         */
         this.fullscreen;
 
+        /**
+         * The dirty state of the Scale Manager.
+         * Set if there is a change between the parent size and the current size.
+         *
+         * @name Phaser.DOM.ScaleManager#dirty
+         * @type {boolean}
+         * @since 3.16.0
+         */
         this.dirty = false;
 
-        //  How many ms should elapse before checking if the browser size has changed?
+        /**
+         * How many milliseconds should elapse before checking if the browser size has changed?
+         * 
+         * Most modern browsers dispatch a 'resize' event, which the Scale Manager will listen for.
+         * However, older browsers fail to do this, or do it consistently, so we fall back to a
+         * more traditional 'size check' based on a time interval. You can control how often it is
+         * checked here.
+         *
+         * @name Phaser.DOM.ScaleManager#resizeInterval
+         * @type {integer}
+         * @since 3.16.0
+         */
         this.resizeInterval = 500;
 
+        /**
+         * Internal size interval tracker.
+         *
+         * @name Phaser.DOM.ScaleManager#_lastCheck
+         * @type {integer}
+         * @private
+         * @since 3.16.0
+         */
         this._lastCheck = 0;
 
+        /**
+         * Internal flag to check orientation state.
+         *
+         * @name Phaser.DOM.ScaleManager#_checkOrientation
+         * @type {boolean}
+         * @private
+         * @since 3.16.0
+         */
         this._checkOrientation = false;
 
+        /**
+         * Internal object containing our defined event listeners.
+         *
+         * @name Phaser.DOM.ScaleManager#listeners
+         * @type {object}
+         * @private
+         * @since 3.16.0
+         */
         this.listeners = {
 
             orientationChange: NOOP,
@@ -121,8 +279,14 @@ var ScaleManager = new Class({
         };
     },
 
-    //  Called BEFORE the Canvas object is created and added to the DOM
-    //  So if we need to do anything re: scaling to a parent, we should do it in `boot` and not here.
+    /**
+     * Called before the canvas object is created and added to the DOM.
+     *
+     * @method Phaser.DOM.ScaleManager#preBoot
+     * @protected
+     * @listens Phaser.Core.Events#BOOT
+     * @since 3.16.0
+     */
     preBoot: function ()
     {
         //  Parse the config to get the scaling values we need
@@ -131,14 +295,20 @@ var ScaleManager = new Class({
         this.game.events.once('boot', this.boot, this);
     },
 
-    //  Fires AFTER the canvas has been created and added to the DOM
+    /**
+     * The Boot handler is called by Phaser.Game when it first starts up.
+     * The renderer is available by now and the canvas has been added to the DOM.
+     *
+     * @method Phaser.DOM.ScaleManager#boot
+     * @protected
+     * @fires Phaser.DOM.ScaleManager.Events#RESIZE
+     * @since 3.16.0
+     */
     boot: function ()
     {
         this.canvas = this.game.canvas;
 
         this.fullscreen = this.game.device.fullscreen;
-
-        this.getParentBounds();
 
         if (this.scaleMode < 5)
         {
@@ -147,42 +317,70 @@ var ScaleManager = new Class({
 
         if (this.scaleMode > 0)
         {
+            this.getParentBounds();
+
             this.displaySize.setParent(this.parentSize);
         }
 
-        this.game.events.on('prestep', this.step, this);
+        this.game.events.on(GameEvents.PRE_STEP, this.step, this);
 
         this.startListeners();
 
         this.refresh();
     },
 
+    /**
+     * Parses the game configuration to set-up the scale defaults.
+     *
+     * @method Phaser.DOM.ScaleManager#parseConfig
+     * @protected
+     * @since 3.16.0
+     * 
+     * @param {GameConfig} config - The Game configuration object.
+     */
     parseConfig: function (config)
     {
+        //  Get the parent element, if any
         this.getParent(config);
+        
+        //  Get the size of the parent element
         this.getParentBounds();
 
         var width = config.width;
         var height = config.height;
-        var resolution = config.resolution;
         var scaleMode = config.scaleMode;
+        var resolution = config.resolution;
         var zoom = config.zoom;
         var autoRound = config.autoRound;
 
         //  If width = '100%', or similar value
         if (typeof width === 'string')
         {
-            var parentScaleX = parseInt(width, 10) / 100;
+            if (this.parent)
+            {
+                var parentScaleX = parseInt(width, 10) / 100;
 
-            width = Math.floor(this.parentSize.width * parentScaleX);
+                width = Math.floor(this.parentSize.width * parentScaleX);
+            }
+            else
+            {
+                width = parseInt(width, 10);
+            }
         }
 
         //  If height = '100%', or similar value
         if (typeof height === 'string')
         {
-            var parentScaleY = parseInt(height, 10) / 100;
+            if (this.parent)
+            {
+                var parentScaleY = parseInt(height, 10) / 100;
 
-            height = Math.floor(this.parentSize.height * parentScaleY);
+                height = Math.floor(this.parentSize.height * parentScaleY);
+            }
+            else
+            {
+                height = parseInt(height, 10);
+            }
         }
 
         //  This is fixed at 1 on purpose.
@@ -235,9 +433,24 @@ var ScaleManager = new Class({
         this.orientation = GetScreenOrientation(width, height);
     },
 
+    /**
+     * Determines the parent element of the game canvas, if any, based on the game configuration.
+     *
+     * @method Phaser.DOM.ScaleManager#getParent
+     * @since 3.16.0
+     * 
+     * @param {GameConfig} config - The Game configuration object.
+     */
     getParent: function (config)
     {
         var parent = config.parent;
+
+        if (parent === null)
+        {
+            //  User is responsible for managing the parent
+            return;
+        }
+
         var canExpandParent = config.expandParent;
 
         var target;
@@ -282,17 +495,29 @@ var ScaleManager = new Class({
         }
     },
 
-    //  Return `true` if the parent bounds have changed size, otherwise returns false.
+    /**
+     * Calculates the size of the parent bounds and updates the `parentSize` component, if the canvas has a dom parent.
+     *
+     * @method Phaser.DOM.ScaleManager#getParentBounds
+     * @since 3.16.0
+     * 
+     * @return {boolean} `true` if the parent bounds have changed size, otherwise `false`.
+     */
     getParentBounds: function ()
     {
+        if (!this.parent)
+        {
+            return false;
+        }
+
+        var parentSize = this.parentSize;
+
         var DOMRect = this.parent.getBoundingClientRect();
 
         if (this.parentIsWindow && this.game.device.os.iOS)
         {
             DOMRect.height = GetInnerHeight(true);
         }
-
-        var parentSize = this.parentSize;
 
         var resolution = this.resolution;
         var newWidth = DOMRect.width * resolution;
@@ -310,8 +535,19 @@ var ScaleManager = new Class({
         }
     },
 
-    //  https://developer.mozilla.org/en-US/docs/Web/API/Screen/lockOrientation
-    //  'portrait-primary', 'landscape-primary', 'landscape', 'portrait', etc.
+    /**
+     * Attempts to lock the orientation of the web browser using the Screen Orientation API.
+     * 
+     * This API is only available on modern mobile browsers.
+     * See https://developer.mozilla.org/en-US/docs/Web/API/Screen/lockOrientation for details.
+     *
+     * @method Phaser.DOM.ScaleManager#lockOrientation
+     * @since 3.16.0
+     * 
+     * @param {string} orientation - The orientation you'd like to lock the browser in. Should be an API string such as 'landscape', 'landscape-primary', 'portrait', etc.
+     * 
+     * @return {boolean} `true` if the orientation was successfully locked, otherwise `false`.
+     */
     lockOrientation: function (orientation)
     {
         var lock = screen.lockOrientation || screen.mozLockOrientation || screen.msLockOrientation;
@@ -324,7 +560,21 @@ var ScaleManager = new Class({
         return false;
     },
 
-    //  Directly resize the game.
+    /**
+     * Forcefully resizes the game to the given dimensions.
+     * 
+     * Use this to change the size of your game after it has booted, or in custom resizing situations.
+     * 
+     * Calling this method will update the `gameSize` and `baseSize` components and then call `refresh`,
+     * which dispatches the resize event.
+     *
+     * @method Phaser.DOM.ScaleManager#resize
+     * @fires Phaser.DOM.ScaleManager.Events#RESIZE
+     * @since 3.16.0
+     * 
+     * @param {number} width - The new width of the game.
+     * @param {number} height - The new height of the game.
+     */
     resize: function (width, height)
     {
         if (this.autoRound)
@@ -340,6 +590,17 @@ var ScaleManager = new Class({
         this.refresh();
     },
 
+    /**
+     * Sets the zoom value of the Scale Manager post-boot.
+     *
+     * @method Phaser.DOM.ScaleManager#setZoom
+     * @fires Phaser.DOM.ScaleManager.Events#RESIZE
+     * @since 3.16.0
+     * 
+     * @param {number} value - The new zoom value of the game.
+     * 
+     * @return {this} The Scale Manager instance.
+     */
     setZoom: function (value)
     {
         if (value !== this.zoom)
@@ -352,6 +613,17 @@ var ScaleManager = new Class({
         return this;
     },
 
+    /**
+     * Refreshes the internal scale values, bounds sizes and orientation checks.
+     * 
+     * Once finished, dispatches the resize event.
+     * 
+     * This is called automatically by the Scale Manager when the browser changes.
+     *
+     * @method Phaser.DOM.ScaleManager#refresh
+     * @fires Phaser.DOM.ScaleManager.Events#RESIZE
+     * @since 3.16.0
+     */
     refresh: function ()
     {
         this.updateScale();
@@ -367,13 +639,19 @@ var ScaleManager = new Class({
             {
                 this.orientation = newOrientation;
     
-                this.emit('orientationchange', newOrientation);
+                this.emit(Events.ORIENTATION_CHANGE, newOrientation);
             }
         }
 
-        this.emit('resize', this.gameSize, this.baseSize, this.displaySize, this.resolution);
+        this.emit(Events.RESIZE, this.gameSize, this.baseSize, this.displaySize, this.resolution);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.DOM.ScaleManager#updateScale
+     * @since 3.16.0
+     */
     updateScale: function ()
     {
         var style = this.canvas.style;
@@ -471,7 +749,7 @@ var ScaleManager = new Class({
     },
 
     /**
-     * Updates the Input Manager bounds rectangle to match the bounding client rectangle of the
+     * Updates the `canvasBounds` rectangle to match the bounding client rectangle of the
      * canvas element being used to track input events.
      *
      * @method Phaser.DOM.ScaleManager#updateBounds
@@ -491,10 +769,10 @@ var ScaleManager = new Class({
     },
 
     /**
-     * Transforms the pageX value into the scaled coordinate space of the Input Manager.
+     * Transforms the pageX value into the scaled coordinate space of the Scale Manager.
      *
-     * @method Phaser.Input.InputManager#transformX
-     * @since 3.0.0
+     * @method Phaser.DOM.ScaleManager#transformX
+     * @since 3.16.0
      *
      * @param {number} pageX - The DOM pageX value.
      *
@@ -506,10 +784,10 @@ var ScaleManager = new Class({
     },
 
     /**
-     * Transforms the pageY value into the scaled coordinate space of the Input Manager.
+     * Transforms the pageY value into the scaled coordinate space of the Scale Manager.
      *
-     * @method Phaser.Input.InputManager#transformY
-     * @since 3.0.0
+     * @method Phaser.DOM.ScaleManager#transformY
+     * @since 3.16.0
      *
      * @param {number} pageY - The DOM pageY value.
      *
@@ -520,26 +798,19 @@ var ScaleManager = new Class({
         return (pageY - this.canvasBounds.top) * this.displayScale.y;
     },
 
-    stopFullscreen: function ()
-    {
-        var fullscreen = this.fullscreen;
-
-        if (!fullscreen.available)
-        {
-            this.emit('fullscreenunsupported');
-
-            return false;
-        }
-
-        if (fullscreen.active)
-        {
-            document[fullscreen.cancel]();
-        }
-    },
-
-    // { navigationUI: "show" }
-    //  https://developer.mozilla.org/en-US/docs/Web/API/FullscreenOptions
-    //  The FullscreenOptions dictionary is used to provide configuration options when 
+    /**
+     * [description]
+     * 
+     * https://developer.mozilla.org/en-US/docs/Web/API/FullscreenOptions
+     *
+     * @method Phaser.DOM.ScaleManager#startFullscreen
+     * @fires Phaser.DOM.ScaleManager.Events#ENTER_FULLSCREEN
+     * @fires Phaser.DOM.ScaleManager.Events#FULLSCREEN_UNSUPPORTED
+     * @fires Phaser.DOM.ScaleManager.Events#RESIZE
+     * @since 3.16.0
+     * 
+     * @param {FullscreenOptions} [fullscreenOptions] - The FullscreenOptions dictionary is used to provide configuration options when entering full screen.
+     */
     startFullscreen: function (fullscreenOptions)
     {
         if (fullscreenOptions === undefined) { fullscreenOptions = { navigationUI: 'hide' }; }
@@ -548,9 +819,9 @@ var ScaleManager = new Class({
 
         if (!fullscreen.available)
         {
-            this.emit('fullscreenunsupported');
+            this.emit(Events.FULLSCREEN_UNSUPPORTED);
 
-            return false;
+            return;
         }
 
         if (!fullscreen.active)
@@ -569,10 +840,50 @@ var ScaleManager = new Class({
                 fsTarget[fullscreen.request](fullscreenOptions);
             }
 
+            this.emit(Events.ENTER_FULLSCREEN);
+
             this.refresh();
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.DOM.ScaleManager#stopFullscreen
+     * @fires Phaser.DOM.ScaleManager.Events#LEAVE_FULLSCREEN
+     * @fires Phaser.DOM.ScaleManager.Events#FULLSCREEN_UNSUPPORTED
+     * @since 3.16.0
+     */
+    stopFullscreen: function ()
+    {
+        var fullscreen = this.fullscreen;
+
+        if (!fullscreen.available)
+        {
+            this.emit(Events.FULLSCREEN_UNSUPPORTED);
+
+            return false;
+        }
+
+        if (fullscreen.active)
+        {
+            document[fullscreen.cancel]();
+
+            this.emit(Events.LEAVE_FULLSCREEN);
+        }
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.DOM.ScaleManager#toggleFullscreen
+     * @fires Phaser.DOM.ScaleManager.Events#ENTER_FULLSCREEN
+     * @fires Phaser.DOM.ScaleManager.Events#LEAVE_FULLSCREEN
+     * @fires Phaser.DOM.ScaleManager.Events#FULLSCREEN_UNSUPPORTED
+     * @since 3.16.0
+     * 
+     * @param {FullscreenOptions} [fullscreenOptions] - The FullscreenOptions dictionary is used to provide configuration options when entering full screen.
+     */
     toggleFullscreen: function (fullscreenOptions)
     {
         if (this.fullscreen.active)
@@ -585,6 +896,12 @@ var ScaleManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.DOM.ScaleManager#startListeners
+     * @since 3.16.0
+     */
     startListeners: function ()
     {
         var _this = this;
@@ -632,20 +949,41 @@ var ScaleManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.DOM.ScaleManager#onFullScreenChange
+     * @since 3.16.0
+     */
     onFullScreenChange: function ()
     {
         console.log('fs change');
         console.log(this.fullscreen.active);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.DOM.ScaleManager#onFullScreenError
+     * @since 3.16.0
+     */
     onFullScreenError: function ()
     {
         console.log('fs error');
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.DOM.ScaleManager#step
+     * @since 3.16.0
+     *
+     * @param {number} time - The time value from the most recent Game step. Typically a high-resolution timer value, or Date.now().
+     * @param {number} delta - The delta value since the last frame. This is smoothed to avoid delta spikes by the TimeStep class.
+     */
     step: function (time, delta)
     {
-        if (this.scaleMode === 0)
+        if (this.scaleMode === 0 || !this.parent)
         {
             return;
         }
@@ -665,6 +1003,12 @@ var ScaleManager = new Class({
         }
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.DOM.ScaleManager#stopListeners
+     * @since 3.16.0
+     */
     stopListeners: function ()
     {
         var listeners = this.listeners;
@@ -685,6 +1029,12 @@ var ScaleManager = new Class({
         document.removeEventListener('MSFullscreenError', listeners.fullScreenError, false);
     },
 
+    /**
+     * [description]
+     *
+     * @method Phaser.DOM.ScaleManager#destroy
+     * @since 3.16.0
+     */
     destroy: function ()
     {
         this.removeAllListeners();
@@ -692,6 +1042,14 @@ var ScaleManager = new Class({
         this.stopListeners();
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.DOM.ScaleManager#isFullscreen
+     * @type {boolean}
+     * @readonly
+     * @since 3.16.0
+     */
     isFullscreen: {
 
         get: function ()
@@ -701,6 +1059,14 @@ var ScaleManager = new Class({
     
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.DOM.ScaleManager#width
+     * @type {number}
+     * @readonly
+     * @since 3.16.0
+     */
     width: {
 
         get: function ()
@@ -710,6 +1076,14 @@ var ScaleManager = new Class({
     
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.DOM.ScaleManager#height
+     * @type {number}
+     * @readonly
+     * @since 3.16.0
+     */
     height: {
 
         get: function ()
@@ -719,6 +1093,14 @@ var ScaleManager = new Class({
     
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.DOM.ScaleManager#isPortrait
+     * @type {boolean}
+     * @readonly
+     * @since 3.16.0
+     */
     isPortrait: {
 
         get: function ()
@@ -728,6 +1110,14 @@ var ScaleManager = new Class({
     
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.DOM.ScaleManager#isLandscape
+     * @type {boolean}
+     * @readonly
+     * @since 3.16.0
+     */
     isLandscape: {
 
         get: function ()
@@ -737,6 +1127,14 @@ var ScaleManager = new Class({
     
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.DOM.ScaleManager#isGamePortrait
+     * @type {boolean}
+     * @readonly
+     * @since 3.16.0
+     */
     isGamePortrait: {
 
         get: function ()
@@ -746,6 +1144,14 @@ var ScaleManager = new Class({
     
     },
 
+    /**
+     * [description]
+     *
+     * @name Phaser.DOM.ScaleManager#isGameLandscape
+     * @type {boolean}
+     * @readonly
+     * @since 3.16.0
+     */
     isGameLandscape: {
 
         get: function ()
