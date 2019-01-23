@@ -113,10 +113,10 @@ var ValueToColor = require('../display/color/ValueToColor');
 /**
  * @typedef {object} ScaleConfig
  *
- * @property {(integer|string)} [width=1024] - The base width of your game.
- * @property {(integer|string)} [height=768] - The base height of your game.
+ * @property {(integer|string)} [width=1024] - The base width of your game. Can be an integer or a string: '100%'.
+ * @property {(integer|string)} [height=768] - The base height of your game. Can be an integer or a string: '100%'.
  * @property {integer} [zoom=1] - The zoom value of the game canvas.
- * @property {number} [resolution=1] - The rendering resolution of the canvas.
+ * @property {number} [resolution=1] - The rendering resolution of the canvas. This is reserved for future use and is currently ignored.
  * @property {(HTMLElement|string)} [parent] - The DOM element that will contain the game canvas, or its `id`. If null (the default) or if the named element doesn't exist, the game canvas is inserted directly into the document body.
  * @property {boolean} [expandParent=true] - Is the Scale Manager allowed to adjust the CSS height property of the parent to be 100%?
  * @property {integer} [mode=0] - The scale mode.
@@ -126,7 +126,7 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {integer} [maxHeight] - The maximum height the canvas can be scaled up to.
  * @property {boolean} [autoRound=false] - Automatically round the display and style sizes of the canvas. This can help with performance in lower-powered devices.
  * @property {integer} [autoCenter=0] - Automatically center the canvas within the parent? 0 = No centering. 1 = Center both horizontally and vertically. 2 = Center horizontally. 3 = Center vertically.
- * @property {integer} [resizeInterval=500] - How many ms should elapse before checking if the browser size has changed?
+ * @property {integer} [resizeInterval=2000] - How many ms should elapse before checking if the browser size has changed?
  */
 
 /**
