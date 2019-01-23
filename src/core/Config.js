@@ -48,6 +48,7 @@ var ValueToColor = require('../display/color/ValueToColor');
  * @property {(boolean|GamepadInputConfig)} [gamepad=false] - Gamepad input configuration. `true` enables gamepad input.
  * @property {integer} [activePointers=1] - The maximum number of touch pointers. See {@link Phaser.Input.InputManager#pointers}.
  * @property {number} [smoothFactor=0] - The smoothing factor to apply during Pointer movement. See {@link Phaser.Input.Pointer#smoothFactor}.
+ * @property {boolean} [inputQueue=false] - Should Phaser use a queued input system for native DOM Events or not?
  */
 
 /**
@@ -481,6 +482,11 @@ var Config = new Class({
          * @const {integer} Phaser.Core.Config#inputSmoothFactor - The smoothing factor to apply during Pointer movement. See {@link Phaser.Input.Pointer#smoothFactor}.
          */
         this.inputSmoothFactor = GetValue(config, 'input.smoothFactor', 0);
+
+        /**
+         * @const {boolean} Phaser.Core.Config#inputQueue - Should Phaser use a queued input system for native DOM Events or not?
+         */
+        this.inputQueue = GetValue(config, 'input.queue', false);
 
         /**
          * @const {boolean} Phaser.Core.Config#inputGamepad - Enable the Gamepad Plugin. This can be disabled in games that don't need gamepad input.
