@@ -405,7 +405,7 @@ var TileSprite = new Class({
      */
     updateTileTexture: function ()
     {
-        if (!this.dirty)
+        if (!this.dirty || !this.renderer)
         {
             return;
         }
