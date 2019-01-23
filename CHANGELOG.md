@@ -159,6 +159,12 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `InputPlugin.setDragState` is a new internal method that sets the drag state for the given Pointer.
 * `InputPlugin.getDragState` is a new internal method that gets the drag state for the given Pointer.
 * Draggable Game Objects would not work if you had multiple Scenes running in parallel, with draggable objects in both of them. Only the top-most Scene would work fully. Items in the bottom Scene would never finish their drag cycle, causing them to get stuck. Fix #4249 #4278 (thanks @probt @iArePJ)
+* `Pointer.leftButtonDown` will now return an actual boolean, rather than the result of the bitwise op (which still evaluated as a boolean, but this is cleaner).
+* `Pointer.rightButtonDown` will now return an actual boolean, rather than the result of the bitwise op (which still evaluated as a boolean, but this is cleaner).
+* `Pointer.middleButtonDown` will now return an actual boolean, rather than the result of the bitwise op (which still evaluated as a boolean, but this is cleaner).
+* `Pointer.backButtonDown` will now return an actual boolean, rather than the result of the bitwise op (which still evaluated as a boolean, but this is cleaner).
+* `Pointer.forwardButtonDown` will now return an actual boolean, rather than the result of the bitwise op (which still evaluated as a boolean, but this is cleaner).
+* `Pointer.up` and `Pointer.down` now use `in` to check for the existance of the `buttons` property on the event, causing it to be set even if equal to zero, which it is when there are no buttons down (thanks @SonnyCampbell)
 
 ### Changes as a result of the new Scale Manager
 
@@ -360,7 +366,6 @@ one set of bindings ever created, which makes things a lot cleaner.
 * Arcade Physics could trigger a `collide` event on a Body even if it performing an overlap check, if the `onCollide` property was true (thanks @samme)
 * TileSprites no longer cause a crash when using the Headless mode renderer. Fix #4297 (thanks @clesquir)
 * The WebGLRenderer will now apply a transparent background if `transparent = true` in the game config (thanks @gomachan7)
-* `Pointer.up` and `Pointer.down` now use a `hasOwnProperty` check for the existance of the buttons property on the event, causing it to be set even if equal to zero, which it is when there are no buttons down (thanks @SonnyCampbell)
 
 ### Examples and TypeScript
 
