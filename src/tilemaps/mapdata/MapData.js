@@ -101,22 +101,13 @@ var MapData = new Class({
         this.format = GetFastValue(config, 'format', null);
 
         /**
-         * [description]
+         * The orientation of the map data (i.e. orthogonal, isometric, hexagonal), default 'orthogonal'.
          * 
          * @name Phaser.Tilemaps.MapData#orientation
          * @type {string}
          * @since 3.0.0
          */
         this.orientation = GetFastValue(config, 'orientation', 'orthogonal');
-
-        /**
-         * The orientation of the map data (i.e. orthogonal, isometric, hexagonal), default 'orthogonal'.
-         * 
-         * @name Phaser.Tilemaps.MapData#renderOrder
-         * @type {string}
-         * @since 3.12.0
-         */
-        this.renderOrder = GetFastValue(config, 'renderOrder', 'right-down');
 
         /**
          * Determines the draw order of tilemap. Default is right-down
@@ -126,6 +117,15 @@ var MapData = new Class({
          * 2, or 'right-up'
          * 3, or 'left-up'
          * 
+         * @name Phaser.Tilemaps.MapData#renderOrder
+         * @type {string}
+         * @since 3.12.0
+         */
+        this.renderOrder = GetFastValue(config, 'renderOrder', 'right-down');
+
+        /**
+         * The version of the map data (as specified in Tiled).
+         * 
          * @name Phaser.Tilemaps.MapData#version
          * @type {string}
          * @since 3.0.0
@@ -133,7 +133,7 @@ var MapData = new Class({
         this.version = GetFastValue(config, 'version', '1');
 
         /**
-         * The version of the map data (as specified in Tiled).
+         * Map specific properties (can be specified in Tiled)
          * 
          * @name Phaser.Tilemaps.MapData#properties
          * @type {object}
@@ -142,7 +142,7 @@ var MapData = new Class({
         this.properties = GetFastValue(config, 'properties', {});
 
         /**
-         * Map specific properties (can be specified in Tiled)
+         * An array with all the layers configured to the MapData.
          * 
          * @name Phaser.Tilemaps.MapData#layers
          * @type {array}
@@ -151,7 +151,7 @@ var MapData = new Class({
         this.layers = GetFastValue(config, 'layers', []);
 
         /**
-         * An array with all the layers configured to the MapData
+         * An array of Tiled Image Layers.
          * 
          * @name Phaser.Tilemaps.MapData#images
          * @type {array}
@@ -160,7 +160,7 @@ var MapData = new Class({
         this.images = GetFastValue(config, 'images', []);
 
         /**
-         * An array of Tiled Image Layers
+         * An object of Tiled Object Layers.
          * 
          * @name Phaser.Tilemaps.MapData#objects
          * @type {object}
@@ -169,7 +169,7 @@ var MapData = new Class({
         this.objects = GetFastValue(config, 'objects', {});
 
         /**
-         * An object of Tiled Object Layers
+         * An object of collision data. Must be created as physics object or will return undefined.
          * 
          * @name Phaser.Tilemaps.MapData#collision
          * @type {object}
@@ -178,7 +178,7 @@ var MapData = new Class({
         this.collision = GetFastValue(config, 'collision', {});
 
         /**
-         * An object of collision data. Must be created as physics object or will return undefined
+         * An array of Tilesets.
          * 
          * @name Phaser.Tilemaps.MapData#tilesets
          * @type {array}
@@ -187,7 +187,7 @@ var MapData = new Class({
         this.tilesets = GetFastValue(config, 'tilesets', []);
 
         /**
-         * An array of Tilesets
+         * [description]
          * 
          * @name Phaser.Tilemaps.MapData#imageCollections
          * @type {array}
