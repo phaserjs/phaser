@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -10,8 +10,8 @@ var Extend = require('../../utils/object/Extend');
 /**
  * @callback ArcadePhysicsCallback
  *
- * @param {Phaser.GameObjects.GameObject} object1 - [description]
- * @param {Phaser.GameObjects.GameObject} object2 - [description]
+ * @param {Phaser.GameObjects.GameObject} object1 - The first Body to separate.
+ * @param {Phaser.GameObjects.GameObject} object2 - The second Body to separate.
  */
 
 /**

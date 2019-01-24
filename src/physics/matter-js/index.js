@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -72,3 +72,12 @@ module.exports = {
  *
  * @class MatterJS.Engine
  */
+
+/**
+ * @classdesc
+* The `Matter.Vertices` module contains methods for creating and manipulating sets of vertices.
+* A set of vertices is an array of `Matter.Vector` with additional indexing properties inserted by `Vertices.create`.
+* A `Matter.Body` maintains a set of vertices to represent the shape of the object (its convex hull).
+*
+* @class MatterJS.Vertices
+*/

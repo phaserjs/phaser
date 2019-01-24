@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Felipe Alfonso <@bitnenfer>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -26,7 +26,7 @@ var WebGLPipeline = require('../WebGLPipeline');
  *
  * @class BitmapMaskPipeline
  * @extends Phaser.Renderer.WebGL.WebGLPipeline
- * @memberOf Phaser.Renderer.WebGL.Pipelines
+ * @memberof Phaser.Renderer.WebGL.Pipelines
  * @constructor
  * @since 3.0.0
  *
@@ -105,7 +105,7 @@ var BitmapMaskPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline#onBind
      * @since 3.0.0
      *
-     * @return {Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline} [description]
+     * @return {this} This WebGLPipeline instance.
      */
     onBind: function ()
     {
@@ -135,7 +135,7 @@ var BitmapMaskPipeline = new Class({
      * @param {number} height - [description]
      * @param {number} resolution - [description]
      *
-     * @return {Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline} [description]
+     * @return {this} This WebGLPipeline instance.
      */
     resize: function (width, height, resolution)
     {

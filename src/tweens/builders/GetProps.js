@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -12,9 +12,9 @@ var RESERVED = require('../tween/ReservedProps');
  * @function Phaser.Tweens.Builders.GetProps
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {object} config - The configuration object of the tween to get the target(s) from.
  *
- * @return {array} [description]
+ * @return {array} An array of all the targets the tween is operating on.
  */
 var GetProps = function (config)
 {

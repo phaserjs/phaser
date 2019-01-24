@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -31,7 +31,7 @@ var Vector2 = require('../../../math/Vector2');
  * A zone that places particles randomly within a shape's area.
  *
  * @class RandomZone
- * @memberOf Phaser.GameObjects.Particles.Zones
+ * @memberof Phaser.GameObjects.Particles.Zones
  * @constructor
  * @since 3.0.0
  *

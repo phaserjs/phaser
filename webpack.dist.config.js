@@ -13,9 +13,7 @@ module.exports = {
         phaser: './phaser.js',
         'phaser.min': './phaser.js',
         'phaser-arcade-physics': './phaser-arcade-physics.js',
-        'phaser-arcade-physics.min': './phaser-arcade-physics.js',
-        'phaser-core': './phaser-core.js',
-        'phaser-core.min': './phaser-core.js'
+        'phaser-arcade-physics.min': './phaser-arcade-physics.js'
     },
 
     output: {

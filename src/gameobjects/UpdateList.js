@@ -1,11 +1,12 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Class = require('../utils/Class');
 var PluginCache = require('../plugins/PluginCache');
+var SceneEvents = require('../scene/events');
 
 /**
  * @classdesc
@@ -16,7 +17,7 @@ var PluginCache = require('../plugins/PluginCache');
  * Some or all of these Game Objects may also be part of the Scene's [Display List]{@link Phaser.GameObjects.DisplayList}, for Rendering.
  *
  * @class UpdateList
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
@@ -79,8 +80,8 @@ var UpdateList = new Class({
          */
         this._pendingRemoval = [];
 
-        scene.sys.events.once('boot', this.boot, this);
-        scene.sys.events.on('start', this.start, this);
+        scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
+        scene.sys.events.on(SceneEvents.START, this.start, this);
     },
 
     /**
@@ -93,7 +94,7 @@ var UpdateList = new Class({
      */
     boot: function ()
     {
-        this.systems.events.once('destroy', this.destroy, this);
+        this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
     },
 
     /**
@@ -109,9 +110,9 @@ var UpdateList = new Class({
     {
         var eventEmitter = this.systems.events;
 
-        eventEmitter.on('preupdate', this.preUpdate, this);
-        eventEmitter.on('update', this.update, this);
-        eventEmitter.once('shutdown', this.shutdown, this);
+        eventEmitter.on(SceneEvents.PRE_UPDATE, this.preUpdate, this);
+        eventEmitter.on(SceneEvents.UPDATE, this.update, this);
+        eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -254,7 +255,26 @@ var UpdateList = new Class({
      */
     shutdown: function ()
     {
-        this.removeAll();
+        var i = this._list.length;
+
+        while (i--)
+        {
+            this._list[i].destroy(true);
+        }
+
+        i = this._pendingRemoval.length;
+
+        while (i--)
+        {
+            this._pendingRemoval[i].destroy(true);
+        }
+
+        i = this._pendingInsertion.length;
+
+        while (i--)
+        {
+            this._pendingInsertion[i].destroy(true);
+        }
 
         this._list.length = 0;
         this._pendingRemoval.length = 0;
@@ -262,9 +282,9 @@ var UpdateList = new Class({
 
         var eventEmitter = this.systems.events;
 
-        eventEmitter.off('preupdate', this.preUpdate, this);
-        eventEmitter.off('update', this.update, this);
-        eventEmitter.off('shutdown', this.shutdown, this);
+        eventEmitter.off(SceneEvents.PRE_UPDATE, this.preUpdate, this);
+        eventEmitter.off(SceneEvents.UPDATE, this.update, this);
+        eventEmitter.off(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -278,7 +298,7 @@ var UpdateList = new Class({
     {
         this.shutdown();
 
-        this.scene.sys.events.off('start', this.start, this);
+        this.scene.sys.events.off(SceneEvents.START, this.start, this);
 
         this.scene = null;
         this.systems = null;
@@ -289,7 +309,7 @@ var UpdateList = new Class({
      *
      * @name Phaser.GameObjects.UpdateList#length
      * @type {integer}
-     * @readOnly
+     * @readonly
      * @since 3.10.0
      */
     length: {

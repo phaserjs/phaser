@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -106,15 +106,15 @@ var BlitterWebGLRenderer = function (renderer, src, interpolationPercentage, cam
 
         if (roundPixels)
         {
-            tx0 |= 0;
-            ty0 |= 0;
+            tx0 = Math.round(tx0);
+            ty0 = Math.round(ty0);
 
-            tx1 |= 0;
-            ty1 |= 0;
+            tx1 = Math.round(tx1);
+            ty1 = Math.round(ty1);
         }
 
         //  TL x/y, BL x/y, BR x/y, TR x/y
-        if (pipeline.batchQuad(tx0, ty0, tx0, ty1, tx1, ty1, tx1, ty0, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect))
+        if (pipeline.batchQuad(tx0, ty0, tx0, ty1, tx1, ty1, tx1, ty0, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect, frame.glTexture, 0))
         {
             prevTextureSourceIndex = -1;
         }

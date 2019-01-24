@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -18,7 +18,7 @@ var quickselect = require('../utils/array/QuickSelect');
  * This is to avoid the eval like function creation that the original library used, which caused CSP policy violations.
  *
  * @class RTree
- * @memberOf Phaser.Structs
+ * @memberof Phaser.Structs
  * @constructor
  * @since 3.0.0
  */

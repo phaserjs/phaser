@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -104,7 +104,7 @@ var Render = require('./GraphicsRender');
  *
  * @class Graphics
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
@@ -507,6 +507,26 @@ var Graphics = new Class({
     },
 
     /**
+     * Fill the current path.
+     * 
+     * This is an alias for `Graphics.fillPath` and does the same thing.
+     * It was added to match the CanvasRenderingContext 2D API.
+     *
+     * @method Phaser.GameObjects.Graphics#fill
+     * @since 3.16.0
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
+    fill: function ()
+    {
+        this.commandBuffer.push(
+            Commands.FILL_PATH
+        );
+
+        return this;
+    },
+
+    /**
      * Stroke the current path.
      *
      * @method Phaser.GameObjects.Graphics#strokePath
@@ -515,6 +535,26 @@ var Graphics = new Class({
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
     strokePath: function ()
+    {
+        this.commandBuffer.push(
+            Commands.STROKE_PATH
+        );
+
+        return this;
+    },
+
+    /**
+     * Stroke the current path.
+     * 
+     * This is an alias for `Graphics.strokePath` and does the same thing.
+     * It was added to match the CanvasRenderingContext 2D API.
+     *
+     * @method Phaser.GameObjects.Graphics#stroke
+     * @since 3.16.0
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
+    stroke: function ()
     {
         this.commandBuffer.push(
             Commands.STROKE_PATH
@@ -1005,15 +1045,15 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Draw a line from the current drawing position to the given position with a specific width and color.
      *
      * @method Phaser.GameObjects.Graphics#lineFxTo
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} rgb - [description]
+     * @param {number} x - The x coordinate to draw the line to.
+     * @param {number} y - The y coordinate to draw the line to.
+     * @param {number} width - The width of the stroke.
+     * @param {number} rgb - The color of the stroke.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -1028,15 +1068,15 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
+     * Move the current drawing position to the given position and change the pen width and color.
      *
      * @method Phaser.GameObjects.Graphics#moveFxTo
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} rgb - [description]
+     * @param {number} x - The x coordinate to move to.
+     * @param {number} y - The y coordinate to move to.
+     * @param {number} width - The new stroke width.
+     * @param {number} rgb - The new stroke color.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -1446,8 +1486,8 @@ var Graphics = new Class({
         var sys = this.scene.sys;
         var renderer = sys.game.renderer;
 
-        if (width === undefined) { width = sys.game.config.width; }
-        if (height === undefined) { height = sys.game.config.height; }
+        if (width === undefined) { width = sys.scale.width; }
+        if (height === undefined) { height = sys.scale.height; }
 
         Graphics.TargetCamera.setScene(this.scene);
         Graphics.TargetCamera.setViewport(0, 0, width, height);
@@ -1493,9 +1533,9 @@ var Graphics = new Class({
             // var GraphicsCanvasRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix, renderTargetCtx, allowClip)
             this.renderCanvas(renderer, this, 0, Graphics.TargetCamera, null, ctx, false);
 
-            if (renderer.gl && texture)
+            if (texture)
             {
-                texture.source[0].glTexture = renderer.canvasToTexture(ctx.canvas, texture.source[0].glTexture);
+                texture.refresh();
             }
         }
 

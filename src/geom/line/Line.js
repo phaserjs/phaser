@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -15,7 +15,7 @@ var Vector2 = require('../../math/Vector2');
  * Defines a Line segment, a part of a line between two endpoints.
  *
  * @class Line
- * @memberOf Phaser.Geom
+ * @memberof Phaser.Geom
  * @constructor
  * @since 3.0.0
  *

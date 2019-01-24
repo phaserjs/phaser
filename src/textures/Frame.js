@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -13,7 +13,7 @@ var Extend = require('../utils/object/Extend');
  * A Frame is a section of a Texture.
  *
  * @class Frame
- * @memberOf Phaser.Textures
+ * @memberof Phaser.Textures
  * @constructor
  * @since 3.0.0
  *
@@ -502,6 +502,9 @@ var Frame = new Class({
             //  Need to check for intersection between the cut area and the crop area
             //  If there is none, we set UV to be empty, otherwise set it to be the intersection area
 
+            width = Clamp(width, 0, cw - x);
+            height = Clamp(height, 0, ch - y);
+    
             var cropRight = x + width;
             var cropBottom = y + height;
 
@@ -722,7 +725,7 @@ var Frame = new Class({
      *
      * @name Phaser.Textures.Frame#realWidth
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     realWidth: {
@@ -740,7 +743,7 @@ var Frame = new Class({
      *
      * @name Phaser.Textures.Frame#realHeight
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     realHeight: {
@@ -757,7 +760,7 @@ var Frame = new Class({
      *
      * @name Phaser.Textures.Frame#radius
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     radius: {
@@ -774,7 +777,7 @@ var Frame = new Class({
      *
      * @name Phaser.Textures.Frame#trimmed
      * @type {boolean}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     trimmed: {
@@ -791,7 +794,7 @@ var Frame = new Class({
      *
      * @name Phaser.Textures.Frame#canvasData
      * @type {object}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     canvasData: {

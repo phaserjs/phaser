@@ -1,18 +1,11 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Class = require('../../utils/Class');
 var GetValue = require('../../utils/object/GetValue');
-
-//  var camControl = new CameraControl({
-//      camera: this.cameras.main,
-//      left: cursors.left,
-//      right: cursors.right,
-//      speed: float OR { x: 0, y: 0 }
-//  })
 
 /**
  * @typedef {object} FixedKeyControlConfig
@@ -30,14 +23,29 @@ var GetValue = require('../../utils/object/GetValue');
 
 /**
  * @classdesc
- * [description]
+ * A Fixed Key Camera Control.
+ *
+ * This allows you to control the movement and zoom of a camera using the defined keys.
+ *
+ * ```javascript
+ * var camControl = new FixedKeyControl({
+ *     camera: this.cameras.main,
+ *     left: cursors.left,
+ *     right: cursors.right,
+ *     speed: float OR { x: 0, y: 0 }
+ * });
+ * ```
+ *
+ * Movement is precise and has no 'smoothing' applied to it.
+ *
+ * You must call the `update` method of this controller every frame.
  *
  * @class FixedKeyControl
- * @memberOf Phaser.Cameras.Controls
+ * @memberof Phaser.Cameras.Controls
  * @constructor
  * @since 3.0.0
  *
- * @param {FixedKeyControlConfig} config - [description]
+ * @param {FixedKeyControlConfig} config - The Fixed Key Control configuration object.
  */
 var FixedKeyControl = new Class({
 
@@ -159,7 +167,7 @@ var FixedKeyControl = new Class({
         }
 
         /**
-         * [description]
+         * Internal property to track the current zoom level.
          *
          * @name Phaser.Cameras.Controls.FixedKeyControl#_zoom
          * @type {number}
@@ -227,12 +235,14 @@ var FixedKeyControl = new Class({
     },
 
     /**
-     * [description]
+     * Applies the results of pressing the control keys to the Camera.
+     *
+     * You must call this every step, it is not called automatically.
      *
      * @method Phaser.Cameras.Controls.FixedKeyControl#update
      * @since 3.0.0
      *
-     * @param {number} delta - [description]
+     * @param {number} delta - The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.
      */
     update: function (delta)
     {

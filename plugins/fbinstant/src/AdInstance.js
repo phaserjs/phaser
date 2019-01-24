@@ -4,11 +4,20 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var AdInstance = function (instance, video)
+/**
+ * @typedef {object} AdInstance
+ *
+ * @property {any} instance - Represents an instance of an ad.
+ * @property {string} placementID - The Audience Network placement ID of this ad instance.
+ * @property {boolean} shown - Has this ad already been shown in-game?
+ * @property {boolean} video - Is this a video ad?
+ */
+
+var AdInstance = function (placementID, instance, video)
 {
     return {
         instance: instance,
-        placementID: instance.getPlacementID(),
+        placementID: placementID,
         shown: false,
         video: video
     };

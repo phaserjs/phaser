@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -14,6 +14,7 @@ module.exports = {
     Map: require('./Map'),
     ProcessQueue: require('./ProcessQueue'),
     RTree: require('./RTree'),
-    Set: require('./Set')
+    Set: require('./Set'),
+    Size: require('./Size')
 
 };

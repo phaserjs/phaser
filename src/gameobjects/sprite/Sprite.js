@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -23,7 +23,7 @@ var SpriteRender = require('./SpriteRender');
  *
  * @class Sprite
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
@@ -153,6 +153,20 @@ var Sprite = new Class({
         //  Extra Sprite data is added here
 
         return data;
+    },
+
+    /**
+     * Handles the pre-destroy step for the Sprite, which removes the Animation component.
+     *
+     * @method Phaser.GameObjects.Sprite#preDestroy
+     * @private
+     * @since 3.14.0
+     */
+    preDestroy: function ()
+    {
+        this.anims.destroy();
+
+        this.anims = undefined;
     }
 
 });

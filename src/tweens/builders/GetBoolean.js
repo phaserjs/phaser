@@ -1,20 +1,20 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 /**
- * [description]
+ * Retrieves the value of the given key from an object.
  *
  * @function Phaser.Tweens.Builders.GetBoolean
  * @since 3.0.0
  *
- * @param {object} source - [description]
- * @param {string} key - [description]
- * @param {*} defaultValue - [description]
+ * @param {object} source - The object to retrieve the value from.
+ * @param {string} key - The key to look for in the `source` object.
+ * @param {*} defaultValue - The default value to return if the `key` doesn't exist or if no `source` object is provided.
  *
- * @return {*} [description]
+ * @return {*} The retrieved value.
  */
 var GetBoolean = function (source, key, defaultValue)
 {

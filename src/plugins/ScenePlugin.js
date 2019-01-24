@@ -1,11 +1,12 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2018 Photon Storm Ltd.
+* @copyright    2019 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser3-plugin-template/blob/master/LICENSE|MIT License}
 */
 
 var BasePlugin = require('./BasePlugin');
 var Class = require('../utils/Class');
+var SceneEvents = require('../scene/events');
 
 /**
  * @classdesc
@@ -14,7 +15,7 @@ var Class = require('../utils/Class');
  * It can map itself to a Scene property, or into the Scene Systems, or both.
  *
  * @class ScenePlugin
- * @memberOf Phaser.Plugins
+ * @memberof Phaser.Plugins
  * @extends Phaser.Plugins.BasePlugin
  * @constructor
  * @since 3.8.0
@@ -35,7 +36,7 @@ var ScenePlugin = new Class({
         this.scene = scene;
         this.systems = scene.sys;
 
-        scene.sys.events.once('boot', this.boot, this);
+        scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
     },
 
     /**

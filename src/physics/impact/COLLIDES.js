@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -15,8 +15,8 @@
  *
  * @name Phaser.Physics.Impact.COLLIDES
  * @enum {integer}
- * @memberOf Phaser.Physics.Impact
- * @readOnly
+ * @memberof Phaser.Physics.Impact
+ * @readonly
  * @since 3.0.0
  */
 module.exports = {

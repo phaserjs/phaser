@@ -1,16 +1,16 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 /**
  * Keyboard Codes.
- * 
+ *
  * @name Phaser.Input.Keyboard.KeyCodes
  * @enum {integer}
- * @memberOf Phaser.Input.Keyboard
- * @readOnly
+ * @memberof Phaser.Input.Keyboard
+ * @readonly
  * @since 3.0.0
  */
 
@@ -464,8 +464,37 @@ var KeyCodes = {
     /**
      * @name Phaser.Input.Keyboard.KeyCodes.CLOSED_BRACKET
      */
-    CLOSED_BRACKET: 221
+    CLOSED_BRACKET: 221,
 
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.SEMICOLON_FIREFOX
+     */
+    SEMICOLON_FIREFOX: 59,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.COLON
+     */
+    COLON: 58,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.COMMA_FIREFOX_WINDOWS
+     */
+    COMMA_FIREFOX_WINDOWS: 60,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.COMMA_FIREFOX
+     */
+    COMMA_FIREFOX: 62,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.BRACKET_RIGHT_FIREFOX
+     */
+    BRACKET_RIGHT_FIREFOX: 174,
+
+    /**
+     * @name Phaser.Input.Keyboard.KeyCodes.BRACKET_LEFT_FIREFOX
+     */
+    BRACKET_LEFT_FIREFOX: 175
 };
 
 module.exports = KeyCodes;

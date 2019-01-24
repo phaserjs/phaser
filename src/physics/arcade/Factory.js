@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -17,7 +17,7 @@ var StaticPhysicsGroup = require('./StaticPhysicsGroup');
  * Objects that are created by this Factory are automatically added to the physics world.
  *
  * @class Factory
- * @memberOf Phaser.Physics.Arcade
+ * @memberof Phaser.Physics.Arcade
  * @constructor
  * @since 3.0.0
  *
@@ -58,7 +58,7 @@ var Factory = new Class({
     },
 
     /**
-     * Create a new Arcade Physics Collider object.
+     * Creates a new Arcade Physics Collider object.
      *
      * @method Phaser.Physics.Arcade.Factory#collider
      * @since 3.0.0
@@ -77,7 +77,7 @@ var Factory = new Class({
     },
 
     /**
-     * Create a new Arcade Physics Collider Overlap object.
+     * Creates a new Arcade Physics Collider Overlap object.
      *
      * @method Phaser.Physics.Arcade.Factory#overlap
      * @since 3.0.0
@@ -101,8 +101,8 @@ var Factory = new Class({
      * @method Phaser.Physics.Arcade.Factory#existing
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.GameObject} gameObject - [description]
-     * @param {boolean} [isStatic=false] - Set to true to create a Static body, otherwise it will create a Dynamic body.
+     * @param {Phaser.GameObjects.GameObject} gameObject - A Game Object.
+     * @param {boolean} [isStatic=false] - Create a Static body (true) or Dynamic body (false).
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object.
      */
@@ -220,8 +220,8 @@ var Factory = new Class({
      * @method Phaser.Physics.Arcade.Factory#staticGroup
      * @since 3.0.0
      *
-     * @param {object|object[]} [children] - [description]
-     * @param {GroupConfig} [config] - [description]
+     * @param {(Phaser.GameObjects.GameObject[]|GroupConfig|GroupCreateConfig)} [children] - Game Objects to add to this group; or the `config` argument.
+     * @param {GroupConfig|GroupCreateConfig} [config] - Settings for this group.
      *
      * @return {Phaser.Physics.Arcade.StaticGroup} The Static Group object that was created.
      */
@@ -237,8 +237,8 @@ var Factory = new Class({
      * @method Phaser.Physics.Arcade.Factory#group
      * @since 3.0.0
      *
-     * @param {object|object[]} [children] - [description]
-     * @param {PhysicsGroupConfig} [config] - [description]
+     * @param {(Phaser.GameObjects.GameObject[]|PhysicsGroupConfig|GroupCreateConfig)} [children] - Game Objects to add to this group; or the `config` argument.
+     * @param {PhysicsGroupConfig|GroupCreateConfig} [config] - Settings for this group.
      *
      * @return {Phaser.Physics.Arcade.Group} The Group object that was created.
      */

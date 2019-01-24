@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -34,22 +34,23 @@ function init ()
 {
     var i;
 
-    var fs = [
-        'requestFullscreen',
-        'requestFullScreen',
-        'webkitRequestFullscreen',
-        'webkitRequestFullScreen',
-        'msRequestFullscreen',
-        'msRequestFullScreen',
-        'mozRequestFullScreen',
-        'mozRequestFullscreen'
-    ];
+    var suffix1 = 'Fullscreen';
+    var suffix2 = 'FullScreen';
 
-    var element = document.createElement('div');
+    var fs = [
+        'request' + suffix1,
+        'request' + suffix2,
+        'webkitRequest' + suffix1,
+        'webkitRequest' + suffix2,
+        'msRequest' + suffix1,
+        'msRequest' + suffix2,
+        'mozRequest' + suffix2,
+        'mozRequest' + suffix1
+    ];
 
     for (i = 0; i < fs.length; i++)
     {
-        if (element[fs[i]])
+        if (document.documentElement[fs[i]])
         {
             Fullscreen.available = true;
             Fullscreen.request = fs[i];
@@ -58,14 +59,14 @@ function init ()
     }
 
     var cfs = [
-        'cancelFullScreen',
-        'exitFullscreen',
-        'webkitCancelFullScreen',
-        'webkitExitFullscreen',
-        'msCancelFullScreen',
-        'msExitFullscreen',
-        'mozCancelFullScreen',
-        'mozExitFullscreen'
+        'cancel' + suffix2,
+        'exit' + suffix1,
+        'webkitCancel' + suffix2,
+        'webkitExit' + suffix1,
+        'msCancel' + suffix2,
+        'msExit' + suffix1,
+        'mozCancel' + suffix2,
+        'mozExit' + suffix1
     ];
 
     if (Fullscreen.available)
@@ -81,10 +82,13 @@ function init ()
     }
 
     //  Keyboard Input?
-    if (window['Element'] && Element['ALLOW_KEYBOARD_INPUT'])
+    //  Safari 5.1 says it supports fullscreen keyboard, but is lying.
+    if (window['Element'] && Element['ALLOW_KEYBOARD_INPUT'] && !(/ Version\/5\.1(?:\.\d+)? Safari\//).test(navigator.userAgent))
     {
         Fullscreen.keyboard = true;
     }
+
+    Object.defineProperty(Fullscreen, 'active', { get: function () { return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement); } });
 
     return Fullscreen;
 }

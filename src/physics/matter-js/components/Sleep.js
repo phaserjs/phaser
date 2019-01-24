@@ -1,9 +1,10 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var Events = require('../events');
 var MatterEvents = require('../lib/core/Events');
 
 /**
@@ -70,7 +71,7 @@ var Sleep = {
 
             MatterEvents.on(this.body, 'sleepStart', function (event)
             {
-                world.emit('sleepstart', event, this);
+                world.emit(Events.SLEEP_START, event, this);
             });
         }
         else
@@ -99,7 +100,7 @@ var Sleep = {
 
             MatterEvents.on(this.body, 'sleepEnd', function (event)
             {
-                world.emit('sleepend', event, this);
+                world.emit(Events.SLEEP_END, event, this);
             });
         }
         else

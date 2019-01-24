@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -26,6 +26,7 @@ module.exports = {
     MultiAtlasFile: require('./MultiAtlasFile'),
     PackFile: require('./PackFile'),
     PluginFile: require('./PluginFile'),
+    SceneFile: require('./SceneFile'),
     ScenePluginFile: require('./ScenePluginFile'),
     ScriptFile: require('./ScriptFile'),
     SpriteSheetFile: require('./SpriteSheetFile'),

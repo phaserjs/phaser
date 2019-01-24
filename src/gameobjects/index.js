@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -9,6 +9,8 @@
  */
 
 var GameObjects = {
+
+    Events: require('./events'),
 
     DisplayList: require('./DisplayList'),
     GameObjectCreator: require('./GameObjectCreator'),
@@ -24,6 +26,7 @@ var GameObjects = {
     Blitter: require('./blitter/Blitter'),
     Container: require('./container/Container'),
     DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapText'),
+    Extern: require('./extern/Extern.js'),
     Graphics: require('./graphics/Graphics.js'),
     Group: require('./group/Group'),
     Image: require('./image/Image'),
@@ -39,7 +42,17 @@ var GameObjects = {
     //  Shapes
 
     Shape: require('./shape/Shape'),
-    Rectangle: require('./shape/Rectangle'),
+    Arc: require('./shape/arc/Arc'),
+    Curve: require('./shape/curve/Curve'),
+    Ellipse: require('./shape/ellipse/Ellipse'),
+    Grid: require('./shape/grid/Grid'),
+    IsoBox: require('./shape/isobox/IsoBox'),
+    IsoTriangle: require('./shape/isotriangle/IsoTriangle'),
+    Line: require('./shape/line/Line'),
+    Polygon: require('./shape/polygon/Polygon'),
+    Rectangle: require('./shape/rectangle/Rectangle'),
+    Star: require('./shape/star/Star'),
+    Triangle: require('./shape/triangle/Triangle'),
 
     //  Game Object Factories
 
@@ -47,18 +60,31 @@ var GameObjects = {
         Blitter: require('./blitter/BlitterFactory'),
         Container: require('./container/ContainerFactory'),
         DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapTextFactory'),
+        Extern: require('./extern/ExternFactory'),
         Graphics: require('./graphics/GraphicsFactory'),
         Group: require('./group/GroupFactory'),
         Image: require('./image/ImageFactory'),
         Particles: require('./particles/ParticleManagerFactory'),
         PathFollower: require('./pathfollower/PathFollowerFactory'),
         RenderTexture: require('./rendertexture/RenderTextureFactory'),
-        Shape: require('./shape/ShapeFactory'),
         Sprite: require('./sprite/SpriteFactory'),
         StaticBitmapText: require('./bitmaptext/static/BitmapTextFactory'),
         Text: require('./text/static/TextFactory'),
         TileSprite: require('./tilesprite/TileSpriteFactory'),
-        Zone: require('./zone/ZoneFactory')
+        Zone: require('./zone/ZoneFactory'),
+
+        //  Shapes
+        Arc: require('./shape/arc/ArcFactory'),
+        Curve: require('./shape/curve/CurveFactory'),
+        Ellipse: require('./shape/ellipse/EllipseFactory'),
+        Grid: require('./shape/grid/GridFactory'),
+        IsoBox: require('./shape/isobox/IsoBoxFactory'),
+        IsoTriangle: require('./shape/isotriangle/IsoTriangleFactory'),
+        Line: require('./shape/line/LineFactory'),
+        Polygon: require('./shape/polygon/PolygonFactory'),
+        Rectangle: require('./shape/rectangle/RectangleFactory'),
+        Star: require('./shape/star/StarFactory'),
+        Triangle: require('./shape/triangle/TriangleFactory')
     },
 
     Creators: {
@@ -70,7 +96,6 @@ var GameObjects = {
         Image: require('./image/ImageCreator'),
         Particles: require('./particles/ParticleManagerCreator'),
         RenderTexture: require('./rendertexture/RenderTextureCreator'),
-        Shape: require('./shape/ShapeCreator'),
         Sprite: require('./sprite/SpriteCreator'),
         StaticBitmapText: require('./bitmaptext/static/BitmapTextCreator'),
         Text: require('./text/static/TextCreator'),

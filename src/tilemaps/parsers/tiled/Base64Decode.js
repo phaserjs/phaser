@@ -1,18 +1,18 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 /**
- * [description]
+ * Decode base-64 encoded data, for example as exported by Tiled.
  *
  * @function Phaser.Tilemaps.Parsers.Tiled.Base64Decode
  * @since 3.0.0
  *
- * @param {object} data - [description]
+ * @param {object} data - Base-64 encoded data to decode.
  *
- * @return {array} [description]
+ * @return {array} Array containing the decoded bytes.
  */
 var Base64Decode = function (data)
 {

@@ -1,6 +1,6 @@
 /**
 * @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2018 Photon Storm Ltd.
+* @copyright    2019 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser3-plugin-template/blob/master/LICENSE|MIT License}
 */
 
@@ -12,7 +12,7 @@ var Class = require('../utils/Class');
  * It can listen for Game events and respond to them.
  *
  * @class BasePlugin
- * @memberOf Phaser.Plugins
+ * @memberof Phaser.Plugins
  * @constructor
  * @since 3.8.0
  *

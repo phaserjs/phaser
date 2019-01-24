@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -59,6 +59,15 @@ var INPUT_CONST = {
      * @since 3.10.0
      */
     TOUCH_END: 5,
+
+    /**
+     * A touch pointer has been been cancelled by the browser.
+     * 
+     * @name Phaser.Input.TOUCH_CANCEL
+     * @type {integer}
+     * @since 3.15.0
+     */
+    TOUCH_CANCEL: 7,
 
     /**
      * The pointer lock has changed.

@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -19,7 +19,7 @@ var Mesh = require('../mesh/Mesh');
  *
  * @class Quad
  * @extends Phaser.GameObjects.Mesh
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @webglOnly
  * @since 3.0.0

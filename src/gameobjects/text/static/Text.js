@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -18,11 +18,47 @@ var TextStyle = require('../TextStyle');
 
 /**
  * @classdesc
- * [description]
+ * A Text Game Object.
+ * 
+ * Text objects work by creating their own internal hidden Canvas and then renders text to it using
+ * the standard Canvas `fillText` API. It then creates a texture from this canvas which is rendered
+ * to your game during the render pass.
+ * 
+ * Because it uses the Canvas API you can take advantage of all the features this offers, such as
+ * applying gradient fills to the text, or strokes, shadows and more. You can also use custom fonts
+ * loaded externally, such as Google or TypeKit Web fonts.
+ * 
+ * **Important:** If the font you wish to use has a space or digit in its name, such as
+ * 'Press Start 2P' or 'Roboto Condensed', then you _must_ put the font name in quotes, either
+ * when creating the Text object, or when setting the font via `setFont` or `setFontFamily`. I.e.:
+ * 
+ * ```javascript
+ * this.add.text(0, 0, 'Hello World', { fontFamily: '"Roboto Condensed"' });
+ * ```
+ * 
+ * Equally, if you wish to provide a list of fallback fonts, then you should ensure they are all
+ * quoted properly, too:
+ * 
+ * ```javascript
+ * this.add.text(0, 0, 'Hello World', { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif' });
+ * ```
+ *
+ * You can only display fonts that are currently loaded and available to the browser: therefore fonts must
+ * be pre-loaded. Phaser does not do ths for you, so you will require the use of a 3rd party font loader,
+ * or have the fonts ready available in the CSS on the page in which your Phaser game resides.
+ *
+ * See {@link http://www.jordanm.co.uk/tinytype this compatibility table} for the available default fonts
+ * across mobile browsers.
+ * 
+ * A note on performance: Every time the contents of a Text object changes, i.e. changing the text being
+ * displayed, or the style of the text, it needs to remake the Text canvas, and if on WebGL, re-upload the
+ * new texture to the GPU. This can be an expensive operation if used often, or with large quantities of
+ * Text objects in your game. If you run into performance issues you would be better off using Bitmap Text
+ * instead, as it benefits from batching and avoids expensive Canvas API calls.
  *
  * @class Text
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
@@ -184,6 +220,20 @@ var Text = new Class({
         this.height = 1;
 
         /**
+         * The line spacing value.
+         * This value is added to the font height to calculate the overall line height.
+         * Only has an effect if this Text object contains multiple lines of text.
+         * 
+         * If you update this property directly, instead of using the `setLineSpacing` method, then
+         * be sure to call `updateText` after, or you won't see the change reflected in the Text object.
+         *
+         * @name Phaser.GameObjects.Text#lineSpacing
+         * @type {number}
+         * @since 3.13.0
+         */
+        this.lineSpacing = 0;
+
+        /**
          * Whether the text or its settings have changed and need updating.
          *
          * @name Phaser.GameObjects.Text#dirty
@@ -221,7 +271,6 @@ var Text = new Class({
         if (this.renderer && this.renderer.gl)
         {
             //  Clear the default 1x1 glTexture, as we override it later
-
             this.renderer.deleteTexture(this.frame.source.glTexture);
 
             this.frame.source.glTexture = null;
@@ -236,7 +285,7 @@ var Text = new Class({
 
         if (style && style.lineSpacing)
         {
-            this._lineSpacing = style.lineSpacing;
+            this.lineSpacing = style.lineSpacing;
         }
 
         this.setText(text);
@@ -595,6 +644,20 @@ var Text = new Class({
      *
      * If an object is given, the `fontFamily`, `fontSize` and `fontStyle`
      * properties of that object are set.
+     * 
+     * **Important:** If the font you wish to use has a space or digit in its name, such as
+     * 'Press Start 2P' or 'Roboto Condensed', then you _must_ put the font name in quotes:
+     * 
+     * ```javascript
+     * Text.setFont('"Roboto Condensed"');
+     * ```
+     * 
+     * Equally, if you wish to provide a list of fallback fonts, then you should ensure they are all
+     * quoted properly, too:
+     * 
+     * ```javascript
+     * Text.setFont('Verdana, "Times New Roman", Tahoma, serif');
+     * ```
      *
      * @method Phaser.GameObjects.Text#setFont
      * @since 3.0.0
@@ -610,6 +673,20 @@ var Text = new Class({
 
     /**
      * Set the font family.
+     * 
+     * **Important:** If the font you wish to use has a space or digit in its name, such as
+     * 'Press Start 2P' or 'Roboto Condensed', then you _must_ put the font name in quotes:
+     * 
+     * ```javascript
+     * Text.setFont('"Roboto Condensed"');
+     * ```
+     * 
+     * Equally, if you wish to provide a list of fallback fonts, then you should ensure they are all
+     * quoted properly, too:
+     * 
+     * ```javascript
+     * Text.setFont('Verdana, "Times New Roman", Tahoma, serif');
+     * ```
      *
      * @method Phaser.GameObjects.Text#setFontFamily
      * @since 3.0.0
@@ -687,18 +764,23 @@ var Text = new Class({
     },
 
     /**
-     * Set the text fill color.
+     * Set the fill style to be used by the Text object.
+     *
+     * This can be any valid CanvasRenderingContext2D fillStyle value, such as
+     * a color (in hex, rgb, rgba, hsl or named values), a gradient or a pattern.
+     *
+     * See the [MDN fillStyle docs](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillStyle) for more details.
      *
      * @method Phaser.GameObjects.Text#setFill
      * @since 3.0.0
      *
-     * @param {string} color - The text fill color.
+     * @param {(string|any)} color - The text fill style. Can be any valid CanvasRenderingContext `fillStyle` value.
      *
      * @return {Phaser.GameObjects.Text} This Text object.
      */
-    setFill: function (color)
+    setFill: function (fillStyle)
     {
-        return this.style.setFill(color);
+        return this.style.setFill(fillStyle);
     },
 
     /**
@@ -903,6 +985,26 @@ var Text = new Class({
     setResolution: function (value)
     {
         return this.style.setResolution(value);
+    },
+
+    /**
+     * Sets the line spacing value.
+     *
+     * This value is _added_ to the height of the font when calculating the overall line height.
+     * This only has an effect if this Text object consists of multiple lines of text.
+     *
+     * @method Phaser.GameObjects.Text#setLineSpacing
+     * @since 3.13.0
+     *
+     * @param {number} value - The amount to add to the font height to achieve the overall line height.
+     *
+     * @return {Phaser.GameObjects.Text} This Text object.
+     */
+    setLineSpacing: function (value)
+    {
+        this.lineSpacing = value;
+
+        return this.updateText();
     },
 
     /**
@@ -1122,7 +1224,8 @@ var Text = new Class({
 
         if (this.renderer.gl)
         {
-            this.frame.source.glTexture = this.renderer.canvasToTexture(canvas, this.frame.source.glTexture);
+            this.frame.source.glTexture = this.renderer.canvasToTexture(canvas, this.frame.source.glTexture, true);
+
             this.frame.glTexture = this.frame.source.glTexture;
         }
 

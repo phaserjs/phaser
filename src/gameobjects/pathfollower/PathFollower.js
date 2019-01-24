@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -23,7 +23,7 @@ var Vector2 = require('../../math/Vector2');
  * @property {boolean} [positionOnPath=false] - Whether to position the PathFollower on the Path using its path offset.
  * @property {boolean} [rotateToPath=false] - Should the PathFollower automatically rotate to point in the direction of the Path?
  * @property {number} [rotationOffset=0] - If the PathFollower is rotating to match the Path, this value is added to the rotation value. This allows you to rotate objects to a path but control the angle of the rotation as well.
- * @property {boolean} [verticalAdjust=false] - [description]
+ * @property {number} [startAt=0] - Current start position of the path follow, between 0 and 1.
  */
 
 /**
@@ -41,7 +41,7 @@ var Vector2 = require('../../math/Vector2');
  *
  * @class PathFollower
  * @extends Phaser.GameObjects.Sprite
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
@@ -82,16 +82,6 @@ var PathFollower = new Class({
         this.rotateToPath = false;
 
         /**
-         * [description]
-         *
-         * @name Phaser.GameObjects.PathFollower#pathRotationVerticalAdjust
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.pathRotationVerticalAdjust = false;
-
-        /**
          * If the PathFollower is rotating to match the Path (@see Phaser.GameObjects.PathFollower#rotateToPath)
          * this value is added to the rotation value. This allows you to rotate objects to a path but control
          * the angle of the rotation as well.
@@ -114,7 +104,7 @@ var PathFollower = new Class({
         this.pathOffset = new Vector2(x, y);
 
         /**
-         * [description]
+         * A Vector2 that stores the current point of the path the follower is on.
          *
          * @name Phaser.GameObjects.PathFollower#pathVector
          * @type {Phaser.Math.Vector2}
@@ -194,19 +184,16 @@ var PathFollower = new Class({
      *
      * @param {boolean} value - Whether the PathFollower should automatically rotate to point in the direction of the Path.
      * @param {number} [offset=0] - Rotation offset in degrees.
-     * @param {boolean} [verticalAdjust=false] - [description]
      *
      * @return {Phaser.GameObjects.PathFollower} This Game Object.
      */
-    setRotateToPath: function (value, offset, verticalAdjust)
+    setRotateToPath: function (value, offset)
     {
         if (offset === undefined) { offset = 0; }
-        if (verticalAdjust === undefined) { verticalAdjust = false; }
 
         this.rotateToPath = value;
 
         this.pathRotationOffset = offset;
-        this.pathRotationVerticalAdjust = verticalAdjust;
 
         return this;
     },
@@ -266,7 +253,22 @@ var PathFollower = new Class({
 
         this.rotateToPath = GetBoolean(config, 'rotateToPath', false);
         this.pathRotationOffset = GetValue(config, 'rotationOffset', 0);
-        this.pathRotationVerticalAdjust = GetBoolean(config, 'verticalAdjust', false);
+
+        //  This works, but it's not an ideal way of doing it as the follower jumps position
+        var seek = GetValue(config, 'startAt', startAt);
+
+        if (seek)
+        {
+            config.onStart = function (tween)
+            {
+                var tweenData = tween.data[0];
+                tweenData.progress = seek;
+                tweenData.elapsed = tweenData.duration * seek;
+                var v = tweenData.ease(tweenData.progress);
+                tweenData.current = tweenData.start + ((tweenData.end - tweenData.start) * v);
+                tweenData.target[tweenData.key] = tweenData.current;
+            };
+        }
 
         this.pathTween = this.scene.sys.tweens.addCounter(config);
 
@@ -421,11 +423,6 @@ var PathFollower = new Class({
             if (this.rotateToPath)
             {
                 this.rotation = Math.atan2(speedY, speedX) + DegToRad(this.pathRotationOffset);
-
-                if (this.pathRotationVerticalAdjust)
-                {
-                    this.flipY = (this.rotation !== 0 && tweenData.state === TWEEN_CONST.PLAYING_BACKWARD);
-                }
             }
         }
     }

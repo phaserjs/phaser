@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -27,7 +27,7 @@ var Vector2 = require('../../math/Vector2');
  *
  * @class Sprite
  * @extends Phaser.GameObjects.Sprite
- * @memberOf Phaser.Physics.Matter
+ * @memberof Phaser.Physics.Matter
  * @constructor
  * @since 3.0.0
  *
@@ -89,7 +89,7 @@ var MatterSprite = new Class({
 
     function MatterSprite (world, x, y, texture, frame, options)
     {
-        GameObject.call(this, world.scene, 'Image');
+        GameObject.call(this, world.scene, 'Sprite');
 
         this.anims = new AnimationComponent(this);
 

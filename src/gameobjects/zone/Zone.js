@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -29,7 +29,7 @@ var RectangleContains = require('../../geom/rectangle/Contains');
  *
  * @class Zone
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
@@ -226,10 +226,7 @@ var Zone = new Class({
      */
     setRectangleDropZone: function (width, height)
     {
-        var x = -(width / 2);
-        var y = -(height / 2);
-
-        return this.setDropZone(new Rectangle(x, y, width, height), RectangleContains);
+        return this.setDropZone(new Rectangle(0, 0, width, height), RectangleContains);
     },
 
     /**
@@ -249,8 +246,7 @@ var Zone = new Class({
         {
             this.setRectangleDropZone(this.width, this.height);
         }
-        else
-        if (!this.input)
+        else if (!this.input)
         {
             this.setInteractive(shape, callback, true);
         }

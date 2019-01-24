@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -23,7 +23,7 @@ var Class = require('../../utils/Class');
  * handled via the Blitter parent.
  *
  * @class Bob
- * @memberOf Phaser.GameObjects.Blitter
+ * @memberof Phaser.GameObjects.Blitter
  * @constructor
  * @since 3.0.0
  *

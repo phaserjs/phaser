@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -16,7 +16,7 @@ var Class = require('../utils/Class');
  * Defaults to the identity matrix when instantiated.
  *
  * @class Matrix3
- * @memberOf Phaser.Math
+ * @memberof Phaser.Math
  * @constructor
  * @since 3.0.0
  *

@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -55,17 +55,12 @@ var GetTextSize = function (text, size, lines)
 
     var lineHeight = size.fontSize + style.strokeThickness;
     var height = lineHeight * drawnLines;
-    var lineSpacing = text._lineSpacing || 0;
-
-    if (lineSpacing < 0 && Math.abs(lineSpacing) > lineHeight)
-    {
-        lineSpacing = -lineHeight;
-    }
+    var lineSpacing = text.lineSpacing;
 
     //  Adjust for line spacing
-    if (lineSpacing !== 0)
+    if (lines.length > 1)
     {
-        height += (lineSpacing > 0) ? lineSpacing * lines.length : lineSpacing * (lines.length - 1);
+        height += lineSpacing * (lines.length - 1);
     }
 
     return {

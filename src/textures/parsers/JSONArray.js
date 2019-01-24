@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -11,7 +11,7 @@ var Clone = require('../../utils/object/Clone');
  * JSON format expected to match that defined by Texture Packer, with the frames property containing an array of Frames.
  *
  * @function Phaser.Textures.Parsers.JSONArray
- * @memberOf Phaser.Textures.Parsers
+ * @memberof Phaser.Textures.Parsers
  * @private
  * @since 3.0.0
  *

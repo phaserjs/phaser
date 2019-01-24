@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -8,15 +8,16 @@ var Class = require('../../utils/Class');
 
 /**
  * @classdesc
- * [description]
+ * An Arcade Physics Collider will automatically check for collision, or overlaps, between two objects
+ * every step. If a collision, or overlap, occurs it will invoke the given callbacks.
  *
  * @class Collider
- * @memberOf Phaser.Physics.Arcade
+ * @memberof Phaser.Physics.Arcade
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Physics.Arcade.World} world - [description]
- * @param {boolean} overlapOnly - [description]
+ * @param {Phaser.Physics.Arcade.World} world - The Arcade physics World that will manage the collisions.
+ * @param {boolean} overlapOnly - Whether to check for collisions or overlap.
  * @param {ArcadeColliderType} object1 - The first object to check for collision.
  * @param {ArcadeColliderType} object2 - The second object to check for collision.
  * @param {ArcadePhysicsCallback} collideCallback - The callback to invoke when the two objects collide.
@@ -30,7 +31,7 @@ var Collider = new Class({
     function Collider (world, overlapOnly, object1, object2, collideCallback, processCallback, callbackContext)
     {
         /**
-         * [description]
+         * The world in which the bodies will collide.
          *
          * @name Phaser.Physics.Arcade.Collider#world
          * @type {Phaser.Physics.Arcade.World}
@@ -39,7 +40,7 @@ var Collider = new Class({
         this.world = world;
 
         /**
-         * [description]
+         * The name of the collider (unused by Phaser).
          *
          * @name Phaser.Physics.Arcade.Collider#name
          * @type {string}
@@ -48,7 +49,7 @@ var Collider = new Class({
         this.name = '';
 
         /**
-         * [description]
+         * Whether the collider is active.
          *
          * @name Phaser.Physics.Arcade.Collider#active
          * @type {boolean}
@@ -58,7 +59,7 @@ var Collider = new Class({
         this.active = true;
 
         /**
-         * [description]
+         * Whether to check for collisions or overlaps.
          *
          * @name Phaser.Physics.Arcade.Collider#overlapOnly
          * @type {boolean}
@@ -67,7 +68,7 @@ var Collider = new Class({
         this.overlapOnly = overlapOnly;
 
         /**
-         * [description]
+         * The first object to check for collision.
          *
          * @name Phaser.Physics.Arcade.Collider#object1
          * @type {ArcadeColliderType}
@@ -76,7 +77,7 @@ var Collider = new Class({
         this.object1 = object1;
 
         /**
-         * [description]
+         * The second object to check for collision.
          *
          * @name Phaser.Physics.Arcade.Collider#object2
          * @type {ArcadeColliderType}
@@ -85,7 +86,7 @@ var Collider = new Class({
         this.object2 = object2;
 
         /**
-         * [description]
+         * The callback to invoke when the two objects collide.
          *
          * @name Phaser.Physics.Arcade.Collider#collideCallback
          * @type {ArcadePhysicsCallback}
@@ -94,7 +95,7 @@ var Collider = new Class({
         this.collideCallback = collideCallback;
 
         /**
-         * [description]
+         * If a processCallback exists it must return true or collision checking will be skipped.
          *
          * @name Phaser.Physics.Arcade.Collider#processCallback
          * @type {ArcadePhysicsCallback}
@@ -103,7 +104,7 @@ var Collider = new Class({
         this.processCallback = processCallback;
 
         /**
-         * [description]
+         * The context the collideCallback and processCallback will run in.
          *
          * @name Phaser.Physics.Arcade.Collider#callbackContext
          * @type {object}
@@ -113,14 +114,16 @@ var Collider = new Class({
     },
 
     /**
-     * [description]
+     * A name for the Collider.
+     * 
+     * Phaser does not use this value, it's for your own reference.
      *
      * @method Phaser.Physics.Arcade.Collider#setName
      * @since 3.1.0
      *
-     * @param {string} name - [description]
+     * @param {string} name - The name to assign to the Collider.
      *
-     * @return {Phaser.Physics.Arcade.Collider} [description]
+     * @return {Phaser.Physics.Arcade.Collider} This Collider instance.
      */
     setName: function (name)
     {
@@ -130,7 +133,7 @@ var Collider = new Class({
     },
 
     /**
-     * [description]
+     * Called by World as part of its step processing, initial operation of collision checking.
      *
      * @method Phaser.Physics.Arcade.Collider#update
      * @since 3.0.0
@@ -148,7 +151,7 @@ var Collider = new Class({
     },
 
     /**
-     * [description]
+     * Removes Collider from World and disposes of its resources.
      *
      * @method Phaser.Physics.Arcade.Collider#destroy
      * @since 3.0.0

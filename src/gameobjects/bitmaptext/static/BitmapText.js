@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -55,11 +55,29 @@ var Render = require('./BitmapTextRender');
 
 /**
  * @classdesc
- * [description]
+ * BitmapText objects work by taking a texture file and an XML or JSON file that describes the font structure.
+ * 
+ * During rendering for each letter of the text is rendered to the display, proportionally spaced out and aligned to
+ * match the font structure.
+ *
+ * BitmapText objects are less flexible than Text objects, in that they have less features such as shadows, fills and the ability
+ * to use Web Fonts, however you trade this flexibility for rendering speed. You can also create visually compelling BitmapTexts by
+ * processing the font texture in an image editor, applying fills and any other effects required.
+ *
+ * To create multi-line text insert \r, \n or \r\n escape codes into the text string.
+ *
+ * To create a BitmapText data files you need a 3rd party app such as:
+ *
+ * BMFont (Windows, free): {@link http://www.angelcode.com/products/bmfont/|http://www.angelcode.com/products/bmfont/}
+ * Glyph Designer (OS X, commercial): {@link http://www.71squared.com/en/glyphdesigner|http://www.71squared.com/en/glyphdesigner}
+ * Littera (Web-based, free): {@link http://kvazars.com/littera/|http://kvazars.com/littera/}
+ *
+ * For most use cases it is recommended to use XML. If you wish to use JSON, the formatting should be equal to the result of
+ * converting a valid XML file through the popular X2JS library. An online tool for conversion can be found here: {@link http://codebeautify.org/xmltojson|http://codebeautify.org/xmltojson}
  *
  * @class BitmapText
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
@@ -119,7 +137,7 @@ var BitmapText = new Class({
          *
          * @name Phaser.GameObjects.BitmapText#font
          * @type {string}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.font = font;
@@ -131,7 +149,7 @@ var BitmapText = new Class({
          *
          * @name Phaser.GameObjects.BitmapText#fontData
          * @type {BitmapFontData}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.fontData = entry.data;
@@ -532,7 +550,7 @@ var BitmapText = new Class({
      *
      * @name Phaser.GameObjects.BitmapText#width
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     width: {
@@ -551,7 +569,7 @@ var BitmapText = new Class({
      *
      * @name Phaser.GameObjects.BitmapText#height
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     height: {

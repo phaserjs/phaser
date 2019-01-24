@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -316,7 +316,7 @@ var Tint = {
      * @name Phaser.GameObjects.Components.Tint#isTinted
      * @type {boolean}
      * @webglOnly
-     * @readOnly
+     * @readonly
      * @since 3.11.0
      */
     isTinted: {

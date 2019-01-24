@@ -1,11 +1,12 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Actions = require('../../actions/');
 var Class = require('../../utils/Class');
+var Events = require('../events');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
@@ -28,7 +29,7 @@ var Sprite = require('../sprite/Sprite');
 /**
  * @typedef {object} GroupConfig
  *
- * @property {?object} [classType=Sprite] - Sets {@link Phaser.GameObjects.Group#classType}.
+ * @property {?GroupClassTypeConstructor} [classType=Sprite] - Sets {@link Phaser.GameObjects.Group#classType}.
  * @property {?boolean} [active=true] - Sets {@link Phaser.GameObjects.Group#active}.
  * @property {?number} [maxSize=-1] - Sets {@link Phaser.GameObjects.Group#maxSize}.
  * @property {?string} [defaultKey=null] - Sets {@link Phaser.GameObjects.Group#defaultKey}.
@@ -52,7 +53,7 @@ var Sprite = require('../sprite/Sprite');
  *
  * `key` is required. {@link Phaser.GameObjects.Group#defaultKey} is not used.
  *
- * @property {?object} [classType] - The class of each new Game Object.
+ * @property {?GroupClassTypeConstructor} [classType] - The class of each new Game Object.
  * @property {string} [key] - The texture key of each new Game Object.
  * @property {?(string|integer)} [frame=null] - The texture frame of each new Game Object.
  * @property {?boolean} [visible=true] - The visible state of each new Game Object.
@@ -94,6 +95,18 @@ var Sprite = require('../sprite/Sprite');
  */
 
 /**
+ * A constructor function (class) that can be assigned to `classType`.
+ * @callback GroupClassTypeConstructor
+ * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
+ * @param {number} x - The horizontal position of this Game Object in the world.
+ * @param {number} y - The vertical position of this Game Object in the world.
+ * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+ * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
+ *
+ * @see Phaser.GameObjects.Group#classType
+ */
+
+/**
  * @classdesc A Group is a way for you to create, manipulate, or recycle similar Game Objects.
  *
  * Group membership is non-exclusive. A Game Object can belong to several groups, one group, or none.
@@ -101,11 +114,11 @@ var Sprite = require('../sprite/Sprite');
  * Groups themselves aren't displayable, and can't be positioned, rotated, scaled, or hidden.
  *
  * @class Group
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  * @param {Phaser.Scene} scene - The scene this group belongs to.
- * @param {(Phaser.GameObjects.GameObject[]|GroupConfig)} [children] - Game objects to add to this group; or the `config` argument.
+ * @param {(Phaser.GameObjects.GameObject[]|GroupConfig|GroupCreateConfig)} [children] - Game Objects to add to this group; or the `config` argument.
  * @param {GroupConfig|GroupCreateConfig} [config] - Settings for this group. If `key` is set, Phaser.GameObjects.Group#createMultiple is also called with these settings.
  *
  * @see Phaser.Physics.Arcade.Group
@@ -185,7 +198,7 @@ var Group = new Class({
          * The class to create new group members from.
          *
          * @name Phaser.GameObjects.Group#classType
-         * @type {object}
+         * @type {GroupClassTypeConstructor}
          * @since 3.0.0
          * @default Phaser.GameObjects.Sprite
          */
@@ -560,7 +573,7 @@ var Group = new Class({
             }
         }
 
-        child.on('destroy', this.remove, this);
+        child.on(Events.DESTROY, this.remove, this);
 
         return this;
     },
@@ -624,7 +637,7 @@ var Group = new Class({
             this.removeCallback.call(this, child);
         }
 
-        child.off('destroy', this.remove, this);
+        child.off(Events.DESTROY, this.remove, this);
 
         if (destroyChild)
         {
@@ -667,7 +680,7 @@ var Group = new Class({
         {
             var gameObject = children.entries[i];
 
-            gameObject.off('destroy', this.remove, this);
+            gameObject.off(Events.DESTROY, this.remove, this);
 
             if (destroyChild)
             {
@@ -1199,7 +1212,7 @@ var Group = new Class({
                 var gameObject = children.entries[i];
 
                 //  Remove the event hook first or it'll go all recursive hell on us
-                gameObject.off('destroy', this.remove, this);
+                gameObject.off(Events.DESTROY, this.remove, this);
 
                 gameObject.destroy();
             }

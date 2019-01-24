@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -17,7 +17,7 @@ var Vector2 = require('../math/Vector2');
  *
  * @class Spline
  * @extends Phaser.Curves.Curve
- * @memberOf Phaser.Curves
+ * @memberof Phaser.Curves
  * @constructor
  * @since 3.0.0
  *

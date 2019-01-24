@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -13,7 +13,7 @@ var NOOP = require('../utils/NOOP');
  * This is invoked automatically by the Phaser.Game instance.
  *
  * @class RequestAnimationFrame
- * @memberOf Phaser.DOM
+ * @memberof Phaser.DOM
  * @constructor
  * @since 3.0.0
  */
@@ -92,9 +92,12 @@ var RequestAnimationFrame = new Class({
          * @type {FrameRequestCallback}
          * @since 3.0.0
          */
-        this.step = function step (timestamp)
+        this.step = function step ()
         {
-            // DOMHighResTimeStamp
+            //  Because we cannot trust the time passed to this callback from the browser and need it kept in sync with event times
+            var timestamp = window.performance.now();
+
+            //  DOMHighResTimeStamp
             _this.lastTime = _this.tick;
 
             _this.tick = timestamp;

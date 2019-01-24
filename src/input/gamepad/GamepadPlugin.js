@@ -1,14 +1,16 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Class = require('../../utils/Class');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
 var Gamepad = require('./Gamepad');
 var GetValue = require('../../utils/object/GetValue');
 var InputPluginCache = require('../InputPluginCache');
+var InputEvents = require('../events');
 
 /**
  * @typedef {object} Pad
@@ -54,7 +56,7 @@ var InputPluginCache = require('../InputPluginCache');
  *
  * @class GamepadPlugin
  * @extends Phaser.Events.EventEmitter
- * @memberOf Phaser.Input.Gamepad
+ * @memberof Phaser.Input.Gamepad
  * @constructor
  * @since 3.10.0
  *
@@ -188,8 +190,8 @@ var GamepadPlugin = new Class({
          */
         this._pad4;
 
-        sceneInputPlugin.pluginEvents.once('boot', this.boot, this);
-        sceneInputPlugin.pluginEvents.on('start', this.start, this);
+        sceneInputPlugin.pluginEvents.once(InputEvents.BOOT, this.boot, this);
+        sceneInputPlugin.pluginEvents.on(InputEvents.START, this.start, this);
     },
 
     /**
@@ -209,7 +211,7 @@ var GamepadPlugin = new Class({
         this.enabled = GetValue(settings, 'gamepad', config.inputGamepad) && game.device.input.gamepads;
         this.target = GetValue(settings, 'gamepad.target', config.inputGamepadEventTarget);
 
-        this.sceneInputPlugin.pluginEvents.once('destroy', this.destroy, this);
+        this.sceneInputPlugin.pluginEvents.once(InputEvents.DESTROY, this.destroy, this);
     },
 
     /**
@@ -228,7 +230,7 @@ var GamepadPlugin = new Class({
             this.startListeners();
         }
 
-        this.sceneInputPlugin.pluginEvents.once('shutdown', this.shutdown, this);
+        this.sceneInputPlugin.pluginEvents.once(InputEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -282,7 +284,7 @@ var GamepadPlugin = new Class({
         //  until more browsers support this
 
         //  Finally, listen for an update event from the Input Plugin
-        this.sceneInputPlugin.pluginEvents.on('update', this.update, this);
+        this.sceneInputPlugin.pluginEvents.on(InputEvents.UPDATE, this.update, this);
     },
 
     /**
@@ -298,7 +300,7 @@ var GamepadPlugin = new Class({
         this.target.removeEventListener('gamepadconnected', this.onGamepadHandler);
         this.target.removeEventListener('gamepaddisconnected', this.onGamepadHandler);
 
-        this.sceneInputPlugin.pluginEvents.off('update', this.update);
+        this.sceneInputPlugin.pluginEvents.off(InputEvents.UPDATE, this.update);
     },
 
     /**
@@ -445,6 +447,8 @@ var GamepadPlugin = new Class({
      *
      * @method Phaser.Input.Gamepad.GamepadPlugin#update
      * @private
+     * @fires Phaser.Input.Gamepad.Events#CONNECTED
+     * @fires Phaser.Input.Gamepad.Events#DISCONNECTED
      * @since 3.10.0
      */
     update: function ()
@@ -473,11 +477,11 @@ var GamepadPlugin = new Class({
 
             if (event.type === 'gamepadconnected')
             {
-                this.emit('connected', pad, event);
+                this.emit(Events.CONNECTED, pad, event);
             }
             else if (event.type === 'gamepaddisconnected')
             {
-                this.emit('disconnected', pad, event);
+                this.emit(Events.DISCONNECTED, pad, event);
             }
         }
     },

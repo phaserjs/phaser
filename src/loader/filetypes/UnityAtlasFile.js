@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -35,7 +35,7 @@ var TextFile = require('./TextFile.js');
  *
  * @class UnityAtlasFile
  * @extends Phaser.Loader.MultiFile
- * @memberOf Phaser.Loader.FileTypes
+ * @memberof Phaser.Loader.FileTypes
  * @constructor
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
@@ -59,6 +59,8 @@ var UnityAtlasFile = new Class({
         if (IsPlainObject(key))
         {
             var config = key;
+
+            key = GetFastValue(config, 'key');
 
             image = new ImageFile(loader, {
                 key: key,
@@ -100,7 +102,7 @@ var UnityAtlasFile = new Class({
      */
     addToCache: function ()
     {
-        if (this.failed === 0 && !this.complete)
+        if (this.isReadyToProcess())
         {
             var image = this.files[0];
             var text = this.files[1];

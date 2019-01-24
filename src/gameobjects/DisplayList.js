@@ -1,12 +1,13 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Class = require('../utils/Class');
 var List = require('../structs/List');
 var PluginCache = require('../plugins/PluginCache');
+var SceneEvents = require('../scene/events');
 var StableSort = require('../utils/array/StableSort');
 
 /**
@@ -19,7 +20,7 @@ var StableSort = require('../utils/array/StableSort');
  *
  * @class DisplayList
  * @extends Phaser.Structs.List.<Phaser.GameObjects.GameObject>
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
@@ -63,8 +64,8 @@ var DisplayList = new Class({
          */
         this.systems = scene.sys;
 
-        scene.sys.events.once('boot', this.boot, this);
-        scene.sys.events.on('start', this.start, this);
+        scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
+        scene.sys.events.on(SceneEvents.START, this.start, this);
     },
 
     /**
@@ -77,7 +78,7 @@ var DisplayList = new Class({
      */
     boot: function ()
     {
-        this.systems.events.once('destroy', this.destroy, this);
+        this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
     },
 
     /**
@@ -91,7 +92,7 @@ var DisplayList = new Class({
      */
     start: function ()
     {
-        this.systems.events.once('shutdown', this.shutdown, this);
+        this.systems.events.once(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -138,46 +139,8 @@ var DisplayList = new Class({
     },
 
     /**
-     * Given an array of Game Objects, sort the array and return it, so that
-     * the objects are in index order with the lowest at the bottom.
-     *
-     * @method Phaser.GameObjects.DisplayList#sortGameObjects
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.GameObject[]} gameObjects - The array of Game Objects to sort.
-     *
-     * @return {array} The sorted array of Game Objects.
-     */
-    sortGameObjects: function (gameObjects)
-    {
-        if (gameObjects === undefined) { gameObjects = this.list; }
-
-        this.scene.sys.depthSort();
-
-        return gameObjects.sort(this.sortIndexHandler.bind(this));
-    },
-
-    /**
-     * Get the top-most Game Object in the given array of Game Objects, after sorting it.
-     *
-     * Note that the given array is sorted in place, even though it isn't returned directly it will still be updated.
-     *
-     * @method Phaser.GameObjects.DisplayList#getTopGameObject
-     * @since 3.0.0
-     *
-     * @param {Phaser.GameObjects.GameObject[]} gameObjects - The array of Game Objects.
-     *
-     * @return {Phaser.GameObjects.GameObject} The top-most Game Object in the array of Game Objects.
-     */
-    getTopGameObject: function (gameObjects)
-    {
-        this.sortGameObjects(gameObjects);
-
-        return gameObjects[gameObjects.length - 1];
-    },
-
-    /**
-     * All members of the group.
+     * Returns an array which contains all objects currently on the Display List.
+     * This is a reference to the main list array, not a copy of it, so be careful not to modify it.
      *
      * @method Phaser.GameObjects.DisplayList#getChildren
      * @since 3.12.0
@@ -199,9 +162,16 @@ var DisplayList = new Class({
      */
     shutdown: function ()
     {
-        this.removeAll();
+        var i = this.list.length;
 
-        this.systems.events.off('shutdown', this.shutdown, this);
+        while (i--)
+        {
+            this.list[i].destroy(true);
+        }
+
+        this.list.length = 0;
+
+        this.systems.events.off(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -216,7 +186,7 @@ var DisplayList = new Class({
     {
         this.shutdown();
 
-        this.scene.sys.events.off('start', this.start, this);
+        this.scene.sys.events.off(SceneEvents.START, this.start, this);
 
         this.scene = null;
         this.systems = null;

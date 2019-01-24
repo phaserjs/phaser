@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -10,16 +10,14 @@ var Image = require('../../gameobjects/image/Image');
 
 /**
  * @classdesc
- * An Arcade Physics Image Game Object.
+ * An Arcade Physics Image is an Image with an Arcade Physics body and related components.
+ * The body can be dynamic or static.
  *
- * An Image is a light-weight Game Object useful for the display of static images in your game,
- * such as logos, backgrounds, scenery or other non-animated elements. Images can have input
- * events and physics bodies, or be tweened, tinted or scrolled. The main difference between an
- * Image and a Sprite is that you cannot animate an Image as they do not have the Animation component.
+ * The main difference between an Arcade Image and an Arcade Sprite is that you cannot animate an Arcade Image.
  *
  * @class Image
  * @extends Phaser.GameObjects.Image
- * @memberOf Phaser.Physics.Arcade
+ * @memberof Phaser.Physics.Arcade
  * @constructor
  * @since 3.0.0
  *

@@ -1,12 +1,13 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Clamp = require('../../../math/Clamp');
 var Class = require('../../../utils/Class');
 var EaseMap = require('../../../math/easing/EaseMap');
+var Events = require('../events');
 
 /**
  * @classdesc
@@ -18,7 +19,7 @@ var EaseMap = require('../../../math/easing/EaseMap');
  * which is invoked each frame for the duration of the effect if required.
  *
  * @class Zoom
- * @memberOf Phaser.Cameras.Scene2D.Effects
+ * @memberof Phaser.Cameras.Scene2D.Effects
  * @constructor
  * @since 3.11.0
  *
@@ -35,7 +36,7 @@ var Zoom = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Zoom#camera
          * @type {Phaser.Cameras.Scene2D.Camera}
-         * @readOnly
+         * @readonly
          * @since 3.11.0
          */
         this.camera = camera;
@@ -45,7 +46,7 @@ var Zoom = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Zoom#isRunning
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @default false
          * @since 3.11.0
          */
@@ -56,7 +57,7 @@ var Zoom = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Zoom#duration
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @default 0
          * @since 3.11.0
          */
@@ -139,35 +140,17 @@ var Zoom = new Class({
     },
 
     /**
-     * This event is fired when the Zoom effect begins to run on a camera.
-     *
-     * @event CameraZoomStartEvent
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.Zoom} effect - A reference to the effect instance.
-     * @param {integer} duration - The duration of the effect.
-     * @param {number} zoom - The destination zoom value.
-     */
-
-    /**
-     * This event is fired when the Zoom effect completes.
-     *
-     * @event CameraZoomCompleteEvent
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.Zoom} effect - A reference to the effect instance.
-     */
-
-    /**
      * This effect will zoom the Camera to the given scale, over the duration and with the ease specified.
      *
      * @method Phaser.Cameras.Scene2D.Effects.Zoom#start
-     * @fires CameraZoomStartEvent
-     * @fires CameraZoomCompleteEvent
+     * @fires Phaser.Cameras.Scene2D.Events#ZOOM_START
+     * @fires Phaser.Cameras.Scene2D.Events#ZOOM_COMPLETE
      * @since 3.11.0
      *
      * @param {number} zoom - The target Camera zoom value.
      * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
      * @param {(string|function)} [ease='Linear'] - The ease to use for the Zoom. Can be any of the Phaser Easing constants or a custom function.
-     * @param {boolean} [force=false] - Force the shake effect to start immediately, even if already running.
+     * @param {boolean} [force=false] - Force the zoom effect to start immediately, even if already running.
      * @param {CameraZoomCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
      * It is sent three arguments: A reference to the camera, a progress amount between 0 and 1 indicating how complete the effect is,
      * and the current camera zoom value.
@@ -215,7 +198,7 @@ var Zoom = new Class({
         this._onUpdate = callback;
         this._onUpdateScope = context;
 
-        this.camera.emit('camerazoomstart', this.camera, this, duration, zoom);
+        this.camera.emit(Events.ZOOM_START, this.camera, this, duration, zoom);
 
         return cam;
     },
@@ -266,6 +249,7 @@ var Zoom = new Class({
      * Called internally when the effect completes.
      *
      * @method Phaser.Cameras.Scene2D.Effects.Zoom#effectComplete
+     * @fires Phaser.Cameras.Scene2D.Events#ZOOM_COMPLETE
      * @since 3.11.0
      */
     effectComplete: function ()
@@ -275,7 +259,7 @@ var Zoom = new Class({
 
         this.isRunning = false;
 
-        this.camera.emit('camerazoomcomplete', this.camera, this);
+        this.camera.emit(Events.ZOOM_COMPLETE, this.camera, this);
     },
 
     /**

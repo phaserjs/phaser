@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -9,8 +9,8 @@
  *
  * @name Phaser.Textures.FilterMode
  * @enum {integer}
- * @memberOf Phaser.Textures
- * @readOnly
+ * @memberof Phaser.Textures
+ * @readonly
  * @since 3.0.0
  */
 var CONST = {

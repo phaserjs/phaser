@@ -1,11 +1,12 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 /**
- * [description]
+ * Takes an array of Game Objects and toggles the visibility of each one.
+ * Those previously `visible = false` will become `visible = true`, and vice versa.
  *
  * @function Phaser.Actions.ToggleVisible
  * @since 3.0.0

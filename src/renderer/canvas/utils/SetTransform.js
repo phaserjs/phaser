@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -8,12 +8,12 @@
  * Takes a reference to the Canvas Renderer, a Canvas Rendering Context, a Game Object, a Camera and a parent matrix
  * and then performs the following steps:
  * 
- * 1) Checks the alpha of the source combined with the Camera alpha. If 0 or less it aborts.
- * 2) Takes the Camera and Game Object matrix and multiplies them, combined with the parent matrix if given.
- * 3) Sets the blend mode of the context to be that used by the Game Object.
- * 4) Sets the alpha value of the context to be that used by the Game Object combined with the Camera.
- * 5) Saves the context state.
- * 6) Sets the final matrix values into the context via setTransform.
+ * 1. Checks the alpha of the source combined with the Camera alpha. If 0 or less it aborts.
+ * 2. Takes the Camera and Game Object matrix and multiplies them, combined with the parent matrix if given.
+ * 3. Sets the blend mode of the context to be that used by the Game Object.
+ * 4. Sets the alpha value of the context to be that used by the Game Object combined with the Camera.
+ * 5. Saves the context state.
+ * 6. Sets the final matrix values into the context via setTransform.
  * 
  * This function is only meant to be used internally. Most of the Canvas Renderer classes use it.
  *
@@ -21,6 +21,7 @@
  * @since 3.12.0
  *
  * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.
+ * @param {CanvasRenderingContext2D} ctx - The canvas context to set the transform on.
  * @param {Phaser.GameObjects.GameObject} src - The Game Object being rendered. Can be any type that extends the base class.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  * @param {Phaser.GameObjects.Components.TransformMatrix} [parentMatrix] - A parent transform matrix to apply to the Game Object before rendering.

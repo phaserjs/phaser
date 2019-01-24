@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -35,7 +35,7 @@ var XMLFile = require('./XMLFile.js');
  *
  * @class AtlasXMLFile
  * @extends Phaser.Loader.MultiFile
- * @memberOf Phaser.Loader.FileTypes
+ * @memberof Phaser.Loader.FileTypes
  * @constructor
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.

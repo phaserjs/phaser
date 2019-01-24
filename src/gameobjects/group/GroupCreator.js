@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -15,7 +15,7 @@ var Group = require('./Group');
  * @method Phaser.GameObjects.GameObjectCreator#group
  * @since 3.0.0
  *
- * @param {GroupConfig} config - The configuration object this Game Object will use to create itself.
+ * @param {GroupConfig|GroupCreateConfig} config - The configuration object this Game Object will use to create itself.
  *
  * @return {Phaser.GameObjects.Group} The Game Object that was created.
  */

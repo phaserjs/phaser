@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -16,14 +16,14 @@ var PointerConstraint = require('./PointerConstraint');
 
 /**
  * @classdesc
- * [description]
+ * The Matter Factory can create different types of bodies and them to a physics world.
  *
  * @class Factory
- * @memberOf Phaser.Physics.Matter
+ * @memberof Phaser.Physics.Matter
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Physics.Matter.World} world - [description]
+ * @param {Phaser.Physics.Matter.World} world - The Matter World which this Factory adds to.
  */
 var Factory = new Class({
 
@@ -32,7 +32,7 @@ var Factory = new Class({
     function Factory (world)
     {
         /**
-         * [description]
+         * The Matter World which this Factory adds to.
          *
          * @name Phaser.Physics.Matter.Factory#world
          * @type {Phaser.Physics.Matter.World}
@@ -41,7 +41,7 @@ var Factory = new Class({
         this.world = world;
 
         /**
-         * [description]
+         * The Scene which this Factory's Matter World belongs to.
          *
          * @name Phaser.Physics.Matter.Factory#scene
          * @type {Phaser.Scene}
@@ -60,16 +60,16 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * Creates a new rigid rectangular Body and adds it to the World.
      *
      * @method Phaser.Physics.Matter.Factory#rectangle
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} height - [description]
-     * @param {object} options - [description]
+     * @param {number} x - The X coordinate of the center of the Body.
+     * @param {number} y - The Y coordinate of the center of the Body.
+     * @param {number} width - The width of the Body.
+     * @param {number} height - The height of the Body.
+     * @param {object} options - An object of properties to set on the Body. You can also specify a `chamfer` property to automatically adjust the body.
      *
      * @return {MatterJS.Body} A Matter JS Body.
      */
@@ -83,17 +83,17 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * Creates a new rigid trapezoidal Body and adds it to the World.
      *
      * @method Phaser.Physics.Matter.Factory#trapezoid
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} height - [description]
-     * @param {number} slope - [description]
-     * @param {object} options - [description]
+     * @param {number} x - The X coordinate of the center of the Body.
+     * @param {number} y - The Y coordinate of the center of the Body.
+     * @param {number} width - The width of the trapezoid of the Body.
+     * @param {number} height - The height of the trapezoid of the Body.
+     * @param {number} slope - The slope of the trapezoid. 0 creates a rectangle, while 1 creates a triangle. Positive values make the top side shorter, while negative values make the bottom side shorter.
+     * @param {object} options - An object of properties to set on the Body. You can also specify a `chamfer` property to automatically adjust the body.
      *
      * @return {MatterJS.Body} A Matter JS Body.
      */
@@ -107,16 +107,16 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * Creates a new rigid circular Body and adds it to the World.
      *
      * @method Phaser.Physics.Matter.Factory#circle
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} radius - [description]
-     * @param {object} options - [description]
-     * @param {number} maxSides - [description]
+     * @param {number} x - The X coordinate of the center of the Body.
+     * @param {number} y - The Y coordinate of the center of the Body.
+     * @param {number} radius - The radius of the circle.
+     * @param {object} options - An object of properties to set on the Body. You can also specify a `chamfer` property to automatically adjust the body.
+     * @param {number} maxSides - The maximum amount of sides to use for the polygon which will approximate this circle.
      *
      * @return {MatterJS.Body} A Matter JS Body.
      */
@@ -130,16 +130,16 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * Creates a new rigid polygonal Body and adds it to the World.
      *
      * @method Phaser.Physics.Matter.Factory#polygon
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} sides - [description]
-     * @param {number} radius - [description]
-     * @param {object} options - [description]
+     * @param {number} x - The X coordinate of the center of the Body.
+     * @param {number} y - The Y coordinate of the center of the Body.
+     * @param {number} sides - The number of sides the polygon will have.
+     * @param {number} radius - The "radius" of the polygon, i.e. the distance from its center to any vertex. This is also the radius of its circumcircle.
+     * @param {object} options - An object of properties to set on the Body. You can also specify a `chamfer` property to automatically adjust the body.
      *
      * @return {MatterJS.Body} A Matter JS Body.
      */
@@ -153,18 +153,19 @@ var Factory = new Class({
     },
 
     /**
-     * [description]
+     * Creates a body using the supplied vertices (or an array containing multiple sets of vertices) and adds it to the World.
+     * If the vertices are convex, they will pass through as supplied. Otherwise, if the vertices are concave, they will be decomposed. Note that this process is not guaranteed to support complex sets of vertices, e.g. ones with holes.
      *
      * @method Phaser.Physics.Matter.Factory#fromVertices
      * @since 3.0.0
      *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
+     * @param {number} x - The X coordinate of the center of the Body.
+     * @param {number} y - The Y coordinate of the center of the Body.
      * @param {array} vertexSets - [description]
      * @param {object} options - [description]
-     * @param {boolean} flagInternal - [description]
-     * @param {boolean} removeCollinear - [description]
-     * @param {number} minimumArea - [description]
+     * @param {boolean} flagInternal - Flag internal edges (coincident part edges)
+     * @param {boolean} removeCollinear - Whether Matter.js will discard collinear edges (to improve performance).
+     * @param {number} minimumArea - During decomposition discard parts that have an area less than this
      *
      * @return {MatterJS.Body} A Matter JS Body.
      */
@@ -260,7 +261,7 @@ var Factory = new Class({
      * @param {number} rows - The number of rows in the pyramid.
      * @param {number} columnGap - The distance between each column.
      * @param {number} rowGap - The distance between each row.
-     * @param {function} callback - [description]
+     * @param {function} callback - The callback function to be invoked.
      *
      * @return {MatterJS.Composite} A Matter JS Composite pyramid.
      */
@@ -371,7 +372,7 @@ var Factory = new Class({
      * @param {number} columnGap - The distance between each column.
      * @param {number} rowGap - The distance between each row.
      * @param {boolean} crossBrace - [description]
-     * @param {number} particleRadius - [description]
+     * @param {number} particleRadius - The radius of this circlular composite.
      * @param {object} particleOptions - [description]
      * @param {object} constraintOptions - [description]
      *
@@ -411,10 +412,10 @@ var Factory = new Class({
      * @method Phaser.Physics.Matter.Factory#spring
      * @since 3.0.0
      *
-     * @param {MatterJS.Body} bodyA - [description]
-     * @param {MatterJS.Body} bodyB - [description]
-     * @param {number} length - [description]
-     * @param {number} [stiffness=1] - [description]
+     * @param {MatterJS.Body} bodyA - The first possible `Body` that this constraint is attached to.
+     * @param {MatterJS.Body} bodyB - The second possible `Body` that this constraint is attached to.
+     * @param {number} length - A Number that specifies the target resting length of the constraint. It is calculated automatically in `Constraint.create` from initial positions of the `constraint.bodyA` and `constraint.bodyB`
+     * @param {number} [stiffness=1] - A Number that specifies the stiffness of the constraint, i.e. the rate at which it returns to its resting `constraint.length`. A value of `1` means the constraint should be very stiff. A value of `0.2` means the constraint acts as a soft spring.
      * @param {object} [options={}] - [description]
      *
      * @return {MatterJS.Constraint} A Matter JS Constraint.

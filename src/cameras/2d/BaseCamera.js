@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -8,6 +8,7 @@ var Class = require('../../utils/Class');
 var Components = require('../../gameobjects/components');
 var DegToRad = require('../../math/DegToRad');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 var ValueToColor = require('../../display/color/ValueToColor');
@@ -67,7 +68,7 @@ var Vector2 = require('../../math/Vector2');
  * to when they were added to the Camera class.
  *
  * @class BaseCamera
- * @memberOf Phaser.Cameras.Scene2D
+ * @memberof Phaser.Cameras.Scene2D
  * @constructor
  * @since 3.12.0
  * 
@@ -119,14 +120,13 @@ var BaseCamera = new Class({
         this.sceneManager;
 
         /**
-         * A reference to the Game Config.
+         * A reference to the Game Scale Manager.
          *
-         * @name Phaser.Cameras.Scene2D.BaseCamera#config
-         * @type {object}
-         * @readOnly
-         * @since 3.12.0
+         * @name Phaser.Cameras.Scene2D.BaseCamera#scaleManager
+         * @type {Phaser.DOM.ScaleManager}
+         * @since 3.16.0
          */
-        this.config;
+        this.scaleManager;
 
         /**
          * The Camera ID. Assigned by the Camera Manager and used to handle camera exclusion.
@@ -134,7 +134,7 @@ var BaseCamera = new Class({
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#id
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.11.0
          */
         this.id = 0;
@@ -150,11 +150,14 @@ var BaseCamera = new Class({
         this.name = '';
 
         /**
+         * This property is un-used in v3.16.
+         * 
          * The resolution of the Game, used in most Camera calculations.
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#resolution
          * @type {number}
-         * @readOnly
+         * @readonly
+         * @deprecated
          * @since 3.12.0
          */
         this.resolution = 1;
@@ -201,7 +204,7 @@ var BaseCamera = new Class({
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#worldView
          * @type {Phaser.Geom.Rectangle}
-         * @readOnly
+         * @readonly
          * @since 3.11.0
          */
         this.worldView = new Rectangle();
@@ -464,7 +467,7 @@ var BaseCamera = new Class({
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#midPoint
          * @type {Phaser.Math.Vector2}
-         * @readOnly
+         * @readonly
          * @since 3.11.0
          */
         this.midPoint = new Vector2(width / 2, height / 2);
@@ -568,7 +571,7 @@ var BaseCamera = new Class({
      * @param {number} y - The vertical coordinate to center on.
      * @param {Phaser.Math.Vector2} [out] - A Vec2 to store the values in. If not given a new Vec2 is created.
      *
-     * @return {Phaser.Math.Vector2} The scroll coordinates stored in the `x` abd `y` properties.
+     * @return {Phaser.Math.Vector2} The scroll coordinates stored in the `x` and `y` properties.
      */
     getScroll: function (x, y, out)
     {
@@ -590,6 +593,60 @@ var BaseCamera = new Class({
     },
 
     /**
+     * Moves the Camera horizontally so that it is centered on the given x coordinate, bounds allowing.
+     * Calling this does not change the scrollY value.
+     *
+     * @method Phaser.Cameras.Scene2D.BaseCamera#centerOnX
+     * @since 3.16.0
+     *
+     * @param {number} x - The horizontal coordinate to center on.
+     *
+     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     */
+    centerOnX: function (x)
+    {
+        var originX = this.width * 0.5;
+
+        this.midPoint.x = x;
+
+        this.scrollX = x - originX;
+
+        if (this.useBounds)
+        {
+            this.scrollX = this.clampX(this.scrollX);
+        }
+
+        return this;
+    },
+
+    /**
+     * Moves the Camera vertically so that it is centered on the given y coordinate, bounds allowing.
+     * Calling this does not change the scrollX value.
+     *
+     * @method Phaser.Cameras.Scene2D.BaseCamera#centerOnY
+     * @since 3.16.0
+     *
+     * @param {number} y - The vertical coordinate to center on.
+     *
+     * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
+     */
+    centerOnY: function (y)
+    {
+        var originY = this.height * 0.5;
+
+        this.midPoint.y = y;
+
+        this.scrollY = y - originY;
+
+        if (this.useBounds)
+        {
+            this.scrollY = this.clampY(this.scrollY);
+        }
+
+        return this;
+    },
+
+    /**
      * Moves the Camera so that it is centered on the given coordinates, bounds allowing.
      *
      * @method Phaser.Cameras.Scene2D.BaseCamera#centerOn
@@ -602,19 +659,8 @@ var BaseCamera = new Class({
      */
     centerOn: function (x, y)
     {
-        var originX = this.width * 0.5;
-        var originY = this.height * 0.5;
-
-        this.midPoint.set(x, y);
-
-        this.scrollX = x - originX;
-        this.scrollY = y - originY;
-
-        if (this.useBounds)
-        {
-            this.scrollX = this.clampX(this.scrollX);
-            this.scrollY = this.clampY(this.scrollY);
-        }
+        this.centerOnX(x);
+        this.centerOnY(y);
 
         return this;
     },
@@ -727,11 +773,12 @@ var BaseCamera = new Class({
             var ty = (objectX * mvb + objectY * mvd + mvf);
             var tw = ((objectX + objectW) * mva + (objectY + objectH) * mvc + mve);
             var th = ((objectX + objectW) * mvb + (objectY + objectH) * mvd + mvf);
-            var cullW = cameraW + objectW;
-            var cullH = cameraH + objectH;
+            var cullTop = this.y;
+            var cullBottom = cullTop + cameraH;
+            var cullLeft = this.x;
+            var cullRight = cullLeft + cameraW;
 
-            if (tx > -objectW && ty > -objectH && tx < cullW && ty < cullH &&
-                tw > -objectW && th > -objectH && tw < cullW && th < cullH)
+            if ((tw > cullLeft && tx < cullRight) && (th > cullTop && ty < cullBottom))
             {
                 culledObjects.push(object);
             }
@@ -802,8 +849,8 @@ var BaseCamera = new Class({
         var sy = y + ((scrollX * s + scrollY * c) * zoom);
 
         //  Apply transform to point
-        output.x = (sx * ima + sy * imc + ime) * res;
-        output.y = (sx * imb + sy * imd + imf) * res;
+        output.x = (sx * ima + sy * imc) * res + ime;
+        output.y = (sx * imb + sy * imd) * res + imf;
 
         return output;
     },
@@ -856,10 +903,9 @@ var BaseCamera = new Class({
      * @protected
      * @since 3.0.0
      *
-     * @param {number} baseScale - The base scale, as set in the Camera Manager.
-     * @param {number} resolution - The game resolution.
+     * @param {number} resolution - The game resolution, as set in the Scale Manager.
      */
-    preRender: function (baseScale, resolution)
+    preRender: function (resolution)
     {
         var width = this.width;
         var height = this.height;
@@ -867,7 +913,7 @@ var BaseCamera = new Class({
         var halfWidth = width * 0.5;
         var halfHeight = height * 0.5;
 
-        var zoom = this.zoom * baseScale;
+        var zoom = this.zoom * resolution;
         var matrix = this.matrix;
 
         var originX = width * this.originX;
@@ -909,11 +955,7 @@ var BaseCamera = new Class({
             displayHeight
         );
 
-        matrix.loadIdentity();
-        matrix.scale(resolution, resolution);
-        matrix.translate(this.x + originX, this.y + originY);
-        matrix.rotate(this.rotation);
-        matrix.scale(zoom, zoom);
+        matrix.applyITRS(this.x + originX, this.y + originY, this.rotation, zoom, zoom);
         matrix.translate(-originX, -originY);
     },
 
@@ -1078,12 +1120,14 @@ var BaseCamera = new Class({
      * @param {integer} y - The top-left y coordinate of the bounds.
      * @param {integer} width - The width of the bounds, in pixels.
      * @param {integer} height - The height of the bounds, in pixels.
-     * @param {boolean} [centerOn] - If `true` the Camera will automatically be centered on the new bounds.
+     * @param {boolean} [centerOn=false] - If `true` the Camera will automatically be centered on the new bounds.
      *
      * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
      */
     setBounds: function (x, y, width, height, centerOn)
     {
+        if (centerOn === undefined) { centerOn = false; }
+
         this._bounds.setTo(x, y, width, height);
 
         this.dirty = true;
@@ -1100,6 +1144,31 @@ var BaseCamera = new Class({
         }
 
         return this;
+    },
+
+    /**
+     * Returns a rectangle containing the bounds of the Camera.
+     * 
+     * If the Camera does not have any bounds the rectangle will be empty.
+     * 
+     * The rectangle is a copy of the bounds, so is safe to modify.
+     *
+     * @method Phaser.Cameras.Scene2D.BaseCamera#getBounds
+     * @since 3.16.0
+     *
+     * @param {Phaser.Geom.Rectangle} [out] - An optional Rectangle to store the bounds in. If not given, a new Rectangle will be created.
+     *
+     * @return {Phaser.Geom.Rectangle} A rectangle containing the bounds of this Camera.
+     */
+    getBounds: function (out)
+    {
+        if (out === undefined) { out = new Rectangle(); }
+
+        var source = this._bounds;
+
+        out.setTo(source.x, source.y, source.width, source.height);
+
+        return out;
     },
 
     /**
@@ -1199,12 +1268,17 @@ var BaseCamera = new Class({
      */
     setScene: function (scene)
     {
+        if (this.scene && this._customViewport)
+        {
+            this.sceneManager.customViewports--;
+        }
+
         this.scene = scene;
 
-        this.config = scene.sys.game.config;
         this.sceneManager = scene.sys.game.scene;
+        this.scaleManager = scene.sys.scale;
 
-        var res = this.config.resolution;
+        var res = this.scaleManager.resolution;
 
         this.resolution = res;
 
@@ -1212,6 +1286,8 @@ var BaseCamera = new Class({
         this._cy = this._y * res;
         this._cw = this._width * res;
         this._ch = this._height * res;
+
+        this.updateSystem();
 
         return this;
     },
@@ -1402,27 +1478,12 @@ var BaseCamera = new Class({
      */
     updateSystem: function ()
     {
-        if (!this.config)
+        if (!this.scaleManager)
         {
             return;
         }
 
-        var custom = false;
-
-        if (this._x !== 0 || this._y !== 0)
-        {
-            custom = true;
-        }
-        else
-        {
-            var gameWidth = this.config.width;
-            var gameHeight = this.config.height;
-
-            if (gameWidth !== this._width || gameHeight !== this._height)
-            {
-                custom = true;
-            }
-        }
+        var custom = (this._x !== 0 || this._y !== 0 || this.scaleManager.width !== this._width || this.scaleManager.height !== this._height);
 
         var sceneManager = this.sceneManager;
 
@@ -1442,25 +1503,21 @@ var BaseCamera = new Class({
     },
 
     /**
-     * This event is fired when a camera is destroyed by the Camera Manager.
-     *
-     * @event CameraDestroyEvent
-     * @param {Phaser.Cameras.Scene2D.BaseCamera} camera - The camera that was destroyed.
-     */
-
-    /**
-     * Destroys this Camera instance. You rarely need to call this directly.
-     *
-     * Called by the Camera Manager. If you wish to destroy a Camera please use `CameraManager.remove` as
-     * cameras are stored in a pool, ready for recycling later, and calling this directly will prevent that.
+     * Destroys this Camera instance and its internal properties and references.
+     * Once destroyed you cannot use this Camera again, even if re-added to a Camera Manager.
+     * 
+     * This method is called automatically by `CameraManager.remove` if that methods `runDestroy` argument is `true`, which is the default.
+     * 
+     * Unless you have a specific reason otherwise, always use `CameraManager.remove` and allow it to handle the camera destruction,
+     * rather than calling this method directly.
      *
      * @method Phaser.Cameras.Scene2D.BaseCamera#destroy
-     * @fires CameraDestroyEvent
+     * @fires Phaser.Cameras.Scene2D.Events#DESTROY
      * @since 3.0.0
      */
     destroy: function ()
     {
-        this.emit('cameradestroy', this);
+        this.emit(Events.DESTROY, this);
 
         this.removeAllListeners();
 
@@ -1477,7 +1534,7 @@ var BaseCamera = new Class({
         this._bounds = null;
 
         this.scene = null;
-        this.config = null;
+        this.scaleManager = null;
         this.sceneManager = null;
     },
 
@@ -1705,11 +1762,11 @@ var BaseCamera = new Class({
     },
 
     /**
-     * The x position of the center of the Camera's viewport, relative to the top-left of the game canvas.
+     * The horizontal position of the center of the Camera's viewport, relative to the left of the game canvas.
      *
      * @name Phaser.Cameras.Scene2D.BaseCamera#centerX
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.10.0
      */
     centerX: {
@@ -1722,11 +1779,11 @@ var BaseCamera = new Class({
     },
 
     /**
-     * The y position of the center of the Camera's viewport, relative to the top-left of the game canvas.
+     * The vertical position of the center of the Camera's viewport, relative to the top of the game canvas.
      *
      * @name Phaser.Cameras.Scene2D.BaseCamera#centerY
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.10.0
      */
     centerY: {
@@ -1749,7 +1806,7 @@ var BaseCamera = new Class({
      *
      * @name Phaser.Cameras.Scene2D.BaseCamera#displayWidth
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.11.0
      */
     displayWidth: {
@@ -1772,7 +1829,7 @@ var BaseCamera = new Class({
      *
      * @name Phaser.Cameras.Scene2D.BaseCamera#displayHeight
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.11.0
      */
     displayHeight: {

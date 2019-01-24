@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -40,7 +40,7 @@ var addFrame = function (texture, sourceIndex, name, frame)
  * For more details about Sprite Meta Data see https://docs.unity3d.com/ScriptReference/SpriteMetaData.html
  *
  * @function Phaser.Textures.Parsers.UnityYAML
- * @memberOf Phaser.Textures.Parsers
+ * @memberof Phaser.Textures.Parsers
  * @private
  * @since 3.0.0
  *

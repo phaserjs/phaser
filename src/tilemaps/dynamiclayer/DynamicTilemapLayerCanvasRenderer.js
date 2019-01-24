@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -39,6 +39,11 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPe
 
     camMatrix.copyFrom(camera.matrix);
 
+    var ctx = renderer.currentContext;
+    var gidMap = src.gidMap;
+
+    ctx.save();
+
     if (parentMatrix)
     {
         //  Multiply the camera by the parent matrix
@@ -50,23 +55,16 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPe
 
         //  Multiply by the Sprite matrix, store result in calcMatrix
         camMatrix.multiply(layerMatrix, calcMatrix);
+
+        calcMatrix.copyToContext(ctx);
     }
     else
     {
         layerMatrix.e -= camera.scrollX * src.scrollFactorX;
         layerMatrix.f -= camera.scrollY * src.scrollFactorY;
 
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(layerMatrix, calcMatrix);
+        layerMatrix.copyToContext(ctx);
     }
-
-    var tileset = src.tileset;
-    var ctx = renderer.currentContext;
-    var image = tileset.image.getSourceImage();
-
-    ctx.save();
-
-    calcMatrix.copyToContext(ctx);
 
     var alpha = camera.alpha * src.alpha;
 
@@ -74,6 +72,14 @@ var DynamicTilemapLayerCanvasRenderer = function (renderer, src, interpolationPe
     {
         var tile = renderTiles[i];
 
+        var tileset = gidMap[tile.index];
+
+        if (!tileset)
+        {
+            continue;
+        }
+
+        var image = tileset.image.getSourceImage();
         var tileTexCoords = tileset.getTileTextureCoordinates(tile.index);
 
         if (tileTexCoords)

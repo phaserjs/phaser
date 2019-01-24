@@ -1,12 +1,13 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Class = require('../../utils/Class');
 var LightsManager = require('./LightsManager');
 var PluginCache = require('../../plugins/PluginCache');
+var SceneEvents = require('../../scene/events');
 
 /**
  * @classdesc
@@ -32,7 +33,7 @@ var PluginCache = require('../../plugins/PluginCache');
  *
  * @class LightsPlugin
  * @extends Phaser.GameObjects.LightsManager
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
@@ -66,7 +67,7 @@ var LightsPlugin = new Class({
 
         if (!scene.sys.settings.isBooted)
         {
-            scene.sys.events.once('boot', this.boot, this);
+            scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
         }
 
         LightsManager.call(this);
@@ -82,8 +83,8 @@ var LightsPlugin = new Class({
     {
         var eventEmitter = this.systems.events;
 
-        eventEmitter.on('shutdown', this.shutdown, this);
-        eventEmitter.on('destroy', this.destroy, this);
+        eventEmitter.on(SceneEvents.SHUTDOWN, this.shutdown, this);
+        eventEmitter.on(SceneEvents.DESTROY, this.destroy, this);
     },
 
     /**

@@ -1,11 +1,12 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Clamp = require('../../../math/Clamp');
 var Class = require('../../../utils/Class');
+var Events = require('../events');
 
 /**
  * @classdesc
@@ -20,7 +21,7 @@ var Class = require('../../../utils/Class');
  * which is invoked each frame for the duration of the effect, if required.
  *
  * @class Flash
- * @memberOf Phaser.Cameras.Scene2D.Effects
+ * @memberof Phaser.Cameras.Scene2D.Effects
  * @constructor
  * @since 3.5.0
  *
@@ -37,7 +38,7 @@ var Flash = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Flash#camera
          * @type {Phaser.Cameras.Scene2D.Camera}
-         * @readOnly
+         * @readonly
          * @since 3.5.0
          */
         this.camera = camera;
@@ -47,7 +48,7 @@ var Flash = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Flash#isRunning
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @default false
          * @since 3.5.0
          */
@@ -58,7 +59,7 @@ var Flash = new Class({
          *
          * @name Phaser.Cameras.Scene2D.Effects.Flash#duration
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @default 0
          * @since 3.5.0
          */
@@ -157,31 +158,11 @@ var Flash = new Class({
     },
 
     /**
-     * This event is fired when the flash effect begins to run on a camera.
-     *
-     * @event CameraFlashStartEvent
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.Flash} effect - A reference to the effect instance.
-     * @param {integer} duration - The duration of the effect.
-     * @param {integer} red - The red color channel value.
-     * @param {integer} green - The green color channel value.
-     * @param {integer} blue - The blue color channel value.
-     */
-
-    /**
-     * This event is fired when the flash effect completes.
-     *
-     * @event CameraFlashCompleteEvent
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.Flash} effect - A reference to the effect instance.
-     */
-
-    /**
      * Flashes the Camera to or from the given color over the duration specified.
      *
      * @method Phaser.Cameras.Scene2D.Effects.Flash#start
-     * @fires CameraFlashStartEvent
-     * @fires CameraFlashCompleteEvent
+     * @fires Phaser.Cameras.Scene2D.Events#FLASH_START
+     * @fires Phaser.Cameras.Scene2D.Events#FLASH_COMPLETE
      * @since 3.5.0
      *
      * @param {integer} [duration=250] - The duration of the effect in milliseconds.
@@ -224,7 +205,7 @@ var Flash = new Class({
         this._onUpdate = callback;
         this._onUpdateScope = context;
 
-        this.camera.emit('cameraflashstart', this.camera, this, duration, red, green, blue);
+        this.camera.emit(Events.FLASH_START, this.camera, this, duration, red, green, blue);
 
         return this.camera;
     },
@@ -295,7 +276,7 @@ var Flash = new Class({
      * @method Phaser.Cameras.Scene2D.Effects.Flash#postRenderWebGL
      * @since 3.5.0
      *
-     * @param {Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline} pipeline - The WebGL Pipeline to render to.
+     * @param {Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline} pipeline - The WebGL Pipeline to render to.
      * @param {function} getTintFunction - A function that will return the gl safe tint colors.
      *
      * @return {boolean} `true` if the effect drew to the renderer, otherwise `false`.
@@ -325,6 +306,7 @@ var Flash = new Class({
      * Called internally when the effect completes.
      *
      * @method Phaser.Cameras.Scene2D.Effects.Flash#effectComplete
+     * @fires Phaser.Cameras.Scene2D.Events#FLASH_COMPLETE
      * @since 3.5.0
      */
     effectComplete: function ()
@@ -334,7 +316,7 @@ var Flash = new Class({
 
         this.isRunning = false;
 
-        this.camera.emit('cameraflashcomplete', this.camera, this);
+        this.camera.emit(Events.FLASH_COMPLETE, this.camera, this);
     },
 
     /**

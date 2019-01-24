@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -22,7 +22,7 @@ var Sprite = require('../../gameobjects/sprite/Sprite');
  *
  * @class ImpactSprite
  * @extends Phaser.GameObjects.Sprite
- * @memberOf Phaser.Physics.Impact
+ * @memberof Phaser.Physics.Impact
  * @constructor
  * @since 3.0.0
  *

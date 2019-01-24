@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -21,10 +21,10 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @private
  * @since 3.0.0
  *
- * @param {integer} tileX - [description]
- * @param {integer} tileY - [description]
- * @param {integer} width - [description]
- * @param {integer} height - [description]
+ * @param {integer} tileX - The left most tile index (in tile coordinates) to use as the origin of the area.
+ * @param {integer} tileY - The top most tile index (in tile coordinates) to use as the origin of the area.
+ * @param {integer} width - How many tiles wide from the `tileX` index the area will be.
+ * @param {integer} height - How many tiles tall from the `tileY` index the area will be.
  * @param {object} GetTilesWithinFilteringOptions - Optional filters to apply when getting the tiles.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * 

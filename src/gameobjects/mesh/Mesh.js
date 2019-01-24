@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -15,18 +15,15 @@ var MeshRender = require('./MeshRender');
  *
  * @class Mesh
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @webglOnly
  * @since 3.0.0
  *
- * @extends Phaser.GameObjects.Components.Alpha
  * @extends Phaser.GameObjects.Components.BlendMode
  * @extends Phaser.GameObjects.Components.Depth
- * @extends Phaser.GameObjects.Components.Flip
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
- * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.ScaleMode
  * @extends Phaser.GameObjects.Components.Size
@@ -50,13 +47,10 @@ var Mesh = new Class({
     Extends: GameObject,
 
     Mixins: [
-        Components.Alpha,
         Components.BlendMode,
         Components.Depth,
-        Components.Flip,
         Components.GetBounds,
         Components.Mask,
-        Components.Origin,
         Components.Pipeline,
         Components.ScaleMode,
         Components.Size,
@@ -157,7 +151,6 @@ var Mesh = new Class({
         this.setTexture(texture, frame);
         this.setPosition(x, y);
         this.setSizeToFrame();
-        this.setOrigin();
         this.initPipeline();
     }
 

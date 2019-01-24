@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -35,7 +35,7 @@ var Class = require('../../../utils/Class');
  * A zone that places particles on a shape's edges.
  *
  * @class EdgeZone
- * @memberOf Phaser.GameObjects.Particles.Zones
+ * @memberof Phaser.GameObjects.Particles.Zones
  * @constructor
  * @since 3.0.0
  *

@@ -1,12 +1,13 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Class = require('../utils/Class');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
 var Extend = require('../utils/object/Extend');
 var NOOP = require('../utils/NOOP');
 
@@ -16,7 +17,7 @@ var NOOP = require('../utils/NOOP');
  *
  * @class BaseSound
  * @extends Phaser.Events.EventEmitter
- * @memberOf Phaser.Sound
+ * @memberof Phaser.Sound
  * @constructor
  * @since 3.0.0
  *
@@ -49,7 +50,7 @@ var BaseSound = new Class({
          *
          * @name Phaser.Sound.BaseSound#key
          * @type {string}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.key = key;
@@ -60,7 +61,7 @@ var BaseSound = new Class({
          * @name Phaser.Sound.BaseSound#isPlaying
          * @type {boolean}
          * @default false
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.isPlaying = false;
@@ -71,7 +72,7 @@ var BaseSound = new Class({
          * @name Phaser.Sound.BaseSound#isPaused
          * @type {boolean}
          * @default false
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.isPaused = false;
@@ -84,7 +85,7 @@ var BaseSound = new Class({
          * @name Phaser.Sound.BaseSound#totalRate
          * @type {number}
          * @default 1
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.totalRate = 1;
@@ -95,7 +96,7 @@ var BaseSound = new Class({
          *
          * @name Phaser.Sound.BaseSound#duration
          * @type {number}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.duration = this.duration || 0;
@@ -105,7 +106,7 @@ var BaseSound = new Class({
          *
          * @name Phaser.Sound.BaseSound#totalDuration
          * @type {number}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.totalDuration = this.totalDuration || 0;
@@ -150,7 +151,7 @@ var BaseSound = new Class({
          * @name Phaser.Sound.BaseSound#markers
          * @type {Object.<string, SoundMarker>}
          * @default {}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.markers = {};
@@ -162,7 +163,7 @@ var BaseSound = new Class({
          * @name Phaser.Sound.BaseSound#currentMarker
          * @type {SoundMarker}
          * @default null
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.currentMarker = null;
@@ -465,6 +466,7 @@ var BaseSound = new Class({
      * Destroys this sound and all associated events and marks it for removal from the sound manager.
      *
      * @method Phaser.Sound.BaseSound#destroy
+     * @fires Phaser.Sound.Events#DESTROY
      * @since 3.0.0
      */
     destroy: function ()
@@ -474,7 +476,7 @@ var BaseSound = new Class({
             return;
         }
 
-        this.emit('destroy', this);
+        this.emit(Events.DESTROY, this);
         this.pendingRemove = true;
         this.manager = null;
         this.key = '';

@@ -1,10 +1,11 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Class = require('../utils/Class');
+var GameEvents = require('../core/events');
 var EventEmitter = require('eventemitter3');
 var FileTypesManager = require('../loader/FileTypesManager');
 var GameObjectCreator = require('../gameobjects/GameObjectCreator');
@@ -33,8 +34,8 @@ var Remove = require('../utils/array/Remove');
  *
  * There are two types of plugin:
  *
- * 1) A Global Plugin
- * 2) A Scene Plugin
+ * 1. A Global Plugin
+ * 2. A Scene Plugin
  *
  * A Global Plugin is a plugin that lives within the Plugin Manager rather than a Scene. You can get
  * access to it by calling `PluginManager.get` and providing a key. Any Scene that requests a plugin in
@@ -48,16 +49,16 @@ var Remove = require('../utils/array/Remove');
  *
  * You can add a plugin to Phaser in three different ways:
  *
- * 1) Preload it
- * 2) Include it in your source code and install it via the Game Config
- * 3) Include it in your source code and install it within a Scene
+ * 1. Preload it
+ * 2. Include it in your source code and install it via the Game Config
+ * 3. Include it in your source code and install it within a Scene
  *
  * For examples of all of these approaches please see the Phaser 3 Examples Repo `plugins` folder.
  *
  * For information on creating your own plugin please see the Phaser 3 Plugin Template.
  *
  * @class PluginManager
- * @memberOf Phaser.Plugins
+ * @memberof Phaser.Plugins
  * @constructor
  * @since 3.0.0
  *
@@ -127,7 +128,7 @@ var PluginManager = new Class({
         }
         else
         {
-            game.events.once('boot', this.boot, this);
+            game.events.once(GameEvents.BOOT, this.boot, this);
         }
     },
 
@@ -198,7 +199,7 @@ var PluginManager = new Class({
         this._pendingGlobal = [];
         this._pendingScene = [];
 
-        this.game.events.once('destroy', this.destroy, this);
+        this.game.events.once(GameEvents.DESTROY, this.destroy, this);
     },
 
     /**
@@ -406,6 +407,8 @@ var PluginManager = new Class({
      * @param {boolean} [start=false] - Automatically start the plugin running? This is always `true` if you provide a mapping value.
      * @param {string} [mapping] - If this plugin is injected into the Phaser.Scene class, this is the property key to use.
      * @param {any} [data] - A value passed to the plugin's `init` method.
+     *
+     * @return {?Phaser.Plugins.BasePlugin} The plugin that was started, or `null` if `start` was false, or game isn't yet booted.
      */
     install: function (key, plugin, start, mapping, data)
     {
@@ -416,13 +419,13 @@ var PluginManager = new Class({
         if (typeof plugin !== 'function')
         {
             console.warn('Invalid Plugin: ' + key);
-            return;
+            return null;
         }
 
         if (PluginCache.hasCustom(key))
         {
             console.warn('Plugin key in use: ' + key);
-            return;
+            return null;
         }
 
         if (mapping !== null)
@@ -444,6 +447,8 @@ var PluginManager = new Class({
                 return this.start(key);
             }
         }
+
+        return null;
     },
 
     /**

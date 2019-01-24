@@ -1,14 +1,16 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @author       Stefan Hedman <schteppe@gmail.com> (http://steffe.se)
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
+
+//  v0.3.0
 
 module.exports = {
     decomp: polygonDecomp,
     quickDecomp: polygonQuickDecomp,
     isSimple: polygonIsSimple,
     removeCollinearPoints: polygonRemoveCollinearPoints,
+    removeDuplicatePoints: polygonRemoveDuplicatePoints,
     makeCCW: polygonMakeCCW
 };
 
@@ -184,6 +186,9 @@ function polygonMakeCCW(polygon){
     // reverse poly if clockwise
     if (!isLeft(polygonAt(polygon, br - 1), polygonAt(polygon, br), polygonAt(polygon, br + 1))) {
         polygonReverse(polygon);
+        return true;
+    } else {
+        return false;
     }
 }
 
@@ -245,6 +250,27 @@ function polygonCanSee(polygon, a,b) {
         }
     }
 
+    return true;
+}
+
+/**
+ * Check if two vertices in the polygon can see each other
+ * @method canSee2
+ * @param  {Number} a Vertex index 1
+ * @param  {Number} b Vertex index 2
+ * @return {Boolean}
+ */
+function polygonCanSee2(polygon, a,b) {
+    // for each edge
+    for (var i = 0; i !== polygon.length; ++i) {
+        // ignore incident edges
+        if (i === a || i === b || (i + 1) % polygon.length === a || (i + 1) % polygon.length === b){
+            continue;
+        }
+        if( lineSegmentsIntersect(polygonAt(polygon, a), polygonAt(polygon, b), polygonAt(polygon, i), polygonAt(polygon, i+1)) ){
+            return false;
+        }
+    }
     return true;
 }
 
@@ -531,9 +557,12 @@ function polygonQuickDecomp(polygon, result,reflexVertices,steinerPoints,delta,m
                 }
 
                 for (var j = lowerIndex; j <= upperIndex; ++j) {
-                    if (isLeftOn(polygonAt(poly, i - 1), polygonAt(poly, i), polygonAt(poly, j)) && isRightOn(polygonAt(poly, i + 1), polygonAt(poly, i), polygonAt(poly, j))) {
+                    if (
+                        isLeftOn(polygonAt(poly, i - 1), polygonAt(poly, i), polygonAt(poly, j)) &&
+                        isRightOn(polygonAt(poly, i + 1), polygonAt(poly, i), polygonAt(poly, j))
+                    ) {
                         d = sqdist(polygonAt(poly, i), polygonAt(poly, j));
-                        if (d < closestDist) {
+                        if (d < closestDist && polygonCanSee2(poly, i, j)) {
                             closestDist = d;
                             closestIndex = j % polygon.length;
                         }
@@ -591,6 +620,23 @@ function polygonRemoveCollinearPoints(polygon, precision){
 }
 
 /**
+ * Remove duplicate points in the polygon.
+ * @method removeDuplicatePoints
+ * @param  {Number} [precision] The threshold to use when determining whether two points are the same. Use zero for best precision.
+ */
+function polygonRemoveDuplicatePoints(polygon, precision){
+    for(var i=polygon.length-1; i>=1; --i){
+        var pi = polygon[i];
+        for(var j=i-1; j>=0; --j){
+            if(points_eq(pi, polygon[j], precision)){
+                polygon.splice(i,1);
+                continue;
+            }
+        }
+    }
+}
+
+/**
  * Check if two scalars are equal
  * @static
  * @method eq
@@ -601,5 +647,18 @@ function polygonRemoveCollinearPoints(polygon, precision){
  */
 function scalar_eq(a,b,precision){
     precision = precision || 0;
-    return Math.abs(a-b) < precision;
+    return Math.abs(a-b) <= precision;
+}
+
+/**
+ * Check if two points are equal
+ * @static
+ * @method points_eq
+ * @param  {Array} a
+ * @param  {Array} b
+ * @param  {Number} [precision]
+ * @return {Boolean}
+ */
+function points_eq(a,b,precision){
+    return scalar_eq(a[0],b[0],precision) && scalar_eq(a[1],b[1],precision);
 }
