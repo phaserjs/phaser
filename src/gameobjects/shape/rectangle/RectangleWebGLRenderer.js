@@ -68,7 +68,7 @@ var RectangleWebGLRenderer = function (renderer, src, interpolationPercentage, c
         fillTint.BR = fillTintColor;
 
         pipeline.setTexture2D();
-   
+
         pipeline.batchFillRect(
             -dx,
             -dy,
