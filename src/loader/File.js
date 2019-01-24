@@ -316,7 +316,7 @@ var File = new Class({
      */
     onLoad: function (xhr, event)
     {
-        var localFileOk = ((xhr.responseURL.indexOf('file://') === 0 && event.target.status === 0));
+        var localFileOk = ((xhr.responseURL && xhr.responseURL.indexOf('file://') === 0 && event.target.status === 0));
 
         var success = !(event.target && event.target.status !== 200) || localFileOk;
 
@@ -337,6 +337,7 @@ var File = new Class({
      * @method Phaser.Loader.File#onError
      * @since 3.0.0
      *
+     * @param {XMLHttpRequest} xhr - The XMLHttpRequest that caused this onload event.
      * @param {ProgressEvent} event - The DOM ProgressEvent that resulted from this error.
      */
     onError: function ()
