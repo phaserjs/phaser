@@ -23,6 +23,11 @@ var UUID = require('../../utils/string/UUID');
  * A Render Texture is a special texture that allows any number of Game Objects to be drawn to it. You can take many complex objects and
  * draw them all to this one texture, which can they be used as the texture for other Game Object's. It's a way to generate dynamic
  * textures at run-time that are WebGL friendly and don't invoke expensive GPU uploads.
+ * 
+ * Note that under WebGL a FrameBuffer, which is what the Render Texture uses internally, cannot be anti-aliased. This means
+ * that when drawing objects such as Shapes to a Render Texture they will appear to be drawn with no aliasing, however this
+ * is a technical limitation of WebGL. To get around it, create your shape as a texture in an art package, then draw that
+ * to the Render Texture.
  *
  * @class RenderTexture
  * @extends Phaser.GameObjects.GameObject
@@ -424,7 +429,7 @@ var RenderTexture = new Class({
 
             renderer.setFramebuffer(this.framebuffer, true);
 
-            renderer.pipelines.TextureTintPipeline.drawFillRect(
+            this.pipeline.drawFillRect(
                 bounds.x, bounds.y, bounds.right, bounds.bottom,
                 Utils.getTintFromFloats(r / 255, g / 255, b / 255, 1),
                 alpha
@@ -460,7 +465,7 @@ var RenderTexture = new Class({
                 var renderer = this.renderer;
 
                 renderer.setFramebuffer(this.framebuffer, true);
-   
+
                 gl.clearColor(0, 0, 0, 0);
                 gl.clear(gl.COLOR_BUFFER_BIT);
 
