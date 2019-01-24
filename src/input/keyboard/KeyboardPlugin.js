@@ -7,6 +7,7 @@
 var Class = require('../../utils/Class');
 var EventEmitter = require('eventemitter3');
 var Events = require('./events');
+var GameEvents = require('../../core/events');
 var GetValue = require('../../utils/object/GetValue');
 var InputEvents = require('../events');
 var InputPluginCache = require('../InputPluginCache');
@@ -70,6 +71,15 @@ var KeyboardPlugin = new Class({
     function KeyboardPlugin (sceneInputPlugin)
     {
         EventEmitter.call(this);
+
+        /**
+         * A reference to the core game, so we can listen for visibility events.
+         *
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#game
+         * @type {Phaser.Game}
+         * @since 3.16.0
+         */
+        this.game = sceneInputPlugin.systems.game;
 
         /**
          * A reference to the Scene that this Input Plugin is responsible for.
@@ -185,9 +195,11 @@ var KeyboardPlugin = new Class({
      */
     start: function ()
     {
-        this.startListeners();
+        this.sceneInputPlugin.pluginEvents.on(InputEvents.UPDATE, this.update, this);
 
         this.sceneInputPlugin.pluginEvents.once(InputEvents.SHUTDOWN, this.shutdown, this);
+
+        this.game.events.on(GameEvents.BLUR, this.resetKeys, this);
     },
 
     /**
@@ -201,32 +213,6 @@ var KeyboardPlugin = new Class({
     isActive: function ()
     {
         return (this.enabled && this.scene.sys.isActive());
-    },
-
-    /**
-     * Starts the Keyboard Event listeners running.
-     * This is called automatically and does not need to be manually invoked.
-     *
-     * @method Phaser.Input.Keyboard.KeyboardPlugin#startListeners
-     * @private
-     * @since 3.10.0
-     */
-    startListeners: function ()
-    {
-        this.sceneInputPlugin.pluginEvents.on(InputEvents.UPDATE, this.update, this);
-    },
-
-    /**
-     * Stops the Keyboard Event listeners.
-     * This is called automatically and does not need to be manually invoked.
-     *
-     * @method Phaser.Input.Keyboard.KeyboardPlugin#stopListeners
-     * @private
-     * @since 3.10.0
-     */
-    stopListeners: function ()
-    {
-        this.sceneInputPlugin.pluginEvents.off(InputEvents.UPDATE, this.update);
     },
 
     /**
@@ -807,7 +793,9 @@ var KeyboardPlugin = new Class({
     {
         this.resetKeys();
 
-        this.stopListeners();
+        this.sceneInputPlugin.pluginEvents.off(InputEvents.UPDATE, this.update);
+
+        this.game.events.off(GameEvents.BLUR, this.resetKeys);
 
         this.removeAllListeners();
 

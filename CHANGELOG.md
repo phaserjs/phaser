@@ -59,13 +59,13 @@ You should update your game code accordingly.
 
 ### Keyboard Input - New Features
 
-The specificity of the Keyboard events has been changed to allow you more control over event handling. Previously, the Keyboard Plugin would emit the global `keydown_CODE` event first (where CODE was a keycode string, like `keydown_A`), then it would emit the global `keydown` event. In previous versions, `Key` objects, created via `this.input.keyboard.addKey()`, didn't emit events.
+The specificity of the Keyboard events has been changed to allow you more control over event handling. Previously, the Keyboard Plugin would emit the global `keydown-CODE` event first (where CODE was a keycode string, like `keydown-A`), then it would emit the global `keydown` event. In previous versions, `Key` objects, created via `this.input.keyboard.addKey()`, didn't emit events.
 
 The `Key` class now extends EventEmitter and emits two new events directly: `down` and `up`. This means you can listen for an event from a Key you've created, i.e.: `yourKey.on('up', handler)`.
 
 The order has also now changed. If it exists, the Key object will dispatch its `down` event first. Then the Keyboard Plugin will dispatch `keydown_CODE` and finally the least specific of them all, `keydown` will be dispatched.
 
-You also now have the ability to cancel this at any stage either on a local or global level. All event handlers are sent an event object which you can call `event.stopImmediatePropagation()` on. This will immediately stop any further listeners from being invoked in the current Scene. Therefore, if you call `stopImmediatePropagation()` in the `Key.on` handler, then the Keyboard Plugin will not emit either the `keydown_CODE` or `keydown` global events. You can also call `stopImmediatePropagation()` during the `keydown_CODE` handler, to stop it reaching the global `keydown` handler. As `keydown` is last, calling it there has no effect. 
+You also now have the ability to cancel this at any stage either on a local or global level. All event handlers are sent an event object which you can call `event.stopImmediatePropagation()` on. This will immediately stop any further listeners from being invoked in the current Scene. Therefore, if you call `stopImmediatePropagation()` in the `Key.on` handler, then the Keyboard Plugin will not emit either the `keydown-CODE` or `keydown` global events. You can also call `stopImmediatePropagation()` during the `keydown-CODE` handler, to stop it reaching the global `keydown` handler. As `keydown` is last, calling it there has no effect. 
 
 There is also the `stopPropagation()` function. This works in the same way as `stopImmediatePropagation` but instead of being local, it works across all of the Scenes in your game. For example, if you had 3 active Scenes (A, B and C, with A at the top of the Scene list), all listening for the same key, calling `stopPropagation()` in Scene A would stop the event from reaching any handlers in Scenes B or C. Remember that events flow down the Scene list from top to bottom. So, the top-most rendering Scene in the Scene list has priority over any Scene below it.
 
@@ -100,6 +100,7 @@ Default captures can be defined in the Game Config in the `input.keyboard.captur
 one set of bindings ever created, which makes things a lot cleaner.
 * There is a new Game and Scene Config setting `input.keyboard.capture` which is an array of KeyCodes that the Keyboard Plugin will capture all non-modified key events on. By default it is empty. You can populate it in the config, or use the new capture methods.
 * The Keyboard Manager will now call `preventDefault` only on non-modified key presses, stopping the keyboard event from hitting the browser. Previously, capturing the R key, for example, would block a CTRL+R page reload, but it now ignores it because of the key modifier.
+* If the browser Window loses focus, either from switching to another app, or another tab, all active Keys will be reset. This prevents issues with keys still reporting as being held down after leaving the game and returning to it again. Fix #4134 (thanks @Simplonium)
 * `Key.emitOnRepeat` is a new boolean property that controls if the Key will continuously emit a `down` event while being held down (true), or emit the event just once, on first press, and then skip future events (false).
 * `Key.setEmitOnRepeat` is a new chainable method for setting the `emitOnRepeat` property.
 * The `KeyboardPlugin.addKeys` method has a new optional boolean `emitOnRepeat` which sets that property on all Key objects it creates as part of the call. It defaults to `false`.
@@ -121,6 +122,8 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `KeyboardPlugin.target` has been removed as it's no longer used by the class.
 * `KeyboardPlugin.queue` has been removed as it's no longer used by the class.
 * `KeyboardPlugin.onKeyHandler` has been removed as it's no longer used by the class.
+* `KeyboardPlugin.startListeners` has been removed as it's no longer used by the class.
+* `KeyboardPlugin.stopListeners` has been removed as it's no longer used by the class.
 
 ### Mouse and Touch Input - New Features, Updates and Fixes
 
