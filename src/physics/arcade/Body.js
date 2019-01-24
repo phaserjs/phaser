@@ -438,6 +438,19 @@ var Body = new Class({
          */
         this.maxVelocity = new Vector2(10000, 10000);
 
+	    /**
+         * The maximum speed this Body is allowed to reach.
+         * 
+         * If not negative it limits the scalar value of speed.
+         * 
+         * Any negative value means no maximum is being applied.
+         * 
+         * @name Phaser.Physics.Arcade.Body#maxSpeed
+         * @type {number}
+         * @since 3.16.0 
+         */
+        this.maxSpeed = -1;
+
         /**
          * If this Body is `immovable` and in motion, `friction` is the proportion of this Body's motion received by the riding Body on each axis, relative to 1.
          * The default value (1, 0) moves the riding Body horizontally in equal proportion to this Body and vertically not at all.
@@ -1550,6 +1563,23 @@ var Body = new Class({
     setMaxVelocity: function (x, y)
     {
         this.maxVelocity.set(x, y);
+
+        return this;
+    },
+
+    /**
+     * Sets the maximum speed the Body can move.
+     *
+     * @method Phaser.Physics.Arcade.Body#setMaxSpeed
+     * @since 3.16.0
+     *
+     * @param {number} value - The maximum speed value, in pixels per second. Set to a negative value to disable.
+     *
+     * @return {Phaser.Physics.Arcade.Body} This Body object.
+     */
+    setMaxSpeed: function (value)
+    {
+        this.maxSpeed = value;
 
         return this;
     },

@@ -270,6 +270,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `Vector3.BACK` is a new constant that can be used in Vector comparison operations (thanks @Aedalus)
 * `Vector3.ONE` is a new constant that can be used in Vector comparison operations (thanks @Aedalus)
 * Geometery Mask has a new property called `invertAlpha` in WebGL, which works in the same way as the flag on the Bitmap Mask and allows you to invert the function of the stencil buffer, i.e. non-drawn shapes become invisible, and drawn shapes visible (thanks @tfelix)
+* The Arcade Physics Body has a new property `maxSpeed` which limits the vector length of the Body velocity. You can set it via the method `setMaxSpeed` and it is applied in the `World.computeVelocity` method (thanks @Edwin222 @rexrainbow)
 
 ### Updates
 

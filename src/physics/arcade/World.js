@@ -1287,6 +1287,7 @@ var World = new Class({
         var maxY = body.maxVelocity.y;
 
         var speed = body.speed;
+        var maxSpeed = body.maxSpeed;
         var allowDrag = body.allowDrag;
         var useDamping = body.useDamping;
 
@@ -1372,6 +1373,11 @@ var World = new Class({
         velocityY = Clamp(velocityY, -maxY, maxY);
 
         body.velocity.set(velocityX, velocityY);
+
+        if (maxSpeed > -1 && body.velocity.length() > maxSpeed)
+        {
+            body.velocity.normalize().scale(maxSpeed);
+        }
     },
 
     /**
