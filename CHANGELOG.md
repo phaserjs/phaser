@@ -320,6 +320,8 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `Tween.seek` now returns the Tween instance (thanks @rexrainbow)
 * `Tween.complete` now returns the Tween instance (thanks @rexrainbow)
 * `Tween.stop` now returns the Tween instance (thanks @rexrainbow)
+* `List.sort` now has an optional parameter `handler` which allows you to provide your own sort handling function (thanks @jcyuan)
+* `Container.sort` now has an optional parameter `handler` which allows you to provide your own sort handling function (thanks @jcyuan)
 
 ### Bug Fixes
 
@@ -373,6 +375,8 @@ one set of bindings ever created, which makes things a lot cleaner.
 * Arcade Physics could trigger a `collide` event on a Body even if it performing an overlap check, if the `onCollide` property was true (thanks @samme)
 * TileSprites no longer cause a crash when using the Headless mode renderer. Fix #4297 (thanks @clesquir)
 * The WebGLRenderer will now apply a transparent background if `transparent = true` in the game config (thanks @gomachan7)
+* `List.sort` was missing the scope required for the sort handler, this is now correctly provided internally. Fix #4241 (thanks @jcyuan)
+* `Container.sort` was missing the scope required for the sort handler, this is now correctly provided internally. Fix #4241 (thanks @jcyuan)
 
 ### Examples and TypeScript
 

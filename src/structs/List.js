@@ -183,9 +183,8 @@ var List = new Class({
     },
 
     /**
-     * Sort the contents of this List so the items are in order based
-     * on the given property. For example, `sort('alpha')` would sort the List
-     * contents based on the value of their `alpha` property.
+     * Sort the contents of this List so the items are in order based on the given property.
+     * For example, `sort('alpha')` would sort the List contents based on the value of their `alpha` property.
      *
      * @method Phaser.Structs.List#sort
      * @since 3.0.0
@@ -193,38 +192,28 @@ var List = new Class({
      * @genericUse {T[]} - [children,$return]
      *
      * @param {string} property - The property to lexically sort by.
+     * @param {function} [handler] - Provide your own custom handler function. Will receive 2 children which it should compare and return a boolean.
      *
      * @return {Phaser.Structs.List} This List object.
      */
-    sort: function (property)
+    sort: function (property, handler)
     {
-        if (property)
+        if (!property)
         {
-            this._sortKey = property;
-
-            StableSort.inplace(this.list, this.sortHandler);
+            return this;
         }
 
-        return this;
-    },
+        if (handler === undefined)
+        {
+            handler = function (childA, childB)
+            {
+                return childA[property] - childB[property];
+            };
+        }
 
-    /**
-     * Internal handler for the {@link #sort} method which compares two items.
-     *
-     * @method Phaser.Structs.List#sortHandler
-     * @private
-     * @since 3.4.0
-     *
-     * @genericUse {T} - [childA,childB]
-     *
-     * @param {*} childA - The first item to compare.
-     * @param {*} childB - The second item to compare.
-     *
-     * @return {integer} The result of the comparison, which will be negative if the first item is smaller then second, positive if the first item is larger than the second, or 0 if they're equal.
-     */
-    sortHandler: function (childA, childB)
-    {
-        return childA[this._sortKey] - childB[this._sortKey];
+        StableSort.inplace(this.list, handler);
+
+        return this;
     },
 
     /**

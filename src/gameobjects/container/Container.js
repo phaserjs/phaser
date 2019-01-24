@@ -525,36 +525,28 @@ var Container = new Class({
      * @since 3.4.0
      *
      * @param {string} property - The property to lexically sort by.
+     * @param {function} [handler] - Provide your own custom handler function. Will receive 2 children which it should compare and return a boolean.
      *
      * @return {Phaser.GameObjects.Container} This Container instance.
      */
-    sort: function (property)
+    sort: function (property, handler)
     {
-        if (property)
+        if (!property)
         {
-            this._sortKey = property;
-
-            ArrayUtils.StableSort.inplace(this.list, this.sortHandler);
+            return this;
         }
 
-        return this;
-    },
+        if (handler === undefined)
+        {
+            handler = function (childA, childB)
+            {
+                return childA[property] - childB[property];
+            };
+        }
 
-    /**
-     * Internal sort handler method.
-     *
-     * @method Phaser.GameObjects.Container#sortHandler
-     * @private
-     * @since 3.4.0
-     *
-     * @param {Phaser.GameObjects.GameObject} childA - The first child to sort.
-     * @param {Phaser.GameObjects.GameObject} childB - The second child to sort.
-     *
-     * @return {integer} The sort results.
-     */
-    sortHandler: function (childA, childB)
-    {
-        return childA[this._sortKey] - childB[this._sortKey];
+        ArrayUtils.StableSort.inplace(this.list, handler);
+
+        return this;
     },
 
     /**
