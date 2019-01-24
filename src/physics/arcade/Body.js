@@ -438,7 +438,7 @@ var Body = new Class({
          */
         this.maxVelocity = new Vector2(10000, 10000);
 
-	    /**
+        /**
          * The maximum speed this Body is allowed to reach.
          * 
          * If not negative it limits the scalar value of speed.
