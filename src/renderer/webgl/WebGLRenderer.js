@@ -1424,6 +1424,7 @@ var WebGLRenderer = new Class({
         else
         {
             gl.texImage2D(gl.TEXTURE_2D, mipLevel, format, format, gl.UNSIGNED_BYTE, pixels);
+
             width = pixels.width;
             height = pixels.height;
         }
@@ -1985,7 +1986,9 @@ var WebGLRenderer = new Class({
                 wrapping = gl.REPEAT;
             }
 
-            dstTexture = this.createTexture2D(0, gl.NEAREST, gl.NEAREST, wrapping, wrapping, gl.RGBA, srcCanvas, srcCanvas.width, srcCanvas.height, true);
+            var filter = (this.config.antialias) ? gl.LINEAR : gl.NEAREST;
+
+            dstTexture = this.createTexture2D(0, filter, filter, wrapping, wrapping, gl.RGBA, srcCanvas, srcCanvas.width, srcCanvas.height, true);
         }
         else
         {

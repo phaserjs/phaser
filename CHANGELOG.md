@@ -325,6 +325,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `Tween.stop` now returns the Tween instance (thanks @rexrainbow)
 * `List.sort` now has an optional parameter `handler` which allows you to provide your own sort handling function (thanks @jcyuan)
 * `Container.sort` now has an optional parameter `handler` which allows you to provide your own sort handling function (thanks @jcyuan)
+* The WebGLRenderer method `canvasToTexture` will now only set the filter to be `NEAREST` if `antialias` is disabled in the game config (i.e. when running in pixelArt mode). This means that Text objects, and other Canvas backed textures, now render with anti-aliasing if everything else does. You can disable this on a per-object basis by calling `texture.setFilter(1)` on them.
 
 ### Bug Fixes
 
