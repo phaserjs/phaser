@@ -48,7 +48,7 @@ var XHRLoader = function (file, globalXHRSettings)
     // After a successful request, the xhr.response property will contain the requested data as a DOMString, ArrayBuffer, Blob, or Document (depending on what was set for responseType.)
 
     xhr.onload = file.onLoad.bind(file, xhr);
-    xhr.onerror = file.onError.bind(file);
+    xhr.onerror = file.onError.bind(file, xhr);
     xhr.onprogress = file.onProgress.bind(file);
 
     //  This is the only standard method, the ones above are browser additions (maybe not universal?)
