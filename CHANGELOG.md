@@ -377,6 +377,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * The WebGLRenderer will now apply a transparent background if `transparent = true` in the game config (thanks @gomachan7)
 * `List.sort` was missing the scope required for the sort handler, this is now correctly provided internally. Fix #4241 (thanks @jcyuan)
 * `Container.sort` was missing the scope required for the sort handler, this is now correctly provided internally. Fix #4241 (thanks @jcyuan)
+* `DataManager.pop` would emit the DataManager instance, instead of the parent, as the first event argument. It now emits the parent as it should do. Fix #4186 (thanks @gadelan)
 
 ### Examples and TypeScript
 

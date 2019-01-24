@@ -502,7 +502,7 @@ var DataManager = new Class({
             delete this.list[key];
             delete this.values[key];
 
-            this.events.emit(Events.REMOVE_DATA, this, key, data);
+            this.events.emit(Events.REMOVE_DATA, this.parent, key, data);
         }
 
         return data;
