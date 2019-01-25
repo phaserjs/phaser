@@ -274,6 +274,10 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `Vector3.ONE` is a new constant that can be used in Vector comparison operations (thanks @Aedalus)
 * Geometery Mask has a new property called `invertAlpha` in WebGL, which works in the same way as the flag on the Bitmap Mask and allows you to invert the function of the stencil buffer, i.e. non-drawn shapes become invisible, and drawn shapes visible (thanks @tfelix)
 * The Arcade Physics Body has a new property `maxSpeed` which limits the vector length of the Body velocity. You can set it via the method `setMaxSpeed` and it is applied in the `World.computeVelocity` method (thanks @Edwin222 @rexrainbow)
+* `WebGLRenderer.snapshotArea` is a new method that allows you to grab an image of the given region of the canvas during the post-render step and have it sent to your defined callback. This is the same as `snapshot` except you control the area being grabbed, so is more efficient if you only need a smaller area.
+* `WebGLRenderer.snapshotPixel` is a new method that allows you to grab a single pixel from the game canvas, post-render. It returns the result as a `Color` object to your specified callback.
+* `CanvasRenderer.snapshotArea` is a new method that allows you to grab an image of the given region of the canvas during the post-render step and have it sent to your defined callback. This is the same as `snapshot` except you control the area being grabbed, so is more efficient if you only need a smaller area.
+* `CanvasRenderer.snapshotPixel` is a new method that allows you to grab a single pixel from the game canvas, post-render. It returns the result as a `Color` object to your specified callback.
 
 ### Updates
 
@@ -326,6 +330,10 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `List.sort` now has an optional parameter `handler` which allows you to provide your own sort handling function (thanks @jcyuan)
 * `Container.sort` now has an optional parameter `handler` which allows you to provide your own sort handling function (thanks @jcyuan)
 * The WebGLRenderer method `canvasToTexture` will now only set the filter to be `NEAREST` if `antialias` is disabled in the game config (i.e. when running in pixelArt mode). This means that Text objects, and other Canvas backed textures, now render with anti-aliasing if everything else does. You can disable this on a per-object basis by calling `texture.setFilter(1)` on them.
+* `CanvasRenderer.snapshotCallback`, `snapshotType` and `snapshotEncoder` have all been removed as they are no longer required.
+* `CanvasRenderer.snapshotState` is a new object that contains the snapshot configuration data, the same as the WebGL Renderer.
+* The signature of the `WebGLSnapshot` function has changed. It now takes a Snapshot Configuration object as the second parameter.
+* The signature of the `CanvasSnapshot` function has changed. It now takes a Snapshot Configuration object as the second parameter.
 
 ### Bug Fixes
 
