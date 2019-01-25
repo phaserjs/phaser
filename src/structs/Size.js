@@ -359,6 +359,47 @@ var Size = new Class({
     },
 
     /**
+     * Sets a new aspect ratio, overriding what was there previously.
+     * 
+     * It then calls `setSize` immediately using the current dimensions.
+     *
+     * @method Phaser.Structs.Size#setAspectRatio
+     * @since 3.16.0
+     *
+     * @param {number} ratio - The new aspect ratio.
+     *
+     * @return {this} This Size component instance.
+     */
+    setAspectRatio: function (ratio)
+    {
+        this.aspectRatio = ratio;
+
+        return this.setSize(this._width, this._height);
+    },
+
+    /**
+     * Sets a new width and height for this Size component and updates the aspect ratio based on them.
+     * 
+     * It _doesn't_ change the `aspectMode` and still factors in size limits such as the min max and parent bounds.
+     *
+     * @method Phaser.Structs.Size#resize
+     * @since 3.16.0
+     *
+     * @param {number} width - The new width of the Size component.
+     * @param {number} [height=width] - The new height of the Size component. If not given, it will use the `width`.
+     *
+     * @return {this} This Size component instance.
+     */
+    resize: function (width, height)
+    {
+        this._width = this.getNewWidth(SnapFloor(width, this.snapTo.x));
+        this._height = this.getNewHeight(SnapFloor(height, this.snapTo.y));
+        this.aspectRatio = (this._height === 0) ? 1 : this._width / this._height;
+
+        return this;
+    },
+
+    /**
      * Takes a new width and passes it through the min/max clamp and then checks it doesn't exceed the parent width.
      *
      * @method Phaser.Structs.Size#getNewWidth
