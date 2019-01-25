@@ -587,9 +587,11 @@ var ScaleManager = new Class({
             height = Math.floor(height);
         }
 
-        this.gameSize.setSize(width, height);
+        this.gameSize.resize(width, height);
 
-        this.baseSize.setSize(width * this.resolution, height * this.resolution);
+        this.baseSize.resize(width * this.resolution, height * this.resolution);
+
+        this.displaySize.resize(width, height);
 
         this.refresh();
     },
