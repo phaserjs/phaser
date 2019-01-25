@@ -15,5 +15,7 @@ Polygon.GetPoints = require('./GetPoints');
 Polygon.Perimeter = require('./Perimeter');
 Polygon.Reverse = require('./Reverse');
 Polygon.Smooth = require('./Smooth');
+Polygon.Offset = require('./Offset');
+Polygon.OffsetPoint = require('./OffsetPoint');
 
 module.exports = Polygon;
