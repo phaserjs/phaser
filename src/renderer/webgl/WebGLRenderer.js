@@ -28,14 +28,6 @@ var TextureTintPipeline = require('./pipelines/TextureTintPipeline');
  */
 
 /**
- * @typedef {object} SnapshotState
- *
- * @property {SnapshotCallback} callback - The function to call after the snapshot is taken.
- * @property {string} type - The type of the image to create.
- * @property {number} encoder - The image quality, between 0 and 1, for image formats which use lossy compression (such as `image/jpeg`).
- */
-
-/**
  * @classdesc
  * WebGLRenderer is a class that contains the needed functionality to keep the
  * WebGLRenderingContext state clean. The main idea of the WebGLRenderer is to keep track of
@@ -212,10 +204,12 @@ var WebGLRenderer = new Class({
         this.snapshotState = {
             x: 0,
             y: 0,
+            width: 1,
+            height: 1,
             getPixel: false,
             callback: null,
-            type: null,
-            encoder: null
+            type: 'image/png',
+            encoder: 0.92
         };
 
         // Internal Renderer State (Textures, Framebuffers, Pipelines, Buffers, etc)
@@ -1931,7 +1925,7 @@ var WebGLRenderer = new Class({
 
         if (state.callback)
         {
-            state.callback(WebGLSnapshot(this.canvas, state));
+            WebGLSnapshot(this.canvas, state);
 
             state.callback = null;
         }
@@ -1945,36 +1939,100 @@ var WebGLRenderer = new Class({
     },
 
     /**
-     * Schedules a snapshot to be taken after the current frame is rendered.
+     * Schedules a snapshot of the entire game viewport to be taken after the current frame is rendered.
+     * 
+     * To capture a specific area see the `snapshotArea` method. To capture a specific pixel, see `snapshotPixel`.
+     * 
+     * Only one snapshot can be active _per frame_. If you have already called `snapshotPixel`, for example, then
+     * calling this method will override it.
+     * 
+     * Snapshots work by using the WebGL `readPixels` feature to grab every pixel from the frame buffer into an ArrayBufferView.
+     * It then parses this, copying the contents to a temporary Canvas and finally creating an Image object from it,
+     * which is the image returned to the callback provided. All in all, this is a computationally expensive and blocking process,
+     * which gets more expensive the larger the canvas size gets, so please be careful how you employ this in your game.
      *
      * @method Phaser.Renderer.WebGL.WebGLRenderer#snapshot
      * @since 3.0.0
      *
-     * @param {SnapshotCallback} callback - Function to invoke after the snapshot is created.
-     * @param {string} type - The format of the image to create, usually `image/png`.
-     * @param {number} encoderOptions - The image quality, between 0 and 1, to use for image formats with lossy compression (such as `image/jpeg`).
+     * @param {SnapshotCallback} callback - The Function to invoke after the snapshot image is created.
+     * @param {string} [type='image/png'] - The format of the image to create, usually `image/png` or `image/jpeg`.
+     * @param {number} [encoderOptions=0.92] - The image quality, between 0 and 1. Used for image formats with lossy compression, such as `image/jpeg`.
      *
-     * @return {Phaser.Renderer.WebGL.WebGLRenderer} This WebGL Renderer.
+     * @return {this} This WebGL Renderer.
      */
     snapshot: function (callback, type, encoderOptions)
+    {
+        return this.snapshotArea(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight, callback, type, encoderOptions);
+    },
+
+    /**
+     * Schedules a snapshot of the given area of the game viewport to be taken after the current frame is rendered.
+     * 
+     * To capture the whole game viewport see the `snapshot` method. To capture a specific pixel, see `snapshotPixel`.
+     * 
+     * Only one snapshot can be active _per frame_. If you have already called `snapshotPixel`, for example, then
+     * calling this method will override it.
+     * 
+     * Snapshots work by using the WebGL `readPixels` feature to grab every pixel from the frame buffer into an ArrayBufferView.
+     * It then parses this, copying the contents to a temporary Canvas and finally creating an Image object from it,
+     * which is the image returned to the callback provided. All in all, this is a computationally expensive and blocking process,
+     * which gets more expensive the larger the canvas size gets, so please be careful how you employ this in your game.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#snapshotArea
+     * @since 3.16.0
+     *
+     * @param {integer} x - The x coordinate to grab from.
+     * @param {integer} y - The y coordinate to grab from.
+     * @param {integer} width - The width of the area to grab.
+     * @param {integer} height - The height of the area to grab.
+     * @param {SnapshotCallback} callback - The Function to invoke after the snapshot image is created.
+     * @param {string} [type='image/png'] - The format of the image to create, usually `image/png` or `image/jpeg`.
+     * @param {number} [encoderOptions=0.92] - The image quality, between 0 and 1. Used for image formats with lossy compression, such as `image/jpeg`.
+     *
+     * @return {this} This WebGL Renderer.
+     */
+    snapshotArea: function (x, y, width, height, callback, type, encoderOptions)
     {
         var state = this.snapshotState;
 
         state.callback = callback;
         state.type = type;
         state.encoder = encoderOptions;
+        state.getPixel = false;
+        state.x = x;
+        state.y = y;
+        state.width = Math.min(width, this.gl.drawingBufferWidth);
+        state.height = Math.min(height, this.gl.drawingBufferHeight);
 
         return this;
     },
 
-    getPixel: function (x, y, callback)
+    /**
+     * Schedules a snapshot of the given pixel from the game viewport to be taken after the current frame is rendered.
+     * 
+     * To capture the whole game viewport see the `snapshot` method. To capture a specific area, see `snapshotArea`.
+     * 
+     * Only one snapshot can be active _per frame_. If you have already called `snapshotArea`, for example, then
+     * calling this method will override it.
+     * 
+     * Unlike the other two snapshot methods, this one will return a `Color` object containing the color data for
+     * the requested pixel. It doesn't need to create an internal Canvas or Image object, so is a lot faster to execute,
+     * using less memory.
+     *
+     * @method Phaser.Renderer.WebGL.WebGLRenderer#snapshotPixel
+     * @since 3.16.0
+     *
+     * @param {integer} x - The x coordinate of the pixel to get.
+     * @param {integer} y - The y coordinate of the pixel to get.
+     * @param {SnapshotCallback} callback - The Function to invoke after the snapshot pixel data is extracted.
+     *
+     * @return {this} This WebGL Renderer.
+     */
+    snapshotPixel: function (x, y, callback)
     {
-        var state = this.snapshotState;
+        this.snapshotArea(x, y, 1, 1, callback);
 
-        state.x = x;
-        state.y = y;
-        state.getPixel = true;
-        state.callback = callback;
+        this.snapshotState.getPixel = true;
 
         return this;
     },
