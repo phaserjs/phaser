@@ -210,6 +210,9 @@ var WebGLRenderer = new Class({
          * @since 3.0.0
          */
         this.snapshotState = {
+            x: 0,
+            y: 0,
+            getPixel: false,
             callback: null,
             type: null,
             encoder: null
@@ -1924,10 +1927,13 @@ var WebGLRenderer = new Class({
 
         // Unbind custom framebuffer here
 
-        if (this.snapshotState.callback)
+        var state = this.snapshotState;
+
+        if (state.callback)
         {
-            this.snapshotState.callback(WebGLSnapshot(this.canvas, this.snapshotState.type, this.snapshotState.encoder));
-            this.snapshotState.callback = null;
+            state.callback(WebGLSnapshot(this.canvas, state));
+
+            state.callback = null;
         }
 
         var pipelines = this.pipelines;
@@ -1952,9 +1958,23 @@ var WebGLRenderer = new Class({
      */
     snapshot: function (callback, type, encoderOptions)
     {
-        this.snapshotState.callback = callback;
-        this.snapshotState.type = type;
-        this.snapshotState.encoder = encoderOptions;
+        var state = this.snapshotState;
+
+        state.callback = callback;
+        state.type = type;
+        state.encoder = encoderOptions;
+
+        return this;
+    },
+
+    getPixel: function (x, y, callback)
+    {
+        var state = this.snapshotState;
+
+        state.x = x;
+        state.y = y;
+        state.getPixel = true;
+        state.callback = callback;
 
         return this;
     },

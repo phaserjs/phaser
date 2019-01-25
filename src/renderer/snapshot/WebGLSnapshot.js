@@ -4,6 +4,8 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var GetFastValue = require('../../utils/object/GetFastValue');
+
 /**
  * Takes a snapshot of the current frame displayed by a WebGL canvas.
  *
@@ -16,48 +18,64 @@
  *
  * @return {HTMLImageElement} A new image which contains a snapshot of the canvas's contents.
  */
-var WebGLSnapshot = function (sourceCanvas, type, encoderOptions)
+var WebGLSnapshot = function (sourceCanvas, snapshotConfig)
 {
-    if (!type) { type = 'image/png'; }
-    if (!encoderOptions) { encoderOptions = 0.92; }
+    var type = GetFastValue(snapshotConfig, 'type', 'image/png');
+    var encoderOptions = GetFastValue(snapshotConfig, 'encoder', 0.92);
+    var x = GetFastValue(snapshotConfig, 'x', 0);
+    var y = GetFastValue(snapshotConfig, 'y', 0);
+    var getPixel = GetFastValue(snapshotConfig, 'getPixel', false);
 
     var gl = sourceCanvas.getContext('experimental-webgl');
-    var pixels = new Uint8Array(gl.drawingBufferWidth * gl.drawingBufferHeight * 4);
-    gl.readPixels(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
 
-    //  CanvasPool?
-    var canvas = document.createElement('canvas');
-    var ctx = canvas.getContext('2d');
-    var imageData;
-
-    canvas.width = gl.drawingBufferWidth;
-    canvas.height = gl.drawingBufferHeight;
-
-    imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-    var data = imageData.data;
-
-    for (var y = 0; y < canvas.height; y += 1)
+    if (getPixel)
     {
-        for (var x = 0; x < canvas.width; x += 1)
-        {
-            var si = ((canvas.height - y) * canvas.width + x) * 4;
-            var di = (y * canvas.width + x) * 4;
-            data[di + 0] = pixels[si + 0];
-            data[di + 1] = pixels[si + 1];
-            data[di + 2] = pixels[si + 2];
-            data[di + 3] = pixels[si + 3];
-        }
+        var pixel = new Uint8Array(4);
+
+        gl.readPixels(x, gl.drawingBufferHeight - y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+
+        return pixel;
     }
+    else
+    {
+        var pixels = new Uint8Array(gl.drawingBufferWidth * gl.drawingBufferHeight * 4);
 
-    ctx.putImageData(imageData, 0, 0);
-
-    var src = canvas.toDataURL(type, encoderOptions);
-    var image = new Image();
-
-    image.src = src;
-
-    return image;
+        gl.readPixels(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+    
+        //  CanvasPool?
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        var imageData;
+    
+        canvas.width = gl.drawingBufferWidth;
+        canvas.height = gl.drawingBufferHeight;
+    
+        imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    
+        var data = imageData.data;
+    
+        for (var y = 0; y < canvas.height; y += 1)
+        {
+            for (var x = 0; x < canvas.width; x += 1)
+            {
+                var si = ((canvas.height - y) * canvas.width + x) * 4;
+                var di = (y * canvas.width + x) * 4;
+                data[di + 0] = pixels[si + 0];
+                data[di + 1] = pixels[si + 1];
+                data[di + 2] = pixels[si + 2];
+                data[di + 3] = pixels[si + 3];
+            }
+        }
+    
+        ctx.putImageData(imageData, 0, 0);
+    
+        var src = canvas.toDataURL(type, encoderOptions);
+        var image = new Image();
+    
+        image.src = src;
+    
+        return image;
+    }
 };
 
 module.exports = WebGLSnapshot;
