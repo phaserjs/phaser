@@ -881,8 +881,13 @@ var Camera = new Class({
 
         this.midPoint.set(fx, fy);
 
-        this.scrollX = fx - originX;
-        this.scrollY = fy - originY;
+        var scrollX = fx - originX;
+        var scrollY = fy - originY;
+        
+        if (this.useBounds) {
+            this.clampX(scrollX);
+            this.clampY(scrollY);
+        }
 
         return this;
     },
