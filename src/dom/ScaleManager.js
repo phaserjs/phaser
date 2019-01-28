@@ -222,6 +222,25 @@ var ScaleManager = new Class({
         this.fullscreen;
 
         /**
+         * The DOM Element which is sent into fullscreen mode.
+         *
+         * @name Phaser.DOM.ScaleManager#fullscreenTarget
+         * @type {?any}
+         * @since 3.16.0
+         */
+        this.fullscreenTarget = null;
+
+        /**
+         * Did Phaser create the fullscreen target div, or was it provided in the game config?
+         *
+         * @name Phaser.DOM.ScaleManager#_createdFullscreenTarget
+         * @type {boolean}
+         * @private
+         * @since 3.16.0
+         */
+        this._createdFullscreenTarget = false;
+
+        /**
          * The dirty state of the Scale Manager.
          * Set if there is a change between the parent size and the current size.
          *
@@ -832,8 +851,7 @@ var ScaleManager = new Class({
 
         if (!fullscreen.active)
         {
-            //  TODO: Edge needs a div insert, other browsers can use Canvas as the target.
-            var fsTarget = this.canvas;
+            var fsTarget = this.getFullscreenTarget();
 
             if (fullscreen.keyboard)
             {
@@ -848,6 +866,38 @@ var ScaleManager = new Class({
 
             this.refresh();
         }
+    },
+
+    /**
+     * [description]
+     *
+     * @method Phaser.DOM.ScaleManager#getFullscreenTarget
+     * @since 3.16.0
+     */
+    getFullscreenTarget: function ()
+    {
+        if (!this.fullscreenTarget)
+        {
+            var fsTarget = document.createElement('div');
+
+            fsTarget.style.margin = '0';
+            fsTarget.style.padding = '0';
+
+            this.fullscreenTarget = fsTarget;
+
+            this._createdFullscreenTarget = true;
+        }
+
+        if (this._createdFullscreenTarget)
+        {
+            var canvasParent = this.canvas.parentNode;
+
+            canvasParent.insertBefore(this.fullscreenTarget, this.canvas);
+
+            this.fullscreenTarget.appendChild(this.canvas);
+        }
+
+        return this.fullscreenTarget;
     },
 
     /**
@@ -872,6 +922,20 @@ var ScaleManager = new Class({
         if (fullscreen.active)
         {
             document[fullscreen.cancel]();
+
+            if (this._createdFullscreenTarget)
+            {
+                var fsTarget = this.fullscreenTarget;
+
+                if (fsTarget && fsTarget.parentNode)
+                {
+                    var parent = fsTarget.parentNode;
+
+                    parent.insertBefore(this.canvas, fsTarget);
+
+                    parent.removeChild(fsTarget);
+                }
+            }
 
             this.emit(Events.LEAVE_FULLSCREEN);
         }
