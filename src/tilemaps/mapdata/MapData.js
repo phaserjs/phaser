@@ -6,9 +6,6 @@
 
 var Class = require('../../utils/Class');
 var GetFastValue = require('../../utils/object/GetFastValue');
-var LayerData = require('./LayerData');
-var ObjectLayer = require("./ObjectLayer");
-var Tileset = require('../Tileset');
 
 /**
  * @typedef {object} MapDataConfig
@@ -25,11 +22,11 @@ var Tileset = require('../Tileset');
  * @property {string} [renderOrder] - Determines the draw order of tilemap. Default is right-down.
  * @property {number} [version] - The version of Tiled the map uses.
  * @property {number} [properties] - Map specific properties (can be specified in Tiled).
- * @property {LayerData[]} [layers] - The layers of the tilemap.
+ * @property {Phaser.Tilemaps.LayerData[]} [layers] - The layers of the tilemap.
  * @property {array} [images] - An array with all the layers configured to the MapData.
  * @property {object} [objects] - An array of Tiled Image Layers.
  * @property {object} [collision] - An object of Tiled Object Layers.
- * @property {Tileset[]} [tilesets] - The tilesets the map uses.
+ * @property {Phaser.Tilemaps.Tileset[]} [tilesets] - The tilesets the map uses.
  * @property {array} [imageCollections] - The collection of images the map uses(specified in Tiled).
  * @property {array} [tiles] - [description]
  */
@@ -172,7 +169,7 @@ var MapData = new Class({
          * An array with all the layers configured to the MapData.
          * 
          * @name Phaser.Tilemaps.MapData#layers
-         * @type {(LayerData[]|ObjectLayer)}
+         * @type {(Phaser.Tilemaps.LayerData[]|Phaser.Tilemaps.ObjectLayer)}
          * @since 3.0.0
          */
         this.layers = GetFastValue(config, 'layers', []);
@@ -208,7 +205,7 @@ var MapData = new Class({
          * An array of Tilesets.
          * 
          * @name Phaser.Tilemaps.MapData#tilesets
-         * @type {Tileset[]}
+         * @type {Phaser.Tilemaps.Tileset[]}
          * @since 3.0.0
          */
         this.tilesets = GetFastValue(config, 'tilesets', []);
