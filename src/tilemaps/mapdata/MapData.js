@@ -6,6 +6,33 @@
 
 var Class = require('../../utils/Class');
 var GetFastValue = require('../../utils/object/GetFastValue');
+var LayerData = require('./LayerData');
+var ObjectLayer = require("./ObjectLayer");
+var Tileset = require('../Tileset');
+
+/**
+ * @typedef {object} MapDataConfig
+ * @property {string} [name] - The key in the Phaser cache that corresponds to the loaded tilemap data.
+ * @property {number} [width=0] - The width of the entire tilemap.
+ * @property {number} [height=0] - The height of the entire tilemap.
+ * @property {number} [tileWidth=0] - The width of the tiles.
+ * @property {number} [tileHeight=0] - The height of the tiles.
+ * @property {number} [widthInPixels] - The width in pixels of the entire tilemap.
+ * @property {number} [heightInPixels] - The height in pixels of the entire tilemap.
+ * @property {number} [widthInPixels=0] - The pixel size of the entire tilemap.
+ * @property {integer} [format] - [description]
+ * @property {string} [orientation] - The orientation of the map data (i.e. orthogonal, isometric, hexagonal), default 'orthogonal'.
+ * @property {string} [renderOrder] - Determines the draw order of tilemap. Default is right-down.
+ * @property {number} [version] - The version of Tiled the map uses.
+ * @property {number} [properties] - Map specific properties (can be specified in Tiled).
+ * @property {LayerData[]} [layers] - The layers of the tilemap.
+ * @property {array} [images] - An array with all the layers configured to the MapData.
+ * @property {object} [objects] - An array of Tiled Image Layers.
+ * @property {object} [collision] - An object of Tiled Object Layers.
+ * @property {Tileset[]} [tilesets] - The tilesets the map uses.
+ * @property {array} [imageCollections] - The collection of images the map uses(specified in Tiled).
+ * @property {array} [tiles] - [description]
+ */
 
 /**
  * @classdesc
@@ -18,7 +45,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @constructor
  * @since 3.0.0
  *
- * @param {object} [config] - [description]
+ * @param {MapDataConfig} [config] - [description]
  */
 var MapData = new Class({
 
@@ -29,7 +56,7 @@ var MapData = new Class({
         if (config === undefined) { config = {}; }
 
         /**
-         * [description]
+         * The key in the Phaser cache that corresponds to the loaded tilemap data.
          * 
          * @name Phaser.Tilemaps.MapData#name
          * @type {string}
@@ -38,7 +65,7 @@ var MapData = new Class({
         this.name = GetFastValue(config, 'name', 'map');
 
         /**
-         * [description]
+         * The width of the entire tilemap.
          * 
          * @name Phaser.Tilemaps.MapData#width
          * @type {number}
@@ -47,7 +74,7 @@ var MapData = new Class({
         this.width = GetFastValue(config, 'width', 0);
 
         /**
-         * [description]
+         * The height of the entire tilemap.
          * 
          * @name Phaser.Tilemaps.MapData#height
          * @type {number}
@@ -56,7 +83,7 @@ var MapData = new Class({
         this.height = GetFastValue(config, 'height', 0);
 
         /**
-         * [description]
+         * The width of the tiles.
          * 
          * @name Phaser.Tilemaps.MapData#tileWidth
          * @type {number}
@@ -65,7 +92,7 @@ var MapData = new Class({
         this.tileWidth = GetFastValue(config, 'tileWidth', 0);
 
         /**
-         * [description]
+         * The height of the tiles.
          * 
          * @name Phaser.Tilemaps.MapData#tileHeight
          * @type {number}
@@ -74,7 +101,7 @@ var MapData = new Class({
         this.tileHeight = GetFastValue(config, 'tileHeight', 0);
 
         /**
-         * [description]
+         * The width in pixels of the entire tilemap.
          * 
          * @name Phaser.Tilemaps.MapData#widthInPixels
          * @type {number}
@@ -83,7 +110,7 @@ var MapData = new Class({
         this.widthInPixels = GetFastValue(config, 'widthInPixels', this.width * this.tileWidth);
 
         /**
-         * [description]
+         * The height in pixels of the entire tilemap.
          * 
          * @name Phaser.Tilemaps.MapData#heightInPixels
          * @type {number}
@@ -145,7 +172,7 @@ var MapData = new Class({
          * An array with all the layers configured to the MapData.
          * 
          * @name Phaser.Tilemaps.MapData#layers
-         * @type {array}
+         * @type {(LayerData[]|ObjectLayer)}
          * @since 3.0.0
          */
         this.layers = GetFastValue(config, 'layers', []);
@@ -169,7 +196,7 @@ var MapData = new Class({
         this.objects = GetFastValue(config, 'objects', {});
 
         /**
-         * An object of collision data. Must be created as physics object or will return undefined.
+          * An object of collision data. Must be created as physics object or will return undefined.
          * 
          * @name Phaser.Tilemaps.MapData#collision
          * @type {object}
@@ -181,13 +208,13 @@ var MapData = new Class({
          * An array of Tilesets.
          * 
          * @name Phaser.Tilemaps.MapData#tilesets
-         * @type {array}
+         * @type {Tileset[]}
          * @since 3.0.0
          */
         this.tilesets = GetFastValue(config, 'tilesets', []);
 
         /**
-         * [description]
+         * The collection of images the map uses(specified in Tiled)
          * 
          * @name Phaser.Tilemaps.MapData#imageCollections
          * @type {array}
