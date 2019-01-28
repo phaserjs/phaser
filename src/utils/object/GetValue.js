@@ -30,7 +30,7 @@ var GetValue = function (source, key, defaultValue)
     {
         return source[key];
     }
-    else if (key.indexOf('.'))
+    else if (key.indexOf('.') !== -1)
     {
         var keys = key.split('.');
         var parent = source;
