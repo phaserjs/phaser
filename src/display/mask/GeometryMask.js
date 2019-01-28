@@ -8,11 +8,21 @@ var Class = require('../../utils/Class');
 
 /**
  * @classdesc
- * A Geometry Mask can be applied to a Game Object to hide any pixels of it which don't intersect a visible pixel from the geometry mask. The mask is essentially a clipping path which can only make a masked pixel fully visible or fully invisible without changing its alpha (opacity).
+ * A Geometry Mask can be applied to a Game Object to hide any pixels of it which don't intersect
+ * a visible pixel from the geometry mask. The mask is essentially a clipping path which can only
+ * make a masked pixel fully visible or fully invisible without changing its alpha (opacity).
  *
- * A Geometry Mask uses a Graphics Game Object to determine which pixels of the masked Game Object(s) should be clipped. For any given point of a masked Game Object's texture, the pixel will only be displayed if the Graphics Game Object of the Geometry Mask has a visible pixel at the same position. The color and alpha of the pixel from the Geometry Mask do not matter.
+ * A Geometry Mask uses a Graphics Game Object to determine which pixels of the masked Game Object(s)
+ * should be clipped. For any given point of a masked Game Object's texture, the pixel will only be displayed
+ * if the Graphics Game Object of the Geometry Mask has a visible pixel at the same position. The color and
+ * alpha of the pixel from the Geometry Mask do not matter.
  *
- * The Geometry Mask's location matches the location of its Graphics object, not the location of the masked objects. Moving or transforming the underlying Graphics object will change the mask (and affect the visibility of any masked objects), whereas moving or transforming a masked object will not affect the mask. You can think of the Geometry Mask (or rather, of the its Graphics object) as an invisible curtain placed in front of all masked objects which has its own visual properties and, naturally, respects the camera's visual properties, but isn't affected by and doesn't follow the masked objects by itself.
+ * The Geometry Mask's location matches the location of its Graphics object, not the location of the masked objects.
+ * Moving or transforming the underlying Graphics object will change the mask (and affect the visibility
+ * of any masked objects), whereas moving or transforming a masked object will not affect the mask.
+ * You can think of the Geometry Mask (or rather, of the its Graphics object) as an invisible curtain placed
+ * in front of all masked objects which has its own visual properties and, naturally, respects the camera's
+ * visual properties, but isn't affected by and doesn't follow the masked objects by itself.
  *
  * @class GeometryMask
  * @memberof Phaser.Display.Masks
@@ -38,7 +48,7 @@ var GeometryMask = new Class({
         this.geometryMask = graphicsGeometry;
 
         /**
-         * Similiar to the BitmapMasks invertAlpha setting this to true will then hide all pixels
+         * Similar to the BitmapMasks invertAlpha setting this to true will then hide all pixels
          * drawn to the Geometry Mask.
          *
          * @name Phaser.Display.Masks.GeometryMask#invertAlpha
@@ -87,7 +97,8 @@ var GeometryMask = new Class({
         gl.stencilOp(gl.REPLACE, gl.REPLACE, gl.REPLACE);
 
         // Write stencil buffer
-        geometryMask.renderWebGL(renderer, geometryMask, 0.0, camera);
+        geometryMask.renderWebGL(renderer, geometryMask, 0, camera);
+
         renderer.flush();
 
         // Use stencil buffer to affect next rendering object
