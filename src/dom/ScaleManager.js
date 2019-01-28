@@ -785,8 +785,8 @@ var ScaleManager = new Class({
         var bounds = this.canvasBounds;
         var clientRect = this.canvas.getBoundingClientRect();
 
-        bounds.x = clientRect.left + window.pageXOffset - document.documentElement.clientLeft;
-        bounds.y = clientRect.top + window.pageYOffset - document.documentElement.clientTop;
+        bounds.x = clientRect.left + (window.pageXOffset || 0) - (document.documentElement.clientLeft || 0);
+        bounds.y = clientRect.top + (window.pageYOffset || 0) - (document.documentElement.clientTop || 0);
         bounds.width = clientRect.width;
         bounds.height = clientRect.height;
 
