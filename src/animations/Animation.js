@@ -28,9 +28,9 @@ var GetValue = require('../utils/object/GetValue');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Animations.AnimationManager} manager - [description]
- * @param {string} key - [description]
- * @param {Phaser.Animations.Animation.Config} config - [description]
+ * @param {Phaser.Animations.AnimationManager} manager - A reference to the global Animation Manager
+ * @param {string} key - The unique identifying string for this animation.
+ * @param {Phaser.Animations.Animation.Config} config - The Animation configuration.
  */
 var Animation = new Class({
 
@@ -43,7 +43,7 @@ var Animation = new Class({
         EventEmitter.call(this);
 
         /**
-         * A reference to the global Animation Manager
+         * A reference to the global Animation Manager.
          *
          * @name Phaser.Animations.Animation#manager
          * @type {Phaser.Animations.AnimationManager}
@@ -52,7 +52,7 @@ var Animation = new Class({
         this.manager = manager;
 
         /**
-         * The unique identifying string for this animation
+         * The unique identifying string for this animation.
          *
          * @name Phaser.Animations.Animation#key
          * @type {string}
@@ -71,7 +71,7 @@ var Animation = new Class({
         this.type = 'frame';
 
         /**
-         * Extract all the frame data into the frames array
+         * Extract all the frame data into the frames array.
          *
          * @name Phaser.Animations.Animation#frames
          * @type {Phaser.Animations.AnimationFrame[]}
@@ -165,7 +165,7 @@ var Animation = new Class({
         this.repeat = GetValue(config, 'repeat', 0);
 
         /**
-         * The delay in ms before the a repeat playthrough starts.
+         * The delay in ms before the a repeat play starts.
          *
          * @name Phaser.Animations.Animation#repeatDelay
          * @type {integer}
@@ -175,7 +175,7 @@ var Animation = new Class({
         this.repeatDelay = GetValue(config, 'repeatDelay', 0);
 
         /**
-         * Should the animation yoyo? (reverse back down to the start) before repeating?
+         * Should the animation yoyo (reverse back down to the start) before repeating?
          *
          * @name Phaser.Animations.Animation#yoyo
          * @type {boolean}
@@ -185,7 +185,7 @@ var Animation = new Class({
         this.yoyo = GetValue(config, 'yoyo', false);
 
         /**
-         * Should sprite.visible = true when the animation starts to play?
+         * Should the GameObject's `visible` property be set to `true` when the animation starts to play?
          *
          * @name Phaser.Animations.Animation#showOnStart
          * @type {boolean}
@@ -195,7 +195,7 @@ var Animation = new Class({
         this.showOnStart = GetValue(config, 'showOnStart', false);
 
         /**
-         * Should sprite.visible = false when the animation finishes?
+         * Should the GameObject's `visible` property be set to `false` when the animation finishes?
          *
          * @name Phaser.Animations.Animation#hideOnComplete
          * @type {boolean}
@@ -239,7 +239,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#addFrameAt
      * @since 3.0.0
      *
-     * @param {integer} index - [description]
+     * @param {integer} index - The index to insert the frame at within the animation.
      * @param {(string|Phaser.Animations.AnimationFrame.Config[])} config - [description]
      *
      * @return {Phaser.Animations.Animation} This Animation object.

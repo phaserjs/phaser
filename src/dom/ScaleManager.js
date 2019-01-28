@@ -18,12 +18,9 @@ var Vector2 = require('../math/Vector2');
 
 /**
  * @classdesc
+ * The Scale Manager handles the scaling, resizing and alignment of the game canvas.
  * 
- * TODO:
- * 
- * 1) Full Screen Input coordinates are wrong (div insert perhaps?).
- * 2) Check zero parent config set-up.
- * 3) Consider moving displaySize to the Scene, so each Scene could have a different scale mode.
+ * The game size is the logical size of the game; the display size is the scaled size of the canvas.
  *
  * @class ScaleManager
  * @memberof Phaser.DOM
@@ -672,7 +669,7 @@ var ScaleManager = new Class({
     },
 
     /**
-     * [description]
+     * Internal method that manages updating the size components based on the scale mode.
      *
      * @method Phaser.DOM.ScaleManager#updateScale
      * @since 3.16.0
@@ -824,9 +821,17 @@ var ScaleManager = new Class({
     },
 
     /**
-     * [description]
+     * Sends a request to the browser to ask it to go in to full screen mode, using the {@link https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API Fullscreen API}.
      * 
-     * https://developer.mozilla.org/en-US/docs/Web/API/FullscreenOptions
+     * If the browser does not support this, a `FULLSCREEN_UNSUPPORTED` event will be emitted.
+     * 
+     * This method _must_ be called from a user-input gesture, such as `pointerdown`. You cannot launch
+     * games fullscreen without this, as most browsers block it. Games within an iframe will also be blocked
+     * from fullscreen unless the iframe has the `allowfullscreen` attribute.
+     * 
+     * Performing an action that navigates to another page, or opens another tab, will automatically cancel
+     * fullscreen mode, as will the user pressing the ESC key. To cancel fullscreen mode from your game, i.e.
+     * from clicking an icon, call the `stopFullscreen` method.
      *
      * @method Phaser.DOM.ScaleManager#startFullscreen
      * @fires Phaser.DOM.ScaleManager.Events#ENTER_FULLSCREEN
@@ -869,10 +874,12 @@ var ScaleManager = new Class({
     },
 
     /**
-     * [description]
+     * An internal method that gets the target element that is used when entering fullscreen mode.
      *
      * @method Phaser.DOM.ScaleManager#getFullscreenTarget
      * @since 3.16.0
+     * 
+     * @return {object} The fullscreen target element.
      */
     getFullscreenTarget: function ()
     {
@@ -901,7 +908,7 @@ var ScaleManager = new Class({
     },
 
     /**
-     * [description]
+     * Calling this method will cancel fullscreen mode, if the browser has entered it.
      *
      * @method Phaser.DOM.ScaleManager#stopFullscreen
      * @fires Phaser.DOM.ScaleManager.Events#LEAVE_FULLSCREEN
@@ -942,12 +949,20 @@ var ScaleManager = new Class({
     },
 
     /**
-     * [description]
+     * Toggles the fullscreen mode. If already in fullscreen, calling this will cancel it.
+     * If not in fullscreen, this will request the browser to enter fullscreen mode.
+     * 
+     * If the browser does not support this, a `FULLSCREEN_UNSUPPORTED` event will be emitted.
+     * 
+     * This method _must_ be called from a user-input gesture, such as `pointerdown`. You cannot launch
+     * games fullscreen without this, as most browsers block it. Games within an iframe will also be blocked
+     * from fullscreen unless the iframe has the `allowfullscreen` attribute.
      *
      * @method Phaser.DOM.ScaleManager#toggleFullscreen
      * @fires Phaser.DOM.ScaleManager.Events#ENTER_FULLSCREEN
      * @fires Phaser.DOM.ScaleManager.Events#LEAVE_FULLSCREEN
      * @fires Phaser.DOM.ScaleManager.Events#FULLSCREEN_UNSUPPORTED
+     * @fires Phaser.DOM.ScaleManager.Events#RESIZE
      * @since 3.16.0
      * 
      * @param {FullscreenOptions} [fullscreenOptions] - The FullscreenOptions dictionary is used to provide configuration options when entering full screen.
@@ -965,7 +980,7 @@ var ScaleManager = new Class({
     },
 
     /**
-     * [description]
+     * An internal method that starts the different DOM event listeners running.
      *
      * @method Phaser.DOM.ScaleManager#startListeners
      * @since 3.16.0
@@ -1018,30 +1033,28 @@ var ScaleManager = new Class({
     },
 
     /**
-     * [description]
+     * Triggered when a fullscreenchange event is dispatched by the DOM.
      *
      * @method Phaser.DOM.ScaleManager#onFullScreenChange
      * @since 3.16.0
      */
     onFullScreenChange: function ()
     {
-        console.log('fs change');
-        console.log(this.fullscreen.active);
     },
 
     /**
-     * [description]
+     * Triggered when a fullscreenerror event is dispatched by the DOM.
      *
      * @method Phaser.DOM.ScaleManager#onFullScreenError
      * @since 3.16.0
      */
     onFullScreenError: function ()
     {
-        console.log('fs error');
     },
 
     /**
-     * [description]
+     * Internal method, called automatically by the game step.
+     * Monitors the elapsed time and resize interval to see if a parent bounds check needs to take place.
      *
      * @method Phaser.DOM.ScaleManager#step
      * @since 3.16.0
@@ -1072,7 +1085,7 @@ var ScaleManager = new Class({
     },
 
     /**
-     * [description]
+     * Stops all DOM event listeners.
      *
      * @method Phaser.DOM.ScaleManager#stopListeners
      * @since 3.16.0
@@ -1098,7 +1111,8 @@ var ScaleManager = new Class({
     },
 
     /**
-     * [description]
+     * Destroys this Scale Manager, releasing all references to external resources.
+     * Once destroyed, the Scale Manager cannot be used again.
      *
      * @method Phaser.DOM.ScaleManager#destroy
      * @since 3.16.0
@@ -1108,10 +1122,20 @@ var ScaleManager = new Class({
         this.removeAllListeners();
 
         this.stopListeners();
+
+        this.game = null;
+        this.canvas = null;
+        this.canvasBounds = null;
+        this.parent = null;
+        this.parentSize.destroy();
+        this.gameSize.destroy();
+        this.baseSize.destroy();
+        this.displaySize.destroy();
+        this.fullscreenTarget = null;
     },
 
     /**
-     * [description]
+     * Is the browser currently in fullscreen mode or not?
      *
      * @name Phaser.DOM.ScaleManager#isFullscreen
      * @type {boolean}
@@ -1128,7 +1152,9 @@ var ScaleManager = new Class({
     },
 
     /**
-     * [description]
+     * The game width.
+     * 
+     * This is typically the size given in the game configuration.
      *
      * @name Phaser.DOM.ScaleManager#width
      * @type {number}
@@ -1145,7 +1171,9 @@ var ScaleManager = new Class({
     },
 
     /**
-     * [description]
+     * The game height.
+     * 
+     * This is typically the size given in the game configuration.
      *
      * @name Phaser.DOM.ScaleManager#height
      * @type {number}
@@ -1162,7 +1190,8 @@ var ScaleManager = new Class({
     },
 
     /**
-     * [description]
+     * Is the device in a portrait orientation as reported by the Orientation API?
+     * This value is usually only available on mobile devices.
      *
      * @name Phaser.DOM.ScaleManager#isPortrait
      * @type {boolean}
@@ -1179,7 +1208,8 @@ var ScaleManager = new Class({
     },
 
     /**
-     * [description]
+     * Is the device in a landscape orientation as reported by the Orientation API?
+     * This value is usually only available on mobile devices.
      *
      * @name Phaser.DOM.ScaleManager#isLandscape
      * @type {boolean}
@@ -1196,7 +1226,9 @@ var ScaleManager = new Class({
     },
 
     /**
-     * [description]
+     * Are the game dimensions portrait? (i.e. taller than they are wide)
+     * 
+     * This is different to the device itself being in a portrait orientation.
      *
      * @name Phaser.DOM.ScaleManager#isGamePortrait
      * @type {boolean}
@@ -1213,7 +1245,9 @@ var ScaleManager = new Class({
     },
 
     /**
-     * [description]
+     * Are the game dimensions landscape? (i.e. wider than they are tall)
+     * 
+     * This is different to the device itself being in a landscape orientation.
      *
      * @name Phaser.DOM.ScaleManager#isGameLandscape
      * @type {boolean}
