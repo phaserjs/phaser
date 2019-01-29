@@ -558,7 +558,7 @@ var Config = new Class({
         /**
          * @const {boolean} Phaser.Core.Config#pixelArt - Prevent pixel art from becoming blurred when scaled. It will remain crisp (tells the WebGL renderer to automatically create textures using a linear filter mode).
          */
-        this.pixelArt = GetValue(renderConfig, 'pixelArt', this.zoom > 1);
+        this.pixelArt = GetValue(renderConfig, 'pixelArt', this.zoom !== 1);
 
         if (this.pixelArt)
         {
