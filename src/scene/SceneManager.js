@@ -818,6 +818,41 @@ var SceneManager = new Class({
     },
 
     /**
+     * Returns an array of all the current Scenes being managed by this Scene Manager.
+     * 
+     * You can filter the output by the active state of the Scene and choose to have
+     * the array returned in normal or reversed order.
+     *
+     * @method Phaser.Scenes.SceneManager#getScenes
+     * @since 3.16.0
+     *
+     * @param {boolean} [isActive=true] - Only include Scene's that are currently active?
+     * @param {boolean} [inReverse=false] - Return the array of Scenes in reverse?
+     *
+     * @return {Phaser.Scene[]} An array containing all of the Scenes in the Scene Manager.
+     */
+    getScenes: function (isActive, inReverse)
+    {
+        if (isActive === undefined) { isActive = true; }
+        if (inReverse === undefined) { inReverse = false; }
+
+        var out = [];
+        var scenes = this.scenes;
+
+        for (var i = 0; i < scenes.length; i++)
+        {
+            var scene = scenes[i];
+
+            if (scene && (!isActive || (isActive && scene.sys.isActive())))
+            {
+                out.push(scene);
+            }
+        }
+
+        return (inReverse) ? out.reverse() : out;
+    },
+
+    /**
      * Retrieves a Scene.
      *
      * @method Phaser.Scenes.SceneManager#getScene
