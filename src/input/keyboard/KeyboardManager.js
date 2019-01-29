@@ -329,7 +329,7 @@ var KeyboardManager = new Class({
 
             if (typeof code === 'string')
             {
-                code = KeyCodes[code.toUpperCase()];
+                code = KeyCodes[code.trim().toUpperCase()];
             }
 
             if (captures.indexOf(code) === -1)
