@@ -1205,13 +1205,15 @@ var Text = new Class({
                 {
                     var extraSpace = textSize.width - textSize.lineWidths[i];
                     var spaceSize = context.measureText(' ').width;
-                    var extraSpaceCharacters = Math.floor(extraSpace / spaceSize);
                     var array = lines[i].split(' ');
-    
-                    for (var s = 0, idx = 0; s < extraSpaceCharacters; s++)
+                    
+                    var extraSpaceCharacters = Math.floor(extraSpace / spaceSize);
+                    var idx = 0;
+                    while (extraSpaceCharacters > 0)
                     {
                         array[idx] += ' ';
                         idx = (idx + 1) % array.length;
+                        --extraSpaceCharacters;
                     }
                     
                     lines[i] = array.join(' ');
