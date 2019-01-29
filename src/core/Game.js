@@ -30,7 +30,7 @@ var VisibilityHandler = require('./VisibilityHandler');
 
 if (typeof EXPERIMENTAL)
 {
-    var CreateDOMContainer = require('./CreateDOMContainer');
+    var CreateDOMContainer = require('../dom/CreateDOMContainer');
 }
 
 if (typeof PLUGIN_FBINSTANT)
