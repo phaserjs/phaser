@@ -195,7 +195,14 @@ var KeyboardPlugin = new Class({
      */
     start: function ()
     {
-        this.sceneInputPlugin.pluginEvents.on(InputEvents.UPDATE, this.update, this);
+        if (this.sceneInputPlugin.manager.useQueue)
+        {
+            this.sceneInputPlugin.pluginEvents.on(InputEvents.UPDATE, this.update, this);
+        }
+        else
+        {
+            this.sceneInputPlugin.manager.events.on(InputEvents.MANAGER_PROCESS, this.update, this);
+        }
 
         this.sceneInputPlugin.pluginEvents.once(InputEvents.SHUTDOWN, this.shutdown, this);
 
@@ -711,6 +718,10 @@ var KeyboardPlugin = new Class({
                     if (KeyMap[code])
                     {
                         this.emit(Events.KEY_DOWN + KeyMap[code], event);
+
+                        //  Deprecated, kept in for compatibility with 3.15
+                        //  To be removed by 3.20.
+                        this.emit('keydown_' + KeyMap[code], event);
                     }
 
                     if (!event.cancelled)
@@ -732,6 +743,10 @@ var KeyboardPlugin = new Class({
                     if (KeyMap[code])
                     {
                         this.emit(Events.KEY_UP + KeyMap[code], event);
+
+                        //  Deprecated, kept in for compatibility with 3.15
+                        //  To be removed by 3.20.
+                        this.emit('keyup_' + KeyMap[code], event);
                     }
 
                     if (!event.cancelled)
