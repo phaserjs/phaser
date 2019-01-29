@@ -407,7 +407,7 @@ The Phaser Doc Jam was a community-backed effort to try and get the Phaser 3 API
 
 Also, the following helped with the docs outside of the Doc Jam:
 
-@bryanwood @jestarray @matosummer @tfelix @imilo @BigZaphod @OmarShehata @16patsle @jcyuan @iam13islucky @FractalBobz
+@bryanwood @jestarray @matosummer @tfelix @imilo @BigZaphod @OmarShehata @16patsle @jcyuan @iam13islucky @FractalBobz Endre
 
 ## Version 3.15.1 - Batou - 16th October 2018
 
