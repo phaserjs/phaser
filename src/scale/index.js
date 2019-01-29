@@ -5,7 +5,7 @@
  */
 
 var Extend = require('../utils/object/Extend');
-var CONST = require('./const');
+var ScaleModes = require('./const');
 
 /**
  * @namespace Phaser.Scale
@@ -17,6 +17,6 @@ var Scale = {
 
 };
 
-Scale = Extend(false, Scale, CONST);
+Scale = Extend(false, Scale, ScaleModes);
 
 module.exports = Scale;

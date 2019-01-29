@@ -5,9 +5,13 @@
  */
 
 /**
- * Global consts.
+ * Phaser Scale Manager constants.
  * 
- * @ignore
+ * @name Phaser.Scale.ScaleModes
+ * @enum {integer}
+ * @memberof Phaser
+ * @readonly
+ * @since 3.16.0
  */
 
 module.exports = {

@@ -138,7 +138,7 @@ var ScaleManager = new Class({
          * The game scale mode.
          *
          * @name Phaser.DOM.ScaleManager#scaleMode
-         * @type {integer}
+         * @type {Phaser.Scale.ScaleModes}
          * @since 3.16.0
          */
         this.scaleMode = CONST.NONE;
@@ -157,7 +157,12 @@ var ScaleManager = new Class({
         /**
          * The game zoom factor.
          * 
-         * This allows you to set a base size that is a multiple of your game size, before any scaling takes place.
+         * This value allows you to multiply your games base size by the given zoom factor.
+         * This is then used when calculating the display size, even in `NO_SCALE` situations.
+         * If you don't want Phaser to touch the canvas style at all, this value should be 1.
+         * 
+         * Can also be set to `MAX_ZOOM` in which case the zoom value will be derived based
+         * on the game size and available space within the parent.
          *
          * @name Phaser.DOM.ScaleManager#zoom
          * @type {number}
@@ -202,7 +207,7 @@ var ScaleManager = new Class({
         /**
          * The current device orientation.
          * 
-         * Orientation events are dispatched via the Device Orientation API and typically only on mobile browsers.
+         * Orientation events are dispatched via the Device Orientation API, typically only on mobile browsers.
          *
          * @name Phaser.DOM.ScaleManager#orientation
          * @type {string}
