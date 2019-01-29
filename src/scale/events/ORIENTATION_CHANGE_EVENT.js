@@ -7,7 +7,7 @@
 /**
  * The Scale Manager Resize Event.
  *
- * @event Phaser.DOM.ScaleManager.Events#ORIENTATION_CHANGE
+ * @event Phaser.Scale.ScaleManager.Events#ORIENTATION_CHANGE
  * 
  * @param {string} orientation - 
  */

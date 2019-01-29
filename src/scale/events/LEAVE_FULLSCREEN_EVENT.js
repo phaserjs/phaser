@@ -7,6 +7,6 @@
 /**
  * The Scale Manager Resize Event.
  *
- * @event Phaser.DOM.ScaleManager.Events#ENTER_FULLSCREEN
+ * @event Phaser.Scale.ScaleManager.Events#LEAVE_FULLSCREEN
  */
-module.exports = 'enterfullscreen';
+module.exports = 'leavefullscreen';

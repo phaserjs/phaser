@@ -37,6 +37,7 @@ var Phaser = {
         Arcade: require('./physics/arcade')
     },
     Plugins: require('./plugins'),
+    Scale: require('./scale'),
     Scene: require('./scene/Scene'),
     Scenes: require('./scene'),
     Sound: require('./sound'),

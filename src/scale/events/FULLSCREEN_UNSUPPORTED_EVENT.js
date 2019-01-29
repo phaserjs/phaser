@@ -7,10 +7,6 @@
 /**
  * The Scale Manager Resize Event.
  *
- * @event Phaser.DOM.ScaleManager.Events#RESIZE
- * 
- * @param {Phaser.Structs.Size} gameSize - 
- * @param {Phaser.Structs.Size} baseSize - 
- * @param {Phaser.Structs.Size} displaySize - 
+ * @event Phaser.Scale.ScaleManager.Events#FULLSCREEN_UNSUPPORTED
  */
-module.exports = 'resize';
+module.exports = 'fullscreenunsupported';

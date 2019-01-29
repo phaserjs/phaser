@@ -85,6 +85,7 @@ var Phaser = {
     },
     Plugins: require('./plugins'),
     Renderer: require('./renderer'),
+    Scale: require('./scale'),
     Scene: require('./scene/Scene'),
     Scenes: require('./scene'),
     Sound: require('./sound'),

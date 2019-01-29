@@ -7,6 +7,10 @@
 /**
  * The Scale Manager Resize Event.
  *
- * @event Phaser.DOM.ScaleManager.Events#LEAVE_FULLSCREEN
+ * @event Phaser.Scale.ScaleManager.Events#RESIZE
+ * 
+ * @param {Phaser.Structs.Size} gameSize - 
+ * @param {Phaser.Structs.Size} baseSize - 
+ * @param {Phaser.Structs.Size} displaySize - 
  */
-module.exports = 'leavefullscreen';
+module.exports = 'resize';

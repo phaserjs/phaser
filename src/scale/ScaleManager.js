@@ -9,8 +9,8 @@ var Class = require('../utils/Class');
 var EventEmitter = require('eventemitter3');
 var Events = require('./events');
 var GameEvents = require('../core/events');
-var GetInnerHeight = require('./GetInnerHeight');
-var GetScreenOrientation = require('./GetScreenOrientation');
+var GetInnerHeight = require('../dom/GetInnerHeight');
+var GetScreenOrientation = require('../dom/GetScreenOrientation');
 var NOOP = require('../utils/NOOP');
 var Rectangle = require('../geom/rectangle/Rectangle');
 var Size = require('../structs/Size');
@@ -24,7 +24,7 @@ var Vector2 = require('../math/Vector2');
  * The game size is the logical size of the game; the display size is the scaled size of the canvas.
  *
  * @class ScaleManager
- * @memberof Phaser.DOM
+ * @memberof Phaser.Scale
  * @extends Phaser.Events.EventEmitter
  * @constructor
  * @since 3.16.0

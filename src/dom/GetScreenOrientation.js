@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CONST = require('./const');
+var CONST = require('../scale/const');
 
 var GetScreenOrientation = function (width, height)
 {
@@ -21,7 +21,7 @@ var GetScreenOrientation = function (width, height)
         //  moz / ms-orientation are strings
         return orientation;
     }
-   
+
     if (screen)
     {
         return (screen.height > screen.width) ? CONST.PORTRAIT : CONST.LANDSCAPE;
