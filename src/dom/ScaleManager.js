@@ -14,6 +14,7 @@ var GetScreenOrientation = require('./GetScreenOrientation');
 var NOOP = require('../utils/NOOP');
 var Rectangle = require('../geom/rectangle/Rectangle');
 var Size = require('../structs/Size');
+var SnapFloor = require('../math/snap/SnapFloor');
 var Vector2 = require('../math/Vector2');
 
 /**
@@ -326,27 +327,31 @@ var ScaleManager = new Class({
      */
     boot: function ()
     {
-        this.canvas = this.game.canvas;
+        var game = this.game;
 
-        this.fullscreen = this.game.device.fullscreen;
+        this.canvas = game.canvas;
 
-        if (this.scaleMode < 5)
+        this.fullscreen = game.device.fullscreen;
+
+        if (this.scaleMode !== CONST.NONE && this.scaleMode !== CONST.RESIZE)
         {
             this.displaySize.setAspectMode(this.scaleMode);
         }
 
-        if (this.scaleMode > 0)
+        if (this.scaleMode === CONST.NONE)
         {
-            this.getParentBounds();
-
+            this.resize(this.width, this.height);
+        }
+        else
+        {
             this.displaySize.setParent(this.parentSize);
+
+            this.refresh();
         }
 
-        this.game.events.on(GameEvents.PRE_STEP, this.step, this);
+        game.events.on(GameEvents.PRE_STEP, this.step, this);
 
         this.startListeners();
-
-        this.refresh();
     },
 
     /**
@@ -408,8 +413,6 @@ var ScaleManager = new Class({
         //  Wait for another release to solve this issue.
         this.resolution = 1;
 
-        this.zoom = zoom;
-
         this.scaleMode = scaleMode;
 
         this.autoRound = autoRound;
@@ -426,6 +429,13 @@ var ScaleManager = new Class({
 
         //  The un-modified game size, as requested in the game config (the raw width / height) as used for world bounds, etc
         this.gameSize.setSize(width, height);
+
+        if (zoom === CONST.MAX_ZOOM)
+        {
+            zoom = this.getMaxZoom();
+        }
+
+        this.zoom = zoom;
 
         //  The modified game size, which is the w/h * resolution
         this.baseSize.setSize(width * resolution, height * resolution);
@@ -581,12 +591,28 @@ var ScaleManager = new Class({
     },
 
     /**
-     * Forcefully resizes the game to the given dimensions.
+     * This method will set the size of the Parent Size component, which is used in scaling
+     * and centering calculations. You only need to call this method if you have explicitly
+     * disabled the use of a parent in your game config, but still wish to take advantage of
+     * other Scale Manager features.
+     *
+     * @method Phaser.DOM.ScaleManager#setParentSize
+     * @fires Phaser.DOM.ScaleManager.Events#RESIZE
+     * @since 3.16.0
      * 
-     * Use this to change the size of your game after it has booted, or in custom resizing situations.
-     * 
-     * Calling this method will update the `gameSize` and `baseSize` components and then call `refresh`,
-     * which dispatches the resize event.
+     * @param {number} width - The new width of the parent.
+     * @param {number} height - The new height of the parent.
+     */
+    setParentSize: function (width, height)
+    {
+        this.parentSize.setSize(width, height);
+
+        return this.refresh();
+    },
+
+    /**
+     * Call this if you modify the size of the Phaser canvas element externally, either via CSS or your
+     * own code.
      *
      * @method Phaser.DOM.ScaleManager#resize
      * @fires Phaser.DOM.ScaleManager.Events#RESIZE
@@ -597,7 +623,11 @@ var ScaleManager = new Class({
      */
     resize: function (width, height)
     {
-        if (this.autoRound)
+        var zoom = this.zoom;
+        var resolution = this.resolution;
+        var autoRound = this.autoRound;
+
+        if (autoRound)
         {
             width = Math.floor(width);
             height = Math.floor(height);
@@ -605,15 +635,43 @@ var ScaleManager = new Class({
 
         this.gameSize.resize(width, height);
 
-        this.baseSize.resize(width * this.resolution, height * this.resolution);
+        this.baseSize.resize(width * resolution, height * resolution);
 
-        this.displaySize.resize(width, height);
+        this.displaySize.setSize((width * zoom) * resolution, (height * zoom) * resolution);
 
-        this.refresh();
+        this.canvas.width = this.baseSize.width;
+        this.canvas.height = this.baseSize.height;
+
+        var style = this.canvas.style;
+
+        var styleWidth = width * zoom;
+        var styleHeight = height * zoom;
+
+        if (autoRound)
+        {
+            styleWidth = Math.floor(styleWidth);
+            styleHeight = Math.floor(styleHeight);
+        }
+
+        if (styleWidth !== width || styleHeight || height)
+        {
+            style.width = styleWidth + 'px';
+            style.height = styleHeight + 'px';
+        }
+
+        this.updateCenter();
+
+        this.updateBounds();
+
+        this.displayScale.set(width / this.canvasBounds.width, height / this.canvasBounds.height);
+
+        this.emit(Events.RESIZE, this.gameSize, this.baseSize, this.displaySize, this.resolution);
+
+        this.updateOrientation();
     },
 
     /**
-     * Sets the zoom value of the Scale Manager post-boot.
+     * Sets the zoom value of the Scale Manager.
      *
      * @method Phaser.DOM.ScaleManager#setZoom
      * @fires Phaser.DOM.ScaleManager.Events#RESIZE
@@ -625,14 +683,25 @@ var ScaleManager = new Class({
      */
     setZoom: function (value)
     {
-        if (value !== this.zoom)
-        {
-            this.zoom = value;
+        this.zoom = value;
 
-            this.refresh();
-        }
+        return this.refresh();
+    },
 
-        return this;
+    /**
+     * Sets the maximum zoom possible based on the current parent size.
+     *
+     * @method Phaser.DOM.ScaleManager#setMaxZoom
+     * @fires Phaser.DOM.ScaleManager.Events#RESIZE
+     * @since 3.16.0
+     * 
+     * @return {this} The Scale Manager instance.
+     */
+    setMaxZoom: function ()
+    {
+        this.zoom = this.getMaxZoom();
+
+        return this.refresh();
     },
 
     /**
@@ -640,17 +709,39 @@ var ScaleManager = new Class({
      * 
      * Once finished, dispatches the resize event.
      * 
-     * This is called automatically by the Scale Manager when the browser changes.
+     * This is called automatically by the Scale Manager when the browser window size changes,
+     * as long as it is using a Scale Mode other than 'NONE'.
      *
      * @method Phaser.DOM.ScaleManager#refresh
      * @fires Phaser.DOM.ScaleManager.Events#RESIZE
      * @since 3.16.0
+     * 
+     * @return {this} The Scale Manager instance.
      */
     refresh: function ()
     {
         this.updateScale();
         this.updateBounds();
+        this.updateOrientation();
 
+        this.displayScale.set(this.baseSize.width / this.canvasBounds.width, this.baseSize.height / this.canvasBounds.height);
+
+        this.emit(Events.RESIZE, this.gameSize, this.baseSize, this.displaySize, this.resolution);
+
+        return this;
+    },
+
+    /**
+     * Internal method that checks the current screen orientation, only if the internal check flag is set.
+     * 
+     * If the orientation has changed it updates the orientation property and then dispatches the orientation change event.
+     *
+     * @method Phaser.DOM.ScaleManager#updateOrientation
+     * @fires Phaser.DOM.ScaleManager.Events#ORIENTATION_CHANGE
+     * @since 3.16.0
+     */
+    updateOrientation: function ()
+    {
         if (this._checkOrientation)
         {
             this._checkOrientation = false;
@@ -664,8 +755,6 @@ var ScaleManager = new Class({
                 this.emit(Events.ORIENTATION_CHANGE, newOrientation);
             }
         }
-
-        this.emit(Events.RESIZE, this.gameSize, this.baseSize, this.displaySize, this.resolution);
     },
 
     /**
@@ -688,7 +777,7 @@ var ScaleManager = new Class({
         var autoRound = this.autoRound;
         var resolution = 1;
 
-        if (this.scaleMode === 0)
+        if (this.scaleMode === CONST.NONE)
         {
             //  No scale
             this.displaySize.setSize((width * zoom) * resolution, (height * zoom) * resolution);
@@ -702,10 +791,13 @@ var ScaleManager = new Class({
                 styleHeight = Math.floor(styleHeight);
             }
 
-            style.width = styleWidth + 'px';
-            style.height = styleHeight + 'px';
+            if (zoom > 1)
+            {
+                style.width = styleWidth + 'px';
+                style.height = styleHeight + 'px';
+            }
         }
-        else if (this.scaleMode === 5)
+        else if (this.scaleMode === CONST.RESIZE)
         {
             //  Resize to match parent
 
@@ -746,28 +838,77 @@ var ScaleManager = new Class({
             style.height = styleHeight + 'px';
         }
 
-        var offsetX = Math.floor((this.parentSize.width - styleWidth) / 2);
-        var offsetY = Math.floor((this.parentSize.height - styleHeight) / 2);
-
-        if (this.autoCenter === 1)
-        {
-            style.marginLeft = offsetX + 'px';
-            style.marginTop = offsetY + 'px';
-        }
-        else if (this.autoCenter === 2)
-        {
-            style.marginLeft = offsetX + 'px';
-        }
-        else if (this.autoCenter === 3)
-        {
-            style.marginTop = offsetY + 'px';
-        }
+        this.updateCenter();
 
         //  Update the parentSize incase the canvas/style change modified it
         if (!this.parentIsWindow)
         {
             this.getParentBounds();
         }
+    },
+
+    /**
+     * Calculates and returns the largest possible zoom factor, based on the current
+     * parent and game sizes.
+     *
+     * @method Phaser.DOM.ScaleManager#getMaxZoom
+     * @since 3.16.0
+     * 
+     * @return {integer} The maximum possible zoom factor.
+     */
+    getMaxZoom: function ()
+    {
+        var zoomH = SnapFloor(this.parentSize.width, this.gameSize.width, 0, true);
+        var zoomV = SnapFloor(this.parentSize.height, this.gameSize.height, 0, true);
+    
+        return Math.min(zoomH, zoomV);
+    },
+
+    /**
+     * Calculates and updates the canvas CSS style in order to center it within the
+     * bounds of its parent. If you have explicitly set parent to be `null` in your
+     * game config then this method will likely give incorrect results unless you have called the
+     * `setParentSize` method first.
+     * 
+     * It works by modifying the canvas CSS `marginLeft` and `marginTop` properties.
+     * 
+     * If they have already been set by your own style sheet, or code, this will overwrite them.
+     * 
+     * To prevent the Scale Manager from centering the canvas, either do not set the
+     * `autoCenter` property in your game config, or make sure it is set to `NO_CENTER`.
+     *
+     * @method Phaser.DOM.ScaleManager#updateCenter
+     * @since 3.16.0
+     */
+    updateCenter: function ()
+    {
+        var autoCenter = this.autoCenter;
+
+        if (autoCenter === CONST.NO_CENTER)
+        {
+            return;
+        }
+
+        this.getParentBounds();
+
+        var style = this.canvas.style;
+
+        var bounds = this.canvas.getBoundingClientRect();
+
+        var offsetX = Math.floor((this.parentSize.width - bounds.width) / 2);
+        var offsetY = Math.floor((this.parentSize.height - bounds.height) / 2);
+
+        if (autoCenter === CONST.CENTER_HORIZONTALLY)
+        {
+            offsetY = 0;
+        }
+        else if (autoCenter === CONST.CENTER_VERTICALLY)
+        {
+            offsetX = 0;
+        }
+
+        style.marginLeft = offsetX + 'px';
+        style.marginTop = offsetY + 'px';
     },
 
     /**
@@ -786,8 +927,6 @@ var ScaleManager = new Class({
         bounds.y = clientRect.top + (window.pageYOffset || 0) - (document.documentElement.clientTop || 0);
         bounds.width = clientRect.width;
         bounds.height = clientRect.height;
-
-        this.displayScale.set(this.baseSize.width / bounds.width, this.baseSize.height / bounds.height);
     },
 
     /**
@@ -1064,7 +1203,7 @@ var ScaleManager = new Class({
      */
     step: function (time, delta)
     {
-        if (this.scaleMode === 0 || !this.parent)
+        if (this.scaleMode === CONST.NONE || !this.parent)
         {
             return;
         }
