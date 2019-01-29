@@ -808,7 +808,14 @@ var KeyboardPlugin = new Class({
     {
         this.resetKeys();
 
-        this.sceneInputPlugin.pluginEvents.off(InputEvents.UPDATE, this.update);
+        if (this.sceneInputPlugin.manager.useQueue)
+        {
+            this.sceneInputPlugin.pluginEvents.off(InputEvents.UPDATE, this.update, this);
+        }
+        else
+        {
+            this.sceneInputPlugin.manager.events.off(InputEvents.MANAGER_PROCESS, this.update, this);
+        }
 
         this.game.events.off(GameEvents.BLUR, this.resetKeys);
 
