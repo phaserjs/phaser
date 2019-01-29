@@ -17,7 +17,9 @@
 module.exports = {
 
     /**
-     * No scaling happens at all. The canvas is the size given in the game config and Phaser doesn't change it.
+     * No scaling happens at all. The canvas is set to the size given in the game config and Phaser doesn't change it
+     * again from that point on. If you change the canvas size, either via CSS, or directly via code, then you need
+     * to call the Scale Managers `resize` method to give the new dimensions, or input events will stop working.
      * 
      * @name Phaser.DOM.NONE
      * @since 3.16.0
@@ -110,6 +112,15 @@ module.exports = {
      * @name Phaser.DOM.PORTRAIT
      * @since 3.16.0
      */
-    PORTRAIT: 'portrait-primary'
+    PORTRAIT: 'portrait-primary',
+
+    /**
+     * Calculate the zoom value based on the maximum multiplied game size that will
+     * fit into the parent, or browser window if no parent is set.
+     * 
+     * @name Phaser.DOM.MAX_ZOOM
+     * @since 3.16.0
+     */
+    MAX_ZOOM: -1
 
 };
