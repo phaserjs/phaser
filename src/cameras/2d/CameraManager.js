@@ -594,14 +594,13 @@ var CameraManager = new Class({
         var scene = this.scene;
         var cameras = this.cameras;
 
-        // var resolution = this.systems.game.scale.resolution;
-
         for (var i = 0; i < this.cameras.length; i++)
         {
             var camera = cameras[i];
 
             if (camera.visible && camera.alpha > 0)
             {
+                //  Hard-coded to 1 for now
                 camera.preRender(1);
 
                 renderer.render(scene, children, interpolation, camera);
