@@ -932,6 +932,32 @@ var InputManager = new Class({
     },
 
     /**
+     * Internal method that gets a list of all the active Input Plugins in the game
+     * and updates each of them in turn, in reverse order (top to bottom), to allow
+     * for DOM top-level event handling simulation.
+     *
+     * @method Phaser.Input.InputManager#updateInputPlugins
+     * @since 3.16.0
+     *
+     * @param {number} time - The time value from the most recent Game step. Typically a high-resolution timer value, or Date.now().
+     * @param {number} delta - The delta value since the last frame. This is smoothed to avoid delta spikes by the TimeStep class.
+     */
+    updateInputPlugins: function (time, delta)
+    {
+        var scenes = this.game.scene.getScenes(true, true);
+
+        for (var i = 0; i < scenes.length; i++)
+        {
+            var scene = scenes[i];
+
+            if (scene.sys.input)
+            {
+                scene.sys.input.update(time, delta);
+            }
+        }
+    },
+
+    /**
      * Queues a touch start event, as passed in by the TouchManager.
      * Also dispatches any DOM callbacks for this event.
      *
@@ -967,7 +993,7 @@ var InputManager = new Class({
                 pointer.updateMotion();
             });
 
-            this.events.emit(Events.MANAGER_PROCESS, event.timeStamp, this.game.loop.delta);
+            this.updateInputPlugins(event.timeStamp, this.game.loop.delta);
         }
     },
 
@@ -1007,7 +1033,7 @@ var InputManager = new Class({
                 pointer.updateMotion();
             });
 
-            this.events.emit(Events.MANAGER_PROCESS, event.timeStamp, this.game.loop.delta);
+            this.updateInputPlugins(event.timeStamp, this.game.loop.delta);
         }
     },
 
@@ -1047,7 +1073,7 @@ var InputManager = new Class({
                 pointer.updateMotion();
             });
 
-            this.events.emit(Events.MANAGER_PROCESS, event.timeStamp, this.game.loop.delta);
+            this.updateInputPlugins(event.timeStamp, this.game.loop.delta);
         }
     },
 
@@ -1078,7 +1104,7 @@ var InputManager = new Class({
                 pointer.updateMotion();
             });
 
-            this.events.emit(Events.MANAGER_PROCESS, event.timeStamp, this.game.loop.delta);
+            this.updateInputPlugins(event.timeStamp, this.game.loop.delta);
         }
     },
 
@@ -1115,7 +1141,7 @@ var InputManager = new Class({
 
             this.mousePointer.updateMotion();
 
-            this.events.emit(Events.MANAGER_PROCESS, event.timeStamp, this.game.loop.delta);
+            this.updateInputPlugins(event.timeStamp, this.game.loop.delta);
         }
     },
 
@@ -1152,7 +1178,7 @@ var InputManager = new Class({
 
             this.mousePointer.updateMotion();
 
-            this.events.emit(Events.MANAGER_PROCESS, event.timeStamp, this.game.loop.delta);
+            this.updateInputPlugins(event.timeStamp, this.game.loop.delta);
         }
     },
 
@@ -1189,7 +1215,7 @@ var InputManager = new Class({
 
             this.mousePointer.updateMotion();
 
-            this.events.emit(Events.MANAGER_PROCESS, event.timeStamp, this.game.loop.delta);
+            this.updateInputPlugins(event.timeStamp, this.game.loop.delta);
         }
     },
 
