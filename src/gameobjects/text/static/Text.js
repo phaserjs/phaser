@@ -1198,6 +1198,25 @@ var Text = new Class({
             {
                 linePositionX += (textSize.width - textSize.lineWidths[i]) / 2;
             }
+            else if (style.align === 'justified')
+            {
+                var minimumLengthToApplyJustification = 0.85;
+                if (textSize.lineWidths[i] / textSize.width >= minimumLengthToApplyJustification)
+                {
+                    var extraSpace = textSize.width - textSize.lineWidths[i];
+                    var spaceSize = context.measureText(' ').width;
+                    var extraSpaceCharacters = Math.floor(extraSpace / spaceSize);
+                    var array = lines[i].split(' ');
+    
+                    for (var s = 0, idx = 0; s < extraSpaceCharacters; s++)
+                    {
+                        array[idx] += ' ';
+                        idx = (idx + 1) % array.length;
+                    }
+                    
+                    lines[i] = array.join(' ');
+                }
+            }
 
             if (this.autoRound)
             {
