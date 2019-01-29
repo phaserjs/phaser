@@ -404,10 +404,6 @@ var InputPlugin = new Class({
         {
             eventEmitter.on(SceneEvents.UPDATE, this.update, this);
         }
-        else
-        {
-            this.manager.events.on(Events.MANAGER_PROCESS, this.update, this);
-        }
 
         eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
 
@@ -2358,10 +2354,6 @@ var InputPlugin = new Class({
         if (this.manager.useQueue)
         {
             eventEmitter.off(SceneEvents.UPDATE, this.update, this);
-        }
-        else
-        {
-            this.manager.events.off(Events.MANAGER_PROCESS, this.update, this);
         }
 
         eventEmitter.off(SceneEvents.SHUTDOWN, this.shutdown, this);
