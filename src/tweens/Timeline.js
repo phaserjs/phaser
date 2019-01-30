@@ -652,6 +652,8 @@ var Timeline = new Class({
         }
         else
         {
+            this.state = TWEEN_CONST.PENDING_REMOVE;
+
             var onComplete = this.callbacks.onComplete;
 
             if (onComplete)
@@ -660,8 +662,6 @@ var Timeline = new Class({
             }
 
             this.emit(Events.TIMELINE_COMPLETE, this);
-
-            this.state = TWEEN_CONST.PENDING_REMOVE;
         }
     },
 
@@ -751,6 +751,8 @@ var Timeline = new Class({
 
                 if (this.countdown <= 0)
                 {
+                    this.state = TWEEN_CONST.PENDING_REMOVE;
+
                     var onComplete = this.callbacks.onComplete;
 
                     if (onComplete)
@@ -759,8 +761,6 @@ var Timeline = new Class({
                     }
 
                     this.emit(Events.TIMELINE_COMPLETE, this);
-
-                    this.state = TWEEN_CONST.PENDING_REMOVE;
                 }
 
                 break;
