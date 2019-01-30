@@ -336,6 +336,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * The signature of the `WebGLSnapshot` function has changed. It now takes a Snapshot Configuration object as the second parameter.
 * The signature of the `CanvasSnapshot` function has changed. It now takes a Snapshot Configuration object as the second parameter.
 * A Tween Timeline will now set it's internal destroy state _before_ calling either the `onComplete` callback or sending the `COMPLETE` event. This means you can now call methods that will change the state of the Timeline, such as `play`, during the callback handlers, where-as before doing this would have had the internal state changed immediately, preventing it (thanks Lucas Knight)
+* The `AddToDOM` method has had the `overflowHidden` argument removed. The DOM element the canvas is inserted into no longer has `overflow: hidden` applied to its style. If you wish to have this, please add it directly via CSS.
 
 ### Bug Fixes
 
