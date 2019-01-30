@@ -669,6 +669,12 @@ var Axes = require('../geometry/Axes');
         body.torque += offset.x * force.y - offset.y * force.x;
     };
 
+    Body.reset = function() {
+        Body._nextCollidingGroupId = 1;
+        Body._nextNonCollidingGroupId = -1;
+        Body._nextCategory = 0x0001;
+    };
+
     /**
      * Returns the sums of the properties of all compound parts of the parent body.
      * @method _totalProperties
