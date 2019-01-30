@@ -26,6 +26,7 @@ var GameObjects = {
     Blitter: require('./blitter/Blitter'),
     Container: require('./container/Container'),
     DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapText'),
+    Extern: require('./extern/Extern.js'),
     Graphics: require('./graphics/Graphics.js'),
     Group: require('./group/Group'),
     Image: require('./image/Image'),
@@ -59,6 +60,7 @@ var GameObjects = {
         Blitter: require('./blitter/BlitterFactory'),
         Container: require('./container/ContainerFactory'),
         DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapTextFactory'),
+        Extern: require('./extern/ExternFactory'),
         Graphics: require('./graphics/GraphicsFactory'),
         Group: require('./group/GroupFactory'),
         Image: require('./image/ImageFactory'),
@@ -107,9 +109,6 @@ if (typeof EXPERIMENTAL)
 {
     GameObjects.DOMElement = require('./domelement/DOMElement');
     GameObjects.Factories.DOMElement = require('./domelement/DOMElementFactory');
-
-    GameObjects.Extern = require('./extern/Extern.js');
-    GameObjects.Factories.Extern = require('./extern/ExternFactory');
 }
 
 if (typeof WEBGL_RENDERER)
