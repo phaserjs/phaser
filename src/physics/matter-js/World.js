@@ -1092,11 +1092,8 @@ var World = new Class({
         MatterWorld.clear(this.localWorld, false);
 
         Engine.clear(this.engine);
-        
-        //Reset body static values
-        MatterBody._nextCollidingGroupId = 1;
-        MatterBody._nextNonCollidingGroupId = -1;
-        MatterBody._nextCategory = 0x0001;
+
+        MatterBody.reset();
 
         if (this.drawDebug)
         {
