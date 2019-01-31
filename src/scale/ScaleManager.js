@@ -10,6 +10,7 @@ var EventEmitter = require('eventemitter3');
 var Events = require('./events');
 var GameEvents = require('../core/events');
 var GetInnerHeight = require('../dom/GetInnerHeight');
+var GetTarget = require('../dom/GetTarget');
 var GetScreenOrientation = require('../dom/GetScreenOrientation');
 var NOOP = require('../utils/NOOP');
 var Rectangle = require('../geom/rectangle/Rectangle');
@@ -141,7 +142,7 @@ var ScaleManager = new Class({
          * @type {Phaser.Scale.ScaleModes}
          * @since 3.16.0
          */
-        this.scaleMode = CONST.NONE;
+        this.scaleMode = CONST.SCALE_MODE.NONE;
 
         /**
          * The canvas resolution.
@@ -191,22 +192,21 @@ var ScaleManager = new Class({
         this.autoRound = false;
 
         /**
-         * Automatically center the canvas within the parent?
+         * Automatically center the canvas within the parent? The different centering modes are:
          * 
-         * 0 = No centering.
-         * 1 = Center both horizontally and vertically.
-         * 2 = Center horizontally.
-         * 3 = Center vertically.
+         * 1. No centering.
+         * 2. Center both horizontally and vertically.
+         * 3. Center horizontally.
+         * 4. Center vertically.
          * 
-         * If you have picked the `NO_SCALE` scale mode, then this setting will have no effect
-         * unless you manually call the `updateCenter` method. All other scale modes will apply
-         * the centering when the browser size change is detected.
+         * Please be aware that in order to center the game canvas, you must have specified a parent
+         * that has a size set, or the canvas parent is the document.body.
          *
          * @name Phaser.Scale.ScaleManager#autoCenter
-         * @type {integer}
+         * @type {Phaser.Scale.Center}
          * @since 3.16.0
          */
-        this.autoCenter = CONST.NO_CENTER;
+        this.autoCenter = CONST.CENTER.NO_CENTER;
 
         /**
          * The current device orientation.
@@ -214,10 +214,10 @@ var ScaleManager = new Class({
          * Orientation events are dispatched via the Device Orientation API, typically only on mobile browsers.
          *
          * @name Phaser.Scale.ScaleManager#orientation
-         * @type {string}
+         * @type {Phaser.Scale.Orientation}
          * @since 3.16.0
          */
-        this.orientation = CONST.LANDSCAPE;
+        this.orientation = CONST.ORIENTATION.LANDSCAPE;
 
         /**
          * A reference to the Device.Fullscreen object.
@@ -342,12 +342,12 @@ var ScaleManager = new Class({
 
         this.fullscreen = game.device.fullscreen;
 
-        if (this.scaleMode !== CONST.RESIZE)
+        if (this.scaleMode !== CONST.SCALE_MODE.RESIZE)
         {
             this.displaySize.setAspectMode(this.scaleMode);
         }
 
-        if (this.scaleMode === CONST.NONE)
+        if (this.scaleMode === CONST.SCALE_MODE.NONE)
         {
             console.log('NONE');
 
@@ -453,7 +453,7 @@ var ScaleManager = new Class({
         //  The un-modified game size, as requested in the game config (the raw width / height) as used for world bounds, etc
         this.gameSize.setSize(width, height);
 
-        if (zoom === CONST.MAX_ZOOM)
+        if (zoom === CONST.ZOOM.MAX_ZOOM)
         {
             zoom = this.getMaxZoom();
         }
@@ -504,34 +504,8 @@ var ScaleManager = new Class({
             return;
         }
 
-        var target;
-
-        if (parent !== '')
-        {
-            if (typeof parent === 'string')
-            {
-                //  Hopefully an element ID
-                target = document.getElementById(parent);
-            }
-            else if (parent && parent.nodeType === 1)
-            {
-                //  Quick test for a HTMLElement
-                target = parent;
-            }
-        }
-
-        //  Fallback to the document body. Covers an invalid ID and a non HTMLElement object.
-        if (!target)
-        {
-            //  Use the full window
-            this.parent = document.body;
-            this.parentIsWindow = true;
-        }
-        else
-        {
-            this.parent = target;
-            this.parentIsWindow = false;
-        }
+        this.parent = GetTarget(parent);
+        this.parentIsWindow = (this.parent === document.body);
 
         if (config.expandParent)
         {
@@ -556,6 +530,12 @@ var ScaleManager = new Class({
                     this.parent.style.height = '100%';
                 }
             }
+        }
+
+        //  And now get the fullscreenTarget
+        if (config.fullscreenTarget && !this.fullscreenTarget)
+        {
+            this.fullscreenTarget = GetTarget(config.fullscreenTarget);
         }
     },
 
@@ -776,7 +756,7 @@ var ScaleManager = new Class({
      * @fires Phaser.Scale.ScaleManager.Events#RESIZE
      * @since 3.16.0
      * 
-     * @param {number} value - The new zoom value of the game.
+     * @param {integer} value - The new zoom value of the game.
      * 
      * @return {this} The Scale Manager instance.
      */
@@ -876,7 +856,7 @@ var ScaleManager = new Class({
         var autoRound = this.autoRound;
         var resolution = 1;
 
-        if (this.scaleMode === CONST.NONE)
+        if (this.scaleMode === CONST.SCALE_MODE.NONE)
         {
             //  No scale
             this.displaySize.setSize((width * zoom) * resolution, (height * zoom) * resolution);
@@ -896,7 +876,7 @@ var ScaleManager = new Class({
                 style.height = styleHeight + 'px';
             }
         }
-        else if (this.scaleMode === CONST.RESIZE)
+        else if (this.scaleMode === CONST.SCALE_MODE.RESIZE)
         {
             //  Resize to match parent
 
@@ -982,7 +962,7 @@ var ScaleManager = new Class({
     {
         var autoCenter = this.autoCenter;
 
-        if (autoCenter === CONST.NO_CENTER)
+        if (autoCenter === CONST.CENTER.NO_CENTER)
         {
             return;
         }
@@ -1004,11 +984,11 @@ var ScaleManager = new Class({
 
         console.log('cen', offsetX, offsetY);
 
-        if (autoCenter === CONST.CENTER_HORIZONTALLY)
+        if (autoCenter === CONST.CENTER.CENTER_HORIZONTALLY)
         {
             offsetY = 0;
         }
-        else if (autoCenter === CONST.CENTER_VERTICALLY)
+        else if (autoCenter === CONST.CENTER.CENTER_VERTICALLY)
         {
             offsetX = 0;
         }
@@ -1077,6 +1057,12 @@ var ScaleManager = new Class({
      * Performing an action that navigates to another page, or opens another tab, will automatically cancel
      * fullscreen mode, as will the user pressing the ESC key. To cancel fullscreen mode from your game, i.e.
      * from clicking an icon, call the `stopFullscreen` method.
+     * 
+     * A browser can only send one DOM element into fullscreen. You can control which element this is by
+     * setting the `fullscreenTarget` property in your game config, or changing the property in the Scale Manager.
+     * Note that the game canvas _must_ be a child of the target. If you do not give a target, Phaser will
+     * automatically create a blank `<div>` element and move the canvas into it, before going fullscreen.
+     * When it leaves fullscreen, the div will be removed.
      *
      * @method Phaser.Scale.ScaleManager#startFullscreen
      * @fires Phaser.Scale.ScaleManager.Events#ENTER_FULLSCREEN
@@ -1460,7 +1446,7 @@ var ScaleManager = new Class({
 
         get: function ()
         {
-            return (this.orientation === CONST.PORTRAIT);
+            return (this.orientation === CONST.ORIENTATION.PORTRAIT);
         }
     
     },
@@ -1478,7 +1464,7 @@ var ScaleManager = new Class({
 
         get: function ()
         {
-            return (this.orientation === CONST.LANDSCAPE);
+            return (this.orientation === CONST.ORIENTATION.LANDSCAPE);
         }
     
     },
