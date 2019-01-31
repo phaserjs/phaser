@@ -310,7 +310,7 @@ var ScaleManager = new Class({
     },
 
     /**
-     * Called before the canvas object is created and added to the DOM.
+     * Called _before_ the canvas object is created and added to the DOM.
      *
      * @method Phaser.Scale.ScaleManager#preBoot
      * @protected
@@ -342,18 +342,29 @@ var ScaleManager = new Class({
 
         this.fullscreen = game.device.fullscreen;
 
-        if (this.scaleMode !== CONST.NONE && this.scaleMode !== CONST.RESIZE)
+        if (this.scaleMode !== CONST.RESIZE)
         {
             this.displaySize.setAspectMode(this.scaleMode);
         }
 
         if (this.scaleMode === CONST.NONE)
         {
+            console.log('NONE');
+
             this.resize(this.width, this.height);
         }
         else
         {
-            this.displaySize.setParent(this.parentSize);
+            this.getParentBounds();
+
+            //  Only set the parent bounds if the parent has an actual size
+            if (this.parentSize.width > 0 && this.parentSize.height > 0)
+            {
+                console.log('display parent set >>');
+                console.log(this.parentSize.toString());
+
+                this.displaySize.setParent(this.parentSize);
+            }
 
             this.refresh();
         }
@@ -378,6 +389,7 @@ var ScaleManager = new Class({
         this.getParent(config);
         
         //  Get the size of the parent element
+        //  This can often set a height of zero (especially for un-styled divs)
         this.getParentBounds();
 
         var width = config.width;
@@ -390,31 +402,33 @@ var ScaleManager = new Class({
         //  If width = '100%', or similar value
         if (typeof width === 'string')
         {
-            if (this.parent)
-            {
-                var parentScaleX = parseInt(width, 10) / 100;
+            //  If we have a parent with a height, we'll work it out from that
+            var parentWidth = this.parentSize.width;
 
-                width = Math.floor(this.parentSize.width * parentScaleX);
-            }
-            else
+            if (parentWidth === 0)
             {
-                width = parseInt(width, 10);
+                parentWidth = window.innerWidth;
             }
+
+            var parentScaleX = parseInt(width, 10) / 100;
+
+            width = Math.floor(parentWidth * parentScaleX);
         }
 
         //  If height = '100%', or similar value
         if (typeof height === 'string')
         {
-            if (this.parent)
-            {
-                var parentScaleY = parseInt(height, 10) / 100;
+            //  If we have a parent with a height, we'll work it out from that
+            var parentHeight = this.parentSize.height;
 
-                height = Math.floor(this.parentSize.height * parentScaleY);
-            }
-            else
+            if (parentHeight === 0)
             {
-                height = parseInt(height, 10);
+                parentHeight = window.innerHeight;
             }
+
+            var parentScaleY = parseInt(height, 10) / 100;
+
+            height = Math.floor(parentHeight * parentScaleY);
         }
 
         //  This is fixed at 1 on purpose.
@@ -490,8 +504,6 @@ var ScaleManager = new Class({
             return;
         }
 
-        var canExpandParent = config.expandParent;
-
         var target;
 
         if (parent !== '')
@@ -521,15 +533,28 @@ var ScaleManager = new Class({
             this.parentIsWindow = false;
         }
 
-        if (canExpandParent)
+        if (config.expandParent)
         {
-            if (this.parentIsWindow)
+            var DOMRect = this.parent.getBoundingClientRect();
+
+            if (this.parentIsWindow || DOMRect.height === 0)
             {
-                document.getElementsByTagName('html')[0].style.height = '100%';
-            }
-            else
-            {
-                this.parent.style.height = '100%';
+                console.log('expanded');
+
+                document.documentElement.style.height = '100%';
+                document.body.style.height = '100%';
+
+                DOMRect = this.parent.getBoundingClientRect();
+
+                //  The parent STILL has no height, clearly no CSS
+                //  has been set on it even though we fixed the body :(
+                if (!this.parentIsWindow && DOMRect.height === 0)
+                {
+                    console.log('dead div parent');
+                    this.parent.style.overflow = 'hidden';
+                    this.parent.style.width = '100%';
+                    this.parent.style.height = '100%';
+                }
             }
         }
     },
@@ -551,6 +576,8 @@ var ScaleManager = new Class({
 
         var parentSize = this.parentSize;
 
+        // Ref. http://msdn.microsoft.com/en-us/library/hh781509(v=vs.85).aspx for getBoundingClientRect
+
         var DOMRect = this.parent.getBoundingClientRect();
 
         if (this.parentIsWindow && this.game.device.os.iOS)
@@ -564,7 +591,9 @@ var ScaleManager = new Class({
 
         if (parentSize.width !== newWidth || parentSize.height !== newHeight)
         {
-            this.parentSize.setSize(newWidth, newHeight);
+            console.log(parentSize.toString());
+
+            parentSize.setSize(newWidth, newHeight);
 
             return true;
         }
@@ -622,6 +651,43 @@ var ScaleManager = new Class({
     },
 
     /**
+     * This method will set a new size for your game.
+     *
+     * @method Phaser.Scale.ScaleManager#setGameSize
+     * @fires Phaser.Scale.ScaleManager.Events#RESIZE
+     * @since 3.16.0
+     * 
+     * @param {number} width - The new width of the game.
+     * @param {number} height - The new height of the game.
+     * 
+     * @return {this} The Scale Manager instance.
+     */
+    setGameSize: function (width, height)
+    {
+        var autoRound = this.autoRound;
+        var resolution = this.resolution;
+
+        if (autoRound)
+        {
+            width = Math.floor(width);
+            height = Math.floor(height);
+        }
+
+        this.gameSize.resize(width, height);
+        this.baseSize.resize(width * resolution, height * resolution);
+
+        this.updateBounds();
+
+        this.displayScale.set(width / this.canvasBounds.width, height / this.canvasBounds.height);
+
+        this.emit(Events.RESIZE, this.gameSize, this.baseSize, this.displaySize, this.resolution);
+
+        this.updateOrientation();
+
+        return this.refresh();
+    },
+
+    /**
      * Call this to modify the size of the Phaser canvas element directly.
      * You should only use this if you are using the `NO_SCALE` scale mode,
      * it will update all internal components completely.
@@ -631,13 +697,13 @@ var ScaleManager = new Class({
      * If all you want is to change the base size of the game, but still have the Scale Manager
      * manage all the scaling, then see the `setGameSize` method.
      * 
-     * This method will set the gameSize, baseSize and displaySize components to the given
+     * This method will set the `gameSize`, `baseSize` and `displaySize` components to the given
      * dimensions. It will then resize the canvas width and height to the values given, by
      * directly setting the properties. Finally, if you have set the Scale Manager zoom value
      * to anything other than 1 (the default), it will set the canvas CSS width and height to
-     * be the given size multiplied by the zoom factor.
+     * be the given size multiplied by the zoom factor (the canvas pixel size remains untouched).
      * 
-     * If you have enabled autoCenter, it is then passed to the `updateCenter` method and
+     * If you have enabled `autoCenter`, it is then passed to the `updateCenter` method and
      * the margins are set, allowing the canvas to be centered based on its parent element
      * alone. Finally, the `displayScale` is adjusted and the RESIZE event dispatched.
      *
@@ -682,11 +748,13 @@ var ScaleManager = new Class({
             styleHeight = Math.floor(styleHeight);
         }
 
-        if (styleWidth !== width || styleHeight || height)
+        if (styleWidth !== width || styleHeight !== height)
         {
             style.width = styleWidth + 'px';
             style.height = styleHeight + 'px';
         }
+
+        this.getParentBounds();
 
         this.updateCenter();
 
@@ -697,12 +765,6 @@ var ScaleManager = new Class({
         this.emit(Events.RESIZE, this.gameSize, this.baseSize, this.displaySize, this.resolution);
 
         this.updateOrientation();
-
-        //  Update the parentSize incase the canvas / style change modified it
-        if (!this.parentIsWindow)
-        {
-            this.getParentBounds();
-        }
 
         return this;
     },
@@ -875,30 +937,29 @@ var ScaleManager = new Class({
             style.height = styleHeight + 'px';
         }
 
-        this.updateCenter();
-
         //  Update the parentSize incase the canvas / style change modified it
-        if (!this.parentIsWindow)
-        {
-            this.getParentBounds();
-        }
+        this.getParentBounds();
+
+        //  Finally, update the centering
+        this.updateCenter();
     },
 
     /**
      * Calculates and returns the largest possible zoom factor, based on the current
-     * parent and game sizes.
+     * parent and game sizes. If the parent has no dimensions (i.e. an unstyled div),
+     * or is smaller than the un-zoomed game, then this will return a value of 1 (no zoom)
      *
      * @method Phaser.Scale.ScaleManager#getMaxZoom
      * @since 3.16.0
      * 
-     * @return {integer} The maximum possible zoom factor.
+     * @return {integer} The maximum possible zoom factor. At a minimum this value is always at least 1.
      */
     getMaxZoom: function ()
     {
         var zoomH = SnapFloor(this.parentSize.width, this.gameSize.width, 0, true);
         var zoomV = SnapFloor(this.parentSize.height, this.gameSize.height, 0, true);
     
-        return Math.min(zoomH, zoomV);
+        return Math.max(Math.min(zoomH, zoomV), 1);
     },
 
     /**
@@ -926,14 +987,22 @@ var ScaleManager = new Class({
             return;
         }
 
-        this.getParentBounds();
+        var canvas = this.canvas;
 
-        var style = this.canvas.style;
+        var style = canvas.style;
 
-        var bounds = this.canvas.getBoundingClientRect();
+        var bounds = canvas.getBoundingClientRect();
 
-        var offsetX = Math.floor((this.parentSize.width - bounds.width) / 2);
-        var offsetY = Math.floor((this.parentSize.height - bounds.height) / 2);
+        // var width = parseInt(canvas.style.width, 10) || canvas.width;
+        // var height = parseInt(canvas.style.height, 10) || canvas.height;
+
+        var width = bounds.width;
+        var height = bounds.height;
+
+        var offsetX = Math.floor((this.parentSize.width - width) / 2);
+        var offsetY = Math.floor((this.parentSize.height - height) / 2);
+
+        console.log('cen', offsetX, offsetY);
 
         if (autoCenter === CONST.CENTER_HORIZONTALLY)
         {
@@ -1032,6 +1101,9 @@ var ScaleManager = new Class({
 
         if (!fullscreen.active)
         {
+            console.log('fullscreen init');
+            console.log(this.parentSize.toString());
+
             var fsTarget = this.getFullscreenTarget();
 
             if (fullscreen.keyboard)
@@ -1043,9 +1115,15 @@ var ScaleManager = new Class({
                 fsTarget[fullscreen.request](fullscreenOptions);
             }
 
-            this.emit(Events.ENTER_FULLSCREEN);
+            console.log('fullscreen done');
+
+            this.getParentBounds();
+
+            console.log(this.parentSize.toString());
 
             this.refresh();
+
+            this.emit(Events.ENTER_FULLSCREEN);
         }
     },
 
@@ -1065,6 +1143,8 @@ var ScaleManager = new Class({
 
             fsTarget.style.margin = '0';
             fsTarget.style.padding = '0';
+            fsTarget.style.width = '100%';
+            fsTarget.style.height = '100%';
 
             this.fullscreenTarget = fsTarget;
 
@@ -1121,6 +1201,8 @@ var ScaleManager = new Class({
             }
 
             this.emit(Events.LEAVE_FULLSCREEN);
+
+            this.refresh();
         }
     },
 
@@ -1240,7 +1322,7 @@ var ScaleManager = new Class({
      */
     step: function (time, delta)
     {
-        if (this.scaleMode === CONST.NONE || !this.parent)
+        if (!this.parent)
         {
             return;
         }
