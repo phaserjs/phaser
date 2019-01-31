@@ -5,7 +5,7 @@
  */
 
 /**
- * @namespace Phaser.Utils.Object
+ * @namespace Phaser.Utils.Objects
  */
 
 module.exports = {
