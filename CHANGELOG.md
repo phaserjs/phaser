@@ -212,6 +212,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * The function `Phaser.Physics.Impact.SeperateY` has been renamed to `SeparateY` to correct the spelling mistake.
 * The `ended` event in `WebAudioSound` has been renamed to `complete` to make it more consistent with the rest of the API.
 * The `ended` event in `HTML5AudioSound` has been renamed to `complete` to make it more consistent with the rest of the API.
+* The `Phaser.Utils.Objects` namespace was incorrectly exposed in the Phaser entrypoints as `Object` (note the lack of plural), this has now been fixed so all associated functions are properly namespaced.
 
 ### New Features
 
