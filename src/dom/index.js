@@ -13,6 +13,7 @@ var Dom = {
     AddToDOM: require('./AddToDOM'),
     DOMContentLoaded: require('./DOMContentLoaded'),
     GetScreenOrientation: require('./GetScreenOrientation'),
+    GetTarget: require('./GetTarget'),
     ParseXML: require('./ParseXML'),
     RemoveFromDOM: require('./RemoveFromDOM'),
     RequestAnimationFrame: require('./RequestAnimationFrame')
