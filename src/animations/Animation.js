@@ -30,7 +30,7 @@ var GetValue = require('../utils/object/GetValue');
  *
  * @param {Phaser.Animations.AnimationManager} manager - A reference to the global Animation Manager
  * @param {string} key - The unique identifying string for this animation.
- * @param {Phaser.Animations.Animation.Config} config - The Animation configuration.
+ * @param {Phaser.Animations.Types.Animation} config - The Animation configuration.
  */
 var Animation = new Class({
 
@@ -224,7 +224,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#addFrame
      * @since 3.0.0
      *
-     * @param {(string|Phaser.Animations.AnimationFrame.Config[])} config - [description]
+     * @param {(string|Phaser.Animations.Types.AnimationFrame[])} config - [description]
      *
      * @return {Phaser.Animations.Animation} This Animation object.
      */
@@ -240,7 +240,7 @@ var Animation = new Class({
      * @since 3.0.0
      *
      * @param {integer} index - The index to insert the frame at within the animation.
-     * @param {(string|Phaser.Animations.AnimationFrame.Config[])} config - [description]
+     * @param {(string|Phaser.Animations.Types.AnimationFrame[])} config - [description]
      *
      * @return {Phaser.Animations.Animation} This Animation object.
      */
@@ -353,7 +353,7 @@ var Animation = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Textures.TextureManager} textureManager - [description]
-     * @param {(string|Phaser.Animations.AnimationFrame.Config[])} frames - [description]
+     * @param {(string|Phaser.Animations.Types.AnimationFrame[])} frames - [description]
      * @param {string} [defaultTextureKey] - [description]
      *
      * @return {Phaser.Animations.AnimationFrame[]} [description]

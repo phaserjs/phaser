@@ -22,7 +22,49 @@ var Vector2 = require('../math/Vector2');
  * @classdesc
  * The Scale Manager handles the scaling, resizing and alignment of the game canvas.
  * 
- * The game size is the logical size of the game; the display size is the scaled size of the canvas.
+ * The way scaling is handled is by setting the game canvas to a fixed size, which is defined in the
+ * game configuration. This dimension can be obtained in the `gameSize` property. The Scale Manager
+ * will then look at the available space within the _parent_ and scale the canvas accordingly. This
+ * is handled by setting the canvas CSS width and height properties, leaving the pixel dimensions
+ * untouched. Scaling is therefore achieved by keeping the core canvas the same size and 'stretching'
+ * it via its CSS properties. The actual displayed size of the game can be found in the `displaySize` component.
+ * 
+ * The calculations of the scale is heavily influenced by the bounding Parent size, which is the computed
+ * dimensions of the canvas's parent container / element. The CSS rules of the parent element play an
+ * important role in the operation of the Scale Manager.
+ * 
+ * #### Parent and Display canvas containment guidelines:
+ *
+ * - Style the Parent element (of the game canvas) to control the Parent size and
+ *   thus the games size and layout.
+ *
+ * - The Parent element's CSS styles should _effectively_ apply maximum (and minimum) bounding behavior.
+ *
+ * - The Parent element should _not_ apply a padding as this is not accounted for.
+ *   If a padding is required apply it to the Parent's parent or apply a margin to the Parent.
+ *   If you need to add a border, margin or any other CSS around your game container, then use a parent element and
+ *   apply the CSS to this instead, otherwise you'll be constantly resizing the shape of the game container.
+ *
+ * - The Display canvas layout CSS styles (i.e. margins, size) should not be altered / specified as
+ *   they may be updated by the Scale Manager.
+ *
+ * #### Scale Modes
+ * 
+ * The way the scaling is handled is determined by the `scaleMode` property. The default is `NO_SCALE`,
+ * which prevents Phaser from scaling or touching the canvas, or its parent, at all. In this mode, you are
+ * responsible for all scaling. The other scaling modes afford you automatic scaling.
+ * 
+ * If you wish to scale your game so that it always fits into the available space within the parent, you
+ * should use the scale mode `FIT`. Look at the documentation for other scale modes to see what options are
+ * available.
+ * 
+ * If you wish for the canvas to be resized directly, so that the canvas itself fills the available space
+ * (i.e. it isn't scaled, it's resized) then use the `RESIZE` scale mode. This will give you a 1:1 mapping
+ * of canvas pixels to game size.
+ * 
+ * You can also have the game canvas automatically centered. Again, this relies heavily on the parent being
+ * properly configured and styled, as the centering offsets are based entirely on the available space
+ * within the parent element. Please see the centering options for details.
  *
  * @class ScaleManager
  * @memberof Phaser.Scale
@@ -349,8 +391,6 @@ var ScaleManager = new Class({
 
         if (this.scaleMode === CONST.SCALE_MODE.NONE)
         {
-            console.log('NONE');
-
             this.resize(this.width, this.height);
         }
         else
@@ -360,9 +400,6 @@ var ScaleManager = new Class({
             //  Only set the parent bounds if the parent has an actual size
             if (this.parentSize.width > 0 && this.parentSize.height > 0)
             {
-                console.log('display parent set >>');
-                console.log(this.parentSize.toString());
-
                 this.displaySize.setParent(this.parentSize);
             }
 
@@ -513,8 +550,6 @@ var ScaleManager = new Class({
 
             if (this.parentIsWindow || DOMRect.height === 0)
             {
-                console.log('expanded');
-
                 document.documentElement.style.height = '100%';
                 document.body.style.height = '100%';
 
@@ -524,7 +559,6 @@ var ScaleManager = new Class({
                 //  has been set on it even though we fixed the body :(
                 if (!this.parentIsWindow && DOMRect.height === 0)
                 {
-                    console.log('dead div parent');
                     this.parent.style.overflow = 'hidden';
                     this.parent.style.width = '100%';
                     this.parent.style.height = '100%';
@@ -571,8 +605,6 @@ var ScaleManager = new Class({
 
         if (parentSize.width !== newWidth || parentSize.height !== newHeight)
         {
-            console.log(parentSize.toString());
-
             parentSize.setSize(newWidth, newHeight);
 
             return true;
@@ -982,8 +1014,6 @@ var ScaleManager = new Class({
         var offsetX = Math.floor((this.parentSize.width - width) / 2);
         var offsetY = Math.floor((this.parentSize.height - height) / 2);
 
-        console.log('cen', offsetX, offsetY);
-
         if (autoCenter === CONST.CENTER.CENTER_HORIZONTALLY)
         {
             offsetY = 0;
@@ -1087,9 +1117,6 @@ var ScaleManager = new Class({
 
         if (!fullscreen.active)
         {
-            console.log('fullscreen init');
-            console.log(this.parentSize.toString());
-
             var fsTarget = this.getFullscreenTarget();
 
             if (fullscreen.keyboard)
@@ -1101,11 +1128,7 @@ var ScaleManager = new Class({
                 fsTarget[fullscreen.request](fullscreenOptions);
             }
 
-            console.log('fullscreen done');
-
             this.getParentBounds();
-
-            console.log(this.parentSize.toString());
 
             this.refresh();
 

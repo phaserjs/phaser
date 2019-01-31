@@ -13,10 +13,14 @@ var GameObject = require('../GameObject');
 var List = require('../../structs/List');
 
 /**
- * @callback Phaser.GameObjects.Blitter.CreateCallback
+ * @callback CreateCallback
  *
  * @param {Phaser.GameObjects.Blitter.Bob} bob - The Bob that was created by the Blitter.
  * @param {integer} index - The position of the Bob within the Blitter display list.
+ */
+
+/**
+ * @namespace [Phaser.GameObjects.Blitter] Phaser.GameObjects.Blitter
  */
 
 /**
@@ -167,7 +171,7 @@ var Blitter = new Class({
      * @method Phaser.GameObjects.Blitter#createFromCallback
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Blitter.CreateCallback} callback - The callback to invoke after creating a bob. It will be sent two arguments: The Bob and the index of the Bob.
+     * @param {CreateCallback} callback - The callback to invoke after creating a bob. It will be sent two arguments: The Bob and the index of the Bob.
      * @param {integer} quantity - The quantity of Bob objects to create.
      * @param {(string|integer|Phaser.Textures.Frame|string[]|integer[]|Phaser.Textures.Frame[])} [frame] - The Frame the Bobs will use. It must be part of the Blitter Texture.
      * @param {boolean} [visible=true] - Should the created Bob render or not?

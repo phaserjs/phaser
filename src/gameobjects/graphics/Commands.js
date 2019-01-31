@@ -4,10 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-/**
- * @namespace Phaser.GameObjects.Graphics.Commands
- */
-
 module.exports = {
 
     ARC: 0,

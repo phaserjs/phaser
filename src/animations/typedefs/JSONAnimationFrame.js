@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Animations.AnimationFrame.JSONConfig
+ * @typedef {object} Phaser.Animations.Types.JSONAnimationFrame
  *
  * @property {string} key - The key of the Texture this AnimationFrame uses.
  * @property {(string|integer)} frame - The key of the Frame within the Texture that this AnimationFrame uses.

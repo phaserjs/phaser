@@ -15,5 +15,5 @@ module.exports = {
     Canvas: require('./canvas'),
     Color: require('./color'),
     Masks: require('./mask')
-  
+
 };

@@ -929,14 +929,6 @@ var StaticTilemapLayer = new Class({
     },
 
     /**
-     * @typedef {object} FilteringOptions
-     * 
-     * @property {boolean} [isNotEmpty=false] - If true, only return tiles that don't have -1 for an index.
-     * @property {boolean} [isColliding=false] - If true, only return tiles that collide on at least one side.
-     * @property {boolean} [hasInterestingFace=false] - If true, only return tiles that have at least one interesting face.
-     */
-
-    /**
      * Find the first tile in the given rectangular area (in tile coordinates) of the layer that
      * satisfies the provided testing function. I.e. finds the first tile for which `callback` returns
      * true. Similar to Array.prototype.find in vanilla JS.
@@ -1139,14 +1131,6 @@ var StaticTilemapLayer = new Class({
     {
         return TilemapComponents.HasTileAtWorldXY(worldX, worldY, camera, this.layer);
     },
-
-    /**
-     * @typedef {object} StyleConfig
-     * 
-     * @property {?Color} [tileColor=blue] - Color to use for drawing a filled rectangle at non-colliding tile locations. If set to null, non-colliding tiles will not be drawn.
-     * @property {?Color} [collidingTileColor=orange] - Color to use for drawing a filled rectangle at colliding tile locations. If set to null, colliding tiles will not be drawn.
-     * @property {?Color} [faceColor=grey] - Color to use for drawing a line at interesting tile faces. If set to null, interesting tile faces will not be drawn.
-     */
 
     /**
      * Draws a debug representation of the layer to the given Graphics. This is helpful when you want to

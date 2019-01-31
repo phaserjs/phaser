@@ -1,8 +1,8 @@
 /**
- * @typedef {object} Phaser.Animations.Animation.Config
+ * @typedef {object} Phaser.Animations.Types.Animation
  *
  * @property {string} [key] - The key that the animation will be associated with. i.e. sprite.animations.play(key)
- * @property {Phaser.Animations.AnimationFrame.Config[]} [frames] - An object containing data used to generate the frames for the animation
+ * @property {Phaser.Animations.Types.AnimationFrame[]} [frames] - An object containing data used to generate the frames for the animation
  * @property {string} [defaultTextureKey=null] - The key of the texture all frames of the animation will use. Can be overridden on a per frame basis.
  * @property {integer} [frameRate] - The frame rate of playback in frames per second (default 24 if duration is null)
  * @property {integer} [duration] - How long the animation should play for in milliseconds. If not given its derived from frameRate.

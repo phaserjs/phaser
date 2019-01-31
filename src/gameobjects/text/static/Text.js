@@ -17,6 +17,10 @@ var TextRender = require('./TextRender');
 var TextStyle = require('../TextStyle');
 
 /**
+ * @namespace [Phaser.GameObjects.Text] Phaser.GameObjects.Text
+ */
+
+/**
  * @classdesc
  * A Text Game Object.
  * 
@@ -153,7 +157,7 @@ var Text = new Class({
          * Manages the style of this Text object.
          *
          * @name Phaser.GameObjects.Text#style
-         * @type {Phaser.GameObjects.Text.TextStyle}
+         * @type {Phaser.GameObjects.TextStyle}
          * @since 3.0.0
          */
         this.style = new TextStyle(this, style);
