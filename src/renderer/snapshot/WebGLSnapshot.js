@@ -10,14 +10,15 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 
 /**
  * Takes a snapshot of an area from the current frame displayed by a WebGL canvas.
+ * 
+ * This is then copied to an Image object. When this loads, the results are sent
+ * to the callback provided in the Snapshot Configuration object.
  *
  * @function Phaser.Renderer.Snapshot.WebGL
  * @since 3.0.0
  *
  * @param {HTMLCanvasElement} sourceCanvas - The canvas to take a snapshot of.
  * @param {SnapshotState} config - The snapshot configuration object.
- *
- * @return {(Phaser.Display.Color|HTMLImageElement)} Either a Color object if a single pixel is being grabbed, or a new Image which contains a snapshot of the canvas contents.
  */
 var WebGLSnapshot = function (sourceCanvas, config)
 {
