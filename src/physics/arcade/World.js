@@ -1512,7 +1512,7 @@ var World = new Class({
      * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to be separated.
      * @param {Phaser.Physics.Arcade.Body} body2 - The second Body to be separated.
      * @param {boolean} [overlapOnly] - If this a collide or overlap check?
-     * @param {number} bias - A small value added to the calculations.
+     * @param {number} [bias] - A small value added to the calculations.
      *
      * @return {boolean} True if separation occurred, otherwise false.
      */
@@ -2170,7 +2170,7 @@ var World = new Class({
      * @param {ArcadePhysicsCallback} [collideCallback] - An optional callback function that is called if the objects collide.
      * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
      * @param {any} [callbackContext] - The context in which to run the callbacks.
-     * @param {boolean} overlapOnly - Whether this is a collision or overlap check.
+     * @param {boolean} [overlapOnly] - Whether this is a collision or overlap check.
      *
      * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
      */

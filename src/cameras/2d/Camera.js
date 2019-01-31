@@ -244,7 +244,7 @@ var Camera = new Class({
          * 
          * This is only set if Phaser is running with the WebGL Renderer.
          *
-         * @name Phaser.Cameras.Scene2D.Camera#framebuffer
+         * @name Phaser.Cameras.Scene2D.Camera#glTexture
          * @type {?WebGLTexture}
          * @since 3.13.0
          */

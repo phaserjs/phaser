@@ -331,7 +331,7 @@ var ScaleManager = new Class({
      *
      * @method Phaser.Scale.ScaleManager#boot
      * @protected
-     * @fires Phaser.Scale.ScaleManager.Events#RESIZE
+     * @fires Phaser.Scale.Events#RESIZE
      * @since 3.16.0
      */
     boot: function ()
@@ -615,7 +615,7 @@ var ScaleManager = new Class({
      * other Scale Manager features.
      *
      * @method Phaser.Scale.ScaleManager#setParentSize
-     * @fires Phaser.Scale.ScaleManager.Events#RESIZE
+     * @fires Phaser.Scale.Events#RESIZE
      * @since 3.16.0
      * 
      * @param {number} width - The new width of the parent.
@@ -634,7 +634,7 @@ var ScaleManager = new Class({
      * This method will set a new size for your game.
      *
      * @method Phaser.Scale.ScaleManager#setGameSize
-     * @fires Phaser.Scale.ScaleManager.Events#RESIZE
+     * @fires Phaser.Scale.Events#RESIZE
      * @since 3.16.0
      * 
      * @param {number} width - The new width of the game.
@@ -688,7 +688,7 @@ var ScaleManager = new Class({
      * alone. Finally, the `displayScale` is adjusted and the RESIZE event dispatched.
      *
      * @method Phaser.Scale.ScaleManager#resize
-     * @fires Phaser.Scale.ScaleManager.Events#RESIZE
+     * @fires Phaser.Scale.Events#RESIZE
      * @since 3.16.0
      * 
      * @param {number} width - The new width of the game.
@@ -753,7 +753,7 @@ var ScaleManager = new Class({
      * Sets the zoom value of the Scale Manager.
      *
      * @method Phaser.Scale.ScaleManager#setZoom
-     * @fires Phaser.Scale.ScaleManager.Events#RESIZE
+     * @fires Phaser.Scale.Events#RESIZE
      * @since 3.16.0
      * 
      * @param {integer} value - The new zoom value of the game.
@@ -771,7 +771,7 @@ var ScaleManager = new Class({
      * Sets the zoom to be the maximum possible based on the _current_ parent size.
      *
      * @method Phaser.Scale.ScaleManager#setMaxZoom
-     * @fires Phaser.Scale.ScaleManager.Events#RESIZE
+     * @fires Phaser.Scale.Events#RESIZE
      * @since 3.16.0
      * 
      * @return {this} The Scale Manager instance.
@@ -792,7 +792,7 @@ var ScaleManager = new Class({
      * as long as it is using a Scale Mode other than 'NONE'.
      *
      * @method Phaser.Scale.ScaleManager#refresh
-     * @fires Phaser.Scale.ScaleManager.Events#RESIZE
+     * @fires Phaser.Scale.Events#RESIZE
      * @since 3.16.0
      * 
      * @return {this} The Scale Manager instance.
@@ -816,7 +816,7 @@ var ScaleManager = new Class({
      * If the orientation has changed it updates the orientation property and then dispatches the orientation change event.
      *
      * @method Phaser.Scale.ScaleManager#updateOrientation
-     * @fires Phaser.Scale.ScaleManager.Events#ORIENTATION_CHANGE
+     * @fires Phaser.Scale.Events#ORIENTATION_CHANGE
      * @since 3.16.0
      */
     updateOrientation: function ()
@@ -1065,9 +1065,9 @@ var ScaleManager = new Class({
      * When it leaves fullscreen, the div will be removed.
      *
      * @method Phaser.Scale.ScaleManager#startFullscreen
-     * @fires Phaser.Scale.ScaleManager.Events#ENTER_FULLSCREEN
-     * @fires Phaser.Scale.ScaleManager.Events#FULLSCREEN_UNSUPPORTED
-     * @fires Phaser.Scale.ScaleManager.Events#RESIZE
+     * @fires Phaser.Scale.Events#ENTER_FULLSCREEN
+     * @fires Phaser.Scale.Events#FULLSCREEN_UNSUPPORTED
+     * @fires Phaser.Scale.Events#RESIZE
      * @since 3.16.0
      * 
      * @param {FullscreenOptions} [fullscreenOptions] - The FullscreenOptions dictionary is used to provide configuration options when entering full screen.
@@ -1153,8 +1153,8 @@ var ScaleManager = new Class({
      * Calling this method will cancel fullscreen mode, if the browser has entered it.
      *
      * @method Phaser.Scale.ScaleManager#stopFullscreen
-     * @fires Phaser.Scale.ScaleManager.Events#LEAVE_FULLSCREEN
-     * @fires Phaser.Scale.ScaleManager.Events#FULLSCREEN_UNSUPPORTED
+     * @fires Phaser.Scale.Events#LEAVE_FULLSCREEN
+     * @fires Phaser.Scale.Events#FULLSCREEN_UNSUPPORTED
      * @since 3.16.0
      */
     stopFullscreen: function ()
@@ -1203,10 +1203,10 @@ var ScaleManager = new Class({
      * from fullscreen unless the iframe has the `allowfullscreen` attribute.
      *
      * @method Phaser.Scale.ScaleManager#toggleFullscreen
-     * @fires Phaser.Scale.ScaleManager.Events#ENTER_FULLSCREEN
-     * @fires Phaser.Scale.ScaleManager.Events#LEAVE_FULLSCREEN
-     * @fires Phaser.Scale.ScaleManager.Events#FULLSCREEN_UNSUPPORTED
-     * @fires Phaser.Scale.ScaleManager.Events#RESIZE
+     * @fires Phaser.Scale.Events#ENTER_FULLSCREEN
+     * @fires Phaser.Scale.Events#LEAVE_FULLSCREEN
+     * @fires Phaser.Scale.Events#FULLSCREEN_UNSUPPORTED
+     * @fires Phaser.Scale.Events#RESIZE
      * @since 3.16.0
      * 
      * @param {FullscreenOptions} [fullscreenOptions] - The FullscreenOptions dictionary is used to provide configuration options when entering full screen.

@@ -326,6 +326,20 @@ var World = new Class({
     },
 
     /**
+     * @typedef {object} CollisionOptions
+     * 
+     * @property {string} [slopeTileProperty=null] - Slope IDs can be stored on tiles directly
+     * using Impacts tileset editor. If a tile has a property with the given slopeTileProperty string
+     * name, the value of that property for the tile will be used for its slope mapping. E.g. a 45
+     * degree slope upward could be given a "slope" property with a value of 2.
+     * @property {object} [slopeMap=null] - A tile index to slope definition map.
+     * @property {integer} [defaultCollidingSlope=null] - If specified, the default slope ID to
+     * assign to a colliding tile. If not specified, the tile's index is used.
+     * @property {integer} [defaultNonCollidingSlope=0] - The default slope ID to assign to a
+     * non-colliding tile.
+     */
+
+    /**
      * Sets the collision map for the world from a tilemap layer. Only tiles that are marked as
      * colliding will be used. You can specify the mapping from tiles to slope IDs in a couple of
      * ways. The easiest is to use Tiled and the slopeTileProperty option. Alternatively, you can
@@ -335,16 +349,7 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer - The tilemap layer to use.
-     * @param {object} [options] - Options for controlling the mapping from tiles to slope IDs.
-     * @param {string} [options.slopeTileProperty=null] - Slope IDs can be stored on tiles directly
-     * using Tiled's tileset editor. If a tile has a property with the given slopeTileProperty string
-     * name, the value of that property for the tile will be used for its slope mapping. E.g. a 45
-     * degree slope upward could be given a "slope" property with a value of 2.
-     * @param {object} [options.slopeMap=null] - A tile index to slope definition map.
-     * @param {integer} [options.defaultCollidingSlope=null] - If specified, the default slope ID to
-     * assign to a colliding tile. If not specified, the tile's index is used.
-     * @param {integer} [options.defaultNonCollidingSlope=0] - The default slope ID to assign to a
-     * non-colliding tile.
+     * @param {CollisionOptions} [options] - Options for controlling the mapping from tiles to slope IDs.
      *
      * @return {Phaser.Physics.Impact.CollisionMap} The newly created CollisionMap.
      */

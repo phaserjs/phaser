@@ -260,7 +260,7 @@ var RenderTexture = new Class({
     /**
      * Sets the size of this Game Object.
      * 
-     * @method Phaser.GameObjects.Components.Size#setSize
+     * @method Phaser.GameObjects.RenderTexture#setSize
      * @since 3.0.0
      *
      * @param {number} width - The width of this Game Object.

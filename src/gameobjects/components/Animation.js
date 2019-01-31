@@ -199,9 +199,10 @@ var Animation = new Class({
          * An Internal trigger that's play the animation in reverse mode ('true') or not ('false'),
          * needed because forward can be changed by yoyo feature.
          *
-         * @name Phaser.GameObjects.Components.Animation#forward
+         * @name Phaser.GameObjects.Components.Animation#_reverse
          * @type {boolean}
          * @default false
+         * @private
          * @since 3.12.0
          */
         this._reverse = false;

@@ -731,6 +731,15 @@ var Graphics = new Class({
     },
 
     /**
+     * @typedef {object} RoundedRectRadius
+     * 
+     * @property {number} [tl=20] - Top left
+     * @property {number} [tr=20] - Top right
+     * @property {number} [br=20] - Bottom right
+     * @property {number} [bl=20] - Bottom left
+     */
+
+    /**
      * Fill a rounded rectangle with the given position, size and radius.
      *
      * @method Phaser.GameObjects.Graphics#fillRoundedRect
@@ -740,11 +749,7 @@ var Graphics = new Class({
      * @param {number} y - The y coordinate of the top-left of the rectangle.
      * @param {number} width - The width of the rectangle.
      * @param {number} height - The height of the rectangle.
-     * @param {number} [radius = 20] - The corner radius; It can also be an object to specify different radii for corners
-     * @param {number} [radius.tl = 20] Top left
-     * @param {number} [radius.tr = 20] Top right
-     * @param {number} [radius.br = 20] Bottom right
-     * @param {number} [radius.bl = 20] Bottom left
+     * @param {(RoundedRectRadius|number)} [radius=20] - The corner radius; It can also be an object to specify different radii for corners.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -790,11 +795,7 @@ var Graphics = new Class({
      * @param {number} y - The y coordinate of the top-left of the rectangle.
      * @param {number} width - The width of the rectangle.
      * @param {number} height - The height of the rectangle.
-     * @param {number} [radius = 20] - The corner radius; It can also be an object to specify different radii for corners
-     * @param {number} [radius.tl = 20] Top left
-     * @param {number} [radius.tr = 20] Top right
-     * @param {number} [radius.br = 20] Bottom right
-     * @param {number} [radius.bl = 20] Bottom left
+     * @param {(RoundedRectRadius|number)} [radius=20] - The corner radius; It can also be an object to specify different radii for corners.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */

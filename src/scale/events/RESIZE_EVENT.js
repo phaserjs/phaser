@@ -7,7 +7,7 @@
 /**
  * The Scale Manager Resize Event.
  *
- * @event Phaser.Scale.ScaleManager.Events#RESIZE
+ * @event Phaser.Scale.Events#RESIZE
  * 
  * @param {Phaser.Structs.Size} gameSize - 
  * @param {Phaser.Structs.Size} baseSize - 

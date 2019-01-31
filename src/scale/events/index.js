@@ -5,7 +5,7 @@
  */
 
 /**
- * @namespace Phaser.DOM.ScaleManager.Events
+ * @namespace Phaser.Scale.Events
  */
 
 module.exports = {

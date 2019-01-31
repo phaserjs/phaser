@@ -34,6 +34,7 @@ var CONST = require('./const');
 var Scale = {
 
     Center: require('./const/CENTER_CONST'),
+    Events: require('./events'),
     Orientation: require('./const/ORIENTATION_CONST'),
     ScaleManager: require('./ScaleManager'),
     ScaleModes: require('./const/SCALE_MODE_CONST'),

@@ -178,7 +178,7 @@ var ForwardDiffuseLightPipeline = new Class({
     /**
      * Generic function for batching a textured quad
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTexture
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchTexture
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - Source GameObject

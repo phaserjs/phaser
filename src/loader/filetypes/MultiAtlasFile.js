@@ -78,7 +78,7 @@ var MultiAtlasFile = new Class({
     /**
      * Called by each File when it finishes loading.
      *
-     * @method Phaser.Loader.MultiFile#onFileComplete
+     * @method Phaser.Loader.MultiAtlasFile#onFileComplete
      * @since 3.7.0
      *
      * @param {Phaser.Loader.File} file - The File that has completed processing.
@@ -151,7 +151,7 @@ var MultiAtlasFile = new Class({
     /**
      * Adds this file to its target cache upon successful loading and processing.
      *
-     * @method Phaser.Loader.MultiFile#addToCache
+     * @method Phaser.Loader.MultiAtlasFile#addToCache
      * @since 3.7.0
      */
     addToCache: function ()

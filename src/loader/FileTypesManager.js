@@ -14,7 +14,7 @@ var FileTypesManager = {
      * Loops through the local types object and injects all of them as
      * properties into the LoaderPlugin instance.
      *
-     * @method Phaser.Loader.FileTypesManager.register
+     * @method Phaser.Loader.FileTypesManager.install
      * @since 3.0.0
      * 
      * @param {Phaser.Loader.LoaderPlugin} loader - The LoaderPlugin to install the types into.
