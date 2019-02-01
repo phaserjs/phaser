@@ -15,12 +15,8 @@ var List = require('../../structs/List');
 /**
  * @callback CreateCallback
  *
- * @param {Phaser.GameObjects.Blitter.Bob} bob - The Bob that was created by the Blitter.
+ * @param {Phaser.GameObjects.Bob} bob - The Bob that was created by the Blitter.
  * @param {integer} index - The position of the Bob within the Blitter display list.
- */
-
-/**
- * @namespace [Phaser.GameObjects.Blitter] Phaser.GameObjects.Blitter
  */
 
 /**
@@ -97,7 +93,7 @@ var Blitter = new Class({
          * This List contains all of the Bob objects created by the Blitter.
          *
          * @name Phaser.GameObjects.Blitter#children
-         * @type {Phaser.Structs.List.<Phaser.GameObjects.Blitter.Bob>}
+         * @type {Phaser.Structs.List.<Phaser.GameObjects.Bob>}
          * @since 3.0.0
          */
         this.children = new List();
@@ -107,7 +103,7 @@ var Blitter = new Class({
          * The array is re-populated whenever the dirty flag is set.
          *
          * @name Phaser.GameObjects.Blitter#renderList
-         * @type {Phaser.GameObjects.Blitter.Bob[]}
+         * @type {Phaser.GameObjects.Bob[]}
          * @default []
          * @private
          * @since 3.0.0
@@ -140,7 +136,7 @@ var Blitter = new Class({
      * @param {boolean} [visible=true] - Should the created Bob render or not?
      * @param {integer} [index] - The position in the Blitters Display List to add the new Bob at. Defaults to the top of the list.
      *
-     * @return {Phaser.GameObjects.Blitter.Bob} The newly created Bob object.
+     * @return {Phaser.GameObjects.Bob} The newly created Bob object.
      */
     create: function (x, y, frame, visible, index)
     {
@@ -176,7 +172,7 @@ var Blitter = new Class({
      * @param {(string|integer|Phaser.Textures.Frame|string[]|integer[]|Phaser.Textures.Frame[])} [frame] - The Frame the Bobs will use. It must be part of the Blitter Texture.
      * @param {boolean} [visible=true] - Should the created Bob render or not?
      *
-     * @return {Phaser.GameObjects.Blitter.Bob[]} An array of Bob objects that were created.
+     * @return {Phaser.GameObjects.Bob[]} An array of Bob objects that were created.
      */
     createFromCallback: function (callback, quantity, frame, visible)
     {
@@ -207,7 +203,7 @@ var Blitter = new Class({
      * @param {(string|integer|Phaser.Textures.Frame|string[]|integer[]|Phaser.Textures.Frame[])} [frame] - The Frame the Bobs will use. It must be part of the Blitter Texture.
      * @param {boolean} [visible=true] - Should the created Bob render or not?
      *
-     * @return {Phaser.GameObjects.Blitter.Bob[]} An array of Bob objects that were created.
+     * @return {Phaser.GameObjects.Bob[]} An array of Bob objects that were created.
      */
     createMultiple: function (quantity, frame, visible)
     {
@@ -239,7 +235,7 @@ var Blitter = new Class({
      * @method Phaser.GameObjects.Blitter#childCanRender
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Blitter.Bob} child - The Bob to check for rendering.
+     * @param {Phaser.GameObjects.Bob} child - The Bob to check for rendering.
      *
      * @return {boolean} Returns `true` if the given child can render, otherwise `false`.
      */
@@ -255,7 +251,7 @@ var Blitter = new Class({
      * @method Phaser.GameObjects.Blitter#getRenderList
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.Blitter.Bob[]} An array of Bob objects that will be rendered this frame.
+     * @return {Phaser.GameObjects.Bob[]} An array of Bob objects that will be rendered this frame.
      */
     getRenderList: function ()
     {

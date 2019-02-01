@@ -227,7 +227,7 @@ var ScenePlugin = new Class({
     },
 
     /**
-     * @typedef {object} Phaser.Scenes.ScenePlugin.SceneTransitionConfig
+     * @typedef {object} SceneTransitionConfig
      *
      * @property {string} target - The Scene key to transition to.
      * @property {integer} [duration=1000] - The duration, in ms, for the transition to last.
@@ -274,7 +274,7 @@ var ScenePlugin = new Class({
      * @fires Phaser.Scenes.Events#TRANSITION_OUT
      * @since 3.5.0
      *
-     * @param {Phaser.Scenes.ScenePlugin.SceneTransitionConfig} config - The transition configuration object.
+     * @param {SceneTransitionConfig} config - The transition configuration object.
      *
      * @return {boolean} `true` is the transition was started, otherwise `false`.
      */

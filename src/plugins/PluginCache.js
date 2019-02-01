@@ -31,6 +31,10 @@ var customPlugins = {};
 var PluginCache = {};
 
 /**
+ * @namespace Phaser.Plugins.PluginCache
+ */
+
+/**
  * Static method called directly by the Core internal Plugins.
  * Key is a reference used to get the plugin from the plugins object (i.e. InputPlugin)
  * Plugin is the object to instantiate to create the plugin

@@ -11,6 +11,10 @@ var HSVToRGB = require('./HSVToRGB');
 var RGBToHSV = require('./RGBToHSV');
 
 /**
+ * @namespace Phaser.Display.Color
+ */
+
+/**
  * @classdesc
  * The Color class holds a single color value and allows for easy modification and reading of it.
  *

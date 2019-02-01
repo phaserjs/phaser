@@ -17,10 +17,6 @@ var TextRender = require('./TextRender');
 var TextStyle = require('../TextStyle');
 
 /**
- * @namespace [Phaser.GameObjects.Text] Phaser.GameObjects.Text
- */
-
-/**
  * @classdesc
  * A Text Game Object.
  * 

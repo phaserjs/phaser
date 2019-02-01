@@ -96,7 +96,7 @@ var AudioSpriteFile = new Class({
     /**
      * Called by each File when it finishes loading.
      *
-     * @method Phaser.Loader.AudioSpriteFile#onFileComplete
+     * @method Phaser.Loader.FileTypes.AudioSpriteFile#onFileComplete
      * @since 3.7.0
      *
      * @param {Phaser.Loader.File} file - The File that has completed processing.
@@ -132,7 +132,7 @@ var AudioSpriteFile = new Class({
     /**
      * Adds this file to its target cache upon successful loading and processing.
      *
-     * @method Phaser.Loader.AudioSpriteFile#addToCache
+     * @method Phaser.Loader.FileTypes.AudioSpriteFile#addToCache
      * @since 3.7.0
      */
     addToCache: function ()

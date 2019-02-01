@@ -213,6 +213,8 @@ one set of bindings ever created, which makes things a lot cleaner.
 * The `ended` event in `WebAudioSound` has been renamed to `complete` to make it more consistent with the rest of the API.
 * The `ended` event in `HTML5AudioSound` has been renamed to `complete` to make it more consistent with the rest of the API.
 * The `Phaser.Utils.Objects` namespace was incorrectly exposed in the Phaser entrypoints as `Object` (note the lack of plural), this has now been fixed so all associated functions are properly namespaced.
+* `Phaser.GameObjects.Blitter.Bob` has been renamed to `Phaser.GameObjects.Bob` to avoid namespace conflicts in TypeScript.
+* `Phaser.GameObjects.Text.TextStyle` has been renamed to `Phaser.GameObjects.TextStyle` to avoid namespace conflicts in TypeScript.
 
 ### New Features
 

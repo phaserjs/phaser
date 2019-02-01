@@ -6,6 +6,10 @@
 
 var types = {};
 
+/**
+ * @namespace Phaser.Loader.FileTypesManager
+ */
+
 var FileTypesManager = {
 
     /**

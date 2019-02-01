@@ -402,7 +402,7 @@ var CanvasTexture = new Class({
     /**
      * An object containing the position and color data for a single pixel in a CanvasTexture.
      *
-     * @typedef {object} Phaser.Textures.CanvasTexture.PixelConfig
+     * @typedef {object} PixelConfig
      *
      * @property {integer} x - The x-coordinate of the pixel.
      * @property {integer} y - The y-coordinate of the pixel.
@@ -427,7 +427,7 @@ var CanvasTexture = new Class({
      * @param {integer} width - The width of the region to get. Must be an integer.
      * @param {integer} [height] - The height of the region to get. Must be an integer. If not given will be set to the `width`.
      * 
-     * @return {Phaser.Textures.CanvasTexture.PixelConfig[]} An array of Pixel objects.
+     * @return {PixelConfig[]} An array of Pixel objects.
      */
     getPixels: function (x, y, width, height)
     {
