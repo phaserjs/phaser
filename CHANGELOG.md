@@ -396,6 +396,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `Container.sort` was missing the scope required for the sort handler, this is now correctly provided internally. Fix #4241 (thanks @jcyuan)
 * `DataManager.pop` would emit the DataManager instance, instead of the parent, as the first event argument. It now emits the parent as it should do. Fix #4186 (thanks @gadelan)
 * The `GetValue` function wasn't checking for the existance of '.' in the config property name correctly, causing the branch to always be taken (thanks @kyranet)
+* Safari had permission problems playing HTML5 Audio files on Mac OS. Due to the changes in the input event system audio now plays properly based on user interactions. You still can't play it automatically, though, it will always require a user gesture to begin. Fix #4217 (thanks @increpare)
 
 ### Examples and TypeScript
 
