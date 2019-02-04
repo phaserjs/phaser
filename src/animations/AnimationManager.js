@@ -262,27 +262,15 @@ var AnimationManager = new Class({
     },
 
     /**
-     * @typedef {object} GenerateFrameNamesConfig
-     *
-     * @property {string} [prefix=''] - The string to append to every resulting frame name if using a range or an array of `frames`.
-     * @property {integer} [start=0] - If `frames` is not provided, the number of the first frame to return.
-     * @property {integer} [end=0] - If `frames` is not provided, the number of the last frame to return.
-     * @property {string} [suffix=''] - The string to append to every resulting frame name if using a range or an array of `frames`.
-     * @property {integer} [zeroPad=0] - The minimum expected lengths of each resulting frame's number. Numbers will be left-padded with zeroes until they are this long, then prepended and appended to create the resulting frame name.
-     * @property {AnimationFrameConfig[]} [outputArray=[]] - The array to append the created configuration objects to.
-     * @property {boolean} [frames=false] - If provided as an array, the range defined by `start` and `end` will be ignored and these frame numbers will be used.
-     */
-
-    /**
      * [description]
      *
      * @method Phaser.Animations.AnimationManager#generateFrameNames
      * @since 3.0.0
      *
      * @param {string} key - The key for the texture containing the animation frames.
-     * @param {GenerateFrameNamesConfig} [config] - The configuration object for the animation frame names.
+     * @param {Phaser.Animations.Types.GenerateFrameNames} [config] - The configuration object for the animation frame names.
      *
-     * @return {AnimationFrameConfig[]} The array of {@link AnimationFrameConfig} objects.
+     * @return {Phaser.Animations.Types.AnimationFrame[]} The array of {@link Phaser.Animations.Types.AnimationFrame} objects.
      */
     generateFrameNames: function (key, config)
     {
@@ -349,27 +337,17 @@ var AnimationManager = new Class({
     },
 
     /**
-     * @typedef {object} GenerateFrameNumbersConfig
+     * Generate an array of {@link Phaser.Animations.Types.AnimationFrame} objects from a texture key and configuration object.
      *
-     * @property {integer} [start=0] - The starting frame of the animation.
-     * @property {integer} [end=-1] - The ending frame of the animation.
-     * @property {(boolean|integer)} [first=false] - A frame to put at the beginning of the animation, before `start` or `outputArray` or `frames`.
-     * @property {AnimationFrameConfig[]} [outputArray=[]] - An array to concatenate the output onto.
-     * @property {(boolean|integer[])} [frames=false] - A custom sequence of frames.
-     */
-
-    /**
-     * Generate an array of {@link AnimationFrameConfig} objects from a texture key and configuration object.
-     *
-     * Generates objects with numbered frame names, as configured by the given {@link GenerateFrameNumbersConfig}.
+     * Generates objects with numbered frame names, as configured by the given {@link Phaser.Animations.Types.GenerateFrameNumbers}.
      *
      * @method Phaser.Animations.AnimationManager#generateFrameNumbers
      * @since 3.0.0
      *
      * @param {string} key - The key for the texture containing the animation frames.
-     * @param {GenerateFrameNumbersConfig} config - The configuration object for the animation frames.
+     * @param {Phaser.Animations.Types.GenerateFrameNumbers} config - The configuration object for the animation frames.
      *
-     * @return {AnimationFrameConfig[]} The array of {@link AnimationFrameConfig} objects.
+     * @return {Phaser.Animations.Types.AnimationFrame[]} The array of {@link Phaser.Animations.Types.AnimationFrame} objects.
      */
     generateFrameNumbers: function (key, config)
     {
