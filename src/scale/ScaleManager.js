@@ -591,7 +591,7 @@ var ScaleManager = new Class({
         this.parent = GetTarget(parent);
         this.parentIsWindow = (this.parent === document.body);
 
-        if (config.expandParent)
+        if (config.expandParent && config.scaleMode !== CONST.SCALE_MODE.NONE)
         {
             var DOMRect = this.parent.getBoundingClientRect();
 
