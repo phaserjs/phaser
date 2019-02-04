@@ -404,7 +404,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 
 Thanks to the following for helping with the Phaser 3 Examples and TypeScript definitions, either by reporting errors, or even better, fixing them:
 
-@guilhermehto @samvieten @darkwebdev @RoryO @snowbillr @slothyrulez @jcyuan @jestarray
+@guilhermehto @samvieten @darkwebdev @RoryO @snowbillr @slothyrulez @jcyuan @jestarray @CzBiX
 
 ### Phaser Doc Jam
 
