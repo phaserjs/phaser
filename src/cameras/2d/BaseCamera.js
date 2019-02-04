@@ -123,7 +123,7 @@ var BaseCamera = new Class({
          * A reference to the Game Scale Manager.
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#scaleManager
-         * @type {Phaser.DOM.ScaleManager}
+         * @type {Phaser.Scale.ScaleManager}
          * @since 3.16.0
          */
         this.scaleManager;

@@ -60,7 +60,7 @@ var InputManager = new Class({
          * Used for all bounds checks and pointer scaling.
          *
          * @name Phaser.Input.InputManager#scaleManager
-         * @type {Phaser.DOM.ScaleManager}
+         * @type {Phaser.Scale.ScaleManager}
          * @since 3.16.0
          */
         this.scaleManager;

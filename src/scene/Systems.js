@@ -155,7 +155,7 @@ var Systems = new Class({
          * In the default set-up you can access this from within a Scene via the `this.scale` property.
          *
          * @name Phaser.Scenes.Systems#scale
-         * @type {Phaser.DOM.ScaleManager}
+         * @type {Phaser.Scale.ScaleManager}
          * @since 3.15.0
          */
         this.scale;

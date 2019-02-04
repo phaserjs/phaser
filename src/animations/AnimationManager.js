@@ -14,13 +14,6 @@ var GetValue = require('../utils/object/GetValue');
 var Pad = require('../utils/string/Pad');
 
 /**
- * @typedef {object} JSONAnimationManager
- *
- * @property {JSONAnimation[]} anims - An array of all Animations added to the Animation Manager.
- * @property {number} globalTimeScale - The global time scale of the Animation Manager.
- */
-
-/**
  * @classdesc
  * The Animation Manager.
  *
@@ -192,7 +185,7 @@ var AnimationManager = new Class({
      * @fires Phaser.Animations.Events#ADD_ANIMATION
      * @since 3.0.0
      *
-     * @param {AnimationConfig} config - The configuration settings for the Animation.
+     * @param {Phaser.Animations.Types.Animation} config - The configuration settings for the Animation.
      *
      * @return {(Phaser.Animations.Animation|false)} The Animation that was created, or `false` is the key is already in use.
      */
@@ -225,7 +218,7 @@ var AnimationManager = new Class({
      * @method Phaser.Animations.AnimationManager#fromJSON
      * @since 3.0.0
      *
-     * @param {(string|JSONAnimationManager|JSONAnimation)} data - The JSON object to parse.
+     * @param {(string|Phaser.Animations.Types.JSONAnimations|Phaser.Animations.Types.JSONAnimation)} data - The JSON object to parse.
      * @param {boolean} [clearCurrentAnimations=false] - If set to `true`, the current animations will be removed (`anims.clear()`). If set to `false` (default), the animations in `data` will be added.
      *
      * @return {Phaser.Animations.Animation[]} An array containing all of the Animation objects that were created as a result of this call.
@@ -618,7 +611,7 @@ var AnimationManager = new Class({
      *
      * @param {string} key - [description]
      *
-     * @return {JSONAnimationManager} [description]
+     * @return {Phaser.Animations.Types.JSONAnimations} [description]
      */
     toJSON: function (key)
     {

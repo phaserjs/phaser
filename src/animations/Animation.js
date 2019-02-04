@@ -803,7 +803,7 @@ var Animation = new Class({
      * @method Phaser.Animations.Animation#toJSON
      * @since 3.0.0
      *
-     * @return {JSONAnimation} [description]
+     * @return {Phaser.Animations.Types.JSONAnimation} [description]
      */
     toJSON: function ()
     {
