@@ -148,7 +148,7 @@ var PhysicsGroup = new Class({
          * @type {GroupClassTypeConstructor}
          * @default ArcadeSprite
          */
-        this.classType = GetFastValue(config, 'classType', ArcadeSprite);
+        config.classType = GetFastValue(config, 'classType', ArcadeSprite);
 
         /**
          * The physics type of the Group's members.
