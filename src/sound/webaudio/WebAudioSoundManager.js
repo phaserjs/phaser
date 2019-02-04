@@ -147,14 +147,17 @@ var WebAudioSoundManager = new Class({
 
         var unlockHandler = function unlockHandler ()
         {
-            _this.context.resume().then(function ()
+            if (_this.context)
             {
-                document.body.removeEventListener('touchstart', unlockHandler);
-                document.body.removeEventListener('touchend', unlockHandler);
-                document.body.removeEventListener('click', unlockHandler);
-
-                _this.unlocked = true;
-            });
+                _this.context.resume().then(function ()
+                {
+                    document.body.removeEventListener('touchstart', unlockHandler);
+                    document.body.removeEventListener('touchend', unlockHandler);
+                    document.body.removeEventListener('click', unlockHandler);
+    
+                    _this.unlocked = true;
+                });
+            }
         };
 
         if (document.body)
