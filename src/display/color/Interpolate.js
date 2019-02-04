@@ -7,29 +7,17 @@
 var Linear = require('../../math/Linear');
 
 /**
- * @namespace Phaser.Display.Color.InterpolateFunctions
- */
-
-/**
- * @name Phaser.Display.Color.Interpolate
+ * @namespace Phaser.Display.Color.Interpolate
  * @memberof Phaser.Display.Color
- * @type {Phaser.Display.Color.InterpolateObject}
- * @static
  * @since 3.0.0
- */
-
-/**
- * @typedef {object} Phaser.Display.Color.InterpolateObject
- * 
- * @property {Phaser.Display.Color.InterpolateFunctions.RGBWithRGB} RGBWithRGB - Interpolates between the two given color ranges over the length supplied.
- * @property {Phaser.Display.Color.InterpolateFunctions.ColorWithColor} ColorWithColor - Interpolates between the two given color objects over the length supplied.
- * @property {Phaser.Display.Color.InterpolateFunctions.ColorWithRGB} ColorWithRGB - Interpolates between the Color object and color values over the length supplied.
  */
 
 /**
  * Interpolates between the two given color ranges over the length supplied.
  *
- * @function Phaser.Display.Color.InterpolateFunctions.RGBWithRGB
+ * @function Phaser.Display.Color.Interpolate.RGBWithRGB
+ * @memberof Phaser.Display.Color.Interpolate
+ * @static
  * @since 3.0.0
  *
  * @param {number} r1 - Red value.
@@ -60,7 +48,9 @@ var RGBWithRGB = function (r1, g1, b1, r2, g2, b2, length, index)
 /**
  * Interpolates between the two given color objects over the length supplied.
  *
- * @function Phaser.Display.Color.InterpolateFunctions.ColorWithColor
+ * @function Phaser.Display.Color.Interpolate.ColorWithColor
+ * @memberof Phaser.Display.Color.Interpolate
+ * @static
  * @since 3.0.0
  *
  * @param {Phaser.Display.Color} color1 - The first Color object.
@@ -81,7 +71,9 @@ var ColorWithColor = function (color1, color2, length, index)
 /**
  * Interpolates between the Color object and color values over the length supplied.
  *
- * @function Phaser.Display.Color.InterpolateFunctions.ColorWithRGB
+ * @function Phaser.Display.Color.Interpolate.ColorWithRGB
+ * @memberof Phaser.Display.Color.Interpolate
+ * @static
  * @since 3.0.0
  *
  * @param {Phaser.Display.Color} color1 - The first Color object.

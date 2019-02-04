@@ -12,14 +12,22 @@
  * @since 3.16.0
  */
 
+/**
+ * Phaser Scale Manager constants for orientation.
+ * 
+ * To find out what each mode does please see [Phaser.Scale.Orientation]{@link Phaser.Scale.Orientation}.
+ * 
+ * @typedef {(Phaser.Scale.Orientation.LANDSCAPE|Phaser.Scale.Orientation.PORTRAIT)} Phaser.Scale.OrientationType
+ * @memberof Phaser.Scale
+ * @since 3.16.0
+ */
+
 module.exports = {
 
     /**
      * A landscape orientation.
      * 
      * @name Phaser.Scale.Orientation.LANDSCAPE
-     * @type {string}
-     * @const
      * @since 3.16.0
      */
     LANDSCAPE: 'landscape-primary',
@@ -28,8 +36,6 @@ module.exports = {
      * A portrait orientation.
      * 
      * @name Phaser.Scale.Orientation.PORTRAIT
-     * @type {string}
-     * @const
      * @since 3.16.0
      */
     PORTRAIT: 'portrait-primary'

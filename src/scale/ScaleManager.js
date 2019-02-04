@@ -228,7 +228,7 @@ var ScaleManager = new Class({
          * The game scale mode.
          *
          * @name Phaser.Scale.ScaleManager#scaleMode
-         * @type {Phaser.Scale.ScaleModes}
+         * @type {Phaser.Scale.ScaleModeType}
          * @since 3.16.0
          */
         this.scaleMode = CONST.SCALE_MODE.NONE;
@@ -292,7 +292,7 @@ var ScaleManager = new Class({
          * that has a size set, or the canvas parent is the document.body.
          *
          * @name Phaser.Scale.ScaleManager#autoCenter
-         * @type {Phaser.Scale.Center}
+         * @type {Phaser.Scale.CenterType}
          * @since 3.16.0
          */
         this.autoCenter = CONST.CENTER.NO_CENTER;
@@ -303,7 +303,7 @@ var ScaleManager = new Class({
          * Orientation events are dispatched via the Device Orientation API, typically only on mobile browsers.
          *
          * @name Phaser.Scale.ScaleManager#orientation
-         * @type {Phaser.Scale.Orientation}
+         * @type {Phaser.Scale.OrientationType}
          * @since 3.16.0
          */
         this.orientation = CONST.ORIENTATION.LANDSCAPE;
@@ -1147,7 +1147,7 @@ var ScaleManager = new Class({
      * @fires Phaser.Scale.Events#RESIZE
      * @since 3.16.0
      * 
-     * @param {FullscreenOptions} [fullscreenOptions] - The FullscreenOptions dictionary is used to provide configuration options when entering full screen.
+     * @param {object} [fullscreenOptions] - The FullscreenOptions dictionary is used to provide configuration options when entering full screen.
      */
     startFullscreen: function (fullscreenOptions)
     {
@@ -1279,7 +1279,7 @@ var ScaleManager = new Class({
      * @fires Phaser.Scale.Events#RESIZE
      * @since 3.16.0
      * 
-     * @param {FullscreenOptions} [fullscreenOptions] - The FullscreenOptions dictionary is used to provide configuration options when entering full screen.
+     * @param {object} [fullscreenOptions] - The FullscreenOptions dictionary is used to provide configuration options when entering full screen.
      */
     toggleFullscreen: function (fullscreenOptions)
     {
