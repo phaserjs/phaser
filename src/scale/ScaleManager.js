@@ -23,20 +23,23 @@ var Vector2 = require('../math/Vector2');
  * The Scale Manager handles the scaling, resizing and alignment of the game canvas.
  * 
  * The way scaling is handled is by setting the game canvas to a fixed size, which is defined in the
- * game configuration. This dimension can be obtained in the `gameSize` property. The Scale Manager
- * will then look at the available space within the _parent_ and scale the canvas accordingly. This
- * is handled by setting the canvas CSS width and height properties, leaving the pixel dimensions
- * untouched. Scaling is therefore achieved by keeping the core canvas the same size and 'stretching'
- * it via its CSS properties. The actual displayed size of the game can be found in the `displaySize` component.
+ * game configuration. You also define the parent container in the game config. If no parent is given,
+ * it will default to using the document body. The Scale Manager will then look at the available space
+ * within the _parent_ and scale the canvas accordingly. Scaling is handled by setting the canvas CSS
+ * width and height properties, leaving the width and height of the canvas element itself untouched.
+ * Scaling is therefore achieved by keeping the core canvas the same size and 'stretching'
+ * it via its CSS properties. This gives the same result and speed as using the `transform-scale` CSS
+ * property, without the need for browser prefix handling.
  * 
- * The calculations of the scale is heavily influenced by the bounding Parent size, which is the computed
- * dimensions of the canvas's parent container / element. The CSS rules of the parent element play an
- * important role in the operation of the Scale Manager.
+ * The calculations for the scale are heavily influenced by the bounding parent size, which is the computed
+ * dimensions of the canvas's parent. The CSS rules of the parent element play an important role in the
+ * operation of the Scale Manager. For example, if the parent has no defined width or height, then actions
+ * like auto-centering will fail to achieve the required result. The Scale Manager works in tandem with the
+ * CSS you set-up on the page hosting your game, rather than taking control of it.
  * 
  * #### Parent and Display canvas containment guidelines:
  *
- * - Style the Parent element (of the game canvas) to control the Parent size and
- *   thus the games size and layout.
+ * - Style the Parent element (of the game canvas) to control the Parent size and thus the games size and layout.
  *
  * - The Parent element's CSS styles should _effectively_ apply maximum (and minimum) bounding behavior.
  *
@@ -56,15 +59,59 @@ var Vector2 = require('../math/Vector2');
  * 
  * If you wish to scale your game so that it always fits into the available space within the parent, you
  * should use the scale mode `FIT`. Look at the documentation for other scale modes to see what options are
- * available.
+ * available. Here is a basic config showing how to set this scale mode:
+ * 
+ * ```javascript
+ * scale: {
+ *     parent: 'yourgamediv',
+ *     mode: Phaser.Scale.FIT,
+ *     width: 800,
+ *     height: 600
+ * }
+ * ```
+ * 
+ * Place the `scale` config object within your game config.
  * 
  * If you wish for the canvas to be resized directly, so that the canvas itself fills the available space
  * (i.e. it isn't scaled, it's resized) then use the `RESIZE` scale mode. This will give you a 1:1 mapping
- * of canvas pixels to game size.
+ * of canvas pixels to game size. In this mode CSS isn't used to scale the canvas, it's literally adjusted
+ * to fill all available space within the parent. You should be extremely careful about the size of the
+ * canvas you're creating when doing this, as the larger the area, the more work the GPU has to do and it's
+ * very easy to hit fill-rate limits quickly.
+ * 
+ * For complex, custom-scaling requirements, you should probably consider using the `RESIZE` scale mode,
+ * with your own limitations in place re: canvas dimensions and managing the scaling with the game scenes
+ * yourself. For the vast majority of games, however, the `FIT` mode is likely to be the most used.
+ * 
+ * Please appreciate that the Scale Manager cannot perform miracles. All it does is scale your game canvas
+ * as best it can, based on what it can infer from its surrounding area. There are all kinds of environments
+ * where it's up to you to guide and help the canvas position itself, especially when built into rendering
+ * frameworks like React and Vue. If your page requires meta tags to prevent user scaling gestures, or such
+ * like, then it's up to you to ensure they are present in the html.
+ * 
+ * #### Centering
  * 
  * You can also have the game canvas automatically centered. Again, this relies heavily on the parent being
  * properly configured and styled, as the centering offsets are based entirely on the available space
- * within the parent element. Please see the centering options for details.
+ * within the parent element. Centering is disabled by default, or can be applied horizontally, vertically,
+ * or both. Here's an example:
+ * 
+ * ```javascript
+ * scale: {
+ *     parent: 'yourgamediv',
+ *     autoCenter: Phaser.Scale.CENTER_BOTH,
+ *     width: 800,
+ *     height: 600
+ * }
+ * ```
+ * 
+ * #### Fullscreen API
+ * 
+ * If the browser supports it, you can send your game into fullscreen mode. In this mode, the game will fill
+ * the entire display, removing all browser UI and anything else present on the screen. It will remain in this
+ * mode until your game either disables it, or until the user tabs out or presses ESCape if on desktop. It's a
+ * great way to achieve a desktop-game like experience from the browser, but it does require a modern browser
+ * to handle it. Some mobile browsers also support this.
  *
  * @class ScaleManager
  * @memberof Phaser.Scale
