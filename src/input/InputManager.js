@@ -357,6 +357,16 @@ var InputManager = new Class({
         this.useQueue = config.inputQueue;
 
         /**
+         * Internal property that tracks frame event state.
+         *
+         * @name Phaser.Input.InputManager#_updatedThisFrame
+         * @type {boolean}
+         * @private
+         * @since 3.16.0
+         */
+        this._updatedThisFrame = false;
+
+        /**
          * A re-cycled point-like object to store hit test values in.
          *
          * @name Phaser.Input.InputManager#_tempPoint
@@ -459,6 +469,8 @@ var InputManager = new Class({
         this._emitIsOverEvent = event;
     },
 
+
+
     /**
      * Internal update method, called automatically when a DOM input event is received.
      *
@@ -471,19 +483,22 @@ var InputManager = new Class({
      */
     update: function (time)
     {
-        var i;
-
-        this._setCursor = 0;
+        if (!this._updatedThisFrame)
+        {
+            this._setCursor = 0;
+    
+            this._updatedThisFrame = true;
+        }
 
         this.events.emit(Events.MANAGER_UPDATE);
-
+    
         this.ignoreEvents = false;
 
         this.dirty = true;
 
         var pointers = this.pointers;
-
-        for (i = 0; i < this.pointersTotal; i++)
+    
+        for (var i = 0; i < this.pointersTotal; i++)
         {
             pointers[i].reset(time);
         }
@@ -607,6 +622,8 @@ var InputManager = new Class({
         this._emitIsOverEvent = null;
 
         this.dirty = false;
+
+        this._updatedThisFrame = false;
     },
 
     /**
