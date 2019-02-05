@@ -100,13 +100,13 @@ npm install phaser
 [Phaser is on jsDelivr](https://www.jsdelivr.com/projects/phaser) which is a "super-fast CDN for developers". Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.16.0/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.16.1/dist/phaser.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.16.0/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.16.1/dist/phaser.min.js"></script>
 ```
 
 ### API Documentation
@@ -178,13 +178,13 @@ We've 3 tutorials related to Facebook Instant Games and Phaser:
 A special build of Phaser with the Facebook Instant Games Plugin ready-enabled is [available on jsDelivr](https://www.jsdelivr.com/projects/phaser). Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.16.0/dist/phaser-facebook-instant-games.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.16.1/dist/phaser-facebook-instant-games.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.16.0/dist/phaser-facebook-instant-games.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.16.1/dist/phaser-facebook-instant-games.min.js"></script>
 ```
 
 The build files are in the git repository in the `dist` folder, and you can also include the plugin in custom builds.
@@ -201,7 +201,7 @@ Create an `index.html` page locally and paste the following code into it:
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.16.0/dist/phaser-arcade-physics.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.16.1/dist/phaser-arcade-physics.min.js"></script> 
 </head>
 <body>
 
@@ -312,9 +312,11 @@ You can then run `webpack` to create a development build in the `build` folder w
 
 # Change Log
 
-## Version 3.16.0 - Ishikawa - 5th February 2019
+## Version 3.16.0 / 3.16.1 - Ishikawa - 5th February 2019
 
 Phaser 3.16 is a massive update. The single largest in the history of Phaser 3 and it contains _breaking changes_. If you're upgrading from an earlier version please do check the log entries below.
+
+Please note: there is no difference between 3.16.0 and 3.16.1. The version bump was just to get around a stupid npm semver policy.
 
 ### Important Namespace Changes
 
@@ -764,8 +766,8 @@ All rights reserved.
 
 "Above all, video games are meant to be just one thing: fun. Fun for everyone." - Satoru Iwata
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.16.0/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.16.0/phaser.min.js
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.16.1/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.16.1/phaser.min.js
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-ghwin]: github-windows://openRepo/https://github.com/photonstorm/phaser
