@@ -1,25 +1,27 @@
 # Change Log
 
-## Version 3.16.0 - Ishikawa - in development
+## Version 3.16.0 - Ishikawa - 5th February 2019
 
-### Facebook Instant Games Updates and Fixes
+Phaser 3.16 is a massive update. The single largest in the history of Phaser 3 and it contains _breaking changes_. If you're upgrading from an earlier version please do check the log entries below.
 
-* Added the `Leaderboard.getConnectedScores` method, to get a list of scores from player connected entries.
-* The `loadPlayerPhoto` function in the Instant Games plugin now listens for the updated Loader event correctly, causing the `photocomplete` event to fire properly.
-* `Leaderboard.setScore` now emits the LeaderboardScore object with the `setscore` event, as the documentation said it did.
-* `Leaderboard.getPlayerScore` now only populates the `playerScore` property if the entry isn't `null`.
-* If the `setScore` or `getPlayerScore` calls fail, it will return `null` as the score instance, instead of causing a run-time error.
-* You can now pass an object or a string to `setScore` and objects will be automatically stringified.
-* The `preloadAds` method will now only create an AdInstance object if the interstitial `loadSync` promise resolves.
-* The `preloadVideoAds` method will now only create an AdInstance object if the interstitial `loadSync` promise resolves.
-* The `preloadAds` method will now emit the `adsnofill` event, if there are no ads in the inventory to load.
-* The `preloadVideoAds` method will now emit the `adsnofill` event, if there are no ads in the inventory to load.
-* The `showAd` method will now emit the `adsnotloaded` event, if there are no ads loaded matching the given Placement ID.
-* The `showVideo` method will now emit the `adsnotloaded` event, if there are no ads loaded matching the given Placement ID.
-* Showing an ad will emit the `adfinished` event when the ad is closed, previously this event was called `showad` but the new name better reflects what has happened.
-* The Facebook Plugin is now available in the `Phaser.Scene` class template under the `facebook` property (thanks @bryanwood)
-* Fixed the `Leaderboard.getScores` method to now take the arguments into account. Fix #4271 (thanks @Oramy)
-* Fixed an API validation error in the `chooseContext` method. Fix #4248 (thanks @yadurajiv)
+### Important Namespace Changes
+
+* The `Phaser.Boot` namespace has been renamed to `Phaser.Core`. As a result, the `boot` folder has been renamed to `core`. This  impacts the `TimeStep` class and `VisibilityHandler` function, which have been moved to be under the new namespace.
+* The `Phaser.Animations` namespace was incorrectly exposed in the Phaser entrypoints as `Animation` (note the lack of plural). This means that if you are creating any custom classes that extend Animation objects using the Phaser namespace, then please update them from `Phaser.Animation` to `Phaser.Animations`, i.e. `Phaser.Animation.AnimationFrame` to `Phaser.Animations.AnimationFrame`. This doesn't impact you if you created animations directly via the Animation Manager.
+* The keyed Data Manager change data event string has changed from `changedata_` to `changedata-` to keep it consistent with other keyed events. Note the change from `_` to `-`.
+* The Keyboard Plugin `keydown` dynamic event string has changed from `keydown_` to `keydown-` to keep it consistent with other keyed events. Note the change from `_` to `-`.
+* The Keyboard Plugin `keyup` dynamic event string has changed from `keyup_` to `keyup-` to keep it consistent with other keyed events. Note the change from `_` to `-`.
+* The `texturesready` event emitted by the Texture Manager has been renamed to `ready`.
+* The `loadcomplete` event emitted by the Loader Plugin has been renamed to `postprocess` to be reflect what it's used for.
+* Game Objects used to emit a `collide` event if they had an Arcade Physics Body with `onCollide` set, that collided with a Tile. This has changed. The event has been renamed to `tilecollide` and you should now listen for this event from the Arcade Physics World itself: `this.physics.world.on('tilecollide')`. Game Objects no longer emit this event.
+* Game Objects used to emit an `overlap` event if they had an Arcade Physics Body with `onOverlap` set, that overlapped with a Tile. This has changed. The event has been renamed to `tileoverlap` and you should now listen for this event from the Arcade Physics World itself: `this.physics.world.on('tileoverlap')`. Game Objects no longer emit this event.
+* The function `Phaser.Physics.Impact.SeperateX` has been renamed to `SeparateX` to correct the spelling mistake.
+* The function `Phaser.Physics.Impact.SeperateY` has been renamed to `SeparateY` to correct the spelling mistake.
+* The `ended` event in `WebAudioSound` has been renamed to `complete` to make it more consistent with the rest of the API.
+* The `ended` event in `HTML5AudioSound` has been renamed to `complete` to make it more consistent with the rest of the API.
+* The `Phaser.Utils.Objects` namespace was incorrectly exposed in the Phaser entrypoints as `Object` (note the lack of plural), this has now been fixed so all associated functions are properly namespaced.
+* `Phaser.GameObjects.Blitter.Bob` has been renamed to `Phaser.GameObjects.Bob` to avoid namespace conflicts in TypeScript.
+* `Phaser.GameObjects.Text.TextStyle` has been renamed to `Phaser.GameObjects.TextStyle` to avoid namespace conflicts in TypeScript.
 
 ### Important Changes to the Input System
 
@@ -171,6 +173,8 @@ one set of bindings ever created, which makes things a lot cleaner.
 
 ### Changes as a result of the new Scale Manager
 
+3.16 introduces the completed Scale Manager. This is fully documented, but the class, all methods and all properties. It also includes a folder full of examples in the Phaser Labs, so you're strongly recommended to start there.
+
 * If you set the Game Config property `zoom` to be > 1 then it will automatically enable `pixelArt` mode, unless you set `pixelArt: false` in the config.
 * There is a new property in the Game Config called `autoRound`, which controls if the canvas size and style sizes are passed through Math.floor or not. On some devices this can help with performance and anti-aliasing. The default is `false` (turned off).
 * The Game Config property `autoResize` has been removed as it's now redundant.
@@ -197,24 +201,24 @@ one set of bindings ever created, which makes things a lot cleaner.
 * The `Game.resize` method has been removed as it's no longer required. You should now call `ScaleManager.resize` instead.
 * The Game will no longer dispatch the `resize` event. You should now listen for this event from the Scale Manager instead.
 
-### Important Namespace Changes
+### Facebook Instant Games Updates and Fixes
 
-* The `Phaser.Boot` namespace has been renamed to `Phaser.Core`. As a result, the `boot` folder has been renamed to `core`. This  impacts the `TimeStep` class and `VisibilityHandler` function, which have been moved to be under the new namespace.
-* The `Phaser.Animations` namespace was incorrectly exposed in the Phaser entrypoints as `Animation` (note the lack of plural). This means that if you are creating any custom classes that extend Animation objects using the Phaser namespace, then please update them from `Phaser.Animation` to `Phaser.Animations`, i.e. `Phaser.Animation.AnimationFrame` to `Phaser.Animations.AnimationFrame`. This doesn't impact you if you created animations directly via the Animation Manager.
-* The keyed Data Manager change data event string has changed from `changedata_` to `changedata-` to keep it consistent with other keyed events. Note the change from `_` to `-`.
-* The Keyboard Plugin `keydown` dynamic event string has changed from `keydown_` to `keydown-` to keep it consistent with other keyed events. Note the change from `_` to `-`.
-* The Keyboard Plugin `keyup` dynamic event string has changed from `keyup_` to `keyup-` to keep it consistent with other keyed events. Note the change from `_` to `-`.
-* The `texturesready` event emitted by the Texture Manager has been renamed to `ready`.
-* The `loadcomplete` event emitted by the Loader Plugin has been renamed to `postprocess` to be reflect what it's used for.
-* Game Objects used to emit a `collide` event if they had an Arcade Physics Body with `onCollide` set, that collided with a Tile. This has changed. The event has been renamed to `tilecollide` and you should now listen for this event from the Arcade Physics World itself: `this.physics.world.on('tilecollide')`. Game Objects no longer emit this event.
-* Game Objects used to emit an `overlap` event if they had an Arcade Physics Body with `onOverlap` set, that overlapped with a Tile. This has changed. The event has been renamed to `tileoverlap` and you should now listen for this event from the Arcade Physics World itself: `this.physics.world.on('tileoverlap')`. Game Objects no longer emit this event.
-* The function `Phaser.Physics.Impact.SeperateX` has been renamed to `SeparateX` to correct the spelling mistake.
-* The function `Phaser.Physics.Impact.SeperateY` has been renamed to `SeparateY` to correct the spelling mistake.
-* The `ended` event in `WebAudioSound` has been renamed to `complete` to make it more consistent with the rest of the API.
-* The `ended` event in `HTML5AudioSound` has been renamed to `complete` to make it more consistent with the rest of the API.
-* The `Phaser.Utils.Objects` namespace was incorrectly exposed in the Phaser entrypoints as `Object` (note the lack of plural), this has now been fixed so all associated functions are properly namespaced.
-* `Phaser.GameObjects.Blitter.Bob` has been renamed to `Phaser.GameObjects.Bob` to avoid namespace conflicts in TypeScript.
-* `Phaser.GameObjects.Text.TextStyle` has been renamed to `Phaser.GameObjects.TextStyle` to avoid namespace conflicts in TypeScript.
+* Added the `Leaderboard.getConnectedScores` method, to get a list of scores from player connected entries.
+* The `loadPlayerPhoto` function in the Instant Games plugin now listens for the updated Loader event correctly, causing the `photocomplete` event to fire properly.
+* `Leaderboard.setScore` now emits the LeaderboardScore object with the `setscore` event, as the documentation said it did.
+* `Leaderboard.getPlayerScore` now only populates the `playerScore` property if the entry isn't `null`.
+* If the `setScore` or `getPlayerScore` calls fail, it will return `null` as the score instance, instead of causing a run-time error.
+* You can now pass an object or a string to `setScore` and objects will be automatically stringified.
+* The `preloadAds` method will now only create an AdInstance object if the interstitial `loadSync` promise resolves.
+* The `preloadVideoAds` method will now only create an AdInstance object if the interstitial `loadSync` promise resolves.
+* The `preloadAds` method will now emit the `adsnofill` event, if there are no ads in the inventory to load.
+* The `preloadVideoAds` method will now emit the `adsnofill` event, if there are no ads in the inventory to load.
+* The `showAd` method will now emit the `adsnotloaded` event, if there are no ads loaded matching the given Placement ID.
+* The `showVideo` method will now emit the `adsnotloaded` event, if there are no ads loaded matching the given Placement ID.
+* Showing an ad will emit the `adfinished` event when the ad is closed, previously this event was called `showad` but the new name better reflects what has happened.
+* The Facebook Plugin is now available in the `Phaser.Scene` class template under the `facebook` property (thanks @bryanwood)
+* Fixed the `Leaderboard.getScores` method to now take the arguments into account. Fix #4271 (thanks @Oramy)
+* Fixed an API validation error in the `chooseContext` method. Fix #4248 (thanks @yadurajiv)
 
 ### New Features
 
@@ -283,6 +287,7 @@ one set of bindings ever created, which makes things a lot cleaner.
 * `CanvasRenderer.snapshotPixel` is a new method that allows you to grab a single pixel from the game canvas, post-render. It returns the result as a `Color` object to your specified callback.
 * `SceneManager.getScenes` is a new method that will return all current Scenes being managed by the Scene Manager. You can optionally return only active scenes and reverse the order in which they are returned in the array.
 * `DOM.GetTarget` is a new helper function that will return a reference to a DOM Element based on the given string or node.
+* `GameObjects.Extern` is a new special type of Game Object that allows you to pass rendering off to a 3rd party. When you create an Extern and place it in the display list of a Scene, the renderer will process the list as usual. When it finds an Extern it will flush the current batch, clear down the pipeline and prepare a transform matrix which your render function can take advantage of, if required. The Extern Game Object is used heavily by the Spine Plugin, but can also be used by other libraries such as three.js, allowing them to render directly into a Phaser game.
 
 ### Updates
 
