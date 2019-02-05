@@ -16,10 +16,12 @@ var ExternRender = require('./ExternRender');
  * 
  * When you create an Extern and place it in the display list of a Scene, the renderer will
  * process the list as usual. When it finds an Extern it will flush the current batch,
- * clear down the pipeline and prepare a transform matrix which you render function can take advantage of, if required.
- * The WebGL context is left is a 'clean' state, ready for you to bind your own shaders,
+ * clear down the pipeline and prepare a transform matrix which your render function can
+ * take advantage of, if required.
+ * 
+ * The WebGL context is then left is a 'clean' state, ready for you to bind your own shaders,
  * or draw to it, whatever you wish to do. Once you've finished, you should free-up any
- * of your resources. The Extern will then rebind the Phaser pipline and carry on with
+ * of your resources. The Extern will then rebind the Phaser pipeline and carry on 
  * rendering the display list.
  * 
  * Although this object has lots of properties such as Alpha, Blend Mode and Tint, none of
