@@ -26,7 +26,7 @@ Grab the source and join the fun!
 
 > 5th February 2019
 
-I'm pleased to announce that Phaser 3.16 is now available. This version represents a significant milestone in the project as Phaser 3 is now 100% feature complete with all of the initially planned systems now in place. The most significant addition in 3.16 is the introduction of the new Scale Manager and the internal modifications required to allow for Spine animation support.
+I'm pleased to announce that Phaser 3.16 is now available. This version represents a significant milestone in the project as Phaser 3 is now 100% feature complete with all of the initially planned systems now in place. The most significant additions in 3.16 is the overhaul of the Input event handling, the long-awaited introduction of the Scale Manager, and the Extern Game Object, which allows for 3rd party rendering support, as required by Spine. Spine animation support is being handled exclusively through a Phaser Plugin. The current build of the Spine plugin can be found in this repo in the `plugins` folder, along with examples in the Phaser Labs. The Spine plugin will be developed independently of Phaser in the coming weeks.
 
 This is the single largest update of Phaser 3 yet, and as such, there _are_ breaking changes. I have painstakingly listed all of them in the Change Log, so please do read it if you're upgrading from an earlier version. I know there is a lot to take in, so I'll be covering the new features in the Phaser World newsletter in the coming weeks.
 
