@@ -1461,6 +1461,9 @@ var InputPlugin = new Class({
                 continue;
             }
 
+            // If pointerup is triggered, we have no need for pointerout.
+            this.this._over[pointer.id] = [];
+
             gameObject.emit(Events.GAMEOBJECT_POINTER_UP, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
 
             if (_eventData.cancelled)
@@ -1489,6 +1492,8 @@ var InputPlugin = new Class({
             {
                 this.emit(Events.POINTER_UP_OUTSIDE, pointer);
             }
+
+            this.this._over[pointer.id] = [];
         }
 
         return currentlyOver.length;
