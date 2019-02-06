@@ -8,6 +8,7 @@ var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
 var MeshRender = require('./MeshRender');
+var NOOP = require('../../utils/NOOP');
 
 /**
  * @classdesc
@@ -152,7 +153,16 @@ var Mesh = new Class({
         this.setPosition(x, y);
         this.setSizeToFrame();
         this.initPipeline();
-    }
+    },
+
+    /**
+     * This method is left intentionally empty and does not do anything.
+     * It is retained to allow a Mesh or Quad to be added to a Container.
+     * 
+     * @method Phaser.GameObjects.Mesh#setAlpha
+     * @since 3.17.0
+     */
+    setAlpha: NOOP
 
 });
 
