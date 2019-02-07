@@ -766,7 +766,7 @@ var KeyboardPlugin = new Class({
 
     /**
      * Resets all Key objects created by _this_ Keyboard Plugin back to their default un-pressed states.
-     * This can only reset keys created via the `addKey`, `addKeys` or `createCursors` methods.
+     * This can only reset keys created via the `addKey`, `addKeys` or `createCursorKeys` methods.
      * If you have created a Key object directly you'll need to reset it yourself.
      * 
      * This method is called automatically when the Keyboard Plugin shuts down, but can be
