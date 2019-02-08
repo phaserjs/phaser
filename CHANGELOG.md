@@ -10,6 +10,7 @@ A small point release to fix a couple of important issues that slipped into 3.16
 * `InputManager.time` is a new property that holds the most recent time it was updated from the Game step, which plugins can access.
 * `InputManager.preStep` is a new method that populates some internal properties every step.
 * `KeyboardPlugin.time` has moved from being a property to being a getter, which returns the time from the InputManager.
+* The `scale` property has been added to the `Scene` class (thanks @strangeweekend)
 
 ### Bug Fixes
 
