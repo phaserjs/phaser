@@ -223,6 +223,7 @@ var PointerConstraint = new Class({
             //  Pointer is up / released
             if (constraint.bodyB)
             {
+                this.world.emit('enddrag', constraint.bodyB, constraint);
                 constraint.bodyB = null;
             }
         }
@@ -239,6 +240,8 @@ var PointerConstraint = new Class({
 
                 constraint.pointA.x = pos.x;
                 constraint.pointA.y = pos.y;
+
+                this.world.emit('drag', constraint.bodyB, constraint);
             }
             else
             {
@@ -254,6 +257,7 @@ var PointerConstraint = new Class({
                     {
                         if (this.getBodyPart(body, pos))
                         {
+                            this.world.emit('startdrag', body, constraint);
                             break;
                         }
                     }
