@@ -376,22 +376,18 @@ var TileSprite = new Class({
      * @method Phaser.GameObjects.TileSprite#setTileScale
      * @since 3.12.0
      *
-     * @param {number} [x] - The horizontal scale of the tiling texture.
-     * @param {number} [y] - The vertical scale of the tiling texture.
+     * @param {number} [x] - The horizontal scale of the tiling texture. If not given it will use the current `tileScaleX` value.
+     * @param {number} [y=x] - The vertical scale of the tiling texture. If not given it will use the `x` value.
      *
      * @return {this} This Tile Sprite instance.
      */
     setTileScale: function (x, y)
     {
-        if (x !== undefined)
-        {
-            this.tileScaleX = x;
-        }
+        if (x === undefined) { x = this.tileScaleX; }
+        if (y === undefined) { y = x; }
 
-        if (y !== undefined)
-        {
-            this.tileScaleY = y;
-        }
+        this.tileScaleX = x;
+        this.tileScaleY = y;
 
         return this;
     },

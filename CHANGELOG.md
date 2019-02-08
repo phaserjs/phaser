@@ -2,6 +2,10 @@
 
 ## Version 3.17.0 - Togusa - in development
 
+### Updates
+
+* `TileSprite.setTileScale` has been updated so that the `y` argument is optional and set to match the `x` argument, like `setScale` elsewhere in the API.
+
 ### Bug Fixes
 
 * The `Mesh.setAlpha` method has been restored, even though it's empty and does nothing, to prevent runtime errors when adding a Mesh or Quad object to a Container. Fix #4338 #4343 (thanks @pfdtravalmatic @charmingny)
