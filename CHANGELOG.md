@@ -1,21 +1,27 @@
 # Change Log
 
-## Version 3.17.0 - Togusa - in development
+## Version 3.16.2 - Ishikawa - 8th February 2019
+
+A small point release to fix a couple of important issues that slipped into 3.16.
 
 ### Updates
 
 * `TileSprite.setTileScale` has been updated so that the `y` argument is optional and set to match the `x` argument, like `setScale` elsewhere in the API.
+* `InputManager.time` is a new property that holds the most recent time it was updated from the Game step, which plugins can access.
+* `InputManager.preStep` is a new method that populates some internal properties every step.
+* `KeyboardPlugin.time` has moved from being a property to being a getter, which returns the time from the InputManager.
 
 ### Bug Fixes
 
 * The `Mesh.setAlpha` method has been restored, even though it's empty and does nothing, to prevent runtime errors when adding a Mesh or Quad object to a Container. Fix #4338 #4343 (thanks @pfdtravalmatic @charmingny)
+* `KeyboardPlugin.checkDown` would always fail if using the new event system, because the time value it was checking wasn't updated.
+
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
 @maretana @CipSoft-Components
-
 
 ## Version 3.16.0 / 3.16.1 - Ishikawa - 5th February 2019
 
