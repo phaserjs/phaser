@@ -698,8 +698,8 @@ var Game = new Class({
 
 });
 
+module.exports = Game;
+
 /**
  * "Computers are good at following instructions, but not at reading your mind." - Donald Knuth
  */
-
-module.exports = Game;

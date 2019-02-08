@@ -14,7 +14,7 @@
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@maretana
+@maretana @CipSoft-Components
 
 
 ## Version 3.16.0 / 3.16.1 - Ishikawa - 5th February 2019
