@@ -1461,10 +1461,15 @@ var InputPlugin = new Class({
                 continue;
             }
 
-            // If pointerup is triggered, we have no need for pointerout.
-            this._over[pointer.id] = [];
-
             gameObject.emit(Events.GAMEOBJECT_POINTER_UP, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
+
+            // Clear over and emit 'pointerout' on touch.
+            if (pointer.wasTouch)
+            {
+                this._over[pointer.id] = [];
+
+                gameObject.emit(Events.GAMEOBJECT_POINTER_OUT, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
+            }
 
             if (_eventData.cancelled)
             {
