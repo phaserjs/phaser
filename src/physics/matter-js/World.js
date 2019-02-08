@@ -499,7 +499,7 @@ var World = new Class({
     {
         var body = (object.body) ? object.body : object;
 
-        Composite.removeBody(this.localWorld, body, deep);
+        Composite.remove(this.localWorld, body, deep);
 
         return this;
     },
