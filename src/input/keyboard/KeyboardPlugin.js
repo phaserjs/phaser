@@ -146,16 +146,6 @@ var KeyboardPlugin = new Class({
          */
         this.combos = [];
 
-        /**
-         * Internal time value.
-         *
-         * @name Phaser.Input.Keyboard.KeyboardPlugin#time
-         * @type {number}
-         * @private
-         * @since 3.11.0
-         */
-        this.time = 0;
-
         sceneInputPlugin.pluginEvents.once(InputEvents.BOOT, this.boot, this);
         sceneInputPlugin.pluginEvents.on(InputEvents.START, this.start, this);
     },
@@ -628,7 +618,7 @@ var KeyboardPlugin = new Class({
      * @param {Phaser.Input.Keyboard.Key} key - A Key object.
      * @param {number} [duration=0] - The duration which must have elapsed before this Key is considered as being down.
      * 
-     * @return {boolean} `True` if the Key is down within the duration specified, otherwise `false`.
+     * @return {boolean} `true` if the Key is down within the duration specified, otherwise `false`.
      */
     checkDown: function (key, duration)
     {
@@ -653,13 +643,9 @@ var KeyboardPlugin = new Class({
      * @method Phaser.Input.Keyboard.KeyboardPlugin#update
      * @private
      * @since 3.10.0
-     * 
-     * @param {number} time - The game loop time value.
      */
-    update: function (time)
+    update: function ()
     {
-        this.time = time;
-
         var queue = this.manager.queue;
         var len = queue.length;
 
@@ -854,6 +840,23 @@ var KeyboardPlugin = new Class({
         this.settings = null;
         this.sceneInputPlugin = null;
         this.manager = null;
+    },
+
+    /**
+     * Internal time value.
+     *
+     * @name Phaser.Input.Keyboard.KeyboardPlugin#time
+     * @type {number}
+     * @private
+     * @since 3.11.0
+     */
+    time: {
+
+        get: function ()
+        {
+            return this.sceneInputPlugin.manager.time;
+        }
+
     }
 
 });
