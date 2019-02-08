@@ -357,6 +357,17 @@ var InputManager = new Class({
         this.useQueue = config.inputQueue;
 
         /**
+         * The time this Input Manager was last updated.
+         * This value is populated by the Game Step each frame.
+         *
+         * @name Phaser.Input.InputManager#time
+         * @type {number}
+         * @readonly
+         * @since 3.16.2
+         */
+        this.time = 0;
+
+        /**
          * Internal property that tracks frame event state.
          *
          * @name Phaser.Input.InputManager#_updatedThisFrame
@@ -431,6 +442,10 @@ var InputManager = new Class({
         {
             this.game.events.on(GameEvents.PRE_STEP, this.legacyUpdate, this);
         }
+        else
+        {
+            this.game.events.on(GameEvents.PRE_STEP, this.preStep, this);
+        }
 
         this.game.events.on(GameEvents.POST_STEP, this.postUpdate, this);
 
@@ -469,8 +484,6 @@ var InputManager = new Class({
         this._emitIsOverEvent = event;
     },
 
-
-
     /**
      * Internal update method, called automatically when a DOM input event is received.
      *
@@ -505,6 +518,20 @@ var InputManager = new Class({
     },
 
     /**
+     * Internal update, called automatically by the Game Step.
+     *
+     * @method Phaser.Input.InputManager#preStep
+     * @private
+     * @since 3.16.2
+     *
+     * @param {number} time - The time stamp value of this game step.
+     */
+    preStep: function (time)
+    {
+        this.time = time;
+    },
+
+    /**
      * Internal update loop, called automatically by the Game Step when using the legacy event queue.
      *
      * @method Phaser.Input.InputManager#legacyUpdate
@@ -516,6 +543,8 @@ var InputManager = new Class({
      */
     legacyUpdate: function (time)
     {
+        this.time = time;
+
         var i;
 
         this._setCursor = 0;
