@@ -321,15 +321,21 @@ var CanvasTexture = new Class({
      * @param {ImageData} imageData - The ImageData to put at the given location.
      * @param {integer} x - The x coordinate to put the imageData. Must lay within the dimensions of this CanvasTexture and be an integer.
      * @param {integer} y - The y coordinate to put the imageData. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {integer} [dirtyX=0] - Horizontal position (x coordinate) of the top-left corner from which the image data will be extracted.
+     * @param {integer} [dirtyY=0] - Vertical position (x coordinate) of the top-left corner from which the image data will be extracted.
+     * @param {integer} [dirtyWidth] - Width of the rectangle to be painted. Defaults to the width of the image data.
+     * @param {integer} [dirtyHeight] - Height of the rectangle to be painted. Defaults to the height of the image data.
      * 
      * @return {this} This CanvasTexture.
      */
-    putData: function (imageData, x, y)
+    putData: function (imageData, x, y, dirtyX, dirtyY, dirtyWidth, dirtyHeight)
     {
-        x = Math.abs(Math.floor(x));
-        y = Math.abs(Math.floor(y));
+        if (dirtyX === undefined) { dirtyX = 0; }
+        if (dirtyY === undefined) { dirtyY = 0; }
+        if (dirtyWidth === undefined) { dirtyWidth = imageData.width; }
+        if (dirtyHeight === undefined) { dirtyHeight = imageData.height; }
 
-        this.context.putImageData(imageData, x, y);
+        this.context.putImageData(imageData, x, y, dirtyX, dirtyY, dirtyWidth, dirtyHeight);
 
         return this;
     },
@@ -343,8 +349,8 @@ var CanvasTexture = new Class({
      * 
      * @param {integer} x - The x coordinate of the top-left of the area to get the ImageData from. Must lay within the dimensions of this CanvasTexture and be an integer.
      * @param {integer} y - The y coordinate of the top-left of the area to get the ImageData from. Must lay within the dimensions of this CanvasTexture and be an integer.
-     * @param {integer} width - The width of the region to get. Must be an integer.
-     * @param {integer} height - The height of the region to get. Must be an integer.
+     * @param {integer} width - The width of the rectangle from which the ImageData will be extracted. Positive values are to the right, and negative to the left.
+     * @param {integer} height - The height of the rectangle from which the ImageData will be extracted. Positive values are down, and negative are up.
      * 
      * @return {ImageData} The ImageData extracted from this CanvasTexture.
      */
