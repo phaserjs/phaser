@@ -255,6 +255,16 @@ var Scene = new Class({
              */
             this.facebook;
         }
+
+        /**
+         * A reference to the global Scale Manager.
+         * This property will only be available if defined in the Scene Injection Map.
+         *
+         * @name Phaser.Scene#scale
+         * @type {Phaser.Scale.ScaleManager}
+         * @since 3.16.1
+         */
+        this.scale;
     },
 
     /**
