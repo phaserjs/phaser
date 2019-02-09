@@ -19,16 +19,23 @@ var Vertices = require('./lib/geometry/Vertices');
 
 /**
  * @classdesc
- * [description]
+ * A Pointer Constraint is a special type of constraint that allows you to click
+ * and drag bodies in a Matter World. It monitors the active Pointers in a Scene,
+ * and when one is pressed down it checks to see if that hit any part of any active
+ * body in the world. If it did, and the body has input enabled, it will begin to
+ * drag it until either released, or you stop it via the `stopDrag` method.
+ * 
+ * You can adjust the stiffness, length and other properties of the constraint via
+ * the `options` object on creation.
  *
  * @class PointerConstraint
  * @memberof Phaser.Physics.Matter
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Scene} scene - [description]
- * @param {Phaser.Physics.Matter.World} world - [description]
- * @param {object} options - [description]
+ * @param {Phaser.Scene} scene - A reference to the Scene to which this Pointer Constraint belongs.
+ * @param {Phaser.Physics.Matter.World} world - A reference to the Matter World instance to which this Constraint belongs.
+ * @param {object} [options] - A Constraint configuration object.
  */
 var PointerConstraint = new Class({
 
@@ -55,7 +62,8 @@ var PointerConstraint = new Class({
         };
 
         /**
-         * [description]
+         * A reference to the Scene to which this Pointer Constraint belongs.
+         * This is the same Scene as the Matter World instance.
          *
          * @name Phaser.Physics.Matter.PointerConstraint#scene
          * @type {Phaser.Scene}
@@ -64,7 +72,7 @@ var PointerConstraint = new Class({
         this.scene = scene;
 
         /**
-         * [description]
+         * A reference to the Matter World instance to which this Constraint belongs.
          *
          * @name Phaser.Physics.Matter.PointerConstraint#world
          * @type {Phaser.Physics.Matter.World}
@@ -83,7 +91,8 @@ var PointerConstraint = new Class({
         this.camera = null;
 
         /**
-         * [description]
+         * A reference to the Input Pointer that activated this Constraint.
+         * This is set in the `onDown` handler.
          *
          * @name Phaser.Physics.Matter.PointerConstraint#pointer
          * @type {Phaser.Input.Pointer}
@@ -93,7 +102,10 @@ var PointerConstraint = new Class({
         this.pointer = null;
 
         /**
-         * [description]
+         * Is this Constraint active or not?
+         * 
+         * An active constraint will be processed each update. An inactive one will be skipped.
+         * Use this to toggle a Pointer Constraint on and off.
          *
          * @name Phaser.Physics.Matter.PointerConstraint#active
          * @type {boolean}
@@ -103,7 +115,7 @@ var PointerConstraint = new Class({
         this.active = true;
 
         /**
-         * The transformed position.
+         * The internal transformed position.
          *
          * @name Phaser.Physics.Matter.PointerConstraint#position
          * @type {Phaser.Math.Vector2}
@@ -112,7 +124,25 @@ var PointerConstraint = new Class({
         this.position = new Vector2();
 
         /**
-         * [description]
+         * The body that is currently being dragged, if any.
+         *
+         * @name Phaser.Physics.Matter.PointerConstraint#body
+         * @type {?MatterJS.Body}
+         * @since 3.16.2
+         */
+        this.body = null;
+
+        /**
+         * The part of the body that was clicked on to start the drag.
+         *
+         * @name Phaser.Physics.Matter.PointerConstraint#part
+         * @type {?MatterJS.Body}
+         * @since 3.16.2
+         */
+        this.part = null;
+
+        /**
+         * The native Matter Constraint that is used to attach to bodies.
          *
          * @name Phaser.Physics.Matter.PointerConstraint#constraint
          * @type {object}
@@ -123,49 +153,87 @@ var PointerConstraint = new Class({
         this.world.on(Events.BEFORE_UPDATE, this.update, this);
 
         scene.sys.input.on(InputEvents.POINTER_DOWN, this.onDown, this);
-        scene.sys.input.on(InputEvents.POINTER_UP, this.onUp, this);
     },
 
     /**
-     * [description]
+     * A Pointer has been pressed down onto the Scene.
+     * 
+     * If this Constraint doesn't have an active Pointer then a hit test is
+     * run against all active bodies in the world. If one is found it is bound
+     * to this constraint and the drag begins.
      *
      * @method Phaser.Physics.Matter.PointerConstraint#onDown
+     * @fires Phaser.Physics.Matter.Events#DRAG_START
      * @since 3.0.0
      *
-     * @param {Phaser.Input.Pointer} pointer - [description]
+     * @param {Phaser.Input.Pointer} pointer - A reference to the Pointer that was pressed.
      */
     onDown: function (pointer)
     {
-        this.pointer = pointer;
+        if (!this.pointer)
+        {
+            if (this.getBody(pointer))
+            {
+                this.pointer = pointer;
 
-        this.camera = pointer.camera;
+                this.camera = pointer.camera;
+            }
+        }
     },
 
     /**
-     * [description]
+     * Scans all active bodies in the current Matter World to see if any of them
+     * are hit by the Pointer. The _first one_ found to hit is set as the active contraint
+     * body.
      *
-     * @method Phaser.Physics.Matter.PointerConstraint#onUp
-     * @since 3.0.0
+     * @method Phaser.Physics.Matter.PointerConstraint#getBody
+     * @since 3.16.2
+     * 
+     * @return {boolean} `true` if a body was found and set, otherwise `false`.
      */
-    onUp: function ()
+    getBody: function (pointer)
     {
-        this.pointer = null;
+        var pos = this.position;
+        var constraint = this.constraint;
 
-        this.camera = pointer.camera;
+        pointer.camera.getWorldPoint(pointer.x, pointer.y, pos);
+
+        var bodies = Composite.allBodies(this.world.localWorld);
+
+        for (var i = 0; i < bodies.length; i++)
+        {
+            var body = bodies[i];
+
+            if (!body.ignorePointer &&
+                Bounds.contains(body.bounds, pos) &&
+                Detector.canCollide(body.collisionFilter, constraint.collisionFilter))
+            {
+                if (this.hitTestBody(body, pos))
+                {
+                    this.world.emit(Events.DRAG_START, this.body, this.part, this);
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
     },
 
     /**
-     * [description]
+     * Scans the current body to determine if a part of it was clicked on.
+     * If a part is found the body is set as the `constraint.bodyB` property,
+     * as well as the `body` property of this class. The part is also set.
      *
-     * @method Phaser.Physics.Matter.PointerConstraint#getBodyPart
-     * @since 3.0.0
+     * @method Phaser.Physics.Matter.PointerConstraint#hitTestBody
+     * @since 3.16.2
      *
-     * @param {MatterJS.Body} body - [description]
-     * @param {Phaser.Math.Vector2} position - [description]
+     * @param {MatterJS.Body} body - The Matter Body to check.
+     * @param {Phaser.Math.Vector2} position - A translated hit test position.
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if a part of the body was hit, otherwise `false`.
      */
-    getBodyPart: function (body, position)
+    hitTestBody: function (body, position)
     {
         var constraint = this.constraint;
 
@@ -189,6 +257,9 @@ var PointerConstraint = new Class({
 
                 Sleeping.set(body, false);
 
+                this.part = part;
+                this.body = body;
+
                 return true;
             }
         }
@@ -197,72 +268,73 @@ var PointerConstraint = new Class({
     },
 
     /**
-     * [description]
+     * Internal update handler. Called in the Matter BEFORE_UPDATE step.
      *
      * @method Phaser.Physics.Matter.PointerConstraint#update
+     * @fires Phaser.Physics.Matter.Events#DRAG
      * @since 3.0.0
      */
     update: function ()
     {
-        if (!this.active)
+        var body = this.body;
+        var pointer = this.pointer;
+
+        if (!this.active || !pointer || !body)
         {
             return;
         }
 
-        var pointer = this.pointer;
-        var constraint = this.constraint;
-
-        if (!pointer)
+        if (pointer.isDown)
         {
-            //  Pointer is up / released
-            if (constraint.bodyB)
-            {
-                this.world.emit(Events.DRAG_END, constraint.bodyB, this);
-
-                constraint.bodyB = null;
-            }
+            var pos = this.position;
+            var constraint = this.constraint;
+    
+            this.camera.getWorldPoint(pointer.x, pointer.y, pos);
+    
+            Sleeping.set(body, false);
+    
+            constraint.pointA.x = pos.x;
+            constraint.pointA.y = pos.y;
+    
+            this.world.emit(Events.DRAG, body, this);
         }
         else
         {
-            var pos = this.position;
-
-            this.camera.getWorldPoint(pointer.x, pointer.y, pos);
-
-            if (constraint.bodyB)
-            {
-                //  Pointer is down and we have bodyB, so wake it up
-                Sleeping.set(constraint.bodyB, false);
-
-                constraint.pointA.x = pos.x;
-                constraint.pointA.y = pos.y;
-
-                this.world.emit(Events.DRAG, constraint.bodyB, this);
-            }
-            else
-            {
-                var bodies = Composite.allBodies(this.world.localWorld);
-
-                //  Pointer is down and no bodyB, so check if we've hit anything
-                for (var i = 0; i < bodies.length; i++)
-                {
-                    var body = bodies[i];
-
-                    if (!body.ignorePointer && Bounds.contains(body.bounds, pos) &&
-                        Detector.canCollide(body.collisionFilter, constraint.collisionFilter))
-                    {
-                        if (this.getBodyPart(body, pos))
-                        {
-                            this.world.emit(Events.DRAG_START, body, this);
-                            break;
-                        }
-                    }
-                }
-            }
+            //  Pointer has been released since the last world step
+            this.stopDrag();
         }
     },
 
     /**
-     * [description]
+     * Stops the Pointer Constraint from dragging the body any further.
+     * 
+     * This is called automatically if the Pointer is released while actively
+     * dragging a body. Or, you can call it manually to release a body from a
+     * constraint without having to first release the pointer.
+     *
+     * @method Phaser.Physics.Matter.PointerConstraint#stopDrag
+     * @fires Phaser.Physics.Matter.Events#DRAG_END
+     * @since 3.16.2
+     */
+    stopDrag: function ()
+    {
+        var body = this.body;
+        var constraint = this.constraint;
+
+        if (body)
+        {
+            this.world.emit(Events.DRAG_END, body, this);
+
+            this.pointer = null;
+            this.body = null;
+            this.part = null;
+
+            constraint.bodyB = null;
+        }
+    },
+
+    /**
+     * Destroys this Pointer Constraint instance and all of its references.
      *
      * @method Phaser.Physics.Matter.PointerConstraint#destroy
      * @since 3.0.0
@@ -271,12 +343,14 @@ var PointerConstraint = new Class({
     {
         this.world.removeConstraint(this.constraint);
 
+        this.pointer = null;
         this.constraint = null;
+        this.body = null;
+        this.part = null;
 
         this.world.off(Events.BEFORE_UPDATE, this.update);
 
         this.scene.sys.input.off(InputEvents.POINTER_DOWN, this.onDown, this);
-        this.scene.sys.input.off(InputEvents.POINTER_UP, this.onUp, this);
     }
 
 });

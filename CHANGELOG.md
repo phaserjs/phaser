@@ -4,11 +4,22 @@
 
 A small point release to fix a couple of important issues that slipped into 3.16.
 
-### New
+### Matter Pointer Constraint Changes
 
-* There is a new Matter Physics Event `DRAG_START` which is emitted by a Pointer Constraint when it starts dragging a body. Listen for this event fro the Matter World instance.
-* There is a new Matter Physics Event `DRAG` which is emitted by a Pointer Constraint as it drags a body. Listen for this event fro the Matter World instance.
-* There is a new Matter Physics Event `DRAG_END` which is emitted by a Pointer Constraint when it stops dragging a body. Listen for this event fro the Matter World instance.
+The following changes all effect the Matter JS Pointer Constraint class:
+
+* Pointer handling has been changed to make more sense. In the previous version, pressing down and then moving the Pointer _over_ a body would start it being dragged, even if the pointer was pressed down well outside of the body bounds. Now, a body can only be dragged by actually pressing down on it, or any of its parts, which is more in-line with how input events should work.
+* Previously, releasing ANY pointer would stop an object being dragged, even if it wasn't the one actually dragging a body, as in a multi-touch game. Bodies are now bound to the pointer which started their drag and only the release of that pointer will stop them.
+* There is a new Matter Physics Event `DRAG_START` which is emitted by a Pointer Constraint when it starts dragging a body. Listen for this event from the Matter World instance.
+* There is a new Matter Physics Event `DRAG` which is emitted by a Pointer Constraint as it drags a body. Listen for this event from the Matter World instance.
+* There is a new Matter Physics Event `DRAG_END` which is emitted by a Pointer Constraint when it stops dragging a body. Listen for this event from the Matter World instance.
+* The `camera` property can no longer be set in the config object. Instead it is set every time the Pointer is pressed down on a Body, this resolves issues where you have a multi-camera Scene and want to drag a body in the non-main camera.
+* `body` is a new property that holds a reference to the Body being dragged, if any.
+* `part` is a new property that holds a reference to the Body part that was clicked on which started the drag.
+* The internal `getBodyPart` method has been renamed to `hitTestBody` to more accurately reflect what it does.
+* The class no longer listens for the pointer `up` event, instead of tracks the active pointer and waits for that to be released. This has reduced the complexity and size of the `update` method considerably.
+* `stopDrag` is a new method that allows you to manually stop an object being dragged, even if the pointer isn't released.
+* This class now has 100% JSDocs.
 
 ### Updates
 
@@ -18,7 +29,6 @@ A small point release to fix a couple of important issues that slipped into 3.16
 * `KeyboardPlugin.time` has moved from being a property to being a getter, which returns the time from the InputManager.
 * The `scale` property has been added to the `Scene` class (thanks @strangeweekend)
 * `Matter.World.remove` now uses the `Composite.remove` method internally. Previously, it used `Composite.removeBody` which only allowed it to remove bodies from the simulation. Now, it can remove any type of Matter object.
-* `Matter.PointerConstraint.camera` can no longer be set in the config object. Instead it is set every time the Pointer is pressed down on a Body, this resolves issues where you have a multi-camera Scene and want to drag a body in the non-main camera.
 
 ### Bug Fixes
 

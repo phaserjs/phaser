@@ -15,6 +15,7 @@
  * @event Phaser.Physics.Matter.Events#DRAG_START
  * 
  * @param {MatterJS.Body} body - The Body that has started being dragged. This is a Matter Body, not a Phaser Game Object.
+ * @param {MatterJS.Body} part - The part of the body that was clicked on.
  * @param {Phaser.Physics.Matter.PointerConstraint} constraint - The Pointer Constraint that is dragging the body.
  */
 module.exports = 'dragstart';
