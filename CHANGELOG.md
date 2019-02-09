@@ -29,6 +29,7 @@ The following changes all effect the Matter JS Pointer Constraint class:
 * `KeyboardPlugin.time` has moved from being a property to being a getter, which returns the time from the InputManager.
 * The `scale` property has been added to the `Scene` class (thanks @strangeweekend)
 * `Matter.World.remove` now uses the `Composite.remove` method internally. Previously, it used `Composite.removeBody` which only allowed it to remove bodies from the simulation. Now, it can remove any type of Matter object.
+* When the Matter World creates its wall bounds, the left and right walls now extend further up and down than before, so that in a 4-wall setting there are no gaps in the corners, which previously allowed for fast moving objects that hit a corner intersection point to sometimes travel through it.
 
 ### Bug Fixes
 

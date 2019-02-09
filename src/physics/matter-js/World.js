@@ -328,8 +328,8 @@ var World = new Class({
         if (top === undefined) { top = true; }
         if (bottom === undefined) { bottom = true; }
 
-        this.updateWall(left, 'left', x - thickness, y, thickness, height);
-        this.updateWall(right, 'right', x + width, y, thickness, height);
+        this.updateWall(left, 'left', x - thickness, y - thickness, thickness, height + (thickness * 2));
+        this.updateWall(right, 'right', x + width, y - thickness, thickness, height + (thickness * 2));
         this.updateWall(top, 'top', x, y - thickness, width, thickness);
         this.updateWall(bottom, 'bottom', x, y + height, width, thickness);
 
