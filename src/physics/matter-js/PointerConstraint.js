@@ -73,24 +73,14 @@ var PointerConstraint = new Class({
         this.world = world;
 
         /**
-         * [description]
+         * The Camera the Pointer was interacting with when the input
+         * down event was processed.
          *
          * @name Phaser.Physics.Matter.PointerConstraint#camera
          * @type {Phaser.Cameras.Scene2D.Camera}
          * @since 3.0.0
          */
-        var camera = GetFastValue(options, 'camera', null);
-
-        if (!camera)
-        {
-            this.camera = scene.sys.cameras.main;
-        }
-        else
-        {
-            this.camera = camera;
-
-            delete options.camera;
-        }
+        this.camera = null;
 
         /**
          * [description]
@@ -147,6 +137,8 @@ var PointerConstraint = new Class({
     onDown: function (pointer)
     {
         this.pointer = pointer;
+
+        this.camera = pointer.camera;
     },
 
     /**
@@ -158,6 +150,8 @@ var PointerConstraint = new Class({
     onUp: function ()
     {
         this.pointer = null;
+
+        this.camera = pointer.camera;
     },
 
     /**
@@ -223,7 +217,8 @@ var PointerConstraint = new Class({
             //  Pointer is up / released
             if (constraint.bodyB)
             {
-                this.world.emit('enddrag', constraint.bodyB, constraint);
+                this.world.emit(Events.DRAG_END, constraint.bodyB, this);
+
                 constraint.bodyB = null;
             }
         }
@@ -241,7 +236,7 @@ var PointerConstraint = new Class({
                 constraint.pointA.x = pos.x;
                 constraint.pointA.y = pos.y;
 
-                this.world.emit('drag', constraint.bodyB, constraint);
+                this.world.emit(Events.DRAG, constraint.bodyB, this);
             }
             else
             {
@@ -257,7 +252,7 @@ var PointerConstraint = new Class({
                     {
                         if (this.getBodyPart(body, pos))
                         {
-                            this.world.emit('startdrag', body, constraint);
+                            this.world.emit(Events.DRAG_START, body, this);
                             break;
                         }
                     }

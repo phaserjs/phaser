@@ -4,6 +4,12 @@
 
 A small point release to fix a couple of important issues that slipped into 3.16.
 
+### New
+
+* There is a new Matter Physics Event `DRAG_START` which is emitted by a Pointer Constraint when it starts dragging a body. Listen for this event fro the Matter World instance.
+* There is a new Matter Physics Event `DRAG` which is emitted by a Pointer Constraint as it drags a body. Listen for this event fro the Matter World instance.
+* There is a new Matter Physics Event `DRAG_END` which is emitted by a Pointer Constraint when it stops dragging a body. Listen for this event fro the Matter World instance.
+
 ### Updates
 
 * `TileSprite.setTileScale` has been updated so that the `y` argument is optional and set to match the `x` argument, like `setScale` elsewhere in the API.
@@ -11,6 +17,8 @@ A small point release to fix a couple of important issues that slipped into 3.16
 * `InputManager.preStep` is a new method that populates some internal properties every step.
 * `KeyboardPlugin.time` has moved from being a property to being a getter, which returns the time from the InputManager.
 * The `scale` property has been added to the `Scene` class (thanks @strangeweekend)
+* `Matter.World.remove` now uses the `Composite.remove` method internally. Previously, it used `Composite.removeBody` which only allowed it to remove bodies from the simulation. Now, it can remove any type of Matter object.
+* `Matter.PointerConstraint.camera` can no longer be set in the config object. Instead it is set every time the Pointer is pressed down on a Body, this resolves issues where you have a multi-camera Scene and want to drag a body in the non-main camera.
 
 ### Bug Fixes
 
