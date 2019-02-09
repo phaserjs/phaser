@@ -40,9 +40,9 @@ var SpriteSheetFromAtlas = function (texture, frame, config)
         throw new Error('TextureManager.SpriteSheetFromAtlas: Invalid frameWidth given.');
     }
 
-    //  Add in a __BASE entry (for the entire atlas)
-    // var source = texture.source[sourceIndex];
-    // texture.add('__BASE', sourceIndex, 0, 0, source.width, source.height);
+    //  Add in a __BASE entry (for the entire atlas frame)
+    var source = texture.source[0];
+    texture.add('__BASE', 0, 0, 0, source.width, source.height);
 
     var startFrame = GetFastValue(config, 'startFrame', 0);
     var endFrame = GetFastValue(config, 'endFrame', -1);
