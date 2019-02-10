@@ -35,6 +35,7 @@ The following changes all effect the Matter JS Pointer Constraint class:
 
 * The `Mesh.setAlpha` method has been restored, even though it's empty and does nothing, to prevent runtime errors when adding a Mesh or Quad object to a Container. Fix #4338 #4343 (thanks @pfdtravalmatic @charmingny)
 * `KeyboardPlugin.checkDown` would always fail if using the new event system, because the time value it was checking wasn't updated.
+* Entering Fullscreen mode in the Scale Manager and then pressing ESC would leave the injected fullsceen div in the DOM, causing it to fail with a node insertion failure the second time you wanted to enter fullscreen mode. Fix #4352 (thanks @ngdevr)
 
 
 ### Examples, Documentation and TypeScript

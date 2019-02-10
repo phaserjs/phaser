@@ -337,6 +337,16 @@ var ScaleManager = new Class({
         this._createdFullscreenTarget = false;
 
         /**
+         * Internal var that keeps track of the user, or the browser, requesting fullscreen changes.
+         *
+         * @name Phaser.Scale.ScaleManager#_requestedFullscreenChange
+         * @type {boolean}
+         * @private
+         * @since 3.16.2
+         */
+        this._requestedFullscreenChange = false;
+
+        /**
          * The dirty state of the Scale Manager.
          * Set if there is a change between the parent size and the current size.
          *
@@ -1166,6 +1176,8 @@ var ScaleManager = new Class({
         {
             var fsTarget = this.getFullscreenTarget();
 
+            this._requestedFullscreenChange = true;
+
             if (fullscreen.keyboard)
             {
                 fsTarget[fullscreen.request](Element.ALLOW_KEYBOARD_INPUT);
@@ -1240,26 +1252,28 @@ var ScaleManager = new Class({
 
         if (fullscreen.active)
         {
+            this._requestedFullscreenChange = true;
+
             document[fullscreen.cancel]();
-
-            if (this._createdFullscreenTarget)
-            {
-                var fsTarget = this.fullscreenTarget;
-
-                if (fsTarget && fsTarget.parentNode)
-                {
-                    var parent = fsTarget.parentNode;
-
-                    parent.insertBefore(this.canvas, fsTarget);
-
-                    parent.removeChild(fsTarget);
-                }
-            }
-
-            this.emit(Events.LEAVE_FULLSCREEN);
-
-            this.refresh();
         }
+
+        if (this._createdFullscreenTarget)
+        {
+            var fsTarget = this.fullscreenTarget;
+
+            if (fsTarget && fsTarget.parentNode)
+            {
+                var parent = fsTarget.parentNode;
+
+                parent.insertBefore(this.canvas, fsTarget);
+
+                parent.removeChild(fsTarget);
+            }
+        }
+
+        this.emit(Events.LEAVE_FULLSCREEN);
+
+        this.refresh();
     },
 
     /**
@@ -1320,7 +1334,7 @@ var ScaleManager = new Class({
 
         window.addEventListener('resize', listeners.windowResize, false);
 
-        if (this.allowFullScreen)
+        if (this.fullscreen.available)
         {
             listeners.fullScreenChange = function (event)
             {
@@ -1354,6 +1368,13 @@ var ScaleManager = new Class({
      */
     onFullScreenChange: function ()
     {
+        //  They pressed ESC while in fullscreen mode
+        if (!this._requestedFullscreenChange)
+        {
+            this.stopFullscreen();
+        }
+
+        this._requestedFullscreenChange = false;
     },
 
     /**
