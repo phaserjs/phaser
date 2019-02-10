@@ -407,6 +407,9 @@ var InputPlugin = new Class({
 
         eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
 
+        this.manager.events.on(Events.GAME_OUT, this.onGameOut, this);
+        this.manager.events.on(Events.GAME_OVER, this.onGameOver, this);
+
         this.enabled = true;
 
         //  Populate the pointer drag states
@@ -414,6 +417,38 @@ var InputPlugin = new Class({
 
         //  Registered input plugins listen for this
         this.pluginEvents.emit(Events.START);
+    },
+
+    /**
+     * Game Over handler.
+     *
+     * @method Phaser.Input.InputPlugin#onGameOver
+     * @fires Phaser.Input.Events#GAME_OVER
+     * @private
+     * @since 3.16.2
+     */
+    onGameOver: function (event)
+    {
+        if (this.isActive())
+        {
+            this.emit(Events.GAME_OVER, event.timeStamp, event);
+        }
+    },
+
+    /**
+     * Game Out handler.
+     *
+     * @method Phaser.Input.InputPlugin#onGameOut
+     * @fires Phaser.Input.Events#GAME_OUT
+     * @private
+     * @since 3.16.2
+     */
+    onGameOut: function (event)
+    {
+        if (this.isActive())
+        {
+            this.emit(Events.GAME_OUT, event.timeStamp, event);
+        }
     },
 
     /**
@@ -485,8 +520,6 @@ var InputPlugin = new Class({
      * Called automatically by the Scene Systems step.
      *
      * @method Phaser.Input.InputPlugin#update
-     * @fires Phaser.Input.Events#GAME_OUT
-     * @fires Phaser.Input.Events#GAME_OVER
      * @fires Phaser.Input.Events#UPDATE
      * @private
      * @since 3.0.0
@@ -509,13 +542,6 @@ var InputPlugin = new Class({
         if (manager.globalTopOnly && manager.ignoreEvents)
         {
             return;
-        }
-
-        if (manager._emitIsOverEvent)
-        {
-            var event = (manager.isOver) ? Events.GAME_OVER : Events.GAME_OUT;
-
-            this.emit(event, time, manager._emitIsOverEvent);
         }
 
         var runUpdate = (manager.dirty || this.pollRate === 0);
@@ -2355,6 +2381,9 @@ var InputPlugin = new Class({
         {
             eventEmitter.off(SceneEvents.UPDATE, this.update, this);
         }
+
+        this.manager.events.off(Events.GAME_OUT, this.onGameOut, this);
+        this.manager.events.off(Events.GAME_OVER, this.onGameOver, this);
 
         eventEmitter.off(SceneEvents.SHUTDOWN, this.shutdown, this);
     },

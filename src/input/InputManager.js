@@ -136,16 +136,6 @@ var InputManager = new Class({
         this.isOver = true;
 
         /**
-         * The DOM Event that was fired when the canvas dispatched an over or out event.
-         *
-         * @name Phaser.Input.InputManager#_emitIsOverEvent
-         * @type {(MouseEvent|TouchEvent)}
-         * @private
-         * @since 3.16.0
-         */
-        this._emitIsOverEvent = false;
-
-        /**
          * Are there any up callbacks defined?
          *
          * @name Phaser.Input.InputManager#_hasUpCallback
@@ -456,6 +446,7 @@ var InputManager = new Class({
      * Internal canvas state change, called automatically by the Mouse Manager.
      *
      * @method Phaser.Input.InputManager#setCanvasOver
+     * @fires Phaser.Input.Events#GAME_OVER
      * @private
      * @since 3.16.0
      *
@@ -465,13 +456,14 @@ var InputManager = new Class({
     {
         this.isOver = true;
 
-        this._emitIsOverEvent = event;
+        this.events.emit(Events.GAME_OVER, event);
     },
 
     /**
      * Internal canvas state change, called automatically by the Mouse Manager.
      *
      * @method Phaser.Input.InputManager#setCanvasOut
+     * @fires Phaser.Input.Events#GAME_OUT
      * @private
      * @since 3.16.0
      *
@@ -481,7 +473,7 @@ var InputManager = new Class({
     {
         this.isOver = false;
 
-        this._emitIsOverEvent = event;
+        this.events.emit(Events.GAME_OUT, event);
     },
 
     /**
@@ -646,9 +638,6 @@ var InputManager = new Class({
         {
             this.canvas.style.cursor = this.defaultCursor;
         }
-
-        //  Reset the isOver event
-        this._emitIsOverEvent = null;
 
         this.dirty = false;
 

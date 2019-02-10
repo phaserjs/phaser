@@ -36,7 +36,7 @@ The following changes all effect the Matter JS Pointer Constraint class:
 * The `Mesh.setAlpha` method has been restored, even though it's empty and does nothing, to prevent runtime errors when adding a Mesh or Quad object to a Container. Fix #4338 #4343 (thanks @pfdtravalmatic @charmingny)
 * `KeyboardPlugin.checkDown` would always fail if using the new event system, because the time value it was checking wasn't updated.
 * Entering Fullscreen mode in the Scale Manager and then pressing ESC would leave the injected fullsceen div in the DOM, causing it to fail with a node insertion failure the second time you wanted to enter fullscreen mode. Fix #4352 (thanks @ngdevr)
-
+* Due to the changes in the Input event system, the `GAME_OUT` event would never fire unless the input system was in legacy mode. The OUT and OVER handlers have been refactored and will now fire as soon as the DOM event happens. As a result the `InputManager._emitIsOverEvent` property has been removed, as the native event is sent directly to the handler and doesn't need storing locally any more. Fix #4344 (thanks @RademCZ)
 
 ### Examples, Documentation and TypeScript
 
