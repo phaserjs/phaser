@@ -267,6 +267,18 @@ var Zone = new Class({
     },
     
     /**
+     * A NOOP method so you can pass a Zone to a Container in Canvas.
+     * Calling this method will do nothing. It is intentionally empty.
+     *
+     * @method Phaser.GameObjects.Zone#setBlendMode
+     * @private
+     * @since 3.16.2
+     */
+    setBlendMode: function ()
+    {
+    },
+
+    /**
      * A Zone does not render.
      *
      * @method Phaser.GameObjects.Zone#renderCanvas
