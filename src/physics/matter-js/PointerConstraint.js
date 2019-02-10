@@ -10,7 +10,6 @@ var Composite = require('./lib/body/Composite');
 var Constraint = require('./lib/constraint/Constraint');
 var Detector = require('./lib/collision/Detector');
 var Events = require('./events');
-var GetFastValue = require('../../utils/object/GetFastValue');
 var InputEvents = require('../../input/events');
 var Merge = require('../../utils/object/Merge');
 var Sleeping = require('./lib/core/Sleeping');
