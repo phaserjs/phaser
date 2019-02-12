@@ -30,6 +30,8 @@ module.exports = {
      * to call the Scale Managers `resize` method to give the new dimensions, or input events will stop working.
      * 
      * @name Phaser.Scale.ScaleModes.NONE
+     * @type {integer}
+     * @const
      * @since 3.16.0
      */
     NONE: 0,
@@ -38,6 +40,8 @@ module.exports = {
      * The height is automatically adjusted based on the width.
      * 
      * @name Phaser.Scale.ScaleModes.WIDTH_CONTROLS_HEIGHT
+     * @type {integer}
+     * @const
      * @since 3.16.0
      */
     WIDTH_CONTROLS_HEIGHT: 1,
@@ -46,6 +50,8 @@ module.exports = {
      * The width is automatically adjusted based on the height.
      * 
      * @name Phaser.Scale.ScaleModes.HEIGHT_CONTROLS_WIDTH
+     * @type {integer}
+     * @const
      * @since 3.16.0
      */
     HEIGHT_CONTROLS_WIDTH: 2,
@@ -56,6 +62,8 @@ module.exports = {
      * inside the area which is not covered.
      * 
      * @name Phaser.Scale.ScaleModes.FIT
+     * @type {integer}
+     * @const
      * @since 3.16.0
      */
     FIT: 3,
@@ -65,6 +73,8 @@ module.exports = {
      * area while keeping the aspect ratio. This may extend further out than the target size.
      * 
      * @name Phaser.Scale.ScaleModes.ENVELOP
+     * @type {integer}
+     * @const
      * @since 3.16.0
      */
     ENVELOP: 4,
@@ -73,6 +83,8 @@ module.exports = {
      * The Canvas is resized to fit all available _parent_ space, regardless of aspect ratio.
      * 
      * @name Phaser.Scale.ScaleModes.RESIZE
+     * @type {integer}
+     * @const
      * @since 3.16.0
      */
     RESIZE: 5

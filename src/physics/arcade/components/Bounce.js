@@ -7,7 +7,7 @@
 /**
  * Provides methods used for setting the bounce properties of an Arcade Physics Body.
  *
- * @name Phaser.Physics.Arcade.Components.Bounce
+ * @namespace Phaser.Physics.Arcade.Components.Bounce
  * @since 3.0.0
  */
 var Bounce = {

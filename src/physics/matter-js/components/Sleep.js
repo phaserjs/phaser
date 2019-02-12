@@ -10,7 +10,7 @@ var MatterEvents = require('../lib/core/Events');
 /**
  * [description]
  *
- * @name Phaser.Physics.Matter.Components.Sleep
+ * @namespace Phaser.Physics.Matter.Components.Sleep
  * @since 3.0.0
  */
 var Sleep = {

@@ -7,7 +7,7 @@
 /**
  * Provides methods used for setting the drag properties of an Arcade Physics Body.
  *
- * @name Phaser.Physics.Arcade.Components.Drag
+ * @namespace Phaser.Physics.Arcade.Components.Drag
  * @since 3.0.0
  */
 var Drag = {

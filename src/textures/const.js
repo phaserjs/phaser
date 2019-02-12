@@ -7,10 +7,8 @@
 /**
  * Filter Types.
  *
- * @name Phaser.Textures.FilterMode
- * @enum {integer}
+ * @namespace Phaser.Textures.FilterMode
  * @memberof Phaser.Textures
- * @readonly
  * @since 3.0.0
  */
 var CONST = {
@@ -19,6 +17,8 @@ var CONST = {
      * Linear filter type.
      * 
      * @name Phaser.Textures.FilterMode.LINEAR
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     LINEAR: 0,
@@ -27,6 +27,8 @@ var CONST = {
      * Nearest neighbor filter type.
      * 
      * @name Phaser.Textures.FilterMode.NEAREST
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     NEAREST: 1

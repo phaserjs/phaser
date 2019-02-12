@@ -18,7 +18,7 @@ var GetColor = function (value)
  * Provides methods used for setting the tint of a Game Object.
  * Should be applied as a mixin and not used directly.
  * 
- * @name Phaser.GameObjects.Components.Tint
+ * @namespace Phaser.GameObjects.Components.Tint
  * @webglOnly
  * @since 3.0.0
  */

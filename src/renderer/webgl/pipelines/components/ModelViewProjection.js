@@ -8,7 +8,7 @@
  * Implements a model view projection matrices.
  * Pipelines can implement this for doing 2D and 3D rendering.
  *
- * @name Phaser.Renderer.WebGL.Pipelines.ModelViewProjection
+ * @namespace Phaser.Renderer.WebGL.Pipelines.ModelViewProjection
  * @since 3.0.0
  */
 var ModelViewProjection = {

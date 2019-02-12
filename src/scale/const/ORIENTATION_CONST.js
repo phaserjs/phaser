@@ -28,6 +28,8 @@ module.exports = {
      * A landscape orientation.
      * 
      * @name Phaser.Scale.Orientation.LANDSCAPE
+     * @type {string}
+     * @const
      * @since 3.16.0
      */
     LANDSCAPE: 'landscape-primary',
@@ -36,6 +38,8 @@ module.exports = {
      * A portrait orientation.
      * 
      * @name Phaser.Scale.Orientation.PORTRAIT
+     * @type {string}
+     * @const
      * @since 3.16.0
      */
     PORTRAIT: 'portrait-primary'

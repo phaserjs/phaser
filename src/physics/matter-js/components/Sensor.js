@@ -7,7 +7,7 @@
 /**
  * [description]
  *
- * @name Phaser.Physics.Matter.Components.Sensor
+ * @namespace Phaser.Physics.Matter.Components.Sensor
  * @since 3.0.0
  */
 var Sensor = {

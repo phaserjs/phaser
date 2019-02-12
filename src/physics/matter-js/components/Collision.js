@@ -7,7 +7,7 @@
 /**
  * Contains methods for changing the collision filter of a Matter Body. Should be used as a mixin and not called directly.
  *
- * @name Phaser.Physics.Matter.Components.Collision
+ * @namespace Phaser.Physics.Matter.Components.Collision
  * @since 3.0.0
  */
 var Collision = {

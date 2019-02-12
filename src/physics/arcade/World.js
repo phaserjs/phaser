@@ -307,7 +307,7 @@ var World = new Class({
          * - 0.5 = double speed
          *
          * @name Phaser.Physics.Arcade.World#timeScale
-         * @property {number}
+         * @type {number}
          * @default 1
          * @since 3.10.0
          */

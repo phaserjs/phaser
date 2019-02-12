@@ -16,7 +16,7 @@ var CONST = {
      * Phaser Release Version
      * 
      * @name Phaser.VERSION
-     * @readonly
+     * @const
      * @type {string}
      * @since 3.0.0
      */
@@ -30,7 +30,7 @@ var CONST = {
      * AUTO Detect Renderer.
      * 
      * @name Phaser.AUTO
-     * @readonly
+     * @const
      * @type {integer}
      * @since 3.0.0
      */
@@ -40,7 +40,7 @@ var CONST = {
      * Canvas Renderer.
      * 
      * @name Phaser.CANVAS
-     * @readonly
+     * @const
      * @type {integer}
      * @since 3.0.0
      */
@@ -50,7 +50,7 @@ var CONST = {
      * WebGL Renderer.
      * 
      * @name Phaser.WEBGL
-     * @readonly
+     * @const
      * @type {integer}
      * @since 3.0.0
      */
@@ -60,7 +60,7 @@ var CONST = {
      * Headless Renderer.
      * 
      * @name Phaser.HEADLESS
-     * @readonly
+     * @const
      * @type {integer}
      * @since 3.0.0
      */
@@ -71,7 +71,7 @@ var CONST = {
      * to help you remember what the value is doing in your code.
      * 
      * @name Phaser.FOREVER
-     * @readonly
+     * @const
      * @type {integer}
      * @since 3.0.0
      */
@@ -81,7 +81,7 @@ var CONST = {
      * Direction constant.
      * 
      * @name Phaser.NONE
-     * @readonly
+     * @const
      * @type {integer}
      * @since 3.0.0
      */
@@ -91,7 +91,7 @@ var CONST = {
      * Direction constant.
      * 
      * @name Phaser.UP
-     * @readonly
+     * @const
      * @type {integer}
      * @since 3.0.0
      */
@@ -101,7 +101,7 @@ var CONST = {
      * Direction constant.
      * 
      * @name Phaser.DOWN
-     * @readonly
+     * @const
      * @type {integer}
      * @since 3.0.0
      */
@@ -111,7 +111,7 @@ var CONST = {
      * Direction constant.
      * 
      * @name Phaser.LEFT
-     * @readonly
+     * @const
      * @type {integer}
      * @since 3.0.0
      */
@@ -121,7 +121,7 @@ var CONST = {
      * Direction constant.
      * 
      * @name Phaser.RIGHT
-     * @readonly
+     * @const
      * @type {integer}
      * @since 3.0.0
      */

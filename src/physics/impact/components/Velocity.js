@@ -8,7 +8,7 @@
  * The Impact Velocity component.
  * Should be applied as a mixin.
  *
- * @name Phaser.Physics.Impact.Components.Velocity
+ * @namespace Phaser.Physics.Impact.Components.Velocity
  * @since 3.0.0
  */
 var Velocity = {

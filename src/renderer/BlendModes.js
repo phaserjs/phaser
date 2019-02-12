@@ -7,10 +7,8 @@
 /**
  * Phaser Blend Modes.
  * 
- * @name Phaser.BlendModes
- * @enum {integer}
+ * @namespace Phaser.BlendModes
  * @memberof Phaser
- * @readonly
  * @since 3.0.0
  */
 
@@ -20,6 +18,8 @@ module.exports = {
      * Skips the Blend Mode check in the renderer.
      * 
      * @name Phaser.BlendModes.SKIP_CHECK
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     SKIP_CHECK: -1,
@@ -29,6 +29,8 @@ module.exports = {
      * This is the default setting and draws new shapes on top of the existing canvas content.
      * 
      * @name Phaser.BlendModes.NORMAL
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     NORMAL: 0,
@@ -38,6 +40,8 @@ module.exports = {
      * Where both shapes overlap the color is determined by adding color values.
      * 
      * @name Phaser.BlendModes.ADD
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     ADD: 1,
@@ -47,6 +51,8 @@ module.exports = {
      * The pixels are of the top layer are multiplied with the corresponding pixel of the bottom layer. A darker picture is the result.
      * 
      * @name Phaser.BlendModes.MULTIPLY
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     MULTIPLY: 2,
@@ -56,6 +62,8 @@ module.exports = {
      * The pixels are inverted, multiplied, and inverted again. A lighter picture is the result (opposite of multiply)
      * 
      * @name Phaser.BlendModes.SCREEN
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     SCREEN: 3,
@@ -65,6 +73,8 @@ module.exports = {
      * A combination of multiply and screen. Dark parts on the base layer become darker, and light parts become lighter.
      * 
      * @name Phaser.BlendModes.OVERLAY
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     OVERLAY: 4,
@@ -74,6 +84,8 @@ module.exports = {
      * Retains the darkest pixels of both layers.
      * 
      * @name Phaser.BlendModes.DARKEN
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     DARKEN: 5,
@@ -83,6 +95,8 @@ module.exports = {
      * Retains the lightest pixels of both layers.
      * 
      * @name Phaser.BlendModes.LIGHTEN
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     LIGHTEN: 6,
@@ -92,6 +106,8 @@ module.exports = {
      * Divides the bottom layer by the inverted top layer.
      * 
      * @name Phaser.BlendModes.COLOR_DODGE
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     COLOR_DODGE: 7,
@@ -101,6 +117,8 @@ module.exports = {
      * Divides the inverted bottom layer by the top layer, and then inverts the result.
      * 
      * @name Phaser.BlendModes.COLOR_BURN
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     COLOR_BURN: 8,
@@ -110,6 +128,8 @@ module.exports = {
      * A combination of multiply and screen like overlay, but with top and bottom layer swapped.
      * 
      * @name Phaser.BlendModes.HARD_LIGHT
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     HARD_LIGHT: 9,
@@ -119,6 +139,8 @@ module.exports = {
      * A softer version of hard-light. Pure black or white does not result in pure black or white.
      * 
      * @name Phaser.BlendModes.SOFT_LIGHT
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     SOFT_LIGHT: 10,
@@ -128,6 +150,8 @@ module.exports = {
      * Subtracts the bottom layer from the top layer or the other way round to always get a positive value.
      * 
      * @name Phaser.BlendModes.DIFFERENCE
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     DIFFERENCE: 11,
@@ -137,6 +161,8 @@ module.exports = {
      * Like difference, but with lower contrast.
      * 
      * @name Phaser.BlendModes.EXCLUSION
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     EXCLUSION: 12,
@@ -146,6 +172,8 @@ module.exports = {
      * Preserves the luma and chroma of the bottom layer, while adopting the hue of the top layer.
      * 
      * @name Phaser.BlendModes.HUE
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     HUE: 13,
@@ -155,6 +183,8 @@ module.exports = {
      * Preserves the luma and hue of the bottom layer, while adopting the chroma of the top layer.
      * 
      * @name Phaser.BlendModes.SATURATION
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     SATURATION: 14,
@@ -164,6 +194,8 @@ module.exports = {
      * Preserves the luma of the bottom layer, while adopting the hue and chroma of the top layer.
      * 
      * @name Phaser.BlendModes.COLOR
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     COLOR: 15,
@@ -173,6 +205,8 @@ module.exports = {
      * Preserves the hue and chroma of the bottom layer, while adopting the luma of the top layer.
      * 
      * @name Phaser.BlendModes.LUMINOSITY
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     LUMINOSITY: 16,
@@ -181,6 +215,8 @@ module.exports = {
      * Alpha erase blend mode. For Canvas and WebGL.
      * 
      * @name Phaser.BlendModes.ERASE
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     ERASE: 17,
@@ -190,6 +226,8 @@ module.exports = {
      * The new shape is drawn only where both the new shape and the destination canvas overlap. Everything else is made transparent.
      * 
      * @name Phaser.BlendModes.SOURCE_IN
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     SOURCE_IN: 18,
@@ -199,6 +237,8 @@ module.exports = {
      * The new shape is drawn where it doesn't overlap the existing canvas content.
      * 
      * @name Phaser.BlendModes.SOURCE_OUT
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     SOURCE_OUT: 19,
@@ -208,6 +248,8 @@ module.exports = {
      * The new shape is only drawn where it overlaps the existing canvas content.
      * 
      * @name Phaser.BlendModes.SOURCE_ATOP
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     SOURCE_ATOP: 20,
@@ -217,6 +259,8 @@ module.exports = {
      * New shapes are drawn behind the existing canvas content.
      * 
      * @name Phaser.BlendModes.DESTINATION_OVER
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     DESTINATION_OVER: 21,
@@ -226,6 +270,8 @@ module.exports = {
      * The existing canvas content is kept where both the new shape and existing canvas content overlap. Everything else is made transparent.
      * 
      * @name Phaser.BlendModes.DESTINATION_IN
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     DESTINATION_IN: 22,
@@ -235,6 +281,8 @@ module.exports = {
      * The existing content is kept where it doesn't overlap the new shape.
      * 
      * @name Phaser.BlendModes.DESTINATION_OUT
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     DESTINATION_OUT: 23,
@@ -244,6 +292,8 @@ module.exports = {
      * The existing canvas is only kept where it overlaps the new shape. The new shape is drawn behind the canvas content.
      * 
      * @name Phaser.BlendModes.DESTINATION_ATOP
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     DESTINATION_ATOP: 24,
@@ -253,6 +303,8 @@ module.exports = {
      * Where both shapes overlap the color is determined by adding color values.
      * 
      * @name Phaser.BlendModes.LIGHTER
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     LIGHTER: 25,
@@ -262,15 +314,19 @@ module.exports = {
      * Only the new shape is shown.
      * 
      * @name Phaser.BlendModes.COPY
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     COPY: 26,
 
     /**
-     * xor blend mode. For Canvas only.
+     * Xor blend mode. For Canvas only.
      * Shapes are made transparent where both overlap and drawn normal everywhere else.
      * 
      * @name Phaser.BlendModes.XOR
+     * @type {integer}
+     * @const
      * @since 3.0.0
      */
     XOR: 27

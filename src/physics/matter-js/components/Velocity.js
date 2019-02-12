@@ -9,7 +9,7 @@ var Body = require('../lib/body/Body');
 /**
  * [description]
  *
- * @name Phaser.Physics.Matter.Components.Velocity
+ * @namespace Phaser.Physics.Matter.Components.Velocity
  * @since 3.0.0
  */
 var Velocity = {
