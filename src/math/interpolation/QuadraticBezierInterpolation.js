@@ -4,6 +4,9 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+/**
+ * @ignore
+ */
 function P0 (t, p)
 {
     var k = 1 - t;
@@ -11,19 +14,21 @@ function P0 (t, p)
     return k * k * p;
 }
 
+/**
+ * @ignore
+ */
 function P1 (t, p)
 {
     return 2 * (1 - t) * t * p;
 }
 
+/**
+ * @ignore
+ */
 function P2 (t, p)
 {
     return t * t * p;
 }
-
-//  p0 = start point
-//  p1 = control point 1
-//  p2 = end point
 
 // https://github.com/mrdoob/three.js/blob/master/src/extras/core/Interpolations.js
 

@@ -499,6 +499,8 @@ var File = new Class({
  *
  * @method Phaser.Loader.File.createObjectURL
  * @static
+ * @since 3.7.0
+ * 
  * @param {HTMLImageElement} image - Image object which 'src' attribute should be set to object URL.
  * @param {Blob} blob - A Blob object to create an object URL for.
  * @param {string} defaultType - Default mime type used if blob type is not available.
@@ -531,6 +533,8 @@ File.createObjectURL = function (image, blob, defaultType)
  *
  * @method Phaser.Loader.File.revokeObjectURL
  * @static
+ * @since 3.7.0
+ * 
  * @param {HTMLImageElement} image - Image object which 'src' attribute should be revoked.
  */
 File.revokeObjectURL = function (image)
