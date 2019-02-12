@@ -4,6 +4,9 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+/**
+ * @ignore
+ */
 function swap (arr, i, j)
 {
     var tmp = arr[i];
@@ -11,6 +14,9 @@ function swap (arr, i, j)
     arr[j] = tmp;
 }
 
+/**
+ * @ignore
+ */
 function defaultCompare (a, b)
 {
     return a < b ? -1 : a > b ? 1 : 0;

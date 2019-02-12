@@ -4,16 +4,25 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+/**
+ * @ignore
+ */
 function hasGetStart (def)
 {
     return (!!def.getStart && typeof def.getStart === 'function');
 }
 
+/**
+ * @ignore
+ */
 function hasGetEnd (def)
 {
     return (!!def.getEnd && typeof def.getEnd === 'function');
 }
 
+/**
+ * @ignore
+ */
 function hasGetters (def)
 {
     return hasGetStart(def) || hasGetEnd(def);
