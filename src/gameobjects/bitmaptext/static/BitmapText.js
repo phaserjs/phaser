@@ -645,6 +645,7 @@ BitmapText.ALIGN_RIGHT = 2;
  * Adds the parsed Bitmap Font data to the cache with the `fontName` key.
  *
  * @name Phaser.GameObjects.BitmapText.ParseFromAtlas
+ * @type {function}
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - The Scene to parse the Bitmap Font for.

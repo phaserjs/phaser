@@ -9,7 +9,7 @@ var ScaleModes = require('../../renderer/ScaleModes');
 /**
  * Provides methods used for getting and setting the scale of a Game Object.
  *
- * @name Phaser.GameObjects.Components.ScaleMode
+ * @namespace Phaser.GameObjects.Components.ScaleMode
  * @since 3.0.0
  */
 

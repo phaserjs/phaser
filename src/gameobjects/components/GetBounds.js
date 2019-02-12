@@ -12,7 +12,7 @@ var Vector2 = require('../../math/Vector2');
  * Provides methods used for obtaining the bounds of a Game Object.
  * Should be applied as a mixin and not used directly.
  *
- * @name Phaser.GameObjects.Components.GetBounds
+ * @namespace Phaser.GameObjects.Components.GetBounds
  * @since 3.0.0
  */
 

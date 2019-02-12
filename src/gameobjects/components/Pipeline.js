@@ -7,7 +7,7 @@
 /**
  * Provides methods used for setting the WebGL rendering pipeline of a Game Object.
  *
- * @name Phaser.GameObjects.Components.Pipeline
+ * @namespace Phaser.GameObjects.Components.Pipeline
  * @webglOnly
  * @since 3.0.0
  */

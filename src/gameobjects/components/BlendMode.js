@@ -10,7 +10,7 @@ var BlendModes = require('../../renderer/BlendModes');
  * Provides methods used for setting the blend mode of a Game Object.
  * Should be applied as a mixin and not used directly.
  *
- * @name Phaser.GameObjects.Components.BlendMode
+ * @namespace Phaser.GameObjects.Components.BlendMode
  * @since 3.0.0
  */
 

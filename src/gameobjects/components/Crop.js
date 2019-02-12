@@ -7,7 +7,7 @@
 /**
  * Provides methods used for getting and setting the texture of a Game Object.
  *
- * @name Phaser.GameObjects.Components.Crop
+ * @namespace Phaser.GameObjects.Components.Crop
  * @since 3.12.0
  */
 
