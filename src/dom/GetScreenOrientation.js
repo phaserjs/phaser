@@ -6,6 +6,17 @@
 
 var CONST = require('../scale/const');
 
+/**
+ * Attempts to determine the screen orientation using the Orientation API.
+ *
+ * @function Phaser.DOM.GetScreenOrientation
+ * @since 3.16.0
+ *
+ * @param {number} width - The width of the viewport.
+ * @param {number} height - The height of the viewport.
+ *
+ * @return {string} The orientation.
+ */
 var GetScreenOrientation = function (width, height)
 {
     var screen = window.screen;
