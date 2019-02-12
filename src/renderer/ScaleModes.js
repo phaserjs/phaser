@@ -20,6 +20,7 @@ module.exports = {
      * Default Scale Mode (Linear).
      * 
      * @name Phaser.ScaleModes.DEFAULT
+     * @since 3.0.0
      */
     DEFAULT: 0,
 
@@ -27,6 +28,7 @@ module.exports = {
      * Linear Scale Mode.
      * 
      * @name Phaser.ScaleModes.LINEAR
+     * @since 3.0.0
      */
     LINEAR: 0,
 
@@ -34,6 +36,7 @@ module.exports = {
      * Nearest Scale Mode.
      * 
      * @name Phaser.ScaleModes.NEAREST
+     * @since 3.0.0
      */
     NEAREST: 1
 

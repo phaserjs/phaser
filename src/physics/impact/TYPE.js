@@ -25,6 +25,7 @@ module.exports = {
      * Collides with nothing.
      *
      * @name Phaser.Physics.Impact.TYPE.NONE
+     * @since 3.0.0
      */
     NONE: 0,
 
@@ -32,6 +33,7 @@ module.exports = {
      * Type A. Collides with Type B.
      *
      * @name Phaser.Physics.Impact.TYPE.A
+     * @since 3.0.0
      */
     A: 1,
 
@@ -39,6 +41,7 @@ module.exports = {
      * Type B. Collides with Type A.
      *
      * @name Phaser.Physics.Impact.TYPE.B
+     * @since 3.0.0
      */
     B: 2,
 
@@ -46,6 +49,7 @@ module.exports = {
      * Collides with both types A and B.
      *
      * @name Phaser.Physics.Impact.TYPE.BOTH
+     * @since 3.0.0
      */
     BOTH: 3
 

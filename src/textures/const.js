@@ -19,6 +19,7 @@ var CONST = {
      * Linear filter type.
      * 
      * @name Phaser.Textures.FilterMode.LINEAR
+     * @since 3.0.0
      */
     LINEAR: 0,
 
@@ -26,6 +27,7 @@ var CONST = {
      * Nearest neighbor filter type.
      * 
      * @name Phaser.Textures.FilterMode.NEAREST
+     * @since 3.0.0
      */
     NEAREST: 1
     

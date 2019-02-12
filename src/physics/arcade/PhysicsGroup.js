@@ -147,6 +147,7 @@ var PhysicsGroup = new Class({
          * @name Phaser.Physics.Arcade.Group#classType
          * @type {GroupClassTypeConstructor}
          * @default ArcadeSprite
+         * @since 3.0.0
          */
         config.classType = GetFastValue(config, 'classType', ArcadeSprite);
 
