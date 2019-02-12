@@ -22,6 +22,7 @@
  * Listen to it from a Scene using: `this.matter.world.on('collisionstart', listener)`.
  *
  * @event Phaser.Physics.Matter.Events#COLLISION_START
+ * @since 3.0.0
  * 
  * @param {Phaser.Physics.Matter.Events.CollisionStartEvent} event - The Collision Event object.
  * @param {MatterJS.Body} bodyA - The first body of the first colliding pair. The `event.pairs` array may contain more colliding bodies.

@@ -37,6 +37,7 @@ var XMLFile = require('./XMLFile.js');
  * @extends Phaser.Loader.MultiFile
  * @memberof Phaser.Loader.FileTypes
  * @constructor
+ * @since 3.7.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
  * @param {(string|Phaser.Loader.FileTypes.AtlasXMLFileConfig)} key - The key to use for this file, or a file configuration object.

@@ -14,6 +14,7 @@
  * You can also listen for a DOWN event from a Gamepad instance. See the [GAMEPAD_BUTTON_DOWN]{@linkcode Phaser.Input.Gamepad.Events#event:GAMEPAD_BUTTON_DOWN} event for details.
  *
  * @event Phaser.Input.Gamepad.Events#BUTTON_DOWN
+ * @since 3.10.0
  * 
  * @param {Phaser.Input.Gamepad} pad - A reference to the Gamepad on which the button was pressed.
  * @param {Phaser.Input.Gamepad.Button} button - A reference to the Button which was pressed.

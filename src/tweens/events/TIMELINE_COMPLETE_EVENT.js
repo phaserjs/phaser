@@ -23,6 +23,7 @@
  * ```
  *
  * @event Phaser.Tweens.Events#TIMELINE_COMPLETE
+ * @since 3.0.0
  * 
  * @param {Phaser.Tweens.Timeline} timeline - A reference to the Timeline instance that emitted the event.
  */

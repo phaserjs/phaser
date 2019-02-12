@@ -11,5 +11,6 @@
  * signalling to all of its internal systems to start.
  *
  * @event Phaser.Input.Events#START
+ * @since 3.0.0
  */
 module.exports = 'start';

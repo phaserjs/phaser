@@ -14,6 +14,7 @@
  * the animation. For example, if you had an animation with the key 'explode' you should listen for `animationupdate-explode`.
  *
  * @event Phaser.Animations.Events#SPRITE_ANIMATION_KEY_UPDATE
+ * @since 3.16.1
  * 
  * @param {Phaser.Animations.Animation} animation - A reference to the Animation that has updated on the Sprite.
  * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame of the Animation.

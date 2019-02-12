@@ -11,5 +11,6 @@
  * enters a focused state. The focus event is raised when the window re-gains focus, having previously lost it.
  *
  * @event Phaser.Core.Events#FOCUS
+ * @since 3.0.0
  */
 module.exports = 'focus';

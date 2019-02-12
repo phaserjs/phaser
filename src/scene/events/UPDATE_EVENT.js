@@ -22,6 +22,7 @@
  * A Scene will only run its step if it is active.
  * 
  * @event Phaser.Scenes.Events#UPDATE
+ * @since 3.0.0
  * 
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.

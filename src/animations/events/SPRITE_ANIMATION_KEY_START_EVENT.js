@@ -13,6 +13,7 @@
  * the animation. For example, if you had an animation with the key 'explode' you should listen for `animationstart-explode`.
  *
  * @event Phaser.Animations.Events#SPRITE_ANIMATION_KEY_START
+ * @since 3.16.1
  * 
  * @param {Phaser.Animations.Animation} animation - A reference to the Animation that was started on the Sprite.
  * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation started with.

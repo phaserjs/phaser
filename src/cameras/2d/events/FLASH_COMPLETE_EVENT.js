@@ -10,6 +10,7 @@
  * This event is dispatched by a Camera instance when the Flash Effect completes.
  *
  * @event Phaser.Cameras.Scene2D.Events#FLASH_COMPLETE
+ * @since 3.3.0
  * 
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
  * @param {Phaser.Cameras.Scene2D.Effects.Flash} effect - A reference to the effect instance.

@@ -10,5 +10,6 @@
  * This internal event is dispatched by the Input Manager as part of its update step.
  *
  * @event Phaser.Input.Events#MANAGER_UPDATE
+ * @since 3.0.0
  */
 module.exports = 'update';

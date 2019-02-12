@@ -12,6 +12,7 @@
  * Listen to this event from within a Scene using: `this.textures.on('addtexture', listener)`.
  *
  * @event Phaser.Textures.Events#ADD
+ * @since 3.0.0
  * 
  * @param {string} key - The key of the Texture that was added to the Texture Manager.
  * @param {Phaser.Textures.Texture} texture - A reference to the Texture that was added to the Texture Manager.

@@ -19,6 +19,7 @@
  * Finally, you can create Key objects, which you can also listen for events from. See [Keyboard.Events.UP]{@linkcode Phaser.Input.Keyboard.Events#event:UP} for details.
  *
  * @event Phaser.Input.Keyboard.Events#KEY_UP
+ * @since 3.0.0
  * 
  * @param {KeyboardEvent} event - The native DOM Keyboard Event. You can inspect this to learn more about the key that was released, any modifiers, etc.
  */

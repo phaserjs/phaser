@@ -23,6 +23,7 @@
  * 5. [TRANSITION_COMPLETE]{@linkcode Phaser.Scenes.Events#event:TRANSITION_COMPLETE} - the Target Scene will emit this event when the transition finishes.
  * 
  * @event Phaser.Scenes.Events#TRANSITION_INIT
+ * @since 3.5.0
  * 
  * @param {Phaser.Scene} from - A reference to the Scene that is being transitioned from.
  * @param {number} duration - The duration of the transition in ms.

@@ -25,6 +25,7 @@
  * the propagation of this event.
  *
  * @event Phaser.Input.Events#GAMEOBJECT_POINTER_MOVE
+ * @since 3.0.0
  * 
  * @param {Phaser.Input.Pointer} pointer - The Pointer responsible for triggering this event.
  * @param {number} localX - The x coordinate that the Pointer interacted with this object on, relative to the Game Object's top-left position.

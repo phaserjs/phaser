@@ -14,6 +14,7 @@
  * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_ANIMATION_KEY_START` event.
  *
  * @event Phaser.Animations.Events#SPRITE_ANIMATION_START
+ * @since 3.16.1
  * 
  * @param {Phaser.Animations.Animation} animation - A reference to the Animation that was started on the Sprite.
  * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation started with.

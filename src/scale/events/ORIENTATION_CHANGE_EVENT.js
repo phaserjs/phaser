@@ -8,6 +8,7 @@
  * The Scale Manager Resize Event.
  *
  * @event Phaser.Scale.Events#ORIENTATION_CHANGE
+ * @since 3.16.1
  * 
  * @param {string} orientation - 
  */

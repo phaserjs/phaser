@@ -10,6 +10,7 @@
  * This event is dispatched by any Cache that extends the BaseCache each time an object is removed from it.
  *
  * @event Phaser.Cache.Events#REMOVE
+ * @since 3.0.0
  * 
  * @param {Phaser.Cache.BaseCache} cache - The cache from which the object was removed.
  * @param {string} key - The key of the object removed from the cache.

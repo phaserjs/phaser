@@ -8,5 +8,6 @@
  * The Scale Manager Resize Event.
  *
  * @event Phaser.Scale.Events#LEAVE_FULLSCREEN
+ * @since 3.16.1
  */
 module.exports = 'leavefullscreen';

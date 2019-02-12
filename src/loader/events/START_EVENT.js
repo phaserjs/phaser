@@ -14,6 +14,7 @@
  * Listen to it from a Scene using: `this.load.on('start', listener)`.
  *
  * @event Phaser.Loader.Events#START
+ * @since 3.0.0
  * 
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader Plugin that dispatched this event.
  */

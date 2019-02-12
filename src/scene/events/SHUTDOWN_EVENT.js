@@ -16,6 +16,7 @@
  * currently active. Use the [DESTROY]{@linkcode Phaser.Scenes.Events#event:DESTROY} event to completely clear resources.
  * 
  * @event Phaser.Scenes.Events#SHUTDOWN
+ * @since 3.0.0
  * 
  * @param {Phaser.Scenes.Systems} sys - A reference to the Scene Systems class of the Scene that emitted this event.
  * @param {any} [data] - An optional data object that was passed to this Scene when it was shutdown.

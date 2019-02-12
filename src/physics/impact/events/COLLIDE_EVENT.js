@@ -12,6 +12,7 @@
  * Listen to it from a Scene using: `this.impact.world.on('collide', listener)`.
  *
  * @event Phaser.Physics.Impact.Events#COLLIDE
+ * @since 3.0.0
  * 
  * @param {Phaser.Physics.Impact.Body} bodyA - The first body involved in the collision.
  * @param {Phaser.Physics.Impact.Body} bodyB - The second body involved in the collision.

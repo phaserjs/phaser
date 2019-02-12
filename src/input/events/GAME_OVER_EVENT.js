@@ -13,6 +13,7 @@
  * Listen to this event from within a Scene using: `this.input.on('gameover', listener)`.
  *
  * @event Phaser.Input.Events#GAME_OVER
+ * @since 3.16.1
  * 
  * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
  * @param {(MouseEvent|TouchEvent)} event - The DOM Event that triggered the canvas over.

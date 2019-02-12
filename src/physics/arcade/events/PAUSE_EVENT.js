@@ -12,5 +12,6 @@
  * Listen to it from a Scene using: `this.physics.world.on('pause', listener)`.
  *
  * @event Phaser.Physics.Arcade.Events#PAUSE
+ * @since 3.0.0
  */
 module.exports = 'pause';

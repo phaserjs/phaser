@@ -12,5 +12,6 @@
  * Listen to it from a Scene using: `this.physics.world.on('resume', listener)`.
  *
  * @event Phaser.Physics.Arcade.Events#RESUME
+ * @since 3.0.0
  */
 module.exports = 'resume';

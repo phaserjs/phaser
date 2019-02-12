@@ -20,6 +20,7 @@
  * ```
  *
  * @event Phaser.Input.Keyboard.Events#COMBO_MATCH
+ * @since 3.0.0
  * 
  * @param {Phaser.Input.Keyboard.KeyCombo} keycombo - The Key Combo object that was matched.
  * @param {KeyboardEvent} event - The native DOM Keyboard Event of the final key in the combo. You can inspect this to learn more about any modifiers, etc.

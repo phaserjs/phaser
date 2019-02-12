@@ -13,6 +13,7 @@
  * animation at the same time, this event will invoke its handler for each one of them.
  *
  * @event Phaser.Animations.Events#ANIMATION_COMPLETE
+ * @since 3.16.1
  * 
  * @param {Phaser.Animations.Animation} animation - A reference to the Animation that completed.
  * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation completed on.

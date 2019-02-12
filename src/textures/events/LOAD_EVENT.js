@@ -15,6 +15,7 @@
  * This event is dispatched after the [ADD]{@linkcode Phaser.Textures.Events#event:ADD} event.
  *
  * @event Phaser.Textures.Events#LOAD
+ * @since 3.0.0
  * 
  * @param {string} key - The key of the Texture that was loaded by the Texture Manager.
  * @param {Phaser.Textures.Texture} texture - A reference to the Texture that was loaded by the Texture Manager.

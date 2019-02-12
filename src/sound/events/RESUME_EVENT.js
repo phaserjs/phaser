@@ -20,6 +20,7 @@
  * ```
  *
  * @event Phaser.Sound.Events#RESUME
+ * @since 3.0.0
  * 
  * @param {(Phaser.Sound.WebAudioSound|Phaser.Sound.HTML5AudioSound)} sound - A reference to the Sound that emitted the event.
  */

@@ -14,6 +14,7 @@
  * This same event is dispatched for all animations. To listen for a specific animation, use the `SPRITE_ANIMATION_KEY_COMPLETE` event.
  *
  * @event Phaser.Animations.Events#SPRITE_ANIMATION_COMPLETE
+ * @since 3.16.1
  * 
  * @param {Phaser.Animations.Animation} animation - A reference to the Animation that completed.
  * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation completed on.

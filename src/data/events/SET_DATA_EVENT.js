@@ -13,6 +13,7 @@
  * the addition of a new data item on a Game Object you would use: `sprite.data.on('setdata', listener)`.
  *
  * @event Phaser.Data.Events#SET_DATA
+ * @since 3.0.0
  * 
  * @param {any} parent - A reference to the object that owns the instance of the Data Manager responsible for this event.
  * @param {string} key - The unique key of the data item within the Data Manager.

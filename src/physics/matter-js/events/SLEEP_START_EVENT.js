@@ -19,6 +19,7 @@
  * Listen to it from a Scene using: `this.matter.world.on('sleepstart', listener)`.
  *
  * @event Phaser.Physics.Matter.Events#SLEEP_START
+ * @since 3.0.0
  * 
  * @param {Phaser.Physics.Matter.Events.SleepStartEvent} event - The Sleep Event object.
  * @param {MatterJS.Body} body - The body that has gone to sleep.

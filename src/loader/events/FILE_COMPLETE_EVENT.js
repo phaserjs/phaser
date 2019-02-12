@@ -14,6 +14,7 @@
  * You can also listen for the completion of a specific file. See the [FILE_KEY_COMPLETE]{@linkcode Phaser.Loader.Events#event:FILE_KEY_COMPLETE} event.
  *
  * @event Phaser.Loader.Events#FILE_COMPLETE
+ * @since 3.0.0
  * 
  * @param {string} key - The key of the file that just loaded and finished processing.
  * @param {string} type - The [file type]{@link Phaser.Loader.File#type} of the file that just loaded, i.e. `image`.

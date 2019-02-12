@@ -15,6 +15,7 @@
  * then you can listen for `sprite.data.on('changedata-gold')`.
  *
  * @event Phaser.Data.Events#CHANGE_DATA_KEY
+ * @since 3.16.1
  * 
  * @param {any} parent - A reference to the object that owns the instance of the Data Manager responsible for this event.
  * @param {string} key - The unique key of the data item within the Data Manager.

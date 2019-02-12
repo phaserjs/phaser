@@ -13,6 +13,7 @@
  * Listen to it from a Scene using: `this.load.on('fileprogress', listener)`.
  *
  * @event Phaser.Loader.Events#FILE_PROGRESS
+ * @since 3.0.0
  * 
  * @param {Phaser.Loader.File} file - A reference to the File which errored during load.
  * @param {number} percentComplete - A value between 0 and 1 indicating how 'complete' this file is.

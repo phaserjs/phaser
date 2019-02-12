@@ -13,6 +13,7 @@
  * scaling your own game content.
  *
  * @event Phaser.Scale.Events#RESIZE
+ * @since 3.16.1
  * 
  * @param {Phaser.Structs.Size} gameSize - A reference to the Game Size component. This is the un-scaled size of your game canvas.
  * @param {Phaser.Structs.Size} baseSize - A reference to the Base Size component. This is the game size multiplied by resolution.

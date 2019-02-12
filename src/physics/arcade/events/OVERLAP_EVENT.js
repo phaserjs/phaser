@@ -17,6 +17,7 @@
  * Please note that 'collide' and 'overlap' are two different things in Arcade Physics.
  *
  * @event Phaser.Physics.Arcade.Events#OVERLAP
+ * @since 3.0.0
  * 
  * @param {Phaser.GameObjects.GameObject} gameObject1 - The first Game Object involved in the overlap. This is the parent of `body1`.
  * @param {Phaser.GameObjects.GameObject} gameObject2 - The second Game Object involved in the overlap. This is the parent of `body2`.

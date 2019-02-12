@@ -14,6 +14,7 @@
  * Listen to it from a Scene using: `this.sound.on('rate', listener)`.
  *
  * @event Phaser.Sound.Events#GLOBAL_DETUNE
+ * @since 3.0.0
  * 
  * @param {Phaser.Sound.BaseSoundManager} soundManager - A reference to the sound manager that emitted the event.
  * @param {number} detune - The updated detune value.

@@ -12,6 +12,7 @@
  * Listen for it on a Game Object instance using `GameObject.on('destroy', listener)`.
  *
  * @event Phaser.GameObjects.Events#DESTROY
+ * @since 3.0.0
  * 
  * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object which is being destroyed.
  */

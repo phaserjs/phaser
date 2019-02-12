@@ -20,6 +20,7 @@
  * This is not to be confused with the [LOOPED]{@linkcode Phaser.Sound.Events#event:LOOPED} event, which emits each time a Sound loops during playback.
  *
  * @event Phaser.Sound.Events#LOOP
+ * @since 3.0.0
  * 
  * @param {(Phaser.Sound.WebAudioSound|Phaser.Sound.HTML5AudioSound)} sound - A reference to the Sound that emitted the event.
  * @param {boolean} loop - The new loop value. `true` if the Sound will loop, otherwise `false`.

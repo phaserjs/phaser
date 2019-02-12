@@ -13,6 +13,7 @@
  * the animation. For example, if you had an animation with the key 'explode' you should listen for `animationrepeat-explode`.
  *
  * @event Phaser.Animations.Events#SPRITE_ANIMATION_KEY_REPEAT
+ * @since 3.16.1
  * 
  * @param {Phaser.Animations.Animation} animation - A reference to the Animation that is repeating on the Sprite.
  * @param {Phaser.Animations.AnimationFrame} frame - The current Animation Frame that the Animation started with.

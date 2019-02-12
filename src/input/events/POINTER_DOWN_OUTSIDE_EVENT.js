@@ -21,6 +21,7 @@
  * the propagation of this event.
  *
  * @event Phaser.Input.Events#POINTER_DOWN_OUTSIDE
+ * @since 3.16.1
  * 
  * @param {Phaser.Input.Pointer} pointer - The Pointer responsible for triggering this event.
  */

@@ -8,5 +8,6 @@
  * The Scale Manager Resize Event.
  *
  * @event Phaser.Scale.Events#FULLSCREEN_UNSUPPORTED
+ * @since 3.16.1
  */
 module.exports = 'fullscreenunsupported';

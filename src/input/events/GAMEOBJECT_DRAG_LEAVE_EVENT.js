@@ -16,6 +16,7 @@
  * See [GameObject.setInteractive]{@link Phaser.GameObjects.GameObject#setInteractive} for more details.
  *
  * @event Phaser.Input.Events#GAMEOBJECT_DRAG_LEAVE
+ * @since 3.0.0
  * 
  * @param {Phaser.Input.Pointer} pointer - The Pointer responsible for triggering this event.
  * @param {Phaser.GameObjects.GameObject} target - The drag target that this pointer has left.

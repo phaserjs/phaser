@@ -21,6 +21,7 @@
  * the propagation of this event.
  *
  * @event Phaser.Input.Events#POINTER_OUT
+ * @since 3.0.0
  * 
  * @param {Phaser.Input.Pointer} pointer - The Pointer responsible for triggering this event.
  * @param {Phaser.GameObjects.GameObject[]} justOut - An array containing all interactive Game Objects that the pointer moved out of when the event was created.
