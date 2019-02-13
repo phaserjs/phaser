@@ -18,27 +18,19 @@ var SplineCurve = require('../SplineCurve');
 var Vector2 = require('../../math/Vector2');
 
 /**
- * @typedef {object} JSONPath
- *
- * @property {string} type - The of the curve.
- * @property {number} x - The X coordinate of the curve's starting point.
- * @property {number} y - The Y coordinate of the path's starting point.
- * @property {boolean} autoClose - The path is auto closed.
- * @property {JSONCurve[]} curves - The list of the curves
- */
-
-/**
  * @classdesc
- * A Path combines multiple Curves into one continuous compound curve. It does not matter how many Curves are in the Path or what type they are.
+ * A Path combines multiple Curves into one continuous compound curve.
+ * It does not matter how many Curves are in the Path or what type they are.
  *
- * A Curve in a Path does not have to start where the previous Curve ends - that is to say, a Path does not have to be an uninterrupted curve. Only the order of the Curves influences the actual points on the Path.
+ * A Curve in a Path does not have to start where the previous Curve ends - that is to say, a Path does not
+ * have to be an uninterrupted curve. Only the order of the Curves influences the actual points on the Path.
  *
  * @class Path
  * @memberof Phaser.Curves
  * @constructor
  * @since 3.0.0
  *
- * @param {number} [x=0] - The X coordinate of the Path's starting point or a {@link JSONPath}.
+ * @param {number} [x=0] - The X coordinate of the Path's starting point or a {@link Phaser.Curves.Types.JSONPath}.
  * @param {number} [y=0] - The Y coordinate of the Path's starting point.
  */
 var Path = new Class({
@@ -339,12 +331,12 @@ var Path = new Class({
     /**
      * Creates a Path from a Path Configuration object.
      *
-     * The provided object should be a {@link JSONPath}, as returned by {@link #toJSON}. Providing a malformed object may cause errors.
+     * The provided object should be a {@link Phaser.Curves.Types.JSONPath}, as returned by {@link #toJSON}. Providing a malformed object may cause errors.
      *
      * @method Phaser.Curves.Path#fromJSON
      * @since 3.0.0
      *
-     * @param {object} data - The JSON object containing the Path data.
+     * @param {Phaser.Curves.Types.JSONPath} data - The JSON object containing the Path data.
      *
      * @return {Phaser.Curves.Path} This Path object.
      */
@@ -768,7 +760,7 @@ var Path = new Class({
      * @method Phaser.Curves.Path#toJSON
      * @since 3.0.0
      *
-     * @return {JSONPath} [description]
+     * @return {Phaser.Curves.Types.JSONPath} [description]
      */
     toJSON: function ()
     {

@@ -12,7 +12,7 @@
  *
  * @param {number} color - A color value, optionally including the alpha value.
  *
- * @return {ColorObject} An object containing the parsed color values.
+ * @return {Phaser.Display.Types.ColorObject} An object containing the parsed color values.
  */
 var ColorToRGBA = function (color)
 {

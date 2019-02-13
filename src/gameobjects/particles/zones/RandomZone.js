@@ -8,25 +8,6 @@ var Class = require('../../../utils/Class');
 var Vector2 = require('../../../math/Vector2');
 
 /**
- * @callback RandomZoneSourceCallback
- *
- * @param {Phaser.Math.Vector2} point - A point to modify.
- */
-
-/**
- * @typedef {object} RandomZoneSource
- *
- * @property {RandomZoneSourceCallback} getRandomPoint - A function modifying its point argument.
- *
- * @see Phaser.Geom.Circle
- * @see Phaser.Geom.Ellipse
- * @see Phaser.Geom.Line
- * @see Phaser.Geom.Polygon
- * @see Phaser.Geom.Rectangle
- * @see Phaser.Geom.Triangle
- */
-
-/**
  * @classdesc
  * A zone that places particles randomly within a shape's area.
  *
@@ -35,7 +16,7 @@ var Vector2 = require('../../../math/Vector2');
  * @constructor
  * @since 3.0.0
  *
- * @param {RandomZoneSource} source - An object instance with a `getRandomPoint(point)` method.
+ * @param {Phaser.GameObjects.Particles.Types.RandomZoneSource} source - An object instance with a `getRandomPoint(point)` method.
  */
 var RandomZone = new Class({
 
@@ -47,7 +28,7 @@ var RandomZone = new Class({
          * An object instance with a `getRandomPoint(point)` method.
          *
          * @name Phaser.GameObjects.Particles.Zones.RandomZone#source
-         * @type {RandomZoneSource}
+         * @type {Phaser.GameObjects.Particles.Types.RandomZoneSource}
          * @since 3.0.0
          */
         this.source = source;

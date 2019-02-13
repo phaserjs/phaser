@@ -15,31 +15,6 @@ var ValueToColor = require('../../display/color/ValueToColor');
 var Vector2 = require('../../math/Vector2');
 
 /**
- * @typedef {object} JSONCameraBounds
- * @property {number} x - The horizontal position of camera
- * @property {number} y - The vertical position of camera
- * @property {number} width - The width size of camera
- * @property {number} height - The height size of camera
- */
-
-/**
- * @typedef {object} JSONCamera
- *
- * @property {string} name - The name of the camera
- * @property {number} x - The horizontal position of camera
- * @property {number} y - The vertical position of camera
- * @property {number} width - The width size of camera
- * @property {number} height - The height size of camera
- * @property {number} zoom - The zoom of camera
- * @property {number} rotation - The rotation of camera
- * @property {boolean} roundPixels - The round pixels st status of camera
- * @property {number} scrollX - The horizontal scroll of camera
- * @property {number} scrollY - The vertical scroll of camera
- * @property {string} backgroundColor - The background color of camera
- * @property {(JSONCameraBounds|undefined)} [bounds] - The bounds of camera
- */
-
-/**
  * @classdesc
  * A Base Camera class.
  *
@@ -1079,7 +1054,7 @@ var BaseCamera = new Class({
      * @method Phaser.Cameras.Scene2D.BaseCamera#setBackgroundColor
      * @since 3.0.0
      *
-     * @param {(string|number|InputColorObject)} [color='rgba(0,0,0,0)'] - The color value. In CSS, hex or numeric color notation.
+     * @param {(string|number|Phaser.Display.Types.InputColorObject)} [color='rgba(0,0,0,0)'] - The color value. In CSS, hex or numeric color notation.
      *
      * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
      */
@@ -1423,7 +1398,7 @@ var BaseCamera = new Class({
      * @method Phaser.Cameras.Scene2D.BaseCamera#toJSON
      * @since 3.0.0
      *
-     * @return {JSONCamera} A well-formed object suitable for conversion to JSON.
+     * @return {Phaser.Cameras.Scene2D.Types.JSONCamera} A well-formed object suitable for conversion to JSON.
      */
     toJSON: function ()
     {

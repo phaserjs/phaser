@@ -11,7 +11,7 @@ var TileSprite = require('./TileSprite');
 
 /**
  * @typedef {object} TileSprite
- * @extends GameObjectConfig
+ * @extends Phaser.GameObjects.Types.GameObjectConfig
  *
  * @property {number} [x=0] - The x coordinate of the Tile Sprite.
  * @property {number} [y=0] - The y coordinate of the Tile Sprite.

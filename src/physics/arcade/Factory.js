@@ -220,8 +220,8 @@ var Factory = new Class({
      * @method Phaser.Physics.Arcade.Factory#staticGroup
      * @since 3.0.0
      *
-     * @param {(Phaser.GameObjects.GameObject[]|GroupConfig|GroupCreateConfig)} [children] - Game Objects to add to this group; or the `config` argument.
-     * @param {GroupConfig|GroupCreateConfig} [config] - Settings for this group.
+     * @param {(Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group.Types.GroupConfig|Phaser.GameObjects.Group.Types.GroupCreateConfig)} [children] - Game Objects to add to this group; or the `config` argument.
+     * @param {Phaser.GameObjects.Group.Types.GroupConfig|Phaser.GameObjects.Group.Types.GroupCreateConfig} [config] - Settings for this group.
      *
      * @return {Phaser.Physics.Arcade.StaticGroup} The Static Group object that was created.
      */

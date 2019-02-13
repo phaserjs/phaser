@@ -262,7 +262,7 @@ var Color = new Class({
      * @method Phaser.Display.Color#setFromRGB
      * @since 3.0.0
      *
-     * @param {InputColorObject} color - An object containing `r`, `g`, `b` and optionally `a` values in the range 0 to 255.
+     * @param {Phaser.Display.Types.InputColorObject} color - An object containing `r`, `g`, `b` and optionally `a` values in the range 0 to 255.
      *
      * @return {Phaser.Display.Color} This Color object.
      */

@@ -1,5 +1,6 @@
 /**
  * @typedef {object} Phaser.Animations.Types.JSONAnimation
+ * @since 3.0.0
  *
  * @property {string} key - The key that the animation will be associated with. i.e. sprite.animations.play(key)
  * @property {string} type - A frame based animation (as opposed to a bone based animation)

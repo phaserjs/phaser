@@ -1,5 +1,6 @@
 /**
  * @typedef {object} Phaser.Animations.Types.GenerateFrameNames
+ * @since 3.0.0
  *
  * @property {string} [prefix=''] - The string to append to every resulting frame name if using a range or an array of `frames`.
  * @property {integer} [start=0] - If `frames` is not provided, the number of the first frame to return.

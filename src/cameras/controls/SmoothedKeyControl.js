@@ -8,21 +8,6 @@ var Class = require('../../utils/Class');
 var GetValue = require('../../utils/object/GetValue');
 
 /**
- * @typedef {object} SmoothedKeyControlConfig
- *
- * @property {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera that this Control will update.
- * @property {Phaser.Input.Keyboard.Key} [left] - The Key to be pressed that will move the Camera left.
- * @property {Phaser.Input.Keyboard.Key} [right] - The Key to be pressed that will move the Camera right.
- * @property {Phaser.Input.Keyboard.Key} [up] - The Key to be pressed that will move the Camera up.
- * @property {Phaser.Input.Keyboard.Key} [zoomIn] - The Key to be pressed that will zoom the Camera in.
- * @property {Phaser.Input.Keyboard.Key} [zoomOut] - The Key to be pressed that will zoom the Camera out.
- * @property {number} [zoomSpeed=0.01] - The speed at which the camera will zoom if the `zoomIn` or `zoomOut` keys are pressed.
- * @property {(number|{x:number,y:number})} [acceleration=0] - The horizontal and vertical acceleration the camera will move.
- * @property {(number|{x:number,y:number})} [drag=0] - The horizontal and vertical drag applied to the camera when it is moving.
- * @property {(number|{x:number,y:number})} [maxSpeed=0] - The maximum horizontal and vertical speed the camera will move.
- */
-
-/**
  * @classdesc
  * A Smoothed Key Camera Control.
  *
@@ -30,7 +15,6 @@ var GetValue = require('../../utils/object/GetValue');
  * Unlike the Fixed Camera Control you can also provide physics values for acceleration, drag and maxSpeed for smoothing effects.
  *
  * ```javascript
- *
  * var controlConfig = {
  *     camera: this.cameras.main,
  *     left: cursors.left,
@@ -53,7 +37,7 @@ var GetValue = require('../../utils/object/GetValue');
  * @constructor
  * @since 3.0.0
  *
- * @param {SmoothedKeyControlConfig} config - The Smoothed Key Control configuration object.
+ * @param {Phaser.Cameras.Controls.Types.SmoothedKeyControlConfig} config - The Smoothed Key Control configuration object.
  */
 var SmoothedKeyControl = new Class({
 

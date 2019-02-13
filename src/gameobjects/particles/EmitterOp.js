@@ -11,84 +11,6 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var Wrap = require('../../math/Wrap');
 
 /**
- * The returned value sets what the property will be at the START of the particle's life, on emit.
- * @callback EmitterOpOnEmitCallback
- *
- * @param {Phaser.GameObjects.Particles.Particle} particle - The particle.
- * @param {string} key - The name of the property.
- * @param {number} value - The current value of the property.
- *
- * @return {number} The new value of the property.
- */
-
-/**
- * The returned value updates the property for the duration of the particle's life.
- * @callback EmitterOpOnUpdateCallback
- *
- * @param {Phaser.GameObjects.Particles.Particle} particle - The particle.
- * @param {string} key - The name of the property.
- * @param {number} t - The normalized lifetime of the particle, between 0 (start) and 1 (end).
- * @param {number} value - The current value of the property.
- *
- * @return {number} The new value of the property.
- */
-
-/**
- * Defines an operation yielding a random value within a range.
- * @typedef {object} EmitterOpRandomConfig
- *
- * @property {number[]} random - The minimum and maximum values, as [min, max].
- */
-
-/**
- * Defines an operation yielding a random value within a range.
- * @typedef {object} EmitterOpRandomMinMaxConfig
- *
- * @property {number} min - The minimum value.
- * @property {number} max - The maximum value.
- */
-
-/**
- * Defines an operation yielding a random value within a range.
- * @typedef {object} EmitterOpRandomStartEndConfig
- *
- * @property {number} start - The starting value.
- * @property {number} end - The ending value.
- * @property {boolean} random - If false, this becomes {@link EmitterOpEaseConfig}.
- */
-
-/**
- * Defines an operation yielding a value incremented continuously across a range.
- * @typedef {object} EmitterOpEaseConfig
- *
- * @property {number} start - The starting value.
- * @property {number} end - The ending value.
- * @property {string} [ease='Linear'] - The name of the easing function.
- */
-
-/**
- * Defines an operation yielding a value incremented by steps across a range.
- * @typedef {object} EmitterOpSteppedConfig
- *
- * @property {number} start - The starting value.
- * @property {number} end - The ending value.
- * @property {number} steps - The number of steps between start and end.
- */
-
-/**
- * @typedef {object} EmitterOpCustomEmitConfig
- *
- * @property {EmitterOpOnEmitCallback} onEmit - A callback that is invoked each time the emitter emits a particle.
- */
-
-/**
- * @typedef {object} EmitterOpCustomUpdateConfig
- *
- * @property {EmitterOpOnEmitCallback} [onEmit] - A callback that is invoked each time the emitter emits a particle.
- * @property {EmitterOpOnUpdateCallback} onUpdate - A callback that is invoked each time the emitter updates.
- */
-
-/**
  * @classdesc
  * A Particle Emitter property.
  *
@@ -99,7 +21,7 @@ var Wrap = require('../../math/Wrap');
  * @constructor
  * @since 3.0.0
  *
- * @param {ParticleEmitterConfig} config - Settings for the Particle Emitter that owns this property.
+ * @param {Phaser.GameObjects.Particles.Types.ParticleEmitterConfig} config - Settings for the Particle Emitter that owns this property.
  * @param {string} key - The name of the property.
  * @param {number} defaultValue - The default value of the property.
  * @param {boolean} [emitOnly=false] - Whether the property can only be modified when a Particle is emitted.
@@ -211,7 +133,7 @@ var EmitterOp = new Class({
          * The callback to run for Particles when they are emitted from the Particle Emitter.
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#onEmit
-         * @type {EmitterOpOnEmitCallback}
+         * @type {Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback}
          * @since 3.0.0
          */
         this.onEmit = this.defaultEmit;
@@ -220,7 +142,7 @@ var EmitterOp = new Class({
          * The callback to run for Particles when they are updated.
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#onUpdate
-         * @type {EmitterOpOnUpdateCallback}
+         * @type {Phaser.GameObjects.Particles.Types.EmitterOpOnUpdateCallback}
          * @since 3.0.0
          */
         this.onUpdate = this.defaultUpdate;
@@ -236,7 +158,7 @@ var EmitterOp = new Class({
      * @method Phaser.GameObjects.Particles.EmitterOp#loadConfig
      * @since 3.0.0
      *
-     * @param {ParticleEmitterConfig} [config] - Settings for the Particle Emitter that owns this property.
+     * @param {Phaser.GameObjects.Particles.Types.ParticleEmitterConfig} [config] - Settings for the Particle Emitter that owns this property.
      * @param {string} [newKey] - The new key to use for this property, if any.
      */
     loadConfig: function (config, newKey)
@@ -501,7 +423,7 @@ var EmitterOp = new Class({
      * @param {string} key - The name of the property.
      * @param {number} [value] - The current value of the property.
      *
-     * @return {number} The new value of hte property.
+     * @return {number} The new value of the property.
      */
     defaultEmit: function (particle, key, value)
     {

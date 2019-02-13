@@ -10,7 +10,7 @@
  * @name Phaser.Create.Palettes.JMP
  * @since 3.0.0
  *
- * @type {Palette}
+ * @type {Phaser.Create.Types.Palette}
  */
 module.exports = {
     0: '#000',

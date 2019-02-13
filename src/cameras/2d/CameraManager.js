@@ -12,27 +12,6 @@ var RectangleContains = require('../../geom/rectangle/Contains');
 var SceneEvents = require('../../scene/events');
 
 /**
- * @typedef {object} InputJSONCameraObject
- *
- * @property {string} [name=''] - The name of the Camera.
- * @property {integer} [x=0] - The horizontal position of the Camera viewport.
- * @property {integer} [y=0] - The vertical position of the Camera viewport.
- * @property {integer} [width] - The width of the Camera viewport.
- * @property {integer} [height] - The height of the Camera viewport.
- * @property {number} [zoom=1] - The default zoom level of the Camera.
- * @property {number} [rotation=0] - The rotation of the Camera, in radians.
- * @property {boolean} [roundPixels=false] - Should the Camera round pixels before rendering?
- * @property {number} [scrollX=0] - The horizontal scroll position of the Camera.
- * @property {number} [scrollY=0] - The vertical scroll position of the Camera.
- * @property {(false|string)} [backgroundColor=false] - A CSS color string controlling the Camera background color.
- * @property {?object} [bounds] - Defines the Camera bounds.
- * @property {number} [bounds.x=0] - The top-left extent of the Camera bounds.
- * @property {number} [bounds.y=0] - The top-left extent of the Camera bounds.
- * @property {number} [bounds.width] - The width of the Camera bounds.
- * @property {number} [bounds.height] - The height of the Camera bounds.
- */
-
-/**
  * @classdesc
  * The Camera Manager is a plugin that belongs to a Scene and is responsible for managing all of the Scene Cameras.
  * 
@@ -391,12 +370,12 @@ var CameraManager = new Class({
     /**
      * Populates this Camera Manager based on the given configuration object, or an array of config objects.
      * 
-     * See the `InputJSONCameraObject` documentation for details of the object structure.
+     * See the `Phaser.Cameras.Scene2D.Types.CameraConfig` documentation for details of the object structure.
      *
      * @method Phaser.Cameras.Scene2D.CameraManager#fromJSON
      * @since 3.0.0
      *
-     * @param {(InputJSONCameraObject|InputJSONCameraObject[])} config - A Camera configuration object, or an array of them, to be added to this Camera Manager.
+     * @param {(Phaser.Cameras.Scene2D.Types.CameraConfig|Phaser.Cameras.Scene2D.Types.CameraConfig[])} config - A Camera configuration object, or an array of them, to be added to this Camera Manager.
      *
      * @return {Phaser.Cameras.Scene2D.CameraManager} This Camera Manager instance.
      */

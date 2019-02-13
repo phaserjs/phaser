@@ -14,7 +14,7 @@
  *
  * @param {integer} input - The color value to convert into a Color object.
  *
- * @return {ColorObject} An object with the red, green and blue values set in the r, g and b properties.
+ * @return {Phaser.Display.Types.ColorObject} An object with the red, green and blue values set in the r, g and b properties.
  */
 var IntegerToRGB = function (color)
 {

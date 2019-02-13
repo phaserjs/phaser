@@ -1,5 +1,6 @@
 /**
  * @typedef {object} Phaser.Animations.Types.Animation
+ * @since 3.0.0
  *
  * @property {string} [key] - The key that the animation will be associated with. i.e. sprite.animations.play(key)
  * @property {Phaser.Animations.Types.AnimationFrame[]} [frames] - An object containing data used to generate the frames for the animation

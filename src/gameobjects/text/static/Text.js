@@ -1274,7 +1274,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#toJSON
      * @since 3.0.0
      *
-     * @return {JSONGameObject} A JSON representation of the Text object.
+     * @return {Phaser.GameObjects.Types.JSONGameObject} A JSON representation of the Text object.
      */
     toJSON: function ()
     {

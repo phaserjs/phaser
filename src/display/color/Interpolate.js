@@ -29,7 +29,7 @@ var Linear = require('../../math/Linear');
  * @param {number} [length=100] - Distance to interpolate over.
  * @param {number} [index=0] - Index to start from.
  *
- * @return {ColorObject} An object containing the interpolated color values.
+ * @return {Phaser.Display.Types.ColorObject} An object containing the interpolated color values.
  */
 var RGBWithRGB = function (r1, g1, b1, r2, g2, b2, length, index)
 {
@@ -58,7 +58,7 @@ var RGBWithRGB = function (r1, g1, b1, r2, g2, b2, length, index)
  * @param {number} [length=100] - Distance to interpolate over.
  * @param {number} [index=0] - Index to start from.
  *
- * @return {ColorObject} An object containing the interpolated color values.
+ * @return {Phaser.Display.Types.ColorObject} An object containing the interpolated color values.
  */
 var ColorWithColor = function (color1, color2, length, index)
 {
@@ -83,7 +83,7 @@ var ColorWithColor = function (color1, color2, length, index)
  * @param {number} [length=100] - Distance to interpolate over.
  * @param {number} [index=0] - Index to start from.
  *
- * @return {ColorObject} An object containing the interpolated color values.
+ * @return {Phaser.Display.Types.ColorObject} An object containing the interpolated color values.
  */
 var ColorWithRGB = function (color, r, g, b, length, index)
 {

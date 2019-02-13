@@ -24,44 +24,6 @@ var MATH_CONST = require('../../math/const');
 var Render = require('./GraphicsRender');
 
 /**
- * Graphics line style (or stroke style) settings.
- *
- * @typedef {object} GraphicsLineStyle
- *
- * @property {number} [width] - The stroke width.
- * @property {number} [color] - The stroke color.
- * @property {number} [alpha] - The stroke alpha.
- */
-
-/**
- * Graphics fill style settings.
- *
- * @typedef {object} GraphicsFillStyle
- *
- * @property {number} [color] - The fill color.
- * @property {number} [alpha] - The fill alpha.
- */
-
-/**
- * Graphics style settings.
- *
- * @typedef {object} GraphicsStyles
- *
- * @property {GraphicsLineStyle} [lineStyle] - The style applied to shape outlines.
- * @property {GraphicsFillStyle} [fillStyle] - The style applied to shape areas.
- */
-
-/**
- * Options for the Graphics game Object.
- *
- * @typedef {object} GraphicsOptions
- * @extends GraphicsStyles
- *
- * @property {number} [x] - The x coordinate of the Graphics.
- * @property {number} [y] - The y coordinate of the Graphics.
- */
-
-/**
  * @classdesc
  * A Graphics object is a way to draw primitive shapes to your game. Primitives include forms of geometry, such as
  * Rectangles, Circles, and Polygons. They also include lines, arcs and curves. When you initially create a Graphics
@@ -118,7 +80,7 @@ var Render = require('./GraphicsRender');
  * @extends Phaser.GameObjects.Components.ScrollFactor
  *
  * @param {Phaser.Scene} scene - The Scene to which this Graphics object belongs.
- * @param {GraphicsOptions} [options] - Options that set the position and default style of this Graphics object.
+ * @param {Phaser.GameObjects.Graphics.Types.Options} [options] - Options that set the position and default style of this Graphics object.
  */
 var Graphics = new Class({
 
@@ -247,7 +209,7 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#setDefaultStyles
      * @since 3.0.0
      *
-     * @param {GraphicsStyles} options - The styles to set as defaults.
+     * @param {Phaser.GameObjects.Graphics.Types.Styles} options - The styles to set as defaults.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -731,15 +693,6 @@ var Graphics = new Class({
     },
 
     /**
-     * @typedef {object} RoundedRectRadius
-     * 
-     * @property {number} [tl=20] - Top left
-     * @property {number} [tr=20] - Top right
-     * @property {number} [br=20] - Bottom right
-     * @property {number} [bl=20] - Bottom left
-     */
-
-    /**
      * Fill a rounded rectangle with the given position, size and radius.
      *
      * @method Phaser.GameObjects.Graphics#fillRoundedRect
@@ -749,7 +702,7 @@ var Graphics = new Class({
      * @param {number} y - The y coordinate of the top-left of the rectangle.
      * @param {number} width - The width of the rectangle.
      * @param {number} height - The height of the rectangle.
-     * @param {(RoundedRectRadius|number)} [radius=20] - The corner radius; It can also be an object to specify different radii for corners.
+     * @param {(Phaser.GameObjects.Graphics.Types.RoundedRectRadius|number)} [radius=20] - The corner radius; It can also be an object to specify different radii for corners.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -795,7 +748,7 @@ var Graphics = new Class({
      * @param {number} y - The y coordinate of the top-left of the rectangle.
      * @param {number} width - The width of the rectangle.
      * @param {number} height - The height of the rectangle.
-     * @param {(RoundedRectRadius|number)} [radius=20] - The corner radius; It can also be an object to specify different radii for corners.
+     * @param {(Phaser.GameObjects.Graphics.Types.RoundedRectRadius|number)} [radius=20] - The corner radius; It can also be an object to specify different radii for corners.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */

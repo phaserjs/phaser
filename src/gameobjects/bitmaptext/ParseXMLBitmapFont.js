@@ -33,7 +33,7 @@ function getValue (node, attribute)
  * @param {integer} [ySpacing=0] - The y-axis spacing to add to the line height.
  * @param {Phaser.Textures.Frame} [frame] - The texture frame to take into account while parsing.
  *
- * @return {BitmapFontData} The parsed Bitmap Font data.
+ * @return {Phaser.GameObjects.BitmapText.Types.BitmapFontData} The parsed Bitmap Font data.
  */
 var ParseXMLBitmapFont = function (xml, xSpacing, ySpacing, frame)
 {

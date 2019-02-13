@@ -9,28 +9,6 @@ var Class = require('../../../utils/Class');
 var Render = require('./DynamicBitmapTextRender');
 
 /**
- * @typedef {object} DisplayCallbackConfig
- * 
- * @property {Phaser.GameObjects.DynamicBitmapText} parent - The Dynamic Bitmap Text object that owns this character being rendered.
- * @property {{topLeft:number, topRight:number, bottomLeft:number, bottomRight:number}} tint - The tint of the character being rendered. Always zero in Canvas.
- * @property {number} index - The index of the character being rendered.
- * @property {number} charCode - The character code of the character being rendered.
- * @property {number} x - The x position of the character being rendered.
- * @property {number} y - The y position of the character being rendered.
- * @property {number} scale - The scale of the character being rendered.
- * @property {number} rotation - The rotation of the character being rendered.
- * @property {any} data - Custom data stored with the character being rendered.
- */
-
-/**
- * @callback DisplayCallback
- *
- * @param {DisplayCallbackConfig} display - Settings of the character that is about to be rendered.
- *
- * @return {{x:number, y:number, scale:number, rotation:number}} Altered position, scale and rotation values for the character that is about to be rendered.
- */
-
-/**
  * @classdesc
  * BitmapText objects work by taking a texture file and an XML or JSON file that describes the font structure.
  * 
@@ -132,7 +110,7 @@ var DynamicBitmapText = new Class({
          * A callback that alters how each character of the Bitmap Text is rendered.
          *
          * @name Phaser.GameObjects.DynamicBitmapText#displayCallback
-         * @type {DisplayCallback}
+         * @type {Phaser.GameObjects.BitmapText.Types.DisplayCallback}
          * @since 3.0.0
          */
         this.displayCallback;
@@ -146,7 +124,7 @@ var DynamicBitmapText = new Class({
          * should shallow copy it, as it's updated and re-used for every glyph in the text.
          *
          * @name Phaser.GameObjects.DynamicBitmapText#callbackData
-         * @type {DisplayCallbackConfig}
+         * @type {Phaser.GameObjects.BitmapText.Types.DisplayCallbackConfig}
          * @since 3.11.0
          */
         this.callbackData = {
@@ -190,7 +168,7 @@ var DynamicBitmapText = new Class({
     /**
      * Set a callback that alters how each character of the Bitmap Text is rendered.
      *
-     * The callback receives a {@link DisplayCallbackConfig} object that contains information about the character that's
+     * The callback receives a {@link Phaser.GameObjects.BitmapText.Types.DisplayCallbackConfig} object that contains information about the character that's
      * about to be rendered.
      *
      * It should return an object with `x`, `y`, `scale` and `rotation` properties that will be used instead of the
@@ -199,7 +177,7 @@ var DynamicBitmapText = new Class({
      * @method Phaser.GameObjects.DynamicBitmapText#setDisplayCallback
      * @since 3.0.0
      *
-     * @param {DisplayCallback} callback - The display callback to set.
+     * @param {Phaser.GameObjects.BitmapText.Types.DisplayCallback} callback - The display callback to set.
      *
      * @return {Phaser.GameObjects.DynamicBitmapText} This Game Object.
      */

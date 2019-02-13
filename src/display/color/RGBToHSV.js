@@ -5,14 +5,6 @@
  */
 
 /**
- * @typedef {object} HSVColorObject
- *
- * @property {number} h - The hue color value. A number between 0 and 1
- * @property {number} s - The saturation color value. A number between 0 and 1
- * @property {number} v - The lightness color value. A number between 0 and 1
- */
-
-/**
  * Converts an RGB color value to HSV (hue, saturation and value).
  * Conversion forumla from http://en.wikipedia.org/wiki/HSL_color_space.
  * Assumes RGB values are contained in the set [0, 255] and returns h, s and v in the set [0, 1].
@@ -24,9 +16,9 @@
  * @param {integer} r - The red color value. A number between 0 and 255.
  * @param {integer} g - The green color value. A number between 0 and 255.
  * @param {integer} b - The blue color value. A number between 0 and 255.
- * @param {(HSVColorObject|Phaser.Display.Color)} [out] - An object to store the color values in. If not given an HSV Color Object will be created.
+ * @param {(Phaser.Display.Types.HSVColorObject|Phaser.Display.Color)} [out] - An object to store the color values in. If not given an HSV Color Object will be created.
  *
- * @return {(HSVColorObject|Phaser.Display.Color)} An object with the properties `h`, `s` and `v` set.
+ * @return {(Phaser.Display.Types.HSVColorObject|Phaser.Display.Color)} An object with the properties `h`, `s` and `v` set.
  */
 var RGBToHSV = function (r, g, b, out)
 {
