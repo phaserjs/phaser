@@ -363,24 +363,12 @@ var KeyboardPlugin = new Class({
     },
 
     /**
-     * @typedef {object} CursorKeys
-     * @memberof Phaser.Input.Keyboard
-     * 
-     * @property {Phaser.Input.Keyboard.Key} [up] - A Key object mapping to the UP arrow key.
-     * @property {Phaser.Input.Keyboard.Key} [down] - A Key object mapping to the DOWN arrow key.
-     * @property {Phaser.Input.Keyboard.Key} [left] - A Key object mapping to the LEFT arrow key.
-     * @property {Phaser.Input.Keyboard.Key} [right] - A Key object mapping to the RIGHT arrow key.
-     * @property {Phaser.Input.Keyboard.Key} [space] - A Key object mapping to the SPACE BAR key.
-     * @property {Phaser.Input.Keyboard.Key} [shift] - A Key object mapping to the SHIFT key.
-     */
-
-    /**
      * Creates and returns an object containing 4 hotkeys for Up, Down, Left and Right, and also Space Bar and shift.
      *
      * @method Phaser.Input.Keyboard.KeyboardPlugin#createCursorKeys
      * @since 3.10.0
      *
-     * @return {CursorKeys} An object containing the properties: `up`, `down`, `left`, `right`, `space` and `shift`.
+     * @return {Phaser.Input.Keyboard.Types.CursorKeys} An object containing the properties: `up`, `down`, `left`, `right`, `space` and `shift`.
      */
     createCursorKeys: function ()
     {
@@ -593,7 +581,7 @@ var KeyboardPlugin = new Class({
      * @since 3.10.0
      *
      * @param {(string|integer[]|object[])} keys - The keys that comprise this combo.
-     * @param {KeyComboConfig} [config] - A Key Combo configuration object.
+     * @param {Phaser.Input.Keyboard.Types.KeyComboConfig} [config] - A Key Combo configuration object.
      *
      * @return {Phaser.Input.Keyboard.KeyCombo} The new KeyCombo object.
      */

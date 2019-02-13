@@ -11,14 +11,6 @@ var GetValue = require('../utils/object/GetValue');
 var inputPlugins = {};
 
 /**
- * @typedef {object} InputPluginContainer
- *
- * @property {string} key - The unique name of this plugin in the input plugin cache.
- * @property {function} plugin - The plugin to be stored. Should be the source object, not instantiated.
- * @property {string} [mapping] - If this plugin is to be injected into the Input Plugin, this is the property key map used.
- */
-
-/**
  * @namespace Phaser.Input.InputPluginCache
  */
 
@@ -56,7 +48,7 @@ InputPluginCache.register = function (key, plugin, mapping, settingsKey, configK
  * 
  * @param {string} key - The key of the input plugin to get.
  *
- * @return {InputPluginContainer} The input plugin object.
+ * @return {Phaser.Input.Types.InputPluginContainer} The input plugin object.
  */
 InputPluginCache.getPlugin = function (key)
 {

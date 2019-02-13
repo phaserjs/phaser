@@ -9,7 +9,8 @@
  * 
  * This object is passed to the registered event listeners and allows you to stop any further propagation.
  * 
- * @typedef {object} Phaser.Input.EventData
+ * @typedef {object} Phaser.Input.Types.EventData
+ * @since 3.15.1
  * 
  * @property {boolean} [cancelled=false] - The cancelled state of this Event.
  * @property {function} stopPropagation - Call this method to stop this event from passing any further down the event chain.

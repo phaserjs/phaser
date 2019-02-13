@@ -40,7 +40,7 @@
  * @property {?number} [setAlpha.value=0] - The alpha value of each new Game Object.
  * @property {?number} [setAlpha.step=0] - Increment each Game Object's alpha from the previous by this amount, starting from `setAlpha.value`.
  * @property {?*} [hitArea] - A geometric shape that defines the hit area for the Game Object.
- * @property {?HitAreaCallback} [hitAreaCallback] - A callback to be invoked when the Game Object is interacted with.
+ * @property {?Phaser.Input.Types.HitAreaCallback} [hitAreaCallback] - A callback to be invoked when the Game Object is interacted with.
  * @property {?(false|Phaser.Actions.Types.GridAlignConfig)} [gridAlign=false] - Align the new Game Objects in a grid using these settings.
  *
  * @see Phaser.Actions.GridAlign

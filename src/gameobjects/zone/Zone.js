@@ -236,7 +236,7 @@ var Zone = new Class({
      * @since 3.0.0
      *
      * @param {object} shape - A Geometry shape instance, such as Phaser.Geom.Ellipse, or your own custom shape.
-     * @param {HitAreaCallback} callback - A function that will return `true` if the given x/y coords it is sent are within the shape.
+     * @param {Phaser.Input.Types.HitAreaCallback} callback - A function that will return `true` if the given x/y coords it is sent are within the shape.
      *
      * @return {Phaser.GameObjects.Zone} This Game Object.
      */

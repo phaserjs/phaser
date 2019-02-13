@@ -13,13 +13,6 @@ var InputPluginCache = require('../InputPluginCache');
 var InputEvents = require('../events');
 
 /**
- * @typedef {object} Pad
- *
- * @property {string} id - The ID of the Gamepad.
- * @property {integer} index - The index of the Gamepad.
- */
-
-/**
  * @classdesc
  * The Gamepad Plugin is an input plugin that belongs to the Scene-owned Input system.
  *
