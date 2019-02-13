@@ -18,61 +18,6 @@ var TILEMAP_FORMATS = require('../../tilemaps/Formats');
 var TYPE = require('./TYPE');
 
 /**
- * @typedef {object} Phaser.Physics.Impact.WorldConfig
- *
- * @property {number} [gravity=0] - Sets {@link Phaser.Physics.Impact.World#gravity}
- * @property {number} [cellSize=64] - The size of the cells used for the broadphase pass. Increase this value if you have lots of large objects in the world.
- * @property {number} [timeScale=1] - A `Number` that allows per-body time scaling, e.g. a force-field where bodies inside are in slow-motion, while others are at full speed.
- * @property {number} [maxStep=0.05] - [description]
- * @property {boolean} [debug=false] - Sets {@link Phaser.Physics.Impact.World#debug}.
- * @property {number} [maxVelocity=100] - The maximum velocity a body can move.
- * @property {boolean} [debugShowBody=true] - Whether the Body's boundary is drawn to the debug display.
- * @property {boolean} [debugShowVelocity=true] - Whether the Body's velocity is drawn to the debug display.
- * @property {number} [debugBodyColor=0xff00ff] - The color of this Body on the debug display.
- * @property {number} [debugVelocityColor=0x00ff00] - The color of the Body's velocity on the debug display.
- * @property {number} [maxVelocityX=maxVelocity] - Maximum X velocity objects can move.
- * @property {number} [maxVelocityY=maxVelocity] - Maximum Y velocity objects can move.
- * @property {number} [minBounceVelocity=40] - The minimum velocity an object can be moving at to be considered for bounce.
- * @property {number} [gravityFactor=1] - Gravity multiplier. Set to 0 for no gravity.
- * @property {number} [bounciness=0] - The default bounce, or restitution, of bodies in the world.
- * @property {(object|boolean)} [setBounds] - Should the world have bounds enabled by default?
- * @property {number} [setBounds.x=0] - The x coordinate of the world bounds.
- * @property {number} [setBounds.y=0] - The y coordinate of the world bounds.
- * @property {number} [setBounds.width] - The width of the world bounds.
- * @property {number} [setBounds.height] - The height of the world bounds.
- * @property {number} [setBounds.thickness=64] - The thickness of the walls of the world bounds.
- * @property {boolean} [setBounds.left=true] - Should the left-side world bounds wall be created?
- * @property {boolean} [setBounds.right=true] - Should the right-side world bounds wall be created?
- * @property {boolean} [setBounds.top=true] - Should the top world bounds wall be created?
- * @property {boolean} [setBounds.bottom=true] - Should the bottom world bounds wall be created?
- */
-
-/**
- * An object containing the 4 wall bodies that bound the physics world.
- * 
- * @typedef {object} Phaser.Physics.Impact.WorldDefaults
- *
- * @property {boolean} debugShowBody - Whether the Body's boundary is drawn to the debug display.
- * @property {boolean} debugShowVelocity - Whether the Body's velocity is drawn to the debug display.
- * @property {number} bodyDebugColor - The color of this Body on the debug display.
- * @property {number} velocityDebugColor - The color of the Body's velocity on the debug display.
- * @property {number} maxVelocityX - Maximum X velocity objects can move.
- * @property {number} maxVelocityY - Maximum Y velocity objects can move.
- * @property {number} minBounceVelocity - The minimum velocity an object can be moving at to be considered for bounce.
- * @property {number} gravityFactor - Gravity multiplier. Set to 0 for no gravity.
- * @property {number} bounciness - The default bounce, or restitution, of bodies in the world.
- */
-
-/**
- * @typedef {object} Phaser.Physics.Impact.WorldWalls
- *
- * @property {?Phaser.Physics.Impact.Body} left - The left-side wall of the world bounds.
- * @property {?Phaser.Physics.Impact.Body} right - The right-side wall of the world bounds.
- * @property {?Phaser.Physics.Impact.Body} top - The top wall of the world bounds.
- * @property {?Phaser.Physics.Impact.Body} bottom - The bottom wall of the world bounds.
- */
-
-/**
  * @classdesc
  * [description]
  *
@@ -83,7 +28,7 @@ var TYPE = require('./TYPE');
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - The Scene to which this Impact World instance belongs.
- * @param {Phaser.Physics.Impact.WorldConfig} config - [description]
+ * @param {Phaser.Physics.Impact.Types.WorldConfig} config - [description]
  */
 var World = new Class({
 
@@ -196,7 +141,7 @@ var World = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.World#defaults
-         * @type {Phaser.Physics.Impact.WorldDefaults}
+         * @type {Phaser.Physics.Impact.Types.WorldDefaults}
          * @since 3.0.0
          */
         this.defaults = {
@@ -215,7 +160,7 @@ var World = new Class({
          * An object containing the 4 wall bodies that bound the physics world.
          *
          * @name Phaser.Physics.Impact.World#walls
-         * @type {Phaser.Physics.Impact.WorldWalls}
+         * @type {Phaser.Physics.Impact.Types.WorldWalls}
          * @since 3.0.0
          */
         this.walls = { left: null, right: null, top: null, bottom: null };
@@ -326,20 +271,6 @@ var World = new Class({
     },
 
     /**
-     * @typedef {object} CollisionOptions
-     * 
-     * @property {string} [slopeTileProperty=null] - Slope IDs can be stored on tiles directly
-     * using Impacts tileset editor. If a tile has a property with the given slopeTileProperty string
-     * name, the value of that property for the tile will be used for its slope mapping. E.g. a 45
-     * degree slope upward could be given a "slope" property with a value of 2.
-     * @property {object} [slopeMap=null] - A tile index to slope definition map.
-     * @property {integer} [defaultCollidingSlope=null] - If specified, the default slope ID to
-     * assign to a colliding tile. If not specified, the tile's index is used.
-     * @property {integer} [defaultNonCollidingSlope=0] - The default slope ID to assign to a
-     * non-colliding tile.
-     */
-
-    /**
      * Sets the collision map for the world from a tilemap layer. Only tiles that are marked as
      * colliding will be used. You can specify the mapping from tiles to slope IDs in a couple of
      * ways. The easiest is to use Tiled and the slopeTileProperty option. Alternatively, you can
@@ -349,7 +280,7 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer - The tilemap layer to use.
-     * @param {CollisionOptions} [options] - Options for controlling the mapping from tiles to slope IDs.
+     * @param {Phaser.Physics.Impact.Types.CollisionOptions} [options] - Options for controlling the mapping from tiles to slope IDs.
      *
      * @return {Phaser.Physics.Impact.CollisionMap} The newly created CollisionMap.
      */
