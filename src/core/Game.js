@@ -57,7 +57,7 @@ if (typeof PLUGIN_FBINSTANT)
  * @fires Phaser.Core.Events#VISIBLE
  * @since 3.0.0
  *
- * @param {GameConfig} [GameConfig] - The configuration object for your Phaser Game instance.
+ * @param {Phaser.Core.Types.GameConfig} [GameConfig] - The configuration object for your Phaser Game instance.
  */
 var Game = new Class({
 
