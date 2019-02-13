@@ -49,7 +49,7 @@ var ScenePlugin = new Class({
          * The settings of the Scene this ScenePlugin belongs to.
          *
          * @name Phaser.Scenes.ScenePlugin#settings
-         * @type {Phaser.Scenes.Settings.Object}
+         * @type {Phaser.Scenes.Types.SettingsObject}
          * @since 3.0.0
          */
         this.settings = scene.sys.settings;
@@ -227,20 +227,6 @@ var ScenePlugin = new Class({
     },
 
     /**
-     * @typedef {object} SceneTransitionConfig
-     *
-     * @property {string} target - The Scene key to transition to.
-     * @property {integer} [duration=1000] - The duration, in ms, for the transition to last.
-     * @property {boolean} [sleep=false] - Will the Scene responsible for the transition be sent to sleep on completion (`true`), or stopped? (`false`)
-     * @property {boolean} [allowInput=false] - Will the Scenes Input system be able to process events while it is transitioning in or out?
-     * @property {boolean} [moveAbove] - Move the target Scene to be above this one before the transition starts.
-     * @property {boolean} [moveBelow] - Move the target Scene to be below this one before the transition starts.
-     * @property {function} [onUpdate] - This callback is invoked every frame for the duration of the transition.
-     * @property {any} [onUpdateScope] - The context in which the callback is invoked.
-     * @property {any} [data] - An object containing any data you wish to be passed to the target Scenes init / create methods.
-     */
-
-    /**
      * This will start a transition from the current Scene to the target Scene given.
      *
      * The transition will last for the duration specified in milliseconds.
@@ -274,7 +260,7 @@ var ScenePlugin = new Class({
      * @fires Phaser.Scenes.Events#TRANSITION_OUT
      * @since 3.5.0
      *
-     * @param {SceneTransitionConfig} config - The transition configuration object.
+     * @param {Phaser.Scenes.Types.SceneTransitionConfig} config - The transition configuration object.
      *
      * @return {boolean} `true` is the transition was started, otherwise `false`.
      */
@@ -444,7 +430,7 @@ var ScenePlugin = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The Scene key.
-     * @param {(Phaser.Scene|Phaser.Scenes.Settings.Config|function)} sceneConfig - The config for the Scene.
+     * @param {(Phaser.Scene|Phaser.Scenes.Types.SettingsConfig|function)} sceneConfig - The config for the Scene.
      * @param {boolean} autoStart - Whether to start the Scene after it's added.
      * @param {object} [data] - Optional data object. This will be set as Scene.settings.data and passed to `Scene.init`.
      *

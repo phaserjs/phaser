@@ -89,7 +89,7 @@ var InputPlugin = new Class({
          * A reference to the Scene Systems Settings.
          *
          * @name Phaser.Input.InputPlugin#settings
-         * @type {Phaser.Scenes.Settings.Object}
+         * @type {Phaser.Scenes.Types.SettingsObject}
          * @since 3.5.0
          */
         this.settings = scene.sys.settings;

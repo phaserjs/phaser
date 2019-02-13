@@ -78,7 +78,7 @@ var GamepadPlugin = new Class({
          * A reference to the Scene Systems Settings.
          *
          * @name Phaser.Input.Gamepad.GamepadPlugin#settings
-         * @type {Phaser.Scenes.Settings.Object}
+         * @type {Phaser.Scenes.Types.SettingsObject}
          * @since 3.10.0
          */
         this.settings = this.scene.sys.settings;

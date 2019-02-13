@@ -23,7 +23,7 @@ var NOOP = require('../utils/NOOP');
  *
  * @param {Phaser.Sound.BaseSoundManager} manager - Reference to the current sound manager instance.
  * @param {string} key - Asset key for the sound.
- * @param {SoundConfig} [config] - An optional config object containing default sound settings.
+ * @param {Phaser.Sound.Types.SoundConfig} [config] - An optional config object containing default sound settings.
  */
 var BaseSound = new Class({
 
@@ -116,7 +116,7 @@ var BaseSound = new Class({
          * Default values will be set by properties' setters.
          *
          * @name Phaser.Sound.BaseSound#config
-         * @type {SoundConfig}
+         * @type {Phaser.Sound.Types.SoundConfig}
          * @private
          * @since 3.0.0
          */
@@ -137,7 +137,7 @@ var BaseSound = new Class({
          * It could be default config or marker config.
          *
          * @name Phaser.Sound.BaseSound#currentConfig
-         * @type {SoundConfig}
+         * @type {Phaser.Sound.Types.SoundConfig}
          * @private
          * @since 3.0.0
          */
@@ -149,7 +149,7 @@ var BaseSound = new Class({
          * Object containing markers definitions.
          *
          * @name Phaser.Sound.BaseSound#markers
-         * @type {Object.<string, SoundMarker>}
+         * @type {Object.<string, Phaser.Sound.Types.SoundMarker>}
          * @default {}
          * @readonly
          * @since 3.0.0
@@ -161,7 +161,7 @@ var BaseSound = new Class({
          * 'null' if whole sound is playing.
          *
          * @name Phaser.Sound.BaseSound#currentMarker
-         * @type {SoundMarker}
+         * @type {Phaser.Sound.Types.SoundMarker}
          * @default null
          * @readonly
          * @since 3.0.0
@@ -232,7 +232,7 @@ var BaseSound = new Class({
      * @method Phaser.Sound.BaseSound#updateMarker
      * @since 3.0.0
      *
-     * @param {SoundMarker} marker - Marker object with updated values.
+     * @param {Phaser.Sound.Types.SoundMarker} marker - Marker object with updated values.
      *
      * @return {boolean} Whether the marker was updated successfully.
      */
@@ -264,7 +264,7 @@ var BaseSound = new Class({
      *
      * @param {string} markerName - The name of the marker to remove.
      *
-     * @return {?SoundMarker} Removed marker object or 'null' if there was no marker with provided name.
+     * @return {?Phaser.Sound.Types.SoundMarker} Removed marker object or 'null' if there was no marker with provided name.
      */
     removeMarker: function (markerName)
     {
@@ -289,7 +289,7 @@ var BaseSound = new Class({
      * @since 3.0.0
      *
      * @param {string} [markerName=''] - If you want to play a marker then provide the marker name here, otherwise omit it to play the full sound.
-     * @param {SoundConfig} [config] - Optional sound config object to be applied to this marker or entire sound if no marker name is provided. It gets memorized for future plays of current section of the sound.
+     * @param {Phaser.Sound.Types.SoundConfig} [config] - Optional sound config object to be applied to this marker or entire sound if no marker name is provided. It gets memorized for future plays of current section of the sound.
      *
      * @return {boolean} Whether the sound started playing successfully.
      */
