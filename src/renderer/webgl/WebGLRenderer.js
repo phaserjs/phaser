@@ -198,7 +198,7 @@ var WebGLRenderer = new Class({
          * If a non-null `callback` is set in this object, a snapshot of the canvas will be taken after the current frame is fully rendered.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#snapshotState
-         * @type {SnapshotState}
+         * @type {Phaser.Renderer.Snapshot.Types.SnapshotState}
          * @since 3.0.0
          */
         this.snapshotState = {

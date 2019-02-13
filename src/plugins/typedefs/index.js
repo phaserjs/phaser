@@ -5,12 +5,5 @@
  */
 
 /**
- * @namespace Phaser.Renderer.Snapshot
+ * @namespace Phaser.Plugins.Types
  */
-
-module.exports = {
-
-    Canvas: require('./CanvasSnapshot'),
-    WebGL: require('./WebGLSnapshot')
-
-};

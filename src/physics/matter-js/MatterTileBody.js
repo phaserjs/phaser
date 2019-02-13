@@ -13,14 +13,6 @@ var HasValue = require('../../utils/object/HasValue');
 var Vertices = require('./lib/geometry/Vertices');
 
 /**
- * @typedef {object} MatterTileOptions
- * 
- * @property {MatterJS.Body} [body=null] - An existing Matter body to be used instead of creating a new one.
- * @property {boolean} [isStatic=true] - Whether or not the newly created body should be made static. This defaults to true since typically tiles should not be moved.
- * @property {boolean} [addToWorld=true] - Whether or not to add the newly created body (or existing body if options.body is used) to the Matter world.
- */
-
-/**
  * @classdesc
  * A wrapper around a Tile that provides access to a corresponding Matter body. A tile can only
  * have one Matter body associated with it. You can either pass in an existing Matter body for
@@ -49,7 +41,7 @@ var Vertices = require('./lib/geometry/Vertices');
  *
  * @param {Phaser.Physics.Matter.World} world - [description]
  * @param {Phaser.Tilemaps.Tile} tile - The target tile that should have a Matter body.
- * @param {MatterTileOptions} [options] - Options to be used when creating the Matter body.
+ * @param {Phaser.Physics.Matter.Types.MatterTileOptions} [options] - Options to be used when creating the Matter body.
  */
 var MatterTileBody = new Class({
 
@@ -122,19 +114,12 @@ var MatterTileBody = new Class({
     },
 
     /**
-     * @typedef {object} MatterBodyTileOptions
-     * 
-     * @property {boolean} [isStatic=true] - Whether or not the newly created body should be made static. This defaults to true since typically tiles should not be moved.
-     * @property {boolean} [addToWorld=true] - Whether or not to add the newly created body (or existing body if options.body is used) to the Matter world.
-     */
-
-    /**
      * Sets the current body to a rectangle that matches the bounds of the tile.
      *
      * @method Phaser.Physics.Matter.TileBody#setFromTileRectangle
      * @since 3.0.0
      *
-     * @param {MatterBodyTileOptions} [options] - Options to be used when creating the Matter body. See MatterJS.Body for a list of what Matter accepts.
+     * @param {Phaser.Physics.Matter.Types.MatterBodyTileOptions} [options] - Options to be used when creating the Matter body. See MatterJS.Body for a list of what Matter accepts.
      * 
      * @return {Phaser.Physics.Matter.TileBody} This TileBody object.
      */

@@ -158,7 +158,7 @@ var CanvasRenderer = new Class({
          * If a non-null `callback` is set in this object, a snapshot of the canvas will be taken after the current frame is fully rendered.
          *
          * @name Phaser.Renderer.Canvas.CanvasRenderer#snapshotState
-         * @type {SnapshotState}
+         * @type {Phaser.Renderer.Snapshot.Types.SnapshotState}
          * @since 3.16.0
          */
         this.snapshotState = {
