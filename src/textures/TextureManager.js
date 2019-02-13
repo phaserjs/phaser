@@ -678,17 +678,6 @@ var TextureManager = new Class({
     },
 
     /**
-     * @typedef {object} SpriteSheetConfig
-     * 
-     * @property {integer} frameWidth - The fixed width of each frame.
-     * @property {integer} [frameHeight] - The fixed height of each frame. If not set it will use the frameWidth as the height.
-     * @property {integer} [startFrame=0] - Skip a number of frames. Useful when there are multiple sprite sheets in one Texture.
-     * @property {integer} [endFrame=-1] - The total number of frames to extract from the Sprite Sheet. The default value of -1 means "extract all frames".
-     * @property {integer} [margin=0] - If the frames have been drawn with a margin, specify the amount here.
-     * @property {integer} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
-     */
-
-    /**
      * Adds a Sprite Sheet to this Texture Manager.
      *
      * In Phaser terminology a Sprite Sheet is a texture containing different frames, but each frame is the exact
@@ -700,7 +689,7 @@ var TextureManager = new Class({
      *
      * @param {string} key - The unique string-based key of the Texture.
      * @param {HTMLImageElement} source - The source Image element.
-     * @param {SpriteSheetConfig} config - The configuration object for this Sprite Sheet.
+     * @param {Phaser.Textures.Types.SpriteSheetConfig} config - The configuration object for this Sprite Sheet.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
@@ -724,19 +713,6 @@ var TextureManager = new Class({
     },
 
     /**
-     * @typedef {object} SpriteSheetFromAtlasConfig
-     * 
-     * @property {string} atlas - The key of the Texture Atlas in which this Sprite Sheet can be found.
-     * @property {string} frame - The key of the Texture Atlas Frame in which this Sprite Sheet can be found.
-     * @property {integer} frameWidth - The fixed width of each frame.
-     * @property {integer} [frameHeight] - The fixed height of each frame. If not set it will use the frameWidth as the height.
-     * @property {integer} [startFrame=0] - Skip a number of frames. Useful when there are multiple sprite sheets in one Texture.
-     * @property {integer} [endFrame=-1] - The total number of frames to extract from the Sprite Sheet. The default value of -1 means "extract all frames".
-     * @property {integer} [margin=0] - If the frames have been drawn with a margin, specify the amount here.
-     * @property {integer} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
-     */
-
-    /**
      * Adds a Sprite Sheet to this Texture Manager, where the Sprite Sheet exists as a Frame within a Texture Atlas.
      *
      * In Phaser terminology a Sprite Sheet is a texture containing different frames, but each frame is the exact
@@ -747,7 +723,7 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {SpriteSheetFromAtlasConfig} config - The configuration object for this Sprite Sheet.
+     * @param {Phaser.Textures.Types.SpriteSheetFromAtlasConfig} config - The configuration object for this Sprite Sheet.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */

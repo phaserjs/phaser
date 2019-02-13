@@ -406,17 +406,6 @@ var CanvasTexture = new Class({
     },
 
     /**
-     * An object containing the position and color data for a single pixel in a CanvasTexture.
-     *
-     * @typedef {object} PixelConfig
-     *
-     * @property {integer} x - The x-coordinate of the pixel.
-     * @property {integer} y - The y-coordinate of the pixel.
-     * @property {integer} color - The color of the pixel, not including the alpha channel.
-     * @property {number} alpha - The alpha of the pixel, between 0 and 1.
-     */
-
-    /**
      * Returns an array containing all of the pixels in the given region.
      *
      * If the requested region extends outside the bounds of this CanvasTexture,
@@ -433,7 +422,7 @@ var CanvasTexture = new Class({
      * @param {integer} width - The width of the region to get. Must be an integer.
      * @param {integer} [height] - The height of the region to get. Must be an integer. If not given will be set to the `width`.
      * 
-     * @return {PixelConfig[]} An array of Pixel objects.
+     * @return {Phaser.Textures.Types.PixelConfig[]} An array of Pixel objects.
      */
     getPixels: function (x, y, width, height)
     {
