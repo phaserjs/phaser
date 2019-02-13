@@ -13,20 +13,6 @@ var TWEEN_CONST = require('../../tweens/tween/const');
 var Vector2 = require('../../math/Vector2');
 
 /**
- * Settings for a PathFollower.
- *
- * @typedef {object} PathConfig
- *
- * @property {number} duration - The duration of the path follow.
- * @property {number} from - The start position of the path follow, between 0 and 1.
- * @property {number} to - The end position of the path follow, between 0 and 1.
- * @property {boolean} [positionOnPath=false] - Whether to position the PathFollower on the Path using its path offset.
- * @property {boolean} [rotateToPath=false] - Should the PathFollower automatically rotate to point in the direction of the Path?
- * @property {number} [rotationOffset=0] - If the PathFollower is rotating to match the Path, this value is added to the rotation value. This allows you to rotate objects to a path but control the angle of the rotation as well.
- * @property {number} [startAt=0] - Current start position of the path follow, between 0 and 1.
- */
-
-/**
  * @classdesc
  * A PathFollower Game Object.
  *
@@ -125,7 +111,7 @@ var PathFollower = new Class({
          * Settings for the PathFollower.
          *
          * @name Phaser.GameObjects.PathFollower#pathConfig
-         * @type {?PathConfig}
+         * @type {?Phaser.GameObjects.PathFollower.Types.PathConfig}
          * @default null
          * @since 3.0.0
          */
@@ -145,13 +131,13 @@ var PathFollower = new Class({
     /**
      * Set the Path that this PathFollower should follow.
      *
-     * Optionally accepts {@link PathConfig} settings.
+     * Optionally accepts {@link Phaser.GameObjects.PathFollower.Types.PathConfig} settings.
      *
      * @method Phaser.GameObjects.PathFollower#setPath
      * @since 3.0.0
      *
      * @param {Phaser.Curves.Path} path - The Path this PathFollower is following. It can only follow one Path at a time.
-     * @param {PathConfig} [config] - Settings for the PathFollower.
+     * @param {Phaser.GameObjects.PathFollower.Types.PathConfig} [config] - Settings for the PathFollower.
      *
      * @return {Phaser.GameObjects.PathFollower} This Game Object.
      */
@@ -221,7 +207,7 @@ var PathFollower = new Class({
      * @method Phaser.GameObjects.PathFollower#startFollow
      * @since 3.3.0
      *
-     * @param {(number|PathConfig)} [config={}] - The duration of the follow, or a PathFollower config object.
+     * @param {(number|Phaser.GameObjects.PathFollower.Types.PathConfig)} [config={}] - The duration of the follow, or a PathFollower config object.
      * @param {number} [startAt=0] - Optional start position of the follow, between 0 and 1.
      *
      * @return {Phaser.GameObjects.PathFollower} This Game Object.

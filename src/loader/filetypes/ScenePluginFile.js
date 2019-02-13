@@ -19,7 +19,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @property {string} [extension='js'] - The default file extension to use if no url is provided.
  * @property {string} [systemKey] - If this plugin is to be added to Scene.Systems, this is the property key for it.
  * @property {string} [sceneKey] - If this plugin is to be added to the Scene, this is the property key for it.
- * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @property {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 
 /**
@@ -41,7 +41,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
  * @param {string} [systemKey] - If this plugin is to be added to Scene.Systems, this is the property key for it.
  * @param {string} [sceneKey] - If this plugin is to be added to the Scene, this is the property key for it.
- * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var ScenePluginFile = new Class({
 
@@ -186,7 +186,7 @@ var ScenePluginFile = new Class({
  * @param {(string|function)} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js". Or, set to a plugin function.
  * @param {string} [systemKey] - If this plugin is to be added to Scene.Systems, this is the property key for it.
  * @param {string} [sceneKey] - If this plugin is to be added to the Scene, this is the property key for it.
- * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */

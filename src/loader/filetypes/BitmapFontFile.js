@@ -19,11 +19,11 @@ var XMLFile = require('./XMLFile.js');
  * @property {string} key - The key of the file. Must be unique within both the Loader and the Texture Manager.
  * @property {string} [textureURL] - The absolute or relative URL to load the texture image file from.
  * @property {string} [textureExtension='png'] - The default file extension to use for the image texture if no url is provided.
- * @property {XHRSettingsObject} [textureXhrSettings] - Extra XHR Settings specifically for the texture image file.
+ * @property {Phaser.Loader.Types.XHRSettingsObject} [textureXhrSettings] - Extra XHR Settings specifically for the texture image file.
  * @property {string} [normalMap] - The filename of an associated normal map. It uses the same path and url to load as the texture image.
  * @property {string} [fontDataURL] - The absolute or relative URL to load the font data xml file from.
  * @property {string} [fontDataExtension='xml'] - The default file extension to use for the font data xml if no url is provided.
- * @property {XHRSettingsObject} [fontDataXhrSettings] - Extra XHR Settings specifically for the font data xml file.
+ * @property {Phaser.Loader.Types.XHRSettingsObject} [fontDataXhrSettings] - Extra XHR Settings specifically for the font data xml file.
  */
 
 /**
@@ -44,8 +44,8 @@ var XMLFile = require('./XMLFile.js');
  * @param {(string|Phaser.Loader.FileTypes.BitmapFontFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string|string[]} [textureURL] - The absolute or relative URL to load the font image file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
  * @param {string} [fontDataURL] - The absolute or relative URL to load the font xml data file from. If undefined or `null` it will be set to `<key>.xml`, i.e. if `key` was "alien" then the URL will be "alien.xml".
- * @param {XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the font image file. Used in replacement of the Loaders default XHR Settings.
- * @param {XHRSettingsObject} [fontDataXhrSettings] - An XHR Settings configuration object for the font data xml file. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the font image file. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [fontDataXhrSettings] - An XHR Settings configuration object for the font data xml file. Used in replacement of the Loaders default XHR Settings.
  */
 var BitmapFontFile = new Class({
 
@@ -215,8 +215,8 @@ var BitmapFontFile = new Class({
  * @param {(string|Phaser.Loader.FileTypes.BitmapFontFileConfig|Phaser.Loader.FileTypes.BitmapFontFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string|string[]} [textureURL] - The absolute or relative URL to load the font image file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
  * @param {string} [fontDataURL] - The absolute or relative URL to load the font xml data file from. If undefined or `null` it will be set to `<key>.xml`, i.e. if `key` was "alien" then the URL will be "alien.xml".
- * @param {XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the font image file. Used in replacement of the Loaders default XHR Settings.
- * @param {XHRSettingsObject} [fontDataXhrSettings] - An XHR Settings configuration object for the font data xml file. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the font image file. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [fontDataXhrSettings] - An XHR Settings configuration object for the font data xml file. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */

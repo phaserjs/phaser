@@ -16,7 +16,7 @@ var JSONFile = require('./JSONFile.js');
  * @property {string|any} [url] - The absolute or relative URL to load the file from. Or can be a ready formed JSON object, in which case it will be directly processed.
  * @property {string} [extension='json'] - The default file extension to use if no url is provided.
  * @property {string} [dataKey] - If specified instead of the whole JSON file being parsed, only the section corresponding to this property key will be added. If the property you want to extract is nested, use periods to divide it.
- * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @property {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 
 /**
@@ -36,7 +36,7 @@ var JSONFile = require('./JSONFile.js');
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
  * @param {(string|Phaser.Loader.FileTypes.JSONFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
- * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  * @param {string} [dataKey] - When the JSON file loads only this property will be stored in the Cache.
  */
 var PackFile = new Class({
@@ -194,7 +194,7 @@ var PackFile = new Class({
  * @param {(string|Phaser.Loader.FileTypes.PackFileConfig|Phaser.Loader.FileTypes.PackFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
  * @param {string} [dataKey] - When the JSON file loads only this property will be stored in the Cache.
- * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */

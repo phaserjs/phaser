@@ -17,7 +17,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @property {string} key - The key of the file. Must be unique within both the Loader and the Texture Manager.
  * @property {string} [url] - The absolute or relative URL to load the file from.
  * @property {string} [extension='html'] - The default file extension to use if no url is provided.
- * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @property {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  * @property {integer} [width=512] - The width of the texture the HTML will be rendered to.
  * @property {integer} [height=512] - The height of the texture the HTML will be rendered to.
  */
@@ -41,7 +41,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
  * @param {integer} [width] - The width of the texture the HTML will be rendered to.
  * @param {integer} [height] - The height of the texture the HTML will be rendered to.
- * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var HTMLTextureFile = new Class({
 
@@ -238,7 +238,7 @@ var HTMLTextureFile = new Class({
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.html`, i.e. if `key` was "alien" then the URL will be "alien.html".
  * @param {integer} [width=512] - The width of the texture the HTML will be rendered to.
  * @param {integer} [height=512] - The height of the texture the HTML will be rendered to.
- * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */

@@ -30,7 +30,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @property {string} [extension='png'] - The default file extension to use if no url is provided.
  * @property {string} [normalMap] - The filename of an associated normal map. It uses the same path and url to load as the image.
  * @property {Phaser.Loader.FileTypes.ImageFrameConfig} [frameConfig] - The frame configuration object. Only provided for, and used by, Sprite Sheets.
- * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @property {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 
 /**
@@ -50,7 +50,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
  * @param {(string|Phaser.Loader.FileTypes.ImageFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string|string[]} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
- * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  * @param {Phaser.Loader.FileTypes.ImageFrameConfig} [frameConfig] - The frame configuration object. Only provided for, and used by, Sprite Sheets.
  */
 var ImageFile = new Class({
@@ -265,7 +265,7 @@ var ImageFile = new Class({
  *
  * @param {(string|Phaser.Loader.FileTypes.ImageFileConfig|Phaser.Loader.FileTypes.ImageFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string|string[]} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
- * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */

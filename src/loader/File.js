@@ -14,19 +14,6 @@ var XHRLoader = require('./XHRLoader');
 var XHRSettings = require('./XHRSettings');
 
 /**
- * @typedef {object} FileConfig
- *
- * @property {string} type - The file type string (image, json, etc) for sorting within the Loader.
- * @property {string} key - Unique cache key (unique within its file type)
- * @property {string} [url] - The URL of the file, not including baseURL.
- * @property {string} [path] - The path of the file, not including the baseURL.
- * @property {string} [extension] - The default extension this file uses.
- * @property {XMLHttpRequestResponseType} [responseType] - The responseType to be used by the XHR request.
- * @property {(XHRSettingsObject|false)} [xhrSettings=false] - Custom XHR Settings specific to this file and merged with the Loader defaults.
- * @property {any} [config] - A config object that can be used by file types to store transitional data.
- */
-
-/**
  * @classdesc
  * The base File class used by all File Types that the Loader can support.
  * You shouldn't create an instance of a File directly, but should extend it with your own class, setting a custom type and processing methods.
@@ -37,7 +24,7 @@ var XHRSettings = require('./XHRSettings');
  * @since 3.0.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - The Loader that is going to load this File.
- * @param {FileConfig} fileConfig - The file configuration object, as created by the file type.
+ * @param {Phaser.Loader.Types.FileConfig} fileConfig - The file configuration object, as created by the file type.
  */
 var File = new Class({
 
@@ -126,7 +113,7 @@ var File = new Class({
          * The merged XHRSettings for this file.
          *
          * @name Phaser.Loader.File#xhrSettings
-         * @type {XHRSettingsObject}
+         * @type {Phaser.Loader.Types.XHRSettingsObject}
          * @since 3.0.0
          */
         this.xhrSettings = XHRSettings(GetFastValue(fileConfig, 'responseType', undefined));

@@ -52,16 +52,6 @@ var propertyMap = {
 };
 
 /**
- * Font metrics for a Text Style object.
- *
- * @typedef {object} BitmapTextMetrics
- *
- * @property {number} ascent - The ascent of the font.
- * @property {number} descent - The descent of the font.
- * @property {number} fontSize - The size of the font.
- */
-
-/**
  * @classdesc
  * A TextStyle class manages all of the style settings for a Text object.
  * 

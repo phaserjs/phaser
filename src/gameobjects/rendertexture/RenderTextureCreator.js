@@ -10,15 +10,6 @@ var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
 var RenderTexture = require('./RenderTexture');
 
 /**
- * @typedef {object} RenderTextureConfig
- *
- * @property {number} [x=0] - The x coordinate of the RenderTexture's position.
- * @property {number} [y=0] - The y coordinate of the RenderTexture's position.
- * @property {number} [width=32] - The width of the RenderTexture.
- * @property {number} [height=32] - The height of the RenderTexture.
- */
-
-/**
  * Creates a new Render Texture Game Object and returns it.
  *
  * Note: This method will only be available if the Render Texture Game Object has been built into Phaser.
@@ -26,7 +17,7 @@ var RenderTexture = require('./RenderTexture');
  * @method Phaser.GameObjects.GameObjectCreator#renderTexture
  * @since 3.2.0
  *
- * @param {RenderTextureConfig} config - The configuration object this Game Object will use to create itself.
+ * @param {Phaser.GameObjects.RenderTexture.Types.RenderTextureConfig} config - The configuration object this Game Object will use to create itself.
  * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.RenderTexture} The Game Object that was created.

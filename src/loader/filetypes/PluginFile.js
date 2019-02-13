@@ -19,7 +19,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @property {string} [extension='js'] - The default file extension to use if no url is provided.
  * @property {boolean} [start=false] - Automatically start the plugin after loading?
  * @property {string} [mapping] - If this plugin is to be injected into the Scene, this is the property key used.
- * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @property {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 
 /**
@@ -41,7 +41,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
  * @param {boolean} [start=false] - Automatically start the plugin after loading?
  * @param {string} [mapping] - If this plugin is to be injected into the Scene, this is the property key used.
- * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var PluginFile = new Class({
 
@@ -192,7 +192,7 @@ var PluginFile = new Class({
  * @param {(string|function)} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js". Or, a plugin function.
  * @param {boolean} [start] - Automatically start the plugin after loading?
  * @param {string} [mapping] - If this plugin is to be injected into the Scene, this is the property key used.
- * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */

@@ -15,7 +15,7 @@ var MergeXHRSettings = require('./MergeXHRSettings');
  * @since 3.0.0
  *
  * @param {Phaser.Loader.File} file - The File to download.
- * @param {XHRSettingsObject} globalXHRSettings - The global XHRSettings object.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} globalXHRSettings - The global XHRSettings object.
  *
  * @return {XMLHttpRequest} The XHR object.
  */
