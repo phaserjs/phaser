@@ -4,9 +4,7 @@
  *
  * @property {number} [fps=60] - Sets {@link Phaser.Physics.Arcade.World#fps}.
  * @property {number} [timeScale=1] - Sets {@link Phaser.Physics.Arcade.World#timeScale}.
- * @property {object} [gravity] - Sets {@link Phaser.Physics.Arcade.World#gravity}.
- * @property {number} [gravity.x=0] - The horizontal world gravity value.
- * @property {number} [gravity.y=0] - The vertical world gravity value.
+ * @property {Phaser.Math.Types.Vector2Like} [gravity] - Sets {@link Phaser.Physics.Arcade.World#gravity}.
  * @property {number} [x=0] - Sets {@link Phaser.Physics.Arcade.World#bounds bounds.x}.
  * @property {number} [y=0] - Sets {@link Phaser.Physics.Arcade.World#bounds bounds.y}.
  * @property {number} [width=0] - Sets {@link Phaser.Physics.Arcade.World#bounds bounds.width}.
