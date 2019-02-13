@@ -14,25 +14,6 @@ var RectangleContains = require('../../geom/rectangle/Contains');
 var Vector2 = require('../../math/Vector2');
 
 /**
- * @typedef {object} ArcadeBodyBounds
- *
- * @property {number} x - The left edge.
- * @property {number} y - The upper edge.
- * @property {number} right - The right edge.
- * @property {number} bottom - The lower edge.
- */
-
-/**
- * @typedef {object} ArcadeBodyCollision
- *
- * @property {boolean} none - True if the Body is not colliding.
- * @property {boolean} up - True if the Body is colliding on its upper edge.
- * @property {boolean} down - True if the Body is colliding on its lower edge.
- * @property {boolean} left - True if the Body is colliding on its left edge.
- * @property {boolean} right - True if the Body is colliding on its right edge.
- */
-
-/**
  * @classdesc
  * A Dynamic Arcade Body.
  *
@@ -661,7 +642,7 @@ var Body = new Class({
          * You can set `checkCollision.none = true` to disable collision checks.
          *
          * @name Phaser.Physics.Arcade.Body#checkCollision
-         * @type {ArcadeBodyCollision}
+         * @type {Phaser.Physics.Arcade.Types.ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.checkCollision = { none: false, up: true, down: true, left: true, right: true };
@@ -670,7 +651,7 @@ var Body = new Class({
          * Whether this Body is colliding with another and in which direction.
          *
          * @name Phaser.Physics.Arcade.Body#touching
-         * @type {ArcadeBodyCollision}
+         * @type {Phaser.Physics.Arcade.Types.ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.touching = { none: true, up: false, down: false, left: false, right: false };
@@ -679,7 +660,7 @@ var Body = new Class({
          * Whether this Body was colliding with another during the last step, and in which direction.
          *
          * @name Phaser.Physics.Arcade.Body#wasTouching
-         * @type {ArcadeBodyCollision}
+         * @type {Phaser.Physics.Arcade.Types.ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
@@ -688,7 +669,7 @@ var Body = new Class({
          * Whether this Body is colliding with a tile or the world boundary.
          *
          * @name Phaser.Physics.Arcade.Body#blocked
-         * @type {ArcadeBodyCollision}
+         * @type {Phaser.Physics.Arcade.Types.ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.blocked = { none: true, up: false, down: false, left: false, right: false };
@@ -1262,9 +1243,9 @@ var Body = new Class({
      * @method Phaser.Physics.Arcade.Body#getBounds
      * @since 3.0.0
      *
-     * @param {ArcadeBodyBounds} obj - An object to copy the values into.
+     * @param {Phaser.Physics.Arcade.Types.ArcadeBodyBounds} obj - An object to copy the values into.
      *
-     * @return {ArcadeBodyBounds} - An object with {x, y, right, bottom}.
+     * @return {Phaser.Physics.Arcade.Types.ArcadeBodyBounds} - An object with {x, y, right, bottom}.
      */
     getBounds: function (obj)
     {

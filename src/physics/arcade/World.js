@@ -33,89 +33,6 @@ var Vector2 = require('../../math/Vector2');
 var Wrap = require('../../math/Wrap');
 
 /**
- * @typedef {object} ArcadeWorldConfig
- *
- * @property {number} [fps=60] - Sets {@link Phaser.Physics.Arcade.World#fps}.
- * @property {number} [timeScale=1] - Sets {@link Phaser.Physics.Arcade.World#timeScale}.
- * @property {object} [gravity] - Sets {@link Phaser.Physics.Arcade.World#gravity}.
- * @property {number} [gravity.x=0] - The horizontal world gravity value.
- * @property {number} [gravity.y=0] - The vertical world gravity value.
- * @property {number} [x=0] - Sets {@link Phaser.Physics.Arcade.World#bounds bounds.x}.
- * @property {number} [y=0] - Sets {@link Phaser.Physics.Arcade.World#bounds bounds.y}.
- * @property {number} [width=0] - Sets {@link Phaser.Physics.Arcade.World#bounds bounds.width}.
- * @property {number} [height=0] - Sets {@link Phaser.Physics.Arcade.World#bounds bounds.height}.
- * @property {object} [checkCollision] - Sets {@link Phaser.Physics.Arcade.World#checkCollision}.
- * @property {boolean} [checkCollision.up=true] - Should bodies collide with the top of the world bounds?
- * @property {boolean} [checkCollision.down=true] - Should bodies collide with the bottom of the world bounds?
- * @property {boolean} [checkCollision.left=true] - Should bodies collide with the left of the world bounds?
- * @property {boolean} [checkCollision.right=true] - Should bodies collide with the right of the world bounds?
- * @property {number} [overlapBias=4] - Sets {@link Phaser.Physics.Arcade.World#OVERLAP_BIAS}.
- * @property {number} [tileBias=16] - Sets {@link Phaser.Physics.Arcade.World#TILE_BIAS}.
- * @property {boolean} [forceX=false] - Sets {@link Phaser.Physics.Arcade.World#forceX}.
- * @property {boolean} [isPaused=false] - Sets {@link Phaser.Physics.Arcade.World#isPaused}.
- * @property {boolean} [debug=false] - Sets {@link Phaser.Physics.Arcade.World#debug}.
- * @property {boolean} [debugShowBody=true] - Sets {@link Phaser.Physics.Arcade.World#defaults debugShowBody}.
- * @property {boolean} [debugShowStaticBody=true] - Sets {@link Phaser.Physics.Arcade.World#defaults debugShowStaticBody}.
- * @property {boolean} [debugShowVelocity=true] - Sets {@link Phaser.Physics.Arcade.World#defaults debugShowStaticBody}.
- * @property {number} [debugBodyColor=0xff00ff] - Sets {@link Phaser.Physics.Arcade.World#defaults debugBodyColor}.
- * @property {number} [debugStaticBodyColor=0x0000ff] - Sets {@link Phaser.Physics.Arcade.World#defaults debugStaticBodyColor}.
- * @property {number} [debugVelocityColor=0x00ff00] - Sets {@link Phaser.Physics.Arcade.World#defaults debugVelocityColor}.
- * @property {number} [maxEntries=16] - Sets {@link Phaser.Physics.Arcade.World#maxEntries}.
- * @property {boolean} [useTree=true] - Sets {@link Phaser.Physics.Arcade.World#useTree}.
- */
-
-/**
- * @typedef {object} CheckCollisionObject
- *
- * @property {boolean} up - Will bodies collide with the top side of the world bounds?
- * @property {boolean} down - Will bodies collide with the bottom side of the world bounds?
- * @property {boolean} left - Will bodies collide with the left side of the world bounds?
- * @property {boolean} right - Will bodies collide with the right side of the world bounds?
- */
-
-/**
- * @typedef {object} ArcadeWorldDefaults
- *
- * @property {boolean} debugShowBody - Set to `true` to render dynamic body outlines to the debug display.
- * @property {boolean} debugShowStaticBody - Set to `true` to render static body outlines to the debug display.
- * @property {boolean} debugShowVelocity - Set to `true` to render body velocity markers to the debug display.
- * @property {number} bodyDebugColor - The color of dynamic body outlines when rendered to the debug display.
- * @property {number} staticBodyDebugColor - The color of static body outlines when rendered to the debug display.
- * @property {number} velocityDebugColor - The color of the velocity markers when rendered to the debug display.
- */
-
-/**
- * @typedef {object} ArcadeWorldTreeMinMax
- *
- * @property {number} minX - The minimum x value used in RTree searches.
- * @property {number} minY - The minimum y value used in RTree searches.
- * @property {number} maxX - The maximum x value used in RTree searches.
- * @property {number} maxY - The maximum y value used in RTree searches.
- */
-
-/**
- * An Arcade Physics Collider Type.
- *
- * @typedef {(
- * Phaser.GameObjects.GameObject|
- * Phaser.GameObjects.Group|
- * Phaser.Physics.Arcade.Sprite|
- * Phaser.Physics.Arcade.Image|
- * Phaser.Physics.Arcade.StaticGroup|
- * Phaser.Physics.Arcade.Group|
- * Phaser.Tilemaps.DynamicTilemapLayer|
- * Phaser.Tilemaps.StaticTilemapLayer|
- * Phaser.GameObjects.GameObject[]|
- * Phaser.Physics.Arcade.Sprite[]|
- * Phaser.Physics.Arcade.Image[]|
- * Phaser.Physics.Arcade.StaticGroup[]|
- * Phaser.Physics.Arcade.Group[]|
- * Phaser.Tilemaps.DynamicTilemapLayer[]|
- * Phaser.Tilemaps.StaticTilemapLayer[]
- * )} ArcadeColliderType
- */
-
-/**
  * @classdesc
  * The Arcade Physics World.
  *
@@ -130,7 +47,7 @@ var Wrap = require('../../math/Wrap');
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - The Scene to which this World instance belongs.
- * @param {ArcadeWorldConfig} config - An Arcade Physics Configuration object.
+ * @param {Phaser.Physics.Arcade.Types.ArcadeWorldConfig} config - An Arcade Physics Configuration object.
  */
 var World = new Class({
 
@@ -236,7 +153,7 @@ var World = new Class({
          * The boundary edges that Bodies can collide with.
          *
          * @name Phaser.Physics.Arcade.World#checkCollision
-         * @type {CheckCollisionObject}
+         * @type {Phaser.Physics.Arcade.Types.CheckCollisionObject}
          * @since 3.0.0
          */
         this.checkCollision = {
@@ -393,7 +310,7 @@ var World = new Class({
          * Default debug display settings for new Bodies.
          *
          * @name Phaser.Physics.Arcade.World#defaults
-         * @type {ArcadeWorldDefaults}
+         * @type {Phaser.Physics.Arcade.Types.ArcadeWorldDefaults}
          * @since 3.0.0
          */
         this.defaults = {
@@ -464,7 +381,7 @@ var World = new Class({
          * Recycled input for tree searches.
          *
          * @name Phaser.Physics.Arcade.World#treeMinMax
-         * @type {ArcadeWorldTreeMinMax}
+         * @type {Phaser.Physics.Arcade.Types.ArcadeWorldTreeMinMax}
          * @since 3.0.0
          */
         this.treeMinMax = { minX: 0, minY: 0, maxX: 0, maxY: 0 };
@@ -891,8 +808,8 @@ var World = new Class({
      * @since 3.0.0
      * @see Phaser.Physics.Arcade.World#collide
      *
-     * @param {ArcadeColliderType} object1 - The first object to check for collision.
-     * @param {ArcadeColliderType} object2 - The second object to check for collision.
+     * @param {Phaser.Physics.Arcade.Types.ArcadeColliderType} object1 - The first object to check for collision.
+     * @param {Phaser.Physics.Arcade.Types.ArcadeColliderType} object2 - The second object to check for collision.
      * @param {ArcadePhysicsCallback} [collideCallback] - The callback to invoke when the two objects collide.
      * @param {ArcadePhysicsCallback} [processCallback] - The callback to invoke when the two objects collide. Must return a boolean.
      * @param {*} [callbackContext] - The scope in which to call the callbacks.
@@ -926,8 +843,8 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#addOverlap
      * @since 3.0.0
      *
-     * @param {ArcadeColliderType} object1 - The first object to check for overlap.
-     * @param {ArcadeColliderType} object2 - The second object to check for overlap.
+     * @param {Phaser.Physics.Arcade.Types.ArcadeColliderType} object1 - The first object to check for overlap.
+     * @param {Phaser.Physics.Arcade.Types.ArcadeColliderType} object2 - The second object to check for overlap.
      * @param {ArcadePhysicsCallback} [collideCallback] - The callback to invoke when the two objects overlap.
      * @param {ArcadePhysicsCallback} [processCallback] - The callback to invoke when the two objects overlap. Must return a boolean.
      * @param {*} [callbackContext] - The scope in which to call the callbacks.
@@ -1777,8 +1694,8 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#overlap
      * @since 3.0.0
      *
-     * @param {ArcadeColliderType} object1 - The first object or array of objects to check.
-     * @param {ArcadeColliderType} [object2] - The second object or array of objects to check, or `undefined`.
+     * @param {Phaser.Physics.Arcade.Types.ArcadeColliderType} object1 - The first object or array of objects to check.
+     * @param {Phaser.Physics.Arcade.Types.ArcadeColliderType} [object2] - The second object or array of objects to check, or `undefined`.
      * @param {ArcadePhysicsCallback} [overlapCallback] - An optional callback function that is called if the objects overlap.
      * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they overlap. If this is set then `overlapCallback` will only be called if this callback returns `true`.
      * @param {*} [callbackContext] - The context in which to run the callbacks.
@@ -1815,8 +1732,8 @@ var World = new Class({
      * @method Phaser.Physics.Arcade.World#collide
      * @since 3.0.0
      *
-     * @param {ArcadeColliderType} object1 - The first object or array of objects to check.
-     * @param {ArcadeColliderType} [object2] - The second object or array of objects to check, or `undefined`.
+     * @param {Phaser.Physics.Arcade.Types.ArcadeColliderType} object1 - The first object or array of objects to check.
+     * @param {Phaser.Physics.Arcade.Types.ArcadeColliderType} [object2] - The second object or array of objects to check, or `undefined`.
      * @param {ArcadePhysicsCallback} [collideCallback] - An optional callback function that is called if the objects collide.
      * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
      * @param {any} [callbackContext] - The context in which to run the callbacks.
@@ -1839,8 +1756,8 @@ var World = new Class({
      * @private
      * @since 3.0.0
      *
-     * @param {ArcadeColliderType} object1 - The first object to check for collision.
-     * @param {ArcadeColliderType} object2 - The second object to check for collision.
+     * @param {Phaser.Physics.Arcade.Types.ArcadeColliderType} object1 - The first object to check for collision.
+     * @param {Phaser.Physics.Arcade.Types.ArcadeColliderType} object2 - The second object to check for collision.
      * @param {ArcadePhysicsCallback} collideCallback - The callback to invoke when the two objects collide.
      * @param {ArcadePhysicsCallback} processCallback - The callback to invoke when the two objects collide. Must return a boolean.
      * @param {any} callbackContext - The scope in which to call the callbacks.
@@ -1910,8 +1827,8 @@ var World = new Class({
      * @private
      * @since 3.0.0
      *
-     * @param {ArcadeColliderType} object1 - The first object or array of objects to check.
-     * @param {ArcadeColliderType} object2 - The second object or array of objects to check, or `undefined`.
+     * @param {Phaser.Physics.Arcade.Types.ArcadeColliderType} object1 - The first object or array of objects to check.
+     * @param {Phaser.Physics.Arcade.Types.ArcadeColliderType} object2 - The second object or array of objects to check, or `undefined`.
      * @param {ArcadePhysicsCallback} collideCallback - An optional callback function that is called if the objects collide.
      * @param {ArcadePhysicsCallback} processCallback - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
      * @param {any} callbackContext - The context in which to run the callbacks.

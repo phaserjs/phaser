@@ -346,7 +346,7 @@ var StaticBody = new Class({
          * Whether this StaticBody is checked for collisions and for which directions. You can set `checkCollision.none = false` to disable collision checks.
          *
          * @name Phaser.Physics.Arcade.StaticBody#checkCollision
-         * @type {ArcadeBodyCollision}
+         * @type {Phaser.Physics.Arcade.Types.ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.checkCollision = { none: false, up: true, down: true, left: true, right: true };
@@ -355,7 +355,7 @@ var StaticBody = new Class({
          * Whether this StaticBody has ever collided with another body and in which direction.
          *
          * @name Phaser.Physics.Arcade.StaticBody#touching
-         * @type {ArcadeBodyCollision}
+         * @type {Phaser.Physics.Arcade.Types.ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.touching = { none: true, up: false, down: false, left: false, right: false };
@@ -364,7 +364,7 @@ var StaticBody = new Class({
          * Whether this StaticBody was colliding with another body during the last step or any previous step, and in which direction.
          *
          * @name Phaser.Physics.Arcade.StaticBody#wasTouching
-         * @type {ArcadeBodyCollision}
+         * @type {Phaser.Physics.Arcade.Types.ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
@@ -373,7 +373,7 @@ var StaticBody = new Class({
          * Whether this StaticBody has ever collided with a tile or the world boundary.
          *
          * @name Phaser.Physics.Arcade.StaticBody#blocked
-         * @type {ArcadeBodyCollision}
+         * @type {Phaser.Physics.Arcade.Types.ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.blocked = { none: true, up: false, down: false, left: false, right: false };
@@ -665,9 +665,9 @@ var StaticBody = new Class({
      * @method Phaser.Physics.Arcade.StaticBody#getBounds
      * @since 3.0.0
      *
-     * @param {ArcadeBodyBounds} obj - The object which will hold the coordinates of the bounds.
+     * @param {Phaser.Physics.Arcade.Types.ArcadeBodyBounds} obj - The object which will hold the coordinates of the bounds.
      *
-     * @return {ArcadeBodyBounds} The same object that was passed with `x`, `y`, `right` and `bottom` values matching the respective values of the StaticBody.
+     * @return {Phaser.Physics.Arcade.Types.ArcadeBodyBounds} The same object that was passed with `x`, `y`, `right` and `bottom` values matching the respective values of the StaticBody.
      */
     getBounds: function (obj)
     {

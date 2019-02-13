@@ -107,7 +107,7 @@ var Group = new Class({
          * The class to create new group members from.
          *
          * @name Phaser.GameObjects.Group#classType
-         * @type {GroupClassTypeConstructor}
+         * @type {Phaser.GameObjects.Group.Types.GroupClassTypeConstructor}
          * @since 3.0.0
          * @default Phaser.GameObjects.Sprite
          */
@@ -169,7 +169,7 @@ var Group = new Class({
          * A function to be called when adding or creating group members.
          *
          * @name Phaser.GameObjects.Group#createCallback
-         * @type {?GroupCallback}
+         * @type {?Phaser.GameObjects.Group.Types.GroupCallback}
          * @since 3.0.0
          */
         this.createCallback = GetFastValue(config, 'createCallback', null);
@@ -178,7 +178,7 @@ var Group = new Class({
          * A function to be called when removing group members.
          *
          * @name Phaser.GameObjects.Group#removeCallback
-         * @type {?GroupCallback}
+         * @type {?Phaser.GameObjects.Group.Types.GroupCallback}
          * @since 3.0.0
          */
         this.removeCallback = GetFastValue(config, 'removeCallback', null);
@@ -187,7 +187,7 @@ var Group = new Class({
          * A function to be called when creating several group members at once.
          *
          * @name Phaser.GameObjects.Group#createMultipleCallback
-         * @type {?GroupMultipleCreateCallback}
+         * @type {?Phaser.GameObjects.Group.Types.GroupMultipleCreateCallback}
          * @since 3.0.0
          */
         this.createMultipleCallback = GetFastValue(config, 'createMultipleCallback', null);
@@ -257,7 +257,7 @@ var Group = new Class({
      * @method Phaser.GameObjects.Group#createMultiple
      * @since 3.0.0
      *
-     * @param {GroupCreateConfig|GroupCreateConfig[]} config - Creation settings. This can be a single configuration object or an array of such objects, which will be applied in turn.
+     * @param {Phaser.GameObjects.Group.Types.GroupCreateConfig|Phaser.GameObjects.Group.Types.GroupCreateConfig[]} config - Creation settings. This can be a single configuration object or an array of such objects, which will be applied in turn.
      *
      * @return {any[]} The newly created Game Objects.
      */
@@ -294,7 +294,7 @@ var Group = new Class({
      * @method Phaser.GameObjects.Group#createFromConfig
      * @since 3.0.0
      *
-     * @param {GroupCreateConfig} options - Creation settings.
+     * @param {Phaser.GameObjects.Group.Types.GroupCreateConfig} options - Creation settings.
      *
      * @return {any[]} The newly created Game Objects.
      */
