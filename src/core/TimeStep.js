@@ -21,14 +21,6 @@ var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
 // http://www.testufo.com/#test=animation-time-graph
 
 /**
- * @callback TimeStepCallback
- *
- * @param {number} time - The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.
- * @param {number} average - The Delta Average.
- * @param {number} interpolation - Interpolation - how far between what is expected and where we are?
- */
-
-/**
  * @classdesc
  * [description]
  *
@@ -38,7 +30,7 @@ var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
  * @since 3.0.0
  *
  * @param {Phaser.Game} game - A reference to the Phaser.Game instance that owns this Time Step.
- * @param {FPSConfig} config
+ * @param {Phaser.Core.Types.FPSConfig} config
  */
 var TimeStep = new Class({
 
@@ -174,7 +166,7 @@ var TimeStep = new Class({
          * A callback to be invoked each time the Time Step steps.
          *
          * @name Phaser.Core.TimeStep#callback
-         * @type {TimeStepCallback}
+         * @type {Phaser.Core.Types.TimeStepCallback}
          * @default NOOP
          * @since 3.0.0
          */
@@ -412,7 +404,7 @@ var TimeStep = new Class({
      * @method Phaser.Core.TimeStep#start
      * @since 3.0.0
      *
-     * @param {TimeStepCallback} callback - The callback to be invoked each time the Time Step steps.
+     * @param {Phaser.Core.Types.TimeStepCallback} callback - The callback to be invoked each time the Time Step steps.
      */
     start: function (callback)
     {

@@ -124,19 +124,10 @@ var Pan = new Class({
         this._elapsed = 0;
 
         /**
-         * @callback CameraPanCallback
-         *
-         * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera on which the effect is running.
-         * @param {number} progress - The progress of the effect. A value between 0 and 1.
-         * @param {number} x - The Camera's new scrollX coordinate.
-         * @param {number} y - The Camera's new scrollY coordinate.
-         */
-
-        /**
          * This callback is invoked every frame for the duration of the effect.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Pan#_onUpdate
-         * @type {?CameraPanCallback}
+         * @type {?Phaser.Cameras.Scene2D.Types.CameraPanCallback}
          * @private
          * @default null
          * @since 3.11.0
@@ -168,7 +159,7 @@ var Pan = new Class({
      * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
      * @param {(string|function)} [ease='Linear'] - The ease to use for the pan. Can be any of the Phaser Easing constants or a custom function.
      * @param {boolean} [force=false] - Force the pan effect to start immediately, even if already running.
-     * @param {CameraPanCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
+     * @param {Phaser.Cameras.Scene2D.Types.CameraPanCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
      * It is sent four arguments: A reference to the camera, a progress amount between 0 and 1 indicating how complete the effect is,
      * the current camera scroll x coordinate and the current camera scroll y coordinate.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
