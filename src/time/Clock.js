@@ -156,7 +156,7 @@ var Clock = new Class({
      * @method Phaser.Time.Clock#addEvent
      * @since 3.0.0
      *
-     * @param {TimerEventConfig} config - The configuration for the Timer Event.
+     * @param {Phaser.Time.Types.TimerEventConfig} config - The configuration for the Timer Event.
      *
      * @return {Phaser.Time.TimerEvent} The Timer Event which was created.
      */
