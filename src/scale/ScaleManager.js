@@ -944,6 +944,8 @@ var ScaleManager = new Class({
         var zoom = this.zoom;
         var autoRound = this.autoRound;
         var resolution = 1;
+        
+        this.getParentBounds();
 
         if (this.scaleMode === CONST.SCALE_MODE.NONE)
         {
