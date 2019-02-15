@@ -4,7 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var OS = require('./OS');
 var Browser = require('./Browser');
 
 /**
@@ -47,24 +46,21 @@ function init ()
         Input.gamepads = true;
     }
 
-    if (!OS.cocoonJS)
+    // See https://developer.mozilla.org/en-US/docs/Web/Events/wheel
+    if ('onwheel' in window || (Browser.ie && 'WheelEvent' in window))
     {
-        // See https://developer.mozilla.org/en-US/docs/Web/Events/wheel
-        if ('onwheel' in window || (Browser.ie && 'WheelEvent' in window))
-        {
-            // DOM3 Wheel Event: FF 17+, IE 9+, Chrome 31+, Safari 7+
-            Input.wheelEvent = 'wheel';
-        }
-        else if ('onmousewheel' in window)
-        {
-            // Non-FF legacy: IE 6-9, Chrome 1-31, Safari 5-7.
-            Input.wheelEvent = 'mousewheel';
-        }
-        else if (Browser.firefox && 'MouseScrollEvent' in window)
-        {
-            // FF prior to 17. This should probably be scrubbed.
-            Input.wheelEvent = 'DOMMouseScroll';
-        }
+        // DOM3 Wheel Event: FF 17+, IE 9+, Chrome 31+, Safari 7+
+        Input.wheelEvent = 'wheel';
+    }
+    else if ('onmousewheel' in window)
+    {
+        // Non-FF legacy: IE 6-9, Chrome 1-31, Safari 5-7.
+        Input.wheelEvent = 'mousewheel';
+    }
+    else if (Browser.firefox && 'MouseScrollEvent' in window)
+    {
+        // FF prior to 17. This should probably be scrubbed.
+        Input.wheelEvent = 'DOMMouseScroll';
     }
 
     return Input;
