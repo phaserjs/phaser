@@ -1,5 +1,13 @@
 # Change Log
 
+## Version 3.16.3 - Ishikawa - in dev
+
+### Updates
+
+* Removed all references to CocoonJS from the API, including in the Device.OS object and elsewhere, as Cocoon is no longer.
+
+
+
 ## Version 3.16.2 - Ishikawa - 11th February 2019
 
 This is point release primarily fixes a few important issues that surfaced in 3.16.0.

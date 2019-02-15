@@ -20,7 +20,7 @@ var CONST = {
      * @type {string}
      * @since 3.0.0
      */
-    VERSION: '3.16.2',
+    VERSION: '3.16.3',
 
     BlendModes: require('./renderer/BlendModes'),
 
