@@ -17,7 +17,7 @@ var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
  * @method Phaser.GameObjects.GameObjectCreator#blitter
  * @since 3.0.0
  *
- * @param {object} config - The configuration object this Game Object will use to create itself.
+ * @param {Phaser.GameObjects.Blitter.Types.BlitterConfig} [config] - The configuration object this Game Object will use to create itself.
  * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.Blitter} The Game Object that was created.
