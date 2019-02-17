@@ -15,7 +15,7 @@ var Graphics = require('./Graphics');
  * @method Phaser.GameObjects.GameObjectCreator#graphics
  * @since 3.0.0
  *
- * @param {object} config - The configuration object this Game Object will use to create itself.
+ * @param {Phaser.GameObjects.Graphics.Types.Options} [config] - The Graphics configuration.
  * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.Graphics} The Game Object that was created.
@@ -35,7 +35,7 @@ GameObjectCreator.register('graphics', function (config, addToScene)
     {
         this.scene.sys.displayList.add(graphics);
     }
-    
+
     return graphics;
 });
 
