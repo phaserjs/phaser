@@ -80,7 +80,7 @@ var Render = require('./GraphicsRender');
  * @extends Phaser.GameObjects.Components.ScrollFactor
  *
  * @param {Phaser.Scene} scene - The Scene to which this Graphics object belongs.
- * @param {Phaser.GameObjects.Graphics.Types.Options} [options] - Options that set the position and default style of this Graphics object.
+ * @param {Phaser.GameObjects.Graphics.Types.GraphicsConfig} [options] - Options that set the position and default style of this Graphics object.
  */
 var Graphics = new Class({
 
@@ -470,7 +470,7 @@ var Graphics = new Class({
 
     /**
      * Fill the current path.
-     * 
+     *
      * This is an alias for `Graphics.fillPath` and does the same thing.
      * It was added to match the CanvasRenderingContext 2D API.
      *
@@ -507,7 +507,7 @@ var Graphics = new Class({
 
     /**
      * Stroke the current path.
-     * 
+     *
      * This is an alias for `Graphics.strokePath` and does the same thing.
      * It was added to match the CanvasRenderingContext 2D API.
      *
@@ -1214,7 +1214,7 @@ var Graphics = new Class({
      * Draw an arc.
      *
      * This method can be used to create circles, or parts of circles.
-     * 
+     *
      * Make sure you call `beginPath` before starting the arc unless you wish for the arc to automatically
      * close when filled or stroked.
      *

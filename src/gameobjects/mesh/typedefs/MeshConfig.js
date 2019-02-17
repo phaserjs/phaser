@@ -1,7 +1,7 @@
 /**
  * Options for the Mesh game Object.
  *
- * @typedef {object} Phaser.GameObjects.Mesh.Types.Options
+ * @typedef {object} Phaser.GameObjects.Mesh.Types.MeshConfig
  * @since 3.0.0
  *
  * @property {string} key - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.

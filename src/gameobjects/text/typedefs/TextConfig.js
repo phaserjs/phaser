@@ -1,7 +1,7 @@
 /**
  * Options for the Zone game Object.
  *
- * @typedef {object} Phaser.GameObjects.Text.Types.Options
+ * @typedef {object} Phaser.GameObjects.Text.Types.TextConfig
  * @extends {Phaser.GameObjects.Types.GameObjectConfig}
  * @since 3.0.0
  *

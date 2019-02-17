@@ -1,7 +1,7 @@
 /**
  * Options for the Graphics game Object.
  *
- * @typedef {object} Phaser.GameObjects.Graphics.Types.Options
+ * @typedef {object} Phaser.GameObjects.Graphics.Types.GraphicsConfig
  * @extends Phaser.GameObjects.Graphics.Types.Styles
  * @since 3.0.0
  *

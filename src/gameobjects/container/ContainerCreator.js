@@ -18,7 +18,7 @@ var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
  * @method Phaser.GameObjects.GameObjectCreator#container
  * @since 3.4.0
  *
- * @param {Phaser.GameObjects.Container.Types.Options} [config] - The Container configuration.
+ * @param {Phaser.GameObjects.Container.Types.ContainerConfig} [config] - The Container configuration.
  * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.Container} The Game Object that was created.

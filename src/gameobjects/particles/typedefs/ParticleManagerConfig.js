@@ -1,7 +1,7 @@
 /**
  * Options for the Particles game Object.
  *
- * @typedef {object} Phaser.GameObjects.Particles.Types.Options
+ * @typedef {object} Phaser.GameObjects.Particles.Types.ParticleManagerConfig
  * @since 3.0.0
  *
  * @property {string} key - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.

@@ -17,7 +17,7 @@ var ParticleEmitterManager = require('./ParticleEmitterManager');
  * @method Phaser.GameObjects.GameObjectCreator#particles
  * @since 3.0.0
  *
- * @param {Phaser.GameObjects.Particles.Types.Options} [config] - The configuration object this Game Object will use to create itself.
+ * @param {Phaser.GameObjects.Particles.Types.ParticleManagerConfig} [config] - The configuration object this Game Object will use to create itself.
  * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.Particles.ParticleEmitterManager} The Game Object that was created.

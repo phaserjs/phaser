@@ -1,7 +1,7 @@
 /**
  * Options for the Zone game Object.
  *
- * @typedef {object} Phaser.GameObjects.Zone.Types.Options
+ * @typedef {object} Phaser.GameObjects.Zone.Types.ZoneConfig
  * @since 3.0.0
  *
  * @property {number} [x] - The horizontal position of this Game Object in the world.
