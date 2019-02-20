@@ -4,10 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var LineToLine = require('./LineToLine');
-var Contains = require('../rectangle/Contains');
-var ContainsArray = require('../triangle/ContainsArray');
-var Decompose = require('../rectangle/Decompose');
+var LineToRectangle = require('./LineToRectangle');
 
 /**
  * Checks for intersection between Rectangle shape and Triangle shape.
@@ -17,15 +14,15 @@ var Decompose = require('../rectangle/Decompose');
  *
  * @param {Phaser.Geom.Rectangle} rect - Rectangle object to test.
  * @param {Phaser.Geom.Triangle} triangle - Triangle object to test.
+ * @param {array} [out] - An array in which to optionally store the points of intersection.
  *
  * @return {boolean} A value of `true` if objects intersect; otherwise `false`.
  */
-var RectangleToTriangle = function (rect, triangle)
+var RectangleToTriangle = function (rect, triangle, out)
 {
-    //  First the cheapest ones:
+    if (out === undefined) { out = []; }
 
-    if (
-        triangle.left > rect.right ||
+    if (triangle.left > rect.right ||
         triangle.right < rect.left ||
         triangle.top > rect.bottom ||
         triangle.bottom < rect.top)
@@ -33,55 +30,28 @@ var RectangleToTriangle = function (rect, triangle)
         return false;
     }
 
-    var triA = triangle.getLineA();
-    var triB = triangle.getLineB();
-    var triC = triangle.getLineC();
+    var oriLength = out.length;
 
-    //  Are any of the triangle points within the rectangle?
+    var lineA = triangle.getLineA();
+    var lineB = triangle.getLineB();
+    var lineC = triangle.getLineC();
 
-    if (Contains(rect, triA.x1, triA.y1) || Contains(rect, triA.x2, triA.y2))
+    var output = [ [], [], [] ];
+
+    var res = [
+        LineToRectangle(lineA, rect, output[0]),
+        LineToRectangle(lineB, rect, output[1]),
+        LineToRectangle(lineC, rect, output[2])
+    ];
+
+    for (var i = 0; i < 3; i++)
     {
-        return true;
+        if (res[i] && output[i] !== []) { out.concat(output[i]); }
     }
 
-    if (Contains(rect, triB.x1, triB.y1) || Contains(rect, triB.x2, triB.y2))
-    {
-        return true;
-    }
-
-    if (Contains(rect, triC.x1, triC.y1) || Contains(rect, triC.x2, triC.y2))
-    {
-        return true;
-    }
-
-    //  Cheap tests over, now to see if any of the lines intersect ...
-
-    var rectA = rect.getLineA();
-    var rectB = rect.getLineB();
-    var rectC = rect.getLineC();
-    var rectD = rect.getLineD();
-
-    if (LineToLine(triA, rectA) || LineToLine(triA, rectB) || LineToLine(triA, rectC) || LineToLine(triA, rectD))
-    {
-        return true;
-    }
-
-    if (LineToLine(triB, rectA) || LineToLine(triB, rectB) || LineToLine(triB, rectC) || LineToLine(triB, rectD))
-    {
-        return true;
-    }
-
-    if (LineToLine(triC, rectA) || LineToLine(triC, rectB) || LineToLine(triC, rectC) || LineToLine(triC, rectD))
-    {
-        return true;
-    }
-
-    //  None of the lines intersect, so are any rectangle points within the triangle?
-
-    var points = Decompose(rect);
-    var within = ContainsArray(triangle, points, true);
-
-    return (within.length > 0);
+    if (out.length - oriLength > 0) { return true; }
+    else if (res[0] || res[1] || res[2]) { return true; }
+    else { return false; }
 };
 
 module.exports = RectangleToTriangle;

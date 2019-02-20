@@ -5,7 +5,6 @@
  */
 
 var LineToCircle = require('./LineToCircle');
-var Contains = require('../triangle/Contains');
 
 /**
  * Checks if a Triangle and a Circle intersect.
@@ -17,15 +16,15 @@ var Contains = require('../triangle/Contains');
  *
  * @param {Phaser.Geom.Triangle} triangle - The Triangle to check for intersection.
  * @param {Phaser.Geom.Circle} circle - The Circle to check for intersection.
+ * @param {array} [out] - An array in which to optionally store the points of intersection.
  *
  * @return {boolean} `true` if the Triangle and the `Circle` intersect, otherwise `false`.
  */
-var TriangleToCircle = function (triangle, circle)
+var TriangleToCircle = function (triangle, circle, out)
 {
-    //  First the cheapest ones:
+    if (out === undefined) { out = []; }
 
-    if (
-        triangle.left > circle.right ||
+    if (triangle.left > circle.right ||
         triangle.right < circle.left ||
         triangle.top > circle.bottom ||
         triangle.bottom < circle.top)
@@ -33,27 +32,28 @@ var TriangleToCircle = function (triangle, circle)
         return false;
     }
 
-    if (Contains(triangle, circle.x, circle.y))
+    var oriLength = out.length;
+
+    var lineA = triangle.getLineA();
+    var lineB = triangle.getLineB();
+    var lineC = triangle.getLineC();
+
+    var output = [ [], [], [] ];
+
+    var res = [
+        LineToCircle(lineA, circle, output[0]),
+        LineToCircle(lineB, circle, output[1]),
+        LineToCircle(lineC, circle, output[2])
+    ];
+
+    for (var i = 0; i < 3; i++)
     {
-        return true;
+        if (res[i] && output !== []) { out.concat(output[i]); }
     }
 
-    if (LineToCircle(triangle.getLineA(), circle))
-    {
-        return true;
-    }
-
-    if (LineToCircle(triangle.getLineB(), circle))
-    {
-        return true;
-    }
-
-    if (LineToCircle(triangle.getLineC(), circle))
-    {
-        return true;
-    }
-
-    return false;
+    if (out.length - oriLength > 0) { return true; }
+    else if (res[0] || res[1] || res[2]) { return true; }
+    else { return false; }
 };
 
 module.exports = TriangleToCircle;

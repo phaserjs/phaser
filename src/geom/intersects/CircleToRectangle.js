@@ -4,6 +4,8 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var LineToCircle = require('./LineToCircle');
+
 /**
  * Checks for intersection between a circle and a rectangle.
  *
@@ -12,37 +14,38 @@
  *
  * @param {Phaser.Geom.Circle} circle - The circle to be checked.
  * @param {Phaser.Geom.Rectangle} rect - The rectangle to be checked.
+ * @param {array} [out] - An array in which to optionally store the points of intersection.
  *
  * @return {boolean} `true` if the two objects intersect, otherwise `false`.
  */
-var CircleToRectangle = function (circle, rect)
+var CircleToRectangle = function (circle, rect, out)
 {
-    var halfWidth = rect.width / 2;
-    var halfHeight = rect.height / 2;
+    if (out === undefined) { out = []; }
 
-    var cx = Math.abs(circle.x - rect.x - halfWidth);
-    var cy = Math.abs(circle.y - rect.y - halfHeight);
-    var xDist = halfWidth + circle.radius;
-    var yDist = halfHeight + circle.radius;
+    var oriLength = out.length;
 
-    if (cx > xDist || cy > yDist)
-    {
-        return false;
-    }
-    else if (cx <= halfWidth || cy <= halfHeight)
-    {
-        return true;
-    }
-    else
-    {
-        var xCornerDist = cx - halfWidth;
-        var yCornerDist = cy - halfHeight;
-        var xCornerDistSq = xCornerDist * xCornerDist;
-        var yCornerDistSq = yCornerDist * yCornerDist;
-        var maxCornerDistSq = circle.radius * circle.radius;
+    var lineA = rect.getLineA();
+    var lineB = rect.getLineB();
+    var lineC = rect.getLineC();
+    var lineD = rect.getLineD();
 
-        return (xCornerDistSq + yCornerDistSq <= maxCornerDistSq);
+    var output = [ [], [], [], [] ];
+
+    var res = [
+        LineToCircle(lineA, circle, output[0]),
+        LineToCircle(lineB, circle, output[1]),
+        LineToCircle(lineC, circle, output[2]),
+        LineToCircle(lineD, circle, output[3])
+    ];
+
+    for (var i = 0; i < 4; i++)
+    {
+        if (res[i] && output !== []) { out.concat(output[i]); }
     }
+
+    if (out.length - oriLength > 0) { return true; }
+    else if (res[0] || res[1] || res[2] || res[3]) { return true; }
+    else { return false; }
 };
 
 module.exports = CircleToRectangle;

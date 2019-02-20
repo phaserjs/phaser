@@ -4,9 +4,8 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var ContainsArray = require('../triangle/ContainsArray');
-var Decompose = require('../triangle/Decompose');
-var LineToLine = require('./LineToLine');
+var Equals = require('../triangle/Equals');
+var TriangleToLine = require('./TriangleToLine');
 
 /**
  * Checks if two Triangles intersect.
@@ -18,15 +17,15 @@ var LineToLine = require('./LineToLine');
  *
  * @param {Phaser.Geom.Triangle} triangleA - The first Triangle to check for intersection.
  * @param {Phaser.Geom.Triangle} triangleB - The second Triangle to check for intersection.
+ * @param {array} [out] - An array in which to optionally store the points of intersection.
  *
  * @return {boolean} `true` if the Triangles intersect, otherwise `false`.
  */
-var TriangleToTriangle = function (triangleA, triangleB)
+var TriangleToTriangle = function (triangleA, triangleB, out)
 {
-    //  First the cheapest ones:
+    if (out === undefined) { out = []; }
 
-    if (
-        triangleA.left > triangleB.right ||
+    if (triangleA.left > triangleB.right ||
         triangleA.right < triangleB.left ||
         triangleA.top > triangleB.bottom ||
         triangleA.bottom < triangleB.top)
@@ -34,51 +33,30 @@ var TriangleToTriangle = function (triangleA, triangleB)
         return false;
     }
 
-    var lineAA = triangleA.getLineA();
-    var lineAB = triangleA.getLineB();
-    var lineAC = triangleA.getLineC();
+    if (Equals(triangleA, triangleB)) { return false; }
 
-    var lineBA = triangleB.getLineA();
-    var lineBB = triangleB.getLineB();
-    var lineBC = triangleB.getLineC();
+    var oriLength = out.length;
 
-    //  Now check the lines against each line of TriangleB
-    if (LineToLine(lineAA, lineBA) || LineToLine(lineAA, lineBB) || LineToLine(lineAA, lineBC))
+    var lineA = triangleB.getLineA();
+    var lineB = triangleB.getLineB();
+    var lineC = triangleB.getLineC();
+
+    var output = [ [], [], [] ];
+
+    var res = [
+        TriangleToLine(triangleA, lineA, output[0]),
+        TriangleToLine(triangleA, lineB, output[1]),
+        TriangleToLine(triangleA, lineC, output[2])
+    ];
+
+    for (var i = 0; i < 3; i++)
     {
-        return true;
+        if (res[i] && output[i] !== []) { out.concat(output[i]); }
     }
 
-    if (LineToLine(lineAB, lineBA) || LineToLine(lineAB, lineBB) || LineToLine(lineAB, lineBC))
-    {
-        return true;
-    }
-
-    if (LineToLine(lineAC, lineBA) || LineToLine(lineAC, lineBB) || LineToLine(lineAC, lineBC))
-    {
-        return true;
-    }
-
-    //  Nope, so check to see if any of the points of triangleA are within triangleB
-
-    var points = Decompose(triangleA);
-    var within = ContainsArray(triangleB, points, true);
-
-    if (within.length > 0)
-    {
-        return true;
-    }
-
-    //  Finally check to see if any of the points of triangleB are within triangleA
-
-    points = Decompose(triangleB);
-    within = ContainsArray(triangleA, points, true);
-
-    if (within.length > 0)
-    {
-        return true;
-    }
-
-    return false;
+    if (out.length - oriLength > 0) { return true; }
+    else if (res[0] || res[1] || res[2]) { return true; }
+    else { return false; }
 };
 
 module.exports = TriangleToTriangle;
