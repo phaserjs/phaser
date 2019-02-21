@@ -954,8 +954,6 @@ var Body = new Class({
      *
      * @method Phaser.Physics.Arcade.Body#postUpdate
      * @since 3.0.0
-     *
-     * @param {boolean} resetDelta - Reset the delta properties?
      */
     postUpdate: function ()
     {
