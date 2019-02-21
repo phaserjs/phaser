@@ -270,6 +270,39 @@ var Scene = new Class({
     /**
      * Should be overridden by your own Scenes.
      *
+     * @method Phaser.Scene#init
+     * @override
+     * @since 3.0.0
+     */
+    init: function ()
+    {
+    },
+    
+    /**
+     * Should be overridden by your own Scenes.
+     *
+     * @method Phaser.Scene#preload
+     * @override
+     * @since 3.0.0
+     */
+    preload: function ()
+    {
+    },
+
+    /**
+     * Should be overridden by your own Scenes.
+     *
+     * @method Phaser.Scene#create
+     * @override
+     * @since 3.0.0
+     */
+    create: function ()
+    {
+    },
+
+    /**
+     * Should be overridden by your own Scenes.
+     *
      * @method Phaser.Scene#update
      * @override
      * @since 3.0.0
