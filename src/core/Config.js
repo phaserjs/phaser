@@ -276,6 +276,11 @@ var Config = new Class({
         this.inputQueue = GetValue(config, 'input.queue', false);
 
         /**
+         * @const {boolean} Phaser.Core.Config#inputWindowEvents - Should Phaser listen for input events on the Window?
+         */
+        this.inputWindowEvents = GetValue(config, 'input.windowEvents', true);
+
+        /**
          * @const {boolean} Phaser.Core.Config#inputGamepad - Enable the Gamepad Plugin. This can be disabled in games that don't need gamepad input.
          */
         this.inputGamepad = GetValue(config, 'input.gamepad', false);
