@@ -276,7 +276,7 @@ var Config = new Class({
         this.inputQueue = GetValue(config, 'input.queue', false);
 
         /**
-         * @const {boolean} Phaser.Core.Config#inputWindowEvents - Should Phaser listen for input events on the Window?
+         * @const {boolean} Phaser.Core.Config#inputWindowEvents - Should Phaser listen for input events on the Window? If you disable this, events like 'POINTER_UP_OUTSIDE' will no longer fire.
          */
         this.inputWindowEvents = GetValue(config, 'input.windowEvents', true);
 

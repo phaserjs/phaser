@@ -84,6 +84,16 @@ var TouchManager = new Class({
         this.onTouchStart = NOOP;
 
         /**
+         * The Touch Start event handler function specifically for events on the Window.
+         * Initially empty and bound in the `startListeners` method.
+         *
+         * @name Phaser.Input.Touch.TouchManager#onTouchStartWindow
+         * @type {function}
+         * @since 3.16.3
+         */
+        this.onTouchStartWindow = NOOP;
+
+        /**
          * The Touch Move event handler function.
          * Initially empty and bound in the `startListeners` method.
          *
@@ -102,6 +112,16 @@ var TouchManager = new Class({
          * @since 3.0.0
          */
         this.onTouchEnd = NOOP;
+
+        /**
+         * The Touch End event handler function specifically for events on the Window.
+         * Initially empty and bound in the `startListeners` method.
+         *
+         * @name Phaser.Input.Touch.TouchManager#onTouchEndWindow
+         * @type {function}
+         * @since 3.16.3
+         */
+        this.onTouchEndWindow = NOOP;
 
         /**
          * The Touch Cancel event handler function.
@@ -199,6 +219,21 @@ var TouchManager = new Class({
             }
         };
 
+        this.onTouchStartWindow = function (event)
+        {
+            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            {
+                //  Do nothing if event already handled
+                return;
+            }
+    
+            if (event.target !== canvas)
+            {
+                //  Only process the event if the target isn't the canvas
+                _this.manager.queueTouchStart(event);
+            }
+        };
+
         this.onTouchMove = function (event)
         {
             if (event.defaultPrevented || !_this.enabled || !_this.manager)
@@ -228,6 +263,21 @@ var TouchManager = new Class({
             if (_this.capture && event.target === canvas)
             {
                 event.preventDefault();
+            }
+        };
+
+        this.onTouchEndWindow = function (event)
+        {
+            if (event.defaultPrevented || !_this.enabled || !_this.manager)
+            {
+                //  Do nothing if event already handled
+                return;
+            }
+    
+            if (event.target !== canvas)
+            {
+                //  Only process the event if the target isn't the canvas
+                _this.manager.queueTouchEnd(event);
             }
         };
 
@@ -286,10 +336,10 @@ var TouchManager = new Class({
         target.addEventListener('touchover', this.onTouchOver, (this.capture) ? nonPassive : passive);
         target.addEventListener('touchout', this.onTouchOut, (this.capture) ? nonPassive : passive);
 
-        if (window)
+        if (window && this.manager.game.config.inputWindowEvents)
         {
-            window.addEventListener('touchstart', this.onTouchStart, nonPassive);
-            window.addEventListener('touchend', this.onTouchEnd, nonPassive);
+            window.addEventListener('touchstart', this.onTouchStartWindow, nonPassive);
+            window.addEventListener('touchend', this.onTouchEndWindow, nonPassive);
         }
 
         this.enabled = true;
@@ -315,8 +365,8 @@ var TouchManager = new Class({
 
         if (window)
         {
-            window.removeEventListener('touchstart', this.onTouchStart);
-            window.removeEventListener('touchend', this.onTouchEnd);
+            window.removeEventListener('touchstart', this.onTouchStartWindow);
+            window.removeEventListener('touchend', this.onTouchEndWindow);
         }
     },
 

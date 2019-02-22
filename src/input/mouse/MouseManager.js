@@ -304,8 +304,6 @@ var MouseManager = new Class({
 
         this.onMouseDown = function (event)
         {
-            console.log('down');
-
             if (autoFocus)
             {
                 window.focus();
@@ -327,8 +325,6 @@ var MouseManager = new Class({
 
         this.onMouseDownWindow = function (event)
         {
-            console.log('window down');
-
             if (event.defaultPrevented || !_this.enabled || !_this.manager)
             {
                 // Do nothing if event already handled
@@ -337,8 +333,6 @@ var MouseManager = new Class({
 
             if (event.target !== canvas)
             {
-                console.log('window process');
-
                 //  Only process the event if the target isn't the canvas
                 _this.manager.queueMouseDown(event);
             }
@@ -457,8 +451,8 @@ var MouseManager = new Class({
 
         if (window)
         {
-            window.removeEventListener('mousedown', this.onMouseDown);
-            window.removeEventListener('mouseup', this.onMouseUp);
+            window.removeEventListener('mousedown', this.onMouseDownWindow);
+            window.removeEventListener('mouseup', this.onMouseUpWindow);
         }
 
         if (Features.pointerLock)
