@@ -1271,6 +1271,9 @@ var ScaleManager = new Class({
             }
         }
 
+        //  Get the parent size again as it will have changed
+        this.getParentBounds();
+
         this.emit(Events.LEAVE_FULLSCREEN);
 
         this.refresh();
