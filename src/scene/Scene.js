@@ -281,6 +281,30 @@ var Scene = new Class({
     {
     }
 
+    /**
+     * Should be overridden by your own Scenes.
+     *
+     * @method Phaser.Scene#init
+     * @override
+     * @since 3.0.0
+     */
+
+    /**
+     * Should be overridden by your own Scenes.
+     *
+     * @method Phaser.Scene#preload
+     * @override
+     * @since 3.0.0
+     */
+
+    /**
+     * Should be overridden by your own Scenes.
+     *
+     * @method Phaser.Scene#create
+     * @override
+     * @since 3.0.0
+     */
+
 });
 
 module.exports = Scene;
