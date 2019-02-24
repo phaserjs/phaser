@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var MATH = require('../../math/const');
+var MATH = require('../../math');
 var GetValue = require('./GetValue');
 
 /**
