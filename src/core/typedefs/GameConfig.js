@@ -30,4 +30,5 @@
  * @property {Phaser.Core.Types.PhysicsConfig} [physics] - Physics configuration.
  * @property {Phaser.Core.Types.PluginObject|Phaser.Core.Types.PluginObjectItem[]} [plugins] - Plugins to install.
  * @property {Phaser.Core.Types.ScaleConfig} [scale] - The Scale Manager configuration.
+ * @property {Phaser.Core.Types.AudioConfig} [audio] - The Audio Configuration object.
  */
