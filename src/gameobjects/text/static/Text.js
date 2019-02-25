@@ -1318,6 +1318,30 @@ var Text = new Class({
         this.texture.destroy();
     }
 
+    /**
+     * The horizontal origin of this Game Object.
+     * The origin maps the relationship between the size and position of the Game Object.
+     * The default value is 0.5, meaning all Game Objects are positioned based on their center.
+     * Setting the value to 0 means the position now relates to the left of the Game Object.
+     *
+     * @name Phaser.GameObjects.Text#originX
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+
+    /**
+     * The vertical origin of this Game Object.
+     * The origin maps the relationship between the size and position of the Game Object.
+     * The default value is 0.5, meaning all Game Objects are positioned based on their center.
+     * Setting the value to 0 means the position now relates to the top of the Game Object.
+     *
+     * @name Phaser.GameObjects.Text#originY
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+
 });
 
 module.exports = Text;
