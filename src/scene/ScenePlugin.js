@@ -434,13 +434,11 @@ var ScenePlugin = new Class({
      * @param {boolean} autoStart - Whether to start the Scene after it's added.
      * @param {object} [data] - Optional data object. This will be set as Scene.settings.data and passed to `Scene.init`.
      *
-     * @return {Phaser.Scenes.ScenePlugin} This ScenePlugin object.
+     * @return {Phaser.Scene} An instance of the Scene that was added to the Scene Manager.
      */
     add: function (key, sceneConfig, autoStart, data)
     {
-        this.manager.add(key, sceneConfig, autoStart, data);
-
-        return this;
+        return this.manager.add(key, sceneConfig, autoStart, data);
     },
 
     /**

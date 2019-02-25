@@ -11,6 +11,7 @@
 * Removed all references to CocoonJS from the API, including in the Device.OS object and elsewhere, as Cocoon is no longer.
 * The MouseManager and TouchManager now use separate handlers for the Window level input events, which check to see if the canvas is the target or not, and redirect processing accordingly.
 * `AnimationManager.generateFrameNumbers` can now accept a start number greater than the end number, and will generate them in reverse (thanks @cruzdanilo)
+* The return from the `ScenePlugin.add` method has changed. Previously, it would return the ScenePlugin, but now it returns a reference to the Scene that was added to the Scene Manager, keeping it in-line with all other `add` methods in the API. Fix #4359 (thanks @BigZaphod)
 
 ### Bug Fixes
 
