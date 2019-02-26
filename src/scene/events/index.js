@@ -11,6 +11,7 @@
 module.exports = {
 
     BOOT: require('./BOOT_EVENT'),
+    CREATE: require('./CREATE_EVENT'),
     DESTROY: require('./DESTROY_EVENT'),
     PAUSE: require('./PAUSE_EVENT'),
     POST_UPDATE: require('./POST_UPDATE_EVENT'),

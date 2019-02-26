@@ -514,7 +514,8 @@ var SceneManager = new Class({
     {
         var scene = loader.scene;
 
-        // Try to unlock HTML5 sounds every time any loader completes
+        //  TODO - Remove. This should *not* be handled here
+        //  Try to unlock HTML5 sounds every time any loader completes
         if (this.game.sound.onBlurPausedSounds)
         {
             this.game.sound.unlock();
@@ -593,6 +594,7 @@ var SceneManager = new Class({
      *
      * @method Phaser.Scenes.SceneManager#create
      * @private
+     * @fires Phaser.Scenes.Events#CREATE
      * @fires Phaser.Scenes.Events#TRANSITION_INIT
      * @since 3.0.0
      *
@@ -622,6 +624,8 @@ var SceneManager = new Class({
         }
 
         settings.status = CONST.RUNNING;
+
+        sys.events.emit(Events.CREATE, scene);
     },
 
     /**
