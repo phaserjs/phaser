@@ -677,14 +677,14 @@ var ScenePlugin = new Class({
     },
 
     /**
-     * Checks if the given Scene is active or not?
+     * Checks if the given Scene is running or not?
      *
      * @method Phaser.Scenes.ScenePlugin#isActive
      * @since 3.0.0
      *
      * @param {string} [key] - The Scene to check.
      *
-     * @return {boolean} Whether the Scene is active.
+     * @return {boolean} Whether the Scene is running.
      */
     isActive: function (key)
     {

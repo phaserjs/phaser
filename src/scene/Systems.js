@@ -539,12 +539,12 @@ var Systems = new Class({
     },
 
     /**
-     * Is this Scene active?
+     * Is this Scene running?
      *
      * @method Phaser.Scenes.Systems#isActive
      * @since 3.0.0
      *
-     * @return {boolean} `true` if this Scene is active, otherwise `false`.
+     * @return {boolean} `true` if this Scene is running, otherwise `false`.
      */
     isActive: function ()
     {

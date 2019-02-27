@@ -890,14 +890,14 @@ var SceneManager = new Class({
     },
 
     /**
-     * Determines whether a Scene is active.
+     * Determines whether a Scene is running.
      *
      * @method Phaser.Scenes.SceneManager#isActive
      * @since 3.0.0
      *
      * @param {string} key - The Scene to check.
      *
-     * @return {boolean} Whether the Scene is active.
+     * @return {boolean} Whether the Scene is running.
      */
     isActive: function (key)
     {
