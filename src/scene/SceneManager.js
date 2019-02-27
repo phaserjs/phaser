@@ -912,6 +912,28 @@ var SceneManager = new Class({
     },
 
     /**
+     * Determines whether a Scene is paused.
+     *
+     * @method Phaser.Scenes.SceneManager#isPaused
+     * @since 3.17.0
+     *
+     * @param {string} key - The Scene to check.
+     *
+     * @return {boolean} Whether the Scene is paused.
+     */
+    isPaused: function (key)
+    {
+        var scene = this.getScene(key);
+
+        if (scene)
+        {
+            return scene.sys.isPaused();
+        }
+
+        return null;
+    },
+
+    /**
      * Determines whether a Scene is visible.
      *
      * @method Phaser.Scenes.SceneManager#isVisible

@@ -694,6 +694,23 @@ var ScenePlugin = new Class({
     },
 
     /**
+     * Checks if the given Scene is paused or not?
+     *
+     * @method Phaser.Scenes.ScenePlugin#isPaused
+     * @since 3.17.0
+     *
+     * @param {string} [key] - The Scene to check.
+     *
+     * @return {boolean} Whether the Scene is paused.
+     */
+    isPaused: function (key)
+    {
+        if (key === undefined) { key = this.key; }
+
+        return this.manager.isPaused(key);
+    },
+
+    /**
      * Checks if the given Scene is visible or not?
      *
      * @method Phaser.Scenes.ScenePlugin#isVisible
