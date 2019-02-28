@@ -336,24 +336,31 @@ var PluginManager = new Class({
      * @param {function} plugin - The plugin code. This should be the non-instantiated version.
      * @param {string} [mapping] - If this plugin is injected into the Phaser.Scene class, this is the property key to use.
      * @param {Phaser.Scene} [addToScene] - Optionally automatically add this plugin to the given Scene.
+     * @param {boolean} [fromLoader=false] - Is this being called by the Loader?
      */
-    installScenePlugin: function (key, plugin, mapping, addToScene)
+    installScenePlugin: function (key, plugin, mapping, addToScene, fromLoader)
     {
+        if (fromLoader === undefined) { fromLoader = false; }
+
         if (typeof plugin !== 'function')
         {
             console.warn('Invalid Scene Plugin: ' + key);
             return;
         }
 
-        if (PluginCache.hasCore(key))
+        if (!PluginCache.hasCore(key))
         {
+            //  Plugin is freshly loaded
+            PluginCache.register(key, plugin, mapping, true);
+
+            this.scenePlugins.push(key);
+        }
+        else if (!fromLoader && PluginCache.hasCore(key))
+        {
+            //  Plugin wasn't from the loader but already exists
             console.warn('Scene Plugin key in use: ' + key);
             return;
         }
-
-        PluginCache.register(key, plugin, mapping, true);
-
-        this.scenePlugins.push(key);
 
         if (addToScene)
         {

@@ -108,7 +108,7 @@ var ScenePluginFile = new Class({
 
         if (this.state === CONST.FILE_POPULATED)
         {
-            pluginManager.installScenePlugin(systemKey, this.data, sceneKey, this.loader.scene);
+            pluginManager.installScenePlugin(systemKey, this.data, sceneKey, this.loader.scene, true);
         }
         else
         {
@@ -123,7 +123,7 @@ var ScenePluginFile = new Class({
 
             document.head.appendChild(this.data);
 
-            pluginManager.installScenePlugin(systemKey, window[this.key], sceneKey, this.loader.scene);
+            pluginManager.installScenePlugin(systemKey, window[this.key], sceneKey, this.loader.scene, true);
         }
 
         this.onProcessComplete();

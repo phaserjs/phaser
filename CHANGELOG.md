@@ -13,6 +13,7 @@
 * The MouseManager and TouchManager now use separate handlers for the Window level input events, which check to see if the canvas is the target or not, and redirect processing accordingly.
 * `AnimationManager.generateFrameNumbers` can now accept a start number greater than the end number, and will generate them in reverse (thanks @cruzdanilo)
 * The return from the `ScenePlugin.add` method has changed. Previously, it would return the ScenePlugin, but now it returns a reference to the Scene that was added to the Scene Manager, keeping it in-line with all other `add` methods in the API. Fix #4359 (thanks @BigZaphod)
+* The `PluginManager.installScenePlugin` method has a new optional boolean parameter `fromLoader` which controls if the plugin is coming in from the result of a Loader operation or not. If it is, it no longer throws a console warning if the plugin already exists. This fixes an issue where if you return to a Scene that loads a Scene Plugin it would throw a warning and then not install the plugin to the Scene.
 
 ### Bug Fixes
 
