@@ -96,28 +96,6 @@ var World = new Class({
         this.pendingDestroy = new Set();
 
         /**
-         * Dynamic Bodies that need a second `update` call to resynchronize their Game Objects.
-         * This set is filled only when the `_late` flag is on, and is processed and cleared during `postUpdate`.
-         *
-         * @name Phaser.Physics.Arcade.World#late
-         * @type {Phaser.Structs.Set.<Phaser.Physics.Arcade.Body>}
-         * @private
-         * @since 3.16.0
-         */
-        this.late = new Set();
-
-        /**
-         * A flag allowing the `late` set to be filled, as appropriate.
-         * This is on (true) only between `update` and `postUpdate` and false at other times.
-         *
-         * @name Phaser.Physics.Arcade.World#_late
-         * @type {boolean}
-         * @private
-         * @since 3.16.0
-         */
-        this._late = false;
-
-        /**
          * This simulation's collision processors.
          *
          * @name Phaser.Physics.Arcade.World#colliders
@@ -651,7 +629,6 @@ var World = new Class({
         {
             this.tree.remove(body);
             this.bodies.delete(body);
-            this.late.delete(body);
         }
         else if (body.physicsType === CONST.STATIC_BODY)
         {
@@ -935,12 +912,25 @@ var World = new Class({
             return;
         }
 
+        //  Update all active bodies
+        var body;
+        var bodies = this.bodies.entries;
+
+        for (var i = 0; i < bodies.length; i++)
+        {
+            body = bodies[i];
+
+            if (body.enable)
+            {
+                body.preUpdate();
+            }
+        }
+
         var stepsThisFrame = 0;
         var fixedDelta = this._frameTime;
         var msPerFrame = this._frameTimeMS * this.timeScale;
 
         this._elapsed += delta;
-        this._late = false;
 
         while (this._elapsed >= msPerFrame)
         {
@@ -952,7 +942,6 @@ var World = new Class({
         }
 
         this.stepsLastFrame = stepsThisFrame;
-        this._late = true;
     },
 
     /**
@@ -1000,18 +989,6 @@ var World = new Class({
                 collider.update();
             }
         }
-
-        len = bodies.length;
-
-        for (i = 0; i < len; i++)
-        {
-            body = bodies[i];
-
-            if (body.enable)
-            {
-                body.postUpdate();
-            }
-        }
     },
 
     /**
@@ -1023,37 +1000,22 @@ var World = new Class({
     postUpdate: function ()
     {
         var i;
-        var bodies;
         var body;
-        var len;
+        var bodies = this.bodies.entries;
+        var len = bodies.length;
 
         var dynamic = this.bodies;
         var staticBodies = this.staticBodies;
-        var pending = this.pendingDestroy;
-        var late = this.late;
 
-        if (late.size > 0)
+        for (i = 0; i < len; i++)
         {
-            bodies = late.entries;
-            len = bodies.length;
+            body = bodies[i];
 
-            for (i = 0; i < len; i++)
+            if (body.enable)
             {
-                body = bodies[i];
-
-                if (body.enable)
-                {
-                    body.postUpdate();
-                }
+                body.postUpdate();
             }
-
-            late.clear();
         }
-
-        this._late = false;
-
-        bodies = dynamic.entries;
-        len = bodies.length;
 
         if (this.drawDebug)
         {
@@ -1085,6 +1047,8 @@ var World = new Class({
             }
         }
 
+        var pending = this.pendingDestroy;
+
         if (pending.size > 0)
         {
             var dynamicTree = this.tree;
@@ -1101,7 +1065,6 @@ var World = new Class({
                 {
                     dynamicTree.remove(body);
                     dynamic.delete(body);
-                    late.delete(body);
                 }
                 else if (body.physicsType === CONST.STATIC_BODY)
                 {
@@ -1400,18 +1363,9 @@ var World = new Class({
                     this.emit(Events.OVERLAP, body1.gameObject, body2.gameObject, body1, body2);
                 }
             }
-            else
+            else if (body1.onCollide || body2.onCollide)
             {
-                if (this._late)
-                {
-                    this.late.set(body1);
-                    this.late.set(body2);
-                }
-
-                if (body1.onCollide || body2.onCollide)
-                {
-                    this.emit(Events.COLLIDE, body1.gameObject, body2.gameObject, body1, body2);
-                }
+                this.emit(Events.COLLIDE, body1.gameObject, body2.gameObject, body1, body2);
             }
         }
 
@@ -1612,8 +1566,8 @@ var World = new Class({
         }
 
         //  sync changes back to the bodies
-        body1.postUpdate();
-        body2.postUpdate();
+        // body1.postUpdate();
+        // body2.postUpdate();
 
         return true;
     },
@@ -2074,6 +2028,81 @@ var World = new Class({
     },
 
     /**
+     * This advanced method is specifically for testing for collision between a single Sprite and an array of Tile objects.
+     * 
+     * You should generally use the `collide` method instead, with a Sprite vs. a Tilemap Layer, as that will perform
+     * tile filtering and culling for you, as well as handle the interesting face collision automatically.
+     * 
+     * This method is offered for those who would like to check for collision with specific Tiles in a layer, without
+     * having to set any collision attributes on the tiles in question. This allows you to perform quick dynamic collisions
+     * on small sets of Tiles. As such, no culling or checks are made to the array of Tiles given to this method,
+     * you should filter them before passing them to this method.
+     * 
+     * Important: Use of this method skips the `interesting faces` system that Tilemap Layers use. This means if you have
+     * say a row or column of tiles, and you jump into, or walk over them, it's possible to get stuck on the edges of the
+     * tiles as the interesting face calculations are skipped. However, for quick-fire small collision set tests on
+     * dynamic maps, this method can prove very useful.
+     *
+     * @method Phaser.Physics.Arcade.World#collideTiles
+     * @fires Phaser.Physics.Arcade.Events#TILE_COLLIDE
+     * @since 3.16.3
+     *
+     * @param {Phaser.GameObjects.GameObject} sprite - The first object to check for collision.
+     * @param {Phaser.Tilemaps.Tile[]} tiles - An array of Tiles to check for collision against.
+     * @param {ArcadePhysicsCallback} [collideCallback] - An optional callback function that is called if the objects collide.
+     * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
+     * @param {any} [callbackContext] - The context in which to run the callbacks.
+     *
+     * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
+     */
+    collideTiles: function (sprite, tiles, collideCallback, processCallback, callbackContext)
+    {
+        if (!sprite.body.enable || tiles.length === 0)
+        {
+            return false;
+        }
+        else
+        {
+            return this.collideSpriteVsTilesHandler(sprite, tiles, collideCallback, processCallback, callbackContext, false, false);
+        }
+    },
+
+    /**
+     * This advanced method is specifically for testing for overlaps between a single Sprite and an array of Tile objects.
+     * 
+     * You should generally use the `overlap` method instead, with a Sprite vs. a Tilemap Layer, as that will perform
+     * tile filtering and culling for you, as well as handle the interesting face collision automatically.
+     * 
+     * This method is offered for those who would like to check for overlaps with specific Tiles in a layer, without
+     * having to set any collision attributes on the tiles in question. This allows you to perform quick dynamic overlap
+     * tests on small sets of Tiles. As such, no culling or checks are made to the array of Tiles given to this method,
+     * you should filter them before passing them to this method.
+     *
+     * @method Phaser.Physics.Arcade.World#overlapTiles
+     * @fires Phaser.Physics.Arcade.Events#TILE_OVERLAP
+     * @since 3.16.3
+     *
+     * @param {Phaser.GameObjects.GameObject} sprite - The first object to check for collision.
+     * @param {Phaser.Tilemaps.Tile[]} tiles - An array of Tiles to check for collision against.
+     * @param {ArcadePhysicsCallback} [collideCallback] - An optional callback function that is called if the objects overlap.
+     * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
+     * @param {any} [callbackContext] - The context in which to run the callbacks.
+     *
+     * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
+     */
+    overlapTiles: function (sprite, tiles, collideCallback, processCallback, callbackContext)
+    {
+        if (!sprite.body.enable || tiles.length === 0)
+        {
+            return false;
+        }
+        else
+        {
+            return this.collideSpriteVsTilesHandler(sprite, tiles, collideCallback, processCallback, callbackContext, true, false);
+        }
+    },
+
+    /**
      * Internal handler for Sprite vs. Tilemap collisions.
      * Please use Phaser.Physics.Arcade.World#collide instead.
      *
@@ -2131,13 +2160,47 @@ var World = new Class({
         {
             return false;
         }
+        else
+        {
+            return this.collideSpriteVsTilesHandler(sprite, mapData, collideCallback, processCallback, callbackContext, overlapOnly, true);
+        }
+    },
+
+    /**
+     * Internal handler for Sprite vs. Tilemap collisions.
+     * Please use Phaser.Physics.Arcade.World#collide instead.
+     *
+     * @method Phaser.Physics.Arcade.World#collideSpriteVsTilesHandler
+     * @fires Phaser.Physics.Arcade.Events#TILE_COLLIDE
+     * @fires Phaser.Physics.Arcade.Events#TILE_OVERLAP
+     * @private
+     * @since 3.16.3
+     *
+     * @param {Phaser.GameObjects.GameObject} sprite - The first object to check for collision.
+     * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer - The second object to check for collision.
+     * @param {ArcadePhysicsCallback} [collideCallback] - An optional callback function that is called if the objects collide.
+     * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
+     * @param {any} [callbackContext] - The context in which to run the callbacks.
+     * @param {boolean} [overlapOnly] - Whether this is a collision or overlap check.
+     * @param {boolean} [isLayer] - Is this check coming from a TilemapLayer or an array of tiles?
+     *
+     * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
+     */
+    collideSpriteVsTilesHandler: function (sprite, tiles, collideCallback, processCallback, callbackContext, overlapOnly, isLayer)
+    {
+        var body = sprite.body;
 
         var tile;
         var tileWorldRect = { left: 0, right: 0, top: 0, bottom: 0 };
+        var tilemapLayer;
+        var collision = false;
 
-        for (var i = 0; i < mapData.length; i++)
+        for (var i = 0; i < tiles.length; i++)
         {
-            tile = mapData[i];
+            tile = tiles[i];
+
+            tilemapLayer = tile.tilemapLayer;
+
             tileWorldRect.left = tilemapLayer.tileToWorldX(tile.x);
             tileWorldRect.top = tilemapLayer.tileToWorldY(tile.y);
 
@@ -2154,9 +2217,11 @@ var World = new Class({
             if (TileIntersectsBody(tileWorldRect, body)
                 && (!processCallback || processCallback.call(callbackContext, sprite, tile))
                 && ProcessTileCallbacks(tile, sprite)
-                && (overlapOnly || SeparateTile(i, body, tile, tileWorldRect, tilemapLayer, this.TILE_BIAS)))
+                && (overlapOnly || SeparateTile(i, body, tile, tileWorldRect, tilemapLayer, this.TILE_BIAS, isLayer)))
             {
                 this._total++;
+
+                collision = true;
 
                 if (collideCallback)
                 {
@@ -2165,17 +2230,19 @@ var World = new Class({
 
                 if (overlapOnly && body.onOverlap)
                 {
-                    this.emit(Events.TILE_OVERLAP, body.gameObject, tile, body);
+                    this.emit(Events.TILE_OVERLAP, sprite, tile, body);
                 }
                 else if (body.onCollide)
                 {
-                    this.emit(Events.TILE_COLLIDE, body.gameObject, tile, body);
+                    this.emit(Events.TILE_COLLIDE, sprite, tile, body);
                 }
 
                 //  sync changes back to the body
-                body.postUpdate();
+                // body.postUpdate();
             }
         }
+
+        return collision;
     },
 
     /**
@@ -2288,7 +2355,6 @@ var World = new Class({
         this.staticTree.clear();
         this.bodies.clear();
         this.staticBodies.clear();
-        this.late.clear();
         this.colliders.destroy();
 
         this.removeAllListeners();
