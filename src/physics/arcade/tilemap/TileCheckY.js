@@ -18,17 +18,31 @@ var ProcessTileSeparationY = require('./ProcessTileSeparationY');
  * @param {number} tileTop - The top position of the tile within the tile world.
  * @param {number} tileBottom - The bottom position of the tile within the tile world.
  * @param {number} tileBias - The tile bias value. Populated by the `World.TILE_BIAS` constant.
+ * @param {boolean} isLayer - Is this check coming from a TilemapLayer or an array of tiles?
  *
  * @return {number} The amount of separation that occurred.
  */
-var TileCheckY = function (body, tile, tileTop, tileBottom, tileBias)
+var TileCheckY = function (body, tile, tileTop, tileBottom, tileBias, isLayer)
 {
     var oy = 0;
 
-    if (body.deltaY() < 0 && !body.blocked.up && tile.collideDown && body.checkCollision.up)
+    var faceTop = tile.faceTop;
+    var faceBottom = tile.faceBottom;
+    var collideUp = tile.collideUp;
+    var collideDown = tile.collideDown;
+
+    if (!isLayer)
+    {
+        faceTop = true;
+        faceBottom = true;
+        collideUp = true;
+        collideDown = true;
+    }
+
+    if (body.deltaY() < 0 && !body.blocked.up && collideDown && body.checkCollision.up)
     {
         //  Body is moving UP
-        if (tile.faceBottom && body.y < tileBottom)
+        if (faceBottom && body.y < tileBottom)
         {
             oy = body.y - tileBottom;
 
@@ -38,10 +52,10 @@ var TileCheckY = function (body, tile, tileTop, tileBottom, tileBias)
             }
         }
     }
-    else if (body.deltaY() > 0 && !body.blocked.down && tile.collideUp && body.checkCollision.down)
+    else if (body.deltaY() > 0 && !body.blocked.down && collideUp && body.checkCollision.down)
     {
         //  Body is moving DOWN
-        if (tile.faceTop && body.bottom > tileTop)
+        if (faceTop && body.bottom > tileTop)
         {
             oy = body.bottom - tileTop;
 
