@@ -865,15 +865,15 @@ var Body = new Class({
     },
 
     /**
-     * Updates the Body.
+     * Prepares the Body for a physics step by resetting all the states and syncing the position
+     * with the parent Game Object.
+     * 
+     * This method is only ever called once per game step.
      *
-     * @method Phaser.Physics.Arcade.Body#update
-     * @fires Phaser.Physics.Arcade.World#worldbounds
-     * @since 3.0.0
-     *
-     * @param {number} delta - The delta time, in seconds, elapsed since the last frame.
+     * @method Phaser.Physics.Arcade.Body#preUpdate
+     * @since 3.16.3
      */
-    update: function (delta)
+    preUpdate: function ()
     {
         //  Store and reset collision flags
         this.wasTouching.none = this.touching.none;
@@ -919,7 +919,24 @@ var Body = new Class({
             this.prev.x = this.position.x;
             this.prev.y = this.position.y;
         }
+    },
 
+    /**
+     * Performs a single physics step and updates the body velocity, angle, speed and other
+     * properties.
+     * 
+     * This method can be called multiple times per game step.
+     * 
+     * The results are synced back to the Game Object in `postUpdate`.
+     *
+     * @method Phaser.Physics.Arcade.Body#update
+     * @fires Phaser.Physics.Arcade.World#worldbounds
+     * @since 3.0.0
+     *
+     * @param {number} delta - The delta time, in seconds, elapsed since the last frame.
+     */
+    update: function (delta)
+    {
         if (this.moves)
         {
             this.world.updateMotion(this, delta);
@@ -936,7 +953,7 @@ var Body = new Class({
             this.angle = Math.atan2(vy, vx);
             this.speed = Math.sqrt(vx * vx + vy * vy);
 
-            //  Now the State update will throw collision checks at the Body
+            //  Now the update will throw collision checks at the Body
             //  And finally we'll integrate the new position back to the Sprite in postUpdate
 
             if (this.collideWorldBounds && this.checkWorldBounds() && this.onWorldBounds)
@@ -951,64 +968,72 @@ var Body = new Class({
 
     /**
      * Feeds the Body results back into the parent Game Object.
+     * 
+     * This method is only ever called once per game step.
      *
      * @method Phaser.Physics.Arcade.Body#postUpdate
      * @since 3.0.0
      */
     postUpdate: function ()
     {
-        this._dx = this.position.x - this.prev.x;
-        this._dy = this.position.y - this.prev.y;
+        var dx = this.position.x - this.prev.x;
+        var dy = this.position.y - this.prev.y;
 
         if (this.moves)
         {
-            if (this.deltaMax.x !== 0 && this._dx !== 0)
+            var mx = this.deltaMax.x;
+            var my = this.deltaMax.y;
+
+            if (mx !== 0 && dx !== 0)
             {
-                if (this._dx < 0 && this._dx < -this.deltaMax.x)
+                if (dx < 0 && dx < -mx)
                 {
-                    this._dx = -this.deltaMax.x;
+                    dx = -mx;
                 }
-                else if (this._dx > 0 && this._dx > this.deltaMax.x)
+                else if (dx > 0 && dx > mx)
                 {
-                    this._dx = this.deltaMax.x;
+                    dx = mx;
                 }
             }
 
-            if (this.deltaMax.y !== 0 && this._dy !== 0)
+            if (my !== 0 && dy !== 0)
             {
-                if (this._dy < 0 && this._dy < -this.deltaMax.y)
+                if (dy < 0 && dy < -my)
                 {
-                    this._dy = -this.deltaMax.y;
+                    dy = -my;
                 }
-                else if (this._dy > 0 && this._dy > this.deltaMax.y)
+                else if (dy > 0 && dy > my)
                 {
-                    this._dy = this.deltaMax.y;
+                    dy = my;
                 }
             }
 
-            this.gameObject.x += this._dx;
-            this.gameObject.y += this._dy;
+            this.gameObject.x += dx;
+            this.gameObject.y += dy;
 
             this._reset = true;
         }
 
-        if (this._dx < 0)
+        if (dx < 0)
         {
             this.facing = CONST.FACING_LEFT;
         }
-        else if (this._dx > 0)
+        else if (dx > 0)
         {
             this.facing = CONST.FACING_RIGHT;
         }
 
-        if (this._dy < 0)
+        if (dy < 0)
         {
             this.facing = CONST.FACING_UP;
         }
-        else if (this._dy > 0)
+        else if (dy > 0)
         {
             this.facing = CONST.FACING_DOWN;
         }
+
+        this._dx = dx;
+        this._dy = dy;
 
         if (this.allowRotation)
         {
