@@ -1567,6 +1567,48 @@ var Tilemap = new Class({
     },
 
     /**
+     * Removes the given Tile, or an array of Tiles, from the layer to which they belong,
+     * and optionally recalculates the collision information.
+     * 
+     * This cannot be applied to Tiles that belong to Static Tilemap Layers.
+     *
+     * @method Phaser.Tilemaps.Tilemap#removeTile
+     * @since 3.16.3
+     *
+     * @param {(Phaser.Tilemaps.Tile|Phaser.Tilemaps.Tile[])} tiles - The Tile to remove, or an array of Tiles.
+     * @param {integer} [replaceIndex=-1] - After removing the Tile, insert a brand new Tile into its location with the given index. Leave as -1 to just remove the tile.
+     * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
+     *
+     * @return {Phaser.Tilemaps.Tile[]} Returns an array of Tiles that were removed.
+     */
+    removeTile: function (tiles, replaceIndex, recalculateFaces)
+    {
+        if (replaceIndex === undefined) { replaceIndex = -1; }
+        if (recalculateFaces === undefined) { recalculateFaces = true; }
+
+        var removed = [];
+
+        if (!Array.isArray(tiles))
+        {
+            tiles = [ tiles ];
+        }
+
+        for (var i = 0; i < tiles.length; i++)
+        {
+            var tile = tiles[i];
+
+            removed.push(this.removeTileAt(tile.x, tile.y, true, recalculateFaces, tile.tilemapLayer));
+
+            if (replaceIndex > -1)
+            {
+                this.putTileAt(replaceIndex, tile.x, tile.y, recalculateFaces, tile.tilemapLayer);
+            }
+        }
+
+        return removed;
+    },
+
+    /**
      * Removes the tile at the given tile coordinates in the specified layer and updates the layer's
      * collision information.
      *
@@ -1582,7 +1624,7 @@ var Tilemap = new Class({
      * @param {boolean} [recalculateFaces=true] - `true` if the faces data should be recalculated.
      * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
-     * @return {?Phaser.Tilemaps.Tile} Returns a Tile, or null if the layer given was invalid.
+     * @return {?Phaser.Tilemaps.Tile} Returns the Tile that was removed, or null if the layer given was invalid.
      */
     removeTileAt: function (tileX, tileY, replaceWithNull, recalculateFaces, layer)
     {
