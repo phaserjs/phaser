@@ -1565,10 +1565,6 @@ var World = new Class({
             this.emit(Events.COLLIDE, body1.gameObject, body2.gameObject, body1, body2);
         }
 
-        //  sync changes back to the bodies
-        // body1.postUpdate();
-        // body2.postUpdate();
-
         return true;
     },
 
@@ -2236,9 +2232,6 @@ var World = new Class({
                 {
                     this.emit(Events.TILE_COLLIDE, sprite, tile, body);
                 }
-
-                //  sync changes back to the body
-                // body.postUpdate();
             }
         }
 
