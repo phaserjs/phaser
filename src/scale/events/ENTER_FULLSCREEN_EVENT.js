@@ -5,7 +5,7 @@
  */
 
 /**
- * The Scale Manager Resize Event.
+ * The Scale Manager has successfully entered fullscreen mode.
  *
  * @event Phaser.Scale.Events#ENTER_FULLSCREEN
  * @since 3.16.1
