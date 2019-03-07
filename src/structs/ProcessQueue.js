@@ -14,7 +14,7 @@ var Class = require('../utils/Class');
  * The `active` list is a selection of items which are considered active and should be updated.
  * The `destroy` list is a selection of items that were active and are awaiting being destroyed in the next update.
  *
- * When new items are added to a Process Queue they are put in a pending data, rather than being added
+ * When new items are added to a Process Queue they are put in the pending list, rather than being added
  * immediately the active list. Equally, items that are removed are put into the destroy list, rather than
  * being destroyed immediately. This allows the Process Queue to carefully process each item at a specific, fixed
  * time, rather than at the time of the request from the API.
