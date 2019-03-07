@@ -520,6 +520,76 @@ var ArcadePhysics = new Class({
     },
 
     /**
+     * This method will search the given rectangular area and return an array of all physics bodies that
+     * overlap with it. It can return either Dynamic or Static bodies. If Arcade Physics is set to use
+     * the RTree (which it is by default) then the search is extremely fast, otherwise the search is O(N).
+     *
+     * @method Phaser.Physics.Arcade.ArcadePhysics#overlapRect
+     * @since 3.17.0
+     *
+     * @param {number} x - The top-left x coordinate of the area to search within.
+     * @param {number} y - The top-left y coordinate of the area to search within.
+     * @param {number} width - The width of the area to search within.
+     * @param {number} height - The height of the area to search within.
+     * @param {boolean} [dynamic=true] - Search for Dynamic Bodies (true) or Static Bodies (false)
+     *
+     * @return {(Phaser.Physics.Arcade.Body[]|Phaser.Physics.Arcade.StaticBody[])} An array of bodies that overlap with the given area.
+     */
+    overlapRect: function (x, y, width, height, dynamic)
+    {
+        if (dynamic === undefined) { dynamic = true; }
+
+        var output = [];
+        var world = this.world;
+
+        var minMax = world.treeMinMax;
+
+        minMax.minX = x;
+        minMax.minY = y;
+        minMax.maxX = x + width;
+        minMax.maxY = y + height;
+
+        if (!dynamic)
+        {
+            output = world.staticTree.search(minMax);
+        }
+        else if (world.useTree)
+        {
+            output = world.tree.search(minMax);
+        }
+        else
+        {
+            var bodies = world.bodies;
+
+            var fakeBody =
+            {
+                position: {
+                    x: x,
+                    y: y
+                },
+                left: x,
+                top: y,
+                right: x + width,
+                bottom: y + height,
+                isCircle: false
+            };
+
+            var intersects = world.intersects;
+
+            bodies.iterate(function (target)
+            {
+                if (intersects(target, fakeBody))
+                {
+                    output.push(target);
+                }
+
+            });
+        }
+
+        return output;
+    },
+
+    /**
      * The Scene that owns this plugin is shutting down.
      * We need to kill and reset all internal properties as well as stop listening to Scene events.
      *
