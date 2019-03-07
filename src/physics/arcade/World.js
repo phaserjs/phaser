@@ -2041,7 +2041,7 @@ var World = new Class({
      *
      * @method Phaser.Physics.Arcade.World#collideTiles
      * @fires Phaser.Physics.Arcade.Events#TILE_COLLIDE
-     * @since 3.16.3
+     * @since 3.17.0
      *
      * @param {Phaser.GameObjects.GameObject} sprite - The first object to check for collision.
      * @param {Phaser.Tilemaps.Tile[]} tiles - An array of Tiles to check for collision against.
@@ -2076,7 +2076,7 @@ var World = new Class({
      *
      * @method Phaser.Physics.Arcade.World#overlapTiles
      * @fires Phaser.Physics.Arcade.Events#TILE_OVERLAP
-     * @since 3.16.3
+     * @since 3.17.0
      *
      * @param {Phaser.GameObjects.GameObject} sprite - The first object to check for collision.
      * @param {Phaser.Tilemaps.Tile[]} tiles - An array of Tiles to check for collision against.
@@ -2170,7 +2170,7 @@ var World = new Class({
      * @fires Phaser.Physics.Arcade.Events#TILE_COLLIDE
      * @fires Phaser.Physics.Arcade.Events#TILE_OVERLAP
      * @private
-     * @since 3.16.3
+     * @since 3.17.0
      *
      * @param {Phaser.GameObjects.GameObject} sprite - The first object to check for collision.
      * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer - The second object to check for collision.

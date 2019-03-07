@@ -871,7 +871,7 @@ var Body = new Class({
      * This method is only ever called once per game step.
      *
      * @method Phaser.Physics.Arcade.Body#preUpdate
-     * @since 3.16.3
+     * @since 3.17.0
      */
     preUpdate: function ()
     {

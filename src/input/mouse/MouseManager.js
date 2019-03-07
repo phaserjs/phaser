@@ -123,7 +123,7 @@ var MouseManager = new Class({
          *
          * @name Phaser.Input.Mouse.MouseManager#onMouseDownWindow
          * @type {function}
-         * @since 3.16.3
+         * @since 3.17.0
          */
         this.onMouseDownWindow = NOOP;
 
@@ -134,7 +134,7 @@ var MouseManager = new Class({
          *
          * @name Phaser.Input.Mouse.MouseManager#onMouseUpWindow
          * @type {function}
-         * @since 3.16.3
+         * @since 3.17.0
          */
         this.onMouseUpWindow = NOOP;
 

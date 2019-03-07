@@ -16,7 +16,7 @@
  * Listen to it from a Scene using `this.scene.events.on('create', listener)`.
  * 
  * @event Phaser.Scenes.Events#CREATE
- * @since 3.16.3
+ * @since 3.17.0
  * 
  * @param {Phaser.Scene} scene - A reference to the Scene that emitted this event.
  */

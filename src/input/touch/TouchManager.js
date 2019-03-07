@@ -89,7 +89,7 @@ var TouchManager = new Class({
          *
          * @name Phaser.Input.Touch.TouchManager#onTouchStartWindow
          * @type {function}
-         * @since 3.16.3
+         * @since 3.17.0
          */
         this.onTouchStartWindow = NOOP;
 
@@ -119,7 +119,7 @@ var TouchManager = new Class({
          *
          * @name Phaser.Input.Touch.TouchManager#onTouchEndWindow
          * @type {function}
-         * @since 3.16.3
+         * @since 3.17.0
          */
         this.onTouchEndWindow = NOOP;
 

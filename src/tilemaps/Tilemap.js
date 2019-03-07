@@ -1573,7 +1573,7 @@ var Tilemap = new Class({
      * This cannot be applied to Tiles that belong to Static Tilemap Layers.
      *
      * @method Phaser.Tilemaps.Tilemap#removeTile
-     * @since 3.16.3
+     * @since 3.17.0
      *
      * @param {(Phaser.Tilemaps.Tile|Phaser.Tilemaps.Tile[])} tiles - The Tile to remove, or an array of Tiles.
      * @param {integer} [replaceIndex=-1] - After removing the Tile, insert a brand new Tile into its location with the given index. Leave as -1 to just remove the tile.
