@@ -31,11 +31,13 @@
 * `AnimationManager.generateFrameNumbers` can now accept a start number greater than the end number, and will generate them in reverse (thanks @cruzdanilo)
 * The return from the `ScenePlugin.add` method has changed. Previously, it would return the ScenePlugin, but now it returns a reference to the Scene that was added to the Scene Manager, keeping it in-line with all other `add` methods in the API. Fix #4359 (thanks @BigZaphod)
 * The `PluginManager.installScenePlugin` method has a new optional boolean parameter `fromLoader` which controls if the plugin is coming in from the result of a Loader operation or not. If it is, it no longer throws a console warning if the plugin already exists. This fixes an issue where if you return to a Scene that loads a Scene Plugin it would throw a warning and then not install the plugin to the Scene.
+* The Scale Manager has a new event `FULLSCREEN_FAILED` which is fired if you try to enter fullscreen mode, but the browser rejects it for some reason.
 
 ### Bug Fixes
 
 * The parent bounds are reset when exiting fullscreen mode in the Scale Manager. This fixes an issue when leaving fullscreen mode by pressing ESC (instead of programmatically) would leave the canvas in the full screen size. Fix #4357 (thanks @khutchins and @HeyStevenXu)
 * `GetAdvancedValue` now uses the correct Math RND reference, which means anything that used the `randInt` or `randFloat` features of this function, such as creating a Sprite from a Config object, or Bitmap Text sizing, will no longer throw an error about a null object reference. Fix #4369 (thanks @sanadov)
+* Trying to enter Fullscreen mode on Android / Chrome, or iOS / Safari, would throw an error regarding an unhandled Promise and a failure to invoke the event from a user gesture. This has been tightened up, using a proper Promise handler internally and the documentation clarified to explicitly say that you must call the function from a `pointerup` handler, and not `pointerdown`. Fix #4355 (thanks @matrizet)
 
 ### Examples, Documentation and TypeScript
 
