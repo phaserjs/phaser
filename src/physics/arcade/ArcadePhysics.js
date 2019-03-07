@@ -344,27 +344,29 @@ var ArcadePhysics = new Class({
     },
 
     /**
-     * Finds the Body closest to a source point or object.
+     * Finds the Dynamic Body closest to a source point or object.
+     * 
+     * If two or more bodies are the exact same distance from the source point, only the first body
+     * is returned.
      *
      * @method Phaser.Physics.Arcade.ArcadePhysics#closest
      * @since 3.0.0
      *
-     * @param {object} source - Any object with public `x` and `y` properties, such as a Game Object or Geometry object.
+     * @param {any} source - Any object with public `x` and `y` properties, such as a Game Object or Geometry object.
      *
-     * @return {Phaser.Physics.Arcade.Body} The closest Body to the given source point.
+     * @return {Phaser.Physics.Arcade.Body} The closest Dynamic Body to the given source point.
      */
     closest: function (source)
     {
-        var bodies = this.world.tree.all();
+        var bodies = this.world.bodies;
 
         var min = Number.MAX_VALUE;
         var closest = null;
         var x = source.x;
         var y = source.y;
 
-        for (var i = bodies.length - 1; i >= 0; i--)
+        bodies.iterate(function (target)
         {
-            var target = bodies[i];
             var distance = DistanceSquared(x, y, target.x, target.y);
 
             if (distance < min)
@@ -372,33 +374,36 @@ var ArcadePhysics = new Class({
                 closest = target;
                 min = distance;
             }
-        }
+
+        });
 
         return closest;
     },
 
     /**
-     * Finds the Body farthest from a source point or object.
+     * Finds the Dynamic Body farthest from a source point or object.
+     * 
+     * If two or more bodies are the exact same distance from the source point, only the first body
+     * is returned.
      *
      * @method Phaser.Physics.Arcade.ArcadePhysics#furthest
      * @since 3.0.0
      *
-     * @param {object} source - Any object with public `x` and `y` properties, such as a Game Object or Geometry object.
+     * @param {any} source - Any object with public `x` and `y` properties, such as a Game Object or Geometry object.
      *
-     * @return {Phaser.Physics.Arcade.Body} The Body furthest from the given source point.
+     * @return {Phaser.Physics.Arcade.Body} The Dynamic Body furthest away from the given source point.
      */
     furthest: function (source)
     {
-        var bodies = this.world.tree.all();
+        var bodies = this.world.bodies;
 
         var max = -1;
         var farthest = null;
         var x = source.x;
         var y = source.y;
 
-        for (var i = bodies.length - 1; i >= 0; i--)
+        bodies.iterate(function (target)
         {
-            var target = bodies[i];
             var distance = DistanceSquared(x, y, target.x, target.y);
 
             if (distance > max)
@@ -406,7 +411,8 @@ var ArcadePhysics = new Class({
                 farthest = target;
                 max = distance;
             }
-        }
+
+        });
 
         return farthest;
     },
