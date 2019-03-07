@@ -1137,13 +1137,18 @@ var ScaleManager = new Class({
      * 
      * If the browser does not support this, a `FULLSCREEN_UNSUPPORTED` event will be emitted.
      * 
-     * This method _must_ be called from a user-input gesture, such as `pointerdown`. You cannot launch
+     * This method _must_ be called from a user-input gesture, such as `pointerup`. You cannot launch
      * games fullscreen without this, as most browsers block it. Games within an iframe will also be blocked
      * from fullscreen unless the iframe has the `allowfullscreen` attribute.
      * 
+     * On touch devices, such as Android and iOS Safari, you should always use `pointerup` and NOT `pointerdown`,
+     * otherwise the request will fail unless the document in which your game is embedded has already received
+     * some form of touch input, which you cannot guarantee. Activating fullscreen via `pointerup` circumvents
+     * this issue.
+     * 
      * Performing an action that navigates to another page, or opens another tab, will automatically cancel
-     * fullscreen mode, as will the user pressing the ESC key. To cancel fullscreen mode from your game, i.e.
-     * from clicking an icon, call the `stopFullscreen` method.
+     * fullscreen mode, as will the user pressing the ESC key. To cancel fullscreen mode directly from your game,
+     * i.e. by clicking an icon, call the `stopFullscreen` method.
      * 
      * A browser can only send one DOM element into fullscreen. You can control which element this is by
      * setting the `fullscreenTarget` property in your game config, or changing the property in the Scale Manager.
@@ -1153,6 +1158,7 @@ var ScaleManager = new Class({
      *
      * @method Phaser.Scale.ScaleManager#startFullscreen
      * @fires Phaser.Scale.Events#ENTER_FULLSCREEN
+     * @fires Phaser.Scale.Events#FULLSCREEN_FAILED
      * @fires Phaser.Scale.Events#FULLSCREEN_UNSUPPORTED
      * @fires Phaser.Scale.Events#RESIZE
      * @since 3.16.0
@@ -1177,22 +1183,77 @@ var ScaleManager = new Class({
             var fsTarget = this.getFullscreenTarget();
 
             this._requestedFullscreenChange = true;
-
-            if (fullscreen.keyboard)
+            
+            if (typeof Promise !== 'undefined')
             {
-                fsTarget[fullscreen.request](Element.ALLOW_KEYBOARD_INPUT);
+                if (fullscreen.keyboard)
+                {
+                    //  eslint-disable-next-line es5/no-arrow-functions
+                    fsTarget[fullscreen.request](Element.ALLOW_KEYBOARD_INPUT).then(() => this.fullscreenSuccessHandler()).catch((error) => this.fullscreenErrorHandler(error));
+                }
+                else
+                {
+                    //  eslint-disable-next-line es5/no-arrow-functions
+                    fsTarget[fullscreen.request](fullscreenOptions).then(() => this.fullscreenSuccessHandler()).catch((error) => this.fullscreenErrorHandler(error));
+                }
             }
             else
             {
-                fsTarget[fullscreen.request](fullscreenOptions);
+                if (fullscreen.keyboard)
+                {
+                    fsTarget[fullscreen.request](Element.ALLOW_KEYBOARD_INPUT);
+                }
+                else
+                {
+                    fsTarget[fullscreen.request](fullscreenOptions);
+                }
+
+                if (fullscreen.active)
+                {
+                    this.fullscreenSuccessHandler();
+                }
+                else
+                {
+                    this.fullscreenErrorHandler();
+                }
             }
-
-            this.getParentBounds();
-
-            this.refresh();
-
-            this.emit(Events.ENTER_FULLSCREEN);
         }
+    },
+
+    /**
+     * The browser has successfully entered fullscreen mode.
+     *
+     * @method Phaser.Scale.ScaleManager#fullscreenSuccessHandler
+     * @private
+     * @fires Phaser.Scale.Events#ENTER_FULLSCREEN
+     * @fires Phaser.Scale.Events#RESIZE
+     * @since 3.17.0
+     */
+    fullscreenSuccessHandler: function ()
+    {
+        this.getParentBounds();
+
+        this.refresh();
+
+        this.emit(Events.ENTER_FULLSCREEN);
+    },
+
+    /**
+     * The browser failed to enter fullscreen mode.
+     *
+     * @method Phaser.Scale.ScaleManager#fullscreenErrorHandler
+     * @private
+     * @fires Phaser.Scale.Events#FULLSCREEN_FAILED
+     * @fires Phaser.Scale.Events#RESIZE
+     * @since 3.17.0
+     * 
+     * @param {any} error - The DOM error event.
+     */
+    fullscreenErrorHandler: function (error)
+    {
+        this.removeFullscreenTarget();
+
+        this.emit(Events.FULLSCREEN_FAILED, error);
     },
 
     /**
@@ -1232,6 +1293,29 @@ var ScaleManager = new Class({
     },
 
     /**
+     * Removes the fullscreen target that was added to the DOM.
+     *
+     * @method Phaser.Scale.ScaleManager#removeFullscreenTarget
+     * @since 3.17.0
+     */
+    removeFullscreenTarget: function ()
+    {
+        if (this._createdFullscreenTarget)
+        {
+            var fsTarget = this.fullscreenTarget;
+
+            if (fsTarget && fsTarget.parentNode)
+            {
+                var parent = fsTarget.parentNode;
+
+                parent.insertBefore(this.canvas, fsTarget);
+
+                parent.removeChild(fsTarget);
+            }
+        }
+    },
+
+    /**
      * Calling this method will cancel fullscreen mode, if the browser has entered it.
      *
      * @method Phaser.Scale.ScaleManager#stopFullscreen
@@ -1257,19 +1341,7 @@ var ScaleManager = new Class({
             document[fullscreen.cancel]();
         }
 
-        if (this._createdFullscreenTarget)
-        {
-            var fsTarget = this.fullscreenTarget;
-
-            if (fsTarget && fsTarget.parentNode)
-            {
-                var parent = fsTarget.parentNode;
-
-                parent.insertBefore(this.canvas, fsTarget);
-
-                parent.removeChild(fsTarget);
-            }
-        }
+        this.removeFullscreenTarget();
 
         //  Get the parent size again as it will have changed
         this.getParentBounds();
@@ -1388,6 +1460,7 @@ var ScaleManager = new Class({
      */
     onFullScreenError: function ()
     {
+        this.removeFullscreenTarget();
     },
 
     /**
