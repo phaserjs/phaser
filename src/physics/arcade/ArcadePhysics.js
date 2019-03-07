@@ -197,6 +197,67 @@ var ArcadePhysics = new Class({
     },
 
     /**
+     * This advanced method is specifically for testing for collision between a single Sprite and an array of Tile objects.
+     * 
+     * You should generally use the `collide` method instead, with a Sprite vs. a Tilemap Layer, as that will perform
+     * tile filtering and culling for you, as well as handle the interesting face collision automatically.
+     * 
+     * This method is offered for those who would like to check for collision with specific Tiles in a layer, without
+     * having to set any collision attributes on the tiles in question. This allows you to perform quick dynamic collisions
+     * on small sets of Tiles. As such, no culling or checks are made to the array of Tiles given to this method,
+     * you should filter them before passing them to this method.
+     * 
+     * Important: Use of this method skips the `interesting faces` system that Tilemap Layers use. This means if you have
+     * say a row or column of tiles, and you jump into, or walk over them, it's possible to get stuck on the edges of the
+     * tiles as the interesting face calculations are skipped. However, for quick-fire small collision set tests on
+     * dynamic maps, this method can prove very useful.
+     *
+     * @method Phaser.Physics.Arcade.ArcadePhysics#collideTiles
+     * @fires Phaser.Physics.Arcade.Events#TILE_COLLIDE
+     * @since 3.17.0
+     *
+     * @param {Phaser.GameObjects.GameObject} sprite - The first object to check for collision.
+     * @param {Phaser.Tilemaps.Tile[]} tiles - An array of Tiles to check for collision against.
+     * @param {ArcadePhysicsCallback} [collideCallback] - An optional callback function that is called if the objects collide.
+     * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
+     * @param {any} [callbackContext] - The context in which to run the callbacks.
+     *
+     * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
+     */
+    collideTiles: function (sprite, tiles, collideCallback, processCallback, callbackContext)
+    {
+        return this.world.collideTiles(sprite, tiles, collideCallback, processCallback, callbackContext);
+    },
+
+    /**
+     * This advanced method is specifically for testing for overlaps between a single Sprite and an array of Tile objects.
+     * 
+     * You should generally use the `overlap` method instead, with a Sprite vs. a Tilemap Layer, as that will perform
+     * tile filtering and culling for you, as well as handle the interesting face collision automatically.
+     * 
+     * This method is offered for those who would like to check for overlaps with specific Tiles in a layer, without
+     * having to set any collision attributes on the tiles in question. This allows you to perform quick dynamic overlap
+     * tests on small sets of Tiles. As such, no culling or checks are made to the array of Tiles given to this method,
+     * you should filter them before passing them to this method.
+     *
+     * @method Phaser.Physics.Arcade.ArcadePhysics#overlapTiles
+     * @fires Phaser.Physics.Arcade.Events#TILE_OVERLAP
+     * @since 3.17.0
+     *
+     * @param {Phaser.GameObjects.GameObject} sprite - The first object to check for collision.
+     * @param {Phaser.Tilemaps.Tile[]} tiles - An array of Tiles to check for collision against.
+     * @param {ArcadePhysicsCallback} [collideCallback] - An optional callback function that is called if the objects overlap.
+     * @param {ArcadePhysicsCallback} [processCallback] - An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
+     * @param {any} [callbackContext] - The context in which to run the callbacks.
+     *
+     * @return {boolean} True if any objects overlap (with `overlapOnly`); or true if any overlapping objects were separated.
+     */
+    overlapTiles: function (sprite, tiles, collideCallback, processCallback, callbackContext)
+    {
+        return this.world.overlapTiles(sprite, tiles, collideCallback, processCallback, callbackContext);
+    },
+
+    /**
      * Pauses the simulation.
      *
      * @method Phaser.Physics.Arcade.ArcadePhysics#pause
