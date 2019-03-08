@@ -383,7 +383,7 @@ var Body = new Class({
          * @type {boolean}
          * @default false
          * @since 3.0.0
-         * @see Phaser.Physics.Arcade.World#worldboundsEvent
+         * @see Phaser.Physics.Arcade.Events#WORLD_BOUNDS
          */
         this.onWorldBounds = false;
 
@@ -394,7 +394,7 @@ var Body = new Class({
          * @type {boolean}
          * @default false
          * @since 3.0.0
-         * @see Phaser.Physics.Arcade.World#collideEvent
+         * @see Phaser.Physics.Arcade.Events#COLLIDE
          */
         this.onCollide = false;
 
@@ -405,7 +405,7 @@ var Body = new Class({
          * @type {boolean}
          * @default false
          * @since 3.0.0
-         * @see Phaser.Physics.Arcade.World#overlapEvent
+         * @see Phaser.Physics.Arcade.Events#OVERLAP
          */
         this.onOverlap = false;
 
@@ -930,7 +930,7 @@ var Body = new Class({
      * The results are synced back to the Game Object in `postUpdate`.
      *
      * @method Phaser.Physics.Arcade.Body#update
-     * @fires Phaser.Physics.Arcade.World#worldbounds
+     * @fires Phaser.Physics.Arcade.Events#WORLD_BOUNDS
      * @since 3.0.0
      *
      * @param {number} delta - The delta time, in seconds, elapsed since the last frame.
@@ -952,18 +952,47 @@ var Body = new Class({
 
             this.angle = Math.atan2(vy, vx);
             this.speed = Math.sqrt(vx * vx + vy * vy);
+        }
 
-            //  Now the update will throw collision checks at the Body
-            //  And finally we'll integrate the new position back to the Sprite in postUpdate
+        //  Calculate the delta
+        this._dx = this.position.x - this.prev.x;
+        this._dy = this.position.y - this.prev.y;
 
-            if (this.collideWorldBounds && this.checkWorldBounds() && this.onWorldBounds)
+        //  World Bounds check
+        if (this.collideWorldBounds && this.checkWorldBounds())
+        {
+            var bx = (this.worldBounce) ? -this.worldBounce.x : -this.bounce.x;
+            var by = (this.worldBounce) ? -this.worldBounce.y : -this.bounce.y;
+            var blocked = this.blocked;
+
+            if (blocked.left || blocked.right)
+            {
+                if (bx !== 0)
+                {
+                    //  Reverse the velocity for the bounce and flip the delta
+                    this.velocity.x *= bx;
+                    this._dx *= -1;
+                }
+            }
+
+            if (blocked.up || blocked.down)
+            {
+                if (by !== 0)
+                {
+                    //  Reverse the velocity for the bounce and flip the delta
+                    this.velocity.y *= by;
+                    this._dy *= -1;
+                }
+            }
+
+            if (this.onWorldBounds)
             {
                 this.world.emit(Events.WORLD_BOUNDS, this, this.blocked.up, this.blocked.down, this.blocked.left, this.blocked.right);
             }
         }
 
-        this._dx = this.position.x - this.prev.x;
-        this._dy = this.position.y - this.prev.y;
+        //  Now the update will throw collision checks at the Body
+        //  And finally we'll integrate the new position back to the Sprite in postUpdate
     },
 
     /**
@@ -1057,41 +1086,40 @@ var Body = new Class({
         var pos = this.position;
         var bounds = this.world.bounds;
         var check = this.world.checkCollision;
+        var set = false;
 
-        var bx = (this.worldBounce) ? -this.worldBounce.x : -this.bounce.x;
-        var by = (this.worldBounce) ? -this.worldBounce.y : -this.bounce.y;
-
-        if (pos.x < bounds.x && check.left)
+        if (pos.x <= bounds.x && check.left)
         {
+            set = true;
             pos.x = bounds.x;
-            this.velocity.x *= bx;
-            this.blocked.left = true;
-            this.blocked.none = false;
+            this.setBlockedLeft();
         }
-        else if (this.right > bounds.right && check.right)
+        else if (this.right >= bounds.right && check.right)
         {
+            set = true;
             pos.x = bounds.right - this.width;
-            this.velocity.x *= bx;
-            this.blocked.right = true;
-            this.blocked.none = false;
+            this.setBlockedRight();
         }
 
-        if (pos.y < bounds.y && check.up)
+        if (pos.y <= bounds.y && check.up)
         {
+            set = true;
             pos.y = bounds.y;
-            this.velocity.y *= by;
-            this.blocked.up = true;
-            this.blocked.none = false;
+            this.setBlockedUp();
         }
-        else if (this.bottom > bounds.bottom && check.down)
+        else if (this.bottom >= bounds.bottom && check.down)
         {
+            set = true;
             pos.y = bounds.bottom - this.height;
-            this.velocity.y *= by;
-            this.blocked.down = true;
-            this.blocked.none = false;
+            this.setBlockedDown();
         }
 
-        return !this.blocked.none;
+        if (set)
+        {
+            this.updateCenter();
+        }
+
+        return set;
     },
 
     /**
@@ -1241,6 +1269,24 @@ var Body = new Class({
         this.updateCenter();
     },
 
+    zeroX: function ()
+    {
+        this.velocity.x = 0;
+        this.prev.x = this.position.x;
+        this._dx = 0;
+
+        return this;
+    },
+
+    zeroY: function ()
+    {
+        this.velocity.y = 0;
+        this.prev.y = this.position.y;
+        this._dy = 0;
+
+        return this;
+    },
+
     /**
      * Sets acceleration, velocity, and speed to zero.
      *
@@ -1348,7 +1394,7 @@ var Body = new Class({
      */
     deltaAbsX: function ()
     {
-        return (this._dx > 0) ? this._dx : -this._dx;
+        return Math.abs(this._dx);
     },
 
     /**
@@ -1361,7 +1407,7 @@ var Body = new Class({
      */
     deltaAbsY: function ()
     {
-        return (this._dy > 0) ? this._dy : -this._dy;
+        return Math.abs(this._dy);
     },
 
     /**
@@ -1638,6 +1684,152 @@ var Body = new Class({
         this.bounce.y = value;
 
         return this;
+    },
+
+    setTouchingUp: function ()
+    {
+        var touching = this.touching;
+
+        touching.up = true;
+        touching.none = false;
+
+        return this;
+    },
+
+    setTouchingDown: function ()
+    {
+        var touching = this.touching;
+
+        touching.down = true;
+        touching.none = false;
+
+        return this;
+    },
+
+    setTouchingLeft: function ()
+    {
+        var touching = this.touching;
+
+        touching.left = true;
+        touching.none = false;
+
+        return this;
+    },
+
+    setTouchingRight: function ()
+    {
+        var touching = this.touching;
+
+        touching.right = true;
+        touching.none = false;
+
+        return this;
+    },
+
+    setBlockedUp: function ()
+    {
+        var blocked = this.blocked;
+
+        blocked.up = true;
+        blocked.none = false;
+
+        return this;
+    },
+
+    setBlockedDown: function ()
+    {
+        var blocked = this.blocked;
+
+        blocked.down = true;
+        blocked.none = false;
+
+        return this;
+    },
+
+    setBlockedLeft: function ()
+    {
+        var blocked = this.blocked;
+
+        blocked.left = true;
+        blocked.none = false;
+
+        return this;
+    },
+
+    setBlockedRight: function ()
+    {
+        var blocked = this.blocked;
+
+        blocked.right = true;
+        blocked.none = false;
+
+        return this;
+    },
+
+    getMoveX: function (amount, setBlocked)
+    {
+        if (setBlocked === undefined) { setBlocked = false; }
+
+        var blocked = this.blocked;
+
+        if (amount < 0 && blocked.left || amount > 0 && blocked.right)
+        {
+            //  If it's already blocked, it can't go anywhere
+            return 0;
+        }
+
+        if (this.checkWorldBounds)
+        {
+            var pos = this.position;
+            var bounds = this.world.bounds;
+            var check = this.world.checkCollision;
+
+            if (amount < 0 && check.left && pos.x + amount < bounds.x)
+            {
+                this.setBlockedLeft();
+                return amount - ((pos.x + amount) - bounds.x);
+            }
+            else if (amount > 0 && check.right && this.right + amount > bounds.right)
+            {
+                this.setBlockedRight();
+                return amount - ((this.right + amount) - bounds.right);
+            }
+        }
+
+        return amount;
+    },
+
+    getMoveY: function (amount, setBlocked)
+    {
+        if (setBlocked === undefined) { setBlocked = false; }
+
+        var blocked = this.blocked;
+
+        if (amount < 0 && blocked.up || amount > 0 && blocked.down)
+        {
+            //  If it's already blocked, it can't go anywhere
+            return 0;
+        }
+
+        if (this.checkWorldBounds)
+        {
+            var pos = this.position;
+            var bounds = this.world.bounds;
+            var check = this.world.checkCollision;
+
+            if (amount < 0 && check.up && pos.y + amount < bounds.y)
+            {
+                this.setBlockedUp();
+                return amount - ((pos.y + amount) - bounds.y);
+            }
+            else if (amount > 0 && check.down && this.bottom + amount > bounds.bottom)
+            {
+                this.setBlockedDown();
+                return amount - ((this.bottom + amount) - bounds.bottom);
+            }
+        }
+
+        return amount;
     },
 
     /**
