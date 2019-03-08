@@ -1250,10 +1250,8 @@ var World = new Class({
             }
         }
 
-        velocityX = Clamp(velocityX, -maxX, maxX);
-        velocityY = Clamp(velocityY, -maxY, maxY);
-
-        body.velocity.set(velocityX, velocityY);
+        body.velocity.x = Clamp(velocityX, -maxX, maxX);
+        body.velocity.y = Clamp(velocityY, -maxY, maxY);
 
         if (maxSpeed > -1 && body.velocity.length() > maxSpeed)
         {
@@ -1670,7 +1668,9 @@ var World = new Class({
      *
      * If two Groups or arrays are passed, each member of one will be tested against each member of the other.
      *
-     * If one Group **only** is passed (as `object1`), each member of the Group will be collided against the other members.
+     * If **only** one Group is passed (as `object1`), each member of the Group will be collided against the other members.
+     * 
+     * If **only** one Array is passed, the array is iterated and every element in it is tested against the others.
      *
      * Two callbacks can be provided. The `collideCallback` is invoked if a collision occurs and the two colliding
      * objects are passed to it.
@@ -1708,7 +1708,7 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Physics.Arcade.Types.ArcadeColliderType} object1 - The first object to check for collision.
-     * @param {Phaser.Physics.Arcade.Types.ArcadeColliderType} object2 - The second object to check for collision.
+     * @param {Phaser.Physics.Arcade.Types.ArcadeColliderType} [object2] - The second object to check for collision.
      * @param {ArcadePhysicsCallback} collideCallback - The callback to invoke when the two objects collide.
      * @param {ArcadePhysicsCallback} processCallback - The callback to invoke when the two objects collide. Must return a boolean.
      * @param {any} callbackContext - The scope in which to call the callbacks.
@@ -1719,6 +1719,7 @@ var World = new Class({
     collideObjects: function (object1, object2, collideCallback, processCallback, callbackContext, overlapOnly)
     {
         var i;
+        var j;
 
         if (object1.isParent && object1.physicsType === undefined)
         {
@@ -1751,9 +1752,30 @@ var World = new Class({
         else if (object1isArray && !object2isArray)
         {
             //  Object 1 is an Array
-            for (i = 0; i < object1.length; i++)
+            if (!object2)
             {
-                this.collideHandler(object1[i], object2, collideCallback, processCallback, callbackContext, overlapOnly);
+                //  Special case for array vs. self
+                for (i = 0; i < object1.length; i++)
+                {
+                    var child = object1[i];
+
+                    for (j = i + 1; j < object1.length; j++)
+                    {
+                        if (i === j)
+                        {
+                            continue;
+                        }
+
+                        this.collideHandler(child, object1[j], collideCallback, processCallback, callbackContext, overlapOnly);
+                    }
+                }
+            }
+            else
+            {
+                for (i = 0; i < object1.length; i++)
+                {
+                    this.collideHandler(object1[i], object2, collideCallback, processCallback, callbackContext, overlapOnly);
+                }
             }
         }
         else
@@ -1761,7 +1783,7 @@ var World = new Class({
             //  They're both arrays
             for (i = 0; i < object1.length; i++)
             {
-                for (var j = 0; j < object2.length; j++)
+                for (j = 0; j < object2.length; j++)
                 {
                     this.collideHandler(object1[i], object2[j], collideCallback, processCallback, callbackContext, overlapOnly);
                 }
