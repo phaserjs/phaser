@@ -22,6 +22,11 @@ var World = require('./World');
  * It also holds some useful methods for moving and rotating Arcade Physics Bodies.
  *
  * You can access it from within a Scene using `this.physics`.
+ * 
+ * Arcade Physics uses the Projection Method of collision resolution and separation. While it's fast and suitable
+ * for 'arcade' style games it lacks stability when multiple objects are in close proximity or resting upon each other.
+ * The separation that stops two objects penetrating may create a new penetration against a different object. If you
+ * require a high level of stability please consider using an alternative physics system, such as Matter.js.
  *
  * @class ArcadePhysics
  * @memberof Phaser.Physics.Arcade
@@ -172,7 +177,24 @@ var ArcadePhysics = new Class({
     },
 
     /**
-     * Tests if Game Objects overlap and separates them (if possible). See {@link Phaser.Physics.Arcade.World#collide}.
+     * Performs a collision check and separation between the two physics enabled objects given, which can be single
+     * Game Objects, arrays of Game Objects, Physics Groups, arrays of Physics Groups or normal Groups.
+     *
+     * If you don't require separation then use {@link #overlap} instead.
+     *
+     * If two Groups or arrays are passed, each member of one will be tested against each member of the other.
+     *
+     * If **only** one Group is passed (as `object1`), each member of the Group will be collided against the other members.
+     * 
+     * If **only** one Array is passed, the array is iterated and every element in it is tested against the others.
+     *
+     * Two callbacks can be provided. The `collideCallback` is invoked if a collision occurs and the two colliding
+     * objects are passed to it.
+     *
+     * Arcade Physics uses the Projection Method of collision resolution and separation. While it's fast and suitable
+     * for 'arcade' style games it lacks stability when multiple objects are in close proximity or resting upon each other.
+     * The separation that stops two objects penetrating may create a new penetration against a different object. If you
+     * require a high level of stability please consider using an alternative physics system, such as Matter.js.
      *
      * @method Phaser.Physics.Arcade.ArcadePhysics#collide
      * @since 3.0.0
