@@ -2,6 +2,13 @@
 
 ## Version 3.17.0 - Ishikawa - in dev
 
+Notes:
+
+1) Vertex for any GO
+2) Body Blocked
+3) GO auto-add to Scene
+4) GO move to another Scene
+
 ### Arcade Physics
 
 #### New Features
