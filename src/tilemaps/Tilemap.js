@@ -360,7 +360,7 @@ var Tilemap = new Class({
     },
 
     /**
-     * Turns the StaticTilemapLayer associated with the given layer into a DynamicTilemapLayer. If
+     * Turns the DynamicTilemapLayer associated with the given layer into a StaticTilemapLayer. If
      * no layer specified, the map's current layer is used. This is useful if you want to manipulate
      * a map at the start of a scene, but then make it non-manipulable and optimize it for speed.
      * Note: the DynamicTilemapLayer passed in is destroyed, so make sure to store the value
