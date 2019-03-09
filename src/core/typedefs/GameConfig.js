@@ -19,6 +19,7 @@
  * @property {boolean} [autoFocus=true] - Automatically call window.focus() when the game boots. Usually necessary to capture input events if the game is in a separate frame.
  * @property {(boolean|Phaser.Core.Types.InputConfig)} [input] - Input configuration, or `false` to disable all game input.
  * @property {boolean} [disableContextMenu=false] - Disable the browser's default 'contextmenu' event (usually triggered by a right-button mouse click).
+ * @property {boolean} [transparent=false] - Whether the game canvas will have a transparent background.
  * @property {(boolean|Phaser.Core.Types.BannerConfig)} [banner=false] - Configuration for the banner printed in the browser console when the game starts.
  * @property {Phaser.Core.Types.DOMContainerConfig} [dom] - The DOM Container configuration object.
  * @property {Phaser.Core.Types.FPSConfig} [fps] - Game loop configuration.
