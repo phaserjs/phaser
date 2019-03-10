@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -29,7 +29,7 @@ var LayerData = new Class({
         if (config === undefined) { config = {}; }
 
         /**
-         * [description]
+         * The name of the layer, if specified in Tiled.
          *
          * @name Phaser.Tilemaps.LayerData#name
          * @type {string}
@@ -38,7 +38,7 @@ var LayerData = new Class({
         this.name = GetFastValue(config, 'name', 'layer');
 
         /**
-         * [description]
+         * The x offset of where to draw from the top left
          *
          * @name Phaser.Tilemaps.LayerData#x
          * @type {number}
@@ -47,7 +47,7 @@ var LayerData = new Class({
         this.x = GetFastValue(config, 'x', 0);
 
         /**
-         * [description]
+         * The y offset of where to draw from the top left
          *
          * @name Phaser.Tilemaps.LayerData#y
          * @type {number}
@@ -56,7 +56,7 @@ var LayerData = new Class({
         this.y = GetFastValue(config, 'y', 0);
 
         /**
-         * [description]
+         * The width in tile of the layer.
          *
          * @name Phaser.Tilemaps.LayerData#width
          * @type {number}
@@ -65,7 +65,7 @@ var LayerData = new Class({
         this.width = GetFastValue(config, 'width', 0);
 
         /**
-         * [description]
+         * The height in tiles of the layer.
          *
          * @name Phaser.Tilemaps.LayerData#height
          * @type {number}
@@ -74,7 +74,7 @@ var LayerData = new Class({
         this.height = GetFastValue(config, 'height', 0);
 
         /**
-         * [description]
+         * The pixel width of the tiles.
          *
          * @name Phaser.Tilemaps.LayerData#tileWidth
          * @type {number}
@@ -83,7 +83,7 @@ var LayerData = new Class({
         this.tileWidth = GetFastValue(config, 'tileWidth', 0);
 
         /**
-         * [description]
+         * The pixel height of the tiles.
          *
          * @name Phaser.Tilemaps.LayerData#tileHeight
          * @type {number}
@@ -110,7 +110,7 @@ var LayerData = new Class({
         this.baseTileHeight = GetFastValue(config, 'baseTileHeight', this.tileHeight);
 
         /**
-         * [description]
+         * The width in pixels of the entire layer.
          *
          * @name Phaser.Tilemaps.LayerData#widthInPixels
          * @type {number}
@@ -119,7 +119,7 @@ var LayerData = new Class({
         this.widthInPixels = GetFastValue(config, 'widthInPixels', this.width * this.baseTileWidth);
 
         /**
-         * [description]
+         * The height in pixels of the entire layer.
          *
          * @name Phaser.Tilemaps.LayerData#heightInPixels
          * @type {number}
@@ -146,7 +146,7 @@ var LayerData = new Class({
         this.visible = GetFastValue(config, 'visible', true);
 
         /**
-         * [description]
+         * Layer specific properties (can be specified in Tiled)
          *
          * @name Phaser.Tilemaps.LayerData#properties
          * @type {object}
@@ -191,10 +191,10 @@ var LayerData = new Class({
         this.bodies = GetFastValue(config, 'bodies', []);
 
         /**
-         * [description]
+         * An array of the tile indexes
          *
          * @name Phaser.Tilemaps.LayerData#data
-         * @type {array}
+         * @type {(number[])}
          * @since 3.0.0
          */
         this.data = GetFastValue(config, 'data', []);

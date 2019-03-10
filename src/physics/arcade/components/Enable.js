@@ -1,13 +1,13 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 /**
  * Provides methods used for setting the enable properties of an Arcade Physics Body.
  *
- * @name Phaser.Physics.Arcade.Components.Enable
+ * @namespace Phaser.Physics.Arcade.Components.Enable
  * @since 3.0.0
  */
 var Enable = {

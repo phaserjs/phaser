@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -10,7 +10,7 @@ var Vector2 = require('../../../math/Vector2');
 /**
  * Allows accessing the mass, density, and center of mass of a Matter-enabled Game Object. Should be used as a mixin and not directly.
  *
- * @name Phaser.Physics.Matter.Components.Mass
+ * @namespace Phaser.Physics.Matter.Components.Mass
  * @since 3.0.0
  */
 var Mass = {
@@ -53,6 +53,7 @@ var Mass = {
      * The body's center of mass.
      *
      * @name Phaser.Physics.Matter.Components.Mass#centerOfMass
+     * @type {Phaser.Math.Vector2}
      * @readonly
      * @since 3.10.0
      *

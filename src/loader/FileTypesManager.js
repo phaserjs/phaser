@@ -1,10 +1,14 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var types = {};
+
+/**
+ * @namespace Phaser.Loader.FileTypesManager
+ */
 
 var FileTypesManager = {
 
@@ -14,7 +18,7 @@ var FileTypesManager = {
      * Loops through the local types object and injects all of them as
      * properties into the LoaderPlugin instance.
      *
-     * @method Phaser.Loader.FileTypesManager.register
+     * @method Phaser.Loader.FileTypesManager.install
      * @since 3.0.0
      * 
      * @param {Phaser.Loader.LoaderPlugin} loader - The LoaderPlugin to install the types into.

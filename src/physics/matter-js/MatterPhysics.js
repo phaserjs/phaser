@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -14,6 +14,7 @@ var MatterWrap = require('./lib/plugins/MatterWrap');
 var Merge = require('../../utils/object/Merge');
 var Plugin = require('./lib/core/Plugin');
 var PluginCache = require('../../plugins/PluginCache');
+var SceneEvents = require('../../scene/events');
 var World = require('./World');
 var Vertices = require('./lib/geometry/Vertices');
 
@@ -104,8 +105,8 @@ var MatterPhysics = new Class({
             Plugin.use(MatterLib, MatterWrap);
         }
 
-        scene.sys.events.once('boot', this.boot, this);
-        scene.sys.events.on('start', this.start, this);
+        scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
+        scene.sys.events.on(SceneEvents.START, this.start, this);
     },
 
     /**
@@ -121,7 +122,7 @@ var MatterPhysics = new Class({
         this.world = new World(this.scene, this.config);
         this.add = new Factory(this.world);
 
-        this.systems.events.once('destroy', this.destroy, this);
+        this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
     },
 
     /**
@@ -143,9 +144,9 @@ var MatterPhysics = new Class({
 
         var eventEmitter = this.systems.events;
 
-        eventEmitter.on('update', this.world.update, this.world);
-        eventEmitter.on('postupdate', this.world.postUpdate, this.world);
-        eventEmitter.once('shutdown', this.shutdown, this);
+        eventEmitter.on(SceneEvents.UPDATE, this.world.update, this.world);
+        eventEmitter.on(SceneEvents.POST_UPDATE, this.world.postUpdate, this.world);
+        eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -305,9 +306,9 @@ var MatterPhysics = new Class({
     {
         var eventEmitter = this.systems.events;
 
-        eventEmitter.off('update', this.world.update, this.world);
-        eventEmitter.off('postupdate', this.world.postUpdate, this.world);
-        eventEmitter.off('shutdown', this.shutdown, this);
+        eventEmitter.off(SceneEvents.UPDATE, this.world.update, this.world);
+        eventEmitter.off(SceneEvents.POST_UPDATE, this.world.postUpdate, this.world);
+        eventEmitter.off(SceneEvents.SHUTDOWN, this.shutdown, this);
 
         this.add.destroy();
         this.world.destroy();
@@ -328,7 +329,7 @@ var MatterPhysics = new Class({
     {
         this.shutdown();
 
-        this.scene.sys.events.off('start', this.start, this);
+        this.scene.sys.events.off(SceneEvents.START, this.start, this);
 
         this.scene = null;
         this.systems = null;

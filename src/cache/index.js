@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -11,6 +11,7 @@
 module.exports = {
 
     BaseCache: require('./BaseCache'),
-    CacheManager: require('./CacheManager')
+    CacheManager: require('./CacheManager'),
+    Events: require('./events')
 
 };

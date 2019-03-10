@@ -1,25 +1,11 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Class = require('../utils/Class');
 var GetFastValue = require('../utils/object/GetFastValue');
-
-/**
- * @typedef {object} TimerEventConfig
- *
- * @property {number} [delay=0] - The delay after which the Timer Event should fire, in milliseconds.
- * @property {number} [repeat=0] - The total number of times the Timer Event will repeat before finishing.
- * @property {boolean} [loop=false] - `true` if the Timer Event should repeat indefinitely.
- * @property {function} [callback] - The callback which will be called when the Timer Event fires.
- * @property {*} [callbackScope] - The scope (`this` object) with which to invoke the `callback`.
- * @property {Array.<*>} [args] - Additional arguments to be passed to the `callback`.
- * @property {number} [timeScale=1] - The scale of the elapsed time.
- * @property {number} [startAt=1] - The initial elapsed time in milliseconds. Useful if you want a long duration with repeat, but for the first loop to fire quickly.
- * @property {boolean} [paused=false] - `true` if the Timer Event should be paused.
- */
 
 /**
  * @classdesc
@@ -32,7 +18,7 @@ var GetFastValue = require('../utils/object/GetFastValue');
  * @constructor
  * @since 3.0.0
  *
- * @param {TimerEventConfig} config - The configuration for the Timer Event, including its delay and callback.
+ * @param {Phaser.Time.Types.TimerEventConfig} config - The configuration for the Timer Event, including its delay and callback.
  */
 var TimerEvent = new Class({
 
@@ -173,7 +159,7 @@ var TimerEvent = new Class({
      * @method Phaser.Time.TimerEvent#reset
      * @since 3.0.0
      *
-     * @param {TimerEventConfig} config - The new state for the Timer Event.
+     * @param {Phaser.Time.Types.TimerEventConfig} config - The new state for the Timer Event.
      *
      * @return {Phaser.Time.TimerEvent} This TimerEvent object.
      */
@@ -288,7 +274,7 @@ var TimerEvent = new Class({
      * @method Phaser.Time.TimerEvent#remove
      * @since 3.0.0
      *
-     * @param {function} dispatchCallback - If `true` (by default `false`), the function of the Timer Event will be called before its removal from its Clock.
+     * @param {boolean} [dispatchCallback] - If `true` (by default `false`), the function of the Timer Event will be called before its removal from its Clock.
      */
     remove: function (dispatchCallback)
     {

@@ -1,17 +1,19 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var COLLIDES = require('./COLLIDES');
-var SeperateX = require('./SeperateX');
-var SeperateY = require('./SeperateY');
+var Events = require('./events');
+var SeparateX = require('./SeparateX');
+var SeparateY = require('./SeparateY');
 
 /**
  * Impact Physics Solver
  *
  * @function Phaser.Physics.Impact.Solver
+ * @fires Phaser.Physics.Impact.Events#COLLIDE
  * @since 3.0.0
  *
  * @param {Phaser.Physics.Impact.World} world - The Impact simulation to run the solver in.
@@ -35,33 +37,33 @@ var Solver = function (world, bodyA, bodyB)
     {
         if (bodyA.last.y < bodyB.last.y)
         {
-            SeperateY(world, bodyA, bodyB, weak);
+            SeparateY(world, bodyA, bodyB, weak);
         }
         else
         {
-            SeperateY(world, bodyB, bodyA, weak);
+            SeparateY(world, bodyB, bodyA, weak);
         }
 
         bodyA.collideWith(bodyB, 'y');
         bodyB.collideWith(bodyA, 'y');
 
-        world.emit('collide', bodyA, bodyB, 'y');
+        world.emit(Events.COLLIDE, bodyA, bodyB, 'y');
     }
     else if (bodyA.last.y + bodyA.size.y > bodyB.last.y && bodyA.last.y < bodyB.last.y + bodyB.size.y)
     {
         if (bodyA.last.x < bodyB.last.x)
         {
-            SeperateX(world, bodyA, bodyB, weak);
+            SeparateX(world, bodyA, bodyB, weak);
         }
         else
         {
-            SeperateX(world, bodyB, bodyA, weak);
+            SeparateX(world, bodyB, bodyA, weak);
         }
 
         bodyA.collideWith(bodyB, 'x');
         bodyB.collideWith(bodyA, 'x');
 
-        world.emit('collide', bodyA, bodyB, 'x');
+        world.emit(Events.COLLIDE, bodyA, bodyB, 'x');
     }
 };
 

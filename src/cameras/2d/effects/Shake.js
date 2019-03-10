@@ -1,11 +1,12 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Clamp = require('../../../math/Clamp');
 var Class = require('../../../utils/Class');
+var Events = require('../events');
 var Vector2 = require('../../../math/Vector2');
 
 /**
@@ -118,17 +119,10 @@ var Shake = new Class({
         this._offsetY = 0;
 
         /**
-         * @callback CameraShakeCallback
-         *
-         * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera on which the effect is running.
-         * @param {number} progress - The progress of the effect. A value between 0 and 1.
-         */
-
-        /**
          * This callback is invoked every frame for the duration of the effect.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Shake#_onUpdate
-         * @type {?CameraShakeCallback}
+         * @type {?Phaser.Cameras.Scene2D.Types.CameraShakeCallback}
          * @private
          * @default null
          * @since 3.5.0
@@ -147,35 +141,17 @@ var Shake = new Class({
     },
 
     /**
-     * This event is fired when the shake effect begins to run on a camera.
-     *
-     * @event CameraShakeStartEvent
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.Shake} effect - A reference to the effect instance.
-     * @param {integer} duration - The duration of the effect.
-     * @param {number} intensity - The intensity of the effect.
-     */
-
-    /**
-     * This event is fired when the shake effect completes.
-     *
-     * @event CameraShakeCompleteEvent
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera that the effect began on.
-     * @param {Phaser.Cameras.Scene2D.Effects.Shake} effect - A reference to the effect instance.
-     */
-
-    /**
      * Shakes the Camera by the given intensity over the duration specified.
      *
      * @method Phaser.Cameras.Scene2D.Effects.Shake#start
-     * @fires CameraShakeStartEvent
-     * @fires CameraShakeCompleteEvent
+     * @fires Phaser.Cameras.Scene2D.Events#SHAKE_START
+     * @fires Phaser.Cameras.Scene2D.Events#SHAKE_COMPLETE
      * @since 3.5.0
      *
      * @param {integer} [duration=100] - The duration of the effect in milliseconds.
      * @param {number} [intensity=0.05] - The intensity of the shake.
      * @param {boolean} [force=false] - Force the shake effect to start immediately, even if already running.
-     * @param {CameraShakeCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
+     * @param {Phaser.Cameras.Scene2D.Types.CameraShakeCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *
@@ -214,7 +190,7 @@ var Shake = new Class({
         this._onUpdate = callback;
         this._onUpdateScope = context;
 
-        this.camera.emit('camerashakestart', this.camera, this, duration, intensity);
+        this.camera.emit(Events.SHAKE_START, this.camera, this, duration, intensity);
 
         return this.camera;
     },
@@ -284,6 +260,7 @@ var Shake = new Class({
      * Called internally when the effect completes.
      *
      * @method Phaser.Cameras.Scene2D.Effects.Shake#effectComplete
+     * @fires Phaser.Cameras.Scene2D.Events#SHAKE_COMPLETE
      * @since 3.5.0
      */
     effectComplete: function ()
@@ -296,7 +273,7 @@ var Shake = new Class({
 
         this.isRunning = false;
 
-        this.camera.emit('camerashakecomplete', this.camera, this);
+        this.camera.emit(Events.SHAKE_COMPLETE, this.camera, this);
     },
 
     /**

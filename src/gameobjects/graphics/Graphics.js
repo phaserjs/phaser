@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -22,44 +22,6 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
 var MATH_CONST = require('../../math/const');
 var Render = require('./GraphicsRender');
-
-/**
- * Graphics line style (or stroke style) settings.
- *
- * @typedef {object} GraphicsLineStyle
- *
- * @property {number} [width] - The stroke width.
- * @property {number} [color] - The stroke color.
- * @property {number} [alpha] - The stroke alpha.
- */
-
-/**
- * Graphics fill style settings.
- *
- * @typedef {object} GraphicsFillStyle
- *
- * @property {number} [color] - The fill color.
- * @property {number} [alpha] - The fill alpha.
- */
-
-/**
- * Graphics style settings.
- *
- * @typedef {object} GraphicsStyles
- *
- * @property {GraphicsLineStyle} [lineStyle] - The style applied to shape outlines.
- * @property {GraphicsFillStyle} [fillStyle] - The style applied to shape areas.
- */
-
-/**
- * Options for the Graphics game Object.
- *
- * @typedef {object} GraphicsOptions
- * @extends GraphicsStyles
- *
- * @property {number} [x] - The x coordinate of the Graphics.
- * @property {number} [y] - The y coordinate of the Graphics.
- */
 
 /**
  * @classdesc
@@ -118,7 +80,7 @@ var Render = require('./GraphicsRender');
  * @extends Phaser.GameObjects.Components.ScrollFactor
  *
  * @param {Phaser.Scene} scene - The Scene to which this Graphics object belongs.
- * @param {GraphicsOptions} [options] - Options that set the position and default style of this Graphics object.
+ * @param {Phaser.GameObjects.Graphics.Types.Options} [options] - Options that set the position and default style of this Graphics object.
  */
 var Graphics = new Class({
 
@@ -247,7 +209,7 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#setDefaultStyles
      * @since 3.0.0
      *
-     * @param {GraphicsStyles} options - The styles to set as defaults.
+     * @param {Phaser.GameObjects.Graphics.Types.Styles} options - The styles to set as defaults.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -740,11 +702,7 @@ var Graphics = new Class({
      * @param {number} y - The y coordinate of the top-left of the rectangle.
      * @param {number} width - The width of the rectangle.
      * @param {number} height - The height of the rectangle.
-     * @param {number} [radius = 20] - The corner radius; It can also be an object to specify different radii for corners
-     * @param {number} [radius.tl = 20] Top left
-     * @param {number} [radius.tr = 20] Top right
-     * @param {number} [radius.br = 20] Bottom right
-     * @param {number} [radius.bl = 20] Bottom left
+     * @param {(Phaser.GameObjects.Graphics.Types.RoundedRectRadius|number)} [radius=20] - The corner radius; It can also be an object to specify different radii for corners.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -790,11 +748,7 @@ var Graphics = new Class({
      * @param {number} y - The y coordinate of the top-left of the rectangle.
      * @param {number} width - The width of the rectangle.
      * @param {number} height - The height of the rectangle.
-     * @param {number} [radius = 20] - The corner radius; It can also be an object to specify different radii for corners
-     * @param {number} [radius.tl = 20] Top left
-     * @param {number} [radius.tr = 20] Top right
-     * @param {number} [radius.br = 20] Bottom right
-     * @param {number} [radius.bl = 20] Bottom left
+     * @param {(Phaser.GameObjects.Graphics.Types.RoundedRectRadius|number)} [radius=20] - The corner radius; It can also be an object to specify different radii for corners.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -1486,8 +1440,8 @@ var Graphics = new Class({
         var sys = this.scene.sys;
         var renderer = sys.game.renderer;
 
-        if (width === undefined) { width = sys.game.config.width; }
-        if (height === undefined) { height = sys.game.config.height; }
+        if (width === undefined) { width = sys.scale.width; }
+        if (height === undefined) { height = sys.scale.height; }
 
         Graphics.TargetCamera.setScene(this.scene);
         Graphics.TargetCamera.setViewport(0, 0, width, height);

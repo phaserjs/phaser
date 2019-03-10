@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -15,14 +15,15 @@ var Extend = require('./utils/object/Extend');
 
 var Phaser = {
 
-    Animation: require('./animations'),
+    Animations: require('./animations'),
     Cache: require('./cache'),
     Cameras: { Scene2D: require('./cameras/2d') },
+    Core: require('./core'),
     Class: require('./utils/Class'),
     Data: require('./data'),
     Display: { Masks: require('./display/mask') },
     Events: require('./events'),
-    Game: require('./boot/Game'),
+    Game: require('./core/Game'),
     GameObjects: {
         DisplayList: require('./gameobjects/DisplayList'),
         GameObjectCreator: require('./gameobjects/GameObjectCreator'),
@@ -84,6 +85,7 @@ var Phaser = {
     },
     Plugins: require('./plugins'),
     Renderer: require('./renderer'),
+    Scale: require('./scale'),
     Scene: require('./scene/Scene'),
     Scenes: require('./scene'),
     Sound: require('./sound'),

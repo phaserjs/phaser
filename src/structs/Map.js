@@ -1,17 +1,16 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Class = require('../utils/Class');
 
 /**
- * @callback EachMapCallback
- * @generic E - [entry]
+ * @callback EachMapCallback<E>
  *
  * @param {string} key - The key of the Map entry.
- * @param {*} entry - The value of the Map entry.
+ * @param {E} entry - The value of the Map entry.
  *
  * @return {?boolean} The callback result.
  */

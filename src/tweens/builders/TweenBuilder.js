@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -24,7 +24,7 @@ var TweenData = require('../tween/TweenData');
  *
  * @param {(Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline)} parent - [description]
  * @param {object} config - [description]
- * @param {Phaser.Tweens.TweenConfigDefaults} defaults - Tween configuration defaults.
+ * @param {Phaser.Tweens.Types.TweenConfigDefaults} defaults - Tween configuration defaults.
 `
  * @property {(object|object[])} targets - The object, or an array of objects, to run the tween on.
  * @property {number} [delay=0] - The number of milliseconds to delay before the tween will start.

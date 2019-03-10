@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -47,12 +47,12 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
         return;
     }
 
-    var pipeline = this.pipeline;
+    var pipeline = renderer.currentPipeline;
 
     var camMatrix = pipeline._tempMatrix1;
     var graphicsMatrix = pipeline._tempMatrix2;
     var currentMatrix = pipeline._tempMatrix4;
-   
+
     renderer.setPipeline(pipeline);
 
     currentMatrix.loadIdentity();

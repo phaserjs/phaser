@@ -1,33 +1,87 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var CanvasPool = require('../../display/canvas/CanvasPool');
+var Color = require('../../display/color/Color');
+var GetFastValue = require('../../utils/object/GetFastValue');
+
 /**
- * Takes a snapshot of the current frame displayed by a 2D canvas.
+ * Takes a snapshot of an area from the current frame displayed by a canvas.
+ * 
+ * This is then copied to an Image object. When this loads, the results are sent
+ * to the callback provided in the Snapshot Configuration object.
  *
  * @function Phaser.Renderer.Snapshot.Canvas
  * @since 3.0.0
  *
- * @param {HTMLCanvasElement} canvas - The canvas to take a snapshot of.
- * @param {string} [type='image/png'] - The format of the returned image.
- * @param {number} [encoderOptions=0.92] - The image quality, between 0 and 1, for image formats which use lossy compression (such as `image/jpeg`).
- *
- * @return {HTMLImageElement} Returns an image of the type specified.
+ * @param {HTMLCanvasElement} sourceCanvas - The canvas to take a snapshot of.
+ * @param {SnapshotState} config - The snapshot configuration object.
  */
-var CanvasSnapshot = function (canvas, type, encoderOptions)
+var CanvasSnapshot = function (canvas, config)
 {
-    if (type === undefined) { type = 'image/png'; }
-    if (encoderOptions === undefined) { encoderOptions = 0.92; }
+    var callback = GetFastValue(config, 'callback');
+    var type = GetFastValue(config, 'type', 'image/png');
+    var encoderOptions = GetFastValue(config, 'encoder', 0.92);
+    var x = Math.abs(Math.round(GetFastValue(config, 'x', 0)));
+    var y = Math.abs(Math.round(GetFastValue(config, 'y', 0)));
+    var width = GetFastValue(config, 'width', canvas.width);
+    var height = GetFastValue(config, 'height', canvas.height);
+    var getPixel = GetFastValue(config, 'getPixel', false);
 
-    var src = canvas.toDataURL(type, encoderOptions);
+    if (getPixel)
+    {
+        var context = canvas.getContext('2d');
+        var imageData = context.getImageData(x, y, 1, 1);
+        var data = imageData.data;
 
-    var image = new Image();
+        callback.call(null, new Color(data[0], data[1], data[2], data[3] / 255));
+    }
+    else if (x !== 0 || y !== 0 || width !== canvas.width || height !== canvas.height)
+    {
+        //  Area Grab
+        var copyCanvas = CanvasPool.createWebGL(this, width, height);
+        var ctx = copyCanvas.getContext('2d');
 
-    image.src = src;
+        ctx.drawImage(canvas, x, y, width, height, 0, 0, width, height);
 
-    return image;
+        var image1 = new Image();
+    
+        image1.onerror = function ()
+        {
+            callback.call(null);
+
+            CanvasPool.remove(copyCanvas);
+        };
+
+        image1.onload = function ()
+        {
+            callback.call(null, image1);
+
+            CanvasPool.remove(copyCanvas);
+        };
+
+        image1.src = copyCanvas.toDataURL(type, encoderOptions);
+    }
+    else
+    {
+        //  Full Grab
+        var image2 = new Image();
+    
+        image2.onerror = function ()
+        {
+            callback.call(null);
+        };
+
+        image2.onload = function ()
+        {
+            callback.call(null, image2);
+        };
+
+        image2.src = canvas.toDataURL(type, encoderOptions);
+    }
 };
 
 module.exports = CanvasSnapshot;

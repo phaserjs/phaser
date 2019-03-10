@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -8,35 +8,11 @@ var Class = require('../../utils/Class');
 var Components = require('../../gameobjects/components');
 var DegToRad = require('../../math/DegToRad');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 var ValueToColor = require('../../display/color/ValueToColor');
 var Vector2 = require('../../math/Vector2');
-
-/**
- * @typedef {object} JSONCameraBounds
- * @property {number} x - The horizontal position of camera
- * @property {number} y - The vertical position of camera
- * @property {number} width - The width size of camera
- * @property {number} height - The height size of camera
- */
-
-/**
- * @typedef {object} JSONCamera
- *
- * @property {string} name - The name of the camera
- * @property {number} x - The horizontal position of camera
- * @property {number} y - The vertical position of camera
- * @property {number} width - The width size of camera
- * @property {number} height - The height size of camera
- * @property {number} zoom - The zoom of camera
- * @property {number} rotation - The rotation of camera
- * @property {boolean} roundPixels - The round pixels st status of camera
- * @property {number} scrollX - The horizontal scroll of camera
- * @property {number} scrollY - The vertical scroll of camera
- * @property {string} backgroundColor - The background color of camera
- * @property {(JSONCameraBounds|undefined)} [bounds] - The bounds of camera
- */
 
 /**
  * @classdesc
@@ -119,14 +95,13 @@ var BaseCamera = new Class({
         this.sceneManager;
 
         /**
-         * A reference to the Game Config.
+         * A reference to the Game Scale Manager.
          *
-         * @name Phaser.Cameras.Scene2D.BaseCamera#config
-         * @type {object}
-         * @readonly
-         * @since 3.12.0
+         * @name Phaser.Cameras.Scene2D.BaseCamera#scaleManager
+         * @type {Phaser.Scale.ScaleManager}
+         * @since 3.16.0
          */
-        this.config;
+        this.scaleManager;
 
         /**
          * The Camera ID. Assigned by the Camera Manager and used to handle camera exclusion.
@@ -150,11 +125,14 @@ var BaseCamera = new Class({
         this.name = '';
 
         /**
+         * This property is un-used in v3.16.
+         * 
          * The resolution of the Game, used in most Camera calculations.
          *
          * @name Phaser.Cameras.Scene2D.BaseCamera#resolution
          * @type {number}
          * @readonly
+         * @deprecated
          * @since 3.12.0
          */
         this.resolution = 1;
@@ -900,10 +878,9 @@ var BaseCamera = new Class({
      * @protected
      * @since 3.0.0
      *
-     * @param {number} baseScale - The base scale, as set in the Camera Manager.
-     * @param {number} resolution - The game resolution.
+     * @param {number} resolution - The game resolution, as set in the Scale Manager.
      */
-    preRender: function (baseScale, resolution)
+    preRender: function (resolution)
     {
         var width = this.width;
         var height = this.height;
@@ -911,7 +888,7 @@ var BaseCamera = new Class({
         var halfWidth = width * 0.5;
         var halfHeight = height * 0.5;
 
-        var zoom = this.zoom * baseScale;
+        var zoom = this.zoom * resolution;
         var matrix = this.matrix;
 
         var originX = width * this.originX;
@@ -953,11 +930,7 @@ var BaseCamera = new Class({
             displayHeight
         );
 
-        matrix.loadIdentity();
-        matrix.scale(resolution, resolution);
-        matrix.translate(this.x + originX, this.y + originY);
-        matrix.rotate(this.rotation);
-        matrix.scale(zoom, zoom);
+        matrix.applyITRS(this.x + originX, this.y + originY, this.rotation, zoom, zoom);
         matrix.translate(-originX, -originY);
     },
 
@@ -1081,7 +1054,7 @@ var BaseCamera = new Class({
      * @method Phaser.Cameras.Scene2D.BaseCamera#setBackgroundColor
      * @since 3.0.0
      *
-     * @param {(string|number|InputColorObject)} [color='rgba(0,0,0,0)'] - The color value. In CSS, hex or numeric color notation.
+     * @param {(string|number|Phaser.Display.Types.InputColorObject)} [color='rgba(0,0,0,0)'] - The color value. In CSS, hex or numeric color notation.
      *
      * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
      */
@@ -1277,10 +1250,10 @@ var BaseCamera = new Class({
 
         this.scene = scene;
 
-        this.config = scene.sys.game.config;
         this.sceneManager = scene.sys.game.scene;
+        this.scaleManager = scene.sys.scale;
 
-        var res = this.config.resolution;
+        var res = this.scaleManager.resolution;
 
         this.resolution = res;
 
@@ -1425,7 +1398,7 @@ var BaseCamera = new Class({
      * @method Phaser.Cameras.Scene2D.BaseCamera#toJSON
      * @since 3.0.0
      *
-     * @return {JSONCamera} A well-formed object suitable for conversion to JSON.
+     * @return {Phaser.Cameras.Scene2D.Types.JSONCamera} A well-formed object suitable for conversion to JSON.
      */
     toJSON: function ()
     {
@@ -1480,12 +1453,12 @@ var BaseCamera = new Class({
      */
     updateSystem: function ()
     {
-        if (!this.config)
+        if (!this.scaleManager)
         {
             return;
         }
 
-        var custom = (this._x !== 0 || this._y !== 0 || this.config.width !== this._width || this.config.height !== this._height);
+        var custom = (this._x !== 0 || this._y !== 0 || this.scaleManager.width !== this._width || this.scaleManager.height !== this._height);
 
         var sceneManager = this.sceneManager;
 
@@ -1505,13 +1478,6 @@ var BaseCamera = new Class({
     },
 
     /**
-     * This event is fired when a camera is destroyed by the Camera Manager.
-     *
-     * @event CameraDestroyEvent
-     * @param {Phaser.Cameras.Scene2D.BaseCamera} camera - The camera that was destroyed.
-     */
-
-    /**
      * Destroys this Camera instance and its internal properties and references.
      * Once destroyed you cannot use this Camera again, even if re-added to a Camera Manager.
      * 
@@ -1521,12 +1487,12 @@ var BaseCamera = new Class({
      * rather than calling this method directly.
      *
      * @method Phaser.Cameras.Scene2D.BaseCamera#destroy
-     * @fires CameraDestroyEvent
+     * @fires Phaser.Cameras.Scene2D.Events#DESTROY
      * @since 3.0.0
      */
     destroy: function ()
     {
-        this.emit('cameradestroy', this);
+        this.emit(Events.DESTROY, this);
 
         this.removeAllListeners();
 
@@ -1543,7 +1509,7 @@ var BaseCamera = new Class({
         this._bounds = null;
 
         this.scene = null;
-        this.config = null;
+        this.scaleManager = null;
         this.sceneManager = null;
     },
 

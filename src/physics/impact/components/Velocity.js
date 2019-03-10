@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -8,7 +8,7 @@
  * The Impact Velocity component.
  * Should be applied as a mixin.
  *
- * @name Phaser.Physics.Impact.Components.Velocity
+ * @namespace Phaser.Physics.Impact.Components.Velocity
  * @since 3.0.0
  */
 var Velocity = {

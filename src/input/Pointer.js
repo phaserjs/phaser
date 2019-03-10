@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -338,20 +338,6 @@ var Pointer = new Class({
         this.primaryDown = false;
 
         /**
-         * The Drag State of the Pointer:
-         *
-         * 0 = Not dragging anything
-         * 1 = Being checked if dragging
-         * 2 = Dragging something
-         *
-         * @name Phaser.Input.Pointer#dragState
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.dragState = 0;
-
-        /**
          * Is _any_ button on this pointer considered as being down?
          *
          * @name Phaser.Input.Pointer#isDown
@@ -581,7 +567,7 @@ var Pointer = new Class({
      */
     up: function (event, time)
     {
-        if (event.buttons)
+        if ('buttons' in event)
         {
             this.buttons = event.buttons;
         }
@@ -622,7 +608,7 @@ var Pointer = new Class({
      */
     down: function (event, time)
     {
-        if (event.buttons)
+        if ('buttons' in event)
         {
             this.buttons = event.buttons;
         }
@@ -663,7 +649,7 @@ var Pointer = new Class({
      */
     move: function (event, time)
     {
-        if (event.buttons)
+        if ('buttons' in event)
         {
             this.buttons = event.buttons;
         }
@@ -847,7 +833,7 @@ var Pointer = new Class({
      */
     leftButtonDown: function ()
     {
-        return (this.buttons & 1);
+        return (this.buttons & 1) ? true : false;
     },
 
     /**
@@ -860,7 +846,7 @@ var Pointer = new Class({
      */
     rightButtonDown: function ()
     {
-        return (this.buttons & 2);
+        return (this.buttons & 2) ? true : false;
     },
 
     /**
@@ -873,7 +859,7 @@ var Pointer = new Class({
      */
     middleButtonDown: function ()
     {
-        return (this.buttons & 4);
+        return (this.buttons & 4) ? true : false;
     },
 
     /**
@@ -886,7 +872,7 @@ var Pointer = new Class({
      */
     backButtonDown: function ()
     {
-        return (this.buttons & 8);
+        return (this.buttons & 8) ? true : false;
     },
 
     /**
@@ -899,7 +885,7 @@ var Pointer = new Class({
      */
     forwardButtonDown: function ()
     {
-        return (this.buttons & 16);
+        return (this.buttons & 16) ? true : false;
     },
 
     /**

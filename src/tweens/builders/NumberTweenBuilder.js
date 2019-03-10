@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -22,7 +22,7 @@ var TweenData = require('../tween/TweenData');
  *
  * @param {(Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline)} parent - [description]
  * @param {object} config - [description]
- * @param {Phaser.Tweens.TweenConfigDefaults} defaults - [description]
+ * @param {Phaser.Tweens.Types.TweenConfigDefaults} defaults - [description]
  *
  * @return {Phaser.Tweens.Tween} [description]
  */
