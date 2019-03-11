@@ -681,7 +681,7 @@ var Body = new Class({
          * @type {Phaser.Physics.Arcade.Types.ArcadeBodyCollision}
          * @since 3.0.0
          */
-        this.blocked = { none: true, up: false, down: false, left: false, right: false };
+        this.blocked = { none: true, up: false, down: false, left: false, right: false, by: null };
 
         /**
          * Whether this Body is colliding with a tile or the world boundary.
@@ -929,6 +929,7 @@ var Body = new Class({
             this.updateCenter();
         }
 
+        blocked.by = null;
         blocked.up = worldBlocked.up;
         blocked.down = worldBlocked.down;
         blocked.left = worldBlocked.left;
@@ -965,6 +966,8 @@ var Body = new Class({
 
             var velocity = this.velocity;
 
+            // this.newVelocity.set(velocity.x * delta, velocity.y * delta);
+
             this.position.x += this.getMoveX(velocity.x * delta);
             this.position.y += this.getMoveY(velocity.y * delta);
         }
@@ -979,11 +982,11 @@ var Body = new Class({
             var bx = (this.worldBounce) ? this.worldBounce.x : this.bounce.x;
             var by = (this.worldBounce) ? this.worldBounce.y : this.bounce.y;
             
+            //  Reverse the velocity for the bounce and flip the delta
+            velocity.x *= -bx;
+
             if (bx !== 0)
             {
-                //  Reverse the velocity for the bounce and flip the delta
-                velocity.x *= -bx;
-
                 if (worldBlocked.left)
                 {
                     this.x = worldBounds.x + (1 * bx);
@@ -994,11 +997,11 @@ var Body = new Class({
                 }
             }
 
+            //  Reverse the velocity for the bounce and flip the delta
+            velocity.y *= -by;
+
             if (by !== 0)
             {
-                //  Reverse the velocity for the bounce and flip the delta
-                velocity.y *= -by;
-
                 if (worldBlocked.up)
                 {
                     this.y = worldBounds.y + (1 * by);
@@ -1043,12 +1046,6 @@ var Body = new Class({
 
         var gameObject = this.gameObject;
 
-        // var px = gameObject.x + gameObject.scaleX * (this.offset.x - gameObject.displayOriginX);
-        // var py = gameObject.y + gameObject.scaleY * (this.offset.y - gameObject.displayOriginY);
-
-        // var dx = this.position.x - px;
-        // var dy = this.position.y - py;
-
         if (this.moves)
         {
             var mx = this.deltaMax.x;
@@ -1077,10 +1074,10 @@ var Body = new Class({
                     dy = my;
                 }
             }
-        }
 
-        gameObject.x += dx;
-        gameObject.y += dy;
+            gameObject.x += dx;
+            gameObject.y += dy;
+        }
 
         if (dx < 0)
         {
@@ -1801,42 +1798,62 @@ var Body = new Class({
         return this;
     },
 
-    setBlockedUp: function ()
+    setBlockedUp: function (by)
     {
         var blocked = this.blocked;
 
         blocked.up = true;
         blocked.none = false;
 
+        if (!blocked.by)
+        {
+            blocked.by = by;
+        }
+
         return this;
     },
 
-    setBlockedDown: function ()
+    setBlockedDown: function (by)
     {
         var blocked = this.blocked;
 
         blocked.down = true;
         blocked.none = false;
 
+        if (!blocked.by)
+        {
+            blocked.by = by;
+        }
+
         return this;
     },
 
-    setBlockedLeft: function ()
+    setBlockedLeft: function (by)
     {
         var blocked = this.blocked;
 
         blocked.left = true;
         blocked.none = false;
 
+        if (!blocked.by)
+        {
+            blocked.by = by;
+        }
+
         return this;
     },
 
-    setBlockedRight: function ()
+    setBlockedRight: function (by)
     {
         var blocked = this.blocked;
 
         blocked.right = true;
         blocked.none = false;
+
+        if (!blocked.by)
+        {
+            blocked.by = by;
+        }
 
         return this;
     },
