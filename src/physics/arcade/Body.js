@@ -966,8 +966,6 @@ var Body = new Class({
 
             var velocity = this.velocity;
 
-            // this.newVelocity.set(velocity.x * delta, velocity.y * delta);
-
             this.position.x += this.getMoveX(velocity.x * delta);
             this.position.y += this.getMoveY(velocity.y * delta);
         }
@@ -1159,6 +1157,11 @@ var Body = new Class({
         }
 
         return set;
+    },
+
+    getOverlapX: function (body, bias)
+    {
+
     },
 
     /**
@@ -1549,7 +1552,7 @@ var Body = new Class({
 
             //  Bottom Left
             var x3 = x1;
-            var y3 = this.bottom - thickness;
+            var y3 = this.bottom;
 
             //  Bottom Right
             var x4 = x2;
@@ -1565,6 +1568,16 @@ var Body = new Class({
             if (blocked.down)
             {
                 graphic.lineStyle(thickness, 0xff0000).lineBetween(x3, y3, x4, y4);
+            }
+
+            if (blocked.left)
+            {
+                graphic.lineStyle(thickness, 0xff0000).lineBetween(x1, y1, x3, y3);
+            }
+
+            if (blocked.right)
+            {
+                graphic.lineStyle(thickness, 0xff0000).lineBetween(x2, y2, x4, y4);
             }
         }
 
