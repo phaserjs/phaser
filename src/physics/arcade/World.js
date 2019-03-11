@@ -908,6 +908,8 @@ var World = new Class({
      */
     update: function (time, delta)
     {
+        console.log('World.update ------>', time);
+
         if (this.isPaused || this.bodies.size === 0)
         {
             return;
@@ -927,12 +929,16 @@ var World = new Class({
             }
         }
 
-        var stepsThisFrame = 0;
+        var stepsThisFrame = 1;
         var fixedDelta = this._frameTime;
         var msPerFrame = this._frameTimeMS * this.timeScale;
 
-        this._elapsed += delta;
+        this._elapsed += delta - msPerFrame;
 
+        //  Always step once, no matter what
+        this.step(fixedDelta);
+
+        //  Additional steps based on remaining time
         while (this._elapsed >= msPerFrame)
         {
             this._elapsed -= msPerFrame;
@@ -1000,6 +1006,8 @@ var World = new Class({
      */
     postUpdate: function ()
     {
+        console.log('<----- World.postUpdate');
+
         var i;
         var body;
         var bodies = this.bodies.entries;
@@ -1589,10 +1597,10 @@ var World = new Class({
         {
             //  Rect vs. Rect
             return !(
-                body1.right <= body2.position.x ||
-                body1.bottom <= body2.position.y ||
-                body1.position.x >= body2.right ||
-                body1.position.y >= body2.bottom
+                body1.right <= body2.x ||
+                body1.bottom <= body2.y ||
+                body1.x >= body2.right ||
+                body1.y >= body2.bottom
             );
         }
         else if (body1.isCircle)
