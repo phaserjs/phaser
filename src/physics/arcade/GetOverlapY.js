@@ -50,53 +50,17 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
             overlap = 0;
         }
     }
+    if (overlap > maxOverlap && !overlapOnly)
+    {
+        body1.embedded = true;
+        body2.embedded = true;
+    }
 
     //  Resets the overlapY to zero if there is no overlap, or to the actual pixel value if there is
     body1.overlapY = overlap;
     body2.overlapY = overlap;
 
     return [ overlap, topFace ];
-
-    /*
-    var body1Down = (body1.deltaY() > body2.deltaY());
-
-    if (body1.deltaY() === body2.deltaY())
-    {
-        //  Neither of them has a faster velocity, but we still need to separate them,
-        //  so try to figure it out based on overlap depth
-        var distance1 = body1.bottom - body2.y;
-        var distance2 = body2.bottom - body1.y;
-
-        body1Down = (distance1 < distance2);
-    }
-
-    if (body1Down || body2.blocked.down)
-    {
-        //  body1 is moving down and body2 is either moving up, moving slower than body1, or static
-        overlap = body1.bottom - body2.y;
-
-        if ((overlap > maxOverlap && !overlapOnly) || !body1.checkCollision.down || !body2.checkCollision.up)
-        {
-            overlap = 0;
-        }
-    }
-    else
-    {
-        //  body1 is moving up and body2 is either moving down, moving slower than body1, or static
-        overlap = body1.y - body2.bottom;
-
-        if ((-overlap > maxOverlap && !overlapOnly) || !body1.checkCollision.up || !body2.checkCollision.down)
-        {
-            overlap = 0;
-        }
-    }
-
-    //  Resets the overlapY to zero if there is no overlap, or to the actual pixel value if there is
-    body1.overlapY = overlap;
-    body2.overlapY = overlap;
-
-    return [ overlap, body1Down ];
-    */
 };
 
 module.exports = GetOverlapY;
