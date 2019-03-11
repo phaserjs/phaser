@@ -1,4 +1,4 @@
-/**
+ /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
@@ -57,29 +57,27 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     //  At this point, the velocity from gravity, world rebounds, etc has been factored in.
     //  The body is moving the direction it wants to, but may be blocked.
 
-    /*
-    console.log('Collision - top face of body1?', faceTop);
+    // console.log('Collision - top face of body1?', faceTop);
 
-    console.log('body1', body1.gameObject.name);
-    console.log('blocked down', blocked1.down, 'blocked up', blocked1.up);
-    console.log('touching down', body1.touching.down, 'touching up', body1.touching.up);
-    console.log('world blocked down', body1.worldBlocked.down, 'world blocked up', body1.worldBlocked.up);
-    console.log('moving up?', (body1.deltaY() < 0), 'speed', body1.deltaY());
-    console.log('immovable', body1.immovable);
-    console.log('velocity', v1);
+    // console.log('body1', body1.gameObject.name);
+    // console.log('blocked down', blocked1.down, 'blocked up', blocked1.up);
+    // console.log('touching down', body1.touching.down, 'touching up', body1.touching.up);
+    // console.log('world blocked down', body1.worldBlocked.down, 'world blocked up', body1.worldBlocked.up);
+    // console.log('moving up?', (body1.deltaY() < 0), 'speed', body1.deltaY());
+    // console.log('immovable', body1.immovable);
+    // console.log('velocity', v1);
 
-    console.log('');
+    // console.log('');
 
-    console.log('body2', body2.gameObject.name);
-    console.log('blocked down', blocked2.down, 'blocked up', blocked2.up);
-    console.log('touching down', body2.touching.down, 'touching up', body2.touching.up);
-    console.log('world blocked down', body2.worldBlocked.down, 'world blocked up', body2.worldBlocked.up);
-    console.log('moving up?', (body2.deltaY() < 0), 'speed', body2.deltaY());
-    console.log('immovable', body2.immovable);
-    console.log('velocity', v2);
+    // console.log('body2', body2.gameObject.name);
+    // console.log('blocked down', blocked2.down, 'blocked up', blocked2.up);
+    // console.log('touching down', body2.touching.down, 'touching up', body2.touching.up);
+    // console.log('world blocked down', body2.worldBlocked.down, 'world blocked up', body2.worldBlocked.up);
+    // console.log('moving up?', (body2.deltaY() < 0), 'speed', body2.deltaY());
+    // console.log('immovable', body2.immovable);
+    // console.log('velocity', v2);
 
-    debugger;
-    */
+    // debugger;
 
     var ny1 = v1;
     var ny2 = v2;
@@ -101,11 +99,13 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     {
         //  Body1 is immovable, so carries on at the same speed regardless, adjust body2 speed
         ny2 = v1 - v2 * body2.bounce.y;
+        // ny2 = v1 - v2;
     }
     else if (body2Immovable)
     {
         //  Body2 is immovable, so carries on at the same speed regardless, adjust body1 speed
         ny1 = v2 - v1 * body1.bounce.y;
+        // ny1 = v2 - v1;
     }
 
     //  Velocities calculated, time to work out what moves where
@@ -150,7 +150,7 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     {
         //  Body1 is moving UP
 
-        if (blocked1.up)
+        if (blocked1.up && blocked1.by === body2)
         {
             //  And is blocked
             if (faceTop)
@@ -163,13 +163,19 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
                 //  Body1 bottom hit Body2 top and is blocked from moving up
                 body1.bottom = body2.y;
             }
+
+            if (ny1 < 0)
+            {
+                //  Velocity hasn't been reversed, so cancel it
+                ny1 = 0;
+            }
         }
     }
     else if (body1.deltaY() > 0)
     {
         //  Body1 is moving DOWN
 
-        if (blocked1.down)
+        if (blocked1.down && blocked1.by === body2)
         {
             //  And is blocked
             if (faceTop)
@@ -181,6 +187,12 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
             {
                 //  Body1 bottom hit Body2 top and is blocked from moving down
                 body1.bottom = body2.y;
+            }
+
+            if (ny1 > 0)
+            {
+                //  Velocity hasn't been reversed, so cancel it
+                ny1 = 0;
             }
         }
     }
@@ -194,7 +206,7 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     {
         //  Body2 is moving UP
 
-        if (blocked2.up)
+        if (blocked2.up && blocked2.by === body1)
         {
             //  And is blocked
             if (faceTop)
@@ -207,13 +219,19 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
                 //  Body2 top hit Body1 bottom and is blocked from moving up
                 body2.y = body1.bottom;
             }
+
+            if (ny2 < 0)
+            {
+                //  Velocity hasn't been reversed, so cancel it
+                ny2 = 0;
+            }
         }
     }
     else if (body2.deltaY() > 0)
     {
         //  Body2 is moving DOWN
 
-        if (blocked2.down)
+        if (blocked2.down && blocked2.by === body1)
         {
             //  And is blocked
             if (faceTop)
@@ -225,6 +243,12 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
             {
                 //  Body2 top hit Body1 bottom and is blocked from moving down
                 body2.y = body1.bottom;
+            }
+
+            if (ny2 > 0)
+            {
+                //  Velocity hasn't been reversed, so cancel it
+                ny2 = 0;
             }
         }
     }
