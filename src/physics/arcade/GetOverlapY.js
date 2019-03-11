@@ -4,6 +4,8 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var CONST = require('./const');
+
 /**
  * Calculates and returns the vertical overlap between two arcade physics bodies.
  * 
@@ -25,8 +27,15 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
     var overlap = 0;
     var maxOverlap = body1.deltaAbsY() + body2.deltaAbsY() + bias;
 
+    var body1Immovable = (body1.physicsType === CONST.STATIC_BODY || body1.immovable);
+    var body2Immovable = (body2.physicsType === CONST.STATIC_BODY || body2.immovable);
+
     var distance1 = body1.bottom - body2.y;
     var distance2 = body2.bottom - body1.y;
+
+    var blocked1 = body1.blocked;
+    var blocked2 = body2.blocked;
+
     var topFace = false;
 
     if (distance1 < distance2)
@@ -37,6 +46,21 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
         if ((overlap > maxOverlap && !overlapOnly) || !body1.checkCollision.down || !body2.checkCollision.up)
         {
             overlap = 0;
+        }
+        else
+        {
+            body1.setTouchingDown();
+            body2.setTouchingUp();
+
+            if (blocked2.down || body2Immovable)
+            {
+                body1.setBlockedDown(body2);
+            }
+
+            if (blocked1.up || body1Immovable)
+            {
+                body2.setBlockedUp(body1);
+            }
         }
     }
     else
@@ -49,7 +73,23 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
         {
             overlap = 0;
         }
+        else
+        {
+            body1.setTouchingUp();
+            body2.setTouchingDown();
+            
+            if (blocked2.up || body2Immovable)
+            {
+                body1.setBlockedUp(body2);
+            }
+
+            if (blocked1.down || body1Immovable)
+            {
+                body2.setBlockedDown(body1);
+            }
+        }
     }
+
     if (overlap > maxOverlap && !overlapOnly)
     {
         body1.embedded = true;
