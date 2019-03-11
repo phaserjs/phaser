@@ -908,8 +908,6 @@ var World = new Class({
      */
     update: function (time, delta)
     {
-        console.log('World.update ------>', time);
-
         if (this.isPaused || this.bodies.size === 0)
         {
             return;
@@ -1006,8 +1004,6 @@ var World = new Class({
      */
     postUpdate: function ()
     {
-        console.log('<----- World.postUpdate');
-
         var i;
         var body;
         var bodies = this.bodies.entries;
