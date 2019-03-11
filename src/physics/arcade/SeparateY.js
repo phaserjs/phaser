@@ -66,34 +66,34 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         if (blocked2.up)
         {
             // console.log('a1');
-            body1.setBlockedUp();
+            body1.setBlockedUp(body2);
         }
         else if (blocked1.up)
         {
             // console.log('a2');
-            body2.setBlockedUp();
+            body2.setBlockedUp(body1);
         }
         else if (blocked1.down)
         {
             // console.log('a3');
-            body2.setBlockedDown();
+            body2.setBlockedDown(body1);
         }
         else if (blocked2.down)
         {
             // console.log('a4');
-            body1.setBlockedDown();
+            body1.setBlockedDown(body2);
         }
         else if (body1Immovable)
         {
             if (v2 < 0)
             {
                 // console.log('a5');
-                body2.setBlockedUp();
+                body2.setBlockedUp(body1);
             }
             else if (v2 > 0)
             {
                 // console.log('a6');
-                body2.setBlockedDown();
+                body2.setBlockedDown(body1);
             }
         }
         else if (body2Immovable)
@@ -101,12 +101,12 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
             if (v1 < 0)
             {
                 // console.log('a7');
-                body1.setBlockedUp();
+                body1.setBlockedUp(body2);
             }
             else if (v1 > 0)
             {
                 // console.log('a8');
-                body1.setBlockedDown();
+                body1.setBlockedDown(body2);
             }
         }
         else
@@ -122,34 +122,34 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         if (blocked2.down)
         {
             // console.log('b1');
-            body1.setBlockedDown();
+            body1.setBlockedDown(body2);
         }
         else if (blocked1.down)
         {
             // console.log('b2');
-            body2.setBlockedDown();
+            body2.setBlockedDown(body1);
         }
         else if (blocked1.up)
         {
             // console.log('b3');
-            body2.setBlockedUp();
+            body2.setBlockedUp(body1);
         }
         else if (blocked2.up)
         {
             // console.log('b4');
-            body1.setBlockedUp();
+            body1.setBlockedUp(body2);
         }
         else if (body1Immovable)
         {
             if (v2 < 0)
             {
                 // console.log('b5');
-                body2.setBlockedUp();
+                body2.setBlockedUp(body1);
             }
             else if (v2 > 0)
             {
                 // console.log('b6');
-                body2.setBlockedDown();
+                body2.setBlockedDown(body1);
             }
         }
         else if (body2Immovable)
@@ -157,12 +157,12 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
             if (v1 < 0)
             {
                 // console.log('b7');
-                body1.setBlockedUp();
+                body1.setBlockedUp(body2);
             }
             else if (v1 > 0)
             {
                 // console.log('b8');
-                body1.setBlockedDown();
+                body1.setBlockedDown(body2);
             }
         }
         else
@@ -179,25 +179,63 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         //  Neither body is immovable, so they get an equal amount of separation and a new velocity based on mass
         //  Share the overlap equally if both bodies are unblocked
 
+        var nv1 = Math.sqrt((v2 * v2 * body2.mass) / body1.mass) * ((v2 > 0) ? 1 : -1);
+        var nv2 = Math.sqrt((v1 * v1 * body1.mass) / body2.mass) * ((v1 > 0) ? 1 : -1);
+        var avg = (nv1 + nv2) * 0.5;
+
+        nv1 -= avg;
+        nv2 -= avg;
+
+        var ny1 = avg + nv1 * body1.bounce.y;
+        var ny2 = avg + nv2 * body2.bounce.y;
+
         if (faceBottom && blocked2.down)
         {
-            body1.bottom = body2.y;
-            // console.log('a');
+            if (blocked1.by === body2)
+            {
+                body1.bottom = body2.y;
+
+                if (body1.bounce.y === 0)
+                {
+                    ny1 = 0;
+                }
+            }
         }
         else if (faceTop && blocked1.down)
         {
-            body2.bottom = body1.y;
-            // console.log('b');
+            if (blocked2.by === body1)
+            {
+                body2.bottom = body1.y;
+
+                if (body2.bounce.y === 0)
+                {
+                    ny2 = 0;
+                }
+            }
         }
         else if (faceBottom && blocked1.up)
         {
-            body2.y = body1.bottom;
-            // console.log('c', body1.bottom, body2.y);
+            if (blocked2.by === body1)
+            {
+                body2.y = body1.bottom;
+
+                if (body2.bounce.y === 0)
+                {
+                    ny2 = 0;
+                }
+            }
         }
         else if (faceTop && blocked2.up)
         {
-            body1.y = body2.bottom;
-            // console.log('d');
+            if (blocked1.by === body2)
+            {
+                body1.y = body2.bottom;
+
+                if (body1.bounce.y === 0)
+                {
+                    ny1 = 0;
+                }
+            }
         }
         else
         {
@@ -206,15 +244,8 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
             body2.y += body2.getMoveY(overlap);
         }
 
-        var nv1 = Math.sqrt((v2 * v2 * body2.mass) / body1.mass) * ((v2 > 0) ? 1 : -1);
-        var nv2 = Math.sqrt((v1 * v1 * body1.mass) / body2.mass) * ((v1 > 0) ? 1 : -1);
-        var avg = (nv1 + nv2) * 0.5;
-
-        nv1 -= avg;
-        nv2 -= avg;
-
-        velocity1.y = avg + nv1 * body1.bounce.y;
-        velocity2.y = avg + nv2 * body2.bounce.y;
+        velocity1.y = ny1;
+        velocity2.y = ny2;
     }
     else if (body1Immovable)
     {
