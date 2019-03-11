@@ -8,6 +8,8 @@ var CircleContains = require('../../geom/circle/Contains');
 var Class = require('../../utils/Class');
 var CONST = require('./const');
 var Events = require('./events');
+var FuzzyLessThan = require('../../math/fuzzy/LessThan');
+var FuzzyGreaterThan = require('../../math/fuzzy/GreaterThan');
 var RadToDeg = require('../../math/RadToDeg');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var RectangleContains = require('../../geom/rectangle/Contains');
@@ -960,54 +962,38 @@ var Body = new Class({
      */
     update: function (delta)
     {
+        var velocity = this.velocity;
+
         if (this.moves)
         {
             this.world.updateMotion(this, delta);
 
-            var velocity = this.velocity;
-
             this.position.x += this.getMoveX(velocity.x * delta);
             this.position.y += this.getMoveY(velocity.y * delta);
         }
+
+        //  Calculate the delta
+        this._dx = this.position.x - this.prev.x;
+        this._dy = this.position.y - this.prev.y;
 
         var worldBlocked = this.worldBlocked;
 
         //  World Bounds check
         if (this.collideWorldBounds && !worldBlocked.none)
         {
-            var worldBounds = this.world.bounds;
-
-            var bx = (this.worldBounce) ? this.worldBounce.x : this.bounce.x;
-            var by = (this.worldBounce) ? this.worldBounce.y : this.bounce.y;
+            var bx = (this.worldBounce) ? -this.worldBounce.x : -this.bounce.x;
+            var by = (this.worldBounce) ? -this.worldBounce.y : -this.bounce.y;
             
-            //  Reverse the velocity for the bounce and flip the delta
-            velocity.x *= -bx;
+            //  Reverse the velocity for the bounce
 
-            if (bx !== 0)
+            if ((worldBlocked.left && velocity.x < 0) || (worldBlocked.right && velocity.x > 0))
             {
-                if (worldBlocked.left)
-                {
-                    this.x = worldBounds.x + (1 * bx);
-                }
-                else if (worldBlocked.right)
-                {
-                    this.right = worldBounds.right - (1 * bx);
-                }
+                velocity.x *= bx;
             }
 
-            //  Reverse the velocity for the bounce and flip the delta
-            velocity.y *= -by;
-
-            if (by !== 0)
+            if ((worldBlocked.down && velocity.y > 0) || (worldBlocked.up && velocity.y < 0))
             {
-                if (worldBlocked.up)
-                {
-                    this.y = worldBounds.y + (1 * by);
-                }
-                else if (worldBlocked.down)
-                {
-                    this.bottom = worldBounds.bottom - (1 * by);
-                }
+                velocity.y *= by;
             }
 
             if (this.onWorldBounds)
@@ -1015,10 +1001,6 @@ var Body = new Class({
                 this.world.emit(Events.WORLD_BOUNDS, this, worldBlocked.up, worldBlocked.down, worldBlocked.left, worldBlocked.right);
             }
         }
-
-        //  Calculate the delta
-        this._dx = this.position.x - this.prev.x;
-        this._dy = this.position.y - this.prev.y;
 
         this.updateCenter();
 
@@ -1137,13 +1119,13 @@ var Body = new Class({
             worldBlocked.right = true;
         }
 
-        if (pos.y <= bounds.y && check.up)
+        if (check.up && pos.y <= bounds.y)
         {
             set = true;
             pos.y = bounds.y;
             worldBlocked.up = true;
         }
-        else if (this.bottom >= bounds.bottom && check.down)
+        else if (check.down && this.bottom >= bounds.bottom)
         {
             set = true;
             pos.y = bounds.bottom - this.height;
@@ -1157,11 +1139,6 @@ var Body = new Class({
         }
 
         return set;
-    },
-
-    getOverlapX: function (body, bias)
-    {
-
     },
 
     /**
