@@ -1349,10 +1349,10 @@ var World = new Class({
             resultY = SeparateY(body1, body2, overlapOnly, this.OVERLAP_BIAS);
 
             //  Are they still intersecting? Let's do the other axis then
-            if (this.intersects(body1, body2))
-            {
-                resultX = SeparateX(body1, body2, overlapOnly, this.OVERLAP_BIAS);
-            }
+            // if (this.intersects(body1, body2))
+            // {
+                // resultX = SeparateX(body1, body2, overlapOnly, this.OVERLAP_BIAS);
+            // }
         }
 
         var result = (resultX || resultY);
