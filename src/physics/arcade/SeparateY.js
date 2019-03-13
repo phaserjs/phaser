@@ -5,6 +5,7 @@
  */
 
 var CONST = require('./const');
+var FuzzyEqual = require('../../math/fuzzy/Equal');
 var GetOverlapY = require('./GetOverlapY');
 
 /**
@@ -85,8 +86,12 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     if (!body1Immovable && !body2Immovable)
     {
         //  Neither body is immovable, so they get a new velocity based on mass
-        var nv1 = Math.sqrt((v2 * v2 * body2.mass) / body1.mass) * ((v2 > 0) ? 1 : -1);
-        var nv2 = Math.sqrt((v1 * v1 * body1.mass) / body2.mass) * ((v1 > 0) ? 1 : -1);
+        var mass1 = body1.mass;
+        var mass2 = body2.mass;
+
+        var nv1 = Math.sqrt((v2 * v2 * mass2) / mass1) * ((v2 > 0) ? 1 : -1);
+        var nv2 = Math.sqrt((v1 * v1 * mass1) / mass2) * ((v1 > 0) ? 1 : -1);
+
         var avg = (nv1 + nv2) * 0.5;
 
         nv1 -= avg;
@@ -98,14 +103,14 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     else if (body1Immovable)
     {
         //  Body1 is immovable, so carries on at the same speed regardless, adjust body2 speed
-        ny2 = v1 - v2 * body2.bounce.y;
-        // ny2 = v1 - v2;
+        // ny2 = v1 - v2 * body2.bounce.y;
+        ny2 = v1 - v2;
     }
     else if (body2Immovable)
     {
         //  Body2 is immovable, so carries on at the same speed regardless, adjust body1 speed
-        ny1 = v2 - v1 * body1.bounce.y;
-        // ny1 = v2 - v1;
+        // ny1 = v2 - v1 * body1.bounce.y;
+        ny1 = v2 - v1;
     }
 
     //  Velocities calculated, time to work out what moves where
@@ -116,30 +121,57 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
 
     if (blocked1.none && blocked2.none)
     {
-        overlap *= 0.5;
+        if (overlap !== 0)
+        {
+            // var p1 = (faceBottom) ? body1.bottom - body2.y : body2.bottom - body1.y;
+            // console.log('impact', v1, v2, 'overlap', overlap, p1);
+    
+            var share = overlap * 0.5;
+            var amount1 = body1.getMoveY(share);
+            var amount2 = body2.getMoveY(-share);
+    
+            if (amount1 !== share)
+            {
+                // console.log('diff1', share, amount1, amount2);
+                amount2 -= (share - amount1);
+            }
+            else if (amount2 !== -share)
+            {
+                // console.log('diff2', share, amount1, amount2);
+                amount1 += (share + amount2);
+            }
+    
+            body1.y += amount1;
+            body2.y += amount2;
 
-        if (body1.deltaY())
-        {
-            body1.y -= body1.getMoveY(overlap);
+            // var p2 = (faceBottom) ? body1.bottom - body2.y : body2.bottom - body1.y;
+            // console.log('post-impact', p2);
         }
-        else
-        {
-            body1.y += body1.getMoveY(overlap);
-        }
+        // else
+        // {
+        //     console.log('zero overlap impact');
+        // }
 
-        if (body2.deltaY())
-        {
-            body2.y -= body2.getMoveY(overlap);
-        }
-        else
-        {
-            body2.y += body2.getMoveY(overlap);
-        }
+        // console.log('----------------------------------');
 
         velocity1.y = ny1;
         velocity2.y = ny2;
 
         return true;
+    }
+    else if (blocked1.none)
+    {
+        //  Body2 is blocked from moving, so Body1 needs to move
+
+    }
+    else if (blocked2.none)
+    {
+        //  Body1 is blocked from moving, so Body2 needs to move
+
+    }
+    else
+    {
+        //  Nothing can move anywhere!
     }
 
     //  -------------------------------------------
@@ -148,6 +180,8 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
 
     if (body1.deltaY() < 0)
     {
+        console.log('up1');
+
         //  Body1 is moving UP
 
         if (blocked1.up && blocked1.by === body2)
@@ -173,6 +207,8 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     }
     else if (body1.deltaY() > 0)
     {
+        console.log('down1');
+
         //  Body1 is moving DOWN
 
         if (blocked1.down && blocked1.by === body2)
@@ -196,14 +232,17 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
             }
         }
     }
-    else
+    else if (FuzzyEqual(ny1, 0, 0.001))
     {
         //  Body1 is static, don't apply any more velocity
+        console.log('static 1');
         ny1 = 0;
     }
 
     if (body2.deltaY() < 0)
     {
+        console.log('up2');
+
         //  Body2 is moving UP
 
         if (blocked2.up && blocked2.by === body1)
@@ -229,6 +268,8 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     }
     else if (body2.deltaY() > 0)
     {
+        console.log('down2');
+
         //  Body2 is moving DOWN
 
         if (blocked2.down && blocked2.by === body1)
@@ -252,367 +293,21 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
             }
         }
     }
-    else
+    else if (FuzzyEqual(ny2, 0, 0.001))
     {
         //  Body2 is static, don't apply any more velocity
+        console.log('static2');
         ny2 = 0;
     }
-
-    /*
-    if (!body1Immovable && !body2Immovable)
-    {
-        //  Neither body is immovable, so they get an equal amount of separation and a new velocity based on mass
-        //  Share the overlap equally if both bodies are unblocked
-
-        var nv1 = Math.sqrt((v2 * v2 * body2.mass) / body1.mass) * ((v2 > 0) ? 1 : -1);
-        var nv2 = Math.sqrt((v1 * v1 * body1.mass) / body2.mass) * ((v1 > 0) ? 1 : -1);
-        var avg = (nv1 + nv2) * 0.5;
-
-        nv1 -= avg;
-        nv2 -= avg;
-
-        ny1 = avg + nv1 * body1.bounce.y;
-        ny2 = avg + nv2 * body2.bounce.y;
-    }
-    else if (body1Immovable)
-    {
-        //  Body1 is immovable, so carries on at the same speed regardless, adjust body2 speed
-        ny2 = v1 - v2 * body2.bounce.y;
-
-        if (body1.deltaY() > 0)
-        {
-            //  Body1 is moving down
-
-            if (faceTop)
-            {
-                //  and Body2 ran into its top
-                body2.y -= body2.getMoveY(overlap);
-            }
-            else
-            {
-                //  and Body2 ran into its bottom
-                body2.y += body2.getMoveY(overlap);
-            }
-        }
-        else if (body1.deltaY() < 0)
-        {
-            //  Body1 is moving up
-
-            if (faceTop)
-            {
-                //  and Body2 ran into its top
-                body2.y -= body2.getMoveY(overlap);
-            }
-            else
-            {
-                //  and Body2 ran into its bottom
-                body2.y += body2.getMoveY(overlap);
-            }
-        }
-    }
-    else if (body2Immovable)
-    {
-        //  Body2 is immovable, so carries on at the same speed regardless, adjust body1 speed
-        ny1 = v2 - v1 * body1.bounce.y;
-
-        console.log('b2i', ny1, body2.deltaY(), 'facetop', faceTop);
-
-        if (body2.deltaY() > 0)
-        {
-            //  Body2 is moving down
-
-            if (faceTop)
-            {
-                //  and Body1 ran into its top
-                body1.bottom = body2.y;
-
-                // body1.y -= body1.getMoveY(overlap);
-            }
-            else
-            {
-                //  and Body1 ran into its bottom
-
-                body1.y = body2.bottom;
-
-                // body1.y += body1.getMoveY(overlap);
-            }
-        }
-        else if (body2.deltaY() < 0)
-        {
-            //  Body2 is moving up
-
-            if (faceTop)
-            {
-                //  and Body1 ran into its top
-                body1.y = body2.bottom;
-
-                // body1.y -= body1.getMoveY(overlap);
-            }
-            else
-            {
-                //  and Body1 ran into its bottom, or it ran into Body1
-                body1.bottom = body2.y - overlap;
-
-                // body1.y += body1.getMoveY(overlap);
-            }
-        }
-    }
-    */
-
-    /*
-    if (faceBottom && blocked2.down)
-    {
-        if (blocked1.by === body2)
-        {
-            body1.bottom = body2.y;
-
-            if (body1.bounce.y === 0)
-            {
-                ny1 = 0;
-            }
-        }
-    }
-    else if (faceTop && blocked1.down)
-    {
-        if (blocked2.by === body1)
-        {
-            body2.bottom = body1.y;
-
-            if (body2.bounce.y === 0)
-            {
-                ny2 = 0;
-            }
-        }
-    }
-    else if (faceBottom && blocked1.up)
-    {
-        if (blocked2.by === body1)
-        {
-            body2.y = body1.bottom;
-
-            if (body2.bounce.y === 0)
-            {
-                ny2 = 0;
-            }
-        }
-    }
-    else if (faceTop && blocked2.up)
-    {
-        if (blocked1.by === body2)
-        {
-            body1.y = body2.bottom;
-
-            if (body1.bounce.y === 0)
-            {
-                ny1 = 0;
-            }
-        }
-    }
-    else
-    {
-        overlap *= 0.5;
-
-        if (body1.deltaY())
-        {
-            body1.y -= body1.getMoveY(overlap);
-        }
-        else
-        {
-            body1.y += body1.getMoveY(overlap);
-        }
-
-        if (body2.deltaY())
-        {
-            body2.y -= body2.getMoveY(overlap);
-        }
-        else
-        {
-            body2.y += body2.getMoveY(overlap);
-        }
-    }
-    */
 
     velocity1.y = ny1;
     velocity2.y = ny2;
 
-    /*
-    if (!body1Immovable && !body2Immovable)
-    {
-        //  Neither body is immovable, so they get an equal amount of separation and a new velocity based on mass
-        //  Share the overlap equally if both bodies are unblocked
-
-        var nv1 = Math.sqrt((v2 * v2 * body2.mass) / body1.mass) * ((v2 > 0) ? 1 : -1);
-        var nv2 = Math.sqrt((v1 * v1 * body1.mass) / body2.mass) * ((v1 > 0) ? 1 : -1);
-        var avg = (nv1 + nv2) * 0.5;
-
-        nv1 -= avg;
-        nv2 -= avg;
-
-        var ny1 = avg + nv1 * body1.bounce.y;
-        var ny2 = avg + nv2 * body2.bounce.y;
-
-        if (faceBottom && blocked2.down)
-        {
-            if (blocked1.by === body2)
-            {
-                body1.bottom = body2.y;
-
-                if (body1.bounce.y === 0)
-                {
-                    ny1 = 0;
-                }
-            }
-        }
-        else if (faceTop && blocked1.down)
-        {
-            if (blocked2.by === body1)
-            {
-                body2.bottom = body1.y;
-
-                if (body2.bounce.y === 0)
-                {
-                    ny2 = 0;
-                }
-            }
-        }
-        else if (faceBottom && blocked1.up)
-        {
-            if (blocked2.by === body1)
-            {
-                body2.y = body1.bottom;
-
-                if (body2.bounce.y === 0)
-                {
-                    ny2 = 0;
-                }
-            }
-        }
-        else if (faceTop && blocked2.up)
-        {
-            if (blocked1.by === body2)
-            {
-                body1.y = body2.bottom;
-
-                if (body1.bounce.y === 0)
-                {
-                    ny1 = 0;
-                }
-            }
-        }
-        else
-        {
-            overlap *= 0.5;
-
-            if (body1.deltaY())
-            {
-                body1.y -= body1.getMoveY(overlap);
-            }
-            else
-            {
-                body1.y += body1.getMoveY(overlap);
-            }
-
-            if (body2.deltaY())
-            {
-                body2.y -= body2.getMoveY(overlap);
-            }
-            else
-            {
-                body2.y += body2.getMoveY(overlap);
-            }
-        }
-
-        velocity1.y = ny1;
-        velocity2.y = ny2;
-    }
-    else if (body1Immovable)
-    {
-        //  Body1 is immovable, but Body2 can move, so it gets all the separation
-
-        if (faceBottom)
-        {
-            if (blocked2.down)
-            {
-                body1.bottom = body2.y;
-                velocity1.y = v2 - v1 * body1.bounce.y;
-            }
-            else
-            {
-                body2.y = body1.bottom;
-                velocity2.y = v1 - v2 * body2.bounce.y;
-            }
-        }
-        else if (faceTop)
-        {
-            if (blocked1.up)
-            {
-                body1.y = body2.bottom;
-                velocity1.y = v2 - v1 * body1.bounce.y;
-            }
-            else
-            {
-                body2.bottom = body1.y;
-                velocity2.y = v1 - v2 * body2.bounce.y;
-            }
-        }
-
-        //  This is special case code that handles things like horizontal moving platforms you can ride
-        if (body1.moves)
-        {
-            body2.x += body2.getMoveX((body1.deltaX()) * body1.friction.x, true);
-        }
-    }
-    else if (body2Immovable)
-    {
-        //  Body2 is immovable, but Body1 can move, so it gets all the separation
-
-        if (faceBottom)
-        {
-            //  Body1 was hit on the bottom by Body2 (which is immovable)
-            if (blocked1.up)
-            {
-                //  But it can't go any further
-                body2.y = body1.bottom;
-            }
-            else
-            {
-                //  Body1 has room to move, so pass on the velocity from Body2
-                body1.y -= body1.getMoveY(overlap);
-            }
-
-
-            // if (blocked1.down)
-            // {
-            //     body2.bottom = body1.y;
-            //     velocity2.y = v2 - v1 * body2.bounce.y;
-            // }
-            // else
-            // {
-            //     body1.y = body2.bottom;
-            //     velocity1.y = v1 - v2 * body1.bounce.y;
-            // }
-        }
-        else if (faceTop)
-        {
-            // if (blocked2.up)
-            // {
-            //     body1.y = body1.bottom;
-            //     velocity2.y = v2 - v1 * body2.bounce.y;
-            // }
-            // else
-            // {
-            //     body1.bottom = body2.y;
-            //     velocity1.y = v1 - v2 * body1.bounce.y;
-            // }
-        }
-
-        //  This is special case code that handles things like horizontal moving platforms you can ride
-        if (body2.moves)
-        {
-            body1.x += body1.getMoveX((body2.deltaX()) * body2.friction.x, true);
-        }
-    }
-    */
+    //  TODO: This is special case code that handles things like horizontal moving platforms you can ride
+    // if (body2.moves)
+    // {
+    //     body1.x += body1.getMoveX((body2.deltaX()) * body2.friction.x, true);
+    // }
 
     //  If we got this far then there WAS overlap, and separation is complete, so return true
     return true;
