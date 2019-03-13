@@ -1461,6 +1461,33 @@ var FacebookInstantGamesPlugin = new Class({
     },
 
     /**
+     * Fetches a single Product from the game's product catalog.
+     * 
+     * The product catalog must have been populated using `getCatalog` prior to calling this method.
+     * 
+     * Use this to look-up product details based on a purchase list.
+     *
+     * @method Phaser.FacebookInstantGamesPlugin#getProduct
+     * @since 3.17.0
+     * 
+     * @param {string} productID - The Product ID of the item to get from the catalog.
+     * 
+     * @return {?Product} The Product from the catalog, or `null` if it couldn't be found or the catalog isn't populated.
+     */
+    getProduct: function (productID)
+    {
+        for (var i = 0; i < this.catalog.length; i++)
+        {
+            if (this.catalog[i].productID === productID)
+            {
+                return this.catalog[i];
+            }
+        }
+
+        return null;
+    },
+
+    /**
      * Begins the purchase flow for a specific product.
      * 
      * It makes an async call to the API, so the result isn't available immediately.
@@ -1569,14 +1596,14 @@ var FacebookInstantGamesPlugin = new Class({
      * If they cannot, i.e. it's not in the list of supported APIs, or the request
      * was rejected, it will emit a `consumepurchasefail` event instead.
      *
-     * @method Phaser.FacebookInstantGamesPlugin#consumePurchases
-     * @since 3.13.0
+     * @method Phaser.FacebookInstantGamesPlugin#consumePurchase
+     * @since 3.17.0
      * 
      * @param {string} purchaseToken - The purchase token of the purchase that should be consumed.
      * 
      * @return {this} This Facebook Instant Games Plugin instance.
      */
-    consumePurchases: function (purchaseToken)
+    consumePurchase: function (purchaseToken)
     {
         if (!this.paymentsReady)
         {

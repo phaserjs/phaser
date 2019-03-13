@@ -36,6 +36,11 @@ Notes:
 * `ArcadePhysics.furthest` now iterates the bodies Set, rather than the RTree, which keeps it working even if the RTree has been disabled.
 * `ArcadePhysics.closest` now iterates the bodies Set, rather than the RTree, which keeps it working even if the RTree has been disabled.
 
+### Facebook Instant Games Plugin
+
+* The method `consumePurchases` has been renamed to `consumePurchase` to bring it in-line with the Facebook API.
+* `getProduct` is a new method that will return a single Product from the product catalog based on the given Product ID. You can use this to look-up product details based on a purchase list.
+
 ### New Features
 
 * There is a new Game Config property `input.windowEvents` which is true by default. It controls if Phaser will listen for any input events on the Window. If you disable this, Phaser will stop being able to emit events like `POINTER_UP_OUTSIDE`, or be aware of anything that happens outside of the Canvas re: input.
