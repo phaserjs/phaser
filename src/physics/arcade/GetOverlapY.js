@@ -32,15 +32,17 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
 
     var distance1 = body1.bottom - body2.y;
     var distance2 = body2.bottom - body1.y;
+    var prevDistance1 = (body1.prev.y + body1.height) - body2.y;
+    var prevDistance2 = body2.bottom - body2.prev.y;
 
     var blocked1 = body1.blocked;
     var blocked2 = body2.blocked;
 
-    var topFace = false;
+    var topFace = (distance1 > distance2 && prevDistance1 > prevDistance2);
 
-    if (distance1 < distance2)
+    if (!topFace)
     {
-        //  Less intersection between the bottom of body1 and the top of body2
+        //  body1 bottom is touching body2 top
         overlap = distance1;
 
         if ((overlap > maxOverlap && !overlapOnly) || !body1.checkCollision.down || !body2.checkCollision.up)
@@ -65,9 +67,8 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
     }
     else
     {
-        //  Less intersection between the top of body1 and the bottom of body2
+        //  body1 top is touching body2 bottom
         overlap = distance2;
-        topFace = true;
 
         if ((overlap > maxOverlap && !overlapOnly) || !body1.checkCollision.up || !body2.checkCollision.down)
         {
