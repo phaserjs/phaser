@@ -963,18 +963,19 @@ var Body = new Class({
     update: function (delta)
     {
         var velocity = this.velocity;
+        var position = this.position;
 
         if (this.moves)
         {
             this.world.updateMotion(this, delta);
 
-            this.position.x += this.getMoveX(velocity.x * delta);
-            this.position.y += this.getMoveY(velocity.y * delta);
+            position.x += this.getMoveX(velocity.x * delta);
+            position.y += this.getMoveY(velocity.y * delta);
         }
 
         //  Calculate the delta
-        this._dx = this.position.x - this.prev.x;
-        this._dy = this.position.y - this.prev.y;
+        this._dx = position.x - this.prev.x;
+        this._dy = position.y - this.prev.y;
 
         var worldBlocked = this.worldBlocked;
 
