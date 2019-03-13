@@ -913,6 +913,8 @@ var World = new Class({
             return;
         }
 
+        console.log('------->');
+
         //  Update all active bodies
         var body;
         var bodies = this.bodies.entries;
@@ -944,6 +946,11 @@ var World = new Class({
             stepsThisFrame++;
 
             this.step(fixedDelta);
+        }
+
+        if (stepsThisFrame > 1)
+        {
+            console.log('extra step');
         }
 
         this.stepsLastFrame = stepsThisFrame;

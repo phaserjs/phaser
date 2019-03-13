@@ -33,7 +33,7 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
 
     var overlap = result[0];
     var faceTop = result[1];
-    var faceBottom = !faceTop;
+    // var faceBottom = !faceTop;
 
     var velocity1 = body1.velocity;
     var velocity2 = body2.velocity;
@@ -83,9 +83,12 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     var ny1 = v1;
     var ny2 = v2;
 
-    if (!body1Immovable && !body2Immovable)
+    var body1BlockedY = (blocked1.up || blocked1.down);
+    var body2BlockedY = (blocked2.up || blocked2.down);
+
+    if (!body1Immovable && !body1BlockedY && !body2Immovable && !body2BlockedY)
     {
-        //  Neither body is immovable, so they get a new velocity based on mass
+        //  Neither body is immovable or blocked, so they get a new velocity based on mass
         var mass1 = body1.mass;
         var mass2 = body2.mass;
 
@@ -100,27 +103,58 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         ny1 = avg + nv1 * body1.bounce.y;
         ny2 = avg + nv2 * body2.bounce.y;
     }
-    else if (body1Immovable)
+    else if (body1BlockedY || body1Immovable)
     {
-        //  Body1 is immovable, so carries on at the same speed regardless, adjust body2 speed
-        // ny2 = v1 - v2 * body2.bounce.y;
-        ny2 = v1 - v2;
+        //  Body1 is blocked or never changes speed, so adjust body2 speed
+        ny2 = v1 - v2 * body2.bounce.y;
     }
-    else if (body2Immovable)
+    else if (body2BlockedY || body2Immovable)
     {
-        //  Body2 is immovable, so carries on at the same speed regardless, adjust body1 speed
-        // ny1 = v2 - v1 * body1.bounce.y;
-        ny1 = v2 - v1;
+        //  Body2 is blocked or never changes speed, so adjust body1 speed
+        ny1 = v2 - v1 * body1.bounce.y;
+    }
+    else
+    {
+        //  Both bodies are equally blocked
+        console.log('Both bodies are equally blocked, kill velocity?');
     }
 
     //  Velocities calculated, time to work out what moves where
+
+    if (overlap !== 0)
+    {
+        // var p1 = (faceBottom) ? body1.bottom - body2.y : body2.bottom - body1.y;
+        // console.log('impact', v1, v2, 'overlap', overlap, p1);
+
+        var share = overlap * 0.5;
+        var amount1 = body1.getMoveY(share);
+        var amount2 = body2.getMoveY(-share);
+
+        if (amount1 !== share)
+        {
+            // console.log('diff1', share, amount1, amount2);
+            amount2 -= (share - amount1);
+        }
+        else if (amount2 !== -share)
+        {
+            // console.log('diff2', share, amount1, amount2);
+            amount1 += (share + amount2);
+        }
+
+        body1.y += amount1;
+        body2.y += amount2;
+
+        // var p2 = (faceBottom) ? body1.bottom - body2.y : body2.bottom - body1.y;
+        // console.log('post-impact', p2);
+    }
 
     //  -------------------------------------------
     //  1) Bail out if nothing is blocking anything
     //  -------------------------------------------
 
-    if (blocked1.none && blocked2.none)
+    if (!body1BlockedY && !body2BlockedY)
     {
+        /*
         if (overlap !== 0)
         {
             // var p1 = (faceBottom) ? body1.bottom - body2.y : body2.bottom - body1.y;
@@ -153,25 +187,12 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         // }
 
         // console.log('----------------------------------');
+        */
 
         velocity1.y = ny1;
         velocity2.y = ny2;
 
         return true;
-    }
-    else if (blocked1.none)
-    {
-        //  Body2 is blocked from moving, so Body1 needs to move
-
-    }
-    else if (blocked2.none)
-    {
-        //  Body1 is blocked from moving, so Body2 needs to move
-
-    }
-    else
-    {
-        //  Nothing can move anywhere!
     }
 
     //  -------------------------------------------
