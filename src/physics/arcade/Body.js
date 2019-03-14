@@ -1034,12 +1034,13 @@ var Body = new Class({
         }
 
         //  Is the velocity flip flopping?
-        // if (this._flipflopY >= this.relaxCount)
+        // if ( this._flipflopY >= this.relaxCount)
         // {
         //     console.log('flipflop reset');
         //     velocity.y = 0;
         //     this._dy = 0;
         //     this._flipflopY = 0;
+        //     this.prev.y = this.y;
         // }
 
         this.updateCenter();
@@ -1136,7 +1137,17 @@ var Body = new Class({
         wasTouching.left = touching.left;
         wasTouching.right = touching.right;
 
-        // if (this.speed > 0 && this.speed < 10 && (this.blocked.up || this.blocked.down) && FuzzyEqual(prev.y, this.y, 2))
+        // var vx = this.velocity.x;
+        // var vy = this.velocity.y;
+
+        // if (this.blocked.down && window.track && window.track === this)
+        // {
+        //     var diff = this.position.y - this.prev.y;
+
+        //     console.log(diff);
+        // }
+
+        // if (this.velocity.y !== 0 && this.blocked.down && Math.abs(this.y - prev.y) < 0.3)
         // {
         //     this._flipflopY++;
         // }
