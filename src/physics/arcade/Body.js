@@ -687,15 +687,6 @@ var Body = new Class({
         this.blocked = { none: true, up: false, down: false, left: false, right: false, by: null };
 
         /**
-         * Whether this Body was blocked from moving in a given direction during the last step.
-         *
-         * @name Phaser.Physics.Arcade.Body#wasBlocked
-         * @type {Phaser.Physics.Arcade.Types.ArcadeBodyCollision}
-         * @since 3.17.0
-         */
-        this.wasBlocked = { none: true, up: false, down: false, left: false, right: false };
-
-        /**
          * Whether this Body is colliding with a tile or the world boundary.
          *
          * @name Phaser.Physics.Arcade.Body#worldBlocked
@@ -894,8 +885,6 @@ var Body = new Class({
      */
     preUpdate: function ()
     {
-        console.log('preUpdate', this.wasBlocked.down);
-
         var touching = this.touching;
         var blocked = this.blocked;
         var worldBlocked = this.worldBlocked;
@@ -935,8 +924,6 @@ var Body = new Class({
 
         if (this.collideWorldBounds && this.checkWorldBounds())
         {
-            console.log('preUpdate cwb', worldBlocked.down, 'was', this.wasBlocked.down);
-
             blocked.up = worldBlocked.up;
             blocked.down = worldBlocked.down;
             blocked.left = worldBlocked.left;
@@ -972,8 +959,6 @@ var Body = new Class({
      */
     update: function (delta)
     {
-        console.log('update', this.wasBlocked.down);
-
         var velocity = this.velocity;
         var position = this.position;
 
@@ -985,8 +970,6 @@ var Body = new Class({
             position.y += this.getMoveY(velocity.y * delta);
         }
 
-        console.log('update2', this.worldBlocked.down, 'was', this.wasBlocked.down);
-
         //  Calculate the delta
         this._dx = position.x - this.prev.x;
         this._dy = position.y - this.prev.y;
@@ -996,10 +979,6 @@ var Body = new Class({
         //  World Bounds check
         if (this.collideWorldBounds)
         {
-            console.log('update3', this.wasBlocked.down, 'w', this.worldBlocked.down, 'n', this.worldBlocked.none);
-
-            var wasBlocked = this.wasBlocked;
-
             if (!worldBlocked.none)
             {
                 var bx = (this.worldBounce) ? -this.worldBounce.x : -this.bounce.x;
@@ -1007,37 +986,14 @@ var Body = new Class({
                 
                 //  Reverse the velocity for the bounce
     
-                // if ((worldBlocked.left && velocity.x < 0) || (worldBlocked.right && velocity.x > 0))
-                // {
-                //     velocity.x *= bx;
-                // }
-    
-                console.log(worldBlocked.down, wasBlocked.down);
-    
-                if (worldBlocked.down && velocity.y > 0)
+                if ((worldBlocked.left && velocity.x < 0) || (worldBlocked.right && velocity.x > 0))
                 {
-                    velocity.y *= by;
-    
-                    //  vy should now be negative
-    
-                    console.log('down', velocity.y, this._dy, wasBlocked.down);
-    
-                    // if (this._dy < -this.minBounceVelocity.y)
-                    // {
-                    //     velocity.y = 0;
-                    // }
+                    velocity.x *= bx;
                 }
-                else if (worldBlocked.up && velocity.y < 0)
+   
+                if ((worldBlocked.down && velocity.y > 0) || (worldBlocked.up && velocity.y < 0))
                 {
-                    //  vy should now be positive
                     velocity.y *= by;
-    
-                    console.log('up', velocity.y, this._dy, wasBlocked.up);
-    
-                    // if (this._dy < this.minBounceVelocity.y)
-                    // {
-                    //     velocity.y = 0;
-                    // }
                 }
             }
         
@@ -1045,12 +1001,6 @@ var Body = new Class({
             {
                 this.world.emit(Events.WORLD_BOUNDS, this, worldBlocked.up, worldBlocked.down, worldBlocked.left, worldBlocked.right);
             }
-
-            wasBlocked.none = worldBlocked.none;
-            wasBlocked.up = worldBlocked.up;
-            wasBlocked.down = worldBlocked.down;
-            wasBlocked.left = worldBlocked.left;
-            wasBlocked.right = worldBlocked.right;
         }
 
         this.updateCenter();
@@ -1138,23 +1088,13 @@ var Body = new Class({
 
         //  Store collision flags
         var wasTouching = this.wasTouching;
-        var wasBlocked = this.wasBlocked;
         var touching = this.touching;
-        var worldBlocked = this.worldBlocked;
 
         wasTouching.none = touching.none;
         wasTouching.up = touching.up;
         wasTouching.down = touching.down;
         wasTouching.left = touching.left;
         wasTouching.right = touching.right;
-
-        console.log('postUpdate', worldBlocked.down, 'was', wasBlocked.down);
-
-        // wasBlocked.none = worldBlocked.none;
-        // wasBlocked.up = worldBlocked.up;
-        // wasBlocked.down = worldBlocked.down;
-        // wasBlocked.left = worldBlocked.left;
-        // wasBlocked.right = worldBlocked.right;
 
         this.prev.x = this.position.x;
         this.prev.y = this.position.y;
@@ -1177,26 +1117,26 @@ var Body = new Class({
         var check = this.world.checkCollision;
         var set = false;
 
-        if (pos.x <= bounds.x && check.left)
+        if (check.left && pos.x < bounds.x)
         {
             set = true;
             pos.x = bounds.x;
             worldBlocked.left = true;
         }
-        else if (this.right >= bounds.right && check.right)
+        else if (check.right && this.right > bounds.right)
         {
             set = true;
             pos.x = bounds.right - this.width;
             worldBlocked.right = true;
         }
 
-        if (check.up && pos.y <= bounds.y)
+        if (check.up && pos.y < bounds.y)
         {
             set = true;
             pos.y = bounds.y;
             worldBlocked.up = true;
         }
-        else if (check.down && this.bottom >= bounds.bottom)
+        else if (check.down && this.bottom > bounds.bottom)
         {
             set = true;
             pos.y = bounds.bottom - this.height;
