@@ -5,7 +5,6 @@
  */
 
 var CONST = require('./const');
-var FuzzyEqual = require('../../math/fuzzy/Equal');
 var GetOverlapY = require('./GetOverlapY');
 
 /**
@@ -33,7 +32,7 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
 
     var overlap = result[0];
     var faceTop = result[1];
-    // var faceBottom = !faceTop;
+    var intersects = result[2];
 
     var velocity1 = body1.velocity;
     var velocity2 = body2.velocity;
@@ -41,14 +40,27 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     var blocked1 = body1.blocked;
     var blocked2 = body2.blocked;
 
+    var body1BlockedY = (blocked1.up || blocked1.down);
+    var body2BlockedY = (blocked2.up || blocked2.down);
+
     var body1Immovable = (body1.physicsType === CONST.STATIC_BODY || body1.immovable);
     var body2Immovable = (body2.physicsType === CONST.STATIC_BODY || body2.immovable);
 
     //  Can't separate two immovable bodies, or a body with its own custom separation logic
-    if (overlapOnly || (body1Immovable && body2Immovable) || body1.customSeparateY || body2.customSeparateY)
+    if (!intersects || overlapOnly || (body1Immovable && body2Immovable) || body1.customSeparateY || body2.customSeparateY)
     {
         //  return true if there was some overlap, otherwise false.
         return (overlap !== 0) || (body1.embedded && body2.embedded);
+    }
+
+    if (blocked1.up && blocked1.down)
+    {
+        body1Immovable = true;
+    }
+
+    if (blocked2.up && blocked2.down)
+    {
+        body2Immovable = true;
     }
 
     //  Adjust their positions and velocities accordingly based on the amount of overlap
@@ -58,35 +70,17 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     //  At this point, the velocity from gravity, world rebounds, etc has been factored in.
     //  The body is moving the direction it wants to, but may be blocked.
 
-    // console.log('Collision - top face of body1?', faceTop);
-
-    // console.log('body1', body1.gameObject.name);
-    // console.log('blocked down', blocked1.down, 'blocked up', blocked1.up);
-    // console.log('touching down', body1.touching.down, 'touching up', body1.touching.up);
-    // console.log('world blocked down', body1.worldBlocked.down, 'world blocked up', body1.worldBlocked.up);
-    // console.log('moving up?', (body1.deltaY() < 0), 'speed', body1.deltaY());
-    // console.log('immovable', body1.immovable);
-    // console.log('velocity', v1);
-
-    // console.log('');
-
-    // console.log('body2', body2.gameObject.name);
-    // console.log('blocked down', blocked2.down, 'blocked up', blocked2.up);
-    // console.log('touching down', body2.touching.down, 'touching up', body2.touching.up);
-    // console.log('world blocked down', body2.worldBlocked.down, 'world blocked up', body2.worldBlocked.up);
-    // console.log('moving up?', (body2.deltaY() < 0), 'speed', body2.deltaY());
-    // console.log('immovable', body2.immovable);
-    // console.log('velocity', v2);
-
-    // debugger;
-
     var ny1 = v1;
     var ny2 = v2;
 
-    var body1BlockedY = (blocked1.up || blocked1.down);
-    var body2BlockedY = (blocked2.up || blocked2.down);
-
-    if (!body1Immovable && !body1BlockedY && !body2Immovable && !body2BlockedY)
+    if (body1Immovable && body2Immovable)
+    {
+        //  Both bodies are equally blocked, we can't do anything with them
+        console.log('Both bodies are equally blocked, kill velocity?');
+        // ny1 = 0;
+        // ny2 = 0;
+    }
+    else if (!body1Immovable && !body1BlockedY && !body2Immovable && !body2BlockedY)
     {
         //  Neither body is immovable or blocked, so they get a new velocity based on mass
         var mass1 = body1.mass;
@@ -113,39 +107,25 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         //  Body2 is blocked or never changes speed, so adjust body1 speed
         ny1 = v2 - v1 * body1.bounce.y;
     }
-    else
-    {
-        //  Both bodies are equally blocked
-        console.log('Both bodies are equally blocked, kill velocity?');
-    }
 
     //  Velocities calculated, time to work out what moves where
-
     if (overlap !== 0)
     {
-        // var p1 = (faceBottom) ? body1.bottom - body2.y : body2.bottom - body1.y;
-        // console.log('impact', v1, v2, 'overlap', overlap, p1);
-
         var share = overlap * 0.5;
         var amount1 = body1.getMoveY(share);
         var amount2 = body2.getMoveY(-share);
 
         if (amount1 !== share)
         {
-            // console.log('diff1', share, amount1, amount2);
             amount2 -= (share - amount1);
         }
         else if (amount2 !== -share)
         {
-            // console.log('diff2', share, amount1, amount2);
             amount1 += (share + amount2);
         }
 
         body1.y += amount1;
         body2.y += amount2;
-
-        // var p2 = (faceBottom) ? body1.bottom - body2.y : body2.bottom - body1.y;
-        // console.log('post-impact', p2);
     }
 
     //  -------------------------------------------
@@ -154,41 +134,6 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
 
     if (!body1BlockedY && !body2BlockedY)
     {
-        /*
-        if (overlap !== 0)
-        {
-            // var p1 = (faceBottom) ? body1.bottom - body2.y : body2.bottom - body1.y;
-            // console.log('impact', v1, v2, 'overlap', overlap, p1);
-    
-            var share = overlap * 0.5;
-            var amount1 = body1.getMoveY(share);
-            var amount2 = body2.getMoveY(-share);
-    
-            if (amount1 !== share)
-            {
-                // console.log('diff1', share, amount1, amount2);
-                amount2 -= (share - amount1);
-            }
-            else if (amount2 !== -share)
-            {
-                // console.log('diff2', share, amount1, amount2);
-                amount1 += (share + amount2);
-            }
-    
-            body1.y += amount1;
-            body2.y += amount2;
-
-            // var p2 = (faceBottom) ? body1.bottom - body2.y : body2.bottom - body1.y;
-            // console.log('post-impact', p2);
-        }
-        // else
-        // {
-        //     console.log('zero overlap impact');
-        // }
-
-        // console.log('----------------------------------');
-        */
-
         velocity1.y = ny1;
         velocity2.y = ny2;
 
@@ -199,126 +144,98 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     //  2) Body1 motion checks
     //  -------------------------------------------
 
-    if (body1.deltaY() < 0)
+    if (body1.deltaY() < 0 && blocked1.up && blocked1.by === body2)
     {
-        console.log('up1');
+        // console.log('up1');
 
-        //  Body1 is moving UP
+        //  Body1 is moving UP and is blocked by Body2
 
-        if (blocked1.up && blocked1.by === body2)
+        if (faceTop)
         {
-            //  And is blocked
-            if (faceTop)
-            {
-                //  Body1 top hit Body2 bottom and is blocked from moving up
-                body1.y = body2.bottom;
-            }
-            else
-            {
-                //  Body1 bottom hit Body2 top and is blocked from moving up
-                body1.bottom = body2.y;
-            }
+            //  Body1 top hit Body2 bottom and is blocked from moving up
+            body1.y = body2.bottom;
+        }
+        else
+        {
+            //  Body1 bottom hit Body2 top and is blocked from moving up
+            body1.bottom = body2.y;
+        }
 
-            if (ny1 < 0)
-            {
-                //  Velocity hasn't been reversed, so cancel it
-                ny1 = 0;
-            }
+        if (ny1 < 0)
+        {
+            //  Velocity hasn't been reversed, so cancel it
+            ny1 = 0;
         }
     }
-    else if (body1.deltaY() > 0)
+    else if (body1.deltaY() > 0 && blocked1.down && blocked1.by === body2)
     {
-        console.log('down1');
+        // console.log('down1');
 
-        //  Body1 is moving DOWN
+        //  Body1 is moving DOWN and is blocked by Body2
 
-        if (blocked1.down && blocked1.by === body2)
+        if (faceTop)
         {
-            //  And is blocked
-            if (faceTop)
-            {
-                //  Body1 top hit Body2 bottom and is blocked from moving down
-                body1.y = body2.bottom;
-            }
-            else
-            {
-                //  Body1 bottom hit Body2 top and is blocked from moving down
-                body1.bottom = body2.y;
-            }
+            //  Body1 top hit Body2 bottom and is blocked from moving down
+            body1.y = body2.bottom;
+        }
+        else
+        {
+            //  Body1 bottom hit Body2 top and is blocked from moving down
+            body1.bottom = body2.y;
+        }
 
-            if (ny1 > 0)
-            {
-                //  Velocity hasn't been reversed, so cancel it
-                ny1 = 0;
-            }
+        if (ny1 > 0)
+        {
+            //  Velocity hasn't been reversed, so cancel it
+            ny1 = 0;
         }
     }
-    else if (FuzzyEqual(ny1, 0, 0.001))
+
+    if (body2.deltaY() < 0 && blocked2.up && blocked2.by === body1)
     {
-        //  Body1 is static, don't apply any more velocity
-        console.log('static 1');
-        ny1 = 0;
-    }
+        // console.log('up2');
 
-    if (body2.deltaY() < 0)
-    {
-        console.log('up2');
+        //  Body2 is moving UP and is blocked by Body1
 
-        //  Body2 is moving UP
-
-        if (blocked2.up && blocked2.by === body1)
+        if (faceTop)
         {
-            //  And is blocked
-            if (faceTop)
-            {
-                //  Body2 bottom hit Body1 top and is blocked from moving up
-                body2.bottom = body1.y;
-            }
-            else
-            {
-                //  Body2 top hit Body1 bottom and is blocked from moving up
-                body2.y = body1.bottom;
-            }
+            //  Body2 bottom hit Body1 top and is blocked from moving up
+            body2.bottom = body1.y;
+        }
+        else
+        {
+            //  Body2 top hit Body1 bottom and is blocked from moving up
+            body2.y = body1.bottom;
+        }
 
-            if (ny2 < 0)
-            {
-                //  Velocity hasn't been reversed, so cancel it
-                ny2 = 0;
-            }
+        if (ny2 < 0)
+        {
+            //  Velocity hasn't been reversed, so cancel it
+            ny2 = 0;
         }
     }
-    else if (body2.deltaY() > 0)
+    else if (body2.deltaY() > 0 && blocked2.down && blocked2.by === body1)
     {
-        console.log('down2');
+        // console.log('down2');
 
-        //  Body2 is moving DOWN
+        //  Body2 is moving DOWN and is blocked by Body1
 
-        if (blocked2.down && blocked2.by === body1)
+        if (faceTop)
         {
-            //  And is blocked
-            if (faceTop)
-            {
-                //  Body2 bottom hit Body1 top and is blocked from moving down
-                body2.bottom = body1.y;
-            }
-            else
-            {
-                //  Body2 top hit Body1 bottom and is blocked from moving down
-                body2.y = body1.bottom;
-            }
-
-            if (ny2 > 0)
-            {
-                //  Velocity hasn't been reversed, so cancel it
-                ny2 = 0;
-            }
+            //  Body2 bottom hit Body1 top and is blocked from moving down
+            body2.bottom = body1.y;
         }
-    }
-    else if (FuzzyEqual(ny2, 0, 0.001))
-    {
-        //  Body2 is static, don't apply any more velocity
-        console.log('static2');
-        ny2 = 0;
+        else
+        {
+            //  Body2 top hit Body1 bottom and is blocked from moving down
+            body2.y = body1.bottom;
+        }
+
+        if (ny2 > 0)
+        {
+            //  Velocity hasn't been reversed, so cancel it
+            ny2 = 0;
+        }
     }
 
     velocity1.y = ny1;
