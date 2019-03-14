@@ -913,8 +913,6 @@ var World = new Class({
             return;
         }
 
-        console.log('------->');
-
         //  Update all active bodies
         var body;
         var bodies = this.bodies.entries;
@@ -946,11 +944,6 @@ var World = new Class({
             stepsThisFrame++;
 
             this.step(fixedDelta);
-        }
-
-        if (stepsThisFrame > 1)
-        {
-            console.log('extra step');
         }
 
         this.stepsLastFrame = stepsThisFrame;
@@ -1019,13 +1012,16 @@ var World = new Class({
         var dynamic = this.bodies;
         var staticBodies = this.staticBodies;
 
-        for (i = 0; i < len; i++)
+        if (!this.isPaused)
         {
-            body = bodies[i];
-
-            if (body.enable)
+            for (i = 0; i < len; i++)
             {
-                body.postUpdate();
+                body = bodies[i];
+    
+                if (body.enable)
+                {
+                    body.postUpdate();
+                }
             }
         }
 
@@ -1599,11 +1595,29 @@ var World = new Class({
         if (!body1.isCircle && !body2.isCircle)
         {
             //  Rect vs. Rect
+            // return !(
+            //     body1.right <= body2.x ||
+            //     body1.bottom <= body2.y ||
+            //     body1.x >= body2.right ||
+            //     body1.y >= body2.bottom
+            // );
+
+            //  Rect vs. Rect with extra 1px padding for touching / blocked checks
+            var b1r = body1.right + 1;
+            var b1b = body1.bottom + 1;
+            var b1x = body1.x - 1;
+            var b1y = body1.y - 1;
+
+            var b2r = body2.right + 1;
+            var b2b = body2.bottom + 1;
+            var b2x = body2.x - 1;
+            var b2y = body2.y - 1;
+
             return !(
-                body1.right <= body2.x ||
-                body1.bottom <= body2.y ||
-                body1.x >= body2.right ||
-                body1.y >= body2.bottom
+                b1r <= b2x ||
+                b1b <= b2y ||
+                b1x >= b2r ||
+                b1y >= b2b
             );
         }
         else if (body1.isCircle)
@@ -1766,17 +1780,12 @@ var World = new Class({
             if (!object2)
             {
                 //  Special case for array vs. self
-                for (i = 0; i < object1.length; i++)
+                for (i = 0; i < object1.length - 1; i++)
                 {
                     var child = object1[i];
 
                     for (j = i + 1; j < object1.length; j++)
                     {
-                        if (i === j)
-                        {
-                            continue;
-                        }
-
                         this.collideHandler(child, object1[j], collideCallback, processCallback, callbackContext, overlapOnly);
                     }
                 }
