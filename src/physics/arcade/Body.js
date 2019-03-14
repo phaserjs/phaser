@@ -9,8 +9,6 @@ var Class = require('../../utils/Class');
 var CONST = require('./const');
 var Events = require('./events');
 var FuzzyEqual = require('../../math/fuzzy/Equal');
-var FuzzyLessThan = require('../../math/fuzzy/LessThan');
-var FuzzyGreaterThan = require('../../math/fuzzy/GreaterThan');
 var RadToDeg = require('../../math/RadToDeg');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var RectangleContains = require('../../geom/rectangle/Contains');
@@ -289,14 +287,14 @@ var Body = new Class({
         this.velocity = new Vector2();
 
         /**
-         * The Body's calculated velocity, in pixels per second, at the last step.
+         * The Body's previously calculated velocity, in pixels per second, in the previous frame.
          *
-         * @name Phaser.Physics.Arcade.Body#newVelocity
+         * @name Phaser.Physics.Arcade.Body#prevVelocity
          * @type {Phaser.Math.Vector2}
          * @readonly
-         * @since 3.0.0
+         * @since 3.17.0
          */
-        this.newVelocity = new Vector2();
+        this.prevVelocity = new Vector2();
 
         /**
          * The Body's absolute maximum change in position, in pixels per step.
@@ -526,6 +524,16 @@ var Body = new Class({
          * @since 3.0.0
          */
         this.mass = 1;
+
+        /**
+         * The number of times the velocity is allowed to flip-flop before being reset to zero.
+         *
+         * @name Phaser.Physics.Arcade.Body#relaxCount
+         * @type {integer}
+         * @default 10
+         * @since 3.7.0
+         */
+        this.relaxCount = 10;
 
         /**
          * The calculated angle of this Body's velocity vector, in degrees, during the last step.
@@ -790,6 +798,28 @@ var Body = new Class({
          * @since 3.0.0
          */
         this._bounds = new Rectangle();
+
+        /**
+         * Flip-flop tracking var.
+         *
+         * @name Phaser.Physics.Arcade.Body#_flipflopX
+         * @type {integer}
+         * @private
+         * @default 0
+         * @since 3.17.0
+         */
+        this._flipflopX = 0;
+
+        /**
+         * Flip-flop tracking var.
+         *
+         * @name Phaser.Physics.Arcade.Body#_flipflopY
+         * @type {integer}
+         * @private
+         * @default 0
+         * @since 3.17.0
+         */
+        this._flipflopY = 0;
     },
 
     /**
@@ -1003,6 +1033,15 @@ var Body = new Class({
             }
         }
 
+        //  Is the velocity flip flopping?
+        // if (this._flipflopY >= this.relaxCount)
+        // {
+        //     console.log('flipflop reset');
+        //     velocity.y = 0;
+        //     this._dy = 0;
+        //     this._flipflopY = 0;
+        // }
+
         this.updateCenter();
 
         this.angle = Math.atan2(velocity.y, velocity.x);
@@ -1089,12 +1128,22 @@ var Body = new Class({
         //  Store collision flags
         var wasTouching = this.wasTouching;
         var touching = this.touching;
+        var prev = this.prev;
 
         wasTouching.none = touching.none;
         wasTouching.up = touching.up;
         wasTouching.down = touching.down;
         wasTouching.left = touching.left;
         wasTouching.right = touching.right;
+
+        // if (this.speed > 0 && this.speed < 10 && (this.blocked.up || this.blocked.down) && FuzzyEqual(prev.y, this.y, 2))
+        // {
+        //     this._flipflopY++;
+        // }
+        // else
+        // {
+        //     this._flipflopY = 0;
+        // }
 
         this.prev.x = this.position.x;
         this.prev.y = this.position.y;
