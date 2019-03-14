@@ -25,31 +25,46 @@ var CONST = require('./const');
 var GetOverlapY = function (body1, body2, overlapOnly, bias)
 {
     var overlap = 0;
-    var maxOverlap = body1.deltaAbsY() + body2.deltaAbsY() + bias;
+
+    // var maxOverlap = body1.deltaAbsY() + body2.deltaAbsY() + bias;
 
     var body1Immovable = (body1.physicsType === CONST.STATIC_BODY || body1.immovable);
     var body2Immovable = (body2.physicsType === CONST.STATIC_BODY || body2.immovable);
 
     var distance1 = body1.bottom - body2.y;
     var distance2 = body2.bottom - body1.y;
-    var prevDistance1 = (body1.prev.y + body1.height) - body2.y;
-    var prevDistance2 = body2.bottom - body2.prev.y;
 
+    var prevDistance1 = (body1.prev.y + body1.height) - body2.prev.y;
+    var prevDistance2 = (body2.prev.y + body2.height) - body1.prev.y;
+
+    var embedded = false;
     var blocked1 = body1.blocked;
     var blocked2 = body2.blocked;
 
     var topFace = (distance1 > distance2 && prevDistance1 > prevDistance2);
 
+    var intersects = !(
+        body1.right <= body2.x ||
+        body1.bottom <= body2.y ||
+        body1.x >= body2.right ||
+        body1.y >= body2.bottom
+    );
+
     if (!topFace)
     {
         //  body1 bottom is touching body2 top
-        overlap = distance1;
+        if (intersects)
+        {
+            overlap = distance1;
+        }
 
-        if ((overlap > maxOverlap && !overlapOnly) || !body1.checkCollision.down || !body2.checkCollision.up)
+        if (!body1.checkCollision.down || !body2.checkCollision.up)
         {
             overlap = 0;
+            intersects = false;
         }
-        else
+
+        if (!overlapOnly)
         {
             body1.setTouchingDown();
             body2.setTouchingUp();
@@ -68,13 +83,18 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
     else
     {
         //  body1 top is touching body2 bottom
-        overlap = distance2;
+        if (intersects)
+        {
+            overlap = distance2;
+        }
 
-        if ((overlap > maxOverlap && !overlapOnly) || !body1.checkCollision.up || !body2.checkCollision.down)
+        if (!body1.checkCollision.up || !body2.checkCollision.down)
         {
             overlap = 0;
+            intersects = false;
         }
-        else
+
+        if (!overlapOnly)
         {
             body1.setTouchingUp();
             body2.setTouchingDown();
@@ -91,17 +111,20 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
         }
     }
 
-    if (overlap > maxOverlap && !overlapOnly)
-    {
-        body1.embedded = true;
-        body2.embedded = true;
-    }
-
     //  Resets the overlapY to zero if there is no overlap, or to the actual pixel value if there is
     body1.overlapY = overlap;
     body2.overlapY = overlap;
 
-    return [ overlap, topFace ];
+    if (embedded)
+    {
+        //  We let the block resolution move it
+        overlap = 0;
+
+        body1.embedded = embedded;
+        body2.embedded = embedded;
+    }
+
+    return [ overlap, topFace, intersects ];
 };
 
 module.exports = GetOverlapY;
