@@ -1164,12 +1164,14 @@ var World = new Class({
      */
     computeVelocity: function (body, delta)
     {
-        var velocityX = body.velocity.x;
+        var velocity = body.velocity;
+
+        var velocityX = velocity.x;
         var accelerationX = body.acceleration.x;
         var dragX = body.drag.x;
         var maxX = body.maxVelocity.x;
 
-        var velocityY = body.velocity.y;
+        var velocityY = velocity.y;
         var accelerationY = body.acceleration.y;
         var dragY = body.drag.y;
         var maxY = body.maxVelocity.y;
@@ -1257,12 +1259,12 @@ var World = new Class({
             }
         }
 
-        body.velocity.x = Clamp(velocityX, -maxX, maxX);
-        body.velocity.y = Clamp(velocityY, -maxY, maxY);
+        velocity.x = Clamp(velocityX, -maxX, maxX);
+        velocity.y = Clamp(velocityY, -maxY, maxY);
 
-        if (maxSpeed > -1 && body.velocity.length() > maxSpeed)
+        if (maxSpeed > -1 && velocity.length() > maxSpeed)
         {
-            body.velocity.normalize().scale(maxSpeed);
+            velocity.normalize().scale(maxSpeed);
         }
     },
 
