@@ -293,11 +293,14 @@ var World = new Class({
          */
         this.defaults = {
             debugShowBody: GetValue(config, 'debugShowBody', true),
+            debugShowBlocked: GetValue(config, 'debugShowBlocked', true),
             debugShowStaticBody: GetValue(config, 'debugShowStaticBody', true),
             debugShowVelocity: GetValue(config, 'debugShowVelocity', true),
             bodyDebugColor: GetValue(config, 'debugBodyColor', 0xff00ff),
             staticBodyDebugColor: GetValue(config, 'debugStaticBodyColor', 0x0000ff),
-            velocityDebugColor: GetValue(config, 'debugVelocityColor', 0x00ff00)
+            velocityDebugColor: GetValue(config, 'debugVelocityColor', 0x00ff00),
+            sleepDebugColor: GetValue(config, 'debugSleepColor', 0xffffff),
+            blockedDebugColor: GetValue(config, 'debugBlockedColor', 0xff0000)
         };
 
         /**
