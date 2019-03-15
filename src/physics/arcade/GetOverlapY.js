@@ -5,6 +5,7 @@
  */
 
 var CONST = require('./const');
+var IntersectsRect = require('./IntersectsRect');
 
 /**
  * Calculates and returns the vertical overlap between two arcade physics bodies.
@@ -38,17 +39,13 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
     var prevDistance2 = (body2.prev.y + body2.height) - body1.prev.y;
 
     var embedded = false;
-    var blocked1 = body1.blocked;
-    var blocked2 = body2.blocked;
+
+    var worldBlocked1 = body1.worldBlocked;
+    var worldBlocked2 = body2.worldBlocked;
 
     var topFace = (distance1 > distance2 && prevDistance1 > prevDistance2);
 
-    var intersects = !(
-        body1.right <= body2.x ||
-        body1.bottom <= body2.y ||
-        body1.x >= body2.right ||
-        body1.y >= body2.bottom
-    );
+    var intersects = IntersectsRect(body1, body2);
 
     if (!topFace)
     {
@@ -69,14 +66,19 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
             body1.setTouchingDown();
             body2.setTouchingUp();
 
-            if (blocked2.down || body2Immovable)
+            //  Soft blocks can be moved apart
+            body1.setBlockedDown(body2);
+            body2.setBlockedUp(body1);
+
+            //  World blocks cannot be penetrated
+            if (worldBlocked2.down || body2Immovable)
             {
-                body1.setBlockedDown(body2);
+                body1.setWorldBlockedDown();
             }
 
-            if (blocked1.up || body1Immovable)
+            if (worldBlocked1.up || body1Immovable)
             {
-                body2.setBlockedUp(body1);
+                body2.setWorldBlockedUp();
             }
         }
     }
@@ -98,15 +100,20 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
         {
             body1.setTouchingUp();
             body2.setTouchingDown();
-            
-            if (blocked2.up || body2Immovable)
+
+            //  Soft blocks can be moved apart
+            body1.setBlockedUp(body2);
+            body2.setBlockedDown(body1);
+
+            //  World blocks cannot be penetrated
+            if (worldBlocked2.up || body2Immovable)
             {
-                body1.setBlockedUp(body2);
+                body1.setWorldBlockedUp();
             }
 
-            if (blocked1.down || body1Immovable)
+            if (worldBlocked1.down || body1Immovable)
             {
-                body2.setBlockedDown(body1);
+                body2.setWorldBlockedDown();
             }
         }
     }
