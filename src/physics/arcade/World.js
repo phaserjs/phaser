@@ -18,6 +18,7 @@ var FuzzyLessThan = require('../../math/fuzzy/LessThan');
 var GetOverlapX = require('./GetOverlapX');
 var GetOverlapY = require('./GetOverlapY');
 var GetValue = require('../../utils/object/GetValue');
+var IntersectsRect = require('./IntersectsRect');
 var ProcessQueue = require('../../structs/ProcessQueue');
 var ProcessTileCallbacks = require('./tilemap/ProcessTileCallbacks');
 var Rectangle = require('../../geom/rectangle/Rectangle');
@@ -1184,10 +1185,20 @@ var World = new Class({
         var allowDrag = body.allowDrag;
         var useDamping = body.useDamping;
 
-        if (body.allowGravity && !body.sleeping)
+        if (body.allowGravity)
         {
-            velocityX += (this.gravity.x + body.gravity.x) * delta;
-            velocityY += (this.gravity.y + body.gravity.y) * delta;
+            var gravityX = (this.gravity.x + body.gravity.x) * delta;
+            var gravityY = (this.gravity.y + body.gravity.y) * delta;
+
+            if (gravityX < 0 && !body.worldBlocked.left || gravityX > 0 && !body.worldBlocked.right)
+            {
+                velocityX += gravityX;
+            }
+
+            if (gravityY > 0 && !body.worldBlocked.down || gravityY < 0 && !body.worldBlocked.up)
+            {
+                velocityY += gravityY;
+            }
         }
 
         if (accelerationX)
@@ -1599,31 +1610,7 @@ var World = new Class({
 
         if (!body1.isCircle && !body2.isCircle)
         {
-            //  Rect vs. Rect
-            // return !(
-            //     body1.right <= body2.x ||
-            //     body1.bottom <= body2.y ||
-            //     body1.x >= body2.right ||
-            //     body1.y >= body2.bottom
-            // );
-
-            //  Rect vs. Rect with extra 1px padding for touching / blocked checks
-            var b1r = body1.right + 1;
-            var b1b = body1.bottom + 1;
-            var b1x = body1.x - 1;
-            var b1y = body1.y - 1;
-
-            var b2r = body2.right + 1;
-            var b2b = body2.bottom + 1;
-            var b2x = body2.x - 1;
-            var b2y = body2.y - 1;
-
-            return !(
-                b1r <= b2x ||
-                b1b <= b2y ||
-                b1x >= b2r ||
-                b1y >= b2b
-            );
+            return IntersectsRect(body1, body2, 1);
         }
         else if (body1.isCircle)
         {
