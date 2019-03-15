@@ -4,6 +4,7 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var ArrayRemove = require('../utils/array/Remove');
 var Class = require('../utils/Class');
 var NumberTweenBuilder = require('./builders/NumberTweenBuilder');
 var PluginCache = require('../plugins/PluginCache');
@@ -372,6 +373,28 @@ var TweenManager = new Class({
                 this._toProcess++;
             }
         }
+    },
+
+    /**
+     * Removes the given tween from the Tween Manager, regardless of its state (pending or active).
+     *
+     * @method Phaser.Tweens.TweenManager#remove
+     * @since 3.17.0
+     *
+     * @param {Phaser.Tweens.Tween} tween - The Tween to be removed.
+     *
+     * @return {Phaser.Tweens.TweenManager} This Tween Manager object.
+     */
+    remove: function (tween)
+    {
+        ArrayRemove(this._add, tween);
+        ArrayRemove(this._pending, tween);
+        ArrayRemove(this._active, tween);
+        ArrayRemove(this._destroy, tween);
+
+        tween.state = TWEEN_CONST.REMOVED;
+
+        return this;
     },
 
     /**
