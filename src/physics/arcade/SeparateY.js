@@ -128,114 +128,120 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         body2.y += amount2;
     }
 
-    //  -------------------------------------------
-    //  1) Bail out if nothing is blocking anything
-    //  -------------------------------------------
-
-    if (!body1BlockedY && !body2BlockedY)
+    if (body1BlockedY || body2BlockedY)
     {
-        velocity1.y = ny1;
-        velocity2.y = ny2;
+        if (body1.deltaY() < 0 && blocked1.up && blocked1.by === body2)
+        {
+            // console.log('up1');
+    
+            //  Body1 is moving UP and is blocked by Body2
+    
+            if (faceTop)
+            {
+                //  Body1 top hit Body2 bottom and is blocked from moving up
+                body1.y = body2.bottom;
+            }
+            else
+            {
+                //  Body1 bottom hit Body2 top and is blocked from moving up
+                body1.bottom = body2.y;
+            }
 
-        return true;
+            body1.forcePosition = (body1.bounce.y === 0);
+    
+            if (ny1 < 0)
+            {
+                //  Velocity hasn't been reversed, so cancel it
+                ny1 = 0;
+            }
+        }
+        else if (body1.deltaY() > 0 && blocked1.down && blocked1.by === body2)
+        {
+            // console.log('down1');
+    
+            //  Body1 is moving DOWN and is blocked by Body2
+    
+            if (faceTop)
+            {
+                //  Body1 top hit Body2 bottom and is blocked from moving down
+                body1.y = body2.bottom;
+            }
+            else
+            {
+                //  Body1 bottom hit Body2 top and is blocked from moving down
+                body1.bottom = body2.y;
+            }
+
+            body1.forcePosition = (body1.bounce.y === 0);
+    
+            if (ny1 > 0)
+            {
+                //  Velocity hasn't been reversed, so cancel it
+                ny1 = 0;
+            }
+        }
+    
+        if (body2.deltaY() < 0 && blocked2.up && blocked2.by === body1)
+        {
+            // console.log('up2');
+    
+            //  Body2 is moving UP and is blocked by Body1
+    
+            if (faceTop)
+            {
+                //  Body2 bottom hit Body1 top and is blocked from moving up
+                body2.bottom = body1.y;
+            }
+            else
+            {
+                //  Body2 top hit Body1 bottom and is blocked from moving up
+                body2.y = body1.bottom;
+            }
+
+            body2.forcePosition = (body2.bounce.y === 0);
+    
+            if (ny2 < 0)
+            {
+                //  Velocity hasn't been reversed, so cancel it
+                ny2 = 0;
+            }
+        }
+        else if (body2.deltaY() > 0 && blocked2.down && blocked2.by === body1)
+        {
+            // console.log('down2');
+    
+            //  Body2 is moving DOWN and is blocked by Body1
+    
+            if (faceTop)
+            {
+                //  Body2 bottom hit Body1 top and is blocked from moving down
+                body2.bottom = body1.y;
+            }
+            else
+            {
+                //  Body2 top hit Body1 bottom and is blocked from moving down
+                body2.y = body1.bottom;
+            }
+
+            body2.forcePosition = (body2.bounce.y === 0);
+    
+            if (ny2 > 0)
+            {
+                //  Velocity hasn't been reversed, so cancel it
+                ny2 = 0;
+            }
+        }
     }
 
-    //  -------------------------------------------
-    //  2) Body1 motion checks
-    //  -------------------------------------------
-
-    if (body1.deltaY() < 0 && blocked1.up && blocked1.by === body2)
+    //  If body was asleep, we only wake it up for significant changes in velocity
+    if (body1.sleeping && Math.abs(ny1) < 10)
     {
-        // console.log('up1');
-
-        //  Body1 is moving UP and is blocked by Body2
-
-        if (faceTop)
-        {
-            //  Body1 top hit Body2 bottom and is blocked from moving up
-            body1.y = body2.bottom;
-        }
-        else
-        {
-            //  Body1 bottom hit Body2 top and is blocked from moving up
-            body1.bottom = body2.y;
-        }
-
-        if (ny1 < 0)
-        {
-            //  Velocity hasn't been reversed, so cancel it
-            ny1 = 0;
-        }
-    }
-    else if (body1.deltaY() > 0 && blocked1.down && blocked1.by === body2)
-    {
-        // console.log('down1');
-
-        //  Body1 is moving DOWN and is blocked by Body2
-
-        if (faceTop)
-        {
-            //  Body1 top hit Body2 bottom and is blocked from moving down
-            body1.y = body2.bottom;
-        }
-        else
-        {
-            //  Body1 bottom hit Body2 top and is blocked from moving down
-            body1.bottom = body2.y;
-        }
-
-        if (ny1 > 0)
-        {
-            //  Velocity hasn't been reversed, so cancel it
-            ny1 = 0;
-        }
+        ny1 = 0;
     }
 
-    if (body2.deltaY() < 0 && blocked2.up && blocked2.by === body1)
+    if (body2.sleeping && Math.abs(ny2) < 10)
     {
-        // console.log('up2');
-
-        //  Body2 is moving UP and is blocked by Body1
-
-        if (faceTop)
-        {
-            //  Body2 bottom hit Body1 top and is blocked from moving up
-            body2.bottom = body1.y;
-        }
-        else
-        {
-            //  Body2 top hit Body1 bottom and is blocked from moving up
-            body2.y = body1.bottom;
-        }
-
-        if (ny2 < 0)
-        {
-            //  Velocity hasn't been reversed, so cancel it
-            ny2 = 0;
-        }
-    }
-    else if (body2.deltaY() > 0 && blocked2.down && blocked2.by === body1)
-    {
-        // console.log('down2');
-
-        //  Body2 is moving DOWN and is blocked by Body1
-
-        if (faceTop)
-        {
-            //  Body2 bottom hit Body1 top and is blocked from moving down
-            body2.bottom = body1.y;
-        }
-        else
-        {
-            //  Body2 top hit Body1 bottom and is blocked from moving down
-            body2.y = body1.bottom;
-        }
-
-        if (ny2 > 0)
-        {
-            //  Velocity hasn't been reversed, so cancel it
-            ny2 = 0;
-        }
+        ny2 = 0;
     }
 
     velocity1.y = ny1;
