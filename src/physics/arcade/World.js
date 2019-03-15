@@ -1184,7 +1184,7 @@ var World = new Class({
         var allowDrag = body.allowDrag;
         var useDamping = body.useDamping;
 
-        if (body.allowGravity)
+        if (body.allowGravity && !body.sleeping)
         {
             velocityX += (this.gravity.x + body.gravity.x) * delta;
             velocityY += (this.gravity.y + body.gravity.y) * delta;
