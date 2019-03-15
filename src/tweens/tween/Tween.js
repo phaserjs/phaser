@@ -899,12 +899,31 @@ var Tween = new Class({
     },
 
     /**
+     * Immediately removes this Tween from the TweenManager and all of its internal arrays,
+     * no matter what stage it as it. Then sets the tween state to `REMOVED`.
+     * 
+     * You should dispose of your reference to this tween after calling this method, to
+     * free it from memory.
+     *
+     * @method Phaser.Tweens.Tween#remove
+     * @since 3.17.0
+     *
+     * @return {this} This Tween instance.
+     */
+    remove: function ()
+    {
+        this.parent.remove(this);
+
+        return this;
+    },
+
+    /**
      * Stops the Tween immediately, whatever stage of progress it is at and flags it for removal by the TweenManager.
      *
      * @method Phaser.Tweens.Tween#stop
      * @since 3.0.0
      *
-     * @param {number} [resetTo] - A value between 0 and 1.
+     * @param {number} [resetTo] - If you want to seek the tween, provide an value between 0 and 1.
      *
      * @return {this} This Tween instance.
      */
