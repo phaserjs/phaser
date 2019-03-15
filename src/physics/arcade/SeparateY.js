@@ -126,6 +126,16 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
 
         body1.y += amount1;
         body2.y += amount2;
+
+        if (amount1)
+        {
+            body1.wake();
+        }
+
+        if (amount2)
+        {
+            body2.wake();
+        }
     }
 
     if (body1BlockedY || body2BlockedY)
