@@ -8,7 +8,8 @@ var CircleContains = require('../../geom/circle/Contains');
 var Class = require('../../utils/Class');
 var CONST = require('./const');
 var Events = require('./events');
-var FuzzyEqual = require('../../math/fuzzy/Equal');
+var FuzzyLessThan = require('../../math/fuzzy/LessThan');
+var FuzzyGreaterThan = require('../../math/fuzzy/GreaterThan');
 var RadToDeg = require('../../math/RadToDeg');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var RectangleContains = require('../../geom/rectangle/Contains');
@@ -97,7 +98,7 @@ var Body = new Class({
          * @type {boolean}
          * @since 3.17.0
          */
-        this.debugShowBlocked = true;
+        this.debugShowBlocked = world.defaults.debugShowBlocked;
 
         /**
          * The color of this Body on the debug display.
@@ -287,14 +288,18 @@ var Body = new Class({
         this.velocity = new Vector2();
 
         /**
-         * The Body's previously calculated velocity, in pixels per second, in the previous frame.
+         * Is the Body asleep?.
          *
-         * @name Phaser.Physics.Arcade.Body#prevVelocity
-         * @type {Phaser.Math.Vector2}
+         * @name Phaser.Physics.Arcade.Body#sleeping
+         * @type {boolean}
          * @readonly
          * @since 3.17.0
          */
-        this.prevVelocity = new Vector2();
+        this.sleeping = false;
+
+        this._sleep = 0;
+
+        this.forcePosition = false;
 
         /**
          * The Body's absolute maximum change in position, in pixels per step.
@@ -943,6 +948,7 @@ var Body = new Class({
         this.overlapY = 0;
 
         this.embedded = false;
+        this.forcePosition = false;
 
         //  Updates the transform values
         this.updateBounds();
@@ -1007,7 +1013,7 @@ var Body = new Class({
         var worldBlocked = this.worldBlocked;
 
         //  World Bounds check
-        if (this.collideWorldBounds)
+        if (this.collideWorldBounds && !this.sleeping)
         {
             if (!worldBlocked.none)
             {
@@ -1033,16 +1039,6 @@ var Body = new Class({
             }
         }
 
-        //  Is the velocity flip flopping?
-        // if ( this._flipflopY >= this.relaxCount)
-        // {
-        //     console.log('flipflop reset');
-        //     velocity.y = 0;
-        //     this._dy = 0;
-        //     this._flipflopY = 0;
-        //     this.prev.y = this.y;
-        // }
-
         this.updateCenter();
 
         this.angle = Math.atan2(velocity.y, velocity.x);
@@ -1067,7 +1063,7 @@ var Body = new Class({
 
         var gameObject = this.gameObject;
 
-        if (this.moves)
+        if (this.moves && !this.sleeping)
         {
             var mx = this.deltaMax.x;
             var my = this.deltaMax.y;
@@ -1096,8 +1092,16 @@ var Body = new Class({
                 }
             }
 
-            gameObject.x += dx;
-            gameObject.y += dy;
+            if (this.forcePosition)
+            {
+                gameObject.x = this.x;
+                gameObject.y = this.y;
+            }
+            else
+            {
+                gameObject.x += dx;
+                gameObject.y += dy;
+            }
         }
 
         if (dx < 0)
@@ -1129,7 +1133,6 @@ var Body = new Class({
         //  Store collision flags
         var wasTouching = this.wasTouching;
         var touching = this.touching;
-        var prev = this.prev;
 
         wasTouching.none = touching.none;
         wasTouching.up = touching.up;
@@ -1137,24 +1140,31 @@ var Body = new Class({
         wasTouching.left = touching.left;
         wasTouching.right = touching.right;
 
-        // var vx = this.velocity.x;
-        // var vy = this.velocity.y;
+        if (Math.abs(dy) < 1)
+        {
+            if (this._sleep < 60)
+            {
+                this._sleep++;
 
-        // if (this.blocked.down && window.track && window.track === this)
-        // {
-        //     var diff = this.position.y - this.prev.y;
+                if (this._sleep >= 60)
+                {
+                    this.sleeping = true;
+                }
+            }
+        }
+        else
+        {
+            if (this._sleep > 0)
+            {
+                this._sleep *= 0.5;
 
-        //     console.log(diff);
-        // }
-
-        // if (this.velocity.y !== 0 && this.blocked.down && Math.abs(this.y - prev.y) < 0.3)
-        // {
-        //     this._flipflopY++;
-        // }
-        // else
-        // {
-        //     this._flipflopY = 0;
-        // }
+                if (this._sleep <= 0)
+                {
+                    this.sleeping = false;
+                    this._sleep = 0;
+                }
+            }
+        }
 
         this.prev.x = this.position.x;
         this.prev.y = this.position.y;
@@ -1190,22 +1200,23 @@ var Body = new Class({
             worldBlocked.right = true;
         }
 
-        if (check.up && pos.y < bounds.y)
+        if (check.up && pos.y <= bounds.y + 1)
         {
             set = true;
-            pos.y = bounds.y;
             worldBlocked.up = true;
+            pos.y = bounds.y;
         }
-        else if (check.down && this.bottom > bounds.bottom)
+        else if (check.down && this.bottom >= bounds.bottom - 1)
         {
             set = true;
-            pos.y = bounds.bottom - this.height;
             worldBlocked.down = true;
+            pos.y = bounds.bottom - this.height;
         }
 
         if (set)
         {
             worldBlocked.none = false;
+            this.forcePosition = true;
             this.updateCenter();
         }
 
@@ -1572,62 +1583,79 @@ var Body = new Class({
         var x = pos.x + this.halfWidth;
         var y = pos.y + this.halfHeight;
 
+        var blockedColor = this.world.defaults.blockedDebugColor;
+        var sleepColor = this.world.defaults.sleepDebugColor;
+
+        var thickness = graphic.defaultStrokeWidth;
+        var halfThickness = thickness / 2;
+
+        //  Top Left
+        var x1 = pos.x;
+        var y1 = pos.y;
+
+        //  Top Right
+        var x2 = this.right;
+        var y2 = y1;
+
+        //  Bottom Left
+        var x3 = x1;
+        var y3 = this.bottom;
+
+        //  Bottom Right
+        var x4 = x2;
+        var y4 = y3;
+
+        var blocked = this.blocked;
+
+        var color;
+
         if (this.debugShowBody)
         {
-            graphic.lineStyle(graphic.defaultStrokeWidth, this.debugBodyColor);
-
-            if (this.isCircle)
-            {
-                graphic.strokeCircle(x, y, this.width / 2);
-            }
-            else
-            {
-                graphic.strokeRect(pos.x, pos.y, this.width, this.height);
-            }
-        }
-
-        if (this.debugShowBlocked)
-        {
-            var thickness = graphic.defaultStrokeWidth * 4;
-
-            //  Top Left
-            var x1 = pos.x;
-            var y1 = pos.y;
-
-            //  Top Right
-            var x2 = this.right;
-            var y2 = y1;
-
-            //  Bottom Left
-            var x3 = x1;
-            var y3 = this.bottom;
-
-            //  Bottom Right
-            var x4 = x2;
-            var y4 = y3;
-
-            var blocked = this.blocked;
+            //  Top
+            color = (this.sleeping) ? sleepColor : this.debugBodyColor;
 
             if (blocked.up)
             {
-                graphic.lineStyle(thickness, 0xff0000).lineBetween(x1, y1, x2, y2);
+                color = blockedColor;
             }
+
+            graphic.lineStyle(thickness, color).lineBetween(x1, y1 + halfThickness, x2, y2 + halfThickness);
+
+            //  Bottom
+            color = (this.sleeping) ? sleepColor : this.debugBodyColor;
 
             if (blocked.down)
             {
-                graphic.lineStyle(thickness, 0xff0000).lineBetween(x3, y3, x4, y4);
+                color = blockedColor;
             }
+
+            graphic.lineStyle(thickness, color).lineBetween(x3, y3 - halfThickness, x4, y4 - halfThickness);
+
+            //  Left
+            color = (this.sleeping) ? sleepColor : this.debugBodyColor;
 
             if (blocked.left)
             {
-                graphic.lineStyle(thickness, 0xff0000).lineBetween(x1, y1, x3, y3);
+                color = blockedColor;
             }
+
+            graphic.lineStyle(thickness, color).lineBetween(x1 + halfThickness, y1, x3 + halfThickness, y3);
+
+            //  Right
+            color = (this.sleeping) ? sleepColor : this.debugBodyColor;
 
             if (blocked.right)
             {
-                graphic.lineStyle(thickness, 0xff0000).lineBetween(x2, y2, x4, y4);
+                color = blockedColor;
             }
+
+            graphic.lineStyle(thickness, color).lineBetween(x2 - halfThickness, y2, x4 - halfThickness, y4);
         }
+
+        // if (this.isCircle)
+        // {
+        //     graphic.strokeCircle(x, y, this.width / 2);
+        // }
 
         if (this.debugShowVelocity)
         {
