@@ -977,10 +977,9 @@ var Body = new Class({
 
         this.rotation = sprite.rotation;
 
-        this.preRotation = this.rotation;
-
         this.prev.x = this.position.x;
         this.prev.y = this.position.y;
+        this.preRotation = this.rotation;
     },
 
     wake: function ()
@@ -1062,8 +1061,11 @@ var Body = new Class({
 
         this.updateCenter();
 
-        this.angle = Math.atan2(velocity.y, velocity.x);
-        this.speed = Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
+        var vx = velocity.x;
+        var vy = velocity.y;
+
+        this.angle = Math.atan2(vy, vx);
+        this.speed = Math.sqrt(vx * vx + vy * vy);
 
         //  Now the update will throw collision checks at the Body
         //  And finally we'll integrate the new position back to the Sprite in postUpdate
@@ -1176,8 +1178,7 @@ var Body = new Class({
 
             if (this._sleep <= 0)
             {
-                this.sleeping = false;
-                this._sleep = 0;
+                this.wake();
             }
         }
 
@@ -1231,20 +1232,16 @@ var Body = new Class({
         if (check.up && pos.y <= bounds.y + 1)
         {
             set = true;
-            worldBlocked.up = true;
-            pos.y = bounds.y;
+            this.setWorldBlockedUp(bounds.y);
         }
         else if (check.down && this.bottom >= bounds.bottom - 1)
         {
             set = true;
-            worldBlocked.down = true;
-            pos.y = bounds.bottom - this.height;
+            this.setWorldBlockedDown(bounds.bottom);
         }
 
         if (set)
         {
-            worldBlocked.none = false;
-            this.forcePosition = true;
             this.updateCenter();
         }
 
@@ -1614,7 +1611,9 @@ var Body = new Class({
         var blockedColor = this.world.defaults.blockedDebugColor;
         var sleepColor = this.world.defaults.sleepDebugColor;
 
-        var thickness = graphic.defaultStrokeWidth;
+        // var thickness = graphic.defaultStrokeWidth;
+
+        var thickness = 2;
         var halfThickness = thickness / 2;
 
         //  Top Left
@@ -1633,7 +1632,8 @@ var Body = new Class({
         var x4 = x2;
         var y4 = y3;
 
-        var blocked = this.blocked;
+        // var blocked = this.blocked;
+        var blocked = this.worldBlocked;
 
         var color;
 
@@ -1975,6 +1975,58 @@ var Body = new Class({
         return this;
     },
 
+    setWorldBlockedUp: function (forceY)
+    {
+        var worldBlocked = this.worldBlocked;
+
+        worldBlocked.up = true;
+        worldBlocked.none = false;
+
+        if (forceY !== undefined)
+        {
+            this.y = forceY;
+            this.forcePosition = true;
+        }
+
+        return this;
+    },
+
+    setWorldBlockedDown: function (forceY)
+    {
+        var worldBlocked = this.worldBlocked;
+
+        worldBlocked.down = true;
+        worldBlocked.none = false;
+
+        if (forceY !== undefined)
+        {
+            this.bottom = forceY;
+            this.forcePosition = true;
+        }
+
+        return this;
+    },
+
+    setWorldBlockedLeft: function ()
+    {
+        var worldBlocked = this.worldBlocked;
+
+        worldBlocked.left = true;
+        worldBlocked.none = false;
+
+        return this;
+    },
+
+    setWorldBlockedRight: function ()
+    {
+        var worldBlocked = this.worldBlocked;
+
+        worldBlocked.right = true;
+        worldBlocked.none = false;
+
+        return this;
+    },
+
     getMoveX: function (amount)
     {
         var blocked = this.blocked;
@@ -2010,10 +2062,11 @@ var Body = new Class({
     getMoveY: function (amount)
     {
         var blocked = this.blocked;
+        var worldBlocked = this.worldBlocked;
 
-        if (amount === 0 || amount < 0 && blocked.up || amount > 0 && blocked.down)
+        if (amount === 0 || amount < 0 && worldBlocked.up || amount > 0 && worldBlocked.down)
         {
-            //  If it's already blocked, or zero, it can't go anywhere
+            //  If it's already world blocked, or zero, it can't go anywhere
             return 0;
         }
 
@@ -2022,7 +2075,6 @@ var Body = new Class({
             var pos = this.position;
             var bounds = this.world.bounds;
             var check = this.world.checkCollision;
-            var worldBlocked = this.worldBlocked;
 
             if (amount < 0 && check.up && pos.y + amount < bounds.y)
             {
