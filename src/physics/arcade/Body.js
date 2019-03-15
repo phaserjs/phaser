@@ -287,6 +287,8 @@ var Body = new Class({
          */
         this.velocity = new Vector2();
 
+        this.prevVelocity = new Vector2();
+
         /**
          * Is the Body asleep?.
          *
@@ -298,6 +300,8 @@ var Body = new Class({
         this.sleeping = false;
 
         this._sleep = 0;
+
+        this.sleepIterations = 60;
 
         this.forcePosition = false;
 
@@ -979,6 +983,17 @@ var Body = new Class({
         this.prev.y = this.position.y;
     },
 
+    wake: function ()
+    {
+        if (this.sleeping)
+        {
+            // console.log(this.gameObject.name, 'woken');
+
+            this.sleeping = false;
+            this._sleep = 0;
+        }
+    },
+
     /**
      * Performs a single physics step and updates the body velocity, angle, speed and other
      * properties.
@@ -998,7 +1013,13 @@ var Body = new Class({
         var velocity = this.velocity;
         var position = this.position;
 
-        if (this.moves)
+        //  Has it been woken up?
+        if (this.sleeping && !velocity.equals(this.prevVelocity))
+        {
+            this.wake();
+        }
+
+        if (this.moves && !this.sleeping)
         {
             this.world.updateMotion(this, delta);
 
@@ -1096,6 +1117,9 @@ var Body = new Class({
             {
                 gameObject.x = this.x;
                 gameObject.y = this.y;
+
+                dx = 0;
+                dy = 0;
             }
             else
             {
@@ -1125,9 +1149,36 @@ var Body = new Class({
         this._dx = dx;
         this._dy = dy;
 
-        if (this.allowRotation)
+        if (this.allowRotation && !this.sleeping)
         {
             gameObject.angle += this.deltaZ();
+        }
+
+        //  Check for sleeping state
+
+        if (Math.abs(dy) < 1)
+        {
+            if (this._sleep < this.sleepIterations)
+            {
+                this._sleep++;
+
+                if (this._sleep >= this.sleepIterations)
+                {
+                    this.sleeping = true;
+                    this.velocity.set(0);
+                }
+            }
+        }
+        else if (this._sleep > 0)
+        {
+            //  Waking up? Do it progressively, not instantly, to ensure it isn't just a step fluctuation
+            this._sleep *= 0.5;
+
+            if (this._sleep <= 0)
+            {
+                this.sleeping = false;
+                this._sleep = 0;
+            }
         }
 
         //  Store collision flags
@@ -1140,34 +1191,11 @@ var Body = new Class({
         wasTouching.left = touching.left;
         wasTouching.right = touching.right;
 
-        if (Math.abs(dy) < 1)
-        {
-            if (this._sleep < 60)
-            {
-                this._sleep++;
-
-                if (this._sleep >= 60)
-                {
-                    this.sleeping = true;
-                }
-            }
-        }
-        else
-        {
-            if (this._sleep > 0)
-            {
-                this._sleep *= 0.5;
-
-                if (this._sleep <= 0)
-                {
-                    this.sleeping = false;
-                    this._sleep = 0;
-                }
-            }
-        }
-
         this.prev.x = this.position.x;
         this.prev.y = this.position.y;
+
+        this.prevVelocity.x = this.velocity.x;
+        this.prevVelocity.y = this.velocity.y;
     },
 
     /**
