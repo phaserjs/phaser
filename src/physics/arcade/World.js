@@ -1187,18 +1187,13 @@ var World = new Class({
 
         if (body.allowGravity)
         {
-            var gravityX = (this.gravity.x + body.gravity.x) * delta;
-            var gravityY = (this.gravity.y + body.gravity.y) * delta;
+            // var worldBlocked = body.worldBlocked;
 
-            if (gravityX < 0 && !body.worldBlocked.left || gravityX > 0 && !body.worldBlocked.right)
-            {
-                velocityX += gravityX;
-            }
+            body._gx = (this.gravity.x + body.gravity.x) * delta;
+            body._gy = (this.gravity.y + body.gravity.y) * delta;
 
-            if (gravityY > 0 && !body.worldBlocked.down || gravityY < 0 && !body.worldBlocked.up)
-            {
-                velocityY += gravityY;
-            }
+            velocityX += body._gx;
+            velocityY += body._gy;
         }
 
         if (accelerationX)
@@ -1610,7 +1605,7 @@ var World = new Class({
 
         if (!body1.isCircle && !body2.isCircle)
         {
-            return IntersectsRect(body1, body2, 1);
+            return IntersectsRect(body1, body2);
         }
         else if (body1.isCircle)
         {
