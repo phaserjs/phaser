@@ -9,6 +9,8 @@ var CircleContains = require('../../geom/circle/Contains');
 var Class = require('../../utils/Class');
 var CONST = require('./const');
 var Events = require('./events');
+var FuzzyGreaterThan = require('../../math/fuzzy/GreaterThan');
+var FuzzyLessThan = require('../../math/fuzzy/LessThan');
 var CheckOverlapY = require('./CheckOverlapY');
 var RadToDeg = require('../../math/RadToDeg');
 var Rectangle = require('../../geom/rectangle/Rectangle');
@@ -812,26 +814,26 @@ var Body = new Class({
         this._bounds = new Rectangle();
 
         /**
-         * Flip-flop tracking var.
+         * The amount of gravity that was applied to the body in the current frame.
          *
-         * @name Phaser.Physics.Arcade.Body#_flipflopX
-         * @type {integer}
+         * @name Phaser.Physics.Arcade.Body#_gx
+         * @type {number}
          * @private
          * @default 0
          * @since 3.17.0
          */
-        this._flipflopX = 0;
+        this._gx = 0;
 
         /**
-         * Flip-flop tracking var.
+         * The amount of gravity that was applied to the body in the current frame.
          *
-         * @name Phaser.Physics.Arcade.Body#_flipflopY
-         * @type {integer}
+         * @name Phaser.Physics.Arcade.Body#_gy
+         * @type {number}
          * @private
          * @default 0
          * @since 3.17.0
          */
-        this._flipflopY = 0;
+        this._gy = 0;
     },
 
     /**
@@ -1028,6 +1030,26 @@ var Body = new Class({
 
         this.log.push('after len: ' + currentBlockers.length);
 
+        //  If we can't move anywhere, we need to kill velocity now
+
+        var worldBlocked = this.worldBlocked;
+
+        if (worldBlocked.up && worldBlocked.down)
+        {
+            this.velocity.y = 0;
+        }
+
+        if (worldBlocked.left && worldBlocked.right)
+        {
+            this.velocity.x = 0;
+        }
+
+        if (this.velocity.x === 0 && this.velocity.y === 0)
+        {
+            this.sleeping = true;
+            this.prevVelocity.set(0);
+        }
+
         this.blockers = currentBlockers;
     },
 
@@ -1047,8 +1069,6 @@ var Body = new Class({
      */
     update: function (delta)
     {
-        this.log.push('update');
-
         this.updateBlockers();
 
         var velocity = this.velocity;
@@ -1058,24 +1078,9 @@ var Body = new Class({
         //  Has it been woken up?
         if (this.sleeping && !velocity.equals(this.prevVelocity))
         {
-            this.log.push('wake test');
-            this.log.push(velocity.y);
-            this.log.push(worldBlocked.up);
-            this.log.push(worldBlocked.down);
-
-            // console.log(this.gameObject.name, 'wake test', velocity.y, worldBlocked.up, worldBlocked.down);
-            // console.log(this.blockers.length);
-            // console.log(this.blockers);
-
             if ((velocity.y < 0 && !worldBlocked.up) || (velocity.y > 0 && !worldBlocked.down))
             {
-                console.log(this.log);
-                // debugger;
                 this.wake();
-            }
-            else
-            {
-                velocity.y = 0;
             }
         }
 
@@ -1099,28 +1104,7 @@ var Body = new Class({
         //  World Bounds check
         if (this.collideWorldBounds)
         {
-            if (!worldBlocked.none)
-            {
-                var bx = (this.worldBounce) ? -this.worldBounce.x : -this.bounce.x;
-                var by = (this.worldBounce) ? -this.worldBounce.y : -this.bounce.y;
-                
-                //  Reverse the velocity for the bounce
-    
-                if ((worldBlocked.left && velocity.x < 0) || (worldBlocked.right && velocity.x > 0))
-                {
-                    velocity.x *= bx;
-                }
-   
-                if ((worldBlocked.down && velocity.y > 0) || (worldBlocked.up && velocity.y < 0))
-                {
-                    velocity.y *= by;
-                }
-            }
-        
-            if (this.onWorldBounds)
-            {
-                this.world.emit(Events.WORLD_BOUNDS, this, worldBlocked.up, worldBlocked.down, worldBlocked.left, worldBlocked.right);
-            }
+            this.worldReboundCheck();
         }
 
         this.updateCenter();
@@ -1133,6 +1117,68 @@ var Body = new Class({
 
         //  Now the update will throw collision checks at the Body
         //  And finally we'll integrate the new position back to the Sprite in postUpdate
+    },
+
+    worldReboundCheck: function ()
+    {
+        var worldBlocked = this.worldBlocked;
+        var touching = this.touching;
+        var velocity = this.velocity;
+
+        var bx = (this.worldBounce) ? this.worldBounce.x : this.bounce.x;
+        var by = (this.worldBounce) ? this.worldBounce.y : this.bounce.y;
+
+        if (!worldBlocked.none && (bx !== 0 || by !== 0))
+        {
+            //  Reverse the velocity for the world bounce?
+            if (by !== 0 && velocity.y !== 0)
+            {
+                if ((worldBlocked.down && !touching.up && velocity.y > 0) || (worldBlocked.up && !touching.down && velocity.y < 0))
+                {
+                    var gravityY = this._gy;
+                    var newVelocityY = velocity.y * by;
+
+                    if (gravityY > 0 && newVelocityY > 0)
+                    {
+                        //  Gravity is pulling them down
+                        if (newVelocityY < gravityY || FuzzyLessThan(newVelocityY, gravityY, 2))
+                        {
+                            velocity.y = 0;
+                            console.log('rebound up too small, zeroing', newVelocityY, gravityY);
+                        }
+                        else
+                        {
+                            velocity.y *= -by;
+                            console.log('rebounded up', newVelocityY, gravityY);
+
+                            if (this.onWorldBounds)
+                            {
+                                this.world.emit(Events.WORLD_BOUNDS, this, worldBlocked.up, worldBlocked.down, worldBlocked.left, worldBlocked.right);
+                            }
+                        }
+                    }
+                    else if (gravityY < 0 && newVelocityY < 0)
+                    {
+                        //  Gravity is pulling them up
+                        if (newVelocityY > gravityY || FuzzyGreaterThan(newVelocityY, gravityY, 2))
+                        {
+                            velocity.y = 0;
+                            console.log('rebound down too small, zeroing', newVelocityY, gravityY);
+                        }
+                        else
+                        {
+                            velocity.y *= -by;
+                            console.log('rebounded down', newVelocityY, gravityY);
+
+                            if (this.onWorldBounds)
+                            {
+                                this.world.emit(Events.WORLD_BOUNDS, this, worldBlocked.up, worldBlocked.down, worldBlocked.left, worldBlocked.right);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     },
 
     /**
@@ -1179,6 +1225,24 @@ var Body = new Class({
                 }
             }
 
+            if (dx < 0)
+            {
+                this.facing = CONST.FACING_LEFT;
+            }
+            else if (dx > 0)
+            {
+                this.facing = CONST.FACING_RIGHT;
+            }
+    
+            if (dy < 0)
+            {
+                this.facing = CONST.FACING_UP;
+            }
+            else if (dy > 0)
+            {
+                this.facing = CONST.FACING_DOWN;
+            }
+    
             if (this.forcePosition)
             {
                 gameObject.x = this.x;
@@ -1192,24 +1256,6 @@ var Body = new Class({
                 gameObject.x += dx;
                 gameObject.y += dy;
             }
-        }
-
-        if (dx < 0)
-        {
-            this.facing = CONST.FACING_LEFT;
-        }
-        else if (dx > 0)
-        {
-            this.facing = CONST.FACING_RIGHT;
-        }
-
-        if (dy < 0)
-        {
-            this.facing = CONST.FACING_UP;
-        }
-        else if (dy > 0)
-        {
-            this.facing = CONST.FACING_DOWN;
         }
 
         this._dx = dx;
@@ -1235,13 +1281,14 @@ var Body = new Class({
                 }
             }
         }
-        else if (this._sleep > 0)
+        else if (this._sleep > 0 && !this.worldBlocked.up && !this.worldBlocked.down)
         {
             //  Waking up? Do it progressively, not instantly, to ensure it isn't just a step fluctuation
             this._sleep *= 0.8;
 
             if (this._sleep <= 0)
             {
+                console.log('body woken from postUpdate', dy);
                 this.wake();
             }
         }
