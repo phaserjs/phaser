@@ -76,10 +76,13 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         var mass1 = body1.mass;
         var mass2 = body2.mass;
 
-        var nv1 = Math.sqrt((v2 * v2 * mass2) / mass1) * ((v2 > 0) ? 1 : -1);
-        var nv2 = Math.sqrt((v1 * v1 * mass1) / mass2) * ((v1 > 0) ? 1 : -1);
+        var bnv1 = Math.sqrt((v2 * v2 * mass2) / mass1) * ((v2 > 0) ? 1 : -1);
+        var bnv2 = Math.sqrt((v1 * v1 * mass1) / mass2) * ((v1 > 0) ? 1 : -1);
 
-        var avg = (nv1 + nv2) * 0.5;
+        var avg = (bnv1 + bnv2) * 0.5;
+
+        var nv1 = bnv1;
+        var nv2 = bnv2;
 
         nv1 -= avg;
         nv2 -= avg;
@@ -87,7 +90,21 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         ny1 = avg + nv1 * bounce1.y;
         ny2 = avg + nv2 * bounce2.y;
 
-        console.log('*1', ny1, ny2, 'vs', v1, v2, 'avg', avg, 'nv', nv1, nv2, 'bounce', body1.bounce.y, body2.bounce.y, 'delta', body1.deltaY(), body2.deltaY());
+        // var total = v1 - v2;
+        // ny1 = (((mass1 - mass2) * v1 + 2 * mass1 * v1) / (mass1 + mass2)) * bounce1.y;
+        // ny2 = (total + ny1) * bounce2.y;
+        // console.log('*1', ny1, ny2, 'vs', v1, v2, 'delta', body1.deltaY(), body2.deltaY());
+
+        console.log('resolution');
+        console.log('body1', ny1, 'body2', ny2);
+        console.log('v1', v1, 'v2', v2);
+        console.log('avg', avg);
+        console.log('nv', nv1, nv2);
+        console.log('sqrt', bnv1, bnv2);
+        console.log('delta', body1.deltaY(), body2.deltaY());
+
+        // console.log('*1', ny1, ny2, 'vs', v1, v2, 'avg', avg, 'nv', nv1, nv2, 'bounce', body1.bounce.y, body2.bounce.y, 'delta', body1.deltaY(), body2.deltaY());
+        // console.log('*1', ny1, ny2, 'vs', v1, v2, 'avg', avg, 'nv', nv1, nv2, 'bounce', body1.bounce.y, body2.bounce.y, 'delta', body1.deltaY(), body2.deltaY());
     }
     else if (body1Immovable)
     {
@@ -154,10 +171,12 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
             if (worldBlocked2.up)
             {
                 body1.setWorldBlockedUp(body2.bottom);
+                console.log('ny1 < 0 topface up', body1.y);
             }
             else
             {
                 body1.y += totalA;
+                console.log('ny1 < 0 topface add', body1.y);
             }
         }
         else if (bottomFace)
@@ -166,10 +185,12 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
             if (worldBlocked2.down)
             {
                 body1.setWorldBlockedDown(body2.y);
+                console.log('ny1 < 0 bottomface down', body1.y);
             }
             else
             {
                 body1.y += totalA;
+                console.log('ny1 < 0 bottomface add', body1.y);
             }
         }
 
@@ -177,6 +198,7 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         if (worldBlocked1.up && body1.sleeping)
         {
             ny1 = 0;
+            console.log('ny1 < 0 zero sleep');
         }
     }
     else if (ny1 > 0)
@@ -189,10 +211,12 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
             if (worldBlocked2.up)
             {
                 body1.setWorldBlockedUp(body2.bottom);
+                console.log('ny1 > 0 topface up', body1.y);
             }
             else
             {
                 body1.y += totalA;
+                console.log('ny1 > 0 topface add', body1.y);
             }
         }
         else if (bottomFace)
@@ -201,10 +225,12 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
             if (worldBlocked2.down)
             {
                 body1.setWorldBlockedDown(body2.y);
+                console.log('ny1 > 0 bottomface down', body1.y);
             }
             else
             {
                 body1.y += totalA;
+                console.log('ny1 > 0 bottomface add', body1.y);
             }
         }
 
@@ -212,15 +238,17 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         if (worldBlocked1.down && body1.sleeping)
         {
             ny1 = 0;
+            console.log('ny1 > 0 zero sleep');
         }
     }
     else
     {
         //  Body1 is stationary
         body1.y += totalA;
+        console.log('body1 stationary', body1.y);
     }
 
-    if (body2.deltaY() < 0)
+    if (ny2 < 0)
     {
         //  Body2 is moving UP
 
@@ -230,10 +258,12 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
             if (worldBlocked1.down)
             {
                 body2.setWorldBlockedDown(body1.y);
+                console.log('ny2 < 0 topface down', body2.y);
             }
             else
             {
                 body2.y += totalB;
+                console.log('ny2 < 0 topface add', body2.y);
             }
         }
         else if (bottomFace)
@@ -242,10 +272,12 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
             if (worldBlocked1.up)
             {
                 body2.setWorldBlockedUp(body1.bottom);
+                console.log('ny2 < 0 bottomface down', body2.y);
             }
             else
             {
                 body2.y += totalB;
+                console.log('ny2 < 0 bottomface add', body2.y);
             }
         }
 
@@ -253,9 +285,10 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         if (worldBlocked2.up && body2.sleeping)
         {
             ny2 = 0;
+            console.log('ny2 < 0 zero sleep');
         }
     }
-    else if (body2.deltaY() > 0)
+    else if (ny2 > 0)
     {
         //  Body2 is moving DOWN
 
@@ -265,10 +298,12 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
             if (worldBlocked1.down)
             {
                 body2.setWorldBlockedDown(body1.y);
+                console.log('ny2 > 0 topface down', body2.y);
             }
             else
             {
                 body2.y += totalB;
+                console.log('ny2 > 0 topface add', body2.y);
             }
         }
         else if (bottomFace)
@@ -277,10 +312,12 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
             if (worldBlocked1.up)
             {
                 body2.setWorldBlockedUp(body1.bottom);
+                console.log('ny2 > 0 bottomface up', body2.y);
             }
             else
             {
-                body1.y += totalA;
+                body2.y += totalB;
+                console.log('ny2 > 0 bottomface add', body2.y);
             }
         }
 
@@ -288,12 +325,14 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         if (worldBlocked2.down && body2.sleeping)
         {
             ny2 = 0;
+            console.log('ny2 > 0 zero sleep');
         }
     }
     else
     {
         //  Body2 is stationary
         body2.y += totalB;
+        console.log('body2 stationary', body2.y);
     }
 
     console.log('postb', worldBlocked1.up, worldBlocked1.down, worldBlocked2.up, worldBlocked2.down);
@@ -344,6 +383,8 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     // {
     //     body1.x += body1.getMoveX((body2.deltaX()) * body2.friction.x, true);
     // }
+
+    console.log('---', Date.now());
 
     //  If we got this far then there WAS overlap, and separation is complete, so return true
     return true;

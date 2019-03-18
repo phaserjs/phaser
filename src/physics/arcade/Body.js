@@ -1144,12 +1144,12 @@ var Body = new Class({
                         if (newVelocityY > 0 && (newVelocityY < gravityY || FuzzyLessThan(newVelocityY, gravityY, 2)))
                         {
                             velocity.y = 0;
-                            console.log('rebound up too small, zeroing', newVelocityY, gravityY);
+                            console.log(this.gameObject.name, 'rebound up too small, zeroing', newVelocityY, gravityY);
                         }
                         else
                         {
                             velocity.y *= -by;
-                            console.log('rebounded up', newVelocityY, gravityY);
+                            console.log(this.gameObject.name, 'rebounded up', newVelocityY, gravityY);
 
                             if (this.onWorldBounds)
                             {
@@ -1163,12 +1163,12 @@ var Body = new Class({
                         if (newVelocityY < 0 && (newVelocityY > gravityY || FuzzyGreaterThan(newVelocityY, gravityY, 2)))
                         {
                             velocity.y = 0;
-                            console.log('rebound down too small, zeroing', newVelocityY, gravityY);
+                            console.log(this.gameObject.name, 'rebound down too small, zeroing', newVelocityY, gravityY);
                         }
                         else
                         {
                             velocity.y *= -by;
-                            console.log('rebounded down', newVelocityY, gravityY);
+                            console.log(this.gameObject.name, 'rebounded down', newVelocityY, gravityY);
 
                             if (this.onWorldBounds)
                             {
