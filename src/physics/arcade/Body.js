@@ -1138,10 +1138,10 @@ var Body = new Class({
                     var gravityY = this._gy;
                     var newVelocityY = velocity.y * by;
 
-                    if (gravityY > 0 && newVelocityY > 0)
+                    if (gravityY > 0)
                     {
                         //  Gravity is pulling them down
-                        if (newVelocityY < gravityY || FuzzyLessThan(newVelocityY, gravityY, 2))
+                        if (newVelocityY > 0 && (newVelocityY < gravityY || FuzzyLessThan(newVelocityY, gravityY, 2)))
                         {
                             velocity.y = 0;
                             console.log('rebound up too small, zeroing', newVelocityY, gravityY);
@@ -1157,10 +1157,10 @@ var Body = new Class({
                             }
                         }
                     }
-                    else if (gravityY < 0 && newVelocityY < 0)
+                    else if (gravityY < 0)
                     {
                         //  Gravity is pulling them up
-                        if (newVelocityY > gravityY || FuzzyGreaterThan(newVelocityY, gravityY, 2))
+                        if (newVelocityY < 0 && (newVelocityY > gravityY || FuzzyGreaterThan(newVelocityY, gravityY, 2)))
                         {
                             velocity.y = 0;
                             console.log('rebound down too small, zeroing', newVelocityY, gravityY);
@@ -1343,13 +1343,11 @@ var Body = new Class({
         if (check.up && pos.y <= bounds.y + 1)
         {
             set = true;
-            this.log.push('cwb up');
             this.setWorldBlockedUp(bounds.y);
         }
         else if (check.down && this.bottom >= bounds.bottom - 1)
         {
             set = true;
-            this.log.push('cwb down');
             this.setWorldBlockedDown(bounds.bottom);
         }
 
