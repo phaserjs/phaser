@@ -31,16 +31,19 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
 {
     var result = GetOverlapY(body1, body2, overlapOnly, bias);
 
-    var overlap = result[0];
-    var topFace = result[1];
+    var overlap = result.overlap;
+    var topFace = result.topFace;
     var bottomFace = !topFace;
-    var intersects = result[2];
+    var intersects = result.intersects;
 
     var velocity1 = body1.velocity;
     var velocity2 = body2.velocity;
 
     var blocked1 = body1.blocked;
     var blocked2 = body2.blocked;
+
+    var bounce1 = body1.bounce;
+    var bounce2 = body2.bounce;
 
     var worldBlocked1 = body1.worldBlocked;
     var worldBlocked2 = body2.worldBlocked;
@@ -97,14 +100,15 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         ny1 = v2 - v1 * body1.bounce.y;
     }
 
+    var totalA = 0;
+    var totalB = 0;
+
     //  Velocities calculated, time to work out what moves where
     if (overlap !== 0)
     {
-        var share = overlap * 0.2;
-        var totalA = 0;
-        var totalB = 0;
+        var share = overlap * 0.5;
 
-        for (var i = 0; i < 12; i++)
+        for (var i = 0; i < 10; i++)
         {
             var amount1 = (topFace) ? body1.getMoveY(share) : body1.getMoveY(-share);
             var amount2 = (topFace) ? body2.getMoveY(-share) : body2.getMoveY(share);
@@ -117,243 +121,161 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
                 break;
             }
         }
-
-        // console.log('split at', totalA, totalB, 'of', overlap);
-
-        body1.y += totalA;
-        body2.y += totalB;
-
-        // var share = overlap * 0.5;
-        // var amount1 = (topFace) ? body1.getMoveY(share) : body1.getMoveY(-share);
-        // var amount2 = (topFace) ? body2.getMoveY(-share) : body2.getMoveY(share);
-
-        // if (topFace && amount1 !== share && !worldBlocked2.up)
-        // {
-        //     amount2 -= (share - amount1);
-        // }
-        // else if (bottomFace && amount1 !== -share && !worldBlocked2.down)
-        // {
-        //     amount2 += (share + amount1);
-        // }
-
-        // body1.y += amount1;
-        // body2.y += amount2;
-
-        // if (amount1)
-        // {
-        //     body1.wake();
-        // }
-
-        // if (amount2)
-        // {
-        //     body2.wake();
-        // }
-
-        // if (body2.gameObject.name === 'block2')
-        // {
-        //     var stillIntersects = IntersectsRect(body1, body2);
-
-        //     console.log(ny1, ny2);
-        //     console.log('split rates', share, amount1, amount2);
-        //     console.log(body1.y, body1.bottom);
-        //     console.log(body2.y, body2.bottom);
-        //     console.log('still?', stillIntersects);
-        //     debugger;
-        // }
-
-        //  Still intersecting?
-
-        /*
-        if (IntersectsRect(body1, body2))
-        {
-            console.log('intersect adjustment');
-
-            if (body1Immovable)
-            {
-                if (topFace)
-                {
-                    console.log('ad1');
-                    body2.bottom = body1.y;
-                }
-                else
-                {
-                    console.log('ad2');
-                    body2.y = body1.bottom;
-                }
-            }
-            else if (!body1Immovable)
-            {
-                if (topFace)
-                {
-                    console.log('ad3');
-                    body1.y = body2.bottom;
-                }
-                else
-                {
-                    console.log('ad4');
-                    body1.bottom = body2.y;
-                }
-            }
-        }
-        */
     }
+    
+    // console.log('split at', totalA, totalB, 'of', overlap);
 
-    /*
     if (body1.deltaY() < 0)
     {
         //  Body1 is moving UP
+
+        if (topFace)
+        {
+            //  The top of Body1 overlaps with the bottom of Body2
+            if (worldBlocked2.up)
+            {
+                body1.setWorldBlockedUp(body2.bottom);
+
+                if (velocity1.y < 0)
+                {
+                    velocity1.y *= bounce1.y;
+                }
+            }
+            else
+            {
+                body1.y += totalA;
+            }
+        }
+        else if (bottomFace)
+        {
+            //  The bottom of Body1 overlaps with the top of Body2
+            if (worldBlocked2.down)
+            {
+                body1.setWorldBlockedDown(body2.y);
+            }
+            else
+            {
+                body1.y += totalA;
+            }
+        }
     }
     else if (body1.deltaY() > 0)
     {
         //  Body1 is moving DOWN
-    }
-    else
-    {
-        //  Body1 is stationary
-    }
-    */
-
-    /*
-    if (topFace)
-    {
-        //  The top of Body1 overlaps with the bottom of Body2
-
-        if (worldBlocked2.up && !body1Immovable)
-        {
-            body1.setWorldBlockedUp(body2.bottom);
-        }
-        else if (worldBlocked2.down && !body1Immovable)
-        {
-            body1.setWorldBlockedDown(body2.y);
-        }
-    }
-    else if (bottomFace)
-    {
-        //  The bottom of Body1 overlaps with the top of Body2
-
-        if (worldBlocked2.down && !body1Immovable)
-        {
-            body1.setWorldBlockedDown(body2.y);
-        }
-        else if (worldBlocked2.up && !body1Immovable)
-        {
-            body1.setWorldBlockedUp(body2.bottom);
-        }
-    }
-    */
-
-    /*
-    if (body1.deltaY() < 0)
-    {
-        //  Body1 is moving UP
-        console.log('up1');
 
         if (topFace)
         {
-            //  The top of Body1 hit the bottom of Body2
-
+            //  The top of Body1 overlaps with the bottom of Body2
             if (worldBlocked2.up)
             {
                 body1.setWorldBlockedUp(body2.bottom);
             }
-            else if (worldBlocked2.down)
+            else
             {
-                body1.setWorldBlockedDown(body2.bottom);
+                body1.y += totalA;
             }
         }
         else if (bottomFace)
         {
-            //  The bottom of Body1 hit the top of Body2
-
-            if (worldBlocked2.up)
-            {
-                body1.setWorldBlockedUp(body2.y);
-            }
-            else if (worldBlocked2.down)
+            //  The bottom of Body1 overlaps with the top of Body2
+            if (worldBlocked2.down)
             {
                 body1.setWorldBlockedDown(body2.y);
+
+                if (velocity1.y > 0)
+                {
+                    velocity1.y *= bounce1.y;
+                }
+            }
+            else
+            {
+                body1.y += totalA;
             }
         }
-
-        if (ny1 < 0)
-        {
-            //  Velocity hasn't been reversed, so cancel it
-            ny1 = 0;
-        }
     }
-    else if (body1.deltaY() > 0)
+    else
     {
-        //  Body1 is moving DOWN
-        console.log('down1');
-
-        if (topFace)
-        {
-
-        }
-
-        if (ny1 > 0)
-        {
-            //  Velocity hasn't been reversed, so cancel it
-            ny1 = 0;
-        }
+        //  Body1 is stationary
+        body1.y += totalA;
     }
-    
+
+    /*
     if (body2.deltaY() < 0)
     {
         //  Body2 is moving UP
-        console.log('up2');
 
-        if (topFace && worldBlocked1.up)
+        if (topFace)
         {
-            //  The bottom of Body2 hit the top of Body1 and is blocked from moving up
-            body1.setWorldBlockedUp(body2.bottom);
-        }
-        else if (topFace)
-        {
-            //  The top of Body1 hit the bottom of Body2, but isn't blocked. However, we still don't want penetration.
-            body1.y = body2.bottom;
-        }
+            //  The top of Body1 overlaps with the bottom of Body2
+            if (worldBlocked1.up)
+            {
+                body2.setWorldBlockedUp(body2.bottom);
 
-        if (ny1 < 0)
-        {
-            //  Velocity hasn't been reversed, so cancel it
-            ny1 = 0;
-        }
-    }
-    else if (body1.deltaY() > 0)
-    {
-        //  Body1 is moving DOWN
-        console.log('down1');
-
-        if (bottomFace && worldBlocked2.down)
-        {
-            //  The bottom of Body1 hit the top of Body2 and is blocked from moving down
-            body1.setWorldBlockedDown(body2.y);
+                if (velocity1.y < 0)
+                {
+                    velocity1.y *= bounce1.y;
+                }
+            }
+            else
+            {
+                body1.y += totalA;
+            }
         }
         else if (bottomFace)
         {
-            //  The bottom of Body1 hit the top of Body2, but isn't blocked. However, we still don't want penetration.
-            body1.bottom = body2.y;
+            //  The bottom of Body1 overlaps with the top of Body2
+            if (worldBlocked2.down)
+            {
+                body1.setWorldBlockedDown(body2.y);
+            }
+            else
+            {
+                body1.y += totalA;
+            }
         }
+    }
+    else if (body2.deltaY() > 0)
+    {
+        //  Body2 is moving DOWN
 
-        if (ny1 > 0)
+        if (topFace)
         {
-            //  Velocity hasn't been reversed, so cancel it
-            ny1 = 0;
+            //  The top of Body1 overlaps with the bottom of Body2
+            if (worldBlocked2.up)
+            {
+                body1.setWorldBlockedUp(body2.bottom);
+            }
+            else
+            {
+                body1.y += totalA;
+            }
         }
+        else if (bottomFace)
+        {
+            //  The bottom of Body1 overlaps with the top of Body2
+            if (worldBlocked2.down)
+            {
+                body1.setWorldBlockedDown(body2.y);
+
+                if (velocity1.y > 0)
+                {
+                    velocity1.y *= bounce1.y;
+                }
+            }
+            else
+            {
+                body1.y += totalA;
+            }
+        }
+    }
+    else
+    {
+        //  Body2 is stationary
+        body2.y += totalB;
     }
     */
 
-    //  If body was asleep, we only wake it up for significant changes in velocity
-    // if (body1.sleeping && Math.abs(ny1) > 10)
-    // {
-    //     body1.wake();
-    // }
-
-    // if (body2.sleeping && Math.abs(ny2) > 10)
-    // {
-    //     body2.wake();
-    // }
+    body2.y += totalB;
 
     if (body1.sleeping && Math.abs(ny1) < 10)
     {

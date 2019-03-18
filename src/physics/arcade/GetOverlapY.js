@@ -18,13 +18,16 @@ var IntersectsRect = require('./IntersectsRect');
  *
  * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to separate.
  * @param {Phaser.Physics.Arcade.Body} body2 - The second Body to separate.
- * @param {boolean} overlapOnly - Is this an overlap only check, or part of separation?
- * @param {number} bias - A value added to the delta values during collision checks. Increase it to prevent sprite tunneling (sprites passing through each other instead of colliding).
+ * @param {boolean} [overlapOnly] - Is this an overlap only check, or part of separation?
+ * @param {number} [bias] - A value added to the delta values during collision checks. Increase it to prevent sprite tunneling (sprites passing through each other instead of colliding).
  *
  * @return {number[]} An array containing the amount of overlap in element 0 and the face of body1 in element 1 (true = bottom, false = top).
  */
 var GetOverlapY = function (body1, body2, overlapOnly, bias)
 {
+    if (overlapOnly === undefined) { overlapOnly = false; }
+    if (bias === undefined) { bias = 0; }
+
     var overlap = 0;
 
     // var maxOverlap = body1.deltaAbsY() + body2.deltaAbsY() + bias;
@@ -67,18 +70,20 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
             body2.setTouchingUp();
 
             //  Soft blocks can be moved apart
-            body1.setBlockedDown(body2);
-            body2.setBlockedUp(body1);
+            // body1.setBlockedDown(body2);
+            // body2.setBlockedUp(body1);
 
             //  World blocks cannot be penetrated
             if (worldBlocked2.down || body2Immovable)
             {
                 body1.setWorldBlockedDown();
+                body1.setBlocker(body2);
             }
 
             if (worldBlocked1.up || body1Immovable)
             {
                 body2.setWorldBlockedUp();
+                body2.setBlocker(body1);
             }
         }
     }
@@ -102,18 +107,20 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
             body2.setTouchingDown();
 
             //  Soft blocks can be moved apart
-            body1.setBlockedUp(body2);
-            body2.setBlockedDown(body1);
+            // body1.setBlockedUp(body2);
+            // body2.setBlockedDown(body1);
 
             //  World blocks cannot be penetrated
             if (worldBlocked2.up || body2Immovable)
             {
                 body1.setWorldBlockedUp();
+                body1.setBlocker(body2);
             }
 
             if (worldBlocked1.down || body1Immovable)
             {
                 body2.setWorldBlockedDown();
+                body2.setBlocker(body1);
             }
         }
     }
@@ -131,7 +138,7 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
         body2.embedded = embedded;
     }
 
-    return [ overlap, topFace, intersects ];
+    return { overlap: overlap, topFace: topFace, intersects: intersects };
 };
 
 module.exports = GetOverlapY;

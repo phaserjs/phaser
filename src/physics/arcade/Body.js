@@ -4,12 +4,12 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var ArrayAdd = require('../../utils/array/Add');
 var CircleContains = require('../../geom/circle/Contains');
 var Class = require('../../utils/Class');
 var CONST = require('./const');
 var Events = require('./events');
-var FuzzyLessThan = require('../../math/fuzzy/LessThan');
-var FuzzyGreaterThan = require('../../math/fuzzy/GreaterThan');
+var CheckOverlapY = require('./CheckOverlapY');
 var RadToDeg = require('../../math/RadToDeg');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var RectangleContains = require('../../geom/rectangle/Contains');
@@ -712,6 +712,9 @@ var Body = new Class({
          */
         this.worldBlocked = { none: true, up: false, down: false, left: false, right: false };
 
+        this.blockers = [];
+        this.log = [];
+
         /**
          * Whether to automatically synchronize this Body's dimensions to the dimensions of its Game Object's visual bounds.
          *
@@ -924,6 +927,9 @@ var Body = new Class({
      */
     preUpdate: function ()
     {
+        this.log = [];
+        this.log.push('preupdate');
+
         var touching = this.touching;
         var blocked = this.blocked;
         var worldBlocked = this.worldBlocked;
@@ -962,20 +968,17 @@ var Body = new Class({
         this.position.x = sprite.x + sprite.scaleX * (this.offset.x - sprite.displayOriginX);
         this.position.y = sprite.y + sprite.scaleY * (this.offset.y - sprite.displayOriginY);
 
-        if (this.collideWorldBounds && this.checkWorldBounds())
+        this.rotation = sprite.rotation;
+
+        if (this.collideWorldBounds)
         {
-            blocked.up = worldBlocked.up;
-            blocked.down = worldBlocked.down;
-            blocked.left = worldBlocked.left;
-            blocked.right = worldBlocked.right;
-            blocked.none = false;
+            this.log.push('checkWorldBounds');
+            this.checkWorldBounds();
         }
         else
         {
             this.updateCenter();
         }
-
-        this.rotation = sprite.rotation;
 
         this.prev.x = this.position.x;
         this.prev.y = this.position.y;
@@ -986,11 +989,46 @@ var Body = new Class({
     {
         if (this.sleeping)
         {
-            // console.log(this.gameObject.name, 'woken');
+            console.log(this.gameObject.name, 'woken');
 
             this.sleeping = false;
             this._sleep = 0;
         }
+    },
+
+    setBlocker: function (bodyB)
+    {
+        this.log.push('setBlocker: ' + bodyB.gameObject.name);
+
+        ArrayAdd(this.blockers, bodyB);
+    },
+
+    updateBlockers: function ()
+    {
+        //  Iterate through the list of previous frame world blockers and see if they are still there
+
+        var currentBlockers = [];
+        var prevBlockers = this.blockers;
+
+        this.log.push('updateBlockers');
+        this.log.push('len: ' + prevBlockers.length);
+
+        for (var i = 0; i < prevBlockers.length; i++)
+        {
+            var bodyB = prevBlockers[i];
+
+            if (bodyB.enable)
+            {
+                if (CheckOverlapY(this, bodyB, 1))
+                {
+                    currentBlockers.push(bodyB);
+                }
+            }
+        }
+
+        this.log.push('after len: ' + currentBlockers.length);
+
+        this.blockers = currentBlockers;
     },
 
     /**
@@ -1009,16 +1047,44 @@ var Body = new Class({
      */
     update: function (delta)
     {
+        this.log.push('update');
+
+        this.updateBlockers();
+
         var velocity = this.velocity;
         var position = this.position;
+        var worldBlocked = this.worldBlocked;
 
         //  Has it been woken up?
         if (this.sleeping && !velocity.equals(this.prevVelocity))
         {
-            this.wake();
+            this.log.push('wake test');
+            this.log.push(velocity.y);
+            this.log.push(worldBlocked.up);
+            this.log.push(worldBlocked.down);
+
+            // console.log(this.gameObject.name, 'wake test', velocity.y, worldBlocked.up, worldBlocked.down);
+            // console.log(this.blockers.length);
+            // console.log(this.blockers);
+
+            if ((velocity.y < 0 && !worldBlocked.up) || (velocity.y > 0 && !worldBlocked.down))
+            {
+                console.log(this.log);
+                // debugger;
+                this.wake();
+            }
+            else
+            {
+                velocity.y = 0;
+            }
         }
 
-        if (this.moves && !this.sleeping)
+        if (this.sleeping)
+        {
+            return;
+        }
+
+        if (this.moves)
         {
             this.world.updateMotion(this, delta);
 
@@ -1030,10 +1096,8 @@ var Body = new Class({
         this._dx = position.x - this.prev.x;
         this._dy = position.y - this.prev.y;
 
-        var worldBlocked = this.worldBlocked;
-
         //  World Bounds check
-        if (this.collideWorldBounds && !this.sleeping)
+        if (this.collideWorldBounds)
         {
             if (!worldBlocked.none)
             {
@@ -1158,7 +1222,7 @@ var Body = new Class({
 
         //  Check for sleeping state
 
-        if (Math.abs(dy) < 1)
+        if (Math.abs(dy) < 1 && !this.worldBlocked.none)
         {
             if (this._sleep < this.sleepIterations)
             {
@@ -1174,7 +1238,7 @@ var Body = new Class({
         else if (this._sleep > 0)
         {
             //  Waking up? Do it progressively, not instantly, to ensure it isn't just a step fluctuation
-            this._sleep *= 0.5;
+            this._sleep *= 0.8;
 
             if (this._sleep <= 0)
             {
@@ -1192,8 +1256,8 @@ var Body = new Class({
         wasTouching.left = touching.left;
         wasTouching.right = touching.right;
 
-        this.prev.x = this.position.x;
-        this.prev.y = this.position.y;
+        // this.prev.x = this.position.x;
+        // this.prev.y = this.position.y;
 
         this.prevVelocity.x = this.velocity.x;
         this.prevVelocity.y = this.velocity.y;
@@ -1232,11 +1296,13 @@ var Body = new Class({
         if (check.up && pos.y <= bounds.y + 1)
         {
             set = true;
+            this.log.push('cwb up');
             this.setWorldBlockedUp(bounds.y);
         }
         else if (check.down && this.bottom >= bounds.bottom - 1)
         {
             set = true;
+            this.log.push('cwb down');
             this.setWorldBlockedDown(bounds.bottom);
         }
 
