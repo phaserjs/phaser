@@ -1187,13 +1187,14 @@ var World = new Class({
 
         if (body.allowGravity)
         {
-            // var worldBlocked = body.worldBlocked;
+            var gravityX = (this.gravity.x + body.gravity.x) * delta;
+            var gravityY = (this.gravity.y + body.gravity.y) * delta;
 
-            body._gx = (this.gravity.x + body.gravity.x) * delta;
-            body._gy = (this.gravity.y + body.gravity.y) * delta;
+            velocityX += gravityX;
+            velocityY += gravityY;
 
-            velocityX += body._gx;
-            velocityY += body._gy;
+            body._gx = gravityX;
+            body._gy = gravityY;
         }
 
         if (accelerationX)
