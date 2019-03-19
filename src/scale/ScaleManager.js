@@ -888,9 +888,9 @@ var ScaleManager = new Class({
      */
     refresh: function ()
     {
+        this.updateOrientation();
         this.updateScale();
         this.updateBounds();
-        this.updateOrientation();
 
         this.displayScale.set(this.baseSize.width / this.canvasBounds.width, this.baseSize.height / this.canvasBounds.height);
 
@@ -1672,6 +1672,23 @@ var ScaleManager = new Class({
             return (this.width > this.height);
         }
     
+    },
+
+    /**
+     * Did the canvas need rotation?
+     *
+     * @name Phaser.Scale.ScaleManager#shouldRotate
+     * @type {boolean}
+     * @readonly
+     * @since 3.16.2
+     */
+    shouldRotate: {
+
+        get: function ()
+        {
+            return (this.isLandscape !== this.isGameLandscape);
+        }
+
     }
 
 });
