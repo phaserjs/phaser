@@ -70,25 +70,45 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     //  At this point, the velocity from gravity, world rebounds, etc has been factored in.
     //  The body is moving the direction it wants to, but may be blocked and rebound.
 
-    if (!body1Immovable && !body2Immovable)
+    var move1 = (!body1Immovable && (v1 >= 0 && !worldBlocked1.down) || (v1 < 0 && !worldBlocked1.up));
+    var move2 = (!body2Immovable && (v2 >= 0 && !worldBlocked2.down) || (v2 < 0 && !worldBlocked2.up));
+
+    if (move1 && move2)
     {
         //  Neither body is immovable, so they get a new velocity based on mass
         var mass1 = body1.mass;
         var mass2 = body2.mass;
 
-        var bnv1 = Math.sqrt((v2 * v2 * mass2) / mass1) * ((v2 > 0) ? 1 : -1);
-        var bnv2 = Math.sqrt((v1 * v1 * mass1) / mass2) * ((v1 > 0) ? 1 : -1);
+        //  We don't need costly sqrts if both masses are the same
+        if (mass1 === mass2)
+        {
+            var bnv1 = (v2 > 0) ? v2 : v2 * -1;
+            var bnv2 = (v1 > 0) ? v1 : v1 * -1;
 
-        var avg = (bnv1 + bnv2) * 0.5;
+            var avg = (bnv1 + bnv2) * 0.5;
 
-        var nv1 = bnv1;
-        var nv2 = bnv2;
+            var nv1 = bnv1 - avg;
+            var nv2 = bnv2 - avg;
+   
+            ny1 = avg + nv1 * bounce1.y;
+            ny2 = avg + nv2 * bounce2.y;
+        }
+        else
+        {
+            var bnv1 = Math.sqrt((v2 * v2 * mass2) / mass1) * ((v2 > 0) ? 1 : -1);
+            var bnv2 = Math.sqrt((v1 * v1 * mass1) / mass2) * ((v1 > 0) ? 1 : -1);
 
-        nv1 -= avg;
-        nv2 -= avg;
+            var avg = (bnv1 + bnv2) * 0.5;
 
-        ny1 = avg + nv1 * bounce1.y;
-        ny2 = avg + nv2 * bounce2.y;
+            var nv1 = bnv1;
+            var nv2 = bnv2;
+    
+            nv1 -= avg;
+            nv2 -= avg;
+    
+            ny1 = avg + nv1 * bounce1.y;
+            ny2 = avg + nv2 * bounce2.y;
+        }
 
         // var total = v1 - v2;
         // ny1 = (((mass1 - mass2) * v1 + 2 * mass1 * v1) / (mass1 + mass2)) * bounce1.y;
@@ -97,6 +117,7 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
 
         console.log('resolution');
         console.log('body1', ny1, 'body2', ny2);
+        console.log('speed', body1.speed, body2.speed);
         console.log('v1', v1, 'v2', v2);
         console.log('avg', avg);
         console.log('nv', nv1, nv2);
@@ -123,7 +144,7 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     //  Velocities calculated, time to work out what moves where
     if (overlap !== 0)
     {
-        //  Try and give 50% separation to each body
+        //  Try and give 50% separation to each body (this could be improved to give a speed ratio amount to each body)
         var share = overlap * 0.5;
 
         if (topFace)
