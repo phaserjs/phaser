@@ -70,8 +70,8 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     //  At this point, the velocity from gravity, world rebounds, etc has been factored in.
     //  The body is moving the direction it wants to, but may be blocked and rebound.
 
-    var move1 = (!body1Immovable && (v1 >= 0 && !worldBlocked1.down) || (v1 < 0 && !worldBlocked1.up));
-    var move2 = (!body2Immovable && (v2 >= 0 && !worldBlocked2.down) || (v2 < 0 && !worldBlocked2.up));
+    var move1 = (!body1Immovable && (v1 >= 0 && !body1.isBlockedDown()) || (v1 < 0 && !body1.isBlockedUp()));
+    var move2 = (!body2Immovable && (v2 >= 0 && !body2.isBlockedDown()) || (v2 < 0 && !body2.isBlockedUp()));
 
     if (move1 && move2)
     {
