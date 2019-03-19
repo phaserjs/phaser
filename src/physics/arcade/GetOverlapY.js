@@ -69,22 +69,21 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
             body1.setTouchingDown();
             body2.setTouchingUp();
 
-            //  Soft blocks can be moved apart
-            // body1.setBlockedDown(body2);
-            // body2.setBlockedUp(body1);
+            body1.setBlockedDown(body2);
+            body2.setBlockedUp(body1);
 
             //  World blocks cannot be penetrated
-            if (worldBlocked2.down || body2Immovable)
-            {
-                body1.setWorldBlockedDown();
-                body1.setBlocker(body2);
-            }
+            // if (worldBlocked2.down || body2Immovable)
+            // {
+            //     body1.setWorldBlockedDown();
+            //     body1.setBlocker(body2);
+            // }
 
-            if (worldBlocked1.up || body1Immovable)
-            {
-                body2.setWorldBlockedUp();
-                body2.setBlocker(body1);
-            }
+            // if (worldBlocked1.up || body1Immovable)
+            // {
+            //     body2.setWorldBlockedUp();
+            //     body2.setBlocker(body1);
+            // }
         }
     }
     else
@@ -106,22 +105,21 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
             body1.setTouchingUp();
             body2.setTouchingDown();
 
-            //  Soft blocks can be moved apart
-            // body1.setBlockedUp(body2);
-            // body2.setBlockedDown(body1);
+            body1.setBlockedUp(body2);
+            body2.setBlockedDown(body1);
 
             //  World blocks cannot be penetrated
-            if (worldBlocked2.up || body2Immovable)
-            {
-                body1.setWorldBlockedUp();
-                body1.setBlocker(body2);
-            }
+            // if (worldBlocked2.up || body2Immovable)
+            // {
+            //     body1.setWorldBlockedUp();
+            //     body1.setBlocker(body2);
+            // }
 
-            if (worldBlocked1.down || body1Immovable)
-            {
-                body2.setWorldBlockedDown();
-                body2.setBlocker(body1);
-            }
+            // if (worldBlocked1.down || body1Immovable)
+            // {
+            //     body2.setWorldBlockedDown();
+            //     body2.setBlocker(body1);
+            // }
         }
     }
 
