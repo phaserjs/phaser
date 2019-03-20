@@ -98,9 +98,10 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
             console.log('resolution 1');
             console.log('pre-impact v = body1', v1, 'body2', v2);
             console.log('post-impact v = body1', ny1, 'body2', ny2);
-            console.log('pre-impact y = body1', body1.gameObject.y, 'body2', body2.gameObject.y);
-            console.log('sleeping? = body1', body1.sleeping, 'body2', body2.sleeping);
-            console.log('wb = body1', body1.worldBlocked.down, 'body2', body2.worldBlocked.down);
+
+            // console.log('pre-impact y = body1', body1.gameObject.y, 'body2', body2.gameObject.y);
+            // console.log('sleeping? = body1', body1.sleeping, 'body2', body2.sleeping);
+            // console.log('wb = body1', body1.worldBlocked.down, 'body2', body2.worldBlocked.down);
 
             // console.log('avg', avg);
             // console.log('nv', nv1, nv2);
@@ -481,7 +482,7 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         }
     }
 
-    console.log('SepY End', ny1, ny2, 'y', body1.y, body2.y);
+    console.log('SepY End', ny1, ny2);
 
     velocity1.y = ny1;
     velocity2.y = ny2;
