@@ -9,6 +9,7 @@ var CircleContains = require('../../geom/circle/Contains');
 var Class = require('../../utils/Class');
 var CONST = require('./const');
 var Events = require('./events');
+var FuzzyEqual = require('../../math/fuzzy/Equal');
 var FuzzyGreaterThan = require('../../math/fuzzy/GreaterThan');
 var FuzzyLessThan = require('../../math/fuzzy/LessThan');
 var CheckOverlapY = require('./CheckOverlapY');
@@ -833,6 +834,9 @@ var Body = new Class({
          * @since 3.17.0
          */
         this._gy = 0;
+
+        this._sleepX = 0;
+        this._sleepY = 0;
     },
 
     /**
@@ -1295,35 +1299,7 @@ var Body = new Class({
             gameObject.angle += this.deltaZ();
         }
 
-        //  Check for sleeping state
-
-        var worldBlocked = this.worldBlocked;
-
-        // else if (this._sleep > 0 && !this.worldBlocked.up && !this.worldBlocked.down)
-
-        if (Math.abs(dy) < 1 && this.isBlocked())
-        {
-            if (this._sleep < this.sleepIterations)
-            {
-                this._sleep++;
-
-                if (this._sleep >= this.sleepIterations)
-                {
-                    this.sleep();
-                }
-            }
-        }
-        else if (this._sleep > 0 && !this.isBlockedY())
-        {
-            //  Waking up? Do it progressively, not instantly, to ensure it isn't just a step fluctuation
-            this._sleep *= 0.8;
-
-            if (this._sleep <= 0)
-            {
-                console.log('body woken from postUpdate', dy);
-                this.wake();
-            }
-        }
+        this.checkSleep(dx, dy);
 
         //  Store collision flags
         var wasTouching = this.wasTouching;
@@ -1340,6 +1316,61 @@ var Body = new Class({
 
         this.prevVelocity.x = this.velocity.x;
         this.prevVelocity.y = this.velocity.y;
+    },
+
+    //  return true if gravity is pulling up and body blocked up,
+    //  or gravity is pulling down and body blocked down
+    isGravityBlockedY: function ()
+    {
+        var gy = this._gy;
+
+        return ((gy < 0 && this.isBlockedUp()) || (gy > 0 && this.isBlockedDown()));
+    },
+
+    //  Check for sleeping state
+    checkSleep: function (dx, dy)
+    {
+        //  Can't sleep if not blocked in the opposite direction somehow
+
+        dx = Math.abs(dx);
+        dy = Math.abs(dy);
+
+        if (!this.sleeping && this.isGravityBlockedY())
+        {
+            //  Falling asleep?
+
+            if (dy < 1 && FuzzyEqual(dy, this._sleepY, 0.1))
+            {
+                if (this._sleep < this.sleepIterations)
+                {
+                    this._sleep++;
+    
+                    if (this._sleep >= this.sleepIterations)
+                    {
+                        this.sleep();
+                    }
+                }
+            }
+        }
+        else if (this.sleeping && !this.isGravityBlockedY())
+        {
+            //  Waking up?
+
+            if (this._sleep > 0)
+            {
+                //  Do it progressively, not instantly, to ensure it isn't just a step fluctuation
+                this._sleep -= (this.sleepIterations * 0.1);
+    
+                if (this._sleep <= 0)
+                {
+                    console.log('body woken from postUpdate', dy);
+                    this.wake();
+                }
+            }
+        }
+
+        this._sleepX = dx;
+        this._sleepY = dy;
     },
 
     /**
@@ -2071,7 +2102,7 @@ var Body = new Class({
             this.y = by.bottom;
             this.forcePosition = true;
     
-            if (this.bounce.y === 0)
+            if (this.bounce.y === 0 && this.isGravityBlockedY())
             {
                 this.velocity.y = 0;
             }
@@ -2094,7 +2125,7 @@ var Body = new Class({
             this.bottom = by.y;
             this.forcePosition = true;
     
-            if (this.bounce.y === 0)
+            if (this.bounce.y === 0 && this.isGravityBlockedY())
             {
                 this.velocity.y = 0;
             }
@@ -2233,14 +2264,15 @@ var Body = new Class({
         return (this.blocked.down || this.worldBlocked.down);
     },
 
+    //  Is this body world blocked AND blocked on the opposite face?
     isBlockedY: function ()
     {
         var blocked = this.blocked;
         var worldBlocked = this.worldBlocked;
 
         return (
-            (blocked.up || worldBlocked.up) &&
-            (blocked.down || worldBlocked.down)
+            (worldBlocked.down && blocked.up) ||
+            (worldBlocked.up && blocked.down)
         );
     },
 
