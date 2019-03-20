@@ -70,8 +70,8 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     //  At this point, the velocity from gravity, world rebounds, etc has been factored in.
     //  The body is moving the direction it wants to, but may be blocked and rebound.
 
-    var move1 = (!body1Immovable && (v1 >= 0 && !body1.isBlockedDown()) || (v1 < 0 && !body1.isBlockedUp()));
-    var move2 = (!body2Immovable && (v2 >= 0 && !body2.isBlockedDown()) || (v2 < 0 && !body2.isBlockedUp()));
+    var move1 = (!body1Immovable && ((v1 >= 0 && !body1.isWorldBlockedDown()) || (v1 < 0 && !body1.isWorldBlockedUp())));
+    var move2 = (!body2Immovable && ((v2 >= 0 && !body2.isWorldBlockedDown()) || (v2 < 0 && !body2.isWorldBlockedUp())));
 
     if (move1 && move2)
     {
@@ -131,11 +131,17 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     {
         //  Body1 is immovable, so adjust body2 speed
         ny2 = v1 - v2 * bounce2.y;
+        console.log('uh oh1');
     }
     else if (body2Immovable)
     {
         //  Body2 is immovable, so adjust body1 speed
         ny1 = v2 - v1 * bounce1.y;
+        console.log('uh oh2');
+    }
+    else
+    {
+        console.log('uh oh');
     }
 
     var totalA = 0;
@@ -276,7 +282,7 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     {
         //  Body1 is stationary
         body1.y += totalA;
-        console.log('body1 stationary', body1.y);
+        console.log('body1 stationary', body1.y, ny1, ny2);
     }
 
     if (ny2 < 0)
@@ -363,13 +369,13 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     {
         //  Body2 is stationary
         body2.y += totalB;
-        console.log('body2 stationary', body2.y);
+        console.log('body2 stationary', body2.y, ny1, ny2);
     }
 
     // console.log('postb', worldBlocked1.up, worldBlocked1.down, worldBlocked2.up, worldBlocked2.down);
 
     //  We disregard the new velocity when:
-    //  Body is world blocked AND touching / blocked on the opposite face
+    //  Body is world blocked AND blocked on the opposite face
 
     if (body1.isBlockedY())
     {
@@ -383,7 +389,7 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
 
     if (body1.sleeping)
     {
-        if (Math.abs(ny1) < 10)
+        if (Math.abs(ny1) < body1.minVelocity.y)
         {
             ny1 = 0;
         }
@@ -396,7 +402,7 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
 
     if (body2.sleeping)
     {
-        if (Math.abs(ny2) < 10)
+        if (Math.abs(ny2) < body2.minVelocity.y)
         {
             ny2 = 0;
         }
@@ -405,6 +411,8 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
             body2.wake();
         }
     }
+
+    //  Rebound check
 
     velocity1.y = ny1;
     velocity2.y = ny2;
