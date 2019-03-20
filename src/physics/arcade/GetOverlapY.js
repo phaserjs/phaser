@@ -4,7 +4,6 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var CONST = require('./const');
 var IntersectsRect = require('./IntersectsRect');
 
 /**
@@ -32,9 +31,6 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
 
     // var maxOverlap = body1.deltaAbsY() + body2.deltaAbsY() + bias;
 
-    var body1Immovable = (body1.physicsType === CONST.STATIC_BODY || body1.immovable);
-    var body2Immovable = (body2.physicsType === CONST.STATIC_BODY || body2.immovable);
-
     var distance1 = body1.bottom - body2.y;
     var distance2 = body2.bottom - body1.y;
 
@@ -42,9 +38,6 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
     var prevDistance2 = (body2.prev.y + body2.height) - body1.prev.y;
 
     var embedded = false;
-
-    var worldBlocked1 = body1.worldBlocked;
-    var worldBlocked2 = body2.worldBlocked;
 
     var topFace = (distance1 > distance2 && prevDistance1 > prevDistance2);
 
@@ -71,19 +64,6 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
 
             body1.setBlockedDown(body2);
             body2.setBlockedUp(body1);
-
-            //  World blocks cannot be penetrated
-            // if (worldBlocked2.down || body2Immovable)
-            // {
-            //     body1.setWorldBlockedDown();
-            //     body1.setBlocker(body2);
-            // }
-
-            // if (worldBlocked1.up || body1Immovable)
-            // {
-            //     body2.setWorldBlockedUp();
-            //     body2.setBlocker(body1);
-            // }
         }
     }
     else
@@ -107,19 +87,6 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
 
             body1.setBlockedUp(body2);
             body2.setBlockedDown(body1);
-
-            //  World blocks cannot be penetrated
-            // if (worldBlocked2.up || body2Immovable)
-            // {
-            //     body1.setWorldBlockedUp();
-            //     body1.setBlocker(body2);
-            // }
-
-            // if (worldBlocked1.down || body1Immovable)
-            // {
-            //     body2.setWorldBlockedDown();
-            //     body2.setBlocker(body1);
-            // }
         }
     }
 
