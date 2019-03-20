@@ -176,6 +176,16 @@ var World = new Class({
         this._frameTime = 1 / this.fps;
 
         /**
+         * Internal frame counter.
+         *
+         * @name Phaser.Physics.Arcade.World#_frame
+         * @private
+         * @type {number}
+         * @since 3.17.0
+         */
+        this._frame = 0;
+
+        /**
          * Internal frame time ms value.
          *
          * @name Phaser.Physics.Arcade.World#_frameTimeMS
@@ -999,6 +1009,8 @@ var World = new Class({
                 collider.update();
             }
         }
+
+        this._frame++;
     },
 
     /**
