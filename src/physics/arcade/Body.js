@@ -1146,16 +1146,24 @@ var Body = new Class({
         //  And finally we'll integrate the new position back to the Sprite in postUpdate
     },
 
+    //  Is this body moving OR can it be made to move?
+    //  Return 'false' if it's immovable, otherwise 'true'
     movingY: function ()
     {
-        if (this.sleeping || this.physicsType === CONST.STATIC_BODY)
+        if (this.physicsType === CONST.STATIC_BODY || this.immovable)
         {
+            //  Static bodies don't move
             return false;
+        }
+        else if (!this.isWorldBlockedUp() && !this.isWorldBlockedDown())
+        {
+            //  Non-blocked bodies, that aren't static, can always move
+            return true;
         }
 
         var velocityY = this.velocity.y;
 
-        if ((velocityY <= 0 && this.isWorldBlockedUp()) || (velocityY >= 0 && this.isWorldBlockedDown()))
+        if ((velocityY < 0 && this.isWorldBlockedUp()) || (velocityY > 0 && this.isWorldBlockedDown()))
         {
             return false;
         }
@@ -1351,6 +1359,8 @@ var Body = new Class({
     
             if (this.forcePosition)
             {
+                // console.log(this.world._frame, this.gameObject.name, 'forcePosition', this.y);
+
                 gameObject.x = this.x;
                 gameObject.y = this.y;
 
@@ -2182,8 +2192,11 @@ var Body = new Class({
         this.setBlocker(by);
 
         // if (forceY && !this.worldBlocked.up)
-        if (!this.worldBlocked.up && this.velocity.y <= 0)
+        // if (forceY && !this.worldBlocked.up && this.velocity.y <= 0)
+        if (forceY && !this.worldBlocked.up && this.velocity.y <= 0)
         {
+            console.log(this.world._frame, this.gameObject.name, 'setBlockedUp');
+
             this.y = by.bottom;
             this.forcePosition = true;
     
@@ -2207,9 +2220,20 @@ var Body = new Class({
 
         this.setBlocker(by);
 
+        //  leave out forceY and bodies settle on bounds properly, but get stuck when moving same direction
+        //  add in forceY and bodies never get stuck together, but don't settle on bounds properly
+
+        //  CheckOverlapY = calls this with 'false' for forcing Y
+        //  GetOverlapY = calls this, setting 'true' for forcing Y
+        //  SeparateY = calls this, not setting anything, so 'true' for forcing Y
+
         // if (forceY && !this.worldBlocked.down)
-        if (!this.worldBlocked.down && this.velocity.y >= 0)
+        // if (forceY && !this.worldBlocked.down && this.velocity.y >= 0)
+        // if (!this.worldBlocked.down && this.velocity.y >= 0)
+        if (forceY && !this.worldBlocked.down && this.velocity.y >= 0)
         {
+            console.log(this.world._frame, this.gameObject.name, 'setBlockedDown');
+
             this.bottom = by.y;
             this.forcePosition = true;
     
