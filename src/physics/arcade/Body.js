@@ -1003,6 +1003,16 @@ var Body = new Class({
         this.prev.x = this.x;
         this.prev.y = this.y;
         this.preRotation = this.rotation;
+
+        if (window.dump)
+        {
+            console.log('preUpdate v', this.gameObject.name, 'vel', this.velocity.y);
+
+            if (this.gameObject.name === 'bit01')
+            {
+                window.dump = false;
+            }
+        }
     },
 
     sleep: function ()
@@ -1099,7 +1109,6 @@ var Body = new Class({
         {
             this.world.updateMotion(this, delta);
 
-            //  World Bounds check
             if (this.collideWorldBounds)
             {
                 this.checkWorldRebound();
@@ -1336,6 +1345,11 @@ var Body = new Class({
         wasBlocked.down = worldBlocked.down;
         wasBlocked.left = worldBlocked.left;
         wasBlocked.right = worldBlocked.right;
+
+        if (window.dump)
+        {
+            console.log('postUpdate v', this.gameObject.name, 'vel', this.velocity.y);
+        }
 
         this.prevVelocity.x = this.velocity.x;
         this.prevVelocity.y = this.velocity.y;
@@ -2108,8 +2122,10 @@ var Body = new Class({
         return this;
     },
 
-    setBlockedUp: function (by)
+    setBlockedUp: function (by, forceY)
     {
+        if (forceY === undefined) { forceY = true; }
+
         var blocked = this.blocked;
 
         blocked.up = true;
@@ -2117,7 +2133,7 @@ var Body = new Class({
 
         this.setBlocker(by);
 
-        if (!this.forcePosition)
+        if (forceY)
         {
             this.y = by.bottom;
             this.forcePosition = true;
@@ -2131,8 +2147,10 @@ var Body = new Class({
         return this;
     },
 
-    setBlockedDown: function (by)
+    setBlockedDown: function (by, forceY)
     {
+        if (forceY === undefined) { forceY = true; }
+
         var blocked = this.blocked;
 
         blocked.down = true;
@@ -2140,7 +2158,7 @@ var Body = new Class({
 
         this.setBlocker(by);
 
-        if (!this.forcePosition)
+        if (forceY)
         {
             this.bottom = by.y;
             this.forcePosition = true;
