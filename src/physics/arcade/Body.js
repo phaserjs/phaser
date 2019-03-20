@@ -1749,7 +1749,7 @@ var Body = new Class({
         var x = pos.x + this.halfWidth;
         var y = pos.y + this.halfHeight;
 
-        var worldBlockedColor = 0xffff00;
+        var worldBlockedColor = this.world.defaults.worldBlockedDebugColor;
         var blockedColor = this.world.defaults.blockedDebugColor;
         var sleepColor = this.world.defaults.sleepDebugColor;
 
