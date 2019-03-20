@@ -173,14 +173,24 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     
     console.log('split at', totalA, totalB, 'of', overlap);
 
+    if (totalA === 0 && totalB === 0 && overlap !== 0)
+    {
+        console.log('two immovable bodies');
+
+        velocity1.y = 0;
+        velocity2.y = 0;
+
+        return true;
+    }
+
     // console.log('d1', body1.deltaY(), 'd2', body2.deltaY());
 
     //  By this stage the bodies have their separation distance calculated (stored in totalA/B)
-    //  and they have their new post-impact velocity. So now we need to  work out world block state based on direction.
+    //  and they have their new post-impact velocity. So now we need to  work out block state based on direction.
 
     // Then, adjust for rebounded direction, if any.
 
-    console.log('preb', worldBlocked1.up, worldBlocked1.down, worldBlocked2.up, worldBlocked2.down);
+    // console.log('preb', worldBlocked1.up, worldBlocked1.down, worldBlocked2.up, worldBlocked2.down);
 
     if (ny1 < 0)
     {
@@ -189,9 +199,9 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         if (topFace)
         {
             //  The top of Body1 overlaps with the bottom of Body2
-            if (worldBlocked2.up)
+            if (body2.isBlockedUp())
             {
-                body1.setWorldBlockedUp(body2.bottom);
+                body1.setBlockedUp(body2);
                 console.log('ny1 < 0 topface up', body1.y);
             }
             else
@@ -203,9 +213,9 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         else if (bottomFace)
         {
             //  The bottom of Body1 overlaps with the top of Body2
-            if (worldBlocked2.down)
+            if (body2.isBlockedDown())
             {
-                body1.setWorldBlockedDown(body2.y);
+                body1.setBlockedDown(body2);
                 console.log('ny1 < 0 bottomface down', body1.y);
             }
             else
@@ -216,7 +226,7 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         }
 
         //  If Body1 cannot move up, it doesn't matter what new velocity it has.
-        if (worldBlocked1.up && body1.sleeping)
+        if (body1.sleeping && body1.isBlockedUp())
         {
             ny1 = 0;
             console.log('ny1 < 0 zero sleep');
@@ -229,9 +239,9 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         if (topFace)
         {
             //  The top of Body1 overlaps with the bottom of Body2
-            if (worldBlocked2.up)
+            if (body1.isBlockedUp())
             {
-                body1.setWorldBlockedUp(body2.bottom);
+                body1.setBlockedUp(body2);
                 console.log('ny1 > 0 topface up', body1.y);
             }
             else
@@ -243,9 +253,9 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         else if (bottomFace)
         {
             //  The bottom of Body1 overlaps with the top of Body2
-            if (worldBlocked2.down)
+            if (body2.isBlockedDown())
             {
-                body1.setWorldBlockedDown(body2.y);
+                body1.setBlockedDown(body2);
                 console.log('ny1 > 0 bottomface down', body1.y);
             }
             else
@@ -256,7 +266,7 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         }
 
         //  If Body1 cannot move down, it doesn't matter what new velocity it has.
-        if (worldBlocked1.down && body1.sleeping)
+        if (body1.sleeping && body1.isBlockedDown())
         {
             ny1 = 0;
             console.log('ny1 > 0 zero sleep');
@@ -276,9 +286,9 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         if (topFace)
         {
             //  The bottom of Body2 overlaps with the top of Body1
-            if (worldBlocked1.down)
+            if (body1.isBlockedDown())
             {
-                body2.setWorldBlockedDown(body1.y);
+                body2.setBlockedDown(body1);
                 console.log('ny2 < 0 topface down', body2.y);
             }
             else
@@ -290,9 +300,9 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         else if (bottomFace)
         {
             //  The top of Body2 overlaps with the bottom of Body1
-            if (worldBlocked1.up)
+            if (body1.isBlockedUp())
             {
-                body2.setWorldBlockedUp(body1.bottom);
+                body2.setBlockedUp(body1);
                 console.log('ny2 < 0 bottomface down', body2.y);
             }
             else
@@ -303,7 +313,7 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         }
 
         //  If Body2 cannot move up, it doesn't matter what new velocity it has.
-        if (worldBlocked2.up && body2.sleeping)
+        if (body2.sleeping && body2.isBlockedUp())
         {
             ny2 = 0;
             console.log('ny2 < 0 zero sleep');
@@ -316,9 +326,9 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         if (topFace)
         {
             //  The bottom of Body2 overlaps with the top of Body1
-            if (worldBlocked1.down)
+            if (body1.isBlockedDown())
             {
-                body2.setWorldBlockedDown(body1.y);
+                body2.setBlockedDown(body1);
                 console.log('ny2 > 0 topface down', body2.y);
             }
             else
@@ -330,9 +340,9 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         else if (bottomFace)
         {
             //  The top of Body2 overlaps with the bottom of Body1
-            if (worldBlocked1.up)
+            if (body1.isBlockedUp())
             {
-                body2.setWorldBlockedUp(body1.bottom);
+                body2.setBlockedUp(body1);
                 console.log('ny2 > 0 bottomface up', body2.y);
             }
             else
@@ -343,7 +353,7 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         }
 
         //  If Body2 cannot move down, it doesn't matter what new velocity it has.
-        if (worldBlocked2.down && body2.sleeping)
+        if (body2.sleeping && body1.isBlockedDown())
         {
             ny2 = 0;
             console.log('ny2 > 0 zero sleep');
@@ -356,17 +366,17 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         console.log('body2 stationary', body2.y);
     }
 
-    console.log('postb', worldBlocked1.up, worldBlocked1.down, worldBlocked2.up, worldBlocked2.down);
+    // console.log('postb', worldBlocked1.up, worldBlocked1.down, worldBlocked2.up, worldBlocked2.down);
 
     //  We disregard the new velocity when:
     //  Body is world blocked AND touching / blocked on the opposite face
 
-    if (worldBlocked1.up && worldBlocked1.down)
+    if (body1.isBlockedY())
     {
         ny1 = 0;
     }
 
-    if (worldBlocked2.up && worldBlocked2.down)
+    if (body2.isBlockedY())
     {
         ny2 = 0;
     }
