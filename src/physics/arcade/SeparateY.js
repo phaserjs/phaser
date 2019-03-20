@@ -65,6 +65,7 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     var ny1 = v1;
     var ny2 = v2;
 
+    console.log('');
     console.log(body1.gameObject.name, 'overlaps', body2.gameObject.name, 'on the', ((topFace) ? 'top' : 'bottom'));
 
     //  At this point, the velocity from gravity, world rebounds, etc has been factored in.
@@ -125,31 +126,22 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
             console.log('sqrt', bnv1, bnv2);
             console.log('delta', body1.deltaY(), body2.deltaY());
         }
-
-        // var total = v1 - v2;
-        // ny1 = (((mass1 - mass2) * v1 + 2 * mass1 * v1) / (mass1 + mass2)) * bounce1.y;
-        // ny2 = (total + ny1) * bounce2.y;
-        // console.log('*1', ny1, ny2, 'vs', v1, v2, 'delta', body1.deltaY(), body2.deltaY());
-
-
-        // console.log('*1', ny1, ny2, 'vs', v1, v2, 'avg', avg, 'nv', nv1, nv2, 'bounce', body1.bounce.y, body2.bounce.y, 'delta', body1.deltaY(), body2.deltaY());
-        // console.log('*1', ny1, ny2, 'vs', v1, v2, 'avg', avg, 'nv', nv1, nv2, 'bounce', body1.bounce.y, body2.bounce.y, 'delta', body1.deltaY(), body2.deltaY());
     }
     else if (body1Immovable)
     {
         //  Body1 is immovable, so adjust body2 speed
         ny2 = v1 - v2 * bounce2.y;
-        console.log('uh oh1');
     }
     else if (body2Immovable)
     {
         //  Body2 is immovable, so adjust body1 speed
         ny1 = v2 - v1 * bounce1.y;
-        console.log('uh oh2');
     }
     else
     {
         console.log('uh oh');
+        ny1 = 0;
+        ny2 = 0;
     }
 
     var totalA = 0;
@@ -197,14 +189,8 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         return true;
     }
 
-    // console.log('d1', body1.deltaY(), 'd2', body2.deltaY());
-
     //  By this stage the bodies have their separation distance calculated (stored in totalA/B)
     //  and they have their new post-impact velocity. So now we need to  work out block state based on direction.
-
-    // Then, adjust for rebounded direction, if any.
-
-    // console.log('preb', worldBlocked1.up, worldBlocked1.down, worldBlocked2.up, worldBlocked2.down);
 
     if (ny1 < 0)
     {
@@ -380,10 +366,7 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         console.log('body2 stationary', body2.y, ny1, ny2);
     }
 
-    // console.log('postb', worldBlocked1.up, worldBlocked1.down, worldBlocked2.up, worldBlocked2.down);
-
-    //  We disregard the new velocity when:
-    //  Body is world blocked AND blocked on the opposite face
+    //  We disregard the new velocity when a Body is world blocked AND blocked by something on the opposite face
 
     if (body1.isBlockedY())
     {
@@ -395,10 +378,13 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         ny2 = 0;
     }
 
+    //  Wakey, wakey?
+
     if (body1.sleeping)
     {
         if (Math.abs(ny1) < body1.minVelocity.y)
         {
+            //  Not enough new velocity to get out of bed for
             ny1 = 0;
         }
         else
@@ -412,6 +398,7 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     {
         if (Math.abs(ny2) < body2.minVelocity.y)
         {
+            //  Not enough new velocity to get out of bed for
             ny2 = 0;
         }
         else
@@ -419,8 +406,6 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
             body2.wake();
         }
     }
-
-    //  Rebound check
 
     console.log('SepY End', ny1, ny2);
 
@@ -433,7 +418,9 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     //     body1.x += body1.getMoveX((body2.deltaX()) * body2.friction.x, true);
     // }
 
-    console.log('---', Date.now());
+    console.log('');
+
+    window.dump = true;
 
     //  If we got this far then there WAS overlap, and separation is complete, so return true
     return true;
