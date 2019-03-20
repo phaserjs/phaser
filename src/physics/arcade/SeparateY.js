@@ -82,8 +82,8 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         //  We don't need costly sqrts if both masses are the same
         if (mass1 === mass2)
         {
-            var bnv1 = (v2 > 0) ? v2 : v2 * -1;
-            var bnv2 = (v1 > 0) ? v1 : v1 * -1;
+            var bnv1 = Math.abs(v2) * ((v2 > 0) ? 1 : -1);
+            var bnv2 = Math.abs(v1) * ((v1 > 0) ? 1 : -1);
 
             var avg = (bnv1 + bnv2) * 0.5;
 
@@ -92,6 +92,14 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
    
             ny1 = avg + nv1 * bounce1.y;
             ny2 = avg + nv2 * bounce2.y;
+
+            console.log('resolution 1');
+            console.log('pre-impact v = body1', v1, 'body2', v2);
+            console.log('post-impact v = body1', ny1, 'body2', ny2);
+            console.log('avg', avg);
+            console.log('nv', nv1, nv2);
+            console.log('sqrt mult', bnv1, bnv2);
+            console.log('delta', body1.deltaY(), body2.deltaY());
         }
         else
         {
@@ -108,6 +116,14 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     
             ny1 = avg + nv1 * bounce1.y;
             ny2 = avg + nv2 * bounce2.y;
+
+            console.log('resolution 2');
+            console.log('pre-impact v = body1', v1, 'body2', v2);
+            console.log('post-impact v = body1', ny1, 'body2', ny2);
+            console.log('avg', avg);
+            console.log('nv', nv1, nv2);
+            console.log('sqrt', bnv1, bnv2);
+            console.log('delta', body1.deltaY(), body2.deltaY());
         }
 
         // var total = v1 - v2;
@@ -115,14 +131,6 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         // ny2 = (total + ny1) * bounce2.y;
         // console.log('*1', ny1, ny2, 'vs', v1, v2, 'delta', body1.deltaY(), body2.deltaY());
 
-        console.log('resolution');
-        console.log('body1', ny1, 'body2', ny2);
-        console.log('speed', body1.speed, body2.speed);
-        console.log('v1', v1, 'v2', v2);
-        console.log('avg', avg);
-        console.log('nv', nv1, nv2);
-        console.log('sqrt', bnv1, bnv2);
-        console.log('delta', body1.deltaY(), body2.deltaY());
 
         // console.log('*1', ny1, ny2, 'vs', v1, v2, 'avg', avg, 'nv', nv1, nv2, 'bounce', body1.bounce.y, body2.bounce.y, 'delta', body1.deltaY(), body2.deltaY());
         // console.log('*1', ny1, ny2, 'vs', v1, v2, 'avg', avg, 'nv', nv1, nv2, 'bounce', body1.bounce.y, body2.bounce.y, 'delta', body1.deltaY(), body2.deltaY());
@@ -413,6 +421,8 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     }
 
     //  Rebound check
+
+    console.log('SepY End', ny1, ny2);
 
     velocity1.y = ny1;
     velocity2.y = ny2;
