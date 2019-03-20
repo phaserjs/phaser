@@ -1299,8 +1299,9 @@ var Body = new Class({
 
         var worldBlocked = this.worldBlocked;
 
-        // if (Math.abs(dy) < 1 && this.isBlockedUp())
-        if (Math.abs(dy) < 1 && !this.worldBlocked.none)
+        // else if (this._sleep > 0 && !this.worldBlocked.up && !this.worldBlocked.down)
+
+        if (Math.abs(dy) < 1 && this.isBlocked())
         {
             if (this._sleep < this.sleepIterations)
             {
@@ -1312,8 +1313,7 @@ var Body = new Class({
                 }
             }
         }
-        // else if (this._sleep > 0 && !this.isBlockedY())
-        else if (this._sleep > 0 && !this.worldBlocked.up && !this.worldBlocked.down)
+        else if (this._sleep > 0 && !this.isBlockedY())
         {
             //  Waking up? Do it progressively, not instantly, to ensure it isn't just a step fluctuation
             this._sleep *= 0.8;
@@ -2066,6 +2066,17 @@ var Body = new Class({
 
         this.setBlocker(by);
 
+        if (!this.forcePosition)
+        {
+            this.y = by.bottom;
+            this.forcePosition = true;
+    
+            if (this.bounce.y === 0)
+            {
+                this.velocity.y = 0;
+            }
+        }
+
         return this;
     },
 
@@ -2077,6 +2088,17 @@ var Body = new Class({
         blocked.none = false;
 
         this.setBlocker(by);
+
+        if (!this.forcePosition)
+        {
+            this.bottom = by.y;
+            this.forcePosition = true;
+    
+            if (this.bounce.y === 0)
+            {
+                this.velocity.y = 0;
+            }
+        }
 
         return this;
     },
@@ -2194,6 +2216,11 @@ var Body = new Class({
     getMoveX: function (amount)
     {
         return amount;
+    },
+
+    isBlocked: function ()
+    {
+        return (!this.blocked.none || !this.worldBlocked.none);
     },
 
     isBlockedUp: function ()
