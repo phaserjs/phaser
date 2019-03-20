@@ -66,15 +66,16 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     var ny2 = v2;
 
     console.log('');
-    console.log(body1.gameObject.name, 'overlaps', body2.gameObject.name, 'on the', ((topFace) ? 'top' : 'bottom'));
+    console.log('frame', body1.world._frame);
+    console.log('body1', body1.gameObject.name, 'overlaps body2', body2.gameObject.name, 'on the', ((topFace) ? 'top' : 'bottom'));
 
     //  At this point, the velocity from gravity, world rebounds, etc has been factored in.
     //  The body is moving the direction it wants to, but may be blocked and rebound.
 
-    var move1 = (!body1Immovable && ((v1 >= 0 && !body1.isWorldBlockedDown()) || (v1 < 0 && !body1.isWorldBlockedUp())));
-    var move2 = (!body2Immovable && ((v2 >= 0 && !body2.isWorldBlockedDown()) || (v2 < 0 && !body2.isWorldBlockedUp())));
+    var moving1 = body1.movingY();
+    var moving2 = body2.movingY();
 
-    if (move1 && move2)
+    if (moving1 && moving2)
     {
         //  Neither body is immovable, so they get a new velocity based on mass
         var mass1 = body1.mass;
@@ -97,10 +98,14 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
             console.log('resolution 1');
             console.log('pre-impact v = body1', v1, 'body2', v2);
             console.log('post-impact v = body1', ny1, 'body2', ny2);
-            console.log('avg', avg);
-            console.log('nv', nv1, nv2);
-            console.log('sqrt mult', bnv1, bnv2);
-            console.log('delta', body1.deltaY(), body2.deltaY());
+            console.log('pre-impact y = body1', body1.gameObject.y, 'body2', body2.gameObject.y);
+            console.log('sleeping? = body1', body1.sleeping, 'body2', body2.sleeping);
+            console.log('wb = body1', body1.worldBlocked.down, 'body2', body2.worldBlocked.down);
+
+            // console.log('avg', avg);
+            // console.log('nv', nv1, nv2);
+            // console.log('sqrt mult', bnv1, bnv2);
+            // console.log('delta', body1.deltaY(), body2.deltaY());
         }
         else
         {
@@ -121,25 +126,41 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
             console.log('resolution 2');
             console.log('pre-impact v = body1', v1, 'body2', v2);
             console.log('post-impact v = body1', ny1, 'body2', ny2);
-            console.log('avg', avg);
-            console.log('nv', nv1, nv2);
-            console.log('sqrt', bnv1, bnv2);
-            console.log('delta', body1.deltaY(), body2.deltaY());
+            // console.log('avg', avg);
+            // console.log('nv', nv1, nv2);
+            // console.log('sqrt', bnv1, bnv2);
+            // console.log('delta', body1.deltaY(), body2.deltaY());
         }
     }
-    else if (body1Immovable)
+    else if (!moving1 && moving2)
     {
         //  Body1 is immovable, so adjust body2 speed
         ny2 = v1 - v2 * bounce2.y;
-    }
-    else if (body2Immovable)
+
+        console.log('resolution 3');
+        console.log('pre-impact v = body1', v1, 'body2', v2);
+        console.log('post-impact v = body1', ny1, 'body2', ny2);
+        console.log('sleeping? = body1', body1.sleeping, 'body2', body2.sleeping);
+}
+    else if (moving1 && !moving2)
     {
         //  Body2 is immovable, so adjust body1 speed
         ny1 = v2 - v1 * bounce1.y;
-    }
+
+        console.log('resolution 4');
+        console.log('pre-impact v = body1', v1, 'body2', v2);
+        console.log('post-impact v = body1', ny1, 'body2', ny2);
+        console.log('sleeping? = body1', body1.sleeping, 'body2', body2.sleeping);
+}
     else
     {
-        console.log('uh oh');
+        console.log('neither moving, or both immovable');
+
+        console.log('resolution 5');
+        console.log('pre-impact v = body1', v1, 'body2', v2);
+        console.log('post-impact v = body1', ny1, 'body2', ny2);
+        console.log('sleeping? = body1', body1.sleeping, 'body2', body2.sleeping);
+
         ny1 = 0;
         ny2 = 0;
     }
@@ -239,7 +260,7 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         if (topFace)
         {
             //  The top of Body1 overlaps with the bottom of Body2
-            if (body1.isBlockedUp())
+            if (body2.isBlockedUp())
             {
                 body1.setBlockedUp(body2);
                 console.log('ny1 > 0 topface up', body1.y);
@@ -275,8 +296,34 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     else
     {
         //  Body1 is stationary
-        body1.y += totalA;
-        console.log('body1 stationary', body1.y, ny1, ny2);
+        if (topFace)
+        {
+            //  The top of Body1 overlaps with the bottom of Body2
+            if (body2.isBlockedUp())
+            {
+                body1.setBlockedUp(body2);
+                console.log('body1 stationary topface up', body1.y);
+            }
+            else
+            {
+                body1.y += totalA;
+                console.log('body1 stationary topface add', body1.y);
+            }
+        }
+        else if (bottomFace)
+        {
+            //  The bottom of Body1 overlaps with the top of Body2
+            if (body2.isBlockedDown())
+            {
+                body1.setBlockedDown(body2);
+                console.log('body1 stationary bottomface down', body1.y);
+            }
+            else
+            {
+                body1.y += totalA;
+                console.log('body1 stationary bottomface add', body1.y);
+            }
+        }
     }
 
     if (ny2 < 0)
@@ -362,8 +409,34 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     else
     {
         //  Body2 is stationary
-        body2.y += totalB;
-        console.log('body2 stationary', body2.y, ny1, ny2);
+        if (topFace)
+        {
+            //  The bottom of Body2 overlaps with the top of Body1
+            if (body1.isBlockedDown())
+            {
+                body2.setBlockedDown(body1);
+                console.log('body2 stationary topface down', body2.y);
+            }
+            else
+            {
+                body2.y += totalB;
+                console.log('body2 stationary topface add', body2.y);
+            }
+        }
+        else if (bottomFace)
+        {
+            //  The top of Body2 overlaps with the bottom of Body1
+            if (body1.isBlockedUp())
+            {
+                body2.setBlockedUp(body1);
+                console.log('body2 stationary bottomface down', body2.y);
+            }
+            else
+            {
+                body2.y += totalB;
+                console.log('body2 stationary bottomface add', body2.y);
+            }
+        }
     }
 
     //  We disregard the new velocity when a Body is world blocked AND blocked by something on the opposite face
@@ -403,11 +476,12 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         }
         else
         {
+            console.log('waking body2 from', ny2, body2.prevVelocity.y);
             body2.wake();
         }
     }
 
-    console.log('SepY End', ny1, ny2);
+    console.log('SepY End', ny1, ny2, 'y', body1.y, body2.y);
 
     velocity1.y = ny1;
     velocity2.y = ny2;
@@ -419,8 +493,6 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     // }
 
     console.log('');
-
-    window.dump = true;
 
     //  If we got this far then there WAS overlap, and separation is complete, so return true
     return true;
