@@ -490,6 +490,27 @@ var ScaleManager = new Class({
      */
     parseConfig: function (config)
     {
+        var width = config.width;
+        var height = config.height;
+        var resolution = config.resolution;
+        var zoom = config.zoom;
+        var autoRound = config.autoRound;
+
+        //  This is fixed at 1 on purpose.
+        //  Changing it will break all user input.
+        //  Wait for another release to solve this issue.
+        this.resolution = 1;
+
+        this.scaleMode = config.scaleMode;
+
+        this.forceOrientation = config.forceOrientation;;
+
+        this.autoRound = autoRound;
+
+        this.autoCenter = config.autoCenter;
+
+        this.resizeInterval = config.resizeInterval;
+
         //  Get the parent element, if any
         this.getParent(config);
 
@@ -497,13 +518,6 @@ var ScaleManager = new Class({
         //  This can often set a height of zero (especially for un-styled divs)
         this.getParentBounds();
 
-        var width = config.width;
-        var height = config.height;
-        var scaleMode = config.scaleMode;
-        var resolution = config.resolution;
-        var zoom = config.zoom;
-        var forceOrientation = config.forceOrientation;
-        var autoRound = config.autoRound;
 
         //  If width = '100%', or similar value
         if (typeof width === 'string')
@@ -536,21 +550,6 @@ var ScaleManager = new Class({
 
             height = Math.floor(parentHeight * parentScaleY);
         }
-
-        //  This is fixed at 1 on purpose.
-        //  Changing it will break all user input.
-        //  Wait for another release to solve this issue.
-        this.resolution = 1;
-
-        this.scaleMode = scaleMode;
-
-        this.forceOrientation = forceOrientation;
-
-        this.autoRound = autoRound;
-
-        this.autoCenter = config.autoCenter;
-
-        this.resizeInterval = config.resizeInterval;
 
         if (autoRound)
         {
