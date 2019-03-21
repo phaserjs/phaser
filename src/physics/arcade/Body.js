@@ -1049,7 +1049,7 @@ var Body = new Class({
             //     console.log(this.world._frame, 'UP Y', velocity.y, position.y, this.prev.y, this.blockers.length);
             // }
 
-            if (this.collideWorldBounds)
+            if (this.collideWorldBounds && !this.worldBlocked.none)
             {
                 this.checkWorldRebound();
             }
@@ -1315,6 +1315,8 @@ var Body = new Class({
         if (!this.collideWorldBounds || worldBlocked.none || velocity.equals(0) || (bx === 0 && by === 0))
         {
             //  Nothing to do
+            console.log('CWB abort', this.collideWorldBounds, worldBlocked.none, velocity.equals(0));
+
             return true;
         }
 
@@ -1498,15 +1500,18 @@ var Body = new Class({
      */
     checkWorldBounds: function ()
     {
+        var velocity = this.velocity;
         var worldBounds = this.world.bounds;
         var worldCollision = this.world.checkCollision;
 
-        if (worldCollision.up && this.y <= (worldBounds.y + 1))
+        if (worldCollision.up && this.y <= (worldBounds.y + 1) && velocity.y <= 0)
         {
             this.setWorldBlockedUp(true);
         }
-        else if (worldCollision.down && this.bottom >= (worldBounds.bottom - 1))
+        else if (worldCollision.down && this.bottom >= (worldBounds.bottom - 1) && velocity.y >= 0)
         {
+            // console.log(this.world._frame, 'via check world bounds');
+
             this.setWorldBlockedDown(true);
         }
     },
@@ -2314,9 +2319,11 @@ var Body = new Class({
 
         if (forceY && this.bottom !== worldBounds.bottom)
         {
-            console.log(this.gameObject.name, 'world blocked down + position');
             this.bottom = worldBounds.bottom;
+
             this.forcePosition = 2;
+
+            console.log(this.world._frame, this.gameObject.name, 'world blocked down + position', this.y);
         }
 
         return this;
@@ -2435,15 +2442,21 @@ var Body = new Class({
 
             if (amount < 0 && worldCollision.up && this.y + amount < worldBounds.y)
             {
+                var diff1 = amount - ((this.y + amount) - worldBounds.y);
+
                 this.setWorldBlockedUp(true);
 
-                return amount - ((this.y + amount) - worldBounds.y);
+                return diff1;
             }
             else if (amount > 0 && worldCollision.down && this.bottom + amount > worldBounds.bottom)
             {
+                var diff2 = amount - ((this.bottom + amount) - worldBounds.bottom);
+
+                // console.log(this.world._frame, 'via check get move y');
+
                 this.setWorldBlockedDown(true);
 
-                return amount - ((this.bottom + amount) - worldBounds.bottom);
+                return diff2;
             }
         }
 
