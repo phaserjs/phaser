@@ -481,7 +481,7 @@ var ScaleManager = new Class({
     {
         //  Get the parent element, if any
         this.getParent(config);
-        
+
         //  Get the size of the parent element
         //  This can often set a height of zero (especially for un-styled divs)
         this.getParentBounds();
@@ -657,8 +657,20 @@ var ScaleManager = new Class({
         }
 
         var resolution = this.resolution;
-        var newWidth = DOMRect.width * resolution;
-        var newHeight = DOMRect.height * resolution;
+
+        var newWidth;
+        var newHeight;
+
+        if (this.shouldRotate)
+        {
+            newWidth = DOMRect.height * resolution;
+            newHeight = DOMRect.width * resolution;
+        }
+        else
+        {
+            newWidth = DOMRect.width * resolution;
+            newHeight = DOMRect.height * resolution;
+        }
 
         if (parentSize.width !== newWidth || parentSize.height !== newHeight)
         {
@@ -922,6 +934,9 @@ var ScaleManager = new Class({
     
                 this.emit(Events.ORIENTATION_CHANGE, newOrientation);
             }
+
+            //  Update the parentSize because of orientationchange will influence it
+            this.getParentBounds();
         }
     },
 
@@ -1060,24 +1075,55 @@ var ScaleManager = new Class({
 
         var style = canvas.style;
 
-        var bounds = canvas.getBoundingClientRect();
+        var offsetX;
+        var offsetY;
 
-        // var width = parseInt(canvas.style.width, 10) || canvas.width;
-        // var height = parseInt(canvas.style.height, 10) || canvas.height;
-
-        var width = bounds.width;
-        var height = bounds.height;
-
-        var offsetX = Math.floor((this.parentSize.width - width) / 2);
-        var offsetY = Math.floor((this.parentSize.height - height) / 2);
-
-        if (autoCenter === CONST.CENTER.CENTER_HORIZONTALLY)
+        if (this.shouldRotate)
         {
-            offsetY = 0;
+            style.transformOrigin = '0 0 0';
+            style.transform = 'rotate(90deg)';
+
+            var bounds = canvas.getBoundingClientRect();
+            var width = bounds.height;
+            var height = bounds.width;
+
+            var baseOffsetX = 0;
+            var baseOffsetY = this.parentSize.height;
+            var _offsetX = Math.floor((this.parentSize.width - width) / 2);
+            var _offsetY = Math.floor((this.parentSize.height - height) / 2);
+
+            if (autoCenter === CONST.CENTER.CENTER_HORIZONTALLY)
+            {
+                _offsetY = 0;
+            }
+            else if (autoCenter === CONST.CENTER.CENTER_VERTICALLY)
+            {
+                _offsetX = 0;
+            }
+
+            offsetX = baseOffsetY - _offsetY;
+            offsetY = baseOffsetX + _offsetX;
         }
-        else if (autoCenter === CONST.CENTER.CENTER_VERTICALLY)
+        else
         {
-            offsetX = 0;
+            style.transformOrigin = '0 0 0';
+            style.transform = 'rotate(0deg)';
+
+            var bounds = canvas.getBoundingClientRect();
+            var width = bounds.width;
+            var height = bounds.height;
+
+            offsetX = Math.floor((this.parentSize.width - width) / 2);
+            offsetY = Math.floor((this.parentSize.height - height) / 2);
+
+            if (autoCenter === CONST.CENTER.CENTER_HORIZONTALLY)
+            {
+                offsetY = 0;
+            }
+            else if (autoCenter === CONST.CENTER.CENTER_VERTICALLY)
+            {
+                offsetX = 0;
+            }
         }
 
         style.marginLeft = offsetX + 'px';
@@ -1680,7 +1726,7 @@ var ScaleManager = new Class({
      * @name Phaser.Scale.ScaleManager#shouldRotate
      * @type {boolean}
      * @readonly
-     * @since 3.16.2
+     * @since 3.17.0
      */
     shouldRotate: {
 
