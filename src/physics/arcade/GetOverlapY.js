@@ -62,8 +62,8 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
             body1.setTouchingDown();
             body2.setTouchingUp();
 
-            body1.setBlockedDown(body2);
-            body2.setBlockedUp(body1);
+            body1.setBlockedDown(body2, intersects);
+            body2.setBlockedUp(body1, intersects);
         }
     }
     else
@@ -85,8 +85,8 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
             body1.setTouchingUp();
             body2.setTouchingDown();
 
-            body1.setBlockedUp(body2);
-            body2.setBlockedDown(body1);
+            body1.setBlockedUp(body2, intersects);
+            body2.setBlockedDown(body1, intersects);
         }
     }
 

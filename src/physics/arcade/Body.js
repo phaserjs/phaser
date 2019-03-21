@@ -6,13 +6,14 @@
 
 var ArrayAdd = require('../../utils/array/Add');
 var CircleContains = require('../../geom/circle/Contains');
+var CheckOverlapY = require('./CheckOverlapY');
 var Class = require('../../utils/Class');
 var CONST = require('./const');
 var Events = require('./events');
 var FuzzyEqual = require('../../math/fuzzy/Equal');
 var FuzzyGreaterThan = require('../../math/fuzzy/GreaterThan');
 var FuzzyLessThan = require('../../math/fuzzy/LessThan');
-var CheckOverlapY = require('./CheckOverlapY');
+var IntersectsRect = require('./IntersectsRect');
 var RadToDeg = require('../../math/RadToDeg');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var RectangleContains = require('../../geom/rectangle/Contains');
@@ -292,7 +293,7 @@ var Body = new Class({
 
         /**
          * The minimum velocity a body can move before it won't rebound and is considered for sleep.
-         * The default is 10 but you may wish to change this based on game type.
+         * The default is 15 but you may wish to change this based on game type.
          *
          * @name Phaser.Physics.Arcade.Body#minVelocity
          * @type {Phaser.Math.Vector2}
@@ -316,7 +317,8 @@ var Body = new Class({
 
         this.sleepIterations = 60;
 
-        this.forcePosition = false;
+        //  0 = none, 1 = soft block, 2 = hard block
+        this.forcePosition = 0;
 
         /**
          * The Body's absolute maximum change in position, in pixels per step.
@@ -978,7 +980,7 @@ var Body = new Class({
         this.overlapY = 0;
 
         this.embedded = false;
-        this.forcePosition = false;
+        this.forcePosition = 0;
 
         //  Updates the transform values
         this.updateBounds();
@@ -1017,7 +1019,7 @@ var Body = new Class({
             this.prevVelocity.set(0);
             this.speed = 0;
 
-            this.forcePosition = true;
+            // this.forcePosition = true;
 
             var worldBlocked = this.worldBlocked;
 
@@ -1028,10 +1030,12 @@ var Body = new Class({
                 if (worldBlocked.down)
                 {
                     this.bottom = worldBounds.bottom;
+                    this.forcePosition = 2;
                 }
                 else if (worldBlocked.up)
                 {
                     this.y = worldBounds.y;
+                    this.forcePosition = 2;
                 }
             }
         }
@@ -1123,7 +1127,7 @@ var Body = new Class({
                 this.checkWorldRebound();
             }
 
-            if (!this.forcePosition)
+            if (this.forcePosition !== 2)
             {
                 position.x += this.getMoveX(velocity.x * delta);
                 position.y += this.getMoveY(velocity.y * delta);
@@ -1300,16 +1304,6 @@ var Body = new Class({
 
         var gameObject = this.gameObject;
 
-        // var newVelocityY = Math.abs(this.velocity.y);
-
-        // if (newVelocityY < this.minVelocity.y)
-        // {
-        //     if (this.isBlockedDown())
-        //     {
-
-        //     }
-        // }
-
         if (this.moves)
         {
             var mx = this.deltaMax.x;
@@ -1357,9 +1351,9 @@ var Body = new Class({
                 this.facing = CONST.FACING_DOWN;
             }
     
-            if (this.forcePosition)
+            if (this.forcePosition !== 0)
             {
-                // console.log(this.world._frame, this.gameObject.name, 'forcePosition', this.y);
+                console.log(this.world._frame, this.gameObject.name, 'forcePosition', this.y);
 
                 gameObject.x = this.x;
                 gameObject.y = this.y;
@@ -2191,18 +2185,12 @@ var Body = new Class({
 
         this.setBlocker(by);
 
-        // if (forceY && !this.worldBlocked.up)
-        // if (forceY && !this.worldBlocked.up && this.velocity.y <= 0)
-        if (forceY && !this.worldBlocked.up && this.velocity.y <= 0)
+        if (forceY && this.forcePosition !== 2)
         {
-            console.log(this.world._frame, this.gameObject.name, 'setBlockedUp');
-
-            this.y = by.bottom;
-            this.forcePosition = true;
-    
-            if (this.bounce.y === 0 && this.isGravityBlockedY())
+            if (IntersectsRect(this, by))
             {
-                this.velocity.y = 0;
+                this.y = by.bottom;
+                this.forcePosition = 1;
             }
         }
 
@@ -2227,19 +2215,12 @@ var Body = new Class({
         //  GetOverlapY = calls this, setting 'true' for forcing Y
         //  SeparateY = calls this, not setting anything, so 'true' for forcing Y
 
-        // if (forceY && !this.worldBlocked.down)
-        // if (forceY && !this.worldBlocked.down && this.velocity.y >= 0)
-        // if (!this.worldBlocked.down && this.velocity.y >= 0)
-        if (forceY && !this.worldBlocked.down && this.velocity.y >= 0)
+        if (forceY && this.forcePosition !== 2)
         {
-            console.log(this.world._frame, this.gameObject.name, 'setBlockedDown');
-
-            this.bottom = by.y;
-            this.forcePosition = true;
-    
-            if (this.bounce.y === 0 && this.isGravityBlockedY())
+            if (IntersectsRect(this, by))
             {
-                this.velocity.y = 0;
+                this.bottom = by.y;
+                this.forcePosition = 1;
             }
         }
 
@@ -2280,7 +2261,7 @@ var Body = new Class({
         if (forceY !== undefined && !this.wasBlocked.up)
         {
             this.y = forceY;
-            this.forcePosition = true;
+            this.forcePosition = 2;
         }
 
         return this;
@@ -2297,7 +2278,7 @@ var Body = new Class({
         {
             console.log(this.gameObject.name, 'world blocked down + position');
             this.bottom = forceY;
-            this.forcePosition = true;
+            this.forcePosition = 2;
         }
 
         return this;
