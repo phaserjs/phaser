@@ -4,61 +4,51 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var IntersectsRect = require('./IntersectsRect');
+var CollisionInfo = require('./CollisionInfo');
+var CONST = require('./const');
 
 /**
- * Calculates and returns the vertical overlap between two arcade physics bodies.
- * 
- * We know the bodies are intersecting based on a previous check, so the point of this function
- * is to determine which face the overlap is occurring on and at what depth.
+ * Takes a CollisionInfo object and tests to see if the two bodies are still intersecting / touching.
  *
  * @function Phaser.Physics.Arcade.CheckOverlapY
  * @since 3.17.0
  *
  * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to separate.
  * @param {Phaser.Physics.Arcade.Body} body2 - The second Body to separate.
- * @param {number} [padding=0] - 
  *
  * @return {boolean} 
  */
-var CheckOverlapY = function (body1, body2, padding)
+var CheckOverlapY = function (body, collisionInfo)
 {
-    if (padding === undefined) { padding = 0; }
+    collisionInfo = CollisionInfo.update(collisionInfo);
 
-    var distance1 = body1.bottom - body2.y;
-    var distance2 = body2.bottom - body1.y;
+    var face = collisionInfo.face;
+    var body1 = collisionInfo.body1;
+    var body2 = collisionInfo.body2;
 
-    var prevDistance1 = (body1.prev.y + body1.height) - body2.prev.y;
-    var prevDistance2 = (body2.prev.y + body2.height) - body1.prev.y;
-
-    var topFace = (distance1 > distance2 && prevDistance1 > prevDistance2);
-
-    var intersects = IntersectsRect(body1, body2, padding);
-
-    if (intersects && !topFace)
+    if (face === CONST.FACING_UP)
     {
-        if (body1.checkCollision.up && body2.checkCollision.down)
-        {
-            body1.setTouchingDown();
-            body2.setTouchingUp();
+        // console.log('CheckOverlapY topFace from', body.gameObject.name, 'body1 is', body1.gameObject.name, 'touching', collisionInfo.touching, 'inter', collisionInfo.intersects, 'oy', collisionInfo.overlapY);
+        // console.log('body1', body1.x, body1.right, body1.y, body1.bottom, 'body2', body2.x, body2.right, body2.y, body2.bottom);
 
-            body1.setBlockedDown(body2, false);
-            body2.setBlockedUp(body1, false);
-        }
+        body1.setTouchingUp();
+        body2.setTouchingDown();
+
+        body1.setBlockedUp();
+        body2.setBlockedDown();
     }
-    else if (intersects && topFace)
+    else if (face === CONST.FACING_DOWN)
     {
-        if (body1.checkCollision.down && body2.checkCollision.up)
-        {
-            body1.setTouchingUp();
-            body2.setTouchingDown();
+        // console.log('CheckOverlapY bottomFace from', body.gameObject.name, 'body1 is', body1.gameObject.name);
 
-            body1.setBlockedUp(body2, false);
-            body2.setBlockedDown(body1, false);
-        }
+        body1.setTouchingDown();
+        body2.setTouchingUp();
+
+        body1.setBlockedDown();
+        body2.setBlockedUp();
     }
 
-    return intersects;
+    return collisionInfo.touching;
 };
 
 module.exports = CheckOverlapY;
