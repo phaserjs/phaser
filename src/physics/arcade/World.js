@@ -961,6 +961,11 @@ var World = new Class({
             this.step(fixedDelta);
         }
 
+        if (stepsThisFrame > 1)
+        {
+            console.log('extra steps', stepsThisFrame);
+        }
+
         this.stepsLastFrame = stepsThisFrame;
     },
 
@@ -1009,8 +1014,6 @@ var World = new Class({
                 collider.update();
             }
         }
-
-        this._frame++;
     },
 
     /**
@@ -1103,6 +1106,8 @@ var World = new Class({
 
             pending.clear();
         }
+
+        this._frame++;
     },
 
     /**
@@ -1208,6 +1213,17 @@ var World = new Class({
 
             body._gx = gravityX;
             body._gy = gravityY;
+
+            if (velocityY === gravityY)
+            {
+                // console.log(this._frame, '///// gravity check', body.gameObject.name, body.isBlockedUp(), body.isBlockedDown());
+
+                if ((gravityY < 0 && body.isBlockedUp()) || (gravityY > 0 && body.isBlockedDown()))
+                {
+                    // console.log(this._frame, '///// gravity reset', body.gameObject.name, gravityY, body.isBlockedUp(), body.isBlockedDown());
+                    velocityY = 0;
+                }
+            }
         }
 
         if (accelerationX)
