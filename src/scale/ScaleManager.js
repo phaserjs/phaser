@@ -189,6 +189,8 @@ var ScaleManager = new Class({
          */
         this.parentSize = new Size();
 
+        this.parentOriginalSize = new Size();
+
         /**
          * The Game Size component.
          * 
@@ -669,23 +671,28 @@ var ScaleManager = new Class({
         }
 
         var resolution = this.resolution;
+        var newOriginalWidth = DOMRect.width * resolution;
+        var newOriginalHeight = DOMRect.height * resolution;
 
-        var newWidth;
-        var newHeight;
+        const isParentResized = this.parentOriginalSize.width !== newOriginalWidth || this.parentOriginalSize.height !== newOriginalHeight;
+        this.parentOriginalSize.setSize(newOriginalWidth, newOriginalHeight);
 
-        if (this.shouldRotate)
+        if (isParentResized)
         {
-            newWidth = DOMRect.height * resolution;
-            newHeight = DOMRect.width * resolution;
-        }
-        else
-        {
-            newWidth = DOMRect.width * resolution;
-            newHeight = DOMRect.height * resolution;
-        }
+            var newWidth;
+            var newHeight;
 
-        if (parentSize.width !== newWidth || parentSize.height !== newHeight)
-        {
+            if (this.shouldRotate)
+            {
+                newWidth = newOriginalHeight;
+                newHeight = newOriginalWidth;
+            }
+            else
+            {
+                newWidth = newOriginalWidth;
+                newHeight = newOriginalHeight;
+            }
+
             parentSize.setSize(newWidth, newHeight);
 
             return true;
@@ -1695,6 +1702,40 @@ var ScaleManager = new Class({
     },
 
     /**
+     * Is the screen's width smaller than / equal to its height?
+     *
+     * @name Phaser.Scale.ScaleManager#isScreenPortrait
+     * @type {boolean}
+     * @readonly
+     * @since 3.17.0
+     */
+    isScreenPortrait: {
+
+        get: function ()
+        {
+            return document.documentElement.clientWidth <= document.documentElement.clientHeight;
+        }
+
+    },
+
+    /**
+     * Is the screen's width bigger than its height?
+     *
+     * @name Phaser.Scale.ScaleManager#isScreenLandscape
+     * @type {boolean}
+     * @readonly
+     * @since 3.17.0
+     */
+    isScreenLandscape: {
+
+        get: function ()
+        {
+            return document.documentElement.clientWidth >= document.documentElement.clientHeight;
+        }
+
+    },
+
+    /**
      * Are the game dimensions portrait? (i.e. taller than they are wide)
      * 
      * This is different to the device itself being in a portrait orientation.
@@ -1744,7 +1785,7 @@ var ScaleManager = new Class({
 
         get: function ()
         {
-            var isOrientationNotMatched = this.isLandscape !== this.isGameLandscape;
+            var isOrientationNotMatched = this.isScreenLandscape !== this.isGameLandscape;
             return this.forceOrientation && isOrientationNotMatched;
         }
 
