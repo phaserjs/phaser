@@ -996,10 +996,8 @@ var Body = new Class({
         {
             this.checkWorldBounds();
         }
-        else
-        {
-            this.updateCenter();
-        }
+
+        this.updateCenter();
 
         //  Reset deltas (world bounds checks have no effect on this)
         this.prev.x = this.x;
@@ -1013,18 +1011,19 @@ var Body = new Class({
         {
             this.sleeping = true;
 
-            console.log(this.gameObject.name, 'put to sleep on frame', this.world._frame);
+            console.log(this.gameObject.name, 'put to sleep on frame', this.world._frame, 'force?', forceY, 'at', this.y);
 
             this.velocity.set(0);
             this.prevVelocity.set(0);
             this.speed = 0;
 
-            // this.forcePosition = true;
-
+            var blocked = this.blocked;
             var worldBlocked = this.worldBlocked;
 
             if (forceY && !worldBlocked.none)
             {
+                console.log(this.gameObject.name, 'sleeping and fixed to world bounds');
+
                 var worldBounds = this.world.bounds;
 
                 if (worldBlocked.down)
@@ -1035,6 +1034,21 @@ var Body = new Class({
                 else if (worldBlocked.up)
                 {
                     this.y = worldBounds.y;
+                    this.forcePosition = 2;
+                }
+            }
+            else if (forceY && !blocked.none)
+            {
+                console.log(this.gameObject.name, 'sleeping and fixed to blocker bounds');
+
+                if (blocked.down)
+                {
+                    // this.bottom = worldBounds.bottom;
+                    this.forcePosition = 2;
+                }
+                else if (blocked.up)
+                {
+                    // this.y = worldBounds.y;
                     this.forcePosition = 2;
                 }
             }
@@ -1126,7 +1140,7 @@ var Body = new Class({
             {
                 this.checkWorldRebound();
             }
-
+    
             if (this.forcePosition !== 2)
             {
                 position.x += this.getMoveX(velocity.x * delta);
@@ -1227,7 +1241,13 @@ var Body = new Class({
                 else
                 {
                     velocity.y *= -by;
+                    
                     console.log(this.gameObject.name, 'rebounded up', newVelocityY, gravityY, 'frame', this.world._frame);
+
+                    if (this.forcePosition === 2)
+                    {
+                        this.forcePosition = 0;
+                    }
 
                     if (this.onWorldBounds)
                     {
@@ -1251,7 +1271,13 @@ var Body = new Class({
                 else
                 {
                     velocity.y *= -by;
+
                     console.log(this.gameObject.name, 'rebounded down', newVelocityY, gravityY, 'frame', this.world._frame);
+
+                    if (this.forcePosition === 2)
+                    {
+                        this.forcePosition = 0;
+                    }
 
                     if (this.onWorldBounds)
                     {
@@ -1276,7 +1302,13 @@ var Body = new Class({
                 else
                 {
                     velocity.y *= -by;
+
                     console.log(this.gameObject.name, 'rebounded zero-g', newVelocityY, velocity.y);
+
+                    if (this.forcePosition === 2)
+                    {
+                        this.forcePosition = 0;
+                    }
 
                     if (this.onWorldBounds)
                     {
@@ -1353,7 +1385,7 @@ var Body = new Class({
     
             if (this.forcePosition !== 0)
             {
-                console.log(this.world._frame, this.gameObject.name, 'forcePosition', this.y);
+                console.log(this.world._frame, this.gameObject.name, 'forcePosition', this.y, 'type', this.forcePosition);
 
                 gameObject.x = this.x;
                 gameObject.y = this.y;
@@ -1436,6 +1468,7 @@ var Body = new Class({
     
                     if (this._sleep >= this.sleepIterations)
                     {
+                        console.log('slept by checkSleep');
                         this.sleep();
                     }
                 }
@@ -1468,41 +1501,21 @@ var Body = new Class({
      * @method Phaser.Physics.Arcade.Body#checkWorldBounds
      * @since 3.0.0
      *
-     * @return {boolean} True if this Body is colliding with the world boundary.
+     * @return {boolean} True if this Body is touching over intersecting with the world boundary.
      */
     checkWorldBounds: function ()
     {
-        var pos = this.position;
-        var bounds = this.world.bounds;
-        var check = this.world.checkCollision;
+        var worldBounds = this.world.bounds;
+        var worldCollision = this.world.checkCollision;
 
-        var forceY = undefined;
-
-        if (check.up && pos.y <= (bounds.y + 1))
+        if (worldCollision.up && this.y <= (worldBounds.y + 1))
         {
-            if (this.y !== bounds.y && this.velocity.y <= 0)
-            {
-                forceY = bounds.y;
-            }
-
-            this.setWorldBlockedUp(forceY);
+            this.setWorldBlockedUp(true);
         }
-        else if (check.down && this.bottom >= (bounds.bottom - 1))
+        else if (worldCollision.down && this.bottom >= (worldBounds.bottom - 1))
         {
-            if (this.bottom !== bounds.bottom && this.velocity.y >= 0)
-            {
-                forceY = bounds.bottom;
-            }
-
-            this.setWorldBlockedDown(forceY);
+            this.setWorldBlockedDown(true);
         }
-
-        if (forceY)
-        {
-            this.updateCenter();
-        }
-
-        return (forceY !== undefined);
     },
 
     /**
@@ -2185,13 +2198,18 @@ var Body = new Class({
 
         this.setBlocker(by);
 
-        if (forceY && this.forcePosition !== 2)
+        //  We don't reposition this body if it's already blocked on a face
+        if (!forceY || this.forcePosition === 2 || this.worldBlocked.down || this.worldBlocked.up)
         {
-            if (IntersectsRect(this, by))
-            {
-                this.y = by.bottom;
-                this.forcePosition = 1;
-            }
+            return this;
+        }
+
+        if (IntersectsRect(this, by))
+        {
+            console.log(this.gameObject.name, 'setBlockedUp', by.y, 'check', forceY, this.forcePosition, this.isBlocked());
+
+            this.y = by.bottom;
+            this.forcePosition = 1;
         }
 
         return this;
@@ -2215,13 +2233,18 @@ var Body = new Class({
         //  GetOverlapY = calls this, setting 'true' for forcing Y
         //  SeparateY = calls this, not setting anything, so 'true' for forcing Y
 
-        if (forceY && this.forcePosition !== 2)
+        //  We don't reposition this body if it's already blocked on a face
+        if (!forceY || this.forcePosition === 2 || this.worldBlocked.down || this.worldBlocked.up)
         {
-            if (IntersectsRect(this, by))
-            {
-                this.bottom = by.y;
-                this.forcePosition = 1;
-            }
+            return this;
+        }
+
+        if (IntersectsRect(this, by))
+        {
+            console.log(this.gameObject.name, 'setBlockedDown', by.y, 'check', forceY, this.forcePosition, this.worldBlocked.down);
+
+            this.bottom = by.y;
+            this.forcePosition = 1;
         }
 
         return this;
@@ -2253,14 +2276,23 @@ var Body = new Class({
 
     setWorldBlockedUp: function (forceY)
     {
+        var worldBounds = this.world.bounds;
         var worldBlocked = this.worldBlocked;
+        var worldCollision = this.world.checkCollision;
+
+        if (!worldCollision.up)
+        {
+            return;
+        }
 
         worldBlocked.up = true;
         worldBlocked.none = false;
 
-        if (forceY !== undefined && !this.wasBlocked.up)
+        if (forceY && this.y !== worldBounds.y)
+        // if (forceY && this.y < worldBounds.y)
+        // if (forceY)
         {
-            this.y = forceY;
+            this.y = worldBounds.y;
             this.forcePosition = 2;
         }
 
@@ -2269,15 +2301,24 @@ var Body = new Class({
 
     setWorldBlockedDown: function (forceY)
     {
+        var worldBounds = this.world.bounds;
         var worldBlocked = this.worldBlocked;
+        var worldCollision = this.world.checkCollision;
+
+        if (!worldCollision.down)
+        {
+            return;
+        }
 
         worldBlocked.down = true;
         worldBlocked.none = false;
 
-        if (forceY !== undefined && !this.wasBlocked.down)
+        if (forceY && this.bottom !== worldBounds.bottom)
+        // if (forceY && this.bottom > worldBounds.bottom)
+        // if (forceY)
         {
             console.log(this.gameObject.name, 'world blocked down + position');
-            this.bottom = forceY;
+            this.bottom = worldBounds.bottom;
             this.forcePosition = 2;
         }
 
@@ -2390,21 +2431,20 @@ var Body = new Class({
 
         if (this.collideWorldBounds)
         {
-            var pos = this.position;
-            var bounds = this.world.bounds;
-            var check = this.world.checkCollision;
+            var worldBounds = this.world.bounds;
+            var worldCollision = this.world.checkCollision;
 
-            if (amount < 0 && check.up && pos.y + amount < bounds.y)
+            if (amount < 0 && worldCollision.up && this.y + amount < worldBounds.y)
             {
-                this.setWorldBlockedUp();
+                this.setWorldBlockedUp(true);
 
-                return amount - ((pos.y + amount) - bounds.y);
+                return amount - ((this.y + amount) - worldBounds.y);
             }
-            else if (amount > 0 && check.down && this.bottom + amount > bounds.bottom)
+            else if (amount > 0 && worldCollision.down && this.bottom + amount > worldBounds.bottom)
             {
-                this.setWorldBlockedDown();
+                this.setWorldBlockedDown(true);
 
-                return amount - ((this.bottom + amount) - bounds.bottom);
+                return amount - ((this.bottom + amount) - worldBounds.bottom);
             }
         }
 

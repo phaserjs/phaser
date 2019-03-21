@@ -1364,7 +1364,7 @@ var World = new Class({
         //  Do we separate on x or y first?
         if (this.forceX || Math.abs(this.gravity.y + body1.gravity.y) < Math.abs(this.gravity.x + body1.gravity.x))
         {
-            resultX = SeparateX(body1, body2, overlapOnly, this.OVERLAP_BIAS);
+            // resultX = SeparateX(body1, body2, overlapOnly, this.OVERLAP_BIAS);
 
             //  Are they still intersecting? Let's do the other axis then
             if (this.intersects(body1, body2))

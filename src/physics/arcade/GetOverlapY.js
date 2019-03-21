@@ -59,6 +59,8 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
 
         if (!overlapOnly)
         {
+            console.log('GetOverlapY !topFace');
+
             body1.setTouchingDown();
             body2.setTouchingUp();
 
@@ -82,6 +84,8 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
 
         if (!overlapOnly)
         {
+            console.log('GetOverlapY topFace');
+
             body1.setTouchingUp();
             body2.setTouchingDown();
 
