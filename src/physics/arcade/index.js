@@ -26,6 +26,7 @@ var Arcade = {
     Factory: require('./Factory'),
     Group: require('./PhysicsGroup'),
     Image: require('./ArcadeImage'),
+    IntersectsRect: require('./IntersectsRect'),
     Sprite: require('./ArcadeSprite'),
     StaticBody: require('./StaticBody'),
     StaticGroup: require('./StaticPhysicsGroup'),
