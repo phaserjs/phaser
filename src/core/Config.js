@@ -77,6 +77,11 @@ var Config = new Class({
         this.scaleMode = GetValue(config, 'scaleMode', 0);
 
         /**
+         * @const {boolean} Phaser.Core.Config#forceOrientation - Toggle force orientation for the Scale Manager. The default is false, which means closed.
+         */
+        this.forceOrientation = GetValue(config, 'forceOrientation', false);
+
+        /**
          * @const {boolean} Phaser.Core.Config#expandParent - Is the Scale Manager allowed to adjust the CSS height property of the parent to be 100%?
          */
         this.expandParent = GetValue(config, 'expandParent', true);

@@ -234,6 +234,15 @@ var ScaleManager = new Class({
         this.scaleMode = CONST.SCALE_MODE.NONE;
 
         /**
+         * Toggle for force orientation.
+         *
+         * @name Phaser.Scale.ScaleManager#forceOrientation
+         * @type {boolean}
+         * @since 3.17.0
+         */
+        this.forceOrientation = false;
+
+        /**
          * The canvas resolution.
          * 
          * This is hard-coded to a value of 1 in the 3.16 release of Phaser and will be enabled at a later date.
@@ -491,6 +500,7 @@ var ScaleManager = new Class({
         var scaleMode = config.scaleMode;
         var resolution = config.resolution;
         var zoom = config.zoom;
+        var forceOrientation = config.forceOrientation;
         var autoRound = config.autoRound;
 
         //  If width = '100%', or similar value
@@ -531,6 +541,8 @@ var ScaleManager = new Class({
         this.resolution = 1;
 
         this.scaleMode = scaleMode;
+
+        this.forceOrientation = forceOrientation;
 
         this.autoRound = autoRound;
 
@@ -1732,7 +1744,8 @@ var ScaleManager = new Class({
 
         get: function ()
         {
-            return (this.isLandscape !== this.isGameLandscape);
+            var isOrientationNotMatched = this.isLandscape !== this.isGameLandscape;
+            return this.forceOrientation && isOrientationNotMatched;
         }
 
     }
