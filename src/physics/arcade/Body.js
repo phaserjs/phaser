@@ -988,6 +988,7 @@ var Body = new Class({
         this.overlapX = 0;
         this.overlapY = 0;
 
+        this.snapTo = null;
         this.embedded = false;
         this.forcePosition = 0;
 
@@ -2307,7 +2308,7 @@ var Body = new Class({
                 return this;
             }
 
-            if (body2 && !collisionInfo.set)
+            if (body2 && !collisionInfo.set && !this.snapTo)
             {
                 console.log(this.gameObject.name, 'setBlockedUp', body2.bottom);
 
@@ -2352,7 +2353,7 @@ var Body = new Class({
                 return this;
             }
 
-            if (body2 && !collisionInfo.set)
+            if (body2 && !collisionInfo.set && !this.snapTo)
             {
                 console.log(this.gameObject.name, 'setBlockedDown', body2.y);
 
