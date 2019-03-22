@@ -31,7 +31,7 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
     {
         if (collisionInfo.face === CONST.FACING_UP)
         {
-            console.log('GetOverlapY topFace');
+            // console.log('GetOverlapY topFace');
 
             if (collisionInfo.body1 === body1)
             {
@@ -49,7 +49,7 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
         }
         else if (collisionInfo.face === CONST.FACING_DOWN)
         {
-            console.log('GetOverlapY bottomFace');
+            // console.log('GetOverlapY bottomFace');
 
             if (collisionInfo.body1 === body1)
             {
