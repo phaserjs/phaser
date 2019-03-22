@@ -92,10 +92,6 @@ var GetOverlapX = function (body1, body2, overlapOnly, bias)
         }
     }
 
-    //  Resets the overlapX to zero if there is no overlap, or to the actual pixel value if there is
-    body1.overlapX = overlap;
-    body2.overlapX = overlap;
-
     return overlap;
 };
 
