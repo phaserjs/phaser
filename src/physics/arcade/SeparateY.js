@@ -36,10 +36,9 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
 
     var collisionInfo = GetOverlapY(body1, body2, overlapOnly, bias);
 
-    console.log(collisionInfo);
-
-    console.log('post-GetOverlap by = body1', body1.y, 'body2', body2.y);
-    console.log('post-GetOverlap gy = body1', body1.gameObject.y, 'body2', body2.gameObject.y);
+    // console.log(collisionInfo);
+    // console.log('post-GetOverlap by = body1', body1.y, 'body2', body2.y);
+    // console.log('post-GetOverlap gy = body1', body1.gameObject.y, 'body2', body2.gameObject.y);
 
     var overlap = collisionInfo.overlapY;
     var topFace = collisionInfo.face === CONST.FACING_UP;
