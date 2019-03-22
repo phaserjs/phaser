@@ -56,14 +56,20 @@ var CollisionInfo = {
 
                 share = overlapY * 0.5;
 
-                share1 = body1.getMoveY(share);
+                if (!body1.immovable)
+                {
+                    share1 = body1.getMoveY(share);
+                }
 
                 if (share1 < share)
                 {
                     share += (share - share1);
                 }
-    
-                share2 = body2.getMoveY(-share);
+
+                if (!body2.immovable)
+                {
+                    share2 = body2.getMoveY(-share);
+                }
             }
             else
             {
@@ -81,14 +87,20 @@ var CollisionInfo = {
 
                 share = overlapY * 0.5;
 
-                share2 = body2.getMoveY(share);
+                if (!body2.immovable)
+                {
+                    share2 = body2.getMoveY(share);
+                }
 
                 if (share2 < share)
                 {
                     share += (share - share2);
                 }
     
-                share1 = body1.getMoveY(-share);
+                if (!body1.immovable)
+                {
+                    share1 = body1.getMoveY(-share);
+                }
             }
             else
             {
