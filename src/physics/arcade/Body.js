@@ -314,7 +314,7 @@ var Body = new Class({
 
         this._sleep = 0;
 
-        this.sleepIterations = 60;
+        this.sleepIterations = 60 * world.positionIterations;
 
         //  0 = none, 1 = soft block, 2 = hard block
         this.forcePosition = 0;
@@ -1063,7 +1063,7 @@ var Body = new Class({
                 this.checkWorldRebound();
             }
         
-            if (this.forcePosition !== 5)
+            if (this.forcePosition < 5)
             {
                 position.x += this.getMoveX(velocity.x * delta);
                 position.y += this.getMoveY(velocity.y * delta);
@@ -1174,8 +1174,8 @@ var Body = new Class({
             }
             else if (!this.sleeping)
             {
-                gameObject.x += dx;
-                gameObject.y += dy;
+                gameObject.x += dx / this.world.positionIterations;
+                gameObject.y += dy / this.world.positionIterations;
 
                 if (this.allowRotation)
                 {
@@ -2292,22 +2292,22 @@ var Body = new Class({
             {
                 ArrayAdd(this.blockers.up, collisionInfo);
             }
-            else
+            else if (body2.isWorldBlockedUp())
             {
-                if (body2.isWorldBlockedUp())
-                {
-                    this.setHardBlockedUp();
-                }
+                this.setHardBlockedUp();
+
+                this.forcePosition = 6;
+
+                this.y = body2.bottom;
             }
 
             //  We don't reposition this body if it's already blocked on a face
-            if (this.forcePosition === 5 || this.worldBlocked.down || this.worldBlocked.up)
+            if (this.forcePosition === 5 || this.isWorldBlockedUp() || this.isWorldBlockedDown())
             {
                 return this;
             }
 
-            // if (body2 && !collisionInfo.set)
-            if (body2)
+            if (body2 && !collisionInfo.set)
             {
                 console.log(this.gameObject.name, 'setBlockedUp', body2.bottom);
 
@@ -2317,7 +2317,7 @@ var Body = new Class({
 
                 this.forcePosition = 1;
 
-                // collisionInfo.set = true;
+                collisionInfo.set = true;
             }
         }
 
@@ -2337,22 +2337,22 @@ var Body = new Class({
             {
                 ArrayAdd(this.blockers.down, collisionInfo);
             }
-            else
+            else if (body2.isWorldBlockedDown())
             {
-                if (body2.isWorldBlockedDown())
-                {
-                    this.setHardBlockedDown();
-                }
+                this.setHardBlockedDown();
+
+                this.forcePosition = 7;
+
+                this.bottom = body2.y;
             }
 
             //  We don't reposition this body if it's already blocked on a face
-            if (this.forcePosition === 5 || this.worldBlocked.down || this.worldBlocked.up)
+            if (this.forcePosition === 5 || this.isWorldBlockedUp() || this.isWorldBlockedDown())
             {
                 return this;
             }
 
-            // if (body2 && !collisionInfo.set)
-            if (body2)
+            if (body2 && !collisionInfo.set)
             {
                 console.log(this.gameObject.name, 'setBlockedDown', body2.y);
 
@@ -2362,7 +2362,7 @@ var Body = new Class({
 
                 this.forcePosition = 2;
 
-                // collisionInfo.set = true;
+                collisionInfo.set = true;
             }
         }
 
