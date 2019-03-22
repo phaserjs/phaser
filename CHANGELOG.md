@@ -29,6 +29,13 @@ Notes:
 * The internal method `SeparateTile` now has a new argument `isLayer` which controls if the set comes from a layer or an array.
 * The internal method `TileCheckX` now has a new argument `isLayer` which controls if the set comes from a layer or an array.
 * The internal method `TileCheckY` now has a new argument `isLayer` which controls if the set comes from a layer or an array.
+* `Body.isMoving` has been removed as it was never used internally.
+* `Body.stopVelocityOnCollide` has been removed as it was never used internally.
+* `Body.overlapX` has been removed as it was never used internally. It's now available in a `CollisionInfo` object.
+* `Body.overlapY` has been removed as it was never used internally. It's now available in a `CollisionInfo` object.
+* `Body.overlapR` has been removed as it was never used internally.
+* `StaticBody.overlapX` has been removed as it was never used internally. It's now available in a `CollisionInfo` object.
+* `StaticBody.overlapY` has been removed as it was never used internally. It's now available in a `CollisionInfo` object.
 
 #### Bug Fixes
 
