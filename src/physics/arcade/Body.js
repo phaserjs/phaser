@@ -1054,11 +1054,6 @@ var Body = new Class({
         {
             this.world.updateMotion(this, delta);
 
-            // if (!this.sleeping && this.gameObject.name === 'vu1')
-            // {
-            //     console.log(this.world._frame, 'UP Y', velocity.y, position.y, this.prev.y, this.blockers.length);
-            // }
-
             if (this.collideWorldBounds && !this.worldBlocked.none)
             {
                 this.checkWorldRebound();
@@ -1273,7 +1268,7 @@ var Body = new Class({
             this.sleeping = true;
 
             console.log(this.gameObject.name, 'put to sleep on frame', this.world._frame, 'force?', forceY, 'at', this.y);
-
+    
             this.velocity.set(0);
             this.prevVelocity.set(0);
             this.speed = 0;
@@ -2083,6 +2078,9 @@ var Body = new Class({
     setVelocity: function (x, y)
     {
         this.velocity.set(x, y);
+
+        x = this.velocity.x;
+        y = this.velocity.y;
 
         this.speed = Math.sqrt(x * x + y * y);
 

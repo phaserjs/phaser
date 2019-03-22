@@ -35,6 +35,7 @@ Notes:
 * The `Body.delta` values are now able to be read and acted upon during a Scene update, due to the new game step flow. This means you can now call `this.physics.collide` during a Scene `update` and it will work properly again. Fix #4370 (thanks @NokFrt)
 * `ArcadePhysics.furthest` now iterates the bodies Set, rather than the RTree, which keeps it working even if the RTree has been disabled.
 * `ArcadePhysics.closest` now iterates the bodies Set, rather than the RTree, which keeps it working even if the RTree has been disabled.
+* `Body.setVelocity` was cause the `speed` property to be set to `NaN` if you didn't provide a `y` argument.
 
 ### Facebook Instant Games Plugin
 
