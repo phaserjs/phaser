@@ -728,15 +728,15 @@ var Body = new Class({
         this.worldBlocked = { none: true, up: false, down: false, left: false, right: false };
 
         /**
-         * The world blocked state of this body in the previous frame.
+         * 
          *
-         * @name Phaser.Physics.Arcade.Body#wasBlocked
+         * @name Phaser.Physics.Arcade.Body#hardBlocked
          * @type {Phaser.Physics.Arcade.Types.ArcadeBodyCollision}
          * @since 3.17.0
          */
-        this.wasBlocked = { up: false, down: false, left: false, right: false };
+        this.hardBlocked = { none: true, up: false, down: false, left: false, right: false };
 
-        this.blockers = [];
+        this.blockers = { up: [], down: [], left: [], right: [] };
 
         /**
          * Whether to automatically synchronize this Body's dimensions to the dimensions of its Game Object's visual bounds.
@@ -956,6 +956,7 @@ var Body = new Class({
         var touching = this.touching;
         var blocked = this.blocked;
         var worldBlocked = this.worldBlocked;
+        var hardBlocked = this.hardBlocked;
 
         touching.none = true;
         touching.up = false;
@@ -975,6 +976,13 @@ var Body = new Class({
         worldBlocked.up = false;
         worldBlocked.down = false;
 
+        hardBlocked.none = true;
+        hardBlocked.left = false;
+        hardBlocked.right = false;
+        hardBlocked.up = false;
+        hardBlocked.down = false;
+
+        //  Remove?
         this.overlapR = 0;
         this.overlapX = 0;
         this.overlapY = 0;
@@ -1167,9 +1175,6 @@ var Body = new Class({
         this.checkSleep(dx, dy);
 
         //  Store collision flags
-        var wasBlocked = this.wasBlocked;
-        var worldBlocked = this.worldBlocked;
-
         var wasTouching = this.wasTouching;
         var touching = this.touching;
 
@@ -1179,18 +1184,8 @@ var Body = new Class({
         wasTouching.left = touching.left;
         wasTouching.right = touching.right;
 
-        wasBlocked.up = worldBlocked.up;
-        wasBlocked.down = worldBlocked.down;
-        wasBlocked.left = worldBlocked.left;
-        wasBlocked.right = worldBlocked.right;
-
         this.prevVelocity.x = this.velocity.x;
         this.prevVelocity.y = this.velocity.y;
-
-        if (!this.sleeping)
-        {
-            // console.log('frame', this.world._frame, this.gameObject.name, 'vy', this.velocity.y, 'sleep', this._sleep, 'y', this.y, 'gy', this.gameObject.y, 'blocked', this.blocked.down);
-        }
     },
 
     sleep: function (forceY)
@@ -1227,18 +1222,47 @@ var Body = new Class({
             }
             else if (forceY && !blocked.none)
             {
-                console.log(this.gameObject.name, 'sleeping and fixed to blocker bounds');
+                console.log(this.gameObject.name, 'sleeping and fixed to blocker bounds scanning ...');
+
+                var body2;
 
                 if (blocked.down)
                 {
-                    // this.bottom = worldBounds.bottom;
-                    this.forcePosition = 2;
+                    body2 = this.getBlocker(this.blockers.down);
+
+                    if (body2)
+                    {
+                        console.log('blocker bounds found', body2.y);
+
+                        this.bottom = body2.y;
+
+                        this.forcePosition = 2;
+                    }
                 }
                 else if (blocked.up)
                 {
                     // this.y = worldBounds.y;
                     this.forcePosition = 2;
                 }
+            }
+        }
+    },
+
+    getBlocker: function (blockers)
+    {
+        for (var i = 0; i < blockers.length; i++)
+        {
+            var collisionInfo = blockers[i];
+
+            console.log('CI', collisionInfo.body1.gameObject.name, collisionInfo.body2.gameObject.name);
+
+            if (collisionInfo.body1 === this)
+            {
+                return collisionInfo.body2;
+            }
+            else if (collisionInfo.body2 === this)
+            {
+                return collisionInfo.body1;
             }
         }
     },
@@ -1258,20 +1282,23 @@ var Body = new Class({
     {
         //  Iterate through the list of previous frame blockers and see if they are still there
 
-        var currentBlockers = [];
-        var prevBlockers = this.blockers;
-
-        for (var i = 0; i < prevBlockers.length; i++)
+        for (var face in this.blockers)
         {
-            var data = prevBlockers[i];
+            var currentBlockers = [];
+            var prevBlockers = this.blockers[face];
 
-            if (CheckOverlapY(this, data))
+            for (var i = 0; i < prevBlockers.length; i++)
             {
-                currentBlockers.push(data);
+                var data = prevBlockers[i];
+    
+                if (CheckOverlapY(this, data))
+                {
+                    currentBlockers.push(data);
+                }
             }
+    
+            this.blockers[face] = currentBlockers;
         }
-
-        this.blockers = currentBlockers;
     },
 
     //  Is this body moving OR can it be made to move?
@@ -1315,7 +1342,7 @@ var Body = new Class({
         if (!this.collideWorldBounds || worldBlocked.none || velocity.equals(0) || (bx === 0 && by === 0))
         {
             //  Nothing to do
-            console.log('CWB abort', this.collideWorldBounds, worldBlocked.none, velocity.equals(0));
+            // console.log('CWB abort', this.collideWorldBounds, worldBlocked.none, velocity.equals(0));
 
             return true;
         }
@@ -1441,7 +1468,7 @@ var Body = new Class({
         return (gy === 0 || (gy < 0 && this.isBlockedUp()) || (gy > 0 && this.isBlockedDown()));
     },
 
-    //  Check for sleeping state
+    //  Check for sleeping state (called during postUpdate AFTER positioning)
     checkSleep: function (dx, dy)
     {
         //  Can't sleep if not blocked in the opposite direction somehow
@@ -1463,8 +1490,14 @@ var Body = new Class({
     
                     if (this._sleep >= this.sleepIterations)
                     {
-                        console.log('slept by checkSleep');
-                        this.sleep();
+                        console.log(this.world._frame, 'slept by checkSleep');
+
+                        this.sleep(true);
+
+                        var gameObject = this.gameObject;
+
+                        gameObject.x = this.x;
+                        gameObject.y = this.y;
                     }
                 }
             }
@@ -1904,6 +1937,7 @@ var Body = new Class({
 
         var blocked = this.blocked;
         var worldBlocked = this.worldBlocked;
+        var hardBlocked = this.hardBlocked;
 
         var color;
 
@@ -1912,9 +1946,9 @@ var Body = new Class({
             //  Top
             color = (this.sleeping) ? sleepColor : this.debugBodyColor;
 
-            if (blocked.up || worldBlocked.up)
+            if (blocked.up || worldBlocked.up || hardBlocked.up)
             {
-                color = (worldBlocked.up) ? worldBlockedColor : blockedColor;
+                color = (worldBlocked.up || hardBlocked.up) ? worldBlockedColor : blockedColor;
             }
 
             graphic.lineStyle(thickness, color).lineBetween(x1, y1 + halfThickness, x2, y2 + halfThickness);
@@ -1922,9 +1956,9 @@ var Body = new Class({
             //  Bottom
             color = (this.sleeping) ? sleepColor : this.debugBodyColor;
 
-            if (blocked.down || worldBlocked.down)
+            if (blocked.down || worldBlocked.down || hardBlocked.down)
             {
-                color = (worldBlocked.down) ? worldBlockedColor : blockedColor;
+                color = (worldBlocked.down || hardBlocked.down) ? worldBlockedColor : blockedColor;
             }
 
             graphic.lineStyle(thickness, color).lineBetween(x3, y3 - halfThickness, x4, y4 - halfThickness);
@@ -2185,6 +2219,26 @@ var Body = new Class({
         return this;
     },
 
+    setHardBlockedUp: function ()
+    {
+        var hardBlocked = this.hardBlocked;
+
+        hardBlocked.none = false;
+        hardBlocked.up = true;
+
+        return this;
+    },
+
+    setHardBlockedDown: function ()
+    {
+        var hardBlocked = this.hardBlocked;
+
+        hardBlocked.none = false;
+        hardBlocked.down = true;
+
+        return this;
+    },
+
     setBlockedUp: function (collisionInfo, body2)
     {
         var blocked = this.blocked;
@@ -2196,7 +2250,14 @@ var Body = new Class({
         {
             if (!body2)
             {
-                ArrayAdd(this.blockers, collisionInfo);
+                ArrayAdd(this.blockers.up, collisionInfo);
+            }
+            else
+            {
+                if (body2.isWorldBlockedUp())
+                {
+                    this.setHardBlockedUp();
+                }
             }
 
             //  We don't reposition this body if it's already blocked on a face
@@ -2230,7 +2291,14 @@ var Body = new Class({
         {
             if (!body2)
             {
-                ArrayAdd(this.blockers, collisionInfo);
+                ArrayAdd(this.blockers.down, collisionInfo);
+            }
+            else
+            {
+                if (body2.isWorldBlockedDown())
+                {
+                    this.setHardBlockedDown();
+                }
             }
 
             //  We don't reposition this body if it's already blocked on a face
@@ -2392,27 +2460,27 @@ var Body = new Class({
 
     isBlocked: function ()
     {
-        return (!this.blocked.none || !this.worldBlocked.none);
+        return (!this.blocked.none || !this.worldBlocked.none || !this.hardBlocked.none);
     },
 
     isBlockedUp: function ()
     {
-        return (this.blocked.up || this.worldBlocked.up);
+        return (this.blocked.up || this.worldBlocked.up || this.hardBlocked.up);
     },
 
     isBlockedDown: function ()
     {
-        return (this.blocked.down || this.worldBlocked.down);
+        return (this.blocked.down || this.worldBlocked.down || this.hardBlocked.down);
     },
 
     isWorldBlockedDown: function ()
     {
-        return this.worldBlocked.down;
+        return (this.worldBlocked.down || this.hardBlocked.down);
     },
 
     isWorldBlockedUp: function ()
     {
-        return this.worldBlocked.up;
+        return (this.worldBlocked.up || this.hardBlocked.up);
     },
 
     //  Is this body world blocked AND blocked on the opposite face?
@@ -2420,10 +2488,11 @@ var Body = new Class({
     {
         var blocked = this.blocked;
         var worldBlocked = this.worldBlocked;
+        var hardBlocked = this.hardBlocked;
 
         return (
-            (worldBlocked.down && blocked.up) ||
-            (worldBlocked.up && blocked.down)
+            ((worldBlocked.down || hardBlocked.down) && blocked.up) ||
+            ((worldBlocked.up || hardBlocked.up) && blocked.down)
         );
     },
 
