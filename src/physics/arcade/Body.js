@@ -2509,39 +2509,47 @@ var Body = new Class({
         {
             return diff;
         }
-        else if (amount < 0 && this.isBlockedUp())
+        else
         {
-            bounds = this.getBlocker(this.blockers.up);
-
-            if (bounds && this.y + amount < bounds.y)
+            if (this.collideWorldBounds)
             {
-                diff = amount - ((this.y + amount) - bounds.y);
+                var worldCollision = this.world.checkCollision;
+    
+                if (amount < 0 && worldCollision.up && this.y + amount < bounds.y)
+                {
+                    diff = amount - ((this.y + amount) - bounds.y);
+    
+                    this.setWorldBlockedUp(true);
+
+                    return diff;
+                }
+                else if (amount > 0 && worldCollision.down && this.bottom + amount > bounds.bottom)
+                {
+                    diff = amount - ((this.bottom + amount) - bounds.bottom);
+    
+                    this.setWorldBlockedDown(true);
+
+                    return diff;
+                }
             }
-        }
-        else if (amount > 0 && this.isBlockedDown())
-        {
-            bounds = this.getBlocker(this.blockers.down);
 
-            if (bounds && this.bottom + amount > bounds.bottom)
+            if (amount < 0 && this.isBlockedUp())
             {
-                diff = amount - ((this.bottom + amount) - bounds.bottom);
+                bounds = this.getBlocker(this.blockers.up);
+
+                if (bounds && this.y + amount < bounds.y)
+                {
+                    diff = amount - ((this.y + amount) - bounds.y);
+                }
             }
-        }
-        else if (this.collideWorldBounds)
-        {
-            var worldCollision = this.world.checkCollision;
-
-            if (amount < 0 && worldCollision.up && this.y + amount < bounds.y)
+            else if (amount > 0 && this.isBlockedDown())
             {
-                diff = amount - ((this.y + amount) - bounds.y);
-
-                this.setWorldBlockedUp(true);
-            }
-            else if (amount > 0 && worldCollision.down && this.bottom + amount > bounds.bottom)
-            {
-                diff = amount - ((this.bottom + amount) - bounds.bottom);
-
-                this.setWorldBlockedDown(true);
+                bounds = this.getBlocker(this.blockers.down);
+    
+                if (bounds && this.bottom + amount > bounds.bottom)
+                {
+                    diff = amount - ((this.bottom + amount) - bounds.bottom);
+                }
             }
         }
 
