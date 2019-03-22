@@ -7,7 +7,6 @@
 var ArrayAdd = require('../../utils/array/Add');
 var CircleContains = require('../../geom/circle/Contains');
 var CheckOverlapY = require('./CheckOverlapY');
-var CollisionInfo = require('./CollisionInfo');
 var Class = require('../../utils/Class');
 var CONST = require('./const');
 var Events = require('./events');
@@ -319,6 +318,8 @@ var Body = new Class({
 
         //  0 = none, 1 = soft block, 2 = hard block
         this.forcePosition = 0;
+
+        this.snapTo = null;
 
         /**
          * The Body's absolute maximum change in position, in pixels per step.
@@ -1062,7 +1063,7 @@ var Body = new Class({
                 this.checkWorldRebound();
             }
         
-            if (this.forcePosition !== 2)
+            if (this.forcePosition !== 5)
             {
                 position.x += this.getMoveX(velocity.x * delta);
                 position.y += this.getMoveY(velocity.y * delta);
@@ -1147,12 +1148,26 @@ var Body = new Class({
                 this.facing = CONST.FACING_DOWN;
             }
 
-            if (this.forcePosition !== 0)
+            if (this.forcePosition > 0)
             {
-                console.log(this.world._frame, this.gameObject.name, 'forcePosition', this.y, 'type', this.forcePosition);
+                console.log(this.world._frame, this.gameObject.name, 'forcePosition. Type: ', this.forcePosition);
 
-                gameObject.x = this.x;
-                gameObject.y = this.y;
+                var snapX = this.x;
+                var snapY = this.y;
+
+                switch (this.forcePosition)
+                {
+                    case 1:
+                        snapY = this.snapTo.bottom;
+                        break;
+
+                    case 2:
+                        snapY = this.snapTo.y - this.height;
+                        break;
+                }
+    
+                gameObject.x = snapX;
+                gameObject.y = snapY;
 
                 dx = 0;
                 dy = 0;
@@ -1188,6 +1203,68 @@ var Body = new Class({
         this.prevVelocity.y = this.velocity.y;
     },
 
+    snapToBlocker: function ()
+    {
+        if (this.velocity.y !== 0)
+        {
+            return;
+        }
+
+        var blocked = this.blocked;
+        var worldBlocked = this.worldBlocked;
+
+        if (!worldBlocked.none)
+        {
+            console.log(this.gameObject.name, 'snapped to world bounds');
+
+            var worldBounds = this.world.bounds;
+
+            if (worldBlocked.down)
+            {
+                this.bottom = worldBounds.bottom;
+                this.forcePosition = 5;
+            }
+            else if (worldBlocked.up)
+            {
+                this.y = worldBounds.y;
+                this.forcePosition = 5;
+            }
+        }
+        else if (!blocked.none)
+        {
+            console.log(this.gameObject.name, 'snapped to blocker bounds scanning ...');
+
+            var body2;
+
+            if (blocked.down)
+            {
+                body2 = this.getBlocker(this.blockers.down);
+
+                if (body2)
+                {
+                    console.log('blocker bounds found', body2.y);
+
+                    this.bottom = body2.y;
+
+                    this.forcePosition = 5;
+                }
+            }
+            else if (blocked.up)
+            {
+                body2 = this.getBlocker(this.blockers.up);
+
+                if (body2)
+                {
+                    console.log('blocker bounds found', body2.y);
+
+                    this.y = body2.bottom;
+
+                    this.forcePosition = 5;
+                }
+            }
+        }
+    },
+
     sleep: function (forceY)
     {
         if (!this.sleeping)
@@ -1200,50 +1277,9 @@ var Body = new Class({
             this.prevVelocity.set(0);
             this.speed = 0;
 
-            var blocked = this.blocked;
-            var worldBlocked = this.worldBlocked;
-
-            if (forceY && !worldBlocked.none)
+            if (forceY)
             {
-                console.log(this.gameObject.name, 'sleeping and fixed to world bounds');
-
-                var worldBounds = this.world.bounds;
-
-                if (worldBlocked.down)
-                {
-                    this.bottom = worldBounds.bottom;
-                    this.forcePosition = 2;
-                }
-                else if (worldBlocked.up)
-                {
-                    this.y = worldBounds.y;
-                    this.forcePosition = 2;
-                }
-            }
-            else if (forceY && !blocked.none)
-            {
-                console.log(this.gameObject.name, 'sleeping and fixed to blocker bounds scanning ...');
-
-                var body2;
-
-                if (blocked.down)
-                {
-                    body2 = this.getBlocker(this.blockers.down);
-
-                    if (body2)
-                    {
-                        console.log('blocker bounds found', body2.y);
-
-                        this.bottom = body2.y;
-
-                        this.forcePosition = 2;
-                    }
-                }
-                else if (blocked.up)
-                {
-                    // this.y = worldBounds.y;
-                    this.forcePosition = 2;
-                }
+                this.snapToBlocker();
             }
         }
     },
@@ -1384,7 +1420,7 @@ var Body = new Class({
                     
                     console.log(this.gameObject.name, 'rebounded up', newVelocityY, gravityY, 'frame', this.world._frame);
 
-                    if (this.forcePosition === 2)
+                    if (this.forcePosition === 5)
                     {
                         this.forcePosition = 0;
                     }
@@ -1414,7 +1450,7 @@ var Body = new Class({
 
                     console.log(this.gameObject.name, 'rebounded down', newVelocityY, gravityY, 'frame', this.world._frame);
 
-                    if (this.forcePosition === 2)
+                    if (this.forcePosition === 5)
                     {
                         this.forcePosition = 0;
                     }
@@ -1445,7 +1481,7 @@ var Body = new Class({
 
                     console.log(this.gameObject.name, 'rebounded zero-g', newVelocityY, velocity.y);
 
-                    if (this.forcePosition === 2)
+                    if (this.forcePosition === 5)
                     {
                         this.forcePosition = 0;
                     }
@@ -2265,19 +2301,23 @@ var Body = new Class({
             }
 
             //  We don't reposition this body if it's already blocked on a face
-            if (this.forcePosition === 2 || this.worldBlocked.down || this.worldBlocked.up)
+            if (this.forcePosition === 5 || this.worldBlocked.down || this.worldBlocked.up)
             {
                 return this;
             }
 
-            if (body2 && !collisionInfo.set)
+            // if (body2 && !collisionInfo.set)
+            if (body2)
             {
                 console.log(this.gameObject.name, 'setBlockedUp', body2.bottom);
 
+                this.snapTo = body2;
+
                 this.y = body2.bottom;
+
                 this.forcePosition = 1;
 
-                collisionInfo.set = true;
+                // collisionInfo.set = true;
             }
         }
 
@@ -2306,19 +2346,23 @@ var Body = new Class({
             }
 
             //  We don't reposition this body if it's already blocked on a face
-            if (this.forcePosition === 2 || this.worldBlocked.down || this.worldBlocked.up)
+            if (this.forcePosition === 5 || this.worldBlocked.down || this.worldBlocked.up)
             {
                 return this;
             }
 
-            if (body2 && !collisionInfo.set)
+            // if (body2 && !collisionInfo.set)
+            if (body2)
             {
                 console.log(this.gameObject.name, 'setBlockedDown', body2.y);
 
-                this.bottom = body2.y;
-                this.forcePosition = 1;
+                this.snapTo = body2;
 
-                collisionInfo.set = true;
+                this.bottom = body2.y;
+
+                this.forcePosition = 2;
+
+                // collisionInfo.set = true;
             }
         }
 
@@ -2367,9 +2411,11 @@ var Body = new Class({
 
         if (forceY && this.y !== worldBounds.y)
         {
-            console.log(this.gameObject.name, 'world blocked up + position');
             this.y = worldBounds.y;
-            this.forcePosition = 2;
+
+            this.forcePosition = 5;
+
+            console.log(this.world._frame, this.gameObject.name, 'world blocked up + position', this.y);
         }
 
         return this;
@@ -2393,7 +2439,7 @@ var Body = new Class({
         {
             this.bottom = worldBounds.bottom;
 
-            this.forcePosition = 2;
+            this.forcePosition = 5;
 
             console.log(this.world._frame, this.gameObject.name, 'world blocked down + position', this.y);
         }
