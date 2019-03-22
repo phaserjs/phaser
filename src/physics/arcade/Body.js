@@ -1254,7 +1254,7 @@ var Body = new Class({
         {
             var collisionInfo = blockers[i];
 
-            console.log('CI', collisionInfo.body1.gameObject.name, collisionInfo.body2.gameObject.name);
+            // console.log('CI', collisionInfo.body1.gameObject.name, collisionInfo.body2.gameObject.name);
 
             if (collisionInfo.body1 === this)
             {
@@ -1265,6 +1265,8 @@ var Body = new Class({
                 return collisionInfo.body1;
             }
         }
+
+        return null;
     },
 
     wake: function ()
@@ -1490,9 +1492,11 @@ var Body = new Class({
     
                     if (this._sleep >= this.sleepIterations)
                     {
-                        console.log(this.world._frame, 'slept by checkSleep');
+                        console.log(this.world._frame, 'checkSleep sending ...');
 
                         this.sleep(true);
+
+                        console.log(this.world._frame, 'slept by checkSleep');
 
                         var gameObject = this.gameObject;
 
@@ -2498,38 +2502,50 @@ var Body = new Class({
 
     getMoveY: function (amount)
     {
-        if (amount === 0 || amount < 0 && this.isBlockedUp() || amount > 0 && this.isBlockedDown())
-        {
-            //  If it's already blocked, or zero, it can't go anywhere
-            return 0;
-        }
+        var diff = amount;
+        var bounds = this.world.bounds;
 
-        if (this.collideWorldBounds)
+        if (amount === 0)
         {
-            var worldBounds = this.world.bounds;
+            return diff;
+        }
+        else if (amount < 0 && this.isBlockedUp())
+        {
+            bounds = this.getBlocker(this.blockers.up);
+
+            if (bounds && this.y + amount < bounds.y)
+            {
+                diff = amount - ((this.y + amount) - bounds.y);
+            }
+        }
+        else if (amount > 0 && this.isBlockedDown())
+        {
+            bounds = this.getBlocker(this.blockers.down);
+
+            if (bounds && this.bottom + amount > bounds.bottom)
+            {
+                diff = amount - ((this.bottom + amount) - bounds.bottom);
+            }
+        }
+        else if (this.collideWorldBounds)
+        {
             var worldCollision = this.world.checkCollision;
 
-            if (amount < 0 && worldCollision.up && this.y + amount < worldBounds.y)
+            if (amount < 0 && worldCollision.up && this.y + amount < bounds.y)
             {
-                var diff1 = amount - ((this.y + amount) - worldBounds.y);
+                diff = amount - ((this.y + amount) - bounds.y);
 
                 this.setWorldBlockedUp(true);
-
-                return diff1;
             }
-            else if (amount > 0 && worldCollision.down && this.bottom + amount > worldBounds.bottom)
+            else if (amount > 0 && worldCollision.down && this.bottom + amount > bounds.bottom)
             {
-                var diff2 = amount - ((this.bottom + amount) - worldBounds.bottom);
-
-                // console.log(this.world._frame, 'via check get move y');
+                diff = amount - ((this.bottom + amount) - bounds.bottom);
 
                 this.setWorldBlockedDown(true);
-
-                return diff2;
             }
         }
 
-        return amount;
+        return diff;
     },
 
     /**
