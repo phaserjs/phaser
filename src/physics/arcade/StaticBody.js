@@ -291,36 +291,6 @@ var StaticBody = new Class({
         this.customSeparateY = false;
 
         /**
-         * The amount of horizontal overlap (before separation), if this Body is colliding with another.
-         *
-         * @name Phaser.Physics.Arcade.StaticBody#overlapX
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.overlapX = 0;
-
-        /**
-         * The amount of vertical overlap (before separation), if this Body is colliding with another.
-         *
-         * @name Phaser.Physics.Arcade.StaticBody#overlapY
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.overlapY = 0;
-
-        /**
-         * The amount of overlap (before separation), if this StaticBody is circular and colliding with another circular body.
-         *
-         * @name Phaser.Physics.Arcade.StaticBody#overlapR
-         * @type {number}
-         * @default 0
-         * @since 3.0.0
-         */
-        this.overlapR = 0;
-
-        /**
          * Whether this StaticBody has ever overlapped with another while both were not moving.
          *
          * @name Phaser.Physics.Arcade.StaticBody#embedded
