@@ -971,11 +971,6 @@ var World = new Class({
             this.step(fixedDelta);
         }
 
-        if (stepsThisFrame > 1)
-        {
-            console.log('extra steps', stepsThisFrame);
-        }
-
         this.stepsLastFrame = stepsThisFrame;
     },
 
