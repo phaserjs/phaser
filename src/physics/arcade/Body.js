@@ -1569,6 +1569,11 @@ var Body = new Class({
                 }
             }
         }
+        else if (this.sleeping && !this.velocity.equals(this.prevVelocity))
+        {
+            console.log('body woken from significant change in velocity =', this.velocity.y);
+            this.wake();
+        }
 
         this._sleepX = this.x;
         this._sleepY = this.y;
