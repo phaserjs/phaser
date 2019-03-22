@@ -51,10 +51,18 @@ var CheckOverlapY = function (body, collisionInfo)
     {
         body2.setHardBlockedDown();
     }
+    else if (body2.isWorldBlockedDown())
+    {
+        body1.setHardBlockedDown();
+    }
 
     if (body1.isWorldBlockedUp())
     {
         body2.setHardBlockedUp();
+    }
+    else if (body2.isWorldBlockedUp())
+    {
+        body1.setHardBlockedUp();
     }
 
     return collisionInfo.touching;
