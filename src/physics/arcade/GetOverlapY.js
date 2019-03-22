@@ -40,6 +40,11 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
     
                 body1.setBlockedUp(collisionInfo);
                 body2.setBlockedDown(collisionInfo);
+
+                if (body2.isWorldBlockedUp())
+                {
+                    body1.setHardBlockedUp();
+                }
             }
         }
         else if (collisionInfo.face === CONST.FACING_DOWN)
@@ -53,6 +58,11 @@ var GetOverlapY = function (body1, body2, overlapOnly, bias)
 
                 body1.setBlockedDown(collisionInfo);
                 body2.setBlockedUp(collisionInfo);
+
+                if (body2.isWorldBlockedDown())
+                {
+                    body1.setHardBlockedDown();
+                }
             }
         }
     }

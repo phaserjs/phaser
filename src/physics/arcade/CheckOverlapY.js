@@ -29,7 +29,6 @@ var CheckOverlapY = function (body, collisionInfo)
     if (face === CONST.FACING_UP)
     {
         // console.log('CheckOverlapY topFace from', body.gameObject.name, 'body1 is', body1.gameObject.name, 'touching', collisionInfo.touching, 'inter', collisionInfo.intersects, 'oy', collisionInfo.overlapY);
-        // console.log('body1', body1.x, body1.right, body1.y, body1.bottom, 'body2', body2.x, body2.right, body2.y, body2.bottom);
 
         body1.setTouchingUp();
         body2.setTouchingDown();
@@ -46,6 +45,16 @@ var CheckOverlapY = function (body, collisionInfo)
 
         body1.setBlockedDown();
         body2.setBlockedUp();
+    }
+
+    if (body1.isWorldBlockedDown())
+    {
+        body2.setHardBlockedDown();
+    }
+
+    if (body1.isWorldBlockedUp())
+    {
+        body2.setHardBlockedUp();
     }
 
     return collisionInfo.touching;
