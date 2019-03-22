@@ -310,9 +310,9 @@ var World = new Class({
             bodyDebugColor: GetValue(config, 'debugBodyColor', 0xff00ff),
             staticBodyDebugColor: GetValue(config, 'debugStaticBodyColor', 0x0000ff),
             velocityDebugColor: GetValue(config, 'debugVelocityColor', 0x00ff00),
-            sleepDebugColor: GetValue(config, 'debugSleepColor', 0x8d8d8d),
-            blockedDebugColor: GetValue(config, 'debugBlockedColor', 0xff0000),
-            worldBlockedDebugColor: GetValue(config, 'debugWorldBlockedColor', 0xffff00)
+            sleepDebugColor: GetValue(config, 'debugSleepColor', 0x636363),
+            blockedDebugColor: GetValue(config, 'debugBlockedColor', 0x00bff3),
+            worldBlockedDebugColor: GetValue(config, 'debugWorldBlockedColor', 0xec008c)
         };
 
         /**
