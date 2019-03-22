@@ -1013,6 +1013,9 @@ var Body = new Class({
         this.prev.x = this.x;
         this.prev.y = this.y;
         this.preRotation = this.rotation;
+
+        this.prevVelocity.x = this.velocity.x;
+        this.prevVelocity.y = this.velocity.y;
     },
 
     /**
@@ -1036,23 +1039,16 @@ var Body = new Class({
         var velocity = this.velocity;
         var position = this.position;
 
-        //  Has it been woken up?
-        if (this.sleeping && !velocity.equals(this.prevVelocity))
-        {
-            if ((velocity.y < 0 && !this.isBlockedUp()) || (velocity.y > 0 && !this.isBlockedDown()))
-            {
-                this.wake();
-            }
-        }
-
-        if (this.sleeping)
-        {
-            return;
-        }
-
         if (this.moves)
         {
             this.world.updateMotion(this, delta);
+
+            //  Has it been woken up?
+
+            if (this.sleeping && !this.checkWake())
+            {
+                return;
+            }
 
             if (this.collideWorldBounds && !this.worldBlocked.none)
             {
@@ -1194,9 +1190,6 @@ var Body = new Class({
         wasTouching.down = touching.down;
         wasTouching.left = touching.left;
         wasTouching.right = touching.right;
-
-        this.prevVelocity.x = this.velocity.x;
-        this.prevVelocity.y = this.velocity.y;
     },
 
     snapToBlocker: function ()
@@ -1301,11 +1294,33 @@ var Body = new Class({
         return null;
     },
 
+    checkWake: function ()
+    {
+        if (!this.sleeping)
+        {
+            return false;
+        }
+
+        var velocity = this.velocity;
+
+        if ((velocity.y < 0 && !this.isBlockedUp()) || (velocity.y > 0 && !this.isBlockedDown()))
+        {
+            console.log('%c' + this.gameObject.name + ' has woken                                 ', 'background-color: lime');
+
+            this.sleeping = false;
+            this._sleep = 0;
+
+            return true;
+        }
+
+        return false;
+    },
+
     wake: function ()
     {
         if (this.sleeping)
         {
-            console.log('%c' + this.gameObject.name + 'has woken                          ', 'background-color: lime');
+            console.log('%c' + this.gameObject.name + ' has woken                                  ', 'background-color: lime');
 
             this.sleeping = false;
             this._sleep = 0;
@@ -2084,6 +2099,11 @@ var Body = new Class({
 
         this.speed = Math.sqrt(x * x + y * y);
 
+        if (this.speed > 0)
+        {
+            this.wake();
+        }
+
         return this;
     },
 
@@ -2106,6 +2126,11 @@ var Body = new Class({
 
         this.speed = Math.sqrt(vx * vx + vy * vy);
 
+        if (this.speed > 0)
+        {
+            this.wake();
+        }
+
         return this;
     },
 
@@ -2127,6 +2152,11 @@ var Body = new Class({
         var vy = value;
 
         this.speed = Math.sqrt(vx * vx + vy * vy);
+
+        if (this.speed > 0)
+        {
+            this.wake();
+        }
 
         return this;
     },
@@ -2563,7 +2593,12 @@ var Body = new Class({
                 if (amount < 0 && worldCollision.up && this.y + amount < bounds.y)
                 {
                     diff = amount - ((this.y + amount) - bounds.y);
-    
+
+                    if (diff !== 0)
+                    {
+                        this.wake();
+                    }
+                
                     this.setWorldBlockedUp(true);
 
                     return diff;
@@ -2571,7 +2606,12 @@ var Body = new Class({
                 else if (amount > 0 && worldCollision.down && this.bottom + amount > bounds.bottom)
                 {
                     diff = amount - ((this.bottom + amount) - bounds.bottom);
-    
+
+                    if (diff !== 0)
+                    {
+                        this.wake();
+                    }
+                
                     this.setWorldBlockedDown(true);
 
                     return diff;
@@ -2596,6 +2636,11 @@ var Body = new Class({
                     diff = amount - ((this.bottom + amount) - bounds.bottom);
                 }
             }
+        }
+
+        if (diff !== 0)
+        {
+            this.wake();
         }
 
         return diff;
