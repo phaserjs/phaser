@@ -1748,7 +1748,7 @@ var ScaleManager = new Class({
 
         get: function ()
         {
-            return (this.height > this.width);
+            return (this.game.config.height > this.game.config.width);
         }
     
     },
@@ -1767,7 +1767,7 @@ var ScaleManager = new Class({
 
         get: function ()
         {
-            return (this.width > this.height);
+            return (this.game.config.width >= this.game.config.height);
         }
     
     },
