@@ -21,7 +21,6 @@ module.exports = {
     Mask: require('./Mask'),
     Origin: require('./Origin'),
     Pipeline: require('./Pipeline'),
-    ScaleMode: require('./ScaleMode'),
     ScrollFactor: require('./ScrollFactor'),
     Size: require('./Size'),
     Texture: require('./Texture'),

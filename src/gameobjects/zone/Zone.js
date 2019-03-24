@@ -36,7 +36,6 @@ var RectangleContains = require('../../geom/rectangle/Contains');
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.ScaleMode
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Visible
@@ -55,7 +54,6 @@ var Zone = new Class({
         Components.Depth,
         Components.GetBounds,
         Components.Origin,
-        Components.ScaleMode,
         Components.Transform,
         Components.ScrollFactor,
         Components.Visible

@@ -56,7 +56,6 @@ var _FLAG = 8; // 1000
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.ScaleMode
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Tint
  * @extends Phaser.GameObjects.Components.Transform
@@ -85,7 +84,6 @@ var TileSprite = new Class({
         Components.Mask,
         Components.Origin,
         Components.Pipeline,
-        Components.ScaleMode,
         Components.ScrollFactor,
         Components.Tint,
         Components.Transform,

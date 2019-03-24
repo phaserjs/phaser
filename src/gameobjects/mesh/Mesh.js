@@ -26,7 +26,6 @@ var NOOP = require('../../utils/NOOP');
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.ScaleMode
  * @extends Phaser.GameObjects.Components.Size
  * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Transform
@@ -53,7 +52,6 @@ var Mesh = new Class({
         Components.GetBounds,
         Components.Mask,
         Components.Pipeline,
-        Components.ScaleMode,
         Components.Size,
         Components.Texture,
         Components.Transform,

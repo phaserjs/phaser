@@ -66,6 +66,7 @@ Notes:
 * The return from the `ScenePlugin.add` method has changed. Previously, it would return the ScenePlugin, but now it returns a reference to the Scene that was added to the Scene Manager, keeping it in-line with all other `add` methods in the API. Fix #4359 (thanks @BigZaphod)
 * The `PluginManager.installScenePlugin` method has a new optional boolean parameter `fromLoader` which controls if the plugin is coming in from the result of a Loader operation or not. If it is, it no longer throws a console warning if the plugin already exists. This fixes an issue where if you return to a Scene that loads a Scene Plugin it would throw a warning and then not install the plugin to the Scene.
 * The Scale Manager has a new event `FULLSCREEN_FAILED` which is fired if you try to enter fullscreen mode, but the browser rejects it for some reason.
+* The `ScaleMode` Component has been removed from every Game Object, and along with it the `scaleMode` property and `setScaleMode` method. These did nothing anyway as they were not hooked to the render pipeline and scale mode should be set on the texture, not the Game Object. Fix #4413 (thanks @jcyuan)
 
 ### Bug Fixes
 
