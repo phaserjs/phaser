@@ -4,95 +4,70 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var CollisionInfo = require('./CollisionInfo');
 var CONST = require('./const');
 
 /**
- * Calculates and returns the horizontal overlap between two arcade physics bodies and sets their properties
- * accordingly, including: `touching.left`, `touching.right`, `touching.none` and `overlapX'.
+ * 
  *
  * @function Phaser.Physics.Arcade.GetOverlapX
- * @since 3.0.0
+ * @since 3.17.0
  *
  * @param {Phaser.Physics.Arcade.Body} body1 - The first Body to separate.
  * @param {Phaser.Physics.Arcade.Body} body2 - The second Body to separate.
- * @param {boolean} overlapOnly - Is this an overlap only check, or part of separation?
- * @param {number} bias - A value added to the delta values during collision checks. Increase it to prevent sprite tunneling(sprites passing through another instead of colliding).
+ * @param {boolean} [overlapOnly] - Is this an overlap only check, or part of separation?
+ * @param {number} [bias] - A value added to the delta values during collision checks. Increase it to prevent sprite tunneling (sprites passing through each other instead of colliding).
  *
- * @return {number} The amount of overlap.
+ * @return {CollisionInfo} A Collision Info object.
  */
 var GetOverlapX = function (body1, body2, overlapOnly, bias)
 {
-    var overlap = 0;
-    var maxOverlap = body1.deltaAbsX() + body2.deltaAbsX() + bias;
+    if (overlapOnly === undefined) { overlapOnly = false; }
+    if (bias === undefined) { bias = 0; }
 
-    if (body1._dx === 0 && body2._dx === 0)
+    var collisionInfo = CollisionInfo.get(body1, body2, overlapOnly, bias);
+
+    if (!overlapOnly)
     {
-        //  They overlap but neither of them are moving
-        body1.embedded = true;
-        body2.embedded = true;
-    }
-    else if (body1._dx > body2._dx)
-    {
-        //  Body1 is moving right and / or Body2 is moving left
-        overlap = body1.right - body2.x;
-
-        if ((overlap > maxOverlap && !overlapOnly) || body1.checkCollision.right === false || body2.checkCollision.left === false)
+        if (collisionInfo.face === CONST.FACING_LEFT)
         {
-            overlap = 0;
-        }
-        else
-        {
-            body1.touching.none = false;
-            body1.touching.right = true;
+            // console.log('GetOverlapX leftFace');
 
-            body2.touching.none = false;
-            body2.touching.left = true;
-
-            if (body2.physicsType === CONST.STATIC_BODY)
+            if (collisionInfo.body1 === body1)
             {
-                body1.blocked.none = false;
-                body1.blocked.right = true;
-            }
+                body1.setTouchingLeft();
+                body2.setTouchingRight();
+    
+                body1.setBlockedLeft(collisionInfo);
+                body2.setBlockedRight(collisionInfo);
 
-            if (body1.physicsType === CONST.STATIC_BODY)
-            {
-                body2.blocked.none = false;
-                body2.blocked.left = true;
+                if (body2.isWorldBlockedLeft())
+                {
+                    body1.setHardBlockedLeft();
+                }
             }
         }
-    }
-    else if (body1._dx < body2._dx)
-    {
-        //  Body1 is moving left and/or Body2 is moving right
-        overlap = body1.x - body2.width - body2.x;
-
-        if ((-overlap > maxOverlap && !overlapOnly) || body1.checkCollision.left === false || body2.checkCollision.right === false)
+        else if (collisionInfo.face === CONST.FACING_RIGHT)
         {
-            overlap = 0;
-        }
-        else
-        {
-            body1.touching.none = false;
-            body1.touching.left = true;
+            // console.log('GetOverlapX rightFace');
 
-            body2.touching.none = false;
-            body2.touching.right = true;
-
-            if (body2.physicsType === CONST.STATIC_BODY)
+            if (collisionInfo.body1 === body1)
             {
-                body1.blocked.none = false;
-                body1.blocked.left = true;
-            }
+                body1.setTouchingRight();
+                body2.setTouchingLeft();
 
-            if (body1.physicsType === CONST.STATIC_BODY)
-            {
-                body2.blocked.none = false;
-                body2.blocked.right = true;
+                body1.setBlockedRight(collisionInfo);
+                body2.setBlockedLeft(collisionInfo);
+
+                if (body2.isWorldBlockedRight())
+                {
+                    body1.setHardBlockedRight();
+                }
             }
         }
     }
 
-    return overlap;
+    return collisionInfo;
 };
 
 module.exports = GetOverlapX;
