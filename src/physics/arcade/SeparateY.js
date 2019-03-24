@@ -28,17 +28,17 @@ var GetOverlapY = require('./GetOverlapY');
  */
 var SeparateY = function (body1, body2, overlapOnly, bias)
 {
-    console.log('');
-    console.log('%c frame ' + body1.world._frame + '                                                                                     ', 'background-color: orange');
-    console.log('body1:', body1.gameObject.name, 'vs body2:', body2.gameObject.name);
-    console.log('pre-GetOverlap by = body1', body1.y, 'body2', body2.y);
-    console.log('pre-GetOverlap gy = body1', body1.gameObject.y, 'body2', body2.gameObject.y);
+    // console.log('');
+    // console.log('%c frame ' + body1.world._frame + '                                                                                     ', 'background-color: orange');
+    // console.log('body1:', body1.gameObject.name, 'vs body2:', body2.gameObject.name);
+    // console.log('pre-GetOverlap by = body1', body1.y, 'body2', body2.y);
+    // console.log('pre-GetOverlap gy = body1', body1.gameObject.y, 'body2', body2.gameObject.y);
 
     var collisionInfo = GetOverlapY(body1, body2, overlapOnly, bias);
 
     // console.log(collisionInfo);
-    console.log('post-GetOverlap by = body1', body1.y, 'body2', body2.y);
-    console.log('post-GetOverlap gy = body1', body1.gameObject.y, 'body2', body2.gameObject.y);
+    // console.log('post-GetOverlap by = body1', body1.y, 'body2', body2.y);
+    // console.log('post-GetOverlap gy = body1', body1.gameObject.y, 'body2', body2.gameObject.y);
 
     var overlap = collisionInfo.overlapY;
     var topFace = collisionInfo.face === CONST.FACING_UP;
@@ -54,7 +54,7 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
     var body1Immovable = (body1.physicsType === CONST.STATIC_BODY || body1.immovable);
     var body2Immovable = (body2.physicsType === CONST.STATIC_BODY || body2.immovable);
 
-    console.log('body1 overlaps body2 across the', ((topFace) ? 'top' : 'bottom'), 'by', overlap, 'px');
+    // console.log('body1 overlaps body2 across the', ((topFace) ? 'top' : 'bottom'), 'by', overlap, 'px');
 
     //  Can't separate two immovable bodies, or a body with its own custom separation logic
     if (!intersects || overlapOnly || (body1Immovable && body2Immovable) || body1.customSeparateY || body2.customSeparateY)
@@ -185,7 +185,7 @@ var SeparateY = function (body1, body2, overlapOnly, bias)
         return true;
     }
 
-    //  FLip flop?
+    //  Flip flop?
     var flip1 = (v1 < 0 && ny1 > 0) || (v1 > 0 && ny1 < 0);
     var flip2 = (v2 < 0 && ny2 > 0) || (v2 > 0 && ny2 < 0);
 
