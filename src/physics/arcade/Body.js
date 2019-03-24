@@ -316,7 +316,17 @@ var Body = new Class({
 
         this.sleepIterations = 60 * world.positionIterations;
 
-        //  0 = none, 1 = soft block, 2 = hard block
+        //  0 = none
+        //  1 = soft up
+        //  2 = soft down
+        //  3 = soft left
+        //  4 = soft right
+        //  5 = world bounds
+        //  6 = hard up
+        //  7 = hard down
+        //  8 = hard left
+        //  9 = hard right
+        //  10 = riding
         this.forcePosition = 0;
 
         this.snapTo = null;
@@ -1285,7 +1295,7 @@ var Body = new Class({
             {
                 var data = prevBlockers[i];
     
-                if (CheckOverlapY(this, data))
+                if (CheckOverlapY(data))
                 {
                     currentBlockers.push(data);
                 }
@@ -2229,6 +2239,10 @@ var Body = new Class({
             {
                 ArrayAdd(this.blockers.up, collisionInfo);
             }
+            else if (body2.rideable)
+            {
+                return this.setRiding(body2, CONST.FACING_UP);
+            }
             else if (body2.isWorldBlockedUp())
             {
                 this.setHardBlockedUp();
@@ -2261,6 +2275,23 @@ var Body = new Class({
         return this;
     },
 
+    setRiding: function (body2, face)
+    {
+        this.snapTo = body2;
+        this.forcePosition = 10;
+
+        if (face === CONST.FACING_UP)
+        {
+            this.y = body2.bottom;
+        }
+        else if (face === CONST.FACING_DOWN)
+        {
+            this.bottom = body2.y;
+        }
+
+        return this;
+    },
+
     setBlockedDown: function (collisionInfo, body2)
     {
         var blocked = this.blocked;
@@ -2276,13 +2307,7 @@ var Body = new Class({
             }
             else if (body2.rideable)
             {
-                this.snapTo = body2;
-
-                this.bottom = body2.y;
-
-                this.forcePosition = 7;
-
-                return this;
+                return this.setRiding(body2, CONST.FACING_DOWN);
             }
             else if (body2.isWorldBlockedDown())
             {
