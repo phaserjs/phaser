@@ -18,7 +18,7 @@ var CONST = require('./const');
  *
  * @return {boolean} 
  */
-var CheckOverlapY = function (body, collisionInfo)
+var CheckOverlapY = function (collisionInfo)
 {
     collisionInfo = CollisionInfo.update(collisionInfo);
 
