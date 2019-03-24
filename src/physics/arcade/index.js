@@ -23,6 +23,7 @@ var Arcade = {
     ArcadePhysics: require('./ArcadePhysics'),
     Body: require('./Body'),
     Collider: require('./Collider'),
+    Components: require('./components'),
     Factory: require('./Factory'),
     Group: require('./PhysicsGroup'),
     Image: require('./ArcadeImage'),

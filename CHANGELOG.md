@@ -36,6 +36,7 @@ Notes:
 * `Body.overlapR` has been removed as it was never used internally.
 * `StaticBody.overlapX` has been removed as it was never used internally. It's now available in a `CollisionInfo` object.
 * `StaticBody.overlapY` has been removed as it was never used internally. It's now available in a `CollisionInfo` object.
+* All of the Arcade Physics Components are now available directly under the `Phaser.Physics.Arcade.Components` namespace. Fix #4440 (thanks @jackfreak)
 
 #### Bug Fixes
 
