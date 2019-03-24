@@ -24,26 +24,41 @@ var CollisionInfo = {
         var overlapY = 0;
 
         // var maxOverlap = body1.deltaAbsY() + body2.deltaAbsY() + bias;
+    
+        var distanceX1 = body1.right - body2.x;
+        var distanceX2 = body2.right - body1.x;
+    
+        var prevDistanceX1 = (body1.prev.x + body1.width) - body2.prev.x;
+        var prevDistanceX2 = (body2.prev.x + body2.width) - body1.prev.x;
 
-        //  Work out the vertical overlap first
+        var distanceY1 = body1.bottom - body2.y;
+        var distanceY2 = body2.bottom - body1.y;
     
-        var distance1 = body1.bottom - body2.y;
-        var distance2 = body2.bottom - body1.y;
-    
-        var prevDistance1 = (body1.prev.y + body1.height) - body2.prev.y;
-        var prevDistance2 = (body2.prev.y + body2.height) - body1.prev.y;
+        var prevDistanceY1 = (body1.prev.y + body1.height) - body2.prev.y;
+        var prevDistanceY2 = (body2.prev.y + body2.height) - body1.prev.y;
    
-        var topFace = (distance1 > distance2 && prevDistance1 > prevDistance2);
+        var leftFace = (distanceX1 > distanceX2 && prevDistanceX1 > prevDistanceX2);
+        var topFace = (distanceY1 > distanceY2 && prevDistanceY1 > prevDistanceY2);
+
+        var testX = ((leftFace && (!body1.checkCollision.left || !body2.checkCollision.right)) || (!leftFace && (!body1.checkCollision.right || !body2.checkCollision.left)));
+        var testY = ((topFace && (!body1.checkCollision.up || !body2.checkCollision.down)) || (!topFace && (!body1.checkCollision.down || !body2.checkCollision.up)));
     
-        var intersects = IntersectsRect(body1, body2, 0);
-        var touching = (intersects) ? true : IntersectsRect(body1, body2, 1);
-
         var face = CONST.FACING_NONE;
+        var intersects = false;
+        var touching = false;
 
-        //  Try and give 50% separation to each body (this could be improved to give a speed ratio amount to each body)
-        var share = 0;
-        var share1 = 0;
-        var share2 = 0;
+        if (testX || testY)
+        {
+            intersects = IntersectsRect(body1, body2, 0);
+            touching = (intersects) ? true : IntersectsRect(body1, body2, 1);
+
+            //  Try and give 50% separation to each body (this could be improved to give a speed ratio amount to each body)
+            var share = 0;
+            var share1 = 0;
+            var share2 = 0;
+        }
+
+
         
         if (topFace)
         {
@@ -52,7 +67,7 @@ var CollisionInfo = {
             //  body1 top is touching body2 bottom
             if (intersects && body1.checkCollision.up && body2.checkCollision.down)
             {
-                overlapY = distance2;
+                overlapY = distanceY2;
 
                 share = overlapY * 0.5;
 
@@ -83,7 +98,7 @@ var CollisionInfo = {
             //  body1 bottom is touching body2 top
             if (intersects && body1.checkCollision.down && body2.checkCollision.up)
             {
-                overlapY = distance1;
+                overlapY = distanceY1;
 
                 share = overlapY * 0.5;
 
