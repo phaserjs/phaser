@@ -1634,8 +1634,8 @@ var InputManager = new Class({
         p1.y = p0.y;
 
         //  Translate coordinates
-        var x = this.scaleManager.transformX(pageX);
-        var y = this.scaleManager.transformY(pageY);
+        var x = this.scaleManager.getAxisX(pageX, pageY);
+        var y = this.scaleManager.getAxisY(pageX, pageY);
 
         var a = pointer.smoothFactor;
 

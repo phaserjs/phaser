@@ -777,7 +777,7 @@ var ScaleManager = new Class({
 
         this.updateBounds();
 
-        this.displayScale.set(width / this.canvasBounds.width, height / this.canvasBounds.height);
+        this.updateDisplayScale();
 
         this.emit(Events.RESIZE, this.gameSize, this.baseSize, this.displaySize, this.resolution);
 
@@ -859,7 +859,7 @@ var ScaleManager = new Class({
 
         this.updateBounds();
 
-        this.displayScale.set(width / this.canvasBounds.width, height / this.canvasBounds.height);
+        this.updateDisplayScale();
 
         this.emit(Events.RESIZE, this.gameSize, this.baseSize, this.displaySize, this.resolution);
 
@@ -921,8 +921,7 @@ var ScaleManager = new Class({
         this.updateOrientation();
         this.updateScale();
         this.updateBounds();
-
-        this.displayScale.set(this.baseSize.width / this.canvasBounds.width, this.baseSize.height / this.canvasBounds.height);
+        this.updateDisplayScale();
 
         this.emit(Events.RESIZE, this.gameSize, this.baseSize, this.displaySize, this.resolution);
 
@@ -1047,6 +1046,17 @@ var ScaleManager = new Class({
     },
 
     /**
+     * Internal method that manages updating the displayScale.
+     *
+     * @method Phaser.Scale.ScaleManager#updateDisplayScale
+     * @since 3.17.0
+     */
+    updateDisplayScale: function ()
+    {
+        this.displayScale.set(this.baseSize.width / this.displaySize.width, this.baseSize.height / this.displaySize.height);
+    },
+
+    /**
      * Calculates and returns the largest possible zoom factor, based on the current
      * parent and game sizes. If the parent has no dimensions (i.e. an unstyled div),
      * or is smaller than the un-zoomed game, then this will return a value of 1 (no zoom)
@@ -1167,33 +1177,50 @@ var ScaleManager = new Class({
     },
 
     /**
-     * Transforms the pageX value into the scaled coordinate space of the Scale Manager.
+     * Get x-axis value in the scaled coordinate space of the Scale Manager according pageX and pageY.
      *
-     * @method Phaser.Scale.ScaleManager#transformX
-     * @since 3.16.0
+     * @method Phaser.Scale.ScaleManager#getX
+     * @since 3.17.0
      *
      * @param {number} pageX - The DOM pageX value.
+     * @param {number} pageY - The DOM pageY value.
      *
-     * @return {number} The translated value.
+     * @return {number} The x-axis value.
      */
-    transformX: function (pageX)
+    getAxisX: function (pageX, pageY)
     {
-        return (pageX - this.canvasBounds.left) * this.displayScale.x;
+        if (this.shouldRotate)
+        {
+            return (pageY - this.canvasBounds.top) * this.displayScale.y;
+        }
+        else
+        {
+            return (pageX - this.canvasBounds.left) * this.displayScale.x;
+        }
+
     },
 
     /**
-     * Transforms the pageY value into the scaled coordinate space of the Scale Manager.
+     * Get y-axis value in the scaled coordinate space of the Scale Manager according pageX and pageY.
      *
-     * @method Phaser.Scale.ScaleManager#transformY
+     * @method Phaser.Scale.ScaleManager#getY
      * @since 3.16.0
      *
+     * @param {number} pageX - The DOM pageX value.
      * @param {number} pageY - The DOM pageY value.
      *
-     * @return {number} The translated value.
+     * @return {number} The y-axis value.
      */
-    transformY: function (pageY)
+    getAxisY: function (pageX, pageY)
     {
-        return (pageY - this.canvasBounds.top) * this.displayScale.y;
+        if (this.shouldRotate)
+        {
+            return (this.displaySize.height - (pageX - this.canvasBounds.left)) * this.displayScale.x;
+        }
+        else
+        {
+            return (pageY - this.canvasBounds.top) * this.displayScale.y;
+        }
     },
 
     /**
