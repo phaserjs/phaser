@@ -5,6 +5,7 @@
  */
 
 var CONST = require('./const');
+var FuzzyEqual = require('../../math/fuzzy/Equal');
 var IntersectsRect = require('./IntersectsRect');
 
 var CollisionInfo = {
@@ -39,7 +40,7 @@ var CollisionInfo = {
    
         var leftFace = (distanceX1 > distanceX2 && prevDistanceX1 > prevDistanceX2);
         var topFace = (distanceY1 > distanceY2 && prevDistanceY1 > prevDistanceY2);
-   
+
         var faceX = CONST.FACING_NONE;
         var faceY = CONST.FACING_NONE;
 
@@ -181,15 +182,57 @@ var CollisionInfo = {
             }
         }
 
-        var face = (overlapX < overlapY) ? faceX : faceY;
+        var forceX = (overlapX < overlapY);
+        var face = (forceX) ? faceX : faceY;
+
+        if (forceX && FuzzyEqual(overlapX, 0))
+        {
+            //  Difference is too small to warrant considering
+            overlapX = 0;
+            shareX1 = 0;
+            shareX2 = 0;
+            intersects = false;
+            intersectsX = false;
+        }
+        
+        if (!forceX && FuzzyEqual(overlapY, 0))
+        {
+            //  Difference is too small to warrant considering
+            overlapY = 0;
+            shareY1 = 0;
+            shareY2 = 0;
+            intersects = false;
+            intersectsY = false;
+        }
+
+        var dump = function ()
+        {
+            console.log('body1:', body1.gameObject.name, 'vs body2:', body2.gameObject.name);
+            console.log('intersects?', intersects, 'xy', intersectsX, intersectsY, 'touching?', touching);
+
+            if (forceX)
+            {
+                console.log('body1 overlaps body2 on the ' + ((faceX === CONST.FACING_LEFT) ? 'left' : 'right') + ' face');
+            }
+            else
+            {
+                console.log('body1 overlaps body2 on the ' + ((faceY === CONST.FACING_UP) ? 'top' : 'bottom') + ' face');
+            }
+
+            console.log('overlapX:', overlapX, 'overlayY:', overlapY);
+            console.log('shareX1:', shareX1, 'shareX2:', shareX2);
+            console.log('shareY1:', shareY1, 'shareY2:', shareY2);
+            console.log('x compare (CI): ', body1.right, 'body2', body2.x, '=', (body1.right - body2.x));
+        };
 
         if (data)
         {
-            data.intersects = (intersectsX || intersectsY);
+            data.intersects = intersects;
             data.touching = touching;
             data.overlapOnly = overlapOnly;
             data.overlapX = overlapX;
             data.overlapY = overlapY;
+            data.forceX = forceX;
             data.face = face;
             data.faceX = faceX;
             data.faceY = faceY;
@@ -198,6 +241,7 @@ var CollisionInfo = {
             data.shareX2 = shareX2;
             data.shareY1 = shareY1;
             data.shareY2 = shareY2;
+            data.dump = dump;
 
             return data;
         }
@@ -206,11 +250,12 @@ var CollisionInfo = {
             return {
                 body1: body1,
                 body2: body2,
-                intersects: (intersectsX || intersectsY),
+                intersects: intersects,
                 touching: touching,
                 overlapOnly: overlapOnly,
                 overlapX: overlapX,
                 overlapY: overlapY,
+                forceX: forceX,
                 face: face,
                 faceX: faceX,
                 faceY: faceY,
@@ -218,7 +263,8 @@ var CollisionInfo = {
                 shareX1: shareX1,
                 shareX2: shareX2,
                 shareY1: shareY1,
-                shareY2: shareY2
+                shareY2: shareY2,
+                dump: dump
             };
         }
     },
