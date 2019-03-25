@@ -1155,68 +1155,6 @@ var Body = new Class({
         wasTouching.right = touching.right;
     },
 
-    snapToBlocker: function ()
-    {
-        if (this.velocity.y !== 0)
-        {
-            return;
-        }
-
-        var blocked = this.blocked;
-        var worldBlocked = this.worldBlocked;
-
-        if (!worldBlocked.none)
-        {
-            // console.log(this.gameObject.name, 'snapped to world bounds');
-
-            var worldBounds = this.world.bounds;
-
-            if (worldBlocked.down)
-            {
-                this.bottom = worldBounds.bottom;
-                this.forcePosition = 5;
-            }
-            else if (worldBlocked.up)
-            {
-                this.y = worldBounds.y;
-                this.forcePosition = 5;
-            }
-        }
-        else if (!blocked.none)
-        {
-            // console.log(this.gameObject.name, 'snapped to blocker bounds scanning ...');
-
-            var body2;
-
-            if (blocked.down)
-            {
-                body2 = this.getBlocker(this.blockers.down);
-
-                if (body2)
-                {
-                    // console.log('blocker bounds found', body2.y);
-
-                    this.bottom = body2.y;
-
-                    this.forcePosition = 5;
-                }
-            }
-            else if (blocked.up)
-            {
-                body2 = this.getBlocker(this.blockers.up);
-
-                if (body2)
-                {
-                    // console.log('blocker bounds found', body2.y);
-
-                    this.y = body2.bottom;
-
-                    this.forcePosition = 5;
-                }
-            }
-        }
-    },
-
     sleep: function (forceY)
     {
         if (!this.sleeping)
@@ -1231,7 +1169,105 @@ var Body = new Class({
 
             if (forceY)
             {
-                this.snapToBlocker();
+                // this.snapToBlocker();
+            }
+        }
+    },
+
+    snapToBlocker: function ()
+    {
+        if (!this.velocity.equals(0))
+        {
+            return;
+        }
+
+        var blocked = this.blocked;
+        var worldBlocked = this.worldBlocked;
+
+        if (!worldBlocked.none)
+        {
+            // console.log(this.gameObject.name, 'snapped to world bounds');
+
+            var worldBounds = this.world.bounds;
+
+            if (worldBlocked.up)
+            {
+                this.y = worldBounds.y;
+                this.forcePosition = 5;
+            }
+            else if (worldBlocked.down)
+            {
+                this.bottom = worldBounds.bottom;
+                this.forcePosition = 5;
+            }
+            else if (worldBlocked.left)
+            {
+                this.x = worldBounds.x;
+                this.forcePosition = 5;
+            }
+            else if (worldBlocked.right)
+            {
+                this.right = worldBounds.right;
+                this.forcePosition = 5;
+            }
+        }
+        else if (!blocked.none)
+        {
+            // console.log(this.gameObject.name, 'snapped to blocker bounds scanning ...');
+
+            var body2;
+
+            if (blocked.up)
+            {
+                body2 = this.getBlocker(this.blockers.up);
+
+                if (body2)
+                {
+                    // console.log('blocker bounds found', body2.y);
+
+                    this.y = body2.bottom;
+
+                    this.forcePosition = 5;
+                }
+            }
+            else if (blocked.down)
+            {
+                body2 = this.getBlocker(this.blockers.down);
+
+                if (body2)
+                {
+                    // console.log('blocker bounds found', body2.y);
+
+                    this.bottom = body2.y;
+
+                    this.forcePosition = 5;
+                }
+            }
+            else if (blocked.left)
+            {
+                body2 = this.getBlocker(this.blockers.left);
+
+                if (body2)
+                {
+                    // console.log('blocker bounds found', body2.y);
+
+                    this.x = body2.right;
+
+                    this.forcePosition = 5;
+                }
+            }
+            else if (blocked.right)
+            {
+                body2 = this.getBlocker(this.blockers.right);
+
+                if (body2)
+                {
+                    // console.log('blocker bounds found', body2.y);
+
+                    this.right = body2.x;
+
+                    this.forcePosition = 5;
+                }
             }
         }
     },
@@ -1571,6 +1607,15 @@ var Body = new Class({
 
     //  return true if gravity is pulling up and body blocked up,
     //  or gravity is pulling down and body blocked down
+    isGravityBlockedX: function ()
+    {
+        var gx = this._gx;
+
+        return (gx === 0 || (gx < 0 && this.isBlockedLeft()) || (gx > 0 && this.isBlockedRight()));
+    },
+
+    //  return true if gravity is pulling up and body blocked up,
+    //  or gravity is pulling down and body blocked down
     isGravityBlockedY: function ()
     {
         var gy = this._gy;
@@ -1591,7 +1636,7 @@ var Body = new Class({
         dx = Math.abs(dx);
         dy = Math.abs(dy);
 
-        if (!this.sleeping && this.isGravityBlockedY())
+        if (!this.sleeping && this.isGravityBlockedX() && this.isGravityBlockedY())
         {
             //  Falling asleep?
 
@@ -1619,9 +1664,10 @@ var Body = new Class({
                 }
             }
         }
-        else if (this.sleeping && !this.isGravityBlockedY())
+        else if (this.sleeping && (!this.isGravityBlockedX() || !this.isGravityBlockedY()))
         {
             //  Waking up?
+            // console.log('waking???');
 
             if (this._sleep > 0)
             {
@@ -1637,7 +1683,7 @@ var Body = new Class({
         }
         else if (this.sleeping && !this.velocity.equals(this.prevVelocity))
         {
-            // console.log('body woken from significant change in velocity =', this.velocity.y);
+            // console.log('body woken from significant change in velocity =', this.velocity.x);
             this.wake();
         }
 
@@ -2815,6 +2861,7 @@ var Body = new Class({
 
         if (diff !== 0)
         {
+            // console.log('gmx3', diff);
             this.wake();
         }
 
