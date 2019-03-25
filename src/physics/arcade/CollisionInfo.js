@@ -39,33 +39,91 @@ var CollisionInfo = {
    
         var leftFace = (distanceX1 > distanceX2 && prevDistanceX1 > prevDistanceX2);
         var topFace = (distanceY1 > distanceY2 && prevDistanceY1 > prevDistanceY2);
+   
+        var faceX = CONST.FACING_NONE;
+        var faceY = CONST.FACING_NONE;
 
-        var testX = ((leftFace && (!body1.checkCollision.left || !body2.checkCollision.right)) || (!leftFace && (!body1.checkCollision.right || !body2.checkCollision.left)));
-        var testY = ((topFace && (!body1.checkCollision.up || !body2.checkCollision.down)) || (!topFace && (!body1.checkCollision.down || !body2.checkCollision.up)));
-    
-        var face = CONST.FACING_NONE;
-        var intersects = false;
-        var touching = false;
+        var intersects = IntersectsRect(body1, body2, 0);
+        var touching = (intersects) ? true : IntersectsRect(body1, body2, 1);
 
-        if (testX || testY)
+        var intersectsX = intersects;
+        var intersectsY = intersects;
+
+        var share = 0;
+        var shareX1 = 0;
+        var shareX2 = 0;
+        var shareY1 = 0;
+        var shareY2 = 0;
+   
+        if (leftFace)
         {
-            intersects = IntersectsRect(body1, body2, 0);
-            touching = (intersects) ? true : IntersectsRect(body1, body2, 1);
+            faceX = CONST.FACING_LEFT;
 
-            //  Try and give 50% separation to each body (this could be improved to give a speed ratio amount to each body)
-            var share = 0;
-            var share1 = 0;
-            var share2 = 0;
+            //  body1 left is touching body2 right
+            if (intersectsX && body1.checkCollision.left && body2.checkCollision.right)
+            {
+                overlapX = distanceX2;
+
+                share = overlapX * 0.5;
+
+                if (!body1.immovable)
+                {
+                    shareX1 = body1.getMoveX(share);
+                }
+
+                if (shareX1 < share)
+                {
+                    share += (share - shareX1);
+                }
+
+                if (!body2.immovable)
+                {
+                    shareX2 = body2.getMoveX(-share);
+                }
+            }
+            else
+            {
+                intersectsX = false;
+            }
+        }
+        else
+        {
+            faceX = CONST.FACING_RIGHT;
+
+            //  body1 right is touching body2 left
+            if (intersectsX && body1.checkCollision.right && body2.checkCollision.left)
+            {
+                overlapX = distanceX1;
+
+                share = overlapX * 0.5;
+
+                if (!body2.immovable)
+                {
+                    shareX2 = body2.getMoveX(share);
+                }
+
+                if (shareX2 < share)
+                {
+                    share += (share - shareX2);
+                }
+    
+                if (!body1.immovable)
+                {
+                    shareX1 = body1.getMoveX(-share);
+                }
+            }
+            else
+            {
+                intersectsX = false;
+            }
         }
 
-
-        
         if (topFace)
         {
-            face = CONST.FACING_UP;
+            faceY = CONST.FACING_UP;
 
             //  body1 top is touching body2 bottom
-            if (intersects && body1.checkCollision.up && body2.checkCollision.down)
+            if (intersectsY && body1.checkCollision.up && body2.checkCollision.down)
             {
                 overlapY = distanceY2;
 
@@ -73,30 +131,30 @@ var CollisionInfo = {
 
                 if (!body1.immovable)
                 {
-                    share1 = body1.getMoveY(share);
+                    shareY1 = body1.getMoveY(share);
                 }
 
-                if (share1 < share)
+                if (shareY1 < share)
                 {
-                    share += (share - share1);
+                    share += (share - shareY1);
                 }
 
                 if (!body2.immovable)
                 {
-                    share2 = body2.getMoveY(-share);
+                    shareY2 = body2.getMoveY(-share);
                 }
             }
             else
             {
-                intersects = false;
+                intersectsY = false;
             }
         }
         else
         {
-            face = CONST.FACING_DOWN;
+            faceY = CONST.FACING_DOWN;
 
             //  body1 bottom is touching body2 top
-            if (intersects && body1.checkCollision.down && body2.checkCollision.up)
+            if (intersectsY && body1.checkCollision.down && body2.checkCollision.up)
             {
                 overlapY = distanceY1;
 
@@ -104,35 +162,42 @@ var CollisionInfo = {
 
                 if (!body2.immovable)
                 {
-                    share2 = body2.getMoveY(share);
+                    shareY2 = body2.getMoveY(share);
                 }
 
-                if (share2 < share)
+                if (shareY2 < share)
                 {
-                    share += (share - share2);
+                    share += (share - shareY2);
                 }
     
                 if (!body1.immovable)
                 {
-                    share1 = body1.getMoveY(-share);
+                    shareY1 = body1.getMoveY(-share);
                 }
             }
             else
             {
-                intersects = false;
+                intersectsY = false;
             }
         }
 
+        var face = (overlapX < overlapY) ? faceX : faceY;
+
         if (data)
         {
-            data.intersects = intersects;
+            data.intersects = (intersectsX || intersectsY);
             data.touching = touching;
+            data.overlapOnly = overlapOnly;
             data.overlapX = overlapX;
             data.overlapY = overlapY;
             data.face = face;
+            data.faceX = faceX;
+            data.faceY = faceY;
             data.set = false;
-            data.share1 = share1;
-            data.share2 = share2;
+            data.shareX1 = shareX1;
+            data.shareX2 = shareX2;
+            data.shareY1 = shareY1;
+            data.shareY2 = shareY2;
 
             return data;
         }
@@ -141,14 +206,19 @@ var CollisionInfo = {
             return {
                 body1: body1,
                 body2: body2,
-                intersects: intersects,
+                intersects: (intersectsX || intersectsY),
                 touching: touching,
+                overlapOnly: overlapOnly,
                 overlapX: overlapX,
                 overlapY: overlapY,
                 face: face,
+                faceX: faceX,
+                faceY: faceY,
                 set: false,
-                share1: share1,
-                share2: share2
+                shareX1: shareX1,
+                shareX2: shareX2,
+                shareY1: shareY1,
+                shareY2: shareY2
             };
         }
     },
