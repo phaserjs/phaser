@@ -1387,51 +1387,22 @@ var World = new Class({
         var collisionInfo = GetOverlap(body1, body2, overlapOnly, this.OVERLAP_BIAS);
 
         //  Do we separate on x or y first?
-        if (collisionInfo.overlapX < collisionInfo.overlapY)
-        {
-            resultX = SeparateX(collisionInfo);
 
-            //  Are they still intersecting? Let's do the other axis then
-            if (this.intersects(body1, body2))
-            {
-                console.log('still intersects 1');
-                // resultY = SeparateY(collisionInfo);
-            }
-        }
-        else
+        if (collisionInfo.intersects)
         {
-            resultY = SeparateY(collisionInfo);
+            console.log('');
+            console.log('%c World frame ' + body1.world._frame + '                                                                                     ', 'background-color: orange');
+            collisionInfo.dump();
 
-            //  Are they still intersecting? Let's do the other axis then
-            if (this.intersects(body1, body2))
+            if (collisionInfo.forceX)
             {
-                console.log('still intersects 2');
                 resultX = SeparateX(collisionInfo);
             }
-        }
-
-        /*
-        if (this.forceX || Math.abs(this.gravity.y + body1.gravity.y) < Math.abs(this.gravity.x + body1.gravity.x))
-        {
-            resultX = SeparateX(collisionInfo);
-
-            //  Are they still intersecting? Let's do the other axis then
-            if (this.intersects(body1, body2))
+            else
             {
                 resultY = SeparateY(collisionInfo);
             }
         }
-        else
-        {
-            resultY = SeparateY(collisionInfo);
-
-            //  Are they still intersecting? Let's do the other axis then
-            if (this.intersects(body1, body2))
-            {
-                resultX = SeparateX(collisionInfo);
-            }
-        }
-        */
 
         var result = (resultX || resultY);
 
