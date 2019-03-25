@@ -15,8 +15,7 @@ var Events = require('./events');
 var FuzzyEqual = require('../../math/fuzzy/Equal');
 var FuzzyGreaterThan = require('../../math/fuzzy/GreaterThan');
 var FuzzyLessThan = require('../../math/fuzzy/LessThan');
-var GetOverlapX = require('./GetOverlapX');
-var GetOverlapY = require('./GetOverlapY');
+var GetOverlap = require('./GetOverlap');
 var GetValue = require('../../utils/object/GetValue');
 var IntersectsRect = require('./IntersectsRect');
 var ProcessQueue = require('../../structs/ProcessQueue');
@@ -1385,27 +1384,54 @@ var World = new Class({
         var resultX = false;
         var resultY = false;
 
+        var collisionInfo = GetOverlap(body1, body2, overlapOnly, this.OVERLAP_BIAS);
+
         //  Do we separate on x or y first?
-        if (this.forceX || Math.abs(this.gravity.y + body1.gravity.y) < Math.abs(this.gravity.x + body1.gravity.x))
+        if (collisionInfo.overlapX < collisionInfo.overlapY)
         {
-            // resultX = SeparateX(body1, body2, overlapOnly, this.OVERLAP_BIAS);
+            resultX = SeparateX(collisionInfo);
 
             //  Are they still intersecting? Let's do the other axis then
             if (this.intersects(body1, body2))
             {
-                resultY = SeparateY(body1, body2, overlapOnly, this.OVERLAP_BIAS);
+                console.log('still intersects 1');
+                // resultY = SeparateY(collisionInfo);
             }
         }
         else
         {
-            resultY = SeparateY(body1, body2, overlapOnly, this.OVERLAP_BIAS);
+            resultY = SeparateY(collisionInfo);
 
             //  Are they still intersecting? Let's do the other axis then
-            // if (this.intersects(body1, body2))
-            // {
-                // resultX = SeparateX(body1, body2, overlapOnly, this.OVERLAP_BIAS);
-            // }
+            if (this.intersects(body1, body2))
+            {
+                console.log('still intersects 2');
+                resultX = SeparateX(collisionInfo);
+            }
         }
+
+        /*
+        if (this.forceX || Math.abs(this.gravity.y + body1.gravity.y) < Math.abs(this.gravity.x + body1.gravity.x))
+        {
+            resultX = SeparateX(collisionInfo);
+
+            //  Are they still intersecting? Let's do the other axis then
+            if (this.intersects(body1, body2))
+            {
+                resultY = SeparateY(collisionInfo);
+            }
+        }
+        else
+        {
+            resultY = SeparateY(collisionInfo);
+
+            //  Are they still intersecting? Let's do the other axis then
+            if (this.intersects(body1, body2))
+            {
+                resultX = SeparateX(collisionInfo);
+            }
+        }
+        */
 
         var result = (resultX || resultY);
 
