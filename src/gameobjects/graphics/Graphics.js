@@ -256,16 +256,17 @@ var Graphics = new Class({
         if (GetValue(options, 'lineStyle', null))
         {
             this.defaultStrokeWidth = GetValue(options, 'lineStyle.width', 1);
-            this.defaultStrokeColor = GetValue(options, 'lineStyle.color', 0xffffff);
-            this.defaultStrokeAlpha = GetValue(options, 'lineStyle.alpha', 1);
+
+            this.defaultStrokeColor = GetValue(options, 'lineStyle.color', GetValue(options, 'lineStyle.color.color', 0xffffff));
+            this.defaultStrokeAlpha = GetValue(options, 'lineStyle.alpha', GetValue(options, 'lineStyle.color.alpha', 1));
 
             this.lineStyle(this.defaultStrokeWidth, this.defaultStrokeColor, this.defaultStrokeAlpha);
         }
 
         if (GetValue(options, 'fillStyle', null))
         {
-            this.defaultFillColor = GetValue(options, 'fillStyle.color', 0xffffff);
-            this.defaultFillAlpha = GetValue(options, 'fillStyle.alpha', 1);
+            this.defaultFillColor = GetValue(options, 'fillStyle.color', GetValue(options, 'fillStyle.color.color', 0xffffff));
+            this.defaultFillAlpha = GetValue(options, 'fillStyle.alpha', GetValue(options, 'fillStyle.color.alpha', 1));
 
             this.fillStyle(this.defaultFillColor, this.defaultFillAlpha);
         }
@@ -508,7 +509,7 @@ var Graphics = new Class({
 
     /**
      * Fill the current path.
-     * 
+     *
      * This is an alias for `Graphics.fillPath` and does the same thing.
      * It was added to match the CanvasRenderingContext 2D API.
      *
@@ -545,7 +546,7 @@ var Graphics = new Class({
 
     /**
      * Stroke the current path.
-     * 
+     *
      * This is an alias for `Graphics.strokePath` and does the same thing.
      * It was added to match the CanvasRenderingContext 2D API.
      *
@@ -732,7 +733,7 @@ var Graphics = new Class({
 
     /**
      * @typedef {object} RoundedRectRadius
-     * 
+     *
      * @property {number} [tl=20] - Top left
      * @property {number} [tr=20] - Top right
      * @property {number} [br=20] - Bottom right
@@ -1261,7 +1262,7 @@ var Graphics = new Class({
      * Draw an arc.
      *
      * This method can be used to create circles, or parts of circles.
-     * 
+     *
      * Make sure you call `beginPath` before starting the arc unless you wish for the arc to automatically
      * close when filled or stroked.
      *

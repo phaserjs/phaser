@@ -64,7 +64,7 @@ var propertyMap = {
 /**
  * @classdesc
  * A TextStyle class manages all of the style settings for a Text object.
- * 
+ *
  * Text Game Objects create a TextStyle instance automatically, which is
  * accessed via the `Text.style` property. You do not normally need to
  * instantiate one yourself.
@@ -386,6 +386,11 @@ var TextStyle = new Class({
             {
                 // Callback & scope should be set without processing the values
                 this[key] = GetValue(style, propertyMap[key][0], value);
+            }
+            else if (typeof style[propertyMap[key][0]] === 'object' && style[propertyMap[key][0]].rgba)
+            {
+                // Process colors (in case if they are Color objects)
+                this[key] = style[propertyMap[key][0]].rgba;
             }
             else
             {
@@ -737,7 +742,7 @@ var TextStyle = new Class({
      * By default it will be set to match the resolution set in the Game Config,
      * but you can override it via this method. It allows for much clearer text on High DPI devices,
      * at the cost of memory because it uses larger internal Canvas textures for the Text.
-     * 
+     *
      * Please use with caution, as the more high res Text you have, the more memory it uses up.
      *
      * @method Phaser.GameObjects.TextStyle#setResolution
@@ -789,7 +794,7 @@ var TextStyle = new Class({
 
     /**
      * Set the shadow settings.
-     * 
+     *
      * Calling this method always re-measures the parent Text object,
      * so only call it when you actually change the shadow settings.
      *
