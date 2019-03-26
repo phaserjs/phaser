@@ -53,7 +53,7 @@ var Clock = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.now = Date.now();
+        this.now = 0;
 
         //  Scale the delta time coming into the Clock by this factor
         //  which then influences anything using this Clock for calculations, like TimerEvents
@@ -129,6 +129,9 @@ var Clock = new Class({
      */
     boot: function ()
     {
+        //  Sync with the TimeStep
+        this.now = this.systems.game.loop.time;
+        
         this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
     },
 
