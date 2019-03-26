@@ -162,7 +162,7 @@ var World = new Class({
          * @type {integer}
          * @since 3.17.0
          */
-        this.positionIterations = 6;
+        this.positionIterations = 1;
 
         /**
          * The amount of elapsed ms since the last frame.
@@ -1221,13 +1221,18 @@ var World = new Class({
             body._gx = gravityX;
             body._gy = gravityY;
 
+            if (velocityX === gravityX)
+            {
+                if ((gravityX < 0 && body.isBlockedLeft()) || (gravityX > 0 && body.isBlockedRight()))
+                {
+                    velocityX = 0;
+                }
+            }
+
             if (velocityY === gravityY)
             {
-                // console.log(this._frame, '///// gravity check', body.gameObject.name, body.isBlockedUp(), body.isBlockedDown());
-
                 if ((gravityY < 0 && body.isBlockedUp()) || (gravityY > 0 && body.isBlockedDown()))
                 {
-                    // console.log(this._frame, '///// gravity reset', body.gameObject.name, gravityY, body.isBlockedUp(), body.isBlockedDown());
                     velocityY = 0;
                 }
             }
