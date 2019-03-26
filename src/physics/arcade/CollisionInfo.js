@@ -21,6 +21,12 @@ var CollisionInfo = {
             body2 = data.body2;
         }
 
+        var intersects = IntersectsRect(body1, body2, 0);
+        var touching = (intersects) ? true : IntersectsRect(body1, body2, 1);
+
+        var intersectsX = intersects;
+        var intersectsY = intersects;
+
         var overlapX = 0;
         var overlapY = 0;
 
@@ -41,14 +47,33 @@ var CollisionInfo = {
         var leftFace = (distanceX1 > distanceX2 && prevDistanceX1 > prevDistanceX2);
         var topFace = (distanceY1 > distanceY2 && prevDistanceY1 > prevDistanceY2);
 
+        var touchingX = false;
+        var touchingY = false;
+
+        if (body1.x === body2.right)
+        {
+            leftFace = true;
+            touchingX = true;
+        }
+        else if (body1.right === body2.x)
+        {
+            leftFace = false;
+            touchingX = true;
+        }
+
+        if (body1.y === body2.bottom)
+        {
+            topFace = true;
+            touchingY = true;
+        }
+        else if (body1.bottom === body2.y)
+        {
+            topFace = false;
+            touchingY = true;
+        }
+
         var faceX = CONST.FACING_NONE;
         var faceY = CONST.FACING_NONE;
-
-        var intersects = IntersectsRect(body1, body2, 0);
-        var touching = (intersects) ? true : IntersectsRect(body1, body2, 1);
-
-        var intersectsX = intersects;
-        var intersectsY = intersects;
 
         var share = 0;
         var shareX1 = 0;
@@ -182,33 +207,37 @@ var CollisionInfo = {
             }
         }
 
-        var forceX = (overlapX < overlapY);
+        var forceX = (touchingX || overlapX < overlapY);
         var face = (forceX) ? faceX : faceY;
 
         if (forceX && FuzzyEqual(overlapX, 0))
         {
-            //  Difference is too small to warrant considering
+            //  Difference is too small to warrant considering separation
             overlapX = 0;
             shareX1 = 0;
             shareX2 = 0;
             intersects = false;
             intersectsX = false;
+            face = faceX;
         }
         
         if (!forceX && FuzzyEqual(overlapY, 0))
         {
-            //  Difference is too small to warrant considering
+            //  Difference is too small to warrant considering separation
             overlapY = 0;
             shareY1 = 0;
             shareY2 = 0;
             intersects = false;
             intersectsY = false;
+            face = faceY;
         }
 
         var dump = function ()
         {
-            console.log('body1:', body1.gameObject.name, 'vs body2:', body2.gameObject.name);
+            console.log('body1:', body1.gameObject.name, 'vs body2:', body2.gameObject.name, 'on face', face, faceX, faceY);
             console.log('intersects?', intersects, 'xy', intersectsX, intersectsY, 'touching?', touching);
+            console.log('body1 x:', body1.x, 'right:', body1.right, 'body2 x:', body2.x, 'right:', body2.right);
+            console.log('body1 y:', body1.y, 'bottom:', body1.bottom, 'body2 y:', body2.y, 'bottom:', body2.bottom);
 
             if (forceX)
             {
@@ -219,7 +248,7 @@ var CollisionInfo = {
                 console.log('body1 overlaps body2 on the ' + ((faceY === CONST.FACING_UP) ? 'top' : 'bottom') + ' face');
             }
 
-            console.log('overlapX:', overlapX, 'overlayY:', overlapY);
+            console.log('overlapX:', overlapX, 'overlapY:', overlapY);
             console.log('shareX1:', shareX1, 'shareX2:', shareX2);
             console.log('shareY1:', shareY1, 'shareY2:', shareY2);
             console.log('x compare (CI): ', body1.right, 'body2', body2.x, '=', (body1.right - body2.x));
