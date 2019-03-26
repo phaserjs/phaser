@@ -21,6 +21,7 @@ var Extend = require('../../utils/object/Extend');
 var Arcade = {
 
     ArcadePhysics: require('./ArcadePhysics'),
+    BaseBody: require('./BaseBody'),
     Body: require('./Body'),
     Collider: require('./Collider'),
     Components: require('./components'),
