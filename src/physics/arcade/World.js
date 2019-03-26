@@ -1395,16 +1395,18 @@ var World = new Class({
 
         if (collisionInfo.intersects)
         {
-            console.log('');
-            console.log('%c World frame ' + body1.world._frame + '                                                                                     ', 'background-color: orange');
-            collisionInfo.dump();
+            // console.log('');
+            // console.log('%c World frame ' + body1.world._frame + '                                                                                     ', 'background-color: orange');
+            // collisionInfo.dump();
 
             if (collisionInfo.forceX)
             {
+                // console.log('>>>>> Sep X');
                 resultX = SeparateX(collisionInfo);
             }
             else
             {
+                // console.log('>>>>> Sep Y');
                 resultY = SeparateY(collisionInfo);
             }
         }

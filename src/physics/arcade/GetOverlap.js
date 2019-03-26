@@ -32,6 +32,10 @@ var GetOverlap = function (body1, body2, overlapOnly, bias)
         return collisionInfo;
     }
 
+    // console.log('');
+    // console.log('%c GetOverlap ' + body1.world._frame + '                                                                                     ', 'background-color: aqua');
+    // collisionInfo.dump();
+
     if (collisionInfo.face === CONST.FACING_LEFT)
     {
         // console.log('GetOverlap leftFace');
