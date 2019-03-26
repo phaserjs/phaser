@@ -947,11 +947,6 @@ var Body = new Class({
         this.embedded = false;
         this.forcePosition = 0;
 
-        this.checkSleep(this._dx, this._dy);
-
-        this._sleepX = this.x;
-        this._sleepY = this.y;
-
         //  Updates the transform values
         this.updateBounds();
 
@@ -1017,8 +1012,8 @@ var Body = new Class({
         
             if (this.forcePosition < 5)
             {
-                position.x += this.getMoveX(velocity.x * delta);
-                position.y += this.getMoveY(velocity.y * delta);
+                this.moveX(velocity.x * delta);
+                this.moveY(velocity.y * delta);
             }
         }
 
@@ -1147,6 +1142,11 @@ var Body = new Class({
         this._dx = dx;
         this._dy = dy;
 
+        this.checkSleep(dx, dy);
+
+        this._sleepX = this.x;
+        this._sleepY = this.y;
+
         //  Store collision flags
         var wasTouching = this.wasTouching;
         var touching = this.touching;
@@ -1164,7 +1164,7 @@ var Body = new Class({
         {
             this.sleeping = true;
 
-            console.log(this.gameObject.name, 'put to sleep on frame', this.world._frame, 'force?', forceY, 'at', this.x);
+            // console.log(this.gameObject.name, 'put to sleep on frame', this.world._frame, 'force?', forceY, 'at', this.x);
     
             this.velocity.set(0);
             this.prevVelocity.set(0);
@@ -1352,24 +1352,24 @@ var Body = new Class({
         }
     },
 
-    //  Is this body moving OR can it be made to move?
-    //  Return 'false' if it's immovable, otherwise 'true'
-    movingX: function ()
+    //  Return false if this body is:
+    //    Static or Immovable
+    //    Under direct movement control
+    //    Has bounce and is moving left but is blocked right, or is moving right and is blocked left
+    //    Isn't moving faster than minVelocity, once factoring in gravity
+    //  Otherwise, return true
+    canMoveX: function ()
     {
         if (this.physicsType === CONST.STATIC_BODY || this.immovable || !this.moves)
         {
             //  Static bodies don't move
             return false;
         }
-        else if (!this.isWorldBlockedLeft() && !this.isWorldBlockedRight())
-        {
-            //  Non-blocked bodies, that aren't static, can always move
-            return true;
-        }
 
+        var bounceX = this.bounce.x;
         var velocityX = this.velocity.x;
 
-        if ((velocityX < 0 && this.isWorldBlockedLeft()) || (velocityX > 0 && this.isWorldBlockedRight()))
+        if (bounceX && ((velocityX < 0 && this.isWorldBlockedRight()) || (velocityX > 0 && this.isWorldBlockedLeft())))
         {
             return false;
         }
@@ -1379,22 +1379,24 @@ var Body = new Class({
         return (actualVelocityX > this.minVelocity.x);
     },
 
-    movingY: function ()
+    //  Return false if this body is:
+    //    Static or Immovable
+    //    Under direct movement control
+    //    Has bounce and is moving up but is blocked down, or is moving down and is blocked up
+    //    Isn't moving faster than minVelocity, once factoring in gravity
+    //  Otherwise, return true
+    canMoveY: function ()
     {
         if (this.physicsType === CONST.STATIC_BODY || this.immovable || !this.moves)
         {
             //  Static bodies don't move
             return false;
         }
-        else if (!this.isWorldBlockedUp() && !this.isWorldBlockedDown())
-        {
-            //  Non-blocked bodies, that aren't static, can always move
-            return true;
-        }
 
+        var bounceY = this.bounce.y;
         var velocityY = this.velocity.y;
 
-        if ((velocityY < 0 && this.isWorldBlockedUp()) || (velocityY > 0 && this.isWorldBlockedDown()))
+        if (bounceY && ((velocityY < 0 && this.isWorldBlockedDown()) || (velocityY > 0 && this.isWorldBlockedUp())))
         {
             return false;
         }
@@ -1600,7 +1602,7 @@ var Body = new Class({
 
         if (sleepX && sleepY)
         {
-            console.log('world rebound');
+            // console.log('world rebound');
             this.sleep(true);
         }
         else if (emitBoundsEvent && this.onWorldBounds)
@@ -2798,7 +2800,7 @@ var Body = new Class({
         );
     },
 
-    getMoveX: function (amount)
+    getShareX: function (amount)
     {
         var diff = amount;
         var bounds = this.world.bounds;
@@ -2815,29 +2817,11 @@ var Body = new Class({
     
                 if (amount < 0 && worldCollision.left && this.x + amount < bounds.x)
                 {
-                    diff = amount - ((this.x + amount) - bounds.x);
-
-                    // if (diff !== 0)
-                    // {
-                    //     this.wake();
-                    // }
-                
-                    this.setWorldBlockedLeft(true);
-
-                    return diff;
+                    return amount - ((this.x + amount) - bounds.x);
                 }
                 else if (amount > 0 && worldCollision.right && this.right + amount > bounds.right)
                 {
-                    diff = amount - ((this.right + amount) - bounds.right);
-
-                    // if (diff !== 0)
-                    // {
-                    //     this.wake();
-                    // }
-                
-                    this.setWorldBlockedRight(true);
-
-                    return diff;
+                    return amount - ((this.right + amount) - bounds.right);
                 }
             }
 
@@ -2847,7 +2831,7 @@ var Body = new Class({
 
                 if (bounds && this.x + amount < bounds.x)
                 {
-                    diff = amount - ((this.x + amount) - bounds.x);
+                    return amount - ((this.x + amount) - bounds.x);
                 }
             }
             else if (amount > 0 && this.isBlockedRight())
@@ -2856,21 +2840,15 @@ var Body = new Class({
     
                 if (bounds && this.right + amount > bounds.right)
                 {
-                    diff = amount - ((this.right + amount) - bounds.right);
+                    return amount - ((this.right + amount) - bounds.right);
                 }
             }
         }
 
-        // if (diff !== 0)
-        // {
-            // console.log('gmx3', diff);
-            // this.wake();
-        // }
-
         return diff;
     },
 
-    getMoveY: function (amount)
+    getShareY: function (amount)
     {
         var diff = amount;
         var bounds = this.world.bounds;
@@ -2887,29 +2865,11 @@ var Body = new Class({
     
                 if (amount < 0 && worldCollision.up && this.y + amount < bounds.y)
                 {
-                    diff = amount - ((this.y + amount) - bounds.y);
-
-                    // if (diff !== 0)
-                    // {
-                    //     this.wake();
-                    // }
-                
-                    this.setWorldBlockedUp(true);
-
-                    return diff;
+                    return amount - ((this.y + amount) - bounds.y);
                 }
                 else if (amount > 0 && worldCollision.down && this.bottom + amount > bounds.bottom)
                 {
-                    diff = amount - ((this.bottom + amount) - bounds.bottom);
-
-                    // if (diff !== 0)
-                    // {
-                    //     this.wake();
-                    // }
-                
-                    this.setWorldBlockedDown(true);
-
-                    return diff;
+                    return amount - ((this.bottom + amount) - bounds.bottom);
                 }
             }
 
@@ -2919,7 +2879,7 @@ var Body = new Class({
 
                 if (bounds && this.y + amount < bounds.y)
                 {
-                    diff = amount - ((this.y + amount) - bounds.y);
+                    return amount - ((this.y + amount) - bounds.y);
                 }
             }
             else if (amount > 0 && this.isBlockedDown())
@@ -2928,15 +2888,148 @@ var Body = new Class({
     
                 if (bounds && this.bottom + amount > bounds.bottom)
                 {
-                    diff = amount - ((this.bottom + amount) - bounds.bottom);
+                    return amount - ((this.bottom + amount) - bounds.bottom);
                 }
             }
         }
 
-        // if (diff !== 0)
-        // {
-        //     this.wake();
-        // }
+        return diff;
+    },
+
+    moveX: function (amount)
+    {
+        var diff = amount;
+        var bounds = this.world.bounds;
+
+        if (this.collideWorldBounds)
+        {
+            var worldCollision = this.world.checkCollision;
+
+            if (amount < 0 && worldCollision.left && this.x + amount < bounds.x)
+            {
+                diff = amount - ((this.x + amount) - bounds.x);
+
+                if (diff !== 0)
+                {
+                    this.wake();
+                }
+            
+                this.setWorldBlockedLeft(true);
+
+                this.x += diff;
+
+                return diff;
+            }
+            else if (amount > 0 && worldCollision.right && this.right + amount > bounds.right)
+            {
+                diff = amount - ((this.right + amount) - bounds.right);
+
+                if (diff !== 0)
+                {
+                    this.wake();
+                }
+            
+                this.setWorldBlockedRight(true);
+
+                this.x += diff;
+
+                return diff;
+            }
+        }
+
+        if (amount < 0 && this.isBlockedLeft())
+        {
+            bounds = this.getBlocker(this.blockers.left);
+
+            if (bounds && this.x + amount < bounds.x)
+            {
+                diff = amount - ((this.x + amount) - bounds.x);
+            }
+        }
+        else if (amount > 0 && this.isBlockedRight())
+        {
+            bounds = this.getBlocker(this.blockers.right);
+
+            if (bounds && this.right + amount > bounds.right)
+            {
+                diff = amount - ((this.right + amount) - bounds.right);
+            }
+        }
+
+        if (diff !== 0)
+        {
+            this.wake();
+
+            this.x += diff;
+        }
+    },
+
+    moveY: function (amount)
+    {
+        var diff = amount;
+        var bounds = this.world.bounds;
+
+        if (this.collideWorldBounds)
+        {
+            var worldCollision = this.world.checkCollision;
+
+            if (amount < 0 && worldCollision.up && this.y + amount < bounds.y)
+            {
+                diff = amount - ((this.y + amount) - bounds.y);
+
+                if (diff !== 0)
+                {
+                    this.wake();
+                }
+            
+                this.setWorldBlockedUp(true);
+
+                this.y += diff;
+
+                return diff;
+            }
+            else if (amount > 0 && worldCollision.down && this.bottom + amount > bounds.bottom)
+            {
+                diff = amount - ((this.bottom + amount) - bounds.bottom);
+
+                if (diff !== 0)
+                {
+                    this.wake();
+                }
+            
+                this.setWorldBlockedDown(true);
+
+                this.y += diff;
+
+                return diff;
+            }
+        }
+
+        if (amount < 0 && this.isBlockedUp())
+        {
+            bounds = this.getBlocker(this.blockers.up);
+
+            if (bounds && this.y + amount < bounds.y)
+            {
+                diff = amount - ((this.y + amount) - bounds.y);
+            }
+        }
+        else if (amount > 0 && this.isBlockedDown())
+        {
+            bounds = this.getBlocker(this.blockers.down);
+
+            if (bounds && this.bottom + amount > bounds.bottom)
+            {
+                diff = amount - ((this.bottom + amount) - bounds.bottom);
+            }
+        }
+
+        if (diff !== 0)
+        {
+            this.wake();
+
+            this.y += diff;
+        }
 
         return diff;
     },
