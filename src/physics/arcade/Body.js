@@ -947,6 +947,11 @@ var Body = new Class({
         this.embedded = false;
         this.forcePosition = 0;
 
+        this.checkSleep(this._dx, this._dy);
+
+        this._sleepX = this.x;
+        this._sleepY = this.y;
+
         //  Updates the transform values
         this.updateBounds();
 
@@ -1142,8 +1147,6 @@ var Body = new Class({
         this._dx = dx;
         this._dy = dy;
 
-        this.checkSleep(dx, dy);
-
         //  Store collision flags
         var wasTouching = this.wasTouching;
         var touching = this.touching;
@@ -1161,7 +1164,7 @@ var Body = new Class({
         {
             this.sleeping = true;
 
-            // console.log(this.gameObject.name, 'put to sleep on frame', this.world._frame, 'force?', forceY, 'at', this.y);
+            console.log(this.gameObject.name, 'put to sleep on frame', this.world._frame, 'force?', forceY, 'at', this.x);
     
             this.velocity.set(0);
             this.prevVelocity.set(0);
@@ -1597,6 +1600,7 @@ var Body = new Class({
 
         if (sleepX && sleepY)
         {
+            console.log('world rebound');
             this.sleep(true);
         }
         else if (emitBoundsEvent && this.onWorldBounds)
@@ -1623,7 +1627,7 @@ var Body = new Class({
         return (gy === 0 || (gy < 0 && this.isBlockedUp()) || (gy > 0 && this.isBlockedDown()));
     },
 
-    //  Check for sleeping state (called during postUpdate AFTER positioning)
+    //  Check for sleeping state
     checkSleep: function (dx, dy)
     {
         if (!this.moves)
@@ -1646,11 +1650,12 @@ var Body = new Class({
                 {
                     this._sleep++;
 
+                    // console.log(this.world._frame, 'sleeping ...', this._sleepY, this.y);
                     // console.log(this.gameObject.name, 'sleep y', this.y);
     
                     if (this._sleep >= this.sleepIterations)
                     {
-                        // console.log(this.world._frame, 'checkSleep sending ...');
+                        // console.log(this.world._frame, 'checkSleep sending ...', dx, this._dx, this._sleepX, this.x, 'dy', dy, this._dy, this._sleepY, this.y);
 
                         this.sleep(true);
 
@@ -1676,7 +1681,7 @@ var Body = new Class({
     
                 if (this._sleep <= 0)
                 {
-                    // console.log('body woken from postUpdate', dy);
+                    console.log('body woken from postUpdate', dy);
                     this.wake();
                 }
             }
@@ -1686,9 +1691,6 @@ var Body = new Class({
             // console.log('body woken from significant change in velocity =', this.velocity.x);
             this.wake();
         }
-
-        this._sleepX = this.x;
-        this._sleepY = this.y;
     },
 
     /**
@@ -2815,10 +2817,10 @@ var Body = new Class({
                 {
                     diff = amount - ((this.x + amount) - bounds.x);
 
-                    if (diff !== 0)
-                    {
-                        this.wake();
-                    }
+                    // if (diff !== 0)
+                    // {
+                    //     this.wake();
+                    // }
                 
                     this.setWorldBlockedLeft(true);
 
@@ -2828,10 +2830,10 @@ var Body = new Class({
                 {
                     diff = amount - ((this.right + amount) - bounds.right);
 
-                    if (diff !== 0)
-                    {
-                        this.wake();
-                    }
+                    // if (diff !== 0)
+                    // {
+                    //     this.wake();
+                    // }
                 
                     this.setWorldBlockedRight(true);
 
@@ -2859,11 +2861,11 @@ var Body = new Class({
             }
         }
 
-        if (diff !== 0)
-        {
+        // if (diff !== 0)
+        // {
             // console.log('gmx3', diff);
-            this.wake();
-        }
+            // this.wake();
+        // }
 
         return diff;
     },
@@ -2887,10 +2889,10 @@ var Body = new Class({
                 {
                     diff = amount - ((this.y + amount) - bounds.y);
 
-                    if (diff !== 0)
-                    {
-                        this.wake();
-                    }
+                    // if (diff !== 0)
+                    // {
+                    //     this.wake();
+                    // }
                 
                     this.setWorldBlockedUp(true);
 
@@ -2900,10 +2902,10 @@ var Body = new Class({
                 {
                     diff = amount - ((this.bottom + amount) - bounds.bottom);
 
-                    if (diff !== 0)
-                    {
-                        this.wake();
-                    }
+                    // if (diff !== 0)
+                    // {
+                    //     this.wake();
+                    // }
                 
                     this.setWorldBlockedDown(true);
 
@@ -2931,10 +2933,10 @@ var Body = new Class({
             }
         }
 
-        if (diff !== 0)
-        {
-            this.wake();
-        }
+        // if (diff !== 0)
+        // {
+        //     this.wake();
+        // }
 
         return diff;
     },
