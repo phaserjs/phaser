@@ -54,22 +54,26 @@ var CollisionInfo = {
         {
             leftFace = true;
             touchingX = true;
+            intersectsY = false;
         }
         else if (body1.right === body2.x)
         {
             leftFace = false;
             touchingX = true;
+            intersectsY = false;
         }
 
         if (body1.y === body2.bottom)
         {
             topFace = true;
             touchingY = true;
+            intersectsX = false;
         }
         else if (body1.bottom === body2.y)
         {
             topFace = false;
             touchingY = true;
+            intersectsX = false;
         }
 
         var faceX = CONST.FACING_NONE;
@@ -94,7 +98,7 @@ var CollisionInfo = {
 
                 if (!body1.immovable)
                 {
-                    shareX1 = body1.getMoveX(share);
+                    shareX1 = body1.getShareX(share);
                 }
 
                 if (shareX1 < share)
@@ -104,7 +108,7 @@ var CollisionInfo = {
 
                 if (!body2.immovable)
                 {
-                    shareX2 = body2.getMoveX(-share);
+                    shareX2 = body2.getShareX(-share);
                 }
             }
             else
@@ -125,7 +129,7 @@ var CollisionInfo = {
 
                 if (!body2.immovable)
                 {
-                    shareX2 = body2.getMoveX(share);
+                    shareX2 = body2.getShareX(share);
                 }
 
                 if (shareX2 < share)
@@ -135,7 +139,7 @@ var CollisionInfo = {
     
                 if (!body1.immovable)
                 {
-                    shareX1 = body1.getMoveX(-share);
+                    shareX1 = body1.getShareX(-share);
                 }
             }
             else
@@ -157,7 +161,7 @@ var CollisionInfo = {
 
                 if (!body1.immovable)
                 {
-                    shareY1 = body1.getMoveY(share);
+                    shareY1 = body1.getShareY(share);
                 }
 
                 if (shareY1 < share)
@@ -167,7 +171,7 @@ var CollisionInfo = {
 
                 if (!body2.immovable)
                 {
-                    shareY2 = body2.getMoveY(-share);
+                    shareY2 = body2.getShareY(-share);
                 }
             }
             else
@@ -188,7 +192,7 @@ var CollisionInfo = {
 
                 if (!body2.immovable)
                 {
-                    shareY2 = body2.getMoveY(share);
+                    shareY2 = body2.getShareY(share);
                 }
 
                 if (shareY2 < share)
@@ -198,7 +202,7 @@ var CollisionInfo = {
     
                 if (!body1.immovable)
                 {
-                    shareY1 = body1.getMoveY(-share);
+                    shareY1 = body1.getShareY(-share);
                 }
             }
             else
@@ -241,10 +245,12 @@ var CollisionInfo = {
 
             if (forceX)
             {
+                console.log('forceX');
                 console.log('body1 overlaps body2 on the ' + ((faceX === CONST.FACING_LEFT) ? 'left' : 'right') + ' face');
             }
             else
             {
+                console.log('forceY');
                 console.log('body1 overlaps body2 on the ' + ((faceY === CONST.FACING_UP) ? 'top' : 'bottom') + ' face');
             }
 
@@ -252,6 +258,7 @@ var CollisionInfo = {
             console.log('shareX1:', shareX1, 'shareX2:', shareX2);
             console.log('shareY1:', shareY1, 'shareY2:', shareY2);
             console.log('x compare (CI): ', body1.right, 'body2', body2.x, '=', (body1.right - body2.x));
+            console.log('y compare (CI): ', body1.bottom, 'body2', body2.y, '=', (body1.bottom - body2.y));
         };
 
         if (data)
