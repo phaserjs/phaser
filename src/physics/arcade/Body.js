@@ -950,17 +950,17 @@ var Body = new Class({
         //  Updates the transform values
         this.updateBounds();
 
-        //  Reset deltas (world bounds checks have no effect on this)
-        this.prev.x = this.x;
-        this.prev.y = this.y;
-        this.preRotation = this.rotation;
-
         var parent = this.transform;
 
         this.x = parent.x + parent.scaleX * (this.offset.x - parent.displayOriginX);
         this.y = parent.y + parent.scaleY * (this.offset.y - parent.displayOriginY);
 
         this.rotation = parent.rotation;
+
+        //  Reset deltas (world bounds checks have no effect on this)
+        this.prev.x = this.x;
+        this.prev.y = this.y;
+        this.preRotation = this.rotation;
 
         if (this.collideWorldBounds)
         {
@@ -1097,8 +1097,6 @@ var Body = new Class({
 
             if (this.forcePosition > 0)
             {
-                // console.log(this.world._frame, this.gameObject.name, 'forcePosition. Type: ', this.forcePosition);
-
                 var snapX = this.x;
                 var snapY = this.y;
 
@@ -1120,9 +1118,9 @@ var Body = new Class({
                         snapX = this.snapTo.x - this.width;
                         break;
                 }
-    
-                gameObject.x = snapX;
-                gameObject.y = snapY;
+
+                gameObject.x += (snapX - this.prev.x);
+                gameObject.y += (snapY - this.prev.y);
 
                 dx = 0;
                 dy = 0;
@@ -1196,23 +1194,22 @@ var Body = new Class({
             if (worldBlocked.up)
             {
                 this.y = worldBounds.y;
-                this.forcePosition = 5;
             }
             else if (worldBlocked.down)
             {
                 this.bottom = worldBounds.bottom;
-                this.forcePosition = 5;
             }
-            else if (worldBlocked.left)
+
+            if (worldBlocked.left)
             {
                 this.x = worldBounds.x;
-                this.forcePosition = 5;
             }
             else if (worldBlocked.right)
             {
                 this.right = worldBounds.right;
-                this.forcePosition = 5;
             }
+
+            this.forcePosition = 5;
         }
         else if (!blocked.none)
         {
@@ -1356,7 +1353,6 @@ var Body = new Class({
     //    Static or Immovable
     //    Under direct movement control
     //    Has bounce and is moving left but is blocked right, or is moving right and is blocked left
-    //    Isn't moving faster than minVelocity, once factoring in gravity
     //  Otherwise, return true
     canMoveX: function ()
     {
@@ -1374,16 +1370,13 @@ var Body = new Class({
             return false;
         }
 
-        var actualVelocityX = Math.abs(velocityX) - Math.abs(this._gx);
-
-        return (actualVelocityX > this.minVelocity.x);
+        return true;
     },
 
     //  Return false if this body is:
     //    Static or Immovable
     //    Under direct movement control
     //    Has bounce and is moving up but is blocked down, or is moving down and is blocked up
-    //    Isn't moving faster than minVelocity, once factoring in gravity
     //  Otherwise, return true
     canMoveY: function ()
     {
@@ -1401,9 +1394,7 @@ var Body = new Class({
             return false;
         }
 
-        var actualVelocityY = Math.abs(velocityY) - Math.abs(this._gy);
-
-        return (actualVelocityY > this.minVelocity.y);
+        return true;
     },
 
     //  Return true if body can be repositioned after this call, otherwise return false to stop positioning in the update
@@ -1663,10 +1654,10 @@ var Body = new Class({
 
                         // console.log(this.world._frame, 'slept by checkSleep');
 
-                        var gameObject = this.gameObject;
+                        // var gameObject = this.gameObject;
 
-                        gameObject.x = this.x;
-                        gameObject.y = this.y;
+                        // gameObject.x = this.x;
+                        // gameObject.y = this.y;
                     }
                 }
             }
@@ -1683,7 +1674,7 @@ var Body = new Class({
     
                 if (this._sleep <= 0)
                 {
-                    console.log('body woken from postUpdate', dy);
+                    // console.log('body woken from postUpdate', dy);
                     this.wake();
                 }
             }
@@ -2645,8 +2636,6 @@ var Body = new Class({
             this.y = worldBounds.y;
 
             this.forcePosition = 5;
-
-            // console.log(this.world._frame, this.gameObject.name, 'world blocked up + position', this.y);
         }
 
         return this;
@@ -2671,8 +2660,6 @@ var Body = new Class({
             this.bottom = worldBounds.bottom;
 
             this.forcePosition = 5;
-
-            // console.log(this.world._frame, this.gameObject.name, 'world blocked down + position', this.y);
         }
 
         return this;
@@ -2697,8 +2684,6 @@ var Body = new Class({
             this.x = worldBounds.x;
 
             this.forcePosition = 5;
-
-            // console.log(this.world._frame, this.gameObject.name, 'world blocked up + position', this.y);
         }
 
         return this;
@@ -2723,8 +2708,6 @@ var Body = new Class({
             this.right = worldBounds.right;
 
             this.forcePosition = 5;
-
-            // console.log(this.world._frame, this.gameObject.name, 'world blocked up + position', this.y);
         }
 
         return this;
