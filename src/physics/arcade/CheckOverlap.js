@@ -112,44 +112,6 @@ var CheckOverlap = function (collisionInfo)
             break;
     }
 
-    /*
-    if (body1.isWorldBlockedLeft())
-    {
-        body2.setHardBlockedLeft();
-    }
-    else if (body2.isWorldBlockedLeft())
-    {
-        body1.setHardBlockedLeft();
-    }
-
-    if (body1.isWorldBlockedRight())
-    {
-        body2.setHardBlockedRight();
-    }
-    else if (body2.isWorldBlockedRight())
-    {
-        body1.setHardBlockedRight();
-    }
-
-    if (body1.isWorldBlockedUp())
-    {
-        body2.setHardBlockedUp();
-    }
-    else if (body2.isWorldBlockedUp())
-    {
-        body1.setHardBlockedUp();
-    }
-
-    if (body1.isWorldBlockedDown())
-    {
-        body2.setHardBlockedDown();
-    }
-    else if (body2.isWorldBlockedDown())
-    {
-        body1.setHardBlockedDown();
-    }
-    */
-
     return collisionInfo.touching;
 };
 
