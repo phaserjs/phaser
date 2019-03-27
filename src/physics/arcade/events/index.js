@@ -16,6 +16,7 @@ module.exports = {
     RESUME: require('./RESUME_EVENT'),
     TILE_COLLIDE: require('./TILE_COLLIDE_EVENT'),
     TILE_OVERLAP: require('./TILE_OVERLAP_EVENT'),
+    TOUCH: require('./TOUCH_EVENT'),
     WORLD_BOUNDS: require('./WORLD_BOUNDS_EVENT')
 
 };
