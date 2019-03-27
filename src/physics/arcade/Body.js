@@ -38,9 +38,23 @@ var Body = new Class({
 
     initialize:
 
-    function Body (world, gameObject)
+    function Body (world, gameObject, x, y, width, height)
     {
-        BaseBody.call(this, world, gameObject, CONST.DYNAMIC_BODY);
+        BaseBody.call(this, world, gameObject, CONST.DYNAMIC_BODY, x, y, width, height);
+
+        if (!gameObject)
+        {
+            gameObject = {
+                x: x,
+                y: y,
+                angle: 0,
+                rotation: 0,
+                scaleX: 1,
+                scaleY: 1,
+                displayOriginX: 0.5,
+                displayOriginY: 0.5
+            };
+        }
 
         /**
          * Transformations applied to this Body.
@@ -545,6 +559,11 @@ var Body = new Class({
     {
         var sprite = this.gameObject;
 
+        if (!sprite)
+        {
+            return;
+        }
+
         //  Container?
 
         var transform = this.transform;
@@ -650,14 +669,18 @@ var Body = new Class({
         this.forcePosition = 0;
 
         //  Updates the transform values
-        this.updateBounds();
 
-        var parent = this.transform;
+        if (this.gameObject)
+        {
+            this.updateBounds();
 
-        this.x = parent.x + parent.scaleX * (this.offset.x - parent.displayOriginX);
-        this.y = parent.y + parent.scaleY * (this.offset.y - parent.displayOriginY);
-
-        this.rotation = parent.rotation;
+            var parent = this.transform;
+    
+            this.x = parent.x + parent.scaleX * (this.offset.x - parent.displayOriginX);
+            this.y = parent.y + parent.scaleY * (this.offset.y - parent.displayOriginY);
+    
+            this.rotation = parent.rotation;
+        }
 
         //  Reset deltas (world bounds checks have no effect on this)
         this.prev.x = this.x;
@@ -748,55 +771,55 @@ var Body = new Class({
         var dx = this.position.x - this.prev.x;
         var dy = this.position.y - this.prev.y;
 
+        var mx = this.deltaMax.x;
+        var my = this.deltaMax.y;
+
+        if (mx !== 0 && dx !== 0)
+        {
+            if (dx < 0 && dx < -mx)
+            {
+                dx = -mx;
+            }
+            else if (dx > 0 && dx > mx)
+            {
+                dx = mx;
+            }
+        }
+
+        if (my !== 0 && dy !== 0)
+        {
+            if (dy < 0 && dy < -my)
+            {
+                dy = -my;
+            }
+            else if (dy > 0 && dy > my)
+            {
+                dy = my;
+            }
+        }
+
+        if (dx < 0)
+        {
+            this.facing = CONST.FACING_LEFT;
+        }
+        else if (dx > 0)
+        {
+            this.facing = CONST.FACING_RIGHT;
+        }
+
+        if (dy < 0)
+        {
+            this.facing = CONST.FACING_UP;
+        }
+        else if (dy > 0)
+        {
+            this.facing = CONST.FACING_DOWN;
+        }
+
         var gameObject = this.gameObject;
 
         if (this.moves)
         {
-            var mx = this.deltaMax.x;
-            var my = this.deltaMax.y;
-
-            if (mx !== 0 && dx !== 0)
-            {
-                if (dx < 0 && dx < -mx)
-                {
-                    dx = -mx;
-                }
-                else if (dx > 0 && dx > mx)
-                {
-                    dx = mx;
-                }
-            }
-
-            if (my !== 0 && dy !== 0)
-            {
-                if (dy < 0 && dy < -my)
-                {
-                    dy = -my;
-                }
-                else if (dy > 0 && dy > my)
-                {
-                    dy = my;
-                }
-            }
-
-            if (dx < 0)
-            {
-                this.facing = CONST.FACING_LEFT;
-            }
-            else if (dx > 0)
-            {
-                this.facing = CONST.FACING_RIGHT;
-            }
-    
-            if (dy < 0)
-            {
-                this.facing = CONST.FACING_UP;
-            }
-            else if (dy > 0)
-            {
-                this.facing = CONST.FACING_DOWN;
-            }
-
             if (this.forcePosition > 0)
             {
                 var snapX = this.x;
@@ -821,13 +844,16 @@ var Body = new Class({
                         break;
                 }
 
-                gameObject.x += (snapX - this.prev.x);
-                gameObject.y += (snapY - this.prev.y);
+                if (gameObject)
+                {
+                    gameObject.x += (snapX - this.prev.x);
+                    gameObject.y += (snapY - this.prev.y);
+                }
 
                 dx = 0;
                 dy = 0;
             }
-            else if (!this.sleeping)
+            else if (!this.sleeping && gameObject)
             {
                 gameObject.x += dx / this.world.positionIterations;
                 gameObject.y += dy / this.world.positionIterations;
@@ -1360,8 +1386,6 @@ var Body = new Class({
         }
         else if (worldCollision.down && this.bottom >= (worldBounds.bottom - 1) && velocity.y >= 0)
         {
-            // console.log(this.world._frame, 'via check world bounds');
-
             this.setWorldBlockedDown(true);
         }
 
@@ -1371,8 +1395,6 @@ var Body = new Class({
         }
         else if (worldCollision.right && this.right >= (worldBounds.right - 1) && velocity.x >= 0)
         {
-            // console.log(this.world._frame, 'via check world bounds');
-
             this.setWorldBlockedRight(true);
         }
     },
@@ -1417,14 +1439,17 @@ var Body = new Class({
 
         var gameObject = this.gameObject;
 
-        if (!width && gameObject.frame)
+        if (gameObject)
         {
-            width = gameObject.frame.realWidth;
-        }
-
-        if (!height && gameObject.frame)
-        {
-            height = gameObject.frame.realHeight;
+            if (!width && gameObject.frame)
+            {
+                width = gameObject.frame.realWidth;
+            }
+    
+            if (!height && gameObject.frame)
+            {
+                height = gameObject.frame.realHeight;
+            }
         }
 
         this.sourceWidth = width;
@@ -1438,7 +1463,7 @@ var Body = new Class({
 
         this.updateCenter();
 
-        if (center && gameObject.getCenter)
+        if (center && gameObject && gameObject.getCenter)
         {
             var ox = gameObject.displayWidth / 2;
             var oy = gameObject.displayHeight / 2;
@@ -1511,14 +1536,18 @@ var Body = new Class({
 
         var gameObject = this.gameObject;
 
-        gameObject.setPosition(x, y);
+        if (gameObject)
+        {
+            gameObject.setPosition(x, y);
 
-        gameObject.getTopLeft(this.position);
+            gameObject.getTopLeft(this.position);
 
-        this.prev.copy(this.position);
+            this.rotation = gameObject.angle;
+            this.preRotation = gameObject.angle;
+        }
 
-        this.rotation = gameObject.angle;
-        this.preRotation = gameObject.angle;
+        this.position.set(x, y);
+        this.prev.set(x, y);
 
         this.updateBounds();
         this.updateCenter();

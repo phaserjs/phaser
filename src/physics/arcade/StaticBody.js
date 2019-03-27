@@ -35,9 +35,9 @@ var StaticBody = new Class({
 
     initialize:
 
-    function StaticBody (world, gameObject)
+    function StaticBody (world, gameObject, x, y, width, height)
     {
-        BaseBody.call(this, world, gameObject, CONST.STATIC_BODY);
+        BaseBody.call(this, world, gameObject, CONST.STATIC_BODY, x, y, width, height);
 
         /**
          * A constant zero velocity used by the Arcade Physics simulation for calculations.
@@ -95,21 +95,24 @@ var StaticBody = new Class({
      */
     updateFromGameObject: function ()
     {
-        this.world.staticTree.remove(this);
-
         var gameObject = this.gameObject;
 
-        gameObject.getTopLeft(this.position);
+        if (gameObject)
+        {
+            this.world.staticTree.remove(this);
 
-        this.width = gameObject.displayWidth;
-        this.height = gameObject.displayHeight;
+            gameObject.getTopLeft(this.position);
 
-        this.halfWidth = Math.abs(this.width / 2);
-        this.halfHeight = Math.abs(this.height / 2);
-
-        this.center.set(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
-
-        this.world.staticTree.insert(this);
+            this.width = gameObject.displayWidth;
+            this.height = gameObject.displayHeight;
+    
+            this.halfWidth = Math.abs(this.width / 2);
+            this.halfHeight = Math.abs(this.height / 2);
+    
+            this.center.set(this.position.x + this.halfWidth, this.position.y + this.halfHeight);
+    
+            this.world.staticTree.insert(this);
+        }
 
         return this;
     },
@@ -167,14 +170,17 @@ var StaticBody = new Class({
 
         var gameObject = this.gameObject;
 
-        if (!width && gameObject.frame)
+        if (gameObject)
         {
-            width = gameObject.frame.realWidth;
-        }
-
-        if (!height && gameObject.frame)
-        {
-            height = gameObject.frame.realHeight;
+            if (!width && gameObject.frame)
+            {
+                width = gameObject.frame.realWidth;
+            }
+    
+            if (!height && gameObject.frame)
+            {
+                height = gameObject.frame.realHeight;
+            }
         }
 
         this.world.staticTree.remove(this);
@@ -256,14 +262,17 @@ var StaticBody = new Class({
     {
         var gameObject = this.gameObject;
 
-        if (x === undefined) { x = gameObject.x; }
-        if (y === undefined) { y = gameObject.y; }
+        if (x === undefined && gameObject) { x = gameObject.x; }
+        if (y === undefined && gameObject) { y = gameObject.y; }
 
         this.world.staticTree.remove(this);
 
-        gameObject.setPosition(x, y);
+        if (gameObject)
+        {
+            gameObject.setPosition(x, y);
         
-        gameObject.getTopLeft(this.position);
+            gameObject.getTopLeft(this.position);
+        }
 
         this.updateCenter();
 

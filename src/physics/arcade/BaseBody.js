@@ -29,10 +29,21 @@ var BaseBody = new Class({
 
     initialize:
 
-    function StaticBody (world, gameObject, bodyType)
+    function BaseBody (world, gameObject, bodyType, x, y, width, height)
     {
-        var width = (gameObject.width) ? gameObject.width : 64;
-        var height = (gameObject.height) ? gameObject.height : 64;
+        if (width === undefined) { width = 64; }
+        if (height === undefined) { height = 64; }
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+
+        if (gameObject)
+        {
+            width = gameObject.width;
+            height = gameObject.height;
+
+            x = gameObject.x - gameObject.displayOriginX;
+            y = gameObject.y - gameObject.displayOriginY;
+        }
 
         /**
          * The Arcade Physics simulation this Body belongs to.
@@ -45,9 +56,12 @@ var BaseBody = new Class({
 
         /**
          * The Game Object this Body belongs to.
+         * 
+         * As of Phaser 3.17 this can be null in order to create a Body that isn't bound to a parent,
+         * but that still collides and overlaps within the physics world.
          *
          * @name Phaser.Physics.Arcade.Body#gameObject
-         * @type {Phaser.GameObjects.GameObject}
+         * @type {?Phaser.GameObjects.GameObject}
          * @since 3.0.0
          */
         this.gameObject = gameObject;
@@ -62,6 +76,8 @@ var BaseBody = new Class({
          */
         this.enable = true;
 
+        var defaults = world.defaults;
+
         /**
          * Whether the Body's boundary is drawn to the debug display.
          *
@@ -69,7 +85,7 @@ var BaseBody = new Class({
          * @type {boolean}
          * @since 3.0.0
          */
-        this.debugShowBody = world.defaults.debugShowBody;
+        this.debugShowBody = defaults.debugShowBody;
 
         /**
          * Whether the Body's velocity is drawn to the debug display.
@@ -78,7 +94,7 @@ var BaseBody = new Class({
          * @type {boolean}
          * @since 3.0.0
          */
-        this.debugShowVelocity = world.defaults.debugShowVelocity;
+        this.debugShowVelocity = defaults.debugShowVelocity;
 
         /**
          * Whether the Body's blocked faces are drawn to the debug display.
@@ -87,7 +103,7 @@ var BaseBody = new Class({
          * @type {boolean}
          * @since 3.17.0
          */
-        this.debugShowBlocked = world.defaults.debugShowBlocked;
+        this.debugShowBlocked = defaults.debugShowBlocked;
 
         /**
          * The color of this Body on the debug display.
@@ -96,7 +112,7 @@ var BaseBody = new Class({
          * @type {integer}
          * @since 3.0.0
          */
-        this.debugBodyColor = world.defaults.bodyDebugColor;
+        this.debugBodyColor = defaults.bodyDebugColor;
 
         /**
          * Whether this Body's boundary is circular (`true`) or rectangular (`false`).
@@ -141,7 +157,7 @@ var BaseBody = new Class({
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
-        this.position = new Vector2(gameObject.x - gameObject.displayOriginX, gameObject.y - gameObject.displayOriginY);
+        this.position = new Vector2(x, y);
 
         /**
          * The position of this Body during the previous step.
@@ -150,7 +166,7 @@ var BaseBody = new Class({
          * @type {Phaser.Math.Vector2}
          * @since 3.17.0
          */
-        this.prev = new Vector2(gameObject.x - gameObject.displayOriginX, gameObject.y - gameObject.displayOriginY);
+        this.prev = new Vector2(x, y);
 
         /**
          * The width of the Static Body's boundary, in pixels.
@@ -200,7 +216,7 @@ var BaseBody = new Class({
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
-        this.center = new Vector2(gameObject.x + this.halfWidth, gameObject.y + this.halfHeight);
+        this.center = new Vector2(x + this.halfWidth, y + this.halfHeight);
 
         /**
          * Whether this Body's position is affected by gravity (local or world).
@@ -455,9 +471,12 @@ var BaseBody = new Class({
         var x = pos.x + this.halfWidth;
         var y = pos.y + this.halfHeight;
 
-        var worldBlockedColor = this.world.defaults.worldBlockedDebugColor;
-        var blockedColor = this.world.defaults.blockedDebugColor;
-        var sleepColor = this.world.defaults.sleepDebugColor;
+        var defaults = this.world.defaults;
+
+        var worldBlockedColor = defaults.worldBlockedDebugColor;
+        var blockedColor = defaults.blockedDebugColor;
+        var sleepColor = defaults.sleepDebugColor;
+        var checkCollision = this.checkCollision;
 
         // var thickness = graphic.defaultStrokeWidth;
 
@@ -489,44 +508,56 @@ var BaseBody = new Class({
         if (this.debugShowBody)
         {
             //  Top
-            color = (this.sleeping) ? sleepColor : this.debugBodyColor;
-
-            if (blocked.up || worldBlocked.up || hardBlocked.up)
+            if (checkCollision.up)
             {
-                color = (worldBlocked.up || hardBlocked.up) ? worldBlockedColor : blockedColor;
-            }
+                color = (this.sleeping) ? sleepColor : this.debugBodyColor;
 
-            graphic.lineStyle(thickness, color).lineBetween(x1, y1 + halfThickness, x2, y2 + halfThickness);
+                if (blocked.up || worldBlocked.up || hardBlocked.up)
+                {
+                    color = (worldBlocked.up || hardBlocked.up) ? worldBlockedColor : blockedColor;
+                }
+    
+                graphic.lineStyle(thickness, color).lineBetween(x1, y1 + halfThickness, x2, y2 + halfThickness);
+            }
 
             //  Bottom
-            color = (this.sleeping) ? sleepColor : this.debugBodyColor;
-
-            if (blocked.down || worldBlocked.down || hardBlocked.down)
+            if (checkCollision.down)
             {
-                color = (worldBlocked.down || hardBlocked.down) ? worldBlockedColor : blockedColor;
-            }
+                color = (this.sleeping) ? sleepColor : this.debugBodyColor;
 
-            graphic.lineStyle(thickness, color).lineBetween(x3, y3 - halfThickness, x4, y4 - halfThickness);
+                if (blocked.down || worldBlocked.down || hardBlocked.down)
+                {
+                    color = (worldBlocked.down || hardBlocked.down) ? worldBlockedColor : blockedColor;
+                }
+    
+                graphic.lineStyle(thickness, color).lineBetween(x3, y3 - halfThickness, x4, y4 - halfThickness);
+            }
 
             //  Left
-            color = (this.sleeping) ? sleepColor : this.debugBodyColor;
-
-            if (blocked.left || worldBlocked.left)
+            if (checkCollision.left)
             {
-                color = (worldBlocked.left) ? worldBlockedColor : blockedColor;
-            }
+                color = (this.sleeping) ? sleepColor : this.debugBodyColor;
 
-            graphic.lineStyle(thickness, color).lineBetween(x1 + halfThickness, y1, x3 + halfThickness, y3);
+                if (blocked.left || worldBlocked.left)
+                {
+                    color = (worldBlocked.left) ? worldBlockedColor : blockedColor;
+                }
+    
+                graphic.lineStyle(thickness, color).lineBetween(x1 + halfThickness, y1, x3 + halfThickness, y3);
+            }
 
             //  Right
-            color = (this.sleeping) ? sleepColor : this.debugBodyColor;
-
-            if (blocked.right || worldBlocked.right)
+            if (checkCollision.right)
             {
-                color = (worldBlocked.right) ? worldBlockedColor : blockedColor;
-            }
+                color = (this.sleeping) ? sleepColor : this.debugBodyColor;
 
-            graphic.lineStyle(thickness, color).lineBetween(x2 - halfThickness, y2, x4 - halfThickness, y4);
+                if (blocked.right || worldBlocked.right)
+                {
+                    color = (worldBlocked.right) ? worldBlockedColor : blockedColor;
+                }
+    
+                graphic.lineStyle(thickness, color).lineBetween(x2 - halfThickness, y2, x4 - halfThickness, y4);
+            }
         }
 
         // if (this.isCircle)
@@ -536,7 +567,7 @@ var BaseBody = new Class({
 
         if (this.debugShowVelocity)
         {
-            graphic.lineStyle(graphic.defaultStrokeWidth, this.world.defaults.velocityDebugColor, 1);
+            graphic.lineStyle(thickness, defaults.velocityDebugColor, 1);
             graphic.lineBetween(x, y, x + this.velocity.x / 2, y + this.velocity.y / 2);
         }
     },
@@ -955,6 +986,8 @@ var BaseBody = new Class({
      */
     setGameObject: function (gameObject, update)
     {
+        if (update === undefined) { update = true; }
+
         if (gameObject && gameObject !== this.gameObject)
         {
             //  Remove this body from the old game object
