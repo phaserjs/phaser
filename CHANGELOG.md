@@ -16,6 +16,7 @@ Notes:
 * `collideTiles` is a new method that allows you to check for collision between a physics enabled Game Object and an array of Tiles. The Tiles don't have to have been enable for collision, or even be on the same layer, for the collision to work. You can provide your own process callback and/or overlap callback. There are some limitations in using this method, please consult the API Docs for details, but on the whole, it allows for dynamic collision on small sets of Tile instances. This is available via `this.physics.collideTiles` and the World instance.
 * `overlapRect` is a new method that allows you to return an array of all physics bodies within the given rectangular region of the World. It can return dynamic or static bodies and will use the RTree for super-fast searching, if enabled (which it is by default)
 * `debugShowBlocked`, `sleepDebugColor`, `blockedDebugColor`
+* The `Body.setCollideWorldBounds` method has two new optional arguments `bounceX` and `bounceY` which, if given, will set the World Bounce values for the body.
 
 #### Updates
 
