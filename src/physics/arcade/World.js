@@ -1392,41 +1392,40 @@ var World = new Class({
             }
         }
 
-        var resultX = false;
-        var resultY = false;
-
         var collisionInfo = GetOverlap(body1, body2, overlapOnly, this.OVERLAP_BIAS);
 
         if (collisionInfo.intersects)
         {
+            // console.log('%c Separate ' + this._frame + '                                                                                     ', 'background-color: yellow');
+            // collisionInfo.dump();
+
             if (collisionInfo.forceX)
             {
-                resultX = SeparateX(collisionInfo);
+                SeparateX(collisionInfo);
             }
             else
             {
-                resultY = SeparateY(collisionInfo);
+                SeparateY(collisionInfo);
             }
-        }
 
-        var result = (resultX || resultY);
-
-        if (result)
-        {
             if (overlapOnly)
             {
                 if (body1.onOverlap || body2.onOverlap)
                 {
-                    this.emit(Events.OVERLAP, body1.gameObject, body2.gameObject, body1, body2);
+                    this.emit(Events.OVERLAP, collisionInfo, body1.gameObject, body2.gameObject);
                 }
             }
             else if (body1.onCollide || body2.onCollide)
             {
-                this.emit(Events.COLLIDE, body1.gameObject, body2.gameObject, body1, body2);
+                this.emit(Events.COLLIDE, collisionInfo, body1.gameObject, body2.gameObject);
             }
         }
+        else if (collisionInfo.touching && (body1.onTouch || body2.onTouch))
+        {
+            this.emit(Events.TOUCH, collisionInfo, body1.gameObject, body2.gameObject);
+        }
 
-        return result;
+        return collisionInfo.intersects;
     },
 
     /**
