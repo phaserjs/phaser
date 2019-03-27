@@ -6,6 +6,7 @@
 
 var ArcadeImage = require('./ArcadeImage');
 var ArcadeSprite = require('./ArcadeSprite');
+var ArcadeRectangle = require('./ArcadeRectangle');
 var Class = require('../../utils/Class');
 var CONST = require('./const');
 var PhysicsGroup = require('./PhysicsGroup');
@@ -113,6 +114,15 @@ var Factory = new Class({
         this.world.enableBody(gameObject, type);
 
         return gameObject;
+    },
+
+    rectangle: function (x, y, width, height)
+    {
+        var body = new ArcadeRectangle(this.world, x, y, width, height);
+
+        this.world.add(body);
+
+        return body;
     },
 
     /**
