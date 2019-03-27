@@ -59,6 +59,16 @@ var BaseBody = new Class({
         this.world = world;
 
         /**
+         * Quick boolean body check.
+         *
+         * @name Phaser.Physics.Arcade.BaseBody#isBody
+         * @type {boolean}
+         * @readonly
+         * @since 3.17.0
+         */
+        this.isBody = true;
+
+        /**
          * The Game Object this Body belongs to.
          * 
          * As of Phaser 3.17 this can be null in order to create a Body that isn't bound to a parent,
@@ -69,6 +79,15 @@ var BaseBody = new Class({
          * @since 3.0.0
          */
         this.gameObject = gameObject;
+
+        /**
+         * The physics body type, either Dynamic or Static.
+         *
+         * @name Phaser.Physics.Arcade.BaseBody#physicsType
+         * @type {integer}
+         * @since 3.0.0
+         */
+        this.physicsType = bodyType;
 
         /**
          * Whether this Body is updated by the physics simulation.
@@ -345,15 +364,6 @@ var BaseBody = new Class({
          * @since 3.17.0
          */
         this.hardBlocked = { none: true, up: false, down: false, left: false, right: false };
-
-        /**
-         * The physics body type, either Dynamic or Static.
-         *
-         * @name Phaser.Physics.Arcade.BaseBody#physicsType
-         * @type {integer}
-         * @since 3.0.0
-         */
-        this.physicsType = bodyType;
 
         /**
          * Whether the simulation emits a `worldbounds` event when this Body collides with the world boundary (and `collideWorldBounds` is also true).
