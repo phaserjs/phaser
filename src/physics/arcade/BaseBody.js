@@ -401,6 +401,17 @@ var BaseBody = new Class({
         this.onOverlap = false;
 
         /**
+         * Whether the simulation emits a `touch` event when this Body touches another.
+         *
+         * @name Phaser.Physics.Arcade.BaseBody#onTouch
+         * @type {boolean}
+         * @default false
+         * @since 3.17.0
+         * @see Phaser.Physics.Arcade.Events#TOUCH
+         */
+        this.onTouch = false;
+
+        /**
          * The calculated change in the Body's horizontal position during the last step.
          *
          * @name Phaser.Physics.Arcade.BaseBody#_dx
@@ -552,9 +563,9 @@ var BaseBody = new Class({
             {
                 color = (this.sleeping) ? sleepColor : this.debugBodyColor;
 
-                if (blocked.left || worldBlocked.left)
+                if (blocked.left || worldBlocked.left || hardBlocked.left)
                 {
-                    color = (worldBlocked.left) ? worldBlockedColor : blockedColor;
+                    color = (worldBlocked.left || hardBlocked.left) ? worldBlockedColor : blockedColor;
                 }
     
                 graphic.lineStyle(thickness, color).lineBetween(x1 + halfThickness, y1, x3 + halfThickness, y3);
@@ -565,9 +576,9 @@ var BaseBody = new Class({
             {
                 color = (this.sleeping) ? sleepColor : this.debugBodyColor;
 
-                if (blocked.right || worldBlocked.right)
+                if (blocked.right || worldBlocked.right || hardBlocked.right)
                 {
-                    color = (worldBlocked.right) ? worldBlockedColor : blockedColor;
+                    color = (worldBlocked.right || hardBlocked.right) ? worldBlockedColor : blockedColor;
                 }
     
                 graphic.lineStyle(thickness, color).lineBetween(x2 - halfThickness, y2, x4 - halfThickness, y4);
@@ -1069,6 +1080,64 @@ var BaseBody = new Class({
         return true;
     },
 
+    setCheckCollisionUp: function (value)
+    {
+        this.checkCollision.up = value;
+
+        return this;
+    },
+
+    setCheckCollisionDown: function (value)
+    {
+        this.checkCollision.down = value;
+
+        return this;
+    },
+
+    setCheckCollisionLeft: function (value)
+    {
+        this.checkCollision.left = value;
+
+        return this;
+    },
+
+    setCheckCollisionRight: function (value)
+    {
+        this.checkCollision.right = value;
+
+        return this;
+    },
+
+    setCheckCollisionX: function (value)
+    {
+        this.setCheckCollisionLeft(value);
+
+        return this.setCheckCollisionRight(value);
+    },
+
+    setCheckCollisionY: function (value)
+    {
+        this.setCheckCollisionUp(value);
+
+        return this.setCheckCollisionDown(value);
+    },
+
+    setCheckCollisionNone: function ()
+    {
+        this.checkCollision.none = true;
+
+        return this;
+    },
+
+    setCheckCollisionAll: function ()
+    {
+        this.checkCollision.none = false;
+
+        this.setCheckCollisionX(true);
+
+        return this.setCheckCollisionY(true);
+    },
+
     /**
      * Disables this Body and marks it for deletion by the simulation.
      *
@@ -1082,6 +1151,16 @@ var BaseBody = new Class({
         if (this.world)
         {
             this.world.pendingDestroy.set(this);
+        }
+
+        var blockers = this.blockers;
+
+        if (blockers)
+        {
+            blockers.up = [];
+            blockers.down = [];
+            blockers.left = [];
+            blockers.right = [];
         }
     }
 
