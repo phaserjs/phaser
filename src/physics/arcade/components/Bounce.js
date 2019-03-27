@@ -68,18 +68,22 @@ var Bounce = {
     },
 
     /**
-     * Sets if this body should collide with the world bounds or not.
+     * Sets whether this Body collides with the world boundary.
+     * 
+     * Optionally also sets the World Bounce values. If the `Body.worldBounce` is null, it's set to a new Vec2 first.
      *
      * @method Phaser.Physics.Arcade.Components.Bounce#setCollideWorldBounds
      * @since 3.0.0
      *
-     * @param {boolean} value - `true` if this body should collide with the world bounds, otherwise `false`.
+     * @param {boolean} [value=true] - `true` if this body should collide with the world bounds, otherwise `false`.
+     * @param {number} [bounceX] - If given this will be replace the `worldBounce.x` value.
+     * @param {number} [bounceY] - If given this will be replace the `worldBounce.y` value.
      *
      * @return {this} This Game Object.
      */
-    setCollideWorldBounds: function (value)
+    setCollideWorldBounds: function (value, bounceX, bounceY)
     {
-        this.body.collideWorldBounds = value;
+        this.body.setCollideWorldBounds(value, bounceX, bounceY);
 
         return this;
     }
