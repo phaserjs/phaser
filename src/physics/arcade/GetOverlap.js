@@ -27,7 +27,7 @@ var GetOverlap = function (body1, body2, overlapOnly, bias)
 
     var collisionInfo = CollisionInfo.get(body1, body2, overlapOnly, bias);
 
-    if (overlapOnly)
+    if (overlapOnly || collisionInfo.embedded)
     {
         return collisionInfo;
     }
