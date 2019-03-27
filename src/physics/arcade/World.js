@@ -1348,9 +1348,15 @@ var World = new Class({
         }
 
         //  They overlap. Is there a custom process callback? If it returns true then we can carry on, otherwise we should abort.
-        if (processCallback && processCallback.call(callbackContext, body1.gameObject, body2.gameObject) === false)
+        if (processCallback)
         {
-            return false;
+            var gameObject1 = (body1.isBody) ? body1 : body1.gameObject;
+            var gameObject2 = (body2.isBody) ? body2 : body2.gameObject;
+
+            if (!processCallback.call(callbackContext, gameObject1, gameObject2))
+            {
+                return false;
+            }
         }
 
         //  Circle vs. Circle quick bail out
@@ -1391,22 +1397,14 @@ var World = new Class({
 
         var collisionInfo = GetOverlap(body1, body2, overlapOnly, this.OVERLAP_BIAS);
 
-        //  Do we separate on x or y first?
-
         if (collisionInfo.intersects)
         {
-            // console.log('');
-            // console.log('%c World frame ' + body1.world._frame + '                                                                                     ', 'background-color: orange');
-            // collisionInfo.dump();
-
             if (collisionInfo.forceX)
             {
-                // console.log('>>>>> Sep X');
                 resultX = SeparateX(collisionInfo);
             }
             else
             {
-                // console.log('>>>>> Sep Y');
                 resultY = SeparateY(collisionInfo);
             }
         }
@@ -1449,8 +1447,9 @@ var World = new Class({
     separateCircle: function (body1, body2, overlapOnly, bias)
     {
         //  Set the bounding box overlap values into the bodies themselves (hence we don't use the return values here)
-        GetOverlapX(body1, body2, false, bias);
-        GetOverlapY(body1, body2, false, bias);
+
+        // GetOverlapX(body1, body2, false, bias);
+        // GetOverlapY(body1, body2, false, bias);
 
         var dx = body2.center.x - body1.center.x;
         var dy = body2.center.y - body1.center.y;
@@ -1874,9 +1873,9 @@ var World = new Class({
         }
 
         //  A Body
-        if (object1.body)
+        if (object1.body || object1.isBody)
         {
-            if (object2.body)
+            if (object2.body || object2.isBody)
             {
                 return this.collideSpriteVsSprite(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
             }
@@ -1893,7 +1892,7 @@ var World = new Class({
         //  GROUPS
         else if (object1.isParent)
         {
-            if (object2.body)
+            if (object2.body || object2.isBody)
             {
                 return this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
             }
@@ -1910,7 +1909,7 @@ var World = new Class({
         //  TILEMAP LAYERS
         else if (object1.isTilemap)
         {
-            if (object2.body)
+            if (object2.body || object2.isBody)
             {
                 return this.collideSpriteVsTilemapLayer(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
             }
@@ -1940,12 +1939,15 @@ var World = new Class({
      */
     collideSpriteVsSprite: function (sprite1, sprite2, collideCallback, processCallback, callbackContext, overlapOnly)
     {
-        if (!sprite1.body || !sprite2.body)
+        var body1 = (sprite1.isBody) ? sprite1 : sprite1.body;
+        var body2 = (sprite2.isBody) ? sprite2 : sprite2.body;
+
+        if (!body1 || !body2)
         {
             return false;
         }
 
-        if (this.separate(sprite1.body, sprite2.body, processCallback, callbackContext, overlapOnly))
+        if (this.separate(body1, body2, processCallback, callbackContext, overlapOnly))
         {
             if (collideCallback)
             {
@@ -1977,7 +1979,7 @@ var World = new Class({
      */
     collideSpriteVsGroup: function (sprite, group, collideCallback, processCallback, callbackContext, overlapOnly)
     {
-        var bodyA = sprite.body;
+        var bodyA = (sprite.isBody) ? sprite : sprite.body;
 
         if (group.length === 0 || !bodyA || !bodyA.enable)
         {
@@ -2026,6 +2028,7 @@ var World = new Class({
         }
         else
         {
+            var child;
             var children = group.getChildren();
             var skipIndex = group.children.entries.indexOf(sprite);
 
@@ -2033,7 +2036,9 @@ var World = new Class({
 
             for (i = 0; i < len; i++)
             {
-                bodyB = children[i].body;
+                child = children[i];
+
+                bodyB = (child.isBody) ? child : child.body;
 
                 if (!bodyB || i === skipIndex || !bodyB.enable)
                 {
@@ -2083,7 +2088,7 @@ var World = new Class({
 
         for (var i = 0; i < children.length; i++)
         {
-            if (children[i].body)
+            if (children[i].body || children[i].isBody)
             {
                 if (this.collideSpriteVsTilemapLayer(children[i], tilemapLayer, collideCallback, processCallback, callbackContext, overlapOnly))
                 {
@@ -2125,7 +2130,9 @@ var World = new Class({
      */
     collideTiles: function (sprite, tiles, collideCallback, processCallback, callbackContext)
     {
-        if (!sprite.body.enable || tiles.length === 0)
+        var body = (sprite.isBody) ? sprite : sprite.body;
+
+        if (!body.enable || tiles.length === 0)
         {
             return false;
         }
@@ -2160,7 +2167,9 @@ var World = new Class({
      */
     overlapTiles: function (sprite, tiles, collideCallback, processCallback, callbackContext)
     {
-        if (!sprite.body.enable || tiles.length === 0)
+        var body = (sprite.isBody) ? sprite : sprite.body;
+
+        if (!body.enable || tiles.length === 0)
         {
             return false;
         }
@@ -2190,7 +2199,7 @@ var World = new Class({
      */
     collideSpriteVsTilemapLayer: function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext, overlapOnly)
     {
-        var body = sprite.body;
+        var body = (sprite.isBody) ? sprite : sprite.body;
 
         if (!body.enable)
         {
@@ -2256,7 +2265,7 @@ var World = new Class({
      */
     collideSpriteVsTilesHandler: function (sprite, tiles, collideCallback, processCallback, callbackContext, overlapOnly, isLayer)
     {
-        var body = sprite.body;
+        var body = (sprite.isBody) ? sprite : sprite.body;
 
         var tile;
         var tileWorldRect = { left: 0, right: 0, top: 0, bottom: 0 };
@@ -2355,7 +2364,7 @@ var World = new Class({
      */
     wrap: function (object, padding)
     {
-        if (object.body)
+        if (object.body || object.isBody)
         {
             this.wrapObject(object, padding);
         }
