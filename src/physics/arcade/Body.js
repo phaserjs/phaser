@@ -1635,7 +1635,7 @@ var Body = new Class({
      * @method Phaser.Physics.Arcade.Body#setCollideWorldBounds
      * @since 3.0.0
      *
-     * @param {boolean} [value=true] - True (collisions) or false (no collisions).
+     * @param {boolean} [value=true] - `true` if this body should collide with the world bounds, otherwise `false`.
      * @param {number} [bounceX] - If given this will be replace the `worldBounce.x` value.
      * @param {number} [bounceY] - If given this will be replace the `worldBounce.y` value.
      *
