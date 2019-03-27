@@ -22,8 +22,12 @@ var Vector2 = require('../../math/Vector2');
  * @since 3.17.0
  *
  * @param {Phaser.Physics.Arcade.World} world - The Arcade Physics simulation this Body belongs to.
- * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object this Body belongs to.
+ * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object this Body belongs to. Pass `null` if this Body should not be bound to a Game Object.
  * @param {integer} bodyType - The physics body type, either Dynamic or Static.
+ * @param {number} [x] - The horizontal position of this Body in the physics world. If undefined and a Game Object is provided it will use the Game Objects position.
+ * @param {number} [y] - The vertical position of this Body in the physics world. If undefined and a Game Object is provided it will use the Game Objects position.
+ * @param {number} [width] - The width of the Body in pixels. If undefined and a Game Object is provided it will use the Game Objects frame size.
+ * @param {number} [height] - The height of the Body in pixels. If undefined and a Game Object is provided it will use the Game Objects frame size.
  */
 var BaseBody = new Class({
 
@@ -48,7 +52,7 @@ var BaseBody = new Class({
         /**
          * The Arcade Physics simulation this Body belongs to.
          *
-         * @name Phaser.Physics.Arcade.Body#world
+         * @name Phaser.Physics.Arcade.BaseBody#world
          * @type {Phaser.Physics.Arcade.World}
          * @since 3.0.0
          */
@@ -60,7 +64,7 @@ var BaseBody = new Class({
          * As of Phaser 3.17 this can be null in order to create a Body that isn't bound to a parent,
          * but that still collides and overlaps within the physics world.
          *
-         * @name Phaser.Physics.Arcade.Body#gameObject
+         * @name Phaser.Physics.Arcade.BaseBody#gameObject
          * @type {?Phaser.GameObjects.GameObject}
          * @since 3.0.0
          */
@@ -69,7 +73,7 @@ var BaseBody = new Class({
         /**
          * Whether this Body is updated by the physics simulation.
          *
-         * @name Phaser.Physics.Arcade.Body#enable
+         * @name Phaser.Physics.Arcade.BaseBody#enable
          * @type {boolean}
          * @default true
          * @since 3.0.0
@@ -81,7 +85,7 @@ var BaseBody = new Class({
         /**
          * Whether the Body's boundary is drawn to the debug display.
          *
-         * @name Phaser.Physics.Arcade.Body#debugShowBody
+         * @name Phaser.Physics.Arcade.BaseBody#debugShowBody
          * @type {boolean}
          * @since 3.0.0
          */
@@ -90,7 +94,7 @@ var BaseBody = new Class({
         /**
          * Whether the Body's velocity is drawn to the debug display.
          *
-         * @name Phaser.Physics.Arcade.Body#debugShowVelocity
+         * @name Phaser.Physics.Arcade.BaseBody#debugShowVelocity
          * @type {boolean}
          * @since 3.0.0
          */
@@ -99,7 +103,7 @@ var BaseBody = new Class({
         /**
          * Whether the Body's blocked faces are drawn to the debug display.
          *
-         * @name Phaser.Physics.Arcade.Body#debugShowVelocity
+         * @name Phaser.Physics.Arcade.BaseBody#debugShowVelocity
          * @type {boolean}
          * @since 3.17.0
          */
@@ -108,7 +112,7 @@ var BaseBody = new Class({
         /**
          * The color of this Body on the debug display.
          *
-         * @name Phaser.Physics.Arcade.Body#debugBodyColor
+         * @name Phaser.Physics.Arcade.BaseBody#debugBodyColor
          * @type {integer}
          * @since 3.0.0
          */
@@ -118,11 +122,11 @@ var BaseBody = new Class({
          * Whether this Body's boundary is circular (`true`) or rectangular (`false`).
          * The default is for all bodies to be rectangles based on the parent Game Object frame size.
          *
-         * @name Phaser.Physics.Arcade.Body#isCircle
+         * @name Phaser.Physics.Arcade.BaseBody#isCircle
          * @type {boolean}
          * @default false
          * @since 3.0.0
-         * @see Phaser.Physics.Arcade.Body#setCircle
+         * @see Phaser.Physics.Arcade.BaseBody#setCircle
          */
         this.isCircle = false;
 
@@ -130,11 +134,11 @@ var BaseBody = new Class({
          * If this Body is circular, this is the unscaled radius of the Body's boundary, as set by {@link #setCircle}, in source pixels.
          * The true radius is equal to `halfWidth`.
          *
-         * @name Phaser.Physics.Arcade.Body#radius
+         * @name Phaser.Physics.Arcade.BaseBody#radius
          * @type {number}
          * @default 0
          * @since 3.0.0
-         * @see Phaser.Physics.Arcade.Body#setCircle
+         * @see Phaser.Physics.Arcade.BaseBody#setCircle
          */
         this.radius = 0;
 
@@ -143,17 +147,17 @@ var BaseBody = new Class({
          *
          * Unlike dynamic bodies, a Static Body does not follow its Game Object. As such, this offset is only applied when resizing the Static Body.
          *
-         * @name Phaser.Physics.Arcade.Body#offset
+         * @name Phaser.Physics.Arcade.BaseBody#offset
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
-         * @see Phaser.Physics.Arcade.Body#setOffset
+         * @see Phaser.Physics.Arcade.BaseBody#setOffset
          */
         this.offset = new Vector2();
 
         /**
          * The position of this Body within the simulation.
          *
-         * @name Phaser.Physics.Arcade.StaticBody#position
+         * @name Phaser.Physics.Arcade.BaseBody#position
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
@@ -162,7 +166,7 @@ var BaseBody = new Class({
         /**
          * The position of this Body during the previous step.
          *
-         * @name Phaser.Physics.Arcade.StaticBody#prev
+         * @name Phaser.Physics.Arcade.BaseBody#prev
          * @type {Phaser.Math.Vector2}
          * @since 3.17.0
          */
@@ -172,7 +176,7 @@ var BaseBody = new Class({
          * The width of the Static Body's boundary, in pixels.
          * If the Static Body is circular, this is also the Static Body's diameter.
          *
-         * @name Phaser.Physics.Arcade.StaticBody#width
+         * @name Phaser.Physics.Arcade.BaseBody#width
          * @type {number}
          * @since 3.0.0
          */
@@ -182,7 +186,7 @@ var BaseBody = new Class({
          * The height of the Static Body's boundary, in pixels.
          * If the Static Body is circular, this is also the Static Body's diameter.
          *
-         * @name Phaser.Physics.Arcade.StaticBody#height
+         * @name Phaser.Physics.Arcade.BaseBody#height
          * @type {number}
          * @since 3.0.0
          */
@@ -192,7 +196,7 @@ var BaseBody = new Class({
          * Half the Body's width, in pixels.
          * If the Body is circular, this is also the radius.
          *
-         * @name Phaser.Physics.Arcade.Body#halfWidth
+         * @name Phaser.Physics.Arcade.BaseBody#halfWidth
          * @type {number}
          * @since 3.0.0
          */
@@ -202,7 +206,7 @@ var BaseBody = new Class({
          * Half the Body's height, in pixels.
          * If the Body is circular, this is also the radius.
          *
-         * @name Phaser.Physics.Arcade.Body#halfHeight
+         * @name Phaser.Physics.Arcade.BaseBody#halfHeight
          * @type {number}
          * @since 3.0.0
          */
@@ -212,7 +216,7 @@ var BaseBody = new Class({
          * The center of the Body's boundary.
          * The midpoint of its `position` (top-left corner) and its bottom-right corner.
          *
-         * @name Phaser.Physics.Arcade.Body#center
+         * @name Phaser.Physics.Arcade.BaseBody#center
          * @type {Phaser.Math.Vector2}
          * @since 3.0.0
          */
@@ -223,11 +227,11 @@ var BaseBody = new Class({
          * 
          * Changing this property has no impact on a Static Body.
          *
-         * @name Phaser.Physics.Arcade.Body#allowGravity
+         * @name Phaser.Physics.Arcade.BaseBody#allowGravity
          * @type {boolean}
          * @default true
          * @since 3.0.0
-         * @see Phaser.Physics.Arcade.Body#gravity
+         * @see Phaser.Physics.Arcade.BaseBody#gravity
          * @see Phaser.Physics.Arcade.World#gravity
          */
         this.allowGravity = true;
@@ -236,7 +240,7 @@ var BaseBody = new Class({
          * The Body's inertia, relative to a default unit (1).
          * With `bounce`, this affects the exchange of momentum (velocities) during collisions.
          *
-         * @name Phaser.Physics.Arcade.Body#mass
+         * @name Phaser.Physics.Arcade.BaseBody#mass
          * @type {number}
          * @default 1
          * @since 3.0.0
@@ -248,7 +252,7 @@ var BaseBody = new Class({
          * 
          * A Static Body is always immovable.
          *
-         * @name Phaser.Physics.Arcade.Body#immovable
+         * @name Phaser.Physics.Arcade.BaseBody#immovable
          * @type {boolean}
          * @default false
          * @since 3.0.0
@@ -259,7 +263,7 @@ var BaseBody = new Class({
          * A flag disabling the default horizontal separation of colliding bodies.
          * Pass your own `collideCallback` to the collider.
          *
-         * @name Phaser.Physics.Arcade.Body#customSeparateX
+         * @name Phaser.Physics.Arcade.BaseBody#customSeparateX
          * @type {boolean}
          * @default false
          * @since 3.0.0
@@ -270,7 +274,7 @@ var BaseBody = new Class({
          * A flag disabling the default vertical separation of colliding bodies.
          * Pass your own `collideCallback` to the collider.
          *
-         * @name Phaser.Physics.Arcade.Body#customSeparateY
+         * @name Phaser.Physics.Arcade.BaseBody#customSeparateY
          * @type {boolean}
          * @default false
          * @since 3.0.0
@@ -280,7 +284,7 @@ var BaseBody = new Class({
         /**
          * Whether this Body interacts with the world boundary.
          *
-         * @name Phaser.Physics.Arcade.Body#collideWorldBounds
+         * @name Phaser.Physics.Arcade.BaseBody#collideWorldBounds
          * @type {boolean}
          * @default false
          * @since 3.0.0
@@ -291,7 +295,7 @@ var BaseBody = new Class({
          * Whether this Body is checked for collisions and for which directions.
          * You can set `checkCollision.none = true` to disable collision checks.
          *
-         * @name Phaser.Physics.Arcade.Body#checkCollision
+         * @name Phaser.Physics.Arcade.BaseBody#checkCollision
          * @type {Phaser.Physics.Arcade.Types.ArcadeBodyCollision}
          * @since 3.0.0
          */
@@ -300,7 +304,7 @@ var BaseBody = new Class({
         /**
          * Whether this Body is colliding with another and in which direction.
          *
-         * @name Phaser.Physics.Arcade.Body#touching
+         * @name Phaser.Physics.Arcade.BaseBody#touching
          * @type {Phaser.Physics.Arcade.Types.ArcadeBodyCollision}
          * @since 3.0.0
          */
@@ -309,7 +313,7 @@ var BaseBody = new Class({
         /**
          * Whether this Body was colliding with another during the last step, and in which direction.
          *
-         * @name Phaser.Physics.Arcade.Body#wasTouching
+         * @name Phaser.Physics.Arcade.BaseBody#wasTouching
          * @type {Phaser.Physics.Arcade.Types.ArcadeBodyCollision}
          * @since 3.0.0
          */
@@ -318,7 +322,7 @@ var BaseBody = new Class({
         /**
          * Whether this Body is blocked from moving in a given direction.
          *
-         * @name Phaser.Physics.Arcade.Body#blocked
+         * @name Phaser.Physics.Arcade.BaseBody#blocked
          * @type {Phaser.Physics.Arcade.Types.ArcadeBodyCollision}
          * @since 3.0.0
          */
@@ -327,7 +331,7 @@ var BaseBody = new Class({
         /**
          * Whether this Body is colliding with a tile or the world boundary.
          *
-         * @name Phaser.Physics.Arcade.Body#worldBlocked
+         * @name Phaser.Physics.Arcade.BaseBody#worldBlocked
          * @type {Phaser.Physics.Arcade.Types.ArcadeBodyCollision}
          * @since 3.17.0
          */
@@ -336,7 +340,7 @@ var BaseBody = new Class({
         /**
          * Whether this Body is hard blocked, i.e. touching another Body that cannot be moved.
          *
-         * @name Phaser.Physics.Arcade.Body#hardBlocked
+         * @name Phaser.Physics.Arcade.BaseBody#hardBlocked
          * @type {Phaser.Physics.Arcade.Types.ArcadeBodyCollision}
          * @since 3.17.0
          */
@@ -345,7 +349,7 @@ var BaseBody = new Class({
         /**
          * The physics body type, either Dynamic or Static.
          *
-         * @name Phaser.Physics.Arcade.StaticBody#physicsType
+         * @name Phaser.Physics.Arcade.BaseBody#physicsType
          * @type {integer}
          * @since 3.0.0
          */
@@ -356,7 +360,7 @@ var BaseBody = new Class({
          * 
          * Always false for a Static Body as Static Bodies never collide with the world boundary and never trigger a `worldbounds` event.
          *
-         * @name Phaser.Physics.Arcade.Body#onWorldBounds
+         * @name Phaser.Physics.Arcade.BaseBody#onWorldBounds
          * @type {boolean}
          * @default false
          * @since 3.0.0
@@ -367,7 +371,7 @@ var BaseBody = new Class({
         /**
          * Whether the simulation emits a `collide` event when this Body collides with another.
          *
-         * @name Phaser.Physics.Arcade.Body#onCollide
+         * @name Phaser.Physics.Arcade.BaseBody#onCollide
          * @type {boolean}
          * @default false
          * @since 3.0.0
@@ -378,7 +382,7 @@ var BaseBody = new Class({
         /**
          * Whether the simulation emits an `overlap` event when this Body overlaps with another.
          *
-         * @name Phaser.Physics.Arcade.Body#onOverlap
+         * @name Phaser.Physics.Arcade.BaseBody#onOverlap
          * @type {boolean}
          * @default false
          * @since 3.0.0
@@ -389,7 +393,7 @@ var BaseBody = new Class({
         /**
          * The calculated change in the Body's horizontal position during the last step.
          *
-         * @name Phaser.Physics.Arcade.Body#_dx
+         * @name Phaser.Physics.Arcade.BaseBody#_dx
          * @type {number}
          * @private
          * @default 0
@@ -400,7 +404,7 @@ var BaseBody = new Class({
         /**
          * The calculated change in the Body's vertical position during the last step.
          *
-         * @name Phaser.Physics.Arcade.Body#_dy
+         * @name Phaser.Physics.Arcade.BaseBody#_dy
          * @type {number}
          * @private
          * @default 0
@@ -412,7 +416,7 @@ var BaseBody = new Class({
     /**
      * Updates the Body's `center` from its `position`, `width`, and `height`.
      *
-     * @method Phaser.Physics.Arcade.Body#updateCenter
+     * @method Phaser.Physics.Arcade.BaseBody#updateCenter
      * @since 3.0.0
      */
     updateCenter: function ()
@@ -423,7 +427,7 @@ var BaseBody = new Class({
     /**
      * Returns the x and y coordinates of the top left and bottom right points of the StaticBody.
      *
-     * @method Phaser.Physics.Arcade.StaticBody#getBounds
+     * @method Phaser.Physics.Arcade.BaseBody#getBounds
      * @since 3.0.0
      *
      * @param {Phaser.Physics.Arcade.Types.ArcadeBodyBounds} obj - The object which will hold the coordinates of the bounds.
@@ -443,7 +447,7 @@ var BaseBody = new Class({
     /**
      * Checks to see if a given x,y coordinate is within this bodies boundary.
      *
-     * @method Phaser.Physics.Arcade.StaticBody#hitTest
+     * @method Phaser.Physics.Arcade.BaseBody#hitTest
      * @since 3.0.0
      *
      * @param {number} x - The x coordinate to check against this body.
@@ -459,7 +463,7 @@ var BaseBody = new Class({
     /**
      * Draws this Body's boundary and velocity, if enabled.
      *
-     * @method Phaser.Physics.Arcade.Body#drawDebug
+     * @method Phaser.Physics.Arcade.BaseBody#drawDebug
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Graphics} graphic - The Graphics object to draw on.
@@ -575,7 +579,7 @@ var BaseBody = new Class({
     /**
      * Whether this Body will be drawn to the debug display.
      *
-     * @method Phaser.Physics.Arcade.Body#willDrawDebug
+     * @method Phaser.Physics.Arcade.BaseBody#willDrawDebug
      * @since 3.0.0
      *
      * @return {boolean} True if either `debugShowBody` or `debugShowVelocity` are enabled.
@@ -930,12 +934,12 @@ var BaseBody = new Class({
     /**
      * Sets the Mass of the StaticBody. Will set the Mass to 0.1 if the value passed is less than or equal to zero.
      *
-     * @method Phaser.Physics.Arcade.StaticBody#setMass
+     * @method Phaser.Physics.Arcade.BaseBody#setMass
      * @since 3.0.0
      *
      * @param {number} value - The value to set the Mass to. Values of zero or less are changed to 0.1.
      *
-     * @return {Phaser.Physics.Arcade.StaticBody} This Static Body object.
+     * @return {Phaser.Physics.Arcade.BaseBody} This Static Body object.
      */
     setMass: function (value)
     {
@@ -953,12 +957,12 @@ var BaseBody = new Class({
     /**
      * Sets the Body's `enable` property.
      *
-     * @method Phaser.Physics.Arcade.Body#setEnable
+     * @method Phaser.Physics.Arcade.BaseBody#setEnable
      * @since 3.15.0
      *
      * @param {boolean} [value=true] - The value to assign to `enable`.
      *
-     * @return {Phaser.Physics.Arcade.Body} This Body object.
+     * @return {Phaser.Physics.Arcade.BaseBody} This Body object.
      */
     setEnable: function (value)
     {
@@ -974,15 +978,15 @@ var BaseBody = new Class({
      * First it removes its reference from the old Game Object, then sets the new one.
      * You can optionally update the position and dimensions of this Body to reflect that of the new Game Object.
      *
-     * @method Phaser.Physics.Arcade.StaticBody#setGameObject
+     * @method Phaser.Physics.Arcade.BaseBody#setGameObject
      * @since 3.1.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The new Game Object that will own this Body.
      * @param {boolean} [update=true] - Reposition and resize this Body to match the new Game Object?
      *
-     * @return {Phaser.Physics.Arcade.StaticBody} This Static Body object.
+     * @return {Phaser.Physics.Arcade.BaseBody} This Static Body object.
      *
-     * @see Phaser.Physics.Arcade.StaticBody#updateFromGameObject
+     * @see Phaser.Physics.Arcade.BaseBody#updateFromGameObject
      */
     setGameObject: function (gameObject, update)
     {
@@ -1058,7 +1062,7 @@ var BaseBody = new Class({
     /**
      * Disables this Body and marks it for deletion by the simulation.
      *
-     * @method Phaser.Physics.Arcade.Body#destroy
+     * @method Phaser.Physics.Arcade.BaseBody#destroy
      * @since 3.0.0
      */
     destroy: function ()
