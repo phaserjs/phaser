@@ -562,6 +562,9 @@ var Body = new Class({
          */
         this._sleepY = 0;
 
+        this.distanceThreshold = 8;
+
+        this._cs = false;
         this._cx = this.x;
         this._cy = this.y;
     },
@@ -697,9 +700,16 @@ var Body = new Class({
             this.x = parent.x + parent.scaleX * (this.offset.x - parent.displayOriginX);
             this.y = parent.y + parent.scaleY * (this.offset.y - parent.displayOriginY);
 
-            if (this.directControl && DistanceBetween(this._cx, this._cy, this.x, this.y) > 10)
+            if (this._cs)
             {
-                this.setPosition(this._cx, this._cy, 1);
+                if (DistanceBetween(this._cx, this._cy, this.x, this.y) > this.distanceThreshold)
+                {
+                    this.setPosition(this._cx, this._cy, 1);
+                }
+                else
+                {
+                    this._cs = false;
+                }
             }
     
             this.rotation = parent.rotation;
@@ -729,6 +739,9 @@ var Body = new Class({
 
         this.calculateVelocity(x, y, lerp, maxSpeed);
 
+        this.wake();
+
+        this._cs = true;
         this._cx = x;
         this._cy = y;
     },
@@ -954,6 +967,7 @@ var Body = new Class({
     {
         if (!this.sleeping && this.canSleep)
         {
+            this._cs = false;
             this.sleeping = true;
 
             // console.log(this.gameObject.name, 'put to sleep on frame', this.world._frame, 'force?', forceY, 'at', this.x);
@@ -2567,13 +2581,13 @@ var Body = new Class({
         if (value)
         {
             this.directControl = true;
-            this.canSleep = false;
+            // this.canSleep = false;
             this.maxSpeed = 2000;
         }
         else
         {
             this.directControl = false;
-            this.canSleep = true;
+            // this.canSleep = true;
         }
 
         return this;
