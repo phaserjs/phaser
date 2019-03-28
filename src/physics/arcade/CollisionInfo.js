@@ -236,14 +236,14 @@ var CollisionInfo = {
         var forceX = (touchingX || overlapX < overlapY);
 
         //  Swizzle it if the body was moving so fast the penetration is too deep to resolve using faces alone
-        if (forceX && (maxOverlapY >= maxOverlapX))
-        {
-            forceX = false;
-        }
-        else if (!forceX && (maxOverlapX >= maxOverlapY))
-        {
-            forceX = true;
-        }
+        // if (forceX && (maxOverlapY > maxOverlapX))
+        // {
+        //     forceX = false;
+        // }
+        // else if (!forceX && (maxOverlapX < maxOverlapY))
+        // {
+        //     forceX = true;
+        // }
 
         var face = (forceX) ? faceX : faceY;
 
@@ -278,7 +278,7 @@ var CollisionInfo = {
 
         //  Collision Checks
 
-        var abort = embedded;
+        var abort = false;
 
         if (!abort)
         {
@@ -337,40 +337,47 @@ var CollisionInfo = {
         {
             console.log('body1:', body1.gameObject.name, 'vs body2:', body2.gameObject.name, 'on face', face, faceX, faceY);
             console.log('intersects?', intersects, 'xy', intersectsX, intersectsY, 'touching?', touching);
-            console.log('body1 x:', body1.x, 'right:', body1.right, 'body2 x:', body2.x, 'right:', body2.right);
-            console.log('body1 y:', body1.y, 'bottom:', body1.bottom, 'body2 y:', body2.y, 'bottom:', body2.bottom);
-            console.log('embedded?', embeddedX, embeddedY);
+            console.log('body1 x:', body1.x, 'right:', body1.right);
+            console.log('body1 y:', body1.y, 'bottom:', body1.bottom);
+            console.log('body2 x:', body2.x, 'right:', body2.right);
+            console.log('body2 y:', body2.y, 'bottom:', body2.bottom);
+            console.log('embedded?', embeddedX, embeddedY, 'aborted?:', abort);
+            console.log('prev body1 x:', body1.prev.x, 'prev y:', body1.prev.y);
+            console.log('prev body2 x:', body2.prev.x, 'prev y:', body2.prev.y);
+            console.log('velocity1 x:', body1.velocity.x, 'y:', body1.velocity.y);
+            console.log('velocity2 x:', body2.velocity.x, 'y:', body2.velocity.y);
 
-            var col1 = body1.checkCollision;
-            var col2 = body2.checkCollision;
+            // var col1 = body1.checkCollision;
+            // var col2 = body2.checkCollision;
 
             // console.log('check x:', checkX, 'y:', checkY);
-            console.log('check col 1:', col1.up, 'down:', col1.down, 'left:', col1.left, 'right:', col1.right);
-            console.log('check col 2:', col2.up, 'down:', col2.down, 'left:', col2.left, 'right:', col2.right);
+            // console.log('check col 1:', col1.up, 'down:', col1.down, 'left:', col1.left, 'right:', col1.right);
+            // console.log('check col 2:', col2.up, 'down:', col2.down, 'left:', col2.left, 'right:', col2.right);
 
             if (forceX)
             {
-                console.log('forceX');
-                console.log('body1 overlaps body2 on the ' + ((faceX === CONST.FACING_LEFT) ? 'left' : 'right') + ' face');
+                console.log('FORCE X body1 overlaps body2 on the ' + ((faceX === CONST.FACING_LEFT) ? 'left' : 'right') + ' face');
             }
             else
             {
-                console.log('forceY');
-                console.log('body1 overlaps body2 on the ' + ((faceY === CONST.FACING_UP) ? 'top' : 'bottom') + ' face');
+                console.log('FORCE Y body1 overlaps body2 on the ' + ((faceY === CONST.FACING_UP) ? 'top' : 'bottom') + ' face');
             }
 
             console.log('overlapX:', overlapX, 'overlapY:', overlapY);
-            console.log('distanceX:', distanceX1, distanceX2, 'prevDistanceX', prevDistanceX1, prevDistanceX2, 'left?', (distanceX1 > distanceX2 && prevDistanceX1 > prevDistanceX2));
-            console.log('distanceY:', distanceY1, distanceY2, 'prevDistanceY', prevDistanceY1, prevDistanceY2, 'top?', (distanceY1 > distanceY2 && prevDistanceY1 > prevDistanceY2));
+            console.log('maxOverlapX:', maxOverlapX, 'maxOverlapY:', maxOverlapY);
+            console.log('distanceX:', distanceX1, distanceX2);
+            console.log('prevDistanceX', prevDistanceX1, prevDistanceX2, 'left?', (distanceX1 > distanceX2 && prevDistanceX1 > prevDistanceX2));
+            console.log('distanceY:', distanceY1, distanceY2);
+            console.log('prevDistanceY', prevDistanceY1, prevDistanceY2, 'top?', (distanceY1 > distanceY2 && prevDistanceY1 > prevDistanceY2));
 
             // console.log('shareX1:', shareX1, 'shareX2:', shareX2);
             // console.log('shareY1:', shareY1, 'shareY2:', shareY2);
 
-            var blocked1 = body1.blocked;
-            var blocked2 = body2.blocked;
+            // var blocked1 = body1.blocked;
+            // var blocked2 = body2.blocked;
 
-            console.log('body1 blocked up:', blocked1.up, 'down:', blocked1.down, 'left:', blocked1.left, 'right:', blocked1.right);
-            console.log('body2 blocked up:', blocked2.up, 'down:', blocked2.down, 'left:', blocked2.left, 'right:', blocked2.right);
+            // console.log('body1 blocked up:', blocked1.up, 'down:', blocked1.down, 'left:', blocked1.left, 'right:', blocked1.right);
+            // console.log('body2 blocked up:', blocked2.up, 'down:', blocked2.down, 'left:', blocked2.left, 'right:', blocked2.right);
 
             // console.log('x compare (CI): ', body1.right, 'body2', body2.x, '=', (body1.right - body2.x));
             // console.log('y compare (CI): ', body1.bottom, 'body2', body2.y, '=', (body1.bottom - body2.y));
