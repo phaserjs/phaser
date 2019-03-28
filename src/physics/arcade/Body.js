@@ -7,12 +7,15 @@
 var ArrayAdd = require('../../utils/array/Add');
 var BaseBody = require('./BaseBody');
 var CheckOverlap = require('./CheckOverlap');
+var Clamp = require('../../math/Clamp');
 var Class = require('../../utils/Class');
 var CONST = require('./const');
+var DistanceBetween = require('../../math/distance/DistanceBetween');
 var Events = require('./events');
 var FuzzyEqual = require('../../math/fuzzy/Equal');
 var FuzzyGreaterThan = require('../../math/fuzzy/GreaterThan');
 var FuzzyLessThan = require('../../math/fuzzy/LessThan');
+var OverlapRect = require('./components/OverlapRect');
 var RadToDeg = require('../../math/RadToDeg');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var Vector2 = require('../../math/Vector2');
@@ -187,6 +190,16 @@ var Body = new Class({
          * @since 3.17.0
          */
         this.sleepIterations = 60 * world.positionIterations;
+
+        /**
+         * Can this Body ever fall asleep? Typically you should leave this as `true`, but some
+         * bodies, such as those under the control of tweens, should never sleep.
+         *
+         * @name Phaser.Physics.Arcade.Body#canSleep
+         * @type {boolean}
+         * @since 3.17.0
+         */
+        this.canSleep = true;
 
         /**
          * The position this Body will be forced to assume during postUpdate, if any.
@@ -431,6 +444,8 @@ var Body = new Class({
          */
         this.moves = true;
 
+        this.directControl = false;
+
         /**
          * Can this body be ridden like a platform?
          *
@@ -546,6 +561,9 @@ var Body = new Class({
          * @since 3.17.0
          */
         this._sleepY = 0;
+
+        this._cx = this.x;
+        this._cy = this.y;
     },
 
     /**
@@ -678,13 +696,18 @@ var Body = new Class({
     
             this.x = parent.x + parent.scaleX * (this.offset.x - parent.displayOriginX);
             this.y = parent.y + parent.scaleY * (this.offset.y - parent.displayOriginY);
+
+            if (this.directControl && DistanceBetween(this._cx, this._cy, this.x, this.y) > 10)
+            {
+                this.setPosition(this._cx, this._cy, 1);
+            }
     
             this.rotation = parent.rotation;
+
+            this.prev.x = this.x;
+            this.prev.y = this.y;
         }
 
-        //  Reset deltas (world bounds checks have no effect on this)
-        this.prev.x = this.x;
-        this.prev.y = this.y;
         this.preRotation = this.rotation;
 
         if (this.collideWorldBounds)
@@ -696,6 +719,43 @@ var Body = new Class({
 
         this.prevVelocity.x = this.velocity.x;
         this.prevVelocity.y = this.velocity.y;
+    },
+
+    setPosition: function (x, y, lerp)
+    {
+        if (lerp === undefined) { lerp = 1; }
+
+        var maxSpeed = this.maxSpeed;
+
+        this.calculateVelocity(x, y, lerp, maxSpeed);
+
+        this._cx = x;
+        this._cy = y;
+    },
+
+    calculateVelocity: function (x, y, lerp, maxSpeed)
+    {
+        var maxX = this.maxVelocity.x;
+        var maxY = this.maxVelocity.x;
+
+        var velocity = this.velocity;
+
+        var px = this.x;
+        var py = this.y;
+
+        var angle = Math.atan2(y - py, x - px);
+
+        var speed = DistanceBetween(px, py, x, y) / (this.world._frameTime * lerp);
+
+        velocity.setToPolar(angle, speed);
+
+        velocity.x = Clamp(velocity.x, -maxX, maxX);
+        velocity.y = Clamp(velocity.y, -maxY, maxY);
+
+        if (maxSpeed > -1 && velocity.length() > maxSpeed)
+        {
+            velocity.normalize().scale(maxSpeed);
+        }
     },
 
     /**
@@ -874,6 +934,11 @@ var Body = new Class({
         this._sleepX = this.x;
         this._sleepY = this.y;
 
+        if (this.directControl)
+        {
+            this.velocity.set(0);
+        }
+
         //  Store collision flags
         var wasTouching = this.wasTouching;
         var touching = this.touching;
@@ -887,7 +952,7 @@ var Body = new Class({
 
     sleep: function (forceY)
     {
-        if (!this.sleeping)
+        if (!this.sleeping && this.canSleep)
         {
             this.sleeping = true;
 
@@ -1245,7 +1310,7 @@ var Body = new Class({
     //  Check for sleeping state
     checkSleep: function (dx, dy, dz)
     {
-        if (!this.moves)
+        if (!this.moves || !this.canSleep)
         {
             return;
         }
@@ -1861,7 +1926,7 @@ var Body = new Class({
                 return this;
             }
 
-            if (body2 && !collisionInfo.set && !this.snapTo)
+            if (body2 && !this.immovable && !collisionInfo.set && !this.snapTo)
             {
                 // console.log(this.gameObject.name, 'setBlockedUp', body2.bottom);
 
@@ -1910,7 +1975,7 @@ var Body = new Class({
                 return this;
             }
 
-            if (body2 && !collisionInfo.set && !this.snapTo)
+            if (body2 && !this.immovable && !collisionInfo.set && !this.snapTo)
             {
                 // console.log(this.gameObject.name, 'setBlockedDown', body2.y);
 
@@ -1959,7 +2024,7 @@ var Body = new Class({
                 return this;
             }
 
-            if (body2 && !collisionInfo.set && !this.snapTo)
+            if (body2 && !this.immovable && !collisionInfo.set && !this.snapTo)
             {
                 // console.log(this.gameObject.name, 'setBlockedUp', body2.bottom);
 
@@ -2008,7 +2073,7 @@ var Body = new Class({
                 return this;
             }
 
-            if (body2 && !collisionInfo.set && !this.snapTo)
+            if (body2 && !this.immovable && !collisionInfo.set && !this.snapTo)
             {
                 // console.log(this.gameObject.name, 'setBlockedDown', body2.y);
 
@@ -2495,10 +2560,21 @@ var Body = new Class({
         return this;
     },
 
-    setDirectControl: function ()
+    setDirectControl: function (value)
     {
-        this.immovable = true;
-        this.moves = false;
+        if (value === undefined) { value = true; }
+
+        if (value)
+        {
+            this.directControl = true;
+            this.canSleep = false;
+            this.maxSpeed = 2000;
+        }
+        else
+        {
+            this.directControl = false;
+            this.canSleep = true;
+        }
 
         return this;
     },
