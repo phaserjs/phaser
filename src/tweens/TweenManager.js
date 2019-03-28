@@ -411,7 +411,7 @@ var TweenManager = new Class({
     {
         if (this._add.indexOf(tween) !== -1 || this._active.indexOf(tween) !== -1)
         {
-            return;
+            return this;
         }
 
         var idx = this._pending.indexOf(tween);
