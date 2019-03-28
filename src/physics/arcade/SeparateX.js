@@ -113,7 +113,7 @@ var SeparateX = function (collisionInfo)
         nx1 = avg + nv1 * bounce1.x;
         nx2 = avg + nv2 * bounce2.x;
 
-        // console.log('resolution 1');
+        // console.log('resolution 1x');
         // console.log('pre-impact v = body1', x1, 'body2', x2);
         // console.log('post-impact v = body1', nx1, 'body2', nx2);
         // console.log('pre-impact x = body1', body1.gameObject.x, 'body2', body2.gameObject.x);
@@ -128,16 +128,9 @@ var SeparateX = function (collisionInfo)
     {
         //  Body1 is immovable, so adjust body2 speed
 
-        if (body1.rideable)
-        {
-            nx2 = (leftFace) ? 1 : -1;
-        }
-        else
-        {
-            nx2 = x1 - x2 * bounce2.x;
-        }
+        nx2 = x1 - x2 * bounce2.x;
 
-        // console.log('%cresolution 2', 'background-color: red; color: white');
+        // console.log('%cresolution 2x', 'background-color: red; color: white');
         // console.log('pre-impact v = body1', x1, 'body2', x2);
         // console.log('post-impact v = body1', nx1, 'body2', nx2);
         // console.log('pre-impact by = body1', body1.y, 'body2', body2.y);
@@ -149,16 +142,9 @@ var SeparateX = function (collisionInfo)
     {
         //  Body2 is immovable, so adjust body1 speed
 
-        if (body2.rideable)
-        {
-            nx1 = (leftFace) ? 1 : -1;
-        }
-        else
-        {
-            nx1 = x2 - x1 * bounce1.x;
-        }
+        nx1 = x2 - x1 * bounce1.x;
 
-        // console.log('resolution 4');
+        // console.log('resolution 3x');
         // console.log('pre-impact v = body1', x1, 'body2', x2);
         // console.log('post-impact v = body1', nx1, 'body2', nx2);
         // console.log('pre-impact y = body1', body1.gameObject.y, 'body2', body2.gameObject.y);
@@ -167,9 +153,9 @@ var SeparateX = function (collisionInfo)
     }
     else
     {
-        // console.log('neither moving, or both immovable');
+        // console.log('neither moving, or both immovable x');
 
-        // console.log('resolution 5');
+        // console.log('resolution 4x');
         // console.log('pre-impact v = body1', x1, 'body2', x2);
         // console.log('post-impact v = body1', nx1, 'body2', nx2);
         // console.log('sleeping? = body1', body1.sleeping, 'body2', body2.sleeping);

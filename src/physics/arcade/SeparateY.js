@@ -114,7 +114,7 @@ var SeparateY = function (collisionInfo)
         ny1 = avg + nv1 * bounce1.y;
         ny2 = avg + nv2 * bounce2.y;
 
-        // console.log('resolution 1');
+        // console.log('resolution 1y');
         // console.log('pre-impact v = body1', v1, 'body2', v2);
         // console.log('post-impact v = body1', ny1, 'body2', ny2);
         // console.log('pre-impact y = body1', body1.gameObject.y, 'body2', body2.gameObject.y);
@@ -129,16 +129,9 @@ var SeparateY = function (collisionInfo)
     {
         //  Body1 is immovable, so adjust body2 speed
 
-        if (body1.rideable)
-        {
-            ny2 = (topFace) ? 1 : -1;
-        }
-        else
-        {
-            ny2 = v1 - v2 * bounce2.y;
-        }
+        ny2 = v1 - v2 * bounce2.y;
 
-        // console.log('%cresolution 3', 'background-color: red; color: white');
+        // console.log('%cresolution 2y', 'background-color: red; color: white');
         // console.log('pre-impact v = body1', v1, 'body2', v2);
         // console.log('post-impact v = body1', ny1, 'body2', ny2);
         // console.log('pre-impact by = body1', body1.y, 'body2', body2.y);
@@ -150,16 +143,9 @@ var SeparateY = function (collisionInfo)
     {
         //  Body2 is immovable, so adjust body1 speed
 
-        if (body2.rideable)
-        {
-            ny1 = (topFace) ? 1 : -1;
-        }
-        else
-        {
-            ny1 = v2 - v1 * bounce1.y;
-        }
+        ny1 = v2 - v1 * bounce1.y;
 
-        // console.log('%cresolution 4', 'background-color: red; color: white');
+        // console.log('%cresolution 3y', 'background-color: red; color: white');
         // console.log('pre-impact v = body1', v1, 'body2', v2);
         // console.log('post-impact v = body1', ny1, 'body2', ny2);
         // console.log('pre-impact y = body1', body1.gameObject.y, 'body2', body2.gameObject.y);
@@ -170,7 +156,7 @@ var SeparateY = function (collisionInfo)
     {
         // console.log('neither moving, or both immovable');
 
-        // console.log('resolution 5');
+        // console.log('resolution 4y');
         // console.log('pre-impact v = body1', v1, 'body2', v2);
         // console.log('post-impact v = body1', ny1, 'body2', ny2);
         // console.log('sleeping? = body1', body1.sleeping, 'body2', body2.sleeping);

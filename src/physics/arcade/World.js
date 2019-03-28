@@ -1396,9 +1396,6 @@ var World = new Class({
 
         if (collisionInfo.intersects)
         {
-            // console.log('%c Separate ' + this._frame + '                                                                                     ', 'background-color: yellow');
-            // collisionInfo.dump();
-
             if (collisionInfo.forceX)
             {
                 SeparateX(collisionInfo);
@@ -1408,6 +1405,9 @@ var World = new Class({
                 SeparateY(collisionInfo);
             }
 
+            // console.log('%c Separate ' + this._frame + '                                           ', 'background-color: yellow');
+            // collisionInfo.dump();
+    
             if (overlapOnly)
             {
                 if (body1.onOverlap || body2.onOverlap)
