@@ -104,7 +104,6 @@ var CollisionInfo = {
             faceX = CONST.FACING_LEFT;
 
             //  body1 left is touching body2 right
-            // if (intersectsX && body1.checkCollision.left && body2.checkCollision.right)
             if (intersectsX)
             {
                 overlapX = distanceX2;
@@ -138,7 +137,6 @@ var CollisionInfo = {
             faceX = CONST.FACING_RIGHT;
 
             //  body1 right is touching body2 left
-            // if (intersectsX && body1.checkCollision.right && body2.checkCollision.left)
             if (intersectsX)
             {
                 overlapX = distanceX1;
@@ -173,7 +171,6 @@ var CollisionInfo = {
             faceY = CONST.FACING_UP;
 
             //  body1 top is touching body2 bottom
-            // if (intersectsY && body1.checkCollision.up && body2.checkCollision.down)
             if (intersectsY)
             {
                 overlapY = distanceY2;
@@ -207,7 +204,6 @@ var CollisionInfo = {
             faceY = CONST.FACING_DOWN;
 
             //  body1 bottom is touching body2 top
-            // if (intersectsY && body1.checkCollision.down && body2.checkCollision.up)
             if (intersectsY)
             {
                 overlapY = distanceY1;
@@ -238,6 +234,17 @@ var CollisionInfo = {
         }
 
         var forceX = (touchingX || overlapX < overlapY);
+
+        //  Swizzle it if the body was moving so fast the penetration is too deep to resolve using faces alone
+        if (forceX && (maxOverlapY >= maxOverlapX))
+        {
+            forceX = false;
+        }
+        else if (!forceX && (maxOverlapX >= maxOverlapY))
+        {
+            forceX = true;
+        }
+
         var face = (forceX) ? faceX : faceY;
 
         if (forceX && FuzzyEqual(overlapX, 0))
@@ -281,7 +288,11 @@ var CollisionInfo = {
             var v1 = body1.velocity;
             var v2 = body2.velocity;
     
-            if (!checkCollision1.left && (face === CONST.FACING_LEFT && v2.x >= 0))
+            if (checkCollision1.none || checkCollision2.none)
+            {
+                abort = true;
+            }
+            else if (!checkCollision1.left && (face === CONST.FACING_LEFT && v2.x >= 0))
             {
                 abort = true;
             }
