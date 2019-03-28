@@ -929,8 +929,8 @@ var Body = new Class({
             }
             else if (!this.sleeping && gameObject)
             {
-                gameObject.x += dx / this.world.positionIterations;
-                gameObject.y += dy / this.world.positionIterations;
+                gameObject.x += dx;
+                gameObject.y += dy;
 
                 if (this.allowRotation)
                 {

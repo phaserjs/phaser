@@ -155,16 +155,6 @@ var World = new Class({
         this.fps = GetValue(config, 'fps', 60);
 
         /**
-         * The number of times all of the active dynamic bodies will be iterated through,
-         * in order to settle down their positions.
-         *
-         * @name Phaser.Physics.Arcade.World#positionIterations
-         * @type {integer}
-         * @since 3.17.0
-         */
-        this.positionIterations = 1;
-
-        /**
          * The amount of elapsed ms since the last frame.
          *
          * @name Phaser.Physics.Arcade.World#_elapsed
@@ -1038,16 +1028,13 @@ var World = new Class({
 
         if (!this.isPaused)
         {
-            for (var c = 0; c < this.positionIterations; c++)
+            for (i = 0; i < len; i++)
             {
-                for (i = 0; i < len; i++)
+                body = bodies[i];
+    
+                if (body.enable)
                 {
-                    body = bodies[i];
-        
-                    if (body.enable)
-                    {
-                        body.postUpdate();
-                    }
+                    body.postUpdate();
                 }
             }
         }
