@@ -56,7 +56,7 @@ If your PR is doing little more than changing the Phaser source code into a form
 
 ## I don't really like git / node.js, but I can fix this bug
 
-That is fine too. While Pull Requests are the best thing in the world for us, they are not the only way to help. You're welcome to post fixes to our forum or even just email them to us. All we ask is that you still adhere to the guidelines presented here re: JSHint, etc.
+That is fine too. While Pull Requests are the best thing in the world for us, they are not the only way to help. You're welcome to post fixes to our forum or even just email them to us. All we ask is that you still adhere to the guidelines presented here re: ESLint, etc.
 
 ## Code Style Guide
 
