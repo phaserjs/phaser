@@ -278,21 +278,17 @@ var CollisionInfo = {
 
         //  Collision Checks
 
-        var abort = false;
+        var checkCollision1 = body1.checkCollision;
+        var checkCollision2 = body2.checkCollision;
+
+        var abort = (checkCollision1.none || checkCollision2.none);
 
         if (!abort)
         {
-            var checkCollision1 = body1.checkCollision;
-            var checkCollision2 = body2.checkCollision;
-    
             var v1 = body1.velocity;
             var v2 = body2.velocity;
     
-            if (checkCollision1.none || checkCollision2.none)
-            {
-                abort = true;
-            }
-            else if (!checkCollision1.left && (face === CONST.FACING_LEFT && v2.x >= 0))
+            if (!checkCollision1.left && (face === CONST.FACING_LEFT && v2.x >= 0))
             {
                 abort = true;
             }
@@ -331,28 +327,30 @@ var CollisionInfo = {
         {
             intersects = false;
             touching = false;
+            face = CONST.FACING_NONE;
         }
 
         var dump = function ()
         {
-            console.log('body1:', body1.gameObject.name, 'vs body2:', body2.gameObject.name, 'on face', face, faceX, faceY);
+            var faces = { 10: 'None', 11: 'Up', 12: 'Down', 13: 'Left', 14: 'Right' };
+
+            console.log('body1:', body1.gameObject.name, 'vs body2:', body2.gameObject.name, 'on face', faces[face], faces[faceX], faces[faceY]);
             console.log('intersects?', intersects, 'xy', intersectsX, intersectsY, 'touching?', touching);
             console.log('body1 x:', body1.x, 'right:', body1.right);
             console.log('body1 y:', body1.y, 'bottom:', body1.bottom);
             console.log('body2 x:', body2.x, 'right:', body2.right);
             console.log('body2 y:', body2.y, 'bottom:', body2.bottom);
             console.log('embedded?', embeddedX, embeddedY, 'aborted?:', abort);
-            console.log('prev body1 x:', body1.prev.x, 'prev y:', body1.prev.y);
-            console.log('prev body2 x:', body2.prev.x, 'prev y:', body2.prev.y);
+            // console.log('prev body1 x:', body1.prev.x, 'prev y:', body1.prev.y);
+            // console.log('prev body2 x:', body2.prev.x, 'prev y:', body2.prev.y);
             console.log('velocity1 x:', body1.velocity.x, 'y:', body1.velocity.y);
             console.log('velocity2 x:', body2.velocity.x, 'y:', body2.velocity.y);
 
-            // var col1 = body1.checkCollision;
-            // var col2 = body2.checkCollision;
+            var col1 = body1.checkCollision;
+            var col2 = body2.checkCollision;
 
-            // console.log('check x:', checkX, 'y:', checkY);
-            // console.log('check col 1:', col1.up, 'down:', col1.down, 'left:', col1.left, 'right:', col1.right);
-            // console.log('check col 2:', col2.up, 'down:', col2.down, 'left:', col2.left, 'right:', col2.right);
+            console.log('collision1 up:', col1.up, 'down:', col1.down, 'left:', col1.left, 'right:', col1.right);
+            console.log('collision2 up:', col2.up, 'down:', col2.down, 'left:', col2.left, 'right:', col2.right);
 
             if (forceX)
             {
