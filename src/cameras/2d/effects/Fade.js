@@ -56,7 +56,7 @@ var Fade = new Class({
 
         /**
          * Has this effect finished running?
-         * 
+         *
          * This is different from `isRunning` because it remains set to `true` when the effect is over,
          * until the effect is either reset or started again.
          *
@@ -265,6 +265,7 @@ var Fade = new Class({
         }
         else
         {
+            this.alpha = (this.direction) ? 1 : 0;
             this.effectComplete();
         }
     },
