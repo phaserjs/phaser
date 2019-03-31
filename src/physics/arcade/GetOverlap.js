@@ -27,10 +27,11 @@ var GetOverlap = function (body1, body2, overlapOnly, bias)
 
     var collisionInfo = CollisionInfo.get(body1, body2, overlapOnly, bias);
 
-    console.log('');
-    console.log('%c GetOverlap ' + body1.world._frame + '                               ', 'background-color: aqua');
-    collisionInfo.dump();
-    debugger;
+    // console.log('');
+    // console.log('%c GetOverlap ' + body1.world._frame + '                               ', 'background-color: aqua');
+    // collisionInfo.dump();
+
+    window.ci = collisionInfo;
 
     if (overlapOnly || collisionInfo.embedded)
     {
