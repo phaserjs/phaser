@@ -55,8 +55,8 @@ var CollisionInfo = {
         // var maxOverlapX = body1.deltaAbsX() + body2.deltaAbsX() + bias;
         // var maxOverlapY = body1.deltaAbsY() + body2.deltaAbsY() + bias;
 
-        var maxOverlapX = bias;
-        var maxOverlapY = bias;
+        var maxOverlapX = bias * 2;
+        var maxOverlapY = bias * 2;
     
         var distanceX1 = body1.right - body2.x;
         var distanceX2 = body2.right - body1.x;
@@ -105,6 +105,12 @@ var CollisionInfo = {
         var timeXCollision = 0;
         var timeYCollision = 0;
 
+        // var dx = body2.prev.x - body2.x;
+        // var dy = body2.prev.y - body2.y;
+
+        var dx = v2.x;
+        var dy = v2.y;
+
         if (leftFace)
         {
             faceX = CONST.FACING_LEFT;
@@ -114,7 +120,7 @@ var CollisionInfo = {
             {
                 overlapX = distanceX2;
 
-                timeXCollision = overlapX / body2.deltaX();
+                timeXCollision = overlapX / ((dx === 0) ? 1 : -dx);
 
                 share = overlapX * 0.5;
 
@@ -149,7 +155,7 @@ var CollisionInfo = {
             {
                 overlapX = distanceX1;
 
-                timeXCollision = overlapX / -body2.deltaX();
+                timeXCollision = overlapX / ((dx === 0) ? 1 : dx);
 
                 share = overlapX * 0.5;
 
@@ -185,7 +191,7 @@ var CollisionInfo = {
             {
                 overlapY = distanceY2;
 
-                timeYCollision = overlapY / body2.deltaY();
+                timeYCollision = overlapY / ((dy === 0) ? 1 : dy);
 
                 share = overlapY * 0.5;
 
@@ -220,7 +226,7 @@ var CollisionInfo = {
             {
                 overlapY = distanceY1;
 
-                timeYCollision = overlapY / -body2.deltaY();
+                timeYCollision = overlapY / ((dy === 0) ? 1 : -dy);
 
                 share = overlapY * 0.5;
 
@@ -254,66 +260,73 @@ var CollisionInfo = {
         var embeddedX = (forceX && overlapX > maxOverlapX);
         var embeddedY = (!forceX && overlapY > maxOverlapY);
 
-        var embedded = (embeddedX || embeddedY);
+        var embedded = ((forceX && embeddedX) || (!forceX && embeddedY));
 
         var abort = (checkCollision1.none || checkCollision2.none);
+
+        if (forceX && FuzzyEqual(overlapX, 0))
+        {
+            //  Difference is too small to warrant considering separation
+            overlapX = 0;
+            shareX1 = 0;
+            shareX2 = 0;
+            intersects = false;
+            intersectsX = false;
+            face = faceX;
+        }
+        
+        if (!forceX && FuzzyEqual(overlapY, 0))
+        {
+            //  Difference is too small to warrant considering separation
+            overlapY = 0;
+            shareY1 = 0;
+            shareY2 = 0;
+            intersects = false;
+            intersectsY = false;
+            face = faceY;
+        }
+
+        if ((forceX && (embeddedX > embeddedY)) || !forceX && (embeddedY > embeddedX))
+        {
+            intersects = false;
+            touching = false;
+            face = CONST.FACING_NONE;
+        }
 
         //  Collision Checks
 
         if (!abort)
         {
-            if (forceX && FuzzyEqual(overlapX, 0))
-            {
-                //  Difference is too small to warrant considering separation
-                overlapX = 0;
-                shareX1 = 0;
-                shareX2 = 0;
-                intersects = false;
-                intersectsX = false;
-                face = faceX;
-            }
-            
-            if (!forceX && FuzzyEqual(overlapY, 0))
-            {
-                //  Difference is too small to warrant considering separation
-                overlapY = 0;
-                shareY1 = 0;
-                shareY2 = 0;
-                intersects = false;
-                intersectsY = false;
-                face = faceY;
-            }
-
-            if (!checkCollision1.left && ((face === CONST.FACING_LEFT || embeddedX) && v2.x >= 0))
+            if (!checkCollision1.left && (face === CONST.FACING_LEFT && v2.x >= 0))
             {
                 abort = true;
             }
-            else if (!checkCollision1.right && ((face === CONST.FACING_RIGHT || embeddedX) && v2.x <= 0))
+            else if (!checkCollision1.right && (face === CONST.FACING_RIGHT && v2.x <= 0))
             {
                 abort = true;
             }
-            else if (!checkCollision1.up && ((face === CONST.FACING_UP || embeddedY) && v2.y >= 0))
+            else if (!checkCollision1.up && (face === CONST.FACING_UP && v2.y >= 0))
             {
                 abort = true;
             }
-            else if (!checkCollision1.down && ((face === CONST.FACING_DOWN || embeddedY) && v2.y <= 0))
+            else if (!checkCollision1.down && (face === CONST.FACING_DOWN && v2.y <= 0))
             {
                 abort = true;
             }
     
-            if (!checkCollision2.left && ((face === CONST.FACING_RIGHT || embeddedX) && v1.x >= 0))
+            if (!checkCollision2.left && (face === CONST.FACING_RIGHT && v1.x >= 0))
             {
                 abort = true;
             }
-            else if (!checkCollision2.right && ((face === CONST.FACING_LEFT || embeddedX) && v1.x <= 0))
+            else if (!checkCollision2.right && (face === CONST.FACING_LEFT && v1.x <= 0))
             {
                 abort = true;
             }
-            else if (!checkCollision2.up && ((face === CONST.FACING_DOWN || embeddedY) && v1.y >= 0))
+            else if (!checkCollision2.up && (face === CONST.FACING_DOWN && v1.y >= 0))
             {
                 abort = true;
             }
-            else if (!checkCollision2.down && ((face === CONST.FACING_UP || embeddedY) && v1.y <= 0))
+            else if (!checkCollision2.down && (face === CONST.FACING_UP && v1.y <= 0))
             {
                 abort = true;
             }
@@ -335,7 +348,7 @@ var CollisionInfo = {
                 console.log('%c Aborted                                      ', 'background-color: red');
             }
 
-            console.log('body1:', body1.gameObject.name, 'vs body2:', body2.gameObject.name, 'on face', faces[face], faces[faceX], faces[faceY]);
+            // console.log('body1:', body1.gameObject.name, 'vs body2:', body2.gameObject.name, 'on face', faces[face], faces[faceX], faces[faceY]);
             console.log('intersects?', intersects, 'xy', intersectsX, intersectsY, 'touching?', touching);
             console.log('body1 x:', body1.x, 'right:', body1.right);
             console.log('body1 y:', body1.y, 'bottom:', body1.bottom);
@@ -352,8 +365,8 @@ var CollisionInfo = {
             var col1 = body1.checkCollision;
             var col2 = body2.checkCollision;
 
-            console.log('collision1 up:', col1.up, 'down:', col1.down, 'left:', col1.left, 'right:', col1.right);
-            console.log('collision2 up:', col2.up, 'down:', col2.down, 'left:', col2.left, 'right:', col2.right);
+            // console.log('collision1 up:', col1.up, 'down:', col1.down, 'left:', col1.left, 'right:', col1.right);
+            // console.log('collision2 up:', col2.up, 'down:', col2.down, 'left:', col2.left, 'right:', col2.right);
 
             if (forceX)
             {
@@ -388,8 +401,12 @@ var CollisionInfo = {
         {
             data.abort = abort;
             data.intersects = intersects;
+            data.intersectsX = intersectsX;
+            data.intersectsY = intersectsY;
             data.touching = touching;
             data.embedded = embedded;
+            data.embeddedX = embeddedX;
+            data.embeddedY = embeddedY;
             data.overlapOnly = overlapOnly;
             data.overlapX = overlapX;
             data.overlapY = overlapY;
@@ -413,12 +430,18 @@ var CollisionInfo = {
                 body1: body1,
                 body2: body2,
                 embedded: embedded,
+                embeddedX: embeddedX,
+                embeddedY: embeddedY,
                 intersects: intersects,
+                intersectsX: intersectsX,
+                intersectsY: intersectsY,
                 touching: touching,
                 overlapOnly: overlapOnly,
                 overlapX: overlapX,
                 overlapY: overlapY,
                 forceX: forceX,
+                timeXCollision: timeXCollision,
+                timeYCollision: timeYCollision,
                 face: face,
                 faceX: faceX,
                 faceY: faceY,
