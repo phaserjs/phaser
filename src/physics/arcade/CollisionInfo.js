@@ -4,11 +4,16 @@
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
+var Area = require('../../geom/rectangle/Area');
 var CONST = require('./const');
 var FuzzyEqual = require('../../math/fuzzy/Equal');
 var IntersectsRect = require('./IntersectsRect');
+var Percent = require('../../math/Percent');
+var Rectangle = require('../../geom/rectangle/Rectangle');
 
 var CollisionInfo = {
+
+    TEMP: new Rectangle(),
 
     check: function (data, body1, body2, overlapOnly, bias)
     {
@@ -22,7 +27,12 @@ var CollisionInfo = {
             body2 = data.body2;
         }
 
-        var intersects = IntersectsRect(body1, body2, 0);
+        // var area = RectIntersection(body1, body2, CollisionInfo.TEMP);
+
+        var intersects = IntersectsRect(body1, body2, 0, CollisionInfo.TEMP);
+
+        var area = CollisionInfo.TEMP;
+
         var touching = (intersects) ? true : IntersectsRect(body1, body2, 1);
 
         if (data && !intersects)
@@ -40,8 +50,8 @@ var CollisionInfo = {
             return data;
         }
 
-        var checkCollision1 = body1.checkCollision;
-        var checkCollision2 = body2.checkCollision;
+        var check1 = body1.checkCollision;
+        var check2 = body2.checkCollision;
 
         var intersectsX = intersects;
         var intersectsY = intersects;
@@ -52,8 +62,11 @@ var CollisionInfo = {
         var v1 = body1.velocity;
         var v2 = body2.velocity;
 
-        // var maxOverlapX = body1.deltaAbsX() + body2.deltaAbsX() + bias;
-        // var maxOverlapY = body1.deltaAbsY() + body2.deltaAbsY() + bias;
+        var v1x = v1.x;
+        var v1y = v1.y;
+
+        var v2x = v2.x;
+        var v2y = v2.y;
 
         var maxOverlapX = bias * 2;
         var maxOverlapY = bias * 2;
@@ -105,11 +118,8 @@ var CollisionInfo = {
         var timeXCollision = 0;
         var timeYCollision = 0;
 
-        // var dx = body2.prev.x - body2.x;
-        // var dy = body2.prev.y - body2.y;
-
-        var dx = v2.x;
-        var dy = v2.y;
+        var dx = (body2.speed > body1.speed) ? v2x : v1x;
+        var dy = (body2.speed > body1.speed) ? v2y : v1y;
 
         if (leftFace)
         {
@@ -253,16 +263,28 @@ var CollisionInfo = {
             }
         }
 
+        var overlapSize = Area(area);
+        var body1Size = Area(body1);
+        var body2Size = Area(body2);
+
+        var p1 = Percent(overlapSize, 0, body1Size);
+        var p2 = Percent(overlapSize, 0, body2Size);
+
+        // console.log(p1);
+        // console.log(p2);
+        // console.log('ox', overlapX);
+        // console.log('oy', overlapY);
+        // console.log(area.height);
+
+        //  DC check
+        if (body1.directControl || body2.directControl)
+        {
+            timeXCollision = overlapX;
+            timeYCollision = overlapY;
+        }
+
         var forceX = (touchingX || (timeXCollision < timeYCollision));
         var face = (forceX) ? faceX : faceY;
-
-        //  Body embedded?
-        var embeddedX = (forceX && overlapX > maxOverlapX);
-        var embeddedY = (!forceX && overlapY > maxOverlapY);
-
-        var embedded = ((forceX && embeddedX) || (!forceX && embeddedY));
-
-        var abort = (checkCollision1.none || checkCollision2.none);
 
         if (forceX && FuzzyEqual(overlapX, 0))
         {
@@ -286,49 +308,88 @@ var CollisionInfo = {
             face = faceY;
         }
 
-        if ((forceX && (embeddedX > embeddedY)) || !forceX && (embeddedY > embeddedX))
-        {
-            intersects = false;
-            touching = false;
-            face = CONST.FACING_NONE;
-        }
+        //  Body embedded?
+        var embeddedX = (forceX && overlapX > maxOverlapX);
+        var embeddedY = (!forceX && overlapY > maxOverlapY);
+        var embedded = ((forceX && embeddedX) || (!forceX && embeddedY));
+
+
+        var abort = (check1.none || check2.none);
+
+        var testCollision = (!abort && (!check1.left || !check1.right || !check1.up || !check1.down || !check2.left || !check2.right || !check2.up || !check2.down));
 
         //  Collision Checks
 
-        if (!abort)
+        var moving1 = 0;
+        var moving2 = 0;
+
+        if (testCollision)
         {
-            if (!checkCollision1.left && (face === CONST.FACING_LEFT && v2.x >= 0))
+            var p1 = Percent(overlapSize, 0, body1Size);
+            var p2 = Percent(overlapSize, 0, body2Size);
+            
+            if (p1 > 0.8 || p2 > 0.8)
             {
+                //  More than 80% embedded? Then abort right away
                 abort = true;
             }
-            else if (!checkCollision1.right && (face === CONST.FACING_RIGHT && v2.x <= 0))
+            else
             {
-                abort = true;
-            }
-            else if (!checkCollision1.up && (face === CONST.FACING_UP && v2.y >= 0))
-            {
-                abort = true;
-            }
-            else if (!checkCollision1.down && (face === CONST.FACING_DOWN && v2.y <= 0))
-            {
-                abort = true;
-            }
-    
-            if (!checkCollision2.left && (face === CONST.FACING_RIGHT && v1.x >= 0))
-            {
-                abort = true;
-            }
-            else if (!checkCollision2.right && (face === CONST.FACING_LEFT && v1.x <= 0))
-            {
-                abort = true;
-            }
-            else if (!checkCollision2.up && (face === CONST.FACING_DOWN && v1.y >= 0))
-            {
-                abort = true;
-            }
-            else if (!checkCollision2.down && (face === CONST.FACING_UP && v1.y <= 0))
-            {
-                abort = true;
+                // var moving1 = this.getDirection(body1.angle);
+                // var moving2 = this.getDirection(body2.angle);
+
+                // if (!check2.up && moving1 === 1)
+                // {
+                //     //  body 1 top face open?
+                //     abort = true;
+                // }
+                // else if (!check2.down && moving1 === 3)
+                // {
+                //     //  body 1 bottom face open?
+                //     abort = true;
+                // }
+
+                //  body 1 bottom face open?
+                // if ((!check1.down && v2y <= 0) || (!check2.up && v1y >= 0))
+                // {
+                //     abort = true;
+                // }
+
+                /*
+                if (!check1.left && (face === CONST.FACING_LEFT && v2x >= 0))
+                {
+                    abort = true;
+                }
+                else if (!check1.right && (face === CONST.FACING_RIGHT && v2x <= 0))
+                {
+                    abort = true;
+                }
+                else if (!check1.up && (face === CONST.FACING_UP && v2y >= 0))
+                {
+                    abort = true;
+                }
+                else if (!check1.down && (face === CONST.FACING_DOWN && v2y <= 0))
+                {
+                    abort = true;
+                }
+        
+                if (!check2.left && (face === CONST.FACING_RIGHT && v1x >= 0))
+                {
+                    abort = true;
+                }
+                else if (!check2.right && (face === CONST.FACING_LEFT && v1x <= 0))
+                {
+                    abort = true;
+                }
+                else if (!check2.up && (face === CONST.FACING_DOWN && v1y >= 0))
+                {
+                    abort = true;
+                }
+                else if (!check2.down && (face === CONST.FACING_UP && v1y <= 0))
+                {
+                    abort = true;
+                }
+                */
             }
         }
 
@@ -400,6 +461,9 @@ var CollisionInfo = {
         if (data)
         {
             data.abort = abort;
+            data.area = area;
+            data.moving1 = moving1;
+            data.moving2 = moving2;
             data.intersects = intersects;
             data.intersectsX = intersectsX;
             data.intersectsY = intersectsY;
@@ -427,6 +491,9 @@ var CollisionInfo = {
         {
             return {
                 abort: abort,
+                area: area,
+                moving1: moving1,
+                moving2: moving2,
                 body1: body1,
                 body2: body2,
                 embedded: embedded,
