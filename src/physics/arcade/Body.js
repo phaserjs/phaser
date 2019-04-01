@@ -189,7 +189,7 @@ var Body = new Class({
          * @type {integer}
          * @since 3.17.0
          */
-        this.sleepIterations = 60 * world.positionIterations;
+        this.sleepIterations = 60;
 
         /**
          * Can this Body ever fall asleep? Typically you should leave this as `true`, but some
@@ -706,10 +706,8 @@ var Body = new Class({
                 {
                     this.setPosition(this._cx, this._cy, 1);
                 }
-                else
-                {
-                    this._cs = false;
-                }
+                
+                this._cs = false;
             }
     
             this.rotation = parent.rotation;
@@ -735,15 +733,30 @@ var Body = new Class({
     {
         if (lerp === undefined) { lerp = 1; }
 
+        if ((x > this.x && this.isBlockedRight()) || (x < this.x && this.isBlockedLeft()))
+        {
+            x = this.x;
+        }
+
+        if ((y > this.y && this.isBlockedDown()) || (y < this.y && this.isBlockedUp()))
+        {
+            y = this.y;
+        }
+
         var maxSpeed = this.maxSpeed;
 
-        this.calculateVelocity(x, y, lerp, maxSpeed);
+        if (this.calculateVelocity(x, y, lerp, maxSpeed))
+        {
+            this.wake();
 
-        this.wake();
-
-        this._cs = true;
-        this._cx = x;
-        this._cy = y;
+            this._cs = true;
+            this._cx = x;
+            this._cy = y;
+        }
+        else
+        {
+            this._cs = false;
+        }
     },
 
     calculateVelocity: function (x, y, lerp, maxSpeed)
@@ -755,6 +768,13 @@ var Body = new Class({
 
         var px = this.x;
         var py = this.y;
+
+        if (x === this.x && y === this.y)
+        {
+            velocity.set(0);
+
+            return false;
+        }
 
         var angle = Math.atan2(y - py, x - px);
 
@@ -769,6 +789,8 @@ var Body = new Class({
         {
             velocity.normalize().scale(maxSpeed);
         }
+
+        return (velocity.x !== 0 || velocity.y !== 0);
     },
 
     /**
@@ -950,6 +972,9 @@ var Body = new Class({
         if (this.directControl)
         {
             this.velocity.set(0);
+
+            this.prev.x = this.x;
+            this.prev.y = this.y;
         }
 
         //  Store collision flags
@@ -1347,6 +1372,7 @@ var Body = new Class({
                 if (this._sleep < this.sleepIterations)
                 {
                     this._sleep++;
+
 
                     // console.log(this.world._frame, 'sleeping ...', this._sleepY, this.y);
                     // console.log(this.gameObject.name, 'sleep y', this.y);
@@ -1934,6 +1960,12 @@ var Body = new Class({
                 this.y = body2.bottom;
             }
 
+            if (this.directControl)
+            {
+                this._cy = this.y;
+                this._cs = true;
+            }
+
             //  We don't reposition this body if it's already blocked on a face
             if (this.forcePosition === 5 || this.isWorldBlockedUp() || this.isWorldBlockedDown())
             {
@@ -1981,6 +2013,12 @@ var Body = new Class({
                 this.forcePosition = 7;
 
                 this.bottom = body2.y;
+            }
+
+            if (this.directControl)
+            {
+                this._cy = this.y;
+                this._cs = true;
             }
 
             //  We don't reposition this body if it's already blocked on a face
@@ -2032,6 +2070,12 @@ var Body = new Class({
                 this.x = body2.right;
             }
 
+            if (this.directControl)
+            {
+                this._cx = this.x;
+                this._cs = true;
+            }
+
             //  We don't reposition this body if it's already blocked on a face
             if (this.forcePosition === 5 || this.isWorldBlockedLeft() || this.isWorldBlockedRight())
             {
@@ -2079,6 +2123,12 @@ var Body = new Class({
                 this.forcePosition = 9;
 
                 this.right = body2.x;
+            }
+
+            if (this.directControl)
+            {
+                this._cx = this.x;
+                this._cs = true;
             }
 
             //  We don't reposition this body if it's already blocked on a face
