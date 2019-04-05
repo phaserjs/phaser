@@ -1047,20 +1047,24 @@ var Graphics = new Class({
     /**
      * Stroke the shape represented by the given array of points.
      *
-     * Pass `true` to `autoClose` to close the shape automatically.
+     * Pass `closeShape` to automatically close the shape by joining the last to the first point.
+     * 
+     * Pass `closePath` to automatically close the path before it is stroked.
      *
      * @method Phaser.GameObjects.Graphics#strokePoints
      * @since 3.0.0
      *
      * @param {(array|Phaser.Geom.Point[])} points - The points to stroke.
-     * @param {boolean} [autoClose=false] - When `true`, the shape is closed by joining the last point to the first point.
+     * @param {boolean} [closeShape=false] - When `true`, the shape is closed by joining the last point to the first point.
+     * @param {boolean} [closePath=true] - When `true`, the path is closed before being stroked.
      * @param {integer} [endIndex] - The index of `points` to stop drawing at. Defaults to `points.length`.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
-    strokePoints: function (points, autoClose, endIndex)
+    strokePoints: function (points, closeShape, closePath, endIndex)
     {
-        if (autoClose === undefined) { autoClose = false; }
+        if (closeShape === undefined) { closeShape = false; }
+        if (closePath === undefined) { closePath = true; }
         if (endIndex === undefined) { endIndex = points.length; }
 
         this.beginPath();
@@ -1072,9 +1076,14 @@ var Graphics = new Class({
             this.lineTo(points[i].x, points[i].y);
         }
 
-        if (autoClose)
+        if (closeShape)
         {
             this.lineTo(points[0].x, points[0].y);
+        }
+
+        if (closePath)
+        {
+            this.closePath();
         }
 
         this.strokePath();
@@ -1085,20 +1094,24 @@ var Graphics = new Class({
     /**
      * Fill the shape represented by the given array of points.
      *
-     * Pass `true` to `autoClose` to close the shape automatically.
+     * Pass `closeShape` to automatically close the shape by joining the last to the first point.
+     * 
+     * Pass `closePath` to automatically close the path before it is filled.
      *
      * @method Phaser.GameObjects.Graphics#fillPoints
      * @since 3.0.0
      *
      * @param {(array|Phaser.Geom.Point[])} points - The points to fill.
-     * @param {boolean} [autoClose=false] - Whether to automatically close the polygon.
+     * @param {boolean} [closeShape=false] - When `true`, the shape is closed by joining the last point to the first point.
+     * @param {boolean} [closePath=true] - When `true`, the path is closed before being stroked.
      * @param {integer} [endIndex] - The index of `points` to stop at. Defaults to `points.length`.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
-    fillPoints: function (points, autoClose, endIndex)
+    fillPoints: function (points, closeShape, closePath, endIndex)
     {
-        if (autoClose === undefined) { autoClose = false; }
+        if (closeShape === undefined) { closeShape = false; }
+        if (closePath === undefined) { closePath = true; }
         if (endIndex === undefined) { endIndex = points.length; }
 
         this.beginPath();
@@ -1110,9 +1123,14 @@ var Graphics = new Class({
             this.lineTo(points[i].x, points[i].y);
         }
 
-        if (autoClose)
+        if (closeShape)
         {
             this.lineTo(points[0].x, points[0].y);
+        }
+
+        if (closePath)
+        {
+            this.closePath();
         }
 
         this.fillPath();
