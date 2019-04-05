@@ -6,14 +6,14 @@
 
 /**
  * Adds the given item, or array of items, to the array.
- * 
+ *
  * Each item must be unique within the array.
- * 
+ *
  * The array is modified in-place and returned.
- * 
+ *
  * You can optionally specify a limit to the maximum size of the array. If the quantity of items being
  * added will take the array length over this limit, it will stop adding once the limit is reached.
- * 
+ *
  * You can optionally specify a callback to be invoked for each item successfully added to the array.
  *
  * @function Phaser.Utils.Array.Add
@@ -53,7 +53,7 @@ var Add = function (array, item, limit, callback, context)
             {
                 callback.call(context, item);
             }
-    
+
             return item;
         }
         else
@@ -72,7 +72,7 @@ var Add = function (array, item, limit, callback, context)
         if (array.indexOf(item[itemLength]) !== -1)
         {
             //  Already exists in array, so remove it
-            item.pop();
+            item.splice(itemLength, 1);
         }
 
         itemLength--;
