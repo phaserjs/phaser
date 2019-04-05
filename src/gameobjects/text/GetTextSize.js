@@ -58,9 +58,9 @@ var GetTextSize = function (text, size, lines)
     var lineSpacing = text.lineSpacing;
 
     //  Adjust for line spacing
-    if (lines.length > 1)
+    if (drawnLines > 1)
     {
-        height += lineSpacing * (lines.length - 1);
+        height += lineSpacing * (drawnLines - 1);
     }
 
     return {

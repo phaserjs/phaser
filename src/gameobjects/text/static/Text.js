@@ -532,7 +532,7 @@ var Text = new Class({
                     }
 
                     result += words[j] + ' ';
-                    spaceLeft = wordWrapWidth - wordWidth;
+                    spaceLeft = wordWrapWidth - wordWidthWithSpace;
                 }
                 else
                 {
@@ -1125,10 +1125,18 @@ var Text = new Class({
         {
             this.width = w;
         }
+        else
+        {
+            this.width = style.fixedWidth;
+        }
 
         if (style.fixedHeight === 0)
         {
             this.height = h;
+        }
+        else
+        {
+            this.height = style.fixedHeight;
         }
 
         this.updateDisplayOrigin();
