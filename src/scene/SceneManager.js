@@ -890,14 +890,14 @@ var SceneManager = new Class({
     },
 
     /**
-     * Determines whether a Scene is active.
+     * Determines whether a Scene is running.
      *
      * @method Phaser.Scenes.SceneManager#isActive
      * @since 3.0.0
      *
      * @param {string} key - The Scene to check.
      *
-     * @return {boolean} Whether the Scene is active.
+     * @return {boolean} Whether the Scene is running.
      */
     isActive: function (key)
     {
@@ -906,6 +906,28 @@ var SceneManager = new Class({
         if (scene)
         {
             return scene.sys.isActive();
+        }
+
+        return null;
+    },
+
+    /**
+     * Determines whether a Scene is paused.
+     *
+     * @method Phaser.Scenes.SceneManager#isPaused
+     * @since 3.17.0
+     *
+     * @param {string} key - The Scene to check.
+     *
+     * @return {boolean} Whether the Scene is paused.
+     */
+    isPaused: function (key)
+    {
+        var scene = this.getScene(key);
+
+        if (scene)
+        {
+            return scene.sys.isPaused();
         }
 
         return null;
