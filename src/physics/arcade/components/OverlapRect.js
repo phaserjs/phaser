@@ -15,15 +15,15 @@
  * @param {number} y - The top-left y coordinate of the area to search within.
  * @param {number} width - The width of the area to search within.
  * @param {number} height - The height of the area to search within.
- * @param {boolean} [dynamic=true] - Should the search include Dynamic Bodies?
- * @param {boolean} [static=false] - Should the search include Static Bodies?
+ * @param {boolean} [includeDynamic=true] - Should the search include Dynamic Bodies?
+ * @param {boolean} [includeStatic=false] - Should the search include Static Bodies?
  *
  * @return {(Phaser.Physics.Arcade.Body[]|Phaser.Physics.Arcade.StaticBody[])} An array of bodies that overlap with the given area.
  */
-var OverlapRect = function (world, x, y, width, height, dynamic, static)
+var OverlapRect = function (world, x, y, width, height, includeDynamic, includeStatic)
 {
-    if (dynamic === undefined) { dynamic = true; }
-    if (static === undefined) { static = false; }
+    if (includeDynamic === undefined) { includeDynamic = true; }
+    if (includeStatic === undefined) { includeStatic = false; }
 
     var dynamicBodies = [];
     var staticBodies = [];
@@ -35,16 +35,16 @@ var OverlapRect = function (world, x, y, width, height, dynamic, static)
     minMax.maxX = x + width;
     minMax.maxY = y + height;
 
-    if (static)
+    if (includeStatic)
     {
         staticBodies = world.staticTree.search(minMax);
     }
 
-    if (dynamic && world.useTree)
+    if (includeDynamic && world.useTree)
     {
         dynamicBodies = world.tree.search(minMax);
     }
-    else if (dynamic)
+    else if (includeDynamic)
     {
         var bodies = world.bodies;
 

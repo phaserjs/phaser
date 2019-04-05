@@ -559,14 +559,14 @@ var ArcadePhysics = new Class({
      * @param {number} y - The top-left y coordinate of the area to search within.
      * @param {number} width - The width of the area to search within.
      * @param {number} height - The height of the area to search within.
-     * @param {boolean} [dynamic=true] - Should the search include Dynamic Bodies?
-     * @param {boolean} [static=false] - Should the search include Static Bodies?
+     * @param {boolean} [includeDynamic=true] - Should the search include Dynamic Bodies?
+     * @param {boolean} [includeStatic=false] - Should the search include Static Bodies?
      *
      * @return {(Phaser.Physics.Arcade.Body[]|Phaser.Physics.Arcade.StaticBody[])} An array of bodies that overlap with the given area.
      */
-    overlapRect: function (x, y, width, height, dynamic, static)
+    overlapRect: function (x, y, width, height, includeDynamic, includeStatic)
     {
-        return OverlapRect(this.world, x, y, width, height, dynamic, static);
+        return OverlapRect(this.world, x, y, width, height, includeDynamic, includeStatic);
     },
 
     /**
