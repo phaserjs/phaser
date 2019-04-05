@@ -85,6 +85,7 @@ Notes:
 * Calling `TweenManager.makeActive` returns the TweenManager instance, however, if you create a tween externally and call `makeActive` with it, this would return `undefined`.
 * Setting the `fixedWidth` and / or `fixedHeight` properties in the configuration of a `Text` would be ignored, they were only supported when calling the `setFixedSize` method. They now work via either option. Fix #4424 (thanks @rexrainbow)
 * When calculating the width of a Text object for word wrapping it would ignore the extra spaces added from the wrap. It now accounts for these in the width. Fix #4187 (thanks @rexrainbow)
+* `Utils.Array.Add` would act incorrectly when adding an object into an array in which it already belonged. This would manifest if, for example, adding a child into a display list it was already a part of. Fix #4411 (thanks @mudala @LoolzRules)
 
 ### Examples, Documentation and TypeScript
 
