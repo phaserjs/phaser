@@ -40,14 +40,14 @@ var Spread = function (items, property, min, max, inc)
     {
         for (i = 0; i < items.length; i++)
         {
-            items[i][property] += i * step;
+            items[i][property] += i * step + min;
         }
     }
     else
     {
         for (i = 0; i < items.length; i++)
         {
-            items[i][property] = i * step;
+            items[i][property] = i * step + min;
         }
     }
 
