@@ -5,10 +5,10 @@
  */
 
 /**
- * Takes an array of Game Objects and then modifies their `property` so the value equals, or is incremented, the
+ * Takes an array of Game Objects and then modifies their `property` so the value equals, or is incremented, by the
  * calculated spread value.
  * 
- * The spread value is derived from the given `min` and `max` values and the total number of items in the array.//#endregion
+ * The spread value is derived from the given `min` and `max` values and the total number of items in the array.
  * 
  * For example, to cause an array of Sprites to change in alpha from 0 to 1 you could call:
  * 
