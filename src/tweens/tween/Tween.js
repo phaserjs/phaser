@@ -611,7 +611,7 @@ var Tween = new Class({
     {
         if (this.state === TWEEN_CONST.PAUSED)
         {
-            return;
+            return this;
         }
 
         this.paused = true;
