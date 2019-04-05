@@ -58,6 +58,8 @@ Notes:
 * `Tilemap.removeTile` is a new method that allows you to remove a tile, or an array of tiles, by passing in references to the tiles themselves, rather than coordinates. The tiles can be replaced with new tiles of the given index, or removed entirely, and the method can optionally recalculate interesting faces on the layer.
 * `TweenManager.remove` is a new method that immediately removes the given Tween from all of its internal arrays.
 * `Tween.remove` is a new method that immediately removes the Tween from the TweenManager, regardless of what state the tween is in. Once called the tween will no longer exist within any internal TweenManager arrays.
+* `SceneManager.isPaused` is a new method that will return if the given Scene is currently paused or not (thanks @samme)
+* `ScenePlugin.isPaused` is a new method that will return if the given Scene is currently paused or not (thanks @samme)
 
 ### Updates
 
@@ -79,6 +81,10 @@ Notes:
 * Trying to enter Fullscreen mode on Android / Chrome, or iOS / Safari, would throw an error regarding an unhandled Promise and a failure to invoke the event from a user gesture. This has been tightened up, using a proper Promise handler internally and the documentation clarified to explicitly say that you must call the function from a `pointerup` handler, and not `pointerdown`. Fix #4355 (thanks @matrizet)
 * Camera fadeIn and fadeOut would sometimes leave a very low alpha-valued rectangle rendering to the camera. Fix #3833 (thanks @bdaenen)
 * `Actions.Spread` would only use the `min` value to work out the step value but not apply it to the property being set (thanks @galman33)
+* Calling `Tween.pause` returns the Tween instance, however, if it was already paused, it would return `undefined`, causing problems when chaining Tween methods (thanks @kyranet)
+* Calling `TweenManager.makeActive` returns the TweenManager instance, however, if you create a tween externally and call `makeActive` with it, this would return `undefined`.
+* Setting the `fixedWidth` and / or `fixedHeight` properties in the configuration of a `Text` would be ignored, they were only supported when calling the `setFixedSize` method. They now work via either option. Fix #4424 (thanks @rexrainbow)
+* When calculating the width of a Text object for word wrapping it would ignore the extra spaces added from the wrap. It now accounts for these in the width. Fix #4187 (thanks @rexrainbow)
 
 ### Examples, Documentation and TypeScript
 
