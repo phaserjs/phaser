@@ -667,7 +667,7 @@ var FacebookInstantGamesPlugin = new Class({
      * 
      * ```javascript
      * this.facebook.loadPlayerPhoto(this, 'player').once('photocomplete', function (key) {
-     *   this.add.image(x, y, 'player);
+     *   this.add.image(x, y, 'player');
      * }, this);
      * ```
      *
