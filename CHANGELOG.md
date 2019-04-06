@@ -60,6 +60,7 @@ Notes:
 * `Tween.remove` is a new method that immediately removes the Tween from the TweenManager, regardless of what state the tween is in. Once called the tween will no longer exist within any internal TweenManager arrays.
 * `SceneManager.isPaused` is a new method that will return if the given Scene is currently paused or not (thanks @samme)
 * `ScenePlugin.isPaused` is a new method that will return if the given Scene is currently paused or not (thanks @samme)
+* `TextureManager.removeKey` is a new method that will remove a key from the Texture Manager without destroying the texture itself.
 
 ### Updates
 
@@ -73,6 +74,7 @@ Notes:
 * The `Clock.now` property value is now synced to be the `TimeStep.time` value when the Clock plugin boots and is no longer `Date.now()` until the first update (thanks @Antriel)
 * `Graphics.strokePoints` has renamed the second argument from `autoClose` to `closeShape`. There is also a new third argument `closePath`, which defaults to `true` and automatically closes the path before stroking it. The `endIndex` argument is now the fourth argument, instead of the third.
 * `Graphics.fillPoints` has renamed the second argument from `autoClose` to `closeShape`. There is also a new third argument `closePath`, which defaults to `true` and automatically closes the path before filling it. The `endIndex` argument is now the fourth argument, instead of the third.
+* Calling `Texture.destroy` will now call `TextureManager.removeKey` to ensure the key is removed from the manager, should you destroy a texture directly, rather than going via `TextureManager.remove`. Fix #4461 (thanks @BigZaphod)
 
 ### Bug Fixes
 

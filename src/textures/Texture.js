@@ -461,6 +461,9 @@ var Texture = new Class({
         this.source = [];
         this.dataSource = [];
         this.frames = {};
+
+        this.manager.removeKey(this.key);
+
         this.manager = null;
     }
 

@@ -213,11 +213,29 @@ var TextureManager = new Class({
         //  By this point key should be a Texture, if not, the following fails anyway
         if (this.list.hasOwnProperty(key.key))
         {
-            delete this.list[key.key];
-
             key.destroy();
 
             this.emit(Events.REMOVE, key.key);
+        }
+
+        return this;
+    },
+
+    /**
+     * Removes a key from the Texture Manager but does not destroy the Texture that was using the key.
+     *
+     * @method Phaser.Textures.TextureManager#removeKey
+     * @since 3.17.0
+     *
+     * @param {string} key - The key to remove from the texture list.
+     *
+     * @return {Phaser.Textures.TextureManager} The Texture Manager.
+     */
+    removeKey: function (key)
+    {
+        if (this.list.hasOwnProperty(key))
+        {
+            delete this.list[key];
         }
 
         return this;
