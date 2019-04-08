@@ -94,6 +94,7 @@ Notes:
 * `Tile.getCenterX` and `Tile.getCenterY` would return the wrong values for tiles on scaled layers. Fix #3845 (thanks @oloflarsson @florianvazelle)
 * `Camera.startFollow` will now ensure that if the Camera is using bounds that the `scrollX` and `scrollY` values set after first following the Game Object do not exceed the bounds (thanks @snowbillr)
 * Creating a Tween with a `duration` of zero would cause the tweened object properties to be set to `NaN`. Now they will tween for one single frame before being set to progress 1. Fix #4235 (thanks @BigZaphod)
+* The First frame of a Texture would take on the appearance of the second frame in a Sprite Sheet created from trimmed Texture Atlas frames. Fix #4088 (thanks @Cirras)
 
 ### Examples, Documentation and TypeScript
 
