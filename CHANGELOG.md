@@ -81,6 +81,8 @@ Notes:
 * `SpriteSheetFromAtlas` now adds in a `__BASE` entry for the Sprite Sheet it creates, keeping it consistent with the other frame parsers (thanks @Cirras)
 * The `from` and `to` properties in the PathFollower Config can now be used to set the span of the follow duration (thanks @kensleebos)
 * `Graphics.lineFxTo` and `Graphics.moveFxTo` have been removed as they were not being rendered anyway.
+* You can now use "infinite" tilemaps as created in Tiled v1.1 and above. Support is basic in that it takes the chunk data and builds one giant map from it. However, at least you are still able to now load and use infinite maps, even if they don't chunk during the game (thanks @Upperfoot)
+* `MapData.infinite` is a new boolean that controls if the map data is infinite or not.
 
 ### Bug Fixes
 
