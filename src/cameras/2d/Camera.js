@@ -884,7 +884,8 @@ var Camera = new Class({
         this.scrollX = fx - originX;
         this.scrollY = fy - originY;
         
-        if (this.useBounds) {
+        if (this.useBounds)
+        {
             this.scrollX = this.clampX(this.scrollX);
             this.scrollY = this.clampY(this.scrollY);
         }
