@@ -63,6 +63,7 @@ Notes:
 * `TextureManager.removeKey` is a new method that will remove a key from the Texture Manager without destroying the texture itself.
 * `Matter.World.resetCollisionIDs` is a new method that will reset the collision IDs that Matter JS uses for body collision groups. You should call this before destroying your game if you need to restart the game again on the same page, without first reloading the page. Or, if you wish to consistently destroy a Scene that contains Matter.js and then run it again (thanks @clesquir)
 * RenderTexture has two new optional constructor arguments `key` and `frame`. This allows you to create a RenderTexture pre-populated with the size and frame from an existing texture (thanks @TadejZupancic)
+* `GameObjects.Components.PathFollower` is a new component that manages any type of Game Object following a path. The original Path Follower Game Object has been updated to use this new component directly, but it can be applied to any custom Game Object class.
 
 ### Updates
 
@@ -99,6 +100,7 @@ Notes:
 * The First frame of a Texture would take on the appearance of the second frame in a Sprite Sheet created from trimmed Texture Atlas frames. Fix #4088 (thanks @Cirras)
 * `Tween.stop` assumed that the parent was the TweenManager. If the Tween has been added to the Timeline, that was not true and the stop method crashed (thanks @TadejZupancic)
 * Calling `Tween.restart` multiple times in a row would cause the tween to freeze. It will now disregard all additional calls to `restart` if it's already in a pending state (thanks @rgk)
+* Tween Timelines would only apply the `delay` value of a child tween once and not on loop. Fix #3841 (thanks @Edwin222 @Antriel)
 
 ### Examples, Documentation and TypeScript
 
