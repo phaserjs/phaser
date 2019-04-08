@@ -440,9 +440,13 @@ var Tilemap = new Class({
                 destTileX, destTileY,
                 recalculateFaces, layer
             );
-        }
 
-        return this;
+            return this;
+        }
+        else
+        {
+            return null;
+        }
     },
 
     /**
@@ -797,12 +801,11 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
+        if (layer === null) { return null; }
+
         if (this._isStaticCall(layer, 'fill')) { return this; }
 
-        if (layer !== null)
-        {
-            TilemapComponents.Fill(index, tileX, tileY, width, height, recalculateFaces, layer);
-        }
+        TilemapComponents.Fill(index, tileX, tileY, width, height, recalculateFaces, layer);
 
         return this;
     },
@@ -982,10 +985,9 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
-        if (layer !== null)
-        {
-            TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, filteringOptions, layer);
-        }
+        if (layer === null) { return null; }
+
+        TilemapComponents.ForEachTile(callback, context, tileX, tileY, width, height, filteringOptions, layer);
 
         return this;
     },
@@ -1065,7 +1067,7 @@ var Tilemap = new Class({
     {
         var index = this.getIndex(this.objects, name);
 
-        return index !== null ? this.objects[index] : null;
+        return (index !== null) ? this.objects[index] : null;
     },
 
     /**
@@ -1163,14 +1165,9 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
-        if (layer === null)
-        {
-            return null;
-        }
-        else
-        {
-            return TilemapComponents.GetTileAtWorldXY(worldX, worldY, nonNull, camera, layer);
-        }
+        if (layer === null) { return null; }
+        
+        return TilemapComponents.GetTileAtWorldXY(worldX, worldY, nonNull, camera, layer);
     },
 
     /**
@@ -1441,10 +1438,9 @@ var Tilemap = new Class({
 
         if (this._isStaticCall(layer, 'putTilesAt')) { return this; }
 
-        if (layer !== null)
-        {
-            TilemapComponents.PutTilesAt(tilesArray, tileX, tileY, recalculateFaces, layer);
-        }
+        if (layer === null) { return null; }
+
+        TilemapComponents.PutTilesAt(tilesArray, tileX, tileY, recalculateFaces, layer);
 
         return this;
     },
@@ -1477,10 +1473,9 @@ var Tilemap = new Class({
 
         if (this._isStaticCall(layer, 'randomize')) { return this; }
 
-        if (layer !== null)
-        {
-            TilemapComponents.Randomize(tileX, tileY, width, height, indexes, layer);
-        }
+        if (layer === null) { return null; }
+
+        TilemapComponents.Randomize(tileX, tileY, width, height, indexes, layer);
 
         return this;
     },
@@ -1505,7 +1500,7 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
-        if (layer === null) { return this; }
+        if (layer === null) { return null; }
 
         TilemapComponents.CalculateFacesAt(tileX, tileY, layer);
 
@@ -1629,7 +1624,7 @@ var Tilemap = new Class({
         {
             if (layers[i].tilemapLayer)
             {
-                layers[i].tilemapLayer.destroy();
+                layers[i].tilemapLayer.destroy(false);
             }
         }
 
@@ -1762,7 +1757,7 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
-        if (layer === null) { return this; }
+        if (layer === null) { return null; }
 
         TilemapComponents.RenderDebug(graphics, styleConfig, layer);
 
@@ -1796,10 +1791,9 @@ var Tilemap = new Class({
 
         if (this._isStaticCall(layer, 'replaceByIndex')) { return this; }
 
-        if (layer !== null)
-        {
-            TilemapComponents.ReplaceByIndex(findIndex, newIndex, tileX, tileY, width, height, layer);
-        }
+        if (layer === null) { return null; }
+
+        TilemapComponents.ReplaceByIndex(findIndex, newIndex, tileX, tileY, width, height, layer);
 
         return this;
     },
@@ -1825,7 +1819,7 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
-        if (layer === null) { return this; }
+        if (layer === null) { return null; }
 
         TilemapComponents.SetCollision(indexes, collides, recalculateFaces, layer);
 
@@ -1855,7 +1849,7 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
-        if (layer === null) { return this; }
+        if (layer === null) { return null; }
 
         TilemapComponents.SetCollisionBetween(start, stop, collides, recalculateFaces, layer);
 
@@ -1887,7 +1881,7 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
-        if (layer === null) { return this; }
+        if (layer === null) { return null; }
 
         TilemapComponents.SetCollisionByProperty(properties, collides, recalculateFaces, layer);
 
@@ -1915,7 +1909,7 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
-        if (layer === null) { return this; }
+        if (layer === null) { return null; }
 
         TilemapComponents.SetCollisionByExclusion(indexes, collides, recalculateFaces, layer);
 
@@ -1943,7 +1937,7 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
-        if (layer === null) { return this; }
+        if (layer === null) { return null; }
 
         TilemapComponents.SetCollisionFromCollisionGroup(collides, recalculateFaces, layer);
 
@@ -1972,7 +1966,7 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
-        if (layer === null) { return this; }
+        if (layer === null) { return null; }
 
         TilemapComponents.SetTileIndexCallback(indexes, callback, callbackContext, layer);
 
@@ -2003,7 +1997,7 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
-        if (layer === null) { return this; }
+        if (layer === null) { return null; }
 
         TilemapComponents.SetTileLocationCallback(tileX, tileY, width, height, callback, callbackContext, layer);
 
@@ -2151,10 +2145,9 @@ var Tilemap = new Class({
 
         if (this._isStaticCall(layer, 'shuffle')) { return this; }
 
-        if (layer !== null)
-        {
-            TilemapComponents.Shuffle(tileX, tileY, width, height, layer);
-        }
+        if (layer === null) { return null; }
+
+        TilemapComponents.Shuffle(tileX, tileY, width, height, layer);
 
         return this;
     },
@@ -2186,10 +2179,9 @@ var Tilemap = new Class({
 
         if (this._isStaticCall(layer, 'swapByIndex')) { return this; }
 
-        if (layer !== null)
-        {
-            TilemapComponents.SwapByIndex(indexA, indexB, tileX, tileY, width, height, layer);
-        }
+        if (layer === null) { return null; }
+
+        TilemapComponents.SwapByIndex(indexA, indexB, tileX, tileY, width, height, layer);
 
         return this;
     },
@@ -2308,10 +2300,9 @@ var Tilemap = new Class({
 
         if (this._isStaticCall(layer, 'weightedRandomize')) { return this; }
 
-        if (layer !== null)
-        {
-            TilemapComponents.WeightedRandomize(tileX, tileY, width, height, weightedIndexes, layer);
-        }
+        if (layer === null) { return null; }
+
+        TilemapComponents.WeightedRandomize(tileX, tileY, width, height, weightedIndexes, layer);
 
         return this;
     },
