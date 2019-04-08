@@ -6,12 +6,13 @@
 
 var Class = require('../utils/Class');
 var DegToRad = require('../math/DegToRad');
-var DynamicTilemapLayer = require('./dynamiclayer/DynamicTilemapLayer.js');
+var DynamicTilemapLayer = require('./dynamiclayer/DynamicTilemapLayer');
 var Extend = require('../utils/object/Extend');
 var Formats = require('./Formats');
 var LayerData = require('./mapdata/LayerData');
 var Rotate = require('../math/Rotate');
-var StaticTilemapLayer = require('./staticlayer/StaticTilemapLayer.js');
+var SpliceOne = require('../utils/array/SpliceOne');
+var StaticTilemapLayer = require('./staticlayer/StaticTilemapLayer');
 var Tile = require('./Tile');
 var TilemapComponents = require('./components');
 var Tileset = require('./Tileset');
@@ -1046,7 +1047,7 @@ var Tilemap = new Class({
     {
         var index = this.getLayerIndex(layer);
 
-        return index !== null ? this.layers[index] : null;
+        return (index !== null) ? this.layers[index] : null;
     },
 
     /**
@@ -1533,11 +1534,81 @@ var Tilemap = new Class({
     {
         layer = this.getLayer(layer);
 
-        if (layer === null) { return this; }
+        if (layer === null) { return null; }
 
         TilemapComponents.CalculateFacesWithin(tileX, tileY, width, height, layer);
 
         return this;
+    },
+
+    /**
+     * Removes the given TilemapLayer from this Tilemap without destroying it.
+     * 
+     * If no layer specified, the map's current layer is used.
+     *
+     * @method Phaser.Tilemaps.Tilemap#removeLayer
+     * @since 3.17.0
+     *
+     * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to be removed.
+     *
+     * @return {?Phaser.Tilemaps.Tilemap} Returns this, or null if the layer given was invalid.
+     */
+    removeLayer: function (layer)
+    {
+        var index = this.getLayerIndex(layer);
+
+        if (index !== null)
+        {
+            SpliceOne(this.layers, index);
+
+            if (this.currentLayerIndex === index)
+            {
+                this.currentLayerIndex = 0;
+            }
+
+            return this;
+        }
+        else
+        {
+            return null;
+        }
+    },
+
+    /**
+     * Destroys the given TilemapLayer and removes it from this Tilemap.
+     * 
+     * If no layer specified, the map's current layer is used.
+     *
+     * @method Phaser.Tilemaps.Tilemap#destroyLayer
+     * @since 3.17.0
+     *
+     * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to be destroyed.
+     *
+     * @return {?Phaser.Tilemaps.Tilemap} Returns this, or null if the layer given was invalid.
+     */
+    destroyLayer: function (layer)
+    {
+        var index = this.getLayerIndex(layer);
+
+        if (index !== null)
+        {
+            layer = this.layers[index];
+
+            layer.destroy();
+
+            SpliceOne(this.layers, index);
+
+            if (this.currentLayerIndex === index)
+            {
+                this.currentLayerIndex = 0;
+            }
+
+            return this;
+        }
+        else
+        {
+            return null;
+        }
     },
 
     /**
@@ -1551,16 +1622,19 @@ var Tilemap = new Class({
      */
     removeAllLayers: function ()
     {
+        var layers = this.layers;
+
         // Destroy any StaticTilemapLayers or DynamicTilemapLayers that are stored in LayerData
-        for (var i = 0; i < this.layers.length; i++)
+        for (var i = 0; i < layers.length; i++)
         {
-            if (this.layers[i].tilemapLayer)
+            if (layers[i].tilemapLayer)
             {
-                this.layers[i].tilemapLayer.destroy();
+                layers[i].tilemapLayer.destroy();
             }
         }
 
-        this.layers.length = 0;
+        layers.length = 0;
+
         this.currentLayerIndex = 0;
 
         return this;
