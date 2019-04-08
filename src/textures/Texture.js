@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -16,6 +16,9 @@ var TEXTURE_MISSING_ERROR = 'Texture.frame missing: ';
  * The Frames represent the different areas of the Texture. For example a texture atlas
  * may have many Frames, one for each element within the atlas. Where-as a single image would have
  * just one frame, that encompasses the whole image.
+ * 
+ * Every Texture, no matter where it comes from, always has at least 1 frame called the `__BASE` frame.
+ * This frame represents the entirety of the source image.
  *
  * Textures are managed by the global TextureManager. This is a singleton class that is
  * responsible for creating and delivering Textures and their corresponding Frames to Game Objects.
@@ -23,13 +26,13 @@ var TEXTURE_MISSING_ERROR = 'Texture.frame missing: ';
  * Sprites and other Game Objects get the texture data they need from the TextureManager.
  *
  * @class Texture
- * @memberOf Phaser.Textures
+ * @memberof Phaser.Textures
  * @constructor
  * @since 3.0.0
  *
  * @param {Phaser.Textures.TextureManager} manager - A reference to the Texture Manager this Texture belongs to.
  * @param {string} key - The unique string-based key of this Texture.
- * @param {(HTMLImageElement[]|HTMLCanvasElement[])} source - An array of sources that are used to create the texture. Usually Images, but can also be a Canvas.
+ * @param {(HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[])} source - An array of sources that are used to create the texture. Usually Images, but can also be a Canvas.
  * @param {number} [width] - The width of the Texture. This is optional and automatically derived from the source images.
  * @param {number} [height] - The height of the Texture. This is optional and automatically derived from the source images.
  */
@@ -111,7 +114,10 @@ var Texture = new Class({
         this.firstFrame = '__BASE';
 
         /**
-         * The total number of Frames in this Texture.
+         * The total number of Frames in this Texture, including the `__BASE` frame.
+         * 
+         * A Texture will always contain at least 1 frame because every Texture contains a `__BASE` frame by default,
+         * in addition to any extra frames that have been added to it, such as when parsing a Sprite Sheet or Texture Atlas.
          *
          * @name Phaser.Textures.Texture#frameTotal
          * @type {integer}
@@ -154,7 +160,7 @@ var Texture = new Class({
         //  This is used to ensure we don't spam the display with entire
         //  atlases of sprite sheets, but instead just the first frame of them
         //  should the dev incorrectly specify the frame index
-        if (this.frameTotal === 1)
+        if (this.firstFrame === '__BASE')
         {
             this.firstFrame = name;
         }
@@ -385,7 +391,7 @@ var Texture = new Class({
      * @method Phaser.Textures.Texture#setDataSource
      * @since 3.0.0
      *
-     * @param {(HTMLImageElement|HTMLCanvasElement)} data - The source image.
+     * @param {(HTMLImageElement|HTMLCanvasElement|HTMLImageElement[]|HTMLCanvasElement[])} data - The source image.
      */
     setDataSource: function (data)
     {
@@ -461,6 +467,9 @@ var Texture = new Class({
         this.source = [];
         this.dataSource = [];
         this.frames = {};
+
+        this.manager.removeKey(this.key);
+
         this.manager = null;
     }
 

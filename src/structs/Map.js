@@ -1,19 +1,18 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Class = require('../utils/Class');
 
 /**
- * @callback EachMapCallback
- * @generic E - [entry]
+ * @callback EachMapCallback<E>
  *
- * @param {string} key - [description]
- * @param {*} entry - [description]
+ * @param {string} key - The key of the Map entry.
+ * @param {E} entry - The value of the Map entry.
  *
- * @return {?boolean} [description]
+ * @return {?boolean} The callback result.
  */
 
 /**
@@ -29,7 +28,7 @@ var Class = require('../utils/Class');
  * ```
  *
  * @class Map
- * @memberOf Phaser.Structs
+ * @memberof Phaser.Structs
  * @constructor
  * @since 3.0.0
  *
@@ -78,6 +77,7 @@ var Map = new Class({
 
     /**
      * Adds an element with a specified `key` and `value` to this Map.
+     * If the `key` already exists, the value will be replaced.
      *
      * @method Phaser.Structs.Map#set
      * @since 3.0.0
@@ -95,9 +95,10 @@ var Map = new Class({
     {
         if (!this.has(key))
         {
-            this.entries[key] = value;
             this.size++;
         }
+
+        this.entries[key] = value;
 
         return this;
     },

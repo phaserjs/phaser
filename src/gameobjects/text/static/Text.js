@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -27,6 +27,21 @@ var TextStyle = require('../TextStyle');
  * Because it uses the Canvas API you can take advantage of all the features this offers, such as
  * applying gradient fills to the text, or strokes, shadows and more. You can also use custom fonts
  * loaded externally, such as Google or TypeKit Web fonts.
+ * 
+ * **Important:** If the font you wish to use has a space or digit in its name, such as
+ * 'Press Start 2P' or 'Roboto Condensed', then you _must_ put the font name in quotes, either
+ * when creating the Text object, or when setting the font via `setFont` or `setFontFamily`. I.e.:
+ * 
+ * ```javascript
+ * this.add.text(0, 0, 'Hello World', { fontFamily: '"Roboto Condensed"' });
+ * ```
+ * 
+ * Equally, if you wish to provide a list of fallback fonts, then you should ensure they are all
+ * quoted properly, too:
+ * 
+ * ```javascript
+ * this.add.text(0, 0, 'Hello World', { fontFamily: 'Verdana, "Times New Roman", Tahoma, serif' });
+ * ```
  *
  * You can only display fonts that are currently loaded and available to the browser: therefore fonts must
  * be pre-loaded. Phaser does not do ths for you, so you will require the use of a 3rd party font loader,
@@ -43,7 +58,7 @@ var TextStyle = require('../TextStyle');
  *
  * @class Text
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
@@ -57,7 +72,6 @@ var TextStyle = require('../TextStyle');
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.ScaleMode
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Tint
  * @extends Phaser.GameObjects.Components.Transform
@@ -84,7 +98,6 @@ var Text = new Class({
         Components.Mask,
         Components.Origin,
         Components.Pipeline,
-        Components.ScaleMode,
         Components.ScrollFactor,
         Components.Tint,
         Components.Transform,
@@ -138,7 +151,7 @@ var Text = new Class({
          * Manages the style of this Text object.
          *
          * @name Phaser.GameObjects.Text#style
-         * @type {Phaser.GameObjects.Text.TextStyle}
+         * @type {Phaser.GameObjects.TextStyle}
          * @since 3.0.0
          */
         this.style = new TextStyle(this, style);
@@ -252,6 +265,14 @@ var Text = new Class({
 
         //  Set the resolution
         this.frame.source.resolution = this.style.resolution;
+
+        if (this.renderer && this.renderer.gl)
+        {
+            //  Clear the default 1x1 glTexture, as we override it later
+            this.renderer.deleteTexture(this.frame.source.glTexture);
+
+            this.frame.source.glTexture = null;
+        }
 
         this.initRTL();
 
@@ -511,7 +532,7 @@ var Text = new Class({
                     }
 
                     result += words[j] + ' ';
-                    spaceLeft = wordWrapWidth - wordWidth;
+                    spaceLeft = wordWrapWidth - wordWidthWithSpace;
                 }
                 else
                 {
@@ -621,6 +642,20 @@ var Text = new Class({
      *
      * If an object is given, the `fontFamily`, `fontSize` and `fontStyle`
      * properties of that object are set.
+     * 
+     * **Important:** If the font you wish to use has a space or digit in its name, such as
+     * 'Press Start 2P' or 'Roboto Condensed', then you _must_ put the font name in quotes:
+     * 
+     * ```javascript
+     * Text.setFont('"Roboto Condensed"');
+     * ```
+     * 
+     * Equally, if you wish to provide a list of fallback fonts, then you should ensure they are all
+     * quoted properly, too:
+     * 
+     * ```javascript
+     * Text.setFont('Verdana, "Times New Roman", Tahoma, serif');
+     * ```
      *
      * @method Phaser.GameObjects.Text#setFont
      * @since 3.0.0
@@ -636,6 +671,20 @@ var Text = new Class({
 
     /**
      * Set the font family.
+     * 
+     * **Important:** If the font you wish to use has a space or digit in its name, such as
+     * 'Press Start 2P' or 'Roboto Condensed', then you _must_ put the font name in quotes:
+     * 
+     * ```javascript
+     * Text.setFont('"Roboto Condensed"');
+     * ```
+     * 
+     * Equally, if you wish to provide a list of fallback fonts, then you should ensure they are all
+     * quoted properly, too:
+     * 
+     * ```javascript
+     * Text.setFont('Verdana, "Times New Roman", Tahoma, serif');
+     * ```
      *
      * @method Phaser.GameObjects.Text#setFontFamily
      * @since 3.0.0
@@ -713,18 +762,23 @@ var Text = new Class({
     },
 
     /**
-     * Set the text fill color.
+     * Set the fill style to be used by the Text object.
+     *
+     * This can be any valid CanvasRenderingContext2D fillStyle value, such as
+     * a color (in hex, rgb, rgba, hsl or named values), a gradient or a pattern.
+     *
+     * See the [MDN fillStyle docs](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillStyle) for more details.
      *
      * @method Phaser.GameObjects.Text#setFill
      * @since 3.0.0
      *
-     * @param {string} color - The text fill color.
+     * @param {(string|any)} color - The text fill style. Can be any valid CanvasRenderingContext `fillStyle` value.
      *
      * @return {Phaser.GameObjects.Text} This Text object.
      */
-    setFill: function (color)
+    setFill: function (fillStyle)
     {
-        return this.style.setFill(color);
+        return this.style.setFill(fillStyle);
     },
 
     /**
@@ -1071,10 +1125,18 @@ var Text = new Class({
         {
             this.width = w;
         }
+        else
+        {
+            this.width = style.fixedWidth;
+        }
 
         if (style.fixedHeight === 0)
         {
             this.height = h;
+        }
+        else
+        {
+            this.height = style.fixedHeight;
         }
 
         this.updateDisplayOrigin();
@@ -1168,7 +1230,7 @@ var Text = new Class({
 
         if (this.renderer.gl)
         {
-            this.frame.source.glTexture = this.renderer.canvasToTexture(canvas, this.frame.source.glTexture);
+            this.frame.source.glTexture = this.renderer.canvasToTexture(canvas, this.frame.source.glTexture, true);
 
             this.frame.glTexture = this.frame.source.glTexture;
         }
@@ -1218,7 +1280,7 @@ var Text = new Class({
      * @method Phaser.GameObjects.Text#toJSON
      * @since 3.0.0
      *
-     * @return {JSONGameObject} A JSON representation of the Text object.
+     * @return {Phaser.GameObjects.Types.JSONGameObject} A JSON representation of the Text object.
      */
     toJSON: function ()
     {
@@ -1261,6 +1323,30 @@ var Text = new Class({
 
         this.texture.destroy();
     }
+
+    /**
+     * The horizontal origin of this Game Object.
+     * The origin maps the relationship between the size and position of the Game Object.
+     * The default value is 0.5, meaning all Game Objects are positioned based on their center.
+     * Setting the value to 0 means the position now relates to the left of the Game Object.
+     *
+     * @name Phaser.GameObjects.Text#originX
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
+
+    /**
+     * The vertical origin of this Game Object.
+     * The origin maps the relationship between the size and position of the Game Object.
+     * The default value is 0.5, meaning all Game Objects are positioned based on their center.
+     * Setting the value to 0 means the position now relates to the top of the Game Object.
+     *
+     * @name Phaser.GameObjects.Text#originY
+     * @type {number}
+     * @default 0
+     * @since 3.0.0
+     */
 
 });
 

@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -14,8 +14,7 @@
  * @private
  * @since 3.0.0
  *
- * @param {(integer|array)} indexes - Either a single tile index, or an array of tile indexes to have a
- * collision callback set for.
+ * @param {(integer|array)} indexes - Either a single tile index, or an array of tile indexes to have a collision callback set for.
  * @param {function} callback - The callback that will be invoked when the tile is collided with.
  * @param {object} callbackContext - The context under which the callback is called.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.

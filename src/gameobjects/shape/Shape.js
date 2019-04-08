@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -16,7 +16,7 @@ var Line = require('../../geom/line/Line');
  *
  * @class Shape
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.13.0
  *
@@ -28,7 +28,6 @@ var Line = require('../../geom/line/Line');
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.ScaleMode
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
@@ -50,7 +49,6 @@ var Shape = new Class({
         Components.Mask,
         Components.Origin,
         Components.Pipeline,
-        Components.ScaleMode,
         Components.ScrollFactor,
         Components.Transform,
         Components.Visible
@@ -231,6 +229,7 @@ var Shape = new Class({
      * @method Phaser.GameObjects.Shape#setStrokeStyle
      * @since 3.13.0
      * 
+     * @param {number} [lineWidth] - The width of line to stroke with. If not provided or undefined the Shape will not be stroked.
      * @param {number} [color] - The color used to stroke this shape. If not provided the Shape will not be stroked.
      * @param {number} [alpha=1] - The alpha value used when stroking this shape, if a stroke color is given.
      *

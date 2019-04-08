@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -18,10 +18,10 @@ var MultiFile = require('../MultiFile.js');
  * @property {string} key - The key of the file. Must be unique within both the Loader and the Texture Manager.
  * @property {string} [atlasURL] - The absolute or relative URL to load the multi atlas json file from. Or, a well formed JSON object.
  * @property {string} [atlasExtension='json'] - The default file extension to use for the atlas json if no url is provided.
- * @property {XHRSettingsObject} [atlasXhrSettings] - Extra XHR Settings specifically for the atlas json file.
+ * @property {Phaser.Loader.Types.XHRSettingsObject} [atlasXhrSettings] - Extra XHR Settings specifically for the atlas json file.
  * @property {string} [path] - Optional path to use when loading the textures defined in the atlas data.
  * @property {string} [baseURL] - Optional Base URL to use when loading the textures defined in the atlas data.
- * @property {XHRSettingsObject} [textureXhrSettings] - Extra XHR Settings specifically for the texture files.
+ * @property {Phaser.Loader.Types.XHRSettingsObject} [textureXhrSettings] - Extra XHR Settings specifically for the texture files.
  */
 
 /**
@@ -34,7 +34,7 @@ var MultiFile = require('../MultiFile.js');
  *
  * @class MultiAtlasFile
  * @extends Phaser.Loader.MultiFile
- * @memberOf Phaser.Loader.FileTypes
+ * @memberof Phaser.Loader.FileTypes
  * @constructor
  * @since 3.7.0
  *
@@ -43,8 +43,8 @@ var MultiFile = require('../MultiFile.js');
  * @param {string} [atlasURL] - The absolute or relative URL to load the multi atlas json file from.
  * @param {string} [path] - Optional path to use when loading the textures defined in the atlas data.
  * @param {string} [baseURL] - Optional Base URL to use when loading the textures defined in the atlas data.
- * @param {XHRSettingsObject} [atlasXhrSettings] - Extra XHR Settings specifically for the atlas json file.
- * @param {XHRSettingsObject} [textureXhrSettings] - Extra XHR Settings specifically for the texture files.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [atlasXhrSettings] - Extra XHR Settings specifically for the atlas json file.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [textureXhrSettings] - Extra XHR Settings specifically for the texture files.
  */
 var MultiAtlasFile = new Class({
 
@@ -78,7 +78,7 @@ var MultiAtlasFile = new Class({
     /**
      * Called by each File when it finishes loading.
      *
-     * @method Phaser.Loader.MultiFile#onFileComplete
+     * @method Phaser.Loader.FileTypes.MultiAtlasFile#onFileComplete
      * @since 3.7.0
      *
      * @param {Phaser.Loader.File} file - The File that has completed processing.
@@ -151,7 +151,7 @@ var MultiAtlasFile = new Class({
     /**
      * Adds this file to its target cache upon successful loading and processing.
      *
-     * @method Phaser.Loader.MultiFile#addToCache
+     * @method Phaser.Loader.FileTypes.MultiAtlasFile#addToCache
      * @since 3.7.0
      */
     addToCache: function ()
@@ -296,7 +296,7 @@ var MultiAtlasFile = new Class({
  * @param {string} [atlasURL] - The absolute or relative URL to load the texture atlas json data file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
  * @param {string} [path] - Optional path to use when loading the textures defined in the atlas data.
  * @param {string} [baseURL] - Optional Base URL to use when loading the textures defined in the atlas data.
- * @param {XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the atlas json file. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [atlasXhrSettings] - An XHR Settings configuration object for the atlas json file. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */

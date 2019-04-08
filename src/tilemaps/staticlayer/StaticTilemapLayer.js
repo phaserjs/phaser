@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -25,7 +25,7 @@ var Utils = require('../../renderer/webgl/Utils');
  *
  * @class StaticTilemapLayer
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.Tilemaps
+ * @memberof Phaser.Tilemaps
  * @constructor
  * @since 3.0.0
  *
@@ -37,7 +37,6 @@ var Utils = require('../../renderer/webgl/Utils');
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.ScaleMode
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
  * @extends Phaser.GameObjects.Components.ScrollFactor
@@ -62,7 +61,6 @@ var StaticTilemapLayer = new Class({
         Components.GetBounds,
         Components.Origin,
         Components.Pipeline,
-        Components.ScaleMode,
         Components.Transform,
         Components.Visible,
         Components.ScrollFactor,
@@ -80,7 +78,7 @@ var StaticTilemapLayer = new Class({
          *
          * @name Phaser.Tilemaps.StaticTilemapLayer#isTilemap
          * @type {boolean}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.isTilemap = true;
@@ -161,7 +159,7 @@ var StaticTilemapLayer = new Class({
          *
          * @name Phaser.Tilemaps.StaticTilemapLayer#tilesDrawn
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.12.0
          */
         this.tilesDrawn = 0;
@@ -173,7 +171,7 @@ var StaticTilemapLayer = new Class({
          *
          * @name Phaser.Tilemaps.StaticTilemapLayer#tilesTotal
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.12.0
          */
         this.tilesTotal = this.layer.width * this.layer.height;
@@ -215,9 +213,9 @@ var StaticTilemapLayer = new Class({
          *
          * It will be sent 3 arguments:
          *
-         * 1) The Phaser.Tilemaps.LayerData object for this Layer
-         * 2) The Camera that is culling the layer. You can check its `dirty` property to see if it has changed since the last cull.
-         * 3) A reference to the `culledTiles` array, which should be used to store the tiles you want rendered.
+         * 1. The Phaser.Tilemaps.LayerData object for this Layer
+         * 2. The Camera that is culling the layer. You can check its `dirty` property to see if it has changed since the last cull.
+         * 3. A reference to the `culledTiles` array, which should be used to store the tiles you want rendered.
          *
          * See the `TilemapComponents.CullTiles` source code for details on implementing your own culling system.
          *
@@ -355,7 +353,7 @@ var StaticTilemapLayer = new Class({
         this.setAlpha(this.layer.alpha);
         this.setPosition(x, y);
         this.setOrigin();
-        this.setSize(this.layer.tileWidth * this.layer.width, this.layer.tileHeight * this.layer.height);
+        this.setSize(tilemap.tileWidth * this.layer.width, tilemap.tileHeight * this.layer.height);
 
         this.updateVBOData();
 
@@ -596,8 +594,8 @@ var StaticTilemapLayer = new Class({
      * @param {integer} vOffset - The vertex offset.
      * @param {any} tile - The tile being rendered.
      * @param {any} tileset - The tileset being used for rendering.
-     * @param {integer} width - The width of the layer.
-     * @param {integer} height - The height of the layer.
+     * @param {integer} width - The width of the tileset image in pixels.
+     * @param {integer} height - The height of the tileset image in pixels.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera the layer is being rendered with.
      * @param {integer} tilesetIndex - The tileset index.
      *
@@ -612,18 +610,18 @@ var StaticTilemapLayer = new Class({
             return vOffset;
         }
 
-        var u0 = texCoords.x / width;
-        var v0 = texCoords.y / height;
-        var u1 = (texCoords.x + tile.width) / width;
-        var v1 = (texCoords.y + tile.height) / height;
-
-        var matrix = this._tempMatrix;
-
-        var tileWidth = tile.width;
-        var tileHeight = tile.height;
+        var tileWidth = tileset.tileWidth;
+        var tileHeight = tileset.tileHeight;
 
         var halfTileWidth = tileWidth / 2;
         var halfTileHeight = tileHeight / 2;
+
+        var u0 = texCoords.x / width;
+        var v0 = texCoords.y / height;
+        var u1 = (texCoords.x + tileWidth) / width;
+        var v1 = (texCoords.y + tileHeight) / height;
+
+        var matrix = this._tempMatrix;
 
         var x = -halfTileWidth;
         var y = -halfTileHeight;
@@ -631,13 +629,13 @@ var StaticTilemapLayer = new Class({
         if (tile.flipX)
         {
             tileWidth *= -1;
-            x += tile.width;
+            x += tileset.tileWidth;
         }
 
         if (tile.flipY)
         {
             tileHeight *= -1;
-            y += tile.height;
+            y += tileset.tileHeight;
         }
 
         var xw = x + tileWidth;
@@ -661,17 +659,17 @@ var StaticTilemapLayer = new Class({
 
         if (camera.roundPixels)
         {
-            tx0 |= 0;
-            ty0 |= 0;
+            tx0 = Math.round(tx0);
+            ty0 = Math.round(ty0);
 
-            tx1 |= 0;
-            ty1 |= 0;
+            tx1 = Math.round(tx1);
+            ty1 = Math.round(ty1);
 
-            tx2 |= 0;
-            ty2 |= 0;
+            tx2 = Math.round(tx2);
+            ty2 = Math.round(ty2);
 
-            tx3 |= 0;
-            ty3 |= 0;
+            tx3 = Math.round(tx3);
+            ty3 = Math.round(ty3);
         }
 
         var vertexViewF32 = this.vertexViewF32[tilesetIndex];
@@ -799,10 +797,10 @@ var StaticTilemapLayer = new Class({
      * @method Phaser.Tilemaps.StaticTilemapLayer#calculateFacesWithin
      * @since 3.0.0
      *
-     * @param {integer} [tileX=0] - [description]
-     * @param {integer} [tileY=0] - [description]
-     * @param {integer} [width=max width based on tileX] - [description]
-     * @param {integer} [height=max height based on tileY] - [description]
+     * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
+     * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
+     * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
      *
      * @return {Phaser.Tilemaps.StaticTilemapLayer} This Tilemap Layer object.
      */
@@ -939,17 +937,11 @@ var StaticTilemapLayer = new Class({
      * @param {function} callback - The callback. Each tile in the given area will be passed to this
      * callback as the first and only parameter.
      * @param {object} [context] - The context under which the callback should be run.
-     * @param {integer} [tileX=0] - [description]
-     * @param {integer} [tileY=0] - [description]
-     * @param {integer} [width=max width based on tileX] - [description]
-     * @param {integer} [height=max height based on tileY] - [description]
-     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
-     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
-     * -1 for an index.
-     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide
-     * on at least one side.
-     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
-     * have at least one interesting face.
+     * @param {integer} [tileX=0] - The left most tile index (in tile coordinates) to use as the origin of the area to filter.
+     * @param {integer} [tileY=0] - The topmost tile index (in tile coordinates) to use as the origin of the area to filter.
+     * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
+     * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {Phaser.Tilemaps.Types.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      *
      * @return {?Phaser.Tilemaps.Tile}
      */
@@ -970,17 +962,11 @@ var StaticTilemapLayer = new Class({
      * callback as the first and only parameter. The callback should return true for tiles that pass the
      * filter.
      * @param {object} [context] - The context under which the callback should be run.
-     * @param {integer} [tileX=0] - [description]
-     * @param {integer} [tileY=0] - [description]
-     * @param {integer} [width=max width based on tileX] - [description]
-     * @param {integer} [height=max height based on tileY] - [description]
-     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
-     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
-     * -1 for an index.
-     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide
-     * on at least one side.
-     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
-     * have at least one interesting face.
+     * @param {integer} [tileX=0] - The leftmost tile index (in tile coordinates) to use as the origin of the area to filter.
+     * @param {integer} [tileY=0] - The topmost tile index (in tile coordinates) to use as the origin of the area to filter.
+     * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
+     * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {Phaser.Tilemaps.Types.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      *
      * @return {Phaser.Tilemaps.Tile[]} An array of Tile objects.
      */
@@ -999,17 +985,11 @@ var StaticTilemapLayer = new Class({
      * @param {function} callback - The callback. Each tile in the given area will be passed to this
      * callback as the first and only parameter.
      * @param {object} [context] - The context under which the callback should be run.
-     * @param {integer} [tileX=0] - [description]
-     * @param {integer} [tileY=0] - [description]
-     * @param {integer} [width=max width based on tileX] - [description]
-     * @param {integer} [height=max height based on tileY] - [description]
-     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
-     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
-     * -1 for an index.
-     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide
-     * on at least one side.
-     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
-     * have at least one interesting face.
+     * @param {integer} [tileX=0] - The leftmost tile index (in tile coordinates) to use as the origin of the area to filter.
+     * @param {integer} [tileY=0] - The topmost tile index (in tile coordinates) to use as the origin of the area to filter.
+     * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
+     * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {Phaser.Tilemaps.Types.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      *
      * @return {Phaser.Tilemaps.StaticTilemapLayer} This Tilemap Layer object.
      */
@@ -1048,7 +1028,7 @@ var StaticTilemapLayer = new Class({
      * @param {number} worldY - Y position to get the tile from (given in pixels)
      * @param {boolean} [nonNull=false] - If true, function won't return null for empty tiles, but a Tile
      * object with an index of -1.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
      *
      * @return {Phaser.Tilemaps.Tile} The tile at the given coordinates or null if no tile was found or the coordinates
      * were invalid.
@@ -1064,17 +1044,11 @@ var StaticTilemapLayer = new Class({
      * @method Phaser.Tilemaps.StaticTilemapLayer#getTilesWithin
      * @since 3.0.0
      *
-     * @param {integer} [tileX=0] - [description]
-     * @param {integer} [tileY=0] - [description]
-     * @param {integer} [width=max width based on tileX] - [description]
-     * @param {integer} [height=max height based on tileY] - [description]
-     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
-     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
-     * -1 for an index.
-     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on
-     * at least one side.
-     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
-     * have at least one interesting face.
+     * @param {integer} [tileX=0] - The leftmost tile index (in tile coordinates) to use as the origin of the area.
+     * @param {integer} [tileY=0] - The topmost tile index (in tile coordinates) to use as the origin of the area.
+     * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
+     * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
+     * @param {Phaser.Tilemaps.Types.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      *
      * @return {Phaser.Tilemaps.Tile[]} An array of Tile objects.
      */
@@ -1089,18 +1063,12 @@ var StaticTilemapLayer = new Class({
      * @method Phaser.Tilemaps.StaticTilemapLayer#getTilesWithinWorldXY
      * @since 3.0.0
      *
-     * @param {number} worldX - [description]
-     * @param {number} worldY - [description]
-     * @param {number} width - [description]
-     * @param {number} height - [description]
-     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
-     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
-     * -1 for an index.
-     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on
-     * at least one side.
-     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
-     * have at least one interesting face.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+     * @param {number} worldX - The leftmost tile index (in tile coordinates) to use as the origin of the area to filter.
+     * @param {number} worldY - The topmost tile index (in tile coordinates) to use as the origin of the area to filter.
+     * @param {number} width - How many tiles wide from the `tileX` index the area will be.
+     * @param {number} height - How many tiles high from the `tileY` index the area will be.
+     * @param {Phaser.Tilemaps.Types.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when factoring in which tiles to return.
      *
      * @return {Phaser.Tilemaps.Tile[]} An array of Tile objects.
      */
@@ -1117,14 +1085,8 @@ var StaticTilemapLayer = new Class({
      * @since 3.0.0
      *
      * @param {(Phaser.Geom.Circle|Phaser.Geom.Line|Phaser.Geom.Rectangle|Phaser.Geom.Triangle)} shape - A shape in world (pixel) coordinates
-     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
-     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have
-     * -1 for an index.
-     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on
-     * at least one side.
-     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that
-     * have at least one interesting face.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+     * @param {Phaser.Tilemaps.Types.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
      *
      * @return {Phaser.Tilemaps.Tile[]} An array of Tile objects.
      */
@@ -1140,8 +1102,8 @@ var StaticTilemapLayer = new Class({
      * @method Phaser.Tilemaps.StaticTilemapLayer#hasTileAt
      * @since 3.0.0
      *
-     * @param {integer} tileX - [description]
-     * @param {integer} tileY - [description]
+     * @param {integer} tileX - X position to get the tile from in tile coordinates.
+     * @param {integer} tileY - Y position to get the tile from in tile coordinates.
      *
      * @return {boolean}
      */
@@ -1157,9 +1119,9 @@ var StaticTilemapLayer = new Class({
      * @method Phaser.Tilemaps.StaticTilemapLayer#hasTileAtWorldXY
      * @since 3.0.0
      *
-     * @param {number} worldX - [description]
-     * @param {number} worldY - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+     * @param {number} worldX - The X coordinate of the world position.
+     * @param {number} worldY - The Y coordinate of the world position.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
      *
      * @return {boolean}
      */
@@ -1178,13 +1140,7 @@ var StaticTilemapLayer = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Graphics} graphics - The target Graphics object to draw upon.
-     * @param {object} styleConfig - An object specifying the colors to use for the debug drawing.
-     * @param {?Color} [styleConfig.tileColor=blue] - Color to use for drawing a filled rectangle at
-     * non-colliding tile locations. If set to null, non-colliding tiles will not be drawn.
-     * @param {?Color} [styleConfig.collidingTileColor=orange] - Color to use for drawing a filled
-     * rectangle at colliding tile locations. If set to null, colliding tiles will not be drawn.
-     * @param {?Color} [styleConfig.faceColor=grey] - Color to use for drawing a line at interesting
-     * tile faces. If set to null, interesting tile faces will not be drawn.
+     * @param {Phaser.Tilemaps.Types.StyleConfig} styleConfig - An object specifying the colors to use for the debug drawing.
      *
      * @return {Phaser.Tilemaps.StaticTilemapLayer} This Tilemap Layer object.
      */
@@ -1348,10 +1304,10 @@ var StaticTilemapLayer = new Class({
      * @method Phaser.Tilemaps.StaticTilemapLayer#setTileLocationCallback
      * @since 3.0.0
      *
-     * @param {integer} tileX - [description]
-     * @param {integer} tileY - [description]
-     * @param {integer} width - [description]
-     * @param {integer} height - [description]
+     * @param {integer} tileX - The leftmost tile index (in tile coordinates) to use as the origin of the area.
+     * @param {integer} tileY - The topmost tile index (in tile coordinates) to use as the origin of the area.
+     * @param {integer} width - How many tiles wide from the `tileX` index the area will be.
+     * @param {integer} height - How many tiles tall from the `tileY` index the area will be.
      * @param {function} callback - The callback that will be invoked when the tile is collided with.
      * @param {object} [callbackContext] - The context under which the callback is called.
      *
@@ -1371,8 +1327,8 @@ var StaticTilemapLayer = new Class({
      * @method Phaser.Tilemaps.StaticTilemapLayer#tileToWorldX
      * @since 3.0.0
      *
-     * @param {integer} tileX - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+     * @param {integer} tileX - The X coordinate, in tile coordinates.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the world values from the tile index.
      *
      * @return {number}
      */
@@ -1388,8 +1344,8 @@ var StaticTilemapLayer = new Class({
      * @method Phaser.Tilemaps.StaticTilemapLayer#tileToWorldY
      * @since 3.0.0
      *
-     * @param {integer} tileY - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+     * @param {integer} tileY - The Y coordinate, in tile coordinates.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the world values from the tile index.
      *
      * @return {number}
      */
@@ -1406,10 +1362,10 @@ var StaticTilemapLayer = new Class({
      * @method Phaser.Tilemaps.StaticTilemapLayer#tileToWorldXY
      * @since 3.0.0
      *
-     * @param {integer} tileX - [description]
-     * @param {integer} tileY - [description]
-     * @param {Phaser.Math.Vector2} [point] - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+     * @param {integer} tileX - The X coordinate, in tile coordinates.
+     * @param {integer} tileY - The Y coordinate, in tile coordinates.
+     * @param {Phaser.Math.Vector2} [point] - A Vector2 to store the coordinates in. If not given, a new Vector2 is created.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the world values from the tile index.
      *
      * @return {Phaser.Math.Vector2}
      */
@@ -1425,10 +1381,10 @@ var StaticTilemapLayer = new Class({
      * @method Phaser.Tilemaps.StaticTilemapLayer#worldToTileX
      * @since 3.0.0
      *
-     * @param {number} worldX - [description]
+     * @param {number} worldX - The X coordinate, in world pixels.
      * @param {boolean} [snapToFloor=true] - Whether or not to round the tile coordinate down to the
      * nearest integer.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.]
      *
      * @return {number}
      */
@@ -1444,10 +1400,10 @@ var StaticTilemapLayer = new Class({
      * @method Phaser.Tilemaps.StaticTilemapLayer#worldToTileY
      * @since 3.0.0
      *
-     * @param {number} worldY - [description]
+     * @param {number} worldY - The Y coordinate, in world pixels.
      * @param {boolean} [snapToFloor=true] - Whether or not to round the tile coordinate down to the
      * nearest integer.
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
      *
      * @return {number}
      */
@@ -1464,12 +1420,12 @@ var StaticTilemapLayer = new Class({
      * @method Phaser.Tilemaps.StaticTilemapLayer#worldToTileXY
      * @since 3.0.0
      *
-     * @param {number} worldX - [description]
-     * @param {number} worldY - [description]
+     * @param {number} worldX - The X coordinate, in world pixels.
+     * @param {number} worldY - The Y coordinate, in world pixels.
      * @param {boolean} [snapToFloor=true] - Whether or not to round the tile coordinate down to the
      * nearest integer.
-     * @param {Phaser.Math.Vector2} [point] - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+     * @param {Phaser.Math.Vector2} [point] - A Vector2 to store the coordinates in. If not given, a new Vector2 is created.
+     * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
      *
      * @return {Phaser.Math.Vector2}
      */

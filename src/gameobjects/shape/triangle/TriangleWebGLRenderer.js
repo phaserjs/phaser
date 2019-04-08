@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -73,6 +73,8 @@ var TriangleWebGLRenderer = function (renderer, src, interpolationPercentage, ca
         var y2 = src.geom.y2 - dy;
         var x3 = src.geom.x3 - dx;
         var y3 = src.geom.y3 - dy;
+
+        pipeline.setTexture2D();
 
         pipeline.batchFillTriangle(
             x1,

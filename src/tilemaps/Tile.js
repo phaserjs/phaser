@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -15,7 +15,7 @@ var Rectangle = require('../geom/rectangle');
  * scale or layer position.
  *
  * @class Tile
- * @memberOf Phaser.Tilemaps
+ * @memberof Phaser.Tilemaps
  * @constructor
  * @since 3.0.0
  *
@@ -151,7 +151,7 @@ var Tile = new Class({
          * Tile specific properties. These usually come from Tiled.
          *
          * @name Phaser.Tilemaps.Tile#properties
-         * @type {object}
+         * @type {any}
          * @since 3.0.0
          */
         this.properties = {};
@@ -470,7 +470,7 @@ var Tile = new Class({
      */
     getCenterX: function (camera)
     {
-        return this.getLeft(camera) + this.width / 2;
+        return (this.getLeft(camera) + this.getRight(camera)) / 2;
     },
 
     /**
@@ -486,7 +486,7 @@ var Tile = new Class({
      */
     getCenterY: function (camera)
     {
-        return this.getTop(camera) + this.height / 2;
+        return (this.getTop(camera) + this.getBottom(camera)) / 2;
     },
 
     /**
@@ -710,7 +710,9 @@ var Tile = new Class({
         // bottom left, while the Phaser renderer assumes the origin is the top left. The y
         // coordinate needs to be adjusted by the difference.
         this.pixelX = this.x * this.baseWidth;
-        this.pixelY = this.y * this.baseHeight - (this.height - this.baseHeight);
+        this.pixelY = this.y * this.baseHeight;
+
+        // this.pixelY = this.y * this.baseHeight - (this.height - this.baseHeight);
 
         return this;
     },
@@ -720,7 +722,7 @@ var Tile = new Class({
      *
      * @name Phaser.Tilemaps.Tile#canCollide
      * @type {boolean}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     canCollide: {
@@ -735,7 +737,7 @@ var Tile = new Class({
      *
      * @name Phaser.Tilemaps.Tile#collides
      * @type {boolean}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     collides: {
@@ -750,7 +752,7 @@ var Tile = new Class({
      *
      * @name Phaser.Tilemaps.Tile#hasInterestingFace
      * @type {boolean}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     hasInterestingFace: {
@@ -761,20 +763,34 @@ var Tile = new Class({
     },
 
     /**
-     * The tileset that contains this Tile. This will only return null if accessed from a LayerData
-     * instance before the tile is placed within a StaticTilemapLayer or DynamicTilemapLayer.
+     * The tileset that contains this Tile. This is null if accessed from a LayerData instance
+     * before the tile is placed in a StaticTilemapLayer or DynamicTilemapLayer, or if the tile has
+     * an index that doesn't correspond to any of the map's tilesets.
      *
      * @name Phaser.Tilemaps.Tile#tileset
      * @type {?Phaser.Tilemaps.Tileset}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     tileset: {
+
         get: function ()
         {
-            var tilemapLayer = this.tilemapLayer;
-            return tilemapLayer ? tilemapLayer.tileset : null;
+            var tilemapLayer = this.layer.tilemapLayer;
+
+            if (tilemapLayer)
+            {
+                var tileset = tilemapLayer.gidMap[this.index];
+
+                if (tileset)
+                {
+                    return tileset;
+                }
+            }
+
+            return null;
         }
+
     },
 
     /**
@@ -784,7 +800,7 @@ var Tile = new Class({
      *
      * @name Phaser.Tilemaps.Tile#tilemapLayer
      * @type {?Phaser.Tilemaps.StaticTilemapLayer|Phaser.Tilemaps.DynamicTilemapLayer}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     tilemapLayer: {
@@ -800,7 +816,7 @@ var Tile = new Class({
      *
      * @name Phaser.Tilemaps.Tile#tilemap
      * @type {?Phaser.Tilemaps.Tilemap}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     tilemap: {

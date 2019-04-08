@@ -1,31 +1,10 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Class = require('../../../utils/Class');
-
-/**
- * @callback DeathZoneSourceCallback
- *
- * @param {number} x - The x coordinate of the particle to check against this source area.
- * @param {number} y - The y coordinate of the particle to check against this source area.
- *
- * @return {boolean} - True if the coordinates are within the source area.
- */
-
-/**
- * @typedef {object} DeathZoneSource
- *
- * @property {DeathZoneSourceCallback} contains
- *
- * @see Phaser.Geom.Circle
- * @see Phaser.Geom.Ellipse
- * @see Phaser.Geom.Polygon
- * @see Phaser.Geom.Rectangle
- * @see Phaser.Geom.Triangle
- */
 
 /**
  * @classdesc
@@ -37,11 +16,11 @@ var Class = require('../../../utils/Class');
  * object as long as it includes a `contains` method for which the Particles can be tested against.
  *
  * @class DeathZone
- * @memberOf Phaser.GameObjects.Particles.Zones
+ * @memberof Phaser.GameObjects.Particles.Zones
  * @constructor
  * @since 3.0.0
  *
- * @param {DeathZoneSource} source - An object instance that has a `contains` method that returns a boolean when given `x` and `y` arguments.
+ * @param {Phaser.GameObjects.Particles.Types.DeathZoneSource} source - An object instance that has a `contains` method that returns a boolean when given `x` and `y` arguments.
  * @param {boolean} killOnEnter - Should the Particle be killed when it enters the zone? `true` or leaves it? `false`
  */
 var DeathZone = new Class({
@@ -55,7 +34,7 @@ var DeathZone = new Class({
          * This could be a Geometry shape, such as `Phaser.Geom.Circle`, or your own custom object.
          *
          * @name Phaser.GameObjects.Particles.Zones.DeathZone#source
-         * @type {DeathZoneSource}
+         * @type {Phaser.GameObjects.Particles.Types.DeathZoneSource}
          * @since 3.0.0
          */
         this.source = source;

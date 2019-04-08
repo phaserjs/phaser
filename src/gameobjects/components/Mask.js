@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -10,7 +10,7 @@ var GeometryMask = require('../../display/mask/GeometryMask');
 /**
  * Provides methods used for getting and setting the mask of a Game Object.
  *
- * @name Phaser.GameObjects.Components.Mask
+ * @namespace Phaser.GameObjects.Components.Mask
  * @since 3.0.0
  */
 

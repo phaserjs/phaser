@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -12,7 +12,7 @@ var Class = require('../../utils/Class');
  * Axis objects are created automatically by the Gamepad as they are needed.
  *
  * @class Axis
- * @memberOf Phaser.Input.Gamepad
+ * @memberof Phaser.Input.Gamepad
  * @constructor
  * @since 3.0.0
  *

@@ -1,15 +1,17 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Class = require('../utils/Class');
 var CONST = require('./const');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
+var GameEvents = require('../core/events');
+var Keyboard = require('./keyboard/KeyboardManager');
 var Mouse = require('./mouse/MouseManager');
 var Pointer = require('./Pointer');
-var Rectangle = require('../geom/rectangle/Rectangle');
 var Touch = require('./touch/TouchManager');
 var TransformMatrix = require('../gameobjects/components/TransformMatrix');
 var TransformXY = require('../math/TransformXY');
@@ -29,7 +31,7 @@ var TransformXY = require('../math/TransformXY');
  * for dealing with all input events for a Scene.
  *
  * @class InputManager
- * @memberOf Phaser.Input
+ * @memberof Phaser.Input
  * @constructor
  * @since 3.0.0
  *
@@ -48,10 +50,20 @@ var InputManager = new Class({
          *
          * @name Phaser.Input.InputManager#game
          * @type {Phaser.Game}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.game = game;
+
+        /**
+         * A reference to the global Game Scale Manager.
+         * Used for all bounds checks and pointer scaling.
+         *
+         * @name Phaser.Input.InputManager#scaleManager
+         * @type {Phaser.Scale.ScaleManager}
+         * @since 3.16.0
+         */
+        this.scaleManager;
 
         /**
          * The Canvas that is used for all DOM event input listeners.
@@ -63,10 +75,10 @@ var InputManager = new Class({
         this.canvas;
 
         /**
-         * The Input Configuration object, as set in the Game Config.
+         * The Game Configuration object, as set during the game boot.
          *
          * @name Phaser.Input.InputManager#config
-         * @type {object}
+         * @type {Phaser.Core.Config}
          * @since 3.0.0
          */
         this.config = config;
@@ -96,6 +108,7 @@ var InputManager = new Class({
          * @name Phaser.Input.InputManager#queue
          * @type {array}
          * @default []
+         * @deprecated
          * @since 3.0.0
          */
         this.queue = [];
@@ -106,9 +119,21 @@ var InputManager = new Class({
          * @name Phaser.Input.InputManager#domCallbacks
          * @private
          * @type {object}
+         * @deprecated
          * @since 3.10.0
          */
         this.domCallbacks = { up: [], down: [], move: [], upOnce: [], downOnce: [], moveOnce: [] };
+
+        /**
+         * Are any mouse or touch pointers currently over the game canvas?
+         * This is updated automatically by the canvas over and out handlers.
+         *
+         * @name Phaser.Input.InputManager#isOver
+         * @type {boolean}
+         * @readonly
+         * @since 3.16.0
+         */
+        this.isOver = true;
 
         /**
          * Are there any up callbacks defined?
@@ -116,6 +141,7 @@ var InputManager = new Class({
          * @name Phaser.Input.InputManager#_hasUpCallback
          * @private
          * @type {boolean}
+         * @deprecated
          * @since 3.10.0
          */
         this._hasUpCallback = false;
@@ -126,6 +152,7 @@ var InputManager = new Class({
          * @name Phaser.Input.InputManager#_hasDownCallback
          * @private
          * @type {boolean}
+         * @deprecated
          * @since 3.10.0
          */
         this._hasDownCallback = false;
@@ -136,6 +163,7 @@ var InputManager = new Class({
          * @name Phaser.Input.InputManager#_hasMoveCallback
          * @private
          * @type {boolean}
+         * @deprecated
          * @since 3.10.0
          */
         this._hasMoveCallback = false;
@@ -176,6 +204,15 @@ var InputManager = new Class({
         this.defaultCursor = '';
 
         /**
+         * A reference to the Keyboard Manager class, if enabled via the `input.keyboard` Game Config property.
+         *
+         * @name Phaser.Input.InputManager#keyboard
+         * @type {?Phaser.Input.Keyboard.KeyboardManager}
+         * @since 3.16.0
+         */
+        this.keyboard = (config.inputKeyboard) ? new Keyboard(this) : null;
+
+        /**
          * A reference to the Mouse Manager class, if enabled via the `input.mouse` Game Config property.
          *
          * @name Phaser.Input.InputManager#mouse
@@ -214,7 +251,7 @@ var InputManager = new Class({
          *
          * @name Phaser.Input.InputManager#pointersTotal
          * @type {integer}
-         * @readOnly
+         * @readonly
          * @since 3.10.0
          */
         this.pointersTotal = config.inputActivePointers;
@@ -226,7 +263,11 @@ var InputManager = new Class({
 
         for (var i = 0; i <= this.pointersTotal; i++)
         {
-            this.pointers.push(new Pointer(this, i));
+            var pointer = new Pointer(this, i);
+
+            pointer.smoothFactor = config.inputSmoothFactor;
+
+            this.pointers.push(pointer);
         }
 
         /**
@@ -264,15 +305,6 @@ var InputManager = new Class({
         this.dirty = false;
 
         /**
-         * The Scale factor being applied to input coordinates.
-         *
-         * @name Phaser.Input.InputManager#scale
-         * @type { { x:number, y:number } }
-         * @since 3.0.0
-         */
-        this.scale = { x: 1, y: 1 };
-
-        /**
          * If the top-most Scene in the Scene List receives an input it will stop input from
          * propagating any lower down the scene list, i.e. if you have a UI Scene at the top
          * and click something on it, that click will not then be passed down to any other
@@ -297,19 +329,49 @@ var InputManager = new Class({
         this.ignoreEvents = false;
 
         /**
-         * The bounds of the Input Manager, used for pointer hit test calculations.
+         * Use the internal event queue or not?
+         * 
+         * Set this via the Game Config with the `inputQueue` property.
+         * 
+         * Phaser 3.15.1 and earlier used a event queue by default.
+         * 
+         * This was changed in version 3.16 to use an immediate-mode system.
+         * The previous queue based version remains and is left under this flag for backwards
+         * compatibility. This flag, along with the legacy system, will be removed in a future version.
          *
-         * @name Phaser.Input.InputManager#bounds
-         * @type {Phaser.Geom.Rectangle}
-         * @since 3.0.0
+         * @name Phaser.Input.InputManager#useQueue
+         * @type {boolean}
+         * @default false
+         * @since 3.16.0
          */
-        this.bounds = new Rectangle();
+        this.useQueue = config.inputQueue;
+
+        /**
+         * The time this Input Manager was last updated.
+         * This value is populated by the Game Step each frame.
+         *
+         * @name Phaser.Input.InputManager#time
+         * @type {number}
+         * @readonly
+         * @since 3.16.2
+         */
+        this.time = 0;
+
+        /**
+         * Internal property that tracks frame event state.
+         *
+         * @name Phaser.Input.InputManager#_updatedThisFrame
+         * @type {boolean}
+         * @private
+         * @since 3.16.0
+         */
+        this._updatedThisFrame = false;
 
         /**
          * A re-cycled point-like object to store hit test values in.
          *
          * @name Phaser.Input.InputManager#_tempPoint
-         * @type {{x:number,y:number}}
+         * @type {{x:number, y:number}}
          * @private
          * @since 3.0.0
          */
@@ -346,7 +408,7 @@ var InputManager = new Class({
          */
         this._tempMatrix2 = new TransformMatrix();
 
-        game.events.once('boot', this.boot, this);
+        game.events.once(GameEvents.BOOT, this.boot, this);
     },
 
     /**
@@ -355,79 +417,131 @@ var InputManager = new Class({
      *
      * @method Phaser.Input.InputManager#boot
      * @protected
+     * @fires Phaser.Input.Events#MANAGER_BOOT
      * @since 3.0.0
      */
     boot: function ()
     {
         this.canvas = this.game.canvas;
 
-        this.updateBounds();
+        this.scaleManager = this.game.scale;
 
-        this.events.emit('boot');
+        this.events.emit(Events.MANAGER_BOOT);
 
-        this.game.events.on('prestep', this.update, this);
-        this.game.events.on('poststep', this.postUpdate, this);
-        this.game.events.once('destroy', this.destroy, this);
+        if (this.useQueue)
+        {
+            this.game.events.on(GameEvents.PRE_STEP, this.legacyUpdate, this);
+        }
+        else
+        {
+            this.game.events.on(GameEvents.PRE_STEP, this.preStep, this);
+        }
+
+        this.game.events.on(GameEvents.POST_STEP, this.postUpdate, this);
+
+        this.game.events.once(GameEvents.DESTROY, this.destroy, this);
     },
 
     /**
-     * Updates the Input Manager bounds rectangle to match the bounding client rectangle of the
-     * canvas element being used to track input events.
+     * Internal canvas state change, called automatically by the Mouse Manager.
      *
-     * @method Phaser.Input.InputManager#updateBounds
-     * @since 3.0.0
-     */
-    updateBounds: function ()
-    {
-        var bounds = this.bounds;
-
-        var clientRect = this.canvas.getBoundingClientRect();
-
-        bounds.x = clientRect.left + window.pageXOffset - document.documentElement.clientLeft;
-        bounds.y = clientRect.top + window.pageYOffset - document.documentElement.clientTop;
-        bounds.width = clientRect.width;
-        bounds.height = clientRect.height;
-    },
-
-    /**
-     * Resizes the Input Manager internal values, including the bounds and scale factor.
+     * @method Phaser.Input.InputManager#setCanvasOver
+     * @fires Phaser.Input.Events#GAME_OVER
+     * @private
+     * @since 3.16.0
      *
-     * @method Phaser.Input.InputManager#resize
-     * @since 3.2.0
+     * @param {(MouseEvent|TouchEvent)} event - The DOM Event.
      */
-    resize: function ()
+    setCanvasOver: function (event)
     {
-        this.updateBounds();
+        this.isOver = true;
 
-        //  Game config size
-        var gw = this.game.config.width;
-        var gh = this.game.config.height;
-
-        //  Actual canvas size
-        var bw = this.bounds.width;
-        var bh = this.bounds.height;
-
-        //  Scale factor
-        this.scale.x = gw / bw;
-        this.scale.y = gh / bh;
+        this.events.emit(Events.GAME_OVER, event);
     },
 
     /**
-     * Internal update loop, called automatically by the Game Step.
+     * Internal canvas state change, called automatically by the Mouse Manager.
+     *
+     * @method Phaser.Input.InputManager#setCanvasOut
+     * @fires Phaser.Input.Events#GAME_OUT
+     * @private
+     * @since 3.16.0
+     *
+     * @param {(MouseEvent|TouchEvent)} event - The DOM Event.
+     */
+    setCanvasOut: function (event)
+    {
+        this.isOver = false;
+
+        this.events.emit(Events.GAME_OUT, event);
+    },
+
+    /**
+     * Internal update method, called automatically when a DOM input event is received.
      *
      * @method Phaser.Input.InputManager#update
      * @private
+     * @fires Phaser.Input.Events#MANAGER_UPDATE
      * @since 3.0.0
      *
      * @param {number} time - The time stamp value of this game step.
      */
     update: function (time)
     {
+        if (!this._updatedThisFrame)
+        {
+            this._setCursor = 0;
+    
+            this._updatedThisFrame = true;
+        }
+
+        this.events.emit(Events.MANAGER_UPDATE);
+    
+        this.ignoreEvents = false;
+
+        this.dirty = true;
+
+        var pointers = this.pointers;
+    
+        for (var i = 0; i < this.pointersTotal; i++)
+        {
+            pointers[i].reset(time);
+        }
+    },
+
+    /**
+     * Internal update, called automatically by the Game Step.
+     *
+     * @method Phaser.Input.InputManager#preStep
+     * @private
+     * @since 3.16.2
+     *
+     * @param {number} time - The time stamp value of this game step.
+     */
+    preStep: function (time)
+    {
+        this.time = time;
+    },
+
+    /**
+     * Internal update loop, called automatically by the Game Step when using the legacy event queue.
+     *
+     * @method Phaser.Input.InputManager#legacyUpdate
+     * @private
+     * @fires Phaser.Input.Events#MANAGER_UPDATE
+     * @since 3.16.0
+     *
+     * @param {number} time - The time stamp value of this game step.
+     */
+    legacyUpdate: function (time)
+    {
+        this.time = time;
+
         var i;
 
         this._setCursor = 0;
 
-        this.events.emit('update');
+        this.events.emit(Events.MANAGER_UPDATE);
 
         this.ignoreEvents = false;
 
@@ -439,20 +553,20 @@ var InputManager = new Class({
 
         for (i = 0; i < this.pointersTotal; i++)
         {
-            pointers[i].reset();
+            pointers[i].reset(time);
         }
 
         if (!this.enabled || len === 0)
         {
+            for (i = 0; i < this.pointersTotal; i++)
+            {
+                pointers[i].updateMotion();
+            }
+
             return;
         }
 
         this.dirty = true;
-
-        this.updateBounds();
-
-        this.scale.x = this.game.config.width / this.bounds.width;
-        this.scale.y = this.game.config.height / this.bounds.height;
 
         //  Clears the queue array, and also means we don't work on array data that could potentially
         //  be modified during the processing phase
@@ -491,10 +605,19 @@ var InputManager = new Class({
                     this.stopPointer(event, time);
                     break;
 
+                case CONST.TOUCH_CANCEL:
+                    this.cancelPointer(event, time);
+                    break;
+
                 case CONST.POINTER_LOCK_CHANGE:
-                    this.events.emit('pointerlockchange', event, this.mouse.locked);
+                    this.events.emit(Events.POINTERLOCK_CHANGE, event, this.mouse.locked);
                     break;
             }
+        }
+
+        for (i = 0; i < this.pointersTotal; i++)
+        {
+            pointers[i].updateMotion();
         }
     },
 
@@ -515,6 +638,10 @@ var InputManager = new Class({
         {
             this.canvas.style.cursor = this.defaultCursor;
         }
+
+        this.dirty = false;
+
+        this._updatedThisFrame = false;
     },
 
     /**
@@ -563,7 +690,7 @@ var InputManager = new Class({
      * @private
      * @since 3.10.0
      * 
-     * @param {Phaser.Input.InteractiveObject} interactiveObject - The Interactive Object that called this method.
+     * @param {Phaser.Input.Types.InteractiveObject} interactiveObject - The Interactive Object that called this method.
      */
     setCursor: function (interactiveObject)
     {
@@ -583,7 +710,7 @@ var InputManager = new Class({
      * @private
      * @since 3.10.0
      * 
-     * @param {Phaser.Input.InteractiveObject} interactiveObject - The Interactive Object that called this method.
+     * @param {Phaser.Input.Types.InteractiveObject} interactiveObject - The Interactive Object that called this method.
      */
     resetCursor: function (interactiveObject)
     {
@@ -606,10 +733,13 @@ var InputManager = new Class({
      *
      * @param {TouchEvent} event - The native DOM event to be processed.
      * @param {number} time - The time stamp value of this game step.
+     * 
+     * @return {Phaser.Input.Pointer[]} An array containing all the Pointer instances that were modified by this event.
      */
     startPointer: function (event, time)
     {
         var pointers = this.pointers;
+        var changed = [];
 
         for (var c = 0; c < event.changedTouches.length; c++)
         {
@@ -622,11 +752,17 @@ var InputManager = new Class({
                 if (!pointer.active)
                 {
                     pointer.touchstart(changedTouch, time);
+
                     this.activePointer = pointer;
+
+                    changed.push(pointer);
+
                     break;
                 }
             }
         }
+
+        return changed;
     },
 
     /**
@@ -638,10 +774,13 @@ var InputManager = new Class({
      *
      * @param {TouchEvent} event - The native DOM event to be processed.
      * @param {number} time - The time stamp value of this game step.
+     * 
+     * @return {Phaser.Input.Pointer[]} An array containing all the Pointer instances that were modified by this event.
      */
     updatePointer: function (event, time)
     {
         var pointers = this.pointers;
+        var changed = [];
 
         for (var c = 0; c < event.changedTouches.length; c++)
         {
@@ -654,11 +793,17 @@ var InputManager = new Class({
                 if (pointer.active && pointer.identifier === changedTouch.identifier)
                 {
                     pointer.touchmove(changedTouch, time);
+
                     this.activePointer = pointer;
+
+                    changed.push(pointer);
+
                     break;
                 }
             }
         }
+
+        return changed;
     },
 
     //  For touch end its a list of the touch points that have been removed from the surface
@@ -674,10 +819,13 @@ var InputManager = new Class({
      *
      * @param {TouchEvent} event - The native DOM event to be processed.
      * @param {number} time - The time stamp value of this game step.
+     * 
+     * @return {Phaser.Input.Pointer[]} An array containing all the Pointer instances that were modified by this event.
      */
     stopPointer: function (event, time)
     {
         var pointers = this.pointers;
+        var changed = [];
 
         for (var c = 0; c < event.changedTouches.length; c++)
         {
@@ -690,10 +838,54 @@ var InputManager = new Class({
                 if (pointer.active && pointer.identifier === changedTouch.identifier)
                 {
                     pointer.touchend(changedTouch, time);
+
+                    changed.push(pointer);
+
                     break;
                 }
             }
         }
+
+        return changed;
+    },
+
+    /**
+     * Called by the main update loop when a Touch Cancel Event is received.
+     *
+     * @method Phaser.Input.InputManager#cancelPointer
+     * @private
+     * @since 3.15.0
+     *
+     * @param {TouchEvent} event - The native DOM event to be processed.
+     * @param {number} time - The time stamp value of this game step.
+     * 
+     * @return {Phaser.Input.Pointer[]} An array containing all the Pointer instances that were modified by this event.
+     */
+    cancelPointer: function (event, time)
+    {
+        var pointers = this.pointers;
+        var changed = [];
+
+        for (var c = 0; c < event.changedTouches.length; c++)
+        {
+            var changedTouch = event.changedTouches[c];
+
+            for (var i = 1; i < this.pointersTotal; i++)
+            {
+                var pointer = pointers[i];
+
+                if (pointer.active && pointer.identifier === changedTouch.identifier)
+                {
+                    pointer.touchend(changedTouch, time);
+
+                    changed.push(pointer);
+
+                    break;
+                }
+            }
+        }
+
+        return changed;
     },
 
     /**
@@ -731,6 +923,8 @@ var InputManager = new Class({
 
             var pointer = new Pointer(this, id);
 
+            pointer.smoothFactor = this.config.inputSmoothFactor;
+
             this.pointers.push(pointer);
 
             this.pointersTotal++;
@@ -746,6 +940,7 @@ var InputManager = new Class({
      *
      * @method Phaser.Input.InputManager#processDomCallbacks
      * @private
+     * @deprecated
      * @since 3.10.0
      *
      * @param {array} once - The isOnce callbacks to invoke.
@@ -768,9 +963,33 @@ var InputManager = new Class({
             every[i](event);
         }
 
-        once = [];
-
         return (every.length > 0);
+    },
+
+    /**
+     * Internal method that gets a list of all the active Input Plugins in the game
+     * and updates each of them in turn, in reverse order (top to bottom), to allow
+     * for DOM top-level event handling simulation.
+     *
+     * @method Phaser.Input.InputManager#updateInputPlugins
+     * @since 3.16.0
+     *
+     * @param {number} time - The time value from the most recent Game step. Typically a high-resolution timer value, or Date.now().
+     * @param {number} delta - The delta value since the last frame. This is smoothed to avoid delta spikes by the TimeStep class.
+     */
+    updateInputPlugins: function (time, delta)
+    {
+        var scenes = this.game.scene.getScenes(true, true);
+
+        for (var i = 0; i < scenes.length; i++)
+        {
+            var scene = scenes[i];
+
+            if (scene.sys.input)
+            {
+                scene.sys.input.update(time, delta);
+            }
+        }
     },
 
     /**
@@ -785,13 +1004,31 @@ var InputManager = new Class({
      */
     queueTouchStart: function (event)
     {
-        this.queue.push(CONST.TOUCH_START, event);
-
-        if (this._hasDownCallback)
+        if (this.useQueue)
         {
-            var callbacks = this.domCallbacks;
+            this.queue.push(CONST.TOUCH_START, event);
 
-            this._hasDownCallback = this.processDomCallbacks(callbacks.downOnce, callbacks.down, event);
+            if (this._hasDownCallback)
+            {
+                var callbacks = this.domCallbacks;
+    
+                this._hasDownCallback = this.processDomCallbacks(callbacks.downOnce, callbacks.down, event);
+    
+                callbacks.downOnce = [];
+            }
+        }
+        else if (this.enabled)
+        {
+            this.update(event.timeStamp);
+
+            var changed = this.startPointer(event, event.timeStamp);
+
+            changed.forEach(function (pointer)
+            {
+                pointer.updateMotion();
+            });
+
+            this.updateInputPlugins(event.timeStamp, this.game.loop.delta);
         }
     },
 
@@ -807,13 +1044,31 @@ var InputManager = new Class({
      */
     queueTouchMove: function (event)
     {
-        this.queue.push(CONST.TOUCH_MOVE, event);
-
-        if (this._hasMoveCallback)
+        if (this.useQueue)
         {
-            var callbacks = this.domCallbacks;
+            this.queue.push(CONST.TOUCH_MOVE, event);
 
-            this._hasMoveCallback = this.processDomCallbacks(callbacks.moveOnce, callbacks.move, event);
+            if (this._hasMoveCallback)
+            {
+                var callbacks = this.domCallbacks;
+    
+                this._hasMoveCallback = this.processDomCallbacks(callbacks.moveOnce, callbacks.move, event);
+    
+                callbacks.moveOnce = [];
+            }
+        }
+        else if (this.enabled)
+        {
+            this.update(event.timeStamp);
+
+            var changed = this.updatePointer(event, event.timeStamp);
+
+            changed.forEach(function (pointer)
+            {
+                pointer.updateMotion();
+            });
+
+            this.updateInputPlugins(event.timeStamp, this.game.loop.delta);
         }
     },
 
@@ -829,13 +1084,62 @@ var InputManager = new Class({
      */
     queueTouchEnd: function (event)
     {
-        this.queue.push(CONST.TOUCH_END, event);
-
-        if (this._hasUpCallback)
+        if (this.useQueue)
         {
-            var callbacks = this.domCallbacks;
+            this.queue.push(CONST.TOUCH_END, event);
 
-            this._hasUpCallback = this.processDomCallbacks(callbacks.upOnce, callbacks.up, event);
+            if (this._hasUpCallback)
+            {
+                var callbacks = this.domCallbacks;
+    
+                this._hasUpCallback = this.processDomCallbacks(callbacks.upOnce, callbacks.up, event);
+    
+                callbacks.upOnce = [];
+            }
+        }
+        else if (this.enabled)
+        {
+            this.update(event.timeStamp);
+
+            var changed = this.stopPointer(event, event.timeStamp);
+
+            changed.forEach(function (pointer)
+            {
+                pointer.updateMotion();
+            });
+
+            this.updateInputPlugins(event.timeStamp, this.game.loop.delta);
+        }
+    },
+
+    /**
+     * Queues a touch cancel event, as passed in by the TouchManager.
+     * Also dispatches any DOM callbacks for this event.
+     *
+     * @method Phaser.Input.InputManager#queueTouchCancel
+     * @private
+     * @since 3.15.0
+     *
+     * @param {TouchEvent} event - The native DOM Touch event.
+     */
+    queueTouchCancel: function (event)
+    {
+        if (this.useQueue)
+        {
+            this.queue.push(CONST.TOUCH_CANCEL, event);
+        }
+        else if (this.enabled)
+        {
+            this.update(event.timeStamp);
+
+            var changed = this.cancelPointer(event, event.timeStamp);
+
+            changed.forEach(function (pointer)
+            {
+                pointer.updateMotion();
+            });
+
+            this.updateInputPlugins(event.timeStamp, this.game.loop.delta);
         }
     },
 
@@ -851,13 +1155,28 @@ var InputManager = new Class({
      */
     queueMouseDown: function (event)
     {
-        this.queue.push(CONST.MOUSE_DOWN, event);
-
-        if (this._hasDownCallback)
+        if (this.useQueue)
         {
-            var callbacks = this.domCallbacks;
+            this.queue.push(CONST.MOUSE_DOWN, event);
 
-            this._hasDownCallback = this.processDomCallbacks(callbacks.downOnce, callbacks.down, event);
+            if (this._hasDownCallback)
+            {
+                var callbacks = this.domCallbacks;
+
+                this._hasDownCallback = this.processDomCallbacks(callbacks.downOnce, callbacks.down, event);
+
+                callbacks.downOnce = [];
+            }
+        }
+        else if (this.enabled)
+        {
+            this.update(event.timeStamp);
+
+            this.mousePointer.down(event, event.timeStamp);
+
+            this.mousePointer.updateMotion();
+
+            this.updateInputPlugins(event.timeStamp, this.game.loop.delta);
         }
     },
 
@@ -873,13 +1192,28 @@ var InputManager = new Class({
      */
     queueMouseMove: function (event)
     {
-        this.queue.push(CONST.MOUSE_MOVE, event);
-
-        if (this._hasMoveCallback)
+        if (this.useQueue)
         {
-            var callbacks = this.domCallbacks;
+            this.queue.push(CONST.MOUSE_MOVE, event);
 
-            this._hasMoveCallback = this.processDomCallbacks(callbacks.moveOnce, callbacks.move, event);
+            if (this._hasMoveCallback)
+            {
+                var callbacks = this.domCallbacks;
+    
+                this._hasMoveCallback = this.processDomCallbacks(callbacks.moveOnce, callbacks.move, event);
+    
+                callbacks.moveOnce = [];
+            }
+        }
+        else if (this.enabled)
+        {
+            this.update(event.timeStamp);
+
+            this.mousePointer.move(event, event.timeStamp);
+
+            this.mousePointer.updateMotion();
+
+            this.updateInputPlugins(event.timeStamp, this.game.loop.delta);
         }
     },
 
@@ -895,17 +1229,36 @@ var InputManager = new Class({
      */
     queueMouseUp: function (event)
     {
-        this.queue.push(CONST.MOUSE_UP, event);
-
-        if (this._hasUpCallback)
+        if (this.useQueue)
         {
-            var callbacks = this.domCallbacks;
+            this.queue.push(CONST.MOUSE_UP, event);
 
-            this._hasUpCallback = this.processDomCallbacks(callbacks.upOnce, callbacks.up, event);
+            if (this._hasUpCallback)
+            {
+                var callbacks = this.domCallbacks;
+    
+                this._hasUpCallback = this.processDomCallbacks(callbacks.upOnce, callbacks.up, event);
+    
+                callbacks.upOnce = [];
+            }
+        }
+        else if (this.enabled)
+        {
+            this.update(event.timeStamp);
+
+            this.mousePointer.up(event, event.timeStamp);
+
+            this.mousePointer.updateMotion();
+
+            this.updateInputPlugins(event.timeStamp, this.game.loop.delta);
         }
     },
 
     /**
+     * **Note:** As of Phaser 3.16 this method is no longer required _unless_ you have set `input.queue = true`
+     * in your game config, to force it to use the legacy event queue system. This method is deprecated and
+     * will be removed in a future version.
+     * 
      * Adds a callback to be invoked whenever the native DOM `mouseup` or `touchend` events are received.
      * By setting the `isOnce` argument you can control if the callback is called once,
      * or every time the DOM event occurs.
@@ -928,6 +1281,7 @@ var InputManager = new Class({
      * solve.
      *
      * @method Phaser.Input.InputManager#addUpCallback
+     * @deprecated
      * @since 3.10.0
      *
      * @param {function} callback - The callback to be invoked on this dom event.
@@ -954,6 +1308,10 @@ var InputManager = new Class({
     },
 
     /**
+     * **Note:** As of Phaser 3.16 this method is no longer required _unless_ you have set `input.queue = true`
+     * in your game config, to force it to use the legacy event queue system. This method is deprecated and
+     * will be removed in a future version.
+     * 
      * Adds a callback to be invoked whenever the native DOM `mousedown` or `touchstart` events are received.
      * By setting the `isOnce` argument you can control if the callback is called once,
      * or every time the DOM event occurs.
@@ -976,6 +1334,7 @@ var InputManager = new Class({
      * solve.
      *
      * @method Phaser.Input.InputManager#addDownCallback
+     * @deprecated
      * @since 3.10.0
      *
      * @param {function} callback - The callback to be invoked on this dom event.
@@ -1002,6 +1361,10 @@ var InputManager = new Class({
     },
 
     /**
+     * **Note:** As of Phaser 3.16 this method is no longer required _unless_ you have set `input.queue = true`
+     * in your game config, to force it to use the legacy event queue system. This method is deprecated and
+     * will be removed in a future version.
+     * 
      * Adds a callback to be invoked whenever the native DOM `mousemove` or `touchmove` events are received.
      * By setting the `isOnce` argument you can control if the callback is called once,
      * or every time the DOM event occurs.
@@ -1024,6 +1387,7 @@ var InputManager = new Class({
      * solve.
      *
      * @method Phaser.Input.InputManager#addMoveCallback
+     * @deprecated
      * @since 3.10.0
      *
      * @param {function} callback - The callback to be invoked on this dom event.
@@ -1226,7 +1590,7 @@ var InputManager = new Class({
      * @method Phaser.Input.InputManager#pointWithinInteractiveObject
      * @since 3.0.0
      *
-     * @param {Phaser.Input.InteractiveObject} object - The Interactive Object to check against.
+     * @param {Phaser.Input.Types.InteractiveObject} object - The Interactive Object to check against.
      * @param {number} x - The translated x coordinate for the hit test.
      * @param {number} y - The translated y coordinate for the hit test.
      *
@@ -1258,97 +1622,35 @@ var InputManager = new Class({
      * @param {Phaser.Input.Pointer} pointer - The Pointer to transform the values for.
      * @param {number} pageX - The Page X value.
      * @param {number} pageY - The Page Y value.
+     * @param {boolean} wasMove - Are we transforming the Pointer from a move event, or an up / down event?
      */
-    transformPointer: function (pointer, pageX, pageY)
+    transformPointer: function (pointer, pageX, pageY, wasMove)
     {
-        //  Store the previous position
-        pointer.prevPosition.x = pointer.x;
-        pointer.prevPosition.y = pointer.y;
+        var p0 = pointer.position;
+        var p1 = pointer.prevPosition;
 
-        pointer.x = (pageX - this.bounds.left) * this.scale.x;
-        pointer.y = (pageY - this.bounds.top) * this.scale.y;
-    },
+        //  Store previous position
+        p1.x = p0.x;
+        p1.y = p0.y;
 
-    /**
-     * Transforms the pageX value into the scaled coordinate space of the Input Manager.
-     *
-     * @method Phaser.Input.InputManager#transformX
-     * @since 3.0.0
-     *
-     * @param {number} pageX - The DOM pageX value.
-     *
-     * @return {number} The translated value.
-     */
-    transformX: function (pageX)
-    {
-        return (pageX - this.bounds.left) * this.scale.x;
-    },
+        //  Translate coordinates
+        var x = this.scaleManager.transformX(pageX);
+        var y = this.scaleManager.transformY(pageY);
 
-    /**
-     * Transforms the pageY value into the scaled coordinate space of the Input Manager.
-     *
-     * @method Phaser.Input.InputManager#transformY
-     * @since 3.0.0
-     *
-     * @param {number} pageY - The DOM pageY value.
-     *
-     * @return {number} The translated value.
-     */
-    transformY: function (pageY)
-    {
-        return (pageY - this.bounds.top) * this.scale.y;
-    },
+        var a = pointer.smoothFactor;
 
-    /**
-     * Returns the left offset of the Input bounds.
-     *
-     * @method Phaser.Input.InputManager#getOffsetX
-     * @since 3.0.0
-     *
-     * @return {number} The left bounds value.
-     */
-    getOffsetX: function ()
-    {
-        return this.bounds.left;
-    },
-
-    /**
-     * Returns the top offset of the Input bounds.
-     *
-     * @method Phaser.Input.InputManager#getOffsetY
-     * @since 3.0.0
-     *
-     * @return {number} The top bounds value.
-     */
-    getOffsetY: function ()
-    {
-        return this.bounds.top;
-    },
-
-    /**
-     * Returns the horizontal Input Scale value.
-     *
-     * @method Phaser.Input.InputManager#getScaleX
-     * @since 3.0.0
-     *
-     * @return {number} The horizontal scale factor of the input.
-     */
-    getScaleX: function ()
-    {
-        return this.game.config.width / this.bounds.width;
-    },
-
-    /**
-     * Returns the vertical Input Scale value.
-     *
-     * @method Phaser.Input.InputManager#getScaleY
-     * @since 3.0.0
-     *
-     * @return {number} The vertical scale factor of the input.
-     */
-    getScaleY: function ()
-    {
-        return this.game.config.height / this.bounds.height;
+        if (!wasMove || a === 0)
+        {
+            //  Set immediately
+            p0.x = x;
+            p0.y = y;
+        }
+        else
+        {
+            //  Apply smoothing
+            p0.x = x * a + p1.x * (1 - a);
+            p0.y = y * a + p1.y * (1 - a);
+        }
     },
 
     /**
@@ -1362,6 +1664,11 @@ var InputManager = new Class({
     destroy: function ()
     {
         this.events.removeAllListeners();
+
+        if (this.keyboard)
+        {
+            this.keyboard.destroy();
+        }
 
         if (this.mouse)
         {

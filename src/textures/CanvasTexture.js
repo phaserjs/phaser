@@ -1,10 +1,11 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Class = require('../utils/Class');
+var Clamp = require('../math/Clamp');
 var Color = require('../display/color/Color');
 var IsSizePowerOfTwo = require('../math/pow2/IsSizePowerOfTwo');
 var Texture = require('./Texture');
@@ -31,7 +32,7 @@ var Texture = require('./Texture');
  *
  * @class CanvasTexture
  * @extends Phaser.Textures.Texture
- * @memberOf Phaser.Textures
+ * @memberof Phaser.Textures
  * @constructor
  * @since 3.7.0
  *
@@ -67,7 +68,7 @@ var CanvasTexture = new Class({
          * The source Canvas Element.
          *
          * @name Phaser.Textures.CanvasTexture#canvas
-         * @readOnly
+         * @readonly
          * @type {HTMLCanvasElement}
          * @since 3.7.0
          */
@@ -77,7 +78,7 @@ var CanvasTexture = new Class({
          * The 2D Canvas Rendering Context.
          *
          * @name Phaser.Textures.CanvasTexture#context
-         * @readOnly
+         * @readonly
          * @type {CanvasRenderingContext2D}
          * @since 3.7.0
          */
@@ -88,7 +89,7 @@ var CanvasTexture = new Class({
          * This property is read-only, if you wish to change it use the `setSize` method.
          *
          * @name Phaser.Textures.CanvasTexture#width
-         * @readOnly
+         * @readonly
          * @type {integer}
          * @since 3.7.0
          */
@@ -99,7 +100,7 @@ var CanvasTexture = new Class({
          * This property is read-only, if you wish to change it use the `setSize` method.
          *
          * @name Phaser.Textures.CanvasTexture#height
-         * @readOnly
+         * @readonly
          * @type {integer}
          * @since 3.7.0
          */
@@ -224,6 +225,148 @@ var CanvasTexture = new Class({
     },
 
     /**
+     * Draws the given texture frame to this CanvasTexture, then updates the internal
+     * ImageData buffer and arrays.
+     *
+     * @method Phaser.Textures.CanvasTexture#drawFrame
+     * @since 3.16.0
+     * 
+     * @param {string} key - The unique string-based key of the Texture.
+     * @param {(string|integer)} [frame] - The string-based name, or integer based index, of the Frame to get from the Texture.
+     * @param {integer} [x=0] - The x coordinate to draw the source at.
+     * @param {integer} [y=0] - The y coordinate to draw the source at.
+     * 
+     * @return {Phaser.Textures.CanvasTexture} This CanvasTexture.
+     */
+    drawFrame: function (key, frame, x, y)
+    {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+
+        var textureFrame = this.manager.getFrame(key, frame);
+
+        if (textureFrame)
+        {
+            var cd = textureFrame.canvasData;
+
+            var width = textureFrame.cutWidth;
+            var height = textureFrame.cutHeight;
+            var res = textureFrame.source.resolution;
+
+            this.context.drawImage(
+                textureFrame.source.image,
+                cd.x, cd.y,
+                width,
+                height,
+                x, y,
+                width / res,
+                height / res
+            );
+
+            return this.update();
+        }
+        else
+        {
+            return this;
+        }
+    },
+
+    /**
+     * Sets a pixel in the CanvasTexture to the given color and alpha values.
+     *
+     * This is an expensive operation to run in large quantities, so use sparingly.
+     *
+     * @method Phaser.Textures.CanvasTexture#setPixel
+     * @since 3.16.0
+     * 
+     * @param {integer} x - The x coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {integer} y - The y coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {integer} red - The red color value. A number between 0 and 255.
+     * @param {integer} green - The green color value. A number between 0 and 255.
+     * @param {integer} blue - The blue color value. A number between 0 and 255.
+     * @param {integer} [alpha=255] - The alpha value. A number between 0 and 255.
+     * 
+     * @return {this} This CanvasTexture.
+     */
+    setPixel: function (x, y, red, green, blue, alpha)
+    {
+        if (alpha === undefined) { alpha = 255; }
+
+        x = Math.abs(Math.floor(x));
+        y = Math.abs(Math.floor(y));
+
+        var index = this.getIndex(x, y);
+
+        if (index > -1)
+        {
+            var imageData = this.context.getImageData(x, y, 1, 1);
+
+            imageData.data[0] = red;
+            imageData.data[1] = green;
+            imageData.data[2] = blue;
+            imageData.data[3] = alpha;
+
+            this.context.putImageData(imageData, x, y);
+        }
+
+        return this;
+    },
+
+    /**
+     * Puts the ImageData into the context of this CanvasTexture at the given coordinates.
+     *
+     * @method Phaser.Textures.CanvasTexture#putData
+     * @since 3.16.0
+     * 
+     * @param {ImageData} imageData - The ImageData to put at the given location.
+     * @param {integer} x - The x coordinate to put the imageData. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {integer} y - The y coordinate to put the imageData. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {integer} [dirtyX=0] - Horizontal position (x coordinate) of the top-left corner from which the image data will be extracted.
+     * @param {integer} [dirtyY=0] - Vertical position (x coordinate) of the top-left corner from which the image data will be extracted.
+     * @param {integer} [dirtyWidth] - Width of the rectangle to be painted. Defaults to the width of the image data.
+     * @param {integer} [dirtyHeight] - Height of the rectangle to be painted. Defaults to the height of the image data.
+     * 
+     * @return {this} This CanvasTexture.
+     */
+    putData: function (imageData, x, y, dirtyX, dirtyY, dirtyWidth, dirtyHeight)
+    {
+        if (dirtyX === undefined) { dirtyX = 0; }
+        if (dirtyY === undefined) { dirtyY = 0; }
+        if (dirtyWidth === undefined) { dirtyWidth = imageData.width; }
+        if (dirtyHeight === undefined) { dirtyHeight = imageData.height; }
+
+        this.context.putImageData(imageData, x, y, dirtyX, dirtyY, dirtyWidth, dirtyHeight);
+
+        return this;
+    },
+
+    /**
+     * Gets an ImageData region from this CanvasTexture from the position and size specified.
+     * You can write this back using `CanvasTexture.putData`, or manipulate it.
+     *
+     * @method Phaser.Textures.CanvasTexture#getData
+     * @since 3.16.0
+     * 
+     * @param {integer} x - The x coordinate of the top-left of the area to get the ImageData from. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {integer} y - The y coordinate of the top-left of the area to get the ImageData from. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {integer} width - The width of the rectangle from which the ImageData will be extracted. Positive values are to the right, and negative to the left.
+     * @param {integer} height - The height of the rectangle from which the ImageData will be extracted. Positive values are down, and negative are up.
+     * 
+     * @return {ImageData} The ImageData extracted from this CanvasTexture.
+     */
+    getData: function (x, y, width, height)
+    {
+        x = Clamp(Math.floor(x), 0, this.width - 1);
+        y = Clamp(Math.floor(y), 0, this.height - 1);
+        width = Clamp(width, 1, this.width - x);
+        height = Clamp(height, 1, this.height - y);
+
+        var imageData = this.context.getImageData(x, y, width, height);
+
+        return imageData;
+    },
+
+    /**
      * Get the color of a specific pixel from this texture and store it in a Color object.
      * 
      * If you have drawn anything to this CanvasTexture since it was created you must call `CanvasTexture.update` to refresh the array buffer,
@@ -232,9 +375,9 @@ var CanvasTexture = new Class({
      * @method Phaser.Textures.CanvasTexture#getPixel
      * @since 3.13.0
      * 
-     * @param {integer} x - The x coordinate of the pixel to be set. Must lay within the dimensions of this CanvasTexture and be an integer.
-     * @param {integer} y - The y coordinate of the pixel to be set. Must lay within the dimensions of this CanvasTexture and be an integer.
-     * @param {Phaser.Display.Color} [out] - An object into which 4 properties will be set: r, g, b and a. If not provided a Color object will be created.
+     * @param {integer} x - The x coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {integer} y - The y coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {Phaser.Display.Color} [out] - A Color object to store the pixel values in. If not provided a new Color object will be created.
      * 
      * @return {Phaser.Display.Color} An object with the red, green, blue and alpha values set in the r, g, b and a properties.
      */
@@ -245,16 +388,104 @@ var CanvasTexture = new Class({
             out = new Color();
         }
 
-        var index = ~~(x + (y * this.width));
+        var index = this.getIndex(x, y);
 
-        index *= 4;
+        if (index > -1)
+        {
+            var data = this.data;
 
-        var r = this.data[index];
-        var g = this.data[++index];
-        var b = this.data[++index];
-        var a = this.data[++index];
+            var r = data[index + 0];
+            var g = data[index + 1];
+            var b = data[index + 2];
+            var a = data[index + 3];
 
-        return out.setTo(r, g, b, a);
+            out.setTo(r, g, b, a);
+        }
+
+        return out;
+    },
+
+    /**
+     * Returns an array containing all of the pixels in the given region.
+     *
+     * If the requested region extends outside the bounds of this CanvasTexture,
+     * the region is truncated to fit.
+     * 
+     * If you have drawn anything to this CanvasTexture since it was created you must call `CanvasTexture.update` to refresh the array buffer,
+     * otherwise this may return out of date color values, or worse - throw a run-time error as it tries to access an array element that doesn't exist.
+     *
+     * @method Phaser.Textures.CanvasTexture#getPixels
+     * @since 3.16.0
+     * 
+     * @param {integer} x - The x coordinate of the top-left of the region. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {integer} y - The y coordinate of the top-left of the region. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {integer} width - The width of the region to get. Must be an integer.
+     * @param {integer} [height] - The height of the region to get. Must be an integer. If not given will be set to the `width`.
+     * 
+     * @return {Phaser.Textures.Types.PixelConfig[]} An array of Pixel objects.
+     */
+    getPixels: function (x, y, width, height)
+    {
+        if (height === undefined) { height = width; }
+
+        x = Math.abs(Math.round(x));
+        y = Math.abs(Math.round(y));
+
+        var left = Clamp(x, 0, this.width);
+        var right = Clamp(x + width, 0, this.width);
+        var top = Clamp(y, 0, this.height);
+        var bottom = Clamp(y + height, 0, this.height);
+
+        var pixel = new Color();
+
+        var out = [];
+
+        for (var py = top; py < bottom; py++)
+        {
+            var row = [];
+
+            for (var px = left; px < right; px++)
+            {
+                pixel = this.getPixel(px, py, pixel);
+
+                row.push({ x: px, y: py, color: pixel.color, alpha: pixel.alphaGL });
+            }
+
+            out.push(row);
+        }
+
+        return out;
+    },
+
+    /**
+     * Returns the Image Data index for the given pixel in this CanvasTexture.
+     *
+     * The index can be used to read directly from the `this.data` array.
+     *
+     * The index points to the red value in the array. The subsequent 3 indexes
+     * point to green, blue and alpha respectively.
+     *
+     * @method Phaser.Textures.CanvasTexture#getIndex
+     * @since 3.16.0
+     * 
+     * @param {integer} x - The x coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * @param {integer} y - The y coordinate of the pixel to get. Must lay within the dimensions of this CanvasTexture and be an integer.
+     * 
+     * @return {integer} 
+     */
+    getIndex: function (x, y)
+    {
+        x = Math.abs(Math.round(x));
+        y = Math.abs(Math.round(y));
+
+        if (x < this.width && y < this.height)
+        {
+            return (x + y * this.width) * 4;
+        }
+        else
+        {
+            return -1;
+        }
     },
 
     /**
@@ -301,16 +532,27 @@ var CanvasTexture = new Class({
     },
 
     /**
-     * Clears this Canvas Texture, resetting it back to transparent.
+     * Clears the given region of this Canvas Texture, resetting it back to transparent.
+     * If no region is given, the whole Canvas Texture is cleared.
      *
      * @method Phaser.Textures.CanvasTexture#clear
      * @since 3.7.0
+     * 
+     * @param {integer} [x=0] - The x coordinate of the top-left of the region to clear.
+     * @param {integer} [y=0] - The y coordinate of the top-left of the region to clear.
+     * @param {integer} [width] - The width of the region.
+     * @param {integer} [height] - The height of the region.
      *
      * @return {Phaser.Textures.CanvasTexture} The Canvas Texture.
      */
-    clear: function ()
+    clear: function (x, y, width, height)
     {
-        this.context.clearRect(0, 0, this.width, this.height);
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = this.width; }
+        if (height === undefined) { height = this.height; }
+
+        this.context.clearRect(x, y, width, height);
 
         return this.update();
     },
@@ -348,6 +590,25 @@ var CanvasTexture = new Class({
         }
 
         return this;
+    },
+
+    /**
+     * Destroys this Texture and releases references to its sources and frames.
+     *
+     * @method Phaser.Textures.CanvasTexture#destroy
+     * @since 3.16.0
+     */
+    destroy: function ()
+    {
+        Texture.prototype.destroy.call(this);
+
+        this._source = null;
+        this.canvas = null;
+        this.context = null;
+        this.imageData = null;
+        this.data = null;
+        this.pixels = null;
+        this.buffer = null;
     }
 
 });

@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Felipe Alfonso <@bitnenfer>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -41,11 +41,11 @@ var Utils = require('./Utils');
  * - https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer
  *
  * @class WebGLPipeline
- * @memberOf Phaser.Renderer.WebGL
+ * @memberof Phaser.Renderer.WebGL
  * @constructor
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {object} config - The configuration object for this WebGL Pipeline, as described above.
  */
 var WebGLPipeline = new Class({
 
@@ -63,7 +63,7 @@ var WebGLPipeline = new Class({
         this.name = 'WebGLPipeline';
 
         /**
-         * [description]
+         * The Game which owns this WebGL Pipeline.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#game
          * @type {Phaser.Game}
@@ -72,7 +72,7 @@ var WebGLPipeline = new Class({
         this.game = config.game;
 
         /**
-         * [description]
+         * The canvas which this WebGL Pipeline renders to.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#view
          * @type {HTMLCanvasElement}
@@ -87,7 +87,7 @@ var WebGLPipeline = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.resolution = config.game.config.resolution;
+        this.resolution = 1;
 
         /**
          * Width of the current viewport
@@ -96,7 +96,7 @@ var WebGLPipeline = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.width = config.game.config.width * this.resolution;
+        this.width = 0;
 
         /**
          * Height of the current viewport
@@ -105,10 +105,10 @@ var WebGLPipeline = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.height = config.game.config.height * this.resolution;
+        this.height = 0;
 
         /**
-         * [description]
+         * The WebGL context this WebGL Pipeline uses.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#gl
          * @type {WebGLRenderingContext}
@@ -136,7 +136,7 @@ var WebGLPipeline = new Class({
         this.vertexCapacity = config.vertexCapacity;
 
         /**
-         * [description]
+         * The WebGL Renderer which owns this WebGL Pipeline.
          *
          * @name Phaser.Renderer.WebGL.WebGLPipeline#renderer
          * @type {Phaser.Renderer.WebGL.WebGLRenderer}
@@ -284,7 +284,7 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#shouldFlush
      * @since 3.0.0
      *
-     * @return {boolean} [description]
+     * @return {boolean} `true` if the current batch should be flushed, otherwise `false`.
      */
     shouldFlush: function ()
     {
@@ -297,9 +297,9 @@ var WebGLPipeline = new Class({
      * @method Phaser.Renderer.WebGL.WebGLPipeline#resize
      * @since 3.0.0
      *
-     * @param {number} width - [description]
-     * @param {number} height - [description]
-     * @param {number} resolution - [description]
+     * @param {number} width - The new width of this WebGL Pipeline.
+     * @param {number} height - The new height of this WebGL Pipeline.
+     * @param {number} resolution - The resolution this WebGL Pipeline should be resized to.
      *
      * @return {this} This WebGLPipeline instance.
      */
@@ -307,6 +307,7 @@ var WebGLPipeline = new Class({
     {
         this.width = width * resolution;
         this.height = height * resolution;
+        this.resolution = resolution;
 
         return this;
     },
@@ -351,7 +352,9 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Set whenever this WebGL Pipeline is bound to a WebGL Renderer.
+     *
+     * This method is called every time the WebGL Pipeline is attempted to be bound, even if it already is the current pipeline.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onBind
      * @since 3.0.0
@@ -365,7 +368,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Called before each frame is rendered, but after the canvas has been cleared.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onPreRender
      * @since 3.0.0
@@ -379,13 +382,13 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Called before a Scene's Camera is rendered.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onRender
      * @since 3.0.0
      *
-     * @param {Phaser.Scene} scene - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.Scene} scene - The Scene being rendered.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Scene Camera being rendered with.
      *
      * @return {this} This WebGLPipeline instance.
      */
@@ -396,7 +399,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Called after each frame has been completely rendered and snapshots have been taken.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#onPostRender
      * @since 3.0.0
@@ -445,7 +448,7 @@ var WebGLPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Removes all object references in this WebGL Pipeline and removes its program from the WebGL context.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#destroy
      * @since 3.0.0
@@ -473,7 +476,7 @@ var WebGLPipeline = new Class({
      * @since 3.2.0
      *
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {number} x - [description]
+     * @param {number} x - The new value of the `float` uniform.
      *
      * @return {this} This WebGLPipeline instance.
      */
@@ -491,8 +494,8 @@ var WebGLPipeline = new Class({
      * @since 3.2.0
      *
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {number} x - [description]
-     * @param {number} y - [description]
+     * @param {number} x - The new X component of the `vec2` uniform.
+     * @param {number} y - The new Y component of the `vec2` uniform.
      *
      * @return {this} This WebGLPipeline instance.
      */
@@ -510,9 +513,9 @@ var WebGLPipeline = new Class({
      * @since 3.2.0
      *
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} z - [description]
+     * @param {number} x - The new X component of the `vec3` uniform.
+     * @param {number} y - The new Y component of the `vec3` uniform.
+     * @param {number} z - The new Z component of the `vec3` uniform.
      *
      * @return {this} This WebGLPipeline instance.
      */
@@ -623,7 +626,7 @@ var WebGLPipeline = new Class({
      * @since 3.2.0
      *
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {integer} x - [description]
+     * @param {integer} x - The new value of the `int` uniform.
      *
      * @return {this} This WebGLPipeline instance.
      */
@@ -641,8 +644,8 @@ var WebGLPipeline = new Class({
      * @since 3.2.0
      *
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {integer} x - [description]
-     * @param {integer} y - [description]
+     * @param {integer} x - The new X component of the `ivec2` uniform.
+     * @param {integer} y - The new Y component of the `ivec2` uniform.
      *
      * @return {this} This WebGLPipeline instance.
      */
@@ -660,9 +663,9 @@ var WebGLPipeline = new Class({
      * @since 3.2.0
      *
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {integer} x - [description]
-     * @param {integer} y - [description]
-     * @param {integer} z - [description]
+     * @param {integer} x - The new X component of the `ivec3` uniform.
+     * @param {integer} y - The new Y component of the `ivec3` uniform.
+     * @param {integer} z - The new Z component of the `ivec3` uniform.
      *
      * @return {this} This WebGLPipeline instance.
      */
@@ -701,8 +704,8 @@ var WebGLPipeline = new Class({
      * @since 3.2.0
      *
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {boolean} transpose - [description]
-     * @param {Float32Array} matrix - [description]
+     * @param {boolean} transpose - Whether to transpose the matrix. Should be `false`.
+     * @param {Float32Array} matrix - The new values for the `mat2` uniform.
      *
      * @return {this} This WebGLPipeline instance.
      */
@@ -720,8 +723,8 @@ var WebGLPipeline = new Class({
      * @since 3.2.0
      *
      * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {boolean} transpose - [description]
-     * @param {Float32Array} matrix - [description]
+     * @param {boolean} transpose - Whether to transpose the matrix. Should be `false`.
+     * @param {Float32Array} matrix - The new values for the `mat3` uniform.
      *
      * @return {this} This WebGLPipeline instance.
      */

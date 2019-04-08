@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -118,25 +118,22 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
 
             if (roundPixels)
             {
-                tx0 |= 0;
-                ty0 |= 0;
-
-                tx1 |= 0;
-                ty1 |= 0;
-
-                tx2 |= 0;
-                ty2 |= 0;
-
-                tx3 |= 0;
-                ty3 |= 0;
+                tx0 = Math.round(tx0);
+                ty0 = Math.round(ty0);
+    
+                tx1 = Math.round(tx1);
+                ty1 = Math.round(ty1);
+    
+                tx2 = Math.round(tx2);
+                ty2 = Math.round(ty2);
+    
+                tx3 = Math.round(tx3);
+                ty3 = Math.round(ty3);
             }
 
             var tint = getTint(particle.tint, alpha);
 
-            if (pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect))
-            {
-                pipeline.setTexture2D(texture, 0);
-            }
+            pipeline.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, frame.u0, frame.v0, frame.u1, frame.v1, tint, tint, tint, tint, tintEffect, texture, 0);
         }
     }
 };

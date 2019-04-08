@@ -1,25 +1,23 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Point = require('../point/Point');
 
-//  The center of the Rectangle object, expressed as a Point object
-
 /**
- * [description]
+ * Returns the center of a Rectangle as a Point.
  *
  * @function Phaser.Geom.Rectangle.GetCenter
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Point} O - [out,$return]
  *
- * @param {Phaser.Geom.Rectangle} rect - [description]
- * @param {(Phaser.Geom.Point|object)} [out] - [description]
+ * @param {Phaser.Geom.Rectangle} rect - The Rectangle to get the center of.
+ * @param {(Phaser.Geom.Point|object)} [out] - Optional point-like object to update with the center coordinates.
  *
- * @return {(Phaser.Geom.Point|object)} [description]
+ * @return {(Phaser.Geom.Point|object)} The modified `out` object, or a new Point if none was provided.
  */
 var GetCenter = function (rect, out)
 {

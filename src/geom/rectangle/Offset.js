@@ -1,22 +1,22 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 /**
- * [description]
+ * Nudges (translates) the top left corner of a Rectangle by a given offset.
  *
  * @function Phaser.Geom.Rectangle.Offset
  * @since 3.0.0
  *
  * @generic {Phaser.Geom.Rectangle} O - [rect,$return]
  *
- * @param {Phaser.Geom.Rectangle} rect - [description]
- * @param {number} x - [description]
- * @param {number} y - [description]
+ * @param {Phaser.Geom.Rectangle} rect - The Rectangle to adjust.
+ * @param {number} x - The distance to move the Rectangle horizontally.
+ * @param {number} y - The distance to move the Rectangle vertically.
  *
- * @return {Phaser.Geom.Rectangle} [description]
+ * @return {Phaser.Geom.Rectangle} The adjusted Rectangle.
  */
 var Offset = function (rect, x, y)
 {

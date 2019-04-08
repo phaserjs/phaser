@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -148,8 +148,8 @@ var BitmapTextCanvasRenderer = function (renderer, src, interpolationPercentage,
 
         if (roundPixels)
         {
-            x |= 0;
-            y |= 0;
+            x = Math.round(x);
+            y = Math.round(y);
         }
 
         ctx.save();

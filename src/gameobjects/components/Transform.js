@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -15,7 +15,7 @@ var _FLAG = 4; // 0100
 /**
  * Provides methods used for getting and setting the position, scale and rotation of a Game Object.
  *
- * @name Phaser.GameObjects.Components.Transform
+ * @namespace Phaser.GameObjects.Components.Transform
  * @since 3.0.0
  */
 
@@ -258,8 +258,8 @@ var Transform = {
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
-        if (width === undefined) { width = this.scene.sys.game.config.width; }
-        if (height === undefined) { height = this.scene.sys.game.config.height; }
+        if (width === undefined) { width = this.scene.sys.scale.width; }
+        if (height === undefined) { height = this.scene.sys.scale.height; }
 
         this.x = x + (Math.random() * width);
         this.y = y + (Math.random() * height);

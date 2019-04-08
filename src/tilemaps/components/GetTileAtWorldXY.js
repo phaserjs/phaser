@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -17,9 +17,8 @@ var WorldToTileY = require('./WorldToTileY');
  *
  * @param {number} worldX - X position to get the tile from (given in pixels)
  * @param {number} worldY - Y position to get the tile from (given in pixels)
- * @param {boolean} [nonNull=false] - If true, function won't return null for empty tiles, but a Tile
- * object with an index of -1.
- * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - [description]
+ * @param {boolean} [nonNull=false] - If true, function won't return null for empty tiles, but a Tile object with an index of -1.
+ * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when calculating the tile index from the world values.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * 
  * @return {Phaser.Tilemaps.Tile} The tile at the given coordinates or null if no tile was found or the coordinates

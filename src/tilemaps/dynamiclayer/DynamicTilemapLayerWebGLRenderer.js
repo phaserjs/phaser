@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -90,7 +90,7 @@ var DynamicTilemapLayerWebGLRenderer = function (renderer, src, interpolationPer
                 src,
                 texture,
                 texture.width, texture.height,
-                (tw + x + tile.pixelX) * sx, (th + y + tile.pixelY) * sy,
+                x + ((tw + tile.pixelX) * sx), y + ((th + tile.pixelY) * sy),
                 tile.width, tile.height,
                 sx, sy,
                 tile.rotation,

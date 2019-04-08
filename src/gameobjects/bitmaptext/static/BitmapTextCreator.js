@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -18,7 +18,7 @@ var GetValue = require('../../../utils/object/GetValue');
  * @method Phaser.GameObjects.GameObjectCreator#bitmapText
  * @since 3.0.0
  *
- * @param {BitmapTextConfig} config - The configuration object this Game Object will use to create itself.
+ * @param {Phaser.GameObjects.BitmapText.Types.BitmapTextConfig} config - The configuration object this Game Object will use to create itself.
  * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  * 
  * @return {Phaser.GameObjects.BitmapText} The Game Object that was created.

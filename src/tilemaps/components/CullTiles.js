@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -16,7 +16,7 @@ var SnapCeil = require('../../math/snap/SnapCeil');
  *
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * @param {Phaser.Cameras.Scene2D.Camera} [camera] - The Camera to run the cull check against.
- * @param {array} [outputArray] - [description]
+ * @param {array} [outputArray] - An optional array to store the Tile objects within.
  *
  * @return {Phaser.Tilemaps.Tile[]} An array of Tile objects.
  */
@@ -71,15 +71,15 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
 
         for (y = drawTop; y < drawBottom; y++)
         {
-            for (x = drawLeft; x < drawRight; x++)
+            for (x = drawLeft; mapData[y] && x < drawRight; x++)
             {
                 tile = mapData[y][x];
-    
+
                 if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
                 {
                     continue;
                 }
-    
+
                 outputArray.push(tile);
             }
         }
@@ -90,15 +90,15 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
 
         for (y = drawTop; y < drawBottom; y++)
         {
-            for (x = drawRight; x >= drawLeft; x--)
+            for (x = drawRight; mapData[y] && x >= drawLeft; x--)
             {
                 tile = mapData[y][x];
-    
+
                 if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
                 {
                     continue;
                 }
-    
+
                 outputArray.push(tile);
             }
         }
@@ -109,15 +109,15 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
 
         for (y = drawBottom; y >= drawTop; y--)
         {
-            for (x = drawLeft; x < drawRight; x++)
+            for (x = drawLeft; mapData[y] && x < drawRight; x++)
             {
                 tile = mapData[y][x];
-    
+
                 if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
                 {
                     continue;
                 }
-    
+
                 outputArray.push(tile);
             }
         }
@@ -128,15 +128,15 @@ var CullTiles = function (layer, camera, outputArray, renderOrder)
 
         for (y = drawBottom; y >= drawTop; y--)
         {
-            for (x = drawRight; x >= drawLeft; x--)
+            for (x = drawRight; mapData[y] && x >= drawLeft; x--)
             {
                 tile = mapData[y][x];
-    
+
                 if (!tile || tile.index === -1 || !tile.visible || tile.alpha === 0)
                 {
                     continue;
                 }
-    
+
                 outputArray.push(tile);
             }
         }

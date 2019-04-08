@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -11,11 +11,15 @@ var HSVToRGB = require('./HSVToRGB');
 var RGBToHSV = require('./RGBToHSV');
 
 /**
+ * @namespace Phaser.Display.Color
+ */
+
+/**
  * @classdesc
  * The Color class holds a single color value and allows for easy modification and reading of it.
  *
  * @class Color
- * @memberOf Phaser.Display
+ * @memberof Phaser.Display
  * @constructor
  * @since 3.0.0
  *
@@ -258,7 +262,7 @@ var Color = new Class({
      * @method Phaser.Display.Color#setFromRGB
      * @since 3.0.0
      *
-     * @param {InputColorObject} color - An object containing `r`, `g`, `b` and optionally `a` values in the range 0 to 255.
+     * @param {Phaser.Display.Types.InputColorObject} color - An object containing `r`, `g`, `b` and optionally `a` values in the range 0 to 255.
      *
      * @return {Phaser.Display.Color} This Color object.
      */
@@ -522,7 +526,7 @@ var Color = new Class({
      *
      * @name Phaser.Display.Color#color
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     color: {
@@ -539,7 +543,7 @@ var Color = new Class({
      *
      * @name Phaser.Display.Color#color32
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     color32: {
@@ -556,7 +560,7 @@ var Color = new Class({
      *
      * @name Phaser.Display.Color#rgba
      * @type {string}
-     * @readOnly
+     * @readonly
      * @since 3.0.0
      */
     rgba: {

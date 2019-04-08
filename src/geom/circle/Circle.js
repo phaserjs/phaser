@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -19,7 +19,7 @@ var Random = require('./Random');
  * To render a Circle you should look at the capabilities of the Graphics class.
  *
  * @class Circle
- * @memberOf Phaser.Geom
+ * @memberof Phaser.Geom
  * @constructor
  * @since 3.0.0
  *

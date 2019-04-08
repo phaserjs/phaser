@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -40,6 +40,7 @@ Rectangle.Perimeter = require('./Perimeter');
 Rectangle.PerimeterPoint = require('./PerimeterPoint');
 Rectangle.Random = require('./Random');
 Rectangle.RandomOutside = require('./RandomOutside');
+Rectangle.SameDimensions = require('./SameDimensions');
 Rectangle.Scale = require('./Scale');
 Rectangle.Union = require('./Union');
 

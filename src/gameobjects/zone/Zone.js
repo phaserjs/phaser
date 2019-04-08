@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -29,14 +29,13 @@ var RectangleContains = require('../../geom/rectangle/Contains');
  *
  * @class Zone
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.ScaleMode
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Visible
@@ -55,7 +54,6 @@ var Zone = new Class({
         Components.Depth,
         Components.GetBounds,
         Components.Origin,
-        Components.ScaleMode,
         Components.Transform,
         Components.ScrollFactor,
         Components.Visible
@@ -236,7 +234,7 @@ var Zone = new Class({
      * @since 3.0.0
      *
      * @param {object} shape - A Geometry shape instance, such as Phaser.Geom.Ellipse, or your own custom shape.
-     * @param {HitAreaCallback} callback - A function that will return `true` if the given x/y coords it is sent are within the shape.
+     * @param {Phaser.Input.Types.HitAreaCallback} callback - A function that will return `true` if the given x/y coords it is sent are within the shape.
      *
      * @return {Phaser.GameObjects.Zone} This Game Object.
      */
@@ -266,6 +264,18 @@ var Zone = new Class({
     {
     },
     
+    /**
+     * A NOOP method so you can pass a Zone to a Container in Canvas.
+     * Calling this method will do nothing. It is intentionally empty.
+     *
+     * @method Phaser.GameObjects.Zone#setBlendMode
+     * @private
+     * @since 3.16.2
+     */
+    setBlendMode: function ()
+    {
+    },
+
     /**
      * A Zone does not render.
      *

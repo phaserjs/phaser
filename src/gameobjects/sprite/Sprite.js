@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -23,7 +23,7 @@ var SpriteRender = require('./SpriteRender');
  *
  * @class Sprite
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
@@ -35,7 +35,6 @@ var SpriteRender = require('./SpriteRender');
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.ScaleMode
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Size
  * @extends Phaser.GameObjects.Components.TextureCrop
@@ -62,7 +61,6 @@ var Sprite = new Class({
         Components.Mask,
         Components.Origin,
         Components.Pipeline,
-        Components.ScaleMode,
         Components.ScrollFactor,
         Components.Size,
         Components.TextureCrop,
@@ -144,7 +142,7 @@ var Sprite = new Class({
      * @method Phaser.GameObjects.Sprite#toJSON
      * @since 3.0.0
      *
-     * @return {JSONGameObject} A JSON representation of the Game Object.
+     * @return {Phaser.GameObjects.Types.JSONGameObject} A JSON representation of the Game Object.
      */
     toJSON: function ()
     {

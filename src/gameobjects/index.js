@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -9,6 +9,8 @@
  */
 
 var GameObjects = {
+
+    Events: require('./events'),
 
     DisplayList: require('./DisplayList'),
     GameObjectCreator: require('./GameObjectCreator'),
@@ -24,6 +26,7 @@ var GameObjects = {
     Blitter: require('./blitter/Blitter'),
     Container: require('./container/Container'),
     DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapText'),
+    Extern: require('./extern/Extern.js'),
     Graphics: require('./graphics/Graphics.js'),
     Group: require('./group/Group'),
     Image: require('./image/Image'),
@@ -57,6 +60,7 @@ var GameObjects = {
         Blitter: require('./blitter/BlitterFactory'),
         Container: require('./container/ContainerFactory'),
         DynamicBitmapText: require('./bitmaptext/dynamic/DynamicBitmapTextFactory'),
+        Extern: require('./extern/ExternFactory'),
         Graphics: require('./graphics/GraphicsFactory'),
         Group: require('./group/GroupFactory'),
         Image: require('./image/ImageFactory'),

@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Felipe Alfonso <@bitnenfer>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -9,6 +9,7 @@ var ArrayUtils = require('../../utils/array');
 var BlendModes = require('../../renderer/BlendModes');
 var Class = require('../../utils/Class');
 var Components = require('../components');
+var Events = require('../events');
 var GameObject = require('../GameObject');
 var Rectangle = require('../../geom/rectangle/Rectangle');
 var Render = require('./ContainerRender');
@@ -53,7 +54,7 @@ var Vector2 = require('../../math/Vector2');
  *
  * @class Container
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.4.0
  *
@@ -210,7 +211,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#originX
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     originX: {
@@ -228,7 +229,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#originY
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     originY: {
@@ -246,7 +247,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#displayOriginX
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     displayOriginX: {
@@ -264,7 +265,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#displayOriginY
      * @type {number}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     displayOriginY: {
@@ -363,7 +364,7 @@ var Container = new Class({
      */
     addHandler: function (gameObject)
     {
-        gameObject.once('destroy', this.remove, this);
+        gameObject.once(Events.DESTROY, this.remove, this);
 
         if (this.exclusive)
         {
@@ -389,7 +390,7 @@ var Container = new Class({
      */
     removeHandler: function (gameObject)
     {
-        gameObject.off('destroy', this.remove);
+        gameObject.off(Events.DESTROY, this.remove);
 
         if (this.exclusive)
         {
@@ -524,36 +525,28 @@ var Container = new Class({
      * @since 3.4.0
      *
      * @param {string} property - The property to lexically sort by.
+     * @param {function} [handler] - Provide your own custom handler function. Will receive 2 children which it should compare and return a boolean.
      *
      * @return {Phaser.GameObjects.Container} This Container instance.
      */
-    sort: function (property)
+    sort: function (property, handler)
     {
-        if (property)
+        if (!property)
         {
-            this._sortKey = property;
-
-            ArrayUtils.StableSort.inplace(this.list, this.sortHandler);
+            return this;
         }
 
-        return this;
-    },
+        if (handler === undefined)
+        {
+            handler = function (childA, childB)
+            {
+                return childA[property] - childB[property];
+            };
+        }
 
-    /**
-     * Internal sort handler method.
-     *
-     * @method Phaser.GameObjects.Container#sortHandler
-     * @private
-     * @since 3.4.0
-     *
-     * @param {Phaser.GameObjects.GameObject} childA - The first child to sort.
-     * @param {Phaser.GameObjects.GameObject} childB - The second child to sort.
-     *
-     * @return {integer} The sort results.
-     */
-    sortHandler: function (childA, childB)
-    {
-        return childA[this._sortKey] - childB[this._sortKey];
+        ArrayUtils.StableSort.inplace(this.list, handler);
+
+        return this;
     },
 
     /**
@@ -601,8 +594,8 @@ var Container = new Class({
      * @method Phaser.GameObjects.Container#getFirst
      * @since 3.4.0
      *
-     * @param {string} [property] - The property to test on each Game Object in the Container.
-     * @param {*} [value] - The value to test the property against. Must pass a strict (`===`) comparison check.
+     * @param {string} property - The property to test on each Game Object in the Container.
+     * @param {*} value - The value to test the property against. Must pass a strict (`===`) comparison check.
      * @param {integer} [startIndex=0] - An optional start index to search from.
      * @param {integer} [endIndex=Container.length] - An optional end index to search up to (but not included)
      *
@@ -610,7 +603,7 @@ var Container = new Class({
      */
     getFirst: function (property, value, startIndex, endIndex)
     {
-        return ArrayUtils.GetFirstElement(this.list, property, value, startIndex, endIndex);
+        return ArrayUtils.GetFirst(this.list, property, value, startIndex, endIndex);
     },
 
     /**
@@ -1084,7 +1077,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#length
      * @type {integer}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     length: {
@@ -1103,7 +1096,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#first
      * @type {?Phaser.GameObjects.GameObject}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     first: {
@@ -1131,7 +1124,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#last
      * @type {?Phaser.GameObjects.GameObject}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     last: {
@@ -1159,7 +1152,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#next
      * @type {?Phaser.GameObjects.GameObject}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     next: {
@@ -1187,7 +1180,7 @@ var Container = new Class({
      *
      * @name Phaser.GameObjects.Container#previous
      * @type {?Phaser.GameObjects.GameObject}
-     * @readOnly
+     * @readonly
      * @since 3.4.0
      */
     previous: {

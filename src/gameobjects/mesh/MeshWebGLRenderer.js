@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -67,7 +67,7 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
     var meshVerticesLength = vertices.length;
     var vertexCount = Math.floor(meshVerticesLength * 0.5);
 
-    if (pipeline.vertexCount + vertexCount >= pipeline.vertexCapacity)
+    if (pipeline.vertexCount + vertexCount > pipeline.vertexCapacity)
     {
         pipeline.flush();
     }
@@ -92,8 +92,8 @@ var MeshWebGLRenderer = function (renderer, src, interpolationPercentage, camera
 
         if (camera.roundPixels)
         {
-            tx |= 0;
-            ty |= 0;
+            tx = Math.round(tx);
+            ty = Math.round(ty);
         }
 
         vertexViewF32[++vertexOffset] = tx;

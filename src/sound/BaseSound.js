@@ -1,12 +1,13 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Pavle Goloskokovic <pgoloskokovic@gmail.com> (http://prunegames.com)
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Class = require('../utils/Class');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
 var Extend = require('../utils/object/Extend');
 var NOOP = require('../utils/NOOP');
 
@@ -16,13 +17,13 @@ var NOOP = require('../utils/NOOP');
  *
  * @class BaseSound
  * @extends Phaser.Events.EventEmitter
- * @memberOf Phaser.Sound
+ * @memberof Phaser.Sound
  * @constructor
  * @since 3.0.0
  *
  * @param {Phaser.Sound.BaseSoundManager} manager - Reference to the current sound manager instance.
  * @param {string} key - Asset key for the sound.
- * @param {SoundConfig} [config] - An optional config object containing default sound settings.
+ * @param {Phaser.Sound.Types.SoundConfig} [config] - An optional config object containing default sound settings.
  */
 var BaseSound = new Class({
 
@@ -49,7 +50,7 @@ var BaseSound = new Class({
          *
          * @name Phaser.Sound.BaseSound#key
          * @type {string}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.key = key;
@@ -60,7 +61,7 @@ var BaseSound = new Class({
          * @name Phaser.Sound.BaseSound#isPlaying
          * @type {boolean}
          * @default false
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.isPlaying = false;
@@ -71,7 +72,7 @@ var BaseSound = new Class({
          * @name Phaser.Sound.BaseSound#isPaused
          * @type {boolean}
          * @default false
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.isPaused = false;
@@ -84,7 +85,7 @@ var BaseSound = new Class({
          * @name Phaser.Sound.BaseSound#totalRate
          * @type {number}
          * @default 1
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.totalRate = 1;
@@ -95,7 +96,7 @@ var BaseSound = new Class({
          *
          * @name Phaser.Sound.BaseSound#duration
          * @type {number}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.duration = this.duration || 0;
@@ -105,7 +106,7 @@ var BaseSound = new Class({
          *
          * @name Phaser.Sound.BaseSound#totalDuration
          * @type {number}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.totalDuration = this.totalDuration || 0;
@@ -115,7 +116,7 @@ var BaseSound = new Class({
          * Default values will be set by properties' setters.
          *
          * @name Phaser.Sound.BaseSound#config
-         * @type {SoundConfig}
+         * @type {Phaser.Sound.Types.SoundConfig}
          * @private
          * @since 3.0.0
          */
@@ -136,7 +137,7 @@ var BaseSound = new Class({
          * It could be default config or marker config.
          *
          * @name Phaser.Sound.BaseSound#currentConfig
-         * @type {SoundConfig}
+         * @type {Phaser.Sound.Types.SoundConfig}
          * @private
          * @since 3.0.0
          */
@@ -148,9 +149,9 @@ var BaseSound = new Class({
          * Object containing markers definitions.
          *
          * @name Phaser.Sound.BaseSound#markers
-         * @type {Object.<string, SoundMarker>}
+         * @type {Object.<string, Phaser.Sound.Types.SoundMarker>}
          * @default {}
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.markers = {};
@@ -160,9 +161,9 @@ var BaseSound = new Class({
          * 'null' if whole sound is playing.
          *
          * @name Phaser.Sound.BaseSound#currentMarker
-         * @type {SoundMarker}
+         * @type {Phaser.Sound.Types.SoundMarker}
          * @default null
-         * @readOnly
+         * @readonly
          * @since 3.0.0
          */
         this.currentMarker = null;
@@ -231,7 +232,7 @@ var BaseSound = new Class({
      * @method Phaser.Sound.BaseSound#updateMarker
      * @since 3.0.0
      *
-     * @param {SoundMarker} marker - Marker object with updated values.
+     * @param {Phaser.Sound.Types.SoundMarker} marker - Marker object with updated values.
      *
      * @return {boolean} Whether the marker was updated successfully.
      */
@@ -263,7 +264,7 @@ var BaseSound = new Class({
      *
      * @param {string} markerName - The name of the marker to remove.
      *
-     * @return {?SoundMarker} Removed marker object or 'null' if there was no marker with provided name.
+     * @return {?Phaser.Sound.Types.SoundMarker} Removed marker object or 'null' if there was no marker with provided name.
      */
     removeMarker: function (markerName)
     {
@@ -288,7 +289,7 @@ var BaseSound = new Class({
      * @since 3.0.0
      *
      * @param {string} [markerName=''] - If you want to play a marker then provide the marker name here, otherwise omit it to play the full sound.
-     * @param {SoundConfig} [config] - Optional sound config object to be applied to this marker or entire sound if no marker name is provided. It gets memorized for future plays of current section of the sound.
+     * @param {Phaser.Sound.Types.SoundConfig} [config] - Optional sound config object to be applied to this marker or entire sound if no marker name is provided. It gets memorized for future plays of current section of the sound.
      *
      * @return {boolean} Whether the sound started playing successfully.
      */
@@ -465,6 +466,7 @@ var BaseSound = new Class({
      * Destroys this sound and all associated events and marks it for removal from the sound manager.
      *
      * @method Phaser.Sound.BaseSound#destroy
+     * @fires Phaser.Sound.Events#DESTROY
      * @since 3.0.0
      */
     destroy: function ()
@@ -474,7 +476,7 @@ var BaseSound = new Class({
             return;
         }
 
-        this.emit('destroy', this);
+        this.emit(Events.DESTROY, this);
         this.pendingRemove = true;
         this.manager = null;
         this.key = '';

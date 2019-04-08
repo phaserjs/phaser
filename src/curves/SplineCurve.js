@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -17,7 +17,7 @@ var Vector2 = require('../math/Vector2');
  *
  * @class Spline
  * @extends Phaser.Curves.Curve
- * @memberOf Phaser.Curves
+ * @memberof Phaser.Curves
  * @constructor
  * @since 3.0.0
  *
@@ -181,7 +181,7 @@ var SplineCurve = new Class({
      * @method Phaser.Curves.Spline#toJSON
      * @since 3.0.0
      *
-     * @return {JSONCurve} The JSON object containing this curve data.
+     * @return {Phaser.Curves.Types.JSONCurve} The JSON object containing this curve data.
      */
     toJSON: function ()
     {
@@ -207,7 +207,7 @@ var SplineCurve = new Class({
  * @function Phaser.Curves.Spline.fromJSON
  * @since 3.0.0
  *
- * @param {JSONCurve} data - The JSON object containing this curve data.
+ * @param {Phaser.Curves.Types.JSONCurve} data - The JSON object containing this curve data.
  *
  * @return {Phaser.Curves.Spline} [description]
  */

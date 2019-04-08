@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -11,11 +11,11 @@
  * @private
  * @since 3.0.0
  *
- * @param {integer} tileX - [description]
- * @param {integer} tileY - [description]
+ * @param {integer} tileX - The x coordinate, in tiles, not pixels.
+ * @param {integer} tileY - The y coordinate, in tiles, not pixels.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * 
- * @return {boolean}
+ * @return {boolean} `true` if the tile coordinates are within the bounds of the layer, otherwise `false`.
  */
 var IsInLayerBounds = function (tileX, tileY, layer)
 {

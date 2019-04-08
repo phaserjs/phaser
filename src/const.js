@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -16,11 +16,11 @@ var CONST = {
      * Phaser Release Version
      * 
      * @name Phaser.VERSION
-     * @readOnly
+     * @const
      * @type {string}
      * @since 3.0.0
      */
-    VERSION: '3.14.0-beta1',
+    VERSION: '3.17.0',
 
     BlendModes: require('./renderer/BlendModes'),
 
@@ -30,7 +30,7 @@ var CONST = {
      * AUTO Detect Renderer.
      * 
      * @name Phaser.AUTO
-     * @readOnly
+     * @const
      * @type {integer}
      * @since 3.0.0
      */
@@ -40,7 +40,7 @@ var CONST = {
      * Canvas Renderer.
      * 
      * @name Phaser.CANVAS
-     * @readOnly
+     * @const
      * @type {integer}
      * @since 3.0.0
      */
@@ -50,7 +50,7 @@ var CONST = {
      * WebGL Renderer.
      * 
      * @name Phaser.WEBGL
-     * @readOnly
+     * @const
      * @type {integer}
      * @since 3.0.0
      */
@@ -60,7 +60,7 @@ var CONST = {
      * Headless Renderer.
      * 
      * @name Phaser.HEADLESS
-     * @readOnly
+     * @const
      * @type {integer}
      * @since 3.0.0
      */
@@ -71,7 +71,7 @@ var CONST = {
      * to help you remember what the value is doing in your code.
      * 
      * @name Phaser.FOREVER
-     * @readOnly
+     * @const
      * @type {integer}
      * @since 3.0.0
      */
@@ -81,7 +81,7 @@ var CONST = {
      * Direction constant.
      * 
      * @name Phaser.NONE
-     * @readOnly
+     * @const
      * @type {integer}
      * @since 3.0.0
      */
@@ -91,7 +91,7 @@ var CONST = {
      * Direction constant.
      * 
      * @name Phaser.UP
-     * @readOnly
+     * @const
      * @type {integer}
      * @since 3.0.0
      */
@@ -101,7 +101,7 @@ var CONST = {
      * Direction constant.
      * 
      * @name Phaser.DOWN
-     * @readOnly
+     * @const
      * @type {integer}
      * @since 3.0.0
      */
@@ -111,7 +111,7 @@ var CONST = {
      * Direction constant.
      * 
      * @name Phaser.LEFT
-     * @readOnly
+     * @const
      * @type {integer}
      * @since 3.0.0
      */
@@ -121,7 +121,7 @@ var CONST = {
      * Direction constant.
      * 
      * @name Phaser.RIGHT
-     * @readOnly
+     * @const
      * @type {integer}
      * @since 3.0.0
      */

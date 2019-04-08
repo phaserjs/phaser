@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -11,7 +11,7 @@ var Class = require('../../utils/Class');
  * Defines a Point in 2D space, with an x and y component.
  *
  * @class Point
- * @memberOf Phaser.Geom
+ * @memberof Phaser.Geom
  * @constructor
  * @since 3.0.0
  *

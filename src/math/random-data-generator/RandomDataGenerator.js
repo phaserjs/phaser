@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -20,7 +20,7 @@ var Class = require('../../utils/Class');
  * If no seed is given it will use a 'random' one based on Date.now.
  *
  * @class RandomDataGenerator
- * @memberOf Phaser.Math
+ * @memberof Phaser.Math
  * @constructor
  * @since 3.0.0
  *
@@ -478,7 +478,7 @@ var RandomDataGenerator = new Class({
 
         for (var i = len; i > 0; i--)
         {
-            var randomIndex = Math.floor(this.frac() * (len + 1));
+            var randomIndex = Math.floor(this.frac() * (i + 1));
             var itemAtIndex = array[randomIndex];
 
             array[randomIndex] = array[i];

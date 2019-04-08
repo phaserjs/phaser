@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -9,16 +9,16 @@
 //  The default value to use if the key doesn't exist
 
 /**
- * [description]
+ * Retrieves a value from an object.
  *
  * @function Phaser.Utils.Objects.GetValue
  * @since 3.0.0
  *
- * @param {object} source - [description]
- * @param {string} key - [description]
- * @param {*} defaultValue - [description]
+ * @param {object} source - The object to retrieve the value from.
+ * @param {string} key - The name of the property to retrieve from the object. If a property is nested, the names of its preceding properties should be separated by a dot (`.`) - `banner.hideBanner` would return the value of the `hideBanner` property from the object stored in the `banner` property of the `source` object.
+ * @param {*} defaultValue - The value to return if the `key` isn't found in the `source` object.
  *
- * @return {*} [description]
+ * @return {*} The value of the requested key.
  */
 var GetValue = function (source, key, defaultValue)
 {
@@ -30,7 +30,7 @@ var GetValue = function (source, key, defaultValue)
     {
         return source[key];
     }
-    else if (key.indexOf('.'))
+    else if (key.indexOf('.') !== -1)
     {
         var keys = key.split('.');
         var parent = source;

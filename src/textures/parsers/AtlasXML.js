@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -8,7 +8,7 @@
  * Parses an XML Texture Atlas object and adds all the Frames into a Texture.
  *
  * @function Phaser.Textures.Parsers.AtlasXML
- * @memberOf Phaser.Textures.Parsers
+ * @memberof Phaser.Textures.Parsers
  * @private
  * @since 3.7.0
  *

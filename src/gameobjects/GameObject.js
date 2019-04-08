@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -8,6 +8,7 @@ var Class = require('../utils/Class');
 var ComponentsToJSON = require('./components/ToJSON');
 var DataManager = require('../data/DataManager');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
 
 /**
  * @classdesc
@@ -16,7 +17,7 @@ var EventEmitter = require('eventemitter3');
  * Instead, use them as the base for your own custom classes.
  *
  * @class GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @extends Phaser.Events.EventEmitter
  * @constructor
  * @since 3.0.0
@@ -54,6 +55,22 @@ var GameObject = new Class({
          * @since 3.0.0
          */
         this.type = type;
+
+        /**
+         * The current state of this Game Object.
+         * 
+         * Phaser itself will never modify this value, although plugins may do so.
+         * 
+         * Use this property to track the state of a Game Object during its lifetime. For example, it could move from
+         * a state of 'moving', to 'attacking', to 'dead'. The state value should be an integer (ideally mapped to a constant
+         * in your game code), or a string. These are recommended to keep it light and simple, with fast comparisons.
+         * If you need to store complex data about your Game Object, look at using the Data Component instead.
+         *
+         * @name Phaser.GameObjects.GameObject#state
+         * @type {(integer|string)}
+         * @since 3.16.0
+         */
+        this.state = 0;
 
         /**
          * The parent Container of this Game Object, if it has one.
@@ -142,7 +159,7 @@ var GameObject = new Class({
          * Not usually set directly. Instead call `GameObject.setInteractive()`.
          *
          * @name Phaser.GameObjects.GameObject#input
-         * @type {?Phaser.Input.InteractiveObject}
+         * @type {?Phaser.Input.Types.InteractiveObject}
          * @default null
          * @since 3.0.0
          */
@@ -212,6 +229,30 @@ var GameObject = new Class({
     },
 
     /**
+     * Sets the current state of this Game Object.
+     * 
+     * Phaser itself will never modify the State of a Game Object, although plugins may do so.
+     * 
+     * For example, a Game Object could change from a state of 'moving', to 'attacking', to 'dead'.
+     * The state value should typically be an integer (ideally mapped to a constant
+     * in your game code), but could also be a string. It is recommended to keep it light and simple.
+     * If you need to store complex data about your Game Object, look at using the Data Component instead.
+     *
+     * @method Phaser.GameObjects.GameObject#setState
+     * @since 3.16.0
+     *
+     * @param {(integer|string)} value - The state of the Game Object.
+     *
+     * @return {this} This GameObject.
+     */
+    setState: function (value)
+    {
+        this.state = value;
+
+        return this;
+    },
+
+    /**
      * Adds a Data Manager component to this Game Object.
      *
      * @method Phaser.GameObjects.GameObject#setDataEnabled
@@ -263,7 +304,7 @@ var GameObject = new Class({
      * When the value is first set, a `setdata` event is emitted from this Game Object.
      *
      * If the key already exists, a `changedata` event is emitted instead, along an event named after the key.
-     * For example, if you updated an existing key called `PlayerLives` then it would emit the event `changedata_PlayerLives`.
+     * For example, if you updated an existing key called `PlayerLives` then it would emit the event `changedata-PlayerLives`.
      * These events will be emitted regardless if you use this method to set the value, or the direct `values` setter.
      *
      * Please note that the data keys are case-sensitive and must be valid JavaScript Object property strings.
@@ -345,8 +386,8 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#setInteractive
      * @since 3.0.0
      *
-     * @param {(Phaser.Input.InputConfiguration|any)} [shape] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
-     * @param {HitAreaCallback} [callback] - A callback to be invoked when the Game Object is interacted with. If you provide a shape you must also provide a callback.
+     * @param {(Phaser.Input.Types.InputConfiguration|any)} [shape] - Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
+     * @param {Phaser.Input.Types.HitAreaCallback} [callback] - A callback to be invoked when the Game Object is interacted with. If you provide a shape you must also provide a callback.
      * @param {boolean} [dropZone=false] - Should this Game Object be treated as a drop zone target?
      *
      * @return {this} This GameObject.
@@ -434,7 +475,7 @@ var GameObject = new Class({
      * @method Phaser.GameObjects.GameObject#toJSON
      * @since 3.0.0
      *
-     * @return {JSONGameObject} A JSON representation of the Game Object.
+     * @return {Phaser.GameObjects.Types.JSONGameObject} A JSON representation of the Game Object.
      */
     toJSON: function ()
     {
@@ -454,7 +495,7 @@ var GameObject = new Class({
      */
     willRender: function (camera)
     {
-        return !(GameObject.RENDER_MASK !== this.renderFlags || (this.cameraFilter > 0 && (this.cameraFilter & camera.id)));
+        return !(GameObject.RENDER_MASK !== this.renderFlags || (this.cameraFilter !== 0 && (this.cameraFilter & camera.id)));
     },
 
     /**
@@ -515,8 +556,9 @@ var GameObject = new Class({
      * Game Object Pool instead of destroying it, as destroyed objects cannot be resurrected.
      *
      * @method Phaser.GameObjects.GameObject#destroy
+     * @fires Phaser.GameObjects.Events#DESTROY
      * @since 3.0.0
-     * 
+     *
      * @param {boolean} [fromScene=false] - Is this Game Object being destroyed as the result of a Scene shutdown?
      */
     destroy: function (fromScene)
@@ -534,7 +576,7 @@ var GameObject = new Class({
             this.preDestroy.call(this);
         }
 
-        this.emit('destroy', this);
+        this.emit(Events.DESTROY, this);
 
         var sys = this.scene.sys;
 
@@ -585,7 +627,7 @@ var GameObject = new Class({
  * The bitmask that `GameObject.renderFlags` is compared against to determine if the Game Object will render or not.
  *
  * @constant {integer} RENDER_MASK
- * @memberOf Phaser.GameObjects.GameObject
+ * @memberof Phaser.GameObjects.GameObject
  * @default
  */
 GameObject.RENDER_MASK = 15;

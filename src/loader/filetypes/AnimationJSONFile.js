@@ -1,12 +1,13 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Class = require('../../utils/Class');
 var FileTypesManager = require('../FileTypesManager');
 var JSONFile = require('./JSONFile.js');
+var LoaderEvents = require('../events');
 
 /**
  * @classdesc
@@ -18,14 +19,14 @@ var JSONFile = require('./JSONFile.js');
  *
  * @class AnimationJSONFile
  * @extends Phaser.Loader.File
- * @memberOf Phaser.Loader.FileTypes
+ * @memberof Phaser.Loader.FileTypes
  * @constructor
  * @since 3.0.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
  * @param {(string|Phaser.Loader.FileTypes.JSONFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
- * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  * @param {string} [dataKey] - When the JSON file loads only this property will be stored in the Cache.
  */
 var AnimationJSONFile = new Class({
@@ -54,7 +55,7 @@ var AnimationJSONFile = new Class({
     onProcess: function ()
     {
         //  We need to hook into this event:
-        this.loader.once('loadcomplete', this.onLoadComplete, this);
+        this.loader.once(LoaderEvents.POST_PROCESS, this.onLoadComplete, this);
 
         //  But the rest is the same as a normal JSON file
         JSONFile.prototype.onProcess.call(this);
@@ -168,7 +169,7 @@ var AnimationJSONFile = new Class({
  * @param {(string|Phaser.Loader.FileTypes.JSONFileConfig|Phaser.Loader.FileTypes.JSONFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
  * @param {string} [dataKey] - When the Animation JSON file loads only this property will be stored in the Cache and used to create animation data.
- * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */

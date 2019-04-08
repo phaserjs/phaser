@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -65,6 +65,8 @@ var LineWebGLRenderer = function (renderer, src, interpolationPercentage, camera
 
         var startWidth = src._startWidth;
         var endWidth = src._endWidth;
+
+        pipeline.setTexture2D();
 
         pipeline.batchLine(
             src.geom.x1 - dx,

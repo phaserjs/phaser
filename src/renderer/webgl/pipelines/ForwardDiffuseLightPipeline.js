@@ -1,7 +1,7 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
  * @author       Felipe Alfonso <@bitnenfer>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -19,11 +19,11 @@ var LIGHT_COUNT = 10;
  *
  * @class ForwardDiffuseLightPipeline
  * @extends Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline
- * @memberOf Phaser.Renderer.WebGL.Pipelines
+ * @memberof Phaser.Renderer.WebGL.Pipelines
  * @constructor
  * @since 3.0.0
  *
- * @param {object} config - [description]
+ * @param {object} config - The configuration of the pipeline, same as the {@link Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline}. The fragment shader will be replaced with the lighting shader.
  */
 var ForwardDiffuseLightPipeline = new Class({
 
@@ -33,6 +33,8 @@ var ForwardDiffuseLightPipeline = new Class({
 
     function ForwardDiffuseLightPipeline (config)
     {
+        LIGHT_COUNT = config.maxLights;
+
         config.fragShader = ShaderSourceFS.replace('%LIGHT_COUNT%', LIGHT_COUNT.toString());
 
         TextureTintPipeline.call(this, config);
@@ -46,6 +48,20 @@ var ForwardDiffuseLightPipeline = new Class({
          * @since 3.11.0
          */
         this.defaultNormalMap;
+
+        /**
+         * Inverse rotation matrix for normal map rotations.
+         *
+         * @name Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#inverseRotationMatrix
+         * @type {Float32Array}
+         * @private
+         * @since 3.16.0
+         */
+        this.inverseRotationMatrix = new Float32Array([
+            1, 0, 0,
+            0, 1, 0,
+            0, 0, 1
+        ]);
     },
 
     /**
@@ -100,8 +116,8 @@ var ForwardDiffuseLightPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#onRender
      * @since 3.0.0
      *
-     * @param {Phaser.Scene} scene - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
+     * @param {Phaser.Scene} scene - The Scene being rendered.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Scene Camera being rendered with.
      *
      * @return {this} This WebGLPipeline instance.
      */
@@ -162,7 +178,7 @@ var ForwardDiffuseLightPipeline = new Class({
     /**
      * Generic function for batching a textured quad
      *
-     * @method Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline#batchTexture
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchTexture
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - Source GameObject
@@ -242,6 +258,7 @@ var ForwardDiffuseLightPipeline = new Class({
         }
 
         this.setTexture2D(normalTexture.glTexture, 1);
+        this.setNormalMapRotation(rotation);
 
         var camMatrix = this._tempMatrix1;
         var spriteMatrix = this._tempMatrix2;
@@ -360,22 +377,22 @@ var ForwardDiffuseLightPipeline = new Class({
 
         if (camera.roundPixels)
         {
-            tx0 |= 0;
-            ty0 |= 0;
+            tx0 = Math.round(tx0);
+            ty0 = Math.round(ty0);
 
-            tx1 |= 0;
-            ty1 |= 0;
+            tx1 = Math.round(tx1);
+            ty1 = Math.round(ty1);
 
-            tx2 |= 0;
-            ty2 |= 0;
+            tx2 = Math.round(tx2);
+            ty2 = Math.round(ty2);
 
-            tx3 |= 0;
-            ty3 |= 0;
+            tx3 = Math.round(tx3);
+            ty3 = Math.round(ty3);
         }
 
         this.setTexture2D(texture, 0);
 
-        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect);
+        this.batchQuad(tx0, ty0, tx1, ty1, tx2, ty2, tx3, ty3, u0, v0, u1, v1, tintTL, tintTR, tintBL, tintBR, tintEffect, texture, 0);
     },
 
     /**
@@ -384,7 +401,7 @@ var ForwardDiffuseLightPipeline = new Class({
      * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#setNormalMap
      * @since 3.11.0
      *
-     * @param {Phaser.GameObjects.GameObject} gameObject - [description]
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to update.
      */
     setNormalMap: function (gameObject)
     {
@@ -411,15 +428,46 @@ var ForwardDiffuseLightPipeline = new Class({
     },
 
     /**
-     * [description]
+     * Rotates the normal map vectors inversely by the given angle.
+     * Only works in 2D space.
+     * 
+     * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#setNormalMapRotation
+     * @since 3.16.0
+     * 
+     * @param {number} rotation - The angle of rotation in radians.
+     */
+    setNormalMapRotation: function (rotation)
+    {
+        var inverseRotationMatrix = this.inverseRotationMatrix;
+
+        if (rotation)
+        {
+            var rot = -rotation;
+            var c = Math.cos(rot);
+            var s = Math.sin(rot);
+
+            inverseRotationMatrix[1] = s;
+            inverseRotationMatrix[3] = -s;
+            inverseRotationMatrix[0] = inverseRotationMatrix[4] = c;
+        }
+        else
+        {
+            inverseRotationMatrix[0] = inverseRotationMatrix[4] = 1;
+            inverseRotationMatrix[1] = inverseRotationMatrix[3] = 0;
+        }
+
+        this.renderer.setMatrix3(this.program, 'uInverseRotationMatrix', false, inverseRotationMatrix);
+    },
+
+    /**
+     * Takes a Sprite Game Object, or any object that extends it, which has a normal texture and adds it to the batch.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline#batchSprite
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Sprite} sprite - [description]
-     * @param {Phaser.Cameras.Scene2D.Camera} camera - [description]
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - [description]
-     *
+     * @param {Phaser.GameObjects.Sprite} sprite - The texture-based Game Object to add to the batch.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera to use for the rendering transform.
+     * @param {Phaser.GameObjects.Components.TransformMatrix} parentTransformMatrix - The transform matrix of the parent container, if set.
      */
     batchSprite: function (sprite, camera, parentTransformMatrix)
     {
@@ -435,6 +483,7 @@ var ForwardDiffuseLightPipeline = new Class({
             this.renderer.setPipeline(this);
 
             this.setTexture2D(normalTexture.glTexture, 1);
+            this.setNormalMapRotation(sprite.rotation);
 
             TextureTintPipeline.prototype.batchSprite.call(this, sprite, camera, parentTransformMatrix);
         }

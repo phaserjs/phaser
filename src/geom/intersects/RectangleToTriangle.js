@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -10,15 +10,15 @@ var ContainsArray = require('../triangle/ContainsArray');
 var Decompose = require('../rectangle/Decompose');
 
 /**
- * [description]
+ * Checks for intersection between Rectangle shape and Triangle shape.
  *
  * @function Phaser.Geom.Intersects.RectangleToTriangle
  * @since 3.0.0
  *
- * @param {Phaser.Geom.Rectangle} rect - [description]
- * @param {Phaser.Geom.Triangle} triangle - [description]
+ * @param {Phaser.Geom.Rectangle} rect - Rectangle object to test.
+ * @param {Phaser.Geom.Triangle} triangle - Triangle object to test.
  *
- * @return {boolean} [description]
+ * @return {boolean} A value of `true` if objects intersect; otherwise `false`.
  */
 var RectangleToTriangle = function (rect, triangle)
 {

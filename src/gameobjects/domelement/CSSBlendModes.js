@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -9,8 +9,8 @@
  * 
  * @name Phaser.CSSBlendModes
  * @enum {string}
- * @memberOf Phaser
- * @readOnly
+ * @memberof Phaser
+ * @readonly
  * @since 3.12.0
  */
 

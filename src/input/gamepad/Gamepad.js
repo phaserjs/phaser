@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -18,12 +18,12 @@ var Vector2 = require('../../math/Vector2');
  *
  * @class Gamepad
  * @extends Phaser.Events.EventEmitter
- * @memberOf Phaser.Input.Gamepad
+ * @memberof Phaser.Input.Gamepad
  * @constructor
  * @since 3.0.0
  *
  * @param {Phaser.Input.Gamepad.GamepadPlugin} manager - A reference to the Gamepad Plugin.
- * @param {Pad} pad - The Gamepad object, as extracted from GamepadEvent.
+ * @param {Phaser.Input.Gamepad.Types.Pad} pad - The Gamepad object, as extracted from GamepadEvent.
  */
 var Gamepad = new Class({
 

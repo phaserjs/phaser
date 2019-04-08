@@ -1,18 +1,10 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var GetFastValue = require('../../utils/object/GetFastValue');
-
-/**
- * @typedef {object} GetTilesWithinFilteringOptions
- *
- * @property {boolean} [isNotEmpty=false] - If true, only return tiles that don't have -1 for an index.
- * @property {boolean} [isColliding=false] - If true, only return tiles that collide on at least one side.
- * @property {boolean} [hasInterestingFace=false] - If true, only return tiles that have at least one interesting face.
- */
 
 /**
  * Gets the tiles in the given rectangular area (in tile coordinates) of the layer.
@@ -21,11 +13,11 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @private
  * @since 3.0.0
  *
- * @param {integer} tileX - [description]
- * @param {integer} tileY - [description]
- * @param {integer} width - [description]
- * @param {integer} height - [description]
- * @param {object} GetTilesWithinFilteringOptions - Optional filters to apply when getting the tiles.
+ * @param {integer} tileX - The left most tile index (in tile coordinates) to use as the origin of the area.
+ * @param {integer} tileY - The top most tile index (in tile coordinates) to use as the origin of the area.
+ * @param {integer} width - How many tiles wide from the `tileX` index the area will be.
+ * @param {integer} height - How many tiles tall from the `tileY` index the area will be.
+ * @param {Phaser.Tilemaps.Types.GetTilesWithinFilteringOptions} GetTilesWithinFilteringOptions - Optional filters to apply when getting the tiles.
  * @param {Phaser.Tilemaps.LayerData} layer - The Tilemap Layer to act upon.
  * 
  * @return {Phaser.Tilemaps.Tile[]} Array of Tile objects.

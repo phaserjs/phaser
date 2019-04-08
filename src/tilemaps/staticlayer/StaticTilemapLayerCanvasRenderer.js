@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -39,6 +39,11 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, src, interpolationPer
 
     camMatrix.copyFrom(camera.matrix);
 
+    var ctx = renderer.currentContext;
+    var gidMap = src.gidMap;
+
+    ctx.save();
+
     if (parentMatrix)
     {
         //  Multiply the camera by the parent matrix
@@ -48,24 +53,18 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, src, interpolationPer
         layerMatrix.e = src.x;
         layerMatrix.f = src.y;
 
-        //  Multiply by the Sprite matrix, store result in calcMatrix
         camMatrix.multiply(layerMatrix, calcMatrix);
+
+        calcMatrix.copyToContext(ctx);
     }
     else
     {
+        //  Undo the camera scroll
         layerMatrix.e -= camera.scrollX * src.scrollFactorX;
         layerMatrix.f -= camera.scrollY * src.scrollFactorY;
 
-        //  Multiply by the Sprite matrix, store result in calcMatrix
-        camMatrix.multiply(layerMatrix, calcMatrix);
+        layerMatrix.copyToContext(ctx);
     }
-
-    var ctx = renderer.currentContext;
-    var gidMap = src.gidMap;
-
-    ctx.save();
-
-    calcMatrix.copyToContext(ctx);
 
     var alpha = camera.alpha * src.alpha;
 
@@ -87,8 +86,10 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, src, interpolationPer
 
         if (tileTexCoords)
         {
-            var halfWidth = tile.width / 2;
-            var halfHeight = tile.height / 2;
+            var tileWidth = tileset.tileWidth;
+            var tileHeight = tileset.tileHeight;
+            var halfWidth = tileWidth / 2;
+            var halfHeight = tileHeight / 2;
     
             ctx.save();
 
@@ -109,9 +110,9 @@ var StaticTilemapLayerCanvasRenderer = function (renderer, src, interpolationPer
             ctx.drawImage(
                 image,
                 tileTexCoords.x, tileTexCoords.y,
-                tile.width, tile.height,
+                tileWidth, tileHeight,
                 -halfWidth, -halfHeight,
-                tile.width, tile.height
+                tileWidth, tileHeight
             );
     
             ctx.restore();

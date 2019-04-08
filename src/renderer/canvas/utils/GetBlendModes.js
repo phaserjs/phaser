@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -8,12 +8,14 @@ var modes = require('../../BlendModes');
 var CanvasFeatures = require('../../../device/CanvasFeatures');
 
 /**
- * [description]
+ * Returns an array which maps the default blend modes to supported Canvas blend modes.
+ *
+ * If the browser doesn't support a blend mode, it will default to the normal `source-over` blend mode.
  *
  * @function Phaser.Renderer.Canvas.GetBlendModes
  * @since 3.0.0
  *
- * @return {array} [description]
+ * @return {array} Which Canvas blend mode corresponds to which default Phaser blend mode.
  */
 var GetBlendModes = function ()
 {
@@ -38,6 +40,17 @@ var GetBlendModes = function ()
     output[modes.SATURATION] = (useNew) ? 'saturation' : so;
     output[modes.COLOR] = (useNew) ? 'color' : so;
     output[modes.LUMINOSITY] = (useNew) ? 'luminosity' : so;
+    output[modes.ERASE] = 'destination-out';
+    output[modes.SOURCE_IN] = 'source-in';
+    output[modes.SOURCE_OUT] = 'source-out';
+    output[modes.SOURCE_ATOP] = 'source-atop';
+    output[modes.DESTINATION_OVER] = 'destination-over';
+    output[modes.DESTINATION_IN] = 'destination-in';
+    output[modes.DESTINATION_OUT] = 'destination-out';
+    output[modes.DESTINATION_ATOP] = 'destination-atop';
+    output[modes.LIGHTER] = 'lighter';
+    output[modes.COPY] = 'copy';
+    output[modes.XOR] = 'xor';
 
     return output;
 };

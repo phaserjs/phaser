@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -11,28 +11,10 @@ var TYPE = require('./TYPE');
 var UpdateMotion = require('./UpdateMotion');
 
 /**
- * @callback BodyUpdateCallback
+ * @callback Phaser.Physics.Impact.Types.BodyUpdateCallback
+ * @since 3.0.0
  *
  * @param {Phaser.Physics.Impact.Body} body - [description]
- */
-
-/**
- * @typedef {object} JSONImpactBody
- * @todo Replace object types
- *
- * @property {string} name - [description]
- * @property {object} size - [description]
- * @property {object} pos - [description]
- * @property {object} vel - [description]
- * @property {object} accel - [description]
- * @property {object} friction - [description]
- * @property {object} maxVel - [description]
- * @property {number} gravityFactor - [description]
- * @property {number} bounciness - [description]
- * @property {number} minBounceVelocity - [description]
- * @property {Phaser.Physics.Impact.TYPE} type - [description]
- * @property {Phaser.Physics.Impact.TYPE} checkAgainst - [description]
- * @property {Phaser.Physics.Impact.COLLIDES} collides - [description]
  */
 
 /**
@@ -41,7 +23,7 @@ var UpdateMotion = require('./UpdateMotion');
  * This re-creates the properties you'd get on an Entity and the math needed to update them.
  *
  * @class Body
- * @memberOf Phaser.Physics.Impact
+ * @memberof Phaser.Physics.Impact
  * @constructor
  * @since 3.0.0
  *
@@ -121,7 +103,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.Body#size
-         * @type {{x: number, y: number}}
+         * @type {Phaser.Math.Types.Vector2Like}
          * @since 3.0.0
          */
         this.size = { x: sx, y: sy };
@@ -130,7 +112,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.Body#offset
-         * @type {{x: number, y: number}}
+         * @type {Phaser.Math.Types.Vector2Like}
          * @since 3.0.0
          */
         this.offset = { x: 0, y: 0 };
@@ -139,7 +121,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.Body#pos
-         * @type {{x: number, y: number}}
+         * @type {Phaser.Math.Types.Vector2Like}
          * @since 3.0.0
          */
         this.pos = { x: x, y: y };
@@ -148,7 +130,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.Body#last
-         * @type {{x: number, y: number}}
+         * @type {Phaser.Math.Types.Vector2Like}
          * @since 3.0.0
          */
         this.last = { x: x, y: y };
@@ -157,7 +139,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.Body#vel
-         * @type {{x: number, y: number}}
+         * @type {Phaser.Math.Types.Vector2Like}
          * @since 3.0.0
          */
         this.vel = { x: 0, y: 0 };
@@ -166,7 +148,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.Body#accel
-         * @type {{x: number, y: number}}
+         * @type {Phaser.Math.Types.Vector2Like}
          * @since 3.0.0
          */
         this.accel = { x: 0, y: 0 };
@@ -175,7 +157,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.Body#friction
-         * @type {{x: number, y: number}}
+         * @type {Phaser.Math.Types.Vector2Like}
          * @since 3.0.0
          */
         this.friction = { x: 0, y: 0 };
@@ -184,7 +166,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.Body#maxVel
-         * @type {{x: number, y: number}}
+         * @type {Phaser.Math.Types.Vector2Like}
          * @since 3.0.0
          */
         this.maxVel = { x: world.defaults.maxVelocityX, y: world.defaults.maxVelocityY };
@@ -461,7 +443,7 @@ var Body = new Class({
     },
 
     /**
-     * [description]
+     * Determines whether the body collides with the `other` one or not.
      *
      * @method Phaser.Physics.Impact.Body#touches
      * @since 3.0.0
@@ -504,12 +486,12 @@ var Body = new Class({
     },
 
     /**
-     * [description]
+     * Export this body object to JSON.
      *
      * @method Phaser.Physics.Impact.Body#toJSON
      * @since 3.0.0
      *
-     * @return {JSONImpactBody} [description]
+     * @return {Phaser.Physics.Impact.Types.JSONImpactBody} JSON representation of this body object.
      */
     toJSON: function ()
     {

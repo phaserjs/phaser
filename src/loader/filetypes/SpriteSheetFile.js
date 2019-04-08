@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -16,7 +16,7 @@ var ImageFile = require('./ImageFile.js');
  * @property {string} [extension='png'] - The default file extension to use if no url is provided.
  * @property {string} [normalMap] - The filename of an associated normal map. It uses the same path and url to load as the image.
  * @property {Phaser.Loader.FileTypes.ImageFrameConfig} [frameConfig] - The frame configuration object.
- * @property {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @property {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 
 /**
@@ -29,7 +29,7 @@ var ImageFile = require('./ImageFile.js');
  *
  * @class SpriteSheetFile
  * @extends Phaser.Loader.File
- * @memberOf Phaser.Loader.FileTypes
+ * @memberof Phaser.Loader.FileTypes
  * @constructor
  * @since 3.0.0
  *
@@ -37,7 +37,7 @@ var ImageFile = require('./ImageFile.js');
  * @param {(string|Phaser.Loader.FileTypes.SpriteSheetFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string|string[]} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
  * @param {Phaser.Loader.FileTypes.ImageFrameConfig} [frameConfig] - The frame configuration object.
- * @param {XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var SpriteSheetFile = new Class({
 
@@ -171,7 +171,7 @@ var SpriteSheetFile = new Class({
  * @param {(string|Phaser.Loader.FileTypes.SpriteSheetFileConfig|Phaser.Loader.FileTypes.SpriteSheetFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
  * @param {Phaser.Loader.FileTypes.ImageFrameConfig} [frameConfig] - The frame configuration object. At a minimum it should have a `frameWidth` property.
- * @param {XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */

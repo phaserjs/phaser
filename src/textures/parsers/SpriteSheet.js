@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -13,7 +13,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * same size and cannot be trimmed or rotated.
  *
  * @function Phaser.Textures.Parsers.SpriteSheet
- * @memberOf Phaser.Textures.Parsers
+ * @memberof Phaser.Textures.Parsers
  * @private
  * @since 3.0.0
  *

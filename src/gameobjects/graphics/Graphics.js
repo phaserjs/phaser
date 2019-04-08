@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -22,44 +22,6 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
 var MATH_CONST = require('../../math/const');
 var Render = require('./GraphicsRender');
-
-/**
- * Graphics line style (or stroke style) settings.
- *
- * @typedef {object} GraphicsLineStyle
- *
- * @property {number} [width] - The stroke width.
- * @property {number} [color] - The stroke color.
- * @property {number} [alpha] - The stroke alpha.
- */
-
-/**
- * Graphics fill style settings.
- *
- * @typedef {object} GraphicsFillStyle
- *
- * @property {number} [color] - The fill color.
- * @property {number} [alpha] - The fill alpha.
- */
-
-/**
- * Graphics style settings.
- *
- * @typedef {object} GraphicsStyles
- *
- * @property {GraphicsLineStyle} [lineStyle] - The style applied to shape outlines.
- * @property {GraphicsFillStyle} [fillStyle] - The style applied to shape areas.
- */
-
-/**
- * Options for the Graphics game Object.
- *
- * @typedef {object} GraphicsOptions
- * @extends GraphicsStyles
- *
- * @property {number} [x] - The x coordinate of the Graphics.
- * @property {number} [y] - The y coordinate of the Graphics.
- */
 
 /**
  * @classdesc
@@ -104,7 +66,7 @@ var Render = require('./GraphicsRender');
  *
  * @class Graphics
  * @extends Phaser.GameObjects.GameObject
- * @memberOf Phaser.GameObjects
+ * @memberof Phaser.GameObjects
  * @constructor
  * @since 3.0.0
  *
@@ -118,7 +80,7 @@ var Render = require('./GraphicsRender');
  * @extends Phaser.GameObjects.Components.ScrollFactor
  *
  * @param {Phaser.Scene} scene - The Scene to which this Graphics object belongs.
- * @param {GraphicsOptions} [options] - Options that set the position and default style of this Graphics object.
+ * @param {Phaser.GameObjects.Graphics.Types.Options} [options] - Options that set the position and default style of this Graphics object.
  */
 var Graphics = new Class({
 
@@ -247,7 +209,7 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#setDefaultStyles
      * @since 3.0.0
      *
-     * @param {GraphicsStyles} options - The styles to set as defaults.
+     * @param {Phaser.GameObjects.Graphics.Types.Styles} options - The styles to set as defaults.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -507,6 +469,26 @@ var Graphics = new Class({
     },
 
     /**
+     * Fill the current path.
+     * 
+     * This is an alias for `Graphics.fillPath` and does the same thing.
+     * It was added to match the CanvasRenderingContext 2D API.
+     *
+     * @method Phaser.GameObjects.Graphics#fill
+     * @since 3.16.0
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
+    fill: function ()
+    {
+        this.commandBuffer.push(
+            Commands.FILL_PATH
+        );
+
+        return this;
+    },
+
+    /**
      * Stroke the current path.
      *
      * @method Phaser.GameObjects.Graphics#strokePath
@@ -515,6 +497,26 @@ var Graphics = new Class({
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
     strokePath: function ()
+    {
+        this.commandBuffer.push(
+            Commands.STROKE_PATH
+        );
+
+        return this;
+    },
+
+    /**
+     * Stroke the current path.
+     * 
+     * This is an alias for `Graphics.strokePath` and does the same thing.
+     * It was added to match the CanvasRenderingContext 2D API.
+     *
+     * @method Phaser.GameObjects.Graphics#stroke
+     * @since 3.16.0
+     *
+     * @return {Phaser.GameObjects.Graphics} This Game Object.
+     */
+    stroke: function ()
     {
         this.commandBuffer.push(
             Commands.STROKE_PATH
@@ -700,11 +702,7 @@ var Graphics = new Class({
      * @param {number} y - The y coordinate of the top-left of the rectangle.
      * @param {number} width - The width of the rectangle.
      * @param {number} height - The height of the rectangle.
-     * @param {number} [radius = 20] - The corner radius; It can also be an object to specify different radii for corners
-     * @param {number} [radius.tl = 20] Top left
-     * @param {number} [radius.tr = 20] Top right
-     * @param {number} [radius.br = 20] Bottom right
-     * @param {number} [radius.bl = 20] Bottom left
+     * @param {(Phaser.GameObjects.Graphics.Types.RoundedRectRadius|number)} [radius=20] - The corner radius; It can also be an object to specify different radii for corners.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -750,11 +748,7 @@ var Graphics = new Class({
      * @param {number} y - The y coordinate of the top-left of the rectangle.
      * @param {number} width - The width of the rectangle.
      * @param {number} height - The height of the rectangle.
-     * @param {number} [radius = 20] - The corner radius; It can also be an object to specify different radii for corners
-     * @param {number} [radius.tl = 20] Top left
-     * @param {number} [radius.tr = 20] Top right
-     * @param {number} [radius.br = 20] Bottom right
-     * @param {number} [radius.bl = 20] Bottom left
+     * @param {(Phaser.GameObjects.Graphics.Types.RoundedRectRadius|number)} [radius=20] - The corner radius; It can also be an object to specify different radii for corners.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -1005,68 +999,26 @@ var Graphics = new Class({
     },
 
     /**
-     * [description]
-     *
-     * @method Phaser.GameObjects.Graphics#lineFxTo
-     * @since 3.0.0
-     *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} rgb - [description]
-     *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
-     */
-    lineFxTo: function (x, y, width, rgb)
-    {
-        this.commandBuffer.push(
-            Commands.LINE_FX_TO,
-            x, y, width, rgb, 1
-        );
-
-        return this;
-    },
-
-    /**
-     * [description]
-     *
-     * @method Phaser.GameObjects.Graphics#moveFxTo
-     * @since 3.0.0
-     *
-     * @param {number} x - [description]
-     * @param {number} y - [description]
-     * @param {number} width - [description]
-     * @param {number} rgb - [description]
-     *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
-     */
-    moveFxTo: function (x, y, width, rgb)
-    {
-        this.commandBuffer.push(
-            Commands.MOVE_FX_TO,
-            x, y, width, rgb, 1
-        );
-
-        return this;
-    },
-
-    /**
      * Stroke the shape represented by the given array of points.
      *
-     * Pass `true` to `autoClose` to close the shape automatically.
+     * Pass `closeShape` to automatically close the shape by joining the last to the first point.
+     * 
+     * Pass `closePath` to automatically close the path before it is stroked.
      *
      * @method Phaser.GameObjects.Graphics#strokePoints
      * @since 3.0.0
      *
      * @param {(array|Phaser.Geom.Point[])} points - The points to stroke.
-     * @param {boolean} [autoClose=false] - When `true`, the shape is closed by joining the last point to the first point.
+     * @param {boolean} [closeShape=false] - When `true`, the shape is closed by joining the last point to the first point.
+     * @param {boolean} [closePath=true] - When `true`, the path is closed before being stroked.
      * @param {integer} [endIndex] - The index of `points` to stop drawing at. Defaults to `points.length`.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
-    strokePoints: function (points, autoClose, endIndex)
+    strokePoints: function (points, closeShape, closePath, endIndex)
     {
-        if (autoClose === undefined) { autoClose = false; }
+        if (closeShape === undefined) { closeShape = false; }
+        if (closePath === undefined) { closePath = true; }
         if (endIndex === undefined) { endIndex = points.length; }
 
         this.beginPath();
@@ -1078,9 +1030,14 @@ var Graphics = new Class({
             this.lineTo(points[i].x, points[i].y);
         }
 
-        if (autoClose)
+        if (closeShape)
         {
             this.lineTo(points[0].x, points[0].y);
+        }
+
+        if (closePath)
+        {
+            this.closePath();
         }
 
         this.strokePath();
@@ -1091,20 +1048,24 @@ var Graphics = new Class({
     /**
      * Fill the shape represented by the given array of points.
      *
-     * Pass `true` to `autoClose` to close the shape automatically.
+     * Pass `closeShape` to automatically close the shape by joining the last to the first point.
+     * 
+     * Pass `closePath` to automatically close the path before it is filled.
      *
      * @method Phaser.GameObjects.Graphics#fillPoints
      * @since 3.0.0
      *
      * @param {(array|Phaser.Geom.Point[])} points - The points to fill.
-     * @param {boolean} [autoClose=false] - Whether to automatically close the polygon.
+     * @param {boolean} [closeShape=false] - When `true`, the shape is closed by joining the last point to the first point.
+     * @param {boolean} [closePath=true] - When `true`, the path is closed before being stroked.
      * @param {integer} [endIndex] - The index of `points` to stop at. Defaults to `points.length`.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
-    fillPoints: function (points, autoClose, endIndex)
+    fillPoints: function (points, closeShape, closePath, endIndex)
     {
-        if (autoClose === undefined) { autoClose = false; }
+        if (closeShape === undefined) { closeShape = false; }
+        if (closePath === undefined) { closePath = true; }
         if (endIndex === undefined) { endIndex = points.length; }
 
         this.beginPath();
@@ -1116,9 +1077,14 @@ var Graphics = new Class({
             this.lineTo(points[i].x, points[i].y);
         }
 
-        if (autoClose)
+        if (closeShape)
         {
             this.lineTo(points[0].x, points[0].y);
+        }
+
+        if (closePath)
+        {
+            this.closePath();
         }
 
         this.fillPath();
@@ -1446,8 +1412,8 @@ var Graphics = new Class({
         var sys = this.scene.sys;
         var renderer = sys.game.renderer;
 
-        if (width === undefined) { width = sys.game.config.width; }
-        if (height === undefined) { height = sys.game.config.height; }
+        if (width === undefined) { width = sys.scale.width; }
+        if (height === undefined) { height = sys.scale.height; }
 
         Graphics.TargetCamera.setScene(this.scene);
         Graphics.TargetCamera.setViewport(0, 0, width, height);

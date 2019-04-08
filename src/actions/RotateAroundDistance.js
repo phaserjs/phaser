@@ -1,13 +1,13 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var MathRotateAroundDistance = require('../math/RotateAroundDistance');
 
 /**
- * [description]
+ * Rotates an array of Game Objects around a point by the given angle and distance.
  *
  * @function Phaser.Actions.RotateAroundDistance
  * @since 3.0.0
