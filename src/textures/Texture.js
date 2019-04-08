@@ -16,6 +16,9 @@ var TEXTURE_MISSING_ERROR = 'Texture.frame missing: ';
  * The Frames represent the different areas of the Texture. For example a texture atlas
  * may have many Frames, one for each element within the atlas. Where-as a single image would have
  * just one frame, that encompasses the whole image.
+ * 
+ * Every Texture, no matter where it comes from, always has at least 1 frame called the `__BASE` frame.
+ * This frame represents the entirety of the source image.
  *
  * Textures are managed by the global TextureManager. This is a singleton class that is
  * responsible for creating and delivering Textures and their corresponding Frames to Game Objects.
@@ -111,7 +114,10 @@ var Texture = new Class({
         this.firstFrame = '__BASE';
 
         /**
-         * The total number of Frames in this Texture.
+         * The total number of Frames in this Texture, including the `__BASE` frame.
+         * 
+         * A Texture will always contain at least 1 frame because every Texture contains a `__BASE` frame by default,
+         * in addition to any extra frames that have been added to it, such as when parsing a Sprite Sheet or Texture Atlas.
          *
          * @name Phaser.Textures.Texture#frameTotal
          * @type {integer}
