@@ -1765,6 +1765,35 @@ var Tilemap = new Class({
     },
 
     /**
+     * Draws a debug representation of all layers within this Tilemap to the given Graphics object.
+     * 
+     * This is helpful when you want to get a quick idea of which of your tiles are colliding and which
+     * have interesting faces. The tiles are drawn starting at (0, 0) in the Graphics, allowing you to
+     * place the debug representation wherever you want on the screen.
+     *
+     * @method Phaser.Tilemaps.Tilemap#renderDebugFull
+     * @since 3.17.0
+     *
+     * @param {Phaser.GameObjects.Graphics} graphics - The target Graphics object to draw upon.
+     * @param {Phaser.Tilemaps.Types.StyleConfig} styleConfig - An object specifying the colors to use for the debug drawing.
+     * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
+     *
+     * @return {?Phaser.Tilemaps.Tilemap} Return this Tilemap object, or null if the layer given was invalid.
+     */
+    renderDebugFull: function (graphics, styleConfig)
+    {
+        var layers = this.layers;
+
+        // Destroy any StaticTilemapLayers or DynamicTilemapLayers that are stored in LayerData
+        for (var i = 0; i < layers.length; i++)
+        {
+            TilemapComponents.RenderDebug(graphics, styleConfig, layers[i]);
+        }
+
+        return this;
+    },
+
+    /**
      * Scans the given rectangular area (given in tile coordinates) for tiles with an index matching
      * `findIndex` and updates their index to match `newIndex`. This only modifies the index and does
      * not change collision information.

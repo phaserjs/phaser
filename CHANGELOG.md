@@ -66,6 +66,7 @@ Notes:
 * `GameObjects.Components.PathFollower` is a new component that manages any type of Game Object following a path. The original Path Follower Game Object has been updated to use this new component directly, but it can be applied to any custom Game Object class.
 * `Tilemap.removeLayer` is a new method that allows you to remove a specific layer from a Tilemap without destroying it.
 * `Tilemap.destroyLayer` is a new method that allows you to destroy a layer and remove it from a Tilemap.
+* `Tilemap.renderDebugFull` is a new method that will debug render all layers in the Tilemap to the given Graphics object.
 
 ### Updates
 
