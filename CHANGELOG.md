@@ -87,6 +87,26 @@ Notes:
 * `MapData.infinite` is a new boolean that controls if the map data is infinite or not.
 * `DynamicTilemapLayer.destroy` will now remove the layer from the Tilemap it belongs to, clearing it from the layers array. Fix #4319 (thanks @APXEOLOG)
 * `StaticTilemapLayer.destroy` will now remove the layer from the Tilemap it belongs to, clearing it from the layers array. Fix #4319 (thanks @APXEOLOG)
+* `DynamicTilemapLayer.destroy` has a new optional boolean argument `removeFromTilemap` which will control if the layer is removed from the parent map or not.
+* `StaticTilemapLayer.destroy` has a new optional boolean argument `removeFromTilemap` which will control if the layer is removed from the parent map or not.
+* `Tilemap.copy` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.fill` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.forEachTile` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.putTilesAt` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.randomize` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.calculateFacesAt` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.renderDebug` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.replaceByIndex` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.setCollision` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.setCollisionBetween` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.setCollisionByProperty` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.setCollisionByExclusion` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.setCollisionFromCollisionGroup` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.setTileIndexCallback` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.setTileLocationCallback` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.shuffle` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.swapByIndex` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.weightedRandomize` now actually returns `null` if an invalid layer was given, as per the docs.
 
 ### Bug Fixes
 
