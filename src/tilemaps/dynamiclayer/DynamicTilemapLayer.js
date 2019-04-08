@@ -451,16 +451,23 @@ var DynamicTilemapLayer = new Class({
      *
      * @method Phaser.Tilemaps.DynamicTilemapLayer#destroy
      * @since 3.0.0
+     * 
+     * @param {boolean} [removeFromTilemap=true] - Remove this layer from the parent Tilemap?
      */
-    destroy: function ()
+    destroy: function (removeFromTilemap)
     {
+        if (removeFromTilemap === undefined) { removeFromTilemap = true; }
+
         //  Uninstall this layer only if it is still installed on the LayerData object
         if (this.layer.tilemapLayer === this)
         {
             this.layer.tilemapLayer = undefined;
         }
 
-        this.tilemap.removeLayer(this);
+        if (removeFromTilemap)
+        {
+            this.tilemap.removeLayer(this);
+        }
 
         this.tilemap = undefined;
         this.layer = undefined;
