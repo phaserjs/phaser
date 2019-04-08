@@ -61,6 +61,7 @@ Notes:
 * `SceneManager.isPaused` is a new method that will return if the given Scene is currently paused or not (thanks @samme)
 * `ScenePlugin.isPaused` is a new method that will return if the given Scene is currently paused or not (thanks @samme)
 * `TextureManager.removeKey` is a new method that will remove a key from the Texture Manager without destroying the texture itself.
+* `Matter.World.resetCollisionIDs` is a new method that will reset the collision IDs that Matter JS uses for body collision groups. You should call this before destroying your game if you need to restart the game again on the same page, without first reloading the page. Or, if you wish to consistently destroy a Scene that contains Matter.js and then run it again (thanks @clesquir)
 
 ### Updates
 
@@ -89,6 +90,7 @@ Notes:
 * Setting the `fixedWidth` and / or `fixedHeight` properties in the configuration of a `Text` would be ignored, they were only supported when calling the `setFixedSize` method. They now work via either option. Fix #4424 (thanks @rexrainbow)
 * When calculating the width of a Text object for word wrapping it would ignore the extra spaces added from the wrap. It now accounts for these in the width. Fix #4187 (thanks @rexrainbow)
 * `Utils.Array.Add` would act incorrectly when adding an object into an array in which it already belonged. This would manifest if, for example, adding a child into a display list it was already a part of. Fix #4411 (thanks @mudala @LoolzRules)
+* `Tile.getCenterX` and `Tile.getCenterY` would return the wrong values for tiles on scaled layers. Fix #3845 (thanks @oloflarsson @florianvazelle)
 
 ### Examples, Documentation and TypeScript
 

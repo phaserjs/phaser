@@ -5,6 +5,7 @@
  */
 
 var Bodies = require('./lib/factory/Bodies');
+var Body = require('./lib/body/Body');
 var Class = require('../../utils/Class');
 var Common = require('./lib/core/Common');
 var Composite = require('./lib/body/Composite');
@@ -1074,6 +1075,26 @@ var World = new Class({
         });
 
         return points;
+    },
+
+    /**
+     * Resets the internal collision IDs that Matter.JS uses for Body collision groups.
+     * 
+     * You should call this before destroying your game if you need to restart the game
+     * again on the same page, without first reloading the page. Or, if you wish to
+     * consistently destroy a Scene that contains Matter.js and then run it again
+     * later in the same game.
+     *
+     * @method Phaser.Physics.Matter.World#resetCollisionIDs
+     * @since 3.17.0
+     */
+    resetCollisionIDs: function ()
+    {
+        Body._nextCollidingGroupId = 1;
+        Body._nextNonCollidingGroupId = -1;
+        Body._nextCategory = 0x0001;
+
+        return this;
     },
 
     /**
