@@ -736,14 +736,15 @@ var Tween = new Class({
 
                 tweenData.state = TWEEN_CONST.PLAYING_FORWARD;
             }
-            else if (tweenData.delay > 0)
-            {
-                tweenData.elapsed = tweenData.delay;
-                tweenData.state = TWEEN_CONST.DELAY;
-            }
             else
             {
                 tweenData.state = TWEEN_CONST.PENDING_RENDER;
+            }
+
+            if (tweenData.delay > 0)
+            {
+                tweenData.elapsed = tweenData.delay;
+                tweenData.state = TWEEN_CONST.DELAY;
             }
         }
     },
