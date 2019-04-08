@@ -131,7 +131,7 @@ Notes:
 * `Texture.add` will no longer let you add a frame to a texture with the same name or index as one that already exists in the texture. Doing so will now return `null` instead of a Frame object, and the `frameTotal` will never be incremented. Fix #4459 (thanks @BigZaphod)
 * The InputPlugin will now dispatch an update event regardless, allowing the Gamepad Plugin to update itself every frame, regardless of OM events. This allows Gamepads to work correctly again. Fix #4414 (thanks @CipSoft-Components)
 * Calling `Tween.play` on a tween that had already finished and was pending removal will stop the tween from getting stuck in an `isPlaying` state and will restart the tween again from the beginning. Calling `play` on a Tween that is already playing does nothing. Fix #4184 (thanks @SamCode)
-
+* Declared `Audio.dataset`, which fixes Internet Explorer 10 crashing when trying to access the dataset property of the object (thanks @SirLink)
 
 ### Examples, Documentation and TypeScript
 
