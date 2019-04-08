@@ -20,6 +20,7 @@ module.exports = {
     GetBounds: require('./GetBounds'),
     Mask: require('./Mask'),
     Origin: require('./Origin'),
+    PathFollower: require('./PathFollower'),
     Pipeline: require('./Pipeline'),
     ScrollFactor: require('./ScrollFactor'),
     Size: require('./Size'),
