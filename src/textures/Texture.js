@@ -160,7 +160,7 @@ var Texture = new Class({
         //  This is used to ensure we don't spam the display with entire
         //  atlases of sprite sheets, but instead just the first frame of them
         //  should the dev incorrectly specify the frame index
-        if (this.frameTotal === 1)
+        if (this.firstFrame === '__BASE')
         {
             this.firstFrame = name;
         }
