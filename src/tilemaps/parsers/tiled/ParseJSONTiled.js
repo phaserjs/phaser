@@ -12,6 +12,7 @@ var ParseTilesets = require('./ParseTilesets');
 var ParseObjectLayers = require('./ParseObjectLayers');
 var BuildTilesetIndex = require('./BuildTilesetIndex');
 var AssignTileProperties = require('./AssignTileProperties');
+var GetFastValue = require('../../../utils/object/GetFastValue');
 
 /**
  * @namespace Phaser.Tilemaps.Parsers.Tiled
@@ -53,7 +54,8 @@ var ParseJSONTiled = function (name, json, insertNull)
         format: Formats.TILED_JSON,
         version: json.version,
         properties: json.properties,
-        renderOrder: json.renderorder
+        renderOrder: json.renderorder,
+        infinite: json.infinite
     });
 
     mapData.layers = ParseTileLayers(json, insertNull);

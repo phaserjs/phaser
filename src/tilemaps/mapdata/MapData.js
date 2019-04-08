@@ -56,6 +56,15 @@ var MapData = new Class({
         this.height = GetFastValue(config, 'height', 0);
 
         /**
+         * If the map is infinite or not.
+         *
+         * @name Phaser.Tilemaps.MapData#infinite
+         * @type {boolean}
+         * @since 3.17.0
+         */
+        this.infinite = GetFastValue(config, 'infinite', false);
+
+        /**
          * The width of the tiles.
          * 
          * @name Phaser.Tilemaps.MapData#tileWidth
