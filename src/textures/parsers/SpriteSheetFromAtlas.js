@@ -73,12 +73,6 @@ var SpriteSheetFromAtlas = function (texture, frame, config)
 
     var bottomHeight = frameHeight - ((sheetHeight - cutHeight) - topPad);
 
-    // console.log('x / y', x, y);
-    // console.log('cutW / H', cutWidth, cutHeight);
-    // console.log('sheetW / H', sheetWidth, sheetHeight);
-    // console.log('row', row, 'column', column, 'total', total);
-    // console.log('LW', leftWidth, 'RW', rightWidth, 'TH', topHeight, 'BH', bottomHeight);
-
     if (startFrame > total || startFrame < -total)
     {
         startFrame = 0;
