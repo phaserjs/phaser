@@ -480,7 +480,10 @@ var Tween = new Class({
         }
 
         //  Excludes loop values
-        this.duration = max;
+
+        //  If duration has been set to 0 then we give it a super-low value so that it always
+        //  renders at least 1 frame, but no more, without causing divided by zero errors elsewhere.
+        this.duration = Math.max(max, 0.001);
 
         this.loopCounter = (this.loop === -1) ? 999999999999 : this.loop;
 
@@ -515,7 +518,7 @@ var Tween = new Class({
             var gen = tweenData.gen;
 
             tweenData.delay = gen.delay(i, totalTargets, target);
-            tweenData.duration = gen.duration(i, totalTargets, target);
+            tweenData.duration = Math.max(gen.duration(i, totalTargets, target), 0.001);
             tweenData.hold = gen.hold(i, totalTargets, target);
             tweenData.repeat = gen.repeat(i, totalTargets, target);
             tweenData.repeatDelay = gen.repeatDelay(i, totalTargets, target);

@@ -92,6 +92,7 @@ Notes:
 * `Utils.Array.Add` would act incorrectly when adding an object into an array in which it already belonged. This would manifest if, for example, adding a child into a display list it was already a part of. Fix #4411 (thanks @mudala @LoolzRules)
 * `Tile.getCenterX` and `Tile.getCenterY` would return the wrong values for tiles on scaled layers. Fix #3845 (thanks @oloflarsson @florianvazelle)
 * `Camera.startFollow` will now ensure that if the Camera is using bounds that the `scrollX` and `scrollY` values set after first following the Game Object do not exceed the bounds (thanks @snowbillr)
+* Creating a Tween with a `duration` of zero would cause the tweened object properties to be set to `NaN`. Now they will tween for one single frame before being set to progress 1. Fix #4235 (thanks @BigZaphod)
 
 ### Examples, Documentation and TypeScript
 
