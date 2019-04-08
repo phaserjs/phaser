@@ -103,6 +103,7 @@ Notes:
 * `Tween.stop` assumed that the parent was the TweenManager. If the Tween has been added to the Timeline, that was not true and the stop method crashed (thanks @TadejZupancic)
 * Calling `Tween.restart` multiple times in a row would cause the tween to freeze. It will now disregard all additional calls to `restart` if it's already in a pending state (thanks @rgk)
 * Tween Timelines would only apply the `delay` value of a child tween once and not on loop. Fix #3841 (thanks @Edwin222 @Antriel)
+* `Texture.add` will no longer let you add a frame to a texture with the same name or index as one that already exists in the texture. Doing so will now return `null` instead of a Frame object, and the `frameTotal` will never be incremented. Fix #4459 (thanks @BigZaphod)
 
 ### Examples, Documentation and TypeScript
 

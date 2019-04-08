@@ -137,6 +137,8 @@ var Texture = new Class({
      * Adds a new Frame to this Texture.
      *
      * A Frame is a rectangular region of a TextureSource with a unique index or string-based key.
+     * 
+     * The name given must be unique within this Texture. If it already exists, this method will return `null`.
      *
      * @method Phaser.Textures.Texture#add
      * @since 3.0.0
@@ -148,10 +150,15 @@ var Texture = new Class({
      * @param {number} width - The width of this Frame.
      * @param {number} height - The height of this Frame.
      *
-     * @return {Phaser.Textures.Frame} The Frame that was added to this Texture.
+     * @return {?Phaser.Textures.Frame} The Frame that was added to this Texture, or `null` if the given name already exists.
      */
     add: function (name, sourceIndex, x, y, width, height)
     {
+        if (this.has(name))
+        {
+            return null;
+        }
+
         var frame = new Frame(this, name, sourceIndex, x, y, width, height);
 
         this.frames[name] = frame;
