@@ -230,10 +230,8 @@ var PathFollower = new Class({
         }
 
         //  Override in case they've been specified in the config
-        config.from = config.from || 0;
-        config.to = config.to || 1;
-
-        //  Can also read extra values out of the config:
+        config.from = GetValue(config, 'from', 0);
+        config.to = GetValue(config, 'to', 1);
 
         var positionOnPath = GetBoolean(config, 'positionOnPath', false);
 
