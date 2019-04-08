@@ -399,11 +399,7 @@ var InputPlugin = new Class({
         eventEmitter.on(SceneEvents.TRANSITION_OUT, this.transitionOut, this);
         eventEmitter.on(SceneEvents.TRANSITION_COMPLETE, this.transitionComplete, this);
         eventEmitter.on(SceneEvents.PRE_UPDATE, this.preUpdate, this);
-
-        if (this.manager.useQueue)
-        {
-            eventEmitter.on(SceneEvents.UPDATE, this.update, this);
-        }
+        eventEmitter.on(SceneEvents.UPDATE, this.update, this);
 
         eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
 
@@ -544,7 +540,7 @@ var InputPlugin = new Class({
             return;
         }
 
-        var runUpdate = (manager.dirty || this.pollRate === 0);
+        var runUpdate = (manager.dirty || this.pollRate === 0 || manager.useQueue);
 
         if (this.pollRate > -1)
         {
