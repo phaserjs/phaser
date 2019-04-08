@@ -18,8 +18,6 @@ module.exports = {
     STROKE_PATH: 9,
     FILL_TRIANGLE: 10,
     STROKE_TRIANGLE: 11,
-    LINE_FX_TO: 12,
-    MOVE_FX_TO: 13,
     SAVE: 14,
     RESTORE: 15,
     TRANSLATE: 16,

@@ -999,52 +999,6 @@ var Graphics = new Class({
     },
 
     /**
-     * Draw a line from the current drawing position to the given position with a specific width and color.
-     *
-     * @method Phaser.GameObjects.Graphics#lineFxTo
-     * @since 3.0.0
-     *
-     * @param {number} x - The x coordinate to draw the line to.
-     * @param {number} y - The y coordinate to draw the line to.
-     * @param {number} width - The width of the stroke.
-     * @param {number} rgb - The color of the stroke.
-     *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
-     */
-    lineFxTo: function (x, y, width, rgb)
-    {
-        this.commandBuffer.push(
-            Commands.LINE_FX_TO,
-            x, y, width, rgb, 1
-        );
-
-        return this;
-    },
-
-    /**
-     * Move the current drawing position to the given position and change the pen width and color.
-     *
-     * @method Phaser.GameObjects.Graphics#moveFxTo
-     * @since 3.0.0
-     *
-     * @param {number} x - The x coordinate to move to.
-     * @param {number} y - The y coordinate to move to.
-     * @param {number} width - The new stroke width.
-     * @param {number} rgb - The new stroke color.
-     *
-     * @return {Phaser.GameObjects.Graphics} This Game Object.
-     */
-    moveFxTo: function (x, y, width, rgb)
-    {
-        this.commandBuffer.push(
-            Commands.MOVE_FX_TO,
-            x, y, width, rgb, 1
-        );
-
-        return this;
-    },
-
-    /**
      * Stroke the shape represented by the given array of points.
      *
      * Pass `closeShape` to automatically close the shape by joining the last to the first point.
