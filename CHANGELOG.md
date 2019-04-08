@@ -64,6 +64,8 @@ Notes:
 * `Matter.World.resetCollisionIDs` is a new method that will reset the collision IDs that Matter JS uses for body collision groups. You should call this before destroying your game if you need to restart the game again on the same page, without first reloading the page. Or, if you wish to consistently destroy a Scene that contains Matter.js and then run it again (thanks @clesquir)
 * RenderTexture has two new optional constructor arguments `key` and `frame`. This allows you to create a RenderTexture pre-populated with the size and frame from an existing texture (thanks @TadejZupancic)
 * `GameObjects.Components.PathFollower` is a new component that manages any type of Game Object following a path. The original Path Follower Game Object has been updated to use this new component directly, but it can be applied to any custom Game Object class.
+* `Tilemap.removeLayer` is a new method that allows you to remove a specific layer from a Tilemap without destroying it.
+* `Tilemap.destroyLayer` is a new method that allows you to destroy a layer and remove it from a Tilemap.
 
 ### Updates
 
@@ -83,6 +85,8 @@ Notes:
 * `Graphics.lineFxTo` and `Graphics.moveFxTo` have been removed as they were not being rendered anyway.
 * You can now use "infinite" tilemaps as created in Tiled v1.1 and above. Support is basic in that it takes the chunk data and builds one giant map from it. However, at least you are still able to now load and use infinite maps, even if they don't chunk during the game (thanks @Upperfoot)
 * `MapData.infinite` is a new boolean that controls if the map data is infinite or not.
+* `DynamicTilemapLayer.destroy` will now remove the layer from the Tilemap it belongs to, clearing it from the layers array. Fix #4319 (thanks @APXEOLOG)
+* `StaticTilemapLayer.destroy` will now remove the layer from the Tilemap it belongs to, clearing it from the layers array. Fix #4319 (thanks @APXEOLOG)
 
 ### Bug Fixes
 
@@ -105,6 +109,7 @@ Notes:
 * Tween Timelines would only apply the `delay` value of a child tween once and not on loop. Fix #3841 (thanks @Edwin222 @Antriel)
 * `Texture.add` will no longer let you add a frame to a texture with the same name or index as one that already exists in the texture. Doing so will now return `null` instead of a Frame object, and the `frameTotal` will never be incremented. Fix #4459 (thanks @BigZaphod)
 * The InputPlugin will now dispatch an update event regardless, allowing the Gamepad Plugin to update itself every frame, regardless of DOM events. This allows Gamepads to work correctly again. Fix #4414 (thanks @CipSoft-Components)
+
 
 ### Examples, Documentation and TypeScript
 

@@ -454,11 +454,13 @@ var DynamicTilemapLayer = new Class({
      */
     destroy: function ()
     {
-        // Uninstall this layer only if it is still installed on the LayerData object
+        //  Uninstall this layer only if it is still installed on the LayerData object
         if (this.layer.tilemapLayer === this)
         {
             this.layer.tilemapLayer = undefined;
         }
+
+        this.tilemap.removeLayer(this);
 
         this.tilemap = undefined;
         this.layer = undefined;

@@ -1448,6 +1448,8 @@ var StaticTilemapLayer = new Class({
             this.layer.tilemapLayer = undefined;
         }
 
+        this.tilemap.removeLayer(this);
+
         this.tilemap = undefined;
         this.layer = undefined;
         this.culledTiles.length = 0;
