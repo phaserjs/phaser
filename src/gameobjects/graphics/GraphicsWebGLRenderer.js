@@ -311,6 +311,41 @@ var GraphicsWebGLRenderer = function (renderer, src, interpolationPercentage, ca
                 path.push(lastPath);
                 break;
 
+            case Commands.LINE_FX_TO:
+                if (lastPath !== null)
+                {
+                    lastPath.points.push(new Point(
+                        commands[++cmdIndex],
+                        commands[++cmdIndex],
+                        commands[++cmdIndex],
+                        commands[++cmdIndex],
+                        commands[++cmdIndex] * alpha
+                    ));
+                }
+                else
+                {
+                    lastPath = new Path(
+                        commands[++cmdIndex],
+                        commands[++cmdIndex],
+                        commands[++cmdIndex],
+                        commands[++cmdIndex],
+                        commands[++cmdIndex] * alpha
+                    );
+                    path.push(lastPath);
+                }
+                break;
+
+            case Commands.MOVE_FX_TO:
+                lastPath = new Path(
+                    commands[++cmdIndex],
+                    commands[++cmdIndex],
+                    commands[++cmdIndex],
+                    commands[++cmdIndex],
+                    commands[++cmdIndex] * alpha
+                );
+                path.push(lastPath);
+                break;
+
             case Commands.SAVE:
                 matrixStack.push(currentMatrix.copyToArray());
                 break;
