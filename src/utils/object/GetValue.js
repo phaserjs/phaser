@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -30,7 +30,7 @@ var GetValue = function (source, key, defaultValue)
     {
         return source[key];
     }
-    else if (key.indexOf('.'))
+    else if (key.indexOf('.') !== -1)
     {
         var keys = key.split('.');
         var parent = source;

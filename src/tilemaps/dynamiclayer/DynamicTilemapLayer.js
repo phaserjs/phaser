@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -35,7 +35,6 @@ var TilemapComponents = require('../components');
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.ScaleMode
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
@@ -60,7 +59,6 @@ var DynamicTilemapLayer = new Class({
         Components.GetBounds,
         Components.Origin,
         Components.Pipeline,
-        Components.ScaleMode,
         Components.Transform,
         Components.Visible,
         Components.ScrollFactor,
@@ -199,9 +197,9 @@ var DynamicTilemapLayer = new Class({
          *
          * It will be sent 3 arguments:
          *
-         * 1) The Phaser.Tilemaps.LayerData object for this Layer
-         * 2) The Camera that is culling the layer. You can check its `dirty` property to see if it has changed since the last cull.
-         * 3) A reference to the `culledTiles` array, which should be used to store the tiles you want rendered.
+         * 1. The Phaser.Tilemaps.LayerData object for this Layer
+         * 2. The Camera that is culling the layer. You can check its `dirty` property to see if it has changed since the last cull.
+         * 3. A reference to the `culledTiles` array, which should be used to store the tiles you want rendered.
          *
          * See the `TilemapComponents.CullTiles` source code for details on implementing your own culling system.
          *
@@ -513,10 +511,7 @@ var DynamicTilemapLayer = new Class({
      * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area to filter.
      * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
      * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
-     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
-     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have -1 for an index.
-     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on at least one side.
-     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that have at least one interesting face.
+     * @param {Phaser.Tilemaps.Types.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      *
      * @return {Phaser.Tilemaps.Tile[]} An array of Tile objects.
      */
@@ -561,10 +556,7 @@ var DynamicTilemapLayer = new Class({
      * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area to search.
      * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
      * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
-     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
-     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have -1 for an index.
-     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on at least one side.
-     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that have at least one interesting face.
+     * @param {Phaser.Tilemaps.Types.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      *
      * @return {?Phaser.Tilemaps.Tile}
      */
@@ -586,10 +578,7 @@ var DynamicTilemapLayer = new Class({
      * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area to search.
      * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
      * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
-     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
-     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have -1 for an index.
-     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on at least one side.
-     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that have at least one interesting face.
+     * @param {Phaser.Tilemaps.Types.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      *
      * @return {Phaser.Tilemaps.DynamicTilemapLayer} This Tilemap Layer object.
      */
@@ -646,10 +635,7 @@ var DynamicTilemapLayer = new Class({
      * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
      * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
      * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
-     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
-     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have -1 for an index.
-     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on at least one side.
-     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that have at least one interesting face.
+     * @param {Phaser.Tilemaps.Types.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      *
      * @return {Phaser.Tilemaps.Tile[]} An array of Tile objects.
      */
@@ -666,10 +652,7 @@ var DynamicTilemapLayer = new Class({
      * @since 3.0.0
      *
      * @param {(Phaser.Geom.Circle|Phaser.Geom.Line|Phaser.Geom.Rectangle|Phaser.Geom.Triangle)} shape - A shape in world (pixel) coordinates
-     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
-     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have -1 for an index.
-     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on at least one side.
-     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that have at least one interesting face.
+     * @param {Phaser.Tilemaps.Types.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when factoring in which tiles to return.
      *
      * @return {Phaser.Tilemaps.Tile[]} An array of Tile objects.
@@ -689,10 +672,7 @@ var DynamicTilemapLayer = new Class({
      * @param {number} worldY - The world y coordinate for the top-left of the area.
      * @param {number} width - The width of the area.
      * @param {number} height - The height of the area.
-     * @param {object} [filteringOptions] - Optional filters to apply when getting the tiles.
-     * @param {boolean} [filteringOptions.isNotEmpty=false] - If true, only return tiles that don't have -1 for an index.
-     * @param {boolean} [filteringOptions.isColliding=false] - If true, only return tiles that collide on at least one side.
-     * @param {boolean} [filteringOptions.hasInterestingFace=false] - If true, only return tiles that have at least one interesting face.
+     * @param {Phaser.Tilemaps.Types.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when factoring in which tiles to return.
      *
      * @return {Phaser.Tilemaps.Tile[]} An array of Tile objects.
@@ -878,13 +858,7 @@ var DynamicTilemapLayer = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Graphics} graphics - The target Graphics object to draw upon.
-     * @param {object} styleConfig - An object specifying the colors to use for the debug drawing.
-     * @param {?Color} [styleConfig.tileColor=blue] - Color to use for drawing a filled rectangle at
-     * non-colliding tile locations. If set to null, non-colliding tiles will not be drawn.
-     * @param {?Color} [styleConfig.collidingTileColor=orange] - Color to use for drawing a filled
-     * rectangle at colliding tile locations. If set to null, colliding tiles will not be drawn.
-     * @param {?Color} [styleConfig.faceColor=grey] - Color to use for drawing a line at interesting
-     * tile faces. If set to null, interesting tile faces will not be drawn.
+     * @param {Phaser.Tilemaps.Types.StyleConfig} styleConfig - An object specifying the colors to use for the debug drawing.
      *
      * @return {Phaser.Tilemaps.DynamicTilemapLayer} This Tilemap Layer object.
      */
@@ -1087,7 +1061,7 @@ var DynamicTilemapLayer = new Class({
      * @method Phaser.Tilemaps.DynamicTilemapLayer#setTileIndexCallback
      * @since 3.0.0
      *
-     * @param {(integer|array)} indexes - Either a single tile index, or an array of tile indexes to have a collision callback set for.
+     * @param {(integer|integer[])} indexes - Either a single tile index, or an array of tile indexes to have a collision callback set for.
      * @param {function} callback - The callback that will be invoked when the tile is collided with.
      * @param {object} callbackContext - The context under which the callback is called.
      *
@@ -1112,7 +1086,7 @@ var DynamicTilemapLayer = new Class({
      * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
      * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
      * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
-     * @param {function} callback - The callback that will be invoked when the tile is collided with.
+     * @param {function} [callback] - The callback that will be invoked when the tile is collided with.
      * @param {object} [callbackContext] - The context under which the callback is called.
      *
      * @return {Phaser.Tilemaps.DynamicTilemapLayer} This Tilemap Layer object.

@@ -1,11 +1,13 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var ArrayRemove = require('../../utils/array/Remove');
 var Class = require('../../utils/Class');
+var GameEvents = require('../../core/events');
+var InputEvents = require('../events');
 var KeyCodes = require('../../input/keyboard/keys/KeyCodes');
 var NOOP = require('../../utils/Class');
 
@@ -72,7 +74,7 @@ var KeyboardManager = new Class({
          * An array of Key Code values that will automatically have `preventDefault` called on them,
          * as long as the `KeyboardManager.preventDefault` boolean is set to `true`.
          * 
-         * By default the array contains: The Space Key, the Cursor Keys, 0 to 9 and A to Z.
+         * By default the array is empty.
          * 
          * The key must be non-modified when pressed in order to be captured.
          * 
@@ -138,7 +140,7 @@ var KeyboardManager = new Class({
          */
         this.onKeyUp = NOOP;
 
-        inputManager.events.once('boot', this.boot, this);
+        inputManager.events.once(InputEvents.MANAGER_BOOT, this.boot, this);
     },
 
     /**
@@ -167,7 +169,7 @@ var KeyboardManager = new Class({
             this.startListeners();
         }
 
-        this.manager.game.events.on('poststep', this.postUpdate, this);
+        this.manager.game.events.on(GameEvents.POST_STEP, this.postUpdate, this);
     },
 
     /**
@@ -190,6 +192,11 @@ var KeyboardManager = new Class({
             }
 
             _this.queue.push(event);
+
+            if (!_this.manager.useQueue)
+            {
+                _this.manager.events.emit(InputEvents.MANAGER_PROCESS);
+            }
     
             var modified = (event.altKey || event.ctrlKey || event.shiftKey || event.metaKey);
 
@@ -206,8 +213,13 @@ var KeyboardManager = new Class({
                 // Do nothing if event already handled
                 return;
             }
-    
+
             _this.queue.push(event);
+
+            if (!_this.manager.useQueue)
+            {
+                _this.manager.events.emit(InputEvents.MANAGER_PROCESS);
+            }
     
             var modified = (event.altKey || event.ctrlKey || event.shiftKey || event.metaKey);
 
@@ -317,7 +329,7 @@ var KeyboardManager = new Class({
 
             if (typeof code === 'string')
             {
-                code = KeyCodes[code.toUpperCase()];
+                code = KeyCodes[code.trim().toUpperCase()];
             }
 
             if (captures.indexOf(code) === -1)
@@ -420,7 +432,7 @@ var KeyboardManager = new Class({
 
         this.queue = [];
 
-        this.manager.game.events.off('poststep', this.postUpdate, this);
+        this.manager.game.events.off(GameEvents.POST_RENDER, this.postUpdate, this);
 
         this.target = null;
         this.enabled = false;

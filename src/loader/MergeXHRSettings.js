@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -16,10 +16,10 @@ var XHRSettings = require('./XHRSettings');
  * @function Phaser.Loader.MergeXHRSettings
  * @since 3.0.0
  *
- * @param {XHRSettingsObject} global - The global XHRSettings object.
- * @param {XHRSettingsObject} local - The local XHRSettings object.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} global - The global XHRSettings object.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} local - The local XHRSettings object.
  *
- * @return {XHRSettingsObject} A newly formed XHRSettings object.
+ * @return {Phaser.Loader.Types.XHRSettingsObject} A newly formed XHRSettings object.
  */
 var MergeXHRSettings = function (global, local)
 {

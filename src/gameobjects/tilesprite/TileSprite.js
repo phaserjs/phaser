@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -24,8 +24,8 @@ var _FLAG = 8; // 1000
  * The texture can be scrolled and scaled independently of the TileSprite itself. Textures will automatically wrap and
  * are designed so that you can create game backdrops using seamless textures as a source.
  *
- * You shouldn't ever create a TileSprite any larger than your actual screen size. If you want to create a large repeating background
- * that scrolls across the whole map of your game, then you create a TileSprite that fits the screen size and then use the `tilePosition`
+ * You shouldn't ever create a TileSprite any larger than your actual canvas size. If you want to create a large repeating background
+ * that scrolls across the whole map of your game, then you create a TileSprite that fits the canvas size and then use the `tilePosition`
  * property to scroll the texture as the player moves. If you create a TileSprite that is thousands of pixels in size then it will 
  * consume huge amounts of memory and cause performance issues. Remember: use `tilePosition` to scroll your texture and `tileScale` to
  * adjust the scale of the texture - don't resize the sprite itself or make it larger than it needs.
@@ -56,7 +56,6 @@ var _FLAG = 8; // 1000
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.ScaleMode
  * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Tint
  * @extends Phaser.GameObjects.Components.Transform
@@ -85,7 +84,6 @@ var TileSprite = new Class({
         Components.Mask,
         Components.Origin,
         Components.Pipeline,
-        Components.ScaleMode,
         Components.ScrollFactor,
         Components.Tint,
         Components.Transform,
@@ -376,22 +374,18 @@ var TileSprite = new Class({
      * @method Phaser.GameObjects.TileSprite#setTileScale
      * @since 3.12.0
      *
-     * @param {number} [x] - The horizontal scale of the tiling texture.
-     * @param {number} [y] - The vertical scale of the tiling texture.
+     * @param {number} [x] - The horizontal scale of the tiling texture. If not given it will use the current `tileScaleX` value.
+     * @param {number} [y=x] - The vertical scale of the tiling texture. If not given it will use the `x` value.
      *
      * @return {this} This Tile Sprite instance.
      */
     setTileScale: function (x, y)
     {
-        if (x !== undefined)
-        {
-            this.tileScaleX = x;
-        }
+        if (x === undefined) { x = this.tileScaleX; }
+        if (y === undefined) { y = x; }
 
-        if (y !== undefined)
-        {
-            this.tileScaleY = y;
-        }
+        this.tileScaleX = x;
+        this.tileScaleY = y;
 
         return this;
     },
@@ -405,7 +399,7 @@ var TileSprite = new Class({
      */
     updateTileTexture: function ()
     {
-        if (!this.dirty)
+        if (!this.dirty || !this.renderer)
         {
             return;
         }

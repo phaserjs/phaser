@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -14,7 +14,7 @@ var GetValue = require('../../utils/object/GetValue');
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - A reference to the Phaser Scene.
- * @param {Phaser.GameObjects.RetroFont.Config} config - The font configuration object.
+ * @param {Phaser.GameObjects.BitmapText.Types.RetroFontConfig} config - The font configuration object.
  *
  * @return {object} A parsed Bitmap Font data entry for the Bitmap Font cache.
  */

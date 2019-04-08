@@ -1,12 +1,13 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Class = require('../utils/Class');
 var CONST = require('./const');
 var DefaultPlugins = require('../plugins/DefaultPlugins');
+var Events = require('./events');
 var GetPhysicsPlugins = require('./GetPhysicsPlugins');
 var GetScenePlugins = require('./GetScenePlugins');
 var NOOP = require('../utils/NOOP');
@@ -26,7 +27,7 @@ var Settings = require('./Settings');
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - The Scene that owns this Systems instance.
- * @param {(string|Phaser.Scenes.Settings.Config)} config - Scene specific configuration settings.
+ * @param {(string|Phaser.Scenes.Types.SettingsConfig)} config - Scene specific configuration settings.
  */
 var Systems = new Class({
 
@@ -68,7 +69,7 @@ var Systems = new Class({
          * The Scene Configuration object, as passed in when creating the Scene.
          *
          * @name Phaser.Scenes.Systems#config
-         * @type {(string|Phaser.Scenes.Settings.Config)}
+         * @type {(string|Phaser.Scenes.Types.SettingsConfig)}
          * @since 3.0.0
          */
         this.config = config;
@@ -77,7 +78,7 @@ var Systems = new Class({
          * The Scene Settings. This is the parsed output based on the Scene configuration.
          *
          * @name Phaser.Scenes.Systems#settings
-         * @type {Phaser.Scenes.Settings.Object}
+         * @type {Phaser.Scenes.Types.SettingsObject}
          * @since 3.0.0
          */
         this.settings = Settings.create(config);
@@ -154,7 +155,7 @@ var Systems = new Class({
          * In the default set-up you can access this from within a Scene via the `this.scale` property.
          *
          * @name Phaser.Scenes.Systems#scale
-         * @type {Phaser.DOM.ScaleManager}
+         * @type {Phaser.Scale.ScaleManager}
          * @since 3.15.0
          */
         this.scale;
@@ -301,6 +302,7 @@ var Systems = new Class({
      *
      * @method Phaser.Scenes.Systems#init
      * @protected
+     * @fires Phaser.Scenes.Events#BOOT
      * @since 3.0.0
      *
      * @param {Phaser.Game} game - A reference to the Phaser Game instance.
@@ -323,7 +325,7 @@ var Systems = new Class({
 
         pluginManager.addToScene(this, DefaultPlugins.Global, [ DefaultPlugins.CoreScene, GetScenePlugins(this), GetPhysicsPlugins(this) ]);
 
-        this.events.emit('boot', this);
+        this.events.emit(Events.BOOT, this);
 
         this.settings.isBooted = true;
     },
@@ -352,6 +354,9 @@ var Systems = new Class({
      * Frame or Set Timeout call to the main Game instance.
      *
      * @method Phaser.Scenes.Systems#step
+     * @fires Phaser.Scenes.Events#PRE_UPDATE
+     * @fires Phaser.Scenes.Events#_UPDATE
+     * @fires Phaser.Scenes.Events#POST_UPDATE
      * @since 3.0.0
      *
      * @param {number} time - The time value from the most recent Game step. Typically a high-resolution timer value, or Date.now().
@@ -359,13 +364,13 @@ var Systems = new Class({
      */
     step: function (time, delta)
     {
-        this.events.emit('preupdate', time, delta);
+        this.events.emit(Events.PRE_UPDATE, time, delta);
 
-        this.events.emit('update', time, delta);
+        this.events.emit(Events.UPDATE, time, delta);
 
         this.sceneUpdate.call(this.scene, time, delta);
 
-        this.events.emit('postupdate', time, delta);
+        this.events.emit(Events.POST_UPDATE, time, delta);
     },
 
     /**
@@ -373,6 +378,7 @@ var Systems = new Class({
      * Instructs the Scene to render itself via its Camera Manager to the renderer given.
      *
      * @method Phaser.Scenes.Systems#render
+     * @fires Phaser.Scenes.Events#RENDER
      * @since 3.0.0
      *
      * @param {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)} renderer - The renderer that invoked the render call.
@@ -385,7 +391,7 @@ var Systems = new Class({
 
         this.cameras.render(renderer, displayList);
 
-        this.events.emit('render', renderer);
+        this.events.emit(Events.RENDER, renderer);
     },
 
     /**
@@ -415,6 +421,7 @@ var Systems = new Class({
      * A paused Scene still renders, it just doesn't run ANY of its update handlers or systems.
      *
      * @method Phaser.Scenes.Systems#pause
+     * @fires Phaser.Scenes.Events#PAUSE
      * @since 3.0.0
      * 
      * @param {object} [data] - A data object that will be passed in the 'pause' event.
@@ -429,7 +436,7 @@ var Systems = new Class({
 
             this.settings.active = false;
 
-            this.events.emit('pause', this, data);
+            this.events.emit(Events.PAUSE, this, data);
         }
 
         return this;
@@ -439,6 +446,7 @@ var Systems = new Class({
      * Resume this Scene from a paused state.
      *
      * @method Phaser.Scenes.Systems#resume
+     * @fires Phaser.Scenes.Events#RESUME
      * @since 3.0.0
      *
      * @param {object} [data] - A data object that will be passed in the 'resume' event.
@@ -453,7 +461,7 @@ var Systems = new Class({
 
             this.settings.active = true;
 
-            this.events.emit('resume', this, data);
+            this.events.emit(Events.RESUME, this, data);
         }
 
         return this;
@@ -468,6 +476,7 @@ var Systems = new Class({
      * from other Scenes may still invoke changes within it, so be careful what is left active.
      *
      * @method Phaser.Scenes.Systems#sleep
+     * @fires Phaser.Scenes.Events#SLEEP
      * @since 3.0.0
      * 
      * @param {object} [data] - A data object that will be passed in the 'sleep' event.
@@ -481,7 +490,7 @@ var Systems = new Class({
         this.settings.active = false;
         this.settings.visible = false;
 
-        this.events.emit('sleep', this, data);
+        this.events.emit(Events.SLEEP, this, data);
 
         return this;
     },
@@ -490,6 +499,7 @@ var Systems = new Class({
      * Wake-up this Scene if it was previously asleep.
      *
      * @method Phaser.Scenes.Systems#wake
+     * @fires Phaser.Scenes.Events#WAKE
      * @since 3.0.0
      *
      * @param {object} [data] - A data object that will be passed in the 'wake' event.
@@ -505,11 +515,11 @@ var Systems = new Class({
         settings.active = true;
         settings.visible = true;
 
-        this.events.emit('wake', this, data);
+        this.events.emit(Events.WAKE, this, data);
 
         if (settings.isTransition)
         {
-            this.events.emit('transitionwake', settings.transitionFrom, settings.transitionDuration);
+            this.events.emit(Events.TRANSITION_WAKE, settings.transitionFrom, settings.transitionDuration);
         }
 
         return this;
@@ -529,12 +539,12 @@ var Systems = new Class({
     },
 
     /**
-     * Is this Scene active?
+     * Is this Scene running?
      *
      * @method Phaser.Scenes.Systems#isActive
      * @since 3.0.0
      *
-     * @return {boolean} `true` if this Scene is active, otherwise `false`.
+     * @return {boolean} `true` if this Scene is running, otherwise `false`.
      */
     isActive: function ()
     {
@@ -654,6 +664,8 @@ var Systems = new Class({
      * Called automatically by the SceneManager.
      *
      * @method Phaser.Scenes.Systems#start
+     * @fires Phaser.Scenes.Events#START
+     * @fires Phaser.Scenes.Events#READY
      * @since 3.0.0
      *
      * @param {object} data - Optional data object that may have been passed to this Scene from another.
@@ -671,25 +683,10 @@ var Systems = new Class({
         this.settings.visible = true;
 
         //  For plugins to listen out for
-        this.events.emit('start', this);
+        this.events.emit(Events.START, this);
 
         //  For user-land code to listen out for
-        this.events.emit('ready', this, data);
-    },
-
-    /**
-     * Called automatically by the SceneManager if the Game resizes.
-     * Dispatches an event you can respond to in your game code.
-     *
-     * @method Phaser.Scenes.Systems#resize
-     * @since 3.2.0
-     *
-     * @param {number} width - The new width of the game.
-     * @param {number} height - The new height of the game.
-     */
-    resize: function (width, height)
-    {
-        this.events.emit('resize', width, height);
+        this.events.emit(Events.READY, this, data);
     },
 
     /**
@@ -700,23 +697,24 @@ var Systems = new Class({
      * to free-up resources.
      *
      * @method Phaser.Scenes.Systems#shutdown
+     * @fires Phaser.Scenes.Events#SHUTDOWN
      * @since 3.0.0
      * 
      * @param {object} [data] - A data object that will be passed in the 'shutdown' event.
      */
     shutdown: function (data)
     {
-        this.events.off('transitioninit');
-        this.events.off('transitionstart');
-        this.events.off('transitioncomplete');
-        this.events.off('transitionout');
+        this.events.off(Events.TRANSITION_INIT);
+        this.events.off(Events.TRANSITION_START);
+        this.events.off(Events.TRANSITION_COMPLETE);
+        this.events.off(Events.TRANSITION_OUT);
 
         this.settings.status = CONST.SHUTDOWN;
 
         this.settings.active = false;
         this.settings.visible = false;
 
-        this.events.emit('shutdown', this, data);
+        this.events.emit(Events.SHUTDOWN, this, data);
     },
 
     /**
@@ -726,6 +724,7 @@ var Systems = new Class({
      *
      * @method Phaser.Scenes.Systems#destroy
      * @private
+     * @fires Phaser.Scenes.Events#DESTROY
      * @since 3.0.0
      */
     destroy: function ()
@@ -735,7 +734,7 @@ var Systems = new Class({
         this.settings.active = false;
         this.settings.visible = false;
 
-        this.events.emit('destroy', this);
+        this.events.emit(Events.DESTROY, this);
 
         this.events.removeAllListeners();
 

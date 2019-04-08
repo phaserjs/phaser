@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -40,9 +40,9 @@ var SpriteSheetFromAtlas = function (texture, frame, config)
         throw new Error('TextureManager.SpriteSheetFromAtlas: Invalid frameWidth given.');
     }
 
-    //  Add in a __BASE entry (for the entire atlas)
-    // var source = texture.source[sourceIndex];
-    // texture.add('__BASE', sourceIndex, 0, 0, source.width, source.height);
+    //  Add in a __BASE entry (for the entire atlas frame)
+    var source = texture.source[0];
+    texture.add('__BASE', 0, 0, 0, source.width, source.height);
 
     var startFrame = GetFastValue(config, 'startFrame', 0);
     var endFrame = GetFastValue(config, 'endFrame', -1);
@@ -72,12 +72,6 @@ var SpriteSheetFromAtlas = function (texture, frame, config)
     var topHeight = frameHeight - topPad;
 
     var bottomHeight = frameHeight - ((sheetHeight - cutHeight) - topPad);
-
-    // console.log('x / y', x, y);
-    // console.log('cutW / H', cutWidth, cutHeight);
-    // console.log('sheetW / H', sheetWidth, sheetHeight);
-    // console.log('row', row, 'column', column, 'total', total);
-    // console.log('LW', leftWidth, 'RW', rightWidth, 'TH', topHeight, 'BH', bottomHeight);
 
     if (startFrame > total || startFrame < -total)
     {

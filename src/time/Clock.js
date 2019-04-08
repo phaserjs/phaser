@@ -1,11 +1,12 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Class = require('../utils/Class');
 var PluginCache = require('../plugins/PluginCache');
+var SceneEvents = require('../scene/events');
 var TimerEvent = require('./TimerEvent');
 
 /**
@@ -52,7 +53,7 @@ var Clock = new Class({
          * @type {number}
          * @since 3.0.0
          */
-        this.now = Date.now();
+        this.now = 0;
 
         //  Scale the delta time coming into the Clock by this factor
         //  which then influences anything using this Clock for calculations, like TimerEvents
@@ -114,8 +115,8 @@ var Clock = new Class({
          */
         this._pendingRemoval = [];
 
-        scene.sys.events.once('boot', this.boot, this);
-        scene.sys.events.on('start', this.start, this);
+        scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
+        scene.sys.events.on(SceneEvents.START, this.start, this);
     },
 
     /**
@@ -128,7 +129,10 @@ var Clock = new Class({
      */
     boot: function ()
     {
-        this.systems.events.once('destroy', this.destroy, this);
+        //  Sync with the TimeStep
+        this.now = this.systems.game.loop.time;
+        
+        this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
     },
 
     /**
@@ -144,9 +148,9 @@ var Clock = new Class({
     {
         var eventEmitter = this.systems.events;
 
-        eventEmitter.on('preupdate', this.preUpdate, this);
-        eventEmitter.on('update', this.update, this);
-        eventEmitter.once('shutdown', this.shutdown, this);
+        eventEmitter.on(SceneEvents.PRE_UPDATE, this.preUpdate, this);
+        eventEmitter.on(SceneEvents.UPDATE, this.update, this);
+        eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -155,7 +159,7 @@ var Clock = new Class({
      * @method Phaser.Time.Clock#addEvent
      * @since 3.0.0
      *
-     * @param {TimerEventConfig} config - The configuration for the Timer Event.
+     * @param {Phaser.Time.Types.TimerEventConfig} config - The configuration for the Timer Event.
      *
      * @return {Phaser.Time.TimerEvent} The Timer Event which was created.
      */
@@ -366,9 +370,9 @@ var Clock = new Class({
 
         var eventEmitter = this.systems.events;
 
-        eventEmitter.off('preupdate', this.preUpdate, this);
-        eventEmitter.off('update', this.update, this);
-        eventEmitter.off('shutdown', this.shutdown, this);
+        eventEmitter.off(SceneEvents.PRE_UPDATE, this.preUpdate, this);
+        eventEmitter.off(SceneEvents.UPDATE, this.update, this);
+        eventEmitter.off(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -383,7 +387,7 @@ var Clock = new Class({
     {
         this.shutdown();
 
-        this.scene.sys.events.off('start', this.start, this);
+        this.scene.sys.events.off(SceneEvents.START, this.start, this);
 
         this.scene = null;
         this.systems = null;

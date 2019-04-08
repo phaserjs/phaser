@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -11,7 +11,7 @@ var _FLAG = 1; // 0001
  * Provides methods used for setting the visibility of a Game Object.
  * Should be applied as a mixin and not used directly.
  * 
- * @name Phaser.GameObjects.Components.Visible
+ * @namespace Phaser.GameObjects.Components.Visible
  * @since 3.0.0
  */
 

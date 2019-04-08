@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -8,15 +8,30 @@ var Class = require('../../utils/Class');
 
 /**
  * @classdesc
- * A Bitmap Mask combines the alpha (opacity) of a masked pixel with the alpha of another pixel. Unlike the Geometry Mask, which is a clipping path, a Bitmask Mask behaves like an alpha mask, not a clipping path. It is only available when using the WebGL Renderer.
+ * A Bitmap Mask combines the alpha (opacity) of a masked pixel with the alpha of another pixel.
+ * Unlike the Geometry Mask, which is a clipping path, a Bitmap Mask behaves like an alpha mask,
+ * not a clipping path. It is only available when using the WebGL Renderer.
  *
- * A Bitmap Mask can use any Game Object to determine the alpha of each pixel of the masked Game Object(s). For any given point of a masked Game Object's texture, the pixel's alpha will be multiplied by the alpha of the pixel at the same position in the Bitmap Mask's Game Object. The color of the pixel from the Bitmap Mask doesn't matter.
+ * A Bitmap Mask can use any Game Object to determine the alpha of each pixel of the masked Game Object(s).
+ * For any given point of a masked Game Object's texture, the pixel's alpha will be multiplied by the alpha
+ * of the pixel at the same position in the Bitmap Mask's Game Object. The color of the pixel from the
+ * Bitmap Mask doesn't matter.
  *
- * For example, if a pure blue pixel with an alpha of 0.95 is masked with a pure red pixel with an alpha of 0.5, the resulting pixel will be pure blue with an alpha of 0.475. Naturally, this means that a pixel in the mask with an alpha of 0 will hide the corresponding pixel in all masked Game Objects. A pixel with an alpha of 1 in the masked Game Object will receive the same alpha as the corresponding pixel in the mask.
+ * For example, if a pure blue pixel with an alpha of 0.95 is masked with a pure red pixel with an
+ * alpha of 0.5, the resulting pixel will be pure blue with an alpha of 0.475. Naturally, this means
+ * that a pixel in the mask with an alpha of 0 will hide the corresponding pixel in all masked Game Objects
+ *  A pixel with an alpha of 1 in the masked Game Object will receive the same alpha as the
+ * corresponding pixel in the mask.
  *
- * The Bitmap Mask's location matches the location of its Game Object, not the location of the masked objects. Moving or transforming the underlying Game Object will change the mask (and affect the visibility of any masked objects), whereas moving or transforming a masked object will not affect the mask.
+ * The Bitmap Mask's location matches the location of its Game Object, not the location of the
+ * masked objects. Moving or transforming the underlying Game Object will change the mask
+ * (and affect the visibility of any masked objects), whereas moving or transforming a masked object
+ * will not affect the mask.
  *
- * The Bitmap Mask will not render its Game Object by itself. If the Game Object is not in a Scene's display list, it will only be used for the mask and its full texture will not be directly visible. Adding the underlying Game Object to a Scene will not cause any problems - it will render as a normal Game Object and will also serve as a mask.
+ * The Bitmap Mask will not render its Game Object by itself. If the Game Object is not in a
+ * Scene's display list, it will only be used for the mask and its full texture will not be directly
+ * visible. Adding the underlying Game Object to a Scene will not cause any problems - it will
+ * render as a normal Game Object and will also serve as a mask.
  *
  * @class BitmapMask
  * @memberof Phaser.Display.Masks

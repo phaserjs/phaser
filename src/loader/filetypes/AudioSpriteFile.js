@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -17,10 +17,10 @@ var MultiFile = require('../MultiFile.js');
  *
  * @property {string} key - The key of the file. Must be unique within both the Loader and the Audio Cache.
  * @property {string} jsonURL - The absolute or relative URL to load the json file from. Or a well formed JSON object to use instead.
- * @property {XHRSettingsObject} [jsonXhrSettings] - Extra XHR Settings specifically for the json file.
+ * @property {Phaser.Loader.Types.XHRSettingsObject} [jsonXhrSettings] - Extra XHR Settings specifically for the json file.
  * @property {{(string|string[])}} [audioURL] - The absolute or relative URL to load the audio file from.
  * @property {any} [audioConfig] - The audio configuration options.
- * @property {XHRSettingsObject} [audioXhrSettings] - Extra XHR Settings specifically for the audio file.
+ * @property {Phaser.Loader.Types.XHRSettingsObject} [audioXhrSettings] - Extra XHR Settings specifically for the audio file.
  */
 
 /**
@@ -42,8 +42,8 @@ var MultiFile = require('../MultiFile.js');
  * @param {string} jsonURL - The absolute or relative URL to load the json file from. Or a well formed JSON object to use instead.
  * @param {{(string|string[])}} [audioURL] - The absolute or relative URL to load the audio file from. If empty it will be obtained by parsing the JSON file.
  * @param {any} [audioConfig] - The audio configuration options.
- * @param {XHRSettingsObject} [audioXhrSettings] - An XHR Settings configuration object for the audio file. Used in replacement of the Loaders default XHR Settings.
- * @param {XHRSettingsObject} [jsonXhrSettings] - An XHR Settings configuration object for the json file. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [audioXhrSettings] - An XHR Settings configuration object for the audio file. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [jsonXhrSettings] - An XHR Settings configuration object for the json file. Used in replacement of the Loaders default XHR Settings.
  */
 var AudioSpriteFile = new Class({
 
@@ -96,7 +96,7 @@ var AudioSpriteFile = new Class({
     /**
      * Called by each File when it finishes loading.
      *
-     * @method Phaser.Loader.AudioSpriteFile#onFileComplete
+     * @method Phaser.Loader.FileTypes.AudioSpriteFile#onFileComplete
      * @since 3.7.0
      *
      * @param {Phaser.Loader.File} file - The File that has completed processing.
@@ -132,7 +132,7 @@ var AudioSpriteFile = new Class({
     /**
      * Adds this file to its target cache upon successful loading and processing.
      *
-     * @method Phaser.Loader.AudioSpriteFile#addToCache
+     * @method Phaser.Loader.FileTypes.AudioSpriteFile#addToCache
      * @since 3.7.0
      */
     addToCache: function ()
@@ -246,8 +246,8 @@ var AudioSpriteFile = new Class({
  * @param {string} jsonURL - The absolute or relative URL to load the json file from. Or a well formed JSON object to use instead.
  * @param {(string|string[])} [audioURL] - The absolute or relative URL to load the audio file from. If empty it will be obtained by parsing the JSON file.
  * @param {any} [audioConfig] - The audio configuration options.
- * @param {XHRSettingsObject} [audioXhrSettings] - An XHR Settings configuration object for the audio file. Used in replacement of the Loaders default XHR Settings.
- * @param {XHRSettingsObject} [jsonXhrSettings] - An XHR Settings configuration object for the json file. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [audioXhrSettings] - An XHR Settings configuration object for the audio file. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Loader.Types.XHRSettingsObject} [jsonXhrSettings] - An XHR Settings configuration object for the json file. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader.
  */

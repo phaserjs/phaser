@@ -1,12 +1,15 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Class = require('../utils/Class');
 var CONST = require('./const');
+var Events = require('./events');
+var GameEvents = require('../core/events');
 var GetValue = require('../utils/object/GetValue');
+var LoaderEvents = require('../loader/events');
 var NOOP = require('../utils/NOOP');
 var Scene = require('./Scene');
 var Systems = require('./Systems');
@@ -152,7 +155,7 @@ var SceneManager = new Class({
             }
         }
 
-        game.events.once('ready', this.bootQueue, this);
+        game.events.once(GameEvents.READY, this.bootQueue, this);
     },
 
     /**
@@ -309,7 +312,7 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - A unique key used to reference the Scene, i.e. `MainMenu` or `Level1`.
-     * @param {(Phaser.Scene|Phaser.Scenes.Settings.Config|function)} sceneConfig - The config for the Scene
+     * @param {(Phaser.Scene|Phaser.Scenes.Types.SettingsConfig|function)} sceneConfig - The config for the Scene
      * @param {boolean} [autoStart=false] - If `true` the Scene will be started immediately after being added.
      * @param {object} [data] - Optional data object. This will be set as Scene.settings.data and passed to `Scene.init`.
      *
@@ -439,6 +442,7 @@ var SceneManager = new Class({
      *
      * @method Phaser.Scenes.SceneManager#bootScene
      * @private
+     * @fires Phaser.Scenes.Events#TRANSITION_INIT
      * @since 3.0.0
      *
      * @param {Phaser.Scene} scene - The Scene to boot.
@@ -456,7 +460,7 @@ var SceneManager = new Class({
 
             if (settings.isTransition)
             {
-                sys.events.emit('transitioninit', settings.transitionFrom, settings.transitionDuration);
+                sys.events.emit(Events.TRANSITION_INIT, settings.transitionFrom, settings.transitionDuration);
             }
         }
 
@@ -483,7 +487,7 @@ var SceneManager = new Class({
                 settings.status = CONST.LOADING;
 
                 //  Start the loader going as we have something in the queue
-                loader.once('complete', this.loadComplete, this);
+                loader.once(LoaderEvents.COMPLETE, this.loadComplete, this);
 
                 loader.start();
             }
@@ -510,7 +514,8 @@ var SceneManager = new Class({
     {
         var scene = loader.scene;
 
-        // Try to unlock HTML5 sounds every time any loader completes
+        //  TODO - Remove. This should *not* be handled here
+        //  Try to unlock HTML5 sounds every time any loader completes
         if (this.game.sound.onBlurPausedSounds)
         {
             this.game.sound.unlock();
@@ -561,26 +566,6 @@ var SceneManager = new Class({
     },
 
     /**
-     * Informs the Scenes of the Game being resized.
-     *
-     * @method Phaser.Scenes.SceneManager#resize
-     * @since 3.2.0
-     *
-     * @param {number} width - The new width of the game.
-     * @param {number} height - The new height of the game.
-     */
-    resize: function (width, height)
-    {
-        //  Loop through the scenes in forward order
-        for (var i = 0; i < this.scenes.length; i++)
-        {
-            var sys = this.scenes[i].sys;
-
-            sys.resize(width, height);
-        }
-    },
-
-    /**
      * Renders the Scenes.
      *
      * @method Phaser.Scenes.SceneManager#render
@@ -609,6 +594,8 @@ var SceneManager = new Class({
      *
      * @method Phaser.Scenes.SceneManager#create
      * @private
+     * @fires Phaser.Scenes.Events#CREATE
+     * @fires Phaser.Scenes.Events#TRANSITION_INIT
      * @since 3.0.0
      *
      * @param {Phaser.Scene} scene - The Scene to create.
@@ -623,11 +610,11 @@ var SceneManager = new Class({
             settings.status = CONST.CREATING;
 
             scene.create.call(scene, settings.data);
+        }
 
-            if (settings.isTransition)
-            {
-                sys.events.emit('transitionstart', settings.transitionFrom, settings.transitionDuration);
-            }
+        if (settings.isTransition)
+        {
+            sys.events.emit(Events.TRANSITION_START, settings.transitionFrom, settings.transitionDuration);
         }
 
         //  If the Scene has an update function we'll set it now, otherwise it'll remain as NOOP
@@ -637,6 +624,8 @@ var SceneManager = new Class({
         }
 
         settings.status = CONST.RUNNING;
+
+        sys.events.emit(Events.CREATE, scene);
     },
 
     /**
@@ -721,7 +710,7 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The key of the Scene.
-     * @param {(string|Phaser.Scenes.Settings.Config)} sceneConfig - The Scene config.
+     * @param {(string|Phaser.Scenes.Types.SettingsConfig)} sceneConfig - The Scene config.
      *
      * @return {Phaser.Scene} The created Scene.
      */
@@ -799,7 +788,7 @@ var SceneManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The key to check in the Scene config.
-     * @param {(Phaser.Scene|Phaser.Scenes.Settings.Config|function)} sceneConfig - The Scene config.
+     * @param {(Phaser.Scene|Phaser.Scenes.Types.SettingsConfig|function)} sceneConfig - The Scene config.
      *
      * @return {string} The Scene key.
      */
@@ -830,6 +819,41 @@ var SceneManager = new Class({
         {
             return key;
         }
+    },
+
+    /**
+     * Returns an array of all the current Scenes being managed by this Scene Manager.
+     * 
+     * You can filter the output by the active state of the Scene and choose to have
+     * the array returned in normal or reversed order.
+     *
+     * @method Phaser.Scenes.SceneManager#getScenes
+     * @since 3.16.0
+     *
+     * @param {boolean} [isActive=true] - Only include Scene's that are currently active?
+     * @param {boolean} [inReverse=false] - Return the array of Scenes in reverse?
+     *
+     * @return {Phaser.Scene[]} An array containing all of the Scenes in the Scene Manager.
+     */
+    getScenes: function (isActive, inReverse)
+    {
+        if (isActive === undefined) { isActive = true; }
+        if (inReverse === undefined) { inReverse = false; }
+
+        var out = [];
+        var scenes = this.scenes;
+
+        for (var i = 0; i < scenes.length; i++)
+        {
+            var scene = scenes[i];
+
+            if (scene && (!isActive || (isActive && scene.sys.isActive())))
+            {
+                out.push(scene);
+            }
+        }
+
+        return (inReverse) ? out.reverse() : out;
     },
 
     /**
@@ -866,14 +890,14 @@ var SceneManager = new Class({
     },
 
     /**
-     * Determines whether a Scene is active.
+     * Determines whether a Scene is running.
      *
      * @method Phaser.Scenes.SceneManager#isActive
      * @since 3.0.0
      *
      * @param {string} key - The Scene to check.
      *
-     * @return {boolean} Whether the Scene is active.
+     * @return {boolean} Whether the Scene is running.
      */
     isActive: function (key)
     {
@@ -882,6 +906,28 @@ var SceneManager = new Class({
         if (scene)
         {
             return scene.sys.isActive();
+        }
+
+        return null;
+    },
+
+    /**
+     * Determines whether a Scene is paused.
+     *
+     * @method Phaser.Scenes.SceneManager#isPaused
+     * @since 3.17.0
+     *
+     * @param {string} key - The Scene to check.
+     *
+     * @return {boolean} Whether the Scene is paused.
+     */
+    isPaused: function (key)
+    {
+        var scene = this.getScene(key);
+
+        if (scene)
+        {
+            return scene.sys.isPaused();
         }
 
         return null;
@@ -1130,7 +1176,7 @@ var SceneManager = new Class({
                     {
                         scene.sys.settings.status = CONST.LOADING;
     
-                        loader.once('complete', this.payloadComplete, this);
+                        loader.once(LoaderEvents.COMPLETE, this.payloadComplete, this);
     
                         loader.start();
     

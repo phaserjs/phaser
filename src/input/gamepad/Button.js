@@ -1,10 +1,11 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Class = require('../../utils/Class');
+var Events = require('./events');
 
 /**
  * @classdesc
@@ -89,10 +90,14 @@ var Button = new Class({
      * Called automatically by the Gamepad as part of its update.
      *
      * @method Phaser.Input.Gamepad.Button#update
+     * @fires Phaser.Input.Gamepad.Events#BUTTON_DOWN
+     * @fires Phaser.Input.Gamepad.Events#BUTTON_UP
+     * @fires Phaser.Input.Gamepad.Events#GAMEPAD_BUTTON_DOWN
+     * @fires Phaser.Input.Gamepad.Events#GAMEPAD_BUTTON_UP
      * @private
      * @since 3.0.0
      *
-     * @param {number} value - The GamepadButton value.
+     * @param {number} value - The value of the button. Between 0 and 1.
      */
     update: function (value)
     {
@@ -106,15 +111,15 @@ var Button = new Class({
             if (!this.pressed)
             {
                 this.pressed = true;
-                this.events.emit('down', pad, this, value);
-                this.pad.emit('down', index, value, this);
+                this.events.emit(Events.BUTTON_DOWN, pad, this, value);
+                this.pad.emit(Events.GAMEPAD_BUTTON_DOWN, index, value, this);
             }
         }
         else if (this.pressed)
         {
             this.pressed = false;
-            this.events.emit('up', pad, this, value);
-            this.pad.emit('up', index, value, this);
+            this.events.emit(Events.BUTTON_UP, pad, this, value);
+            this.pad.emit(Events.GAMEPAD_BUTTON_UP, index, value, this);
         }
     },
 

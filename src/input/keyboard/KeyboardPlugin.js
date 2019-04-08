@@ -1,12 +1,15 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Class = require('../../utils/Class');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
+var GameEvents = require('../../core/events');
 var GetValue = require('../../utils/object/GetValue');
+var InputEvents = require('../events');
 var InputPluginCache = require('../InputPluginCache');
 var Key = require('./keys/Key');
 var KeyCodes = require('./keys/KeyCodes');
@@ -31,7 +34,7 @@ var SnapFloor = require('../../math/snap/SnapFloor');
  * Or, to listen for a specific key:
  * 
  * ```javascript
- * this.input.keyboard.on('keydown_A', callback, context);
+ * this.input.keyboard.on('keydown-A', callback, context);
  * ```
  *
  * You can also create Key objects, which you can then poll in your game loop:
@@ -70,6 +73,15 @@ var KeyboardPlugin = new Class({
         EventEmitter.call(this);
 
         /**
+         * A reference to the core game, so we can listen for visibility events.
+         *
+         * @name Phaser.Input.Keyboard.KeyboardPlugin#game
+         * @type {Phaser.Game}
+         * @since 3.16.0
+         */
+        this.game = sceneInputPlugin.systems.game;
+
+        /**
          * A reference to the Scene that this Input Plugin is responsible for.
          *
          * @name Phaser.Input.Keyboard.KeyboardPlugin#scene
@@ -82,7 +94,7 @@ var KeyboardPlugin = new Class({
          * A reference to the Scene Systems Settings.
          *
          * @name Phaser.Input.Keyboard.KeyboardPlugin#settings
-         * @type {Phaser.Scenes.Settings.Object}
+         * @type {Phaser.Scenes.Types.SettingsObject}
          * @since 3.10.0
          */
         this.settings = this.scene.sys.settings;
@@ -134,18 +146,8 @@ var KeyboardPlugin = new Class({
          */
         this.combos = [];
 
-        /**
-         * Internal time value.
-         *
-         * @name Phaser.Input.Keyboard.KeyboardPlugin#time
-         * @type {number}
-         * @private
-         * @since 3.11.0
-         */
-        this.time = 0;
-
-        sceneInputPlugin.pluginEvents.once('boot', this.boot, this);
-        sceneInputPlugin.pluginEvents.on('start', this.start, this);
+        sceneInputPlugin.pluginEvents.once(InputEvents.BOOT, this.boot, this);
+        sceneInputPlugin.pluginEvents.on(InputEvents.START, this.start, this);
     },
 
     /**
@@ -169,7 +171,7 @@ var KeyboardPlugin = new Class({
             this.addCaptures(captures);
         }
 
-        this.sceneInputPlugin.pluginEvents.once('destroy', this.destroy, this);
+        this.sceneInputPlugin.pluginEvents.once(InputEvents.DESTROY, this.destroy, this);
     },
 
     /**
@@ -183,9 +185,18 @@ var KeyboardPlugin = new Class({
      */
     start: function ()
     {
-        this.startListeners();
+        if (this.sceneInputPlugin.manager.useQueue)
+        {
+            this.sceneInputPlugin.pluginEvents.on(InputEvents.UPDATE, this.update, this);
+        }
+        else
+        {
+            this.sceneInputPlugin.manager.events.on(InputEvents.MANAGER_PROCESS, this.update, this);
+        }
 
-        this.sceneInputPlugin.pluginEvents.once('shutdown', this.shutdown, this);
+        this.sceneInputPlugin.pluginEvents.once(InputEvents.SHUTDOWN, this.shutdown, this);
+
+        this.game.events.on(GameEvents.BLUR, this.resetKeys, this);
     },
 
     /**
@@ -199,32 +210,6 @@ var KeyboardPlugin = new Class({
     isActive: function ()
     {
         return (this.enabled && this.scene.sys.isActive());
-    },
-
-    /**
-     * Starts the Keyboard Event listeners running.
-     * This is called automatically and does not need to be manually invoked.
-     *
-     * @method Phaser.Input.Keyboard.KeyboardPlugin#startListeners
-     * @private
-     * @since 3.10.0
-     */
-    startListeners: function ()
-    {
-        this.sceneInputPlugin.pluginEvents.on('update', this.update, this);
-    },
-
-    /**
-     * Stops the Keyboard Event listeners.
-     * This is called automatically and does not need to be manually invoked.
-     *
-     * @method Phaser.Input.Keyboard.KeyboardPlugin#stopListeners
-     * @private
-     * @since 3.10.0
-     */
-    stopListeners: function ()
-    {
-        this.sceneInputPlugin.pluginEvents.off('update', this.update);
     },
 
     /**
@@ -378,24 +363,12 @@ var KeyboardPlugin = new Class({
     },
 
     /**
-     * @typedef {object} CursorKeys
-     * @memberof Phaser.Input.Keyboard
-     * 
-     * @property {Phaser.Input.Keyboard.Key} [up] - A Key object mapping to the UP arrow key.
-     * @property {Phaser.Input.Keyboard.Key} [down] - A Key object mapping to the DOWN arrow key.
-     * @property {Phaser.Input.Keyboard.Key} [left] - A Key object mapping to the LEFT arrow key.
-     * @property {Phaser.Input.Keyboard.Key} [right] - A Key object mapping to the RIGHT arrow key.
-     * @property {Phaser.Input.Keyboard.Key} [space] - A Key object mapping to the SPACE BAR key.
-     * @property {Phaser.Input.Keyboard.Key} [shift] - A Key object mapping to the SHIFT key.
-     */
-
-    /**
      * Creates and returns an object containing 4 hotkeys for Up, Down, Left and Right, and also Space Bar and shift.
      *
      * @method Phaser.Input.Keyboard.KeyboardPlugin#createCursorKeys
      * @since 3.10.0
      *
-     * @return {CursorKeys} An object containing the properties: `up`, `down`, `left`, `right`, `space` and `shift`.
+     * @return {Phaser.Input.Keyboard.Types.CursorKeys} An object containing the properties: `up`, `down`, `left`, `right`, `space` and `shift`.
      */
     createCursorKeys: function ()
     {
@@ -608,7 +581,7 @@ var KeyboardPlugin = new Class({
      * @since 3.10.0
      *
      * @param {(string|integer[]|object[])} keys - The keys that comprise this combo.
-     * @param {KeyComboConfig} [config] - A Key Combo configuration object.
+     * @param {Phaser.Input.Keyboard.Types.KeyComboConfig} [config] - A Key Combo configuration object.
      *
      * @return {Phaser.Input.Keyboard.KeyCombo} The new KeyCombo object.
      */
@@ -633,7 +606,7 @@ var KeyboardPlugin = new Class({
      * @param {Phaser.Input.Keyboard.Key} key - A Key object.
      * @param {number} [duration=0] - The duration which must have elapsed before this Key is considered as being down.
      * 
-     * @return {boolean} `True` if the Key is down within the duration specified, otherwise `false`.
+     * @return {boolean} `true` if the Key is down within the duration specified, otherwise `false`.
      */
     checkDown: function (key, duration)
     {
@@ -658,13 +631,9 @@ var KeyboardPlugin = new Class({
      * @method Phaser.Input.Keyboard.KeyboardPlugin#update
      * @private
      * @since 3.10.0
-     * 
-     * @param {number} time - The game loop time value.
      */
-    update: function (time)
+    update: function ()
     {
-        this.time = time;
-
         var queue = this.manager.queue;
         var len = queue.length;
 
@@ -720,16 +689,18 @@ var KeyboardPlugin = new Class({
 
                 if (!event.cancelled && (!key || !repeat))
                 {
-                    //  keydown_code event
                     if (KeyMap[code])
                     {
+                        this.emit(Events.KEY_DOWN + KeyMap[code], event);
+
+                        //  Deprecated, kept in for compatibility with 3.15
+                        //  To be removed by 3.20.
                         this.emit('keydown_' + KeyMap[code], event);
                     }
 
                     if (!event.cancelled)
                     {
-                        //  keydown event
-                        this.emit(event.type, event);
+                        this.emit(Events.ANY_KEY_DOWN, event);
                     }
                 }
             }
@@ -743,16 +714,18 @@ var KeyboardPlugin = new Class({
 
                 if (!event.cancelled)
                 {
-                    //  keyup_code event
                     if (KeyMap[code])
                     {
+                        this.emit(Events.KEY_UP + KeyMap[code], event);
+
+                        //  Deprecated, kept in for compatibility with 3.15
+                        //  To be removed by 3.20.
                         this.emit('keyup_' + KeyMap[code], event);
                     }
 
                     if (!event.cancelled)
                     {
-                        //  keyup event
-                        this.emit(event.type, event);
+                        this.emit(Events.ANY_KEY_UP, event);
                     }
                 }
             }
@@ -767,7 +740,7 @@ var KeyboardPlugin = new Class({
 
     /**
      * Resets all Key objects created by _this_ Keyboard Plugin back to their default un-pressed states.
-     * This can only reset keys created via the `addKey`, `addKeys` or `createCursors` methods.
+     * This can only reset keys created via the `addKey`, `addKeys` or `createCursorKeys` methods.
      * If you have created a Key object directly you'll need to reset it yourself.
      * 
      * This method is called automatically when the Keyboard Plugin shuts down, but can be
@@ -809,7 +782,16 @@ var KeyboardPlugin = new Class({
     {
         this.resetKeys();
 
-        this.stopListeners();
+        if (this.sceneInputPlugin.manager.useQueue)
+        {
+            this.sceneInputPlugin.pluginEvents.off(InputEvents.UPDATE, this.update, this);
+        }
+        else
+        {
+            this.sceneInputPlugin.manager.events.off(InputEvents.MANAGER_PROCESS, this.update, this);
+        }
+
+        this.game.events.off(GameEvents.BLUR, this.resetKeys);
 
         this.removeAllListeners();
 
@@ -846,6 +828,23 @@ var KeyboardPlugin = new Class({
         this.settings = null;
         this.sceneInputPlugin = null;
         this.manager = null;
+    },
+
+    /**
+     * Internal time value.
+     *
+     * @name Phaser.Input.Keyboard.KeyboardPlugin#time
+     * @type {number}
+     * @private
+     * @since 3.11.0
+     */
+    time: {
+
+        get: function ()
+        {
+            return this.sceneInputPlugin.manager.time;
+        }
+
     }
 
 });

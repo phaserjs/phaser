@@ -1,11 +1,12 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Class = require('../utils/Class');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
 var TweenBuilder = require('./builders/TweenBuilder');
 var TWEEN_CONST = require('./tween/const');
 
@@ -567,6 +568,7 @@ var Timeline = new Class({
      * Starts playing the timeline.
      *
      * @method Phaser.Tweens.Timeline#play
+     * @fires Phaser.Tweens.Events#TIMELINE_START
      * @since 3.0.0
      */
     play: function ()
@@ -598,13 +600,15 @@ var Timeline = new Class({
             onStart.func.apply(onStart.scope, onStart.params);
         }
 
-        this.emit('start', this);
+        this.emit(Events.TIMELINE_START, this);
     },
 
     /**
      * [description]
      *
      * @method Phaser.Tweens.Timeline#nextState
+     * @fires Phaser.Tweens.Events#TIMELINE_COMPLETE
+     * @fires Phaser.Tweens.Events#TIMELINE_LOOP
      * @since 3.0.0
      */
     nextState: function ()
@@ -627,7 +631,7 @@ var Timeline = new Class({
                 onLoop.func.apply(onLoop.scope, onLoop.params);
             }
 
-            this.emit('loop', this, this.loopCounter);
+            this.emit(Events.TIMELINE_LOOP, this, this.loopCounter);
 
             this.resetTweens(true);
 
@@ -648,6 +652,8 @@ var Timeline = new Class({
         }
         else
         {
+            this.state = TWEEN_CONST.PENDING_REMOVE;
+
             var onComplete = this.callbacks.onComplete;
 
             if (onComplete)
@@ -655,9 +661,7 @@ var Timeline = new Class({
                 onComplete.func.apply(onComplete.scope, onComplete.params);
             }
 
-            this.emit('complete', this);
-
-            this.state = TWEEN_CONST.PENDING_REMOVE;
+            this.emit(Events.TIMELINE_COMPLETE, this);
         }
     },
 
@@ -666,6 +670,8 @@ var Timeline = new Class({
      * Otherwise, returns false.
      *
      * @method Phaser.Tweens.Timeline#update
+     * @fires Phaser.Tweens.Events#TIMELINE_COMPLETE
+     * @fires Phaser.Tweens.Events#TIMELINE_UPDATE
      * @since 3.0.0
      *
      * @param {number} timestamp - [description]
@@ -718,7 +724,7 @@ var Timeline = new Class({
                     onUpdate.func.apply(onUpdate.scope, onUpdate.params);
                 }
 
-                this.emit('update', this);
+                this.emit(Events.TIMELINE_UPDATE, this);
 
                 //  Anything still running? If not, we're done
                 if (stillRunning === 0)
@@ -745,6 +751,8 @@ var Timeline = new Class({
 
                 if (this.countdown <= 0)
                 {
+                    this.state = TWEEN_CONST.PENDING_REMOVE;
+
                     var onComplete = this.callbacks.onComplete;
 
                     if (onComplete)
@@ -752,9 +760,7 @@ var Timeline = new Class({
                         onComplete.func.apply(onComplete.scope, onComplete.params);
                     }
 
-                    this.emit('complete', this);
-
-                    this.state = TWEEN_CONST.PENDING_REMOVE;
+                    this.emit(Events.TIMELINE_COMPLETE, this);
                 }
 
                 break;
@@ -778,6 +784,7 @@ var Timeline = new Class({
      * Pauses the timeline, retaining its internal state.
      *
      * @method Phaser.Tweens.Timeline#pause
+     * @fires Phaser.Tweens.Events#TIMELINE_PAUSE
      * @since 3.0.0
      *
      * @return {Phaser.Tweens.Timeline} This Timeline object.
@@ -795,7 +802,7 @@ var Timeline = new Class({
 
         this.state = TWEEN_CONST.PAUSED;
 
-        this.emit('pause', this);
+        this.emit(Events.TIMELINE_PAUSE, this);
 
         return this;
     },
@@ -804,6 +811,7 @@ var Timeline = new Class({
      * Resumes the timeline from where it was when it was paused.
      *
      * @method Phaser.Tweens.Timeline#resume
+     * @fires Phaser.Tweens.Events#TIMELINE_RESUME
      * @since 3.0.0
      *
      * @return {Phaser.Tweens.Timeline} This Timeline object.
@@ -817,7 +825,7 @@ var Timeline = new Class({
             this.state = this._pausedState;
         }
 
-        this.emit('resume', this);
+        this.emit(Events.TIMELINE_RESUME, this);
 
         return this;
     },

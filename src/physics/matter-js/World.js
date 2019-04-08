@@ -1,15 +1,17 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Bodies = require('./lib/factory/Bodies');
+var Body = require('./lib/body/Body');
 var Class = require('../../utils/Class');
 var Common = require('./lib/core/Common');
 var Composite = require('./lib/body/Composite');
 var Engine = require('./lib/core/Engine');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var GetValue = require('../../utils/object/GetValue');
 var MatterBody = require('./lib/body/Body');
@@ -96,8 +98,8 @@ var World = new Class({
             {
                 var x = GetFastValue(boundsConfig, 'x', 0);
                 var y = GetFastValue(boundsConfig, 'y', 0);
-                var width = GetFastValue(boundsConfig, 'width', scene.sys.game.config.width);
-                var height = GetFastValue(boundsConfig, 'height', scene.sys.game.config.height);
+                var width = GetFastValue(boundsConfig, 'width', scene.sys.scale.width);
+                var height = GetFastValue(boundsConfig, 'height', scene.sys.scale.height);
                 var thickness = GetFastValue(boundsConfig, 'thickness', 64);
                 var left = GetFastValue(boundsConfig, 'left', true);
                 var right = GetFastValue(boundsConfig, 'right', true);
@@ -238,12 +240,12 @@ var World = new Class({
 
         MatterEvents.on(engine, 'beforeUpdate', function (event)
         {
-            _this.emit('beforeupdate', event);
+            _this.emit(Events.BEFORE_UPDATE, event);
         });
 
         MatterEvents.on(engine, 'afterUpdate', function (event)
         {
-            _this.emit('afterupdate', event);
+            _this.emit(Events.AFTER_UPDATE, event);
         });
 
         MatterEvents.on(engine, 'collisionStart', function (event)
@@ -258,7 +260,7 @@ var World = new Class({
                 bodyB = pairs[0].bodyB;
             }
 
-            _this.emit('collisionstart', event, bodyA, bodyB);
+            _this.emit(Events.COLLISION_START, event, bodyA, bodyB);
         });
 
         MatterEvents.on(engine, 'collisionActive', function (event)
@@ -273,7 +275,7 @@ var World = new Class({
                 bodyB = pairs[0].bodyB;
             }
 
-            _this.emit('collisionactive', event, bodyA, bodyB);
+            _this.emit(Events.COLLISION_ACTIVE, event, bodyA, bodyB);
         });
 
         MatterEvents.on(engine, 'collisionEnd', function (event)
@@ -288,7 +290,7 @@ var World = new Class({
                 bodyB = pairs[0].bodyB;
             }
 
-            _this.emit('collisionend', event, bodyA, bodyB);
+            _this.emit(Events.COLLISION_END, event, bodyA, bodyB);
         });
     },
 
@@ -319,16 +321,16 @@ var World = new Class({
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
-        if (width === undefined) { width = this.scene.sys.game.config.width; }
-        if (height === undefined) { height = this.scene.sys.game.config.height; }
+        if (width === undefined) { width = this.scene.sys.scale.width; }
+        if (height === undefined) { height = this.scene.sys.scale.height; }
         if (thickness === undefined) { thickness = 128; }
         if (left === undefined) { left = true; }
         if (right === undefined) { right = true; }
         if (top === undefined) { top = true; }
         if (bottom === undefined) { bottom = true; }
 
-        this.updateWall(left, 'left', x - thickness, y, thickness, height);
-        this.updateWall(right, 'right', x + width, y, thickness, height);
+        this.updateWall(left, 'left', x - thickness, y - thickness, thickness, height + (thickness * 2));
+        this.updateWall(right, 'right', x + width, y - thickness, thickness, height + (thickness * 2));
         this.updateWall(top, 'top', x, y - thickness, width, thickness);
         this.updateWall(bottom, 'bottom', x, y + height, width, thickness);
 
@@ -498,7 +500,7 @@ var World = new Class({
     {
         var body = (object.body) ? object.body : object;
 
-        Composite.removeBody(this.localWorld, body, deep);
+        Composite.remove(this.localWorld, body, deep);
 
         return this;
     },
@@ -537,7 +539,7 @@ var World = new Class({
     convertTilemapLayer: function (tilemapLayer, options)
     {
         var layerData = tilemapLayer.layer;
-        var tiles = tilemapLayer.getTilesWithin(0, 0, layerData.width, layerData.height, {isColliding: true});
+        var tiles = tilemapLayer.getTilesWithin(0, 0, layerData.width, layerData.height, { isColliding: true });
 
         this.convertTiles(tiles, options);
 
@@ -603,6 +605,7 @@ var World = new Class({
      * [description]
      *
      * @method Phaser.Physics.Matter.World#pause
+     * @fires Phaser.Physics.Matter.Events#PAUSE
      * @since 3.0.0
      *
      * @return {Phaser.Physics.Matter.World} This Matter World object.
@@ -611,7 +614,7 @@ var World = new Class({
     {
         this.enabled = false;
 
-        this.emit('pause');
+        this.emit(Events.PAUSE);
 
         return this;
     },
@@ -620,6 +623,7 @@ var World = new Class({
      * [description]
      *
      * @method Phaser.Physics.Matter.World#resume
+     * @fires Phaser.Physics.Matter.Events#RESUME
      * @since 3.0.0
      *
      * @return {Phaser.Physics.Matter.World} This Matter World object.
@@ -628,7 +632,7 @@ var World = new Class({
     {
         this.enabled = true;
 
-        this.emit('resume');
+        this.emit(Events.RESUME);
 
         return this;
     },
@@ -1071,6 +1075,26 @@ var World = new Class({
         });
 
         return points;
+    },
+
+    /**
+     * Resets the internal collision IDs that Matter.JS uses for Body collision groups.
+     * 
+     * You should call this before destroying your game if you need to restart the game
+     * again on the same page, without first reloading the page. Or, if you wish to
+     * consistently destroy a Scene that contains Matter.js and then run it again
+     * later in the same game.
+     *
+     * @method Phaser.Physics.Matter.World#resetCollisionIDs
+     * @since 3.17.0
+     */
+    resetCollisionIDs: function ()
+    {
+        Body._nextCollidingGroupId = 1;
+        Body._nextNonCollidingGroupId = -1;
+        Body._nextCategory = 0x0001;
+
+        return this;
     },
 
     /**

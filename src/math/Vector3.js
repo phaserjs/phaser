@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -705,76 +705,100 @@ var Vector3 = new Class({
 
 });
 
-/*
-Vector3.Zero = function ()
-{
-    return new Vector3(0, 0, 0);
-};
+/**
+ * A static zero Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.ZERO
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.ZERO = new Vector3();
 
-Vector3.Up = function ()
-{
-    return new Vector3(0, 1.0, 0);
-};
+/**
+ * A static right Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.RIGHT
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.RIGHT = new Vector3(1, 0, 0);
 
-Vector3.Copy = function (source)
-{
-    return new Vector3(source.x, source.y, source.z);
-};
+/**
+ * A static left Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.LEFT
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.LEFT = new Vector3(-1, 0, 0);
 
-Vector3.TransformCoordinates = function (vector, transformation)
-{
-    var x = (vector.x * transformation.m[0]) + (vector.y * transformation.m[4]) + (vector.z * transformation.m[8]) + transformation.m[12];
-    var y = (vector.x * transformation.m[1]) + (vector.y * transformation.m[5]) + (vector.z * transformation.m[9]) + transformation.m[13];
-    var z = (vector.x * transformation.m[2]) + (vector.y * transformation.m[6]) + (vector.z * transformation.m[10]) + transformation.m[14];
-    var w = (vector.x * transformation.m[3]) + (vector.y * transformation.m[7]) + (vector.z * transformation.m[11]) + transformation.m[15];
+/**
+ * A static up Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.UP
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.UP = new Vector3(0, -1, 0);
 
-    return new Vector3(x / w, y / w, z / w);
-};
+/**
+ * A static down Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.DOWN
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.DOWN = new Vector3(0, 1, 0);
 
-Vector3.TransformNormal = function (vector, transformation)
-{
-    var x = (vector.x * transformation.m[0]) + (vector.y * transformation.m[4]) + (vector.z * transformation.m[8]);
-    var y = (vector.x * transformation.m[1]) + (vector.y * transformation.m[5]) + (vector.z * transformation.m[9]);
-    var z = (vector.x * transformation.m[2]) + (vector.y * transformation.m[6]) + (vector.z * transformation.m[10]);
+/**
+ * A static forward Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.FORWARD
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.FORWARD = new Vector3(0, 0, 1);
 
-    return new Vector3(x, y, z);
-};
+/**
+ * A static back Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.BACK
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.BACK = new Vector3(0, 0, -1);
 
-Vector3.Dot = function (left, right)
-{
-    return (left.x * right.x + left.y * right.y + left.z * right.z);
-};
-
-Vector3.Cross = function (left, right)
-{
-    var x = left.y * right.z - left.z * right.y;
-    var y = left.z * right.x - left.x * right.z;
-    var z = left.x * right.y - left.y * right.x;
-
-    return new Vector3(x, y, z);
-};
-
-Vector3.Normalize = function (vector)
-{
-    var newVector = Vector3.Copy(vector);
-    newVector.normalize();
-
-    return newVector;
-};
-
-Vector3.Distance = function (value1, value2)
-{
-    return Math.sqrt(Vector3.DistanceSquared(value1, value2));
-};
-
-Vector3.DistanceSquared = function (value1, value2)
-{
-    var x = value1.x - value2.x;
-    var y = value1.y - value2.y;
-    var z = value1.z - value2.z;
-
-    return (x * x) + (y * y) + (z * z);
-};
-*/
+/**
+ * A static one Vector3 for use by reference.
+ * 
+ * This constant is meant for comparison operations and should not be modified directly.
+ *
+ * @constant
+ * @name Phaser.Math.Vector3.ONE
+ * @type {Phaser.Math.Vector3}
+ * @since 3.16.0
+ */
+Vector3.ONE = new Vector3(1, 1, 1);
 
 module.exports = Vector3;

@@ -1,11 +1,15 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 //! stable.js 0.1.6, https://github.com/Two-Screen/stable
 //! © 2017 Angry Bytes and contributors. MIT licensed.
+
+/**
+ * @namespace Phaser.Utils.Array.StableSortFunctions
+ */
 
 (function() {
 
@@ -28,7 +32,8 @@ var stable = function(arr, comp) {
  /**
  * Sort the input array and simply copy it back if the result isn't in the original array, which happens on an odd number of passes.
  *
- * @function Phaser.Utils.Array.StableSort.inplace
+ * @function Phaser.Utils.Array.StableSortFunctions.inplace
+ * @memberof Phaser.Utils.Array.StableSortFunctions
  * @since 3.0.0
  *
  * @param {array} arr - The input array.

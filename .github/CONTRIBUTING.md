@@ -56,7 +56,7 @@ If your PR is doing little more than changing the Phaser source code into a form
 
 ## I don't really like git / node.js, but I can fix this bug
 
-That is fine too. While Pull Requests are the best thing in the world for us, they are not the only way to help. You're welcome to post fixes to our forum or even just email them to us. All we ask is that you still adhere to the guidelines presented here re: JSHint, etc.
+That is fine too. While Pull Requests are the best thing in the world for us, they are not the only way to help. You're welcome to post fixes to our forum or even just email them to us. All we ask is that you still adhere to the guidelines presented here re: ESLint, etc.
 
 ## Code Style Guide
 
@@ -76,5 +76,5 @@ Thanks to Chad for creating the original Pixi.js Contributing file which we adap
 [1]: http://jsfiddle.net
 [2]: http://jsbin.com/
 [3]: http://nodejs.org
-[4]: http://www.html5gamedevs.com/forum/33-phaser-3/
+[4]: https://phaser.discourse.group/
 [5]: https://codepen.io/pen?template=YeEWom "Phaser 3 game template"

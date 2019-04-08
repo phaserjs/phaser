@@ -24,25 +24,19 @@ Grab the source and join the fun!
 
 <div align="center"><img src="https://phaser.io/images/github/news.jpg"></div>
 
-> 16th October 2018
+> 11th February 2019
 
-Phaser 3.15 is now available. This is slightly ahead of schedule because we needed to get some important performance and iOS input related fixes released, without waiting for new features to be completed first.
+With a new version as large as 3.16.0 was, there were bound to be some bugs that got overlooked. With 3.16.2 we address some of the more important ones. Please see the Change Log below for full details. If you're using 3.16, then please upgrade to 3.16.2.
 
-This means that the new Scale Manager and Spine support have been moved to release 3.16 due towards the end of October. Please read the weekly Dev Logs for details about development.
+5th February 2019:
 
-> 1st October 2018
+I'm pleased to announce that Phaser 3.16 is now available. This version represents a significant milestone in the project as Phaser 3 is now 100% feature complete with all of the initially planned systems now in place. The most significant additions in 3.16 is the overhaul of the Input event handling, the long-awaited introduction of the Scale Manager, and the Extern Game Object, which allows for 3rd party rendering support, as required by Spine. Spine animation support is being handled exclusively through a Phaser Plugin. The current build of the Spine plugin can be found in this repo in the `plugins` folder, along with examples in the Phaser Labs. The Spine plugin will be developed independently of Phaser in the coming weeks.
 
-I'm pleased to announce that Phaser 3.14 is now out. Hot on the heels of the massive 3.13 release, 3.14 brings some sought-after new features to the party, including support for the new Tiled Map Editor 1.2 file formats, as well as the long-requested feature allowing use of multiple tilesets per single tilemap layer.
+This is the single largest update of Phaser 3 yet, and as such, there _are_ breaking changes. I have painstakingly listed all of them in the Change Log, so please do read it if you're upgrading from an earlier version. I know there is a lot to take in, so I'll be covering the new features in the Phaser World newsletter in the coming weeks.
 
-There are also new features to make Matter JS debugging easier and body creation when using lists of vertices is now much cleaner too. It's never just features though. There are lots of important fixes and updates in 3.14, including a fix causing gl canvas resizing to fail, better handling of the game shutdown process and fixes for an issue with Graphics.generateTexture.
+3.16 also brings together all of the hard work from the community that went in to the documentation. They're in a much better state than ever before, and very nearly 100% complete. I also completely reworked the internal event system, so event names, callback arguments and more are easy to find in one central place in the docs and can be reference in your code with either strings or properly name-spaced constants.
 
-If you're building an active project on 3.13 then please upgrade to 3.14 and, as usual, report any issues you find on GitHub so we can look at them immediately. Also, in the 3.14 release we have completed over 1000 new areas of documentation. At the time of writing there are now just 1900 items in the API left to document, which may sound like a lot, but is a fraction of the tens of thousands already done! With our current progress we should have 100% documentation coverage within the next couple of months.
-
-In case you missed the notice, Phaser 3.13 introduced the Facebook Instant Games Plugin. The plugin provides a seamless bridge between Phaser and version 6.2 of the Facebook Instant Games SDK. Every single SDK function is available via the plugin and we will keep track of the official SDK to make sure they stay in sync. My thanks to Facebook for helping make this possible.
-
-Also new in 3.13 were the Shape Game Objects, which allows for quick addition of geometry onto the display list. Easily add rectangles, triangles, curves, stars and more into your game and treat them just like any other Game Object. Perfect for place-holder art, abstract style games or just really fast iterations game-jam style.
-
-3.14 continues to represent the tireless effort on my part to get it fully production ready. I'm seeing lots more games being released with Phaser 3 and stacks of tutorials and plugins are starting to surface. My aim has always been to continue the mission of enhancing Phaser 3 as quickly as I can. It means releasing significant updates in relatively short periods of time. But it also means I'm jumping on bug reports as quickly as I can, keeping the issues list total nice and low (the vast majority of the items in there are feature requests now!) - a massive thank-you to all of you who support Phaser on Patreon and PayPal. It's your support that allows me to work on this full-time, to the benefit of everyone.
+A massive thank-you to everyone who supports Phaser on Patreon and PayPal. It's your backing that allows me to work on this full-time. If you've ever considered becoming a backer, now is the perfect time!
 
 As always, please check out the [Change Log](#changelog) for comprehensive details about what recent versions contain.
 
@@ -62,15 +56,17 @@ Rich - [@photonstorm](https://twitter.com/photonstorm)
 
 ![Support Phaser](https://phaser.io/images/github/div-support-phaser.png "Support Phaser")
 
-Developing Phaser takes a lot of time, effort and money. There are monthly running costs as well as countless hours of development time, community support, and assistance resolving issues.
+Because Phaser is an open source project, we cannot charge for it in the same way as traditional retail software. What's more, we don't ever want to. After all, it's built on, and was born from, open web standards. It's part of our manifesto that the core framework will always be free, even if you use it commercially, as many of you do.
 
-If you have found Phaser useful in your development life or have made income as a result of it please support our work via:
+**You may not realize it, but because of this, we rely 100% on community backing to fund development.**
 
-* A monthly contribution on [Patreon](https://www.patreon.com/photonstorm).
-* A [one-off donation](https://phaser.io/community/donate) with PayPal.
-* Purchase any of our [plugins or books](https://phaser.io/shop).
+Those funds allow Phaser to improve, and when it improves, everyone involved benefits. Your support helps secure a constant cycle of updates, fixes, new features and planning for the future.
 
-It all helps and genuinely contributes towards future development.
+There are other benefits to [backing Phaser](https://www.patreon.com/join/photonstorm), too:
+
+![Backers Perks](https://phaser.io/images/github/patreon-perk-chart.png)
+
+I use [Patreon](https://www.patreon.com/photonstorm) to manage the backing and you can [support Phaser](https://www.patreon.com/join/photonstorm?) from $1 per month. The amount you pledge is entirely up to you and can be changed as often as you like. Patreon renews monthly, just like Netflix. You can, of course, cancel at any point. Tears will be shed on this end, but that's not your concern.
 
 Extra special thanks to our top-tier sponsors: [Orange Games](http://orangegames.com) and [CrossInstall](https://crossinstall.com).
 
@@ -82,7 +78,7 @@ Extra special thanks to our top-tier sponsors: [Orange Games](http://orangegames
 
 We publish the [Phaser World](https://phaser.io/community/newsletter) newsletter. It's packed full of the latest Phaser games, tutorials, videos, meet-ups, talks, and more. The newsletter also contains our weekly Development Progress updates which let you know about the new features we're working on.
 
-Over 120 previous editions can be found on our [Back Issues](https://phaser.io/community/backissues) page.
+Over 130 previous editions can be found on our [Back Issues](https://phaser.io/community/backissues) page.
 
 ![Download Phaser](https://phaser.io/images/github/div-download.png "Download Phaser")
 <a name="download"></a>
@@ -108,13 +104,13 @@ npm install phaser
 [Phaser is on jsDelivr](https://www.jsdelivr.com/projects/phaser) which is a "super-fast CDN for developers". Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.15/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.15/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser.min.js"></script>
 ```
 
 ### API Documentation
@@ -186,13 +182,13 @@ We've 3 tutorials related to Facebook Instant Games and Phaser:
 A special build of Phaser with the Facebook Instant Games Plugin ready-enabled is [available on jsDelivr](https://www.jsdelivr.com/projects/phaser). Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.15/dist/phaser-facebook-instant-games.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser-facebook-instant-games.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.15/dist/phaser-facebook-instant-games.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser-facebook-instant-games.min.js"></script>
 ```
 
 The build files are in the git repository in the `dist` folder, and you can also include the plugin in custom builds.
@@ -209,7 +205,7 @@ Create an `index.html` page locally and paste the following code into it:
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://labs.phaser.io/build/phaser-arcade-physics.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser-arcade-physics.min.js"></script> 
 </head>
 <body>
 
@@ -320,42 +316,51 @@ You can then run `webpack` to create a development build in the `build` folder w
 
 # Change Log
 
-## Version 3.15.1 - Batou - 16th October 2018
+## Version 3.16.2 - Ishikawa - 11th February 2019
 
-Note: We are releasing this version ahead of schedule in order to make some very important iOS performance and input related fixes available. It does not contain the new Scale Manager or Spine support, both of which have been moved to 3.16 as they require a few more weeks of development.
+This is point release primarily fixes a few important issues that surfaced in 3.16.0. Please be sure to read the [Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md) if you are coming from a version < 3.16.0 as it contains lots of important updates.
 
-### New Features
+### Matter Pointer Constraint Changes
 
-* You can now set the `maxLights` value in the Game Config, which controls the total number of lights the Light2D shader can render in a single pass. The default is 10. Be careful about pushing this too far. More lights = less performance. Close #4081 (thanks @FrancescoNegri)
-* `Rectangle.SameDimensions` determines if the two objects (either Rectangles or Rectangle-like) have the same width and height values under strict equality.
-* An ArcadePhysics Group can now pass `{ enable: false }`` in its config to disable all the member bodies (thanks @samme)
-* `Body.setEnable` is a new chainable method that allows you to toggle the enable state of an Arcade Physics Body (thanks @samme)
-* `KeyboardPlugin.resetKeys` is a new method that will reset the state of any Key object created by a Scene's Keyboard Plugin.
-* `Pointer.wasCanceled` is a new boolean property that allows you to tell if a Pointer was cleared due to a `touchcancel` event. This flag is reset during the next `touchstart` event for the Pointer.
-* `Pointer.touchcancel` is a new internal method specifically for handling touch cancel events. It has the same result as `touchend` without setting any of the up properties, to avoid triggering up event handlers. It will also set the `wasCanceled` property to `true`.
+The following changes all effect the Matter JS Pointer Constraint class:
+
+* Pointer handling has been changed to make more sense. In the previous version, pressing down and then moving the Pointer _over_ a body would start it being dragged, even if the pointer was pressed down well outside of the body bounds. Now, a body can only be dragged by actually pressing down on it, or any of its parts, which is more in-line with how input events should work.
+* Previously, releasing ANY pointer would stop an object being dragged, even if it wasn't the one actually dragging a body, as in a multi-touch game. Bodies are now bound to the pointer which started their drag and only the release of that pointer will stop them.
+* There is a new Matter Physics Event `DRAG_START` which is emitted by a Pointer Constraint when it starts dragging a body. Listen for this event from the Matter World instance.
+* There is a new Matter Physics Event `DRAG` which is emitted by a Pointer Constraint as it drags a body. Listen for this event from the Matter World instance.
+* There is a new Matter Physics Event `DRAG_END` which is emitted by a Pointer Constraint when it stops dragging a body. Listen for this event from the Matter World instance.
+* The `camera` property can no longer be set in the config object. Instead it is set every time the Pointer is pressed down on a Body, this resolves issues where you have a multi-camera Scene and want to drag a body in the non-main camera.
+* `body` is a new property that holds a reference to the Body being dragged, if any.
+* `part` is a new property that holds a reference to the Body part that was clicked on which started the drag.
+* The internal `getBodyPart` method has been renamed to `hitTestBody` to more accurately reflect what it does.
+* The class no longer listens for the pointer `up` event, instead of tracks the active pointer and waits for that to be released. This has reduced the complexity and size of the `update` method considerably.
+* `stopDrag` is a new method that allows you to manually stop an object being dragged, even if the pointer isn't released.
+* This class now has 100% JSDocs.
 
 ### Updates
 
-* `WebGLRenderer.deleteTexture` will check to see if the texture it is being asked to delete is the currently bound texture or not. If it is, it'll set the blank texture to be bound after deletion. This should stop `RENDER WARNING: there is no texture bound to the unit 0` errors if you destroy a Game Object, such as Text or TileSprite, from an async or timed process (thanks jamespierce)
-* The `RequestAnimationFrame.step` and `stepTimeout` functions have been updated so that the new Frame is requested from raf before the main game step is called. This allows you to now stop the raf callback from within the game update or render loop. Fix #3952 (thanks @tolimeh)
-* If you pass zero as the width or height when creating a TileSprite it will now use the dimensions of the texture frame as the size of the TileSprite. Fix #4073 (thanks @jcyuan)
-* `TileSprite.setFrame` has had both the `updateSize` and `updateOrigin` arguments removed as they didn't do anything for TileSprites and were misleading.
-* `CameraManager.remove` has a new argument `runDestroy` which, if set, will automatically call `Camera.destroy` on the Cameras removed from the Camera Manager. You should nearly always allow this to happen (thanks jamespierce)
-* Device.OS has been restructured to allow fake UAs from Chrome dev tools to register iOS devices.
-* Texture batching during the batch flush has been implemented in the TextureTintPipeline which resolves the issues of very low frame rates, especially on iOS devices, when using non-batched textures such as those used by Text or TileSprites. Fix #4110 #4086 (thanks @ivanpopelyshev @sachinhosmani   @maximtsai @alexeymolchan)
-* The WebGLRenderer method `canvasToTexture` has a new optional argument `noRepeat` which will stop it from using `gl.REPEAT` entirely. This is now used by the Text object to avoid it potentially switching between a REPEAT and CLAMP texture, causing texture black-outs (thanks @ivanpopelyshev)
-* `KeyboardPlugin.resetKeys` is now called automatically as part of the Keyboard Plugin `shutdown` method. This means, when the plugin shuts down, such as when stopping a Scene, it will reset the state of any key held in the plugin. It will also clear the queue of any pending events.
-* The `Touch Manager` has been rewritten to use declared functions for all touch event handlers, rather than bound functions. This means they will now clear properly when the TouchManager is shut down.
-* There is a new Input constant `TOUCH_CANCEL` which represents canceled touch events.
+* `TileSprite.setTileScale` has been updated so that the `y` argument is optional and set to match the `x` argument, like `setScale` elsewhere in the API.
+* `InputManager.time` is a new property that holds the most recent time it was updated from the Game step, which plugins can access.
+* `InputManager.preStep` is a new method that populates some internal properties every step.
+* `KeyboardPlugin.time` has moved from being a property to being a getter, which returns the time from the InputManager.
+* The `scale` property has been added to the `Scene` class (thanks @strangeweekend)
+* `Matter.World.remove` now uses the `Composite.remove` method internally. Previously, it used `Composite.removeBody` which only allowed it to remove bodies from the simulation. Now, it can remove any type of Matter object.
+* When the Matter World creates its wall bounds, the left and right walls now extend further up and down than before, so that in a 4-wall setting there are no gaps in the corners, which previously allowed for fast moving objects that hit a corner intersection point to sometimes travel through it.
+* Touch inputs will now trigger a `POINTER_OUT` event if they leave the game (i.e. are released), where-as before they would only trigger the `POINTER_UP` event. Now, both happen (thanks @rgk)
 
 ### Bug Fixes
 
-* Fixed a bug in the canvas rendering of both the Static and Dynamic Tilemap Layers where the camera matrix was being multiplied twice with the layer, causing the scale and placement to be off (thanks galerijanamar)
-* If you set `pixelArt` to true in your game config (or `antialias` to false) then TileSprites will now respect this when using the Canvas Renderer and disable smoothing on the internal fill canvas.
-* TileSprites that were set to be interactive before they had rendered once wouldn't receive a valid input hit area, causing input to fail. They now define their size immediately, allowing them to be made interactive without having rendered. Fix #4085 (thanks @DotTheGreat)
-* The Particle Emitter Manager has been given a NOOP method called `setBlendMode` to stop warnings from being thrown if you added an emitter to a Container in the Canvas renderer. Fix #4083 (thanks @maximtsai)
-* The `game.context` property would be incorrectly set to `null` after the WebGLRenderer instance was created (thanks @samme)
-* The Touch Manager, Input Manager and Pointer classes all now handle the `touchcancel` event, such as triggered on iOS when activating an out of browser UI gesture, or in Facebook Instant Games when displaying an overlay ad. This should prevent issues with touch input becoming locked on iOS specifically. Fix #3756 (thanks @sftsk @sachinhosmani @kooappsdevs)
+* The `Mesh.setAlpha` method has been restored, even though it's empty and does nothing, to prevent runtime errors when adding a Mesh or Quad object to a Container. Fix #4338 #4343 (thanks @pfdtravalmatic @charmingny)
+* `KeyboardPlugin.checkDown` would always fail if using the new event system, because the time value it was checking wasn't updated.
+* Entering `Fullscreen` mode in the Scale Manager and then pressing ESC would leave the injected fullscreen div in the DOM, causing it to throw a node insertion failure the second time you wanted to enter fullscreen mode. Fix #4352 (thanks @ngdevr)
+* Due to the changes in the Input event system, the `GAME_OUT` event would never fire unless the input system was in legacy mode. The OUT and OVER handlers have been refactored and will now fire as soon as the DOM event happens. As a result the `InputManager._emitIsOverEvent` property has been removed, as the native event is sent directly to the handler and doesn't need storing locally any more. Fix #4344 (thanks @RademCZ)
+* Added `Zone.setBlendMode` method as a NOOP function, fixing a bug where if you added a Zone to a Container when running under Canvas it would fail. Fix #4295 (thanks @emanuel15)
+
+### Examples, Documentation and TypeScript
+
+My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
+
+@maretana @CipSoft-Components @brian-lui
 
 Please see the complete [Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md) for previous releases.
 
@@ -382,14 +387,14 @@ Phaser is a [Photon Storm](http://www.photonstorm.com) production.
 
 Created by [Richard Davey](mailto:rich@photonstorm.com). Powered by coffee, anime, pixels and love.
 
-The Phaser logo and characters are &copy; 2018 Photon Storm Limited.
+The Phaser logo and characters are &copy; 2019 Photon Storm Limited.
 
 All rights reserved.
 
 "Above all, video games are meant to be just one thing: fun. Fun for everyone." - Satoru Iwata
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.15.1/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.15.1/phaser.min.js
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.16.2/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.16.2/phaser.min.js
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-ghwin]: github-windows://openRepo/https://github.com/photonstorm/phaser

@@ -8,8 +8,6 @@ src/geom/polygon/Earcut.js
 src/utils/array/StableSort.js
 src/utils/object/Extend.js
 src/structs/RTree.js
-src/dom/_ScaleManager.js
-src/dom/VisualBounds.js
 plugins/spine/src/spine-canvas.js
 plugins/spine/src/spine-webgl.js
 webpack.*

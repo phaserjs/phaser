@@ -1,14 +1,16 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var ArcadeImage = require('./ArcadeImage');
 var ArcadeSprite = require('./ArcadeSprite');
+var Body = require('./Body');
 var Class = require('../../utils/Class');
 var CONST = require('./const');
 var PhysicsGroup = require('./PhysicsGroup');
+var StaticBody = require('./StaticBody');
 var StaticPhysicsGroup = require('./StaticPhysicsGroup');
 
 /**
@@ -116,6 +118,58 @@ var Factory = new Class({
     },
 
     /**
+     * Creates a new Dynamic Body and adds it to the World.
+     * 
+     * This Body it not tied to a Game Object, which means it will not render in the game, but can
+     * still be used for collision and overlap events, and be moved, accelerated and so on just like
+     * a regular body can.
+     *
+     * @method Phaser.Physics.Arcade.Factory#body
+     * @since 3.17.0
+     *
+     * @param {number} x - The horizontal position of this Body in the physics world.
+     * @param {number} y - The vertical position of this Body in the physics world.
+     * @param {number} width - The width of the Body in pixels.
+     * @param {number} height - The height of the Body in pixels.
+     *
+     * @return {Phaser.Physics.Arcade.Body} The Body that was created.
+     */
+    body: function (x, y, width, height)
+    {
+        var body = new Body(this.world, null, x, y, width, height);
+
+        this.world.add(body);
+
+        return body;
+    },
+
+    /**
+     * Creates a new Static Body and adds it to the World.
+     * 
+     * This Body it not tied to a Game Object, which means it will not render in the game, but can
+     * still be used for collision and overlap events, and be moved, accelerated and so on just like
+     * a regular body can.
+     *
+     * @method Phaser.Physics.Arcade.Factory#staticBody
+     * @since 3.17.0
+     *
+     * @param {number} x - The horizontal position of this Body in the physics world.
+     * @param {number} y - The vertical position of this Body in the physics world.
+     * @param {number} width - The width of the Body in pixels.
+     * @param {number} height - The height of the Body in pixels.
+     *
+     * @return {Phaser.Physics.Arcade.StaticBody} The Body that was created.
+     */
+    staticBody: function (x, y, width, height)
+    {
+        var body = new StaticBody(this.world, null, x, y, width, height);
+
+        this.world.add(body);
+
+        return body;
+    },
+
+    /**
      * Creates a new Arcade Image object with a Static body.
      *
      * @method Phaser.Physics.Arcade.Factory#staticImage
@@ -220,8 +274,8 @@ var Factory = new Class({
      * @method Phaser.Physics.Arcade.Factory#staticGroup
      * @since 3.0.0
      *
-     * @param {(Phaser.GameObjects.GameObject[]|GroupConfig|GroupCreateConfig)} [children] - Game Objects to add to this group; or the `config` argument.
-     * @param {GroupConfig|GroupCreateConfig} [config] - Settings for this group.
+     * @param {(Phaser.GameObjects.GameObject[]|Phaser.GameObjects.Group.Types.GroupConfig|Phaser.GameObjects.Group.Types.GroupCreateConfig)} [children] - Game Objects to add to this group; or the `config` argument.
+     * @param {Phaser.GameObjects.Group.Types.GroupConfig|Phaser.GameObjects.Group.Types.GroupCreateConfig} [config] - Settings for this group.
      *
      * @return {Phaser.Physics.Arcade.StaticGroup} The Static Group object that was created.
      */
@@ -237,8 +291,8 @@ var Factory = new Class({
      * @method Phaser.Physics.Arcade.Factory#group
      * @since 3.0.0
      *
-     * @param {(Phaser.GameObjects.GameObject[]|PhysicsGroupConfig|GroupCreateConfig)} [children] - Game Objects to add to this group; or the `config` argument.
-     * @param {PhysicsGroupConfig|GroupCreateConfig} [config] - Settings for this group.
+     * @param {(Phaser.GameObjects.GameObject[]|Phaser.Physics.Arcade.Types.PhysicsGroupConfig|Phaser.GameObjects.Group.Types.GroupCreateConfig)} [children] - Game Objects to add to this group; or the `config` argument.
+     * @param {Phaser.Physics.Arcade.Types.PhysicsGroupConfig|Phaser.GameObjects.Group.Types.GroupCreateConfig} [config] - Settings for this group.
      *
      * @return {Phaser.Physics.Arcade.Group} The Group object that was created.
      */

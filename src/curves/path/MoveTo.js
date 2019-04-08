@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -117,7 +117,7 @@ var MoveTo = new Class({
      * @method Phaser.Curves.MoveTo#toJSON
      * @since 3.0.0
      *
-     * @return {JSONCurve} A primitive object with the curve's type and only point.
+     * @return {Phaser.Curves.Types.JSONCurve} A primitive object with the curve's type and only point.
      */
     toJSON: function ()
     {

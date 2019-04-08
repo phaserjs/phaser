@@ -1,10 +1,11 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Class = require('../utils/Class');
+var Events = require('./events');
 
 /**
  * @callback DataEachCallback
@@ -17,7 +18,7 @@ var Class = require('../utils/Class');
 
 /**
  * @classdesc
- * The Data Component features a means to store pieces of data specific to a Game Object, System or Plugin.
+ * The Data Manager Component features a means to store pieces of data specific to a Game Object, System or Plugin.
  * You can then search, query it, and retrieve the data. The parent must either extend EventEmitter,
  * or have a property called `events` that is an instance of it.
  *
@@ -239,13 +240,16 @@ var DataManager = new Class({
      * When the value is first set, a `setdata` event is emitted.
      *
      * If the key already exists, a `changedata` event is emitted instead, along an event named after the key.
-     * For example, if you updated an existing key called `PlayerLives` then it would emit the event `changedata_PlayerLives`.
+     * For example, if you updated an existing key called `PlayerLives` then it would emit the event `changedata-PlayerLives`.
      * These events will be emitted regardless if you use this method to set the value, or the direct `values` setter.
      *
      * Please note that the data keys are case-sensitive and must be valid JavaScript Object property strings.
      * This means the keys `gold` and `Gold` are treated as two unique values within the Data Manager.
      *
      * @method Phaser.Data.DataManager#set
+     * @fires Phaser.Data.Events#SET_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA_KEY
      * @since 3.0.0
      *
      * @param {(string|object)} key - The key to set the value for. Or an object or key value pairs. If an object the `data` argument is ignored.
@@ -279,6 +283,9 @@ var DataManager = new Class({
      * Internal value setter, called automatically by the `set` method.
      *
      * @method Phaser.Data.DataManager#setValue
+     * @fires Phaser.Data.Events#SET_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA_KEY
      * @private
      * @since 3.10.0
      *
@@ -324,8 +331,8 @@ var DataManager = new Class({
                         var previousValue = list[key];
                         list[key] = value;
 
-                        events.emit('changedata', parent, key, value, previousValue);
-                        events.emit('changedata_' + key, parent, value, previousValue);
+                        events.emit(Events.CHANGE_DATA, parent, key, value, previousValue);
+                        events.emit(Events.CHANGE_DATA_KEY + key, parent, value, previousValue);
                     }
                 }
 
@@ -333,7 +340,7 @@ var DataManager = new Class({
 
             list[key] = data;
 
-            events.emit('setdata', parent, key, data);
+            events.emit(Events.SET_DATA, parent, key, data);
         }
 
         return this;
@@ -378,6 +385,9 @@ var DataManager = new Class({
      * will emit a `changedata` event.
      *
      * @method Phaser.Data.DataManager#merge
+     * @fires Phaser.Data.Events#SET_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA
+     * @fires Phaser.Data.Events#CHANGE_DATA_KEY
      * @since 3.0.0
      *
      * @param {Object.<string, *>} data - The data to merge.
@@ -414,6 +424,7 @@ var DataManager = new Class({
      * ```
      *
      * @method Phaser.Data.DataManager#remove
+     * @fires Phaser.Data.Events#REMOVE_DATA
      * @since 3.0.0
      *
      * @param {(string|string[])} key - The key to remove, or an array of keys to remove.
@@ -447,6 +458,7 @@ var DataManager = new Class({
      *
      * @method Phaser.Data.DataManager#removeValue
      * @private
+     * @fires Phaser.Data.Events#REMOVE_DATA
      * @since 3.10.0
      *
      * @param {string} key - The key to set the value for.
@@ -462,7 +474,7 @@ var DataManager = new Class({
             delete this.list[key];
             delete this.values[key];
 
-            this.events.emit('removedata', this.parent, key, data);
+            this.events.emit(Events.REMOVE_DATA, this.parent, key, data);
         }
 
         return this;
@@ -472,6 +484,7 @@ var DataManager = new Class({
      * Retrieves the data associated with the given 'key', deletes it from this Data Manager, then returns it.
      *
      * @method Phaser.Data.DataManager#pop
+     * @fires Phaser.Data.Events#REMOVE_DATA
      * @since 3.0.0
      *
      * @param {string} key - The key of the value to retrieve and delete.
@@ -489,7 +502,7 @@ var DataManager = new Class({
             delete this.list[key];
             delete this.values[key];
 
-            this.events.emit('removedata', this, key, data);
+            this.events.emit(Events.REMOVE_DATA, this.parent, key, data);
         }
 
         return data;
@@ -562,9 +575,9 @@ var DataManager = new Class({
     {
         this.reset();
 
-        this.events.off('changedata');
-        this.events.off('setdata');
-        this.events.off('removedata');
+        this.events.off(Events.CHANGE_DATA);
+        this.events.off(Events.SET_DATA);
+        this.events.off(Events.REMOVE_DATA);
 
         this.parent = null;
     },

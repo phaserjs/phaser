@@ -1,0 +1,3 @@
+/**
+ * @namespace Phaser.Display.Types
+ */

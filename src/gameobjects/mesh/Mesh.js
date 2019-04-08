@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -8,6 +8,7 @@ var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
 var MeshRender = require('./MeshRender');
+var NOOP = require('../../utils/NOOP');
 
 /**
  * @classdesc
@@ -25,7 +26,6 @@ var MeshRender = require('./MeshRender');
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.ScaleMode
  * @extends Phaser.GameObjects.Components.Size
  * @extends Phaser.GameObjects.Components.Texture
  * @extends Phaser.GameObjects.Components.Transform
@@ -52,7 +52,6 @@ var Mesh = new Class({
         Components.GetBounds,
         Components.Mask,
         Components.Pipeline,
-        Components.ScaleMode,
         Components.Size,
         Components.Texture,
         Components.Transform,
@@ -152,7 +151,16 @@ var Mesh = new Class({
         this.setPosition(x, y);
         this.setSizeToFrame();
         this.initPipeline();
-    }
+    },
+
+    /**
+     * This method is left intentionally empty and does not do anything.
+     * It is retained to allow a Mesh or Quad to be added to a Container.
+     * 
+     * @method Phaser.GameObjects.Mesh#setAlpha
+     * @since 3.17.0
+     */
+    setAlpha: NOOP
 
 });
 

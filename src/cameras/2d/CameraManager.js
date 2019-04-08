@@ -1,6 +1,6 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
@@ -9,27 +9,7 @@ var Class = require('../../utils/Class');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var PluginCache = require('../../plugins/PluginCache');
 var RectangleContains = require('../../geom/rectangle/Contains');
-
-/**
- * @typedef {object} InputJSONCameraObject
- *
- * @property {string} [name=''] - The name of the Camera.
- * @property {integer} [x=0] - The horizontal position of the Camera viewport.
- * @property {integer} [y=0] - The vertical position of the Camera viewport.
- * @property {integer} [width] - The width of the Camera viewport.
- * @property {integer} [height] - The height of the Camera viewport.
- * @property {number} [zoom=1] - The default zoom level of the Camera.
- * @property {number} [rotation=0] - The rotation of the Camera, in radians.
- * @property {boolean} [roundPixels=false] - Should the Camera round pixels before rendering?
- * @property {number} [scrollX=0] - The horizontal scroll position of the Camera.
- * @property {number} [scrollY=0] - The vertical scroll position of the Camera.
- * @property {(false|string)} [backgroundColor=false] - A CSS color string controlling the Camera background color.
- * @property {?object} [bounds] - Defines the Camera bounds.
- * @property {number} [bounds.x=0] - The top-left extent of the Camera bounds.
- * @property {number} [bounds.y=0] - The top-left extent of the Camera bounds.
- * @property {number} [bounds.width] - The width of the Camera bounds.
- * @property {number} [bounds.height] - The height of the Camera bounds.
- */
+var SceneEvents = require('../../scene/events');
 
 /**
  * @classdesc
@@ -134,17 +114,8 @@ var CameraManager = new Class({
          */
         this.main;
 
-        /**
-         * This scale affects all cameras. It's used by the Scale Manager.
-         *
-         * @name Phaser.Cameras.Scene2D.CameraManager#baseScale
-         * @type {number}
-         * @since 3.0.0
-         */
-        this.baseScale = 1;
-
-        scene.sys.events.once('boot', this.boot, this);
-        scene.sys.events.on('start', this.start, this);
+        scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
+        scene.sys.events.on(SceneEvents.START, this.start, this);
     },
 
     /**
@@ -153,6 +124,7 @@ var CameraManager = new Class({
      *
      * @method Phaser.Cameras.Scene2D.CameraManager#boot
      * @private
+     * @listens Phaser.Scenes.Events#DESTROY
      * @since 3.5.1
      */
     boot: function ()
@@ -172,7 +144,7 @@ var CameraManager = new Class({
 
         this.main = this.cameras[0];
 
-        this.systems.events.once('destroy', this.destroy, this);
+        this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
     },
 
     /**
@@ -182,6 +154,8 @@ var CameraManager = new Class({
      *
      * @method Phaser.Cameras.Scene2D.CameraManager#start
      * @private
+     * @listens Phaser.Scenes.Events#UPDATE
+     * @listens Phaser.Scenes.Events#SHUTDOWN
      * @since 3.5.0
      */
     start: function ()
@@ -206,8 +180,8 @@ var CameraManager = new Class({
 
         var eventEmitter = this.systems.events;
 
-        eventEmitter.on('update', this.update, this);
-        eventEmitter.once('shutdown', this.shutdown, this);
+        eventEmitter.on(SceneEvents.UPDATE, this.update, this);
+        eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -243,8 +217,8 @@ var CameraManager = new Class({
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
-        if (width === undefined) { width = this.scene.sys.game.config.width; }
-        if (height === undefined) { height = this.scene.sys.game.config.height; }
+        if (width === undefined) { width = this.scene.sys.scale.width; }
+        if (height === undefined) { height = this.scene.sys.scale.height; }
         if (makeMain === undefined) { makeMain = false; }
         if (name === undefined) { name = ''; }
 
@@ -396,12 +370,12 @@ var CameraManager = new Class({
     /**
      * Populates this Camera Manager based on the given configuration object, or an array of config objects.
      * 
-     * See the `InputJSONCameraObject` documentation for details of the object structure.
+     * See the `Phaser.Cameras.Scene2D.Types.CameraConfig` documentation for details of the object structure.
      *
      * @method Phaser.Cameras.Scene2D.CameraManager#fromJSON
      * @since 3.0.0
      *
-     * @param {(InputJSONCameraObject|InputJSONCameraObject[])} config - A Camera configuration object, or an array of them, to be added to this Camera Manager.
+     * @param {(Phaser.Cameras.Scene2D.Types.CameraConfig|Phaser.Cameras.Scene2D.Types.CameraConfig[])} config - A Camera configuration object, or an array of them, to be added to this Camera Manager.
      *
      * @return {Phaser.Cameras.Scene2D.CameraManager} This Camera Manager instance.
      */
@@ -412,8 +386,8 @@ var CameraManager = new Class({
             config = [ config ];
         }
 
-        var gameWidth = this.scene.sys.game.config.width;
-        var gameHeight = this.scene.sys.game.config.height;
+        var gameWidth = this.scene.sys.scale.width;
+        var gameHeight = this.scene.sys.scale.height;
 
         for (var i = 0; i < config.length; i++)
         {
@@ -598,8 +572,6 @@ var CameraManager = new Class({
     {
         var scene = this.scene;
         var cameras = this.cameras;
-        var baseScale = this.baseScale;
-        var resolution = renderer.config.resolution;
 
         for (var i = 0; i < this.cameras.length; i++)
         {
@@ -607,7 +579,8 @@ var CameraManager = new Class({
 
             if (camera.visible && camera.alpha > 0)
             {
-                camera.preRender(baseScale, resolution);
+                //  Hard-coded to 1 for now
+                camera.preRender(1);
 
                 renderer.render(scene, children, interpolation, camera);
             }
@@ -646,14 +619,14 @@ var CameraManager = new Class({
      * @protected
      * @since 3.0.0
      *
-     * @param {number} timestep - The timestep value.
-     * @param {number} delta - The delta value since the last frame.
+     * @param {integer} time - The current timestamp as generated by the Request Animation Frame or SetTimeout.
+     * @param {number} delta - The delta time, in ms, elapsed since the last frame.
      */
-    update: function (timestep, delta)
+    update: function (time, delta)
     {
         for (var i = 0; i < this.cameras.length; i++)
         {
-            this.cameras[i].update(timestep, delta);
+            this.cameras[i].update(time, delta);
         }
     },
 
@@ -695,8 +668,8 @@ var CameraManager = new Class({
 
         var eventEmitter = this.systems.events;
 
-        eventEmitter.off('update', this.update, this);
-        eventEmitter.off('shutdown', this.shutdown, this);
+        eventEmitter.off(SceneEvents.UPDATE, this.update, this);
+        eventEmitter.off(SceneEvents.SHUTDOWN, this.shutdown, this);
     },
 
     /**
@@ -711,7 +684,7 @@ var CameraManager = new Class({
     {
         this.shutdown();
 
-        this.scene.sys.events.off('start', this.start, this);
+        this.scene.sys.events.off(SceneEvents.START, this.start, this);
 
         this.scene = null;
         this.systems = null;

@@ -1,11 +1,12 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var BaseCache = require('./BaseCache');
 var Class = require('../utils/Class');
+var GameEvents = require('../core/events');
 
 /**
  * @classdesc
@@ -149,7 +150,7 @@ var CacheManager = new Class({
          */
         this.custom = {};
 
-        this.game.events.once('destroy', this.destroy, this);
+        this.game.events.once(GameEvents.DESTROY, this.destroy, this);
     },
 
     /**

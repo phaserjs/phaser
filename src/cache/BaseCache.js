@@ -1,12 +1,13 @@
 /**
  * @author       Richard Davey <rich@photonstorm.com>
- * @copyright    2018 Photon Storm Ltd.
+ * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Class = require('../utils/Class');
 var CustomMap = require('../structs/Map');
 var EventEmitter = require('eventemitter3');
+var Events = require('./events');
 
 /**
  * @classdesc
@@ -49,22 +50,11 @@ var BaseCache = new Class({
     },
 
     /**
-     * Cache add event.
-     *
-     * This event is fired by the Cache each time a new object is added to it.
-     *
-     * @event Phaser.Cache.BaseCache#addEvent
-     * @param {Phaser.Cache.BaseCache} cache - The BaseCache to which the object was added.
-     * @param {string} key - The key of the object added to the cache.
-     * @param {*} object - A reference to the object added to the cache.
-     */
-
-    /**
      * Adds an item to this cache. The item is referenced by a unique string, which you are responsible
      * for setting and keeping track of. The item can only be retrieved by using this string.
      *
      * @method Phaser.Cache.BaseCache#add
-     * @fires Phaser.Cache.BaseCache#addEvent
+     * @fires Phaser.Cache.Events#ADD
      * @since 3.0.0
      *
      * @param {string} key - The unique key by which the data added to the cache will be referenced.
@@ -76,7 +66,7 @@ var BaseCache = new Class({
     {
         this.entries.set(key, data);
 
-        this.events.emit('add', this, key, data);
+        this.events.emit(Events.ADD, this, key, data);
 
         return this;
     },
@@ -129,17 +119,6 @@ var BaseCache = new Class({
     },
 
     /**
-     * Cache remove event.
-     *
-     * This event is fired by the Cache each time an object is removed from it.
-     *
-     * @event Phaser.Cache.BaseCache#removeEvent
-     * @param {Phaser.Cache.BaseCache} cache - The BaseCache from which the object was removed.
-     * @param {string} key - The key of the object removed from the cache.
-     * @param {*} object - The object that was removed from the cache.
-     */
-
-    /**
      * Removes and item from this cache based on the given key.
      *
      * If an entry matching the key is found it is removed from the cache and a `remove` event emitted.
@@ -147,7 +126,7 @@ var BaseCache = new Class({
      * are relying on this item, it is up to you to sever those relationships prior to removing the item.
      *
      * @method Phaser.Cache.BaseCache#remove
-     * @fires Phaser.Cache.BaseCache#removeEvent
+     * @fires Phaser.Cache.Events#REMOVE
      * @since 3.0.0
      *
      * @param {string} key - The unique key of the item to remove from the cache.
@@ -162,7 +141,7 @@ var BaseCache = new Class({
         {
             this.entries.delete(key);
 
-            this.events.emit('remove', this, key, entry.data);
+            this.events.emit(Events.REMOVE, this, key, entry.data);
         }
 
         return this;
