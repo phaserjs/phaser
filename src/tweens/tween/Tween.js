@@ -944,8 +944,16 @@ var Tween = new Class({
         {
             if (this.state === TWEEN_CONST.PAUSED || this.state === TWEEN_CONST.PENDING_ADD)
             {
-                this.parent._destroy.push(this);
-                this.parent._toProcess++;
+                if (this.parentIsTimeline)
+                {
+                    this.parent.manager._destroy.push(this);
+                    this.parent.manager._toProcess++;
+                }
+                else
+                {
+                    this.parent._destroy.push(this);
+                    this.parent._toProcess++;
+                }
             }
 
             this.state = TWEEN_CONST.PENDING_REMOVE;
