@@ -209,7 +209,6 @@ var RenderTexture = new Class({
             this.texture = scene.sys.textures.get(key);
             
             //  Get the frame
-            if (frame === undefined) { frame = '__BASE'; }
             this.frame = this.texture.get(frame);
 
             this.canvas = this.frame.source.image;
@@ -473,20 +472,19 @@ var RenderTexture = new Class({
         var b = (rgb | 0) & 0xff;
 
         var gl = this.gl;
+        var frame = this.frame;
 
         if (gl)
         {
             var renderer = this.renderer;
-
-            var gl = this.gl;
-    
+   
             var bounds = this.getBounds();
 
             renderer.setFramebuffer(this.framebuffer, true);
 
-          if (width !== this.frame.source.width || height !== this.frame.source.height)
+            if (width !== frame.source.width || height !== frame.source.height)
             {
-                gl.scissor(x + this.frame.cutX, y + this.frame.cutY, width, height);
+                gl.scissor(x + frame.cutX, y + frame.cutY, width, height);
             }
 
             this.pipeline.drawFillRect(
@@ -495,17 +493,17 @@ var RenderTexture = new Class({
                 alpha
             );
 
-            if (width !== this.frame.source.width || height !== this.frame.source.height)
+            if (width !== frame.source.width || height !== frame.source.height)
             {
-                gl.scissor(0, 0, this.frame.source.width, this.frame.source.height);
+                gl.scissor(0, 0, frame.source.width, frame.source.height);
             }
     
             this.renderer.setFramebuffer(null, true);
         }
         else
         {
-            this.context.fillStyle = 'rgba(' + ur + ',' + ug + ',' + ub + ',' + alpha + ')';
-            this.context.fillRect(x + this.frame.cutX, y + this.frame.cutY, width, height);
+            this.context.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+            this.context.fillRect(x + frame.cutX, y + frame.cutY, width, height);
         }
 
         return this;
