@@ -419,6 +419,11 @@ var Tween = new Class({
      */
     restart: function ()
     {
+        if (this.state === TWEEN_CONST.PENDING_ADD)
+        {
+            return this;
+        }
+
         if (this.state === TWEEN_CONST.REMOVED)
         {
             this.seek(0);
@@ -926,7 +931,7 @@ var Tween = new Class({
      * @method Phaser.Tweens.Tween#stop
      * @since 3.0.0
      *
-     * @param {number} [resetTo] - If you want to seek the tween, provide an value between 0 and 1.
+     * @param {number} [resetTo] - If you want to seek the tween, provide a value between 0 and 1.
      *
      * @return {this} This Tween instance.
      */

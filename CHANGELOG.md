@@ -98,6 +98,7 @@ Notes:
 * Creating a Tween with a `duration` of zero would cause the tweened object properties to be set to `NaN`. Now they will tween for one single frame before being set to progress 1. Fix #4235 (thanks @BigZaphod)
 * The First frame of a Texture would take on the appearance of the second frame in a Sprite Sheet created from trimmed Texture Atlas frames. Fix #4088 (thanks @Cirras)
 * `Tween.stop` assumed that the parent was the TweenManager. If the Tween has been added to the Timeline, that was not true and the stop method crashed (thanks @TadejZupancic)
+* Calling `Tween.restart` multiple times in a row would cause the tween to freeze. It will now disregard all additional calls to `restart` if it's already in a pending state (thanks @rgk)
 
 ### Examples, Documentation and TypeScript
 
