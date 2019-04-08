@@ -230,8 +230,8 @@ var PathFollower = new Class({
         }
 
         //  Override in case they've been specified in the config
-        config.from = 0;
-        config.to = 1;
+        config.from = config.from || 0;
+        config.to = config.to || 1;
 
         //  Can also read extra values out of the config:
 
