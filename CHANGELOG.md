@@ -75,6 +75,7 @@ Notes:
 * `Graphics.strokePoints` has renamed the second argument from `autoClose` to `closeShape`. There is also a new third argument `closePath`, which defaults to `true` and automatically closes the path before stroking it. The `endIndex` argument is now the fourth argument, instead of the third.
 * `Graphics.fillPoints` has renamed the second argument from `autoClose` to `closeShape`. There is also a new third argument `closePath`, which defaults to `true` and automatically closes the path before filling it. The `endIndex` argument is now the fourth argument, instead of the third.
 * Calling `Texture.destroy` will now call `TextureManager.removeKey` to ensure the key is removed from the manager, should you destroy a texture directly, rather than going via `TextureManager.remove`. Fix #4461 (thanks @BigZaphod)
+* `SpriteSheetFromAtlas` now adds in a `__BASE` entry for the Sprite Sheet it creates, keeping it consistent with the other frame parsers (thanks @Cirras)
 
 ### Bug Fixes
 
@@ -93,7 +94,7 @@ Notes:
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@sky-coding @G-Rath @S4n60w3n @rootasjey @englercj @josephmbustamante @Jason-Cooke @Zamiell @krzysztof-grzybek @S4n60w3n @m31271n 
+@sky-coding @G-Rath @S4n60w3n @rootasjey @englercj @josephmbustamante @Jason-Cooke @Zamiell @krzysztof-grzybek @S4n60w3n @m31271n @peterellisjones @martinlindhe
 
 
 ## Version 3.16.2 - Ishikawa - 11th February 2019
