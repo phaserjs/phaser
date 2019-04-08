@@ -635,25 +635,34 @@ var Tween = new Class({
      * Starts a Tween playing.
      * 
      * You only need to call this method if you have configured the tween to be paused on creation.
+     * 
+     * If the Tween is already playing, calling this method again will have no effect. If you wish to
+     * restart the Tween, use `Tween.restart` instead.
+     * 
+     * Calling this method after the Tween has completed will start the Tween playing again from the start.
+     * This is the same as calling `Tween.seek(0)` and then `Tween.play()`.
      *
      * @method Phaser.Tweens.Tween#play
      * @since 3.0.0
      *
-     * @param {boolean} resetFromTimeline - Is this Tween being played as part of a Timeline?
+     * @param {boolean} [resetFromTimeline=false] - Is this Tween being played as part of a Timeline?
      *
      * @return {this} This Tween instance.
      */
     play: function (resetFromTimeline)
     {
-        if (this.state === TWEEN_CONST.ACTIVE)
+        if (resetFromTimeline === undefined) { resetFromTimeline = false; }
+
+        if (this.state === TWEEN_CONST.ACTIVE || this.state === TWEEN_CONST.PENDING_ADD)
         {
             return this;
         }
         else if (this.state === TWEEN_CONST.PENDING_REMOVE || this.state === TWEEN_CONST.REMOVED)
         {
-            this.init();
+            this.seek(0);
             this.parent.makeActive(this);
-            resetFromTimeline = true;
+
+            return this;
         }
 
         var onStart = this.callbacks.onStart;
