@@ -17,7 +17,7 @@ var ValueToColor = require('../display/color/ValueToColor');
 
 /**
  * @classdesc
- * The active game configuration settings, parsed from a {@link GameConfig} object.
+ * The active game configuration settings, parsed from a {@link Phaser.Core.Types.GameConfig} object.
  *
  * @class Config
  * @memberof Phaser.Core
