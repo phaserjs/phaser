@@ -10,6 +10,7 @@ var CacheManager = require('../cache/CacheManager');
 var CanvasPool = require('../display/canvas/CanvasPool');
 var Class = require('../utils/Class');
 var Config = require('./Config');
+var CreateDOMContainer = require('../dom/CreateDOMContainer');
 var CreateRenderer = require('./CreateRenderer');
 var DataManager = require('../data/DataManager');
 var DebugHeader = require('./DebugHeader');
@@ -27,11 +28,6 @@ var TextureEvents = require('../textures/events');
 var TextureManager = require('../textures/TextureManager');
 var TimeStep = require('./TimeStep');
 var VisibilityHandler = require('./VisibilityHandler');
-
-if (typeof EXPERIMENTAL)
-{
-    var CreateDOMContainer = require('../dom/CreateDOMContainer');
-}
 
 if (typeof PLUGIN_FBINSTANT)
 {
@@ -86,22 +82,19 @@ var Game = new Class({
          */
         this.renderer = null;
 
-        if (typeof EXPERIMENTAL)
-        {
-            /**
-             * A reference to an HTML Div Element used as a DOM Element Container.
-             * 
-             * Only set if `createDOMContainer` is `true` in the game config (by default it is `false`) and
-             * if you provide a parent element to insert the Phaser Game inside.
-             *
-             * See the DOM Element Game Object for more details.
-             *
-             * @name Phaser.Game#domContainer
-             * @type {HTMLDivElement}
-             * @since 3.12.0
-             */
-            this.domContainer = null;
-        }
+        /**
+         * A reference to an HTML Div Element used as the DOM Element Container.
+         * 
+         * Only set if `createDOMContainer` is `true` in the game config (by default it is `false`) and
+         * if you provide a parent element to insert the Phaser Game inside.
+         *
+         * See the DOM Element Game Object for more details.
+         *
+         * @name Phaser.Game#domContainer
+         * @type {HTMLDivElement}
+         * @since 3.17.0
+         */
+        this.domContainer = null;
 
         /**
          * A reference to the HTML Canvas Element that Phaser uses to render the game.
@@ -366,10 +359,7 @@ var Game = new Class({
 
         CreateRenderer(this);
 
-        if (typeof EXPERIMENTAL)
-        {
-            CreateDOMContainer(this);
-        }
+        CreateDOMContainer(this);
 
         DebugHeader(this);
 
@@ -683,12 +673,9 @@ var Game = new Class({
             }
         }
 
-        if (typeof EXPERIMENTAL)
+        if (this.domContainer)
         {
-            if (this.domContainer)
-            {
-                this.domContainer.parentNode.removeChild(this.domContainer);
-            }
+            this.domContainer.parentNode.removeChild(this.domContainer);
         }
 
         this.loop.destroy();

@@ -20,13 +20,17 @@ var CreateDOMContainer = function (game)
 
     div.style = [
         'display: block;',
-        'width: ' + game.canvas.width + 'px;',
-        'height: ' + game.canvas.height + 'px;',
+        'width: ' + game.scale.width + 'px;',
+        'height: ' + game.scale.height + 'px;',
         'padding: 0; margin: 0;',
         'position: absolute;',
         'overflow: hidden;',
-        'pointer-events: none;'
+        'pointer-events: none;',
+        'transform: scale(1);',
+        'transform-origin: left top;'
     ].join(' ');
+
+
 
     game.domContainer = div;
 

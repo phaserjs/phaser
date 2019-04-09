@@ -894,6 +894,15 @@ var ScaleManager = new Class({
 
         this.displayScale.set(this.baseSize.width / this.canvasBounds.width, this.baseSize.height / this.canvasBounds.height);
 
+        var domContainer = this.game.domContainer;
+
+        if (domContainer)
+        {
+            this.baseSize.setCSS(domContainer);
+
+            domContainer.style.transform = 'scale(' + this.displaySize.width / this.baseSize.width + ',' + this.displaySize.height / this.baseSize.height + ')';
+        }
+
         this.emit(Events.RESIZE, this.gameSize, this.baseSize, this.displaySize, this.resolution);
 
         return this;
