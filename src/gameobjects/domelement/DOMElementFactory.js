@@ -8,28 +8,24 @@ var DOMElement = require('./DOMElement');
 var GameObjectFactory = require('../GameObjectFactory');
 
 /**
- * Creates a new Image Game Object and adds it to the Scene.
+ * Creates a new DOM Element Game Object and adds it to the parent DOM Container.
+ * 
+ * The game must have been configured with the `dom.createContainer` property set to `true` for this to work.
  *
- * Note: This method will only be available if the Image Game Object has been built into Phaser.
+ * Note: This method will only be available if the DOM Element Game Object has been built into Phaser.
  *
  * @method Phaser.GameObjects.GameObjectFactory#dom
- * @since 3.12.0
+ * @since 3.17.0
  *
- * @param {number} x - The horizontal position of this Game Object in the world.
- * @param {number} y - The vertical position of this Game Object in the world.
- * @param {string} element - The DOM element.
+ * @param {number} x - The horizontal position of this DOM Element in the world.
+ * @param {number} y - The vertical position of this DOM Element in the world.
+ * @param {(HTMLElement|string)} [element] - An existing DOM element, or a string. If a string starting with a # it will do a `getElementById` look-up on the string (minus the hash). Without a hash, it represents the type of element to create, i.e. 'div'.
+ * @param {(string|any)} [style] - If a string, will be set directly as the elements `style` property value. If a plain object, will be iterated and the values transferred. In both cases the values replacing whatever CSS styles may have been previously set.
+ * @param {string} [innerText] - If given, will be set directly as the elements `innerText` property value, replacing whatever was there before.
  *
  * @return {Phaser.GameObjects.DOMElement} The Game Object that was created.
  */
-GameObjectFactory.register('dom', function (x, y, element)
+GameObjectFactory.register('dom', function (x, y, element, style, innerText)
 {
-    return this.displayList.add(new DOMElement(this.scene, x, y, element));
+    return this.displayList.add(new DOMElement(this.scene, x, y, element, style, innerText));
 });
-
-//  When registering a factory function 'this' refers to the GameObjectFactory context.
-//
-//  There are several properties available to use:
-//
-//  this.scene - a reference to the Scene that owns the GameObjectFactory
-//  this.displayList - a reference to the Display List the Scene owns
-//  this.updateList - a reference to the Update List the Scene owns
