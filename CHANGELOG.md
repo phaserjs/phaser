@@ -67,6 +67,15 @@ Notes:
 * `Tilemap.removeLayer` is a new method that allows you to remove a specific layer from a Tilemap without destroying it.
 * `Tilemap.destroyLayer` is a new method that allows you to destroy a layer and remove it from a Tilemap.
 * `Tilemap.renderDebugFull` is a new method that will debug render all layers in the Tilemap to the given Graphics object.
+* `Geom.Intersects.GetCircleToCircle` is a new function that will return the point/s of intersection between two circles (thanks @florianvazelle)
+* `Geom.Intersects.GetCircleToRectangle` is a new function that will return the point/s of intersection between a circle and a rectangle (thanks @florianvazelle)
+* `Geom.Intersects.GetLineToCircle` is a new function that will return the point/s of intersection between a line and a circle (thanks @florianvazelle)
+* `Geom.Intersects.GetLineToRectangle` is a new function that will return the point/s of intersection between a line and a rectangle (thanks @florianvazelle)
+* `Geom.Intersects.GetRectangleToRectangle` is a new function that will return the point/s of intersection between two rectangles (thanks @florianvazelle)
+* `Geom.Intersects.GetRectangleToTriangle` is a new function that will return the point/s of intersection between a rectangle and a triangle (thanks @florianvazelle)
+* `Geom.Intersects.GetTriangleToCircle` is a new function that will return the point/s of intersection between a triangle and a circle (thanks @florianvazelle)
+* `Geom.Intersects.GetTriangleToLine` is a new function that will return the point/s of intersection between a triangle and a line (thanks @florianvazelle)
+* `Geom.Intersects.GetTriangleToTriangle` is a new function that will return the point/s of intersection between two triangles (thanks @florianvazelle)
 
 ### Updates
 
