@@ -8,6 +8,7 @@ var Class = require('../../utils/Class');
 var Components = require('../components');
 var DOMElementRender = require('./DOMElementRender');
 var GameObject = require('../GameObject');
+var IsPlainObject = require('../../utils/object/IsPlainObject');
 var RemoveFromDOM = require('../../dom/RemoveFromDOM');
 var Vector4 = require('../../math/Vector4');
 
@@ -19,7 +20,7 @@ var Vector4 = require('../../math/Vector4');
  * @extends Phaser.GameObjects.GameObject
  * @memberof Phaser.GameObjects
  * @constructor
- * @since 3.12.0
+ * @since 3.17.0
  *
  * @extends Phaser.GameObjects.Components.Alpha
  * @extends Phaser.GameObjects.Components.BlendMode
@@ -31,9 +32,11 @@ var Vector4 = require('../../math/Vector4');
  * @extends Phaser.GameObjects.Components.Visible
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
- * @param {number} x - The horizontal position of this Game Object in the world.
- * @param {number} y - The vertical position of this Game Object in the world.
- * @param {(string|HTMLElement)} [element] - The DOM Element to use.
+ * @param {number} x - The horizontal position of this DOM Element in the world.
+ * @param {number} y - The vertical position of this DOM Element in the world.
+ * @param {(HTMLElement|string)} [element] - An existing DOM element, or a string. If a string starting with a # it will do a `getElementById` look-up on the string (minus the hash). Without a hash, it represents the type of element to create, i.e. 'div'.
+ * @param {(string|any)} [style] - If a string, will be set directly as the elements `style` property value. If a plain object, will be iterated and the values transferred. In both cases the values replacing whatever CSS styles may have been previously set.
+ * @param {string} [innerText] - If given, will be set directly as the elements `innerText` property value, replacing whatever was there before.
  */
 var DOMElement = new Class({
 
@@ -53,7 +56,7 @@ var DOMElement = new Class({
 
     initialize:
 
-    function DOMElement (scene, x, y, element)
+    function DOMElement (scene, x, y, element, style, innerText)
     {
         GameObject.call(this, scene, 'DOMElement');
 
@@ -74,9 +77,21 @@ var DOMElement = new Class({
 
         this.setPosition(x, y);
 
-        if (element)
+        if (typeof element === 'string')
         {
-            this.setElement(element);
+            //  hash?
+            if (element[0] === '#')
+            {
+                this.setElement(element.substr(1), style, innerText);
+            }
+            else
+            {
+                this.createElement(element, style, innerText);
+            }
+        }
+        else if (element)
+        {
+            this.setElement(element, style, innerText);
         }
     },
 
@@ -148,7 +163,12 @@ var DOMElement = new Class({
         this.emit(event.type, event);
     },
 
-    setElement: function (element)
+    createElement: function (element, style, innerText)
+    {
+        return this.setElement(document.createElement(element), style, innerText);
+    },
+
+    setElement: function (element, style, innerText)
     {
         var target;
 
@@ -168,6 +188,21 @@ var DOMElement = new Class({
 
         this.node = target;
 
+        //  style can be empty, a string or a plain object
+        if (IsPlainObject(style))
+        {
+            for (var key in style)
+            {
+                target.style[key] = style[key];
+            }
+        }
+        else if (typeof style === 'string')
+        {
+            target.style = style;
+        }
+
+        //  Add / Override the values we need
+
         target.style.zIndex = '0';
         target.style.display = 'inline';
         target.style.position = 'absolute';
@@ -179,6 +214,13 @@ var DOMElement = new Class({
         if (this.parent)
         {
             this.parent.appendChild(target);
+        }
+
+        //  InnerText
+
+        if (innerText)
+        {
+            target.innerText = innerText;
         }
 
         var nodeBounds = target.getBoundingClientRect();
