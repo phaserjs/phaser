@@ -24,12 +24,13 @@ var GameObject = require('../GameObject');
 var DOMElementCSSRenderer = function (renderer, src, interpolationPercentage, camera)
 {
     var node = src.node;
+    var style = node.style;
 
-    if (!node || GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)))
+    if (!node || !style || GameObject.RENDER_MASK !== src.renderFlags || (src.cameraFilter !== 0 && (src.cameraFilter & camera.id)))
     {
         if (node)
         {
-            node.style.display = 'none';
+            style.display = 'none';
         }
         
         return;
@@ -48,22 +49,20 @@ var DOMElementCSSRenderer = function (renderer, src, interpolationPercentage, ca
     
     camMatrix.multiply(spriteMatrix, calcMatrix);
 
-    node.style.display = 'block';
-    node.style.opacity = src.alpha;
-    node.style.zIndex = src._depth;
-    node.style.pointerEvents = 'auto';
-    node.style.mixBlendMode = CSSBlendModes[src._blendMode];
+    style.display = 'block';
+    style.opacity = src.alpha;
+    style.zIndex = src._depth;
+    style.pointerEvents = 'auto';
+    style.mixBlendMode = CSSBlendModes[src._blendMode];
 
     // https://developer.mozilla.org/en-US/docs/Web/CSS/transform
 
-    node.style.transform =
+    style.transform =
         calcMatrix.getCSSMatrix() +
         ' skew(' + src.skewX + 'rad, ' + src.skewY + 'rad)' +
         ' rotate3d(' + src.rotate3d.x + ',' + src.rotate3d.y + ',' + src.rotate3d.z + ',' + src.rotate3d.w + src.rotate3dAngle + ')';
 
-    // node.style.transform = calcMatrix.getCSSMatrix();
-
-    node.style.transformOrigin = (100 * src.originX) + '% ' + (100 * src.originY) + '%';
+    style.transformOrigin = (100 * src.originX) + '% ' + (100 * src.originY) + '%';
 };
 
 module.exports = DOMElementCSSRenderer;
