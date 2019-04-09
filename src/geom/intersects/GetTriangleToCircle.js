@@ -1,5 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Florian Vazelle
+ * @author       Geoffrey Glaive
  * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
@@ -31,18 +32,9 @@ var GetTriangleToCircle = function (triangle, circle, out)
         var lineB = triangle.getLineB();
         var lineC = triangle.getLineC();
 
-        var output = [ [], [], [] ];
-
-        var result = [
-            GetLineToCircle(lineA, circle, output[0]),
-            GetLineToCircle(lineB, circle, output[1]),
-            GetLineToCircle(lineC, circle, output[2])
-        ];
-
-        for (var i = 0; i < 3; i++)
-        {
-            if (result[i] && output !== []) { out.concat(output[i]); }
-        }
+        GetLineToCircle(lineA, circle, out);
+        GetLineToCircle(lineB, circle, out);
+        GetLineToCircle(lineC, circle, out);
     }
 
     return out;

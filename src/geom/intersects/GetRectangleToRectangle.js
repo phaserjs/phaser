@@ -1,5 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Florian Vazelle
+ * @author       Geoffrey Glaive
  * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
@@ -32,19 +33,10 @@ var GetRectangleToRectangle = function (rectA, rectB, out)
         var lineC = rectA.getLineC();
         var lineD = rectA.getLineD();
 
-        var output = [ [], [], [], [] ];
-
-        var result = [
-            GetLineToRectangle(lineA, rectB, output[0]),
-            GetLineToRectangle(lineB, rectB, output[1]),
-            GetLineToRectangle(lineC, rectB, output[2]),
-            GetLineToRectangle(lineD, rectB, output[3])
-        ];
-
-        for (var i = 0; i < 4; i++)
-        {
-            if (result[i] && output !== []) { out.concat(output[i]); }
-        }
+        GetLineToRectangle(lineA, rectB, out);
+        GetLineToRectangle(lineB, rectB, out);
+        GetLineToRectangle(lineC, rectB, out);
+        GetLineToRectangle(lineD, rectB, out);
     }
 
     return out;

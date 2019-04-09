@@ -1,5 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Florian Vazelle
+ * @author       Geoffrey Glaive
  * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */

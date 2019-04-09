@@ -1,11 +1,12 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Florian Vazelle
+ * @author       Geoffrey Glaive
  * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
-var Equals = require('../TriangleToTriangle');
-var TriangleToLine = require('./GetTriangleToLine');
+var TriangleToTriangle = require('./TriangleToTriangle');
+var GetTriangleToLine = require('./GetTriangleToLine');
 
 /**
  * Checks if two Triangles intersect, and returns the intersection points as a Point object array.
@@ -31,18 +32,9 @@ var GetTriangleToTriangle = function (triangleA, triangleB, out)
         var lineB = triangleB.getLineB();
         var lineC = triangleB.getLineC();
 
-        var output = [ [], [], [] ];
-
-        var result = [
-            GetTriangleToLine(triangleA, lineA, output[0]),
-            GetTriangleToLine(triangleA, lineB, output[1]),
-            GetTriangleToLine(triangleA, lineC, output[2])
-        ];
-
-        for (var i = 0; i < 3; i++)
-        {
-            if (result[i] && output[i] !== []) { out.concat(output[i]); }
-        }
+        GetTriangleToLine(triangleA, lineA, out);
+        GetTriangleToLine(triangleA, lineB, out);
+        GetTriangleToLine(triangleA, lineC, out);
     }
 
     return out;

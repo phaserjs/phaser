@@ -1,5 +1,6 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Florian Vazelle
+ * @author       Geoffrey Glaive
  * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
@@ -30,18 +31,9 @@ var GetRectangleToTriangle = function (rect, triangle, out)
         var lineB = triangle.getLineB();
         var lineC = triangle.getLineC();
 
-        var output = [ [], [], [] ];
-
-        var result = [
-            GetLineToRectangle(lineA, rect, output[0]),
-            GetLineToRectangle(lineB, rect, output[1]),
-            GetLineToRectangle(lineC, rect, output[2])
-        ];
-
-        for (var i = 0; i < 3; i++)
-        {
-            if (result[i] && output[i] !== []) { out.concat(output[i]); }
-        }
+        GetLineToRectangle(lineA, rect, out);
+        GetLineToRectangle(lineB, rect, out);
+        GetLineToRectangle(lineC, rect, out);
     }
 
     return out;

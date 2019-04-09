@@ -1,12 +1,13 @@
 /**
- * @author       Richard Davey <rich@photonstorm.com>
+ * @author       Florian Vazelle
+ * @author       Geoffrey Glaive
  * @copyright    2019 Photon Storm Ltd.
  * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
  */
 
 var Point = require('../point/Point');
 var TriangleToLine = require('./TriangleToLine');
-var GetLineToLine = require('./GetLineToLine');
+var LineToLine = require('./LineToLine');
 
 /**
  * Checks if a Triangle and a Line intersect, and returns the intersection points as a Point object array.
@@ -35,14 +36,14 @@ var GetTriangleToLine = function (triangle, line, out)
         var output = [ new Point(), new Point(), new Point() ];
 
         var result = [
-            GetLineToLine(lineA, line, output[0]),
-            GetLineToLine(lineB, line, output[1]),
-            GetLineToLine(lineC, line, output[2])
+            LineToLine(lineA, line, output[0]),
+            LineToLine(lineB, line, output[1]),
+            LineToLine(lineC, line, output[2])
         ];
 
         for (var i = 0; i < 3; i++)
         {
-            if (result[i] && output !== []) { out.push(output[i]); }
+            if (result[i]) { out.push(output[i]); }
         }
     }
 
