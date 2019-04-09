@@ -76,6 +76,7 @@ Notes:
 * `Geom.Intersects.GetTriangleToCircle` is a new function that will return the point/s of intersection between a triangle and a circle (thanks @florianvazelle)
 * `Geom.Intersects.GetTriangleToLine` is a new function that will return the point/s of intersection between a triangle and a line (thanks @florianvazelle)
 * `Geom.Intersects.GetTriangleToTriangle` is a new function that will return the point/s of intersection between two triangles (thanks @florianvazelle)
+* `Size.setCSS` is a new method that will set the Size components width and height to the respective CSS style properties of the given element.
 
 ### Updates
 
