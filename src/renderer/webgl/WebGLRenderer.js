@@ -1719,6 +1719,13 @@ var WebGLRenderer = new Class({
         {
             this.pushScissor(cx, cy, cw, ch);
 
+            var mask = camera.mask;
+
+            if (mask)
+            {
+                mask.preRenderWebGL(this, null, camera);
+            }
+
             if (color.alphaGL > 0)
             {
                 TextureTintPipeline.drawFillRect(
@@ -1747,6 +1754,13 @@ var WebGLRenderer = new Class({
         camera.fadeEffect.postRenderWebGL(TextureTintPipeline, Utils.getTintFromFloats);
 
         camera.dirty = false;
+
+        var mask = camera.mask;
+
+        if (mask)
+        {
+            mask.postRenderWebGL(this);
+        }
 
         this.popScissor();
 

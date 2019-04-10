@@ -62,6 +62,7 @@ var BaseCamera = new Class({
 
     Mixins: [
         Components.Alpha,
+        Components.Mask,
         Components.Visible
     ],
 
