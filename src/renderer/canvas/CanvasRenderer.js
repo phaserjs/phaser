@@ -426,6 +426,13 @@ var CanvasRenderer = new Class({
 
         this.currentContext = ctx;
 
+        var mask = camera.mask;
+
+        if (mask)
+        {
+            mask.preRenderCanvas(this, null, camera._maskCamera);
+        }
+
         if (!camera.transparent)
         {
             ctx.fillStyle = camera.backgroundColor.rgba;
@@ -475,6 +482,11 @@ var CanvasRenderer = new Class({
         camera.fadeEffect.postRenderCanvas(ctx);
 
         camera.dirty = false;
+
+        if (mask)
+        {
+            mask.postRenderCanvas(this);
+        }
 
         //  Restore pre-clip context
         ctx.restore();

@@ -1723,7 +1723,7 @@ var WebGLRenderer = new Class({
 
             if (mask)
             {
-                mask.preRenderWebGL(this, null, camera);
+                mask.preRenderWebGL(this, null, camera._maskCamera);
             }
 
             if (color.alphaGL > 0)
