@@ -53,6 +53,8 @@ Notes:
 
 ### New Features
 
+* `Camera.setMask` is a new method that allows you to set a geometry or bitmap mask on any camera. The mask can be set to remain fixed in position, or to translate along with the camera. It will impact anything the camera renders. A reference to the mask is stored in the `Camera.mask` property.
+* `Camera.clearMask` is a new method that clears a previously set mask on a Camera.
 * There is a new Game Config property `input.windowEvents` which is true by default. It controls if Phaser will listen for any input events on the Window. If you disable this, Phaser will stop being able to emit events like `POINTER_UP_OUTSIDE`, or be aware of anything that happens outside of the Canvas re: input.
 * A Scene will now emit the new `CREATE` event after it has been created by the Scene Manager. If the Scene has a `create` method this event comes after that, so is useful to knowing when a Scene may have finished creating Game Objects, etc. (thanks @jackfreak)
 * `Tilemap.removeTile` is a new method that allows you to remove a tile, or an array of tiles, by passing in references to the tiles themselves, rather than coordinates. The tiles can be replaced with new tiles of the given index, or removed entirely, and the method can optionally recalculate interesting faces on the layer.
@@ -118,6 +120,8 @@ Notes:
 * `Tilemap.shuffle` now actually returns `null` if an invalid layer was given, as per the docs.
 * `Tilemap.swapByIndex` now actually returns `null` if an invalid layer was given, as per the docs.
 * `Tilemap.weightedRandomize` now actually returns `null` if an invalid layer was given, as per the docs.
+* `BaseCamera.cameraManager` is a new property that is a reference to the Camera Manager, set in the `setScene` method.
+* `CameraManager.default` is a new property that contains a single un-transformed instance of a Camera, that exists outside of the camera list and doesn't render. It's used by other systems as a default camera matrix.
 
 ### Bug Fixes
 
