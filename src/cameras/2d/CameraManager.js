@@ -114,6 +114,18 @@ var CameraManager = new Class({
          */
         this.main;
 
+        /**
+         * A default un-transformed Camera that doesn't exist on the camera list and doesn't
+         * count towards the total number of cameras being managed. It exists for other
+         * systems, as well as your own code, should they require a basic un-transformed
+         * camera instance from which to calculate a view matrix.
+         *
+         * @name Phaser.Cameras.Scene2D.CameraManager#default
+         * @type {Phaser.Cameras.Scene2D.Camera}
+         * @since 3.17.0
+         */
+        this.default;
+
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
         scene.sys.events.on(SceneEvents.START, this.start, this);
     },
@@ -143,6 +155,9 @@ var CameraManager = new Class({
         }
 
         this.main = this.cameras[0];
+
+        //  Create a default camera
+        this.default = new Camera(0, 0, sys.scale.width, sys.scale.height).setScene(this.scene);
 
         this.systems.events.once(SceneEvents.DESTROY, this.destroy, this);
     },
@@ -665,6 +680,8 @@ var CameraManager = new Class({
         }
 
         this.cameras = [];
+
+        this.default.destroy();
 
         var eventEmitter = this.systems.events;
 
