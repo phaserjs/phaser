@@ -62,7 +62,6 @@ var BaseCamera = new Class({
 
     Mixins: [
         Components.Alpha,
-        Components.Mask,
         Components.Visible
     ],
 
@@ -103,6 +102,15 @@ var BaseCamera = new Class({
          * @since 3.16.0
          */
         this.scaleManager;
+
+        /**
+         * A reference to the Scene's Camera Manager to which this Camera belongs.
+         *
+         * @name Phaser.Cameras.Scene2D.BaseCamera#cameraManager
+         * @type {Phaser.Cameras.Scene2D.CameraManager}
+         * @since 3.17.0
+         */
+        this.cameraManager;
 
         /**
          * The Camera ID. Assigned by the Camera Manager and used to handle camera exclusion.
@@ -492,6 +500,30 @@ var BaseCamera = new Class({
          * @since 3.12.0
          */
         this._customViewport = false;
+
+        /**
+         * The Mask this Camera is using during render.
+         * Set the mask using the `setMask` method. Remove the mask using the `clearMask` method.
+         *
+         * @name Phaser.Cameras.Scene2D.BaseCamera#mask
+         * @type {?(Phaser.Display.Masks.BitmapMask|Phaser.Display.Masks.GeometryMask)}
+         * @since 3.17.0
+         */
+        this.mask = null;
+
+        /**
+         * The Camera that this Camera uses for translation during masking.
+         * 
+         * If the mask is fixed in position this will be a reference to
+         * the CameraManager.default instance. Otherwise, it'll be a reference
+         * to itself.
+         *
+         * @name Phaser.Cameras.Scene2D.BaseCamera#_maskCamera
+         * @type {?Phaser.Cameras.Scene2D.BaseCamera}
+         * @private
+         * @since 3.17.0
+         */
+        this._maskCamera = null;
     },
 
     /**
@@ -1251,8 +1283,11 @@ var BaseCamera = new Class({
 
         this.scene = scene;
 
-        this.sceneManager = scene.sys.game.scene;
-        this.scaleManager = scene.sys.scale;
+        var sys = scene.sys;
+
+        this.sceneManager = sys.game.scene;
+        this.scaleManager = sys.scale;
+        this.cameraManager = sys.cameras;
 
         var res = this.scaleManager.resolution;
 
@@ -1376,6 +1411,63 @@ var BaseCamera = new Class({
         }
 
         this.zoom = value;
+
+        return this;
+    },
+
+    /**
+     * Sets the mask to be applied to this Camera during rendering.
+     *
+     * The mask must have been previously created and can be either a GeometryMask or a BitmapMask.
+     * 
+     * Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+     *
+     * If a mask is already set on this Camera it will be immediately replaced.
+     * 
+     * Masks have no impact on physics or input detection. They are purely a rendering component
+     * that allows you to limit what is visible during the render pass.
+     * 
+     * Note: You cannot mask a Camera that has `renderToTexture` set.
+     *
+     * @method Phaser.Cameras.Scene2D.BaseCamera#setMask
+     * @since 3.17.0
+     *
+     * @param {(Phaser.Display.Masks.BitmapMask|Phaser.Display.Masks.GeometryMask)} mask - The mask this Camera will use when rendering.
+     * @param {boolean} [fixedPosition=true] - Should the mask translate along with the Camera, or be fixed in place and not impacted by the Cameras transform?
+     *
+     * @return {this} This Camera instance.
+     */
+    setMask: function (mask, fixedPosition)
+    {
+        if (fixedPosition === undefined) { fixedPosition = true; }
+
+        this.mask = mask;
+
+        this._maskCamera = (fixedPosition) ? this.cameraManager.default : this;
+
+        return this;
+    },
+
+    /**
+     * Clears the mask that this Camera was using.
+     *
+     * @method Phaser.Cameras.Scene2D.BaseCamera#clearMask
+     * @since 3.17.0
+     *
+     * @param {boolean} [destroyMask=false] - Destroy the mask before clearing it?
+     *
+     * @return {this} This Camera instance.
+     */
+    clearMask: function (destroyMask)
+    {
+        if (destroyMask === undefined) { destroyMask = false; }
+
+        if (destroyMask && this.mask)
+        {
+            this.mask.destroy();
+        }
+
+        this.mask = null;
 
         return this;
     },
@@ -1512,6 +1604,7 @@ var BaseCamera = new Class({
         this.scene = null;
         this.scaleManager = null;
         this.sceneManager = null;
+        this.cameraManager = null;
     },
 
     /**
