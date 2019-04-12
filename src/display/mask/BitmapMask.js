@@ -137,8 +137,8 @@ var BitmapMask = new Class({
 
             this.mainTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
             this.maskTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
-            this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, false);
-            this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, false);
+            this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, true);
+            this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, true);
 
             renderer.onContextRestored(function (renderer)
             {
@@ -151,8 +151,8 @@ var BitmapMask = new Class({
 
                 this.mainTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
                 this.maskTexture = renderer.createTexture2D(0, filter, filter, wrap, wrap, gl.RGBA, null, width, height);
-                this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, false);
-                this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, false);
+                this.mainFramebuffer = renderer.createFramebuffer(width, height, this.mainTexture, true);
+                this.maskFramebuffer = renderer.createFramebuffer(width, height, this.maskTexture, true);
 
             }, this);
         }
