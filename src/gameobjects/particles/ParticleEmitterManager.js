@@ -23,6 +23,7 @@ var Render = require('./ParticleManagerRender');
  * @since 3.0.0
  *
  * @extends Phaser.GameObjects.Components.Depth
+ * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Pipeline
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
@@ -38,6 +39,7 @@ var ParticleEmitterManager = new Class({
 
     Mixins: [
         Components.Depth,
+        Components.Mask,
         Components.Pipeline,
         Components.Transform,
         Components.Visible,
