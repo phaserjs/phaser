@@ -165,22 +165,31 @@ var BitmapMaskPipeline = new Class({
 
         if (bitmapMask && gl)
         {
-            renderer.flush();
+            if (maskedObject.mask && renderer.currentMask === maskedObject.mask)
+            {
+                renderer.setFramebuffer(maskedObject.mask.mainFramebuffer);
+            }
+            else
+            {
+                renderer.flush();
 
-            // First we clear the mask framebuffer
-            renderer.setFramebuffer(mask.maskFramebuffer);
-            gl.clearColor(0, 0, 0, 0);
-            gl.clear(gl.COLOR_BUFFER_BIT);
+                //  First we clear the mask framebuffer
+                renderer.setFramebuffer(mask.maskFramebuffer);
 
-            // We render our mask source
-            bitmapMask.renderWebGL(renderer, bitmapMask, 0, camera);
-            renderer.flush();
+                gl.clearColor(0, 0, 0, 0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+    
+                //  We render our mask source
+                bitmapMask.renderWebGL(renderer, bitmapMask, 0, camera);
 
-            // Bind and clear our main source (masked object)
-            renderer.setFramebuffer(mask.mainFramebuffer);
-
-            gl.clearColor(0, 0, 0, 0);
-            gl.clear(gl.COLOR_BUFFER_BIT);
+                renderer.flush();
+    
+                //  Bind and clear our main source (masked object)
+                renderer.setFramebuffer(mask.mainFramebuffer);
+    
+                gl.clearColor(0, 0, 0, 0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+            }
         }
     },
 
@@ -206,8 +215,16 @@ var BitmapMaskPipeline = new Class({
         if (bitmapMask && gl)
         {
             // Return to default framebuffer
-            renderer.setFramebuffer(null);
             
+            if (renderer.currentMask)
+            {
+                renderer.setFramebuffer(renderer.currentMask.mainFramebuffer);
+            }
+            else
+            {
+                renderer.setFramebuffer(null);
+            }
+
             // Bind bitmap mask pipeline and draw
             renderer.setPipeline(this);
             
