@@ -78,30 +78,31 @@ var GeometryMask = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGL Renderer instance to draw to.
-     * @param {Phaser.GameObjects.GameObject} mask - The Game Object being rendered.
+     * @param {Phaser.GameObjects.GameObject} child - The Game Object being rendered.
      * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera the Game Object is being rendered through.
      */
-    preRenderWebGL: function (renderer, mask, camera)
+    preRenderWebGL: function (renderer, child, camera)
     {
         var gl = renderer.gl;
         var geometryMask = this.geometryMask;
 
-        // Force flushing before drawing to stencil buffer
+        //  Force flushing before drawing to stencil buffer
         renderer.flush();
 
-        // Enable and setup GL state to write to stencil buffer
+        //  Enable and setup GL state to write to stencil buffer
         gl.enable(gl.STENCIL_TEST);
         gl.clear(gl.STENCIL_BUFFER_BIT);
         gl.colorMask(false, false, false, false);
+
         gl.stencilFunc(gl.NOTEQUAL, 1, 1);
         gl.stencilOp(gl.REPLACE, gl.REPLACE, gl.REPLACE);
 
-        // Write stencil buffer
+        //  Write stencil buffer
         geometryMask.renderWebGL(renderer, geometryMask, 0, camera);
 
         renderer.flush();
 
-        // Use stencil buffer to affect next rendering object
+        //  Use stencil buffer to affect next rendering object
         gl.colorMask(true, true, true, true);
 
         if (this.invertAlpha)
