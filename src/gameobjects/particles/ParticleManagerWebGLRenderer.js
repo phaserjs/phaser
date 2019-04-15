@@ -144,7 +144,8 @@ var ParticleManagerWebGLRenderer = function (renderer, emitterManager, interpola
 
         if (emitter.mask)
         {
-            emitter.mask.postRenderWebGL(renderer);
+            emitter.mask.postRenderWebGL(renderer, camera);
+            pipeline.setTexture2D(texture, 0);
         }
     }
 };

@@ -75,6 +75,11 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
             renderer.setBlendMode(child.blendMode);
         }
 
+        if (child.mask)
+        {
+            child.mask.preRenderWebGL(renderer, child, camera);
+        }
+
         //  Set parent values
         child.setScrollFactor(childScrollFactorX * scrollFactorX, childScrollFactorY * scrollFactorY);
         child.setAlpha(childAlpha * alpha);
@@ -85,6 +90,11 @@ var ContainerWebGLRenderer = function (renderer, container, interpolationPercent
         //  Restore original values
         child.setAlpha(childAlpha);
         child.setScrollFactor(childScrollFactorX, childScrollFactorY);
+
+        if (child.mask)
+        {
+            child.mask.postRenderWebGL(renderer, camera);
+        }
     }
 };
 
