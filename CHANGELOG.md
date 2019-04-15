@@ -122,6 +122,7 @@ Notes:
 * `Tilemap.weightedRandomize` now actually returns `null` if an invalid layer was given, as per the docs.
 * `BaseCamera.cameraManager` is a new property that is a reference to the Camera Manager, set in the `setScene` method.
 * `CameraManager.default` is a new property that contains a single un-transformed instance of a Camera, that exists outside of the camera list and doesn't render. It's used by other systems as a default camera matrix.
+* The `Graphics` Game Object now has 3 new Transform Matrix instances called `_tempMatrix1` to `_tempMatrix3`, which are used by it during the WebGL Rendering process. This is because Graphics objects can be used as Geometry Masks, which need to retain their own matrix state mid-render of another object, so cannot share the renderer temp matrices that other Game Objects can use. This also indirectly fixes an issue where masked children (such as emitters or container children) would get incorrect camera scroll values.
 
 ### Bug Fixes
 
