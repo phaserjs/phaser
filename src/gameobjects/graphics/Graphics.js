@@ -16,6 +16,8 @@ var ComponentsTransform = require('../components/Transform');
 var ComponentsVisible = require('../components/Visible');
 var ComponentsScrollFactor = require('../components/ScrollFactor');
 
+var TransformMatrix = require('../components/TransformMatrix');
+
 var Ellipse = require('../../geom/ellipse/Ellipse');
 var GameObject = require('../GameObject');
 var GetFastValue = require('../../utils/object/GetFastValue');
@@ -199,6 +201,36 @@ var Graphics = new Class({
          * @since 3.0.0
          */
         this._lineWidth = 1.0;
+
+        /**
+         * A temporary Transform Matrix, re-used internally during batching.
+         *
+         * @name Phaser.GameObjects.Graphics#_tempMatrix1
+         * @private
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.17.0
+         */
+        this._tempMatrix1 = new TransformMatrix();
+
+        /**
+         * A temporary Transform Matrix, re-used internally during batching.
+         *
+         * @name Phaser.GameObjects.Graphics#_tempMatrix2
+         * @private
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.17.0
+         */
+        this._tempMatrix2 = new TransformMatrix();
+
+        /**
+         * A temporary Transform Matrix, re-used internally during batching.
+         *
+         * @name Phaser.GameObjects.Graphics#_tempMatrix3
+         * @private
+         * @type {Phaser.GameObjects.Components.TransformMatrix}
+         * @since 3.17.0
+         */
+        this._tempMatrix3 = new TransformMatrix();
 
         this.setDefaultStyles(options);
     },
