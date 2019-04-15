@@ -89,13 +89,31 @@ var GeometryMask = new Class({
         //  Force flushing before drawing to stencil buffer
         renderer.flush();
 
-        //  Enable and setup GL state to write to stencil buffer
-        gl.enable(gl.STENCIL_TEST);
-        gl.clear(gl.STENCIL_BUFFER_BIT);
+        if (renderer.maskStack.length === 0)
+        {
+            gl.enable(gl.STENCIL_TEST);
+            gl.clear(gl.STENCIL_BUFFER_BIT);
+
+            renderer.maskCount = 0;
+            renderer.maskReverse = true;
+        }
+
+        renderer.maskStack.push({ mask: this, camera: camera });
+
+        var level = renderer.maskCount;
+
         gl.colorMask(false, false, false, false);
 
-        gl.stencilFunc(gl.NOTEQUAL, 1, 1);
-        gl.stencilOp(gl.REPLACE, gl.REPLACE, gl.REPLACE);
+        if (!renderer.maskReverse)
+        {
+            gl.stencilFunc(gl.EQUAL, 0xFF - level, 0xFF);
+            gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
+        }
+        else
+        {
+            gl.stencilFunc(gl.EQUAL, level, 0xFF);
+            gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
+        }
 
         //  Write stencil buffer
         geometryMask.renderWebGL(renderer, geometryMask, 0, camera);
@@ -105,16 +123,29 @@ var GeometryMask = new Class({
         //  Use stencil buffer to affect next rendering object
         gl.colorMask(true, true, true, true);
 
-        if (this.invertAlpha)
+        if (!renderer.maskReverse)
         {
-            gl.stencilFunc(gl.NOTEQUAL, 1, 1);
+            if (this.invertAlpha)
+            {
+                gl.stencilFunc(gl.NOTEQUAL, 0xFF - (level + 1), 0xFF);
+            }
+            else
+            {
+                gl.stencilFunc(gl.EQUAL, 0xFF - (level + 1), 0xFF);
+            }
+        }
+        else if (this.invertAlpha)
+        {
+            gl.stencilFunc(gl.NOTEQUAL, level + 1, 0xFF);
         }
         else
         {
-            gl.stencilFunc(gl.EQUAL, 1, 1);
+            gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
         }
 
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+
+        renderer.maskCount++;
     },
 
     /**
@@ -125,14 +156,67 @@ var GeometryMask = new Class({
      *
      * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGL Renderer instance to draw flush.
      */
-    postRenderWebGL: function (renderer)
+    postRenderWebGL: function (renderer, camera)
     {
         var gl = renderer.gl;
 
         // Force flush before disabling stencil test
         renderer.flush();
 
-        gl.disable(gl.STENCIL_TEST);
+        renderer.maskStack.pop();
+
+        renderer.maskCount--;
+
+        if (renderer.maskStack.length === 0)
+        {
+            gl.disable(gl.STENCIL_TEST);
+        }
+        else
+        {
+            var level = renderer.maskCount;
+
+            gl.colorMask(false, false, false, false);
+
+            if (!renderer.maskReverse)
+            {
+                gl.stencilFunc(gl.EQUAL, 0xFF - (level + 1), 0xFF);
+                gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
+            }
+            else
+            {
+                gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
+                gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
+            }
+
+            var geometryMask = this.geometryMask;
+
+            geometryMask.renderWebGL(renderer, geometryMask, 0, camera);
+
+            renderer.flush();
+
+            if (!renderer.maskReverse)
+            {
+                if (this.invertAlpha)
+                {
+                    gl.stencilFunc(gl.NOTEQUAL, 0xFF - (level), 0xFF);
+                }
+                else
+                {
+                    gl.stencilFunc(gl.EQUAL, 0xFF - (level), 0xFF);
+                }
+            }
+            else if (this.invertAlpha)
+            {
+                gl.stencilFunc(gl.NOTEQUAL, level, 0xFF);
+            }
+            else
+            {
+                gl.stencilFunc(gl.EQUAL, level, 0xFF);
+            }
+
+            gl.colorMask(true, true, true, true);
+            gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+        }
     },
 
     /**

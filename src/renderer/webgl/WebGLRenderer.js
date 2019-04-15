@@ -479,6 +479,12 @@ var WebGLRenderer = new Class({
          */
         this.currentMask = null;
 
+        this.maskCount = 0;
+
+        this.maskReverse = true;
+
+        this.maskStack = [];
+
         this.init(this.config);
     },
 
@@ -1966,16 +1972,11 @@ var WebGLRenderer = new Class({
         var mask = camera.mask;
 
         mask.preRenderWebGL(this, camera, camera._maskCamera);
-
-        //  Cameras cannot have child cameras, so each one can clear the mask stack
-        this.currentMask = mask;
     },
 
     clearCameraMask: function (camera)
     {
-        this.currentMask = null;
-
-        camera.mask.postRenderWebGL(this);
+        camera.mask.postRenderWebGL(this, camera._maskCamera);
     },
 
     setChildMask: function (renderer, child, interpolationPercentage, camera)
@@ -1986,13 +1987,7 @@ var WebGLRenderer = new Class({
 
         child.renderWebGL(renderer, child, interpolationPercentage, camera);
 
-        mask.postRenderWebGL(renderer);
-
-        //  Restore camera mask
-        if (this.currentMask)
-        {
-            this.setCameraMask(camera);
-        }
+        mask.postRenderWebGL(renderer, camera);
     },
 
     /**
