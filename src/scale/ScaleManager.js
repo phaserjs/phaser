@@ -900,7 +900,13 @@ var ScaleManager = new Class({
         {
             this.baseSize.setCSS(domContainer);
 
-            domContainer.style.transform = 'scale(' + this.displaySize.width / this.baseSize.width + ',' + this.displaySize.height / this.baseSize.height + ')';
+            var canvasStyle = this.canvas.style;
+            var domStyle = domContainer.style;
+
+            domStyle.transform = 'scale(' + this.displaySize.width / this.baseSize.width + ',' + this.displaySize.height / this.baseSize.height + ')';
+
+            domStyle.marginLeft = canvasStyle.marginLeft;
+            domStyle.marginTop = canvasStyle.marginTop;
         }
 
         this.emit(Events.RESIZE, this.gameSize, this.baseSize, this.displaySize, this.resolution);
