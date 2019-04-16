@@ -7,7 +7,7 @@
 var Random = require('../geom/rectangle/Random');
 
 /**
- * Takes an array of Game Objects and positions them at random locations within the Ellipse.
+ * Takes an array of Game Objects and positions them at random locations within the Rectangle.
  *
  * @function Phaser.Actions.RandomRectangle
  * @since 3.0.0
