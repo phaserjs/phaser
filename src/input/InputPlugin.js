@@ -1966,14 +1966,13 @@ var InputPlugin = new Class({
 
     /**
      * When set to `true` the global Input Manager will emulate DOM behavior by only emitting events from
-     * the top-most Game Objects in the Display List.
-     *
-     * If set to `false` it will emit events from all Game Objects below a Pointer, not just the top one.
+     * the top-most Scene in the Scene List. By default, if a Scene receives an input event it will then stop the event
+     * from flowing down to any Scenes below it in the Scene list. To disable this behavior call this method with `false`.
      *
      * @method Phaser.Input.InputPlugin#setGlobalTopOnly
      * @since 3.0.0
      *
-     * @param {boolean} value - `true` to only include the top-most Game Object, or `false` to include all Game Objects in a hit test.
+     * @param {boolean} value - Set to `true` to stop processing input events on the Scene that receives it, or `false` to let the event continue down the Scene list.
      *
      * @return {Phaser.Input.InputPlugin} This InputPlugin object.
      */
