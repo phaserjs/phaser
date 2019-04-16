@@ -11,7 +11,7 @@
  * @property {HTMLCanvasElement} [canvas=null] - Provide your own Canvas element for Phaser to use instead of creating one.
  * @property {string} [canvasStyle=null] - CSS styles to apply to the game canvas instead of Phaser's default styles.
  * @property {CanvasRenderingContext2D} [context] - Provide your own Canvas Context for Phaser to use, instead of creating one.
- * @property {object} [scene=null] - A scene or scenes to add to the game. If several are given, the first is started; the remainder are started only if they have { active: true }.
+ * @property {(Phaser.Scene|Phaser.Scene[]|Phaser.Scenes.Types.SettingsConfig|Phaser.Scenes.Types.SettingsConfig[]|Phaser.Scenes.Types.CreateSceneFromObjectConfig|Phaser.Scenes.Types.CreateSceneFromObjectConfig[]|function|function[])} [scene=null] - A scene or scenes to add to the game. If several are given, the first is started; the remainder are started only if they have `{ active: true }`. See the `sceneConfig` argument in {@link Phaser.Scenes.SceneManager#add}.
  * @property {string[]} [seed] - Seed for the random number generator.
  * @property {string} [title=''] - The title of the game. Shown in the browser console.
  * @property {string} [url='http://phaser.io'] - The URL of the game. Shown in the browser console.
