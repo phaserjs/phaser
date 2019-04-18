@@ -15,6 +15,7 @@ var GetValue = require('../../../utils/object/GetValue');
 var RemoveFromDOM = require('../../../dom/RemoveFromDOM');
 var TextRender = require('./TextRender');
 var TextStyle = require('../TextStyle');
+var Rectangle = require('../../../geom/rectangle/Rectangle');
 
 /**
  * @classdesc
@@ -1236,6 +1237,12 @@ var Text = new Class({
         }
 
         this.dirty = true;
+
+        if (this.input && this.input.hitArea instanceof Rectangle)
+        {
+            this.input.hitArea.width = this.width;
+            this.input.hitArea.height = this.height;
+        }
 
         return this;
     },
