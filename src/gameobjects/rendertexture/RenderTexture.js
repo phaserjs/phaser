@@ -278,7 +278,12 @@ var RenderTexture = new Class({
         this.camera.setScene(scene);
 
         this.setPosition(x, y);
-        if (key === undefined) { this.setSize(width, height); }
+
+        if (key === undefined)
+        {
+            this.setSize(width, height);
+        }
+
         this.setOrigin(0, 0);
         this.initPipeline();
     },
