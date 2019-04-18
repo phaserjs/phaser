@@ -112,18 +112,18 @@ var Triangle = new Class({
     updateData: function ()
     {
         var path = [];
-        var rect = this.geom;
+        var tri = this.geom;
         var line = this._tempLine;
 
-        rect.getLineA(line);
+        tri.getLineA(line);
 
         path.push(line.x1, line.y1, line.x2, line.y2);
 
-        rect.getLineB(line);
+        tri.getLineB(line);
 
         path.push(line.x2, line.y2);
 
-        rect.getLineC(line);
+        tri.getLineC(line);
 
         path.push(line.x2, line.y2);
 
