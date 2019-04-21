@@ -41,29 +41,29 @@ var ScenePlugin = new Class({
 
     /**
      * This method is called when the Scene boots. It is only ever called once.
-     * 
+     *
      * By this point the plugin properties `scene` and `systems` will have already been set.
-     * 
-     * In here you can listen for Scene events and set-up whatever you need for this plugin to run.
+     *
+     * In here you can listen for {@link Phaser.Scenes.Events Scene events} and set-up whatever you need for this plugin to run.
      * Here are the Scene events you can listen to:
-     * 
-     * start
-     * ready
-     * preupdate
-     * update
-     * postupdate
-     * resize
-     * pause
-     * resume
-     * sleep
-     * wake
-     * transitioninit
-     * transitionstart
-     * transitioncomplete
-     * transitionout
-     * shutdown
-     * destroy
-     * 
+     *
+     * - start
+     * - ready
+     * - preupdate
+     * - update
+     * - postupdate
+     * - resize
+     * - pause
+     * - resume
+     * - sleep
+     * - wake
+     * - transitioninit
+     * - transitionstart
+     * - transitioncomplete
+     * - transitionout
+     * - shutdown
+     * - destroy
+     *
      * At the very least you should offer a destroy handler for when the Scene closes down, i.e:
      *
      * ```javascript
