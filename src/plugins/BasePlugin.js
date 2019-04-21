@@ -49,7 +49,7 @@ var BasePlugin = new Class({
          * A reference to the Scene that has installed this plugin.
          * Only set if it's a Scene Plugin, otherwise `null`.
          * This property is only set when the plugin is instantiated and added to the Scene, not before.
-         * You cannot use it during the `init` method, but you can during the `boot` method.
+         * You can use it during the `boot` method.
          *
          * @name Phaser.Plugins.BasePlugin#scene
          * @type {?Phaser.Scene}
@@ -62,7 +62,7 @@ var BasePlugin = new Class({
          * A reference to the Scene Systems of the Scene that has installed this plugin.
          * Only set if it's a Scene Plugin, otherwise `null`.
          * This property is only set when the plugin is instantiated and added to the Scene, not before.
-         * You cannot use it during the `init` method, but you can during the `boot` method.
+         * You can use it during the `boot` method.
          *
          * @name Phaser.Plugins.BasePlugin#systems
          * @type {?Phaser.Scenes.Systems}
@@ -73,10 +73,11 @@ var BasePlugin = new Class({
     },
 
     /**
-     * Called by the PluginManager when this plugin is first instantiated.
+     * The PluginManager calls this method on a Global Plugin when the plugin is first instantiated.
      * It will never be called again on this instance.
      * In here you can set-up whatever you need for this plugin to run.
      * If a plugin is set to automatically start then `BasePlugin.start` will be called immediately after this.
+     * On a Scene Plugin, this method is never called. Use {@link Phaser.Plugins.ScenePlugin#boot} instead.
      *
      * @method Phaser.Plugins.BasePlugin#init
      * @since 3.8.0
@@ -88,9 +89,10 @@ var BasePlugin = new Class({
     },
 
     /**
-     * Called by the PluginManager when this plugin is started.
+     * The PluginManager calls this method on a Global Plugin when the plugin is started.
      * If a plugin is stopped, and then started again, this will get called again.
      * Typically called immediately after `BasePlugin.init`.
+     * On a Scene Plugin, this method is never called.
      *
      * @method Phaser.Plugins.BasePlugin#start
      * @since 3.8.0
@@ -114,11 +116,12 @@ var BasePlugin = new Class({
     },
 
     /**
-     * Called by the PluginManager when this plugin is stopped.
+     * The PluginManager calls this method on a Global Plugin when the plugin is stopped.
      * The game code has requested that your plugin stop doing whatever it does.
      * It is now considered as 'inactive' by the PluginManager.
      * Handle that process here (i.e. stop listening for events, etc)
      * If the plugin is started again then `BasePlugin.start` will be called again.
+     * On a Scene Plugin, this method is never called.
      *
      * @method Phaser.Plugins.BasePlugin#stop
      * @since 3.8.0
