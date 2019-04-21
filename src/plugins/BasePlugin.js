@@ -128,34 +128,6 @@ var BasePlugin = new Class({
     },
 
     /**
-     * If this is a Scene Plugin (i.e. installed into a Scene) then this method is called when the Scene boots.
-     * By this point the plugin properties `scene` and `systems` will have already been set.
-     * In here you can listen for Scene events and set-up whatever you need for this plugin to run.
-     *
-     * @method Phaser.Plugins.BasePlugin#boot
-     * @since 3.8.0
-     */
-    boot: function ()
-    {
-        //  Here are the Scene events you can listen to.
-        //  At the very least you should offer a destroy handler for when the Scene closes down.
-
-        // var eventEmitter = this.systems.events;
-
-        // eventEmitter.once('destroy', this.sceneDestroy, this);
-        // eventEmitter.on('start', this.sceneStart, this);
-        // eventEmitter.on('preupdate', this.scenePreUpdate, this);
-        // eventEmitter.on('update', this.sceneUpdate, this);
-        // eventEmitter.on('postupdate', this.scenePostUpdate, this);
-        // eventEmitter.on('pause', this.scenePause, this);
-        // eventEmitter.on('resume', this.sceneResume, this);
-        // eventEmitter.on('sleep', this.sceneSleep, this);
-        // eventEmitter.on('wake', this.sceneWake, this);
-        // eventEmitter.on('shutdown', this.sceneShutdown, this);
-        // eventEmitter.on('destroy', this.sceneDestroy, this);
-    },
-
-    /**
      * Game instance has been destroyed.
      * You must release everything in here, all references, all objects, free it all up.
      *
