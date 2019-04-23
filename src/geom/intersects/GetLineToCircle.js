@@ -37,66 +37,43 @@ var GetLineToCircle = function (line, circle, out)
         var cy = circle.y;
         var cr = circle.radius;
 
-        // We determine the line equation
-        var leadingCoefficient, originOrdinate;
+        var lDirX = lx2 - lx1;
+        var lDirY = ly2 - ly1;
+        var oDirX = lx1 - cx;
+        var oDirY = ly1 - cy;
 
-        if (lx1 === lx2)
-        {
-        // Linear function
-            leadingCoefficient = lx1;
-            originOrdinate = 0;
-        }
-        else
-        {
-        // Constant function
-            leadingCoefficient = (ly2 - ly1) / (lx2 - lx1);
-            originOrdinate = ly1 - leadingCoefficient * lx1;
-        }
-
-        var coefficientA = (leadingCoefficient * leadingCoefficient) + 1;
-        var coefficientB = (-2 * cx) - (2 * cy * leadingCoefficient) + (2 * leadingCoefficient * originOrdinate);
-        var coefficientC = (cx * cx) + (cy * cy) + (originOrdinate * originOrdinate) - (cr * cr) - (2 * cy * originOrdinate);
+        var coefficientA = lDirX * lDirX + lDirY * lDirY;
+        var coefficientB = 2 * (lDirX * oDirX + lDirY * oDirY);
+        var coefficientC = oDirX * oDirX + oDirY * oDirY - cr * cr;
 
         var lambda = (coefficientB * coefficientB) - (4 * coefficientA * coefficientC);
 
         var x, y;
 
-        var xMin = Math.min(lx1, lx2);
-        var yMin = Math.min(ly1, ly2);
-
-        var xMax = Math.max(lx1, lx2);
-        var yMax = Math.max(ly1, ly2);
-
         if (lambda === 0)
         {
-            x = (-coefficientB / (2 * coefficientA));
-            y = ((leadingCoefficient * x) + originOrdinate);
-            if (Math.min(xMin, x) === xMin &&
-            Math.min(yMin, y) === yMin &&
-            Math.max(xMax, x) === xMax &&
-            Math.max(yMax, y) === yMax)
+            var root = -coefficientB / (2 * coefficientA);
+            x = lx1 + root * lDirX;
+            y = ly1 + root * lDirY;
+            if (root >= 0 && root <= 1)
             {
                 out.push(new Point(x, y));
             }
         }
         else if (lambda > 0)
         {
-            x = (-coefficientB + Math.sqrt(lambda)) / (2 * coefficientA);
-            y = ((leadingCoefficient * x) + originOrdinate);
-            if (Math.min(xMin, x) === xMin &&
-            Math.min(yMin, y) === yMin &&
-            Math.max(xMax, x) === xMax &&
-            Math.max(yMax, y) === yMax)
+            var root1 = (-coefficientB - Math.sqrt(lambda)) / (2 * coefficientA);
+            x = lx1 + root1 * lDirX;
+            y = ly1 + root1 * lDirY;
+            if (root1 >= 0 && root1 <= 1)
             {
                 out.push(new Point(x, y));
             }
 
-            x = (-coefficientB - Math.sqrt(lambda)) / (2 * coefficientA);
-            y = ((leadingCoefficient * x) + originOrdinate);
-            if (Math.min(xMin, x) === xMin &&
-            Math.min(yMin, y) === yMin &&
-            Math.max(xMax, x) === xMax &&
-            Math.max(yMax, y) === yMax)
+            var root2 = (-coefficientB + Math.sqrt(lambda)) / (2 * coefficientA);
+            x = lx1 + root2 * lDirX;
+            y = ly1 + root2 * lDirY;
+            if (root2 >= 0 && root2 <= 1)
             {
                 out.push(new Point(x, y));
             }
