@@ -189,7 +189,7 @@ var DOMElement = new Class({
         this.node = target;
 
         //  style can be empty, a string or a plain object
-        if (IsPlainObject(style))
+        if (style && IsPlainObject(style))
         {
             for (var key in style)
             {
@@ -291,6 +291,20 @@ var DOMElement = new Class({
     getChildByName: function (name)
     {
         return this.getChildByProperty('name', name);
+    },
+
+    setClassName: function (className)
+    {
+        if (this.node)
+        {
+            this.node.className = className;
+
+            var nodeBounds = this.node.getBoundingClientRect();
+
+            this.setSize(nodeBounds.width, nodeBounds.height);
+        }
+
+        return this;
     },
 
     setText: function (text)

@@ -79,6 +79,7 @@ Notes:
 * `Geom.Intersects.GetTriangleToLine` is a new function that will return the point/s of intersection between a triangle and a line (thanks @florianvazelle)
 * `Geom.Intersects.GetTriangleToTriangle` is a new function that will return the point/s of intersection between two triangles (thanks @florianvazelle)
 * `Size.setCSS` is a new method that will set the Size components width and height to the respective CSS style properties of the given element.
+* `CSSFile` is a new Loader FileType that allows you to load css into the current document via the normal Phaser Loader, using the `load.css` method. As such, you can chain it with other load calls, load via config, use as part of a pack load or any other option available to all loader filetypes. The CSS is applied immediately to the document.
 
 ### Updates
 
