@@ -153,6 +153,7 @@ Notes:
 * The Particle Emitter Manager was missing the Mask component, even though it fully supported masking. The Mask component has now been added. You can now mask the manager, which impacts all emitters you create through it, or a specific emitter. Different emitters can have different masks, although they override the parent mask, if set.
 * You can now apply a Bitmap Mask to a Camera or Container and a Geometry Mask to a child and have it work correctly.
 * The `InputManager.update` method is now called every frame, as long as a native DOM event hasn't already fired it, which allows things like `setPollRate` to work again. Fix #4405 (thanks @Shucki)
+* `Pointer.getDuration` would only return zero until the pointer was released, or moved (basically any action that generated a DOM event). It now returns the duration regardless of the DOM events. Fix #4444 (thanks @plazicx)
 
 ### Examples, Documentation and TypeScript
 

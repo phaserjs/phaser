@@ -965,7 +965,7 @@ var Pointer = new Class({
 
     /**
      * If the Pointer has a button pressed down at the time this method is called, it will return the
-     * duration since the Pointer's was pressed down.
+     * duration since the button was pressed down.
      * 
      * If no button is held down, it will return the last recorded duration, based on the time
      * the Pointer button was released.
