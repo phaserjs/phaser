@@ -493,19 +493,19 @@ var InputManager = new Class({
             this._setCursor = 0;
     
             this._updatedThisFrame = true;
-        }
 
-        this.events.emit(Events.MANAGER_UPDATE);
+            this.events.emit(Events.MANAGER_UPDATE);
     
-        this.ignoreEvents = false;
-
-        this.dirty = true;
-
-        var pointers = this.pointers;
+            this.ignoreEvents = false;
     
-        for (var i = 0; i < this.pointersTotal; i++)
-        {
-            pointers[i].reset(time);
+            this.dirty = true;
+    
+            var pointers = this.pointers;
+        
+            for (var i = 0; i < this.pointersTotal; i++)
+            {
+                pointers[i].reset(time);
+            }
         }
     },
 
@@ -521,6 +521,8 @@ var InputManager = new Class({
     preStep: function (time)
     {
         this.time = time;
+
+        this.update(time);
     },
 
     /**
