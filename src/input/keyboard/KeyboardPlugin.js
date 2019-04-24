@@ -497,7 +497,7 @@ var KeyboardPlugin = new Class({
 
         if (!keys[key])
         {
-            keys[key] = new Key(key);
+            keys[key] = new Key(this, key);
 
             if (enableCapture)
             {
@@ -519,12 +519,16 @@ var KeyboardPlugin = new Class({
      * @since 3.10.0
      *
      * @param {(Phaser.Input.Keyboard.Key|string|integer)} key - Either a Key object, a string, such as `A` or `SPACE`, or a key code value.
+     * @param {boolean} [destroy=false] - Call `Key.destroy` on the removed Key object?
      *
      * @return {Phaser.Input.Keyboard.KeyboardPlugin} This KeyboardPlugin object.
      */
-    removeKey: function (key)
+    removeKey: function (key, destroy)
     {
+        if (destroy === undefined) { destroy = false; }
+
         var keys = this.keys;
+        var ref;
 
         if (key instanceof Key)
         {
@@ -532,6 +536,8 @@ var KeyboardPlugin = new Class({
 
             if (idx > -1)
             {
+                ref = this.keys[idx];
+
                 this.keys[idx] = undefined;
             }
         }
@@ -542,7 +548,19 @@ var KeyboardPlugin = new Class({
 
         if (keys[key])
         {
+            ref = keys[key];
+
             keys[key] = undefined;
+        }
+
+        if (ref)
+        {
+            ref.plugin = null;
+
+            if (destroy)
+            {
+                ref.destroy();
+            }
         }
 
         return this;
