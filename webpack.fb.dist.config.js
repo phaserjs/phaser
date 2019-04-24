@@ -47,7 +47,8 @@ module.exports = {
             "typeof WEBGL_RENDERER": JSON.stringify(true),
             "typeof EXPERIMENTAL": JSON.stringify(false),
             "typeof PLUGIN_CAMERA3D": JSON.stringify(false),
-            "typeof PLUGIN_FBINSTANT": JSON.stringify(true)
+            "typeof PLUGIN_FBINSTANT": JSON.stringify(true),
+            "typeof FEATURE_SOUND": JSON.stringify(true)
         })
     ]
 };

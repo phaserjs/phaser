@@ -88,7 +88,6 @@ var Phaser = {
     Scale: require('./scale'),
     Scene: require('./scene/Scene'),
     Scenes: require('./scene'),
-    Sound: require('./sound'),
     Structs: require('./structs'),
     Textures: require('./textures'),
     Time: require('./time'),
@@ -100,6 +99,11 @@ var Phaser = {
 Phaser = Extend(false, Phaser, CONST);
 
 //  Export it
+
+if (typeof FEATURE_SOUND)
+{
+    Phaser.Sound = require('./sound');
+}
 
 module.exports = Phaser;
 

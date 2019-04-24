@@ -39,7 +39,6 @@ var Phaser = {
     Scale: require('./scale'),
     Scene: require('./scene/Scene'),
     Scenes: require('./scene'),
-    Sound: require('./sound'),
     Structs: require('./structs'),
     Textures: require('./textures'),
     Tilemaps: require('./tilemaps'),
@@ -50,6 +49,11 @@ var Phaser = {
 };
 
 //  Merge in the optional plugins
+
+if (typeof FEATURE_SOUND)
+{
+    Phaser.Sound = require('./sound');
+}
 
 if (typeof PLUGIN_CAMERA3D)
 {
