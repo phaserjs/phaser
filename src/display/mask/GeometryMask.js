@@ -95,25 +95,16 @@ var GeometryMask = new Class({
             gl.clear(gl.STENCIL_BUFFER_BIT);
 
             renderer.maskCount = 0;
-            // renderer.maskReverse = true;
         }
 
-        renderer.maskStack.push({ mask: this.geometryMask, camera: camera });
+        renderer.maskStack.push({ mask: this, camera: camera });
 
         var level = renderer.maskCount;
 
         gl.colorMask(false, false, false, false);
 
-        // if (!renderer.maskReverse)
-        // {
-        //     gl.stencilFunc(gl.EQUAL, 0xFF - level, 0xFF);
-        //     gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
-        // }
-        // else
-        // {
-            gl.stencilFunc(gl.EQUAL, level, 0xFF);
-            gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
-        // }
+        gl.stencilFunc(gl.EQUAL, level, 0xFF);
+        gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
 
         //  Write stencil buffer
         geometryMask.renderWebGL(renderer, geometryMask, 0, camera);
@@ -123,25 +114,14 @@ var GeometryMask = new Class({
         //  Use stencil buffer to affect next rendering object
         gl.colorMask(true, true, true, true);
 
-        // if (!renderer.maskReverse)
-        // {
-        //     if (this.invertAlpha)
-        //     {
-        //         gl.stencilFunc(gl.NOTEQUAL, 0xFF - (level + 1), 0xFF);
-        //     }
-        //     else
-        //     {
-        //         gl.stencilFunc(gl.EQUAL, 0xFF - (level + 1), 0xFF);
-        //     }
-        // }
-        // else if (this.invertAlpha)
-        // {
-            // gl.stencilFunc(gl.NOTEQUAL, level + 1, 0xFF);
-        // }
-        // else
-        // {
+        if (this.invertAlpha)
+        {
+            gl.stencilFunc(gl.NOTEQUAL, level + 1, 0xFF);
+        }
+        else
+        {
             gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
-        // }
+        }
 
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
 
@@ -177,44 +157,25 @@ var GeometryMask = new Class({
 
             gl.colorMask(false, false, false, false);
 
-            // if (!renderer.maskReverse)
-            // {
-            //     gl.stencilFunc(gl.EQUAL, 0xFF - (level + 1), 0xFF);
-            //     gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
-            // }
-            // else
-            // {
-                gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
-                gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
-            // }
+            gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
+            gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
 
             var prev = renderer.maskStack[renderer.maskStack.length - 1];
-            var geometryMask = prev.mask;
+            var geometryMask = prev.mask.geometryMask;
             var camera = prev.camera;
 
             geometryMask.renderWebGL(renderer, geometryMask, 0, camera);
 
             renderer.flush();
 
-            // if (!renderer.maskReverse)
-            // {
-            //     if (this.invertAlpha)
-            //     {
-            //         gl.stencilFunc(gl.NOTEQUAL, 0xFF - (level), 0xFF);
-            //     }
-            //     else
-            //     {
-            //         gl.stencilFunc(gl.EQUAL, 0xFF - (level), 0xFF);
-            //     }
-            // }
-            // else if (this.invertAlpha)
-            // {
-            //     gl.stencilFunc(gl.NOTEQUAL, level, 0xFF);
-            // }
-            // else
-            // {
+            if (prev.mask.invertAlpha)
+            {
+                gl.stencilFunc(gl.NOTEQUAL, level, 0xFF);
+            }
+            else
+            {
                 gl.stencilFunc(gl.EQUAL, level, 0xFF);
-            // }
+            }
 
             gl.colorMask(true, true, true, true);
             gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
