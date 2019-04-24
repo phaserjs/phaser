@@ -532,12 +532,19 @@ var InputPlugin = new Class({
      */
     pluginUpdate: function (time, delta)
     {
-        if (!this.isActive())
+        if (this.pollRate > -1)
         {
-            return;
+            this.update(time, delta);
         }
-
-        this.pluginEvents.emit(Events.UPDATE, time, delta);
+        else
+        {
+            if (!this.isActive())
+            {
+                return;
+            }
+    
+            this.pluginEvents.emit(Events.UPDATE, time, delta);
+        }
     },
 
     /**
@@ -561,7 +568,7 @@ var InputPlugin = new Class({
 
         var manager = this.manager;
 
-        // this.pluginEvents.emit(Events.UPDATE, time, delta);
+        this.pluginEvents.emit(Events.UPDATE, time, delta);
 
         //  Another Scene above this one has already consumed the input events, or we're in transition
         if (manager.globalTopOnly && manager.ignoreEvents)
@@ -569,9 +576,9 @@ var InputPlugin = new Class({
             return;
         }
 
-        var runUpdate = (manager.dirty || this.pollRate === 0 || manager.useQueue);
+        var runUpdate = (manager.dirty || this.pollRate === 0);
 
-        if (this.pollRate > -1)
+        if (this.pollRate > 0)
         {
             this._pollTimer -= delta;
 
@@ -1949,10 +1956,7 @@ var InputPlugin = new Class({
      */
     setPollAlways: function ()
     {
-        this.pollRate = 0;
-        this._pollTimer = 0;
-
-        return this;
+        return this.setPollRate(0);
     },
 
     /**
@@ -1968,10 +1972,7 @@ var InputPlugin = new Class({
      */
     setPollOnMove: function ()
     {
-        this.pollRate = -1;
-        this._pollTimer = 0;
-
-        return this;
+        return this.setPollRate(-1);
     },
 
     /**
