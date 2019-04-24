@@ -240,17 +240,21 @@ var Game = new Class({
          */
         this.scale = new ScaleManager(this, this.config);
 
+        /**
+         * An instance of the base Sound Manager.
+         *
+         * The Sound Manager is a global system responsible for the playback and updating of all audio in your game.
+         * 
+         * You can disable the inclusion of the Sound Manager in your build by toggling the webpack `FEATURE_SOUND` flag.
+         *
+         * @name Phaser.Game#sound
+         * @type {Phaser.Sound.BaseSoundManager}
+         * @since 3.0.0
+         */
+        this.sound = null;
+
         if (typeof FEATURE_SOUND)
         {
-            /**
-             * An instance of the base Sound Manager.
-             *
-             * The Sound Manager is a global system responsible for the playback and updating of all audio in your game.
-             *
-             * @name Phaser.Game#sound
-             * @type {Phaser.Sound.BaseSoundManager}
-             * @since 3.0.0
-             */
             this.sound = SoundManagerCreator.create(this);
         }
 
