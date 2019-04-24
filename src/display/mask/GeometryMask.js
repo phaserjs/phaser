@@ -20,7 +20,7 @@ var Class = require('../../utils/Class');
  * The Geometry Mask's location matches the location of its Graphics object, not the location of the masked objects.
  * Moving or transforming the underlying Graphics object will change the mask (and affect the visibility
  * of any masked objects), whereas moving or transforming a masked object will not affect the mask.
- * You can think of the Geometry Mask (or rather, of the its Graphics object) as an invisible curtain placed
+ * You can think of the Geometry Mask (or rather, of its Graphics object) as an invisible curtain placed
  * in front of all masked objects which has its own visual properties and, naturally, respects the camera's
  * visual properties, but isn't affected by and doesn't follow the masked objects by itself.
  *
@@ -65,10 +65,34 @@ var GeometryMask = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Graphics} graphicsGeometry - The Graphics object which will be used for the Geometry Mask.
+     * 
+     * @return {this} This Geometry Mask
      */
     setShape: function (graphicsGeometry)
     {
         this.geometryMask = graphicsGeometry;
+
+        return this;
+    },
+
+    /**
+     * Sets the `invertAlpha` property of this Geometry Mask.
+     * Inverting the alpha essentially flips the way the mask works.
+     *
+     * @method Phaser.Display.Masks.GeometryMask#setInvertAlpha
+     * @since 3.17.0
+     *
+     * @param {boolean} [value=true] - Invert the alpha of this mask?
+     * 
+     * @return {this} This Geometry Mask
+     */
+    setInvertAlpha: function (value)
+    {
+        if (value === undefined) { value = true; }
+
+        this.invertAlpha = value;
+
+        return this;
     },
 
     /**
