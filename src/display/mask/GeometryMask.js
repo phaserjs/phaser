@@ -89,17 +89,16 @@ var GeometryMask = new Class({
         //  Force flushing before drawing to stencil buffer
         renderer.flush();
 
-        // if (renderer.maskStack.length === 0)
-        if (renderer.maskCount === 0)
+        if (renderer.maskStack.length === 0)
         {
             gl.enable(gl.STENCIL_TEST);
             gl.clear(gl.STENCIL_BUFFER_BIT);
 
-            // renderer.maskCount = 0;
+            renderer.maskCount = 0;
             // renderer.maskReverse = true;
         }
 
-        // renderer.maskStack.push({ mask: this, camera: camera });
+        renderer.maskStack.push({ mask: this.geometryMask, camera: camera });
 
         var level = renderer.maskCount;
 
@@ -157,19 +156,18 @@ var GeometryMask = new Class({
      *
      * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGL Renderer instance to draw flush.
      */
-    postRenderWebGL: function (renderer, camera)
+    postRenderWebGL: function (renderer)
     {
         var gl = renderer.gl;
 
         // Force flush before disabling stencil test
         renderer.flush();
 
-        // renderer.maskStack.pop();
+        renderer.maskStack.pop();
 
         renderer.maskCount--;
 
-        // if (renderer.maskStack.length === 0)
-        if (renderer.maskCount === 0)
+        if (renderer.maskStack.length === 0)
         {
             gl.disable(gl.STENCIL_TEST);
         }
@@ -190,7 +188,9 @@ var GeometryMask = new Class({
                 gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
             // }
 
-            var geometryMask = this.geometryMask;
+            var prev = renderer.maskStack[renderer.maskStack.length - 1];
+            var geometryMask = prev.mask;
+            var camera = prev.camera;
 
             geometryMask.renderWebGL(renderer, geometryMask, 0, camera);
 
