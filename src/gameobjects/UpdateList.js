@@ -216,11 +216,11 @@ var UpdateList = new Class({
      */
     remove: function (child)
     {
-        var index = this._list.indexOf(child);
+        var index = this._pendingRemoval.indexOf(child);
 
         if (index !== -1)
         {
-            this._list.splice(index, 1);
+            this._pendingRemoval.push(child);
         }
 
         return child;
