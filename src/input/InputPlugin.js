@@ -494,7 +494,7 @@ var InputPlugin = new Class({
             {
                 current.splice(index, 1);
 
-                this.clear(gameObject);
+                this.clear(gameObject, true);
             }
         }
 
@@ -668,11 +668,14 @@ var InputPlugin = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object that will have its Interactive Object removed.
+     * @param {boolean} [skipQueue=false] - Skip adding this Game Object into the removal queue?
      *
      * @return {Phaser.GameObjects.GameObject} The Game Object that had its Interactive Object removed.
      */
-    clear: function (gameObject)
+    clear: function (gameObject, skipQueue)
     {
+        if (skipQueue === undefined) { skipQueue = false; }
+
         var input = gameObject.input;
 
         // If GameObject.input already cleared from higher class
@@ -681,7 +684,10 @@ var InputPlugin = new Class({
             return;
         }
 
-        this.queueForRemoval(gameObject);
+        if (!skipQueue)
+        {
+            this.queueForRemoval(gameObject);
+        }
 
         input.gameObject = undefined;
         input.target = undefined;
