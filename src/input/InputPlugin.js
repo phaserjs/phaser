@@ -878,7 +878,7 @@ var InputPlugin = new Class({
 
             gameObject.emit(Events.GAMEOBJECT_POINTER_DOWN, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
 
-            if (_eventData.cancelled)
+            if (_eventData.cancelled || !gameObject.input)
             {
                 aborted = true;
                 break;
@@ -886,7 +886,7 @@ var InputPlugin = new Class({
 
             this.emit(Events.GAMEOBJECT_DOWN, pointer, gameObject, _eventContainer);
 
-            if (_eventData.cancelled)
+            if (_eventData.cancelled || !gameObject.input)
             {
                 aborted = true;
                 break;
@@ -1109,6 +1109,8 @@ var InputPlugin = new Class({
             return list.length;
         }
 
+        var target;
+
         //  4 = Pointer actively dragging the draglist and has moved
         if (this.getDragState(pointer) === 4 && pointer.justMoved && !pointer.justUp)
         {
@@ -1122,38 +1124,42 @@ var InputPlugin = new Class({
 
                 input = gameObject.input;
 
+                target = input.target;
+
                 //  If this GO has a target then let's check it
-                if (input.target)
+                if (target)
                 {
-                    var index = dropZones.indexOf(input.target);
+                    var index = dropZones.indexOf(target);
 
                     //  Got a target, are we still over it?
                     if (index === 0)
                     {
                         //  We're still over it, and it's still the top of the display list, phew ...
-                        gameObject.emit(Events.GAMEOBJECT_DRAG_OVER, pointer, input.target);
+                        gameObject.emit(Events.GAMEOBJECT_DRAG_OVER, pointer, target);
 
-                        this.emit(Events.DRAG_OVER, pointer, gameObject, input.target);
+                        this.emit(Events.DRAG_OVER, pointer, gameObject, target);
                     }
                     else if (index > 0)
                     {
                         //  Still over it but it's no longer top of the display list (targets must always be at the top)
-                        gameObject.emit(Events.GAMEOBJECT_DRAG_LEAVE, pointer, input.target);
+                        gameObject.emit(Events.GAMEOBJECT_DRAG_LEAVE, pointer, target);
 
-                        this.emit(Events.DRAG_LEAVE, pointer, gameObject, input.target);
+                        this.emit(Events.DRAG_LEAVE, pointer, gameObject, target);
 
                         input.target = dropZones[0];
 
-                        gameObject.emit(Events.GAMEOBJECT_DRAG_ENTER, pointer, input.target);
+                        target = input.target;
 
-                        this.emit(Events.DRAG_ENTER, pointer, gameObject, input.target);
+                        gameObject.emit(Events.GAMEOBJECT_DRAG_ENTER, pointer, target);
+
+                        this.emit(Events.DRAG_ENTER, pointer, gameObject, target);
                     }
                     else
                     {
                         //  Nope, we've moved on (or the target has!), leave the old target
-                        gameObject.emit(Events.GAMEOBJECT_DRAG_LEAVE, pointer, input.target);
+                        gameObject.emit(Events.GAMEOBJECT_DRAG_LEAVE, pointer, target);
 
-                        this.emit(Events.DRAG_LEAVE, pointer, gameObject, input.target);
+                        this.emit(Events.DRAG_LEAVE, pointer, gameObject, target);
 
                         //  Anything new to replace it?
                         //  Yup!
@@ -1161,9 +1167,11 @@ var InputPlugin = new Class({
                         {
                             input.target = dropZones[0];
 
-                            gameObject.emit(Events.GAMEOBJECT_DRAG_ENTER, pointer, input.target);
+                            target = input.target;
 
-                            this.emit(Events.DRAG_ENTER, pointer, gameObject, input.target);
+                            gameObject.emit(Events.GAMEOBJECT_DRAG_ENTER, pointer, target);
+
+                            this.emit(Events.DRAG_ENTER, pointer, gameObject, target);
                         }
                         else
                         {
@@ -1172,13 +1180,15 @@ var InputPlugin = new Class({
                         }
                     }
                 }
-                else if (!input.target && dropZones[0])
+                else if (!target && dropZones[0])
                 {
                     input.target = dropZones[0];
 
-                    gameObject.emit(Events.GAMEOBJECT_DRAG_ENTER, pointer, input.target);
+                    target = input.target;
 
-                    this.emit(Events.DRAG_ENTER, pointer, gameObject, input.target);
+                    gameObject.emit(Events.GAMEOBJECT_DRAG_ENTER, pointer, target);
+
+                    this.emit(Events.DRAG_ENTER, pointer, gameObject, target);
                 }
 
                 var dragX = pointer.x - gameObject.input.dragX;
@@ -1203,7 +1213,7 @@ var InputPlugin = new Class({
 
                 input = gameObject.input;
 
-                if (input.dragState === 2)
+                if (input && input.dragState === 2)
                 {
                     input.dragState = 0;
 
@@ -1212,11 +1222,13 @@ var InputPlugin = new Class({
 
                     var dropped = false;
 
-                    if (input.target)
-                    {
-                        gameObject.emit(Events.GAMEOBJECT_DROP, pointer, input.target);
+                    target = input.target;
 
-                        this.emit(Events.DROP, pointer, gameObject, input.target);
+                    if (target)
+                    {
+                        gameObject.emit(Events.GAMEOBJECT_DROP, pointer, target);
+
+                        this.emit(Events.DROP, pointer, gameObject, target);
 
                         input.target = null;
 
@@ -1225,9 +1237,12 @@ var InputPlugin = new Class({
 
                     //  And finally the dragend event
 
-                    gameObject.emit(Events.GAMEOBJECT_DRAG_END, pointer, input.dragX, input.dragY, dropped);
+                    if (gameObject.input)
+                    {
+                        gameObject.emit(Events.GAMEOBJECT_DRAG_END, pointer, input.dragX, input.dragY, dropped);
 
-                    this.emit(Events.DRAG_END, pointer, gameObject, dropped);
+                        this.emit(Events.DRAG_END, pointer, gameObject, dropped);
+                    }
                 }
             }
 
@@ -1279,7 +1294,7 @@ var InputPlugin = new Class({
 
             gameObject.emit(Events.GAMEOBJECT_POINTER_MOVE, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
 
-            if (_eventData.cancelled)
+            if (_eventData.cancelled || !gameObject.input)
             {
                 aborted = true;
                 break;
@@ -1287,7 +1302,7 @@ var InputPlugin = new Class({
 
             this.emit(Events.GAMEOBJECT_MOVE, pointer, gameObject, _eventContainer);
 
-            if (_eventData.cancelled)
+            if (_eventData.cancelled || !gameObject.input)
             {
                 aborted = true;
                 break;
@@ -1405,7 +1420,7 @@ var InputPlugin = new Class({
 
                 totalInteracted++;
 
-                if (_eventData.cancelled)
+                if (_eventData.cancelled || !gameObject.input)
                 {
                     aborted = true;
                     break;
@@ -1413,7 +1428,7 @@ var InputPlugin = new Class({
 
                 this.emit(Events.GAMEOBJECT_OUT, pointer, gameObject, _eventContainer);
 
-                if (_eventData.cancelled)
+                if (_eventData.cancelled || !gameObject.input)
                 {
                     aborted = true;
                     break;
@@ -1453,7 +1468,7 @@ var InputPlugin = new Class({
 
                 totalInteracted++;
 
-                if (_eventData.cancelled)
+                if (_eventData.cancelled || !gameObject.input)
                 {
                     aborted = true;
                     break;
@@ -1461,7 +1476,7 @@ var InputPlugin = new Class({
 
                 this.emit(Events.GAMEOBJECT_OVER, pointer, gameObject, _eventContainer);
 
-                if (_eventData.cancelled)
+                if (_eventData.cancelled || !gameObject.input)
                 {
                     aborted = true;
                     break;
@@ -1521,15 +1536,15 @@ var InputPlugin = new Class({
 
             gameObject.emit(Events.GAMEOBJECT_POINTER_UP, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
 
-            // Clear over and emit 'pointerout' on touch.
-            if (pointer.wasTouch)
+            //  Clear over and emit 'pointerout' on touch.
+            if (pointer.wasTouch && gameObject.input)
             {
                 this._over[pointer.id] = [];
 
                 gameObject.emit(Events.GAMEOBJECT_POINTER_OUT, pointer, gameObject.input.localX, gameObject.input.localY, _eventContainer);
             }
 
-            if (_eventData.cancelled)
+            if (_eventData.cancelled || !gameObject.input)
             {
                 aborted = true;
                 break;
@@ -1537,7 +1552,7 @@ var InputPlugin = new Class({
 
             this.emit(Events.GAMEOBJECT_UP, pointer, gameObject, _eventContainer);
 
-            if (_eventData.cancelled)
+            if (_eventData.cancelled || !gameObject.input)
             {
                 aborted = true;
                 break;

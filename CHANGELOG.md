@@ -165,6 +165,7 @@ Notes:
 * Keys would lose track of the state of a Scene when the Scene became paused. They're now updated regardless, stopping them from getting stuck if you pause and resume a Scene while holding them down. Fix #3822 (thanks @DannyT)
 * Changing any aspect of a Text object, such as the font size or content, wouldn't update its `hitArea` if it had been enabled for input, causing it to carry on using the old hit area size. Now, as long as the Text was created _without_ a custom hitArea, the hitArea size will be changed to match the new texture size on update. If you have provided your own custom hitArea shape, you need to modify it when the Text changes size yourself. Fix #4456 (thanks @thanh-taro and @rexrainbow)
 * `Camera.clearRenderToTexture` will check to see if the Scene is available before proceeding, avoiding potential errors when a Camera is destroyed multiple times during a Scene shutdown.
+* Destroying a Game object during its `pointerup` event handler on a touch device will no longer cause `Uncaught TypeError: Cannot read property 'localX' of undefined`. All InputPlugin process handlers now check to see if the Game Object has been destroyed at any stage and abort if it has. Fix #4463 (thanks @PatrickSachs)
 
 ### Examples, Documentation and TypeScript
 
