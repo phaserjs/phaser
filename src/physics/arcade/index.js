@@ -26,6 +26,7 @@ var Arcade = {
     CheckOverlap: require('./CheckOverlap'),
     Collider: require('./Collider'),
     Components: require('./components'),
+    Events: require('./events'),
     Factory: require('./Factory'),
     GetOverlap: require('./GetOverlap'),
     Group: require('./PhysicsGroup'),

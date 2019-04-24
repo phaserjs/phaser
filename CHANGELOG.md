@@ -167,6 +167,7 @@ Notes:
 * `Camera.clearRenderToTexture` will check to see if the Scene is available before proceeding, avoiding potential errors when a Camera is destroyed multiple times during a Scene shutdown.
 * Destroying a Game object during its `pointerup` event handler on a touch device will no longer cause `Uncaught TypeError: Cannot read property 'localX' of undefined`. All InputPlugin process handlers now check to see if the Game Object has been destroyed at any stage and abort if it has. Fix #4463 (thanks @PatrickSachs)
 * `InputPlugin.clear` has a new argument `skipQueue` which is used to avoid clearing a Game Object twice. This, combined with the fix for 4463 means you will no longer get a `Cannot read property 'dragState'` error if you destroy a Game Object enabled for drag where another draggable object exists. Fix #4228 (thanks @YannCaron)
+* `Phaser.Physics.Arcade.Events` is now exposed in the namespace, preventing it from erroring if you use them in TypeScript. Fix #4481 (thanks @danielalves)
 
 ### Examples, Documentation and TypeScript
 
