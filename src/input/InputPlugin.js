@@ -1764,6 +1764,7 @@ var InputPlugin = new Class({
 
             var io = (!gameObject.input) ? CreateInteractiveObject(gameObject, shape, callback) : gameObject.input;
 
+            io.customHitArea = true;
             io.dropZone = dropZone;
             io.cursor = (useHandCursor) ? 'pointer' : cursor;
 

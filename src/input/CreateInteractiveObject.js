@@ -38,6 +38,9 @@ var CreateInteractiveObject = function (gameObject, hitArea, hitAreaCallback)
         hitArea: hitArea,
         hitAreaCallback: hitAreaCallback,
 
+        //  Has the dev specified their own shape, or is this bound to the texture size?
+        customHitArea: false,
+
         localX: 0,
         localY: 0,
 
