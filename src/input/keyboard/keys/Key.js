@@ -362,7 +362,7 @@ var Key = new Class({
      * @method Phaser.Input.Keyboard.Key#getDuration
      * @since 3.17.0
      * 
-     * @return {integer} The duration, in ms, that the Key has been held down for if currently down.
+     * @return {number} The duration, in ms, that the Key has been held down for if currently down.
      */
     getDuration: function ()
     {
