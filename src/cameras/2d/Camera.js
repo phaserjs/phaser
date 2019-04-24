@@ -389,6 +389,11 @@ var Camera = new Class({
      */
     clearRenderToTexture: function ()
     {
+        if (!this.scene)
+        {
+            return;
+        }
+
         var renderer = this.scene.sys.game.renderer;
 
         if (renderer.gl)
