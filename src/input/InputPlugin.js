@@ -399,7 +399,15 @@ var InputPlugin = new Class({
         eventEmitter.on(SceneEvents.TRANSITION_OUT, this.transitionOut, this);
         eventEmitter.on(SceneEvents.TRANSITION_COMPLETE, this.transitionComplete, this);
         eventEmitter.on(SceneEvents.PRE_UPDATE, this.preUpdate, this);
-        eventEmitter.on(SceneEvents.UPDATE, this.update, this);
+
+        if (this.manager.useQueue)
+        {
+            eventEmitter.on(SceneEvents.UPDATE, this.update, this);
+        }
+        else
+        {
+            eventEmitter.on(SceneEvents.UPDATE, this.pluginUpdate, this);
+        }
 
         eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
 
@@ -512,6 +520,27 @@ var InputPlugin = new Class({
     },
 
     /**
+     * The internal update loop for the plugins belong to this Input class.
+     * Called automatically by the Scene Systems step and only used if `useQueue` is false.
+     *
+     * @method Phaser.Input.InputPlugin#pluginUpdate
+     * @private
+     * @since 3.17.0
+     *
+     * @param {number} time - The time value from the most recent Game step. Typically a high-resolution timer value, or Date.now().
+     * @param {number} delta - The delta value since the last frame. This is smoothed to avoid delta spikes by the TimeStep class.
+     */
+    pluginUpdate: function (time, delta)
+    {
+        if (!this.isActive())
+        {
+            return;
+        }
+
+        this.pluginEvents.emit(Events.UPDATE, time, delta);
+    },
+
+    /**
      * The internal update loop for the Input Plugin.
      * Called automatically by the Scene Systems step.
      *
@@ -532,7 +561,7 @@ var InputPlugin = new Class({
 
         var manager = this.manager;
 
-        this.pluginEvents.emit(Events.UPDATE, time, delta);
+        // this.pluginEvents.emit(Events.UPDATE, time, delta);
 
         //  Another Scene above this one has already consumed the input events, or we're in transition
         if (manager.globalTopOnly && manager.ignoreEvents)
