@@ -1237,6 +1237,14 @@ var Text = new Class({
 
         this.dirty = true;
 
+        var input = this.input;
+
+        if (input && !input.customHitArea)
+        {
+            input.hitArea.width = this.width;
+            input.hitArea.height = this.height;
+        }
+
         return this;
     },
 
