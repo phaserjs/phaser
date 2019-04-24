@@ -81,6 +81,7 @@ Notes:
 * `Size.setCSS` is a new method that will set the Size components width and height to the respective CSS style properties of the given element.
 * `CSSFile` is a new Loader FileType that allows you to load css into the current document via the normal Phaser Loader, using the `load.css` method. As such, you can chain it with other load calls, load via config, use as part of a pack load or any other option available to all loader filetypes. The CSS is applied immediately to the document.
 * `MultiScriptFile` is a new Loader FileType that allows you to load multiple script files into the document via the Phaser Loader, using the new `load.scripts` method. The difference between this and `load.script` is that you must pass an array of script file URLs to this method and they will be loaded in parallel but _processed_ (i.e. added to the document) in the exact order specified in the array. This allows you to load a bundle of scripts that have dependencies on each other.
+* `Key.getDuration` is a new method that will return the duration, in ms, that the Key has been held down for. If the Key isn't down it will return zero.
 
 ### Updates
 
@@ -125,6 +126,8 @@ Notes:
 * `BaseCamera.cameraManager` is a new property that is a reference to the Camera Manager, set in the `setScene` method.
 * `CameraManager.default` is a new property that contains a single un-transformed instance of a Camera, that exists outside of the camera list and doesn't render. It's used by other systems as a default camera matrix.
 * The `Graphics` Game Object now has 3 new Transform Matrix instances called `_tempMatrix1` to `_tempMatrix3`, which are used by it during the WebGL Rendering process. This is because Graphics objects can be used as Geometry Masks, which need to retain their own matrix state mid-render of another object, so cannot share the renderer temp matrices that other Game Objects can use. This also indirectly fixes an issue where masked children (such as emitters or container children) would get incorrect camera scroll values.
+* The `Key` method signature has changed. It now expects to receive a reference to the KeyboardPlugin instance that is creating the Key as the first argument. This is now stored in the new `Key.plugin` property, and cleared in `destroy`.
+* `KeyboardPlugin.removeKey` has a new optional argument `destroy` that will, if set, destroy the Key object being removed from the plugin.
 
 ### Bug Fixes
 
@@ -154,6 +157,8 @@ Notes:
 * You can now apply a Bitmap Mask to a Camera or Container and a Geometry Mask to a child and have it work correctly.
 * The `InputManager.update` method is now called every frame, as long as a native DOM event hasn't already fired it, which allows things like `setPollRate` to work again. Fix #4405 (thanks @Shucki)
 * `Pointer.getDuration` would only return zero until the pointer was released, or moved (basically any action that generated a DOM event). It now returns the duration regardless of the DOM events. Fix #4444 (thanks @plazicx)
+* `Keyboard.UpDuration` has been changed so the `duration` being checked is now against the current game clock. This means you can use it to check if a Key was released with `duration` ms ago, based on the time now, not the historic value of the Key.
+* `Keyboard.DownDuration` has been changed so the `duration` being checked is now against the current game clock. This fixes an issue where it couldn't be used while the Key was actively being held down. Fix #4484 (thanks @belen-albeza)
 
 ### Examples, Documentation and TypeScript
 
