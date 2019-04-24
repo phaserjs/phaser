@@ -488,6 +488,15 @@ var WebGLRenderer = new Class({
          */
         this.maskStack = [];
 
+        /**
+         * Internal property that tracks the currently set mask.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#currentMask
+         * @type {Phaser.Display.Masks.GeometryMask}
+         * @since 3.17.0
+         */
+        this.currentMask = null;
+
         this.init(this.config);
     },
 
@@ -1869,6 +1878,9 @@ var WebGLRenderer = new Class({
             gl.scissor(0, (this.drawingBufferHeight - this.height), this.width, this.height);
         }
 
+        this.currentMask = null;
+        this.maskStack.length = 0;
+
         this.setPipeline(this.pipelines.TextureTintPipeline);
     },
 
@@ -1922,17 +1934,22 @@ var WebGLRenderer = new Class({
 
             var mask = child.mask;
 
-            if (mask)
+            if (this.currentMask && this.currentMask !== mask)
+            {
+                this.currentMask.postRenderWebGL(this);
+            }
+
+            if (mask && mask !== this.currentMask)
             {
                 mask.preRenderWebGL(this, child, camera);
             }
 
             child.renderWebGL(this, child, interpolationPercentage, camera);
+        }
 
-            if (mask)
-            {
-                mask.postRenderWebGL(this, camera);
-            }
+        if (this.currentMask)
+        {
+            this.currentMask.postRenderWebGL(this);
         }
 
         this.setBlendMode(CONST.BlendModes.NORMAL);

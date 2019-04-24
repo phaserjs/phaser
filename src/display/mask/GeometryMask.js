@@ -121,6 +121,7 @@ var GeometryMask = new Class({
             renderer.maskCount = 0;
         }
 
+        renderer.currentMask = this;
         renderer.maskStack.push({ mask: this, camera: camera });
 
         var level = renderer.maskCount;
@@ -164,19 +165,24 @@ var GeometryMask = new Class({
     {
         var gl = renderer.gl;
 
-        // Force flush before disabling stencil test
-        renderer.flush();
-
         renderer.maskStack.pop();
 
         renderer.maskCount--;
 
         if (renderer.maskStack.length === 0)
         {
+            //  If this is the only mask in the stack, flush and disable
+            renderer.flush();
+
+            renderer.currentMask = null;
+
             gl.disable(gl.STENCIL_TEST);
         }
         else
         {
+            // Force flush before disabling stencil test
+            renderer.flush();
+
             var level = renderer.maskCount;
 
             gl.colorMask(false, false, false, false);
@@ -184,9 +190,12 @@ var GeometryMask = new Class({
             gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
             gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
 
+            //  Get the mask previous to this one
             var prev = renderer.maskStack[renderer.maskStack.length - 1];
             var geometryMask = prev.mask.geometryMask;
             var camera = prev.camera;
+
+            renderer.currentMask = prev.mask;
 
             geometryMask.renderWebGL(renderer, geometryMask, 0, camera);
 

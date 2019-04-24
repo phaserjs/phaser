@@ -8,6 +8,20 @@ Notes:
 3) GO auto-add to Scene
 4) GO move to another Scene
 
+### Geometry and Bitmap Masks
+
+* `Camera.setMask` is a new method that allows you to set a geometry or bitmap mask on any camera. The mask can be set to remain fixed in position, or to translate along with the camera. It will impact anything the camera renders. A reference to the mask is stored in the `Camera.mask` property.
+* `Camera.clearMask` is a new method that clears a previously set mask on a Camera.
+* There is a new Game Config property `input.windowEvents` which is true by default. It controls if Phaser will listen for any input events on the Window. If you disable this, Phaser will stop being able to emit events like `POINTER_UP_OUTSIDE`, or be aware of anything that happens outside of the Canvas re: input.
+* Containers can now contain masked children and have those masks respected, including the mask on the Container itself (if any). Masks work on any depth of child up to 255 children deep.
+* Geometry Masks are now batched. Previously, using the same mask on multiple Game Objects would create brand new stencil operations for every single Game Object, causing performance to tank. Now, the mask is only set if it's different from the previously masked object in the display list, allowing you to mask thousands of Game Objects and retain batching through-out.
+* `GeometryMask.setInvertAlpha` is a new method that allows you to set the `invertAlpha` property in a chainable call.
+* Previously, setting a mask on a Particle Emitter wouldn't work (it had to be set on the Emitter Manager instance), even though the mask methods and properties existed. You can now set a geometry or bitmap mask directly on an emitter.
+* The Particle Emitter Manager was missing the Mask component, even though it fully supported masking. The Mask component has now been added. You can now mask the manager, which impacts all emitters you create through it, or a specific emitter. Different emitters can have different masks, although they override the parent mask, if set.
+* You can now apply a Bitmap Mask to a Camera or Container and a Geometry Mask to a child and have it work correctly.
+* `WebGLRenderer.maskCount` is a new internal property that tracks the number of masks in the stack.
+* `WebGLRenderer.maskStack` is a new internal array that contains the current mask stack.
+
 ### Arcade Physics
 
 #### New Features
@@ -53,9 +67,6 @@ Notes:
 
 ### New Features
 
-* `Camera.setMask` is a new method that allows you to set a geometry or bitmap mask on any camera. The mask can be set to remain fixed in position, or to translate along with the camera. It will impact anything the camera renders. A reference to the mask is stored in the `Camera.mask` property.
-* `Camera.clearMask` is a new method that clears a previously set mask on a Camera.
-* There is a new Game Config property `input.windowEvents` which is true by default. It controls if Phaser will listen for any input events on the Window. If you disable this, Phaser will stop being able to emit events like `POINTER_UP_OUTSIDE`, or be aware of anything that happens outside of the Canvas re: input.
 * A Scene will now emit the new `CREATE` event after it has been created by the Scene Manager. If the Scene has a `create` method this event comes after that, so is useful to knowing when a Scene may have finished creating Game Objects, etc. (thanks @jackfreak)
 * `Tilemap.removeTile` is a new method that allows you to remove a tile, or an array of tiles, by passing in references to the tiles themselves, rather than coordinates. The tiles can be replaced with new tiles of the given index, or removed entirely, and the method can optionally recalculate interesting faces on the layer.
 * `TweenManager.remove` is a new method that immediately removes the given Tween from all of its internal arrays.
@@ -131,7 +142,6 @@ Notes:
 * The `Key` method signature has changed. It now expects to receive a reference to the KeyboardPlugin instance that is creating the Key as the first argument. This is now stored in the new `Key.plugin` property, and cleared in `destroy`.
 * `KeyboardPlugin.removeKey` has a new optional argument `destroy` that will, if set, destroy the Key object being removed from the plugin.
 * `InteractiveObject.customHitArea` is a new property that records if the hitArea for the Interactive Object was created based on texture size (false), or a custom shape (true)
-* `GeometryMask.setInvertAlpha` is a new method that allows you to set the `invertAlpha` property in a chainable call.
 
 ### Bug Fixes
 
@@ -156,9 +166,6 @@ Notes:
 * The InputPlugin will now dispatch an update event, allowing the Gamepad Plugin to update itself every frame, regardless of DOM events. This allows Gamepads to work correctly again. Fix #4414 (thanks @CipSoft-Components)
 * Calling `Tween.play` on a tween that had already finished and was pending removal will stop the tween from getting stuck in an `isPlaying` state and will restart the tween again from the beginning. Calling `play` on a Tween that is already playing does nothing. Fix #4184 (thanks @SamCode)
 * Declared `Audio.dataset`, which fixes Internet Explorer 10 crashing when trying to access the dataset property of the object (thanks @SirLink)
-* Previously, setting a mask on a Particle Emitter wouldn't work (it had to be set on the Emitter Manager instance), even though the mask methods and properties existed. You can now set a geometry or bitmap mask directly on an emitter.
-* The Particle Emitter Manager was missing the Mask component, even though it fully supported masking. The Mask component has now been added. You can now mask the manager, which impacts all emitters you create through it, or a specific emitter. Different emitters can have different masks, although they override the parent mask, if set.
-* You can now apply a Bitmap Mask to a Camera or Container and a Geometry Mask to a child and have it work correctly.
 * The `InputManager.update` method is now called every frame, as long as a native DOM event hasn't already fired it, which allows things like `setPollRate` to work again. Fix #4405 (thanks @Shucki)
 * `Pointer.getDuration` would only return zero until the pointer was released, or moved (basically any action that generated a DOM event). It now returns the duration regardless of the DOM events. Fix #4444 (thanks @plazicx)
 * `Keyboard.UpDuration` has been changed so the `duration` being checked is now against the current game clock. This means you can use it to check if a Key was released with `duration` ms ago, based on the time now, not the historic value of the Key.
