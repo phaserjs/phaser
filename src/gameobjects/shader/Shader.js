@@ -31,8 +31,12 @@ var TransformMatrix = require('../components/TransformMatrix');
  * @extends Phaser.GameObjects.Components.Visible
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
- * @param {number} x - The horizontal position of this Game Object in the world.
- * @param {number} y - The vertical position of this Game Object in the world.
+ * @param {number} [x=0] - The horizontal position of this Game Object in the world.
+ * @param {number} [y=0] - The vertical position of this Game Object in the world.
+ * @param {number} [width=128] - The width of the Game Object.
+ * @param {number} [height=128] - The height of the Game Object.
+ * @param {string} [fragSource] - The source code of the fragment shader.
+ * @param {string} [vertSource] - The source code of the vertex shader.
  */
 var Shader = new Class({
 
@@ -52,12 +56,55 @@ var Shader = new Class({
 
     initialize:
 
-    function Shader (scene, x, y, width, height, vert, frag)
+    function Shader (scene, x, y, width, height, fragSource, vertSource)
     {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (width === undefined) { width = 128; }
+        if (height === undefined) { height = 128; }
+
+        if (fragSource === undefined)
+        {
+            fragSource = [
+                'precision mediump float;',
+
+                'uniform vec2 resolution;',
+
+                'varying vec2 fragCoord;',
+
+                'void main () {',
+                '    vec2 uv = fragCoord / resolution.xy;',
+                '    gl_FragColor = vec4(uv.xyx, 1.0);',
+                '}'
+            ].join('\n');
+        }
+
+        if (vertSource === undefined)
+        {
+            vertSource = [
+                'precision mediump float;',
+
+                'uniform mat4 uProjectionMatrix;',
+                'uniform mat4 uViewMatrix;',
+
+                'attribute vec2 inPosition;',
+
+                'varying vec2 fragCoord;',
+
+                'void main () {',
+                'gl_Position = uProjectionMatrix * uViewMatrix * vec4(inPosition, 1.0, 1.0);',
+                'fragCoord = inPosition;',
+                '}'
+            ].join('\n');
+        }
+
         GameObject.call(this, scene, 'Shader');
 
         //  This Game Object cannot have a blend mode, so skip all checks
         this.blendMode = -1;
+
+        this.vertSource = vertSource;
+        this.fragSource = fragSource;
 
         this.vertexCount = 0;
         this.vertexCapacity = 6;
@@ -214,13 +261,15 @@ var Shader = new Class({
         this.setSize(width, height);
         this.setOrigin(0.5, 0.5);
 
-        this.setShader(vert, frag);
+        this.setShader(fragSource, vertSource);
 
         this.projOrtho(0, renderer.width, renderer.height, 0);
     },
 
-    setShader: function (vertSource, fragSource)
+    setShader: function (fragSource, vertSource)
     {
+        if (vertSource === undefined) { vertSource = this.vertSource; }
+
         var gl = this.gl;
         var renderer = this.renderer;
 
@@ -235,6 +284,10 @@ var Shader = new Class({
         renderer.setMatrix4(program, 'uProjectionMatrix', false, this.projectionMatrix);
 
         this.program = program;
+        this.fragSource = fragSource;
+        this.vertSource = vertSource;
+
+        return this;
     },
 
     /**

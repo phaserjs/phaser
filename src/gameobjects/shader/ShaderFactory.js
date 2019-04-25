@@ -12,33 +12,23 @@ var GameObjectFactory = require('../GameObjectFactory');
  *
  * Note: This method will only be available if the Shader Game Object and WebGL support have been built into Phaser.
  *
- * @method Phaser.GameObjects.GameObjectFactory#mesh
+ * @method Phaser.GameObjects.GameObjectFactory#shader
  * @webglOnly
- * @since 3.0.0
+ * @since 3.17.0
  *
- * @param {number} x - The horizontal position of this Game Object in the world.
- * @param {number} y - The vertical position of this Game Object in the world.
- * @param {number[]} vertices - An array containing the vertices data for this Shader.
- * @param {number[]} uv - An array containing the uv data for this Shader.
- * @param {number[]} colors - An array containing the color data for this Shader.
- * @param {number[]} alphas - An array containing the alpha data for this Shader.
- * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
- * @param {(string|integer)} [frame] - An optional frame from the Texture this Game Object is rendering with.
+ * @param {number} [x=0] - The horizontal position of this Game Object in the world.
+ * @param {number} [y=0] - The vertical position of this Game Object in the world.
+ * @param {number} [width=128] - The width of the Game Object.
+ * @param {number} [height=128] - The height of the Game Object.
+ * @param {string} [fragSource] - The source code of the fragment shader.
+ * @param {string} [vertSource] - The source code of the vertex shader.
  *
  * @return {Phaser.GameObjects.Shader} The Game Object that was created.
  */
 if (typeof WEBGL_RENDERER)
 {
-    GameObjectFactory.register('shader', function (x, y, width, height, vert, frag)
+    GameObjectFactory.register('shader', function (x, y, width, height, fragSource, vertSource)
     {
-        return this.displayList.add(new Shader(this.scene, x, y, width, height, vert, frag));
+        return this.displayList.add(new Shader(this.scene, x, y, width, height, fragSource, vertSource));
     });
 }
-
-//  When registering a factory function 'this' refers to the GameObjectFactory context.
-//
-//  There are several properties available to use:
-//
-//  this.scene - a reference to the Scene that owns the GameObjectFactory
-//  this.displayList - a reference to the Display List the Scene owns
-//  this.updateList - a reference to the Update List the Scene owns
