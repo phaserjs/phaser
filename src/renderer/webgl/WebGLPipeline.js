@@ -342,7 +342,7 @@ var WebGLPipeline = new Class({
                 gl.enableVertexAttribArray(location);
                 gl.vertexAttribPointer(location, element.size, element.type, element.normalized, vertexSize, element.offset);
             }
-            else
+            else if (location !== -1)
             {
                 gl.disableVertexAttribArray(location);
             }
