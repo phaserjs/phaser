@@ -38,7 +38,7 @@ var GetCircleToCircle = function (circleA, circleB, out)
 
         if (y0 === y1)
         {
-            x = (r1 * r1) - (r0 * r0) - (x1 * x1) + (x0 * x0);
+            x = ((r1 * r1) - (r0 * r0) - (x1 * x1) + (x0 * x0)) / (2 * (x0 - x1));
 
             coefficientA = 1;
             coefficientB = -2 * y1;
