@@ -7,7 +7,6 @@
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
-var ModelViewProjection = require('../../renderer/webgl/pipelines/components/ModelViewProjection');
 var ShaderRender = require('./ShaderRender');
 var TransformMatrix = require('../components/TransformMatrix');
 
@@ -22,15 +21,14 @@ var TransformMatrix = require('../components/TransformMatrix');
  * @webglOnly
  * @since 3.17.0
  *
+ * @extends Phaser.GameObjects.Components.ComputedSize
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.GetBounds
  * @extends Phaser.GameObjects.Components.Mask
  * @extends Phaser.GameObjects.Components.Origin
- * @extends Phaser.GameObjects.Components.Pipeline
- * @extends Phaser.GameObjects.Components.Size
+ * @extends Phaser.GameObjects.Components.ScrollFactor
  * @extends Phaser.GameObjects.Components.Transform
  * @extends Phaser.GameObjects.Components.Visible
- * @extends Phaser.GameObjects.Components.ScrollFactor
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {number} x - The horizontal position of this Game Object in the world.
@@ -41,16 +39,14 @@ var Shader = new Class({
     Extends: GameObject,
 
     Mixins: [
-        ModelViewProjection,
-        Components.BlendMode,
+        Components.ComputedSize,
         Components.Depth,
         Components.GetBounds,
         Components.Mask,
         Components.Origin,
-        Components.Size,
+        Components.ScrollFactor,
         Components.Transform,
         Components.Visible,
-        Components.ScrollFactor,
         ShaderRender
     ],
 
@@ -60,10 +56,15 @@ var Shader = new Class({
     {
         GameObject.call(this, scene, 'Shader');
 
+        //  This Game Object cannot have a blend mode, so skip all checks
+        this.blendMode = -1;
+
         this.vertexCount = 0;
         this.vertexCapacity = 6;
 
-        this.renderer = scene.sys.renderer;
+        var renderer = scene.sys.renderer;
+
+        this.renderer = renderer;
 
         /**
          * The size in bytes of the vertex.
@@ -100,7 +101,7 @@ var Shader = new Class({
          * @type {WebGLBuffer}
          * @since 3.0.0
          */
-        this.vertexBuffer = this.renderer.createVertexBuffer(this.vertexData.byteLength, this.gl.STREAM_DRAW);
+        this.vertexBuffer = renderer.createVertexBuffer(this.vertexData.byteLength, this.gl.STREAM_DRAW);
 
         /**
          * The handle to a WebGL program
@@ -109,7 +110,7 @@ var Shader = new Class({
          * @type {WebGLProgram}
          * @since 3.0.0
          */
-        this.program = this.renderer.createProgram(vert, frag);
+        this.program = null;
 
         /**
          * Array of objects that describe the vertex attributes
@@ -186,13 +187,186 @@ var Shader = new Class({
          */
         this._tempMatrix3 = new TransformMatrix();
 
+        /**
+         * Model matrix
+         * 
+         * @name Phaser.Renderer.WebGL.Pipelines.ModelViewProjection#modelMatrix
+         * @type {?Float32Array}
+         * @readonly
+         * @since 3.0.0
+         */
+        this.modelMatrix = new Float32Array([ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ]);
+
+        /**
+         * View matrix
+         * 
+         * @name Phaser.Renderer.WebGL.Pipelines.ModelViewProjection#viewMatrix
+         * @type {?Float32Array}
+         * @readonly
+         * @since 3.0.0
+         */
+        this.viewMatrix = new Float32Array([ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ]);
+
+        /**
+         * Projection matrix
+         * 
+         * @name Phaser.Renderer.WebGL.Pipelines.ModelViewProjection#projectionMatrix
+         * @type {?Float32Array}
+         * @readonly
+         * @since 3.0.0
+         */
+        this.projectionMatrix = new Float32Array([ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ]);
+
+        this._rendererWidth = renderer.width;
+        this._rendererHeight = renderer.height;
+
         this.setPosition(x, y);
         this.setSize(width, height);
         this.setOrigin(0.5, 0.5);
 
-        this.mvpInit();
+        this.setShader(vert, frag);
 
-        this.projOrtho(0, this.renderer.width, this.renderer.height, 0, -1000.0, 1000.0);
+        this.projOrtho(0, renderer.width, renderer.height, 0);
+    },
+
+    setShader: function (vertSource, fragSource)
+    {
+        var gl = this.gl;
+        var renderer = this.renderer;
+
+        if (this.program)
+        {
+            gl.deleteProgram(this.program);
+        }
+
+        var program = renderer.createProgram(vertSource, fragSource);
+
+        renderer.setMatrix4(program, 'uProjectionMatrix', false, this.projectionMatrix);
+        renderer.setMatrix4(program, 'uViewMatrix', false, this.viewMatrix);
+        renderer.setMatrix4(program, 'uModelMatrix', false, this.modelMatrix);
+
+        this.program = program;
+    },
+
+    /**
+     * Sets up an orthographics projection matrix
+     * 
+     * @method Phaser.Renderer.WebGL.Pipelines.ModelViewProjection#projOrtho
+     * @since 3.0.0
+     *
+     * @param {number} left - The left value.
+     * @param {number} right - The right value.
+     * @param {number} bottom - The bottom value.
+     * @param {number} top - The top value.
+     *
+     * @return {this} This Model View Projection.
+     */
+    projOrtho: function (left, right, bottom, top)
+    {
+        var near = -1000;
+        var far = 1000;
+
+        var leftRight = 1 / (left - right);
+        var bottomTop = 1 / (bottom - top);
+        var nearFar = 1 / (near - far);
+
+        var pm = this.projectionMatrix;
+
+        pm[0] = -2 * leftRight;
+        pm[5] = -2 * bottomTop;
+        pm[10] = 2 * nearFar;
+        pm[12] = (left + right) * leftRight;
+        pm[13] = (top + bottom) * bottomTop;
+        pm[14] = (far + near) * nearFar;
+
+        var program = this.program;
+
+        this.renderer.setMatrix4(program, 'uProjectionMatrix', false, this.projectionMatrix);
+
+        this._rendererWidth = right;
+        this._rendererHeight = bottom;
+    },
+
+    load: function (matrix2D)
+    {
+        //  ITRS
+
+        var program = this.program;
+
+        var x = -this._displayOriginX;
+        var y = -this._displayOriginX;
+
+        var vm = this.viewMatrix;
+
+        vm[0] = matrix2D[0];
+        vm[1] = matrix2D[1];
+        vm[4] = matrix2D[2];
+        vm[5] = matrix2D[3];
+        vm[8] = matrix2D[4];
+        vm[9] = matrix2D[5];
+        vm[12] = vm[0] * x + vm[4] * y;
+        vm[13] = vm[1] * x + vm[5] * y;
+
+        this.renderer.setMatrix4(program, 'uViewMatrix', false, this.viewMatrix);
+
+        //  Bind
+
+        var gl = this.gl;
+        var vertexBuffer = this.vertexBuffer;
+        var attributes = this.attributes;
+        var renderer = this.renderer;
+        var vertexSize = this.vertexSize;
+
+        renderer.setProgram(program);
+        renderer.setVertexBuffer(vertexBuffer);
+
+        for (var index = 0; index < attributes.length; index++)
+        {
+            var element = attributes[index];
+            var location = gl.getAttribLocation(program, element.name);
+
+            if (location >= 0)
+            {
+                gl.enableVertexAttribArray(location);
+                gl.vertexAttribPointer(location, element.size, element.type, element.normalized, vertexSize, element.offset);
+            }
+            else if (location !== -1)
+            {
+                gl.disableVertexAttribArray(location);
+            }
+        }
+
+        this.setFloat1('time', this.renderer.game.loop.time / 1000);
+        this.setFloat2('resolution', this.width, this.height);
+
+        //  Draw
+
+        var xw = this.width;
+        var yh = this.height;
+
+        var vf = this.vertexViewF32;
+
+        vf[0] = 0;
+        vf[1] = 0;
+        vf[2] = 0;
+        vf[3] = yh;
+        vf[4] = xw;
+        vf[5] = yh;
+        vf[6] = 0;
+        vf[7] = 0;
+        vf[8] = xw;
+        vf[9] = yh;
+        vf[10] = xw;
+        vf[11] = 0;
+
+        //  Flush
+
+        var vertexCount = 6;
+        var topology = this.topology;
+
+        gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
+
+        gl.drawArrays(topology, 0, vertexCount);
     },
 
     /**
@@ -220,96 +394,6 @@ var Shader = new Class({
         });
 
         return this;
-    },
-
-    /**
-     * Binds the pipeline resources, including programs, vertex buffers and binds attributes
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#bind
-     * @since 3.0.0
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    bind: function ()
-    {
-        var gl = this.gl;
-        var vertexBuffer = this.vertexBuffer;
-        var attributes = this.attributes;
-        var program = this.program;
-        var renderer = this.renderer;
-        var vertexSize = this.vertexSize;
-
-        renderer.setProgram(program);
-        renderer.setVertexBuffer(vertexBuffer);
-
-        for (var index = 0; index < attributes.length; index++)
-        {
-            var element = attributes[index];
-            var location = gl.getAttribLocation(program, element.name);
-
-            if (location >= 0)
-            {
-                gl.enableVertexAttribArray(location);
-                gl.vertexAttribPointer(location, element.size, element.type, element.normalized, vertexSize, element.offset);
-            }
-            else if (location !== -1)
-            {
-                gl.disableVertexAttribArray(location);
-            }
-        }
-
-        this.setFloat1('time', this.renderer.game.loop.time / 1000);
-        this.setFloat2('resolution', this.width, this.height);
-    },
-
-    /**
-     * Uploads the vertex data and emits a draw call
-     * for the current batch of vertices.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#flush
-     * @since 3.0.0
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    flush: function ()
-    {
-        var gl = this.gl;
-        var vertexCount = 6;
-        var topology = this.topology;
-        var vertexSize = this.vertexSize;
-
-        gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
-
-        gl.drawArrays(topology, 0, vertexCount);
-    },
-
-    /**
-     * Renders a single quad using the current shader and then flushes the batch.
-     *
-     * @method Phaser.Renderer.WebGL.Pipelines.QuadShaderPipeline#draw
-     * @since 3.17.0
-     */
-    draw: function ()
-    {
-        var xw = this.width;
-        var yh = this.height;
-
-        var vertexViewF32 = this.vertexViewF32;
-
-        vertexViewF32[0] = 0;
-        vertexViewF32[1] = 0;
-        vertexViewF32[2] = 0;
-        vertexViewF32[3] = yh;
-        vertexViewF32[4] = xw;
-        vertexViewF32[5] = yh;
-        vertexViewF32[6] = 0;
-        vertexViewF32[7] = 0;
-        vertexViewF32[8] = xw;
-        vertexViewF32[9] = yh;
-        vertexViewF32[10] = xw;
-        vertexViewF32[11] = 0;
-
-        this.flush();
     },
 
     /**
@@ -602,8 +686,6 @@ var Shader = new Class({
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#destroy
      * @since 3.0.0
-     *
-     * @return {this} This WebGLPipeline instance.
      */
     destroy: function ()
     {
@@ -612,11 +694,6 @@ var Shader = new Class({
         gl.deleteProgram(this.program);
         gl.deleteBuffer(this.vertexBuffer);
 
-        delete this.program;
-        delete this.vertexBuffer;
-        delete this.gl;
-
-        return this;
     }
 
 });

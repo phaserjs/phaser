@@ -50,14 +50,13 @@ var ShaderWebGLRenderer = function (renderer, src, interpolationPercentage, came
 
     camMatrix.multiply(shapeMatrix, calcMatrix);
 
-    src.viewLoad2D(calcMatrix.matrix);
-    src.viewTranslate(-src._displayOriginX, -src._displayOriginX, 0);
+    //  Renderer size changed?
+    if (renderer.width !== src._rendererWidth || renderer.height !== src._rendererHeight)
+    {
+        src.projOrtho(0, renderer.width, renderer.height, 0);
+    }
 
-    src.mvpUpdate();
-
-    src.bind();
-
-    src.draw();
+    src.load(calcMatrix.matrix);
 
     renderer.rebindPipeline(pipeline);
 };
