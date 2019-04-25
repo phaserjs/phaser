@@ -21,26 +21,34 @@
  */
 var ShaderWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
-    if (!src.program)
-    {
-        src.program = renderer.createProgram(src.vertSrc, src.fragSrc);
-    }
+    var pipeline = renderer.currentPipeline;
 
-    var pipeline = this.pipeline;
+    renderer.clearPipeline();
 
-    var camMatrix = pipeline._tempMatrix1;
-    var shapeMatrix = pipeline._tempMatrix2;
-    var calcMatrix = pipeline._tempMatrix3;
+    // src.projOrtho(0, renderer.width, renderer.height, 0, -1000.0, 1000.0);
 
-    pipeline.program = src.program;
-    pipeline.flushLocked = false;
+    // src.viewLoad2D(src);
 
-    renderer.setPipeline(pipeline);
-    renderer.setBlankTexture(true);
+    //  ITRS
 
-    pipeline.mvpUpdate();
-    pipeline.setFloat1('time', renderer.game.loop.time / 1000);
-    pipeline.setFloat2('resolution', src.width, src.height);
+    src.viewIdentity();
+    src.viewTranslate(src.x, src.y, src.z);
+    src.viewRotateZ(src.rotation);
+    src.viewScale(src.scaleX, src.scaleY, 1.0);
+
+    src.mvpUpdate();
+
+    src.bind();
+
+    var dx = src._displayOriginX;
+    var dy = src._displayOriginY;
+
+    src.draw(-dx, -dy, src.width, src.height);
+
+    /*
+    var camMatrix = src._tempMatrix1;
+    var shapeMatrix = src._tempMatrix2;
+    var calcMatrix = src._tempMatrix3;
 
     shapeMatrix.applyITRS(src.x, src.y, src.rotation, src.scaleX, src.scaleY);
 
@@ -66,14 +74,10 @@ var ShaderWebGLRenderer = function (renderer, src, interpolationPercentage, came
     var dx = src._displayOriginX;
     var dy = src._displayOriginY;
 
-    pipeline.draw(
-        -dx,
-        -dy,
-        src.width,
-        src.height
-    );
+    src.draw(-dx, -dy, src.width, src.height);
+    */
 
-    pipeline.flushLocked = true;
+    renderer.rebindPipeline(pipeline);
 };
 
 module.exports = ShaderWebGLRenderer;
