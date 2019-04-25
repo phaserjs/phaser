@@ -285,8 +285,6 @@ var Shader = new Class({
 
         this.setShader(fragSource, vertSource);
 
-        this.initUniforms();
-
         this.projOrtho(0, renderer.width, renderer.height, 0);
     },
 
@@ -310,6 +308,8 @@ var Shader = new Class({
         this.program = program;
         this.fragSource = fragSource;
         this.vertSource = vertSource;
+
+        this.initUniforms();
 
         return this;
     },
@@ -369,8 +369,6 @@ var Shader = new Class({
             var type = uniform.type;
             var data = map[type];
 
-            uniform.uniformLocation = gl.getUniformLocation(program, key);
-
             if (type === 'sampler2D')
             {
                 // this.initSampler2D(uniform);
@@ -380,6 +378,7 @@ var Shader = new Class({
                 uniform.glMatrix = data.matrix;
                 uniform.glValueLength = data.length;
                 uniform.glFunc = data.func;
+                uniform.uniformLocation = gl.getUniformLocation(program, key);
             }
         }
     },
