@@ -56,7 +56,7 @@ var Shader = new Class({
 
     initialize:
 
-    function Shader (scene, x, y, width, height, fragSource, vertSource)
+    function Shader (scene, x, y, width, height, fragSource, vertSource, uniforms)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -106,22 +106,9 @@ var Shader = new Class({
         this.vertSource = vertSource;
         this.fragSource = fragSource;
 
-        this.vertexCount = 0;
-        this.vertexCapacity = 6;
-
         var renderer = scene.sys.renderer;
 
         this.renderer = renderer;
-
-        /**
-         * The size in bytes of the vertex.
-         * The attribute sizes all added together (2 + 2 + 1 + 4)
-         *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#vertexSize
-         * @type {integer}
-         * @since 3.0.0
-         */
-        this.vertexSize = Float32Array.BYTES_PER_ELEMENT * 2;
 
         /**
          * The WebGL context this WebGL Pipeline uses.
@@ -139,7 +126,7 @@ var Shader = new Class({
          * @type {ArrayBuffer}
          * @since 3.0.0
          */
-        this.vertexData = new ArrayBuffer(this.vertexCapacity * this.vertexSize);
+        this.vertexData = new ArrayBuffer(6 * (Float32Array.BYTES_PER_ELEMENT * 2));
 
         /**
          * The handle to a WebGL vertex buffer object.
@@ -158,32 +145,6 @@ var Shader = new Class({
          * @since 3.0.0
          */
         this.program = null;
-
-        /**
-         * Array of objects that describe the vertex attributes
-         *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#attributes
-         * @type {object}
-         * @since 3.0.0
-         */
-        this.attributes = [
-            {
-                name: 'inPosition',
-                size: 2,
-                type: this.gl.FLOAT,
-                normalized: false,
-                offset: 0
-            }
-        ];
-
-        /**
-         * The primitive topology which the pipeline will use to submit draw calls
-         *
-         * @name Phaser.Renderer.WebGL.WebGLPipeline#topology
-         * @type {integer}
-         * @since 3.0.0
-         */
-        this.topology = this.gl.TRIANGLES;
 
         /**
          * Uint8 view to the vertex raw buffer. Used for uploading vertex buffer resources
@@ -254,6 +215,35 @@ var Shader = new Class({
          */
         this.projectionMatrix = new Float32Array([ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ]);
 
+        /*
+        * The supported types are: 1f, 1fv, 1i, 2f, 2fv, 2i, 2iv, 3f, 3fv, 3i, 3iv, 4f, 4fv, 4i, 4iv, mat2, mat3, mat4 and sampler2D.
+        */
+        var d = new Date();
+
+        /**
+         * @property {object} uniforms - Default uniform mappings. Compatible with ShaderToy and GLSLSandbox.
+         */
+        this.uniforms = {
+            resolution: { type: '2f', value: { x: x, y: y }},
+            time: { type: '1f', value: 0 },
+            mouse: { type: '2f', value: { x: 0.0, y: 0.0 } },
+            date: { type: '4fv', value: [ d.getFullYear(), d.getMonth(), d.getDate(), d.getHours() * 60 * 60 + d.getMinutes() * 60 + d.getSeconds() ] },
+            sampleRate: { type: '1f', value: 44100.0 },
+            iChannel0: { type: 'sampler2D', value: null, textureData: { repeat: true } },
+            iChannel1: { type: 'sampler2D', value: null, textureData: { repeat: true } },
+            iChannel2: { type: 'sampler2D', value: null, textureData: { repeat: true } },
+            iChannel3: { type: 'sampler2D', value: null, textureData: { repeat: true } }
+        };
+
+        //  Copy over / replace any passed in the constructor
+        if (uniforms)
+        {
+            for (var key in uniforms)
+            {
+                this.uniforms[key] = uniforms[key];
+            }
+        }
+
         this._rendererWidth = renderer.width;
         this._rendererHeight = renderer.height;
 
@@ -261,7 +251,41 @@ var Shader = new Class({
         this.setSize(width, height);
         this.setOrigin(0.5, 0.5);
 
+        var gl = this.gl;
+
+        // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/uniform
+
+        this._glFuncMap = {
+
+            mat2: { func: gl.uniformMatrix2fv, length: 1, matrix: true },
+            mat3: { func: gl.uniformMatrix3fv, length: 1, matrix: true },
+            mat4: { func: gl.uniformMatrix4fv, length: 1, matrix: true },
+
+            '1f': { func: gl.uniform1f, length: 1 },
+            '1fv': { func: gl.uniform1fv, length: 1 },
+            '1i': { func: gl.uniform1i, length: 1 },
+            '1iv': { func: gl.uniform1iv, length: 1 },
+
+            '2f': { func: gl.uniform2f, length: 2 },
+            '2fv': { func: gl.uniform2fv, length: 1 },
+            '2i': { func: gl.uniform2i, length: 2 },
+            '2iv': { func: gl.uniform2iv, length: 1 },
+
+            '3f': { func: gl.uniform3f, length: 3 },
+            '3fv': { func: gl.uniform3fv, length: 1 },
+            '3i': { func: gl.uniform3i, length: 3 },
+            '3iv': { func: gl.uniform3iv, length: 1 },
+
+            '4f': { func: gl.uniform4f, length: 4 },
+            '4fv': { func: gl.uniform4fv, length: 1 },
+            '4i': { func: gl.uniform4i, length: 4 },
+            '4iv': { func: gl.uniform4iv, length: 1 }
+
+        };
+
         this.setShader(fragSource, vertSource);
+
+        this.initUniforms();
 
         this.projOrtho(0, renderer.width, renderer.height, 0);
     },
@@ -329,6 +353,101 @@ var Shader = new Class({
         this._rendererHeight = bottom;
     },
 
+    // Uniforms are specified in the GLSL_ES Specification: http://www.khronos.org/registry/webgl/specs/latest/1.0/
+    // http://www.khronos.org/registry/gles/specs/2.0/GLSL_ES_Specification_1.0.17.pdf
+
+    initUniforms: function ()
+    {
+        var gl = this.gl;
+        var map = this._glFuncMap;
+        var program = this.program;
+
+        for (var key in this.uniforms)
+        {
+            var uniform = this.uniforms[key];
+
+            var type = uniform.type;
+            var data = map[type];
+
+            uniform.uniformLocation = gl.getUniformLocation(program, key);
+
+            if (type === 'sampler2D')
+            {
+                // this.initSampler2D(uniform);
+            }
+            else
+            {
+                uniform.glMatrix = data.matrix;
+                uniform.glValueLength = data.length;
+                uniform.glFunc = data.func;
+            }
+        }
+    },
+
+    syncUniforms: function ()
+    {
+        var gl = this.gl;
+
+        var uniform;
+        var length;
+        var glFunc;
+        var location;
+        var value;
+
+        // var textureCount = 1;
+    
+        for (var key in this.uniforms)
+        {
+            uniform = this.uniforms[key];
+
+            glFunc = uniform.glFunc;
+            length = uniform.glValueLength;
+            location = uniform.uniformLocation;
+            value = uniform.value;
+
+            if (length === 1)
+            {
+                if (uniform.glMatrix)
+                {
+                    glFunc.call(gl, location, uniform.transpose, value);
+                }
+                else
+                {
+                    glFunc.call(gl, location, value);
+                }
+            }
+            else if (length === 2)
+            {
+                glFunc.call(gl, location, value.x, value.y);
+            }
+            else if (length === 3)
+            {
+                glFunc.call(gl, location, value.x, value.y, value.z);
+            }
+            else if (length === 4)
+            {
+                glFunc.call(gl, location, value.x, value.y, value.z, value.w);
+            }
+            else if (uniform.type === 'sampler2D')
+            {
+                if (uniform._init)
+                {
+                    // gl.activeTexture(gl['TEXTURE' + this.textureCount]);
+    
+                    // gl.bindTexture(gl.TEXTURE_2D, value.baseTexture._glTextures[gl.id]);
+    
+                    // gl.uniform1i(location, textureCount);
+
+                    // textureCount++;
+                }
+                else
+                {
+                    // this.initSampler2D(uniform);
+                }
+            }
+        }
+    },
+
     load: function (matrix2D)
     {
         //  ITRS
@@ -355,31 +474,27 @@ var Shader = new Class({
 
         var gl = this.gl;
         var vertexBuffer = this.vertexBuffer;
-        var attributes = this.attributes;
         var renderer = this.renderer;
-        var vertexSize = this.vertexSize;
+        var vertexSize = Float32Array.BYTES_PER_ELEMENT * 2;
 
         renderer.setProgram(program);
         renderer.setVertexBuffer(vertexBuffer);
 
-        for (var index = 0; index < attributes.length; index++)
+        var location = gl.getAttribLocation(program, 'inPosition');
+
+        if (location !== -1)
         {
-            var element = attributes[index];
-            var location = gl.getAttribLocation(program, element.name);
+            gl.enableVertexAttribArray(location);
 
-            if (location >= 0)
-            {
-                gl.enableVertexAttribArray(location);
-                gl.vertexAttribPointer(location, element.size, element.type, element.normalized, vertexSize, element.offset);
-            }
-            else if (location !== -1)
-            {
-                gl.disableVertexAttribArray(location);
-            }
+            gl.vertexAttribPointer(location, 2, gl.FLOAT, false, vertexSize, 0);
         }
+   
+        this.uniforms.resolution.value.x = this.width;
+        this.uniforms.resolution.value.y = this.height;
 
-        this.setFloat1('time', this.renderer.game.loop.time / 1000);
-        this.setFloat2('resolution', this.width, this.height);
+        this.uniforms.time.value = this.renderer.game.loop.time / 1000;
+
+        this.syncUniforms();
 
         //  Draw
 
@@ -398,323 +513,10 @@ var Shader = new Class({
         //  Flush
 
         var vertexCount = 6;
-        var topology = this.topology;
 
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.bytes.subarray(0, vertexCount * vertexSize));
 
-        gl.drawArrays(topology, 0, vertexCount);
-    },
-
-    /**
-     * Adds a description of vertex attribute to the pipeline
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#addAttribute
-     * @since 3.2.0
-     *
-     * @param {string} name - Name of the vertex attribute
-     * @param {integer} size - Vertex component size
-     * @param {integer} type - Type of the attribute
-     * @param {boolean} normalized - Is the value normalized to a range
-     * @param {integer} offset - Byte offset to the beginning of the first element in the vertex
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    addAttribute: function (name, size, type, normalized, offset)
-    {
-        this.attributes.push({
-            name: name,
-            size: size,
-            type: this.renderer.glFormats[type],
-            normalized: normalized,
-            offset: offset
-        });
-
-        return this;
-    },
-
-    /**
-     * Set a uniform value of the current pipeline program.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat1
-     * @since 3.2.0
-     *
-     * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {number} x - The new value of the `float` uniform.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    setFloat1: function (name, x)
-    {
-        this.renderer.setFloat1(this.program, name, x);
-
-        return this;
-    },
-
-    /**
-     * Set a uniform value of the current pipeline program.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat2
-     * @since 3.2.0
-     *
-     * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {number} x - The new X component of the `vec2` uniform.
-     * @param {number} y - The new Y component of the `vec2` uniform.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    setFloat2: function (name, x, y)
-    {
-        this.renderer.setFloat2(this.program, name, x, y);
-
-        return this;
-    },
-
-    /**
-     * Set a uniform value of the current pipeline program.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat3
-     * @since 3.2.0
-     *
-     * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {number} x - The new X component of the `vec3` uniform.
-     * @param {number} y - The new Y component of the `vec3` uniform.
-     * @param {number} z - The new Z component of the `vec3` uniform.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    setFloat3: function (name, x, y, z)
-    {
-        this.renderer.setFloat3(this.program, name, x, y, z);
-
-        return this;
-    },
-
-    /**
-     * Set a uniform value of the current pipeline program.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat4
-     * @since 3.2.0
-     *
-     * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {number} x - X component of the uniform
-     * @param {number} y - Y component of the uniform
-     * @param {number} z - Z component of the uniform
-     * @param {number} w - W component of the uniform
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    setFloat4: function (name, x, y, z, w)
-    {
-        this.renderer.setFloat4(this.program, name, x, y, z, w);
-
-        return this;
-    },
-
-    /**
-     * Set a uniform value of the current pipeline program.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat1v
-     * @since 3.13.0
-     *
-     * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {Float32Array} arr - The new value to be used for the uniform variable.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    setFloat1v: function (name, arr)
-    {
-        this.renderer.setFloat1v(this.program, name, arr);
-
-        return this;
-    },
-
-    /**
-     * Set a uniform value of the current pipeline program.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat2v
-     * @since 3.13.0
-     *
-     * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {Float32Array} arr - The new value to be used for the uniform variable.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    setFloat2v: function (name, arr)
-    {
-        this.renderer.setFloat2v(this.program, name, arr);
-
-        return this;
-    },
-
-    /**
-     * Set a uniform value of the current pipeline program.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat3v
-     * @since 3.13.0
-     *
-     * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {Float32Array} arr - The new value to be used for the uniform variable.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    setFloat3v: function (name, arr)
-    {
-        this.renderer.setFloat3v(this.program, name, arr);
-
-        return this;
-    },
-
-    /**
-     * Set a uniform value of the current pipeline program.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setFloat4v
-     * @since 3.13.0
-     *
-     * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {Float32Array} arr - The new value to be used for the uniform variable.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    setFloat4v: function (name, arr)
-    {
-        this.renderer.setFloat4v(this.program, name, arr);
-
-        return this;
-    },
-
-    /**
-     * Set a uniform value of the current pipeline program.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setInt1
-     * @since 3.2.0
-     *
-     * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {integer} x - The new value of the `int` uniform.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    setInt1: function (name, x)
-    {
-        this.renderer.setInt1(this.program, name, x);
-
-        return this;
-    },
-
-    /**
-     * Set a uniform value of the current pipeline program.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setInt2
-     * @since 3.2.0
-     *
-     * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {integer} x - The new X component of the `ivec2` uniform.
-     * @param {integer} y - The new Y component of the `ivec2` uniform.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    setInt2: function (name, x, y)
-    {
-        this.renderer.setInt2(this.program, name, x, y);
-
-        return this;
-    },
-
-    /**
-     * Set a uniform value of the current pipeline program.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setInt3
-     * @since 3.2.0
-     *
-     * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {integer} x - The new X component of the `ivec3` uniform.
-     * @param {integer} y - The new Y component of the `ivec3` uniform.
-     * @param {integer} z - The new Z component of the `ivec3` uniform.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    setInt3: function (name, x, y, z)
-    {
-        this.renderer.setInt3(this.program, name, x, y, z);
-
-        return this;
-    },
-
-    /**
-     * Set a uniform value of the current pipeline program.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setInt4
-     * @since 3.2.0
-     *
-     * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {integer} x - X component of the uniform
-     * @param {integer} y - Y component of the uniform
-     * @param {integer} z - Z component of the uniform
-     * @param {integer} w - W component of the uniform
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    setInt4: function (name, x, y, z, w)
-    {
-        this.renderer.setInt4(this.program, name, x, y, z, w);
-
-        return this;
-    },
-
-    /**
-     * Set a uniform value of the current pipeline program.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setMatrix2
-     * @since 3.2.0
-     *
-     * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {boolean} transpose - Whether to transpose the matrix. Should be `false`.
-     * @param {Float32Array} matrix - The new values for the `mat2` uniform.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    setMatrix2: function (name, transpose, matrix)
-    {
-        this.renderer.setMatrix2(this.program, name, transpose, matrix);
-
-        return this;
-    },
-
-    /**
-     * Set a uniform value of the current pipeline program.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setMatrix3
-     * @since 3.2.0
-     *
-     * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {boolean} transpose - Whether to transpose the matrix. Should be `false`.
-     * @param {Float32Array} matrix - The new values for the `mat3` uniform.
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    setMatrix3: function (name, transpose, matrix)
-    {
-        this.renderer.setMatrix3(this.program, name, transpose, matrix);
-
-        return this;
-    },
-
-    /**
-     * Set a uniform value of the current pipeline program.
-     *
-     * @method Phaser.Renderer.WebGL.WebGLPipeline#setMatrix4
-     * @since 3.2.0
-     *
-     * @param {string} name - The name of the uniform to look-up and modify.
-     * @param {boolean} transpose - Should the matrix be transpose
-     * @param {Float32Array} matrix - Matrix data
-     *
-     * @return {this} This WebGLPipeline instance.
-     */
-    setMatrix4: function (name, transpose, matrix)
-    {
-        this.renderer.setMatrix4(this.program, name, transpose, matrix);
-
-        return this;
+        gl.drawArrays(gl.TRIANGLES, 0, vertexCount);
     },
 
     /**
@@ -729,7 +531,6 @@ var Shader = new Class({
 
         gl.deleteProgram(this.program);
         gl.deleteBuffer(this.vertexBuffer);
-
     }
 
 });
