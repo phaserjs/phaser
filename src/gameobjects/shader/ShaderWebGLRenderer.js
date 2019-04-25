@@ -25,27 +25,6 @@ var ShaderWebGLRenderer = function (renderer, src, interpolationPercentage, came
 
     renderer.clearPipeline();
 
-    // src.projOrtho(0, renderer.width, renderer.height, 0, -1000.0, 1000.0);
-
-    // src.viewLoad2D(src);
-
-    //  ITRS
-
-    src.viewIdentity();
-    src.viewTranslate(src.x, src.y, src.z);
-    src.viewRotateZ(src.rotation);
-    src.viewScale(src.scaleX, src.scaleY, 1.0);
-
-    src.mvpUpdate();
-
-    src.bind();
-
-    var dx = src._displayOriginX;
-    var dy = src._displayOriginY;
-
-    src.draw(-dx, -dy, src.width, src.height);
-
-    /*
     var camMatrix = src._tempMatrix1;
     var shapeMatrix = src._tempMatrix2;
     var calcMatrix = src._tempMatrix3;
@@ -71,11 +50,14 @@ var ShaderWebGLRenderer = function (renderer, src, interpolationPercentage, came
 
     camMatrix.multiply(shapeMatrix, calcMatrix);
 
-    var dx = src._displayOriginX;
-    var dy = src._displayOriginY;
+    src.viewLoad2D(calcMatrix.matrix);
+    src.viewTranslate(-src._displayOriginX, -src._displayOriginX, 0);
 
-    src.draw(-dx, -dy, src.width, src.height);
-    */
+    src.mvpUpdate();
+
+    src.bind();
+
+    src.draw();
 
     renderer.rebindPipeline(pipeline);
 };

@@ -186,21 +186,12 @@ var Shader = new Class({
          */
         this._tempMatrix3 = new TransformMatrix();
 
-        /**
-         * A temporary Transform Matrix, re-used internally during batching.
-         *
-         * @name Phaser.Renderer.WebGL.Pipelines.QuadShaderPipeline#_tempMatrix4
-         * @private
-         * @type {Phaser.GameObjects.Components.TransformMatrix}
-         * @since 3.17.0
-         */
-        this._tempMatrix4 = new TransformMatrix();
-
         this.setPosition(x, y);
         this.setSize(width, height);
         this.setOrigin(0.5, 0.5);
 
         this.mvpInit();
+
         this.projOrtho(0, this.renderer.width, this.renderer.height, 0, -1000.0, 1000.0);
     },
 
@@ -292,60 +283,31 @@ var Shader = new Class({
         gl.drawArrays(topology, 0, vertexCount);
     },
 
-    
-
     /**
      * Renders a single quad using the current shader and then flushes the batch.
      *
      * @method Phaser.Renderer.WebGL.Pipelines.QuadShaderPipeline#draw
      * @since 3.17.0
-     *
-     * @param {number} x - Horizontal top left coordinate of the rectangle.
-     * @param {number} y - Vertical top left coordinate of the rectangle.
-     * @param {number} width - Width of the rectangle.
-     * @param {number} height - Height of the rectangle.
-     * @param {Phaser.GameObjects.Components.TransformMatrix} currentMatrix - The current transform.
-     * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - The parent transform.
      */
-    draw: function (x, y, width, height, currentMatrix, parentMatrix)
+    draw: function ()
     {
-        var calcMatrix = this._tempMatrix3;
-
-        //  Multiply and store result in calcMatrix, only if the parentMatrix is set, otherwise we'll use whatever values are already in the calcMatrix
-        if (parentMatrix)
-        {
-            parentMatrix.multiply(currentMatrix, calcMatrix);
-        }
-        
-        var xw = x + width;
-        var yh = y + height;
-
-        var x0 = calcMatrix.getX(x, y);
-        var y0 = calcMatrix.getY(x, y);
-
-        var x1 = calcMatrix.getX(x, yh);
-        var y1 = calcMatrix.getY(x, yh);
-
-        var x2 = calcMatrix.getX(xw, yh);
-        var y2 = calcMatrix.getY(xw, yh);
-
-        var x3 = calcMatrix.getX(xw, y);
-        var y3 = calcMatrix.getY(xw, y);
+        var xw = this.width;
+        var yh = this.height;
 
         var vertexViewF32 = this.vertexViewF32;
 
-        vertexViewF32[0] = x0;
-        vertexViewF32[1] = y0;
-        vertexViewF32[2] = x1;
-        vertexViewF32[3] = y1;
-        vertexViewF32[4] = x2;
-        vertexViewF32[5] = y2;
-        vertexViewF32[6] = x0;
-        vertexViewF32[7] = y0;
-        vertexViewF32[8] = x2;
-        vertexViewF32[9] = y2;
-        vertexViewF32[10] = x3;
-        vertexViewF32[11] = y3;
+        vertexViewF32[0] = 0;
+        vertexViewF32[1] = 0;
+        vertexViewF32[2] = 0;
+        vertexViewF32[3] = yh;
+        vertexViewF32[4] = xw;
+        vertexViewF32[5] = yh;
+        vertexViewF32[6] = 0;
+        vertexViewF32[7] = 0;
+        vertexViewF32[8] = xw;
+        vertexViewF32[9] = yh;
+        vertexViewF32[10] = xw;
+        vertexViewF32[11] = 0;
 
         this.flush();
     },
