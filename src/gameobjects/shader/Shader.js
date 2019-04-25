@@ -188,16 +188,6 @@ var Shader = new Class({
         this._tempMatrix3 = new TransformMatrix();
 
         /**
-         * Model matrix
-         * 
-         * @name Phaser.Renderer.WebGL.Pipelines.ModelViewProjection#modelMatrix
-         * @type {?Float32Array}
-         * @readonly
-         * @since 3.0.0
-         */
-        this.modelMatrix = new Float32Array([ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ]);
-
-        /**
          * View matrix
          * 
          * @name Phaser.Renderer.WebGL.Pipelines.ModelViewProjection#viewMatrix
@@ -241,9 +231,8 @@ var Shader = new Class({
 
         var program = renderer.createProgram(vertSource, fragSource);
 
-        renderer.setMatrix4(program, 'uProjectionMatrix', false, this.projectionMatrix);
         renderer.setMatrix4(program, 'uViewMatrix', false, this.viewMatrix);
-        renderer.setMatrix4(program, 'uModelMatrix', false, this.modelMatrix);
+        renderer.setMatrix4(program, 'uProjectionMatrix', false, this.projectionMatrix);
 
         this.program = program;
     },
@@ -341,23 +330,17 @@ var Shader = new Class({
 
         //  Draw
 
-        var xw = this.width;
-        var yh = this.height;
+        var width = this.width;
+        var height = this.height;
 
         var vf = this.vertexViewF32;
 
-        vf[0] = 0;
-        vf[1] = 0;
-        vf[2] = 0;
-        vf[3] = yh;
-        vf[4] = xw;
-        vf[5] = yh;
-        vf[6] = 0;
-        vf[7] = 0;
-        vf[8] = xw;
-        vf[9] = yh;
-        vf[10] = xw;
-        vf[11] = 0;
+        vf[3] = height;
+        vf[4] = width;
+        vf[5] = height;
+        vf[8] = width;
+        vf[9] = height;
+        vf[10] = width;
 
         //  Flush
 
