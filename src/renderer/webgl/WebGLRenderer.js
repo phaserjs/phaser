@@ -16,9 +16,10 @@ var TransformMatrix = require('../../gameobjects/components/TransformMatrix');
 var Utils = require('./Utils');
 var WebGLSnapshot = require('../snapshot/WebGLSnapshot');
 
-// Default Pipelines
+//  Default Pipelines
 var BitmapMaskPipeline = require('./pipelines/BitmapMaskPipeline');
 var ForwardDiffuseLightPipeline = require('./pipelines/ForwardDiffuseLightPipeline');
+var QuadShaderPipeline = require('./pipelines/QuadShaderPipeline');
 var TextureTintPipeline = require('./pipelines/TextureTintPipeline');
 
 /**
@@ -604,6 +605,7 @@ var WebGLRenderer = new Class({
         this.addPipeline('TextureTintPipeline', new TextureTintPipeline({ game: game, renderer: this }));
         this.addPipeline('BitmapMaskPipeline', new BitmapMaskPipeline({ game: game, renderer: this }));
         this.addPipeline('Light2D', new ForwardDiffuseLightPipeline({ game: game, renderer: this, maxLights: config.maxLights }));
+        this.addPipeline('QuadShaderPipeline', new QuadShaderPipeline({ game: game, renderer: this }));
 
         this.setBlendMode(CONST.BlendModes.NORMAL);
 
