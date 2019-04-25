@@ -53,6 +53,15 @@ var Systems = new Class({
          */
         this.game;
 
+        /**
+         * A reference to either the Canvas or WebGL Renderer that this Game is using.
+         *
+         * @name Phaser.Scenes.Systems#renderer
+         * @type {(Phaser.Renderer.Canvas.CanvasRenderer|Phaser.Renderer.WebGL.WebGLRenderer)}
+         * @since 3.17.0
+         */
+        this.renderer;
+
         if (typeof PLUGIN_FBINSTANT)
         {
             /**
@@ -315,6 +324,7 @@ var Systems = new Class({
         this.sceneUpdate = NOOP;
 
         this.game = game;
+        this.renderer = game.renderer;
 
         this.canvas = game.canvas;
         this.context = game.context;
