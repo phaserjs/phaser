@@ -66,6 +66,8 @@ var DOMElement = new Class({
 
         this.node;
 
+        this.transformOnly = false;
+
         this.skewX = 0;
         this.skewY = 0;
 

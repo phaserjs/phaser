@@ -49,11 +49,14 @@ var DOMElementCSSRenderer = function (renderer, src, interpolationPercentage, ca
     
     camMatrix.multiply(spriteMatrix, calcMatrix);
 
-    style.display = 'block';
-    style.opacity = src.alpha;
-    style.zIndex = src._depth;
-    style.pointerEvents = 'auto';
-    style.mixBlendMode = CSSBlendModes[src._blendMode];
+    if (!src.transformOnly)
+    {
+        style.display = 'block';
+        style.opacity = src.alpha;
+        style.zIndex = src._depth;
+        style.pointerEvents = 'auto';
+        style.mixBlendMode = CSSBlendModes[src._blendMode];
+    }
 
     // https://developer.mozilla.org/en-US/docs/Web/CSS/transform
 
