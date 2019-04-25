@@ -244,6 +244,8 @@ var Shader = new Class({
             }
         }
 
+        this.pointer = null;
+
         this._rendererWidth = renderer.width;
         this._rendererHeight = renderer.height;
 
@@ -310,6 +312,13 @@ var Shader = new Class({
         this.vertSource = vertSource;
 
         this.initUniforms();
+
+        return this;
+    },
+
+    setPointer: function (pointer)
+    {
+        this.pointer = pointer;
 
         return this;
     },
@@ -492,6 +501,15 @@ var Shader = new Class({
         this.uniforms.resolution.value.y = this.height;
 
         this.uniforms.time.value = this.renderer.game.loop.time / 1000;
+
+        if (this.pointer)
+        {
+            var px = this.pointer.x / this.width;
+            var py = 1 - this.pointer.y / this.height;
+    
+            this.uniforms.mouse.value.x = px.toFixed(2);
+            this.uniforms.mouse.value.y = py.toFixed(2);
+        }
 
         this.syncUniforms();
 
