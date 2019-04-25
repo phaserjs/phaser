@@ -336,7 +336,7 @@ var Shader = new Class({
         var program = this.program;
 
         var x = -this._displayOriginX;
-        var y = -this._displayOriginX;
+        var y = -this._displayOriginY;
 
         var vm = this.viewMatrix;
 
