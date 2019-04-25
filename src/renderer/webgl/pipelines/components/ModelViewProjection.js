@@ -695,6 +695,7 @@ var ModelViewProjection = {
         projectionMatrix[15] = 1.0;
 
         this.projectionMatrixDirty = true;
+
         return this;
     },
     
@@ -704,17 +705,17 @@ var ModelViewProjection = {
      * @method Phaser.Renderer.WebGL.Pipelines.ModelViewProjection#projPersp
      * @since 3.0.0
      *
-     * @param {number} fovy - The fovy value.
+     * @param {number} fovY - The fov value.
      * @param {number} aspectRatio - The aspectRatio value.
      * @param {number} near - The near value.
      * @param {number} far - The far value.
      *
      * @return {this} This Model View Projection.
      */
-    projPersp: function (fovy, aspectRatio, near, far)
+    projPersp: function (fovY, aspectRatio, near, far)
     {
         var projectionMatrix = this.projectionMatrix;
-        var fov = 1.0 / Math.tan(fovy / 2.0);
+        var fov = 1.0 / Math.tan(fovY / 2.0);
         var nearFar = 1.0 / (near - far);
         
         projectionMatrix[0] = fov / aspectRatio;
@@ -735,6 +736,7 @@ var ModelViewProjection = {
         projectionMatrix[15] = 0.0;
         
         this.projectionMatrixDirty = true;
+
         return this;
     }
 };
