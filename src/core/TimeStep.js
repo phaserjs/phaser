@@ -610,6 +610,32 @@ var TimeStep = new Class({
     },
 
     /**
+     * Gets the duration which the game has been running, in seconds.
+     *
+     * @method Phaser.Core.TimeStep#getDuration
+     * @since 3.17.0
+     *
+     * @return {number} The duration in seconds.
+     */
+    getDuration: function ()
+    {
+        return Math.round(this.lastTime - this.startTime) / 1000;
+    },
+
+    /**
+     * Gets the duration which the game has been running, in ms.
+     *
+     * @method Phaser.Core.TimeStep#getDurationMS
+     * @since 3.17.0
+     *
+     * @return {number} The duration in ms.
+     */
+    getDurationMS: function ()
+    {
+        return Math.round(this.lastTime - this.startTime);
+    },
+
+    /**
      * Stops the TimeStep running.
      *
      * @method Phaser.Core.TimeStep#stop
