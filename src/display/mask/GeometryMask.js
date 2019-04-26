@@ -121,7 +121,11 @@ var GeometryMask = new Class({
             renderer.maskCount = 0;
         }
 
-        renderer.currentMask = this;
+        if (renderer.currentCameraMask !== this)
+        {
+            renderer.currentMask = this;
+        }
+
         renderer.maskStack.push({ mask: this, camera: camera });
 
         var level = renderer.maskCount;
@@ -195,7 +199,10 @@ var GeometryMask = new Class({
             var geometryMask = prev.mask.geometryMask;
             var camera = prev.camera;
 
-            renderer.currentMask = prev.mask;
+            if (renderer.currentCameraMask !== prev.mask)
+            {
+                renderer.currentMask = prev.mask;
+            }
 
             geometryMask.renderWebGL(renderer, geometryMask, 0, camera);
 

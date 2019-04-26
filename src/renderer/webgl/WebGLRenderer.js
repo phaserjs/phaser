@@ -497,6 +497,15 @@ var WebGLRenderer = new Class({
          */
         this.currentMask = null;
 
+        /**
+         * Internal property that tracks the currently set camera mask.
+         *
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#currentCameraMask
+         * @type {Phaser.Display.Masks.GeometryMask}
+         * @since 3.17.0
+         */
+        this.currentCameraMask = null;
+
         this.init(this.config);
     },
 
@@ -1014,9 +1023,16 @@ var WebGLRenderer = new Class({
 
         gl.disable(gl.DEPTH_TEST);
         gl.disable(gl.CULL_FACE);
-        gl.disable(gl.STENCIL_TEST);
-    
-        gl.clear(gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+
+        if (!this.currentMask && !this.currentCameraMask)
+        {
+            gl.disable(gl.STENCIL_TEST);
+            gl.clear(gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT);
+        }
+        else
+        {
+            gl.clear(gl.DEPTH_BUFFER_BIT);
+        }
 
         gl.viewport(0, 0, this.width, this.height);
 
@@ -1755,6 +1771,8 @@ var WebGLRenderer = new Class({
 
             if (camera.mask)
             {
+                this.currentCameraMask = camera.mask;
+
                 camera.mask.preRenderWebGL(this, camera, camera._maskCamera);
             }
 
@@ -1832,6 +1850,8 @@ var WebGLRenderer = new Class({
         if (camera.mask)
         {
             camera.mask.postRenderWebGL(this, camera._maskCamera);
+
+            this.currentCameraMask = null;
         }
     },
 
@@ -1879,6 +1899,7 @@ var WebGLRenderer = new Class({
         }
 
         this.currentMask = null;
+        this.currentCameraMask = null;
         this.maskStack.length = 0;
 
         this.setPipeline(this.pipelines.TextureTintPipeline);
