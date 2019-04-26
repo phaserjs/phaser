@@ -1745,6 +1745,7 @@ var InputPlugin = new Class({
         var dropZone = false;
         var cursor = false;
         var useHandCursor = false;
+        var pixelPerfect = false;
 
         //  Config object?
         if (IsPlainObject(shape))
@@ -1758,7 +1759,7 @@ var InputPlugin = new Class({
             cursor = GetFastValue(config, 'cursor', false);
             useHandCursor = GetFastValue(config, 'useHandCursor', false);
 
-            var pixelPerfect = GetFastValue(config, 'pixelPerfect', false);
+            pixelPerfect = GetFastValue(config, 'pixelPerfect', false);
             var alphaTolerance = GetFastValue(config, 'alphaTolerance', 1);
 
             if (pixelPerfect)
@@ -1782,6 +1783,12 @@ var InputPlugin = new Class({
         for (var i = 0; i < gameObjects.length; i++)
         {
             var gameObject = gameObjects[i];
+
+            if (pixelPerfect && gameObject.type === 'Container')
+            {
+                console.warn('Cannot pixelPerfect test a Container. Use a custom callback.');
+                continue;
+            }
 
             var io = (!gameObject.input) ? CreateInteractiveObject(gameObject, shape, callback) : gameObject.input;
 

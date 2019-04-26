@@ -178,6 +178,7 @@ Notes:
 * `InputPlugin.clear` has a new argument `skipQueue` which is used to avoid clearing a Game Object twice. This, combined with the fix for 4463 means you will no longer get a `Cannot read property 'dragState'` error if you destroy a Game Object enabled for drag where another draggable object exists. Fix #4228 (thanks @YannCaron)
 * `Phaser.Physics.Arcade.Events` is now exposed in the namespace, preventing it from erroring if you use them in TypeScript. Fix #4481 (thanks @danielalves)
 * `UpdateList.remove` will now move the removed child to the internal `_pendingRemoval` array, instead of slicing it directly out of the active list. The pending list is cleared at the start of the next game frame. Fix #4365 (thanks @jcyuan)
+* Setting `pixelPerfect` when input enabling a Container would cause it to crash, because Containers don't have a texture to check. It will now throw a run-time warning and skip the Container for input. You should use a custom input callback instead. Fix #4492 (thanks @BigZaphod)
 
 ### Examples, Documentation and TypeScript
 
