@@ -165,36 +165,24 @@ var BitmapMaskPipeline = new Class({
 
         if (bitmapMask && gl)
         {
-            if (maskedObject.mask && renderer.currentMask === maskedObject.mask)
+            renderer.flush();
+
+            mask.prevFramebuffer = renderer.currentFramebuffer;
+
+            renderer.setFramebuffer(mask.mainFramebuffer);
+
+            gl.clearColor(0, 0, 0, 0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+
+            if (renderer.currentCameraMask !== mask)
             {
-                renderer.setFramebuffer(maskedObject.mask.mainFramebuffer);
-            }
-            else
-            {
-                renderer.flush();
-
-                //  First we clear the mask framebuffer
-                renderer.setFramebuffer(mask.maskFramebuffer);
-
-                gl.clearColor(0, 0, 0, 0);
-                gl.clear(gl.COLOR_BUFFER_BIT);
-    
-                //  We render our mask source
-                bitmapMask.renderWebGL(renderer, bitmapMask, 0, camera);
-
-                renderer.flush();
-    
-                //  Bind and clear our main source (masked object)
-                renderer.setFramebuffer(mask.mainFramebuffer);
-    
-                gl.clearColor(0, 0, 0, 0);
-                gl.clear(gl.COLOR_BUFFER_BIT);
+                renderer.currentMask = mask;
             }
         }
     },
 
     /**
-     * The masked game object's framebuffer is unbound and it's texture 
+     * The masked game objects framebuffer is unbound and its texture 
      * is bound together with the mask texture and the mask shader and 
      * a draw call with a single quad is processed. Here is where the
      * masking effect is applied.  
@@ -204,28 +192,33 @@ var BitmapMaskPipeline = new Class({
      *
      * @param {Phaser.GameObjects.GameObject} mask - GameObject used as a mask.
      */
-    endMask: function (mask)
+    endMask: function (mask, camera)
     {
-        var renderer = this.renderer;
         var gl = this.gl;
+        var renderer = this.renderer;
 
         //  The renderable Game Object that is being used for the bitmap mask
         var bitmapMask = mask.bitmapMask;
 
         if (bitmapMask && gl)
         {
-            // Return to default framebuffer
-            
-            if (renderer.currentMask && renderer.currentMask.mainFramebuffer)
-            {
-                renderer.setFramebuffer(renderer.currentMask.mainFramebuffer);
-            }
-            else
-            {
-                renderer.setFramebuffer(null);
-            }
+            renderer.flush();
 
-            // Bind bitmap mask pipeline and draw
+            //  First we draw the mask to the mask fb
+            renderer.setFramebuffer(mask.maskFramebuffer);
+
+            gl.clearColor(0, 0, 0, 0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+
+            bitmapMask.renderWebGL(renderer, bitmapMask, 0, camera);
+
+            renderer.flush();
+
+            renderer.setFramebuffer(mask.prevFramebuffer);
+
+            renderer.currentMask = null;
+
+            //  Bind bitmap mask pipeline and draw
             renderer.setPipeline(this);
             
             renderer.setTexture2D(mask.maskTexture, 1);
