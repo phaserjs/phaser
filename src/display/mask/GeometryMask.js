@@ -56,6 +56,10 @@ var GeometryMask = new Class({
          * @since 3.16.0
          */
         this.invertAlpha = false;
+
+        this.isStencil = true;
+
+        this.level = 0;
     },
 
     /**
@@ -108,7 +112,6 @@ var GeometryMask = new Class({
     preRenderWebGL: function (renderer, child, camera)
     {
         var gl = renderer.gl;
-        var geometryMask = this.geometryMask;
 
         //  Force flushing before drawing to stencil buffer
         renderer.flush();
@@ -126,35 +129,50 @@ var GeometryMask = new Class({
             renderer.currentMask = this;
         }
 
+        renderer.maskCount++;
+
+        this.level = renderer.maskCount;
+
         renderer.maskStack.push({ mask: this, camera: camera });
 
-        var level = renderer.maskCount;
+        this.applyStencil(renderer, camera, true);
+    },
+
+    applyStencil: function (renderer, camera, inc)
+    {
+        var gl = renderer.gl;
+        var geometryMask = this.geometryMask;
+        var level = this.level;
 
         gl.colorMask(false, false, false, false);
 
-        gl.stencilFunc(gl.EQUAL, level, 0xFF);
-        gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
+        if (inc)
+        {
+            gl.stencilFunc(gl.EQUAL, level - 1, 0xFF);
+            gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
+        }
+        else
+        {
+            gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
+            gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
+        }
 
         //  Write stencil buffer
         geometryMask.renderWebGL(renderer, geometryMask, 0, camera);
 
         renderer.flush();
 
-        //  Use stencil buffer to affect next rendering object
-        gl.colorMask(true, true, true, true);
-
         if (this.invertAlpha)
         {
-            gl.stencilFunc(gl.NOTEQUAL, level + 1, 0xFF);
+            gl.stencilFunc(gl.NOTEQUAL, level, 0xFF);
         }
         else
         {
-            gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
+            gl.stencilFunc(gl.EQUAL, level, 0xFF);
         }
 
+        gl.colorMask(true, true, true, true);
         gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
-
-        renderer.maskCount++;
     },
 
     /**
@@ -187,6 +205,16 @@ var GeometryMask = new Class({
             // Force flush before disabling stencil test
             renderer.flush();
 
+            var prev = renderer.maskStack[renderer.maskStack.length - 1];
+
+            prev.mask.applyStencil(renderer, prev.camera, false);
+
+            if (renderer.currentCameraMask !== prev.mask)
+            {
+                renderer.currentMask = prev.mask;
+            }
+
+            /*
             var level = renderer.maskCount;
 
             gl.colorMask(false, false, false, false);
@@ -219,6 +247,7 @@ var GeometryMask = new Class({
 
             gl.colorMask(true, true, true, true);
             gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+            */
         }
     },
 
