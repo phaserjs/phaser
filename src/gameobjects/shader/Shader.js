@@ -500,7 +500,7 @@ var Shader = new Class({
         this.uniforms.resolution.value.x = this.width;
         this.uniforms.resolution.value.y = this.height;
 
-        this.uniforms.time.value = this.renderer.game.loop.time / 1000;
+        this.uniforms.time.value = this.renderer.game.loop.getDuration();
 
         if (this.pointer)
         {
