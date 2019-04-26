@@ -216,7 +216,7 @@ var BitmapMaskPipeline = new Class({
         {
             // Return to default framebuffer
             
-            if (renderer.currentMask)
+            if (renderer.currentMask && renderer.currentMask.mainFramebuffer)
             {
                 renderer.setFramebuffer(renderer.currentMask.mainFramebuffer);
             }
