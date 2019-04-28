@@ -1099,11 +1099,19 @@ var InputPlugin = new Class({
 
                 input.dragState = 2;
 
-                input.dragX = pointer.x - gameObject.x;
-                input.dragY = pointer.y - gameObject.y;
-
+                // For contained objects, drag global coordinates need to be transformed to local coordinates
                 input.dragStartX = gameObject.x;
                 input.dragStartY = gameObject.y;
+                input.dragStartXGlobal = pointer.x;
+                input.dragStartYGlobal = pointer.y;
+
+                input.dragX = input.dragStartXGlobal - input.dragStartX;
+                input.dragY = input.dragStartYGlobal - input.dragStartY;
+
+                // This will be used to rotate the drag vector for objects in rotated containers
+                var rotation = this.getContainerRotation(gameObject);
+                input.sin = Math.sin(rotation);
+                input.cos = Math.cos(rotation);
 
                 gameObject.emit(Events.GAMEOBJECT_DRAG_START, pointer, input.dragX, input.dragY);
 
@@ -1197,8 +1205,14 @@ var InputPlugin = new Class({
                     this.emit(Events.DRAG_ENTER, pointer, gameObject, target);
                 }
 
-                var dragX = pointer.x - gameObject.input.dragX;
-                var dragY = pointer.y - gameObject.input.dragY;
+                var dX = pointer.x - gameObject.input.dragStartXGlobal;
+                var dY = pointer.y - gameObject.input.dragStartYGlobal;
+
+                var dXRotated = dX * input.cos + dY * input.sin;
+                var dYRotated = dY * input.cos - dX * input.sin;
+
+                var dragX = dXRotated + gameObject.input.dragStartX;
+                var dragY = dYRotated + gameObject.input.dragStartY;
 
                 gameObject.emit(Events.GAMEOBJECT_DRAG, pointer, dragX, dragY);
 
@@ -1259,6 +1273,28 @@ var InputPlugin = new Class({
 
         return 0;
     },
+
+    /**
+     * Retrieves the sum rotation of all ancestors in the container heirarchy
+     *
+     * @method Phaser.Input.InputPlugin#getContainerRotation
+     * @private
+     * @since 3.17.0
+     *
+     * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object for which to compute container rotation.
+     *
+     * @return {containerRotation} The sum rotation of all ancestors in the container heriarchy.
+     */
+    getContainerRotation: function (gameObject)
+    {
+        var parent = gameObject.parentContainer;
+        if (parent)
+        {
+            return parent.rotation + this.getContainerRotation(parent);
+        }
+        return 0;
+    },
+
 
     /**
      * An internal method that handles the Pointer movement event.
