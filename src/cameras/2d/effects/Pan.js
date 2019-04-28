@@ -244,8 +244,8 @@ var Pan = new Class({
 
             cam.getScroll(this.destination.x, this.destination.y, this.current);
 
-            var x = this.source.x + ((this.current.x - this.source.x) * v);
-            var y = this.source.y + ((this.current.y - this.source.y) * v);
+            var x = this.source.x + ((this.source.x - this.current.x) * v);
+            var y = this.source.y + ((this.source.y - this.current.y) * v);
 
             cam.setScroll(x, y);
 
