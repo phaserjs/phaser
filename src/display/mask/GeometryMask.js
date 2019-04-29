@@ -60,6 +60,15 @@ var GeometryMask = new Class({
         this.isStencil = true;
 
         this.level = 0;
+
+        this.name = '';
+    },
+
+    setName: function (name)
+    {
+        this.name = name;
+
+        return this;
     },
 
     /**
@@ -129,26 +138,26 @@ var GeometryMask = new Class({
             renderer.currentMask = this;
         }
 
-        renderer.maskCount++;
-
         this.level = renderer.maskCount;
+
+        renderer.maskCount++;
 
         renderer.maskStack.push({ mask: this, camera: camera });
 
-        this.applyStencil(renderer, camera, true);
+        this.applyStencil(renderer, camera, true, this.level);
     },
 
-    applyStencil: function (renderer, camera, inc)
+    applyStencil: function (renderer, camera, inc, level)
     {
         var gl = renderer.gl;
         var geometryMask = this.geometryMask;
-        var level = this.level;
+        // var level = this.level;
 
         gl.colorMask(false, false, false, false);
 
         if (inc)
         {
-            gl.stencilFunc(gl.EQUAL, level - 1, 0xFF);
+            gl.stencilFunc(gl.EQUAL, level, 0xFF);
             gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR);
         }
         else
@@ -162,17 +171,31 @@ var GeometryMask = new Class({
 
         renderer.flush();
 
-        if (this.invertAlpha)
+        gl.colorMask(true, true, true, true);
+        gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
+
+        if (inc)
         {
-            gl.stencilFunc(gl.NOTEQUAL, level, 0xFF);
+            if (this.invertAlpha)
+            {
+                gl.stencilFunc(gl.NOTEQUAL, level + 1, 0xFF);
+            }
+            else
+            {
+                gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
+            }
         }
         else
         {
-            gl.stencilFunc(gl.EQUAL, level, 0xFF);
+            if (this.invertAlpha)
+            {
+                gl.stencilFunc(gl.NOTEQUAL, level, 0xFF);
+            }
+            else
+            {
+                gl.stencilFunc(gl.EQUAL, level, 0xFF);
+            }
         }
-
-        gl.colorMask(true, true, true, true);
-        gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
     },
 
     /**
@@ -202,52 +225,23 @@ var GeometryMask = new Class({
         }
         else
         {
-            // Force flush before disabling stencil test
+            //  Force flush before disabling stencil test
             renderer.flush();
 
-            var prev = renderer.maskStack[renderer.maskStack.length - 1];
-
-            prev.mask.applyStencil(renderer, prev.camera, false);
-
-            if (renderer.currentCameraMask !== prev.mask)
-            {
-                renderer.currentMask = prev.mask;
-            }
-
-            /*
             var level = renderer.maskCount;
 
-            gl.colorMask(false, false, false, false);
-
-            gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
-            gl.stencilOp(gl.KEEP, gl.KEEP, gl.DECR);
-
-            //  Get the mask previous to this one
             var prev = renderer.maskStack[renderer.maskStack.length - 1];
-            var geometryMask = prev.mask.geometryMask;
-            var camera = prev.camera;
+
+            prev.mask.applyStencil(renderer, prev.camera, false, level);
 
             if (renderer.currentCameraMask !== prev.mask)
             {
                 renderer.currentMask = prev.mask;
-            }
-
-            geometryMask.renderWebGL(renderer, geometryMask, 0, camera);
-
-            renderer.flush();
-
-            if (prev.mask.invertAlpha)
-            {
-                gl.stencilFunc(gl.NOTEQUAL, level, 0xFF);
             }
             else
             {
-                gl.stencilFunc(gl.EQUAL, level, 0xFF);
+                renderer.currentMask = null;
             }
-
-            gl.colorMask(true, true, true, true);
-            gl.stencilOp(gl.KEEP, gl.KEEP, gl.KEEP);
-            */
         }
     },
 
