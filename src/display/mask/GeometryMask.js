@@ -133,7 +133,7 @@ var GeometryMask = new Class({
             renderer.maskCount = 0;
         }
 
-        if (renderer.currentCameraMask !== this)
+        if (renderer.currentCameraMask.mask !== this)
         {
             renderer.currentMask = this;
         }
@@ -183,16 +183,13 @@ var GeometryMask = new Class({
                 gl.stencilFunc(gl.EQUAL, level + 1, 0xFF);
             }
         }
+        else if (this.invertAlpha)
+        {
+            gl.stencilFunc(gl.NOTEQUAL, level, 0xFF);
+        }
         else
         {
-            if (this.invertAlpha)
-            {
-                gl.stencilFunc(gl.NOTEQUAL, level, 0xFF);
-            }
-            else
-            {
-                gl.stencilFunc(gl.EQUAL, level, 0xFF);
-            }
+            gl.stencilFunc(gl.EQUAL, level, 0xFF);
         }
     },
 
@@ -230,7 +227,7 @@ var GeometryMask = new Class({
 
             prev.mask.applyStencil(renderer, prev.camera, false);
 
-            if (renderer.currentCameraMask !== prev.mask)
+            if (renderer.currentCameraMask.mask !== prev.mask)
             {
                 renderer.currentMask = prev.mask;
             }
