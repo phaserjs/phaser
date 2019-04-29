@@ -135,7 +135,7 @@ var GeometryMask = new Class({
 
         if (renderer.currentCameraMask.mask !== this)
         {
-            renderer.currentMask = this;
+            renderer.currentMask.mask = this;
         }
 
         renderer.maskStack.push({ mask: this, camera: camera });
@@ -214,7 +214,7 @@ var GeometryMask = new Class({
             //  If this is the only mask in the stack, flush and disable
             renderer.flush();
 
-            renderer.currentMask = null;
+            renderer.currentMask.mask = null;
 
             gl.disable(gl.STENCIL_TEST);
         }
@@ -229,11 +229,12 @@ var GeometryMask = new Class({
 
             if (renderer.currentCameraMask.mask !== prev.mask)
             {
-                renderer.currentMask = prev.mask;
+                renderer.currentMask.mask = prev.mask;
+                renderer.currentMask.camera = prev.camera;
             }
             else
             {
-                renderer.currentMask = null;
+                renderer.currentMask.mask = null;
             }
         }
     },

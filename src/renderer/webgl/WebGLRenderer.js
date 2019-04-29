@@ -492,16 +492,16 @@ var WebGLRenderer = new Class({
          * Internal property that tracks the currently set mask.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentMask
-         * @type {Phaser.Display.Masks.GeometryMask}
+         * @type {any}
          * @since 3.17.0
          */
-        this.currentMask = null;
+        this.currentMask = { mask: null, camera: null };
 
         /**
          * Internal property that tracks the currently set camera mask.
          *
          * @name Phaser.Renderer.WebGL.WebGLRenderer#currentCameraMask
-         * @type {Phaser.Display.Masks.GeometryMask}
+         * @type {any}
          * @since 3.17.0
          */
         this.currentCameraMask = { mask: null, camera: null };
@@ -1008,7 +1008,7 @@ var WebGLRenderer = new Class({
      */
     hasActiveStencilMask: function ()
     {
-        var mask = this.currentMask;
+        var mask = this.currentMask.mask;
         var camMask = this.currentCameraMask.mask;
 
         return ((mask && mask.isStencil) || (camMask && camMask.isStencil));
@@ -1935,7 +1935,7 @@ var WebGLRenderer = new Class({
             gl.scissor(0, (this.drawingBufferHeight - this.height), this.width, this.height);
         }
 
-        this.currentMask = null;
+        this.currentMask.mask = null;
         this.currentCameraMask.mask = null;
         this.maskStack.length = 0;
 
@@ -1976,6 +1976,8 @@ var WebGLRenderer = new Class({
         //   Apply scissor for cam region + render background color, if not transparent
         this.preRenderCamera(camera);
 
+        var current = this.currentMask;
+
         for (var i = 0; i < childCount; i++)
         {
             var child = list[i];
@@ -1992,13 +1994,15 @@ var WebGLRenderer = new Class({
 
             var mask = child.mask;
 
-            if (this.currentMask && this.currentMask !== mask)
+            current = this.currentMask;
+
+            if (current.mask && current.mask !== mask)
             {
                 //  Render out the previously set mask
-                this.currentMask.postRenderWebGL(this, camera);
+                current.mask.postRenderWebGL(this, current.camera);
             }
 
-            if (mask && this.currentMask !== mask)
+            if (mask && current.mask !== mask)
             {
                 mask.preRenderWebGL(this, child, camera);
             }
@@ -2006,10 +2010,12 @@ var WebGLRenderer = new Class({
             child.renderWebGL(this, child, interpolationPercentage, camera);
         }
 
-        if (this.currentMask)
+        current = this.currentMask;
+
+        if (current.mask)
         {
             //  Render out the previously set mask, if it was the last item in the display list
-            this.currentMask.postRenderWebGL(this, camera);
+            current.mask.postRenderWebGL(this, current.camera);
         }
 
         this.setBlendMode(CONST.BlendModes.NORMAL);

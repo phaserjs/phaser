@@ -177,9 +177,10 @@ var BitmapMaskPipeline = new Class({
 
             gl.clear(gl.COLOR_BUFFER_BIT);
 
-            if (renderer.currentCameraMask !== mask)
+            if (renderer.currentCameraMask.mask !== mask)
             {
-                renderer.currentMask = mask;
+                renderer.currentMask.mask = mask;
+                renderer.currentMask.camera = camera;
             }
         }
     },
@@ -230,7 +231,7 @@ var BitmapMaskPipeline = new Class({
             }
             else
             {
-                renderer.currentMask = null;
+                renderer.currentMask.mask = null;
             }
 
             //  Bind bitmap mask pipeline and draw
