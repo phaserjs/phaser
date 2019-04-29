@@ -171,7 +171,10 @@ var BitmapMaskPipeline = new Class({
 
             renderer.setFramebuffer(mask.mainFramebuffer);
 
+            gl.disable(gl.STENCIL_TEST);
+
             gl.clearColor(0, 0, 0, 0);
+
             gl.clear(gl.COLOR_BUFFER_BIT);
 
             if (renderer.currentCameraMask !== mask)
@@ -216,7 +219,19 @@ var BitmapMaskPipeline = new Class({
 
             renderer.setFramebuffer(mask.prevFramebuffer);
 
-            renderer.currentMask = null;
+            //  Is there a stencil further up the stack?
+            var prev = renderer.getCurrentStencilMask();
+
+            if (prev)
+            {
+                gl.enable(gl.STENCIL_TEST);
+
+                prev.mask.applyStencil(renderer, prev.camera, true);
+            }
+            else
+            {
+                renderer.currentMask = null;
+            }
 
             //  Bind bitmap mask pipeline and draw
             renderer.setPipeline(this);
