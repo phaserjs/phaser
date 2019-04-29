@@ -537,6 +537,30 @@ var Shader = new Class({
     },
 
     /**
+     * A NOOP method so you can pass a Shader to a Container.
+     * Calling this method will do nothing. It is intentionally empty.
+     *
+     * @method Phaser.GameObjects.Shader#setAlpha
+     * @private
+     * @since 3.17.0
+     */
+    setAlpha: function ()
+    {
+    },
+    
+    /**
+     * A NOOP method so you can pass a Shader to a Container in Canvas.
+     * Calling this method will do nothing. It is intentionally empty.
+     *
+     * @method Phaser.GameObjects.Shader#setBlendMode
+     * @private
+     * @since 3.17.0
+     */
+    setBlendMode: function ()
+    {
+    },
+
+    /**
      * Removes all object references in this WebGL Pipeline and removes its program from the WebGL context.
      *
      * @method Phaser.Renderer.WebGL.WebGLPipeline#destroy
