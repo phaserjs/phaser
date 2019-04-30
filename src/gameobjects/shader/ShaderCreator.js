@@ -7,7 +7,6 @@
 var BuildGameObject = require('../BuildGameObject');
 var GameObjectCreator = require('../GameObjectCreator');
 var GetAdvancedValue = require('../../utils/object/GetAdvancedValue');
-var GetValue = require('../../utils/object/GetValue');
 var Shader = require('./Shader');
 
 /**
@@ -15,35 +14,34 @@ var Shader = require('./Shader');
  *
  * Note: This method will only be available if the Shader Game Object and WebGL support have been built into Phaser.
  *
- * @method Phaser.GameObjects.GameObjectCreator#mesh
- * @since 3.0.0
+ * @method Phaser.GameObjects.GameObjectCreator#shader
+ * @since 3.17.0
  *
  * @param {object} config - The configuration object this Game Object will use to create itself.
  * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.Shader} The Game Object that was created.
  */
-GameObjectCreator.register('mesh', function (config, addToScene)
+GameObjectCreator.register('shader', function (config, addToScene)
 {
     if (config === undefined) { config = {}; }
 
     var key = GetAdvancedValue(config, 'key', null);
-    var frame = GetAdvancedValue(config, 'frame', null);
-    var vertices = GetValue(config, 'vertices', []);
-    var colors = GetValue(config, 'colors', []);
-    var alphas = GetValue(config, 'alphas', []);
-    var uv = GetValue(config, 'uv', []);
+    var x = GetAdvancedValue(config, 'x', 0);
+    var y = GetAdvancedValue(config, 'y', 0);
+    var width = GetAdvancedValue(config, 'width', 128);
+    var height = GetAdvancedValue(config, 'height', 128);
 
-    var mesh = new Shader(this.scene, 0, 0, vertices, uv, colors, alphas, key, frame);
+    var shader = new Shader(this.scene, key, x, y, width, height);
 
     if (addToScene !== undefined)
     {
         config.add = addToScene;
     }
 
-    BuildGameObject(this.scene, mesh, config);
+    BuildGameObject(this.scene, shader, config);
 
-    return mesh;
+    return shader;
 });
 
 //  When registering a factory function 'this' refers to the GameObjectCreator context.

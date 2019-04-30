@@ -8,7 +8,7 @@
  * This is a stub function for Shader.Render. There is no Canvas renderer for Shader objects.
  *
  * @method Phaser.GameObjects.Shader#renderCanvas
- * @since 3.0.0
+ * @since 3.17.0
  * @private
  *
  * @param {Phaser.Renderer.Canvas.CanvasRenderer} renderer - A reference to the current active Canvas renderer.

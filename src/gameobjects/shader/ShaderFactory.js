@@ -16,7 +16,7 @@ var GameObjectFactory = require('../GameObjectFactory');
  * @webglOnly
  * @since 3.17.0
  *
- * @param {string} key - 
+ * @param {string} key - The key of the shader to use from the shader cache.
  * @param {number} [x=0] - The horizontal position of this Game Object in the world.
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
  * @param {number} [width=128] - The width of the Game Object.

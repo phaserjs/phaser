@@ -36,7 +36,7 @@ var TransformMatrix = require('../components/TransformMatrix');
  * @extends Phaser.GameObjects.Components.Visible
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
- * @param {string} key - 
+ * @param {string} key - The key of the shader to use from the shader cache.
  * @param {number} [x=0] - The horizontal position of this Game Object in the world.
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
  * @param {number} [width=128] - The width of the Game Object.
@@ -523,23 +523,25 @@ var Shader = new Class({
      * Called automatically during render.
      * 
      * This method performs matrix ITRS and then stores the resulting value in the `uViewMatrix` uniform.
-     * It then sets up the vertex buffer and shader, updates and syncs the uniforms and finally draws it
-     * to a single quad.
+     * It then sets up the vertex buffer and shader, updates and syncs the uniforms ready
+     * for flush to be called.
      * 
      * @method Phaser.GameObjects.Shader#load
-     * @private
      * @since 3.17.0
+     * 
+     * @param {Phaser.GameObjects.Components.TransformMatrix} matrix2D - The transform matrix to use during rendering.
      */
     load: function (matrix2D)
     {
         //  ITRS
 
+        var width = this.width;
+        var height = this.height;
+        var renderer = this.renderer;
         var program = this.program;
 
         var x = -this._displayOriginX;
         var y = -this._displayOriginY;
-        var width = this.width;
-        var height = this.height;
 
         var vm = this.viewMatrix;
 
@@ -554,25 +556,6 @@ var Shader = new Class({
 
         this.renderer.setMatrix4(program, 'uViewMatrix', false, this.viewMatrix);
 
-        //  Bind
-
-        var gl = this.gl;
-        var vertexBuffer = this.vertexBuffer;
-        var renderer = this.renderer;
-        var vertexSize = Float32Array.BYTES_PER_ELEMENT * 2;
-
-        renderer.setProgram(program);
-        renderer.setVertexBuffer(vertexBuffer);
-
-        var location = gl.getAttribLocation(program, 'inPosition');
-
-        if (location !== -1)
-        {
-            gl.enableVertexAttribArray(location);
-
-            gl.vertexAttribPointer(location, 2, gl.FLOAT, false, vertexSize, 0);
-        }
-   
         //  Update common uniforms
 
         var uniforms = this.uniforms;
@@ -597,6 +580,40 @@ var Shader = new Class({
         }
 
         this.syncUniforms();
+    },
+
+    /**
+     * Called automatically during render.
+     * 
+     * Sets the active shader, loads the vertex buffer and then draws.
+     * 
+     * @method Phaser.GameObjects.Shader#flush
+     * @since 3.17.0
+     */
+    flush: function ()
+    {
+        //  Bind
+
+        var width = this.width;
+        var height = this.height;
+        var program = this.program;
+
+        var gl = this.gl;
+        var vertexBuffer = this.vertexBuffer;
+        var renderer = this.renderer;
+        var vertexSize = Float32Array.BYTES_PER_ELEMENT * 2;
+
+        renderer.setProgram(program);
+        renderer.setVertexBuffer(vertexBuffer);
+
+        var location = gl.getAttribLocation(program, 'inPosition');
+
+        if (location !== -1)
+        {
+            gl.enableVertexAttribArray(location);
+
+            gl.vertexAttribPointer(location, 2, gl.FLOAT, false, vertexSize, 0);
+        }
 
         //  Draw
 
@@ -643,12 +660,13 @@ var Shader = new Class({
     },
 
     /**
-     * Removes all object references in this WebGL Pipeline and removes its program from the WebGL context.
+     * Internal destroy handler, called as part of the destroy process.
      *
-     * @method Phaser.GameObjects.Shader#destroy
-     * @since 3.17.0
+     * @method Phaser.GameObjects.RenderTexture#preDestroy
+     * @protected
+     * @since 3.9.0
      */
-    destroy: function ()
+    preDestroy: function ()
     {
         var gl = this.gl;
 

@@ -10,7 +10,7 @@
  * This method should not be called directly. It is a utility function of the Render module.
  *
  * @method Phaser.GameObjects.Shader#renderWebGL
- * @since 3.0.0
+ * @since 3.17.0
  * @private
  *
  * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - A reference to the current active WebGL renderer.
@@ -57,6 +57,7 @@ var ShaderWebGLRenderer = function (renderer, src, interpolationPercentage, came
     }
 
     src.load(calcMatrix.matrix);
+    src.flush();
 
     renderer.rebindPipeline(pipeline);
 };
