@@ -112,15 +112,12 @@ var GLSLFile = new Class({
 
         if (block)
         {
-            console.log('glsl bundle loaded');
-
             while (block)
             {
                 var key = this.getShaderName(block.header);
                 var shaderType = this.getShaderType(block.header);
+                var uniforms = this.getShaderUniforms(block.header);
                 var shaderSrc = block.shader;
-
-                console.log('shader: ', key);
 
                 if (this.cache.has(key))
                 {
@@ -134,67 +131,133 @@ var GLSLFile = new Class({
                     {
                         shader.vertexSrc = shaderSrc;
                     }
+
+                    if (!shader.uniforms)
+                    {
+                        shader.uniforms = uniforms;
+                    }
                 }
                 else if (shaderType === 'fragment')
                 {
-                    this.cache.add(key, new Shader(key, shaderSrc));
+                    this.cache.add(key, new Shader(key, shaderSrc, '', uniforms));
                 }
                 else
                 {
-                    this.cache.add(key, new Shader(key, '', shaderSrc));
+                    this.cache.add(key, new Shader(key, '', shaderSrc, uniforms));
                 }
 
                 block = this.extractBlock(data, block.offset);
             }
         }
+        else if (this.config.shaderType === 'fragment')
+        {
+            //  Single shader
+            this.cache.add(this.key, new Shader(this.key, data));
+        }
         else
         {
-            console.log(this.key, 'raw glsl');
-
-            //  Single shader
-            if (this.config.shaderType === 'fragment')
-            {
-                this.cache.add(this.key, new Shader(this.key, data));
-            }
-            else
-            {
-                this.cache.add(this.key, new Shader(this.key, '', data));
-            }
+            this.cache.add(this.key, new Shader(this.key, '', data));
         }
 
         this.pendingDestroy();
     },
 
+    /**
+     * Returns the name of the shader from the header block.
+     *
+     * @method Phaser.Loader.FileTypes.GLSLFile#getShaderName
+     * @since 3.17.0
+     * 
+     * @param {string[]} headerSource - The header data.
+     * 
+     * @return {string} The shader name.
+     */
     getShaderName: function (headerSource)
     {
         for (var i = 0; i < headerSource.length; i++)
         {
             var line = headerSource[i].trim();
 
-            if (line.substr(0, 5) === 'name:')
+            if (line.substring(0, 5) === 'name:')
             {
-                return line.substr(5).trim();
+                return line.substring(5).trim();
             }
         }
 
         return this.key;
     },
 
+    /**
+     * Returns the type of the shader from the header block.
+     *
+     * @method Phaser.Loader.FileTypes.GLSLFile#getShaderType
+     * @since 3.17.0
+     * 
+     * @param {string[]} headerSource - The header data.
+     * 
+     * @return {string} The shader type. Either 'fragment' or 'vertex'.
+     */
     getShaderType: function (headerSource)
     {
         for (var i = 0; i < headerSource.length; i++)
         {
             var line = headerSource[i].trim();
 
-            if (line.substr(0, 5) === 'type:')
+            if (line.substring(0, 5) === 'type:')
             {
-                return line.substr(5).trim();
+                return line.substring(5).trim();
             }
         }
 
         return this.config.shaderType;
     },
 
+    /**
+     * Returns the shader uniforms from the header block.
+     *
+     * @method Phaser.Loader.FileTypes.GLSLFile#getShaderUniforms
+     * @since 3.17.0
+     * 
+     * @param {string[]} headerSource - The header data.
+     * 
+     * @return {any} The shader uniforms object.
+     */
+    getShaderUniforms: function (headerSource)
+    {
+        var uniforms = {};
+
+        for (var i = 0; i < headerSource.length; i++)
+        {
+            var line = headerSource[i].trim();
+
+            if (line.substring(0, 8) === 'uniform.')
+            {
+                var pos = line.indexOf(':');
+
+                if (pos)
+                {
+                    var key = line.substring(8, pos);
+
+                    uniforms[key] = JSON.parse(line.substring(pos + 1).trim());
+                }
+            }
+        }
+
+        return uniforms;
+    },
+
+    /**
+     * Processes the shader file and extracts the relevant data.
+     *
+     * @method Phaser.Loader.FileTypes.GLSLFile#extractBlock
+     * @private
+     * @since 3.17.0
+     * 
+     * @param {string[]} data - The array of shader data to process.
+     * @param {integer} offset - The offset to start processing from.
+     * 
+     * @return {any} The processed shader block, or null.
+     */
     extractBlock: function (data, offset)
     {
         var headerStart = -1;
@@ -239,15 +302,6 @@ var GLSLFile = new Class({
                 blockEnd = i;
             }
         }
-
-        // console.log('headerStart', headerStart);
-        // console.log('headerEnd', headerEnd);
-        // console.log('headerOpen', headerOpen);
-        // console.log('blockEnd', blockEnd);
-        // console.log('headerSource');
-        // console.log(headerSource);
-        // console.log('shaderSource');
-        // console.log(shaderSource);
 
         if (!headerOpen && headerEnd !== -1)
         {
