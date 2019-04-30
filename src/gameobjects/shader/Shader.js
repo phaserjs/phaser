@@ -7,6 +7,7 @@
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
+var GetFastValue = require('../../utils/object/GetFastValue');
 var Merge = require('../../utils/object/Merge');
 var ShaderRender = require('./ShaderRender');
 var TransformMatrix = require('../components/TransformMatrix');
@@ -15,10 +16,6 @@ var TransformMatrix = require('../components/TransformMatrix');
  * @classdesc
  * A Shader Game Object.
  * 
- * TODO:
- * 
- * Test with sampler2D shader
- *
  * @class Shader
  * @extends Phaser.GameObjects.GameObject
  * @memberof Phaser.GameObjects
@@ -60,7 +57,7 @@ var Shader = new Class({
 
     initialize:
 
-    function Shader (scene, key, x, y, width, height)
+    function Shader (scene, key, x, y, width, height, textures)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
@@ -293,10 +290,12 @@ var Shader = new Class({
 
         };
 
+        this.textureCount = 0;
+
         this.setPosition(x, y);
         this.setSize(width, height);
         this.setOrigin(0.5, 0.5);
-        this.setShader(key);
+        this.setShader(key, textures);
     },
 
     /**
@@ -311,8 +310,10 @@ var Shader = new Class({
      * 
      * @return {this} This Shader instance.
      */
-    setShader: function (key)
+    setShader: function (key, textures)
     {
+        if (textures === undefined) { textures = []; }
+
         var cache = this.scene.sys.cache.shader;
 
         if (!cache.has(key))
@@ -340,7 +341,7 @@ var Shader = new Class({
 
         var d = new Date();
 
-        this.uniforms = Merge(this.shader.uniforms, {
+        var defaultUniforms = {
             resolution: { type: '2f', value: { x: this.width, y: this.height }},
             time: { type: '1f', value: 0 },
             mouse: { type: '2f', value: { x: this.width / 2, y: this.height / 2 } },
@@ -350,7 +351,24 @@ var Shader = new Class({
             iChannel1: { type: 'sampler2D', value: null, textureData: { repeat: true } },
             iChannel2: { type: 'sampler2D', value: null, textureData: { repeat: true } },
             iChannel3: { type: 'sampler2D', value: null, textureData: { repeat: true } }
-        });
+        };
+
+        if (this.shader.uniforms)
+        {
+            this.uniforms = Merge(this.shader.uniforms, defaultUniforms);
+        }
+        else
+        {
+            this.uniforms = defaultUniforms;
+        }
+
+        for (var i = 0; i < 4; i++)
+        {
+            if (textures[i])
+            {
+                this.setSampler2D('iChannel' + i, textures[i], i);
+            }
+        }
 
         this.initUniforms();
 
@@ -434,6 +452,8 @@ var Shader = new Class({
         var map = this._glFuncMap;
         var program = this.program;
 
+        this.textureCount = 0;
+
         for (var key in this.uniforms)
         {
             var uniform = this.uniforms[key];
@@ -441,18 +461,136 @@ var Shader = new Class({
             var type = uniform.type;
             var data = map[type];
 
-            if (type === 'sampler2D')
-            {
-                // this.initSampler2D(uniform);
-            }
-            else
+            uniform.uniformLocation = gl.getUniformLocation(program, key);
+
+            if (type !== 'sampler2D')
             {
                 uniform.glMatrix = data.matrix;
                 uniform.glValueLength = data.length;
                 uniform.glFunc = data.func;
-                uniform.uniformLocation = gl.getUniformLocation(program, key);
             }
         }
+    },
+
+    setSampler2D: function (uniformKey, key, textureIndex, textureData)
+    {
+        if (textureIndex === undefined) { textureIndex = 0; }
+
+        var textureManager = this.scene.sys.textures;
+
+        if (textureManager.exists(key))
+        {
+            var frame = textureManager.getFrame(key);
+            var uniform = this.uniforms[uniformKey];
+
+            uniform.textureKey = key;
+            uniform.source = frame.source.image;
+            uniform.value = frame.glTexture;
+
+            if (textureData)
+            {
+                uniform.textureData = textureData;
+            }
+
+            this.textureCount = textureIndex;
+
+            this.initSampler2D(uniform);
+        }
+
+        return this;
+    },
+
+    setChannel0: function (key, textureData)
+    {
+        return this.setSampler2D('iChannel0', key, 0, textureData);
+    },
+
+    setChannel1: function (key, textureData)
+    {
+        return this.setSampler2D('iChannel1', key, 1, textureData);
+    },
+
+    setChannel2: function (key, textureData)
+    {
+        return this.setSampler2D('iChannel2', key, 2, textureData);
+    },
+
+    setChannel3: function (key, textureData)
+    {
+        return this.setSampler2D('iChannel3', key, 3, textureData);
+    },
+
+    initSampler2D: function (uniform)
+    {
+        if (!uniform.value)
+        {
+            return;
+        }
+
+        var gl = this.gl;
+
+        gl.activeTexture(gl.TEXTURE0 + this.textureCount);
+        gl.bindTexture(gl.TEXTURE_2D, uniform.value);
+    
+        //  Extended texture data
+
+        var data = uniform.textureData;
+
+        if (data)
+        {
+            // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texImage2D
+
+            // GLTexture = mag linear, min linear_mipmap_linear, wrap repeat + gl.generateMipmap(gl.TEXTURE_2D);
+            // GLTextureLinear = mag/min linear, wrap clamp
+            // GLTextureNearestRepeat = mag/min NEAREST, wrap repeat
+            // GLTextureNearest = mag/min nearest, wrap clamp
+            // AudioTexture = whatever + luminance + width 512, height 2, border 0
+            // KeyTexture = whatever + luminance + width 256, height 2, border 0
+    
+            //  mag / minFilter can be: gl.LINEAR, gl.LINEAR_MIPMAP_LINEAR or gl.NEAREST
+            //  wrapS/T can be: gl.CLAMP_TO_EDGE or gl.REPEAT
+            //  format can be: gl.LUMINANCE or gl.RGBA
+    
+            var magFilter = gl[GetFastValue(data, 'magFilter', 'linear').toUpperCase()];
+            var minFilter = gl[GetFastValue(data, 'minFilter', 'linear').toUpperCase()];
+            var wrapS = gl[GetFastValue(data, 'wrapS', 'repeat').toUpperCase()];
+            var wrapT = gl[GetFastValue(data, 'wrapT', 'repeat').toUpperCase()];
+            var format = gl[GetFastValue(data, 'format', 'rgba').toUpperCase()];
+
+            if (data.repeat)
+            {
+                wrapS = gl.REPEAT;
+                wrapT = gl.REPEAT;
+            }
+
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, !!data.flipY);
+
+            if (data.width)
+            {
+                var width = GetFastValue(data, 'width', 512);
+                var height = GetFastValue(data, 'height', 2);
+                var border = GetFastValue(data, 'border', 0);
+    
+                //  texImage2D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, ArrayBufferView? pixels)
+                gl.texImage2D(gl.TEXTURE_2D, 0, format, width, height, border, format, gl.UNSIGNED_BYTE, null);
+            }
+            else
+            {
+                //  texImage2D(GLenum target, GLint level, GLenum internalformat, GLenum format, GLenum type, ImageData? pixels)
+                gl.texImage2D(gl.TEXTURE_2D, 0, format, gl.RGBA, gl.UNSIGNED_BYTE, uniform.source);
+            }
+    
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, magFilter);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, minFilter);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT);
+        }
+
+        this.renderer.setProgram(this.program);
+    
+        gl.uniform1i(uniform.uniformLocation, this.textureCount);
+    
+        this.textureCount++;
     },
 
     /**
@@ -473,8 +611,7 @@ var Shader = new Class({
         var glFunc;
         var location;
         var value;
-
-        // var textureCount = 1;
+        var textureCount = 0;
     
         for (var key in uniforms)
         {
@@ -510,20 +647,13 @@ var Shader = new Class({
             }
             else if (uniform.type === 'sampler2D')
             {
-                if (uniform._init)
-                {
-                    // gl.activeTexture(gl['TEXTURE' + this.textureCount]);
-    
-                    // gl.bindTexture(gl.TEXTURE_2D, value.baseTexture._glTextures[gl.id]);
-    
-                    // gl.uniform1i(location, textureCount);
+                gl.activeTexture(gl['TEXTURE' + textureCount]);
 
-                    // textureCount++;
-                }
-                else
-                {
-                    // this.initSampler2D(uniform);
-                }
+                gl.bindTexture(gl.TEXTURE_2D, value);
+
+                gl.uniform1i(location, textureCount);
+
+                textureCount++;
             }
         }
     },
