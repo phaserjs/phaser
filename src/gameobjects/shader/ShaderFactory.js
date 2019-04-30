@@ -26,8 +26,8 @@ var GameObjectFactory = require('../GameObjectFactory');
  */
 if (typeof WEBGL_RENDERER)
 {
-    GameObjectFactory.register('shader', function (key, x, y, width, height)
+    GameObjectFactory.register('shader', function (key, x, y, width, height, textures)
     {
-        return this.displayList.add(new Shader(this.scene, key, x, y, width, height));
+        return this.displayList.add(new Shader(this.scene, key, x, y, width, height, textures));
     });
 }
