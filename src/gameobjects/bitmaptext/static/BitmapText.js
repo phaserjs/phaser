@@ -622,7 +622,7 @@ BitmapText.ParseFromAtlas = ParseFromAtlas;
  *
  * @name Phaser.GameObjects.BitmapText.ParseXMLBitmapFont
  * @type {function}
- * @since 3.0.0
+ * @since 3.17.0
  *
  * @param {XMLDocument} xml - The XML Document to parse the font from.
  * @param {integer} [xSpacing=0] - The x-axis spacing to add between each letter.
