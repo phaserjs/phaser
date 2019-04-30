@@ -297,7 +297,6 @@ var Shader = new Class({
         this.setSize(width, height);
         this.setOrigin(0.5, 0.5);
         this.setShader(key);
-        this.projOrtho(0, renderer.width, renderer.height, 0);
     },
 
     /**
@@ -314,7 +313,15 @@ var Shader = new Class({
      */
     setShader: function (key)
     {
-        this.shader = this.scene.sys.cache.shader.get(key);
+        var cache = this.scene.sys.cache.shader;
+
+        if (!cache.has(key))
+        {
+            console.warn('Shader missing: ' + key);
+            return this;
+        }
+
+        this.shader = cache.get(key);
 
         var gl = this.gl;
         var renderer = this.renderer;
@@ -346,6 +353,8 @@ var Shader = new Class({
         });
 
         this.initUniforms();
+
+        this.projOrtho(0, renderer.width, renderer.height, 0);
 
         return this;
     },

@@ -21,6 +21,11 @@
  */
 var ShaderWebGLRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
+    if (!src.shader)
+    {
+        return;
+    }
+
     var pipeline = renderer.currentPipeline;
 
     renderer.clearPipeline();
