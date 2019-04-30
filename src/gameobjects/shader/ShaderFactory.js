@@ -16,20 +16,18 @@ var GameObjectFactory = require('../GameObjectFactory');
  * @webglOnly
  * @since 3.17.0
  *
+ * @param {string} key - 
  * @param {number} [x=0] - The horizontal position of this Game Object in the world.
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
  * @param {number} [width=128] - The width of the Game Object.
  * @param {number} [height=128] - The height of the Game Object.
- * @param {string} [fragSource] - The source code of the fragment shader.
- * @param {string} [vertSource] - The source code of the vertex shader.
- * @param {any} [uniforms] - Optional uniforms object to go with this shader.
  *
  * @return {Phaser.GameObjects.Shader} The Game Object that was created.
  */
 if (typeof WEBGL_RENDERER)
 {
-    GameObjectFactory.register('shader', function (x, y, width, height, fragSource, vertSource, uniforms)
+    GameObjectFactory.register('shader', function (key, x, y, width, height)
     {
-        return this.displayList.add(new Shader(this.scene, x, y, width, height, fragSource, vertSource, uniforms));
+        return this.displayList.add(new Shader(this.scene, key, x, y, width, height));
     });
 }

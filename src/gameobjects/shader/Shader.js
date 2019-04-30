@@ -7,12 +7,18 @@
 var Class = require('../../utils/Class');
 var Components = require('../components');
 var GameObject = require('../GameObject');
+var Merge = require('../../utils/object/Merge');
 var ShaderRender = require('./ShaderRender');
 var TransformMatrix = require('../components/TransformMatrix');
 
 /**
  * @classdesc
  * A Shader Game Object.
+ * 
+ * TODO:
+ * 
+ * Test with sampler2D shader
+ * Load v/f source from file
  *
  * @class Shader
  * @extends Phaser.GameObjects.GameObject
@@ -31,12 +37,11 @@ var TransformMatrix = require('../components/TransformMatrix');
  * @extends Phaser.GameObjects.Components.Visible
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
+ * @param {string} key - 
  * @param {number} [x=0] - The horizontal position of this Game Object in the world.
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
  * @param {number} [width=128] - The width of the Game Object.
  * @param {number} [height=128] - The height of the Game Object.
- * @param {string} [fragSource] - The source code of the fragment shader.
- * @param {string} [vertSource] - The source code of the vertex shader.
  */
 var Shader = new Class({
 
@@ -56,47 +61,12 @@ var Shader = new Class({
 
     initialize:
 
-    function Shader (scene, x, y, width, height, fragSource, vertSource, uniforms)
+    function Shader (scene, key, x, y, width, height)
     {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
         if (width === undefined) { width = 128; }
         if (height === undefined) { height = 128; }
-
-        if (fragSource === undefined)
-        {
-            fragSource = [
-                'precision mediump float;',
-
-                'uniform vec2 resolution;',
-
-                'varying vec2 fragCoord;',
-
-                'void main () {',
-                '    vec2 uv = fragCoord / resolution.xy;',
-                '    gl_FragColor = vec4(uv.xyx, 1.0);',
-                '}'
-            ].join('\n');
-        }
-
-        if (vertSource === undefined)
-        {
-            vertSource = [
-                'precision mediump float;',
-
-                'uniform mat4 uProjectionMatrix;',
-                'uniform mat4 uViewMatrix;',
-
-                'attribute vec2 inPosition;',
-
-                'varying vec2 fragCoord;',
-
-                'void main () {',
-                'gl_Position = uProjectionMatrix * uViewMatrix * vec4(inPosition, 1.0, 1.0);',
-                'fragCoord = inPosition;',
-                '}'
-            ].join('\n');
-        }
 
         GameObject.call(this, scene, 'Shader');
 
@@ -111,22 +81,13 @@ var Shader = new Class({
         this.blendMode = -1;
 
         /**
-         * The source code, as a string, of the vertex shader being used.
+         * The underlying shader object being used.
          * 
-         * @name Phaser.GameObjects.Shader#vertSource
-         * @type {string}
+         * @name Phaser.GameObjects.Shader#shader
+         * @type {Phaser.Display.Shader}
          * @since 3.17.0
          */
-        this.vertSource = vertSource;
-
-        /**
-         * The source code, as a string, of the fragment shader being used.
-         * 
-         * @name Phaser.GameObjects.Shader#fragSource
-         * @type {string}
-         * @since 3.17.0
-         */
-        this.fragSource = fragSource;
+        this.shader;
 
         var renderer = scene.sys.renderer;
 
@@ -244,8 +205,6 @@ var Shader = new Class({
          */
         this.projectionMatrix = new Float32Array([ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ]);
 
-        var d = new Date();
-
         /**
          * The default uniform mappings. These can be added to (or replaced) by specifying your own uniforms when
          * creating this shader game object. The uniforms are updated automatically during the render step.
@@ -261,29 +220,9 @@ var Shader = new Class({
          * 
          * @name Phaser.GameObjects.Shader#uniforms
          * @type {any}
-         * @readonly
          * @since 3.17.0
          */
-        this.uniforms = {
-            resolution: { type: '2f', value: { x: x, y: y }},
-            time: { type: '1f', value: 0 },
-            mouse: { type: '2f', value: { x: 0.0, y: 0.0 } },
-            date: { type: '4fv', value: [ d.getFullYear(), d.getMonth(), d.getDate(), d.getHours() * 60 * 60 + d.getMinutes() * 60 + d.getSeconds() ] },
-            sampleRate: { type: '1f', value: 44100.0 },
-            iChannel0: { type: 'sampler2D', value: null, textureData: { repeat: true } },
-            iChannel1: { type: 'sampler2D', value: null, textureData: { repeat: true } },
-            iChannel2: { type: 'sampler2D', value: null, textureData: { repeat: true } },
-            iChannel3: { type: 'sampler2D', value: null, textureData: { repeat: true } }
-        };
-
-        //  Copy over / replace any passed in the constructor
-        if (uniforms)
-        {
-            for (var key in uniforms)
-            {
-                this.uniforms[key] = uniforms[key];
-            }
-        }
+        this.uniforms = {};
 
         /**
          * The pointer bound to this shader, if any.
@@ -357,7 +296,7 @@ var Shader = new Class({
         this.setPosition(x, y);
         this.setSize(width, height);
         this.setOrigin(0.5, 0.5);
-        this.setShader(fragSource, vertSource);
+        this.setShader(key);
         this.projOrtho(0, renderer.width, renderer.height, 0);
     },
 
@@ -369,14 +308,13 @@ var Shader = new Class({
      * @method Phaser.GameObjects.Shader#setShader
      * @since 3.17.0
      * 
-     * @param {string} fragSource - The fragment shader source code.
-     * @param {string} [vertSource] - The vertex shader source code. If not given it will use the default vertex shader.
+     * @param {string} key - The key of the shader stored in the shader cache to use.
      * 
      * @return {this} This Shader instance.
      */
-    setShader: function (fragSource, vertSource)
+    setShader: function (key)
     {
-        if (vertSource === undefined) { vertSource = this.vertSource; }
+        this.shader = this.scene.sys.cache.shader.get(key);
 
         var gl = this.gl;
         var renderer = this.renderer;
@@ -386,14 +324,42 @@ var Shader = new Class({
             gl.deleteProgram(this.program);
         }
 
-        var program = renderer.createProgram(vertSource, fragSource);
+        var program = renderer.createProgram(this.shader.vertexSrc, this.shader.fragmentSrc);
 
         renderer.setMatrix4(program, 'uViewMatrix', false, this.viewMatrix);
         renderer.setMatrix4(program, 'uProjectionMatrix', false, this.projectionMatrix);
 
         this.program = program;
-        this.fragSource = fragSource;
-        this.vertSource = vertSource;
+
+        var d = new Date();
+
+        /*
+        this.uniforms = Merge(this.shader.uniforms, {
+            resolution: { type: '2f', value: { x: this.width, y: this.height }},
+            time: { type: '1f', value: 0 },
+            mouse: { type: '2f', value: { x: 0.0, y: 0.0 } },
+            date: { type: '4fv', value: [ d.getFullYear(), d.getMonth(), d.getDate(), d.getHours() * 60 * 60 + d.getMinutes() * 60 + d.getSeconds() ] },
+            sampleRate: { type: '1f', value: 44100.0 },
+            iChannel0: { type: 'sampler2D', value: null, textureData: { repeat: true } },
+            iChannel1: { type: 'sampler2D', value: null, textureData: { repeat: true } },
+            iChannel2: { type: 'sampler2D', value: null, textureData: { repeat: true } },
+            iChannel3: { type: 'sampler2D', value: null, textureData: { repeat: true } }
+        });
+        */
+
+        this.uniforms = {
+            resolution: { type: '2f', value: { x: this.width, y: this.height }},
+            time: { type: '1f', value: 0 },
+            mouse: { type: '2f', value: { x: 0.0, y: 0.0 } },
+            date: { type: '4fv', value: [ d.getFullYear(), d.getMonth(), d.getDate(), d.getHours() * 60 * 60 + d.getMinutes() * 60 + d.getSeconds() ] },
+            sampleRate: { type: '1f', value: 44100.0 },
+            iChannel0: { type: 'sampler2D', value: null, textureData: { repeat: true } },
+            iChannel1: { type: 'sampler2D', value: null, textureData: { repeat: true } },
+            iChannel2: { type: 'sampler2D', value: null, textureData: { repeat: true } },
+            iChannel3: { type: 'sampler2D', value: null, textureData: { repeat: true } }
+        };
+
+        console.log(this.uniforms);
 
         this.initUniforms();
 
