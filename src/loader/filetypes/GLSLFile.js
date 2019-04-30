@@ -10,12 +10,14 @@ var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
+var Shader = require('../../display/shader/Shader');
 
 /**
  * @typedef {object} Phaser.Loader.FileTypes.GLSLFileConfig
  *
  * @property {string} key - The key of the file. Must be unique within both the Loader and the Text Cache.
  * @property {string} [url] - The absolute or relative URL to load the file from.
+ * @property {string} [shaderType='fragment'] - The type of shader. Either `fragment` for a fragment shader, or `vertex` for a vertex shader. This is ignored if you load a shader bundle.
  * @property {string} [extension='glsl'] - The default file extension to use if no url is provided.
  * @property {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
@@ -37,6 +39,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
  * @param {(string|Phaser.Loader.FileTypes.TextFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.txt".
+ * @param {string} [shaderType='fragment'] - The type of shader. Either `fragment` for a fragment shader, or `vertex` for a vertex shader. This is ignored if you load a shader bundle.
  * @param {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var GLSLFile = new Class({
@@ -45,7 +48,7 @@ var GLSLFile = new Class({
 
     initialize:
 
-    function GLSLFile (loader, key, url, xhrSettings)
+    function GLSLFile (loader, key, url, shaderType, xhrSettings)
     {
         var extension = 'glsl';
 
@@ -55,8 +58,13 @@ var GLSLFile = new Class({
 
             key = GetFastValue(config, 'key');
             url = GetFastValue(config, 'url');
+            shaderType = GetFastValue(config, 'shaderType', 'fragment');
             xhrSettings = GetFastValue(config, 'xhrSettings');
             extension = GetFastValue(config, 'extension', extension);
+        }
+        else if (shaderType === undefined)
+        {
+            shaderType = 'frag';
         }
 
         var fileConfig = {
@@ -66,6 +74,7 @@ var GLSLFile = new Class({
             responseType: 'text',
             key: key,
             url: url,
+            shaderType: shaderType,
             xhrSettings: xhrSettings
         };
 
@@ -86,6 +95,168 @@ var GLSLFile = new Class({
         this.data = this.xhrLoader.responseText;
 
         this.onProcessComplete();
+    },
+
+    /**
+     * Adds this file to its target cache upon successful loading and processing.
+     *
+     * @method Phaser.Loader.FileTypes.GLSLFile#addToCache
+     * @since 3.17.0
+     */
+    addToCache: function ()
+    {
+        var data = this.data.split('\n');
+
+        //  Check to see if this is a shader bundle, or raw glsl file.
+        var block = this.extractBlock(data, 0);
+
+        if (block)
+        {
+            console.log('glsl bundle loaded');
+
+            while (block)
+            {
+                var key = this.getShaderName(block.header);
+                var shaderType = this.getShaderType(block.header);
+                var shaderSrc = block.shader;
+
+                console.log('shader: ', key);
+
+                if (this.cache.has(key))
+                {
+                    var shader = this.cache.get(key);
+
+                    if (shaderType === 'fragment')
+                    {
+                        shader.fragmentSrc = shaderSrc;
+                    }
+                    else
+                    {
+                        shader.vertexSrc = shaderSrc;
+                    }
+                }
+                else if (shaderType === 'fragment')
+                {
+                    this.cache.add(key, new Shader(key, shaderSrc));
+                }
+                else
+                {
+                    this.cache.add(key, new Shader(key, '', shaderSrc));
+                }
+
+                block = this.extractBlock(data, block.offset);
+            }
+        }
+        else
+        {
+            console.log(this.key, 'raw glsl');
+
+            //  Single shader
+            if (this.config.shaderType === 'fragment')
+            {
+                this.cache.add(this.key, new Shader(this.key, data));
+            }
+            else
+            {
+                this.cache.add(this.key, new Shader(this.key, '', data));
+            }
+        }
+
+        this.pendingDestroy();
+    },
+
+    getShaderName: function (headerSource)
+    {
+        for (var i = 0; i < headerSource.length; i++)
+        {
+            var line = headerSource[i].trim();
+
+            if (line.substr(0, 5) === 'name:')
+            {
+                return line.substr(5).trim();
+            }
+        }
+
+        return this.key;
+    },
+
+    getShaderType: function (headerSource)
+    {
+        for (var i = 0; i < headerSource.length; i++)
+        {
+            var line = headerSource[i].trim();
+
+            if (line.substr(0, 5) === 'type:')
+            {
+                return line.substr(5).trim();
+            }
+        }
+
+        return this.config.shaderType;
+    },
+
+    extractBlock: function (data, offset)
+    {
+        var headerStart = -1;
+        var headerEnd = -1;
+        var blockEnd = -1;
+        var headerOpen = false;
+        var captureSource = false;
+        var headerSource = [];
+        var shaderSource = [];
+
+        for (var i = offset; i < data.length; i++)
+        {
+            var line = data[i].trim();
+
+            if (line === '---')
+            {
+                if (headerStart === -1)
+                {
+                    headerStart = i;
+                    headerOpen = true;
+                }
+                else if (headerOpen)
+                {
+                    headerEnd = i;
+                    headerOpen = false;
+                    captureSource = true;
+                }
+                else
+                {
+                    //  We've hit another --- delimeter, break out
+                    captureSource = false;
+                    break;
+                }
+            }
+            else if (headerOpen)
+            {
+                headerSource.push(line);
+            }
+            else if (captureSource)
+            {
+                shaderSource.push(line);
+                blockEnd = i;
+            }
+        }
+
+        // console.log('headerStart', headerStart);
+        // console.log('headerEnd', headerEnd);
+        // console.log('headerOpen', headerOpen);
+        // console.log('blockEnd', blockEnd);
+        // console.log('headerSource');
+        // console.log(headerSource);
+        // console.log('shaderSource');
+        // console.log(shaderSource);
+
+        if (!headerOpen && headerEnd !== -1)
+        {
+            return { header: headerSource, shader: shaderSource.join('\n'), offset: blockEnd };
+        }
+        else
+        {
+            return null;
+        }
     }
 
 });
@@ -121,6 +292,7 @@ var GLSLFile = new Class({
  * ```javascript
  * this.load.glsl({
  *     key: 'plasma',
+ *     shaderType: 'fragment',
  *     url: 'shaders/Plasma.glsl'
  * });
  * ```
@@ -154,11 +326,12 @@ var GLSLFile = new Class({
  *
  * @param {(string|Phaser.Loader.FileTypes.GLSLFileConfig|Phaser.Loader.FileTypes.GLSLFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.glsl`, i.e. if `key` was "alien" then the URL will be "alien.glsl".
+ * @param {string} [shaderType='fragment'] - The type of shader. Either `fragment` for a fragment shader, or `vertex` for a vertex shader. This is ignored if you load a shader bundle.
  * @param {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */
-FileTypesManager.register('glsl', function (key, url, xhrSettings)
+FileTypesManager.register('glsl', function (key, url, shaderType, xhrSettings)
 {
     if (Array.isArray(key))
     {
@@ -170,7 +343,7 @@ FileTypesManager.register('glsl', function (key, url, xhrSettings)
     }
     else
     {
-        this.addFile(new GLSLFile(this, key, url, xhrSettings));
+        this.addFile(new GLSLFile(this, key, url, shaderType, xhrSettings));
     }
 
     return this;
