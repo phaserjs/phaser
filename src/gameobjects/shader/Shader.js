@@ -18,7 +18,6 @@ var TransformMatrix = require('../components/TransformMatrix');
  * TODO:
  * 
  * Test with sampler2D shader
- * Load v/f source from file
  *
  * @class Shader
  * @extends Phaser.GameObjects.GameObject
@@ -82,6 +81,7 @@ var Shader = new Class({
 
         /**
          * The underlying shader object being used.
+         * Empty by default and set during a call to the `setShader` method.
          * 
          * @name Phaser.GameObjects.Shader#shader
          * @type {Phaser.Display.Shader}
@@ -333,11 +333,10 @@ var Shader = new Class({
 
         var d = new Date();
 
-        /*
         this.uniforms = Merge(this.shader.uniforms, {
             resolution: { type: '2f', value: { x: this.width, y: this.height }},
             time: { type: '1f', value: 0 },
-            mouse: { type: '2f', value: { x: 0.0, y: 0.0 } },
+            mouse: { type: '2f', value: { x: this.width / 2, y: this.height / 2 } },
             date: { type: '4fv', value: [ d.getFullYear(), d.getMonth(), d.getDate(), d.getHours() * 60 * 60 + d.getMinutes() * 60 + d.getSeconds() ] },
             sampleRate: { type: '1f', value: 44100.0 },
             iChannel0: { type: 'sampler2D', value: null, textureData: { repeat: true } },
@@ -345,21 +344,6 @@ var Shader = new Class({
             iChannel2: { type: 'sampler2D', value: null, textureData: { repeat: true } },
             iChannel3: { type: 'sampler2D', value: null, textureData: { repeat: true } }
         });
-        */
-
-        this.uniforms = {
-            resolution: { type: '2f', value: { x: this.width, y: this.height }},
-            time: { type: '1f', value: 0 },
-            mouse: { type: '2f', value: { x: 0.0, y: 0.0 } },
-            date: { type: '4fv', value: [ d.getFullYear(), d.getMonth(), d.getDate(), d.getHours() * 60 * 60 + d.getMinutes() * 60 + d.getSeconds() ] },
-            sampleRate: { type: '1f', value: 44100.0 },
-            iChannel0: { type: 'sampler2D', value: null, textureData: { repeat: true } },
-            iChannel1: { type: 'sampler2D', value: null, textureData: { repeat: true } },
-            iChannel2: { type: 'sampler2D', value: null, textureData: { repeat: true } },
-            iChannel3: { type: 'sampler2D', value: null, textureData: { repeat: true } }
-        };
-
-        console.log(this.uniforms);
 
         this.initUniforms();
 
@@ -474,7 +458,7 @@ var Shader = new Class({
     {
         var gl = this.gl;
 
-        var uniforms;
+        var uniforms = this.uniforms;
         var uniform;
         var length;
         var glFunc;
