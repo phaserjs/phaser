@@ -25,7 +25,7 @@ var Shader = new Class({
 
     function Shader (key, fragmentSrc, vertexSrc, uniforms)
     {
-        if (fragmentSrc === undefined)
+        if (!fragmentSrc || fragmentSrc === '')
         {
             fragmentSrc = [
                 'precision mediump float;',
@@ -41,7 +41,7 @@ var Shader = new Class({
             ].join('\n');
         }
 
-        if (vertexSrc === undefined)
+        if (!vertexSrc || vertexSrc === '')
         {
             vertexSrc = [
                 'precision mediump float;',
@@ -60,7 +60,7 @@ var Shader = new Class({
             ].join('\n');
         }
 
-        if (uniforms === undefined) { uniforms = {}; }
+        if (uniforms === undefined) { uniforms = null; }
 
         /**
          * The key of this shader, unique within the shader cache of this Phaser game instance.
@@ -93,7 +93,7 @@ var Shader = new Class({
          * The default uniforms for this shader.
          *
          * @name Phaser.Display.Shader#uniforms
-         * @type {any}
+         * @type {?any}
          * @since 3.17.0
          */
         this.uniforms = uniforms;
