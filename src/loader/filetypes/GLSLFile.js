@@ -238,7 +238,14 @@ var GLSLFile = new Class({
                 {
                     var key = line.substring(8, pos);
 
-                    uniforms[key] = JSON.parse(line.substring(pos + 1).trim());
+                    try
+                    {
+                        uniforms[key] = JSON.parse(line.substring(pos + 1));
+                    }
+                    catch (e)
+                    {
+                        console.warn('Invalid uniform JSON: ' + key);
+                    }
                 }
             }
         }
