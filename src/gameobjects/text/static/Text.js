@@ -1248,12 +1248,6 @@ var Text = new Class({
 
         this.dirty = true;
 
-        if (this.input && this.input.hitArea instanceof Rectangle)
-        {
-            this.input.hitArea.width = this.width;
-            this.input.hitArea.height = this.height;
-        }
-
         return this;
     },
 
