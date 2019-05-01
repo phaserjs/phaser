@@ -16,11 +16,12 @@ var GameObjectFactory = require('../GameObjectFactory');
  * @webglOnly
  * @since 3.17.0
  *
- * @param {string} key - The key of the shader to use from the shader cache.
+ * @param {(string|Phaser.Display.BaseShader)} key - The key of the shader to use from the shader cache, or a BaseShader instance.
  * @param {number} [x=0] - The horizontal position of this Game Object in the world.
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
  * @param {number} [width=128] - The width of the Game Object.
  * @param {number} [height=128] - The height of the Game Object.
+ * @param {string[]} [textures] - Optional array of texture keys to bind to the iChannel0...3 uniforms. The textures must already exist in the Texture Manager.
  *
  * @return {Phaser.GameObjects.Shader} The Game Object that was created.
  */

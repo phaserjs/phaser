@@ -71,11 +71,12 @@ var TransformMatrix = require('../components/TransformMatrix');
  * @extends Phaser.GameObjects.Components.Visible
  *
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
- * @param {string} key - The key of the shader to use from the shader cache.
+ * @param {(string|Phaser.Display.BaseShader)} key - The key of the shader to use from the shader cache, or a BaseShader instance.
  * @param {number} [x=0] - The horizontal position of this Game Object in the world.
  * @param {number} [y=0] - The vertical position of this Game Object in the world.
  * @param {number} [width=128] - The width of the Game Object.
  * @param {number} [height=128] - The height of the Game Object.
+ * @param {string[]} [textures] - Optional array of texture keys to bind to the iChannel0...3 uniforms. The textures must already exist in the Texture Manager.
  */
 var Shader = new Class({
 
@@ -313,7 +314,8 @@ var Shader = new Class({
      * @method Phaser.GameObjects.Shader#setShader
      * @since 3.17.0
      * 
-     * @param {string} key - The key of the shader stored in the shader cache to use.
+     * @param {(string|Phaser.Display.BaseShader)} key - The key of the shader to use from the shader cache, or a BaseShader instance.
+     * @param {string[]} [textures] - Optional array of texture keys to bind to the iChannel0...3 uniforms. The textures must already exist in the Texture Manager.
      * 
      * @return {this} This Shader instance.
      */
@@ -321,15 +323,22 @@ var Shader = new Class({
     {
         if (textures === undefined) { textures = []; }
 
-        var cache = this.scene.sys.cache.shader;
-
-        if (!cache.has(key))
+        if (typeof key === 'string')
         {
-            console.warn('Shader missing: ' + key);
-            return this;
-        }
+            var cache = this.scene.sys.cache.shader;
 
-        this.shader = cache.get(key);
+            if (!cache.has(key))
+            {
+                console.warn('Shader missing: ' + key);
+                return this;
+            }
+    
+            this.shader = cache.get(key);
+        }
+        else
+        {
+            this.shader = key;
+        }
 
         var gl = this.gl;
         var renderer = this.renderer;
@@ -553,6 +562,21 @@ var Shader = new Class({
         SetValue(this.uniforms, key, value);
 
         return this;
+    },
+
+    /**
+     * Returns the uniform object for the given key, or `null` if the uniform couldn't be found.
+     * 
+     * @method Phaser.GameObjects.Shader#getUniform
+     * @since 3.17.0
+     * 
+     * @param {string} key - The key of the uniform to return the value for.
+     * 
+     * @return {this} This Shader instance.
+     */
+    getUniform: function (key)
+    {
+        return GetFastValue(this.uniforms, key, null);
     },
 
     /**
