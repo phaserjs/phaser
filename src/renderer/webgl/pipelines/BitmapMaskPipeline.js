@@ -214,6 +214,8 @@ var BitmapMaskPipeline = new Class({
             gl.clearColor(0, 0, 0, 0);
             gl.clear(gl.COLOR_BUFFER_BIT);
 
+            renderer.setBlendMode(0, true);
+
             bitmapMask.renderWebGL(renderer, bitmapMask, 0, camera);
 
             renderer.flush();
@@ -236,10 +238,14 @@ var BitmapMaskPipeline = new Class({
 
             //  Bind bitmap mask pipeline and draw
             renderer.setPipeline(this);
-            
-            renderer.setTexture2D(mask.maskTexture, 1);
-            renderer.setTexture2D(mask.mainTexture, 0);
-            renderer.setInt1(this.program, 'uInvertMaskAlpha', mask.invertAlpha);
+
+            gl.activeTexture(gl.TEXTURE1);
+            gl.bindTexture(gl.TEXTURE_2D, mask.maskTexture);
+
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, mask.mainTexture);
+
+            gl.uniform1i(gl.getUniformLocation(this.program, 'uInvertMaskAlpha'), mask.invertAlpha);
 
             //  Finally, draw a triangle filling the whole screen
             gl.drawArrays(this.topology, 0, 3);

@@ -98,7 +98,7 @@ var Mask = {
      */
     createBitmapMask: function (renderable)
     {
-        if (renderable === undefined && this.texture)
+        if (renderable === undefined && (this.texture || this.shader))
         {
             // eslint-disable-next-line consistent-this
             renderable = this;
