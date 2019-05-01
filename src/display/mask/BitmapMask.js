@@ -196,21 +196,7 @@ var BitmapMask = new Class({
      */
     preRenderWebGL: function (renderer, maskedObject, camera)
     {
-        // if (renderer.maskStack.length === 0)
-        // {
-        //     renderer.maskCount = 0;
-        // }
-
-        // if (renderer.currentCameraMask !== this)
-        // {
-        //     renderer.currentMask = this;
-        // }
-
-        // renderer.maskStack.push({ mask: this, camera: camera });
-
         renderer.pipelines.BitmapMaskPipeline.beginMask(this, maskedObject, camera);
-
-        // renderer.maskCount++;
     },
 
     /**
@@ -226,34 +212,6 @@ var BitmapMask = new Class({
     postRenderWebGL: function (renderer, camera)
     {
         renderer.pipelines.BitmapMaskPipeline.endMask(this, camera);
-
-        /*
-        renderer.maskStack.pop();
-
-        renderer.maskCount--;
-
-        if (renderer.maskStack.length === 0)
-        {
-            renderer.pipelines.BitmapMaskPipeline.endMask(this);
-
-            renderer.currentMask = null;
-        }
-        else
-        {
-            //  Get the mask previous to this one
-            var prev = renderer.maskStack[renderer.maskStack.length - 1];
-            var bitmapMask = prev.mask;
-
-            // var camera = prev.camera;
-
-            if (renderer.currentCameraMask !== bitmapMask)
-            {
-                renderer.currentMask = bitmapMask;
-            }
-
-            renderer.setFramebuffer(bitmapMask.mainFramebuffer);
-        }
-        */
     },
 
     /**
