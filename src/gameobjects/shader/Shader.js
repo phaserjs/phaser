@@ -9,6 +9,7 @@ var Components = require('../components');
 var GameObject = require('../GameObject');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var Merge = require('../../utils/object/Merge');
+var SetValue = require('../../utils/object/SetValue');
 var ShaderRender = require('./ShaderRender');
 var TransformMatrix = require('../components/TransformMatrix');
 
@@ -251,46 +252,15 @@ var Shader = new Class({
          */
         this._rendererHeight = renderer.height;
 
-        var gl = this.gl;
-
         /**
-         * Internal gl function mapping for uniform look-up.
-         * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/uniform
+         * Internal texture count tracker.
          * 
-         * @name Phaser.GameObjects.Shader#_glFuncMap
-         * @type {any}
+         * @name Phaser.GameObjects.Shader#_textureCount
+         * @type {number}
          * @private
          * @since 3.17.0
          */
-        this._glFuncMap = {
-
-            mat2: { func: gl.uniformMatrix2fv, length: 1, matrix: true },
-            mat3: { func: gl.uniformMatrix3fv, length: 1, matrix: true },
-            mat4: { func: gl.uniformMatrix4fv, length: 1, matrix: true },
-
-            '1f': { func: gl.uniform1f, length: 1 },
-            '1fv': { func: gl.uniform1fv, length: 1 },
-            '1i': { func: gl.uniform1i, length: 1 },
-            '1iv': { func: gl.uniform1iv, length: 1 },
-
-            '2f': { func: gl.uniform2f, length: 2 },
-            '2fv': { func: gl.uniform2fv, length: 1 },
-            '2i': { func: gl.uniform2i, length: 2 },
-            '2iv': { func: gl.uniform2iv, length: 1 },
-
-            '3f': { func: gl.uniform3f, length: 3 },
-            '3fv': { func: gl.uniform3fv, length: 1 },
-            '3i': { func: gl.uniform3i, length: 3 },
-            '3iv': { func: gl.uniform3iv, length: 1 },
-
-            '4f': { func: gl.uniform4f, length: 4 },
-            '4fv': { func: gl.uniform4fv, length: 1 },
-            '4i': { func: gl.uniform4i, length: 4 },
-            '4iv': { func: gl.uniform4iv, length: 1 }
-
-        };
-
-        this.textureCount = 0;
+        this._textureCount = 0;
 
         this.setPosition(x, y);
         this.setSize(width, height);
@@ -449,10 +419,10 @@ var Shader = new Class({
     initUniforms: function ()
     {
         var gl = this.gl;
-        var map = this._glFuncMap;
+        var map = this.renderer.glFuncMap;
         var program = this.program;
 
-        this.textureCount = 0;
+        this._textureCount = 0;
 
         for (var key in this.uniforms)
         {
@@ -472,18 +442,34 @@ var Shader = new Class({
         }
     },
 
-    setSampler2D: function (uniformKey, key, textureIndex, textureData)
+    /**
+     * Sets a sampler2D uniform on this shader.
+     * 
+     * The textureKey given is the key from the Texture Manager cache. You cannot use a single frame
+     * from a texture, only the full image. Also, lots of shaders expect textures to be power-of-two sized.
+     * 
+     * @method Phaser.GameObjects.Shader#setSampler2D
+     * @since 3.17.0
+     * 
+     * @param {string} uniformKey - The key of the sampler2D uniform to be updated, i.e. `iChannel0`.
+     * @param {string} textureKey - The key of the texture, as stored in the Texture Manager. Must already be loaded.
+     * @param {integer} [textureIndex=0] - The texture index.
+     * @param {any} [textureData] - Additional texture data.
+     * 
+     * @return {this} This Shader instance.
+     */
+    setSampler2D: function (uniformKey, textureKey, textureIndex, textureData)
     {
         if (textureIndex === undefined) { textureIndex = 0; }
 
         var textureManager = this.scene.sys.textures;
 
-        if (textureManager.exists(key))
+        if (textureManager.exists(textureKey))
         {
-            var frame = textureManager.getFrame(key);
+            var frame = textureManager.getFrame(textureKey);
             var uniform = this.uniforms[uniformKey];
 
-            uniform.textureKey = key;
+            uniform.textureKey = textureKey;
             uniform.source = frame.source.image;
             uniform.value = frame.glTexture;
 
@@ -492,7 +478,7 @@ var Shader = new Class({
                 uniform.textureData = textureData;
             }
 
-            this.textureCount = textureIndex;
+            this._textureCount = textureIndex;
 
             this.initSampler2D(uniform);
         }
@@ -500,26 +486,124 @@ var Shader = new Class({
         return this;
     },
 
-    setChannel0: function (key, textureData)
+    /**
+     * Sets a property of a uniform already present on this shader.
+     * 
+     * To modify the value of a uniform such as a 1f or 1i use the `value` property directly:
+     * 
+     * ```javascript
+     * shader.setUniform('size.value', 16);
+     * ```
+     * 
+     * You can use dot notation to access deeper values, for example:
+     * 
+     * ```javascript
+     * shader.setUniform('resolution.value.x', 512);
+     * ```
+     * 
+     * The change to the uniform will take effect the next time the shader is rendered.
+     * 
+     * @method Phaser.GameObjects.Shader#setUniform
+     * @since 3.17.0
+     * 
+     * @param {string} key - The key of the uniform to modify. Use dots for deep properties, i.e. `resolution.value.x`.
+     * @param {any} value - The value to set into the uniform.
+     * 
+     * @return {this} This Shader instance.
+     */
+    setUniform: function (key, value)
     {
-        return this.setSampler2D('iChannel0', key, 0, textureData);
+        SetValue(this.uniforms, key, value);
+
+        return this;
     },
 
-    setChannel1: function (key, textureData)
+    /**
+     * A short-cut method that will directly set the texture being used by the `iChannel0` sampler2D uniform.
+     * 
+     * The textureKey given is the key from the Texture Manager cache. You cannot use a single frame
+     * from a texture, only the full image. Also, lots of shaders expect textures to be power-of-two sized.
+     * 
+     * @method Phaser.GameObjects.Shader#setChannel0
+     * @since 3.17.0
+     * 
+     * @param {string} textureKey - The key of the texture, as stored in the Texture Manager. Must already be loaded.
+     * @param {any} [textureData] - Additional texture data.
+     * 
+     * @return {this} This Shader instance.
+     */
+    setChannel0: function (textureKey, textureData)
     {
-        return this.setSampler2D('iChannel1', key, 1, textureData);
+        return this.setSampler2D('iChannel0', textureKey, 0, textureData);
     },
 
-    setChannel2: function (key, textureData)
+    /**
+     * A short-cut method that will directly set the texture being used by the `iChannel1` sampler2D uniform.
+     * 
+     * The textureKey given is the key from the Texture Manager cache. You cannot use a single frame
+     * from a texture, only the full image. Also, lots of shaders expect textures to be power-of-two sized.
+     * 
+     * @method Phaser.GameObjects.Shader#setChannel1
+     * @since 3.17.0
+     * 
+     * @param {string} textureKey - The key of the texture, as stored in the Texture Manager. Must already be loaded.
+     * @param {any} [textureData] - Additional texture data.
+     * 
+     * @return {this} This Shader instance.
+     */
+    setChannel1: function (textureKey, textureData)
     {
-        return this.setSampler2D('iChannel2', key, 2, textureData);
+        return this.setSampler2D('iChannel1', textureKey, 1, textureData);
     },
 
-    setChannel3: function (key, textureData)
+    /**
+     * A short-cut method that will directly set the texture being used by the `iChannel2` sampler2D uniform.
+     * 
+     * The textureKey given is the key from the Texture Manager cache. You cannot use a single frame
+     * from a texture, only the full image. Also, lots of shaders expect textures to be power-of-two sized.
+     * 
+     * @method Phaser.GameObjects.Shader#setChannel2
+     * @since 3.17.0
+     * 
+     * @param {string} textureKey - The key of the texture, as stored in the Texture Manager. Must already be loaded.
+     * @param {any} [textureData] - Additional texture data.
+     * 
+     * @return {this} This Shader instance.
+     */
+    setChannel2: function (textureKey, textureData)
     {
-        return this.setSampler2D('iChannel3', key, 3, textureData);
+        return this.setSampler2D('iChannel2', textureKey, 2, textureData);
     },
 
+    /**
+     * A short-cut method that will directly set the texture being used by the `iChannel3` sampler2D uniform.
+     * 
+     * The textureKey given is the key from the Texture Manager cache. You cannot use a single frame
+     * from a texture, only the full image. Also, lots of shaders expect textures to be power-of-two sized.
+     * 
+     * @method Phaser.GameObjects.Shader#setChannel3
+     * @since 3.17.0
+     * 
+     * @param {string} textureKey - The key of the texture, as stored in the Texture Manager. Must already be loaded.
+     * @param {any} [textureData] - Additional texture data.
+     * 
+     * @return {this} This Shader instance.
+     */
+    setChannel3: function (textureKey, textureData)
+    {
+        return this.setSampler2D('iChannel3', textureKey, 3, textureData);
+    },
+
+    /**
+     * Internal method that takes a sampler2D uniform and prepares it for use by setting the
+     * gl texture parameters.
+     * 
+     * @method Phaser.GameObjects.Shader#initSampler2D
+     * @private
+     * @since 3.17.0
+     * 
+     * @param {any} uniform - The sampler2D uniform to process.
+     */
     initSampler2D: function (uniform)
     {
         if (!uniform.value)
@@ -529,7 +613,7 @@ var Shader = new Class({
 
         var gl = this.gl;
 
-        gl.activeTexture(gl.TEXTURE0 + this.textureCount);
+        gl.activeTexture(gl.TEXTURE0 + this._textureCount);
         gl.bindTexture(gl.TEXTURE_2D, uniform.value);
     
         //  Extended texture data
@@ -539,13 +623,6 @@ var Shader = new Class({
         if (data)
         {
             // https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/texImage2D
-
-            // GLTexture = mag linear, min linear_mipmap_linear, wrap repeat + gl.generateMipmap(gl.TEXTURE_2D);
-            // GLTextureLinear = mag/min linear, wrap clamp
-            // GLTextureNearestRepeat = mag/min NEAREST, wrap repeat
-            // GLTextureNearest = mag/min nearest, wrap clamp
-            // AudioTexture = whatever + luminance + width 512, height 2, border 0
-            // KeyTexture = whatever + luminance + width 256, height 2, border 0
     
             //  mag / minFilter can be: gl.LINEAR, gl.LINEAR_MIPMAP_LINEAR or gl.NEAREST
             //  wrapS/T can be: gl.CLAMP_TO_EDGE or gl.REPEAT
@@ -588,9 +665,9 @@ var Shader = new Class({
 
         this.renderer.setProgram(this.program);
     
-        gl.uniform1i(uniform.uniformLocation, this.textureCount);
+        gl.uniform1i(uniform.uniformLocation, this._textureCount);
     
-        this.textureCount++;
+        this._textureCount++;
     },
 
     /**
@@ -803,7 +880,7 @@ var Shader = new Class({
      *
      * @method Phaser.GameObjects.RenderTexture#preDestroy
      * @protected
-     * @since 3.9.0
+     * @since 3.17.0
      */
     preDestroy: function ()
     {
