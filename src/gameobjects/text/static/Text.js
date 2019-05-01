@@ -15,7 +15,6 @@ var GetValue = require('../../../utils/object/GetValue');
 var RemoveFromDOM = require('../../../dom/RemoveFromDOM');
 var TextRender = require('./TextRender');
 var TextStyle = require('../TextStyle');
-var Rectangle = require('../../../geom/rectangle/Rectangle');
 
 /**
  * @classdesc
