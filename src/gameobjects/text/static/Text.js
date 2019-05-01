@@ -1128,11 +1128,6 @@ var Text = new Class({
         else
         {
             this.width = style.fixedWidth;
-
-            if (w > style.fixedWidth)
-            {
-                w = style.fixedWidth;
-            }
         }
 
         if (style.fixedHeight === 0)
@@ -1142,11 +1137,16 @@ var Text = new Class({
         else
         {
             this.height = style.fixedHeight;
+        }
 
-            if (h > style.fixedHeight)
-            {
-                h = style.fixedHeight;
-            }
+        if (w > this.width)
+        {
+            w = this.width;
+        }
+
+        if (h > this.height)
+        {
+            h = this.height;
         }
 
         this.updateDisplayOrigin();
