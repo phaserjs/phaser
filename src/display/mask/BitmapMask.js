@@ -125,7 +125,7 @@ var BitmapMask = new Class({
         this.prevFramebuffer = null;
 
         /**
-         * Whether to invert the mask's alpha.
+         * Whether to invert the masks alpha.
          *
          * If `true`, the alpha of the masking pixel will be inverted before it's multiplied with the masked pixel. Essentially, this means that a masked area will be visible only if the corresponding area in the mask is invisible.
          *
@@ -135,6 +135,14 @@ var BitmapMask = new Class({
          */
         this.invertAlpha = false;
 
+        /**
+         * Is this mask a stencil mask?
+         *
+         * @name Phaser.Display.Masks.BitmapMask#isStencil
+         * @type {boolean}
+         * @readonly
+         * @since 3.17.0
+         */
         this.isStencil = false;
 
         if (renderer && renderer.gl)

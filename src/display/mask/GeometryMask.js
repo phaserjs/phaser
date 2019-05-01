@@ -57,18 +57,25 @@ var GeometryMask = new Class({
          */
         this.invertAlpha = false;
 
+        /**
+         * Is this mask a stencil mask?
+         *
+         * @name Phaser.Display.Masks.GeometryMask#isStencil
+         * @type {boolean}
+         * @readonly
+         * @since 3.17.0
+         */
         this.isStencil = true;
 
+        /**
+         * The current stencil level.
+         *
+         * @name Phaser.Display.Masks.GeometryMask#level
+         * @type {boolean}
+         * @private
+         * @since 3.17.0
+         */
         this.level = 0;
-
-        this.name = '';
-    },
-
-    setName: function (name)
-    {
-        this.name = name;
-
-        return this;
     },
 
     /**
@@ -145,6 +152,16 @@ var GeometryMask = new Class({
         renderer.maskCount++;
     },
 
+    /**
+     * Applies the current stencil mask to the renderer.
+     *
+     * @method Phaser.Display.Masks.GeometryMask#applyStencil
+     * @since 3.17.0
+     *
+     * @param {Phaser.Renderer.WebGL.WebGLRenderer} renderer - The WebGL Renderer instance to draw to.
+     * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera the Game Object is being rendered through.
+     * @param {boolean} inc - Is this an INCR stencil or a DECR stencil?
+     */
     applyStencil: function (renderer, camera, inc)
     {
         var gl = renderer.gl;
