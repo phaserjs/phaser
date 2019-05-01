@@ -506,6 +506,16 @@ var WebGLRenderer = new Class({
          */
         this.currentCameraMask = { mask: null, camera: null };
 
+        /**
+         * Internal gl function mapping for uniform look-up.
+         * https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/uniform
+         * 
+         * @name Phaser.Renderer.WebGL.WebGLRenderer#glFuncMap
+         * @type {any}
+         * @since 3.17.0
+         */
+        this.glFuncMap = null;
+
         this.init(this.config);
     },
 
@@ -570,6 +580,35 @@ var WebGLRenderer = new Class({
         this.glFormats[2] = gl.UNSIGNED_BYTE;
         this.glFormats[3] = gl.UNSIGNED_SHORT;
         this.glFormats[4] = gl.FLOAT;
+
+        //  Set the gl function map
+        this.glFuncMap = {
+
+            mat2: { func: gl.uniformMatrix2fv, length: 1, matrix: true },
+            mat3: { func: gl.uniformMatrix3fv, length: 1, matrix: true },
+            mat4: { func: gl.uniformMatrix4fv, length: 1, matrix: true },
+
+            '1f': { func: gl.uniform1f, length: 1 },
+            '1fv': { func: gl.uniform1fv, length: 1 },
+            '1i': { func: gl.uniform1i, length: 1 },
+            '1iv': { func: gl.uniform1iv, length: 1 },
+
+            '2f': { func: gl.uniform2f, length: 2 },
+            '2fv': { func: gl.uniform2fv, length: 1 },
+            '2i': { func: gl.uniform2i, length: 2 },
+            '2iv': { func: gl.uniform2iv, length: 1 },
+
+            '3f': { func: gl.uniform3f, length: 3 },
+            '3fv': { func: gl.uniform3fv, length: 1 },
+            '3i': { func: gl.uniform3i, length: 3 },
+            '3iv': { func: gl.uniform3iv, length: 1 },
+
+            '4f': { func: gl.uniform4f, length: 4 },
+            '4fv': { func: gl.uniform4fv, length: 1 },
+            '4i': { func: gl.uniform4i, length: 4 },
+            '4iv': { func: gl.uniform4iv, length: 1 }
+
+        };
 
         // Load supported extensions
         var exts = gl.getSupportedExtensions();

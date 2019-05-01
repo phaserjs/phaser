@@ -97,6 +97,7 @@ Notes:
 * There is a new webpack config `FEATURE_SOUND` which is set to `true` by default, but if set to `false` it will exclude the Sound Manager and all of its systems into the build files. Fix #4428 (thanks @goldfire)
 * `Scene.Systems.renderer` is a new property that is a reference to the current renderer the game is using.
 * `Utils.Objects.SetValue` is a new function that allows you to set a value in an object by specifying a property key. The function can set a value to any depth by using dot-notation for the key, i.e. `SetValue(data, 'world.position.x', 100)`.
+* `WebGLRenderer.glFuncMap` is a new object, populated during the `init` method, that contains uniform mappings from key to the corresponding gl function, i.e. `mat2` to `gl.uniformMatrix2fv`.
 
 ### Updates
 
