@@ -11,10 +11,10 @@
 module.exports = {
 
     Align: require('./align'),
+    BaseShader: require('./shader/BaseShader'),
     Bounds: require('./bounds'),
     Canvas: require('./canvas'),
     Color: require('./color'),
-    Masks: require('./mask'),
-    Shader: require('./shader/Shader')
+    Masks: require('./mask')
 
 };

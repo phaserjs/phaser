@@ -10,7 +10,7 @@ var File = require('../File');
 var FileTypesManager = require('../FileTypesManager');
 var GetFastValue = require('../../utils/object/GetFastValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
-var Shader = require('../../display/shader/Shader');
+var Shader = require('../../display/shader/BaseShader');
 
 /**
  * @typedef {object} Phaser.Loader.FileTypes.GLSLFileConfig
