@@ -64,7 +64,7 @@ var GLSLFile = new Class({
         }
         else if (shaderType === undefined)
         {
-            shaderType = 'frag';
+            shaderType = 'fragment';
         }
 
         var fileConfig = {
@@ -74,7 +74,9 @@ var GLSLFile = new Class({
             responseType: 'text',
             key: key,
             url: url,
-            shaderType: shaderType,
+            config: {
+                shaderType: shaderType
+            },
             xhrSettings: xhrSettings
         };
 
@@ -152,11 +154,11 @@ var GLSLFile = new Class({
         else if (this.config.shaderType === 'fragment')
         {
             //  Single shader
-            this.cache.add(this.key, new Shader(this.key, data));
+            this.cache.add(this.key, new Shader(this.key, this.data));
         }
         else
         {
-            this.cache.add(this.key, new Shader(this.key, '', data));
+            this.cache.add(this.key, new Shader(this.key, '', this.data));
         }
 
         this.pendingDestroy();
