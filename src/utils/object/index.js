@@ -21,6 +21,7 @@ module.exports = {
     HasValue: require('./HasValue'),
     IsPlainObject: require('./IsPlainObject'),
     Merge: require('./Merge'),
-    MergeRight: require('./MergeRight')
+    MergeRight: require('./MergeRight'),
+    SetValue: require('./SetValue')
 
 };
