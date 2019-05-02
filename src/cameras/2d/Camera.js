@@ -712,7 +712,7 @@ var Camera = new Class({
             CenterOn(deadzone, this.midPoint.x, this.midPoint.y);
         }
 
-        if (follow)
+        if (follow && !this.panEffect.isRunning)
         {
             var fx = (follow.x - this.followOffset.x);
             var fy = (follow.y - this.followOffset.y);

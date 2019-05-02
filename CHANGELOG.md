@@ -146,6 +146,7 @@ Notes:
 * The `Key` method signature has changed. It now expects to receive a reference to the KeyboardPlugin instance that is creating the Key as the first argument. This is now stored in the new `Key.plugin` property, and cleared in `destroy`.
 * `KeyboardPlugin.removeKey` has a new optional argument `destroy` that will, if set, destroy the Key object being removed from the plugin.
 * `InteractiveObject.customHitArea` is a new property that records if the hitArea for the Interactive Object was created based on texture size (false), or a custom shape (true)
+* A Camera will pause following a Game Object for the duration of the Camera Pan Effect, as the two will clash over the Camera scroll position (thanks fruitbatinshades).
 
 ### Bug Fixes
 
