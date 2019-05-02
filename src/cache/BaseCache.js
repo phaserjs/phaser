@@ -148,6 +148,21 @@ var BaseCache = new Class({
     },
 
     /**
+     * Returns all keys in use in this cache.
+     *
+     * @method Phaser.Cache.BaseCache#getKeys
+     * @since 3.17.0
+     *
+     * @genericUse {K[]} - [$return]
+     *
+     * @return {string[]} Array containing all the keys.
+     */
+    getKeys: function ()
+    {
+        return this.entries.keys();
+    },
+
+    /**
      * Destroys this cache and all items within it.
      *
      * @method Phaser.Cache.BaseCache#destroy

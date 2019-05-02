@@ -98,6 +98,7 @@ Notes:
 * `Scene.Systems.renderer` is a new property that is a reference to the current renderer the game is using.
 * `Utils.Objects.SetValue` is a new function that allows you to set a value in an object by specifying a property key. The function can set a value to any depth by using dot-notation for the key, i.e. `SetValue(data, 'world.position.x', 100)`.
 * `WebGLRenderer.glFuncMap` is a new object, populated during the `init` method, that contains uniform mappings from key to the corresponding gl function, i.e. `mat2` to `gl.uniformMatrix2fv`.
+* `BaseCache.getKeys` is a new method that will return all keys in use in the current cache, i.e. `this.cache.shader.getKeys()`.
 
 ### Updates
 
