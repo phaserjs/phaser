@@ -64,7 +64,7 @@ var ParseTileLayers = function (json, insertNull)
         var output = [];
         var x = 0;
 
-        if(infiniteMap)
+        if (infiniteMap)
         {
             var layerOffsetX = GetFastValue(curl, 'startx', 0) + curl.x;
             var layerOffsetY = GetFastValue(curl, 'starty', 0) + curl.y;
@@ -131,7 +131,7 @@ var ParseTileLayers = function (json, insertNull)
 
                     x++;
 
-                    if(x === chunk.width)
+                    if (x === chunk.width)
                     {
                         y++;
                         x = 0;

@@ -12,7 +12,6 @@ var ParseTilesets = require('./ParseTilesets');
 var ParseObjectLayers = require('./ParseObjectLayers');
 var BuildTilesetIndex = require('./BuildTilesetIndex');
 var AssignTileProperties = require('./AssignTileProperties');
-var GetFastValue = require('../../../utils/object/GetFastValue');
 
 /**
  * @namespace Phaser.Tilemaps.Parsers.Tiled
