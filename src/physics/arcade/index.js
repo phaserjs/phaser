@@ -21,17 +21,13 @@ var Extend = require('../../utils/object/Extend');
 var Arcade = {
 
     ArcadePhysics: require('./ArcadePhysics'),
-    BaseBody: require('./BaseBody'),
     Body: require('./Body'),
-    CheckOverlap: require('./CheckOverlap'),
     Collider: require('./Collider'),
     Components: require('./components'),
     Events: require('./events'),
     Factory: require('./Factory'),
-    GetOverlap: require('./GetOverlap'),
     Group: require('./PhysicsGroup'),
     Image: require('./ArcadeImage'),
-    IntersectsRect: require('./IntersectsRect'),
     Sprite: require('./ArcadeSprite'),
     StaticBody: require('./StaticBody'),
     StaticGroup: require('./StaticPhysicsGroup'),

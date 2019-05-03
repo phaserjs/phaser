@@ -68,7 +68,14 @@ var TileCheckX = function (body, tile, tileLeft, tileRight, tileBias, isLayer)
 
     if (ox !== 0)
     {
-        ProcessTileSeparationX(body, ox);
+        if (body.customSeparateX)
+        {
+            body.overlapX = ox;
+        }
+        else
+        {
+            ProcessTileSeparationX(body, ox);
+        }
     }
 
     return ox;

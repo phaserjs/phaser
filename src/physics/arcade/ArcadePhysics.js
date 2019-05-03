@@ -568,7 +568,7 @@ var ArcadePhysics = new Class({
     {
         return OverlapRect(this.world, x, y, width, height, includeDynamic, includeStatic);
     },
-
+    
     /**
      * The Scene that owns this plugin is shutting down.
      * We need to kill and reset all internal properties as well as stop listening to Scene events.

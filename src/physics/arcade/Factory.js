@@ -6,11 +6,9 @@
 
 var ArcadeImage = require('./ArcadeImage');
 var ArcadeSprite = require('./ArcadeSprite');
-var Body = require('./Body');
 var Class = require('../../utils/Class');
 var CONST = require('./const');
 var PhysicsGroup = require('./PhysicsGroup');
-var StaticBody = require('./StaticBody');
 var StaticPhysicsGroup = require('./StaticPhysicsGroup');
 
 /**
@@ -115,58 +113,6 @@ var Factory = new Class({
         this.world.enableBody(gameObject, type);
 
         return gameObject;
-    },
-
-    /**
-     * Creates a new Dynamic Body and adds it to the World.
-     * 
-     * This Body it not tied to a Game Object, which means it will not render in the game, but can
-     * still be used for collision and overlap events, and be moved, accelerated and so on just like
-     * a regular body can.
-     *
-     * @method Phaser.Physics.Arcade.Factory#body
-     * @since 3.17.0
-     *
-     * @param {number} x - The horizontal position of this Body in the physics world.
-     * @param {number} y - The vertical position of this Body in the physics world.
-     * @param {number} width - The width of the Body in pixels.
-     * @param {number} height - The height of the Body in pixels.
-     *
-     * @return {Phaser.Physics.Arcade.Body} The Body that was created.
-     */
-    body: function (x, y, width, height)
-    {
-        var body = new Body(this.world, null, x, y, width, height);
-
-        this.world.add(body);
-
-        return body;
-    },
-
-    /**
-     * Creates a new Static Body and adds it to the World.
-     * 
-     * This Body it not tied to a Game Object, which means it will not render in the game, but can
-     * still be used for collision and overlap events, and be moved, accelerated and so on just like
-     * a regular body can.
-     *
-     * @method Phaser.Physics.Arcade.Factory#staticBody
-     * @since 3.17.0
-     *
-     * @param {number} x - The horizontal position of this Body in the physics world.
-     * @param {number} y - The vertical position of this Body in the physics world.
-     * @param {number} width - The width of the Body in pixels.
-     * @param {number} height - The height of the Body in pixels.
-     *
-     * @return {Phaser.Physics.Arcade.StaticBody} The Body that was created.
-     */
-    staticBody: function (x, y, width, height)
-    {
-        var body = new StaticBody(this.world, null, x, y, width, height);
-
-        this.world.add(body);
-
-        return body;
     },
 
     /**
