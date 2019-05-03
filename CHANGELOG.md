@@ -2,12 +2,6 @@
 
 ## Version 3.17.0 - Ishikawa - in dev
 
-Notes:
-
-1) Vertex for any GO
-3) GO auto-add to Scene
-4) GO move to another Scene
-
 ### Geometry and Bitmap Masks
 
 * `Camera.setMask` is a new method that allows you to set a geometry or bitmap mask on any camera. The mask can be set to remain fixed in position, or to translate along with the camera. It will impact anything the camera renders. A reference to the mask is stored in the `Camera.mask` property.
@@ -29,7 +23,6 @@ Notes:
 * `overlapTiles` is a new method that allows you to check for overlaps between a physics enabled Game Object and an array of Tiles. The Tiles don't have to have been enable for collision, or even be on the same layer, for the overlap check to work. You can provide your own process callback and/or overlap callback. This is handy for testing for overlap for a specific Tile in your map, not just based on a tile index. This is available via `this.physics.overlapTiles` and the World instance.
 * `collideTiles` is a new method that allows you to check for collision between a physics enabled Game Object and an array of Tiles. The Tiles don't have to have been enable for collision, or even be on the same layer, for the collision to work. You can provide your own process callback and/or overlap callback. There are some limitations in using this method, please consult the API Docs for details, but on the whole, it allows for dynamic collision on small sets of Tile instances. This is available via `this.physics.collideTiles` and the World instance.
 * `overlapRect` is a new method that allows you to return an array of all physics bodies within the given rectangular region of the World. It can return dynamic or static bodies and will use the RTree for super-fast searching, if enabled (which it is by default)
-* `debugShowBlocked`, `sleepDebugColor`, `blockedDebugColor`
 * The `Body.setCollideWorldBounds` method has two new optional arguments `bounceX` and `bounceY` which, if given, will set the World Bounce values for the body.
 
 #### Updates
@@ -46,12 +39,8 @@ Notes:
 * The internal method `TileCheckY` now has a new argument `isLayer` which controls if the set comes from a layer or an array.
 * `Body.isMoving` has been removed as it was never used internally.
 * `Body.stopVelocityOnCollide` has been removed as it was never used internally.
-* `Body.overlapX` has been removed as it was never used internally. It's now available in a `CollisionInfo` object.
-* `Body.overlapY` has been removed as it was never used internally. It's now available in a `CollisionInfo` object.
-* `Body.overlapR` has been removed as it was never used internally.
-* `StaticBody.overlapX` has been removed as it was never used internally. It's now available in a `CollisionInfo` object.
-* `StaticBody.overlapY` has been removed as it was never used internally. It's now available in a `CollisionInfo` object.
 * All of the Arcade Physics Components are now available directly under the `Phaser.Physics.Arcade.Components` namespace. Fix #4440 (thanks @jackfreak)
+* `Phaser.Physics.Arcade.Events` is now exposed in the namespace, preventing it from erroring if you use them in TypeScript. Fix #4481 (thanks @danielalves)
 
 #### Bug Fixes
 
@@ -180,7 +169,6 @@ Notes:
 * `Camera.clearRenderToTexture` will check to see if the Scene is available before proceeding, avoiding potential errors when a Camera is destroyed multiple times during a Scene shutdown.
 * Destroying a Game object during its `pointerup` event handler on a touch device will no longer cause `Uncaught TypeError: Cannot read property 'localX' of undefined`. All InputPlugin process handlers now check to see if the Game Object has been destroyed at any stage and abort if it has. Fix #4463 (thanks @PatrickSachs)
 * `InputPlugin.clear` has a new argument `skipQueue` which is used to avoid clearing a Game Object twice. This, combined with the fix for 4463 means you will no longer get a `Cannot read property 'dragState'` error if you destroy a Game Object enabled for drag where another draggable object exists. Fix #4228 (thanks @YannCaron)
-* `Phaser.Physics.Arcade.Events` is now exposed in the namespace, preventing it from erroring if you use them in TypeScript. Fix #4481 (thanks @danielalves)
 * `UpdateList.remove` will now move the removed child to the internal `_pendingRemoval` array, instead of slicing it directly out of the active list. The pending list is cleared at the start of the next game frame. Fix #4365 (thanks @jcyuan)
 * Setting `pixelPerfect` when input enabling a Container would cause it to crash, because Containers don't have a texture to check. It will now throw a run-time warning and skip the Container for input. You should use a custom input callback instead. Fix #4492 (thanks @BigZaphod)
 
