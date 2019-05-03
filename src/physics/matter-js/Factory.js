@@ -115,8 +115,8 @@ var Factory = new Class({
      * @param {number} x - The X coordinate of the center of the Body.
      * @param {number} y - The Y coordinate of the center of the Body.
      * @param {number} radius - The radius of the circle.
-     * @param {object} options - An object of properties to set on the Body. You can also specify a `chamfer` property to automatically adjust the body.
-     * @param {number} maxSides - The maximum amount of sides to use for the polygon which will approximate this circle.
+     * @param {object} [options] - An object of properties to set on the Body. You can also specify a `chamfer` property to automatically adjust the body.
+     * @param {number} [maxSides] - The maximum amount of sides to use for the polygon which will approximate this circle.
      *
      * @return {MatterJS.Body} A Matter JS Body.
      */
