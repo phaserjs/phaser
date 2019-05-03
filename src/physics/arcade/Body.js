@@ -686,28 +686,6 @@ var Body = new Class({
         this.syncBounds = false;
 
         /**
-         * Whether this Body is being moved by the `moveTo` or `moveFrom` methods.
-         *
-         * @name Phaser.Physics.Arcade.Body#isMoving
-         * @type {boolean}
-         * @default false
-         * @since 3.0.0
-         */
-        this.isMoving = false;
-
-        /**
-         * Whether this Body's movement by `moveTo` or `moveFrom` will be stopped by collisions with other bodies.
-         *
-         * @name Phaser.Physics.Arcade.Body#stopVelocityOnCollide
-         * @type {boolean}
-         * @default true
-         * @since 3.0.0
-         */
-        this.stopVelocityOnCollide = true;
-
-        //  read-only
-
-        /**
          * The Body's physics type (dynamic or static).
          *
          * @name Phaser.Physics.Arcade.Body#physicsType
