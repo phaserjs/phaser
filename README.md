@@ -125,9 +125,28 @@ The documentation for Phaser 3 is an on-going project. Please help us by searchi
 
 [TypeScript Definitions](https://github.com/photonstorm/phaser3-docs/tree/master/typescript) are now available.
 
-They are automatically generated from the jsdoc comments in the Phaser source code. If you wish to help refine them then you must edit the Phaser jsdoc blocks directly. You can find more details, including the source to the conversion tool we wrote in the Docs repo.
+They are automatically generated from the jsdoc comments in the Phaser source code. If you wish to help refine them then you must edit the Phaser jsdoc blocks directly. You can find more details, including the source to the conversion tool we wrote in the Docs repo. When we release new versions of Phaser we publish new TS defs too.
 
-As soon as we're happy with the accuracy of the TS defs we'll merge them into the main repo, for now, please download them from the docs repo, linked above, and add them to your project. When we release new versions of Phaser we publish new TS defs too.
+As soon as we're happy with the accuracy of the TS defs we'll merge them into the main repo. For now, please download [`phaser.d.ts`](https://github.com/photonstorm/phaser3-docs/blob/master/typescript/phaser.d.ts) from the `phaser3-docs` repo linked above, and include it in your project.
+
+Alternatively, install the `phaser3-docs` repo into your project as a dev dependency, and include typings in your `tsconfig.json`.
+
+```
+// Install the docs, which includes the typings file
+npm install --save-dev https://github.com/photonstorm/phaser3-docs.git
+
+// Include the file in your Typescript project
+// tsconfig.json
+
+{
+  "compilerOptions": {
+    ...
+    "paths": {
+        "phaser": ["node_modules/phaser3-docs/typescript/phaser.d.ts"]
+    },
+  }
+}
+```
 
 ### Webpack
 
@@ -205,7 +224,7 @@ Create an `index.html` page locally and paste the following code into it:
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser-arcade-physics.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser-arcade-physics.min.js"></script>
 </head>
 <body>
 
