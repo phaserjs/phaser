@@ -1139,6 +1139,16 @@ var Text = new Class({
             this.height = style.fixedHeight;
         }
 
+        if (w > this.width)
+        {
+            w = this.width;
+        }
+
+        if (h > this.height)
+        {
+            h = this.height;
+        }
+
         this.updateDisplayOrigin();
 
         w *= resolution;
