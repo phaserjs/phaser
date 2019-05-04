@@ -1394,11 +1394,6 @@ var World = new Class({
         GetOverlapX(body1, body2, false, bias);
         GetOverlapY(body1, body2, false, bias);
 
-        var dx = body2.center.x - body1.center.x;
-        var dy = body2.center.y - body1.center.y;
-
-        var angleCollision = Math.atan2(dy, dx);
-
         var overlap = 0;
 
         if (body1.isCircle !== body2.isCircle)
@@ -1458,94 +1453,28 @@ var World = new Class({
             return (overlap !== 0);
         }
 
-        // Transform the velocity vector to the coordinate system oriented along the direction of impact.
-        // This is done to eliminate the vertical component of the velocity
+        var dx = body1.position.x - body2.position.x;
+        var dy = body1.position.y - body2.position.y;
+        var d = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+        var nx = (body2.position.x - body1.position.x) / d;
+        var ny = (body2.position.y - body1.position.y) / d;
+        var p = 2 * (body1.velocity.x * nx + body1.velocity.y * ny - body2.velocity.x * nx - body2.velocity.y * ny) / (body1.mass + body2.mass);
 
-        var b1vx = body1.velocity.x;
-        var b1vy = body1.velocity.y;
-        var b1mass = body1.mass;
-
-        var b2vx = body2.velocity.x;
-        var b2vy = body2.velocity.y;
-        var b2mass = body2.mass;
-
-        var v1 = {
-            x: b1vx * Math.cos(angleCollision) + b1vy * Math.sin(angleCollision),
-            y: b1vx * Math.sin(angleCollision) - b1vy * Math.cos(angleCollision)
-        };
-
-        var v2 = {
-            x: b2vx * Math.cos(angleCollision) + b2vy * Math.sin(angleCollision),
-            y: b2vx * Math.sin(angleCollision) - b2vy * Math.cos(angleCollision)
-        };
-
-        // We expect the new velocity after impact
-        var tempVel1 = ((b1mass - b2mass) * v1.x + 2 * b2mass * v2.x) / (b1mass + b2mass);
-        var tempVel2 = (2 * b1mass * v1.x + (b2mass - b1mass) * v2.x) / (b1mass + b2mass);
-
-        // We convert the vector to the original coordinate system and multiplied by factor of rebound
         if (!body1.immovable)
         {
-            body1.velocity.x = (tempVel1 * Math.cos(angleCollision) - v1.y * Math.sin(angleCollision)) * body1.bounce.x;
-            body1.velocity.y = (v1.y * Math.cos(angleCollision) + tempVel1 * Math.sin(angleCollision)) * body1.bounce.y;
-
-            //  Reset local var
-            b1vx = body1.velocity.x;
-            b1vy = body1.velocity.y;
+            body1.velocity.x = (body1.velocity.x - p * body1.mass * nx) * body1.bounce.x;
+            body1.velocity.y = (body1.velocity.y - p * body1.mass * ny) * body1.bounce.y;
         }
 
         if (!body2.immovable)
         {
-            body2.velocity.x = (tempVel2 * Math.cos(angleCollision) - v2.y * Math.sin(angleCollision)) * body2.bounce.x;
-            body2.velocity.y = (v2.y * Math.cos(angleCollision) + tempVel2 * Math.sin(angleCollision)) * body2.bounce.y;
-
-            //  Reset local var
-            b2vx = body2.velocity.x;
-            b2vy = body2.velocity.y;
+            body2.velocity.x = (body2.velocity.x + p * body2.mass * nx) * body2.bounce.x;
+            body2.velocity.y = (body2.velocity.y + p * body2.mass * ny) * body2.bounce.y;
         }
 
-        // When the collision angle is almost perpendicular to the total initial velocity vector
-        // (collision on a tangent) vector direction can be determined incorrectly.
-        // This code fixes the problem
-
-        if (Math.abs(angleCollision) < Math.PI / 2)
-        {
-            if ((b1vx > 0) && !body1.immovable && (b2vx > b1vx))
-            {
-                body1.velocity.x *= -1;
-            }
-            else if ((b2vx < 0) && !body2.immovable && (b1vx < b2vx))
-            {
-                body2.velocity.x *= -1;
-            }
-            else if ((b1vy > 0) && !body1.immovable && (b2vy > b1vy))
-            {
-                body1.velocity.y *= -1;
-            }
-            else if ((b2vy < 0) && !body2.immovable && (b1vy < b2vy))
-            {
-                body2.velocity.y *= -1;
-            }
-        }
-        else if (Math.abs(angleCollision) > Math.PI / 2)
-        {
-            if ((b1vx < 0) && !body1.immovable && (b2vx < b1vx))
-            {
-                body1.velocity.x *= -1;
-            }
-            else if ((b2vx > 0) && !body2.immovable && (b1vx > b2vx))
-            {
-                body2.velocity.x *= -1;
-            }
-            else if ((b1vy < 0) && !body1.immovable && (b2vy < b1vy))
-            {
-                body1.velocity.y *= -1;
-            }
-            else if ((b2vy > 0) && !body2.immovable && (b1vx > b2vy))
-            {
-                body2.velocity.y *= -1;
-            }
-        }
+        var dvx = body2.velocity.x - body1.velocity.x;
+        var dvy = body2.velocity.y - body1.velocity.y;
+        var angleCollision = Math.atan2(dvy, dvx);
 
         var delta = this._frameTime;
 
