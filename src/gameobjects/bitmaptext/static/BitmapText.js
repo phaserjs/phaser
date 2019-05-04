@@ -9,6 +9,7 @@ var Components = require('../../components');
 var GameObject = require('../../GameObject');
 var GetBitmapTextSize = require('../GetBitmapTextSize');
 var ParseFromAtlas = require('../ParseFromAtlas');
+var ParseXMLBitmapFont = require('../ParseXMLBitmapFont');
 var Render = require('./BitmapTextRender');
 
 /**
@@ -615,5 +616,21 @@ BitmapText.ALIGN_RIGHT = 2;
  * @return {boolean} Whether the parsing was successful or not.
  */
 BitmapText.ParseFromAtlas = ParseFromAtlas;
+
+/**
+ * Parse an XML font to Bitmap Font data for the Bitmap Font cache.
+ *
+ * @name Phaser.GameObjects.BitmapText.ParseXMLBitmapFont
+ * @type {function}
+ * @since 3.17.0
+ *
+ * @param {XMLDocument} xml - The XML Document to parse the font from.
+ * @param {integer} [xSpacing=0] - The x-axis spacing to add between each letter.
+ * @param {integer} [ySpacing=0] - The y-axis spacing to add to the line height.
+ * @param {Phaser.Textures.Frame} [frame] - The texture frame to take into account while parsing.
+ *
+ * @return {Phaser.GameObjects.BitmapText.Types.BitmapFontData} The parsed Bitmap Font data.
+ */
+BitmapText.ParseXMLBitmapFont = ParseXMLBitmapFont;
 
 module.exports = BitmapText;
