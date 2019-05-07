@@ -24,7 +24,6 @@ var Vector4 = require('../../math/Vector4');
  *
  * @extends Phaser.GameObjects.Components.Alpha
  * @extends Phaser.GameObjects.Components.BlendMode
- * @extends Phaser.GameObjects.Components.ComputedSize
  * @extends Phaser.GameObjects.Components.Depth
  * @extends Phaser.GameObjects.Components.Origin
  * @extends Phaser.GameObjects.Components.ScrollFactor
@@ -45,7 +44,6 @@ var DOMElement = new Class({
     Mixins: [
         Components.Alpha,
         Components.BlendMode,
-        Components.ComputedSize,
         Components.Depth,
         Components.Origin,
         Components.ScrollFactor,
@@ -78,6 +76,35 @@ var DOMElement = new Class({
         this.handler = this.dispatchNativeEvent.bind(this);
 
         this.setPosition(x, y);
+
+        /**
+         * The native (un-scaled) width of this Game Object.
+         * 
+         * Changing this value will not change the size that the Game Object is rendered in-game.
+         * For that you need to either set the scale of the Game Object (`setScale`) or use
+         * the `displayWidth` property.
+         * 
+         * @name Phaser.GameObjects.Components.ComputedSize#width
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.width = 0;
+
+        /**
+         * The native (un-scaled) height of this Game Object.
+         * 
+         * Changing this value will not change the size that the Game Object is rendered in-game.
+         * For that you need to either set the scale of the Game Object (`setScale`) or use
+         * the `displayHeight` property.
+         * 
+         * @name Phaser.GameObjects.Components.ComputedSize#height
+         * @type {number}
+         * @since 3.0.0
+         */
+        this.height = 0;
+
+        this.displayWidth = 0;
+        this.displayHeight = 0;
 
         if (typeof element === 'string')
         {
@@ -227,7 +254,10 @@ var DOMElement = new Class({
 
         var nodeBounds = target.getBoundingClientRect();
 
-        this.setSize(nodeBounds.width || 0, nodeBounds.height || 0);
+        this.width = target.clientWidth;
+        this.height = target.clientHeight;
+        this.displayWidth = nodeBounds.width || 0;
+        this.displayHeight = nodeBounds.height || 0;
 
         return this;
     },

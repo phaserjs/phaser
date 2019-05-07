@@ -21,7 +21,7 @@ var GameObject = require('../GameObject');
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
  */
-var DOMElementCSSRenderer = function (renderer, src, interpolationPercentage, camera)
+var DOMElementCSSRenderer = function (renderer, src, interpolationPercentage, camera, parentTransformMatrix)
 {
     var node = src.node;
     var style = node.style;
@@ -36,23 +36,66 @@ var DOMElementCSSRenderer = function (renderer, src, interpolationPercentage, ca
         return;
     }
 
+    var parent = src.parentContainer;
+    var alpha = camera.alpha * src.alpha;
+
+    if (parent)
+    {
+        alpha *= parent.alpha;
+    }
+
     var camMatrix = renderer._tempMatrix1;
-    var spriteMatrix = renderer._tempMatrix2;
+    var srcMatrix = renderer._tempMatrix2;
     var calcMatrix = renderer._tempMatrix3;
 
-    var x = src.originX * src.width;
-    var y = src.originY * src.height;
+    var dx = 0;
+    var dy = 0;
 
-    spriteMatrix.applyITRS(src.x - x - (camera.scrollX * src.scrollFactorX), src.y - y - (camera.scrollY * src.scrollFactorY), src.rotation, src.scaleX, src.scaleY);
+    var tx = '0%';
+    var ty = '0%';
 
-    camMatrix.copyFrom(camera.matrix);
-    
-    camMatrix.multiply(spriteMatrix, calcMatrix);
+    if (parentTransformMatrix)
+    {
+        dx = (src.width * src.scaleX) * src.originX;
+        dy = (src.height * src.scaleY) * src.originY;
+
+        srcMatrix.applyITRS(src.x - dx, src.y - dy, src.rotation, src.scaleX, src.scaleY);
+
+        camMatrix.copyFrom(camera.matrix);
+
+        //  Multiply the camera by the parent matrix
+        camMatrix.multiplyWithOffset(parentTransformMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
+
+        //  Undo the camera scroll
+        srcMatrix.e = src.x - dx;
+        srcMatrix.f = src.y - dy;
+
+        //  Multiply by the src matrix, store result in calcMatrix
+        camMatrix.multiply(srcMatrix, calcMatrix);
+    }
+    else
+    {
+        dx = (src.width) * src.originX;
+        dy = (src.height) * src.originY;
+ 
+        srcMatrix.applyITRS(src.x - dx, src.y - dy, src.rotation, src.scaleX, src.scaleY);
+        
+        camMatrix.copyFrom(camera.matrix);
+
+        tx = (100 * src.originX) + '%';
+        ty = (100 * src.originY) + '%';
+
+        srcMatrix.e -= camera.scrollX * src.scrollFactorX;
+        srcMatrix.f -= camera.scrollY * src.scrollFactorY;
+
+        //  Multiply by the src matrix, store result in calcMatrix
+        camMatrix.multiply(srcMatrix, calcMatrix);
+    }
 
     if (!src.transformOnly)
     {
         style.display = 'block';
-        style.opacity = src.alpha;
+        style.opacity = alpha;
         style.zIndex = src._depth;
         style.pointerEvents = 'auto';
         style.mixBlendMode = CSSBlendModes[src._blendMode];
@@ -65,7 +108,12 @@ var DOMElementCSSRenderer = function (renderer, src, interpolationPercentage, ca
         ' skew(' + src.skewX + 'rad, ' + src.skewY + 'rad)' +
         ' rotate3d(' + src.rotate3d.x + ',' + src.rotate3d.y + ',' + src.rotate3d.z + ',' + src.rotate3d.w + src.rotate3dAngle + ')';
 
-    style.transformOrigin = (100 * src.originX) + '% ' + (100 * src.originY) + '%';
+    style.transformOrigin = tx + ' ' + ty;
+
+    var nodeBounds = node.getBoundingClientRect();
+
+    src.displayWidth = nodeBounds.width;
+    src.displayHeight = nodeBounds.height;
 };
 
 module.exports = DOMElementCSSRenderer;

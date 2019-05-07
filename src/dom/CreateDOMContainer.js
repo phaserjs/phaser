@@ -30,8 +30,6 @@ var CreateDOMContainer = function (game)
         'transform-origin: left top;'
     ].join(' ');
 
-
-
     game.domContainer = div;
 
     AddToDOM(div, config.parent);
