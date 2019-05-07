@@ -352,6 +352,16 @@ var Group = new Class({
             yoyo: yoyo
         });
 
+        if (options.createCallback)
+        {
+            this.createCallback = options.createCallback;
+        }
+
+        if (options.removeCallback)
+        {
+            this.removeCallback = options.removeCallback;
+        }
+
         for (var c = 0; c < range.length; c++)
         {
             var created = this.create(0, 0, range[c].a, range[c].b, visible, active);
