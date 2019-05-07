@@ -337,6 +337,17 @@ var DOMElement = new Class({
         return this;
     },
 
+    preUpdate: function ()
+    {
+        var parent = this.parentContainer;
+        var node = this.node;
+
+        if (node && parent && !parent.willRender())
+        {
+            node.style.display = 'none';
+        }
+    },
+
     /**
      * Compares the renderMask with the renderFlags to see if this Game Object will render or not.
      * 
