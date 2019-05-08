@@ -20,8 +20,9 @@ var GameObject = require('../GameObject');
  * @param {Phaser.GameObjects.DOMElement} src - The Game Object being rendered in this call.
  * @param {number} interpolationPercentage - Reserved for future use and custom pipelines.
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The Camera that is rendering the Game Object.
+ * @param {Phaser.GameObjects.Components.TransformMatrix} parentMatrix - This transform matrix is defined if the game object is nested
  */
-var DOMElementCSSRenderer = function (renderer, src, interpolationPercentage, camera, parentTransformMatrix)
+var DOMElementCSSRenderer = function (renderer, src, interpolationPercentage, camera, parentMatrix)
 {
     var node = src.node;
     var style = node.style;
@@ -54,7 +55,7 @@ var DOMElementCSSRenderer = function (renderer, src, interpolationPercentage, ca
     var tx = '0%';
     var ty = '0%';
 
-    if (parentTransformMatrix)
+    if (parentMatrix)
     {
         dx = (src.width * src.scaleX) * src.originX;
         dy = (src.height * src.scaleY) * src.originY;
@@ -64,7 +65,7 @@ var DOMElementCSSRenderer = function (renderer, src, interpolationPercentage, ca
         camMatrix.copyFrom(camera.matrix);
 
         //  Multiply the camera by the parent matrix
-        camMatrix.multiplyWithOffset(parentTransformMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
+        camMatrix.multiplyWithOffset(parentMatrix, -camera.scrollX * src.scrollFactorX, -camera.scrollY * src.scrollFactorY);
 
         //  Undo the camera scroll
         srcMatrix.e = src.x - dx;
