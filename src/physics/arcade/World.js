@@ -927,11 +927,14 @@ var World = new Class({
             }
         }
 
-        var stepsThisFrame = 0;
+        var stepsThisFrame = 1;
         var fixedDelta = this._frameTime;
         var msPerFrame = this._frameTimeMS * this.timeScale;
 
-        this._elapsed += delta;
+        this._elapsed += delta - msPerFrame;
+
+        //  Always step once, no matter what
+        this.step(fixedDelta);
 
         while (this._elapsed >= msPerFrame)
         {
