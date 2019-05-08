@@ -6,15 +6,15 @@ const exec = require('child_process').exec;
 module.exports = {
     mode: 'development',
 
-    context: `${__dirname}/src/`,
+    context: `${__dirname}/../src/`,
 
     entry: {
         phaser: './phaser.js'
     },
 
     output: {
-        path: `${__dirname}/build/`,
-        filename: 'phaser-facebook-instant-games.js',
+        path: `${__dirname}/../build/`,
+        filename: '[name].js',
         library: 'Phaser',
         libraryTarget: 'umd',
         sourceMapFilename: '[file].map',
@@ -29,15 +29,15 @@ module.exports = {
         new webpack.DefinePlugin({
             "typeof CANVAS_RENDERER": JSON.stringify(true),
             "typeof WEBGL_RENDERER": JSON.stringify(true),
-            "typeof EXPERIMENTAL": JSON.stringify(false),
+            "typeof EXPERIMENTAL": JSON.stringify(true),
             "typeof PLUGIN_CAMERA3D": JSON.stringify(false),
-            "typeof PLUGIN_FBINSTANT": JSON.stringify(true),
+            "typeof PLUGIN_FBINSTANT": JSON.stringify(false),
             "typeof FEATURE_SOUND": JSON.stringify(true)
         }),
         {
             apply: (compiler) => {
                 compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
-                    exec('node scripts/copy-to-examples-fb.js', (err, stdout, stderr) => {
+                    exec('node scripts/copy-to-examples.js', (err, stdout, stderr) => {
                         if (stdout) process.stdout.write(stdout);
                         if (stderr) process.stderr.write(stderr);
                     });

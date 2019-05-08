@@ -7,7 +7,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 module.exports = {
     mode: 'production',
 
-    context: `${__dirname}/src/`,
+    context: `${__dirname}/../src/`,
 
     entry: {
         phaser: './phaser.js',
@@ -17,7 +17,7 @@ module.exports = {
     },
 
     output: {
-        path: `${__dirname}/dist/`,
+        path: `${__dirname}/../dist/`,
         filename: '[name].js',
         library: 'Phaser',
         libraryTarget: 'umd',
