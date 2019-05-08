@@ -9,7 +9,7 @@ var Systems = require('./Systems');
 
 /**
  * @classdesc
- * A base Phaser.Scene class which you could extend for your own use.
+ * A base Phaser.Scene class which can be extended for your own use.
  *
  * @class Scene
  * @memberof Phaser
@@ -265,6 +265,18 @@ var Scene = new Class({
          * @since 3.16.2
          */
         this.scale;
+
+        /**
+         * A reference to the Plugin Manager.
+         *
+         * The Plugin Manager is a global system that allows plugins to register themselves with it, and can then install
+         * those plugins into Scenes as required.
+         *
+         * @name Phaser.Scene#plugins
+         * @type {Phaser.Plugins.PluginManager}
+         * @since 3.0.0
+         */
+        this.plugins;
     },
 
     /**
