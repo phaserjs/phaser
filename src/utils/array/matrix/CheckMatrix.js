@@ -22,8 +22,11 @@
  *
  * @function Phaser.Utils.Array.Matrix.CheckMatrix
  * @since 3.0.0
+ * 
+ * @generic T
+ * @genericUse {T[][]} - [matrix]
  *
- * @param {array} matrix - The array to check.
+ * @param {T[][]} [matrix] - The array to check.
  *
  * @return {boolean} `true` if the given `matrix` array is a valid matrix.
  */

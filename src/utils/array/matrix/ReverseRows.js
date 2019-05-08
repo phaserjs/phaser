@@ -10,9 +10,12 @@
  * @function Phaser.Utils.Array.Matrix.ReverseRows
  * @since 3.0.0
  *
- * @param {array} matrix - The array matrix to reverse the rows for.
+ * @generic T
+ * @genericUse {T[][]} - [matrix,$return]
  *
- * @return {array} The column reversed matrix.
+ * @param {T[][]} [matrix] - The array matrix to reverse the rows for.
+ *
+ * @return {T[][]} The column reversed matrix.
  */
 var ReverseRows = function (matrix)
 {

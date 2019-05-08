@@ -13,7 +13,10 @@ var CheckMatrix = require('./CheckMatrix');
  * @function Phaser.Utils.Array.Matrix.MatrixToString
  * @since 3.0.0
  *
- * @param {array} matrix - A 2-dimensional array.
+ * @generic T
+ * @genericUse {T[][]} - [matrix]
+ *
+ * @param {T[][]} [matrix] - A 2-dimensional array.
  *
  * @return {string} A string representing the matrix.
  */
