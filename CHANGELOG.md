@@ -2,6 +2,62 @@
 
 ## Version 3.17.0 - Ishikawa - in dev
 
+### Shaders
+
+'Shader' is a new type of Game Object which allows you to easily add a quad with its own shader into the display list, and manipulate it as you would any other Game Object, including scaling, rotating, positioning and adding to Containers. Shaders can be masked with either Bitmap or Geometry masks and can also be used as a Bitmap Mask for a Camera or other Game Object. They can also be made interactive and used for input events.
+
+They work by taking a reference to a `Phaser.Display.BaseShader` instance, as found in the Shader Cache. These can be created dynamically at runtime, or loaded in via the updated GLSL File Loader:
+
+```javascript
+function preload ()
+{
+    this.load.glsl('fire', 'shaders/fire.glsl.js');
+}
+ 
+function create ()
+{
+    this.add.shader('fire', 400, 300, 512, 512);
+}
+```
+
+Please see the Phaser 3 Examples GitHub repo for examples of loading and creating shaders dynamically.
+
+* `Display.BaseShader` is a new type of object that contain the fragment and vertex source, together with any uniforms the shader needs, and are used when creating the new `Shader` Game Objects. They are stored in the Shader cache.
+* The Shader Cache `this.cache.shader` has been updated. Rather than holding plain text fragments, it now holds instances of the new `BaseShader` objects. As a result, using `cache.shader.get(key)` will now return a `BaseShader` instead of a text file.
+* The `GLSLFile` loader has been updated with new arguments. As well as a URL to the shader file you can also specify if the file is a fragment or vertex shader. It then uses this value to help create or update a `BaseShader` instance in the shader cache.
+* The `GLSLFile` loader now supports shader bundles. These allow for multiple shaders to be stored in a single file, with each shader separated by a block of front-matter that represents its contents. Example shader bundles can be found in the Phaser 3 Examples repo.
+
+### DOM Elements
+
+DOM Elements have finally left the experimental stage and are now part of the full Phaser release.
+
+DOM Element Game Objects are a way to control and manipulate HTML Elements over the top of your game. In order for DOM Elements to display you have to enable them by adding the following to your game configuration object:
+
+```javascript
+dom {
+  createContainer: true
+}
+```
+
+When this is added, Phaser will automatically create a DOM Container div that is positioned over the top of the game canvas. This div is sized to match the canvas, and if the canvas size changes, as a result of settings within the Scale Manager, the dom container is resized accordingly.
+
+You can create a DOM Element by either passing in DOMStrings, or by passing in a reference to an existing
+Element that you wish to be placed under the control of Phaser. For example:
+
+```javascript
+this.add.dom(x, y, 'div', 'background-color: lime; width: 220px; height: 100px; font: 48px Arial', 'Phaser');
+```
+
+The above code will insert a div element into the DOM Container at the given x/y coordinate. The DOMString in the 4th argument sets the initial CSS style of the div and the final argument is the inner text. In this case, it will create a lime colored div that is 220px by 100px in size with the text Phaser in it, in an Arial font.
+
+You should nearly always, without exception, use explicitly sized HTML Elements, in order to fully control alignment and positioning of the elements next to regular game content.
+
+Rather than specify the CSS and HTML directly you can use the `load.html` File Loader to load it into the cache and then use the `createFromCache` method instead. You can also use `createFromHTML` and various other methods available in this class to help construct your elements.
+
+Once the element has been created you can then control it like you would any other Game Object. You can set its position, scale, rotation, alpha and other properties. It will move as the main Scene Camera moves and be clipped at the edge of the canvas. It's important to remember some limitations of DOM Elements: The obvious one is that they appear above or below your game canvas. You cannot blend them into the display list, meaning you cannot have a DOM Element, then a Sprite, then another DOM Element behind it.
+
+You can find lots of examples on using DOM Elements in the Phaser 3 Examples repo.
+
 ### Geometry and Bitmap Masks
 
 * `Camera.setMask` is a new method that allows you to set a geometry or bitmap mask on any camera. The mask can be set to remain fixed in position, or to translate along with the camera. It will impact anything the camera renders. A reference to the mask is stored in the `Camera.mask` property.
@@ -84,7 +140,7 @@
 * `MultiScriptFile` is a new Loader FileType that allows you to load multiple script files into the document via the Phaser Loader, using the new `load.scripts` method. The difference between this and `load.script` is that you must pass an array of script file URLs to this method and they will be loaded in parallel but _processed_ (i.e. added to the document) in the exact order specified in the array. This allows you to load a bundle of scripts that have dependencies on each other.
 * `Key.getDuration` is a new method that will return the duration, in ms, that the Key has been held down for. If the Key isn't down it will return zero.
 * The `Container.setScrollFactor` method has a new optional argument `updateChildren`. If set, it will change the `scrollFactor` values of all the Container children as well as the Container. Fix #4466 #4475 (thanks @pinkkis @enriqueto)
-* There is a new webpack config `FEATURE_SOUND` which is set to `true` by default, but if set to `false` it will exclude the Sound Manager and all of its systems into the build files. Fix #4428 (thanks @goldfire)
+* There is a new webpack config `FEATURE_SOUND` which is set to `true` by default, but if set to `false` it will exclude the Sound Manager and all of its systems from the build files. Fix #4428 (thanks @goldfire)
 * `Scene.Systems.renderer` is a new property that is a reference to the current renderer the game is using.
 * `Utils.Objects.SetValue` is a new function that allows you to set a value in an object by specifying a property key. The function can set a value to any depth by using dot-notation for the key, i.e. `SetValue(data, 'world.position.x', 100)`.
 * `WebGLRenderer.glFuncMap` is a new object, populated during the `init` method, that contains uniform mappings from key to the corresponding gl function, i.e. `mat2` to `gl.uniformMatrix2fv`.
