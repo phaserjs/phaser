@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "module": "system",
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "noImplicitThis": true,
+        "noImplicitReturns": true,
+        "preserveConstEnums": true,
+        "outFile": "./bin/game.js",
+        "sourceMap": true
+    },
+    "include": [
+        "src/*",
+        "../../../types/phaser.d.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
