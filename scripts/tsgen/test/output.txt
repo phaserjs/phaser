@@ -1,0 +1,156 @@
+src/game2.ts(6,10): error TS2304: Cannot find name 'GameConfig'.
+../../../types/phaser.d.ts(2281,24): error TS2304: Cannot find name 'K'.
+../../../types/phaser.d.ts(3358,117): error TS2304: Cannot find name 'CameraPanCallback'.
+../../../types/phaser.d.ts(3371,112): error TS2304: Cannot find name 'CameraPanCallback'.
+../../../types/phaser.d.ts(6101,246): error TS7014: Function type, which lacks return-type annotation, implicitly has an 'any' return type.
+../../../types/phaser.d.ts(6101,246): error TS8020: JSDoc types can only be used inside documentation comments.
+../../../types/phaser.d.ts(6319,26): error TS2304: Cannot find name 'MatterWorldConfig'.
+../../../types/phaser.d.ts(9914,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(9938,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(10774,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(10798,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(11471,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(11495,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(12447,35): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(12470,53): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(14251,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(14275,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(14682,90): error TS2304: Cannot find name 'DOMString'.
+../../../types/phaser.d.ts(14682,118): error TS2304: Cannot find name 'DOMString'.
+../../../types/phaser.d.ts(14682,147): error TS2304: Cannot find name 'DOMString'.
+../../../types/phaser.d.ts(14869,52): error TS2304: Cannot find name 'DOMString'.
+../../../types/phaser.d.ts(14869,81): error TS2304: Cannot find name 'DOMString'.
+../../../types/phaser.d.ts(14916,59): error TS2304: Cannot find name 'DOMString'.
+../../../types/phaser.d.ts(14916,88): error TS2304: Cannot find name 'DOMString'.
+../../../types/phaser.d.ts(14950,52): error TS2304: Cannot find name 'DOMString'.
+../../../types/phaser.d.ts(14977,31): error TS2304: Cannot find name 'DOMString'.
+../../../types/phaser.d.ts(14977,52): error TS2304: Cannot find name 'DOMString'.
+../../../types/phaser.d.ts(15033,27): error TS2304: Cannot find name 'DOMString'.
+../../../types/phaser.d.ts(15039,27): error TS2304: Cannot find name 'DOMString'.
+../../../types/phaser.d.ts(15120,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(15144,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(15542,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(15566,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(17956,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(17980,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(18738,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(18762,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(19824,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(19848,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(21394,53): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(22115,40): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(22491,42): error TS2304: Cannot find name 'EdgeZoneSource'.
+../../../types/phaser.d.ts(22661,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(22685,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(23577,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(23601,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(24421,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(24445,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(25113,36): error TS2694: Namespace 'Phaser.Display' has no exported member 'Shader'.
+../../../types/phaser.d.ts(25919,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(25943,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(26543,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(26567,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(27177,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(27201,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(27866,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(27890,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(28537,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(28561,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(29222,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(29246,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(29860,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(29884,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(30482,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(30506,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(31087,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(31111,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(31782,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(31806,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(32430,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(32454,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(33052,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(33076,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(33681,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(33705,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(34901,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(34925,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(35916,31): error TS2304: Cannot find name 'BitmapTextMetrics'.
+../../../types/phaser.d.ts(36156,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(36180,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(50324,32): error TS2304: Cannot find name 'Vector2Like'.
+../../../types/phaser.d.ts(51061,35): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(51085,53): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(52455,35): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(52479,53): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(56617,45): error TS2694: Namespace 'Phaser.Physics.Impact' has no exported member 'TYPE'.
+../../../types/phaser.d.ts(56622,53): error TS2694: Namespace 'Phaser.Physics.Impact' has no exported member 'TYPE'.
+../../../types/phaser.d.ts(56627,49): error TS2694: Namespace 'Phaser.Physics.Impact' has no exported member 'COLLIDES'.
+../../../types/phaser.d.ts(56647,33): error TS2304: Cannot find name 'BodyUpdateCallback'.
+../../../types/phaser.d.ts(57667,35): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(57691,53): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(58826,35): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(58850,53): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(59933,49): error TS2694: Namespace 'Phaser.Physics.Impact' has no exported member 'TYPE'.
+../../../types/phaser.d.ts(59937,57): error TS2694: Namespace 'Phaser.Physics.Impact' has no exported member 'TYPE'.
+../../../types/phaser.d.ts(59941,53): error TS2694: Namespace 'Phaser.Physics.Impact' has no exported member 'COLLIDES'.
+../../../types/phaser.d.ts(61310,35): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(61334,53): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(62477,35): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(62501,53): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(63487,48): error TS2304: Cannot find name 'MatterBodyTileOptions'.
+../../../types/phaser.d.ts(65030,36): error TS2304: Cannot find name 'SnapshotCallback'.
+../../../types/phaser.d.ts(65050,97): error TS2304: Cannot find name 'SnapshotCallback'.
+../../../types/phaser.d.ts(65067,65): error TS2304: Cannot find name 'SnapshotCallback'.
+../../../types/phaser.d.ts(65123,70): error TS2304: Cannot find name 'SnapshotState'.
+../../../types/phaser.d.ts(65173,69): error TS2304: Cannot find name 'SnapshotState'.
+../../../types/phaser.d.ts(65305,75): error TS2526: A 'this' type is available only in a non-static member of a class or interface.
+../../../types/phaser.d.ts(65313,79): error TS2526: A 'this' type is available only in a non-static member of a class or interface.
+../../../types/phaser.d.ts(65319,61): error TS2526: A 'this' type is available only in a non-static member of a class or interface.
+../../../types/phaser.d.ts(65325,61): error TS2526: A 'this' type is available only in a non-static member of a class or interface.
+../../../types/phaser.d.ts(65331,61): error TS2526: A 'this' type is available only in a non-static member of a class or interface.
+../../../types/phaser.d.ts(65336,46): error TS2526: A 'this' type is available only in a non-static member of a class or interface.
+../../../types/phaser.d.ts(65344,74): error TS2526: A 'this' type is available only in a non-static member of a class or interface.
+../../../types/phaser.d.ts(65352,78): error TS2526: A 'this' type is available only in a non-static member of a class or interface.
+../../../types/phaser.d.ts(65358,60): error TS2526: A 'this' type is available only in a non-static member of a class or interface.
+../../../types/phaser.d.ts(65364,60): error TS2526: A 'this' type is available only in a non-static member of a class or interface.
+../../../types/phaser.d.ts(65370,60): error TS2526: A 'this' type is available only in a non-static member of a class or interface.
+../../../types/phaser.d.ts(65376,66): error TS2526: A 'this' type is available only in a non-static member of a class or interface.
+../../../types/phaser.d.ts(65382,62): error TS2526: A 'this' type is available only in a non-static member of a class or interface.
+../../../types/phaser.d.ts(65387,46): error TS2526: A 'this' type is available only in a non-static member of a class or interface.
+../../../types/phaser.d.ts(65398,126): error TS2526: A 'this' type is available only in a non-static member of a class or interface.
+../../../types/phaser.d.ts(65407,103): error TS2526: A 'this' type is available only in a non-static member of a class or interface.
+../../../types/phaser.d.ts(66723,36): error TS2304: Cannot find name 'SnapshotCallback'.
+../../../types/phaser.d.ts(66745,97): error TS2304: Cannot find name 'SnapshotCallback'.
+../../../types/phaser.d.ts(66762,65): error TS2304: Cannot find name 'SnapshotCallback'.
+../../../types/phaser.d.ts(67003,47): error TS2694: Namespace 'Phaser.Scale.Center' has no exported member 'NO_CENTER'.
+../../../types/phaser.d.ts(67003,79): error TS2694: Namespace 'Phaser.Scale.Center' has no exported member 'CENTER_BOTH'.
+../../../types/phaser.d.ts(67003,113): error TS2694: Namespace 'Phaser.Scale.Center' has no exported member 'CENTER_HORIZONTALLY'.
+../../../types/phaser.d.ts(67003,155): error TS2694: Namespace 'Phaser.Scale.Center' has no exported member 'CENTER_VERTICALLY'.
+../../../types/phaser.d.ts(67026,57): error TS2694: Namespace 'Phaser.Scale.Orientation' has no exported member 'LANDSCAPE'.
+../../../types/phaser.d.ts(67026,94): error TS2694: Namespace 'Phaser.Scale.Orientation' has no exported member 'PORTRAIT'.
+../../../types/phaser.d.ts(67074,54): error TS2694: Namespace 'Phaser.Scale.ScaleModes' has no exported member 'NONE'.
+../../../types/phaser.d.ts(67074,85): error TS2694: Namespace 'Phaser.Scale.ScaleModes' has no exported member 'WIDTH_CONTROLS_HEIGHT'.
+../../../types/phaser.d.ts(67074,133): error TS2694: Namespace 'Phaser.Scale.ScaleModes' has no exported member 'HEIGHT_CONTROLS_WIDTH'.
+../../../types/phaser.d.ts(67074,181): error TS2694: Namespace 'Phaser.Scale.ScaleModes' has no exported member 'FIT'.
+../../../types/phaser.d.ts(67074,211): error TS2694: Namespace 'Phaser.Scale.ScaleModes' has no exported member 'ENVELOP'.
+../../../types/phaser.d.ts(67074,245): error TS2694: Namespace 'Phaser.Scale.ScaleModes' has no exported member 'RESIZE'.
+../../../types/phaser.d.ts(67108,43): error TS2694: Namespace 'Phaser.Scale.Zoom' has no exported member 'NO_ZOOM'.
+../../../types/phaser.d.ts(67108,71): error TS2694: Namespace 'Phaser.Scale.Zoom' has no exported member 'ZOOM_2X'.
+../../../types/phaser.d.ts(67108,99): error TS2694: Namespace 'Phaser.Scale.Zoom' has no exported member 'ZOOM_4X'.
+../../../types/phaser.d.ts(67108,127): error TS2694: Namespace 'Phaser.Scale.Zoom' has no exported member 'MAX_ZOOM'.
+../../../types/phaser.d.ts(67403,43): error TS2304: Cannot find name 'GameConfig'.
+../../../types/phaser.d.ts(67409,31): error TS2304: Cannot find name 'GameConfig'.
+../../../types/phaser.d.ts(69081,27): error TS2304: Cannot find name 'InputJSONCameraObject'.
+../../../types/phaser.d.ts(69081,51): error TS2304: Cannot find name 'InputJSONCameraObject'.
+../../../types/phaser.d.ts(69408,31): error TS2304: Cannot find name 'SoundMarker'.
+../../../types/phaser.d.ts(72092,51): error TS2694: Namespace 'Phaser.Textures' has no exported member 'FilterMode'.
+../../../types/phaser.d.ts(72494,51): error TS2694: Namespace 'Phaser.Textures' has no exported member 'FilterMode'.
+../../../types/phaser.d.ts(72766,100): error TS2304: Cannot find name 'SpriteConfig'.
+../../../types/phaser.d.ts(73302,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(73326,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(74570,100): error TS2304: Cannot find name 'SpriteConfig'.
+../../../types/phaser.d.ts(74967,31): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(74991,49): error TS2694: Namespace 'Phaser' has no exported member 'BlendModes'.
+../../../types/phaser.d.ts(76157,81): error TS2304: Cannot find name 'SpriteConfig'.
+../../../types/phaser.d.ts(76173,100): error TS2304: Cannot find name 'SpriteConfig'.
