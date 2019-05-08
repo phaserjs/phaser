@@ -237,7 +237,7 @@ var DOMElement = new Class({
      * 
      * For more information see: https://developer.mozilla.org/en-US/docs/Web/CSS/transform
      *
-     * @method Phaser.GameObjects.Sprite#setSkew
+     * @method Phaser.GameObjects.DOMElement#setSkew
      * @since 3.17.0
      *
      * @param {number} [x=0] - The angle, in radians, by which to skew the DOM Element on the horizontal axis.
@@ -266,7 +266,7 @@ var DOMElement = new Class({
      * 
      * **Changing this value changes it globally for all DOM Elements, as they all share the same parent container.**
      *
-     * @method Phaser.GameObjects.Sprite#setPerspective
+     * @method Phaser.GameObjects.DOMElement#setPerspective
      * @since 3.17.0
      *
      * @param {number} value - The perspective value, in pixels, that determines the distance between the z plane and the user.
@@ -322,7 +322,7 @@ var DOMElement = new Class({
      * div.on('click', handler);
      * ```
      *
-     * @method Phaser.GameObjects.Sprite#addListener
+     * @method Phaser.GameObjects.DOMElement#addListener
      * @since 3.17.0
      *
      * @param {string} events - The DOM event/s to listen for. You can specify multiple events by separating them with spaces.
@@ -347,7 +347,7 @@ var DOMElement = new Class({
     /**
      * Removes one or more native DOM event listeners from the underlying Element of this Game Object.
      *
-     * @method Phaser.GameObjects.Sprite#removeListener
+     * @method Phaser.GameObjects.DOMElement#removeListener
      * @since 3.17.0
      *
      * @param {string} events - The DOM event/s to stop listening for. You can specify multiple events by separating them with spaces.
@@ -372,7 +372,7 @@ var DOMElement = new Class({
     /**
      * Internal event proxy to dispatch native DOM Events via this Game Object.
      *
-     * @method Phaser.GameObjects.Sprite#dispatchNativeEvent
+     * @method Phaser.GameObjects.DOMElement#dispatchNativeEvent
      * @private
      * @since 3.17.0
      *
@@ -384,31 +384,38 @@ var DOMElement = new Class({
     },
 
     /**
+     * Creates a native DOM Element, adds it to the parent DOM Container and then binds it to this Game Object,
+     * so you can control it. The `tagName` should be a string and is passed to `document.createElement`:
      * 
+     * ```javascript
+     * this.add.dom().createElement('div');
+     * ```
+     * 
+     * For more details see: https://developer.mozilla.org/en-US/docs/Web/API/Document/createElement
      *
-     * @method Phaser.GameObjects.Sprite#createElement
+     * @method Phaser.GameObjects.DOMElement#createElement
      * @since 3.17.0
      *
-     * @param {string} element - 
-     * @param {DOMString} style - 
-     * @param {DOMString} innerText - 
+     * @param {string} tagName - A string that specifies the type of element to be created. The nodeName of the created element is initialized with the value of tagName. Don't use qualified names (like "html:a") with this method.
+     * @param {DOMString} [style] - A DOMString that holds the CSS styles to be applied to the created element.
+     * @param {DOMString} [innerText] - A DOMString that holds the text that will be set as the innerText of the created element.
      * 
      * @return {this} This DOM Element instance.
      */
-    createElement: function (element, style, innerText)
+    createElement: function (tagName, style, innerText)
     {
-        return this.setElement(document.createElement(element), style, innerText);
+        return this.setElement(document.createElement(tagName), style, innerText);
     },
 
     /**
      * 
      *
-     * @method Phaser.GameObjects.Sprite#setElement
+     * @method Phaser.GameObjects.DOMElement#setElement
      * @since 3.17.0
      *
      * @param {(string|Element)} element - 
-     * @param {DOMString} style - 
-     * @param {DOMString} innerText - 
+     * @param {DOMString} [style] - A DOMString that holds the CSS styles to be applied to the created element.
+     * @param {DOMString} [innerText] - A DOMString that holds the text that will be set as the innerText of the created element.
      * 
      * @return {this} This DOM Element instance.
      */
