@@ -33,7 +33,7 @@ var Vector4 = require('../../math/Vector4');
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {number} [x=0] - The horizontal position of this DOM Element in the world.
  * @param {number} [y=0] - The vertical position of this DOM Element in the world.
- * @param {(HTMLElement|string)} [element] - An existing DOM element, or a string. If a string starting with a # it will do a `getElementById` look-up on the string (minus the hash). Without a hash, it represents the type of element to create, i.e. 'div'.
+ * @param {(Element|DOMString|string)} [element] - An existing DOM element, or a string. If a string starting with a # it will do a `getElementById` look-up on the string (minus the hash). Without a hash, it represents the type of element to create, i.e. 'div'.
  * @param {(DOMString|any)} [style] - If a string, will be set directly as the elements `style` property value. If a plain object, will be iterated and the values transferred. In both cases the values replacing whatever CSS styles may have been previously set.
  * @param {DOMString} [innerText] - If given, will be set directly as the elements `innerText` property value, replacing whatever was there before.
  */
@@ -391,13 +391,36 @@ var DOMElement = new Class({
      * this.add.dom().createElement('div');
      * ```
      * 
-     * For more details see: https://developer.mozilla.org/en-US/docs/Web/API/Document/createElement
+     * For more details on acceptable tag names see: https://developer.mozilla.org/en-US/docs/Web/API/Document/createElement
+     * 
+     * You can also pass in a DOMString or style object to set the CSS on the created element, and an optional `innerText`
+     * value as well. Here is an example of a DOMString:
+     * 
+     * ```javascript
+     * this.add.dom().createElement('div', 'background-color: lime; width: 220px; height: 100px; font: 48px Arial', 'Phaser');
+     * ```
+     * 
+     * And using a style object:
+     * 
+     * ```javascript
+     * var style = {
+     *   'background-color': 'lime';
+     *   'width': '200px';
+     *   'height': '100px';
+     *   'font': '48px Arial';
+     * };
+     * 
+     * this.add.dom().createElement('div', style, 'Phaser');
+     * ```
+     * 
+     * If this Game Object already has an Element, it is removed from the DOM entirely first.
+     * Any event listeners you may have previously created will need to be re-created after this call.
      *
      * @method Phaser.GameObjects.DOMElement#createElement
      * @since 3.17.0
      *
      * @param {string} tagName - A string that specifies the type of element to be created. The nodeName of the created element is initialized with the value of tagName. Don't use qualified names (like "html:a") with this method.
-     * @param {DOMString} [style] - A DOMString that holds the CSS styles to be applied to the created element.
+     * @param {(DOMString|any)} [style] - Either a DOMString that holds the CSS styles to be applied to the created element, or an object the styles will be ready from.
      * @param {DOMString} [innerText] - A DOMString that holds the text that will be set as the innerText of the created element.
      * 
      * @return {this} This DOM Element instance.
@@ -408,23 +431,71 @@ var DOMElement = new Class({
     },
 
     /**
+     * Binds a new DOM Element to this Game Object. If this Game Object already has an Element it is removed from the DOM
+     * entirely first. Any event listeners you may have previously created will need to be re-created on the new element.
      * 
+     * The `element` argument you pass to this method can be either a string tagName:
+     * 
+     * ```javascript
+     * <h1 id="heading">Phaser</h1>
+     *
+     * this.add.dom().setElement('heading');
+     * ```
+     * 
+     * Or a reference to an Element instance:
+     * 
+     * ```javascript
+     * <h1 id="heading">Phaser</h1>
+     *
+     * var h1 = document.getElementById('heading');
+     * 
+     * this.add.dom().setElement(h1);
+     * ```
+     * 
+     * You can also pass in a DOMString or style object to set the CSS on the created element, and an optional `innerText`
+     * value as well. Here is an example of a DOMString:
+     * 
+     * ```javascript
+     * this.add.dom().setElement(h1, 'background-color: lime; width: 220px; height: 100px; font: 48px Arial', 'Phaser');
+     * ```
+     * 
+     * And using a style object:
+     * 
+     * ```javascript
+     * var style = {
+     *   'background-color': 'lime';
+     *   'width': '200px';
+     *   'height': '100px';
+     *   'font': '48px Arial';
+     * };
+     * 
+     * this.add.dom().setElement(h1, style, 'Phaser');
+     * ```
      *
      * @method Phaser.GameObjects.DOMElement#setElement
      * @since 3.17.0
      *
-     * @param {(string|Element)} element - 
-     * @param {DOMString} [style] - A DOMString that holds the CSS styles to be applied to the created element.
+     * @param {(string|Element)} element - If a string it is passed to `getElementById()`, or it should be a reference to an existing Element.
+     * @param {(DOMString|any)} [style] - Either a DOMString that holds the CSS styles to be applied to the created element, or an object the styles will be ready from.
      * @param {DOMString} [innerText] - A DOMString that holds the text that will be set as the innerText of the created element.
      * 
      * @return {this} This DOM Element instance.
      */
     setElement: function (element, style, innerText)
     {
+        //  Already got an element? Remove it first
+        this.removeElement();
+
         var target;
 
         if (typeof element === 'string')
         {
+            //  hash?
+            if (element[0] === '#')
+            {
+                element = element.substr(1);
+            }
+
             target = document.getElementById(element);
         }
         else if (typeof element === 'object' && element.nodeType === 1)
@@ -434,7 +505,7 @@ var DOMElement = new Class({
 
         if (!target)
         {
-            return;
+            return this;
         }
 
         this.node = target;
@@ -477,16 +548,95 @@ var DOMElement = new Class({
         return this.updateSize();
     },
 
-    createFromCache: function (key, elementType)
+    /**
+     * Takes a block of html from the HTML Cache, that has previously been preloaded into the game, and then
+     * creates a DOM Element from it. The loaded HTML is set as the `innerHTML` property of the created
+     * element.
+     * 
+     * Assume the following html is stored in a file called `loginform.html`:
+     * 
+     * ```html
+     * <input type="text" name="nameField" placeholder="Enter your name" style="font-size: 32px">
+     * <input type="button" name="playButton" value="Let's Play" style="font-size: 32px">
+     * ```
+     * 
+     * Which is loaded into your game using the cache key 'login':
+     * 
+     * ```javascript
+     * this.load.html('login', 'assets/loginform.html');
+     * ```
+     * 
+     * You can create a DOM Element from it using the cache key:
+     * 
+     * ```javascript
+     * this.add.dom().createFromCache('login');
+     * ```
+     * 
+     * The optional `elementType` argument controls the container that is created, into which the loaded html is inserted.
+     * The default is a plain `div` object, but any valid tagName can be given.
+     * 
+     * If this Game Object already has an Element, it is removed from the DOM entirely first.
+     * Any event listeners you may have previously created will need to be re-created after this call.
+     *
+     * @method Phaser.GameObjects.DOMElement#createFromCache
+     * @since 3.17.0
+     * 
+     * @param {string} The key of the html cache entry to use for this DOM Element.
+     * @param {DOMString} [tagName='div'] - The tag name of the element into which all of the loaded html will be inserted. Defaults to a plain div tag.
+     * 
+     * @return {this} This DOM Element instance.
+     */
+    createFromCache: function (key, tagName)
     {
-        return this.createFromHTML(this.cache.get(key), elementType);
+        var html = this.cache.get(key);
+
+        if (html)
+        {
+            this.createFromHTML(html, tagName);
+        }
+
+        return this;
     },
 
-    createFromHTML: function (html, elementType)
+    /**
+     * Takes a string of html and then creates a DOM Element from it. The HTML is set as the `innerHTML`
+     * property of the created element.
+     * 
+     * ```javascript
+     * let form = `
+     * <input type="text" name="nameField" placeholder="Enter your name" style="font-size: 32px">
+     * <input type="button" name="playButton" value="Let's Play" style="font-size: 32px">
+     * `;
+     * ```
+     * 
+     * You can create a DOM Element from it using the string:
+     * 
+     * ```javascript
+     * this.add.dom().createFromHTML(form);
+     * ```
+     * 
+     * The optional `elementType` argument controls the type of container that is created, into which the html is inserted.
+     * The default is a plain `div` object, but any valid tagName can be given.
+     * 
+     * If this Game Object already has an Element, it is removed from the DOM entirely first.
+     * Any event listeners you may have previously created will need to be re-created after this call.
+     *
+     * @method Phaser.GameObjects.DOMElement#createFromHTML
+     * @since 3.17.0
+     * 
+     * @param {DOMString} A string of html to be set as the `innerHTML` property of the created element.
+     * @param {DOMString} [tagName='div'] - The tag name of the element into which all of the html will be inserted. Defaults to a plain div tag.
+     * 
+     * @return {this} This DOM Element instance.
+     */
+    createFromHTML: function (html, tagName)
     {
-        if (elementType === undefined) { elementType = 'div'; }
+        if (tagName === undefined) { tagName = 'div'; }
 
-        var element = document.createElement(elementType);
+        //  Already got an element? Remove it first
+        this.removeElement();
+
+        var element = document.createElement(tagName);
 
         this.node = element;
 
@@ -508,6 +658,39 @@ var DOMElement = new Class({
         return this.updateSize();
     },
 
+    /**
+     * Removes the current DOM Element bound to this Game Object from the DOM entirely and resets the
+     * `node` property of this Game Object to be `null`.
+     *
+     * @method Phaser.GameObjects.DOMElement#removeElement
+     * @since 3.17.0
+     * 
+     * @return {this} This DOM Element instance.
+     */
+    removeElement: function ()
+    {
+        if (this.node)
+        {
+            RemoveFromDOM(this.node);
+
+            this.node = null;
+        }
+
+        return this;
+    },
+
+    /**
+     * Internal method that calls `getBoundingClientRect` on the `node` and then sets the bounds width
+     * and height into the `displayWidth` and `displayHeight` properties, and the `clientWidth` and `clientHeight`
+     * values into the `width` and `height` properties respectively.
+     * 
+     * This is called automatically whenever a new element is created or set.
+     *
+     * @method Phaser.GameObjects.DOMElement#updateSize
+     * @since 3.17.0
+     * 
+     * @return {this} This DOM Element instance.
+     */
     updateSize: function ()
     {
         var node = this.node;
@@ -523,6 +706,19 @@ var DOMElement = new Class({
         return this;
     },
 
+    /**
+     * Gets all children from this DOM Elements node, using `querySelectorAll('*')` and then iterates through
+     * them, looking for the first one that has a property matching the given key and value. It then returns this child
+     * if found, or `null` if not.
+     *
+     * @method Phaser.GameObjects.DOMElement#getChildByProperty
+     * @since 3.17.0
+     * 
+     * @param {string} property - The property to search the children for.
+     * @param {string} value - The value the property must strictly equal.
+     * 
+     * @return {?Element} The first matching child DOM Element, or `null` if not found.
+     */
     getChildByProperty: function (property, value)
     {
         if (this.node)
@@ -541,53 +737,105 @@ var DOMElement = new Class({
         return null;
     },
 
+    /**
+     * Gets all children from this DOM Elements node, using `querySelectorAll('*')` and then iterates through
+     * them, looking for the first one that has a matching id. It then returns this child if found, or `null` if not.
+     * 
+     * Be aware that class and id names are case-sensitive.
+     *
+     * @method Phaser.GameObjects.DOMElement#getChildByID
+     * @since 3.17.0
+     * 
+     * @param {string} id - The id to search the children for.
+     * 
+     * @return {?Element} The first matching child DOM Element, or `null` if not found.
+     */
     getChildByID: function (id)
     {
         return this.getChildByProperty('id', id);
     },
 
+    /**
+     * Gets all children from this DOM Elements node, using `querySelectorAll('*')` and then iterates through
+     * them, looking for the first one that has a matching name. It then returns this child if found, or `null` if not.
+     * 
+     * Be aware that class and id names are case-sensitive.
+     *
+     * @method Phaser.GameObjects.DOMElement#getChildByName
+     * @since 3.17.0
+     * 
+     * @param {string} name - The name to search the children for.
+     * 
+     * @return {?Element} The first matching child DOM Element, or `null` if not found.
+     */
     getChildByName: function (name)
     {
         return this.getChildByProperty('name', name);
     },
 
+    /**
+     * Sets the `className` property of the DOM Element node and updates the internal sizes.
+     *
+     * @method Phaser.GameObjects.DOMElement#setClassName
+     * @since 3.17.0
+     * 
+     * @param {string} className - A string representing the class or space-separated classes of the element.
+     * 
+     * @return {this} This DOM Element instance.
+     */
     setClassName: function (className)
     {
         if (this.node)
         {
             this.node.className = className;
 
-            var nodeBounds = this.node.getBoundingClientRect();
-
-            this.setSize(nodeBounds.width, nodeBounds.height);
+            this.updateSize();
         }
 
         return this;
     },
 
+    /**
+     * Sets the `innerText` property of the DOM Element node and updates the internal sizes.
+     * 
+     * Note that only certain types of Elements can have `innerText` set on them.
+     *
+     * @method Phaser.GameObjects.DOMElement#setText
+     * @since 3.17.0
+     * 
+     * @param {DOMString} text - A DOMString representing the rendered text content of the element.
+     * 
+     * @return {this} This DOM Element instance.
+     */
     setText: function (text)
     {
         if (this.node)
         {
             this.node.innerText = text;
 
-            var nodeBounds = this.node.getBoundingClientRect();
-
-            this.setSize(nodeBounds.width, nodeBounds.height);
+            this.updateSize();
         }
 
         return this;
     },
 
+    /**
+     * Sets the `innerHTML` property of the DOM Element node and updates the internal sizes.
+     *
+     * @method Phaser.GameObjects.DOMElement#setHTML
+     * @since 3.17.0
+     * 
+     * @param {DOMString} html - A DOMString of html to be set as the `innerHTML` property of the element.
+     * 
+     * @return {this} This DOM Element instance.
+     */
     setHTML: function (html)
     {
         if (this.node)
         {
             this.node.innerHTML = html;
 
-            var nodeBounds = this.node.getBoundingClientRect();
-
-            this.setSize(nodeBounds.width, nodeBounds.height);
+            this.updateSize();
         }
 
         return this;
@@ -635,7 +883,7 @@ var DOMElement = new Class({
      */
     preDestroy: function ()
     {
-        RemoveFromDOM(this.node);
+        this.removeElement();
     }
 
 });
