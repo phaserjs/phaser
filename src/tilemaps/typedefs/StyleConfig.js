@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Tilemaps.Types.StyleConfig
+ * @typedef {object} Phaser.Types.Tilemaps.StyleConfig
  * @since 3.0.0
  * 
  * @property {?(Phaser.Display.Color|number|null)} [tileColor=blue] - Color to use for drawing a filled rectangle at non-colliding tile locations. If set to null, non-colliding tiles will not be drawn.

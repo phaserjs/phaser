@@ -859,7 +859,7 @@ var Tilemap = new Class({
      * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area to filter.
      * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
      * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
-     * @param {Phaser.Tilemaps.Types.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
+     * @param {Phaser.Types.Tilemaps.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tile[]} Returns an array of Tiles, or null if the layer given was invalid.
@@ -947,7 +947,7 @@ var Tilemap = new Class({
      * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area to search.
      * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
      * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
-     * @param {Phaser.Tilemaps.Types.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
+     * @param {Phaser.Types.Tilemaps.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The Tile layer to run the search on. If not provided will use the current layer.
      *
      * @return {?Phaser.Tilemaps.Tile} Returns a Tiles, or null if the layer given was invalid.
@@ -976,7 +976,7 @@ var Tilemap = new Class({
      * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area to search.
      * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
      * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
-     * @param {Phaser.Tilemaps.Types.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
+     * @param {Phaser.Types.Tilemaps.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The Tile layer to run the search on. If not provided will use the current layer.
      *
      * @return {?Phaser.Tilemaps.Tilemap} Returns this, or null if the layer given was invalid.
@@ -1181,7 +1181,7 @@ var Tilemap = new Class({
      * @param {integer} [tileY=0] - The top most tile index (in tile coordinates) to use as the origin of the area.
      * @param {integer} [width=max width based on tileX] - How many tiles wide from the `tileX` index the area will be.
      * @param {integer} [height=max height based on tileY] - How many tiles tall from the `tileY` index the area will be.
-     * @param {Phaser.Tilemaps.Types.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
+     * @param {Phaser.Types.Tilemaps.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tile[]} Returns an array of Tiles, or null if the layer given was invalid.
@@ -1204,7 +1204,7 @@ var Tilemap = new Class({
      * @since 3.0.0
      *
      * @param {(Phaser.Geom.Circle|Phaser.Geom.Line|Phaser.Geom.Rectangle|Phaser.Geom.Triangle)} shape - A shape in world (pixel) coordinates
-     * @param {Phaser.Tilemaps.Types.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
+     * @param {Phaser.Types.Tilemaps.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when factoring in which tiles to return.
      * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
@@ -1230,7 +1230,7 @@ var Tilemap = new Class({
      * @param {number} worldY - The world y coordinate for the top-left of the area.
      * @param {number} width - The width of the area.
      * @param {number} height - The height of the area.
-     * @param {Phaser.Tilemaps.Types.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
+     * @param {Phaser.Types.Tilemaps.FilteringOptions} [filteringOptions] - Optional filters to apply when getting the tiles.
      * @param {Phaser.Cameras.Scene2D.Camera} [camera=main camera] - The Camera to use when factoring in which tiles to return.
      * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
@@ -1748,7 +1748,7 @@ var Tilemap = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.GameObjects.Graphics} graphics - The target Graphics object to draw upon.
-     * @param {Phaser.Tilemaps.Types.StyleConfig} styleConfig - An object specifying the colors to use for the debug drawing.
+     * @param {Phaser.Types.Tilemaps.StyleConfig} styleConfig - An object specifying the colors to use for the debug drawing.
      * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tilemap} Return this Tilemap object, or null if the layer given was invalid.
@@ -1775,7 +1775,7 @@ var Tilemap = new Class({
      * @since 3.17.0
      *
      * @param {Phaser.GameObjects.Graphics} graphics - The target Graphics object to draw upon.
-     * @param {Phaser.Tilemaps.Types.StyleConfig} styleConfig - An object specifying the colors to use for the debug drawing.
+     * @param {Phaser.Types.Tilemaps.StyleConfig} styleConfig - An object specifying the colors to use for the debug drawing.
      * @param {(string|integer|Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} [layer] - The tile layer to use. If not given the current layer is used.
      *
      * @return {?Phaser.Tilemaps.Tilemap} Return this Tilemap object, or null if the layer given was invalid.

@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Tilemaps.Types.MapDataConfig
+ * @typedef {object} Phaser.Types.Tilemaps.MapDataConfig
  * @since 3.0.0
  * 
  * @property {string} [name] - The key in the Phaser cache that corresponds to the loaded tilemap data.

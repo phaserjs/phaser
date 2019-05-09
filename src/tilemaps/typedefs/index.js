@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.Tilemaps.Types
+ * @namespace Phaser.Types.Tilemaps
  */

@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Tilemaps.Types.GetTilesWithinFilteringOptions
+ * @typedef {object} Phaser.Types.Tilemaps.GetTilesWithinFilteringOptions
  * @since 3.0.0
  *
  * @property {boolean} [isNotEmpty=false] - If true, only return tiles that don't have -1 for an index.

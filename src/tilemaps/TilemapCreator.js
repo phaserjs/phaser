@@ -16,7 +16,7 @@ var ParseToTilemap = require('./ParseToTilemap');
  * @method Phaser.GameObjects.GameObjectCreator#tilemap
  * @since 3.0.0
  * 
- * @param {Phaser.Tilemaps.Types.TilemapConfig} [config] - The config options for the Tilemap.
+ * @param {Phaser.Types.Tilemaps.TilemapConfig} [config] - The config options for the Tilemap.
  * 
  * @return {Phaser.Tilemaps.Tilemap}
  */

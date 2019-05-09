@@ -18,7 +18,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Tilemaps.Types.MapDataConfig} [config] - The Map configuration object.
+ * @param {Phaser.Types.Tilemaps.MapDataConfig} [config] - The Map configuration object.
  */
 var MapData = new Class({
 
