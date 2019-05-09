@@ -1,7 +1,7 @@
 /**
  * Settings for a PathFollower.
  *
- * @typedef {object} Phaser.GameObjects.PathFollower.Types.PathConfig
+ * @typedef {object} Phaser.Types.GameObjects.PathFollower.PathConfig
  * @since 3.0.0
  *
  * @property {number} duration - The duration of the path follow in ms. Must be `> 0`.

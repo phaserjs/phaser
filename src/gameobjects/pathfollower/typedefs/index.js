@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.GameObjects.PathFollower.Types
+ * @namespace Phaser.Types.GameObjects.PathFollower
  */
