@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.GameObjects.Text.Types
+ * @namespace Phaser.Types.GameObjects.Text
  */
