@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.Actions.Types
+ * @namespace Phaser.Types.Actions
  */
