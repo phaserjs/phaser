@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.GameObjects.Sprite.Types.SpriteConfig
+ * @typedef {object} Phaser.Types.GameObjects.Sprite.SpriteConfig
  * @extends Phaser.GameObjects.Types.GameObjectConfig
  * @since 3.0.0
  *

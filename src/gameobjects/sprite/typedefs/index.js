@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.GameObjects.Sprite.Types
+ * @namespace Phaser.Types.GameObjects.Sprite
  */
