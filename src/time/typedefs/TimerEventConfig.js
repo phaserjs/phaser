@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Time.Types.TimerEventConfig
+ * @typedef {object} Phaser.Types.Time.TimerEventConfig
  * @since 3.0.0
  *
  * @property {number} [delay=0] - The delay after which the Timer Event should fire, in milliseconds.

@@ -18,7 +18,7 @@ var GetFastValue = require('../utils/object/GetFastValue');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Time.Types.TimerEventConfig} config - The configuration for the Timer Event, including its delay and callback.
+ * @param {Phaser.Types.Time.TimerEventConfig} config - The configuration for the Timer Event, including its delay and callback.
  */
 var TimerEvent = new Class({
 
@@ -159,7 +159,7 @@ var TimerEvent = new Class({
      * @method Phaser.Time.TimerEvent#reset
      * @since 3.0.0
      *
-     * @param {Phaser.Time.Types.TimerEventConfig} config - The new state for the Timer Event.
+     * @param {Phaser.Types.Time.TimerEventConfig} config - The new state for the Timer Event.
      *
      * @return {Phaser.Time.TimerEvent} This TimerEvent object.
      */

@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.Time.Types
+ * @namespace Phaser.Types.Time
  */
