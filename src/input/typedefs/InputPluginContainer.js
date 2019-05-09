@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Input.Types.InputPluginContainer
+ * @typedef {object} Phaser.Types.Input.InputPluginContainer
  * @since 3.0.0
  *
  * @property {string} key - The unique name of this plugin in the input plugin cache.

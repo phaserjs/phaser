@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Input.Types.InputConfiguration
+ * @typedef {object} Phaser.Types.Input.InputConfiguration
  * @since 3.0.0
  *
  * @property {any} [hitArea] - The object / shape to use as the Hit Area. If not given it will try to create a Rectangle based on the texture frame.

@@ -1,5 +1,5 @@
 /**
- * @callback Phaser.Input.Types.HitAreaCallback
+ * @callback Phaser.Types.Input.HitAreaCallback
  * @since 3.0.0
  *
  * @param {any} hitArea - The hit area object.

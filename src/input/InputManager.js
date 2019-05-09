@@ -692,7 +692,7 @@ var InputManager = new Class({
      * @private
      * @since 3.10.0
      * 
-     * @param {Phaser.Input.Types.InteractiveObject} interactiveObject - The Interactive Object that called this method.
+     * @param {Phaser.Types.Input.InteractiveObject} interactiveObject - The Interactive Object that called this method.
      */
     setCursor: function (interactiveObject)
     {
@@ -712,7 +712,7 @@ var InputManager = new Class({
      * @private
      * @since 3.10.0
      * 
-     * @param {Phaser.Input.Types.InteractiveObject} interactiveObject - The Interactive Object that called this method.
+     * @param {Phaser.Types.Input.InteractiveObject} interactiveObject - The Interactive Object that called this method.
      */
     resetCursor: function (interactiveObject)
     {
@@ -1592,7 +1592,7 @@ var InputManager = new Class({
      * @method Phaser.Input.InputManager#pointWithinInteractiveObject
      * @since 3.0.0
      *
-     * @param {Phaser.Input.Types.InteractiveObject} object - The Interactive Object to check against.
+     * @param {Phaser.Types.Input.InteractiveObject} object - The Interactive Object to check against.
      * @param {number} x - The translated x coordinate for the hit test.
      * @param {number} y - The translated y coordinate for the hit test.
      *

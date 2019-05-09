@@ -48,7 +48,7 @@ InputPluginCache.register = function (key, plugin, mapping, settingsKey, configK
  * 
  * @param {string} key - The key of the input plugin to get.
  *
- * @return {Phaser.Input.Types.InputPluginContainer} The input plugin object.
+ * @return {Phaser.Types.Input.InputPluginContainer} The input plugin object.
  */
 InputPluginCache.getPlugin = function (key)
 {

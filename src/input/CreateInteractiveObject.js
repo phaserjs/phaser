@@ -16,9 +16,9 @@
  *
  * @param {Phaser.GameObjects.GameObject} gameObject - The Game Object to which this Interactive Object is bound.
  * @param {any} hitArea - The hit area for this Interactive Object. Typically a geometry shape, like a Rectangle or Circle.
- * @param {Phaser.Input.Types.HitAreaCallback} hitAreaCallback - The 'contains' check callback that the hit area shape will use for all hit tests.
+ * @param {Phaser.Types.Input.HitAreaCallback} hitAreaCallback - The 'contains' check callback that the hit area shape will use for all hit tests.
  *
- * @return {Phaser.Input.Types.InteractiveObject} The new Interactive Object.
+ * @return {Phaser.Types.Input.InteractiveObject} The new Interactive Object.
  */
 var CreateInteractiveObject = function (gameObject, hitArea, hitAreaCallback)
 {

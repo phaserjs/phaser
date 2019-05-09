@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Input.Types.InteractiveObject
+ * @typedef {object} Phaser.Types.Input.InteractiveObject
  * @since 3.0.0
  *
  * @property {Phaser.GameObjects.GameObject} gameObject - The Game Object to which this Interactive Object is bound.
@@ -10,7 +10,7 @@
  * @property {?Phaser.GameObjects.GameObject} target - An optional drop target for a draggable Interactive Object.
  * @property {Phaser.Cameras.Scene2D.Camera} camera - The most recent Camera to be tested against this Interactive Object.
  * @property {any} hitArea - The hit area for this Interactive Object. Typically a geometry shape, like a Rectangle or Circle.
- * @property {Phaser.Input.Types.HitAreaCallback} hitAreaCallback - The 'contains' check callback that the hit area shape will use for all hit tests.
+ * @property {Phaser.Types.Input.HitAreaCallback} hitAreaCallback - The 'contains' check callback that the hit area shape will use for all hit tests.
  * @property {boolean} customHitArea - Was the hitArea for this Interactive Object created based on texture size (false), or a custom shape? (true)
  * @property {number} localX - The x coordinate that the Pointer interacted with this object on, relative to the Game Object's top-left position.
  * @property {number} localY - The y coordinate that the Pointer interacted with this object on, relative to the Game Object's top-left position.
