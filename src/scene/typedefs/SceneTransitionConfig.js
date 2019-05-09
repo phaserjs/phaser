@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Scenes.Types.SceneTransitionConfig
+ * @typedef {object} Phaser.Types.Scenes.SceneTransitionConfig
  * @since 3.5.0
  *
  * @property {string} target - The Scene key to transition to.

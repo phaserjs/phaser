@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Scenes.Types.CreateSceneFromObjectConfig
+ * @typedef {object} Phaser.Types.Scenes.CreateSceneFromObjectConfig
  * @since 3.17.0
  *
  * @property {function} [init] - See {@link Phaser.Scene#init}.

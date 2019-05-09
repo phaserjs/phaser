@@ -49,7 +49,7 @@ var ScenePlugin = new Class({
          * The settings of the Scene this ScenePlugin belongs to.
          *
          * @name Phaser.Scenes.ScenePlugin#settings
-         * @type {Phaser.Scenes.Types.SettingsObject}
+         * @type {Phaser.Types.Scenes.SettingsObject}
          * @since 3.0.0
          */
         this.settings = scene.sys.settings;
@@ -260,7 +260,7 @@ var ScenePlugin = new Class({
      * @fires Phaser.Scenes.Events#TRANSITION_OUT
      * @since 3.5.0
      *
-     * @param {Phaser.Scenes.Types.SceneTransitionConfig} config - The transition configuration object.
+     * @param {Phaser.Types.Scenes.SceneTransitionConfig} config - The transition configuration object.
      *
      * @return {boolean} `true` is the transition was started, otherwise `false`.
      */
@@ -430,7 +430,7 @@ var ScenePlugin = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The Scene key.
-     * @param {(Phaser.Scene|Phaser.Scenes.Types.SettingsConfig|Phaser.Scenes.Types.CreateSceneFromObjectConfig|function)} sceneConfig - The config for the Scene.
+     * @param {(Phaser.Scene|Phaser.Types.Scenes.SettingsConfig|Phaser.Types.Scenes.CreateSceneFromObjectConfig|function)} sceneConfig - The config for the Scene.
      * @param {boolean} autoStart - Whether to start the Scene after it's added.
      * @param {object} [data] - Optional data object. This will be set as Scene.settings.data and passed to `Scene.init`.
      *

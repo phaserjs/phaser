@@ -21,9 +21,9 @@ var Settings = {
      * @function Phaser.Scenes.Settings.create
      * @since 3.0.0
      *
-     * @param {(string|Phaser.Scenes.Types.SettingsConfig)} config - The Scene configuration object used to create this Scene Settings.
+     * @param {(string|Phaser.Types.Scenes.SettingsConfig)} config - The Scene configuration object used to create this Scene Settings.
      *
-     * @return {Phaser.Scenes.Types.SettingsObject} The Scene Settings object created as a result of the config and default settings.
+     * @return {Phaser.Types.Scenes.SettingsObject} The Scene Settings object created as a result of the config and default settings.
      */
     create: function (config)
     {

@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.Scenes.Types
+ * @namespace Phaser.Types.Scenes
  */

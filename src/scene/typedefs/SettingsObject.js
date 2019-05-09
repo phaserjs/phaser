@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Scenes.Types.SettingsObject
+ * @typedef {object} Phaser.Types.Scenes.SettingsObject
  * @since 3.0.0
  *
  * @property {number} status - The current status of the Scene. Maps to the Scene constants.

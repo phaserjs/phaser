@@ -94,7 +94,7 @@ var KeyboardPlugin = new Class({
          * A reference to the Scene Systems Settings.
          *
          * @name Phaser.Input.Keyboard.KeyboardPlugin#settings
-         * @type {Phaser.Scenes.Types.SettingsObject}
+         * @type {Phaser.Types.Scenes.SettingsObject}
          * @since 3.10.0
          */
         this.settings = this.scene.sys.settings;

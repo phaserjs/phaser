@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Scenes.Types.SettingsConfig
+ * @typedef {object} Phaser.Types.Scenes.SettingsConfig
  * @since 3.0.0
  *
  * @property {string} [key] - The unique key of this Scene. Must be unique within the entire Game instance.
