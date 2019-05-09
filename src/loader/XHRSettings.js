@@ -16,7 +16,7 @@
  * @param {string} [password=''] - Optional password for the XHR request.
  * @param {integer} [timeout=0] - Optional XHR timeout value.
  *
- * @return {Phaser.Loader.Types.XHRSettingsObject} The XHRSettings object as used by the Loader.
+ * @return {Phaser.Types.Loader.XHRSettingsObject} The XHRSettings object as used by the Loader.
  */
 var XHRSettings = function (responseType, async, user, password, timeout)
 {

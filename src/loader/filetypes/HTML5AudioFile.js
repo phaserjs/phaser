@@ -28,7 +28,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
  * @param {(string|Phaser.Loader.FileTypes.AudioFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [urlConfig] - The absolute or relative URL to load this file from.
- * @param {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
 var HTML5AudioFile = new Class({
 

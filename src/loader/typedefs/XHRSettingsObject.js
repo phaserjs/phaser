@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Loader.Types.XHRSettingsObject
+ * @typedef {object} Phaser.Types.Loader.XHRSettingsObject
  * @since 3.0.0
  *
  * @property {XMLHttpRequestResponseType} responseType - The response type of the XHR request, i.e. `blob`, `text`, etc.

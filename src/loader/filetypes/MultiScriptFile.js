@@ -17,7 +17,7 @@ var ScriptFile = require('./ScriptFile.js');
  * @property {string} key - The key of the file. Must be unique within the Loader.
  * @property {string[]} [url] - An array of absolute or relative URLs to load the script files from. They are processed in the order given in the array.
  * @property {string} [extension='js'] - The default file extension to use if no url is provided.
- * @property {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for these files.
+ * @property {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for these files.
  */
 
 /**
@@ -37,7 +37,7 @@ var ScriptFile = require('./ScriptFile.js');
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
  * @param {(string|Phaser.Loader.FileTypes.MultiScriptFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string[]} [url] - An array of absolute or relative URLs to load the script files from. They are processed in the order given in the array.
- * @param {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object for the script files. Used in replacement of the Loaders default XHR Settings.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object for the script files. Used in replacement of the Loaders default XHR Settings.
  */
 var MultiScriptFile = new Class({
 
@@ -186,7 +186,7 @@ var MultiScriptFile = new Class({
  * @param {(string|Phaser.Loader.FileTypes.MultiScriptFileConfig|Phaser.Loader.FileTypes.MultiScriptFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string[]} [url] - An array of absolute or relative URLs to load the script files from. They are processed in the order given in the array.
  * @param {string} [extension='js'] - The default file extension to use if no url is provided.
- * @param {Phaser.Loader.Types.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for these files.
+ * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for these files.
  *
  * @return {Phaser.Loader.LoaderPlugin} The Loader instance.
  */

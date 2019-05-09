@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.Loader.Types
+ * @namespace Phaser.Types.Loader
  */
