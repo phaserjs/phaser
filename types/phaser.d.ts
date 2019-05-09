@@ -2,700 +2,16 @@ declare type DataEachCallback = (parent: any, key: string, value: any, ...args: 
 
 declare type ContentLoadedCallback = ()=>void;
 
-declare namespace Phaser.GameObjects.BitmapText {
-    namespace Types {
-        /**
-         * The font data for an individual character of a Bitmap Font.
-         * 
-         * Describes the character's position, size, offset and kerning.
-         */
-        type BitmapFontCharacterData = {
-            /**
-             * The x position of the character.
-             */
-            x: number;
-            /**
-             * The y position of the character.
-             */
-            y: number;
-            /**
-             * The width of the character.
-             */
-            width: number;
-            /**
-             * The height of the character.
-             */
-            height: number;
-            /**
-             * The center x position of the character.
-             */
-            centerX: number;
-            /**
-             * The center y position of the character.
-             */
-            centerY: number;
-            /**
-             * The x offset of the character.
-             */
-            xOffset: number;
-            /**
-             * The y offset of the character.
-             */
-            yOffset: number;
-            /**
-             * Extra data for the character.
-             */
-            data: object;
-            /**
-             * Kerning values, keyed by character code.
-             */
-            kerning: {[key: string]: number};
-        };
-
-        /**
-         * Bitmap Font data that can be used by a BitmapText Game Object.
-         */
-        type BitmapFontData = {
-            /**
-             * The name of the font.
-             */
-            font: string;
-            /**
-             * The size of the font.
-             */
-            size: number;
-            /**
-             * The line height of the font.
-             */
-            lineHeight: number;
-            /**
-             * Whether this font is a retro font (monospace).
-             */
-            retroFont: boolean;
-            /**
-             * The character data of the font, keyed by character code. Each character datum includes a position, size, offset and more.
-             */
-            chars: {[key: number]:  Phaser.GameObjects.BitmapText.Types.BitmapFontCharacterData};
-        };
-
-        type BitmapTextConfig = Phaser.GameObjects.Types.GameObjectConfig & {
-            /**
-             * The key of the font to use from the BitmapFont cache.
-             */
-            font?: string;
-            /**
-             * The string, or array of strings, to be set as the content of this Bitmap Text.
-             */
-            text?: string;
-            /**
-             * The font size to set.
-             */
-            size?: number | false;
-        };
-
-        type BitmapTextSize = {
-            /**
-             * The position and size of the BitmapText, taking into account the position and scale of the Game Object.
-             */
-            global: Phaser.GameObjects.BitmapText.Types.GlobalBitmapTextSize;
-            /**
-             * The position and size of the BitmapText, taking just the font size into account.
-             */
-            local: Phaser.GameObjects.BitmapText.Types.LocalBitmapTextSize;
-        };
-
-        type DisplayCallbackConfig = {
-            /**
-             * The Dynamic Bitmap Text object that owns this character being rendered.
-             */
-            parent: Phaser.GameObjects.DynamicBitmapText;
-            /**
-             * The tint of the character being rendered. Always zero in Canvas.
-             */
-            tint: Phaser.GameObjects.BitmapText.Types.TintConfig;
-            /**
-             * The index of the character being rendered.
-             */
-            index: number;
-            /**
-             * The character code of the character being rendered.
-             */
-            charCode: number;
-            /**
-             * The x position of the character being rendered.
-             */
-            x: number;
-            /**
-             * The y position of the character being rendered.
-             */
-            y: number;
-            /**
-             * The scale of the character being rendered.
-             */
-            scale: number;
-            /**
-             * The rotation of the character being rendered.
-             */
-            rotation: number;
-            /**
-             * Custom data stored with the character being rendered.
-             */
-            data: any;
-        };
-
-        type DisplayCallback = (display: Phaser.GameObjects.BitmapText.Types.DisplayCallbackConfig)=>void;
-
-        /**
-         * The position and size of the Bitmap Text in global space, taking into account the Game Object's scale and world position.
-         */
-        type GlobalBitmapTextSize = {
-            /**
-             * The x position of the BitmapText, taking into account the x position and scale of the Game Object.
-             */
-            x: number;
-            /**
-             * The y position of the BitmapText, taking into account the y position and scale of the Game Object.
-             */
-            y: number;
-            /**
-             * The width of the BitmapText, taking into account the x scale of the Game Object.
-             */
-            width: number;
-            /**
-             * The height of the BitmapText, taking into account the y scale of the Game Object.
-             */
-            height: number;
-        };
-
-        type JSONBitmapText = Phaser.GameObjects.Types.JSONGameObject & {
-            /**
-             * The name of the font.
-             */
-            font: string;
-            /**
-             * The text that this Bitmap Text displays.
-             */
-            text: string;
-            /**
-             * The size of the font.
-             */
-            fontSize: number;
-            /**
-             * Adds / Removes spacing between characters.
-             */
-            letterSpacing: number;
-            /**
-             * The alignment of the text in a multi-line BitmapText object.
-             */
-            align: integer;
-        };
-
-        /**
-         * The position and size of the Bitmap Text in local space, taking just the font size into account.
-         */
-        type LocalBitmapTextSize = {
-            /**
-             * The x position of the BitmapText.
-             */
-            x: number;
-            /**
-             * The y position of the BitmapText.
-             */
-            y: number;
-            /**
-             * The width of the BitmapText.
-             */
-            width: number;
-            /**
-             * The height of the BitmapText.
-             */
-            height: number;
-        };
-
-        type RetroFontConfig = {
-            /**
-             * The key of the image containing the font.
-             */
-            image: string;
-            /**
-             * If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.
-             */
-            "offset.x": number;
-            /**
-             * If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
-             */
-            "offset.y": number;
-            /**
-             * The width of each character in the font set.
-             */
-            width: number;
-            /**
-             * The height of each character in the font set.
-             */
-            height: number;
-            /**
-             * The characters used in the font set, in display order. You can use the TEXT_SET consts for common font set arrangements.
-             */
-            chars: string;
-            /**
-             * The number of characters per row in the font set. If not given charsPerRow will be the image width / characterWidth.
-             */
-            charsPerRow: number;
-            /**
-             * If the characters in the font set have horizontal spacing between them set the required amount here.
-             */
-            "spacing.x": number;
-            /**
-             * If the characters in the font set have vertical spacing between them set the required amount here.
-             */
-            "spacing.y": number;
-            /**
-             * The amount of vertical space to add to the line height of the font.
-             */
-            lineSpacing: number;
-        };
-
-        type TintConfig = {
-            /**
-             * The top left tint value. Always zero in canvas.
-             */
-            topLeft: number;
-            /**
-             * The top right tint value. Always zero in canvas.
-             */
-            topRight: number;
-            /**
-             * The bottom left tint value. Always zero in canvas.
-             */
-            bottomLeft: number;
-            /**
-             * The bottom right tint value. Always zero in canvas.
-             */
-            bottomRight: number;
-        };
-
-    }
-
-}
-
 declare type CreateCallback = (bob: Phaser.GameObjects.Bob, index: integer)=>void;
 
 declare type EachContainerCallback<I> = (item: any, ...args: any[])=>void;
 
-declare namespace Phaser.GameObjects.Graphics {
-    namespace Types {
-        /**
-         * Graphics fill style settings.
-         */
-        type FillStyle = {
-            /**
-             * The fill color.
-             */
-            color?: number;
-            /**
-             * The fill alpha.
-             */
-            alpha?: number;
-        };
-
-        /**
-         * Graphics line style (or stroke style) settings.
-         */
-        type LineStyle = {
-            /**
-             * The stroke width.
-             */
-            width?: number;
-            /**
-             * The stroke color.
-             */
-            color?: number;
-            /**
-             * The stroke alpha.
-             */
-            alpha?: number;
-        };
-
-        /**
-         * Options for the Graphics game Object.
-         */
-        type Options = Phaser.GameObjects.Graphics.Types.Styles & {
-            /**
-             * The x coordinate of the Graphics.
-             */
-            x?: number;
-            /**
-             * The y coordinate of the Graphics.
-             */
-            y?: number;
-        };
-
-        type RoundedRectRadius = {
-            /**
-             * Top left
-             */
-            tl?: number;
-            /**
-             * Top right
-             */
-            tr?: number;
-            /**
-             * Bottom right
-             */
-            br?: number;
-            /**
-             * Bottom left
-             */
-            bl?: number;
-        };
-
-        /**
-         * Graphics style settings.
-         */
-        type Styles = {
-            /**
-             * The style applied to shape outlines.
-             */
-            lineStyle?: Phaser.GameObjects.Graphics.Types.LineStyle;
-            /**
-             * The style applied to shape areas.
-             */
-            fillStyle?: Phaser.GameObjects.Graphics.Types.FillStyle;
-        };
-
-    }
-
-}
-
-declare namespace Phaser.GameObjects.Group {
-    namespace Types {
-        type GroupCallback = (item: Phaser.GameObjects.GameObject)=>void;
-
-        /**
-         * A constructor function (class) that can be assigned to `classType`.
-         */
-        type GroupClassTypeConstructor = (scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | integer)=>void;
-
-        type GroupConfig = {
-            /**
-             * Sets {@link Phaser.GameObjects.Group#classType}.
-             */
-            classType?: Phaser.GameObjects.Group.Types.GroupClassTypeConstructor;
-            /**
-             * Sets {@link Phaser.GameObjects.Group#active}.
-             */
-            active?: boolean;
-            /**
-             * Sets {@link Phaser.GameObjects.Group#maxSize}.
-             */
-            maxSize?: number;
-            /**
-             * Sets {@link Phaser.GameObjects.Group#defaultKey}.
-             */
-            defaultKey?: string;
-            /**
-             * Sets {@link Phaser.GameObjects.Group#defaultFrame}.
-             */
-            defaultFrame?: string | integer;
-            /**
-             * Sets {@link Phaser.GameObjects.Group#runChildUpdate}.
-             */
-            runChildUpdate?: boolean;
-            /**
-             * Sets {@link Phaser.GameObjects.Group#createCallback}.
-             */
-            createCallback?: Phaser.GameObjects.Group.Types.GroupCallback;
-            /**
-             * Sets {@link Phaser.GameObjects.Group#removeCallback}.
-             */
-            removeCallback?: Phaser.GameObjects.Group.Types.GroupCallback;
-            /**
-             * Sets {@link Phaser.GameObjects.Group#createMultipleCallback}.
-             */
-            createMultipleCallback?: Phaser.GameObjects.Group.Types.GroupMultipleCreateCallback;
-        };
-
-        /**
-         * The total number of objects created will be
-         * 
-         *     key.length * frame.length * frameQuantity * (yoyo ? 2 : 1) * (1 + repeat)
-         * 
-         * In the simplest case, 1 + `repeat` objects will be created.
-         * 
-         * If `max` is positive, then the total created will not exceed `max`.
-         * 
-         * `key` is required. {@link Phaser.GameObjects.Group#defaultKey} is not used.
-         */
-        type GroupCreateConfig = {
-            /**
-             * The class of each new Game Object.
-             */
-            classType?: Phaser.GameObjects.Group.Types.GroupClassTypeConstructor;
-            /**
-             * The texture key of each new Game Object.
-             */
-            key?: string;
-            /**
-             * The texture frame of each new Game Object.
-             */
-            frame?: string | integer;
-            /**
-             * The visible state of each new Game Object.
-             */
-            visible?: boolean;
-            /**
-             * The active state of each new Game Object.
-             */
-            active?: boolean;
-            /**
-             * The number of times each `key` × `frame` combination will be *repeated* (after the first combination).
-             */
-            repeat?: number;
-            /**
-             * Select a `key` at random.
-             */
-            randomKey?: boolean;
-            /**
-             * Select a `frame` at random.
-             */
-            randomFrame?: boolean;
-            /**
-             * Select keys and frames by moving forward then backward through `key` and `frame`.
-             */
-            yoyo?: boolean;
-            /**
-             * The number of times each `frame` should be combined with one `key`.
-             */
-            frameQuantity?: number;
-            /**
-             * The maximum number of new Game Objects to create. 0 is no maximum.
-             */
-            max?: number;
-            setXY?: object;
-            /**
-             * The horizontal position of each new Game Object.
-             */
-            "setXY.x"?: number;
-            /**
-             * The vertical position of each new Game Object.
-             */
-            "setXY.y"?: number;
-            /**
-             * Increment each Game Object's horizontal position from the previous by this amount, starting from `setXY.x`.
-             */
-            "setXY.stepX"?: number;
-            /**
-             * Increment each Game Object's vertical position from the previous by this amount, starting from `setXY.y`.
-             */
-            "setXY.stepY"?: number;
-            setRotation?: object;
-            /**
-             * Rotation of each new Game Object.
-             */
-            "setRotation.value"?: number;
-            /**
-             * Increment each Game Object's rotation from the previous by this amount, starting at `setRotation.value`.
-             */
-            "setRotation.step"?: number;
-            setScale?: object;
-            /**
-             * The horizontal scale of each new Game Object.
-             */
-            "setScale.x"?: number;
-            /**
-             * The vertical scale of each new Game Object.
-             */
-            "setScale.y"?: number;
-            /**
-             * Increment each Game Object's horizontal scale from the previous by this amount, starting from `setScale.x`.
-             */
-            "setScale.stepX"?: number;
-            /**
-             * Increment each Game object's vertical scale from the previous by this amount, starting from `setScale.y`.
-             */
-            "setScale.stepY"?: number;
-            setAlpha?: object;
-            /**
-             * The alpha value of each new Game Object.
-             */
-            "setAlpha.value"?: number;
-            /**
-             * Increment each Game Object's alpha from the previous by this amount, starting from `setAlpha.value`.
-             */
-            "setAlpha.step"?: number;
-            /**
-             * A geometric shape that defines the hit area for the Game Object.
-             */
-            hitArea?: any;
-            /**
-             * A callback to be invoked when the Game Object is interacted with.
-             */
-            hitAreaCallback?: Phaser.Input.Types.HitAreaCallback;
-            /**
-             * Align the new Game Objects in a grid using these settings.
-             */
-            gridAlign?: false | Phaser.Actions.Types.GridAlignConfig;
-        };
-
-        type GroupMultipleCreateCallback = (items: Phaser.GameObjects.GameObject[])=>void;
-
-    }
-
-}
-
 declare type LightForEach = (light: Phaser.GameObjects.Light)=>void;
-
-declare namespace Phaser.GameObjects.PathFollower {
-    namespace Types {
-        /**
-         * Settings for a PathFollower.
-         */
-        type PathConfig = {
-            /**
-             * The duration of the path follow in ms. Must be `> 0`.
-             */
-            duration: number;
-            /**
-             * The start position of the path follow, between 0 and 1. Must be less than `to`.
-             */
-            from?: number;
-            /**
-             * The end position of the path follow, between 0 and 1. Must be more than `from`.
-             */
-            to?: number;
-            /**
-             * Whether to position the PathFollower on the Path using its path offset.
-             */
-            positionOnPath?: boolean;
-            /**
-             * Should the PathFollower automatically rotate to point in the direction of the Path?
-             */
-            rotateToPath?: boolean;
-            /**
-             * If the PathFollower is rotating to match the Path, this value is added to the rotation value. This allows you to rotate objects to a path but control the angle of the rotation as well.
-             */
-            rotationOffset?: number;
-            /**
-             * Current start position of the path follow, must be between `from` and `to`.
-             */
-            startAt?: number;
-        };
-
-    }
-
-}
-
-declare namespace Phaser.GameObjects.RenderTexture {
-    namespace Types {
-        type RenderTextureConfig = {
-            /**
-             * The x coordinate of the RenderTextures position.
-             */
-            x?: number;
-            /**
-             * The y coordinate of the RenderTextures position.
-             */
-            y?: number;
-            /**
-             * The width of the RenderTexture.
-             */
-            width?: number;
-            /**
-             * The height of the RenderTexture.
-             */
-            height?: number;
-            /**
-             * The texture key to make the RenderTexture from.
-             */
-            key?: string;
-            /**
-             * the frame to make the RenderTexture from.
-             */
-            frame?: string;
-        };
-
-    }
-
-}
-
-declare namespace Phaser.GameObjects.Sprite {
-    namespace Types {
-        type SpriteConfig = Phaser.GameObjects.Types.GameObjectConfig & {
-            /**
-             * The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
-             */
-            key?: string;
-            /**
-             * An optional frame from the Texture this Game Object is rendering with.
-             */
-            frame?: number | string;
-        };
-
-    }
-
-}
 
 /**
  * A custom function that will be responsible for wrapping the text.
  */
 declare type TextStyleWordWrapCallback = (text: string, textObject: Phaser.GameObjects.Text)=>void;
-
-declare namespace Phaser.GameObjects.Text {
-    namespace Types {
-        /**
-         * Font metrics for a Text Style object.
-         */
-        type TextMetrics = {
-            /**
-             * The ascent of the font.
-             */
-            ascent: number;
-            /**
-             * The descent of the font.
-             */
-            descent: number;
-            /**
-             * The size of the font.
-             */
-            fontSize: number;
-        };
-
-    }
-
-}
-
-declare namespace Phaser.GameObjects.TileSprite {
-    namespace Types {
-        type TileSpriteConfig = Phaser.GameObjects.Types.GameObjectConfig & {
-            /**
-             * The x coordinate of the Tile Sprite.
-             */
-            x?: number;
-            /**
-             * The y coordinate of the Tile Sprite.
-             */
-            y?: number;
-            /**
-             * The width of the Tile Sprite. If zero it will use the size of the texture frame.
-             */
-            width?: integer;
-            /**
-             * The height of the Tile Sprite. If zero it will use the size of the texture frame.
-             */
-            height?: integer;
-            /**
-             * The key of the Texture this Tile Sprite will use to render with, as stored in the Texture Manager.
-             */
-            key?: string;
-            /**
-             * An optional frame from the Texture this Tile Sprite is rendering with.
-             */
-            frame?: string;
-        };
-
-    }
-
-}
 
 declare type CenterFunction = (triangle: Phaser.Geom.Triangle)=>void;
 
@@ -722,7 +38,7 @@ declare namespace Phaser {
          * @param callback The callback to be invoked. It will be passed just one argument: the item from the array.
          * @param context The scope in which the callback will be invoked.
          */
-        function Call<G extends Phaser.GameObjects.GameObject[]>(items: G, callback: Phaser.Actions.Types.CallCallback, context: any): G;
+        function Call<G extends Phaser.GameObjects.GameObject[]>(items: G, callback: Phaser.Types.Actions.CallCallback, context: any): G;
 
         /**
          * Takes an array of objects and returns the first element in the array that has properties which match
@@ -754,7 +70,7 @@ declare namespace Phaser {
          * @param items The array of items to be updated by this action.
          * @param options The GridAlign Configuration object.
          */
-        function GridAlign<G extends Phaser.GameObjects.GameObject[]>(items: G, options: Phaser.Actions.Types.GridAlignConfig): G;
+        function GridAlign<G extends Phaser.GameObjects.GameObject[]>(items: G, options: Phaser.Types.Actions.GridAlignConfig): G;
 
         /**
          * Takes an array of Game Objects, or any objects that have a public `alpha` property,
@@ -1080,7 +396,7 @@ declare namespace Phaser {
          * @param hitArea Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
          * @param hitAreaCallback A callback to be invoked when the Game Object is interacted with. If you provide a shape you must also provide a callback.
          */
-        function SetHitArea<G extends Phaser.GameObjects.GameObject[]>(items: G, hitArea: any, hitAreaCallback: Phaser.Input.Types.HitAreaCallback): G;
+        function SetHitArea<G extends Phaser.GameObjects.GameObject[]>(items: G, hitArea: any, hitAreaCallback: Phaser.Types.Input.HitAreaCallback): G;
 
         /**
          * Takes an array of Game Objects, or any objects that have the public properties `originX` and `originY`
@@ -1301,44 +617,6 @@ declare namespace Phaser {
          */
         function ToggleVisible<G extends Phaser.GameObjects.GameObject[]>(items: G): G;
 
-        namespace Types {
-            type CallCallback = (item: Phaser.GameObjects.GameObject)=>void;
-
-            type GridAlignConfig = {
-                /**
-                 * The width of the grid in items (not pixels). -1 means lay all items out horizontally, regardless of quantity.
-                 *                                  If both this value and height are set to -1 then this value overrides it and the `height` value is ignored.
-                 */
-                width?: integer;
-                /**
-                 * The height of the grid in items (not pixels). -1 means lay all items out vertically, regardless of quantity.
-                 *                                   If both this value and `width` are set to -1 then `width` overrides it and this value is ignored.
-                 */
-                height?: integer;
-                /**
-                 * The width of the cell, in pixels, in which the item is positioned.
-                 */
-                cellWidth?: integer;
-                /**
-                 * The height of the cell, in pixels, in which the item is positioned.
-                 */
-                cellHeight?: integer;
-                /**
-                 * The alignment position. One of the Phaser.Display.Align consts such as `TOP_LEFT` or `RIGHT_CENTER`.
-                 */
-                position?: integer;
-                /**
-                 * Optionally place the top-left of the final grid at this coordinate.
-                 */
-                x?: number;
-                /**
-                 * Optionally place the top-left of the final grid at this coordinate.
-                 */
-                y?: number;
-            };
-
-        }
-
         /**
          * Wrap each item's coordinates within a rectangle's area.
          * @param items An array of Game Objects. The contents of this array are updated by this Action.
@@ -1366,7 +644,7 @@ declare namespace Phaser {
              * @param key The unique identifying string for this animation.
              * @param config The Animation configuration.
              */
-            constructor(manager: Phaser.Animations.AnimationManager, key: string, config: Phaser.Animations.Types.Animation);
+            constructor(manager: Phaser.Animations.AnimationManager, key: string, config: Phaser.Types.Animations.Animation);
 
             /**
              * A reference to the global Animation Manager.
@@ -1449,14 +727,14 @@ declare namespace Phaser {
              * Add frames to the end of the animation.
              * @param config [description]
              */
-            addFrame(config: string | Phaser.Animations.Types.AnimationFrame[]): Phaser.Animations.Animation;
+            addFrame(config: string | Phaser.Types.Animations.AnimationFrame[]): Phaser.Animations.Animation;
 
             /**
              * Add frame/s into the animation.
              * @param index The index to insert the frame at within the animation.
              * @param config [description]
              */
-            addFrameAt(index: integer, config: string | Phaser.Animations.Types.AnimationFrame[]): Phaser.Animations.Animation;
+            addFrameAt(index: integer, config: string | Phaser.Types.Animations.AnimationFrame[]): Phaser.Animations.Animation;
 
             /**
              * Check if the given frame index is valid.
@@ -1489,7 +767,7 @@ declare namespace Phaser {
              * @param frames [description]
              * @param defaultTextureKey [description]
              */
-            getFrames(textureManager: Phaser.Textures.TextureManager, frames: string | Phaser.Animations.Types.AnimationFrame[], defaultTextureKey?: string): Phaser.Animations.AnimationFrame[];
+            getFrames(textureManager: Phaser.Textures.TextureManager, frames: string | Phaser.Types.Animations.AnimationFrame[], defaultTextureKey?: string): Phaser.Animations.AnimationFrame[];
 
             /**
              * [description]
@@ -1548,7 +826,7 @@ declare namespace Phaser {
             /**
              * Converts the animation data to JSON.
              */
-            toJSON(): Phaser.Animations.Types.JSONAnimation;
+            toJSON(): Phaser.Types.Animations.JSONAnimation;
 
             /**
              * [description]
@@ -1645,7 +923,7 @@ declare namespace Phaser {
             /**
              * Generates a JavaScript object suitable for converting to JSON.
              */
-            toJSON(): Phaser.Animations.Types.JSONAnimationFrame;
+            toJSON(): Phaser.Types.Animations.JSONAnimationFrame;
 
             /**
              * Destroys this object by removing references to external resources and callbacks.
@@ -1738,30 +1016,30 @@ declare namespace Phaser {
              * If you wish to re-use an existing key, call `AnimationManager.remove` first, then this method.
              * @param config The configuration settings for the Animation.
              */
-            create(config: Phaser.Animations.Types.Animation): Phaser.Animations.Animation | false;
+            create(config: Phaser.Types.Animations.Animation): Phaser.Animations.Animation | false;
 
             /**
              * Loads this Animation Manager's Animations and settings from a JSON object.
              * @param data The JSON object to parse.
              * @param clearCurrentAnimations If set to `true`, the current animations will be removed (`anims.clear()`). If set to `false` (default), the animations in `data` will be added. Default false.
              */
-            fromJSON(data: string | Phaser.Animations.Types.JSONAnimations | Phaser.Animations.Types.JSONAnimation, clearCurrentAnimations?: boolean): Phaser.Animations.Animation[];
+            fromJSON(data: string | Phaser.Types.Animations.JSONAnimations | Phaser.Types.Animations.JSONAnimation, clearCurrentAnimations?: boolean): Phaser.Animations.Animation[];
 
             /**
              * [description]
              * @param key The key for the texture containing the animation frames.
              * @param config The configuration object for the animation frame names.
              */
-            generateFrameNames(key: string, config?: Phaser.Animations.Types.GenerateFrameNames): Phaser.Animations.Types.AnimationFrame[];
+            generateFrameNames(key: string, config?: Phaser.Types.Animations.GenerateFrameNames): Phaser.Types.Animations.AnimationFrame[];
 
             /**
-             * Generate an array of {@link Phaser.Animations.Types.AnimationFrame} objects from a texture key and configuration object.
+             * Generate an array of {@link Phaser.Types.Animations.AnimationFrame} objects from a texture key and configuration object.
              * 
-             * Generates objects with numbered frame names, as configured by the given {@link Phaser.Animations.Types.GenerateFrameNumbers}.
+             * Generates objects with numbered frame names, as configured by the given {@link Phaser.Types.Animations.GenerateFrameNumbers}.
              * @param key The key for the texture containing the animation frames.
              * @param config The configuration object for the animation frames.
              */
-            generateFrameNumbers(key: string, config: Phaser.Animations.Types.GenerateFrameNumbers): Phaser.Animations.Types.AnimationFrame[];
+            generateFrameNumbers(key: string, config: Phaser.Types.Animations.GenerateFrameNumbers): Phaser.Types.Animations.AnimationFrame[];
 
             /**
              * Get an Animation.
@@ -1814,7 +1092,7 @@ declare namespace Phaser {
              * Get the animation data as javascript object by giving key, or get the data of all animations as array of objects, if key wasn't provided.
              * @param key [description]
              */
-            toJSON(key: string): Phaser.Animations.Types.JSONAnimations;
+            toJSON(key: string): Phaser.Types.Animations.JSONAnimations;
 
             /**
              * Destroy this Animation Manager and clean up animation definitions and references to other objects.
@@ -2010,210 +1288,6 @@ declare namespace Phaser {
 
         }
 
-        namespace Types {
-            type Animation = {
-                /**
-                 * The key that the animation will be associated with. i.e. sprite.animations.play(key)
-                 */
-                key?: string;
-                /**
-                 * An object containing data used to generate the frames for the animation
-                 */
-                frames?: Phaser.Animations.Types.AnimationFrame[];
-                /**
-                 * The key of the texture all frames of the animation will use. Can be overridden on a per frame basis.
-                 */
-                defaultTextureKey?: string;
-                /**
-                 * The frame rate of playback in frames per second (default 24 if duration is null)
-                 */
-                frameRate?: integer;
-                /**
-                 * How long the animation should play for in milliseconds. If not given its derived from frameRate.
-                 */
-                duration?: integer;
-                /**
-                 * Skip frames if the time lags, or always advanced anyway?
-                 */
-                skipMissedFrames?: boolean;
-                /**
-                 * Delay before starting playback. Value given in milliseconds.
-                 */
-                delay?: integer;
-                /**
-                 * Number of times to repeat the animation (-1 for infinity)
-                 */
-                repeat?: integer;
-                /**
-                 * Delay before the animation repeats. Value given in milliseconds.
-                 */
-                repeatDelay?: integer;
-                /**
-                 * Should the animation yoyo? (reverse back down to the start) before repeating?
-                 */
-                yoyo?: boolean;
-                /**
-                 * Should sprite.visible = true when the animation starts to play?
-                 */
-                showOnStart?: boolean;
-                /**
-                 * Should sprite.visible = false when the animation finishes?
-                 */
-                hideOnComplete?: boolean;
-            };
-
-            type AnimationFrame = {
-                /**
-                 * The key that the animation will be associated with. i.e. sprite.animations.play(key)
-                 */
-                key: string;
-                /**
-                 * [description]
-                 */
-                frame: string | number;
-                /**
-                 * [description]
-                 */
-                duration?: number;
-                /**
-                 * [description]
-                 */
-                visible?: boolean;
-            };
-
-            type GenerateFrameNames = {
-                /**
-                 * The string to append to every resulting frame name if using a range or an array of `frames`.
-                 */
-                prefix?: string;
-                /**
-                 * If `frames` is not provided, the number of the first frame to return.
-                 */
-                start?: integer;
-                /**
-                 * If `frames` is not provided, the number of the last frame to return.
-                 */
-                end?: integer;
-                /**
-                 * The string to append to every resulting frame name if using a range or an array of `frames`.
-                 */
-                suffix?: string;
-                /**
-                 * The minimum expected lengths of each resulting frame's number. Numbers will be left-padded with zeroes until they are this long, then prepended and appended to create the resulting frame name.
-                 */
-                zeroPad?: integer;
-                /**
-                 * The array to append the created configuration objects to.
-                 */
-                outputArray?: Phaser.Animations.Types.AnimationFrame[];
-                /**
-                 * If provided as an array, the range defined by `start` and `end` will be ignored and these frame numbers will be used.
-                 */
-                frames?: boolean;
-            };
-
-            type GenerateFrameNumbers = {
-                /**
-                 * The starting frame of the animation.
-                 */
-                start?: integer;
-                /**
-                 * The ending frame of the animation.
-                 */
-                end?: integer;
-                /**
-                 * A frame to put at the beginning of the animation, before `start` or `outputArray` or `frames`.
-                 */
-                first?: boolean | integer;
-                /**
-                 * An array to concatenate the output onto.
-                 */
-                outputArray?: Phaser.Animations.Types.AnimationFrame[];
-                /**
-                 * A custom sequence of frames.
-                 */
-                frames?: boolean | integer[];
-            };
-
-            type JSONAnimation = {
-                /**
-                 * The key that the animation will be associated with. i.e. sprite.animations.play(key)
-                 */
-                key: string;
-                /**
-                 * A frame based animation (as opposed to a bone based animation)
-                 */
-                type: string;
-                /**
-                 * [description]
-                 */
-                frames: Phaser.Animations.Types.JSONAnimationFrame[];
-                /**
-                 * The frame rate of playback in frames per second (default 24 if duration is null)
-                 */
-                frameRate: integer;
-                /**
-                 * How long the animation should play for in milliseconds. If not given its derived from frameRate.
-                 */
-                duration: integer;
-                /**
-                 * Skip frames if the time lags, or always advanced anyway?
-                 */
-                skipMissedFrames: boolean;
-                /**
-                 * Delay before starting playback. Value given in milliseconds.
-                 */
-                delay: integer;
-                /**
-                 * Number of times to repeat the animation (-1 for infinity)
-                 */
-                repeat: integer;
-                /**
-                 * Delay before the animation repeats. Value given in milliseconds.
-                 */
-                repeatDelay: integer;
-                /**
-                 * Should the animation yoyo? (reverse back down to the start) before repeating?
-                 */
-                yoyo: boolean;
-                /**
-                 * Should sprite.visible = true when the animation starts to play?
-                 */
-                showOnStart: boolean;
-                /**
-                 * Should sprite.visible = false when the animation finishes?
-                 */
-                hideOnComplete: boolean;
-            };
-
-            type JSONAnimationFrame = {
-                /**
-                 * The key of the Texture this AnimationFrame uses.
-                 */
-                key: string;
-                /**
-                 * The key of the Frame within the Texture that this AnimationFrame uses.
-                 */
-                frame: string | integer;
-                /**
-                 * Additional time (in ms) that this frame should appear for during playback.
-                 */
-                duration: number;
-            };
-
-            type JSONAnimations = {
-                /**
-                 * An array of all Animations added to the Animation Manager.
-                 */
-                anims: Phaser.Animations.Types.JSONAnimation[];
-                /**
-                 * The global time scale of the Animation Manager.
-                 */
-                globalTimeScale: number;
-            };
-
-        }
-
     }
 
     namespace Cache {
@@ -2278,7 +1352,7 @@ declare namespace Phaser {
             /**
              * Returns all keys in use in this cache.
              */
-            getKeys(): K[];
+            getKeys(): string[];
 
             /**
              * Destroys this cache and all items within it.
@@ -2707,7 +1781,7 @@ declare namespace Phaser {
                  * The color value can be specified using CSS color notation, hex or numbers.
                  * @param color The color value. In CSS, hex or numeric color notation. Default 'rgba(0,0,0,0)'.
                  */
-                setBackgroundColor(color?: string | number | Phaser.Display.Types.InputColorObject): Phaser.Cameras.Scene2D.BaseCamera;
+                setBackgroundColor(color?: string | number | Phaser.Types.Display.InputColorObject): Phaser.Cameras.Scene2D.BaseCamera;
 
                 /**
                  * Set the bounds of the Camera. The bounds are an axis-aligned rectangle.
@@ -2872,7 +1946,7 @@ declare namespace Phaser {
                 /**
                  * Returns an Object suitable for JSON storage containing all of the Camera viewport and rendering properties.
                  */
-                toJSON(): Phaser.Cameras.Scene2D.Types.JSONCamera;
+                toJSON(): Phaser.Types.Cameras.Scene2D.JSONCamera;
 
                 /**
                  * Internal method called automatically by the Camera Manager.
@@ -3355,7 +2429,7 @@ declare namespace Phaser {
                  * the current camera scroll x coordinate and the current camera scroll y coordinate.
                  * @param context The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
                  */
-                pan(x: number, y: number, duration?: integer, ease?: string | Function, force?: boolean, callback?: CameraPanCallback, context?: any): Phaser.Cameras.Scene2D.Camera;
+                pan(x: number, y: number, duration?: integer, ease?: string | Function, force?: boolean, callback?: Phaser.Types.Cameras.Scene2D.CameraPanCallback, context?: any): Phaser.Cameras.Scene2D.Camera;
 
                 /**
                  * This effect will zoom the Camera to the given scale, over the duration and with the ease specified.
@@ -3368,7 +2442,7 @@ declare namespace Phaser {
                  * the current camera scroll x coordinate and the current camera scroll y coordinate.
                  * @param context The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
                  */
-                zoomTo(zoom: number, duration?: integer, ease?: string | Function, force?: boolean, callback?: CameraPanCallback, context?: any): Phaser.Cameras.Scene2D.Camera;
+                zoomTo(zoom: number, duration?: integer, ease?: string | Function, force?: boolean, callback?: Phaser.Types.Cameras.Scene2D.CameraPanCallback, context?: any): Phaser.Cameras.Scene2D.Camera;
 
                 /**
                  * Internal preRender step.
@@ -3756,10 +2830,10 @@ declare namespace Phaser {
                 /**
                  * Populates this Camera Manager based on the given configuration object, or an array of config objects.
                  * 
-                 * See the `Phaser.Cameras.Scene2D.Types.CameraConfig` documentation for details of the object structure.
+                 * See the `Phaser.Types.Cameras.Scene2D.CameraConfig` documentation for details of the object structure.
                  * @param config A Camera configuration object, or an array of them, to be added to this Camera Manager.
                  */
-                fromJSON(config: Phaser.Cameras.Scene2D.Types.CameraConfig | Phaser.Cameras.Scene2D.Types.CameraConfig[]): Phaser.Cameras.Scene2D.CameraManager;
+                fromJSON(config: Phaser.Types.Cameras.Scene2D.CameraConfig | Phaser.Types.Cameras.Scene2D.CameraConfig[]): Phaser.Cameras.Scene2D.CameraManager;
 
                 /**
                  * Gets a Camera based on its name.
@@ -3892,7 +2966,7 @@ declare namespace Phaser {
                      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
                      * @param context The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
                      */
-                    start(direction?: boolean, duration?: integer, red?: integer, green?: integer, blue?: integer, force?: boolean, callback?: Phaser.Cameras.Scene2D.Types.CameraFadeCallback, context?: any): Phaser.Cameras.Scene2D.Camera;
+                    start(direction?: boolean, duration?: integer, red?: integer, green?: integer, blue?: integer, force?: boolean, callback?: Phaser.Types.Cameras.Scene2D.CameraFadeCallback, context?: any): Phaser.Cameras.Scene2D.Camera;
 
                     /**
                      * The main update loop for this effect. Called automatically by the Camera.
@@ -3981,7 +3055,7 @@ declare namespace Phaser {
                      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
                      * @param context The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
                      */
-                    start(duration?: integer, red?: integer, green?: integer, blue?: integer, force?: boolean, callback?: Phaser.Cameras.Scene2D.Types.CameraFlashCallback, context?: any): Phaser.Cameras.Scene2D.Camera;
+                    start(duration?: integer, red?: integer, green?: integer, blue?: integer, force?: boolean, callback?: Phaser.Types.Cameras.Scene2D.CameraFlashCallback, context?: any): Phaser.Cameras.Scene2D.Camera;
 
                     /**
                      * The main update loop for this effect. Called automatically by the Camera.
@@ -4093,7 +3167,7 @@ declare namespace Phaser {
                      * the current camera scroll x coordinate and the current camera scroll y coordinate.
                      * @param context The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
                      */
-                    start(x: number, y: number, duration?: integer, ease?: string | Function, force?: boolean, callback?: Phaser.Cameras.Scene2D.Types.CameraPanCallback, context?: any): Phaser.Cameras.Scene2D.Camera;
+                    start(x: number, y: number, duration?: integer, ease?: string | Function, force?: boolean, callback?: Phaser.Types.Cameras.Scene2D.CameraPanCallback, context?: any): Phaser.Cameras.Scene2D.Camera;
 
                     /**
                      * The main update loop for this effect. Called automatically by the Camera.
@@ -4174,7 +3248,7 @@ declare namespace Phaser {
                      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
                      * @param context The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
                      */
-                    start(duration?: integer, intensity?: number, force?: boolean, callback?: Phaser.Cameras.Scene2D.Types.CameraShakeCallback, context?: any): Phaser.Cameras.Scene2D.Camera;
+                    start(duration?: integer, intensity?: number, force?: boolean, callback?: Phaser.Types.Cameras.Scene2D.CameraShakeCallback, context?: any): Phaser.Cameras.Scene2D.Camera;
 
                     /**
                      * The pre-render step for this effect. Called automatically by the Camera.
@@ -4267,7 +3341,7 @@ declare namespace Phaser {
                      * and the current camera zoom value.
                      * @param context The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
                      */
-                    start(zoom: number, duration?: integer, ease?: string | Function, force?: boolean, callback?: Phaser.Cameras.Scene2D.Types.CameraZoomCallback, context?: any): Phaser.Cameras.Scene2D.Camera;
+                    start(zoom: number, duration?: integer, ease?: string | Function, force?: boolean, callback?: Phaser.Types.Cameras.Scene2D.CameraZoomCallback, context?: any): Phaser.Cameras.Scene2D.Camera;
 
                     /**
                      * The main update loop for this effect. Called automatically by the Camera.
@@ -4418,156 +3492,6 @@ declare namespace Phaser {
 
             }
 
-            namespace Types {
-                type CameraConfig = {
-                    /**
-                     * The name of the Camera.
-                     */
-                    name?: string;
-                    /**
-                     * The horizontal position of the Camera viewport.
-                     */
-                    x?: integer;
-                    /**
-                     * The vertical position of the Camera viewport.
-                     */
-                    y?: integer;
-                    /**
-                     * The width of the Camera viewport.
-                     */
-                    width?: integer;
-                    /**
-                     * The height of the Camera viewport.
-                     */
-                    height?: integer;
-                    /**
-                     * The default zoom level of the Camera.
-                     */
-                    zoom?: number;
-                    /**
-                     * The rotation of the Camera, in radians.
-                     */
-                    rotation?: number;
-                    /**
-                     * Should the Camera round pixels before rendering?
-                     */
-                    roundPixels?: boolean;
-                    /**
-                     * The horizontal scroll position of the Camera.
-                     */
-                    scrollX?: number;
-                    /**
-                     * The vertical scroll position of the Camera.
-                     */
-                    scrollY?: number;
-                    /**
-                     * A CSS color string controlling the Camera background color.
-                     */
-                    backgroundColor?: false | string;
-                    /**
-                     * Defines the Camera bounds.
-                     */
-                    bounds?: object;
-                    /**
-                     * The top-left extent of the Camera bounds.
-                     */
-                    "bounds.x"?: number;
-                    /**
-                     * The top-left extent of the Camera bounds.
-                     */
-                    "bounds.y"?: number;
-                    /**
-                     * The width of the Camera bounds.
-                     */
-                    "bounds.width"?: number;
-                    /**
-                     * The height of the Camera bounds.
-                     */
-                    "bounds.height"?: number;
-                };
-
-                type CameraFadeCallback = (camera: Phaser.Cameras.Scene2D.Camera, progress: number)=>void;
-
-                type CameraFlashCallback = (camera: Phaser.Cameras.Scene2D.Camera, progress: number)=>void;
-
-                type CameraPanCallback = (camera: Phaser.Cameras.Scene2D.Camera, progress: number, x: number, y: number)=>void;
-
-                type CameraShakeCallback = (camera: Phaser.Cameras.Scene2D.Camera, progress: number)=>void;
-
-                type CameraZoomCallback = (camera: Phaser.Cameras.Scene2D.Camera, progress: number, zoom: number)=>void;
-
-                type JSONCamera = {
-                    /**
-                     * The name of the camera
-                     */
-                    name: string;
-                    /**
-                     * The horizontal position of camera
-                     */
-                    x: number;
-                    /**
-                     * The vertical position of camera
-                     */
-                    y: number;
-                    /**
-                     * The width size of camera
-                     */
-                    width: number;
-                    /**
-                     * The height size of camera
-                     */
-                    height: number;
-                    /**
-                     * The zoom of camera
-                     */
-                    zoom: number;
-                    /**
-                     * The rotation of camera
-                     */
-                    rotation: number;
-                    /**
-                     * The round pixels st status of camera
-                     */
-                    roundPixels: boolean;
-                    /**
-                     * The horizontal scroll of camera
-                     */
-                    scrollX: number;
-                    /**
-                     * The vertical scroll of camera
-                     */
-                    scrollY: number;
-                    /**
-                     * The background color of camera
-                     */
-                    backgroundColor: string;
-                    /**
-                     * The bounds of camera
-                     */
-                    bounds?: Phaser.Cameras.Scene2D.Types.JSONCameraBounds | undefined;
-                };
-
-                type JSONCameraBounds = {
-                    /**
-                     * The horizontal position of camera
-                     */
-                    x: number;
-                    /**
-                     * The vertical position of camera
-                     */
-                    y: number;
-                    /**
-                     * The width size of camera
-                     */
-                    width: number;
-                    /**
-                     * The height size of camera
-                     */
-                    height: number;
-                };
-
-            }
-
         }
 
         namespace Controls {
@@ -4594,7 +3518,7 @@ declare namespace Phaser {
                  * 
                  * @param config The Fixed Key Control configuration object.
                  */
-                constructor(config: Phaser.Cameras.Controls.Types.FixedKeyControlConfig);
+                constructor(config: Phaser.Types.Cameras.Controls.FixedKeyControlConfig);
 
                 /**
                  * The Camera that this Control will update.
@@ -4711,7 +3635,7 @@ declare namespace Phaser {
                  * 
                  * @param config The Smoothed Key Control configuration object.
                  */
-                constructor(config: Phaser.Cameras.Controls.Types.SmoothedKeyControlConfig);
+                constructor(config: Phaser.Types.Cameras.Controls.SmoothedKeyControlConfig);
 
                 /**
                  * The Camera that this Control will update.
@@ -4819,91 +3743,6 @@ declare namespace Phaser {
 
             }
 
-            namespace Types {
-                type FixedKeyControlConfig = {
-                    /**
-                     * The Camera that this Control will update.
-                     */
-                    camera?: Phaser.Cameras.Scene2D.Camera;
-                    /**
-                     * The Key to be pressed that will move the Camera left.
-                     */
-                    left?: Phaser.Input.Keyboard.Key;
-                    /**
-                     * The Key to be pressed that will move the Camera right.
-                     */
-                    right?: Phaser.Input.Keyboard.Key;
-                    /**
-                     * The Key to be pressed that will move the Camera up.
-                     */
-                    up?: Phaser.Input.Keyboard.Key;
-                    /**
-                     * The Key to be pressed that will move the Camera down.
-                     */
-                    down?: Phaser.Input.Keyboard.Key;
-                    /**
-                     * The Key to be pressed that will zoom the Camera in.
-                     */
-                    zoomIn?: Phaser.Input.Keyboard.Key;
-                    /**
-                     * The Key to be pressed that will zoom the Camera out.
-                     */
-                    zoomOut?: Phaser.Input.Keyboard.Key;
-                    /**
-                     * The speed at which the camera will zoom if the `zoomIn` or `zoomOut` keys are pressed.
-                     */
-                    zoomSpeed?: number;
-                    /**
-                     * The horizontal and vertical speed the camera will move.
-                     */
-                    speed?: number | Object;
-                };
-
-                type SmoothedKeyControlConfig = {
-                    /**
-                     * The Camera that this Control will update.
-                     */
-                    camera?: Phaser.Cameras.Scene2D.Camera;
-                    /**
-                     * The Key to be pressed that will move the Camera left.
-                     */
-                    left?: Phaser.Input.Keyboard.Key;
-                    /**
-                     * The Key to be pressed that will move the Camera right.
-                     */
-                    right?: Phaser.Input.Keyboard.Key;
-                    /**
-                     * The Key to be pressed that will move the Camera up.
-                     */
-                    up?: Phaser.Input.Keyboard.Key;
-                    /**
-                     * The Key to be pressed that will zoom the Camera in.
-                     */
-                    zoomIn?: Phaser.Input.Keyboard.Key;
-                    /**
-                     * The Key to be pressed that will zoom the Camera out.
-                     */
-                    zoomOut?: Phaser.Input.Keyboard.Key;
-                    /**
-                     * The speed at which the camera will zoom if the `zoomIn` or `zoomOut` keys are pressed.
-                     */
-                    zoomSpeed?: number;
-                    /**
-                     * The horizontal and vertical acceleration the camera will move.
-                     */
-                    acceleration?: number | Object;
-                    /**
-                     * The horizontal and vertical drag applied to the camera when it is moving.
-                     */
-                    drag?: number | Object;
-                    /**
-                     * The maximum horizontal and vertical speed the camera will move.
-                     */
-                    maxSpeed?: number | Object;
-                };
-
-            }
-
         }
 
     }
@@ -4978,7 +3817,7 @@ declare namespace Phaser {
          * 
          * @param GameConfig The configuration object for your Phaser Game instance.
          */
-        constructor(GameConfig?: Phaser.Core.Types.GameConfig);
+        constructor(GameConfig?: Phaser.Types.Core.GameConfig);
 
         /**
          * The parsed Game Configuration object.
@@ -5221,14 +4060,14 @@ declare namespace Phaser {
 
     namespace Core {
         /**
-         * The active game configuration settings, parsed from a {@link Phaser.Core.Types.GameConfig} object.
+         * The active game configuration settings, parsed from a {@link Phaser.Types.Core.GameConfig} object.
          */
         class Config {
             /**
              * 
              * @param GameConfig The configuration object for your Phaser Game instance.
              */
-            constructor(GameConfig?: Phaser.Core.Types.GameConfig);
+            constructor(GameConfig?: Phaser.Types.Core.GameConfig);
 
             /**
              * The width of the underlying canvas, in pixels.
@@ -5453,7 +4292,7 @@ declare namespace Phaser {
             /**
              * The Audio Configuration object.
              */
-            readonly audio: Phaser.Core.Types.AudioConfig;
+            readonly audio: Phaser.Types.Core.AudioConfig;
 
             /**
              * Don't write the banner line to the console.log.
@@ -5478,7 +4317,7 @@ declare namespace Phaser {
             /**
              * The Frame Rate Configuration object, as parsed by the Timestep class.
              */
-            readonly fps: Phaser.Core.Types.FPSConfig;
+            readonly fps: Phaser.Types.Core.FPSConfig;
 
             /**
              * When set to `true`, WebGL uses linear interpolation to draw scaled or rotated textures, giving a smooth appearance. When set to `false`, WebGL uses nearest-neighbor interpolation, giving a crisper appearance. `false` also disables antialiasing of the game canvas itself, if the browser supports it, when the game canvas is scaled.
@@ -5538,17 +4377,17 @@ declare namespace Phaser {
             /**
              * Called before Phaser boots. Useful for initializing anything not related to Phaser that Phaser may require while booting.
              */
-            readonly preBoot: Phaser.Core.Types.BootCallback;
+            readonly preBoot: Phaser.Types.Core.BootCallback;
 
             /**
              * A function to run at the end of the boot sequence. At this point, all the game systems have started and plugins have been loaded.
              */
-            readonly postBoot: Phaser.Core.Types.BootCallback;
+            readonly postBoot: Phaser.Types.Core.BootCallback;
 
             /**
              * The Physics Configuration object.
              */
-            readonly physics: Phaser.Core.Types.PhysicsConfig;
+            readonly physics: Phaser.Types.Core.PhysicsConfig;
 
             /**
              * The default physics system. It will be started for each scene. Either 'arcade', 'impact' or 'matter'.
@@ -5775,7 +4614,7 @@ declare namespace Phaser {
              * 
              * @param game A reference to the Phaser.Game instance that owns this Time Step.
              */
-            constructor(game: Phaser.Game, config: Phaser.Core.Types.FPSConfig);
+            constructor(game: Phaser.Game, config: Phaser.Types.Core.FPSConfig);
 
             /**
              * A reference to the Phaser.Game instance.
@@ -5832,7 +4671,7 @@ declare namespace Phaser {
             /**
              * A callback to be invoked each time the Time Step steps.
              */
-            callback: Phaser.Core.Types.TimeStepCallback;
+            callback: Phaser.Types.Core.TimeStepCallback;
 
             /**
              * You can force the Time Step to use Set Timeout instead of Request Animation Frame by setting
@@ -5927,7 +4766,7 @@ declare namespace Phaser {
              * Called automatically by the Game Boot process.
              * @param callback The callback to be invoked each time the Time Step steps.
              */
-            start(callback: Phaser.Core.Types.TimeStepCallback): void;
+            start(callback: Phaser.Types.Core.TimeStepCallback): void;
 
             /**
              * The main step method. This is called each time the browser updates, either by Request Animation Frame,
@@ -5977,522 +4816,6 @@ declare namespace Phaser {
 
         }
 
-        namespace Types {
-            /**
-             * Config object containing various sound settings.
-             */
-            type AudioConfig = {
-                /**
-                 * Use HTML5 Audio instead of Web Audio.
-                 */
-                disableWebAudio?: boolean;
-                /**
-                 * An existing Web Audio context.
-                 */
-                context?: AudioContext;
-                /**
-                 * Disable all audio output.
-                 */
-                noAudio?: boolean;
-            };
-
-            type BannerConfig = {
-                /**
-                 * Omit Phaser's name and version from the banner.
-                 */
-                hidePhaser?: boolean;
-                /**
-                 * The color of the banner text.
-                 */
-                text?: string;
-                /**
-                 * The background colors of the banner.
-                 */
-                background?: string[];
-            };
-
-            type BootCallback = (game: Phaser.Game)=>void;
-
-            type CallbacksConfig = {
-                /**
-                 * A function to run at the start of the boot sequence.
-                 */
-                preBoot?: Phaser.Core.Types.BootCallback;
-                /**
-                 * A function to run at the end of the boot sequence. At this point, all the game systems have started and plugins have been loaded.
-                 */
-                postBoot?: Phaser.Core.Types.BootCallback;
-            };
-
-            type DOMContainerConfig = {
-                /**
-                 * Should the game create a div element to act as a DOM Container? Only enable if you're using DOM Element objects. You must provide a parent object if you use this feature.
-                 */
-                createContainer?: boolean;
-                /**
-                 * Should the DOM Container that is created (if `dom.createContainer` is true) be positioned behind (true) or over the top (false, the default) of the game canvas?
-                 */
-                behindCanvas?: boolean;
-            };
-
-            type FPSConfig = {
-                /**
-                 * The minimum acceptable rendering rate, in frames per second.
-                 */
-                min?: integer;
-                /**
-                 * The optimum rendering rate, in frames per second.
-                 */
-                target?: integer;
-                /**
-                 * Use setTimeout instead of requestAnimationFrame to run the game loop.
-                 */
-                forceSetTimeOut?: boolean;
-                /**
-                 * Calculate the average frame delta from this many consecutive frame intervals.
-                 */
-                deltaHistory?: integer;
-                /**
-                 * The amount of frames the time step counts before we trust the delta values again.
-                 */
-                panicMax?: integer;
-            };
-
-            type GameConfig = {
-                /**
-                 * The width of the game, in game pixels.
-                 */
-                width?: integer | string;
-                /**
-                 * The height of the game, in game pixels.
-                 */
-                height?: integer | string;
-                /**
-                 * Simple scale applied to the game canvas. 2 is double size, 0.5 is half size, etc.
-                 */
-                zoom?: number;
-                /**
-                 * The size of each game pixel, in canvas pixels. Values larger than 1 are "high" resolution.
-                 */
-                resolution?: number;
-                /**
-                 * Which renderer to use. Phaser.AUTO, Phaser.CANVAS, Phaser.HEADLESS, or Phaser.WEBGL. AUTO picks WEBGL if available, otherwise CANVAS.
-                 */
-                type?: number;
-                /**
-                 * The DOM element that will contain the game canvas, or its `id`. If undefined or if the named element doesn't exist, the game canvas is inserted directly into the document body. If `null` no parent will be used and you are responsible for adding the canvas to your environment.
-                 */
-                parent?: HTMLElement | string;
-                /**
-                 * Provide your own Canvas element for Phaser to use instead of creating one.
-                 */
-                canvas?: HTMLCanvasElement;
-                /**
-                 * CSS styles to apply to the game canvas instead of Phaser's default styles.
-                 */
-                canvasStyle?: string;
-                /**
-                 * Provide your own Canvas Context for Phaser to use, instead of creating one.
-                 */
-                context?: CanvasRenderingContext2D;
-                /**
-                 * A scene or scenes to add to the game. If several are given, the first is started; the remainder are started only if they have `{ active: true }`. See the `sceneConfig` argument in {@link Phaser.Scenes.SceneManager#add}.
-                 */
-                scene?: Phaser.Scene | Phaser.Scene[] | Phaser.Scenes.Types.SettingsConfig | Phaser.Scenes.Types.SettingsConfig[] | Phaser.Scenes.Types.CreateSceneFromObjectConfig | Phaser.Scenes.Types.CreateSceneFromObjectConfig[] | Function | function()[];
-                /**
-                 * Seed for the random number generator.
-                 */
-                seed?: string[];
-                /**
-                 * The title of the game. Shown in the browser console.
-                 */
-                title?: string;
-                /**
-                 * The URL of the game. Shown in the browser console.
-                 */
-                url?: string;
-                /**
-                 * The version of the game. Shown in the browser console.
-                 */
-                version?: string;
-                /**
-                 * Automatically call window.focus() when the game boots. Usually necessary to capture input events if the game is in a separate frame.
-                 */
-                autoFocus?: boolean;
-                /**
-                 * Input configuration, or `false` to disable all game input.
-                 */
-                input?: boolean | Phaser.Core.Types.InputConfig;
-                /**
-                 * Disable the browser's default 'contextmenu' event (usually triggered by a right-button mouse click).
-                 */
-                disableContextMenu?: boolean;
-                /**
-                 * Whether the game canvas will have a transparent background.
-                 */
-                transparent?: boolean;
-                /**
-                 * Configuration for the banner printed in the browser console when the game starts.
-                 */
-                banner?: boolean | Phaser.Core.Types.BannerConfig;
-                /**
-                 * The DOM Container configuration object.
-                 */
-                dom?: Phaser.Core.Types.DOMContainerConfig;
-                /**
-                 * Game loop configuration.
-                 */
-                fps?: Phaser.Core.Types.FPSConfig;
-                /**
-                 * Game renderer configuration.
-                 */
-                render?: Phaser.Core.Types.RenderConfig;
-                /**
-                 * The background color of the game canvas. The default is black.
-                 */
-                backgroundColor?: string | number;
-                /**
-                 * Optional callbacks to run before or after game boot.
-                 */
-                callbacks?: Phaser.Core.Types.CallbacksConfig;
-                /**
-                 * Loader configuration.
-                 */
-                loader?: Phaser.Core.Types.LoaderConfig;
-                /**
-                 * Images configuration.
-                 */
-                images?: Phaser.Core.Types.ImagesConfig;
-                /**
-                 * Physics configuration.
-                 */
-                physics?: Phaser.Core.Types.PhysicsConfig;
-                /**
-                 * Plugins to install.
-                 */
-                plugins?: Phaser.Core.Types.PluginObject | Phaser.Core.Types.PluginObjectItem[];
-                /**
-                 * The Scale Manager configuration.
-                 */
-                scale?: Phaser.Core.Types.ScaleConfig;
-                /**
-                 * The Audio Configuration object.
-                 */
-                audio?: Phaser.Core.Types.AudioConfig;
-            };
-
-            type GamepadInputConfig = {
-                /**
-                 * Where the Gamepad Manager listens for gamepad input events.
-                 */
-                target?: any;
-            };
-
-            type ImagesConfig = {
-                /**
-                 * URL to use for the 'default' texture.
-                 */
-                default?: string;
-                /**
-                 * URL to use for the 'missing' texture.
-                 */
-                missing?: string;
-            };
-
-            type InputConfig = {
-                /**
-                 * Keyboard input configuration. `true` uses the default configuration and `false` disables keyboard input.
-                 */
-                keyboard?: boolean | Phaser.Core.Types.KeyboardInputConfig;
-                /**
-                 * Mouse input configuration. `true` uses the default configuration and `false` disables mouse input.
-                 */
-                mouse?: boolean | Phaser.Core.Types.MouseInputConfig;
-                /**
-                 * Touch input configuration. `true` uses the default configuration and `false` disables touch input.
-                 */
-                touch?: boolean | Phaser.Core.Types.TouchInputConfig;
-                /**
-                 * Gamepad input configuration. `true` enables gamepad input.
-                 */
-                gamepad?: boolean | Phaser.Core.Types.GamepadInputConfig;
-                /**
-                 * The maximum number of touch pointers. See {@link Phaser.Input.InputManager#pointers}.
-                 */
-                activePointers?: integer;
-                /**
-                 * The smoothing factor to apply during Pointer movement. See {@link Phaser.Input.Pointer#smoothFactor}.
-                 */
-                smoothFactor?: number;
-                /**
-                 * Should Phaser use a queued input system for native DOM Events or not?
-                 */
-                inputQueue?: boolean;
-                /**
-                 * Should Phaser listen for input events on the Window? If you disable this, events like 'POINTER_UP_OUTSIDE' will no longer fire.
-                 */
-                windowEvents?: boolean;
-            };
-
-            type KeyboardInputConfig = {
-                /**
-                 * Where the Keyboard Manager listens for keyboard input events.
-                 */
-                target?: any;
-                /**
-                 * `preventDefault` will be called on every non-modified key which has a key code in this array. By default it is empty.
-                 */
-                capture?: integer[];
-            };
-
-            type LoaderConfig = {
-                /**
-                 * A URL used to resolve paths given to the loader. Example: 'http://labs.phaser.io/assets/'.
-                 */
-                baseURL?: string;
-                /**
-                 * A URL path used to resolve relative paths given to the loader. Example: 'images/sprites/'.
-                 */
-                path?: string;
-                /**
-                 * The maximum number of resources the loader will start loading at once.
-                 */
-                maxParallelDownloads?: integer;
-                /**
-                 * 'anonymous', 'use-credentials', or `undefined`. If you're not making cross-origin requests, leave this as `undefined`. See {@link https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_settings_attributes}.
-                 */
-                crossOrigin?: string | undefined;
-                /**
-                 * The response type of the XHR request, e.g. `blob`, `text`, etc.
-                 */
-                responseType?: string;
-                /**
-                 * Should the XHR request use async or not?
-                 */
-                async?: boolean;
-                /**
-                 * Optional username for all XHR requests.
-                 */
-                user?: string;
-                /**
-                 * Optional password for all XHR requests.
-                 */
-                password?: string;
-                /**
-                 * Optional XHR timeout value, in ms.
-                 */
-                timeout?: integer;
-            };
-
-            type MouseInputConfig = {
-                /**
-                 * Where the Mouse Manager listens for mouse input events. The default is the game canvas.
-                 */
-                target?: any;
-                /**
-                 * Whether mouse input events have `preventDefault` called on them.
-                 */
-                capture?: boolean;
-            };
-
-            /**
-             * This callback type is completely empty, a no-operation.
-             */
-            type NOOP = ()=>void;
-
-            type PhysicsConfig = {
-                /**
-                 * The default physics system. It will be started for each scene. Phaser provides 'arcade', 'impact', and 'matter'.
-                 */
-                default?: string;
-                /**
-                 * Arcade Physics configuration.
-                 */
-                arcade?: Phaser.Physics.Arcade.Types.ArcadeWorldConfig;
-                /**
-                 * Impact Physics configuration.
-                 */
-                impact?: Phaser.Physics.Impact.Types.WorldConfig;
-                /**
-                 * Matter Physics configuration.
-                 */
-                matter?: MatterWorldConfig;
-            };
-
-            type PluginObject = {
-                /**
-                 * Global plugins to install.
-                 */
-                global?: Phaser.Core.Types.PluginObjectItem[];
-                /**
-                 * Scene plugins to install.
-                 */
-                scene?: Phaser.Core.Types.PluginObjectItem[];
-                /**
-                 * The default set of scene plugins (names).
-                 */
-                default?: string[];
-                /**
-                 * Plugins to *add* to the default set of scene plugins.
-                 */
-                defaultMerge?: string[];
-            };
-
-            type PluginObjectItem = {
-                /**
-                 * A key to identify the plugin in the Plugin Manager.
-                 */
-                key?: string;
-                /**
-                 * The plugin itself. Usually a class/constructor.
-                 */
-                plugin?: any;
-                /**
-                 * Whether the plugin should be started automatically.
-                 */
-                start?: boolean;
-                /**
-                 * For a scene plugin, add the plugin to the scene's systems object under this key (`this.sys.KEY`, from the scene).
-                 */
-                systemKey?: string;
-                /**
-                 * For a scene plugin, add the plugin to the scene object under this key (`this.KEY`, from the scene).
-                 */
-                sceneKey?: string;
-                /**
-                 * If this plugin is to be injected into the Scene Systems, this is the property key map used.
-                 */
-                mapping?: string;
-                /**
-                 * Arbitrary data passed to the plugin's init() method.
-                 */
-                data?: any;
-            };
-
-            type RenderConfig = {
-                /**
-                 * When set to `true`, WebGL uses linear interpolation to draw scaled or rotated textures, giving a smooth appearance. When set to `false`, WebGL uses nearest-neighbor interpolation, giving a crisper appearance. `false` also disables antialiasing of the game canvas itself, if the browser supports it, when the game canvas is scaled.
-                 */
-                antialias?: boolean;
-                /**
-                 * Sets `antialias` and `roundPixels` to true. This is the best setting for pixel-art games.
-                 */
-                pixelArt?: boolean;
-                /**
-                 * Draw texture-based Game Objects at only whole-integer positions. Game Objects without textures, like Graphics, ignore this property.
-                 */
-                roundPixels?: boolean;
-                /**
-                 * Whether the game canvas will be transparent.
-                 */
-                transparent?: boolean;
-                /**
-                 * Whether the game canvas will be cleared between each rendering frame.
-                 */
-                clearBeforeRender?: boolean;
-                /**
-                 * In WebGL mode, the drawing buffer contains colors with pre-multiplied alpha.
-                 */
-                premultipliedAlpha?: boolean;
-                /**
-                 * Let the browser abort creating a WebGL context if it judges performance would be unacceptable.
-                 */
-                failIfMajorPerformanceCaveat?: boolean;
-                /**
-                 * "high-performance", "low-power" or "default". A hint to the browser on how much device power the game might use.
-                 */
-                powerPreference?: string;
-                /**
-                 * The default WebGL batch size.
-                 */
-                batchSize?: integer;
-                /**
-                 * The maximum number of lights allowed to be visible within range of a single Camera in the LightManager.
-                 */
-                maxLights?: integer;
-            };
-
-            type ScaleConfig = {
-                /**
-                 * The base width of your game. Can be an integer or a string: '100%'. If a string it will only work if you have set a parent element that has a size.
-                 */
-                width?: integer | string;
-                /**
-                 * The base height of your game. Can be an integer or a string: '100%'. If a string it will only work if you have set a parent element that has a size.
-                 */
-                height?: integer | string;
-                /**
-                 * The zoom value of the game canvas.
-                 */
-                zoom?: Phaser.Scale.ZoomType | integer;
-                /**
-                 * The rendering resolution of the canvas. This is reserved for future use and is currently ignored.
-                 */
-                resolution?: number;
-                /**
-                 * The DOM element that will contain the game canvas, or its `id`. If undefined, or if the named element doesn't exist, the game canvas is inserted directly into the document body. If `null` no parent will be used and you are responsible for adding the canvas to your environment.
-                 */
-                parent?: HTMLElement | string;
-                /**
-                 * Is the Scale Manager allowed to adjust the CSS height property of the parent and/or document body to be 100%?
-                 */
-                expandParent?: boolean;
-                /**
-                 * The scale mode.
-                 */
-                mode?: Phaser.Scale.ScaleModeType;
-                /**
-                 * The minimum width and height the canvas can be scaled down to.
-                 */
-                min?: WidthHeight;
-                /**
-                 * The maximum width the canvas can be scaled up to.
-                 */
-                max?: WidthHeight;
-                /**
-                 * Automatically round the display and style sizes of the canvas. This can help with performance in lower-powered devices.
-                 */
-                autoRound?: boolean;
-                /**
-                 * Automatically center the canvas within the parent?
-                 */
-                autoCenter?: Phaser.Scale.CenterType;
-                /**
-                 * How many ms should elapse before checking if the browser size has changed?
-                 */
-                resizeInterval?: integer;
-                /**
-                 * The DOM element that will be sent into full screen mode, or its `id`. If undefined Phaser will create its own div and insert the canvas into it when entering fullscreen mode.
-                 */
-                fullscreenTarget?: HTMLElement | string;
-            };
-
-            type TimeStepCallback = (time: number, average: number, interpolation: number)=>void;
-
-            type TouchInputConfig = {
-                /**
-                 * Where the Touch Manager listens for touch input events. The default is the game canvas.
-                 */
-                target?: any;
-                /**
-                 * Whether touch input events have preventDefault() called on them.
-                 */
-                capture?: boolean;
-            };
-
-            type WidthHeight = {
-                /**
-                 * The width.
-                 */
-                width?: integer;
-                /**
-                 * The height.
-                 */
-                height?: integer;
-            };
-
-        }
-
         /**
          * The Visibility Handler is responsible for listening out for document level visibility change events.
          * This includes `visibilitychange` if the browser supports it, and blur and focus events. It then uses
@@ -6508,144 +4831,33 @@ declare namespace Phaser {
          * [description]
          * @param config [description]
          */
-        function GenerateTexture(config: Phaser.Create.Types.GenerateTextureConfig): HTMLCanvasElement;
+        function GenerateTexture(config: Phaser.Types.Create.GenerateTextureConfig): HTMLCanvasElement;
 
         namespace Palettes {
             /**
              * A 16 color palette by [Arne](http://androidarts.com/palette/16pal.htm)
              */
-            var ARNE16: Phaser.Create.Types.Palette;
+            var ARNE16: Phaser.Types.Create.Palette;
 
             /**
              * A 16 color palette inspired by the Commodore 64.
              */
-            var C64: Phaser.Create.Types.Palette;
+            var C64: Phaser.Types.Create.Palette;
 
             /**
              * A 16 color CGA inspired palette by [Arne](http://androidarts.com/palette/16pal.htm)
              */
-            var CGA: Phaser.Create.Types.Palette;
+            var CGA: Phaser.Types.Create.Palette;
 
             /**
              * A 16 color JMP palette by [Arne](http://androidarts.com/palette/16pal.htm)
              */
-            var JMP: Phaser.Create.Types.Palette;
+            var JMP: Phaser.Types.Create.Palette;
 
             /**
              * A 16 color palette inspired by Japanese computers like the MSX.
              */
-            var MSX: Phaser.Create.Types.Palette;
-
-        }
-
-        namespace Types {
-            type GenerateTextureCallback = (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D)=>void;
-
-            type GenerateTextureConfig = {
-                /**
-                 * [description]
-                 */
-                data?: any[];
-                /**
-                 * [description]
-                 */
-                canvas?: HTMLCanvasElement;
-                /**
-                 * [description]
-                 */
-                palette?: Phaser.Create.Types.Palette;
-                /**
-                 * The width of each 'pixel' in the generated texture.
-                 */
-                pixelWidth?: number;
-                /**
-                 * The height of each 'pixel' in the generated texture.
-                 */
-                pixelHeight?: number;
-                /**
-                 * [description]
-                 */
-                resizeCanvas?: boolean;
-                /**
-                 * [description]
-                 */
-                clearCanvas?: boolean;
-                /**
-                 * [description]
-                 */
-                preRender?: Phaser.Create.Types.GenerateTextureCallback;
-                /**
-                 * [description]
-                 */
-                postRender?: Phaser.Create.Types.GenerateTextureCallback;
-            };
-
-            type Palette = {
-                /**
-                 * Color value 1.
-                 */
-                "0": string;
-                /**
-                 * Color value 2.
-                 */
-                "1": string;
-                /**
-                 * Color value 3.
-                 */
-                "2": string;
-                /**
-                 * Color value 4.
-                 */
-                "3": string;
-                /**
-                 * Color value 5.
-                 */
-                "4": string;
-                /**
-                 * Color value 6.
-                 */
-                "5": string;
-                /**
-                 * Color value 7.
-                 */
-                "6": string;
-                /**
-                 * Color value 8.
-                 */
-                "7": string;
-                /**
-                 * Color value 9.
-                 */
-                "8": string;
-                /**
-                 * Color value 10.
-                 */
-                "9": string;
-                /**
-                 * Color value 11.
-                 */
-                A: string;
-                /**
-                 * Color value 12.
-                 */
-                B: string;
-                /**
-                 * Color value 13.
-                 */
-                C: string;
-                /**
-                 * Color value 14.
-                 */
-                D: string;
-                /**
-                 * Color value 15.
-                 */
-                E: string;
-                /**
-                 * Color value 16.
-                 */
-                F: string;
-            };
+            var MSX: Phaser.Types.Create.Palette;
 
         }
 
@@ -6714,13 +4926,13 @@ declare namespace Phaser {
             /**
              * Returns a JSON object that describes this curve.
              */
-            toJSON(): Phaser.Curves.Types.JSONCurve;
+            toJSON(): Phaser.Types.Curves.JSONCurve;
 
             /**
              * Generates a curve from a JSON object.
              * @param data The JSON object containing this curve data.
              */
-            static fromJSON(data: Phaser.Curves.Types.JSONCurve): Phaser.Curves.CubicBezier;
+            static fromJSON(data: Phaser.Types.Curves.JSONCurve): Phaser.Curves.CubicBezier;
 
         }
 
@@ -6894,7 +5106,7 @@ declare namespace Phaser {
              * @param clockwise Sets if the the ellipse rotation is clockwise (true) or anti-clockwise (false) Default false.
              * @param rotation The rotation of the ellipse, in degrees. Default 0.
              */
-            constructor(x?: number | Phaser.Curves.Types.EllipseCurveConfig, y?: number, xRadius?: number, yRadius?: number, startAngle?: integer, endAngle?: integer, clockwise?: boolean, rotation?: integer);
+            constructor(x?: number | Phaser.Types.Curves.EllipseCurveConfig, y?: number, xRadius?: number, yRadius?: number, startAngle?: integer, endAngle?: integer, clockwise?: boolean, rotation?: integer);
 
             /**
              * The center point of the ellipse. Used for calculating rotation.
@@ -7016,13 +5228,13 @@ declare namespace Phaser {
             /**
              * JSON serialization of the curve.
              */
-            toJSON(): Phaser.Curves.Types.JSONEllipseCurve;
+            toJSON(): Phaser.Types.Curves.JSONEllipseCurve;
 
             /**
              * Creates a curve from the provided Ellipse Curve Configuration object.
              * @param data The JSON object containing this curve data.
              */
-            static fromJSON(data: Phaser.Curves.Types.JSONEllipseCurve): Phaser.Curves.Ellipse;
+            static fromJSON(data: Phaser.Types.Curves.JSONEllipseCurve): Phaser.Curves.Ellipse;
 
         }
 
@@ -7096,13 +5308,13 @@ declare namespace Phaser {
             /**
              * Gets a JSON representation of the line.
              */
-            toJSON(): Phaser.Curves.Types.JSONCurve;
+            toJSON(): Phaser.Types.Curves.JSONCurve;
 
             /**
              * Configures this line from a JSON representation.
              * @param data The JSON object containing this curve data.
              */
-            static fromJSON(data: Phaser.Curves.Types.JSONCurve): Phaser.Curves.Line;
+            static fromJSON(data: Phaser.Types.Curves.JSONCurve): Phaser.Curves.Line;
 
         }
 
@@ -7154,7 +5366,7 @@ declare namespace Phaser {
             /**
              * Converts this curve into a JSON-serializable object.
              */
-            toJSON(): Phaser.Curves.Types.JSONCurve;
+            toJSON(): Phaser.Types.Curves.JSONCurve;
 
         }
 
@@ -7168,7 +5380,7 @@ declare namespace Phaser {
         class Path {
             /**
              * 
-             * @param x The X coordinate of the Path's starting point or a {@link Phaser.Curves.Types.JSONPath}. Default 0.
+             * @param x The X coordinate of the Path's starting point or a {@link Phaser.Types.Curves.JSONPath}. Default 0.
              * @param y The Y coordinate of the Path's starting point. Default 0.
              */
             constructor(x?: number, y?: number);
@@ -7269,10 +5481,10 @@ declare namespace Phaser {
             /**
              * Creates a Path from a Path Configuration object.
              * 
-             * The provided object should be a {@link Phaser.Curves.Types.JSONPath}, as returned by {@link #toJSON}. Providing a malformed object may cause errors.
+             * The provided object should be a {@link Phaser.Types.Curves.JSONPath}, as returned by {@link #toJSON}. Providing a malformed object may cause errors.
              * @param data The JSON object containing the Path data.
              */
-            fromJSON(data: Phaser.Curves.Types.JSONPath): Phaser.Curves.Path;
+            fromJSON(data: Phaser.Types.Curves.JSONPath): Phaser.Curves.Path;
 
             /**
              * Returns a Rectangle with a position and size matching the bounds of this Path.
@@ -7359,7 +5571,7 @@ declare namespace Phaser {
             /**
              * [description]
              */
-            toJSON(): Phaser.Curves.Types.JSONPath;
+            toJSON(): Phaser.Types.Curves.JSONPath;
 
             /**
              * [description]
@@ -7429,13 +5641,13 @@ declare namespace Phaser {
             /**
              * Converts the curve into a JSON compatible object.
              */
-            toJSON(): Phaser.Curves.Types.JSONCurve;
+            toJSON(): Phaser.Types.Curves.JSONCurve;
 
             /**
              * Creates a curve from a JSON object, e. g. created by `toJSON`.
              * @param data The JSON object containing this curve data.
              */
-            static fromJSON(data: Phaser.Curves.Types.JSONCurve): Phaser.Curves.QuadraticBezier;
+            static fromJSON(data: Phaser.Types.Curves.JSONCurve): Phaser.Curves.QuadraticBezier;
 
         }
 
@@ -7489,124 +5701,13 @@ declare namespace Phaser {
             /**
              * [description]
              */
-            toJSON(): Phaser.Curves.Types.JSONCurve;
+            toJSON(): Phaser.Types.Curves.JSONCurve;
 
             /**
              * [description]
              * @param data The JSON object containing this curve data.
              */
-            static fromJSON(data: Phaser.Curves.Types.JSONCurve): Phaser.Curves.Spline;
-
-        }
-
-        namespace Types {
-            type EllipseCurveConfig = {
-                /**
-                 * The x coordinate of the ellipse.
-                 */
-                x?: number;
-                /**
-                 * The y coordinate of the ellipse.
-                 */
-                y?: number;
-                /**
-                 * The horizontal radius of the ellipse.
-                 */
-                xRadius?: number;
-                /**
-                 * The vertical radius of the ellipse.
-                 */
-                yRadius?: number;
-                /**
-                 * The start angle of the ellipse, in degrees.
-                 */
-                startAngle?: integer;
-                /**
-                 * The end angle of the ellipse, in degrees.
-                 */
-                endAngle?: integer;
-                /**
-                 * Sets if the the ellipse rotation is clockwise (true) or anti-clockwise (false)
-                 */
-                clockwise?: boolean;
-                /**
-                 * The rotation of the ellipse, in degrees.
-                 */
-                rotation?: integer;
-            };
-
-            type JSONCurve = {
-                /**
-                 * The of the curve
-                 */
-                type: string;
-                /**
-                 * The arrays of points like `[x1, y1, x2, y2]`
-                 */
-                points: number[];
-            };
-
-            type JSONEllipseCurve = {
-                /**
-                 * The of the curve.
-                 */
-                type: string;
-                /**
-                 * The x coordinate of the ellipse.
-                 */
-                x: number;
-                /**
-                 * The y coordinate of the ellipse.
-                 */
-                y: number;
-                /**
-                 * The horizontal radius of ellipse.
-                 */
-                xRadius: number;
-                /**
-                 * The vertical radius of ellipse.
-                 */
-                yRadius: number;
-                /**
-                 * The start angle of the ellipse, in degrees.
-                 */
-                startAngle: integer;
-                /**
-                 * The end angle of the ellipse, in degrees.
-                 */
-                endAngle: integer;
-                /**
-                 * Sets if the the ellipse rotation is clockwise (true) or anti-clockwise (false)
-                 */
-                clockwise: boolean;
-                /**
-                 * The rotation of ellipse, in degrees.
-                 */
-                rotation: integer;
-            };
-
-            type JSONPath = {
-                /**
-                 * The of the curve.
-                 */
-                type: string;
-                /**
-                 * The X coordinate of the curve's starting point.
-                 */
-                x: number;
-                /**
-                 * The Y coordinate of the path's starting point.
-                 */
-                y: number;
-                /**
-                 * The path is auto closed.
-                 */
-                autoClose: boolean;
-                /**
-                 * The list of the curves
-                 */
-                curves: Phaser.Curves.Types.JSONCurve[];
-            };
+            static fromJSON(data: Phaser.Types.Curves.JSONCurve): Phaser.Curves.Spline;
 
         }
 
@@ -8821,7 +6922,7 @@ declare namespace Phaser {
                  * @param length Distance to interpolate over. Default 100.
                  * @param index Index to start from. Default 0.
                  */
-                function RGBWithRGB(r1: number, g1: number, b1: number, r2: number, g2: number, b2: number, length?: number, index?: number): Phaser.Display.Types.ColorObject;
+                function RGBWithRGB(r1: number, g1: number, b1: number, r2: number, g2: number, b2: number, length?: number, index?: number): Phaser.Types.Display.ColorObject;
 
                 /**
                  * Interpolates between the two given color objects over the length supplied.
@@ -8830,7 +6931,7 @@ declare namespace Phaser {
                  * @param length Distance to interpolate over. Default 100.
                  * @param index Index to start from. Default 0.
                  */
-                function ColorWithColor(color1: Phaser.Display.Color, color2: Phaser.Display.Color, length?: number, index?: number): Phaser.Display.Types.ColorObject;
+                function ColorWithColor(color1: Phaser.Display.Color, color2: Phaser.Display.Color, length?: number, index?: number): Phaser.Types.Display.ColorObject;
 
                 /**
                  * Interpolates between the Color object and color values over the length supplied.
@@ -8841,7 +6942,7 @@ declare namespace Phaser {
                  * @param length Distance to interpolate over. Default 100.
                  * @param index Index to start from. Default 0.
                  */
-                function ColorWithRGB(color1: Phaser.Display.Color, r: number, g: number, b: number, length?: number, index?: number): Phaser.Display.Types.ColorObject;
+                function ColorWithRGB(color1: Phaser.Display.Color, r: number, g: number, b: number, length?: number, index?: number): Phaser.Types.Display.ColorObject;
 
             }
 
@@ -8893,7 +6994,7 @@ declare namespace Phaser {
              * Sets the color based on the color object given.
              * @param color An object containing `r`, `g`, `b` and optionally `a` values in the range 0 to 255.
              */
-            setFromRGB(color: Phaser.Display.Types.InputColorObject): Phaser.Display.Color;
+            setFromRGB(color: Phaser.Types.Display.InputColorObject): Phaser.Display.Color;
 
             /**
              * Sets the color based on the hue, saturation and lightness values given.
@@ -9037,7 +7138,7 @@ declare namespace Phaser {
              * Converts the given color value into an Object containing r,g,b and a properties.
              * @param color A color value, optionally including the alpha value.
              */
-            static ColorToRGBA(color: number): Phaser.Display.Types.ColorObject;
+            static ColorToRGBA(color: number): Phaser.Types.Display.ColorObject;
 
             /**
              * Returns a string containing a hex representation of the given color component.
@@ -9085,7 +7186,7 @@ declare namespace Phaser {
              * @param s The saturation, in the range 0 - 1. Default 1.
              * @param v The value, in the range 0 - 1. Default 1.
              */
-            static HSVColorWheel(s?: number, v?: number): Phaser.Display.Types.ColorObject[];
+            static HSVColorWheel(s?: number, v?: number): Phaser.Types.Display.ColorObject[];
 
             /**
              * Converts an HSV (hue, saturation and value) color value to RGB.
@@ -9097,7 +7198,7 @@ declare namespace Phaser {
              * @param v The value, in the range 0 - 1. This controls how dark the color is. Where 1 is as bright as possible and 0 is black.
              * @param out A Color object to store the results in. If not given a new ColorObject will be created.
              */
-            static HSVToRGB(h: number, s: number, v: number, out?: Phaser.Display.Types.ColorObject | Phaser.Display.Color): Phaser.Display.Types.ColorObject | Phaser.Display.Color;
+            static HSVToRGB(h: number, s: number, v: number, out?: Phaser.Types.Display.ColorObject | Phaser.Display.Color): Phaser.Types.Display.ColorObject | Phaser.Display.Color;
 
             /**
              * Converts a hue to an RGB color.
@@ -9117,13 +7218,13 @@ declare namespace Phaser {
              * Alpha will only be set if it exists in the given color (0xAARRGGBB)
              * @param input The color value to convert into a Color object.
              */
-            static IntegerToRGB(input: integer): Phaser.Display.Types.ColorObject;
+            static IntegerToRGB(input: integer): Phaser.Types.Display.ColorObject;
 
             /**
              * Converts an object containing `r`, `g`, `b` and `a` properties into a Color class instance.
              * @param input An object containing `r`, `g`, `b` and `a` properties in the range 0 to 255.
              */
-            static ObjectToColor(input: Phaser.Display.Types.InputColorObject): Phaser.Display.Color;
+            static ObjectToColor(input: Phaser.Types.Display.InputColorObject): Phaser.Display.Color;
 
             /**
              * Creates a new Color object where the r, g, and b values have been set to random values
@@ -9151,7 +7252,7 @@ declare namespace Phaser {
              * @param b The blue color value. A number between 0 and 255.
              * @param out An object to store the color values in. If not given an HSV Color Object will be created.
              */
-            static RGBToHSV(r: integer, g: integer, b: integer, out?: Phaser.Display.Types.HSVColorObject | Phaser.Display.Color): Phaser.Display.Types.HSVColorObject | Phaser.Display.Color;
+            static RGBToHSV(r: integer, g: integer, b: integer, out?: Phaser.Types.Display.HSVColorObject | Phaser.Display.Color): Phaser.Types.Display.HSVColorObject | Phaser.Display.Color;
 
             /**
              * Converts the color values into an HTML compatible color string, prefixed with either `#` or `0x`.
@@ -9168,7 +7269,7 @@ declare namespace Phaser {
              * The value can be either a string, prefixed with `rgb` or a hex string, a number or an Object.
              * @param input The source color value to convert.
              */
-            static ValueToColor(input: string | number | Phaser.Display.Types.InputColorObject): Phaser.Display.Color;
+            static ValueToColor(input: string | number | Phaser.Types.Display.InputColorObject): Phaser.Display.Color;
 
         }
 
@@ -9456,62 +7557,6 @@ declare namespace Phaser {
 
         }
 
-        namespace Types {
-            type ColorObject = {
-                /**
-                 * The red color value in the range 0 to 255.
-                 */
-                r: number;
-                /**
-                 * The green color value in the range 0 to 255.
-                 */
-                g: number;
-                /**
-                 * The blue color value in the range 0 to 255.
-                 */
-                b: number;
-                /**
-                 * The alpha color value in the range 0 to 255.
-                 */
-                a: number;
-            };
-
-            type HSVColorObject = {
-                /**
-                 * The hue color value. A number between 0 and 1
-                 */
-                h: number;
-                /**
-                 * The saturation color value. A number between 0 and 1
-                 */
-                s: number;
-                /**
-                 * The lightness color value. A number between 0 and 1
-                 */
-                v: number;
-            };
-
-            type InputColorObject = {
-                /**
-                 * The red color value in the range 0 to 255.
-                 */
-                r?: number;
-                /**
-                 * The green color value in the range 0 to 255.
-                 */
-                g?: number;
-                /**
-                 * The blue color value in the range 0 to 255.
-                 */
-                b?: number;
-                /**
-                 * The alpha color value in the range 0 to 255.
-                 */
-                a?: number;
-            };
-
-        }
-
     }
 
     namespace DOM {
@@ -9796,7 +7841,7 @@ declare namespace Phaser {
             /**
              * A callback that alters how each character of the Bitmap Text is rendered.
              */
-            displayCallback: Phaser.GameObjects.BitmapText.Types.DisplayCallback;
+            displayCallback: Phaser.Types.GameObjects.BitmapText.DisplayCallback;
 
             /**
              * The data object that is populated during rendering, then passed to the displayCallback.
@@ -9806,7 +7851,7 @@ declare namespace Phaser {
              * Please note that if you need a reference to this object locally in your game code then you
              * should shallow copy it, as it's updated and re-used for every glyph in the text.
              */
-            callbackData: Phaser.GameObjects.BitmapText.Types.DisplayCallbackConfig;
+            callbackData: Phaser.Types.GameObjects.BitmapText.DisplayCallbackConfig;
 
             /**
              * Set the crop size of this Bitmap Text.
@@ -9818,14 +7863,14 @@ declare namespace Phaser {
             /**
              * Set a callback that alters how each character of the Bitmap Text is rendered.
              * 
-             * The callback receives a {@link Phaser.GameObjects.BitmapText.Types.DisplayCallbackConfig} object that contains information about the character that's
+             * The callback receives a {@link Phaser.Types.GameObjects.BitmapText.DisplayCallbackConfig} object that contains information about the character that's
              * about to be rendered.
              * 
              * It should return an object with `x`, `y`, `scale` and `rotation` properties that will be used instead of the
              * usual values when rendering.
              * @param callback The display callback to set.
              */
-            setDisplayCallback(callback: Phaser.GameObjects.BitmapText.Types.DisplayCallback): Phaser.GameObjects.DynamicBitmapText;
+            setDisplayCallback(callback: Phaser.Types.GameObjects.BitmapText.DisplayCallback): Phaser.GameObjects.DynamicBitmapText;
 
             /**
              * Set the horizontal scroll position of this Bitmap Text.
@@ -10503,7 +8548,7 @@ declare namespace Phaser {
              * @param scene A reference to the Phaser Scene.
              * @param config The font configuration object.
              */
-            function Parse(scene: Phaser.Scene, config: Phaser.GameObjects.BitmapText.Types.RetroFontConfig): object;
+            function Parse(scene: Phaser.Scene, config: Phaser.Types.GameObjects.BitmapText.RetroFontConfig): object;
 
         }
 
@@ -10550,7 +8595,7 @@ declare namespace Phaser {
             /**
              * The data of the Bitmap Font used by this Bitmap Text.
              */
-            readonly fontData: Phaser.GameObjects.BitmapText.Types.BitmapFontData;
+            readonly fontData: Phaser.Types.GameObjects.BitmapText.BitmapFontData;
 
             /**
              * Set the lines of text in this BitmapText to be left-aligned.
@@ -10605,7 +8650,7 @@ declare namespace Phaser {
              * Also in the object is data regarding the length of each line, should this be a multi-line BitmapText.
              * @param round Whether to round the results to the nearest integer.
              */
-            getTextBounds(round?: boolean): Phaser.GameObjects.BitmapText.Types.BitmapTextSize;
+            getTextBounds(round?: boolean): Phaser.Types.GameObjects.BitmapText.BitmapTextSize;
 
             /**
              * Changes the font this BitmapText is using to render.
@@ -10670,7 +8715,7 @@ declare namespace Phaser {
             /**
              * Build a JSON representation of this Bitmap Text.
              */
-            toJSON(): Phaser.GameObjects.BitmapText.Types.JSONBitmapText;
+            toJSON(): Phaser.Types.GameObjects.BitmapText.JSONBitmapText;
 
             /**
              * Left align the text characters in a multi-line BitmapText object.
@@ -12077,7 +10122,7 @@ declare namespace Phaser {
          * @param gameObject The initial GameObject.
          * @param config The config to build the GameObject with.
          */
-        function BuildGameObject(scene: Phaser.Scene, gameObject: Phaser.GameObjects.GameObject, config: Phaser.GameObjects.Types.GameObjectConfig): Phaser.GameObjects.GameObject;
+        function BuildGameObject(scene: Phaser.Scene, gameObject: Phaser.GameObjects.GameObject, config: Phaser.Types.GameObjects.GameObjectConfig): Phaser.GameObjects.GameObject;
 
         /**
          * Adds an Animation component to a Sprite and populates it based on the given config.
@@ -12826,74 +10871,64 @@ declare namespace Phaser {
              * Provides methods used for managing a Game Object following a Path.
              * Should be applied as a mixin and not used directly.
              */
-            namespace PathFollower {
+            interface PathFollower {
                 /**
                  * The Path this PathFollower is following. It can only follow one Path at a time.
                  */
-                var path: Phaser.Curves.Path;
-
+                path: Phaser.Curves.Path;
                 /**
                  * Should the PathFollower automatically rotate to point in the direction of the Path?
                  */
-                var rotateToPath: boolean;
-
+                rotateToPath: boolean;
                 /**
                  * Set the Path that this PathFollower should follow.
                  * 
-                 * Optionally accepts {@link Phaser.GameObjects.PathFollower.Types.PathConfig} settings.
+                 * Optionally accepts {@link Phaser.Types.GameObjects.PathFollower.PathConfig} settings.
                  * @param path The Path this PathFollower is following. It can only follow one Path at a time.
                  * @param config Settings for the PathFollower.
                  */
-                function setPath(path: Phaser.Curves.Path, config?: Phaser.GameObjects.PathFollower.Types.PathConfig): Phaser.GameObjects.PathFollower;
-
+                setPath(path: Phaser.Curves.Path, config?: Phaser.Types.GameObjects.PathFollower.PathConfig): Phaser.GameObjects.PathFollower;
                 /**
                  * Set whether the PathFollower should automatically rotate to point in the direction of the Path.
                  * @param value Whether the PathFollower should automatically rotate to point in the direction of the Path.
                  * @param offset Rotation offset in degrees. Default 0.
                  */
-                function setRotateToPath(value: boolean, offset?: number): Phaser.GameObjects.PathFollower;
-
+                setRotateToPath(value: boolean, offset?: number): Phaser.GameObjects.PathFollower;
                 /**
                  * Is this PathFollower actively following a Path or not?
                  * 
                  * To be considered as `isFollowing` it must be currently moving on a Path, and not paused.
                  */
-                function isFollowing(): boolean;
-
+                isFollowing(): boolean;
                 /**
                  * Starts this PathFollower following its given Path.
                  * @param config The duration of the follow, or a PathFollower config object. Default {}.
                  * @param startAt Optional start position of the follow, between 0 and 1. Default 0.
                  */
-                function startFollow(config?: number | Phaser.GameObjects.PathFollower.Types.PathConfig, startAt?: number): Phaser.GameObjects.PathFollower;
-
+                startFollow(config?: number | Phaser.Types.GameObjects.PathFollower.PathConfig, startAt?: number): Phaser.GameObjects.PathFollower;
                 /**
                  * Pauses this PathFollower. It will still continue to render, but it will remain motionless at the
                  * point on the Path at which you paused it.
                  */
-                function pauseFollow(): Phaser.GameObjects.PathFollower;
-
+                pauseFollow(): Phaser.GameObjects.PathFollower;
                 /**
                  * Resumes a previously paused PathFollower.
                  * 
                  * If the PathFollower was not paused this has no effect.
                  */
-                function resumeFollow(): Phaser.GameObjects.PathFollower;
-
+                resumeFollow(): Phaser.GameObjects.PathFollower;
                 /**
                  * Stops this PathFollower from following the path any longer.
                  * 
                  * This will invoke any 'stop' conditions that may exist on the Path, or for the follower.
                  */
-                function stopFollow(): Phaser.GameObjects.PathFollower;
-
+                stopFollow(): Phaser.GameObjects.PathFollower;
                 /**
                  * Internal update handler that advances this PathFollower along the path.
                  * 
                  * Called automatically by the Scene step, should not typically be called directly.
                  */
-                function pathUpdate(): void;
-
+                pathUpdate(): void;
             }
 
             /**
@@ -14679,7 +12714,7 @@ declare namespace Phaser {
              * @param style If a string, will be set directly as the elements `style` property value. If a plain object, will be iterated and the values transferred. In both cases the values replacing whatever CSS styles may have been previously set.
              * @param innerText If given, will be set directly as the elements `innerText` property value, replacing whatever was there before.
              */
-            constructor(scene: Phaser.Scene, x?: number, y?: number, element?: Element | DOMString | string, style?: DOMString | any, innerText?: DOMString);
+            constructor(scene: Phaser.Scene, x?: number, y?: number, element?: Element | string, style?: string | any, innerText?: string);
 
             /**
              * A reference to the parent DOM Container that the Game instance created when it started.
@@ -14866,7 +12901,7 @@ declare namespace Phaser {
              * @param style Either a DOMString that holds the CSS styles to be applied to the created element, or an object the styles will be ready from.
              * @param innerText A DOMString that holds the text that will be set as the innerText of the created element.
              */
-            createElement(tagName: string, style?: DOMString | any, innerText?: DOMString): this;
+            createElement(tagName: string, style?: string | any, innerText?: string): this;
 
             /**
              * Binds a new DOM Element to this Game Object. If this Game Object already has an Element it is removed from the DOM
@@ -14913,7 +12948,7 @@ declare namespace Phaser {
              * @param style Either a DOMString that holds the CSS styles to be applied to the created element, or an object the styles will be ready from.
              * @param innerText A DOMString that holds the text that will be set as the innerText of the created element.
              */
-            setElement(element: string | Element, style?: DOMString | any, innerText?: DOMString): this;
+            setElement(element: string | Element, style?: string | any, innerText?: string): this;
 
             /**
              * Takes a block of html from the HTML Cache, that has previously been preloaded into the game, and then
@@ -14947,7 +12982,7 @@ declare namespace Phaser {
              * @param The key of the html cache entry to use for this DOM Element.
              * @param tagName The tag name of the element into which all of the loaded html will be inserted. Defaults to a plain div tag. Default 'div'.
              */
-            createFromCache(The: string, tagName?: DOMString): this;
+            createFromCache(The: string, tagName?: string): this;
 
             /**
              * Takes a string of html and then creates a DOM Element from it. The HTML is set as the `innerHTML`
@@ -14974,7 +13009,7 @@ declare namespace Phaser {
              * @param A string of html to be set as the `innerHTML` property of the created element.
              * @param tagName The tag name of the element into which all of the html will be inserted. Defaults to a plain div tag. Default 'div'.
              */
-            createFromHTML(A: DOMString, tagName?: DOMString): this;
+            createFromHTML(A: string, tagName?: string): this;
 
             /**
              * Removes the current DOM Element bound to this Game Object from the DOM entirely and resets the
@@ -15030,13 +13065,13 @@ declare namespace Phaser {
              * Note that only certain types of Elements can have `innerText` set on them.
              * @param text A DOMString representing the rendered text content of the element.
              */
-            setText(text: DOMString): this;
+            setText(text: string): this;
 
             /**
              * Sets the `innerHTML` property of the DOM Element node and updates the internal sizes.
              * @param html A DOMString of html to be set as the `innerHTML` property of the element.
              */
-            setHTML(html: DOMString): this;
+            setHTML(html: string): this;
 
             /**
              * Compares the renderMask with the renderFlags to see if this Game Object will render or not.
@@ -16187,7 +14222,7 @@ declare namespace Phaser {
              * If this Game Object is enabled for input then this property will contain an InteractiveObject instance.
              * Not usually set directly. Instead call `GameObject.setInteractive()`.
              */
-            input: Phaser.Input.Types.InteractiveObject;
+            input: Phaser.Types.Input.InteractiveObject;
 
             /**
              * If this Game Object is enabled for physics then this property will contain a reference to a Physics Body.
@@ -16319,7 +14354,7 @@ declare namespace Phaser {
              * @param callback A callback to be invoked when the Game Object is interacted with. If you provide a shape you must also provide a callback.
              * @param dropZone Should this Game Object be treated as a drop zone target? Default false.
              */
-            setInteractive(shape?: Phaser.Input.Types.InputConfiguration | any, callback?: Phaser.Input.Types.HitAreaCallback, dropZone?: boolean): this;
+            setInteractive(shape?: Phaser.Types.Input.InputConfiguration | any, callback?: Phaser.Types.Input.HitAreaCallback, dropZone?: boolean): this;
 
             /**
              * If this Game Object has previously been enabled for input, this will disable it.
@@ -16363,7 +14398,7 @@ declare namespace Phaser {
             /**
              * Returns a JSON representation of the Game Object.
              */
-            toJSON(): Phaser.GameObjects.Types.JSONGameObject;
+            toJSON(): Phaser.Types.GameObjects.JSONGameObject;
 
             /**
              * Compares the renderMask with the renderFlags to see if this Game Object will render or not.
@@ -16427,7 +14462,7 @@ declare namespace Phaser {
              * @param config The configuration object this Game Object will use to create itself.
              * @param addToScene Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
              */
-            dynamicBitmapText(config: Phaser.GameObjects.BitmapText.Types.BitmapTextConfig, addToScene?: boolean): Phaser.GameObjects.DynamicBitmapText;
+            dynamicBitmapText(config: Phaser.Types.GameObjects.BitmapText.BitmapTextConfig, addToScene?: boolean): Phaser.GameObjects.DynamicBitmapText;
 
             /**
              * Creates a new Bitmap Text Game Object and returns it.
@@ -16436,7 +14471,7 @@ declare namespace Phaser {
              * @param config The configuration object this Game Object will use to create itself.
              * @param addToScene Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
              */
-            bitmapText(config: Phaser.GameObjects.BitmapText.Types.BitmapTextConfig, addToScene?: boolean): Phaser.GameObjects.BitmapText;
+            bitmapText(config: Phaser.Types.GameObjects.BitmapText.BitmapTextConfig, addToScene?: boolean): Phaser.GameObjects.BitmapText;
 
             /**
              * Creates a new Blitter Game Object and returns it.
@@ -16491,7 +14526,7 @@ declare namespace Phaser {
              * Note: This method will only be available if the Group Game Object has been built into Phaser.
              * @param config The configuration object this Game Object will use to create itself.
              */
-            group(config: Phaser.GameObjects.Group.Types.GroupConfig | Phaser.GameObjects.Group.Types.GroupCreateConfig): Phaser.GameObjects.Group;
+            group(config: Phaser.Types.GameObjects.Group.GroupConfig | Phaser.Types.GameObjects.Group.GroupCreateConfig): Phaser.GameObjects.Group;
 
             /**
              * Creates a new Image Game Object and returns it.
@@ -16536,7 +14571,7 @@ declare namespace Phaser {
              * @param config The configuration object this Game Object will use to create itself.
              * @param addToScene Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
              */
-            renderTexture(config: Phaser.GameObjects.RenderTexture.Types.RenderTextureConfig, addToScene?: boolean): Phaser.GameObjects.RenderTexture;
+            renderTexture(config: Phaser.Types.GameObjects.RenderTexture.RenderTextureConfig, addToScene?: boolean): Phaser.GameObjects.RenderTexture;
 
             /**
              * Creates a new Shader Game Object and returns it.
@@ -16554,7 +14589,7 @@ declare namespace Phaser {
              * @param config The configuration object this Game Object will use to create itself.
              * @param addToScene Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
              */
-            sprite(config: Phaser.GameObjects.Sprite.Types.SpriteConfig, addToScene?: boolean): Phaser.GameObjects.Sprite;
+            sprite(config: Phaser.Types.GameObjects.Sprite.SpriteConfig, addToScene?: boolean): Phaser.GameObjects.Sprite;
 
             /**
              * Creates a new Text Game Object and returns it.
@@ -16572,7 +14607,7 @@ declare namespace Phaser {
              * @param config The configuration object this Game Object will use to create itself.
              * @param addToScene Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
              */
-            tileSprite(config: Phaser.GameObjects.TileSprite.Types.TileSpriteConfig, addToScene?: boolean): Phaser.GameObjects.TileSprite;
+            tileSprite(config: Phaser.Types.GameObjects.TileSprite.TileSpriteConfig, addToScene?: boolean): Phaser.GameObjects.TileSprite;
 
             /**
              * Creates a new Zone Game Object and returns it.
@@ -16589,7 +14624,7 @@ declare namespace Phaser {
              * data. For an empty map, you should specify tileWidth, tileHeight, width & height.
              * @param config The config options for the Tilemap.
              */
-            tilemap(config?: Phaser.Tilemaps.Types.TilemapConfig): Phaser.Tilemaps.Tilemap;
+            tilemap(config?: Phaser.Types.Tilemaps.TilemapConfig): Phaser.Tilemaps.Tilemap;
 
             /**
              * Creates a new Tween object and returns it.
@@ -16818,7 +14853,7 @@ declare namespace Phaser {
              * Note: This method will only be available if the Graphics Game Object has been built into Phaser.
              * @param config The Graphics configuration.
              */
-            graphics(config?: Phaser.GameObjects.Graphics.Types.Options): Phaser.GameObjects.Graphics;
+            graphics(config?: Phaser.Types.GameObjects.Graphics.Options): Phaser.GameObjects.Graphics;
 
             /**
              * Creates a new Group Game Object and adds it to the Scene.
@@ -16827,7 +14862,7 @@ declare namespace Phaser {
              * @param children Game Objects to add to this Group; or the `config` argument.
              * @param config A Group Configuration object.
              */
-            group(children?: Phaser.GameObjects.GameObject[] | Phaser.GameObjects.Group.Types.GroupConfig | Phaser.GameObjects.Group.Types.GroupConfig[], config?: Phaser.GameObjects.Group.Types.GroupConfig | Phaser.GameObjects.Group.Types.GroupCreateConfig): Phaser.GameObjects.Group;
+            group(children?: Phaser.GameObjects.GameObject[] | Phaser.Types.GameObjects.Group.GroupConfig | Phaser.Types.GameObjects.Group.GroupConfig[], config?: Phaser.Types.GameObjects.Group.GroupConfig | Phaser.Types.GameObjects.Group.GroupCreateConfig): Phaser.GameObjects.Group;
 
             /**
              * Creates a new Image Game Object and adds it to the Scene.
@@ -16863,7 +14898,7 @@ declare namespace Phaser {
              * @param frame An optional frame from the Texture this Game Object is rendering with.
              * @param emitters Configuration settings for one or more emitters to create.
              */
-            particles(texture: string, frame?: string | integer | object, emitters?: Phaser.GameObjects.Particles.Types.ParticleEmitterConfig | Phaser.GameObjects.Particles.Types.ParticleEmitterConfig[]): Phaser.GameObjects.Particles.ParticleEmitterManager;
+            particles(texture: string, frame?: string | integer | object, emitters?: Phaser.Types.GameObjects.Particles.ParticleEmitterConfig | Phaser.Types.GameObjects.Particles.ParticleEmitterConfig[]): Phaser.GameObjects.Particles.ParticleEmitterManager;
 
             /**
              * Creates a new PathFollower Game Object and adds it to the Scene.
@@ -17390,7 +15425,7 @@ declare namespace Phaser {
              * @param scene The Scene to which this Graphics object belongs.
              * @param options Options that set the position and default style of this Graphics object.
              */
-            constructor(scene: Phaser.Scene, options?: Phaser.GameObjects.Graphics.Types.Options);
+            constructor(scene: Phaser.Scene, options?: Phaser.Types.GameObjects.Graphics.Options);
 
             /**
              * The horizontal display origin of the Graphics.
@@ -17436,7 +15471,7 @@ declare namespace Phaser {
              * Set the default style settings for this Graphics object.
              * @param options The styles to set as defaults.
              */
-            setDefaultStyles(options: Phaser.GameObjects.Graphics.Types.Styles): Phaser.GameObjects.Graphics;
+            setDefaultStyles(options: Phaser.Types.GameObjects.Graphics.Styles): Phaser.GameObjects.Graphics;
 
             /**
              * Set the current line style.
@@ -17617,7 +15652,7 @@ declare namespace Phaser {
              * @param height The height of the rectangle.
              * @param radius The corner radius; It can also be an object to specify different radii for corners. Default 20.
              */
-            fillRoundedRect(x: number, y: number, width: number, height: number, radius?: Phaser.GameObjects.Graphics.Types.RoundedRectRadius | number): Phaser.GameObjects.Graphics;
+            fillRoundedRect(x: number, y: number, width: number, height: number, radius?: Phaser.Types.GameObjects.Graphics.RoundedRectRadius | number): Phaser.GameObjects.Graphics;
 
             /**
              * Stroke a rounded rectangle with the given position, size and radius.
@@ -17627,7 +15662,7 @@ declare namespace Phaser {
              * @param height The height of the rectangle.
              * @param radius The corner radius; It can also be an object to specify different radii for corners. Default 20.
              */
-            strokeRoundedRect(x: number, y: number, width: number, height: number, radius?: Phaser.GameObjects.Graphics.Types.RoundedRectRadius | number): Phaser.GameObjects.Graphics;
+            strokeRoundedRect(x: number, y: number, width: number, height: number, radius?: Phaser.Types.GameObjects.Graphics.RoundedRectRadius | number): Phaser.GameObjects.Graphics;
 
             /**
              * Fill the given point.
@@ -18313,7 +16348,7 @@ declare namespace Phaser {
              * @param children Game Objects to add to this group; or the `config` argument.
              * @param config Settings for this group. If `key` is set, Phaser.GameObjects.Group#createMultiple is also called with these settings.
              */
-            constructor(scene: Phaser.Scene, children?: Phaser.GameObjects.GameObject[] | Phaser.GameObjects.Group.Types.GroupConfig | Phaser.GameObjects.Group.Types.GroupCreateConfig, config?: Phaser.GameObjects.Group.Types.GroupConfig | Phaser.GameObjects.Group.Types.GroupCreateConfig);
+            constructor(scene: Phaser.Scene, children?: Phaser.GameObjects.GameObject[] | Phaser.Types.GameObjects.Group.GroupConfig | Phaser.Types.GameObjects.Group.GroupCreateConfig, config?: Phaser.Types.GameObjects.Group.GroupConfig | Phaser.Types.GameObjects.Group.GroupCreateConfig);
 
             /**
              * This scene this group belongs to.
@@ -18333,7 +16368,7 @@ declare namespace Phaser {
             /**
              * The class to create new group members from.
              */
-            classType: Phaser.GameObjects.Group.Types.GroupClassTypeConstructor;
+            classType: Phaser.Types.GameObjects.Group.GroupClassTypeConstructor;
 
             /**
              * Whether this group runs its {@link Phaser.GameObjects.Group#preUpdate} method
@@ -18367,17 +16402,17 @@ declare namespace Phaser {
             /**
              * A function to be called when adding or creating group members.
              */
-            createCallback: Phaser.GameObjects.Group.Types.GroupCallback;
+            createCallback: Phaser.Types.GameObjects.Group.GroupCallback;
 
             /**
              * A function to be called when removing group members.
              */
-            removeCallback: Phaser.GameObjects.Group.Types.GroupCallback;
+            removeCallback: Phaser.Types.GameObjects.Group.GroupCallback;
 
             /**
              * A function to be called when creating several group members at once.
              */
-            createMultipleCallback: Phaser.GameObjects.Group.Types.GroupMultipleCreateCallback;
+            createMultipleCallback: Phaser.Types.GameObjects.Group.GroupMultipleCreateCallback;
 
             /**
              * Creates a new Game Object and adds it to this group, unless the group {@link Phaser.GameObjects.Group#isFull is full}.
@@ -18400,13 +16435,13 @@ declare namespace Phaser {
              * Calls {@link Phaser.GameObjects.Group#createMultipleCallback} and {@link Phaser.GameObjects.Group#createCallback}.
              * @param config Creation settings. This can be a single configuration object or an array of such objects, which will be applied in turn.
              */
-            createMultiple(config: Phaser.GameObjects.Group.Types.GroupCreateConfig | Phaser.GameObjects.Group.Types.GroupCreateConfig[]): any[];
+            createMultiple(config: Phaser.Types.GameObjects.Group.GroupCreateConfig | Phaser.Types.GameObjects.Group.GroupCreateConfig[]): any[];
 
             /**
              * A helper for {@link Phaser.GameObjects.Group#createMultiple}.
              * @param options Creation settings.
              */
-            createFromConfig(options: Phaser.GameObjects.Group.Types.GroupCreateConfig): any[];
+            createFromConfig(options: Phaser.Types.GameObjects.Group.GroupCreateConfig): any[];
 
             /**
              * Updates any group members, if {@link Phaser.GameObjects.Group#runChildUpdate} is enabled.
@@ -20335,7 +18370,7 @@ declare namespace Phaser {
                  * @param defaultValue The default value of the property.
                  * @param emitOnly Whether the property can only be modified when a Particle is emitted. Default false.
                  */
-                constructor(config: Phaser.GameObjects.Particles.Types.ParticleEmitterConfig, key: string, defaultValue: number, emitOnly?: boolean);
+                constructor(config: Phaser.Types.GameObjects.Particles.ParticleEmitterConfig, key: string, defaultValue: number, emitOnly?: boolean);
 
                 /**
                  * The name of this property.
@@ -20392,12 +18427,12 @@ declare namespace Phaser {
                 /**
                  * The callback to run for Particles when they are emitted from the Particle Emitter.
                  */
-                onEmit: Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback;
+                onEmit: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback;
 
                 /**
                  * The callback to run for Particles when they are updated.
                  */
-                onUpdate: Phaser.GameObjects.Particles.Types.EmitterOpOnUpdateCallback;
+                onUpdate: Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback;
 
                 /**
                  * Load the property from a Particle Emitter configuration object.
@@ -20406,7 +18441,7 @@ declare namespace Phaser {
                  * @param config Settings for the Particle Emitter that owns this property.
                  * @param newKey The new key to use for this property, if any.
                  */
-                loadConfig(config?: Phaser.GameObjects.Particles.Types.ParticleEmitterConfig, newKey?: string): void;
+                loadConfig(config?: Phaser.Types.GameObjects.Particles.ParticleEmitterConfig, newKey?: string): void;
 
                 /**
                  * Build a JSON representation of this Particle Emitter property.
@@ -20533,7 +18568,7 @@ declare namespace Phaser {
                  * @param epsilon The minimum distance for which the gravity force is calculated. Default 100.
                  * @param gravity The gravitational force of this Gravity Well. Default 50.
                  */
-                constructor(x?: number | Phaser.GameObjects.Particles.Types.GravityWellConfig, y?: number, power?: number, epsilon?: number, gravity?: number);
+                constructor(x?: number | Phaser.Types.GameObjects.Particles.GravityWellConfig, y?: number, power?: number, epsilon?: number, gravity?: number);
 
                 /**
                  * The x coordinate of the Gravity Well, in world space.
@@ -20749,7 +18784,7 @@ declare namespace Phaser {
                  * @param manager The Emitter Manager this Emitter belongs to.
                  * @param config Settings for this emitter.
                  */
-                constructor(manager: Phaser.GameObjects.Particles.ParticleEmitterManager, config: Phaser.GameObjects.Particles.Types.ParticleEmitterConfig);
+                constructor(manager: Phaser.GameObjects.Particles.ParticleEmitterManager, config: Phaser.Types.GameObjects.Particles.ParticleEmitterConfig);
 
                 /**
                  * The Emitter Manager this Emitter belongs to.
@@ -20913,7 +18948,7 @@ declare namespace Phaser {
                 /**
                  * A function to call when a particle is emitted.
                  */
-                emitCallback: Phaser.GameObjects.Particles.Types.ParticleEmitterCallback;
+                emitCallback: Phaser.Types.GameObjects.Particles.ParticleEmitterCallback;
 
                 /**
                  * The calling context for {@link Phaser.GameObjects.Particles.ParticleEmitter#emitCallback}.
@@ -20923,7 +18958,7 @@ declare namespace Phaser {
                 /**
                  * A function to call when a particle dies.
                  */
-                deathCallback: Phaser.GameObjects.Particles.Types.ParticleDeathCallback;
+                deathCallback: Phaser.Types.GameObjects.Particles.ParticleDeathCallback;
 
                 /**
                  * The calling context for {@link Phaser.GameObjects.Particles.ParticleEmitter#deathCallback}.
@@ -21061,7 +19096,7 @@ declare namespace Phaser {
                  * Merges configuration settings into the emitter's current settings.
                  * @param config Settings for this emitter.
                  */
-                fromJSON(config: Phaser.GameObjects.Particles.Types.ParticleEmitterConfig): Phaser.GameObjects.Particles.ParticleEmitter;
+                fromJSON(config: Phaser.Types.GameObjects.Particles.ParticleEmitterConfig): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Creates a description of this emitter suitable for JSON serialization.
@@ -21094,7 +19129,7 @@ declare namespace Phaser {
                  * @param pickRandom Whether frames should be assigned at random from `frames`. Default true.
                  * @param quantity The number of consecutive particles that will receive each frame. Default 1.
                  */
-                setFrame(frames: any[] | string | integer | Phaser.GameObjects.Particles.Types.ParticleEmitterFrameConfig, pickRandom?: boolean, quantity?: integer): Phaser.GameObjects.Particles.ParticleEmitter;
+                setFrame(frames: any[] | string | integer | Phaser.Types.GameObjects.Particles.ParticleEmitterFrameConfig, pickRandom?: boolean, quantity?: integer): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Turns {@link Phaser.GameObjects.Particles.ParticleEmitter#radial} particle movement on or off.
@@ -21108,7 +19143,7 @@ declare namespace Phaser {
                  * @param x The x-coordinate of the particle origin.
                  * @param y The y-coordinate of the particle origin.
                  */
-                setPosition(x: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object, y: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setPosition(x: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object, y: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets or modifies a rectangular boundary constraining the particles.
@@ -21119,46 +19154,46 @@ declare namespace Phaser {
                  * @param width The width of the boundary.
                  * @param height The height of the boundary.
                  */
-                setBounds(x: number | Phaser.GameObjects.Particles.Types.ParticleEmitterBounds | Phaser.GameObjects.Particles.Types.ParticleEmitterBoundsAlt, y: number, width: number, height: number): Phaser.GameObjects.Particles.ParticleEmitter;
+                setBounds(x: number | Phaser.Types.GameObjects.Particles.ParticleEmitterBounds | Phaser.Types.GameObjects.Particles.ParticleEmitterBoundsAlt, y: number, width: number, height: number): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the initial horizontal speed of emitted particles.
                  * Changes the emitter to point mode.
                  * @param value The speed, in pixels per second.
                  */
-                setSpeedX(value: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setSpeedX(value: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the initial vertical speed of emitted particles.
                  * Changes the emitter to point mode.
                  * @param value The speed, in pixels per second.
                  */
-                setSpeedY(value: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setSpeedY(value: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the initial radial speed of emitted particles.
                  * Changes the emitter to radial mode.
                  * @param value The speed, in pixels per second.
                  */
-                setSpeed(value: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setSpeed(value: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the horizontal scale of emitted particles.
                  * @param value The scale, relative to 1.
                  */
-                setScaleX(value: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnUpdateCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setScaleX(value: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the vertical scale of emitted particles.
                  * @param value The scale, relative to 1.
                  */
-                setScaleY(value: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnUpdateCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setScaleY(value: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the scale of emitted particles.
                  * @param value The scale, relative to 1.
                  */
-                setScale(value: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnUpdateCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setScale(value: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the horizontal gravity applied to emitted particles.
@@ -21183,31 +19218,31 @@ declare namespace Phaser {
                  * Sets the opacity of emitted particles.
                  * @param value A value between 0 (transparent) and 1 (opaque).
                  */
-                setAlpha(value: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnUpdateCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setAlpha(value: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the angle of a {@link Phaser.GameObjects.Particles.ParticleEmitter#radial} particle stream.
                  * @param value The angle of the initial velocity of emitted particles.
                  */
-                setEmitterAngle(value: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setEmitterAngle(value: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the angle of a {@link Phaser.GameObjects.Particles.ParticleEmitter#radial} particle stream.
                  * @param value The angle of the initial velocity of emitted particles.
                  */
-                setAngle(value: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setAngle(value: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the lifespan of newly emitted particles.
                  * @param value The particle lifespan, in ms.
                  */
-                setLifespan(value: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setLifespan(value: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the number of particles released at each flow cycle or explosion.
                  * @param quantity The number of particles to release at each flow cycle or explosion.
                  */
-                setQuantity(quantity: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setQuantity(quantity: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets the emitter's {@link Phaser.GameObjects.Particles.ParticleEmitter#frequency}
@@ -21215,23 +19250,23 @@ declare namespace Phaser {
                  * @param frequency The time interval (>= 0) of each flow cycle, in ms; or -1 to put the emitter in explosion mode.
                  * @param quantity The number of particles to release at each flow cycle or explosion.
                  */
-                setFrequency(frequency: number, quantity?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setFrequency(frequency: number, quantity?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets or removes the {@link Phaser.GameObjects.Particles.ParticleEmitter#emitZone}.
                  * 
-                 * An {@link Phaser.GameObjects.Particles.Types.ParticleEmitterEdgeZoneConfig EdgeZone} places particles on its edges. Its {@link EdgeZoneSource source} can be a Curve, Path, Circle, Ellipse, Line, Polygon, Rectangle, or Triangle; or any object with a suitable {@link Phaser.GameObjects.Particles.Types.EdgeZoneSourceCallback getPoints} method.
+                 * An {@link Phaser.Types.GameObjects.Particles.ParticleEmitterEdgeZoneConfig EdgeZone} places particles on its edges. Its {@link Phaser.Types.GameObjects.Particles.EdgeZoneSource source} can be a Curve, Path, Circle, Ellipse, Line, Polygon, Rectangle, or Triangle; or any object with a suitable {@link Phaser.Types.GameObjects.Particles.EdgeZoneSourceCallback getPoints} method.
                  * 
-                 * A {@link Phaser.GameObjects.Particles.Types.ParticleEmitterRandomZoneConfig RandomZone} places randomly within its interior. Its {@link RandomZoneSource source} can be a Circle, Ellipse, Line, Polygon, Rectangle, or Triangle; or any object with a suitable {@link Phaser.GameObjects.Particles.Types.RandomZoneSourceCallback getRandomPoint} method.
+                 * A {@link Phaser.Types.GameObjects.Particles.ParticleEmitterRandomZoneConfig RandomZone} places randomly within its interior. Its {@link RandomZoneSource source} can be a Circle, Ellipse, Line, Polygon, Rectangle, or Triangle; or any object with a suitable {@link Phaser.Types.GameObjects.Particles.RandomZoneSourceCallback getRandomPoint} method.
                  * @param zoneConfig An object describing the zone, or `undefined` to remove any current emit zone.
                  */
-                setEmitZone(zoneConfig?: Phaser.GameObjects.Particles.Types.ParticleEmitterEdgeZoneConfig | Phaser.GameObjects.Particles.Types.ParticleEmitterRandomZoneConfig): Phaser.GameObjects.Particles.ParticleEmitter;
+                setEmitZone(zoneConfig?: Phaser.Types.GameObjects.Particles.ParticleEmitterEdgeZoneConfig | Phaser.Types.GameObjects.Particles.ParticleEmitterRandomZoneConfig): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets or removes the {@link Phaser.GameObjects.Particles.ParticleEmitter#deathZone}.
                  * @param zoneConfig An object describing the zone, or `undefined` to remove any current death zone.
                  */
-                setDeathZone(zoneConfig?: Phaser.GameObjects.Particles.Types.ParticleEmitterDeathZoneConfig): Phaser.GameObjects.Particles.ParticleEmitter;
+                setDeathZone(zoneConfig?: Phaser.Types.GameObjects.Particles.ParticleEmitterDeathZoneConfig): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Creates inactive particles and adds them to this emitter's pool.
@@ -21264,14 +19299,14 @@ declare namespace Phaser {
                  * @param callback The function.
                  * @param context The calling context.
                  */
-                onParticleEmit(callback: Phaser.GameObjects.Particles.Types.ParticleEmitterCallback, context?: any): Phaser.GameObjects.Particles.ParticleEmitter;
+                onParticleEmit(callback: Phaser.Types.GameObjects.Particles.ParticleEmitterCallback, context?: any): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Sets a function to call for each particle death.
                  * @param callback The function.
                  * @param context The function's calling context.
                  */
-                onParticleDeath(callback: Phaser.GameObjects.Particles.Types.ParticleDeathCallback, context?: any): Phaser.GameObjects.Particles.ParticleEmitter;
+                onParticleDeath(callback: Phaser.Types.GameObjects.Particles.ParticleDeathCallback, context?: any): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Deactivates every particle in this emitter.
@@ -21283,14 +19318,14 @@ declare namespace Phaser {
                  * @param callback The function.
                  * @param context The function's calling context.
                  */
-                forEachAlive(callback: Phaser.GameObjects.Particles.Types.ParticleEmitterCallback, context: any): Phaser.GameObjects.Particles.ParticleEmitter;
+                forEachAlive(callback: Phaser.Types.GameObjects.Particles.ParticleEmitterCallback, context: any): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Calls a function for each inactive particle in this emitter.
                  * @param callback The function.
                  * @param context The function's calling context.
                  */
-                forEachDead(callback: Phaser.GameObjects.Particles.Types.ParticleEmitterCallback, context: any): Phaser.GameObjects.Particles.ParticleEmitter;
+                forEachDead(callback: Phaser.Types.GameObjects.Particles.ParticleEmitterCallback, context: any): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Turns {@link Phaser.GameObjects.Particles.ParticleEmitter#on} the emitter and resets the flow counter.
@@ -21329,7 +19364,7 @@ declare namespace Phaser {
                  * @param frequency The time interval (>= 0) of each flow cycle, in ms.
                  * @param count The number of particles to emit at each flow cycle. Default 1.
                  */
-                flow(frequency: number, count?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
+                flow(frequency: number, count?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Puts the emitter in explode mode (frequency = -1), stopping any current particle flow, and emits several particles all at once.
@@ -21530,7 +19565,7 @@ declare namespace Phaser {
                  * @param frame An optional frame from the Texture this Emitter Manager will use to render particles.
                  * @param emitters Configuration settings for one or more emitters to create.
                  */
-                constructor(scene: Phaser.Scene, texture: string, frame?: string | integer, emitters?: Phaser.GameObjects.Particles.Types.ParticleEmitterConfig | Phaser.GameObjects.Particles.Types.ParticleEmitterConfig[]);
+                constructor(scene: Phaser.Scene, texture: string, frame?: string | integer, emitters?: Phaser.Types.GameObjects.Particles.ParticleEmitterConfig | Phaser.Types.GameObjects.Particles.ParticleEmitterConfig[]);
 
                 /**
                  * The time scale applied to all emitters and particles, affecting flow rate, lifespan, and movement.
@@ -21600,7 +19635,7 @@ declare namespace Phaser {
                  * Creates a new Particle Emitter object, adds it to this Emitter Manager and returns a reference to it.
                  * @param config Configuration settings for the Particle Emitter to create.
                  */
-                createEmitter(config: Phaser.GameObjects.Particles.Types.ParticleEmitterConfig): Phaser.GameObjects.Particles.ParticleEmitter;
+                createEmitter(config: Phaser.Types.GameObjects.Particles.ParticleEmitterConfig): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
                  * Adds an existing Gravity Well object to this Emitter Manager.
@@ -21612,7 +19647,7 @@ declare namespace Phaser {
                  * Creates a new Gravity Well, adds it to this Emitter Manager and returns a reference to it.
                  * @param config Configuration settings for the Gravity Well to create.
                  */
-                createGravityWell(config: Phaser.GameObjects.Particles.Types.GravityWellConfig): Phaser.GameObjects.Particles.GravityWell;
+                createGravityWell(config: Phaser.Types.GameObjects.Particles.GravityWellConfig): Phaser.GameObjects.Particles.GravityWell;
 
                 /**
                  * Emits particles from each active emitter.
@@ -21917,479 +19952,6 @@ declare namespace Phaser {
 
             }
 
-            namespace Types {
-                type DeathZoneSource = {
-                    contains: Phaser.GameObjects.Particles.Types.DeathZoneSourceCallback;
-                };
-
-                type DeathZoneSourceCallback = (x: number, y: number)=>void;
-
-                type EdgeZoneSource = {
-                    /**
-                     * A function placing points on the sources edge or edges.
-                     */
-                    getPoints: Phaser.GameObjects.Particles.Types.EdgeZoneSourceCallback;
-                };
-
-                type EdgeZoneSourceCallback = (quantity: integer, stepRate?: number)=>void;
-
-                type EmitterOpCustomEmitConfig = {
-                    /**
-                     * A callback that is invoked each time the emitter emits a particle.
-                     */
-                    onEmit: Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback;
-                };
-
-                type EmitterOpCustomUpdateConfig = {
-                    /**
-                     * A callback that is invoked each time the emitter emits a particle.
-                     */
-                    onEmit?: Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback;
-                    /**
-                     * A callback that is invoked each time the emitter updates.
-                     */
-                    onUpdate: Phaser.GameObjects.Particles.Types.EmitterOpOnUpdateCallback;
-                };
-
-                /**
-                 * Defines an operation yielding a value incremented continuously across a range.
-                 */
-                type EmitterOpEaseConfig = {
-                    /**
-                     * The starting value.
-                     */
-                    start: number;
-                    /**
-                     * The ending value.
-                     */
-                    end: number;
-                    /**
-                     * The name of the easing function.
-                     */
-                    ease?: string;
-                };
-
-                /**
-                 * The returned value sets what the property will be at the START of the particle's life, on emit.
-                 */
-                type EmitterOpOnEmitCallback = (particle: Phaser.GameObjects.Particles.Particle, key: string, value: number)=>void;
-
-                /**
-                 * The returned value updates the property for the duration of the particle's life.
-                 */
-                type EmitterOpOnUpdateCallback = (particle: Phaser.GameObjects.Particles.Particle, key: string, t: number, value: number)=>void;
-
-                /**
-                 * Defines an operation yielding a random value within a range.
-                 */
-                type EmitterOpRandomConfig = {
-                    /**
-                     * The minimum and maximum values, as [min, max].
-                     */
-                    random: number[];
-                };
-
-                /**
-                 * Defines an operation yielding a random value within a range.
-                 */
-                type EmitterOpRandomMinMaxConfig = {
-                    /**
-                     * The minimum value.
-                     */
-                    min: number;
-                    /**
-                     * The maximum value.
-                     */
-                    max: number;
-                };
-
-                /**
-                 * Defines an operation yielding a random value within a range.
-                 */
-                type EmitterOpRandomStartEndConfig = {
-                    /**
-                     * The starting value.
-                     */
-                    start: number;
-                    /**
-                     * The ending value.
-                     */
-                    end: number;
-                    /**
-                     * If false, this becomes {@link EmitterOpEaseConfig}.
-                     */
-                    random: boolean;
-                };
-
-                /**
-                 * Defines an operation yielding a value incremented by steps across a range.
-                 */
-                type EmitterOpSteppedConfig = {
-                    /**
-                     * The starting value.
-                     */
-                    start: number;
-                    /**
-                     * The ending value.
-                     */
-                    end: number;
-                    /**
-                     * The number of steps between start and end.
-                     */
-                    steps: number;
-                };
-
-                type GravityWellConfig = {
-                    /**
-                     * The x coordinate of the Gravity Well, in world space.
-                     */
-                    x?: number;
-                    /**
-                     * The y coordinate of the Gravity Well, in world space.
-                     */
-                    y?: number;
-                    /**
-                     * The strength of the gravity force - larger numbers produce a stronger force.
-                     */
-                    power?: number;
-                    /**
-                     * The minimum distance for which the gravity force is calculated.
-                     */
-                    epsilon?: number;
-                    /**
-                     * The gravitational force of this Gravity Well.
-                     */
-                    gravity?: number;
-                };
-
-                type ParticleDeathCallback = (particle: Phaser.GameObjects.Particles.Particle)=>void;
-
-                type ParticleEmitterBounds = {
-                    /**
-                     * The left edge of the rectangle.
-                     */
-                    x: number;
-                    /**
-                     * The top edge of the rectangle.
-                     */
-                    y: number;
-                    /**
-                     * The width of the rectangle.
-                     */
-                    width: number;
-                    /**
-                     * The height of the rectangle.
-                     */
-                    height: number;
-                };
-
-                type ParticleEmitterBoundsAlt = {
-                    /**
-                     * The left edge of the rectangle.
-                     */
-                    x: number;
-                    /**
-                     * The top edge of the rectangle.
-                     */
-                    y: number;
-                    /**
-                     * The width of the rectangle.
-                     */
-                    w: number;
-                    /**
-                     * The height of the rectangle.
-                     */
-                    h: number;
-                };
-
-                type ParticleEmitterCallback = (particle: Phaser.GameObjects.Particles.Particle, emitter: Phaser.GameObjects.Particles.ParticleEmitter)=>void;
-
-                type ParticleEmitterConfig = {
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#active}.
-                     */
-                    active?: boolean;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#blendMode}.
-                     */
-                    blendMode?: Phaser.BlendModes | string;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#deathCallbackScope} and {@link Phaser.GameObjects.Particles.ParticleEmitter#emitCallbackScope}.
-                     */
-                    callbackScope?: any;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#collideBottom}.
-                     */
-                    collideBottom?: boolean;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#collideLeft}.
-                     */
-                    collideLeft?: boolean;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#collideRight}.
-                     */
-                    collideRight?: boolean;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#collideTop}.
-                     */
-                    collideTop?: boolean;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#deathCallback}.
-                     */
-                    deathCallback?: boolean;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#deathCallbackScope}.
-                     */
-                    deathCallbackScope?: any;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#emitCallback}.
-                     */
-                    emitCallback?: Function;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#emitCallbackScope}.
-                     */
-                    emitCallbackScope?: any;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#follow}.
-                     */
-                    follow?: Phaser.GameObjects.GameObject;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#frequency}.
-                     */
-                    frequency?: number;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#gravityX}.
-                     */
-                    gravityX?: number;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#gravityY}.
-                     */
-                    gravityY?: number;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#maxParticles}.
-                     */
-                    maxParticles?: integer;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#name}.
-                     */
-                    name?: string;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#on}.
-                     */
-                    on?: boolean;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#particleBringToTop}.
-                     */
-                    particleBringToTop?: boolean;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#particleClass}.
-                     */
-                    particleClass?: Phaser.GameObjects.Particles.Particle;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#radial}.
-                     */
-                    radial?: boolean;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#timeScale}.
-                     */
-                    timeScale?: number;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#trackVisible}.
-                     */
-                    trackVisible?: boolean;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#visible}.
-                     */
-                    visible?: boolean;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#accelerationX} (emit only).
-                     */
-                    accelerationX?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#accelerationY} (emit only).
-                     */
-                    accelerationY?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#alpha}.
-                     */
-                    alpha?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnUpdateCallback | object;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#angle} (emit only)
-                     */
-                    angle?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#bounce} (emit only).
-                     */
-                    bounce?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#delay} (emit only).
-                     */
-                    delay?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#lifespan} (emit only).
-                     */
-                    lifespan?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#maxVelocityX} (emit only).
-                     */
-                    maxVelocityX?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#maxVelocityY} (emit only).
-                     */
-                    maxVelocityY?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#moveToX} (emit only).
-                     */
-                    moveToX?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#moveToY} (emit only).
-                     */
-                    moveToY?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#quantity} (emit only).
-                     */
-                    quantity?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#rotate}.
-                     */
-                    rotate?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnUpdateCallback | object;
-                    /**
-                     * As {@link Phaser.GameObjects.Particles.ParticleEmitter#setScale}.
-                     */
-                    scale?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnUpdateCallback | object;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#scaleX}.
-                     */
-                    scaleX?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnUpdateCallback | object;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#scaleY}.
-                     */
-                    scaleY?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnUpdateCallback | object;
-                    /**
-                     * As {@link Phaser.GameObjects.Particles.ParticleEmitter#setSpeed} (emit only).
-                     */
-                    speed?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#speedX} (emit only).
-                     */
-                    speedX?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#speedY} (emit only).
-                     */
-                    speedY?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#tint}.
-                     */
-                    tint?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#x} (emit only).
-                     */
-                    x?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#y} (emit only).
-                     */
-                    y?: number | number[] | Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback | object;
-                    /**
-                     * As {@link Phaser.GameObjects.Particles.ParticleEmitter#setEmitZone}.
-                     */
-                    emitZone?: object;
-                    /**
-                     * As {@link Phaser.GameObjects.Particles.ParticleEmitter#setBounds}.
-                     */
-                    bounds?: Phaser.GameObjects.Particles.Types.ParticleEmitterBounds | Phaser.GameObjects.Particles.Types.ParticleEmitterBoundsAlt;
-                    /**
-                     * Assigns to {@link Phaser.GameObjects.Particles.ParticleEmitter#followOffset}.
-                     */
-                    followOffset?: object;
-                    /**
-                     * x-coordinate of the offset.
-                     */
-                    "followOffset.x"?: number;
-                    /**
-                     * y-coordinate of the offset.
-                     */
-                    "followOffset.y"?: number;
-                    /**
-                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#frames}.
-                     */
-                    frame?: number | number[] | string | string[] | Phaser.Textures.Frame | Phaser.Textures.Frame[] | Phaser.GameObjects.Particles.Types.ParticleEmitterFrameConfig;
-                };
-
-                type ParticleEmitterDeathZoneConfig = {
-                    /**
-                     * A shape representing the zone. See {@link Phaser.GameObjects.Particles.Zones.DeathZone#source}.
-                     */
-                    source: Phaser.GameObjects.Particles.Types.DeathZoneSource;
-                    /**
-                     * 'onEnter' or 'onLeave'.
-                     */
-                    type?: string;
-                };
-
-                type ParticleEmitterEdgeZoneConfig = {
-                    /**
-                     * A shape representing the zone. See {@link Phaser.GameObjects.Particles.Zones.EdgeZone#source}.
-                     */
-                    source: Phaser.GameObjects.Particles.Types.EdgeZoneSource;
-                    /**
-                     * 'edge'.
-                     */
-                    type: string;
-                    /**
-                     * The number of particles to place on the source edge. Set to 0 to use `stepRate` instead.
-                     */
-                    quantity: integer;
-                    /**
-                     * The distance between each particle. When set, `quantity` is implied and should be set to 0.
-                     */
-                    stepRate?: number;
-                    /**
-                     * Whether particles are placed from start to end and then end to start.
-                     */
-                    yoyo?: boolean;
-                    /**
-                     * Whether one endpoint will be removed if it's identical to the other.
-                     */
-                    seamless?: boolean;
-                };
-
-                type ParticleEmitterFrameConfig = {
-                    /**
-                     * One or more texture frames.
-                     */
-                    frames?: number | number[] | string | string[] | Phaser.Textures.Frame | Phaser.Textures.Frame[];
-                    /**
-                     * Whether texture frames will be assigned consecutively (true) or at random (false).
-                     */
-                    cycle?: boolean;
-                    /**
-                     * The number of consecutive particles receiving each texture frame, when `cycle` is true.
-                     */
-                    quantity?: integer;
-                };
-
-                type ParticleEmitterRandomZoneConfig = {
-                    /**
-                     * A shape representing the zone. See {@link Phaser.GameObjects.Particles.Zones.RandomZone#source}.
-                     */
-                    source: Phaser.GameObjects.Particles.Types.RandomZoneSource;
-                    /**
-                     * 'random'.
-                     */
-                    type?: string;
-                };
-
-                type RandomZoneSource = {
-                    /**
-                     * A function modifying its point argument.
-                     */
-                    getRandomPoint: Phaser.GameObjects.Particles.Types.RandomZoneSourceCallback;
-                };
-
-                type RandomZoneSourceCallback = (point: Phaser.Math.Vector2)=>void;
-
-            }
-
             namespace Zones {
                 /**
                  * A Death Zone.
@@ -22405,13 +19967,13 @@ declare namespace Phaser {
                      * @param source An object instance that has a `contains` method that returns a boolean when given `x` and `y` arguments.
                      * @param killOnEnter Should the Particle be killed when it enters the zone? `true` or leaves it? `false`
                      */
-                    constructor(source: Phaser.GameObjects.Particles.Types.DeathZoneSource, killOnEnter: boolean);
+                    constructor(source: Phaser.Types.GameObjects.Particles.DeathZoneSource, killOnEnter: boolean);
 
                     /**
                      * An object instance that has a `contains` method that returns a boolean when given `x` and `y` arguments.
                      * This could be a Geometry shape, such as `Phaser.Geom.Circle`, or your own custom object.
                      */
-                    source: Phaser.GameObjects.Particles.Types.DeathZoneSource;
+                    source: Phaser.Types.GameObjects.Particles.DeathZoneSource;
 
                     /**
                      * Set to `true` if the Particle should be killed if it enters this zone.
@@ -22439,12 +20001,12 @@ declare namespace Phaser {
                      * @param yoyo Whether particles are placed from start to end and then end to start. Default false.
                      * @param seamless Whether one endpoint will be removed if it's identical to the other. Default true.
                      */
-                    constructor(source: Phaser.GameObjects.Particles.Types.EdgeZoneSource, quantity: integer, stepRate: number, yoyo?: boolean, seamless?: boolean);
+                    constructor(source: Phaser.Types.GameObjects.Particles.EdgeZoneSource, quantity: integer, stepRate: number, yoyo?: boolean, seamless?: boolean);
 
                     /**
                      * An object instance with a `getPoints(quantity, stepRate)` method returning an array of points.
                      */
-                    source: Phaser.GameObjects.Particles.Types.EdgeZoneSource | Phaser.GameObjects.Particles.Types.RandomZoneSource;
+                    source: Phaser.Types.GameObjects.Particles.EdgeZoneSource | Phaser.Types.GameObjects.Particles.RandomZoneSource;
 
                     /**
                      * The points placed on the source edge.
@@ -22485,10 +20047,10 @@ declare namespace Phaser {
                     updateSource(): Phaser.GameObjects.Particles.Zones.EdgeZone;
 
                     /**
-                     * Change the EdgeZone's source.
+                     * Change the source of the EdgeZone.
                      * @param source An object instance with a `getPoints(quantity, stepRate)` method returning an array of points.
                      */
-                    changeSource(source: EdgeZoneSource): Phaser.GameObjects.Particles.Zones.EdgeZone;
+                    changeSource(source: Phaser.Types.GameObjects.Particles.EdgeZoneSource): Phaser.GameObjects.Particles.Zones.EdgeZone;
 
                     /**
                      * Get the next point in the Zone and set its coordinates on the given Particle.
@@ -22506,12 +20068,12 @@ declare namespace Phaser {
                      * 
                      * @param source An object instance with a `getRandomPoint(point)` method.
                      */
-                    constructor(source: Phaser.GameObjects.Particles.Types.RandomZoneSource);
+                    constructor(source: Phaser.Types.GameObjects.Particles.RandomZoneSource);
 
                     /**
                      * An object instance with a `getRandomPoint(point)` method.
                      */
-                    source: Phaser.GameObjects.Particles.Types.RandomZoneSource;
+                    source: Phaser.Types.GameObjects.Particles.RandomZoneSource;
 
                     /**
                      * Get the next point in the Zone and set its coordinates on the given Particle.
@@ -22537,7 +20099,7 @@ declare namespace Phaser {
          * to finish, forwards or backwards, or from any given point on the Path to its end. They can optionally rotate
          * to face the direction of the path, be offset from the path coordinates or rotate independently of the Path.
          */
-        class PathFollower extends Phaser.GameObjects.Sprite {
+        class PathFollower extends Phaser.GameObjects.Sprite implements Phaser.GameObjects.Components.PathFollower {
             /**
              * 
              * @param scene The Scene to which this PathFollower belongs.
@@ -22575,7 +20137,7 @@ declare namespace Phaser {
             /**
              * Settings for the PathFollower.
              */
-            pathConfig: Phaser.GameObjects.PathFollower.Types.PathConfig;
+            pathConfig: Phaser.Types.GameObjects.PathFollower.PathConfig;
 
             /**
              * Internal update handler that advances this PathFollower along the path.
@@ -23389,6 +20951,73 @@ declare namespace Phaser {
              * @param value The visible state of the Game Object.
              */
             setVisible(value: boolean): this;
+
+            /**
+             * The Path this PathFollower is following. It can only follow one Path at a time.
+             */
+            path: Phaser.Curves.Path;
+
+            /**
+             * Should the PathFollower automatically rotate to point in the direction of the Path?
+             */
+            rotateToPath: boolean;
+
+            /**
+             * Set the Path that this PathFollower should follow.
+             * 
+             * Optionally accepts {@link Phaser.Types.GameObjects.PathFollower.PathConfig} settings.
+             * @param path The Path this PathFollower is following. It can only follow one Path at a time.
+             * @param config Settings for the PathFollower.
+             */
+            setPath(path: Phaser.Curves.Path, config?: Phaser.Types.GameObjects.PathFollower.PathConfig): Phaser.GameObjects.PathFollower;
+
+            /**
+             * Set whether the PathFollower should automatically rotate to point in the direction of the Path.
+             * @param value Whether the PathFollower should automatically rotate to point in the direction of the Path.
+             * @param offset Rotation offset in degrees. Default 0.
+             */
+            setRotateToPath(value: boolean, offset?: number): Phaser.GameObjects.PathFollower;
+
+            /**
+             * Is this PathFollower actively following a Path or not?
+             * 
+             * To be considered as `isFollowing` it must be currently moving on a Path, and not paused.
+             */
+            isFollowing(): boolean;
+
+            /**
+             * Starts this PathFollower following its given Path.
+             * @param config The duration of the follow, or a PathFollower config object. Default {}.
+             * @param startAt Optional start position of the follow, between 0 and 1. Default 0.
+             */
+            startFollow(config?: number | Phaser.Types.GameObjects.PathFollower.PathConfig, startAt?: number): Phaser.GameObjects.PathFollower;
+
+            /**
+             * Pauses this PathFollower. It will still continue to render, but it will remain motionless at the
+             * point on the Path at which you paused it.
+             */
+            pauseFollow(): Phaser.GameObjects.PathFollower;
+
+            /**
+             * Resumes a previously paused PathFollower.
+             * 
+             * If the PathFollower was not paused this has no effect.
+             */
+            resumeFollow(): Phaser.GameObjects.PathFollower;
+
+            /**
+             * Stops this PathFollower from following the path any longer.
+             * 
+             * This will invoke any 'stop' conditions that may exist on the Path, or for the follower.
+             */
+            stopFollow(): Phaser.GameObjects.PathFollower;
+
+            /**
+             * Internal update handler that advances this PathFollower along the path.
+             * 
+             * Called automatically by the Scene step, should not typically be called directly.
+             */
+            pathUpdate(): void;
 
         }
 
@@ -25110,7 +22739,7 @@ declare namespace Phaser {
              * The underlying shader object being used.
              * Empty by default and set during a call to the `setShader` method.
              */
-            shader: Phaser.Display.Shader;
+            shader: Phaser.Display.BaseShader;
 
             /**
              * A reference to the current renderer.
@@ -25303,6 +22932,11 @@ declare namespace Phaser {
              * Sets the active shader, loads the vertex buffer and then draws.
              */
             flush(): void;
+
+            /**
+             * Internal destroy handler, called as part of the destroy process.
+             */
+            protected preDestroy(): void;
 
             /**
              * The native (un-scaled) width of this Game Object.
@@ -33604,7 +31238,7 @@ declare namespace Phaser {
             /**
              * Build a JSON representation of this Sprite.
              */
-            toJSON(): Phaser.GameObjects.Types.JSONGameObject;
+            toJSON(): Phaser.Types.GameObjects.JSONGameObject;
 
             /**
              * Clears all alpha values associated with this Game Object.
@@ -34468,7 +32102,7 @@ declare namespace Phaser {
              * @param size The Text metrics to use when calculating the size.
              * @param lines The lines of text to calculate the size from.
              */
-            static GetTextSize(text: Phaser.GameObjects.Text, size: Phaser.GameObjects.Text.Types.TextMetrics, lines: any[]): object;
+            static GetTextSize(text: Phaser.GameObjects.Text, size: Phaser.Types.GameObjects.Text.TextMetrics, lines: any[]): object;
 
             /**
              * Calculates the ascent, descent and fontSize of a given font style.
@@ -34819,7 +32453,7 @@ declare namespace Phaser {
             /**
              * Build a JSON representation of the Text object.
              */
-            toJSON(): Phaser.GameObjects.Types.JSONGameObject;
+            toJSON(): Phaser.Types.GameObjects.JSONGameObject;
 
             /**
              * Internal destroy handler, called as part of the destroy process.
@@ -35913,7 +33547,7 @@ declare namespace Phaser {
             /**
              * Get the current text metrics.
              */
-            getTextMetrics(): BitmapTextMetrics;
+            getTextMetrics(): Phaser.Types.GameObjects.Text.TextMetrics;
 
             /**
              * Build a JSON representation of this Text Style.
@@ -36839,155 +34473,6 @@ declare namespace Phaser {
 
         }
 
-        namespace Types {
-            type GameObjectConfig = {
-                /**
-                 * The x position of the Game Object.
-                 */
-                x?: number;
-                /**
-                 * The y position of the Game Object.
-                 */
-                y?: number;
-                /**
-                 * The depth of the GameObject.
-                 */
-                depth?: number;
-                /**
-                 * The horizontally flipped state of the Game Object.
-                 */
-                flipX?: boolean;
-                /**
-                 * The vertically flipped state of the Game Object.
-                 */
-                flipY?: boolean;
-                /**
-                 * The scale of the GameObject.
-                 */
-                scale?: number | object;
-                /**
-                 * The scroll factor of the GameObject.
-                 */
-                scrollFactor?: number | object;
-                /**
-                 * The rotation angle of the Game Object, in radians.
-                 */
-                rotation?: number;
-                /**
-                 * The rotation angle of the Game Object, in degrees.
-                 */
-                angle?: number;
-                /**
-                 * The alpha (opacity) of the Game Object.
-                 */
-                alpha?: number;
-                /**
-                 * The origin of the Game Object.
-                 */
-                origin?: number | object;
-                /**
-                 * The scale mode of the GameObject.
-                 */
-                scaleMode?: number;
-                /**
-                 * The blend mode of the GameObject.
-                 */
-                blendMode?: number;
-                /**
-                 * The visible state of the Game Object.
-                 */
-                visible?: boolean;
-                /**
-                 * Add the GameObject to the scene.
-                 */
-                add?: boolean;
-            };
-
-            type JSONGameObject = {
-                /**
-                 * The name of this Game Object.
-                 */
-                name: string;
-                /**
-                 * A textual representation of this Game Object, i.e. `sprite`.
-                 */
-                type: string;
-                /**
-                 * The x position of this Game Object.
-                 */
-                x: number;
-                /**
-                 * The y position of this Game Object.
-                 */
-                y: number;
-                /**
-                 * The scale of this Game Object
-                 */
-                scale: object;
-                /**
-                 * The horizontal scale of this Game Object.
-                 */
-                "scale.x": number;
-                /**
-                 * The vertical scale of this Game Object.
-                 */
-                "scale.y": number;
-                /**
-                 * The origin of this Game Object.
-                 */
-                origin: object;
-                /**
-                 * The horizontal origin of this Game Object.
-                 */
-                "origin.x": number;
-                /**
-                 * The vertical origin of this Game Object.
-                 */
-                "origin.y": number;
-                /**
-                 * The horizontally flipped state of the Game Object.
-                 */
-                flipX: boolean;
-                /**
-                 * The vertically flipped state of the Game Object.
-                 */
-                flipY: boolean;
-                /**
-                 * The angle of this Game Object in radians.
-                 */
-                rotation: number;
-                /**
-                 * The alpha value of the Game Object.
-                 */
-                alpha: number;
-                /**
-                 * The visible state of the Game Object.
-                 */
-                visible: boolean;
-                /**
-                 * The Scale Mode being used by this Game Object.
-                 */
-                scaleMode: integer;
-                /**
-                 * Sets the Blend Mode being used by this Game Object.
-                 */
-                blendMode: integer | string;
-                /**
-                 * The texture key of this Game Object.
-                 */
-                textureKey: string;
-                /**
-                 * The frame key of this Game Object.
-                 */
-                frameKey: string;
-                /**
-                 * The data of this Game Object.
-                 */
-                data: object;
-            };
-
-        }
-
         /**
          * The Update List plugin.
          * 
@@ -37152,7 +34637,7 @@ declare namespace Phaser {
              * @param shape A Geometry shape instance, such as Phaser.Geom.Ellipse, or your own custom shape.
              * @param callback A function that will return `true` if the given x/y coords it is sent are within the shape.
              */
-            setDropZone(shape: object, callback: Phaser.Input.Types.HitAreaCallback): Phaser.GameObjects.Zone;
+            setDropZone(shape: object, callback: Phaser.Types.Input.HitAreaCallback): Phaser.GameObjects.Zone;
 
             /**
              * The depth of this Game Object within the Scene.
@@ -39583,7 +37068,7 @@ declare namespace Phaser {
          * @param hitArea The hit area for this Interactive Object. Typically a geometry shape, like a Rectangle or Circle.
          * @param hitAreaCallback The 'contains' check callback that the hit area shape will use for all hit tests.
          */
-        function CreateInteractiveObject(gameObject: Phaser.GameObjects.GameObject, hitArea: any, hitAreaCallback: Phaser.Input.Types.HitAreaCallback): Phaser.Input.Types.InteractiveObject;
+        function CreateInteractiveObject(gameObject: Phaser.GameObjects.GameObject, hitArea: any, hitAreaCallback: Phaser.Types.Input.HitAreaCallback): Phaser.Types.Input.InteractiveObject;
 
         /**
          * Creates a new Pixel Perfect Handler function.
@@ -40437,7 +37922,7 @@ declare namespace Phaser {
                  * @param manager A reference to the Gamepad Plugin.
                  * @param pad The Gamepad object, as extracted from GamepadEvent.
                  */
-                constructor(manager: Phaser.Input.Gamepad.GamepadPlugin, pad: Phaser.Input.Gamepad.Types.Pad);
+                constructor(manager: Phaser.Input.Gamepad.GamepadPlugin, pad: Phaser.Types.Input.Gamepad.Pad);
 
                 /**
                  * A reference to the Gamepad Plugin.
@@ -40706,7 +38191,7 @@ declare namespace Phaser {
                 /**
                  * A reference to the Scene Systems Settings.
                  */
-                settings: Phaser.Scenes.Types.SettingsObject;
+                settings: Phaser.Types.Scenes.SettingsObject;
 
                 /**
                  * A reference to the Scene Input Plugin that created this Keyboard Plugin.
@@ -40791,23 +38276,6 @@ declare namespace Phaser {
                  * is plugged in, but hasn't yet had any buttons pressed on it.
                  */
                 pad4: Phaser.Input.Gamepad.Gamepad;
-
-            }
-
-            namespace Types {
-                /**
-                 * The Gamepad object, as extracted from GamepadEvent.
-                 */
-                type Pad = {
-                    /**
-                     * The ID of the Gamepad.
-                     */
-                    id: string;
-                    /**
-                     * The index of the Gamepad.
-                     */
-                    index: integer;
-                };
 
             }
 
@@ -41151,7 +38619,7 @@ declare namespace Phaser {
              * @param x The translated x coordinate for the hit test.
              * @param y The translated y coordinate for the hit test.
              */
-            pointWithinInteractiveObject(object: Phaser.Input.Types.InteractiveObject, x: number, y: number): boolean;
+            pointWithinInteractiveObject(object: Phaser.Types.Input.InteractiveObject, x: number, y: number): boolean;
 
             /**
              * Transforms the pageX and pageY values of a Pointer into the scaled coordinate space of the Input Manager.
@@ -41221,7 +38689,7 @@ declare namespace Phaser {
             /**
              * A reference to the Scene Systems Settings.
              */
-            settings: Phaser.Scenes.Types.SettingsObject;
+            settings: Phaser.Types.Scenes.SettingsObject;
 
             /**
              * A reference to the Game Input Manager.
@@ -41330,7 +38798,7 @@ declare namespace Phaser {
              * @param callback The 'contains' function to invoke to check if the pointer is within the hit area.
              * @param dropZone Is this Game Object a drop zone or not? Default false.
              */
-            enable(gameObject: Phaser.GameObjects.GameObject, shape?: Phaser.Input.Types.InputConfiguration | any, callback?: Phaser.Input.Types.HitAreaCallback, dropZone?: boolean): Phaser.Input.InputPlugin;
+            enable(gameObject: Phaser.GameObjects.GameObject, shape?: Phaser.Types.Input.InputConfiguration | any, callback?: Phaser.Types.Input.HitAreaCallback, dropZone?: boolean): Phaser.Input.InputPlugin;
 
             /**
              * Takes the given Pointer and performs a hit test against it, to see which interactive Game Objects
@@ -41429,7 +38897,7 @@ declare namespace Phaser {
              * @param shape Either an input configuration object, or a geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
              * @param callback The 'contains' function to invoke to check if the pointer is within the hit area.
              */
-            setHitArea(gameObjects: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], shape?: Phaser.Input.Types.InputConfiguration | any, callback?: Phaser.Input.Types.HitAreaCallback): Phaser.Input.InputPlugin;
+            setHitArea(gameObjects: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], shape?: Phaser.Types.Input.InputConfiguration | any, callback?: Phaser.Types.Input.HitAreaCallback): Phaser.Input.InputPlugin;
 
             /**
              * Sets the hit area for an array of Game Objects to be a `Phaser.Geom.Circle` shape, using
@@ -41440,7 +38908,7 @@ declare namespace Phaser {
              * @param radius The radius of the circle.
              * @param callback The hit area callback. If undefined it uses Circle.Contains.
              */
-            setHitAreaCircle(gameObjects: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], x: number, y: number, radius: number, callback?: Phaser.Input.Types.HitAreaCallback): Phaser.Input.InputPlugin;
+            setHitAreaCircle(gameObjects: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], x: number, y: number, radius: number, callback?: Phaser.Types.Input.HitAreaCallback): Phaser.Input.InputPlugin;
 
             /**
              * Sets the hit area for an array of Game Objects to be a `Phaser.Geom.Ellipse` shape, using
@@ -41452,7 +38920,7 @@ declare namespace Phaser {
              * @param height The height of the ellipse.
              * @param callback The hit area callback. If undefined it uses Ellipse.Contains.
              */
-            setHitAreaEllipse(gameObjects: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], x: number, y: number, width: number, height: number, callback?: Phaser.Input.Types.HitAreaCallback): Phaser.Input.InputPlugin;
+            setHitAreaEllipse(gameObjects: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], x: number, y: number, width: number, height: number, callback?: Phaser.Types.Input.HitAreaCallback): Phaser.Input.InputPlugin;
 
             /**
              * Sets the hit area for an array of Game Objects to be a `Phaser.Geom.Rectangle` shape, using
@@ -41460,7 +38928,7 @@ declare namespace Phaser {
              * @param gameObjects An array of Game Objects to set as having an ellipse hit area.
              * @param callback The hit area callback. If undefined it uses Rectangle.Contains.
              */
-            setHitAreaFromTexture(gameObjects: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], callback?: Phaser.Input.Types.HitAreaCallback): Phaser.Input.InputPlugin;
+            setHitAreaFromTexture(gameObjects: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], callback?: Phaser.Types.Input.HitAreaCallback): Phaser.Input.InputPlugin;
 
             /**
              * Sets the hit area for an array of Game Objects to be a `Phaser.Geom.Rectangle` shape, using
@@ -41472,7 +38940,7 @@ declare namespace Phaser {
              * @param height The height of the rectangle.
              * @param callback The hit area callback. If undefined it uses Rectangle.Contains.
              */
-            setHitAreaRectangle(gameObjects: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], x: number, y: number, width: number, height: number, callback?: Phaser.Input.Types.HitAreaCallback): Phaser.Input.InputPlugin;
+            setHitAreaRectangle(gameObjects: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], x: number, y: number, width: number, height: number, callback?: Phaser.Types.Input.HitAreaCallback): Phaser.Input.InputPlugin;
 
             /**
              * Sets the hit area for an array of Game Objects to be a `Phaser.Geom.Triangle` shape, using
@@ -41486,7 +38954,7 @@ declare namespace Phaser {
              * @param y3 The y coordinate of the third point of the triangle.
              * @param callback The hit area callback. If undefined it uses Triangle.Contains.
              */
-            setHitAreaTriangle(gameObjects: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], x1: number, y1: number, x2: number, y2: number, x3: number, y3: number, callback?: Phaser.Input.Types.HitAreaCallback): Phaser.Input.InputPlugin;
+            setHitAreaTriangle(gameObjects: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], x1: number, y1: number, x2: number, y2: number, x3: number, y3: number, callback?: Phaser.Types.Input.HitAreaCallback): Phaser.Input.InputPlugin;
 
             /**
              * Sets the Pointers to always poll.
@@ -41829,7 +39297,7 @@ declare namespace Phaser {
                  * @param keys The keys that comprise this combo.
                  * @param config A Key Combo configuration object.
                  */
-                constructor(keyboardPlugin: Phaser.Input.Keyboard.KeyboardPlugin, keys: string | integer[] | object[], config?: Phaser.Input.Keyboard.Types.KeyComboConfig);
+                constructor(keyboardPlugin: Phaser.Input.Keyboard.KeyboardPlugin, keys: string | integer[] | object[], config?: Phaser.Types.Input.Keyboard.KeyComboConfig);
 
                 /**
                  * A reference to the Keyboard Manager
@@ -42267,7 +39735,7 @@ declare namespace Phaser {
                 /**
                  * A reference to the Scene Systems Settings.
                  */
-                settings: Phaser.Scenes.Types.SettingsObject;
+                settings: Phaser.Types.Scenes.SettingsObject;
 
                 /**
                  * A reference to the Scene Input Plugin that created this Keyboard Plugin.
@@ -42393,7 +39861,7 @@ declare namespace Phaser {
                 /**
                  * Creates and returns an object containing 4 hotkeys for Up, Down, Left and Right, and also Space Bar and shift.
                  */
-                createCursorKeys(): Phaser.Input.Keyboard.Types.CursorKeys;
+                createCursorKeys(): Phaser.Types.Input.Keyboard.CursorKeys;
 
                 /**
                  * A practical way to create an object containing user selected hotkeys.
@@ -42473,7 +39941,7 @@ declare namespace Phaser {
                  * @param keys The keys that comprise this combo.
                  * @param config A Key Combo configuration object.
                  */
-                createCombo(keys: string | integer[] | object[], config?: Phaser.Input.Keyboard.Types.KeyComboConfig): Phaser.Input.Keyboard.KeyCombo;
+                createCombo(keys: string | integer[] | object[], config?: Phaser.Types.Input.Keyboard.KeyComboConfig): Phaser.Input.Keyboard.KeyCombo;
 
                 /**
                  * Checks if the given Key object is currently being held down.
@@ -43166,57 +40634,6 @@ declare namespace Phaser {
              */
             function UpDuration(key: Phaser.Input.Keyboard.Key, duration?: integer): boolean;
 
-            namespace Types {
-                type CursorKeys = {
-                    /**
-                     * A Key object mapping to the UP arrow key.
-                     */
-                    up?: Phaser.Input.Keyboard.Key;
-                    /**
-                     * A Key object mapping to the DOWN arrow key.
-                     */
-                    down?: Phaser.Input.Keyboard.Key;
-                    /**
-                     * A Key object mapping to the LEFT arrow key.
-                     */
-                    left?: Phaser.Input.Keyboard.Key;
-                    /**
-                     * A Key object mapping to the RIGHT arrow key.
-                     */
-                    right?: Phaser.Input.Keyboard.Key;
-                    /**
-                     * A Key object mapping to the SPACE BAR key.
-                     */
-                    space?: Phaser.Input.Keyboard.Key;
-                    /**
-                     * A Key object mapping to the SHIFT key.
-                     */
-                    shift?: Phaser.Input.Keyboard.Key;
-                };
-
-                type KeyboardKeydownCallback = (event: KeyboardEvent)=>void;
-
-                type KeyComboConfig = {
-                    /**
-                     * If they press the wrong key do we reset the combo?
-                     */
-                    resetOnWrongKey?: boolean;
-                    /**
-                     * The max delay in ms between each key press. Above this the combo is reset. 0 means disabled.
-                     */
-                    maxKeyDelay?: number;
-                    /**
-                     * If previously matched and they press the first key of the combo again, will it reset?
-                     */
-                    resetOnMatch?: boolean;
-                    /**
-                     * If the combo matches, will it delete itself?
-                     */
-                    deleteOnMatch?: boolean;
-                };
-
-            }
-
         }
 
         namespace Mouse {
@@ -43876,148 +41293,6 @@ declare namespace Phaser {
 
         }
 
-        namespace Types {
-            /**
-             * A Phaser Input Event Data object.
-             * 
-             * This object is passed to the registered event listeners and allows you to stop any further propagation.
-             */
-            type EventData = {
-                /**
-                 * The cancelled state of this Event.
-                 */
-                cancelled?: boolean;
-                /**
-                 * Call this method to stop this event from passing any further down the event chain.
-                 */
-                stopPropagation: Function;
-            };
-
-            type HitAreaCallback = (hitArea: any, x: number, y: number, gameObject: Phaser.GameObjects.GameObject)=>void;
-
-            type InputConfiguration = {
-                /**
-                 * The object / shape to use as the Hit Area. If not given it will try to create a Rectangle based on the texture frame.
-                 */
-                hitArea?: any;
-                /**
-                 * The callback that determines if the pointer is within the Hit Area shape or not.
-                 */
-                hitAreaCallback?: Function;
-                /**
-                 * If `true` the Interactive Object will be set to be draggable and emit drag events.
-                 */
-                draggable?: boolean;
-                /**
-                 * If `true` the Interactive Object will be set to be a drop zone for draggable objects.
-                 */
-                dropZone?: boolean;
-                /**
-                 * If `true` the Interactive Object will set the `pointer` hand cursor when a pointer is over it. This is a short-cut for setting `cursor: 'pointer'`.
-                 */
-                useHandCursor?: boolean;
-                /**
-                 * The CSS string to be used when the cursor is over this Interactive Object.
-                 */
-                cursor?: string;
-                /**
-                 * If `true` the a pixel perfect function will be set for the hit area callback. Only works with texture based Game Objects.
-                 */
-                pixelPerfect?: boolean;
-                /**
-                 * If `pixelPerfect` is set, this is the alpha tolerance threshold value used in the callback.
-                 */
-                alphaTolerance?: integer;
-            };
-
-            type InputPluginContainer = {
-                /**
-                 * The unique name of this plugin in the input plugin cache.
-                 */
-                key: string;
-                /**
-                 * The plugin to be stored. Should be the source object, not instantiated.
-                 */
-                plugin: Function;
-                /**
-                 * If this plugin is to be injected into the Input Plugin, this is the property key map used.
-                 */
-                mapping?: string;
-            };
-
-            type InteractiveObject = {
-                /**
-                 * The Game Object to which this Interactive Object is bound.
-                 */
-                gameObject: Phaser.GameObjects.GameObject;
-                /**
-                 * Is this Interactive Object currently enabled for input events?
-                 */
-                enabled: boolean;
-                /**
-                 * Is this Interactive Object draggable? Enable with `InputPlugin.setDraggable`.
-                 */
-                draggable: boolean;
-                /**
-                 * Is this Interactive Object a drag-targets drop zone? Set when the object is created.
-                 */
-                dropZone: boolean;
-                /**
-                 * Should this Interactive Object change the cursor (via css) when over? (desktop only)
-                 */
-                cursor: boolean | string;
-                /**
-                 * An optional drop target for a draggable Interactive Object.
-                 */
-                target: Phaser.GameObjects.GameObject;
-                /**
-                 * The most recent Camera to be tested against this Interactive Object.
-                 */
-                camera: Phaser.Cameras.Scene2D.Camera;
-                /**
-                 * The hit area for this Interactive Object. Typically a geometry shape, like a Rectangle or Circle.
-                 */
-                hitArea: any;
-                /**
-                 * The 'contains' check callback that the hit area shape will use for all hit tests.
-                 */
-                hitAreaCallback: Phaser.Input.Types.HitAreaCallback;
-                /**
-                 * Was the hitArea for this Interactive Object created based on texture size (false), or a custom shape? (true)
-                 */
-                customHitArea: boolean;
-                /**
-                 * The x coordinate that the Pointer interacted with this object on, relative to the Game Object's top-left position.
-                 */
-                localX: number;
-                /**
-                 * The y coordinate that the Pointer interacted with this object on, relative to the Game Object's top-left position.
-                 */
-                localY: number;
-                /**
-                 * The current drag state of this Interactive Object. 0 = Not being dragged, 1 = being checked for drag, or 2 = being actively dragged.
-                 */
-                dragState: 0 | 1 | 2;
-                /**
-                 * The x coordinate that the Pointer started dragging this Interactive Object from.
-                 */
-                dragStartX: number;
-                /**
-                 * The y coordinate that the Pointer started dragging this Interactive Object from.
-                 */
-                dragStartY: number;
-                /**
-                 * The x coordinate that this Interactive Object is currently being dragged to.
-                 */
-                dragX: number;
-                /**
-                 * The y coordinate that this Interactive Object is currently being dragged to.
-                 */
-                dragY: number;
-            };
-
-        }
-
     }
 
     namespace Loader {
@@ -44239,7 +41514,7 @@ declare namespace Phaser {
              * @param loader The Loader that is going to load this File.
              * @param fileConfig The file configuration object, as created by the file type.
              */
-            constructor(loader: Phaser.Loader.LoaderPlugin, fileConfig: Phaser.Loader.Types.FileConfig);
+            constructor(loader: Phaser.Loader.LoaderPlugin, fileConfig: Phaser.Types.Loader.FileConfig);
 
             /**
              * A reference to the Loader that is going to load this file.
@@ -44276,7 +41551,7 @@ declare namespace Phaser {
             /**
              * The merged XHRSettings for this file.
              */
-            xhrSettings: Phaser.Loader.Types.XHRSettingsObject;
+            xhrSettings: Phaser.Types.Loader.XHRSettingsObject;
 
             /**
              * The XMLHttpRequest instance (as created by XHR Loader) that is loading this File.
@@ -44450,7 +41725,7 @@ declare namespace Phaser {
                  * @param xhrSettings Extra XHR Settings specifically for this file.
                  * @param dataKey When the JSON file loads only this property will be stored in the Cache.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.JSONFileConfig, url?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject, dataKey?: string);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.JSONFileConfig, url?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject, dataKey?: string);
 
                 /**
                  * Called automatically by Loader.nextFile.
@@ -44464,41 +41739,6 @@ declare namespace Phaser {
                 onLoadComplete(): void;
 
             }
-
-            type AtlasJSONFileConfig = {
-                /**
-                 * The key of the file. Must be unique within both the Loader and the Texture Manager.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the texture image file from.
-                 */
-                textureURL?: string;
-                /**
-                 * The default file extension to use for the image texture if no url is provided.
-                 */
-                textureExtension?: string;
-                /**
-                 * Extra XHR Settings specifically for the texture image file.
-                 */
-                textureXhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-                /**
-                 * The filename of an associated normal map. It uses the same path and url to load as the texture image.
-                 */
-                normalMap?: string;
-                /**
-                 * The absolute or relative URL to load the atlas json file from. Or a well formed JSON object to use instead.
-                 */
-                atlasURL?: string;
-                /**
-                 * The default file extension to use for the atlas json if no url is provided.
-                 */
-                atlasExtension?: string;
-                /**
-                 * Extra XHR Settings specifically for the atlas json file.
-                 */
-                atlasXhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-            };
 
             /**
              * A single JSON based Texture Atlas File suitable for loading by the Loader.
@@ -44519,7 +41759,7 @@ declare namespace Phaser {
                  * @param textureXhrSettings An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.
                  * @param atlasXhrSettings An XHR Settings configuration object for the atlas json file. Used in replacement of the Loaders default XHR Settings.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.AtlasJSONFileConfig, textureURL?: string | string[], atlasURL?: string, textureXhrSettings?: Phaser.Loader.Types.XHRSettingsObject, atlasXhrSettings?: Phaser.Loader.Types.XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.AtlasJSONFileConfig, textureURL?: string | string[], atlasURL?: string, textureXhrSettings?: Phaser.Types.Loader.XHRSettingsObject, atlasXhrSettings?: Phaser.Types.Loader.XHRSettingsObject);
 
                 /**
                  * Adds this file to its target cache upon successful loading and processing.
@@ -44527,41 +41767,6 @@ declare namespace Phaser {
                 addToCache(): void;
 
             }
-
-            type AtlasXMLFileConfig = {
-                /**
-                 * The key of the file. Must be unique within both the Loader and the Texture Manager.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the texture image file from.
-                 */
-                textureURL?: string;
-                /**
-                 * The default file extension to use for the image texture if no url is provided.
-                 */
-                textureExtension?: string;
-                /**
-                 * Extra XHR Settings specifically for the texture image file.
-                 */
-                textureXhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-                /**
-                 * The filename of an associated normal map. It uses the same path and url to load as the texture image.
-                 */
-                normalMap?: string;
-                /**
-                 * The absolute or relative URL to load the atlas xml file from.
-                 */
-                atlasURL?: string;
-                /**
-                 * The default file extension to use for the atlas xml if no url is provided.
-                 */
-                atlasExtension?: string;
-                /**
-                 * Extra XHR Settings specifically for the atlas xml file.
-                 */
-                atlasXhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-            };
 
             /**
              * A single XML based Texture Atlas File suitable for loading by the Loader.
@@ -44580,7 +41785,7 @@ declare namespace Phaser {
                  * @param textureXhrSettings An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.
                  * @param atlasXhrSettings An XHR Settings configuration object for the atlas xml file. Used in replacement of the Loaders default XHR Settings.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.AtlasXMLFileConfig, textureURL?: string | string[], atlasURL?: string, textureXhrSettings?: Phaser.Loader.Types.XHRSettingsObject, atlasXhrSettings?: Phaser.Loader.Types.XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.AtlasXMLFileConfig, textureURL?: string | string[], atlasURL?: string, textureXhrSettings?: Phaser.Types.Loader.XHRSettingsObject, atlasXhrSettings?: Phaser.Types.Loader.XHRSettingsObject);
 
                 /**
                  * Adds this file to its target cache upon successful loading and processing.
@@ -44588,25 +41793,6 @@ declare namespace Phaser {
                 addToCache(): void;
 
             }
-
-            type AudioFileConfig = {
-                /**
-                 * The key of the file. Must be unique within the Loader and Audio Cache.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the file from.
-                 */
-                urlConfig?: string;
-                /**
-                 * Extra XHR Settings specifically for this file.
-                 */
-                xhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-                /**
-                 * The AudioContext this file will use to process itself.
-                 */
-                audioContext?: AudioContext;
-            };
 
             /**
              * A single Audio File suitable for loading by the Loader.
@@ -44624,7 +41810,7 @@ declare namespace Phaser {
                  * @param xhrSettings Extra XHR Settings specifically for this file.
                  * @param audioContext The AudioContext this file will use to process itself.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.AudioFileConfig, urlConfig?: any, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject, audioContext?: AudioContext);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.AudioFileConfig, urlConfig?: any, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject, audioContext?: AudioContext);
 
                 /**
                  * Called automatically by Loader.nextFile.
@@ -44633,33 +41819,6 @@ declare namespace Phaser {
                 onProcess(): void;
 
             }
-
-            type AudioSpriteFileConfig = {
-                /**
-                 * The key of the file. Must be unique within both the Loader and the Audio Cache.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the json file from. Or a well formed JSON object to use instead.
-                 */
-                jsonURL: string;
-                /**
-                 * Extra XHR Settings specifically for the json file.
-                 */
-                jsonXhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-                /**
-                 * The absolute or relative URL to load the audio file from.
-                 */
-                audioURL?: Object;
-                /**
-                 * The audio configuration options.
-                 */
-                audioConfig?: any;
-                /**
-                 * Extra XHR Settings specifically for the audio file.
-                 */
-                audioXhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-            };
 
             /**
              * An Audio Sprite File suitable for loading by the Loader.
@@ -44679,7 +41838,7 @@ declare namespace Phaser {
                  * @param audioXhrSettings An XHR Settings configuration object for the audio file. Used in replacement of the Loaders default XHR Settings.
                  * @param jsonXhrSettings An XHR Settings configuration object for the json file. Used in replacement of the Loaders default XHR Settings.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.AudioSpriteFileConfig, jsonURL: string, audioURL?: Object, audioConfig?: any, audioXhrSettings?: Phaser.Loader.Types.XHRSettingsObject, jsonXhrSettings?: Phaser.Loader.Types.XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.AudioSpriteFileConfig, jsonURL: string, audioURL?: Object, audioConfig?: any, audioXhrSettings?: Phaser.Types.Loader.XHRSettingsObject, jsonXhrSettings?: Phaser.Types.Loader.XHRSettingsObject);
 
                 /**
                  * Called by each File when it finishes loading.
@@ -44693,29 +41852,6 @@ declare namespace Phaser {
                 addToCache(): void;
 
             }
-
-            type BinaryFileConfig = {
-                /**
-                 * The key of the file. Must be unique within both the Loader and the Binary Cache.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the file from.
-                 */
-                url?: string;
-                /**
-                 * The default file extension to use if no url is provided.
-                 */
-                extension?: string;
-                /**
-                 * Extra XHR Settings specifically for this file.
-                 */
-                xhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-                /**
-                 * Optional type to cast the binary file to once loaded. For example, `Uint8Array`.
-                 */
-                dataType?: any;
-            };
 
             /**
              * A single Binary File suitable for loading by the Loader.
@@ -44733,7 +41869,7 @@ declare namespace Phaser {
                  * @param xhrSettings Extra XHR Settings specifically for this file.
                  * @param dataType Optional type to cast the binary file to once loaded. For example, `Uint8Array`.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.BinaryFileConfig, url?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject, dataType?: any);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.BinaryFileConfig, url?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject, dataType?: any);
 
                 /**
                  * Called automatically by Loader.nextFile.
@@ -44742,41 +41878,6 @@ declare namespace Phaser {
                 onProcess(): void;
 
             }
-
-            type BitmapFontFileConfig = {
-                /**
-                 * The key of the file. Must be unique within both the Loader and the Texture Manager.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the texture image file from.
-                 */
-                textureURL?: string;
-                /**
-                 * The default file extension to use for the image texture if no url is provided.
-                 */
-                textureExtension?: string;
-                /**
-                 * Extra XHR Settings specifically for the texture image file.
-                 */
-                textureXhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-                /**
-                 * The filename of an associated normal map. It uses the same path and url to load as the texture image.
-                 */
-                normalMap?: string;
-                /**
-                 * The absolute or relative URL to load the font data xml file from.
-                 */
-                fontDataURL?: string;
-                /**
-                 * The default file extension to use for the font data xml if no url is provided.
-                 */
-                fontDataExtension?: string;
-                /**
-                 * Extra XHR Settings specifically for the font data xml file.
-                 */
-                fontDataXhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-            };
 
             /**
              * A single Bitmap Font based File suitable for loading by the Loader.
@@ -44795,7 +41896,7 @@ declare namespace Phaser {
                  * @param textureXhrSettings An XHR Settings configuration object for the font image file. Used in replacement of the Loaders default XHR Settings.
                  * @param fontDataXhrSettings An XHR Settings configuration object for the font data xml file. Used in replacement of the Loaders default XHR Settings.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.BitmapFontFileConfig, textureURL?: string | string[], fontDataURL?: string, textureXhrSettings?: Phaser.Loader.Types.XHRSettingsObject, fontDataXhrSettings?: Phaser.Loader.Types.XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.BitmapFontFileConfig, textureURL?: string | string[], fontDataURL?: string, textureXhrSettings?: Phaser.Types.Loader.XHRSettingsObject, fontDataXhrSettings?: Phaser.Types.Loader.XHRSettingsObject);
 
                 /**
                  * Adds this file to its target cache upon successful loading and processing.
@@ -44803,25 +41904,6 @@ declare namespace Phaser {
                 addToCache(): void;
 
             }
-
-            type CSSFileConfig = {
-                /**
-                 * The key of the file. Must be unique within the Loader.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the file from.
-                 */
-                url?: string;
-                /**
-                 * The default file extension to use if no url is provided.
-                 */
-                extension?: string;
-                /**
-                 * Extra XHR Settings specifically for this file.
-                 */
-                xhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-            };
 
             /**
              * A single CSS File suitable for loading by the Loader.
@@ -44838,7 +41920,7 @@ declare namespace Phaser {
                  * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
                  * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.CSSFileConfig, url?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.CSSFileConfig, url?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject);
 
                 /**
                  * Called automatically by Loader.nextFile.
@@ -44847,29 +41929,6 @@ declare namespace Phaser {
                 onProcess(): void;
 
             }
-
-            type GLSLFileConfig = {
-                /**
-                 * The key of the file. Must be unique within both the Loader and the Text Cache.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the file from.
-                 */
-                url?: string;
-                /**
-                 * The type of shader. Either `fragment` for a fragment shader, or `vertex` for a vertex shader. This is ignored if you load a shader bundle.
-                 */
-                shaderType?: string;
-                /**
-                 * The default file extension to use if no url is provided.
-                 */
-                extension?: string;
-                /**
-                 * Extra XHR Settings specifically for this file.
-                 */
-                xhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-            };
 
             /**
              * A single GLSL File suitable for loading by the Loader.
@@ -44887,7 +41946,7 @@ declare namespace Phaser {
                  * @param shaderType The type of shader. Either `fragment` for a fragment shader, or `vertex` for a vertex shader. This is ignored if you load a shader bundle. Default 'fragment'.
                  * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.TextFileConfig, url?: string, shaderType?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.GLSLFileConfig, url?: string, shaderType?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject);
 
                 /**
                  * Called automatically by Loader.nextFile.
@@ -44935,7 +41994,7 @@ declare namespace Phaser {
                  * @param urlConfig The absolute or relative URL to load this file from.
                  * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.AudioFileConfig, urlConfig?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.AudioFileConfig, urlConfig?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject);
 
                 /**
                  * Called when the file finishes loading.
@@ -44961,25 +42020,6 @@ declare namespace Phaser {
 
             }
 
-            type HTMLFileConfig = {
-                /**
-                 * The key of the file. Must be unique within both the Loader and the Text Cache.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the file from.
-                 */
-                url?: string;
-                /**
-                 * The default file extension to use if no url is provided.
-                 */
-                extension?: string;
-                /**
-                 * Extra XHR Settings specifically for this file.
-                 */
-                xhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-            };
-
             /**
              * A single HTML File suitable for loading by the Loader.
              * 
@@ -44995,7 +42035,7 @@ declare namespace Phaser {
                  * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.html".
                  * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.HTMLFileConfig, url?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.HTMLFileConfig, url?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject);
 
                 /**
                  * Called automatically by Loader.nextFile.
@@ -45004,33 +42044,6 @@ declare namespace Phaser {
                 onProcess(): void;
 
             }
-
-            type HTMLTextureFileConfig = {
-                /**
-                 * The key of the file. Must be unique within both the Loader and the Texture Manager.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the file from.
-                 */
-                url?: string;
-                /**
-                 * The default file extension to use if no url is provided.
-                 */
-                extension?: string;
-                /**
-                 * Extra XHR Settings specifically for this file.
-                 */
-                xhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-                /**
-                 * The width of the texture the HTML will be rendered to.
-                 */
-                width?: integer;
-                /**
-                 * The height of the texture the HTML will be rendered to.
-                 */
-                height?: integer;
-            };
 
             /**
              * A single HTML File suitable for loading by the Loader.
@@ -45049,7 +42062,7 @@ declare namespace Phaser {
                  * @param height The height of the texture the HTML will be rendered to.
                  * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.HTMLTextureFileConfig, url?: string, width?: integer, height?: integer, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.HTMLTextureFileConfig, url?: string, width?: integer, height?: integer, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject);
 
                 /**
                  * Called automatically by Loader.nextFile.
@@ -45063,60 +42076,6 @@ declare namespace Phaser {
                 addToCache(): void;
 
             }
-
-            type ImageFrameConfig = {
-                /**
-                 * The width of the frame in pixels.
-                 */
-                frameWidth: integer;
-                /**
-                 * The height of the frame in pixels. Uses the `frameWidth` value if not provided.
-                 */
-                frameHeight?: integer;
-                /**
-                 * The first frame to start parsing from.
-                 */
-                startFrame?: integer;
-                /**
-                 * The frame to stop parsing at. If not provided it will calculate the value based on the image and frame dimensions.
-                 */
-                endFrame?: integer;
-                /**
-                 * The margin in the image. This is the space around the edge of the frames.
-                 */
-                margin?: integer;
-                /**
-                 * The spacing between each frame in the image.
-                 */
-                spacing?: integer;
-            };
-
-            type ImageFileConfig = {
-                /**
-                 * The key of the file. Must be unique within both the Loader and the Texture Manager.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the file from.
-                 */
-                url?: string;
-                /**
-                 * The default file extension to use if no url is provided.
-                 */
-                extension?: string;
-                /**
-                 * The filename of an associated normal map. It uses the same path and url to load as the image.
-                 */
-                normalMap?: string;
-                /**
-                 * The frame configuration object. Only provided for, and used by, Sprite Sheets.
-                 */
-                frameConfig?: Phaser.Loader.FileTypes.ImageFrameConfig;
-                /**
-                 * Extra XHR Settings specifically for this file.
-                 */
-                xhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-            };
 
             /**
              * A single Image File suitable for loading by the Loader.
@@ -45134,7 +42093,7 @@ declare namespace Phaser {
                  * @param xhrSettings Extra XHR Settings specifically for this file.
                  * @param frameConfig The frame configuration object. Only provided for, and used by, Sprite Sheets.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.ImageFileConfig, url?: string | string[], xhrSettings?: Phaser.Loader.Types.XHRSettingsObject, frameConfig?: Phaser.Loader.FileTypes.ImageFrameConfig);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.ImageFileConfig, url?: string | string[], xhrSettings?: Phaser.Types.Loader.XHRSettingsObject, frameConfig?: Phaser.Types.Loader.FileTypes.ImageFrameConfig);
 
                 /**
                  * Called automatically by Loader.nextFile.
@@ -45148,29 +42107,6 @@ declare namespace Phaser {
                 addToCache(): void;
 
             }
-
-            type JSONFileConfig = {
-                /**
-                 * The key of the file. Must be unique within both the Loader and the JSON Cache.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the file from. Or can be a ready formed JSON object, in which case it will be directly added to the Cache.
-                 */
-                url?: string | any;
-                /**
-                 * The default file extension to use if no url is provided.
-                 */
-                extension?: string;
-                /**
-                 * If specified instead of the whole JSON file being parsed and added to the Cache, only the section corresponding to this property key will be added. If the property you want to extract is nested, use periods to divide it.
-                 */
-                dataKey?: string;
-                /**
-                 * Extra XHR Settings specifically for this file.
-                 */
-                xhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-            };
 
             /**
              * A single JSON File suitable for loading by the Loader.
@@ -45188,7 +42124,7 @@ declare namespace Phaser {
                  * @param xhrSettings Extra XHR Settings specifically for this file.
                  * @param dataKey When the JSON file loads only this property will be stored in the Cache.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.JSONFileConfig, url?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject, dataKey?: string);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.JSONFileConfig, url?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject, dataKey?: string);
 
                 /**
                  * Called automatically by Loader.nextFile.
@@ -45197,37 +42133,6 @@ declare namespace Phaser {
                 onProcess(): void;
 
             }
-
-            type MultiAtlasFileConfig = {
-                /**
-                 * The key of the file. Must be unique within both the Loader and the Texture Manager.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the multi atlas json file from. Or, a well formed JSON object.
-                 */
-                atlasURL?: string;
-                /**
-                 * The default file extension to use for the atlas json if no url is provided.
-                 */
-                atlasExtension?: string;
-                /**
-                 * Extra XHR Settings specifically for the atlas json file.
-                 */
-                atlasXhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-                /**
-                 * Optional path to use when loading the textures defined in the atlas data.
-                 */
-                path?: string;
-                /**
-                 * Optional Base URL to use when loading the textures defined in the atlas data.
-                 */
-                baseURL?: string;
-                /**
-                 * Extra XHR Settings specifically for the texture files.
-                 */
-                textureXhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-            };
 
             /**
              * A single Multi Texture Atlas File suitable for loading by the Loader.
@@ -45247,7 +42152,7 @@ declare namespace Phaser {
                  * @param atlasXhrSettings Extra XHR Settings specifically for the atlas json file.
                  * @param textureXhrSettings Extra XHR Settings specifically for the texture files.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string, atlasURL?: string, path?: string, baseURL?: string, atlasXhrSettings?: Phaser.Loader.Types.XHRSettingsObject, textureXhrSettings?: Phaser.Loader.Types.XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string, atlasURL?: string, path?: string, baseURL?: string, atlasXhrSettings?: Phaser.Types.Loader.XHRSettingsObject, textureXhrSettings?: Phaser.Types.Loader.XHRSettingsObject);
 
                 /**
                  * Called by each File when it finishes loading.
@@ -45261,25 +42166,6 @@ declare namespace Phaser {
                 addToCache(): void;
 
             }
-
-            type MultiScriptFileConfig = {
-                /**
-                 * The key of the file. Must be unique within the Loader.
-                 */
-                key: string;
-                /**
-                 * An array of absolute or relative URLs to load the script files from. They are processed in the order given in the array.
-                 */
-                url?: string[];
-                /**
-                 * The default file extension to use if no url is provided.
-                 */
-                extension?: string;
-                /**
-                 * Extra XHR Settings specifically for these files.
-                 */
-                xhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-            };
 
             /**
              * A Multi Script File suitable for loading by the Loader.
@@ -45296,7 +42182,7 @@ declare namespace Phaser {
                  * @param url An array of absolute or relative URLs to load the script files from. They are processed in the order given in the array.
                  * @param xhrSettings An XHR Settings configuration object for the script files. Used in replacement of the Loaders default XHR Settings.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.MultiScriptFileConfig, url?: string[], xhrSettings?: Phaser.Loader.Types.XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.MultiScriptFileConfig, url?: string[], xhrSettings?: Phaser.Types.Loader.XHRSettingsObject);
 
                 /**
                  * Adds this file to its target cache upon successful loading and processing.
@@ -45304,29 +42190,6 @@ declare namespace Phaser {
                 addToCache(): void;
 
             }
-
-            type PackFileConfig = {
-                /**
-                 * The key of the file. Must be unique within both the Loader and the JSON Cache.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the file from. Or can be a ready formed JSON object, in which case it will be directly processed.
-                 */
-                url?: string | any;
-                /**
-                 * The default file extension to use if no url is provided.
-                 */
-                extension?: string;
-                /**
-                 * If specified instead of the whole JSON file being parsed, only the section corresponding to this property key will be added. If the property you want to extract is nested, use periods to divide it.
-                 */
-                dataKey?: string;
-                /**
-                 * Extra XHR Settings specifically for this file.
-                 */
-                xhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-            };
 
             /**
              * A single JSON Pack File suitable for loading by the Loader.
@@ -45344,7 +42207,7 @@ declare namespace Phaser {
                  * @param xhrSettings Extra XHR Settings specifically for this file.
                  * @param dataKey When the JSON file loads only this property will be stored in the Cache.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.JSONFileConfig, url?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject, dataKey?: string);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.PackFileConfig, url?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject, dataKey?: string);
 
                 /**
                  * Called automatically by Loader.nextFile.
@@ -45353,33 +42216,6 @@ declare namespace Phaser {
                 onProcess(): void;
 
             }
-
-            type PluginFileConfig = {
-                /**
-                 * The key of the file. Must be unique within the Loader.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the file from.
-                 */
-                url?: string;
-                /**
-                 * The default file extension to use if no url is provided.
-                 */
-                extension?: string;
-                /**
-                 * Automatically start the plugin after loading?
-                 */
-                start?: boolean;
-                /**
-                 * If this plugin is to be injected into the Scene, this is the property key used.
-                 */
-                mapping?: string;
-                /**
-                 * Extra XHR Settings specifically for this file.
-                 */
-                xhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-            };
 
             /**
              * A single Plugin Script File suitable for loading by the Loader.
@@ -45398,7 +42234,7 @@ declare namespace Phaser {
                  * @param mapping If this plugin is to be injected into the Scene, this is the property key used.
                  * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.PluginFileConfig, url?: string, start?: boolean, mapping?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.PluginFileConfig, url?: string, start?: boolean, mapping?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject);
 
                 /**
                  * Called automatically by Loader.nextFile.
@@ -45407,25 +42243,6 @@ declare namespace Phaser {
                 onProcess(): void;
 
             }
-
-            type SceneFileConfig = {
-                /**
-                 * The key of the file. Must be unique within both the Loader and the Text Cache.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the file from.
-                 */
-                url?: string;
-                /**
-                 * The default file extension to use if no url is provided.
-                 */
-                extension?: string;
-                /**
-                 * Extra XHR Settings specifically for this file.
-                 */
-                xhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-            };
 
             /**
              * An external Scene JavaScript File suitable for loading by the Loader.
@@ -45442,7 +42259,7 @@ declare namespace Phaser {
                  * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
                  * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.SceneFileConfig, url?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.SceneFileConfig, url?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject);
 
                 /**
                  * Called automatically by Loader.nextFile.
@@ -45456,33 +42273,6 @@ declare namespace Phaser {
                 addToCache(): void;
 
             }
-
-            type ScenePluginFileConfig = {
-                /**
-                 * The key of the file. Must be unique within the Loader.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the file from. Or, a Scene Plugin.
-                 */
-                url?: string | Function;
-                /**
-                 * The default file extension to use if no url is provided.
-                 */
-                extension?: string;
-                /**
-                 * If this plugin is to be added to Scene.Systems, this is the property key for it.
-                 */
-                systemKey?: string;
-                /**
-                 * If this plugin is to be added to the Scene, this is the property key for it.
-                 */
-                sceneKey?: string;
-                /**
-                 * Extra XHR Settings specifically for this file.
-                 */
-                xhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-            };
 
             /**
              * A single Scene Plugin Script File suitable for loading by the Loader.
@@ -45501,7 +42291,7 @@ declare namespace Phaser {
                  * @param sceneKey If this plugin is to be added to the Scene, this is the property key for it.
                  * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.ScenePluginFileConfig, url?: string, systemKey?: string, sceneKey?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.ScenePluginFileConfig, url?: string, systemKey?: string, sceneKey?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject);
 
                 /**
                  * Called automatically by Loader.nextFile.
@@ -45510,25 +42300,6 @@ declare namespace Phaser {
                 onProcess(): void;
 
             }
-
-            type ScriptFileConfig = {
-                /**
-                 * The key of the file. Must be unique within the Loader.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the file from.
-                 */
-                url?: string;
-                /**
-                 * The default file extension to use if no url is provided.
-                 */
-                extension?: string;
-                /**
-                 * Extra XHR Settings specifically for this file.
-                 */
-                xhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-            };
 
             /**
              * A single Script File suitable for loading by the Loader.
@@ -45545,7 +42316,7 @@ declare namespace Phaser {
                  * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
                  * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.ScriptFileConfig, url?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.ScriptFileConfig, url?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject);
 
                 /**
                  * Called automatically by Loader.nextFile.
@@ -45554,33 +42325,6 @@ declare namespace Phaser {
                 onProcess(): void;
 
             }
-
-            type SpriteSheetFileConfig = {
-                /**
-                 * The key of the file. Must be unique within both the Loader and the Texture Manager.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the file from.
-                 */
-                url?: string;
-                /**
-                 * The default file extension to use if no url is provided.
-                 */
-                extension?: string;
-                /**
-                 * The filename of an associated normal map. It uses the same path and url to load as the image.
-                 */
-                normalMap?: string;
-                /**
-                 * The frame configuration object.
-                 */
-                frameConfig?: Phaser.Loader.FileTypes.ImageFrameConfig;
-                /**
-                 * Extra XHR Settings specifically for this file.
-                 */
-                xhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-            };
 
             /**
              * A single Sprite Sheet Image File suitable for loading by the Loader.
@@ -45598,7 +42342,7 @@ declare namespace Phaser {
                  * @param frameConfig The frame configuration object.
                  * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.SpriteSheetFileConfig, url?: string | string[], frameConfig?: Phaser.Loader.FileTypes.ImageFrameConfig, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.SpriteSheetFileConfig, url?: string | string[], frameConfig?: Phaser.Types.Loader.FileTypes.ImageFrameConfig, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject);
 
                 /**
                  * Adds this file to its target cache upon successful loading and processing.
@@ -45606,44 +42350,6 @@ declare namespace Phaser {
                 addToCache(): void;
 
             }
-
-            type SVGSizeConfig = {
-                /**
-                 * An optional width. The SVG will be resized to this size before being rendered to a texture.
-                 */
-                width?: integer;
-                /**
-                 * An optional height. The SVG will be resized to this size before being rendered to a texture.
-                 */
-                height?: integer;
-                /**
-                 * An optional scale. If given it overrides the width / height properties. The SVG is scaled by the scale factor before being rendered to a texture.
-                 */
-                scale?: number;
-            };
-
-            type SVGFileConfig = {
-                /**
-                 * The key of the file. Must be unique within both the Loader and the Texture Manager.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the file from.
-                 */
-                url?: string;
-                /**
-                 * The default file extension to use if no url is provided.
-                 */
-                extension?: string;
-                /**
-                 * Extra XHR Settings specifically for this file.
-                 */
-                xhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-                /**
-                 * The svg size configuration object.
-                 */
-                svgConfig?: Phaser.Loader.FileTypes.SVGSizeConfig;
-            };
 
             /**
              * A single SVG File suitable for loading by the Loader.
@@ -45661,7 +42367,7 @@ declare namespace Phaser {
                  * @param svgConfig The svg size configuration object.
                  * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.SVGFileConfig, url?: string, svgConfig?: Phaser.Loader.FileTypes.SVGSizeConfig, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.SVGFileConfig, url?: string, svgConfig?: Phaser.Types.Loader.FileTypes.SVGSizeConfig, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject);
 
                 /**
                  * Called automatically by Loader.nextFile.
@@ -45675,25 +42381,6 @@ declare namespace Phaser {
                 addToCache(): void;
 
             }
-
-            type TextFileConfig = {
-                /**
-                 * The key of the file. Must be unique within both the Loader and the Text Cache.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the file from.
-                 */
-                url?: string;
-                /**
-                 * The default file extension to use if no url is provided.
-                 */
-                extension?: string;
-                /**
-                 * Extra XHR Settings specifically for this file.
-                 */
-                xhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-            };
 
             /**
              * A single Text File suitable for loading by the Loader.
@@ -45710,7 +42397,7 @@ declare namespace Phaser {
                  * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.txt".
                  * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.TextFileConfig, url?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.TextFileConfig, url?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject);
 
                 /**
                  * Called automatically by Loader.nextFile.
@@ -45719,25 +42406,6 @@ declare namespace Phaser {
                 onProcess(): void;
 
             }
-
-            type TilemapCSVFileConfig = {
-                /**
-                 * The key of the file. Must be unique within both the Loader and the Tilemap Cache.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the file from.
-                 */
-                url?: string;
-                /**
-                 * The default file extension to use if no url is provided.
-                 */
-                extension?: string;
-                /**
-                 * Extra XHR Settings specifically for this file.
-                 */
-                xhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-            };
 
             /**
              * A single Tilemap CSV File suitable for loading by the Loader.
@@ -45754,7 +42422,7 @@ declare namespace Phaser {
                  * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.csv`, i.e. if `key` was "alien" then the URL will be "alien.csv".
                  * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.TilemapCSVFileConfig, url?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.TilemapCSVFileConfig, url?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject);
 
                 /**
                  * Called automatically by Loader.nextFile.
@@ -45768,25 +42436,6 @@ declare namespace Phaser {
                 addToCache(): void;
 
             }
-
-            type TilemapImpactFileConfig = {
-                /**
-                 * The key of the file. Must be unique within both the Loader and the Tilemap Cache.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the file from.
-                 */
-                url?: string;
-                /**
-                 * The default file extension to use if no url is provided.
-                 */
-                extension?: string;
-                /**
-                 * Extra XHR Settings specifically for this file.
-                 */
-                xhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-            };
 
             /**
              * A single Impact.js Tilemap JSON File suitable for loading by the Loader.
@@ -45803,7 +42452,7 @@ declare namespace Phaser {
                  * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
                  * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.TilemapImpactFileConfig, url?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.TilemapImpactFileConfig, url?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject);
 
                 /**
                  * Adds this file to its target cache upon successful loading and processing.
@@ -45811,25 +42460,6 @@ declare namespace Phaser {
                 addToCache(): void;
 
             }
-
-            type TilemapJSONFileConfig = {
-                /**
-                 * The key of the file. Must be unique within both the Loader and the Tilemap Cache.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the file from.
-                 */
-                url?: string;
-                /**
-                 * The default file extension to use if no url is provided.
-                 */
-                extension?: string;
-                /**
-                 * Extra XHR Settings specifically for this file.
-                 */
-                xhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-            };
 
             /**
              * A single Tiled Tilemap JSON File suitable for loading by the Loader.
@@ -45846,7 +42476,7 @@ declare namespace Phaser {
                  * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
                  * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.TilemapJSONFileConfig, url?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.TilemapJSONFileConfig, url?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject);
 
                 /**
                  * Adds this file to its target cache upon successful loading and processing.
@@ -45854,41 +42484,6 @@ declare namespace Phaser {
                 addToCache(): void;
 
             }
-
-            type UnityAtlasFileConfig = {
-                /**
-                 * The key of the file. Must be unique within both the Loader and the Texture Manager.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the texture image file from.
-                 */
-                textureURL?: string;
-                /**
-                 * The default file extension to use for the image texture if no url is provided.
-                 */
-                textureExtension?: string;
-                /**
-                 * Extra XHR Settings specifically for the texture image file.
-                 */
-                textureXhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-                /**
-                 * The filename of an associated normal map. It uses the same path and url to load as the texture image.
-                 */
-                normalMap?: string;
-                /**
-                 * The absolute or relative URL to load the atlas data file from.
-                 */
-                atlasURL?: string;
-                /**
-                 * The default file extension to use for the atlas data if no url is provided.
-                 */
-                atlasExtension?: string;
-                /**
-                 * Extra XHR Settings specifically for the atlas data file.
-                 */
-                atlasXhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-            };
 
             /**
              * A single text file based Unity Texture Atlas File suitable for loading by the Loader.
@@ -45907,7 +42502,7 @@ declare namespace Phaser {
                  * @param textureXhrSettings An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.
                  * @param atlasXhrSettings An XHR Settings configuration object for the atlas data file. Used in replacement of the Loaders default XHR Settings.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.UnityAtlasFileConfig, textureURL?: string | string[], atlasURL?: string, textureXhrSettings?: Phaser.Loader.Types.XHRSettingsObject, atlasXhrSettings?: Phaser.Loader.Types.XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.UnityAtlasFileConfig, textureURL?: string | string[], atlasURL?: string, textureXhrSettings?: Phaser.Types.Loader.XHRSettingsObject, atlasXhrSettings?: Phaser.Types.Loader.XHRSettingsObject);
 
                 /**
                  * Adds this file to its target cache upon successful loading and processing.
@@ -45915,25 +42510,6 @@ declare namespace Phaser {
                 addToCache(): void;
 
             }
-
-            type XMLFileConfig = {
-                /**
-                 * The key of the file. Must be unique within both the Loader and the Text Cache.
-                 */
-                key: string;
-                /**
-                 * The absolute or relative URL to load the file from.
-                 */
-                url?: string;
-                /**
-                 * The default file extension to use if no url is provided.
-                 */
-                extension?: string;
-                /**
-                 * Extra XHR Settings specifically for this file.
-                 */
-                xhrSettings?: Phaser.Loader.Types.XHRSettingsObject;
-            };
 
             /**
              * A single XML File suitable for loading by the Loader.
@@ -45950,7 +42526,7 @@ declare namespace Phaser {
                  * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.xml`, i.e. if `key` was "alien" then the URL will be "alien.xml".
                  * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.XMLFileConfig, url?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Types.Loader.FileTypes.XMLFileConfig, url?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject);
 
                 /**
                  * Called automatically by Loader.nextFile.
@@ -46064,7 +42640,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.JSONFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.JSONFileConfig` for more details.
              * 
              * Once the file has finished loading it will automatically be passed to the global Animation Managers `fromJSON` method.
              * This will parse all of the JSON data and create animation data from it. This process happens at the very end
@@ -46117,7 +42693,7 @@ declare namespace Phaser {
              * @param dataKey When the Animation JSON file loads only this property will be stored in the Cache and used to create animation data.
              * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            animation(key: string | Phaser.Loader.FileTypes.JSONFileConfig | Phaser.Loader.FileTypes.JSONFileConfig[], url?: string, dataKey?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            animation(key: string | Phaser.Types.Loader.FileTypes.JSONFileConfig | Phaser.Types.Loader.FileTypes.JSONFileConfig[], url?: string, dataKey?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a JSON based Texture Atlas, or array of atlases, to the current load queue.
@@ -46164,7 +42740,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.AtlasJSONFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.AtlasJSONFileConfig` for more details.
              * 
              * Instead of passing a URL for the atlas JSON data you can also pass in a well formed JSON object instead.
              * 
@@ -46217,7 +42793,7 @@ declare namespace Phaser {
              * @param textureXhrSettings An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.
              * @param atlasXhrSettings An XHR Settings configuration object for the atlas json file. Used in replacement of the Loaders default XHR Settings.
              */
-            atlas(key: string | Phaser.Loader.FileTypes.AtlasJSONFileConfig | Phaser.Loader.FileTypes.AtlasJSONFileConfig[], textureURL?: string | string[], atlasURL?: string, textureXhrSettings?: Phaser.Loader.Types.XHRSettingsObject, atlasXhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            atlas(key: string | Phaser.Types.Loader.FileTypes.AtlasJSONFileConfig | Phaser.Types.Loader.FileTypes.AtlasJSONFileConfig[], textureURL?: string | string[], atlasURL?: string, textureXhrSettings?: Phaser.Types.Loader.XHRSettingsObject, atlasXhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds an XML based Texture Atlas, or array of atlases, to the current load queue.
@@ -46262,7 +42838,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.AtlasXMLFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.AtlasXMLFileConfig` for more details.
              * 
              * Once the atlas has finished loading you can use frames from it as textures for a Game Object by referencing its key:
              * 
@@ -46313,7 +42889,7 @@ declare namespace Phaser {
              * @param textureXhrSettings An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.
              * @param atlasXhrSettings An XHR Settings configuration object for the atlas xml file. Used in replacement of the Loaders default XHR Settings.
              */
-            atlasXML(key: string | Phaser.Loader.FileTypes.AtlasXMLFileConfig | Phaser.Loader.FileTypes.AtlasXMLFileConfig[], textureURL?: string | string[], atlasURL?: string, textureXhrSettings?: Phaser.Loader.Types.XHRSettingsObject, atlasXhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            atlasXML(key: string | Phaser.Types.Loader.FileTypes.AtlasXMLFileConfig | Phaser.Types.Loader.FileTypes.AtlasXMLFileConfig[], textureURL?: string | string[], atlasURL?: string, textureXhrSettings?: Phaser.Types.Loader.XHRSettingsObject, atlasXhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds an Audio or HTML5Audio file, or array of audio files, to the current load queue.
@@ -46349,7 +42925,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.AudioFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.AudioFileConfig` for more details.
              * 
              * The URLs can be relative or absolute. If the URLs are relative the `Loader.baseURL` and `Loader.path` values will be prepended to them.
              * 
@@ -46366,7 +42942,7 @@ declare namespace Phaser {
              * @param config An object containing an `instances` property for HTML5Audio. Defaults to 1.
              * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            audio(key: string | Phaser.Loader.FileTypes.AudioFileConfig | Phaser.Loader.FileTypes.AudioFileConfig[], urls?: string | string[], config?: any, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            audio(key: string | Phaser.Types.Loader.FileTypes.AudioFileConfig | Phaser.Types.Loader.FileTypes.AudioFileConfig[], urls?: string | string[], config?: any, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a JSON based Audio Sprite, or array of audio sprites, to the current load queue.
@@ -46427,7 +43003,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.AudioSpriteFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.AudioSpriteFileConfig` for more details.
              * 
              * Instead of passing a URL for the audio JSON data you can also pass in a well formed JSON object instead.
              * 
@@ -46461,7 +43037,7 @@ declare namespace Phaser {
              * @param audioXhrSettings An XHR Settings configuration object for the audio file. Used in replacement of the Loaders default XHR Settings.
              * @param jsonXhrSettings An XHR Settings configuration object for the json file. Used in replacement of the Loaders default XHR Settings.
              */
-            audioSprite(key: string | Phaser.Loader.FileTypes.AudioSpriteFileConfig | Phaser.Loader.FileTypes.AudioSpriteFileConfig[], jsonURL: string, audioURL?: string | string[], audioConfig?: any, audioXhrSettings?: Phaser.Loader.Types.XHRSettingsObject, jsonXhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            audioSprite(key: string | Phaser.Types.Loader.FileTypes.AudioSpriteFileConfig | Phaser.Types.Loader.FileTypes.AudioSpriteFileConfig[], jsonURL: string, audioURL?: string | string[], audioConfig?: any, audioXhrSettings?: Phaser.Types.Loader.XHRSettingsObject, jsonXhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a Binary file, or array of Binary files, to the current load queue.
@@ -46498,7 +43074,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.BinaryFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.BinaryFileConfig` for more details.
              * 
              * Once the file has finished loading you can access it from its Cache using its key:
              * 
@@ -46525,7 +43101,7 @@ declare namespace Phaser {
              * @param dataType Optional type to cast the binary file to once loaded. For example, `Uint8Array`.
              * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            binary(key: string | Phaser.Loader.FileTypes.BinaryFileConfig | Phaser.Loader.FileTypes.BinaryFileConfig[], url?: string, dataType?: any, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            binary(key: string | Phaser.Types.Loader.FileTypes.BinaryFileConfig | Phaser.Types.Loader.FileTypes.BinaryFileConfig[], url?: string, dataType?: any, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds an XML based Bitmap Font, or array of fonts, to the current load queue.
@@ -46570,7 +43146,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.BitmapFontFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.BitmapFontFileConfig` for more details.
              * 
              * Once the atlas has finished loading you can use key of it when creating a Bitmap Text Game Object:
              * 
@@ -46619,7 +43195,7 @@ declare namespace Phaser {
              * @param textureXhrSettings An XHR Settings configuration object for the font image file. Used in replacement of the Loaders default XHR Settings.
              * @param fontDataXhrSettings An XHR Settings configuration object for the font data xml file. Used in replacement of the Loaders default XHR Settings.
              */
-            bitmapFont(key: string | Phaser.Loader.FileTypes.BitmapFontFileConfig | Phaser.Loader.FileTypes.BitmapFontFileConfig[], textureURL?: string | string[], fontDataURL?: string, textureXhrSettings?: Phaser.Loader.Types.XHRSettingsObject, fontDataXhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            bitmapFont(key: string | Phaser.Types.Loader.FileTypes.BitmapFontFileConfig | Phaser.Types.Loader.FileTypes.BitmapFontFileConfig[], textureURL?: string | string[], fontDataURL?: string, textureXhrSettings?: Phaser.Types.Loader.XHRSettingsObject, fontDataXhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a CSS file, or array of CSS files, to the current load queue.
@@ -46652,7 +43228,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.CSSFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.CSSFileConfig` for more details.
              * 
              * Once the file has finished loading it will automatically be converted into a style DOM element
              * via `document.createElement('style')`. It will have its `defer` property set to false and then the
@@ -46670,7 +43246,7 @@ declare namespace Phaser {
              * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.css`, i.e. if `key` was "alien" then the URL will be "alien.css".
              * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            css(key: string | Phaser.Loader.FileTypes.CSSFileConfig | Phaser.Loader.FileTypes.CSSFileConfig[], url?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            css(key: string | Phaser.Types.Loader.FileTypes.CSSFileConfig | Phaser.Types.Loader.FileTypes.CSSFileConfig[], url?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a GLSL file, or array of GLSL files, to the current load queue.
@@ -46708,7 +43284,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.GLSLFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.GLSLFileConfig` for more details.
              * 
              * Once the file has finished loading you can access it from its Cache using its key:
              * 
@@ -46735,7 +43311,7 @@ declare namespace Phaser {
              * @param shaderType The type of shader. Either `fragment` for a fragment shader, or `vertex` for a vertex shader. This is ignored if you load a shader bundle. Default 'fragment'.
              * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            glsl(key: string | Phaser.Loader.FileTypes.GLSLFileConfig | Phaser.Loader.FileTypes.GLSLFileConfig[], url?: string, shaderType?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            glsl(key: string | Phaser.Types.Loader.FileTypes.GLSLFileConfig | Phaser.Types.Loader.FileTypes.GLSLFileConfig[], url?: string, shaderType?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds an HTML file, or array of HTML files, to the current load queue.
@@ -46771,7 +43347,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.HTMLFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.HTMLFileConfig` for more details.
              * 
              * Once the file has finished loading you can access it from its Cache using its key:
              * 
@@ -46797,7 +43373,7 @@ declare namespace Phaser {
              * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.html`, i.e. if `key` was "alien" then the URL will be "alien.html".
              * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            html(key: string | Phaser.Loader.FileTypes.HTMLFileConfig | Phaser.Loader.FileTypes.HTMLFileConfig[], url?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            html(key: string | Phaser.Types.Loader.FileTypes.HTMLFileConfig | Phaser.Types.Loader.FileTypes.HTMLFileConfig[], url?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds an HTML File, or array of HTML Files, to the current load queue. When the files are loaded they
@@ -46836,7 +43412,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.HTMLTextureFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.HTMLTextureFileConfig` for more details.
              * 
              * Once the file has finished loading you can use it as a texture for a Game Object by referencing its key:
              * 
@@ -46873,7 +43449,7 @@ declare namespace Phaser {
              * @param height The height of the texture the HTML will be rendered to. Default 512.
              * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            htmlTexture(key: string | Phaser.Loader.FileTypes.HTMLTextureFileConfig | Phaser.Loader.FileTypes.HTMLTextureFileConfig[], url?: string, width?: integer, height?: integer, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            htmlTexture(key: string | Phaser.Types.Loader.FileTypes.HTMLTextureFileConfig | Phaser.Types.Loader.FileTypes.HTMLTextureFileConfig[], url?: string, width?: integer, height?: integer, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds an Image, or array of Images, to the current load queue.
@@ -46913,7 +43489,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.ImageFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.ImageFileConfig` for more details.
              * 
              * Once the file has finished loading you can use it as a texture for a Game Object by referencing its key:
              * 
@@ -46959,7 +43535,7 @@ declare namespace Phaser {
              * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
              * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            image(key: string | Phaser.Loader.FileTypes.ImageFileConfig | Phaser.Loader.FileTypes.ImageFileConfig[], url?: string | string[], xhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            image(key: string | Phaser.Types.Loader.FileTypes.ImageFileConfig | Phaser.Types.Loader.FileTypes.ImageFileConfig[], url?: string | string[], xhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a JSON file, or array of JSON files, to the current load queue.
@@ -46995,7 +43571,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.JSONFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.JSONFileConfig` for more details.
              * 
              * Once the file has finished loading you can access it from its Cache using its key:
              * 
@@ -47040,7 +43616,7 @@ declare namespace Phaser {
              * @param dataKey When the JSON file loads only this property will be stored in the Cache.
              * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            json(key: string | Phaser.Loader.FileTypes.JSONFileConfig | Phaser.Loader.FileTypes.JSONFileConfig[], url?: string, dataKey?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            json(key: string | Phaser.Types.Loader.FileTypes.JSONFileConfig | Phaser.Types.Loader.FileTypes.JSONFileConfig[], url?: string, dataKey?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a Multi Texture Atlas, or array of multi atlases, to the current load queue.
@@ -47086,7 +43662,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.MultiAtlasFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.MultiAtlasFileConfig` for more details.
              * 
              * Instead of passing a URL for the atlas JSON data you can also pass in a well formed JSON object instead.
              * 
@@ -47118,7 +43694,7 @@ declare namespace Phaser {
              * @param baseURL Optional Base URL to use when loading the textures defined in the atlas data.
              * @param atlasXhrSettings An XHR Settings configuration object for the atlas json file. Used in replacement of the Loaders default XHR Settings.
              */
-            multiatlas(key: string | Phaser.Loader.FileTypes.MultiAtlasFileConfig | Phaser.Loader.FileTypes.MultiAtlasFileConfig[], atlasURL?: string, path?: string, baseURL?: string, atlasXhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            multiatlas(key: string | Phaser.Types.Loader.FileTypes.MultiAtlasFileConfig | Phaser.Types.Loader.FileTypes.MultiAtlasFileConfig[], atlasURL?: string, path?: string, baseURL?: string, atlasXhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds an array of Script files to the current load queue.
@@ -47172,7 +43748,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.MultiScriptFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.MultiScriptFileConfig` for more details.
              * 
              * Once all the files have finished loading they will automatically be converted into a script element
              * via `document.createElement('script')`. They will have their language set to JavaScript, `defer` set to
@@ -47188,7 +43764,7 @@ declare namespace Phaser {
              * @param extension The default file extension to use if no url is provided. Default 'js'.
              * @param xhrSettings Extra XHR Settings specifically for these files.
              */
-            scripts(key: string | Phaser.Loader.FileTypes.MultiScriptFileConfig | Phaser.Loader.FileTypes.MultiScriptFileConfig[], url?: string[], extension?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            scripts(key: string | Phaser.Types.Loader.FileTypes.MultiScriptFileConfig | Phaser.Types.Loader.FileTypes.MultiScriptFileConfig[], url?: string[], extension?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a JSON File Pack, or array of packs, to the current load queue.
@@ -47265,7 +43841,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.PackFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.PackFileConfig` for more details.
              * 
              * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
              * key. For example, if the prefix was `LEVEL1.` and the key was `Waves` the final key will be `LEVEL1.Waves` and
@@ -47302,7 +43878,7 @@ declare namespace Phaser {
              * @param dataKey When the JSON file loads only this property will be stored in the Cache.
              * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            pack(key: string | Phaser.Loader.FileTypes.PackFileConfig | Phaser.Loader.FileTypes.PackFileConfig[], url?: string, dataKey?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            pack(key: string | Phaser.Types.Loader.FileTypes.PackFileConfig | Phaser.Types.Loader.FileTypes.PackFileConfig[], url?: string, dataKey?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a Plugin Script file, or array of plugin files, to the current load queue.
@@ -47335,7 +43911,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.PluginFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.PluginFileConfig` for more details.
              * 
              * Once the file has finished loading it will automatically be converted into a script element
              * via `document.createElement('script')`. It will have its language set to JavaScript, `defer` set to
@@ -47356,7 +43932,7 @@ declare namespace Phaser {
              * @param mapping If this plugin is to be injected into the Scene, this is the property key used.
              * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            plugin(key: string | Phaser.Loader.FileTypes.PluginFileConfig | Phaser.Loader.FileTypes.PluginFileConfig[], url?: string | Function, start?: boolean, mapping?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            plugin(key: string | Phaser.Types.Loader.FileTypes.PluginFileConfig | Phaser.Types.Loader.FileTypes.PluginFileConfig[], url?: string | Function, start?: boolean, mapping?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds an external Scene file, or array of Scene files, to the current load queue.
@@ -47420,7 +43996,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.SceneFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.SceneFileConfig` for more details.
              * 
              * Once the file has finished loading it will be added to the Scene Manager.
              * 
@@ -47446,7 +44022,7 @@ declare namespace Phaser {
              * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
              * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            sceneFile(key: string | Phaser.Loader.FileTypes.SceneFileConfig | Phaser.Loader.FileTypes.SceneFileConfig[], url?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            sceneFile(key: string | Phaser.Types.Loader.FileTypes.SceneFileConfig | Phaser.Types.Loader.FileTypes.SceneFileConfig[], url?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a Scene Plugin Script file, or array of plugin files, to the current load queue.
@@ -47479,7 +44055,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.ScenePluginFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.ScenePluginFileConfig` for more details.
              * 
              * Once the file has finished loading it will automatically be converted into a script element
              * via `document.createElement('script')`. It will have its language set to JavaScript, `defer` set to
@@ -47500,7 +44076,7 @@ declare namespace Phaser {
              * @param sceneKey If this plugin is to be added to the Scene, this is the property key for it.
              * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            scenePlugin(key: string | Phaser.Loader.FileTypes.ScenePluginFileConfig | Phaser.Loader.FileTypes.ScenePluginFileConfig[], url?: string | Function, systemKey?: string, sceneKey?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            scenePlugin(key: string | Phaser.Types.Loader.FileTypes.ScenePluginFileConfig | Phaser.Types.Loader.FileTypes.ScenePluginFileConfig[], url?: string | Function, systemKey?: string, sceneKey?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a Script file, or array of Script files, to the current load queue.
@@ -47533,7 +44109,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.ScriptFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.ScriptFileConfig` for more details.
              * 
              * Once the file has finished loading it will automatically be converted into a script element
              * via `document.createElement('script')`. It will have its language set to JavaScript, `defer` set to
@@ -47552,7 +44128,7 @@ declare namespace Phaser {
              * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
              * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            script(key: string | Phaser.Loader.FileTypes.ScriptFileConfig | Phaser.Loader.FileTypes.ScriptFileConfig[], url?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            script(key: string | Phaser.Types.Loader.FileTypes.ScriptFileConfig | Phaser.Types.Loader.FileTypes.ScriptFileConfig[], url?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a Sprite Sheet Image, or array of Sprite Sheet Images, to the current load queue.
@@ -47604,7 +44180,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.SpriteSheetFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.SpriteSheetFileConfig` for more details.
              * 
              * Once the file has finished loading you can use it as a texture for a Game Object by referencing its key:
              * 
@@ -47655,7 +44231,7 @@ declare namespace Phaser {
              * @param frameConfig The frame configuration object. At a minimum it should have a `frameWidth` property.
              * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            spritesheet(key: string | Phaser.Loader.FileTypes.SpriteSheetFileConfig | Phaser.Loader.FileTypes.SpriteSheetFileConfig[], url?: string, frameConfig?: Phaser.Loader.FileTypes.ImageFrameConfig, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            spritesheet(key: string | Phaser.Types.Loader.FileTypes.SpriteSheetFileConfig | Phaser.Types.Loader.FileTypes.SpriteSheetFileConfig[], url?: string, frameConfig?: Phaser.Types.Loader.FileTypes.ImageFrameConfig, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds an SVG File, or array of SVG Files, to the current load queue. When the files are loaded they
@@ -47692,7 +44268,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.SVGFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.SVGFileConfig` for more details.
              * 
              * Once the file has finished loading you can use it as a texture for a Game Object by referencing its key:
              * 
@@ -47767,7 +44343,7 @@ declare namespace Phaser {
              * @param svgConfig The svg size configuration object.
              * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            svg(key: string | Phaser.Loader.FileTypes.SVGFileConfig | Phaser.Loader.FileTypes.SVGFileConfig[], url?: string, svgConfig?: Phaser.Loader.FileTypes.SVGSizeConfig, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            svg(key: string | Phaser.Types.Loader.FileTypes.SVGFileConfig | Phaser.Types.Loader.FileTypes.SVGFileConfig[], url?: string, svgConfig?: Phaser.Types.Loader.FileTypes.SVGSizeConfig, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a Text file, or array of Text files, to the current load queue.
@@ -47803,7 +44379,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.TextFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.TextFileConfig` for more details.
              * 
              * Once the file has finished loading you can access it from its Cache using its key:
              * 
@@ -47829,7 +44405,7 @@ declare namespace Phaser {
              * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.txt".
              * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            text(key: string | Phaser.Loader.FileTypes.TextFileConfig | Phaser.Loader.FileTypes.TextFileConfig[], url?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            text(key: string | Phaser.Types.Loader.FileTypes.TextFileConfig | Phaser.Types.Loader.FileTypes.TextFileConfig[], url?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a CSV Tilemap file, or array of CSV files, to the current load queue.
@@ -47867,7 +44443,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.TilemapCSVFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.TilemapCSVFileConfig` for more details.
              * 
              * Once the file has finished loading you can access it from its Cache using its key:
              * 
@@ -47893,7 +44469,7 @@ declare namespace Phaser {
              * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.csv`, i.e. if `key` was "alien" then the URL will be "alien.csv".
              * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            tilemapCSV(key: string | Phaser.Loader.FileTypes.TilemapCSVFileConfig | Phaser.Loader.FileTypes.TilemapCSVFileConfig[], url?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            tilemapCSV(key: string | Phaser.Types.Loader.FileTypes.TilemapCSVFileConfig | Phaser.Types.Loader.FileTypes.TilemapCSVFileConfig[], url?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds an Impact.js Tilemap file, or array of map files, to the current load queue.
@@ -47931,7 +44507,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.TilemapImpactFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.TilemapImpactFileConfig` for more details.
              * 
              * Once the file has finished loading you can access it from its Cache using its key:
              * 
@@ -47957,7 +44533,7 @@ declare namespace Phaser {
              * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
              * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            tilemapImpact(key: string | Phaser.Loader.FileTypes.TilemapImpactFileConfig | Phaser.Loader.FileTypes.TilemapImpactFileConfig[], url?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            tilemapImpact(key: string | Phaser.Types.Loader.FileTypes.TilemapImpactFileConfig | Phaser.Types.Loader.FileTypes.TilemapImpactFileConfig[], url?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a Tiled JSON Tilemap file, or array of map files, to the current load queue.
@@ -47995,7 +44571,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.TilemapJSONFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.TilemapJSONFileConfig` for more details.
              * 
              * Once the file has finished loading you can access it from its Cache using its key:
              * 
@@ -48021,7 +44597,7 @@ declare namespace Phaser {
              * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
              * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            tilemapTiledJSON(key: string | Phaser.Loader.FileTypes.TilemapJSONFileConfig | Phaser.Loader.FileTypes.TilemapJSONFileConfig[], url?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            tilemapTiledJSON(key: string | Phaser.Types.Loader.FileTypes.TilemapJSONFileConfig | Phaser.Types.Loader.FileTypes.TilemapJSONFileConfig[], url?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds a Unity YAML based Texture Atlas, or array of atlases, to the current load queue.
@@ -48065,7 +44641,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.UnityAtlasFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.UnityAtlasFileConfig` for more details.
              * 
              * Once the atlas has finished loading you can use frames from it as textures for a Game Object by referencing its key:
              * 
@@ -48116,7 +44692,7 @@ declare namespace Phaser {
              * @param textureXhrSettings An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.
              * @param atlasXhrSettings An XHR Settings configuration object for the atlas data file. Used in replacement of the Loaders default XHR Settings.
              */
-            unityAtlas(key: string | Phaser.Loader.FileTypes.UnityAtlasFileConfig | Phaser.Loader.FileTypes.UnityAtlasFileConfig[], textureURL?: string | string[], atlasURL?: string, textureXhrSettings?: Phaser.Loader.Types.XHRSettingsObject, atlasXhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            unityAtlas(key: string | Phaser.Types.Loader.FileTypes.UnityAtlasFileConfig | Phaser.Types.Loader.FileTypes.UnityAtlasFileConfig[], textureURL?: string | string[], atlasURL?: string, textureXhrSettings?: Phaser.Types.Loader.XHRSettingsObject, atlasXhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * Adds an XML file, or array of XML files, to the current load queue.
@@ -48152,7 +44728,7 @@ declare namespace Phaser {
              * });
              * ```
              * 
-             * See the documentation for `Phaser.Loader.FileTypes.XMLFileConfig` for more details.
+             * See the documentation for `Phaser.Types.Loader.FileTypes.XMLFileConfig` for more details.
              * 
              * Once the file has finished loading you can access it from its Cache using its key:
              * 
@@ -48178,7 +44754,7 @@ declare namespace Phaser {
              * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.xml`, i.e. if `key` was "alien" then the URL will be "alien.xml".
              * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            xml(key: string | Phaser.Loader.FileTypes.XMLFileConfig | Phaser.Loader.FileTypes.XMLFileConfig[], url?: string, xhrSettings?: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            xml(key: string | Phaser.Types.Loader.FileTypes.XMLFileConfig | Phaser.Types.Loader.FileTypes.XMLFileConfig[], url?: string, xhrSettings?: Phaser.Types.Loader.XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
              * The Scene which owns this Loader instance.
@@ -48254,7 +44830,7 @@ declare namespace Phaser {
             /**
              * xhr specific global settings (can be overridden on a per-file basis)
              */
-            xhr: Phaser.Loader.Types.XHRSettingsObject;
+            xhr: Phaser.Types.Loader.XHRSettingsObject;
 
             /**
              * The crossOrigin value applied to loaded images. Very often this needs to be set to 'anonymous'.
@@ -48519,7 +45095,7 @@ declare namespace Phaser {
          * @param global The global XHRSettings object.
          * @param local The local XHRSettings object.
          */
-        function MergeXHRSettings(global: Phaser.Loader.Types.XHRSettingsObject, local: Phaser.Loader.Types.XHRSettingsObject): Phaser.Loader.Types.XHRSettingsObject;
+        function MergeXHRSettings(global: Phaser.Types.Loader.XHRSettingsObject, local: Phaser.Types.Loader.XHRSettingsObject): Phaser.Types.Loader.XHRSettingsObject;
 
         /**
          * A MultiFile is a special kind of parent that contains two, or more, Files as children and looks after
@@ -48602,83 +45178,6 @@ declare namespace Phaser {
 
         }
 
-        namespace Types {
-            type FileConfig = {
-                /**
-                 * The file type string (image, json, etc) for sorting within the Loader.
-                 */
-                type: string;
-                /**
-                 * Unique cache key (unique within its file type)
-                 */
-                key: string;
-                /**
-                 * The URL of the file, not including baseURL.
-                 */
-                url?: string;
-                /**
-                 * The path of the file, not including the baseURL.
-                 */
-                path?: string;
-                /**
-                 * The default extension this file uses.
-                 */
-                extension?: string;
-                /**
-                 * The responseType to be used by the XHR request.
-                 */
-                responseType?: XMLHttpRequestResponseType;
-                /**
-                 * Custom XHR Settings specific to this file and merged with the Loader defaults.
-                 */
-                xhrSettings?: Phaser.Loader.Types.XHRSettingsObject | false;
-                /**
-                 * A config object that can be used by file types to store transitional data.
-                 */
-                config?: any;
-            };
-
-            type XHRSettingsObject = {
-                /**
-                 * The response type of the XHR request, i.e. `blob`, `text`, etc.
-                 */
-                responseType: XMLHttpRequestResponseType;
-                /**
-                 * Should the XHR request use async or not?
-                 */
-                async?: boolean;
-                /**
-                 * Optional username for the XHR request.
-                 */
-                user?: string;
-                /**
-                 * Optional password for the XHR request.
-                 */
-                password?: string;
-                /**
-                 * Optional XHR timeout value.
-                 */
-                timeout?: integer;
-                /**
-                 * This value is used to populate the XHR `setRequestHeader` and is undefined by default.
-                 */
-                header?: string | undefined;
-                /**
-                 * This value is used to populate the XHR `setRequestHeader` and is undefined by default.
-                 */
-                headerValue?: string | undefined;
-                /**
-                 * This value is used to populate the XHR `setRequestHeader` and is undefined by default.
-                 */
-                requestedWith?: string | undefined;
-                /**
-                 * Provide a custom mime-type to use instead of the default.
-                 */
-                overrideMimeType?: string | undefined;
-            };
-
-        }
-
         /**
          * Creates a new XMLHttpRequest (xhr) object based on the given File and XHRSettings
          * and starts the download of it. It uses the Files own XHRSettings and merges them
@@ -48686,7 +45185,7 @@ declare namespace Phaser {
          * @param file The File to download.
          * @param globalXHRSettings The global XHRSettings object.
          */
-        function XHRLoader(file: Phaser.Loader.File, globalXHRSettings: Phaser.Loader.Types.XHRSettingsObject): XMLHttpRequest;
+        function XHRLoader(file: Phaser.Loader.File, globalXHRSettings: Phaser.Types.Loader.XHRSettingsObject): XMLHttpRequest;
 
         /**
          * Creates an XHRSettings Object with default values.
@@ -48696,7 +45195,7 @@ declare namespace Phaser {
          * @param password Optional password for the XHR request. Default ''.
          * @param timeout Optional XHR timeout value. Default 0.
          */
-        function XHRSettings(responseType?: XMLHttpRequestResponseType, async?: boolean, user?: string, password?: string, timeout?: integer): Phaser.Loader.Types.XHRSettingsObject;
+        function XHRSettings(responseType?: XMLHttpRequestResponseType, async?: boolean, user?: string, password?: string, timeout?: integer): Phaser.Types.Loader.XHRSettingsObject;
 
     }
 
@@ -50174,7 +46673,7 @@ declare namespace Phaser {
          * @param cosAmp The cosine value amplitude. Default 1.
          * @param frequency The frequency of the values. Default 1.
          */
-        function SinCosTableGenerator(length: number, sinAmp?: number, cosAmp?: number, frequency?: number): Phaser.Math.Types.SinCosTable;
+        function SinCosTableGenerator(length: number, sinAmp?: number, cosAmp?: number, frequency?: number): Phaser.Types.Math.SinCosTable;
 
         /**
          * Calculate a smoother interpolation percentage of `x` between `min` and `max`.
@@ -50254,35 +46753,6 @@ declare namespace Phaser {
          */
         function TransformXY(x: number, y: number, positionX: number, positionY: number, rotation: number, scaleX: number, scaleY: number, output?: Phaser.Math.Vector2 | Phaser.Geom.Point | object): Phaser.Math.Vector2 | Phaser.Geom.Point | object;
 
-        namespace Types {
-            type SinCosTable = {
-                /**
-                 * The sine value.
-                 */
-                sin: number;
-                /**
-                 * The cosine value.
-                 */
-                cos: number;
-                /**
-                 * The length.
-                 */
-                length: number;
-            };
-
-            type Vector2Like = {
-                /**
-                 * The x component.
-                 */
-                x?: number;
-                /**
-                 * The y component.
-                 */
-                y?: number;
-            };
-
-        }
-
         /**
          * A representation of a vector in 2D space.
          * 
@@ -50294,7 +46764,7 @@ declare namespace Phaser {
              * @param x The x component, or an object with `x` and `y` properties.
              * @param y The y component.
              */
-            constructor(x?: number | Phaser.Math.Types.Vector2Like, y?: number);
+            constructor(x?: number | Phaser.Types.Math.Vector2Like, y?: number);
 
             /**
              * The x component of this Vector.
@@ -50321,7 +46791,7 @@ declare namespace Phaser {
              * Set the component values of this Vector from a given Vector2Like object.
              * @param obj The object containing the component values to set for this Vector.
              */
-            setFromObject(obj: Vector2Like): Phaser.Math.Vector2;
+            setFromObject(obj: Phaser.Types.Math.Vector2Like): Phaser.Math.Vector2;
 
             /**
              * Set the `x` and `y` components of the this Vector to the given `x` and `y` values.
@@ -50959,6 +47429,5206 @@ declare namespace Phaser {
          * @param max The maximum value.
          */
         function Wrap(value: number, min: number, max: number): number;
+
+    }
+
+    /**
+     * The root types namespace.
+     */
+    namespace Types {
+        namespace Actions {
+            type CallCallback = (item: Phaser.GameObjects.GameObject)=>void;
+
+            type GridAlignConfig = {
+                /**
+                 * The width of the grid in items (not pixels). -1 means lay all items out horizontally, regardless of quantity.
+                 *                                  If both this value and height are set to -1 then this value overrides it and the `height` value is ignored.
+                 */
+                width?: integer;
+                /**
+                 * The height of the grid in items (not pixels). -1 means lay all items out vertically, regardless of quantity.
+                 *                                   If both this value and `width` are set to -1 then `width` overrides it and this value is ignored.
+                 */
+                height?: integer;
+                /**
+                 * The width of the cell, in pixels, in which the item is positioned.
+                 */
+                cellWidth?: integer;
+                /**
+                 * The height of the cell, in pixels, in which the item is positioned.
+                 */
+                cellHeight?: integer;
+                /**
+                 * The alignment position. One of the Phaser.Display.Align consts such as `TOP_LEFT` or `RIGHT_CENTER`.
+                 */
+                position?: integer;
+                /**
+                 * Optionally place the top-left of the final grid at this coordinate.
+                 */
+                x?: number;
+                /**
+                 * Optionally place the top-left of the final grid at this coordinate.
+                 */
+                y?: number;
+            };
+
+        }
+
+        namespace Animations {
+            type Animation = {
+                /**
+                 * The key that the animation will be associated with. i.e. sprite.animations.play(key)
+                 */
+                key?: string;
+                /**
+                 * An object containing data used to generate the frames for the animation
+                 */
+                frames?: Phaser.Types.Animations.AnimationFrame[];
+                /**
+                 * The key of the texture all frames of the animation will use. Can be overridden on a per frame basis.
+                 */
+                defaultTextureKey?: string;
+                /**
+                 * The frame rate of playback in frames per second (default 24 if duration is null)
+                 */
+                frameRate?: integer;
+                /**
+                 * How long the animation should play for in milliseconds. If not given its derived from frameRate.
+                 */
+                duration?: integer;
+                /**
+                 * Skip frames if the time lags, or always advanced anyway?
+                 */
+                skipMissedFrames?: boolean;
+                /**
+                 * Delay before starting playback. Value given in milliseconds.
+                 */
+                delay?: integer;
+                /**
+                 * Number of times to repeat the animation (-1 for infinity)
+                 */
+                repeat?: integer;
+                /**
+                 * Delay before the animation repeats. Value given in milliseconds.
+                 */
+                repeatDelay?: integer;
+                /**
+                 * Should the animation yoyo? (reverse back down to the start) before repeating?
+                 */
+                yoyo?: boolean;
+                /**
+                 * Should sprite.visible = true when the animation starts to play?
+                 */
+                showOnStart?: boolean;
+                /**
+                 * Should sprite.visible = false when the animation finishes?
+                 */
+                hideOnComplete?: boolean;
+            };
+
+            type AnimationFrame = {
+                /**
+                 * The key that the animation will be associated with. i.e. sprite.animations.play(key)
+                 */
+                key: string;
+                /**
+                 * [description]
+                 */
+                frame: string | number;
+                /**
+                 * [description]
+                 */
+                duration?: number;
+                /**
+                 * [description]
+                 */
+                visible?: boolean;
+            };
+
+            type GenerateFrameNames = {
+                /**
+                 * The string to append to every resulting frame name if using a range or an array of `frames`.
+                 */
+                prefix?: string;
+                /**
+                 * If `frames` is not provided, the number of the first frame to return.
+                 */
+                start?: integer;
+                /**
+                 * If `frames` is not provided, the number of the last frame to return.
+                 */
+                end?: integer;
+                /**
+                 * The string to append to every resulting frame name if using a range or an array of `frames`.
+                 */
+                suffix?: string;
+                /**
+                 * The minimum expected lengths of each resulting frame's number. Numbers will be left-padded with zeroes until they are this long, then prepended and appended to create the resulting frame name.
+                 */
+                zeroPad?: integer;
+                /**
+                 * The array to append the created configuration objects to.
+                 */
+                outputArray?: Phaser.Types.Animations.AnimationFrame[];
+                /**
+                 * If provided as an array, the range defined by `start` and `end` will be ignored and these frame numbers will be used.
+                 */
+                frames?: boolean;
+            };
+
+            type GenerateFrameNumbers = {
+                /**
+                 * The starting frame of the animation.
+                 */
+                start?: integer;
+                /**
+                 * The ending frame of the animation.
+                 */
+                end?: integer;
+                /**
+                 * A frame to put at the beginning of the animation, before `start` or `outputArray` or `frames`.
+                 */
+                first?: boolean | integer;
+                /**
+                 * An array to concatenate the output onto.
+                 */
+                outputArray?: Phaser.Types.Animations.AnimationFrame[];
+                /**
+                 * A custom sequence of frames.
+                 */
+                frames?: boolean | integer[];
+            };
+
+            type JSONAnimation = {
+                /**
+                 * The key that the animation will be associated with. i.e. sprite.animations.play(key)
+                 */
+                key: string;
+                /**
+                 * A frame based animation (as opposed to a bone based animation)
+                 */
+                type: string;
+                /**
+                 * [description]
+                 */
+                frames: Phaser.Types.Animations.JSONAnimationFrame[];
+                /**
+                 * The frame rate of playback in frames per second (default 24 if duration is null)
+                 */
+                frameRate: integer;
+                /**
+                 * How long the animation should play for in milliseconds. If not given its derived from frameRate.
+                 */
+                duration: integer;
+                /**
+                 * Skip frames if the time lags, or always advanced anyway?
+                 */
+                skipMissedFrames: boolean;
+                /**
+                 * Delay before starting playback. Value given in milliseconds.
+                 */
+                delay: integer;
+                /**
+                 * Number of times to repeat the animation (-1 for infinity)
+                 */
+                repeat: integer;
+                /**
+                 * Delay before the animation repeats. Value given in milliseconds.
+                 */
+                repeatDelay: integer;
+                /**
+                 * Should the animation yoyo? (reverse back down to the start) before repeating?
+                 */
+                yoyo: boolean;
+                /**
+                 * Should sprite.visible = true when the animation starts to play?
+                 */
+                showOnStart: boolean;
+                /**
+                 * Should sprite.visible = false when the animation finishes?
+                 */
+                hideOnComplete: boolean;
+            };
+
+            type JSONAnimationFrame = {
+                /**
+                 * The key of the Texture this AnimationFrame uses.
+                 */
+                key: string;
+                /**
+                 * The key of the Frame within the Texture that this AnimationFrame uses.
+                 */
+                frame: string | integer;
+                /**
+                 * Additional time (in ms) that this frame should appear for during playback.
+                 */
+                duration: number;
+            };
+
+            type JSONAnimations = {
+                /**
+                 * An array of all Animations added to the Animation Manager.
+                 */
+                anims: Phaser.Types.Animations.JSONAnimation[];
+                /**
+                 * The global time scale of the Animation Manager.
+                 */
+                globalTimeScale: number;
+            };
+
+        }
+
+        namespace Cameras {
+            namespace Scene2D {
+                type CameraConfig = {
+                    /**
+                     * The name of the Camera.
+                     */
+                    name?: string;
+                    /**
+                     * The horizontal position of the Camera viewport.
+                     */
+                    x?: integer;
+                    /**
+                     * The vertical position of the Camera viewport.
+                     */
+                    y?: integer;
+                    /**
+                     * The width of the Camera viewport.
+                     */
+                    width?: integer;
+                    /**
+                     * The height of the Camera viewport.
+                     */
+                    height?: integer;
+                    /**
+                     * The default zoom level of the Camera.
+                     */
+                    zoom?: number;
+                    /**
+                     * The rotation of the Camera, in radians.
+                     */
+                    rotation?: number;
+                    /**
+                     * Should the Camera round pixels before rendering?
+                     */
+                    roundPixels?: boolean;
+                    /**
+                     * The horizontal scroll position of the Camera.
+                     */
+                    scrollX?: number;
+                    /**
+                     * The vertical scroll position of the Camera.
+                     */
+                    scrollY?: number;
+                    /**
+                     * A CSS color string controlling the Camera background color.
+                     */
+                    backgroundColor?: false | string;
+                    /**
+                     * Defines the Camera bounds.
+                     */
+                    bounds?: object;
+                    /**
+                     * The top-left extent of the Camera bounds.
+                     */
+                    "bounds.x"?: number;
+                    /**
+                     * The top-left extent of the Camera bounds.
+                     */
+                    "bounds.y"?: number;
+                    /**
+                     * The width of the Camera bounds.
+                     */
+                    "bounds.width"?: number;
+                    /**
+                     * The height of the Camera bounds.
+                     */
+                    "bounds.height"?: number;
+                };
+
+                type CameraFadeCallback = (camera: Phaser.Cameras.Scene2D.Camera, progress: number)=>void;
+
+                type CameraFlashCallback = (camera: Phaser.Cameras.Scene2D.Camera, progress: number)=>void;
+
+                type CameraPanCallback = (camera: Phaser.Cameras.Scene2D.Camera, progress: number, x: number, y: number)=>void;
+
+                type CameraShakeCallback = (camera: Phaser.Cameras.Scene2D.Camera, progress: number)=>void;
+
+                type CameraZoomCallback = (camera: Phaser.Cameras.Scene2D.Camera, progress: number, zoom: number)=>void;
+
+                type JSONCamera = {
+                    /**
+                     * The name of the camera
+                     */
+                    name: string;
+                    /**
+                     * The horizontal position of camera
+                     */
+                    x: number;
+                    /**
+                     * The vertical position of camera
+                     */
+                    y: number;
+                    /**
+                     * The width size of camera
+                     */
+                    width: number;
+                    /**
+                     * The height size of camera
+                     */
+                    height: number;
+                    /**
+                     * The zoom of camera
+                     */
+                    zoom: number;
+                    /**
+                     * The rotation of camera
+                     */
+                    rotation: number;
+                    /**
+                     * The round pixels st status of camera
+                     */
+                    roundPixels: boolean;
+                    /**
+                     * The horizontal scroll of camera
+                     */
+                    scrollX: number;
+                    /**
+                     * The vertical scroll of camera
+                     */
+                    scrollY: number;
+                    /**
+                     * The background color of camera
+                     */
+                    backgroundColor: string;
+                    /**
+                     * The bounds of camera
+                     */
+                    bounds?: Phaser.Types.Cameras.Scene2D.JSONCameraBounds | undefined;
+                };
+
+                type JSONCameraBounds = {
+                    /**
+                     * The horizontal position of camera
+                     */
+                    x: number;
+                    /**
+                     * The vertical position of camera
+                     */
+                    y: number;
+                    /**
+                     * The width size of camera
+                     */
+                    width: number;
+                    /**
+                     * The height size of camera
+                     */
+                    height: number;
+                };
+
+            }
+
+            namespace Controls {
+                type FixedKeyControlConfig = {
+                    /**
+                     * The Camera that this Control will update.
+                     */
+                    camera?: Phaser.Cameras.Scene2D.Camera;
+                    /**
+                     * The Key to be pressed that will move the Camera left.
+                     */
+                    left?: Phaser.Input.Keyboard.Key;
+                    /**
+                     * The Key to be pressed that will move the Camera right.
+                     */
+                    right?: Phaser.Input.Keyboard.Key;
+                    /**
+                     * The Key to be pressed that will move the Camera up.
+                     */
+                    up?: Phaser.Input.Keyboard.Key;
+                    /**
+                     * The Key to be pressed that will move the Camera down.
+                     */
+                    down?: Phaser.Input.Keyboard.Key;
+                    /**
+                     * The Key to be pressed that will zoom the Camera in.
+                     */
+                    zoomIn?: Phaser.Input.Keyboard.Key;
+                    /**
+                     * The Key to be pressed that will zoom the Camera out.
+                     */
+                    zoomOut?: Phaser.Input.Keyboard.Key;
+                    /**
+                     * The speed at which the camera will zoom if the `zoomIn` or `zoomOut` keys are pressed.
+                     */
+                    zoomSpeed?: number;
+                    /**
+                     * The horizontal and vertical speed the camera will move.
+                     */
+                    speed?: number | Object;
+                };
+
+                type SmoothedKeyControlConfig = {
+                    /**
+                     * The Camera that this Control will update.
+                     */
+                    camera?: Phaser.Cameras.Scene2D.Camera;
+                    /**
+                     * The Key to be pressed that will move the Camera left.
+                     */
+                    left?: Phaser.Input.Keyboard.Key;
+                    /**
+                     * The Key to be pressed that will move the Camera right.
+                     */
+                    right?: Phaser.Input.Keyboard.Key;
+                    /**
+                     * The Key to be pressed that will move the Camera up.
+                     */
+                    up?: Phaser.Input.Keyboard.Key;
+                    /**
+                     * The Key to be pressed that will zoom the Camera in.
+                     */
+                    zoomIn?: Phaser.Input.Keyboard.Key;
+                    /**
+                     * The Key to be pressed that will zoom the Camera out.
+                     */
+                    zoomOut?: Phaser.Input.Keyboard.Key;
+                    /**
+                     * The speed at which the camera will zoom if the `zoomIn` or `zoomOut` keys are pressed.
+                     */
+                    zoomSpeed?: number;
+                    /**
+                     * The horizontal and vertical acceleration the camera will move.
+                     */
+                    acceleration?: number | Object;
+                    /**
+                     * The horizontal and vertical drag applied to the camera when it is moving.
+                     */
+                    drag?: number | Object;
+                    /**
+                     * The maximum horizontal and vertical speed the camera will move.
+                     */
+                    maxSpeed?: number | Object;
+                };
+
+            }
+
+        }
+
+        namespace Core {
+            /**
+             * Config object containing various sound settings.
+             */
+            type AudioConfig = {
+                /**
+                 * Use HTML5 Audio instead of Web Audio.
+                 */
+                disableWebAudio?: boolean;
+                /**
+                 * An existing Web Audio context.
+                 */
+                context?: AudioContext;
+                /**
+                 * Disable all audio output.
+                 */
+                noAudio?: boolean;
+            };
+
+            type BannerConfig = {
+                /**
+                 * Omit Phaser's name and version from the banner.
+                 */
+                hidePhaser?: boolean;
+                /**
+                 * The color of the banner text.
+                 */
+                text?: string;
+                /**
+                 * The background colors of the banner.
+                 */
+                background?: string[];
+            };
+
+            type BootCallback = (game: Phaser.Game)=>void;
+
+            type CallbacksConfig = {
+                /**
+                 * A function to run at the start of the boot sequence.
+                 */
+                preBoot?: Phaser.Types.Core.BootCallback;
+                /**
+                 * A function to run at the end of the boot sequence. At this point, all the game systems have started and plugins have been loaded.
+                 */
+                postBoot?: Phaser.Types.Core.BootCallback;
+            };
+
+            type DOMContainerConfig = {
+                /**
+                 * Should the game create a div element to act as a DOM Container? Only enable if you're using DOM Element objects. You must provide a parent object if you use this feature.
+                 */
+                createContainer?: boolean;
+                /**
+                 * Should the DOM Container that is created (if `dom.createContainer` is true) be positioned behind (true) or over the top (false, the default) of the game canvas?
+                 */
+                behindCanvas?: boolean;
+            };
+
+            type FPSConfig = {
+                /**
+                 * The minimum acceptable rendering rate, in frames per second.
+                 */
+                min?: integer;
+                /**
+                 * The optimum rendering rate, in frames per second.
+                 */
+                target?: integer;
+                /**
+                 * Use setTimeout instead of requestAnimationFrame to run the game loop.
+                 */
+                forceSetTimeOut?: boolean;
+                /**
+                 * Calculate the average frame delta from this many consecutive frame intervals.
+                 */
+                deltaHistory?: integer;
+                /**
+                 * The amount of frames the time step counts before we trust the delta values again.
+                 */
+                panicMax?: integer;
+            };
+
+            type GameConfig = {
+                /**
+                 * The width of the game, in game pixels.
+                 */
+                width?: integer | string;
+                /**
+                 * The height of the game, in game pixels.
+                 */
+                height?: integer | string;
+                /**
+                 * Simple scale applied to the game canvas. 2 is double size, 0.5 is half size, etc.
+                 */
+                zoom?: number;
+                /**
+                 * The size of each game pixel, in canvas pixels. Values larger than 1 are "high" resolution.
+                 */
+                resolution?: number;
+                /**
+                 * Which renderer to use. Phaser.AUTO, Phaser.CANVAS, Phaser.HEADLESS, or Phaser.WEBGL. AUTO picks WEBGL if available, otherwise CANVAS.
+                 */
+                type?: number;
+                /**
+                 * The DOM element that will contain the game canvas, or its `id`. If undefined or if the named element doesn't exist, the game canvas is inserted directly into the document body. If `null` no parent will be used and you are responsible for adding the canvas to your environment.
+                 */
+                parent?: HTMLElement | string;
+                /**
+                 * Provide your own Canvas element for Phaser to use instead of creating one.
+                 */
+                canvas?: HTMLCanvasElement;
+                /**
+                 * CSS styles to apply to the game canvas instead of Phasers default styles.
+                 */
+                canvasStyle?: string;
+                /**
+                 * Provide your own Canvas Context for Phaser to use, instead of creating one.
+                 */
+                context?: CanvasRenderingContext2D;
+                /**
+                 * A scene or scenes to add to the game. If several are given, the first is started; the remainder are started only if they have `{ active: true }`. See the `sceneConfig` argument in `Phaser.Scenes.SceneManager#add`.
+                 */
+                scene?: Phaser.Scene | Phaser.Scene[] | Phaser.Types.Scenes.SettingsConfig | Phaser.Types.Scenes.SettingsConfig[] | Phaser.Types.Scenes.CreateSceneFromObjectConfig | Phaser.Types.Scenes.CreateSceneFromObjectConfig[] | Function;
+                /**
+                 * Seed for the random number generator.
+                 */
+                seed?: string[];
+                /**
+                 * The title of the game. Shown in the browser console.
+                 */
+                title?: string;
+                /**
+                 * The URL of the game. Shown in the browser console.
+                 */
+                url?: string;
+                /**
+                 * The version of the game. Shown in the browser console.
+                 */
+                version?: string;
+                /**
+                 * Automatically call window.focus() when the game boots. Usually necessary to capture input events if the game is in a separate frame.
+                 */
+                autoFocus?: boolean;
+                /**
+                 * Input configuration, or `false` to disable all game input.
+                 */
+                input?: boolean | Phaser.Types.Core.InputConfig;
+                /**
+                 * Disable the browser's default 'contextmenu' event (usually triggered by a right-button mouse click).
+                 */
+                disableContextMenu?: boolean;
+                /**
+                 * Whether the game canvas will have a transparent background.
+                 */
+                transparent?: boolean;
+                /**
+                 * Configuration for the banner printed in the browser console when the game starts.
+                 */
+                banner?: boolean | Phaser.Types.Core.BannerConfig;
+                /**
+                 * The DOM Container configuration object.
+                 */
+                dom?: Phaser.Types.Core.DOMContainerConfig;
+                /**
+                 * Game loop configuration.
+                 */
+                fps?: Phaser.Types.Core.FPSConfig;
+                /**
+                 * Game renderer configuration.
+                 */
+                render?: Phaser.Types.Core.RenderConfig;
+                /**
+                 * The background color of the game canvas. The default is black.
+                 */
+                backgroundColor?: string | number;
+                /**
+                 * Optional callbacks to run before or after game boot.
+                 */
+                callbacks?: Phaser.Types.Core.CallbacksConfig;
+                /**
+                 * Loader configuration.
+                 */
+                loader?: Phaser.Types.Core.LoaderConfig;
+                /**
+                 * Images configuration.
+                 */
+                images?: Phaser.Types.Core.ImagesConfig;
+                /**
+                 * Physics configuration.
+                 */
+                physics?: Phaser.Types.Core.PhysicsConfig;
+                /**
+                 * Plugins to install.
+                 */
+                plugins?: Phaser.Types.Core.PluginObject | Phaser.Types.Core.PluginObjectItem[];
+                /**
+                 * The Scale Manager configuration.
+                 */
+                scale?: Phaser.Types.Core.ScaleConfig;
+                /**
+                 * The Audio Configuration object.
+                 */
+                audio?: Phaser.Types.Core.AudioConfig;
+            };
+
+            type GamepadInputConfig = {
+                /**
+                 * Where the Gamepad Manager listens for gamepad input events.
+                 */
+                target?: any;
+            };
+
+            type ImagesConfig = {
+                /**
+                 * URL to use for the 'default' texture.
+                 */
+                default?: string;
+                /**
+                 * URL to use for the 'missing' texture.
+                 */
+                missing?: string;
+            };
+
+            type InputConfig = {
+                /**
+                 * Keyboard input configuration. `true` uses the default configuration and `false` disables keyboard input.
+                 */
+                keyboard?: boolean | Phaser.Types.Core.KeyboardInputConfig;
+                /**
+                 * Mouse input configuration. `true` uses the default configuration and `false` disables mouse input.
+                 */
+                mouse?: boolean | Phaser.Types.Core.MouseInputConfig;
+                /**
+                 * Touch input configuration. `true` uses the default configuration and `false` disables touch input.
+                 */
+                touch?: boolean | Phaser.Types.Core.TouchInputConfig;
+                /**
+                 * Gamepad input configuration. `true` enables gamepad input.
+                 */
+                gamepad?: boolean | Phaser.Types.Core.GamepadInputConfig;
+                /**
+                 * The maximum number of touch pointers. See {@link Phaser.Input.InputManager#pointers}.
+                 */
+                activePointers?: integer;
+                /**
+                 * The smoothing factor to apply during Pointer movement. See {@link Phaser.Input.Pointer#smoothFactor}.
+                 */
+                smoothFactor?: number;
+                /**
+                 * Should Phaser use a queued input system for native DOM Events or not?
+                 */
+                inputQueue?: boolean;
+                /**
+                 * Should Phaser listen for input events on the Window? If you disable this, events like 'POINTER_UP_OUTSIDE' will no longer fire.
+                 */
+                windowEvents?: boolean;
+            };
+
+            type KeyboardInputConfig = {
+                /**
+                 * Where the Keyboard Manager listens for keyboard input events.
+                 */
+                target?: any;
+                /**
+                 * `preventDefault` will be called on every non-modified key which has a key code in this array. By default it is empty.
+                 */
+                capture?: integer[];
+            };
+
+            type LoaderConfig = {
+                /**
+                 * A URL used to resolve paths given to the loader. Example: 'http://labs.phaser.io/assets/'.
+                 */
+                baseURL?: string;
+                /**
+                 * A URL path used to resolve relative paths given to the loader. Example: 'images/sprites/'.
+                 */
+                path?: string;
+                /**
+                 * The maximum number of resources the loader will start loading at once.
+                 */
+                maxParallelDownloads?: integer;
+                /**
+                 * 'anonymous', 'use-credentials', or `undefined`. If you're not making cross-origin requests, leave this as `undefined`. See {@link https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_settings_attributes}.
+                 */
+                crossOrigin?: string | undefined;
+                /**
+                 * The response type of the XHR request, e.g. `blob`, `text`, etc.
+                 */
+                responseType?: string;
+                /**
+                 * Should the XHR request use async or not?
+                 */
+                async?: boolean;
+                /**
+                 * Optional username for all XHR requests.
+                 */
+                user?: string;
+                /**
+                 * Optional password for all XHR requests.
+                 */
+                password?: string;
+                /**
+                 * Optional XHR timeout value, in ms.
+                 */
+                timeout?: integer;
+            };
+
+            type MouseInputConfig = {
+                /**
+                 * Where the Mouse Manager listens for mouse input events. The default is the game canvas.
+                 */
+                target?: any;
+                /**
+                 * Whether mouse input events have `preventDefault` called on them.
+                 */
+                capture?: boolean;
+            };
+
+            /**
+             * This callback type is completely empty, a no-operation.
+             */
+            type NOOP = ()=>void;
+
+            type PhysicsConfig = {
+                /**
+                 * The default physics system. It will be started for each scene. Phaser provides 'arcade', 'impact', and 'matter'.
+                 */
+                default?: string;
+                /**
+                 * Arcade Physics configuration.
+                 */
+                arcade?: Phaser.Types.Physics.Arcade.ArcadeWorldConfig;
+                /**
+                 * Impact Physics configuration.
+                 */
+                impact?: Phaser.Types.Physics.Impact.WorldConfig;
+                /**
+                 * Matter Physics configuration.
+                 */
+                matter?: Phaser.Types.Physics.Matter.MatterWorldConfig;
+            };
+
+            type PluginObject = {
+                /**
+                 * Global plugins to install.
+                 */
+                global?: Phaser.Types.Core.PluginObjectItem[];
+                /**
+                 * Scene plugins to install.
+                 */
+                scene?: Phaser.Types.Core.PluginObjectItem[];
+                /**
+                 * The default set of scene plugins (names).
+                 */
+                default?: string[];
+                /**
+                 * Plugins to *add* to the default set of scene plugins.
+                 */
+                defaultMerge?: string[];
+            };
+
+            type PluginObjectItem = {
+                /**
+                 * A key to identify the plugin in the Plugin Manager.
+                 */
+                key?: string;
+                /**
+                 * The plugin itself. Usually a class/constructor.
+                 */
+                plugin?: any;
+                /**
+                 * Whether the plugin should be started automatically.
+                 */
+                start?: boolean;
+                /**
+                 * For a scene plugin, add the plugin to the scene's systems object under this key (`this.sys.KEY`, from the scene).
+                 */
+                systemKey?: string;
+                /**
+                 * For a scene plugin, add the plugin to the scene object under this key (`this.KEY`, from the scene).
+                 */
+                sceneKey?: string;
+                /**
+                 * If this plugin is to be injected into the Scene Systems, this is the property key map used.
+                 */
+                mapping?: string;
+                /**
+                 * Arbitrary data passed to the plugin's init() method.
+                 */
+                data?: any;
+            };
+
+            type RenderConfig = {
+                /**
+                 * When set to `true`, WebGL uses linear interpolation to draw scaled or rotated textures, giving a smooth appearance. When set to `false`, WebGL uses nearest-neighbor interpolation, giving a crisper appearance. `false` also disables antialiasing of the game canvas itself, if the browser supports it, when the game canvas is scaled.
+                 */
+                antialias?: boolean;
+                /**
+                 * Sets `antialias` and `roundPixels` to true. This is the best setting for pixel-art games.
+                 */
+                pixelArt?: boolean;
+                /**
+                 * Draw texture-based Game Objects at only whole-integer positions. Game Objects without textures, like Graphics, ignore this property.
+                 */
+                roundPixels?: boolean;
+                /**
+                 * Whether the game canvas will be transparent.
+                 */
+                transparent?: boolean;
+                /**
+                 * Whether the game canvas will be cleared between each rendering frame.
+                 */
+                clearBeforeRender?: boolean;
+                /**
+                 * In WebGL mode, the drawing buffer contains colors with pre-multiplied alpha.
+                 */
+                premultipliedAlpha?: boolean;
+                /**
+                 * Let the browser abort creating a WebGL context if it judges performance would be unacceptable.
+                 */
+                failIfMajorPerformanceCaveat?: boolean;
+                /**
+                 * "high-performance", "low-power" or "default". A hint to the browser on how much device power the game might use.
+                 */
+                powerPreference?: string;
+                /**
+                 * The default WebGL batch size.
+                 */
+                batchSize?: integer;
+                /**
+                 * The maximum number of lights allowed to be visible within range of a single Camera in the LightManager.
+                 */
+                maxLights?: integer;
+            };
+
+            type ScaleConfig = {
+                /**
+                 * The base width of your game. Can be an integer or a string: '100%'. If a string it will only work if you have set a parent element that has a size.
+                 */
+                width?: integer | string;
+                /**
+                 * The base height of your game. Can be an integer or a string: '100%'. If a string it will only work if you have set a parent element that has a size.
+                 */
+                height?: integer | string;
+                /**
+                 * The zoom value of the game canvas.
+                 */
+                zoom?: Phaser.Scale.ZoomType | integer;
+                /**
+                 * The rendering resolution of the canvas. This is reserved for future use and is currently ignored.
+                 */
+                resolution?: number;
+                /**
+                 * The DOM element that will contain the game canvas, or its `id`. If undefined, or if the named element doesn't exist, the game canvas is inserted directly into the document body. If `null` no parent will be used and you are responsible for adding the canvas to your environment.
+                 */
+                parent?: HTMLElement | string;
+                /**
+                 * Is the Scale Manager allowed to adjust the CSS height property of the parent and/or document body to be 100%?
+                 */
+                expandParent?: boolean;
+                /**
+                 * The scale mode.
+                 */
+                mode?: Phaser.Scale.ScaleModeType;
+                /**
+                 * The minimum width and height the canvas can be scaled down to.
+                 */
+                min?: WidthHeight;
+                /**
+                 * The maximum width the canvas can be scaled up to.
+                 */
+                max?: WidthHeight;
+                /**
+                 * Automatically round the display and style sizes of the canvas. This can help with performance in lower-powered devices.
+                 */
+                autoRound?: boolean;
+                /**
+                 * Automatically center the canvas within the parent?
+                 */
+                autoCenter?: Phaser.Scale.CenterType;
+                /**
+                 * How many ms should elapse before checking if the browser size has changed?
+                 */
+                resizeInterval?: integer;
+                /**
+                 * The DOM element that will be sent into full screen mode, or its `id`. If undefined Phaser will create its own div and insert the canvas into it when entering fullscreen mode.
+                 */
+                fullscreenTarget?: HTMLElement | string;
+            };
+
+            type TimeStepCallback = (time: number, average: number, interpolation: number)=>void;
+
+            type TouchInputConfig = {
+                /**
+                 * Where the Touch Manager listens for touch input events. The default is the game canvas.
+                 */
+                target?: any;
+                /**
+                 * Whether touch input events have preventDefault() called on them.
+                 */
+                capture?: boolean;
+            };
+
+            type WidthHeight = {
+                /**
+                 * The width.
+                 */
+                width?: integer;
+                /**
+                 * The height.
+                 */
+                height?: integer;
+            };
+
+        }
+
+        namespace Create {
+            type GenerateTextureCallback = (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D)=>void;
+
+            type GenerateTextureConfig = {
+                /**
+                 * [description]
+                 */
+                data?: any[];
+                /**
+                 * [description]
+                 */
+                canvas?: HTMLCanvasElement;
+                /**
+                 * [description]
+                 */
+                palette?: Phaser.Types.Create.Palette;
+                /**
+                 * The width of each 'pixel' in the generated texture.
+                 */
+                pixelWidth?: number;
+                /**
+                 * The height of each 'pixel' in the generated texture.
+                 */
+                pixelHeight?: number;
+                /**
+                 * [description]
+                 */
+                resizeCanvas?: boolean;
+                /**
+                 * [description]
+                 */
+                clearCanvas?: boolean;
+                /**
+                 * [description]
+                 */
+                preRender?: Phaser.Types.Create.GenerateTextureCallback;
+                /**
+                 * [description]
+                 */
+                postRender?: Phaser.Types.Create.GenerateTextureCallback;
+            };
+
+            type Palette = {
+                /**
+                 * Color value 1.
+                 */
+                "0": string;
+                /**
+                 * Color value 2.
+                 */
+                "1": string;
+                /**
+                 * Color value 3.
+                 */
+                "2": string;
+                /**
+                 * Color value 4.
+                 */
+                "3": string;
+                /**
+                 * Color value 5.
+                 */
+                "4": string;
+                /**
+                 * Color value 6.
+                 */
+                "5": string;
+                /**
+                 * Color value 7.
+                 */
+                "6": string;
+                /**
+                 * Color value 8.
+                 */
+                "7": string;
+                /**
+                 * Color value 9.
+                 */
+                "8": string;
+                /**
+                 * Color value 10.
+                 */
+                "9": string;
+                /**
+                 * Color value 11.
+                 */
+                A: string;
+                /**
+                 * Color value 12.
+                 */
+                B: string;
+                /**
+                 * Color value 13.
+                 */
+                C: string;
+                /**
+                 * Color value 14.
+                 */
+                D: string;
+                /**
+                 * Color value 15.
+                 */
+                E: string;
+                /**
+                 * Color value 16.
+                 */
+                F: string;
+            };
+
+        }
+
+        namespace Curves {
+            type EllipseCurveConfig = {
+                /**
+                 * The x coordinate of the ellipse.
+                 */
+                x?: number;
+                /**
+                 * The y coordinate of the ellipse.
+                 */
+                y?: number;
+                /**
+                 * The horizontal radius of the ellipse.
+                 */
+                xRadius?: number;
+                /**
+                 * The vertical radius of the ellipse.
+                 */
+                yRadius?: number;
+                /**
+                 * The start angle of the ellipse, in degrees.
+                 */
+                startAngle?: integer;
+                /**
+                 * The end angle of the ellipse, in degrees.
+                 */
+                endAngle?: integer;
+                /**
+                 * Sets if the the ellipse rotation is clockwise (true) or anti-clockwise (false)
+                 */
+                clockwise?: boolean;
+                /**
+                 * The rotation of the ellipse, in degrees.
+                 */
+                rotation?: integer;
+            };
+
+            type JSONCurve = {
+                /**
+                 * The of the curve
+                 */
+                type: string;
+                /**
+                 * The arrays of points like `[x1, y1, x2, y2]`
+                 */
+                points: number[];
+            };
+
+            type JSONEllipseCurve = {
+                /**
+                 * The of the curve.
+                 */
+                type: string;
+                /**
+                 * The x coordinate of the ellipse.
+                 */
+                x: number;
+                /**
+                 * The y coordinate of the ellipse.
+                 */
+                y: number;
+                /**
+                 * The horizontal radius of ellipse.
+                 */
+                xRadius: number;
+                /**
+                 * The vertical radius of ellipse.
+                 */
+                yRadius: number;
+                /**
+                 * The start angle of the ellipse, in degrees.
+                 */
+                startAngle: integer;
+                /**
+                 * The end angle of the ellipse, in degrees.
+                 */
+                endAngle: integer;
+                /**
+                 * Sets if the the ellipse rotation is clockwise (true) or anti-clockwise (false)
+                 */
+                clockwise: boolean;
+                /**
+                 * The rotation of ellipse, in degrees.
+                 */
+                rotation: integer;
+            };
+
+            type JSONPath = {
+                /**
+                 * The of the curve.
+                 */
+                type: string;
+                /**
+                 * The X coordinate of the curve's starting point.
+                 */
+                x: number;
+                /**
+                 * The Y coordinate of the path's starting point.
+                 */
+                y: number;
+                /**
+                 * The path is auto closed.
+                 */
+                autoClose: boolean;
+                /**
+                 * The list of the curves
+                 */
+                curves: Phaser.Types.Curves.JSONCurve[];
+            };
+
+        }
+
+        namespace Display {
+            type ColorObject = {
+                /**
+                 * The red color value in the range 0 to 255.
+                 */
+                r: number;
+                /**
+                 * The green color value in the range 0 to 255.
+                 */
+                g: number;
+                /**
+                 * The blue color value in the range 0 to 255.
+                 */
+                b: number;
+                /**
+                 * The alpha color value in the range 0 to 255.
+                 */
+                a: number;
+            };
+
+            type HSVColorObject = {
+                /**
+                 * The hue color value. A number between 0 and 1
+                 */
+                h: number;
+                /**
+                 * The saturation color value. A number between 0 and 1
+                 */
+                s: number;
+                /**
+                 * The lightness color value. A number between 0 and 1
+                 */
+                v: number;
+            };
+
+            type InputColorObject = {
+                /**
+                 * The red color value in the range 0 to 255.
+                 */
+                r?: number;
+                /**
+                 * The green color value in the range 0 to 255.
+                 */
+                g?: number;
+                /**
+                 * The blue color value in the range 0 to 255.
+                 */
+                b?: number;
+                /**
+                 * The alpha color value in the range 0 to 255.
+                 */
+                a?: number;
+            };
+
+        }
+
+        namespace GameObjects {
+            namespace BitmapText {
+                /**
+                 * The font data for an individual character of a Bitmap Font.
+                 * 
+                 * Describes the character's position, size, offset and kerning.
+                 */
+                type BitmapFontCharacterData = {
+                    /**
+                     * The x position of the character.
+                     */
+                    x: number;
+                    /**
+                     * The y position of the character.
+                     */
+                    y: number;
+                    /**
+                     * The width of the character.
+                     */
+                    width: number;
+                    /**
+                     * The height of the character.
+                     */
+                    height: number;
+                    /**
+                     * The center x position of the character.
+                     */
+                    centerX: number;
+                    /**
+                     * The center y position of the character.
+                     */
+                    centerY: number;
+                    /**
+                     * The x offset of the character.
+                     */
+                    xOffset: number;
+                    /**
+                     * The y offset of the character.
+                     */
+                    yOffset: number;
+                    /**
+                     * Extra data for the character.
+                     */
+                    data: object;
+                    /**
+                     * Kerning values, keyed by character code.
+                     */
+                    kerning: {[key: string]: number};
+                };
+
+                /**
+                 * Bitmap Font data that can be used by a BitmapText Game Object.
+                 */
+                type BitmapFontData = {
+                    /**
+                     * The name of the font.
+                     */
+                    font: string;
+                    /**
+                     * The size of the font.
+                     */
+                    size: number;
+                    /**
+                     * The line height of the font.
+                     */
+                    lineHeight: number;
+                    /**
+                     * Whether this font is a retro font (monospace).
+                     */
+                    retroFont: boolean;
+                    /**
+                     * The character data of the font, keyed by character code. Each character datum includes a position, size, offset and more.
+                     */
+                    chars: {[key: number]:  Phaser.Types.GameObjects.BitmapText.BitmapFontCharacterData};
+                };
+
+                type BitmapTextConfig = Phaser.Types.GameObjects.GameObjectConfig & {
+                    /**
+                     * The key of the font to use from the BitmapFont cache.
+                     */
+                    font?: string;
+                    /**
+                     * The string, or array of strings, to be set as the content of this Bitmap Text.
+                     */
+                    text?: string;
+                    /**
+                     * The font size to set.
+                     */
+                    size?: number | false;
+                };
+
+                type BitmapTextSize = {
+                    /**
+                     * The position and size of the BitmapText, taking into account the position and scale of the Game Object.
+                     */
+                    global: Phaser.Types.GameObjects.BitmapText.GlobalBitmapTextSize;
+                    /**
+                     * The position and size of the BitmapText, taking just the font size into account.
+                     */
+                    local: Phaser.Types.GameObjects.BitmapText.LocalBitmapTextSize;
+                };
+
+                type DisplayCallbackConfig = {
+                    /**
+                     * The Dynamic Bitmap Text object that owns this character being rendered.
+                     */
+                    parent: Phaser.GameObjects.DynamicBitmapText;
+                    /**
+                     * The tint of the character being rendered. Always zero in Canvas.
+                     */
+                    tint: Phaser.Types.GameObjects.BitmapText.TintConfig;
+                    /**
+                     * The index of the character being rendered.
+                     */
+                    index: number;
+                    /**
+                     * The character code of the character being rendered.
+                     */
+                    charCode: number;
+                    /**
+                     * The x position of the character being rendered.
+                     */
+                    x: number;
+                    /**
+                     * The y position of the character being rendered.
+                     */
+                    y: number;
+                    /**
+                     * The scale of the character being rendered.
+                     */
+                    scale: number;
+                    /**
+                     * The rotation of the character being rendered.
+                     */
+                    rotation: number;
+                    /**
+                     * Custom data stored with the character being rendered.
+                     */
+                    data: any;
+                };
+
+                type DisplayCallback = (display: Phaser.Types.GameObjects.BitmapText.DisplayCallbackConfig)=>void;
+
+                /**
+                 * The position and size of the Bitmap Text in global space, taking into account the Game Object's scale and world position.
+                 */
+                type GlobalBitmapTextSize = {
+                    /**
+                     * The x position of the BitmapText, taking into account the x position and scale of the Game Object.
+                     */
+                    x: number;
+                    /**
+                     * The y position of the BitmapText, taking into account the y position and scale of the Game Object.
+                     */
+                    y: number;
+                    /**
+                     * The width of the BitmapText, taking into account the x scale of the Game Object.
+                     */
+                    width: number;
+                    /**
+                     * The height of the BitmapText, taking into account the y scale of the Game Object.
+                     */
+                    height: number;
+                };
+
+                type JSONBitmapText = Phaser.Types.GameObjects.JSONGameObject & {
+                    /**
+                     * The name of the font.
+                     */
+                    font: string;
+                    /**
+                     * The text that this Bitmap Text displays.
+                     */
+                    text: string;
+                    /**
+                     * The size of the font.
+                     */
+                    fontSize: number;
+                    /**
+                     * Adds / Removes spacing between characters.
+                     */
+                    letterSpacing: number;
+                    /**
+                     * The alignment of the text in a multi-line BitmapText object.
+                     */
+                    align: integer;
+                };
+
+                /**
+                 * The position and size of the Bitmap Text in local space, taking just the font size into account.
+                 */
+                type LocalBitmapTextSize = {
+                    /**
+                     * The x position of the BitmapText.
+                     */
+                    x: number;
+                    /**
+                     * The y position of the BitmapText.
+                     */
+                    y: number;
+                    /**
+                     * The width of the BitmapText.
+                     */
+                    width: number;
+                    /**
+                     * The height of the BitmapText.
+                     */
+                    height: number;
+                };
+
+                type RetroFontConfig = {
+                    /**
+                     * The key of the image containing the font.
+                     */
+                    image: string;
+                    /**
+                     * If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.
+                     */
+                    "offset.x": number;
+                    /**
+                     * If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
+                     */
+                    "offset.y": number;
+                    /**
+                     * The width of each character in the font set.
+                     */
+                    width: number;
+                    /**
+                     * The height of each character in the font set.
+                     */
+                    height: number;
+                    /**
+                     * The characters used in the font set, in display order. You can use the TEXT_SET consts for common font set arrangements.
+                     */
+                    chars: string;
+                    /**
+                     * The number of characters per row in the font set. If not given charsPerRow will be the image width / characterWidth.
+                     */
+                    charsPerRow: number;
+                    /**
+                     * If the characters in the font set have horizontal spacing between them set the required amount here.
+                     */
+                    "spacing.x": number;
+                    /**
+                     * If the characters in the font set have vertical spacing between them set the required amount here.
+                     */
+                    "spacing.y": number;
+                    /**
+                     * The amount of vertical space to add to the line height of the font.
+                     */
+                    lineSpacing: number;
+                };
+
+                type TintConfig = {
+                    /**
+                     * The top left tint value. Always zero in canvas.
+                     */
+                    topLeft: number;
+                    /**
+                     * The top right tint value. Always zero in canvas.
+                     */
+                    topRight: number;
+                    /**
+                     * The bottom left tint value. Always zero in canvas.
+                     */
+                    bottomLeft: number;
+                    /**
+                     * The bottom right tint value. Always zero in canvas.
+                     */
+                    bottomRight: number;
+                };
+
+            }
+
+            namespace Graphics {
+                /**
+                 * Graphics fill style settings.
+                 */
+                type FillStyle = {
+                    /**
+                     * The fill color.
+                     */
+                    color?: number;
+                    /**
+                     * The fill alpha.
+                     */
+                    alpha?: number;
+                };
+
+                /**
+                 * Graphics line style (or stroke style) settings.
+                 */
+                type LineStyle = {
+                    /**
+                     * The stroke width.
+                     */
+                    width?: number;
+                    /**
+                     * The stroke color.
+                     */
+                    color?: number;
+                    /**
+                     * The stroke alpha.
+                     */
+                    alpha?: number;
+                };
+
+                /**
+                 * Options for the Graphics game Object.
+                 */
+                type Options = Phaser.Types.GameObjects.Graphics.Styles & {
+                    /**
+                     * The x coordinate of the Graphics.
+                     */
+                    x?: number;
+                    /**
+                     * The y coordinate of the Graphics.
+                     */
+                    y?: number;
+                };
+
+                type RoundedRectRadius = {
+                    /**
+                     * Top left
+                     */
+                    tl?: number;
+                    /**
+                     * Top right
+                     */
+                    tr?: number;
+                    /**
+                     * Bottom right
+                     */
+                    br?: number;
+                    /**
+                     * Bottom left
+                     */
+                    bl?: number;
+                };
+
+                /**
+                 * Graphics style settings.
+                 */
+                type Styles = {
+                    /**
+                     * The style applied to shape outlines.
+                     */
+                    lineStyle?: Phaser.Types.GameObjects.Graphics.LineStyle;
+                    /**
+                     * The style applied to shape areas.
+                     */
+                    fillStyle?: Phaser.Types.GameObjects.Graphics.FillStyle;
+                };
+
+            }
+
+            namespace Group {
+                type GroupCallback = (item: Phaser.GameObjects.GameObject)=>void;
+
+                /**
+                 * A constructor function (class) that can be assigned to `classType`.
+                 */
+                type GroupClassTypeConstructor = (scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | integer)=>void;
+
+                type GroupConfig = {
+                    /**
+                     * Sets {@link Phaser.GameObjects.Group#classType}.
+                     */
+                    classType?: Phaser.Types.GameObjects.Group.GroupClassTypeConstructor;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Group#active}.
+                     */
+                    active?: boolean;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Group#maxSize}.
+                     */
+                    maxSize?: number;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Group#defaultKey}.
+                     */
+                    defaultKey?: string;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Group#defaultFrame}.
+                     */
+                    defaultFrame?: string | integer;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Group#runChildUpdate}.
+                     */
+                    runChildUpdate?: boolean;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Group#createCallback}.
+                     */
+                    createCallback?: Phaser.Types.GameObjects.Group.GroupCallback;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Group#removeCallback}.
+                     */
+                    removeCallback?: Phaser.Types.GameObjects.Group.GroupCallback;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Group#createMultipleCallback}.
+                     */
+                    createMultipleCallback?: Phaser.Types.GameObjects.Group.GroupMultipleCreateCallback;
+                };
+
+                /**
+                 * The total number of objects created will be
+                 * 
+                 *     key.length * frame.length * frameQuantity * (yoyo ? 2 : 1) * (1 + repeat)
+                 * 
+                 * In the simplest case, 1 + `repeat` objects will be created.
+                 * 
+                 * If `max` is positive, then the total created will not exceed `max`.
+                 * 
+                 * `key` is required. {@link Phaser.GameObjects.Group#defaultKey} is not used.
+                 */
+                type GroupCreateConfig = {
+                    /**
+                     * The class of each new Game Object.
+                     */
+                    classType?: Phaser.Types.GameObjects.Group.GroupClassTypeConstructor;
+                    /**
+                     * The texture key of each new Game Object.
+                     */
+                    key?: string;
+                    /**
+                     * The texture frame of each new Game Object.
+                     */
+                    frame?: string | integer;
+                    /**
+                     * The visible state of each new Game Object.
+                     */
+                    visible?: boolean;
+                    /**
+                     * The active state of each new Game Object.
+                     */
+                    active?: boolean;
+                    /**
+                     * The number of times each `key` × `frame` combination will be *repeated* (after the first combination).
+                     */
+                    repeat?: number;
+                    /**
+                     * Select a `key` at random.
+                     */
+                    randomKey?: boolean;
+                    /**
+                     * Select a `frame` at random.
+                     */
+                    randomFrame?: boolean;
+                    /**
+                     * Select keys and frames by moving forward then backward through `key` and `frame`.
+                     */
+                    yoyo?: boolean;
+                    /**
+                     * The number of times each `frame` should be combined with one `key`.
+                     */
+                    frameQuantity?: number;
+                    /**
+                     * The maximum number of new Game Objects to create. 0 is no maximum.
+                     */
+                    max?: number;
+                    setXY?: object;
+                    /**
+                     * The horizontal position of each new Game Object.
+                     */
+                    "setXY.x"?: number;
+                    /**
+                     * The vertical position of each new Game Object.
+                     */
+                    "setXY.y"?: number;
+                    /**
+                     * Increment each Game Object's horizontal position from the previous by this amount, starting from `setXY.x`.
+                     */
+                    "setXY.stepX"?: number;
+                    /**
+                     * Increment each Game Object's vertical position from the previous by this amount, starting from `setXY.y`.
+                     */
+                    "setXY.stepY"?: number;
+                    setRotation?: object;
+                    /**
+                     * Rotation of each new Game Object.
+                     */
+                    "setRotation.value"?: number;
+                    /**
+                     * Increment each Game Object's rotation from the previous by this amount, starting at `setRotation.value`.
+                     */
+                    "setRotation.step"?: number;
+                    setScale?: object;
+                    /**
+                     * The horizontal scale of each new Game Object.
+                     */
+                    "setScale.x"?: number;
+                    /**
+                     * The vertical scale of each new Game Object.
+                     */
+                    "setScale.y"?: number;
+                    /**
+                     * Increment each Game Object's horizontal scale from the previous by this amount, starting from `setScale.x`.
+                     */
+                    "setScale.stepX"?: number;
+                    /**
+                     * Increment each Game object's vertical scale from the previous by this amount, starting from `setScale.y`.
+                     */
+                    "setScale.stepY"?: number;
+                    setAlpha?: object;
+                    /**
+                     * The alpha value of each new Game Object.
+                     */
+                    "setAlpha.value"?: number;
+                    /**
+                     * Increment each Game Object's alpha from the previous by this amount, starting from `setAlpha.value`.
+                     */
+                    "setAlpha.step"?: number;
+                    /**
+                     * A geometric shape that defines the hit area for the Game Object.
+                     */
+                    hitArea?: any;
+                    /**
+                     * A callback to be invoked when the Game Object is interacted with.
+                     */
+                    hitAreaCallback?: Phaser.Types.Input.HitAreaCallback;
+                    /**
+                     * Align the new Game Objects in a grid using these settings.
+                     */
+                    gridAlign?: false | Phaser.Types.Actions.GridAlignConfig;
+                };
+
+                type GroupMultipleCreateCallback = (items: Phaser.GameObjects.GameObject[])=>void;
+
+            }
+
+            namespace Particles {
+                type DeathZoneSource = {
+                    contains: Phaser.Types.GameObjects.Particles.DeathZoneSourceCallback;
+                };
+
+                type DeathZoneSourceCallback = (x: number, y: number)=>void;
+
+                type EdgeZoneSource = {
+                    /**
+                     * A function placing points on the sources edge or edges.
+                     */
+                    getPoints: Phaser.Types.GameObjects.Particles.EdgeZoneSourceCallback;
+                };
+
+                type EdgeZoneSourceCallback = (quantity: integer, stepRate?: number)=>void;
+
+                type EmitterOpCustomEmitConfig = {
+                    /**
+                     * A callback that is invoked each time the emitter emits a particle.
+                     */
+                    onEmit: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback;
+                };
+
+                type EmitterOpCustomUpdateConfig = {
+                    /**
+                     * A callback that is invoked each time the emitter emits a particle.
+                     */
+                    onEmit?: Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback;
+                    /**
+                     * A callback that is invoked each time the emitter updates.
+                     */
+                    onUpdate: Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback;
+                };
+
+                /**
+                 * Defines an operation yielding a value incremented continuously across a range.
+                 */
+                type EmitterOpEaseConfig = {
+                    /**
+                     * The starting value.
+                     */
+                    start: number;
+                    /**
+                     * The ending value.
+                     */
+                    end: number;
+                    /**
+                     * The name of the easing function.
+                     */
+                    ease?: string;
+                };
+
+                /**
+                 * The returned value sets what the property will be at the START of the particle's life, on emit.
+                 */
+                type EmitterOpOnEmitCallback = (particle: Phaser.GameObjects.Particles.Particle, key: string, value: number)=>void;
+
+                /**
+                 * The returned value updates the property for the duration of the particle's life.
+                 */
+                type EmitterOpOnUpdateCallback = (particle: Phaser.GameObjects.Particles.Particle, key: string, t: number, value: number)=>void;
+
+                /**
+                 * Defines an operation yielding a random value within a range.
+                 */
+                type EmitterOpRandomConfig = {
+                    /**
+                     * The minimum and maximum values, as [min, max].
+                     */
+                    random: number[];
+                };
+
+                /**
+                 * Defines an operation yielding a random value within a range.
+                 */
+                type EmitterOpRandomMinMaxConfig = {
+                    /**
+                     * The minimum value.
+                     */
+                    min: number;
+                    /**
+                     * The maximum value.
+                     */
+                    max: number;
+                };
+
+                /**
+                 * Defines an operation yielding a random value within a range.
+                 */
+                type EmitterOpRandomStartEndConfig = {
+                    /**
+                     * The starting value.
+                     */
+                    start: number;
+                    /**
+                     * The ending value.
+                     */
+                    end: number;
+                    /**
+                     * If false, this becomes {@link EmitterOpEaseConfig}.
+                     */
+                    random: boolean;
+                };
+
+                /**
+                 * Defines an operation yielding a value incremented by steps across a range.
+                 */
+                type EmitterOpSteppedConfig = {
+                    /**
+                     * The starting value.
+                     */
+                    start: number;
+                    /**
+                     * The ending value.
+                     */
+                    end: number;
+                    /**
+                     * The number of steps between start and end.
+                     */
+                    steps: number;
+                };
+
+                type GravityWellConfig = {
+                    /**
+                     * The x coordinate of the Gravity Well, in world space.
+                     */
+                    x?: number;
+                    /**
+                     * The y coordinate of the Gravity Well, in world space.
+                     */
+                    y?: number;
+                    /**
+                     * The strength of the gravity force - larger numbers produce a stronger force.
+                     */
+                    power?: number;
+                    /**
+                     * The minimum distance for which the gravity force is calculated.
+                     */
+                    epsilon?: number;
+                    /**
+                     * The gravitational force of this Gravity Well.
+                     */
+                    gravity?: number;
+                };
+
+                type ParticleDeathCallback = (particle: Phaser.GameObjects.Particles.Particle)=>void;
+
+                type ParticleEmitterBounds = {
+                    /**
+                     * The left edge of the rectangle.
+                     */
+                    x: number;
+                    /**
+                     * The top edge of the rectangle.
+                     */
+                    y: number;
+                    /**
+                     * The width of the rectangle.
+                     */
+                    width: number;
+                    /**
+                     * The height of the rectangle.
+                     */
+                    height: number;
+                };
+
+                type ParticleEmitterBoundsAlt = {
+                    /**
+                     * The left edge of the rectangle.
+                     */
+                    x: number;
+                    /**
+                     * The top edge of the rectangle.
+                     */
+                    y: number;
+                    /**
+                     * The width of the rectangle.
+                     */
+                    w: number;
+                    /**
+                     * The height of the rectangle.
+                     */
+                    h: number;
+                };
+
+                type ParticleEmitterCallback = (particle: Phaser.GameObjects.Particles.Particle, emitter: Phaser.GameObjects.Particles.ParticleEmitter)=>void;
+
+                type ParticleEmitterConfig = {
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#active}.
+                     */
+                    active?: boolean;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#blendMode}.
+                     */
+                    blendMode?: Phaser.BlendModes | string;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#deathCallbackScope} and {@link Phaser.GameObjects.Particles.ParticleEmitter#emitCallbackScope}.
+                     */
+                    callbackScope?: any;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#collideBottom}.
+                     */
+                    collideBottom?: boolean;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#collideLeft}.
+                     */
+                    collideLeft?: boolean;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#collideRight}.
+                     */
+                    collideRight?: boolean;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#collideTop}.
+                     */
+                    collideTop?: boolean;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#deathCallback}.
+                     */
+                    deathCallback?: boolean;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#deathCallbackScope}.
+                     */
+                    deathCallbackScope?: any;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#emitCallback}.
+                     */
+                    emitCallback?: Function;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#emitCallbackScope}.
+                     */
+                    emitCallbackScope?: any;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#follow}.
+                     */
+                    follow?: Phaser.GameObjects.GameObject;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#frequency}.
+                     */
+                    frequency?: number;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#gravityX}.
+                     */
+                    gravityX?: number;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#gravityY}.
+                     */
+                    gravityY?: number;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#maxParticles}.
+                     */
+                    maxParticles?: integer;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#name}.
+                     */
+                    name?: string;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#on}.
+                     */
+                    on?: boolean;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#particleBringToTop}.
+                     */
+                    particleBringToTop?: boolean;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#particleClass}.
+                     */
+                    particleClass?: Phaser.GameObjects.Particles.Particle;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#radial}.
+                     */
+                    radial?: boolean;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#timeScale}.
+                     */
+                    timeScale?: number;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#trackVisible}.
+                     */
+                    trackVisible?: boolean;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#visible}.
+                     */
+                    visible?: boolean;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#accelerationX} (emit only).
+                     */
+                    accelerationX?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#accelerationY} (emit only).
+                     */
+                    accelerationY?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#alpha}.
+                     */
+                    alpha?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback | object;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#angle} (emit only)
+                     */
+                    angle?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#bounce} (emit only).
+                     */
+                    bounce?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#delay} (emit only).
+                     */
+                    delay?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#lifespan} (emit only).
+                     */
+                    lifespan?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#maxVelocityX} (emit only).
+                     */
+                    maxVelocityX?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#maxVelocityY} (emit only).
+                     */
+                    maxVelocityY?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#moveToX} (emit only).
+                     */
+                    moveToX?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#moveToY} (emit only).
+                     */
+                    moveToY?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#quantity} (emit only).
+                     */
+                    quantity?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#rotate}.
+                     */
+                    rotate?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback | object;
+                    /**
+                     * As {@link Phaser.GameObjects.Particles.ParticleEmitter#setScale}.
+                     */
+                    scale?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback | object;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#scaleX}.
+                     */
+                    scaleX?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback | object;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#scaleY}.
+                     */
+                    scaleY?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback | object;
+                    /**
+                     * As {@link Phaser.GameObjects.Particles.ParticleEmitter#setSpeed} (emit only).
+                     */
+                    speed?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#speedX} (emit only).
+                     */
+                    speedX?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#speedY} (emit only).
+                     */
+                    speedY?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#tint}.
+                     */
+                    tint?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#x} (emit only).
+                     */
+                    x?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#y} (emit only).
+                     */
+                    y?: number | number[] | Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback | object;
+                    /**
+                     * As {@link Phaser.GameObjects.Particles.ParticleEmitter#setEmitZone}.
+                     */
+                    emitZone?: object;
+                    /**
+                     * As {@link Phaser.GameObjects.Particles.ParticleEmitter#setBounds}.
+                     */
+                    bounds?: Phaser.Types.GameObjects.Particles.ParticleEmitterBounds | Phaser.Types.GameObjects.Particles.ParticleEmitterBoundsAlt;
+                    /**
+                     * Assigns to {@link Phaser.GameObjects.Particles.ParticleEmitter#followOffset}.
+                     */
+                    followOffset?: object;
+                    /**
+                     * x-coordinate of the offset.
+                     */
+                    "followOffset.x"?: number;
+                    /**
+                     * y-coordinate of the offset.
+                     */
+                    "followOffset.y"?: number;
+                    /**
+                     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#frames}.
+                     */
+                    frame?: number | number[] | string | string[] | Phaser.Textures.Frame | Phaser.Textures.Frame[] | Phaser.Types.GameObjects.Particles.ParticleEmitterFrameConfig;
+                };
+
+                type ParticleEmitterDeathZoneConfig = {
+                    /**
+                     * A shape representing the zone. See {@link Phaser.GameObjects.Particles.Zones.DeathZone#source}.
+                     */
+                    source: Phaser.Types.GameObjects.Particles.DeathZoneSource;
+                    /**
+                     * 'onEnter' or 'onLeave'.
+                     */
+                    type?: string;
+                };
+
+                type ParticleEmitterEdgeZoneConfig = {
+                    /**
+                     * A shape representing the zone. See {@link Phaser.GameObjects.Particles.Zones.EdgeZone#source}.
+                     */
+                    source: Phaser.Types.GameObjects.Particles.EdgeZoneSource;
+                    /**
+                     * 'edge'.
+                     */
+                    type: string;
+                    /**
+                     * The number of particles to place on the source edge. Set to 0 to use `stepRate` instead.
+                     */
+                    quantity: integer;
+                    /**
+                     * The distance between each particle. When set, `quantity` is implied and should be set to 0.
+                     */
+                    stepRate?: number;
+                    /**
+                     * Whether particles are placed from start to end and then end to start.
+                     */
+                    yoyo?: boolean;
+                    /**
+                     * Whether one endpoint will be removed if it's identical to the other.
+                     */
+                    seamless?: boolean;
+                };
+
+                type ParticleEmitterFrameConfig = {
+                    /**
+                     * One or more texture frames.
+                     */
+                    frames?: number | number[] | string | string[] | Phaser.Textures.Frame | Phaser.Textures.Frame[];
+                    /**
+                     * Whether texture frames will be assigned consecutively (true) or at random (false).
+                     */
+                    cycle?: boolean;
+                    /**
+                     * The number of consecutive particles receiving each texture frame, when `cycle` is true.
+                     */
+                    quantity?: integer;
+                };
+
+                type ParticleEmitterRandomZoneConfig = {
+                    /**
+                     * A shape representing the zone. See {@link Phaser.GameObjects.Particles.Zones.RandomZone#source}.
+                     */
+                    source: Phaser.Types.GameObjects.Particles.RandomZoneSource;
+                    /**
+                     * 'random'.
+                     */
+                    type?: string;
+                };
+
+                type RandomZoneSource = {
+                    /**
+                     * A function modifying its point argument.
+                     */
+                    getRandomPoint: Phaser.Types.GameObjects.Particles.RandomZoneSourceCallback;
+                };
+
+                type RandomZoneSourceCallback = (point: Phaser.Math.Vector2)=>void;
+
+            }
+
+            namespace PathFollower {
+                /**
+                 * Settings for a PathFollower.
+                 */
+                type PathConfig = {
+                    /**
+                     * The duration of the path follow in ms. Must be `> 0`.
+                     */
+                    duration: number;
+                    /**
+                     * The start position of the path follow, between 0 and 1. Must be less than `to`.
+                     */
+                    from?: number;
+                    /**
+                     * The end position of the path follow, between 0 and 1. Must be more than `from`.
+                     */
+                    to?: number;
+                    /**
+                     * Whether to position the PathFollower on the Path using its path offset.
+                     */
+                    positionOnPath?: boolean;
+                    /**
+                     * Should the PathFollower automatically rotate to point in the direction of the Path?
+                     */
+                    rotateToPath?: boolean;
+                    /**
+                     * If the PathFollower is rotating to match the Path, this value is added to the rotation value. This allows you to rotate objects to a path but control the angle of the rotation as well.
+                     */
+                    rotationOffset?: number;
+                    /**
+                     * Current start position of the path follow, must be between `from` and `to`.
+                     */
+                    startAt?: number;
+                };
+
+            }
+
+            namespace RenderTexture {
+                type RenderTextureConfig = {
+                    /**
+                     * The x coordinate of the RenderTextures position.
+                     */
+                    x?: number;
+                    /**
+                     * The y coordinate of the RenderTextures position.
+                     */
+                    y?: number;
+                    /**
+                     * The width of the RenderTexture.
+                     */
+                    width?: number;
+                    /**
+                     * The height of the RenderTexture.
+                     */
+                    height?: number;
+                    /**
+                     * The texture key to make the RenderTexture from.
+                     */
+                    key?: string;
+                    /**
+                     * the frame to make the RenderTexture from.
+                     */
+                    frame?: string;
+                };
+
+            }
+
+            namespace Sprite {
+                type SpriteConfig = Phaser.Types.GameObjects.GameObjectConfig & {
+                    /**
+                     * The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
+                     */
+                    key?: string;
+                    /**
+                     * An optional frame from the Texture this Game Object is rendering with.
+                     */
+                    frame?: number | string;
+                };
+
+            }
+
+            namespace Text {
+                /**
+                 * Font metrics for a Text Style object.
+                 */
+                type TextMetrics = {
+                    /**
+                     * The ascent of the font.
+                     */
+                    ascent: number;
+                    /**
+                     * The descent of the font.
+                     */
+                    descent: number;
+                    /**
+                     * The size of the font.
+                     */
+                    fontSize: number;
+                };
+
+            }
+
+            namespace TileSprite {
+                type TileSpriteConfig = Phaser.Types.GameObjects.GameObjectConfig & {
+                    /**
+                     * The x coordinate of the Tile Sprite.
+                     */
+                    x?: number;
+                    /**
+                     * The y coordinate of the Tile Sprite.
+                     */
+                    y?: number;
+                    /**
+                     * The width of the Tile Sprite. If zero it will use the size of the texture frame.
+                     */
+                    width?: integer;
+                    /**
+                     * The height of the Tile Sprite. If zero it will use the size of the texture frame.
+                     */
+                    height?: integer;
+                    /**
+                     * The key of the Texture this Tile Sprite will use to render with, as stored in the Texture Manager.
+                     */
+                    key?: string;
+                    /**
+                     * An optional frame from the Texture this Tile Sprite is rendering with.
+                     */
+                    frame?: string;
+                };
+
+            }
+
+            type GameObjectConfig = {
+                /**
+                 * The x position of the Game Object.
+                 */
+                x?: number;
+                /**
+                 * The y position of the Game Object.
+                 */
+                y?: number;
+                /**
+                 * The depth of the GameObject.
+                 */
+                depth?: number;
+                /**
+                 * The horizontally flipped state of the Game Object.
+                 */
+                flipX?: boolean;
+                /**
+                 * The vertically flipped state of the Game Object.
+                 */
+                flipY?: boolean;
+                /**
+                 * The scale of the GameObject.
+                 */
+                scale?: number | object;
+                /**
+                 * The scroll factor of the GameObject.
+                 */
+                scrollFactor?: number | object;
+                /**
+                 * The rotation angle of the Game Object, in radians.
+                 */
+                rotation?: number;
+                /**
+                 * The rotation angle of the Game Object, in degrees.
+                 */
+                angle?: number;
+                /**
+                 * The alpha (opacity) of the Game Object.
+                 */
+                alpha?: number;
+                /**
+                 * The origin of the Game Object.
+                 */
+                origin?: number | object;
+                /**
+                 * The scale mode of the GameObject.
+                 */
+                scaleMode?: number;
+                /**
+                 * The blend mode of the GameObject.
+                 */
+                blendMode?: number;
+                /**
+                 * The visible state of the Game Object.
+                 */
+                visible?: boolean;
+                /**
+                 * Add the GameObject to the scene.
+                 */
+                add?: boolean;
+            };
+
+            type JSONGameObject = {
+                /**
+                 * The name of this Game Object.
+                 */
+                name: string;
+                /**
+                 * A textual representation of this Game Object, i.e. `sprite`.
+                 */
+                type: string;
+                /**
+                 * The x position of this Game Object.
+                 */
+                x: number;
+                /**
+                 * The y position of this Game Object.
+                 */
+                y: number;
+                /**
+                 * The scale of this Game Object
+                 */
+                scale: object;
+                /**
+                 * The horizontal scale of this Game Object.
+                 */
+                "scale.x": number;
+                /**
+                 * The vertical scale of this Game Object.
+                 */
+                "scale.y": number;
+                /**
+                 * The origin of this Game Object.
+                 */
+                origin: object;
+                /**
+                 * The horizontal origin of this Game Object.
+                 */
+                "origin.x": number;
+                /**
+                 * The vertical origin of this Game Object.
+                 */
+                "origin.y": number;
+                /**
+                 * The horizontally flipped state of the Game Object.
+                 */
+                flipX: boolean;
+                /**
+                 * The vertically flipped state of the Game Object.
+                 */
+                flipY: boolean;
+                /**
+                 * The angle of this Game Object in radians.
+                 */
+                rotation: number;
+                /**
+                 * The alpha value of the Game Object.
+                 */
+                alpha: number;
+                /**
+                 * The visible state of the Game Object.
+                 */
+                visible: boolean;
+                /**
+                 * The Scale Mode being used by this Game Object.
+                 */
+                scaleMode: integer;
+                /**
+                 * Sets the Blend Mode being used by this Game Object.
+                 */
+                blendMode: integer | string;
+                /**
+                 * The texture key of this Game Object.
+                 */
+                textureKey: string;
+                /**
+                 * The frame key of this Game Object.
+                 */
+                frameKey: string;
+                /**
+                 * The data of this Game Object.
+                 */
+                data: object;
+            };
+
+        }
+
+        namespace Input {
+            namespace Gamepad {
+                /**
+                 * The Gamepad object, as extracted from GamepadEvent.
+                 */
+                type Pad = {
+                    /**
+                     * The ID of the Gamepad.
+                     */
+                    id: string;
+                    /**
+                     * The index of the Gamepad.
+                     */
+                    index: integer;
+                };
+
+            }
+
+            namespace Keyboard {
+                type CursorKeys = {
+                    /**
+                     * A Key object mapping to the UP arrow key.
+                     */
+                    up?: Phaser.Input.Keyboard.Key;
+                    /**
+                     * A Key object mapping to the DOWN arrow key.
+                     */
+                    down?: Phaser.Input.Keyboard.Key;
+                    /**
+                     * A Key object mapping to the LEFT arrow key.
+                     */
+                    left?: Phaser.Input.Keyboard.Key;
+                    /**
+                     * A Key object mapping to the RIGHT arrow key.
+                     */
+                    right?: Phaser.Input.Keyboard.Key;
+                    /**
+                     * A Key object mapping to the SPACE BAR key.
+                     */
+                    space?: Phaser.Input.Keyboard.Key;
+                    /**
+                     * A Key object mapping to the SHIFT key.
+                     */
+                    shift?: Phaser.Input.Keyboard.Key;
+                };
+
+                type KeyboardKeydownCallback = (event: KeyboardEvent)=>void;
+
+                type KeyComboConfig = {
+                    /**
+                     * If they press the wrong key do we reset the combo?
+                     */
+                    resetOnWrongKey?: boolean;
+                    /**
+                     * The max delay in ms between each key press. Above this the combo is reset. 0 means disabled.
+                     */
+                    maxKeyDelay?: number;
+                    /**
+                     * If previously matched and they press the first key of the combo again, will it reset?
+                     */
+                    resetOnMatch?: boolean;
+                    /**
+                     * If the combo matches, will it delete itself?
+                     */
+                    deleteOnMatch?: boolean;
+                };
+
+            }
+
+            /**
+             * A Phaser Input Event Data object.
+             * 
+             * This object is passed to the registered event listeners and allows you to stop any further propagation.
+             */
+            type EventData = {
+                /**
+                 * The cancelled state of this Event.
+                 */
+                cancelled?: boolean;
+                /**
+                 * Call this method to stop this event from passing any further down the event chain.
+                 */
+                stopPropagation: Function;
+            };
+
+            type HitAreaCallback = (hitArea: any, x: number, y: number, gameObject: Phaser.GameObjects.GameObject)=>void;
+
+            type InputConfiguration = {
+                /**
+                 * The object / shape to use as the Hit Area. If not given it will try to create a Rectangle based on the texture frame.
+                 */
+                hitArea?: any;
+                /**
+                 * The callback that determines if the pointer is within the Hit Area shape or not.
+                 */
+                hitAreaCallback?: Function;
+                /**
+                 * If `true` the Interactive Object will be set to be draggable and emit drag events.
+                 */
+                draggable?: boolean;
+                /**
+                 * If `true` the Interactive Object will be set to be a drop zone for draggable objects.
+                 */
+                dropZone?: boolean;
+                /**
+                 * If `true` the Interactive Object will set the `pointer` hand cursor when a pointer is over it. This is a short-cut for setting `cursor: 'pointer'`.
+                 */
+                useHandCursor?: boolean;
+                /**
+                 * The CSS string to be used when the cursor is over this Interactive Object.
+                 */
+                cursor?: string;
+                /**
+                 * If `true` the a pixel perfect function will be set for the hit area callback. Only works with texture based Game Objects.
+                 */
+                pixelPerfect?: boolean;
+                /**
+                 * If `pixelPerfect` is set, this is the alpha tolerance threshold value used in the callback.
+                 */
+                alphaTolerance?: integer;
+            };
+
+            type InputPluginContainer = {
+                /**
+                 * The unique name of this plugin in the input plugin cache.
+                 */
+                key: string;
+                /**
+                 * The plugin to be stored. Should be the source object, not instantiated.
+                 */
+                plugin: Function;
+                /**
+                 * If this plugin is to be injected into the Input Plugin, this is the property key map used.
+                 */
+                mapping?: string;
+            };
+
+            type InteractiveObject = {
+                /**
+                 * The Game Object to which this Interactive Object is bound.
+                 */
+                gameObject: Phaser.GameObjects.GameObject;
+                /**
+                 * Is this Interactive Object currently enabled for input events?
+                 */
+                enabled: boolean;
+                /**
+                 * Is this Interactive Object draggable? Enable with `InputPlugin.setDraggable`.
+                 */
+                draggable: boolean;
+                /**
+                 * Is this Interactive Object a drag-targets drop zone? Set when the object is created.
+                 */
+                dropZone: boolean;
+                /**
+                 * Should this Interactive Object change the cursor (via css) when over? (desktop only)
+                 */
+                cursor: boolean | string;
+                /**
+                 * An optional drop target for a draggable Interactive Object.
+                 */
+                target: Phaser.GameObjects.GameObject;
+                /**
+                 * The most recent Camera to be tested against this Interactive Object.
+                 */
+                camera: Phaser.Cameras.Scene2D.Camera;
+                /**
+                 * The hit area for this Interactive Object. Typically a geometry shape, like a Rectangle or Circle.
+                 */
+                hitArea: any;
+                /**
+                 * The 'contains' check callback that the hit area shape will use for all hit tests.
+                 */
+                hitAreaCallback: Phaser.Types.Input.HitAreaCallback;
+                /**
+                 * Was the hitArea for this Interactive Object created based on texture size (false), or a custom shape? (true)
+                 */
+                customHitArea: boolean;
+                /**
+                 * The x coordinate that the Pointer interacted with this object on, relative to the Game Object's top-left position.
+                 */
+                localX: number;
+                /**
+                 * The y coordinate that the Pointer interacted with this object on, relative to the Game Object's top-left position.
+                 */
+                localY: number;
+                /**
+                 * The current drag state of this Interactive Object. 0 = Not being dragged, 1 = being checked for drag, or 2 = being actively dragged.
+                 */
+                dragState: 0 | 1 | 2;
+                /**
+                 * The x coordinate that the Pointer started dragging this Interactive Object from.
+                 */
+                dragStartX: number;
+                /**
+                 * The y coordinate that the Pointer started dragging this Interactive Object from.
+                 */
+                dragStartY: number;
+                /**
+                 * The x coordinate that this Interactive Object is currently being dragged to.
+                 */
+                dragX: number;
+                /**
+                 * The y coordinate that this Interactive Object is currently being dragged to.
+                 */
+                dragY: number;
+            };
+
+        }
+
+        namespace Loader {
+            namespace FileTypes {
+                type AtlasJSONFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within both the Loader and the Texture Manager.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the texture image file from.
+                     */
+                    textureURL?: string;
+                    /**
+                     * The default file extension to use for the image texture if no url is provided.
+                     */
+                    textureExtension?: string;
+                    /**
+                     * Extra XHR Settings specifically for the texture image file.
+                     */
+                    textureXhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                    /**
+                     * The filename of an associated normal map. It uses the same path and url to load as the texture image.
+                     */
+                    normalMap?: string;
+                    /**
+                     * The absolute or relative URL to load the atlas json file from. Or a well formed JSON object to use instead.
+                     */
+                    atlasURL?: string;
+                    /**
+                     * The default file extension to use for the atlas json if no url is provided.
+                     */
+                    atlasExtension?: string;
+                    /**
+                     * Extra XHR Settings specifically for the atlas json file.
+                     */
+                    atlasXhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                };
+
+                type AtlasXMLFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within both the Loader and the Texture Manager.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the texture image file from.
+                     */
+                    textureURL?: string;
+                    /**
+                     * The default file extension to use for the image texture if no url is provided.
+                     */
+                    textureExtension?: string;
+                    /**
+                     * Extra XHR Settings specifically for the texture image file.
+                     */
+                    textureXhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                    /**
+                     * The filename of an associated normal map. It uses the same path and url to load as the texture image.
+                     */
+                    normalMap?: string;
+                    /**
+                     * The absolute or relative URL to load the atlas xml file from.
+                     */
+                    atlasURL?: string;
+                    /**
+                     * The default file extension to use for the atlas xml if no url is provided.
+                     */
+                    atlasExtension?: string;
+                    /**
+                     * Extra XHR Settings specifically for the atlas xml file.
+                     */
+                    atlasXhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                };
+
+                type AudioFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within the Loader and Audio Cache.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the file from.
+                     */
+                    urlConfig?: string;
+                    /**
+                     * Extra XHR Settings specifically for this file.
+                     */
+                    xhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                    /**
+                     * The AudioContext this file will use to process itself.
+                     */
+                    audioContext?: AudioContext;
+                };
+
+                type AudioSpriteFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within both the Loader and the Audio Cache.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the json file from. Or a well formed JSON object to use instead.
+                     */
+                    jsonURL: string;
+                    /**
+                     * Extra XHR Settings specifically for the json file.
+                     */
+                    jsonXhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                    /**
+                     * The absolute or relative URL to load the audio file from.
+                     */
+                    audioURL?: Object;
+                    /**
+                     * The audio configuration options.
+                     */
+                    audioConfig?: any;
+                    /**
+                     * Extra XHR Settings specifically for the audio file.
+                     */
+                    audioXhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                };
+
+                type BinaryFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within both the Loader and the Binary Cache.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the file from.
+                     */
+                    url?: string;
+                    /**
+                     * The default file extension to use if no url is provided.
+                     */
+                    extension?: string;
+                    /**
+                     * Extra XHR Settings specifically for this file.
+                     */
+                    xhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                    /**
+                     * Optional type to cast the binary file to once loaded. For example, `Uint8Array`.
+                     */
+                    dataType?: any;
+                };
+
+                type BitmapFontFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within both the Loader and the Texture Manager.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the texture image file from.
+                     */
+                    textureURL?: string;
+                    /**
+                     * The default file extension to use for the image texture if no url is provided.
+                     */
+                    textureExtension?: string;
+                    /**
+                     * Extra XHR Settings specifically for the texture image file.
+                     */
+                    textureXhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                    /**
+                     * The filename of an associated normal map. It uses the same path and url to load as the texture image.
+                     */
+                    normalMap?: string;
+                    /**
+                     * The absolute or relative URL to load the font data xml file from.
+                     */
+                    fontDataURL?: string;
+                    /**
+                     * The default file extension to use for the font data xml if no url is provided.
+                     */
+                    fontDataExtension?: string;
+                    /**
+                     * Extra XHR Settings specifically for the font data xml file.
+                     */
+                    fontDataXhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                };
+
+                type CSSFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within the Loader.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the file from.
+                     */
+                    url?: string;
+                    /**
+                     * The default file extension to use if no url is provided.
+                     */
+                    extension?: string;
+                    /**
+                     * Extra XHR Settings specifically for this file.
+                     */
+                    xhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                };
+
+                type GLSLFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within both the Loader and the Text Cache.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the file from.
+                     */
+                    url?: string;
+                    /**
+                     * The type of shader. Either `fragment` for a fragment shader, or `vertex` for a vertex shader. This is ignored if you load a shader bundle.
+                     */
+                    shaderType?: string;
+                    /**
+                     * The default file extension to use if no url is provided.
+                     */
+                    extension?: string;
+                    /**
+                     * Extra XHR Settings specifically for this file.
+                     */
+                    xhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                };
+
+                type HTMLFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within both the Loader and the Text Cache.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the file from.
+                     */
+                    url?: string;
+                    /**
+                     * The default file extension to use if no url is provided.
+                     */
+                    extension?: string;
+                    /**
+                     * Extra XHR Settings specifically for this file.
+                     */
+                    xhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                };
+
+                type HTMLTextureFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within both the Loader and the Texture Manager.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the file from.
+                     */
+                    url?: string;
+                    /**
+                     * The default file extension to use if no url is provided.
+                     */
+                    extension?: string;
+                    /**
+                     * Extra XHR Settings specifically for this file.
+                     */
+                    xhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                    /**
+                     * The width of the texture the HTML will be rendered to.
+                     */
+                    width?: integer;
+                    /**
+                     * The height of the texture the HTML will be rendered to.
+                     */
+                    height?: integer;
+                };
+
+                type ImageFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within both the Loader and the Texture Manager.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the file from.
+                     */
+                    url?: string;
+                    /**
+                     * The default file extension to use if no url is provided.
+                     */
+                    extension?: string;
+                    /**
+                     * The filename of an associated normal map. It uses the same path and url to load as the image.
+                     */
+                    normalMap?: string;
+                    /**
+                     * The frame configuration object. Only provided for, and used by, Sprite Sheets.
+                     */
+                    frameConfig?: Phaser.Types.Loader.FileTypes.ImageFrameConfig;
+                    /**
+                     * Extra XHR Settings specifically for this file.
+                     */
+                    xhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                };
+
+                type ImageFrameConfig = {
+                    /**
+                     * The width of the frame in pixels.
+                     */
+                    frameWidth: integer;
+                    /**
+                     * The height of the frame in pixels. Uses the `frameWidth` value if not provided.
+                     */
+                    frameHeight?: integer;
+                    /**
+                     * The first frame to start parsing from.
+                     */
+                    startFrame?: integer;
+                    /**
+                     * The frame to stop parsing at. If not provided it will calculate the value based on the image and frame dimensions.
+                     */
+                    endFrame?: integer;
+                    /**
+                     * The margin in the image. This is the space around the edge of the frames.
+                     */
+                    margin?: integer;
+                    /**
+                     * The spacing between each frame in the image.
+                     */
+                    spacing?: integer;
+                };
+
+                type JSONFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within both the Loader and the JSON Cache.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the file from. Or can be a ready formed JSON object, in which case it will be directly added to the Cache.
+                     */
+                    url?: string | any;
+                    /**
+                     * The default file extension to use if no url is provided.
+                     */
+                    extension?: string;
+                    /**
+                     * If specified instead of the whole JSON file being parsed and added to the Cache, only the section corresponding to this property key will be added. If the property you want to extract is nested, use periods to divide it.
+                     */
+                    dataKey?: string;
+                    /**
+                     * Extra XHR Settings specifically for this file.
+                     */
+                    xhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                };
+
+                type MultiAtlasFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within both the Loader and the Texture Manager.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the multi atlas json file from. Or, a well formed JSON object.
+                     */
+                    atlasURL?: string;
+                    /**
+                     * The default file extension to use for the atlas json if no url is provided.
+                     */
+                    atlasExtension?: string;
+                    /**
+                     * Extra XHR Settings specifically for the atlas json file.
+                     */
+                    atlasXhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                    /**
+                     * Optional path to use when loading the textures defined in the atlas data.
+                     */
+                    path?: string;
+                    /**
+                     * Optional Base URL to use when loading the textures defined in the atlas data.
+                     */
+                    baseURL?: string;
+                    /**
+                     * Extra XHR Settings specifically for the texture files.
+                     */
+                    textureXhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                };
+
+                type MultiScriptFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within the Loader.
+                     */
+                    key: string;
+                    /**
+                     * An array of absolute or relative URLs to load the script files from. They are processed in the order given in the array.
+                     */
+                    url?: string[];
+                    /**
+                     * The default file extension to use if no url is provided.
+                     */
+                    extension?: string;
+                    /**
+                     * Extra XHR Settings specifically for these files.
+                     */
+                    xhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                };
+
+                type PackFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within both the Loader and the JSON Cache.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the file from. Or can be a ready formed JSON object, in which case it will be directly processed.
+                     */
+                    url?: string | any;
+                    /**
+                     * The default file extension to use if no url is provided.
+                     */
+                    extension?: string;
+                    /**
+                     * If specified instead of the whole JSON file being parsed, only the section corresponding to this property key will be added. If the property you want to extract is nested, use periods to divide it.
+                     */
+                    dataKey?: string;
+                    /**
+                     * Extra XHR Settings specifically for this file.
+                     */
+                    xhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                };
+
+                type PluginFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within the Loader.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the file from.
+                     */
+                    url?: string;
+                    /**
+                     * The default file extension to use if no url is provided.
+                     */
+                    extension?: string;
+                    /**
+                     * Automatically start the plugin after loading?
+                     */
+                    start?: boolean;
+                    /**
+                     * If this plugin is to be injected into the Scene, this is the property key used.
+                     */
+                    mapping?: string;
+                    /**
+                     * Extra XHR Settings specifically for this file.
+                     */
+                    xhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                };
+
+                type SceneFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within both the Loader and the Text Cache.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the file from.
+                     */
+                    url?: string;
+                    /**
+                     * The default file extension to use if no url is provided.
+                     */
+                    extension?: string;
+                    /**
+                     * Extra XHR Settings specifically for this file.
+                     */
+                    xhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                };
+
+                type ScenePluginFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within the Loader.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the file from. Or, a Scene Plugin.
+                     */
+                    url?: string | Function;
+                    /**
+                     * The default file extension to use if no url is provided.
+                     */
+                    extension?: string;
+                    /**
+                     * If this plugin is to be added to Scene.Systems, this is the property key for it.
+                     */
+                    systemKey?: string;
+                    /**
+                     * If this plugin is to be added to the Scene, this is the property key for it.
+                     */
+                    sceneKey?: string;
+                    /**
+                     * Extra XHR Settings specifically for this file.
+                     */
+                    xhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                };
+
+                type ScriptFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within the Loader.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the file from.
+                     */
+                    url?: string;
+                    /**
+                     * The default file extension to use if no url is provided.
+                     */
+                    extension?: string;
+                    /**
+                     * Extra XHR Settings specifically for this file.
+                     */
+                    xhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                };
+
+                type SpriteSheetFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within both the Loader and the Texture Manager.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the file from.
+                     */
+                    url?: string;
+                    /**
+                     * The default file extension to use if no url is provided.
+                     */
+                    extension?: string;
+                    /**
+                     * The filename of an associated normal map. It uses the same path and url to load as the image.
+                     */
+                    normalMap?: string;
+                    /**
+                     * The frame configuration object.
+                     */
+                    frameConfig?: Phaser.Types.Loader.FileTypes.ImageFrameConfig;
+                    /**
+                     * Extra XHR Settings specifically for this file.
+                     */
+                    xhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                };
+
+                type SVGFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within both the Loader and the Texture Manager.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the file from.
+                     */
+                    url?: string;
+                    /**
+                     * The default file extension to use if no url is provided.
+                     */
+                    extension?: string;
+                    /**
+                     * Extra XHR Settings specifically for this file.
+                     */
+                    xhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                    /**
+                     * The svg size configuration object.
+                     */
+                    svgConfig?: Phaser.Types.Loader.FileTypes.SVGSizeConfig;
+                };
+
+                type SVGSizeConfig = {
+                    /**
+                     * An optional width. The SVG will be resized to this size before being rendered to a texture.
+                     */
+                    width?: integer;
+                    /**
+                     * An optional height. The SVG will be resized to this size before being rendered to a texture.
+                     */
+                    height?: integer;
+                    /**
+                     * An optional scale. If given it overrides the width / height properties. The SVG is scaled by the scale factor before being rendered to a texture.
+                     */
+                    scale?: number;
+                };
+
+                type TextFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within both the Loader and the Text Cache.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the file from.
+                     */
+                    url?: string;
+                    /**
+                     * The default file extension to use if no url is provided.
+                     */
+                    extension?: string;
+                    /**
+                     * Extra XHR Settings specifically for this file.
+                     */
+                    xhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                };
+
+                type TilemapCSVFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within both the Loader and the Tilemap Cache.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the file from.
+                     */
+                    url?: string;
+                    /**
+                     * The default file extension to use if no url is provided.
+                     */
+                    extension?: string;
+                    /**
+                     * Extra XHR Settings specifically for this file.
+                     */
+                    xhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                };
+
+                type TilemapImpactFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within both the Loader and the Tilemap Cache.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the file from.
+                     */
+                    url?: string;
+                    /**
+                     * The default file extension to use if no url is provided.
+                     */
+                    extension?: string;
+                    /**
+                     * Extra XHR Settings specifically for this file.
+                     */
+                    xhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                };
+
+                type TilemapJSONFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within both the Loader and the Tilemap Cache.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the file from.
+                     */
+                    url?: string;
+                    /**
+                     * The default file extension to use if no url is provided.
+                     */
+                    extension?: string;
+                    /**
+                     * Extra XHR Settings specifically for this file.
+                     */
+                    xhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                };
+
+                type UnityAtlasFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within both the Loader and the Texture Manager.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the texture image file from.
+                     */
+                    textureURL?: string;
+                    /**
+                     * The default file extension to use for the image texture if no url is provided.
+                     */
+                    textureExtension?: string;
+                    /**
+                     * Extra XHR Settings specifically for the texture image file.
+                     */
+                    textureXhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                    /**
+                     * The filename of an associated normal map. It uses the same path and url to load as the texture image.
+                     */
+                    normalMap?: string;
+                    /**
+                     * The absolute or relative URL to load the atlas data file from.
+                     */
+                    atlasURL?: string;
+                    /**
+                     * The default file extension to use for the atlas data if no url is provided.
+                     */
+                    atlasExtension?: string;
+                    /**
+                     * Extra XHR Settings specifically for the atlas data file.
+                     */
+                    atlasXhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                };
+
+                type XMLFileConfig = {
+                    /**
+                     * The key of the file. Must be unique within both the Loader and the Text Cache.
+                     */
+                    key: string;
+                    /**
+                     * The absolute or relative URL to load the file from.
+                     */
+                    url?: string;
+                    /**
+                     * The default file extension to use if no url is provided.
+                     */
+                    extension?: string;
+                    /**
+                     * Extra XHR Settings specifically for this file.
+                     */
+                    xhrSettings?: Phaser.Types.Loader.XHRSettingsObject;
+                };
+
+            }
+
+            type FileConfig = {
+                /**
+                 * The file type string (image, json, etc) for sorting within the Loader.
+                 */
+                type: string;
+                /**
+                 * Unique cache key (unique within its file type)
+                 */
+                key: string;
+                /**
+                 * The URL of the file, not including baseURL.
+                 */
+                url?: string;
+                /**
+                 * The path of the file, not including the baseURL.
+                 */
+                path?: string;
+                /**
+                 * The default extension this file uses.
+                 */
+                extension?: string;
+                /**
+                 * The responseType to be used by the XHR request.
+                 */
+                responseType?: XMLHttpRequestResponseType;
+                /**
+                 * Custom XHR Settings specific to this file and merged with the Loader defaults.
+                 */
+                xhrSettings?: Phaser.Types.Loader.XHRSettingsObject | false;
+                /**
+                 * A config object that can be used by file types to store transitional data.
+                 */
+                config?: any;
+            };
+
+            type XHRSettingsObject = {
+                /**
+                 * The response type of the XHR request, i.e. `blob`, `text`, etc.
+                 */
+                responseType: XMLHttpRequestResponseType;
+                /**
+                 * Should the XHR request use async or not?
+                 */
+                async?: boolean;
+                /**
+                 * Optional username for the XHR request.
+                 */
+                user?: string;
+                /**
+                 * Optional password for the XHR request.
+                 */
+                password?: string;
+                /**
+                 * Optional XHR timeout value.
+                 */
+                timeout?: integer;
+                /**
+                 * This value is used to populate the XHR `setRequestHeader` and is undefined by default.
+                 */
+                header?: string | undefined;
+                /**
+                 * This value is used to populate the XHR `setRequestHeader` and is undefined by default.
+                 */
+                headerValue?: string | undefined;
+                /**
+                 * This value is used to populate the XHR `setRequestHeader` and is undefined by default.
+                 */
+                requestedWith?: string | undefined;
+                /**
+                 * Provide a custom mime-type to use instead of the default.
+                 */
+                overrideMimeType?: string | undefined;
+            };
+
+        }
+
+        namespace Math {
+            type SinCosTable = {
+                /**
+                 * The sine value.
+                 */
+                sin: number;
+                /**
+                 * The cosine value.
+                 */
+                cos: number;
+                /**
+                 * The length.
+                 */
+                length: number;
+            };
+
+            type Vector2Like = {
+                /**
+                 * The x component.
+                 */
+                x?: number;
+                /**
+                 * The y component.
+                 */
+                y?: number;
+            };
+
+        }
+
+        namespace Physics {
+            namespace Arcade {
+                type ArcadeBodyBounds = {
+                    /**
+                     * The left edge.
+                     */
+                    x: number;
+                    /**
+                     * The upper edge.
+                     */
+                    y: number;
+                    /**
+                     * The right edge.
+                     */
+                    right: number;
+                    /**
+                     * The lower edge.
+                     */
+                    bottom: number;
+                };
+
+                type ArcadeBodyCollision = {
+                    /**
+                     * True if the Body is not colliding.
+                     */
+                    none: boolean;
+                    /**
+                     * True if the Body is colliding on its upper edge.
+                     */
+                    up: boolean;
+                    /**
+                     * True if the Body is colliding on its lower edge.
+                     */
+                    down: boolean;
+                    /**
+                     * True if the Body is colliding on its left edge.
+                     */
+                    left: boolean;
+                    /**
+                     * True if the Body is colliding on its right edge.
+                     */
+                    right: boolean;
+                };
+
+                /**
+                 * An Arcade Physics Collider Type.
+                 */
+                type ArcadeColliderType = Phaser.GameObjects.GameObject | Phaser.GameObjects.Group | Phaser.Physics.Arcade.Sprite | Phaser.Physics.Arcade.Image | Phaser.Physics.Arcade.StaticGroup | Phaser.Physics.Arcade.Group | Phaser.Tilemaps.DynamicTilemapLayer | Phaser.Tilemaps.StaticTilemapLayer | Phaser.GameObjects.GameObject[] | Phaser.Physics.Arcade.Sprite[] | Phaser.Physics.Arcade.Image[] | Phaser.Physics.Arcade.StaticGroup[] | Phaser.Physics.Arcade.Group[] | Phaser.Tilemaps.DynamicTilemapLayer[] | Phaser.Tilemaps.StaticTilemapLayer[];
+
+                type ArcadeWorldConfig = {
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.World#fps}.
+                     */
+                    fps?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.World#timeScale}.
+                     */
+                    timeScale?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.World#gravity}.
+                     */
+                    gravity?: Phaser.Types.Math.Vector2Like;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.World#bounds bounds.x}.
+                     */
+                    x?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.World#bounds bounds.y}.
+                     */
+                    y?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.World#bounds bounds.width}.
+                     */
+                    width?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.World#bounds bounds.height}.
+                     */
+                    height?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.World#checkCollision}.
+                     */
+                    checkCollision?: Phaser.Types.Physics.Arcade.CheckCollisionObject;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.World#OVERLAP_BIAS}.
+                     */
+                    overlapBias?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.World#TILE_BIAS}.
+                     */
+                    tileBias?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.World#forceX}.
+                     */
+                    forceX?: boolean;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.World#isPaused}.
+                     */
+                    isPaused?: boolean;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.World#debug}.
+                     */
+                    debug?: boolean;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.World#defaults debugShowBody}.
+                     */
+                    debugShowBody?: boolean;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.World#defaults debugShowStaticBody}.
+                     */
+                    debugShowStaticBody?: boolean;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.World#defaults debugShowStaticBody}.
+                     */
+                    debugShowVelocity?: boolean;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.World#defaults debugBodyColor}.
+                     */
+                    debugBodyColor?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.World#defaults debugStaticBodyColor}.
+                     */
+                    debugStaticBodyColor?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.World#defaults debugVelocityColor}.
+                     */
+                    debugVelocityColor?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.World#maxEntries}.
+                     */
+                    maxEntries?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.World#useTree}.
+                     */
+                    useTree?: boolean;
+                };
+
+                type ArcadeWorldDefaults = {
+                    /**
+                     * Set to `true` to render dynamic body outlines to the debug display.
+                     */
+                    debugShowBody: boolean;
+                    /**
+                     * Set to `true` to render static body outlines to the debug display.
+                     */
+                    debugShowStaticBody: boolean;
+                    /**
+                     * Set to `true` to render body velocity markers to the debug display.
+                     */
+                    debugShowVelocity: boolean;
+                    /**
+                     * The color of dynamic body outlines when rendered to the debug display.
+                     */
+                    bodyDebugColor: number;
+                    /**
+                     * The color of static body outlines when rendered to the debug display.
+                     */
+                    staticBodyDebugColor: number;
+                    /**
+                     * The color of the velocity markers when rendered to the debug display.
+                     */
+                    velocityDebugColor: number;
+                };
+
+                type ArcadeWorldTreeMinMax = {
+                    /**
+                     * The minimum x value used in RTree searches.
+                     */
+                    minX: number;
+                    /**
+                     * The minimum y value used in RTree searches.
+                     */
+                    minY: number;
+                    /**
+                     * The maximum x value used in RTree searches.
+                     */
+                    maxX: number;
+                    /**
+                     * The maximum y value used in RTree searches.
+                     */
+                    maxY: number;
+                };
+
+                type CheckCollisionObject = {
+                    /**
+                     * Will bodies collide with the top side of the world bounds?
+                     */
+                    up: boolean;
+                    /**
+                     * Will bodies collide with the bottom side of the world bounds?
+                     */
+                    down: boolean;
+                    /**
+                     * Will bodies collide with the left side of the world bounds?
+                     */
+                    left: boolean;
+                    /**
+                     * Will bodies collide with the right side of the world bounds?
+                     */
+                    right: boolean;
+                };
+
+                type PhysicsGroupConfig = Phaser.Types.GameObjects.Group.GroupConfig & {
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.Body#collideWorldBounds}.
+                     */
+                    collideWorldBounds?: boolean;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.Body#acceleration acceleration.x}.
+                     */
+                    accelerationX?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.Body#acceleration acceleration.y}.
+                     */
+                    accelerationY?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.Body#allowDrag}.
+                     */
+                    allowDrag?: boolean;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.Body#allowGravity}.
+                     */
+                    allowGravity?: boolean;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.Body#allowRotation}.
+                     */
+                    allowRotation?: boolean;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.Body#bounce bounce.x}.
+                     */
+                    bounceX?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.Body#bounce bounce.y}.
+                     */
+                    bounceY?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.Body#drag drag.x}.
+                     */
+                    dragX?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.Body#drag drag.y}.
+                     */
+                    dragY?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.Body#enable enable}.
+                     */
+                    enable?: boolean;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.Body#gravity gravity.x}.
+                     */
+                    gravityX?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.Body#gravity gravity.y}.
+                     */
+                    gravityY?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.Body#friction friction.x}.
+                     */
+                    frictionX?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.Body#friction friction.y}.
+                     */
+                    frictionY?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.Body#velocity velocity.x}.
+                     */
+                    velocityX?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.Body#velocity velocity.y}.
+                     */
+                    velocityY?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.Body#angularVelocity}.
+                     */
+                    angularVelocity?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.Body#angularAcceleration}.
+                     */
+                    angularAcceleration?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.Body#angularDrag}.
+                     */
+                    angularDrag?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.Body#mass}.
+                     */
+                    mass?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Arcade.Body#immovable}.
+                     */
+                    immovable?: boolean;
+                };
+
+                type PhysicsGroupDefaults = {
+                    /**
+                     * As {@link Phaser.Physics.Arcade.Body#setCollideWorldBounds}.
+                     */
+                    setCollideWorldBounds: boolean;
+                    /**
+                     * As {@link Phaser.Physics.Arcade.Body#setAccelerationX}.
+                     */
+                    setAccelerationX: number;
+                    /**
+                     * As {@link Phaser.Physics.Arcade.Body#setAccelerationY}.
+                     */
+                    setAccelerationY: number;
+                    /**
+                     * As {@link Phaser.Physics.Arcade.Body#setAllowDrag}.
+                     */
+                    setAllowDrag: boolean;
+                    /**
+                     * As {@link Phaser.Physics.Arcade.Body#setAllowGravity}.
+                     */
+                    setAllowGravity: boolean;
+                    /**
+                     * As {@link Phaser.Physics.Arcade.Body#setAllowRotation}.
+                     */
+                    setAllowRotation: boolean;
+                    /**
+                     * As {@link Phaser.Physics.Arcade.Body#setBounceX}.
+                     */
+                    setBounceX: number;
+                    /**
+                     * As {@link Phaser.Physics.Arcade.Body#setBounceY}.
+                     */
+                    setBounceY: number;
+                    /**
+                     * As {@link Phaser.Physics.Arcade.Body#setDragX}.
+                     */
+                    setDragX: number;
+                    /**
+                     * As {@link Phaser.Physics.Arcade.Body#setDragY}.
+                     */
+                    setDragY: number;
+                    /**
+                     * As {@link Phaser.Physics.Arcade.Body#setEnable}.
+                     */
+                    setEnable: boolean;
+                    /**
+                     * As {@link Phaser.Physics.Arcade.Body#setGravityX}.
+                     */
+                    setGravityX: number;
+                    /**
+                     * As {@link Phaser.Physics.Arcade.Body#setGravityY}.
+                     */
+                    setGravityY: number;
+                    /**
+                     * As {@link Phaser.Physics.Arcade.Body#setFrictionX}.
+                     */
+                    setFrictionX: number;
+                    /**
+                     * As {@link Phaser.Physics.Arcade.Body#setFrictionY}.
+                     */
+                    setFrictionY: number;
+                    /**
+                     * As {@link Phaser.Physics.Arcade.Body#setVelocityX}.
+                     */
+                    setVelocityX: number;
+                    /**
+                     * As {@link Phaser.Physics.Arcade.Body#setVelocityY}.
+                     */
+                    setVelocityY: number;
+                    /**
+                     * As {@link Phaser.Physics.Arcade.Body#setAngularVelocity}.
+                     */
+                    setAngularVelocity: number;
+                    /**
+                     * As {@link Phaser.Physics.Arcade.Body#setAngularAcceleration}.
+                     */
+                    setAngularAcceleration: number;
+                    /**
+                     * As {@link Phaser.Physics.Arcade.Body#setAngularDrag}.
+                     */
+                    setAngularDrag: number;
+                    /**
+                     * As {@link Phaser.Physics.Arcade.Body#setMass}.
+                     */
+                    setMass: number;
+                    /**
+                     * As {@link Phaser.Physics.Arcade.Body#setImmovable}.
+                     */
+                    setImmovable: boolean;
+                };
+
+            }
+
+            namespace Impact {
+                type BodyUpdateCallback = (body: Phaser.Physics.Impact.Body)=>void;
+
+                type CollisionOptions = {
+                    /**
+                     * Slope IDs can be stored on tiles directly
+                     * using Impacts tileset editor. If a tile has a property with the given slopeTileProperty string
+                     * name, the value of that property for the tile will be used for its slope mapping. E.g. a 45
+                     * degree slope upward could be given a "slope" property with a value of 2.
+                     */
+                    slopeTileProperty?: string;
+                    /**
+                     * A tile index to slope definition map.
+                     */
+                    slopeMap?: object;
+                    /**
+                     * If specified, the default slope ID to
+                     * assign to a colliding tile. If not specified, the tile's index is used.
+                     */
+                    defaultCollidingSlope?: integer;
+                    /**
+                     * The default slope ID to assign to a
+                     * non-colliding tile.
+                     */
+                    defaultNonCollidingSlope?: integer;
+                };
+
+                type JSONImpactBody = {
+                    /**
+                     * [description]
+                     */
+                    name: string;
+                    /**
+                     * [description]
+                     */
+                    size: Phaser.Types.Math.Vector2Like;
+                    /**
+                     * The entity's position in the game world.
+                     */
+                    pos: Phaser.Types.Math.Vector2Like;
+                    /**
+                     * Current velocity in pixels per second.
+                     */
+                    vel: Phaser.Types.Math.Vector2Like;
+                    /**
+                     * Current acceleration to be added to the entity's velocity per second. E.g. an entity with a `vel.x` of 0 and `accel.x` of 10 will have a `vel.x` of 100 ten seconds later.
+                     */
+                    accel: Phaser.Types.Math.Vector2Like;
+                    /**
+                     * Deceleration to be subtracted from the entity's velocity per second. Only applies if `accel` is 0.
+                     */
+                    friction: Phaser.Types.Math.Vector2Like;
+                    /**
+                     * The maximum velocity a body can move.
+                     */
+                    maxVel: Phaser.Types.Math.Vector2Like;
+                    /**
+                     * [description]
+                     */
+                    gravityFactor: number;
+                    /**
+                     * [description]
+                     */
+                    bounciness: number;
+                    /**
+                     * [description]
+                     */
+                    minBounceVelocity: number;
+                    /**
+                     * [description]
+                     */
+                    type: Phaser.Physics.Impact.TYPE;
+                    /**
+                     * [description]
+                     */
+                    checkAgainst: Phaser.Physics.Impact.TYPE;
+                    /**
+                     * [description]
+                     */
+                    collides: Phaser.Physics.Impact.COLLIDES;
+                };
+
+                type WorldConfig = {
+                    /**
+                     * Sets {@link Phaser.Physics.Impact.World#gravity}
+                     */
+                    gravity?: number;
+                    /**
+                     * The size of the cells used for the broadphase pass. Increase this value if you have lots of large objects in the world.
+                     */
+                    cellSize?: number;
+                    /**
+                     * A number that allows per-body time scaling, e.g. a force-field where bodies inside are in slow-motion, while others are at full speed.
+                     */
+                    timeScale?: number;
+                    /**
+                     * [description]
+                     */
+                    maxStep?: number;
+                    /**
+                     * Sets {@link Phaser.Physics.Impact.World#debug}.
+                     */
+                    debug?: boolean;
+                    /**
+                     * The maximum velocity a body can move.
+                     */
+                    maxVelocity?: number;
+                    /**
+                     * Whether the Body's boundary is drawn to the debug display.
+                     */
+                    debugShowBody?: boolean;
+                    /**
+                     * Whether the Body's velocity is drawn to the debug display.
+                     */
+                    debugShowVelocity?: boolean;
+                    /**
+                     * The color of this Body on the debug display.
+                     */
+                    debugBodyColor?: number;
+                    /**
+                     * The color of the Body's velocity on the debug display.
+                     */
+                    debugVelocityColor?: number;
+                    /**
+                     * Maximum X velocity objects can move.
+                     */
+                    maxVelocityX?: number;
+                    /**
+                     * Maximum Y velocity objects can move.
+                     */
+                    maxVelocityY?: number;
+                    /**
+                     * The minimum velocity an object can be moving at to be considered for bounce.
+                     */
+                    minBounceVelocity?: number;
+                    /**
+                     * Gravity multiplier. Set to 0 for no gravity.
+                     */
+                    gravityFactor?: number;
+                    /**
+                     * The default bounce, or restitution, of bodies in the world.
+                     */
+                    bounciness?: number;
+                    /**
+                     * Should the world have bounds enabled by default?
+                     */
+                    setBounds?: object | boolean;
+                    /**
+                     * The x coordinate of the world bounds.
+                     */
+                    "setBounds.x"?: number;
+                    /**
+                     * The y coordinate of the world bounds.
+                     */
+                    "setBounds.y"?: number;
+                    /**
+                     * The width of the world bounds.
+                     */
+                    "setBounds.width"?: number;
+                    /**
+                     * The height of the world bounds.
+                     */
+                    "setBounds.height"?: number;
+                    /**
+                     * The thickness of the walls of the world bounds.
+                     */
+                    "setBounds.thickness"?: number;
+                    /**
+                     * Should the left-side world bounds wall be created?
+                     */
+                    "setBounds.left"?: boolean;
+                    /**
+                     * Should the right-side world bounds wall be created?
+                     */
+                    "setBounds.right"?: boolean;
+                    /**
+                     * Should the top world bounds wall be created?
+                     */
+                    "setBounds.top"?: boolean;
+                    /**
+                     * Should the bottom world bounds wall be created?
+                     */
+                    "setBounds.bottom"?: boolean;
+                };
+
+                /**
+                 * An object containing the 4 wall bodies that bound the physics world.
+                 */
+                type WorldDefaults = {
+                    /**
+                     * Whether the Body's boundary is drawn to the debug display.
+                     */
+                    debugShowBody: boolean;
+                    /**
+                     * Whether the Body's velocity is drawn to the debug display.
+                     */
+                    debugShowVelocity: boolean;
+                    /**
+                     * The color of this Body on the debug display.
+                     */
+                    bodyDebugColor: number;
+                    /**
+                     * The color of the Body's velocity on the debug display.
+                     */
+                    velocityDebugColor: number;
+                    /**
+                     * Maximum X velocity objects can move.
+                     */
+                    maxVelocityX: number;
+                    /**
+                     * Maximum Y velocity objects can move.
+                     */
+                    maxVelocityY: number;
+                    /**
+                     * The minimum velocity an object can be moving at to be considered for bounce.
+                     */
+                    minBounceVelocity: number;
+                    /**
+                     * Gravity multiplier. Set to 0 for no gravity.
+                     */
+                    gravityFactor: number;
+                    /**
+                     * The default bounce, or restitution, of bodies in the world.
+                     */
+                    bounciness: number;
+                };
+
+                type WorldWalls = {
+                    /**
+                     * The left-side wall of the world bounds.
+                     */
+                    left: Phaser.Physics.Impact.Body;
+                    /**
+                     * The right-side wall of the world bounds.
+                     */
+                    right: Phaser.Physics.Impact.Body;
+                    /**
+                     * The top wall of the world bounds.
+                     */
+                    top: Phaser.Physics.Impact.Body;
+                    /**
+                     * The bottom wall of the world bounds.
+                     */
+                    bottom: Phaser.Physics.Impact.Body;
+                };
+
+            }
+
+            namespace Matter {
+                type MatterBodyTileOptions = {
+                    /**
+                     * Whether or not the newly created body should be made static. This defaults to true since typically tiles should not be moved.
+                     */
+                    isStatic?: boolean;
+                    /**
+                     * Whether or not to add the newly created body (or existing body if options.body is used) to the Matter world.
+                     */
+                    addToWorld?: boolean;
+                };
+
+                type MatterTileOptions = {
+                    /**
+                     * An existing Matter body to be used instead of creating a new one.
+                     */
+                    body?: MatterJS.Body;
+                    /**
+                     * Whether or not the newly created body should be made static. This defaults to true since typically tiles should not be moved.
+                     */
+                    isStatic?: boolean;
+                    /**
+                     * Whether or not to add the newly created body (or existing body if options.body is used) to the Matter world.
+                     */
+                    addToWorld?: boolean;
+                };
+
+                type MatterWorldConfig = {
+                    /**
+                     * Sets {@link Phaser.Physics.Matter.World#gravity}.
+                     */
+                    gravity?: Phaser.Types.Math.Vector2Like;
+                    /**
+                     * Should the world have bounds enabled by default?
+                     */
+                    setBounds?: object | boolean;
+                    /**
+                     * The x coordinate of the world bounds.
+                     */
+                    "setBounds.x"?: number;
+                    /**
+                     * The y coordinate of the world bounds.
+                     */
+                    "setBounds.y"?: number;
+                    /**
+                     * The width of the world bounds.
+                     */
+                    "setBounds.width"?: number;
+                    /**
+                     * The height of the world bounds.
+                     */
+                    "setBounds.height"?: number;
+                    /**
+                     * The thickness of the walls of the world bounds.
+                     */
+                    "setBounds.thickness"?: number;
+                    /**
+                     * Should the left-side world bounds wall be created?
+                     */
+                    "setBounds.left"?: boolean;
+                    /**
+                     * Should the right-side world bounds wall be created?
+                     */
+                    "setBounds.right"?: boolean;
+                    /**
+                     * Should the top world bounds wall be created?
+                     */
+                    "setBounds.top"?: boolean;
+                    /**
+                     * Should the bottom world bounds wall be created?
+                     */
+                    "setBounds.bottom"?: boolean;
+                    /**
+                     * The number of position iterations to perform each update. The higher the value, the higher quality the simulation will be at the expense of performance.
+                     */
+                    positionIterations?: number;
+                    /**
+                     * The number of velocity iterations to perform each update. The higher the value, the higher quality the simulation will be at the expense of performance.
+                     */
+                    velocityIterations?: number;
+                    /**
+                     * The number of constraint iterations to perform each update. The higher the value, the higher quality the simulation will be at the expense of performance.
+                     */
+                    constraintIterations?: number;
+                    /**
+                     * A flag that specifies whether the engine should allow sleeping via the `Matter.Sleeping` module. Sleeping can improve stability and performance, but often at the expense of accuracy.
+                     */
+                    enableSleeping?: boolean;
+                    /**
+                     * A `Number` that specifies the current simulation-time in milliseconds starting from `0`. It is incremented on every `Engine.update` by the given `delta` argument.
+                     */
+                    "timing.timestamp"?: number;
+                    /**
+                     * A `Number` that specifies the global scaling factor of time for all bodies. A value of `0` freezes the simulation. A value of `0.1` gives a slow-motion effect. A value of `1.2` gives a speed-up effect.
+                     */
+                    "timing.timeScale"?: number;
+                    /**
+                     * Toggles if the world is enabled or not.
+                     */
+                    enabled?: boolean;
+                    /**
+                     * An optional Number that specifies the time correction factor to apply to the update.
+                     */
+                    correction?: number;
+                    /**
+                     * This function is called every time the core game loop steps, which is bound to the Request Animation Frame frequency unless otherwise modified.
+                     */
+                    getDelta?: Function;
+                    /**
+                     * Automatically call Engine.update every time the game steps.
+                     */
+                    autoUpdate?: boolean;
+                    /**
+                     * Sets if Matter will render to the debug Graphic overlay. Do not enable this in production.
+                     */
+                    debug?: boolean;
+                    /**
+                     * Should dynamic bodies be drawn to the debug graphic?
+                     */
+                    debugShowBody?: boolean;
+                    /**
+                     * Should static bodies be drawn to the debug graphic?
+                     */
+                    debugShowStaticBody?: boolean;
+                    /**
+                     * Should the velocity vector be drawn to the debug graphic?
+                     */
+                    debugShowVelocity?: boolean;
+                    /**
+                     * The color that dynamic body debug outlines are drawn in.
+                     */
+                    debugBodyColor?: number;
+                    /**
+                     * The color that dynamic body debug fills are drawn in.
+                     */
+                    debugBodyFillColor?: number;
+                    /**
+                     * The color that static body debug outlines are drawn in.
+                     */
+                    debugStaticBodyColor?: number;
+                    /**
+                     * The color that the debug velocity vector lines are drawn in.
+                     */
+                    debugVelocityColor?: number;
+                    /**
+                     * Render joints to the debug graphic.
+                     */
+                    debugShowJoint?: boolean;
+                    /**
+                     * The color that the debug joints are drawn in.
+                     */
+                    debugJointColor?: number;
+                    /**
+                     * Render the debug output as wireframes.
+                     */
+                    debugWireframes?: boolean;
+                    /**
+                     * Render internal edges to the debug.
+                     */
+                    debugShowInternalEdges?: boolean;
+                    /**
+                     * Render convex hulls to the debug.
+                     */
+                    debugShowConvexHulls?: boolean;
+                    /**
+                     * The color that the debug convex hulls are drawn in, if enabled.
+                     */
+                    debugConvexHullColor?: number;
+                    /**
+                     * Render sleeping bodies the debug.
+                     */
+                    debugShowSleeping?: boolean;
+                };
+
+            }
+
+        }
+
+        namespace Plugins {
+            type CorePluginContainer = {
+                /**
+                 * The unique name of this plugin in the core plugin cache.
+                 */
+                key: string;
+                /**
+                 * The plugin to be stored. Should be the source object, not instantiated.
+                 */
+                plugin: Function;
+                /**
+                 * If this plugin is to be injected into the Scene Systems, this is the property key map used.
+                 */
+                mapping?: string;
+                /**
+                 * Core Scene plugin or a Custom Scene plugin?
+                 */
+                custom?: boolean;
+            };
+
+            type CustomPluginContainer = {
+                /**
+                 * The unique name of this plugin in the custom plugin cache.
+                 */
+                key: string;
+                /**
+                 * The plugin to be stored. Should be the source object, not instantiated.
+                 */
+                plugin: Function;
+            };
+
+            type GlobalPlugin = {
+                /**
+                 * The unique name of this plugin within the plugin cache.
+                 */
+                key: string;
+                /**
+                 * An instance of the plugin.
+                 */
+                plugin: Function;
+                /**
+                 * Is the plugin active or not?
+                 */
+                active?: boolean;
+                /**
+                 * If this plugin is to be injected into the Scene Systems, this is the property key map used.
+                 */
+                mapping?: string;
+            };
+
+        }
+
+        namespace Renderer {
+            namespace Snapshot {
+                type SnapshotCallback = (snapshot: Phaser.Display.Color | HTMLImageElement)=>void;
+
+                type SnapshotState = {
+                    /**
+                     * The function to call after the snapshot is taken.
+                     */
+                    callback: Phaser.Types.Renderer.Snapshot.SnapshotCallback;
+                    /**
+                     * The format of the image to create, usually `image/png` or `image/jpeg`.
+                     */
+                    type?: string;
+                    /**
+                     * The image quality, between 0 and 1. Used for image formats with lossy compression, such as `image/jpeg`.
+                     */
+                    encoderOptions?: number;
+                    /**
+                     * The x coordinate to start the snapshot from.
+                     */
+                    x?: integer;
+                    /**
+                     * The y coordinate to start the snapshot from.
+                     */
+                    y?: integer;
+                    /**
+                     * The width of the snapshot.
+                     */
+                    width?: integer;
+                    /**
+                     * The height of the snapshot.
+                     */
+                    height?: integer;
+                    /**
+                     * Is this a snapshot to get a single pixel, or an area?
+                     */
+                    getPixel?: boolean;
+                };
+
+            }
+
+        }
+
+        namespace Scenes {
+            type CreateSceneFromObjectConfig = {
+                /**
+                 * See {@link Phaser.Scene#init}.
+                 */
+                init?: Function;
+                /**
+                 * See See {@link Phaser.Scene#preload}.
+                 */
+                preload?: Function;
+                /**
+                 * See {@link Phaser.Scene#create}.
+                 */
+                create?: Function;
+                /**
+                 * See {@link Phaser.Scene#update}.
+                 */
+                update?: Function;
+                /**
+                 * Any additional properties, which will be copied to the Scene after it's created (except `data` or `sys`).
+                 */
+                extend?: any;
+                /**
+                 * Any values, which will be merged into the Scene's Data Manager store.
+                 */
+                "extend.data"?: any;
+            };
+
+            type SceneTransitionConfig = {
+                /**
+                 * The Scene key to transition to.
+                 */
+                target: string;
+                /**
+                 * The duration, in ms, for the transition to last.
+                 */
+                duration?: integer;
+                /**
+                 * Will the Scene responsible for the transition be sent to sleep on completion (`true`), or stopped? (`false`)
+                 */
+                sleep?: boolean;
+                /**
+                 * Will the Scenes Input system be able to process events while it is transitioning in or out?
+                 */
+                allowInput?: boolean;
+                /**
+                 * Move the target Scene to be above this one before the transition starts.
+                 */
+                moveAbove?: boolean;
+                /**
+                 * Move the target Scene to be below this one before the transition starts.
+                 */
+                moveBelow?: boolean;
+                /**
+                 * This callback is invoked every frame for the duration of the transition.
+                 */
+                onUpdate?: Function;
+                /**
+                 * The context in which the callback is invoked.
+                 */
+                onUpdateScope?: any;
+                /**
+                 * An object containing any data you wish to be passed to the target Scenes init / create methods.
+                 */
+                data?: any;
+            };
+
+            type SettingsConfig = {
+                /**
+                 * The unique key of this Scene. Must be unique within the entire Game instance.
+                 */
+                key?: string;
+                /**
+                 * Does the Scene start as active or not? An active Scene updates each step.
+                 */
+                active?: boolean;
+                /**
+                 * Does the Scene start as visible or not? A visible Scene renders each step.
+                 */
+                visible?: boolean;
+                /**
+                 * An optional Loader Packfile to be loaded before the Scene begins.
+                 */
+                pack?: false | Phaser.Types.Loader.FileTypes.PackFileConfig;
+                /**
+                 * An optional Camera configuration object.
+                 */
+                cameras?: Phaser.Types.Cameras.Scene2D.JSONCamera | Phaser.Types.Cameras.Scene2D.JSONCamera[];
+                /**
+                 * Overwrites the default injection map for a scene.
+                 */
+                map?: {[key: string]:  string};
+                /**
+                 * Extends the injection map for a scene.
+                 */
+                mapAdd?: {[key: string]:  string};
+                /**
+                 * The physics configuration object for the Scene.
+                 */
+                physics?: object;
+                /**
+                 * The loader configuration object for the Scene.
+                 */
+                loader?: object;
+                /**
+                 * The plugin configuration object for the Scene.
+                 */
+                plugins?: false | any;
+            };
+
+            type SettingsObject = {
+                /**
+                 * The current status of the Scene. Maps to the Scene constants.
+                 */
+                status: number;
+                /**
+                 * The unique key of this Scene. Unique within the entire Game instance.
+                 */
+                key: string;
+                /**
+                 * The active state of this Scene. An active Scene updates each step.
+                 */
+                active: boolean;
+                /**
+                 * The visible state of this Scene. A visible Scene renders each step.
+                 */
+                visible: boolean;
+                /**
+                 * Has the Scene finished booting?
+                 */
+                isBooted: boolean;
+                /**
+                 * Is the Scene in a state of transition?
+                 */
+                isTransition: boolean;
+                /**
+                 * The Scene this Scene is transitioning from, if set.
+                 */
+                transitionFrom: Phaser.Scene;
+                /**
+                 * The duration of the transition, if set.
+                 */
+                transitionDuration: integer;
+                /**
+                 * Is this Scene allowed to receive input during transitions?
+                 */
+                transitionAllowInput: boolean;
+                /**
+                 * a data bundle passed to this Scene from the Scene Manager.
+                 */
+                data: object;
+                /**
+                 * The Loader Packfile to be loaded before the Scene begins.
+                 */
+                pack: false | Phaser.Types.Loader.FileTypes.PackFileConfig;
+                /**
+                 * The Camera configuration object.
+                 */
+                cameras: Phaser.Types.Cameras.Scene2D.JSONCamera | Phaser.Types.Cameras.Scene2D.JSONCamera[];
+                /**
+                 * The Scene's Injection Map.
+                 */
+                map: {[key: string]:  string};
+                /**
+                 * The physics configuration object for the Scene.
+                 */
+                physics: object;
+                /**
+                 * The loader configuration object for the Scene.
+                 */
+                loader: object;
+                /**
+                 * The plugin configuration object for the Scene.
+                 */
+                plugins: false | any;
+            };
+
+        }
+
+        namespace Sound {
+            /**
+             * Audio sprite sound type.
+             */
+            type AudioSpriteSound = {
+                /**
+                 * Local reference to 'spritemap' object form json file generated by audiosprite tool.
+                 */
+                spritemap: object;
+            };
+
+            type EachActiveSoundCallback = (manager: Phaser.Sound.BaseSoundManager, sound: Phaser.Sound.BaseSound, index: number, sounds: Phaser.Sound.BaseSound[])=>void;
+
+            /**
+             * Config object containing various sound settings.
+             */
+            type SoundConfig = {
+                /**
+                 * Boolean indicating whether the sound should be muted or not.
+                 */
+                mute?: boolean;
+                /**
+                 * A value between 0 (silence) and 1 (full volume).
+                 */
+                volume?: number;
+                /**
+                 * Defines the speed at which the sound should be played.
+                 */
+                rate?: number;
+                /**
+                 * Represents detuning of sound in [cents](https://en.wikipedia.org/wiki/Cent_%28music%29).
+                 */
+                detune?: number;
+                /**
+                 * Position of playback for this sound, in seconds.
+                 */
+                seek?: number;
+                /**
+                 * Whether or not the sound or current sound marker should loop.
+                 */
+                loop?: boolean;
+                /**
+                 * Time, in seconds, that should elapse before the sound actually starts its playback.
+                 */
+                delay?: number;
+            };
+
+            /**
+             * Marked section of a sound represented by name, and optionally start time, duration, and config object.
+             */
+            type SoundMarker = {
+                /**
+                 * Unique identifier of a sound marker.
+                 */
+                name: string;
+                /**
+                 * Sound position offset at witch playback should start.
+                 */
+                start?: number;
+                /**
+                 * Playback duration of this marker.
+                 */
+                duration?: number;
+                /**
+                 * An optional config object containing default marker settings.
+                 */
+                config?: Phaser.Types.Sound.SoundConfig;
+            };
+
+        }
+
+        namespace Textures {
+            /**
+             * An object containing the position and color data for a single pixel in a CanvasTexture.
+             */
+            type PixelConfig = {
+                /**
+                 * The x-coordinate of the pixel.
+                 */
+                x: integer;
+                /**
+                 * The y-coordinate of the pixel.
+                 */
+                y: integer;
+                /**
+                 * The color of the pixel, not including the alpha channel.
+                 */
+                color: integer;
+                /**
+                 * The alpha of the pixel, between 0 and 1.
+                 */
+                alpha: number;
+            };
+
+            type SpriteSheetConfig = {
+                /**
+                 * The fixed width of each frame.
+                 */
+                frameWidth: integer;
+                /**
+                 * The fixed height of each frame. If not set it will use the frameWidth as the height.
+                 */
+                frameHeight?: integer;
+                /**
+                 * Skip a number of frames. Useful when there are multiple sprite sheets in one Texture.
+                 */
+                startFrame?: integer;
+                /**
+                 * The total number of frames to extract from the Sprite Sheet. The default value of -1 means "extract all frames".
+                 */
+                endFrame?: integer;
+                /**
+                 * If the frames have been drawn with a margin, specify the amount here.
+                 */
+                margin?: integer;
+                /**
+                 * If the frames have been drawn with spacing between them, specify the amount here.
+                 */
+                spacing?: integer;
+            };
+
+            type SpriteSheetFromAtlasConfig = {
+                /**
+                 * The key of the Texture Atlas in which this Sprite Sheet can be found.
+                 */
+                atlas: string;
+                /**
+                 * The key of the Texture Atlas Frame in which this Sprite Sheet can be found.
+                 */
+                frame: string;
+                /**
+                 * The fixed width of each frame.
+                 */
+                frameWidth: integer;
+                /**
+                 * The fixed height of each frame. If not set it will use the frameWidth as the height.
+                 */
+                frameHeight?: integer;
+                /**
+                 * Skip a number of frames. Useful when there are multiple sprite sheets in one Texture.
+                 */
+                startFrame?: integer;
+                /**
+                 * The total number of frames to extract from the Sprite Sheet. The default value of -1 means "extract all frames".
+                 */
+                endFrame?: integer;
+                /**
+                 * If the frames have been drawn with a margin, specify the amount here.
+                 */
+                margin?: integer;
+                /**
+                 * If the frames have been drawn with spacing between them, specify the amount here.
+                 */
+                spacing?: integer;
+            };
+
+        }
+
+        namespace Tilemaps {
+            type FilteringOptions = {
+                /**
+                 * If true, only return tiles that don't have -1 for an index.
+                 */
+                isNotEmpty?: boolean;
+                /**
+                 * If true, only return tiles that collide on at least one side.
+                 */
+                isColliding?: boolean;
+                /**
+                 * If true, only return tiles that have at least one interesting face.
+                 */
+                hasInterestingFace?: boolean;
+            };
+
+            type GetTilesWithinFilteringOptions = {
+                /**
+                 * If true, only return tiles that don't have -1 for an index.
+                 */
+                isNotEmpty?: boolean;
+                /**
+                 * If true, only return tiles that collide on at least one side.
+                 */
+                isColliding?: boolean;
+                /**
+                 * If true, only return tiles that have at least one interesting face.
+                 */
+                hasInterestingFace?: boolean;
+            };
+
+            type MapDataConfig = {
+                /**
+                 * The key in the Phaser cache that corresponds to the loaded tilemap data.
+                 */
+                name?: string;
+                /**
+                 * The width of the entire tilemap.
+                 */
+                width?: number;
+                /**
+                 * The height of the entire tilemap.
+                 */
+                height?: number;
+                /**
+                 * The width of the tiles.
+                 */
+                tileWidth?: number;
+                /**
+                 * The height of the tiles.
+                 */
+                tileHeight?: number;
+                /**
+                 * The width in pixels of the entire tilemap.
+                 */
+                widthInPixels?: number;
+                /**
+                 * The height in pixels of the entire tilemap.
+                 */
+                heightInPixels?: number;
+                /**
+                 * The format of the Tilemap, as defined in Tiled.
+                 */
+                format?: integer;
+                /**
+                 * The orientation of the map data (i.e. orthogonal, isometric, hexagonal), default 'orthogonal'.
+                 */
+                orientation?: string;
+                /**
+                 * Determines the draw order of tilemap. Default is right-down.
+                 */
+                renderOrder?: string;
+                /**
+                 * The version of Tiled the map uses.
+                 */
+                version?: number;
+                /**
+                 * Map specific properties (can be specified in Tiled).
+                 */
+                properties?: number;
+                /**
+                 * The layers of the tilemap.
+                 */
+                layers?: Phaser.Tilemaps.LayerData[];
+                /**
+                 * An array with all the layers configured to the MapData.
+                 */
+                images?: any[];
+                /**
+                 * An array of Tiled Image Layers.
+                 */
+                objects?: object;
+                /**
+                 * An object of Tiled Object Layers.
+                 */
+                collision?: object;
+                /**
+                 * The tilesets the map uses.
+                 */
+                tilesets?: Phaser.Tilemaps.Tileset[];
+                /**
+                 * The collection of images the map uses(specified in Tiled).
+                 */
+                imageCollections?: any[];
+                /**
+                 * [description]
+                 */
+                tiles?: any[];
+            };
+
+            type StyleConfig = {
+                /**
+                 * Color to use for drawing a filled rectangle at non-colliding tile locations. If set to null, non-colliding tiles will not be drawn.
+                 */
+                tileColor?: Phaser.Display.Color | number | null;
+                /**
+                 * Color to use for drawing a filled rectangle at colliding tile locations. If set to null, colliding tiles will not be drawn.
+                 */
+                collidingTileColor?: Phaser.Display.Color | number | null;
+                /**
+                 * Color to use for drawing a line at interesting tile faces. If set to null, interesting tile faces will not be drawn.
+                 */
+                faceColor?: Phaser.Display.Color | number | null;
+            };
+
+            type TilemapConfig = {
+                /**
+                 * The key in the Phaser cache that corresponds to the loaded tilemap data.
+                 */
+                key?: string;
+                /**
+                 * Instead of loading from the cache, you can also load directly from a 2D array of tile indexes.
+                 */
+                data?: integer[][];
+                /**
+                 * The width of a tile in pixels.
+                 */
+                tileWidth?: integer;
+                /**
+                 * The height of a tile in pixels.
+                 */
+                tileHeight?: integer;
+                /**
+                 * The width of the map in tiles.
+                 */
+                width?: integer;
+                /**
+                 * The height of the map in tiles.
+                 */
+                height?: integer;
+                /**
+                 * Controls how empty tiles, tiles with an index of -1,
+                 * in the map data are handled. If `true`, empty locations will get a value of `null`. If `false`,
+                 * empty location will get a Tile object with an index of -1. If you've a large sparsely populated
+                 * map and the tile data doesn't need to change then setting this value to `true` will help with
+                 * memory consumption. However if your map is small or you need to update the tiles dynamically,
+                 * then leave the default value set.
+                 */
+                insertNull?: boolean;
+            };
+
+        }
+
+        namespace Time {
+            type TimerEventConfig = {
+                /**
+                 * The delay after which the Timer Event should fire, in milliseconds.
+                 */
+                delay?: number;
+                /**
+                 * The total number of times the Timer Event will repeat before finishing.
+                 */
+                repeat?: number;
+                /**
+                 * `true` if the Timer Event should repeat indefinitely.
+                 */
+                loop?: boolean;
+                /**
+                 * The callback which will be called when the Timer Event fires.
+                 */
+                callback?: Function;
+                /**
+                 * The scope (`this` object) with which to invoke the `callback`.
+                 */
+                callbackScope?: any;
+                /**
+                 * Additional arguments to be passed to the `callback`.
+                 */
+                args?: any[];
+                /**
+                 * The scale of the elapsed time.
+                 */
+                timeScale?: number;
+                /**
+                 * The initial elapsed time in milliseconds. Useful if you want a long duration with repeat, but for the first loop to fire quickly.
+                 */
+                startAt?: number;
+                /**
+                 * `true` if the Timer Event should be paused.
+                 */
+                paused?: boolean;
+            };
+
+        }
+
+        namespace Tweens {
+            type TweenConfigDefaults = {
+                /**
+                 * The object, or an array of objects, to run the tween on.
+                 */
+                targets: object | object[];
+                /**
+                 * The number of milliseconds to delay before the tween will start.
+                 */
+                delay?: number;
+                /**
+                 * The duration of the tween in milliseconds.
+                 */
+                duration?: number;
+                /**
+                 * The easing equation to use for the tween.
+                 */
+                ease?: string;
+                /**
+                 * Optional easing parameters.
+                 */
+                easeParams?: any[];
+                /**
+                 * The number of milliseconds to hold the tween for before yoyo'ing.
+                 */
+                hold?: number;
+                /**
+                 * The number of times to repeat the tween.
+                 */
+                repeat?: number;
+                /**
+                 * The number of milliseconds to pause before a tween will repeat.
+                 */
+                repeatDelay?: number;
+                /**
+                 * Should the tween complete, then reverse the values incrementally to get back to the starting tween values? The reverse tweening will also take `duration` milliseconds to complete.
+                 */
+                yoyo?: boolean;
+                /**
+                 * Horizontally flip the target of the Tween when it completes (before it yoyos, if set to do so). Only works for targets that support the `flipX` property.
+                 */
+                flipX?: boolean;
+                /**
+                 * Vertically flip the target of the Tween when it completes (before it yoyos, if set to do so). Only works for targets that support the `flipY` property.
+                 */
+                flipY?: boolean;
+            };
+
+            type TweenDataConfig = {
+                /**
+                 * The target to tween.
+                 */
+                target: any;
+                /**
+                 * The property of the target being tweened.
+                 */
+                key: string;
+                /**
+                 * The returned value sets what the property will be at the END of the Tween.
+                 */
+                getEndValue: Function;
+                /**
+                 * The returned value sets what the property will be at the START of the Tween.
+                 */
+                getStartValue: Function;
+                /**
+                 * The ease function this tween uses.
+                 */
+                ease: Function;
+                /**
+                 * Duration of the tween in ms/frames, excludes time for yoyo or repeats.
+                 */
+                duration?: number;
+                /**
+                 * The total calculated duration of this TweenData (based on duration, repeat, delay and yoyo)
+                 */
+                totalDuration?: number;
+                /**
+                 * Time in ms/frames before tween will start.
+                 */
+                delay?: number;
+                /**
+                 * Cause the tween to return back to its start value after hold has expired.
+                 */
+                yoyo?: boolean;
+                /**
+                 * Time in ms/frames the tween will pause before running the yoyo or starting a repeat.
+                 */
+                hold?: number;
+                /**
+                 * Number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
+                 */
+                repeat?: integer;
+                /**
+                 * Time in ms/frames before the repeat will start.
+                 */
+                repeatDelay?: number;
+                /**
+                 * Automatically call toggleFlipX when the TweenData yoyos or repeats
+                 */
+                flipX?: boolean;
+                /**
+                 * Automatically call toggleFlipY when the TweenData yoyos or repeats
+                 */
+                flipY?: boolean;
+                /**
+                 * Between 0 and 1 showing completion of this TweenData.
+                 */
+                progress?: number;
+                /**
+                 * Delta counter
+                 */
+                elapsed?: number;
+                /**
+                 * How many repeats are left to run?
+                 */
+                repeatCounter?: integer;
+                /**
+                 * Ease value data.
+                 */
+                start?: number;
+                /**
+                 * Ease value data.
+                 */
+                current?: number;
+                /**
+                 * Ease value data.
+                 */
+                end?: number;
+                /**
+                 * Time duration 1.
+                 */
+                t1?: number;
+                /**
+                 * Time duration 2.
+                 */
+                t2?: number;
+                /**
+                 * LoadValue generation functions.
+                 */
+                gen?: Phaser.Types.Tweens.TweenDataGenConfig;
+                /**
+                 * TWEEN_CONST.CREATED
+                 */
+                state?: integer;
+            };
+
+            type TweenDataGenConfig = {
+                /**
+                 * Time in ms/frames before tween will start.
+                 */
+                delay: Function;
+                /**
+                 * Duration of the tween in ms/frames, excludes time for yoyo or repeats.
+                 */
+                duration: Function;
+                /**
+                 * Time in ms/frames the tween will pause before running the yoyo or starting a repeat.
+                 */
+                hold: Function;
+                /**
+                 * Number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
+                 */
+                repeat: Function;
+                /**
+                 * Time in ms/frames before the repeat will start.
+                 */
+                repeatDelay: Function;
+            };
+
+        }
 
     }
 
@@ -52149,7 +53819,7 @@ declare namespace Phaser {
                  * @param processCallback An optional callback function that lets you perform additional checks against the two objects if they overlap. If this is set then `collideCallback` will only be called if this callback returns `true`.
                  * @param callbackContext The context in which to run the callbacks.
                  */
-                overlap(object1: Phaser.Physics.Arcade.Types.ArcadeColliderType, object2?: Phaser.Physics.Arcade.Types.ArcadeColliderType, collideCallback?: ArcadePhysicsCallback, processCallback?: ArcadePhysicsCallback, callbackContext?: any): boolean;
+                overlap(object1: Phaser.Types.Physics.Arcade.ArcadeColliderType, object2?: Phaser.Types.Physics.Arcade.ArcadeColliderType, collideCallback?: ArcadePhysicsCallback, processCallback?: ArcadePhysicsCallback, callbackContext?: any): boolean;
 
                 /**
                  * Performs a collision check and separation between the two physics enabled objects given, which can be single
@@ -52176,7 +53846,7 @@ declare namespace Phaser {
                  * @param processCallback An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
                  * @param callbackContext The context in which to run the callbacks.
                  */
-                collide(object1: Phaser.Physics.Arcade.Types.ArcadeColliderType, object2?: Phaser.Physics.Arcade.Types.ArcadeColliderType, collideCallback?: ArcadePhysicsCallback, processCallback?: ArcadePhysicsCallback, callbackContext?: any): boolean;
+                collide(object1: Phaser.Types.Physics.Arcade.ArcadeColliderType, object2?: Phaser.Types.Physics.Arcade.ArcadeColliderType, collideCallback?: ArcadePhysicsCallback, processCallback?: ArcadePhysicsCallback, callbackContext?: any): boolean;
 
                 /**
                  * This advanced method is specifically for testing for collision between a single Sprite and an array of Tile objects.
@@ -53824,22 +55494,22 @@ declare namespace Phaser {
                  * Whether this Body is checked for collisions and for which directions.
                  * You can set `checkCollision.none = true` to disable collision checks.
                  */
-                checkCollision: Phaser.Physics.Arcade.Types.ArcadeBodyCollision;
+                checkCollision: Phaser.Types.Physics.Arcade.ArcadeBodyCollision;
 
                 /**
                  * Whether this Body is colliding with another and in which direction.
                  */
-                touching: Phaser.Physics.Arcade.Types.ArcadeBodyCollision;
+                touching: Phaser.Types.Physics.Arcade.ArcadeBodyCollision;
 
                 /**
                  * Whether this Body was colliding with another during the last step, and in which direction.
                  */
-                wasTouching: Phaser.Physics.Arcade.Types.ArcadeBodyCollision;
+                wasTouching: Phaser.Types.Physics.Arcade.ArcadeBodyCollision;
 
                 /**
                  * Whether this Body is colliding with a tile or the world boundary.
                  */
-                blocked: Phaser.Physics.Arcade.Types.ArcadeBodyCollision;
+                blocked: Phaser.Types.Physics.Arcade.ArcadeBodyCollision;
 
                 /**
                  * Whether to automatically synchronize this Body's dimensions to the dimensions of its Game Object's visual bounds.
@@ -53935,7 +55605,7 @@ declare namespace Phaser {
                  * Copies the coordinates of this Body's edges into an object.
                  * @param obj An object to copy the values into.
                  */
-                getBounds(obj: Phaser.Physics.Arcade.Types.ArcadeBodyBounds): Phaser.Physics.Arcade.Types.ArcadeBodyBounds;
+                getBounds(obj: Phaser.Types.Physics.Arcade.ArcadeBodyBounds): Phaser.Types.Physics.Arcade.ArcadeBodyBounds;
 
                 /**
                  * Tests if the coordinates are within this Body's boundary.
@@ -54240,7 +55910,7 @@ declare namespace Phaser {
                  * @param processCallback The callback to invoke when the two objects collide. Must return a boolean.
                  * @param callbackContext The scope in which to call the callbacks.
                  */
-                constructor(world: Phaser.Physics.Arcade.World, overlapOnly: boolean, object1: Phaser.Physics.Arcade.Types.ArcadeColliderType, object2: Phaser.Physics.Arcade.Types.ArcadeColliderType, collideCallback: ArcadePhysicsCallback, processCallback: ArcadePhysicsCallback, callbackContext: any);
+                constructor(world: Phaser.Physics.Arcade.World, overlapOnly: boolean, object1: Phaser.Types.Physics.Arcade.ArcadeColliderType, object2: Phaser.Types.Physics.Arcade.ArcadeColliderType, collideCallback: ArcadePhysicsCallback, processCallback: ArcadePhysicsCallback, callbackContext: any);
 
                 /**
                  * The world in which the bodies will collide.
@@ -54265,12 +55935,12 @@ declare namespace Phaser {
                 /**
                  * The first object to check for collision.
                  */
-                object1: Phaser.Physics.Arcade.Types.ArcadeColliderType;
+                object1: Phaser.Types.Physics.Arcade.ArcadeColliderType;
 
                 /**
                  * The second object to check for collision.
                  */
-                object2: Phaser.Physics.Arcade.Types.ArcadeColliderType;
+                object2: Phaser.Types.Physics.Arcade.ArcadeColliderType;
 
                 /**
                  * The callback to invoke when the two objects collide.
@@ -54901,7 +56571,7 @@ declare namespace Phaser {
                  * @param children Game Objects to add to this group; or the `config` argument.
                  * @param config Settings for this group.
                  */
-                staticGroup(children?: Phaser.GameObjects.GameObject[] | Phaser.GameObjects.Group.Types.GroupConfig | Phaser.GameObjects.Group.Types.GroupCreateConfig, config?: Phaser.GameObjects.Group.Types.GroupConfig | Phaser.GameObjects.Group.Types.GroupCreateConfig): Phaser.Physics.Arcade.StaticGroup;
+                staticGroup(children?: Phaser.GameObjects.GameObject[] | Phaser.Types.GameObjects.Group.GroupConfig | Phaser.Types.GameObjects.Group.GroupCreateConfig, config?: Phaser.Types.GameObjects.Group.GroupConfig | Phaser.Types.GameObjects.Group.GroupCreateConfig): Phaser.Physics.Arcade.StaticGroup;
 
                 /**
                  * Creates a Physics Group object.
@@ -54909,7 +56579,7 @@ declare namespace Phaser {
                  * @param children Game Objects to add to this group; or the `config` argument.
                  * @param config Settings for this group.
                  */
-                group(children?: Phaser.GameObjects.GameObject[] | Phaser.Physics.Arcade.Types.PhysicsGroupConfig | Phaser.GameObjects.Group.Types.GroupCreateConfig, config?: Phaser.Physics.Arcade.Types.PhysicsGroupConfig | Phaser.GameObjects.Group.Types.GroupCreateConfig): Phaser.Physics.Arcade.Group;
+                group(children?: Phaser.GameObjects.GameObject[] | Phaser.Types.Physics.Arcade.PhysicsGroupConfig | Phaser.Types.GameObjects.Group.GroupCreateConfig, config?: Phaser.Types.Physics.Arcade.PhysicsGroupConfig | Phaser.Types.GameObjects.Group.GroupCreateConfig): Phaser.Physics.Arcade.Group;
 
                 /**
                  * Destroys this Factory.
@@ -54953,7 +56623,7 @@ declare namespace Phaser {
                  * @param children Game Objects to add to this group; or the `config` argument.
                  * @param config Settings for this group.
                  */
-                constructor(world: Phaser.Physics.Arcade.World, scene: Phaser.Scene, children?: Phaser.GameObjects.GameObject[] | Phaser.Physics.Arcade.Types.PhysicsGroupConfig | Phaser.GameObjects.Group.Types.GroupCreateConfig, config?: Phaser.Physics.Arcade.Types.PhysicsGroupConfig | Phaser.GameObjects.Group.Types.GroupCreateConfig);
+                constructor(world: Phaser.Physics.Arcade.World, scene: Phaser.Scene, children?: Phaser.GameObjects.GameObject[] | Phaser.Types.Physics.Arcade.PhysicsGroupConfig | Phaser.Types.GameObjects.Group.GroupCreateConfig, config?: Phaser.Types.Physics.Arcade.PhysicsGroupConfig | Phaser.Types.GameObjects.Group.GroupCreateConfig);
 
                 /**
                  * The physics simulation.
@@ -54965,7 +56635,7 @@ declare namespace Phaser {
                  * 
                  * This should be either `Phaser.Physics.Arcade.Image`, `Phaser.Physics.Arcade.Sprite`, or a class extending one of those.
                  */
-                classType: Phaser.GameObjects.Group.Types.GroupClassTypeConstructor;
+                classType: Phaser.Types.GameObjects.Group.GroupClassTypeConstructor;
 
                 /**
                  * The physics type of the Group's members.
@@ -54975,7 +56645,7 @@ declare namespace Phaser {
                 /**
                  * Default physics properties applied to Game Objects added to the Group or created by the Group. Derived from the `config` argument.
                  */
-                defaults: Phaser.Physics.Arcade.Types.PhysicsGroupDefaults;
+                defaults: Phaser.Types.Physics.Arcade.PhysicsGroupDefaults;
 
                 /**
                  * Enables a Game Object's Body and assigns `defaults`. Called when a Group member is added or created.
@@ -55220,22 +56890,22 @@ declare namespace Phaser {
                 /**
                  * Whether this StaticBody is checked for collisions and for which directions. You can set `checkCollision.none = false` to disable collision checks.
                  */
-                checkCollision: Phaser.Physics.Arcade.Types.ArcadeBodyCollision;
+                checkCollision: Phaser.Types.Physics.Arcade.ArcadeBodyCollision;
 
                 /**
                  * Whether this StaticBody has ever collided with another body and in which direction.
                  */
-                touching: Phaser.Physics.Arcade.Types.ArcadeBodyCollision;
+                touching: Phaser.Types.Physics.Arcade.ArcadeBodyCollision;
 
                 /**
                  * Whether this StaticBody was colliding with another body during the last step or any previous step, and in which direction.
                  */
-                wasTouching: Phaser.Physics.Arcade.Types.ArcadeBodyCollision;
+                wasTouching: Phaser.Types.Physics.Arcade.ArcadeBodyCollision;
 
                 /**
                  * Whether this StaticBody has ever collided with a tile or the world boundary.
                  */
-                blocked: Phaser.Physics.Arcade.Types.ArcadeBodyCollision;
+                blocked: Phaser.Types.Physics.Arcade.ArcadeBodyCollision;
 
                 /**
                  * The StaticBody's physics type (static by default).
@@ -55304,7 +56974,7 @@ declare namespace Phaser {
                  * Returns the x and y coordinates of the top left and bottom right points of the StaticBody.
                  * @param obj The object which will hold the coordinates of the bounds.
                  */
-                getBounds(obj: Phaser.Physics.Arcade.Types.ArcadeBodyBounds): Phaser.Physics.Arcade.Types.ArcadeBodyBounds;
+                getBounds(obj: Phaser.Types.Physics.Arcade.ArcadeBodyBounds): Phaser.Types.Physics.Arcade.ArcadeBodyBounds;
 
                 /**
                  * Checks to see if a given x,y coordinate is colliding with this Static Body.
@@ -55412,7 +57082,7 @@ declare namespace Phaser {
                  * @param children Game Objects to add to this group; or the `config` argument.
                  * @param config Settings for this group.
                  */
-                constructor(world: Phaser.Physics.Arcade.World, scene: Phaser.Scene, children?: Phaser.GameObjects.GameObject[] | Phaser.GameObjects.Group.Types.GroupConfig | Phaser.GameObjects.Group.Types.GroupCreateConfig, config?: Phaser.GameObjects.Group.Types.GroupConfig | Phaser.GameObjects.Group.Types.GroupCreateConfig);
+                constructor(world: Phaser.Physics.Arcade.World, scene: Phaser.Scene, children?: Phaser.GameObjects.GameObject[] | Phaser.Types.GameObjects.Group.GroupConfig | Phaser.Types.GameObjects.Group.GroupCreateConfig, config?: Phaser.Types.GameObjects.Group.GroupConfig | Phaser.Types.GameObjects.Group.GroupCreateConfig);
 
                 /**
                  * The physics simulation.
@@ -55517,390 +57187,6 @@ declare namespace Phaser {
 
             }
 
-            namespace Types {
-                type ArcadeBodyBounds = {
-                    /**
-                     * The left edge.
-                     */
-                    x: number;
-                    /**
-                     * The upper edge.
-                     */
-                    y: number;
-                    /**
-                     * The right edge.
-                     */
-                    right: number;
-                    /**
-                     * The lower edge.
-                     */
-                    bottom: number;
-                };
-
-                type ArcadeBodyCollision = {
-                    /**
-                     * True if the Body is not colliding.
-                     */
-                    none: boolean;
-                    /**
-                     * True if the Body is colliding on its upper edge.
-                     */
-                    up: boolean;
-                    /**
-                     * True if the Body is colliding on its lower edge.
-                     */
-                    down: boolean;
-                    /**
-                     * True if the Body is colliding on its left edge.
-                     */
-                    left: boolean;
-                    /**
-                     * True if the Body is colliding on its right edge.
-                     */
-                    right: boolean;
-                };
-
-                /**
-                 * An Arcade Physics Collider Type.
-                 */
-                type ArcadeColliderType = Phaser.GameObjects.GameObject | Phaser.GameObjects.Group | Phaser.Physics.Arcade.Sprite | Phaser.Physics.Arcade.Image | Phaser.Physics.Arcade.StaticGroup | Phaser.Physics.Arcade.Group | Phaser.Tilemaps.DynamicTilemapLayer | Phaser.Tilemaps.StaticTilemapLayer | Phaser.GameObjects.GameObject[] | Phaser.Physics.Arcade.Sprite[] | Phaser.Physics.Arcade.Image[] | Phaser.Physics.Arcade.StaticGroup[] | Phaser.Physics.Arcade.Group[] | Phaser.Tilemaps.DynamicTilemapLayer[] | Phaser.Tilemaps.StaticTilemapLayer[];
-
-                type ArcadeWorldConfig = {
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.World#fps}.
-                     */
-                    fps?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.World#timeScale}.
-                     */
-                    timeScale?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.World#gravity}.
-                     */
-                    gravity?: Phaser.Math.Types.Vector2Like;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.World#bounds bounds.x}.
-                     */
-                    x?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.World#bounds bounds.y}.
-                     */
-                    y?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.World#bounds bounds.width}.
-                     */
-                    width?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.World#bounds bounds.height}.
-                     */
-                    height?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.World#checkCollision}.
-                     */
-                    checkCollision?: Phaser.Physics.Arcade.Types.CheckCollisionObject;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.World#OVERLAP_BIAS}.
-                     */
-                    overlapBias?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.World#TILE_BIAS}.
-                     */
-                    tileBias?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.World#forceX}.
-                     */
-                    forceX?: boolean;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.World#isPaused}.
-                     */
-                    isPaused?: boolean;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.World#debug}.
-                     */
-                    debug?: boolean;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.World#defaults debugShowBody}.
-                     */
-                    debugShowBody?: boolean;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.World#defaults debugShowStaticBody}.
-                     */
-                    debugShowStaticBody?: boolean;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.World#defaults debugShowStaticBody}.
-                     */
-                    debugShowVelocity?: boolean;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.World#defaults debugBodyColor}.
-                     */
-                    debugBodyColor?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.World#defaults debugStaticBodyColor}.
-                     */
-                    debugStaticBodyColor?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.World#defaults debugVelocityColor}.
-                     */
-                    debugVelocityColor?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.World#maxEntries}.
-                     */
-                    maxEntries?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.World#useTree}.
-                     */
-                    useTree?: boolean;
-                };
-
-                type ArcadeWorldDefaults = {
-                    /**
-                     * Set to `true` to render dynamic body outlines to the debug display.
-                     */
-                    debugShowBody: boolean;
-                    /**
-                     * Set to `true` to render static body outlines to the debug display.
-                     */
-                    debugShowStaticBody: boolean;
-                    /**
-                     * Set to `true` to render body velocity markers to the debug display.
-                     */
-                    debugShowVelocity: boolean;
-                    /**
-                     * The color of dynamic body outlines when rendered to the debug display.
-                     */
-                    bodyDebugColor: number;
-                    /**
-                     * The color of static body outlines when rendered to the debug display.
-                     */
-                    staticBodyDebugColor: number;
-                    /**
-                     * The color of the velocity markers when rendered to the debug display.
-                     */
-                    velocityDebugColor: number;
-                };
-
-                type ArcadeWorldTreeMinMax = {
-                    /**
-                     * The minimum x value used in RTree searches.
-                     */
-                    minX: number;
-                    /**
-                     * The minimum y value used in RTree searches.
-                     */
-                    minY: number;
-                    /**
-                     * The maximum x value used in RTree searches.
-                     */
-                    maxX: number;
-                    /**
-                     * The maximum y value used in RTree searches.
-                     */
-                    maxY: number;
-                };
-
-                type CheckCollisionObject = {
-                    /**
-                     * Will bodies collide with the top side of the world bounds?
-                     */
-                    up: boolean;
-                    /**
-                     * Will bodies collide with the bottom side of the world bounds?
-                     */
-                    down: boolean;
-                    /**
-                     * Will bodies collide with the left side of the world bounds?
-                     */
-                    left: boolean;
-                    /**
-                     * Will bodies collide with the right side of the world bounds?
-                     */
-                    right: boolean;
-                };
-
-                type PhysicsGroupConfig = Phaser.GameObjects.Group.Types.GroupConfig & {
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.Body#collideWorldBounds}.
-                     */
-                    collideWorldBounds?: boolean;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.Body#acceleration acceleration.x}.
-                     */
-                    accelerationX?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.Body#acceleration acceleration.y}.
-                     */
-                    accelerationY?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.Body#allowDrag}.
-                     */
-                    allowDrag?: boolean;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.Body#allowGravity}.
-                     */
-                    allowGravity?: boolean;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.Body#allowRotation}.
-                     */
-                    allowRotation?: boolean;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.Body#bounce bounce.x}.
-                     */
-                    bounceX?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.Body#bounce bounce.y}.
-                     */
-                    bounceY?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.Body#drag drag.x}.
-                     */
-                    dragX?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.Body#drag drag.y}.
-                     */
-                    dragY?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.Body#enable enable}.
-                     */
-                    enable?: boolean;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.Body#gravity gravity.x}.
-                     */
-                    gravityX?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.Body#gravity gravity.y}.
-                     */
-                    gravityY?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.Body#friction friction.x}.
-                     */
-                    frictionX?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.Body#friction friction.y}.
-                     */
-                    frictionY?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.Body#velocity velocity.x}.
-                     */
-                    velocityX?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.Body#velocity velocity.y}.
-                     */
-                    velocityY?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.Body#angularVelocity}.
-                     */
-                    angularVelocity?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.Body#angularAcceleration}.
-                     */
-                    angularAcceleration?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.Body#angularDrag}.
-                     */
-                    angularDrag?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.Body#mass}.
-                     */
-                    mass?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Arcade.Body#immovable}.
-                     */
-                    immovable?: boolean;
-                };
-
-                type PhysicsGroupDefaults = {
-                    /**
-                     * As {@link Phaser.Physics.Arcade.Body#setCollideWorldBounds}.
-                     */
-                    setCollideWorldBounds: boolean;
-                    /**
-                     * As {@link Phaser.Physics.Arcade.Body#setAccelerationX}.
-                     */
-                    setAccelerationX: number;
-                    /**
-                     * As {@link Phaser.Physics.Arcade.Body#setAccelerationY}.
-                     */
-                    setAccelerationY: number;
-                    /**
-                     * As {@link Phaser.Physics.Arcade.Body#setAllowDrag}.
-                     */
-                    setAllowDrag: boolean;
-                    /**
-                     * As {@link Phaser.Physics.Arcade.Body#setAllowGravity}.
-                     */
-                    setAllowGravity: boolean;
-                    /**
-                     * As {@link Phaser.Physics.Arcade.Body#setAllowRotation}.
-                     */
-                    setAllowRotation: boolean;
-                    /**
-                     * As {@link Phaser.Physics.Arcade.Body#setBounceX}.
-                     */
-                    setBounceX: number;
-                    /**
-                     * As {@link Phaser.Physics.Arcade.Body#setBounceY}.
-                     */
-                    setBounceY: number;
-                    /**
-                     * As {@link Phaser.Physics.Arcade.Body#setDragX}.
-                     */
-                    setDragX: number;
-                    /**
-                     * As {@link Phaser.Physics.Arcade.Body#setDragY}.
-                     */
-                    setDragY: number;
-                    /**
-                     * As {@link Phaser.Physics.Arcade.Body#setEnable}.
-                     */
-                    setEnable: boolean;
-                    /**
-                     * As {@link Phaser.Physics.Arcade.Body#setGravityX}.
-                     */
-                    setGravityX: number;
-                    /**
-                     * As {@link Phaser.Physics.Arcade.Body#setGravityY}.
-                     */
-                    setGravityY: number;
-                    /**
-                     * As {@link Phaser.Physics.Arcade.Body#setFrictionX}.
-                     */
-                    setFrictionX: number;
-                    /**
-                     * As {@link Phaser.Physics.Arcade.Body#setFrictionY}.
-                     */
-                    setFrictionY: number;
-                    /**
-                     * As {@link Phaser.Physics.Arcade.Body#setVelocityX}.
-                     */
-                    setVelocityX: number;
-                    /**
-                     * As {@link Phaser.Physics.Arcade.Body#setVelocityY}.
-                     */
-                    setVelocityY: number;
-                    /**
-                     * As {@link Phaser.Physics.Arcade.Body#setAngularVelocity}.
-                     */
-                    setAngularVelocity: number;
-                    /**
-                     * As {@link Phaser.Physics.Arcade.Body#setAngularAcceleration}.
-                     */
-                    setAngularAcceleration: number;
-                    /**
-                     * As {@link Phaser.Physics.Arcade.Body#setAngularDrag}.
-                     */
-                    setAngularDrag: number;
-                    /**
-                     * As {@link Phaser.Physics.Arcade.Body#setMass}.
-                     */
-                    setMass: number;
-                    /**
-                     * As {@link Phaser.Physics.Arcade.Body#setImmovable}.
-                     */
-                    setImmovable: boolean;
-                };
-
-            }
-
             /**
              * The Arcade Physics World.
              * 
@@ -55914,7 +57200,7 @@ declare namespace Phaser {
                  * @param scene The Scene to which this World instance belongs.
                  * @param config An Arcade Physics Configuration object.
                  */
-                constructor(scene: Phaser.Scene, config: Phaser.Physics.Arcade.Types.ArcadeWorldConfig);
+                constructor(scene: Phaser.Scene, config: Phaser.Types.Physics.Arcade.ArcadeWorldConfig);
 
                 /**
                  * The Scene this simulation belongs to.
@@ -55954,7 +57240,7 @@ declare namespace Phaser {
                 /**
                  * The boundary edges that Bodies can collide with.
                  */
-                checkCollision: Phaser.Physics.Arcade.Types.CheckCollisionObject;
+                checkCollision: Phaser.Types.Physics.Arcade.CheckCollisionObject;
 
                 /**
                  * The number of physics steps to be taken per second.
@@ -56016,7 +57302,7 @@ declare namespace Phaser {
                 /**
                  * Default debug display settings for new Bodies.
                  */
-                defaults: Phaser.Physics.Arcade.Types.ArcadeWorldDefaults;
+                defaults: Phaser.Types.Physics.Arcade.ArcadeWorldDefaults;
 
                 /**
                  * The maximum number of items per node on the RTree.
@@ -56059,7 +57345,7 @@ declare namespace Phaser {
                 /**
                  * Recycled input for tree searches.
                  */
-                treeMinMax: Phaser.Physics.Arcade.Types.ArcadeWorldTreeMinMax;
+                treeMinMax: Phaser.Types.Physics.Arcade.ArcadeWorldTreeMinMax;
 
                 /**
                  * Adds an Arcade Physics Body to a Game Object, an array of Game Objects, or the children of a Group.
@@ -56228,7 +57514,7 @@ declare namespace Phaser {
                  * @param processCallback The callback to invoke when the two objects collide. Must return a boolean.
                  * @param callbackContext The scope in which to call the callbacks.
                  */
-                addCollider(object1: Phaser.Physics.Arcade.Types.ArcadeColliderType, object2: Phaser.Physics.Arcade.Types.ArcadeColliderType, collideCallback?: ArcadePhysicsCallback, processCallback?: ArcadePhysicsCallback, callbackContext?: any): Phaser.Physics.Arcade.Collider;
+                addCollider(object1: Phaser.Types.Physics.Arcade.ArcadeColliderType, object2: Phaser.Types.Physics.Arcade.ArcadeColliderType, collideCallback?: ArcadePhysicsCallback, processCallback?: ArcadePhysicsCallback, callbackContext?: any): Phaser.Physics.Arcade.Collider;
 
                 /**
                  * Creates a new Overlap Collider object and adds it to the simulation.
@@ -56246,7 +57532,7 @@ declare namespace Phaser {
                  * @param processCallback The callback to invoke when the two objects overlap. Must return a boolean.
                  * @param callbackContext The scope in which to call the callbacks.
                  */
-                addOverlap(object1: Phaser.Physics.Arcade.Types.ArcadeColliderType, object2: Phaser.Physics.Arcade.Types.ArcadeColliderType, collideCallback?: ArcadePhysicsCallback, processCallback?: ArcadePhysicsCallback, callbackContext?: any): Phaser.Physics.Arcade.Collider;
+                addOverlap(object1: Phaser.Types.Physics.Arcade.ArcadeColliderType, object2: Phaser.Types.Physics.Arcade.ArcadeColliderType, collideCallback?: ArcadePhysicsCallback, processCallback?: ArcadePhysicsCallback, callbackContext?: any): Phaser.Physics.Arcade.Collider;
 
                 /**
                  * Removes a Collider from the simulation so it is no longer processed.
@@ -56358,7 +57644,7 @@ declare namespace Phaser {
                  * @param processCallback An optional callback function that lets you perform additional checks against the two objects if they overlap. If this is set then `overlapCallback` will only be called if this callback returns `true`.
                  * @param callbackContext The context in which to run the callbacks.
                  */
-                overlap(object1: Phaser.Physics.Arcade.Types.ArcadeColliderType, object2?: Phaser.Physics.Arcade.Types.ArcadeColliderType, overlapCallback?: ArcadePhysicsCallback, processCallback?: ArcadePhysicsCallback, callbackContext?: any): boolean;
+                overlap(object1: Phaser.Types.Physics.Arcade.ArcadeColliderType, object2?: Phaser.Types.Physics.Arcade.ArcadeColliderType, overlapCallback?: ArcadePhysicsCallback, processCallback?: ArcadePhysicsCallback, callbackContext?: any): boolean;
 
                 /**
                  * Performs a collision check and separation between the two physics enabled objects given, which can be single
@@ -56385,7 +57671,7 @@ declare namespace Phaser {
                  * @param processCallback An optional callback function that lets you perform additional checks against the two objects if they collide. If this is set then `collideCallback` will only be called if this callback returns `true`.
                  * @param callbackContext The context in which to run the callbacks.
                  */
-                collide(object1: Phaser.Physics.Arcade.Types.ArcadeColliderType, object2?: Phaser.Physics.Arcade.Types.ArcadeColliderType, collideCallback?: ArcadePhysicsCallback, processCallback?: ArcadePhysicsCallback, callbackContext?: any): boolean;
+                collide(object1: Phaser.Types.Physics.Arcade.ArcadeColliderType, object2?: Phaser.Types.Physics.Arcade.ArcadeColliderType, collideCallback?: ArcadePhysicsCallback, processCallback?: ArcadePhysicsCallback, callbackContext?: any): boolean;
 
                 /**
                  * This advanced method is specifically for testing for collision between a single Sprite and an array of Tile objects.
@@ -56539,42 +57825,42 @@ declare namespace Phaser {
                 /**
                  * [description]
                  */
-                size: Phaser.Math.Types.Vector2Like;
+                size: Phaser.Types.Math.Vector2Like;
 
                 /**
                  * [description]
                  */
-                offset: Phaser.Math.Types.Vector2Like;
+                offset: Phaser.Types.Math.Vector2Like;
 
                 /**
                  * [description]
                  */
-                pos: Phaser.Math.Types.Vector2Like;
+                pos: Phaser.Types.Math.Vector2Like;
 
                 /**
                  * [description]
                  */
-                last: Phaser.Math.Types.Vector2Like;
+                last: Phaser.Types.Math.Vector2Like;
 
                 /**
                  * [description]
                  */
-                vel: Phaser.Math.Types.Vector2Like;
+                vel: Phaser.Types.Math.Vector2Like;
 
                 /**
                  * [description]
                  */
-                accel: Phaser.Math.Types.Vector2Like;
+                accel: Phaser.Types.Math.Vector2Like;
 
                 /**
                  * [description]
                  */
-                friction: Phaser.Math.Types.Vector2Like;
+                friction: Phaser.Types.Math.Vector2Like;
 
                 /**
                  * [description]
                  */
-                maxVel: Phaser.Math.Types.Vector2Like;
+                maxVel: Phaser.Types.Math.Vector2Like;
 
                 /**
                  * [description]
@@ -56644,7 +57930,7 @@ declare namespace Phaser {
                 /**
                  * [description]
                  */
-                updateCallback: BodyUpdateCallback;
+                updateCallback: Phaser.Types.Physics.Impact.BodyUpdateCallback;
 
                 /**
                  * min 44 deg, max 136 deg
@@ -56698,7 +57984,7 @@ declare namespace Phaser {
                 /**
                  * Export this body object to JSON.
                  */
-                toJSON(): Phaser.Physics.Impact.Types.JSONImpactBody;
+                toJSON(): Phaser.Types.Physics.Impact.JSONImpactBody;
 
                 /**
                  * [description]
@@ -56741,32 +58027,27 @@ declare namespace Phaser {
              * with other LITE or PASSIVE entities at all. The behavior for FIXED vs.
              * FIXED collisions is undefined.
              */
-            namespace COLLIDES {
+            enum COLLIDES {
                 /**
                  * Never collides.
                  */
-                const NEVER: integer;
-
+                NEVER,
                 /**
                  * Lite collision.
                  */
-                const LITE: integer;
-
+                LITE,
                 /**
                  * Passive collision.
                  */
-                const PASSIVE: integer;
-
+                PASSIVE,
                 /**
                  * Active collision.
                  */
-                const ACTIVE: integer;
-
+                ACTIVE,
                 /**
                  * Fixed collision.
                  */
-                const FIXED: integer;
-
+                FIXED,
             }
 
             /**
@@ -59836,275 +61117,23 @@ declare namespace Phaser {
              * with other LITE or PASSIVE entities at all. The behavior for FIXED vs.
              * FIXED collisions is undefined.
              */
-            namespace TYPE {
+            enum TYPE {
                 /**
                  * Collides with nothing.
                  */
-                const NONE: integer;
-
+                NONE,
                 /**
                  * Type A. Collides with Type B.
                  */
-                const A: integer;
-
+                A,
                 /**
                  * Type B. Collides with Type A.
                  */
-                const B: integer;
-
+                B,
                 /**
                  * Collides with both types A and B.
                  */
-                const BOTH: integer;
-
-            }
-
-            namespace Types {
-                type BodyUpdateCallback = (body: Phaser.Physics.Impact.Body)=>void;
-
-                type CollisionOptions = {
-                    /**
-                     * Slope IDs can be stored on tiles directly
-                     * using Impacts tileset editor. If a tile has a property with the given slopeTileProperty string
-                     * name, the value of that property for the tile will be used for its slope mapping. E.g. a 45
-                     * degree slope upward could be given a "slope" property with a value of 2.
-                     */
-                    slopeTileProperty?: string;
-                    /**
-                     * A tile index to slope definition map.
-                     */
-                    slopeMap?: object;
-                    /**
-                     * If specified, the default slope ID to
-                     * assign to a colliding tile. If not specified, the tile's index is used.
-                     */
-                    defaultCollidingSlope?: integer;
-                    /**
-                     * The default slope ID to assign to a
-                     * non-colliding tile.
-                     */
-                    defaultNonCollidingSlope?: integer;
-                };
-
-                type JSONImpactBody = {
-                    /**
-                     * [description]
-                     */
-                    name: string;
-                    /**
-                     * [description]
-                     */
-                    size: Phaser.Math.Types.Vector2Like;
-                    /**
-                     * The entity's position in the game world.
-                     */
-                    pos: Phaser.Math.Types.Vector2Like;
-                    /**
-                     * Current velocity in pixels per second.
-                     */
-                    vel: Phaser.Math.Types.Vector2Like;
-                    /**
-                     * Current acceleration to be added to the entity's velocity per second. E.g. an entity with a `vel.x` of 0 and `accel.x` of 10 will have a `vel.x` of 100 ten seconds later.
-                     */
-                    accel: Phaser.Math.Types.Vector2Like;
-                    /**
-                     * Deceleration to be subtracted from the entity's velocity per second. Only applies if `accel` is 0.
-                     */
-                    friction: Phaser.Math.Types.Vector2Like;
-                    /**
-                     * The maximum velocity a body can move.
-                     */
-                    maxVel: Phaser.Math.Types.Vector2Like;
-                    /**
-                     * [description]
-                     */
-                    gravityFactor: number;
-                    /**
-                     * [description]
-                     */
-                    bounciness: number;
-                    /**
-                     * [description]
-                     */
-                    minBounceVelocity: number;
-                    /**
-                     * [description]
-                     */
-                    type: Phaser.Physics.Impact.TYPE;
-                    /**
-                     * [description]
-                     */
-                    checkAgainst: Phaser.Physics.Impact.TYPE;
-                    /**
-                     * [description]
-                     */
-                    collides: Phaser.Physics.Impact.COLLIDES;
-                };
-
-                type WorldConfig = {
-                    /**
-                     * Sets {@link Phaser.Physics.Impact.World#gravity}
-                     */
-                    gravity?: number;
-                    /**
-                     * The size of the cells used for the broadphase pass. Increase this value if you have lots of large objects in the world.
-                     */
-                    cellSize?: number;
-                    /**
-                     * A number that allows per-body time scaling, e.g. a force-field where bodies inside are in slow-motion, while others are at full speed.
-                     */
-                    timeScale?: number;
-                    /**
-                     * [description]
-                     */
-                    maxStep?: number;
-                    /**
-                     * Sets {@link Phaser.Physics.Impact.World#debug}.
-                     */
-                    debug?: boolean;
-                    /**
-                     * The maximum velocity a body can move.
-                     */
-                    maxVelocity?: number;
-                    /**
-                     * Whether the Body's boundary is drawn to the debug display.
-                     */
-                    debugShowBody?: boolean;
-                    /**
-                     * Whether the Body's velocity is drawn to the debug display.
-                     */
-                    debugShowVelocity?: boolean;
-                    /**
-                     * The color of this Body on the debug display.
-                     */
-                    debugBodyColor?: number;
-                    /**
-                     * The color of the Body's velocity on the debug display.
-                     */
-                    debugVelocityColor?: number;
-                    /**
-                     * Maximum X velocity objects can move.
-                     */
-                    maxVelocityX?: number;
-                    /**
-                     * Maximum Y velocity objects can move.
-                     */
-                    maxVelocityY?: number;
-                    /**
-                     * The minimum velocity an object can be moving at to be considered for bounce.
-                     */
-                    minBounceVelocity?: number;
-                    /**
-                     * Gravity multiplier. Set to 0 for no gravity.
-                     */
-                    gravityFactor?: number;
-                    /**
-                     * The default bounce, or restitution, of bodies in the world.
-                     */
-                    bounciness?: number;
-                    /**
-                     * Should the world have bounds enabled by default?
-                     */
-                    setBounds?: object | boolean;
-                    /**
-                     * The x coordinate of the world bounds.
-                     */
-                    "setBounds.x"?: number;
-                    /**
-                     * The y coordinate of the world bounds.
-                     */
-                    "setBounds.y"?: number;
-                    /**
-                     * The width of the world bounds.
-                     */
-                    "setBounds.width"?: number;
-                    /**
-                     * The height of the world bounds.
-                     */
-                    "setBounds.height"?: number;
-                    /**
-                     * The thickness of the walls of the world bounds.
-                     */
-                    "setBounds.thickness"?: number;
-                    /**
-                     * Should the left-side world bounds wall be created?
-                     */
-                    "setBounds.left"?: boolean;
-                    /**
-                     * Should the right-side world bounds wall be created?
-                     */
-                    "setBounds.right"?: boolean;
-                    /**
-                     * Should the top world bounds wall be created?
-                     */
-                    "setBounds.top"?: boolean;
-                    /**
-                     * Should the bottom world bounds wall be created?
-                     */
-                    "setBounds.bottom"?: boolean;
-                };
-
-                /**
-                 * An object containing the 4 wall bodies that bound the physics world.
-                 */
-                type WorldDefaults = {
-                    /**
-                     * Whether the Body's boundary is drawn to the debug display.
-                     */
-                    debugShowBody: boolean;
-                    /**
-                     * Whether the Body's velocity is drawn to the debug display.
-                     */
-                    debugShowVelocity: boolean;
-                    /**
-                     * The color of this Body on the debug display.
-                     */
-                    bodyDebugColor: number;
-                    /**
-                     * The color of the Body's velocity on the debug display.
-                     */
-                    velocityDebugColor: number;
-                    /**
-                     * Maximum X velocity objects can move.
-                     */
-                    maxVelocityX: number;
-                    /**
-                     * Maximum Y velocity objects can move.
-                     */
-                    maxVelocityY: number;
-                    /**
-                     * The minimum velocity an object can be moving at to be considered for bounce.
-                     */
-                    minBounceVelocity: number;
-                    /**
-                     * Gravity multiplier. Set to 0 for no gravity.
-                     */
-                    gravityFactor: number;
-                    /**
-                     * The default bounce, or restitution, of bodies in the world.
-                     */
-                    bounciness: number;
-                };
-
-                type WorldWalls = {
-                    /**
-                     * The left-side wall of the world bounds.
-                     */
-                    left: Phaser.Physics.Impact.Body;
-                    /**
-                     * The right-side wall of the world bounds.
-                     */
-                    right: Phaser.Physics.Impact.Body;
-                    /**
-                     * The top wall of the world bounds.
-                     */
-                    top: Phaser.Physics.Impact.Body;
-                    /**
-                     * The bottom wall of the world bounds.
-                     */
-                    bottom: Phaser.Physics.Impact.Body;
-                };
-
+                BOTH,
             }
 
             /**
@@ -60128,7 +61157,7 @@ declare namespace Phaser {
                  * @param scene The Scene to which this Impact World instance belongs.
                  * @param config [description]
                  */
-                constructor(scene: Phaser.Scene, config: Phaser.Physics.Impact.Types.WorldConfig);
+                constructor(scene: Phaser.Scene, config: Phaser.Types.Physics.Impact.WorldConfig);
 
                 /**
                  * [description]
@@ -60183,12 +61212,12 @@ declare namespace Phaser {
                 /**
                  * [description]
                  */
-                defaults: Phaser.Physics.Impact.Types.WorldDefaults;
+                defaults: Phaser.Types.Physics.Impact.WorldDefaults;
 
                 /**
                  * An object containing the 4 wall bodies that bound the physics world.
                  */
-                walls: Phaser.Physics.Impact.Types.WorldWalls;
+                walls: Phaser.Types.Physics.Impact.WorldWalls;
 
                 /**
                  * [description]
@@ -60213,7 +61242,7 @@ declare namespace Phaser {
                  * @param tilemapLayer The tilemap layer to use.
                  * @param options Options for controlling the mapping from tiles to slope IDs.
                  */
-                setCollisionMapFromTilemapLayer(tilemapLayer: Phaser.Tilemaps.DynamicTilemapLayer | Phaser.Tilemaps.StaticTilemapLayer, options?: Phaser.Physics.Impact.Types.CollisionOptions): Phaser.Physics.Impact.CollisionMap;
+                setCollisionMapFromTilemapLayer(tilemapLayer: Phaser.Tilemaps.DynamicTilemapLayer | Phaser.Tilemaps.StaticTilemapLayer, options?: Phaser.Types.Physics.Impact.CollisionOptions): Phaser.Physics.Impact.CollisionMap;
 
                 /**
                  * Sets the bounds of the Physics world to match the given world pixel dimensions.
@@ -63454,7 +64483,7 @@ declare namespace Phaser {
                  * @param tile The target tile that should have a Matter body.
                  * @param options Options to be used when creating the Matter body.
                  */
-                constructor(world: Phaser.Physics.Matter.World, tile: Phaser.Tilemaps.Tile, options?: Phaser.Physics.Matter.Types.MatterTileOptions);
+                constructor(world: Phaser.Physics.Matter.World, tile: Phaser.Tilemaps.Tile, options?: Phaser.Types.Physics.Matter.MatterTileOptions);
 
                 /**
                  * The tile object the body is associated with.
@@ -63470,7 +64499,7 @@ declare namespace Phaser {
                  * Sets the current body to a rectangle that matches the bounds of the tile.
                  * @param options Options to be used when creating the Matter body. See MatterJS.Body for a list of what Matter accepts.
                  */
-                setFromTileRectangle(options?: Phaser.Physics.Matter.Types.MatterBodyTileOptions): Phaser.Physics.Matter.TileBody;
+                setFromTileRectangle(options?: Phaser.Types.Physics.Matter.MatterBodyTileOptions): Phaser.Physics.Matter.TileBody;
 
                 /**
                  * Sets the current body from the collision group associated with the Tile. This is typically
@@ -63484,7 +64513,7 @@ declare namespace Phaser {
                  * polygon into multiple convex polygons yourself.
                  * @param options Options to be used when creating the Matter body. See MatterJS.Body for a list of what Matter accepts.
                  */
-                setFromTileCollision(options?: MatterBodyTileOptions): Phaser.Physics.Matter.TileBody;
+                setFromTileCollision(options?: Phaser.Types.Physics.Matter.MatterBodyTileOptions): Phaser.Physics.Matter.TileBody;
 
                 /**
                  * Sets the current body to the given body. This will remove the previous body, if one already
@@ -63767,35 +64796,6 @@ declare namespace Phaser {
 
             }
 
-            namespace Types {
-                type MatterBodyTileOptions = {
-                    /**
-                     * Whether or not the newly created body should be made static. This defaults to true since typically tiles should not be moved.
-                     */
-                    isStatic?: boolean;
-                    /**
-                     * Whether or not to add the newly created body (or existing body if options.body is used) to the Matter world.
-                     */
-                    addToWorld?: boolean;
-                };
-
-                type MatterTileOptions = {
-                    /**
-                     * An existing Matter body to be used instead of creating a new one.
-                     */
-                    body?: MatterJS.Body;
-                    /**
-                     * Whether or not the newly created body should be made static. This defaults to true since typically tiles should not be moved.
-                     */
-                    isStatic?: boolean;
-                    /**
-                     * Whether or not to add the newly created body (or existing body if options.body is used) to the Matter world.
-                     */
-                    addToWorld?: boolean;
-                };
-
-            }
-
             /**
              * [description]
              */
@@ -63803,9 +64803,9 @@ declare namespace Phaser {
                 /**
                  * 
                  * @param scene The Scene to which this Matter World instance belongs.
-                 * @param config [description]
+                 * @param config The Matter World configuration object.
                  */
-                constructor(scene: Phaser.Scene, config: object);
+                constructor(scene: Phaser.Scene, config: Phaser.Types.Physics.Matter.MatterWorldConfig);
 
                 /**
                  * The Scene to which this Matter World instance belongs.
@@ -64248,13 +65248,13 @@ declare namespace Phaser {
              * Returns the core plugin object from the cache based on the given key.
              * @param key The key of the core plugin to get.
              */
-            function getCore(key: string): Phaser.Plugins.Types.CorePluginContainer;
+            function getCore(key: string): Phaser.Types.Plugins.CorePluginContainer;
 
             /**
              * Returns the custom plugin object from the cache based on the given key.
              * @param key The key of the custom plugin to get.
              */
-            function getCustom(key: string): Phaser.Plugins.Types.CustomPluginContainer;
+            function getCustom(key: string): Phaser.Types.Plugins.CustomPluginContainer;
 
             /**
              * Returns an object from the custom cache based on the given key that can be instantiated.
@@ -64338,7 +65338,7 @@ declare namespace Phaser {
              * The global plugins currently running and managed by this Plugin Manager.
              * A plugin must have been started at least once in order to appear in this list.
              */
-            plugins: Phaser.Plugins.Types.GlobalPlugin[];
+            plugins: Phaser.Types.Plugins.GlobalPlugin[];
 
             /**
              * A list of plugin keys that should be installed into Scenes as well as the Core Plugins.
@@ -64431,7 +65431,7 @@ declare namespace Phaser {
              * Gets a global plugin based on the given key.
              * @param key The unique plugin key.
              */
-            protected getEntry(key: string): Phaser.Plugins.Types.GlobalPlugin;
+            protected getEntry(key: string): Phaser.Types.Plugins.GlobalPlugin;
 
             /**
              * Checks if the given global plugin, based on its key, is active or not.
@@ -64623,236 +65623,155 @@ declare namespace Phaser {
 
         }
 
-        namespace Types {
-            type CorePluginContainer = {
-                /**
-                 * The unique name of this plugin in the core plugin cache.
-                 */
-                key: string;
-                /**
-                 * The plugin to be stored. Should be the source object, not instantiated.
-                 */
-                plugin: Function;
-                /**
-                 * If this plugin is to be injected into the Scene Systems, this is the property key map used.
-                 */
-                mapping?: string;
-                /**
-                 * Core Scene plugin or a Custom Scene plugin?
-                 */
-                custom?: boolean;
-            };
-
-            type CustomPluginContainer = {
-                /**
-                 * The unique name of this plugin in the custom plugin cache.
-                 */
-                key: string;
-                /**
-                 * The plugin to be stored. Should be the source object, not instantiated.
-                 */
-                plugin: Function;
-            };
-
-            type GlobalPlugin = {
-                /**
-                 * The unique name of this plugin within the plugin cache.
-                 */
-                key: string;
-                /**
-                 * An instance of the plugin.
-                 */
-                plugin: Function;
-                /**
-                 * Is the plugin active or not?
-                 */
-                active?: boolean;
-                /**
-                 * If this plugin is to be injected into the Scene Systems, this is the property key map used.
-                 */
-                mapping?: string;
-            };
-
-        }
-
     }
 
     /**
      * Phaser Blend Modes.
      */
-    namespace BlendModes {
+    enum BlendModes {
         /**
          * Skips the Blend Mode check in the renderer.
          */
-        const SKIP_CHECK: integer;
-
+        SKIP_CHECK,
         /**
          * Normal blend mode. For Canvas and WebGL.
          * This is the default setting and draws new shapes on top of the existing canvas content.
          */
-        const NORMAL: integer;
-
+        NORMAL,
         /**
          * Add blend mode. For Canvas and WebGL.
          * Where both shapes overlap the color is determined by adding color values.
          */
-        const ADD: integer;
-
+        ADD,
         /**
          * Multiply blend mode. For Canvas and WebGL.
          * The pixels are of the top layer are multiplied with the corresponding pixel of the bottom layer. A darker picture is the result.
          */
-        const MULTIPLY: integer;
-
+        MULTIPLY,
         /**
          * Screen blend mode. For Canvas and WebGL.
          * The pixels are inverted, multiplied, and inverted again. A lighter picture is the result (opposite of multiply)
          */
-        const SCREEN: integer;
-
+        SCREEN,
         /**
          * Overlay blend mode. For Canvas only.
          * A combination of multiply and screen. Dark parts on the base layer become darker, and light parts become lighter.
          */
-        const OVERLAY: integer;
-
+        OVERLAY,
         /**
          * Darken blend mode. For Canvas only.
          * Retains the darkest pixels of both layers.
          */
-        const DARKEN: integer;
-
+        DARKEN,
         /**
          * Lighten blend mode. For Canvas only.
          * Retains the lightest pixels of both layers.
          */
-        const LIGHTEN: integer;
-
+        LIGHTEN,
         /**
          * Color Dodge blend mode. For Canvas only.
          * Divides the bottom layer by the inverted top layer.
          */
-        const COLOR_DODGE: integer;
-
+        COLOR_DODGE,
         /**
          * Color Burn blend mode. For Canvas only.
          * Divides the inverted bottom layer by the top layer, and then inverts the result.
          */
-        const COLOR_BURN: integer;
-
+        COLOR_BURN,
         /**
          * Hard Light blend mode. For Canvas only.
          * A combination of multiply and screen like overlay, but with top and bottom layer swapped.
          */
-        const HARD_LIGHT: integer;
-
+        HARD_LIGHT,
         /**
          * Soft Light blend mode. For Canvas only.
          * A softer version of hard-light. Pure black or white does not result in pure black or white.
          */
-        const SOFT_LIGHT: integer;
-
+        SOFT_LIGHT,
         /**
          * Difference blend mode. For Canvas only.
          * Subtracts the bottom layer from the top layer or the other way round to always get a positive value.
          */
-        const DIFFERENCE: integer;
-
+        DIFFERENCE,
         /**
          * Exclusion blend mode. For Canvas only.
          * Like difference, but with lower contrast.
          */
-        const EXCLUSION: integer;
-
+        EXCLUSION,
         /**
          * Hue blend mode. For Canvas only.
          * Preserves the luma and chroma of the bottom layer, while adopting the hue of the top layer.
          */
-        const HUE: integer;
-
+        HUE,
         /**
          * Saturation blend mode. For Canvas only.
          * Preserves the luma and hue of the bottom layer, while adopting the chroma of the top layer.
          */
-        const SATURATION: integer;
-
+        SATURATION,
         /**
          * Color blend mode. For Canvas only.
          * Preserves the luma of the bottom layer, while adopting the hue and chroma of the top layer.
          */
-        const COLOR: integer;
-
+        COLOR,
         /**
          * Luminosity blend mode. For Canvas only.
          * Preserves the hue and chroma of the bottom layer, while adopting the luma of the top layer.
          */
-        const LUMINOSITY: integer;
-
+        LUMINOSITY,
         /**
          * Alpha erase blend mode. For Canvas and WebGL.
          */
-        const ERASE: integer;
-
+        ERASE,
         /**
          * Source-in blend mode. For Canvas only.
          * The new shape is drawn only where both the new shape and the destination canvas overlap. Everything else is made transparent.
          */
-        const SOURCE_IN: integer;
-
+        SOURCE_IN,
         /**
          * Source-out blend mode. For Canvas only.
          * The new shape is drawn where it doesn't overlap the existing canvas content.
          */
-        const SOURCE_OUT: integer;
-
+        SOURCE_OUT,
         /**
          * Source-out blend mode. For Canvas only.
          * The new shape is only drawn where it overlaps the existing canvas content.
          */
-        const SOURCE_ATOP: integer;
-
+        SOURCE_ATOP,
         /**
          * Destination-over blend mode. For Canvas only.
          * New shapes are drawn behind the existing canvas content.
          */
-        const DESTINATION_OVER: integer;
-
+        DESTINATION_OVER,
         /**
          * Destination-in blend mode. For Canvas only.
          * The existing canvas content is kept where both the new shape and existing canvas content overlap. Everything else is made transparent.
          */
-        const DESTINATION_IN: integer;
-
+        DESTINATION_IN,
         /**
          * Destination-out blend mode. For Canvas only.
          * The existing content is kept where it doesn't overlap the new shape.
          */
-        const DESTINATION_OUT: integer;
-
+        DESTINATION_OUT,
         /**
          * Destination-out blend mode. For Canvas only.
          * The existing canvas is only kept where it overlaps the new shape. The new shape is drawn behind the canvas content.
          */
-        const DESTINATION_ATOP: integer;
-
+        DESTINATION_ATOP,
         /**
          * Lighten blend mode. For Canvas only.
          * Where both shapes overlap the color is determined by adding color values.
          */
-        const LIGHTER: integer;
-
+        LIGHTER,
         /**
          * Copy blend mode. For Canvas only.
          * Only the new shape is shown.
          */
-        const COPY: integer;
-
+        COPY,
         /**
          * Xor blend mode. For Canvas only.
          * Shapes are made transparent where both overlap and drawn normal everywhere else.
          */
-        const XOR: integer;
-
+        XOR,
     }
 
     namespace Renderer {
@@ -64934,7 +65853,7 @@ declare namespace Phaser {
                  * 
                  * If a non-null `callback` is set in this object, a snapshot of the canvas will be taken after the current frame is fully rendered.
                  */
-                snapshotState: Phaser.Renderer.Snapshot.Types.SnapshotState;
+                snapshotState: Phaser.Types.Renderer.Snapshot.SnapshotState;
 
                 /**
                  * Prepares the game canvas for rendering.
@@ -65027,7 +65946,7 @@ declare namespace Phaser {
                  * @param type The format of the image to create, usually `image/png` or `image/jpeg`. Default 'image/png'.
                  * @param encoderOptions The image quality, between 0 and 1. Used for image formats with lossy compression, such as `image/jpeg`. Default 0.92.
                  */
-                snapshot(callback: SnapshotCallback, type?: string, encoderOptions?: number): this;
+                snapshot(callback: Phaser.Types.Renderer.Snapshot.SnapshotCallback, type?: string, encoderOptions?: number): this;
 
                 /**
                  * Schedules a snapshot of the given area of the game viewport to be taken after the current frame is rendered.
@@ -65047,7 +65966,7 @@ declare namespace Phaser {
                  * @param type The format of the image to create, usually `image/png` or `image/jpeg`. Default 'image/png'.
                  * @param encoderOptions The image quality, between 0 and 1. Used for image formats with lossy compression, such as `image/jpeg`. Default 0.92.
                  */
-                snapshotArea(x: integer, y: integer, width: integer, height: integer, callback: SnapshotCallback, type?: string, encoderOptions?: number): this;
+                snapshotArea(x: integer, y: integer, width: integer, height: integer, callback: Phaser.Types.Renderer.Snapshot.SnapshotCallback, type?: string, encoderOptions?: number): this;
 
                 /**
                  * Schedules a snapshot of the given pixel from the game viewport to be taken after the current frame is rendered.
@@ -65064,7 +65983,7 @@ declare namespace Phaser {
                  * @param y The y coordinate of the pixel to get.
                  * @param callback The Function to invoke after the snapshot pixel data is extracted.
                  */
-                snapshotPixel(x: integer, y: integer, callback: SnapshotCallback): this;
+                snapshotPixel(x: integer, y: integer, callback: Phaser.Types.Renderer.Snapshot.SnapshotCallback): this;
 
                 /**
                  * Takes a Sprite Game Object, or any object that extends it, and draws it to the current context.
@@ -65120,47 +66039,7 @@ declare namespace Phaser {
              * @param sourceCanvas The canvas to take a snapshot of.
              * @param config The snapshot configuration object.
              */
-            function Canvas(sourceCanvas: HTMLCanvasElement, config: SnapshotState): void;
-
-            namespace Types {
-                type SnapshotCallback = (snapshot: Phaser.Display.Color | HTMLImageElement)=>void;
-
-                type SnapshotState = {
-                    /**
-                     * The function to call after the snapshot is taken.
-                     */
-                    callback: Phaser.Renderer.Snapshot.Types.SnapshotCallback;
-                    /**
-                     * The format of the image to create, usually `image/png` or `image/jpeg`.
-                     */
-                    type?: string;
-                    /**
-                     * The image quality, between 0 and 1. Used for image formats with lossy compression, such as `image/jpeg`.
-                     */
-                    encoderOptions?: number;
-                    /**
-                     * The x coordinate to start the snapshot from.
-                     */
-                    x?: integer;
-                    /**
-                     * The y coordinate to start the snapshot from.
-                     */
-                    y?: integer;
-                    /**
-                     * The width of the snapshot.
-                     */
-                    width?: integer;
-                    /**
-                     * The height of the snapshot.
-                     */
-                    height?: integer;
-                    /**
-                     * Is this a snapshot to get a single pixel, or an area?
-                     */
-                    getPixel?: boolean;
-                };
-
-            }
+            function Canvas(sourceCanvas: HTMLCanvasElement, config: Phaser.Types.Renderer.Snapshot.SnapshotState): void;
 
             /**
              * Takes a snapshot of an area from the current frame displayed by a WebGL canvas.
@@ -65170,7 +66049,7 @@ declare namespace Phaser {
              * @param sourceCanvas The canvas to take a snapshot of.
              * @param config The snapshot configuration object.
              */
-            function WebGL(sourceCanvas: HTMLCanvasElement, config: SnapshotState): void;
+            function WebGL(sourceCanvas: HTMLCanvasElement, config: Phaser.Types.Renderer.Snapshot.SnapshotState): void;
 
         }
 
@@ -65250,144 +66129,121 @@ declare namespace Phaser {
                  * Implements a model view projection matrices.
                  * Pipelines can implement this for doing 2D and 3D rendering.
                  */
-                namespace ModelViewProjection {
+                interface ModelViewProjection {
                     /**
                      * Dirty flag for checking if model matrix needs to be updated on GPU.
                      */
-                    var modelMatrixDirty: boolean;
-
+                    modelMatrixDirty: boolean;
                     /**
                      * Dirty flag for checking if view matrix needs to be updated on GPU.
                      */
-                    var viewMatrixDirty: boolean;
-
+                    viewMatrixDirty: boolean;
                     /**
                      * Dirty flag for checking if projection matrix needs to be updated on GPU.
                      */
-                    var projectionMatrixDirty: boolean;
-
+                    projectionMatrixDirty: boolean;
                     /**
                      * Model matrix
                      */
-                    var modelMatrix: Float32Array;
-
+                    modelMatrix: Float32Array;
                     /**
                      * View matrix
                      */
-                    var viewMatrix: Float32Array;
-
+                    viewMatrix: Float32Array;
                     /**
                      * Projection matrix
                      */
-                    var projectionMatrix: Float32Array;
-
+                    projectionMatrix: Float32Array;
                     /**
                      * Initializes MVP matrices with an identity matrix
                      */
-                    function mvpInit(): void;
-
+                    mvpInit(): void;
                     /**
                      * If dirty flags are set then the matrices are uploaded to the GPU.
                      */
-                    function mvpUpdate(): void;
-
+                    mvpUpdate(): void;
                     /**
                      * Loads an identity matrix to the model matrix
                      */
-                    function modelIdentity(): void;
-
+                    modelIdentity(): void;
                     /**
                      * Scale model matrix
                      * @param x The x component.
                      * @param y The y component.
                      * @param z The z component.
                      */
-                    function modelScale(x: number, y: number, z: number): this;
-
+                    modelScale(x: number, y: number, z: number): this;
                     /**
                      * Translate model matrix
                      * @param x The x component.
                      * @param y The y component.
                      * @param z The z component.
                      */
-                    function modelTranslate(x: number, y: number, z: number): this;
-
+                    modelTranslate(x: number, y: number, z: number): this;
                     /**
                      * Rotates the model matrix in the X axis.
                      * @param radians The amount to rotate by.
                      */
-                    function modelRotateX(radians: number): this;
-
+                    modelRotateX(radians: number): this;
                     /**
                      * Rotates the model matrix in the Y axis.
                      * @param radians The amount to rotate by.
                      */
-                    function modelRotateY(radians: number): this;
-
+                    modelRotateY(radians: number): this;
                     /**
                      * Rotates the model matrix in the Z axis.
                      * @param radians The amount to rotate by.
                      */
-                    function modelRotateZ(radians: number): this;
-
+                    modelRotateZ(radians: number): this;
                     /**
                      * Loads identity matrix into the view matrix
                      */
-                    function viewIdentity(): this;
-
+                    viewIdentity(): this;
                     /**
                      * Scales view matrix
                      * @param x The x component.
                      * @param y The y component.
                      * @param z The z component.
                      */
-                    function viewScale(x: number, y: number, z: number): this;
-
+                    viewScale(x: number, y: number, z: number): this;
                     /**
                      * Translates view matrix
                      * @param x The x component.
                      * @param y The y component.
                      * @param z The z component.
                      */
-                    function viewTranslate(x: number, y: number, z: number): this;
-
+                    viewTranslate(x: number, y: number, z: number): this;
                     /**
                      * Rotates view matrix in the X axis.
                      * @param radians The amount to rotate by.
                      */
-                    function viewRotateX(radians: number): this;
-
+                    viewRotateX(radians: number): this;
                     /**
                      * Rotates view matrix in the Y axis.
                      * @param radians The amount to rotate by.
                      */
-                    function viewRotateY(radians: number): this;
-
+                    viewRotateY(radians: number): this;
                     /**
                      * Rotates view matrix in the Z axis.
                      * @param radians The amount to rotate by.
                      */
-                    function viewRotateZ(radians: number): this;
-
+                    viewRotateZ(radians: number): this;
                     /**
                      * Loads a 2D view matrix (3x2 matrix) into a 4x4 view matrix
                      * @param matrix2D The Matrix2D.
                      */
-                    function viewLoad2D(matrix2D: Float32Array): this;
-
+                    viewLoad2D(matrix2D: Float32Array): this;
                     /**
                      * Copies a 4x4 matrix into the view matrix
                      * @param matrix The Matrix2D.
                      */
-                    function viewLoad(matrix: Float32Array): this;
-
+                    viewLoad(matrix: Float32Array): this;
                     /**
                      * Loads identity matrix into the projection matrix.
                      */
-                    function projIdentity(): this;
-
+                    projIdentity(): this;
                     /**
-                     * Sets up an orthographics projection matrix
+                     * Sets up an orthographic projection matrix
                      * @param left The left value.
                      * @param right The right value.
                      * @param bottom The bottom value.
@@ -65395,8 +66251,7 @@ declare namespace Phaser {
                      * @param near The near value.
                      * @param far The far value.
                      */
-                    function projOrtho(left: number, right: number, bottom: number, top: number, near: number, far: number): this;
-
+                    projOrtho(left: number, right: number, bottom: number, top: number, near: number, far: number): this;
                     /**
                      * Sets up a perspective projection matrix
                      * @param fovY The fov value.
@@ -65404,8 +66259,7 @@ declare namespace Phaser {
                      * @param near The near value.
                      * @param far The far value.
                      */
-                    function projPersp(fovY: number, aspectRatio: number, near: number, far: number): this;
-
+                    projPersp(fovY: number, aspectRatio: number, near: number, far: number): this;
                 }
 
                 /**
@@ -66255,7 +67109,7 @@ declare namespace Phaser {
                  * 
                  * If a non-null `callback` is set in this object, a snapshot of the canvas will be taken after the current frame is fully rendered.
                  */
-                snapshotState: Phaser.Renderer.Snapshot.Types.SnapshotState;
+                snapshotState: Phaser.Types.Renderer.Snapshot.SnapshotState;
 
                 /**
                  * Cached value for the last texture unit that was used
@@ -66720,7 +67574,7 @@ declare namespace Phaser {
                  * @param type The format of the image to create, usually `image/png` or `image/jpeg`. Default 'image/png'.
                  * @param encoderOptions The image quality, between 0 and 1. Used for image formats with lossy compression, such as `image/jpeg`. Default 0.92.
                  */
-                snapshot(callback: SnapshotCallback, type?: string, encoderOptions?: number): this;
+                snapshot(callback: Phaser.Types.Renderer.Snapshot.SnapshotCallback, type?: string, encoderOptions?: number): this;
 
                 /**
                  * Schedules a snapshot of the given area of the game viewport to be taken after the current frame is rendered.
@@ -66742,7 +67596,7 @@ declare namespace Phaser {
                  * @param type The format of the image to create, usually `image/png` or `image/jpeg`. Default 'image/png'.
                  * @param encoderOptions The image quality, between 0 and 1. Used for image formats with lossy compression, such as `image/jpeg`. Default 0.92.
                  */
-                snapshotArea(x: integer, y: integer, width: integer, height: integer, callback: SnapshotCallback, type?: string, encoderOptions?: number): this;
+                snapshotArea(x: integer, y: integer, width: integer, height: integer, callback: Phaser.Types.Renderer.Snapshot.SnapshotCallback, type?: string, encoderOptions?: number): this;
 
                 /**
                  * Schedules a snapshot of the given pixel from the game viewport to be taken after the current frame is rendered.
@@ -66759,7 +67613,7 @@ declare namespace Phaser {
                  * @param y The y coordinate of the pixel to get.
                  * @param callback The Function to invoke after the snapshot pixel data is extracted.
                  */
-                snapshotPixel(x: integer, y: integer, callback: SnapshotCallback): this;
+                snapshotPixel(x: integer, y: integer, callback: Phaser.Types.Renderer.Snapshot.SnapshotCallback): this;
 
                 /**
                  * Creates a WebGL Texture based on the given canvas element.
@@ -66937,35 +67791,31 @@ declare namespace Phaser {
     /**
      * Phaser Scale Modes.
      */
-    namespace ScaleModes {
+    enum ScaleModes {
         /**
          * Default Scale Mode (Linear).
          */
-        const DEFAULT: integer;
-
+        DEFAULT,
         /**
          * Linear Scale Mode.
          */
-        const LINEAR: integer;
-
+        LINEAR,
         /**
          * Nearest Scale Mode.
          */
-        const NEAREST: integer;
-
+        NEAREST,
     }
 
     namespace Scale {
         /**
          * Phaser Scale Manager constants for centering the game canvas.
          */
-        namespace Center {
+        enum Center {
             /**
              * The game canvas is not centered within the parent by Phaser.
              * You can still center it yourself via CSS.
              */
-            const NO_CENTER: integer;
-
+            NO_CENTER,
             /**
              * The game canvas is centered both horizontally and vertically within the parent.
              * To do this, the parent has to have a bounds that can be calculated and not be empty.
@@ -66973,8 +67823,7 @@ declare namespace Phaser {
              * Centering is achieved by setting the margin left and top properties of the
              * game canvas, and does not factor in any other CSS styles you may have applied.
              */
-            const CENTER_BOTH: integer;
-
+            CENTER_BOTH,
             /**
              * The game canvas is centered horizontally within the parent.
              * To do this, the parent has to have a bounds that can be calculated and not be empty.
@@ -66982,8 +67831,7 @@ declare namespace Phaser {
              * Centering is achieved by setting the margin left and top properties of the
              * game canvas, and does not factor in any other CSS styles you may have applied.
              */
-            const CENTER_HORIZONTALLY: integer;
-
+            CENTER_HORIZONTALLY,
             /**
              * The game canvas is centered both vertically within the parent.
              * To do this, the parent has to have a bounds that can be calculated and not be empty.
@@ -66991,8 +67839,7 @@ declare namespace Phaser {
              * Centering is achieved by setting the margin left and top properties of the
              * game canvas, and does not factor in any other CSS styles you may have applied.
              */
-            const CENTER_VERTICALLY: integer;
-
+            CENTER_VERTICALLY,
         }
 
         /**
@@ -67000,22 +67847,20 @@ declare namespace Phaser {
          * 
          * To find out what each mode does please see [Phaser.Scale.Center]{@link Phaser.Scale.Center}.
          */
-        type CenterType = Phaser.Scale.Center.NO_CENTER | Phaser.Scale.Center.CENTER_BOTH | Phaser.Scale.Center.CENTER_HORIZONTALLY | Phaser.Scale.Center.CENTER_VERTICALLY;
+        type CenterType = Phaser.Scale.Center;
 
         /**
          * Phaser Scale Manager constants for orientation.
          */
-        namespace Orientation {
+        enum Orientation {
             /**
              * A landscape orientation.
              */
-            const LANDSCAPE: string;
-
+            LANDSCAPE,
             /**
              * A portrait orientation.
              */
-            const PORTRAIT: string;
-
+            PORTRAIT,
         }
 
         /**
@@ -67023,47 +67868,41 @@ declare namespace Phaser {
          * 
          * To find out what each mode does please see [Phaser.Scale.Orientation]{@link Phaser.Scale.Orientation}.
          */
-        type OrientationType = Phaser.Scale.Orientation.LANDSCAPE | Phaser.Scale.Orientation.PORTRAIT;
+        type OrientationType = Phaser.Scale.Orientation;
 
         /**
          * Phaser Scale Manager constants for the different scale modes available.
          */
-        namespace ScaleModes {
+        enum ScaleModes {
             /**
              * No scaling happens at all. The canvas is set to the size given in the game config and Phaser doesn't change it
              * again from that point on. If you change the canvas size, either via CSS, or directly via code, then you need
              * to call the Scale Managers `resize` method to give the new dimensions, or input events will stop working.
              */
-            const NONE: integer;
-
+            NONE,
             /**
              * The height is automatically adjusted based on the width.
              */
-            const WIDTH_CONTROLS_HEIGHT: integer;
-
+            WIDTH_CONTROLS_HEIGHT,
             /**
              * The width is automatically adjusted based on the height.
              */
-            const HEIGHT_CONTROLS_WIDTH: integer;
-
+            HEIGHT_CONTROLS_WIDTH,
             /**
              * The width and height are automatically adjusted to fit inside the given target area,
              * while keeping the aspect ratio. Depending on the aspect ratio there may be some space
              * inside the area which is not covered.
              */
-            const FIT: integer;
-
+            FIT,
             /**
              * The width and height are automatically adjusted to make the size cover the entire target
              * area while keeping the aspect ratio. This may extend further out than the target size.
              */
-            const ENVELOP: integer;
-
+            ENVELOP,
             /**
              * The Canvas is resized to fit all available _parent_ space, regardless of aspect ratio.
              */
-            const RESIZE: integer;
-
+            RESIZE,
         }
 
         /**
@@ -67071,33 +67910,29 @@ declare namespace Phaser {
          * 
          * To find out what each mode does please see [Phaser.Scale.ScaleModes]{@link Phaser.Scale.ScaleModes}.
          */
-        type ScaleModeType = Phaser.Scale.ScaleModes.NONE | Phaser.Scale.ScaleModes.WIDTH_CONTROLS_HEIGHT | Phaser.Scale.ScaleModes.HEIGHT_CONTROLS_WIDTH | Phaser.Scale.ScaleModes.FIT | Phaser.Scale.ScaleModes.ENVELOP | Phaser.Scale.ScaleModes.RESIZE;
+        type ScaleModeType = Phaser.Scale.ScaleModes;
 
         /**
          * Phaser Scale Manager constants for zoom modes.
          */
-        namespace Zoom {
+        enum Zoom {
             /**
              * The game canvas will not be zoomed by Phaser.
              */
-            const NO_ZOOM: integer;
-
+            NO_ZOOM,
             /**
              * The game canvas will be 2x zoomed by Phaser.
              */
-            const ZOOM_2X: integer;
-
+            ZOOM_2X,
             /**
              * The game canvas will be 4x zoomed by Phaser.
              */
-            const ZOOM_4X: integer;
-
+            ZOOM_4X,
             /**
              * Calculate the zoom value based on the maximum multiplied game size that will
              * fit into the parent, or browser window if no parent is set.
              */
-            const MAX_ZOOM: integer;
-
+            MAX_ZOOM,
         }
 
         /**
@@ -67105,7 +67940,7 @@ declare namespace Phaser {
          * 
          * To find out what each mode does please see [Phaser.Scale.Zoom]{@link Phaser.Scale.Zoom}.
          */
-        type ZoomType = Phaser.Scale.Zoom.NO_ZOOM | Phaser.Scale.Zoom.ZOOM_2X | Phaser.Scale.Zoom.ZOOM_4X | Phaser.Scale.Zoom.MAX_ZOOM;
+        type ZoomType = Phaser.Scale.Zoom;
 
         namespace Events {
             /**
@@ -67400,13 +68235,13 @@ declare namespace Phaser {
              * Parses the game configuration to set-up the scale defaults.
              * @param config The Game configuration object.
              */
-            protected parseConfig(config: GameConfig): void;
+            protected parseConfig(config: Phaser.Types.Core.GameConfig): void;
 
             /**
              * Determines the parent element of the game canvas, if any, based on the game configuration.
              * @param config The Game configuration object.
              */
-            getParent(config: GameConfig): void;
+            getParent(config: Phaser.Types.Core.GameConfig): void;
 
             /**
              * Calculates the size of the parent bounds and updates the `parentSize` component, if the canvas has a dom parent.
@@ -68188,7 +69023,7 @@ declare namespace Phaser {
              * @param autoStart If `true` the Scene will be started immediately after being added. Default false.
              * @param data Optional data object. This will be set as Scene.settings.data and passed to `Scene.init`.
              */
-            add(key: string, sceneConfig: Phaser.Scene | Phaser.Scenes.Types.SettingsConfig | Phaser.Scenes.Types.CreateSceneFromObjectConfig | Function, autoStart?: boolean, data?: object): Phaser.Scene;
+            add(key: string, sceneConfig: Phaser.Scene | Phaser.Types.Scenes.SettingsConfig | Phaser.Types.Scenes.CreateSceneFromObjectConfig | Function, autoStart?: boolean, data?: object): Phaser.Scene;
 
             /**
              * Removes a Scene from the SceneManager.
@@ -68416,7 +69251,7 @@ declare namespace Phaser {
             /**
              * The settings of the Scene this ScenePlugin belongs to.
              */
-            settings: Phaser.Scenes.Types.SettingsObject;
+            settings: Phaser.Types.Scenes.SettingsObject;
 
             /**
              * The key of the Scene this ScenePlugin belongs to.
@@ -68478,7 +69313,7 @@ declare namespace Phaser {
              * override this understand that until the target Scene completes it might never be unlocked for input events.
              * @param config The transition configuration object.
              */
-            transition(config: Phaser.Scenes.Types.SceneTransitionConfig): boolean;
+            transition(config: Phaser.Types.Scenes.SceneTransitionConfig): boolean;
 
             /**
              * Add the Scene into the Scene Manager and start it if 'autoStart' is true or the Scene config 'active' property is set.
@@ -68487,7 +69322,7 @@ declare namespace Phaser {
              * @param autoStart Whether to start the Scene after it's added.
              * @param data Optional data object. This will be set as Scene.settings.data and passed to `Scene.init`.
              */
-            add(key: string, sceneConfig: Phaser.Scene | Phaser.Scenes.Types.SettingsConfig | Phaser.Scenes.Types.CreateSceneFromObjectConfig | Function, autoStart: boolean, data?: object): Phaser.Scene;
+            add(key: string, sceneConfig: Phaser.Scene | Phaser.Types.Scenes.SettingsConfig | Phaser.Types.Scenes.CreateSceneFromObjectConfig | Function, autoStart: boolean, data?: object): Phaser.Scene;
 
             /**
              * Launch the given Scene and run it in parallel with this one.
@@ -68679,7 +69514,7 @@ declare namespace Phaser {
              * Takes a Scene configuration object and returns a fully formed System Settings object.
              * @param config The Scene configuration object used to create this Scene Settings.
              */
-            function create(config: string | Phaser.Scenes.Types.SettingsConfig): Phaser.Scenes.Types.SettingsObject;
+            function create(config: string | Phaser.Types.Scenes.SettingsConfig): Phaser.Types.Scenes.SettingsObject;
 
         }
 
@@ -68696,7 +69531,7 @@ declare namespace Phaser {
              * @param scene The Scene that owns this Systems instance.
              * @param config Scene specific configuration settings.
              */
-            constructor(scene: Phaser.Scene, config: string | Phaser.Scenes.Types.SettingsConfig);
+            constructor(scene: Phaser.Scene, config: string | Phaser.Types.Scenes.SettingsConfig);
 
             /**
              * A reference to the Scene that these Systems belong to.
@@ -68721,12 +69556,12 @@ declare namespace Phaser {
             /**
              * The Scene Configuration object, as passed in when creating the Scene.
              */
-            config: string | Phaser.Scenes.Types.SettingsConfig;
+            config: string | Phaser.Types.Scenes.SettingsConfig;
 
             /**
              * The Scene Settings. This is the parsed output based on the Scene configuration.
              */
-            settings: Phaser.Scenes.Types.SettingsObject;
+            settings: Phaser.Types.Scenes.SettingsObject;
 
             /**
              * A handy reference to the Scene canvas / context.
@@ -68991,185 +69826,6 @@ declare namespace Phaser {
 
         }
 
-        namespace Types {
-            type CreateSceneFromObjectConfig = {
-                /**
-                 * See {@link Phaser.Scene#init}.
-                 */
-                init?: Function;
-                /**
-                 * See See {@link Phaser.Scene#preload}.
-                 */
-                preload?: Function;
-                /**
-                 * See {@link Phaser.Scene#create}.
-                 */
-                create?: Function;
-                /**
-                 * See {@link Phaser.Scene#update}.
-                 */
-                update?: Function;
-                /**
-                 * Any additional properties, which will be copied to the Scene after it's created (except `data` or `sys`).
-                 */
-                extend?: any;
-                /**
-                 * Any values, which will be merged into the Scene's Data Manager store.
-                 */
-                "extend.data"?: any;
-            };
-
-            type SceneTransitionConfig = {
-                /**
-                 * The Scene key to transition to.
-                 */
-                target: string;
-                /**
-                 * The duration, in ms, for the transition to last.
-                 */
-                duration?: integer;
-                /**
-                 * Will the Scene responsible for the transition be sent to sleep on completion (`true`), or stopped? (`false`)
-                 */
-                sleep?: boolean;
-                /**
-                 * Will the Scenes Input system be able to process events while it is transitioning in or out?
-                 */
-                allowInput?: boolean;
-                /**
-                 * Move the target Scene to be above this one before the transition starts.
-                 */
-                moveAbove?: boolean;
-                /**
-                 * Move the target Scene to be below this one before the transition starts.
-                 */
-                moveBelow?: boolean;
-                /**
-                 * This callback is invoked every frame for the duration of the transition.
-                 */
-                onUpdate?: Function;
-                /**
-                 * The context in which the callback is invoked.
-                 */
-                onUpdateScope?: any;
-                /**
-                 * An object containing any data you wish to be passed to the target Scenes init / create methods.
-                 */
-                data?: any;
-            };
-
-            type SettingsConfig = {
-                /**
-                 * The unique key of this Scene. Must be unique within the entire Game instance.
-                 */
-                key?: string;
-                /**
-                 * Does the Scene start as active or not? An active Scene updates each step.
-                 */
-                active?: boolean;
-                /**
-                 * Does the Scene start as visible or not? A visible Scene renders each step.
-                 */
-                visible?: boolean;
-                /**
-                 * An optional Loader Packfile to be loaded before the Scene begins.
-                 */
-                pack?: false | Phaser.Loader.FileTypes.PackFileConfig;
-                /**
-                 * An optional Camera configuration object.
-                 */
-                cameras?: InputJSONCameraObject | InputJSONCameraObject[];
-                /**
-                 * Overwrites the default injection map for a scene.
-                 */
-                map?: {[key: string]:  string};
-                /**
-                 * Extends the injection map for a scene.
-                 */
-                mapAdd?: {[key: string]:  string};
-                /**
-                 * The physics configuration object for the Scene.
-                 */
-                physics?: object;
-                /**
-                 * The loader configuration object for the Scene.
-                 */
-                loader?: object;
-                /**
-                 * The plugin configuration object for the Scene.
-                 */
-                plugins?: false | any;
-            };
-
-            type SettingsObject = {
-                /**
-                 * The current status of the Scene. Maps to the Scene constants.
-                 */
-                status: number;
-                /**
-                 * The unique key of this Scene. Unique within the entire Game instance.
-                 */
-                key: string;
-                /**
-                 * The active state of this Scene. An active Scene updates each step.
-                 */
-                active: boolean;
-                /**
-                 * The visible state of this Scene. A visible Scene renders each step.
-                 */
-                visible: boolean;
-                /**
-                 * Has the Scene finished booting?
-                 */
-                isBooted: boolean;
-                /**
-                 * Is the Scene in a state of transition?
-                 */
-                isTransition: boolean;
-                /**
-                 * The Scene this Scene is transitioning from, if set.
-                 */
-                transitionFrom: Phaser.Scene;
-                /**
-                 * The duration of the transition, if set.
-                 */
-                transitionDuration: integer;
-                /**
-                 * Is this Scene allowed to receive input during transitions?
-                 */
-                transitionAllowInput: boolean;
-                /**
-                 * a data bundle passed to this Scene from the Scene Manager.
-                 */
-                data: object;
-                /**
-                 * The Loader Packfile to be loaded before the Scene begins.
-                 */
-                pack: false | Phaser.Loader.FileTypes.PackFileConfig;
-                /**
-                 * The Camera configuration object.
-                 */
-                cameras: Phaser.Cameras.Scene2D.Types.JSONCamera | Phaser.Cameras.Scene2D.Types.JSONCamera[];
-                /**
-                 * The Scene's Injection Map.
-                 */
-                map: {[key: string]:  string};
-                /**
-                 * The physics configuration object for the Scene.
-                 */
-                physics: object;
-                /**
-                 * The loader configuration object for the Scene.
-                 */
-                loader: object;
-                /**
-                 * The plugin configuration object for the Scene.
-                 */
-                plugins: false | any;
-            };
-
-        }
-
     }
 
     /**
@@ -69180,7 +69836,7 @@ declare namespace Phaser {
          * 
          * @param config Scene specific configuration settings.
          */
-        constructor(config: string | Phaser.Scenes.Types.SettingsConfig);
+        constructor(config: string | Phaser.Types.Scenes.SettingsConfig);
 
         /**
          * The Scene Systems. You must never overwrite this property, or all hell will break lose.
@@ -69354,7 +70010,7 @@ declare namespace Phaser {
              * @param key Asset key for the sound.
              * @param config An optional config object containing default sound settings.
              */
-            constructor(manager: Phaser.Sound.BaseSoundManager, key: string, config?: Phaser.Sound.Types.SoundConfig);
+            constructor(manager: Phaser.Sound.BaseSoundManager, key: string, config?: Phaser.Types.Sound.SoundConfig);
 
             /**
              * Asset key for the sound.
@@ -69392,32 +70048,32 @@ declare namespace Phaser {
             /**
              * Object containing markers definitions.
              */
-            readonly markers: {[key: string]:  Phaser.Sound.Types.SoundMarker};
+            readonly markers: {[key: string]:  Phaser.Types.Sound.SoundMarker};
 
             /**
              * Currently playing marker.
              * 'null' if whole sound is playing.
              */
-            readonly currentMarker: Phaser.Sound.Types.SoundMarker;
+            readonly currentMarker: Phaser.Types.Sound.SoundMarker;
 
             /**
              * Adds a marker into the current sound. A marker is represented by name, start time, duration, and optionally config object.
              * This allows you to bundle multiple sounds together into a single audio file and use markers to jump between them for playback.
              * @param marker Marker object.
              */
-            addMarker(marker: SoundMarker): boolean;
+            addMarker(marker: Phaser.Types.Sound.SoundMarker): boolean;
 
             /**
              * Updates previously added marker.
              * @param marker Marker object with updated values.
              */
-            updateMarker(marker: Phaser.Sound.Types.SoundMarker): boolean;
+            updateMarker(marker: Phaser.Types.Sound.SoundMarker): boolean;
 
             /**
              * Removes a marker from the sound.
              * @param markerName The name of the marker to remove.
              */
-            removeMarker(markerName: string): Phaser.Sound.Types.SoundMarker;
+            removeMarker(markerName: string): Phaser.Types.Sound.SoundMarker;
 
             /**
              * Play this sound, or a marked section of it.
@@ -69426,7 +70082,7 @@ declare namespace Phaser {
              * @param markerName If you want to play a marker then provide the marker name here, otherwise omit it to play the full sound. Default ''.
              * @param config Optional sound config object to be applied to this marker or entire sound if no marker name is provided. It gets memorized for future plays of current section of the sound.
              */
-            play(markerName?: string, config?: Phaser.Sound.Types.SoundConfig): boolean;
+            play(markerName?: string, config?: Phaser.Types.Sound.SoundConfig): boolean;
 
             /**
              * Pauses the sound.
@@ -69525,7 +70181,7 @@ declare namespace Phaser {
              * @param key Asset key for the sound.
              * @param config An optional config object containing default sound settings.
              */
-            add(key: string, config?: Phaser.Sound.Types.SoundConfig): Phaser.Sound.BaseSound;
+            add(key: string, config?: Phaser.Types.Sound.SoundConfig): Phaser.Sound.BaseSound;
 
             /**
              * Adds a new audio sprite sound into the sound manager.
@@ -69534,7 +70190,7 @@ declare namespace Phaser {
              * @param key Asset key for the sound.
              * @param config An optional config object containing default sound settings.
              */
-            addAudioSprite(key: string, config?: Phaser.Sound.Types.SoundConfig): Phaser.Sound.Types.AudioSpriteSound;
+            addAudioSprite(key: string, config?: Phaser.Types.Sound.SoundConfig): Phaser.Types.Sound.AudioSpriteSound;
 
             /**
              * Enables playing sound on the fly without the need to keep a reference to it.
@@ -69542,7 +70198,7 @@ declare namespace Phaser {
              * @param key Asset key for the sound.
              * @param extra An optional additional object containing settings to be applied to the sound. It could be either config or marker object.
              */
-            play(key: string, extra?: Phaser.Sound.Types.SoundConfig | Phaser.Sound.Types.SoundMarker): boolean;
+            play(key: string, extra?: Phaser.Types.Sound.SoundConfig | Phaser.Types.Sound.SoundMarker): boolean;
 
             /**
              * Enables playing audio sprite sound on the fly without the need to keep a reference to it.
@@ -69551,7 +70207,7 @@ declare namespace Phaser {
              * @param spriteName The name of the sound sprite to play.
              * @param config An optional config object containing default sound settings.
              */
-            playAudioSprite(key: string, spriteName: string, config?: Phaser.Sound.Types.SoundConfig): boolean;
+            playAudioSprite(key: string, spriteName: string, config?: Phaser.Types.Sound.SoundConfig): boolean;
 
             /**
              * Removes a sound from the sound manager.
@@ -69955,7 +70611,7 @@ declare namespace Phaser {
              * @param key Asset key for the sound.
              * @param config An optional config object containing default sound settings. Default {}.
              */
-            constructor(manager: Phaser.Sound.HTML5AudioSoundManager, key: string, config?: Phaser.Sound.Types.SoundConfig);
+            constructor(manager: Phaser.Sound.HTML5AudioSoundManager, key: string, config?: Phaser.Types.Sound.SoundConfig);
 
             /**
              * Play this sound, or a marked section of it.
@@ -69964,7 +70620,7 @@ declare namespace Phaser {
              * @param markerName If you want to play a marker then provide the marker name here, otherwise omit it to play the full sound. Default ''.
              * @param config Optional sound config object to be applied to this marker or entire sound if no marker name is provided. It gets memorized for future plays of current section of the sound.
              */
-            play(markerName?: string, config?: Phaser.Sound.Types.SoundConfig): boolean;
+            play(markerName?: string, config?: Phaser.Types.Sound.SoundConfig): boolean;
 
             /**
              * Pauses the sound.
@@ -70121,7 +70777,7 @@ declare namespace Phaser {
              * @param key Asset key for the sound.
              * @param config An optional config object containing default sound settings.
              */
-            add(key: string, config?: Phaser.Sound.Types.SoundConfig): Phaser.Sound.HTML5AudioSound;
+            add(key: string, config?: Phaser.Types.Sound.SoundConfig): Phaser.Sound.HTML5AudioSound;
 
             /**
              * Unlocks HTML5 Audio loading and playback on mobile
@@ -70190,7 +70846,7 @@ declare namespace Phaser {
              * @param key Asset key for the sound.
              * @param config An optional config object containing default sound settings. Default {}.
              */
-            constructor(manager: Phaser.Sound.NoAudioSoundManager, key: string, config?: Phaser.Sound.Types.SoundConfig);
+            constructor(manager: Phaser.Sound.NoAudioSoundManager, key: string, config?: Phaser.Types.Sound.SoundConfig);
 
         }
 
@@ -70219,77 +70875,6 @@ declare namespace Phaser {
          */
         function SoundManagerCreator(game: Phaser.Game): void;
 
-        namespace Types {
-            /**
-             * Audio sprite sound type.
-             */
-            type AudioSpriteSound = {
-                /**
-                 * Local reference to 'spritemap' object form json file generated by audiosprite tool.
-                 */
-                spritemap: object;
-            };
-
-            type EachActiveSoundCallback = (manager: Phaser.Sound.BaseSoundManager, sound: Phaser.Sound.BaseSound, index: number, sounds: Phaser.Sound.BaseSound[])=>void;
-
-            /**
-             * Config object containing various sound settings.
-             */
-            type SoundConfig = {
-                /**
-                 * Boolean indicating whether the sound should be muted or not.
-                 */
-                mute?: boolean;
-                /**
-                 * A value between 0 (silence) and 1 (full volume).
-                 */
-                volume?: number;
-                /**
-                 * Defines the speed at which the sound should be played.
-                 */
-                rate?: number;
-                /**
-                 * Represents detuning of sound in [cents](https://en.wikipedia.org/wiki/Cent_%28music%29).
-                 */
-                detune?: number;
-                /**
-                 * Position of playback for this sound, in seconds.
-                 */
-                seek?: number;
-                /**
-                 * Whether or not the sound or current sound marker should loop.
-                 */
-                loop?: boolean;
-                /**
-                 * Time, in seconds, that should elapse before the sound actually starts its playback.
-                 */
-                delay?: number;
-            };
-
-            /**
-             * Marked section of a sound represented by name, and optionally start time, duration, and config object.
-             */
-            type SoundMarker = {
-                /**
-                 * Unique identifier of a sound marker.
-                 */
-                name: string;
-                /**
-                 * Sound position offset at witch playback should start.
-                 */
-                start?: number;
-                /**
-                 * Playback duration of this marker.
-                 */
-                duration?: number;
-                /**
-                 * An optional config object containing default marker settings.
-                 */
-                config?: Phaser.Sound.Types.SoundConfig;
-            };
-
-        }
-
         /**
          * Web Audio API implementation of the sound.
          */
@@ -70300,7 +70885,7 @@ declare namespace Phaser {
              * @param key Asset key for the sound.
              * @param config An optional config object containing default sound settings. Default {}.
              */
-            constructor(manager: Phaser.Sound.WebAudioSoundManager, key: string, config?: Phaser.Sound.Types.SoundConfig);
+            constructor(manager: Phaser.Sound.WebAudioSoundManager, key: string, config?: Phaser.Types.Sound.SoundConfig);
 
             /**
              * Play this sound, or a marked section of it.
@@ -70310,7 +70895,7 @@ declare namespace Phaser {
              * @param markerName If you want to play a marker then provide the marker name here, otherwise omit it to play the full sound. Default ''.
              * @param config Optional sound config object to be applied to this marker or entire sound if no marker name is provided. It gets memorized for future plays of current section of the sound.
              */
-            play(markerName?: string, config?: Phaser.Sound.Types.SoundConfig): boolean;
+            play(markerName?: string, config?: Phaser.Types.Sound.SoundConfig): boolean;
 
             /**
              * Pauses the sound.
@@ -70444,7 +71029,7 @@ declare namespace Phaser {
              * @param key Asset key for the sound.
              * @param config An optional config object containing default sound settings.
              */
-            add(key: string, config?: Phaser.Sound.Types.SoundConfig): Phaser.Sound.WebAudioSound;
+            add(key: string, config?: Phaser.Types.Sound.SoundConfig): Phaser.Sound.WebAudioSound;
 
             /**
              * Unlocks Web Audio API on the initial input event.
@@ -71529,7 +72114,7 @@ declare namespace Phaser {
              * @param width The width of the region to get. Must be an integer.
              * @param height The height of the region to get. Must be an integer. If not given will be set to the `width`.
              */
-            getPixels(x: integer, y: integer, width: integer, height?: integer): Phaser.Textures.Types.PixelConfig[];
+            getPixels(x: integer, y: integer, width: integer, height?: integer): Phaser.Types.Textures.PixelConfig[];
 
             /**
              * Returns the Image Data index for the given pixel in this CanvasTexture.
@@ -71587,17 +72172,15 @@ declare namespace Phaser {
         /**
          * Filter Types.
          */
-        namespace FilterMode {
+        enum FilterMode {
             /**
              * Linear filter type.
              */
-            const LINEAR: integer;
-
+            LINEAR,
             /**
              * Nearest neighbor filter type.
              */
-            const NEAREST: integer;
-
+            NEAREST,
         }
 
         namespace Events {
@@ -72278,7 +72861,7 @@ declare namespace Phaser {
              * @param source The source Image element.
              * @param config The configuration object for this Sprite Sheet.
              */
-            addSpriteSheet(key: string, source: HTMLImageElement, config: Phaser.Textures.Types.SpriteSheetConfig): Phaser.Textures.Texture;
+            addSpriteSheet(key: string, source: HTMLImageElement, config: Phaser.Types.Textures.SpriteSheetConfig): Phaser.Textures.Texture;
 
             /**
              * Adds a Sprite Sheet to this Texture Manager, where the Sprite Sheet exists as a Frame within a Texture Atlas.
@@ -72288,7 +72871,7 @@ declare namespace Phaser {
              * @param key The unique string-based key of the Texture.
              * @param config The configuration object for this Sprite Sheet.
              */
-            addSpriteSheetFromAtlas(key: string, config: Phaser.Textures.Types.SpriteSheetFromAtlasConfig): Phaser.Textures.Texture;
+            addSpriteSheetFromAtlas(key: string, config: Phaser.Types.Textures.SpriteSheetFromAtlasConfig): Phaser.Textures.Texture;
 
             /**
              * Creates a new Texture using the given source and dimensions.
@@ -72506,93 +73089,6 @@ declare namespace Phaser {
 
         }
 
-        namespace Types {
-            /**
-             * An object containing the position and color data for a single pixel in a CanvasTexture.
-             */
-            type PixelConfig = {
-                /**
-                 * The x-coordinate of the pixel.
-                 */
-                x: integer;
-                /**
-                 * The y-coordinate of the pixel.
-                 */
-                y: integer;
-                /**
-                 * The color of the pixel, not including the alpha channel.
-                 */
-                color: integer;
-                /**
-                 * The alpha of the pixel, between 0 and 1.
-                 */
-                alpha: number;
-            };
-
-            type SpriteSheetConfig = {
-                /**
-                 * The fixed width of each frame.
-                 */
-                frameWidth: integer;
-                /**
-                 * The fixed height of each frame. If not set it will use the frameWidth as the height.
-                 */
-                frameHeight?: integer;
-                /**
-                 * Skip a number of frames. Useful when there are multiple sprite sheets in one Texture.
-                 */
-                startFrame?: integer;
-                /**
-                 * The total number of frames to extract from the Sprite Sheet. The default value of -1 means "extract all frames".
-                 */
-                endFrame?: integer;
-                /**
-                 * If the frames have been drawn with a margin, specify the amount here.
-                 */
-                margin?: integer;
-                /**
-                 * If the frames have been drawn with spacing between them, specify the amount here.
-                 */
-                spacing?: integer;
-            };
-
-            type SpriteSheetFromAtlasConfig = {
-                /**
-                 * The key of the Texture Atlas in which this Sprite Sheet can be found.
-                 */
-                atlas: string;
-                /**
-                 * The key of the Texture Atlas Frame in which this Sprite Sheet can be found.
-                 */
-                frame: string;
-                /**
-                 * The fixed width of each frame.
-                 */
-                frameWidth: integer;
-                /**
-                 * The fixed height of each frame. If not set it will use the frameWidth as the height.
-                 */
-                frameHeight?: integer;
-                /**
-                 * Skip a number of frames. Useful when there are multiple sprite sheets in one Texture.
-                 */
-                startFrame?: integer;
-                /**
-                 * The total number of frames to extract from the Sprite Sheet. The default value of -1 means "extract all frames".
-                 */
-                endFrame?: integer;
-                /**
-                 * If the frames have been drawn with a margin, specify the amount here.
-                 */
-                margin?: integer;
-                /**
-                 * If the frames have been drawn with spacing between them, specify the amount here.
-                 */
-                spacing?: integer;
-            };
-
-        }
-
     }
 
     namespace Tilemaps {
@@ -72763,7 +73259,7 @@ declare namespace Phaser {
              * @param scene The Scene to create the Sprites within. Default scene the map is within.
              * @param camera The Camera to use when determining the world XY Default main camera.
              */
-            createFromTiles(indexes: integer | any[], replacements: integer | any[], spriteConfig: SpriteConfig, scene?: Phaser.Scene, camera?: Phaser.Cameras.Scene2D.Camera): Phaser.GameObjects.Sprite[];
+            createFromTiles(indexes: integer | any[], replacements: integer | any[], spriteConfig: Phaser.Types.GameObjects.Sprite.SpriteConfig, scene?: Phaser.Scene, camera?: Phaser.Cameras.Scene2D.Camera): Phaser.GameObjects.Sprite[];
 
             /**
              * Returns the tiles in the given layer that are within the cameras viewport.
@@ -72819,7 +73315,7 @@ declare namespace Phaser {
              * @param height How many tiles tall from the `tileY` index the area will be. Default max height based on tileY.
              * @param filteringOptions Optional filters to apply when getting the tiles.
              */
-            filterTiles(callback: Function, context?: object, tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Tilemaps.Types.FilteringOptions): Phaser.Tilemaps.Tile[];
+            filterTiles(callback: Function, context?: object, tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Types.Tilemaps.FilteringOptions): Phaser.Tilemaps.Tile[];
 
             /**
              * Searches the entire map layer for the first tile matching the given index, then returns that Tile
@@ -72846,7 +73342,7 @@ declare namespace Phaser {
              * @param height How many tiles tall from the `tileY` index the area will be. Default max height based on tileY.
              * @param filteringOptions Optional filters to apply when getting the tiles.
              */
-            findTile(callback: FindTileCallback, context?: object, tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Tilemaps.Types.FilteringOptions): Phaser.Tilemaps.Tile;
+            findTile(callback: FindTileCallback, context?: object, tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Types.Tilemaps.FilteringOptions): Phaser.Tilemaps.Tile;
 
             /**
              * For each tile in the given rectangular area (in tile coordinates) of the layer, run the given
@@ -72859,7 +73355,7 @@ declare namespace Phaser {
              * @param height How many tiles tall from the `tileY` index the area will be. Default max height based on tileY.
              * @param filteringOptions Optional filters to apply when getting the tiles.
              */
-            forEachTile(callback: EachTileCallback, context?: object, tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Tilemaps.Types.FilteringOptions): Phaser.Tilemaps.DynamicTilemapLayer;
+            forEachTile(callback: EachTileCallback, context?: object, tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Types.Tilemaps.FilteringOptions): Phaser.Tilemaps.DynamicTilemapLayer;
 
             /**
              * Gets a tile at the given tile coordinates from the given layer.
@@ -72886,7 +73382,7 @@ declare namespace Phaser {
              * @param height How many tiles tall from the `tileY` index the area will be. Default max height based on tileY.
              * @param filteringOptions Optional filters to apply when getting the tiles.
              */
-            getTilesWithin(tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Tilemaps.Types.FilteringOptions): Phaser.Tilemaps.Tile[];
+            getTilesWithin(tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Types.Tilemaps.FilteringOptions): Phaser.Tilemaps.Tile[];
 
             /**
              * Gets the tiles that overlap with the given shape in the given layer. The shape must be a Circle,
@@ -72895,7 +73391,7 @@ declare namespace Phaser {
              * @param filteringOptions Optional filters to apply when getting the tiles.
              * @param camera The Camera to use when factoring in which tiles to return. Default main camera.
              */
-            getTilesWithinShape(shape: Phaser.Geom.Circle | Phaser.Geom.Line | Phaser.Geom.Rectangle | Phaser.Geom.Triangle, filteringOptions?: Phaser.Tilemaps.Types.FilteringOptions, camera?: Phaser.Cameras.Scene2D.Camera): Phaser.Tilemaps.Tile[];
+            getTilesWithinShape(shape: Phaser.Geom.Circle | Phaser.Geom.Line | Phaser.Geom.Rectangle | Phaser.Geom.Triangle, filteringOptions?: Phaser.Types.Tilemaps.FilteringOptions, camera?: Phaser.Cameras.Scene2D.Camera): Phaser.Tilemaps.Tile[];
 
             /**
              * Gets the tiles in the given rectangular area (in world coordinates) of the layer.
@@ -72906,7 +73402,7 @@ declare namespace Phaser {
              * @param filteringOptions Optional filters to apply when getting the tiles.
              * @param camera The Camera to use when factoring in which tiles to return. Default main camera.
              */
-            getTilesWithinWorldXY(worldX: number, worldY: number, width: number, height: number, filteringOptions?: Phaser.Tilemaps.Types.FilteringOptions, camera?: Phaser.Cameras.Scene2D.Camera): Phaser.Tilemaps.Tile[];
+            getTilesWithinWorldXY(worldX: number, worldY: number, width: number, height: number, filteringOptions?: Phaser.Types.Tilemaps.FilteringOptions, camera?: Phaser.Cameras.Scene2D.Camera): Phaser.Tilemaps.Tile[];
 
             /**
              * Checks if there is a tile at the given location (in tile coordinates) in the given layer. Returns
@@ -73006,7 +73502,7 @@ declare namespace Phaser {
              * @param graphics The target Graphics object to draw upon.
              * @param styleConfig An object specifying the colors to use for the debug drawing.
              */
-            renderDebug(graphics: Phaser.GameObjects.Graphics, styleConfig: Phaser.Tilemaps.Types.StyleConfig): Phaser.Tilemaps.DynamicTilemapLayer;
+            renderDebug(graphics: Phaser.GameObjects.Graphics, styleConfig: Phaser.Types.Tilemaps.StyleConfig): Phaser.Tilemaps.DynamicTilemapLayer;
 
             /**
              * Scans the given rectangular area (given in tile coordinates) for tiles with an index matching
@@ -74028,7 +74524,7 @@ declare namespace Phaser {
              * 
              * @param config The Map configuration object.
              */
-            constructor(config?: Phaser.Tilemaps.Types.MapDataConfig);
+            constructor(config?: Phaser.Types.Tilemaps.MapDataConfig);
 
             /**
              * The key in the Phaser cache that corresponds to the loaded tilemap data.
@@ -74567,7 +75063,7 @@ declare namespace Phaser {
              * @param scene The Scene to create the Sprites within. Default scene the map is within.
              * @param camera The Camera to use when determining the world XY Default main camera.
              */
-            createFromTiles(indexes: integer | any[], replacements: integer | any[], spriteConfig: SpriteConfig, scene?: Phaser.Scene, camera?: Phaser.Cameras.Scene2D.Camera): Phaser.GameObjects.Sprite[];
+            createFromTiles(indexes: integer | any[], replacements: integer | any[], spriteConfig: Phaser.Types.GameObjects.Sprite.SpriteConfig, scene?: Phaser.Scene, camera?: Phaser.Cameras.Scene2D.Camera): Phaser.GameObjects.Sprite[];
 
             /**
              * Returns the tiles in the given layer that are within the cameras viewport.
@@ -74626,7 +75122,7 @@ declare namespace Phaser {
              * @param height How many tiles tall from the `tileY` index the area will be. Default max height based on tileY.
              * @param filteringOptions Optional filters to apply when getting the tiles.
              */
-            findTile(callback: Function, context?: object, tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Tilemaps.Types.FilteringOptions): Phaser.Tilemaps.Tile;
+            findTile(callback: Function, context?: object, tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Types.Tilemaps.FilteringOptions): Phaser.Tilemaps.Tile;
 
             /**
              * For each tile in the given rectangular area (in tile coordinates) of the layer, run the given
@@ -74642,7 +75138,7 @@ declare namespace Phaser {
              * @param height How many tiles tall from the `tileY` index the area will be. Default max height based on tileY.
              * @param filteringOptions Optional filters to apply when getting the tiles.
              */
-            filterTiles(callback: Function, context?: object, tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Tilemaps.Types.FilteringOptions): Phaser.Tilemaps.Tile[];
+            filterTiles(callback: Function, context?: object, tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Types.Tilemaps.FilteringOptions): Phaser.Tilemaps.Tile[];
 
             /**
              * For each tile in the given rectangular area (in tile coordinates) of the layer, run the given
@@ -74656,7 +75152,7 @@ declare namespace Phaser {
              * @param height How many tiles tall from the `tileY` index the area will be. Default max height based on tileY.
              * @param filteringOptions Optional filters to apply when getting the tiles.
              */
-            forEachTile(callback: Function, context?: object, tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Tilemaps.Types.FilteringOptions): Phaser.Tilemaps.StaticTilemapLayer;
+            forEachTile(callback: Function, context?: object, tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Types.Tilemaps.FilteringOptions): Phaser.Tilemaps.StaticTilemapLayer;
 
             /**
              * Gets a tile at the given tile coordinates from the given layer.
@@ -74685,7 +75181,7 @@ declare namespace Phaser {
              * @param height How many tiles tall from the `tileY` index the area will be. Default max height based on tileY.
              * @param filteringOptions Optional filters to apply when getting the tiles.
              */
-            getTilesWithin(tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Tilemaps.Types.FilteringOptions): Phaser.Tilemaps.Tile[];
+            getTilesWithin(tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Types.Tilemaps.FilteringOptions): Phaser.Tilemaps.Tile[];
 
             /**
              * Gets the tiles in the given rectangular area (in world coordinates) of the layer.
@@ -74696,7 +75192,7 @@ declare namespace Phaser {
              * @param filteringOptions Optional filters to apply when getting the tiles.
              * @param camera The Camera to use when factoring in which tiles to return. Default main camera.
              */
-            getTilesWithinWorldXY(worldX: number, worldY: number, width: number, height: number, filteringOptions?: Phaser.Tilemaps.Types.FilteringOptions, camera?: Phaser.Cameras.Scene2D.Camera): Phaser.Tilemaps.Tile[];
+            getTilesWithinWorldXY(worldX: number, worldY: number, width: number, height: number, filteringOptions?: Phaser.Types.Tilemaps.FilteringOptions, camera?: Phaser.Cameras.Scene2D.Camera): Phaser.Tilemaps.Tile[];
 
             /**
              * Gets the tiles that overlap with the given shape in the given layer. The shape must be a Circle,
@@ -74705,7 +75201,7 @@ declare namespace Phaser {
              * @param filteringOptions Optional filters to apply when getting the tiles.
              * @param camera The Camera to use when calculating the tile index from the world values. Default main camera.
              */
-            getTilesWithinShape(shape: Phaser.Geom.Circle | Phaser.Geom.Line | Phaser.Geom.Rectangle | Phaser.Geom.Triangle, filteringOptions?: Phaser.Tilemaps.Types.FilteringOptions, camera?: Phaser.Cameras.Scene2D.Camera): Phaser.Tilemaps.Tile[];
+            getTilesWithinShape(shape: Phaser.Geom.Circle | Phaser.Geom.Line | Phaser.Geom.Rectangle | Phaser.Geom.Triangle, filteringOptions?: Phaser.Types.Tilemaps.FilteringOptions, camera?: Phaser.Cameras.Scene2D.Camera): Phaser.Tilemaps.Tile[];
 
             /**
              * Checks if there is a tile at the given location (in tile coordinates) in the given layer. Returns
@@ -74732,7 +75228,7 @@ declare namespace Phaser {
              * @param graphics The target Graphics object to draw upon.
              * @param styleConfig An object specifying the colors to use for the debug drawing.
              */
-            renderDebug(graphics: Phaser.GameObjects.Graphics, styleConfig: Phaser.Tilemaps.Types.StyleConfig): Phaser.Tilemaps.StaticTilemapLayer;
+            renderDebug(graphics: Phaser.GameObjects.Graphics, styleConfig: Phaser.Types.Tilemaps.StyleConfig): Phaser.Tilemaps.StaticTilemapLayer;
 
             /**
              * Sets collision on the given tile or tiles within a layer by index. You can pass in either a
@@ -76154,7 +76650,7 @@ declare namespace Phaser {
              * scene.make.sprite).
              * @param scene The Scene to create the Sprites within. Default the scene the map is within.
              */
-            createFromObjects(name: string, id: integer | string, spriteConfig: SpriteConfig, scene?: Phaser.Scene): Phaser.GameObjects.Sprite[];
+            createFromObjects(name: string, id: integer | string, spriteConfig: Phaser.Types.GameObjects.Sprite.SpriteConfig, scene?: Phaser.Scene): Phaser.GameObjects.Sprite[];
 
             /**
              * Creates a Sprite for every object matching the given tile indexes in the layer. You can
@@ -76170,7 +76666,7 @@ declare namespace Phaser {
              * @param camera The Camera to use when calculating the tile index from the world values. Default main camera.
              * @param layer The tile layer to use. If not given the current layer is used.
              */
-            createFromTiles(indexes: integer | any[], replacements: integer | any[], spriteConfig: SpriteConfig, scene?: Phaser.Scene, camera?: Phaser.Cameras.Scene2D.Camera, layer?: string | integer | Phaser.Tilemaps.DynamicTilemapLayer | Phaser.Tilemaps.StaticTilemapLayer): Phaser.GameObjects.Sprite[];
+            createFromTiles(indexes: integer | any[], replacements: integer | any[], spriteConfig: Phaser.Types.GameObjects.Sprite.SpriteConfig, scene?: Phaser.Scene, camera?: Phaser.Cameras.Scene2D.Camera, layer?: string | integer | Phaser.Tilemaps.DynamicTilemapLayer | Phaser.Tilemaps.StaticTilemapLayer): Phaser.GameObjects.Sprite[];
 
             /**
              * Creates a new StaticTilemapLayer that renders the LayerData associated with the given
@@ -76238,7 +76734,7 @@ declare namespace Phaser {
              * @param filteringOptions Optional filters to apply when getting the tiles.
              * @param layer The tile layer to use. If not given the current layer is used.
              */
-            filterTiles(callback: Function, context?: object, tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Tilemaps.Types.FilteringOptions, layer?: string | integer | Phaser.Tilemaps.DynamicTilemapLayer | Phaser.Tilemaps.StaticTilemapLayer): Phaser.Tilemaps.Tile[];
+            filterTiles(callback: Function, context?: object, tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Types.Tilemaps.FilteringOptions, layer?: string | integer | Phaser.Tilemaps.DynamicTilemapLayer | Phaser.Tilemaps.StaticTilemapLayer): Phaser.Tilemaps.Tile[];
 
             /**
              * Searches the entire map layer for the first tile matching the given index, then returns that Tile
@@ -76278,7 +76774,7 @@ declare namespace Phaser {
              * @param filteringOptions Optional filters to apply when getting the tiles.
              * @param layer The Tile layer to run the search on. If not provided will use the current layer.
              */
-            findTile(callback: FindTileCallback, context?: object, tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Tilemaps.Types.FilteringOptions, layer?: string | integer | Phaser.Tilemaps.DynamicTilemapLayer | Phaser.Tilemaps.StaticTilemapLayer): Phaser.Tilemaps.Tile;
+            findTile(callback: FindTileCallback, context?: object, tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Types.Tilemaps.FilteringOptions, layer?: string | integer | Phaser.Tilemaps.DynamicTilemapLayer | Phaser.Tilemaps.StaticTilemapLayer): Phaser.Tilemaps.Tile;
 
             /**
              * For each tile in the given rectangular area (in tile coordinates) of the layer, run the given
@@ -76294,7 +76790,7 @@ declare namespace Phaser {
              * @param filteringOptions Optional filters to apply when getting the tiles.
              * @param layer The Tile layer to run the search on. If not provided will use the current layer.
              */
-            forEachTile(callback: EachTileCallback, context?: object, tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Tilemaps.Types.FilteringOptions, layer?: string | integer | Phaser.Tilemaps.DynamicTilemapLayer | Phaser.Tilemaps.StaticTilemapLayer): Phaser.Tilemaps.Tilemap;
+            forEachTile(callback: EachTileCallback, context?: object, tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Types.Tilemaps.FilteringOptions, layer?: string | integer | Phaser.Tilemaps.DynamicTilemapLayer | Phaser.Tilemaps.StaticTilemapLayer): Phaser.Tilemaps.Tilemap;
 
             /**
              * Gets the image layer index based on its name.
@@ -76373,7 +76869,7 @@ declare namespace Phaser {
              * @param filteringOptions Optional filters to apply when getting the tiles.
              * @param layer The tile layer to use. If not given the current layer is used.
              */
-            getTilesWithin(tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Tilemaps.Types.FilteringOptions, layer?: string | integer | Phaser.Tilemaps.DynamicTilemapLayer | Phaser.Tilemaps.StaticTilemapLayer): Phaser.Tilemaps.Tile[];
+            getTilesWithin(tileX?: integer, tileY?: integer, width?: integer, height?: integer, filteringOptions?: Phaser.Types.Tilemaps.FilteringOptions, layer?: string | integer | Phaser.Tilemaps.DynamicTilemapLayer | Phaser.Tilemaps.StaticTilemapLayer): Phaser.Tilemaps.Tile[];
 
             /**
              * Gets the tiles that overlap with the given shape in the given layer. The shape must be a Circle,
@@ -76384,7 +76880,7 @@ declare namespace Phaser {
              * @param camera The Camera to use when factoring in which tiles to return. Default main camera.
              * @param layer The tile layer to use. If not given the current layer is used.
              */
-            getTilesWithinShape(shape: Phaser.Geom.Circle | Phaser.Geom.Line | Phaser.Geom.Rectangle | Phaser.Geom.Triangle, filteringOptions?: Phaser.Tilemaps.Types.FilteringOptions, camera?: Phaser.Cameras.Scene2D.Camera, layer?: string | integer | Phaser.Tilemaps.DynamicTilemapLayer | Phaser.Tilemaps.StaticTilemapLayer): Phaser.Tilemaps.Tile[];
+            getTilesWithinShape(shape: Phaser.Geom.Circle | Phaser.Geom.Line | Phaser.Geom.Rectangle | Phaser.Geom.Triangle, filteringOptions?: Phaser.Types.Tilemaps.FilteringOptions, camera?: Phaser.Cameras.Scene2D.Camera, layer?: string | integer | Phaser.Tilemaps.DynamicTilemapLayer | Phaser.Tilemaps.StaticTilemapLayer): Phaser.Tilemaps.Tile[];
 
             /**
              * Gets the tiles in the given rectangular area (in world coordinates) of the layer.
@@ -76397,7 +76893,7 @@ declare namespace Phaser {
              * @param camera The Camera to use when factoring in which tiles to return. Default main camera.
              * @param layer The tile layer to use. If not given the current layer is used.
              */
-            getTilesWithinWorldXY(worldX: number, worldY: number, width: number, height: number, filteringOptions?: Phaser.Tilemaps.Types.FilteringOptions, camera?: Phaser.Cameras.Scene2D.Camera, layer?: string | integer | Phaser.Tilemaps.DynamicTilemapLayer | Phaser.Tilemaps.StaticTilemapLayer): Phaser.Tilemaps.Tile[];
+            getTilesWithinWorldXY(worldX: number, worldY: number, width: number, height: number, filteringOptions?: Phaser.Types.Tilemaps.FilteringOptions, camera?: Phaser.Cameras.Scene2D.Camera, layer?: string | integer | Phaser.Tilemaps.DynamicTilemapLayer | Phaser.Tilemaps.StaticTilemapLayer): Phaser.Tilemaps.Tile[];
 
             /**
              * Gets the Tileset that has the given `name`, or null if an invalid `name` is given.
@@ -76609,7 +77105,7 @@ declare namespace Phaser {
              * @param styleConfig An object specifying the colors to use for the debug drawing.
              * @param layer The tile layer to use. If not given the current layer is used.
              */
-            renderDebug(graphics: Phaser.GameObjects.Graphics, styleConfig: Phaser.Tilemaps.Types.StyleConfig, layer?: string | integer | Phaser.Tilemaps.DynamicTilemapLayer | Phaser.Tilemaps.StaticTilemapLayer): Phaser.Tilemaps.Tilemap;
+            renderDebug(graphics: Phaser.GameObjects.Graphics, styleConfig: Phaser.Types.Tilemaps.StyleConfig, layer?: string | integer | Phaser.Tilemaps.DynamicTilemapLayer | Phaser.Tilemaps.StaticTilemapLayer): Phaser.Tilemaps.Tilemap;
 
             /**
              * Draws a debug representation of all layers within this Tilemap to the given Graphics object.
@@ -76621,7 +77117,7 @@ declare namespace Phaser {
              * @param styleConfig An object specifying the colors to use for the debug drawing.
              * @param layer The tile layer to use. If not given the current layer is used.
              */
-            renderDebugFull(graphics: Phaser.GameObjects.Graphics, styleConfig: Phaser.Tilemaps.Types.StyleConfig, layer?: string | integer | Phaser.Tilemaps.DynamicTilemapLayer | Phaser.Tilemaps.StaticTilemapLayer): Phaser.Tilemaps.Tilemap;
+            renderDebugFull(graphics: Phaser.GameObjects.Graphics, styleConfig: Phaser.Types.Tilemaps.StyleConfig, layer?: string | integer | Phaser.Tilemaps.DynamicTilemapLayer | Phaser.Tilemaps.StaticTilemapLayer): Phaser.Tilemaps.Tilemap;
 
             /**
              * Scans the given rectangular area (given in tile coordinates) for tiles with an index matching
@@ -77066,169 +77562,6 @@ declare namespace Phaser {
 
         }
 
-        namespace Types {
-            type FilteringOptions = {
-                /**
-                 * If true, only return tiles that don't have -1 for an index.
-                 */
-                isNotEmpty?: boolean;
-                /**
-                 * If true, only return tiles that collide on at least one side.
-                 */
-                isColliding?: boolean;
-                /**
-                 * If true, only return tiles that have at least one interesting face.
-                 */
-                hasInterestingFace?: boolean;
-            };
-
-            type GetTilesWithinFilteringOptions = {
-                /**
-                 * If true, only return tiles that don't have -1 for an index.
-                 */
-                isNotEmpty?: boolean;
-                /**
-                 * If true, only return tiles that collide on at least one side.
-                 */
-                isColliding?: boolean;
-                /**
-                 * If true, only return tiles that have at least one interesting face.
-                 */
-                hasInterestingFace?: boolean;
-            };
-
-            type MapDataConfig = {
-                /**
-                 * The key in the Phaser cache that corresponds to the loaded tilemap data.
-                 */
-                name?: string;
-                /**
-                 * The width of the entire tilemap.
-                 */
-                width?: number;
-                /**
-                 * The height of the entire tilemap.
-                 */
-                height?: number;
-                /**
-                 * The width of the tiles.
-                 */
-                tileWidth?: number;
-                /**
-                 * The height of the tiles.
-                 */
-                tileHeight?: number;
-                /**
-                 * The width in pixels of the entire tilemap.
-                 */
-                widthInPixels?: number;
-                /**
-                 * The height in pixels of the entire tilemap.
-                 */
-                heightInPixels?: number;
-                /**
-                 * The format of the Tilemap, as defined in Tiled.
-                 */
-                format?: integer;
-                /**
-                 * The orientation of the map data (i.e. orthogonal, isometric, hexagonal), default 'orthogonal'.
-                 */
-                orientation?: string;
-                /**
-                 * Determines the draw order of tilemap. Default is right-down.
-                 */
-                renderOrder?: string;
-                /**
-                 * The version of Tiled the map uses.
-                 */
-                version?: number;
-                /**
-                 * Map specific properties (can be specified in Tiled).
-                 */
-                properties?: number;
-                /**
-                 * The layers of the tilemap.
-                 */
-                layers?: Phaser.Tilemaps.LayerData[];
-                /**
-                 * An array with all the layers configured to the MapData.
-                 */
-                images?: any[];
-                /**
-                 * An array of Tiled Image Layers.
-                 */
-                objects?: object;
-                /**
-                 * An object of Tiled Object Layers.
-                 */
-                collision?: object;
-                /**
-                 * The tilesets the map uses.
-                 */
-                tilesets?: Phaser.Tilemaps.Tileset[];
-                /**
-                 * The collection of images the map uses(specified in Tiled).
-                 */
-                imageCollections?: any[];
-                /**
-                 * [description]
-                 */
-                tiles?: any[];
-            };
-
-            type StyleConfig = {
-                /**
-                 * Color to use for drawing a filled rectangle at non-colliding tile locations. If set to null, non-colliding tiles will not be drawn.
-                 */
-                tileColor?: Phaser.Display.Color | number | null;
-                /**
-                 * Color to use for drawing a filled rectangle at colliding tile locations. If set to null, colliding tiles will not be drawn.
-                 */
-                collidingTileColor?: Phaser.Display.Color | number | null;
-                /**
-                 * Color to use for drawing a line at interesting tile faces. If set to null, interesting tile faces will not be drawn.
-                 */
-                faceColor?: Phaser.Display.Color | number | null;
-            };
-
-            type TilemapConfig = {
-                /**
-                 * The key in the Phaser cache that corresponds to the loaded tilemap data.
-                 */
-                key?: string;
-                /**
-                 * Instead of loading from the cache, you can also load directly from a 2D array of tile indexes.
-                 */
-                data?: integer[][];
-                /**
-                 * The width of a tile in pixels.
-                 */
-                tileWidth?: integer;
-                /**
-                 * The height of a tile in pixels.
-                 */
-                tileHeight?: integer;
-                /**
-                 * The width of the map in tiles.
-                 */
-                width?: integer;
-                /**
-                 * The height of the map in tiles.
-                 */
-                height?: integer;
-                /**
-                 * Controls how empty tiles, tiles with an index of -1,
-                 * in the map data are handled. If `true`, empty locations will get a value of `null`. If `false`,
-                 * empty location will get a Tile object with an index of -1. If you've a large sparsely populated
-                 * map and the tile data doesn't need to change then setting this value to `true` will help with
-                 * memory consumption. However if your map is small or you need to update the tiles dynamically,
-                 * then leave the default value set.
-                 */
-                insertNull?: boolean;
-            };
-
-        }
-
     }
 
     namespace Time {
@@ -77277,7 +77610,7 @@ declare namespace Phaser {
              * Creates a Timer Event and adds it to the Clock at the start of the frame.
              * @param config The configuration for the Timer Event.
              */
-            addEvent(config: Phaser.Time.Types.TimerEventConfig): Phaser.Time.TimerEvent;
+            addEvent(config: Phaser.Types.Time.TimerEventConfig): Phaser.Time.TimerEvent;
 
             /**
              * Creates a Timer Event and adds it to the Clock at the start of the frame.
@@ -77326,7 +77659,7 @@ declare namespace Phaser {
              * 
              * @param config The configuration for the Timer Event, including its delay and callback.
              */
-            constructor(config: Phaser.Time.Types.TimerEventConfig);
+            constructor(config: Phaser.Types.Time.TimerEventConfig);
 
             /**
              * The delay in ms at which this TimerEvent fires.
@@ -77396,7 +77729,7 @@ declare namespace Phaser {
              * Completely reinitializes the Timer Event, regardless of its current state, according to a configuration object.
              * @param config The new state for the Timer Event.
              */
-            reset(config: Phaser.Time.Types.TimerEventConfig): Phaser.Time.TimerEvent;
+            reset(config: Phaser.Types.Time.TimerEventConfig): Phaser.Time.TimerEvent;
 
             /**
              * Gets the progress of the current iteration, not factoring in repeats.
@@ -77437,48 +77770,6 @@ declare namespace Phaser {
              * Normally, this method is only called by the Clock when it shuts down. As such, it doesn't stop the Timer Event. If called manually, the Timer Event will still be updated by the Clock, but it won't do anything when it fires.
              */
             destroy(): void;
-
-        }
-
-        namespace Types {
-            type TimerEventConfig = {
-                /**
-                 * The delay after which the Timer Event should fire, in milliseconds.
-                 */
-                delay?: number;
-                /**
-                 * The total number of times the Timer Event will repeat before finishing.
-                 */
-                repeat?: number;
-                /**
-                 * `true` if the Timer Event should repeat indefinitely.
-                 */
-                loop?: boolean;
-                /**
-                 * The callback which will be called when the Timer Event fires.
-                 */
-                callback?: Function;
-                /**
-                 * The scope (`this` object) with which to invoke the `callback`.
-                 */
-                callbackScope?: any;
-                /**
-                 * Additional arguments to be passed to the `callback`.
-                 */
-                args?: any[];
-                /**
-                 * The scale of the elapsed time.
-                 */
-                timeScale?: number;
-                /**
-                 * The initial elapsed time in milliseconds. Useful if you want a long duration with repeat, but for the first loop to fire quickly.
-                 */
-                startAt?: number;
-                /**
-                 * `true` if the Timer Event should be paused.
-                 */
-                paused?: boolean;
-            };
 
         }
 
@@ -77544,7 +77835,7 @@ declare namespace Phaser {
              * @param config [description]
              * @param defaults [description]
              */
-            function NumberTweenBuilder(parent: Phaser.Tweens.TweenManager | Phaser.Tweens.Timeline, config: object, defaults: Phaser.Tweens.Types.TweenConfigDefaults): Phaser.Tweens.Tween;
+            function NumberTweenBuilder(parent: Phaser.Tweens.TweenManager | Phaser.Tweens.Timeline, config: object, defaults: Phaser.Types.Tweens.TweenConfigDefaults): Phaser.Tweens.Tween;
 
             /**
              * Builds a Timeline of Tweens based on a configuration object.
@@ -77589,7 +77880,7 @@ declare namespace Phaser {
              * @param defaults Tween configuration defaults.
              * `
              */
-            function TweenBuilder(parent: Phaser.Tweens.TweenManager | Phaser.Tweens.Timeline, config: object, defaults: Phaser.Tweens.Types.TweenConfigDefaults): Phaser.Tweens.Tween;
+            function TweenBuilder(parent: Phaser.Tweens.TweenManager | Phaser.Tweens.Timeline, config: object, defaults: Phaser.Types.Tweens.TweenConfigDefaults): Phaser.Tweens.Tween;
 
         }
 
@@ -78057,7 +78348,7 @@ declare namespace Phaser {
              * @param data An array of TweenData objects, each containing a unique property to be tweened.
              * @param targets An array of targets to be tweened.
              */
-            constructor(parent: Phaser.Tweens.TweenManager | Phaser.Tweens.Timeline, data: Phaser.Tweens.Types.TweenDataConfig[], targets: any[]);
+            constructor(parent: Phaser.Tweens.TweenManager | Phaser.Tweens.Timeline, data: Phaser.Types.Tweens.TweenDataConfig[], targets: any[]);
 
             /**
              * A reference to the parent of this Tween.
@@ -78073,7 +78364,7 @@ declare namespace Phaser {
             /**
              * An array of TweenData objects, each containing a unique property and target being tweened.
              */
-            data: Phaser.Tweens.Types.TweenDataConfig[];
+            data: Phaser.Types.Tweens.TweenDataConfig[];
 
             /**
              * The cached length of the data array.
@@ -78330,7 +78621,7 @@ declare namespace Phaser {
              * @param tweenData The TweenData property to update.
              * @param diff Any extra time that needs to be accounted for in the elapsed and progress values.
              */
-            setStateFromEnd(tween: Phaser.Tweens.Tween, tweenData: Phaser.Tweens.Types.TweenDataConfig, diff: number): integer;
+            setStateFromEnd(tween: Phaser.Tweens.Tween, tweenData: Phaser.Types.Tweens.TweenDataConfig, diff: number): integer;
 
             /**
              * Internal method used as part of the playback process that sets a tween to play from the start.
@@ -78338,7 +78629,7 @@ declare namespace Phaser {
              * @param tweenData The TweenData property to update.
              * @param diff Any extra time that needs to be accounted for in the elapsed and progress values.
              */
-            setStateFromStart(tween: Phaser.Tweens.Tween, tweenData: Phaser.Tweens.Types.TweenDataConfig, diff: number): integer;
+            setStateFromStart(tween: Phaser.Tweens.Tween, tweenData: Phaser.Types.Tweens.TweenDataConfig, diff: number): integer;
 
             /**
              * Internal method that advances the TweenData based on the time value given.
@@ -78346,7 +78637,7 @@ declare namespace Phaser {
              * @param tweenData The TweenData property to update.
              * @param delta Either a value in ms, or 1 if Tween.useFrames is true
              */
-            updateTweenData(tween: Phaser.Tweens.Tween, tweenData: Phaser.Tweens.Types.TweenDataConfig, delta: number): boolean;
+            updateTweenData(tween: Phaser.Tweens.Tween, tweenData: Phaser.Types.Tweens.TweenDataConfig, delta: number): boolean;
 
         }
 
@@ -78368,7 +78659,7 @@ declare namespace Phaser {
          * @param flipX Should toggleFlipX be called when yoyo or repeat happens?
          * @param flipY Should toggleFlipY be called when yoyo or repeat happens?
          */
-        function TweenData(target: object, key: string, getEnd: Function, getStart: Function, ease: Function, delay: number, duration: number, yoyo: boolean, hold: number, repeat: number, repeatDelay: number, flipX: boolean, flipY: boolean): Phaser.Tweens.Types.TweenDataConfig;
+        function TweenData(target: object, key: string, getEnd: Function, getStart: Function, ease: Function, delay: number, duration: number, yoyo: boolean, hold: number, repeat: number, repeatDelay: number, flipX: boolean, flipY: boolean): Phaser.Types.Tweens.TweenDataConfig;
 
         /**
          * The Tween Manager is a default Scene Plugin which controls and updates Tweens and Timelines.
@@ -78529,178 +78820,6 @@ declare namespace Phaser {
              * We need to shutdown and then kill off all external references.
              */
             destroy(): void;
-
-        }
-
-        namespace Types {
-            type TweenConfigDefaults = {
-                /**
-                 * The object, or an array of objects, to run the tween on.
-                 */
-                targets: object | object[];
-                /**
-                 * The number of milliseconds to delay before the tween will start.
-                 */
-                delay?: number;
-                /**
-                 * The duration of the tween in milliseconds.
-                 */
-                duration?: number;
-                /**
-                 * The easing equation to use for the tween.
-                 */
-                ease?: string;
-                /**
-                 * Optional easing parameters.
-                 */
-                easeParams?: any[];
-                /**
-                 * The number of milliseconds to hold the tween for before yoyo'ing.
-                 */
-                hold?: number;
-                /**
-                 * The number of times to repeat the tween.
-                 */
-                repeat?: number;
-                /**
-                 * The number of milliseconds to pause before a tween will repeat.
-                 */
-                repeatDelay?: number;
-                /**
-                 * Should the tween complete, then reverse the values incrementally to get back to the starting tween values? The reverse tweening will also take `duration` milliseconds to complete.
-                 */
-                yoyo?: boolean;
-                /**
-                 * Horizontally flip the target of the Tween when it completes (before it yoyos, if set to do so). Only works for targets that support the `flipX` property.
-                 */
-                flipX?: boolean;
-                /**
-                 * Vertically flip the target of the Tween when it completes (before it yoyos, if set to do so). Only works for targets that support the `flipY` property.
-                 */
-                flipY?: boolean;
-            };
-
-            type TweenDataConfig = {
-                /**
-                 * The target to tween.
-                 */
-                target: any;
-                /**
-                 * The property of the target being tweened.
-                 */
-                key: string;
-                /**
-                 * The returned value sets what the property will be at the END of the Tween.
-                 */
-                getEndValue: Function;
-                /**
-                 * The returned value sets what the property will be at the START of the Tween.
-                 */
-                getStartValue: Function;
-                /**
-                 * The ease function this tween uses.
-                 */
-                ease: Function;
-                /**
-                 * Duration of the tween in ms/frames, excludes time for yoyo or repeats.
-                 */
-                duration?: number;
-                /**
-                 * The total calculated duration of this TweenData (based on duration, repeat, delay and yoyo)
-                 */
-                totalDuration?: number;
-                /**
-                 * Time in ms/frames before tween will start.
-                 */
-                delay?: number;
-                /**
-                 * Cause the tween to return back to its start value after hold has expired.
-                 */
-                yoyo?: boolean;
-                /**
-                 * Time in ms/frames the tween will pause before running the yoyo or starting a repeat.
-                 */
-                hold?: number;
-                /**
-                 * Number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
-                 */
-                repeat?: integer;
-                /**
-                 * Time in ms/frames before the repeat will start.
-                 */
-                repeatDelay?: number;
-                /**
-                 * Automatically call toggleFlipX when the TweenData yoyos or repeats
-                 */
-                flipX?: boolean;
-                /**
-                 * Automatically call toggleFlipY when the TweenData yoyos or repeats
-                 */
-                flipY?: boolean;
-                /**
-                 * Between 0 and 1 showing completion of this TweenData.
-                 */
-                progress?: number;
-                /**
-                 * Delta counter
-                 */
-                elapsed?: number;
-                /**
-                 * How many repeats are left to run?
-                 */
-                repeatCounter?: integer;
-                /**
-                 * Ease value data.
-                 */
-                start?: number;
-                /**
-                 * Ease value data.
-                 */
-                current?: number;
-                /**
-                 * Ease value data.
-                 */
-                end?: number;
-                /**
-                 * Time duration 1.
-                 */
-                t1?: number;
-                /**
-                 * Time duration 2.
-                 */
-                t2?: number;
-                /**
-                 * LoadValue generation functions.
-                 */
-                gen?: Phaser.Tweens.Types.TweenDataGenConfig;
-                /**
-                 * TWEEN_CONST.CREATED
-                 */
-                state?: integer;
-            };
-
-            type TweenDataGenConfig = {
-                /**
-                 * Time in ms/frames before tween will start.
-                 */
-                delay: Function;
-                /**
-                 * Duration of the tween in ms/frames, excludes time for yoyo or repeats.
-                 */
-                duration: Function;
-                /**
-                 * Time in ms/frames the tween will pause before running the yoyo or starting a repeat.
-                 */
-                hold: Function;
-                /**
-                 * Number of times to repeat the tween. The tween will always run once regardless, so a repeat value of '1' will play the tween twice.
-                 */
-                repeat: Function;
-                /**
-                 * Time in ms/frames before the repeat will start.
-                 */
-                repeatDelay: Function;
-            };
 
         }
 
@@ -79571,7 +79690,7 @@ declare namespace Phaser {
         /**
          * Contains all of the leaderboard data, as populated by the `getLeaderboard()` method.
          */
-        leaderboards: Phaser.FacebookInstantGamesPlugin.Leaderboard[];
+        leaderboards: Phaser.FacebookInstantGamesLeaderboard[];
 
         /**
          * Contains AdInstance objects, as created by the `preloadAds()` method.
@@ -80181,141 +80300,13 @@ declare namespace Phaser {
 
     }
 
-}
-
-declare type ArcadePhysicsCallback = (object1: Phaser.GameObjects.GameObject, object2: Phaser.GameObjects.GameObject)=>void;
-
-declare type CollideCallback = (body: Phaser.Physics.Impact.Body, other: Phaser.Physics.Impact.Body, axis: string)=>void;
-
-declare namespace MatterJS {
-    /**
-     * The `Matter.Body` module contains methods for creating and manipulating body models.
-     * A `Matter.Body` is a rigid body that can be simulated by a `Matter.Engine`.
-     * Factories for commonly used body configurations (such as rectangles, circles and other polygons) can be found in the module `Matter.Bodies`.
-     */
-    class Body {
-    }
-
-    /**
-     * The `Matter.Composite` module contains methods for creating and manipulating composite bodies.
-     * A composite body is a collection of `Matter.Body`, `Matter.Constraint` and other `Matter.Composite`, therefore composites form a tree structure.
-     * It is important to use the functions in this module to modify composites, rather than directly modifying their properties.
-     * Note that the `Matter.World` object is also a type of `Matter.Composite` and as such all composite methods here can also operate on a `Matter.World`.
-     */
-    class Composite {
-    }
-
-    /**
-     * The `Matter.World` module contains methods for creating and manipulating the world composite.
-     * A `Matter.World` is a `Matter.Composite` body, which is a collection of `Matter.Body`, `Matter.Constraint` and other `Matter.Composite`.
-     * A `Matter.World` has a few additional properties including `gravity` and `bounds`.
-     * It is important to use the functions in the `Matter.Composite` module to modify the world composite, rather than directly modifying its properties.
-     * There are also a few methods here that alias those in `Matter.Composite` for easier readability.
-     */
-    class World extends MatterJS.Composite {
-    }
-
-    /**
-     * The `Matter.Constraint` module contains methods for creating and manipulating constraints.
-     * Constraints are used for specifying that a fixed distance must be maintained between two bodies (or a body and a fixed world-space position).
-     * The stiffness of constraints can be modified to create springs or elastic.
-     */
-    class Constraint {
-    }
-
-    /**
-     * The `Matter.Engine` module contains methods for creating and manipulating engines.
-     * An engine is a controller that manages updating the simulation of the world.
-     */
-    class Engine {
-    }
-
-    /**
-     * The `Matter.Vertices` module contains methods for creating and manipulating sets of vertices.
-     * A set of vertices is an array of `Matter.Vector` with additional indexing properties inserted by `Vertices.create`.
-     * A `Matter.Body` maintains a set of vertices to represent the shape of the object (its convex hull).
-     */
-    class Vertices {
-    }
-
-}
-
-declare type WebGLContextCallback = (renderer: Phaser.Renderer.WebGL.WebGLRenderer)=>void;
-
-declare type EachListCallback<I> = (item: I, ...args: any[])=>void;
-
-declare type EachMapCallback<E> = (key: string, entry: E)=>void;
-
-declare type EachSetCallback<E> = (entry: E, index: number)=>void;
-
-declare type EachTextureCallback = (texture: Phaser.Textures.Texture, ...args: any[])=>void;
-
-declare type FindTileCallback = (value: Phaser.Tilemaps.Tile, index: integer, array: Phaser.Tilemaps.Tile[])=>void;
-
-declare type EachTileCallback = (value: Phaser.Tilemaps.Tile, index: integer, array: Phaser.Tilemaps.Tile[])=>void;
-
-declare type TilemapFilterCallback = (value: Phaser.GameObjects.GameObject, index: number, array: Phaser.GameObjects.GameObject[])=>void;
-
-declare type TilemapFindCallback = (value: Phaser.GameObjects.GameObject, index: number, array: Phaser.GameObjects.GameObject[])=>void;
-
-declare namespace Phaser.Class {
-    /**
-     * Extends the given `myClass` object's prototype with the properties of `definition`.
-     * @param ctor The constructor object to mix into.
-     * @param definition A dictionary of functions for the class.
-     * @param isClassDescriptor Is the definition a class descriptor?
-     * @param extend The parent constructor object.
-     */
-    function extend(ctor: Object, definition: Object, isClassDescriptor: boolean, extend?: Object): void;
-
-    /**
-     * Applies the given `mixins` to the prototype of `myClass`.
-     * @param myClass The constructor object to mix into.
-     * @param mixins The mixins to apply to the constructor.
-     */
-    function mixin(myClass: Object, mixins: Object | Object[]): void;
-
-}
-
-/**
- * Phaser.Class
- */
-declare class Class {
-    /**
-     * 
-     * @param definition a dictionary of functions for the class
-     */
-    constructor(definition: Object);
-
-}
-
-declare type AdInstance = {
-    /**
-     * Represents an instance of an ad.
-     */
-    instance: any;
-    /**
-     * The Audience Network placement ID of this ad instance.
-     */
-    placementID: string;
-    /**
-     * Has this ad already been shown in-game?
-     */
-    shown: boolean;
-    /**
-     * Is this a video ad?
-     */
-    video: boolean;
-};
-
-declare namespace Phaser.FacebookInstantGamesPlugin {
     /**
      * This class represents one single Leaderboard that belongs to a Facebook Instant Game.
      * 
      * You do not need to instantiate this class directly, it will be created when you use the
      * `getLeaderboard()` method of the main plugin.
      */
-    class Leaderboard {
+    class FacebookInstantGamesLeaderboard {
         /**
          * 
          * @param plugin A reference to the Facebook Instant Games Plugin.
@@ -80421,6 +80412,128 @@ declare namespace Phaser.FacebookInstantGamesPlugin {
     }
 
 }
+
+declare type ArcadePhysicsCallback = (object1: Phaser.GameObjects.GameObject, object2: Phaser.GameObjects.GameObject)=>void;
+
+declare type CollideCallback = (body: Phaser.Physics.Impact.Body, other: Phaser.Physics.Impact.Body, axis: string)=>void;
+
+declare namespace MatterJS {
+    /**
+     * The `Matter.Body` module contains methods for creating and manipulating body models.
+     * A `Matter.Body` is a rigid body that can be simulated by a `Matter.Engine`.
+     * Factories for commonly used body configurations (such as rectangles, circles and other polygons) can be found in the module `Matter.Bodies`.
+     */
+    class Body {
+    }
+
+    /**
+     * The `Matter.Composite` module contains methods for creating and manipulating composite bodies.
+     * A composite body is a collection of `Matter.Body`, `Matter.Constraint` and other `Matter.Composite`, therefore composites form a tree structure.
+     * It is important to use the functions in this module to modify composites, rather than directly modifying their properties.
+     * Note that the `Matter.World` object is also a type of `Matter.Composite` and as such all composite methods here can also operate on a `Matter.World`.
+     */
+    class Composite {
+    }
+
+    /**
+     * The `Matter.World` module contains methods for creating and manipulating the world composite.
+     * A `Matter.World` is a `Matter.Composite` body, which is a collection of `Matter.Body`, `Matter.Constraint` and other `Matter.Composite`.
+     * A `Matter.World` has a few additional properties including `gravity` and `bounds`.
+     * It is important to use the functions in the `Matter.Composite` module to modify the world composite, rather than directly modifying its properties.
+     * There are also a few methods here that alias those in `Matter.Composite` for easier readability.
+     */
+    class World extends MatterJS.Composite {
+    }
+
+    /**
+     * The `Matter.Constraint` module contains methods for creating and manipulating constraints.
+     * Constraints are used for specifying that a fixed distance must be maintained between two bodies (or a body and a fixed world-space position).
+     * The stiffness of constraints can be modified to create springs or elastic.
+     */
+    class Constraint {
+    }
+
+    /**
+     * The `Matter.Engine` module contains methods for creating and manipulating engines.
+     * An engine is a controller that manages updating the simulation of the world.
+     */
+    class Engine {
+    }
+
+    /**
+     * The `Matter.Vertices` module contains methods for creating and manipulating sets of vertices.
+     * A set of vertices is an array of `Matter.Vector` with additional indexing properties inserted by `Vertices.create`.
+     * A `Matter.Body` maintains a set of vertices to represent the shape of the object (its convex hull).
+     */
+    class Vertices {
+    }
+
+}
+
+declare type WebGLContextCallback = (renderer: Phaser.Renderer.WebGL.WebGLRenderer)=>void;
+
+declare type EachListCallback<I> = (item: I, ...args: any[])=>void;
+
+declare type EachMapCallback<E> = (key: string, entry: E)=>void;
+
+declare type EachSetCallback<E> = (entry: E, index: number)=>void;
+
+declare type EachTextureCallback = (texture: Phaser.Textures.Texture, ...args: any[])=>void;
+
+declare type FindTileCallback = (value: Phaser.Tilemaps.Tile, index: integer, array: Phaser.Tilemaps.Tile[])=>void;
+
+declare type EachTileCallback = (value: Phaser.Tilemaps.Tile, index: integer, array: Phaser.Tilemaps.Tile[])=>void;
+
+declare type TilemapFilterCallback = (value: Phaser.GameObjects.GameObject, index: number, array: Phaser.GameObjects.GameObject[])=>void;
+
+declare type TilemapFindCallback = (value: Phaser.GameObjects.GameObject, index: number, array: Phaser.GameObjects.GameObject[])=>void;
+
+/**
+ * Extends the given `myClass` object's prototype with the properties of `definition`.
+ * @param ctor The constructor object to mix into.
+ * @param definition A dictionary of functions for the class.
+ * @param isClassDescriptor Is the definition a class descriptor?
+ * @param extend The parent constructor object.
+ */
+declare function extend(ctor: Object, definition: Object, isClassDescriptor: boolean, extend?: Object): void;
+
+/**
+ * Applies the given `mixins` to the prototype of `myClass`.
+ * @param myClass The constructor object to mix into.
+ * @param mixins The mixins to apply to the constructor.
+ */
+declare function mixin(myClass: Object, mixins: Object | Object[]): void;
+
+/**
+ * Phaser.Class
+ */
+declare class Class {
+    /**
+     * 
+     * @param definition a dictionary of functions for the class
+     */
+    constructor(definition: Object);
+
+}
+
+declare type AdInstance = {
+    /**
+     * Represents an instance of an ad.
+     */
+    instance: any;
+    /**
+     * The Audience Network placement ID of this ad instance.
+     */
+    placementID: string;
+    /**
+     * Has this ad already been shown in-game?
+     */
+    shown: boolean;
+    /**
+     * Is this a video ad?
+     */
+    video: boolean;
+};
 
 declare type LeaderboardScore = {
     /**
