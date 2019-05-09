@@ -368,7 +368,7 @@ var KeyboardPlugin = new Class({
      * @method Phaser.Input.Keyboard.KeyboardPlugin#createCursorKeys
      * @since 3.10.0
      *
-     * @return {Phaser.Input.Keyboard.Types.CursorKeys} An object containing the properties: `up`, `down`, `left`, `right`, `space` and `shift`.
+     * @return {Phaser.Types.Input.Keyboard.CursorKeys} An object containing the properties: `up`, `down`, `left`, `right`, `space` and `shift`.
      */
     createCursorKeys: function ()
     {
@@ -599,7 +599,7 @@ var KeyboardPlugin = new Class({
      * @since 3.10.0
      *
      * @param {(string|integer[]|object[])} keys - The keys that comprise this combo.
-     * @param {Phaser.Input.Keyboard.Types.KeyComboConfig} [config] - A Key Combo configuration object.
+     * @param {Phaser.Types.Input.Keyboard.KeyComboConfig} [config] - A Key Combo configuration object.
      *
      * @return {Phaser.Input.Keyboard.KeyCombo} The new KeyCombo object.
      */

@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Input.Keyboard.Types.KeyComboConfig
+ * @typedef {object} Phaser.Types.Input.Keyboard.KeyComboConfig
  * @since 3.0.0
  *
  * @property {boolean} [resetOnWrongKey=true] - If they press the wrong key do we reset the combo?

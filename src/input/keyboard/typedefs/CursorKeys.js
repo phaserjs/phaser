@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Input.Keyboard.Types.CursorKeys
+ * @typedef {object} Phaser.Types.Input.Keyboard.CursorKeys
  * @since 3.0.0
  * 
  * @property {Phaser.Input.Keyboard.Key} [up] - A Key object mapping to the UP arrow key.

@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.Input.Keyboard.Types
+ * @namespace Phaser.Types.Input.Keyboard
  */

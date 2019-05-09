@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.Input.Gamepad.Types
+ * @namespace Phaser.Types.Input.Gamepad
  */
