@@ -939,7 +939,7 @@ var Shader = new Class({
     /**
      * Internal destroy handler, called as part of the destroy process.
      *
-     * @method Phaser.GameObjects.RenderTexture#preDestroy
+     * @method Phaser.GameObjects.Shader#preDestroy
      * @protected
      * @since 3.17.0
      */
