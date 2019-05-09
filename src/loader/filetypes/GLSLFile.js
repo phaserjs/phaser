@@ -27,7 +27,7 @@ var Shader = require('../../display/shader/BaseShader');
  * @since 3.0.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {(string|Phaser.Loader.FileTypes.TextFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {(string|Phaser.Types.Loader.FileTypes.GLSLFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.txt".
  * @param {string} [shaderType='fragment'] - The type of shader. Either `fragment` for a fragment shader, or `vertex` for a vertex shader. This is ignored if you load a shader bundle.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
@@ -350,7 +350,7 @@ var GLSLFile = new Class({
  * });
  * ```
  *
- * See the documentation for `Phaser.Loader.FileTypes.GLSLFileConfig` for more details.
+ * See the documentation for `Phaser.Types.Loader.FileTypes.GLSLFileConfig` for more details.
  *
  * Once the file has finished loading you can access it from its Cache using its key:
  * 
@@ -377,7 +377,7 @@ var GLSLFile = new Class({
  * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.0.0
  *
- * @param {(string|Phaser.Loader.FileTypes.GLSLFileConfig|Phaser.Loader.FileTypes.GLSLFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {(string|Phaser.Types.Loader.FileTypes.GLSLFileConfig|Phaser.Types.Loader.FileTypes.GLSLFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.glsl`, i.e. if `key` was "alien" then the URL will be "alien.glsl".
  * @param {string} [shaderType='fragment'] - The type of shader. Either `fragment` for a fragment shader, or `vertex` for a vertex shader. This is ignored if you load a shader bundle.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.

@@ -26,10 +26,10 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @since 3.0.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {(string|Phaser.Loader.FileTypes.ImageFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {(string|Phaser.Types.Loader.FileTypes.ImageFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string|string[]} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
- * @param {Phaser.Loader.FileTypes.ImageFrameConfig} [frameConfig] - The frame configuration object. Only provided for, and used by, Sprite Sheets.
+ * @param {Phaser.Types.Loader.FileTypes.ImageFrameConfig} [frameConfig] - The frame configuration object. Only provided for, and used by, Sprite Sheets.
  */
 var ImageFile = new Class({
 
@@ -194,7 +194,7 @@ var ImageFile = new Class({
  * });
  * ```
  *
- * See the documentation for `Phaser.Loader.FileTypes.ImageFileConfig` for more details.
+ * See the documentation for `Phaser.Types.Loader.FileTypes.ImageFileConfig` for more details.
  *
  * Once the file has finished loading you can use it as a texture for a Game Object by referencing its key:
  * 
@@ -241,7 +241,7 @@ var ImageFile = new Class({
  * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.0.0
  *
- * @param {(string|Phaser.Loader.FileTypes.ImageFileConfig|Phaser.Loader.FileTypes.ImageFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {(string|Phaser.Types.Loader.FileTypes.ImageFileConfig|Phaser.Types.Loader.FileTypes.ImageFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string|string[]} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *

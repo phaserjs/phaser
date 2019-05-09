@@ -24,7 +24,7 @@ var JSONFile = require('./JSONFile.js');
  * @since 3.7.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {(string|Phaser.Loader.FileTypes.JSONFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {(string|Phaser.Types.Loader.FileTypes.PackFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  * @param {string} [dataKey] - When the JSON file loads only this property will be stored in the Cache.

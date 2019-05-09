@@ -28,7 +28,7 @@ var XMLFile = require('./XMLFile.js');
  * @since 3.0.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {(string|Phaser.Loader.FileTypes.BitmapFontFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {(string|Phaser.Types.Loader.FileTypes.BitmapFontFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string|string[]} [textureURL] - The absolute or relative URL to load the font image file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
  * @param {string} [fontDataURL] - The absolute or relative URL to load the font xml data file from. If undefined or `null` it will be set to `<key>.xml`, i.e. if `key` was "alien" then the URL will be "alien.xml".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the font image file. Used in replacement of the Loaders default XHR Settings.
@@ -151,7 +151,7 @@ var BitmapFontFile = new Class({
  * });
  * ```
  *
- * See the documentation for `Phaser.Loader.FileTypes.BitmapFontFileConfig` for more details.
+ * See the documentation for `Phaser.Types.Loader.FileTypes.BitmapFontFileConfig` for more details.
  *
  * Once the atlas has finished loading you can use key of it when creating a Bitmap Text Game Object:
  * 
@@ -199,7 +199,7 @@ var BitmapFontFile = new Class({
  * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.0.0
  *
- * @param {(string|Phaser.Loader.FileTypes.BitmapFontFileConfig|Phaser.Loader.FileTypes.BitmapFontFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {(string|Phaser.Types.Loader.FileTypes.BitmapFontFileConfig|Phaser.Types.Loader.FileTypes.BitmapFontFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string|string[]} [textureURL] - The absolute or relative URL to load the font image file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
  * @param {string} [fontDataURL] - The absolute or relative URL to load the font xml data file from. If undefined or `null` it will be set to `<key>.xml`, i.e. if `key` was "alien" then the URL will be "alien.xml".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the font image file. Used in replacement of the Loaders default XHR Settings.

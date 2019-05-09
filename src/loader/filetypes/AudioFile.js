@@ -27,7 +27,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @since 3.0.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {(string|Phaser.Loader.FileTypes.AudioFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {(string|Phaser.Types.Loader.FileTypes.AudioFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {any} [urlConfig] - The absolute or relative URL to load this file from in a config object.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  * @param {AudioContext} [audioContext] - The AudioContext this file will use to process itself.
@@ -198,7 +198,7 @@ AudioFile.getAudioURL = function (game, urls)
  * });
  * ```
  *
- * See the documentation for `Phaser.Loader.FileTypes.AudioFileConfig` for more details.
+ * See the documentation for `Phaser.Types.Loader.FileTypes.AudioFileConfig` for more details.
  *
  * The URLs can be relative or absolute. If the URLs are relative the `Loader.baseURL` and `Loader.path` values will be prepended to them.
  *
@@ -215,7 +215,7 @@ AudioFile.getAudioURL = function (game, urls)
  * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.0.0
  *
- * @param {(string|Phaser.Loader.FileTypes.AudioFileConfig|Phaser.Loader.FileTypes.AudioFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {(string|Phaser.Types.Loader.FileTypes.AudioFileConfig|Phaser.Types.Loader.FileTypes.AudioFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {(string|string[])} [urls] - The absolute or relative URL to load the audio files from.
  * @param {any} [config] - An object containing an `instances` property for HTML5Audio. Defaults to 1.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.

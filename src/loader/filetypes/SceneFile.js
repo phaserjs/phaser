@@ -26,7 +26,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @since 3.16.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {(string|Phaser.Loader.FileTypes.SceneFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {(string|Phaser.Types.Loader.FileTypes.SceneFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
@@ -158,7 +158,7 @@ var SceneFile = new Class({
  * });
  * ```
  *
- * See the documentation for `Phaser.Loader.FileTypes.SceneFileConfig` for more details.
+ * See the documentation for `Phaser.Types.Loader.FileTypes.SceneFileConfig` for more details.
  *
  * Once the file has finished loading it will be added to the Scene Manager.
  *
@@ -185,7 +185,7 @@ var SceneFile = new Class({
  * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.16.0
  *
- * @param {(string|Phaser.Loader.FileTypes.SceneFileConfig|Phaser.Loader.FileTypes.SceneFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {(string|Phaser.Types.Loader.FileTypes.SceneFileConfig|Phaser.Types.Loader.FileTypes.SceneFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *

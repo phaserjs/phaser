@@ -26,7 +26,7 @@ var ScriptFile = require('./ScriptFile.js');
  * @since 3.17.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {(string|Phaser.Loader.FileTypes.MultiScriptFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {(string|Phaser.Types.Loader.FileTypes.MultiScriptFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string[]} [url] - An array of absolute or relative URLs to load the script files from. They are processed in the order given in the array.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object for the script files. Used in replacement of the Loaders default XHR Settings.
  */
@@ -158,7 +158,7 @@ var MultiScriptFile = new Class({
  * });
  * ```
  *
- * See the documentation for `Phaser.Loader.FileTypes.MultiScriptFileConfig` for more details.
+ * See the documentation for `Phaser.Types.Loader.FileTypes.MultiScriptFileConfig` for more details.
  *
  * Once all the files have finished loading they will automatically be converted into a script element
  * via `document.createElement('script')`. They will have their language set to JavaScript, `defer` set to
@@ -174,7 +174,7 @@ var MultiScriptFile = new Class({
  * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.17.0
  *
- * @param {(string|Phaser.Loader.FileTypes.MultiScriptFileConfig|Phaser.Loader.FileTypes.MultiScriptFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {(string|Phaser.Types.Loader.FileTypes.MultiScriptFileConfig|Phaser.Types.Loader.FileTypes.MultiScriptFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string[]} [url] - An array of absolute or relative URLs to load the script files from. They are processed in the order given in the array.
  * @param {string} [extension='js'] - The default file extension to use if no url is provided.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for these files.

@@ -24,7 +24,7 @@ var TILEMAP_FORMATS = require('../../tilemaps/Formats');
  * @since 3.7.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {(string|Phaser.Loader.FileTypes.TilemapImpactFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {(string|Phaser.Types.Loader.FileTypes.TilemapImpactFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
  */
@@ -96,7 +96,7 @@ var TilemapImpactFile = new Class({
  * });
  * ```
  *
- * See the documentation for `Phaser.Loader.FileTypes.TilemapImpactFileConfig` for more details.
+ * See the documentation for `Phaser.Types.Loader.FileTypes.TilemapImpactFileConfig` for more details.
  *
  * Once the file has finished loading you can access it from its Cache using its key:
  *
@@ -123,7 +123,7 @@ var TilemapImpactFile = new Class({
  * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.7.0
  *
- * @param {(string|Phaser.Loader.FileTypes.TilemapImpactFileConfig|Phaser.Loader.FileTypes.TilemapImpactFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {(string|Phaser.Types.Loader.FileTypes.TilemapImpactFileConfig|Phaser.Types.Loader.FileTypes.TilemapImpactFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
  *

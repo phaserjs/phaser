@@ -27,7 +27,7 @@ var XMLFile = require('./XMLFile.js');
  * @since 3.7.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {(string|Phaser.Loader.FileTypes.AtlasXMLFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {(string|Phaser.Types.Loader.FileTypes.AtlasXMLFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string|string[]} [textureURL] - The absolute or relative URL to load the texture image file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
  * @param {string} [atlasURL] - The absolute or relative URL to load the texture atlas xml data file from. If undefined or `null` it will be set to `<key>.xml`, i.e. if `key` was "alien" then the URL will be "alien.xml".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.
@@ -149,7 +149,7 @@ var AtlasXMLFile = new Class({
  * });
  * ```
  *
- * See the documentation for `Phaser.Loader.FileTypes.AtlasXMLFileConfig` for more details.
+ * See the documentation for `Phaser.Types.Loader.FileTypes.AtlasXMLFileConfig` for more details.
  *
  * Once the atlas has finished loading you can use frames from it as textures for a Game Object by referencing its key:
  * 
@@ -199,7 +199,7 @@ var AtlasXMLFile = new Class({
  * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.7.0
  *
- * @param {(string|Phaser.Loader.FileTypes.AtlasXMLFileConfig|Phaser.Loader.FileTypes.AtlasXMLFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {(string|Phaser.Types.Loader.FileTypes.AtlasXMLFileConfig|Phaser.Types.Loader.FileTypes.AtlasXMLFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string|string[]} [textureURL] - The absolute or relative URL to load the texture image file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
  * @param {string} [atlasURL] - The absolute or relative URL to load the texture atlas xml data file from. If undefined or `null` it will be set to `<key>.xml`, i.e. if `key` was "alien" then the URL will be "alien.xml".
  * @param {Phaser.Types.Loader.XHRSettingsObject} [textureXhrSettings] - An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.

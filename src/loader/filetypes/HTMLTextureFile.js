@@ -26,7 +26,7 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  * @since 3.12.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {(string|Phaser.Loader.FileTypes.HTMLTextureFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {(string|Phaser.Types.Loader.FileTypes.HTMLTextureFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
  * @param {integer} [width] - The width of the texture the HTML will be rendered to.
  * @param {integer} [height] - The height of the texture the HTML will be rendered to.
@@ -187,7 +187,7 @@ var HTMLTextureFile = new Class({
  * });
  * ```
  *
- * See the documentation for `Phaser.Loader.FileTypes.HTMLTextureFileConfig` for more details.
+ * See the documentation for `Phaser.Types.Loader.FileTypes.HTMLTextureFileConfig` for more details.
  *
  * Once the file has finished loading you can use it as a texture for a Game Object by referencing its key:
  * 
@@ -223,7 +223,7 @@ var HTMLTextureFile = new Class({
  * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.12.0
  *
- * @param {(string|Phaser.Loader.FileTypes.HTMLTextureFileConfig|Phaser.Loader.FileTypes.HTMLTextureFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {(string|Phaser.Types.Loader.FileTypes.HTMLTextureFileConfig|Phaser.Types.Loader.FileTypes.HTMLTextureFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.html`, i.e. if `key` was "alien" then the URL will be "alien.html".
  * @param {integer} [width=512] - The width of the texture the HTML will be rendered to.
  * @param {integer} [height=512] - The height of the texture the HTML will be rendered to.
