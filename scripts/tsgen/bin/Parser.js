@@ -4,19 +4,6 @@ const dom = require("dts-dom");
 const regexEndLine = /^(.*)\r\n|\n|\r/gm;
 class Parser {
     constructor(docs) {
-        // TODO remove once stable
-        for (let i = 0; i < docs.length; i++) {
-            let doclet = docs[i];
-            if (doclet.longname && doclet.longname.indexOf('{') === 0) {
-                doclet.longname = doclet.longname.substr(1);
-                console.log(`Warning: had to fix wrong name for ${doclet.longname} in ${doclet.meta.filename}@${doclet.meta.lineno}`);
-            }
-            if (doclet.memberof && doclet.memberof.indexOf('{') === 0) {
-                doclet.memberof = doclet.memberof.substr(1);
-                console.log(`Warning: had to fix wrong name for ${doclet.longname} in ${doclet.meta.filename}@${doclet.meta.lineno}`);
-            }
-        }
-        //////////////////////////
         this.topLevel = [];
         this.objects = {};
         this.namespaces = {};
@@ -39,24 +26,22 @@ class Parser {
         let ignored = [];
         let result = this.topLevel.reduce((out, obj) => {
             // TODO: remove once stable
-            if (obj.kind === 'property') {
-                ignored.push(obj.name);
-                return out;
-            }
+            // if (<string>obj.kind === 'property') {
+            //     ignored.push((<any>obj).name);
+            //     return out;
+            // }
             //////////////////////////
             return out + dom.emit(obj);
         }, '');
-        console.log('ignored top level properties:');
-        console.log(ignored);
+        if (ignored.length > 0) {
+            console.log('ignored top level properties:');
+            console.log(ignored);
+        }
         return result;
     }
     parseObjects(docs) {
         for (let i = 0; i < docs.length; i++) {
             let doclet = docs[i];
-            // if (doclet.kind === 'namespace')
-            // {
-            //     console.log('module: ', doclet.name);
-            // }
             // TODO: Custom temporary rules
             switch (doclet.longname) {
                 case 'Phaser.GameObjects.Components.Alpha':
@@ -82,13 +67,24 @@ class Parser {
                 case 'Phaser.Renderer.WebGL.Pipelines.ModelViewProjection':
                     doclet.kind = 'mixin';
                     break;
+                //  Because, sod you TypeScript
+                case 'Phaser.BlendModes':
+                case 'Phaser.ScaleModes':
+                case 'Phaser.Physics.Impact.TYPE':
+                case 'Phaser.Physics.Impact.COLLIDES':
+                case 'Phaser.Scale.Center':
+                case 'Phaser.Scale.Orientation':
+                case 'Phaser.Scale.ScaleModes':
+                case 'Phaser.Scale.Zoom':
+                case 'Phaser.Textures.FilterMode':
+                    console.log('Forcing enum for ' + doclet.longname);
+                    doclet.kind = 'member';
+                    doclet.isEnum = true;
+                    break;
             }
-            if ((doclet.longname.indexOf('Phaser.Physics.Arcade.Components.') == 0
-                || doclet.longname.indexOf('Phaser.Physics.Impact.Components.') == 0
-                || doclet.longname.indexOf('Phaser.Physics.Matter.Components.') == 0)
-                && doclet.longname.indexOf('#') == -1)
+            if ((doclet.longname.indexOf('Phaser.Physics.Arcade.Components.') == 0 || doclet.longname.indexOf('Phaser.Physics.Impact.Components.') == 0 || doclet.longname.indexOf('Phaser.Physics.Matter.Components.') == 0) && doclet.longname.indexOf('#') == -1) {
                 doclet.kind = 'mixin';
-            /////////////////////////
+            }
             let obj;
             let container = this.objects;
             switch (doclet.kind) {
