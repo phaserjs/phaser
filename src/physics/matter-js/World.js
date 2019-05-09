@@ -31,7 +31,7 @@ var Vector = require('./lib/geometry/Vector');
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - The Scene to which this Matter World instance belongs.
- * @param {object} config - [description]
+ * @param {Phaser.Types.Physics.Matter.MatterWorldConfig} config - The Matter World configuration object.
  */
 var World = new Class({
 
@@ -207,8 +207,8 @@ var World = new Class({
             debugShowStaticBody: GetFastValue(config, 'debugShowStaticBody', true),
             debugShowVelocity: GetFastValue(config, 'debugShowVelocity', true),
             bodyDebugColor: GetFastValue(config, 'debugBodyColor', 0xff00ff),
-            bodyDebugFillColor: GetFastValue(config, 'bodyDebugFillColor', 0xe3a7e3),
-            staticBodyDebugColor: GetFastValue(config, 'debugBodyColor', 0x0000ff),
+            bodyDebugFillColor: GetFastValue(config, 'debugBodyFillColor', 0xe3a7e3),
+            staticBodyDebugColor: GetFastValue(config, 'debugStaticBodyColor', 0x0000ff),
             velocityDebugColor: GetFastValue(config, 'debugVelocityColor', 0x00ff00),
             debugShowJoint: GetFastValue(config, 'debugShowJoint', true),
             jointDebugColor: GetFastValue(config, 'debugJointColor', 0x000000),
