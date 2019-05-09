@@ -97,6 +97,8 @@ You can find lots of examples on using DOM Elements in the Phaser 3 Examples rep
 * `Body.stopVelocityOnCollide` has been removed as it was never used internally.
 * All of the Arcade Physics Components are now available directly under the `Phaser.Physics.Arcade.Components` namespace. Fix #4440 (thanks @jackfreak)
 * `Phaser.Physics.Arcade.Events` is now exposed in the namespace, preventing it from erroring if you use them in TypeScript. Fix #4481 (thanks @danielalves)
+* The Matter World configuration value `bodyDebugFillColor` has been renamed to `debugBodyFillColor` to be consistent with the rest of the options.
+* The Matter World configuration has a new property: `debugStaticBodyColor` that sets the static body debug color.
 
 #### Bug Fixes
 
