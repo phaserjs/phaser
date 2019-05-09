@@ -8,18 +8,17 @@
  * Phaser Scale Modes.
  * 
  * @namespace Phaser.ScaleModes
- * @memberof Phaser
  * @since 3.0.0
  */
 
-module.exports = {
+var ScaleModes = {
 
     /**
      * Default Scale Mode (Linear).
      * 
      * @name Phaser.ScaleModes.DEFAULT
      * @type {integer}
-     * @const
+     * @readonly
      * @since 3.0.0
      */
     DEFAULT: 0,
@@ -29,7 +28,7 @@ module.exports = {
      * 
      * @name Phaser.ScaleModes.LINEAR
      * @type {integer}
-     * @const
+     * @readonly
      * @since 3.0.0
      */
     LINEAR: 0,
@@ -39,9 +38,11 @@ module.exports = {
      * 
      * @name Phaser.ScaleModes.NEAREST
      * @type {integer}
-     * @const
+     * @readonly
      * @since 3.0.0
      */
     NEAREST: 1
 
 };
+
+module.exports = ScaleModes;

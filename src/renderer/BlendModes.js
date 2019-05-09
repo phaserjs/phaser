@@ -8,7 +8,6 @@
  * Phaser Blend Modes.
  * 
  * @namespace Phaser.BlendModes
- * @memberof Phaser
  * @since 3.0.0
  */
 
