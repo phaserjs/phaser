@@ -90,10 +90,9 @@ export class Parser {
                 case 'Phaser.GameObjects.Components.GetBounds':
                 case 'Phaser.GameObjects.Components.Mask':
                 case 'Phaser.GameObjects.Components.Origin':
+                case 'Phaser.GameObjects.Components.PathFollower':
                 case 'Phaser.GameObjects.Components.Pipeline':
-                case 'Phaser.GameObjects.Components.ScaleMode':
                 case 'Phaser.GameObjects.Components.ScrollFactor':
-                case 'Phaser.GameObjects.Components.ScaleFactor':
                 case 'Phaser.GameObjects.Components.Size':
                 case 'Phaser.GameObjects.Components.Texture':
                 case 'Phaser.GameObjects.Components.TextureCrop':
