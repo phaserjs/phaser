@@ -12,7 +12,7 @@ var Color = require('./Color');
  * @function Phaser.Display.Color.ObjectToColor
  * @since 3.0.0
  *
- * @param {Phaser.Display.Types.InputColorObject} input - An object containing `r`, `g`, `b` and `a` properties in the range 0 to 255.
+ * @param {Phaser.Types.Display.InputColorObject} input - An object containing `r`, `g`, `b` and `a` properties in the range 0 to 255.
  *
  * @return {Phaser.Display.Color} A Color object.
  */

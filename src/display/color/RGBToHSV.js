@@ -16,9 +16,9 @@
  * @param {integer} r - The red color value. A number between 0 and 255.
  * @param {integer} g - The green color value. A number between 0 and 255.
  * @param {integer} b - The blue color value. A number between 0 and 255.
- * @param {(Phaser.Display.Types.HSVColorObject|Phaser.Display.Color)} [out] - An object to store the color values in. If not given an HSV Color Object will be created.
+ * @param {(Phaser.Types.Display.HSVColorObject|Phaser.Display.Color)} [out] - An object to store the color values in. If not given an HSV Color Object will be created.
  *
- * @return {(Phaser.Display.Types.HSVColorObject|Phaser.Display.Color)} An object with the properties `h`, `s` and `v` set.
+ * @return {(Phaser.Types.Display.HSVColorObject|Phaser.Display.Color)} An object with the properties `h`, `s` and `v` set.
  */
 var RGBToHSV = function (r, g, b, out)
 {

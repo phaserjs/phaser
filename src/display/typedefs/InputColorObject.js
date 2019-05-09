@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Display.Types.InputColorObject
+ * @typedef {object} Phaser.Types.Display.InputColorObject
  * @since 3.0.0
  *
  * @property {number} [r] - The red color value in the range 0 to 255.

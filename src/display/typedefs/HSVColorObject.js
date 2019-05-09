@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Display.Types.HSVColorObject
+ * @typedef {object} Phaser.Types.Display.HSVColorObject
  * @since 3.0.0
  *
  * @property {number} h - The hue color value. A number between 0 and 1

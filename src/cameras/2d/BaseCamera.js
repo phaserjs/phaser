@@ -1087,7 +1087,7 @@ var BaseCamera = new Class({
      * @method Phaser.Cameras.Scene2D.BaseCamera#setBackgroundColor
      * @since 3.0.0
      *
-     * @param {(string|number|Phaser.Display.Types.InputColorObject)} [color='rgba(0,0,0,0)'] - The color value. In CSS, hex or numeric color notation.
+     * @param {(string|number|Phaser.Types.Display.InputColorObject)} [color='rgba(0,0,0,0)'] - The color value. In CSS, hex or numeric color notation.
      *
      * @return {Phaser.Cameras.Scene2D.BaseCamera} This Camera instance.
      */
