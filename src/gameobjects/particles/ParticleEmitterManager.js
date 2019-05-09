@@ -31,7 +31,7 @@ var Render = require('./ParticleManagerRender');
  * @param {Phaser.Scene} scene - The Scene to which this Emitter Manager belongs.
  * @param {string} texture - The key of the Texture this Emitter Manager will use to render particles, as stored in the Texture Manager.
  * @param {(string|integer)} [frame] - An optional frame from the Texture this Emitter Manager will use to render particles.
- * @param {Phaser.GameObjects.Particles.Types.ParticleEmitterConfig|Phaser.GameObjects.Particles.Types.ParticleEmitterConfig[]} [emitters] - Configuration settings for one or more emitters to create.
+ * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterConfig|Phaser.Types.GameObjects.Particles.ParticleEmitterConfig[]} [emitters] - Configuration settings for one or more emitters to create.
  */
 var ParticleEmitterManager = new Class({
 
@@ -268,7 +268,7 @@ var ParticleEmitterManager = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitterManager#createEmitter
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Particles.Types.ParticleEmitterConfig} config - Configuration settings for the Particle Emitter to create.
+     * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterConfig} config - Configuration settings for the Particle Emitter to create.
      *
      * @return {Phaser.GameObjects.Particles.ParticleEmitter} The Particle Emitter that was created.
      */
@@ -298,7 +298,7 @@ var ParticleEmitterManager = new Class({
      * @method Phaser.GameObjects.Particles.ParticleEmitterManager#createGravityWell
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Particles.Types.GravityWellConfig} config - Configuration settings for the Gravity Well to create.
+     * @param {Phaser.Types.GameObjects.Particles.GravityWellConfig} config - Configuration settings for the Gravity Well to create.
      *
      * @return {Phaser.GameObjects.Particles.GravityWell} The Gravity Well that was created.
      */

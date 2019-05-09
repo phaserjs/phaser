@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.GameObjects.Particles.Types.ParticleEmitterFrameConfig
+ * @typedef {object} Phaser.Types.GameObjects.Particles.ParticleEmitterFrameConfig
  * @since 3.0.0
  *
  * @property {number|number[]|string|string[]|Phaser.Textures.Frame|Phaser.Textures.Frame[]} [frames] - One or more texture frames.

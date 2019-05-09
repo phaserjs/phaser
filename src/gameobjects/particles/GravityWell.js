@@ -20,7 +20,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @constructor
  * @since 3.0.0
  *
- * @param {(number|Phaser.GameObjects.Particles.Types.GravityWellConfig)} [x=0] - The x coordinate of the Gravity Well, in world space.
+ * @param {(number|Phaser.Types.GameObjects.Particles.GravityWellConfig)} [x=0] - The x coordinate of the Gravity Well, in world space.
  * @param {number} [y=0] - The y coordinate of the Gravity Well, in world space.
  * @param {number} [power=0] - The strength of the gravity force - larger numbers produce a stronger force.
  * @param {number} [epsilon=100] - The minimum distance for which the gravity force is calculated.

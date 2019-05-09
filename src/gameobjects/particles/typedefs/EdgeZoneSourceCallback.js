@@ -1,5 +1,5 @@
 /**
- * @callback Phaser.GameObjects.Particles.Types.EdgeZoneSourceCallback
+ * @callback Phaser.Types.GameObjects.Particles.EdgeZoneSourceCallback
  * @since 3.0.0
  *
  * @param {integer} quantity - The number of particles to place on the source edge. If 0, `stepRate` should be used instead.

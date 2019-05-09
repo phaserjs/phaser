@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.GameObjects.Particles.Types
+ * @namespace Phaser.Types.GameObjects.Particles
  */

@@ -21,7 +21,7 @@ var Wrap = require('../../math/Wrap');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.GameObjects.Particles.Types.ParticleEmitterConfig} config - Settings for the Particle Emitter that owns this property.
+ * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterConfig} config - Settings for the Particle Emitter that owns this property.
  * @param {string} key - The name of the property.
  * @param {number} defaultValue - The default value of the property.
  * @param {boolean} [emitOnly=false] - Whether the property can only be modified when a Particle is emitted.
@@ -133,7 +133,7 @@ var EmitterOp = new Class({
          * The callback to run for Particles when they are emitted from the Particle Emitter.
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#onEmit
-         * @type {Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback}
+         * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback}
          * @since 3.0.0
          */
         this.onEmit = this.defaultEmit;
@@ -142,7 +142,7 @@ var EmitterOp = new Class({
          * The callback to run for Particles when they are updated.
          *
          * @name Phaser.GameObjects.Particles.EmitterOp#onUpdate
-         * @type {Phaser.GameObjects.Particles.Types.EmitterOpOnUpdateCallback}
+         * @type {Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback}
          * @since 3.0.0
          */
         this.onUpdate = this.defaultUpdate;
@@ -158,7 +158,7 @@ var EmitterOp = new Class({
      * @method Phaser.GameObjects.Particles.EmitterOp#loadConfig
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Particles.Types.ParticleEmitterConfig} [config] - Settings for the Particle Emitter that owns this property.
+     * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterConfig} [config] - Settings for the Particle Emitter that owns this property.
      * @param {string} [newKey] - The new key to use for this property, if any.
      */
     loadConfig: function (config, newKey)

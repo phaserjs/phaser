@@ -17,7 +17,7 @@ var ParticleEmitterManager = require('./ParticleEmitterManager');
  *
  * @param {string} texture - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
  * @param {(string|integer|object)} [frame] - An optional frame from the Texture this Game Object is rendering with.
- * @param {Phaser.GameObjects.Particles.Types.ParticleEmitterConfig|Phaser.GameObjects.Particles.Types.ParticleEmitterConfig[]} [emitters] - Configuration settings for one or more emitters to create.
+ * @param {Phaser.Types.GameObjects.Particles.ParticleEmitterConfig|Phaser.Types.GameObjects.Particles.ParticleEmitterConfig[]} [emitters] - Configuration settings for one or more emitters to create.
  *
  * @return {Phaser.GameObjects.Particles.ParticleEmitterManager} The Game Object that was created.
  */

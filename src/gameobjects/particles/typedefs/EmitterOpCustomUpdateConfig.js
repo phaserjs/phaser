@@ -1,7 +1,7 @@
 /**
- * @typedef {object} Phaser.GameObjects.Particles.Types.EmitterOpCustomUpdateConfig
+ * @typedef {object} Phaser.Types.GameObjects.Particles.EmitterOpCustomUpdateConfig
  * @since 3.0.0
  *
- * @property {Phaser.GameObjects.Particles.Types.EmitterOpOnEmitCallback} [onEmit] - A callback that is invoked each time the emitter emits a particle.
- * @property {Phaser.GameObjects.Particles.Types.EmitterOpOnUpdateCallback} onUpdate - A callback that is invoked each time the emitter updates.
+ * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnEmitCallback} [onEmit] - A callback that is invoked each time the emitter emits a particle.
+ * @property {Phaser.Types.GameObjects.Particles.EmitterOpOnUpdateCallback} onUpdate - A callback that is invoked each time the emitter updates.
  */

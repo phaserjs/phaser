@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.GameObjects.Particles.Types.ParticleEmitterBounds
+ * @typedef {object} Phaser.Types.GameObjects.Particles.ParticleEmitterBounds
  * @since 3.0.0
  *
  * @property {number} x - The left edge of the rectangle.

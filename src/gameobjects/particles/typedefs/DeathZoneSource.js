@@ -1,8 +1,8 @@
 /**
- * @typedef {object} Phaser.GameObjects.Particles.Types.DeathZoneSource
+ * @typedef {object} Phaser.Types.GameObjects.Particles.DeathZoneSource
  * @since 3.0.0
  *
- * @property {Phaser.GameObjects.Particles.Types.DeathZoneSourceCallback} contains
+ * @property {Phaser.Types.GameObjects.Particles.DeathZoneSourceCallback} contains
  *
  * @see Phaser.Geom.Circle
  * @see Phaser.Geom.Ellipse

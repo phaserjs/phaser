@@ -20,7 +20,7 @@ var Class = require('../../../utils/Class');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.GameObjects.Particles.Types.DeathZoneSource} source - An object instance that has a `contains` method that returns a boolean when given `x` and `y` arguments.
+ * @param {Phaser.Types.GameObjects.Particles.DeathZoneSource} source - An object instance that has a `contains` method that returns a boolean when given `x` and `y` arguments.
  * @param {boolean} killOnEnter - Should the Particle be killed when it enters the zone? `true` or leaves it? `false`
  */
 var DeathZone = new Class({
@@ -34,7 +34,7 @@ var DeathZone = new Class({
          * This could be a Geometry shape, such as `Phaser.Geom.Circle`, or your own custom object.
          *
          * @name Phaser.GameObjects.Particles.Zones.DeathZone#source
-         * @type {Phaser.GameObjects.Particles.Types.DeathZoneSource}
+         * @type {Phaser.Types.GameObjects.Particles.DeathZoneSource}
          * @since 3.0.0
          */
         this.source = source;

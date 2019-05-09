@@ -1,8 +1,8 @@
 /**
- * @typedef {object} Phaser.GameObjects.Particles.Types.EdgeZoneSource
+ * @typedef {object} Phaser.Types.GameObjects.Particles.EdgeZoneSource
  * @since 3.0.0
  *
- * @property {Phaser.GameObjects.Particles.Types.EdgeZoneSourceCallback} getPoints - A function placing points on the sources edge or edges.
+ * @property {Phaser.Types.GameObjects.Particles.EdgeZoneSourceCallback} getPoints - A function placing points on the sources edge or edges.
  *
  * @see Phaser.Curves.Curve
  * @see Phaser.Curves.Path
