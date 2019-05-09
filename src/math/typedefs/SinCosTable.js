@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Math.Types.SinCosTable
+ * @typedef {object} Phaser.Types.Math.SinCosTable
  * @since 3.0.0
  *
  * @property {number} sin - The sine value.

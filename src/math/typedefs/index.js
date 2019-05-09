@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.Math.Types
+ * @namespace Phaser.Types.Math
  */

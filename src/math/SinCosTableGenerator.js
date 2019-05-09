@@ -15,7 +15,7 @@
  * @param {number} [cosAmp=1] - The cosine value amplitude.
  * @param {number} [frequency=1] - The frequency of the values.
  *
- * @return {Phaser.Math.Types.SinCosTable} The generated values.
+ * @return {Phaser.Types.Math.SinCosTable} The generated values.
  */
 var SinCosTableGenerator = function (length, sinAmp, cosAmp, frequency)
 {

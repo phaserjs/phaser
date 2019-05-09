@@ -20,7 +20,7 @@ var Class = require('../utils/Class');
  * @constructor
  * @since 3.0.0
  *
- * @param {number|Phaser.Math.Types.Vector2Like} [x] - The x component, or an object with `x` and `y` properties.
+ * @param {number|Phaser.Types.Math.Vector2Like} [x] - The x component, or an object with `x` and `y` properties.
  * @param {number} [y] - The y component.
  */
 var Vector2 = new Class({
