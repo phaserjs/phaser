@@ -117,7 +117,7 @@ var MoveTo = new Class({
      * @method Phaser.Curves.MoveTo#toJSON
      * @since 3.0.0
      *
-     * @return {Phaser.Curves.Types.JSONCurve} A primitive object with the curve's type and only point.
+     * @return {Phaser.Types.Curves.JSONCurve} A primitive object with the curve's type and only point.
      */
     toJSON: function ()
     {

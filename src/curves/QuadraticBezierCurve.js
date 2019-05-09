@@ -168,7 +168,7 @@ var QuadraticBezier = new Class({
      * @method Phaser.Curves.QuadraticBezier#toJSON
      * @since 3.2.0
      *
-     * @return {Phaser.Curves.Types.JSONCurve} The JSON object containing this curve data.
+     * @return {Phaser.Types.Curves.JSONCurve} The JSON object containing this curve data.
      */
     toJSON: function ()
     {
@@ -190,7 +190,7 @@ var QuadraticBezier = new Class({
  * @function Phaser.Curves.QuadraticBezier.fromJSON
  * @since 3.2.0
  *
- * @param {Phaser.Curves.Types.JSONCurve} data - The JSON object containing this curve data.
+ * @param {Phaser.Types.Curves.JSONCurve} data - The JSON object containing this curve data.
  *
  * @return {Phaser.Curves.QuadraticBezier} The created curve instance.
  */

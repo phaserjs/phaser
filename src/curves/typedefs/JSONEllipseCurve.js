@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Curves.Types.JSONEllipseCurve
+ * @typedef {object} Phaser.Types.Curves.JSONEllipseCurve
  * @since 3.0.0
  *
  * @property {string} type - The of the curve.

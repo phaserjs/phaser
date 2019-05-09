@@ -181,7 +181,7 @@ var SplineCurve = new Class({
      * @method Phaser.Curves.Spline#toJSON
      * @since 3.0.0
      *
-     * @return {Phaser.Curves.Types.JSONCurve} The JSON object containing this curve data.
+     * @return {Phaser.Types.Curves.JSONCurve} The JSON object containing this curve data.
      */
     toJSON: function ()
     {
@@ -207,7 +207,7 @@ var SplineCurve = new Class({
  * @function Phaser.Curves.Spline.fromJSON
  * @since 3.0.0
  *
- * @param {Phaser.Curves.Types.JSONCurve} data - The JSON object containing this curve data.
+ * @param {Phaser.Types.Curves.JSONCurve} data - The JSON object containing this curve data.
  *
  * @return {Phaser.Curves.Spline} [description]
  */

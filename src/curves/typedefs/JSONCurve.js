@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Curves.Types.JSONCurve
+ * @typedef {object} Phaser.Types.Curves.JSONCurve
  * @since 3.0.0
  *
  * @property {string} type - The of the curve

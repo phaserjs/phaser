@@ -30,7 +30,7 @@ var Vector2 = require('../../math/Vector2');
  * @constructor
  * @since 3.0.0
  *
- * @param {number} [x=0] - The X coordinate of the Path's starting point or a {@link Phaser.Curves.Types.JSONPath}.
+ * @param {number} [x=0] - The X coordinate of the Path's starting point or a {@link Phaser.Types.Curves.JSONPath}.
  * @param {number} [y=0] - The Y coordinate of the Path's starting point.
  */
 var Path = new Class({
@@ -331,12 +331,12 @@ var Path = new Class({
     /**
      * Creates a Path from a Path Configuration object.
      *
-     * The provided object should be a {@link Phaser.Curves.Types.JSONPath}, as returned by {@link #toJSON}. Providing a malformed object may cause errors.
+     * The provided object should be a {@link Phaser.Types.Curves.JSONPath}, as returned by {@link #toJSON}. Providing a malformed object may cause errors.
      *
      * @method Phaser.Curves.Path#fromJSON
      * @since 3.0.0
      *
-     * @param {Phaser.Curves.Types.JSONPath} data - The JSON object containing the Path data.
+     * @param {Phaser.Types.Curves.JSONPath} data - The JSON object containing the Path data.
      *
      * @return {Phaser.Curves.Path} This Path object.
      */
@@ -760,7 +760,7 @@ var Path = new Class({
      * @method Phaser.Curves.Path#toJSON
      * @since 3.0.0
      *
-     * @return {Phaser.Curves.Types.JSONPath} [description]
+     * @return {Phaser.Types.Curves.JSONPath} [description]
      */
     toJSON: function ()
     {

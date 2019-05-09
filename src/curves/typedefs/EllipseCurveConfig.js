@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Curves.Types.EllipseCurveConfig
+ * @typedef {object} Phaser.Types.Curves.EllipseCurveConfig
  *
  * @property {number} [x=0] - The x coordinate of the ellipse.
  * @property {number} [y=0] - The y coordinate of the ellipse.

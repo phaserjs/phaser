@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.Curves.Types
+ * @namespace Phaser.Types.Curves
  */
