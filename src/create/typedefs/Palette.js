@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Create.Types.Palette
+ * @typedef {object} Phaser.Types.Create.Palette
  * @since 3.0.0
  *
  * @property {string} 0 - Color value 1.

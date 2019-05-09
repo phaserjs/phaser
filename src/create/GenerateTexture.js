@@ -14,7 +14,7 @@ var GetValue = require('../utils/object/GetValue');
  * @function Phaser.Create.GenerateTexture
  * @since 3.0.0
  *
- * @param {Phaser.Create.Types.GenerateTextureConfig} config - [description]
+ * @param {Phaser.Types.Create.GenerateTextureConfig} config - [description]
  *
  * @return {HTMLCanvasElement} [description]
  */

@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.Create.Types
+ * @namespace Phaser.Types.Create
  */
