@@ -36,31 +36,4 @@ var config = {
     scene: MyScene
 };
 var game = new Phaser.Game(config);
-var scene = new Phaser.Scene("");
-var blitter = new Phaser.GameObjects.Blitter(scene, 10, 10);
-var conf = {
-    type: Phaser.AUTO,
-    width: 100,
-    height: 100,
-    zoom: 1,
-    resolution: 1
-};
-var tex = null;
-tex.source[0].setFilter(Phaser.Textures.FilterMode.LINEAR);
-tex.setFilter(Phaser.Textures.FilterMode.LINEAR);
-tex.setFilter(Phaser.Textures.NEAREST);
-var sprite = new Phaser.GameObjects.Sprite(scene, 0, 0, "test");
-var MyVec = /** @class */ (function (_super) {
-    __extends(MyVec, _super);
-    function MyVec() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    MyVec.prototype.extra = function () {
-    };
-    return MyVec;
-}(Phaser.Geom.Rectangle));
-var p = new MyVec();
-sprite.getBounds(p).extra();
-var container = scene.add.container(0, 0);
-container.getWorldTransformMatrix();
 //# sourceMappingURL=game.js.map

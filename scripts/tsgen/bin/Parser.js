@@ -69,10 +69,9 @@ class Parser {
                 case 'Phaser.GameObjects.Components.GetBounds':
                 case 'Phaser.GameObjects.Components.Mask':
                 case 'Phaser.GameObjects.Components.Origin':
+                case 'Phaser.GameObjects.Components.PathFollower':
                 case 'Phaser.GameObjects.Components.Pipeline':
-                case 'Phaser.GameObjects.Components.ScaleMode':
                 case 'Phaser.GameObjects.Components.ScrollFactor':
-                case 'Phaser.GameObjects.Components.ScaleFactor':
                 case 'Phaser.GameObjects.Components.Size':
                 case 'Phaser.GameObjects.Components.Texture':
                 case 'Phaser.GameObjects.Components.TextureCrop':
@@ -80,11 +79,10 @@ class Parser {
                 case 'Phaser.GameObjects.Components.ToJSON':
                 case 'Phaser.GameObjects.Components.Transform':
                 case 'Phaser.GameObjects.Components.Visible':
+                case 'Phaser.Renderer.WebGL.Pipelines.ModelViewProjection':
                     doclet.kind = 'mixin';
                     break;
             }
-            if (doclet.longname == 'ModelViewProjection')
-                doclet.kind = 'mixin';
             if ((doclet.longname.indexOf('Phaser.Physics.Arcade.Components.') == 0
                 || doclet.longname.indexOf('Phaser.Physics.Impact.Components.') == 0
                 || doclet.longname.indexOf('Phaser.Physics.Matter.Components.') == 0)
