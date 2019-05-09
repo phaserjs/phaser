@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.GameObjects.Graphics.Types.RoundedRectRadius
+ * @typedef {object} Phaser.Types.GameObjects.Graphics.RoundedRectRadius
  * @since 3.11.0
  * 
  * @property {number} [tl=20] - Top left

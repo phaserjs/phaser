@@ -82,7 +82,7 @@ var Render = require('./GraphicsRender');
  * @extends Phaser.GameObjects.Components.ScrollFactor
  *
  * @param {Phaser.Scene} scene - The Scene to which this Graphics object belongs.
- * @param {Phaser.GameObjects.Graphics.Types.Options} [options] - Options that set the position and default style of this Graphics object.
+ * @param {Phaser.Types.GameObjects.Graphics.Options} [options] - Options that set the position and default style of this Graphics object.
  */
 var Graphics = new Class({
 
@@ -241,7 +241,7 @@ var Graphics = new Class({
      * @method Phaser.GameObjects.Graphics#setDefaultStyles
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.Graphics.Types.Styles} options - The styles to set as defaults.
+     * @param {Phaser.Types.GameObjects.Graphics.Styles} options - The styles to set as defaults.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -734,7 +734,7 @@ var Graphics = new Class({
      * @param {number} y - The y coordinate of the top-left of the rectangle.
      * @param {number} width - The width of the rectangle.
      * @param {number} height - The height of the rectangle.
-     * @param {(Phaser.GameObjects.Graphics.Types.RoundedRectRadius|number)} [radius=20] - The corner radius; It can also be an object to specify different radii for corners.
+     * @param {(Phaser.Types.GameObjects.Graphics.RoundedRectRadius|number)} [radius=20] - The corner radius; It can also be an object to specify different radii for corners.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */
@@ -780,7 +780,7 @@ var Graphics = new Class({
      * @param {number} y - The y coordinate of the top-left of the rectangle.
      * @param {number} width - The width of the rectangle.
      * @param {number} height - The height of the rectangle.
-     * @param {(Phaser.GameObjects.Graphics.Types.RoundedRectRadius|number)} [radius=20] - The corner radius; It can also be an object to specify different radii for corners.
+     * @param {(Phaser.Types.GameObjects.Graphics.RoundedRectRadius|number)} [radius=20] - The corner radius; It can also be an object to specify different radii for corners.
      *
      * @return {Phaser.GameObjects.Graphics} This Game Object.
      */

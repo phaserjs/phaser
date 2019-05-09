@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.GameObjects.Graphics.Types
+ * @namespace Phaser.Types.GameObjects.Graphics
  */

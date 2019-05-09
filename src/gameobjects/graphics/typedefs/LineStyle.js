@@ -1,7 +1,7 @@
 /**
  * Graphics line style (or stroke style) settings.
  *
- * @typedef {object} Phaser.GameObjects.Graphics.Types.LineStyle
+ * @typedef {object} Phaser.Types.GameObjects.Graphics.LineStyle
  * @since 3.0.0
  *
  * @property {number} [width] - The stroke width.
