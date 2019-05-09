@@ -1005,7 +1005,7 @@ var TextStyle = new Class({
      * @method Phaser.GameObjects.TextStyle#getTextMetrics
      * @since 3.0.0
      *
-     * @return {BitmapTextMetrics} The text metrics.
+     * @return {Phaser.Types.GameObjects.Text.TextMetrics} The text metrics.
      */
     getTextMetrics: function ()
     {

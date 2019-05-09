@@ -475,7 +475,7 @@ var ScaleManager = new Class({
      * @protected
      * @since 3.16.0
      * 
-     * @param {GameConfig} config - The Game configuration object.
+     * @param {Phaser.Types.Core.GameConfig} config - The Game configuration object.
      */
     parseConfig: function (config)
     {
@@ -586,7 +586,7 @@ var ScaleManager = new Class({
      * @method Phaser.Scale.ScaleManager#getParent
      * @since 3.16.0
      * 
-     * @param {GameConfig} config - The Game configuration object.
+     * @param {Phaser.Types.Core.GameConfig} config - The Game configuration object.
      */
     getParent: function (config)
     {

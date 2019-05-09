@@ -249,7 +249,7 @@ var MultiAtlasFile = new Class({
  * });
  * ```
  *
- * See the documentation for `Phaser.Loader.FileTypes.MultiAtlasFileConfig` for more details.
+ * See the documentation for `Phaser.Types.Loader.FileTypes.MultiAtlasFileConfig` for more details.
  *
  * Instead of passing a URL for the atlas JSON data you can also pass in a well formed JSON object instead.
  *
@@ -280,7 +280,7 @@ var MultiAtlasFile = new Class({
  * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.7.0
  *
- * @param {(string|Phaser.Loader.FileTypes.MultiAtlasFileConfig|Phaser.Loader.FileTypes.MultiAtlasFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {(string|Phaser.Types.Loader.FileTypes.MultiAtlasFileConfig|Phaser.Types.Loader.FileTypes.MultiAtlasFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string} [atlasURL] - The absolute or relative URL to load the texture atlas json data file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
  * @param {string} [path] - Optional path to use when loading the textures defined in the atlas data.
  * @param {string} [baseURL] - Optional Base URL to use when loading the textures defined in the atlas data.

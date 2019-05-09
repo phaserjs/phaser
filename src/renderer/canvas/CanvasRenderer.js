@@ -537,7 +537,7 @@ var CanvasRenderer = new Class({
      * @method Phaser.Renderer.Canvas.CanvasRenderer#snapshot
      * @since 3.0.0
      *
-     * @param {SnapshotCallback} callback - The Function to invoke after the snapshot image is created.
+     * @param {Phaser.Types.Renderer.Snapshot.SnapshotCallback} callback - The Function to invoke after the snapshot image is created.
      * @param {string} [type='image/png'] - The format of the image to create, usually `image/png` or `image/jpeg`.
      * @param {number} [encoderOptions=0.92] - The image quality, between 0 and 1. Used for image formats with lossy compression, such as `image/jpeg`.
      *
@@ -566,7 +566,7 @@ var CanvasRenderer = new Class({
      * @param {integer} y - The y coordinate to grab from.
      * @param {integer} width - The width of the area to grab.
      * @param {integer} height - The height of the area to grab.
-     * @param {SnapshotCallback} callback - The Function to invoke after the snapshot image is created.
+     * @param {Phaser.Types.Renderer.Snapshot.SnapshotCallback} callback - The Function to invoke after the snapshot image is created.
      * @param {string} [type='image/png'] - The format of the image to create, usually `image/png` or `image/jpeg`.
      * @param {number} [encoderOptions=0.92] - The image quality, between 0 and 1. Used for image formats with lossy compression, such as `image/jpeg`.
      *
@@ -605,7 +605,7 @@ var CanvasRenderer = new Class({
      *
      * @param {integer} x - The x coordinate of the pixel to get.
      * @param {integer} y - The y coordinate of the pixel to get.
-     * @param {SnapshotCallback} callback - The Function to invoke after the snapshot pixel data is extracted.
+     * @param {Phaser.Types.Renderer.Snapshot.SnapshotCallback} callback - The Function to invoke after the snapshot pixel data is extracted.
      *
      * @return {this} This WebGL Renderer.
      */

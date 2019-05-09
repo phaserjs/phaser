@@ -187,7 +187,7 @@ var BaseSound = new Class({
      * @method Phaser.Sound.BaseSound#addMarker
      * @since 3.0.0
      *
-     * @param {SoundMarker} marker - Marker object.
+     * @param {Phaser.Types.Sound.SoundMarker} marker - Marker object.
      *
      * @return {boolean} Whether the marker was added successfully.
      */

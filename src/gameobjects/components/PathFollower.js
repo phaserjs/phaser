@@ -335,7 +335,6 @@ var PathFollower = {
      * Called automatically by the Scene step, should not typically be called directly.
      *
      * @method Phaser.GameObjects.Components.PathFollower#pathUpdate
-     * @protected
      * @since 3.17.0
      */
     pathUpdate: function ()

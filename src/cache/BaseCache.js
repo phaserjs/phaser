@@ -153,8 +153,6 @@ var BaseCache = new Class({
      * @method Phaser.Cache.BaseCache#getKeys
      * @since 3.17.0
      *
-     * @genericUse {K[]} - [$return]
-     *
      * @return {string[]} Array containing all the keys.
      */
     getKeys: function ()

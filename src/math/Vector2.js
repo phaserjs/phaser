@@ -100,7 +100,7 @@ var Vector2 = new Class({
      * @method Phaser.Math.Vector2#setFromObject
      * @since 3.0.0
      *
-     * @param {Vector2Like} obj - The object containing the component values to set for this Vector.
+     * @param {Phaser.Types.Math.Vector2Like} obj - The object containing the component values to set for this Vector.
      *
      * @return {Phaser.Math.Vector2} This Vector2.
      */

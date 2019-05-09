@@ -296,7 +296,7 @@ var Body = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.Body#updateCallback
-         * @type {?BodyUpdateCallback}
+         * @type {?Phaser.Types.Physics.Impact.BodyUpdateCallback}
          * @since 3.0.0
          */
         this.updateCallback;

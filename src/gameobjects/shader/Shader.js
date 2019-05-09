@@ -120,7 +120,7 @@ var Shader = new Class({
          * Empty by default and set during a call to the `setShader` method.
          * 
          * @name Phaser.GameObjects.Shader#shader
-         * @type {Phaser.Display.Shader}
+         * @type {Phaser.Display.BaseShader}
          * @since 3.17.0
          */
         this.shader;

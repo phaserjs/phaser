@@ -153,7 +153,7 @@ var MatterTileBody = new Class({
      * @method Phaser.Physics.Matter.TileBody#setFromTileCollision
      * @since 3.0.0
      *
-     * @param {MatterBodyTileOptions} [options] - Options to be used when creating the Matter body. See MatterJS.Body for a list of what Matter accepts.
+     * @param {Phaser.Types.Physics.Matter.MatterBodyTileOptions} [options] - Options to be used when creating the Matter body. See MatterJS.Body for a list of what Matter accepts.
      * 
      * @return {Phaser.Physics.Matter.TileBody} This TileBody object.
      */

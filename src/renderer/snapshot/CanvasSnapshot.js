@@ -18,7 +18,7 @@ var GetFastValue = require('../../utils/object/GetFastValue');
  * @since 3.0.0
  *
  * @param {HTMLCanvasElement} sourceCanvas - The canvas to take a snapshot of.
- * @param {SnapshotState} config - The snapshot configuration object.
+ * @param {Phaser.Types.Renderer.Snapshot.SnapshotState} config - The snapshot configuration object.
  */
 var CanvasSnapshot = function (canvas, config)
 {

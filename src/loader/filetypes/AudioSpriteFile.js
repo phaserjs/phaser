@@ -27,7 +27,7 @@ var MultiFile = require('../MultiFile.js');
  * @since 3.7.0
  *
  * @param {Phaser.Loader.LoaderPlugin} loader - A reference to the Loader that is responsible for this file.
- * @param {(string|Phaser.Loader.FileTypes.AudioSpriteFileConfig)} key - The key to use for this file, or a file configuration object.
+ * @param {(string|Phaser.Types.Loader.FileTypes.AudioSpriteFileConfig)} key - The key to use for this file, or a file configuration object.
  * @param {string} jsonURL - The absolute or relative URL to load the json file from. Or a well formed JSON object to use instead.
  * @param {{(string|string[])}} [audioURL] - The absolute or relative URL to load the audio file from. If empty it will be obtained by parsing the JSON file.
  * @param {any} [audioConfig] - The audio configuration options.
@@ -199,7 +199,7 @@ var AudioSpriteFile = new Class({
  * });
  * ```
  *
- * See the documentation for `Phaser.Loader.FileTypes.AudioSpriteFileConfig` for more details.
+ * See the documentation for `Phaser.Types.Loader.FileTypes.AudioSpriteFileConfig` for more details.
  *
  * Instead of passing a URL for the audio JSON data you can also pass in a well formed JSON object instead.
  *
@@ -231,7 +231,7 @@ var AudioSpriteFile = new Class({
  * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.0.0
  *
- * @param {(string|Phaser.Loader.FileTypes.AudioSpriteFileConfig|Phaser.Loader.FileTypes.AudioSpriteFileConfig[])} key - The key to use for this file, or a file configuration object, or an array of objects.
+ * @param {(string|Phaser.Types.Loader.FileTypes.AudioSpriteFileConfig|Phaser.Types.Loader.FileTypes.AudioSpriteFileConfig[])} key - The key to use for this file, or a file configuration object, or an array of objects.
  * @param {string} jsonURL - The absolute or relative URL to load the json file from. Or a well formed JSON object to use instead.
  * @param {(string|string[])} [audioURL] - The absolute or relative URL to load the audio file from. If empty it will be obtained by parsing the JSON file.
  * @param {any} [audioConfig] - The audio configuration options.

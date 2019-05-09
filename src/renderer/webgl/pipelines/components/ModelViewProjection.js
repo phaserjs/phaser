@@ -656,7 +656,7 @@ var ModelViewProjection = {
     },
 
     /**
-     * Sets up an orthographics projection matrix
+     * Sets up an orthographic projection matrix
      * 
      * @method Phaser.Renderer.WebGL.Pipelines.ModelViewProjection#projOrtho
      * @since 3.0.0

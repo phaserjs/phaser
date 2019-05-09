@@ -83,9 +83,9 @@ var Vector4 = require('../../math/Vector4');
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
  * @param {number} [x=0] - The horizontal position of this DOM Element in the world.
  * @param {number} [y=0] - The vertical position of this DOM Element in the world.
- * @param {(Element|DOMString|string)} [element] - An existing DOM element, or a string. If a string starting with a # it will do a `getElementById` look-up on the string (minus the hash). Without a hash, it represents the type of element to create, i.e. 'div'.
- * @param {(DOMString|any)} [style] - If a string, will be set directly as the elements `style` property value. If a plain object, will be iterated and the values transferred. In both cases the values replacing whatever CSS styles may have been previously set.
- * @param {DOMString} [innerText] - If given, will be set directly as the elements `innerText` property value, replacing whatever was there before.
+ * @param {(Element|string)} [element] - An existing DOM element, or a string. If a string starting with a # it will do a `getElementById` look-up on the string (minus the hash). Without a hash, it represents the type of element to create, i.e. 'div'.
+ * @param {(string|any)} [style] - If a string, will be set directly as the elements `style` property value. If a plain object, will be iterated and the values transferred. In both cases the values replacing whatever CSS styles may have been previously set.
+ * @param {string} [innerText] - If given, will be set directly as the elements `innerText` property value, replacing whatever was there before.
  */
 var DOMElement = new Class({
 
@@ -470,8 +470,8 @@ var DOMElement = new Class({
      * @since 3.17.0
      *
      * @param {string} tagName - A string that specifies the type of element to be created. The nodeName of the created element is initialized with the value of tagName. Don't use qualified names (like "html:a") with this method.
-     * @param {(DOMString|any)} [style] - Either a DOMString that holds the CSS styles to be applied to the created element, or an object the styles will be ready from.
-     * @param {DOMString} [innerText] - A DOMString that holds the text that will be set as the innerText of the created element.
+     * @param {(string|any)} [style] - Either a DOMString that holds the CSS styles to be applied to the created element, or an object the styles will be ready from.
+     * @param {string} [innerText] - A DOMString that holds the text that will be set as the innerText of the created element.
      * 
      * @return {this} This DOM Element instance.
      */
@@ -526,8 +526,8 @@ var DOMElement = new Class({
      * @since 3.17.0
      *
      * @param {(string|Element)} element - If a string it is passed to `getElementById()`, or it should be a reference to an existing Element.
-     * @param {(DOMString|any)} [style] - Either a DOMString that holds the CSS styles to be applied to the created element, or an object the styles will be ready from.
-     * @param {DOMString} [innerText] - A DOMString that holds the text that will be set as the innerText of the created element.
+     * @param {(string|any)} [style] - Either a DOMString that holds the CSS styles to be applied to the created element, or an object the styles will be ready from.
+     * @param {string} [innerText] - A DOMString that holds the text that will be set as the innerText of the created element.
      * 
      * @return {this} This DOM Element instance.
      */
@@ -632,7 +632,7 @@ var DOMElement = new Class({
      * @since 3.17.0
      * 
      * @param {string} The key of the html cache entry to use for this DOM Element.
-     * @param {DOMString} [tagName='div'] - The tag name of the element into which all of the loaded html will be inserted. Defaults to a plain div tag.
+     * @param {string} [tagName='div'] - The tag name of the element into which all of the loaded html will be inserted. Defaults to a plain div tag.
      * 
      * @return {this} This DOM Element instance.
      */
@@ -674,8 +674,8 @@ var DOMElement = new Class({
      * @method Phaser.GameObjects.DOMElement#createFromHTML
      * @since 3.17.0
      * 
-     * @param {DOMString} A string of html to be set as the `innerHTML` property of the created element.
-     * @param {DOMString} [tagName='div'] - The tag name of the element into which all of the html will be inserted. Defaults to a plain div tag.
+     * @param {string} A string of html to be set as the `innerHTML` property of the created element.
+     * @param {string} [tagName='div'] - The tag name of the element into which all of the html will be inserted. Defaults to a plain div tag.
      * 
      * @return {this} This DOM Element instance.
      */
@@ -853,7 +853,7 @@ var DOMElement = new Class({
      * @method Phaser.GameObjects.DOMElement#setText
      * @since 3.17.0
      * 
-     * @param {DOMString} text - A DOMString representing the rendered text content of the element.
+     * @param {string} text - A DOMString representing the rendered text content of the element.
      * 
      * @return {this} This DOM Element instance.
      */
@@ -875,7 +875,7 @@ var DOMElement = new Class({
      * @method Phaser.GameObjects.DOMElement#setHTML
      * @since 3.17.0
      * 
-     * @param {DOMString} html - A DOMString of html to be set as the `innerHTML` property of the element.
+     * @param {string} html - A DOMString of html to be set as the `innerHTML` property of the element.
      * 
      * @return {this} This DOM Element instance.
      */

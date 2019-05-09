@@ -144,7 +144,7 @@ var PackFile = new Class({
  * });
  * ```
  *
- * See the documentation for `Phaser.Loader.FileTypes.PackFileConfig` for more details.
+ * See the documentation for `Phaser.Types.Loader.FileTypes.PackFileConfig` for more details.
  *
  * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
  * key. For example, if the prefix was `LEVEL1.` and the key was `Waves` the final key will be `LEVEL1.Waves` and
@@ -181,7 +181,7 @@ var PackFile = new Class({
  * @fires Phaser.Loader.LoaderPlugin#addFileEvent
  * @since 3.7.0
  *
- * @param {(string|Phaser.Loader.FileTypes.PackFileConfig|Phaser.Loader.FileTypes.PackFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
+ * @param {(string|Phaser.Types.Loader.FileTypes.PackFileConfig|Phaser.Types.Loader.FileTypes.PackFileConfig[])} key - The key to use for this file, or a file configuration object, or array of them.
  * @param {string} [url] - The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
  * @param {string} [dataKey] - When the JSON file loads only this property will be stored in the Cache.
  * @param {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
