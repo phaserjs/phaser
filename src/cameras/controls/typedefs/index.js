@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.Cameras.Controls.Types
+ * @namespace Phaser.Types.Cameras.Controls
  */

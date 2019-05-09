@@ -31,7 +31,7 @@ var GetValue = require('../../utils/object/GetValue');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Cameras.Controls.Types.FixedKeyControlConfig} config - The Fixed Key Control configuration object.
+ * @param {Phaser.Types.Cameras.Controls.FixedKeyControlConfig} config - The Fixed Key Control configuration object.
  */
 var FixedKeyControl = new Class({
 

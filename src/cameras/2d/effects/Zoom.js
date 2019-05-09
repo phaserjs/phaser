@@ -113,7 +113,7 @@ var Zoom = new Class({
          * This callback is invoked every frame for the duration of the effect.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Zoom#_onUpdate
-         * @type {?Phaser.Cameras.Scene2D.Types.CameraZoomCallback}
+         * @type {?Phaser.Types.Cameras.Scene2D.CameraZoomCallback}
          * @private
          * @default null
          * @since 3.11.0
@@ -143,7 +143,7 @@ var Zoom = new Class({
      * @param {integer} [duration=1000] - The duration of the effect in milliseconds.
      * @param {(string|function)} [ease='Linear'] - The ease to use for the Zoom. Can be any of the Phaser Easing constants or a custom function.
      * @param {boolean} [force=false] - Force the zoom effect to start immediately, even if already running.
-     * @param {Phaser.Cameras.Scene2D.Types.CameraZoomCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
+     * @param {Phaser.Types.Cameras.Scene2D.CameraZoomCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
      * It is sent three arguments: A reference to the camera, a progress amount between 0 and 1 indicating how complete the effect is,
      * and the current camera zoom value.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.

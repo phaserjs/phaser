@@ -1,5 +1,5 @@
 /**
- * @callback Phaser.Cameras.Scene2D.Types.CameraPanCallback
+ * @callback Phaser.Types.Cameras.Scene2D.CameraPanCallback
  * @since 3.5.0
  *
  * @param {Phaser.Cameras.Scene2D.Camera} camera - The camera on which the effect is running.

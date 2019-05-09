@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Cameras.Scene2D.Types.JSONCameraBounds
+ * @typedef {object} Phaser.Types.Cameras.Scene2D.JSONCameraBounds
  * @since 3.0.0
  * 
  * @property {number} x - The horizontal position of camera

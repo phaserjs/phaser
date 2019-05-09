@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Cameras.Scene2D.Types.JSONCamera
+ * @typedef {object} Phaser.Types.Cameras.Scene2D.JSONCamera
  * @since 3.0.0
  *
  * @property {string} name - The name of the camera
@@ -13,5 +13,5 @@
  * @property {number} scrollX - The horizontal scroll of camera
  * @property {number} scrollY - The vertical scroll of camera
  * @property {string} backgroundColor - The background color of camera
- * @property {(Phaser.Cameras.Scene2D.Types.JSONCameraBounds|undefined)} [bounds] - The bounds of camera
+ * @property {(Phaser.Types.Cameras.Scene2D.JSONCameraBounds|undefined)} [bounds] - The bounds of camera
  */

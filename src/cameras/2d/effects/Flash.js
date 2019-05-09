@@ -132,7 +132,7 @@ var Flash = new Class({
          * This callback is invoked every frame for the duration of the effect.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Flash#_onUpdate
-         * @type {?Phaser.Cameras.Scene2D.Types.CameraFlashCallback}
+         * @type {?Phaser.Types.Cameras.Scene2D.CameraFlashCallback}
          * @private
          * @default null
          * @since 3.5.0
@@ -163,7 +163,7 @@ var Flash = new Class({
      * @param {integer} [green=255] - The amount to fade the green channel towards. A value between 0 and 255.
      * @param {integer} [blue=255] - The amount to fade the blue channel towards. A value between 0 and 255.
      * @param {boolean} [force=false] - Force the effect to start immediately, even if already running.
-     * @param {Phaser.Cameras.Scene2D.Types.CameraFlashCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
+     * @param {Phaser.Types.Cameras.Scene2D.CameraFlashCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *

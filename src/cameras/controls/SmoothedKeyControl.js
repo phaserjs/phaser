@@ -37,7 +37,7 @@ var GetValue = require('../../utils/object/GetValue');
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Cameras.Controls.Types.SmoothedKeyControlConfig} config - The Smoothed Key Control configuration object.
+ * @param {Phaser.Types.Cameras.Controls.SmoothedKeyControlConfig} config - The Smoothed Key Control configuration object.
  */
 var SmoothedKeyControl = new Class({
 

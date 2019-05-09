@@ -122,7 +122,7 @@ var Shake = new Class({
          * This callback is invoked every frame for the duration of the effect.
          *
          * @name Phaser.Cameras.Scene2D.Effects.Shake#_onUpdate
-         * @type {?Phaser.Cameras.Scene2D.Types.CameraShakeCallback}
+         * @type {?Phaser.Types.Cameras.Scene2D.CameraShakeCallback}
          * @private
          * @default null
          * @since 3.5.0
@@ -151,7 +151,7 @@ var Shake = new Class({
      * @param {integer} [duration=100] - The duration of the effect in milliseconds.
      * @param {number} [intensity=0.05] - The intensity of the shake.
      * @param {boolean} [force=false] - Force the shake effect to start immediately, even if already running.
-     * @param {Phaser.Cameras.Scene2D.Types.CameraShakeCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
+     * @param {Phaser.Types.Cameras.Scene2D.CameraShakeCallback} [callback] - This callback will be invoked every frame for the duration of the effect.
      * It is sent two arguments: A reference to the camera and a progress amount between 0 and 1 indicating how complete the effect is.
      * @param {any} [context] - The context in which the callback is invoked. Defaults to the Scene to which the Camera belongs.
      *

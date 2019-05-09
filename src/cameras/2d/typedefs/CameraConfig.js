@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Cameras.Scene2D.Types.CameraConfig
+ * @typedef {object} Phaser.Types.Cameras.Scene2D.CameraConfig
  * @since 3.0.0
  *
  * @property {string} [name=''] - The name of the Camera.

@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.Cameras.Scene2D.Types
+ * @namespace Phaser.Types.Cameras.Scene2D
  */

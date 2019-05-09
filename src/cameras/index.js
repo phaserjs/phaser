@@ -8,6 +8,10 @@
  * @namespace Phaser.Cameras
  */
 
+/**
+ * @namespace Phaser.Types.Cameras
+ */
+
 module.exports = {
 
     Controls: require('./controls'),

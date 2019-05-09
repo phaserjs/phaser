@@ -385,12 +385,12 @@ var CameraManager = new Class({
     /**
      * Populates this Camera Manager based on the given configuration object, or an array of config objects.
      * 
-     * See the `Phaser.Cameras.Scene2D.Types.CameraConfig` documentation for details of the object structure.
+     * See the `Phaser.Types.Cameras.Scene2D.CameraConfig` documentation for details of the object structure.
      *
      * @method Phaser.Cameras.Scene2D.CameraManager#fromJSON
      * @since 3.0.0
      *
-     * @param {(Phaser.Cameras.Scene2D.Types.CameraConfig|Phaser.Cameras.Scene2D.Types.CameraConfig[])} config - A Camera configuration object, or an array of them, to be added to this Camera Manager.
+     * @param {(Phaser.Types.Cameras.Scene2D.CameraConfig|Phaser.Types.Cameras.Scene2D.CameraConfig[])} config - A Camera configuration object, or an array of them, to be added to this Camera Manager.
      *
      * @return {Phaser.Cameras.Scene2D.CameraManager} This Camera Manager instance.
      */
