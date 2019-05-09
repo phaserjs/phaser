@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Textures.Types.SpriteSheetConfig
+ * @typedef {object} Phaser.Types.Textures.SpriteSheetConfig
  * @since 3.0.0
  * 
  * @property {integer} frameWidth - The fixed width of each frame.

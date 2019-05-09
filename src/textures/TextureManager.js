@@ -707,7 +707,7 @@ var TextureManager = new Class({
      *
      * @param {string} key - The unique string-based key of the Texture.
      * @param {HTMLImageElement} source - The source Image element.
-     * @param {Phaser.Textures.Types.SpriteSheetConfig} config - The configuration object for this Sprite Sheet.
+     * @param {Phaser.Types.Textures.SpriteSheetConfig} config - The configuration object for this Sprite Sheet.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */
@@ -741,7 +741,7 @@ var TextureManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The unique string-based key of the Texture.
-     * @param {Phaser.Textures.Types.SpriteSheetFromAtlasConfig} config - The configuration object for this Sprite Sheet.
+     * @param {Phaser.Types.Textures.SpriteSheetFromAtlasConfig} config - The configuration object for this Sprite Sheet.
      *
      * @return {?Phaser.Textures.Texture} The Texture that was created, or `null` if the key is already in use.
      */

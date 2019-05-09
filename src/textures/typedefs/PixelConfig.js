@@ -1,7 +1,7 @@
 /**
  * An object containing the position and color data for a single pixel in a CanvasTexture.
  *
- * @typedef {object} Phaser.Textures.Types.PixelConfig
+ * @typedef {object} Phaser.Types.Textures.PixelConfig
  * @since 3.16.0
  *
  * @property {integer} x - The x-coordinate of the pixel.

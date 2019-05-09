@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.Textures.Types
+ * @namespace Phaser.Types.Textures
  */
