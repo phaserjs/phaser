@@ -21,7 +21,7 @@ var TWEEN_CONST = require('./const');
  * @since 3.0.0
  *
  * @param {(Phaser.Tweens.TweenManager|Phaser.Tweens.Timeline)} parent - A reference to the parent of this Tween. Either the Tween Manager or a Tween Timeline instance.
- * @param {Phaser.Tweens.Types.TweenDataConfig[]} data - An array of TweenData objects, each containing a unique property to be tweened.
+ * @param {Phaser.Types.Tweens.TweenDataConfig[]} data - An array of TweenData objects, each containing a unique property to be tweened.
  * @param {array} targets - An array of targets to be tweened.
  */
 var Tween = new Class({
@@ -53,7 +53,7 @@ var Tween = new Class({
          * An array of TweenData objects, each containing a unique property and target being tweened.
          *
          * @name Phaser.Tweens.Tween#data
-         * @type {Phaser.Tweens.Types.TweenDataConfig[]}
+         * @type {Phaser.Types.Tweens.TweenDataConfig[]}
          * @since 3.0.0
          */
         this.data = data;
@@ -1090,7 +1090,7 @@ var Tween = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Tweens.Tween} tween - The Tween to update.
-     * @param {Phaser.Tweens.Types.TweenDataConfig} tweenData - The TweenData property to update.
+     * @param {Phaser.Types.Tweens.TweenDataConfig} tweenData - The TweenData property to update.
      * @param {number} diff - Any extra time that needs to be accounted for in the elapsed and progress values.
      *
      * @return {integer} The state of this Tween.
@@ -1194,7 +1194,7 @@ var Tween = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Tweens.Tween} tween - The Tween to update.
-     * @param {Phaser.Tweens.Types.TweenDataConfig} tweenData - The TweenData property to update.
+     * @param {Phaser.Types.Tweens.TweenDataConfig} tweenData - The TweenData property to update.
      * @param {number} diff - Any extra time that needs to be accounted for in the elapsed and progress values.
      *
      * @return {integer} The state of this Tween.
@@ -1258,7 +1258,7 @@ var Tween = new Class({
      * @since 3.0.0
      *
      * @param {Phaser.Tweens.Tween} tween - The Tween to update.
-     * @param {Phaser.Tweens.Types.TweenDataConfig} tweenData - The TweenData property to update.
+     * @param {Phaser.Types.Tweens.TweenDataConfig} tweenData - The TweenData property to update.
      * @param {number} delta - Either a value in ms, or 1 if Tween.useFrames is true
      *
      * @return {boolean} [description]

@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Tweens.Types.TweenDataGenConfig
+ * @typedef {object} Phaser.Types.Tweens.TweenDataGenConfig
  * @since 3.0.0
  *
  * @property {function} delay - Time in ms/frames before tween will start.

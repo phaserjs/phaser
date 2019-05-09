@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.Tweens.Types
+ * @namespace Phaser.Types.Tweens
  */

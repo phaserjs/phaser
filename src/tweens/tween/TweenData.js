@@ -26,7 +26,7 @@
  * @param {boolean} flipX - Should toggleFlipX be called when yoyo or repeat happens?
  * @param {boolean} flipY - Should toggleFlipY be called when yoyo or repeat happens?
  *
- * @return {Phaser.Tweens.Types.TweenDataConfig} The config object describing this TweenData.
+ * @return {Phaser.Types.Tweens.TweenDataConfig} The config object describing this TweenData.
  */
 var TweenData = function (target, key, getEnd, getStart, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY)
 {
