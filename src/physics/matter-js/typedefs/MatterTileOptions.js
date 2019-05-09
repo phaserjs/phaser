@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Physics.Matter.Types.MatterTileOptions
+ * @typedef {object} Phaser.Types.Physics.Matter.MatterTileOptions
  * @since 3.0.0
  * 
  * @property {MatterJS.Body} [body=null] - An existing Matter body to be used instead of creating a new one.

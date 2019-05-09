@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Physics.Matter.Types.MatterBodyTileOptions
+ * @typedef {object} Phaser.Types.Physics.Matter.MatterBodyTileOptions
  * @since 3.0.0
  * 
  * @property {boolean} [isStatic=true] - Whether or not the newly created body should be made static. This defaults to true since typically tiles should not be moved.

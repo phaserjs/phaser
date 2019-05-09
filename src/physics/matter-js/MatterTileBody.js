@@ -41,7 +41,7 @@ var Vertices = require('./lib/geometry/Vertices');
  *
  * @param {Phaser.Physics.Matter.World} world - [description]
  * @param {Phaser.Tilemaps.Tile} tile - The target tile that should have a Matter body.
- * @param {Phaser.Physics.Matter.Types.MatterTileOptions} [options] - Options to be used when creating the Matter body.
+ * @param {Phaser.Types.Physics.Matter.MatterTileOptions} [options] - Options to be used when creating the Matter body.
  */
 var MatterTileBody = new Class({
 
@@ -119,7 +119,7 @@ var MatterTileBody = new Class({
      * @method Phaser.Physics.Matter.TileBody#setFromTileRectangle
      * @since 3.0.0
      *
-     * @param {Phaser.Physics.Matter.Types.MatterBodyTileOptions} [options] - Options to be used when creating the Matter body. See MatterJS.Body for a list of what Matter accepts.
+     * @param {Phaser.Types.Physics.Matter.MatterBodyTileOptions} [options] - Options to be used when creating the Matter body. See MatterJS.Body for a list of what Matter accepts.
      * 
      * @return {Phaser.Physics.Matter.TileBody} This TileBody object.
      */

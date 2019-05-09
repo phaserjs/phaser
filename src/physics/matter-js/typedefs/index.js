@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.Physics.Matter.Types
+ * @namespace Phaser.Types.Physics.Matter
  */
