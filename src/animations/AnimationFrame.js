@@ -141,7 +141,7 @@ var AnimationFrame = new Class({
      * @method Phaser.Animations.AnimationFrame#toJSON
      * @since 3.0.0
      *
-     * @return {Phaser.Animations.Types.JSONAnimationFrame} The AnimationFrame data.
+     * @return {Phaser.Types.Animations.JSONAnimationFrame} The AnimationFrame data.
      */
     toJSON: function ()
     {

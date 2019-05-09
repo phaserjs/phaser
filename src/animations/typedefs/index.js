@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.Animations.Types
+ * @namespace Phaser.Types.Animations
  */

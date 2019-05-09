@@ -185,7 +185,7 @@ var AnimationManager = new Class({
      * @fires Phaser.Animations.Events#ADD_ANIMATION
      * @since 3.0.0
      *
-     * @param {Phaser.Animations.Types.Animation} config - The configuration settings for the Animation.
+     * @param {Phaser.Types.Animations.Animation} config - The configuration settings for the Animation.
      *
      * @return {(Phaser.Animations.Animation|false)} The Animation that was created, or `false` is the key is already in use.
      */
@@ -218,7 +218,7 @@ var AnimationManager = new Class({
      * @method Phaser.Animations.AnimationManager#fromJSON
      * @since 3.0.0
      *
-     * @param {(string|Phaser.Animations.Types.JSONAnimations|Phaser.Animations.Types.JSONAnimation)} data - The JSON object to parse.
+     * @param {(string|Phaser.Types.Animations.JSONAnimations|Phaser.Types.Animations.JSONAnimation)} data - The JSON object to parse.
      * @param {boolean} [clearCurrentAnimations=false] - If set to `true`, the current animations will be removed (`anims.clear()`). If set to `false` (default), the animations in `data` will be added.
      *
      * @return {Phaser.Animations.Animation[]} An array containing all of the Animation objects that were created as a result of this call.
@@ -268,9 +268,9 @@ var AnimationManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - The key for the texture containing the animation frames.
-     * @param {Phaser.Animations.Types.GenerateFrameNames} [config] - The configuration object for the animation frame names.
+     * @param {Phaser.Types.Animations.GenerateFrameNames} [config] - The configuration object for the animation frame names.
      *
-     * @return {Phaser.Animations.Types.AnimationFrame[]} The array of {@link Phaser.Animations.Types.AnimationFrame} objects.
+     * @return {Phaser.Types.Animations.AnimationFrame[]} The array of {@link Phaser.Types.Animations.AnimationFrame} objects.
      */
     generateFrameNames: function (key, config)
     {
@@ -337,17 +337,17 @@ var AnimationManager = new Class({
     },
 
     /**
-     * Generate an array of {@link Phaser.Animations.Types.AnimationFrame} objects from a texture key and configuration object.
+     * Generate an array of {@link Phaser.Types.Animations.AnimationFrame} objects from a texture key and configuration object.
      *
-     * Generates objects with numbered frame names, as configured by the given {@link Phaser.Animations.Types.GenerateFrameNumbers}.
+     * Generates objects with numbered frame names, as configured by the given {@link Phaser.Types.Animations.GenerateFrameNumbers}.
      *
      * @method Phaser.Animations.AnimationManager#generateFrameNumbers
      * @since 3.0.0
      *
      * @param {string} key - The key for the texture containing the animation frames.
-     * @param {Phaser.Animations.Types.GenerateFrameNumbers} config - The configuration object for the animation frames.
+     * @param {Phaser.Types.Animations.GenerateFrameNumbers} config - The configuration object for the animation frames.
      *
-     * @return {Phaser.Animations.Types.AnimationFrame[]} The array of {@link Phaser.Animations.Types.AnimationFrame} objects.
+     * @return {Phaser.Types.Animations.AnimationFrame[]} The array of {@link Phaser.Types.Animations.AnimationFrame} objects.
      */
     generateFrameNumbers: function (key, config)
     {
@@ -594,7 +594,7 @@ var AnimationManager = new Class({
      *
      * @param {string} key - [description]
      *
-     * @return {Phaser.Animations.Types.JSONAnimations} [description]
+     * @return {Phaser.Types.Animations.JSONAnimations} [description]
      */
     toJSON: function (key)
     {

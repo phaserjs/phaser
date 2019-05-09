@@ -1,10 +1,10 @@
 /**
- * @typedef {object} Phaser.Animations.Types.JSONAnimation
+ * @typedef {object} Phaser.Types.Animations.JSONAnimation
  * @since 3.0.0
  *
  * @property {string} key - The key that the animation will be associated with. i.e. sprite.animations.play(key)
  * @property {string} type - A frame based animation (as opposed to a bone based animation)
- * @property {Phaser.Animations.Types.JSONAnimationFrame[]} frames - [description]
+ * @property {Phaser.Types.Animations.JSONAnimationFrame[]} frames - [description]
  * @property {integer} frameRate - The frame rate of playback in frames per second (default 24 if duration is null)
  * @property {integer} duration - How long the animation should play for in milliseconds. If not given its derived from frameRate.
  * @property {boolean} skipMissedFrames - Skip frames if the time lags, or always advanced anyway?
