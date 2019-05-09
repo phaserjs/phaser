@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.GameObjects.BitmapText.Types
+ * @namespace Phaser.Types.GameObjects.BitmapText
  */

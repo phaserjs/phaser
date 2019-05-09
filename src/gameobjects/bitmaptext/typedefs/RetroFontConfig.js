@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.GameObjects.BitmapText.Types.RetroFontConfig
+ * @typedef {object} Phaser.Types.GameObjects.BitmapText.RetroFontConfig
  * @since 3.6.0
  * 
  * @property {string} image - The key of the image containing the font.

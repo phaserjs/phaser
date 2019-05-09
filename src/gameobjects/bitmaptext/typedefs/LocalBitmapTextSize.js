@@ -1,7 +1,7 @@
 /**
  * The position and size of the Bitmap Text in local space, taking just the font size into account.
  *
- * @typedef {object} Phaser.GameObjects.BitmapText.Types.LocalBitmapTextSize
+ * @typedef {object} Phaser.Types.GameObjects.BitmapText.LocalBitmapTextSize
  * @since 3.0.0
  *
  * @property {number} x - The x position of the BitmapText.

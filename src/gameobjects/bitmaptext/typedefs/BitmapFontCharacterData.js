@@ -3,7 +3,7 @@
  *
  * Describes the character's position, size, offset and kerning.
  *
- * @typedef {object} Phaser.GameObjects.BitmapText.Types.BitmapFontCharacterData
+ * @typedef {object} Phaser.Types.GameObjects.BitmapText.BitmapFontCharacterData
  * @since 3.0.0
  *
  * @property {number} x - The x position of the character.

@@ -22,7 +22,7 @@
  * @param {boolean} [round] - Whether to round the results to the nearest integer.
  * @param {object} [out] - Optional object to store the results in, to save constant object creation.
  *
- * @return {Phaser.GameObjects.BitmapText.Types.BitmapTextSize} The calculated position, width and height of the BitmapText.
+ * @return {Phaser.Types.GameObjects.BitmapText.BitmapTextSize} The calculated position, width and height of the BitmapText.
  */
 var GetBitmapTextSize = function (src, round, out)
 {

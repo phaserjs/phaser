@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.GameObjects.BitmapText.Types.TintConfig
+ * @typedef {object} Phaser.Types.GameObjects.BitmapText.TintConfig
  * @since 3.0.0
  * 
  * @property {number} topLeft - The top left tint value. Always zero in canvas.

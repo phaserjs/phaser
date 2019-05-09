@@ -1,9 +1,9 @@
 /**
- * @typedef {object} Phaser.GameObjects.BitmapText.Types.DisplayCallbackConfig
+ * @typedef {object} Phaser.Types.GameObjects.BitmapText.DisplayCallbackConfig
  * @since 3.0.0
  * 
  * @property {Phaser.GameObjects.DynamicBitmapText} parent - The Dynamic Bitmap Text object that owns this character being rendered.
- * @property {Phaser.GameObjects.BitmapText.Types.TintConfig} tint - The tint of the character being rendered. Always zero in Canvas.
+ * @property {Phaser.Types.GameObjects.BitmapText.TintConfig} tint - The tint of the character being rendered. Always zero in Canvas.
  * @property {number} index - The index of the character being rendered.
  * @property {number} charCode - The character code of the character being rendered.
  * @property {number} x - The x position of the character being rendered.
@@ -14,9 +14,9 @@
  */
 
 /**
- * @callback Phaser.GameObjects.BitmapText.Types.DisplayCallback
+ * @callback Phaser.Types.GameObjects.BitmapText.DisplayCallback
  *
- * @param {Phaser.GameObjects.BitmapText.Types.DisplayCallbackConfig} display - Settings of the character that is about to be rendered.
+ * @param {Phaser.Types.GameObjects.BitmapText.DisplayCallbackConfig} display - Settings of the character that is about to be rendered.
  *
- * @return {Phaser.GameObjects.BitmapText.Types.DisplayCallbackConfig} Altered position, scale and rotation values for the character that is about to be rendered.
+ * @return {Phaser.Types.GameObjects.BitmapText.DisplayCallbackConfig} Altered position, scale and rotation values for the character that is about to be rendered.
  */

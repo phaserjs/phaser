@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.GameObjects.BitmapText.Types.JSONBitmapText
+ * @typedef {object} Phaser.Types.GameObjects.BitmapText.JSONBitmapText
  * @extends {Phaser.GameObjects.Types.JSONGameObject}
  * @since 3.0.0
  *

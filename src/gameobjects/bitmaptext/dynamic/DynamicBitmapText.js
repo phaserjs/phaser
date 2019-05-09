@@ -110,7 +110,7 @@ var DynamicBitmapText = new Class({
          * A callback that alters how each character of the Bitmap Text is rendered.
          *
          * @name Phaser.GameObjects.DynamicBitmapText#displayCallback
-         * @type {Phaser.GameObjects.BitmapText.Types.DisplayCallback}
+         * @type {Phaser.Types.GameObjects.BitmapText.DisplayCallback}
          * @since 3.0.0
          */
         this.displayCallback;
@@ -124,7 +124,7 @@ var DynamicBitmapText = new Class({
          * should shallow copy it, as it's updated and re-used for every glyph in the text.
          *
          * @name Phaser.GameObjects.DynamicBitmapText#callbackData
-         * @type {Phaser.GameObjects.BitmapText.Types.DisplayCallbackConfig}
+         * @type {Phaser.Types.GameObjects.BitmapText.DisplayCallbackConfig}
          * @since 3.11.0
          */
         this.callbackData = {
@@ -168,7 +168,7 @@ var DynamicBitmapText = new Class({
     /**
      * Set a callback that alters how each character of the Bitmap Text is rendered.
      *
-     * The callback receives a {@link Phaser.GameObjects.BitmapText.Types.DisplayCallbackConfig} object that contains information about the character that's
+     * The callback receives a {@link Phaser.Types.GameObjects.BitmapText.DisplayCallbackConfig} object that contains information about the character that's
      * about to be rendered.
      *
      * It should return an object with `x`, `y`, `scale` and `rotation` properties that will be used instead of the
@@ -177,7 +177,7 @@ var DynamicBitmapText = new Class({
      * @method Phaser.GameObjects.DynamicBitmapText#setDisplayCallback
      * @since 3.0.0
      *
-     * @param {Phaser.GameObjects.BitmapText.Types.DisplayCallback} callback - The display callback to set.
+     * @param {Phaser.Types.GameObjects.BitmapText.DisplayCallback} callback - The display callback to set.
      *
      * @return {Phaser.GameObjects.DynamicBitmapText} This Game Object.
      */

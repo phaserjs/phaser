@@ -105,7 +105,7 @@ var BitmapText = new Class({
          * The data of the Bitmap Font used by this Bitmap Text.
          *
          * @name Phaser.GameObjects.BitmapText#fontData
-         * @type {Phaser.GameObjects.BitmapText.Types.BitmapFontData}
+         * @type {Phaser.Types.GameObjects.BitmapText.BitmapFontData}
          * @readonly
          * @since 3.0.0
          */
@@ -167,7 +167,7 @@ var BitmapText = new Class({
          * An object that describes the size of this Bitmap Text.
          *
          * @name Phaser.GameObjects.BitmapText#_bounds
-         * @type {Phaser.GameObjects.BitmapText.Types.BitmapTextSize}
+         * @type {Phaser.Types.GameObjects.BitmapText.BitmapTextSize}
          * @private
          * @since 3.0.0
          */
@@ -340,7 +340,7 @@ var BitmapText = new Class({
      *
      * @param {boolean} [round] - Whether to round the results to the nearest integer.
      *
-     * @return {Phaser.GameObjects.BitmapText.Types.BitmapTextSize} An object that describes the size of this Bitmap Text.
+     * @return {Phaser.Types.GameObjects.BitmapText.BitmapTextSize} An object that describes the size of this Bitmap Text.
      */
     getTextBounds: function (round)
     {
@@ -546,7 +546,7 @@ var BitmapText = new Class({
      * @method Phaser.GameObjects.BitmapText#toJSON
      * @since 3.0.0
      *
-     * @return {Phaser.GameObjects.BitmapText.Types.JSONBitmapText} A JSON representation of this Bitmap Text.
+     * @return {Phaser.Types.GameObjects.BitmapText.JSONBitmapText} A JSON representation of this Bitmap Text.
      */
     toJSON: function ()
     {
@@ -629,7 +629,7 @@ BitmapText.ParseFromAtlas = ParseFromAtlas;
  * @param {integer} [ySpacing=0] - The y-axis spacing to add to the line height.
  * @param {Phaser.Textures.Frame} [frame] - The texture frame to take into account while parsing.
  *
- * @return {Phaser.GameObjects.BitmapText.Types.BitmapFontData} The parsed Bitmap Font data.
+ * @return {Phaser.Types.GameObjects.BitmapText.BitmapFontData} The parsed Bitmap Font data.
  */
 BitmapText.ParseXMLBitmapFont = ParseXMLBitmapFont;
 

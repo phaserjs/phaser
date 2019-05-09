@@ -8,6 +8,10 @@
  * @namespace Phaser.GameObjects
  */
 
+/**
+ * @namespace Phaser.GameObjects.Types
+ */
+
 var GameObjects = {
 
     Events: require('./events'),

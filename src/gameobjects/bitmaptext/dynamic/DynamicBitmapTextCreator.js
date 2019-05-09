@@ -17,7 +17,7 @@ var GetAdvancedValue = require('../../../utils/object/GetAdvancedValue');
  * @method Phaser.GameObjects.GameObjectCreator#dynamicBitmapText
  * @since 3.0.0
  *²
- * @param {Phaser.GameObjects.BitmapText.Types.BitmapTextConfig} config - The configuration object this Game Object will use to create itself.
+ * @param {Phaser.Types.GameObjects.BitmapText.BitmapTextConfig} config - The configuration object this Game Object will use to create itself.
  * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.DynamicBitmapText} The Game Object that was created.
