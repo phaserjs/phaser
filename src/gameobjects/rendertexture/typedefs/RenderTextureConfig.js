@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.GameObjects.RenderTexture.Types.RenderTextureConfig
+ * @typedef {object} Phaser.Types.GameObjects.RenderTexture.RenderTextureConfig
  * @since 3.2.0
  *
  * @property {number} [x=0] - The x coordinate of the RenderTextures position.

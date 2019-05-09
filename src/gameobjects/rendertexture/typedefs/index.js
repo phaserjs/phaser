@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.GameObjects.RenderTexture.Types
+ * @namespace Phaser.Types.GameObjects.RenderTexture
  */

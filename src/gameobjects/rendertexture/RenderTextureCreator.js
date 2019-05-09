@@ -17,7 +17,7 @@ var RenderTexture = require('./RenderTexture');
  * @method Phaser.GameObjects.GameObjectCreator#renderTexture
  * @since 3.2.0
  *
- * @param {Phaser.GameObjects.RenderTexture.Types.RenderTextureConfig} config - The configuration object this Game Object will use to create itself.
+ * @param {Phaser.Types.GameObjects.RenderTexture.RenderTextureConfig} config - The configuration object this Game Object will use to create itself.
  * @param {boolean} [addToScene] - Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
  *
  * @return {Phaser.GameObjects.RenderTexture} The Game Object that was created.
