@@ -94,7 +94,7 @@ PluginCache.hasCustom = function (key)
  * 
  * @param {string} key - The key of the core plugin to get.
  *
- * @return {Phaser.Plugins.Types.CorePluginContainer} The core plugin object.
+ * @return {Phaser.Types.Plugins.CorePluginContainer} The core plugin object.
  */
 PluginCache.getCore = function (key)
 {
@@ -109,7 +109,7 @@ PluginCache.getCore = function (key)
  * 
  * @param {string} key - The key of the custom plugin to get.
  *
- * @return {Phaser.Plugins.Types.CustomPluginContainer} The custom plugin object.
+ * @return {Phaser.Types.Plugins.CustomPluginContainer} The custom plugin object.
  */
 PluginCache.getCustom = function (key)
 {

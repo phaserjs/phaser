@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.Plugins.Types
+ * @namespace Phaser.Types.Plugins
  */

@@ -79,7 +79,7 @@ var PluginManager = new Class({
          * A plugin must have been started at least once in order to appear in this list.
          *
          * @name Phaser.Plugins.PluginManager#plugins
-         * @type {Phaser.Plugins.Types.GlobalPlugin[]}
+         * @type {Phaser.Types.Plugins.GlobalPlugin[]}
          * @since 3.8.0
          */
         this.plugins = [];
@@ -486,7 +486,7 @@ var PluginManager = new Class({
      *
      * @param {string} key - The unique plugin key.
      *
-     * @return {Phaser.Plugins.Types.GlobalPlugin} The plugin entry.
+     * @return {Phaser.Types.Plugins.GlobalPlugin} The plugin entry.
      */
     getEntry: function (key)
     {

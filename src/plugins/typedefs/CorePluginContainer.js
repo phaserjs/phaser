@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Plugins.Types.CorePluginContainer
+ * @typedef {object} Phaser.Types.Plugins.CorePluginContainer
  * @since 3.8.0
  *
  * @property {string} key - The unique name of this plugin in the core plugin cache.
