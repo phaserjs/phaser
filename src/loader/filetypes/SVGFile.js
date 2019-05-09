@@ -12,24 +12,6 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
- * @typedef {object} Phaser.Loader.FileTypes.SVGSizeConfig
- *
- * @property {integer} [width] - An optional width. The SVG will be resized to this size before being rendered to a texture.
- * @property {integer} [height] - An optional height. The SVG will be resized to this size before being rendered to a texture.
- * @property {number} [scale] - An optional scale. If given it overrides the width / height properties. The SVG is scaled by the scale factor before being rendered to a texture.
- */
-
-/**
- * @typedef {object} Phaser.Loader.FileTypes.SVGFileConfig
- *
- * @property {string} key - The key of the file. Must be unique within both the Loader and the Texture Manager.
- * @property {string} [url] - The absolute or relative URL to load the file from.
- * @property {string} [extension='svg'] - The default file extension to use if no url is provided.
- * @property {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
- * @property {Phaser.Loader.FileTypes.SVGSizeConfig} [svgConfig] - The svg size configuration object.
- */
-
-/**
  * @classdesc
  * A single SVG File suitable for loading by the Loader.
  *

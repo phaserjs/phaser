@@ -12,28 +12,6 @@ var GetFastValue = require('../../utils/object/GetFastValue');
 var IsPlainObject = require('../../utils/object/IsPlainObject');
 
 /**
- * @typedef {object} Phaser.Loader.FileTypes.ImageFrameConfig
- *
- * @property {integer} frameWidth - The width of the frame in pixels.
- * @property {integer} [frameHeight] - The height of the frame in pixels. Uses the `frameWidth` value if not provided.
- * @property {integer} [startFrame=0] - The first frame to start parsing from.
- * @property {integer} [endFrame] - The frame to stop parsing at. If not provided it will calculate the value based on the image and frame dimensions.
- * @property {integer} [margin=0] - The margin in the image. This is the space around the edge of the frames.
- * @property {integer} [spacing=0] - The spacing between each frame in the image.
- */
-
-/**
- * @typedef {object} Phaser.Loader.FileTypes.ImageFileConfig
- *
- * @property {string} key - The key of the file. Must be unique within both the Loader and the Texture Manager.
- * @property {string} [url] - The absolute or relative URL to load the file from.
- * @property {string} [extension='png'] - The default file extension to use if no url is provided.
- * @property {string} [normalMap] - The filename of an associated normal map. It uses the same path and url to load as the image.
- * @property {Phaser.Loader.FileTypes.ImageFrameConfig} [frameConfig] - The frame configuration object. Only provided for, and used by, Sprite Sheets.
- * @property {Phaser.Types.Loader.XHRSettingsObject} [xhrSettings] - Extra XHR Settings specifically for this file.
- */
-
-/**
  * @classdesc
  * A single Image File suitable for loading by the Loader.
  *
