@@ -1,7 +1,7 @@
 /**
  * Config object containing various sound settings.
  *
- * @typedef {object} Phaser.Core.Types.AudioConfig
+ * @typedef {object} Phaser.Types.Core.AudioConfig
  * @since 3.0.0
  *
  * @property {boolean} [disableWebAudio=false] - Use HTML5 Audio instead of Web Audio.

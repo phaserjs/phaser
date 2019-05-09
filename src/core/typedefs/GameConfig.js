@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Core.Types.GameConfig
+ * @typedef {object} Phaser.Types.Core.GameConfig
  * @since 3.0.0
  *
  * @property {(integer|string)} [width=1024] - The width of the game, in game pixels.
@@ -17,19 +17,19 @@
  * @property {string} [url='http://phaser.io'] - The URL of the game. Shown in the browser console.
  * @property {string} [version=''] - The version of the game. Shown in the browser console.
  * @property {boolean} [autoFocus=true] - Automatically call window.focus() when the game boots. Usually necessary to capture input events if the game is in a separate frame.
- * @property {(boolean|Phaser.Core.Types.InputConfig)} [input] - Input configuration, or `false` to disable all game input.
+ * @property {(boolean|Phaser.Types.Core.InputConfig)} [input] - Input configuration, or `false` to disable all game input.
  * @property {boolean} [disableContextMenu=false] - Disable the browser's default 'contextmenu' event (usually triggered by a right-button mouse click).
  * @property {boolean} [transparent=false] - Whether the game canvas will have a transparent background.
- * @property {(boolean|Phaser.Core.Types.BannerConfig)} [banner=false] - Configuration for the banner printed in the browser console when the game starts.
- * @property {Phaser.Core.Types.DOMContainerConfig} [dom] - The DOM Container configuration object.
- * @property {Phaser.Core.Types.FPSConfig} [fps] - Game loop configuration.
- * @property {Phaser.Core.Types.RenderConfig} [render] - Game renderer configuration.
+ * @property {(boolean|Phaser.Types.Core.BannerConfig)} [banner=false] - Configuration for the banner printed in the browser console when the game starts.
+ * @property {Phaser.Types.Core.DOMContainerConfig} [dom] - The DOM Container configuration object.
+ * @property {Phaser.Types.Core.FPSConfig} [fps] - Game loop configuration.
+ * @property {Phaser.Types.Core.RenderConfig} [render] - Game renderer configuration.
  * @property {(string|number)} [backgroundColor=0x000000] - The background color of the game canvas. The default is black.
- * @property {Phaser.Core.Types.CallbacksConfig} [callbacks] - Optional callbacks to run before or after game boot.
- * @property {Phaser.Core.Types.LoaderConfig} [loader] - Loader configuration.
- * @property {Phaser.Core.Types.ImagesConfig} [images] - Images configuration.
- * @property {Phaser.Core.Types.PhysicsConfig} [physics] - Physics configuration.
- * @property {Phaser.Core.Types.PluginObject|Phaser.Core.Types.PluginObjectItem[]} [plugins] - Plugins to install.
- * @property {Phaser.Core.Types.ScaleConfig} [scale] - The Scale Manager configuration.
- * @property {Phaser.Core.Types.AudioConfig} [audio] - The Audio Configuration object.
+ * @property {Phaser.Types.Core.CallbacksConfig} [callbacks] - Optional callbacks to run before or after game boot.
+ * @property {Phaser.Types.Core.LoaderConfig} [loader] - Loader configuration.
+ * @property {Phaser.Types.Core.ImagesConfig} [images] - Images configuration.
+ * @property {Phaser.Types.Core.PhysicsConfig} [physics] - Physics configuration.
+ * @property {Phaser.Types.Core.PluginObject|Phaser.Types.Core.PluginObjectItem[]} [plugins] - Plugins to install.
+ * @property {Phaser.Types.Core.ScaleConfig} [scale] - The Scale Manager configuration.
+ * @property {Phaser.Types.Core.AudioConfig} [audio] - The Audio Configuration object.
  */

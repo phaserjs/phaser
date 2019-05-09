@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Core.Types.PhysicsConfig
+ * @typedef {object} Phaser.Types.Core.PhysicsConfig
  * @since 3.0.0
  *
  * @property {string} [default] - The default physics system. It will be started for each scene. Phaser provides 'arcade', 'impact', and 'matter'.

@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Core.Types.FPSConfig
+ * @typedef {object} Phaser.Types.Core.FPSConfig
  * @since 3.0.0
  *
  * @property {integer} [min=5] - The minimum acceptable rendering rate, in frames per second.

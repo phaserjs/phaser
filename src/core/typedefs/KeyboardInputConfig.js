@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Core.Types.KeyboardInputConfig
+ * @typedef {object} Phaser.Types.Core.KeyboardInputConfig
  * @since 3.0.0
  *
  * @property {*} [target=window] - Where the Keyboard Manager listens for keyboard input events.

@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Core.Types.BannerConfig
+ * @typedef {object} Phaser.Types.Core.BannerConfig
  * @since 3.0.0
  *
  * @property {boolean} [hidePhaser=false] - Omit Phaser's name and version from the banner.

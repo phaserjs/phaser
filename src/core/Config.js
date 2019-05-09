@@ -17,14 +17,14 @@ var ValueToColor = require('../display/color/ValueToColor');
 
 /**
  * @classdesc
- * The active game configuration settings, parsed from a {@link Phaser.Core.Types.GameConfig} object.
+ * The active game configuration settings, parsed from a {@link Phaser.Types.Core.GameConfig} object.
  *
  * @class Config
  * @memberof Phaser.Core
  * @constructor
  * @since 3.0.0
  *
- * @param {Phaser.Core.Types.GameConfig} [GameConfig] - The configuration object for your Phaser Game instance.
+ * @param {Phaser.Types.Core.GameConfig} [GameConfig] - The configuration object for your Phaser Game instance.
  *
  * @see Phaser.Game#config
  */
@@ -296,7 +296,7 @@ var Config = new Class({
         this.disableContextMenu = GetValue(config, 'disableContextMenu', false);
 
         /**
-         * @const {Phaser.Core.Types.AudioConfig} Phaser.Core.Config#audio - The Audio Configuration object.
+         * @const {Phaser.Types.Core.AudioConfig} Phaser.Core.Config#audio - The Audio Configuration object.
          */
         this.audio = GetValue(config, 'audio');
 
@@ -328,7 +328,7 @@ var Config = new Class({
         }
 
         /**
-         * @const {?Phaser.Core.Types.FPSConfig} Phaser.Core.Config#fps - The Frame Rate Configuration object, as parsed by the Timestep class.
+         * @const {?Phaser.Types.Core.FPSConfig} Phaser.Core.Config#fps - The Frame Rate Configuration object, as parsed by the Timestep class.
          */
         this.fps = GetValue(config, 'fps', null);
 
@@ -406,17 +406,17 @@ var Config = new Class({
         }
 
         /**
-         * @const {Phaser.Core.Types.BootCallback} Phaser.Core.Config#preBoot - Called before Phaser boots. Useful for initializing anything not related to Phaser that Phaser may require while booting.
+         * @const {Phaser.Types.Core.BootCallback} Phaser.Core.Config#preBoot - Called before Phaser boots. Useful for initializing anything not related to Phaser that Phaser may require while booting.
          */
         this.preBoot = GetValue(config, 'callbacks.preBoot', NOOP);
 
         /**
-         * @const {Phaser.Core.Types.BootCallback} Phaser.Core.Config#postBoot - A function to run at the end of the boot sequence. At this point, all the game systems have started and plugins have been loaded.
+         * @const {Phaser.Types.Core.BootCallback} Phaser.Core.Config#postBoot - A function to run at the end of the boot sequence. At this point, all the game systems have started and plugins have been loaded.
          */
         this.postBoot = GetValue(config, 'callbacks.postBoot', NOOP);
 
         /**
-         * @const {Phaser.Core.Types.PhysicsConfig} Phaser.Core.Config#physics - The Physics Configuration object.
+         * @const {Phaser.Types.Core.PhysicsConfig} Phaser.Core.Config#physics - The Physics Configuration object.
          */
         this.physics = GetValue(config, 'physics', {});
 
