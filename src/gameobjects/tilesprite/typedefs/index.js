@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.GameObjects.TileSprite.Types
+ * @namespace Phaser.Types.GameObjects.TileSprite
  */

@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.GameObjects.TileSprite.Types.TileSpriteConfig
+ * @typedef {object} Phaser.Types.GameObjects.TileSprite.TileSpriteConfig
  * @extends Phaser.GameObjects.Types.GameObjectConfig
  * @since 3.0.0
  *
