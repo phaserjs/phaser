@@ -13,6 +13,13 @@ var Extend = require('./utils/object/Extend');
  * @namespace Phaser
  */
 
+/**
+ * The root types namespace.
+ * 
+ * @namespace Phaser.Types
+ * @since 3.17.0
+ */
+
 var Phaser = {
 
     Actions: require('./actions'),

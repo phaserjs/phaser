@@ -5,7 +5,7 @@
  */
 
 /**
- * Global consts.
+ * Global constants.
  * 
  * @ignore
  */
