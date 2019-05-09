@@ -1,6 +1,6 @@
 /**
  * @typedef {object} Phaser.Types.GameObjects.BitmapText.JSONBitmapText
- * @extends {Phaser.GameObjects.Types.JSONGameObject}
+ * @extends {Phaser.Types.GameObjects.JSONGameObject}
  * @since 3.0.0
  *
  * @property {string} font - The name of the font.

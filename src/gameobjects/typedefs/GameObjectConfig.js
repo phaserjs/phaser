@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.GameObjects.Types.GameObjectConfig
+ * @typedef {object} Phaser.Types.GameObjects.GameObjectConfig
  * @since 3.0.0
  *
  * @property {number} [x=0] - The x position of the Game Object.

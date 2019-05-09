@@ -1,6 +1,6 @@
 /**
  * @typedef {object} Phaser.Types.GameObjects.Sprite.SpriteConfig
- * @extends Phaser.GameObjects.Types.GameObjectConfig
+ * @extends Phaser.Types.GameObjects.GameObjectConfig
  * @since 3.0.0
  *
  * @property {string} [key] - The key of the Texture this Game Object will use to render with, as stored in the Texture Manager.
