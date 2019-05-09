@@ -27,8 +27,8 @@ var IsPlainObject = require('../../utils/object/IsPlainObject');
  *
  * @param {Phaser.Physics.Arcade.World} world - The physics simulation.
  * @param {Phaser.Scene} scene - The scene this group belongs to.
- * @param {(Phaser.GameObjects.GameObject[]|Phaser.Physics.Arcade.Types.PhysicsGroupConfig|Phaser.GameObjects.Group.Types.GroupCreateConfig)} [children] - Game Objects to add to this group; or the `config` argument.
- * @param {Phaser.Physics.Arcade.Types.PhysicsGroupConfig|Phaser.GameObjects.Group.Types.GroupCreateConfig} [config] - Settings for this group.
+ * @param {(Phaser.GameObjects.GameObject[]|Phaser.Physics.Arcade.Types.PhysicsGroupConfig|Phaser.Types.GameObjects.Group.GroupCreateConfig)} [children] - Game Objects to add to this group; or the `config` argument.
+ * @param {Phaser.Physics.Arcade.Types.PhysicsGroupConfig|Phaser.Types.GameObjects.Group.GroupCreateConfig} [config] - Settings for this group.
  */
 var PhysicsGroup = new Class({
 
@@ -91,7 +91,7 @@ var PhysicsGroup = new Class({
          * This should be either `Phaser.Physics.Arcade.Image`, `Phaser.Physics.Arcade.Sprite`, or a class extending one of those.
          *
          * @name Phaser.Physics.Arcade.Group#classType
-         * @type {Phaser.GameObjects.Group.Types.GroupClassTypeConstructor}
+         * @type {Phaser.Types.GameObjects.Group.GroupClassTypeConstructor}
          * @default ArcadeSprite
          * @since 3.0.0
          */

@@ -1,7 +1,7 @@
 /**
  * A constructor function (class) that can be assigned to `classType`.
  * 
- * @callback Phaser.GameObjects.Group.Types.GroupClassTypeConstructor
+ * @callback Phaser.Types.GameObjects.Group.GroupClassTypeConstructor
  * @since 3.0.0
  * 
  * @param {Phaser.Scene} scene - The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.

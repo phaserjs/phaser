@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.GameObjects.Group.Types
+ * @namespace Phaser.Types.GameObjects.Group
  */

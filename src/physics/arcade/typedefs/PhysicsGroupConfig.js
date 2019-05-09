@@ -1,6 +1,6 @@
 /**
  * @typedef {object} Phaser.Physics.Arcade.Types.PhysicsGroupConfig
- * @extends Phaser.GameObjects.Group.Types.GroupConfig
+ * @extends Phaser.Types.GameObjects.Group.GroupConfig
  * @since 3.0.0
  *
  * @property {boolean} [collideWorldBounds=false] - Sets {@link Phaser.Physics.Arcade.Body#collideWorldBounds}.

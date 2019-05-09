@@ -9,10 +9,10 @@
  *
  * `key` is required. {@link Phaser.GameObjects.Group#defaultKey} is not used.
  * 
- * @typedef {object} Phaser.GameObjects.Group.Types.GroupCreateConfig
+ * @typedef {object} Phaser.Types.GameObjects.Group.GroupCreateConfig
  * @since 3.0.0
  *
- * @property {?Phaser.GameObjects.Group.Types.GroupClassTypeConstructor} [classType] - The class of each new Game Object.
+ * @property {?Phaser.Types.GameObjects.Group.GroupClassTypeConstructor} [classType] - The class of each new Game Object.
  * @property {string} [key] - The texture key of each new Game Object.
  * @property {?(string|integer)} [frame=null] - The texture frame of each new Game Object.
  * @property {?boolean} [visible=true] - The visible state of each new Game Object.
