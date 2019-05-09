@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Physics.Impact.Types.JSONImpactBody
+ * @typedef {object} Phaser.Types.Physics.Impact.JSONImpactBody
  * @since 3.0.0
  *
  * @property {string} name - [description]

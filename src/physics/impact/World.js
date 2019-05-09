@@ -28,7 +28,7 @@ var TYPE = require('./TYPE');
  * @since 3.0.0
  *
  * @param {Phaser.Scene} scene - The Scene to which this Impact World instance belongs.
- * @param {Phaser.Physics.Impact.Types.WorldConfig} config - [description]
+ * @param {Phaser.Types.Physics.Impact.WorldConfig} config - [description]
  */
 var World = new Class({
 
@@ -141,7 +141,7 @@ var World = new Class({
          * [description]
          *
          * @name Phaser.Physics.Impact.World#defaults
-         * @type {Phaser.Physics.Impact.Types.WorldDefaults}
+         * @type {Phaser.Types.Physics.Impact.WorldDefaults}
          * @since 3.0.0
          */
         this.defaults = {
@@ -160,7 +160,7 @@ var World = new Class({
          * An object containing the 4 wall bodies that bound the physics world.
          *
          * @name Phaser.Physics.Impact.World#walls
-         * @type {Phaser.Physics.Impact.Types.WorldWalls}
+         * @type {Phaser.Types.Physics.Impact.WorldWalls}
          * @since 3.0.0
          */
         this.walls = { left: null, right: null, top: null, bottom: null };
@@ -280,7 +280,7 @@ var World = new Class({
      * @since 3.0.0
      *
      * @param {(Phaser.Tilemaps.DynamicTilemapLayer|Phaser.Tilemaps.StaticTilemapLayer)} tilemapLayer - The tilemap layer to use.
-     * @param {Phaser.Physics.Impact.Types.CollisionOptions} [options] - Options for controlling the mapping from tiles to slope IDs.
+     * @param {Phaser.Types.Physics.Impact.CollisionOptions} [options] - Options for controlling the mapping from tiles to slope IDs.
      *
      * @return {Phaser.Physics.Impact.CollisionMap} The newly created CollisionMap.
      */

@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.Physics.Impact.Types
+ * @namespace Phaser.Types.Physics.Impact
  */

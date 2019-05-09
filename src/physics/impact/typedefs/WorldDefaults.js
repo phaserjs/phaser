@@ -1,7 +1,7 @@
 /**
  * An object containing the 4 wall bodies that bound the physics world.
  * 
- * @typedef {object} Phaser.Physics.Impact.Types.WorldDefaults
+ * @typedef {object} Phaser.Types.Physics.Impact.WorldDefaults
  * @since 3.0.0
  *
  * @property {boolean} debugShowBody - Whether the Body's boundary is drawn to the debug display.

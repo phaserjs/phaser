@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Physics.Impact.Types.WorldConfig
+ * @typedef {object} Phaser.Types.Physics.Impact.WorldConfig
  * @since 3.0.0
  *
  * @property {number} [gravity=0] - Sets {@link Phaser.Physics.Impact.World#gravity}

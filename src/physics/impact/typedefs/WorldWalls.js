@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Physics.Impact.Types.WorldWalls
+ * @typedef {object} Phaser.Types.Physics.Impact.WorldWalls
  * @since 3.0.0
  *
  * @property {?Phaser.Physics.Impact.Body} left - The left-side wall of the world bounds.

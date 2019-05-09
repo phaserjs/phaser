@@ -11,7 +11,7 @@ var TYPE = require('./TYPE');
 var UpdateMotion = require('./UpdateMotion');
 
 /**
- * @callback Phaser.Physics.Impact.Types.BodyUpdateCallback
+ * @callback Phaser.Types.Physics.Impact.BodyUpdateCallback
  * @since 3.0.0
  *
  * @param {Phaser.Physics.Impact.Body} body - [description]
@@ -491,7 +491,7 @@ var Body = new Class({
      * @method Phaser.Physics.Impact.Body#toJSON
      * @since 3.0.0
      *
-     * @return {Phaser.Physics.Impact.Types.JSONImpactBody} JSON representation of this body object.
+     * @return {Phaser.Types.Physics.Impact.JSONImpactBody} JSON representation of this body object.
      */
     toJSON: function ()
     {
