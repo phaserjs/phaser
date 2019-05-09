@@ -8,6 +8,10 @@
  * @namespace Phaser.Renderer
  */
 
+/**
+ * @namespace Phaser.Types.Renderer
+ */
+
 module.exports = {
 
     Canvas: require('./canvas'),

@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.Renderer.Snapshot.Types
+ * @namespace Phaser.Types.Renderer.Snapshot
  */

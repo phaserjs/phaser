@@ -1,8 +1,8 @@
 /**
- * @typedef {object} Phaser.Renderer.Snapshot.Types.SnapshotState
+ * @typedef {object} Phaser.Types.Renderer.Snapshot.SnapshotState
  * @since 3.16.1
  *
- * @property {Phaser.Renderer.Snapshot.Types.SnapshotCallback} callback - The function to call after the snapshot is taken.
+ * @property {Phaser.Types.Renderer.Snapshot.SnapshotCallback} callback - The function to call after the snapshot is taken.
  * @property {string} [type='image/png'] - The format of the image to create, usually `image/png` or `image/jpeg`.
  * @property {number} [encoderOptions=0.92] - The image quality, between 0 and 1. Used for image formats with lossy compression, such as `image/jpeg`.
  * @property {integer} [x=0] - The x coordinate to start the snapshot from.
