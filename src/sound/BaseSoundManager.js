@@ -175,7 +175,7 @@ var BaseSoundManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - Asset key for the sound.
-     * @param {Phaser.Sound.Types.SoundConfig} [config] - An optional config object containing default sound settings.
+     * @param {Phaser.Types.Sound.SoundConfig} [config] - An optional config object containing default sound settings.
      *
      * @return {Phaser.Sound.BaseSound} The new sound instance.
      */
@@ -190,9 +190,9 @@ var BaseSoundManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - Asset key for the sound.
-     * @param {Phaser.Sound.Types.SoundConfig} [config] - An optional config object containing default sound settings.
+     * @param {Phaser.Types.Sound.SoundConfig} [config] - An optional config object containing default sound settings.
      *
-     * @return {Phaser.Sound.Types.AudioSpriteSound} The new audio sprite sound instance.
+     * @return {Phaser.Types.Sound.AudioSpriteSound} The new audio sprite sound instance.
      */
     addAudioSprite: function (key, config)
     {
@@ -235,7 +235,7 @@ var BaseSoundManager = new Class({
      * @since 3.0.0
      *
      * @param {string} key - Asset key for the sound.
-     * @param {(Phaser.Sound.Types.SoundConfig|Phaser.Sound.Types.SoundMarker)} [extra] - An optional additional object containing settings to be applied to the sound. It could be either config or marker object.
+     * @param {(Phaser.Types.Sound.SoundConfig|Phaser.Types.Sound.SoundMarker)} [extra] - An optional additional object containing settings to be applied to the sound. It could be either config or marker object.
      *
      * @return {boolean} Whether the sound started playing successfully.
      */
@@ -274,7 +274,7 @@ var BaseSoundManager = new Class({
      *
      * @param {string} key - Asset key for the sound.
      * @param {string} spriteName - The name of the sound sprite to play.
-     * @param {Phaser.Sound.Types.SoundConfig} [config] - An optional config object containing default sound settings.
+     * @param {Phaser.Types.Sound.SoundConfig} [config] - An optional config object containing default sound settings.
      *
      * @return {boolean} Whether the audio sprite sound started playing successfully.
      */
@@ -496,7 +496,7 @@ var BaseSoundManager = new Class({
      * @private
      * @since 3.0.0
      *
-     * @param {Phaser.Sound.Types.EachActiveSoundCallback} callback - Callback function. (manager: Phaser.Sound.BaseSoundManager, sound: Phaser.Sound.BaseSound, index: number, sounds: Phaser.Manager.BaseSound[]) => void
+     * @param {Phaser.Types.Sound.EachActiveSoundCallback} callback - Callback function. (manager: Phaser.Sound.BaseSoundManager, sound: Phaser.Sound.BaseSound, index: number, sounds: Phaser.Manager.BaseSound[]) => void
      * @param {*} [scope] - Callback context.
      */
     forEachActiveSound: function (callback, scope)

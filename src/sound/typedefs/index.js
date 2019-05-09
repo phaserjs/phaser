@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.Sound.Types
+ * @namespace Phaser.Types.Sound
  */

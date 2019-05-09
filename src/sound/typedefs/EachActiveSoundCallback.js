@@ -1,5 +1,5 @@
 /**
- * @callback Phaser.Sound.Types.EachActiveSoundCallback
+ * @callback Phaser.Types.Sound.EachActiveSoundCallback
  * @since 3.0.0
  *
  * @param {Phaser.Sound.BaseSoundManager} manager - The SoundManager

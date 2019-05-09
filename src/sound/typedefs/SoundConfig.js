@@ -1,7 +1,7 @@
 /**
  * Config object containing various sound settings.
  *
- * @typedef {object} Phaser.Sound.Types.SoundConfig
+ * @typedef {object} Phaser.Types.Sound.SoundConfig
  * @since 3.0.0
  *
  * @property {boolean} [mute=false] - Boolean indicating whether the sound should be muted or not.
