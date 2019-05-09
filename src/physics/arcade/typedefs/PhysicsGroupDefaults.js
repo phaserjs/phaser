@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Physics.Arcade.Types.PhysicsGroupDefaults
+ * @typedef {object} Phaser.Types.Physics.Arcade.PhysicsGroupDefaults
  * @since 3.0.0
  *
  * @property {boolean} setCollideWorldBounds - As {@link Phaser.Physics.Arcade.Body#setCollideWorldBounds}.

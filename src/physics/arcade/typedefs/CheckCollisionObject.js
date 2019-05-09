@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Physics.Arcade.Types.CheckCollisionObject
+ * @typedef {object} Phaser.Types.Physics.Arcade.CheckCollisionObject
  * @since 3.0.0
  *
  * @property {boolean} up - Will bodies collide with the top side of the world bounds?

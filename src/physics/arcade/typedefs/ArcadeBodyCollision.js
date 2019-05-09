@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Physics.Arcade.Types.ArcadeBodyCollision
+ * @typedef {object} Phaser.Types.Physics.Arcade.ArcadeBodyCollision
  * @since 3.0.0
  *
  * @property {boolean} none - True if the Body is not colliding.

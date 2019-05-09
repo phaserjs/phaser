@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Physics.Arcade.Types.ArcadeBodyBounds
+ * @typedef {object} Phaser.Types.Physics.Arcade.ArcadeBodyBounds
  * @since 3.0.0
  *
  * @property {number} x - The left edge.

@@ -642,7 +642,7 @@ var Body = new Class({
          * You can set `checkCollision.none = true` to disable collision checks.
          *
          * @name Phaser.Physics.Arcade.Body#checkCollision
-         * @type {Phaser.Physics.Arcade.Types.ArcadeBodyCollision}
+         * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.checkCollision = { none: false, up: true, down: true, left: true, right: true };
@@ -651,7 +651,7 @@ var Body = new Class({
          * Whether this Body is colliding with another and in which direction.
          *
          * @name Phaser.Physics.Arcade.Body#touching
-         * @type {Phaser.Physics.Arcade.Types.ArcadeBodyCollision}
+         * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.touching = { none: true, up: false, down: false, left: false, right: false };
@@ -660,7 +660,7 @@ var Body = new Class({
          * Whether this Body was colliding with another during the last step, and in which direction.
          *
          * @name Phaser.Physics.Arcade.Body#wasTouching
-         * @type {Phaser.Physics.Arcade.Types.ArcadeBodyCollision}
+         * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.wasTouching = { none: true, up: false, down: false, left: false, right: false };
@@ -669,7 +669,7 @@ var Body = new Class({
          * Whether this Body is colliding with a tile or the world boundary.
          *
          * @name Phaser.Physics.Arcade.Body#blocked
-         * @type {Phaser.Physics.Arcade.Types.ArcadeBodyCollision}
+         * @type {Phaser.Types.Physics.Arcade.ArcadeBodyCollision}
          * @since 3.0.0
          */
         this.blocked = { none: true, up: false, down: false, left: false, right: false };
@@ -1244,9 +1244,9 @@ var Body = new Class({
      * @method Phaser.Physics.Arcade.Body#getBounds
      * @since 3.0.0
      *
-     * @param {Phaser.Physics.Arcade.Types.ArcadeBodyBounds} obj - An object to copy the values into.
+     * @param {Phaser.Types.Physics.Arcade.ArcadeBodyBounds} obj - An object to copy the values into.
      *
-     * @return {Phaser.Physics.Arcade.Types.ArcadeBodyBounds} - An object with {x, y, right, bottom}.
+     * @return {Phaser.Types.Physics.Arcade.ArcadeBodyBounds} - An object with {x, y, right, bottom}.
      */
     getBounds: function (obj)
     {

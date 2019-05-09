@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Physics.Arcade.Types.ArcadeWorldConfig
+ * @typedef {object} Phaser.Types.Physics.Arcade.ArcadeWorldConfig
  * @since 3.0.0
  *
  * @property {number} [fps=60] - Sets {@link Phaser.Physics.Arcade.World#fps}.
@@ -9,7 +9,7 @@
  * @property {number} [y=0] - Sets {@link Phaser.Physics.Arcade.World#bounds bounds.y}.
  * @property {number} [width=0] - Sets {@link Phaser.Physics.Arcade.World#bounds bounds.width}.
  * @property {number} [height=0] - Sets {@link Phaser.Physics.Arcade.World#bounds bounds.height}.
- * @property {Phaser.Physics.Arcade.Types.CheckCollisionObject} [checkCollision] - Sets {@link Phaser.Physics.Arcade.World#checkCollision}.
+ * @property {Phaser.Types.Physics.Arcade.CheckCollisionObject} [checkCollision] - Sets {@link Phaser.Physics.Arcade.World#checkCollision}.
  * @property {number} [overlapBias=4] - Sets {@link Phaser.Physics.Arcade.World#OVERLAP_BIAS}.
  * @property {number} [tileBias=16] - Sets {@link Phaser.Physics.Arcade.World#TILE_BIAS}.
  * @property {boolean} [forceX=false] - Sets {@link Phaser.Physics.Arcade.World#forceX}.

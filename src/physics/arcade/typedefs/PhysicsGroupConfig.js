@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Physics.Arcade.Types.PhysicsGroupConfig
+ * @typedef {object} Phaser.Types.Physics.Arcade.PhysicsGroupConfig
  * @extends Phaser.Types.GameObjects.Group.GroupConfig
  * @since 3.0.0
  *

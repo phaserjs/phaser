@@ -1,5 +1,5 @@
 /**
- * @typedef {object} Phaser.Physics.Arcade.Types.ArcadeWorldTreeMinMax
+ * @typedef {object} Phaser.Types.Physics.Arcade.ArcadeWorldTreeMinMax
  * @since 3.0.0
  *
  * @property {number} minX - The minimum x value used in RTree searches.

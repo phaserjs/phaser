@@ -5,5 +5,5 @@
  */
 
 /**
- * @namespace Phaser.Physics.Arcade.Types
+ * @namespace Phaser.Types.Physics.Arcade
  */
