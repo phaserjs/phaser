@@ -15,8 +15,8 @@ var LeaderboardScore = require('./LeaderboardScore');
  * You do not need to instantiate this class directly, it will be created when you use the
  * `getLeaderboard()` method of the main plugin.
  *
- * @class Leaderboard
- * @memberOf Phaser.FacebookInstantGamesPlugin
+ * @class FacebookInstantGamesLeaderboard
+ * @memberOf Phaser
  * @constructor
  * @since 3.13.0
  * 
@@ -36,7 +36,7 @@ var Leaderboard = new Class({
         /**
          * A reference to the Facebook Instant Games Plugin.
          *
-         * @name Phaser.FacebookInstantGamesPlugin.Leaderboard#plugin
+         * @name Phaser.FacebookInstantGamesLeaderboard#plugin
          * @type {Phaser.FacebookInstantGamesPlugin}
          * @since 3.13.0
          */
@@ -45,7 +45,7 @@ var Leaderboard = new Class({
         /**
          * An Instant Game leaderboard instance.
          *
-         * @name Phaser.FacebookInstantGamesPlugin.Leaderboard#ref
+         * @name Phaser.FacebookInstantGamesLeaderboard#ref
          * @type {any}
          * @since 3.13.0
          */
@@ -54,7 +54,7 @@ var Leaderboard = new Class({
         /**
          * The name of the leaderboard.
          *
-         * @name Phaser.FacebookInstantGamesPlugin.Leaderboard#name
+         * @name Phaser.FacebookInstantGamesLeaderboard#name
          * @type {string}
          * @since 3.13.0
          */
@@ -63,7 +63,7 @@ var Leaderboard = new Class({
         /**
          * The ID of the context that the leaderboard is associated with, or null if the leaderboard is not tied to a particular context.
          *
-         * @name Phaser.FacebookInstantGamesPlugin.Leaderboard#contextID
+         * @name Phaser.FacebookInstantGamesLeaderboard#contextID
          * @type {string}
          * @since 3.13.0
          */
@@ -73,7 +73,7 @@ var Leaderboard = new Class({
          * The total number of player entries in the leaderboard.
          * This value defaults to zero. Populate it via the `getEntryCount()` method.
          *
-         * @name Phaser.FacebookInstantGamesPlugin.Leaderboard#entryCount
+         * @name Phaser.FacebookInstantGamesLeaderboard#entryCount
          * @type {integer}
          * @since 3.13.0
          */
@@ -83,7 +83,7 @@ var Leaderboard = new Class({
          * The players score object.
          * This value defaults to `null`. Populate it via the `getPlayerScore()` method.
          *
-         * @name Phaser.FacebookInstantGamesPlugin.Leaderboard#playerScore
+         * @name Phaser.FacebookInstantGamesLeaderboard#playerScore
          * @type {LeaderboardScore}
          * @since 3.13.0
          */
@@ -94,7 +94,7 @@ var Leaderboard = new Class({
          * This value defaults to an empty array. Populate it via the `getScores()` method.
          * The contents of this array are reset each time `getScores()` is called.
          *
-         * @name Phaser.FacebookInstantGamesPlugin.Leaderboard#scores
+         * @name Phaser.FacebookInstantGamesLeaderboard#scores
          * @type {LeaderboardScore[]}
          * @since 3.13.0
          */
@@ -110,7 +110,7 @@ var Leaderboard = new Class({
      * 
      * When the call completes this Leaderboard will emit the `getentrycount` event along with the count and name of the Leaderboard.
      *
-     * @method Phaser.FacebookInstantGamesPlugin.Leaderboard#getEntryCount
+     * @method Phaser.FacebookInstantGamesLeaderboard#getEntryCount
      * @since 3.13.0
      * 
      * @return {this} This Leaderboard instance.
@@ -143,7 +143,7 @@ var Leaderboard = new Class({
      * 
      * If the save fails the event will send `null` as the score value.
      *
-     * @method Phaser.FacebookInstantGamesPlugin.Leaderboard#setScore
+     * @method Phaser.FacebookInstantGamesLeaderboard#setScore
      * @since 3.13.0
      * 
      * @param {integer} score - The new score for the player. Must be a 64-bit integer number.
@@ -194,7 +194,7 @@ var Leaderboard = new Class({
      * 
      * If the player has not yet saved a score, the event will send `null` as the score value, and `playerScore` will be set to `null` as well.
      *
-     * @method Phaser.FacebookInstantGamesPlugin.Leaderboard#getPlayerScore
+     * @method Phaser.FacebookInstantGamesLeaderboard#getPlayerScore
      * @since 3.13.0
      * 
      * @return {this} This Leaderboard instance.
@@ -233,7 +233,7 @@ var Leaderboard = new Class({
      * 
      * When the call completes this Leaderboard will emit the `getscores` event along with an array of LeaderboardScore entries and the name of the Leaderboard.
      *
-     * @method Phaser.FacebookInstantGamesPlugin.Leaderboard#getScores
+     * @method Phaser.FacebookInstantGamesLeaderboard#getScores
      * @since 3.13.0
      * 
      * @param {integer} [count=10] - The number of entries to attempt to fetch from the leaderboard. Currently, up to a maximum of 100 entries may be fetched per query.
@@ -274,7 +274,7 @@ var Leaderboard = new Class({
      * 
      * When the call completes this Leaderboard will emit the `getconnectedscores` event along with an array of LeaderboardScore entries and the name of the Leaderboard.
      *
-     * @method Phaser.FacebookInstantGamesPlugin.Leaderboard#getConnectedScores
+     * @method Phaser.FacebookInstantGamesLeaderboard#getConnectedScores
      * @since 3.16.0
      * 
      * @param {integer} [count=10] - The number of entries to attempt to fetch from the leaderboard. Currently, up to a maximum of 100 entries may be fetched per query.

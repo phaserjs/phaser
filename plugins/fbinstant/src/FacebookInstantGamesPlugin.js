@@ -279,7 +279,7 @@ var FacebookInstantGamesPlugin = new Class({
          * Contains all of the leaderboard data, as populated by the `getLeaderboard()` method.
          *
          * @name Phaser.FacebookInstantGamesPlugin#leaderboards
-         * @type {Phaser.FacebookInstantGamesPlugin.Leaderboard[]}
+         * @type {Phaser.FacebookInstantGamesLeaderboard[]}
          * @since 3.13.0
          */
         this.leaderboards = {};
