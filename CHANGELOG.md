@@ -239,7 +239,7 @@ You can find lots of examples on using DOM Elements in the Phaser 3 Examples rep
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@sky-coding @G-Rath @S4n60w3n @rootasjey @englercj @josephmbustamante @Jason-Cooke @Zamiell @krzysztof-grzybek @S4n60w3n @m31271n @peterellisjones @martinlindhe @TylerMorley @samme @schomatis @BeLi4L @hizzd @OmarShehata
+@sky-coding @G-Rath @S4n60w3n @rootasjey @englercj @josephmbustamante @Jason-Cooke @Zamiell @krzysztof-grzybek @S4n60w3n @m31271n @peterellisjones @martinlindhe @TylerMorley @samme @schomatis @BeLi4L @hizzd @OmarShehata @antoine-pous @digitsensitive
 
 Also, thanks to @Osmose there is a new Dashing config added to the Phaser 3 Docs Repo, with a new command `build-docset` which will build a [Dash](https://kapeli.com/dash) compatible docset for those who like to use Dash for their docs.
 

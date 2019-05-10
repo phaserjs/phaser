@@ -9,7 +9,7 @@
  * @property {?(Phaser.Types.Cameras.Scene2D.JSONCamera|Phaser.Types.Cameras.Scene2D.JSONCamera[])} [cameras=null] - An optional Camera configuration object.
  * @property {Object.<string, string>} [map] - Overwrites the default injection map for a scene.
  * @property {Object.<string, string>} [mapAdd] - Extends the injection map for a scene.
- * @property {object} [physics={}] - The physics configuration object for the Scene.
- * @property {object} [loader={}] - The loader configuration object for the Scene.
+ * @property {Phaser.Types.Core.PhysicsConfig} [physics={}] - The physics configuration object for the Scene.
+ * @property {Phaser.Types.Core.LoaderConfig} [loader={}] - The loader configuration object for the Scene.
  * @property {(false|*)} [plugins=false] - The plugin configuration object for the Scene.
  */
