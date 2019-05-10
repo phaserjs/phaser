@@ -32,11 +32,9 @@ Also brand new in this release are Shader Game Objects. Previously, if you wishe
 
 The final significant new feature comes in the way of masks. Phaser 3 has always supported Bitmap and Geometry Masks, but using them was limited (you couldn't mask children inside Containers, for example), and they were pretty slow. After a lot of development they're now fully batched, meaning the same mask applied to thousands of game objects no longer impacts performance. They can also be nested and will restore the mask stack as they're used and what's more, you can now add masks to Cameras. This is a great feature in itself and opens up the possibility for lots of visual effects in your games.
 
-It doesn't end there, though. You'll find hundreds of great new features, updates and fixes. So, as usual, please do spend some time digging through the Change Log. I assure you, it's worth while :)
+It doesn't end there, though. You'll find hundreds of great new features, updates and fixes. So, as usual, please do spend some time digging through the [Change Log](#changelog). I assure you, it's worth while :)
 
-A massive thank-you to everyone who supports Phaser on Patreon and PayPal. Your continued backing has allowed me to work on Phaser all year, and great new releases like 3.17 are the very real result of that. It's quite literally your backing that allows me to work on this as much as I do. If you've ever considered becoming a backer, now is the perfect time!
-
-As always, please check out the [Change Log](#changelog) for comprehensive details about what recent versions contain.
+A massive thank-you to everyone who supports Phaser on Patreon and PayPal. Your continued backing has allowed me to work on Phaser all year, and this great new releases is the very real result of that. If you've ever considered becoming a backer, now is the perfect time!
 
 If you'd like to stay abreast of developments then I publish my [Developer Logs](https://phaser.io/phaser3/devlog) in the [Phaser World](https://phaser.io/community/newsletter) newsletter. Subscribe to stay in touch and get all the latest news from the core team and the wider community.
 
@@ -78,7 +76,7 @@ Extra special thanks to the following companies who's support makes Phaser possi
 * [Twilio](https://www.twilio.com)
 * [Y8 Games](https://www.y8.com)
 
-![Sponsors](https://phaser.io/images/github/sponsors-2019-05.png.png "Awesome  Sponsors")
+![Sponsors](https://phaser.io/images/github/sponsors-2019-05.png "Awesome  Sponsors")
 
 ![Phaser Newsletter](https://phaser.io/images/github/div-newsletter.png "Phaser Newsletter")
 
