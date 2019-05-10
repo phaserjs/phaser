@@ -32108,7 +32108,7 @@ declare namespace Phaser {
              * Calculates the ascent, descent and fontSize of a given font style.
              * @param textStyle The TextStyle object to measure.
              */
-            static MeasureText(textStyle: Phaser.GameObjects.TextStyle): object;
+            static MeasureText(textStyle: Phaser.GameObjects.TextStyle): Phaser.Types.GameObjects.Text.TextMetrics;
 
             /**
              * The renderer in use by this Text object.
@@ -52015,11 +52015,11 @@ declare namespace Phaser {
                 /**
                  * The physics configuration object for the Scene.
                  */
-                physics?: object;
+                physics?: Phaser.Types.Core.PhysicsConfig;
                 /**
                  * The loader configuration object for the Scene.
                  */
-                loader?: object;
+                loader?: Phaser.Types.Core.LoaderConfig;
                 /**
                  * The plugin configuration object for the Scene.
                  */
@@ -52082,11 +52082,11 @@ declare namespace Phaser {
                 /**
                  * The physics configuration object for the Scene.
                  */
-                physics: object;
+                physics: Phaser.Types.Core.PhysicsConfig;
                 /**
                  * The loader configuration object for the Scene.
                  */
-                loader: object;
+                loader: Phaser.Types.Core.LoaderConfig;
                 /**
                  * The plugin configuration object for the Scene.
                  */
