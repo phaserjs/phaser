@@ -22,6 +22,10 @@ var CONST = {
      */
     VERSION: '3.17.0',
 
+    BlendModes: require('./renderer/BlendModes'),
+
+    ScaleModes: require('./renderer/ScaleModes'),
+
     /**
      * AUTO Detect Renderer.
      * 
