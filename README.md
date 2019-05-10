@@ -70,7 +70,7 @@ I use [Patreon](https://www.patreon.com/photonstorm) to manage the backing and y
 
 Extra special thanks to our top-tier sponsors: [Orange Games](http://orangegames.com) and [CrossInstall](https://crossinstall.com).
 
-![Sponsors](https://phaser.io/images/github/patreon-sponsors-2018-1.png "Top Patreon Sponsors")
+![Sponsors](https://phaser.io/images/github/sponsors-2019-05.png.png "Awesome  Sponsors")
 
 ![Phaser Newsletter](https://phaser.io/images/github/div-newsletter.png "Phaser Newsletter")
 
