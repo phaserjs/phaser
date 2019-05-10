@@ -107,6 +107,7 @@ You can find lots of examples on using DOM Elements in the Phaser 3 Examples rep
 * `ArcadePhysics.closest` now iterates the bodies Set, rather than the RTree, which keeps it working even if the RTree has been disabled.
 * `Body.setVelocity` caused the `speed` property to be set to `NaN` if you didn't provide a `y` argument.
 * Passing an _array_ of configuration objects to `physics.add.group` would ignore them and none of the children would be assigned a physics body. Fix #4511 (thanks @rgk)
+* A Body with `damping` and `drag` enabled would fail to move if it went from zero velocity to a new velocity inside an `update` loop. It will now reset its speed accordingly and retain its new velocity (thanks StealthGary)
 
 ### Facebook Instant Games Plugin
 
