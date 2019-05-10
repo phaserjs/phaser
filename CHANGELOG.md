@@ -1,6 +1,6 @@
 # Change Log
 
-## Version 3.17.0 - Ishikawa - in dev
+## Version 3.17.0 - Motoko - 10th May 2019
 
 ### Shaders
 
@@ -224,7 +224,7 @@ You can find lots of examples on using DOM Elements in the Phaser 3 Examples rep
 * Declared `Audio.dataset`, which fixes Internet Explorer 10 crashing when trying to access the dataset property of the object (thanks @SirLink)
 * The `InputManager.update` method is now called every frame, as long as a native DOM event hasn't already fired it, which allows things like `setPollRate` to work again. Fix #4405 (thanks @Shucki)
 * `Pointer.getDuration` would only return zero until the pointer was released, or moved (basically any action that generated a DOM event). It now returns the duration regardless of the DOM events. Fix #4444 (thanks @plazicx)
-* `Keyboard.UpDuration` has been changed so the `duration` being checked is now against the current game clock. This means you can use it to check if a Key was released with `duration` ms ago, based on the time now, not the historic value of the Key.
+* `Keyboard.UpDuration` has been changed so the `duration` being checked is now against the current game clock. This means you can use it to check if a Key was released within `duration` ms ago, based on the time now, not the historic value of the Key.
 * `Keyboard.DownDuration` has been changed so the `duration` being checked is now against the current game clock. This fixes an issue where it couldn't be used while the Key was actively being held down. Fix #4484 (thanks @belen-albeza)
 * Keys would lose track of the state of a Scene when the Scene became paused. They're now updated regardless, stopping them from getting stuck if you pause and resume a Scene while holding them down. Fix #3822 (thanks @DannyT)
 * Changing any aspect of a Text object, such as the font size or content, wouldn't update its `hitArea` if it had been enabled for input, causing it to carry on using the old hit area size. Now, as long as the Text was created _without_ a custom hitArea, the hitArea size will be changed to match the new texture size on update. If you have provided your own custom hitArea shape, you need to modify it when the Text changes size yourself. Fix #4456 (thanks @thanh-taro and @rexrainbow)

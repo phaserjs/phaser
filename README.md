@@ -11,7 +11,7 @@ Along with the fantastic open source community, Phaser is actively developed and
 Thousands of developers from indie and multi-national digital agencies, and universities worldwide use Phaser. You can take a look at their incredible [games](https://phaser.io/games/).
 
 **Visit:** The [Phaser website](https://phaser.io) and follow on [Twitter](https://twitter.com/phaser_) (#phaserjs)<br />
-**Learn:** [API Docs](https://github.com/photonstorm/phaser3-docs), [Support Forum][forum] and [StackOverflow](https://stackoverflow.com/questions/tagged/phaser-framework)<br />
+**Learn:** [API Docs](https://photonstorm.github.io/phaser3-docs/index.html), [Support Forum][forum] and [StackOverflow](https://stackoverflow.com/questions/tagged/phaser-framework)<br />
 **Code:** 700+ [Examples](https://labs.phaser.io) (source available in this [repo][examples])<br />
 **Read:** The [Phaser World](#newsletter) Newsletter<br />
 **Chat:** [Slack](https://phaser.io/community/slack) and [Discord](https://phaser.io/community/discord)<br />
@@ -24,19 +24,17 @@ Grab the source and join the fun!
 
 <div align="center"><img src="https://phaser.io/images/github/news.jpg"></div>
 
-> 11th February 2019
+> 10th May 2019
 
-With a new version as large as 3.16.0 was, there were bound to be some bugs that got overlooked. With 3.16.2 we address some of the more important ones. Please see the Change Log below for full details. If you're using 3.16, then please upgrade to 3.16.2.
+After months of hard work, we're very happy to announce that Phaser 3.17 is now released. This is a significant update for a number of reasons, bring some great new features and fixes out. The first is that we have moved the DOM Element Game Objects from the 'experimental' flag they were previously hidden under, finished them off, fully documented them and moved them to main. DOM Elements are a great way to layer HTML content over the top of your game and control it, just as if it was a standard Game Object. Have a look at the demos, read the docs and get stuck-in using them!
 
-5th February 2019:
+Also brand new in this release are Shader Game Objects. Previously, if you wished to use a custom shader in your game, you'd have to create your own WebGL pipeline to handle it. Now, with 3.17, adding a shader is a single line of code - and what's more, you can manipulate them just like regular Game Objects, so they can be rotated, scaled, have hit areas and so on. As with DOM Elements please see the new examples and read the fully complete API Docs to learn how to use them.
 
-I'm pleased to announce that Phaser 3.16 is now available. This version represents a significant milestone in the project as Phaser 3 is now 100% feature complete with all of the initially planned systems now in place. The most significant additions in 3.16 is the overhaul of the Input event handling, the long-awaited introduction of the Scale Manager, and the Extern Game Object, which allows for 3rd party rendering support, as required by Spine. Spine animation support is being handled exclusively through a Phaser Plugin. The current build of the Spine plugin can be found in this repo in the `plugins` folder, along with examples in the Phaser Labs. The Spine plugin will be developed independently of Phaser in the coming weeks.
+The final significant new feature comes in the way of masks. Phaser 3 has always supported Bitmap and Geometry Masks, but using them was limited (you couldn't mask children inside Containers, for example), and they were pretty slow. After a lot of development they're now fully batched, meaning the same mask applied to thousands of game objects no longer impacts performance. They can also be nested and will restore the mask stack as they're used and what's more, you can now add masks to Cameras. This is a great feature in itself and opens up the possibility for lots of visual effects in your games.
 
-This is the single largest update of Phaser 3 yet, and as such, there _are_ breaking changes. I have painstakingly listed all of them in the Change Log, so please do read it if you're upgrading from an earlier version. I know there is a lot to take in, so I'll be covering the new features in the Phaser World newsletter in the coming weeks.
+It doesn't end there, though. You'll find hundreds of great new features, updates and fixes. So, as usual, please do spend some time digging through the Change Log. I assure you, it's worth while :)
 
-3.16 also brings together all of the hard work from the community that went in to the documentation. They're in a much better state than ever before, and very nearly 100% complete. I also completely reworked the internal event system, so event names, callback arguments and more are easy to find in one central place in the docs and can be reference in your code with either strings or properly name-spaced constants.
-
-A massive thank-you to everyone who supports Phaser on Patreon and PayPal. It's your backing that allows me to work on this full-time. If you've ever considered becoming a backer, now is the perfect time!
+A massive thank-you to everyone who supports Phaser on Patreon and PayPal. Your continued backing has allowed me to work on Phaser all year, and great new releases like 3.17 are the very real result of that. It's quite literally your backing that allows me to work on this as much as I do. If you've ever considered becoming a backer, now is the perfect time!
 
 As always, please check out the [Change Log](#changelog) for comprehensive details about what recent versions contain.
 
@@ -66,9 +64,19 @@ There are other benefits to [backing Phaser](https://www.patreon.com/join/photon
 
 ![Backers Perks](https://phaser.io/images/github/patreon-perk-chart.png)
 
-I use [Patreon](https://www.patreon.com/photonstorm) to manage the backing and you can [support Phaser](https://www.patreon.com/join/photonstorm?) from $1 per month. The amount you pledge is entirely up to you and can be changed as often as you like. Patreon renews monthly, just like Netflix. You can, of course, cancel at any point. Tears will be shed on this end, but that's not your concern.
+We use [Patreon](https://www.patreon.com/photonstorm) to manage the backing and you can [support Phaser](https://www.patreon.com/join/photonstorm?) from $1 per month. The amount you pledge is entirely up to you and can be changed as often as you like. Patreon renews monthly, just like Netflix. You can, of course, cancel at any point. Tears will be shed on this end, but that's not your concern.
 
-Extra special thanks to our top-tier sponsors: [Orange Games](http://orangegames.com) and [CrossInstall](https://crossinstall.com).
+Extra special thanks to the following companies who's support makes Phaser possible:
+
+* [Cerebral Fix](https://cerebralfix.com)
+* [CrossInstall](https://crossinstall.com)
+* [Facebook](https://www.facebook.com)
+* [Game Distribution](https://gamedistribution.com)
+* [GameCommerce](https://www.gamecommerce.com)
+* [Mozilla](https://www.mozilla.org)
+* [Texture Packer](https://www.codeandweb.com/texturepacker/tutorials/how-to-create-sprite-sheets-for-phaser3?utm_source=ad&utm_medium=banner&utm_campaign=phaser-2018-10-16)
+* [Twilio](https://www.twilio.com)
+* [Y8 Games](https://www.y8.com)
 
 ![Sponsors](https://phaser.io/images/github/sponsors-2019-05.png.png "Awesome  Sponsors")
 
@@ -78,7 +86,7 @@ Extra special thanks to our top-tier sponsors: [Orange Games](http://orangegames
 
 We publish the [Phaser World](https://phaser.io/community/newsletter) newsletter. It's packed full of the latest Phaser games, tutorials, videos, meet-ups, talks, and more. The newsletter also contains our weekly Development Progress updates which let you know about the new features we're working on.
 
-Over 130 previous editions can be found on our [Back Issues](https://phaser.io/community/backissues) page.
+Over 140 previous editions can be found on our [Back Issues](https://phaser.io/community/backissues) page.
 
 ![Download Phaser](https://phaser.io/images/github/div-download.png "Download Phaser")
 <a name="download"></a>
@@ -104,18 +112,18 @@ npm install phaser
 [Phaser is on jsDelivr](https://www.jsdelivr.com/projects/phaser) which is a "super-fast CDN for developers". Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.17.0/dist/phaser.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.17.0/dist/phaser.min.js"></script>
 ```
 
 ### API Documentation
 
-Go to https://photonstorm.github.io/phaser3-docs/index.html to read the docs online. Use the drop-down menus at the top to navigate the name spaces, classes and Game Objects lists.
+Go to https://photonstorm.github.io/phaser3-docs/index.html to read the docs online. Use the drop-down menus at the top to navigate the namespaces, classes and Game Objects lists.
 
 Or, if you wish to run the docs locally you can checkout the [phaser3-docs](https://github.com/photonstorm/phaser3-docs) repository and then read the documentation by pointing your browser to the `docs/` folder.
 
@@ -123,9 +131,9 @@ The documentation for Phaser 3 is an on-going project. Please help us by searchi
 
 ### TypeScript Definitions
 
-You can find the [TypeScript definitions](https://github.com/photonstorm/phaser/tree/master/types) inside the `types` folder of the main repo. They are also referenced in the types entry in `package.json`.
+You can find the [TypeScript definitions](https://github.com/photonstorm/phaser/tree/master/types) inside the `types` folder. They are also referenced in the types entry in `package.json`.
 
-The defs are automatically generated from the JSDoc comments found in the Phaser source code. If you wish to help refine them then you must edit the Phaser JSDoc blocks directly, not the defs files. You can find more details about the parser we use in the `scripts/tsgen` folder in the main repo.
+The defs are automatically generated from the JSDoc comments found in the Phaser source code. If you wish to help refine them then you must edit the Phaser JSDoc blocks directly, not the defs file. You can find more details about the parser we built in the `scripts/tsgen` folder.
 
 ### Webpack
 
@@ -180,13 +188,13 @@ We've 3 tutorials related to Facebook Instant Games and Phaser:
 A special build of Phaser with the Facebook Instant Games Plugin ready-enabled is [available on jsDelivr](https://www.jsdelivr.com/projects/phaser). Include the following in your html:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser-facebook-instant-games.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.17.0/dist/phaser-facebook-instant-games.js"></script>
 ```
 
 or the minified version:
 
 ```html
-<script src="//cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser-facebook-instant-games.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/phaser@3.17.0/dist/phaser-facebook-instant-games.min.js"></script>
 ```
 
 The build files are in the git repository in the `dist` folder, and you can also include the plugin in custom builds.
@@ -203,7 +211,7 @@ Create an `index.html` page locally and paste the following code into it:
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser-arcade-physics.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.17.0/dist/phaser-arcade-physics.min.js"></script> 
 </head>
 <body>
 
@@ -314,55 +322,250 @@ You can then run `webpack` to create a development build in the `build` folder w
 
 # Change Log
 
-## Version 3.16.2 - Ishikawa - 11th February 2019
+## Version 3.17.0 - Motoko - 10th May 2019
 
-This is point release primarily fixes a few important issues that surfaced in 3.16.0. Please be sure to read the [Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md) if you are coming from a version < 3.16.0 as it contains lots of important updates.
+### Shaders
 
-### Matter Pointer Constraint Changes
+'Shader' is a new type of Game Object which allows you to easily add a quad with its own shader into the display list, and manipulate it as you would any other Game Object, including scaling, rotating, positioning and adding to Containers. Shaders can be masked with either Bitmap or Geometry masks and can also be used as a Bitmap Mask for a Camera or other Game Object. They can also be made interactive and used for input events.
 
-The following changes all effect the Matter JS Pointer Constraint class:
+They work by taking a reference to a `Phaser.Display.BaseShader` instance, as found in the Shader Cache. These can be created dynamically at runtime, or loaded in via the updated GLSL File Loader:
 
-* Pointer handling has been changed to make more sense. In the previous version, pressing down and then moving the Pointer _over_ a body would start it being dragged, even if the pointer was pressed down well outside of the body bounds. Now, a body can only be dragged by actually pressing down on it, or any of its parts, which is more in-line with how input events should work.
-* Previously, releasing ANY pointer would stop an object being dragged, even if it wasn't the one actually dragging a body, as in a multi-touch game. Bodies are now bound to the pointer which started their drag and only the release of that pointer will stop them.
-* There is a new Matter Physics Event `DRAG_START` which is emitted by a Pointer Constraint when it starts dragging a body. Listen for this event from the Matter World instance.
-* There is a new Matter Physics Event `DRAG` which is emitted by a Pointer Constraint as it drags a body. Listen for this event from the Matter World instance.
-* There is a new Matter Physics Event `DRAG_END` which is emitted by a Pointer Constraint when it stops dragging a body. Listen for this event from the Matter World instance.
-* The `camera` property can no longer be set in the config object. Instead it is set every time the Pointer is pressed down on a Body, this resolves issues where you have a multi-camera Scene and want to drag a body in the non-main camera.
-* `body` is a new property that holds a reference to the Body being dragged, if any.
-* `part` is a new property that holds a reference to the Body part that was clicked on which started the drag.
-* The internal `getBodyPart` method has been renamed to `hitTestBody` to more accurately reflect what it does.
-* The class no longer listens for the pointer `up` event, instead of tracks the active pointer and waits for that to be released. This has reduced the complexity and size of the `update` method considerably.
-* `stopDrag` is a new method that allows you to manually stop an object being dragged, even if the pointer isn't released.
-* This class now has 100% JSDocs.
+```javascript
+function preload ()
+{
+    this.load.glsl('fire', 'shaders/fire.glsl.js');
+}
+ 
+function create ()
+{
+    this.add.shader('fire', 400, 300, 512, 512);
+}
+```
+
+Please see the Phaser 3 Examples GitHub repo for examples of loading and creating shaders dynamically.
+
+* `Display.BaseShader` is a new type of object that contain the fragment and vertex source, together with any uniforms the shader needs, and are used when creating the new `Shader` Game Objects. They are stored in the Shader cache.
+* The Shader Cache `this.cache.shader` has been updated. Rather than holding plain text fragments, it now holds instances of the new `BaseShader` objects. As a result, using `cache.shader.get(key)` will now return a `BaseShader` instead of a text file.
+* The `GLSLFile` loader has been updated with new arguments. As well as a URL to the shader file you can also specify if the file is a fragment or vertex shader. It then uses this value to help create or update a `BaseShader` instance in the shader cache.
+* The `GLSLFile` loader now supports shader bundles. These allow for multiple shaders to be stored in a single file, with each shader separated by a block of front-matter that represents its contents. Example shader bundles can be found in the Phaser 3 Examples repo.
+
+### DOM Elements
+
+DOM Elements have finally left the experimental stage and are now part of the full Phaser release.
+
+DOM Element Game Objects are a way to control and manipulate HTML Elements over the top of your game. In order for DOM Elements to display you have to enable them by adding the following to your game configuration object:
+
+```javascript
+dom {
+  createContainer: true
+}
+```
+
+When this is added, Phaser will automatically create a DOM Container div that is positioned over the top of the game canvas. This div is sized to match the canvas, and if the canvas size changes, as a result of settings within the Scale Manager, the dom container is resized accordingly.
+
+You can create a DOM Element by either passing in DOMStrings, or by passing in a reference to an existing
+Element that you wish to be placed under the control of Phaser. For example:
+
+```javascript
+this.add.dom(x, y, 'div', 'background-color: lime; width: 220px; height: 100px; font: 48px Arial', 'Phaser');
+```
+
+The above code will insert a div element into the DOM Container at the given x/y coordinate. The DOMString in the 4th argument sets the initial CSS style of the div and the final argument is the inner text. In this case, it will create a lime colored div that is 220px by 100px in size with the text Phaser in it, in an Arial font.
+
+You should nearly always, without exception, use explicitly sized HTML Elements, in order to fully control alignment and positioning of the elements next to regular game content.
+
+Rather than specify the CSS and HTML directly you can use the `load.html` File Loader to load it into the cache and then use the `createFromCache` method instead. You can also use `createFromHTML` and various other methods available in this class to help construct your elements.
+
+Once the element has been created you can then control it like you would any other Game Object. You can set its position, scale, rotation, alpha and other properties. It will move as the main Scene Camera moves and be clipped at the edge of the canvas. It's important to remember some limitations of DOM Elements: The obvious one is that they appear above or below your game canvas. You cannot blend them into the display list, meaning you cannot have a DOM Element, then a Sprite, then another DOM Element behind it.
+
+You can find lots of examples on using DOM Elements in the Phaser 3 Examples repo.
+
+### Geometry and Bitmap Masks
+
+* `Camera.setMask` is a new method that allows you to set a geometry or bitmap mask on any camera. The mask can be set to remain fixed in position, or to translate along with the camera. It will impact anything the camera renders. A reference to the mask is stored in the `Camera.mask` property.
+* `Camera.clearMask` is a new method that clears a previously set mask on a Camera.
+* There is a new Game Config property `input.windowEvents` which is true by default. It controls if Phaser will listen for any input events on the Window. If you disable this, Phaser will stop being able to emit events like `POINTER_UP_OUTSIDE`, or be aware of anything that happens outside of the Canvas re: input.
+* Containers can now contain masked children and have those masks respected, including the mask on the Container itself (if any). Masks work on any depth of child up to 255 children deep.
+* Geometry Masks are now batched. Previously, using the same mask on multiple Game Objects would create brand new stencil operations for every single Game Object, causing performance to tank. Now, the mask is only set if it's different from the previously masked object in the display list, allowing you to mask thousands of Game Objects and retain batching through-out.
+* `GeometryMask.setInvertAlpha` is a new method that allows you to set the `invertAlpha` property in a chainable call.
+* Previously, setting a mask on a Particle Emitter wouldn't work (it had to be set on the Emitter Manager instance), even though the mask methods and properties existed. You can now set a geometry or bitmap mask directly on an emitter.
+* The Particle Emitter Manager was missing the Mask component, even though it fully supported masking. The Mask component has now been added. You can now mask the manager, which impacts all emitters you create through it, or a specific emitter. Different emitters can have different masks, although they override the parent mask, if set.
+* You can now apply a Bitmap Mask to a Camera or Container and a Geometry Mask to a child and have it work correctly.
+* `WebGLRenderer.maskCount` is a new internal property that tracks the number of masks in the stack.
+* `WebGLRenderer.maskStack` is a new internal array that contains the current mask stack.
+
+### Arcade Physics
+
+#### New Features
+
+* `overlapTiles` is a new method that allows you to check for overlaps between a physics enabled Game Object and an array of Tiles. The Tiles don't have to have been enable for collision, or even be on the same layer, for the overlap check to work. You can provide your own process callback and/or overlap callback. This is handy for testing for overlap for a specific Tile in your map, not just based on a tile index. This is available via `this.physics.overlapTiles` and the World instance.
+* `collideTiles` is a new method that allows you to check for collision between a physics enabled Game Object and an array of Tiles. The Tiles don't have to have been enable for collision, or even be on the same layer, for the collision to work. You can provide your own process callback and/or overlap callback. There are some limitations in using this method, please consult the API Docs for details, but on the whole, it allows for dynamic collision on small sets of Tile instances. This is available via `this.physics.collideTiles` and the World instance.
+* `overlapRect` is a new method that allows you to return an array of all physics bodies within the given rectangular region of the World. It can return dynamic or static bodies and will use the RTree for super-fast searching, if enabled (which it is by default)
+* The `Body.setCollideWorldBounds` method has two new optional arguments `bounceX` and `bounceY` which, if given, will set the World Bounce values for the body.
+
+#### Updates
+
+* `Body.preUpdate` is a new method that is called only once per game step. It resets all collision status properties and syncs the Body with the parent Game Object.
+* `Body.update` has been rewritten to just perform one single physics step and no longer re-syncs with the Game Object. It can be called multiple times per game step, depending on the World FPS rate.
+* `Body.postUpdate` has been rewritten to make it more compact. It syncs the body data back to the parent Game Object and is only called once per game step now (previously it was called whenever the Body updated)
+* The `World.late` Set has been removed and is no longer populated, as it's no longer required.
+* `World.update` now calls `Body.preUpdate` just once per game step, then calls `Body.update` as many times as is required as per the FPS setting, and no longer calls `Body.postUpdate` at all.
+* `World.collideSpriteVsTilemapLayer` now returns a boolean if a collision or overlap happens, where-as before it didn't.
+* `World.collideSpriteVsTilemapLayerHandler` is a new private method that handles all tilemap collision checks.
+* The internal method `SeparateTile` now has a new argument `isLayer` which controls if the set comes from a layer or an array.
+* The internal method `TileCheckX` now has a new argument `isLayer` which controls if the set comes from a layer or an array.
+* The internal method `TileCheckY` now has a new argument `isLayer` which controls if the set comes from a layer or an array.
+* `Body.isMoving` has been removed as it was never used internally.
+* `Body.stopVelocityOnCollide` has been removed as it was never used internally.
+* All of the Arcade Physics Components are now available directly under the `Phaser.Physics.Arcade.Components` namespace. Fix #4440 (thanks @jackfreak)
+* `Phaser.Physics.Arcade.Events` is now exposed in the namespace, preventing it from erroring if you use them in TypeScript. Fix #4481 (thanks @danielalves)
+* The Matter World configuration value `bodyDebugFillColor` has been renamed to `debugBodyFillColor` to be consistent with the rest of the options.
+* The Matter World configuration has a new property: `debugStaticBodyColor` that sets the static body debug color.
+
+#### Bug Fixes
+
+* The `Body.delta` values are now able to be read and acted upon during a Scene update, due to the new game step flow. This means you can now call `this.physics.collide` during a Scene `update` and it will work properly again. Fix #4370 (thanks @NokFrt)
+* `ArcadePhysics.furthest` now iterates the bodies Set, rather than the RTree, which keeps it working even if the RTree has been disabled.
+* `ArcadePhysics.closest` now iterates the bodies Set, rather than the RTree, which keeps it working even if the RTree has been disabled.
+* `Body.setVelocity` caused the `speed` property to be set to `NaN` if you didn't provide a `y` argument.
+* Passing an _array_ of configuration objects to `physics.add.group` would ignore them and none of the children would be assigned a physics body. Fix #4511 (thanks @rgk)
+* A Body with `damping` and `drag` enabled would fail to move if it went from zero velocity to a new velocity inside an `update` loop. It will now reset its speed accordingly and retain its new velocity (thanks StealthGary)
+
+### Facebook Instant Games Plugin
+
+* The method `consumePurchases` has been renamed to `consumePurchase` to bring it in-line with the Facebook API.
+* `getProduct` is a new method that will return a single Product from the product catalog based on the given Product ID. You can use this to look-up product details based on a purchase list.
+
+### New Features
+
+* A Scene will now emit the new `CREATE` event after it has been created by the Scene Manager. If the Scene has a `create` method this event comes after that, so is useful to knowing when a Scene may have finished creating Game Objects, etc. (thanks @jackfreak)
+* `Tilemap.removeTile` is a new method that allows you to remove a tile, or an array of tiles, by passing in references to the tiles themselves, rather than coordinates. The tiles can be replaced with new tiles of the given index, or removed entirely, and the method can optionally recalculate interesting faces on the layer.
+* `TweenManager.remove` is a new method that immediately removes the given Tween from all of its internal arrays.
+* `Tween.remove` is a new method that immediately removes the Tween from the TweenManager, regardless of what state the tween is in. Once called the tween will no longer exist within any internal TweenManager arrays.
+* `SceneManager.isPaused` is a new method that will return if the given Scene is currently paused or not (thanks @samme)
+* `ScenePlugin.isPaused` is a new method that will return if the given Scene is currently paused or not (thanks @samme)
+* `TextureManager.removeKey` is a new method that will remove a key from the Texture Manager without destroying the texture itself.
+* `Matter.World.resetCollisionIDs` is a new method that will reset the collision IDs that Matter JS uses for body collision groups. You should call this before destroying your game if you need to restart the game again on the same page, without first reloading the page. Or, if you wish to consistently destroy a Scene that contains Matter.js and then run it again (thanks @clesquir)
+* RenderTexture has two new optional constructor arguments `key` and `frame`. This allows you to create a RenderTexture pre-populated with the size and frame from an existing texture (thanks @TadejZupancic)
+* `GameObjects.Components.PathFollower` is a new component that manages any type of Game Object following a path. The original Path Follower Game Object has been updated to use this new component directly, but it can be applied to any custom Game Object class.
+* `Tilemap.removeLayer` is a new method that allows you to remove a specific layer from a Tilemap without destroying it.
+* `Tilemap.destroyLayer` is a new method that allows you to destroy a layer and remove it from a Tilemap.
+* `Tilemap.renderDebugFull` is a new method that will debug render all layers in the Tilemap to the given Graphics object.
+* `Geom.Intersects.GetCircleToCircle` is a new function that will return the point/s of intersection between two circles (thanks @florianvazelle)
+* `Geom.Intersects.GetCircleToRectangle` is a new function that will return the point/s of intersection between a circle and a rectangle (thanks @florianvazelle)
+* `Geom.Intersects.GetLineToCircle` is a new function that will return the point/s of intersection between a line and a circle (thanks @florianvazelle)
+* `Geom.Intersects.GetLineToRectangle` is a new function that will return the point/s of intersection between a line and a rectangle (thanks @florianvazelle)
+* `Geom.Intersects.GetRectangleToRectangle` is a new function that will return the point/s of intersection between two rectangles (thanks @florianvazelle)
+* `Geom.Intersects.GetRectangleToTriangle` is a new function that will return the point/s of intersection between a rectangle and a triangle (thanks @florianvazelle)
+* `Geom.Intersects.GetTriangleToCircle` is a new function that will return the point/s of intersection between a triangle and a circle (thanks @florianvazelle)
+* `Geom.Intersects.GetTriangleToLine` is a new function that will return the point/s of intersection between a triangle and a line (thanks @florianvazelle)
+* `Geom.Intersects.GetTriangleToTriangle` is a new function that will return the point/s of intersection between two triangles (thanks @florianvazelle)
+* `Size.setCSS` is a new method that will set the Size components width and height to the respective CSS style properties of the given element.
+* `CSSFile` is a new Loader FileType that allows you to load css into the current document via the normal Phaser Loader, using the `load.css` method. As such, you can chain it with other load calls, load via config, use as part of a pack load or any other option available to all loader filetypes. The CSS is applied immediately to the document.
+* `MultiScriptFile` is a new Loader FileType that allows you to load multiple script files into the document via the Phaser Loader, using the new `load.scripts` method. The difference between this and `load.script` is that you must pass an array of script file URLs to this method and they will be loaded in parallel but _processed_ (i.e. added to the document) in the exact order specified in the array. This allows you to load a bundle of scripts that have dependencies on each other.
+* `Key.getDuration` is a new method that will return the duration, in ms, that the Key has been held down for. If the Key isn't down it will return zero.
+* The `Container.setScrollFactor` method has a new optional argument `updateChildren`. If set, it will change the `scrollFactor` values of all the Container children as well as the Container. Fix #4466 #4475 (thanks @pinkkis @enriqueto)
+* There is a new webpack config `FEATURE_SOUND` which is set to `true` by default, but if set to `false` it will exclude the Sound Manager and all of its systems from the build files. Fix #4428 (thanks @goldfire)
+* `Scene.Systems.renderer` is a new property that is a reference to the current renderer the game is using.
+* `Utils.Objects.SetValue` is a new function that allows you to set a value in an object by specifying a property key. The function can set a value to any depth by using dot-notation for the key, i.e. `SetValue(data, 'world.position.x', 100)`.
+* `WebGLRenderer.glFuncMap` is a new object, populated during the `init` method, that contains uniform mappings from key to the corresponding gl function, i.e. `mat2` to `gl.uniformMatrix2fv`.
+* `BaseCache.getKeys` is a new method that will return all keys in use in the current cache, i.e. `this.cache.shader.getKeys()`.
 
 ### Updates
 
-* `TileSprite.setTileScale` has been updated so that the `y` argument is optional and set to match the `x` argument, like `setScale` elsewhere in the API.
-* `InputManager.time` is a new property that holds the most recent time it was updated from the Game step, which plugins can access.
-* `InputManager.preStep` is a new method that populates some internal properties every step.
-* `KeyboardPlugin.time` has moved from being a property to being a getter, which returns the time from the InputManager.
-* The `scale` property has been added to the `Scene` class (thanks @strangeweekend)
-* `Matter.World.remove` now uses the `Composite.remove` method internally. Previously, it used `Composite.removeBody` which only allowed it to remove bodies from the simulation. Now, it can remove any type of Matter object.
-* When the Matter World creates its wall bounds, the left and right walls now extend further up and down than before, so that in a 4-wall setting there are no gaps in the corners, which previously allowed for fast moving objects that hit a corner intersection point to sometimes travel through it.
-* Touch inputs will now trigger a `POINTER_OUT` event if they leave the game (i.e. are released), where-as before they would only trigger the `POINTER_UP` event. Now, both happen (thanks @rgk)
+* Removed all references to CocoonJS from the API, including in the Device.OS object and elsewhere, as Cocoon is no longer.
+* The MouseManager and TouchManager now use separate handlers for the Window level input events, which check to see if the canvas is the target or not, and redirect processing accordingly.
+* `AnimationManager.generateFrameNumbers` can now accept a start number greater than the end number, and will generate them in reverse (thanks @cruzdanilo)
+* The return from the `ScenePlugin.add` method has changed. Previously, it would return the ScenePlugin, but now it returns a reference to the Scene that was added to the Scene Manager, keeping it in-line with all other `add` methods in the API. Fix #4359 (thanks @BigZaphod)
+* The `PluginManager.installScenePlugin` method has a new optional boolean parameter `fromLoader` which controls if the plugin is coming in from the result of a Loader operation or not. If it is, it no longer throws a console warning if the plugin already exists. This fixes an issue where if you return to a Scene that loads a Scene Plugin it would throw a warning and then not install the plugin to the Scene.
+* The Scale Manager has a new event `FULLSCREEN_FAILED` which is fired if you try to enter fullscreen mode, but the browser rejects it for some reason.
+* The `ScaleMode` Component has been removed from every Game Object, and along with it the `scaleMode` property and `setScaleMode` method. These did nothing anyway as they were not hooked to the render pipeline and scale mode should be set on the texture, not the Game Object. Fix #4413 (thanks @jcyuan)
+* The `Clock.now` property value is now synced to be the `TimeStep.time` value when the Clock plugin boots and is no longer `Date.now()` until the first update (thanks @Antriel)
+* `Graphics.strokePoints` has renamed the second argument from `autoClose` to `closeShape`. There is also a new third argument `closePath`, which defaults to `true` and automatically closes the path before stroking it. The `endIndex` argument is now the fourth argument, instead of the third.
+* `Graphics.fillPoints` has renamed the second argument from `autoClose` to `closeShape`. There is also a new third argument `closePath`, which defaults to `true` and automatically closes the path before filling it. The `endIndex` argument is now the fourth argument, instead of the third.
+* Calling `Texture.destroy` will now call `TextureManager.removeKey` to ensure the key is removed from the manager, should you destroy a texture directly, rather than going via `TextureManager.remove`. Fix #4461 (thanks @BigZaphod)
+* `SpriteSheetFromAtlas` now adds in a `__BASE` entry for the Sprite Sheet it creates, keeping it consistent with the other frame parsers (thanks @Cirras)
+* The `from` and `to` properties in the PathFollower Config can now be used to set the span of the follow duration (thanks @kensleebos)
+* `Graphics.lineFxTo` and `Graphics.moveFxTo` have been removed as they were not being rendered anyway.
+* You can now use "infinite" tilemaps as created in Tiled v1.1 and above. Support is basic in that it takes the chunk data and builds one giant map from it. However, at least you are still able to now load and use infinite maps, even if they don't chunk during the game (thanks @Upperfoot)
+* `MapData.infinite` is a new boolean that controls if the map data is infinite or not.
+* `DynamicTilemapLayer.destroy` will now remove the layer from the Tilemap it belongs to, clearing it from the layers array. Fix #4319 (thanks @APXEOLOG)
+* `StaticTilemapLayer.destroy` will now remove the layer from the Tilemap it belongs to, clearing it from the layers array. Fix #4319 (thanks @APXEOLOG)
+* `DynamicTilemapLayer.destroy` has a new optional boolean argument `removeFromTilemap` which will control if the layer is removed from the parent map or not.
+* `StaticTilemapLayer.destroy` has a new optional boolean argument `removeFromTilemap` which will control if the layer is removed from the parent map or not.
+* `Tilemap.copy` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.fill` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.forEachTile` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.putTilesAt` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.randomize` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.calculateFacesAt` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.renderDebug` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.replaceByIndex` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.setCollision` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.setCollisionBetween` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.setCollisionByProperty` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.setCollisionByExclusion` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.setCollisionFromCollisionGroup` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.setTileIndexCallback` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.setTileLocationCallback` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.shuffle` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.swapByIndex` now actually returns `null` if an invalid layer was given, as per the docs.
+* `Tilemap.weightedRandomize` now actually returns `null` if an invalid layer was given, as per the docs.
+* `BaseCamera.cameraManager` is a new property that is a reference to the Camera Manager, set in the `setScene` method.
+* `CameraManager.default` is a new property that contains a single un-transformed instance of a Camera, that exists outside of the camera list and doesn't render. It's used by other systems as a default camera matrix.
+* The `Graphics` Game Object now has 3 new Transform Matrix instances called `_tempMatrix1` to `_tempMatrix3`, which are used by it during the WebGL Rendering process. This is because Graphics objects can be used as Geometry Masks, which need to retain their own matrix state mid-render of another object, so cannot share the renderer temp matrices that other Game Objects can use. This also indirectly fixes an issue where masked children (such as emitters or container children) would get incorrect camera scroll values.
+* The `Key` method signature has changed. It now expects to receive a reference to the KeyboardPlugin instance that is creating the Key as the first argument. This is now stored in the new `Key.plugin` property, and cleared in `destroy`.
+* `KeyboardPlugin.removeKey` has a new optional argument `destroy` that will, if set, destroy the Key object being removed from the plugin.
+* `InteractiveObject.customHitArea` is a new property that records if the hitArea for the Interactive Object was created based on texture size (false), or a custom shape (true)
+* A Camera will pause following a Game Object for the duration of the Camera Pan Effect, as the two will clash over the Camera scroll position (thanks fruitbatinshades).
+* `ParseXMLBitmapFont` has now been exposed as a static function on the `BitmapText` object, so you can access it easily from your own code (thanks @jcyuan)
+* The math used in the circle to circle Arcade Physics collision has been updated to better handle horizontal collision, giving a more realistic response. Fix #4256 (thanks @akuskis @JeSuisUnCaillou)
 
 ### Bug Fixes
 
-* The `Mesh.setAlpha` method has been restored, even though it's empty and does nothing, to prevent runtime errors when adding a Mesh or Quad object to a Container. Fix #4338 #4343 (thanks @pfdtravalmatic @charmingny)
-* `KeyboardPlugin.checkDown` would always fail if using the new event system, because the time value it was checking wasn't updated.
-* Entering `Fullscreen` mode in the Scale Manager and then pressing ESC would leave the injected fullscreen div in the DOM, causing it to throw a node insertion failure the second time you wanted to enter fullscreen mode. Fix #4352 (thanks @ngdevr)
-* Due to the changes in the Input event system, the `GAME_OUT` event would never fire unless the input system was in legacy mode. The OUT and OVER handlers have been refactored and will now fire as soon as the DOM event happens. As a result the `InputManager._emitIsOverEvent` property has been removed, as the native event is sent directly to the handler and doesn't need storing locally any more. Fix #4344 (thanks @RademCZ)
-* Added `Zone.setBlendMode` method as a NOOP function, fixing a bug where if you added a Zone to a Container when running under Canvas it would fail. Fix #4295 (thanks @emanuel15)
+* The parent bounds are reset when exiting fullscreen mode in the Scale Manager. This fixes an issue when leaving fullscreen mode by pressing ESC (instead of programmatically) would leave the canvas in the full screen size. Fix #4357 (thanks @khutchins and @HeyStevenXu)
+* `GetAdvancedValue` now uses the correct Math RND reference, which means anything that used the `randInt` or `randFloat` features of this function, such as creating a Sprite from a Config object, or Bitmap Text sizing, will no longer throw an error about a null object reference. Fix #4369 (thanks @sanadov)
+* Trying to enter Fullscreen mode on Android / Chrome, or iOS / Safari, would throw an error regarding an unhandled Promise and a failure to invoke the event from a user gesture. This has been tightened up, using a proper Promise handler internally and the documentation clarified to explicitly say that you must call the function from a `pointerup` handler, and not `pointerdown`. Fix #4355 (thanks @matrizet)
+* Camera fadeIn and fadeOut would sometimes leave a very low alpha-valued rectangle rendering to the camera. Fix #3833 (thanks @bdaenen)
+* `Actions.Spread` would only use the `min` value to work out the step value but not apply it to the property being set (thanks @galman33)
+* Calling `Tween.pause` returns the Tween instance, however, if it was already paused, it would return `undefined`, causing problems when chaining Tween methods (thanks @kyranet)
+* Calling `TweenManager.makeActive` returns the TweenManager instance, however, if you create a tween externally and call `makeActive` with it, this would return `undefined`.
+* Setting the `fixedWidth` and / or `fixedHeight` properties in the configuration of a `Text` would be ignored, they were only supported when calling the `setFixedSize` method. They now work via either option. Fix #4424 (thanks @rexrainbow)
+* When calculating the width of a Text object for word wrapping it would ignore the extra spaces added from the wrap. It now accounts for these in the width. Fix #4187 (thanks @rexrainbow)
+* `Utils.Array.Add` would act incorrectly when adding an object into an array in which it already belonged. This would manifest if, for example, adding a child into a display list it was already a part of. Fix #4411 (thanks @mudala @LoolzRules)
+* `Tile.getCenterX` and `Tile.getCenterY` would return the wrong values for tiles on scaled layers. Fix #3845 (thanks @oloflarsson @florianvazelle)
+* `Camera.startFollow` will now ensure that if the Camera is using bounds that the `scrollX` and `scrollY` values set after first following the Game Object do not exceed the bounds (thanks @snowbillr)
+* Creating a Tween with a `duration` of zero would cause the tweened object properties to be set to `NaN`. Now they will tween for one single frame before being set to progress 1. Fix #4235 (thanks @BigZaphod)
+* The First frame of a Texture would take on the appearance of the second frame in a Sprite Sheet created from trimmed Texture Atlas frames. Fix #4088 (thanks @Cirras)
+* `Tween.stop` assumed that the parent was the TweenManager. If the Tween has been added to the Timeline, that was not true and the stop method crashed (thanks @TadejZupancic)
+* Calling `Tween.restart` multiple times in a row would cause the tween to freeze. It will now disregard all additional calls to `restart` if it's already in a pending state (thanks @rgk)
+* Tween Timelines would only apply the `delay` value of a child tween once and not on loop. Fix #3841 (thanks @Edwin222 @Antriel)
+* `Texture.add` will no longer let you add a frame to a texture with the same name or index as one that already exists in the texture. Doing so will now return `null` instead of a Frame object, and the `frameTotal` will never be incremented. Fix #4459 (thanks @BigZaphod)
+* The InputPlugin will now dispatch an update event, allowing the Gamepad Plugin to update itself every frame, regardless of DOM events. This allows Gamepads to work correctly again. Fix #4414 (thanks @CipSoft-Components)
+* Calling `Tween.play` on a tween that had already finished and was pending removal will stop the tween from getting stuck in an `isPlaying` state and will restart the tween again from the beginning. Calling `play` on a Tween that is already playing does nothing. Fix #4184 (thanks @SamCode)
+* Declared `Audio.dataset`, which fixes Internet Explorer 10 crashing when trying to access the dataset property of the object (thanks @SirLink)
+* The `InputManager.update` method is now called every frame, as long as a native DOM event hasn't already fired it, which allows things like `setPollRate` to work again. Fix #4405 (thanks @Shucki)
+* `Pointer.getDuration` would only return zero until the pointer was released, or moved (basically any action that generated a DOM event). It now returns the duration regardless of the DOM events. Fix #4444 (thanks @plazicx)
+* `Keyboard.UpDuration` has been changed so the `duration` being checked is now against the current game clock. This means you can use it to check if a Key was released within `duration` ms ago, based on the time now, not the historic value of the Key.
+* `Keyboard.DownDuration` has been changed so the `duration` being checked is now against the current game clock. This fixes an issue where it couldn't be used while the Key was actively being held down. Fix #4484 (thanks @belen-albeza)
+* Keys would lose track of the state of a Scene when the Scene became paused. They're now updated regardless, stopping them from getting stuck if you pause and resume a Scene while holding them down. Fix #3822 (thanks @DannyT)
+* Changing any aspect of a Text object, such as the font size or content, wouldn't update its `hitArea` if it had been enabled for input, causing it to carry on using the old hit area size. Now, as long as the Text was created _without_ a custom hitArea, the hitArea size will be changed to match the new texture size on update. If you have provided your own custom hitArea shape, you need to modify it when the Text changes size yourself. Fix #4456 (thanks @thanh-taro and @rexrainbow)
+* `Camera.clearRenderToTexture` will check to see if the Scene is available before proceeding, avoiding potential errors when a Camera is destroyed multiple times during a Scene shutdown.
+* Destroying a Game object during its `pointerup` event handler on a touch device will no longer cause `Uncaught TypeError: Cannot read property 'localX' of undefined`. All InputPlugin process handlers now check to see if the Game Object has been destroyed at any stage and abort if it has. Fix #4463 (thanks @PatrickSachs)
+* `InputPlugin.clear` has a new argument `skipQueue` which is used to avoid clearing a Game Object twice. This, combined with the fix for 4463 means you will no longer get a `Cannot read property 'dragState'` error if you destroy a Game Object enabled for drag where another draggable object exists. Fix #4228 (thanks @YannCaron)
+* `UpdateList.remove` will now move the removed child to the internal `_pendingRemoval` array, instead of slicing it directly out of the active list. The pending list is cleared at the start of the next game frame. Fix #4365 (thanks @jcyuan)
+* Setting `pixelPerfect` when input enabling a Container would cause it to crash, because Containers don't have a texture to check. It will now throw a run-time warning and skip the Container for input. You should use a custom input callback instead. Fix #4492 (thanks @BigZaphod)
+* Setting `fixedWidth` and `fixedHeight` on a Text object will now clamp the size of the canvas being created, as well as the width and height properties of the Text object itself (thanks @rexrainbow)
 
 ### Examples, Documentation and TypeScript
 
 My thanks to the following for helping with the Phaser 3 Examples, Docs and TypeScript definitions, either by reporting errors, fixing them or helping author the docs:
 
-@maretana @CipSoft-Components @brian-lui
+@sky-coding @G-Rath @S4n60w3n @rootasjey @englercj @josephmbustamante @Jason-Cooke @Zamiell @krzysztof-grzybek @S4n60w3n @m31271n @peterellisjones @martinlindhe @TylerMorley @samme @schomatis @BeLi4L @hizzd @OmarShehata @antoine-pous @digitsensitive
+
+Also, thanks to @Osmose there is a new Dashing config added to the Phaser 3 Docs Repo, with a new command `build-docset` which will build a [Dash](https://kapeli.com/dash) compatible docset for those who like to use Dash for their docs.
 
 Please see the complete [Change Log](https://github.com/photonstorm/phaser/blob/master/CHANGELOG.md) for previous releases.
-
-Looking for a v2 change? Check out the [Phaser CE Change Log](https://github.com/photonstorm/phaser-ce/blob/master/CHANGELOG.md)
 
 ![Contributing](https://phaser.io/images/github/div-contributing.png "Contributing")
 <a name="contributing"></a>
@@ -391,8 +594,8 @@ All rights reserved.
 
 "Above all, video games are meant to be just one thing: fun. Fun for everyone." - Satoru Iwata
 
-[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.16.2/phaser.js
-[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.16.2/phaser.min.js
+[get-js]: https://github.com/photonstorm/phaser/releases/download/v3.17.0/phaser.js
+[get-minjs]: https://github.com/photonstorm/phaser/releases/download/v3.17.0/phaser.min.js
 [clone-http]: https://github.com/photonstorm/phaser.git
 [clone-ssh]: git@github.com:photonstorm/phaser.git
 [clone-ghwin]: github-windows://openRepo/https://github.com/photonstorm/phaser
