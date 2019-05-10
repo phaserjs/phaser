@@ -1190,7 +1190,10 @@ var World = new Class({
             if (useDamping)
             {
                 //  Damping based deceleration
+
                 velocityX *= dragX;
+
+                speed = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
 
                 if (FuzzyEqual(speed, 0, 0.001))
                 {
@@ -1228,6 +1231,8 @@ var World = new Class({
                 //  Damping based deceleration
                 velocityY *= dragY;
 
+                speed = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
+
                 if (FuzzyEqual(speed, 0, 0.001))
                 {
                     velocityY = 0;
@@ -1258,10 +1263,13 @@ var World = new Class({
 
         body.velocity.set(velocityX, velocityY);
 
-        if (maxSpeed > -1 && body.velocity.length() > maxSpeed)
+        if (maxSpeed > -1 && speed > maxSpeed)
         {
             body.velocity.normalize().scale(maxSpeed);
+            speed = maxSpeed;
         }
+
+        body.speed = speed;
     },
 
     /**
