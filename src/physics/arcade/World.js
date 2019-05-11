@@ -1467,8 +1467,8 @@ var World = new Class({
         var dx = body1.position.x - body2.position.x;
         var dy = body1.position.y - body2.position.y;
         var d = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-        var nx = (body2.position.x - body1.position.x) / d;
-        var ny = (body2.position.y - body1.position.y) / d;
+        var nx = ((body2.position.x - body1.position.x) / d) || 0;
+        var ny = ((body2.position.y - body1.position.y) / d) || 0;
         var p = 2 * (body1.velocity.x * nx + body1.velocity.y * ny - body2.velocity.x * nx - body2.velocity.y * ny) / (body1.mass + body2.mass);
 
         if (!body1.immovable)
