@@ -235,11 +235,12 @@ var Bodies = require('./Bodies');
      * @param {number} width
      * @param {number} height
      * @param {number} wheelSize
+     * @param {number} padding (optional)
      * @return {composite} A new composite car body
      */
-    Composites.car = function(xx, yy, width, height, wheelSize) {
+    Composites.car = function(xx, yy, width, height, wheelSize, padding = 20) {
         var group = Body.nextGroup(true),
-            wheelBase = 20,
+            wheelBase = padding,
             wheelAOffset = -width * 0.5 + wheelBase,
             wheelBOffset = width * 0.5 - wheelBase,
             wheelYOffset = 0;
