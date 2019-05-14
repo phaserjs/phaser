@@ -165,10 +165,12 @@ var Zone = new Class({
         this.width = width;
         this.height = height;
 
-        if (resizeInput && this.input && this.input.hitArea instanceof Rectangle)
+        var input = this.input;
+
+        if (resizeInput && input && !input.customHitArea)
         {
-            this.input.hitArea.width = width;
-            this.input.hitArea.height = height;
+            input.hitArea.width = width;
+            input.hitArea.height = height;
         }
 
         return this;
