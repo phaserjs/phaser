@@ -5,7 +5,7 @@
 ### Bug Fixes
 
 * Tweens created in a paused state couldn't be started by a call to `play`. Fix #4525 (thanks @TonioParis)
-
+* If both Arcade Physics circle body positions and the delta equaled zero, the `separateCircle` function would cause the position to be set `NaN` (thanks @hizzd)
 
 ## Version 3.17.0 - Motoko - 10th May 2019
 
