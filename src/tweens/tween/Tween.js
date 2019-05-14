@@ -653,7 +653,7 @@ var Tween = new Class({
     {
         if (resetFromTimeline === undefined) { resetFromTimeline = false; }
 
-        if (this.state === TWEEN_CONST.ACTIVE || this.state === TWEEN_CONST.PENDING_ADD)
+        if (this.state === TWEEN_CONST.ACTIVE || (this.state === TWEEN_CONST.PENDING_ADD && this._pausedState === TWEEN_CONST.PENDING_ADD))
         {
             return this;
         }
