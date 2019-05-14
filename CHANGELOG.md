@@ -2,6 +2,9 @@
 
 ## Version 3.18.0 - Raphtalia - in dev
 
+### Bug Fixes
+
+* Tweens created in a paused state couldn't be started by a call to `play`. Fix #4525 (thanks @TonioParis)
 
 
 ## Version 3.17.0 - Motoko - 10th May 2019
