@@ -2,10 +2,19 @@
 
 ## Version 3.18.0 - Raphtalia - in dev
 
+### Updates
+
+* `Zones` will now use the new `customHitArea` property introduced in 3.17 to avoid their hit areas from being resized if you specified your own custom hit area (thanks @rexrainbow)
+
 ### Bug Fixes
 
 * Tweens created in a paused state couldn't be started by a call to `play`. Fix #4525 (thanks @TonioParis)
 * If both Arcade Physics circle body positions and the delta equaled zero, the `separateCircle` function would cause the position to be set `NaN` (thanks @hizzd)
+
+
+
+
+
 
 ## Version 3.17.0 - Motoko - 10th May 2019
 
