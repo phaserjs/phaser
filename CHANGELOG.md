@@ -5,6 +5,7 @@
 ### Updates
 
 * `Zones` will now use the new `customHitArea` property introduced in 3.17 to avoid their hit areas from being resized if you specified your own custom hit area (thanks @rexrainbow)
+* The default `BaseShader` vertex shader will now set the `fragCoord` varying to be the viewport height minus the y inPosition. This will give the correct y axis in the fragment shader, causing 'inverted' shaders to display normally when using the default vertex code.
 
 ### Bug Fixes
 

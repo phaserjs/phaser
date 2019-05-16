@@ -68,7 +68,7 @@ var BaseShader = new Class({
 
                 'void main () {',
                 'gl_Position = uProjectionMatrix * uViewMatrix * vec4(inPosition, 1.0, 1.0);',
-                'fragCoord = inPosition;',
+                'fragCoord = vec2(inPosition.x, uViewMatrix[2][0] - inPosition.y);',
                 '}'
             ].join('\n');
         }
