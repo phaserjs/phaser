@@ -350,13 +350,16 @@ var Shader = new Class({
 
         var program = renderer.createProgram(this.shader.vertexSrc, this.shader.fragmentSrc);
 
+        //  The default uniforms available within the vertex shader
         renderer.setMatrix4(program, 'uViewMatrix', false, this.viewMatrix);
         renderer.setMatrix4(program, 'uProjectionMatrix', false, this.projectionMatrix);
+        renderer.setFloat2(program, 'uResolution', this.width, this.height);
 
         this.program = program;
 
         var d = new Date();
 
+        //  The default uniforms available within the fragment shader
         var defaultUniforms = {
             resolution: { type: '2f', value: { x: this.width, y: this.height }},
             time: { type: '1f', value: 0 },
@@ -831,9 +834,12 @@ var Shader = new Class({
         vm[12] = vm[0] * x + vm[4] * y;
         vm[13] = vm[1] * x + vm[5] * y;
 
-        this.renderer.setMatrix4(program, 'uViewMatrix', false, this.viewMatrix);
+        //  Update vertex shader uniforms
 
-        //  Update common uniforms
+        this.renderer.setMatrix4(program, 'uViewMatrix', false, this.viewMatrix);
+        this.renderer.setFloat2(program, 'uResolution', this.width, this.height);
+
+        //  Update fragment shader uniforms
 
         var uniforms = this.uniforms;
         var res = uniforms.resolution;
