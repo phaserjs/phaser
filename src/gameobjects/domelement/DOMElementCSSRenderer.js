@@ -110,11 +110,6 @@ var DOMElementCSSRenderer = function (renderer, src, interpolationPercentage, ca
         ' rotate3d(' + src.rotate3d.x + ',' + src.rotate3d.y + ',' + src.rotate3d.z + ',' + src.rotate3d.w + src.rotate3dAngle + ')';
 
     style.transformOrigin = tx + ' ' + ty;
-
-    var nodeBounds = node.getBoundingClientRect();
-
-    src.displayWidth = nodeBounds.width;
-    src.displayHeight = nodeBounds.height;
 };
 
 module.exports = DOMElementCSSRenderer;
