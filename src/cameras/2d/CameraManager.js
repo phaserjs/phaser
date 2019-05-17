@@ -681,8 +681,6 @@ var CameraManager = new Class({
 
         this.cameras = [];
 
-        this.default.destroy();
-
         var eventEmitter = this.systems.events;
 
         eventEmitter.off(SceneEvents.UPDATE, this.update, this);
@@ -700,6 +698,8 @@ var CameraManager = new Class({
     destroy: function ()
     {
         this.shutdown();
+
+        this.default.destroy();
 
         this.scene.sys.events.off(SceneEvents.START, this.start, this);
 
