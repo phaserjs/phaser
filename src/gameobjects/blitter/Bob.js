@@ -5,6 +5,7 @@
  */
 
 var Class = require('../../utils/Class');
+var Frame = require('../../textures/Frame');
 
 /**
  * @classdesc
@@ -148,6 +149,10 @@ var Bob = new Class({
         if (frame === undefined)
         {
             this.frame = this.parent.frame;
+        }
+        else if (frame instanceof Frame && frame.texture === this.parent.texture)
+        {
+            this.frame = frame;
         }
         else
         {
