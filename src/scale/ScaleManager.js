@@ -1203,13 +1203,15 @@ var ScaleManager = new Class({
             {
                 if (fullscreen.keyboard)
                 {
-                    //  eslint-disable-next-line es5/no-arrow-functions
-                    fsTarget[fullscreen.request](Element.ALLOW_KEYBOARD_INPUT).then(() => this.fullscreenSuccessHandler()).catch((error) => this.fullscreenErrorHandler(error));
+                    fsTarget[fullscreen.request](Element.ALLOW_KEYBOARD_INPUT)
+                        .then(this.fullscreenSuccessHandler)
+                        .catch(this.fullscreenErrorHandler);
                 }
                 else
                 {
-                    //  eslint-disable-next-line es5/no-arrow-functions
-                    fsTarget[fullscreen.request](fullscreenOptions).then(() => this.fullscreenSuccessHandler()).catch((error) => this.fullscreenErrorHandler(error));
+                    fsTarget[fullscreen.request](fullscreenOptions)
+                        .then(this.fullscreenSuccessHandler)
+                        .catch(this.fullscreenErrorHandler);
                 }
             }
             else
