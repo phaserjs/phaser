@@ -1424,7 +1424,12 @@ var Body = new Class({
             }
             else
             {
-                graphic.strokeRect(pos.x, pos.y, this.width, this.height);
+                //graphic.strokeRect(pos.x, pos.y, this.width, this.height);
+                // only draw the sides where checkCollision is true, similar to debugger in layer
+				if (this.checkCollision.up)    { graphic.lineBetween(pos.x,              pos.y,               pos.x + this.width, pos.y); }
+				if (this.checkCollision.right) { graphic.lineBetween(pos.x + this.width, pos.y,               pos.x + this.width, pos.y + this.height); }
+				if (this.checkCollision.down)  { graphic.lineBetween(pos.x,              pos.y + this.height, pos.x + this.width, pos.y + this.height); }
+				if (this.checkCollision.left)  { graphic.lineBetween(pos.x,              pos.y,               pos.x,              pos.y + this.height); }
             }
         }
 
