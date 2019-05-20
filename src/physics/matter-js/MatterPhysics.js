@@ -4,6 +4,7 @@
  * @license      {@link https://opensource.org/licenses/MIT|MIT License}
  */
 
+var Body = require('./lib/body/Body');
 var Class = require('../../utils/Class');
 var Factory = require('./Factory');
 var GetFastValue = require('../../utils/object/GetFastValue');
@@ -90,6 +91,15 @@ var MatterPhysics = new Class({
          * @since 3.14.0
          */
         this.verts = Vertices;
+
+        /**
+         * A reference to the `Matter.Body` module which contains methods for creating and manipulating body models.
+         *
+         * @name Phaser.Physics.Matter.MatterPhysics#body
+         * @type {MatterJS.Body}
+         * @since 3.18.0
+         */
+        this.body = Body;
 
         //  Matter plugins
 
