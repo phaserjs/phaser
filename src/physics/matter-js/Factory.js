@@ -5,6 +5,7 @@
  */
 
 var Bodies = require('./lib/factory/Bodies');
+var Body = require('./lib/body/Body');
 var Class = require('../../utils/Class');
 var Composites = require('./lib/factory/Composites');
 var Constraint = require('./lib/constraint/Constraint');
@@ -605,6 +606,65 @@ var Factory = new Class({
     gameObject: function (gameObject, options)
     {
         return MatterGameObject(this.world, gameObject, options);
+    },
+
+    /**
+     * Instantly sets the linear velocity of the given body. Position, angle, force etc. are unchanged.
+     * 
+     * See also `force`.
+     *
+     * @method Phaser.Physics.Matter.Factory#velocity
+     * @since 3.18.0
+     *
+     * @param {MatterJS.Body} body - The Matter Body to set the velocity on.
+     * @param {Phaser.Types.Math.Vector2Like} velocity - The velocity to set. An object with public `x` and `y` components.
+     *
+     * @return {MatterJS.Body} The Matter body.
+     */
+    velocity: function (body, velocity)
+    {
+        Body.setVelocity(body, velocity);
+
+        return body;
+    },
+
+    /**
+     * Instantly sets the angular velocity of the given body. Position, angle, force etc. are unchanged.
+     * 
+     * See also `force`.
+     *
+     * @method Phaser.Physics.Matter.Factory#angularVelocity
+     * @since 3.18.0
+     *
+     * @param {MatterJS.Body} body - The Matter Body to set the velocity on.
+     * @param {number} velocity - The angular velocity to set.
+     *
+     * @return {MatterJS.Body} The Matter body.
+     */
+    angularVelocity: function (body, velocity)
+    {
+        Body.setAngularVelocity(body, velocity);
+
+        return body;
+    },
+
+    /**
+     * Applies a force to a body from a given world-space position, including resulting torque.
+     *
+     * @method Phaser.Physics.Matter.Factory#force
+     * @since 3.18.0
+     *
+     * @param {MatterJS.Body} body - The Matter Body to set the force on.
+     * @param {Phaser.Types.Math.Vector2Like} position - The world position to apply the force from. An object with public `x` and `y` components.
+     * @param {Phaser.Types.Math.Vector2Like} force - The force to set. An object with public `x` and `y` components.
+     *
+     * @return {MatterJS.Body} The Matter body.
+     */
+    force: function (body, position, force)
+    {
+        Body.applyForce(body, position, force);
+
+        return body;
     },
 
     /**
