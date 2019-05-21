@@ -107,7 +107,7 @@ var Group = new Class({
          * The class to create new group members from.
          *
          * @name Phaser.GameObjects.Group#classType
-         * @type {Phaser.Types.GameObjects.Group.GroupClassTypeConstructor}
+         * @type {Phaser.Types.GameObjects.Group.GroupClassType}
          * @since 3.0.0
          * @default Phaser.GameObjects.Sprite
          */
