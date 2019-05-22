@@ -2,6 +2,12 @@
 
 ## Version 3.18.0 - Raphtalia - in dev
 
+### New Features
+
+* `Matter.Factory.velocity` is a new method that allows you to set the velocity on a Matter Body directly.
+* `Matter.Factory.angularVelocity` is a new method that allows you to set the angular velocity on a Matter Body directly.
+* `Matter.Factory.force` is a new method that allows you to apply a force from a world position on a Matter Body directly.
+
 ### Updates
 
 * `Zones` will now use the new `customHitArea` property introduced in 3.17 to avoid their hit areas from being resized if you specified your own custom hit area (thanks @rexrainbow)
