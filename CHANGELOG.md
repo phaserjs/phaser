@@ -2,6 +2,34 @@
 
 ## Version 3.18.0 - Raphtalia - in dev
 
+### Input System Changes
+
+* Removed the `inputQueue` Game config property
+* Removed the `InputManager.useQueue` property
+* Removed the `_hasUpCallback`, `_hasDownCallback` and `_hasMoveCallback` properties from the Input Manager
+* Removed the following Input Manager methods and properties: `processDomCallbacks`, `addDownCallback`, `addUpCallback`, `addMoveCallback`, `queue`, `domCallbacks`, `addDownCallback`, `addUpCallback` and `addMoveCallback`
+* Cursors are now set and reset immediately on the canvas, leading to the removal of `_setCursor` and `_customCursor` properties
+* The Input Manager bo longer listens for: `GameEvents.POST_STEP` as it's not required
+
+Document the following:
+
+remove InputManager#_updatedThisFrame ?
+
+//  These methods also no longer check 'enabled' (the handler does that)
+queueTouchStart = onTouchStart
+queueTouchMove = onTouchMove
+queueTouchEnd = onTouchEnd
+queueTouchCancel = onTouchCancel
+queueMouseDown = onMouseDown
+queueMouseMove = onMouseMove
+queueMouseUp = onMouseUp
+
+plugin - old = update, new = pluginUpdate
+manager - old = legacyUpdate, new = update (BOTH removed!)
+
+Pointer.lastAction
+Pointer calls reset itself
+
 ### New Features
 
 * `Matter.Factory.velocity` is a new method that allows you to set the velocity on a Matter Body directly.
@@ -14,6 +42,7 @@
 * The default `BaseShader` vertex shader has a new uniform `uResolution` which is set during the Shader init and load to be the size of the Game Object to which the shader is bound.
 * The default `BaseShader` vertex shader will now set the `fragCoord` varying to be the Game Object height minus the y inPosition. This will give the correct y axis in the fragment shader, causing 'inverted' shaders to display normally when using the default vertex code.
 * There was some test code left in the `DOMElementCSSRenderer` file that caused `getBoundingClientRect` to be called every render. This has been removed, which increases performance significantly for DOM heavy games.
+* The `TimeStep` will no longer set its `frame` property to zero in the `resetDelta` method. Instead, this property is incremented every step, no matter what, giving an accurate indication of exactly which frame something happened on internally.
 
 ### Bug Fixes
 
