@@ -382,7 +382,6 @@ var TimeStep = new Class({
         this.lastTime = now;
         this.nextFpsUpdate = now + 1000;
         this.framesThisSecond = 0;
-        this.frame = 0;
 
         //  Pre-populate smoothing array
 
