@@ -399,16 +399,7 @@ var InputPlugin = new Class({
         eventEmitter.on(SceneEvents.TRANSITION_OUT, this.transitionOut, this);
         eventEmitter.on(SceneEvents.TRANSITION_COMPLETE, this.transitionComplete, this);
         eventEmitter.on(SceneEvents.PRE_UPDATE, this.preUpdate, this);
-
-        if (this.manager.useQueue)
-        {
-            eventEmitter.on(SceneEvents.UPDATE, this.update, this);
-        }
-        else
-        {
-            eventEmitter.on(SceneEvents.UPDATE, this.pluginUpdate, this);
-        }
-
+        eventEmitter.on(SceneEvents.UPDATE, this.pluginUpdate, this);
         eventEmitter.once(SceneEvents.SHUTDOWN, this.shutdown, this);
 
         this.manager.events.on(Events.GAME_OUT, this.onGameOut, this);
@@ -520,8 +511,8 @@ var InputPlugin = new Class({
     },
 
     /**
-     * The internal update loop for the plugins belong to this Input class.
-     * Called automatically by the Scene Systems step and only used if `useQueue` is false.
+     * The internal update loop for the plugins belonging to this Input class.
+     * Called automatically by the Scene Systems step.
      *
      * @method Phaser.Input.InputPlugin#pluginUpdate
      * @private
@@ -532,6 +523,9 @@ var InputPlugin = new Class({
      */
     pluginUpdate: function (time, delta)
     {
+        this.pluginEvents.emit(Events.UPDATE, time, delta);
+
+        /*
         if (this.pollRate > -1)
         {
             this.update(time, delta);
@@ -545,11 +539,12 @@ var InputPlugin = new Class({
     
             this.pluginEvents.emit(Events.UPDATE, time, delta);
         }
+        */
     },
 
     /**
      * The internal update loop for the Input Plugin.
-     * Called automatically by the Scene Systems step.
+     * Called when a DOM Event is processed by the Input Manager.
      *
      * @method Phaser.Input.InputPlugin#update
      * @fires Phaser.Input.Events#UPDATE
@@ -568,7 +563,7 @@ var InputPlugin = new Class({
 
         var manager = this.manager;
 
-        this.pluginEvents.emit(Events.UPDATE, time, delta);
+        // this.pluginEvents.emit(Events.UPDATE, time, delta);
 
         //  Another Scene above this one has already consumed the input events, or we're in transition
         if (manager.globalTopOnly && manager.ignoreEvents)
@@ -576,24 +571,15 @@ var InputPlugin = new Class({
             return;
         }
 
-        var runUpdate = (manager.dirty || this.pollRate === 0);
-
         if (this.pollRate > 0)
         {
             this._pollTimer -= delta;
 
             if (this._pollTimer < 0)
             {
-                runUpdate = true;
-
                 //  Discard timer diff
                 this._pollTimer = this.pollRate;
             }
-        }
-
-        if (!runUpdate)
-        {
-            return;
         }
 
         var pointers = this.manager.pointers;
@@ -2168,132 +2154,6 @@ var InputPlugin = new Class({
     },
 
     /**
-     * **Note:** As of Phaser 3.16 this method is no longer required _unless_ you have set `input.queue = true`
-     * in your game config, to force it to use the legacy event queue system. This method is deprecated and
-     * will be removed in a future version.
-     * 
-     * Adds a callback to be invoked whenever the native DOM `mouseup` or `touchend` events are received.
-     * By setting the `isOnce` argument you can control if the callback is called once,
-     * or every time the DOM event occurs.
-     *
-     * Callbacks passed to this method are invoked _immediately_ when the DOM event happens,
-     * within the scope of the DOM event handler. Therefore, they are considered as 'native'
-     * from the perspective of the browser. This means they can be used for tasks such as
-     * opening new browser windows, or anything which explicitly requires user input to activate.
-     * However, as a result of this, they come with their own risks, and as such should not be used
-     * for general game input, but instead be reserved for special circumstances.
-     *
-     * If all you're trying to do is execute a callback when a pointer is released, then
-     * please use the internal Input event system instead.
-     *
-     * Please understand that these callbacks are invoked when the browser feels like doing so,
-     * which may be entirely out of the normal flow of the Phaser Game Loop. Therefore, you should absolutely keep
-     * Phaser related operations to a minimum in these callbacks. For example, don't destroy Game Objects,
-     * change Scenes or manipulate internal systems, otherwise you run a very real risk of creating
-     * heisenbugs (https://en.wikipedia.org/wiki/Heisenbug) that prove a challenge to reproduce, never mind
-     * solve.
-     *
-     * @method Phaser.Input.InputPlugin#addUpCallback
-     * @deprecated
-     * @since 3.10.0
-     *
-     * @param {function} callback - The callback to be invoked on this DOM event.
-     * @param {boolean} [isOnce=true] - `true` if the callback will only be invoked once, `false` to call every time this event happens.
-     *
-     * @return {this} The Input Plugin.
-     */
-    addUpCallback: function (callback, isOnce)
-    {
-        this.manager.addUpCallback(callback, isOnce);
-
-        return this;
-    },
-
-    /**
-     * **Note:** As of Phaser 3.16 this method is no longer required _unless_ you have set `input.queue = true`
-     * in your game config, to force it to use the legacy event queue system. This method is deprecated and
-     * will be removed in a future version.
-     * 
-     * Adds a callback to be invoked whenever the native DOM `mousedown` or `touchstart` events are received.
-     * By setting the `isOnce` argument you can control if the callback is called once,
-     * or every time the DOM event occurs.
-     *
-     * Callbacks passed to this method are invoked _immediately_ when the DOM event happens,
-     * within the scope of the DOM event handler. Therefore, they are considered as 'native'
-     * from the perspective of the browser. This means they can be used for tasks such as
-     * opening new browser windows, or anything which explicitly requires user input to activate.
-     * However, as a result of this, they come with their own risks, and as such should not be used
-     * for general game input, but instead be reserved for special circumstances.
-     *
-     * If all you're trying to do is execute a callback when a pointer is down, then
-     * please use the internal Input event system instead.
-     *
-     * Please understand that these callbacks are invoked when the browser feels like doing so,
-     * which may be entirely out of the normal flow of the Phaser Game Loop. Therefore, you should absolutely keep
-     * Phaser related operations to a minimum in these callbacks. For example, don't destroy Game Objects,
-     * change Scenes or manipulate internal systems, otherwise you run a very real risk of creating
-     * heisenbugs (https://en.wikipedia.org/wiki/Heisenbug) that prove a challenge to reproduce, never mind
-     * solve.
-     *
-     * @method Phaser.Input.InputPlugin#addDownCallback
-     * @deprecated
-     * @since 3.10.0
-     *
-     * @param {function} callback - The callback to be invoked on this dom event.
-     * @param {boolean} [isOnce=true] - `true` if the callback will only be invoked once, `false` to call every time this event happens.
-     *
-     * @return {this} The Input Plugin.
-     */
-    addDownCallback: function (callback, isOnce)
-    {
-        this.manager.addDownCallback(callback, isOnce);
-
-        return this;
-    },
-
-    /**
-     * **Note:** As of Phaser 3.16 this method is no longer required _unless_ you have set `input.queue = true`
-     * in your game config, to force it to use the legacy event queue system. This method is deprecated and
-     * will be removed in a future version.
-     * 
-     * Adds a callback to be invoked whenever the native DOM `mousemove` or `touchmove` events are received.
-     * By setting the `isOnce` argument you can control if the callback is called once,
-     * or every time the DOM event occurs.
-     *
-     * Callbacks passed to this method are invoked _immediately_ when the DOM event happens,
-     * within the scope of the DOM event handler. Therefore, they are considered as 'native'
-     * from the perspective of the browser. This means they can be used for tasks such as
-     * opening new browser windows, or anything which explicitly requires user input to activate.
-     * However, as a result of this, they come with their own risks, and as such should not be used
-     * for general game input, but instead be reserved for special circumstances.
-     *
-     * If all you're trying to do is execute a callback when a pointer is moved, then
-     * please use the internal Input event system instead.
-     *
-     * Please understand that these callbacks are invoked when the browser feels like doing so,
-     * which may be entirely out of the normal flow of the Phaser Game Loop. Therefore, you should absolutely keep
-     * Phaser related operations to a minimum in these callbacks. For example, don't destroy Game Objects,
-     * change Scenes or manipulate internal systems, otherwise you run a very real risk of creating
-     * heisenbugs (https://en.wikipedia.org/wiki/Heisenbug) that prove a challenge to reproduce, never mind
-     * solve.
-     *
-     * @method Phaser.Input.InputPlugin#addMoveCallback
-     * @deprecated
-     * @since 3.10.0
-     *
-     * @param {function} callback - The callback to be invoked on this dom event.
-     * @param {boolean} [isOnce=false] - `true` if the callback will only be invoked once, `false` to call every time this event happens.
-     *
-     * @return {this} The Input Plugin.
-     */
-    addMoveCallback: function (callback, isOnce)
-    {
-        this.manager.addMoveCallback(callback, isOnce);
-
-        return this;
-    },
-
-    /**
      * Adds new Pointer objects to the Input Manager.
      *
      * By default Phaser creates 2 pointer objects: `mousePointer` and `pointer1`.
@@ -2423,13 +2283,7 @@ var InputPlugin = new Class({
         eventEmitter.off(SceneEvents.TRANSITION_START, this.transitionIn, this);
         eventEmitter.off(SceneEvents.TRANSITION_OUT, this.transitionOut, this);
         eventEmitter.off(SceneEvents.TRANSITION_COMPLETE, this.transitionComplete, this);
-
         eventEmitter.off(SceneEvents.PRE_UPDATE, this.preUpdate, this);
-
-        if (this.manager.useQueue)
-        {
-            eventEmitter.off(SceneEvents.UPDATE, this.update, this);
-        }
 
         this.manager.events.off(Events.GAME_OUT, this.onGameOut, this);
         this.manager.events.off(Events.GAME_OVER, this.onGameOver, this);
