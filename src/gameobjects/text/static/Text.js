@@ -1129,7 +1129,8 @@ var Text = new Class({
         {
             this.width = style.fixedWidth;
             textWidth = this.width - padding.left - padding.right;
-            if (textWidth < textSize.width) {
+            if (textWidth < textSize.width) 
+            {
                 textWidth = textSize.width;
             }
         }
