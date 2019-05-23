@@ -1118,13 +1118,20 @@ var Text = new Class({
 
         var padding = this.padding;
 
+        var textWidth;
+
         if (style.fixedWidth === 0)
         {
             this.width = textSize.width + padding.left + padding.right;
+            textWidth = textSize.width;
         }
         else
         {
             this.width = style.fixedWidth;
+            textWidth = this.width - padding.left - padding.right;
+            if (textWidth < textSize.width) {
+                textWidth = textSize.width;
+            }
         }
 
         if (style.fixedHeight === 0)
@@ -1198,11 +1205,11 @@ var Text = new Class({
             }
             else if (style.align === 'right')
             {
-                linePositionX += textSize.width - textSize.lineWidths[i];
+                linePositionX += textWidth - textSize.lineWidths[i];
             }
             else if (style.align === 'center')
             {
-                linePositionX += (textSize.width - textSize.lineWidths[i]) / 2;
+                linePositionX += (textWidth - textSize.lineWidths[i]) / 2;
             }
 
             if (this.autoRound)
