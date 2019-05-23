@@ -1118,12 +1118,9 @@ var Text = new Class({
 
         var padding = this.padding;
 
-        var w = textSize.width + padding.left + padding.right;
-        var h = textSize.height + padding.top + padding.bottom;
-
         if (style.fixedWidth === 0)
         {
-            this.width = w;
+            this.width = textSize.width + padding.left + padding.right;
         }
         else
         {
@@ -1132,22 +1129,15 @@ var Text = new Class({
 
         if (style.fixedHeight === 0)
         {
-            this.height = h;
+            this.height = textSize.height + padding.top + padding.bottom;
         }
         else
         {
             this.height = style.fixedHeight;
         }
 
-        if (w > this.width)
-        {
-            w = this.width;
-        }
-
-        if (h > this.height)
-        {
-            h = this.height;
-        }
+        var w = this.width;
+        var h = this.height;
 
         this.updateDisplayOrigin();
 
