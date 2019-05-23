@@ -8,6 +8,5 @@
  * @property {(boolean|Phaser.Types.Core.GamepadInputConfig)} [gamepad=false] - Gamepad input configuration. `true` enables gamepad input.
  * @property {integer} [activePointers=1] - The maximum number of touch pointers. See {@link Phaser.Input.InputManager#pointers}.
  * @property {number} [smoothFactor=0] - The smoothing factor to apply during Pointer movement. See {@link Phaser.Input.Pointer#smoothFactor}.
- * @property {boolean} [inputQueue=false] - Should Phaser use a queued input system for native DOM Events or not?
  * @property {boolean} [windowEvents=true] - Should Phaser listen for input events on the Window? If you disable this, events like 'POINTER_UP_OUTSIDE' will no longer fire.
  */
