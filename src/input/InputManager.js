@@ -246,8 +246,8 @@ var InputManager = new Class({
          * @type {boolean}
          * @default false
          * @since 3.0.0
+        this.ignoreEvents = -1;
          */
-        this.ignoreEvents = false;
 
         /**
          * The time this Input Manager was last updated.
@@ -259,16 +259,6 @@ var InputManager = new Class({
          * @since 3.16.2
          */
         this.time = 0;
-
-        /**
-         * Internal property that tracks frame event state.
-         *
-         * @name Phaser.Input.InputManager#_updatedThisFrame
-         * @type {boolean}
-         * @private
-         * @since 3.16.0
-         */
-        this._updatedThisFrame = false;
 
         /**
          * A re-cycled point-like object to store hit test values in.
@@ -331,7 +321,9 @@ var InputManager = new Class({
 
         this.events.emit(Events.MANAGER_BOOT);
 
-        this.game.events.on(GameEvents.PRE_STEP, this.preStep, this);
+        this.game.events.on(GameEvents.PRE_RENDER, this.preStep, this);
+
+        this.game.events.on(GameEvents.POST_RENDER, this.postRender, this);
 
         this.game.events.once(GameEvents.DESTROY, this.destroy, this);
     },
@@ -371,7 +363,7 @@ var InputManager = new Class({
     },
 
     /**
-     * Internal update, called automatically by the Game Step.
+     * Internal update, called automatically by the Game Step right at the start.
      *
      * @method Phaser.Input.InputManager#preStep
      * @private
@@ -383,16 +375,33 @@ var InputManager = new Class({
     {
         this.time = time;
 
-        this.ignoreEvents = false;
+        this.events.emit(Events.MANAGER_UPDATE);
+
+        // this.ignoreEvents = false;
+    },
+
+    /**
+     * Internal update, called automatically by the Game Step right after everything has finished rendering.
+     * 
+     * We do this because, in the life of a frame, rAF comes _after_ the input events. So, we need to clear down
+     * the input settings, ready incase the new input events potentially change them prior to the next game step.
+     * 
+     * https://medium.com/@paul_irish/requestanimationframe-scheduling-for-nerds-9c57f7438ef4
+     *
+     * @method Phaser.Input.InputManager#postRender
+     * @private
+     * @since 3.18.0
+     */
+    postRender: function ()
+    {
+        // this.ignoreEvents = false;
 
         var pointers = this.pointers;
     
         for (var i = 0; i < this.pointersTotal; i++)
         {
-            pointers[i].reset(time);
+            pointers[i].reset(this.game.getTime());
         }
-
-        this.events.emit(Events.MANAGER_UPDATE);
     },
 
     /**
@@ -704,9 +713,10 @@ var InputManager = new Class({
         {
             var scene = scenes[i];
 
-            if (scene.sys.input)
+            if (scene.sys.input && scene.sys.input.update(time, delta) && this.globalTopOnly)
             {
-                scene.sys.input.update(time, delta);
+                //  If the Scene returns true, it means it captured some input that no other Scene should get, so we bail out
+                return;
             }
         }
     },
@@ -806,6 +816,8 @@ var InputManager = new Class({
      */
     onMouseDown: function (event)
     {
+        console.log(this.game.getFrame(), 'md', event.pageX, event.pageY);
+
         this.mousePointer.down(event);
 
         this.mousePointer.updateMotion();

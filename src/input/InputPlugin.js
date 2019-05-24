@@ -356,6 +356,16 @@ var InputPlugin = new Class({
          */
         this._validTypes = [ 'onDown', 'onUp', 'onOver', 'onOut', 'onMove', 'onDragStart', 'onDrag', 'onDragEnd', 'onDragEnter', 'onDragLeave', 'onDragOver', 'onDrop' ];
 
+        /**
+         * Internal property that tracks frame event state.
+         *
+         * @name Phaser.Input.InputPlugin#_updatedThisFrame
+         * @type {boolean}
+         * @private
+         * @since 3.18.0
+         */
+        this._updatedThisFrame = false;
+
         scene.sys.events.once(SceneEvents.BOOT, this.boot, this);
         scene.sys.events.on(SceneEvents.START, this.start, this);
     },
@@ -525,10 +535,9 @@ var InputPlugin = new Class({
     {
         this.pluginEvents.emit(Events.UPDATE, time, delta);
 
-        /*
-        if (this.pollRate > -1)
+        if (this.pollRate > -1 && !this._updatedThisFrame)
         {
-            this.update(time, delta);
+            this.updatePoll(time, delta);
         }
         else
         {
@@ -539,7 +548,92 @@ var InputPlugin = new Class({
     
             this.pluginEvents.emit(Events.UPDATE, time, delta);
         }
-        */
+
+        this._updatedThisFrame = false;
+    },
+
+    updatePoll: function (time, delta)
+    {
+        console.log('poll');
+
+        if (!this.isActive())
+        {
+            return false;
+        }
+
+        if (this.pollRate > 0)
+        {
+            this._pollTimer -= delta;
+
+            if (this._pollTimer < 0)
+            {
+                //  Discard timer diff, we're ready to poll again
+                this._pollTimer = this.pollRate;
+            }
+            else
+            {
+                //  Not enough time has elapsed since the last poll, so abort now
+                return;
+            }
+        }
+
+        //  We got this far? Then we should poll for movement
+        var manager = this.manager;
+        var pointers = manager.pointers;
+        var pointersTotal = manager.pointersTotal;
+        var captured = false;
+
+        for (var i = 0; i < pointersTotal; i++)
+        {
+            var pointer = pointers[i];
+
+            //  Always reset this array
+            this._tempZones = [];
+
+            //  _temp contains a hit tested and camera culled list of IO objects
+            this._temp = this.hitTestPointer(pointer);
+
+            this.sortGameObjects(this._temp);
+            this.sortGameObjects(this._tempZones);
+
+            if (this.topOnly)
+            {
+                //  Only the top-most one counts now, so safely ignore the rest
+                if (this._temp.length)
+                {
+                    this._temp.splice(1);
+                }
+
+                if (this._tempZones.length)
+                {
+                    this._tempZones.splice(1);
+                }
+            }
+
+            var total = 0;
+
+            //  TODO: Enable for touch - the method needs recoding to take ALL pointers at once
+            //  and process them all together, in the same batch, otherwise the justOut and stillOver
+            //  arrays will get corrupted in multi-touch enabled games. For now, we'll enable it for
+            //  single touch games (which is probably the majority anyway).
+            if (pointersTotal < 3 || !pointer.wasTouch)
+            {
+                total += this.processOverOutEvents(pointer);
+            }
+
+            if (pointer.justMoved)
+            {
+                total += this.processMoveEvents(pointer);
+            }
+
+            if (total > 0 && manager.globalTopOnly)
+            {
+                //  We interacted with an event in this Scene, so block any Scenes below us from doing the same this frame
+                captured = true;
+            }
+        }
+
+        return captured;
     },
 
     /**
@@ -553,37 +647,21 @@ var InputPlugin = new Class({
      *
      * @param {number} time - The time value from the most recent Game step. Typically a high-resolution timer value, or Date.now().
      * @param {number} delta - The delta value since the last frame. This is smoothed to avoid delta spikes by the TimeStep class.
+     * 
+     * @return {boolean} `true` if this Scene has captured the input events from all other Scenes, otherwise `false`.
      */
     update: function (time, delta)
     {
         if (!this.isActive())
         {
-            return;
+            return false;
         }
 
         var manager = this.manager;
 
-        // this.pluginEvents.emit(Events.UPDATE, time, delta);
-
-        //  Another Scene above this one has already consumed the input events, or we're in transition
-        if (manager.globalTopOnly && manager.ignoreEvents)
-        {
-            return;
-        }
-
-        if (this.pollRate > 0)
-        {
-            this._pollTimer -= delta;
-
-            if (this._pollTimer < 0)
-            {
-                //  Discard timer diff
-                this._pollTimer = this.pollRate;
-            }
-        }
-
-        var pointers = this.manager.pointers;
-        var pointersTotal = this.manager.pointersTotal;
+        var pointers = manager.pointers;
+        var pointersTotal = manager.pointersTotal;
+        var captured = false;
 
         for (var i = 0; i < pointersTotal; i++)
         {
@@ -641,9 +719,13 @@ var InputPlugin = new Class({
             if (total > 0 && manager.globalTopOnly)
             {
                 //  We interacted with an event in this Scene, so block any Scenes below us from doing the same this frame
-                manager.ignoreEvents = true;
+                captured = true;
             }
         }
+
+        this._updatedThisFrame = true;
+
+        return captured;
     },
 
     /**
