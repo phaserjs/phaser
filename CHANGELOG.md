@@ -4,28 +4,33 @@
 
 ### Input System Changes
 
-* Removed the `inputQueue` Game config property
-* Removed the `InputManager.useQueue` property
+The old 'input queue' legacy system, which was deprecated in 3.16, has been removed entirely in order to tidy-up the API and keep input events consistent. This means the following changes:
+
+* Removed the `inputQueue` Game config property.
+* Removed the `useQueue`, `queue` and `_updatedThisFrame` properties from the Input Manager.
+* Removed the `legacyUpdate` and `update` methods from the Input Manager.
+* The Input Manager no longer listens for the `GameEvents.POST_STEP` event. Processing has been moved to a `GameEvents.POST_RENDER` event handler.
+
+As a result, all of the following Input Manager methods have been renamed:
+
+* `queueTouchStart` is now called `onTouchStart` and invoked by the Touch Manager.
+* `queueTouchMove` is now called `onTouchMove` and invoked by the Touch Manager.
+* `queueTouchEnd` is now called `onTouchEnd` and invoked by the Touch Manager.
+* `queueTouchCancel` is now called `onTouchCancel` and invoked by the Touch Manager.
+* `queueMouseDown` is now called `onMouseDown` and invoked by the Mouse Manager.
+* `queueMouseMove` is now called `onMouseMove` and invoked by the Mouse Manager.
+* `queueMouseUp` is now called `onMouseUp` and invoked by the Mouse Manager.
+
+Each of these handlers used to check the `enabled` state of the Input Manager, but this now handled directly in the Touch and Mouse Managers instead, leading to less branching and cleaner tests.
+
+Because the legacy queue mode is gone, there is no longer any need for the DOM Callbacks:
+
 * Removed the `_hasUpCallback`, `_hasDownCallback` and `_hasMoveCallback` properties from the Input Manager
-* Removed the following Input Manager methods and properties: `processDomCallbacks`, `addDownCallback`, `addUpCallback`, `addMoveCallback`, `queue`, `domCallbacks`, `addDownCallback`, `addUpCallback` and `addMoveCallback`
-* Cursors are now set and reset immediately on the canvas, leading to the removal of `_setCursor` and `_customCursor` properties
-* The Input Manager bo longer listens for: `GameEvents.POST_STEP` as it's not required
+* Removed the `processDomCallbacks`, `addDownCallback`, `addUpCallback`, `addMoveCallback`, `domCallbacks`, `addDownCallback`, `addUpCallback` and `addMoveCallback` methods.
 
-Document the following:
+Also, CSS cursors can now be set directly:
 
-remove InputManager#_updatedThisFrame ?
-
-//  These methods also no longer check 'enabled' (the handler does that)
-queueTouchStart = onTouchStart
-queueTouchMove = onTouchMove
-queueTouchEnd = onTouchEnd
-queueTouchCancel = onTouchCancel
-queueMouseDown = onMouseDown
-queueMouseMove = onMouseMove
-queueMouseUp = onMouseUp
-
-plugin - old = update, new = pluginUpdate
-manager - old = legacyUpdate, new = update (BOTH removed!)
+* Cursors are now set and reset immediately on the canvas, leading to the removal of `_setCursor` and `_customCursor` properties.
 
 Pointer.lastAction
 Pointer calls reset itself
@@ -43,6 +48,8 @@ Pointer calls reset itself
 * The default `BaseShader` vertex shader will now set the `fragCoord` varying to be the Game Object height minus the y inPosition. This will give the correct y axis in the fragment shader, causing 'inverted' shaders to display normally when using the default vertex code.
 * There was some test code left in the `DOMElementCSSRenderer` file that caused `getBoundingClientRect` to be called every render. This has been removed, which increases performance significantly for DOM heavy games.
 * The `TimeStep` will no longer set its `frame` property to zero in the `resetDelta` method. Instead, this property is incremented every step, no matter what, giving an accurate indication of exactly which frame something happened on internally.
+* The `TimeStep.step` method no longer uses the time value passed to the raf callback, as it's not actually the current point in time, but rather the time that the main thread began at. Which doesn't help if we're comparing it to event timestamps.
+* `TimeStep.now` is a new property that holds the exact `performance.now` value, as set at the start of the current game step.
 
 ### Bug Fixes
 
@@ -51,7 +58,7 @@ Pointer calls reset itself
 * The `CameraManager` would incorrectly destroy the `default` Camera in its shutdown method, meaning that if you used a fixed mask camera and stopped then resumed a Scene, the masks would stop working. The default camera is now destroyed only in the `destroy` method. Fix #4520 (thanks @telinc1)
 * Passing a Frame object to `Bob.setFrame` would fail, as it expected a string or integer. It now checks the type of object, and if a Frame it checks to make sure it's a Frame belonging to the parent Blitter's texture, and if so sets it. Fix #4516 (thanks @NokFrt)
 * The ScaleManager full screen call had an arrow function in it. Despite being within a conditional block of code it still broke really old browsers like IE11, so has been removed. Fix #4530 (thanks @jorbascrumps @CNDW)
-
+* `Game.getTime` would return `NaN` because it incorrectly accessed the time value from the TimeStep.
 
 
 ## Version 3.17.0 - Motoko - 10th May 2019
