@@ -504,7 +504,7 @@ var Pointer = new Class({
      */
     reset: function (time)
     {
-        var currentFrame = this.manager.game.loop.frame;
+        var currentFrame = this.manager.game.getFrame();
 
         if (this.lastAction < currentFrame)
         {
@@ -584,7 +584,7 @@ var Pointer = new Class({
     up: function (event)
     {
         var time = event.timeStamp;
-        var currentFrame = this.manager.game.loop.frame;
+        var currentFrame = this.manager.game.getFrame();
 
         if (currentFrame > this.lastAction)
         {
@@ -632,7 +632,7 @@ var Pointer = new Class({
     down: function (event)
     {
         var time = event.timeStamp;
-        var currentFrame = this.manager.game.loop.frame;
+        var currentFrame = this.manager.game.getFrame();
 
         if (currentFrame > this.lastAction)
         {
@@ -680,7 +680,7 @@ var Pointer = new Class({
     move: function (event)
     {
         var time = event.timeStamp;
-        var currentFrame = this.manager.game.loop.frame;
+        var currentFrame = this.manager.game.getFrame();
 
         if (currentFrame > this.lastAction)
         {
